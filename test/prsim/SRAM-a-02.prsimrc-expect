@@ -52,8 +52,8 @@ then set write enable...
 	50	w.we_ : 0	[by we:=1]
 	50	bl : 0	[by we:=1]
 	60	_bl : 1	[by w.we_:=0]
-	60	c[0].r.d[0] : 0	[by bl:=0]
 	60	p.bls : 1	[by bl:=0]
+	60	c[0].r.d[0] : 0	[by bl:=0]
 	70	p._bls : 0	[by _bl:=1]
 	70	c[0].r.d[1] : 1	[by c[0].r.d[0]:=0]
 Fanins of node `c[0].r.t':

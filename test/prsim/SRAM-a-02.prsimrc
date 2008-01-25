@@ -1,6 +1,7 @@
 # "SRAM-a-02.prsimrc"
 # @haco@ SRAM-a.haco-a
 
+# echo-commands on
 # trying different control signal ordering
 weak-rules on
 fanin bl
@@ -26,14 +27,21 @@ time
 echo set wordline first...
 set wl[0] 1
 cycle
+assert c[0].r.t X
+assert c[0].r.f X
 
 echo then set write enable...
 set wv 0
 set we 1
 cycle
-
 fanin-get c[0].r.t
 fanin-get c[0].r.f
+
+# unset c[0].r.t
+# pending c[0].r.t
+
+assert c[0].r.f 0
+assert c[0].r.t 1
 
 fanin-get bl
 fanin-get _bl

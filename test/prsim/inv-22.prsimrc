@@ -1,0 +1,11 @@
+# "inv-22.prsimrc"
+# @haco@ inv.haco-a
+echo compare with "weak-inv-01.prsimrc"
+
+fanin-get b
+watchall
+set a 0
+step
+
+assert b 1
+

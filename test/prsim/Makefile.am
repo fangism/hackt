@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.12 2008/01/25 02:29:38 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.13 2008/01/25 08:24:31 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -16,6 +16,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	unstable-a unstable-b \
 	precharge-a precharge-b precharge-c precharge-d \
 	precharge-e precharge-f \
+	weak-inv \
 	weak-fight-a weak-fight-b \
 	weak-vs-weak \
 	weak-feedback-a weak-feedback-b \
@@ -40,7 +41,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	celem-01 celem-02 celem-03 celem-04 \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-07 inv-08 inv-09 \
 	inv-11 inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
-	inv-18 inv-19 inv-20 inv-20a inv-21 inv-21a \
+	inv-18 inv-19 inv-20 inv-20a inv-21 inv-21a inv-22 inv-23 \
 	inv-alt-01 inv-alt-02 inv-alt-03 inv-alt-04 inv-alt-05 inv-alt-06 \
 	and-01 nand-01 nand-02 or-01 nor-01 nor-02 nor-04 \
 	expr-limit-a-01 \
@@ -73,6 +74,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	precharge-a-01 precharge-b-01 \
 	precharge-c-01 precharge-d-01 \
 	precharge-e-01 precharge-f-01 \
+	weak-inv-01 weak-inv-02 \
 	weak-fight-a-01 weak-fight-a-02 weak-fight-a-03 weak-fight-a-04 \
 	weak-fight-a-05 \
 	weak-fight-b-01 \
@@ -86,7 +88,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	cross-pull-a-01 cross-pull-a-02 \
 	bitline-a-01 bitline-a-02 \
 	bitline-b-01 bitline-b-02 \
-	SRAM-a-01 SRAM-a-02 SRAM-a-03 SRAM-a-04 \
+	SRAM-a-01 SRAM-a-02 SRAM-a-03 SRAM-a-04 SRAM-a-05 \
 	SRAM-b-01 SRAM-b-02 SRAM-b-03 \
 	SRAM-c-01 SRAM-c-02 SRAM-c-03 \
 	keeper-a-01

@@ -1,0 +1,6 @@
+compare with "weak-inv-01.prsimrc" 
+Fanins of node `b':
+[after 10]	~a:X -> b+:X
+[after 10]	a:X -> b-:X
+	0	a : 0
+	10	b : 1	[by a:=0]

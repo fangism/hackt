@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.8.5 2008/01/24 01:23:08 fang Exp $
+#	$Id: TODO,v 1.4.8.6 2008/01/25 08:24:29 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -43,6 +43,11 @@ prsim:
 		Will cost some more memory per node.
 		Difficulty: easy (hour)
 		Consider the cost of increased memory! 'memstats'
+
+	causes: sometimes a rule firing is attributed to the opposite
+		pull turning *off* ... do we attribute the cause to the
+		rule that turned off or the rule that was on?
+		Is there a clean way to keep track? with cause flags?
 
 	'backtrace' add optional starting value argument, 
 		default uses current value.

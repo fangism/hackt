@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.19 2008/01/25 02:29:36 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.20 2008/01/25 08:24:28 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2570,7 +2570,14 @@ if (!n.pending_event()) {
 			enqueue_exclhi(get_delay_up(e), pe);
 		} else {
 			// not sure why: checking against non-weak only:
-			if (n.pull_dn_index STR_INDEX(NORMAL_RULE)) {
+#if PRSIM_WEAK_RULES
+			if (n.pull_dn_index STR_INDEX(NORMAL_RULE)
+				|| (weak_rules_enabled() &&
+					n.pull_dn_index STR_INDEX(WEAK_RULE)))
+#else
+			if (n.pull_dn_index STR_INDEX(NORMAL_RULE))
+#endif
+			{
 				enqueue_pending(pe);
 			} else {
 				enqueue_event(get_delay_up(e), pe);
@@ -2597,7 +2604,10 @@ if (!n.pending_event()) {
 			__allocate_event(n, ui, c,
 				root_rule, node_type::LOGIC_LOW 
 #if PRSIM_WEAK_RULES
+				// if cause is the rule that turned off
 				, is_weak
+				// if cause is the opposition that was on
+				// , (dn_pull == expr_type::PULL_OFF)
 #endif
 				);
 		// pe->cause = root
@@ -2608,7 +2618,7 @@ if (!n.pending_event()) {
 			enqueue_pending(pe);
 		}
 	}
-	}
+	}	// end if next is PULL_OFF
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in the exclusive queue
@@ -2737,7 +2747,13 @@ if (!n.pending_event()) {
 			// insert into exclhi queue
 			enqueue_excllo(get_delay_dn(e), pe);
 		} else {
-			if (n.pull_up_index STR_INDEX(NORMAL_RULE)) {
+#if PRSIM_WEAK_RULES
+			if (n.pull_up_index STR_INDEX(NORMAL_RULE)
+				|| (n.pull_up_index STR_INDEX(WEAK_RULE)))
+#else
+			if (n.pull_up_index STR_INDEX(NORMAL_RULE))
+#endif
+			{
 				enqueue_pending(pe);
 			} else {
 				enqueue_event(get_delay_dn(e), pe);
@@ -2764,7 +2780,10 @@ if (!n.pending_event()) {
 			__allocate_event(n, ui, c,
 				root_rule, node_type::LOGIC_HIGH
 #if PRSIM_WEAK_RULES
+				// if cause is the rule that turned off
 				, is_weak
+				// if cause is the opposition that was on
+				// , (up_pull == expr_type::PULL_OFF)
 #endif
 				);
 		// pe->cause = root
@@ -2775,7 +2794,7 @@ if (!n.pending_event()) {
 			enqueue_pending(pe);
 		}
 	}
-	}
+	}	// end if next is PULL_OFF
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in an exclusive queue

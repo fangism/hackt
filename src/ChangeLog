@@ -5,6 +5,13 @@
 
 2008-01-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-24:
+	  prsim: minor bug fix: enqueuing of events in propagate_evaluate()
+		failed to for presence of opposing weak rules, when they
+		are enabled, test cases include single weak inverter.
+	  Updated some tests with more asserts.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-23:
 	  prsim: critical bug fix(es):
 		fatal typo in Event-prsim.h: pending_interference.

@@ -42,8 +42,8 @@ WARNING: weak-interference `_bl'
 	20	we : 1
 	30	w.we_ : 0	[by we:=1]
 	30	bl : 0	[by we:=1]
-	40	c[0].r.d[0] : 0	[by bl:=0]
 	40	p.bls : 1	[by bl:=0]
+	40	c[0].r.d[0] : 0	[by bl:=0]
 	50	c[0].r.d[1] : 1	[by c[0].r.d[0]:=0]
 Fanins of node `c[0].r.t':
 [after 10]	wl[0]:1 & ~_bl:1<0> -> c[0].r.d[1]-:1
