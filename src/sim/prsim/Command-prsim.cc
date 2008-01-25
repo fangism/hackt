@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.6 2008/01/24 23:39:35 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.7 2008/01/25 20:40:33 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1851,6 +1851,91 @@ AssertN::usage(ostream& o) {
 	o << "assertn <node> <value>" << endl;
 	o << "signal an error and halt simulation if node is at this value"
 		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assert-pending.texi
+@deffn Command assert-pending node
+Error out if @var{node} does not have a pending event in queue.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertPending, "assert-pending", info, 
+	"error if node does not have event in queue")
+
+
+int
+AssertPending::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		const node_type& n(s.get_node(ni));
+		if (!n.pending_event()) {
+			cout <<
+			"assert failed: expecting pending event on node `"
+				<< objname << "\', but none found." << endl;
+			return Command::FATAL;
+		}
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+AssertPending::usage(ostream& o) {
+	o << "assert-pending <node>" << endl;
+	o << "signal an error and halt if node has pending event" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assertn-pending.texi
+@deffn Command assert-pending node
+Error out if @var{node} does have a pending event in queue.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertNPending, "assertn-pending", info, 
+	"error if node does have event in queue")
+
+int
+AssertNPending::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		const node_type& n(s.get_node(ni));
+		if (n.pending_event()) {
+			cout <<
+			"assert failed: expecting no pending event on node `"
+				<< objname << "\', but found one." << endl;
+			return Command::FATAL;
+		}
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+AssertNPending::usage(ostream& o) {
+	o << "assertn-pending <node>" << endl;
+	o << "signal an error and halt if node has no pending event" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
