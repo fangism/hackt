@@ -5,6 +5,12 @@
 
 2008-01-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-27:
+	  prsim: kill-event-node function factored out for maintainence, 
+		now print confirmation if node (and its events) 
+		is being watched.  Minor adjust to test cases.  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-26:
 	  prsim: major bug fix: X events were not being (pending) enqueued
 		when strong rules turned off, yielding to weakly (and

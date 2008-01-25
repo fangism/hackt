@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.21 2008/01/25 21:53:13 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.22 2008/01/25 23:54:16 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -753,6 +753,27 @@ State::get_event(const event_index_type i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Removes event from main event queue and dissociates it from
+	its affected node.  (node and event are invariably consistent)
+	This is only a non-static member function because we want to
+	check the state's watch-list for dequeue feedback.  
+	Yes, usually the node& and event& are already lookedup, 
+	but this should be infrequent enough to not suffer from pessimization.
+ */
+void
+State::kill_event(const event_index_type ei, const node_index_type ni) {
+	get_event(ei).kill();
+	get_node(ni).clear_event();
+	if (UNLIKELY(watching_all_event_queue() ||
+			(watching_event_queue() && is_watching_node(ni)))) {
+		dump_event_force(cout << "killed  :", ei,
+			delay_policy<time_type>::zero, true);
+		// flush?
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Registers event in the primary event queue.  
 	Only this is allowed to load killed events.  
  */
@@ -912,8 +933,7 @@ if (pending) {
 		// cancel former event, but don't deallocate it until dequeued
 		cout << "WARNING: pending event for node `" << objname <<
 			"\' was overridden." << endl;
-		get_event(pending).kill();
-		n.clear_event();
+		kill_event(pending, ni);
 	} else if (!unchanged) {
 		// not forcing: if new value is different, issue warning
 		cout << "WARNING: pending value for node `" << objname <<
@@ -2498,8 +2518,7 @@ if (n.pending_event()) {
 		DEBUG_STEP_PRINT("old weak event killed" << endl);
 		// it was weak, and should be overtaken
 		// what if new event is weak-off?
-		e.kill();
-		n.clear_event();
+		kill_event(ei, ui);
 		// ei = 0;
 	} else if (!e.is_weak() && is_weak
 			// && previous-pull != expr_type::PULL_OFF
@@ -2689,8 +2708,7 @@ if (!n.pending_event()) {
 		e.val == node_type::LOGIC_OTHER) {
 		if (n.current_value() == node_type::LOGIC_LOW) {
 			// already low, just kill pending X
-			e.kill();
-			n.clear_event();
+			kill_event(ei, ui);
 		} else {
 		/***
 			Terrible overload of the dequeue-unstable mode.
@@ -2868,8 +2886,7 @@ if (!n.pending_event()) {
 		e.val == node_type::LOGIC_OTHER) {
 		if (n.current_value() == node_type::LOGIC_HIGH) {
 			// kill pending X, node is already high
-			e.kill();
-			n.clear_event();
+			kill_event(ei, ui);
 		} else {
 		/***
 			Terrible overload of the dequeue-unstable mode.
@@ -3039,8 +3056,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 				// let dequeuer deallocate killed events
 				const size_t pe = n.get_event();
 				DEBUG_STEP_PRINT("dequeuing unstable event " << pe << endl);
-				get_event(pe).kill();
-				n.clear_event();
+				kill_event(pe, ui);
 #if 0
 	{	// pardon momentary ugly indentation...
 		typedef	node_type::const_fanout_iterator	const_iterator;
@@ -3390,17 +3406,18 @@ State::dump_struct_dot(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Print a single event.  
+	Internal event printer.
+	\param force pass true to show killed events.
  */
 ostream&
-State::dump_event(ostream& o, const event_index_type ei, 
-		const time_type t) const {
+State::dump_event_force(ostream& o, const event_index_type ei, 
+		const time_type t, const bool force) const {
 	DEBUG_STEP_PRINT(ei);
 	const event_type& ev(get_event(ei));
 #if 0
 	o << '[' << ei << ']';		// for debugging
 #endif
-	if (!ev.killed()) {
+	if (!ev.killed() || force) {
 		o << '\t' << t << '\t' <<
 			get_node_canonical_name(ev.node) << " : " <<
 			node_type::value_to_char[ev.val];
@@ -3414,28 +3431,26 @@ State::dump_event(ostream& o, const event_index_type ei,
 #if PRSIM_WEAK_RULES
 		if (ev.is_weak()) { o << '\t' << "(weak)"; }
 #endif
-		o << endl;
-	}
-#if DEBUG_STEP
-	else {
-		o << '\t' << t << '\t' <<
-			get_node_canonical_name(ev.node) << " : " <<
-			node_type::value_to_char[ev.val];
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		if (ev.cause.node) {
-			o << '\t' << "[from " <<
-			get_node_canonical_name(ev.cause.node) << ":=" <<
-			node_type::value_to_char[ev.cause.val] << "]";
+		if (ev.killed()) {
+			o << '\t' << "(killed)";
 		}
-#endif
-#if PRSIM_WEAK_RULES
-		if (ev.is_weak()) { o << '\t' << "(weak)"; }
-#endif
-		o << '\t' << "(killed)";
 		o << endl;
 	}
-#endif
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print a single event.  
+ */
+ostream&
+State::dump_event(ostream& o, const event_index_type ei, 
+		const time_type t) const {
+#if DEBUG_STEP
+	return dump_event_force(o, ei, t, true);
+#else
+	return dump_event_force(o, ei, t, false);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

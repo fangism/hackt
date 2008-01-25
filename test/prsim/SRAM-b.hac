@@ -1,5 +1,5 @@
 // "SRAM-b.hac"
-//	$Id: SRAM-b.hac,v 1.1.4.1 2008/01/17 01:34:16 fang Exp $
+//	$Id: SRAM-b.hac,v 1.1.4.2 2008/01/25 23:54:24 fang Exp $
 // minimized test case to reproduce a stuck-node bug
 // with artificial delays to produce timing scenario
 
@@ -41,17 +41,6 @@ prs {
 }
 }
 
-/**
-	Bitline precharge. 
-	No explicit staticizer (the way it *should* be).
- */
-defproc pc_nostat(bool _pchg, bl, _bl) {
-bool bls;
-prs {
-	~_pchg		-> _bl+
-	~_pchg		-> bl+
-}
-}
 
 bool _pchg;
 bool bl, _bl, wl[2], we, wv;

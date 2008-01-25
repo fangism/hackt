@@ -1,0 +1,15 @@
+// "SRAM-d.hac"
+//	$Id: SRAM-d.hac,v 1.1.2.1 2008/01/25 23:54:26 fang Exp $
+// this is how an SRAM should be implemented
+// difference from -a is that bitlines do not use explicit half-keepers
+
+import "SRAM.hac";
+
+bool _pchg;
+bool bl, _bl, wl[2], we, wv;
+cell c[2];
+c[0](bl, _bl, wl[0]);
+c[1](bl, _bl, wl[1]);
+writer w(we, wv, bl, _bl);
+pc_nostat p(_pchg, bl, _bl);
+

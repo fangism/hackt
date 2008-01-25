@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.7 2008/01/23 04:59:02 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.8 2008/01/25 23:54:17 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -890,6 +890,9 @@ private:
 	event_type&
 	get_event(const event_index_type);
 
+	void
+	kill_event(const event_index_type, const node_index_type);
+
 	node_index_type
 	load_enqueue_event(const time_type, const event_index_type);
 
@@ -1014,6 +1017,10 @@ public:
 	/// prints output in DOT form for visualization (options?)
 	ostream&
 	dump_struct_dot(ostream&) const;
+
+	ostream&
+	dump_event_force(ostream&, const event_index_type,
+		const time_type, const bool) const;
 
 	ostream&
 	dump_event(ostream&, const event_index_type, const time_type) const;

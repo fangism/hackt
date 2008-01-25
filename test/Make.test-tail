@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.88 2007/11/06 21:40:00 fang Exp $
+#	$Id: Make.test-tail,v 1.88.4.1 2008/01/25 23:54:18 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -47,7 +47,7 @@ HACO_FLAGS += -I$(srcdir)
 # if executable did not successfully build, then skip.
 
 HAC_DEPEND_FILTER = $(SED) -e '/haco:/s|^$(srcdir)\/||g' \
-	-e 's/haco:/haco $@:/g'
+	-e 's/haco:/haco $@:/g' -e 's/^:/$@:/' -e 's/\.depend:/.haco:/'
 # the following works for VPATH, but need to test for srcdir = .
 # -e 's|$(srcdir)|$$(srcdir)|g'
 
