@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.13 2008/01/25 08:24:31 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.14 2008/01/25 21:53:15 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -88,7 +88,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	cross-pull-a-01 cross-pull-a-02 \
 	bitline-a-01 bitline-a-02 \
 	bitline-b-01 bitline-b-02 \
-	SRAM-a-01 SRAM-a-02 SRAM-a-03 SRAM-a-04 SRAM-a-05 \
+	SRAM-a-01 SRAM-a-02 SRAM-a-03 SRAM-a-04 SRAM-a-05 SRAM-a-06 \
 	SRAM-b-01 SRAM-b-02 SRAM-b-03 \
 	SRAM-c-01 SRAM-c-02 SRAM-c-03 \
 	keeper-a-01

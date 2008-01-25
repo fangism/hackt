@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.20 2008/01/25 08:24:28 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.21 2008/01/25 21:53:13 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2590,8 +2590,11 @@ if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("pull-up turned off" << endl);
 	if (dn_pull == expr_type::PULL_ON
 #if PRSIM_WEAK_RULES
-		|| (!is_weak && wdn_pull == expr_type::PULL_ON &&
+		|| (!is_weak && 
+			wdn_pull == expr_type::PULL_ON &&
 			wup_pull == expr_type::PULL_OFF)
+		|| (wdn_pull == expr_type::PULL_WEAK &&
+			n.current_value() != node_type::LOGIC_OTHER)
 #endif
 		) {
 		// n->dn->val == PRS_VAL_T
@@ -2766,8 +2769,11 @@ if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("pull-down turned off" << endl);
 	if (up_pull == expr_type::PULL_ON
 #if PRSIM_WEAK_RULES
-		|| (!is_weak && wup_pull == expr_type::PULL_ON &&
+		|| (!is_weak &&
+			wup_pull == expr_type::PULL_ON &&
 			wdn_pull == expr_type::PULL_OFF)
+		|| (wup_pull == expr_type::PULL_WEAK && 
+			n.current_value() != node_type::LOGIC_OTHER)
 #endif
 		) {
 		// n->up->val == PRS_VAL_T

@@ -5,6 +5,15 @@
 
 2008-01-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-26:
+	  prsim: major bug fix: X events were not being (pending) enqueued
+		when strong rules turned off, yielding to weakly (and
+		possibly) pulling weak rules (possible interfering).
+	  Fixed in test case prsim/SRAM-a-06.
+	  For the record, this was particularly nasty and difficult to 
+		analyze, after several botched patch attempts.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-25:
 	  prsim new commands: assert-pending, assertn-pending
 		assert whether or not node has pending event in queue.
