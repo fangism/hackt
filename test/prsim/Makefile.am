@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.11 2008/01/24 19:42:15 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.12 2008/01/25 02:29:38 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -7,7 +7,7 @@ include $(top_srcdir)/test/Make.test-head
 # .hac inputs
 HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem inv oscillator half-celem deep tree interference \
-	inv-alt \
+	interference-a inv-alt \
 	celem-share after-celem-def after-celem after-celem-more \
 	pass-gates-def pass-gates excl-rings-def excl-rings \
 	check-excl-rings-def check-excl-rings \
@@ -40,13 +40,14 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	celem-01 celem-02 celem-03 celem-04 \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-07 inv-08 inv-09 \
 	inv-11 inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
-	inv-18 inv-19 inv-20 inv-21 \
-	inv-alt-01 inv-alt-02 inv-alt-03 inv-alt-04 \
+	inv-18 inv-19 inv-20 inv-20a inv-21 inv-21a \
+	inv-alt-01 inv-alt-02 inv-alt-03 inv-alt-04 inv-alt-05 inv-alt-06 \
 	and-01 nand-01 nand-02 or-01 nor-01 nor-02 nor-04 \
 	expr-limit-a-01 \
 	interference-01 interference-02 interference-03 interference-04 \
 	interference-05 interference-06 interference-07 interference-08 \
 	interference-09 interference-10 \
+	interference-a-01 interference-a-02 \
 	killed-01 \
 	unstable-01 unstable-02 unstable-03 \
 	unstable-a-01 unstable-b-01 \

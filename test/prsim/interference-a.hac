@@ -1,0 +1,11 @@
+// "interference-a.hac"
+// testing effect on event queue upon interference
+
+import "interference.hac";
+
+bool d;
+
+prs {
+	c	=> d-
+}
+

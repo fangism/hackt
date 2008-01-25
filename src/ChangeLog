@@ -5,6 +5,15 @@
 
 2008-01-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-23:
+	  prsim: critical bug fix(es):
+		fatal typo in Event-prsim.h: pending_interference.
+		interference event handling: case immediate -> X was botched,
+			now can accommodate unstably-dequeued events 
+			while flushing interference events from pending queue.
+	  Several test cases added, regression free.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-22:
 	  prsim: 'step-event' command to advance by step count, 
 		as opposed to time increments (old 'step'). 

@@ -1,0 +1,29 @@
+# "inv-21a.prsimrc"
+# @haco@ inv.haco-a
+# trying to reproduce stuck-away-from-X bug
+
+# unstable-unknown
+weak-rules on
+unstable warn
+watchall
+set a 0
+cycle
+assert b 1
+assert c 0
+
+set a 1
+advance 4
+queue
+time
+
+set a X
+echo expect weak-instability on b-
+cycle
+# assert b X
+# assert c X
+
+unsetall
+queue
+assertn-queue
+
+

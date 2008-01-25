@@ -1,0 +1,18 @@
+	0	a : 1
+	10	b : 0	[by a:=1]
+	20	c : 1	[by b:=0]
+	20	a : 0
+event queue:
+	30	b : 1	[from a:=0]
+time: 24
+expect weak-instability on b+ 
+WARNING: weak-unstable `b'+
+>> cause: `a' (val: X)
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+	24	a : X
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	30	b : X	[by a:=X]
+	40	c : X	[by b:=X]
+event queue:

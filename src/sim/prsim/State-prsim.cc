@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.18 2008/01/24 23:39:36 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.19 2008/01/25 02:29:36 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1375,16 +1375,27 @@ for ( ; i!=e; ++i) {
 		}
 		if (ev.pending_interference()) {
 			DEBUG_STEP_PRINT("immediate -> X." << endl);
-			ISE_INVARIANT(_n.pending_event());
+			// ISE_INVARIANT(_n.pending_event());
+			// might have been dequeued due to unstable-dequeue
+			// in which case, enqueue this event
+			const bool still_pending = _n.pending_event();
+		if (still_pending) {
 			// always set the cause and new value together
+			event_type& pe(get_event(_n.get_event()));
+			pe.val = node_type::LOGIC_OTHER;
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-			_n.set_value_and_cause(node_type::LOGIC_OTHER, 
-				ev.cause);
+			pe.cause.node = ev.cause.node;
+			pe.cause.val = ev.cause.val;
 #else
-			_n.set_cause_node(ev.cause_node);
-			_n.set_value(node_type::LOGIC_OTHER);
+			pe.cause_node = ev.cause_node;
 #endif
 			__deallocate_pending_interference_event(ne);
+		} else {
+			INVARIANT(dequeue_unstable_events());
+			DEBUG_STEP_PRINT("re-queue to X." << endl);
+			ev.val = node_type::LOGIC_OTHER;
+			__flush_pending_event_with_interference(_n, ne, ev);
+		}	// end if still_pending
 		} else {
 			DEBUG_STEP_PRINT("overwrite to X." << endl);
 			ev.val = node_type::LOGIC_OTHER;
@@ -1413,16 +1424,27 @@ for ( ; i!=e; ++i) {
 		}
 		if (ev.pending_interference()) {
 			DEBUG_STEP_PRINT("immediate -> X." << endl);
-			ISE_INVARIANT(_n.pending_event());
+			// ISE_INVARIANT(_n.pending_event());
+			// might have been dequeued due to unstable-dequeue
+			// in which case, enqueue this event
+			const bool still_pending = _n.pending_event();
+		if (still_pending) {
 			// always set the cause and new value together
+			event_type& pe(get_event(_n.get_event()));
+			pe.val = node_type::LOGIC_OTHER;
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-			_n.set_value_and_cause(node_type::LOGIC_OTHER, 
-				ev.cause);
+			pe.cause.node = ev.cause.node;
+			pe.cause.val = ev.cause.val;
 #else
-			_n.set_cause_node(ev.cause_node);
-			_n.set_value(node_type::LOGIC_OTHER);
+			pe.cause_node = ev.cause_node;
 #endif
 			__deallocate_pending_interference_event(ne);
+		} else {
+			INVARIANT(dequeue_unstable_events());
+			DEBUG_STEP_PRINT("re-queue to X." << endl);
+			ev.val = node_type::LOGIC_OTHER;
+			__flush_pending_event_with_interference(_n, ne, ev);
+		}	// end if still_pending
 		} else {
 			DEBUG_STEP_PRINT("overwrite to X." << endl);
 			ev.val = node_type::LOGIC_OTHER;
@@ -1481,6 +1503,8 @@ for ( ; i!=e; ++i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For the sake of shortening long code.  
+	\param ev pending event, corresponds to index...
+	\param ne index of the pending event.
  */
 // inline
 void
