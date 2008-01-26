@@ -1,0 +1,4 @@
+enqueued:	10	t : 0	[from bl:=0]
+queue:	10	t : 0	[from bl:=0]
+queue:	10	t : 1	[from bl:=0]
+	10	t : 1	[by bl:=1]

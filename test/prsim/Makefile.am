@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.16 2008/01/26 02:33:29 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.17 2008/01/26 05:52:44 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -21,6 +21,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	weak-fight-a weak-fight-b \
 	weak-vs-weak \
 	weak-feedback-a weak-feedback-b \
+	weak-yield-a weak-yield-b \
 	celem-fb \
 	half-keeper-a \
 	cross-coupled cross-coupled-weak \
@@ -55,6 +56,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	unstable-a-01 unstable-b-01 \
 	weak-unstable-a-01 weak-unstable-a-02 weak-unstable-a-03 \
 	weak-unstable-b-01 weak-unstable-b-02 weak-unstable-b-03 \
+	weak-yield-a-01 weak-yield-b-01 \
 	oscil-break-01 oscil-break-02 oscil-break-03 \
 	oscil-random-01 oscil-random-01a \
 	oscil-random-02 oscil-random-02a oscil-random-02b oscil-random-02c \

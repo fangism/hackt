@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.23 2008/01/26 02:33:27 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.24 2008/01/26 05:52:43 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1004,8 +1004,8 @@ if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 		if (e.val != new_val) {
 			cerr << "Overriding pending event\'s value on node `"
 				<< get_node_canonical_name(ni) << "\' from " <<
-				node_type::char_to_value(e.val) << " to " <<
-				node_type::char_to_value(new_val) <<
+				node_type::value_to_char[e.val] << " to " <<
+				node_type::value_to_char[new_val] <<
 				", keeping the same event time." << endl;
 			e.val = new_val;
 		}
@@ -2508,6 +2508,14 @@ State::propagate_evaluation(
 	const pull_enum up_pull = get_pull(up_index);
 	const expr_index_type dn_index = n.pull_dn_index STR_INDEX(NORMAL_RULE);
 	const pull_enum dn_pull = get_pull(dn_index);
+#if PRSIM_WEAK_RULES
+	const expr_index_type wndn_ind = n.pull_dn_index STR_INDEX(WEAK_RULE);
+	const char wndn_pull = weak_rules_enabled() ?
+		get_pull(wndn_ind) : expr_type::PULL_OFF;
+	const expr_index_type wnup_ind = n.pull_up_index STR_INDEX(WEAK_RULE);
+	const char wnup_pull = weak_rules_enabled() ?
+		get_pull(wnup_ind) : expr_type::PULL_OFF;
+#endif	// PRSIM_WEAK_RULES
 	break_type err = false;
 #if PRSIM_WEAK_RULES
 	// weak rule pre-filtering
@@ -2647,11 +2655,6 @@ if (!n.pending_event()) {
 	event_type& e(get_event(ei));
 	const expr_index_type ndn_ind = n.pull_dn_index STR_INDEX(NORMAL_RULE);
 	const char ndn_pull = get_pull(ndn_ind);
-#if PRSIM_WEAK_RULES
-	const expr_index_type wndn_ind = n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const char wndn_pull = weak_rules_enabled() ?
-		get_pull(wndn_ind) : expr_type::PULL_OFF;
-#endif	// PRSIM_WEAK_RULES
 	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
 	DEBUG_STEP_PRINT("pull-dn = " << size_t(get_pull(ndn_ind)) << endl);
 	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
@@ -2725,6 +2728,21 @@ if (!n.pending_event()) {
 		e.val = node_type::LOGIC_LOW;
 		e.set_cause_node(ni);
 		}
+	} else if (dequeue_unstable_events() && !is_weak &&
+		next == expr_type::PULL_OFF && 
+		get_pull(wnup_ind) == expr_type::PULL_OFF &&
+		get_pull(wndn_ind) == expr_type::PULL_ON) {
+		/***
+			Strong rule turning off, yielding to weak rule 
+			pulling in opposite direction.
+			TODO: kill pending event and re-enqueue.
+			Really doesn't make sense to use the same delay
+			if changing to opposite direction.  
+		***/
+		DEBUG_STEP_PRINT("changing pending 1 to 0 in queue." << endl);
+		// for now, out of laziness, overwrite the pending event
+		e.val = node_type::LOGIC_LOW;
+		e.set_cause_node(ni);
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
@@ -2825,11 +2843,6 @@ if (!n.pending_event()) {
 	event_type& e(get_event(ei));
 	const expr_index_type nup_ind = n.pull_up_index STR_INDEX(NORMAL_RULE);
 	const char nup_pull = get_pull(nup_ind);
-#if PRSIM_WEAK_RULES
-	const expr_index_type wnup_ind = n.pull_up_index STR_INDEX(WEAK_RULE);
-	const char wnup_pull = weak_rules_enabled() ?
-		get_pull(wnup_ind) : expr_type::PULL_OFF;
-#endif
 	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
 	DEBUG_STEP_PRINT("pull-up = " << size_t(get_pull(nup_ind)) << endl);
 	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
@@ -2903,6 +2916,21 @@ if (!n.pending_event()) {
 		e.val = node_type::LOGIC_HIGH;
 		e.set_cause_node(ni);
 		}
+	} else if (dequeue_unstable_events() && !is_weak &&
+		next == expr_type::PULL_OFF && 
+		get_pull(wndn_ind) == expr_type::PULL_OFF &&
+		get_pull(wnup_ind) == expr_type::PULL_ON) {
+		/***
+			Strong rule turning off, yielding to weak rule 
+			pulling in opposite direction.
+			TODO: kill pending event and re-enqueue.
+			Really doesn't make sense to use the same delay
+			if changing to opposite direction.  
+		***/
+		DEBUG_STEP_PRINT("changing pending 0 to 1 in queue." << endl);
+		// for now, out of laziness, overwrite the pending event
+		e.val = node_type::LOGIC_HIGH;
+		e.set_cause_node(ni);
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<

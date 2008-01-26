@@ -5,6 +5,13 @@
 
 2008-01-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-29:
+	  prsim: major bug fix:
+		shutting off of strong rules should yield to weak rules
+		pulling in opposite direction, overtake in queue.
+	  New test cases: prsim/weak-yield-*
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-28:
 	  prsim: critical bug fix (suitable for trunk!)
 		dequeue *weak* unstable events now checks if a pending X
