@@ -13,6 +13,6 @@ WARNING: weak-interference `b'
 	24	a : X
 WARNING: weak-interference `c'
 >> cause: `b' (val: X)
-	34	b : X	[by a:=X]
-	44	c : X	[by b:=X]
+	30	b : X	[by a:=X]
+	40	c : X	[by b:=X]
 event queue:

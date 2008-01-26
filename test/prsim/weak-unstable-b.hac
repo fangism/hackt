@@ -1,0 +1,13 @@
+// "weak-unstable-b.hac"
+// copy-modified from "weak-unstable-b.hac"
+// setting up example of weak instability
+// in unstable-dequeue mode, using weak transistors
+
+bool a, b, c, _p;
+
+prs {
+	~_p	-> c+
+[weak=1]	a	-> c-
+[weak=1]	b	-> c-
+}
+

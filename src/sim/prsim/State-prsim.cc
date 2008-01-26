@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.22 2008/01/25 23:54:16 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.23 2008/01/26 02:33:27 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3052,8 +3052,11 @@ State::__diagnose_violation(ostream& o, const uchar next,
 			// on pending queue (result of instability)
 		if (instability) {
 			e.set_cause_node(ni);
-			if (dequeue_unstable_events()) {
+			if (dequeue_unstable_events() &&
+				(next == expr_type::PULL_OFF ||
+				n.current_value() == node_type::LOGIC_OTHER)) {
 				// let dequeuer deallocate killed events
+				// weak-unstable should leave X in queue
 				const size_t pe = n.get_event();
 				DEBUG_STEP_PRINT("dequeuing unstable event " << pe << endl);
 				kill_event(pe, ui);

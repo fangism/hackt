@@ -8,11 +8,9 @@ time: 24
 expect weak-instability on b- 
 WARNING: weak-unstable `b'-
 >> cause: `a' (val: X)
-WARNING: weak-interference `b'
->> cause: `a' (val: X)
 	24	a : X
 WARNING: weak-interference `c'
 >> cause: `b' (val: X)
-	34	b : X	[by a:=X]
-	44	c : X	[by b:=X]
+	30	b : X	[by a:=X]
+	40	c : X	[by b:=X]
 event queue:

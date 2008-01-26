@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.15 2008/01/25 23:54:20 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.16 2008/01/26 02:33:29 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -14,6 +14,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	logic-defs and nand or nor array \
 	expr-limit-a \
 	unstable-a unstable-b \
+	weak-unstable-a weak-unstable-b \
 	precharge-a precharge-b precharge-c precharge-d \
 	precharge-e precharge-f \
 	weak-inv \
@@ -52,6 +53,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	killed-01 \
 	unstable-01 unstable-02 unstable-03 \
 	unstable-a-01 unstable-b-01 \
+	weak-unstable-a-01 weak-unstable-a-02 weak-unstable-a-03 \
+	weak-unstable-b-01 weak-unstable-b-02 weak-unstable-b-03 \
 	oscil-break-01 oscil-break-02 oscil-break-03 \
 	oscil-random-01 oscil-random-01a \
 	oscil-random-02 oscil-random-02a oscil-random-02b oscil-random-02c \
@@ -91,6 +94,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	SRAM-a-01 SRAM-a-02 SRAM-a-03 SRAM-a-04 SRAM-a-05 SRAM-a-06 \
 	SRAM-b-01 SRAM-b-02 SRAM-b-03 \
 	SRAM-c-01 SRAM-c-02 SRAM-c-03 \
+	SRAM-d-01 \
 	keeper-a-01
 
 # positive different test:

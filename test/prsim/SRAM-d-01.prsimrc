@@ -1,0 +1,35 @@
+# "SRAM-d-01.prsimrc"
+# @haco@ SRAM-d.haco-a
+
+# essentially copied from "SRAM-a-05.prsimrc"
+
+watch bl _bl
+watch-queue
+weak-rules on
+interference warn
+
+set wv 0
+set we 0
+set wl[0] 0
+set wl[1] 0
+set _pchg 0
+cycle
+
+set _pchg 1
+cycle
+assert bl 1
+assert _bl 1
+
+echo enabling wordline should expose bitline to cell
+set wl[0] 1
+advance 5
+queue
+pending bl
+pending _bl
+
+cycle
+fanin-get bl
+fanin-get _bl
+assert bl x
+assert _bl x
+

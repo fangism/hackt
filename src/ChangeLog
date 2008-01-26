@@ -5,6 +5,14 @@
 
 2008-01-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-28:
+	  prsim: critical bug fix (suitable for trunk!)
+		dequeue *weak* unstable events now checks if a pending X
+		node should be left in queue based on the new pull state
+		and possible change of node value.  (3 line patch)
+	  Test cases added for strong and weak rules alike.  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-27:
 	  prsim: kill-event-node function factored out for maintainence, 
 		now print confirmation if node (and its events) 
