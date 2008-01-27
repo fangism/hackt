@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.25 2008/01/27 00:13:23 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.26 2008/01/27 00:19:51 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2527,7 +2527,7 @@ if (n.pending_event()) {
 		// it was weak, and should be overtaken
 		// what if new event is weak-off?
 		if (e.val != node_type::LOGIC_OTHER) {
-			err |= __report_instability(cerr,
+			err |= __report_instability(cout,
 				next == expr_type::PULL_WEAK, 
 				e.val == node_type::LOGIC_HIGH, e.node, e);
 		}
@@ -2748,7 +2748,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending 1 to 0 in queue." << endl);
 		// for now, out of laziness, overwrite the pending event
-		err |= __report_instability(cerr, false, true, e.node, e);
+		err |= __report_instability(cout, false, true, e.node, e);
 		e.val = node_type::LOGIC_LOW;
 		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
@@ -2941,7 +2941,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending 0 to 1 in queue." << endl);
 		// for now, out of laziness, overwrite the pending event
-		err |= __report_instability(cerr, false, false, e.node, e);
+		err |= __report_instability(cout, false, false, e.node, e);
 		e.val = node_type::LOGIC_HIGH;
 		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
