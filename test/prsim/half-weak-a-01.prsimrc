@@ -1,0 +1,16 @@
+# "half-weak-a-01.prsimrc"
+# @haco@ half-weak-a.haco-a
+
+watchall
+weak-rules on
+# unstable-dequeue
+set a 1
+cycle
+
+set a 0
+step-event
+pending b
+set a 1
+step-event
+pending b
+

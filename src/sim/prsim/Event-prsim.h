@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.1.38.4 2008/01/25 02:29:35 fang Exp $
+	$Id: Event-prsim.h,v 1.1.38.5 2008/01/27 00:13:23 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -31,7 +31,7 @@
 /**
 	Use a set for free-list to check for uniqueness.
 	I think a set<> (unpooled) will be slower than vector<>.
-	TODO: use a discrete_interval_set for efficiency.
+	TODO: use a discrete_interval_set for memory efficiency?
  */
 #define	PARANOID_EVENT_FREE_LIST			1
 

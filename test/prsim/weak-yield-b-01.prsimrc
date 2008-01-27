@@ -22,6 +22,7 @@ step-event
 pending t
 assert-pending t
 
+# expect instability
 set bl 0
 step-event
 pending t

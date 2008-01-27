@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.24 2008/01/26 05:52:43 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.25 2008/01/27 00:13:23 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2526,8 +2526,14 @@ if (n.pending_event()) {
 		DEBUG_STEP_PRINT("old weak event killed" << endl);
 		// it was weak, and should be overtaken
 		// what if new event is weak-off?
+		if (e.val != node_type::LOGIC_OTHER) {
+			err |= __report_instability(cerr,
+				next == expr_type::PULL_WEAK, 
+				e.val == node_type::LOGIC_HIGH, e.node, e);
+		}
 		kill_event(ei, ui);
 		// ei = 0;
+		// don't return, continue processing non-weak events
 	} else if (!e.is_weak() && is_weak
 			// && previous-pull != expr_type::PULL_OFF
 			// since vacuous events are dropped, events 
@@ -2635,9 +2641,10 @@ if (!n.pending_event()) {
 				root_rule, node_type::LOGIC_LOW 
 #if PRSIM_WEAK_RULES
 				// if cause is the rule that turned off
-				, is_weak
+				// , is_weak
 				// if cause is the opposition that was on
-				// , (dn_pull == expr_type::PULL_OFF)
+				, (dn_pull == expr_type::PULL_OFF)
+				// important for interference checking
 #endif
 				);
 		// pe->cause = root
@@ -2741,8 +2748,12 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending 1 to 0 in queue." << endl);
 		// for now, out of laziness, overwrite the pending event
+		err |= __report_instability(cerr, false, true, e.node, e);
 		e.val = node_type::LOGIC_LOW;
 		e.set_cause_node(ni);
+#if PRSIM_WEAK_RULES
+		e.set_weak(true);
+#endif
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
@@ -2823,9 +2834,10 @@ if (!n.pending_event()) {
 				root_rule, node_type::LOGIC_HIGH
 #if PRSIM_WEAK_RULES
 				// if cause is the rule that turned off
-				, is_weak
+				// , is_weak
 				// if cause is the opposition that was on
-				// , (up_pull == expr_type::PULL_OFF)
+				, (up_pull == expr_type::PULL_OFF)
+				// important for interference checking
 #endif
 				);
 		// pe->cause = root
@@ -2929,8 +2941,12 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending 0 to 1 in queue." << endl);
 		// for now, out of laziness, overwrite the pending event
+		err |= __report_instability(cerr, false, false, e.node, e);
 		e.val = node_type::LOGIC_HIGH;
 		e.set_cause_node(ni);
+#if PRSIM_WEAK_RULES
+		e.set_weak(true);
+#endif
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
@@ -2991,6 +3007,10 @@ State::__report_interference(ostream& o, const bool weak,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param weak is true if unstable was *possible*, i.e. caused by X
+	\param dir the direction of the unstable firing
+	\param _ni affected node (ev.node?)
+	\param ev the unstable event
 	\return true if error causes break in events.  
 	If node is flagged unstable, 
  */
@@ -3087,6 +3107,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 				// weak-unstable should leave X in queue
 				const size_t pe = n.get_event();
 				DEBUG_STEP_PRINT("dequeuing unstable event " << pe << endl);
+				// instability will be reported below
 				kill_event(pe, ui);
 #if 0
 	{	// pardon momentary ugly indentation...

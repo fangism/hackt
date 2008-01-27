@@ -18,6 +18,6 @@ restoring b -> 0
 expect weak pull up to restore 
 	20	b : 0
 event queue:
-	30	c : 1	[from b:=0]
+	30	c : 1	[from b:=0]	(weak)
 expected c+ in queue, from weak pull-up 
 	30	c : 1	[by b:=0]

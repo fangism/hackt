@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-01-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-30:
+	  prsim: CRITICAL bug fix(es):
+		when pull-off yields to opposite rule, 
+			set event's weak flag as necessary.
+		when overwriting event in-queue, also update weak-flag
+			WITH THE RULE THAT IS ACTUALLY ON, and not the
+			one that turned off.  
+	  prsim diagnostic enhancements:
+		report instabilities on dequeued/overtaken events,
+			except user-set.
+		Many test cases updated with improved feedback.
+	  NUMEROUS test cases added to prsim/ to cover many corners.  
+
+
 2008-01-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-29:

@@ -1,0 +1,11 @@
+propagate 0s and 1s first 
+	0	a : 1
+	10	b : 0	[by a:=1]
+	20	c : 1	[by b:=0]
+testing overtaking of unstable rules 
+	20	a : 0
+queue:	30	b : 1	[from a:=0]
+WARNING: unstable `b'+
+>> cause: `a' (val: 1)
+	20	a : 1
+No event pending on `b'.

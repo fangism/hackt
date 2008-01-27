@@ -1,4 +1,6 @@
 enqueued:	10	t : 1	[from bl:=1]
 queue:	10	t : 1	[from bl:=1]
-queue:	10	t : 0	[from bl:=1]
+WARNING: unstable `t'+
+>> cause: `bl' (val: 0)
+queue:	10	t : 0	[from bl:=1]	(weak)
 	10	t : 0	[by bl:=0]

@@ -1,0 +1,10 @@
+// "half-weak-b.hac"
+// same as "half-weak-a.hac", written in different order
+
+bool a, b;
+prs {
+[weak=1]	~a		-> b+
+		a		-> b-
+//		z		-> b-
+}
+
