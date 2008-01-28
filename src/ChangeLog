@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-31:
+	  prsim: bug fix: 
+		strong pulls turning off should not be unstable if
+		there is already a weak pull in the same direction on.
+		Assign cause to the active weak rule.  
+		Technically, rule *is* unstable...
+	  Added test case: prsim/SRAM-d-02
+
+
 2008-01-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-30:

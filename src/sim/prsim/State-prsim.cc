@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.26 2008/01/27 00:19:51 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.27 2008/01/28 03:15:52 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2754,6 +2754,22 @@ if (!n.pending_event()) {
 #if PRSIM_WEAK_RULES
 		e.set_weak(true);
 #endif
+#if 1
+	} else if (next == expr_type::PULL_OFF && 
+		get_pull(ndn_ind) == expr_type::PULL_OFF &&
+		get_pull(wndn_ind) == expr_type::PULL_OFF &&
+		get_pull(wnup_ind) == expr_type::PULL_ON &&
+		e.val == node_type::LOGIC_HIGH) {
+		// technically, is this unstable?
+		// instability is masked because weak-rule continues to pull...
+		// everything but weak pull-up is off
+		// then keep event in queue
+		// change node cause?
+		e.set_cause_node(ni);
+#if PRSIM_WEAK_RULES
+		e.set_weak(true);
+#endif
+#endif
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
@@ -2946,6 +2962,22 @@ if (!n.pending_event()) {
 		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
 		e.set_weak(true);
+#endif
+#if 1
+	} else if (next == expr_type::PULL_OFF && 
+		get_pull(nup_ind) == expr_type::PULL_OFF &&
+		get_pull(wnup_ind) == expr_type::PULL_OFF &&
+		get_pull(wndn_ind) == expr_type::PULL_ON &&
+		e.val == node_type::LOGIC_LOW) {
+		// technically, is this unstable?
+		// instability is masked because weak-rule continues to pull...
+		// everything but weak pull-up is off
+		// then keep event in queue
+		// change node cause?
+		e.set_cause_node(ni);
+#if PRSIM_WEAK_RULES
+		e.set_weak(true);
+#endif
 #endif
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {

@@ -1,0 +1,54 @@
+# "SRAM-d-02.prsimrc"
+# @haco@ SRAM-d.haco-a
+# bug: turning off strong pull-up did not yield to opposing weak pull-down
+
+# echo-commands on
+
+watch bl _bl
+watch-queue
+weak-rules on
+interference warn
+unstable-dequeue
+
+set wv 0
+set we 0
+set wl[0] 0
+set wl[1] 0
+set _pchg 0
+cycle
+
+echo write contents to one cell
+set _pchg 1
+set we 1
+set wl[0] 1
+cycle
+
+echo resetting...
+set wl[0] 0
+set wv 0
+set we 0
+set _pchg 0
+cycle
+assert bl 1
+assert _bl 1
+
+echo scenario...
+set wl[0] 1
+cycle
+set we 1
+step-event
+set _pchg 1
+step-event
+set we 0
+step-event
+
+pending bl
+pending _bl
+fanin-get bl
+fanin-get _bl
+getall w
+
+cycle
+unsetall
+assertn-queue
+
