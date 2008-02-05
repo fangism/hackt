@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.27 2008/01/28 03:15:52 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.28 2008/02/05 23:24:57 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3728,16 +3728,22 @@ do {
 /**
 	Print all X nodes with no fanin.  
 	This won't find X cycles, however.  
+	\param b true to include node with no fanout
  */
 ostream&
-State::dump_dangling_unknown_nodes(ostream& o) const {
+State::dump_dangling_unknown_nodes(ostream& o, const bool b) const {
 	const size_t ns = node_pool.size();
 	size_t i = INVALID_NODE_INDEX +1;
-	o << "X nodes with no fanin:" << endl;
+	o << "X nodes with no fanin";
+	if (!b) {
+		o << ", with fanout";
+	}
+	o << ":" << endl;
 	for ( ; i<ns; ++i) {
 		const node_type& n(node_pool[i]);
 		if (n.current_value() == node_type::LOGIC_OTHER &&
-			!n.has_fanin()) {
+			!n.has_fanin() &&
+			(n.fanout.size() || b)) {
 			o << get_node_canonical_name(i) << endl;
 		}
 	}

@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.7 2008/01/25 20:40:33 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.8 2008/02/05 23:24:56 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1424,6 +1424,7 @@ Status::usage(ostream& o) {
 @deffn Command unknown-inputs
 Print all nodes with value X that have no fanins, i.e. input-only nodes.  
 Great for debugging forgotten environment inputs and connections!
+This variant includes X-nodes with no fanouts (unused nodes).  
 @end deffn
 @end texinfo
 ***/
@@ -1437,7 +1438,7 @@ if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.dump_dangling_unknown_nodes(cout);
+	s.dump_dangling_unknown_nodes(cout, true);
 	return Command::NORMAL;
 }
 }
@@ -1445,6 +1446,36 @@ if (a.size() != 1) {
 void
 UnknownInputs::usage(ostream& o) {
 	o << name << " -- list all nodes at value X with no fanin." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unknown-inputs-fanout.texi
+@deffn Command unknown-inputs-fanout
+Print all nodes with value X that have no fanins, i.e. input-only nodes.  
+This variant excludes X-nodes with no fanouts (unused nodes).  
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnknownInputsFanout,
+	"unknown-inputs-fanout", info, 
+	"list all X nodes with no fanin, with fanout")
+
+int
+UnknownInputsFanout::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_dangling_unknown_nodes(cout, false);
+	return Command::NORMAL;
+}
+}
+
+void
+UnknownInputsFanout::usage(ostream& o) {
+	o << name << " -- list X nodes with no fanin, with fanout." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

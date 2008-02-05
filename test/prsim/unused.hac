@@ -1,0 +1,7 @@
+// "unused.hac"
+// includes some completely unused nodes
+
+import "inv.hac";
+
+bool d, e, f;
+
