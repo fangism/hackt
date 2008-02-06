@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.28 2008/02/05 23:24:57 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.29 2008/02/06 06:24:47 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3298,16 +3298,17 @@ State::dump_watched_nodes(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param val node_type::LOGIC_{LOW,HIGH,OTHER}.  
+	\param nl use newline delimiter instead of space.
  */
 ostream&
-State::status_nodes(ostream& o, const uchar val) const {
+State::status_nodes(ostream& o, const uchar val, const bool nl) const {
 	ISE_INVARIANT(node_type::is_valid_value(val));
 	const size_t ns = node_pool.size();
 	size_t i = INVALID_NODE_INDEX +1;
 	o << node_type::value_to_char[size_t(val)] << " nodes:" << endl;
 	for ( ; i<ns; ++i) {
 		if (node_pool[i].current_value() == val) {
-			o << get_node_canonical_name(i) << ' ';
+			o << get_node_canonical_name(i) << (nl ? '\n' : ' ');
 		}
 	}
 	return o << endl;

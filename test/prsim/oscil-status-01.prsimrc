@@ -1,0 +1,19 @@
+# "oscil-status-01.prsimrc"
+# @haco@ oscillator.haco-a
+
+status-newline U
+status-newline 0
+status-newline 1
+
+watchall
+set _Reset 0
+cycle
+set _Reset 1
+step 40
+assert-queue
+
+status-newline U
+status-newline 0
+status-newline 1
+
+

@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.8 2008/02/05 23:24:56 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.9 2008/02/06 06:24:46 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1383,10 +1383,13 @@ GetAll::usage(ostream& o) {
 /***
 @texinfo cmd/status.texi
 @deffn Command status value
+@deffnx Command status-newline value
 Print all nodes whose current value is @var{value}.  
 Frequently used to find nodes that are in an unknown ('X') state.  
 Valid @var{value} arguments are [0fF] for logic-low, [1tT] for logic-high,
 [xXuU] for unknown value.  
+The @command{-newline} variant prints each node on a separate line
+for readability.  
 @end deffn
 @end texinfo
 ***/
@@ -1402,7 +1405,7 @@ if (a.size() != 2) {
 	typedef	State::node_type		node_type;
 	const char v = node_type::string_to_value(a.back());
 	if (node_type::is_valid_value(v)) {
-		s.status_nodes(cout, v);
+		s.status_nodes(cout, v, false);
 		return Command::NORMAL;
 	} else {
 		cerr << "Bad status value." << endl;
@@ -1415,6 +1418,34 @@ if (a.size() != 2) {
 void
 Status::usage(ostream& o) {
 	o << "status <[0fF1tTxXuU]>" << endl;
+	o << "list all nodes with the matching current value" << endl;
+}
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusNewline, "status-newline", info, 
+	"show all nodes matching a value, line separated")
+
+int
+StatusNewline::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	const char v = node_type::string_to_value(a.back());
+	if (node_type::is_valid_value(v)) {
+		s.status_nodes(cout, v, true);
+		return Command::NORMAL;
+	} else {
+		cerr << "Bad status value." << endl;
+		usage(cerr);
+		return Command::BADARG;
+	}
+}
+}
+
+void
+StatusNewline::usage(ostream& o) {
+	o << "status-newline <[0fF1tTxXuU]>" << endl;
 	o << "list all nodes with the matching current value" << endl;
 }
 
