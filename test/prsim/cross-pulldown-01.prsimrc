@@ -1,0 +1,29 @@
+# "cross-pulldown-01.prsimrc"
+# @haco@ cross-pulldown.haco-a
+# currently fails, in the same manner as the reference prsim
+
+watchall-queue
+# echo-commands on
+
+unstable-dequeue
+# unstable-unknown
+# same result because initially X
+
+unstable warn
+getall x
+
+set g.Vdd 1
+set g.GND 0
+cycle
+
+set x.t 0
+# cycle
+set x.f 0
+queue
+cycle
+echo yikes! instability on pull-down, not from rule!
+
+queue
+
+getall x
+

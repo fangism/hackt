@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.21 2008/02/06 06:24:50 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.22 2008/02/09 23:37:49 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -26,6 +26,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	half-weak-a half-weak-b \
 	half-keeper-a \
 	cross-coupled cross-coupled-weak \
+	cross-pulldown \
 	cbit_test_stat \
 	cross-pull-a \
 	bitline-a bitline-b \
@@ -140,12 +141,15 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	comment-03 comment-05 comment-07 \
 	celem-05 \
 	inv-06 inv-10 nor-03 \
+	cross-pulldown-01 \
 	cycle-source-a cycle-source-b \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	aliases-05 aliases-06 aliases-07 \
 	check-excl-rings-01 check-excl-rings-03 \
 	weak-feedback-a-02 weak-feedback-b-02 \
 	celem-fb-02
+
+# KNOWN BUG (fails, but should not): cross-pulldown-01
 
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)
 

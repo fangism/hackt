@@ -1,0 +1,21 @@
+// "cross-pulldown.hac"
+
+defproc e1of2(bool f, t) { }
+
+defproc globals(bool Vdd, GND) { }
+
+defproc foo (globals g; e1of2 x) {
+
+	bool GND = g.GND;
+	bool Vdd = g.Vdd;
+
+	prs {
+		passn(x.t, GND, x.f)
+		passn(x.f, GND, x.t)
+	}
+}
+
+globals g;
+e1of2 x;
+foo myfoo(g, x);
+
