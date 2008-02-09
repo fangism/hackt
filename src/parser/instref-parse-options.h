@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: instref-parse-options.h,v 1.4 2007/02/12 06:54:41 fang Exp $
+	$Id: instref-parse-options.h,v 1.5 2008/02/09 02:57:40 fang Exp $
  */
 
 #ifndef	__PARSER_INSTREF_PARSE_OPTIONS_H__
@@ -55,7 +55,7 @@
 // in the original source, a local variable yylval shares the same name
 // as the parameter we wish to pass by reference.  
 #if USING_BISON && !defined(LIBBOGUS)
-#define	YYPARSE_PARAM		null, YYSTYPE& instref_lval, FILE* infile
+#define	YYPARSE_PARAM		null, YYSTYPE& instref_lval, flex::lexer_state& _lexer_state
 #endif
 
 #if defined(YYBYACC)
@@ -67,7 +67,7 @@
 #endif
 // some versons of byacc use YYPARSE_PARAM_TYPE
 #define	YYPARSE_PARAM
-#define	YYPARSE_PARAM_TYPE	void*, YYSTYPE& instref_lval, FILE* infile
+#define	YYPARSE_PARAM_TYPE	void*, YYSTYPE& instref_lval, flex::lexer_state& _lexer_state
 #endif	// YYBYACC
 
 #endif	// __PARSER_INSTREF_PARSE_OPTIONS_H__

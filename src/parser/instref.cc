@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.7 2007/10/08 01:21:50 fang Exp $
+	$Id: instref.cc,v 1.8 2008/02/09 02:57:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -13,6 +13,7 @@
 #include "parser/instref-prefix.h"
 #include "parser/instref-parse-real.h"
 #include "parser/instref-parse-options.h"
+#include "lexer/flex_lexer_state.h"
 #include "util/stacktrace.h"
 
 // the rest of this file came from an old "sim/prsim/Reference.cc"
@@ -42,7 +43,7 @@
 
 extern
 int
-instref_parse(void*, YYSTYPE&, FILE*);
+instref_parse(void*, YYSTYPE&, flex::lexer_state&);
 
 namespace HAC {
 namespace parser {
@@ -110,7 +111,8 @@ parse_reference(const char* s) {
 		rewind(&*temp);		// same as fseek(temp, 0, SEEK_SET);
 		YYSTYPE lval;
 		try {
-			instref_parse(NULL, lval, &*temp);
+			flex::lexer_state f(&*temp);
+			instref_parse(NULL, lval, f);
 		} catch (...) {
 			cerr << "Error parsing instance name: " << s << endl;
 			return return_type(NULL);;

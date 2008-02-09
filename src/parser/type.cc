@@ -1,6 +1,6 @@
 /**
 	\file "parser/type.cc"
-	$Id: type.cc,v 1.2 2007/10/08 01:21:50 fang Exp $
+	$Id: type.cc,v 1.3 2008/02/09 02:57:41 fang Exp $
  */
 
 #include <iostream>
@@ -10,6 +10,7 @@
 #include "AST/AST.h"		// should be first
 #include "AST/parse_context.h"
 #include "parser/type-parse-real.h"
+#include "lexer/flex_lexer_state.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/deallocation_policy.h"
@@ -19,7 +20,7 @@
 
 extern
 int
-type_parse(void*, YYSTYPE&, FILE*);
+type_parse(void*, YYSTYPE&, flex::lexer_state&);
 
 //=============================================================================
 namespace HAC {
@@ -69,7 +70,8 @@ parse_complete_type(const char* t) {
 		YYSTYPE lval;
 		lval._concrete_type_ref = NULL;	// initialize
 		try {
-			type_parse(NULL, lval, &*temp);
+			flex::lexer_state f(&*temp);
+			type_parse(NULL, lval, f);
 		} catch (...) {
 			cerr << "Error parsing type: " << t << endl;
 			return return_type(NULL);;

@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.19 2007/10/08 01:21:49 fang Exp $
+	$Id: main_funcs.cc,v 1.20 2008/02/09 02:57:40 fang Exp $
  */
 
 #include <iostream>
@@ -57,7 +57,7 @@ using util::memory::count_ptr;
 	YYPARSE_PARAM for bison, or hacked by scripts for yacc.  
 	Coordinate with "parser/hackt-parse-options.h".
  */
-extern	int	hackt_parse(void*, YYSTYPE&, FILE*);
+extern	int	hackt_parse(void*, YYSTYPE&, flex::lexer_state&);
 extern	HAC::lexer::file_manager	hackt_parse_file_manager;
 extern	HAC::lexer::embedded_file_stack_type	hackt_embedded_file_stack;
 extern	int	__hacflat_lex(std::string&, flex::lexer_state&);
@@ -173,7 +173,8 @@ parse_to_AST(FILE* yyin) {
 	YYSTYPE lval;			// root token (was yyval)
 	NEVER_NULL(yyin);
 	try {
-		hackt_parse(NULL, lval, yyin);
+		flex::lexer_state f(yyin);
+		hackt_parse(NULL, lval, f);
 	} catch (...) {
 		return return_type(NULL);
 	}
@@ -205,7 +206,8 @@ parse_to_AST(const char* c, const compile_options& opt) {
 	if (yyin) {
 	try {
 		// pass in FILE*
-		hackt_parse(NULL, hackt_val, yyin);
+		flex::lexer_state f(yyin);
+		hackt_parse(NULL, hackt_val, f);
 	} catch (...) {
 		// then it's possible that the file_manager is not balanced.  
 		need_to_clean_up_file_manager = true;
