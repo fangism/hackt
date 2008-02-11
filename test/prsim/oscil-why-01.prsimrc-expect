@@ -1,0 +1,227 @@
+R.x[0]<X>, pull up/dn are both X
+  R.x[12]<X>, pull up/dn are both X
+    R.x[11]<X>, pull up/dn are both X
+      R.x[10]<X>, pull up/dn are both X
+        R.x[9]<X>, pull up/dn are both X
+          R.x[8]<X>, pull up/dn are both X
+            R.x[7]<X>, pull up/dn are both X
+              R.x[6]<X>, pull up/dn are both X
+                R.x[5]<X>, pull up/dn are both X
+                  R.x[4]<X>, pull up/dn are both X
+                    R.x[3]<X>, pull up/dn are both X
+                      R.x[2]<X>, pull up/dn are both X
+                        R.x[1]<X>, pull up/dn are both X
+                          R.x[0]<X>, cycle reached
+  _Reset<X>, pull up/dn undriven
+R.x[5]<X>, pull up/dn are both X
+  R.x[4]<X>, pull up/dn are both X
+    R.x[3]<X>, pull up/dn are both X
+      R.x[2]<X>, pull up/dn are both X
+        R.x[1]<X>, pull up/dn are both X
+          R.x[0]<X>, pull up/dn are both X
+            R.x[12]<X>, pull up/dn are both X
+              R.x[11]<X>, pull up/dn are both X
+                R.x[10]<X>, pull up/dn are both X
+                  R.x[9]<X>, pull up/dn are both X
+                    R.x[8]<X>, pull up/dn are both X
+                      R.x[7]<X>, pull up/dn are both X
+                        R.x[6]<X>, pull up/dn are both X
+                          R.x[5]<X>, cycle reached
+            _Reset<X>, pull up/dn undriven
+R.x[12]<X>, pull up/dn are both X
+  R.x[11]<X>, pull up/dn are both X
+    R.x[10]<X>, pull up/dn are both X
+      R.x[9]<X>, pull up/dn are both X
+        R.x[8]<X>, pull up/dn are both X
+          R.x[7]<X>, pull up/dn are both X
+            R.x[6]<X>, pull up/dn are both X
+              R.x[5]<X>, pull up/dn are both X
+                R.x[4]<X>, pull up/dn are both X
+                  R.x[3]<X>, pull up/dn are both X
+                    R.x[2]<X>, pull up/dn are both X
+                      R.x[1]<X>, pull up/dn are both X
+                        R.x[0]<X>, pull up/dn are both X
+                          R.x[12]<X>, cycle reached
+                          _Reset<X>, pull up/dn undriven
+setting _Reset : 1 
+	0	_Reset : 1
+R.x[12]<X>, pull up/dn are both X
+  R.x[11]<X>, pull up/dn are both X
+    R.x[10]<X>, pull up/dn are both X
+      R.x[9]<X>, pull up/dn are both X
+        R.x[8]<X>, pull up/dn are both X
+          R.x[7]<X>, pull up/dn are both X
+            R.x[6]<X>, pull up/dn are both X
+              R.x[5]<X>, pull up/dn are both X
+                R.x[4]<X>, pull up/dn are both X
+                  R.x[3]<X>, pull up/dn are both X
+                    R.x[2]<X>, pull up/dn are both X
+                      R.x[1]<X>, pull up/dn are both X
+                        R.x[0]<X>, pull up/dn are both X
+                          R.x[12]<X>, cycle reached
+setting _Reset : 0 
+	0	_Reset : 0
+	10	R.x[0] : 1	[by _Reset:=0]
+	20	R.x[1] : 0	[by R.x[0]:=1]
+	30	R.x[2] : 1	[by R.x[1]:=0]
+	40	R.x[3] : 0	[by R.x[2]:=1]
+	50	R.x[4] : 1	[by R.x[3]:=0]
+	60	R.x[5] : 0	[by R.x[4]:=1]
+	70	R.x[6] : 1	[by R.x[5]:=0]
+	80	R.x[7] : 0	[by R.x[6]:=1]
+	90	R.x[8] : 1	[by R.x[7]:=0]
+	100	R.x[9] : 0	[by R.x[8]:=1]
+	110	R.x[10] : 1	[by R.x[9]:=0]
+	120	R.x[11] : 0	[by R.x[10]:=1]
+	130	R.x[12] : 1	[by R.x[11]:=0]
+R.x[12] is not X.
+setting _Reset : 1 
+	130	_Reset : 1
+	140	R.x[0] : 0	[by _Reset:=1]
+	150	R.x[1] : 1	[by R.x[0]:=0]
+	160	R.x[2] : 0	[by R.x[1]:=1]
+	170	R.x[3] : 1	[by R.x[2]:=0]
+	180	R.x[4] : 0	[by R.x[3]:=1]
+	190	R.x[5] : 1	[by R.x[4]:=0]
+	200	R.x[6] : 0	[by R.x[5]:=1]
+	210	R.x[7] : 1	[by R.x[6]:=0]
+	220	R.x[8] : 0	[by R.x[7]:=1]
+	230	R.x[9] : 1	[by R.x[8]:=0]
+	240	R.x[10] : 0	[by R.x[9]:=1]
+	250	R.x[11] : 1	[by R.x[10]:=0]
+	260	R.x[12] : 0	[by R.x[11]:=1]
+	270	R.x[0] : 1	[by R.x[12]:=0]
+	280	R.x[1] : 0	[by R.x[0]:=1]
+	290	R.x[2] : 1	[by R.x[1]:=0]
+	300	R.x[3] : 0	[by R.x[2]:=1]
+	310	R.x[4] : 1	[by R.x[3]:=0]
+	320	R.x[5] : 0	[by R.x[4]:=1]
+	330	R.x[6] : 1	[by R.x[5]:=0]
+	340	R.x[7] : 0	[by R.x[6]:=1]
+	350	R.x[8] : 1	[by R.x[7]:=0]
+	360	R.x[9] : 0	[by R.x[8]:=1]
+	370	R.x[10] : 1	[by R.x[9]:=0]
+	380	R.x[11] : 0	[by R.x[10]:=1]
+	390	R.x[12] : 1	[by R.x[11]:=0]
+	400	R.x[0] : 0	[by R.x[12]:=1]
+	410	R.x[1] : 1	[by R.x[0]:=0]
+	420	R.x[2] : 0	[by R.x[1]:=1]
+	430	R.x[3] : 1	[by R.x[2]:=0]
+R.x[12] is not X.
+setting _Reset : X 
+WARNING: weak-interference `R.x[0]'
+>> cause: `_Reset' (val: X)
+	430	_Reset : X
+	440	R.x[4] : 0	[by R.x[3]:=1]
+WARNING: weak-interference `R.x[1]'
+>> cause: `R.x[0]' (val: X)
+	440	R.x[0] : X	[by _Reset:=X]
+	450	R.x[5] : 1	[by R.x[4]:=0]
+WARNING: weak-interference `R.x[2]'
+>> cause: `R.x[1]' (val: X)
+	450	R.x[1] : X	[by R.x[0]:=X]
+	460	R.x[6] : 0	[by R.x[5]:=1]
+WARNING: weak-interference `R.x[3]'
+>> cause: `R.x[2]' (val: X)
+	460	R.x[2] : X	[by R.x[1]:=X]
+	470	R.x[7] : 1	[by R.x[6]:=0]
+WARNING: weak-interference `R.x[4]'
+>> cause: `R.x[3]' (val: X)
+	470	R.x[3] : X	[by R.x[2]:=X]
+	480	R.x[8] : 0	[by R.x[7]:=1]
+WARNING: weak-interference `R.x[5]'
+>> cause: `R.x[4]' (val: X)
+	480	R.x[4] : X	[by R.x[3]:=X]
+	490	R.x[9] : 1	[by R.x[8]:=0]
+WARNING: weak-interference `R.x[6]'
+>> cause: `R.x[5]' (val: X)
+	490	R.x[5] : X	[by R.x[4]:=X]
+	500	R.x[10] : 0	[by R.x[9]:=1]
+WARNING: weak-interference `R.x[7]'
+>> cause: `R.x[6]' (val: X)
+	500	R.x[6] : X	[by R.x[5]:=X]
+	510	R.x[11] : 1	[by R.x[10]:=0]
+WARNING: weak-interference `R.x[8]'
+>> cause: `R.x[7]' (val: X)
+	510	R.x[7] : X	[by R.x[6]:=X]
+	520	R.x[12] : 0	[by R.x[11]:=1]
+WARNING: weak-interference `R.x[9]'
+>> cause: `R.x[8]' (val: X)
+	520	R.x[8] : X	[by R.x[7]:=X]
+	530	R.x[0] : 1	[by R.x[12]:=0]
+WARNING: weak-interference `R.x[10]'
+>> cause: `R.x[9]' (val: X)
+	530	R.x[9] : X	[by R.x[8]:=X]
+	540	R.x[1] : 0	[by R.x[0]:=1]
+WARNING: weak-interference `R.x[11]'
+>> cause: `R.x[10]' (val: X)
+	540	R.x[10] : X	[by R.x[9]:=X]
+	550	R.x[2] : 1	[by R.x[1]:=0]
+WARNING: weak-interference `R.x[12]'
+>> cause: `R.x[11]' (val: X)
+	550	R.x[11] : X	[by R.x[10]:=X]
+	560	R.x[3] : 0	[by R.x[2]:=1]
+WARNING: weak-interference `R.x[0]'
+>> cause: `R.x[12]' (val: X)
+	560	R.x[12] : X	[by R.x[11]:=X]
+	570	R.x[4] : 1	[by R.x[3]:=0]
+WARNING: weak-interference `R.x[1]'
+>> cause: `R.x[0]' (val: X)
+	570	R.x[0] : X	[by R.x[12]:=X]
+	580	R.x[5] : 0	[by R.x[4]:=1]
+WARNING: weak-interference `R.x[2]'
+>> cause: `R.x[1]' (val: X)
+	580	R.x[1] : X	[by R.x[0]:=X]
+	590	R.x[6] : 1	[by R.x[5]:=0]
+WARNING: weak-interference `R.x[3]'
+>> cause: `R.x[2]' (val: X)
+	590	R.x[2] : X	[by R.x[1]:=X]
+	600	R.x[7] : 0	[by R.x[6]:=1]
+WARNING: weak-interference `R.x[4]'
+>> cause: `R.x[3]' (val: X)
+	600	R.x[3] : X	[by R.x[2]:=X]
+	610	R.x[8] : 1	[by R.x[7]:=0]
+WARNING: weak-interference `R.x[5]'
+>> cause: `R.x[4]' (val: X)
+	610	R.x[4] : X	[by R.x[3]:=X]
+	620	R.x[9] : 0	[by R.x[8]:=1]
+WARNING: weak-interference `R.x[6]'
+>> cause: `R.x[5]' (val: X)
+	620	R.x[5] : X	[by R.x[4]:=X]
+	630	R.x[10] : 1	[by R.x[9]:=0]
+WARNING: weak-interference `R.x[7]'
+>> cause: `R.x[6]' (val: X)
+	630	R.x[6] : X	[by R.x[5]:=X]
+	640	R.x[11] : 0	[by R.x[10]:=1]
+WARNING: weak-interference `R.x[8]'
+>> cause: `R.x[7]' (val: X)
+	640	R.x[7] : X	[by R.x[6]:=X]
+	650	R.x[12] : 1	[by R.x[11]:=0]
+WARNING: weak-interference `R.x[9]'
+>> cause: `R.x[8]' (val: X)
+	650	R.x[8] : X	[by R.x[7]:=X]
+WARNING: weak-interference `R.x[10]'
+>> cause: `R.x[9]' (val: X)
+	660	R.x[9] : X	[by R.x[8]:=X]
+WARNING: weak-interference `R.x[11]'
+>> cause: `R.x[10]' (val: X)
+	670	R.x[10] : X	[by R.x[9]:=X]
+WARNING: weak-interference `R.x[12]'
+>> cause: `R.x[11]' (val: X)
+	680	R.x[11] : X	[by R.x[10]:=X]
+	690	R.x[12] : X	[by R.x[11]:=X]
+R.x[12]<X>, pull up/dn are both X
+  R.x[11]<X>, pull up/dn are both X
+    R.x[10]<X>, pull up/dn are both X
+      R.x[9]<X>, pull up/dn are both X
+        R.x[8]<X>, pull up/dn are both X
+          R.x[7]<X>, pull up/dn are both X
+            R.x[6]<X>, pull up/dn are both X
+              R.x[5]<X>, pull up/dn are both X
+                R.x[4]<X>, pull up/dn are both X
+                  R.x[3]<X>, pull up/dn are both X
+                    R.x[2]<X>, pull up/dn are both X
+                      R.x[1]<X>, pull up/dn are both X
+                        R.x[0]<X>, pull up/dn are both X
+                          R.x[12]<X>, cycle reached
+                          _Reset<X>, pull up/dn undriven

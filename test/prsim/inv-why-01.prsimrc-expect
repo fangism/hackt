@@ -1,0 +1,26 @@
+why is a X? 
+a<X>, pull up/dn undriven
+why is b X? 
+b<X>, pull up/dn are both X
+  a<X>, pull up/dn undriven
+why is c X? 
+c<X>, pull up/dn are both X
+  b<X>, pull up/dn are both X
+    a<X>, pull up/dn undriven
+############### 
+setting a to 0 
+why is a X? 
+a is not X.
+why is b X? 
+b<X>, pending event -> 1
+why is c X? 
+c<X>, pull up/dn are both X
+  b<X>, pending event -> 1
+############### 
+propagating to b 
+why is a X? 
+a is not X.
+why is b X? 
+b is not X.
+why is c X? 
+c<X>, pending event -> 0

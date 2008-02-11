@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.22 2008/02/09 23:37:49 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.23 2008/02/11 19:46:19 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -43,12 +43,14 @@ HACKT_PARSE_TEST_PASSES = \
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	comment-01 comment-02 comment-04 comment-06 \
 	celem-01 celem-02 celem-03 celem-04 \
+	celem-why-01 \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-07 inv-08 inv-09 \
 	inv-11 inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
 	inv-18 inv-19 inv-20 inv-20a inv-21 inv-21a inv-22 inv-23 \
 	inv-24 inv-25 inv-26 inv-27 \
 	inv-alt-01 inv-alt-02 inv-alt-03 inv-alt-04 inv-alt-05 inv-alt-06 \
 	inv-alt-07 inv-alt-08 inv-alt-09 inv-alt-10 \
+	inv-why-01 \
 	and-01 nand-01 nand-02 or-01 nor-01 nor-02 nor-04 \
 	unused-01 \
 	expr-limit-a-01 \
@@ -69,6 +71,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	oscil-unset-01 oscil-unset-02 oscil-unset-03 \
 	oscil-backtrace-01 \
 	oscil-status-01 \
+	oscil-why-01 \
 	half-celem-01 \
 	celem-share-01 celem-share-02 \
 	deep-01 deep-02 \
@@ -95,6 +98,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	celem-fb-01 \
 	half-keeper-a-01 half-keeper-a-02 \
 	cross-coupled-01 cross-coupled-weak-01 \
+	cross-coupled-why-01 \
 	cbit_test_stat-01 \
 	cross-pull-a-01 cross-pull-a-02 \
 	bitline-a-01 bitline-a-02 \

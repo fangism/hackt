@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.10 2008/02/06 06:24:49 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.11 2008/02/11 19:46:18 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -327,6 +327,7 @@ public:
 		Alternative: use map for sparser exclusive rings.  
 	 */
 	typedef	std::set<node_index_type>	ring_set_type;
+	typedef	std::set<node_index_type>	node_set_type;
 protected:
 	typedef	vector<ring_set_type>
 						mk_excl_ring_map_type;
@@ -1041,6 +1042,9 @@ public:
 	dump_node_fanin(ostream&, const node_index_type, const bool) const;
 
 	ostream&
+	dump_node_why_X(ostream&, const node_index_type) const;
+
+	ostream&
 	dump_dangling_unknown_nodes(ostream&, const bool) const;
 
 	ostream&
@@ -1069,6 +1073,12 @@ public:
 	dump_checkpoint(ostream&, istream&);
 
 private:
+	void
+	__get_X_fanins(const expr_index_type, node_set_type&) const;
+
+	ostream&
+	__node_why_X(ostream&, const node_index_type, node_set_type&) const;
+
 	void
 	head_sentinel(void);
 

@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.9 2008/02/06 06:24:46 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.10 2008/02/11 19:46:14 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2085,6 +2085,42 @@ BackTrace::usage(ostream& o) {
 }
 
 #endif	// PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/why-x.texi
+@deffn Command why-x node
+Print causality chain for why a particular node (at value X) remains X.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyX, "why-x", info, 
+	"recursively trace cause of X value on node")
+
+int
+WhyX::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.dump_node_why_X(cout, ni);
+		return Command::NORMAL;
+	} else {
+		return Command::BADARG;
+	}
+}
+}
+
+void
+WhyX::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o <<
+"Recursively finds the cause for the node being X through other X nodes."
+		<< endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.29 2008/02/06 06:24:47 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.30 2008/02/11 19:46:16 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -46,6 +46,7 @@
 #include "util/IO_utils.tcc"
 #include "util/binders.h"
 #include "util/utypes.h"
+#include "util/indent.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -113,6 +114,7 @@ using util::read_value;
 using util::write_value;
 using util::bind2nd_argval;
 using util::bind2nd_argval_void;
+using util::auto_indent;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -3700,8 +3702,8 @@ State::dump_node_fanin(ostream& o, const node_index_type ni,
 	size_t w = NORMAL_RULE;
 do {
 #endif
-	const node_index_type ui = n.pull_up_index STR_INDEX(w);
-	const node_index_type di = n.pull_dn_index STR_INDEX(w);
+	const expr_index_type ui = n.pull_up_index STR_INDEX(w);
+	const expr_index_type di = n.pull_dn_index STR_INDEX(w);
 	if (ui) {
 		dump_subexpr(o, ui, v)
 			<< " -> " << cn << '+';
@@ -3723,6 +3725,149 @@ do {
 } while (w<2);		// even if !weak_rules_enabled()
 #endif
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints why a node is X.
+ */
+ostream&
+State::dump_node_why_X(ostream& o, const node_index_type ni) const {
+	// unique set to terminate cyclic recursion
+	const node_type& n(get_node(ni));
+if (n.current_value() == node_type::LOGIC_OTHER) {
+	node_set_type u;
+	return __node_why_X(o, ni, u);
+} else {
+	o << get_node_canonical_name(ni) << " is not X." << endl;
+}
+	return o;
+}
+
+ostream&
+State::__node_why_X(ostream& o, const node_index_type ni, 
+		node_set_type& u) const {
+	const std::pair<node_set_type::iterator, bool> p(u.insert(ni));
+	const string nn(get_node_canonical_name(ni));
+	o << auto_indent << nn << "<X>";
+if (p.second) {
+	// inserted uniquely
+	const node_type& n(get_node(ni));
+	INVARIANT(n.current_value() == node_type::LOGIC_OTHER);
+	// inspect pull state (and event queue)
+	const event_index_type pe = n.get_event();
+	if (pe) {
+		o << ", pending event -> " <<
+			node_type::value_to_char[size_t(get_event(pe).val)];
+	}
+#if PRSIM_WEAK_RULES
+	size_t w = NORMAL_RULE;
+do {
+#endif
+	const expr_index_type ui = n.pull_up_index STR_INDEX(w);
+	const expr_index_type di = n.pull_dn_index STR_INDEX(w);
+	const pull_enum up = get_pull(ui);
+	const pull_enum dp = get_pull(di);
+	const size_t ux = (up == expr_type::PULL_WEAK);
+	const size_t dx = (dp == expr_type::PULL_WEAK);
+	node_set_type xs;
+	switch (ux +dx) {
+	case 0:
+		if (up == expr_type::PULL_ON && dp == expr_type::PULL_ON) {
+			o << ", pull up/dn interfere";
+		} else
+		if (
+#if PRSIM_WEAK_RULES
+			w &&
+#endif
+				up == expr_type::PULL_OFF &&
+				dp == expr_type::PULL_OFF) {
+			o << ", pull up/dn undriven";
+		} else if (w) {
+			o << endl;
+		}
+		break;
+	case 1: {	// one pull is X
+		// recursively, find X nodes that are exposed
+		const expr_index_type xi = (ux ? ui : di);
+		const expr_index_type oi = (ux ? di : ui);	// other pull
+		if (get_pull(oi) == expr_type::PULL_ON) {
+			o << ", weak-interference vs. " << (ux ? "dn" : "up");
+		} else {	// is OFF
+			o << ", unknown-pull " << (ux ? "up" : "dn");
+		}
+		INVARIANT(xi);
+		__get_X_fanins(xi, xs);
+		break;
+	}
+	case 2:
+		o << ", pull up/dn are both X";
+		__get_X_fanins(ui, xs);
+		__get_X_fanins(di, xs);
+		break;
+	default:
+		DIE;
+	}	// end switch
+#if PRSIM_WEAK_RULES
+	if (up != expr_type::PULL_OFF ||
+			dp != expr_type::PULL_OFF) {
+#endif
+		o << endl;
+		INDENT_SECTION(o);
+		node_set_type::const_iterator ii(xs.begin()), ee(xs.end());
+		for ( ; ii!=ee; ++ii) {
+			__node_why_X(o, *ii, u);	// recursion
+		}
+#if PRSIM_WEAK_RULES
+		break;
+	} else if (w) {
+		o << endl;
+	}
+	++w;
+} while (w<2);		// even if !weak_rules_enabled()
+#endif
+	u.erase(ni);
+} else {
+	// was not inserted uniquely
+	return o << ", cycle reached" << endl;
+}
+	return o;
+}	// end __node_why_X
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In an expression tree, find nodes that are exposed X's.
+	Cut-off X nodes will not be visited.  
+	1s and 0s are not visited.  
+	Should follow similar flow to dump_subexpr.
+	\param u set of X node to accumulate
+	TODO: generalize this to take any pull-state value!!!
+ */
+void
+State::__get_X_fanins(const expr_index_type xi, node_set_type& u) const {
+	ISE_INVARIANT(xi);
+	ISE_INVARIANT(xi < expr_pool.size());
+	const expr_type& x(expr_pool[xi]);
+	ISE_INVARIANT(x.pull_state() == expr_type::PULL_WEAK);
+	const graph_node_type& g(expr_graph_node_pool[xi]);
+	typedef	graph_node_type::const_iterator		const_iterator;
+	const_iterator ci(g.begin()), ce(g.end());
+	for ( ; ci!=ce; ++ci) {
+		INVARIANT(ci->second);
+		if (ci->first) {
+			// is a leaf node, visit if value is X
+			if (get_node(ci->second).current_value()
+					== node_type::LOGIC_OTHER) {
+				u.insert(ci->second);
+			}
+		} else {
+			// is a sub-expresion, recurse if pull is X
+			if (expr_pool[ci->second].pull_state()
+					== expr_type::PULL_WEAK) {
+				__get_X_fanins(ci->second, u);
+			}
+		}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

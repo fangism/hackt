@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-02-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-34:
+	  prsim command: 'why-x', recursively traces back the source of
+		signals in the X state, through other X signals, 
+		and other related diagnostics, also detects cycles. 
+		TODO: maintain a global set for pruning.  
+	  Documented and minimally tested with new test cases.  
+	  Coming soon: 'why-not' [01]
+
+
 2008-02-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-33:
