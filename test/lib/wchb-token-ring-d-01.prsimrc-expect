@@ -1,0 +1,211 @@
+initially all X. 
+L.e:X, pull up/dn are both X
+  X._le:X, pull up/dn are both X
+    X._r.d[0]:X, pull up/dn are both X
+      L.d[0]:X, pull up/dn are both X
+        Z._r.d[0]:X, pull up/dn are both X
+          L.e:X, cycle reached
+          R.d[0]:X, pull up/dn are both X
+            Y._r.d[0]:X, pull up/dn are both X
+              M.d[0]:X, pull up/dn are both X
+                X._r.d[0]:X, cycle reached
+              R.e:X, pull up/dn are both X
+                Z._le:X, pull up/dn are both X
+                  Z._r.d[0]:X, cycle reached
+                  Z._r.d[1]:X, pull up/dn are both X
+                    L.e:X, cycle reached
+                    R.d[1]:X, pull up/dn are both X
+                      Y._r.d[1]:X, pull up/dn are both X
+                        M.d[1]:X, pull up/dn are both X
+                          X._r.d[1]:X, pull up/dn are both X
+                            L.d[1]:X, pull up/dn are both X
+                              Z._r.d[1]:X, cycle reached
+                            M.e:X, pull up/dn are both X
+                              Y._le:X, pull up/dn are both X
+                                Y._r.d[0]:X, cycle reached
+                                Y._r.d[1]:X, cycle reached
+                            _Reset:X, pull up/dn undriven
+                        R.e:X, cycle reached
+                        _Reset:X, (visited before, see above)
+                    _Reset:X, (visited before, see above)
+              _Reset:X, (visited before, see above)
+          _Reset:X, (visited before, see above)
+      M.e:X, (visited before, see above)
+      _Reset:X, (visited before, see above)
+    X._r.d[1]:X, (visited before, see above)
+L.d[0]:X, pull up/dn are both X
+  Z._r.d[0]:X, pull up/dn are both X
+    L.e:X, pull up/dn are both X
+      X._le:X, pull up/dn are both X
+        X._r.d[0]:X, pull up/dn are both X
+          L.d[0]:X, cycle reached
+          M.e:X, pull up/dn are both X
+            Y._le:X, pull up/dn are both X
+              Y._r.d[0]:X, pull up/dn are both X
+                M.d[0]:X, pull up/dn are both X
+                  X._r.d[0]:X, cycle reached
+                R.e:X, pull up/dn are both X
+                  Z._le:X, pull up/dn are both X
+                    Z._r.d[0]:X, cycle reached
+                    Z._r.d[1]:X, pull up/dn are both X
+                      L.e:X, cycle reached
+                      R.d[1]:X, pull up/dn are both X
+                        Y._r.d[1]:X, pull up/dn are both X
+                          M.d[1]:X, pull up/dn are both X
+                            X._r.d[1]:X, pull up/dn are both X
+                              L.d[1]:X, pull up/dn are both X
+                                Z._r.d[1]:X, cycle reached
+                              M.e:X, cycle reached
+                              _Reset:X, pull up/dn undriven
+                          R.e:X, cycle reached
+                          _Reset:X, (visited before, see above)
+                      _Reset:X, (visited before, see above)
+                _Reset:X, (visited before, see above)
+              Y._r.d[1]:X, (visited before, see above)
+          _Reset:X, (visited before, see above)
+        X._r.d[1]:X, (visited before, see above)
+    R.d[0]:X, pull up/dn are both X
+      Y._r.d[0]:X, (visited before, see above)
+    _Reset:X, (visited before, see above)
+resetting ... 
+WARNING: weak-interference `X._r.d[0]'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `X._r.d[1]'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `Y._r.d[0]'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `Y._r.d[1]'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `Z._r.d[0]'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `Z._r.d[1]'
+>> cause: `_Reset' (val: 0)
+X nodes:
+L.d[0] L.d[1] L.e M.d[0] M.d[1] M.e R.d[0] R.d[1] R.e X._r.d[0] X._r.d[1] X._le Y._r.d[0] Y._r.d[1] Y._le Z._r.d[0] Z._r.d[1] Z._le 
+L.e:X, pull up/dn are both X
+  X._le:X, pull up/dn are both X
+    X._r.d[0]:X, weak-interference vs. up
+      L.d[0]:X, pull up/dn are both X
+        Z._r.d[0]:X, weak-interference vs. up
+          L.e:X, cycle reached
+          R.d[0]:X, pull up/dn are both X
+            Y._r.d[0]:X, weak-interference vs. up
+              M.d[0]:X, pull up/dn are both X
+                X._r.d[0]:X, cycle reached
+              R.e:X, pull up/dn are both X
+                Z._le:X, pull up/dn are both X
+                  Z._r.d[0]:X, cycle reached
+                  Z._r.d[1]:X, weak-interference vs. up
+                    L.e:X, cycle reached
+                    R.d[1]:X, pull up/dn are both X
+                      Y._r.d[1]:X, weak-interference vs. up
+                        M.d[1]:X, pull up/dn are both X
+                          X._r.d[1]:X, weak-interference vs. up
+                            L.d[1]:X, pull up/dn are both X
+                              Z._r.d[1]:X, cycle reached
+                            M.e:X, pull up/dn are both X
+                              Y._le:X, pull up/dn are both X
+                                Y._r.d[0]:X, cycle reached
+                                Y._r.d[1]:X, cycle reached
+                        R.e:X, cycle reached
+      M.e:X, (visited before, see above)
+    X._r.d[1]:X, (visited before, see above)
+L.d[0]:X, pull up/dn are both X
+  Z._r.d[0]:X, weak-interference vs. up
+    L.e:X, pull up/dn are both X
+      X._le:X, pull up/dn are both X
+        X._r.d[0]:X, weak-interference vs. up
+          L.d[0]:X, cycle reached
+          M.e:X, pull up/dn are both X
+            Y._le:X, pull up/dn are both X
+              Y._r.d[0]:X, weak-interference vs. up
+                M.d[0]:X, pull up/dn are both X
+                  X._r.d[0]:X, cycle reached
+                R.e:X, pull up/dn are both X
+                  Z._le:X, pull up/dn are both X
+                    Z._r.d[0]:X, cycle reached
+                    Z._r.d[1]:X, weak-interference vs. up
+                      L.e:X, cycle reached
+                      R.d[1]:X, pull up/dn are both X
+                        Y._r.d[1]:X, weak-interference vs. up
+                          M.d[1]:X, pull up/dn are both X
+                            X._r.d[1]:X, weak-interference vs. up
+                              L.d[1]:X, pull up/dn are both X
+                                Z._r.d[1]:X, cycle reached
+                              M.e:X, cycle reached
+                          R.e:X, cycle reached
+              Y._r.d[1]:X, (visited before, see above)
+        X._r.d[1]:X, (visited before, see above)
+    R.d[0]:X, pull up/dn are both X
+      Y._r.d[0]:X, (visited before, see above)
+releasing ... 
+WARNING: weak-interference `X._r.d[0]'
+>> cause: `_Reset' (val: 1)
+WARNING: weak-interference `X._r.d[1]'
+>> cause: `_Reset' (val: 1)
+WARNING: weak-interference `Y._r.d[0]'
+>> cause: `_Reset' (val: 1)
+WARNING: weak-interference `Y._r.d[1]'
+>> cause: `_Reset' (val: 1)
+WARNING: weak-interference `Z._r.d[0]'
+>> cause: `_Reset' (val: 1)
+WARNING: weak-interference `Z._r.d[1]'
+>> cause: `_Reset' (val: 1)
+X nodes:
+L.d[0] L.d[1] L.e M.d[0] M.d[1] M.e R.d[0] R.d[1] R.e X._r.d[0] X._r.d[1] X._le Y._r.d[0] Y._r.d[1] Y._le Z._r.d[0] Z._r.d[1] Z._le 
+L.e:X, pull up/dn are both X
+  X._le:X, pull up/dn are both X
+    X._r.d[0]:X, pull up/dn are both X
+      L.d[0]:X, pull up/dn are both X
+        Z._r.d[0]:X, pull up/dn are both X
+          L.e:X, cycle reached
+          R.d[0]:X, pull up/dn are both X
+            Y._r.d[0]:X, pull up/dn are both X
+              M.d[0]:X, pull up/dn are both X
+                X._r.d[0]:X, cycle reached
+              R.e:X, pull up/dn are both X
+                Z._le:X, pull up/dn are both X
+                  Z._r.d[0]:X, cycle reached
+                  Z._r.d[1]:X, pull up/dn are both X
+                    L.e:X, cycle reached
+                    R.d[1]:X, pull up/dn are both X
+                      Y._r.d[1]:X, pull up/dn are both X
+                        M.d[1]:X, pull up/dn are both X
+                          X._r.d[1]:X, pull up/dn are both X
+                            L.d[1]:X, pull up/dn are both X
+                              Z._r.d[1]:X, cycle reached
+                            M.e:X, pull up/dn are both X
+                              Y._le:X, pull up/dn are both X
+                                Y._r.d[0]:X, cycle reached
+                                Y._r.d[1]:X, cycle reached
+                        R.e:X, cycle reached
+      M.e:X, (visited before, see above)
+    X._r.d[1]:X, (visited before, see above)
+L.d[0]:X, pull up/dn are both X
+  Z._r.d[0]:X, pull up/dn are both X
+    L.e:X, pull up/dn are both X
+      X._le:X, pull up/dn are both X
+        X._r.d[0]:X, pull up/dn are both X
+          L.d[0]:X, cycle reached
+          M.e:X, pull up/dn are both X
+            Y._le:X, pull up/dn are both X
+              Y._r.d[0]:X, pull up/dn are both X
+                M.d[0]:X, pull up/dn are both X
+                  X._r.d[0]:X, cycle reached
+                R.e:X, pull up/dn are both X
+                  Z._le:X, pull up/dn are both X
+                    Z._r.d[0]:X, cycle reached
+                    Z._r.d[1]:X, pull up/dn are both X
+                      L.e:X, cycle reached
+                      R.d[1]:X, pull up/dn are both X
+                        Y._r.d[1]:X, pull up/dn are both X
+                          M.d[1]:X, pull up/dn are both X
+                            X._r.d[1]:X, pull up/dn are both X
+                              L.d[1]:X, pull up/dn are both X
+                                Z._r.d[1]:X, cycle reached
+                              M.e:X, cycle reached
+                          R.e:X, cycle reached
+              Y._r.d[1]:X, (visited before, see above)
+        X._r.d[1]:X, (visited before, see above)
+    R.d[0]:X, pull up/dn are both X
+      Y._r.d[0]:X, (visited before, see above)

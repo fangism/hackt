@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.30 2008/02/11 19:46:16 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.31 2008/02/12 01:05:50 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3736,21 +3736,29 @@ State::dump_node_why_X(ostream& o, const node_index_type ni) const {
 	// unique set to terminate cyclic recursion
 	const node_type& n(get_node(ni));
 if (n.current_value() == node_type::LOGIC_OTHER) {
-	node_set_type u;
-	return __node_why_X(o, ni, u);
+	node_set_type u, v;	// cycle-detect set, globally-visited set
+	return __node_why_X(o, ni, u, v);
 } else {
 	o << get_node_canonical_name(ni) << " is not X." << endl;
 }
 	return o;
 }
 
+/**
+	\param u the current stack of visited nodes, for cycle detection, 
+		is pushed and popped like a stack.
+	\param v the set of all visited nodes, for cross-referencing
+		already visited sub-trees, accumulatess without popping.  
+ */
 ostream&
 State::__node_why_X(ostream& o, const node_index_type ni, 
-		node_set_type& u) const {
-	const std::pair<node_set_type::iterator, bool> p(u.insert(ni));
+		node_set_type& u, node_set_type& v) const {
+	const std::pair<node_set_type::iterator, bool>
+		p(u.insert(ni)), y(v.insert(ni));
 	const string nn(get_node_canonical_name(ni));
-	o << auto_indent << nn << "<X>";
+	o << auto_indent << nn << ":X";
 if (p.second) {
+if (y.second) {
 	// inserted uniquely
 	const node_type& n(get_node(ni));
 	INVARIANT(n.current_value() == node_type::LOGIC_OTHER);
@@ -3816,7 +3824,7 @@ do {
 		INDENT_SECTION(o);
 		node_set_type::const_iterator ii(xs.begin()), ee(xs.end());
 		for ( ; ii!=ee; ++ii) {
-			__node_why_X(o, *ii, u);	// recursion
+			__node_why_X(o, *ii, u, v);	// recursion
 		}
 #if PRSIM_WEAK_RULES
 		break;
@@ -3826,9 +3834,14 @@ do {
 	++w;
 } while (w<2);		// even if !weak_rules_enabled()
 #endif
-	u.erase(ni);
 } else {
-	// was not inserted uniquely
+	// don't print the same subtree twice, just cross-reference
+	o << ", (visited before, see above)" << endl;
+}	// end if visited
+	u.erase(ni);
+	return o;
+} else {
+	INVARIANT(!y.second);
 	return o << ", cycle reached" << endl;
 }
 	return o;

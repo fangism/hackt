@@ -1,64 +1,64 @@
-R.x[0]<X>, pull up/dn are both X
-  R.x[12]<X>, pull up/dn are both X
-    R.x[11]<X>, pull up/dn are both X
-      R.x[10]<X>, pull up/dn are both X
-        R.x[9]<X>, pull up/dn are both X
-          R.x[8]<X>, pull up/dn are both X
-            R.x[7]<X>, pull up/dn are both X
-              R.x[6]<X>, pull up/dn are both X
-                R.x[5]<X>, pull up/dn are both X
-                  R.x[4]<X>, pull up/dn are both X
-                    R.x[3]<X>, pull up/dn are both X
-                      R.x[2]<X>, pull up/dn are both X
-                        R.x[1]<X>, pull up/dn are both X
-                          R.x[0]<X>, cycle reached
-  _Reset<X>, pull up/dn undriven
-R.x[5]<X>, pull up/dn are both X
-  R.x[4]<X>, pull up/dn are both X
-    R.x[3]<X>, pull up/dn are both X
-      R.x[2]<X>, pull up/dn are both X
-        R.x[1]<X>, pull up/dn are both X
-          R.x[0]<X>, pull up/dn are both X
-            R.x[12]<X>, pull up/dn are both X
-              R.x[11]<X>, pull up/dn are both X
-                R.x[10]<X>, pull up/dn are both X
-                  R.x[9]<X>, pull up/dn are both X
-                    R.x[8]<X>, pull up/dn are both X
-                      R.x[7]<X>, pull up/dn are both X
-                        R.x[6]<X>, pull up/dn are both X
-                          R.x[5]<X>, cycle reached
-            _Reset<X>, pull up/dn undriven
-R.x[12]<X>, pull up/dn are both X
-  R.x[11]<X>, pull up/dn are both X
-    R.x[10]<X>, pull up/dn are both X
-      R.x[9]<X>, pull up/dn are both X
-        R.x[8]<X>, pull up/dn are both X
-          R.x[7]<X>, pull up/dn are both X
-            R.x[6]<X>, pull up/dn are both X
-              R.x[5]<X>, pull up/dn are both X
-                R.x[4]<X>, pull up/dn are both X
-                  R.x[3]<X>, pull up/dn are both X
-                    R.x[2]<X>, pull up/dn are both X
-                      R.x[1]<X>, pull up/dn are both X
-                        R.x[0]<X>, pull up/dn are both X
-                          R.x[12]<X>, cycle reached
-                          _Reset<X>, pull up/dn undriven
+R.x[0]:X, pull up/dn are both X
+  R.x[12]:X, pull up/dn are both X
+    R.x[11]:X, pull up/dn are both X
+      R.x[10]:X, pull up/dn are both X
+        R.x[9]:X, pull up/dn are both X
+          R.x[8]:X, pull up/dn are both X
+            R.x[7]:X, pull up/dn are both X
+              R.x[6]:X, pull up/dn are both X
+                R.x[5]:X, pull up/dn are both X
+                  R.x[4]:X, pull up/dn are both X
+                    R.x[3]:X, pull up/dn are both X
+                      R.x[2]:X, pull up/dn are both X
+                        R.x[1]:X, pull up/dn are both X
+                          R.x[0]:X, cycle reached
+  _Reset:X, pull up/dn undriven
+R.x[5]:X, pull up/dn are both X
+  R.x[4]:X, pull up/dn are both X
+    R.x[3]:X, pull up/dn are both X
+      R.x[2]:X, pull up/dn are both X
+        R.x[1]:X, pull up/dn are both X
+          R.x[0]:X, pull up/dn are both X
+            R.x[12]:X, pull up/dn are both X
+              R.x[11]:X, pull up/dn are both X
+                R.x[10]:X, pull up/dn are both X
+                  R.x[9]:X, pull up/dn are both X
+                    R.x[8]:X, pull up/dn are both X
+                      R.x[7]:X, pull up/dn are both X
+                        R.x[6]:X, pull up/dn are both X
+                          R.x[5]:X, cycle reached
+            _Reset:X, pull up/dn undriven
+R.x[12]:X, pull up/dn are both X
+  R.x[11]:X, pull up/dn are both X
+    R.x[10]:X, pull up/dn are both X
+      R.x[9]:X, pull up/dn are both X
+        R.x[8]:X, pull up/dn are both X
+          R.x[7]:X, pull up/dn are both X
+            R.x[6]:X, pull up/dn are both X
+              R.x[5]:X, pull up/dn are both X
+                R.x[4]:X, pull up/dn are both X
+                  R.x[3]:X, pull up/dn are both X
+                    R.x[2]:X, pull up/dn are both X
+                      R.x[1]:X, pull up/dn are both X
+                        R.x[0]:X, pull up/dn are both X
+                          R.x[12]:X, cycle reached
+                          _Reset:X, pull up/dn undriven
 setting _Reset : 1 
 	0	_Reset : 1
-R.x[12]<X>, pull up/dn are both X
-  R.x[11]<X>, pull up/dn are both X
-    R.x[10]<X>, pull up/dn are both X
-      R.x[9]<X>, pull up/dn are both X
-        R.x[8]<X>, pull up/dn are both X
-          R.x[7]<X>, pull up/dn are both X
-            R.x[6]<X>, pull up/dn are both X
-              R.x[5]<X>, pull up/dn are both X
-                R.x[4]<X>, pull up/dn are both X
-                  R.x[3]<X>, pull up/dn are both X
-                    R.x[2]<X>, pull up/dn are both X
-                      R.x[1]<X>, pull up/dn are both X
-                        R.x[0]<X>, pull up/dn are both X
-                          R.x[12]<X>, cycle reached
+R.x[12]:X, pull up/dn are both X
+  R.x[11]:X, pull up/dn are both X
+    R.x[10]:X, pull up/dn are both X
+      R.x[9]:X, pull up/dn are both X
+        R.x[8]:X, pull up/dn are both X
+          R.x[7]:X, pull up/dn are both X
+            R.x[6]:X, pull up/dn are both X
+              R.x[5]:X, pull up/dn are both X
+                R.x[4]:X, pull up/dn are both X
+                  R.x[3]:X, pull up/dn are both X
+                    R.x[2]:X, pull up/dn are both X
+                      R.x[1]:X, pull up/dn are both X
+                        R.x[0]:X, pull up/dn are both X
+                          R.x[12]:X, cycle reached
 setting _Reset : 0 
 	0	_Reset : 0
 	10	R.x[0] : 1	[by _Reset:=0]
@@ -210,18 +210,18 @@ WARNING: weak-interference `R.x[12]'
 >> cause: `R.x[11]' (val: X)
 	680	R.x[11] : X	[by R.x[10]:=X]
 	690	R.x[12] : X	[by R.x[11]:=X]
-R.x[12]<X>, pull up/dn are both X
-  R.x[11]<X>, pull up/dn are both X
-    R.x[10]<X>, pull up/dn are both X
-      R.x[9]<X>, pull up/dn are both X
-        R.x[8]<X>, pull up/dn are both X
-          R.x[7]<X>, pull up/dn are both X
-            R.x[6]<X>, pull up/dn are both X
-              R.x[5]<X>, pull up/dn are both X
-                R.x[4]<X>, pull up/dn are both X
-                  R.x[3]<X>, pull up/dn are both X
-                    R.x[2]<X>, pull up/dn are both X
-                      R.x[1]<X>, pull up/dn are both X
-                        R.x[0]<X>, pull up/dn are both X
-                          R.x[12]<X>, cycle reached
-                          _Reset<X>, pull up/dn undriven
+R.x[12]:X, pull up/dn are both X
+  R.x[11]:X, pull up/dn are both X
+    R.x[10]:X, pull up/dn are both X
+      R.x[9]:X, pull up/dn are both X
+        R.x[8]:X, pull up/dn are both X
+          R.x[7]:X, pull up/dn are both X
+            R.x[6]:X, pull up/dn are both X
+              R.x[5]:X, pull up/dn are both X
+                R.x[4]:X, pull up/dn are both X
+                  R.x[3]:X, pull up/dn are both X
+                    R.x[2]:X, pull up/dn are both X
+                      R.x[1]:X, pull up/dn are both X
+                        R.x[0]:X, pull up/dn are both X
+                          R.x[12]:X, cycle reached
+                          _Reset:X, pull up/dn undriven

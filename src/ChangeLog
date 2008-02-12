@@ -5,6 +5,13 @@
 
 2008-02-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-35:
+	  prism::why-x: now prune already-visited backtrace paths, 
+		makes output much more scalable and comprehensible for huge
+		directed-acyclic clouds of X nodes.  
+	  Tested in lib/ on token-ring structures.  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-34:
 	  prsim command: 'why-x', recursively traces back the source of
 		signals in the X state, through other X signals, 

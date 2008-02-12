@@ -1,0 +1,63 @@
+initially all X. 
+L.e:X, pull up/dn are both X
+  X.fore.rv:X, pull up/dn are both X
+    X.fore._r.d[0]:X, pull up/dn are both X
+      L.d[0]:X, pull up/dn are both X
+        X.aft._r.d[0]:X, pull up/dn are both X
+          L.e:X, cycle reached
+          _Reset:X, pull up/dn undriven
+          X.M.d[0]:X, pull up/dn are both X
+            _Reset:X, (visited before, see above)
+            X.fore._r.d[0]:X, cycle reached
+      Reset:X, pull up/dn undriven
+      X.M.e:X, pull up/dn are both X
+        X.aft.rv:X, pull up/dn are both X
+          X.aft._r.d[0]:X, (visited before, see above)
+          X.aft._r.d[1]:X, pull up/dn are both X
+            L.e:X, cycle reached
+            _Reset:X, (visited before, see above)
+            X.M.d[1]:X, pull up/dn are both X
+              X.fore._r.d[1]:X, pull up/dn are both X
+                L.d[1]:X, pull up/dn are both X
+                  X.aft._r.d[1]:X, cycle reached
+                _Reset:X, (visited before, see above)
+                X.M.e:X, cycle reached
+    X.fore._r.d[1]:X, (visited before, see above)
+L.d[0]:X, pull up/dn are both X
+  X.aft._r.d[0]:X, pull up/dn are both X
+    L.e:X, pull up/dn are both X
+      X.fore.rv:X, pull up/dn are both X
+        X.fore._r.d[0]:X, pull up/dn are both X
+          L.d[0]:X, cycle reached
+          Reset:X, pull up/dn undriven
+          X.M.e:X, pull up/dn are both X
+            X.aft.rv:X, pull up/dn are both X
+              X.aft._r.d[0]:X, cycle reached
+              X.aft._r.d[1]:X, pull up/dn are both X
+                L.e:X, cycle reached
+                _Reset:X, pull up/dn undriven
+                X.M.d[1]:X, pull up/dn are both X
+                  X.fore._r.d[1]:X, pull up/dn are both X
+                    L.d[1]:X, pull up/dn are both X
+                      X.aft._r.d[1]:X, cycle reached
+                    _Reset:X, (visited before, see above)
+                    X.M.e:X, cycle reached
+        X.fore._r.d[1]:X, (visited before, see above)
+    _Reset:X, (visited before, see above)
+    X.M.d[0]:X, pull up/dn are both X
+      _Reset:X, (visited before, see above)
+      X.fore._r.d[0]:X, (visited before, see above)
+resetting ... 
+WARNING: weak-interference `X.fore._r.d[1]'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `X.fore._r.d[0]'
+>> cause: `Reset' (val: 1)
+X nodes:
+
+L.e is not X.
+L.d[0] is not X.
+releasing ... 
+X nodes:
+
+L.e is not X.
+L.d[0] is not X.

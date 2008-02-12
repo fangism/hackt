@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.11 2008/02/11 19:46:18 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.12 2008/02/12 01:05:52 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1077,7 +1077,8 @@ private:
 	__get_X_fanins(const expr_index_type, node_set_type&) const;
 
 	ostream&
-	__node_why_X(ostream&, const node_index_type, node_set_type&) const;
+	__node_why_X(ostream&, const node_index_type, node_set_type&, 
+		node_set_type&) const;
 
 	void
 	head_sentinel(void);

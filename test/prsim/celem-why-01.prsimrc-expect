@@ -1,23 +1,23 @@
-c<X>, pull up/dn are both X
-  a<X>, pull up/dn undriven
-  b<X>, pull up/dn undriven
+c:X, pull up/dn are both X
+  a:X, pull up/dn undriven
+  b:X, pull up/dn undriven
 	0	a : 1
-c<X>, unknown-pull dn
-  b<X>, pull up/dn undriven
+c:X, unknown-pull dn
+  b:X, pull up/dn undriven
 	0	a : 0
-c<X>, unknown-pull up
-  b<X>, pull up/dn undriven
+c:X, unknown-pull up
+  b:X, pull up/dn undriven
 WARNING: weak-interference `c'
 >> cause: `a' (val: X)
 	0	a : X
 	0	b : 1
-c<X>, unknown-pull dn
-  a<X>, pull up/dn undriven
+c:X, unknown-pull dn
+  a:X, pull up/dn undriven
 	0	b : 0
-c<X>, unknown-pull up
-  a<X>, pull up/dn undriven
+c:X, unknown-pull up
+  a:X, pull up/dn undriven
 	0	a : 1
-c<X>, pull up/dn undriven
+c:X, pull up/dn undriven
 	0	b : 1
 	10	c : 0	[by b:=1]
 c is not X.
