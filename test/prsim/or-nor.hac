@@ -1,0 +1,13 @@
+// "or-nor.hac"
+// combined gate
+
+defproc or_nor(bool a, b, c, d, o) {
+prs {
+	(~a & ~b) | (~c & ~d)	=> o+
+}
+}
+
+bool a, b, c, d, o;
+
+or_nor x(a, b, c, d, o);
+

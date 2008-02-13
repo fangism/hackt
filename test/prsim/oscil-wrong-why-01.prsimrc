@@ -1,0 +1,23 @@
+# "oscil-wrong-why-01.prsimrc"
+# @haco@ oscillator-wrong.haco-a
+
+watchall
+why-x R.x[3]
+why-x R.x[7]
+
+set _Reset 0
+cycle
+why-not R.x[3]
+why-not-verbose R.x[3]
+why-not R.x[7]
+why-not-verbose R.x[7]
+
+set _Reset 1
+cycle
+why-not R.x[3]
+why-not-verbose R.x[3]
+why-not R.x[7]
+why-not-verbose R.x[7]
+
+echo DEADLOCK!
+

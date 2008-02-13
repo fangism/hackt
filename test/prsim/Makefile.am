@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.23 2008/02/11 19:46:19 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.24 2008/02/13 08:13:42 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -7,11 +7,14 @@ include $(top_srcdir)/test/Make.test-head
 # .hac inputs
 HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem inv oscillator half-celem deep tree interference \
+	oscillator-wrong \
 	interference-a inv-alt unused \
 	celem-share after-celem-def after-celem after-celem-more \
 	pass-gates-def pass-gates excl-rings-def excl-rings \
 	check-excl-rings-def check-excl-rings \
 	logic-defs and nand or nor array \
+	and-nand or-nor \
+	and-nand-alt or-nor-alt \
 	expr-limit-a \
 	unstable-a unstable-b \
 	weak-unstable-a weak-unstable-b \
@@ -43,15 +46,18 @@ HACKT_PARSE_TEST_PASSES = \
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	comment-01 comment-02 comment-04 comment-06 \
 	celem-01 celem-02 celem-03 celem-04 \
-	celem-why-01 \
+	celem-why-01 celem-why-02 \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-07 inv-08 inv-09 \
 	inv-11 inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
 	inv-18 inv-19 inv-20 inv-20a inv-21 inv-21a inv-22 inv-23 \
 	inv-24 inv-25 inv-26 inv-27 \
 	inv-alt-01 inv-alt-02 inv-alt-03 inv-alt-04 inv-alt-05 inv-alt-06 \
 	inv-alt-07 inv-alt-08 inv-alt-09 inv-alt-10 \
-	inv-why-01 \
+	inv-why-01 inv-why-02 \
 	and-01 nand-01 nand-02 or-01 nor-01 nor-02 nor-04 \
+	nor-why-01 nand-why-01 \
+	and-nand-why-01 or-nor-why-01 \
+	and-nand-alt-why-01 or-nor-alt-why-01 \
 	unused-01 \
 	expr-limit-a-01 \
 	interference-01 interference-02 interference-03 interference-04 \
@@ -71,7 +77,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	oscil-unset-01 oscil-unset-02 oscil-unset-03 \
 	oscil-backtrace-01 \
 	oscil-status-01 \
-	oscil-why-01 \
+	oscil-why-01 oscil-why-02 \
+	oscil-wrong-why-01 \
 	half-celem-01 \
 	celem-share-01 celem-share-02 \
 	deep-01 deep-02 \
@@ -145,6 +152,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	comment-03 comment-05 comment-07 \
 	celem-05 \
 	inv-06 inv-10 nor-03 \
+	inv-why-03 \
 	cross-pulldown-01 \
 	cycle-source-a cycle-source-b \
 	aliases-01 aliases-02 aliases-03 aliases-04 \

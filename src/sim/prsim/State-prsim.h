@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.12 2008/02/12 01:05:52 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.13 2008/02/13 08:13:28 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1045,6 +1045,10 @@ public:
 	dump_node_why_X(ostream&, const node_index_type) const;
 
 	ostream&
+	dump_node_why_not(ostream&, const node_index_type, const bool, 
+		const bool) const;
+
+	ostream&
 	dump_dangling_unknown_nodes(ostream&, const bool) const;
 
 	ostream&
@@ -1076,9 +1080,17 @@ private:
 	void
 	__get_X_fanins(const expr_index_type, node_set_type&) const;
 
+	void
+	__expr_why_not(ostream&, const expr_index_type, const bool, 
+		node_set_type&, node_set_type&) const;
+
 	ostream&
 	__node_why_X(ostream&, const node_index_type, node_set_type&, 
 		node_set_type&) const;
+
+	ostream&
+	__node_why_not(ostream&, const node_index_type, const bool, 
+		const bool, node_set_type&, node_set_type&) const;
 
 	void
 	head_sentinel(void);

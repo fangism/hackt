@@ -1,0 +1,27 @@
+# "wchb-token-ring-b-03.prsimrc"
+#	$Id: wchb-token-ring-b-03.prsimrc,v 1.1.2.1 2008/02/13 08:13:33 fang Exp $
+# @haco@ wchb-token-ring-b.haco-a
+# testing why-not commands
+
+echo resetting ...
+set _Reset 0
+set Reset 1
+cycle
+status X
+why-not L.e
+why-not-verbose L.e
+why-not L.d[0]
+why-not-verbose L.d[0]
+
+echo releasing ...
+set _Reset 1
+set Reset 0
+cycle
+status X
+why-not L.e
+why-not-verbose L.e
+why-not L.d[0]
+why-not-verbose L.d[0]
+
+# deadlock: why? (we know why...)
+

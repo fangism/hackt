@@ -1,0 +1,75 @@
+# "inv-why-02.prsimrc"
+# @haco@ inv.haco-a
+# testing 'why' commands family
+
+watchall
+
+echo why isn't a 0?
+why-not a 0
+
+echo why isn't b 0?
+why-not b 0
+
+echo why isn't c 0?
+why-not c 0
+
+echo ###############
+
+echo setting a to 0
+set a 0
+step-event
+
+echo why isn't a 0?
+why-not a 0
+
+echo why isn't b 0?
+why-not b 0
+
+echo why isn't c 0?
+why-not c 0
+
+echo ###############
+echo propagating to b
+step-event
+
+echo why isn't a 0?
+why-not a 0
+
+echo why isn't b 0?
+why-not b 0
+
+echo why isn't c 0?
+why-not c 0
+
+echo ###############
+cycle
+
+echo why isn't c 0?
+why-not c 0
+
+echo why isn't c 1?
+why-not c 1
+
+echo why isn't c opposite?
+why-not c
+
+echo now verbosely...
+why-not-verbose c
+
+echo ###############
+set a 1
+cycle
+
+echo why isn't c 0?
+why-not c 0
+
+echo why isn't c 1?
+why-not c 1
+
+echo why isn't c opposite?
+why-not c
+
+echo now verbosely...
+why-not-verbose c
+
+

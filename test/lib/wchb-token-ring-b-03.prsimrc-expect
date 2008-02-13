@@ -1,0 +1,150 @@
+resetting ... 
+WARNING: weak-interference `X.fore._r.d[1]'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `X.fore._r.d[0]'
+>> cause: `Reset' (val: 1)
+X nodes:
+
+L.e:0
+  X.fore.rv:1
+    X.fore._r.d[0]:0
+      X.M.e:1
+        X.aft.rv:0
+          X.aft._r.d[0]:1
+            _Reset:0
+            L.e:0, cycle: possible deadlock
+          X.aft._r.d[1]:1
+            _Reset:0, (visited before, see above)
+            L.e:0, cycle: possible deadlock
+            X.M.d[1]:0
+              X.fore._r.d[1]:1
+                L.d[1]:0
+                  X.aft._r.d[1]:1, cycle: possible deadlock
+L.e:0
+. ~X.fore.rv:1
+. ~.-+
+. ~. & X.fore._r.d[0]:0
+. ~. & .-+
+. ~. & . & ~X.M.e:1
+. ~. & . & ~. X.aft.rv:0
+. ~. & . & ~. .-+
+. ~. & . & ~. . | ~X.aft._r.d[0]:1
+. ~. & . & ~. . | ~.-+
+. ~. & . & ~. . | ~. & _Reset:0
+. ~. & . & ~. . | ~. & L.e:0, cycle: possible deadlock
+. ~. & . & ~. . | ~X.aft._r.d[1]:1
+. ~. & . & ~. . | ~.-+
+. ~. & . & ~. . | ~. & _Reset:0, (visited before, see above)
+. ~. & . & ~. . | ~. & L.e:0, cycle: possible deadlock
+. ~. & . & ~. . | ~. & X.M.d[1]:0
+. ~. & . & ~. . | ~. & . ~X.fore._r.d[1]:1
+. ~. & . & ~. . | ~. & . ~.-+
+. ~. & . & ~. . | ~. & . ~. & L.d[1]:0
+. ~. & . & ~. . | ~. & . ~. & . ~X.aft._r.d[1]:1, cycle: possible deadlock
+L.d[0]:0
+  X.aft._r.d[0]:1
+    _Reset:0
+    L.e:0
+      X.fore.rv:1
+        X.fore._r.d[0]:0
+          X.M.e:1
+            X.aft.rv:0
+              X.aft._r.d[0]:1, cycle: possible deadlock
+              X.aft._r.d[1]:1
+                _Reset:0, (visited before, see above)
+                L.e:0, cycle: possible deadlock
+                X.M.d[1]:0
+                  X.fore._r.d[1]:1
+                    L.d[1]:0
+                      X.aft._r.d[1]:1, cycle: possible deadlock
+L.d[0]:0
+. ~X.aft._r.d[0]:1
+. ~.-+
+. ~. & _Reset:0
+. ~. & L.e:0
+. ~. & . ~X.fore.rv:1
+. ~. & . ~.-+
+. ~. & . ~. & X.fore._r.d[0]:0
+. ~. & . ~. & .-+
+. ~. & . ~. & . & ~X.M.e:1
+. ~. & . ~. & . & ~. X.aft.rv:0
+. ~. & . ~. & . & ~. .-+
+. ~. & . ~. & . & ~. . | ~X.aft._r.d[0]:1, cycle: possible deadlock
+. ~. & . ~. & . & ~. . | ~X.aft._r.d[1]:1
+. ~. & . ~. & . & ~. . | ~.-+
+. ~. & . ~. & . & ~. . | ~. & _Reset:0, (visited before, see above)
+. ~. & . ~. & . & ~. . | ~. & L.e:0, cycle: possible deadlock
+. ~. & . ~. & . & ~. . | ~. & X.M.d[1]:0
+. ~. & . ~. & . & ~. . | ~. & . ~X.fore._r.d[1]:1
+. ~. & . ~. & . & ~. . | ~. & . ~.-+
+. ~. & . ~. & . & ~. . | ~. & . ~. & L.d[1]:0
+. ~. & . ~. & . & ~. . | ~. & . ~. & . ~X.aft._r.d[1]:1, cycle: possible deadlock
+releasing ... 
+X nodes:
+
+L.e:0
+  X.fore.rv:1
+    X.fore._r.d[0]:0
+      X.M.e:1
+        X.aft.rv:0
+          X.aft._r.d[0]:1
+            L.e:0, cycle: possible deadlock
+          X.aft._r.d[1]:1
+            L.e:0, cycle: possible deadlock
+            X.M.d[1]:0
+              X.fore._r.d[1]:1
+                L.d[1]:0
+                  X.aft._r.d[1]:1, cycle: possible deadlock
+L.e:0
+. ~X.fore.rv:1
+. ~.-+
+. ~. & X.fore._r.d[0]:0
+. ~. & .-+
+. ~. & . & ~X.M.e:1
+. ~. & . & ~. X.aft.rv:0
+. ~. & . & ~. .-+
+. ~. & . & ~. . | ~X.aft._r.d[0]:1
+. ~. & . & ~. . | ~.-+
+. ~. & . & ~. . | ~. & L.e:0, cycle: possible deadlock
+. ~. & . & ~. . | ~X.aft._r.d[1]:1
+. ~. & . & ~. . | ~.-+
+. ~. & . & ~. . | ~. & L.e:0, cycle: possible deadlock
+. ~. & . & ~. . | ~. & X.M.d[1]:0
+. ~. & . & ~. . | ~. & . ~X.fore._r.d[1]:1
+. ~. & . & ~. . | ~. & . ~.-+
+. ~. & . & ~. . | ~. & . ~. & L.d[1]:0
+. ~. & . & ~. . | ~. & . ~. & . ~X.aft._r.d[1]:1, cycle: possible deadlock
+L.d[0]:0
+  X.aft._r.d[0]:1
+    L.e:0
+      X.fore.rv:1
+        X.fore._r.d[0]:0
+          X.M.e:1
+            X.aft.rv:0
+              X.aft._r.d[0]:1, cycle: possible deadlock
+              X.aft._r.d[1]:1
+                L.e:0, cycle: possible deadlock
+                X.M.d[1]:0
+                  X.fore._r.d[1]:1
+                    L.d[1]:0
+                      X.aft._r.d[1]:1, cycle: possible deadlock
+L.d[0]:0
+. ~X.aft._r.d[0]:1
+. ~.-+
+. ~. & L.e:0
+. ~. & . ~X.fore.rv:1
+. ~. & . ~.-+
+. ~. & . ~. & X.fore._r.d[0]:0
+. ~. & . ~. & .-+
+. ~. & . ~. & . & ~X.M.e:1
+. ~. & . ~. & . & ~. X.aft.rv:0
+. ~. & . ~. & . & ~. .-+
+. ~. & . ~. & . & ~. . | ~X.aft._r.d[0]:1, cycle: possible deadlock
+. ~. & . ~. & . & ~. . | ~X.aft._r.d[1]:1
+. ~. & . ~. & . & ~. . | ~.-+
+. ~. & . ~. & . & ~. . | ~. & L.e:0, cycle: possible deadlock
+. ~. & . ~. & . & ~. . | ~. & X.M.d[1]:0
+. ~. & . ~. & . & ~. . | ~. & . ~X.fore._r.d[1]:1
+. ~. & . ~. & . & ~. . | ~. & . ~.-+
+. ~. & . ~. & . & ~. . | ~. & . ~. & L.d[1]:0
+. ~. & . ~. & . & ~. . | ~. & . ~. & . ~X.aft._r.d[1]:1, cycle: possible deadlock

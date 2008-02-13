@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-02-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-36:
+	  prsim command: 'why-not', recursively figures out why a
+		node is NOT a given value, following fanins and exprs.
+		This pretty much performs deadlock analysis, 
+		and any other query for "why isn't this doing what I
+		think it should be doing?"
+		This would've been useful years ago...
+	  Documented, and well tested with cases in prsim/ and lib/.
+	  prsim/TODO -- one item down!
+
+
 2008-02-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-35:

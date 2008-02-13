@@ -1,0 +1,22 @@
+/**
+	\file "oscillator-wrong.hac"
+	A humble ring-NOT-oscillator.  
+	For demonstrating deadlock analysis.
+	$Id: oscillator-wrong.hac,v 1.1.2.1 2008/02/13 08:14:06 fang Exp $
+ */
+
+
+template <pint N>
+defproc ring_oscillator(bool x[N]; bool _Reset) {
+prs {
+	(:i:N-1:
+		x[i]		=> x[i+1]-
+	)
+	x[N-1] & _Reset		=> x[0]-
+}
+}
+
+// even cycle will not oscillate, duh!
+bool _Reset;
+ring_oscillator<8> R( , _Reset);
+

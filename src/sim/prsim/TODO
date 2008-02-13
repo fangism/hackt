@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.8.6 2008/01/25 08:24:29 fang Exp $
+#	$Id: TODO,v 1.4.8.7 2008/02/13 08:13:29 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -51,12 +51,6 @@ prsim:
 
 	'backtrace' add optional starting value argument, 
 		default uses current value.
-
-
-	deadlock diagnosis, akin to backtrace, but using fanin state analysis
-		commands 'why' [01X] and 'whynot' [01].
-		Difficulty: easy (few hours)
-		Must make sure to detect cycles.  
 
 	unstab attribute: is checked on nodes, but only applied to rules
 		so this needs to be fixed to check for rules.  

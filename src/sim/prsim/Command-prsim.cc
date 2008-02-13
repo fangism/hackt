@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.10 2008/02/11 19:46:14 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.11 2008/02/13 08:13:26 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2091,6 +2091,9 @@ BackTrace::usage(ostream& o) {
 @texinfo cmd/why-x.texi
 @deffn Command why-x node
 Print causality chain for why a particular node (at value X) remains X.  
+In expressions, X nodes that are masked out (e.g. 1 | X or 0 & X) 
+are not followed.  
+Recursion terminates on cycles and already-visited nodes.  
 @end deffn
 @end texinfo
 ***/
@@ -2120,6 +2123,105 @@ WhyX::usage(ostream& o) {
 	o <<
 "Recursively finds the cause for the node being X through other X nodes."
 		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/why-not.texi
+@deffn Command why-not node [val]
+@deffnx Command why-not-verbose node [val]
+Print reason for node not being a given value, 0 or 1.
+X is not a valid value for this procedure.  
+If @var{val} is not given, it is assumed to be opposite of the
+current value of the node.  
+The algorithm examines each node's fanins and follows
+nodes that prevent the relevant expression from evaluating true.  
+This is an excellent tool for debugging deadlocks.  
+The verbose variant prints expression types as it auto-indents, 
+which is more informative but may appear more cluttered.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot, "why-not", info, 
+	"recursively trace why node is not at value")
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotVerbose, "why-not-verbose", info, 
+	"recursively trace why node is not at value (verbose)")
+
+static
+int
+why_not_main(State& s, const string_list& a, const bool verbose, 
+	void (usage)(ostream&)) {
+const size_t a_s = a.size();
+if (a_s < 2 || a_s > 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+if (ni) {
+	bool v;
+	if (a_s == 3) {
+		const string& b(a.back());
+		if (b == "0") {
+			v = false;
+		} else if (b == "1") {
+			v = true;
+		} else {
+			usage(cerr << "usage: ");
+			return Command::BADARG;
+		}
+	} else {
+		typedef	State::node_type	node_type;
+		switch (s.get_node(ni).current_value()) {
+		case node_type::LOGIC_LOW:
+			v = true;
+			break;
+		case node_type::LOGIC_HIGH:
+			v = false;
+			break;
+		default:
+			cerr << "why-not <node> X is not supported." << endl;
+			return Command::BADARG;
+		}
+	}
+	s.dump_node_why_not(cout, ni, v, verbose);
+	return Command::NORMAL;
+} else {
+	return Command::BADARG;
+}
+}
+}
+
+int
+WhyNot::main(State& s, const string_list& a) {
+	return why_not_main(s, a, false, usage);
+}
+
+int
+WhyNotVerbose::main(State& s, const string_list& a) {
+	return why_not_main(s, a, true, usage);
+}
+
+static
+void
+why_not_usage(ostream& o, const char* name) {
+	o << name << " <node> [01]" << endl;
+	o <<
+"Recursively trace back reason why named node has not become a given value.\n"
+"Value must be 0 or 1.  If value is omitted, then assumes the opposite value.\n"
+"This can be used to detect deadlock in circuits."
+	<< endl;
+}
+
+void
+WhyNot::usage(ostream& o) {
+	why_not_usage(o, name);
+}
+
+void
+WhyNotVerbose::usage(ostream& o) {
+	why_not_usage(o, name);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

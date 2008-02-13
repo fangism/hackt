@@ -1,0 +1,58 @@
+# "celem-why-02.prsimrc"
+# @haco@ celem.haco-a
+
+watchall
+set a 0
+set b 0
+cycle
+why-not c
+why-not-verbose c
+
+echo -----------------------
+set a 1
+cycle
+why-not c
+why-not-verbose c
+
+echo -----------------------
+set b 1
+cycle
+why-not c
+why-not-verbose c
+
+echo -----------------------
+set a 0
+cycle
+why-not c
+why-not-verbose c
+
+echo -----------------------
+set b 0
+cycle
+why-not c
+why-not-verbose c
+
+echo -----------------------
+set b 1
+cycle
+why-not c
+why-not-verbose c
+
+echo -----------------------
+set a 1
+cycle
+why-not c
+why-not-verbose c
+
+echo -----------------------
+set b 0
+cycle
+why-not c
+why-not-verbose c
+
+echo -----------------------
+set a 0
+cycle
+why-not c
+why-not-verbose c
+

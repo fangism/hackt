@@ -1,0 +1,59 @@
+why isn't a 0? 
+a is X.
+why isn't b 0? 
+b is X.
+why isn't c 0? 
+c is X.
+############### 
+setting a to 0 
+	0	a : 0
+why isn't a 0? 
+a is 0.
+why isn't b 0? 
+b is X.
+why isn't c 0? 
+c is X.
+############### 
+propagating to b 
+	10	b : 1	[by a:=0]
+why isn't a 0? 
+a is 0.
+why isn't b 0? 
+b:1
+  a:0
+why isn't c 0? 
+c is X.
+############### 
+	20	c : 0	[by b:=1]
+why isn't c 0? 
+c is 0.
+why isn't c 1? 
+c:0
+  b:1
+    a:0
+why isn't c opposite? 
+c:0
+  b:1
+    a:0
+now verbosely... 
+c:0
+. ~b:1
+. ~. a:0
+############### 
+	20	a : 1
+	30	b : 0	[by a:=1]
+	40	c : 1	[by b:=0]
+why isn't c 0? 
+c:1
+  b:0
+    a:1
+why isn't c 1? 
+c is 1.
+why isn't c opposite? 
+c:1
+  b:0
+    a:1
+now verbosely... 
+c:1
+. b:0
+. . ~a:1
