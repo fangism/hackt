@@ -1,0 +1,14 @@
+// "strengths-02.hac"
+// testing cflat with conductance calculations
+// @hflat-flags@ -fstrengths
+
+bool a, b, c, d, e, f, o, p, q, r, s;
+
+prs {
+	a<40> & b<30> & c<20> & d<25>	=> o-
+	a<40> & b<30> & c<20> & d<25>	#> p-
+	~a<40> & ~b<30> & ~c<20> & ~d<25>	=> q+
+	~a<40> & ~b<30> | ~c<20> & ~d<25>	=> r+
+	e<5,10> & f<5,5>		=> s-
+}
+

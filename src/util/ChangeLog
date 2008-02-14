@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.93.4.2 2008/01/18 21:12:35 fang Exp $
+#	$Id: ChangeLog,v 1.93.4.3 2008/02/14 04:09:14 fang Exp $
+
+2008-02-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-37:
+	  Added util/numeric/functional.h: includes reciprocate.
+
 
 2008-01-17	David Fang		<fangism@users.sourceforge.net>
 

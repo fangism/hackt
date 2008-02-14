@@ -1,10 +1,11 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.15 2007/10/08 01:21:25 fang Exp $
+	$Id: cflat_printer.cc,v 1.15.8.1 2008/02/14 04:09:05 fang Exp $
  */
 
 #include <iostream>
+#include <algorithm>
 #include <set>
 #include "Object/lang/cflat_printer.h"
 #include "Object/lang/PRS_enum.h"
@@ -24,11 +25,22 @@
 #include "util/offset_array.h"
 #include "util/member_saver.h"
 #include "util/qmap.tcc"		// for const_assoc_query symbols??
+#if CFLAT_WITH_CONDUCTANCES
+#include "Object/expr/pint_const.h"
+#include "Object/expr/preal_const.h"
+#include "util/numeric/functional.h"	// for reciprocate
+#endif
 
 namespace HAC {
 namespace entity {
 namespace PRS {
 #include "util/using_ostream.h"
+#if CFLAT_WITH_CONDUCTANCES
+using std::accumulate;
+using std::transform;
+using util::numeric::reciprocate;
+#endif
+
 //=============================================================================
 // class cflat_prs_printer method definitions
 
@@ -64,7 +76,15 @@ if (!cfopts.check_prs) {
 	sm->get_pool<bool_tag>()[global_bool_index]
 		.dump_canonical_name(os, *topfp, *sm);
 	if (cfopts.enquote_names) os << '\"';
-	os << (r.dir ? '+' : '-') << endl;
+	os << (r.dir ? '+' : '-');
+#if CFLAT_WITH_CONDUCTANCES
+	if (cfopts.compute_conductances) {
+		// min/mxa_conductance was evaluated from expression
+		os << "\t(G min,max = " << min_conductance << ", " <<
+			max_conductance << ")";
+	}
+#endif
+	os << endl;
 }
 }
 
@@ -161,6 +181,25 @@ cflat_prs_printer::__dump_resolved_literal_group(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CFLAT_WITH_CONDUCTANCES
+/// helper function for extracting sizing parameter
+static
+float
+extract_float_param(const count_ptr<const const_param>& p) {
+	const count_ptr<const pint_const> i(p.is_a<const pint_const>());
+	if (i) {
+		return float(i->static_constant_value());
+	} else {
+		const count_ptr<const preal_const>
+			r(p.is_a<const preal_const>());
+		if (r)
+			return r->static_constant_value();
+	}
+	return 0.0;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints out the expression. 
 	Adapted from footprint::cflat_expr().  
@@ -170,27 +209,61 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 	const size_t sz = e.size();
 	const char type = e.get_type();
 	const char ptype = parent_expr_type;
-	const expr_type_setter tmp(*this, type);
+	const expr_type_setter __tmp(*this, type);
 	switch (type) {
-		case PRS_LITERAL_TYPE_ENUM:
+		case PRS_LITERAL_TYPE_ENUM: {
 			INVARIANT(sz == 1);
 			__dump_canonical_literal(e.only());
+			const directive_base_params_type& par(e.get_params());
 			if (cfopts.size_prs) {
-				directive_base::dump_params(e.get_params(), os);
+				directive_base::dump_params(par, os);
 			}
+#if CFLAT_WITH_CONDUCTANCES
+			float width = 0.0;
+			float length = 0.0;
+			const size_t ps = par.size();
+			size_t i = 0;
+			// take first two non-negative values as W/L
+			for ( ; i<ps; ++i) {
+				float tmp = extract_float_param(par[i]);
+				if (tmp > 0.0) {
+				if (width <= 0.0) {
+					width = tmp;
+				} else if (length <= 0.0) {
+					length = tmp;
+				}
+				}
+			}
+			// hard-coded default values
+			if (width <= 0.0) width = 5.0;
+			if (length <= 0.0) length = 2.0;
+			max_conductance = min_conductance = width/length;
+#endif
 			break;
+		}
 		case PRS_NOT_EXPR_TYPE_ENUM:
 			INVARIANT(sz == 1);
 			os << '~';
 			(*expr_pool)[e.only()].accept(*this);
+			// conductances ignore negations;
+			// just forward return value to caller.
 			break;
 		case PRS_AND_EXPR_TYPE_ENUM:
 			// yes, fall-through
 		case PRS_OR_EXPR_TYPE_ENUM: {
 			const bool paren = ptype && (type != ptype);
 			if (paren) os << '(';
-			if (e.size()) {
+			if (sz) {
+#if CFLAT_WITH_CONDUCTANCES
+				vector<float> max_G, min_G;
+				max_G.reserve(sz);
+				min_G.reserve(sz);
+#endif
 				(*expr_pool)[e.only()].accept(*this);
+#if CFLAT_WITH_CONDUCTANCES
+				max_G.push_back(max_conductance);
+				min_G.push_back(min_conductance);
+#endif
 				const char* const op =
 					(type == PRS_AND_EXPR_TYPE_ENUM) ?
 						" & " : " | ";
@@ -198,8 +271,49 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 				for ( ; i<=sz; i++) {
 					os << op;
 					(*expr_pool)[e[i]].accept(*this);
+#if CFLAT_WITH_CONDUCTANCES
+					max_G.push_back(max_conductance);
+					min_G.push_back(min_conductance);
+#endif
 				}
+#if CFLAT_WITH_CONDUCTANCES
+				// compute new max/min conductances and return
+				if (type == PRS_AND_EXPR_TYPE_ENUM) {
+					// convert conductances to resistances
+					// overwrite in-place to aliases
+					vector<float>& max_R(min_G);
+					vector<float>& min_R(max_G);
+					transform(min_G.begin(), min_G.end(), 
+						max_R.begin(),
+						reciprocate<float>());
+					transform(max_G.begin(), max_G.end(), 
+						min_R.begin(),
+						reciprocate<float>());
+					max_conductance = 1.0 /
+						accumulate(min_R.begin(),
+							min_R.end(), 0.0);
+					min_conductance = 1.0 /
+						accumulate(max_R.begin(),
+							max_R.end(), 0.0);
+				} else {	// type is OR
+					// min is smallest
+					// max is sum
+					min_conductance = *std::min_element(
+						min_G.begin(), min_G.end());
+					max_conductance = accumulate(
+						max_G.begin(), max_G.end(),
+						0.0);
+				}
+#endif
 			}
+#if CFLAT_WITH_CONDUCTANCES
+			else if (cfopts.compute_conductances) {
+				cerr << "FATAL: Cannot compute conductance on "
+					"an empty expression!" << endl;
+				THROW_EXIT;
+			}
+#endif
+			// null/empty expressions may arise from loop expansion
 			if (paren) os << ')';
 			break;
 		}

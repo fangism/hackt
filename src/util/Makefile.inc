@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.36 2007/10/08 01:21:56 fang Exp $
+#	$Id: Makefile.inc,v 1.36.8.1 2008/02/14 04:09:16 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -155,6 +155,7 @@ UTIL_HEADER_FILES = \
 	util/numeric/clz.h \
 	util/numeric/ctz.h \
 	util/numeric/ffs.h \
+	util/numeric/functional.h \
 	util/numeric/integer_traits.h \
 	util/numeric/inttype_traits.h \
 	util/numeric/nibble_tables.h \

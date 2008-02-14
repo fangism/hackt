@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.35.2.2 2008/01/23 21:42:20 fang Exp $
+#	$Id: Makefile.am,v 1.35.2.3 2008/02/14 04:09:28 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -68,7 +68,8 @@ HACKT_PARSE_TEST_PASSES = \
 	internal-node-15 internal-node-17 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
-	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
+	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
+	strengths-01 strengths-02
 # pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
 
 srcdir_EXTRA_DIST += \
@@ -113,7 +114,8 @@ HACKT_CREATE_TEST_PASSES = \
 	act-001 act-002 act-005 act-006 act-007 act-010 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
-	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
+	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
+	strengths-01 strengths-02
 
 # TODO: precharge-00 etc. to middle and back-end tests
 # pending: act-003 act-004 act-005
@@ -159,6 +161,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
+	strengths-01 strengths-02 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
@@ -184,6 +187,7 @@ HACKT_ALLOC_TEST_PASSES = \
 
 HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
 	size-01 size-03 size-04 size-05 \
+	strengths-01 strengths-02 \
 	act-005 act-010
 # pending: act-004
 

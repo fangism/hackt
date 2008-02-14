@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.88.4.1 2008/01/25 23:54:18 fang Exp $
+#	$Id: Make.test-tail,v 1.88.4.2 2008/02/14 04:09:25 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -97,6 +97,8 @@ EXTRACT_HACO_FLAGS_PIPE = $(GREP) "@haco-flags@" | $(HEAD) -n1 | \
 	$(SED) 's/^.*@haco-flags@[ ]*//g'
 EXTRACT_HACPP_FLAGS_PIPE = $(GREP) "@hacpp-flags@" | $(HEAD) -n1 | \
 	$(SED) 's/^.*@hacpp-flags@[ ]*//g'
+EXTRACT_HFLAT_FLAGS_PIPE = $(GREP) "@hflat-flags@" | $(HEAD) -n1 | \
+	$(SED) 's/^.*@hflat-flags@[ ]*//g'
 
 # useful for extracting object file name from a source script
 # EXTRACT_HACO_PIPE = $(GREP) "^\#" ...

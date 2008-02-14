@@ -1,0 +1,97 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	13	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	371
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	338
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    size_test = process-definition (defined) size_test<
+      pint<> P
+      >(
+        bool<> a
+        bool<> b
+      )
+      In definition "size_test", we have: {
+      Parameters:
+        P = pint<> size_test::P
+      Instances:
+        a = bool<> size_test::a
+        b = bool<> size_test::b
+      unroll sequence: 
+        bool<> a
+        bool<> b
+      prs:
+        a<P> -> b-
+        ~a<2*P> -> b+
+      footprint collection: {
+        <8> {
+          P = pint^0 value: 8
+          a = bool^0 = size_test::a (1) 
+          b = bool^0 = size_test::b (2) 
+          Created state:
+          bool instance pool:
+          1	size_test::a
+          2	size_test::b
+          resolved prs:
+          a<8> -> b-
+          ~a<16> -> b+
+        }
+      }
+      }
+
+  Instances:
+    x = size_test<8> x
+}
+
+footprint: {
+  x = process size_test<8>^0 = x (1) (
+    a = bool^0 = x.a (1) 
+    b = bool^0 = x.b (2) 
+  )
+  Created state:
+  process instance pool:
+  1	x
+  bool instance pool:
+  1	x.a
+  2	x.b
+}

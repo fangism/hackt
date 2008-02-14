@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.19 2007/09/13 01:14:08 fang Exp $
+	$Id: cflat.cc,v 1.19.14.1 2008/02/14 04:09:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -118,6 +118,9 @@ __cflat_prsim(cflat::options& cf) {
 	cf.wire_mode = false;
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
+#if CFLAT_WITH_CONDUCTANCES
+	cf.compute_conductances = false;
+#endif
 	cf.size_prs = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 }
@@ -139,6 +142,9 @@ __cflat_prlint(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
+#if CFLAT_WITH_CONDUCTANCES
+	cf.compute_conductances = false;
+#endif
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 
@@ -161,6 +167,9 @@ __cflat_connect(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
+#if CFLAT_WITH_CONDUCTANCES
+	cf.compute_conductances = false;
+#endif
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 
@@ -186,6 +195,9 @@ __cflat_lvs(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
+#if CFLAT_WITH_CONDUCTANCES
+	cf.compute_conductances = false;
+#endif
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -208,6 +220,9 @@ __cflat_wire(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
+#if CFLAT_WITH_CONDUCTANCES
+	cf.compute_conductances = false;
+#endif
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 
@@ -228,6 +243,9 @@ __cflat_ADspice(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = true;
 	cf.size_prs = false;
+#if CFLAT_WITH_CONDUCTANCES
+	cf.compute_conductances = false;
+#endif
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 
@@ -668,6 +686,42 @@ __cflat_no_size_prs(cflat::options& cf) {
 const cflat::register_options_modifier
 	cflat::_no_size_prs("no-sizes", &__cflat_no_size_prs, 
 		"not (size-prs)");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CFLAT_WITH_CONDUCTANCES
+/***
+@texinfo cflat/opt-strengths.texi
+@defvr {@t{cflat -f} option} strengths
+@defvrx {@t{cflat -f} option} no-strengths
+Prints min/max drive strengths for each rule.
+Strengths are computed as such:
+the maximum strength assumes that every guard subexpression is true
+and conducting to the supply;
+the minimum strength assumes that a single weakest path is conducting.
+The strength unit is relative to a 1W/1L drive strength, 
+and is not normalized with respect to NFET/PFET mobility. 
+The default width is 5, and default length is 2.  
+@end defvr
+@end texinfo
+***/
+static
+void
+__cflat_strengths(cflat::options& cf) {
+	cf.compute_conductances = true;
+}
+const cflat::register_options_modifier
+	cflat::_strengths("strengths", &__cflat_strengths, 
+		"prints min/max strengths for each rule");
+
+static
+void
+__cflat_no_strengths(cflat::options& cf) {
+	cf.compute_conductances = false;
+}
+const cflat::register_options_modifier
+	cflat::_no_strengths("no-strengths", &__cflat_no_strengths, 
+		"suppresses min/max strengths for each rule");
+#endif	// CFLAT WITH_CONDUCTANCES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	cf.csim_style_prs = false;
