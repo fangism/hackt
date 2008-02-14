@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.19.14.1 2008/02/14 04:09:09 fang Exp $
+	$Id: cflat.cc,v 1.19.14.2 2008/02/14 18:23:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -697,7 +697,9 @@ Prints min/max drive strengths for each rule.
 Strengths are computed as such:
 the maximum strength assumes that every guard subexpression is true
 and conducting to the supply;
-the minimum strength assumes that a single weakest path is conducting.
+the minimum strength assumes that a single weakest path is conducting, 
+and 'one' value for the stronge single path.
+CMOS implementability of rules is ignored.  
 The strength unit is relative to a 1W/1L drive strength, 
 and is not normalized with respect to NFET/PFET mobility. 
 The default width is 5, and default length is 2.  

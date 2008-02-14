@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.15.8.1 2008/02/14 04:09:05 fang Exp $
+	$Id: cflat_printer.cc,v 1.15.8.2 2008/02/14 18:23:00 fang Exp $
  */
 
 #include <iostream>
@@ -80,7 +80,8 @@ if (!cfopts.check_prs) {
 #if CFLAT_WITH_CONDUCTANCES
 	if (cfopts.compute_conductances) {
 		// min/mxa_conductance was evaluated from expression
-		os << "\t(G min,max = " << min_conductance << ", " <<
+		os << "\t(G min,one,max = " << min_conductance << ", " <<
+			one_conductance << ", " <<
 			max_conductance << ")";
 	}
 #endif
@@ -238,6 +239,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			if (width <= 0.0) width = 5.0;
 			if (length <= 0.0) length = 2.0;
 			max_conductance = min_conductance = width/length;
+			one_conductance = max_conductance;
 #endif
 			break;
 		}
@@ -255,13 +257,15 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			if (paren) os << '(';
 			if (sz) {
 #if CFLAT_WITH_CONDUCTANCES
-				vector<float> max_G, min_G;
+				vector<float> max_G, one_G, min_G;
 				max_G.reserve(sz);
+				one_G.reserve(sz);
 				min_G.reserve(sz);
 #endif
 				(*expr_pool)[e.only()].accept(*this);
 #if CFLAT_WITH_CONDUCTANCES
 				max_G.push_back(max_conductance);
+				one_G.push_back(one_conductance);
 				min_G.push_back(min_conductance);
 #endif
 				const char* const op =
@@ -273,6 +277,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 					(*expr_pool)[e[i]].accept(*this);
 #if CFLAT_WITH_CONDUCTANCES
 					max_G.push_back(max_conductance);
+					one_G.push_back(one_conductance);
 					min_G.push_back(min_conductance);
 #endif
 				}
@@ -282,9 +287,13 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 					// convert conductances to resistances
 					// overwrite in-place to aliases
 					vector<float>& max_R(min_G);
+					vector<float>& one_R(one_G);
 					vector<float>& min_R(max_G);
 					transform(min_G.begin(), min_G.end(), 
 						max_R.begin(),
+						reciprocate<float>());
+					transform(one_G.begin(), one_G.end(), 
+						one_R.begin(),
 						reciprocate<float>());
 					transform(max_G.begin(), max_G.end(), 
 						min_R.begin(),
@@ -292,6 +301,9 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 					max_conductance = 1.0 /
 						accumulate(min_R.begin(),
 							min_R.end(), 0.0);
+					one_conductance = 1.0 /
+						accumulate(one_R.begin(),
+							one_R.end(), 0.0);
 					min_conductance = 1.0 /
 						accumulate(max_R.begin(),
 							max_R.end(), 0.0);
@@ -300,6 +312,8 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 					// max is sum
 					min_conductance = *std::min_element(
 						min_G.begin(), min_G.end());
+					one_conductance = *std::max_element(
+						one_G.begin(), one_G.end());
 					max_conductance = accumulate(
 						max_G.begin(), max_G.end(),
 						0.0);

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.9.76.1 2008/02/14 04:09:06 fang Exp $
+	$Id: cflat_printer.h,v 1.9.76.2 2008/02/14 18:23:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -47,6 +47,8 @@ protected:
 	 */
 	float					max_conductance;
 	float					min_conductance;
+	/// strongest single path
+	float					one_conductance;
 #endif
 
 public:

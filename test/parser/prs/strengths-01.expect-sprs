@@ -1,2 +1,2 @@
-"x.a"<8> -> "x.b"-	(G min,max = 4, 4)
-~"x.a"<16> -> "x.b"+	(G min,max = 8, 8)
+"x.a"<8> -> "x.b"-	(G min,one,max = 4, 4, 4)
+~"x.a"<16> -> "x.b"+	(G min,one,max = 8, 8, 8)
