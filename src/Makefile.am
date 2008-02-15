@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.193.2.2 2008/01/19 06:46:07 fang Exp $
+#	$Id: Makefile.am,v 1.193.2.2.2.1 2008/02/15 02:22:21 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -900,6 +900,7 @@ SIM_CC_FILES = \
 	sim/random_time.cc \
 	sim/state_base.cc \
 	sim/signal_handler.cc \
+	sim/prsim/Channel-prsim.cc \
 	sim/prsim/Command-prsim.cc \
 	sim/prsim/Command-prsim-export.cc \
 	sim/prsim/Cause.cc \

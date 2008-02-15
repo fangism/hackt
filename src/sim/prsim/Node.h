@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.13.74.3 2008/01/23 04:58:59 fang Exp $
+	$Id: Node.h,v 1.13.74.3.2.1 2008/02/15 02:22:30 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -259,6 +259,16 @@ public:
 			one of the exclusive ring queues.  
 		 */
 		NODE_EX_QUEUE = 0x04,
+
+#if PRSIM_CHANNEL_SUPPORT
+		/// true if this node participates in any registered channel
+		NODE_IN_CHANNEL = 0x08,
+#if 0
+		// THESE OVERFLOW uchar!!!
+		NODE_CHANNEL_VALID = 0x10,
+		NODE_CHANNEL_DATA = 0x20,
+#endif
+#endif
 
 		/// OR-mask for initialization
 		NODE_INITIALIZE_SET_MASK = 0x00,

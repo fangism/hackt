@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.4.74.1 2008/01/17 01:32:31 fang Exp $
+	$Id: devel_switches.h,v 1.4.74.1.2.1 2008/02/15 02:22:31 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -80,6 +80,16 @@
 	Priority: HIGH
  */
 #define	PRSIM_ALLOW_OVERTAKE_EVENTS			1
+
+/**
+	Define to 1 to enable prsim channel command support.
+	Goal: 1
+	Rationale: legacy prsim support, testing utility and convenience
+	Status: in progress
+	Priority: high
+	TODO: preserve/restore some channel state in checkpoints?
+ */
+#define	PRSIM_CHANNEL_SUPPORT				1
 
 //-----------------------------------------------------------------------------
 // ready-to-commit the flags below

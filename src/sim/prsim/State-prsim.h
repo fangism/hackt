@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.13 2008/02/13 08:13:28 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.13.2.1 2008/02/15 02:22:31 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -30,6 +30,9 @@
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
 #include "sim/prsim/Rule.h"
+#if PRSIM_CHANNEL_SUPPORT
+#include "sim/prsim/Channel-prsim.h"	// for channels support
+#endif
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
 #include "util/list_vector.h"

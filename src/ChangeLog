@@ -5,6 +5,15 @@
 
 2008-02-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-01:
+	  This branch is for the development of the long awaited
+		channel features in prsim.
+	  Initial revision is incomplete (link-fail), work in progress.
+	  Added sim/prsim/Channel-prsim.{h,cc}
+
+
+2008-02-14	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38:
 	  cflat -strengths now also computes strongest-single-path
 		drive strength ('one'), along with min,max.

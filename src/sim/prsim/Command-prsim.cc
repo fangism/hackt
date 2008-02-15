@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.11 2008/02/13 08:13:26 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.11.2.1 2008/02/15 02:22:29 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -79,7 +79,7 @@ static CommandCategory
 	general("general", "general commands"),
 	debug("debug", "debugging internals"),
 	simulation("simulation", "simulation commands"),
-	channel("channel", "channel commands"),
+	channels("channels", "channel commands"),
 	info("info", "information about simulated circuit"),
 	view("view", "instance to watch"),
 	modes("modes", "timing model, error handling");
@@ -3089,6 +3089,132 @@ MemStats::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SUPPORT
+// TODO: texinfo documentation! oh, and implement these.
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Channel, "channel", 
+	channels, "declare a handshake channel from a group of nodes")
+
+void
+Channel::usage(ostream& o) {
+	o << name << " <name> <type:init> <bundle:size> <rail:radix>" << endl;
+	o <<
+"Registers a named channel (with contituents) in a separate namespace in \n"
+"the simulator, typically used to drive or log the environment.\n"
+"\'name\' is the name of the new channel in the simulator's namespace\n"
+"\'type\' is a regular expression of the form [ae][nv]?, where \n"
+	"\t\'a\' means active-high acknowledge\n"
+	"\t\'e\' means active-low acknowledge (a.k.a. enable)\n"
+	"\t\'n\' means active-low validity (a.k.a. neutrality)\n"
+	"\t\'v\' means active-high validity.\n"
+	"\tThese are also the names of the channel signals.\n"
+"\'init\' is [01], the initial value of the acknowledge during reset\n"
+"\'bundle\' is the name of the data bundle (rail group) of the channel.\n"
+"\'size\' is the number of rail bundles (M in Mx1ofN)\n"
+	"\tnote: if there are no bundles, then leave the name blank,\n"
+		"\t\ti.e. just write \":0\"\n"
+	"\tUse size 0 to indicate that bundle name is not an array.\n"
+"\'rail\' is the name of the data rail of the channel.\n"
+"\'radix\' is the number of data rails per bundle (N in Mx1ofN).\n"
+	"\tUse radix 0 to indicate that rails are not an array (1of1).\n"
+"For example, \"channel e:0 :0 d:4\", is a conventional e1of4 channel with\n"
+"data rails d[0..3], and an active-low acknowledge reset to 0, no bundles."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// for finesse
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AutoChannel, "auto-channel", 
+	channels, "register a channel based on internal type")
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowChannels, "show-channels", 
+	channels, "list all registered channels")
+
+void
+ShowChannels::usage(ostream& o) {
+	o << name << endl;
+o << "Print list of all registered channels with their type information."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchChannel, "watch-channel", 
+	channels, "report when spcified channel changes state")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchChannel, "unwatch-channel", 
+	channels, "ignore when spcified channel changes state")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAllChannels, "watchall-channels", 
+	channels, "report when any channel changes state")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchAllChannels, "unwatchall-channels", 
+	channels, "ignore when any channel changes state")
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ResetChannel, "reset-channel", 
+	channels, "set a channel into its reset state")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ReleaseChannel, "release-channel", 
+	channels, "release a channel from its reset state")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ResetAllChannels, "reset-all-channels", 
+	channels, "set all registered channel into reset state")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ReleaseAllChannels,
+	"release-all-channels", channels,
+	"release all registered channels from reset state")
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CloseChannel, "close-channel", 
+	channels, "close any files/streams associated with channel")
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(InjectFile, "injectfile", 
+	channels, "source values on channel from file (once)")
+
+void
+InjectFile::usage(ostream& o) {
+	o << name << " <channel> <file> [start]" << endl;
+// optional start is for offset
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(LoopInjectFile, "loop-injectfile", 
+	channels, "source values on channel from file (loop)")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ExpectFile, "expectfile", 
+	channels, "assert values on channel from file (once)")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(LoopExpectFile, "loop-expectfile", 
+	channels, "assert values on channel from file (loop)")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpFile, "dumpfile", 
+	channels, "log channel values to file")
+
+// TODO: control format?
+
+void
+DumpFile::usage(ostream& o) {
+	o << name << " <channel> <file>" << endl;
+	o << "Logs channel values to an output file." << endl;
+}
+
+#endif	// PRSIM_CHANNEL_SUPPORT
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS
