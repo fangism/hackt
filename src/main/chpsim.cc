@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.14.14.1 2008/02/15 04:43:28 fang Exp $
+	$Id: chpsim.cc,v 1.14.14.2 2008/02/15 05:02:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -228,7 +228,7 @@ chpsim::parse_command_options(const int argc, char* argv[], options& o) {
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
 /***
-@texinfo opt/option-a.texi
+@texinfo options/option-a.texi
 @cindex checkpoint
 @cindex autosave
 @defopt -a
