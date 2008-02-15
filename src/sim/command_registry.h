@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.2.44.3 2008/01/21 23:02:48 fang Exp $
+	$Id: command_registry.h,v 1.2.44.4 2008/02/15 04:43:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -104,6 +104,11 @@ public:
 		interpreted.  Default off (false).
 	 */
 	static bool			echo_commands;
+	/**
+		Automatically save checkpoint upon termination, 
+		normal or error.  
+	 */
+	static bool			autosave_on_exit;
 public:
 	template <class C>
 	static

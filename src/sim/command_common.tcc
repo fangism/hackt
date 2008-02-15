@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.6.8.3 2008/01/24 01:23:04 fang Exp $
+	$Id: command_common.tcc,v 1.6.8.4 2008/02/15 04:43:33 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -538,6 +538,45 @@ template <class State>
 void
 Load<State>::usage(ostream& o) {
 	o << "load <file>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(AutoSave, "autosave",
+	"automatically save checkpoint upon exit")
+
+template <class State>
+int
+AutoSave<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+	const string& arg(a.back());
+	if (arg == "1") {
+		command_registry_type::autosave_on_exit = true;
+	} else if (arg == "on") {
+		command_registry_type::autosave_on_exit = true;
+	} else if (arg == "yes") {
+		command_registry_type::autosave_on_exit = true;
+	} else if (arg == "0") {
+		command_registry_type::autosave_on_exit = false;
+	} else if (arg == "off") {
+		command_registry_type::autosave_on_exit = false;
+	} else if (arg == "no") {
+		command_registry_type::autosave_on_exit = false;
+	} else {
+		cerr << "Error: invalid argument." << endl;
+		usage(cerr);
+		return command_type::BADARG;
+	}
+	return command_type::NORMAL;
+}
+
+template <class State>
+void
+AutoSave<State>::usage(ostream& o) {
+	o << name << " <on|off>" << endl;
 	o << brief << endl;
 }
 

@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.14 2007/09/13 01:14:12 fang Exp $
+	$Id: chpsim.cc,v 1.14.14.1 2008/02/15 04:43:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,6 +13,7 @@
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
+#include <fstream>
 #include <list>
 #include "main/chpsim.h"
 #include "main/chpsim_options.h"
@@ -194,6 +195,15 @@ try {
 			opt.interactive);
 		if (ret) {
 			// return value only has meaning to the interpreter
+			if (CommandRegistry::autosave_on_exit) {
+				std::ofstream ofs("autosave.chpsimckpt");
+				if (ofs) {
+					sim_state.save_checkpoint(ofs);
+				} else {
+					cerr <<
+				"Error saving autosave.chpsimckpt" << endl;
+				}
+			}
 			return 1;	// ret
 		}
 	}
@@ -213,10 +223,24 @@ try {
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+bcC:d:f:hiI:l:L:";
+	static const char optstring[] = "+abcC:d:f:hiI:l:L:";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
+/***
+@texinfo opt/option-a.texi
+@cindex checkpoint
+@cindex autosave
+@defopt -a
+Automatically save checkpoint "autosave.prsimckpt" upon exit, 
+regardless of the exit status.
+Useful for debugging and resuming simulations.  
+@end defopt
+@end texinfo
+***/
+		case 'a':
+			CommandRegistry::autosave_on_exit = true;
+			break;
 /***
 @texinfo options/option-b.texi
 @cindex batch mode
@@ -424,6 +448,7 @@ void
 chpsim::usage(void) {
 	cerr << "usage: " << name << " [options] <hackt-obj-file>" << endl;
 	cerr << "options:\n"
+ "\t-a : auto-save checkpoint (autosave.chpsimckpt) upon exit\n"
 "\t-b : batch-mode, non-interactive (promptless)\n"
 "\t-d <checkpoint>: textual dump of checkpoint only\n"
 "\t-f <flag> : general options modifiers (listed below)\n"

@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.14.14.1 2008/01/17 01:31:50 fang Exp $
+	$Id: prsim.cc,v 1.14.14.2 2008/02/15 04:43:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -174,6 +174,17 @@ try {
 			opt.interactive);
 		if (ret) {
 			// return value only has meaning to the interpreter
+			// if autosave is on, save checkpoint for
+			// post-mortem analysis.
+			if (CommandRegistry::autosave_on_exit) {
+				std::ofstream ofs("autosave.prsimckpt");
+				if (ofs) {
+					sim_state.save_checkpoint(ofs);
+				} else {
+					cerr <<
+				"Error saving autosave.prsimckpt" << endl;
+				}
+			}
 			return 1;	// ret;
 		}
 	}
@@ -194,10 +205,24 @@ try {
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+bcC:d:f:hiI:O:";
+	static const char optstring[] = "+abcC:d:f:hiI:O:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
+/***
+@texinfo opt/option-a.texi
+@cindex checkpoint
+@cindex autosave
+@defopt -a
+Automatically save checkpoint "autosave.prsimckpt" upon exit, 
+regardless of the exit status.
+Useful for debugging and resuming simulations.  
+@end defopt
+@end texinfo
+***/
+		case 'a':
+			CommandRegistry::autosave_on_exit = true;
+			break;
 /***
 @texinfo opt/option-b.texi
 @cindex batch mode
@@ -348,16 +373,17 @@ For more details, @xref{Optimization Flags}.
 void
 prsim::usage(void) {
 	cerr << "usage: " << name << " [options] <hackt-obj-infile>" << endl;
-	cerr << "options:" << endl;
-	cerr << "\t-b : batch-mode, non-interactive (promptless)" << endl;
-	cerr << "\t-c : input file is source, not object, compile it" << endl;
-	cerr << "\t-C <opts> : forward options to compile driver" << endl;
-	cerr << "\t-d <checkpoint>: textual dump of checkpoint only" << endl;
-	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
-	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;
-	cerr << "\t-i : interactive (default)" << endl;
-	cerr << "\t-I <path> : include path for scripts (repeatable)" << endl;
-	cerr << "\t-O <0..1> : expression optimization level" << endl;
+	cerr << "options:\n"
+"\t-a : auto-save checkpoint (autosave.prsimckpt) upon exit\n"
+"\t-b : batch-mode, non-interactive (promptless)\n"
+"\t-c : input file is source, not object, compile it\n"
+"\t-C <opts> : forward options to compile driver\n"
+"\t-d <checkpoint>: textual dump of checkpoint only\n"
+"\t-f <flag> : general options modifiers (listed below)\n"
+"\t-h : print commands help and exit (objfile optional)\n"
+"\t-i : interactive (default)\n"
+"\t-I <path> : include path for scripts (repeatable)\n"
+"\t-O <0..1> : expression optimization level\n";
         const size_t flags = options_modifier_map.size();
 	if (flags) {
 		cerr << "flags (" << flags << " total):" << endl;

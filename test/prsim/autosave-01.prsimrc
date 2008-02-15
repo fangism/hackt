@@ -1,0 +1,20 @@
+# "autosave-01.prsimrc"
+# @haco@ inv.haco-a
+# @antideps@ autosave.prsimckpt
+# testing autosave feature
+# will produce an "autosave.prsimckpt"
+
+autosave on
+# remove it first
+!rm -f autosave.prsimckpt
+
+watchall
+set a 0
+cycle
+time
+
+# expect fail
+assert c 1
+
+echo not reached
+# exit

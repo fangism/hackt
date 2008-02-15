@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.13.8.2 2008/01/24 01:23:05 fang Exp $
+	$Id: Command.cc,v 1.13.8.3 2008/02/15 04:43:36 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1253,6 +1253,18 @@ file @var{ckpt}.
 ***/
 typedef	Load<State>				Load;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/autosave.texi
+@deffn Command autosave [on|off]
+Automatically save checkpoint upon end of simulation, 
+regardless of exit status.
+@end deffn
+@end texinfo
+***/
+typedef	AutoSave<State>				AutoSave;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AutoSave, CHPSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

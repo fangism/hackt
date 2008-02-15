@@ -5,6 +5,15 @@
 
 2008-02-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-39:
+	  By request, autosave in prsim and chpsim.
+		either pass -a on command invocation, or use
+		'autosave' [on|off] command in interpreter.
+	  Documented and basically tested.  
+
+
+2008-02-14	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38:
 	  cflat -strengths now also computes strongest-single-path
 		drive strength ('one'), along with min,max.

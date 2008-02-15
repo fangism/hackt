@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.11 2008/02/13 08:13:26 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.12 2008/02/15 04:43:39 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1132,6 +1132,18 @@ Loads a @command{hacprsim} checkpoint file into the simulator state.
 ***/
 typedef	Load<State>				Load;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Load, PRSIM::simulation)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/autosave.texi
+@deffn Command autosave [on|off]
+Automatically save checkpoint upon end of simulation, 
+regardless of exit status.
+@end deffn
+@end texinfo
+***/
+typedef	AutoSave<State>				AutoSave;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AutoSave, PRSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
