@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.13.74.3.2.1 2008/02/15 02:22:30 fang Exp $
+	$Id: Node.h,v 1.13.74.3.2.2 2008/02/16 02:29:53 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -413,6 +413,14 @@ public:
 
 	void
 	clear_excl_queue(void) { state_flags &= ~NODE_EX_QUEUE; }
+
+#if PRSIM_CHANNEL_SUPPORT
+	void
+	set_in_channel(void) { state_flags |= NODE_IN_CHANNEL; }
+
+	bool
+	in_channel(void) { return state_flags & NODE_IN_CHANNEL; }
+#endif
 
 	uchar
 	current_value(void) const { return value; }

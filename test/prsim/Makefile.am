@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.24 2008/02/13 08:13:42 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.24.2.1 2008/02/16 02:29:56 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -34,7 +34,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	cross-pull-a \
 	bitline-a bitline-b \
 	SRAM SRAM-a SRAM-b SRAM-c SRAM-d \
-	keeper-a
+	keeper-a \
+	channel-test-a
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -118,7 +119,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	SRAM-b-01 SRAM-b-02 SRAM-b-03 \
 	SRAM-c-01 SRAM-c-02 SRAM-c-03 \
 	SRAM-d-01 SRAM-d-02 \
-	keeper-a-01
+	keeper-a-01 \
+	channel-test-a-01
 
 # positive different test:
 # oscil-random-01 and oscil-random-01a are *supposed* to differ (seeds)

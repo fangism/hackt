@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.11.2.1 2008/02/15 02:22:29 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.11.2.2 2008/02/16 02:29:52 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3091,9 +3091,102 @@ MemStats::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_CHANNEL_SUPPORT
 // TODO: texinfo documentation! oh, and implement these.
+// TODO: support PxeMx1ofN (array source, auto-expand and decouple?)
+// TODO: typedef-channel command
 
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Channel, "channel", 
 	channels, "declare a handshake channel from a group of nodes")
+
+int
+Channel::main(State& s, const string_list& a) {
+if (a.size() != 5) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string& chan_name(*i);
+	const string& ev_type(*++i);
+	const string& bundle(*++i);
+	const string& rail(*++i);
+	// could confirm that 'name' exists as a process/channel/datatype?
+	bool ack_sense;
+	bool ack_init;
+	bool have_valid = false;
+	bool valid_sense = false;
+	try {
+		// parse ev-type
+		const size_t evl = ev_type.length();
+		if (evl < 3 || evl > 4) { THROW_EXIT; }
+		switch (tolower(ev_type[0])) {
+		case 'a': ack_sense = true; break;
+		case 'e': ack_sense = false; break;
+		default: THROW_EXIT;
+		}
+		size_t c = ev_type.find(':');
+		if (c == string::npos) { THROW_EXIT; }
+		if (evl == 4) {
+			have_valid = true;
+			switch (tolower(ev_type[c-1])) {
+			case 'n': valid_sense = false; break;
+			case 'v': valid_sense = true; break;
+			default: THROW_EXIT;
+			}
+		}
+		switch (*--ev_type.end()) {
+		case '0': ack_init = false; break;
+		case '1': ack_init = true; break;
+		default: THROW_EXIT;
+		}
+	} catch (...) {
+		cerr << "Error: invalid channel ev-type argument." << endl;
+		cerr << "See \"help " << name << "\"." << endl;
+		return Command::BADARG;
+	}
+	string bundle_name;	// default blank
+	size_t bundle_size = 0;
+	try {
+		// parse bundle
+		size_t c = bundle.find(':');
+		if (c == string::npos || (c == bundle.length() -1)) {
+			THROW_EXIT;
+		}
+		const string::const_iterator b(bundle.begin());
+		bundle_name.assign(b, b+c);
+		string v(b +c +1, bundle.end());
+		if (string_to_num(v, bundle_size)) { THROW_EXIT; }
+	} catch (...) {
+		cerr << "Error: invalid channel bundle argument." << endl;
+		cerr << "See \"help " << name << "\"." << endl;
+		return Command::BADARG;
+	}
+	string rail_name;
+	size_t rail_size = 0;
+	try {
+		// parse rail
+		size_t c = rail.find(':');
+		if (c == string::npos || (c == rail.length() -1)) {
+			THROW_EXIT;
+		}
+		const string::const_iterator b(rail.begin());
+		rail_name.assign(b, b+c);
+		if (!rail_name.length()) { THROW_EXIT; }
+		string v(b +c +1, rail.end());
+		if (string_to_num(v, rail_size)) { THROW_EXIT; }
+	} catch (...) {
+		cerr << "Error: invalid channel rail argument." << endl;
+		cerr << "See \"help " << name << "\"." << endl;
+		return Command::BADARG;
+	}
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.new_channel(s, chan_name, bundle_name, bundle_size, 
+			rail_name, rail_size) ||
+			cm.set_channel_ack_valid(s, chan_name, ack_sense, 
+				ack_init, have_valid, valid_sense)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}	// end Channel::main
 
 void
 Channel::usage(ostream& o) {
@@ -3133,6 +3226,17 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AutoChannel, "auto-channel",
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowChannels, "show-channels", 
 	channels, "list all registered channels")
 
+int
+ShowChannels::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_channels(cout);
+	return Command::NORMAL;
+}
+}
+
 void
 ShowChannels::usage(ostream& o) {
 	o << name << endl;
@@ -3141,6 +3245,7 @@ o << "Print list of all registered channels with their type information."
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchChannel, "watch-channel", 
 	channels, "report when spcified channel changes state")
 
@@ -3155,15 +3260,20 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAllChannels, "watchall-channels",
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchAllChannels, "unwatchall-channels", 
 	channels, "ignore when any channel changes state")
-
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ResetChannel, "reset-channel", 
 	channels, "set a channel into its reset state")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ReleaseChannel, "release-channel", 
 	channels, "release a channel from its reset state")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StopChannel, "stop-channel", 
+	channels, "hold a channel in its current state")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ResetAllChannels, "reset-all-channels", 
@@ -3174,24 +3284,29 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ReleaseAllChannels,
 	"release-all-channels", channels,
 	"release all registered channels from reset state")
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StopAllChannels,
+	"stop-all-channels", channels,
+	"hold all registered channels in current state")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(CloseChannel, "close-channel", 
 	channels, "close any files/streams associated with channel")
-
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(InjectFile, "injectfile", 
 	channels, "source values on channel from file (once)")
 
 void
 InjectFile::usage(ostream& o) {
 	o << name << " <channel> <file> [start]" << endl;
-// optional start is for offset
+	// optional start is for offset
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(LoopInjectFile, "loop-injectfile", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(InjectFileLoop, "injectfile-loop", 
 	channels, "source values on channel from file (loop)")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3199,7 +3314,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ExpectFile, "expectfile",
 	channels, "assert values on channel from file (once)")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(LoopExpectFile, "loop-expectfile", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ExpectFileLoop, "expectfile-loop", 
 	channels, "assert values on channel from file (loop)")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3213,6 +3328,7 @@ DumpFile::usage(ostream& o) {
 	o << name << " <channel> <file>" << endl;
 	o << "Logs channel values to an output file." << endl;
 }
+#endif
 
 #endif	// PRSIM_CHANNEL_SUPPORT
 

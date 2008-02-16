@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.13.2.1 2008/02/15 02:22:31 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.13.2.2 2008/02/16 02:29:55 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -415,7 +415,12 @@ private:
 	// watched nodes
 	watch_list_type				watch_list;
 	// vectors
-	// channels
+#if PRSIM_CHANNEL_SUPPORT
+	/**
+		Extension to manage channel environments and actions. 
+	 */
+	channel_manager				_channel_manager;
+#endif
 	// mode of operation
 	// operation flags
 	flags_type				flags;
@@ -574,6 +579,14 @@ public:
 		return flags & FLAG_WEAK_RULES;
 	}
 #endif	// PRSIM_WEAK_RULES
+
+#if PRSIM_CHANNEL_SUPPORT
+	/**
+		Extension to manage channel environments and actions. 
+	 */
+	channel_manager&
+	get_channel_manager(void) { return _channel_manager; }
+#endif
 
 	void
 	reset_tcounts(void);
@@ -1065,6 +1078,13 @@ public:
 		// really don't care what kind of expr, is ignored
 		return dump_subexpr(o, ei, v, expr_type::EXPR_ROOT, true);
 	}
+
+#if PRSIM_CHANNEL_SUPPORT
+	ostream&
+	dump_channels(ostream& o) const {
+		return _channel_manager.dump(o, *this);
+	}
+#endif
 
 	ostream&
 	dump_memory_usage(ostream&) const;

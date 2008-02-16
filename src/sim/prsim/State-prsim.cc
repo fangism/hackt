@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.32 2008/02/13 08:13:27 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.32.2.1 2008/02/16 02:29:54 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -186,6 +186,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		current_time(0), 
 		uniform_delay(time_traits::default_delay), 
 		watch_list(), 
+#if PRSIM_CHANNEL_SUPPORT
+		_channel_manager(), 
+#endif
 		flags(FLAGS_DEFAULT),
 		unstable_policy(ERROR_DEFAULT_UNSTABLE),
 		weak_unstable_policy(ERROR_DEFAULT_WEAK_UNSTABLE),
@@ -4614,6 +4617,9 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, interference_policy);
 	write_value(o, weak_interference_policy);
 	write_value(o, timing_mode);
+#if PRSIM_CHANNEL_SUPPORT
+	if (_channel_manager.save_checkpoint(o)) return true;
+#endif
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
@@ -4779,6 +4785,9 @@ try {
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
+#if PRSIM_CHANNEL_SUPPORT
+	if (_channel_manager.load_checkpoint(i)) return true;
+#endif
 
 	// this must be run *after* mode flags are loaded
 if (checking_excl()) {
@@ -4909,6 +4918,13 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	char timing_mode;
 	read_value(i, timing_mode);
 	o << "timing mode: " << size_t(timing_mode) << endl;
+#if PRSIM_CHANNEL_SUPPORT
+{
+	channel_manager tmp;
+	tmp.load_checkpoint(i);
+	tmp.dump_checkpoint_state(o) << endl;
+}
+#endif
 	read_value(i, header_check);
 	o << "footer string: " << header_check << endl;
 	return o;
