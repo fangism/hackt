@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.32.2.1 2008/02/16 02:29:54 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.32.2.2 2008/02/17 22:15:25 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2222,6 +2222,21 @@ if (eval_ordering_is_random()) {
 #endif
 	}
 }
+#if PRSIM_CHANNEL_SUPPORT
+	// Q: is this the best place to handle this?
+	if (n.in_channel()) {
+		// predicate may not filter precisely
+		// channel manager should 'ignore' irrelevant nodes
+		vector<env_event_type> env_events;
+		_channel_manager.process_node(ni, prev, next, env_events);
+		// cause of these events must be 'ni', this node
+		// TODO: promote to primary event queue
+		// __allocate_event
+		// enqueue_event
+		// interaction with other enqueued events? anomalies?
+		// for now, give up if there are conflicting events in queue
+	}
+#endif
 	/***
 		If an event is forced (say, by user), then check node's own
 		guards to determine whether or not a new event needs to

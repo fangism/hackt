@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.2.3 2008/02/17 02:20:39 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.2.4 2008/02/17 22:15:24 fang Exp $
  */
 
 #include <iostream>
@@ -16,6 +16,9 @@
 #include "util/string.tcc"
 #include "util/tokenize.h"
 #include "util/IO_utils.tcc"
+#if PACKED_ARRAY_DATA_RAILS
+#include "util/packed_array.tcc"
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -31,6 +34,7 @@ using std::pair;
 using std::make_pair;
 using std::mem_fun_ref;
 using std::ostream_iterator;
+using std::back_inserter;
 using entity::int_value_type;
 #include "util/using_ostream.h"
 using util::read_value;
@@ -137,6 +141,9 @@ channel::get_all_nodes(vector<node_index_type>& ret) const {
 #if PRSIM_CHANNEL_VALIDITY
 	ret.push_back(valid_signal);
 #endif
+#if PACKED_ARRAY_DATA_RAILS
+	copy(data.begin(), data.end(), back_inserter(ret));
+#else
 	size_t j = 0;
 	for ( ; j<bundles(); ++j) {
 	size_t k = 0;
@@ -144,9 +151,36 @@ channel::get_all_nodes(vector<node_index_type>& ret) const {
 		ret.push_back(data[j][k]);
 	}
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Search for a match.  
+	\return true if there is an alias conflict with any data rails, 
+	in which case, channel cannot function properly.  
+ */
+bool
+channel::alias_data_rails(const node_index_type ni) const {
+#if PACKED_ARRAY_DATA_RAILS
+	return std::find(data.begin(), data.end(), ni) != data.end();
+#else
+	size_t j = 0;
+	for ( ; j<bundles(); ++j) {
+	size_t k = 0;
+	for ( ; k<radix(); ++k) {
+		if (data[j][k] == ni)
+			return true;
+	}
+	}
+	return false;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't bother printing out node indices.
+ */
 ostream&
 channel::dump(ostream& o) const {
 	o << (get_ack_active() ? ".a" : ".e");
@@ -285,18 +319,33 @@ channel::set_source(const State& s, const string& file_name, const bool loop) {
 	// this is forgiveable
 #endif
 #endif
+#if PACKED_ARRAY_DATA_RAILS
+	data_bundle_array_type::const_iterator i(data.begin()), e(data.end());
+	for ( ; i!=e; ++i) {
+		const State::node_type& d(s.get_node(*i));
+#else
 	size_t j = 0;
 	for ( ; j<bundles(); ++j) {
 	size_t k = 0;
 	for ( ; k<radix(); ++k) {
 		const State::node_type& d(s.get_node(data[j][k]));
+#endif
 		if (d.has_fanin()) {
+#if PACKED_ARRAY_DATA_RAILS
+			const size_t pos = i -data.begin();	// std::distance
+			const size_t j = pos / radix();
+			const size_t k = pos % radix();
+#endif
 			cerr << "Warning: channel data rail `" << name <<
 				"\' (" << j << ", " << k << ") has fanin.\n";
 			maybe_externally_driven = true;
 		}
+#if PACKED_ARRAY_DATA_RAILS
+	}
+#else
 	}
 	}
+#endif
 	if (maybe_externally_driven) {
 		cerr << "Channel source may not operator properly, "
 			"if driven from elsewhere." << endl;
@@ -333,10 +382,12 @@ channel::set_sink(const State& s) {
 		cerr << "Warning: channel validity `" << name <<
 			(get_valid_sense() ? ".v" : ".n") <<
 			"\' has no fanin." << endl;
+#if 0
 		cerr << "I will automatically drive this signal for you "
 			"according to the state of the data rails... "
 			"because I am so kind." << endl;
 		// but make sure this is not doubly driven by another source
+#endif
 	}
 #if 0
 	if (vn.has_fanout()) {
@@ -413,14 +464,21 @@ channel::set_log(const string& fn) {
  */
 void
 channel::initialize_data_counter(const State& s) {
+	typedef	State::node_type		node_type;
 	counter_state = 0;
 	x_counter = 0;
+#if PACKED_ARRAY_DATA_RAILS
+	data_bundle_array_type::const_iterator i(data.begin()), e(data.end());
+	for ( ; i!=e; ++i) {
+		const node_type& n(s.get_node(*i));
+#else
 	size_t j = 0;
 	for ( ; j<bundles(); ++j) {
 	size_t k = 0;
 	for ( ; k<radix(); ++k) {
-		typedef	State::node_type		node_type;
-		switch (s.get_node(data[j][k]).current_value()) {
+		const node_type& n(s.get_node(data[j][k]));
+#endif
+		switch (n.current_value()) {
 		case node_type::LOGIC_HIGH:
 			++counter_state;
 			break;
@@ -429,8 +487,12 @@ channel::initialize_data_counter(const State& s) {
 			break;
 		default: break;
 		}
+#if PACKED_ARRAY_DATA_RAILS
+	}
+#else
 	}
 	}
+#endif
 	if (counter_state > bundles()) {
 		cerr << "Channel data rails are in an invalid state!" << endl;
 		cerr << "In channel `" << name << "\', got " << counter_state
@@ -438,6 +500,72 @@ channel::initialize_data_counter(const State& s) {
 			" are permitted." << endl;
 		THROW_EXIT;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Event on node ni may trigger environment events, logging, 
+	checking, etc... process them here.
+	This assumes that in any given channel, the acknowledge
+	is not aliased to any of the data rails.  
+	\param new_events is where new events from the environment
+		should be staged.  
+ */
+void
+channel::process_node(const node_index_type ni, 
+		const uchar prev, const uchar next, 
+		vector<env_event_type>& new_events) {
+	typedef	State::node_type	node_type;
+// first identify which channel node member this node is
+if (ni == ack_signal) {
+	// only need to take action if this is a source
+	if (is_sourcing() && !stopped()) {
+	switch (next) {
+	case node_type::LOGIC_LOW:
+		if (get_ack_active()) {
+			// \pre all data rails are neutral
+			// set data rails to next data value
+		} else {
+			// reset all data rails, (switch only those active)
+		}
+		break;
+	case node_type::LOGIC_HIGH:
+		if (get_ack_active()) {
+			// reset all data rails, (switch only those active)
+		} else {
+			// \pre all data rails are neutral
+			// set data rails to next data value
+		}
+		break;
+	default:
+		// set all data to X
+		break;
+	}
+	}
+	// logging and expect mode don't care
+#if PRSIM_CHANNEL_VALIDITY
+} else if (valid_signal && (ni == valid_signal)) {
+	// only need to take action if this is a sink
+#endif
+} else {
+	// invariant: must be data rail
+	// update state counters
+	switch (prev) {
+	case node_type::LOGIC_HIGH: --counter_state; break;
+	case node_type::LOGIC_OTHER: --x_counter; break;
+	default: break;
+	}
+	switch (next) {
+	case node_type::LOGIC_HIGH: ++counter_state; break;
+	case node_type::LOGIC_OTHER: ++x_counter; break;
+	default: break;
+	}
+	// need to take action for EACH of the following that hold:
+	// 1) this is sink AND not a valid-request protocol
+	//	(otherwise, depends on valid signal)
+	// 2) this is being logged
+	// 3) this is being expected
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -457,6 +585,9 @@ channel::save_checkpoint(ostream& o) const {
 	write_value(o, x_counter);
 	write_value(o, bundles());	// size_t
 	write_value(o, radix());	// size_t
+#if PACKED_ARRAY_DATA_RAILS
+	util::write_range(o, data.begin(), data.end());
+#else
 	size_t j = 0;
 	for ( ; j<bundles(); ++j) {
 	size_t k = 0;
@@ -464,6 +595,7 @@ channel::save_checkpoint(ostream& o) const {
 		write_value(o, data[j][k]);
 	}
 	}
+#endif
 	write_value(o, value_index);
 //	write_value(o, inject_expect_file);
 	if (dumplog.save_checkpoint(o)) return true;
@@ -482,6 +614,13 @@ channel::load_checkpoint(istream& i) {
 	read_value(i, flags);
 	read_value(i, counter_state);
 	read_value(i, x_counter);
+#if PACKED_ARRAY_DATA_RAILS
+	data_rail_index_type k;
+	read_value(i, k[0]);
+	read_value(i, k[1]);
+	data.resize(k);
+	util::read_range(i, data.begin(), data.end());
+#else
 	size_t _bundles, _radix;
 	read_value(i, _bundles);
 	read_value(i, _radix);
@@ -495,6 +634,7 @@ channel::load_checkpoint(istream& i) {
 			read_value(i, r[k]);
 		}
 	}
+#endif
 	read_value(i, value_index);
 //	read_value(i, inject_expect_file);
 	// no need to re-open file, already have its values
@@ -539,14 +679,26 @@ if (i.second) {
 	channel& c(channel_pool.back());
 	c.name = base;
 	// allocate data rail references:
+#if PACKED_ARRAY_DATA_RAILS
+	channel::data_rail_index_type dk;
+	dk[0] = num_bundles;
+	dk[1] = num_rails;
+	c.data.resize(dk);
+#else
 	c.data.resize(num_bundles);
 	// this would be easier with a packed_array...
 	for_each(c.data.begin(), c.data.end(),
 		bind2nd(mem_fun_ref(&channel::rails_array_type::resize),
 			num_rails));
+#endif
 	const entity::module& m(state.get_module());
 	// lookup and assign node-indices
+#if PACKED_ARRAY_DATA_RAILS
+	dk[0] = 0;
+	size_t& j = dk[0];
+#else
 	size_t j = 0;
+#endif
 	for ( ; j<num_bundles; ++j) {
 		ostringstream bundle_segment;
 		if (bundle_name.length()) {
@@ -555,7 +707,12 @@ if (i.second) {
 				bundle_segment << "[" << j << "]";
 			}
 		}
+#if PACKED_ARRAY_DATA_RAILS
+		dk[1] = 0;
+		size_t& k = dk[1];
+#else
 		size_t k = 0;
+#endif
 		for ( ; k<num_rails; ++k) {
 			ostringstream n;
 			n << base << bundle_segment.str() << "." << rail_name;
@@ -565,10 +722,18 @@ if (i.second) {
 			const node_index_type ni =
 				parse_node_to_index(n.str(), m);
 			if (ni) {
+#if PACKED_ARRAY_DATA_RAILS
+				c.data[dk] = ni;
+#else
 				c.data[j][k] = ni;
+#endif
 				// flag node for consistency
 				state.get_node(ni).set_in_channel();
+#if PACKED_ARRAY_DATA_RAILS
+				c.__node_to_rail[ni] = dk;
+#else
 				c.__node_to_rail[ni] = make_pair(j, k);
+#endif
 				// lookup from node to channels
 				node_channels_map[ni].insert(key);
 			} else {
@@ -622,7 +787,11 @@ channel_manager::set_channel_ack_valid(State& state, const string& base,
 			"\' in channel." << endl;
 		return true;
 	}
-	c.ack_signal = ai;
+	if (c.set_ack_signal(ai)) {
+		cerr << "Channel acknowledge is not allowed to alias "
+			"any of its data rails!" << endl;
+		return true;
+	}
 	state.get_node(ai).set_in_channel();		// flag in channel
 	node_channels_map[ai].insert(f->second);	// reverse lookup
 }
@@ -636,7 +805,16 @@ if (have_validity) {
 			"\' in channel." << endl;
 		return true;
 	}
-	c.valid_signal = vi;
+	if (c.set_valid_signal(vi)) {
+		cerr << "Channel acknowledge is not allowed to alias "
+			"any of its data rails!" << endl;
+		return true;
+	}
+	if (c.ack_signal == c.valid_signal) {
+		cerr << "Channel acknowledge and validity are not allowed to "
+			"alias each other!" << endl;
+		return true;
+	}
 	state.get_node(vi).set_in_channel();		// flag in channel
 	node_channels_map[vi].insert(f->second);	// reverse lookup
 }
@@ -747,6 +925,27 @@ void
 channel_manager::resume_all_channels(void) {
 	for_each(channel_pool.begin(), channel_pool.end(), 
 		mem_fun_ref(&channel::resume));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Any return status?
+ */
+void
+channel_manager::process_node(const node_index_type ni, 
+		const uchar prev, const uchar next, 
+		vector<env_event_type>& new_events) {
+	// find all channels that this node participates in:
+	const node_channels_map_type::const_iterator
+		f(node_channels_map.find(ni));
+if (f != node_channels_map.end()) {
+	std::set<channel_index_type>::const_iterator
+		i(f->second.begin()), e(f->second.end());
+	for ( ; i!=e; ++i) {
+		channel_pool[*i].process_node(ni, prev, next, new_events);
+	}
+}
+	// else ignore, nothing to do, only cost one map lookup
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.93.4.3 2008/02/14 04:09:14 fang Exp $
+#	$Id: ChangeLog,v 1.93.4.3.2.1 2008/02/17 22:15:28 fang Exp $
+
+2008-02-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-04:
+	  util/IO_utils.{h,tcc}: added write/read_range (pair of iterators)
+
 
 2008-02-13	David Fang		<fangism@users.sourceforge.net>
 

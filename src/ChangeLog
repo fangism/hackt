@@ -5,6 +5,14 @@
 
 2008-02-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-04:
+	  prsim/Channel-prsim.{h,cc}: use packed 2D array structure
+		instead of vector-of-vector, cleaner and faster.
+		Started to implement channel::process_node.
+
+
+2008-02-16	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-03:
 	  Slight redesign of prsim::channel structure, allowing for
 		concurrent non-conflicting modes of operation.
