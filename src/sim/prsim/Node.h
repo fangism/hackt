@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.13.74.3.2.2 2008/02/16 02:29:53 fang Exp $
+	$Id: Node.h,v 1.13.74.3.2.3 2008/02/17 02:20:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -171,6 +171,11 @@ public:
 #else
 		return pull_up_index || pull_dn_index;
 #endif
+	}
+
+	bool
+	has_fanout(void) const {
+		return fanout.size();
 	}
 
 	bool

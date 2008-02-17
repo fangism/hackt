@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-02-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-03:
+	  Slight redesign of prsim::channel structure, allowing for
+		concurrent non-conflicting modes of operation.
+		Handful of new channel commands: stop, release, 
+			source, sink, expect, log (-all variants).
+	  Added basic test case.
+
+
 2008-02-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-02:

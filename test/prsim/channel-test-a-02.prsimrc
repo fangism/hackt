@@ -1,0 +1,16 @@
+# "channel-test-a-02.prsimrc"
+# @haco@ channel-test-a.haco-a
+
+source channel-test-a-01.prsimrc
+
+# set up some channels with commands
+channel-log X channel-test-a-02-X.log
+
+show-channels
+
+channel-close X
+!cat channel-test-a-02-X.log
+!rm channel-test-a-02-X.log
+
+show-channels
+

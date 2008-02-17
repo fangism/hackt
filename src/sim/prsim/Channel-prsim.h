@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.2.2 2008/02/16 02:29:51 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.2.3 2008/02/17 02:20:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -36,7 +36,8 @@ using std::vector;
 using std::string;
 using std::ostream;
 using std::istream;
-using std::ios;
+using std::ofstream;
+using entity::int_value_type;
 using util::memory::count_ptr;
 class State;
 class channel;
@@ -46,13 +47,16 @@ typedef	node_index_type				channel_index_type;
 
 //=============================================================================
 /**
+	Only used for output logging.
+	Never used for inputs.  
 	TODO: format flags!
 	Q: is there a way to query the open mode of an ios (stream)?
  */
 class channel_file_handle {
 	friend class channel;
 	string					fname;
-	count_ptr<ios>				stream;
+	count_ptr<ofstream>			stream;
+#if 0
 	enum __flags {
 		CHANNEL_FILE_READ = 		0x01,
 		CHANNEL_FILE_WRITE = 		0x02,
@@ -60,16 +64,13 @@ class channel_file_handle {
 		/// if true, re-open file at EOF (unused)
 		CHANNEL_FILE_LOOP = 		0x08
 	};
-#if 0
-	// position in file
-	// no longer need if entire file is read into array at once
-	size_t					linenum;
-#endif
 	// flags
 	uchar					flags;
+#endif
 public:
 	channel_file_handle();
 	~channel_file_handle();
+#if 0
 
 	bool
 	is_reading(void) const {
@@ -83,10 +84,14 @@ public:
 
 	bool
 	open_read(const string&);
+#endif
 
 	// append?
 	bool
-	open_write(const string&, const bool);
+	open_write(const string&);
+
+	void
+	close(void);
 
 	bool
 	save_checkpoint(ostream&) const;
@@ -103,20 +108,11 @@ public:
 	A channel can be configured as a source or sink.  
 	TODO: eventually add a configurable delay for environment 
 		response time.  
+	This assumes that all data rails are active high.
+	TODO: consider timestamping logs to be able to reconstruct total order
  */
 class channel {
 	friend class channel_manager;
-#if 0
-	/**
-		Data encoding: Mx1ofN, M is _size, N is radix.
-		Hetergenous channels not yet supported.  
-	 */
-	uchar					_size;
-	/**
-		The base of the data rails.  
-	 */
-	uchar					radix;
-#endif
 
 	enum channel_flags {
 		/// the value of channel enable on reset
@@ -127,6 +123,14 @@ class channel {
 		/// true for active high (v), false for active low (n)
 		CHANNEL_VALID_ACTIVE_SENSE =	0x0004,
 #endif
+		/// derived mask
+		CHANNEL_TYPE_FLAGS =
+			CHANNEL_ACK_RESET_VALUE
+			| CHANNEL_ACK_ACTIVE_SENSE
+#if PRSIM_CHANNEL_VALIDITY
+			| CHANNEL_VALID_RESET_VALUE
+#endif
+			,
 		/**
 			true if values are interpreted as source values.
 			should be exclusive with CHANNEL_SINKING.  
@@ -145,7 +149,7 @@ class channel {
 		/**
 			true if consumed values are interpreted as
 			values to expect and assert.  
-			prerequisite: CHANNEL_SINKING
+			NOTE: this is independent of sinking!
 		 */
 		CHANNEL_EXPECTING = 		0x0080,
 		/**
@@ -155,7 +159,8 @@ class channel {
 		/// default initial value
 		CHANNEL_DEFAULT_FLAGS = 	0x0000
 	};
-
+	/// name of channel (redundant)
+	string					name;
 	/// node index for acknowledge/enable
 	node_index_type				ack_signal;
 #if PRSIM_CHANNEL_VALIDITY
@@ -179,13 +184,26 @@ class channel {
 		invariant: [return-to-zero] counter must monotonically
 		increase/decrease between 0 and M, the nmuber of bundles.  
 	 */
-	ushort					counter_state;
+	uchar					counter_state;
+	/**
+		Counts the number of X data rails.  
+	 */
+	uchar					x_counter;
 	/**
 		Size of this array is the number of bundles (rail sets). 
 		Size of each element is the radix of the data rails.
 		TODO: use packed_array<T, 2>!!
 	 */
 	vector<rails_array_type>		data;
+	/**
+		Inject/expect files don't need to persist
+		once they are loaded into values.  
+		In non-loop mode, once values are exhausted, 
+		this should be cleared, along with flags.  
+		This way a checkpoint restore won't re-open them.  
+		Could also use value_index as a check.  
+	 */
+	string					inject_expect_file;
 	/**
 		Actions associated between channels and files.
 		Q: can some of these be overloaded?  
@@ -194,13 +212,15 @@ class channel {
 		This easily avoids file-system limits for large numbers
 		of channels.  
 	 */
-	channel_file_handle			inject_expect;
 	channel_file_handle			dumplog;
 	/**
 		The values to expect or inject.  
 	 */
-	vector<entity::int_value_type>		values;
-
+	vector<int_value_type>			values;
+	/**
+		Position in values list.
+	 */
+	size_t					value_index;
 private:
 	// optional: reverse lookup map: node -> bundle, rail
 	typedef	std::map<node_index_type, std::pair<size_t, size_t> >
@@ -273,15 +293,41 @@ public:
 
 	bool
 	is_expecting(void) const {
-		return (flags & CHANNEL_SINKING) &&
-			(flags & CHANNEL_EXPECTING);
+		return flags & CHANNEL_EXPECTING;
 	}
 
 	bool
 	is_looping(void) const {
-		return (is_sourcing() || is_sinking()) &&
+		return (is_sourcing() || is_expecting()) &&
 			(flags & CHANNEL_VALUE_LOOP);
 	}
+
+	bool
+	stopped(void) const { return flags & CHANNEL_STOPPED; }
+
+	void
+	stop(void) { flags |= CHANNEL_STOPPED; }
+
+	void
+	resume(void) { flags &= ~CHANNEL_STOPPED; }
+
+	bool
+	set_source(const State&, const string&, const bool);
+
+	bool
+	set_sink(const State&);
+
+	bool
+	set_log(const string&);
+
+	bool
+	set_expect(const string&, const bool);
+
+	void
+	close_stream(void);
+
+	void
+	initialize_data_counter(const State&);
 
 	void
 	process_node(const node_index_type, const uchar val);
@@ -360,6 +406,36 @@ public:
 	dump(ostream& o, const State&) const {
 		return __dump(o, false);
 	}
+
+	bool
+	source_channel(const State&, const string&, const string&, const bool);
+
+	bool
+	sink_channel(const State&, const string&);
+
+	bool
+	expect_channel(const string&, const string&, const bool);
+
+	bool
+	log_channel(const string&, const string&);
+
+	bool
+	close_channel(const string&);
+
+	void
+	close_all_channels(void);
+
+	bool
+	stop_channel(const string&);
+	
+	void
+	stop_all_channels(void);
+	
+	bool
+	resume_channel(const string&);
+
+	void
+	resume_all_channels(void);
 
 	ostream&
 	dump_memory_usage(ostream&) const;

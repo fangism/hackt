@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.11.2.2 2008/02/16 02:29:52 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.11.2.3 2008/02/17 02:20:42 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3268,66 +3268,338 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ResetChannel, "reset-channel",
 	channels, "set a channel into its reset state")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ReleaseChannel, "release-channel", 
-	channels, "release a channel from its reset state")
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(StopChannel, "stop-channel", 
-	channels, "hold a channel in its current state")
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ResetAllChannels, "reset-all-channels", 
 	channels, "set all registered channel into reset state")
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ReleaseAllChannels,
-	"release-all-channels", channels,
-	"release all registered channels from reset state")
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(StopAllChannels,
-	"stop-all-channels", channels,
-	"hold all registered channels in current state")
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(CloseChannel, "close-channel", 
-	channels, "close any files/streams associated with channel")
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(InjectFile, "injectfile", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStop, "channel-stop", 
+	channels, "hold a channel in its current state")
+
+int
+ChannelStop::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().stop_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelStop::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Prevent a source/sink channel from operating (pause)." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStopAll,
+	"channel-stop-all", channels,
+	"hold all registered channels in current state")
+
+int
+ChannelStopAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().stop_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelStopAll::usage(ostream& o) {
+	o << name << endl;
+	o << "Prevent all source/sink channels from operating." << endl;
+}
+
+// could call these Resume...
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelRelease, "channel-release", 
+	channels, "release a channel from its reset or stopped state")
+
+int
+ChannelRelease::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().resume_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelRelease::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Release a source/sink channel from paused state." << endl;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelReleaseAll,
+	"channel-release-all", channels,
+	"release all registered channels from reset/stopped state")
+
+int
+ChannelReleaseAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().resume_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelReleaseAll::usage(ostream& o) {
+	o << name << endl;
+	o << "Release all source/sink channels from reset/stopped state." << endl;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelClose, "channel-close", 
+	channels, "close any files/streams associated with channel")
+
+int
+ChannelClose::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().close_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelClose::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Close streams associated with channel." << endl;
+	o << "Note: this does not affect sources and expects." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelCloseAll, "channel-close-all", 
+	channels, "close files/streams associated with any channel")
+
+int
+ChannelCloseAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().close_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelCloseAll::usage(ostream& o) {
+	o << name << endl;
+	o << "Close all streams associated with channels." << endl;
+	o << "Note: this does not affect sources and expects." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSource, "channel-source", 
 	channels, "source values on channel from file (once)")
 
+int
+ChannelSource::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().source_channel(s, 
+			*++a.begin(), a.back(), false))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
 void
-InjectFile::usage(ostream& o) {
-	o << name << " <channel> <file> [start]" << endl;
-	// optional start is for offset
+ChannelSource::usage(ostream& o) {
+	o << name << " <channel> <file>" << endl;
+	// TODO optional start argument for offset
+	o << "Source channel values from file.  \n"
+		"Once values are exhausted, channel stops sourcing." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(InjectFileLoop, "injectfile-loop", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceLoop, "channel-source-loop", 
 	channels, "source values on channel from file (loop)")
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ExpectFile, "expectfile", 
-	channels, "assert values on channel from file (once)")
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ExpectFileLoop, "expectfile-loop", 
-	channels, "assert values on channel from file (loop)")
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpFile, "dumpfile", 
-	channels, "log channel values to file")
-
-// TODO: control format?
+int
+ChannelSourceLoop::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().source_channel(s, 
+			*++a.begin(), a.back(), true))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
 
 void
-DumpFile::usage(ostream& o) {
+ChannelSourceLoop::usage(ostream& o) {
 	o << name << " <channel> <file>" << endl;
-	o << "Logs channel values to an output file." << endl;
+	// TODO optional start argument for offset
+	o << "Source channel values from file infinitely.  \n"
+		"Once values are exhausted, sequence restarts." << endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSink, "channel-sink", 
+	channels, "consume tokens infinitely on channel")
+
+int
+ChannelSink::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().sink_channel(s, a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelSink::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Sink channel tokens infinitely." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLog, "channel-log", 
+	channels, "log channel values to file")
+
+int
+ChannelLog::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().log_channel(*++a.begin(), a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelLog::usage(ostream& o) {
+	o << name << " <channel> <file>" << endl;
+	o << "Record channel values to file (non-append)." << endl;
+	o << "Logging only passively observes the state of channel data, "
+		"without controlling any handshake signals.  " << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSinkLog, "channel-sink-log", 
+	channels, "sink and log channel values to file")
+
+int
+ChannelSinkLog::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& chan_name(*++a.begin());
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.sink_channel(s, chan_name, string(), true))
+		return Command::BADARG;
+	if (cm.log_channel(chan_name, a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelSinkLog::usage(ostream& o) {
+	o << name << " <channel> <file>" << endl;
+	o << "Record channel values in consumed tokens to file (non-append)."
+		<< endl;
+	o << "Logging only passively observes the state of channel data, "
+		"without controlling any handshake signals.  " << endl;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpect, "channel-expect", 
+	channels, "assert values on channel from file (once)")
+
+int
+ChannelExpect::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& chan_name(*++a.begin());
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.expect_channel(chan_name, a.back(), false))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelExpect::usage(ostream& o) {
+	// TODO optional start argument for offset
+	o << name << " <channel> <file>" << endl;
+	o <<
+"Assert that values observed on channel match expected values from file.\n"
+"Expecting only passively observes the state of channel data, "
+	"without controlling any handshake signals." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectLoop, "channel-expect-loop", 
+	channels, "assert values on channel from file (loop)")
+
+int
+ChannelExpectLoop::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& chan_name(*++a.begin());
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.expect_channel(chan_name, a.back(), true))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelExpectLoop::usage(ostream& o) {
+	o << name << " <channel> <file>" << endl;
+	o <<
+"Assert that values observed on channel match expected values from file.\n"
+"Expecting only passively observes the state of channel data, "
+	"without controlling any handshake signals." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSinkExpect, "channel-sink-expect", 
+	channels, "consume and assert values on channel (once)")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSinkExpectLoop,
+	"channel-sink-expect-loop", channels,
+	"consume and assert values on channel (once)")
 #endif
 
 #endif	// PRSIM_CHANNEL_SUPPORT

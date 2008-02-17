@@ -1,0 +1,13 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+channels:
+X : .e(init:0) 1x1of2 off > channel-test-a-02-X.log
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+# log for channel: X
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
