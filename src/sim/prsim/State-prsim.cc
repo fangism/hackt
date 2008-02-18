@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.32.2.2 2008/02/17 22:15:25 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.32.2.3 2008/02/18 05:32:38 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -307,6 +307,79 @@ State::initialize(void) {
 	// timing mode preserved
 	current_time = 0;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SUPPORT
+	// Q: is this the best place to handle this?
+void
+State::flush_channel_events(const vector<env_event_type>& env_events, 
+		const event_cause_type& c) {
+	// cause of these events must be 'ni', this node
+	vector<env_event_type>::const_iterator
+		i(env_events.begin()), e(env_events.end());
+	// const event_cause_type c(ni, next);
+	for ( ; i!=e; ++i) {
+		node_type& _n(get_node(i->first));
+		const uchar _v = i->second;
+		if (_n.current_value() != _v) {
+		if (_n.get_event()) {
+	// interaction with other enqueued events? anomalies?
+	// for now, give up if there are conflicting events in queue
+			// instability!?
+			ISE_INVARIANT(!_n.get_event());
+			// not true, but we bomb out for now...
+			// TODO: proper diagnostic
+		} else {
+			// __allocate_event
+			const event_index_type pn =
+				__allocate_event(_n, i->first, c,
+					INVALID_RULE_INDEX, _v
+#if PRSIM_WEAK_RULES
+					, false	// environment never weak
+#endif
+				);
+			// enqueue_event
+			const event_type& ev(get_event(pn));
+			switch (_v) {
+			case node_type::LOGIC_LOW:
+				enqueue_event(get_delay_dn(ev), pn);
+				break;
+			case node_type::LOGIC_HIGH:
+				enqueue_event(get_delay_up(ev), pn);
+				break;
+			default: enqueue_event(
+				delay_policy<time_type>::zero, pn);
+			}
+		}
+		} // else filter out vacuous events
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set a single channel into reset state.  
+ */
+bool
+State::reset_channel(const string& cn) {
+	vector<env_event_type> temp;
+	if (_channel_manager.reset_channel(cn, temp))	return true;
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reset all channels.  
+ */
+void
+State::reset_all_channels(void) {
+	vector<env_event_type> temp;
+	_channel_manager.reset_all_channels(temp);
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+}
+#endif	// PRSIM_CHANNEL_SUPPORT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2037,8 +2110,10 @@ State::check_excl_rings(const node_index_type ni, const node_type& n,
 	Uses extremely slow search because this only occurs on exception.  
  */
 void
-State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
+State::inspect_exception(const step_exception& ex, ostream& o) const {
+if (IS_A(const excl_exception*, &ex)) {
 	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
+	const excl_exception& exex(AS_A(const excl_exception&, ex));
 	ring_set_type ring;
 	const_iterator i, e;
 	if (exex.type) {
@@ -2074,6 +2149,16 @@ State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
 		"but you may further inspect the state." << endl;
 	o << "You probably want to disable excl-checking with `nocheckexcl\' "
 		"if you wish to continue the simulation." << endl;
+#if PRSIM_CHANNEL_SUPPORT
+} else if (IS_A(const channel_exception*, &ex)) {
+	const channel_exception& exex(AS_A(const channel_exception&, ex));
+	o << "ERROR: value assertion failed on channel `" <<
+		exex.name << "\'." << endl;
+	o << "\texpected: " << exex.expect << ", got: " << exex.got << endl;
+#endif
+} else {
+	o << "Unkonwn step_exception." << endl;
+}
 }	// end method State::inspect_excl_exception
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2224,19 +2309,18 @@ if (eval_ordering_is_random()) {
 }
 #if PRSIM_CHANNEL_SUPPORT
 	// Q: is this the best place to handle this?
-	if (n.in_channel()) {
-		// predicate may not filter precisely
-		// channel manager should 'ignore' irrelevant nodes
-		vector<env_event_type> env_events;
-		_channel_manager.process_node(ni, prev, next, env_events);
-		// cause of these events must be 'ni', this node
-		// TODO: promote to primary event queue
-		// __allocate_event
-		// enqueue_event
-		// interaction with other enqueued events? anomalies?
-		// for now, give up if there are conflicting events in queue
-	}
-#endif
+if (n.in_channel()) {
+	// predicate may not filter precisely
+	// channel manager should 'ignore' irrelevant nodes
+	vector<env_event_type> env_events;
+	// the following may throw channel_exception
+	_channel_manager.process_node(*this, ni,
+			prev, next, env_events);
+	// cause of these events must be 'ni', this node
+	const event_cause_type c(ni, next);
+	flush_channel_events(env_events, c);
+}
+#endif	// PRSIM_CHANNEL_SUPPORT
 	/***
 		If an event is forced (say, by user), then check node's own
 		guards to determine whether or not a new event needs to
@@ -4817,7 +4901,7 @@ if (checking_excl()) {
 		const excl_exception
 			e(check_excl_rings(distance(nb, ni), n, prev, next));
 		if (e.lock_id) {
-			inspect_excl_exception(e, cerr);
+			inspect_exception(e, cerr);
 			// don't bother throwing
 		}
 	}

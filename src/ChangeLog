@@ -5,6 +5,16 @@
 
 2008-02-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-05:
+	  Continued development of prsim:channels, mostly implementation
+		of source/sink commands, and interactions with 
+		the simulator state's events. 
+	  State::excl_exception now derived from common base step_exception
+		to support different exception types. 
+	  Cleaned up previous patch #if's.
+	  Still untested.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-04:
 	  prsim/Channel-prsim.{h,cc}: use packed 2D array structure
 		instead of vector-of-vector, cleaner and faster.

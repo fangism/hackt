@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.11.2.3 2008/02/17 02:20:42 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.11.2.4 2008/02/18 05:32:37 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -393,8 +393,8 @@ if (a.size() > 2) {
 			}
 		}
 	}	// end while
-	} catch (const State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
+	} catch (const State::step_exception& exex) {
+		s.inspect_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
 	return Command::NORMAL;
@@ -487,8 +487,8 @@ if (a.size() > 2) {
 			}
 		}
 	}	// end while
-	} catch (const State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
+	} catch (const State::step_exception& exex) {
+		s.inspect_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
 	return Command::NORMAL;
@@ -608,8 +608,8 @@ if (a.size() != 1) {
 			}
 		}
 	}	// end while (!s.stopped())
-	} catch (const State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
+	} catch (const State::step_exception& exex) {
+		s.inspect_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
 	return Command::NORMAL;
@@ -3246,32 +3246,142 @@ o << "Print list of all registered channels with their type information."
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchChannel, "watch-channel", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLoop, "channel-loop", 
+	channels, "cycle through source/expect values")
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLoop, "channel-unloop", 
+	channels, "stop sourcing/expecting at end of values")
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelWatch, "channel-watch", 
 	channels, "report when spcified channel changes state")
 
+int
+ChannelWatch::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().watch_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelWatch::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchChannel, "unwatch-channel", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelUnWatch, "channel-unwatch", 
 	channels, "ignore when spcified channel changes state")
 
+int
+ChannelUnWatch::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().unwatch_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelUnWatch::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAllChannels, "watchall-channels", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelWatchAll, "channel-watchall", 
 	channels, "report when any channel changes state")
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchAllChannels, "unwatchall-channels", 
-	channels, "ignore when any channel changes state")
-#endif
+int
+ChannelWatchAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().watch_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelWatchAll::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ResetChannel, "reset-channel", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelUnWatchAll, "channel-unwatchall", 
+	channels, "ignore when any channel changes state")
+
+int
+ChannelUnWatchAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().unwatch_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelUnWatchAll::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelReset, "channel-reset", 
 	channels, "set a channel into its reset state")
 
+int
+ChannelReset::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.reset_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelReset::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Hold a source/sink channel in its reset state." << endl;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ResetAllChannels, "reset-all-channels", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelResetAll, "channel-reset-all", 
 	channels, "set all registered channel into reset state")
 
-#endif
+int
+ChannelResetAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.reset_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelResetAll::usage(ostream& o) {
+	o << name << endl;
+	o << "Hold all registered source/sink channels into reset state."
+		<< endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStop, "channel-stop", 
@@ -3506,37 +3616,6 @@ ChannelLog::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSinkLog, "channel-sink-log", 
-	channels, "sink and log channel values to file")
-
-int
-ChannelSinkLog::main(State& s, const string_list& a) {
-if (a.size() != 3) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	const string& chan_name(*++a.begin());
-	channel_manager& cm(s.get_channel_manager());
-	if (cm.sink_channel(s, chan_name, string(), true))
-		return Command::BADARG;
-	if (cm.log_channel(chan_name, a.back()))
-		return Command::BADARG;
-	return Command::NORMAL;
-}
-}
-
-void
-ChannelSinkLog::usage(ostream& o) {
-	o << name << " <channel> <file>" << endl;
-	o << "Record channel values in consumed tokens to file (non-append)."
-		<< endl;
-	o << "Logging only passively observes the state of channel data, "
-		"without controlling any handshake signals.  " << endl;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpect, "channel-expect", 
 	channels, "assert values on channel from file (once)")
 
@@ -3593,13 +3672,12 @@ ChannelExpectLoop::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSinkExpect, "channel-sink-expect", 
-	channels, "consume and assert values on channel (once)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelGet, "channel-get", 
+	channels, "show current state of channel")
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSinkExpectLoop,
-	"channel-sink-expect-loop", channels,
-	"consume and assert values on channel (once)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert", 
+	channels, "assert value on channel immediately")
+
 #endif
 
 #endif	// PRSIM_CHANNEL_SUPPORT

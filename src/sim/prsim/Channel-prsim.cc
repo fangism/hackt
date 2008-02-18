@@ -1,7 +1,9 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.2.4 2008/02/17 22:15:24 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.2.5 2008/02/18 05:32:36 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include <fstream>
@@ -16,9 +18,9 @@
 #include "util/string.tcc"
 #include "util/tokenize.h"
 #include "util/IO_utils.tcc"
-#if PACKED_ARRAY_DATA_RAILS
 #include "util/packed_array.tcc"
-#endif
+#include "util/numeric/div.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace SIM {
@@ -40,6 +42,8 @@ using entity::int_value_type;
 using util::read_value;
 using util::write_value;
 using util::strings::string_to_num;
+using util::numeric::div;
+using util::numeric::div_type;
 
 //=============================================================================
 // class channel_file_handle method definitions
@@ -141,17 +145,7 @@ channel::get_all_nodes(vector<node_index_type>& ret) const {
 #if PRSIM_CHANNEL_VALIDITY
 	ret.push_back(valid_signal);
 #endif
-#if PACKED_ARRAY_DATA_RAILS
 	copy(data.begin(), data.end(), back_inserter(ret));
-#else
-	size_t j = 0;
-	for ( ; j<bundles(); ++j) {
-	size_t k = 0;
-	for ( ; k<radix(); ++k) {
-		ret.push_back(data[j][k]);
-	}
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -162,19 +156,7 @@ channel::get_all_nodes(vector<node_index_type>& ret) const {
  */
 bool
 channel::alias_data_rails(const node_index_type ni) const {
-#if PACKED_ARRAY_DATA_RAILS
 	return std::find(data.begin(), data.end(), ni) != data.end();
-#else
-	size_t j = 0;
-	for ( ; j<bundles(); ++j) {
-	size_t k = 0;
-	for ( ; k<radix(); ++k) {
-		if (data[j][k] == ni)
-			return true;
-	}
-	}
-	return false;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -193,8 +175,28 @@ channel::dump(ostream& o) const {
 	// didn't store names of bundles and rails
 	o << ' ' << bundles() << "x1of" << radix();
 	// print internal node IDs? names?
-	o << ' ' << (is_sourcing() ? "source" : is_sinking() ? "sink" : "off")
-		<< (is_expecting() ? ",expect" : "");
+	bool something = false;
+	o << ' ';
+	if (is_sourcing()) {
+		o << "source";
+		something = true;
+	}
+	if (is_sinking()) {
+		if (something) o << ',';
+		o << "sink";
+		something = true;
+	}
+	if (is_expecting()) {
+		if (something) o << ',';
+		o << "expect";
+		something = true;
+	}
+	if (!something) {
+		o << "off";
+	}
+	if (stopped()) {
+		o << ",stopped";
+	}
 	if (is_sourcing() || is_expecting()) {
 		o << " {";
 		copy(values.begin(), values.end(), 
@@ -232,6 +234,7 @@ channel::dump_state(ostream& o) const {
 static
 bool
 read_values_from_file(const string& fn, vector<int_value_type>& v) {
+	STACKTRACE_VERBOSE;
 	v.clear();
 	ifstream f(fn.c_str());
 	if (!f) {
@@ -266,6 +269,7 @@ while (1) {
  */
 bool
 channel::set_source(const State& s, const string& file_name, const bool loop) {
+	STACKTRACE_VERBOSE;
 	if (is_sourcing()) {
 		cout <<
 "Warning: reconnecting channel from old source to new source."
@@ -319,33 +323,18 @@ channel::set_source(const State& s, const string& file_name, const bool loop) {
 	// this is forgiveable
 #endif
 #endif
-#if PACKED_ARRAY_DATA_RAILS
 	data_bundle_array_type::const_iterator i(data.begin()), e(data.end());
 	for ( ; i!=e; ++i) {
 		const State::node_type& d(s.get_node(*i));
-#else
-	size_t j = 0;
-	for ( ; j<bundles(); ++j) {
-	size_t k = 0;
-	for ( ; k<radix(); ++k) {
-		const State::node_type& d(s.get_node(data[j][k]));
-#endif
 		if (d.has_fanin()) {
-#if PACKED_ARRAY_DATA_RAILS
 			const size_t pos = i -data.begin();	// std::distance
 			const size_t j = pos / radix();
 			const size_t k = pos % radix();
-#endif
 			cerr << "Warning: channel data rail `" << name <<
 				"\' (" << j << ", " << k << ") has fanin.\n";
 			maybe_externally_driven = true;
 		}
-#if PACKED_ARRAY_DATA_RAILS
 	}
-#else
-	}
-	}
-#endif
 	if (maybe_externally_driven) {
 		cerr << "Channel source may not operator properly, "
 			"if driven from elsewhere." << endl;
@@ -361,6 +350,7 @@ channel::set_source(const State& s, const string& file_name, const bool loop) {
  */
 bool
 channel::set_sink(const State& s) {
+	STACKTRACE_VERBOSE;
 	// sinking should not conflict with any other mode
 	// is OK to log
 	// warn if data/validity is already driven with fanin
@@ -412,6 +402,7 @@ channel::set_sink(const State& s) {
  */
 bool
 channel::set_expect(const string& fn, const bool loop) {
+	STACKTRACE_VERBOSE;
 	if (is_sourcing()) {
 		cout <<
 "Warning: no longer sourcing channel values; configuring to expect."
@@ -464,20 +455,13 @@ channel::set_log(const string& fn) {
  */
 void
 channel::initialize_data_counter(const State& s) {
+	STACKTRACE_VERBOSE;
 	typedef	State::node_type		node_type;
 	counter_state = 0;
 	x_counter = 0;
-#if PACKED_ARRAY_DATA_RAILS
 	data_bundle_array_type::const_iterator i(data.begin()), e(data.end());
 	for ( ; i!=e; ++i) {
 		const node_type& n(s.get_node(*i));
-#else
-	size_t j = 0;
-	for ( ; j<bundles(); ++j) {
-	size_t k = 0;
-	for ( ; k<radix(); ++k) {
-		const node_type& n(s.get_node(data[j][k]));
-#endif
 		switch (n.current_value()) {
 		case node_type::LOGIC_HIGH:
 			++counter_state;
@@ -487,12 +471,7 @@ channel::initialize_data_counter(const State& s) {
 			break;
 		default: break;
 		}
-#if PACKED_ARRAY_DATA_RAILS
 	}
-#else
-	}
-	}
-#endif
 	if (counter_state > bundles()) {
 		cerr << "Channel data rails are in an invalid state!" << endl;
 		cerr << "In channel `" << name << "\', got " << counter_state
@@ -504,41 +483,192 @@ channel::initialize_data_counter(const State& s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Binding constructor functor.
+ */
+struct __node_setter {
+	uchar				val;
+
+	explicit
+	__node_setter(const uchar v) : val(v) { }
+
+	env_event_type
+	operator () (const node_index_type ni) const {
+		return env_event_type(ni, val);
+	}
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sources will lower all data rails, 
+	sinks will set acknowledges according to the reset value.
+ */
+void
+channel::reset(vector<env_event_type>& events) {
+	STACKTRACE_VERBOSE;
+	typedef	State::node_type		node_type;
+	if (is_sourcing()) {
+		transform(data.begin(), data.end(), back_inserter(events), 
+			__node_setter(node_type::LOGIC_LOW));
+	}
+	if (is_sinking()) {
+		events.push_back(env_event_type(ack_signal, 
+			(get_ack_init() ? node_type::LOGIC_HIGH
+				: node_type::LOGIC_LOW)));
+	}
+	// else nothing else to do
+	stop();	// freeze this channel until it is resumed
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Point to next value in sequence, if applicable.
+ */
+void
+channel::advance_value(void) {
+	++value_index;		// overflow?
+	if (value_index >= values.size()) {
+		if (is_looping()) {
+			value_index = 0;
+		} else {
+			value_index = values.size();	// one past end
+		}
+	}
+	// else if values.size(), values.clear() ?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return in r the list of data rails selected by current value.
+	If there is no current value, then return nothing.  
+ */
+void
+channel::current_data_rails(vector<node_index_type>& r) const {
+	INVARIANT(r.empty());
+if (have_value()) {
+	const int_value_type rdx = radix();
+	div_type<int_value_type>::return_type qr;
+	qr.quot = current_value();
+	qr.rem = 0;	// unused
+	data_rail_index_type k;
+	k[0] = 0;
+	while (r.size() < bundles()) {
+		qr = div(qr.quot, rdx);
+		k[1] = qr.rem;
+		r.push_back(data[k]);
+		++k[0];
+	}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This does NOT check the stopped state, caller is responsibly.
+ */
+void
+channel::set_current_data_rails(vector<env_event_type>& events, 
+		const uchar val) {
+	STACKTRACE_VERBOSE;
+	vector<node_index_type> nodes;
+	current_data_rails(nodes);	// use current values[value_index]
+	transform(nodes.begin(), nodes.end(), back_inserter(events), 
+		__node_setter(val));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre data rails must be in a valid (active) state, i.e.
+		exactly one rail per bundle high, no unknowns.
+		If this ever fails, we didn't do enough tracking/counting.
+	\return the numerical value as represented by data rails.
+ */
+int_value_type
+channel::data_rails_value(const State& s) const {
+	STACKTRACE_VERBOSE;
+	typedef	State::node_type	node_type;
+	int_value_type ret = 0;
+	data_rail_index_type k;
+	k[0] = bundles();
+	const size_t rdx = radix();	// sign mismatch?
+	while (k[0]) {
+		--k[0];
+		k[1] = 0;
+		ret *= rdx;
+		bool have_hi = false;
+		size_t hi = 0;
+		// check all rails for paranoia
+		for ( ; k[1] < rdx; ++k[1]) {
+			const node_type& n(s.get_node(data[k]));
+			switch (n.current_value()) {
+			case node_type::LOGIC_LOW: break;
+			case node_type::LOGIC_HIGH:
+				INVARIANT(!have_hi);
+				have_hi = true;
+				hi = k[1];
+				break;
+			default: DIE;
+			}
+		}
+		INVARIANT(have_hi);
+		ret += hi;
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Event on node ni may trigger environment events, logging, 
 	checking, etc... process them here.
 	This assumes that in any given channel, the acknowledge
 	is not aliased to any of the data rails.  
+	Only sets node if not in stopped state.  
+	The events returned in new_events may be vacuous, and should
+		filtered out by the caller.
 	\param new_events is where new events from the environment
 		should be staged.  
+	\throw exception if there is an expected value mismatch.
  */
 void
-channel::process_node(const node_index_type ni, 
+channel::process_node(const State& s, const node_index_type ni, 
 		const uchar prev, const uchar next, 
 		vector<env_event_type>& new_events) {
+	STACKTRACE_VERBOSE;
 	typedef	State::node_type	node_type;
 // first identify which channel node member this node is
 if (ni == ack_signal) {
 	// only need to take action if this is a source
 	if (is_sourcing() && !stopped()) {
 	switch (next) {
+		// assumes that data rails are active high
 	case node_type::LOGIC_LOW:
 		if (get_ack_active()) {
 			// \pre all data rails are neutral
 			// set data rails to next data value
+			advance_value();
+			set_current_data_rails(new_events,
+				node_type::LOGIC_HIGH);
 		} else {
 			// reset all data rails, (switch only those active)
+			set_current_data_rails(new_events,
+				node_type::LOGIC_LOW);
 		}
 		break;
 	case node_type::LOGIC_HIGH:
 		if (get_ack_active()) {
 			// reset all data rails, (switch only those active)
+			set_current_data_rails(new_events,
+				node_type::LOGIC_LOW);
 		} else {
 			// \pre all data rails are neutral
 			// set data rails to next data value
+			advance_value();
+			set_current_data_rails(new_events,
+				node_type::LOGIC_HIGH);
 		}
 		break;
 	default:
 		// set all data to X
+		transform(data.begin(), data.end(), back_inserter(new_events), 
+			__node_setter(node_type::LOGIC_OTHER));
 		break;
 	}
 	}
@@ -546,6 +676,40 @@ if (ni == ack_signal) {
 #if PRSIM_CHANNEL_VALIDITY
 } else if (valid_signal && (ni == valid_signal)) {
 	// only need to take action if this is a sink
+	if (is_sinking() && !stopped()) {
+	switch (next) {
+	case node_type::LOGIC_LOW:
+		if (get_valid_sense()) {
+			// neutral, reset ack
+			new_events.push_back(env_event_type(ack_signal, 
+				get_ack_active() ? node_type::LOGIC_LOW
+					: node_type::LOGIC_HIGH));
+		} else {
+			// valid, ack
+			new_events.push_back(env_event_type(ack_signal, 
+				get_ack_active() ? node_type::LOGIC_HIGH
+					: node_type::LOGIC_LOW));
+		}
+		break;
+	case node_type::LOGIC_HIGH:
+		if (get_valid_sense()) {
+			// valid, ack
+			new_events.push_back(env_event_type(ack_signal, 
+				get_ack_active() ? node_type::LOGIC_HIGH
+					: node_type::LOGIC_LOW));
+		} else {
+			// neutral, reset ack
+			new_events.push_back(env_event_type(ack_signal, 
+				get_ack_active() ? node_type::LOGIC_LOW
+					: node_type::LOGIC_HIGH));
+		}
+		break;
+	default:
+		new_events.push_back(env_event_type(ack_signal, 
+			node_type::LOGIC_OTHER));
+		break;
+	}
+	}
 #endif
 } else {
 	// invariant: must be data rail
@@ -560,13 +724,110 @@ if (ni == ack_signal) {
 	case node_type::LOGIC_OTHER: ++x_counter; break;
 	default: break;
 	}
+	if (x_counter) {
+		// if there are ANY Xs, then cannot log/expect values
+		// sources/sinks should respond accordingly with X signals
+		if (!stopped()) {
+		if (is_sourcing()) {
+#if PRSIM_CHANNEL_VALIDITY
+			// for validity protocol, set valid to X
+			if (valid_signal) {
+				new_events.push_back(env_event_type(
+					valid_signal, node_type::LOGIC_OTHER));
+			}
+#endif
+		}
+		if (is_sinking()) {
+#if PRSIM_CHANNEL_VALIDITY
+			// if not validity protocol, set ack to X
+			if (!valid_signal) {
+				new_events.push_back(env_event_type(
+					ack_signal, node_type::LOGIC_OTHER));
+			}
+#endif
+		}
+		}
 	// need to take action for EACH of the following that hold:
 	// 1) this is sink AND not a valid-request protocol
 	//	(otherwise, depends on valid signal)
-	// 2) this is being logged
-	// 3) this is being expected
+	// 2) this is a source on valid-request protocol, 
+	//	and thus need to set valid signal automatically
+	// 3) this is being logged
+	// 4) this is being expected
+	} else if (!counter_state) {
+		// then data rails are in neutral state
+		if (!stopped()) {
+#if PRSIM_CHANNEL_VALIDITY
+		if (is_sourcing() && valid_signal) {
+			// source is responsible for resetting valid signal
+			new_events.push_back(env_event_type(valid_signal, 
+				get_ack_active() ? node_type::LOGIC_LOW
+					: node_type::LOGIC_HIGH));
+		}
+#else
+		// if this is sourcing, then don't care
+#endif
+		if (is_sinking()
+#if PRSIM_CHANNEL_VALIDITY
+			&& !valid_signal
+#endif
+		) {
+			// sink should reply with ack reset
+			// otherwise, valid_signal is an input
+			new_events.push_back(env_event_type(ack_signal, 
+				get_ack_active() ? node_type::LOGIC_LOW
+					: node_type::LOGIC_HIGH));
+		}
+		}
+	} else if (counter_state == bundles()) {
+		// NOTE: stopped channels will not assert expected data nor log!
+	if (!stopped()) {
+		// then data rails are in valid state
+		if (watched()) {
+			cout << "channel\t" << name << " (.data) : " <<
+				data_rails_value(s) << endl;
+		}
+		if (dumplog.stream && *dumplog.stream) {
+			// TODO: format me, hex, dec, bin, etc...
+			// should be able to just setbase()
+			(*dumplog.stream) << data_rails_value(s) << endl;
+		}
+		if (is_expecting() && have_value()) {
+			// don't bother waiting for validity signal
+			const int_value_type expect = current_value();
+			const int_value_type got = data_rails_value(s);
+			advance_value();
+			if (expect != got) {
+				throw State::channel_exception(name, 
+					expect, got);
+			}
+		}
+		// if no value available, just ignore
+#if PRSIM_CHANNEL_VALIDITY
+		if (is_sourcing() && valid_signal) {
+			// source is responsible for setting valid signal
+			new_events.push_back(env_event_type(valid_signal, 
+				get_ack_active() ? node_type::LOGIC_HIGH
+					: node_type::LOGIC_LOW));
+		}
+#else
+		// if this is sourcing, then don't care
+#endif
+		if (is_sinking()
+#if PRSIM_CHANNEL_VALIDITY
+			&& !valid_signal
+#endif
+		) {
+			// sink should reply with ack reset
+			// otherwise, valid_signal is an input
+			new_events.push_back(env_event_type(ack_signal, 
+				get_ack_active() ? node_type::LOGIC_HIGH
+					: node_type::LOGIC_LOW));
+		}
+	}
+	}
 }
-}
+}	// end channel::process_node
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -575,6 +836,7 @@ if (ni == ack_signal) {
  */
 bool
 channel::save_checkpoint(ostream& o) const {
+	STACKTRACE_VERBOSE;
 	// don't write the name, let caller save it
 	write_value(o, ack_signal);
 #if PRSIM_CHANNEL_VALIDITY
@@ -585,17 +847,7 @@ channel::save_checkpoint(ostream& o) const {
 	write_value(o, x_counter);
 	write_value(o, bundles());	// size_t
 	write_value(o, radix());	// size_t
-#if PACKED_ARRAY_DATA_RAILS
 	util::write_range(o, data.begin(), data.end());
-#else
-	size_t j = 0;
-	for ( ; j<bundles(); ++j) {
-	size_t k = 0;
-	for ( ; k<radix(); ++k) {
-		write_value(o, data[j][k]);
-	}
-	}
-#endif
 	write_value(o, value_index);
 //	write_value(o, inject_expect_file);
 	if (dumplog.save_checkpoint(o)) return true;
@@ -606,6 +858,7 @@ channel::save_checkpoint(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 channel::load_checkpoint(istream& i) {
+	STACKTRACE_VERBOSE;
 	// don't restore the name here, let caller set it
 	read_value(i, ack_signal);
 #if PRSIM_CHANNEL_VALIDITY
@@ -614,27 +867,11 @@ channel::load_checkpoint(istream& i) {
 	read_value(i, flags);
 	read_value(i, counter_state);
 	read_value(i, x_counter);
-#if PACKED_ARRAY_DATA_RAILS
 	data_rail_index_type k;
-	read_value(i, k[0]);
-	read_value(i, k[1]);
+	read_value(i, k[0]);	// bundles
+	read_value(i, k[1]);	// radix
 	data.resize(k);
 	util::read_range(i, data.begin(), data.end());
-#else
-	size_t _bundles, _radix;
-	read_value(i, _bundles);
-	read_value(i, _radix);
-	data.resize(_bundles);
-	size_t j = 0;
-	for ( ; j<_bundles; ++j) {
-		rails_array_type& r(data[j]);
-		r.resize(_radix);
-		size_t k = 0;
-		for ( ; k<_radix; ++k) {
-			read_value(i, r[k]);
-		}
-	}
-#endif
 	read_value(i, value_index);
 //	read_value(i, inject_expect_file);
 	// no need to re-open file, already have its values
@@ -666,6 +903,7 @@ bool
 channel_manager::new_channel(State& state, const string& base, 
 		const string& bundle_name, const size_t _num_bundles, 
 		const string& rail_name, const size_t _num_rails) {
+	STACKTRACE_VERBOSE;
 	// 0 indicates that bundle/rail is scalar, not array
 	// in any case, size should be at least 1
 	const size_t num_bundles = _num_bundles ? _num_bundles : 1;
@@ -679,26 +917,14 @@ if (i.second) {
 	channel& c(channel_pool.back());
 	c.name = base;
 	// allocate data rail references:
-#if PACKED_ARRAY_DATA_RAILS
 	channel::data_rail_index_type dk;
 	dk[0] = num_bundles;
 	dk[1] = num_rails;
 	c.data.resize(dk);
-#else
-	c.data.resize(num_bundles);
-	// this would be easier with a packed_array...
-	for_each(c.data.begin(), c.data.end(),
-		bind2nd(mem_fun_ref(&channel::rails_array_type::resize),
-			num_rails));
-#endif
 	const entity::module& m(state.get_module());
 	// lookup and assign node-indices
-#if PACKED_ARRAY_DATA_RAILS
 	dk[0] = 0;
 	size_t& j = dk[0];
-#else
-	size_t j = 0;
-#endif
 	for ( ; j<num_bundles; ++j) {
 		ostringstream bundle_segment;
 		if (bundle_name.length()) {
@@ -707,12 +933,8 @@ if (i.second) {
 				bundle_segment << "[" << j << "]";
 			}
 		}
-#if PACKED_ARRAY_DATA_RAILS
 		dk[1] = 0;
 		size_t& k = dk[1];
-#else
-		size_t k = 0;
-#endif
 		for ( ; k<num_rails; ++k) {
 			ostringstream n;
 			n << base << bundle_segment.str() << "." << rail_name;
@@ -722,18 +944,10 @@ if (i.second) {
 			const node_index_type ni =
 				parse_node_to_index(n.str(), m);
 			if (ni) {
-#if PACKED_ARRAY_DATA_RAILS
 				c.data[dk] = ni;
-#else
-				c.data[j][k] = ni;
-#endif
 				// flag node for consistency
 				state.get_node(ni).set_in_channel();
-#if PACKED_ARRAY_DATA_RAILS
 				c.__node_to_rail[ni] = dk;
-#else
-				c.__node_to_rail[ni] = make_pair(j, k);
-#endif
 				// lookup from node to channels
 				node_channels_map[ni].insert(key);
 			} else {
@@ -775,6 +989,7 @@ bool
 channel_manager::set_channel_ack_valid(State& state, const string& base, 
 		const bool ack_sense, const bool ack_init, 
 		const bool have_validity, const bool validity_sense) {
+	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, base)
 	const entity::module& m(state.get_module());
 {
@@ -829,6 +1044,7 @@ if (have_validity) {
 bool
 channel_manager::source_channel(const State& s, const string& channel_name, 
 		const string& file_name, const bool loop) {
+	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
 	if (c.set_source(s, file_name, loop)) return true;
 	// warn if channel happens to be connected in wrong direction
@@ -844,6 +1060,7 @@ channel_manager::source_channel(const State& s, const string& channel_name,
  */
 bool
 channel_manager::sink_channel(const State& s, const string& channel_name) {
+	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
 	if (c.set_sink(s)) return true; // does many checks
 
@@ -870,6 +1087,7 @@ channel_manager::sink_channel(const State& s, const string& channel_name) {
 bool
 channel_manager::log_channel(const string& channel_name, 
 		const string& file_name) {
+	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
 	return c.set_log(file_name);
 }
@@ -878,6 +1096,7 @@ channel_manager::log_channel(const string& channel_name,
 bool
 channel_manager::expect_channel(const string& channel_name, 
 		const string& file_name, const bool loop) {
+	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
 	return c.set_expect(file_name, loop);
 }
@@ -885,6 +1104,7 @@ channel_manager::expect_channel(const string& channel_name,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 channel_manager::close_channel(const string& channel_name) {
+	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
 	c.close_stream();
 	return false;
@@ -893,6 +1113,7 @@ channel_manager::close_channel(const string& channel_name) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_manager::close_all_channels(void) {
+	STACKTRACE_VERBOSE;
 	for_each(channel_pool.begin(), channel_pool.end(), 
 		mem_fun_ref(&channel::close_stream));
 }
@@ -900,6 +1121,7 @@ channel_manager::close_all_channels(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 channel_manager::stop_channel(const string& channel_name) {
+	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
 	c.stop();
 	return false;
@@ -908,6 +1130,7 @@ channel_manager::stop_channel(const string& channel_name) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_manager::stop_all_channels(void) {
+	STACKTRACE_VERBOSE;
 	for_each(channel_pool.begin(), channel_pool.end(), 
 		mem_fun_ref(&channel::stop));
 }
@@ -915,26 +1138,86 @@ channel_manager::stop_all_channels(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 channel_manager::resume_channel(const string& channel_name) {
+	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
-	c.stop();
+	c.resume();
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_manager::resume_all_channels(void) {
+	STACKTRACE_VERBOSE;
 	for_each(channel_pool.begin(), channel_pool.end(), 
 		mem_fun_ref(&channel::resume));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_manager::reset_channel(const string& channel_name, 
+		vector<env_event_type>& events) {
+	STACKTRACE_VERBOSE;
+	GET_NAMED_CHANNEL(c, channel_name)
+	c.reset(events);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_manager::reset_all_channels(vector<env_event_type>& events) {
+	STACKTRACE_VERBOSE;
+	// damn it, give me boost::lambda!
+	channel_pool_type::iterator
+		i(channel_pool.begin()), e(channel_pool.end());
+	for ( ; i!=e; ++i) {
+		i->reset(events);	// could bind2nd_argval...
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_manager::watch_channel(const string& channel_name) {
+	STACKTRACE_VERBOSE;
+	GET_NAMED_CHANNEL(c, channel_name)
+	c.watch();
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_manager::watch_all_channels(void) {
+	STACKTRACE_VERBOSE;
+	for_each(channel_pool.begin(), channel_pool.end(), 
+		mem_fun_ref(&channel::watch));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_manager::unwatch_channel(const string& channel_name) {
+	STACKTRACE_VERBOSE;
+	GET_NAMED_CHANNEL(c, channel_name)
+	c.unwatch();
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_manager::unwatch_all_channels(void) {
+	STACKTRACE_VERBOSE;
+	for_each(channel_pool.begin(), channel_pool.end(), 
+		mem_fun_ref(&channel::unwatch));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Any return status?
+	\return true if there are any assert errors.  
+	\throw exception if assert value fails.
  */
 void
-channel_manager::process_node(const node_index_type ni, 
+channel_manager::process_node(const State& s, const node_index_type ni, 
 		const uchar prev, const uchar next, 
 		vector<env_event_type>& new_events) {
+	STACKTRACE_VERBOSE;
 	// find all channels that this node participates in:
 	const node_channels_map_type::const_iterator
 		f(node_channels_map.find(ni));
@@ -942,7 +1225,7 @@ if (f != node_channels_map.end()) {
 	std::set<channel_index_type>::const_iterator
 		i(f->second.begin()), e(f->second.end());
 	for ( ; i!=e; ++i) {
-		channel_pool[*i].process_node(ni, prev, next, new_events);
+		channel_pool[*i].process_node(s, ni, prev, next, new_events);
 	}
 }
 	// else ignore, nothing to do, only cost one map lookup
@@ -974,6 +1257,7 @@ for ( ; i!=e; ++i) {
  */
 bool
 channel_manager::save_checkpoint(ostream& o) const {
+	STACKTRACE_VERBOSE;
 	write_value(o, channel_pool.size());
 	channel_pool_type::const_iterator
 		i(channel_pool.begin()), e(channel_pool.end());
@@ -994,6 +1278,7 @@ channel_manager::save_checkpoint(ostream& o) const {
  */
 bool
 channel_manager::load_checkpoint(istream& i) {
+	STACKTRACE_VERBOSE;
 	channel_pool.clear();
 	channel_index_set.clear();
 	node_channels_map.clear();

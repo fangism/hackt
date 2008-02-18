@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.13.2.2 2008/02/16 02:29:55 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.13.2.3 2008/02/18 05:32:39 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -126,11 +126,14 @@ public:
 	typedef	std::pair<node_index_type, node_index_type>
 							step_return_type;
 	typedef	size_t				lock_index_type;
+	struct step_exception {
+	virtual	~step_exception() { }
+	};
 	/**
 		Exception thrown when there is a violation of 
 		exclusion among exclhi or excllo checked rings.  
 	 */
-	struct excl_exception {
+	struct excl_exception : public step_exception {
 		/// true for exclhi, false for excllo
 		bool				type;
 		/// index of the mutex lock triggered
@@ -142,6 +145,21 @@ public:
 			const node_index_type ni) : type(b), 
 			lock_id(li), node_id(ni) { }
 	};	// end struct excl_exception
+
+#if PRSIM_CHANNEL_SUPPORT
+	/**
+		When channel value mismatches expectation.
+	 */
+	struct channel_exception : public step_exception {
+		const string			name;
+		int_value_type			expect;
+		int_value_type			got;
+		channel_exception(const string& n, 
+			const int_value_type e, const int_value_type g) :
+			name(n), expect(e), got(g) { }
+	};	// end struct channel_exception
+#endif
+
 #define	THROWS_EXCL_EXCEPTION	throw (excl_exception)
 private:
 	struct evaluate_return_type {
@@ -586,6 +604,18 @@ public:
 	 */
 	channel_manager&
 	get_channel_manager(void) { return _channel_manager; }
+
+private:
+	void
+	flush_channel_events(const vector<env_event_type>&, 
+		const event_cause_type&);
+
+public:
+	bool
+	reset_channel(const string&);
+
+	void
+	reset_all_channels(void);
 #endif
 
 	void
@@ -829,7 +859,7 @@ public:
 	append_check_excllo_ring(const ring_set_type&);
 
 	void
-	inspect_excl_exception(const excl_exception&, ostream&) const;
+	inspect_exception(const step_exception&, ostream&) const;
 
 	ostream&
 	dump_mk_excl_ring(ostream&, const ring_set_type&) const;

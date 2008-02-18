@@ -1,7 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.93.4.3.2.1 2008/02/17 22:15:28 fang Exp $
+#	$Id: ChangeLog,v 1.93.4.3.2.2 2008/02/18 05:32:40 fang Exp $
 
 2008-02-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-05:
+	  Added: util/numeric/div.h for efficient quotient/remainder division,
+		through consistent template-deduced interface.
+
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-04:
 	  util/IO_utils.{h,tcc}: added write/read_range (pair of iterators)

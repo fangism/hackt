@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.2.4 2008/02/17 22:15:25 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.2.5 2008/02/18 05:32:36 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -22,12 +22,7 @@
 #include "util/utypes.h"
 #include "util/macros.h"
 #include "util/memory/count_ptr.h"
-
-#define	PACKED_ARRAY_DATA_RAILS			1
-
-#if PACKED_ARRAY_DATA_RAILS
 #include "util/packed_array.h"
-#endif
 
 /**
 	Define to 1 to add support for channel validity, for example
@@ -45,9 +40,7 @@ using std::istream;
 using std::ofstream;
 using entity::int_value_type;
 using util::memory::count_ptr;
-#if PACKED_ARRAY_DATA_RAILS
 using util::packed_array;
-#endif
 class State;
 class channel;
 class channel_manager;
@@ -72,6 +65,9 @@ typedef	std::pair<node_index_type, uchar>	env_event_type;
 class channel_file_handle {
 	friend class channel;
 	string					fname;
+	/**
+		Need copy-constructible pointer type.  
+	 */
 	count_ptr<ofstream>			stream;
 public:
 	channel_file_handle();
@@ -147,6 +143,11 @@ class channel {
 			Pause environment activity on a channel.  
 		 */
 		CHANNEL_STOPPED =		0x0100,
+		/**
+			If true, print all valid channel values
+			in the data-valid state.  
+		 */
+		CHANNEL_WATCHED =		0x0200,
 		/// default initial value
 		CHANNEL_DEFAULT_FLAGS = 	0x0000
 	};
@@ -185,18 +186,11 @@ class channel {
 	/**
 		Size of this array is the number of bundles (rail sets). 
 		Size of each element is the radix of the data rails.
-		TODO: use packed_array<T, 2>!!
 	 */
-#if PACKED_ARRAY_DATA_RAILS
 	typedef	util::packed_array<2, size_t, node_index_type>
 						data_bundle_array_type;
 	typedef	data_bundle_array_type::key_type
 						data_rail_index_type;
-#else
-	// is valarray copy-safe? who cares for now...
-	typedef	vector<node_index_type>		rails_array_type;
-	typedef	vector<rails_array_type>	data_bundle_array_type;
-#endif
 	data_bundle_array_type			data;
 	/**
 		Inject/expect files don't need to persist
@@ -226,11 +220,7 @@ class channel {
 	size_t					value_index;
 private:
 	// optional: reverse lookup map: node -> bundle, rail
-#if PACKED_ARRAY_DATA_RAILS
 	typedef	std::map<node_index_type, data_rail_index_type>
-#else
-	typedef	std::map<node_index_type, std::pair<size_t, size_t> >
-#endif
 						data_rail_map_type;
 	data_rail_map_type			__node_to_rail;
 
@@ -239,30 +229,29 @@ public:
 	~channel();
 
 	size_t
-	bundles(void) const {
-#if PACKED_ARRAY_DATA_RAILS
-		return data.size()[0];
-#else
-		return data.size();
-#endif
-	}
+	bundles(void) const { return data.size()[0]; }
 
 	size_t
-	radix(void) const {
-#if PACKED_ARRAY_DATA_RAILS
-		return data.size()[1];
-#else
-		INVARIANT(data.size());
-		return data.front().size();
-#endif
-	}
+	radix(void) const { return data.size()[1]; }
+
+	bool
+	have_value(void) const { return value_index < values.size(); }
 
 private:
 	bool
 	alias_data_rails(const node_index_type) const;
 
-	int_value_type
-	next_value(void);	// post-increments index
+	void
+	current_data_rails(vector<node_index_type>&) const;
+
+	const int_value_type&
+	current_value(void) const { return values[value_index]; }
+
+	void
+	advance_value(void);
+
+	void
+	set_current_data_rails(vector<env_event_type>&, const uchar);
 
 	bool
 	set_ack_signal(const node_index_type ai) {
@@ -348,6 +337,18 @@ public:
 	void
 	resume(void) { flags &= ~CHANNEL_STOPPED; }
 
+	void
+	reset(vector<env_event_type>&);
+
+	bool
+	watched(void) const { return flags & CHANNEL_WATCHED; }
+
+	void
+	watch(void) { flags |= CHANNEL_WATCHED; }
+
+	void
+	unwatch(void) { flags &= ~CHANNEL_WATCHED; }
+
 	bool
 	set_source(const State&, const string&, const bool);
 
@@ -366,8 +367,12 @@ public:
 	void
 	initialize_data_counter(const State&);
 
+	int_value_type
+	data_rails_value(const State&) const;
+
 	void
-	process_node(const node_index_type, const uchar, const uchar, 
+	process_node(const State&, const node_index_type, 
+		const uchar, const uchar, 
 		vector<env_event_type>&);
 
 #if 0
@@ -475,8 +480,27 @@ public:
 	void
 	resume_all_channels(void);
 
+	bool
+	reset_channel(const string&, vector<env_event_type>&);
+
 	void
-	process_node(const node_index_type, const uchar, const uchar, 
+	reset_all_channels(vector<env_event_type>&);
+
+	bool
+	watch_channel(const string&);
+
+	void
+	watch_all_channels(void);
+
+	bool
+	unwatch_channel(const string&);
+
+	void
+	unwatch_all_channels(void);
+
+	void
+	process_node(const State&, const node_index_type, 
+		const uchar, const uchar, 
 		vector<env_event_type>&);
 
 	ostream&
