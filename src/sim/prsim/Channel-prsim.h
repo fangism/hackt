@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.2.5 2008/02/18 05:32:36 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.2.6 2008/02/18 22:02:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -253,6 +253,9 @@ private:
 	void
 	set_current_data_rails(vector<env_event_type>&, const uchar);
 
+	void
+	set_all_data_rails(vector<env_event_type>&) const;
+
 	bool
 	set_ack_signal(const node_index_type ai) {
 		ack_signal = ai;
@@ -335,7 +338,7 @@ public:
 	stop(void) { flags |= CHANNEL_STOPPED; }
 
 	void
-	resume(void) { flags &= ~CHANNEL_STOPPED; }
+	resume(const State&, vector<env_event_type>&);
 
 	void
 	reset(vector<env_event_type>&);
@@ -445,9 +448,17 @@ public:
 	ostream&
 	__dump(ostream&, const bool) const;
 
+	bool
+	__dump_channel(ostream&, const string&, const bool) const;
+
 	ostream&
 	dump(ostream& o, const State&) const {
 		return __dump(o, false);
+	}
+
+	bool
+	dump_channel(ostream& o, const State&, const string& c) const {
+		return __dump_channel(o, c, true);
 	}
 
 	bool
@@ -475,10 +486,10 @@ public:
 	stop_all_channels(void);
 	
 	bool
-	resume_channel(const string&);
+	resume_channel(const State&, const string&, vector<env_event_type>&);
 
 	void
-	resume_all_channels(void);
+	resume_all_channels(const State&, vector<env_event_type>&);
 
 	bool
 	reset_channel(const string&, vector<env_event_type>&);

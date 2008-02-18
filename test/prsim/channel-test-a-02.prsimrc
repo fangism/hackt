@@ -6,11 +6,11 @@ source channel-test-a-01.prsimrc
 # set up some channels with commands
 channel-log X channel-test-a-02-X.log
 
-show-channels
+channel-show-all
 
 channel-close X
 !cat channel-test-a-02-X.log
 !rm channel-test-a-02-X.log
 
-show-channels
+channel-show-all
 

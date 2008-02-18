@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.2.5 2008/02/18 05:32:36 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.2.6 2008/02/18 22:02:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -165,6 +165,7 @@ channel::alias_data_rails(const node_index_type ni) const {
  */
 ostream&
 channel::dump(ostream& o) const {
+	o << name << " : ";
 	o << (get_ack_active() ? ".a" : ".e");
 	o << "(init:" << (get_ack_init() ? '1' : '0') << ')';
 #if PRSIM_CHANNEL_VALIDITY
@@ -218,8 +219,8 @@ channel::dump(ostream& o) const {
  */
 ostream&
 channel::dump_state(ostream& o) const {
-	o << "count: " << counter_state;
-	o << ", unkonwns: " << x_counter;
+	o << "count: " << size_t(counter_state);
+	o << ", unknowns: " << size_t(x_counter);
 	return o;
 }
 
@@ -562,6 +563,40 @@ if (have_value()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Similar to current_data_rails, but emits events for setting
+	all data rails high or low, according to the current value.  
+	If there is no current value, reset all data rails.  
+	This is useful for coming out of an uninitialized state (resume).
+ */
+void
+channel::set_all_data_rails(vector<env_event_type>& r) const {
+	STACKTRACE_VERBOSE;
+	typedef	State::node_type		node_type;
+if (have_value()) {
+	const int_value_type rdx = radix();
+	div_type<int_value_type>::return_type qr;
+	qr.quot = current_value();
+	qr.rem = 0;	// unused
+	data_rail_index_type k;
+	k[0] = 0;
+	for ( ; k[0] < bundles(); ++k[0]) {
+		qr = div(qr.quot, rdx);
+		k[1] = 0;
+		for ( ; k[1] < size_t(rdx); ++k[1]) {
+			r.push_back(env_event_type(data[k], 	// node index
+				(k[1] == size_t(qr.rem)) ?
+				node_type::LOGIC_HIGH : node_type::LOGIC_LOW));
+		}
+	}
+} else {
+	// no next value, just hold all data rails neutral
+	transform(data.begin(), data.end(), back_inserter(r), 
+		__node_setter(node_type::LOGIC_LOW));
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This does NOT check the stopped state, caller is responsibly.
  */
 void
@@ -831,6 +866,178 @@ if (ni == ack_signal) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	We don't know the current state of the channel because it may
+	have changed while this was stopped, thus we need to refresh
+	with a complete re-evaluation of signals to infer the current state.  
+	Data rail activity should have been tracked even while
+	channel was stopped.  
+ */
+void
+channel::resume(const State& s, vector<env_event_type>& events) {
+	STACKTRACE_VERBOSE;
+	typedef	State::node_type		node_type;
+	flags &= ~CHANNEL_STOPPED;
+	static const char ambiguous_data[] = 
+"Warning: the current state of data rails is neither valid nor neutral, "
+"so I\'m assuming that current sequence value has already been used and "
+"moving on to the next one.";
+if (is_sourcing()) {
+	// validity should be set after all data rails are valid/neutral
+	const node_type& a(s.get_node(ack_signal));
+	switch (a.current_value()) {
+	case node_type::LOGIC_LOW:
+		if (get_ack_active()) {
+			// should send new data, if available
+			// Q: if counter_state is *between* 0 and #bundles, 
+			// should we assume that the current value was
+			// already used or not?
+			if (counter_state && (counter_state != bundles())) {
+				// ambiguous
+				cerr << ambiguous_data << endl;
+			}
+			if ((counter_state != bundles() || x_counter)) {
+				advance_value();
+				set_all_data_rails(events);
+			}
+#if PRSIM_CHANNEL_VALIDITY
+			if (valid_signal) {
+				if (x_counter) {
+					events.push_back(env_event_type(
+						valid_signal, 
+						node_type::LOGIC_OTHER));
+				} else if (!counter_state) {
+					events.push_back(env_event_type(
+						valid_signal, 
+						get_valid_sense() ?
+							node_type::LOGIC_LOW :
+							node_type::LOGIC_HIGH));
+				} else if (counter_state == bundles()) {
+					events.push_back(env_event_type(
+						valid_signal, 
+						get_valid_sense() ?
+							node_type::LOGIC_HIGH :
+							node_type::LOGIC_LOW));
+				}
+				// else leave alone in intermediate state
+			}
+#endif
+		} else {
+			// reset data
+			transform(data.begin(), data.end(),
+				back_inserter(events),
+				__node_setter(node_type::LOGIC_LOW));
+		}
+		break;
+	case node_type::LOGIC_HIGH:
+		if (get_ack_active()) {
+			// reset data
+			transform(data.begin(), data.end(),
+				back_inserter(events),
+				__node_setter(node_type::LOGIC_LOW));
+		} else {
+			if (counter_state && (counter_state != bundles())) {
+				// ambiguous
+				cerr << ambiguous_data << endl;
+			}
+			if ((counter_state != bundles() || x_counter)) {
+				advance_value();
+				set_all_data_rails(events);
+			}
+#if PRSIM_CHANNEL_VALIDITY
+			if (valid_signal) {
+				if (x_counter) {
+					events.push_back(env_event_type(
+						valid_signal, 
+						node_type::LOGIC_OTHER));
+				} else if (!counter_state) {
+					events.push_back(env_event_type(
+						valid_signal, 
+						get_valid_sense() ?
+							node_type::LOGIC_LOW :
+							node_type::LOGIC_HIGH));
+				} else if (counter_state == bundles()) {
+					events.push_back(env_event_type(
+						valid_signal, 
+						get_valid_sense() ?
+							node_type::LOGIC_HIGH :
+							node_type::LOGIC_LOW));
+				}
+				// else leave alone in intermediate state
+			}
+#endif
+		}
+		break;
+	default:
+		transform(data.begin(), data.end(),
+			back_inserter(events),
+			__node_setter(node_type::LOGIC_OTHER));
+	}	// end switch
+}
+// could also be sinking at the same time
+if (is_sinking()) {
+#if PRSIM_CHANNEL_VALIDITY
+	if (valid_signal) {
+		const node_type& v(get_node(valid_signal));
+		// TODO: use xor and value inversion to simplify the following:
+		switch (v.current_value()) {
+		case node_type::LOGIC_LOW:
+			if (get_valid_sense()) {
+				// reset ack
+				events.push_back(env_event_type(ack_signal, 
+					get_ack_active() ?
+						node_type::LOGIC_LOW :
+						node_type::LOGIC_HIGH));
+			} else {
+				// ack
+				events.push_back(env_event_type(ack_signal, 
+					get_ack_active() ?
+						node_type::LOGIC_HIGH :
+						node_type::LOGIC_LOW));
+			}
+			break;
+		case node_type::LOGIC_HIGH:
+			if (get_valid_sense()) {
+				// ack
+				events.push_back(env_event_type(ack_signal, 
+					get_ack_active() ?
+						node_type::LOGIC_HIGH :
+						node_type::LOGIC_LOW));
+			} else {
+				// reset ack
+				events.push_back(env_event_type(ack_signal, 
+					get_ack_active() ?
+						node_type::LOGIC_LOW :
+						node_type::LOGIC_HIGH));
+			}
+			break;
+		default:
+			events.push_back(env_event_type(
+				ack_signal, node_type::LOGIC_OTHER));
+		}
+	} else
+#endif
+	if (x_counter) {
+		events.push_back(env_event_type(
+			ack_signal, node_type::LOGIC_OTHER));
+	} else if (!counter_state) {
+		// data is neutral, reset ack
+		events.push_back(env_event_type(ack_signal, 
+			get_ack_active() ?
+				node_type::LOGIC_LOW :
+				node_type::LOGIC_HIGH));
+	} else if (counter_state == bundles()) {
+		// data is valid, ack
+		events.push_back(env_event_type(ack_signal, 
+			get_ack_active() ?
+				node_type::LOGIC_HIGH :
+				node_type::LOGIC_LOW));
+	}
+	// else in some intermediate state, leave acknowledge alone
+}
+}	// end channel::resume
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Technically counter_state and x_counter should be reconstructible
 	from the current state of the nodes.  
  */
@@ -970,7 +1177,7 @@ if (i.second) {
 	Results in a channel reference named 'chan'.
 	\return true on error
  */
-#define	GET_NAMED_CHANNEL(chan, name)					\
+#define	__GET_NAMED_CHANNEL(name)					\
 	const channel_set_type::const_iterator				\
 		f(channel_index_set.find(name));			\
 	if (f == channel_index_set.end()) {				\
@@ -978,7 +1185,14 @@ if (i.second) {
 			"\' not yet registered." << endl;		\
 		return true;						\
 	}								\
+
+#define	GET_NAMED_CHANNEL(chan, name)					\
+	__GET_NAMED_CHANNEL(name)					\
 	channel& chan(channel_pool[f->second]);
+
+#define	GET_NAMED_CHANNEL_CONST(chan, name)				\
+	__GET_NAMED_CHANNEL(name)					\
+	const channel& chan(channel_pool[f->second]);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1049,6 +1263,23 @@ channel_manager::source_channel(const State& s, const string& channel_name,
 	if (c.set_source(s, file_name, loop)) return true;
 	// warn if channel happens to be connected in wrong direction
 	// TODO: check that data/validity are not driven by other sources!
+#if PRSIM_CHANNEL_VALIDITY
+	node_channels_map_type::const_iterator
+		m(node_channels_map.find(c.valid_signal));
+	INVARIANT(m != node_channels_map.end());
+	set<channel_index_type>::const_iterator
+		ti(m->second.begin()), te(m->second.end());
+	for ( ; ti!=te; ++ti) {
+	if (*ti != f->second) {
+		const channel& ch(channel_pool[*ti]);
+		if (ch.is_sourcing() && (ch.valid_signal == c.valid_signal)) {
+			cerr << "Warning: channel validity is already "
+				"being driven by source on channel `" <<
+				ch.name << "\'." << endl;
+		}
+	}
+	}
+#endif
 	return false;
 }
 
@@ -1066,8 +1297,9 @@ channel_manager::sink_channel(const State& s, const string& channel_name) {
 
 	// check if signal is registered with other sinking channels?
 	node_channels_map_type::const_iterator
-		m(node_channels_map.find(f->second));
+		m(node_channels_map.find(c.ack_signal));
 	INVARIANT(m != node_channels_map.end());
+
 	set<channel_index_type>::const_iterator
 		ti(m->second.begin()), te(m->second.end());
 	for ( ; ti!=te; ++ti) {
@@ -1137,19 +1369,24 @@ channel_manager::stop_all_channels(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-channel_manager::resume_channel(const string& channel_name) {
+channel_manager::resume_channel(const State& s, const string& channel_name, 
+		vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
-	c.resume();
+	c.resume(s, events);
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-channel_manager::resume_all_channels(void) {
+channel_manager::resume_all_channels(const State& s,
+		vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
-	for_each(channel_pool.begin(), channel_pool.end(), 
-		mem_fun_ref(&channel::resume));
+	channel_pool_type::iterator
+		i(channel_pool.begin()), e(channel_pool.end());
+	for ( ; i!=e; ++i) {
+		i->resume(s, events);	// could bind2nd_argval...
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1241,14 +1478,28 @@ channel_manager::__dump(ostream& o, const bool state) const {
 	channel_set_type::const_iterator
 		i(channel_index_set.begin()), e(channel_index_set.end());
 for ( ; i!=e; ++i) {
-	o << i->first << " : ";		// channel name
 	const channel& c(channel_pool[i->second]);
-	c.dump(o) << endl;
+	c.dump(o) << endl;		// contains channel name
 	if (state) {
 		c.dump_state(o << '\t') << endl;
 	}
 }
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just show all managed channels.  
+ */
+bool
+channel_manager::__dump_channel(ostream& o, const string& channel_name, 
+		const bool state) const {
+	GET_NAMED_CHANNEL_CONST(c, channel_name)
+	c.dump(o) << endl;		// contains channel name
+	if (state) {
+		c.dump_state(o << '\t') << endl;
+	}
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1306,7 +1557,10 @@ for ( ; j<s; ++j) {
 }
 
 //=============================================================================
+#undef	__GET_NAMED_CHANNEL
 #undef	GET_NAMED_CHANNEL
+#undef	GET_NAMED_CHANNEL_CONST
+
 }	// end namespace PRSIM
 }	// end namespace SIM
 }	// end namespace HAC

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.24.2.2 2008/02/17 02:20:43 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.24.2.3 2008/02/18 22:02:45 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -120,7 +120,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	SRAM-c-01 SRAM-c-02 SRAM-c-03 \
 	SRAM-d-01 SRAM-d-02 \
 	keeper-a-01 \
-	channel-test-a-01 channel-test-a-02
+	channel-test-a-01 channel-test-a-02 channel-test-a-03
 
 # positive different test:
 # oscil-random-01 and oscil-random-01a are *supposed* to differ (seeds)

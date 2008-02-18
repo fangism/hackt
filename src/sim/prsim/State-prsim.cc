@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.32.2.3 2008/02/18 05:32:38 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.32.2.4 2008/02/18 22:02:43 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -376,6 +376,31 @@ void
 State::reset_all_channels(void) {
 	vector<env_event_type> temp;
 	_channel_manager.reset_all_channels(temp);
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set a single channel into reset state.  
+ */
+bool
+State::resume_channel(const string& cn) {
+	vector<env_event_type> temp;
+	if (_channel_manager.resume_channel(*this, cn, temp))	return true;
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reset all channels.  
+ */
+void
+State::resume_all_channels(void) {
+	vector<env_event_type> temp;
+	_channel_manager.resume_all_channels(*this, temp);
 	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
 	flush_channel_events(temp, c);
 }

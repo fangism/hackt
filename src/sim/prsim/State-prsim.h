@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.13.2.3 2008/02/18 05:32:39 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.13.2.4 2008/02/18 22:02:45 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -616,6 +616,12 @@ public:
 
 	void
 	reset_all_channels(void);
+
+	bool
+	resume_channel(const string&);
+
+	void
+	resume_all_channels(void);
 #endif
 
 	void
@@ -1110,6 +1116,11 @@ public:
 	}
 
 #if PRSIM_CHANNEL_SUPPORT
+	bool
+	dump_channel(ostream& o, const string& s) const {
+		return _channel_manager.dump_channel(o, *this, s);
+	}
+
 	ostream&
 	dump_channels(ostream& o) const {
 		return _channel_manager.dump(o, *this);

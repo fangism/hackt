@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.11.2.4 2008/02/18 05:32:37 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.11.2.5 2008/02/18 22:02:42 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3223,11 +3223,34 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AutoChannel, "auto-channel",
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowChannels, "show-channels", 
-	channels, "list all registered channels")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelShow, "channel-show", 
+	channels, "show configuration of registered channel")
 
 int
-ShowChannels::main(State& s, const string_list& a) {
+ChannelShow::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.dump_channel(cout, a.back())) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelShow::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelShowAll, "channel-show-all", 
+	channels, "list configuration of all registered channels")
+
+int
+ChannelShowAll::main(State& s, const string_list& a) {
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -3238,7 +3261,7 @@ if (a.size() != 1) {
 }
 
 void
-ShowChannels::usage(ostream& o) {
+ChannelShowAll::usage(ostream& o) {
 	o << name << endl;
 o << "Print list of all registered channels with their type information."
 	<< endl;
@@ -3246,6 +3269,7 @@ o << "Print list of all registered channels with their type information."
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
+// change loop configuration
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLoop, "channel-loop", 
 	channels, "cycle through source/expect values")
 
@@ -3438,7 +3462,7 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.get_channel_manager().resume_channel(a.back()))
+	if (s.resume_channel(a.back()))
 		return Command::BADARG;
 	return Command::NORMAL;
 }
@@ -3462,7 +3486,7 @@ if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.get_channel_manager().resume_all_channels();
+	s.resume_all_channels();
 	return Command::NORMAL;
 }
 }
@@ -3470,9 +3494,9 @@ if (a.size() != 1) {
 void
 ChannelReleaseAll::usage(ostream& o) {
 	o << name << endl;
-	o << "Release all source/sink channels from reset/stopped state." << endl;
+	o << "Release all source/sink channels from reset/stopped state."
+		<< endl;
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelClose, "channel-close", 

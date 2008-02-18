@@ -3,7 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2008-02-16	David Fang		<fangism@users.sourceforge.net>
+2008-02-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-06:
+	  channel::resume() now properly spawns events from the environment
+		of sources and sink.
+	  Channel sink initial tests are working.
+	  Added test case with manual toggling of data rails.
+
+
+2008-02-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-05:
 	  Continued development of prsim:channels, mostly implementation
