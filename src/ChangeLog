@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-02-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-04:
+	  Minor bug-fix [accepts-invalid]: array nonmeta expressions
+		were not being properly rejected.  Now all nonmeta expressions
+		are required to be scalar (0-dimensional), until a future
+		time when we define proper semantics for them.  
+	  Added test case: parser/chp/124.hac
+		Few other expect-fail tests updated with new diagnostic.
+
+
 2008-02-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-03:

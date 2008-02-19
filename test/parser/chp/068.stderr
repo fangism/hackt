@@ -1,3 +1,5 @@
-Sorry, non-scalar instance reference at [9:5] not supported in CHP yet.
+Error: expression at [9:10] is not scalar.
+Sorry, array nonmeta expressions are not yet supported.
+Error in rvalue of assignment at [9:10]
 ERROR in one of the actions in [9:2..12]
 ERROR: at least one error in CHP body.

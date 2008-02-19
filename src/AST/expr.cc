@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.31 2007/11/14 20:50:22 fang Exp $
+	$Id: expr.cc,v 1.32 2008/02/19 05:48:56 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -261,6 +261,8 @@ inst_ref_expr::check_meta_expr(const context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Need to allow meta expressions as nonmeta expressions.  
+	Current limitation, nonmeta expressions must be scalar
+	util array expressions and semantics are supported.  
  */
 nonmeta_expr_return_type
 inst_ref_expr::check_nonmeta_expr(const context& c) const {
@@ -273,6 +275,13 @@ inst_ref_expr::check_nonmeta_expr(const context& c) const {
 	}
 	const expr::nonmeta_return_type data_ref(inst_ref.is_a<data_type>());
 	if (data_ref) {
+		if (data_ref->dimensions()) {
+			cerr << "Error: expression at " << where(*this) <<
+				" is not scalar.\n"
+		"Sorry, array nonmeta expressions are not yet supported."
+				<< endl;
+			return return_type(NULL);
+		}
 		return data_ref;
 	} else {
 		cerr << "ERROR: Expression at " << where(*this) <<

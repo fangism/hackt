@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2007/10/08 01:24:12 fang Exp $
+#	$Id: Makefile.am,v 1.25 2008/02/19 05:48:57 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -15,7 +15,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	095 096 \
 	107 \
 	119 \
-	120 \
+	120 124 \
 	wrong-source \
 	wrong-sink wrong-sink-02 \
 	dataless-02 dataless-04 dataless-05

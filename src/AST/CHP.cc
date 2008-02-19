@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.21 2007/11/26 08:27:20 fang Exp $
+	$Id: CHP.cc,v 1.22 2008/02/19 05:48:55 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -767,11 +767,14 @@ binary_assignment::__check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 	// type-check
+#if 0
+	// checked by inst_ref_expr::check_nonmeta_expr
 	if (lref->dimensions()) {
 		cerr << "Sorry, non-scalar instance reference at " <<
 			where(*lval) << " not supported in CHP yet." << endl;
 		return statement::return_type(NULL);
 	}
+#endif
 	const count_ptr<const data_type_reference>
 		ltype(lref->get_unresolved_data_type_ref());
 	if (!ltype) {
@@ -856,12 +859,15 @@ bool_assignment::__check_action(context& c) const {
 			"instance references, bug Fang about it." << endl;
 		return statement::return_type(NULL);
 	}
+#if 0
+	// checked by inst_ref_expr::check_nonmeta_expr
 	if (lref->dimensions()) {
 		cerr << "Sorry, non-scalar boolean reference at " <<
 			where(*bool_var) << " not supported in CHP yet."
 			<< endl;
 		return statement::return_type(NULL);
 	}
+#endif
 	// wait, there is no rvalue in this assignment, it is implicit
 	// in the direction (dir: +/-) field.  
 	const count_ptr<const data_type_reference>

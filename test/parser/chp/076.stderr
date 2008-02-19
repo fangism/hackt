@@ -1,5 +1,5 @@
-Error: mismatch in dimensions of assignment.
-	got: 0 at [8:5]
-	and: 1 at [8:10]
+Error: expression at [8:10] is not scalar.
+Sorry, array nonmeta expressions are not yet supported.
+Error in rvalue of assignment at [8:10]
 ERROR in one of the actions in [8:2..12]
 ERROR: at least one error in CHP body.
