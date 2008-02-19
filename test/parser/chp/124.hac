@@ -1,0 +1,11 @@
+// "124.hac"
+// accepts-invalid test case
+// should reject array expressions
+
+int x[2], y[2];
+chan(int) Z;
+
+chp {
+	Z!(x ^ y)
+}
+

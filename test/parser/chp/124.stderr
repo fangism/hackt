@@ -1,0 +1,8 @@
+Error: expression at [9:5] is not scalar.
+Sorry, array nonmeta expressions are not yet supported.
+Error: expression at [9:9] is not scalar.
+Sorry, array nonmeta expressions are not yet supported.
+ERROR building non-meta expression at [9:5]
+ERROR building non-meta expression at [9:9]
+At least one error in expr-list at [9:4..10]
+ERROR: at least one error in CHP body.
