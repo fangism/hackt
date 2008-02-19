@@ -5,6 +5,17 @@
 
 2008-02-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-07:
+	  Ironed out most initial bugs for channel commands, now works!
+		Call it beta.
+	  Now advance value in sequence *after* data rails are reset.
+		Resume no longer auto-advances.
+	  Fixed exception throw specifier for State::step,cycle, 
+		which otherwise, prevented channel_exception from
+		being caught (channel value assert-fail).
+	  Added bunch of source/sink/log/expect test cases.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-06:
 	  channel::resume() now properly spawns events from the environment
 		of sources and sink.

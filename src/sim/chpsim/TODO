@@ -1,5 +1,5 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.10 2007/09/11 06:53:14 fang Exp $
+#	$Id: TODO,v 1.10.18.1 2008/02/19 03:22:10 fang Exp $
 
 ===============================================================================
 chpsim:
@@ -55,6 +55,7 @@ low-priority:
 		for guard expressions
 		variables referenced (and their values)
 	backtrace: like prsim: recent last-arrival event chain, up to a cycle
+	add -t <type> argument analogous to cflat's
 	minor enhancement:
 		coalesce common subtrees of forks and joins [low priority]
 	visualization: 

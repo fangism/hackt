@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.2.6 2008/02/18 22:02:41 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.2.7 2008/02/19 03:22:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -257,6 +257,7 @@ while (1) {
 				toks.front() << "\"." << endl;
 			return true;
 		}
+		v.push_back(i);
 	}
 }
 	return false;
@@ -290,7 +291,8 @@ channel::set_source(const State& s, const string& file_name, const bool loop) {
 	value_index = 0;	// TODO: optional offset or initial position
 	if (read_values_from_file(file_name, values)) return true;
 	if (!values.size()) {
-		cerr << "Error: no values found in file, cannot source channel."
+		cerr << "Error: no values found in file \"" << file_name
+			<< "\", cannot source channel."
 			<< endl;
 		return true;
 	}
@@ -391,7 +393,6 @@ channel::set_sink(const State& s) {
 	// this is forgiveable
 #endif
 #endif
-	initialize_data_counter(s);
 	// do we care if data rails lack fanin?
 	return false;
 }	// end channel::set_sink
@@ -453,6 +454,7 @@ channel::set_log(const string& fn) {
 	data rail nodes.  
 	One LOGIC_HIGH counts, X's are treated as 0s.  
 	invariant: if exclusiveness is violated, this will complain!
+	invariant: no data rails alias
  */
 void
 channel::initialize_data_counter(const State& s) {
@@ -597,16 +599,26 @@ if (have_value()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	This does NOT check the stopped state, caller is responsibly.
+	When sourcing, set data values.
+	This does NOT check the stopped state, caller is responsible.
  */
 void
 channel::set_current_data_rails(vector<env_event_type>& events, 
 		const uchar val) {
 	STACKTRACE_VERBOSE;
+	INVARIANT(is_sourcing());
+if (have_value()) {
 	vector<node_index_type> nodes;
 	current_data_rails(nodes);	// use current values[value_index]
 	transform(nodes.begin(), nodes.end(), back_inserter(events), 
 		__node_setter(val));
+} else {
+	// out of values, might as well turn of sourcing
+	flags &= ~CHANNEL_SOURCING;
+	if (!values.empty()) {
+		values.clear();
+	}
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -668,6 +680,10 @@ channel::process_node(const State& s, const node_index_type ni,
 		vector<env_event_type>& new_events) {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type	node_type;
+#if ENABLE_STACKTRACE
+	cout << s.get_node_canonical_name(ni) << " : " << size_t(prev) << 
+		" -> " << size_t(next) << endl;
+#endif
 // first identify which channel node member this node is
 if (ni == ack_signal) {
 	// only need to take action if this is a source
@@ -678,13 +694,13 @@ if (ni == ack_signal) {
 		if (get_ack_active()) {
 			// \pre all data rails are neutral
 			// set data rails to next data value
-			advance_value();
 			set_current_data_rails(new_events,
 				node_type::LOGIC_HIGH);
 		} else {
 			// reset all data rails, (switch only those active)
 			set_current_data_rails(new_events,
 				node_type::LOGIC_LOW);
+			advance_value();
 		}
 		break;
 	case node_type::LOGIC_HIGH:
@@ -692,10 +708,10 @@ if (ni == ack_signal) {
 			// reset all data rails, (switch only those active)
 			set_current_data_rails(new_events,
 				node_type::LOGIC_LOW);
+			advance_value();
 		} else {
 			// \pre all data rails are neutral
 			// set data rails to next data value
-			advance_value();
 			set_current_data_rails(new_events,
 				node_type::LOGIC_HIGH);
 		}
@@ -750,8 +766,14 @@ if (ni == ack_signal) {
 	// invariant: must be data rail
 	// update state counters
 	switch (prev) {
-	case node_type::LOGIC_HIGH: --counter_state; break;
-	case node_type::LOGIC_OTHER: --x_counter; break;
+	case node_type::LOGIC_HIGH:
+		INVARIANT(counter_state);
+		--counter_state;
+		break;
+	case node_type::LOGIC_OTHER:
+		INVARIANT(x_counter);
+		--x_counter;
+		break;
 	default: break;
 	}
 	switch (next) {
@@ -827,7 +849,8 @@ if (ni == ack_signal) {
 			// should be able to just setbase()
 			(*dumplog.stream) << data_rails_value(s) << endl;
 		}
-		if (is_expecting() && have_value()) {
+		if (is_expecting()) {
+		if (have_value()) {
 			// don't bother waiting for validity signal
 			const int_value_type expect = current_value();
 			const int_value_type got = data_rails_value(s);
@@ -836,6 +859,14 @@ if (ni == ack_signal) {
 				throw State::channel_exception(name, 
 					expect, got);
 			}
+		} else {
+			// exhausted values, disable expecting
+			flags &= ~CHANNEL_EXPECTING;
+			// might as well release memory...
+			if (!values.empty()) {
+				values.clear();
+			}
+		}
 		}
 		// if no value available, just ignore
 #if PRSIM_CHANNEL_VALIDITY
@@ -879,8 +910,8 @@ channel::resume(const State& s, vector<env_event_type>& events) {
 	flags &= ~CHANNEL_STOPPED;
 	static const char ambiguous_data[] = 
 "Warning: the current state of data rails is neither valid nor neutral, "
-"so I\'m assuming that current sequence value has already been used and "
-"moving on to the next one.";
+"so I\'m assuming that current sequence value has NOT already been used; "
+"we are using the current value.";
 if (is_sourcing()) {
 	// validity should be set after all data rails are valid/neutral
 	const node_type& a(s.get_node(ack_signal));
@@ -896,7 +927,7 @@ if (is_sourcing()) {
 				cerr << ambiguous_data << endl;
 			}
 			if ((counter_state != bundles() || x_counter)) {
-				advance_value();
+				// advance_value();
 				set_all_data_rails(events);
 			}
 #if PRSIM_CHANNEL_VALIDITY
@@ -940,7 +971,7 @@ if (is_sourcing()) {
 				cerr << ambiguous_data << endl;
 			}
 			if ((counter_state != bundles() || x_counter)) {
-				advance_value();
+				// advance_value();
 				set_all_data_rails(events);
 			}
 #if PRSIM_CHANNEL_VALIDITY
@@ -1164,6 +1195,8 @@ if (i.second) {
 			}
 		}
 	}
+	// initialize data-rail state counters from current values
+	c.initialize_data_counter(state);
 	return false;
 } else {
 	return true;

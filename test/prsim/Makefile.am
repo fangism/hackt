@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.24.2.3 2008/02/18 22:02:45 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.24.2.4 2008/02/19 03:22:17 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -35,7 +35,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	bitline-a bitline-b \
 	SRAM SRAM-a SRAM-b SRAM-c SRAM-d \
 	keeper-a \
-	channel-test-a
+	channel-test-a channel-test-b
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -120,7 +120,13 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	SRAM-c-01 SRAM-c-02 SRAM-c-03 \
 	SRAM-d-01 SRAM-d-02 \
 	keeper-a-01 \
-	channel-test-a-01 channel-test-a-02 channel-test-a-03
+	channel-test-a-01 channel-test-a-02 channel-test-a-03 \
+	channel-test-a-04 channel-test-a-05 channel-test-a-06 \
+	channel-test-a-07 channel-test-a-08 channel-test-a-09 \
+	channel-test-a-11 \
+	channel-test-b-01 channel-test-b-02 channel-test-b-03 \
+	channel-test-b-04 channel-test-b-05 channel-test-b-06 \
+	channel-test-b-07 channel-test-b-08
 
 # positive different test:
 # oscil-random-01 and oscil-random-01a are *supposed* to differ (seeds)
@@ -135,11 +141,20 @@ $(srcdir)/cbit_test_stat-01.prsimrc: gen_cbit_test.awk
 	$(ECHO) "# @haco@ cbit_test_stat.haco-a" ; \
 	$(AWK) -f $< ;} > $@
 
+channel-test-a-values-X.txt:
+	{ $(ECHO) "# $@" ; \
+	$(ECHO) "# bunch of 1of2 values" ; \
+	$(ECHO) "0" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; \
+	$(ECHO) "0" ; $(ECHO) "0" ; $(ECHO) "0" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; \
+		} > $@
+
 # extra dep
 cbit_test_stat-01.prsimrc-out: cbit_test_stat.haco-a
 
-CLEANFILES += cbit_test_stat-01.prsimrc
-AUTO_IGNORE += cbit_test_stat-01.prsimrc
+CLEANFILES += cbit_test_stat-01.prsimrc channel-test-a-values-X.txt
+AUTO_IGNORE += cbit_test_stat-01.prsimrc channel-test-a-values-X.txt
 EXTRA_DIST += cbit_test_stat-01.prsimrc gen_cbit_test.awk
 
 # all weak-* tests added (pass AND fail) are consistent with Rajit's prsim
@@ -161,7 +176,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	aliases-05 aliases-06 aliases-07 \
 	check-excl-rings-01 check-excl-rings-03 \
 	weak-feedback-a-02 weak-feedback-b-02 \
-	celem-fb-02
+	celem-fb-02 \
+	channel-test-a-10 channel-test-a-12
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.8.7 2008/02/13 08:13:29 fang Exp $
+#	$Id: TODO,v 1.4.8.7.2.1 2008/02/19 03:22:16 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -38,6 +38,8 @@ prsim:
 		In batch-mode, will just continue.  
 		Also needs a 'where' command to show file-stack and 
 			line positions for reference.
+
+	add -t <type> argument analogous to cflat's
 
 	timestamp last causes -- automatic cycle time
 		Will cost some more memory per node.

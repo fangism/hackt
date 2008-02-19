@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.32.2.4 2008/02/18 22:02:43 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.32.2.5 2008/02/19 03:22:13 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2199,7 +2199,7 @@ if (IS_A(const excl_exception*, &ex)) {
 		leaving violating event in queue.  
  */
 State::step_return_type
-State::step(void) THROWS_EXCL_EXCEPTION {
+State::step(void) THROWS_STEP_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
 	ISE_INVARIANT(pending_queue.empty());
@@ -3338,7 +3338,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 		the ID of the node that tripped a breakpoint.  
  */
 State::step_return_type
-State::cycle(void) THROWS_EXCL_EXCEPTION {
+State::cycle(void) THROWS_STEP_EXCEPTION {
 	step_return_type ret;
 	while ((ret = step()).first) {
 		if (get_node(ret.first).is_breakpoint() || stopped())

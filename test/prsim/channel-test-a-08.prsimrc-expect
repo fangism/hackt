@@ -1,0 +1,120 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+X : .e(init:0) 1x1of2 off
+	count: 0, unknowns: 2
+Warning: channel acknowledge `X.e' has no fanin!
+All subnodes of 'X':
+X.d[0] : 0
+X.d[1] : 0
+X.e : 0
+X : .e(init:0) 1x1of2 source,sink,stopped {0,1,1,0,0,0,1,1,1,1,}* @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 0
+releasing channel X (source) 
+source values on X will repeat 
+	20	X.e : 1
+channel	X (.data) : 0
+	30	X.d[0] : 1	[by X.e:=1]
+	40	X.e : 0	[by X.d[0]:=1]
+	50	X.d[0] : 0	[by X.e:=0]
+	60	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 1
+	70	X.d[1] : 1	[by X.e:=1]
+	80	X.e : 0	[by X.d[1]:=1]
+	90	X.d[1] : 0	[by X.e:=0]
+	100	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	110	X.d[1] : 1	[by X.e:=1]
+	120	X.e : 0	[by X.d[1]:=1]
+	130	X.d[1] : 0	[by X.e:=0]
+	140	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 0
+	150	X.d[0] : 1	[by X.e:=1]
+	160	X.e : 0	[by X.d[0]:=1]
+	170	X.d[0] : 0	[by X.e:=0]
+	180	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 0
+	190	X.d[0] : 1	[by X.e:=1]
+	200	X.e : 0	[by X.d[0]:=1]
+	210	X.d[0] : 0	[by X.e:=0]
+	220	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 0
+	230	X.d[0] : 1	[by X.e:=1]
+	240	X.e : 0	[by X.d[0]:=1]
+	250	X.d[0] : 0	[by X.e:=0]
+	260	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 1
+	270	X.d[1] : 1	[by X.e:=1]
+	280	X.e : 0	[by X.d[1]:=1]
+	290	X.d[1] : 0	[by X.e:=0]
+	300	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	310	X.d[1] : 1	[by X.e:=1]
+	320	X.e : 0	[by X.d[1]:=1]
+	330	X.d[1] : 0	[by X.e:=0]
+	340	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	350	X.d[1] : 1	[by X.e:=1]
+	360	X.e : 0	[by X.d[1]:=1]
+	370	X.d[1] : 0	[by X.e:=0]
+	380	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	390	X.d[1] : 1	[by X.e:=1]
+	400	X.e : 0	[by X.d[1]:=1]
+	410	X.d[1] : 0	[by X.e:=0]
+	420	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 0
+	430	X.d[0] : 1	[by X.e:=1]
+	440	X.e : 0	[by X.d[0]:=1]
+	450	X.d[0] : 0	[by X.e:=0]
+	460	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 1
+	470	X.d[1] : 1	[by X.e:=1]
+	480	X.e : 0	[by X.d[1]:=1]
+	490	X.d[1] : 0	[by X.e:=0]
+	500	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	510	X.d[1] : 1	[by X.e:=1]
+	520	X.e : 0	[by X.d[1]:=1]
+	530	X.d[1] : 0	[by X.e:=0]
+	540	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 0
+	550	X.d[0] : 1	[by X.e:=1]
+	560	X.e : 0	[by X.d[0]:=1]
+	570	X.d[0] : 0	[by X.e:=0]
+	580	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 0
+	590	X.d[0] : 1	[by X.e:=1]
+	600	X.e : 0	[by X.d[0]:=1]
+	610	X.d[0] : 0	[by X.e:=0]
+	620	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 0
+	630	X.d[0] : 1	[by X.e:=1]
+	640	X.e : 0	[by X.d[0]:=1]
+	650	X.d[0] : 0	[by X.e:=0]
+	660	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 1
+	670	X.d[1] : 1	[by X.e:=1]
+	680	X.e : 0	[by X.d[1]:=1]
+	690	X.d[1] : 0	[by X.e:=0]
+	700	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	710	X.d[1] : 1	[by X.e:=1]
+	720	X.e : 0	[by X.d[1]:=1]
+	730	X.d[1] : 0	[by X.e:=0]
+	740	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	750	X.d[1] : 1	[by X.e:=1]
+	760	X.e : 0	[by X.d[1]:=1]
+	770	X.d[1] : 0	[by X.e:=0]
+	780	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	790	X.d[1] : 1	[by X.e:=1]
+	800	X.e : 0	[by X.d[1]:=1]
+	810	X.d[1] : 0	[by X.e:=0]
+time: 810
+running a bit longer... 
+time: 124260
+X : .e(init:0) 1x1of2 source,sink {0,1,1,0,0,0,1,1,1,1,}* @6 < channel-test-a-values-X.txt
+	count: 0, unknowns: 0

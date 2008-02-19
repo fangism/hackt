@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.13.2.4 2008/02/18 22:02:45 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.13.2.5 2008/02/19 03:22:14 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -126,6 +126,10 @@ public:
 	typedef	std::pair<node_index_type, node_index_type>
 							step_return_type;
 	typedef	size_t				lock_index_type;
+	/**
+		Generic simulation exception base class, 
+		when something goes wrong.
+	 */
 	struct step_exception {
 	virtual	~step_exception() { }
 	};
@@ -160,7 +164,7 @@ public:
 	};	// end struct channel_exception
 #endif
 
-#define	THROWS_EXCL_EXCEPTION	throw (excl_exception)
+#define	THROWS_STEP_EXCEPTION	throw (step_exception)
 private:
 	struct evaluate_return_type {
 		node_index_type			node_index;
@@ -746,10 +750,10 @@ public:
 	dump_breakpoints(ostream&) const;
 
 	step_return_type
-	step(void) THROWS_EXCL_EXCEPTION;
+	step(void) THROWS_STEP_EXCEPTION;
 
 	step_return_type
-	cycle(void) THROWS_EXCL_EXCEPTION;
+	cycle(void) THROWS_STEP_EXCEPTION;
 
 	void
 	stop(void) {

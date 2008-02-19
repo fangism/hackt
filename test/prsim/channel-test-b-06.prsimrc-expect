@@ -1,0 +1,62 @@
+channels:
+L : .e(init:0) 1x1of2 off
+R : .e(init:0) 1x1of2 off
+L : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,}* @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+R : .e(init:0) 1x1of2 sink,expect {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+L : .e(init:0) 1x1of2 source,stopped {0,1,1,0,0,0,1,1,1,1,}* @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+R : .e(init:0) 1x1of2 sink,expect,stopped {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+L : .e(init:0) 1x1of2 source,stopped {0,1,1,0,0,0,1,1,1,1,}* @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 0
+R : .e(init:0) 1x1of2 sink,expect,stopped {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 0
+event queue:
+	50	L.d[0] : 1
+	50	R.e : 1
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel	L (.data) : 1
+time: 540
+L : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,}* @6 < channel-test-a-values-X.txt
+	count: 1, unknowns: 0
+R : .e(init:0) 1x1of2 sink,expect {0,1,1,0,0,0,1,1,1,1,} @6 < channel-test-a-values-X.txt
+	count: 0, unknowns: 0
+channel	R (.data) : 1
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel	L (.data) : 1
+time: 1340
+L : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,}* @6 < channel-test-a-values-X.txt
+	count: 1, unknowns: 0
+R : .e(init:0) 1x1of2 sink
+	count: 0, unknowns: 0
+ran out of expected values on R 
