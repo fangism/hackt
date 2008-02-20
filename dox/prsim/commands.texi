@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.9 2008/02/11 19:46:09 fang Exp $
+@c $Id: commands.texi,v 1.2.2.9.2.1 2008/02/20 00:26:58 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -104,6 +104,103 @@ Checkpointing.
 @c ----------------------------------------------------------------------------
 @node Channel Commands
 @section @t{channel} Commands
+
+The simulator currently provides some limited features for
+interacting with channels and environments at run-time.  
+The @i{channel} features allow a user to connect arbitrary 
+sources and sinks to channels, as well as perform assertion checks
+and value logging.  
+For consistency, all @t{channels} commands are prefixed with 
+@t{channel-}.  
+
+@include cmd/channel.texi
+
+The channel names used in the simulator must correspond to an
+actual channel (or process) in the input description.  
+(The name used for registration actually resides in the simulator's
+own namespace, separate from the compiled circuits.)
+Upon registering a channel name, the simulator locates all
+relevant subnodes of the channel by appending @t{.e} or @t{.a}
+and @t{.d[i]} (or however the rails are named) to the end of 
+the channel's name.  The following are examples of @command{channel} commands.  
+
+@example
+channel e:0 :0 d:2
+channel e:1 :0 d:2
+channel e:1 :0 r:2
+channel e:1 :0 d:0
+channel a:1 :0 r:4
+channel e:1 d:4 r:4
+channel ev:0 :0 d:2
+@end example
+
+@noindent
+Respectively, an @t{e1of2} channel with @t{.e} initially low (if coming 
+from the environment), an @t{e1of2} with @t{.e} initially high, 
+an @t{e1of2} with array data rails named @t{r}, 
+an @t{e1of2} with one non-array data rail @t{r}, 
+an @t{a1of4} with @t{.a} initially high, 
+an @t{e4x1of4} channel, 
+and an @t{ev1of2} (enable-valid protocol).  
+
+@include cmd/channel-show.texi
+@include cmd/channel-show-all.texi
+
+To control which channels should report values to the console, 
+the simulator provides basic watch commands.  
+
+@include cmd/channel-watch.texi
+@include cmd/channel-unwatch.texi
+@include cmd/channel-watchall.texi
+@include cmd/channel-unwatchall.texi
+
+Channel values can also be logged to a file or compared against
+expected values.  
+
+@include cmd/channel-log.texi
+@include cmd/channel-close.texi
+@include cmd/channel-close-all.texi
+@include cmd/channel-expect.texi
+@include cmd/channel-expect-loop.texi
+
+@noindent
+It is legal to log and expect values on the same channel.  
+
+@b{Value files}: The files referenced by @command{channel-expect} and 
+@command{channel-source} may contain @t{#} comments and blank lines, 
+which are skipped.  
+Only the first value on each line is used, so value sequences
+should be newline-separated.
+For now, the remained of each line is simply ignored, 
+so you may use them for comments, but this may change in the future.  
+
+Channels can be configured to operate as environments
+when they are not already connected to inputs or outputs.  
+The only conflicting (illegal) configuration combination is that 
+a channel cannot act as source while expecting values.  
+(Why would you want to do that anyways?)
+
+@include cmd/channel-source.texi
+@include cmd/channel-source-loop.texi
+@include cmd/channel-rsource.texi
+@include cmd/channel-sink.texi
+
+@noindent
+It is legal to source and sink on the same channel.  
+
+Channels configured as sources or sinks can be controlled through
+the following commands.  
+
+@include cmd/channel-reset.texi
+@include cmd/channel-reset-all.texi
+@include cmd/channel-stop.texi
+@include cmd/channel-stop-all.texi
+@include cmd/channel-release.texi
+@include cmd/channel-release-all.texi
+
+@b{Timing}: delays are given some default value, 
+except in random timing mode, where delays are randomized.  
+TODO: configure after delays on sources and sinks.
 
 @c ----------------------------------------------------------------------------
 @node Info Commands

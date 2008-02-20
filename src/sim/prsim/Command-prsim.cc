@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.11.2.5 2008/02/18 22:02:42 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.11.2.6 2008/02/20 00:27:07 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3094,6 +3094,42 @@ MemStats::usage(ostream& o) {
 // TODO: support PxeMx1ofN (array source, auto-expand and decouple?)
 // TODO: typedef-channel command
 
+/***
+@texinfo cmd/channel.texi
+@deffn Command channel name type bundle rails
+Registers a named channel (with constituents) in a separate namespace in
+the simulator, typically used to drive or log the environment.
+The @var{name} of the channel should match that of an instance 
+(process or channel) in the source file.  
+@itemize
+@item @var{name} is the name of the new channel in the simulator's namespace
+@item @var{type} is a regular expression of the form @t{[ae][nv]?:[01]}, where
+@itemize
+	@item @t{a} means active-high acknowledge
+	@item @t{e} means active-low acknowledge (a.k.a. enable)
+	@item @t{n} means active-low validity (a.k.a. neutrality)
+	@item @t{v} means active-high validity.
+	These are also the names of the channel signals.
+	@item @t{[01]} is the initial value of the acknowledge during reset, 
+		which is only relevant to channel sinks.  
+@end itemize
+@item @var{bundle} is the name of the data bundle (rail group) of the channel
+	in the form @t{[name]:size}, where @var{size} is the number of 
+	rail bundles (M in Mx1ofN).
+	If there are no bundles, then leave the name blank,
+		i.e. just write @t{:0}
+	If there is only one bundle (1x1ofN), use @var{size} 0 to 
+		indicate that named bundle is not an array.
+@item @var{rails} (@t{rname:radix}) is the name and size of each bundle's 
+	data rails, @var{rname} is the name of the data rail of the channel.
+	@var{radix} is the number of data rails per bundle (N in Mx1ofN).
+	Use @var{radix} 0 to indicate that rail is not an array (1of1).
+@end itemize
+For example, @t{channel e:0 :0 d:4} is a conventional e1of4 channel with
+data rails @t{d[0..3]}, and an active-low acknowledge reset to 0, no bundles.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Channel, "channel", 
 	channels, "declare a handshake channel from a group of nodes")
 
@@ -3192,7 +3228,7 @@ void
 Channel::usage(ostream& o) {
 	o << name << " <name> <type:init> <bundle:size> <rail:radix>" << endl;
 	o <<
-"Registers a named channel (with contituents) in a separate namespace in \n"
+"Registers a named channel (with constituents) in a separate namespace in \n"
 "the simulator, typically used to drive or log the environment.\n"
 "\'name\' is the name of the new channel in the simulator's namespace\n"
 "\'type\' is a regular expression of the form [ae][nv]?, where \n"
@@ -3223,6 +3259,18 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AutoChannel, "auto-channel",
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-show.texi
+@deffn Command channel-show chan
+Print the current configuration and state of channel @var{chan}.
+This also shows the sequence of values associated with sources and 
+expectations with sequence position, if applicable.  
+Looping values are indicated with @t{*}.  
+This also shows the origin of the value sequence and the 
+name of the current log file to which values are dumped, if enabled.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelShow, "channel-show", 
 	channels, "show configuration of registered channel")
 
@@ -3246,6 +3294,13 @@ ChannelShow::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-show-all.texi
+@deffn Command channel-show-all
+Print the current configuration for all registered channels.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelShowAll, "channel-show-all", 
 	channels, "list configuration of all registered channels")
 
@@ -3278,6 +3333,17 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLoop, "channel-unloop",
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-watch.texi
+@deffn Command channel-watch chan
+Report value of data rails when channel @var{chan} has valid data.  
+Data validity is only determined by the state of the data rails, 
+and not the acknowledge signal. 
+An unstable channel (that can transiently take valid states)
+will report @emph{every} transient value.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelWatch, "channel-watch", 
 	channels, "report when spcified channel changes state")
 
@@ -3300,6 +3366,13 @@ ChannelWatch::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-unwatch.texi
+@deffn Command channel-unwatch chan
+Remove channel @var{chan} from watch list.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelUnWatch, "channel-unwatch", 
 	channels, "ignore when spcified channel changes state")
 
@@ -3322,6 +3395,13 @@ ChannelUnWatch::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-watchall.texi
+@deffn Command channel-watchall
+Report values on all channels when data rails become valid.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelWatchAll, "channel-watchall", 
 	channels, "report when any channel changes state")
 
@@ -3343,6 +3423,13 @@ ChannelWatchAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-unwatchall.texi
+@deffn Command channel-unwatchall
+Silence value-reporting on all channels.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelUnWatchAll, "channel-unwatchall", 
 	channels, "ignore when any channel changes state")
 
@@ -3364,6 +3451,19 @@ ChannelUnWatchAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-reset.texi
+@deffn Command channel-reset chan
+Force a environment-configured channel into its reset state, i.e. 
+a source will reset its data rails to neutral (ignoring state of acknowledge),
+and a sink will set the acknowledge to the initial value (from configuration)
+regardless of the data rails (and validity).  
+@strong{IMPORTANT}: This command also freezes a channel in the stopped state, 
+like @command{channel-stop} and will not respond to signal changes until 
+resumed by @command{channel-release}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelReset, "channel-reset", 
 	channels, "set a channel into its reset state")
 
@@ -3386,6 +3486,15 @@ ChannelReset::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-reset-all.texi
+@deffn Command channel-reset-all
+Force all source- or sink- configured channels into their reset state, 
+as done by @command{channel-reset}.
+This is typically done at the same time as global reset initalization.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelResetAll, "channel-reset-all", 
 	channels, "set all registered channel into reset state")
 
@@ -3408,6 +3517,17 @@ ChannelResetAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-stop.texi
+@deffn Command channel-stop chan
+Freeze a source- or sink-configured channel so that it stops responding 
+to signal transitions from the circuit.  
+Stopped channels will not log data nor assert expected values
+because they may be in a transient state.  
+A channel can be unfrozen by @command{channel-release}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStop, "channel-stop", 
 	channels, "hold a channel in its current state")
 
@@ -3430,6 +3550,13 @@ ChannelStop::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-stop-all.texi
+@deffn Command channel-stop-all
+Applies @command{channel-stop} to all channels.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStopAll,
 	"channel-stop-all", channels,
 	"hold all registered channels in current state")
@@ -3453,6 +3580,17 @@ ChannelStopAll::usage(ostream& o) {
 
 // could call these Resume...
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-release.texi
+@deffn Command channel-release chan
+Releases a source- or sink-configured channel from the stopped state, 
+so that it begins to respond to circuit signal transitions
+(and continue logging and expecting).  
+Upon resuming, the channel evaluates its inputs and adds events
+to the event queue as deemed appropriate.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelRelease, "channel-release", 
 	channels, "release a channel from its reset or stopped state")
 
@@ -3476,6 +3614,15 @@ ChannelRelease::usage(ostream& o) {
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-release-all.texi
+@deffn Command channel-release-all
+Applies @command{channel-release} to all channels.  
+This is typically used at the end of a reset initialization sequence
+as the circuit is brought out of the reset state.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelReleaseAll,
 	"channel-release-all", channels,
 	"release all registered channels from reset/stopped state")
@@ -3499,6 +3646,16 @@ ChannelReleaseAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-close.texi
+@deffn Command channel-close chan
+Close any output file streams associated with channel @var{chan}.
+This flush the current log file, closes the file, and stops logging.  
+This does not affect source nor expect value sequences since those
+files are read in their entirety upon configuration.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelClose, "channel-close", 
 	channels, "close any files/streams associated with channel")
 
@@ -3522,6 +3679,13 @@ ChannelClose::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-close-all.texi
+@deffn Command channel-close-all
+Apply @command{channel-close} to all channels.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelCloseAll, "channel-close-all", 
 	channels, "close files/streams associated with any channel")
 
@@ -3544,6 +3708,16 @@ ChannelCloseAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-source.texi
+@deffn Command channel-source chan file
+Configure channel @var{chan} to source values from the environment.
+Values are take from @var{file} and read into an internal array.
+Once values are exhausted, the channel stops sourcing.  
+To repeat values, use @command{channel-source-loop}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSource, "channel-source", 
 	channels, "source values on channel from file (once)")
 
@@ -3569,6 +3743,14 @@ ChannelSource::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-source-loop.texi
+@deffn Command channel-source-loop chan file
+Like @command{channel-source} except that value sequence is repeated
+infintely.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceLoop, "channel-source-loop", 
 	channels, "source values on channel from file (loop)")
 
@@ -3594,6 +3776,45 @@ ChannelSourceLoop::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-rsource.texi
+@deffn Command channel-rsource chan
+Configures a channel to source random data values.  
+This is useful for tests that do not depend on data values.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelRandomSource, "channel-rsource", 
+	channels, "source random values on channel (infinite)")
+
+int
+ChannelRandomSource::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().rsource_channel(s, a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelRandomSource::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Source channel using random values." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-sink.texi
+@deffn Command channel-sink chan
+Configure a channel to consume all data values (infinitely).  
+A sink-configured channel can also log and expect values.  
+Mmmmm... tokens!  Nom-nom-nom...
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSink, "channel-sink", 
 	channels, "consume tokens infinitely on channel")
 
@@ -3616,6 +3837,15 @@ ChannelSink::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-log.texi
+@deffn Command channel-log chan file
+Record all valid data values on channel @var{chan} to output @var{file}.
+File stream automatically closes upon end of simulation, 
+or with an explicit @command{channel-close}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLog, "channel-log", 
 	channels, "log channel values to file")
 
@@ -3640,6 +3870,18 @@ ChannelLog::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-expect.texi
+@deffn Command channel-expect chan file
+Compare data values seen on channel @var{chan} against a sequence of
+values from @var{file}.
+Error out as soon as there is a value mismatch.  
+In this variant, once value sequence is exhausted, 
+no more comparisons are done, and channel values go unchecked.  
+See also @command{channel-expect-loop}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpect, "channel-expect", 
 	channels, "assert values on channel from file (once)")
 
@@ -3668,6 +3910,13 @@ ChannelExpect::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-expect-loop.texi
+@deffn Command channel-expect-loop
+Like @command{channel-expect} but repeats value sequence infintely.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectLoop, "channel-expect-loop", 
 	channels, "assert values on channel from file (loop)")
 

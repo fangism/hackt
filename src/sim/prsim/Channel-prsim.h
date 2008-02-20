@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.2.6 2008/02/18 22:02:41 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.2.7 2008/02/20 00:27:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -144,10 +144,16 @@ class channel {
 		 */
 		CHANNEL_STOPPED =		0x0100,
 		/**
+			Random values, infinite sequence, 
+			override value sequence.
+			Only useful for sources really.
+		 */
+		CHANNEL_RANDOM = 		0x0200,
+		/**
 			If true, print all valid channel values
 			in the data-valid state.  
 		 */
-		CHANNEL_WATCHED =		0x0200,
+		CHANNEL_WATCHED =		0x0400,
 		/// default initial value
 		CHANNEL_DEFAULT_FLAGS = 	0x0000
 	};
@@ -326,6 +332,11 @@ public:
 	}
 
 	bool
+	is_random(void) const {
+		return (flags & CHANNEL_RANDOM) && is_sourcing();
+	}
+
+	bool
 	is_looping(void) const {
 		return (is_sourcing() || is_expecting()) &&
 			(flags & CHANNEL_VALUE_LOOP);
@@ -352,8 +363,16 @@ public:
 	void
 	unwatch(void) { flags &= ~CHANNEL_WATCHED; }
 
+private:
+	bool
+	__configure_source(const State&);
+
+public:
 	bool
 	set_source(const State&, const string&, const bool);
+
+	bool
+	set_rsource(const State&);
 
 	bool
 	set_sink(const State&);
@@ -461,8 +480,16 @@ public:
 		return __dump_channel(o, c, true);
 	}
 
+private:
+	bool
+	check_source(const channel& c) const;
+
+public:
 	bool
 	source_channel(const State&, const string&, const string&, const bool);
+
+	bool
+	rsource_channel(const State&, const string&);
 
 	bool
 	sink_channel(const State&, const string&);

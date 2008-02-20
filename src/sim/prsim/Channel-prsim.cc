@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.2.7 2008/02/19 03:22:11 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.2.8 2008/02/20 00:27:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -20,6 +20,7 @@
 #include "util/IO_utils.tcc"
 #include "util/packed_array.tcc"
 #include "util/numeric/div.h"
+#include "util/numeric/random.h"	// for rand48 family
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -44,6 +45,7 @@ using util::write_value;
 using util::strings::string_to_num;
 using util::numeric::div;
 using util::numeric::div_type;
+using util::numeric::rand48;
 
 //=============================================================================
 // class channel_file_handle method definitions
@@ -180,6 +182,9 @@ channel::dump(ostream& o) const {
 	o << ' ';
 	if (is_sourcing()) {
 		o << "source";
+		if (is_random()) {
+			o << "-random";
+		}
 		something = true;
 	}
 	if (is_sinking()) {
@@ -198,7 +203,7 @@ channel::dump(ostream& o) const {
 	if (stopped()) {
 		o << ",stopped";
 	}
-	if (is_sourcing() || is_expecting()) {
+	if ((is_sourcing() && !is_random()) || is_expecting()) {
 		o << " {";
 		copy(values.begin(), values.end(), 
 			ostream_iterator<int_value_type>(o, ","));
@@ -206,6 +211,10 @@ channel::dump(ostream& o) const {
 		if (is_looping()) o << '*';
 		o << " @" << value_index;
 		o << " < " << inject_expect_file;	// source/expect
+	} else if (is_random()) {
+#if 0
+		o << " {" << values.front() << '}';
+#endif
 	}
 	if (dumplog.stream) {
 		o << " > " << dumplog.fname;
@@ -265,27 +274,13 @@ while (1) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Drive a channel from a file, sourcing values, no loop.  
-	\return true on error
-	TODO: check for values that overflow (bundle,rail)?
+	Common actions for configuring source operation.  
+	\return true if there are errors
  */
 bool
 channel::set_source(const State& s, const string& file_name, const bool loop) {
 	STACKTRACE_VERBOSE;
-	if (is_sourcing()) {
-		cout <<
-"Warning: reconnecting channel from old source to new source."
-		<< endl;
-	} else if (is_expecting()) {
-		cout <<
-"Warning: no longer asserting expected channel values; connecting to source."
-		<< endl;
-	}
-	// is OK to log
-	// warn if data/validity is already driven with fanin
-	// warn if ack has no fanin
-	flags &= ~(CHANNEL_EXPECTING | CHANNEL_VALUE_LOOP);
-	flags |= CHANNEL_SOURCING;
+	if (__configure_source(s))	return true;
 	if (loop)
 		flags |= CHANNEL_VALUE_LOOP;
 	value_index = 0;	// TODO: optional offset or initial position
@@ -298,6 +293,48 @@ channel::set_source(const State& s, const string& file_name, const bool loop) {
 	}
 	// no need to set inject/expect file handle's underlying stream
 	inject_expect_file = file_name;
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Configure source to just emit random values.  
+ */
+bool
+channel::set_rsource(const State& s) {
+	STACKTRACE_VERBOSE;
+	if (__configure_source(s))	return true;
+	flags |= CHANNEL_RANDOM;
+	value_index = 0;
+	values.resize(1);	
+	// used as value holder to remember the last value
+	inject_expect_file = "";
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Drive a channel from a file, sourcing values, no loop.  
+	\return true on error
+	TODO: check for values that overflow (bundle,rail)?
+ */
+bool
+channel::__configure_source(const State& s) {
+	STACKTRACE_VERBOSE;
+	if (is_sourcing()) {
+		cout <<
+"Warning: reconfiguring channel from old source to new source."
+		<< endl;
+	} else if (is_expecting()) {
+		cout <<
+"Warning: no longer asserting expected channel values; connecting to source."
+		<< endl;
+	}
+	// is OK to log
+	// warn if data/validity is already driven with fanin
+	// warn if ack has no fanin
+	flags &= ~(CHANNEL_EXPECTING | CHANNEL_VALUE_LOOP | CHANNEL_RANDOM);
+	flags |= CHANNEL_SOURCING;
 
 	// safety checks on signal directions
 	if (!s.get_node(ack_signal).has_fanin()) {
@@ -528,6 +565,11 @@ channel::reset(vector<env_event_type>& events) {
  */
 void
 channel::advance_value(void) {
+if (is_random()) {
+	INVARIANT(!value_index);
+	INVARIANT(values.size() == 1);
+	values.front() = rand48<int_value_type>()();
+} else {
 	++value_index;		// overflow?
 	if (value_index >= values.size()) {
 		if (is_looping()) {
@@ -537,6 +579,7 @@ channel::advance_value(void) {
 		}
 	}
 	// else if values.size(), values.clear() ?
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1294,6 +1337,28 @@ channel_manager::source_channel(const State& s, const string& channel_name,
 	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
 	if (c.set_source(s, file_name, loop)) return true;
+	return check_source(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Configure a registered channel to source values randomly, 
+	and infinitely.
+ */
+bool
+channel_manager::rsource_channel(const State& s, const string& channel_name) {
+	STACKTRACE_VERBOSE;
+	GET_NAMED_CHANNEL(c, channel_name)
+	if (c.set_rsource(s)) return true;
+	return check_source(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if there is any connection error.
+ */
+bool
+channel_manager::check_source(const channel& c) const {
 	// warn if channel happens to be connected in wrong direction
 	// TODO: check that data/validity are not driven by other sources!
 #if PRSIM_CHANNEL_VALIDITY
@@ -1309,6 +1374,7 @@ channel_manager::source_channel(const State& s, const string& channel_name,
 			cerr << "Warning: channel validity is already "
 				"being driven by source on channel `" <<
 				ch.name << "\'." << endl;
+			// return true;
 		}
 	}
 	}
