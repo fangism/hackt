@@ -1,0 +1,161 @@
+channels:
+L : .e(init:0) 1x1of2 off
+R : .e(init:0) 1x1of2 off
+L : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+R : .e(init:0) 1x1of2 sink
+	count: 0, unknowns: 2
+L : .e(init:0) 1x1of2 source,stopped {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+R : .e(init:0) 1x1of2 sink,stopped
+	count: 0, unknowns: 2
+L : .e(init:0) 1x1of2 source,stopped {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 0
+R : .e(init:0) 1x1of2 sink,stopped
+	count: 0, unknowns: 0
+event queue:
+	#TIME#	L.d[0] : 1
+	#TIME#	R.e : 1
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+source has run out of values! 
+deadlock analysis should point back to source 
+L.e:1
+  R.d[0]:0
+    _r[0]:1
+      L.d[0]:0
+  R.d[1]:0
+    _r[1]:1
+      L.d[1]:0
+L : .e(init:0) 1x1of2 source-random
+	count: 0, unknowns: 0
+R : .e(init:0) 1x1of2 sink
+	count: 0, unknowns: 0
+L : .e(init:0) 1x1of2 source-random,stopped
+	count: 0, unknowns: 0
+R : .e(init:0) 1x1of2 sink,stopped
+	count: 0, unknowns: 0
+L : .e(init:0) 1x1of2 source-random,stopped
+	count: 0, unknowns: 0
+R : .e(init:0) 1x1of2 sink,stopped
+	count: 0, unknowns: 0
+event queue:
+	#TIME#	L.d[0] : 1
+	#TIME#	R.e : 1
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+--------------------------- 
+stop channel L 
+R.e:1
+channels:
+L : .e(init:0) 1x1of2 source-random,stopped
+R : .e(init:0) 1x1of2 sink
+--------------------------- 
+stop channel R 
+channels:
+L : .e(init:0) 1x1of2 source-random,stopped
+R : .e(init:0) 1x1of2 sink,stopped
+--------------------------- 
+resume channel L 
+channel	L (.data) : #VALUE#
+L.e:0
+  R.d[1]:1
+    _r[1]:0
+      R.e:1
+channels:
+L : .e(init:0) 1x1of2 source-random
+R : .e(init:0) 1x1of2 sink,stopped
+--------------------------- 
+resume channel R 
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channels:
+L : .e(init:0) 1x1of2 source-random
+R : .e(init:0) 1x1of2 sink
+--------------------------- 
+stop channel R 
+channel	L (.data) : #VALUE#
+L.e:0
+  R.d[1]:1
+    _r[1]:0
+      R.e:1
+channels:
+L : .e(init:0) 1x1of2 source-random
+R : .e(init:0) 1x1of2 sink,stopped
+--------------------------- 
+stop channel L 
+R.e:1
+channels:
+L : .e(init:0) 1x1of2 source-random,stopped
+R : .e(init:0) 1x1of2 sink,stopped
+--------------------------- 
+resume channel R 
+channels:
+L : .e(init:0) 1x1of2 source-random,stopped
+R : .e(init:0) 1x1of2 sink
+--------------------------- 
+resume channel L 
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channels:
+L : .e(init:0) 1x1of2 source-random
+R : .e(init:0) 1x1of2 sink

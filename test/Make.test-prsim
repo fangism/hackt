@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.13.14.2.2.1 2008/02/20 04:38:07 fang Exp $
+#	$Id: Make.test-prsim,v 1.13.14.2.2.2 2008/02/20 05:56:52 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -56,6 +56,7 @@ AUTO_IGNORE += $(HACKT_PRSIM_CLEAN_IGNORE_PATTERNS)
 
 PRSIMRC_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-filter.awk
 PRSIMRC_TIME_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-random-time-filter.awk
+PRSIMRC_VALUE_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-random-value-filter.awk
 
 PRSIMCKPT_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimckpt-template.prsimrc
 PRSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimckpt-load-template.prsimrc
@@ -195,7 +196,8 @@ PRSIMRC_TEST_FILTER_SCRIPT = \
 		$(SED) -e '/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' | \
 		$(PRSIMRC_FILTER_AWK) > $@ ; \
 	case $< in \
-	  *random*) $(CAT) $@ | $(PRSIMRC_TIME_FILTER_AWK) > $@.tmp ; \
+	  *random*) $(CAT) $@ | $(PRSIMRC_TIME_FILTER_AWK) | \
+		$(PRSIMRC_VALUE_FILTER_AWK) > $@.tmp ; \
 	    $(MV) $@.tmp $@ ; \
 	    break ;; \
 	  *) break ;; \

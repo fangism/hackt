@@ -5,6 +5,16 @@
 
 2008-02-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-10:
+	  Changed channel::value_type to unsigned type to facilitate
+		translation of values to and from data rails.
+		Note, however that ldiv() and family still operates on
+		signed integers, so values may still be limited to 
+		unsigned::max (warning issued).  
+	  Tested random-sources (fix) and channel-stop with channel-resume.
+		Added new tests cases for these.  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-09:
 	  Failed attempt to fix compile-option-forwarding (-C "...")
 		attributed to getopt() being non-reentrant.  

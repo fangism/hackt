@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.2.7 2008/02/20 00:27:05 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.2.8 2008/02/20 05:56:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -23,6 +23,7 @@
 #include "util/macros.h"
 #include "util/memory/count_ptr.h"
 #include "util/packed_array.h"
+#include "util/numeric/sign_traits.h"
 
 /**
 	Define to 1 to add support for channel validity, for example
@@ -100,7 +101,15 @@ public:
  */
 class channel {
 	friend class channel_manager;
-
+public:
+	/**
+		Treat all integers as *unsigned*, even if internal 
+		integer type is signed.  This makes it easier
+		to translate values to rails without worrying about negatives.  
+	 */
+	typedef	util::numeric::unsigned_type<int_value_type>::type
+						value_type;
+private:
 	enum channel_flags {
 		/// the value of channel enable on reset
 		CHANNEL_ACK_RESET_VALUE =	0x0001,
@@ -219,7 +228,7 @@ class channel {
 	/**
 		The values to expect or inject.  
 	 */
-	vector<int_value_type>			values;
+	vector<value_type>			values;
 	/**
 		Position in values list.
 	 */
@@ -250,7 +259,7 @@ private:
 	void
 	current_data_rails(vector<node_index_type>&) const;
 
-	const int_value_type&
+	const value_type&
 	current_value(void) const { return values[value_index]; }
 
 	void
@@ -389,7 +398,7 @@ public:
 	void
 	initialize_data_counter(const State&);
 
-	int_value_type
+	value_type
 	data_rails_value(const State&) const;
 
 	void

@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.46 2007/08/17 00:36:35 fang Exp $
+#	$Id: Makefile.am,v 1.46.22.1 2008/02/20 05:56:53 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -51,6 +51,7 @@ dist_noinst_SCRIPTS = \
 	analyze-dump-diff.awk \
 	prsimrc-filter.awk \
 	prsimrc-random-time-filter.awk \
+	prsimrc-random-value-filter.awk \
 	chpsim-binary-size-filter.awk \
 	spacestonewline.awk \
 	prsimckpt-template.prsimrc \

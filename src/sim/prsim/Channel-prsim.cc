@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.2.8 2008/02/20 00:27:03 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.2.9 2008/02/20 05:56:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -38,7 +38,6 @@ using std::make_pair;
 using std::mem_fun_ref;
 using std::ostream_iterator;
 using std::back_inserter;
-using entity::int_value_type;
 #include "util/using_ostream.h"
 using util::read_value;
 using util::write_value;
@@ -206,7 +205,7 @@ channel::dump(ostream& o) const {
 	if ((is_sourcing() && !is_random()) || is_expecting()) {
 		o << " {";
 		copy(values.begin(), values.end(), 
-			ostream_iterator<int_value_type>(o, ","));
+			ostream_iterator<value_type>(o, ","));
 		o << '}';
 		if (is_looping()) o << '*';
 		o << " @" << value_index;
@@ -243,7 +242,7 @@ channel::dump_state(ostream& o) const {
  */
 static
 bool
-read_values_from_file(const string& fn, vector<int_value_type>& v) {
+read_values_from_file(const string& fn, vector<channel::value_type>& v) {
 	STACKTRACE_VERBOSE;
 	v.clear();
 	ifstream f(fn.c_str());
@@ -260,11 +259,16 @@ while (1) {
 	if ((line.length() > 0) && (line[0] != '#')) {
 		util::string_list toks;
 		util::tokenize(line, toks);
-		int_value_type i;
+		channel::value_type i;
 		if (string_to_num(toks.front(), i)) {
 			cerr << "Error: invalid value \"" <<
 				toks.front() << "\"." << endl;
 			return true;
+		}
+		if (i > std::numeric_limits<channel::value_type>::max() >> 1) {
+			cerr << "Warning: value " << i << " is greater than "
+				"max(unsigned value_type)/2, which may screw "
+				"up ldiv() when translating to rails." << endl;
 		}
 		v.push_back(i);
 	}
@@ -568,7 +572,8 @@ channel::advance_value(void) {
 if (is_random()) {
 	INVARIANT(!value_index);
 	INVARIANT(values.size() == 1);
-	values.front() = rand48<int_value_type>()();
+	values.front() = rand48<value_type>()();
+	// long (lrand48): [0..2^31 -1]
 } else {
 	++value_index;		// overflow?
 	if (value_index >= values.size()) {
@@ -599,6 +604,7 @@ if (have_value()) {
 	k[0] = 0;
 	while (r.size() < bundles()) {
 		qr = div(qr.quot, rdx);
+		INVARIANT(qr.rem >= 0);	// because division is signed
 		k[1] = qr.rem;
 		r.push_back(data[k]);
 		++k[0];
@@ -619,6 +625,7 @@ channel::set_all_data_rails(vector<env_event_type>& r) const {
 	typedef	State::node_type		node_type;
 if (have_value()) {
 	const int_value_type rdx = radix();
+	// NOTE: div is *signed*
 	div_type<int_value_type>::return_type qr;
 	qr.quot = current_value();
 	qr.rem = 0;	// unused
@@ -671,11 +678,11 @@ if (have_value()) {
 		If this ever fails, we didn't do enough tracking/counting.
 	\return the numerical value as represented by data rails.
  */
-int_value_type
+channel::value_type
 channel::data_rails_value(const State& s) const {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type	node_type;
-	int_value_type ret = 0;
+	value_type ret = 0;
 	data_rail_index_type k;
 	k[0] = bundles();
 	const size_t rdx = radix();	// sign mismatch?
@@ -895,8 +902,8 @@ if (ni == ack_signal) {
 		if (is_expecting()) {
 		if (have_value()) {
 			// don't bother waiting for validity signal
-			const int_value_type expect = current_value();
-			const int_value_type got = data_rails_value(s);
+			const value_type expect = current_value();
+			const value_type got = data_rails_value(s);
 			advance_value();
 			if (expect != got) {
 				throw State::channel_exception(name, 
