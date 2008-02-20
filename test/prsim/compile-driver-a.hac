@@ -1,0 +1,7 @@
+// "compile-driver-a.hac"
+// test hacprsim -c -C "-I path"
+
+// just a wrapper from srcdir
+// import "../../lib/channel.hac";
+import "inv.hac";
+

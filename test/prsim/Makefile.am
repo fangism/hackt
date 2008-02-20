@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.24.2.4 2008/02/19 03:22:17 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.24.2.5 2008/02/20 04:38:11 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -193,6 +193,10 @@ srcdir_EXTRA_DIST += \
 	precharge-d-repeat.prsimrc \
 	precharge-e-repeat.prsimrc \
 	precharge-f-repeat.prsimrc
+
+# KNOWN BUG: failing getopt because is not re-entrant
+# revisit this after re-implementing getopt...
+srcdir_EXTRA_DIST += compile-driver-a.hac compile-driver-a-01.prsimrc
 
 include $(top_srcdir)/test/Make.test-tail
 

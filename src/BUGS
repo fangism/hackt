@@ -1,6 +1,6 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.14 2007/11/14 17:35:04 fang Exp $
+	$Id: BUGS,v 1.14.8.1 2008/02/20 04:38:04 fang Exp $
 
 guile: [CRITICAL]
 	This is an issue primarily with guile.
@@ -9,6 +9,12 @@ guile: [CRITICAL]
 	consequence: errors during guile will leak resources like crazy
 	Issue has been raised on guile-users@gnu.org.
 	Propose to re-implement their exception mechanism.
+
+getopt: is not re-entrant on most platforms, and is not required to be
+	by the POSIX standard.  getopt has side-effects on internal state
+	and thus cannot be used in a nested manner, as needed by
+	nested command line option parsing (forwarding compile driver flags).
+	TODO: replace with own nicer version.
 
 editline: 2006-07-09
 	piping or redirecting script into editline-histedit

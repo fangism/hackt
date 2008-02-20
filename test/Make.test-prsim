@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.13.14.2 2008/01/24 01:23:13 fang Exp $
+#	$Id: Make.test-prsim,v 1.13.14.2.2.1 2008/02/20 04:38:07 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -125,19 +125,25 @@ prsimexprtest.autodepend: Makefile
 	@$(DUMMY_TEST_SCRIPT)
 
 # touch is needed if the redirected output is empty
+# we now perform $srcdir substitution and $(HACO_FLAGS) substitution
+# in the event where the input file is a hac source, as opposed to object file
 PRSIMRC_TEST_SCRIPT = \
-	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
+	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE) | \
+	  $(SED) -e 's|[$$]srcdir|$(srcdir)|g' \
+	    -e 's|[$$](HACO_FLAGS)|$(HACO_FLAGS)|g'` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.prsimckpt/g'` ; \
-	$(ECHO) "ckpt: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj < $<" ; \
+	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj" ; \
+	$(ECHO) "ckpt: $$cmd < $<" ; \
 	$(CAT) $(PRSIMCKPT_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
-	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) "$$obj" > $@ 2>&1 ; \
+	  $$cmd > $@ 2>&1 ; \
 	$(TOUCH) $@
 
 PRSIMRC_FAIL_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-	$(ECHO) "$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj < $<" ; \
-	$(HACKT_PRSIM_EXE) -b -I$(srcdir) "$$obj" < $< > $@ 2>&1
+	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj" ; \
+	$(ECHO) "$$cmd < $<" ; \
+	$$cmd < $< > $@ 2>&1
 
 .prsimrc.prsimrc-out:
 	@$(PRSIMRC_TEST_SCRIPT)
