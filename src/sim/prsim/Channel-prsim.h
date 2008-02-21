@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.2.8 2008/02/20 05:56:50 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.2.9 2008/02/21 03:24:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -109,6 +109,7 @@ public:
 	 */
 	typedef	util::numeric::unsigned_type<int_value_type>::type
 						value_type;
+	typedef	std::set<node_index_type>	node_set_type;
 private:
 	enum channel_flags {
 		/// the value of channel enable on reset
@@ -265,11 +266,14 @@ private:
 	void
 	advance_value(void);
 
+#if 0
+	// not worth it
 	void
 	set_current_data_rails(vector<env_event_type>&, const uchar);
+#endif
 
 	void
-	set_all_data_rails(vector<env_event_type>&) const;
+	set_all_data_rails(vector<env_event_type>&);
 
 	bool
 	set_ack_signal(const node_index_type ai) {
@@ -401,6 +405,17 @@ public:
 	value_type
 	data_rails_value(const State&) const;
 
+	bool
+	may_drive_node(const node_index_type) const;
+
+	void
+	__get_fanins(const node_index_type, node_set_type&) const;
+
+	ostream&
+	__node_why_not(const State&, ostream&, const node_index_type, 
+		const bool d, const bool v, 
+		node_set_type&, node_set_type&) const;
+
 	void
 	process_node(const State&, const node_index_type, 
 		const uchar, const uchar, 
@@ -435,6 +450,10 @@ private:
 // wrap these into a channel_manager?
 
 class channel_manager {
+	/**
+		For __get_X_fanins.
+	 */
+	typedef	std::set<node_index_type>	node_set_type;
 	/**
 		Pool from which sim channels spawn.
 		Not bothering with any sort of free-list yet.
@@ -549,6 +568,18 @@ public:
 	process_node(const State&, const node_index_type, 
 		const uchar, const uchar, 
 		vector<env_event_type>&);
+
+	bool
+	node_has_fanin(const node_index_type) const;
+
+	void
+	__get_X_fanins(const State&, const node_index_type, 
+		node_set_type&) const;
+
+	ostream&
+	__node_why_not(const State&, ostream&, const node_index_type, 
+		const bool d, const bool v, 
+		node_set_type&, node_set_type&) const;
 
 	ostream&
 	dump_memory_usage(ostream&) const;

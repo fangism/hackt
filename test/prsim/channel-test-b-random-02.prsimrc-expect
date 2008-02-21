@@ -91,6 +91,26 @@ channel	R (.data) : #VALUE#
 --------------------------- 
 stop channel L 
 R.e:1
+  R.d[0]:0
+    _r[0]:1
+      L.d[0]:0
+        (channel L is stopped.)
+  R.d[1]:0
+    _r[1]:1
+      L.d[1]:0
+        (channel L is stopped.)
+R.e:1
+. -+
+.  | R.d[0]:0
+.  | . ~_r[0]:1
+.  | . ~.-+
+.  | . ~. & L.d[0]:0
+.  | . ~. & . (channel L is stopped.)
+.  | R.d[1]:0
+.  | . ~_r[1]:1
+.  | . ~.-+
+.  | . ~. & L.d[1]:0
+.  | . ~. & . (channel L is stopped.)
 channels:
 L : .e(init:0) 1x1of2 source-random,stopped
 R : .e(init:0) 1x1of2 sink
@@ -106,6 +126,16 @@ L.e:0
   R.d[1]:1
     _r[1]:0
       R.e:1
+        (channel R is stopped.)
+    (channel R is stopped.)
+L.e:0
+.-+
+. & ~R.d[1]:1
+. & ~. _r[1]:0
+. & ~. .-+
+. & ~. . & ~R.e:1
+. & ~. . & ~. (channel R is stopped.)
+. & ~. (channel R is stopped.)
 channels:
 L : .e(init:0) 1x1of2 source-random
 R : .e(init:0) 1x1of2 sink,stopped
@@ -131,12 +161,25 @@ L.e:0
   R.d[1]:1
     _r[1]:0
       R.e:1
+        (channel R is stopped.)
+    (channel R is stopped.)
+L.e:0
+.-+
+. & ~R.d[1]:1
+. & ~. _r[1]:0
+. & ~. .-+
+. & ~. . & ~R.e:1
+. & ~. . & ~. (channel R is stopped.)
+. & ~. (channel R is stopped.)
 channels:
 L : .e(init:0) 1x1of2 source-random
 R : .e(init:0) 1x1of2 sink,stopped
 --------------------------- 
 stop channel L 
 R.e:1
+  (channel R is stopped.)
+R.e:1
+. (channel R is stopped.)
 channels:
 L : .e(init:0) 1x1of2 source-random,stopped
 R : .e(init:0) 1x1of2 sink,stopped

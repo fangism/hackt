@@ -34,6 +34,7 @@ echo stop channel L
 channel-stop L
 cycle
 why-not R.e
+why-not-verbose R.e
 channel-show-all
 
 echo ---------------------------
@@ -47,6 +48,7 @@ echo resume channel L
 channel-release L
 cycle
 why-not L.e
+why-not-verbose L.e
 channel-show-all
 
 echo ---------------------------
@@ -61,6 +63,7 @@ echo stop channel R
 channel-stop R
 cycle
 why-not L.e
+why-not-verbose L.e
 channel-show-all
 
 echo ---------------------------
@@ -68,6 +71,7 @@ echo stop channel L
 channel-stop L
 cycle
 why-not R.e
+why-not-verbose R.e
 channel-show-all
 
 echo ---------------------------

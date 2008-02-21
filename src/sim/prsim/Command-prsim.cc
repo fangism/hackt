@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.11.2.6 2008/02/20 00:27:07 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.11.2.7 2008/02/21 03:24:27 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3341,6 +3341,8 @@ Data validity is only determined by the state of the data rails,
 and not the acknowledge signal. 
 An unstable channel (that can transiently take valid states)
 will report @emph{every} transient value.
+Channels in the stopped state will NOT be reported, 
+make sure that they are resumed by @command{channel-release}.  
 @end deffn
 @end texinfo
 ***/
@@ -3843,6 +3845,8 @@ ChannelSink::usage(ostream& o) {
 Record all valid data values on channel @var{chan} to output @var{file}.
 File stream automatically closes upon end of simulation, 
 or with an explicit @command{channel-close}.  
+Channels in the stopped state will NOT be reported, 
+make sure that they are resumed by @command{channel-release}.  
 @end deffn
 @end texinfo
 ***/

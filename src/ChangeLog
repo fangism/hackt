@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-02-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-11:
+	  Bug fixes in prsim::channel:
+		Now always set all data rails (high and low) in response
+			to acknoledge on sources.  
+		Now advancing data immediate after using data for
+			settting channel data rails.  
+	  Extended why-not[-verbose] and why-x to search through channels!
+	  Few new test cases.  
+
+
 2008-02-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-10:

@@ -1,0 +1,129 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+Warning: channel acknowledge `X.e' has no fanin!
+X : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+why-x: X is sourced, should be able to trace back through acknowledge 
+X.d[0]:X, from-channel, pull up/dn undriven
+  X.e:X, pull up/dn undriven
+X.d[1]:X, from-channel, pull up/dn undriven
+  X.e:X, pull up/dn undriven
+- - - - - - - - - - - - - - - - - - - 
+resetting channel X 
+	10	X.d[0] : 0
+	10	X.d[1] : 0
+X.d[0]:0
+  (channel X is stopped.)
+X.d[0]:0
+. (channel X is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel X, but ack is still X 
+	10	X.d[0] : X
+	10	X.d[1] : X
+X.d[0]:X, from-channel, pull up/dn undriven
+  X.e:X, pull up/dn undriven
+X.d[1]:X, from-channel, pull up/dn undriven
+  X.e:X, pull up/dn undriven
+- - - - - - - - - - - - - - - - - - - 
+reset ack 
+	10	X.e : 0
+	20	X.d[0] : 0	[by X.e:=0]
+	20	X.d[1] : 0	[by X.e:=0]
+X.d[0]:0
+  X.e:0
+X.d[0]:0
+. X.e:0
+- - - - - - - - - - - - - - - - - - - 
+set ack 
+	20	X.e : 1
+	30	X.d[0] : 1	[by X.e:=1]
+X.d[0]:1
+  X.e:1
+X.d[1]:0
+  X.e:1
+X.d[0]:1
+. X.e:1
+X.d[1]:0
+. X.e:1
+- - - - - - - - - - - - - - - - - - - 
+reset ack 
+	30	X.e : 0
+	40	X.d[0] : 0	[by X.e:=0]
+X.d[0]:0
+  X.e:0
+X.d[1]:0
+  X.e:0
+X.d[0]:0
+. X.e:0
+X.d[1]:0
+. X.e:0
+- - - - - - - - - - - - - - - - - - - 
+set ack 
+	40	X.e : 1
+	50	X.d[1] : 1	[by X.e:=1]
+X.d[0]:0
+  X.e:1
+X.d[1]:1
+  X.e:1
+X.d[0]:0
+. X.e:1
+X.d[1]:1
+. X.e:1
+- - - - - - - - - - - - - - - - - - - 
+freezing channel X, and setting ack 
+	50	X.e : 0
+X : .e(init:0) 1x1of2 source,stopped {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+	count: 1, unknowns: 0
+X.d[0]:0
+  (channel X is stopped.)
+X.d[1]:1
+  (channel X is stopped.)
+X.d[0]:0
+. (channel X is stopped.)
+X.d[1]:1
+. (channel X is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel X 
+	60	X.d[1] : 0
+- - - - - - - - - - - - - - - - - - - 
+setting X.e -> U 
+	60	X.e : X
+	60	X.d[0] : X	[by X.e:=X]
+	60	X.d[1] : X	[by X.e:=X]
+X : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+X.d[0]:X, from-channel, pull up/dn undriven
+  X.e:X, pull up/dn undriven
+X.d[1]:X, from-channel, pull up/dn undriven
+  X.e:X, pull up/dn undriven
+X.d[0] is X.
+X.d[0] is X.
+- - - - - - - - - - - - - - - - - - - 
+setting X.e -> 1 
+	60	X.e : 1
+X.d[0] is X.
+X.d[0] is X.
+X.d[1] is X.
+X.d[1] is X.
+event queue:
+	70	X.d[0] : 0	[from X.e:=1]
+	70	X.d[1] : 1	[from X.e:=1]
+time: 60
+	70	X.d[0] : 0	[by X.e:=1]
+	70	X.d[1] : 1	[by X.e:=1]
+- - - - - - - - - - - - - - - - - - - 
+ack-ing X.e 
+	70	X.e : 0
+event queue:
+	80	X.d[1] : 0	[from X.e:=0]
+time: 70
+X.d[0]:0
+  X.e:0
+X.d[1]:1, pending event -> 0
+X.d[0]:0
+. X.e:0
+X.d[1]:1, pending event -> 0
+	80	X.d[1] : 0	[by X.e:=0]
+DONE. 

@@ -116,5 +116,5 @@ channel	X (.data) : 1
 time: 810
 running a bit longer... 
 time: 124260
-X : .e(init:0) 1x1of2 source,sink {0,1,1,0,0,0,1,1,1,1,}* @6 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,sink {0,1,1,0,0,0,1,1,1,1,}* @7 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0

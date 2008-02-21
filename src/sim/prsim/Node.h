@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.13.74.3.2.3 2008/02/17 02:20:42 fang Exp $
+	$Id: Node.h,v 1.13.74.3.2.4 2008/02/21 03:24:27 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -424,7 +424,7 @@ public:
 	set_in_channel(void) { state_flags |= NODE_IN_CHANNEL; }
 
 	bool
-	in_channel(void) { return state_flags & NODE_IN_CHANNEL; }
+	in_channel(void) const { return state_flags & NODE_IN_CHANNEL; }
 #endif
 
 	uchar

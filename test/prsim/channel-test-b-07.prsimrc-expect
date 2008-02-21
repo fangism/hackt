@@ -30,7 +30,7 @@ channel	L (.data) : 0
 channel	R (.data) : 0
 channel	L (.data) : 1
 time: 540
-L : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,}* @6 < channel-test-a-values-X.txt
+L : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,}* @7 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 R : .e(init:0) 1x1of2 sink,expect {0,1,1,0,0,0,1,1,1,1,}* @6 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
@@ -55,7 +55,7 @@ channel	L (.data) : 0
 channel	R (.data) : 0
 channel	L (.data) : 1
 time: 1340
-L : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,}* @6 < channel-test-a-values-X.txt
+L : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,}* @7 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 R : .e(init:0) 1x1of2 sink,expect {0,1,1,0,0,0,1,1,1,1,}* @6 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0

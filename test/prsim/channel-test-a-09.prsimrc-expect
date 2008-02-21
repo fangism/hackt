@@ -115,12 +115,12 @@ X : .e(init:0) 1x1of2 sink,expect {0,1,1,0,0,0,1,1,1,1,} @9 < channel-test-a-val
 channel	X (.data) : 1
 	200	X.d[1] : 1
 	210	X.e : 0	[by X.d[1]:=1]
-X : .e(init:0) 1x1of2 sink,expect {0,1,1,0,0,0,1,1,1,1,} @10 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 sink,expect
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	210	X.d[1] : 0
 	220	X.e : 1	[by X.d[1]:=0]
-X : .e(init:0) 1x1of2 sink,expect {0,1,1,0,0,0,1,1,1,1,} @10 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 sink,expect
 	count: 0, unknowns: 0
 ------------------------------------ 
 expect values exhausted, now can be any value 

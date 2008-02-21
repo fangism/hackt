@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.2.9 2008/02/20 05:56:48 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.2.10 2008/02/21 03:24:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -14,11 +14,14 @@
 #include "sim/prsim/Channel-prsim.h"
 #include "sim/prsim/State-prsim.h"
 #include "parser/instref.h"
+#include "util/iterator_more.h"		// for set_inserter
+#include "util/copy_if.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/string.tcc"
 #include "util/tokenize.h"
 #include "util/IO_utils.tcc"
 #include "util/packed_array.tcc"
+#include "util/indent.h"
 #include "util/numeric/div.h"
 #include "util/numeric/random.h"	// for rand48 family
 #include "util/stacktrace.h"
@@ -38,9 +41,13 @@ using std::make_pair;
 using std::mem_fun_ref;
 using std::ostream_iterator;
 using std::back_inserter;
+using util::copy_if;
+using util::set_inserter;
 #include "util/using_ostream.h"
 using util::read_value;
 using util::write_value;
+using util::indent;
+using util::auto_indent;
 using util::strings::string_to_num;
 using util::numeric::div;
 using util::numeric::div_type;
@@ -202,7 +209,8 @@ channel::dump(ostream& o) const {
 	if (stopped()) {
 		o << ",stopped";
 	}
-	if ((is_sourcing() && !is_random()) || is_expecting()) {
+	if (have_value() &&
+			((is_sourcing() && !is_random()) || is_expecting())) {
 		o << " {";
 		copy(values.begin(), values.end(), 
 			ostream_iterator<value_type>(o, ","));
@@ -529,15 +537,16 @@ channel::initialize_data_counter(const State& s) {
 /**
 	Binding constructor functor.
  */
-struct __node_setter {
+struct __node_setter :
+	public std::unary_function<const node_index_type, env_event_type> {
 	uchar				val;
 
 	explicit
 	__node_setter(const uchar v) : val(v) { }
 
-	env_event_type
-	operator () (const node_index_type ni) const {
-		return env_event_type(ni, val);
+	result_type
+	operator () (argument_type ni) const {
+		return result_type(ni, val);
 	}
 };
 
@@ -618,9 +627,11 @@ if (have_value()) {
 	all data rails high or low, according to the current value.  
 	If there is no current value, reset all data rails.  
 	This is useful for coming out of an uninitialized state (resume).
+	When run out of data values, clear the sourcing flag, 
+	and clear the value array.  
  */
 void
-channel::set_all_data_rails(vector<env_event_type>& r) const {
+channel::set_all_data_rails(vector<env_event_type>& r) {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type		node_type;
 if (have_value()) {
@@ -641,13 +652,21 @@ if (have_value()) {
 		}
 	}
 } else {
+	INVARIANT(!is_random());
+	// otherwise following code would wipe the random value slot!
 	// no next value, just hold all data rails neutral
 	transform(data.begin(), data.end(), back_inserter(r), 
 		__node_setter(node_type::LOGIC_LOW));
+	flags &= ~CHANNEL_SOURCING;
+	if (!values.empty()) {
+		values.clear();
+	}
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// don't bother using this, error prone, not worth added efficiency
 /**
 	When sourcing, set data values.
 	This does NOT check the stopped state, caller is responsible.
@@ -670,6 +689,7 @@ if (have_value()) {
 	}
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -713,6 +733,203 @@ channel::data_rails_value(const State& s) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true if this channel may drive the node.
+	Node may be driven if channel is sourced and node is a 
+	data rail, or channel is sinking and node is an acknowledge.
+	Sources may also drive validity signals.  
+	Nodes are reported regardless of the stopped state of the channel.
+ */
+bool
+channel::may_drive_node(const node_index_type ni) const {
+	if (is_sourcing()) {
+#if PRSIM_CHANNEL_VALIDITY
+		if (validity_signal && (ni == validity_signal)) {
+			return true;
+		}
+#endif
+		// check: is it data rail of source?
+		const data_rail_map_type::const_iterator
+			f(__node_to_rail.find(ni));
+		if (f != __node_to_rail.end()) {
+			return true;
+		}
+	}
+	if (is_sinking()) {
+		if (ack_signal == ni) {
+			return true;
+		}
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Return all nodes that may effectively drive node ni
+	that are in an unkonwn (X) state.  
+ */
+void
+channel::__get_fanins(const node_index_type ni, 
+		std::set<node_index_type>& ret) const {
+	if (is_sourcing()) {
+#if PRSIM_CHANNEL_VALIDITY
+		if (validity_signal && (ni == validity_signal)) {
+			copy(data.begin(), data.end(), set_inserter(ret));
+		}
+#endif
+		// if node is data rail, then effective input is ack
+		const data_rail_map_type::const_iterator
+			f(__node_to_rail.find(ni));
+		if (f != __node_to_rail.end()) {
+			ret.insert(ack_signal);
+		}
+	}
+	if (is_sinking()) {
+	if (ack_signal == ni) {
+#if PRSIM_CHANNEL_VALIDITY
+		// validity is responsibility of the circuit, not the sink.
+		if (validity_signal)
+			ret.insert(validity_signal);
+		else
+#endif
+		copy(data.begin(), data.end(), set_inserter(ret));
+	}
+	}
+}	// end channel::get_fanins
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Report why node in question is not driven in direction dir. 
+	Is mutually recursive with State::__node_why_not().
+	If channel is stopped, do not report.  
+	TODO: test eMx1ofN channels
+ */
+ostream&
+channel::__node_why_not(const State& s, ostream& o, const node_index_type ni, 
+		const bool dir, const bool verbose, 
+		node_set_type& u, node_set_type& v) const {
+	typedef	State::node_type		node_type;
+	const indent __ind_outer(o, verbose ? " " : "");
+if (stopped()) {
+	// TODO: this should really only be printed in cases below
+	// where it is actually acting as a source or sink.
+	// watched and logged channels won't care...
+	o << auto_indent << "(channel " << name << " is stopped.)" << endl;
+	// FIXME: later
+} else {
+	// const node_type& n(s.get_node(ni));
+	if (is_sourcing()) {
+		// only data or validity can be driven by source
+#if PRSIM_CHANNEL_VALIDITY
+		if (validity_signal && (ni == validity_signal)) {
+			// then point back to data rails, see below
+			// eventually refactor that code out
+			FINISH_ME(Fang);
+		}
+#endif
+		const data_rail_map_type::const_iterator
+			f(__node_to_rail.find(ni));
+		if (f != __node_to_rail.end()) {
+			// then is attributed to acknowledge
+			// interpret dir as data-active, 
+			// which equivalently asks why acknowledge is not
+			// the opposite (active).  
+			// const indent __ind_nd(o, verbose ? "." : "  ");
+			// INDENT_SCOPE(o);
+			if (dir ^ get_ack_active()) {
+				s.__node_why_not(o, ack_signal, 
+					true, verbose, u, v);
+			} else {
+				s.__node_why_not(o, ack_signal, 
+					false, verbose, u, v);
+			}
+		}
+	}
+	if (is_sinking() && (ni == ack_signal)) {
+		// no other signal should be driven by sink
+#if PRSIM_CHANNEL_VALIDITY
+	if (validity_signal) {
+		// TODO: not sure if the following is correct
+		// it may be backwards, if I just think about it...
+		if (get_ack_active() ^ dir ^ get_valid_sense()) {
+			s.__node_why_not(o, validity_signal, 
+				true, verbose, u, v);
+		} else {
+			s.__node_why_not(o, validity_signal, 
+				false, verbose, u, v);
+		}
+	} else
+#endif
+	{
+		// TODO: factor the following code out
+		// then query completion status of the data rails, 
+		// assuming celem-of-or style completion of bundles
+		const node_type& a(s.get_node(ack_signal));
+		const uchar av = a.current_value();
+		string ind_str;
+		if (verbose && (bundles() > 1)) {
+			ind_str += " & ";
+			o << auto_indent << "-+" << endl;
+		}
+		const indent __ind_celem(o, ind_str);      // INDENT_SCOPE(o);
+		data_rail_index_type key;
+		key[0] = 0;
+		for ( ; key[0] < bundles(); ++key[0]) {
+			// first find out if bundle is valid
+			size_t partial_valid = 0;
+			key[1] = 0;
+			for ( ; key[1] < radix(); ++key[1]) {
+				if (s.get_node(data[key]).current_value() ==
+					node_type::LOGIC_HIGH) {
+					++partial_valid;
+				}
+			}
+			// second pass, only if bundle is not ready
+			string i_s;
+			if (verbose && (radix() > 1)) {
+				i_s += " ";
+				// when to negate (nor)?
+				// when data wants to be neutral, 
+				// i.e. when acknowledge is active
+				if ((av == node_type::LOGIC_LOW) ^
+						get_ack_active()) {
+					i_s += "~";
+				}
+				i_s += "| ";
+				o << auto_indent << "-+" << endl;
+			}
+			const indent __ind_or(o, i_s);	// INDENT_SCOPE(o);
+
+			key[1] = 0;
+			for ( ; key[1] < radix(); ++key[1]) {
+				const node_index_type di = data[key];
+				const node_type& d(s.get_node(di));
+				switch (d.current_value()) {
+				case node_type::LOGIC_LOW:
+					if (get_ack_active() ^
+						(av == node_type::LOGIC_HIGH)) {
+						s.__node_why_not(o, di, 
+							true, verbose, u, v);
+					}
+					break;
+				case node_type::LOGIC_HIGH:
+					if (get_ack_active() ^
+						(av == node_type::LOGIC_LOW)) {
+						s.__node_why_not(o, di, 
+							false, verbose, u, v);
+					}
+					break;
+				default: break;	// ignore Xs
+				}
+			}	// end for rails
+		}	// end for bundles
+	}
+	}
+}
+	return o;
+}	// end channel::__node_why_not
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Event on node ni may trigger environment events, logging, 
 	checking, etc... process them here.
 	This assumes that in any given channel, the acknowledge
@@ -744,26 +961,26 @@ if (ni == ack_signal) {
 		if (get_ack_active()) {
 			// \pre all data rails are neutral
 			// set data rails to next data value
-			set_current_data_rails(new_events,
-				node_type::LOGIC_HIGH);
-		} else {
-			// reset all data rails, (switch only those active)
-			set_current_data_rails(new_events,
-				node_type::LOGIC_LOW);
+			set_all_data_rails(new_events);
 			advance_value();
+		} else {
+			// reset all data rails
+			transform(data.begin(), data.end(),
+				back_inserter(new_events), 
+				__node_setter(node_type::LOGIC_LOW));
 		}
 		break;
 	case node_type::LOGIC_HIGH:
 		if (get_ack_active()) {
-			// reset all data rails, (switch only those active)
-			set_current_data_rails(new_events,
-				node_type::LOGIC_LOW);
-			advance_value();
+			// reset all data rails
+			transform(data.begin(), data.end(),
+				back_inserter(new_events), 
+				__node_setter(node_type::LOGIC_LOW));
 		} else {
 			// \pre all data rails are neutral
 			// set data rails to next data value
-			set_current_data_rails(new_events,
-				node_type::LOGIC_HIGH);
+			set_all_data_rails(new_events);
+			advance_value();
 		}
 		break;
 	default:
@@ -851,9 +1068,13 @@ if (ni == ack_signal) {
 				new_events.push_back(env_event_type(
 					ack_signal, node_type::LOGIC_OTHER));
 			}
+			// otherwise wait for validity to go X
+#else
+			new_events.push_back(env_event_type(
+				ack_signal, node_type::LOGIC_OTHER));
 #endif
 		}
-		}
+		}	// end if !stopped
 	// need to take action for EACH of the following that hold:
 	// 1) this is sink AND not a valid-request protocol
 	//	(otherwise, depends on valid signal)
@@ -977,8 +1198,8 @@ if (is_sourcing()) {
 				cerr << ambiguous_data << endl;
 			}
 			if ((counter_state != bundles() || x_counter)) {
-				// advance_value();
 				set_all_data_rails(events);
+				advance_value();
 			}
 #if PRSIM_CHANNEL_VALIDITY
 			if (valid_signal) {
@@ -1021,8 +1242,8 @@ if (is_sourcing()) {
 				cerr << ambiguous_data << endl;
 			}
 			if ((counter_state != bundles() || x_counter)) {
-				// advance_value();
 				set_all_data_rails(events);
+				advance_value();
 			}
 #if PRSIM_CHANNEL_VALIDITY
 			if (valid_signal) {
@@ -1572,6 +1793,87 @@ if (f != node_channels_map.end()) {
 	}
 }
 	// else ignore, nothing to do, only cost one map lookup
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if node is potentially driven by any registered channel. 
+ */
+bool
+channel_manager::node_has_fanin(const node_index_type ni) const {
+	const node_channels_map_type::const_iterator
+		f(node_channels_map.find(ni));
+if (f != node_channels_map.end()) {
+	std::set<channel_index_type>::const_iterator
+		i(f->second.begin()), e(f->second.end());
+	for ( ; i!=e; ++i) {
+		if (channel_pool[*i].may_drive_node(ni))
+			return true;
+	}
+}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// Predicate: true if node is X
+struct IfNodeX : public std::unary_function<const node_index_type, bool> {
+	const State&		state;
+
+	explicit
+	IfNodeX(const State& s) : state(s) { }
+
+	result_type
+	operator () (argument_type ni) const {
+		return state.get_node(ni).current_value()
+			== State::node_type::LOGIC_OTHER;
+	}
+};	// end struct IfNodeX
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Return a list of nodes that this channel is dependent upon
+	with value X.  
+ */
+void
+channel_manager::__get_X_fanins(const State& s, const node_index_type ni, 
+		node_set_type& ret) const {
+	node_set_type fanins;
+	const node_channels_map_type::const_iterator
+		f(node_channels_map.find(ni));
+if (f != node_channels_map.end()) {
+	std::set<channel_index_type>::const_iterator
+		i(f->second.begin()), e(f->second.end());
+	for ( ; i!=e; ++i) {
+		channel_pool[*i].__get_fanins(ni, fanins);
+	}
+	// filter out only those that are X
+	copy_if(fanins.begin(), fanins.end(), set_inserter(ret), IfNodeX(s));
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Asks why a node (if driven by channel, not-stopped) has not been
+	driven up or down.
+	\pre caller has already done visited/cycle check on sets u, v, 
+		and that this node/path has not been visited before.  
+	\pre there is no pending event on this node 'ni', else caller
+		should have stopped there.  
+ */
+ostream&
+channel_manager::__node_why_not(const State& s, ostream& o, 
+		const node_index_type ni, const bool dir, const bool verbose, 
+		node_set_type& u, node_set_type& v) const {
+	const node_channels_map_type::const_iterator
+		f(node_channels_map.find(ni));
+if (f != node_channels_map.end()) {
+	std::set<channel_index_type>::const_iterator
+		i(f->second.begin()), e(f->second.end());
+	for ( ; i!=e; ++i) {
+		channel_pool[*i].__node_why_not(s, o, ni, dir, verbose, u, v);
+	}
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

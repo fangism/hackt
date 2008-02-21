@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.32.2.5 2008/02/19 03:22:13 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.32.2.6 2008/02/21 03:24:29 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -347,8 +347,9 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 			case node_type::LOGIC_HIGH:
 				enqueue_event(get_delay_up(ev), pn);
 				break;
-			default: enqueue_event(
-				delay_policy<time_type>::zero, pn);
+			default: enqueue_event(current_time
+				// +delay_policy<time_type>::zero
+				, pn);
 			}
 		}
 		} // else filter out vacuous events
@@ -3923,12 +3924,21 @@ if (y.second) {
 	// inserted uniquely
 	const node_type& n(get_node(ni));
 	INVARIANT(n.current_value() == node_type::LOGIC_OTHER);
+#if PRSIM_CHANNEL_SUPPORT
+	if (n.in_channel()) {
+		if (_channel_manager.node_has_fanin(ni)) {
+			o << ", from-channel";
+			// channel may be in stopped state...
+		}
+	}
+#endif
 	// inspect pull state (and event queue)
 	const event_index_type pe = n.get_event();
 	if (pe) {
 		o << ", pending event -> " <<
 			node_type::value_to_char[size_t(get_event(pe).val)];
 	}
+	node_set_type xs;
 #if PRSIM_WEAK_RULES
 	size_t w = NORMAL_RULE;
 do {
@@ -3939,7 +3949,6 @@ do {
 	const pull_enum dp = get_pull(di);
 	const size_t ux = (up == expr_type::PULL_WEAK);
 	const size_t dx = (dp == expr_type::PULL_WEAK);
-	node_set_type xs;
 	switch (ux +dx) {
 	case 0:
 		if (up == expr_type::PULL_ON && dp == expr_type::PULL_ON) {
@@ -3982,11 +3991,6 @@ do {
 			dp != expr_type::PULL_OFF) {
 #endif
 		o << endl;
-		INDENT_SECTION(o);
-		node_set_type::const_iterator ii(xs.begin()), ee(xs.end());
-		for ( ; ii!=ee; ++ii) {
-			__node_why_X(o, *ii, u, v);	// recursion
-		}
 #if PRSIM_WEAK_RULES
 		break;
 	} else if (w) {
@@ -3995,6 +3999,17 @@ do {
 	++w;
 } while (w<2);		// even if !weak_rules_enabled()
 #endif
+#if PRSIM_CHANNEL_SUPPORT
+	if (n.in_channel()) {
+		// if node is part of source or sink
+		_channel_manager.__get_X_fanins(*this, ni, xs);
+	}
+#endif
+	INDENT_SECTION(o);
+	node_set_type::const_iterator ii(xs.begin()), ee(xs.end());
+	for ( ; ii!=ee; ++ii) {
+		__node_why_X(o, *ii, u, v);	// recursion
+	}
 } else {
 	// don't print the same subtree twice, just cross-reference
 	o << ", (visited before, see above)" << endl;
@@ -4012,6 +4027,7 @@ do {
 /**
 	Why is a node not a certain value?
 	Q: X nodes are not followed?
+	\param d if true, ask why node isn't pulled up, else ... why not down
 	\param u the current stack of visited nodes, for cycle detection, 
 		is pushed and popped like a stack.
 	\param v the set of all visited nodes, for cross-referencing
@@ -4057,6 +4073,13 @@ if (y.second) {
 		const pull_enum wps = get_pull(pi);
 		if (wpi && wps == expr_type::PULL_OFF) {
 			__expr_why_not(o, wpi, verbose, u, v);
+		}
+#endif
+#if PRSIM_CHANNEL_SUPPORT
+		if (n.in_channel()) {
+			// ask channel why it has not driven the node
+			_channel_manager.__node_why_not(*this, o, 
+				ni, dir, verbose, u, v);
 		}
 #endif
 	}	// end if pending event
