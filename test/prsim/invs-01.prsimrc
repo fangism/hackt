@@ -1,0 +1,11 @@
+# "invs-01.prsimrc"
+# @haco@ invs.haco-a
+
+echo the point of this test is to test precise queue reconstruction
+set a 0
+step-event
+queue
+time
+echo this proves that a priority_queue (heap) is not suitable
+echo for precise checkpointing.
+
