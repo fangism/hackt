@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.2.10 2008/02/21 03:24:25 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.2.11 2008/02/21 18:38:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -201,6 +201,11 @@ channel::dump(ostream& o) const {
 	if (is_expecting()) {
 		if (something) o << ',';
 		o << "expect";
+		something = true;
+	}
+	if (watched()) {
+		if (something) o << ',';
+		o << "watch";
 		something = true;
 	}
 	if (!something) {
@@ -1119,6 +1124,7 @@ if (ni == ack_signal) {
 			// TODO: format me, hex, dec, bin, etc...
 			// should be able to just setbase()
 			(*dumplog.stream) << data_rails_value(s) << endl;
+			// really flush every line?
 		}
 		if (is_expecting()) {
 		if (have_value()) {

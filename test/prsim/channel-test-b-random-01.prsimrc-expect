@@ -5,13 +5,13 @@ L : .e(init:0) 1x1of2 source-random
 	count: 0, unknowns: 2
 R : .e(init:0) 1x1of2 sink
 	count: 0, unknowns: 2
-L : .e(init:0) 1x1of2 source-random,stopped
+L : .e(init:0) 1x1of2 source-random,watch,stopped
 	count: 0, unknowns: 2
-R : .e(init:0) 1x1of2 sink,stopped
+R : .e(init:0) 1x1of2 sink,watch,stopped
 	count: 0, unknowns: 2
-L : .e(init:0) 1x1of2 source-random,stopped
+L : .e(init:0) 1x1of2 source-random,watch,stopped
 	count: 0, unknowns: 0
-R : .e(init:0) 1x1of2 sink,stopped
+R : .e(init:0) 1x1of2 sink,watch,stopped
 	count: 0, unknowns: 0
 event queue:
 	#TIME#	L.d[0] : 1

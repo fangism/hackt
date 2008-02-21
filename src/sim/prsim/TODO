@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.8.7.2.1 2008/02/19 03:22:16 fang Exp $
+#	$Id: TODO,v 1.4.8.7.2.2 2008/02/21 18:38:43 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -40,6 +40,15 @@ prsim:
 			line positions for reference.
 
 	add -t <type> argument analogous to cflat's
+
+	channel commands:
+		channel-auto : auto-infer channel type
+			what about initial ack?
+		channel-type (map types to defchan)
+		enable validity protocol variants
+		test bundles
+		delay control for setting and resetting source/sinks
+		value formatting input and output
 
 	timestamp last causes -- automatic cycle time
 		Will cost some more memory per node.

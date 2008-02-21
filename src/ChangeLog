@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-02-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-12:
+	  Minor patch, channel-show now indicates whether channel is watched.
+	  Two new failures in test suite (prsim,lib) are NOT regressions;
+		they expose a latent problem with precise queue reconstruction
+		using any heap structure.  Next revision will change this
+		over to red-black-tree (multimap) which is order-preserving, 
+		with first-come-first-serve tie-breakers.  
+	  Added bunch of channel feature test cases.  
+
+
 2008-02-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-11:

@@ -9,7 +9,7 @@ All subnodes of 'X':
 X.d[0] : 0
 X.d[1] : 0
 X.e : 0
-X : .e(init:0) 1x1of2 source,sink,stopped {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt > channel-test-a-07-X.txt
+X : .e(init:0) 1x1of2 source,sink,watch,stopped {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt > channel-test-a-07-X.txt
 	count: 0, unknowns: 0
 releasing channel X (source) 
 expect to see 10 values on X before source is exhausted... 

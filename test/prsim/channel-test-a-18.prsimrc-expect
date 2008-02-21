@@ -1,0 +1,133 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+Z : .a(init:0) 1x1of3 sink
+	count: 0, unknowns: 3
+why-x: Z is sinking, should be able to trace back through acknowledge 
+Z.a:X, from-channel, pull up/dn undriven
+  Z.d[0]:X, pull up/dn undriven
+  Z.d[1]:X, pull up/dn undriven
+  Z.d[2]:X, pull up/dn undriven
+- - - - - - - - - - - - - - - - - - - 
+resetting channel Z 
+	10	Z.a : 0
+Z.a:0
+  (channel Z is stopped.)
+Z.a:0
+. (channel Z is stopped.)
+Z : .a(init:0) 1x1of3 sink,stopped
+	count: 0, unknowns: 3
+- - - - - - - - - - - - - - - - - - - 
+releasing channel Z, but data is still X 
+	10	Z.a : X
+Z.a:X, from-channel, pull up/dn undriven
+  Z.d[0]:X, pull up/dn undriven
+  Z.d[1]:X, pull up/dn undriven
+  Z.d[2]:X, pull up/dn undriven
+- - - - - - - - - - - - - - - - - - - 
+reset data 
+	10	Z.d[0] : 0
+	10	Z.d[1] : 0
+	10	Z.d[2] : 0
+	20	Z.a : 0	[by Z.d[2]:=0]
+Z.a:0
+  Z.d[0]:0
+  Z.d[1]:0
+  Z.d[2]:0
+Z.a:0
+. -+
+.  | Z.d[0]:0
+.  | Z.d[1]:0
+.  | Z.d[2]:0
+- - - - - - - - - - - - - - - - - - - 
+set data 
+	20	Z.d[0] : 1
+	30	Z.a : 1	[by Z.d[0]:=1]
+Z.a:1
+  Z.d[0]:1
+Z.a:1
+. -+
+.  ~| Z.d[0]:1
+- - - - - - - - - - - - - - - - - - - 
+reset data 
+	30	Z.d[0] : 0
+	40	Z.a : 0	[by Z.d[0]:=0]
+Z.a:0
+  Z.d[0]:0
+  Z.d[1]:0
+  Z.d[2]:0
+Z.a:0
+. -+
+.  | Z.d[0]:0
+.  | Z.d[1]:0
+.  | Z.d[2]:0
+- - - - - - - - - - - - - - - - - - - 
+set data 
+	40	Z.d[1] : 1
+	50	Z.a : 1	[by Z.d[1]:=1]
+Z.a:1
+  Z.d[1]:1
+Z.a:1
+. -+
+.  ~| Z.d[1]:1
+- - - - - - - - - - - - - - - - - - - 
+freezing channel Z, and resetting data 
+	50	Z.d[1] : 0
+Z : .a(init:0) 1x1of3 sink,stopped
+	count: 0, unknowns: 0
+Z.a:1
+  (channel Z is stopped.)
+Z.a:1
+. (channel Z is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel Z 
+	60	Z.a : 0
+- - - - - - - - - - - - - - - - - - - 
+All subnodes of 'Z':
+Z.d[0] : 0
+Z.d[1] : 0
+Z.d[2] : 0
+Z.a : 0
+setting Z.d[0] -> U 
+	60	Z.d[0] : X
+	60	Z.a : X	[by Z.d[0]:=X]
+Z : .a(init:0) 1x1of3 sink
+	count: 0, unknowns: 1
+Z.a:X, from-channel, pull up/dn undriven
+  Z.d[0]:X, pull up/dn undriven
+- - - - - - - - - - - - - - - - - - - 
+setting Z.d[0] -> 1 
+	60	Z.d[0] : 1
+Z.a is X.
+Z.a is X.
+event queue:
+	70	Z.a : 1	[from Z.d[0]:=1]
+time: 60
+	70	Z.a : 1	[by Z.d[0]:=1]
+- - - - - - - - - - - - - - - - - - - 
+resetting data 
+	70	Z.d[0] : 0
+event queue:
+	80	Z.a : 0	[from Z.d[0]:=0]
+time: 70
+Z.a:1, pending event -> 0
+Z.a:1, pending event -> 0
+	80	Z.a : 0	[by Z.d[0]:=0]
+- - - - - - - - - - - - - - - - - - - 
+stopping channel Z 
+	80	Z.d[1] : 1
+Z : .a(init:0) 1x1of3 sink,stopped
+	count: 1, unknowns: 0
+Z.a:0
+  (channel Z is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel Z 
+event queue:
+	90	Z.a : 1
+time: 80
+Z.a:0, pending event -> 1
+	90	Z.a : 1
+Z.a:1
+  Z.d[1]:1
+DONE. 

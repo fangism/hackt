@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.24.2.7 2008/02/21 03:24:31 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.24.2.8 2008/02/21 18:38:53 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -7,6 +7,7 @@ include $(top_srcdir)/test/Make.test-head
 # .hac inputs
 HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem inv oscillator half-celem deep tree interference \
+	invs \
 	oscillator-wrong \
 	interference-a inv-alt unused \
 	celem-share after-celem-def after-celem after-celem-more \
@@ -55,6 +56,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	inv-alt-01 inv-alt-02 inv-alt-03 inv-alt-04 inv-alt-05 inv-alt-06 \
 	inv-alt-07 inv-alt-08 inv-alt-09 inv-alt-10 \
 	inv-why-01 inv-why-02 \
+	invs-01 \
 	and-01 nand-01 nand-02 or-01 nor-01 nor-02 nor-04 \
 	nor-why-01 nand-why-01 \
 	and-nand-why-01 or-nor-why-01 \
@@ -124,6 +126,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-a-04 channel-test-a-05 channel-test-a-06 \
 	channel-test-a-07 channel-test-a-08 channel-test-a-09 \
 	channel-test-a-11 channel-test-a-13 channel-test-a-14 \
+	channel-test-a-15 channel-test-a-16 channel-test-a-17 \
+	channel-test-a-18 \
 	channel-test-b-01 channel-test-b-02 channel-test-b-03 \
 	channel-test-b-04 channel-test-b-05 channel-test-b-06 \
 	channel-test-b-07 channel-test-b-08 \
@@ -151,11 +155,24 @@ channel-test-a-values-X.txt:
 	$(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; \
 		} > $@
 
+channel-test-a-values-Y.txt:
+	{ $(ECHO) "# $@" ; \
+	$(ECHO) "# bunch of 1of4 values" ; \
+	$(ECHO) "0" ; $(ECHO) "3" ; $(ECHO) "2" ; $(ECHO) "3" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "0" ; $(ECHO) "1" ; \
+	$(ECHO) "2" ; $(ECHO) "0" ; $(ECHO) "2" ; $(ECHO) "3" ; \
+	$(ECHO) "1" ; $(ECHO) "3" ; $(ECHO) "0" ; $(ECHO) "2" ; \
+		} > $@
+
 # extra dep
 cbit_test_stat-01.prsimrc-out: cbit_test_stat.haco-a
 
-CLEANFILES += cbit_test_stat-01.prsimrc channel-test-a-values-X.txt
-AUTO_IGNORE += cbit_test_stat-01.prsimrc channel-test-a-values-X.txt
+CLEANFILES += cbit_test_stat-01.prsimrc \
+	channel-test-a-values-X.txt \
+	channel-test-a-values-Y.txt
+AUTO_IGNORE += cbit_test_stat-01.prsimrc \
+	channel-test-a-values-X.txt \
+	channel-test-a-values-Y.txt
 EXTRA_DIST += cbit_test_stat-01.prsimrc gen_cbit_test.awk
 
 # all weak-* tests added (pass AND fail) are consistent with Rajit's prsim
