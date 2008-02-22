@@ -2,8 +2,8 @@ enqueued:	10	_bl : 1	[from _pchg:=0]
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 enqueued:	10	bl : 1	[from we:=0]
-	10	bl : 1	[by we:=0]
 	10	_bl : 1	[by _pchg:=0]
+	10	bl : 1	[by we:=0]
 bitlines still high due to precharge 
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 1)

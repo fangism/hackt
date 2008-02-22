@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.62 2007/10/15 20:07:39 fang Exp $
+#	$Id: Makefile.am,v 1.62.8.1 2008/02/22 01:27:42 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -95,6 +95,7 @@ noinst_PROGRAMS = \
 	friend_function_formal_bug \
 	link_test \
 	bitmanip_test \
+	priority_queue_test \
 	pointer_classes_test \
 	excl_ptr_variant_test \
 	gxx-pr29164-operator-delete \
@@ -178,6 +179,7 @@ deque_iterator_test_LDADD = libfangutil.la
 hash_map_iterator_O2_bug_test_SOURCES = hash_map_iterator_O2_bug_test.cc
 hash_qmap_test_SOURCES = hash_qmap_test.cc
 friend_function_formal_bug_SOURCES = friend_function_formal_bug.cc
+priority_queue_test_SOURCES = priority_queue_test.cc
 bitmanip_test_SOURCES = bitmanip_test.cc
 bitmanip_test_LDADD = libfangutil.la
 link_test_SOURCES = link_test.cc

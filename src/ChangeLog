@@ -5,6 +5,21 @@
 
 2008-02-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-13:
+	  ALERT: potentially risky change: replaces priority queue (heap) with
+		multiset/map, to guarantee FCFS ordering among identically
+		timestamped events, and to preserve sane ordering
+		upon reconstruction from checkpoint.  
+		There is no measurable performance difference from
+		running the lib/ tests.
+	  Several test cases in prsim/ updated to reflect re-orderings.  
+		This fixes non-regression test failures that were sensitive
+		to queue ordering in checkpoint reconstruction.
+	  Even though this affects chpsim, there were no visible changes
+		in the chpsim test suite.
+	  This patch should apply (and reversible) on trunk as well.  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-12:
 	  Minor patch, channel-show now indicates whether channel is watched.
 	  Two new failures in test suite (prsim,lib) are NOT regressions;

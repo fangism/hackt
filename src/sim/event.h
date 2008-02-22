@@ -1,14 +1,26 @@
 /**
 	\file "sim/event.h"
 	Generic event placeholder type.  
-	$Id: event.h,v 1.2.44.2 2008/01/21 01:19:52 fang Exp $
+	$Id: event.h,v 1.2.44.2.2.1 2008/02/22 01:27:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_EVENT_H__
 #define	__HAC_SIM_EVENT_H__
 
+/**
+	Define to 1 to use multimap event queue instead of priority queue.
+	Multimap is better for consistency in checkpointing because of
+	first-come-first-serve ordering among equal keys, but may be 
+	slightly slower.  
+ */
+#define	MULTIMAP_EVENT_QUEUE		1
+
 #include <iosfwd>
+#if MULTIMAP_EVENT_QUEUE
+#include <set>
+#else
 #include <queue>
+#endif
 #include <vector>
 #include "sim/common.h"
 #include "util/macros.h"
@@ -31,7 +43,6 @@ namespace HAC {
 namespace SIM {
 using std::istream;
 using std::ostream;
-using std::priority_queue;
 using std::vector;
 
 //=============================================================================
@@ -66,7 +77,11 @@ public:
 	 */
 	bool
 	operator < (const EventPlaceholder& r) const {
+#if MULTIMAP_EVENT_QUEUE
+		return time < r.time;
+#else
 		return time > r.time;
+#endif
 	}
 
 	/**
@@ -90,7 +105,7 @@ public:
 /**
 	For now, hard-coded to one type of event.  
 	TODO: template this to use custom structures.  
-	TODO: compare map vs. priority_queue
+	TODO: compare multimap vs. priority_queue
 	TODO: document a consistent interface.  
 	TODO: use list_vector pool allocation.  
 	\param E is the event-placeholder type.  
@@ -105,7 +120,11 @@ private:
 		Heap-like structure. 
 		Also consider trying multimap.  
 	 */
-	typedef	priority_queue<value_type, vector<value_type> >
+#if MULTIMAP_EVENT_QUEUE
+	typedef	std::multiset<value_type>
+#else
+	typedef	std::priority_queue<value_type, vector<value_type> >
+#endif
 						queue_type;
 #if CHECK_UNIQUE_EVENTS
 	typedef	typename value_type::index_type	index_type;
@@ -136,7 +155,11 @@ public:
 
 	void
 	push(const value_type& p) {
+#if MULTIMAP_EVENT_QUEUE
+		equeue.insert(p);
+#else
 		equeue.push(p);
+#endif
 #if CHECK_UNIQUE_EVENTS
 		const std::pair<index_iterator, bool>
 			i(index_set.insert(p.event_index));
@@ -152,8 +175,14 @@ public:
 	 */
 	value_type
 	pop(void) {
+#if MULTIMAP_EVENT_QUEUE
+		const typename queue_type::const_iterator i(equeue.begin());
+		const value_type ret(*i);	// copy and return
+		equeue.erase(i);		// log time
+#else
 		const value_type ret(equeue.top());
 		equeue.pop();
+#endif
 #if CHECK_UNIQUE_EVENTS
 		const index_iterator f(index_set.find(ret.event_index));
 		INVARIANT(f != index_set.end());
@@ -165,13 +194,23 @@ public:
 	// semantically equivalent variation, but guaranteed to elide copy
 	void
 	pop(value_type& v) {
+#if MULTIMAP_EVENT_QUEUE
+		const typename queue_type::const_iterator i(equeue.begin());
+		v = *i;
+		equeue.erase(i);		// log time
+#else
 		v = equeue.top();
+#endif
 #if CHECK_UNIQUE_EVENTS
 		const index_iterator f(index_set.find(v.event_index));
 		INVARIANT(f != index_set.end());
 		index_set.erase(f);
 #endif
+#if MULTIMAP_EVENT_QUEUE
+		equeue.erase(i);		// log time
+#else
 		equeue.pop();
+#endif
 	}
 
 	/**
@@ -181,7 +220,11 @@ public:
 	const value_type&
 	top(void) const {
 		INVARIANT(!empty());
+#if MULTIMAP_EVENT_QUEUE
+		return *equeue.begin();
+#else
 		return equeue.top();
+#endif
 	}
 
 	void

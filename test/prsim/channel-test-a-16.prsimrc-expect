@@ -32,8 +32,8 @@ Y.e:X, from-channel, pull up/dn undriven
 - - - - - - - - - - - - - - - - - - - 
 reset data 
 	10	Y.d[0] : 0
-	10	Y.d[2] : 0
 	10	Y.d[1] : 0
+	10	Y.d[2] : 0
 	10	Y.d[3] : 0
 	20	Y.e : 1	[by Y.d[3]:=0]
 Y.e:1

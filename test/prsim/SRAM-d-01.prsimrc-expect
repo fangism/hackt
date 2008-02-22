@@ -2,8 +2,8 @@ enqueued:	10	_bl : 1	[from _pchg:=0]
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 enqueued:	10	bl : 1	[from we:=0]
-	10	bl : 1	[by we:=0]
 	10	_bl : 1	[by _pchg:=0]
+	10	bl : 1	[by we:=0]
 enabling wordline should expose bitline to cell 
 enqueued:	20	bl : X	[from wl[0]:=1]	(weak)
 enqueued:	20	_bl : X	[from wl[0]:=1]	(weak)
