@@ -1,0 +1,11 @@
+channels:
+L : .e(init:1) 1x1of2 watch
+R : .e(init:1) 1x1of2 off
+expect to see on channel L: [0]* 
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 0

@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.8.7 2008/02/13 08:13:29 fang Exp $
+#	$Id: TODO,v 1.4.8.8 2008/02/22 06:07:27 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -38,6 +38,17 @@ prsim:
 		In batch-mode, will just continue.  
 		Also needs a 'where' command to show file-stack and 
 			line positions for reference.
+
+	add -t <type> argument analogous to cflat's
+
+	channel commands:
+		channel-auto : auto-infer channel type
+			what about initial ack?
+		channel-type (map types to defchan)
+		enable validity protocol variants
+		test bundles
+		delay control for setting and resetting source/sinks
+		value formatting input and output
 
 	timestamp last causes -- automatic cycle time
 		Will cost some more memory per node.

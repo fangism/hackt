@@ -1,0 +1,34 @@
+# "channel-test-a-08.prsimrc"
+# @haco@ channel-test-a.haco-a
+# @deps@ channel-test-a-values-X.txt
+# testing channel source and sink together
+
+# echo-commands on
+source channel-test-a-01.prsimrc
+
+channel-show X
+channel-source-loop X channel-test-a-values-X.txt
+channel-sink X
+channel-watch X
+channel-reset X
+cycle
+getall X
+channel-show X
+
+watchall
+echo releasing channel X (source)
+channel-release X
+echo source values on X will repeat
+step 80
+time
+
+assert-queue
+channel-unwatch X
+nowatchall
+
+echo running a bit longer...
+step 12345
+assert-queue
+time
+channel-show X
+

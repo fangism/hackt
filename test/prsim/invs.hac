@@ -1,0 +1,9 @@
+// "invs.hac"
+// testing event queue preservation and restoration
+
+bool a, b[20];
+
+prs {
+(:i:20:	a	=> b[i]-	)
+}
+

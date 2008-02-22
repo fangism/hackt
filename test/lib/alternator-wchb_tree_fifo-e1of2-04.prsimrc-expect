@@ -1,0 +1,12 @@
+channels:
+L : .e(init:0) 1x1of2 source {0,1,0,0,1,1,0,0,0,1,1,1,}* @0 < 1of2_values.txt
+R : .e(init:0) 1x1of2 sink,expect {0,1,0,0,1,1,0,0,0,1,1,1,}* @0 < 1of2_values.txt
+channels:
+L : .e(init:0) 1x1of2 source,stopped {0,1,0,0,1,1,0,0,0,1,1,1,}* @0 < 1of2_values.txt
+R : .e(init:0) 1x1of2 sink,expect,stopped {0,1,0,0,1,1,0,0,0,1,1,1,}* @0 < 1of2_values.txt
+channels:
+L : .e(init:0) 1x1of2 source {0,1,0,0,1,1,0,0,0,1,1,1,}* @1 < 1of2_values.txt
+R : .e(init:0) 1x1of2 sink,expect {0,1,0,0,1,1,0,0,0,1,1,1,}* @0 < 1of2_values.txt
+channels:
+L : .e(init:0) 1x1of2 source {0,1,0,0,1,1,0,0,0,1,1,1,}* @8 < 1of2_values.txt
+R : .e(init:0) 1x1of2 sink,expect {0,1,0,0,1,1,0,0,0,1,1,1,}* @6 < 1of2_values.txt

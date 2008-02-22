@@ -21,10 +21,10 @@ WARNING: weak-interference `bl'
 	0	wv : 0
 	0	wl[0] : 0
 	0	we : 0
+	10	w.wv_ : 1	[by wv:=0]
 	10	_bl : 1	[by wv:=0]
 	10	w.we_ : 1	[by we:=0]
 	10	bl : 1	[by we:=0]
-	10	w.wv_ : 1	[by wv:=0]
 	20	p._bls : 0	[by _bl:=1]
 	20	p.bls : 0	[by bl:=1]
 X nodes:
@@ -40,10 +40,16 @@ WARNING: weak-interference `_bl'
 >> cause: `wl[0]' (val: 1)
 	20	wl[0] : 1
 	20	we : 1
+WARNING: weak-interference `p._bls'
+>> cause: `_bl' (val: X)
+	30	_bl : X	[by wl[0]:=1]
 	30	w.we_ : 0	[by we:=1]
 	30	bl : 0	[by we:=1]
+	40	p._bls : X	[by _bl:=X]
+	40	_bl : 1	[by w.we_:=0]
 	40	p.bls : 1	[by bl:=0]
 	40	c[0].r.d[0] : 0	[by bl:=0]
+	50	p._bls : 0	[by _bl:=1]
 	50	c[0].r.d[1] : 1	[by c[0].r.d[0]:=0]
 Fanins of node `c[0].r.t':
 [after 10]	wl[0]:1 & ~_bl:1<0> -> c[0].r.d[1]-:1

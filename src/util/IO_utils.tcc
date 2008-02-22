@@ -2,7 +2,7 @@
 	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
 	Consider renaming this file to value_read/writer...
-	$Id: IO_utils.tcc,v 1.17 2007/02/05 06:39:57 fang Exp $
+	$Id: IO_utils.tcc,v 1.17.40.1 2008/02/22 06:07:30 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <algorithm>
 #include <functional>
+#include <iterator>
 #include <utility>		// for std::pair
 #include "util/STL/vector_fwd.h"	// for vector<bool>
 #include "util/macros.h"	// for INVARIANT
@@ -126,6 +127,25 @@ write_sequence(ostream& f, const S& l) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Writes an iterator range.
+	Useful if size is taken care of elsewhere.
+	\param f the output stream
+	\param i the begin iterator
+	\param e the end iterator
+ */
+template <class Iter>
+void
+write_range(ostream& f, Iter i, const Iter e) {
+	typedef	typename std::iterator_traits<Iter>::value_type	value_type;
+	value_writer<value_type> w(f);
+	while (i!=e) {
+		w(*i);
+		++i;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Generic function for writing value arrays.  
 	Use this on classes that do not satisfy the iterator concept
 	(such as valarray) nor have a begin() or end() method, 
@@ -147,6 +167,24 @@ write_array(ostream& f, const S& s) {
 	for ( ; i < s.size(); i++) {
 		w(s[i]);
 		// write_value<value_type>(f, s[i]);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Read a sequence of values in-place over a pre-sized range.  
+	\param f input stream
+	\param i begin iterator
+	\param e end iterator
+ */
+template <class Iter>
+void
+read_range(istream& f, Iter i, const Iter e) {
+	typedef	typename std::iterator_traits<Iter>::value_type	value_type;
+	value_reader<value_type> r(f);
+	while (i!=e) {
+		r(*i);
+		++i;
 	}
 }
 

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.25 2008/02/15 04:43:41 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.26 2008/02/22 06:08:38 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -7,6 +7,7 @@ include $(top_srcdir)/test/Make.test-head
 # .hac inputs
 HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem inv oscillator half-celem deep tree interference \
+	invs \
 	oscillator-wrong \
 	interference-a inv-alt unused \
 	celem-share after-celem-def after-celem after-celem-more \
@@ -34,7 +35,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	cross-pull-a \
 	bitline-a bitline-b \
 	SRAM SRAM-a SRAM-b SRAM-c SRAM-d \
-	keeper-a
+	keeper-a \
+	channel-test-a channel-test-b
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -54,6 +56,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	inv-alt-01 inv-alt-02 inv-alt-03 inv-alt-04 inv-alt-05 inv-alt-06 \
 	inv-alt-07 inv-alt-08 inv-alt-09 inv-alt-10 \
 	inv-why-01 inv-why-02 \
+	invs-01 \
 	and-01 nand-01 nand-02 or-01 nor-01 nor-02 nor-04 \
 	nor-why-01 nand-why-01 \
 	and-nand-why-01 or-nor-why-01 \
@@ -119,7 +122,17 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	SRAM-c-01 SRAM-c-02 SRAM-c-03 \
 	SRAM-d-01 SRAM-d-02 \
 	keeper-a-01 \
-	autosave-02
+	autosave-02 \
+	channel-test-a-01 channel-test-a-02 channel-test-a-03 \
+	channel-test-a-04 channel-test-a-05 channel-test-a-06 \
+	channel-test-a-07 channel-test-a-08 channel-test-a-09 \
+	channel-test-a-11 channel-test-a-13 channel-test-a-14 \
+	channel-test-a-15 channel-test-a-16 channel-test-a-17 \
+	channel-test-a-18 \
+	channel-test-b-01 channel-test-b-02 channel-test-b-03 \
+	channel-test-b-04 channel-test-b-05 channel-test-b-06 \
+	channel-test-b-07 channel-test-b-08 \
+	channel-test-b-random-01 channel-test-b-random-02
 
 # positive different test:
 # oscil-random-01 and oscil-random-01a are *supposed* to differ (seeds)
@@ -134,11 +147,33 @@ $(srcdir)/cbit_test_stat-01.prsimrc: gen_cbit_test.awk
 	$(ECHO) "# @haco@ cbit_test_stat.haco-a" ; \
 	$(AWK) -f $< ;} > $@
 
+channel-test-a-values-X.txt:
+	{ $(ECHO) "# $@" ; \
+	$(ECHO) "# bunch of 1of2 values" ; \
+	$(ECHO) "0" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; \
+	$(ECHO) "0" ; $(ECHO) "0" ; $(ECHO) "0" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; \
+		} > $@
+
+channel-test-a-values-Y.txt:
+	{ $(ECHO) "# $@" ; \
+	$(ECHO) "# bunch of 1of4 values" ; \
+	$(ECHO) "0" ; $(ECHO) "3" ; $(ECHO) "2" ; $(ECHO) "3" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "0" ; $(ECHO) "1" ; \
+	$(ECHO) "2" ; $(ECHO) "0" ; $(ECHO) "2" ; $(ECHO) "3" ; \
+	$(ECHO) "1" ; $(ECHO) "3" ; $(ECHO) "0" ; $(ECHO) "2" ; \
+		} > $@
+
 # extra dep
 cbit_test_stat-01.prsimrc-out: cbit_test_stat.haco-a
 
-CLEANFILES += cbit_test_stat-01.prsimrc
-AUTO_IGNORE += cbit_test_stat-01.prsimrc
+CLEANFILES += cbit_test_stat-01.prsimrc \
+	channel-test-a-values-X.txt \
+	channel-test-a-values-Y.txt
+AUTO_IGNORE += cbit_test_stat-01.prsimrc \
+	channel-test-a-values-X.txt \
+	channel-test-a-values-Y.txt
 EXTRA_DIST += cbit_test_stat-01.prsimrc gen_cbit_test.awk
 
 # all weak-* tests added (pass AND fail) are consistent with Rajit's prsim
@@ -161,7 +196,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	aliases-05 aliases-06 aliases-07 \
 	check-excl-rings-01 check-excl-rings-03 \
 	weak-feedback-a-02 weak-feedback-b-02 \
-	celem-fb-02
+	celem-fb-02 \
+	channel-test-a-10 channel-test-a-12
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 
@@ -177,6 +213,10 @@ srcdir_EXTRA_DIST += \
 	precharge-d-repeat.prsimrc \
 	precharge-e-repeat.prsimrc \
 	precharge-f-repeat.prsimrc
+
+# KNOWN BUG: failing getopt because is not re-entrant
+# revisit this after re-implementing getopt...
+srcdir_EXTRA_DIST += compile-driver-a.hac compile-driver-a-01.prsimrc
 
 include $(top_srcdir)/test/Make.test-tail
 

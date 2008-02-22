@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.50.6.1 2008/02/14 04:09:01 fang Exp $
+	$Id: devel_switches.h,v 1.50.6.2 2008/02/22 06:07:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -185,7 +185,7 @@
 	of production rules, currently only available in hflat.
 	Rationale: strength checking vs. post-extraction load
 	Goal: 1?
-	Status: in development
+	Status: done, basically tested
 	Priority: high
  */
 #define	CFLAT_WITH_CONDUCTANCES			1

@@ -1,0 +1,8 @@
+# "channel-test-b-01.prsimrc"
+# @haco@ channel-test-b.haco-a
+# testing source/sinks on different channels
+
+channel L e:0 :0 d:2
+channel R e:0 :0 d:2
+channel-show-all
+

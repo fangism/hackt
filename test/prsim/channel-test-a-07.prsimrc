@@ -1,0 +1,28 @@
+# "channel-test-a-07.prsimrc"
+# @haco@ channel-test-a.haco-a
+# @deps@ channel-test-a-values-X.txt
+# testing channel source and sink and log together
+
+# echo-commands on
+source channel-test-a-01.prsimrc
+
+channel-show X
+channel-source X channel-test-a-values-X.txt
+channel-sink X
+channel-watch X
+channel-log X channel-test-a-07-X.txt
+channel-reset X
+cycle
+getall X
+channel-show X
+
+watchall
+echo releasing channel X (source)
+channel-release X
+echo expect to see 10 values on X before source is exhausted...
+cycle
+
+channel-close X
+!cat channel-test-a-07-X.txt
+!rm channel-test-a-07-X.txt
+

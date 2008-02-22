@@ -1,0 +1,25 @@
+// "wchb-linear_fifo_init-e1of2-a.hac"
+//	$Id: wchb-linear_fifo_init-e1of2-a.hac,v 1.1.4.1 2008/02/22 06:08:26 fang Exp $
+// linear fifo with initial tokens
+
+import "buffer_init.hac";
+import "copy.hac";
+
+template <pint N>
+defproc linear_fifo(e1of2 L, R; bool _Reset) {
+	e1of2 M[N+1];
+	L = M[0];
+	R = M[N];
+	wchb_copy_e1of2<1> B[N];
+	(;i:N:	B[i](M[i], {M[i+1]}, _Reset);	)
+}
+
+bool _Reset, Reset;
+e1of2 L, X, Y, R;
+// initial value: 1, 0
+wchb2_init_e1of2	A<0>(L, X, _Reset, Reset);
+wchb2_init_e1of2	B<1>(Y, R, _Reset, Reset);
+linear_fifo<3>		F(X, Y, _Reset);
+
+// expect value sequence: 1, 0, ... remainder
+

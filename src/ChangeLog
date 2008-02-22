@@ -3,6 +3,142 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-02-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-40-merged-prsim-09-13:
+	  Branch merge: added prsim channel command support.
+		and there was much rejoicing...
+		Documented and reasonably tested.
+		Replaced event-queue priority_queue (heap) with multiset, for 
+		FCFS ordering and precise checkpoint reconstructibility.
+
+
+2008-02-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-13:
+	  ALERT: potentially risky change: replaces priority queue (heap) with
+		multiset/map, to guarantee FCFS ordering among identically
+		timestamped events, and to preserve sane ordering
+		upon reconstruction from checkpoint.  
+		There is no measurable performance difference from
+		running the lib/ tests.
+	  Several test cases in prsim/ updated to reflect re-orderings.  
+		This fixes non-regression test failures that were sensitive
+		to queue ordering in checkpoint reconstruction.
+	  Even though this affects chpsim, there were no visible changes
+		in the chpsim test suite.
+	  This patch should apply (and reversible) on trunk as well.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-12:
+	  Minor patch, channel-show now indicates whether channel is watched.
+	  Two new failures in test suite (prsim,lib) are NOT regressions;
+		they expose a latent problem with precise queue reconstruction
+		using any heap structure.  Next revision will change this
+		over to red-black-tree (multimap) which is order-preserving, 
+		with first-come-first-serve tie-breakers.  
+	  Added bunch of channel feature test cases.  
+
+
+2008-02-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-11:
+	  Bug fixes in prsim::channel:
+		Now always set all data rails (high and low) in response
+			to acknoledge on sources.  
+		Now advancing data immediate after using data for
+			settting channel data rails.  
+	  Extended why-not[-verbose] and why-x to search through channels!
+	  Few new test cases.  
+
+
+2008-02-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-10:
+	  Changed channel::value_type to unsigned type to facilitate
+		translation of values to and from data rails.
+		Note, however that ldiv() and family still operates on
+		signed integers, so values may still be limited to 
+		unsigned::max (warning issued).  
+	  Tested random-sources (fix) and channel-stop with channel-resume.
+		Added new tests cases for these.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-09:
+	  Failed attempt to fix compile-option-forwarding (-C "...")
+		attributed to getopt() being non-reentrant.  
+		What a load of crap.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-08:
+	  Implemented random sources (channel-rsource), untested. 
+	  Texinfo-documented all channel commands.  
+
+
+2008-02-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-07:
+	  Ironed out most initial bugs for channel commands, now works!
+		Call it beta.
+	  Now advance value in sequence *after* data rails are reset.
+		Resume no longer auto-advances.
+	  Fixed exception throw specifier for State::step,cycle, 
+		which otherwise, prevented channel_exception from
+		being caught (channel value assert-fail).
+	  Added bunch of source/sink/log/expect test cases.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-06:
+	  channel::resume() now properly spawns events from the environment
+		of sources and sink.
+	  Channel sink initial tests are working.
+	  Added test case with manual toggling of data rails.
+
+
+2008-02-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-05:
+	  Continued development of prsim:channels, mostly implementation
+		of source/sink commands, and interactions with 
+		the simulator state's events. 
+	  State::excl_exception now derived from common base step_exception
+		to support different exception types. 
+	  Cleaned up previous patch #if's.
+	  Still untested.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-04:
+	  prsim/Channel-prsim.{h,cc}: use packed 2D array structure
+		instead of vector-of-vector, cleaner and faster.
+		Started to implement channel::process_node.
+
+
+2008-02-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-03:
+	  Slight redesign of prsim::channel structure, allowing for
+		concurrent non-conflicting modes of operation.
+		Handful of new channel commands: stop, release, 
+			source, sink, expect, log (-all variants).
+	  Added basic test case.
+
+
+2008-02-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-02:
+	  More channel development.
+	  Can now declare a channel, but not do anything with it yet.
+
+
+2008-02-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-01:
+	  This branch is for the development of the long awaited
+		channel features in prsim.
+	  Initial revision is incomplete (link-fail), work in progress.
+	  Added sim/prsim/Channel-prsim.{h,cc}
+
+
 2008-02-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-39:

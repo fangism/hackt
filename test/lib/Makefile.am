@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.29.18.2 2008/02/13 08:13:30 fang Exp $
+#	$Id: Makefile.am,v 1.29.18.3 2008/02/22 06:07:54 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -79,11 +79,13 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	alternator-wchb_merge-06 alternator-wchb_merge-07 \
 	alternator-wchb_merge-08 alternator-wchb_merge-09 \
 	alternator-wchb_merge-10 alternator-wchb_merge-11 \
+	alternator-wchb_tree_fifo-e1of2 \
 	alternator-wchb_tree_fifo-01 \
 	alternator-wchb_tree_fifo-02 alternator-wchb_tree_fifo-03 \
 	alternator-wchb_tree_fifo-04 \
 	alternator-wchb_tree_fifo-05 alternator-wchb_tree_fifo-06 \
 	alternator-wchb_tree_fifo-07 \
+	wchb-linear_fifo_init-e1of2-a \
 	copy-wire_copy-01 copy-wire_copy-02 \
 	copy-wire_copy-03 copy-wire_copy-04 \
 	copy-wchb_copy-01 copy-wchb_copy-02 \
@@ -149,6 +151,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	alternator-wchb_tree_fifo-04 \
 	alternator-wchb_tree_fifo-05 alternator-wchb_tree_fifo-06 \
 	alternator-wchb_tree_fifo-07 \
+	alternator-wchb_tree_fifo-e1of2-01 alternator-wchb_tree_fifo-e1of2-02 \
+	alternator-wchb_tree_fifo-e1of2-03 alternator-wchb_tree_fifo-e1of2-04 \
+	alternator-wchb_tree_fifo-e1of2-05 \
+	wchb-linear_fifo_init-e1of2-a-01 wchb-linear_fifo_init-e1of2-a-02 \
 	copy-wire_copy-01 copy-wire_copy-02 \
 	copy-wire_copy-03 copy-wire_copy-04 \
 	copy-wchb_copy-01 copy-wchb_copy-02 \
@@ -156,9 +162,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	init-source-sink-a-01 init-source-sink-a-02 \
 	init-source-sink-b-01 \
 	init-source-sink-c-01 init-source-sink-c-02 \
-	wchb-token-ring-a-01 wchb-token-ring-a-02 \
+	wchb-token-ring-a-01 wchb-token-ring-a-02 wchb-token-ring-a-03 \
 	wchb-token-ring-b-02 wchb-token-ring-b-03 \
-	wchb-token-ring-c-01 wchb-token-ring-c-02 \
+	wchb-token-ring-c-01 wchb-token-ring-c-02 wchb-token-ring-c-03 \
+	wchb-token-ring-c-04 wchb-token-ring-c-05 wchb-token-ring-c-06 \
 	wchb-token-ring-d-01 \
 	wchb-token-ring-e-01 \
 	pcehb_mux_4xe1of2-a-01
@@ -171,6 +178,18 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)
 HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
+
+1of2_values.txt:
+	{ $(ECHO) "# $@" ; \
+	$(ECHO) "# bunch of 1of2 values" ; \
+	$(ECHO) "0" ; $(ECHO) "1" ; \
+	$(ECHO) "0" ; $(ECHO) "0" ; $(ECHO) "1" ; $(ECHO) "1" ; \
+	$(ECHO) "0" ; $(ECHO) "0" ; $(ECHO) "0" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; \
+		} > $@
+
+AUTO_IGNORE += 1of2_values.txt
+CLEANFILES += 1of2_values.txt
 
 srcdir_EXTRA_DIST += README \
 	initial-reset.prsimrc \

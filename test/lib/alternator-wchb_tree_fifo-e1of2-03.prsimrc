@@ -1,0 +1,31 @@
+# "alternator-wchb_tree_fifo-e1of2-03.prsimrc"
+# @haco@ alternator-wchb_tree_fifo-e1of2.haco-a
+# @deps@ 1of2_values.txt
+
+channel L e:0 :0 d:2
+channel R e:0 :0 d:2
+
+channel-source L 1of2_values.txt
+channel-sink R
+channel-expect-loop R 1of2_values.txt
+channel-show-all
+
+timing random
+
+mode reset
+set _Reset 0
+set Reset 1
+channel-reset-all
+channel-show-all
+cycle
+
+mode run
+set _Reset 1
+set Reset 0
+channel-release-all
+channel-show-all
+cycle
+
+channel-show-all
+assertn-queue
+

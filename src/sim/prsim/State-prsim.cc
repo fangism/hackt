@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.32 2008/02/13 08:13:27 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.33 2008/02/22 06:07:25 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -186,6 +186,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		current_time(0), 
 		uniform_delay(time_traits::default_delay), 
 		watch_list(), 
+#if PRSIM_CHANNEL_SUPPORT
+		_channel_manager(), 
+#endif
 		flags(FLAGS_DEFAULT),
 		unstable_policy(ERROR_DEFAULT_UNSTABLE),
 		weak_unstable_policy(ERROR_DEFAULT_WEAK_UNSTABLE),
@@ -304,6 +307,105 @@ State::initialize(void) {
 	// timing mode preserved
 	current_time = 0;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SUPPORT
+	// Q: is this the best place to handle this?
+void
+State::flush_channel_events(const vector<env_event_type>& env_events, 
+		const event_cause_type& c) {
+	// cause of these events must be 'ni', this node
+	vector<env_event_type>::const_iterator
+		i(env_events.begin()), e(env_events.end());
+	// const event_cause_type c(ni, next);
+	for ( ; i!=e; ++i) {
+		node_type& _n(get_node(i->first));
+		const uchar _v = i->second;
+		if (_n.current_value() != _v) {
+		if (_n.get_event()) {
+	// interaction with other enqueued events? anomalies?
+	// for now, give up if there are conflicting events in queue
+			// instability!?
+			ISE_INVARIANT(!_n.get_event());
+			// not true, but we bomb out for now...
+			// TODO: proper diagnostic
+		} else {
+			// __allocate_event
+			const event_index_type pn =
+				__allocate_event(_n, i->first, c,
+					INVALID_RULE_INDEX, _v
+#if PRSIM_WEAK_RULES
+					, false	// environment never weak
+#endif
+				);
+			// enqueue_event
+			const event_type& ev(get_event(pn));
+			switch (_v) {
+			case node_type::LOGIC_LOW:
+				enqueue_event(get_delay_dn(ev), pn);
+				break;
+			case node_type::LOGIC_HIGH:
+				enqueue_event(get_delay_up(ev), pn);
+				break;
+			default: enqueue_event(current_time
+				// +delay_policy<time_type>::zero
+				, pn);
+			}
+		}
+		} // else filter out vacuous events
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set a single channel into reset state.  
+ */
+bool
+State::reset_channel(const string& cn) {
+	vector<env_event_type> temp;
+	if (_channel_manager.reset_channel(cn, temp))	return true;
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reset all channels.  
+ */
+void
+State::reset_all_channels(void) {
+	vector<env_event_type> temp;
+	_channel_manager.reset_all_channels(temp);
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set a single channel into reset state.  
+ */
+bool
+State::resume_channel(const string& cn) {
+	vector<env_event_type> temp;
+	if (_channel_manager.resume_channel(*this, cn, temp))	return true;
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reset all channels.  
+ */
+void
+State::resume_all_channels(void) {
+	vector<env_event_type> temp;
+	_channel_manager.resume_all_channels(*this, temp);
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+}
+#endif	// PRSIM_CHANNEL_SUPPORT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2034,8 +2136,10 @@ State::check_excl_rings(const node_index_type ni, const node_type& n,
 	Uses extremely slow search because this only occurs on exception.  
  */
 void
-State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
+State::inspect_exception(const step_exception& ex, ostream& o) const {
+if (IS_A(const excl_exception*, &ex)) {
 	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
+	const excl_exception& exex(AS_A(const excl_exception&, ex));
 	ring_set_type ring;
 	const_iterator i, e;
 	if (exex.type) {
@@ -2071,6 +2175,16 @@ State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
 		"but you may further inspect the state." << endl;
 	o << "You probably want to disable excl-checking with `nocheckexcl\' "
 		"if you wish to continue the simulation." << endl;
+#if PRSIM_CHANNEL_SUPPORT
+} else if (IS_A(const channel_exception*, &ex)) {
+	const channel_exception& exex(AS_A(const channel_exception&, ex));
+	o << "ERROR: value assertion failed on channel `" <<
+		exex.name << "\'." << endl;
+	o << "\texpected: " << exex.expect << ", got: " << exex.got << endl;
+#endif
+} else {
+	o << "Unkonwn step_exception." << endl;
+}
 }	// end method State::inspect_excl_exception
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2086,7 +2200,7 @@ State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
 		leaving violating event in queue.  
  */
 State::step_return_type
-State::step(void) THROWS_EXCL_EXCEPTION {
+State::step(void) THROWS_STEP_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
 	ISE_INVARIANT(pending_queue.empty());
@@ -2219,6 +2333,20 @@ if (eval_ordering_is_random()) {
 #endif
 	}
 }
+#if PRSIM_CHANNEL_SUPPORT
+	// Q: is this the best place to handle this?
+if (n.in_channel()) {
+	// predicate may not filter precisely
+	// channel manager should 'ignore' irrelevant nodes
+	vector<env_event_type> env_events;
+	// the following may throw channel_exception
+	_channel_manager.process_node(*this, ni,
+			prev, next, env_events);
+	// cause of these events must be 'ni', this node
+	const event_cause_type c(ni, next);
+	flush_channel_events(env_events, c);
+}
+#endif	// PRSIM_CHANNEL_SUPPORT
 	/***
 		If an event is forced (say, by user), then check node's own
 		guards to determine whether or not a new event needs to
@@ -3211,7 +3339,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 		the ID of the node that tripped a breakpoint.  
  */
 State::step_return_type
-State::cycle(void) THROWS_EXCL_EXCEPTION {
+State::cycle(void) THROWS_STEP_EXCEPTION {
 	step_return_type ret;
 	while ((ret = step()).first) {
 		if (get_node(ret.first).is_breakpoint() || stopped())
@@ -3796,12 +3924,21 @@ if (y.second) {
 	// inserted uniquely
 	const node_type& n(get_node(ni));
 	INVARIANT(n.current_value() == node_type::LOGIC_OTHER);
+#if PRSIM_CHANNEL_SUPPORT
+	if (n.in_channel()) {
+		if (_channel_manager.node_has_fanin(ni)) {
+			o << ", from-channel";
+			// channel may be in stopped state...
+		}
+	}
+#endif
 	// inspect pull state (and event queue)
 	const event_index_type pe = n.get_event();
 	if (pe) {
 		o << ", pending event -> " <<
 			node_type::value_to_char[size_t(get_event(pe).val)];
 	}
+	node_set_type xs;
 #if PRSIM_WEAK_RULES
 	size_t w = NORMAL_RULE;
 do {
@@ -3812,7 +3949,6 @@ do {
 	const pull_enum dp = get_pull(di);
 	const size_t ux = (up == expr_type::PULL_WEAK);
 	const size_t dx = (dp == expr_type::PULL_WEAK);
-	node_set_type xs;
 	switch (ux +dx) {
 	case 0:
 		if (up == expr_type::PULL_ON && dp == expr_type::PULL_ON) {
@@ -3855,11 +3991,6 @@ do {
 			dp != expr_type::PULL_OFF) {
 #endif
 		o << endl;
-		INDENT_SECTION(o);
-		node_set_type::const_iterator ii(xs.begin()), ee(xs.end());
-		for ( ; ii!=ee; ++ii) {
-			__node_why_X(o, *ii, u, v);	// recursion
-		}
 #if PRSIM_WEAK_RULES
 		break;
 	} else if (w) {
@@ -3868,6 +3999,17 @@ do {
 	++w;
 } while (w<2);		// even if !weak_rules_enabled()
 #endif
+#if PRSIM_CHANNEL_SUPPORT
+	if (n.in_channel()) {
+		// if node is part of source or sink
+		_channel_manager.__get_X_fanins(*this, ni, xs);
+	}
+#endif
+	INDENT_SECTION(o);
+	node_set_type::const_iterator ii(xs.begin()), ee(xs.end());
+	for ( ; ii!=ee; ++ii) {
+		__node_why_X(o, *ii, u, v);	// recursion
+	}
 } else {
 	// don't print the same subtree twice, just cross-reference
 	o << ", (visited before, see above)" << endl;
@@ -3885,6 +4027,7 @@ do {
 /**
 	Why is a node not a certain value?
 	Q: X nodes are not followed?
+	\param d if true, ask why node isn't pulled up, else ... why not down
 	\param u the current stack of visited nodes, for cycle detection, 
 		is pushed and popped like a stack.
 	\param v the set of all visited nodes, for cross-referencing
@@ -3930,6 +4073,13 @@ if (y.second) {
 		const pull_enum wps = get_pull(pi);
 		if (wpi && wps == expr_type::PULL_OFF) {
 			__expr_why_not(o, wpi, verbose, u, v);
+		}
+#endif
+#if PRSIM_CHANNEL_SUPPORT
+		if (n.in_channel()) {
+			// ask channel why it has not driven the node
+			_channel_manager.__node_why_not(*this, o, 
+				ni, dir, verbose, u, v);
 		}
 #endif
 	}	// end if pending event
@@ -4614,6 +4764,9 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, interference_policy);
 	write_value(o, weak_interference_policy);
 	write_value(o, timing_mode);
+#if PRSIM_CHANNEL_SUPPORT
+	if (_channel_manager.save_checkpoint(o)) return true;
+#endif
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
@@ -4779,6 +4932,9 @@ try {
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
+#if PRSIM_CHANNEL_SUPPORT
+	if (_channel_manager.load_checkpoint(i)) return true;
+#endif
 
 	// this must be run *after* mode flags are loaded
 if (checking_excl()) {
@@ -4793,7 +4949,7 @@ if (checking_excl()) {
 		const excl_exception
 			e(check_excl_rings(distance(nb, ni), n, prev, next));
 		if (e.lock_id) {
-			inspect_excl_exception(e, cerr);
+			inspect_exception(e, cerr);
 			// don't bother throwing
 		}
 	}
@@ -4909,6 +5065,13 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	char timing_mode;
 	read_value(i, timing_mode);
 	o << "timing mode: " << size_t(timing_mode) << endl;
+#if PRSIM_CHANNEL_SUPPORT
+{
+	channel_manager tmp;
+	tmp.load_checkpoint(i);
+	tmp.dump_checkpoint_state(o) << endl;
+}
+#endif
 	read_value(i, header_check);
 	o << "footer string: " << header_check << endl;
 	return o;

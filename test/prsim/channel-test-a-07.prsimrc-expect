@@ -1,0 +1,77 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+X : .e(init:0) 1x1of2 off
+	count: 0, unknowns: 2
+Warning: channel acknowledge `X.e' has no fanin!
+All subnodes of 'X':
+X.d[0] : 0
+X.d[1] : 0
+X.e : 0
+X : .e(init:0) 1x1of2 source,sink,watch,stopped {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt > channel-test-a-07-X.txt
+	count: 0, unknowns: 0
+releasing channel X (source) 
+expect to see 10 values on X before source is exhausted... 
+	20	X.e : 1
+channel	X (.data) : 0
+	30	X.d[0] : 1	[by X.e:=1]
+	40	X.e : 0	[by X.d[0]:=1]
+	50	X.d[0] : 0	[by X.e:=0]
+	60	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 1
+	70	X.d[1] : 1	[by X.e:=1]
+	80	X.e : 0	[by X.d[1]:=1]
+	90	X.d[1] : 0	[by X.e:=0]
+	100	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	110	X.d[1] : 1	[by X.e:=1]
+	120	X.e : 0	[by X.d[1]:=1]
+	130	X.d[1] : 0	[by X.e:=0]
+	140	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 0
+	150	X.d[0] : 1	[by X.e:=1]
+	160	X.e : 0	[by X.d[0]:=1]
+	170	X.d[0] : 0	[by X.e:=0]
+	180	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 0
+	190	X.d[0] : 1	[by X.e:=1]
+	200	X.e : 0	[by X.d[0]:=1]
+	210	X.d[0] : 0	[by X.e:=0]
+	220	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 0
+	230	X.d[0] : 1	[by X.e:=1]
+	240	X.e : 0	[by X.d[0]:=1]
+	250	X.d[0] : 0	[by X.e:=0]
+	260	X.e : 1	[by X.d[0]:=0]
+channel	X (.data) : 1
+	270	X.d[1] : 1	[by X.e:=1]
+	280	X.e : 0	[by X.d[1]:=1]
+	290	X.d[1] : 0	[by X.e:=0]
+	300	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	310	X.d[1] : 1	[by X.e:=1]
+	320	X.e : 0	[by X.d[1]:=1]
+	330	X.d[1] : 0	[by X.e:=0]
+	340	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	350	X.d[1] : 1	[by X.e:=1]
+	360	X.e : 0	[by X.d[1]:=1]
+	370	X.d[1] : 0	[by X.e:=0]
+	380	X.e : 1	[by X.d[1]:=0]
+channel	X (.data) : 1
+	390	X.d[1] : 1	[by X.e:=1]
+	400	X.e : 0	[by X.d[1]:=1]
+	410	X.d[1] : 0	[by X.e:=0]
+	420	X.e : 1	[by X.d[1]:=0]
+# log for channel: X
+0
+1
+1
+0
+0
+0
+1
+1
+1
+1

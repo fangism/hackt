@@ -1,6 +1,14 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.81.2.2 2008/01/24 01:23:10 fang Exp $
+#	$Id: ChangeLog,v 1.81.2.3 2008/02/22 06:07:43 fang Exp $
 # ChangeLog for test directory.
+
+2008-02-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-28-prsim-09-10:
+	  Added prsimrc-random-value-filter.awk (self-explanatory).
+	  Make.test-prsim: filter out random values where appropriate.
+		Also improved prsimrc-out suffix rule script.
+
 
 2008-01-23	David Fang		<fangism@users.sourceforge.net>
 

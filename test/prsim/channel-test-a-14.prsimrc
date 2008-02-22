@@ -1,0 +1,134 @@
+# "channel-test-a-14.prsimrc"
+# @haco@ channel-test-a.haco-a
+
+# echo-commands on
+watchall
+source channel-test-a-01.prsimrc
+
+# X is an e:0
+channel-sink X
+channel-show X
+echo why-x: X is sinking, should be able to trace back through acknowledge
+why-x X.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo resetting channel X
+channel-reset X
+cycle
+assert X.e 0
+why-not X.e
+why-not-verbose X.e
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - - -
+echo releasing channel X, but data is still X
+channel-release X
+cycle
+assert X.e X
+why-x X.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset data
+set X.d[0] 0
+set X.d[1] 0
+cycle
+assert X.e 1
+why-not X.e
+why-not-verbose X.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set data
+set X.d[0] 1
+cycle
+assert X.e 0
+why-not X.e
+why-not-verbose X.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset data
+set X.d[0] 0
+cycle
+assert X.e 1
+why-not X.e
+why-not-verbose X.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set data
+set X.d[1] 1
+cycle
+assert X.e 0
+why-not X.e
+why-not-verbose X.e
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-stop X
+echo freezing channel X, and resetting data
+set X.d[1] 0
+cycle
+channel-show X
+assert X.e 0
+why-not X.e
+why-not-verbose X.e
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-release X
+echo releasing channel X
+cycle
+assert X.e 1
+
+echo - - - - - - - - - - - - - - - - - - -
+getall X
+echo setting X.d[0] -> U
+set X.d[0] X
+cycle
+channel-show X
+assert X.e X
+why-x X.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo setting X.d[0] -> 1
+set X.d[0] 1
+step-event
+assert X.e X
+why-not X.e 1
+why-not X.e 0
+queue
+time
+cycle
+assert X.e 0
+
+echo - - - - - - - - - - - - - - - - - - -
+echo resetting data
+set X.d[0] 0
+step-event
+queue
+time
+why-not X.e
+why-not-verbose X.e
+cycle
+assert X.e 1
+
+echo - - - - - - - - - - - - - - - - - - -
+echo stopping channel X
+channel-stop X
+set X.d[1] 1
+cycle
+channel-show X
+assert X.e 1
+why-not X.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo releasing channel X
+channel-release X
+queue
+time
+assert X.e 1
+why-not X.e
+step-event
+assert X.e 0
+why-not X.e
+
+assertn-queue
+
+echo DONE.
+

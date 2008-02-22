@@ -9,10 +9,10 @@ weak-rules on
 interference warn
 
 set wv 0
-set we 0
 set wl[0] 0
-set wl[1] 0
 set _pchg 0
+set we 0
+set wl[1] 0
 cycle
 
 set wl[0] X
