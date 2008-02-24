@@ -21,6 +21,8 @@ echo --------------------
 set b 1
 cycle
 why-x o
+why o
+why-verbose o
 
 echo gray code transitions...
 echo --------------------
@@ -28,24 +30,32 @@ set d 1
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set d 0
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set c 0
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set d 1
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 
 echo --------------------
@@ -53,24 +63,32 @@ set a 0
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set c 1
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set d 0
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set c 0
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 
 echo --------------------
@@ -78,24 +96,32 @@ set b 0
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set d 1
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set c 1
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set d 0
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 
 echo --------------------
@@ -103,24 +129,32 @@ set a 1
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set c 0
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set d 1
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo --------------------
 set c 1
 cycle
 why-not o
 why-not-verbose o
+why o
+why-verbose o
 
 echo done!
 

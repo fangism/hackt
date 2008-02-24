@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.33 2008/02/22 06:07:25 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.34 2008/02/24 07:25:03 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3880,22 +3880,22 @@ if (n.current_value() == node_type::LOGIC_OTHER) {
  */
 ostream&
 State::dump_node_why_not(ostream& o, const node_index_type ni, 
-		const bool dir, const bool verbose) const {
+		const bool dir, const bool why_not, const bool verbose) const {
 	const node_type& n(get_node(ni));
 	node_set_type u, v;
 switch (n.current_value()) {
 case node_type::LOGIC_LOW:
-	if (dir) {
-		return __node_why_not(o, ni, dir, verbose, u, v);
+	if (dir ^ !why_not) {
+		return __node_why_not(o, ni, dir, why_not, verbose, u, v);
 	} else {
 		o << get_node_canonical_name(ni) << " is 0." << endl;
 	}
 	break;
 case node_type::LOGIC_HIGH:
-	if (dir) {
+	if (dir ^ !why_not) {
 		o << get_node_canonical_name(ni) << " is 1." << endl;
 	} else {
-		return __node_why_not(o, ni, dir, verbose, u, v);
+		return __node_why_not(o, ni, dir, why_not, verbose, u, v);
 	}
 	break;
 default:
@@ -4035,7 +4035,7 @@ do {
  */
 ostream&
 State::__node_why_not(ostream& o, const node_index_type ni, const bool dir,
-		const bool verbose, 
+		const bool why_not, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
 	const std::pair<node_set_type::iterator, bool>
 		p(u.insert(ni)), y(v.insert(ni));
@@ -4054,32 +4054,56 @@ if (y.second) {
 			<< endl;
 		// check that pending event's value matches
 	} else {
-		o << endl;
-		// INDENT_SCOPE(o);
+		const pull_enum pull_query = why_not ? 
+			expr_type::PULL_OFF : expr_type::PULL_ON;
 		const indent __ind_nd(o, verbose ? "." : "  ");
 		// only check for the side that is off
 		const expr_index_type pi = dir ?
 			n.pull_up_index STR_INDEX(NORMAL_RULE) :
 			n.pull_dn_index STR_INDEX(NORMAL_RULE);
 		const pull_enum ps = get_pull(pi);
-		if (pi && ps == expr_type::PULL_OFF) {
-			__expr_why_not(o, pi, verbose, u, v);
-		}
 #if PRSIM_WEAK_RULES
 		// skip this
 		const expr_index_type wpi = dir ?
 			n.pull_up_index STR_INDEX(WEAK_RULE) :
 			n.pull_dn_index STR_INDEX(WEAK_RULE);
-		const pull_enum wps = get_pull(pi);
-		if (wpi && wps == expr_type::PULL_OFF) {
-			__expr_why_not(o, wpi, verbose, u, v);
+		const pull_enum wps = get_pull(wpi);
+#endif
+		if ((ps == expr_type::PULL_OFF)
+#if PRSIM_WEAK_RULES
+			&& (wps == expr_type::PULL_OFF)
+#endif
+			) {
+			const bool from_channel =
+#if PRSIM_CHANNEL_SUPPORT
+				(n.in_channel() &&
+					_channel_manager.node_has_fanin(ni));
+#else
+				false;
+#endif
+			if (n.has_fanin() || from_channel) {
+			if (!why_not && !from_channel) {
+				o << ", state-holding";
+			}
+			} else {
+				o << ", input";
+			}
+		}
+		o << endl;
+		// INDENT_SCOPE(o);
+		if (pi && (ps == pull_query)) {
+			__expr_why_not(o, pi, why_not, verbose, u, v);
+		}
+#if PRSIM_WEAK_RULES
+		if (wpi && (wps == pull_query)) {
+			__expr_why_not(o, wpi, why_not, verbose, u, v);
 		}
 #endif
 #if PRSIM_CHANNEL_SUPPORT
 		if (n.in_channel()) {
 			// ask channel why it has not driven the node
 			_channel_manager.__node_why_not(*this, o, 
-				ni, dir, verbose, u, v);
+				ni, dir, why_not, verbose, u, v);
 		}
 #endif
 	}	// end if pending event
@@ -4091,7 +4115,11 @@ if (y.second) {
 	return o;
 } else {
 	INVARIANT(!y.second);
-	return o << ", cycle: possible deadlock" << endl;
+	o << ", cycle";
+	if (why_not) {
+		o << ": possible deadlock";
+	}
+	o << endl;
 }
 	return o;
 }	// end __node_why_X
@@ -4137,18 +4165,40 @@ State::__get_X_fanins(const expr_index_type xi, node_set_type& u) const {
 	In an expression tree, find nodes that are cutting expressions off.
 	Xs are not visited.  
 	Should follow similar flow to dump_subexpr.
+	\param off_on true asks why a node is/not on, false asks ... off
+	\param why_not is true if asking why-not? (negative-query), 
+		else is asking 'why'? (positive-query)
 	\param u anti-cycle stack
 	\param v globally visited stack
  */
 void
-State::__expr_why_not(ostream& o, const expr_index_type xi, const bool verbose,
+State::__expr_why_not(ostream& o, const expr_index_type xi, 
+		// const bool off_on, 
+		const bool why_not, const bool verbose,
 		node_set_type& u, node_set_type& v) const {
+#if 0
+	if (verbose) {
+		o << auto_indent << "__expr_why_not: why";
+			if (why_not) o << " not";
+		// o << (off_on ? " on" : " off");
+		o << "?";
+	}
+#endif
 	ISE_INVARIANT(xi);
 	ISE_INVARIANT(xi < expr_pool.size());
 	const expr_type& x(expr_pool[xi]);
 	const graph_node_type& g(expr_graph_node_pool[xi]);
-	const pull_enum p(x.pull_state());
-	INVARIANT(p != expr_type::PULL_WEAK);
+	const pull_enum xp(x.pull_state());
+#if 0
+	if (verbose) {
+		o << " pull=" << size_t(xp);
+		if (x.is_not()) {
+			o << ", negated";
+		}
+		o << endl;
+	}
+#endif
+	INVARIANT(xp != expr_type::PULL_WEAK);
 	typedef	graph_node_type::const_iterator		const_iterator;
 	const_iterator ci(g.begin()), ce(g.end());
 	string ind_str;
@@ -4165,19 +4215,15 @@ State::__expr_why_not(ostream& o, const expr_index_type xi, const bool verbose,
 	for ( ; ci!=ce; ++ci) {
 		INVARIANT(ci->second);
 		if (ci->first) {
-			// is a leaf node, visit if value is X
+			// is a leaf node, visit if value is not X
 			switch (get_node(ci->second).current_value()) {
 			case node_type::LOGIC_LOW:
-				// o << auto_indent << "NODE LOW" << endl;
-			if (!x.is_not() ^ (p == expr_type::PULL_ON))
-				__node_why_not(o, ci->second, true,
-					verbose, u, v);
+				__node_why_not(o, ci->second, why_not,
+					why_not, verbose, u, v);
 			break;
 			case node_type::LOGIC_HIGH:
-				// o << auto_indent << "NODE HIGH" << endl;
-			if (x.is_not() ^ (p == expr_type::PULL_ON))
-				__node_why_not(o, ci->second, false,
-					verbose, u, v);
+				__node_why_not(o, ci->second, !why_not,
+					why_not, verbose, u, v);
 			break;
 			default:
 				break;
@@ -4190,12 +4236,12 @@ State::__expr_why_not(ostream& o, const expr_index_type xi, const bool verbose,
 				expr_type::EXPR_ROOT, false) << endl;
 #endif
 			const expr_type& s(expr_pool[ci->second]);
-			if (s.pull_state() ==
-				(x.is_not() ?
-				expr_type::PULL_ON :
-				expr_type::PULL_OFF)) {
-				// o << auto_indent << "EXPR OFF" << endl;
-				__expr_why_not(o, ci->second, verbose, u, v);
+			const pull_enum match_pull = x.is_not() ?
+				expr_type::negate_pull(xp) : xp;
+		// maintain same (positive/negative) query type recursively
+			if (s.pull_state() == match_pull) {
+				__expr_why_not(o, ci->second, 
+					why_not, verbose, u, v);
 			}
 		}
 	}	// end for

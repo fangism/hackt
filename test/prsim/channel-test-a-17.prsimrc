@@ -23,6 +23,8 @@ assert Z.d[1] 0
 assert Z.d[2] 0
 why-not Z.d[0]
 why-not-verbose Z.d[0]
+why Z.d[0]
+why-verbose Z.d[0]
 
 echo - - - - - - - - - - - - - - - - - - -
 echo releasing channel Z, but ack is still X
@@ -44,6 +46,8 @@ assert Z.d[0] 0
 assert Z.d[1] 0
 why-not Z.d[0]
 why-not-verbose Z.d[0]
+why Z.d[0]
+why-verbose Z.d[0]
 
 echo - - - - - - - - - - - - - - - - - - -
 echo set ack
@@ -56,6 +60,8 @@ why-not Z.d[0]
 why-not Z.d[1]
 why-not-verbose Z.d[0]
 why-not-verbose Z.d[1]
+why-verbose Z.d[0]
+why-verbose Z.d[1]
 
 
 echo - - - - - - - - - - - - - - - - - - -
@@ -69,6 +75,8 @@ why-not Z.d[0]
 why-not Z.d[1]
 why-not-verbose Z.d[0]
 why-not-verbose Z.d[1]
+why-verbose Z.d[0]
+why-verbose Z.d[1]
 
 echo - - - - - - - - - - - - - - - - - - -
 echo set ack
@@ -81,6 +89,8 @@ why-not Z.d[0]
 why-not Z.d[1]
 why-not-verbose Z.d[0]
 why-not-verbose Z.d[1]
+why-verbose Z.d[0]
+why-verbose Z.d[1]
 
 echo - - - - - - - - - - - - - - - - - - -
 channel-stop Z
@@ -113,6 +123,8 @@ why-x Z.d[0]
 why-x Z.d[1]
 why-not Z.d[0] 1
 why-not Z.d[0] 0
+why Z.d[0] 1
+why Z.d[0] 0
 
 echo - - - - - - - - - - - - - - - - - - -
 echo setting Z.a -> 0
@@ -124,6 +136,10 @@ why-not Z.d[0] 1
 why-not Z.d[0] 0
 why-not Z.d[1] 1
 why-not Z.d[1] 0
+why Z.d[0] 1
+why Z.d[0] 0
+why Z.d[1] 1
+why Z.d[1] 0
 queue
 time
 cycle
@@ -140,6 +156,8 @@ why-not Z.d[0]
 why-not Z.d[1]
 why-not-verbose Z.d[0]
 why-not-verbose Z.d[1]
+why-verbose Z.d[0]
+why-verbose Z.d[1]
 cycle
 assert Z.d[0] 0
 assert Z.d[1] 0

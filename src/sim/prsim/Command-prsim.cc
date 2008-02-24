@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.13 2008/02/22 06:07:24 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.14 2008/02/24 07:25:02 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2139,6 +2139,24 @@ WhyX::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/why.texi
+@deffn Command why node [val]
+@deffnx Command why-verbose node [val]
+Print reason for node being driven to a given value, 0 or 1.
+X is not a valid value for this procedure.  
+If @var{val} is not given, it is assumed to be the current value of the node.  
+The algorithm examines each node's fanins and follows
+nodes on paths where the subexpression is true 
+(path through transistors is on).  
+The analysis will terminate at state-holding nodes that are not being
+driven to their current value.
+This is an excellent aid in debugging unexpected values.  
+The verbose variant prints expression types as it auto-indents, 
+which is more informative but may appear more cluttered.  
+@end deffn
+@end texinfo
+***/
+/***
 @texinfo cmd/why-not.texi
 @deffn Command why-not node [val]
 @deffnx Command why-not-verbose node [val]
@@ -2154,16 +2172,28 @@ which is more informative but may appear more cluttered.
 @end deffn
 @end texinfo
 ***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Why, "why", info, 
+	"recursively trace why node is driven to value")
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyVerbose, "why-verbose", info, 
+	"recursively trace why node is driven to value (verbose)")
+
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot, "why-not", info, 
 	"recursively trace why node is not at value")
 
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotVerbose, "why-not-verbose", info, 
 	"recursively trace why node is not at value (verbose)")
 
+/**
+	Template procedure for invoking node_why[_not] with various options.
+	\param why_not true if querying negatively
+	\param verbose true if expression structure verbosity requested
+ */
 static
 int
-why_not_main(State& s, const string_list& a, const bool verbose, 
-	void (usage)(ostream&)) {
+why_not_main(State& s, const string_list& a, 
+		const bool why_not, const bool verbose, 
+		void (usage)(ostream&)) {
 const size_t a_s = a.size();
 if (a_s < 2 || a_s > 3) {
 	usage(cerr << "usage: ");
@@ -2187,17 +2217,17 @@ if (ni) {
 		typedef	State::node_type	node_type;
 		switch (s.get_node(ni).current_value()) {
 		case node_type::LOGIC_LOW:
-			v = true;
+			v = why_not;
 			break;
 		case node_type::LOGIC_HIGH:
-			v = false;
+			v = !why_not;
 			break;
 		default:
-			cerr << "why-not <node> X is not supported." << endl;
+			cerr << "why[-not] <node> X is not supported." << endl;
 			return Command::BADARG;
 		}
 	}
-	s.dump_node_why_not(cout, ni, v, verbose);
+	s.dump_node_why_not(cout, ni, v, why_not, verbose);
 	return Command::NORMAL;
 } else {
 	return Command::BADARG;
@@ -2206,13 +2236,34 @@ if (ni) {
 }
 
 int
+Why::main(State& s, const string_list& a) {
+	return why_not_main(s, a, false, false, usage);
+}
+
+int
+WhyVerbose::main(State& s, const string_list& a) {
+	return why_not_main(s, a, false, true, usage);
+}
+
+int
 WhyNot::main(State& s, const string_list& a) {
-	return why_not_main(s, a, false, usage);
+	return why_not_main(s, a, true, false, usage);
 }
 
 int
 WhyNotVerbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, true, usage);
+	return why_not_main(s, a, true, true, usage);
+}
+
+static
+void
+why_usage(ostream& o, const char* name) {
+	o << name << " <node> [01]" << endl;
+	o <<
+"Recursively trace back reason why named node is driven to a given value.\n"
+"Value must be 0 or 1.  If value is omitted, then assumes the current value.\n"
+"This can be used to detect unexpected firings in circuits."
+	<< endl;
 }
 
 static
@@ -2224,6 +2275,16 @@ why_not_usage(ostream& o, const char* name) {
 "Value must be 0 or 1.  If value is omitted, then assumes the opposite value.\n"
 "This can be used to detect deadlock in circuits."
 	<< endl;
+}
+
+void
+Why::usage(ostream& o) {
+	why_usage(o, name);
+}
+
+void
+WhyVerbose::usage(ostream& o) {
+	why_usage(o, name);
 }
 
 void

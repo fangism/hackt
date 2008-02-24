@@ -20,7 +20,7 @@ why isn't a 0?
 a is 0.
 why isn't b 0? 
 b:1
-  a:0
+  a:0, input
 why isn't c 0? 
 c is X.
 ############### 
@@ -30,15 +30,19 @@ c is 0.
 why isn't c 1? 
 c:0
   b:1
-    a:0
+    a:0, input
 why isn't c opposite? 
 c:0
   b:1
-    a:0
+    a:0, input
+why is c current? 
+c:0
+  b:1
+    a:0, input
 now verbosely... 
 c:0
 . ~b:1
-. ~. a:0
+. ~. a:0, input
 ############### 
 	20	a : 1
 	30	b : 0	[by a:=1]
@@ -46,14 +50,21 @@ c:0
 why isn't c 0? 
 c:1
   b:0
-    a:1
+    a:1, input
 why isn't c 1? 
 c is 1.
 why isn't c opposite? 
 c:1
   b:0
-    a:1
+    a:1, input
+why is c current? 
+c:1
+  b:0
+    a:1, input
 now verbosely... 
 c:1
 . b:0
-. . ~a:1
+. . ~a:1, input
+c:1
+. ~b:0
+. ~. a:1, input

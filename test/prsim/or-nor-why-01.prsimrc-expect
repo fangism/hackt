@@ -19,197 +19,362 @@ o is not X.
 -------------------- 
 	10	b : 1
 o is not X.
+o:0
+  a:1, input
+  b:1, input
+  c:1, input
+o:0
+.-+
+. &-+
+. & | a:1, input
+. & | b:1, input
+. &-+
+. & | c:1, input
 gray code transitions... 
 -------------------- 
 	10	d : 1
 o:0
-  a:1
-  b:1
-  c:1
-  d:1
+  a:1, input
+  b:1, input
+  c:1, input
+  d:1, input
 o:0
 .-+
 . |-+
-. | & ~a:1
-. | & ~b:1
+. | & ~a:1, input
+. | & ~b:1, input
 . |-+
-. | & ~c:1
-. | & ~d:1
+. | & ~c:1, input
+. | & ~d:1, input
+o:0
+  a:1, input
+  b:1, input
+  c:1, input
+  d:1, input
+o:0
+.-+
+. &-+
+. & | a:1, input
+. & | b:1, input
+. &-+
+. & | c:1, input
+. & | d:1, input
 -------------------- 
 	10	d : 0
 o:0
-  a:1
-  b:1
-  c:1
+  a:1, input
+  b:1, input
+  c:1, input
 o:0
 .-+
 . |-+
-. | & ~a:1
-. | & ~b:1
+. | & ~a:1, input
+. | & ~b:1, input
 . |-+
-. | & ~c:1
+. | & ~c:1, input
+o:0
+  a:1, input
+  b:1, input
+  c:1, input
+o:0
+.-+
+. &-+
+. & | a:1, input
+. & | b:1, input
+. &-+
+. & | c:1, input
 -------------------- 
 	10	c : 0
 	20	o : 1	[by c:=0]
 o:1
-  c:0
-  d:0
+  c:0, input
+  d:0, input
 o:1
 .-+
 . &-+
-. & | c:0
-. & | d:0
+. & | c:0, input
+. & | d:0, input
+o:1
+  c:0, input
+  d:0, input
+o:1
+.-+
+. |-+
+. | & ~c:0, input
+. | & ~d:0, input
 -------------------- 
 	20	d : 1
 	30	o : 0	[by d:=1]
 o:0
-  a:1
-  b:1
-  d:1
+  a:1, input
+  b:1, input
+  d:1, input
 o:0
 .-+
 . |-+
-. | & ~a:1
-. | & ~b:1
+. | & ~a:1, input
+. | & ~b:1, input
 . |-+
-. | & ~d:1
+. | & ~d:1, input
+o:0
+  a:1, input
+  b:1, input
+  d:1, input
+o:0
+.-+
+. &-+
+. & | a:1, input
+. & | b:1, input
+. &-+
+. & | d:1, input
 -------------------- 
 	30	a : 0
 o:0
-  b:1
-  d:1
+  b:1, input
+  d:1, input
 o:0
 .-+
 . |-+
-. | & ~b:1
+. | & ~b:1, input
 . |-+
-. | & ~d:1
+. | & ~d:1, input
+o:0
+  b:1, input
+  d:1, input
+o:0
+.-+
+. &-+
+. & | b:1, input
+. &-+
+. & | d:1, input
 -------------------- 
 	30	c : 1
 o:0
-  b:1
-  c:1
-  d:1
+  b:1, input
+  c:1, input
+  d:1, input
 o:0
 .-+
 . |-+
-. | & ~b:1
+. | & ~b:1, input
 . |-+
-. | & ~c:1
-. | & ~d:1
+. | & ~c:1, input
+. | & ~d:1, input
+o:0
+  b:1, input
+  c:1, input
+  d:1, input
+o:0
+.-+
+. &-+
+. & | b:1, input
+. &-+
+. & | c:1, input
+. & | d:1, input
 -------------------- 
 	30	d : 0
 o:0
-  b:1
-  c:1
+  b:1, input
+  c:1, input
 o:0
 .-+
 . |-+
-. | & ~b:1
+. | & ~b:1, input
 . |-+
-. | & ~c:1
+. | & ~c:1, input
+o:0
+  b:1, input
+  c:1, input
+o:0
+.-+
+. &-+
+. & | b:1, input
+. &-+
+. & | c:1, input
 -------------------- 
 	30	c : 0
 	40	o : 1	[by c:=0]
 o:1
-  c:0
-  d:0
+  c:0, input
+  d:0, input
 o:1
 .-+
 . &-+
-. & | c:0
-. & | d:0
+. & | c:0, input
+. & | d:0, input
+o:1
+  c:0, input
+  d:0, input
+o:1
+.-+
+. |-+
+. | & ~c:0, input
+. | & ~d:0, input
 -------------------- 
 	40	b : 0
 o:1
-  a:0
-  b:0
-  c:0
-  d:0
+  a:0, input
+  b:0, input
+  c:0, input
+  d:0, input
 o:1
 .-+
 . &-+
-. & | a:0
-. & | b:0
+. & | a:0, input
+. & | b:0, input
 . &-+
-. & | c:0
-. & | d:0
+. & | c:0, input
+. & | d:0, input
+o:1
+  a:0, input
+  b:0, input
+  c:0, input
+  d:0, input
+o:1
+.-+
+. |-+
+. | & ~a:0, input
+. | & ~b:0, input
+. |-+
+. | & ~c:0, input
+. | & ~d:0, input
 -------------------- 
 	40	d : 1
 o:1
-  a:0
-  b:0
+  a:0, input
+  b:0, input
 o:1
 .-+
 . &-+
-. & | a:0
-. & | b:0
+. & | a:0, input
+. & | b:0, input
+o:1
+  a:0, input
+  b:0, input
+o:1
+.-+
+. |-+
+. | & ~a:0, input
+. | & ~b:0, input
 -------------------- 
 	40	c : 1
 o:1
-  a:0
-  b:0
+  a:0, input
+  b:0, input
 o:1
 .-+
 . &-+
-. & | a:0
-. & | b:0
+. & | a:0, input
+. & | b:0, input
+o:1
+  a:0, input
+  b:0, input
+o:1
+.-+
+. |-+
+. | & ~a:0, input
+. | & ~b:0, input
 -------------------- 
 	40	d : 0
 o:1
-  a:0
-  b:0
+  a:0, input
+  b:0, input
 o:1
 .-+
 . &-+
-. & | a:0
-. & | b:0
+. & | a:0, input
+. & | b:0, input
+o:1
+  a:0, input
+  b:0, input
+o:1
+.-+
+. |-+
+. | & ~a:0, input
+. | & ~b:0, input
 -------------------- 
 	40	a : 1
 	50	o : 0	[by a:=1]
 o:0
-  a:1
-  c:1
+  a:1, input
+  c:1, input
 o:0
 .-+
 . |-+
-. | & ~a:1
+. | & ~a:1, input
 . |-+
-. | & ~c:1
+. | & ~c:1, input
+o:0
+  a:1, input
+  c:1, input
+o:0
+.-+
+. &-+
+. & | a:1, input
+. &-+
+. & | c:1, input
 -------------------- 
 	50	c : 0
 	60	o : 1	[by c:=0]
 o:1
-  c:0
-  d:0
+  c:0, input
+  d:0, input
 o:1
 .-+
 . &-+
-. & | c:0
-. & | d:0
+. & | c:0, input
+. & | d:0, input
+o:1
+  c:0, input
+  d:0, input
+o:1
+.-+
+. |-+
+. | & ~c:0, input
+. | & ~d:0, input
 -------------------- 
 	60	d : 1
 	70	o : 0	[by d:=1]
 o:0
-  a:1
-  d:1
+  a:1, input
+  d:1, input
 o:0
 .-+
 . |-+
-. | & ~a:1
+. | & ~a:1, input
 . |-+
-. | & ~d:1
+. | & ~d:1, input
+o:0
+  a:1, input
+  d:1, input
+o:0
+.-+
+. &-+
+. & | a:1, input
+. &-+
+. & | d:1, input
 -------------------- 
 	70	c : 1
 o:0
-  a:1
-  c:1
-  d:1
+  a:1, input
+  c:1, input
+  d:1, input
 o:0
 .-+
 . |-+
-. | & ~a:1
+. | & ~a:1, input
 . |-+
-. | & ~c:1
-. | & ~d:1
+. | & ~c:1, input
+. | & ~d:1, input
+o:0
+  a:1, input
+  c:1, input
+  d:1, input
+o:0
+.-+
+. &-+
+. & | a:1, input
+. &-+
+. & | c:1, input
+. & | d:1, input
 done! 

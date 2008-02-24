@@ -9,15 +9,23 @@ set _Reset 0
 cycle
 why-not R.x[3]
 why-not-verbose R.x[3]
+why R.x[3]
+why-verbose R.x[3]
 why-not R.x[7]
 why-not-verbose R.x[7]
+why R.x[7]
+why-verbose R.x[7]
 
 set _Reset 1
 cycle
 why-not R.x[3]
 why-not-verbose R.x[3]
+why R.x[3]
+why-verbose R.x[3]
 why-not R.x[7]
 why-not-verbose R.x[7]
+why R.x[7]
+why-verbose R.x[7]
 
 echo DEADLOCK!
 

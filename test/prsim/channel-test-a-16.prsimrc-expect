@@ -17,6 +17,10 @@ Y.e:1
   (channel Y is stopped.)
 Y.e:1
 . (channel Y is stopped.)
+Y.e:1
+  (channel Y is stopped.)
+Y.e:1
+. (channel Y is stopped.)
 Y : .e(init:1) 1x1of4 sink,stopped
 	count: 0, unknowns: 4
 - - - - - - - - - - - - - - - - - - - 
@@ -37,54 +41,90 @@ reset data
 	10	Y.d[3] : 0
 	20	Y.e : 1	[by Y.d[3]:=0]
 Y.e:1
-  Y.d[0]:0
-  Y.d[1]:0
-  Y.d[2]:0
-  Y.d[3]:0
+  Y.d[0]:0, input
+  Y.d[1]:0, input
+  Y.d[2]:0, input
+  Y.d[3]:0, input
 Y.e:1
 . -+
-.  | Y.d[0]:0
-.  | Y.d[1]:0
-.  | Y.d[2]:0
-.  | Y.d[3]:0
+.  | Y.d[0]:0, input
+.  | Y.d[1]:0, input
+.  | Y.d[2]:0, input
+.  | Y.d[3]:0, input
+Y.e:1
+  Y.d[0]:0, input
+  Y.d[1]:0, input
+  Y.d[2]:0, input
+  Y.d[3]:0, input
+Y.e:1
+. -+
+.  ~| Y.d[0]:0, input
+.  ~| Y.d[1]:0, input
+.  ~| Y.d[2]:0, input
+.  ~| Y.d[3]:0, input
 - - - - - - - - - - - - - - - - - - - 
 set data 
 	20	Y.d[0] : 1
 	30	Y.e : 0	[by Y.d[0]:=1]
 Y.e:0
-  Y.d[0]:1
+  Y.d[0]:1, input
 Y.e:0
 . -+
-.  ~| Y.d[0]:1
+.  ~| Y.d[0]:1, input
+Y.e:0
+  Y.d[0]:1, input
+Y.e:0
+. -+
+.  | Y.d[0]:1, input
 - - - - - - - - - - - - - - - - - - - 
 reset data 
 	30	Y.d[0] : 0
 	40	Y.e : 1	[by Y.d[0]:=0]
 Y.e:1
-  Y.d[0]:0
-  Y.d[1]:0
-  Y.d[2]:0
-  Y.d[3]:0
+  Y.d[0]:0, input
+  Y.d[1]:0, input
+  Y.d[2]:0, input
+  Y.d[3]:0, input
 Y.e:1
 . -+
-.  | Y.d[0]:0
-.  | Y.d[1]:0
-.  | Y.d[2]:0
-.  | Y.d[3]:0
+.  | Y.d[0]:0, input
+.  | Y.d[1]:0, input
+.  | Y.d[2]:0, input
+.  | Y.d[3]:0, input
+Y.e:1
+  Y.d[0]:0, input
+  Y.d[1]:0, input
+  Y.d[2]:0, input
+  Y.d[3]:0, input
+Y.e:1
+. -+
+.  ~| Y.d[0]:0, input
+.  ~| Y.d[1]:0, input
+.  ~| Y.d[2]:0, input
+.  ~| Y.d[3]:0, input
 - - - - - - - - - - - - - - - - - - - 
 set data 
 	40	Y.d[3] : 1
 	50	Y.e : 0	[by Y.d[3]:=1]
 Y.e:0
-  Y.d[3]:1
+  Y.d[3]:1, input
 Y.e:0
 . -+
-.  ~| Y.d[3]:1
+.  ~| Y.d[3]:1, input
+Y.e:0
+  Y.d[3]:1, input
+Y.e:0
+. -+
+.  | Y.d[3]:1, input
 - - - - - - - - - - - - - - - - - - - 
 freezing channel Y, and resetting data 
 	50	Y.d[3] : 0
 Y : .e(init:1) 1x1of4 sink,stopped
 	count: 0, unknowns: 0
+Y.e:0
+  (channel Y is stopped.)
+Y.e:0
+. (channel Y is stopped.)
 Y.e:0
   (channel Y is stopped.)
 Y.e:0
@@ -111,6 +151,8 @@ setting Y.d[0] -> 1
 	60	Y.d[2] : 1
 Y.e is X.
 Y.e is X.
+Y.e is X.
+Y.e is X.
 event queue:
 	70	Y.e : 0	[from Y.d[2]:=1]
 time: 60
@@ -123,6 +165,8 @@ event queue:
 time: 70
 Y.e:0, pending event -> 1
 Y.e:0, pending event -> 1
+Y.e:0, pending event -> 1
+Y.e:0, pending event -> 1
 	80	Y.e : 1	[by Y.d[2]:=0]
 - - - - - - - - - - - - - - - - - - - 
 stopping channel Y 
@@ -131,13 +175,18 @@ Y : .e(init:1) 1x1of4 sink,stopped
 	count: 1, unknowns: 0
 Y.e:1
   (channel Y is stopped.)
+Y.e:1
+  (channel Y is stopped.)
 - - - - - - - - - - - - - - - - - - - 
 releasing channel Y 
 event queue:
 	90	Y.e : 0
 time: 80
 Y.e:1, pending event -> 0
+Y.e:1, pending event -> 0
 	90	Y.e : 0
 Y.e:0
-  Y.d[1]:1
+  Y.d[1]:1, input
+Y.e:0
+  Y.d[1]:1, input
 DONE. 

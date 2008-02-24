@@ -1,5 +1,5 @@
 # "wchb-token-ring-b-03.prsimrc"
-#	$Id: wchb-token-ring-b-03.prsimrc,v 1.1.2.1 2008/02/13 08:13:33 fang Exp $
+#	$Id: wchb-token-ring-b-03.prsimrc,v 1.1.2.2 2008/02/24 07:25:07 fang Exp $
 # @haco@ wchb-token-ring-b.haco-a
 # testing why-not commands
 
@@ -10,8 +10,12 @@ cycle
 status X
 why-not L.e
 why-not-verbose L.e
+why L.e
+why-verbose L.e
 why-not L.d[0]
 why-not-verbose L.d[0]
+why L.d[0]
+why-verbose L.d[0]
 
 echo releasing ...
 set _Reset 1
@@ -20,8 +24,12 @@ cycle
 status X
 why-not L.e
 why-not-verbose L.e
+why L.e
+why-verbose L.e
 why-not L.d[0]
 why-not-verbose L.d[0]
+why L.d[0]
+why-verbose L.d[0]
 
 # deadlock: why? (we know why...)
 

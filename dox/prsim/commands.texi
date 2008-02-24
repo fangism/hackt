@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.10 2008/02/22 06:06:58 fang Exp $
+@c $Id: commands.texi,v 1.2.2.11 2008/02/24 07:24:55 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -234,6 +234,8 @@ simulator and the simulated production rules.
 @include cmd/assertn-queue.texi
 @include cmd/backtrace.texi
 @include cmd/why-x.texi
+@include cmd/why.texi
+@include cmd/why-not.texi
 @include cmd/status.texi
 @include cmd/time.texi
 @include cmd/unknown-inputs.texi

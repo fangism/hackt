@@ -8,13 +8,21 @@ set _Reset 0
 cycle
 why-not R.x[6]
 why-not-verbose R.x[6]
+why R.x[6]
+why-verbose R.x[6]
 why-not R.x[12]
 why-not-verbose R.x[12]
+why R.x[12]
+why-verbose R.x[12]
 
 set _Reset 1
 step 30
 why-not R.x[6]
 why-not-verbose R.x[6]
+why R.x[6]
+why-verbose R.x[6]
 why-not R.x[12]
 why-not-verbose R.x[12]
+why R.x[12]
+why-verbose R.x[12]
 

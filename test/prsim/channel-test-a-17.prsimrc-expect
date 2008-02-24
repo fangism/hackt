@@ -21,6 +21,10 @@ Z.d[0]:0
   (channel Z is stopped.)
 Z.d[0]:0
 . (channel Z is stopped.)
+Z.d[0]:0
+  (channel Z is stopped.)
+Z.d[0]:0
+. (channel Z is stopped.)
 - - - - - - - - - - - - - - - - - - - 
 releasing channel Z, but ack is still X 
 	10	Z.d[0] : X
@@ -37,45 +41,61 @@ reset ack
 	20	Z.d[1] : 0	[by Z.a:=1]
 	20	Z.d[2] : 0	[by Z.a:=1]
 Z.d[0]:0
-  Z.a:1
+  Z.a:1, input
 Z.d[0]:0
-. Z.a:1
+. Z.a:1, input
+Z.d[0]:0
+  Z.a:1, input
+Z.d[0]:0
+. Z.a:1, input
 - - - - - - - - - - - - - - - - - - - 
 set ack 
 	20	Z.a : 0
 	30	Z.d[0] : 1	[by Z.a:=0]
 Z.d[0]:1
-  Z.a:0
+  Z.a:0, input
 Z.d[1]:0
-  Z.a:0
+  Z.a:0, input
 Z.d[0]:1
-. Z.a:0
+. Z.a:0, input
 Z.d[1]:0
-. Z.a:0
+. Z.a:0, input
+Z.d[0]:1
+. Z.a:0, input
+Z.d[1]:0
+. Z.a:0, input
 - - - - - - - - - - - - - - - - - - - 
 reset ack 
 	30	Z.a : 1
 	40	Z.d[0] : 0	[by Z.a:=1]
 Z.d[0]:0
-  Z.a:1
+  Z.a:1, input
 Z.d[1]:0
-  Z.a:1
+  Z.a:1, input
 Z.d[0]:0
-. Z.a:1
+. Z.a:1, input
 Z.d[1]:0
-. Z.a:1
+. Z.a:1, input
+Z.d[0]:0
+. Z.a:1, input
+Z.d[1]:0
+. Z.a:1, input
 - - - - - - - - - - - - - - - - - - - 
 set ack 
 	40	Z.a : 0
 	50	Z.d[1] : 1	[by Z.a:=0]
 Z.d[0]:0
-  Z.a:0
+  Z.a:0, input
 Z.d[1]:1
-  Z.a:0
+  Z.a:0, input
 Z.d[0]:0
-. Z.a:0
+. Z.a:0, input
 Z.d[1]:1
-. Z.a:0
+. Z.a:0, input
+Z.d[0]:0
+. Z.a:0, input
+Z.d[1]:1
+. Z.a:0, input
 - - - - - - - - - - - - - - - - - - - 
 freezing channel Z, and setting ack 
 	50	Z.a : 1
@@ -106,9 +126,15 @@ Z.d[1]:X, from-channel, pull up/dn undriven
   Z.a:X, pull up/dn undriven
 Z.d[0] is X.
 Z.d[0] is X.
+Z.d[0] is X.
+Z.d[0] is X.
 - - - - - - - - - - - - - - - - - - - 
 setting Z.a -> 0 
 	60	Z.a : 0
+Z.d[0] is X.
+Z.d[0] is X.
+Z.d[1] is X.
+Z.d[1] is X.
 Z.d[0] is X.
 Z.d[0] is X.
 Z.d[1] is X.
@@ -128,10 +154,13 @@ event queue:
 	80	Z.d[1] : 0	[from Z.a:=1]
 time: 70
 Z.d[0]:0
-  Z.a:1
+  Z.a:1, input
 Z.d[1]:1, pending event -> 0
 Z.d[0]:0
-. Z.a:1
+. Z.a:1, input
+Z.d[1]:1, pending event -> 0
+Z.d[0]:0
+. Z.a:1, input
 Z.d[1]:1, pending event -> 0
 	80	Z.d[1] : 0	[by Z.a:=1]
 DONE. 

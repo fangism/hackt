@@ -19,6 +19,8 @@ cycle
 assert Z.a 0
 why-not Z.a
 why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
 channel-show Z
 
 echo - - - - - - - - - - - - - - - - - - -
@@ -37,6 +39,8 @@ cycle
 assert Z.a 0
 why-not Z.a
 why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
 
 echo - - - - - - - - - - - - - - - - - - -
 echo set data
@@ -45,6 +49,8 @@ cycle
 assert Z.a 1
 why-not Z.a
 why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
 
 echo - - - - - - - - - - - - - - - - - - -
 echo reset data
@@ -53,6 +59,8 @@ cycle
 assert Z.a 0
 why-not Z.a
 why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
 
 echo - - - - - - - - - - - - - - - - - - -
 echo set data
@@ -61,6 +69,8 @@ cycle
 assert Z.a 1
 why-not Z.a
 why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
 
 echo - - - - - - - - - - - - - - - - - - -
 channel-stop Z
@@ -71,6 +81,8 @@ channel-show Z
 assert Z.a 1
 why-not Z.a
 why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
 
 echo - - - - - - - - - - - - - - - - - - -
 channel-release Z
@@ -94,6 +106,8 @@ step-event
 assert Z.a X
 why-not Z.a 1
 why-not Z.a 0
+why Z.a 1
+why Z.a 0
 queue
 time
 cycle
@@ -107,6 +121,8 @@ queue
 time
 why-not Z.a
 why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
 cycle
 assert Z.a 0
 
@@ -118,6 +134,7 @@ cycle
 channel-show Z
 assert Z.a 0
 why-not Z.a
+why Z.a
 
 echo - - - - - - - - - - - - - - - - - - -
 echo releasing channel Z
@@ -126,9 +143,11 @@ queue
 time
 assert Z.a 0
 why-not Z.a
+why Z.a
 step-event
 assert Z.a 1
 why-not Z.a
+why Z.a
 
 assertn-queue
 

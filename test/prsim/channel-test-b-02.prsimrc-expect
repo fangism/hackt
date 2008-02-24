@@ -41,7 +41,7 @@ deadlock analysis should point back to source
 L.e:1
   R.d[0]:0
     _r[0]:1
-      L.d[0]:0
+      L.d[0]:0, input
   R.d[1]:0
     _r[1]:1
-      L.d[1]:0
+      L.d[1]:0, input

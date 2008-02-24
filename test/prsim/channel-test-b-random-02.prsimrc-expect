@@ -41,10 +41,10 @@ deadlock analysis should point back to source
 L.e:1
   R.d[0]:0
     _r[0]:1
-      L.d[0]:0
+      L.d[0]:0, input
   R.d[1]:0
     _r[1]:1
-      L.d[1]:0
+      L.d[1]:0, input
 L : .e(init:0) 1x1of2 source-random,watch
 	count: 0, unknowns: 0
 R : .e(init:0) 1x1of2 sink,watch

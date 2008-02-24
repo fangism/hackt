@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.26 2008/02/22 06:08:38 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.27 2008/02/24 07:25:12 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -14,8 +14,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	pass-gates-def pass-gates excl-rings-def excl-rings \
 	check-excl-rings-def check-excl-rings \
 	logic-defs and nand or nor array \
-	and-nand or-nor \
-	and-nand-alt or-nor-alt \
+	and-nand or-nor nand-or \
+	and-nand-alt or-nor-alt nor-and \
 	expr-limit-a \
 	unstable-a unstable-b \
 	weak-unstable-a weak-unstable-b \
@@ -61,6 +61,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	nor-why-01 nand-why-01 \
 	and-nand-why-01 or-nor-why-01 \
 	and-nand-alt-why-01 or-nor-alt-why-01 \
+	nand-or-why-01 \
+	nor-and-why-01 \
 	unused-01 \
 	expr-limit-a-01 \
 	interference-01 interference-02 interference-03 interference-04 \

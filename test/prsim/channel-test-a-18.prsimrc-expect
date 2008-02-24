@@ -16,6 +16,10 @@ Z.a:0
   (channel Z is stopped.)
 Z.a:0
 . (channel Z is stopped.)
+Z.a:0
+  (channel Z is stopped.)
+Z.a:0
+. (channel Z is stopped.)
 Z : .a(init:0) 1x1of3 sink,stopped
 	count: 0, unknowns: 3
 - - - - - - - - - - - - - - - - - - - 
@@ -32,50 +36,82 @@ reset data
 	10	Z.d[2] : 0
 	20	Z.a : 0	[by Z.d[2]:=0]
 Z.a:0
-  Z.d[0]:0
-  Z.d[1]:0
-  Z.d[2]:0
+  Z.d[0]:0, input
+  Z.d[1]:0, input
+  Z.d[2]:0, input
 Z.a:0
 . -+
-.  | Z.d[0]:0
-.  | Z.d[1]:0
-.  | Z.d[2]:0
+.  | Z.d[0]:0, input
+.  | Z.d[1]:0, input
+.  | Z.d[2]:0, input
+Z.a:0
+  Z.d[0]:0, input
+  Z.d[1]:0, input
+  Z.d[2]:0, input
+Z.a:0
+. -+
+.  ~| Z.d[0]:0, input
+.  ~| Z.d[1]:0, input
+.  ~| Z.d[2]:0, input
 - - - - - - - - - - - - - - - - - - - 
 set data 
 	20	Z.d[0] : 1
 	30	Z.a : 1	[by Z.d[0]:=1]
 Z.a:1
-  Z.d[0]:1
+  Z.d[0]:1, input
 Z.a:1
 . -+
-.  ~| Z.d[0]:1
+.  ~| Z.d[0]:1, input
+Z.a:1
+  Z.d[0]:1, input
+Z.a:1
+. -+
+.  | Z.d[0]:1, input
 - - - - - - - - - - - - - - - - - - - 
 reset data 
 	30	Z.d[0] : 0
 	40	Z.a : 0	[by Z.d[0]:=0]
 Z.a:0
-  Z.d[0]:0
-  Z.d[1]:0
-  Z.d[2]:0
+  Z.d[0]:0, input
+  Z.d[1]:0, input
+  Z.d[2]:0, input
 Z.a:0
 . -+
-.  | Z.d[0]:0
-.  | Z.d[1]:0
-.  | Z.d[2]:0
+.  | Z.d[0]:0, input
+.  | Z.d[1]:0, input
+.  | Z.d[2]:0, input
+Z.a:0
+  Z.d[0]:0, input
+  Z.d[1]:0, input
+  Z.d[2]:0, input
+Z.a:0
+. -+
+.  ~| Z.d[0]:0, input
+.  ~| Z.d[1]:0, input
+.  ~| Z.d[2]:0, input
 - - - - - - - - - - - - - - - - - - - 
 set data 
 	40	Z.d[1] : 1
 	50	Z.a : 1	[by Z.d[1]:=1]
 Z.a:1
-  Z.d[1]:1
+  Z.d[1]:1, input
 Z.a:1
 . -+
-.  ~| Z.d[1]:1
+.  ~| Z.d[1]:1, input
+Z.a:1
+  Z.d[1]:1, input
+Z.a:1
+. -+
+.  | Z.d[1]:1, input
 - - - - - - - - - - - - - - - - - - - 
 freezing channel Z, and resetting data 
 	50	Z.d[1] : 0
 Z : .a(init:0) 1x1of3 sink,stopped
 	count: 0, unknowns: 0
+Z.a:1
+  (channel Z is stopped.)
+Z.a:1
+. (channel Z is stopped.)
 Z.a:1
   (channel Z is stopped.)
 Z.a:1
@@ -101,6 +137,8 @@ setting Z.d[0] -> 1
 	60	Z.d[0] : 1
 Z.a is X.
 Z.a is X.
+Z.a is X.
+Z.a is X.
 event queue:
 	70	Z.a : 1	[from Z.d[0]:=1]
 time: 60
@@ -113,6 +151,8 @@ event queue:
 time: 70
 Z.a:1, pending event -> 0
 Z.a:1, pending event -> 0
+Z.a:1, pending event -> 0
+Z.a:1, pending event -> 0
 	80	Z.a : 0	[by Z.d[0]:=0]
 - - - - - - - - - - - - - - - - - - - 
 stopping channel Z 
@@ -121,13 +161,18 @@ Z : .a(init:0) 1x1of3 sink,stopped
 	count: 1, unknowns: 0
 Z.a:0
   (channel Z is stopped.)
+Z.a:0
+  (channel Z is stopped.)
 - - - - - - - - - - - - - - - - - - - 
 releasing channel Z 
 event queue:
 	90	Z.a : 1
 time: 80
 Z.a:0, pending event -> 1
+Z.a:0, pending event -> 1
 	90	Z.a : 1
 Z.a:1
-  Z.d[1]:1
+  Z.d[1]:1, input
+Z.a:1
+  Z.d[1]:1, input
 DONE. 

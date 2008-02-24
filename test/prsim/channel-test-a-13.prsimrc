@@ -19,7 +19,9 @@ cycle
 assert X.d[0] 0
 assert X.d[1] 0
 why-not X.d[0]
+why X.d[0]
 why-not-verbose X.d[0]
+why-verbose X.d[0]
 
 echo - - - - - - - - - - - - - - - - - - -
 echo releasing channel X, but ack is still X
@@ -40,7 +42,9 @@ cycle
 assert X.d[0] 0
 assert X.d[1] 0
 why-not X.d[0]
+why X.d[0]
 why-not-verbose X.d[0]
+why-verbose X.d[0]
 
 echo - - - - - - - - - - - - - - - - - - -
 echo set ack
@@ -53,6 +57,8 @@ why-not X.d[0]
 why-not X.d[1]
 why-not-verbose X.d[0]
 why-not-verbose X.d[1]
+why-verbose X.d[0]
+why-verbose X.d[1]
 
 
 echo - - - - - - - - - - - - - - - - - - -
@@ -66,6 +72,8 @@ why-not X.d[0]
 why-not X.d[1]
 why-not-verbose X.d[0]
 why-not-verbose X.d[1]
+why-verbose X.d[0]
+why-verbose X.d[1]
 
 echo - - - - - - - - - - - - - - - - - - -
 echo set ack
@@ -78,6 +86,8 @@ why-not X.d[0]
 why-not X.d[1]
 why-not-verbose X.d[0]
 why-not-verbose X.d[1]
+why-verbose X.d[0]
+why-verbose X.d[1]
 
 echo - - - - - - - - - - - - - - - - - - -
 channel-stop X
@@ -91,6 +101,8 @@ why-not X.d[0]
 why-not X.d[1]
 why-not-verbose X.d[0]
 why-not-verbose X.d[1]
+why-verbose X.d[0]
+why-verbose X.d[1]
 
 echo - - - - - - - - - - - - - - - - - - -
 channel-release X
@@ -110,6 +122,8 @@ why-x X.d[0]
 why-x X.d[1]
 why-not X.d[0] 1
 why-not X.d[0] 0
+why X.d[0] 1
+why X.d[0] 0
 
 echo - - - - - - - - - - - - - - - - - - -
 echo setting X.e -> 1
@@ -137,6 +151,8 @@ why-not X.d[0]
 why-not X.d[1]
 why-not-verbose X.d[0]
 why-not-verbose X.d[1]
+why-verbose X.d[0]
+why-verbose X.d[1]
 cycle
 assert X.d[0] 0
 assert X.d[1] 0

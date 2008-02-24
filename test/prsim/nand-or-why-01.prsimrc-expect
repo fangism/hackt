@@ -1,5 +1,5 @@
 Fanins of node `o':
-[after 10]	~(a | b) | ~(c | d) -> o+
+[after 10]	~((a | b) & (c | d)) -> o+
 [after 10]	(a | b) & (c | d) -> o-
 why is o X? 
 o:X, pull up/dn are both X
@@ -40,12 +40,12 @@ o:0
   d:1, input
 o:0
 .-+
-. |-+
-. | ~| a:1, input
-. | ~| b:1, input
-. |-+
-. | ~| c:1, input
-. | ~| d:1, input
+. ~&-+
+. ~& | a:1, input
+. ~& | b:1, input
+. ~&-+
+. ~& | c:1, input
+. ~& | d:1, input
 o:0
   a:1, input
   b:1, input
@@ -67,11 +67,11 @@ o:0
   c:1, input
 o:0
 .-+
-. |-+
-. | ~| a:1, input
-. | ~| b:1, input
-. |-+
-. | ~| c:1, input
+. ~&-+
+. ~& | a:1, input
+. ~& | b:1, input
+. ~&-+
+. ~& | c:1, input
 o:0
   a:1, input
   b:1, input
@@ -99,9 +99,9 @@ o:1
   d:0, input
 o:1
 .-+
-. |-+
-. | ~| c:0, input
-. | ~| d:0, input
+. ~&-+
+. ~& | c:0, input
+. ~& | d:0, input
 -------------------- 
 	20	d : 1
 	30	o : 0	[by d:=1]
@@ -111,11 +111,11 @@ o:0
   d:1, input
 o:0
 .-+
-. |-+
-. | ~| a:1, input
-. | ~| b:1, input
-. |-+
-. | ~| d:1, input
+. ~&-+
+. ~& | a:1, input
+. ~& | b:1, input
+. ~&-+
+. ~& | d:1, input
 o:0
   a:1, input
   b:1, input
@@ -134,10 +134,10 @@ o:0
   d:1, input
 o:0
 .-+
-. |-+
-. | ~| b:1, input
-. |-+
-. | ~| d:1, input
+. ~&-+
+. ~& | b:1, input
+. ~&-+
+. ~& | d:1, input
 o:0
   b:1, input
   d:1, input
@@ -155,11 +155,11 @@ o:0
   d:1, input
 o:0
 .-+
-. |-+
-. | ~| b:1, input
-. |-+
-. | ~| c:1, input
-. | ~| d:1, input
+. ~&-+
+. ~& | b:1, input
+. ~&-+
+. ~& | c:1, input
+. ~& | d:1, input
 o:0
   b:1, input
   c:1, input
@@ -178,10 +178,10 @@ o:0
   c:1, input
 o:0
 .-+
-. |-+
-. | ~| b:1, input
-. |-+
-. | ~| c:1, input
+. ~&-+
+. ~& | b:1, input
+. ~&-+
+. ~& | c:1, input
 o:0
   b:1, input
   c:1, input
@@ -207,9 +207,9 @@ o:1
   d:0, input
 o:1
 .-+
-. |-+
-. | ~| c:0, input
-. | ~| d:0, input
+. ~&-+
+. ~& | c:0, input
+. ~& | d:0, input
 -------------------- 
 	40	b : 0
 o:1
@@ -232,12 +232,12 @@ o:1
   d:0, input
 o:1
 .-+
-. |-+
-. | ~| a:0, input
-. | ~| b:0, input
-. |-+
-. | ~| c:0, input
-. | ~| d:0, input
+. ~&-+
+. ~& | a:0, input
+. ~& | b:0, input
+. ~&-+
+. ~& | c:0, input
+. ~& | d:0, input
 -------------------- 
 	40	d : 1
 o:1
@@ -253,9 +253,9 @@ o:1
   b:0, input
 o:1
 .-+
-. |-+
-. | ~| a:0, input
-. | ~| b:0, input
+. ~&-+
+. ~& | a:0, input
+. ~& | b:0, input
 -------------------- 
 	40	c : 1
 o:1
@@ -271,9 +271,9 @@ o:1
   b:0, input
 o:1
 .-+
-. |-+
-. | ~| a:0, input
-. | ~| b:0, input
+. ~&-+
+. ~& | a:0, input
+. ~& | b:0, input
 -------------------- 
 	40	d : 0
 o:1
@@ -289,9 +289,9 @@ o:1
   b:0, input
 o:1
 .-+
-. |-+
-. | ~| a:0, input
-. | ~| b:0, input
+. ~&-+
+. ~& | a:0, input
+. ~& | b:0, input
 -------------------- 
 	40	a : 1
 	50	o : 0	[by a:=1]
@@ -300,10 +300,10 @@ o:0
   c:1, input
 o:0
 .-+
-. |-+
-. | ~| a:1, input
-. |-+
-. | ~| c:1, input
+. ~&-+
+. ~& | a:1, input
+. ~&-+
+. ~& | c:1, input
 o:0
   a:1, input
   c:1, input
@@ -329,9 +329,9 @@ o:1
   d:0, input
 o:1
 .-+
-. |-+
-. | ~| c:0, input
-. | ~| d:0, input
+. ~&-+
+. ~& | c:0, input
+. ~& | d:0, input
 -------------------- 
 	60	d : 1
 	70	o : 0	[by d:=1]
@@ -340,10 +340,10 @@ o:0
   d:1, input
 o:0
 .-+
-. |-+
-. | ~| a:1, input
-. |-+
-. | ~| d:1, input
+. ~&-+
+. ~& | a:1, input
+. ~&-+
+. ~& | d:1, input
 o:0
   a:1, input
   d:1, input
@@ -361,11 +361,11 @@ o:0
   d:1, input
 o:0
 .-+
-. |-+
-. | ~| a:1, input
-. |-+
-. | ~| c:1, input
-. | ~| d:1, input
+. ~&-+
+. ~& | a:1, input
+. ~&-+
+. ~& | c:1, input
+. ~& | d:1, input
 o:0
   a:1, input
   c:1, input

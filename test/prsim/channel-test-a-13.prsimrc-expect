@@ -17,6 +17,10 @@ resetting channel X
 X.d[0]:0
   (channel X is stopped.)
 X.d[0]:0
+  (channel X is stopped.)
+X.d[0]:0
+. (channel X is stopped.)
+X.d[0]:0
 . (channel X is stopped.)
 - - - - - - - - - - - - - - - - - - - 
 releasing channel X, but ack is still X 
@@ -32,45 +36,61 @@ reset ack
 	20	X.d[0] : 0	[by X.e:=0]
 	20	X.d[1] : 0	[by X.e:=0]
 X.d[0]:0
-  X.e:0
+  X.e:0, input
 X.d[0]:0
-. X.e:0
+  X.e:0, input
+X.d[0]:0
+. X.e:0, input
+X.d[0]:0
+. X.e:0, input
 - - - - - - - - - - - - - - - - - - - 
 set ack 
 	20	X.e : 1
 	30	X.d[0] : 1	[by X.e:=1]
 X.d[0]:1
-  X.e:1
+  X.e:1, input
 X.d[1]:0
-  X.e:1
+  X.e:1, input
 X.d[0]:1
-. X.e:1
+. X.e:1, input
 X.d[1]:0
-. X.e:1
+. X.e:1, input
+X.d[0]:1
+. X.e:1, input
+X.d[1]:0
+. X.e:1, input
 - - - - - - - - - - - - - - - - - - - 
 reset ack 
 	30	X.e : 0
 	40	X.d[0] : 0	[by X.e:=0]
 X.d[0]:0
-  X.e:0
+  X.e:0, input
 X.d[1]:0
-  X.e:0
+  X.e:0, input
 X.d[0]:0
-. X.e:0
+. X.e:0, input
 X.d[1]:0
-. X.e:0
+. X.e:0, input
+X.d[0]:0
+. X.e:0, input
+X.d[1]:0
+. X.e:0, input
 - - - - - - - - - - - - - - - - - - - 
 set ack 
 	40	X.e : 1
 	50	X.d[1] : 1	[by X.e:=1]
 X.d[0]:0
-  X.e:1
+  X.e:1, input
 X.d[1]:1
-  X.e:1
+  X.e:1, input
 X.d[0]:0
-. X.e:1
+. X.e:1, input
 X.d[1]:1
-. X.e:1
+. X.e:1, input
+X.d[0]:0
+. X.e:1, input
+X.d[1]:1
+. X.e:1, input
 - - - - - - - - - - - - - - - - - - - 
 freezing channel X, and setting ack 
 	50	X.e : 0
@@ -80,6 +100,10 @@ X.d[0]:0
   (channel X is stopped.)
 X.d[1]:1
   (channel X is stopped.)
+X.d[0]:0
+. (channel X is stopped.)
+X.d[1]:1
+. (channel X is stopped.)
 X.d[0]:0
 . (channel X is stopped.)
 X.d[1]:1
@@ -98,6 +122,8 @@ X.d[0]:X, from-channel, pull up/dn undriven
   X.e:X, pull up/dn undriven
 X.d[1]:X, from-channel, pull up/dn undriven
   X.e:X, pull up/dn undriven
+X.d[0] is X.
+X.d[0] is X.
 X.d[0] is X.
 X.d[0] is X.
 - - - - - - - - - - - - - - - - - - - 
@@ -120,10 +146,13 @@ event queue:
 	80	X.d[1] : 0	[from X.e:=0]
 time: 70
 X.d[0]:0
-  X.e:0
+  X.e:0, input
 X.d[1]:1, pending event -> 0
 X.d[0]:0
-. X.e:0
+. X.e:0, input
+X.d[1]:1, pending event -> 0
+X.d[0]:0
+. X.e:0, input
 X.d[1]:1, pending event -> 0
 	80	X.d[1] : 0	[by X.e:=0]
 DONE. 

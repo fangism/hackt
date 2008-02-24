@@ -15,6 +15,10 @@ X.e:0
   (channel X is stopped.)
 X.e:0
 . (channel X is stopped.)
+X.e:0
+  (channel X is stopped.)
+X.e:0
+. (channel X is stopped.)
 X : .e(init:0) 1x1of2 sink,stopped
 	count: 0, unknowns: 2
 - - - - - - - - - - - - - - - - - - - 
@@ -29,46 +33,74 @@ reset data
 	10	X.d[1] : 0
 	20	X.e : 1	[by X.d[1]:=0]
 X.e:1
-  X.d[0]:0
-  X.d[1]:0
+  X.d[0]:0, input
+  X.d[1]:0, input
 X.e:1
 . -+
-.  | X.d[0]:0
-.  | X.d[1]:0
+.  | X.d[0]:0, input
+.  | X.d[1]:0, input
+X.e:1
+  X.d[0]:0, input
+  X.d[1]:0, input
+X.e:1
+. -+
+.  ~| X.d[0]:0, input
+.  ~| X.d[1]:0, input
 - - - - - - - - - - - - - - - - - - - 
 set data 
 	20	X.d[0] : 1
 	30	X.e : 0	[by X.d[0]:=1]
 X.e:0
-  X.d[0]:1
+  X.d[0]:1, input
 X.e:0
 . -+
-.  ~| X.d[0]:1
+.  ~| X.d[0]:1, input
+X.e:0
+  X.d[0]:1, input
+X.e:0
+. -+
+.  | X.d[0]:1, input
 - - - - - - - - - - - - - - - - - - - 
 reset data 
 	30	X.d[0] : 0
 	40	X.e : 1	[by X.d[0]:=0]
 X.e:1
-  X.d[0]:0
-  X.d[1]:0
+  X.d[0]:0, input
+  X.d[1]:0, input
 X.e:1
 . -+
-.  | X.d[0]:0
-.  | X.d[1]:0
+.  | X.d[0]:0, input
+.  | X.d[1]:0, input
+X.e:1
+  X.d[0]:0, input
+  X.d[1]:0, input
+X.e:1
+. -+
+.  ~| X.d[0]:0, input
+.  ~| X.d[1]:0, input
 - - - - - - - - - - - - - - - - - - - 
 set data 
 	40	X.d[1] : 1
 	50	X.e : 0	[by X.d[1]:=1]
 X.e:0
-  X.d[1]:1
+  X.d[1]:1, input
 X.e:0
 . -+
-.  ~| X.d[1]:1
+.  ~| X.d[1]:1, input
+X.e:0
+  X.d[1]:1, input
+X.e:0
+. -+
+.  | X.d[1]:1, input
 - - - - - - - - - - - - - - - - - - - 
 freezing channel X, and resetting data 
 	50	X.d[1] : 0
 X : .e(init:0) 1x1of2 sink,stopped
 	count: 0, unknowns: 0
+X.e:0
+  (channel X is stopped.)
+X.e:0
+. (channel X is stopped.)
 X.e:0
   (channel X is stopped.)
 X.e:0
@@ -93,6 +125,8 @@ setting X.d[0] -> 1
 	60	X.d[0] : 1
 X.e is X.
 X.e is X.
+X.e is X.
+X.e is X.
 event queue:
 	70	X.e : 0	[from X.d[0]:=1]
 time: 60
@@ -105,6 +139,8 @@ event queue:
 time: 70
 X.e:0, pending event -> 1
 X.e:0, pending event -> 1
+X.e:0, pending event -> 1
+X.e:0, pending event -> 1
 	80	X.e : 1	[by X.d[0]:=0]
 - - - - - - - - - - - - - - - - - - - 
 stopping channel X 
@@ -113,13 +149,18 @@ X : .e(init:0) 1x1of2 sink,stopped
 	count: 1, unknowns: 0
 X.e:1
   (channel X is stopped.)
+X.e:1
+  (channel X is stopped.)
 - - - - - - - - - - - - - - - - - - - 
 releasing channel X 
 event queue:
 	90	X.e : 0
 time: 80
 X.e:1, pending event -> 0
+X.e:1, pending event -> 0
 	90	X.e : 0
 X.e:0
-  X.d[1]:1
+  X.d[1]:1, input
+X.e:0
+  X.d[1]:1, input
 DONE. 

@@ -7,52 +7,70 @@ set b 0
 cycle
 why-not c
 why-not-verbose c
+why c
+why-verbose c
 
 echo -----------------------
 set a 1
 cycle
 why-not c
 why-not-verbose c
+why c
+why-verbose c
 
 echo -----------------------
 set b 1
 cycle
 why-not c
 why-not-verbose c
+why c
+why-verbose c
 
 echo -----------------------
 set a 0
 cycle
 why-not c
 why-not-verbose c
+why c
+why-verbose c
 
 echo -----------------------
 set b 0
 cycle
 why-not c
 why-not-verbose c
+why c
+why-verbose c
 
 echo -----------------------
 set b 1
 cycle
 why-not c
 why-not-verbose c
+why c
+why-verbose c
 
 echo -----------------------
 set a 1
 cycle
 why-not c
 why-not-verbose c
+why c
+why-verbose c
 
 echo -----------------------
 set b 0
 cycle
 why-not c
 why-not-verbose c
+why c
+why-verbose c
 
 echo -----------------------
 set a 0
 cycle
 why-not c
 why-not-verbose c
+why c
+why-verbose c
 

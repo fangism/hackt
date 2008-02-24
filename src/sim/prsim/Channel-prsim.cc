@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.4.1 2008/02/22 06:07:19 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.4.2 2008/02/24 07:24:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -810,7 +810,7 @@ channel::__get_fanins(const node_index_type ni,
  */
 ostream&
 channel::__node_why_not(const State& s, ostream& o, const node_index_type ni, 
-		const bool dir, const bool verbose, 
+		const bool dir, const bool why_not, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
 	typedef	State::node_type		node_type;
 	const indent __ind_outer(o, verbose ? " " : "");
@@ -840,13 +840,9 @@ if (stopped()) {
 			// the opposite (active).  
 			// const indent __ind_nd(o, verbose ? "." : "  ");
 			// INDENT_SCOPE(o);
-			if (dir ^ get_ack_active()) {
-				s.__node_why_not(o, ack_signal, 
-					true, verbose, u, v);
-			} else {
-				s.__node_why_not(o, ack_signal, 
-					false, verbose, u, v);
-			}
+			s.__node_why_not(o, ack_signal, 
+				dir ^ get_ack_active() ^ !why_not,
+				why_not, verbose, u, v);
 		}
 	}
 	if (is_sinking() && (ni == ack_signal)) {
@@ -855,12 +851,13 @@ if (stopped()) {
 	if (validity_signal) {
 		// TODO: not sure if the following is correct
 		// it may be backwards, if I just think about it...
+		// TODO: account for why_not parameter
 		if (get_ack_active() ^ dir ^ get_valid_sense()) {
 			s.__node_why_not(o, validity_signal, 
-				true, verbose, u, v);
+				true, why_not, verbose, u, v);
 		} else {
 			s.__node_why_not(o, validity_signal, 
-				false, verbose, u, v);
+				false, why_not, verbose, u, v);
 		}
 	} else
 #endif
@@ -895,7 +892,7 @@ if (stopped()) {
 				// when to negate (nor)?
 				// when data wants to be neutral, 
 				// i.e. when acknowledge is active
-				if ((av == node_type::LOGIC_LOW) ^
+				if ((av == node_type::LOGIC_LOW) ^ !why_not ^
 						get_ack_active()) {
 					i_s += "~";
 				}
@@ -908,28 +905,28 @@ if (stopped()) {
 			for ( ; key[1] < radix(); ++key[1]) {
 				const node_index_type di = data[key];
 				const node_type& d(s.get_node(di));
-				switch (d.current_value()) {
-				case node_type::LOGIC_LOW:
-					if (get_ack_active() ^
-						(av == node_type::LOGIC_HIGH)) {
-						s.__node_why_not(o, di, 
-							true, verbose, u, v);
-					}
-					break;
-				case node_type::LOGIC_HIGH:
-					if (get_ack_active() ^
-						(av == node_type::LOGIC_LOW)) {
-						s.__node_why_not(o, di, 
-							false, verbose, u, v);
-					}
-					break;
-				default: break;	// ignore Xs
+			switch (d.current_value()) {
+			case node_type::LOGIC_LOW:
+				if (get_ack_active() ^
+					(av == node_type::LOGIC_HIGH)) {
+					s.__node_why_not(o, di, why_not, 
+						why_not, verbose, u, v);
 				}
+				break;
+			case node_type::LOGIC_HIGH:
+				if (get_ack_active() ^
+					(av == node_type::LOGIC_LOW)) {
+					s.__node_why_not(o, di, !why_not, 
+						why_not, verbose, u, v);
+				}
+				break;
+			default: break;	// ignore Xs
+			}	// end switch
 			}	// end for rails
 		}	// end for bundles
 	}
-	}
-}
+	}	// end if sinking
+}	// end if !stopped
 	return o;
 }	// end channel::__node_why_not
 
@@ -1868,7 +1865,8 @@ if (f != node_channels_map.end()) {
  */
 ostream&
 channel_manager::__node_why_not(const State& s, ostream& o, 
-		const node_index_type ni, const bool dir, const bool verbose, 
+		const node_index_type ni, const bool dir, 
+		const bool why_not, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
 	const node_channels_map_type::const_iterator
 		f(node_channels_map.find(ni));
@@ -1876,7 +1874,8 @@ if (f != node_channels_map.end()) {
 	std::set<channel_index_type>::const_iterator
 		i(f->second.begin()), e(f->second.end());
 	for ( ; i!=e; ++i) {
-		channel_pool[*i].__node_why_not(s, o, ni, dir, verbose, u, v);
+		channel_pool[*i].__node_why_not(
+			s, o, ni, dir, why_not, verbose, u, v);
 	}
 }
 	return o;

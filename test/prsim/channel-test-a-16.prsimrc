@@ -19,6 +19,8 @@ cycle
 assert Y.e 1
 why-not Y.e
 why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
 channel-show Y
 
 echo - - - - - - - - - - - - - - - - - - -
@@ -39,6 +41,8 @@ cycle
 assert Y.e 1
 why-not Y.e
 why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo set data
@@ -47,6 +51,8 @@ cycle
 assert Y.e 0
 why-not Y.e
 why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo reset data
@@ -55,6 +61,8 @@ cycle
 assert Y.e 1
 why-not Y.e
 why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo set data
@@ -63,6 +71,8 @@ cycle
 assert Y.e 0
 why-not Y.e
 why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
 
 echo - - - - - - - - - - - - - - - - - - -
 channel-stop Y
@@ -73,6 +83,8 @@ channel-show Y
 assert Y.e 0
 why-not Y.e
 why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
 
 echo - - - - - - - - - - - - - - - - - - -
 channel-release Y
@@ -96,6 +108,8 @@ step-event
 assert Y.e X
 why-not Y.e 1
 why-not Y.e 0
+why Y.e 1
+why Y.e 0
 queue
 time
 cycle
@@ -109,6 +123,8 @@ queue
 time
 why-not Y.e
 why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
 cycle
 assert Y.e 1
 
@@ -120,6 +136,7 @@ cycle
 channel-show Y
 assert Y.e 1
 why-not Y.e
+why Y.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo releasing channel Y
@@ -128,9 +145,11 @@ queue
 time
 assert Y.e 1
 why-not Y.e
+why Y.e
 step-event
 assert Y.e 0
 why-not Y.e
+why Y.e
 
 assertn-queue
 

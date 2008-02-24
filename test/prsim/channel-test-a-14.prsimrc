@@ -18,6 +18,8 @@ cycle
 assert X.e 0
 why-not X.e
 why-not-verbose X.e
+why X.e
+why-verbose X.e
 channel-show X
 
 echo - - - - - - - - - - - - - - - - - - -
@@ -35,6 +37,8 @@ cycle
 assert X.e 1
 why-not X.e
 why-not-verbose X.e
+why X.e
+why-verbose X.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo set data
@@ -43,6 +47,8 @@ cycle
 assert X.e 0
 why-not X.e
 why-not-verbose X.e
+why X.e
+why-verbose X.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo reset data
@@ -51,6 +57,8 @@ cycle
 assert X.e 1
 why-not X.e
 why-not-verbose X.e
+why X.e
+why-verbose X.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo set data
@@ -59,6 +67,8 @@ cycle
 assert X.e 0
 why-not X.e
 why-not-verbose X.e
+why X.e
+why-verbose X.e
 
 echo - - - - - - - - - - - - - - - - - - -
 channel-stop X
@@ -69,6 +79,8 @@ channel-show X
 assert X.e 0
 why-not X.e
 why-not-verbose X.e
+why X.e
+why-verbose X.e
 
 echo - - - - - - - - - - - - - - - - - - -
 channel-release X
@@ -92,6 +104,8 @@ step-event
 assert X.e X
 why-not X.e 1
 why-not X.e 0
+why X.e 1
+why X.e 0
 queue
 time
 cycle
@@ -105,6 +119,8 @@ queue
 time
 why-not X.e
 why-not-verbose X.e
+why X.e
+why-verbose X.e
 cycle
 assert X.e 1
 
@@ -116,6 +132,7 @@ cycle
 channel-show X
 assert X.e 1
 why-not X.e
+why X.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo releasing channel X
@@ -124,9 +141,11 @@ queue
 time
 assert X.e 1
 why-not X.e
+why X.e
 step-event
 assert X.e 0
 why-not X.e
+why X.e
 
 assertn-queue
 
