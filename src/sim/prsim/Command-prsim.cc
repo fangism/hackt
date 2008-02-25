@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.14 2008/02/24 07:25:02 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.15 2008/02/25 05:21:30 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3700,7 +3700,7 @@ as the circuit is brought out of the reset state.
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelReleaseAll,
 	"channel-release-all", channels,
-	"release all registered channels from reset/stopped state")
+	"channel-release all registered channels")
 
 int
 ChannelReleaseAll::main(State& s, const string_list& a) {

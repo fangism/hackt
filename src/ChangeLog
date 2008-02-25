@@ -5,6 +5,12 @@
 
 2008-02-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-42:
+	  Improved 'why-x' diagnostic output, test-cases updated.
+
+
+2008-02-23	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-41:
 	  prsim: added 'why' and 'why-verbose' commands to recursively
 		query why a signal is being driven to its value.

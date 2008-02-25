@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.34 2008/02/24 07:25:03 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.35 2008/02/25 05:21:31 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3924,14 +3924,17 @@ if (y.second) {
 	// inserted uniquely
 	const node_type& n(get_node(ni));
 	INVARIANT(n.current_value() == node_type::LOGIC_OTHER);
+	const bool from_channel =
 #if PRSIM_CHANNEL_SUPPORT
-	if (n.in_channel()) {
-		if (_channel_manager.node_has_fanin(ni)) {
-			o << ", from-channel";
-			// channel may be in stopped state...
-		}
-	}
+		(n.in_channel() &&
+			_channel_manager.node_has_fanin(ni));
+#else
+		false;
 #endif
+	if (from_channel) {
+		o << ", from-channel";
+		// channel may be in stopped state...
+	}
 	// inspect pull state (and event queue)
 	const event_index_type pe = n.get_event();
 	if (pe) {
@@ -3961,6 +3964,9 @@ do {
 				up == expr_type::PULL_OFF &&
 				dp == expr_type::PULL_OFF) {
 			o << ", pull up/dn undriven";
+			if (!n.has_fanin() && !from_channel) {
+				o << ", no fanin";
+			}
 		} else if (w) {
 			o << endl;
 		}
