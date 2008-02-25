@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.2 2008/02/25 19:55:23 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.3 2008/02/25 21:06:43 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -27,21 +27,26 @@ installcheck-local: $(INSTALLCHECK_TARGETS)
 	do $(CAT) $$o ; done
 endif
 
-inverters.vxi-subdir-out:
-	+$(ECHO) "Part 2: building subdir to test installed example." && \
-	$(RM) -r $(EXAMPLE_NAME) && \
-	$(CP) -r $(vpiinvdir) . && \
+Makefile.copy: example.mk
 	$(SED) -e 's|@pkgdatadir@|$(pkgdatadir)|g' \
 		-e 's|@vcs_flags@|$(COMMON_VCS_FLAGS)|g' \
 		-e 's|@vpi_flags@|$(INSTALLCHECK_VCS_VPI_FLAGS)|g' \
 		-e 's|@vpi_env@|$(VPI_INSTALLCHECK_ENV)|g' \
 		-e '/^VPI_ENV/s|\$$|$$$$|g' \
-		$(srcdir)/example.mk > $(EXAMPLE_NAME)/Makefile && \
+		$< > $@
+
+inverters.vxi-subdir-out: Makefile.copy
+	+$(ECHO) "Part 2: building subdir to test installed example." && \
+	$(RM) -r $(EXAMPLE_NAME) && \
+	$(CP) -r $(vpiinvdir) . && \
+	$(MV) $(EXAMPLE_NAME)/Makefile.copy $(EXAMPLE_NAME)/Makefile && \
 	( cd $(EXAMPLE_NAME) && $(MAKE) check ) > $@
 
+CLEANFILES += Makefile.copy
 
 # TODO: provide Makefile?
 dist_vpiinv_DATA = clkgen.v inverters.hac inverters.v example.mk
+vpiinv_DATA = Makefile.copy
 
 # generalize and automate this rule
 DISTCLEANDIRS += inverters.vx.daidir inverters.vxi.daidir
