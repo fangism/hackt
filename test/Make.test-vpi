@@ -1,12 +1,12 @@
 # "Make.test-vpi"
 #	vi: ft=automake
-#	$Id: Make.test-vpi,v 1.1.2.1 2008/02/25 08:23:51 fang Exp $
+#	$Id: Make.test-vpi,v 1.1.2.2 2008/02/25 19:55:21 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
 
-HACKT_VPI_SUFFIXES = .v .vx .vx-out .vx-out-filter .vx-diff
+HACKT_VPI_SUFFIXES = .v .vx .vxi .vx-out .vxi-out .vx-out-filter .vx-diff
 
 HACKT_VPI_TEST_SUFFIXES = .vpitest 
 SUFFIXES += $(HACKT_VPI_SUFFIXES) $(HACKT_VPI_TEST_SUFFIXES)
@@ -14,7 +14,9 @@ BOGUS_SUFFIX_TARGETS += $(HACKT_VPI_SUFFIXES)
 
 HACKT_VPI_CLEAN_IGNORE_PATTERNS = \
 	"*.vx" \
+	"*.vxi" \
 	"*.vx-out" \
+	"*.vxi-out" \
 	"*.vx-out-filter" \
 	"*.vx-diff" \
 	"*.vpitest"
@@ -24,33 +26,64 @@ AUTO_IGNORE += $(HACKT_VPI_CLEAN_IGNORE_PATTERNS)
 
 VCS_OUTPUT_FILTER =
 
+# where vpihacprim.la is built
+VPI_LIB_PATH = $(top_builddir)/src
+# where vpihacprsim.{la,so} are installed
+INSTALLCHECK_VPI_LIB_PATH = $(pkglibdir)
+
+COMMON_VCS_FLAGS = +cli+3 -Mupdate +v2k +vcsace+diff+ok
+
+AM_VCS_VPI_FLAGS = +vpi \
+	-use_vpiobj $(VPI_LIB_PATH)/$(LTDL_OBJDIR)/vpihacprsim.so \
+	-LDFLAGS="-L$(VPI_LIB_PATH)/$(LTDL_OBJDIR)" 
+AM_VCS_FLAGS = +incdir+$(srcdir) +cli+3 $(COMMON_VCS_FLAGS)
+
+# for install-time tests, use installed library, not the built one
+INSTALLCHECK_VCS_VPI_FLAGS = +vpi \
+	-use_vpiobj $(INSTALLCHECK_VPI_LIB_PATH)/vpihacprsim.so \
+	-LDFLAGS="-L$(INSTALLCHECK_VPI_LIB_PATH)" 
+# lazy: for now, use the $(srcdir) instead of +incdir+$(examplesdir)/...
+INSTALLCHECK_VCS_FLAGS = $(AM_VCS_FLAGS)
+
 # create simulation executable
 # '+' connects child make (vcs) to parent's jobserver
 .v.vx:
-if HAVE_VCS
-	+$(VCS) $(VCS_FLAGS) -o $@ $<
+if HAVE_VPI
+	+$(VCS) $(AM_VCS_FLAGS) $(AM_VCS_VPI_FLAGS) -o $@ $<
 else
-	@$(ECHO) "No vcs found in path during configure." ; exit 1
+	@$(ECHO) "VPI not explicitly enabled during configure."
 endif
 
-# where vpihacprim.la is built
-VPI_LIB_PATH = $(top_builddir)/src
+# post-install tests!
+.v.vxi:
+if HAVE_VPI
+	+$(VCS) $(INSTALLCHECK_VCS_FLAGS) $(INSTALLCHECK_VCS_VPI_FLAGS) -o $@ $<
+else
+	@$(ECHO) "VPI not explicitly enabled during configure."
+endif
 
 # setup run-time link path for build testing
 VPI_TEST_ENV = \
-	$(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR) && \
-	export $(LTDL_SHLIBPATH_VAR)
+	$(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR)
 
-SHOW_VPI_TEST_ENV = $(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$"$(LTDL_SHLIBPATH_VAR)"
+# installcheck environment
+VPI_INSTALLCHECK_ENV = \
+	$(LTDL_SHLIBPATH_VAR)=$(INSTALLCHECK_VPI_LIB_PATH)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR)
 
-# TODO: installcheck environment
+# SHOW_VPI_TEST_ENV = $(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$"$(LTDL_SHLIBPATH_VAR)"
 
 .vx.vx-out:
-	$(VPI_TEST_ENV) ; \
-	./$< > $@ 2>&1
+if HAVE_VPI
+	$(VPI_TEST_ENV) ./$< > $@ 2>&1
+else
+	@$(ECHO) "VCS/VPI was not explicitly configured, so skipping." > $@
+endif
+
+.vxi.vxi-out:
+	$(VPI_INSTALLCHECK_ENV) ./$< > $@ 2>&1
 
 .vx-out.vx-out-filter:
-	$(GREP) "observed" $< > $@
+	$(GREP) "observed" $< > $@ || $(TOUCH) $@
 #	$(CP) $< $@
 
 if VERBOSE_CHECK
@@ -60,7 +93,7 @@ ECHO_VPI_DIFF_COMMAND = :
 endif
 
 .vx-out-filter.vx-diff:
-if HAVE_VCS
+if HAVE_VPI
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.vx-diff$$/.expect-vpi/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	$(RM) $@ ; \
@@ -74,11 +107,11 @@ if HAVE_VCS
 	fi ; \
 	$(TOUCH) $@
 else
-	@$(TOUCH) $@
+	@$(CP) $< $@
 endif
 
 .vx-diff.vpitest:
-if HAVE_VCS
+if HAVE_VPI
 	@$(DEFAULT_DIFF_TEST_SCRIPT)
 else
 	@$(SKIP_TEST_SCRIPT)
@@ -88,7 +121,7 @@ vpitest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(RM) $@ ; \
 	{ list='$(HACKT_VPI_TEST_SCRIPTS_PASSES)' ; \
-	exts='vx' ; \
+	exts='vx-out' ; \
 	test -z "$$list" || \
 	for d in $$list ; do \
 	  src=$(srcdir)/$$d.v ; \
@@ -131,10 +164,15 @@ if CHECK_TESTS
 TESTS += $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vpitest)
 endif
 
-build-check-local: \
+VPI_TARGETS =
+if HAVE_VPI
+VPI_TARGETS += \
 	$(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx-out) \
 	$(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx-out-filter) \
 	$(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx-diff)
+endif
+
+build-check-local: $(VPI_TARGETS)
 
 echo-vpi-tests: force
 	@$(ECHO) $(HACKT_VPI_TEST_SCRIPTS_BASES)

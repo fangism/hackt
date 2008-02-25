@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: cosim.texi,v 1.1.4.1 2008/01/17 01:31:36 fang Exp $
+@c $Id: cosim.texi,v 1.1.4.2 2008/02/25 19:55:15 fang Exp $
 
 @node Co-simulation
 @chapter Co-simulation
@@ -9,6 +9,7 @@ This chapter describes ways in which this can be accomplished.
 
 @menu
 * Verilog PLI::
+* VPI Example::
 @end menu
 
 @c ----------------------------------------------------------------------------
@@ -45,6 +46,8 @@ as it is automatically appended.)
 If it is found, then compilation will create a module for VCS's VPI,
 @file{vpihacprsim.la} (which is installed with the actual @t{.so/dll/dylib}
 shared library).  
+This configuration check also looks for @command{vcs} in the path;
+@command{vcs} is used to compile Verilog into a simulation executable.  
 
 @strong{Disclaimer}: the following instructions are taken from the
 author's trials, and do not necessary reflect the actual
@@ -79,4 +82,29 @@ sh$ LD_LIBRARY_PATH=/prefix/lib/hackt:$LD_LIBRARY_PATH ./simv
 
 csh% env sh$ LD_LIBRARY_PATH=/prefix/lib/hackt:$LD_LIBRARY_PATH ./simv
 @end example
+
+@c ----------------------------------------------------------------------------
+@node VPI Example
+@section VPI Example
+
+An example is installed in the 
+@file{/prefix/share/hackt/doc/example/vpiprsim-inverters} directory.
+This example demonstrates several inverters communicating 
+across the @command{hacprsim} and VPI boundary, in a shoelace connection.
+
+Copy the contents of the directory to a temporary directory, 
+and rename @file{example.mk} to @file{Makefile}. 
+The Makefile is already setup to include @file{hackt.mk} and provides
+some basic rules for compiling and running the Verilog simulation. 
+The @file{inverters.v} file is compiled to an executable @file{inverters.vx}
+which runs the simulation.  
+@file{inverters.v} references @file{inverters.haco-a}, which is a
+prerequisite for running (but not compiling) the simulation executable.  
+
+@command{make check} will run all the necessary steps in order
+and print the result of running the executable to @file{stdout}.
+Note that the invocation of the executable is prefixed with 
+an environment extension for @code{LD_LIBRARY_PATH}.  
+This is not necessary if you have already included @code{/prefix/lib/hackt}
+(a.k.a. @code{pkglibdir}) in your environment.  
 

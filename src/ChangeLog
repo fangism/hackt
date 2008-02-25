@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-44:
+	  No source revision, updating tests to support installcheck
+		tests on VPI/prsim, improved testing harness.
+
+
 2008-02-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-43:

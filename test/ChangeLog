@@ -1,6 +1,12 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.81.2.3 2008/02/22 06:07:43 fang Exp $
+#	$Id: ChangeLog,v 1.81.2.4 2008/02/25 19:55:19 fang Exp $
 # ChangeLog for test directory.
+
+2008-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-44:
+	  Added Make.test-vpi to support vpi build-time and install-time
+		tests.
 
 2008-02-19	David Fang		<fangism@users.sourceforge.net>
 
