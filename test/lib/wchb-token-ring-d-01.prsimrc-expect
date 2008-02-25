@@ -24,7 +24,7 @@ L.e:X, pull up/dn are both X
                               Y._le:X, pull up/dn are both X
                                 Y._r.d[0]:X, cycle reached
                                 Y._r.d[1]:X, cycle reached
-                            _Reset:X, pull up/dn undriven
+                            _Reset:X, pull up/dn undriven, no fanin
                         R.e:X, cycle reached
                         _Reset:X, (visited before, see above)
                     _Reset:X, (visited before, see above)
@@ -56,7 +56,7 @@ L.d[0]:X, pull up/dn are both X
                               L.d[1]:X, pull up/dn are both X
                                 Z._r.d[1]:X, cycle reached
                               M.e:X, cycle reached
-                              _Reset:X, pull up/dn undriven
+                              _Reset:X, pull up/dn undriven, no fanin
                           R.e:X, cycle reached
                           _Reset:X, (visited before, see above)
                       _Reset:X, (visited before, see above)

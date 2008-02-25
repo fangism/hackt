@@ -12,7 +12,7 @@ R.x[0]:X, pull up/dn are both X
                       R.x[2]:X, pull up/dn are both X
                         R.x[1]:X, pull up/dn are both X
                           R.x[0]:X, cycle reached
-  _Reset:X, pull up/dn undriven
+  _Reset:X, pull up/dn undriven, no fanin
 R.x[5]:X, pull up/dn are both X
   R.x[4]:X, pull up/dn are both X
     R.x[3]:X, pull up/dn are both X
@@ -27,7 +27,7 @@ R.x[5]:X, pull up/dn are both X
                       R.x[7]:X, pull up/dn are both X
                         R.x[6]:X, pull up/dn are both X
                           R.x[5]:X, cycle reached
-            _Reset:X, pull up/dn undriven
+            _Reset:X, pull up/dn undriven, no fanin
 R.x[12]:X, pull up/dn are both X
   R.x[11]:X, pull up/dn are both X
     R.x[10]:X, pull up/dn are both X
@@ -42,7 +42,7 @@ R.x[12]:X, pull up/dn are both X
                       R.x[1]:X, pull up/dn are both X
                         R.x[0]:X, pull up/dn are both X
                           R.x[12]:X, cycle reached
-                          _Reset:X, pull up/dn undriven
+                          _Reset:X, pull up/dn undriven, no fanin
 setting _Reset : 1 
 	0	_Reset : 1
 R.x[12]:X, pull up/dn are both X
@@ -224,4 +224,4 @@ R.x[12]:X, pull up/dn are both X
                       R.x[1]:X, pull up/dn are both X
                         R.x[0]:X, pull up/dn are both X
                           R.x[12]:X, cycle reached
-                          _Reset:X, pull up/dn undriven
+                          _Reset:X, pull up/dn undriven, no fanin

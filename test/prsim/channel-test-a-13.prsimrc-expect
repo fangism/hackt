@@ -7,9 +7,9 @@ X : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X
 	count: 0, unknowns: 2
 why-x: X is sourced, should be able to trace back through acknowledge 
 X.d[0]:X, from-channel, pull up/dn undriven
-  X.e:X, pull up/dn undriven
+  X.e:X, pull up/dn undriven, no fanin
 X.d[1]:X, from-channel, pull up/dn undriven
-  X.e:X, pull up/dn undriven
+  X.e:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 resetting channel X 
 	10	X.d[0] : 0
@@ -27,9 +27,9 @@ releasing channel X, but ack is still X
 	10	X.d[0] : X
 	10	X.d[1] : X
 X.d[0]:X, from-channel, pull up/dn undriven
-  X.e:X, pull up/dn undriven
+  X.e:X, pull up/dn undriven, no fanin
 X.d[1]:X, from-channel, pull up/dn undriven
-  X.e:X, pull up/dn undriven
+  X.e:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 reset ack 
 	10	X.e : 0
@@ -119,9 +119,9 @@ setting X.e -> U
 X : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
 	count: 0, unknowns: 2
 X.d[0]:X, from-channel, pull up/dn undriven
-  X.e:X, pull up/dn undriven
+  X.e:X, pull up/dn undriven, no fanin
 X.d[1]:X, from-channel, pull up/dn undriven
-  X.e:X, pull up/dn undriven
+  X.e:X, pull up/dn undriven, no fanin
 X.d[0] is X.
 X.d[0] is X.
 X.d[0] is X.

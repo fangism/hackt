@@ -6,10 +6,10 @@ Y : .e(init:1) 1x1of4 sink
 	count: 0, unknowns: 4
 why-x: Y is sinking, should be able to trace back through acknowledge 
 Y.e:X, from-channel, pull up/dn undriven
-  Y.d[0]:X, pull up/dn undriven
-  Y.d[1]:X, pull up/dn undriven
-  Y.d[2]:X, pull up/dn undriven
-  Y.d[3]:X, pull up/dn undriven
+  Y.d[0]:X, pull up/dn undriven, no fanin
+  Y.d[1]:X, pull up/dn undriven, no fanin
+  Y.d[2]:X, pull up/dn undriven, no fanin
+  Y.d[3]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 resetting channel Y 
 	10	Y.e : 1
@@ -29,10 +29,10 @@ Y : .e(init:1) 1x1of4 sink
 	count: 0, unknowns: 4
 	10	Y.e : X
 Y.e:X, from-channel, pull up/dn undriven
-  Y.d[0]:X, pull up/dn undriven
-  Y.d[1]:X, pull up/dn undriven
-  Y.d[2]:X, pull up/dn undriven
-  Y.d[3]:X, pull up/dn undriven
+  Y.d[0]:X, pull up/dn undriven, no fanin
+  Y.d[1]:X, pull up/dn undriven, no fanin
+  Y.d[2]:X, pull up/dn undriven, no fanin
+  Y.d[3]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 reset data 
 	10	Y.d[0] : 0
@@ -145,7 +145,7 @@ setting Y.d[0] -> U
 Y : .e(init:1) 1x1of4 sink
 	count: 0, unknowns: 1
 Y.e:X, from-channel, pull up/dn undriven
-  Y.d[2]:X, pull up/dn undriven
+  Y.d[2]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 setting Y.d[0] -> 1 
 	60	Y.d[2] : 1

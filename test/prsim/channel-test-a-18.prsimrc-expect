@@ -6,9 +6,9 @@ Z : .a(init:0) 1x1of3 sink
 	count: 0, unknowns: 3
 why-x: Z is sinking, should be able to trace back through acknowledge 
 Z.a:X, from-channel, pull up/dn undriven
-  Z.d[0]:X, pull up/dn undriven
-  Z.d[1]:X, pull up/dn undriven
-  Z.d[2]:X, pull up/dn undriven
+  Z.d[0]:X, pull up/dn undriven, no fanin
+  Z.d[1]:X, pull up/dn undriven, no fanin
+  Z.d[2]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 resetting channel Z 
 	10	Z.a : 0
@@ -26,9 +26,9 @@ Z : .a(init:0) 1x1of3 sink,stopped
 releasing channel Z, but data is still X 
 	10	Z.a : X
 Z.a:X, from-channel, pull up/dn undriven
-  Z.d[0]:X, pull up/dn undriven
-  Z.d[1]:X, pull up/dn undriven
-  Z.d[2]:X, pull up/dn undriven
+  Z.d[0]:X, pull up/dn undriven, no fanin
+  Z.d[1]:X, pull up/dn undriven, no fanin
+  Z.d[2]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 reset data 
 	10	Z.d[0] : 0
@@ -131,7 +131,7 @@ setting Z.d[0] -> U
 Z : .a(init:0) 1x1of3 sink
 	count: 0, unknowns: 1
 Z.a:X, from-channel, pull up/dn undriven
-  Z.d[0]:X, pull up/dn undriven
+  Z.d[0]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 setting Z.d[0] -> 1 
 	60	Z.d[0] : 1

@@ -12,7 +12,7 @@ R.x[6]:X, pull up/dn are both X
                       R.x[8]:X, pull up/dn are both X
                         R.x[7]:X, pull up/dn are both X
                           R.x[6]:X, cycle reached
-              _Reset:X, pull up/dn undriven
+              _Reset:X, pull up/dn undriven, no fanin
 	0	_Reset : 0
 	10	R.x[0] : 1	[by _Reset:=0]
 	20	R.x[1] : 0	[by R.x[0]:=1]

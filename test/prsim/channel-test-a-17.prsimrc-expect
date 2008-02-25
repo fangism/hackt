@@ -7,11 +7,11 @@ Z : .a(init:0) 1x1of3 source {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X
 	count: 0, unknowns: 3
 why-x: Z is sourced, should be able to trace back through acknowledge 
 Z.d[0]:X, from-channel, pull up/dn undriven
-  Z.a:X, pull up/dn undriven
+  Z.a:X, pull up/dn undriven, no fanin
 Z.d[1]:X, from-channel, pull up/dn undriven
-  Z.a:X, pull up/dn undriven
+  Z.a:X, pull up/dn undriven, no fanin
 Z.d[2]:X, from-channel, pull up/dn undriven
-  Z.a:X, pull up/dn undriven
+  Z.a:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 resetting channel Z 
 	10	Z.d[0] : 0
@@ -31,9 +31,9 @@ releasing channel Z, but ack is still X
 	10	Z.d[1] : X
 	10	Z.d[2] : X
 Z.d[0]:X, from-channel, pull up/dn undriven
-  Z.a:X, pull up/dn undriven
+  Z.a:X, pull up/dn undriven, no fanin
 Z.d[1]:X, from-channel, pull up/dn undriven
-  Z.a:X, pull up/dn undriven
+  Z.a:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 reset ack 
 	10	Z.a : 1
@@ -121,9 +121,9 @@ setting Z.a -> U
 Z : .a(init:0) 1x1of3 source {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
 	count: 0, unknowns: 3
 Z.d[0]:X, from-channel, pull up/dn undriven
-  Z.a:X, pull up/dn undriven
+  Z.a:X, pull up/dn undriven, no fanin
 Z.d[1]:X, from-channel, pull up/dn undriven
-  Z.a:X, pull up/dn undriven
+  Z.a:X, pull up/dn undriven, no fanin
 Z.d[0] is X.
 Z.d[0] is X.
 Z.d[0] is X.

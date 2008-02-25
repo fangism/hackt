@@ -7,9 +7,9 @@ Y : .e(init:1) 1x1of4 source {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @0 < channel-tes
 	count: 0, unknowns: 4
 why-x: Y is sourced, should be able to trace back through acknowledge 
 Y.d[0]:X, from-channel, pull up/dn undriven
-  Y.e:X, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
 Y.d[1]:X, from-channel, pull up/dn undriven
-  Y.e:X, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 resetting channel Y 
 	10	Y.d[0] : 0
@@ -27,13 +27,13 @@ releasing channel Y, but ack is still X
 	10	Y.d[2] : X
 	10	Y.d[3] : X
 Y.d[0]:X, from-channel, pull up/dn undriven
-  Y.e:X, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
 Y.d[1]:X, from-channel, pull up/dn undriven
-  Y.e:X, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
 Y.d[2]:X, from-channel, pull up/dn undriven
-  Y.e:X, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
 Y.d[3]:X, from-channel, pull up/dn undriven
-  Y.e:X, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 reset ack 
 	10	Y.e : 0
@@ -127,9 +127,9 @@ setting Y.e -> U
 Y : .e(init:1) 1x1of4 source {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @2 < channel-test-a-values-Y.txt
 	count: 0, unknowns: 4
 Y.d[0]:X, from-channel, pull up/dn undriven
-  Y.e:X, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
 Y.d[1]:X, from-channel, pull up/dn undriven
-  Y.e:X, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
 Y.d[3] is X.
 Y.d[3] is X.
 Y.d[3] is X.

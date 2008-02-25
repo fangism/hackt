@@ -1,12 +1,12 @@
 why is a X? 
-a:X, pull up/dn undriven
+a:X, pull up/dn undriven, no fanin
 why is b X? 
 b:X, pull up/dn are both X
-  a:X, pull up/dn undriven
+  a:X, pull up/dn undriven, no fanin
 why is c X? 
 c:X, pull up/dn are both X
   b:X, pull up/dn are both X
-    a:X, pull up/dn undriven
+    a:X, pull up/dn undriven, no fanin
 ############### 
 setting a to 0 
 why is a X? 
