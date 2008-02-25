@@ -1,0 +1,17 @@
+// "inverters.hac"
+// to be connected to VPI and back
+
+bool in0, out0;
+bool in1, out1;
+bool in2, out2;
+bool in3, out3;
+bool in4, out4;
+
+prs {
+	in0	=> out0-
+	in1	=> out1-
+	in2	=> out2-
+	in3	=> out3-
+	in4	=> out4-
+}
+

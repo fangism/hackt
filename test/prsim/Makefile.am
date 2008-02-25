@@ -1,8 +1,10 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.27 2008/02/24 07:25:12 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.28 2008/02/25 08:23:53 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
+
+SUBDIRS = . vpi
 
 # .hac inputs
 HACKT_PRSIMRC_TEST_SUBJECTS = \

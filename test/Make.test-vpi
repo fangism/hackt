@@ -1,0 +1,155 @@
+# "Make.test-vpi"
+#	vi: ft=automake
+#	$Id: Make.test-vpi,v 1.1.2.1 2008/02/25 08:23:51 fang Exp $
+# This is just a portion of the Make.test-tail template included by
+# Makefile.am's in the test/ directory subtree.  
+# This depends on variables defined in Make.test-tail, and thus, 
+# should not be included by itself.  
+
+HACKT_VPI_SUFFIXES = .v .vx .vx-out .vx-out-filter .vx-diff
+
+HACKT_VPI_TEST_SUFFIXES = .vpitest 
+SUFFIXES += $(HACKT_VPI_SUFFIXES) $(HACKT_VPI_TEST_SUFFIXES)
+BOGUS_SUFFIX_TARGETS += $(HACKT_VPI_SUFFIXES)
+
+HACKT_VPI_CLEAN_IGNORE_PATTERNS = \
+	"*.vx" \
+	"*.vx-out" \
+	"*.vx-out-filter" \
+	"*.vx-diff" \
+	"*.vpitest"
+
+AUTO_IGNORE += $(HACKT_VPI_CLEAN_IGNORE_PATTERNS)
+
+
+VCS_OUTPUT_FILTER =
+
+# create simulation executable
+# '+' connects child make (vcs) to parent's jobserver
+.v.vx:
+if HAVE_VCS
+	+$(VCS) $(VCS_FLAGS) -o $@ $<
+else
+	@$(ECHO) "No vcs found in path during configure." ; exit 1
+endif
+
+# where vpihacprim.la is built
+VPI_LIB_PATH = $(top_builddir)/src
+
+# setup run-time link path for build testing
+VPI_TEST_ENV = \
+	$(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR) && \
+	export $(LTDL_SHLIBPATH_VAR)
+
+SHOW_VPI_TEST_ENV = $(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$"$(LTDL_SHLIBPATH_VAR)"
+
+# TODO: installcheck environment
+
+.vx.vx-out:
+	$(VPI_TEST_ENV) ; \
+	./$< > $@ 2>&1
+
+.vx-out.vx-out-filter:
+	$(GREP) "observed" $< > $@
+#	$(CP) $< $@
+
+if VERBOSE_CHECK
+ECHO_VPI_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_VPI_DIFF_COMMAND = :
+endif
+
+.vx-out-filter.vx-diff:
+if HAVE_VCS
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.vx-diff$$/.expect-vpi/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_VPI_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+else
+	@$(TOUCH) $@
+endif
+
+.vx-diff.vpitest:
+if HAVE_VCS
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+else
+	@$(SKIP_TEST_SCRIPT)
+endif
+
+vpitest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(RM) $@ ; \
+	{ list='$(HACKT_VPI_TEST_SCRIPTS_PASSES)' ; \
+	exts='vx' ; \
+	test -z "$$list" || \
+	for d in $$list ; do \
+	  src=$(srcdir)/$$d.v ; \
+	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
+	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
+	  for e in $$exts ; do \
+	    target=$$d.$$e ; \
+	    $(ECHO) -n "$$target " ; \
+	  done ; \
+	  $(ECHO) ": $$obj $$deps" ; \
+	done ; \
+	$(ECHO) "$(HACKT_VPI_TEST_SCRIPTS_BASES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".vx-diff: $$(srcdir)/" $$1 ".expect-vpi"; }'; \
+	} > $@ ; \
+	$(TOUCH) $@
+
+-include vpitest.autodepend
+
+AUTO_DEPENDS += vpitest.autodepend
+
+BOGUS_TESTS += .vpitest
+
+CHECK_SUMMARIES += vpidiffs
+
+
+vpidiffs: force
+	-$(CAT) *.vx-diff > $@
+
+
+HACKT_VPI_TEST_SCRIPTS_BASES = \
+	$(HACKT_VPI_TEST_SCRIPTS_PASSES) \
+	$(HACKT_VPI_TEST_SCRIPTS_FAILURES)
+
+srcdir_EXTRA_DIST += \
+	$(HACKT_VPI_TEST_SCRIPTS_BASES:=.v) \
+	$(HACKT_VPI_TEST_SCRIPTS_BASES:=.expect-vpi)
+
+if CHECK_TESTS
+TESTS += $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vpitest)
+endif
+
+build-check-local: \
+	$(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx-out) \
+	$(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx-out-filter) \
+	$(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx-diff)
+
+echo-vpi-tests: force
+	@$(ECHO) $(HACKT_VPI_TEST_SCRIPTS_BASES)
+
+clean-vpitests:
+	patternlist='$(HACKT_VPI_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
+
+# 'csrc' is the temporary directory used in VCS compilation
+DISTCLEANDIRS += csrc
+
+clean-local: clean-vpitests
+
+.PHONY: clean-vpitests
+

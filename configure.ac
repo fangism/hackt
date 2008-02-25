@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.169.2.2 2008/01/22 23:05:09 fang Exp $
+#	$Id: configure.ac,v 1.169.2.3 2008/02/25 08:23:37 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -541,6 +541,7 @@ AC_CONFIG_FILES([
 	test/parser/connect/Makefile
 	test/parser/flow/Makefile
 	test/prsim/Makefile
+	test/prsim/vpi/Makefile
 	test/chpsim/Makefile
 	test/chpsim/testlib/Makefile
 	test/chpsim/router/Makefile

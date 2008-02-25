@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2008-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-43:
+	  config/hackt.m4: VPI check now checks for 'vcs' and provide
+		automake conditional HAVE_VCS.
+	  configure.ac: AC_OUTPUT(test/prsim/vpi/Makefile)
+
+
 2008-01-22	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-15:

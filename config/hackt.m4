@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.13.2.1 2008/01/17 01:31:28 fang Exp $
+dnl	$Id: hackt.m4,v 1.13.2.2 2008/02/25 08:23:38 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -326,6 +326,8 @@ dnl Argument is the base path where include and lib can be found
 dnl (without include/).
 dnl e.g. /usr/local/cad/synopsys/vcs/linux
 dnl which is expected to contain subdirs include/, lib/
+dnl Often times, this will be some architecture-dependent path.
+dnl Also checks for vcs compiler
 dnl
 dnl @category ProjectSpecific
 dnl @version 2007-12-17
@@ -349,6 +351,9 @@ fi
 AM_CONDITIONAL(HAVE_VPI, test "$VPI_INCLUDE")
 AC_SUBST(VPI_INCLUDE)
 AC_SUBST(VPI_LDPATH)
+dnl check for vcs for running tests
+AC_CHECK_PROG([VCS], vcs, vcs)
+AM_CONDITIONAL(HAVE_VCS, test "$ac_cv_prog_VCS" = "vcs")
 ])dnl
 
 dnl @synopsis HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING

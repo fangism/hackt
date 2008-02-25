@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.1.4.1 2008/01/17 01:32:33 fang Exp $
+	$Id: vpi-prsim.cc,v 1.1.4.2 2008/02/25 08:23:43 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -163,6 +163,12 @@ lookup_prsim_name(const char* prsim_name) {
   return n;
 }
 
+static
+node_index_type
+lookup_prsim_name(const string& s) {
+	return lookup_prsim_name(s.c_str());
+}
+
 /**
 	\param vcs_name should really just be a const char*.
  */
@@ -177,6 +183,14 @@ lookup_vcs_name(const char* vcs_name) {
   }
   return net;
 }
+
+#if 0
+static
+vpiHandle
+lookup_vcs_name(const string& s) {
+	return lookup_vcs_name(s.c_str());
+}
+#endif
 
 //=============================================================================
 static
@@ -413,21 +427,24 @@ PLI_INT32 prsim_callback (s_cb_data *p)
   vcs_to_prstime(p->time, &vcstime);
   SHOW_VCS_TIME(vcstime);
 #endif
-static const bool force = true;
+/**
+	Whether or not set events from VPI are considered forced.
+ */
+static const bool set_force = true;
   switch (p->value->value.scalar) {
 // NOTE: for now, set_node_time is not "forced", hence false argument
   case vpi0:
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_F, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_LOW, vcstime, force);
+    prsim_state->set_node_time(n, node_type::LOGIC_LOW, vcstime, set_force);
 #endif
     break;
   case vpi1:
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_T, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_HIGH, vcstime, force);
+    prsim_state->set_node_time(n, node_type::LOGIC_HIGH, vcstime, set_force);
 #endif
     break;
   case vpiZ:
@@ -437,7 +454,7 @@ static const bool force = true;
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_X, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_OTHER, vcstime, force);
+    prsim_state->set_node_time(n, node_type::LOGIC_OTHER, vcstime, set_force);
 #endif
     break;
   default:
@@ -456,6 +473,7 @@ static const bool force = true;
 /*
   Register a VCS-driven node with VCS and prsim
 */
+static
 void register_to_prsim (const char *vcs_name, const char *prsim_name)
 {
   STACKTRACE_VERBOSE;
@@ -495,6 +513,7 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
 /*
   Register a prsim-driven node with VCS and prsim
 */
+static
 void register_from_prsim (const char *vcs_name, const char *prsim_name)
 {
   STACKTRACE_VERBOSE;
@@ -532,6 +551,20 @@ void register_from_prsim (const char *vcs_name, const char *prsim_name)
 	vpiHandleMap[ni] = net;
 #endif
 }
+
+#if 0
+/// wrapper.
+static
+void register_to_prsim(const string& s, const string& p) {
+	register_to_prsim(s.c_str(), p.c_str());
+}
+
+/// wrapper.
+static
+void register_from_prsim(const string& s, const string& p) {
+	register_from_prsim(s.c_str(), p.c_str());
+}
+#endif
 
 /*
   Register a prsim-driven node watch-point
@@ -581,7 +614,7 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
   vpiHandle h;
   vpiHandle net1, net2;
   s_vpi_value arg;
-  char *arg1;
+  string arg1;
 
   task_call = vpi_handle (vpiSysTfCall, NULL);
   h = vpi_iterate (vpiArgument, task_call);
@@ -592,7 +625,8 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
   }
   arg.format = vpiStringVal;
   vpi_get_value (net1, &arg);
-  arg1 = strdup (arg.value.str);
+  // arg1 = strdup (arg.value.str);	// memory leak?
+  arg1 = arg.value.str;
 
   net2 = vpi_scan (h);
   if (!net2) {
@@ -603,8 +637,7 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
   vpi_get_value (net2, &arg);
 
 #if VERBOSE_DEBUG
-  vpi_printf ("setup %s (vcs) -> %s (prsim)\n", arg1,
-	      arg.value.str);
+  vpi_printf ("setup %s (vcs) -> %s (prsim)\n", arg1.c_str(), arg.value.str);
 #endif
 
   if (vpi_scan (h)) {
@@ -612,7 +645,7 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
     return 0;
   }
 
-  register_to_prsim (arg1, arg.value.str);
+  register_to_prsim (arg1.c_str(), arg.value.str);
   return 1;
 }
 
@@ -623,7 +656,7 @@ static PLI_INT32 from_prsim (PLI_BYTE8 *args)
   vpiHandle h;
   vpiHandle net1, net2;
   s_vpi_value arg;
-  char *arg1;
+  string arg1;
 
   task_call = vpi_handle (vpiSysTfCall, NULL);
   h = vpi_iterate (vpiArgument, task_call);
@@ -634,7 +667,8 @@ static PLI_INT32 from_prsim (PLI_BYTE8 *args)
   }
   arg.format = vpiStringVal;
   vpi_get_value (net1, &arg);
-  arg1 = strdup (arg.value.str);
+  // arg1 = strdup (arg.value.str);
+  arg1 = arg.value.str;
 
   net2 = vpi_scan (h);
   if (!net2) {
@@ -649,7 +683,7 @@ static PLI_INT32 from_prsim (PLI_BYTE8 *args)
     return 0;
   }
 
-  register_from_prsim (arg.value.str, arg1);
+  register_from_prsim (arg.value.str, arg1.c_str());
   return 1;
 }
 
@@ -825,6 +859,182 @@ static PLI_INT32 prsim_resetmode (PLI_BYTE8 *args)
   return 1;
 }
 
+static PLI_INT32 prsim_status_x (PLI_BYTE8 *args)
+{
+  STACKTRACE_VERBOSE;
+  vpiHandle task_call;
+  vpiHandle h;
+  vpiHandle fname;
+  s_vpi_value arg;
+
+#if 0
+  if (!prsim_state) {
+    fatal_error ("Call prsim_status only after an object file has been loaded");
+  }
+#else
+  require_prsim_state(__FUNCTION__);
+#endif
+
+  task_call = vpi_handle (vpiSysTfCall, NULL);
+  h = vpi_iterate (vpiArgument, task_call);
+  fname = vpi_scan (h);
+  if (!fname) {
+    vpi_printf ("Usage: $prsim_status(1 or 0 or U)\n");
+    return 0;
+  }
+  arg.format = vpiIntVal;
+  vpi_get_value (fname, &arg);
+
+  if (vpi_scan (h)) {
+    vpi_printf ("Usage: $prsim_status(1 or 0 or U)\n");
+    return 0;
+  }
+
+#if 0
+  int v = PRS_VAL_X;
+  //printf("U nodes:\n");
+  prs_apply (P, (void*)v, check_nodeval);
+  prs_apply (P, (void*)NULL, clear_nodeflag);
+  vpi_printf ("\n");
+
+  //if (arg.value.integer == 0) {
+    //P->flags &= ~PRS_NO_WEAK_INTERFERENCE;
+  //}
+  //else {
+    //P->flags |= PRS_NO_WEAK_INTERFERENCE;
+  //}
+#else
+	// arg.value.char? .str[0]?
+	prsim_state->status_nodes(cout, 'X', false);
+#endif
+  return 1;
+}
+
+// just set a node in prsim
+static PLI_INT32 prsim_set (PLI_BYTE8 *args)
+{
+  STACKTRACE_VERBOSE;
+  vpiHandle task_call;
+  vpiHandle h;
+  vpiHandle net1;
+  s_vpi_value arg;
+  string arg1;
+  vpiHandle fname;
+  // PrsNode *n;
+  uchar val;
+  require_prsim_state(__FUNCTION__);
+
+  task_call = vpi_handle (vpiSysTfCall, NULL);
+  h = vpi_iterate (vpiArgument, task_call);
+  net1 = vpi_scan (h);
+  if (!net1) {
+    vpi_printf ("Usage: $prsim_set(prsim-name, val)\n");
+    return 0;
+  }
+
+  arg.format = vpiStringVal;
+  vpi_get_value (net1, &arg);
+  // arg1 = strdup (arg.value.str);	// umm, memory leak, Hello???
+  arg1 = arg.value.str;
+
+  fname = vpi_scan (h);
+  if (!fname) {
+    vpi_printf ("Usage: $prsim_set(prsim-name, val)\n");
+    return 0;
+  }
+
+  arg.format = vpiIntVal;
+  vpi_get_value (fname, &arg);
+
+  if (vpi_scan (h)) {
+    vpi_printf ("Usage: $prsim_set(prsim-name, val)\n");
+    return 0;
+  }
+
+#if 0
+  vpi_printf ("prsim set %s %d\n", arg1, arg.value.integer);
+#endif
+	// can't set X, huh?
+  if (arg.value.integer == 0) {
+          val = node_type::LOGIC_LOW;
+  } else {
+          val = node_type::LOGIC_HIGH;
+  }
+#if 0
+  n = prs_node (P, arg1);
+  prs_set_node (P, n, val);
+#else
+  // Time_t vcstime;
+  // vcs_to_prstime(p->time, &vcstime);
+	const node_index_type ni = lookup_prsim_name(arg1);
+	prsim_state->set_node(ni, val, false);
+	// error status?
+#endif
+
+  //if (vpi_scan (h)) {
+    //vpi_printf ("Usage: $to_prsim(vcs-name, prsim-name)\n");
+    //return 0;
+  //}
+
+  //register_to_prsim (arg1, arg.value.str);
+
+  return 1;
+}
+
+// just get a node in prsim
+static PLI_INT32 prsim_get (PLI_BYTE8 *args)
+{
+  STACKTRACE_VERBOSE;
+  vpiHandle task_call;
+  vpiHandle h;
+  vpiHandle net1;
+  s_vpi_value arg;
+  string arg1;
+  // vpiHandle fname;
+  // PrsNode *n;
+  // int val;
+
+  require_prsim_state(__FUNCTION__);
+  task_call = vpi_handle (vpiSysTfCall, NULL);
+  h = vpi_iterate (vpiArgument, task_call);
+  net1 = vpi_scan (h);
+  if (!net1) {
+    vpi_printf ("Usage: $prsim_get(prsim-name)\n");
+    return 0;
+  }
+
+  arg.format = vpiStringVal;
+  vpi_get_value (net1, &arg);
+  // arg1 = strdup (arg.value.str);
+  arg1 = arg.value.str;
+
+  if (vpi_scan (h)) {
+    vpi_printf ("Usage: $prsim_set(prsim-name, val)\n");
+    return 0;
+  }
+
+#if 0
+  vpi_printf ("prsim set %s %d\n", arg1, arg.value.integer);
+#endif
+
+#if 0
+  n = prs_node (P, arg1);
+  vpi_printf ("%s: %c\n", arg1.c_str(), prs_nodechar (prs_nodeval (n)));
+#else
+	const node_index_type ni = lookup_prsim_name(arg1);
+	print_watched_node(cout, *prsim_state, ni, arg1);
+#endif
+
+  //if (vpi_scan (h)) {
+    //vpi_printf ("Usage: $to_prsim(vcs-name, prsim-name)\n");
+    //return 0;
+  //}
+
+  //register_to_prsim (arg1, arg.value.str);
+
+  return 1;
+}
+
 
 struct funcs {
   char *name;
@@ -835,7 +1045,11 @@ static struct funcs f[] = {
   { "$to_prsim", to_prsim },
   { "$from_prsim", from_prsim },
   { "$prsim", prsim_file },
-  { "$prsim_cmd", prsim_cmd },
+  { "$prsim_cmd", prsim_cmd },		// one command to rule them all
+	// these other commands are not needed, only for convenience
+  { "$prsim_status_x", prsim_status_x },
+  { "$prsim_set", prsim_set },
+  { "$prsim_get", prsim_get },
   // { "$packprsim", prsim_packfile },
   { "$prsim_mkrandom", prsim_random },
   { "$prsim_resetmode", prsim_resetmode },

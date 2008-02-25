@@ -3,7 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2008-02-23	David Fang		<fangism@users.sourceforge.net>
+2008-02-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-43:
+	  Extended vpi-prsim with prsim_set/prsim_get commands, as an 
+		additional interface, even though $prsim_cmd suffices. 
+	  prsim/vpi-prsim.cc: replace memory-leaking strdup calls with
+		properly constructed std::strings.  
+	  Added first vpi test to test suite, only enabled if configure
+		detects vcs (verilog compiler).
+
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-42:
 	  Improved 'why-x' diagnostic output, test-cases updated.
