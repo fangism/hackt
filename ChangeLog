@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2008-02-28	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05:
+	  configure.ac: AM_CONDITIONAL SRCDIR_BUILD
+
+
 2008-02-18	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-04:

@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.22 2007/11/06 21:40:01 fang Exp $
+#	$Id: Makefile.am,v 1.23 2008/02/26 22:44:26 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -30,6 +30,14 @@ HACKT_PARSE_TEST_FAILURES = \
 	line-number-01 line-number-02 line-number-03 \
 	bin-02 \
 	quad-02
+
+# these tests don't work when building in the srcdir
+if SRCDIR_BUILD
+import-006.hacktcmplfailtest:
+	@$(SKIP_TEST_SCRIPT)
+import-010.hacktcmplfailtest:
+	@$(SKIP_TEST_SCRIPT)
+endif
 
 HACKT_PARSE_TEST_PASSES = \
 	comment-003 comment-004 comment-005 comment-006 \
@@ -80,6 +88,15 @@ HACKT_FLATTEN_TEST_FAILURES = \
 	import-016 import-017 import-018 import-019 import-020 \
 	import-021
 
+# these tests don't work when building in the srcdir
+if SRCDIR_BUILD
+import-006.hacflatfailtest:
+	@$(SKIP_TEST_SCRIPT)
+import-010.hacflatfailtest:
+	@$(SKIP_TEST_SCRIPT)
+endif
+
+
 # should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
 # HACKT_OBJ_TEST_SUBJECTS = $(HACKT_PARSE_TEST_PASSES)
 
@@ -98,6 +115,13 @@ INCLUDE_FIRST_TEST_FILES = me_first.hac include/me_first.hac
 # extra deps
 include-path-01.depend include-path-01.haco include-path-01.hacf: \
 	$(INCLUDE_FIRST_TEST_FILES)
+
+if SRCDIR_BUILD
+include-path-01.hacfobjdifftest:
+	@$(SKIP_TEST_SCRIPT)
+include-path-01.hacktcreatetest:
+	@$(SKIP_TEST_SCRIPT)
+endif
 
 include/me_first.hac: Makefile
 	$(mkdir_p) include && \

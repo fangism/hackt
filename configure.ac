@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.170 2008/02/19 05:48:51 fang Exp $
+#	$Id: configure.ac,v 1.171 2008/02/26 22:44:21 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -35,6 +35,8 @@ if test "$AWK" = "mawk" ; then
   AC_MSG_WARN([mawk is known to die on valid input, please try any other awk!])
 fi
 HACKT_AUTO_CVSIGNORE
+dnl true if building in srcdir
+AM_CONDITIONAL(SRCDIR_BUILD, test "$srcdir" = ".")
 
 AC_CHECK_PROG([SH], sh, sh)
 AC_PATH_PROG(SH_PATH, sh)
