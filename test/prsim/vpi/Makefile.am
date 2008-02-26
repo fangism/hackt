@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.3 2008/02/25 21:06:43 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.4 2008/02/26 02:13:28 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -49,7 +49,7 @@ dist_vpiinv_DATA = clkgen.v inverters.hac inverters.v example.mk
 vpiinv_DATA = Makefile.copy
 
 # generalize and automate this rule
-DISTCLEANDIRS += inverters.vx.daidir inverters.vxi.daidir
+DISTCLEANDIRS += inverters.vx.daidir inverters.vxi.daidir $(EXAMPLE_NAME)
 
 include $(top_srcdir)/test/Make.test-tail
 

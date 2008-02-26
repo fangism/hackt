@@ -1,6 +1,6 @@
 # "Make.test-vpi"
 #	vi: ft=automake
-#	$Id: Make.test-vpi,v 1.1.2.2 2008/02/25 19:55:21 fang Exp $
+#	$Id: Make.test-vpi,v 1.1.2.3 2008/02/26 02:13:27 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -22,7 +22,8 @@ HACKT_VPI_CLEAN_IGNORE_PATTERNS = \
 	"*.vpitest"
 
 AUTO_IGNORE += $(HACKT_VPI_CLEAN_IGNORE_PATTERNS)
-
+AUTO_IGNORE += .vcsmx_rebuild
+DISTCLEANFILES += .vcsmx_rebuild
 
 VCS_OUTPUT_FILTER =
 
