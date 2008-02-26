@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.35 2008/02/25 05:21:31 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.36 2008/02/26 01:56:59 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3244,7 +3244,13 @@ State::__diagnose_violation(ostream& o, const uchar next,
 		// then must be unstable or interfering (exclusive)
 		const bool instability =
 			(eu & event_type::EVENT_UNSTABLE) &&
-			!n.is_unstab();
+			!n.is_unstab()
+#if PRSIM_WEAK_RULES
+			&& !(weak && !e.is_weak())
+			// is not instability if original event was strong
+			// and this new event is weak
+#endif
+			;
 		/***
 			This last condition !unstab violates exact exclusion 
 			between unstable and interference!
@@ -3282,6 +3288,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 	}
 #endif
 			} else {
+				DEBUG_STEP_PRINT("changing event to X" << endl);
 				e.val = node_type::LOGIC_OTHER;
 			}
 		}

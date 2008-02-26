@@ -1,0 +1,15 @@
+// "stuck-bug-a.hac"
+// reduced test case
+
+bool mp, _pR, s, e, en, _r, c, l_, d;
+
+prs {
+	// just explicitly folded stacks
+	~_pR | (~s & ~e) | (~e & ~s)	-> _r+
+	(en | en) & ((c & l_ & s & e) | (e & s & l_ & c))
+					-> _r-
+[weak=1]	~mp & ~d		-> _r+
+[weak=1]	_pR & d			-> _r-
+}
+
+
