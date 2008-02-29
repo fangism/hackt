@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.4.2 2008/02/24 07:25:01 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.4.3 2008/02/29 04:07:22 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -30,6 +30,12 @@
 	with 'ev' protocols.  
  */
 #define	PRSIM_CHANNEL_VALIDITY			0
+
+/**
+	Define to 1 to support don't care values in channels, 
+	only applicable to expects.  
+ */
+#define	PRSIM_CHANNEL_DONT_CARES		1
 
 namespace HAC {
 namespace SIM {
@@ -109,6 +115,20 @@ public:
 	 */
 	typedef	util::numeric::unsigned_type<int_value_type>::type
 						value_type;
+	/**
+		Values kept by the array.  
+		Pair implementation to support don't cares.  
+		Second member bool is true means don't care for expects.  
+		Define to struct to be able to overload ostream& operator <<
+	 */
+#if PRSIM_CHANNEL_DONT_CARES
+	struct array_value_type : public std::pair<value_type, bool> { };
+#else
+	typedef	value_type			array_value_type;
+#endif
+	/**
+		Utility data structure for set of unique node indices. 
+	 */
 	typedef	std::set<node_index_type>	node_set_type;
 private:
 	enum channel_flags {
@@ -229,7 +249,7 @@ private:
 	/**
 		The values to expect or inject.  
 	 */
-	vector<value_type>			values;
+	vector<array_value_type>		values;
 	/**
 		Position in values list.
 	 */
@@ -260,7 +280,7 @@ private:
 	void
 	current_data_rails(vector<node_index_type>&) const;
 
-	const value_type&
+	const array_value_type&
 	current_value(void) const { return values[value_index]; }
 
 	void
@@ -445,6 +465,11 @@ private:
 	load_checkpoint(istream&);
 
 };	// end class channel
+
+#if PRSIM_CHANNEL_DONT_CARES
+ostream&
+operator << (ostream&, const channel::array_value_type&);
+#endif
 
 //=============================================================================
 // wrap these into a channel_manager?

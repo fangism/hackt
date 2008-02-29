@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.4.2 2008/02/24 07:24:58 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.4.3 2008/02/29 04:07:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -25,6 +25,47 @@
 #include "util/numeric/div.h"
 #include "util/numeric/random.h"	// for rand48 family
 #include "util/stacktrace.h"
+
+#if PRSIM_CHANNEL_DONT_CARES
+namespace util {
+using std::istream;
+using std::ostream;
+using HAC::SIM::PRSIM::channel;
+
+template <>
+struct value_writer<channel::array_value_type> {
+	ostream&		os;
+	explicit
+	value_writer(ostream& o) : os(o) { }
+
+	void
+	operator () (const channel::array_value_type& p) {
+		write_value(os, p.first);
+		write_value(os, p.second);
+	}
+};
+
+template <>
+struct value_reader<channel::array_value_type> {
+	istream&		is;
+	explicit
+	value_reader(istream& i) : is(i) { }
+
+	void
+	operator () (channel::array_value_type& p) {
+		read_value(is, p.first);
+		read_value(is, p.second);
+	}
+};
+
+}	// end namespace util
+#endif	// PRSIM_CHANNEL_DONT_CARES
+
+#if PRSIM_CHANNEL_DONT_CARES
+#define	DATA_VALUE(x)			x.first
+#else
+#define	DATA_VALUE(x)			x
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -168,6 +209,18 @@ channel::alias_data_rails(const node_index_type ni) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_DONT_CARES
+ostream&
+operator << (ostream& o, const channel::array_value_type& p) {
+	if (p.second) {
+		return o << 'X';
+	} else {
+		return o << p.first;
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Don't bother printing out node indices.
  */
@@ -218,7 +271,7 @@ channel::dump(ostream& o) const {
 			((is_sourcing() && !is_random()) || is_expecting())) {
 		o << " {";
 		copy(values.begin(), values.end(), 
-			ostream_iterator<value_type>(o, ","));
+			ostream_iterator<array_value_type>(o, ","));
 		o << '}';
 		if (is_looping()) o << '*';
 		o << " @" << value_index;
@@ -255,7 +308,7 @@ channel::dump_state(ostream& o) const {
  */
 static
 bool
-read_values_from_file(const string& fn, vector<channel::value_type>& v) {
+read_values_from_file(const string& fn, vector<channel::array_value_type>& v) {
 	STACKTRACE_VERBOSE;
 	v.clear();
 	ifstream f(fn.c_str());
@@ -272,18 +325,32 @@ while (1) {
 	if ((line.length() > 0) && (line[0] != '#')) {
 		util::string_list toks;
 		util::tokenize(line, toks);
-		channel::value_type i;
+#if PRSIM_CHANNEL_DONT_CARES
+		channel::array_value_type p;
+		channel::value_type& i(p.first);
+		p.first = 0;
+		p.second = false;
+		if (toks.front() == "X") {
+			p.second = true;
+		} else
+#else
+		channel::array_value_type i;
+#endif
 		if (string_to_num(toks.front(), i)) {
 			cerr << "Error: invalid value \"" <<
 				toks.front() << "\"." << endl;
 			return true;
-		}
+		} else
 		if (i > std::numeric_limits<channel::value_type>::max() >> 1) {
 			cerr << "Warning: value " << i << " is greater than "
 				"max(unsigned value_type)/2, which may screw "
 				"up ldiv() when translating to rails." << endl;
 		}
+#if PRSIM_CHANNEL_DONT_CARES
+		v.push_back(p);
+#else
 		v.push_back(i);
+#endif
 	}
 }
 	return false;
@@ -586,7 +653,7 @@ channel::advance_value(void) {
 if (is_random()) {
 	INVARIANT(!value_index);
 	INVARIANT(values.size() == 1);
-	values.front() = rand48<value_type>()();
+	DATA_VALUE(values.front()) = rand48<value_type>()();
 	// long (lrand48): [0..2^31 -1]
 } else {
 	++value_index;		// overflow?
@@ -598,6 +665,12 @@ if (is_random()) {
 		}
 	}
 	// else if values.size(), values.clear() ?
+#if PRSIM_CHANNEL_DONT_CARES
+	if (values[value_index].second) {
+		// if values is X (don't care), then choose a random value
+		values[value_index].first = rand48<value_type>()();
+	}
+#endif
 }
 }
 
@@ -612,7 +685,7 @@ channel::current_data_rails(vector<node_index_type>& r) const {
 if (have_value()) {
 	const int_value_type rdx = radix();
 	div_type<int_value_type>::return_type qr;
-	qr.quot = current_value();
+	qr.quot = DATA_VALUE(current_value());
 	qr.rem = 0;	// unused
 	data_rail_index_type k;
 	k[0] = 0;
@@ -643,7 +716,7 @@ if (have_value()) {
 	const int_value_type rdx = radix();
 	// NOTE: div is *signed*
 	div_type<int_value_type>::return_type qr;
-	qr.quot = current_value();
+	qr.quot = DATA_VALUE(current_value());
 	qr.rem = 0;	// unused
 	data_rail_index_type k;
 	k[0] = 0;
@@ -1126,13 +1199,19 @@ if (ni == ack_signal) {
 		if (is_expecting()) {
 		if (have_value()) {
 			// don't bother waiting for validity signal
-			const value_type expect = current_value();
+			const array_value_type& expect = current_value();
+#if PRSIM_CHANNEL_DONT_CARES
+			if (!expect.second) {
+#endif
 			const value_type got = data_rails_value(s);
 			advance_value();
-			if (expect != got) {
+			if (DATA_VALUE(expect) != got) {
 				throw State::channel_exception(name, 
-					expect, got);
+					DATA_VALUE(expect), got);
 			}
+#if PRSIM_CHANNEL_DONT_CARES
+			}	// else don't care
+#endif
 		} else {
 			// exhausted values, disable expecting
 			flags &= ~CHANNEL_EXPECTING;
@@ -1973,6 +2052,7 @@ for ( ; j<s; ++j) {
 #undef	__GET_NAMED_CHANNEL
 #undef	GET_NAMED_CHANNEL
 #undef	GET_NAMED_CHANNEL_CONST
+#undef	DATA_VALUE
 
 }	// end namespace PRSIM
 }	// end namespace SIM

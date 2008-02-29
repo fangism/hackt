@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.11 2008/02/24 07:24:55 fang Exp $
+@c $Id: commands.texi,v 1.2.2.12 2008/02/29 04:07:16 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -173,6 +173,8 @@ Only the first value on each line is used, so value sequences
 should be newline-separated.
 For now, the remained of each line is simply ignored, 
 so you may use them for comments, but this may change in the future.  
+The other legal value in the file is @t{X}, which is interpreted as
+@i{don't care} for expected values, and @i{random} for source values.  
 
 Channels can be configured to operate as environments
 when they are not already connected to inputs or outputs.  

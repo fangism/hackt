@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.29 2008/02/26 01:57:05 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.30 2008/02/29 04:07:23 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -137,6 +137,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-b-01 channel-test-b-02 channel-test-b-03 \
 	channel-test-b-04 channel-test-b-05 channel-test-b-06 \
 	channel-test-b-07 channel-test-b-08 \
+	channel-test-b-09 channel-test-b-10 \
+	channel-test-b-11 channel-test-b-12 \
+	channel-test-b-13 channel-test-b-14 \
 	channel-test-b-random-01 channel-test-b-random-02 \
 	stuck-bug-a-01
 
@@ -171,15 +174,23 @@ channel-test-a-values-Y.txt:
 	$(ECHO) "1" ; $(ECHO) "3" ; $(ECHO) "0" ; $(ECHO) "2" ; \
 		} > $@
 
+channel-dont-cares.txt:
+	{ $(ECHO) "# $@" ; \
+	$(ECHO) "# bunch of X (do not care) values" ; \
+	$(ECHO) "X" ; $(ECHO) "X" ; $(ECHO) "X" ; $(ECHO) "X" ; \
+		} > $@
+
 # extra dep
 cbit_test_stat-01.prsimrc-out: cbit_test_stat.haco-a
 
 CLEANFILES += cbit_test_stat-01.prsimrc \
 	channel-test-a-values-X.txt \
-	channel-test-a-values-Y.txt
+	channel-test-a-values-Y.txt \
+	channel-dont-cares.txt
 AUTO_IGNORE += cbit_test_stat-01.prsimrc \
 	channel-test-a-values-X.txt \
-	channel-test-a-values-Y.txt
+	channel-test-a-values-Y.txt \
+	channel-dont-cares.txt
 EXTRA_DIST += cbit_test_stat-01.prsimrc gen_cbit_test.awk
 
 # all weak-* tests added (pass AND fail) are consistent with Rajit's prsim

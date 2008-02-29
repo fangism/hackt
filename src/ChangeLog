@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-02-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-46:
+	  prsim channel features: input files for channel values may now 
+		contain 'X's, which are interpreted as don't cares for
+		channel-expect, and as treated as random values for 
+		channel-source.  
+	  Documented (dox/prsim/commands.texi) and tested.  
+	  Few tests updated to remove non-determinstic output (random).
+
+
 2008-02-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-45:

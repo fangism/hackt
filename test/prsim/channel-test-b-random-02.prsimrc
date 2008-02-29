@@ -62,8 +62,9 @@ echo ---------------------------
 echo stop channel R
 channel-stop R
 cycle
-why-not L.e
-why-not-verbose L.e
+# can't rely on output being the same b/c random source
+# why-not L.e
+# why-not-verbose L.e
 channel-show-all
 
 echo ---------------------------
