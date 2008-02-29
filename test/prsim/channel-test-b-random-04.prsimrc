@@ -1,0 +1,91 @@
+# "channel-test-b-random-04.prsimrc"
+# copy-modified from "channel-test-b-random-02.prsimrc"
+# @haco@ channel-test-b.haco-a
+# testing source/sinks on different channels
+
+source channel-test-b-02.prsimrc
+
+channel-source-args-loop L X
+channel-sink R
+channel-show L
+channel-show R
+channel-watchall
+
+channel-reset-all
+channel-show L
+channel-show R
+cycle
+channel-show L
+channel-show R
+assert L.d[0] 0
+assert L.d[1] 0
+assert L.e 1
+assert R.d[0] 0
+assert R.d[1] 0
+assert R.e 0
+
+channel-release-all
+queue
+
+step 111
+assert-queue
+
+echo ---------------------------
+echo stop channel L
+channel-stop L
+cycle
+why-not R.e
+why-not-verbose R.e
+channel-show-all
+
+echo ---------------------------
+echo stop channel R
+channel-stop R
+cycle
+channel-show-all
+
+echo ---------------------------
+echo resume channel L
+channel-release L
+cycle
+why-not L.e
+why-not-verbose L.e
+channel-show-all
+
+echo ---------------------------
+echo resume channel R
+channel-release R
+step 44
+assert-queue
+channel-show-all
+
+echo ---------------------------
+echo stop channel R
+channel-stop R
+cycle
+# can't rely on output being the same b/c random source
+# why-not L.e
+# why-not-verbose L.e
+channel-show-all
+
+echo ---------------------------
+echo stop channel L
+channel-stop L
+cycle
+why-not R.e
+why-not-verbose R.e
+channel-show-all
+
+echo ---------------------------
+echo resume channel R
+channel-release R
+cycle
+channel-show-all
+
+echo ---------------------------
+echo resume channel L
+channel-release L
+step 33
+assert-queue
+channel-show-all
+

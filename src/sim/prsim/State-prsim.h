@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.15 2008/02/24 07:25:05 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.16 2008/02/29 22:42:24 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -26,6 +26,7 @@
 #include "sim/state_base.h"
 #include "sim/signal_handler.h"
 #include "sim/event.h"
+#include "sim/prsim/Exception.h"
 #include "sim/prsim/Event-prsim.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
@@ -127,13 +128,6 @@ public:
 							step_return_type;
 	typedef	size_t				lock_index_type;
 	/**
-		Generic simulation exception base class, 
-		when something goes wrong.
-	 */
-	struct step_exception {
-	virtual	~step_exception() { }
-	};
-	/**
 		Exception thrown when there is a violation of 
 		exclusion among exclhi or excllo checked rings.  
 	 */
@@ -150,19 +144,6 @@ public:
 			lock_id(li), node_id(ni) { }
 	};	// end struct excl_exception
 
-#if PRSIM_CHANNEL_SUPPORT
-	/**
-		When channel value mismatches expectation.
-	 */
-	struct channel_exception : public step_exception {
-		const string			name;
-		int_value_type			expect;
-		int_value_type			got;
-		channel_exception(const string& n, 
-			const int_value_type e, const int_value_type g) :
-			name(n), expect(e), got(g) { }
-	};	// end struct channel_exception
-#endif
 
 #define	THROWS_STEP_EXCEPTION	throw (step_exception)
 private:
@@ -991,6 +972,8 @@ private:
 	void
 	__flush_pending_event_replacement(
 		node_type&, const event_index_type, event_type&);
+
+	struct auto_flush_queues;
 
 	event_placeholder_type
 	dequeue_event(void);

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.193.2.3 2008/02/22 06:07:04 fang Exp $
+#	$Id: Makefile.am,v 1.193.2.4 2008/02/29 22:42:18 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -935,6 +935,7 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/devel_switches.h \
 	sim/prsim/devel_switches.h \
 	sim/prsim/ExprAllocFlags.h \
+	sim/prsim/Exception.h \
 	sim/chpsim/chpsim_dlfunction.h \
 	sim/chpsim/StateConstructorFlags.h \
 	sim/chpsim/devel_switches.h \

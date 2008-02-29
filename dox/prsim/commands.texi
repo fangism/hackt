@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.12 2008/02/29 04:07:16 fang Exp $
+@c $Id: commands.texi,v 1.2.2.13 2008/02/29 22:42:13 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -162,6 +162,7 @@ expected values.
 @include cmd/channel-close-all.texi
 @include cmd/channel-expect.texi
 @include cmd/channel-expect-loop.texi
+@include cmd/channel-expect-args.texi
 
 @noindent
 It is legal to log and expect values on the same channel.  
@@ -184,6 +185,7 @@ a channel cannot act as source while expecting values.
 
 @include cmd/channel-source.texi
 @include cmd/channel-source-loop.texi
+@include cmd/channel-source-args.texi
 @include cmd/channel-rsource.texi
 @include cmd/channel-sink.texi
 

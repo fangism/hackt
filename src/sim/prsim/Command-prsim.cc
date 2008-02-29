@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.15 2008/02/25 05:21:30 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.16 2008/02/29 22:42:21 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -393,7 +393,7 @@ if (a.size() > 2) {
 			}
 		}
 	}	// end while
-	} catch (const State::step_exception& exex) {
+	} catch (const step_exception& exex) {
 		s.inspect_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
@@ -487,7 +487,7 @@ if (a.size() > 2) {
 			}
 		}
 	}	// end while
-	} catch (const State::step_exception& exex) {
+	} catch (const step_exception& exex) {
 		s.inspect_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
@@ -608,7 +608,7 @@ if (a.size() != 1) {
 			}
 		}
 	}	// end while (!s.stopped())
-	} catch (const State::step_exception& exex) {
+	} catch (const step_exception& exex) {
 		s.inspect_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
@@ -3785,24 +3785,27 @@ ChannelCloseAll::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/channel-source.texi
-@deffn Command channel-source chan file
+@deffn Command channel-source-file chan file
+@deffnx Command channel-source chan file
 Configure channel @var{chan} to source values from the environment.
 Values are take from @var{file} and read into an internal array.
 Once values are exhausted, the channel stops sourcing.  
-To repeat values, use @command{channel-source-loop}.  
+To repeat values, use @command{channel-source-file-loop}.  
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSource, "channel-source", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceFile, "channel-source-file", 
 	channels, "source values on channel from file (once)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSource, "channel-source", 
+	channels, "alias to channel-source (deprecated)")
 
 int
-ChannelSource::main(State& s, const string_list& a) {
+ChannelSourceFile::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.get_channel_manager().source_channel(s, 
+	if (s.get_channel_manager().source_channel_file(s, 
 			*++a.begin(), a.back(), false))
 		return Command::BADARG;
 	return Command::NORMAL;
@@ -3810,32 +3813,46 @@ if (a.size() != 3) {
 }
 
 void
-ChannelSource::usage(ostream& o) {
+ChannelSourceFile::usage(ostream& o) {
 	o << name << " <channel> <file>" << endl;
 	// TODO optional start argument for offset
 	o << "Source channel values from file.  \n"
 		"Once values are exhausted, channel stops sourcing." << endl;
 }
 
+int
+ChannelSource::main(State& s, const string_list& a) {
+	return ChannelSourceFile::main(s, a);
+}
+
+void
+ChannelSource::usage(ostream& o) {
+	ChannelSourceFile::usage(o);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/channel-source-loop.texi
-@deffn Command channel-source-loop chan file
-Like @command{channel-source} except that value sequence is repeated
+@deffn Command channel-source-file-loop chan file
+@deffnx Command channel-source-loop chan file
+Like @command{channel-source-file} except that value sequence is repeated
 infintely.  
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceLoop, "channel-source-loop", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceFileLoop, 
+	"channel-source-file-loop", 
 	channels, "source values on channel from file (loop)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceLoop, "channel-source-loop", 
+	channels, "alias to channel-source-loop (deprecated)")
 
 int
-ChannelSourceLoop::main(State& s, const string_list& a) {
+ChannelSourceFileLoop::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.get_channel_manager().source_channel(s, 
+	if (s.get_channel_manager().source_channel_file(s, 
 			*++a.begin(), a.back(), true))
 		return Command::BADARG;
 	return Command::NORMAL;
@@ -3843,11 +3860,99 @@ if (a.size() != 3) {
 }
 
 void
-ChannelSourceLoop::usage(ostream& o) {
+ChannelSourceFileLoop::usage(ostream& o) {
 	o << name << " <channel> <file>" << endl;
 	// TODO optional start argument for offset
 	o << "Source channel values from file infinitely.  \n"
 		"Once values are exhausted, sequence restarts." << endl;
+}
+
+int
+ChannelSourceLoop::main(State& s, const string_list& a) {
+	return ChannelSourceFileLoop::main(s, a);
+}
+
+void
+ChannelSourceLoop::usage(ostream& o) {
+	ChannelSourceFileLoop::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-source-args.texi
+@deffn Command channel-source-args chan values...
+Source values on channel @var{chan} using the @var{values} passed
+on the command.  
+Sourcing stops after last value is used. 
+Legal values are integers and 'X' for random.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceArgs,
+	"channel-source-args", 
+	channels, "source values on channel from arguments (once)")
+
+int
+ChannelSourceArgs::main(State& s, const string_list& a) {
+if (a.size() < 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list v;
+	copy(++++a.begin(), a.end(), back_inserter(v));
+	if (s.get_channel_manager().source_channel_args(s, 
+			*++a.begin(), v, false))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelSourceArgs::usage(ostream& o) {
+	o << name << " <channel> <values...>" << endl;
+	o <<
+"Sources a channel with finite sequence of values passed in arguments.\n"
+"Argument values may be integer or \'X\' (don\'t care or random)."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-source-args-loop.texi
+@deffn Command channel-source-args-loop chan values...
+Source values on channel @var{chan} using the @var{values} passed
+on the command.  
+Value sequence is repeated infinitely.  
+Legal values are integers and 'X' for random.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceArgsLoop,
+	"channel-source-args-loop", 
+	channels, "source values on channel from arguments (loop)")
+
+int
+ChannelSourceArgsLoop::main(State& s, const string_list& a) {
+if (a.size() < 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list v;
+	copy(++++a.begin(), a.end(), back_inserter(v));
+	if (s.get_channel_manager().source_channel_args(s, 
+			*++a.begin(), v, true))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelSourceArgsLoop::usage(ostream& o) {
+	o << name << " <channel> <values...>" << endl;
+	o <<
+"Sources a channel with repeating sequence of values passed in arguments.\n"
+"Argument values may be integer or \'X\' (don\'t care or random)."
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3949,35 +4054,38 @@ ChannelLog::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/channel-expect.texi
-@deffn Command channel-expect chan file
+@deffn Command channel-expect-file chan file
+@deffnx Command channel-expect chan file
 Compare data values seen on channel @var{chan} against a sequence of
 values from @var{file}.
 Error out as soon as there is a value mismatch.  
 In this variant, once value sequence is exhausted, 
 no more comparisons are done, and channel values go unchecked.  
-See also @command{channel-expect-loop}.
+See also @command{channel-expect-file-loop}.
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpect, "channel-expect", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectFile, "channel-expect-file", 
 	channels, "assert values on channel from file (once)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpect, "channel-expect", 
+	channels, "alias to channel-expect-file (deprecated)")
 
 int
-ChannelExpect::main(State& s, const string_list& a) {
+ChannelExpectFile::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	const string& chan_name(*++a.begin());
 	channel_manager& cm(s.get_channel_manager());
-	if (cm.expect_channel(chan_name, a.back(), false))
+	if (cm.expect_channel_file(chan_name, a.back(), false))
 		return Command::BADARG;
 	return Command::NORMAL;
 }
 }
 
 void
-ChannelExpect::usage(ostream& o) {
+ChannelExpectFile::usage(ostream& o) {
 	// TODO optional start argument for offset
 	o << name << " <channel> <file>" << endl;
 	o <<
@@ -3986,38 +4094,138 @@ ChannelExpect::usage(ostream& o) {
 	"without controlling any handshake signals." << endl;
 }
 
+int
+ChannelExpect::main(State& s, const string_list& a) {
+	return ChannelExpectFile::main(s, a);
+}
+
+void
+ChannelExpect::usage(ostream& o) {
+	ChannelExpectFile::usage(o);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/channel-expect-loop.texi
-@deffn Command channel-expect-loop
-Like @command{channel-expect} but repeats value sequence infintely.  
+@deffn Command channel-expect-file-loop chan file
+@deffnx Command channel-expect-loop chan file
+Like @command{channel-expect-file} but repeats value sequence infintely.  
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectLoop, "channel-expect-loop", 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectFileLoop,
+	"channel-expect-file-loop", 
 	channels, "assert values on channel from file (loop)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectLoop, "channel-expect-loop", 
+	channels, "alias to channel-expect-loop (deprecated)")
 
 int
-ChannelExpectLoop::main(State& s, const string_list& a) {
+ChannelExpectFileLoop::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	const string& chan_name(*++a.begin());
 	channel_manager& cm(s.get_channel_manager());
-	if (cm.expect_channel(chan_name, a.back(), true))
+	if (cm.expect_channel_file(chan_name, a.back(), true))
 		return Command::BADARG;
 	return Command::NORMAL;
 }
 }
 
 void
-ChannelExpectLoop::usage(ostream& o) {
+ChannelExpectFileLoop::usage(ostream& o) {
 	o << name << " <channel> <file>" << endl;
 	o <<
 "Assert that values observed on channel match expected values from file.\n"
 "Expecting only passively observes the state of channel data, "
 	"without controlling any handshake signals." << endl;
+}
+
+int
+ChannelExpectLoop::main(State& s, const string_list& a) {
+	return ChannelExpectFileLoop::main(s, a);
+}
+
+void
+ChannelExpectLoop::usage(ostream& o) {
+	ChannelExpectFileLoop::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-expect-args.texi
+@deffn Command channel-expect-args chan values...
+Tells a channel @var{chan} to expect @var{values} on data rails.
+Stops checking values after last value is used.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectArgs,
+	"channel-expect-args", 
+	channels, "assert values on channel from arguments (once)")
+
+int
+ChannelExpectArgs::main(State& s, const string_list& a) {
+if (a.size() < 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& chan_name(*++a.begin());
+	string_list v;
+	copy(++++a.begin(), a.end(), back_inserter(v));
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.expect_channel_args(chan_name, v, false))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelExpectArgs::usage(ostream& o) {
+	o << name << " <channel> <values...>" << endl;
+	o << 
+"Assert that values seen on channel match those listed in argument values.\n"
+"Stops checking after last value is used."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-expect-args-loop.texi
+@deffn Command channel-expect-args-loop chan values...
+Tells a channel @var{chan} to expect @var{values} on data rails.
+Checks that value sequence repeats infintely.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectArgsLoop,
+	"channel-expect-args-loop", 
+	channels, "assert values on channel from arguments (loop)")
+
+int
+ChannelExpectArgsLoop::main(State& s, const string_list& a) {
+if (a.size() < 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& chan_name(*++a.begin());
+	string_list v;
+	copy(++++a.begin(), a.end(), back_inserter(v));
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.expect_channel_args(chan_name, v, true))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelExpectArgsLoop::usage(ostream& o) {
+	o << name << " <channel> <values...>" << endl;
+	o << 
+"Assert that values seen on channel match those listed in argument values.\n"
+"Checks that value sequence repeats infintely."
+	<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.36 2008/02/26 01:56:59 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.37 2008/02/29 22:42:22 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2189,6 +2189,29 @@ if (IS_A(const excl_exception*, &ex)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	For the sake of exception safety, 
+	Upon destruction, flush intermediate event queues.  
+ */
+struct State::auto_flush_queues {
+	State&		state;
+
+	explicit
+	auto_flush_queues(State& s) : state(s) { }
+
+	~auto_flush_queues() {
+		// check and flush pending queue, spawn fanout events
+		if (UNLIKELY(state.flush_pending_queue())) {
+			state.stop();		// set stop flag
+		}
+
+		// check and flush pending queue against exclhi/lo events
+		state.flush_exclhi_queue();
+		state.flush_excllo_queue();
+	}
+} __ATTRIBUTE_UNUSED__ ;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Modeled after prs_step() from the original prsim.  
 	Critical path through here.  
 	TODO: possible add arguments later. 
@@ -2206,6 +2229,8 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	ISE_INVARIANT(pending_queue.empty());
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
+
+	const auto_flush_queues __auto_flush(*this);
 	if (event_queue.empty()) {
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
@@ -2437,15 +2462,7 @@ if (n.in_channel()) {
 	}	// end if (excllo enforcement)
 
 	// energy estimation?  TODO later for a different sim variant
-
-	// check and flush pending queue, spawn fanout events
-	if (UNLIKELY(flush_pending_queue())) {
-		stop();		// set stop flag
-	}
-
-	// check and flush pending queue against exclhi/lo events
-	flush_exclhi_queue();
-	flush_excllo_queue();
+	// queues automatically flushed by dtor of auto_flush_queues
 
 #if 0
 	// very slow, but terrific for debugging!!!

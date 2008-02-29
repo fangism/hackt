@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.4.3 2008/02/29 04:07:21 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.4.4 2008/02/29 22:42:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -275,7 +275,10 @@ channel::dump(ostream& o) const {
 		o << '}';
 		if (is_looping()) o << '*';
 		o << " @" << value_index;
-		o << " < " << inject_expect_file;	// source/expect
+		if (inject_expect_file.length()) {
+			o << " < " << inject_expect_file;	// source/expect
+		}
+		// values may come from command arguments
 	} else if (is_random()) {
 #if 0
 		o << " {" << values.front() << '}';
@@ -300,6 +303,49 @@ channel::dump_state(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true on error.
+ */
+static
+bool
+read_values_from_list(const string_list& s,
+		vector<channel::array_value_type>& v) {
+	STACKTRACE_VERBOSE;
+	v.reserve(s.size());
+	string_list::const_iterator j(s.begin()), e(s.end());
+	for ( ; j!=e; ++j) {
+		const string& tok(*j);
+#if PRSIM_CHANNEL_DONT_CARES
+		channel::array_value_type p;
+		channel::value_type& i(p.first);
+		p.first = 0;
+		p.second = false;
+		if (tok == "X") {
+			p.second = true;
+		} else
+#else
+		channel::array_value_type i;
+#endif
+		if (string_to_num(tok, i)) {
+			cerr << "Error: invalid value \"" << tok <<
+				"\"." << endl;
+			return true;
+		} else
+		if (i > std::numeric_limits<channel::value_type>::max() >> 1) {
+			cerr << "Warning: value " << i << " is greater than "
+				"max(unsigned value_type)/2, which may screw "
+				"up ldiv() when translating to rails." << endl;
+		}
+#if PRSIM_CHANNEL_DONT_CARES
+		v.push_back(p);
+#else
+		v.push_back(i);
+#endif
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reads values from a file line-by-line.
 	TODO: make this function re-usable to others
 	TODO: lookup file in search paths (from interpreter?)
@@ -318,6 +364,7 @@ read_values_from_file(const string& fn, vector<channel::array_value_type>& v) {
 		return true;
 	}
 	// honor '#' comments
+	string_list s;
 while (1) {
 	string line;
 	getline(f, line);
@@ -325,35 +372,10 @@ while (1) {
 	if ((line.length() > 0) && (line[0] != '#')) {
 		util::string_list toks;
 		util::tokenize(line, toks);
-#if PRSIM_CHANNEL_DONT_CARES
-		channel::array_value_type p;
-		channel::value_type& i(p.first);
-		p.first = 0;
-		p.second = false;
-		if (toks.front() == "X") {
-			p.second = true;
-		} else
-#else
-		channel::array_value_type i;
-#endif
-		if (string_to_num(toks.front(), i)) {
-			cerr << "Error: invalid value \"" <<
-				toks.front() << "\"." << endl;
-			return true;
-		} else
-		if (i > std::numeric_limits<channel::value_type>::max() >> 1) {
-			cerr << "Warning: value " << i << " is greater than "
-				"max(unsigned value_type)/2, which may screw "
-				"up ldiv() when translating to rails." << endl;
-		}
-#if PRSIM_CHANNEL_DONT_CARES
-		v.push_back(p);
-#else
-		v.push_back(i);
-#endif
+		s.push_back(toks.front());
 	}
 }
-	return false;
+	return read_values_from_list(s, v);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -362,11 +384,10 @@ while (1) {
 	\return true if there are errors
  */
 bool
-channel::set_source(const State& s, const string& file_name, const bool loop) {
+channel::set_source_file(const State& s, const string& file_name, 
+		const bool loop) {
 	STACKTRACE_VERBOSE;
-	if (__configure_source(s))	return true;
-	if (loop)
-		flags |= CHANNEL_VALUE_LOOP;
+	if (__configure_source(s, loop))	return true;
 	value_index = 0;	// TODO: optional offset or initial position
 	if (read_values_from_file(file_name, values)) return true;
 	if (!values.size()) {
@@ -382,12 +403,33 @@ channel::set_source(const State& s, const string& file_name, const bool loop) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Common actions for configuring source operation.  
+	\pre v list of string-values must be non-empty.
+	\return true if there are errors
+ */
+bool
+channel::set_source_args(const State& s, const string_list& v, 
+		const bool loop) {
+	STACKTRACE_VERBOSE;
+	if (__configure_source(s, loop))	return true;
+	value_index = 0;	// TODO: optional offset or initial position
+	read_values_from_list(v, values);
+	if (!values.size()) {
+		cerr << "Error: no values given, cannot source channel."
+			<< endl;
+		return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Configure source to just emit random values.  
  */
 bool
 channel::set_rsource(const State& s) {
 	STACKTRACE_VERBOSE;
-	if (__configure_source(s))	return true;
+	if (__configure_source(s, false))	return true;
 	flags |= CHANNEL_RANDOM;
 	value_index = 0;
 	values.resize(1);	
@@ -403,7 +445,7 @@ channel::set_rsource(const State& s) {
 	TODO: check for values that overflow (bundle,rail)?
  */
 bool
-channel::__configure_source(const State& s) {
+channel::__configure_source(const State& s, const bool loop) {
 	STACKTRACE_VERBOSE;
 	if (is_sourcing()) {
 		cout <<
@@ -419,6 +461,8 @@ channel::__configure_source(const State& s) {
 	// warn if ack has no fanin
 	flags &= ~(CHANNEL_EXPECTING | CHANNEL_VALUE_LOOP | CHANNEL_RANDOM);
 	flags |= CHANNEL_SOURCING;
+	if (loop)
+		flags |= CHANNEL_VALUE_LOOP;
 
 	// safety checks on signal directions
 	if (!s.get_node(ack_signal).has_fanin()) {
@@ -464,7 +508,7 @@ channel::__configure_source(const State& s) {
 			"if driven from elsewhere." << endl;
 	}
 	return false;
-}	// end channel::set_source
+}	// end channel::set_source_file
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -519,13 +563,8 @@ channel::set_sink(const State& s) {
 }	// end channel::set_sink
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Expecting values conflicts with sourcing values.  
-	TODO: check for values that overflow (bundle,rail)?
- */
-bool
-channel::set_expect(const string& fn, const bool loop) {
-	STACKTRACE_VERBOSE;
+void
+channel::__configure_expect(const bool loop) {
 	if (is_sourcing()) {
 		cout <<
 "Warning: no longer sourcing channel values; configuring to expect."
@@ -537,12 +576,43 @@ channel::set_expect(const string& fn, const bool loop) {
 	if (loop) {
 		flags |= CHANNEL_VALUE_LOOP;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expecting values conflicts with sourcing values.  
+	TODO: check for values that overflow (bundle,rail)?
+ */
+bool
+channel::set_expect_file(const string& fn, const bool loop) {
+	STACKTRACE_VERBOSE;
+	__configure_expect(loop);
 	value_index = 0;
 	values.clear();
 	if (read_values_from_file(fn, values)) return true;
 	if (values.size()) {
 		inject_expect_file = fn;	// save name
 	} else {
+		cerr <<
+	"Warning: no values found in expect file, ignoring expect."
+			<< endl;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expecting values conflicts with sourcing values.  
+	TODO: check for values that overflow (bundle,rail)?
+ */
+bool
+channel::set_expect_args(const string_list& v, const bool loop) {
+	STACKTRACE_VERBOSE;
+	__configure_expect(loop);
+	value_index = 0;
+	values.clear();
+	read_values_from_list(v, values);
+	if (!values.size()) {
 		cerr <<
 	"Warning: no values found in expect file, ignoring expect."
 			<< endl;
@@ -1019,7 +1089,7 @@ if (stopped()) {
 void
 channel::process_node(const State& s, const node_index_type ni, 
 		const uchar prev, const uchar next, 
-		vector<env_event_type>& new_events) {
+		vector<env_event_type>& new_events) throw(channel_exception) {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type	node_type;
 #if ENABLE_STACKTRACE
@@ -1206,7 +1276,7 @@ if (ni == ack_signal) {
 			const value_type got = data_rails_value(s);
 			advance_value();
 			if (DATA_VALUE(expect) != got) {
-				throw State::channel_exception(name, 
+				throw channel_exception(name, 
 					DATA_VALUE(expect), got);
 			}
 #if PRSIM_CHANNEL_DONT_CARES
@@ -1642,11 +1712,26 @@ if (have_validity) {
 	Configure a registered channel to source values from a file.
  */
 bool
-channel_manager::source_channel(const State& s, const string& channel_name, 
+channel_manager::source_channel_file(const State& s, 
+		const string& channel_name, 
 		const string& file_name, const bool loop) {
 	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
-	if (c.set_source(s, file_name, loop)) return true;
+	if (c.set_source_file(s, file_name, loop)) return true;
+	return check_source(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Configure a registered channel to source values from a list.
+ */
+bool
+channel_manager::source_channel_args(const State& s, 
+		const string& channel_name, 
+		const string_list& values, const bool loop) {
+	STACKTRACE_VERBOSE;
+	GET_NAMED_CHANNEL(c, channel_name)
+	if (c.set_source_args(s, values, loop)) return true;
 	return check_source(c);
 }
 
@@ -1735,11 +1820,20 @@ channel_manager::log_channel(const string& channel_name,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-channel_manager::expect_channel(const string& channel_name, 
+channel_manager::expect_channel_file(const string& channel_name, 
 		const string& file_name, const bool loop) {
 	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
-	return c.set_expect(file_name, loop);
+	return c.set_expect_file(file_name, loop);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_manager::expect_channel_args(const string& channel_name, 
+		const string_list& values, const bool loop) {
+	STACKTRACE_VERBOSE;
+	GET_NAMED_CHANNEL(c, channel_name)
+	return c.set_expect_args(values, loop);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1862,7 +1956,7 @@ channel_manager::unwatch_all_channels(void) {
 void
 channel_manager::process_node(const State& s, const node_index_type ni, 
 		const uchar prev, const uchar next, 
-		vector<env_event_type>& new_events) {
+		vector<env_event_type>& new_events) throw(channel_exception) {
 	STACKTRACE_VERBOSE;
 	// find all channels that this node participates in:
 	const node_channels_map_type::const_iterator

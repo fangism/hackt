@@ -1,14 +1,12 @@
-# "channel-test-b-07.prsimrc"
+# "channel-test-b-15.prsimrc"
+# copy-m0odified from "channel-test-b-02.prsimrc"
 # @haco@ channel-test-b.haco-a
-# @deps@ channel-test-a-values-X.txt
 # testing source/sinks on different channels
-# adding expect, looped
 
 source channel-test-b-01.prsimrc
 
-channel-source-loop L channel-test-a-values-X.txt
+channel-source-args L 0 0 1 1 0 1 0 1
 channel-sink R
-channel-expect-loop R channel-test-a-values-X.txt
 channel-show L
 channel-show R
 channel-watchall
@@ -29,16 +27,9 @@ assert R.e 0
 channel-release-all
 queue
 
-step 50
-assert-queue
-time
-channel-show L
-channel-show R
+cycle
+echo source has run out of values!
 
-step 80
-time
-assert-queue
-channel-show L
-channel-show R
-echo R is still asserting...
+echo deadlock analysis should point back to source
+why-not L.e
 

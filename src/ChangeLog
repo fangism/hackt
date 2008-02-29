@@ -3,6 +3,27 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-02-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-47:
+	  By request, prsim channel commands:
+		channel-source-args[-loop]
+		channel-expect-args[-loop]
+		instead of reading a file, take values from interpreted
+			command line arguments directly (avoids files).
+		Now old source/expect commands are called source-file[-loop], 
+			and expect-file[-loop] respectively, but the old
+			names will continue to work (but consider deprecated).
+		Some internal functions were renamed to avoid ambiguity.
+		Documented and tested.
+	  Moved step_exception to sim/prsim/Exception.h for better
+		extensibility, relocated channel_exception to Channel-prsim.h
+		where it makes sense.  
+	  prsim: State::step now uses automatic queue-flushing via RAII
+		for exception safety and consistency enforcing, 
+		when exception can come from within (e.g. channel-assert fail).
+
+
 2008-02-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-46:

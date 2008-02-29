@@ -1,14 +1,12 @@
-# "channel-test-b-07.prsimrc"
+# "channel-test-b-16.prsimrc"
+# copy-modified from "channel-test-b-03.prsimrc"
 # @haco@ channel-test-b.haco-a
-# @deps@ channel-test-a-values-X.txt
 # testing source/sinks on different channels
-# adding expect, looped
 
 source channel-test-b-01.prsimrc
 
-channel-source-loop L channel-test-a-values-X.txt
+channel-source-args-loop L 0 1 1 0 0 1 0 1 0
 channel-sink R
-channel-expect-loop R channel-test-a-values-X.txt
 channel-show L
 channel-show R
 channel-watchall
@@ -29,16 +27,10 @@ assert R.e 0
 channel-release-all
 queue
 
-step 50
+step 150
 assert-queue
-time
-channel-show L
-channel-show R
+echo could just keep going, source is looping
 
-step 80
-time
-assert-queue
-channel-show L
-channel-show R
-echo R is still asserting...
+echo backtrace should be able to find cycle through sources and sinks!
+backtrace L.e
 

@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.4.3 2008/02/29 04:07:22 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.4.4 2008/02/29 22:42:19 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -19,11 +19,13 @@
 #include <vector>
 #include "sim/common.h"
 #include "Object/expr/types.h"
+#include "sim/prsim/Exception.h"
 #include "util/utypes.h"
 #include "util/macros.h"
 #include "util/memory/count_ptr.h"
-#include "util/packed_array.h"
+#include "util/packed_array.h"		// for value array
 #include "util/numeric/sign_traits.h"
+#include "util/tokenize_fwd.h"		// for util::string_list
 
 /**
 	Define to 1 to add support for channel validity, for example
@@ -48,6 +50,7 @@ using std::ofstream;
 using entity::int_value_type;
 using util::memory::count_ptr;
 using util::packed_array;
+using util::string_list;
 class State;
 class channel;
 class channel_manager;
@@ -61,6 +64,18 @@ typedef	node_index_type				channel_index_type;
 	in the primary event queue.  
  */
 typedef	std::pair<node_index_type, uchar>	env_event_type;
+
+/**
+	When channel value mismatches expectation.
+ */
+struct channel_exception : public step_exception {
+	const string			name;
+	int_value_type			expect;
+	int_value_type			got;
+	channel_exception(const string& n, 
+		const int_value_type e, const int_value_type g) :
+		name(n), expect(e), got(g) { }
+};	// end struct channel_exception
 
 //=============================================================================
 /**
@@ -398,11 +413,17 @@ public:
 
 private:
 	bool
-	__configure_source(const State&);
+	__configure_source(const State&, const bool);
+
+	void
+	__configure_expect(const bool);
 
 public:
 	bool
-	set_source(const State&, const string&, const bool);
+	set_source_file(const State&, const string&, const bool);
+
+	bool
+	set_source_args(const State&, const string_list&, const bool);
 
 	bool
 	set_rsource(const State&);
@@ -414,7 +435,10 @@ public:
 	set_log(const string&);
 
 	bool
-	set_expect(const string&, const bool);
+	set_expect_file(const string&, const bool);
+
+	bool
+	set_expect_args(const string_list&, const bool);
 
 	void
 	close_stream(void);
@@ -439,7 +463,7 @@ public:
 	void
 	process_node(const State&, const node_index_type, 
 		const uchar, const uchar, 
-		vector<env_event_type>&);
+		vector<env_event_type>&) throw(channel_exception);
 
 #if 0
 private:
@@ -539,7 +563,12 @@ private:
 
 public:
 	bool
-	source_channel(const State&, const string&, const string&, const bool);
+	source_channel_file(const State&, const string&, 
+		const string&, const bool);
+
+	bool
+	source_channel_args(const State&, const string&, 
+		const string_list&, const bool);
 
 	bool
 	rsource_channel(const State&, const string&);
@@ -548,7 +577,10 @@ public:
 	sink_channel(const State&, const string&);
 
 	bool
-	expect_channel(const string&, const string&, const bool);
+	expect_channel_file(const string&, const string&, const bool);
+
+	bool
+	expect_channel_args(const string&, const string_list&, const bool);
 
 	bool
 	log_channel(const string&, const string&);
@@ -592,7 +624,7 @@ public:
 	void
 	process_node(const State&, const node_index_type, 
 		const uchar, const uchar, 
-		vector<env_event_type>&);
+		vector<env_event_type>&) throw (channel_exception);
 
 	bool
 	node_has_fanin(const node_index_type) const;
