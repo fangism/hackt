@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.13.14.4 2008/02/26 01:57:01 fang Exp $
+#	$Id: Make.test-prsim,v 1.13.14.5 2008/03/01 09:18:01 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -61,6 +61,8 @@ PRSIMRC_VALUE_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-random-value-filter.
 PRSIMCKPT_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimckpt-template.prsimrc
 PRSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimckpt-load-template.prsimrc
 
+EXTRACT_HACPRSIM_FLAGS_PIPE = $(GREP) "@hacprsim-flags@" | $(HEAD) -n1 | \
+	$(SED) 's/^.*@hacprsim-flags@[ ]*//g'
 
 .haco-a.prsimexpr:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc -fcheck-structure $< > $@
@@ -132,8 +134,9 @@ PRSIMRC_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE) | \
 	  $(SED) -e 's|[$$]srcdir|$(srcdir)|g' \
 	    -e 's|[$$](HACO_FLAGS)|$(HACO_FLAGS)|g'` ; \
+	flags=`$(CAT) $< | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.prsimckpt/g'` ; \
-	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj" ; \
+	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$flags $$obj" ; \
 	$(ECHO) "ckpt: $$cmd < $<" ; \
 	$(CAT) $(PRSIMCKPT_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
@@ -142,7 +145,8 @@ PRSIMRC_TEST_SCRIPT = \
 
 PRSIMRC_FAIL_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj" ; \
+	flags=`$(CAT) $< | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
+	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$flags $$obj" ; \
 	$(ECHO) "$$cmd < $<" ; \
 	$$cmd < $< > $@ 2>&1
 
@@ -296,11 +300,13 @@ PRSIM_CHECKPOINT_DUMP_SCRIPT = $(HACKT_PRSIM_EXE) -d $< > $@
 .prsimckpt.prsimckpt-indump:
 	@rc=$(srcdir)/`$(ECHO) $< | $(SED) 's/\.prsimckpt$$/.prsimrc/g'` ; \
 	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)` ; \
+	flags=`$(CAT) "$$rc" | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-indump$$/-dupe/g'` ; \
-	$(ECHO) "load: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj" ; \
+	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$flags $$obj" ; \
+	$(ECHO) "load: $$cmd" ; \
 	$(CAT) $(PRSIMCKPT_LOAD_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|LOAD|$<|g' -e 's|SAVE|'"$$ckpt"'|g' | \
-	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) "$$obj" > $@ 2>&1
+	  $$cmd > $@ 2>&1
 
 # no-op: simultaneously produced target
 .prsimckpt-indump.prsimckpt-dupe:
@@ -356,11 +362,12 @@ PRSIMOPT_FLAG = -O1
 .prsimrc.prsimckpt-O1-err:
 	@obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-err$$//g'` ; \
-	$(ECHO) "ckpt: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $(PRSIMOPT_FLAG) $$obj" ; \
+	flags=`$(CAT) $< | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
+	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$flags $(PRSIMOPT_FLAG) $$obj" ; \
+	$(ECHO) "ckpt: $$cmd" ; \
 	$(CAT) $(PRSIMOPT_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
-	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) $(PRSIMOPT_FLAG) "$$obj" \
-	    > $@ 2>&1 ; \
+	  $$cmd > $@ 2>&1 ; \
 	$(TOUCH) $@
 
 # no-op: simultaneously produced target

@@ -3,7 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+
 2008-02-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-49:
+	  prsim: added command line option -t <type> to instantiate
+		one instance of the named type as the top-level, in place
+		of the source's original top-level instances.
+	  Documented and tested.  
+	  TODO: also patch chpsim likewise.
+
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-48:
 	  util-only addition: deep_copy (util/ChangeLog)

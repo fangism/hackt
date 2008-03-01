@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.14.14.2 2008/02/15 04:43:29 fang Exp $
+	$Id: prsim.cc,v 1.14.14.3 2008/03/01 09:17:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -68,6 +68,20 @@ public:
 	bool			dump_dot_struct;
 	/// whether or not checkpoint dump is requested
 	bool			dump_checkpoint;
+	/**
+		Copied from cflat_options.
+		Ignore top-level instances and flatten one anonymous
+		instance of a named complete process type.  
+		Flag to do 'cast2lvs'-like behavior.  
+		Tip: protect argument with "quotes" in command-line
+			to protect shell-characters.  
+	 */
+	bool			use_referenced_type_instead_of_top_level;
+	/**
+		The string of the complete process type to process
+		in lieu of the top-level instance hierarchy.  
+	 */
+	std::string			named_process_type;
 	ExprAllocFlags		expr_alloc_flags;
 	/// compiler-driver flags
 	compile_options		comp_opt;
@@ -80,6 +94,8 @@ public:
 		dump_expr_alloc(false), run(true),
 		check_structure(true), dump_dot_struct(false), 
 		dump_checkpoint(false),
+		use_referenced_type_instead_of_top_level(false),
+		named_process_type(),
 		expr_alloc_flags(), 
 		comp_opt(),
 		source_paths() { }
@@ -142,20 +158,39 @@ if (opt.comp_opt.compile_input) {
 	if (!the_module)
 		return 1;
 
+	static const char alloc_errstr[] = 
+		"ERROR in allocating global state.  Aborting.";
+	// inspired by hflat flag
+	count_ptr<module> top_module;
+if (opt.use_referenced_type_instead_of_top_level) {
+	const count_ptr<const process_type_reference>
+		rpt(parse_and_create_complete_process_type(
+			opt.named_process_type.c_str(), *the_module));
+	if (!rpt) {
+		return 1;		// already have error message
+	}
+	top_module = count_ptr<module>(new module("<auxiliary>"));
+	NEVER_NULL(top_module);
+	if (!top_module->allocate_unique_process_type(*rpt).good) {
+		cerr << alloc_errstr << endl;
+		return 1;
+	}
+} else {
 //	the_module->dump(cerr);
 	if (the_module->is_allocated()) {
 		// cerr << "Module is already allocated, skipping..." << endl;
 	} else {
 		if (!the_module->allocate_unique().good) {
-			cerr << "ERROR in allocating.  Aborting." << endl;
+			cerr << alloc_errstr << endl;
 			return 1;
 		}
 //		the_module->dump(cerr);
 	}
-
+	top_module = the_module;
+}
 	// the simulator state object, initialized with the module
 try {
-	State sim_state(*the_module, opt.expr_alloc_flags);	// may throw
+	State sim_state(*top_module, opt.expr_alloc_flags);	// may throw
 	const State::signal_handler int_handler(&sim_state);
 	if (opt.dump_expr_alloc)
 		sim_state.dump_struct(cout) << endl;
@@ -205,7 +240,7 @@ try {
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+abcC:d:f:hiI:O:";
+	static const char optstring[] = "+abcC:d:f:hiI:O:t:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -356,6 +391,28 @@ For more details, @xref{Optimization Flags}.
 			}
 			break;
 		}
+/***
+@texinfo opt/option-t.texi
+@defopt -t type
+Instead of using the top-level instances in the source file, 
+instantiate one instance of the named @var{type}, propagating its
+ports as top-level globals.  
+In other words, use the referenced type as the top-level scope, 
+ignoring the source's top-level instances.  
+Convenient takes palce of copy-propagating a single instance's ports.  
+@end defopt
+@end texinfo
+***/
+		case 't':
+			if (o.use_referenced_type_instead_of_top_level) {
+				cerr << "Cannot specify more than one type."
+					<< endl;
+				return 1;
+			} else {
+				o.use_referenced_type_instead_of_top_level = true;
+				o.named_process_type = optarg;        // strcpy
+			}
+			break;
 		case ':':
 			cerr << "Expected but missing option-argument." << endl;
 			return 1;
@@ -383,7 +440,9 @@ prsim::usage(void) {
 "\t-h : print commands help and exit (objfile optional)\n"
 "\t-i : interactive (default)\n"
 "\t-I <path> : include path for scripts (repeatable)\n"
-"\t-O <0..1> : expression optimization level\n";
+"\t-O <0..1> : expression optimization level\n"
+"\t-t \"type\" : allocate one instance of the named type,\n"
+	"\t\tignoring top-level instances (quotes recommended).\n";
         const size_t flags = options_modifier_map.size();
 	if (flags) {
 		cerr << "flags (" << flags << " total):" << endl;

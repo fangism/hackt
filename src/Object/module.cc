@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.33.14.1 2008/01/17 23:01:50 fang Exp $
+ 	$Id: module.cc,v 1.33.14.2 2008/03/01 09:17:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -330,6 +330,8 @@ module::allocate_unique_process_type(const process_type_reference& pt) {
 		tp(cpt.get_raw_template_params());
 	// need to import definition's local symbols (deep copy) into
 	// this temporary module's global namespace and footprint.  
+	// HIJACK!!! copy-overwrite module's global namespace
+	AS_A(scopespace&, *global_namespace) = *pd;
 	footprint& _footprint(get_footprint());
 #if ENABLE_STACKTRACE
 	pd->dump(cerr << "process definition: ") << endl;

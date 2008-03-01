@@ -1,0 +1,13 @@
+// "logic-defs-a.hac"
+// testing nested definitions
+
+import "logic-defs.hac";
+
+defproc and4(bool a, b, c, d, o) {
+	bool r, s;
+	nand p(a, b, r), q(c, d, s);
+	nor t(r, s, o);
+}
+
+// no top-level instantiation
+

@@ -1,0 +1,8 @@
+X nodes:
+x y 
+Fanins of node `y':
+[after 10]	~x:X -> y+:X
+[after 10]	x:X -> y-:X
+Fanouts of node `x':
+[after 10]	x:X -> y-:X
+[after 10]	~x:X -> y+:X

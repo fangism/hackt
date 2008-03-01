@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.31 2008/02/29 22:42:25 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.32 2008/03/01 09:18:04 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -15,7 +15,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem-share after-celem-def after-celem after-celem-more \
 	pass-gates-def pass-gates excl-rings-def excl-rings \
 	check-excl-rings-def check-excl-rings \
-	logic-defs and nand or nor array \
+	logic-defs logic-defs-a logic-defs-b \
+	and nand or nor array \
 	and-nand or-nor nand-or \
 	and-nand-alt or-nor-alt nor-and \
 	expr-limit-a \
@@ -67,6 +68,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	nand-or-why-01 \
 	nor-and-why-01 \
 	unused-01 \
+	logic-defs-01 logic-defs-a-01 logic-defs-b-01 \
 	expr-limit-a-01 \
 	interference-01 interference-02 interference-03 interference-04 \
 	interference-05 interference-06 interference-07 interference-08 \
