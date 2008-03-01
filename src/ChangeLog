@@ -5,6 +5,12 @@
 
 2008-02-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-48:
+	  util-only addition: deep_copy (util/ChangeLog)
+
+
+2008-02-29	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-47:
 	  By request, prsim channel commands:
 		channel-source-args[-loop]

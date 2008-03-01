@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.93.4.4 2008/02/22 06:07:29 fang Exp $
+#	$Id: ChangeLog,v 1.93.4.5 2008/03/01 08:34:22 fang Exp $
+
+2008-02-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-48:
+	  Added util/memory/deep_copy.h utility.
+	  util/memory/excl_ptr.h: added deep_copy member functions
+		to excl_ptr and sticky_ptr.
+
 
 2008-02-17	David Fang		<fangism@users.sourceforge.net>
 
