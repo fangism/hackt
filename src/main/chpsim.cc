@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.14.14.2 2008/02/15 05:02:36 fang Exp $
+	$Id: chpsim.cc,v 1.14.14.3 2008/03/01 23:48:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -223,7 +223,7 @@ try {
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+abcC:d:f:hiI:l:L:";
+	static const char optstring[] = "+abcC:d:f:hiI:l:L:t:T:";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
@@ -238,9 +238,9 @@ Useful for debugging and resuming simulations.
 @end defopt
 @end texinfo
 ***/
-		case 'a':
-			CommandRegistry::autosave_on_exit = true;
-			break;
+	case 'a':
+		CommandRegistry::autosave_on_exit = true;
+		break;
 /***
 @texinfo options/option-b.texi
 @cindex batch mode
@@ -397,7 +397,7 @@ For more on building and loading shared-libraries, @xref{Extending simulation}.
 /***
 @texinfo options/option-t.texi
 @defopt -t type
-Instead of expanding the whole top-level instances, only operator
+Instead of expanding the whole top-level instances, only operate
 on the given type @var{type}, i.e. instantiate one instance
 of @var{type} as the top-level.  
 This variation, however does @strong{not} expand subinstances recursively, 
@@ -448,7 +448,7 @@ void
 chpsim::usage(void) {
 	cerr << "usage: " << name << " [options] <hackt-obj-file>" << endl;
 	cerr << "options:\n"
- "\t-a : auto-save checkpoint (autosave.chpsimckpt) upon exit\n"
+"\t-a : auto-save checkpoint (autosave.chpsimckpt) upon exit\n"
 "\t-b : batch-mode, non-interactive (promptless)\n"
 "\t-d <checkpoint>: textual dump of checkpoint only\n"
 "\t-f <flag> : general options modifiers (listed below)\n"
@@ -456,7 +456,9 @@ chpsim::usage(void) {
 "\t-i : interactive (default)\n"
 "\t-I <path> : include path for scripts (repeatable)\n"
 "\t-L <path> : append load path for dlopening modules (repeatable)\n"
-"\t-l <lib> : library to dlopen (NO file extension) (repeatable)"
+"\t-l <lib> : library to dlopen (NO file extension) (repeatable)\n"
+"\t-t \"type\" : expand type non-recursively as top-level (recommend quotes)\n"
+"\t-T \"type\" : expand type recursively as top-level (recommend quotes)"
 	<< endl;
 //	cerr << "\t-O <0..1> : expression optimization level" << endl;
         const size_t flags = options_modifier_map.size();

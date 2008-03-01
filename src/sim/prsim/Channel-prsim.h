@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.4.4 2008/02/29 22:42:19 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.4.5 2008/03/01 23:48:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -30,12 +30,14 @@
 /**
 	Define to 1 to add support for channel validity, for example
 	with 'ev' protocols.  
+	TODO: finish me, test me
  */
 #define	PRSIM_CHANNEL_VALIDITY			0
 
 /**
 	Define to 1 to support don't care values in channels, 
 	only applicable to expects.  
+	Status: done and tested, can perm this
  */
 #define	PRSIM_CHANNEL_DONT_CARES		1
 
@@ -562,6 +564,7 @@ private:
 	check_source(const channel& c) const;
 
 public:
+	// most of these functions differ in only the channel method called
 	bool
 	source_channel_file(const State&, const string&, 
 		const string&, const bool);

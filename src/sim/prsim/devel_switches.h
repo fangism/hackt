@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.4.74.2 2008/02/22 06:07:28 fang Exp $
+	$Id: devel_switches.h,v 1.4.74.3 2008/03/01 23:48:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -61,7 +61,7 @@
 	Rationale: explicit staticizers, memories with bidirectional bitlines
 	Note: this should not cause any regressions on previous simulations
 		that were never aware of the weak attribute.  
-	Status: drafted, somewhat tested, needs more rigorous testing.
+	Status: done, fairly tested
 	Priority: TOP
  */
 #define	PRSIM_WEAK_RULES				1
@@ -74,7 +74,7 @@
 	Rationale: synchronous circuit simulation require accommodation
 	for what are normaly considered violations and anomalies.  
 	Goal: 1
-	Status: drafted, minimally tested
+	Status: done, fairly tested
 	Note: this should be orthogonal to weak rules
 	Rationale: for synchronous circuit simulation.  
 	Priority: HIGH
@@ -85,9 +85,10 @@
 	Define to 1 to enable prsim channel command support.
 	Goal: 1
 	Rationale: legacy prsim support, testing utility and convenience
-	Status: in progress
+	Status: complete, tested, though interface may change in future
 	Priority: high
 	TODO: preserve/restore some channel state in checkpoints?
+	TODO: test support for validity protocol channels
  */
 #define	PRSIM_CHANNEL_SUPPORT				1
 

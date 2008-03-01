@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-50:
+	  No real source revision.
+	  Updated documentation and help for chpsim -t and -T, 
+		also support chpsim-flags in test suite.  
+	  Branch is in good standing, expect merge this week.
+
 
 2008-02-29	David Fang		<fangism@users.sourceforge.net>
 
