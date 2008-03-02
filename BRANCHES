@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.27 2007/11/27 06:10:09 fang Exp $
+	$Id: BRANCHES,v 1.28 2008/03/02 20:57:06 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -9,13 +9,20 @@ When a branch is merged for the last time, delete the entry from this file.
 
 Open branches:
 
+	HACKT-00-01-04-main-00-82-05-parser-06
+		invasive changes to lexer/parser infrastructure
+		goal: coalesce common symbols through linking, 
+			use yy_scan_string to avoid parsing temporary files!
+
+	HACKT-00-01-04-main-00-82-02-ACT-03 (massive)
+		ACT-compatbility changes
+		prsim features, extensions, and improvements
+		other useful things that came about while working at
+			an Asynchronous FPGA startup company.
+
 Coming soon:
 
-	HACKT-00-01-04-main-00-81-??-scm-02
+	HACKT-00-01-04-main-00-8?-??-scm-02
 		guile/scheme work for chpsim trace analysis framework
-		for dissertation
-
-	HACKT-00-01-04-main-00-81-??-ACT-03
-		language and feature convergence with Rajit's ACT toolchain,
-		round 3
+		for dissertation (continuation)
 
