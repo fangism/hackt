@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.193 2007/11/26 20:11:05 fang Exp $
+#	$Id: Makefile.am,v 1.193.6.1 2008/03/02 22:38:22 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -852,6 +852,7 @@ PARSER_H_FILES = \
 	lexer/file_manager.h \
 	lexer/input_manager.h \
 	lexer/flex_lexer_state.h \
+	lexer/flex_buffer_state.h \
 	lexer/yyin_manager.h \
 	lexer/hac_lex.h
 
@@ -872,7 +873,8 @@ PARSER_CC_FILES = \
 	lexer/file_manager.cc \
 	lexer/flex_lexer_state.cc \
 	lexer/yyin_manager.cc \
-	lexer/hac_lex.cc
+	lexer/hac_lex.cc \
+	lexer/flex_lexer_common.cc
 
 
 SIM_CC_FILES = \
@@ -1115,6 +1117,7 @@ ALL_TCC_FILES += \
 HACKT_YACC_PREFIX = hackt_
 INSTREF_YACC_PREFIX = instref_
 TYPE_YACC_PREFIX = type_
+HACFLAT_YACC_PREFIX = hacflat_
 
 # regenerate the parser input file using config.status
 parser/$(HACKT_PARSE_ROOT).yy: \
@@ -1142,24 +1145,32 @@ SED_YACC_YYPARSE = $(SED) '/^yyparse(.*)/s/(.*)/(void*, YYSTYPE\& yylval, FILE* 
 # e.g apple ships yacc skeleton 1.14
 SED_CONST_CHAR_P = $(AWK) -f $(srcdir)/parser/yacc_const_char.awk
 
+# requires shell variable 'basename'
+MAKE_PARSE_PREFIX_HEADER_SCRIPT = \
+	$(SED_srcdir_strip_setup) ; \
+	$(AWK) -f $< -v PREFIX=$$basename -v keep_common=1 < /dev/null > \
+		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+
 # Oddly, these targets get mistakenly placed in the srcdir
 parser/hackt-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
-	$(SED_srcdir_strip_setup) ; \
-	$(AWK) -f $< -v PREFIX=$(HACKT_YACC_PREFIX) < /dev/null > \
-		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+	basename=$(HACKT_YACC_PREFIX) ; \
+	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
 
 parser/instref-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
-	$(SED_srcdir_strip_setup) ; \
-	$(AWK) -f $< -v PREFIX=$(INSTREF_YACC_PREFIX) < /dev/null > \
-		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+	basename=$(INSTREF_YACC_PREFIX) ; \
+	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
 
 parser/type-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
-	$(SED_srcdir_strip_setup) ; \
-	$(AWK) -f $< -v PREFIX=$(TYPE_YACC_PREFIX) < /dev/null > \
-		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+	basename=$(TYPE_YACC_PREFIX) ; \
+	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
+
+parser/hacflat-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
+	basename=$(HACFLAT_YACC_PREFIX) ; \
+	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
 
 LEXYACC_PREFIX_H_FILES = parser/hackt-prefix.h \
-	parser/instref-prefix.h parser/type-prefix.h
+	parser/instref-prefix.h parser/type-prefix.h \
+	parser/hacflat-prefix.h
 
 ALL_HEADER_FILES += $(LEXYACC_PREFIX_H_FILES)
 CLEANFILES += $(LEXYACC_PREFIX_H_FILES)
@@ -1195,6 +1206,14 @@ PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
 	$(SED_YACC_YYPARSE)
 endif
 
+FLEX_COMMON_PATCH = lexer/flex_common_marker.patch
+EXTRA_DIST += $(FLEX_COMMON_PATCH)
+
+# keep only common symbols, give them external linkage
+EXTRACT_FLEX_COMMON_PIPE = \
+	$(SED) -n '/KEEP_FLEX_COMMON/,/KEEP_FLEX_COMMON/p' | \
+	$(SED) -e '/^static/s/^static[ ]*//' | \
+	$(GREP) -v '^\#include.*prefix\.h'
 
 # rules for the prefix-transformed versions of generated lexer/parser sources
 # make these conditional on yacc vs. bison
@@ -1202,25 +1221,30 @@ endif
 # the other preceeding scripts shouldn't matter in their order
 parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT).output.h
-	$(CAT) parser/$(HACKT_PARSE_ROOT).cc | $(PARSER_HACK_PIPE) > $@
+	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 parser/$(INSTREF_PARSE_ROOT)-real.cc: parser/$(INSTREF_PARSE_ROOT).cc \
 		parser/$(INSTREF_PARSE_ROOT).output.h
-	$(CAT) parser/$(INSTREF_PARSE_ROOT).cc | $(PARSER_HACK_PIPE) > $@
+	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 parser/$(TYPE_PARSE_ROOT)-real.cc: parser/$(TYPE_PARSE_ROOT).cc \
 		parser/$(TYPE_PARSE_ROOT).output.h
-	$(CAT) parser/$(TYPE_PARSE_ROOT).cc | $(PARSER_HACK_PIPE) > $@
+	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
+
+# requires shell variable 'basename'
+MAKE_REAL_PARSER_HEADER_SCRIPT = \
+	$(SED_srcdir_strip_setup) ; \
+	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" ; \
+	$(ECHO) "\#include \"parser/$$basename-union.h\"" ; \
+	$(CAT) parser/$$basename-parse.h ;} > \
+		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
 # NOTE: oddly, this sometimes builds in the srcdir, when it shouldn't
 parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h \
 		parser/hackt-prefix.h
-	$(SED_srcdir_strip_setup) ; \
-	{ $(ECHO) "#include \"parser/hackt-prefix.h\"" ; \
-	$(ECHO) "#include \"parser/hackt-union.h\"" ; \
-	$(CAT) parser/$(HACKT_PARSE_ROOT).h ;} > \
-		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+	basename="hackt" ; \
+	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
 
 parser/$(INSTREF_PARSE_ROOT)-real.h: parser/$(INSTREF_PARSE_ROOT).h \
 		parser/instref-prefix.h
@@ -1230,17 +1254,25 @@ parser/$(INSTREF_PARSE_ROOT)-real.h: parser/$(INSTREF_PARSE_ROOT).h \
 	$(ECHO) "#include \"parser/instref.h\"" ; \
 	$(CAT) parser/$(INSTREF_PARSE_ROOT).h ;} > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+# the above includes an additonal header in the middle
 
 parser/$(TYPE_PARSE_ROOT)-real.h: parser/$(TYPE_PARSE_ROOT).h \
 		parser/type-prefix.h
-	$(SED_srcdir_strip_setup) ; \
-	{ $(ECHO) "#include \"parser/type-prefix.h\"" ; \
-	$(ECHO) "#include \"parser/type-union.h\"" ; \
-	$(CAT) parser/$(TYPE_PARSE_ROOT).h ;} > \
-		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+	basename="type" ; \
+	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
 
 PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 	$(SED) 's/REFERENCE/\&/g'
+
+# requires shell variable 'basename'
+MAKE_REAL_LEXER_SCRIPT = \
+	$(CP) $< $@.tmp && \
+	$(SED) '1,3s|FILENAME|$@.tmp|' $(srcdir)/$(FLEX_COMMON_PATCH) | \
+		$(PATCH) -u -p0 && \
+	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" ; \
+	$(ECHO) "\#include \"lexer/flex_lexer_state.h\"" ; \
+	$(CAT) $@.tmp | $(PURIFY_LEXER_PIPE) ;} > $@ ; \
+	$(RM) $@.tmp $@.tmp.orig
 
 # need to include prefix header because the lexer-generated code
 # doesn't include it early enough from the .ll source :(
@@ -1249,28 +1281,59 @@ lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT)-real.h
 # need forward declaration for flex 2.5.31
 # need early declaration of flex::lexer_state needed for flex 2.5.{31,33}
-	{ $(ECHO) "#include \"parser/hackt-prefix.h\"" ; \
-	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
-	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
+	basename="hackt" ; \
+	$(MAKE_REAL_LEXER_SCRIPT)
+#	{ $(ECHO) "#include \"parser/hackt-prefix.h\"" ; \
+#	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
+#	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
+
 # flex scanner purification eliminates need to rename most variables
 #	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 #		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 
 lexer/$(INSTREF_LEX_ROOT)-real.cc: lexer/$(INSTREF_LEX_ROOT).cc \
 		parser/$(INSTREF_PARSE_ROOT)-real.h
-	{ $(ECHO) "#include \"parser/instref-prefix.h\"" ; \
-	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
-	$(CAT) lexer/$(INSTREF_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
+	basename="instref" ; \
+	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(TYPE_LEX_ROOT)-real.cc: lexer/$(TYPE_LEX_ROOT).cc \
 		parser/$(TYPE_PARSE_ROOT)-real.h
-	{ $(ECHO) "#include \"parser/type-prefix.h\"" ; \
-	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
-	$(CAT) lexer/$(TYPE_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
+	basename="type" ; \
+	$(MAKE_REAL_LEXER_SCRIPT)
+#	{ $(ECHO) "#include \"parser/type-prefix.h\"" ; \
+#	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
+#	$(CAT) lexer/$(TYPE_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
 
 lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc
-	{ $(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
-	$(CAT) lexer/$(HACFLAT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
+	basename="hacflat" ; \
+	$(MAKE_REAL_LEXER_SCRIPT)
+#	{ $(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
+#	$(CAT) lexer/$(HACFLAT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
+
+# should be able to depend on *ANY* of the above processed lexer sources
+# actually, not quite, there's a difference depending on whether lexer
+# uses BOL (beginning-of-line) in match patterns.
+lexer/flex_lexer_common.cc: lexer/$(HACKT_LEX_ROOT)-real.cc
+	{ $(ECHO) "// \"$@\" -- automatically generated, do not modify" ; \
+	cmd="$(CAT) $< | $(EXTRACT_FLEX_COMMON_PIPE)" ; \
+	$(ECHO) "// produced by: $$cmd" ; \
+	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
+	$(ECHO) "#define KEEP_FLEX_COMMON	1" ; \
+	$(ECHO) "#define YY_ALWAYS_INTERACTIVE	0" ; \
+	$(CAT) $< | $(EXTRACT_FLEX_COMMON_PIPE) ; } > $@
+
+# generated header, extracting struct definition
+lexer/flex_lexer_state.cc: lexer/flex_buffer_state.h
+
+lexer/flex_buffer_state.h: lexer/$(HACKT_LEX_ROOT)-real.cc
+	$(SED_srcdir_strip_setup) ; \
+	{ $(ECHO) "// \"$@\" -- automatically generated, do not modify" ; \
+	$(ECHO) "#ifndef	__LEXER_FLEX_BUFFER_STATE_H__" ; \
+	$(ECHO) "#define	__LEXER_FLEX_BUFFER_STATE_H__" ; \
+	$(ECHO) "#include \"util/FILE_fwd.h\"" ; \
+	$(SED) -n '/STRUCT_BUFFER_STATE/,/STRUCT_BUFFER_STATE/p' $< ; \
+	$(ECHO) "#endif	// __LEXER_FLEX_BUFFER_STATE_H__" ; } > \
+		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
 $(srcdir)/lexer/instref.cc: parser/$(INSTREF_PARSE_ROOT)-real.h
 
@@ -1292,24 +1355,18 @@ PARSE_OUTPUT_HEADER_SCRIPT = \
 
 $(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
-#	@if $(GREP) "conflict" $<; then exit 1; fi
-#	$(CAT) $< | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
 
 INSTREF_PARSE_OUTPUT = parser/$(INSTREF_PARSE_ROOT).output
 $(INSTREF_PARSE_OUTPUT): parser/$(INSTREF_PARSE_ROOT).h
 
 $(INSTREF_PARSE_OUTPUT).h: $(INSTREF_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
-#	@if $(GREP) "conflict" $<; then exit 1; fi
-#	$(CAT) $< | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
 
 TYPE_PARSE_OUTPUT = parser/$(TYPE_PARSE_ROOT).output
 $(TYPE_PARSE_OUTPUT): parser/$(TYPE_PARSE_ROOT).h
 
 $(TYPE_PARSE_OUTPUT).h: $(TYPE_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
-#	@if $(GREP) "conflict" $<; then exit 1; fi
-#	$(CAT) $< | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
 
 # These all depend on parser/$(HACKT_PARSE_ROOT).h, 
 # which is made non-atomically, by automake's yacc rules.
@@ -1343,24 +1400,12 @@ PARSER_TYPES_PIPE = $(GREP) -v "\#include" | $(CPP_TRADITIONAL) -P | \
 
 parser/hackt.types: parser/$(HACKT_PARSE_ROOT).yy
 	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
-#	$(CAT) $< | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-#		$(GREP) -v pragma | \
-#		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-#		$(SED) '/^[ \t]*$$/d' > $@
 
 parser/instref.types: parser/$(INSTREF_PARSE_ROOT).yy
 	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
-#	$(CAT) $< | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-#		$(GREP) -v pragma | \
-#		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-#		$(SED) '/^[ \t]*$$/d' > $@
 
 parser/type.types: parser/$(TYPE_PARSE_ROOT).yy
 	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
-#	$(CAT) $< | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-#		$(GREP) -v pragma | \
-#		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-#		$(SED) '/^[ \t]*$$/d' > $@
 
 # extract num: first matched line, 3rd space-delimited field (#define foo bar)
 # "cut" is not a good idea, if # define is separated... :(
@@ -1756,7 +1801,9 @@ CLEANLEXER = \
 	lexer/$(INSTREF_LEX_ROOT)-real.cc \
 	lexer/$(INSTREF_LEX_ROOT).cc \
 	lexer/$(TYPE_LEX_ROOT)-real.cc \
-	lexer/$(TYPE_LEX_ROOT).cc
+	lexer/$(TYPE_LEX_ROOT).cc \
+	lexer/flex_lexer_common.cc \
+	lexer/flex_buffer_state.h
 
 libs: $(LTLIBRARIES)
 

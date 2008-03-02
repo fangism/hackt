@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-01:
+	  New branch for invasive changes to lexers.  
+	  Extract code common to all generated lexers with 
+		lexer/flex_common_marker.patch and sed script.
+	  Makefile.am: some clean-up and re-use of script variables.
+		Generation of lexer/*-real.cc updated to use new patch.
+		NOTE: all lexer/*-lex-real.cc use the same patch!
+	  util/lang/lexyacc/lexyacc-prefix-generator.awk:
+		new option -v keep_common to NOT transform selected
+		symbols to make use of common-extracted functions.
+	  lexer/*.ll: replace *_at_eof() with flex_lexer_state::at_eof().
+	  automatically extract lexer/flex_buffer_state.h struct definition.
+	  Next: continued clean-up and also re-write of string parse calls.
+	  TODO: this is going to need re-validation against flex 2.5.31+
+
+
 2008-02-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-05:

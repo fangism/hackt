@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.9 2007/10/31 18:24:03 cto3 Exp $
+#	$Id: purify_flex.awk,v 1.9.10.1 2008/03/02 22:38:28 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -251,7 +251,8 @@ function append_call_args(str, arg) {
 	} else {
 	# BIG ELSE
 
-	if (match($0, "static int yy_get_next_buffer(.*)")) {
+	if (match($0, "int yy_get_next_buffer(.*)")) {
+		# is originally static linkage
 		# need to rewrite prototype of this function
 		$0 = replace_proto_params($0, state_decl);
 	} else if (match($0, "yy_get_next_buffer\\([ ]*\\)")) {

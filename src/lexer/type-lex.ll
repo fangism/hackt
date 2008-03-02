@@ -2,7 +2,7 @@
  *	\file "lexer/type-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: type-lex.ll,v 1.2 2007/02/14 00:31:11 fang Exp $
+ *	$Id: type-lex.ll,v 1.2.44.1 2008/03/02 22:38:29 fang Exp $
  */
 
 %{
@@ -219,10 +219,12 @@ MULTILINE_NEWLINE(token_position& p __YYLEX_PARAM) {
 	p.leng = yyleng -1; NEWLINE_UPDATE(__YYLEX_ARG_VOID);
 }
 
+#if 0
 /* checking whether or not we are at end of file, defined below */
 extern
 int
 type_at_eof(const flex::lexer_state&);
+#endif
 
 }	/* end namespace lexer */
 }	/* end namespace HAC */
@@ -421,6 +423,7 @@ FALSE		"false"
 %%
 /****** user-code ************************************************************/
 
+#if 0
 /**
 	If this is already the outermost file, then return 1, 
 		signaling the end of all input.  
@@ -448,4 +451,5 @@ int type_at_eof(const flex::lexer_state& foo) {
 
 }	/* end namespace lexer */
 }	/* end namespace HAC */
+#endif
 

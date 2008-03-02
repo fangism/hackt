@@ -1,7 +1,7 @@
 /**
 	\file "lexer/flex_lexer_state.h"
 	Structure holding all of the flex scanner's stateful information.  
-	$Id: flex_lexer_state.h,v 1.7 2007/11/01 23:59:42 fang Exp $
+	$Id: flex_lexer_state.h,v 1.7.10.1 2008/03/02 22:38:27 fang Exp $
  */
 
 #ifndef	__LEXER_FLEX_LEXER_STATE_H__
@@ -23,6 +23,7 @@ typedef	struct yy_buffer_state*	YY_BUFFER_STATE;
  */
 namespace flex {
 
+//=============================================================================
 /**
 	What was global state information has been ported into this
 	struct.  
@@ -69,12 +70,26 @@ struct lexer_state {
 // the following appear in flex 2.5.31
 #ifdef LEXER_HAS_YYLINENO
 	int			yylineno;		// = 0;
+#define	FLEX_LEXER_CTOR_INIT_YYLINENO	, yylineno(0)
+#else
+#define	FLEX_LEXER_CTOR_INIT_YYLINENO
 #endif
+
 #ifdef LEXER_HAS_BUFFER_STACK
 	size_t			yy_buffer_stack_top;	// = 0;
 	size_t			yy_buffer_stack_max;	// = 0;
 	YY_BUFFER_STATE*	yy_buffer_stack;	// = NULL;
+#define	FLEX_LEXER_CTOR_INIT_BUFFER_STACK				\
+			, yy_buffer_stack_top(0) 			\
+			, yy_buffer_stack_max(0) 			\
+			, yy_buffer_stack(NULL)
+#else
+#define	FLEX_LEXER_CTOR_INIT_BUFFER_STACK
 #endif
+
+#define	FLEX_LEXER_CTOR_EXTRA_INIT					\
+	FLEX_LEXER_CTOR_INIT_YYLINENO					\
+	FLEX_LEXER_CTOR_INIT_BUFFER_STACK
 
 	/**
 		Default constructor initializes the values faithfully
@@ -84,14 +99,7 @@ struct lexer_state {
 			yy_current_buffer(NULL), 
 			yy_c_buf_p(NULL), yy_init(1), yy_start(0), 
 			yy_more_flag(0), yy_more_len(0) 
-#ifdef LEXER_HAS_YYLINENO
-			, yylineno(0) 
-#endif
-#ifdef LEXER_HAS_BUFFER_STACK
-			, yy_buffer_stack_top(0) 
-			, yy_buffer_stack_max(0) 
-			, yy_buffer_stack(NULL)
-#endif
+			FLEX_LEXER_CTOR_EXTRA_INIT
 			{ }
 
 	explicit
@@ -99,15 +107,11 @@ struct lexer_state {
 			yy_current_buffer(NULL), 
 			yy_c_buf_p(NULL), yy_init(1), yy_start(0), 
 			yy_more_flag(0), yy_more_len(0)
-#ifdef LEXER_HAS_YYLINENO
-			, yylineno(0) 
-#endif
-#ifdef LEXER_HAS_BUFFER_STACK
-			, yy_buffer_stack_top(0) 
-			, yy_buffer_stack_max(0) 
-			, yy_buffer_stack(NULL)
-#endif
+			FLEX_LEXER_CTOR_EXTRA_INIT
 			{ }
+
+	explicit
+	lexer_state(const char* str);
 
 	/**
 		For now, default destructor, trusting the lexer
@@ -115,9 +119,16 @@ struct lexer_state {
 	 */
 	~lexer_state();
 
-};	// end struct lexer_state
+	int
+	at_eof(void) const;
 
+};	// end struct lexer_state
 }	// end namespace flex
+
+//=============================================================================
+// wanna-be member functions, common functions extracted from flex skeletons
+
+//=============================================================================
 
 #endif	// __LEXER_FLEX_LEXER_STATE_H__
 

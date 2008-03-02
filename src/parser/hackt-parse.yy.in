@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.33 2007/11/26 08:27:48 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.33.4.1 2008/03/02 22:38:29 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -407,13 +407,6 @@ extern const char* const yyrule[];
  */
 // extern	int yylex(void);		// ancient compiler rejects
 extern	YY_DECL;			// something like the above
-
-namespace HAC {
-namespace lexer {
-extern	int hackt_at_eof(const flex::lexer_state&);	// from "hackt-lex.ll"
-}
-}
-using HAC::lexer::hackt_at_eof;
 
 static void yyerror(const char* msg);	// ancient compiler rejects
 
@@ -3121,7 +3114,7 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 			yy_union_resolve_delete(*v, *(s-1), *s);
 		}
 	}
-	if (!hackt_at_eof(_lexer_state)) {
+	if (!_lexer_state.at_eof()) {
 		// cerr << "Deleting last token..." << endl;
 		// free the last token (if not EOF)
 		yy_union_lookup_delete(_yylval_, _yychar_);
@@ -3222,7 +3215,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
 //	NULL check not necessarily valid if last token normally returned NULL
-	if (hackt_at_eof(_lexer_state)) {
+	if (_lexer_state.at_eof()) {
 		cerr << "\t" << __symbol_names[0];	// "end-of-file"
 	} else {
 //		The last token from the lexer, yychar, tells us the last

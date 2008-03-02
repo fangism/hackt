@@ -1,15 +1,22 @@
 #!/usr/bin/awk -f
-#	$Id: lexyacc-prefix-generator.awk,v 1.3 2007/01/23 07:21:22 fang Exp $
+#	$Id: lexyacc-prefix-generator.awk,v 1.3.50.1 2008/03/02 22:38:37 fang Exp $
 # "lexyacc-prefix-generator.awk"
 #
 # generates a header suitable for preprocessing and performing
 # token substitution on lex/yacc-generated source files.  
 # takes no input, pass < /dev/null
 
+# optional: -v keep_common=1 will preserve the names of functions common
+# to all flex-generated sources (they are input-dependent) so they may
+# be shared among multiple scanners.  Default: keep_common=0
+
 BEGIN {
 	if (!length(PREFIX)) {
 		print "Missing argument: -v prefix=<prefix>";
 		exit 1;
+	}
+	if (!length(keep_common)) {
+		keep_common = 0;
 	}
 	header_str = "__LEXYACC_" toupper(PREFIX) "_PREFIX_H__";
 	print "#ifndef " header_str;
@@ -82,15 +89,20 @@ BEGIN {
 
 # more symbols from [f]lex generated lexer code
 #	roots["_start"];		# macro to static int
+if (!keep_common) {
 	roots["restart"];		# void yyrestart(FILE*) (bison)
 	roots["in"];			# FILE*
 	roots["out"];			# FILE*
 	roots["lineno"];		# int
+}
 #	roots["yyconst"];		# macro
 #	roots["yyless"];		# macro
+if (!keep_common) {
 	roots["text"];			# char*
+}
 #	roots["_size_t"];		# fixed
 #	roots["_buffer_state"];		# struct, fixed
+if (!keep_common) {
 	roots["_current_buffer"];	# static
 	roots["_switch_to_buffer"];	# public
 	roots["_create_buffer"];	# public (bison)
@@ -104,13 +116,16 @@ BEGIN {
 #	roots["_flex_alloc"];		# static
 #	roots["_flex_realloc"];		# static
 #	roots["_flex_free"];		# static
+}
 #	roots["_new_buffer"];		# macro
 #	roots["_set_interactive"];	# macro
 #	roots["_set_bol"];		# macro
 #	roots["_state_type"];		# fixed typedef
 #	MANY more static variables and functions that need not be changed...
 
+if (!keep_common) {
 	roots["wrap"];			# per lexer
+}
 #	roots["unput"];			# static
 #	roots["terminate"];		# macro
 

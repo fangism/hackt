@@ -2,7 +2,7 @@
  *	\file "lexer/instref-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: instref-lex.ll,v 1.5 2006/07/30 05:49:37 fang Exp $
+ *	$Id: instref-lex.ll,v 1.5.82.1 2008/03/02 22:38:28 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -96,8 +96,10 @@ NODE_POSITION_UPDATE(YYSTYPE& lval __YYLEX_PARAM) {
 	TOKEN_UPDATE(__YYLEX_ARG_VOID);
 }
 
+#if 0
 /* checking whether or not we are at end of file, defined below */
 int instref_at_eof(void);
+#endif
 
 }	/* end namespace lexer */
 }	/* end namespace HAC */
@@ -225,6 +227,7 @@ RANGE		".."
 %%
 /****** user-code ************************************************************/
 
+#if 0
 /**
 	\return 0 to continue lexing, after restoring yyin to its 
 		former value.  
@@ -249,4 +252,5 @@ int instref_at_eof(AT_EOF_PARAM) {
 
 }	/* end namespace lexer */
 }	/* end namespace HAC */
+#endif
 
