@@ -4,7 +4,7 @@
 	TODO: (.m4.in)
 	Use m4 to conditionally turn on/off parts of grammar.  
 	Consider using bison-GLR generator.  
-	$Id: cx-parse.yy.in,v 1.4 2006/08/29 17:56:46 fang Exp $
+	$Id: cx-parse.yy.in,v 1.4.66.1 2008/03/03 04:09:06 fang Exp $
  */
 
 %{
@@ -16,11 +16,6 @@
 %union {
 	void*		_void;
 }
-
-/**
-	The first token number, to avoid guessing.
- */
-%token	MINIMUM_BOGOSITY
 
 /* terminal token symbols and their types */
 
@@ -103,8 +98,6 @@
 %token	<_void>	TEMPLATE_ID
 // %token	<_void>	DECLARATOR_ID
 %token	<_void>	MEMBER_DECLARATION
-
-%token	MAXIMUM_BOGOSITY
 
 /* non-terminal symbols and their types */
 
@@ -1622,4 +1615,19 @@ TYPENAME_opt
 
 %%
 /* more useful code and definitions go here */
+#if YYBISON
+// bison-isms: names were changed to protect the innocent
+// yacc symbol for maximum token number, renamed in bison
+#define	YYMAXTOKEN	YYMAXUTOK
+#define	__symbol_names	yytname
+#define	__shift_table	yypact
+#define	__reduce_table	yydefact
+#define	__YYTABLESIZE	YYLAST
+
+#else	// !YYBISON
+#define	__symbol_names	yyname
+#define	__shift_table	yysindex
+#define	__reduce_table	yyrindex
+#define	__YYTABLESIZE	YYTABLESIZE
+#endif
 

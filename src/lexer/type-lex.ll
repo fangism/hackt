@@ -2,7 +2,7 @@
  *	\file "lexer/type-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: type-lex.ll,v 1.2.44.1 2008/03/02 22:38:29 fang Exp $
+ *	$Id: type-lex.ll,v 1.2.44.2 2008/03/03 04:09:04 fang Exp $
  */
 
 %{
@@ -219,13 +219,6 @@ MULTILINE_NEWLINE(token_position& p __YYLEX_PARAM) {
 	p.leng = yyleng -1; NEWLINE_UPDATE(__YYLEX_ARG_VOID);
 }
 
-#if 0
-/* checking whether or not we are at end of file, defined below */
-extern
-int
-type_at_eof(const flex::lexer_state&);
-#endif
-
 }	/* end namespace lexer */
 }	/* end namespace HAC */
 
@@ -423,33 +416,4 @@ FALSE		"false"
 %%
 /****** user-code ************************************************************/
 
-#if 0
-/**
-	If this is already the outermost file, then return 1, 
-		signaling the end of all input.  
-	\return 0 to continue lexing, after restoring yyin to its 
-		former value.  
- */
-int yywrap(void) {
-	return 1;		// no more input
-}
-
-namespace HAC {
-namespace lexer {
-
-/**
-	Public function that indicates whether or not the lexer is
-	in the EOF (end-of-file) state.  
-	This must be defined in this file because it makes reference
-	to a statically linked variable, (which makes it invisible 
-	to the outside world).  
- */
-int type_at_eof(const flex::lexer_state& foo) {
-	assert(YY_CURRENT_BUFFER);
-	return YY_CURRENT_BUFFER->yy_n_chars == 0;
-}
-
-}	/* end namespace lexer */
-}	/* end namespace HAC */
-#endif
 

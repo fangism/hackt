@@ -1,5 +1,5 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.7 2007/11/02 01:15:05 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.7.10.1 2008/03/03 04:08:48 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
@@ -111,15 +111,52 @@ dnl
 dnl Enables YACC as a configurable variable.  
 dnl This usually picks up bison by default if found, 
 dnl but can be manually overridden.
+dnl Note: automake-1.10+ already provides YACC variable
+dnl This macro now runs some test to detect certain traits
+dnl of the parser generator.
 dnl
 dnl @category InstalledPackages
-dnl @version 2006-05-08
+dnl @version 2008-03-03
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_VAR_YACC],
 [AC_REQUIRE([AC_PROG_YACC])
 AC_ARG_VAR(YACC, [parser generator, requires LALR(1), such as yacc/bison])
+cat > conftest.y <<ACEOF
+%token	FIRST_TOK
+%token	LAST_TOK
+%start top
+%%
+top: FIRST_TOK LAST_TOK
+%%
+ACEOF
+dnl fake cache variable< should probably use different name prefix
+ac_cv_prog_yacc_root="y.tab"
+ac_compile_yacc='$CC -c $CFLAGS $CPPFLAGS $ac_cv_prog_yacc_root.c >&5'
+
+dnl test 1: find the enumeral value of the first token
+if $YACC -d -t -v conftest.y && eval "$ac_compile_yacc"
+then
+if ! test -f $ac_cv_prog_yacc_root.h
+then AC_MSG_ERROR([$YACC does not produce $ac_cv_prog_yacc_root.h.])
+fi
+YACC_FIRST_TOKEN_ENUM=`grep "^#define.*FIRST_TOK" $ac_cv_prog_yacc_root.h | cut -d\  -f3`
+fi
+AC_SUBST(YACC_FIRST_TOKEN_ENUM)
+
+dnl test 2: if yacc, get the version string of the skeleton
+dnl eventually pass this into YACC_VERSION
+yacc_skeleton_version=`grep "skeleton" $ac_cv_prog_yacc_root.c | \
+	cut -d\" -f2 | sed 's/[$]//g'`
+
+dnl test 3: find name of preprocessor symbol for MAXTOK
+dnl is YYMAXTOKEN for yacc, YYMAXUTOK for bison
+
+dnl TODO: run more tests
+dnl clean up files: y.tab.c y.tab.h y.output
+rm -f y.*
+dnl for use in Makefile
 ])dnl
 
 dnl @synopsis HACKT_LEX_VERSION
@@ -204,7 +241,8 @@ dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_YACC_VERSION],
-[AC_REQUIRE([AC_PROG_YACC])
+[AC_REQUIRE([HACKT_ARG_VAR_YACC])	dnl for test results
+dnl AC_REQUIRE([AC_PROG_YACC])
 case $YACC in
 	dnl (
 	*bison* )
@@ -238,7 +276,8 @@ dnl	fi
 		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
 		AC_DEFINE(USING_BYACC, 1, [Define to 1 if we're using byacc.])
 		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
-		YACC_VERSION=`which $YACC | head -n 1`
+		YACC_VERSION="$yacc_skeleton_version"
+		dnl YACC_VERSION=`which $YACC | head -n 1`
 		;;
 	dnl (
 	*yacc* )
@@ -246,13 +285,13 @@ dnl	fi
 		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
 		AC_DEFINE(USING_BYACC, 0, [Define to 1 if we're using byacc.])
 		AC_DEFINE(USING_YACC, 1, [Define to 1 if we're using yacc.])
+		YACC_VERSION="$yacc_skeleton_version"
 		dnl traditional yacc has no version flag :S
-		YACC_VERSION=`which $YACC | head -n 1`
+		dnl YACC_VERSION=`which $YACC | head -n 1`
 		;;
 	dnl (
 	* ) AC_MSG_ERROR([No parser-generator found.]) ;;
 esac
 AC_SUBST(YACC_VERSION)
 ])dnl
-
 

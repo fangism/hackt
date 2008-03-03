@@ -5,6 +5,23 @@
 
 2008-03-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-05-parser-06-02:
+	  Makefile.am purge-ry, parser surgery, config patchery.
+	  configury: test minimalist example to determine properties
+		of the chosen parser generator.
+		e.g. no longer need MINIMUM_BOGOSITY token
+		Now have a proper yacc skeleton version string.
+	  Makefile.am: clean-up, better script re-use for maintainence, 
+		eliminating eye-sore duplicates
+	  lexer/*.ll: remove all references to yywrap and *_at_eof.
+	  parser/*.yy.in: eliminate MINIMUM_BOGOSITY placeholder, 
+		replace MAXUMIN_BOGOSITY with YYMAXTOKEN, aliases
+		to YYMAXUTOK for bison.
+	  Next: rewrite string parse calls.
+
+
+2008-03-02	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-05-parser-06-01:
 	  New branch for invasive changes to lexers.  
 	  Extract code common to all generated lexers with 

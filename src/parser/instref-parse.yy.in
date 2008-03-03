@@ -4,7 +4,7 @@
 	This will be used in prsim and other simulators, for example.  
 	The grammar in here is an extremely small snippet
 	of the hackt language grammar.  
-	$Id: instref-parse.yy.in,v 1.6.66.1 2008/03/02 22:38:34 fang Exp $
+	$Id: instref-parse.yy.in,v 1.6.66.2 2008/03/03 04:09:05 fang Exp $
  */
 
 %{
@@ -109,8 +109,6 @@ yyfreestacks(const short* yyss, const short* yyssp,
 		const flex::lexer_state& _lexer_state);
 %}
 
-%token	MINIMUM_BOGOSITY
-
 %type	<_node_position>	'[' ']' '.'
 %token	<_node_position>	SCOPE
 %token	<_token_identifier>	ID
@@ -125,8 +123,6 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* %type	<_expr>			index		*/
 %type	<_id_expr>		id_expr
 %type	<_qualified_id>		absolute_id relative_id
-
-%token	MAXIMUM_BOGOSITY
 
 %start	instref
 
@@ -243,6 +239,7 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 }
 
 #if YYBISON
+#define	YYMAXTOKEN	YYMAXUTOK
 #define __symbol_names  yytname
 #define __shift_table   yypact
 #define __reduce_table  yydefact
@@ -318,7 +315,7 @@ void yyerror(const char* msg) {
 	{
 		int _yychar_ = 0;
 		int yyn;
-		for ( ; _yychar_ <= MAXIMUM_BOGOSITY; _yychar_++) {
+		for ( ; _yychar_ <= YYMAXTOKEN; _yychar_++) {
 			// try all terminal tokens
 			if ((yyn = __shift_table[*yyssp]) &&
 					(yyn += _yychar_) >= 0 &&

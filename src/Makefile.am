@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.193.6.1 2008/03/02 22:38:22 fang Exp $
+#	$Id: Makefile.am,v 1.193.6.2 2008/03/03 04:08:55 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1237,6 +1237,9 @@ MAKE_REAL_PARSER_HEADER_SCRIPT = \
 	$(SED_srcdir_strip_setup) ; \
 	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" ; \
 	$(ECHO) "\#include \"parser/$$basename-union.h\"" ; \
+	if test -f "parser/$$basename.h" ; then \
+		$(ECHO) "\#include \"parser/$$basename.h\"" ; \
+	fi ; \
 	$(CAT) parser/$$basename-parse.h ;} > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
@@ -1248,12 +1251,14 @@ parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h \
 
 parser/$(INSTREF_PARSE_ROOT)-real.h: parser/$(INSTREF_PARSE_ROOT).h \
 		parser/instref-prefix.h
-	$(SED_srcdir_strip_setup) ; \
-	{ $(ECHO) "#include \"parser/instref-prefix.h\"" ; \
-	$(ECHO) "#include \"parser/instref-union.h\"" ; \
-	$(ECHO) "#include \"parser/instref.h\"" ; \
-	$(CAT) parser/$(INSTREF_PARSE_ROOT).h ;} > \
-		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+	basename="instref" ; \
+	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
+#	$(SED_srcdir_strip_setup) ; \
+#	{ $(ECHO) "#include \"parser/instref-prefix.h\"" ; \
+#	$(ECHO) "#include \"parser/instref-union.h\"" ; \
+#	$(ECHO) "#include \"parser/instref.h\"" ; \
+#	$(CAT) parser/$(INSTREF_PARSE_ROOT).h ;} > \
+#		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 # the above includes an additonal header in the middle
 
 parser/$(TYPE_PARSE_ROOT)-real.h: parser/$(TYPE_PARSE_ROOT).h \
@@ -1265,6 +1270,7 @@ PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 	$(SED) 's/REFERENCE/\&/g'
 
 # requires shell variable 'basename'
+# flex scanner purification eliminates need to rename most variables
 MAKE_REAL_LEXER_SCRIPT = \
 	$(CP) $< $@.tmp && \
 	$(SED) '1,3s|FILENAME|$@.tmp|' $(srcdir)/$(FLEX_COMMON_PATCH) | \
@@ -1283,13 +1289,6 @@ lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 # need early declaration of flex::lexer_state needed for flex 2.5.{31,33}
 	basename="hackt" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
-#	{ $(ECHO) "#include \"parser/hackt-prefix.h\"" ; \
-#	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
-#	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
-
-# flex scanner purification eliminates need to rename most variables
-#	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-#		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 
 lexer/$(INSTREF_LEX_ROOT)-real.cc: lexer/$(INSTREF_LEX_ROOT).cc \
 		parser/$(INSTREF_PARSE_ROOT)-real.h
@@ -1300,15 +1299,10 @@ lexer/$(TYPE_LEX_ROOT)-real.cc: lexer/$(TYPE_LEX_ROOT).cc \
 		parser/$(TYPE_PARSE_ROOT)-real.h
 	basename="type" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
-#	{ $(ECHO) "#include \"parser/type-prefix.h\"" ; \
-#	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
-#	$(CAT) lexer/$(TYPE_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
 
 lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc
 	basename="hacflat" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
-#	{ $(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
-#	$(CAT) lexer/$(HACFLAT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
 
 # should be able to depend on *ANY* of the above processed lexer sources
 # actually, not quite, there's a difference depending on whether lexer
@@ -1417,50 +1411,36 @@ GET_START_TOKEN_ENUM = \
 # TODO: use configure-time yacc test to determine this
 
 # so far, yacc token enums start at 257 consistently, but we take no chances.
-HACKT_YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
-		-v include="AST/AST.h parser/$(HACKT_PARSE_ROOT)-real.h lexer/hac_lex.h" \
+# requires shell variable 'basename'
+YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/$$basename.types \
+		-v include="AST/AST.h parser/$$basename-parse-real.h lexer/hac_lex.h" \
 		-v namespace="HAC::parser HAC::lexer" \
-		-v token_enum=`$(GET_START_TOKEN_ENUM)`
+		-v token_enum=$(YACC_FIRST_TOKEN_ENUM)
 
-INSTREF_YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/instref.types \
-		-v include="AST/AST.h parser/$(INSTREF_PARSE_ROOT)-real.h lexer/hac_lex.h" \
-		-v namespace="HAC::parser HAC::lexer" \
-		-v token_enum=`$(GET_START_TOKEN_ENUM)`
-
-TYPE_YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/type.types \
-		-v include="AST/AST.h parser/$(TYPE_PARSE_ROOT)-real.h lexer/hac_lex.h" \
-		-v namespace="HAC::parser HAC::lexer" \
-		-v token_enum=`$(GET_START_TOKEN_ENUM)`
+# requires shell variable 'basename'
+MAKE_PARSER_UNION_SCRIPT = \
+	if test ! -s parser/$$basename.types ; then \
+		$(ECHO) "parser/$$basename.types is empty!" ; \
+		exit 1 ; \
+	fi && \
+	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
+		-f $(YACC_UNION_SCRIPT) $(YACC_UNION_SCRIPT_ARGS) \
+		parser/$$basename-parse.output > $@
 
 parser/hackt-union.cc: $(HACKT_PARSE_OUTPUT) parser/hackt.types \
 		parser/$(HACKT_PARSE_ROOT)-real.h
-	@if test ! -s parser/hackt.types ; then \
-		$(ECHO) "parser/hackt.types is empty!" ; \
-		exit 1 ; \
-	fi
-	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
-		-f $(YACC_UNION_SCRIPT) $(HACKT_YACC_UNION_SCRIPT_ARGS) \
-		$(HACKT_PARSE_OUTPUT) > $@
+	basename="hackt" ; \
+	$(MAKE_PARSER_UNION_SCRIPT)
 
 parser/instref-union.cc: $(INSTREF_PARSE_OUTPUT) parser/instref.types \
 		parser/$(INSTREF_PARSE_ROOT)-real.h
-	@if test ! -s parser/instref.types ; then \
-		$(ECHO) "parser/instref.types is empty!" ; \
-		exit 1 ; \
-	fi
-	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
-		-f $(YACC_UNION_SCRIPT) $(INSTREF_YACC_UNION_SCRIPT_ARGS) \
-		$(INSTREF_PARSE_OUTPUT) > $@
+	basename="instref" ; \
+	$(MAKE_PARSER_UNION_SCRIPT)
 
 parser/type-union.cc: $(TYPE_PARSE_OUTPUT) parser/type.types \
 		parser/$(TYPE_PARSE_ROOT)-real.h
-	@if test ! -s parser/type.types ; then \
-		$(ECHO) "parser/type.types is empty!" ; \
-		exit 1 ; \
-	fi
-	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
-		-f $(YACC_UNION_SCRIPT) $(TYPE_YACC_UNION_SCRIPT_ARGS) \
-		$(TYPE_PARSE_OUTPUT) > $@
+	basename="type" ; \
+	$(MAKE_PARSER_UNION_SCRIPT)
 
 
 # configure accumulated AUTO_CPPFLAGS for dependent package includes
