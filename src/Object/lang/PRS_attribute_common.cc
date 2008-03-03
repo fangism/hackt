@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_common.cc"
-	$Id: PRS_attribute_common.cc,v 1.5 2007/10/08 01:21:20 fang Exp $
+	$Id: PRS_attribute_common.cc,v 1.6 2008/03/03 21:10:26 sandra Exp $
  */
 
 #include <iostream>
@@ -63,6 +63,15 @@ After::__check_vals(const char* name, const values_type& v) {
 			return good_bool(true);
 		}
 	}
+}
+
+//=============================================================================
+/**
+	Takes a single integer value.  1 or 0.
+*/
+good_bool
+Always_Random::__check_vals(const char* name, const values_type& v) {
+        return check_single_integer(name, v);
 }
 
 //=============================================================================

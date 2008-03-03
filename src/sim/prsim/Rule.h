@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.4 2007/04/26 05:46:40 fang Exp $
+	$Id: Rule.h,v 1.5 2008/03/03 21:10:36 sandra Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -27,7 +27,8 @@ struct Rule {
 	typedef	enum {
 		RULE_DEFAULT_FLAGS = 0x00,
 		RULE_UNSTAB = 0x01,
-		RULE_WEAK = 0x02
+		RULE_WEAK = 0x02,
+		RULE_ALWAYS_RANDOM = 0x04
 	}	rule_enum_type;
 public:
 	time_type			after;
@@ -38,6 +39,15 @@ public:
 public:
 	Rule() : after(delay_policy<time_type>::default_delay), 
 		rule_flags(RULE_DEFAULT_FLAGS) { }
+
+        bool
+        is_always_random(void) const { return this->rule_flags & RULE_ALWAYS_RANDOM; }
+
+        void
+        set_always_random(void) { this->rule_flags |= RULE_ALWAYS_RANDOM; }
+
+        void
+        clear_always_random(void) { this->rule_flags &= ~RULE_ALWAYS_RANDOM; }
 
 	bool
 	is_weak(void) const { return this->rule_flags & RULE_WEAK; }

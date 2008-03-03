@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.12 2007/10/08 01:21:21 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.13 2008/03/03 21:10:26 sandra Exp $
  */
 
 #include "util/static_trace.h"
@@ -106,6 +106,33 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 		entity::expr_dump_context::default_value) << '\t';
 }
 }
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-always_random.texi
+@defmac always_random b
+If @var{b} is true (1), rule delay is based on random exponential    
+distrubution.
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Always_Random, "always_random")
+
+/**
+      Prints out "always_random" before a rule in cflat.
+      TODO: check to ensure use with after.
+ */
+void
+Always_Random::main(visitor_type& p, const values_type& v) {
+if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
+      const pint_const& pi(*v[0].is_a<const pint_const>());
+      if (pi.static_constant_value()) {
+              ostream& o(p.os);
+              o << "always_random\t";
+      }
+}
+}
+
 
 //-----------------------------------------------------------------------------
 /***

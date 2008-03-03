@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.21 2007/10/08 01:21:53 fang Exp $
+	$Id: ExprAlloc.cc,v 1.22 2008/03/03 21:10:36 sandra Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -828,6 +828,23 @@ After::main(visitor_type& v, const values_type& a) {
 	const values_type::value_type& d(a.front());
 	// assert type cast, b/c already checked
 	r.set_delay(d.is_a<const pint_const>()->static_constant_value());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Always_Random, "always_random")
+
+/**
+        Sets or clears always_random flag on a rule.
+        Value is 1 (true) or 0.
+ */
+void
+Always_Random::main(visitor_type& v, const values_type& a) {
+        typedef visitor_type::rule_type rule_type;
+        rule_type& r(v.st_rule_map[v.last_expr_index()]);
+        const values_type::value_type& w(a.front());
+        if (w.is_a<const pint_const>()->static_constant_value())
+                r.set_always_random();
+        else    r.clear_always_random();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

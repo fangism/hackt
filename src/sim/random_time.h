@@ -1,6 +1,6 @@
 /**
 	\file "sim/random_time.h"
-	$Id: random_time.h,v 1.2 2006/04/03 05:30:35 fang Exp $
+	$Id: random_time.h,v 1.3 2008/03/03 21:10:31 sandra Exp $
  */
 
 #ifndef	__HAC_SIM_RANDOM_TIME_H__
@@ -55,14 +55,28 @@ struct random_time<unsigned short> {
 
 	return_type
 	operator () (void) const {
-		const double d = rand48<double>()();
-		return return_type(exp(d*ln_max_val) -1);
+		// const double d = rand48<double>()();
+                double d;
+		do
+			d = rand48<double>()();
+                while(d == 0.0);
+		// return return_type(exp(d*ln_max_val) -1);
+		const double e = -1 * log(d);
+		//return return_type((0x01 << 11)*e); //(2^11)*e
+		return return_type(e);
 	}
 
 	return_type
 	operator () (seed_type& s) const {
-		const double d = rand48<double>()(s);
-		return return_type(exp(d*ln_max_val) -1);
+		// const double d = rand48<double>()(s);
+		double d;
+		do
+			d = rand48<double>()();
+		while(d == 0.0);
+		// return return_type(exp(d*ln_max_val) -1);
+                const double e = -1 * log(d);
+		//return return_type((0x01 << 11)*e); //(2^11)*e
+ 		return return_type(e);
 	}
 };
 
@@ -86,14 +100,28 @@ struct random_time<double> {
 
 	return_type
 	operator () (void) const {
-		const double d = rand48<double>()();
-		return exp(d*ln_max_val) -1.0;
+		// const double d = rand48<double>()();
+		double d;
+		do
+			d = rand48<double>()();
+		while(d == 0.0);
+		// return exp(d*ln_max_val) -1.0;
+                const double e = -1 * log(d);
+		//return (0x01 << 11))*e; //(2^11)*e
+		return e;
 	}
 
 	return_type
 	operator () (seed_type& s) const {
-		const double d = rand48<double>()(s);
-		return exp(d*ln_max_val) -1.0;
+		// const double d = rand48<double>()(s);
+		double d;
+		do
+			d = rand48<double>()();
+		while(d == 0.0);
+		// return exp(d*ln_max_val) -1.0;
+                const double e = -1 * log(d);
+                //return (0x01 << 11)*e; //(2^11)*e
+                return e;
 	}
 };
 

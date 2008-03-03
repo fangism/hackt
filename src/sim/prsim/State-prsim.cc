@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6 2007/12/01 04:25:31 fang Exp $
+	$Id: State-prsim.cc,v 1.7 2008/03/03 21:10:36 sandra Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1144,12 +1144,17 @@ return current_time +
 	(timing_mode == TIMING_RANDOM ?
 		(e.cause_rule && time_traits::is_zero(
 				rule_map.find(e.cause_rule)->second.after) ?
-			time_traits::zero : random_delay())
+			time_traits::zero : ((0x01 << 11)*random_delay()))
 		:
 	(timing_mode == TIMING_UNIFORM ? uniform_delay :
 	// timing_mode == TIMING_AFTER
+	//	(e.cause_rule ?
+	//		rule_map.find(e.cause_rule)->second.after : 0)
 		(e.cause_rule ?
-			rule_map.find(e.cause_rule)->second.after : 0)
+			(rule_map.find(e.cause_rule)->second.is_always_random() ? 
+				(rule_map.find(e.cause_rule)->second.after 
+					* random_delay())
+			: rule_map.find(e.cause_rule)->second.after) : 0)
 	));
 }
 
@@ -1165,12 +1170,17 @@ State::get_delay_dn(const event_type& e) const {
 		(timing_mode == TIMING_RANDOM ?
 		(e.cause_rule && time_traits::is_zero(
 				rule_map.find(e.cause_rule)->second.after) ?
-			time_traits::zero : random_delay())
+			time_traits::zero : ((0x01 << 11)*random_delay()))
 			:
 		(timing_mode == TIMING_UNIFORM ? uniform_delay :
 		// timing_mode == TIMING_AFTER
+		//	(e.cause_rule ?
+		//		rule_map.find(e.cause_rule)->second.after : 0)
 			(e.cause_rule ?
-				rule_map.find(e.cause_rule)->second.after : 0)
+				(rule_map.find(e.cause_rule)->second.is_always_random() ?
+					(rule_map.find(e.cause_rule)->second.after
+						* random_delay())
+                        : rule_map.find(e.cause_rule)->second.after) : 0)	
 		));
 }
 
