@@ -5,6 +5,15 @@
 
 2008-03-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-05-parser-06-03:
+	  Mission accomplished.
+	  Deleted rotten pasta code with opening temporary files for
+		parsing, by replacing with string-initialized lexer-state.
+		Wish code could be this elegant more often.  
+		Net reduction in line count!
+		Files: parser/instref.cc parser/type.cc
+
+
 	* HACKT-00-01-04-main-00-82-05-parser-06-02:
 	  Makefile.am purge-ry, parser surgery, config patchery.
 	  configury: test minimalist example to determine properties

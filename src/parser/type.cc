@@ -1,6 +1,6 @@
 /**
 	\file "parser/type.cc"
-	$Id: type.cc,v 1.3 2008/02/09 02:57:41 fang Exp $
+	$Id: type.cc,v 1.3.2.1 2008/03/03 05:29:29 fang Exp $
  */
 
 #include <iostream>
@@ -13,7 +13,6 @@
 #include "lexer/flex_lexer_state.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "util/memory/count_ptr.tcc"
-#include "util/memory/deallocation_policy.h"
 
 #define	ENABLE_STACKTRACE		0
 #include "util/stacktrace.h"
@@ -41,45 +40,23 @@ check_complete_type(const concrete_type_ref&, const entity::module&);
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Parses a string into a complete type.  
-	NOTE: context should really be const.  
-	UGLY: writes string to file first, eventually fix parser
-		with iostreams instead of FILE*.  
 	Code ripped from parser::parse_reference.  
  */
 excl_ptr<const concrete_type_ref>
 parse_complete_type(const char* t) {
-	STACKTRACE_VERBOSE;
-	typedef count_ptr<FILE, util::memory::FILE_tag> FILE_ptr;
 	typedef excl_ptr<const concrete_type_ref>	return_type;
-	NEVER_NULL(t);
-	STACKTRACE_INDENT_PRINT("type = " << t << endl);
-	const FILE_ptr temp(tmpfile());
-	if (!temp) {
-		cerr << "Failed to create temporary file-buffer!" << endl;
-		THROW_EXIT;
+	STACKTRACE_VERBOSE;
+	YYSTYPE lval;
+	try {
+		flex::lexer_state f(t);	// can now parse string directly!
+		type_parse(NULL, lval, f);
+	} catch (...) {
+		cerr << "Error parsing type: " << t << endl;
+		return return_type(NULL);;
 	}
-	// see implementation comments in parser::parse_reference.
-	if (fputs(t, &*temp) == EOF) {
-		cerr << "Error writing string to temporary file." << endl;
-		THROW_EXIT;
-	} else {
-		STACKTRACE_INDENT_PRINT("attempting parsing..." << endl);
-		fputc('\n', &*temp);
-		// fflush(&*temp);
-		rewind(&*temp);         // same as fseek(temp, 0, SEEK_SET);
-		YYSTYPE lval;
-		lval._concrete_type_ref = NULL;	// initialize
-		try {
-			flex::lexer_state f(&*temp);
-			type_parse(NULL, lval, f);
-		} catch (...) {
-			cerr << "Error parsing type: " << t << endl;
-			return return_type(NULL);;
-		}
-		// cerr << "parsed node name successfully... " << endl;
-		// here is our mini-parse-tree:
-		return return_type(lval._concrete_type_ref);
-	}
+	// cerr << "parsed node name successfully... " << endl;
+	// here is our mini-parse-tree:
+	return return_type(lval._concrete_type_ref);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
