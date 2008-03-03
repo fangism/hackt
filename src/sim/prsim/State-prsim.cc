@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.37 2008/02/29 22:42:22 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.38 2008/03/03 22:24:47 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -314,19 +314,33 @@ State::initialize(void) {
 void
 State::flush_channel_events(const vector<env_event_type>& env_events, 
 		const event_cause_type& c) {
+	STACKTRACE_VERBOSE;
 	// cause of these events must be 'ni', this node
 	vector<env_event_type>::const_iterator
 		i(env_events.begin()), e(env_events.end());
 	// const event_cause_type c(ni, next);
 	for ( ; i!=e; ++i) {
+#if 0
+		cerr << "channel event on node: " <<
+			get_node_canonical_name(i->first) << endl;
+#endif
 		node_type& _n(get_node(i->first));
 		const uchar _v = i->second;
 		if (_n.current_value() != _v) {
-		if (_n.get_event()) {
+		const event_index_type pe = _n.get_event();
+		if (pe) {
 	// interaction with other enqueued events? anomalies?
 	// for now, give up if there are conflicting events in queue
 			// instability!?
-			ISE_INVARIANT(!_n.get_event());
+			cerr << "pending event on node: " <<
+				get_node_canonical_name(i->first) << endl;
+			dump_event(cerr, pe, 0) << endl;
+			cerr << "but got from channel: -> " <<
+				node_type::value_to_char[i->second] << endl;
+			cerr << "caused by node: " <<
+				get_node_canonical_name(c.node) << " -> " <<
+				node_type::value_to_char[c.val] << endl;
+			ISE_INVARIANT(!pe);
 			// not true, but we bomb out for now...
 			// TODO: proper diagnostic
 		} else {

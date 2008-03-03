@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.4.4 2008/02/29 22:42:19 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.4.5 2008/03/03 22:24:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1206,7 +1206,10 @@ if (ni == ack_signal) {
 			}
 #endif
 		}
-		if (is_sinking()) {
+		if (is_sinking() && (next == node_type::LOGIC_OTHER)
+				&& (x_counter == 1)) {
+			// if counter was JUST incremented to 1
+			// otherwise multiple X's are vacuous
 #if PRSIM_CHANNEL_VALIDITY
 			// if not validity protocol, set ack to X
 			if (!valid_signal) {

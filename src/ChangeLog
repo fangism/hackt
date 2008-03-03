@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-51:
+	  prsim channel bug fix: was mistakenly enqueueing multiple
+		X events from sink, where latter X's should have been vacuous.
+		Initially reported by Ilya Ganusov, reduced by Fang.  
+	  Fixed with test case prsim/channel-test-a-19.
+
+
 2008-03-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-50:
@@ -62,7 +71,7 @@
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-45:
 	  prsim weak-rules critical bug fix: false positive diagnostic on
-		a weak rule utting off (from X->0) should not impact
+		a weak rule cutting off (from X->0) should not impact
 		a pending non-weak event (in the same direction).  
 		Symptom: wrongly X'd out events on non-instability.
 		Fixed, with reduced test case added.  
