@@ -5,6 +5,11 @@
 
 2008-03-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-53:
+	  prsim: Functional-style clean-ups will make it easier to pass 
+		around arbitary functions.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-52:
 	  prsim critical bug fix: assessment of interference should
 		ignore when weak-rule tries to fight against strong rule, 

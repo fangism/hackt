@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.16 2008/02/29 22:42:24 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.17 2008/03/04 02:43:19 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1087,6 +1087,18 @@ public:
 	dump_node_why_not(ostream&, const node_index_type, const bool, 
 		const bool, const bool) const;
 
+	void
+	find_nodes(vector<node_index_type>&,
+		bool (*)(const node_type&)) const;
+
+	void
+	find_nodes(vector<node_index_type>&,
+		bool (node_type::*)(void) const) const;
+
+	ostream&
+	print_nodes(ostream&, const vector<node_index_type>&,
+		const char*) const;
+
 	ostream&
 	dump_dangling_unknown_nodes(ostream&, const bool) const;
 
@@ -1139,6 +1151,14 @@ private:
 	ostream&
 	__node_why_X(ostream&, const node_index_type, node_set_type&, 
 		node_set_type&) const;
+
+	template <typename Iter>
+	ostream&
+	__print_nodes(ostream&, Iter, Iter, const char*) const;
+
+	template <typename Iter>
+	ostream&
+	__print_nodes_infix(ostream&, Iter, Iter, const char*) const;
 
 public:
 	// so channel_manager has access (or pass callback?)

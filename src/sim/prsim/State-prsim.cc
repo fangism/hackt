@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.39 2008/03/04 00:30:57 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.40 2008/03/04 02:43:18 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3471,6 +3471,25 @@ State::dump_watched_nodes(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+bool
+node_is_0(const State::node_type& n) {
+	return n.current_value() == State::node_type::LOGIC_LOW;
+}
+
+static
+bool
+node_is_1(const State::node_type& n) {
+	return n.current_value() == State::node_type::LOGIC_HIGH;
+}
+
+static
+bool
+node_is_X(const State::node_type& n) {
+	return n.current_value() == State::node_type::LOGIC_OTHER;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param val node_type::LOGIC_{LOW,HIGH,OTHER}.  
 	\param nl use newline delimiter instead of space.
@@ -3478,14 +3497,16 @@ State::dump_watched_nodes(ostream& o) const {
 ostream&
 State::status_nodes(ostream& o, const uchar val, const bool nl) const {
 	ISE_INVARIANT(node_type::is_valid_value(val));
-	const size_t ns = node_pool.size();
-	size_t i = INVALID_NODE_INDEX +1;
 	o << node_type::value_to_char[size_t(val)] << " nodes:" << endl;
-	for ( ; i<ns; ++i) {
-		if (node_pool[i].current_value() == val) {
-			o << get_node_canonical_name(i) << (nl ? '\n' : ' ');
-		}
+	bool (*f)(const node_type&) = &node_is_X;
+	switch (val) {
+	case node_type::LOGIC_LOW: f = &node_is_0; break;
+	case node_type::LOGIC_HIGH: f = &node_is_1; break;
+	default: break;
 	}
+	vector<node_index_type> nodes;
+	find_nodes(nodes, f);
+	print_nodes(o, nodes, nl ? "\n" : " ");
 	return o << endl;
 }
 
@@ -4299,27 +4320,128 @@ State::__expr_why_not(ostream& o, const expr_index_type xi,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Generic traversal to find all nodes meeting a certain criterion.  
+ */
+void
+State::find_nodes(vector<node_index_type>& ret, 
+		bool (*pred)(const node_type&)) const {
+	const node_index_type ns = node_pool.size();
+	node_index_type i = INVALID_NODE_INDEX +1;
+	for ( ; i<ns; ++i) {
+		const node_type& n(node_pool[i]);
+		if ((*pred)(n)) {
+			ret.push_back(i);
+		}
+	}
+}
+
+// pointer-to-member-function variant overload
+void
+State::find_nodes(vector<node_index_type>& ret, 
+		bool (node_type::*predmf)(void) const) const {
+	const node_index_type ns = node_pool.size();
+	node_index_type i = INVALID_NODE_INDEX +1;
+	for ( ; i<ns; ++i) {
+		const node_type& n(node_pool[i]);
+		if ((n.*predmf)()) {
+			ret.push_back(i);
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	printing functor, like output_iterator
+	Caller should call a flush after this.  
+ */
+struct node_printer_base {
+	const State&			state;
+	ostream&			os;
+	const char*			delim;
+
+	explicit
+	node_printer_base(const State& s, ostream& o, const char* d) :
+			state(s), os(o), delim(d) {
+		NEVER_NULL(delim);
+	}
+
+};
+
+struct node_printer : public node_printer_base {
+	node_printer(const State& s, ostream& o, const char* d) :
+			node_printer_base(s, o, d) { }
+
+	void
+	operator () (const node_index_type ni) const {
+		os << state.get_node_canonical_name(ni) << delim;
+	}
+};
+
+struct node_printer_prefix : public node_printer_base {
+	node_printer_prefix(const State& s, ostream& o, const char* d) :
+			node_printer_base(s, o, d) { }
+
+	void
+	operator () (const node_index_type ni) const {
+		os << delim << state.get_node_canonical_name(ni);
+	}
+};
+
+template <typename Iter>
+ostream&
+State::__print_nodes(ostream& o, Iter b, Iter e, const char* delim) const {
+	for_each(b, e, node_printer(*this, o, delim));
+	return o << std::flush;
+}
+
+template <typename Iter>
+ostream&
+State::__print_nodes_infix(ostream& o, Iter b, Iter e,
+		const char* delim) const {
+if (b != e) {
+	node_printer(*this, o, "")(*b);
+	++b;
+	for_each(b, e, node_printer_prefix(*this, o, delim));
+}
+	return o << std::flush;
+}
+
+ostream&
+State::print_nodes(ostream& o, const vector<node_index_type>& nodes, 
+		const char* delim) const {
+	return __print_nodes(o, nodes.begin(), nodes.end(), delim);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+bool
+node_is_X_no_fanin(const State::node_type& n) {
+	return node_is_X(n) && !n.has_fanin();
+}
+
+static
+bool
+node_is_X_no_fanin_with_fanout(const State::node_type& n) {
+	return node_is_X_no_fanin(n) && n.fanout.size();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Print all X nodes with no fanin.  
 	This won't find X cycles, however.  
 	\param b true to include node with no fanout
  */
 ostream&
 State::dump_dangling_unknown_nodes(ostream& o, const bool b) const {
-	const size_t ns = node_pool.size();
-	size_t i = INVALID_NODE_INDEX +1;
 	o << "X nodes with no fanin";
 	if (!b) {
 		o << ", with fanout";
 	}
 	o << ":" << endl;
-	for ( ; i<ns; ++i) {
-		const node_type& n(node_pool[i]);
-		if (n.current_value() == node_type::LOGIC_OTHER &&
-			!n.has_fanin() &&
-			(n.fanout.size() || b)) {
-			o << get_node_canonical_name(i) << endl;
-		}
-	}
+	vector<node_index_type> nodes;
+	find_nodes(nodes,
+		b ? &node_is_X_no_fanin : &node_is_X_no_fanin_with_fanout);
+	print_nodes(o, nodes, "\n");
 	return o;
 }
 
@@ -4408,13 +4530,7 @@ ostream&
 State::dump_mk_excl_ring(ostream& o, const ring_set_type& r) const {
 	typedef	ring_set_type::const_iterator	const_iterator;
 	ISE_INVARIANT(r.size() > 1);
-	const_iterator i(r.begin()), e(r.end());
-	o << "{ ";
-	o << get_node_canonical_name(*i);
-	for (++i; i!=e; ++i) {
-		o << ", " << get_node_canonical_name(*i);
-	}
-	return o << " }";
+	return __print_nodes_infix(o << "{ ", r.begin(), r.end(), ", ") << " }";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4476,13 +4592,7 @@ ostream&
 State::dump_check_excl_ring(ostream& o, const lock_index_list_type& r) const {
 	typedef	lock_index_list_type::const_iterator	const_iterator;
 	ISE_INVARIANT(r.size() > 1);
-	const_iterator i(r.begin()), e(r.end());
-	o << "{ ";
-	o << get_node_canonical_name(*i);
-	for (++i; i!=e; ++i) {
-		o << ", " << get_node_canonical_name(*i);
-	}
-	return o << " }";
+	return __print_nodes_infix(o << "{ ", r.begin(), r.end(), ", ") << " }";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
