@@ -1,0 +1,23 @@
+staging initial condition 
+enqueued:	0	_pR : 1
+enqueued:	0	d0 : 0
+enqueued:	0	d1 : 1
+enqueued:	0	s : 1
+enqueued:	0	_r1 : 0
+enqueued:	0	_lw : 0
+enqueued:	0	mp : 0
+	0	_pR : 1
+	0	d0 : 0
+	0	d1 : 1
+	0	s : 1
+	0	_r1 : 0
+	0	_lw : 0
+	0	mp : 0
+failing situation: 
+enqueued:	0	_r0 : 1
+enqueued:	0	_lw : X
+enqueued:	10	__le : 0	[from _r0:=1]
+	0	_r0 : 1
+	0	_lw : X
+	10	__le : 0	[by _r0:=1]
+CONGRATULATIONS, it didn't die! 

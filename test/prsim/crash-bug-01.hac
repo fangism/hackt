@@ -1,0 +1,28 @@
+// "crash-bug-01.hac"
+// trying to reduce a bug-revealing test case
+
+bool _pR, d0, d1, s, _r0, _r1, mp, _lw, __le;
+
+prs {
+	~_pR |
+	(~d1 & ~s & ~d0) |
+	(~d0 & ~s & ~d1)		-> __le+
+	s & ((d0 & _r1) | (d1 & _r0))
+					-> __le-
+[weak=1]	~mp & ~_lw		-> __le+
+[weak=1]	_pR & _lw		-> __le-
+
+}
+
+/**
+state 1:
+_pR:1 d0:0 d1:1 s:1 _r0:X _r1:0 mp:0 _lw:0 __le:X
+
+state 2:
+_pR:1 d0:0 d1:1 s:1 [_r0:1] _r1:0 mp:0 _lw:0 __le:X
+	enqueuing __le-
+
+state 3: *death*, on _lw:X WHILE WEAK RULES ARE OFF
+	
+**/
+

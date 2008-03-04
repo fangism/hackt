@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.38 2008/03/03 22:24:47 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.39 2008/03/04 00:30:57 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3289,7 +3289,13 @@ State::__diagnose_violation(ostream& o, const uchar next,
 			expected to work as presently coded.  
 		***/
 		const bool interference =
-			eu & event_type::EVENT_INTERFERENCE;
+			eu & event_type::EVENT_INTERFERENCE
+#if PRSIM_WEAK_RULES
+			&& !(weak && !e.is_weak())
+			// is not interference if original event was strong
+			// and this new event is weak
+#endif
+			;
 		const string cause_name(get_node_canonical_name(ni));
 		const string out_name(get_node_canonical_name(ui));
 

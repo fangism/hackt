@@ -5,6 +5,14 @@
 
 2008-03-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-52:
+	  prsim critical bug fix: assessment of interference should
+		ignore when weak-rule tries to fight against strong rule, 
+		similar patch to -03-45 on this branch.  
+		Initially reported by Ilya Ganusov, reduced by Fang.  
+	  Fixed with test case prsim/crash-bug-01.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-51:
 	  prsim channel bug fix: was mistakenly enqueueing multiple
 		X events from sink, where latter X's should have been vacuous.
