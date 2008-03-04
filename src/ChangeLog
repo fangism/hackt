@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-54:
+	  prsim/State-prsim.cc: cleanups and additions, refactoring code
+		to make more use of function pointers.  
+		Added more generalized queries for input/output states.
+	  prsim channels: source/sink configured channels now count
+		as effective 'fanin' and 'fanouts' in queries.
+	  New command: unknown-outputs: report X nodes that have no
+		fanout, useful when they are going into environment.
+		Documented, tested.  
+
+
 2008-03-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-53:

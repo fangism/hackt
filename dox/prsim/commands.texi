@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.13 2008/02/29 22:42:13 fang Exp $
+@c $Id: commands.texi,v 1.2.2.14 2008/03/04 21:53:19 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -244,6 +244,7 @@ simulator and the simulated production rules.
 @include cmd/time.texi
 @include cmd/unknown-inputs.texi
 @include cmd/unknown-inputs-fanout.texi
+@include cmd/unknown-outputs.texi
 
 @c ----------------------------------------------------------------------------
 @node View Commands

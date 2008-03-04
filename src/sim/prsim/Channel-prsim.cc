@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.4.5 2008/03/03 22:24:46 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.4.6 2008/03/04 21:53:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -905,6 +905,43 @@ channel::may_drive_node(const node_index_type ni) const {
 	if (is_sinking()) {
 		if (ack_signal == ni) {
 			return true;
+		}
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if this channel may repond to changes in node.
+ */
+bool
+channel::reads_node(const node_index_type ni) const {
+	const data_rail_map_type::const_iterator
+		f(__node_to_rail.find(ni));
+	const bool is_data_rail = (f != __node_to_rail.end());
+	if (is_sourcing()) {
+		if (ni == ack_signal) {
+			return true;
+		}
+#if PRSIM_CHANNEL_VALIDITY
+		if (validity_signal && is_data_rail) {
+			// source's validity must respond to its own data rails
+			return true;
+		}
+#endif
+	}
+	if (is_sinking()) {
+#if PRSIM_CHANNEL_VALIDITY
+		if (validity_signal) {
+			// ack only responds to validity, not data rails
+			if (ni == validity_signal)
+				return true;
+		} else
+#endif
+		{
+			// yes, ack responds to data rails
+			if (is_data_rail)
+				return true;
 		}
 	}
 	return false;
@@ -1987,6 +2024,25 @@ if (f != node_channels_map.end()) {
 		i(f->second.begin()), e(f->second.end());
 	for ( ; i!=e; ++i) {
 		if (channel_pool[*i].may_drive_node(ni))
+			return true;
+	}
+}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if any channel is potentially driven node.
+ */
+bool
+channel_manager::node_has_fanout(const node_index_type ni) const {
+	const node_channels_map_type::const_iterator
+		f(node_channels_map.find(ni));
+if (f != node_channels_map.end()) {
+	std::set<channel_index_type>::const_iterator
+		i(f->second.begin()), e(f->second.end());
+	for ( ; i!=e; ++i) {
+		if (channel_pool[*i].reads_node(ni))
 			return true;
 	}
 }

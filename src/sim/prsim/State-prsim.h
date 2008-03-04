@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.17 2008/03/04 02:43:19 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.18 2008/03/04 21:53:29 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1095,12 +1095,26 @@ public:
 	find_nodes(vector<node_index_type>&,
 		bool (node_type::*)(void) const) const;
 
+	void
+	find_nodes(vector<node_index_type>&,
+		bool (this_type::*)(const node_index_type) const) const;
+
+	void
+	find_nodes(vector<node_index_type>&,
+		bool (*)(const State&, const node_index_type)) const;
+
 	ostream&
 	print_nodes(ostream&, const vector<node_index_type>&,
 		const char*) const;
 
 	ostream&
 	dump_dangling_unknown_nodes(ostream&, const bool) const;
+
+	ostream&
+	dump_output_nodes(ostream&) const;
+
+	ostream&
+	dump_output_unknown_nodes(ostream&) const;
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
@@ -1125,6 +1139,28 @@ public:
 		return _channel_manager.dump(o, *this);
 	}
 #endif
+
+	bool
+	node_is_driven_by_channel(const node_index_type) const;
+
+	bool
+	node_drives_any_channel(const node_index_type) const;
+
+	bool
+	node_is_driven(const node_index_type) const;
+
+	bool
+	node_is_not_driven(const node_index_type ni) const {
+		return !node_is_driven(ni);
+	}
+
+	bool
+	node_is_used(const node_index_type) const;
+
+	bool
+	node_is_not_used(const node_index_type ni) const {
+		return !node_is_used(ni);
+	}
 
 	ostream&
 	dump_memory_usage(ostream&) const;

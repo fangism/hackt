@@ -1,0 +1,27 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+Warning: channel acknowledge `Y.e' has no fanin!
+Warning: channel acknowledge `Z.a' has no fanin!
+channels:
+X : .e(init:0) 1x1of2 sink
+Y : .e(init:1) 1x1of4 source {2,1,0,} @0
+Z : .a(init:0) 1x1of3 source,sink {0,2,1,} @0
+undriven X inputs 
+X nodes with no fanin:
+X.d[0]
+X.d[1]
+Y.e
+undriven X inputs with fanout 
+X nodes with no fanin, with fanout:
+X.d[0]
+X.d[1]
+Y.e
+X outputs 
+X nodes with no fanout (unused): 
+X.e
+Y.d[0]
+Y.d[1]
+Y.d[2]
+Y.d[3]

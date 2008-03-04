@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.40 2008/03/04 02:43:18 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.41 2008/03/04 21:53:27 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -306,6 +306,46 @@ State::initialize(void) {
 	// unwatchall()? no, preserved
 	// timing mode preserved
 	current_time = 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A node is driven if it has fanin rule, or can be driven from channel.
+ */
+bool
+State::node_is_driven(const node_index_type ni) const {
+	return get_node(ni).has_fanin() || node_is_driven_by_channel(ni);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A node is used if it has fanout or can cause a channel event.  
+ */
+bool
+State::node_is_used(const node_index_type ni) const {
+	return get_node(ni).fanout.size() || node_drives_any_channel(ni);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+State::node_is_driven_by_channel(const node_index_type ni) const {
+#if PRSIM_CHANNEL_SUPPORT
+	return get_node(ni).in_channel() &&
+		_channel_manager.node_has_fanin(ni);
+#else
+	return false;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+State::node_drives_any_channel(const node_index_type ni) const {
+#if PRSIM_CHANNEL_SUPPORT
+	return get_node(ni).in_channel() &&
+		_channel_manager.node_has_fanout(ni);
+#else
+	return false;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3991,8 +4031,7 @@ if (y.second) {
 	INVARIANT(n.current_value() == node_type::LOGIC_OTHER);
 	const bool from_channel =
 #if PRSIM_CHANNEL_SUPPORT
-		(n.in_channel() &&
-			_channel_manager.node_has_fanin(ni));
+		node_is_driven_by_channel(ni);
 #else
 		false;
 #endif
@@ -4146,12 +4185,7 @@ if (y.second) {
 #endif
 			) {
 			const bool from_channel =
-#if PRSIM_CHANNEL_SUPPORT
-				(n.in_channel() &&
-					_channel_manager.node_has_fanin(ni));
-#else
-				false;
-#endif
+				node_is_driven_by_channel(ni);
 			if (n.has_fanin() || from_channel) {
 			if (!why_not && !from_channel) {
 				o << ", state-holding";
@@ -4336,6 +4370,7 @@ State::find_nodes(vector<node_index_type>& ret,
 }
 
 // pointer-to-member-function variant overload
+// suitable for queries that don't require the State object
 void
 State::find_nodes(vector<node_index_type>& ret, 
 		bool (node_type::*predmf)(void) const) const {
@@ -4344,6 +4379,32 @@ State::find_nodes(vector<node_index_type>& ret,
 	for ( ; i<ns; ++i) {
 		const node_type& n(node_pool[i]);
 		if ((n.*predmf)()) {
+			ret.push_back(i);
+		}
+	}
+}
+
+// pointer-to-state member function
+void
+State::find_nodes(vector<node_index_type>& ret, 
+		bool (this_type::*predmf)(const node_index_type) const) const {
+	const node_index_type ns = node_pool.size();
+	node_index_type i = INVALID_NODE_INDEX +1;
+	for ( ; i<ns; ++i) {
+		if ((this->*predmf)(i)) {
+			ret.push_back(i);
+		}
+	}
+}
+
+// pointer to function
+void
+State::find_nodes(vector<node_index_type>& ret, 
+		bool (*p)(const this_type&, const node_index_type)) const {
+	const node_index_type ns = node_pool.size();
+	node_index_type i = INVALID_NODE_INDEX +1;
+	for ( ; i<ns; ++i) {
+		if ((*p)(*this, i)) {
 			ret.push_back(i);
 		}
 	}
@@ -4413,6 +4474,7 @@ State::print_nodes(ostream& o, const vector<node_index_type>& nodes,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 static
 bool
 node_is_X_no_fanin(const State::node_type& n) {
@@ -4423,6 +4485,36 @@ static
 bool
 node_is_X_no_fanin_with_fanout(const State::node_type& n) {
 	return node_is_X_no_fanin(n) && n.fanout.size();
+		// FIXME: node_is_used
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+ 	No driver means also not driven by channel
+ */
+static
+bool
+node_is_X_no_driver(const State& s, const node_index_type ni) {
+	return node_is_X(s.get_node(ni)) && !s.node_is_driven(ni);
+}
+
+/**
+	Nodes that are X and undriven, and used outputs.  
+ */
+static
+bool
+node_is_X_no_driver_with_fanout(const State& s, const node_index_type ni) {
+	return node_is_X_no_driver(s, ni) && s.node_is_used(ni);
+}
+
+/**
+	Find nodes that are X's and unused outputs.  
+ */
+static
+bool
+node_is_X_not_used(const State& s, const node_index_type ni) {
+	return node_is_X(s.get_node(ni)) && !s.node_is_used(ni);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4440,9 +4532,35 @@ State::dump_dangling_unknown_nodes(ostream& o, const bool b) const {
 	o << ":" << endl;
 	vector<node_index_type> nodes;
 	find_nodes(nodes,
-		b ? &node_is_X_no_fanin : &node_is_X_no_fanin_with_fanout);
+		b ? &node_is_X_no_driver : &node_is_X_no_driver_with_fanout);
 	print_nodes(o, nodes, "\n");
-	return o;
+	return o << std::flush;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print all nodes with no fanout, presumed to be outputs.
+ */
+ostream&
+State::dump_output_nodes(ostream& o) const {
+	o << "nodes with no fanout (unused): " << endl;
+	vector<node_index_type> nodes;
+	find_nodes(nodes, &this_type::node_is_not_used);
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Status X intersected with nodes with no fanout (not used).
+ */
+ostream&
+State::dump_output_unknown_nodes(ostream& o) const {
+	o << "X nodes with no fanout (unused): " << endl;
+	vector<node_index_type> nodes;
+	find_nodes(nodes, &node_is_X_not_used);
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
