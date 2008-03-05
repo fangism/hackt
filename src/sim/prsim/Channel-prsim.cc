@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.4.6 2008/03/04 21:53:22 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.4.7 2008/03/05 02:28:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1112,6 +1112,93 @@ if (stopped()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Report why node in question is not driven in direction dir. 
+	Is mutually recursive with State::__node_why_not().
+	If channel is stopped, do not report.  
+	TODO: test eMx1ofN channels
+ */
+ostream&
+channel::__node_why_X(const State& s, ostream& o, const node_index_type ni, 
+		const bool verbose, node_set_type& u, node_set_type& v) const {
+	typedef	State::node_type		node_type;
+	const indent __ind_outer(o, verbose ? " " : "");
+if (stopped()) {
+	// TODO: this should really only be printed in cases below
+	// where it is actually acting as a source or sink.
+	// watched and logged channels won't care...
+	o << auto_indent << "(channel " << name << " is stopped.)" << endl;
+	// FIXME: later
+} else {
+	// const node_type& n(s.get_node(ni));
+	if (is_sourcing()) {
+		// only data or validity can be driven by source
+#if PRSIM_CHANNEL_VALIDITY
+		if (validity_signal && (ni == validity_signal)) {
+			// then point back to data rails, see below
+			// eventually refactor that code out
+			FINISH_ME(Fang);
+		}
+#endif
+		const data_rail_map_type::const_iterator
+			f(__node_to_rail.find(ni));
+		if (f != __node_to_rail.end()) {
+			// then is attributed to acknowledge
+			// interpret dir as data-active, 
+			// which equivalently asks why acknowledge is not
+			// the opposite (active).  
+			const indent __ind_nd(o, verbose ? "." : "  ");
+			// INDENT_SCOPE(o);
+			s.__node_why_X(o, ack_signal, verbose, u, v);
+		}
+	}
+	if (is_sinking() && (ni == ack_signal)) {
+		// no other signal should be driven by sink
+#if PRSIM_CHANNEL_VALIDITY
+	if (validity_signal) {
+		s.__node_why_X(o, validity_signal, verbose, u, v);
+	} else
+#endif
+	{
+		string ind_str(verbose ? "" : "  ");
+		if (verbose && (bundles() > 1)) {
+			ind_str += " & ";
+			o << auto_indent << "-+" << endl;
+		}
+		const indent __ind_celem(o, ind_str);      // INDENT_SCOPE(o);
+		data_rail_index_type key;
+		key[0] = 0;
+		for ( ; key[0] < bundles(); ++key[0]) {
+			// first find out if bundle is X
+			key[1] = 0;
+			string i_s;
+			if (verbose && (radix() > 1)) {
+				i_s += " ";
+				// when to negate (nor)?
+				// when data wants to be neutral, 
+				// i.e. when acknowledge is active
+				if (!get_ack_active()) {
+					i_s += "~";
+				}
+				i_s += "| ";
+				o << auto_indent << "-+" << endl;
+			}
+			const indent __ind_or(o, i_s);	// INDENT_SCOPE(o);
+			for ( ; key[1] < radix(); ++key[1]) {
+				const node_index_type d(data[key]);
+				if (s.get_node(d).current_value() ==
+						node_type::LOGIC_OTHER) {
+					s.__node_why_X(o, d, verbose, u, v);
+				}
+			}	// end for rails
+		}	// end for bundles
+	}
+	}	// end if sinking
+}	// end if !stopped
+	return o;
+}	// end channel::__node_why_X
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Event on node ni may trigger environment events, logging, 
 	checking, etc... process them here.
 	This assumes that in any given channel, the acknowledge
@@ -2108,6 +2195,23 @@ if (f != node_channels_map.end()) {
 	for ( ; i!=e; ++i) {
 		channel_pool[*i].__node_why_not(
 			s, o, ni, dir, why_not, verbose, u, v);
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_manager::__node_why_X(const State& s, ostream& o, 
+		const node_index_type ni, const bool verbose, 
+		node_set_type& u, node_set_type& v) const {
+	const node_channels_map_type::const_iterator
+		f(node_channels_map.find(ni));
+if (f != node_channels_map.end()) {
+	std::set<channel_index_type>::const_iterator
+		i(f->second.begin()), e(f->second.end());
+	for ( ; i!=e; ++i) {
+		channel_pool[*i].__node_why_X(s, o, ni, verbose, u, v);
 	}
 }
 	return o;

@@ -3,7 +3,9 @@
 
 watchall
 why-x R.x[3]
+why-x-verbose R.x[3]
 why-x R.x[7]
+why-x-verbose R.x[7]
 
 set _Reset 0
 cycle

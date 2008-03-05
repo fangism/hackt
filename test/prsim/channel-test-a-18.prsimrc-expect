@@ -9,6 +9,11 @@ Z.a:X, from-channel, pull up/dn undriven
   Z.d[0]:X, pull up/dn undriven, no fanin
   Z.d[1]:X, pull up/dn undriven, no fanin
   Z.d[2]:X, pull up/dn undriven, no fanin
+Z.a:X, from-channel, pull up/dn undriven
+ -+
+  | Z.d[0]:X, pull up/dn undriven, no fanin
+  | Z.d[1]:X, pull up/dn undriven, no fanin
+  | Z.d[2]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 resetting channel Z 
 	10	Z.a : 0
@@ -29,6 +34,11 @@ Z.a:X, from-channel, pull up/dn undriven
   Z.d[0]:X, pull up/dn undriven, no fanin
   Z.d[1]:X, pull up/dn undriven, no fanin
   Z.d[2]:X, pull up/dn undriven, no fanin
+Z.a:X, from-channel, pull up/dn undriven
+ -+
+  | Z.d[0]:X, pull up/dn undriven, no fanin
+  | Z.d[1]:X, pull up/dn undriven, no fanin
+  | Z.d[2]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 reset data 
 	10	Z.d[0] : 0
@@ -132,6 +142,9 @@ Z : .a(init:0) 1x1of3 sink
 	count: 0, unknowns: 1
 Z.a:X, from-channel, pull up/dn undriven
   Z.d[0]:X, pull up/dn undriven, no fanin
+Z.a:X, from-channel, pull up/dn undriven
+ -+
+  | Z.d[0]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 setting Z.d[0] -> 1 
 	60	Z.d[0] : 1

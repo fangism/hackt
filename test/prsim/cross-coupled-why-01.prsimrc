@@ -3,4 +3,6 @@
 
 why-x t
 why-x f
+why-x-verbose t
+why-x-verbose f
 

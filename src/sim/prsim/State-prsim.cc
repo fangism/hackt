@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.41 2008/03/04 21:53:27 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.42 2008/03/05 02:28:04 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3966,12 +3966,13 @@ do {
 	Prints why a node is X.
  */
 ostream&
-State::dump_node_why_X(ostream& o, const node_index_type ni) const {
+State::dump_node_why_X(ostream& o, const node_index_type ni, 
+		const bool verbose) const {
 	// unique set to terminate cyclic recursion
 	const node_type& n(get_node(ni));
 if (n.current_value() == node_type::LOGIC_OTHER) {
 	node_set_type u, v;	// cycle-detect set, globally-visited set
-	return __node_why_X(o, ni, u, v);
+	return __node_why_X(o, ni, verbose, u, v);
 } else {
 	o << get_node_canonical_name(ni) << " is not X." << endl;
 }
@@ -4018,7 +4019,7 @@ default:
 		already visited sub-trees, accumulatess without popping.  
  */
 ostream&
-State::__node_why_X(ostream& o, const node_index_type ni, 
+State::__node_why_X(ostream& o, const node_index_type ni, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
 	const std::pair<node_set_type::iterator, bool>
 		p(u.insert(ni)), y(v.insert(ni));
@@ -4043,9 +4044,12 @@ if (y.second) {
 	const event_index_type pe = n.get_event();
 	if (pe) {
 		o << ", pending event -> " <<
-			node_type::value_to_char[size_t(get_event(pe).val)];
-	}
+			node_type::value_to_char[size_t(get_event(pe).val)]
+			<< endl;
+	} else {
+#if 0
 	node_set_type xs;
+#endif
 #if PRSIM_WEAK_RULES
 	size_t w = NORMAL_RULE;
 do {
@@ -4085,13 +4089,31 @@ do {
 			o << ", unknown-pull " << (ux ? "up" : "dn");
 		}
 		INVARIANT(xi);
+#if 0
 		__get_X_fanins(xi, xs);
+#else
+		o << endl;
+		const string __ind_str(verbose ? (ux ? "+" : "-") : "  ");
+		const indent __indent(o, __ind_str);
+		__expr_why_X(o, xi, verbose, u, v);
+#endif
 		break;
 	}
 	case 2:
 		o << ", pull up/dn are both X";
+#if 0
 		__get_X_fanins(ui, xs);
 		__get_X_fanins(di, xs);
+#else
+		o << endl;
+		{
+			const indent __indent(o, verbose ? "+" : "  ");
+			__expr_why_X(o, ui, verbose, u, v);
+		}{
+			const indent __indent(o, verbose ? "-" : "  ");
+			__expr_why_X(o, di, verbose, u, v);
+		}
+#endif
 		break;
 	default:
 		DIE;
@@ -4100,7 +4122,9 @@ do {
 	if (up != expr_type::PULL_OFF ||
 			dp != expr_type::PULL_OFF) {
 #endif
+#if 0
 		o << endl;
+#endif
 #if PRSIM_WEAK_RULES
 		break;
 	} else if (w) {
@@ -4112,13 +4136,20 @@ do {
 #if PRSIM_CHANNEL_SUPPORT
 	if (n.in_channel()) {
 		// if node is part of source or sink
+#if 0
 		_channel_manager.__get_X_fanins(*this, ni, xs);
+#else
+		_channel_manager.__node_why_X(*this, o, ni, verbose, u, v);
+#endif
 	}
 #endif
+#if 0
 	INDENT_SECTION(o);
 	node_set_type::const_iterator ii(xs.begin()), ee(xs.end());
 	for ( ; ii!=ee; ++ii) {
 		__node_why_X(o, *ii, u, v);	// recursion
+	}
+#endif
 	}
 } else {
 	// don't print the same subtree twice, just cross-reference
@@ -4227,7 +4258,7 @@ if (y.second) {
 	o << endl;
 }
 	return o;
-}	// end __node_why_X
+}	// end __node_why_not
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -4263,11 +4294,12 @@ State::__get_X_fanins(const expr_index_type xi, node_set_type& u) const {
 			}
 		}
 	}	// end for
-}
+}	// end __get_X_fanins
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	In an expression tree, find nodes that are cutting expressions off.
+	now also finds subexpressions that are actively pulling.  
 	Xs are not visited.  
 	Should follow similar flow to dump_subexpr.
 	\param off_on true asks why a node is/not on, false asks ... off
@@ -4281,28 +4313,11 @@ State::__expr_why_not(ostream& o, const expr_index_type xi,
 		// const bool off_on, 
 		const bool why_not, const bool verbose,
 		node_set_type& u, node_set_type& v) const {
-#if 0
-	if (verbose) {
-		o << auto_indent << "__expr_why_not: why";
-			if (why_not) o << " not";
-		// o << (off_on ? " on" : " off");
-		o << "?";
-	}
-#endif
 	ISE_INVARIANT(xi);
 	ISE_INVARIANT(xi < expr_pool.size());
 	const expr_type& x(expr_pool[xi]);
 	const graph_node_type& g(expr_graph_node_pool[xi]);
 	const pull_enum xp(x.pull_state());
-#if 0
-	if (verbose) {
-		o << " pull=" << size_t(xp);
-		if (x.is_not()) {
-			o << ", negated";
-		}
-		o << endl;
-	}
-#endif
 	INVARIANT(xp != expr_type::PULL_WEAK);
 	typedef	graph_node_type::const_iterator		const_iterator;
 	const_iterator ci(g.begin()), ce(g.end());
@@ -4350,7 +4365,64 @@ State::__expr_why_not(ostream& o, const expr_index_type xi,
 			}
 		}
 	}	// end for
-}
+}	// end expr_why_not
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In an expression tree, find nodes that are X's that are not cut off
+	(by and-0) nor overtaken (or or-1).  
+	Ripped from __node_why_not, above.
+	\param off_on true asks why a node is/not on, false asks ... off
+	\param why_not is true if asking why-not? (negative-query), 
+		else is asking 'why'? (positive-query)
+	\param u anti-cycle stack
+	\param v globally visited stack
+ */
+void
+State::__expr_why_X(ostream& o, const expr_index_type xi, 
+		const bool verbose, node_set_type& u, node_set_type& v) const {
+	ISE_INVARIANT(xi);
+	ISE_INVARIANT(xi < expr_pool.size());
+	const expr_type& x(expr_pool[xi]);
+	const graph_node_type& g(expr_graph_node_pool[xi]);
+	const pull_enum xp(x.pull_state());
+	INVARIANT(xp == expr_type::PULL_WEAK);
+	typedef	graph_node_type::const_iterator		const_iterator;
+	const_iterator ci(g.begin()), ce(g.end());
+	string ind_str;
+	if (verbose) {
+		ind_str += " ";
+		if (x.is_not()) ind_str += "~";
+		if (g.children.size() > 1) {
+			ind_str += x.is_conjunctive() ? "&" : "|";
+			o << auto_indent << "-+" << endl;
+		}
+		// ind_str += " ";
+	}
+	const indent __ind_ex(o, ind_str);	// INDENT_SCOPE(o);
+	for ( ; ci!=ce; ++ci) {
+		INVARIANT(ci->second);
+		if (ci->first) {
+			// is a leaf node, visit if value is X
+			if (get_node(ci->second).current_value()
+				== node_type::LOGIC_OTHER) {
+				__node_why_X(o, ci->second, verbose, u, v);
+			}
+		} else {
+			// is a sub-expresion, recurse if pull is X
+#if 0
+			o << auto_indent << "examining expr..." << endl;
+			dump_subexpr(o, ci->second, false,
+				expr_type::EXPR_ROOT, false) << endl;
+#endif
+			const expr_type& s(expr_pool[ci->second]);
+			if (s.pull_state() == expr_type::PULL_WEAK) {
+				__expr_why_X(o, ci->second, 
+					verbose, u, v);
+			}
+		}
+	}	// end for
+}	// end expr_why_X
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

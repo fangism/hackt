@@ -13,6 +13,7 @@ channel-show Y
 echo why-x: Y is sourced, should be able to trace back through acknowledge
 why-x Y.d[0]
 why-x Y.d[1]
+why-x-verbose Y.d[1]
 
 echo - - - - - - - - - - - - - - - - - - -
 echo resetting channel Y
@@ -39,6 +40,7 @@ why-x Y.d[0]
 why-x Y.d[1]
 why-x Y.d[2]
 why-x Y.d[3]
+why-x-verbose Y.d[0]
 
 echo - - - - - - - - - - - - - - - - - - -
 echo reset ack
@@ -140,6 +142,7 @@ assert Y.d[3] X
 assert Y.d[1] X
 why-x Y.d[0]
 why-x Y.d[1]
+why-x-verbose Y.d[0]
 why-not Y.d[3] 1
 why-not Y.d[3] 0
 why Y.d[3] 1

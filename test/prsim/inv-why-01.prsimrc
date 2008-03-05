@@ -4,12 +4,15 @@
 
 echo why is a X?
 why-x a
+why-x-verbose a
 
 echo why is b X?
 why-x b
+why-x-verbose b
 
 echo why is c X?
 why-x c
+why-x-verbose c
 
 echo ###############
 
@@ -19,12 +22,15 @@ step-event
 
 echo why is a X?
 why-x a
+why-x-verbose a
 
 echo why is b X?
 why-x b
+why-x-verbose b
 
 echo why is c X?
 why-x c
+why-x-verbose c
 
 echo ###############
 echo propagating to b
@@ -32,10 +38,13 @@ step-event
 
 echo why is a X?
 why-x a
+why-x-verbose a
 
 echo why is b X?
 why-x b
+why-x-verbose b
 
 echo why is c X?
 why-x c
+why-x-verbose c
 

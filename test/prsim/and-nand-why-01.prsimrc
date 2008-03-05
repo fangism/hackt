@@ -6,21 +6,25 @@ fanin o
 
 echo why is o X?
 why-x o
+why-x-verbose o
 
 echo --------------------
 set a 1
 cycle
 why-x o
+why-x-verbose o
 
 echo --------------------
 set c 1
 cycle
 why-x o
+why-x-verbose o
 
 echo --------------------
 set b 1
 cycle
 why-x o
+why-x-verbose o
 why o
 why-verbose o
 

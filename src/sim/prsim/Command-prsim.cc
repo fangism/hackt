@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.17 2008/03/04 21:53:25 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.18 2008/03/05 02:28:02 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2140,15 +2140,34 @@ BackTrace::usage(ostream& o) {
 /***
 @texinfo cmd/why-x.texi
 @deffn Command why-x node
+@deffnx Command why-x-verbose node
 Print causality chain for why a particular node (at value X) remains X.  
 In expressions, X nodes that are masked out (e.g. 1 | X or 0 & X) 
 are not followed.  
+The verbose variant prints more information about the subexpressions
+visited (whether conjunctive or disjunctive), 
+and pretty prints in tree-indent form.  
 Recursion terminates on cycles and already-visited nodes.  
 @end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyX, "why-x", info, 
 	"recursively trace cause of X value on node")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyXVerbose, "why-x-verbose", info, 
+	"recursively trace cause of X value on node (verbose)")
+
+static
+int
+why_X_main(State& s, const string_list& a, const bool verbose) {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.dump_node_why_X(cout, ni, verbose);
+		return Command::NORMAL;
+	} else {
+		return Command::BADARG;
+	}
+}
 
 int
 WhyX::main(State& s, const string_list& a) {
@@ -2156,14 +2175,17 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	const string& objname(a.back());
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		s.dump_node_why_X(cout, ni);
-		return Command::NORMAL;
-	} else {
-		return Command::BADARG;
-	}
+	return why_X_main(s, a, false);
+}
+}
+
+int
+WhyXVerbose::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	return why_X_main(s, a, true);
 }
 }
 
@@ -2172,6 +2194,15 @@ WhyX::usage(ostream& o) {
 	o << name << " <node>" << endl;
 	o <<
 "Recursively finds the cause for the node being X through other X nodes."
+		<< endl;
+}
+
+void
+WhyXVerbose::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o <<
+"Recursively finds the cause for the node being X through other X nodes.\n"
+"Verbose variant prints more details about expression structures."
 		<< endl;
 }
 

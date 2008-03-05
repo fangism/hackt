@@ -4,26 +4,33 @@
 watchall
 
 why-x R.x[0]
+why-x-verbose R.x[0]
 why-x R.x[5]
+why-x-verbose R.x[5]
 why-x R.x[12]
+why-x-verbose R.x[12]
 
 echo setting _Reset : 1
 set _Reset 1
 cycle
 why-x R.x[12]
+why-x-verbose R.x[12]
 
 echo setting _Reset : 0
 set _Reset 0
 cycle
 why-x R.x[12]
+why-x-verbose R.x[12]
 
 echo setting _Reset : 1
 set _Reset 1
 step 30
 why-x R.x[12]
+why-x-verbose R.x[12]
 
 echo setting _Reset : X
 set _Reset X
 cycle
 why-x R.x[12]
+why-x-verbose R.x[12]
 

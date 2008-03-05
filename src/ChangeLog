@@ -5,6 +5,16 @@
 
 2008-03-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-55:
+	  prsim: implemented 'why-x-verbose'
+		'why-x' now prints a bit more instances of "already visited"
+		because expressions are walked, and not just collecting 
+		unique X nodes, which reveals logic.  
+		Also supported through channels.  
+	  No test cases added, but all old test cases with 'why-x' 
+		now also call 'why-x-verbose', and updated accordingly.  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-54:
 	  prsim/State-prsim.cc: cleanups and additions, refactoring code
 		to make more use of function pointers.  

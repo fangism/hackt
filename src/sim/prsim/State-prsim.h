@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.18 2008/03/04 21:53:29 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.19 2008/03/05 02:28:05 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1081,7 +1081,7 @@ public:
 	dump_node_fanin(ostream&, const node_index_type, const bool) const;
 
 	ostream&
-	dump_node_why_X(ostream&, const node_index_type) const;
+	dump_node_why_X(ostream&, const node_index_type, const bool) const;
 
 	ostream&
 	dump_node_why_not(ostream&, const node_index_type, const bool, 
@@ -1176,17 +1176,19 @@ public:
 	dump_checkpoint(ostream&, istream&);
 
 private:
+	// not recursive, collect
 	void
 	__get_X_fanins(const expr_index_type, node_set_type&) const;
+
+	// recursive
+	void
+	__expr_why_X(ostream&, const expr_index_type, const bool, 
+		node_set_type&, node_set_type&) const;
 
 	void
 	__expr_why_not(ostream&, const expr_index_type, 
 		const bool, const bool, 
 		node_set_type&, node_set_type&) const;
-
-	ostream&
-	__node_why_X(ostream&, const node_index_type, node_set_type&, 
-		node_set_type&) const;
 
 	template <typename Iter>
 	ostream&
@@ -1201,6 +1203,10 @@ public:
 	ostream&
 	__node_why_not(ostream&, const node_index_type, const bool, 
 		const bool, const bool, node_set_type&, node_set_type&) const;
+
+	ostream&
+	__node_why_X(ostream&, const node_index_type, const bool, 
+		node_set_type&, node_set_type&) const;
 
 private:
 	void

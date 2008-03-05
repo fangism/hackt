@@ -10,6 +10,7 @@ channel-sink X
 channel-show X
 echo why-x: X is sinking, should be able to trace back through acknowledge
 why-x X.e
+why-x-verbose X.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo resetting channel X
@@ -28,6 +29,7 @@ channel-release X
 cycle
 assert X.e X
 why-x X.e
+why-x-verbose X.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo reset data
@@ -96,6 +98,7 @@ cycle
 channel-show X
 assert X.e X
 why-x X.e
+why-x-verbose X.e
 
 echo - - - - - - - - - - - - - - - - - - -
 echo setting X.d[0] -> 1

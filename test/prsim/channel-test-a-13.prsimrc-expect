@@ -10,6 +10,8 @@ X.d[0]:X, from-channel, pull up/dn undriven
   X.e:X, pull up/dn undriven, no fanin
 X.d[1]:X, from-channel, pull up/dn undriven
   X.e:X, pull up/dn undriven, no fanin
+X.d[0]:X, from-channel, pull up/dn undriven
+ .X.e:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 resetting channel X 
 	10	X.d[0] : 0
@@ -30,6 +32,8 @@ X.d[0]:X, from-channel, pull up/dn undriven
   X.e:X, pull up/dn undriven, no fanin
 X.d[1]:X, from-channel, pull up/dn undriven
   X.e:X, pull up/dn undriven, no fanin
+X.d[1]:X, from-channel, pull up/dn undriven
+ .X.e:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 reset ack 
 	10	X.e : 0
@@ -122,6 +126,8 @@ X.d[0]:X, from-channel, pull up/dn undriven
   X.e:X, pull up/dn undriven, no fanin
 X.d[1]:X, from-channel, pull up/dn undriven
   X.e:X, pull up/dn undriven, no fanin
+X.d[0]:X, from-channel, pull up/dn undriven
+ .X.e:X, pull up/dn undriven, no fanin
 X.d[0] is X.
 X.d[0] is X.
 X.d[0] is X.

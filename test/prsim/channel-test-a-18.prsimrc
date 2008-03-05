@@ -11,6 +11,7 @@ channel-sink Z
 channel-show Z
 echo why-x: Z is sinking, should be able to trace back through acknowledge
 why-x Z.a
+why-x-verbose Z.a
 
 echo - - - - - - - - - - - - - - - - - - -
 echo resetting channel Z
@@ -29,6 +30,7 @@ channel-release Z
 cycle
 assert Z.a X
 why-x Z.a
+why-x-verbose Z.a
 
 echo - - - - - - - - - - - - - - - - - - -
 echo reset data
@@ -98,6 +100,7 @@ cycle
 channel-show Z
 assert Z.a X
 why-x Z.a
+why-x-verbose Z.a
 
 echo - - - - - - - - - - - - - - - - - - -
 echo setting Z.d[0] -> 1

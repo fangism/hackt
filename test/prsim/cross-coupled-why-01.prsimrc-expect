@@ -1,6 +1,20 @@
 t:X, pull up/dn are both X
   f:X, pull up/dn are both X
     t:X, cycle reached
+    t:X, cycle reached
+  f:X, (visited before, see above)
 f:X, pull up/dn are both X
   t:X, pull up/dn are both X
     f:X, cycle reached
+    f:X, cycle reached
+  t:X, (visited before, see above)
+t:X, pull up/dn are both X
++ ~f:X, pull up/dn are both X
++ ~+ ~t:X, cycle reached
++ ~- t:X, cycle reached
+- f:X, (visited before, see above)
+f:X, pull up/dn are both X
++ ~t:X, pull up/dn are both X
++ ~+ ~f:X, cycle reached
++ ~- f:X, cycle reached
+- t:X, (visited before, see above)

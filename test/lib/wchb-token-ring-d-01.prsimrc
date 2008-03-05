@@ -1,11 +1,13 @@
 # "wchb-token-ring-d-01.prsimrc"
-#	$Id: wchb-token-ring-d-01.prsimrc,v 1.1.2.1 2008/02/12 01:05:59 fang Exp $
+#	$Id: wchb-token-ring-d-01.prsimrc,v 1.1.2.2 2008/03/05 02:28:09 fang Exp $
 # @haco@ wchb-token-ring-d.haco-a
 # testing deadlock analysis commands
 
 echo initially all X.
 why-x L.e
+why-x-verbose L.e
 why-x L.d[0]
+why-x-verbose L.d[0]
 
 echo resetting ...
 set _Reset 0
@@ -13,7 +15,9 @@ set Reset 1
 cycle
 status X
 why-x L.e
+why-x-verbose L.e
 why-x L.d[0]
+why-x-verbose L.d[0]
 
 echo releasing ...
 set _Reset 1
@@ -21,7 +25,9 @@ set Reset 0
 cycle
 status X
 why-x L.e
+why-x-verbose L.e
 why-x L.d[0]
+why-x-verbose L.d[0]
 
 # deadlock: why? (we know why...)
 

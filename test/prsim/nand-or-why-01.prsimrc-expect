@@ -7,17 +7,49 @@ o:X, pull up/dn are both X
   b:X, pull up/dn undriven, no fanin
   c:X, pull up/dn undriven, no fanin
   d:X, pull up/dn undriven, no fanin
+  a:X, (visited before, see above)
+  b:X, (visited before, see above)
+  c:X, (visited before, see above)
+  d:X, (visited before, see above)
+o:X, pull up/dn are both X
++-+
++ ~&-+
++ ~& | a:X, pull up/dn undriven, no fanin
++ ~& | b:X, pull up/dn undriven, no fanin
++ ~&-+
++ ~& | c:X, pull up/dn undriven, no fanin
++ ~& | d:X, pull up/dn undriven, no fanin
+--+
+- &-+
+- & | a:X, (visited before, see above)
+- & | b:X, (visited before, see above)
+- &-+
+- & | c:X, (visited before, see above)
+- & | d:X, (visited before, see above)
 -------------------- 
 	0	a : 1
 o:X, pull up/dn are both X
   c:X, pull up/dn undriven, no fanin
   d:X, pull up/dn undriven, no fanin
+  c:X, (visited before, see above)
+  d:X, (visited before, see above)
+o:X, pull up/dn are both X
++-+
++ ~&-+
++ ~& | c:X, pull up/dn undriven, no fanin
++ ~& | d:X, pull up/dn undriven, no fanin
+--+
+- &-+
+- & | c:X, (visited before, see above)
+- & | d:X, (visited before, see above)
 -------------------- 
 	0	c : 1
 	10	o : 0	[by c:=1]
 o is not X.
+o is not X.
 -------------------- 
 	10	b : 1
+o is not X.
 o is not X.
 o:0
   a:1, input

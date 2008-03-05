@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.4.6 2008/03/04 21:53:24 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.4.7 2008/03/05 02:28:01 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -465,6 +465,10 @@ public:
 		const bool d, const bool wn, const bool v, 
 		node_set_type&, node_set_type&) const;
 
+	ostream&
+	__node_why_X(const State&, ostream&, const node_index_type, 
+		const bool v, node_set_type&, node_set_type&) const;
+
 	void
 	process_node(const State&, const node_index_type, 
 		const uchar, const uchar, 
@@ -646,6 +650,10 @@ public:
 	__node_why_not(const State&, ostream&, const node_index_type, 
 		const bool d, const bool wn, const bool v, 
 		node_set_type&, node_set_type&) const;
+
+	ostream&
+	__node_why_X(const State&, ostream&, const node_index_type, 
+		const bool v, node_set_type&, node_set_type&) const;
 
 	ostream&
 	dump_memory_usage(ostream&) const;

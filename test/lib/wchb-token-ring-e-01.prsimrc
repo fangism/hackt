@@ -1,12 +1,14 @@
 # "wchb-token-ring-e-01.prsimrc"
 # copied from "wchb-token-ring-b-03.prsimrc"
-#	$Id: wchb-token-ring-e-01.prsimrc,v 1.1.2.2 2008/02/24 07:25:09 fang Exp $
+#	$Id: wchb-token-ring-e-01.prsimrc,v 1.1.2.3 2008/03/05 02:28:12 fang Exp $
 # @haco@ wchb-token-ring-e.haco-a
 # testing why-not commands
 
 echo initially all X...
 why-x L.e
+why-x-verbose L.e
 why-x L.d[0]
+why-x-verbose L.d[0]
 
 echo resetting ...
 set _Reset 0

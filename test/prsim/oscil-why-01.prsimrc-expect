@@ -12,7 +12,52 @@ R.x[0]:X, pull up/dn are both X
                       R.x[2]:X, pull up/dn are both X
                         R.x[1]:X, pull up/dn are both X
                           R.x[0]:X, cycle reached
+                          R.x[0]:X, cycle reached
+                        R.x[1]:X, (visited before, see above)
+                      R.x[2]:X, (visited before, see above)
+                    R.x[3]:X, (visited before, see above)
+                  R.x[4]:X, (visited before, see above)
+                R.x[5]:X, (visited before, see above)
+              R.x[6]:X, (visited before, see above)
+            R.x[7]:X, (visited before, see above)
+          R.x[8]:X, (visited before, see above)
+        R.x[9]:X, (visited before, see above)
+      R.x[10]:X, (visited before, see above)
+    R.x[11]:X, (visited before, see above)
   _Reset:X, pull up/dn undriven, no fanin
+  R.x[12]:X, (visited before, see above)
+  _Reset:X, (visited before, see above)
+R.x[0]:X, pull up/dn are both X
++-+
++ | ~R.x[12]:X, pull up/dn are both X
++ | ~+ ~R.x[11]:X, pull up/dn are both X
++ | ~+ ~+ ~R.x[10]:X, pull up/dn are both X
++ | ~+ ~+ ~+ ~R.x[9]:X, pull up/dn are both X
++ | ~+ ~+ ~+ ~+ ~R.x[8]:X, pull up/dn are both X
++ | ~+ ~+ ~+ ~+ ~+ ~R.x[7]:X, pull up/dn are both X
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[6]:X, pull up/dn are both X
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[5]:X, pull up/dn are both X
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[4]:X, pull up/dn are both X
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[3]:X, pull up/dn are both X
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[2]:X, pull up/dn are both X
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[1]:X, pull up/dn are both X
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[0]:X, cycle reached
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[0]:X, cycle reached
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[1]:X, (visited before, see above)
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[2]:X, (visited before, see above)
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[3]:X, (visited before, see above)
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[4]:X, (visited before, see above)
++ | ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[5]:X, (visited before, see above)
++ | ~+ ~+ ~+ ~+ ~+ ~- R.x[6]:X, (visited before, see above)
++ | ~+ ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)
++ | ~+ ~+ ~+ ~- R.x[8]:X, (visited before, see above)
++ | ~+ ~+ ~- R.x[9]:X, (visited before, see above)
++ | ~+ ~- R.x[10]:X, (visited before, see above)
++ | ~- R.x[11]:X, (visited before, see above)
++ | ~_Reset:X, pull up/dn undriven, no fanin
+--+
+- & R.x[12]:X, (visited before, see above)
+- & _Reset:X, (visited before, see above)
 R.x[5]:X, pull up/dn are both X
   R.x[4]:X, pull up/dn are both X
     R.x[3]:X, pull up/dn are both X
@@ -27,7 +72,52 @@ R.x[5]:X, pull up/dn are both X
                       R.x[7]:X, pull up/dn are both X
                         R.x[6]:X, pull up/dn are both X
                           R.x[5]:X, cycle reached
+                          R.x[5]:X, cycle reached
+                        R.x[6]:X, (visited before, see above)
+                      R.x[7]:X, (visited before, see above)
+                    R.x[8]:X, (visited before, see above)
+                  R.x[9]:X, (visited before, see above)
+                R.x[10]:X, (visited before, see above)
+              R.x[11]:X, (visited before, see above)
             _Reset:X, pull up/dn undriven, no fanin
+            R.x[12]:X, (visited before, see above)
+            _Reset:X, (visited before, see above)
+          R.x[0]:X, (visited before, see above)
+        R.x[1]:X, (visited before, see above)
+      R.x[2]:X, (visited before, see above)
+    R.x[3]:X, (visited before, see above)
+  R.x[4]:X, (visited before, see above)
+R.x[5]:X, pull up/dn are both X
++ ~R.x[4]:X, pull up/dn are both X
++ ~+ ~R.x[3]:X, pull up/dn are both X
++ ~+ ~+ ~R.x[2]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~R.x[1]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~R.x[0]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+-+
++ ~+ ~+ ~+ ~+ ~+ | ~R.x[12]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~R.x[11]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~R.x[10]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~R.x[9]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~R.x[8]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~+ ~R.x[7]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[6]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[5]:X, cycle reached
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[5]:X, cycle reached
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~+ ~- R.x[6]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~- R.x[8]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~- R.x[9]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ | ~+ ~- R.x[10]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ | ~- R.x[11]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ | ~_Reset:X, pull up/dn undriven, no fanin
++ ~+ ~+ ~+ ~+ ~--+
++ ~+ ~+ ~+ ~+ ~- & R.x[12]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~- & _Reset:X, (visited before, see above)
++ ~+ ~+ ~+ ~- R.x[0]:X, (visited before, see above)
++ ~+ ~+ ~- R.x[1]:X, (visited before, see above)
++ ~+ ~- R.x[2]:X, (visited before, see above)
++ ~- R.x[3]:X, (visited before, see above)
+- R.x[4]:X, (visited before, see above)
 R.x[12]:X, pull up/dn are both X
   R.x[11]:X, pull up/dn are both X
     R.x[10]:X, pull up/dn are both X
@@ -43,6 +133,51 @@ R.x[12]:X, pull up/dn are both X
                         R.x[0]:X, pull up/dn are both X
                           R.x[12]:X, cycle reached
                           _Reset:X, pull up/dn undriven, no fanin
+                          R.x[12]:X, cycle reached
+                          _Reset:X, (visited before, see above)
+                        R.x[0]:X, (visited before, see above)
+                      R.x[1]:X, (visited before, see above)
+                    R.x[2]:X, (visited before, see above)
+                  R.x[3]:X, (visited before, see above)
+                R.x[4]:X, (visited before, see above)
+              R.x[5]:X, (visited before, see above)
+            R.x[6]:X, (visited before, see above)
+          R.x[7]:X, (visited before, see above)
+        R.x[8]:X, (visited before, see above)
+      R.x[9]:X, (visited before, see above)
+    R.x[10]:X, (visited before, see above)
+  R.x[11]:X, (visited before, see above)
+R.x[12]:X, pull up/dn are both X
++ ~R.x[11]:X, pull up/dn are both X
++ ~+ ~R.x[10]:X, pull up/dn are both X
++ ~+ ~+ ~R.x[9]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~R.x[8]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~R.x[7]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~R.x[6]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[5]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[4]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[3]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[2]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[1]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[0]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+-+
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ | ~R.x[12]:X, cycle reached
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ | ~_Reset:X, pull up/dn undriven, no fanin
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~--+
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- & R.x[12]:X, cycle reached
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- & _Reset:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[0]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[1]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[2]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[3]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[4]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~- R.x[5]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~- R.x[6]:X, (visited before, see above)
++ ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)
++ ~+ ~+ ~- R.x[8]:X, (visited before, see above)
++ ~+ ~- R.x[9]:X, (visited before, see above)
++ ~- R.x[10]:X, (visited before, see above)
+- R.x[11]:X, (visited before, see above)
 setting _Reset : 1 
 	0	_Reset : 1
 R.x[12]:X, pull up/dn are both X
@@ -59,6 +194,48 @@ R.x[12]:X, pull up/dn are both X
                       R.x[1]:X, pull up/dn are both X
                         R.x[0]:X, pull up/dn are both X
                           R.x[12]:X, cycle reached
+                          R.x[12]:X, cycle reached
+                        R.x[0]:X, (visited before, see above)
+                      R.x[1]:X, (visited before, see above)
+                    R.x[2]:X, (visited before, see above)
+                  R.x[3]:X, (visited before, see above)
+                R.x[4]:X, (visited before, see above)
+              R.x[5]:X, (visited before, see above)
+            R.x[6]:X, (visited before, see above)
+          R.x[7]:X, (visited before, see above)
+        R.x[8]:X, (visited before, see above)
+      R.x[9]:X, (visited before, see above)
+    R.x[10]:X, (visited before, see above)
+  R.x[11]:X, (visited before, see above)
+R.x[12]:X, pull up/dn are both X
++ ~R.x[11]:X, pull up/dn are both X
++ ~+ ~R.x[10]:X, pull up/dn are both X
++ ~+ ~+ ~R.x[9]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~R.x[8]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~R.x[7]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~R.x[6]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[5]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[4]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[3]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[2]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[1]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[0]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+-+
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ | ~R.x[12]:X, cycle reached
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~--+
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- & R.x[12]:X, cycle reached
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[0]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[1]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[2]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[3]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[4]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~- R.x[5]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~- R.x[6]:X, (visited before, see above)
++ ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)
++ ~+ ~+ ~- R.x[8]:X, (visited before, see above)
++ ~+ ~- R.x[9]:X, (visited before, see above)
++ ~- R.x[10]:X, (visited before, see above)
+- R.x[11]:X, (visited before, see above)
 setting _Reset : 0 
 	0	_Reset : 0
 	10	R.x[0] : 1	[by _Reset:=0]
@@ -74,6 +251,7 @@ setting _Reset : 0
 	110	R.x[10] : 1	[by R.x[9]:=0]
 	120	R.x[11] : 0	[by R.x[10]:=1]
 	130	R.x[12] : 1	[by R.x[11]:=0]
+R.x[12] is not X.
 R.x[12] is not X.
 setting _Reset : 1 
 	130	_Reset : 1
@@ -107,6 +285,7 @@ setting _Reset : 1
 	410	R.x[1] : 1	[by R.x[0]:=0]
 	420	R.x[2] : 0	[by R.x[1]:=1]
 	430	R.x[3] : 1	[by R.x[2]:=0]
+R.x[12] is not X.
 R.x[12] is not X.
 setting _Reset : X 
 WARNING: weak-interference `R.x[0]'
@@ -225,3 +404,48 @@ R.x[12]:X, pull up/dn are both X
                         R.x[0]:X, pull up/dn are both X
                           R.x[12]:X, cycle reached
                           _Reset:X, pull up/dn undriven, no fanin
+                          R.x[12]:X, cycle reached
+                          _Reset:X, (visited before, see above)
+                        R.x[0]:X, (visited before, see above)
+                      R.x[1]:X, (visited before, see above)
+                    R.x[2]:X, (visited before, see above)
+                  R.x[3]:X, (visited before, see above)
+                R.x[4]:X, (visited before, see above)
+              R.x[5]:X, (visited before, see above)
+            R.x[6]:X, (visited before, see above)
+          R.x[7]:X, (visited before, see above)
+        R.x[8]:X, (visited before, see above)
+      R.x[9]:X, (visited before, see above)
+    R.x[10]:X, (visited before, see above)
+  R.x[11]:X, (visited before, see above)
+R.x[12]:X, pull up/dn are both X
++ ~R.x[11]:X, pull up/dn are both X
++ ~+ ~R.x[10]:X, pull up/dn are both X
++ ~+ ~+ ~R.x[9]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~R.x[8]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~R.x[7]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~R.x[6]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[5]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[4]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[3]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[2]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[1]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[0]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+-+
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ | ~R.x[12]:X, cycle reached
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ | ~_Reset:X, pull up/dn undriven, no fanin
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~--+
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- & R.x[12]:X, cycle reached
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- & _Reset:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[0]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[1]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[2]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[3]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[4]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~- R.x[5]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~- R.x[6]:X, (visited before, see above)
++ ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)
++ ~+ ~+ ~- R.x[8]:X, (visited before, see above)
++ ~+ ~- R.x[9]:X, (visited before, see above)
++ ~- R.x[10]:X, (visited before, see above)
+- R.x[11]:X, (visited before, see above)

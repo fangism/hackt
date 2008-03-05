@@ -9,6 +9,7 @@ what x[0]
 getall x[3]
 
 why-x o
+why-x-verbose o
 
 set i 0
 cycle

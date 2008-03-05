@@ -8,6 +8,10 @@ why-x: X is sinking, should be able to trace back through acknowledge
 X.e:X, from-channel, pull up/dn undriven
   X.d[0]:X, pull up/dn undriven, no fanin
   X.d[1]:X, pull up/dn undriven, no fanin
+X.e:X, from-channel, pull up/dn undriven
+ -+
+  ~| X.d[0]:X, pull up/dn undriven, no fanin
+  ~| X.d[1]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 resetting channel X 
 	10	X.e : 0
@@ -27,6 +31,10 @@ releasing channel X, but data is still X
 X.e:X, from-channel, pull up/dn undriven
   X.d[0]:X, pull up/dn undriven, no fanin
   X.d[1]:X, pull up/dn undriven, no fanin
+X.e:X, from-channel, pull up/dn undriven
+ -+
+  ~| X.d[0]:X, pull up/dn undriven, no fanin
+  ~| X.d[1]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 reset data 
 	10	X.d[0] : 0
@@ -120,6 +128,9 @@ X : .e(init:0) 1x1of2 sink
 	count: 0, unknowns: 1
 X.e:X, from-channel, pull up/dn undriven
   X.d[0]:X, pull up/dn undriven, no fanin
+X.e:X, from-channel, pull up/dn undriven
+ -+
+  ~| X.d[0]:X, pull up/dn undriven, no fanin
 - - - - - - - - - - - - - - - - - - - 
 setting X.d[0] -> 1 
 	60	X.d[0] : 1
