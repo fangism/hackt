@@ -1,0 +1,92 @@
+$start of simulation
+at time   0.000, observed in 0
+at time   0.090, observed out = 1
+at time   1.000, observed in 1
+at time   1.090, observed out = 0
+at time   2.000, observed in 0
+at time   2.090, observed out = 1
+at time   3.000, observed in 1
+at time   3.090, observed out = 0
+at time   4.000, observed in 0
+at time   4.090, observed out = 1
+at time   5.000, observed in 1
+at time   5.090, observed out = 0
+at time   6.000, observed in 0
+at time   6.090, observed out = 1
+at time   7.000, observed in 1
+at time   7.090, observed out = 0
+at time   8.000, observed in 0
+at time   8.090, observed out = 1
+at time   9.000, observed in 1
+at time   9.090, observed out = 0
+at time  10.000, observed in 0
+at time  10.090, observed out = 1
+at time  11.000, observed in 1
+at time  11.090, observed out = 0
+at time  12.000, observed in 0
+at time  12.090, observed out = 1
+at time  13.000, observed in 1
+at time  13.090, observed out = 0
+at time  14.000, observed in 0
+at time  14.090, observed out = 1
+at time  15.000, observed in 1
+at time  15.090, observed out = 0
+at time  16.000, observed in 0
+at time  16.090, observed out = 1
+at time  17.000, observed in 1
+at time  17.090, observed out = 0
+at time  18.000, observed in 0
+at time  18.090, observed out = 1
+at time  19.000, observed in 1
+at time  19.090, observed out = 0
+at time  20.000, observed in 0
+at time  20.090, observed out = 1
+at time  21.000, observed in 1
+at time  21.090, observed out = 0
+at time  22.000, observed in 0
+at time  22.090, observed out = 1
+at time  23.000, observed in 1
+at time  23.090, observed out = 0
+at time  24.000, observed in 0
+at time  24.090, observed out = 1
+at time  25.000, observed in 1
+at time  25.090, observed out = 0
+at time  26.000, observed in 0
+at time  26.090, observed out = 1
+at time  27.000, observed in 1
+at time  27.090, observed out = 0
+at time  28.000, observed in 0
+at time  28.090, observed out = 1
+at time  29.000, observed in 1
+at time  29.090, observed out = 0
+at time  30.000, observed in 0
+at time  30.090, observed out = 1
+at time  31.000, observed in 1
+at time  31.090, observed out = 0
+at time  32.000, observed in 0
+at time  32.090, observed out = 1
+at time  33.000, observed in 1
+at time  33.090, observed out = 0
+at time  34.000, observed in 0
+at time  34.090, observed out = 1
+at time  35.000, observed in 1
+at time  35.090, observed out = 0
+at time  36.000, observed in 0
+at time  36.090, observed out = 1
+at time  37.000, observed in 1
+at time  37.090, observed out = 0
+at time  38.000, observed in 0
+at time  38.090, observed out = 1
+at time  39.000, observed in 1
+at time  39.090, observed out = 0
+at time  40.000, observed in 0
+at time  40.090, observed out = 1
+at time  41.000, observed in 1
+at time  41.090, observed out = 0
+at time  42.000, observed in 0
+at time  42.090, observed out = 1
+at time  43.000, observed in 1
+at time  43.090, observed out = 0
+at time  44.000, observed in 0
+at time  44.090, observed out = 1
+$finish at simulation time   45.0 ns

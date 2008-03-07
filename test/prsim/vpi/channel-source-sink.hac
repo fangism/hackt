@@ -1,0 +1,10 @@
+// "channel-source-sink.hac"
+//	$Id: channel-source-sink.hac,v 1.1.2.1 2008/03/07 01:32:31 fang Exp $
+// connecting channels through Verilog VCS PLI
+
+defchan e1of2 <: chan(bool) (bool d[2], e) { }
+
+e1of2 L, R;
+// will source on L and sink on R, 
+// connect L and R in Verilog
+

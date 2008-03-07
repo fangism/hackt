@@ -1,8 +1,8 @@
 /**
-	\file "inverters.v"
+	\file "interleave-c.v"
 	Chain a bunch of inverters between VPI/VCS and prsim, shoelacing.
-	$Id: inverters.v,v 1.1.2.2 2008/03/07 01:32:44 fang Exp $
-	Thanks to Ilya Ganusov for contributing this test.
+	Added inverters in prsim to check for proper event interleaving.  
+	$Id: interleave-c.v,v 1.1.2.1 2008/03/07 01:32:42 fang Exp $
  */
 
 `timescale 1ns/1ps 
@@ -21,9 +21,11 @@ module TOP;
 	// prsim stuff
 	initial 
 	begin
-	// @haco@ inverters.haco-a
-		$prsim("inverters.haco-a");
+	// @haco@ interleave-c.haco-a
+		$prsim("interleave-c.haco-a");
 		$prsim_cmd("echo $start of simulation");
+		$prsim_cmd("watchall");
+		$prsim_cmd("timing after");
 
 		$to_prsim("TOP.in",   "in0");
 		$to_prsim("TOP.out0", "in1");
@@ -38,24 +40,10 @@ module TOP;
 	end
 
 
-	initial #45 $finish;
+	initial #6 $finish;
 
-/**
-	// optional: produce vector file for dump
-	initial begin
-		$dumpfile ("test.dump"); 
-		$dumpvars(0,TOP);
-	end
-**/
-
-	always @(in) 
-	begin
-		$display("at time %7.3f, observed in %b", $realtime,in);
-	end	
-
-	always @(out) 
-	begin
-		$display("at time %7.3f, observed out = %b", $realtime,out);
-	end	
+	initial
+	$monitor("@%6.3f: out=%d,%d,%d,%d,%d", $realtime,
+		out0, out1, out2, out3, out);
 
 endmodule

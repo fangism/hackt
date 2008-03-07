@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.35 2008/03/04 21:53:31 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.36 2008/03/07 01:32:20 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -157,7 +157,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 # different custom test: just compare two existing output dumps (unfiltered!)
 oscil-random-02c.prsimrc-diff: \
 		oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out
-	$(DIFF) oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out > $@
+	$(DIFF) oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out \
+		> $@ ; \
+	$(TOUCH) $@
 
 $(srcdir)/cbit_test_stat-01.prsimrc: gen_cbit_test.awk
 	{ $(ECHO) "# $@" ; \

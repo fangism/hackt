@@ -1,3 +1,4 @@
+$start of simulation
 at time   0.000, observed in 0
 at time   0.050, observed out = 1
 at time   1.000, observed in 1
@@ -88,3 +89,4 @@ at time  43.000, observed in 1
 at time  43.050, observed out = 0
 at time  44.000, observed in 0
 at time  44.050, observed out = 1
+$finish at simulation time   45.0 ns

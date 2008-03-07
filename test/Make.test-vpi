@@ -1,6 +1,6 @@
 # "Make.test-vpi"
 #	vi: ft=automake
-#	$Id: Make.test-vpi,v 1.1.2.3 2008/02/26 02:13:27 fang Exp $
+#	$Id: Make.test-vpi,v 1.1.2.4 2008/03/07 01:32:15 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -19,13 +19,18 @@ HACKT_VPI_CLEAN_IGNORE_PATTERNS = \
 	"*.vxi-out" \
 	"*.vx-out-filter" \
 	"*.vx-diff" \
-	"*.vpitest"
+	"*.vpitest" \
+	"*.csrc" \
+	"*.daidir"
+
+VPI_PRSIM_MODULE = $(top_builddir)/src/vpihacprsim.la
 
 AUTO_IGNORE += $(HACKT_VPI_CLEAN_IGNORE_PATTERNS)
 AUTO_IGNORE += .vcsmx_rebuild
 DISTCLEANFILES += .vcsmx_rebuild
 
-VCS_OUTPUT_FILTER =
+VCS_OUTPUT_FILTER = \
+	$(SED) -n '/^[$$]start of simulation/,/^[$$]finish at simulation/p'
 
 # where vpihacprim.la is built
 VPI_LIB_PATH = $(top_builddir)/src
@@ -33,24 +38,29 @@ VPI_LIB_PATH = $(top_builddir)/src
 INSTALLCHECK_VPI_LIB_PATH = $(pkglibdir)
 
 COMMON_VCS_FLAGS = +cli+3 -Mupdate +v2k +vcsace+diff+ok
+# wait for license if none available, damn commercial tools
+COMMON_VCS_FLAGS += +vcs+lic+wait
+# requires env. LM_LICENSE_FILE
 
 AM_VCS_VPI_FLAGS = +vpi \
 	-use_vpiobj $(VPI_LIB_PATH)/$(LTDL_OBJDIR)/vpihacprsim.so \
 	-LDFLAGS="-L$(VPI_LIB_PATH)/$(LTDL_OBJDIR)" 
-AM_VCS_FLAGS = +incdir+$(srcdir) +cli+3 $(COMMON_VCS_FLAGS)
+AM_VCS_FLAGS = +incdir+$(srcdir) $(COMMON_VCS_FLAGS) -Mdir=$@.csrc
 
 # for install-time tests, use installed library, not the built one
 INSTALLCHECK_VCS_VPI_FLAGS = +vpi \
 	-use_vpiobj $(INSTALLCHECK_VPI_LIB_PATH)/vpihacprsim.so \
 	-LDFLAGS="-L$(INSTALLCHECK_VPI_LIB_PATH)" 
-# lazy: for now, use the $(srcdir) instead of +incdir+$(examplesdir)/...
-INSTALLCHECK_VCS_FLAGS = $(AM_VCS_FLAGS)
+# lazy: for now, use the .. dir instead of +incdir+$(examplesdir)/...
+# because compilation is done in a temporary subdirectory
+# the generated Makefiles have a variable named $(VSRC) that could be used...
+INSTALLCHECK_VCS_FLAGS = +incdir+$(srcdir) $(COMMON_VCS_FLAGS) -Mdir=$$@.csrc
 
 # create simulation executable
 # '+' connects child make (vcs) to parent's jobserver
 .v.vx:
 if HAVE_VPI
-	+$(VCS) $(AM_VCS_FLAGS) $(AM_VCS_VPI_FLAGS) -o $@ $<
+	+$(VCS_ENV) $(VCS) $(AM_VCS_FLAGS) $(AM_VCS_VPI_FLAGS) -o $@ $<
 else
 	@$(ECHO) "VPI not explicitly enabled during configure."
 endif
@@ -58,7 +68,7 @@ endif
 # post-install tests!
 .v.vxi:
 if HAVE_VPI
-	+$(VCS) $(INSTALLCHECK_VCS_FLAGS) $(INSTALLCHECK_VCS_VPI_FLAGS) -o $@ $<
+	+$(VCS_ENV) $(VCS) $(INSTALLCHECK_VCS_FLAGS) $(INSTALLCHECK_VCS_VPI_FLAGS) -o $@ $<
 else
 	@$(ECHO) "VPI not explicitly enabled during configure."
 endif
@@ -84,7 +94,9 @@ endif
 	$(VPI_INSTALLCHECK_ENV) ./$< > $@ 2>&1
 
 .vx-out.vx-out-filter:
-	$(GREP) "observed" $< > $@ || $(TOUCH) $@
+	$(CAT) $< | $(VCS_OUTPUT_FILTER) > $@ && \
+	if ! test -s $@ ; then $(TOUCH) $@ ; fi
+#	$(GREP) "observed" $< > $@ || $(TOUCH) $@
 #	$(CP) $< $@
 
 if VERBOSE_CHECK
@@ -165,6 +177,10 @@ if CHECK_TESTS
 TESTS += $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vpitest)
 endif
 
+VPI_SIM_EXECUTABLES = $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx)
+# exeuctables depend on the plugin module
+$(VPI_SIM_EXECUTABLES): $(VPI_PRSIM_MODULE)
+
 VPI_TARGETS =
 if HAVE_VPI
 VPI_TARGETS += \
@@ -186,7 +202,12 @@ clean-vpitests:
 	done
 
 # 'csrc' is the temporary directory used in VCS compilation
-DISTCLEANDIRS += csrc
+CLEANDIRS += csrc \
+	$(HACKT_VPI_TEST_SCRIPTS_BASES:=.csrc) \
+	$(HACKT_VPI_TEST_SCRIPTS_BASES:=.vx.csrc) \
+	$(HACKT_VPI_TEST_SCRIPTS_BASES:=.vxi.csrc) \
+	$(HACKT_VPI_TEST_SCRIPTS_BASES:=.vx.daidir) \
+	$(HACKT_VPI_TEST_SCRIPTS_BASES:=.vxi.daidir)
 
 clean-local: clean-vpitests
 

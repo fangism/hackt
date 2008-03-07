@@ -3,6 +3,28 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-56:
+	  prsim+VPI:
+		__advance_prsim (kernel of _run_prsim) now breaks
+		out of loop as soon as registered breakpoint is encountered, 
+		to return control back to VCS as eagerly.  
+		This didn't seem to change the behavior visibly, though
+		it seems more correct...
+		At end of _run_prsim, only conditionally register self-
+			callback if there is actually a pending event, 
+			now in reregister_next_callback().  
+		$prsim_sync (new): catch up prsim to VCS's current time, 
+			executing past breakpoints as necessary.
+		__advance_prsim(): change vpiPureTransportDelay to
+			vpiNoDelay to take effects immediately, and to
+			support multiple successive breakpoints during sync.  
+	  Added several new test cases, including demonstration of
+		mixing VPI with channel features, using $prsim_sync.
+		Documented in new section in dox/prsim/cosim.texi.
+
+
 2008-03-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-55:

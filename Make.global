@@ -7,7 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.30 2007/08/09 03:47:01 fang Exp $
+#	$Id: Make.global,v 1.30.22.1 2008/03/07 01:32:05 fang Exp $
 
 # automatically runs autotools (and recursively in subdirectories)
 reconf: force
@@ -135,6 +135,12 @@ dist-hook: srcdir-distfiles
 DISTCLEANFILES += check.log cvsdiffs
 DISTCLEANFILES += $(AUTO_DEPENDS)
 
+cleandirs:
+	test -z "$(CLEANDIRS)" || $(RM) -r $(CLEANDIRS)
+
+clean-local: cleandirs
+
+# $distdir is assumed passed in as Makefile variable
 distcleandirs:
 	test -z "$(DISTCLEANDIRS)" || $(RM) -r $(DISTCLEANDIRS)
 

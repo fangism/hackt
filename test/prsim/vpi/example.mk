@@ -9,26 +9,38 @@ pkgdatadir = @pkgdatadir@
 
 # generic definitions
 VCS = vcs
+VCS_ENV =
 VCS_FLAGS = @vcs_flags@
 VPI_FLAGS = @vpi_flags@
 VPI_ENV = @vpi_env@
 
-.SUFFIXES: .v .vx
+.SUFFIXES: .v .vx .vx-log
 
 include $(pkgdatadir)/mk/hackt.mk
 
 .v.vx:
-	+$(VCS) $(VCS_FLAGS) $(VPI_FLAGS) -o $@ $<
+	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) -o $@ $<
 
-all: inverters.vx
+.vx.vx-log:
+	$(VPI_ENV) ./$< > $@ 2>&1
+
+all: inverters.vx shoelace.vx channel-source-sink.vx
 
 # extra deps
-inverters.vx: inverters.haco-a
+inverters.vx-log: inverters.haco-a
+shoelace.vx-log: inverters.haco-a
+channel-source-sink.vx-log: channel-source-sink.haco-a
 # really, is only run-time dep, not build-time dep
 
-check: inverters.vx
-	$(VPI_ENV) ./$<
+# .NOTPARALLEL: check
+check: inverters.vx-log shoelace.vx-log channel-source-sink.vx-log
+	cat $^
+#	for f in $^ ; do cat $$f ; done
 
 clean:
-	rm -f inverters.vx
+	rm -f *.haco*
+	rm -f *.vx
+	rm -rf *.vx.*
+	rm -rf *csrc
+	rm -f *.vx-log
 
