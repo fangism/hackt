@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2008-03-06	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-56:
+	  Make.stddef, Make.global: added CLEANDIRS variable, cleandirs target
+		Revised check.log rule to catch more specific errors in log.
+
+
 2008-02-24	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-43:
