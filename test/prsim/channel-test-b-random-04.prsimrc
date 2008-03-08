@@ -3,7 +3,9 @@
 # @haco@ channel-test-b.haco-a
 # testing source/sinks on different channels
 
-source channel-test-b-02.prsimrc
+# I think this was meant...
+source channel-test-b-01.prsimrc
+# source channel-test-b-02.prsimrc
 
 channel-source-args-loop L X
 channel-sink R
@@ -48,8 +50,9 @@ echo ---------------------------
 echo resume channel L
 channel-release L
 cycle
-why-not L.e
-why-not-verbose L.e
+# output is data-dependent (random)
+# why-not L.e
+# why-not-verbose L.e
 channel-show-all
 
 echo ---------------------------

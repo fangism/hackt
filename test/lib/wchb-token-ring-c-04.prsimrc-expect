@@ -7,17 +7,20 @@ there is only one hole in the ring
 expect to see on channel L: [1,0]* 
 expect to see on channel M: [0,1]* 
 expect to see on channel R: [0,1]* 
-channel	R (.data) : 1
-channel	M (.data) : 0
-channel	L (.data) : 1
-channel	R (.data) : 0
-channel	M (.data) : 1
-channel	L (.data) : 0
-channel	R (.data) : 1
-channel	M (.data) : 0
-channel	L (.data) : 1
-channel	R (.data) : 0
-channel	M (.data) : 1
-channel	L (.data) : 0
-channel	R (.data) : 1
-channel	M (.data) : 0
+# log for channel: L
+1
+0
+1
+0
+# log for channel: M
+0
+1
+0
+1
+0
+# log for channel: R
+1
+0
+1
+0
+1

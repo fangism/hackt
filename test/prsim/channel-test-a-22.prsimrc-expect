@@ -1,0 +1,18 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+initializing... 
+X : .e(init:0) 1x1of2 off
+	count: 0, unknowns: 2
+Y : .e(init:1) 1x1of4 off
+	count: 0, unknowns: 4
+Z : .a(init:0) 1x1of3 off
+	count: 0, unknowns: 3
+resetting... 
+channels:
+all gone! 

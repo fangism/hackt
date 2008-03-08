@@ -1,5 +1,5 @@
 # "wchb-token-ring-a-03.prsimrc"
-#	$Id: wchb-token-ring-a-03.prsimrc,v 1.1.4.1 2008/02/22 06:08:27 fang Exp $
+#	$Id: wchb-token-ring-a-03.prsimrc,v 1.1.4.2 2008/03/08 02:37:16 fang Exp $
 # @haco@ wchb-token-ring-a.haco-a
 # testing stability of token ring
 
@@ -16,7 +16,8 @@ channel-show-all
 timing random
 
 echo expect to see on channel L: [0]*
-step 180
+# stopping point is kind of probabilitic
+step 177
 assert-queue
 
 

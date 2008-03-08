@@ -1,0 +1,10 @@
+# "channel-test-a-22.prsimrc"
+# @haco@ channel-test-a.haco-a
+# testing initialization and reset
+# can source this script after running any other test
+
+source channel-test-a-01.prsimrc
+channel-show-all
+
+source channel-test-a-21.prsimrc
+

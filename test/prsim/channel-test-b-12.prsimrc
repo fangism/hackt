@@ -27,7 +27,9 @@ assert R.d[0] 0
 assert R.d[1] 0
 assert R.e 0
 
+channel-unwatchall
 channel-release-all
+watch L.e R.e
 queue
 
 cycle

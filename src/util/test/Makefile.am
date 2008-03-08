@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.62.4.1 2008/02/22 06:07:37 fang Exp $
+#	$Id: Makefile.am,v 1.62.4.2 2008/03/08 02:37:10 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -66,7 +66,8 @@ TEST_DIFF = $(DIFF) -u
 	  fi ; \
 	fi
 	-$(TEST_DIFF) $^ > $@
-	@if test -s $@ ; then \
+	@$(TOUCH) $@ ; \
+	if test -s $@ ; then \
 	  $(ECHO) "Differences found in $@!" ; \
 	fi
 
@@ -105,6 +106,7 @@ noinst_PROGRAMS = \
 	deque_iterator_test \
 	hash_map_iterator_O2_bug_test \
 	hash_qmap_test \
+	free_list_test \
 	discrete_interval_set_test \
 	EBCO_test \
 	integer_traits_test \
@@ -138,7 +140,7 @@ exec.autodepend: Makefile
 	test -z "$$list" || \
 	for e in $$list ; do \
 	  $(ECHO) "$$e.out: $$e" ; \
-	  $(ECHO) "	-./$$""< > $$""@ 2>&1" ; \
+	  $(ECHO) "	-./$$""< > $$""@ 2>&1 ; $(TOUCH) $$""@" ; \
 	  $(ECHO) "" ; \
 	done > $@ ; \
 	$(TOUCH) $@
@@ -178,6 +180,8 @@ deque_iterator_test_SOURCES = deque_iterator_test.cc
 deque_iterator_test_LDADD = libfangutil.la
 hash_map_iterator_O2_bug_test_SOURCES = hash_map_iterator_O2_bug_test.cc
 hash_qmap_test_SOURCES = hash_qmap_test.cc
+free_list_test_SOURCES = free_list_test.cc
+free_list_test_LDADD = libfangutil.la
 friend_function_formal_bug_SOURCES = friend_function_formal_bug.cc
 priority_queue_test_SOURCES = priority_queue_test.cc
 bitmanip_test_SOURCES = bitmanip_test.cc
@@ -310,7 +314,8 @@ bitmanip_test.diff: bitmanip_test.out bitmanip_test.stderr
 	-@out=`$(ECHO) $@ | $(SED) 's/\.diff$$/.out/g'` ; \
 	expect=$(srcdir)/`$(ECHO) $@ | $(SED) 's/\.diff$$/.stderr/g'` ; \
 	$(ECHO) "$(DIFF) -u $$expect $$out > $@" && \
-	$(DIFF) -u $$expect $$out > $@ 2>&1
+	$(DIFF) -u $$expect $$out > $@ 2>&1 ; \
+	$(TOUCH) $@
 
 # some tests require more than the default filtering
 MOREFILTER_TESTS = \

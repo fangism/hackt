@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.36 2008/03/07 01:32:20 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.37 2008/03/08 02:37:19 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -137,6 +137,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-a-11 channel-test-a-13 channel-test-a-14 \
 	channel-test-a-15 channel-test-a-16 channel-test-a-17 \
 	channel-test-a-18 channel-test-a-19 channel-test-a-20 \
+	channel-test-a-22 channel-test-a-23 \
+	channel-test-a-24 channel-test-a-25 channel-test-a-26 \
+	channel-test-a-27 channel-test-a-28 channel-test-a-29 \
+	channel-test-a-30 \
 	channel-test-b-01 channel-test-b-02 channel-test-b-03 \
 	channel-test-b-04 channel-test-b-05 channel-test-b-06 \
 	channel-test-b-07 channel-test-b-08 \
@@ -225,6 +229,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	weak-feedback-a-02 weak-feedback-b-02 \
 	celem-fb-02 \
 	channel-test-a-10 channel-test-a-12 \
+	channel-test-a-21 \
 	channel-test-b-21
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01

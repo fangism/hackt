@@ -1,5 +1,5 @@
 # "wchb-token-ring-c-04.prsimrc"
-#	$Id: wchb-token-ring-c-04.prsimrc,v 1.1.4.1 2008/02/22 06:08:33 fang Exp $
+#	$Id: wchb-token-ring-c-04.prsimrc,v 1.1.4.2 2008/03/08 02:37:17 fang Exp $
 # @haco@ wchb-token-ring-c.haco-a
 # testing stability of token ring
 
@@ -13,6 +13,12 @@ channel R e:1 :0 d:2
 channel-watchall
 
 channel-show-all
+channel-unwatchall
+channel-log L wchb-token-ring-c-04-L.txt
+channel-log R wchb-token-ring-c-04-R.txt
+channel-log M wchb-token-ring-c-04-M.txt
+
+# channel-watchall
 
 timing random
 
@@ -21,7 +27,14 @@ echo there is only one hole in the ring
 echo expect to see on channel L: [1,0]*
 echo expect to see on channel M: [0,1]*
 echo expect to see on channel R: [0,1]*
-step 180
+step 177
 assert-queue
+channel-close-all
+!cat wchb-token-ring-c-04-L.txt
+!cat wchb-token-ring-c-04-M.txt
+!cat wchb-token-ring-c-04-R.txt
+!rm wchb-token-ring-c-04-L.txt
+!rm wchb-token-ring-c-04-M.txt
+!rm wchb-token-ring-c-04-R.txt
 
 

@@ -24,7 +24,8 @@ set _Reset 1
 set Reset 0
 channel-release-all
 channel-show-all
-step 12345
+# where it ends it kind of probabilstic
+step 12367
 
 channel-show-all
 assert-queue

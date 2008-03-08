@@ -1,6 +1,6 @@
 # "Make.test-vpi"
 #	vi: ft=automake
-#	$Id: Make.test-vpi,v 1.1.2.4 2008/03/07 01:32:15 fang Exp $
+#	$Id: Make.test-vpi,v 1.1.2.5 2008/03/08 02:37:12 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -94,8 +94,8 @@ endif
 	$(VPI_INSTALLCHECK_ENV) ./$< > $@ 2>&1
 
 .vx-out.vx-out-filter:
-	$(CAT) $< | $(VCS_OUTPUT_FILTER) > $@ && \
-	if ! test -s $@ ; then $(TOUCH) $@ ; fi
+	$(CAT) $< | $(VCS_OUTPUT_FILTER) > $@ ; \
+	$(TOUCH) $@
 #	$(GREP) "observed" $< > $@ || $(TOUCH) $@
 #	$(CP) $< $@
 
@@ -178,8 +178,10 @@ TESTS += $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vpitest)
 endif
 
 VPI_SIM_EXECUTABLES = $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx)
+if HAVE_VPI
 # exeuctables depend on the plugin module
 $(VPI_SIM_EXECUTABLES): $(VPI_PRSIM_MODULE)
+endif
 
 VPI_TARGETS =
 if HAVE_VPI

@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.1.4.7 2008/03/05 02:28:01 fang Exp $
+	$Id: Channel-prsim.h,v 1.1.4.8 2008/03/08 02:37:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -448,6 +448,12 @@ public:
 	void
 	initialize_data_counter(const State&);
 
+	void
+	initialize(void);
+
+	void
+	clobber(void);		// simulation reset
+
 	value_type
 	data_rails_value(const State&) const;
 
@@ -603,10 +609,10 @@ public:
 
 	bool
 	stop_channel(const string&);
-	
+
 	void
 	stop_all_channels(void);
-	
+
 	bool
 	resume_channel(const State&, const string&, vector<env_event_type>&);
 
@@ -650,6 +656,12 @@ public:
 	__node_why_not(const State&, ostream&, const node_index_type, 
 		const bool d, const bool wn, const bool v, 
 		node_set_type&, node_set_type&) const;
+
+	void
+	initialize(void);
+
+	void
+	clobber_all(void);
 
 	ostream&
 	__node_why_X(const State&, ostream&, const node_index_type, 

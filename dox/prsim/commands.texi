@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.14 2008/03/04 21:53:19 fang Exp $
+@c $Id: commands.texi,v 1.2.2.15 2008/03/08 02:36:58 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -205,6 +205,20 @@ the following commands.
 @b{Timing}: delays are given some default value, 
 except in random timing mode, where delays are randomized.  
 TODO: configure after delays on sources and sinks.
+
+@b{Re-initialization}:
+The @command{initialize} and @command{reset} also affect the state
+of channels.  
+@command{initialize} retains the configuration (source, sink, watch, expect)
+of all channels, however, the data rail tracking is reset to
+account for all nodes being set to X.  
+All output log streams are closed.  
+Value sequences for sourcing and expecting are retained, but the 
+position index is reset to 0, the beginning.  
+(Rationale: it is uncommon to start at different offsets in
+the value sequences.)
+@command{reset} will completely wipe all registered channels, 
+as if the simulator had just started up.  
 
 @c ----------------------------------------------------------------------------
 @node Info Commands

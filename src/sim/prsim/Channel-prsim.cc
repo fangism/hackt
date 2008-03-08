@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.1.4.7 2008/03/05 02:28:00 fang Exp $
+	$Id: Channel-prsim.cc,v 1.1.4.8 2008/03/08 02:37:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -123,7 +123,7 @@ channel_file_handle::open_write(const string& fn) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_file_handle::close(void) {
-	fname = "";
+	fname.clear();
 	if (stream) {
 		stream = count_ptr<ofstream>(NULL);
 		// automatically close and deallocates
@@ -434,7 +434,7 @@ channel::set_rsource(const State& s) {
 	value_index = 0;
 	values.resize(1);	
 	// used as value holder to remember the last value
-	inject_expect_file = "";
+	inject_expect_file.clear();
 	return false;
 }
 
@@ -677,6 +677,46 @@ channel::initialize_data_counter(const State& s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\pre all nodes are set to X, so counters should be thus initialized.
+	Close output logging stream.  
+	Restarts all values sequences to first index, which may not necessarily
+		do what user intends if channels were sourced mid-simulation!
+ */
+void
+channel::initialize(void) {
+	counter_state = 0;
+	x_counter = bundles() * radix();
+	// retain values in sequence, but reset index
+	value_index = 0;
+	// retain inject_expect_file
+	// retain data-rails, ack, validity
+	close_stream();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Is this even necessary (if channels are going to be destroyed)?
+	\pre simulator's nodes have wiped any references to channels.  
+	Might as well just destroy in-place and re-initialize?
+ */
+void
+channel::clobber(void) {
+	initialize();
+	name.clear();
+	values.clear();
+	inject_expect_file.clear();
+	flags = CHANNEL_DEFAULT_FLAGS;
+	data.~data_bundle_array_type();		// placement dtor
+	new (&data) data_bundle_array_type;	// placement ctor
+	__node_to_rail.clear();
+	ack_signal = 0;
+#if PRSIM_CHANNEL_VALIDITY
+	validity_signal = 0;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Binding constructor functor.
  */
 struct __node_setter :
@@ -717,6 +757,8 @@ channel::reset(vector<env_event_type>& events) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Point to next value in sequence, if applicable.
+	For finite value sequences, when run-out of values, 
+	clear the array and any string associated with its values (file).  
  */
 void
 channel::advance_value(void) {
@@ -731,12 +773,16 @@ if (is_random()) {
 		if (is_looping()) {
 			value_index = 0;
 		} else {
-			value_index = values.size();	// one past end
+			values.clear();
+			value_index = 0;
+			INVARIANT(!have_value());
+			inject_expect_file.clear();
+			// value_index = values.size();	// one past end
 		}
 	}
 	// else if values.size(), values.clear() ?
 #if PRSIM_CHANNEL_DONT_CARES
-	if (values[value_index].second) {
+	if (have_value() && values[value_index].second) {
 		// if values is X (don't care), then choose a random value
 		values[value_index].first = rand48<value_type>()();
 	}
@@ -1222,8 +1268,10 @@ channel::process_node(const State& s, const node_index_type ni,
 #endif
 // first identify which channel node member this node is
 if (ni == ack_signal) {
+	STACKTRACE_INDENT_PRINT("got ack update" << endl);
 	// only need to take action if this is a source
 	if (is_sourcing() && !stopped()) {
+	STACKTRACE_INDENT_PRINT("source responding..." << endl);
 	switch (next) {
 		// assumes that data rails are active high
 	case node_type::LOGIC_LOW:
@@ -1254,6 +1302,7 @@ if (ni == ack_signal) {
 		break;
 	default:
 		// set all data to X
+		// do not advance
 		transform(data.begin(), data.end(), back_inserter(new_events), 
 			__node_setter(node_type::LOGIC_OTHER));
 		break;
@@ -1262,6 +1311,7 @@ if (ni == ack_signal) {
 	// logging and expect mode don't care
 #if PRSIM_CHANNEL_VALIDITY
 } else if (valid_signal && (ni == valid_signal)) {
+	STACKTRACE_INDENT_PRINT("got validity update" << endl);
 	// only need to take action if this is a sink
 	if (is_sinking() && !stopped()) {
 	switch (next) {
@@ -1299,6 +1349,7 @@ if (ni == ack_signal) {
 	}
 #endif
 } else {
+	STACKTRACE_INDENT_PRINT("got data-rail update" << endl);
 	// invariant: must be data rail
 	// update state counters
 	switch (prev) {
@@ -2073,6 +2124,37 @@ channel_manager::unwatch_all_channels(void) {
 	STACKTRACE_VERBOSE;
 	for_each(channel_pool.begin(), channel_pool.end(), 
 		mem_fun_ref(&channel::unwatch));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Initialize all channels.
+	Retains some modes.
+ */
+void
+channel_manager::initialize(void) {
+	STACKTRACE_VERBOSE;
+	for_each(channel_pool.begin(), channel_pool.end(), 
+		mem_fun_ref(&channel::initialize));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wipes all modes and settings.  
+	Unregisters all channels.  
+ */
+void
+channel_manager::clobber_all(void) {
+	STACKTRACE_VERBOSE;
+#if 0
+	for_each(channel_pool.begin(), channel_pool.end(), 
+		mem_fun_ref(&channel::clobber));
+#else
+	// basically just destroy in-place and re-construct in-place
+	node_channels_map.clear();
+	channel_index_set.clear();
+	channel_pool.clear();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

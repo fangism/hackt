@@ -4,7 +4,7 @@
 	Technically, this need not be in the memory namespace, 
 	but this is used so frequently in memory management.  
 	TODO: bitfield implementation for integers
-	$Id: free_list.h,v 1.4.44.1 2008/01/18 21:12:44 fang Exp $
+	$Id: free_list.h,v 1.4.44.2 2008/03/08 02:37:08 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_FREE_LIST_H__
@@ -190,11 +190,15 @@ struct free_list<set<T, C, A> > {
 	typedef	typename container_type::iterator	iterator;
 	typedef	typename container_type::value_type	value_type;
 
+	/**
+		There must be at least one element to remove, of course. 
+	 */
 	static
 	value_type
 	acquire(container_type& c) {
 		// could also use end() -1
 		const iterator b(c.begin());
+		INVARIANT(b != c.end());
 		const value_type ret = *b;
 		c.erase(b);
 		return ret;

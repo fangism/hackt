@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.42 2008/03/05 02:28:04 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.43 2008/03/08 02:37:04 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -281,13 +281,11 @@ State::destroy(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Resets the state of simulation by X-ing all nodes, but
-	also preserves some simulator modes, such as the 
-	watch/break point state.
-	\pre expressions are already properly sized.  
+	Clears internal data structures.
+	Procedure is common to initialize() and reset().
  */
 void
-State::initialize(void) {
+State::__initialize(void) {
 	STACKTRACE_VERBOSE;
 	for_each(node_pool.begin(), node_pool.end(), 
 		mem_fun_ref(&node_type::initialize));
@@ -301,11 +299,27 @@ State::initialize(void) {
 	ISE_INVARIANT(event_pool.check_valid_empty());
 	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
-	flags |= FLAGS_INITIALIZE_SET_MASK;
-	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
 	// unwatchall()? no, preserved
 	// timing mode preserved
 	current_time = 0;
+#if PRSIM_CHANNEL_SUPPORT
+	_channel_manager.initialize();
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets the state of simulation by X-ing all nodes, but
+	also preserves some simulator modes, such as the 
+	watch/break point state.
+	\pre expressions are already properly sized.  
+ */
+void
+State::initialize(void) {
+	STACKTRACE_VERBOSE;
+	__initialize();
+	flags |= FLAGS_INITIALIZE_SET_MASK;
+	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -483,18 +497,7 @@ State::reset_tcounts(void) {
 void
 State::reset(void) {
 	STACKTRACE_VERBOSE;
-	for_each(node_pool.begin(), node_pool.end(), 
-		mem_fun_ref(&node_type::reset));
-	for_each(expr_pool.begin(), expr_pool.end(), 
-		mem_fun_ref(&expr_type::reset));
-	// the expr_graph_node_pool contains no stateful information.  
-	while (!event_queue.empty()) {
-		const event_placeholder_type next(event_queue.pop());
-		event_pool.deallocate(next.event_index);
-	}
-	ISE_INVARIANT(event_pool.check_valid_empty());
-	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
-	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
+	__initialize();
 	flags = FLAGS_DEFAULT;
 	unstable_policy = ERROR_DEFAULT_UNSTABLE;
 	weak_unstable_policy = ERROR_DEFAULT_WEAK_UNSTABLE;
@@ -503,7 +506,9 @@ State::reset(void) {
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
 	uniform_delay = time_traits::default_delay;
-	current_time = 0;
+#if PRSIM_CHANNEL_SUPPORT
+	_channel_manager.clobber_all();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

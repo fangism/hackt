@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.19 2008/03/05 02:28:05 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.20 2008/03/08 02:37:06 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -482,6 +482,12 @@ public:
 	/// wipes the simulation state (like destructor)
 	void
 	destroy(void);
+
+private:
+	void
+	__initialize(void);
+
+public:
 
 	void
 	check_node(const node_index_type) const;

@@ -47,8 +47,9 @@ echo ---------------------------
 echo resume channel L
 channel-release L
 cycle
-why-not L.e
-why-not-verbose L.e
+# output is data-dependent (random)
+# why-not L.e
+# why-not-verbose L.e
 channel-show-all
 
 echo ---------------------------
