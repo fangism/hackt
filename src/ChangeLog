@@ -7,7 +7,8 @@
 
 	* HACKT-00-01-04-main-00-82-05-parser-06-04:
 	  lexer/flex_common_marker.patch:
-		updated and validated against older bison-1.875.
+		updated to soften patch match (flex 2.5.4, patch 2.5.9)
+		also validated against older bison-1.875.
 	  Makefile.am: added dependencies on patch file.
 
 
