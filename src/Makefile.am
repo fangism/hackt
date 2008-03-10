@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.193.6.2 2008/03/03 04:08:55 fang Exp $
+#	$Id: Makefile.am,v 1.193.6.3 2008/03/10 04:37:20 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1274,33 +1274,37 @@ PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 MAKE_REAL_LEXER_SCRIPT = \
 	$(CP) $< $@.tmp && \
 	$(SED) '1,3s|FILENAME|$@.tmp|' $(srcdir)/$(FLEX_COMMON_PATCH) | \
-		$(PATCH) -u -p0 && \
+		$(PATCH) -l -u -p0 && \
 	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" ; \
 	$(ECHO) "\#include \"lexer/flex_lexer_state.h\"" ; \
-	$(CAT) $@.tmp | $(PURIFY_LEXER_PIPE) ;} > $@ ; \
+	$(CAT) $@.tmp | $(PURIFY_LEXER_PIPE) ;} > $@ && \
 	$(RM) $@.tmp $@.tmp.orig
 
 # need to include prefix header because the lexer-generated code
 # doesn't include it early enough from the .ll source :(
 # if HAVE_FLEX ...
 lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
-		parser/$(HACKT_PARSE_ROOT)-real.h
+		parser/$(HACKT_PARSE_ROOT)-real.h \
+		$(FLEX_COMMON_PATCH)
 # need forward declaration for flex 2.5.31
 # need early declaration of flex::lexer_state needed for flex 2.5.{31,33}
 	basename="hackt" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(INSTREF_LEX_ROOT)-real.cc: lexer/$(INSTREF_LEX_ROOT).cc \
-		parser/$(INSTREF_PARSE_ROOT)-real.h
+		parser/$(INSTREF_PARSE_ROOT)-real.h \
+		$(FLEX_COMMON_PATCH)
 	basename="instref" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(TYPE_LEX_ROOT)-real.cc: lexer/$(TYPE_LEX_ROOT).cc \
-		parser/$(TYPE_PARSE_ROOT)-real.h
+		parser/$(TYPE_PARSE_ROOT)-real.h \
+		$(FLEX_COMMON_PATCH)
 	basename="type" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
-lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc
+lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc \
+		$(FLEX_COMMON_PATCH)
 	basename="hacflat" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
