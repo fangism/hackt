@@ -2,7 +2,7 @@
 	\file "util/numeric/random.h"
 	Template specializations for random numbers, 
 	wrapper interface to stdlib *rand48 functions.  
-	$Id: random.h,v 1.2 2006/04/03 05:30:40 fang Exp $
+	$Id: random.h,v 1.2.96.1 2008/03/10 01:01:55 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_RANDOM_H__
@@ -71,6 +71,21 @@ struct rand48<unsigned long> {
 	}
 
 };	// end struct rand48
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !TYPE_EQUIV_SIZE_T_UNSIGNED_LONG && (SIZEOF_SIZE_T == SIZEOF_LONG)
+/**
+	Conditional specialization, depending on whether or not
+	size_t is equivalent to unsigned long.
+	If they are not, they must be the same size.  
+ */
+template <>
+struct rand48<size_t> : public rand48<unsigned long> {
+	typedef	rand48<unsigned long>	impl_type;
+	typedef	impl_type::seed_type	seed_type;
+	// inherit the rest
+};	// end struct rand48
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

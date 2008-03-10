@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-58:
+	  Added commands 'cause' and 'nocause' to hide causality tracking, 
+		motivated by need to test randomized data on channels.
+	  Documented, now used in some tests.  
+	  Minor update to util/numeric/random.h.
+
+
 2008-03-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-57:

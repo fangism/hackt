@@ -17,22 +17,22 @@ event queue:
 	50	L.d[0] : 1
 	50	R.e : 1
 	50	R.e : 1
-	80	R.e : 0	[by R.d[0]:=1]
-	80	L.e : 0	[by R.d[0]:=1]
-	120	R.e : 1	[by R.d[0]:=0]
-	120	L.e : 1	[by R.d[0]:=0]
-	160	R.e : 0	[by R.d[0]:=1]
-	160	L.e : 0	[by R.d[0]:=1]
-	200	R.e : 1	[by R.d[0]:=0]
-	200	L.e : 1	[by R.d[0]:=0]
-	240	R.e : 0	[by R.d[1]:=1]
-	240	L.e : 0	[by R.d[1]:=1]
-	280	R.e : 1	[by R.d[1]:=0]
-	280	L.e : 1	[by R.d[1]:=0]
-	320	R.e : 0	[by R.d[1]:=1]
-	320	L.e : 0	[by R.d[1]:=1]
-	360	R.e : 1	[by R.d[1]:=0]
-	360	L.e : 1	[by R.d[1]:=0]
+	80	R.e : 0
+	80	L.e : 0
+	120	R.e : 1
+	120	L.e : 1
+	160	R.e : 0
+	160	L.e : 0
+	200	R.e : 1
+	200	L.e : 1
+	240	R.e : 0
+	240	L.e : 0
+	280	R.e : 1
+	280	L.e : 1
+	320	R.e : 0
+	320	L.e : 0
+	360	R.e : 1
+	360	L.e : 1
 no asserts failed, yay! 
 L : .e(init:0) 1x1of2 off
 	count: 0, unknowns: 0

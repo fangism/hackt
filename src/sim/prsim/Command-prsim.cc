@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.18 2008/03/05 02:28:02 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.19 2008/03/10 01:01:50 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2605,6 +2605,57 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoWatchAllQueue, PRSIM::view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/cause.texi
+@deffn Command cause
+@deffnx Command nocause
+@command{cause} displays causal information of nodes as they change value.  
+@command{nocause} hides cause information, but silently keeps track.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cause, "cause", view, 
+	"show causal transitions on watched nodes")
+
+int
+Cause::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.set_show_cause();
+	return Command::NORMAL;
+}
+}
+
+void
+Cause::usage(ostream& o) {
+	o << name << endl;
+	o << "report causal transitions of watched nodes" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoCause, "nocause", view, 
+	"hide causal transitions on watched nodes")
+
+int
+NoCause::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.clear_show_cause();
+	return Command::NORMAL;
+}
+}
+
+void
+NoCause::usage(ostream& o) {
+	o << name << endl;
+	o << "suppress causal transitions of watched nodes" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/tcounts.texi
 @deffn Command tcounts
 @deffnx Command notcounts
@@ -2629,7 +2680,7 @@ if (a.size() != 1) {
 
 void
 TCounts::usage(ostream& o) {
-	o << "tcounts" << endl;
+	o << name<< endl;
 	o << "report transition counts of watched nodes" << endl;
 }
 
@@ -2650,7 +2701,7 @@ if (a.size() != 1) {
 
 void
 NoTCounts::usage(ostream& o) {
-	o << "notcounts" << endl;
+	o << name << endl;
 	o << "suppress transition counts of watched nodes" << endl;
 }
 

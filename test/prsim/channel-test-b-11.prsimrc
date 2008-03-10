@@ -32,6 +32,9 @@ watch L.e R.e
 channel-release-all
 queue
 
+# because data is random
+nocause
+
 cycle
 assertn-queue
 echo no asserts failed, yay!

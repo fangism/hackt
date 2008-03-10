@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.93.4.5 2008/03/01 08:34:22 fang Exp $
+#	$Id: ChangeLog,v 1.93.4.6 2008/03/10 01:01:53 fang Exp $
+
+2008-02-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-58:
+	  util/numeric/random.h:
+		conditionally specialize for size_t (when not equiv. ulong)
+
 
 2008-02-28	David Fang		<fangism@users.sourceforge.net>
 

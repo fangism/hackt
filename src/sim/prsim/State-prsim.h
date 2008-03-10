@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.20 2008/03/08 02:37:06 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.21 2008/03/10 01:01:51 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -249,8 +249,13 @@ private:
 		 */
 		FLAG_WEAK_RULES = 0x400,
 #endif
+		/**
+			Print cause information on watched nodes.  
+			Causes are always tracked.  
+		 */
+		FLAG_SHOW_CAUSE = 0x800,
 		/// initial flags
-		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
+		FLAGS_DEFAULT = FLAG_CHECK_EXCL | FLAG_SHOW_CAUSE,
 		/**
 			Flags to set upon initialize().
 		 */
@@ -556,6 +561,15 @@ public:
 
 	void
 	clear_show_tcounts(void) { flags &= ~FLAG_SHOW_TCOUNTS; }
+
+	bool
+	show_cause(void) const { return flags & FLAG_SHOW_CAUSE; }
+
+	void
+	set_show_cause(void) { flags |= FLAG_SHOW_CAUSE; }
+
+	void
+	clear_show_cause(void) { flags &= ~FLAG_SHOW_CAUSE; }
 
 	bool
 	eval_ordering_is_random(void) const {

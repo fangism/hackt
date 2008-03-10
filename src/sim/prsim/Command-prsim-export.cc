@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Command-prsim-export.cc"
-	$Id: Command-prsim-export.cc,v 1.1.4.3 2008/02/29 22:42:20 fang Exp $
+	$Id: Command-prsim-export.cc,v 1.1.4.4 2008/03/10 01:01:48 fang Exp $
 	Useful functions to be exported to elsewhere.  
  */
 
@@ -29,7 +29,7 @@ print_watched_node(ostream& o, const State& s,
 	const State::node_type& n(s.get_node(ni));
 	n.dump_value(o << nodename << " : ");
 	const node_index_type ci = GET_CAUSE(r);
-	if (ci) {
+	if (ci && s.show_cause()) {
 		const string causename(s.get_node_canonical_name(ci));
 		const State::node_type& c(s.get_node(ci));
 		c.dump_value(o << "\t[by " << causename << ":=") << ']';
