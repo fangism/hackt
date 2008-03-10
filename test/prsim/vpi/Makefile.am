@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.5 2008/03/07 01:32:27 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.6 2008/03/10 03:29:46 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -7,7 +7,7 @@ include $(top_srcdir)/installdirs.mk
 # for examplesdir
 
 # for .hac and .haco
-HACKT_PRSIM_TEST_SUBJECTS = inverters \
+HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 	interleave-a interleave-b interleave-c \
 	oscillator \
 	channel-source-sink
