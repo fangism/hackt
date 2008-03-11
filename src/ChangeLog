@@ -5,6 +5,18 @@
 
 2008-03-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-05-parser-06-06:
+	  Reasonable attempt to acommodate flex 2.5.33, but as was before
+		this branch, it still crashes, so it shall remain on the 
+		blacklist (described in README).
+		May consider investigating, this is the branch to do it.
+	  Makefile.am: use hand-written lexer/flex_common_marker.awk instead 
+		of lexer/flex_common_marker.patch, which is harder to
+		apply across flex variants.  AWK AWK AWK!
+	  lexer/flex_lexer_state.h: added yy_flex_debug member.
+	  No regressions.  
+
+
 	* HACKT-00-01-04-main-00-82-05-parser-06-05:
 	  Makefile.am: replaced yyparse prototype sed-hack with updated
 		parameter (flex::lexer_state&).  

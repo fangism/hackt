@@ -1,6 +1,6 @@
 /**
 	\file "lexer/flex_lexer_state.cc"
-	$Id: flex_lexer_state.cc,v 1.2.8.1 2008/03/02 22:38:27 fang Exp $
+	$Id: flex_lexer_state.cc,v 1.2.8.2 2008/03/11 22:02:09 fang Exp $
  */
 
 #include "lexer/flex_lexer_state.h"
@@ -42,7 +42,8 @@ namespace flex {
 lexer_state::lexer_state(const char* str) : yyin(NULL), yyout(NULL),
 		yy_current_buffer(NULL),
 		yy_c_buf_p(NULL), yy_init(1), yy_start(0), 
-		yy_more_flag(0), yy_more_len(0)
+		yy_more_flag(0), yy_more_len(0), 
+		yy_flex_debug(0)
 		FLEX_LEXER_CTOR_EXTRA_INIT
 		{
 	yy_scan_string(str, *this);
@@ -77,20 +78,14 @@ lexer_state::~lexer_state() {
 	to a statically linked variable, (which makes it invisible 
 	to the outside world).  
  */
-#if 0
-// from old code
-int hacflat_at_eof(const flex::lexer_state& foo) {
-	assert(YY_CURRENT_BUFFER);
-	return YY_CURRENT_BUFFER->yy_n_chars == 0;
-}
-#else
 int
 lexer_state::at_eof(void) const {
-	NEVER_NULL(yy_current_buffer);
-	return yy_current_buffer->YY_N_CHARS == 0;
+	const lexer_state& foo(*this);
+	assert(YY_CURRENT_BUFFER);
+	// return YY_CURRENT_BUFFER->yy_n_chars == 0;
+	return YY_CURRENT_BUFFER->YY_N_CHARS == 0;
 	// was yy_n_chars until "lexer/purify_flex.awk"
 }
-#endif
 
 //=============================================================================
 }	// end namespace flex

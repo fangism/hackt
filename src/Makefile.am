@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.193.6.4 2008/03/10 22:21:14 fang Exp $
+#	$Id: Makefile.am,v 1.193.6.5 2008/03/11 22:02:08 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1206,14 +1206,17 @@ PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
 	$(SED_YACC_YYPARSE)
 endif
 
-FLEX_COMMON_PATCH = lexer/flex_common_marker.patch
+# FLEX_COMMON_PATCH = lexer/flex_common_marker.patch
+FLEX_COMMON_PATCH = lexer/flex_common_marker.awk
 EXTRA_DIST += $(FLEX_COMMON_PATCH)
 
 # keep only common symbols, give them external linkage
 EXTRACT_FLEX_COMMON_PIPE = \
 	$(SED) -n '/KEEP_FLEX_COMMON/,/KEEP_FLEX_COMMON/p' | \
-	$(SED) -e '/^static/s/^static[ ]*//' | \
+	$(SED) -e '/^[ ]*static/s/^[ ]*static[ ]*//' | \
 	$(GREP) -v '^\#include.*prefix\.h'
+#	  -e '/for.*max_size/s/max_size/size_t(max_size)/'
+# last subsitution works around signed comparison warning from flex 2.5.33
 
 # rules for the prefix-transformed versions of generated lexer/parser sources
 # make these conditional on yacc vs. bison
@@ -1271,10 +1274,13 @@ PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 
 # requires shell variable 'basename'
 # flex scanner purification eliminates need to rename most variables
-MAKE_REAL_LEXER_SCRIPT = \
-	$(CP) $< $@.tmp && \
-	$(SED) '1,3s|FILENAME|$@.tmp|' $(srcdir)/$(FLEX_COMMON_PATCH) | \
-		$(PATCH) -l -u -p0 && \
+# MAKE_REAL_LEXER_SCRIPT = \
+#	$(CP) $< $@.tmp && \
+#	$(SED) '1,3s|FILENAME|$@.tmp|' $(srcdir)/$(FLEX_COMMON_PATCH) | \
+#		$(PATCH) -l -u -p0
+MAKE_REAL_LEXER_SCRIPT = $(AWK) -f $(srcdir)/$(FLEX_COMMON_PATCH) $< > $@.tmp
+
+MAKE_REAL_LEXER_SCRIPT += && \
 	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" ; \
 	$(ECHO) "\#include \"lexer/flex_lexer_state.h\"" ; \
 	$(CAT) $@.tmp | $(PURIFY_LEXER_PIPE) ;} > $@ && \

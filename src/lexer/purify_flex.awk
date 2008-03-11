@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.9.10.1 2008/03/02 22:38:28 fang Exp $
+#	$Id: purify_flex.awk,v 1.9.10.2 2008/03/11 22:02:12 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -204,6 +204,10 @@ function append_call_args(str, arg) {
 	} else if (match($0, "^static YY_BUFFER_STATE [*] yy_buffer_stack")) {
 		# flex 2.5.31
 		members["yy_buffer_stack"] = "";
+		comment_out($0);
+	} else if (match($0, "int yy_flex_debug")) {
+		# flex 2.5.33
+		members["yy_flex_debug"] = "";
 		comment_out($0);
 
 	# bunch of special cases I can't otherwise catch easily :(

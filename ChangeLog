@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2008-03-11	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-06:
+	  config/lexyacc.m4: detect and warn against known bad flex.
+
+
 2008-03-02	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-05-parser-06-02:

@@ -1,7 +1,7 @@
 /**
 	\file "lexer/flex_lexer_state.h"
 	Structure holding all of the flex scanner's stateful information.  
-	$Id: flex_lexer_state.h,v 1.7.10.1 2008/03/02 22:38:27 fang Exp $
+	$Id: flex_lexer_state.h,v 1.7.10.2 2008/03/11 22:02:11 fang Exp $
  */
 
 #ifndef	__LEXER_FLEX_LEXER_STATE_H__
@@ -67,7 +67,12 @@ struct lexer_state {
 	int*			yy_start_stack;		// = NULL;
 #endif
 #endif
-// the following appear in flex 2.5.31
+// the following appear in flex 2.5.31 or later
+	/**
+		Run-time debug switch.
+		In flex 2.5.33.
+	 */
+	int			yy_flex_debug;
 #ifdef LEXER_HAS_YYLINENO
 	int			yylineno;		// = 0;
 #define	FLEX_LEXER_CTOR_INIT_YYLINENO	, yylineno(0)
@@ -98,7 +103,8 @@ struct lexer_state {
 	lexer_state() : yyin(NULL), yyout(NULL),
 			yy_current_buffer(NULL), 
 			yy_c_buf_p(NULL), yy_init(1), yy_start(0), 
-			yy_more_flag(0), yy_more_len(0) 
+			yy_more_flag(0), yy_more_len(0), 
+			yy_flex_debug(0)
 			FLEX_LEXER_CTOR_EXTRA_INIT
 			{ }
 
@@ -106,7 +112,8 @@ struct lexer_state {
 	lexer_state(FILE* _yyin) : yyin(_yyin), yyout(NULL),
 			yy_current_buffer(NULL), 
 			yy_c_buf_p(NULL), yy_init(1), yy_start(0), 
-			yy_more_flag(0), yy_more_len(0)
+			yy_more_flag(0), yy_more_len(0), 
+			yy_flex_debug(0)
 			FLEX_LEXER_CTOR_EXTRA_INIT
 			{ }
 
