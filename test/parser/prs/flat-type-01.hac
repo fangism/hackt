@@ -1,0 +1,13 @@
+// "flat-type-01.hac"
+// testing use of global parameter
+// @hflat-flags@ -t foo
+
+pint S = 100;
+
+defproc foo(bool x, y) {
+prs {
+[after=S]	x	=> y-
+}
+}
+
+

@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.19.14.2 2008/02/14 18:23:02 fang Exp $
+	$Id: cflat.cc,v 1.19.14.3 2008/03/15 03:33:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -795,7 +795,7 @@ if (cf.use_referenced_type_instead_of_top_level) {
 	}
 	top_module = count_ptr<module>(new module("<auxiliary>"));
 	NEVER_NULL(top_module);
-	if (!top_module->allocate_unique_process_type(*rpt).good) {
+	if (!top_module->allocate_unique_process_type(*rpt, *the_module).good) {
 		cerr << alloc_errstr << endl;
 		return 1;
 	}

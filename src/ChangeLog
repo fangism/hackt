@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-59:
+	  Latent bug fix in commands with -t <type> option not
+		being able to reference top-level parameters, now fixed.  
+		Resolution: unroll top-level parameters before unrolling
+		per-type instance hierarchy.  This makes values available, 
+		and correctly overshadows globals with local parameters.  
+	  Added new test cases.  
+
+
 2008-03-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-58:

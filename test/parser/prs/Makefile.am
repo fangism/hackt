@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.35.2.3 2008/02/14 04:09:28 fang Exp $
+#	$Id: Makefile.am,v 1.35.2.4 2008/03/15 03:33:58 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -49,6 +49,7 @@ HACKT_PARSE_TEST_PASSES = \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	bug-001 \
 	top-level-01 top-level-04 \
+	flat-type-01 flat-type-02 flat-type-03 \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
 	tree-00 tree-01 tree-02 tree-03 tree-04 \
@@ -101,6 +102,7 @@ HACKT_CREATE_TEST_PASSES = \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	bug-001 \
 	top-level-01 top-level-04 \
+	flat-type-01 flat-type-02 flat-type-03 \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
 	tree-02 tree-03 tree-04 \
@@ -153,6 +155,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	weak-01 weak-02 \
 	bug-001 \
 	top-level-01 top-level-04 \
+	flat-type-01 flat-type-02 flat-type-03 \
 	tree-02 tree-03 \
 	subckt-01 \
 	unstab-01 \

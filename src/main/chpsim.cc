@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.14.14.3 2008/03/01 23:48:08 fang Exp $
+	$Id: chpsim.cc,v 1.14.14.4 2008/03/15 03:33:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -138,7 +138,8 @@ if (opt.comp_opt.compile_input) {
 		// create fake top-level module from them (import)
 		top_module = count_ptr<module>(new module("<auxiliary>"));
 		NEVER_NULL(top_module);
-		if (!top_module->allocate_unique_process_type(*pt).good) {
+		if (!top_module->allocate_unique_process_type(*pt,
+				*the_module).good) {
 			cerr << alloc_errstr << endl;
 			return 1;
 		}

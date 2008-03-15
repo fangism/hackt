@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.14.14.3 2008/03/01 09:17:53 fang Exp $
+	$Id: prsim.cc,v 1.14.14.4 2008/03/15 03:33:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -171,7 +171,7 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	}
 	top_module = count_ptr<module>(new module("<auxiliary>"));
 	NEVER_NULL(top_module);
-	if (!top_module->allocate_unique_process_type(*rpt).good) {
+	if (!top_module->allocate_unique_process_type(*rpt, *the_module).good) {
 		cerr << alloc_errstr << endl;
 		return 1;
 	}

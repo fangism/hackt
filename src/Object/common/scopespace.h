@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.18 2007/11/01 23:59:41 fang Exp $
+	$Id: scopespace.h,v 1.18.4.1 2008/03/15 03:33:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -281,10 +281,13 @@ protected:
 	never_ptr<const dummy_placeholder<node_tag> >
 	add_node_instance_idempotent(const token_identifier&, const size_t);
 
-protected:
 	never_ptr<const instance_placeholder_base>
 	add_instance(excl_ptr<instance_placeholder_base>&);
+
 public:
+	void
+	import_physical_instances(const scopespace& s);
+
 	// need id because instantiation statement won't be named yet!
 	never_ptr<const instance_placeholder_base>
 	add_instance(const count_ptr<instantiation_statement_base>& i, 

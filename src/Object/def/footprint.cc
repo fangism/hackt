@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.36.10.1 2008/01/17 01:31:47 fang Exp $
+	$Id: footprint.cc,v 1.36.10.2 2008/03/15 03:33:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -609,6 +609,41 @@ try {
 	cerr << "Error creating footprint of complete type." << endl;
 	return good_bool(false);
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Removes all instances that share the same key as collections
+	found in the referenced scopespace.  
+	Purpose is to fake process-type creation while preserving
+	top-level parameters that are referenced out-of-scope.  
+	This works because top-level parameters have already been resolved
+	to constants.  
+	It should be sufficient to just dissociate the map?
+	This means that new parameter collection 
+ */
+void
+footprint::remove_shadowed_collections(const scopespace& s) {
+	scopespace::const_map_iterator
+		i(s.id_map_begin()), e(s.id_map_end());
+for ( ; i!=e; ++i) {
+	const string& k(i->first);
+	const instance_collection_map_type::iterator
+		mf(instance_collection_map.find(k));
+	if (mf != instance_collection_map.end()) {
+		const collection_map_entry_type& x(mf->second);
+	switch (x.meta_type) {
+	case META_TYPE_PBOOL:
+	case META_TYPE_PINT:
+	case META_TYPE_PREAL:
+		// dissociate, rather than destroy
+		instance_collection_map.erase(mf);
+		break;
+	default: break;
+	// ignore all other collections, they pose no threat
+	}	// end switch
+	}	// end if
+}	// end for
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

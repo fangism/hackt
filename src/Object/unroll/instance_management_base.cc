@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.17 2007/11/26 08:27:43 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.17.2.1 2008/03/15 03:33:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -101,6 +101,26 @@ sequential_scope::unroll(const unroll_context& c) const {
 		}
 	}
 #endif
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicated unroll.  
+ */
+good_bool
+sequential_scope::unroll_if(const unroll_context& c, 
+		bool (*pred)(const instance_management_base*)) const {
+	STACKTRACE("sequential_scope::unroll()");
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		if (*i && (*pred)(&**i)) {
+			if (!(*i)->unroll(c).good) {
+				return good_bool(false);
+			}
+		}
+	}
 	return good_bool(true);
 }
 
