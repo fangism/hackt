@@ -4,7 +4,7 @@
 # This file uses macros defined in "dox/Make.dox-head"
 #	In other words, that file must be included first!
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.17 2007/07/31 23:22:32 fang Exp $
+#	$Id: Make.latex,v 1.17.28.1 2008/03/16 06:56:33 fang Exp $
 
 SUFFIXES += .ps .dvi .tex .pdf .ind .idx .bbl .aux \
 	.dvidepend .pdfdepend
@@ -36,7 +36,7 @@ AUTOBIBINPUTS = $(COMMONINPUTS)"$$BIBINPUTS"$(PATH_SEPARATOR)
 IGNORE_TEXDEPEND_EXTENSIONS = aux bbl ind lot lof out toc
 # can += this variable to add more
 SCANTEXDEPEND_FILTER = $(AWK) -f $(top_srcdir)/dox/mk/scantexdepend.awk -v ignore_extensions="$(IGNORE_TEXDEPEND_EXTENSIONS)"
-SCANTEXDEPEND_SCRIPT = { $(ECHO) -n "$@:" ; \
+SCANTEXDEPEND_SCRIPT = { $(PRINTF) "$@:" ; \
 	$(SCANTEXDEPEND_FILTER) $*.log ;} > $$depfile
 
 # create dummy dependencies first, overwrite later
@@ -111,7 +111,7 @@ if HAVE_PDFLATEX
 	$(ECHO) "Generating $$bldroot.pdf..." ; \
 	if test -f $$bldroot.stamp ; then \
 		if $(GREP) -q $(PDFLATEX) $$bldroot.stamp ; then \
-			$(ECHO) -n ; else $(MAKE) clean-temps ; fi \
+			: ; else $(MAKE) clean-temps ; fi \
 	fi ; \
 	TEXINPUTS=$(AUTOTEXINPUTS) $(PDFLATEX) $< > /dev/null < /dev/null ; \
 	$(ECHO) $(PDFLATEX) > $$bldroot.stamp ; \

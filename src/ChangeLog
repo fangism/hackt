@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-07:
+	  {lexer,parser}/*options.h: change cpp conditional to use defined()
+		on USING_{YACC,BISON}, easier to generate from configure.
+	  Elsewhere in project: Makefile maintainence, use printf vs. echo -n
+
+
 2008-03-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-05-parser-06-06:

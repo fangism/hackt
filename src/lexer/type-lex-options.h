@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: type-lex-options.h,v 1.2 2006/08/07 04:54:07 fang Exp $
+	$Id: type-lex-options.h,v 1.2.82.1 2008/03/16 06:57:07 fang Exp $
  */
 
 #ifndef	__LEXER_TYPE_LEX_OPTIONS_H__
@@ -74,11 +74,11 @@
 #ifndef	LIBBOGUS
 // else don't bother
 
-#if USING_YACC || USING_BYACC
+#if defined(USING_YACC) || defined(USING_BYACC)
 #define	type_lex()		__type_lex(&type_lval, _lexer_state)
 #endif	// USING_YACC || USING_BYACC
 
-#if USING_BISON
+#if defined(USING_BISON)
 #ifdef	YYLEX_PARAM
 // YYLEX_PARAM is a declarator, so we have to manually pass
 // in the correct argument name.

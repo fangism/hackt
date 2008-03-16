@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2008-03-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-07:
+	  Project-wide cleanup of "echo -n", replaced with equivalent
+		'printf' for POSIX standards-compliant behavior.  
+		echo is not required to accept options.
+	  config/lexyacc.m4: improved yacc/bison traits checking, 
+		no longer based on executable name, but generator output
+		which is much more reliable.
+
+
 2008-03-11	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-05-parser-06-06:

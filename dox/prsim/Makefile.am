@@ -1,5 +1,5 @@
 # "dox/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2007/09/14 04:29:53 fang Exp $
+#	$Id: Makefile.am,v 1.6.18.1 2008/03/16 06:56:35 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -20,13 +20,13 @@ hacprsim_INCLUDES = \
 	execution.texi
 
 $(srcdir)/options.mk: usage.texi
-	{ $(ECHO) -n "HACPRSIM_OPTIONS_TEXI = " ; \
+	{ $(PRINTF) "HACPRSIM_OPTIONS_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@
 
 $(srcdir)/commands.mk: commands.texi
-	{ $(ECHO) -n "HACPRSIM_COMMANDS_TEXI = " ; \
+	{ $(PRINTF) "HACPRSIM_COMMANDS_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@

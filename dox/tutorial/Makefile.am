@@ -1,6 +1,6 @@
 # "dox/tutorial/Makefile.am"
 # Makefile for tutorial directory
-#	$Id: Makefile.am,v 1.13 2007/09/14 04:29:53 fang Exp $
+#	$Id: Makefile.am,v 1.13.20.1 2008/03/16 06:56:43 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -30,13 +30,13 @@ hacmacros.texi: $(srcdir)/../common/hacmacros.texi
 CLEANFILES += hacmacros.texi
 
 $(srcdir)/compile.mk: hackt/compiler.texi
-	{ $(ECHO) -n "COMPILE_OPTIONS_TEXI = " ; \
+	{ $(PRINTF) "COMPILE_OPTIONS_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@
 
 $(srcdir)/cflat.mk: hackt/legacy.texi
-	{ $(ECHO) -n "HFLAT_OPTIONS_TEXI = " ; \
+	{ $(PRINTF) "HFLAT_OPTIONS_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@

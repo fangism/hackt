@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.13 2007/09/13 20:37:28 fang Exp $
+#	$Id: Make.test-prsim,v 1.13.18.1 2008/03/16 06:57:27 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -158,7 +158,7 @@ prsimrc-out.autodepend: Makefile
 	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
-	    $(ECHO) -n "$$target " ; \
+	    $(PRINTF) "$$target " ; \
 	  done ; \
 	  $(ECHO) ": $$obj" ; \
 	done ;} > $@ ; \

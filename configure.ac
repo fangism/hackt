@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.171 2008/02/26 22:44:21 fang Exp $
+#	$Id: configure.ac,v 1.171.2.1 2008/03/16 06:56:17 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -63,6 +63,7 @@ AC_CHECK_PROG([FIND], find, find)
 AC_CHECK_PROG([GREP], grep, grep)
 AC_CHECK_PROG([HEXDUMP], hexdump, hexdump)
 AC_CHECK_PROG([ECHO], echo, echo)
+AC_CHECK_PROG([PRINTF], printf, printf)
 AC_CHECK_PROG([SORT], sort, sort)
 AC_CHECK_PROG([CUT], cut, cut)
 AC_CHECK_PROG([PASTE], paste, paste)
@@ -123,9 +124,6 @@ AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 # but it doesn't break anything
 HACKT_ARG_VAR_LEX
 HACKT_ARG_VAR_YACC
-HACKT_AM_CONDITIONAL_HAVE_YACC
-HACKT_YACC_PURE_PARSER
-HACKT_YACC_VERSION
 HACKT_LEX_VERSION
 
 AC_CHECK_PROG([PKG_CONFIG], pkg-config, pkg-config)

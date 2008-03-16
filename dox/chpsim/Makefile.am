@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2007/09/14 04:29:52 fang Exp $
+#	$Id: Makefile.am,v 1.15.20.1 2008/03/16 06:56:22 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -29,19 +29,19 @@ hacchpsim_INCLUDES = \
 # HACCHPSIM_FUNCTIONS_TEXI = ...
 # source-extracted texinfo files: (can we deduce this automatically? done.)
 $(srcdir)/options.mk: usage.texi
-	{ $(ECHO) -n "HACCHPSIM_OPTIONS_TEXI = " ; \
+	{ $(PRINTF) "HACCHPSIM_OPTIONS_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@
 
 $(srcdir)/commands.mk: commands.texi
-	{ $(ECHO) -n "HACCHPSIM_COMMANDS_TEXI = " ; \
+	{ $(PRINTF) "HACCHPSIM_COMMANDS_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@
 
 $(srcdir)/functions.mk: stdchpfn.texi
-	{ $(ECHO) -n "HACCHPSIM_FUNCTIONS_TEXI = " ; \
+	{ $(PRINTF) "HACCHPSIM_FUNCTIONS_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@

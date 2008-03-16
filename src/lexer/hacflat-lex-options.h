@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: hacflat-lex-options.h,v 1.1 2006/11/15 00:08:54 fang Exp $
+	$Id: hacflat-lex-options.h,v 1.1.60.1 2008/03/16 06:57:01 fang Exp $
  */
 
 #ifndef	__LEXER_HACKT_LEX_OPTIONS_H__
@@ -61,12 +61,12 @@
 #undef	yylex
 #endif
 
-#if USING_YACC || USING_BYACC
+#if defined(USING_YACC) || defined(USING_BYACC)
 #define	yylex()			__hacflat_lex(yylval, _lexer_state)
 #define	hacflat_lex()		__hacflat_lex(hacflat_lval, _lexer_state)
 #endif	// USING_YACC || USING_BYACC
 
-#if USING_BISON
+#if defined(USING_BISON)
 #ifdef	YYLEX_PARAM
 // YYLEX_PARAM is a declarator, so we have to manually pass
 // in the correct argument name.

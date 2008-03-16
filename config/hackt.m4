@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.13 2007/11/30 05:49:44 fang Exp $
+dnl	$Id: hackt.m4,v 1.13.6.1 2008/03/16 06:56:18 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -542,7 +542,7 @@ AC_DEFUN([HACKT_CHECK_SANITY],
 [AC_REQUIRE([FANG_PROG_SLEEP])
 dnl not so funny...
 AC_MSG_CHECKING([whether fang is sane])
-dnl sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "." sleep 1; 
+dnl $SLEEP 1; printf "."; $SLEEP 1; printf "."; $SLEEP 1; printf "." $SLEEP 1; 
 $SLEEP 3
 AC_MSG_RESULT([no]);
 dnl not enough sleep

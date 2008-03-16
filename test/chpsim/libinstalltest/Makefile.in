@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.4 2007/11/02 14:37:18 fang Exp $
+#	$Id: Makefile.in,v 1.4.10.1 2008/03/16 06:57:37 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -58,6 +58,7 @@ include $(pkgdatadir)/mk/hackt-lt.mk
 # CC = @CC@
 CXX = @CXX@
 ECHO = @ECHO@
+PRINTF = @PRINTF@
 # or just 'echo'
 
 # just echo results back out
@@ -76,7 +77,7 @@ confirm-exec:
 	which $(HACKT_CREATE_EXE) && \
 	which $(HACKT_ALLOC_EXE) && \
 	which $(HACKT_CHPSIM_EXE) && \
-	$(ECHO) -n "hackt-config --ldflags: " && \
+	$(PRINTF) "hackt-config --ldflags: " && \
 	$(HACKT_CONFIG) --ldflags && \
 	$(ECHO) "should match $$""(pkglibdir): -L$(pkglibdir)" ; \
 	} > $@ 2>&1
