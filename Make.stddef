@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.27 2007/08/16 06:11:02 fang Exp $
+#	$Id: Make.stddef,v 1.28 2008/03/17 23:01:57 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -12,7 +12,8 @@ SHELL = @SH_PATH@
 # add -v for verbose
 
 # to control the version of automake (minimum)
-AUTOMAKE_OPTIONS = 1.9
+AUTOMAKE_OPTIONS = 1.9 gnu
+# std-options
 
 # useful standard utility definitions
 # consider autoconf-ing these...
@@ -61,6 +62,7 @@ TOUCH = @TOUCH@
 
 CLEANFILES =
 DISTCLEANFILES =
+CLEANDIRS =
 DISTCLEANDIRS =
 EXTRA_DIST =
 TESTS =

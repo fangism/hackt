@@ -1,0 +1,18 @@
+// "channel-test-b.hac"
+//	$Id: channel-test-b.hac,v 1.2 2008/03/17 23:08:22 fang Exp $
+
+import "../../lib/channel.hac";
+
+e1of2 L, R;
+
+bool _r[2];
+
+prs {
+	// plain WCHB, without resets
+	(:i:2:
+		L.d[i] & R.e	#> _r[i]-
+		_r[i]		=> R.d[i]-
+	)
+	R.d[0] | R.d[1]		=> L.e-
+}
+

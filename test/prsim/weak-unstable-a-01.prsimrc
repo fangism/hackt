@@ -1,0 +1,37 @@
+# "weak-unstable-a-01.prsimrc"
+# @haco@ weak-unstable-a.haco-a
+
+# echo-commands on
+unstable warn
+unstable-dequeue
+
+watch-queue
+watch c
+
+set a 0
+set b 0
+set _p 0
+cycle
+time
+
+set _p 1
+cycle
+
+set a X
+step-event
+time
+pending c
+
+set b 1
+step-event
+pending c
+
+set b 0
+step-event
+echo weak-unstable should leave x-pull in queue
+pending c
+assert-pending c
+
+cycle
+assert c X
+

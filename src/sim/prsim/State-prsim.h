@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2 2007/12/01 04:25:31 fang Exp $
+	$Id: State-prsim.h,v 1.3 2008/03/17 23:03:04 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -11,6 +11,13 @@
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
 #define	__HAC_SIM_PRSIM_STATE_H__
 
+// enable additional sanity checking in "sim/event.h" for event queue
+// can be disabled when not debugging
+#define	CHECK_UNIQUE_EVENTS			0
+
+// define to 1 to use a unique-set container for pending queue
+#define	UNIQUE_PENDING_QUEUE			1
+
 #include <iosfwd>
 #include <map>
 #include <set>
@@ -19,10 +26,14 @@
 #include "sim/state_base.h"
 #include "sim/signal_handler.h"
 #include "sim/event.h"
+#include "sim/prsim/Exception.h"
 #include "sim/prsim/Event-prsim.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
 #include "sim/prsim/Rule.h"
+#if PRSIM_CHANNEL_SUPPORT
+#include "sim/prsim/Channel-prsim.h"	// for channels support
+#endif
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
 #include "util/list_vector.h"
@@ -103,6 +114,7 @@ public:
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
 	typedef	vector<node_type>		node_pool_type;
 	typedef	vector<expr_type>		expr_pool_type;
+	typedef	expr_type::pull_enum		pull_enum;
 	typedef	RuleState<time_type>		rule_type;
 	typedef	hash_map<expr_index_type, rule_type>	rule_map_type;
 
@@ -119,7 +131,7 @@ public:
 		Exception thrown when there is a violation of 
 		exclusion among exclhi or excllo checked rings.  
 	 */
-	struct excl_exception {
+	struct excl_exception : public step_exception {
 		/// true for exclhi, false for excllo
 		bool				type;
 		/// index of the mutex lock triggered
@@ -131,17 +143,19 @@ public:
 			const node_index_type ni) : type(b), 
 			lock_id(li), node_id(ni) { }
 	};	// end struct excl_exception
-#define	THROWS_EXCL_EXCEPTION	throw (excl_exception)
+
+
+#define	THROWS_STEP_EXCEPTION	throw (step_exception)
 private:
 	struct evaluate_return_type {
 		node_index_type			node_index;
 		expr_type*			root_ex;
-		uchar				root_pull;
+		pull_enum			root_pull;
 
 		evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
 
 		evaluate_return_type(const node_index_type ni,
-			expr_type* const e, const uchar p) :
+			expr_type* const e, const pull_enum p) :
 			node_index(ni), root_ex(e), root_pull(p) { }
 	};	// end struct evaluate_return_type
 private:
@@ -219,12 +233,29 @@ private:
 		 */
 		FLAG_RANDOM_FANOUT_EVALUATION_ORDERING = 0x80,
 		/**
+			If true, dump events of watched nodes as they
+			are entered into the event queue.  
+		 */
+		FLAG_WATCH_QUEUE = 0x100,
+		/**
 			If true, dump every event as it is enqueued in
 			the primary event queue.  
 		 */
-		FLAG_WATCH_QUEUE = 0x100,
+		FLAG_WATCHALL_QUEUE = 0x200,
+#if PRSIM_WEAK_RULES
+		/**
+			Global flag to heed or ignore weak rules.  
+			Default off.  
+		 */
+		FLAG_WEAK_RULES = 0x400,
+#endif
+		/**
+			Print cause information on watched nodes.  
+			Causes are always tracked.  
+		 */
+		FLAG_SHOW_CAUSE = 0x800,
 		/// initial flags
-		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
+		FLAGS_DEFAULT = FLAG_CHECK_EXCL | FLAG_SHOW_CAUSE,
 		/**
 			Flags to set upon initialize().
 		 */
@@ -307,11 +338,26 @@ public:
 		Alternative: use map for sparser exclusive rings.  
 	 */
 	typedef	std::set<node_index_type>	ring_set_type;
+	typedef	std::set<node_index_type>	node_set_type;
 protected:
 	typedef	vector<ring_set_type>
 						mk_excl_ring_map_type;
-	typedef	vector<event_placeholder_type>	mk_excl_queue_type;
+	/**
+		This needs to be a unique forward mapping (injection),
+		i.e. no duplicate events.  
+		The (key, value) pair is just a transposed event placeholder.
+		TODO: pool-allocate?
+	 */
+	typedef	std::map<event_index_type, time_type>
+						mk_excl_queue_type;
+	/**
+		invariant: no event should be in pending queue more than once.
+	 */
+#if UNIQUE_PENDING_QUEUE
+	typedef	std::set<event_index_type>	pending_queue_type;
+#else
 	typedef	vector<event_index_type>	pending_queue_type;
+#endif
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
 	typedef	vector<expr_index_type>		expr_trace_type;
@@ -377,7 +423,12 @@ private:
 	// watched nodes
 	watch_list_type				watch_list;
 	// vectors
-	// channels
+#if PRSIM_CHANNEL_SUPPORT
+	/**
+		Extension to manage channel environments and actions. 
+	 */
+	channel_manager				_channel_manager;
+#endif
 	// mode of operation
 	// operation flags
 	flags_type				flags;
@@ -436,6 +487,12 @@ public:
 	/// wipes the simulation state (like destructor)
 	void
 	destroy(void);
+
+private:
+	void
+	__initialize(void);
+
+public:
 
 	void
 	check_node(const node_index_type) const;
@@ -506,6 +563,15 @@ public:
 	clear_show_tcounts(void) { flags &= ~FLAG_SHOW_TCOUNTS; }
 
 	bool
+	show_cause(void) const { return flags & FLAG_SHOW_CAUSE; }
+
+	void
+	set_show_cause(void) { flags |= FLAG_SHOW_CAUSE; }
+
+	void
+	clear_show_cause(void) { flags &= ~FLAG_SHOW_CAUSE; }
+
+	bool
 	eval_ordering_is_random(void) const {
 		return flags & FLAG_RANDOM_FANOUT_EVALUATION_ORDERING;
 	}
@@ -519,6 +585,49 @@ public:
 	set_eval_ordering_inorder(void) {
 		flags &= ~FLAG_RANDOM_FANOUT_EVALUATION_ORDERING;
 	}
+
+#if PRSIM_WEAK_RULES
+	void
+	enable_weak_rules(void) {
+		flags |= FLAG_WEAK_RULES;
+	}
+
+	void
+	disable_weak_rules(void) {
+		flags &= ~FLAG_WEAK_RULES;
+	}
+
+	bool
+	weak_rules_enabled(void) const {
+		return flags & FLAG_WEAK_RULES;
+	}
+#endif	// PRSIM_WEAK_RULES
+
+#if PRSIM_CHANNEL_SUPPORT
+	/**
+		Extension to manage channel environments and actions. 
+	 */
+	channel_manager&
+	get_channel_manager(void) { return _channel_manager; }
+
+private:
+	void
+	flush_channel_events(const vector<env_event_type>&, 
+		const event_cause_type&);
+
+public:
+	bool
+	reset_channel(const string&);
+
+	void
+	reset_all_channels(void);
+
+	bool
+	resume_channel(const string&);
+
+	void
+	resume_all_channels(void);
+#endif
 
 	void
 	reset_tcounts(void);
@@ -642,10 +751,10 @@ public:
 	dump_breakpoints(ostream&) const;
 
 	step_return_type
-	step(void) THROWS_EXCL_EXCEPTION;
+	step(void) THROWS_STEP_EXCEPTION;
 
 	step_return_type
-	cycle(void) THROWS_EXCL_EXCEPTION;
+	cycle(void) THROWS_STEP_EXCEPTION;
 
 	void
 	stop(void) {
@@ -697,6 +806,17 @@ public:
 	bool
 	watching_event_queue(void) const { return flags & FLAG_WATCH_QUEUE; }
 
+	void
+	watchall_event_queue(void) { flags |= FLAG_WATCHALL_QUEUE; }
+
+	void
+	nowatchall_event_queue(void) { flags &= ~FLAG_WATCHALL_QUEUE; }
+
+	bool
+	watching_all_event_queue(void) const {
+		return flags & FLAG_WATCHALL_QUEUE;
+	}
+
 	/// for any user-defined structures from the .hac
 	void
 	watch_structure(void);
@@ -709,7 +829,7 @@ public:
 	dump_watched_nodes(ostream&) const;
 
 	ostream&
-	status_nodes(ostream&, const uchar) const;
+	status_nodes(ostream&, const uchar, const bool) const;
 
 	bool
 	dequeue_unstable_events(void) const {
@@ -750,7 +870,7 @@ public:
 	append_check_excllo_ring(const ring_set_type&);
 
 	void
-	inspect_excl_exception(const excl_exception&, ostream&) const;
+	inspect_exception(const step_exception&, ostream&) const;
 
 	ostream&
 	dump_mk_excl_ring(ostream&, const ring_set_type&) const;
@@ -792,13 +912,21 @@ private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const rule_index_type, const uchar);
+		const rule_index_type, const uchar
+#if PRSIM_WEAK_RULES
+		, const bool weak
+#endif
+		);
 
 	event_index_type
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const uchar);
+		const uchar
+#if PRSIM_WEAK_RULES
+		, const bool weak
+#endif
+		);
 
 	void
 	__deallocate_pending_interference_event(const event_index_type);
@@ -819,6 +947,12 @@ private:
 
 	event_type&
 	get_event(const event_index_type);
+
+	void
+	kill_event(const event_index_type, const node_index_type);
+
+	node_index_type
+	load_enqueue_event(const time_type, const event_index_type);
 
 	void
 	enqueue_event(const time_type, const event_index_type);
@@ -859,6 +993,8 @@ private:
 	__flush_pending_event_replacement(
 		node_type&, const event_index_type, event_type&);
 
+	struct auto_flush_queues;
+
 	event_placeholder_type
 	dequeue_event(void);
 
@@ -868,14 +1004,19 @@ private:
 	time_type
 	get_delay_dn(const event_type&) const;
 
+	pull_enum
+	get_pull(const expr_index_type ei) const {
+		return ei ? expr_pool[ei].pull_state() : expr_type::PULL_OFF;
+	}
+
 	evaluate_return_type
 	evaluate(const node_index_type, expr_index_type, 
-		uchar prev, uchar next);
+		pull_enum prev, pull_enum next);
 
 	break_type
-	propagate_evaluation(cause_arg_type, expr_index_type, uchar prev
+	propagate_evaluation(cause_arg_type, expr_index_type, pull_enum prev
 #if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		, uchar next
+		, pull_enum next
 #endif
 		);
 
@@ -889,7 +1030,11 @@ private:
 	__diagnose_violation(ostream&, const uchar next, 
 		const event_index_type, event_type&, 
 		const node_index_type ui, node_type& n, 
-		cause_arg_type, const bool dir);
+		cause_arg_type, const bool dir
+#if PRSIM_WEAK_RULES
+		, const bool w
+#endif
+		);
 
 	break_type
 	__report_instability(ostream&, const bool wk, const bool dir, 
@@ -905,6 +1050,9 @@ private:
 public:
 	void
 	check_expr(const expr_index_type) const;
+
+	void
+	check_event_queue(void) const;
 
 	/// run-time check of invariants in Node/Expr structures.  
 	void
@@ -931,10 +1079,17 @@ public:
 	dump_struct_dot(ostream&) const;
 
 	ostream&
+	dump_event_force(ostream&, const event_index_type,
+		const time_type, const bool) const;
+
+	ostream&
 	dump_event(ostream&, const event_index_type, const time_type) const;
 
 	ostream&
 	dump_event_queue(ostream&) const;
+
+	ostream&
+	dump_node_pending(ostream&, const node_index_type, const bool) const;
 
 	ostream&
 	dump_node_value(ostream&, const node_index_type) const;
@@ -944,6 +1099,42 @@ public:
 
 	ostream&
 	dump_node_fanin(ostream&, const node_index_type, const bool) const;
+
+	ostream&
+	dump_node_why_X(ostream&, const node_index_type, const bool) const;
+
+	ostream&
+	dump_node_why_not(ostream&, const node_index_type, const bool, 
+		const bool, const bool) const;
+
+	void
+	find_nodes(vector<node_index_type>&,
+		bool (*)(const node_type&)) const;
+
+	void
+	find_nodes(vector<node_index_type>&,
+		bool (node_type::*)(void) const) const;
+
+	void
+	find_nodes(vector<node_index_type>&,
+		bool (this_type::*)(const node_index_type) const) const;
+
+	void
+	find_nodes(vector<node_index_type>&,
+		bool (*)(const State&, const node_index_type)) const;
+
+	ostream&
+	print_nodes(ostream&, const vector<node_index_type>&,
+		const char*) const;
+
+	ostream&
+	dump_dangling_unknown_nodes(ostream&, const bool) const;
+
+	ostream&
+	dump_output_nodes(ostream&) const;
+
+	ostream&
+	dump_output_unknown_nodes(ostream&) const;
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
@@ -957,6 +1148,43 @@ public:
 		return dump_subexpr(o, ei, v, expr_type::EXPR_ROOT, true);
 	}
 
+#if PRSIM_CHANNEL_SUPPORT
+	bool
+	dump_channel(ostream& o, const string& s) const {
+		return _channel_manager.dump_channel(o, *this, s);
+	}
+
+	ostream&
+	dump_channels(ostream& o) const {
+		return _channel_manager.dump(o, *this);
+	}
+#endif
+
+	bool
+	node_is_driven_by_channel(const node_index_type) const;
+
+	bool
+	node_drives_any_channel(const node_index_type) const;
+
+	bool
+	node_is_driven(const node_index_type) const;
+
+	bool
+	node_is_not_driven(const node_index_type ni) const {
+		return !node_is_driven(ni);
+	}
+
+	bool
+	node_is_used(const node_index_type) const;
+
+	bool
+	node_is_not_used(const node_index_type ni) const {
+		return !node_is_used(ni);
+	}
+
+	ostream&
+	dump_memory_usage(ostream&) const;
+
 	bool
 	save_checkpoint(ostream&) const;
 
@@ -966,6 +1194,39 @@ public:
 	static
 	ostream&
 	dump_checkpoint(ostream&, istream&);
+
+private:
+	// not recursive, collect
+	void
+	__get_X_fanins(const expr_index_type, node_set_type&) const;
+
+	// recursive
+	void
+	__expr_why_X(ostream&, const expr_index_type, const bool, 
+		node_set_type&, node_set_type&) const;
+
+	void
+	__expr_why_not(ostream&, const expr_index_type, 
+		const bool, const bool, 
+		node_set_type&, node_set_type&) const;
+
+	template <typename Iter>
+	ostream&
+	__print_nodes(ostream&, Iter, Iter, const char*) const;
+
+	template <typename Iter>
+	ostream&
+	__print_nodes_infix(ostream&, Iter, Iter, const char*) const;
+
+public:
+	// so channel_manager has access (or pass callback?)
+	ostream&
+	__node_why_not(ostream&, const node_index_type, const bool, 
+		const bool, const bool, node_set_type&, node_set_type&) const;
+
+	ostream&
+	__node_why_X(ostream&, const node_index_type, const bool, 
+		node_set_type&, node_set_type&) const;
 
 private:
 	void

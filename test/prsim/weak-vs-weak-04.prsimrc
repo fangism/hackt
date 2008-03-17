@@ -1,0 +1,30 @@
+# "weak-vs-weak-04.prsimrc"
+# @haco@ weak-vs-weak.haco-a
+
+# [weak] ~a -> c+
+# [weak] b  -> c-
+
+# echo-commands on
+weak-rules on
+unstable warn
+timing uniform 10
+
+# order of the next two determines whether there is instability
+set a 1
+set b 0
+cycle
+assert c X
+echo c: still unknown value
+
+echo testing for interference
+
+set a 0
+advance 5
+queue
+assert c X
+
+set b 1
+echo expecting interference from weak guard
+cycle
+assert c X
+

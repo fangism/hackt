@@ -1,0 +1,26 @@
+# "cross-coupled-01.prsimrc"
+# @haco@ cross-coupled.haco-a
+
+fanin t
+fanin f
+watchall
+echo setting X -> 1
+set t 1
+cycle
+echo setting 1 -> 0
+set t 0
+cycle
+echo setting 0 -> X
+set t X
+cycle
+echo setting X -> 0
+set t 0
+cycle
+echo setting 0 -> 1
+set t 1
+cycle
+echo setting 1 -> X
+set t X
+cycle
+echo how did we do?
+

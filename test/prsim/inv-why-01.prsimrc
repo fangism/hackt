@@ -1,0 +1,50 @@
+# "inv-why-01.prsimrc"
+# @haco@ inv.haco-a
+# testing 'why' commands family
+
+echo why is a X?
+why-x a
+why-x-verbose a
+
+echo why is b X?
+why-x b
+why-x-verbose b
+
+echo why is c X?
+why-x c
+why-x-verbose c
+
+echo ###############
+
+echo setting a to 0
+set a 0
+step-event
+
+echo why is a X?
+why-x a
+why-x-verbose a
+
+echo why is b X?
+why-x b
+why-x-verbose b
+
+echo why is c X?
+why-x c
+why-x-verbose c
+
+echo ###############
+echo propagating to b
+step-event
+
+echo why is a X?
+why-x a
+why-x-verbose a
+
+echo why is b X?
+why-x b
+why-x-verbose b
+
+echo why is c X?
+why-x c
+why-x-verbose c
+

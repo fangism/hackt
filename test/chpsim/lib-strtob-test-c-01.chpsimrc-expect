@@ -5,3 +5,4 @@ Run-time error executing event 1.
 Run-time error while checking event.
 event[1]:	10	1	0	print(strtob("true"))
 Caught run-time exception during execution.  Halting.
+... at line 9

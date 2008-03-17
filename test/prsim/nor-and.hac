@@ -1,0 +1,15 @@
+// "nor-and.hac"
+// copy-modified from "and-nand-alt.hac" (equivalent)
+// combined gate
+
+// alternate writing
+defproc and_nand(bool a, b, c, d, o) {
+prs {
+	~((a & b) | (c & d))	=> o+
+}
+}
+
+bool a, b, c, d, o;
+
+and_nand x(a, b, c, d, o);
+

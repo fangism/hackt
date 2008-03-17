@@ -1,0 +1,19 @@
+# "killed-01.prsimrc"
+# @haco@ inv.haco-a
+# testing checkpointing of killed events in event queue, proper reconstruction
+
+unstable-dequeue
+unstable warn
+
+set a 1
+advance 4
+queue
+time
+
+echo now overtake (unstably)
+set a 0
+advance 4
+
+queue
+check-queue
+

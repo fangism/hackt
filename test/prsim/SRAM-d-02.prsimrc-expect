@@ -1,0 +1,42 @@
+enqueued:	10	_bl : 1	[from _pchg:=0]
+WARNING: weak-interference `bl'
+>> cause: `_pchg' (val: 0)
+enqueued:	10	bl : 1	[from we:=0]
+	10	_bl : 1	[by _pchg:=0]
+	10	bl : 1	[by we:=0]
+write contents to one cell 
+enqueued:	20	bl : 0	[from we:=1]
+enqueued:	20	_bl : X	[from wl[0]:=1]	(weak)
+killed  :	0	_bl : X	[from wl[0]:=1]	(weak)	(killed)
+	20	bl : 0	[by we:=1]
+resetting... 
+enqueued:	50	bl : 1	[from _pchg:=0]
+	50	bl : 1	[by _pchg:=0]
+scenario... 
+WARNING: interference `bl'
+>> cause: `we' (val: 1)
+enqueued:	60	bl : X	[from we:=1]
+WARNING: unstable `w.we_'-
+>> cause: `we' (val: 0)
+queue:	60	bl : 0	[from we:=1]	(weak)
+No event pending on `_bl'.
+Fanins of node `bl':
+[after 10]	(~w.we_:1 & ~w.wv_:1)<0> | 
+[after 10]	~_pchg:1<0> -> bl+:1
+[after 10]	we:0 & w.wv_:1<0> -> bl-:1
+[after 10, weak]	(c[0].r.d[1]:1 & wl[0]:1)<1> | 
+[after 10, weak]	(c[1].r.d[1]:X & wl[1]:0)<0><1> -> bl-:1
+Fanins of node `_bl':
+[after 10]	(~w.we_:1 & ~wv:0)<0> | 
+[after 10]	~_pchg:1<0> -> _bl+:1
+[after 10]	we:0 & wv:0<0> -> _bl-:1
+[after 10, weak]	(c[0].r.d[0]:0 & wl[0]:1)<0> | 
+[after 10, weak]	(c[1].r.d[0]:X & wl[1]:0)<0><0> -> _bl-:1
+All subnodes of 'w':
+we : 0
+wv : 0
+bl : 1
+_bl : 1
+w.we_ : 1
+w.wv_ : 1
+	60	bl : 0	[by we:=0]

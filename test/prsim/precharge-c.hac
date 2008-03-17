@@ -1,0 +1,18 @@
+// "precharge-c.hac"
+// copy-modified from "precharge-b.hac"
+// expect pass
+
+// resembles a precharge stage
+template <pint N>
+defproc precharger(bool en; bool x[N], _o) {
+prs {
+(:i:N:
+	en & x[i]		-> _o-
+)
+	~en			-> _o+
+}
+}
+
+bool x[4], en, _o;
+precharger<4> A(en, x, _o);
+

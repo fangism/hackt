@@ -1,0 +1,8 @@
+// "weak-feedback-a.hac"
+
+bool a, b;
+prs {
+		a	=> b-
+[weak=1]	b	=> a-
+}
+

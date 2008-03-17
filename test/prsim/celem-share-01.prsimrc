@@ -1,12 +1,12 @@
 # "half-celem-01.prsimrc"
-#	$Id: celem-share-01.prsimrc,v 1.2 2006/04/23 07:37:34 fang Exp $
+#	$Id: celem-share-01.prsimrc,v 1.3 2008/03/17 23:07:25 fang Exp $
 # @haco@ celem-share.haco-a
 # testing fanin OR-combinations
 
 watchall
 set b 1
-set a 1
 set c 1
+set a 1
 set d 0
 cycle
 time

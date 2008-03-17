@@ -1,6 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.22 2008/03/03 21:10:36 sandra Exp $
+	Visitor implementation for allocating simulator state structures.  
+	$Id: ExprAlloc.cc,v 1.23 2008/03/17 23:03:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -37,6 +38,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/offset_array.h"
 #include "util/stacktrace.h"
 #include "util/qmap.tcc"
+#include "util/value_saver.h"
 #include "util/memory/free_list.h"
 #include "common/TODO.h"
 
@@ -186,6 +188,7 @@ ExprAlloc::ExprAlloc(state_type& _s) :
 		st_graph_node_pool(state.expr_graph_node_pool), 
 		st_rule_map(state.get_rule_map()),
 		ret_ex_index(INVALID_EXPR_INDEX), 
+		temp_rule(NULL),
 		flags(), expr_free_list() {
 }
 
@@ -198,6 +201,7 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 		st_graph_node_pool(state.expr_graph_node_pool), 
 		st_rule_map(state.get_rule_map()),
 		ret_ex_index(INVALID_EXPR_INDEX), 
+		temp_rule(NULL),
 		flags(f), expr_free_list() {
 }
 
@@ -278,7 +282,12 @@ ExprAlloc::compact_expr_pools(void) {
 		// relink parent, which may be node or expression
 		if (e.is_root()) {
 			node_type& nd(st_node_pool[e.parent]);
-			nd.replace_pull_index(e.direction(), n);
+			nd.replace_pull_index(e.direction(), n
+#if PRSIM_WEAK_RULES
+				, rule_strength(st_rule_map[n].is_weak())
+				// careful: consistent with enum rule_strength
+#endif
+				);
 		} else {
 			graph_node_type::child_entry_type&
 				c(st_graph_node_pool[e.parent]
@@ -333,7 +342,6 @@ void
 ExprAlloc::visit(const footprint_rule& r) {
 	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
 try {
-{
 	(*expr_pool)[r.expr_index].accept(*this);
 	const size_t top_ex_index = ret_ex_index;
 	// r.output_index gives the local unique ID,
@@ -347,16 +355,19 @@ try {
 	// can always compute it (cacheable) offline
 	STACKTRACE_INDENT_PRINT("expr " << top_ex_index << " pulls node " <<
 		ni << (r.dir ? " up" : " down") << endl);
-	link_node_to_root_expr(ni, top_ex_index, r.dir);
+	// need to process attributes BEFORE linking to node
+	// because depends on weak attribute
+//	link_node_to_root_expr(ni, top_ex_index, r.dir);	// moved later
 #if ENABLE_STACKTRACE
 	state.dump_struct(cerr) << endl;
 #endif
 	INVARIANT(top_ex_index == ret_ex_index);	// sanity check
-}
 {
 	// first, unconditionally create a rule entry in the state's rule
 	// map for every top-level (root) expression that affects a node.  
-	rule_type& rule __ATTRIBUTE_UNUSED_CTOR__((st_rule_map[ret_ex_index]));
+//	rule_type& rule __ATTRIBUTE_UNUSED_CTOR__((st_rule_map[ret_ex_index]));
+	rule_type dummy_rule;
+	const util::value_saver<rule_type*> rs(temp_rule, &dummy_rule);
 	// now iterate over attributes to apply changes
 	typedef footprint_rule::attributes_list_type	attr_list_type;
 	typedef	attr_list_type::const_iterator		const_iterator;
@@ -364,6 +375,14 @@ try {
 	for ( ; i!=e; ++i) {
 		ExprAlloc_attribute_registry[i->key].main(*this, *i->values);
 	}
+	INVARIANT(top_ex_index == ret_ex_index);	// sanity check
+	// following order matters b/c of rule_map access
+	link_node_to_root_expr(ni, top_ex_index, r.dir
+#if PRSIM_WEAK_RULES
+		, rule_strength(dummy_rule.is_weak())
+#endif
+		);
+	st_rule_map[ret_ex_index] = dummy_rule;	// copy over temporary
 }
 } catch (...) {
 	cerr << "FATAL: error during prs rule allocation." << endl;
@@ -726,7 +745,11 @@ if (d) {
  */
 void
 ExprAlloc::link_node_to_root_expr(const node_index_type ni,
-		const expr_index_type top_ex_index, const bool dir) {
+		const expr_index_type top_ex_index, const bool dir
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) {
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
 	STACKTRACE_INDENT_PRINT("linking expr " << top_ex_index <<
 		" to node " << ni << (dir ? '+' : '-') << endl);
@@ -741,7 +764,11 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	// super-expression will be referenced in fanin
 	// for consistent structure...
 	// be careful to keep root expr consistent
-	expr_index_type& dir_index(output.get_pull_expr(dir));
+	expr_index_type& dir_index(output.get_pull_expr(dir
+#if PRSIM_WEAK_RULES
+		, w
+#endif
+		));
 	if (dir_index) {
 		STACKTRACE_INDENT_PRINT("pull-up/dn already set" << endl);
 		// already set, need OR-combination
@@ -824,7 +851,8 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(After, "after")
 void
 After::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
-	rule_type& r(v.st_rule_map[v.last_expr_index()]);
+//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
+	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& d(a.front());
 	// assert type cast, b/c already checked
 	r.set_delay(d.is_a<const pint_const>()->static_constant_value());
@@ -857,7 +885,8 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Weak, "weak")
 void
 Weak::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
-	rule_type& r(v.st_rule_map[v.last_expr_index()]);
+//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
+	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& w(a.front());
 	if (w.is_a<const pint_const>()->static_constant_value())
 		r.set_weak();
@@ -874,7 +903,8 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Unstab, "unstab")
 void
 Unstab::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
-	rule_type& r(v.st_rule_map[v.last_expr_index()]);
+//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
+	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& w(a.front());
 	if (w.is_a<const pint_const>()->static_constant_value())
 		r.set_unstable();
@@ -970,7 +1000,11 @@ PassN::main(visitor_type& v, const param_args_type& params,
 		v.allocate_new_Nary_expr(entity::PRS::PRS_AND_EXPR_TYPE_ENUM,2);
 	v.link_child_expr(pe, g, 0);
 	v.link_child_expr(pe, ns, 1);
-	v.link_node_to_root_expr(d, pe, false);	// pull-down
+	v.link_node_to_root_expr(d, pe, false
+#if PRSIM_WEAK_RULES
+		, NORMAL_RULE
+#endif
+		);	// pull-down
 
 	typedef	visitor_type::rule_type	rule_type;
 	rule_type& r(v.st_rule_map[pe]);
@@ -1003,7 +1037,11 @@ PassP::main(visitor_type& v, const param_args_type& params,
 		v.allocate_new_Nary_expr(entity::PRS::PRS_AND_EXPR_TYPE_ENUM,2);
 	v.link_child_expr(pe, ng, 0);
 	v.link_child_expr(pe, s, 1);
-	v.link_node_to_root_expr(d, pe, true);	// pull-up
+	v.link_node_to_root_expr(d, pe, true
+#if PRSIM_WEAK_RULES
+		, NORMAL_RULE
+#endif
+		);	// pull-up
 
 	typedef	visitor_type::rule_type	rule_type;
 	rule_type& r(v.st_rule_map[pe]);
@@ -1197,6 +1235,15 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // layout_min_sep -- reserved for SEU prsim... later
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(supply_x, "supply_x")
+
+void
+supply_x::main(visitor_type& v, const param_args_type& params, 
+		const node_args_type& nodes) {
+	// TODO: nothing?
+}
 
 #undef	DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS
 }	// end namespace prsim_spec_directives

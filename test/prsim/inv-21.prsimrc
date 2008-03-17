@@ -1,0 +1,7 @@
+# "inv-21.prsimrc"
+# @haco@ inv.haco-a
+# trying to reproduce stuck-away-from-X bug
+
+unstable-dequeue
+source inv-21a.prsimrc
+

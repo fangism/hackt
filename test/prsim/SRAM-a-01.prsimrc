@@ -1,0 +1,45 @@
+# "SRAM-a-01.prsimrc"
+# @haco@ SRAM-a.haco-a
+
+fanin bl
+fanin _bl
+watchall
+unstable warn
+unstable-dequeue
+
+set _pchg 0
+set wl[1] 0
+set wv 0
+set wl[0] 0
+set we 0
+cycle
+status U
+time
+echo done precharging, now writing...
+
+set _pchg 1
+cycle
+time
+
+echo writing a zero...
+set wv 0
+set we 1
+cycle
+
+echo enabled write, set value, now setting wordline
+set wl[0] 1
+cycle
+
+fanin-get c[0].r.t
+fanin-get c[0].r.f
+
+fanin-get bl
+fanin-get _bl
+
+# getall c[0]
+# getall c[1]
+
+unsetall
+queue
+echo queue should be empty after unsetall
+

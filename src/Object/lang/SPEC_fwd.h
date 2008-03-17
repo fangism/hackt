@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_fwd.h"
 	Useful forward declarations for SPEC headers.  
-	$Id: SPEC_fwd.h,v 1.4 2006/04/12 08:53:16 fang Exp $
+	$Id: SPEC_fwd.h,v 1.5 2008/03/17 23:02:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FWD_H__
@@ -53,8 +53,11 @@ typedef	util::memory::count_ptr<PRS::literal>		literal_ptr_type;
 typedef	state_instance<bool_tag>			bool_instance_type;
 typedef	instance_pool<bool_instance_type>		node_pool_type;
 
+class directive_abstract;
 class directive;
 class directives_set;
+class directive_conditional;
+class directive_loop;
 
 //=============================================================================
 }	// end namespace SPEC

@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.14 2007/10/08 01:22:03 fang Exp $
+#	$Id: Make.test-cflat,v 1.15 2008/03/17 23:03:26 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -61,10 +61,32 @@ AUTO_IGNORE += $(HACKT_CFLAT_CLEAN_IGNORE_PATTERNS)
 
 # CFLAT tests
 
+# TODO: unify all prs tests into one set of Makefile suffix rules and
+# embed the flags variations in the source files with @hflat-flags@.  
+# Rationale: remove clutter of suffixes for some trivial variations.  
+# Not all variations, because that would result in excessive 
+# duplicate object files (can that be avoided?).  
+# TODO: test configuration files that dictate exact dependencies and options,
+# e.g. source (or .) <script that sets variables>
+
+# compute flags, -t <type> is always last for now (doesn't matter)
+DEDUCE_HFLAT_VARIANT = \
+	srcfile=$(srcdir)/$*.hac ; \
+	flags=`$(CAT) $$srcfile | $(EXTRACT_HFLAT_FLAGS_PIPE)` ; \
+	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
+		$(SED) -e 's/^.*-type@[ \t]*//g' -e 's/\"//g'` ; \
+	if test -n "$$type" ; then \
+		flags="$$flags -t $$type" ; \
+	fi
+
+
 # the touch is only necessary if the output is empty, in which case
 # we need to force a timestamp update
 .haco-a.prs:
-	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
+	@$(DEDUCE_HFLAT_VARIANT) ; \
+	cmd="$(HACKT_CFLAT_PRSIM_EXE) $$flags $<" ; \
+	$(ECHO) "$$cmd > $@" ; \
+	$$cmd > $@
 	@$(TOUCH) $@
 
 OLD_PRSIM_TEST_SCRIPT =
@@ -142,24 +164,16 @@ cflatprstest.autodepend: Makefile
 -include cflatprstest.autodepend
 
 if VERBOSE_CHECK
-ECHO_CFLAT_LVS_TYPE_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@"
-ECHO_CFLAT_LVS_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) $< > $@"
+ECHO_CFLAT_LVS_COMMAND = $(ECHO) "$$cmd > $@"
 else
-ECHO_CFLAT_LVS_TYPE_COMMAND = :
 ECHO_CFLAT_LVS_COMMAND = :
 endif
 
 HACKT_CFLAT_LVS_SCRIPT = \
-	srcfile=$(srcdir)/$*.hac ; \
-	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
-		$(SED) -e 's/^.*-type@[ \t]*//g' -e 's/\"//g'` ; \
-	if test -n "$$type" ; then \
-		$(ECHO_CFLAT_LVS_TYPE_COMMAND) ; \
-		$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@ 2>&1 ; \
-	else \
-		$(ECHO_CFLAT_LVS_COMMAND) ; \
-		$(HACKT_CFLAT_LVS_EXE) $< > $@ 2>&1 ; \
-	fi
+	$(DEDUCE_HFLAT_VARIANT) ; \
+	cmd="$(HACKT_CFLAT_LVS_EXE) $$flags $<" ; \
+	$(ECHO_CFLAT_LVS_COMMAND) ; \
+	$$cmd > $@ 2>&1
 
 
 # if the source file has a magic line @hflat-type@, then extract it
@@ -172,24 +186,16 @@ HACKT_CFLAT_LVS_SCRIPT = \
 	-@$(HACKT_CFLAT_LVS_SCRIPT)
 
 if VERBOSE_CHECK
-ECHO_CFLAT_LVS_SIZE_TYPE_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) -fsizes -t $$type $< > $@"
-ECHO_CFLAT_LVS_SIZE_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@"
+ECHO_CFLAT_LVS_SIZE_COMMAND = $(ECHO) "$$cmd > $@"
 else
-ECHO_CFLAT_LVS_SIZE_TYPE_COMMAND = :
 ECHO_CFLAT_LVS_SIZE_COMMAND = :
 endif
 
 .haco-a.lvssprs:
-	@srcfile=$(srcdir)/$*.hac ; \
-	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
-		$(SED) -e 's/^.*-type@[ \t]*//g' -e 's/\"//g'` ; \
-	if test -n "$$type" ; then \
-		$(ECHO_CFLAT_LVS_SIZE_TYPE_COMMAND) ; \
-		$(HACKT_CFLAT_LVS_EXE) -fsizes -t $$type $< > $@ ; \
-	else \
-		$(ECHO_CFLAT_LVS_SIZE_COMMAND) ; \
-		$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@ ; \
-	fi
+	@$(DEDUCE_HFLAT_VARIANT) ; \
+	cmd="$(HACKT_CFLAT_LVS_EXE) -fsizes $$flags $<" ; \
+	$(ECHO_CFLAT_LVS_SIZE_COMMAND) ; \
+	$$cmd > $@
 
 .lvsprs.lvsprs-sort:
 	$(DEFAULT_SORT_SCRIPT)
@@ -270,6 +276,7 @@ cflatlvsfailtest.autodepend: Makefile
 -include cflatlvstest.autodepend
 -include cflatlvsfailtest.autodepend
 
+# not bothering to extract @hflat-flags@ for these tests
 .haco-a.prsseu:
 	$(HACKT_CFLAT_PRSIM_SEU_EXE) $< > $@
 
@@ -327,7 +334,11 @@ cflatprsseutest.autodepend: Makefile
 
 
 .haco-a.sprs:
-	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
+	@$(DEDUCE_HFLAT_VARIANT) ; \
+	cmd="$(HACKT_CFLAT_PRSIM_EXE) -fsizes $$flags $<" ; \
+	$(ECHO) "$$cmd > $@" ; \
+	$$cmd > $@
+
 
 .sprs.sprs-sort:
 	$(DEFAULT_SORT_SCRIPT)

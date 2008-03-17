@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.1 2007/02/27 02:28:05 fang Exp $
+	$Id: Event-prsim.h,v 1.2 2008/03/17 23:02:59 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -24,7 +24,20 @@
 #include "sim/prsim/devel_switches.h"
 #include "sim/prsim/Cause.h"
 
+/**
+	Verbosely trace each item added and removed from pool free list.
+ */
 #define	DEBUG_EVENT_POOL_ALLOC				0
+/**
+	Use a set for free-list to check for uniqueness.
+	I think a set<> (unpooled) will be slower than vector<>.
+	TODO: use a discrete_interval_set for memory efficiency?
+ */
+#define	PARANOID_EVENT_FREE_LIST			1
+
+#if PARANOID_EVENT_FREE_LIST
+#include <set>
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -115,6 +128,12 @@ protected:
 			Coerced events may require special handling.  
 		 */
 		EVENT_FLAG_FORCED = 0x04,
+#if PRSIM_WEAK_RULES
+		/**
+			True if event was attributed to a weak rule.
+		 */
+		EVENT_WEAK_RULE = 0x08,
+#endif
 		// add more as seen fit
 		EVENT_FLAGS_DEFAULT_VALUE = 0x00
 	};
@@ -138,6 +157,7 @@ public:
 	/**
 		The rule index is allowed to be NULL (invalid), 
 		to indicate an external (perhaps user) cause.  
+		\param w true for weak rules
 	 */
 	Event(const node_index_type n,
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
@@ -146,7 +166,11 @@ public:
 		const node_index_type c, 
 #endif
 		const rule_index_type r, 
-		const uchar v) :
+		const uchar v
+#if PRSIM_WEAK_RULES
+		, const bool w
+#endif
+		) :
 		node(n),
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		cause(c), 
@@ -155,7 +179,12 @@ public:
 #endif
 		cause_rule(r),
 		val(v),
-		flags(EVENT_FLAGS_DEFAULT_VALUE) { }
+		flags(
+#if PRSIM_WEAK_RULES
+			w ? EVENT_WEAK_RULE : 
+#endif
+			EVENT_FLAGS_DEFAULT_VALUE
+			) { }
 
 	void
 	kill(void) { flags |= EVENT_FLAG_KILLED; }
@@ -172,6 +201,26 @@ public:
 	bool
 	forced(void) const { return flags & EVENT_FLAG_FORCED; }
 
+#if PRSIM_WEAK_RULES
+	bool
+	is_weak(void) const { return flags & EVENT_WEAK_RULE; }
+
+	void
+	set_weak(const bool w) {
+		if (w)	flags |= EVENT_WEAK_RULE;
+		else	flags &= ~EVENT_WEAK_RULE;
+	}
+#endif
+
+	void
+	set_cause_node(const node_index_type ni) {
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		cause.node = ni;
+#else
+		cause_node = ni;
+#endif
+	}
+
 	void
 	save_state(ostream&) const;
 
@@ -180,13 +229,13 @@ public:
 
 	bool
 	pending_interference(void) const {
-		return flags & EVENT_FLAGS_DEFAULT_VALUE;
+		return flags & EVENT_FLAG_PENDING_INTERFERENCE;
 	}
 
 	void
 	pending_interference(const bool i) {
-		if (i)	flags |= EVENT_FLAGS_DEFAULT_VALUE;
-		else	flags &= ~EVENT_FLAGS_DEFAULT_VALUE;
+		if (i)	flags |= EVENT_FLAG_PENDING_INTERFERENCE;
+		else	flags &= ~EVENT_FLAG_PENDING_INTERFERENCE;
 	}
 
 	static
@@ -210,7 +259,14 @@ class EventPool {
 public:
 	typedef	Event				event_type;
 	typedef	index_pool<vector<Event> >	event_allocator_type;
+	/**
+		TODO: use a more compact discrete_interval_set
+	 */
+#if PARANOID_EVENT_FREE_LIST
+	typedef	std::set<event_index_type>	free_list_type;
+#else
 	typedef	vector<event_index_type>	free_list_type;
+#endif
 private:
 	event_allocator_type			event_pool;
 	free_list_type				free_indices;
@@ -266,6 +322,9 @@ public:
 
 	void
 	clear(void);
+
+	ostream&
+	dump_memory_usage(ostream&) const;
 
 };	// end class EventPool
 

@@ -1,0 +1,47 @@
+# "SRAM-a-03.prsimrc"
+# @haco@ SRAM-a.haco-a
+
+weak-rules on
+fanin bl
+fanin _bl
+watchall
+unstable warn
+unstable-dequeue
+
+set _pchg 0
+set wl[1] 0
+set wv 0
+set wl[0] 0
+set we 0
+cycle
+status U
+time
+echo done precharging, now writing...
+
+set _pchg 1
+cycle
+time
+assert c[0].r.t X
+assert c[0].r.f X
+
+echo enable write, set value, and set wordline simultaneously
+set wv 0
+set we 1
+set wl[0] 1
+cycle
+assert c[0].r.t 1
+assert c[0].r.f 0
+
+fanin-get c[0].r.t
+fanin-get c[0].r.f
+
+fanin-get bl
+fanin-get _bl
+
+# getall c[0]
+# getall c[1]
+
+unsetall
+queue
+echo queue should be empty after unsetall
+

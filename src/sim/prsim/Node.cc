@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.10 2007/02/08 18:10:12 fang Exp $
+	$Id: Node.cc,v 1.11 2008/03/17 23:03:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -32,10 +32,22 @@ using util::read_value;
 //=============================================================================
 // class Node method definitions
 
-Node::Node() : pull_up_index(INVALID_EXPR_INDEX),
-	pull_dn_index(INVALID_EXPR_INDEX), fanout(),
+Node::Node() : 
+#if PRSIM_WEAK_RULES
+//	The next standard of C++ better have aggregate initializers...
+//	pull_up_index({INVALID_EXPR_INDEX}),
+//	pull_dn_index({INVALID_EXPR_INDEX}),
+#else
+	pull_up_index(INVALID_EXPR_INDEX),
+	pull_dn_index(INVALID_EXPR_INDEX), 
+#endif
+	fanout(),
 	struct_flags(NODE_DEFAULT_STRUCT_FLAGS) {
 	INVARIANT(!fanout.size());
+#if PRSIM_WEAK_RULES
+	pull_up_index[0] = pull_up_index[1] = INVALID_EXPR_INDEX;
+	pull_dn_index[0] = pull_dn_index[1] = INVALID_EXPR_INDEX;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -72,26 +84,44 @@ Node::contains_fanout(const expr_index_type i) const {
 	This occurs during compaction of optimized expressions.  
  */
 void
-Node::replace_pull_index(const bool dir, const expr_index_type _new) {
+Node::replace_pull_index(const bool dir, const expr_index_type _new
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) {
 	if (dir) {
-		pull_up_index = _new;
+		pull_up_index STR_INDEX(w) = _new;
 	} else {
-		pull_dn_index = _new;
+		pull_dn_index STR_INDEX(w) = _new;
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Dumps structural information about the Node only.
+	Of each up/dn pair, the first is the strong rule, 
+		the second is weak (may not be printed).
  */
 ostream&
 Node::dump_struct(ostream& o) const {
 	o << "up: ";
-	if (pull_up_index)	o << pull_up_index;
-	else			o << '-';	// irrelevant
+	if (pull_up_index STR_INDEX(NORMAL_RULE))
+		o << pull_up_index STR_INDEX(NORMAL_RULE);
+	else	o << '-';	// irrelevant
+#if PRSIM_WEAK_RULES
+	if (pull_up_index STR_INDEX(WEAK_RULE))
+		o << '<' << pull_up_index STR_INDEX(WEAK_RULE);
+	// else just omit
+#endif
 	o << ", dn: ";
-	if (pull_dn_index)	o << pull_dn_index;
-	else			o << '-';	// irrelevant
+	if (pull_dn_index STR_INDEX(NORMAL_RULE))
+		o << pull_dn_index STR_INDEX(NORMAL_RULE);
+	else	o << '-';	// irrelevant
+#if PRSIM_WEAK_RULES
+	if (pull_dn_index STR_INDEX(WEAK_RULE))
+		o << '<' << pull_dn_index STR_INDEX(WEAK_RULE);
+	// else just omit
+#endif
 	o << " fanout: ";
 #if 1
 //	o << '<' << fanout.size() << "> ";

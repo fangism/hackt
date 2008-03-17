@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.24 2007/09/11 06:52:40 fang Exp $
+	$Id: footprint.h,v 1.25 2008/03/17 23:02:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -314,16 +314,7 @@ public:
 	}
 
 	void
-	import_scopespace(const scopespace&);
-
-	void
-	import_scopespace_shallow(const scopespace&);
-
-	void
-	import_hierarchical_scopespace(const scopespace&);
-
-	void
-	clear_instance_collection_map(void);
+	remove_shadowed_collections(const scopespace&);
 
 	// this is defined in Object/inst/instance_collection.cc
 	// to break a cyclic library dependence.  :-/

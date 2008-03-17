@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2 2007/12/01 04:25:26 fang Exp $
+@c $Id: commands.texi,v 1.3 2008/03/17 23:02:02 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -19,6 +19,7 @@ source file @file{sim/prsim/Command-prsim.cc}.
 * Info Commands::
 * View Commands::
 * Modes Commands::
+* Debug Commands::
 @end menu
 
 @c ----------------------------------------------------------------------------
@@ -32,6 +33,10 @@ The following commands are listed in the @t{builtin} category.
 @include cmd/comment.texi
 @include cmd/exit.texi
 
+The following command is useful for showing each executed command.
+
+@include cmd/echo-commands.texi
+
 The following commands pertain to command aliases.
 
 @include cmd/alias.texi
@@ -41,6 +46,15 @@ The following commands pertain to command aliases.
 
 Shell commands may be executed by prefixing a line with '!'.  
 For example, @samp{!whoami}.  
+
+@strong{New}:
+Block comments are pseudo C-style, using @t{/*} and @t{*/} to enclose comments.
+It is recommended to start use block-comment delimiters on their own lines
+to avoid confusion.  
+The line parser is very crude.
+Nested comments are supported.  
+Files with unterminated comments will be reported as errors.  
+@t{#}-comments are allowed within block comments.  
 
 @c ----------------------------------------------------------------------------
 @node General Commands
@@ -62,6 +76,7 @@ The following commands are listed in the @t{general} category.
 Running the simulation.  
 
 @include cmd/step.texi
+@include cmd/step-event.texi
 @include cmd/advance.texi
 @include cmd/cycle.texi
 
@@ -90,6 +105,121 @@ Checkpointing.
 @node Channel Commands
 @section @t{channel} Commands
 
+The simulator currently provides some limited features for
+interacting with channels and environments at run-time.  
+The @i{channel} features allow a user to connect arbitrary 
+sources and sinks to channels, as well as perform assertion checks
+and value logging.  
+For consistency, all @t{channels} commands are prefixed with 
+@t{channel-}.  
+
+@include cmd/channel.texi
+
+The channel names used in the simulator must correspond to an
+actual channel (or process) in the input description.  
+(The name used for registration actually resides in the simulator's
+own namespace, separate from the compiled circuits.)
+Upon registering a channel name, the simulator locates all
+relevant subnodes of the channel by appending @t{.e} or @t{.a}
+and @t{.d[i]} (or however the rails are named) to the end of 
+the channel's name.  The following are examples of @command{channel} commands.  
+
+@example
+channel e:0 :0 d:2
+channel e:1 :0 d:2
+channel e:1 :0 r:2
+channel e:1 :0 d:0
+channel a:1 :0 r:4
+channel e:1 d:4 r:4
+channel ev:0 :0 d:2
+@end example
+
+@noindent
+Respectively, an @t{e1of2} channel with @t{.e} initially low (if coming 
+from the environment), an @t{e1of2} with @t{.e} initially high, 
+an @t{e1of2} with array data rails named @t{r}, 
+an @t{e1of2} with one non-array data rail @t{r}, 
+an @t{a1of4} with @t{.a} initially high, 
+an @t{e4x1of4} channel, 
+and an @t{ev1of2} (enable-valid protocol).  
+
+@include cmd/channel-show.texi
+@include cmd/channel-show-all.texi
+
+To control which channels should report values to the console, 
+the simulator provides basic watch commands.  
+
+@include cmd/channel-watch.texi
+@include cmd/channel-unwatch.texi
+@include cmd/channel-watchall.texi
+@include cmd/channel-unwatchall.texi
+
+Channel values can also be logged to a file or compared against
+expected values.  
+
+@include cmd/channel-log.texi
+@include cmd/channel-close.texi
+@include cmd/channel-close-all.texi
+@include cmd/channel-expect.texi
+@include cmd/channel-expect-loop.texi
+@include cmd/channel-expect-args.texi
+
+@noindent
+It is legal to log and expect values on the same channel.  
+
+@b{Value files}: The files referenced by @command{channel-expect} and 
+@command{channel-source} may contain @t{#} comments and blank lines, 
+which are skipped.  
+Only the first value on each line is used, so value sequences
+should be newline-separated.
+For now, the remained of each line is simply ignored, 
+so you may use them for comments, but this may change in the future.  
+The other legal value in the file is @t{X}, which is interpreted as
+@i{don't care} for expected values, and @i{random} for source values.  
+
+Channels can be configured to operate as environments
+when they are not already connected to inputs or outputs.  
+The only conflicting (illegal) configuration combination is that 
+a channel cannot act as source while expecting values.  
+(Why would you want to do that anyways?)
+
+@include cmd/channel-source.texi
+@include cmd/channel-source-loop.texi
+@include cmd/channel-source-args.texi
+@include cmd/channel-rsource.texi
+@include cmd/channel-sink.texi
+
+@noindent
+It is legal to source and sink on the same channel.  
+
+Channels configured as sources or sinks can be controlled through
+the following commands.  
+
+@include cmd/channel-reset.texi
+@include cmd/channel-reset-all.texi
+@include cmd/channel-stop.texi
+@include cmd/channel-stop-all.texi
+@include cmd/channel-release.texi
+@include cmd/channel-release-all.texi
+
+@b{Timing}: delays are given some default value, 
+except in random timing mode, where delays are randomized.  
+TODO: configure after delays on sources and sinks.
+
+@b{Re-initialization}:
+The @command{initialize} and @command{reset} also affect the state
+of channels.  
+@command{initialize} retains the configuration (source, sink, watch, expect)
+of all channels, however, the data rail tracking is reset to
+account for all nodes being set to X.  
+All output log streams are closed.  
+Value sequences for sourcing and expecting are retained, but the 
+position index is reset to 0, the beginning.  
+(Rationale: it is uncommon to start at different offsets in
+the value sequences.)
+@command{reset} will completely wipe all registered channels, 
+as if the simulator had just started up.  
+
 @c ----------------------------------------------------------------------------
 @node Info Commands
 @section @t{info} Commands
@@ -115,11 +245,20 @@ simulator and the simulated production rules.
 @include cmd/getall.texi
 @include cmd/assert.texi
 @include cmd/assertn.texi
+@include cmd/assert-pending.texi
+@include cmd/assertn-pending.texi
 @include cmd/queue.texi
 @include cmd/assert-queue.texi
+@include cmd/assertn-queue.texi
 @include cmd/backtrace.texi
+@include cmd/why-x.texi
+@include cmd/why.texi
+@include cmd/why-not.texi
 @include cmd/status.texi
 @include cmd/time.texi
+@include cmd/unknown-inputs.texi
+@include cmd/unknown-inputs-fanout.texi
+@include cmd/unknown-outputs.texi
 
 @c ----------------------------------------------------------------------------
 @node View Commands
@@ -131,9 +270,11 @@ View commands affect what is displayed while the simulation is running.
 @include cmd/unwatch.texi
 @include cmd/watches.texi
 @include cmd/watchall.texi
+@include cmd/cause.texi
 @include cmd/tcounts.texi
 @include cmd/zerotcounts.texi
 @include cmd/watch-queue.texi
+@include cmd/watchall-queue.texi
 
 @c ----------------------------------------------------------------------------
 @node Modes Commands
@@ -149,6 +290,14 @@ Timing mode.
 @include cmd/timing.texi
 @include cmd/random.texi
 @include cmd/norandom.texi
+@include cmd/seed48.texi
+
+The simulator now supports @emph{weak rules} which can drive un-pulled nodes
+but always yield to normal rules. 
+Weak rules are marked with the @code{[weak=1]} production rule attribute.  
+The use of weak-rules can be globally enabled or disabled.  
+
+@include cmd/weak-rules.texi
 
 @include cmd/diagnostics.texi
 @include cmd/unstable.texi
@@ -158,7 +307,22 @@ Timing mode.
 @include cmd/mode.texi
 
 Two additional commands control the behavior of unstable rules.  
+These are particularly useful for simulating circuits that expect to
+glitch, such as synchronous (clocked) circuits.  
 
 @include cmd/unstable-unknown.texi
 @include cmd/unstable-dequeue.texi
+
+@c ----------------------------------------------------------------------------
+@node Debug Commands
+@section @t{debug} Commands
+
+This section is reserved for commands that are only useful for debugging
+the simulator.  
+Some commands that end in @t{-debug} have already been mentioned
+in the other sections.  
+
+@include cmd/check-structure.texi
+@include cmd/check-queue.texi
+@include cmd/memstats.texi
 

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.5 2008/03/03 21:10:36 sandra Exp $
+	$Id: Rule.h,v 1.6 2008/03/17 23:03:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -9,6 +9,7 @@
 #include <iosfwd>
 #include "sim/time.h"
 #include "util/attributes.h"
+#include "sim/prsim/devel_switches.h"
 
 namespace HAC {
 namespace SIM {
@@ -31,6 +32,14 @@ struct Rule {
 		RULE_ALWAYS_RANDOM = 0x04
 	}	rule_enum_type;
 public:
+#if PRSIM_WEAK_RULES
+	/**
+		Since each rule is maintained separately, 
+		there is no need to different delays in this structure
+		for weak vs. strong rules.
+		By design, every rule/direction gets its own delay.
+	 */
+#endif
 	time_type			after;
 	/**
 		Uses rule_enum_type to signal flags.  

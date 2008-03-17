@@ -9,6 +9,6 @@ state	value
 #STATE#	(id-expr): x [7:5]
 #STATE#	> [7:7]
 in state #STATE#, possible rules are:
-	guarded_instance_management: expr . RARROW instance_management_list  (#RULE#)
+	guarded_instance_management: expr . RARROW instance_management_list_optional  (#RULE#)
 acceptable tokens are: 
 	RARROW (shift)

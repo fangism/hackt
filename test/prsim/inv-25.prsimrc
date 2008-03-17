@@ -1,0 +1,20 @@
+# "inv-25.prsimrc"
+# @haco@ inv.haco-a
+
+echo testing overtaking of unstable rules
+# everything initially X
+
+unstable-dequeue
+watchall
+
+set a 1
+step-event
+pending b
+set a 0
+step-event
+pending b
+# assert-pending b
+cycle
+assert b 1
+assert c 0
+

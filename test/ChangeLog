@@ -1,6 +1,40 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.81 2007/11/27 06:10:16 fang Exp $
+#	$Id: ChangeLog,v 1.82 2008/03/17 23:03:24 fang Exp $
 # ChangeLog for test directory.
+
+2008-02-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-49:
+	  Make.test-prsim: support for @hacprsim-flags@ extraction
+		in prsimrc and checkpoint testing.
+
+
+2008-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-44:
+	  Added Make.test-vpi to support vpi build-time and install-time
+		tests.
+
+2008-02-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-28-prsim-09-10:
+	  Added prsimrc-random-value-filter.awk (self-explanatory).
+	  Make.test-prsim: filter out random values where appropriate.
+		Also improved prsimrc-out suffix rule script.
+
+
+2008-01-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-19:
+	  prsim checkpoints should depend on the built executable as well.
+	  also extract additional dependencies @deps@ from .prsimrc.
+
+
+2008-01-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-23:
+	  prsimrc_filter.awk: filter out traced source file comments (vpath)
+
 
 2007-11-26	David Fang		<fangism@users.sourceforge.net>
 

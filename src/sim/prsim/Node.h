@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.13 2006/08/12 00:36:34 fang Exp $
+	$Id: Node.h,v 1.14 2008/03/17 23:03:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -24,6 +24,17 @@ namespace PRSIM {
 using std::ostream;
 using std::istream;
 using std::vector;
+
+#if PRSIM_WEAK_RULES
+enum rule_strength {
+	NORMAL_RULE = 0,
+	WEAK_RULE = 1
+};
+#define	STR_INDEX(w)	[w]
+#else
+#define	STR_INDEX(w)
+#endif
+
 
 //=============================================================================
 /**
@@ -72,6 +83,16 @@ struct Node {
 	} struct_flags_enum;
 
 
+#if PRSIM_WEAK_RULES
+	/**
+		Index to the pull-up expression (normal, weak).
+	 */
+	expr_index_type			pull_up_index[2];
+	/**
+		Index to the pull-dn expression (normal, weak).
+	 */
+	expr_index_type			pull_dn_index[2];
+#else
 	/**
 		Index to the pull-up expression.
 	 */
@@ -80,6 +101,7 @@ struct Node {
 		Index to the pull-dn expression.
 	 */
 	expr_index_type			pull_dn_index;
+#endif
 
 	/**
 		List of expression indices to which this node fans out.  
@@ -114,17 +136,47 @@ public:
 	contains_fanout(const expr_index_type) const;
 
 	expr_index_type&
-	get_pull_expr(const bool b) {
-		return b ? pull_up_index : pull_dn_index;
+	get_pull_expr(const bool b
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) {
+		return b ? pull_up_index STR_INDEX(w)
+			: pull_dn_index STR_INDEX(w);
 	}
 
 	const expr_index_type&
-	get_pull_expr(const bool b) const {
-		return b ? pull_up_index : pull_dn_index;
+	get_pull_expr(const bool b
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) const {
+		return b ? pull_up_index STR_INDEX(w)
+			: pull_dn_index STR_INDEX(w);
 	}
 
 	void
-	replace_pull_index(const bool dir, const expr_index_type);
+	replace_pull_index(const bool dir, const expr_index_type
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		);
+
+	bool
+	has_fanin(void) const {
+#if PRSIM_WEAK_RULES
+		return pull_up_index[NORMAL_RULE] ||
+			pull_dn_index[NORMAL_RULE] ||
+			pull_up_index[WEAK_RULE] || pull_dn_index[WEAK_RULE];
+#else
+		return pull_up_index || pull_dn_index;
+#endif
+	}
+
+	bool
+	has_fanout(void) const {
+		return fanout.size();
+	}
 
 	bool
 	is_unstab(void) const { return struct_flags & NODE_UNSTAB; }
@@ -157,6 +209,12 @@ public:
 	void
 	check_excllo(void) { struct_flags |= NODE_CHECK_EXCLLO; }
 
+	static
+	size_t
+	add_fanout_size(size_t sum, const Node& n) {
+		return sum + n.fanout.size();
+	}
+
 	ostream&
 	dump_fanout_dot(ostream&, const std::string&) const;
 
@@ -176,6 +234,7 @@ private:
 	typedef	NodeState			this_type;
 public:
 	typedef	Node				parent_type;
+	typedef	parent_type::fanout_array_type	fanout_array_type;
 	typedef	LastCause::event_cause_type	event_cause_type;
 
 	typedef	enum {
@@ -205,6 +264,16 @@ public:
 			one of the exclusive ring queues.  
 		 */
 		NODE_EX_QUEUE = 0x04,
+
+#if PRSIM_CHANNEL_SUPPORT
+		/// true if this node participates in any registered channel
+		NODE_IN_CHANNEL = 0x08,
+#if 0
+		// THESE OVERFLOW uchar!!!
+		NODE_CHANNEL_VALID = 0x10,
+		NODE_CHANNEL_DATA = 0x20,
+#endif
+#endif
 
 		/// OR-mask for initialization
 		NODE_INITIALIZE_SET_MASK = 0x00,
@@ -304,6 +373,19 @@ public:
 	}
 
 	/**
+		Use this version to set-if-unset, else assert
+		that is already set consistently.
+	 */
+	void
+	set_event_consistent(const event_index_type i) {
+		if (!pending_event()) {
+			set_event(i);
+		} else {
+			INVARIANT(event_index == i);
+		}
+	}
+
+	/**
 		This variation should only be used during checkpoint
 		loading.  
 	 */
@@ -336,6 +418,14 @@ public:
 
 	void
 	clear_excl_queue(void) { state_flags &= ~NODE_EX_QUEUE; }
+
+#if PRSIM_CHANNEL_SUPPORT
+	void
+	set_in_channel(void) { state_flags |= NODE_IN_CHANNEL; }
+
+	bool
+	in_channel(void) const { return state_flags & NODE_IN_CHANNEL; }
+#endif
 
 	uchar
 	current_value(void) const { return value; }

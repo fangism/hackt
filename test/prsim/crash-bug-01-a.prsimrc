@@ -1,0 +1,33 @@
+# "crash-bug-01-a.prsimrc"
+# @haco@ crash-bug-01.haco-a
+
+unstable warn
+interference warn
+unstable-dequeue
+weak-rules off
+# mode
+# timing doesn't matter
+
+watchall
+watchall-queue
+
+echo staging initial condition
+set _pR 1
+set d0 0
+set d1 1
+set s 1
+set _r1 0
+set _r0 X
+set _lw 0
+set mp 0
+cycle
+assert __le X
+
+echo failing situation:
+set _r0 1
+set _lw X
+
+cycle
+assert __le 0
+echo CONGRATULATIONS, it didn't die!
+

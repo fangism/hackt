@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.28 2008/03/02 20:57:06 fang Exp $
+	$Id: BRANCHES,v 1.29 2008/03/17 23:01:56 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -14,15 +14,16 @@ Open branches:
 		goal: coalesce common symbols through linking, 
 			use yy_scan_string to avoid parsing temporary files!
 
-	HACKT-00-01-04-main-00-82-02-ACT-03 (massive)
-		ACT-compatbility changes
-		prsim features, extensions, and improvements
-		other useful things that came about while working at
-			an Asynchronous FPGA startup company.
-
 Coming soon:
 
-	HACKT-00-01-04-main-00-8?-??-scm-02
+	HACKT-00-01-04-main-00-82-??-scm-02
 		guile/scheme work for chpsim trace analysis framework
 		for dissertation (continuation)
+
+	HACKT-00-01-04-main-00-82-??-prsim-10
+		Completely rewrite of event model (simplification).
+		Removal of translated expression structure cache, 
+			for improved scalability (already decent), 
+			will cost performance a tad...
+		Guile Scheme interface to data structures, like chpsim.
 

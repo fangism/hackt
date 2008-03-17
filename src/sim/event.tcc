@@ -1,13 +1,17 @@
 /**
 	\file "sim/event.tcc"
 	Implementation of prsim event structures.  
-	$Id: event.tcc,v 1.2 2007/01/21 06:00:31 fang Exp $
+	$Id: event.tcc,v 1.3 2008/03/17 23:02:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_EVENT_TCC__
 #define	__HAC_SIM_EVENT_TCC__
 
 #include "sim/event.h"
+#if MULTIMAP_EVENT_QUEUE
+#include <iterator>
+#include <functional>
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -15,7 +19,11 @@ namespace SIM {
 // class EventQueue method definitions
 
 EVENT_QUEUE_TEMPLATE_SIGNATURE
-EVENT_QUEUE_CLASS::EventQueue() : equeue() { }
+EVENT_QUEUE_CLASS::EventQueue() : equeue()
+#if CHECK_UNIQUE_EVENTS
+		, index_set()
+#endif
+	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EVENT_QUEUE_TEMPLATE_SIGNATURE
@@ -43,11 +51,16 @@ EVENT_QUEUE_TEMPLATE_SIGNATURE
 template <class S>
 void
 EVENT_QUEUE_CLASS::copy_to(S& s) const {
+#if MULTIMAP_EVENT_QUEUE
+	std::copy(this->equeue.begin(), this->equeue.end(), 
+		std::back_inserter(s));
+#else
 	this_type c(*this);
 	while (!c.empty()) {
 		s.push_back(c.equeue.top());
 		c.pop();
 	}
+#endif
 }
 
 //=============================================================================

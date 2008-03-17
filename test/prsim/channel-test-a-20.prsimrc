@@ -1,0 +1,20 @@
+# "channel-test-a-20.prsimrc"
+# @haco@ channel-test-a.haco-a
+
+source channel-test-a-01.prsimrc
+
+# set up some channels with commands
+channel-sink X
+channel-source-args Y 2 1 0
+channel-source-args Z 0 2 1
+channel-sink Z
+
+channel-show-all
+
+echo undriven X inputs
+unknown-inputs
+echo undriven X inputs with fanout
+unknown-inputs-fanout
+echo X outputs
+unknown-outputs
+

@@ -1,0 +1,6 @@
+	0	a : 0
+	10	b : 1	[by a:=0]
+	20	c : 0	[by b:=1]
+time: 20
+assert failed: expecting node `c' at 1, but got 0.
+... at line 17

@@ -1,6 +1,6 @@
 /**
 	\file "packed_array_test.cc"
-	$Id: packed_array_test.cc,v 1.8 2006/02/26 02:28:05 fang Exp $
+	$Id: packed_array_test.cc,v 1.9 2008/03/17 23:03:19 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -167,7 +167,52 @@ main(int, char*[]) {
 	} while (key_gen != key_gen.lower_corner);
 	bari.dump(cerr << "bari: ") << endl;
 }
-
+	cerr << "index-to-key tests:" << endl;
+{
+	int_3d::key_type d(3);
+	d[0] = 2;
+	d[1] = 1;
+	d[2] = 2;
+	int_3d X(d);
+	const int_3d::key_type& sk(X.size());
+	cerr << "size-key = " << sk << endl;
+	const size_t s = int_3d::sizes_product(sk);
+	cerr << "sizes_product = " << s << endl;
+	size_t i=0;
+	for ( ; i<s; ++i) {
+		cerr << "offset " << i << ": " << X.index_to_key(i) << endl;
+	}
+}{
+	int_3d::key_type d(3);
+	d[0] = 4;
+	d[1] = 3;
+	d[2] = 2;
+	int_3d X(d);
+	const int_3d::key_type& sk(X.size());
+	cerr << "size-key = " << sk << endl;
+	const size_t s = int_3d::sizes_product(sk);
+	cerr << "sizes_product = " << s << endl;
+	size_t i=0;
+	for ( ; i<s; ++i) {
+		cerr << "offset " << i << ": " << X.index_to_key(i) << endl;
+	}
+}{
+	typedef	int_3d	int_4d;	// is same (generic)
+	int_4d::key_type d(4);
+	d[0] = 2;
+	d[1] = 2;
+	d[2] = 2;
+	d[3] = 2;
+	int_4d X(d);
+	const int_4d::key_type& sk(X.size());
+	cerr << "size-key = " << sk << endl;
+	const size_t s = int_4d::sizes_product(sk);
+	cerr << "sizes_product = " << s << endl;
+	size_t i=0;
+	for ( ; i<s; ++i) {
+		cerr << "offset " << i << ": " << X.index_to_key(i) << endl;
+	}
+}
 	return 0;
 }
 

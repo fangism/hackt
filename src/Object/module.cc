@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.33 2007/09/11 06:52:36 fang Exp $
+ 	$Id: module.cc,v 1.34 2008/03/17 23:02:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -17,12 +17,18 @@
 #include <iostream>
 #include "Object/common/namespace.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/unroll/expression_assignment.h"
+#include "Object/unroll/instantiation_statement.h"
+#include "Object/unroll/param_instantiation_statement.h"
+// #include "Object/traits/value_traits.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/lang/cflat_printer.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/lang/SPEC_footprint.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/meta_range_list.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/type/canonical_type.h"
 #include "Object/def/process_definition.h"
@@ -313,10 +319,37 @@ module::allocate_unique(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Kludge: detect instance-management statements that deal 
+	only with parameter values, not physical instances, 
+	nor other language bodies.  
+	Implementation here is hideous...
+ */
+static
+bool
+instance_management_of_values(const instance_management_base* m) {
+	if (
+		IS_A(const instantiation_statement<pbool_tag>*, m) ||
+		IS_A(const instantiation_statement<pint_tag>*, m) ||
+		IS_A(const instantiation_statement<preal_tag>*, m) ||
+		IS_A(const expression_assignment<pbool_tag>*, m) ||
+		IS_A(const expression_assignment<pint_tag>*, m) ||
+		IS_A(const expression_assignment<preal_tag>*, m)
+		) {
+		return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Takes process definition and unroll its contents into the top-level.  
+	\param top_module the true top-level module is used to 
+		unroll parameter values and their assignments, for the 
+		purposes of global parameter lookup.  
  */
 good_bool
-module::allocate_unique_process_type(const process_type_reference& pt) {
+module::allocate_unique_process_type(const process_type_reference& pt, 
+		const module& top_module) {
 	STACKTRACE_VERBOSE;
 	const canonical_process_type cpt(pt.make_canonical_type());
 	if (!cpt) {
@@ -327,9 +360,27 @@ module::allocate_unique_process_type(const process_type_reference& pt) {
 		pd(cpt.get_base_def());
 	const count_ptr<const const_param_expr_list>&
 		tp(cpt.get_raw_template_params());
+	// only want to clobber physical instances, leave top-level parameters
+	footprint& _footprint(get_footprint());
 	// need to import definition's local symbols (deep copy) into
 	// this temporary module's global namespace and footprint.  
-	footprint& _footprint(get_footprint());
+#if 0
+	// HIJACK!!! copy-overwrite module's global namespace
+	AS_A(scopespace&, *global_namespace) = *pd;
+#else
+	// need to unroll all global value parameters first
+	// what to do about overshadowed parameters?
+	const unroll_context c(&_footprint, &_footprint);
+	if (!top_module.unroll_if(c, &instance_management_of_values).good) {
+		cerr << "Error unrolling top-level parameter values." << endl;
+		return good_bool(false);
+	}
+	global_namespace->import_physical_instances(*pd);
+	// need to remove shadowed value collection, since they won't be
+	// visible to the process-type within its scope anyways...
+	_footprint.remove_shadowed_collections(*pd);
+	// non-shadowed values remain intact for lookup during next create phase
+#endif
 #if ENABLE_STACKTRACE
 	pd->dump(cerr << "process definition: ") << endl;
 	_footprint.dump_with_collections(cerr << "module\'s footprint: ", 
@@ -362,6 +413,9 @@ module::__cflat_rules(ostream& o, const cflat_options& cf) const {
 			// const top_level_footprint_importer foo(*this);
 			const footprint& _footprint(get_footprint());
 			_footprint.get_prs_footprint().accept(cfp);
+			_footprint.get_spec_footprint().accept(cfp);
+			// no flat CHP yet (hopefully ever)
+			// _footprint.get_chp_footprint().accept(cfp);
 		} catch (...) {
 			cerr << "Caught exception during cflat PRS." << endl;
 			return good_bool(false);

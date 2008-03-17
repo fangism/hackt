@@ -1,15 +1,56 @@
 "ChangeLog"
 
+2008-03-17	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-07-merged-ACT-03-59:
+	  Branch merge.
+
+
+2008-03-06	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-56:
+	  Make.stddef, Make.global: added CLEANDIRS variable, cleandirs target
+		Revised check.log rule to catch more specific errors in log.
+
+
 2008-02-28	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-05:
 	  configure.ac: AM_CONDITIONAL SRCDIR_BUILD
 
 
+2008-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-43:
+	  config/hackt.m4: VPI check now checks for 'vcs' and provide
+		automake conditional HAVE_VCS.
+	  configure.ac: AC_OUTPUT(test/prsim/vpi/Makefile)
+
+
 2008-02-18	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-04:
 	  configure.ac: date bump
+
+
+2008-01-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-15:
+	  config/cxx_STL.m4: check for <set> <map> _Rb_tree implementation.
+	  configure.ac: use it
+
+
+2008-01-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-02-merged-prsim-08-29:
+	  Child branch merge.  
+
+
+2007-12-18	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-09:
+	  config/hackt.m4: check for vpi_user.h support for prsim.
+	  configure.ac: use it
 
 
 2007-11-26	David Fang	<fangism@users.sourceforge.net>

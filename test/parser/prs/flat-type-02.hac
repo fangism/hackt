@@ -1,0 +1,18 @@
+// "flat-type-02.hac"
+// copy-modified from "flat-type-01.hac"
+// testing use of global parameter
+// @hflat-flags@ -t foo<333>
+
+pint S = 100;
+
+// NOTE: template parameter shadows global parameter!
+// will overwrite global parameter because definition scope would
+// not find global parameter in any case.  
+template <pint S>
+defproc foo(bool x, y) {
+prs {
+[after=S]	x	=> y-
+}
+}
+
+

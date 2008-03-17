@@ -1,0 +1,43 @@
+# "comment-02.prsimrc"
+# @haco@ inv.haco-a
+# testing block comments
+
+/*
+ignored
+*/
+
+/**
+also ignored
+**/
+
+/***useful message
+end comment***/
+
+/**lalala**/
+/** la la la **/
+/*******/
+echo even stubby comments work, oh well
+/*/
+/**/
+/*** ****/
+
+/* nested
+/*
+comments
+/**are cool
+***/
+aren't */
+they?
+*/
+echo i'm listening again
+
+/*
+# line comments inside block comments should work too
+***/
+
+/** even as contorted
+# as this ? ignores -> **/
+**/
+
+echo leaving comment hell
+

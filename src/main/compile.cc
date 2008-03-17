@@ -3,8 +3,10 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.18 2007/10/08 01:21:48 fang Exp $
+	$Id: compile.cc,v 1.19 2008/03/17 23:02:42 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include <list>
@@ -256,6 +258,7 @@ compile::compile() { }
 int
 compile::make_module(int argc, char* argv[], options& opt, 
 		count_ptr<module>& ret) {
+	STACKTRACE_VERBOSE;
 	if (parse_command_options(argc, argv, opt)) {
 		usage();
 		return 1;

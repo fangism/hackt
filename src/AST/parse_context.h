@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.19 2007/11/26 08:27:32 fang Exp $
+	$Id: parse_context.h,v 1.20 2008/03/17 23:02:17 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -50,6 +50,9 @@ namespace entity {
 	template <class> class dummy_placeholder;
 namespace PRS {
 	class rule_set;
+}
+namespace SPEC {
+	class directives_set;
 }
 }	// end namespace entity
 
@@ -217,6 +220,11 @@ private:
 		which can be top-level, or in conditional or loop. 
 	 */
 	never_ptr<entity::PRS::rule_set>	current_prs_body;
+	/**
+		The current scope of spec directives to add, 
+		may be top-level, in definition, conditional, or loop.  
+	 */
+	never_ptr<entity::SPEC::directives_set>	current_spec_body;
 	/**
 		Stupid implementation of switching between
 		strict and relaxed template parameters. 
@@ -541,6 +549,12 @@ public:
 	typedef	util::member_saver<context, 
 		never_ptr<entity::PRS::rule_set>, &context::current_prs_body>
 						prs_body_frame;
+
+	typedef	util::member_saver<context, 
+			never_ptr<entity::SPEC::directives_set>,
+			&context::current_spec_body>
+						spec_body_frame;
+
 	bool
 	inside_conditional(void) const {
 		return in_conditional_scope;
@@ -555,6 +569,12 @@ public:
 	get_current_prs_body(void) const {
 		// NEVER_NULL(current_prs_body);
 		return *current_prs_body;
+	}
+
+	entity::SPEC::directives_set&
+	get_current_spec_body(void) const {
+		// NEVER_NULL(current_spec_body);
+		return *current_spec_body;
 	}
 
 	struct file_stack_frame {

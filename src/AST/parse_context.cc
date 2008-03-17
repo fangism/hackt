@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.23 2007/11/26 08:27:31 fang Exp $
+ 	$Id: parse_context.cc,v 1.24 2008/03/17 23:02:16 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -84,6 +84,7 @@ context::context(module& m, const parse_options& o) :
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
 		current_prs_body(&m.get_prs()),
+		current_spec_body(&m.get_spec_directives_set()),
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
 		view_all_publicly(false), 
@@ -130,6 +131,7 @@ context::context(const module& m, const parse_options& o, const bool _pub) :
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
 		current_prs_body(NULL),	// not adding any PRS
+		current_spec_body(NULL),	// not adding any spec
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
 		view_all_publicly(_pub), 

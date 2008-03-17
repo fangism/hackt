@@ -1,0 +1,13 @@
+// "loop-spec-02.hac"
+// copy-modified from "loop-spec-01.hac"
+// testing spec directives inside loops
+
+pint N = 4;
+bool x[N][2];
+
+(;i:N:
+	spec {
+		mk_exclhi(x[i])	// aggregate reference
+	}
+)
+

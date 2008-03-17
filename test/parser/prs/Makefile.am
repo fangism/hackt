@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.35 2007/11/26 08:28:19 fang Exp $
+#	$Id: Makefile.am,v 1.36 2008/03/17 23:06:21 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -12,12 +12,16 @@ HACKT_PARSE_TEST_FAILURES = \
 	macro-pass-04 macro-pass-06 \
 	macro-param-01 macro-param-02 macro-param-03 \
 	size-02 size-06 \
-	spec_min_sep-02 spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
+	spec_min_sep-02 spec_min_sep-02b spec_min_sep-02c \
+	spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
 	top-level-02 top-level-03 \
 	precharge-01 \
 	internal-node-01 internal-node-02 internal-node-03 internal-node-04 \
 	internal-node-05 internal-node-08 \
 	internal-node-11 internal-node-16
+
+HACKT_PARSE_TEST_WARNINGS = \
+	macro-attrib-01
 
 HACKT_PARSE_TEST_PASSES = \
 	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
@@ -44,7 +48,8 @@ HACKT_PARSE_TEST_PASSES = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	bug-001 \
-	top-level-01\
+	top-level-01 top-level-04 \
+	flat-type-01 flat-type-02 flat-type-03 \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
 	tree-00 tree-01 tree-02 tree-03 tree-04 \
@@ -64,7 +69,8 @@ HACKT_PARSE_TEST_PASSES = \
 	internal-node-15 internal-node-17 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
-	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
+	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
+	strengths-01 strengths-02
 # pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
 
 srcdir_EXTRA_DIST += \
@@ -95,7 +101,8 @@ HACKT_CREATE_TEST_PASSES = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	bug-001 \
-	top-level-01 \
+	top-level-01 top-level-04 \
+	flat-type-01 flat-type-02 flat-type-03 \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
 	tree-02 tree-03 tree-04 \
@@ -109,7 +116,8 @@ HACKT_CREATE_TEST_PASSES = \
 	act-001 act-002 act-005 act-006 act-007 act-010 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
-	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
+	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
+	strengths-01 strengths-02
 
 # TODO: precharge-00 etc. to middle and back-end tests
 # pending: act-003 act-004 act-005
@@ -146,7 +154,8 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	size-01 size-03 size-04 size-05 \
 	weak-01 weak-02 \
 	bug-001 \
-	top-level-01 \
+	top-level-01 top-level-04 \
+	flat-type-01 flat-type-02 flat-type-03 \
 	tree-02 tree-03 \
 	subckt-01 \
 	unstab-01 \
@@ -155,6 +164,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
+	strengths-01 strengths-02 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
@@ -180,6 +190,7 @@ HACKT_ALLOC_TEST_PASSES = \
 
 HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
 	size-01 size-03 size-04 size-05 \
+	strengths-01 strengths-02 \
 	act-005 act-010
 # pending: act-004
 

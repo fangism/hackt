@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.21 2007/11/26 08:27:41 fang Exp $
+	$Id: PRS.h,v 1.22 2008/03/17 23:02:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -361,6 +361,9 @@ typedef	rule_set		nested_rules;
 class rule_loop : public nested_rules, private meta_loop_base {
 	typedef	rule_loop			this_type;
 	typedef	rule_set::value_type		value_type;
+	typedef	nested_rules			implementation_type;
+	friend struct meta_loop<this_type>;
+	typedef	meta_loop<this_type>		meta_loop;
 public:
 	rule_loop();
 	rule_loop(const ind_var_ptr_type&, const range_ptr_type&);
@@ -395,6 +398,8 @@ public:
 class rule_conditional : public rule, private meta_conditional_base {
 	typedef	rule_conditional		this_type;
 	typedef	rule_set::value_type		value_type;
+	friend struct meta_conditional<this_type>;
+	typedef	meta_conditional<this_type>	meta_conditional;
 private:
 	/**
 		DO NOT use vector unless size is pre-reserved, 

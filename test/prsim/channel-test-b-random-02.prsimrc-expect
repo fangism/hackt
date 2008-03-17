@@ -1,0 +1,176 @@
+channels:
+L : .e(init:0) 1x1of2 off
+R : .e(init:0) 1x1of2 off
+L : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+R : .e(init:0) 1x1of2 sink
+	count: 0, unknowns: 2
+L : .e(init:0) 1x1of2 source,watch,stopped {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+R : .e(init:0) 1x1of2 sink,watch,stopped
+	count: 0, unknowns: 2
+L : .e(init:0) 1x1of2 source,watch,stopped {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 0
+R : .e(init:0) 1x1of2 sink,watch,stopped
+	count: 0, unknowns: 0
+event queue:
+	#TIME#	L.d[0] : 1
+	#TIME#	R.e : 1
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+source has run out of values! 
+deadlock analysis should point back to source 
+L.e:1
+  R.d[0]:0
+    _r[0]:1
+      L.d[0]:0, input
+  R.d[1]:0
+    _r[1]:1
+      L.d[1]:0, input
+L : .e(init:0) 1x1of2 source-random,watch
+	count: 0, unknowns: 0
+R : .e(init:0) 1x1of2 sink,watch
+	count: 0, unknowns: 0
+L : .e(init:0) 1x1of2 source-random,watch,stopped
+	count: 0, unknowns: 0
+R : .e(init:0) 1x1of2 sink,watch,stopped
+	count: 0, unknowns: 0
+L : .e(init:0) 1x1of2 source-random,watch,stopped
+	count: 0, unknowns: 0
+R : .e(init:0) 1x1of2 sink,watch,stopped
+	count: 0, unknowns: 0
+event queue:
+	#TIME#	L.d[0] : 1
+	#TIME#	R.e : 1
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+--------------------------- 
+stop channel L 
+R.e:1
+  R.d[0]:0
+    _r[0]:1
+      L.d[0]:0
+        (channel L is stopped.)
+  R.d[1]:0
+    _r[1]:1
+      L.d[1]:0
+        (channel L is stopped.)
+R.e:1
+. -+
+.  | R.d[0]:0
+.  | . ~_r[0]:1
+.  | . ~.-+
+.  | . ~. & L.d[0]:0
+.  | . ~. & . (channel L is stopped.)
+.  | R.d[1]:0
+.  | . ~_r[1]:1
+.  | . ~.-+
+.  | . ~. & L.d[1]:0
+.  | . ~. & . (channel L is stopped.)
+channels:
+L : .e(init:0) 1x1of2 source-random,watch,stopped
+R : .e(init:0) 1x1of2 sink,watch
+--------------------------- 
+stop channel R 
+channels:
+L : .e(init:0) 1x1of2 source-random,watch,stopped
+R : .e(init:0) 1x1of2 sink,watch,stopped
+--------------------------- 
+resume channel L 
+channel	L (.data) : #VALUE#
+channels:
+L : .e(init:0) 1x1of2 source-random,watch
+R : .e(init:0) 1x1of2 sink,watch,stopped
+--------------------------- 
+resume channel R 
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channels:
+L : .e(init:0) 1x1of2 source-random,watch
+R : .e(init:0) 1x1of2 sink,watch
+--------------------------- 
+stop channel R 
+channel	L (.data) : #VALUE#
+channels:
+L : .e(init:0) 1x1of2 source-random,watch
+R : .e(init:0) 1x1of2 sink,watch,stopped
+--------------------------- 
+stop channel L 
+R.e:1
+  (channel R is stopped.)
+R.e:1
+. (channel R is stopped.)
+channels:
+L : .e(init:0) 1x1of2 source-random,watch,stopped
+R : .e(init:0) 1x1of2 sink,watch,stopped
+--------------------------- 
+resume channel R 
+channels:
+L : .e(init:0) 1x1of2 source-random,watch,stopped
+R : .e(init:0) 1x1of2 sink,watch
+--------------------------- 
+resume channel L 
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE#
+channels:
+L : .e(init:0) 1x1of2 source-random,watch
+R : .e(init:0) 1x1of2 sink,watch

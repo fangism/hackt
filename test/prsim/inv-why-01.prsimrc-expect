@@ -1,0 +1,47 @@
+why is a X? 
+a:X, pull up/dn undriven, no fanin
+a:X, pull up/dn undriven, no fanin
+why is b X? 
+b:X, pull up/dn are both X
+  a:X, pull up/dn undriven, no fanin
+  a:X, (visited before, see above)
+b:X, pull up/dn are both X
++ ~a:X, pull up/dn undriven, no fanin
+- a:X, (visited before, see above)
+why is c X? 
+c:X, pull up/dn are both X
+  b:X, pull up/dn are both X
+    a:X, pull up/dn undriven, no fanin
+    a:X, (visited before, see above)
+  b:X, (visited before, see above)
+c:X, pull up/dn are both X
++ ~b:X, pull up/dn are both X
++ ~+ ~a:X, pull up/dn undriven, no fanin
++ ~- a:X, (visited before, see above)
+- b:X, (visited before, see above)
+############### 
+setting a to 0 
+why is a X? 
+a is not X.
+a is not X.
+why is b X? 
+b:X, pending event -> 1
+b:X, pending event -> 1
+why is c X? 
+c:X, pull up/dn are both X
+  b:X, pending event -> 1
+  b:X, (visited before, see above)
+c:X, pull up/dn are both X
++ ~b:X, pending event -> 1
+- b:X, (visited before, see above)
+############### 
+propagating to b 
+why is a X? 
+a is not X.
+a is not X.
+why is b X? 
+b is not X.
+b is not X.
+why is c X? 
+c:X, pending event -> 0
+c:X, pending event -> 0

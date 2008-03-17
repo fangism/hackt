@@ -1,0 +1,12 @@
+// "weak-unstable-a.hac"
+// setting up example of weak instability
+// in unstable-dequeue mode
+
+bool a, b, c, _p;
+
+prs {
+	~_p	-> c+
+	a	-> c-
+	b	-> c-
+}
+

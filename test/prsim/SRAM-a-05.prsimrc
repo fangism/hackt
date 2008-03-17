@@ -1,0 +1,34 @@
+# "SRAM-a-05.prsimrc"
+# @haco@ SRAM-a.haco-a
+# testing inactive write
+
+watch bl _bl
+watch-queue
+weak-rules on
+interference warn
+
+set wv 0
+set wl[0] 0
+set _pchg 0
+set we 0
+set wl[1] 0
+cycle
+
+set _pchg 1
+cycle
+assert bl 1
+assert _bl 1
+
+fanin-get bl
+fanin-get _bl
+
+
+echo enabling wordline should expose bitline to cell
+set wl[0] 1
+advance 5
+queue
+
+cycle
+assert bl x
+assert _bl x
+

@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.9 2007/10/31 23:16:04 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.10 2008/03/17 23:02:01 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -634,4 +634,34 @@ if test "$fang_cv_cxx_stl_bitset_find_next" = yes ; then
 fi
 ])dnl
 
-
+dnl @synopsis FANG_CXX_STL_TREE
+dnl Checks whether or not std::set/map are based upon a red-black tree
+dnl with implementation named _Rb_tree*
+dnl
+AC_DEFUN([FANG_CXX_STL_TREE],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[whether std::set,map are based on _Rb_tree], 
+[fang_cv_cxx_stl_tree],
+[AC_LANG_PUSH(C++)
+dnl saved_CXXFLAGS=$CXXFLAGS
+dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <set>
+		#include <map>
+		using std::_Rb_tree_node_base;
+		using std::_Rb_tree_node;
+		using std::_Rb_tree;
+		]], []),
+	[fang_cv_cxx_stl_tree=yes],
+	[fang_cv_cxx_stl_tree=no]
+)
+dnl CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stl_tree" = "yes" ; then
+AC_DEFINE(HAVE_STL_TREE, [],
+	[True if STL <set> is based on std::_Rb_tree])
+fi
+])

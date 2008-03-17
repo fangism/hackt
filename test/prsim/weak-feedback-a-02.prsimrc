@@ -1,0 +1,17 @@
+# "weak-feedback-a-02.prsimrc"
+# @haco@ weak-feedback-a.haco-a
+
+timing uniform 10
+fanin b
+fanin a
+
+set a 0
+advance 5
+queue
+assert b X
+
+set a 1
+queue
+echo expect usual instability to be reported
+cycle
+

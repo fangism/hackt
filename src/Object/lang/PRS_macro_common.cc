@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_common.cc"
 	Definition of tool-independent parts of PRS macro classes.  
-	$Id: PRS_macro_common.cc,v 1.3 2006/10/04 23:18:27 fang Exp $
+	$Id: PRS_macro_common.cc,v 1.4 2008/03/17 23:02:29 fang Exp $
  */
 
 #include <iostream>
@@ -12,6 +12,7 @@
 #include "util/attributes.h"
 #include "Object/expr/preal_const.h"
 #include "Object/expr/pint_const.h"
+#include "Object/devel_switches.h"	// for CFLAT_WITH_CONDUCTANCES
 
 namespace HAC {
 namespace entity {
@@ -47,6 +48,8 @@ __no_grouped_node_args(const char* name, const node_args_type& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// current unused
 static
 good_bool
 __optional_width_length_params(const char* m, const size_t s) {
@@ -58,6 +61,20 @@ __optional_width_length_params(const char* m, const size_t s) {
 		return good_bool(true);
 	}
 }
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+good_bool
+__optional_width_length_type_params(const char* m, const size_t s) {
+	if (s > 3) {
+		cerr << "Error: the \'" << m <<
+			"\' macro takes 0-3 parameters." << endl;
+		return good_bool(false);
+	} else {
+		return good_bool(true);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
@@ -84,6 +101,7 @@ __takes_no_parameters(const char* m, const param_args_type& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CFLAT_WITH_CONDUCTANCES
 /**
 	\ret 'good' if value is > 0
 	\param v pointer to value to check.
@@ -143,6 +161,7 @@ __optional_width_length_must_be_positive(
 	}
 	return good_bool(true);
 }
+#endif	// CFLAT_WITH_CONDUCTANCES
 
 //=============================================================================
 /**     
@@ -195,22 +214,31 @@ DEFINE_DEFAULT_PRS_MACRO_CHECK_NODES(Echo)
 
 good_bool
 PassN::__check_num_params(const char* name, const size_t n) {
-	return __optional_width_length_params(name, n);
+	return __optional_width_length_type_params(name, n);
 }
 
 good_bool
 PassP::__check_num_params(const char* name, const size_t n) {
-	return __optional_width_length_params(name, n);
+	return __optional_width_length_type_params(name, n);
 }
 
 good_bool
 PassN::__check_param_args(const char* name, const param_args_type& p) {
+#if CFLAT_WITH_CONDUCTANCES
+	return good_bool(true);
+#else
 	return __optional_width_length_must_be_positive(name, p);
+#endif
 }
 
 good_bool
 PassP::__check_param_args(const char* name, const param_args_type& p) {
+#if CFLAT_WITH_CONDUCTANCES
+	return good_bool(true);
+#else
 	return __optional_width_length_must_be_positive(name, p);
+#endif
+
 }
 
 /**

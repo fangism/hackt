@@ -7,3 +7,4 @@ unalias <name>
 undefines an existing command alias
 should fail: can't override existing command 
 'alias' is already a command, cannot be used to register an alias.
+... at line 11

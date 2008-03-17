@@ -1,0 +1,190 @@
+# "channel-test-a-15.prsimrc"
+# copy-modified from "channel-test-a-13.prsimrc"
+# @haco@ channel-test-a.haco-a
+# @deps@ channel-test-a-values-Y.txt
+# Using channel Y (e1of4) instead of X
+
+# echo-commands on
+watchall
+source channel-test-a-01.prsimrc
+
+channel-source Y channel-test-a-values-Y.txt
+channel-show Y
+echo why-x: Y is sourced, should be able to trace back through acknowledge
+why-x Y.d[0]
+why-x Y.d[1]
+why-x-verbose Y.d[1]
+
+echo - - - - - - - - - - - - - - - - - - -
+echo resetting channel Y
+channel-reset Y
+cycle
+assert Y.d[0] 0
+assert Y.d[1] 0
+assert Y.d[2] 0
+assert Y.d[3] 0
+why-not Y.d[0]
+why-not-verbose Y.d[0]
+
+echo - - - - - - - - - - - - - - - - - - -
+echo releasing channel Y, but ack is still X
+channel-release Y
+# watchall
+cycle
+# we know the first values sourced
+assert Y.d[0] X
+assert Y.d[1] X
+assert Y.d[2] X
+assert Y.d[3] X
+why-x Y.d[0]
+why-x Y.d[1]
+why-x Y.d[2]
+why-x Y.d[3]
+why-x-verbose Y.d[0]
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset ack
+set Y.e 0
+cycle
+# we know the first values sourced
+assert Y.d[0] 0
+assert Y.d[1] 0
+assert Y.d[2] 0
+assert Y.d[3] 0
+why-not Y.d[0]
+why-not-verbose Y.d[0]
+why-not Y.d[3]
+why-not-verbose Y.d[3]
+why Y.d[3]
+why-verbose Y.d[3]
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set ack
+set Y.e 1
+cycle
+# we know the first values sourced
+assert Y.d[0] 1
+assert Y.d[1] 0
+assert Y.d[2] 0
+assert Y.d[3] 0
+why-not Y.d[0]
+why-not Y.d[1]
+why-not-verbose Y.d[0]
+why-not-verbose Y.d[1]
+why-verbose Y.d[0]
+why-verbose Y.d[1]
+
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset ack
+set Y.e 0
+cycle
+# we know the first values sourced
+assert Y.d[0] 0
+assert Y.d[1] 0
+assert Y.d[2] 0
+assert Y.d[3] 0
+why-not Y.d[0]
+why-not Y.d[2]
+why-not-verbose Y.d[0]
+why-not-verbose Y.d[2]
+why-verbose Y.d[0]
+why-verbose Y.d[2]
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set ack
+set Y.e 1
+cycle
+# we know the second values sourced
+assert Y.d[0] 0
+assert Y.d[1] 0
+assert Y.d[2] 0
+assert Y.d[3] 1
+why-not Y.d[2]
+why-not Y.d[3]
+why-not-verbose Y.d[2]
+why-not-verbose Y.d[3]
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-stop Y
+echo freezing channel Y, and setting ack
+set Y.e 0
+cycle
+channel-show Y
+assert Y.d[0] 0
+assert Y.d[1] 0
+assert Y.d[2] 0
+assert Y.d[3] 1
+why-not Y.d[1]
+why-not Y.d[2]
+why-not-verbose Y.d[1]
+why-not-verbose Y.d[2]
+why-verbose Y.d[1]
+why-verbose Y.d[2]
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-release Y
+echo releasing channel Y
+cycle
+assert Y.d[0] 0
+assert Y.d[1] 0
+assert Y.d[2] 0
+assert Y.d[3] 0
+
+echo - - - - - - - - - - - - - - - - - - -
+echo setting Y.e -> U
+set Y.e X
+cycle
+channel-show Y
+assert Y.d[0] X
+assert Y.d[1] X
+assert Y.d[3] X
+assert Y.d[1] X
+why-x Y.d[0]
+why-x Y.d[1]
+why-x-verbose Y.d[0]
+why-not Y.d[3] 1
+why-not Y.d[3] 0
+why Y.d[3] 1
+why Y.d[3] 0
+
+echo - - - - - - - - - - - - - - - - - - -
+echo setting Y.e -> 1
+set Y.e 1
+step-event
+assert Y.d[0] X
+assert Y.d[1] X
+assert Y.d[2] X
+assert Y.d[3] X
+why-not Y.d[0] 1
+why-not Y.d[0] 0
+why-not Y.d[1] 1
+why-not Y.d[1] 0
+queue
+time
+cycle
+assert Y.d[0] 0
+assert Y.d[1] 0
+assert Y.d[2] 1
+assert Y.d[3] 0
+
+echo - - - - - - - - - - - - - - - - - - -
+echo ack-ing Y.e
+set Y.e 0
+step-event
+queue
+time
+why-not Y.d[1]
+why-not Y.d[3]
+why-not-verbose Y.d[1]
+why-not-verbose Y.d[3]
+why-verbose Y.d[1]
+why-verbose Y.d[3]
+cycle
+assert Y.d[0] 0
+assert Y.d[1] 0
+assert Y.d[2] 0
+assert Y.d[3] 0
+
+echo DONE.
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.16 2007/08/21 00:50:49 fang Exp $
+	$Id: SPEC_registry.cc,v 1.17 2008/03/17 23:02:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -535,6 +535,16 @@ SIM_force_excllo::main(cflat_prs_printer& p, const param_args_type& v,
 	default:
 		break;
 	}
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(supply_x, "supply_x")
+
+void
+supply_x::main(cflat_prs_printer& p, const param_args_type& v,
+		const node_args_type& a) {
+	STACKTRACE_VERBOSE;
+	FINISH_ME(Fang);
 }
 
 //-----------------------------------------------------------------------------

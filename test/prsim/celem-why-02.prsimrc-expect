@@ -1,0 +1,121 @@
+	0	a : 0
+	0	b : 0
+	10	c : 1	[by b:=0]
+c:1
+  a:0, input
+  b:0, input
+c:1
+.-+
+. & a:0, input
+. & b:0, input
+c:1
+  a:0, input
+  b:0, input
+c:1
+.-+
+. & ~a:0, input
+. & ~b:0, input
+----------------------- 
+	10	a : 1
+c:1
+  b:0, input
+c:1
+.-+
+. & b:0, input
+c:1, state-holding
+c:1, state-holding
+----------------------- 
+	10	b : 1
+	20	c : 0	[by b:=1]
+c:0
+  a:1, input
+  b:1, input
+c:0
+.-+
+. & ~a:1, input
+. & ~b:1, input
+c:0
+  a:1, input
+  b:1, input
+c:0
+.-+
+. & a:1, input
+. & b:1, input
+----------------------- 
+	20	a : 0
+c:0
+  b:1, input
+c:0
+.-+
+. & ~b:1, input
+c:0, state-holding
+c:0, state-holding
+----------------------- 
+	20	b : 0
+	30	c : 1	[by b:=0]
+c:1
+  a:0, input
+  b:0, input
+c:1
+.-+
+. & a:0, input
+. & b:0, input
+c:1
+  a:0, input
+  b:0, input
+c:1
+.-+
+. & ~a:0, input
+. & ~b:0, input
+----------------------- 
+	30	b : 1
+c:1
+  a:0, input
+c:1
+.-+
+. & a:0, input
+c:1, state-holding
+c:1, state-holding
+----------------------- 
+	30	a : 1
+	40	c : 0	[by a:=1]
+c:0
+  a:1, input
+  b:1, input
+c:0
+.-+
+. & ~a:1, input
+. & ~b:1, input
+c:0
+  a:1, input
+  b:1, input
+c:0
+.-+
+. & a:1, input
+. & b:1, input
+----------------------- 
+	40	b : 0
+c:0
+  a:1, input
+c:0
+.-+
+. & ~a:1, input
+c:0, state-holding
+c:0, state-holding
+----------------------- 
+	40	a : 0
+	50	c : 1	[by a:=0]
+c:1
+  a:0, input
+  b:0, input
+c:1
+.-+
+. & a:0, input
+. & b:0, input
+c:1
+  a:0, input
+  b:0, input
+c:1
+.-+
+. & ~a:0, input
+. & ~b:0, input

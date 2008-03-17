@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.33 2007/11/26 08:27:48 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.34 2008/03/17 23:02:43 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -603,6 +603,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_process_def>	defchan
 /* %type	<_user_chan_type_def>	defchan	*/
 %type	<_chp_body>	set_body get_body send_body recv_body
+%type	<_chp_body>	send_body_optional recv_body_optional
+%type	<_chp_body>	set_body_optional get_body_optional
 /***
 %type	<_data_param_decl_list>	data_param_decl_list
 %type	<_data_param_decl_list>	data_param_decl_list_in_parens
@@ -612,9 +614,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 ***/
 %type	<_definition_body>	definition_body optional_definition_body
 %type	<_definition_body>	datatype_body optional_datatype_body
-/* %type	<_instance_management_list>	optional_connection_body */
+%type	<_instance_management_list>	connection_body_optional
 %type	<_instance_management_list>	connection_body
 %type	<_instance_management_list>	instance_management_list
+%type	<_instance_management_list>	instance_management_list_optional
 %type	<_instance_management>	connection_body_item_base
 %type	<_instance_management>	connection_body_item
 %type	<_def_body_item>	definition_body_item
@@ -1287,7 +1290,7 @@ declare_datatype_proto
 
 defdatatype
 	: declare_datatype_proto
-	  '{' optional_datatype_body set_body get_body '}'
+	  '{' optional_datatype_body set_body_optional get_body_optional '}'
 		{
 #if DEFTYPE_LIKE_PROCESS
 /**
@@ -1298,7 +1301,8 @@ defdatatype
 **/
 		WRAP_LIST($2, $3, $6);
 		$$ = new process_def(*$1, $3);
-		DELETE_TOKEN($4); DELETE_TOKEN($5);
+		if ($4) { DELETE_TOKEN($4); }
+		if ($5) { DELETE_TOKEN($5); }
 #else
 /**
 		$$ = new user_data_type_def(
@@ -1307,6 +1311,16 @@ defdatatype
 		$$ = new user_data_type_def($1, $2, $3, $4, $5);
 #endif
 		}
+	;
+
+set_body_optional
+	: set_body { $$ = $1; }
+	| { $$ = NULL; }
+	;
+
+get_body_optional
+	: get_body { $$ = $1; }
+	| { $$ = NULL; }
 	;
 
 set_body
@@ -1361,7 +1375,7 @@ declare_chan_proto
 	
 defchan
 	: declare_chan_proto
-	  '{' optional_datatype_body send_body recv_body '}'
+	  '{' optional_datatype_body send_body_optional recv_body_optional '}'
 		{
 #if DEFCHAN_LIKE_PROCESS
 /**
@@ -1372,7 +1386,8 @@ defchan
 **/
 		WRAP_LIST($2, $3, $6);
 		$$ = new process_def(*$1, $3);
-		DELETE_TOKEN($4); DELETE_TOKEN($5);
+		if ($4) { DELETE_TOKEN($4); }
+		if ($5) { DELETE_TOKEN($5); }
 #else
 /**
 		$$ = new user_chan_type_def(
@@ -1381,6 +1396,16 @@ defchan
 		$$ = new user_chan_type_def($1, $2, $3, $4, $5, $6);
 #endif
 		}
+	;
+
+send_body_optional
+	: send_body { $$ = $1; }
+	| { $$ = NULL; }
+	;
+
+recv_body_optional
+	: recv_body { $$ = $1; }
+	| { $$ = NULL; }
 	;
 
 send_body
@@ -1484,12 +1509,10 @@ datatype_body_item
 	| lang_spec { $$ = $1; }
 	;
 
-/**
-optional_connection_body
+connection_body_optional
 	: connection_body { $$ = $1; }
-	| { $$ = new definition_body(); }
+	| { $$ = NULL; }
 	;
-**/
 
 connection_body
 	: connection_body connection_body_item
@@ -1511,6 +1534,11 @@ connection_body_item
 	: connection_body_item_base { $$ = $1; }
 	| loop_connections { $$ = $1; }
 	| conditional_connections { $$ = $1; }
+	;
+
+instance_management_list_optional
+	: instance_management_list { $$ = $1; }
+	| { $$ = NULL; }
 	;
 
 /* subset of definition body items allowed inside loop/conditional scopes
@@ -1692,12 +1720,12 @@ guarded_instance_management_list_unmatched
 /* semantics: must guards be mutually exclusive? */
 /* sequential else-if semantics? */
 guarded_instance_management
-	: expr RARROW instance_management_list
+	: expr RARROW instance_management_list_optional
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
 
 instance_management_else_clause
-	: ELSE RARROW instance_management_list
+	: ELSE RARROW instance_management_list_optional
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
 
@@ -1718,12 +1746,12 @@ guarded_connection_body_unmatched
 	;
 
 guarded_connection_body_clause
-	: expr RARROW connection_body
+	: expr RARROW connection_body_optional
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
 
 connection_body_else_clause
-	: ELSE RARROW connection_body
+	: ELSE RARROW connection_body_optional
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
 
@@ -2282,8 +2310,12 @@ prs_macro
 		 * reduction step.  
 		 */
 			/* do parse-checking during next pass */
-			$$ = new PRS::macro($1, $2);
+			$$ = new PRS::macro(NULL, $1, $2);
 		}
+	/* optional, tentatively ignored */
+	| prs_rule_attribute_list_in_brackets
+	  prs_literal mandatory_member_index_expr_list_in_parens
+		{ $$ = new PRS::macro($1, $2, $3); }
 	;
 
 prs_loop
@@ -2317,15 +2349,8 @@ prs_guarded_body
 		{ $$ = new PRS::guarded_body($1, $2, $3); }
 	;
 
-/**
-prs_else_clause_optional
-	: prs_else_clause { $$ = $1; }
-	|	{ $$ = NULL; }
-	;
-**/
-
 prs_else_clause
-	: ELSE RARROW prs_body
+	: ELSE RARROW prs_body_optional
 		{ $$ = new PRS::guarded_body($1, $2, $3); }
 	;
 

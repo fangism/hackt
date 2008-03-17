@@ -1,0 +1,160 @@
+# "channel-test-a-16.prsimrc"
+# copy-modified from "channel-test-a-14.prsimrc"
+# @haco@ channel-test-a.haco-a
+
+# echo-commands on
+watchall
+source channel-test-a-01.prsimrc
+
+# Y is an e:1
+channel-sink Y
+channel-show Y
+echo why-x: Y is sinking, should be able to trace back through acknowledge
+why-x Y.e
+why-x-verbose Y.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo resetting channel Y
+channel-reset Y
+cycle
+assert Y.e 1
+why-not Y.e
+why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
+channel-show Y
+
+echo - - - - - - - - - - - - - - - - - - -
+echo releasing channel Y, but data is still X
+channel-release Y
+channel-show Y
+cycle
+assert Y.e X
+why-x Y.e
+why-x-verbose Y.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset data
+set Y.d[0] 0
+set Y.d[1] 0
+set Y.d[2] 0
+set Y.d[3] 0
+cycle
+assert Y.e 1
+why-not Y.e
+why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set data
+set Y.d[0] 1
+cycle
+assert Y.e 0
+why-not Y.e
+why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset data
+set Y.d[0] 0
+cycle
+assert Y.e 1
+why-not Y.e
+why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set data
+set Y.d[3] 1
+cycle
+assert Y.e 0
+why-not Y.e
+why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-stop Y
+echo freezing channel Y, and resetting data
+set Y.d[3] 0
+cycle
+channel-show Y
+assert Y.e 0
+why-not Y.e
+why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-release Y
+echo releasing channel Y
+cycle
+assert Y.e 1
+
+echo - - - - - - - - - - - - - - - - - - -
+getall Y
+echo setting Y.d[0] -> U
+set Y.d[2] X
+cycle
+channel-show Y
+assert Y.e X
+why-x Y.e
+why-x-verbose Y.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo setting Y.d[0] -> 1
+set Y.d[2] 1
+step-event
+assert Y.e X
+why-not Y.e 1
+why-not Y.e 0
+why Y.e 1
+why Y.e 0
+queue
+time
+cycle
+assert Y.e 0
+
+echo - - - - - - - - - - - - - - - - - - -
+echo resetting data
+set Y.d[2] 0
+step-event
+queue
+time
+why-not Y.e
+why-not-verbose Y.e
+why Y.e
+why-verbose Y.e
+cycle
+assert Y.e 1
+
+echo - - - - - - - - - - - - - - - - - - -
+echo stopping channel Y
+channel-stop Y
+set Y.d[1] 1
+cycle
+channel-show Y
+assert Y.e 1
+why-not Y.e
+why Y.e
+
+echo - - - - - - - - - - - - - - - - - - -
+echo releasing channel Y
+channel-release Y
+queue
+time
+assert Y.e 1
+why-not Y.e
+why Y.e
+step-event
+assert Y.e 0
+why-not Y.e
+why Y.e
+
+assertn-queue
+
+echo DONE.
+

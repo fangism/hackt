@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.193 2007/11/26 20:11:05 fang Exp $
+#	$Id: Makefile.am,v 1.194 2008/03/17 23:02:06 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -227,6 +227,18 @@ libhacktguile_la_LIBADD = libguileutil.la
 # want to break, but have cyclic dependency through qualified_id_slice...
 # libhackt_la_LIBADD = libhacktinstref.la libhacktcommon.la \
 #	$(LIBFANGUTIL)
+
+# VPI (Verilog Programming Language Interface)
+# EXTRA_LTLIBRARIES += vpihacprsim.la
+if HAVE_VPI
+pkglib_LTLIBRARIES += vpihacprsim.la
+endif
+
+# try dynamic library plug-in module first
+vpihacprsim_la_SOURCES = sim/prsim/vpi-prsim.cc
+vpihacprsim_la_CPPFLAGS = $(VPI_INCLUDE)
+vpihacprsim_la_LDFLAGS = -module $(VPI_LDPATH)
+vpihacprsim_la_LIBADD = libhacktsim.la
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
@@ -666,6 +678,8 @@ OBJECT_TCC_FILES = \
 	Object/unroll/alias_connection.tcc \
 	Object/unroll/expression_assignment.tcc \
 	Object/unroll/instantiation_statement.tcc \
+	Object/unroll/meta_conditional.tcc \
+	Object/unroll/meta_loop.tcc \
 	Object/unroll/template_type_completion.tcc \
 	Object/unroll/port_connection.tcc \
 	Object/unroll/unroll_context.tcc \
@@ -814,6 +828,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/instantiation_statement_base.h \
 	Object/unroll/instantiation_statement_type_ref_default.h \
 	Object/unroll/channel_instantiation_type_ref_base.h \
+	Object/unroll/meta_conditional.h \
+	Object/unroll/meta_loop.h \
 	Object/unroll/null_parameter_type.h \
 	Object/unroll/param_expression_assignment.h \
 	Object/unroll/param_instantiation_statement.h \
@@ -884,7 +900,9 @@ SIM_CC_FILES = \
 	sim/random_time.cc \
 	sim/state_base.cc \
 	sim/signal_handler.cc \
+	sim/prsim/Channel-prsim.cc \
 	sim/prsim/Command-prsim.cc \
+	sim/prsim/Command-prsim-export.cc \
 	sim/prsim/Cause.cc \
 	sim/prsim/Node.cc \
 	sim/prsim/Expr.cc \
@@ -917,6 +935,7 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/devel_switches.h \
 	sim/prsim/devel_switches.h \
 	sim/prsim/ExprAllocFlags.h \
+	sim/prsim/Exception.h \
 	sim/chpsim/chpsim_dlfunction.h \
 	sim/chpsim/StateConstructorFlags.h \
 	sim/chpsim/devel_switches.h \
@@ -1481,7 +1500,7 @@ am_cxxflags.h: $(srcdir)/Makefile.am
 	$(ECHO) "#define	AM_LDFLAGS \"$(AM_LDFLAGS)\"" ; \
 	$(ECHO) "#endif	/* AM_LDFLAGS */" ;} > $@
 
-# flags needed to produce .output from yacc/bison
+# flags needed to produce .output and .h from yacc/bison
 AM_YFLAGS = -d -t -v
 AM_LFLAGS = 
 

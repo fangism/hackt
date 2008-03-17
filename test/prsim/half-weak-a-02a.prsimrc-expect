@@ -1,0 +1,7 @@
+initially all Xs 
+	0	a : 0
+queue:	10	b : 1	[from a:=0]	(weak)
+WARNING: unstable `b'+
+>> cause: `a' (val: 1)
+	0	a : 1
+queue:	10	b : 0	[from a:=1]

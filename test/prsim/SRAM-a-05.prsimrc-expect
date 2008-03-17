@@ -1,0 +1,36 @@
+enqueued:	10	_bl : 1	[from _pchg:=0]
+WARNING: weak-interference `bl'
+>> cause: `_pchg' (val: 0)
+enqueued:	10	bl : 1	[from we:=0]
+	10	_bl : 1	[by _pchg:=0]
+	10	bl : 1	[by we:=0]
+Fanins of node `bl':
+[after 10]	(~w.we_:1 & ~w.wv_:1)<0> | 
+[after 10]	~_pchg:1<0> -> bl+:1
+[after 10]	we:0 & w.wv_:1<0> -> bl-:1
+[after 10, weak]	~p.bls:0 -> bl+:1
+[after 10, weak]	(c[0].r.d[1]:X & wl[0]:0)<0> | 
+[after 10, weak]	(c[1].r.d[1]:X & wl[1]:0)<0><0> -> bl-:1
+Fanins of node `_bl':
+[after 10]	(~w.we_:1 & ~wv:0)<0> | 
+[after 10]	~_pchg:1<0> -> _bl+:1
+[after 10]	we:0 & wv:0<0> -> _bl-:1
+[after 10, weak]	~p._bls:0 -> _bl+:1
+[after 10, weak]	(c[0].r.d[0]:X & wl[0]:0)<0> | 
+[after 10, weak]	(c[1].r.d[0]:X & wl[1]:0)<0><0> -> _bl-:1
+enabling wordline should expose bitline to cell 
+WARNING: weak-interference `bl'
+>> cause: `wl[0]' (val: 1)
+enqueued:	30	bl : X	[from wl[0]:=1]	(weak)
+WARNING: weak-interference `_bl'
+>> cause: `wl[0]' (val: 1)
+enqueued:	30	_bl : X	[from wl[0]:=1]	(weak)
+event queue:
+	30	bl : X	[from wl[0]:=1]	(weak)
+	30	_bl : X	[from wl[0]:=1]	(weak)
+WARNING: weak-interference `p.bls'
+>> cause: `bl' (val: X)
+	30	bl : X	[by wl[0]:=1]
+WARNING: weak-interference `p._bls'
+>> cause: `_bl' (val: X)
+	30	_bl : X	[by wl[0]:=1]

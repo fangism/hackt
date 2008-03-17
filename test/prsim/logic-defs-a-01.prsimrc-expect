@@ -1,0 +1,30 @@
+p refers to process-inst-ref nand<>
+q refers to process-inst-ref nand<>
+t refers to process-inst-ref nor<>
+All subnodes of 'p':
+a : X
+b : X
+r : X
+All subnodes of 'q':
+c : X
+d : X
+s : X
+All subnodes of 't':
+r : X
+s : X
+o : X
+	0	a : 0
+	0	d : 0
+	20	o : 0	[by r:=1]
+Fanins of node `o':
+[after 10]	~r:1 & ~s:1<0> -> o+:0
+[after 10]	r:1 | s:1<1> -> o-:0
+	20	a : 1
+Fanins of node `o':
+[after 10]	~r:0 & ~s:1<0> -> o+:0
+[after 10]	r:0 | s:1<1> -> o-:0
+	30	d : 1
+	50	o : 1	[by s:=0]
+Fanins of node `o':
+[after 10]	~r:0 & ~s:0<1> -> o+:1
+[after 10]	r:0 | s:0<0> -> o-:1

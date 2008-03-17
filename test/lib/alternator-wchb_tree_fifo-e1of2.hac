@@ -1,0 +1,10 @@
+// "alternator-wchb_tree_fifo-e1of2.hac"
+// bare fifo without environment
+
+import "alternator.hac";
+import "env.hac";
+
+e1of2 L, R;
+bool _Reset, Reset;
+wchb_tree_fifo_e1of<2,3> X(L, R, _Reset, Reset);
+

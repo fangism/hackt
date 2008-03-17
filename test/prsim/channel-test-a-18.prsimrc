@@ -1,0 +1,158 @@
+# "channel-test-a-18.prsimrc"
+# copy-modified from "channel-test-a-14.prsimrc"
+# @haco@ channel-test-a.haco-a
+
+# echo-commands on
+watchall
+source channel-test-a-01.prsimrc
+
+# Z is an a:0
+channel-sink Z
+channel-show Z
+echo why-x: Z is sinking, should be able to trace back through acknowledge
+why-x Z.a
+why-x-verbose Z.a
+
+echo - - - - - - - - - - - - - - - - - - -
+echo resetting channel Z
+channel-reset Z
+cycle
+assert Z.a 0
+why-not Z.a
+why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
+channel-show Z
+
+echo - - - - - - - - - - - - - - - - - - -
+echo releasing channel Z, but data is still X
+channel-release Z
+cycle
+assert Z.a X
+why-x Z.a
+why-x-verbose Z.a
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset data
+set Z.d[0] 0
+set Z.d[1] 0
+set Z.d[2] 0
+cycle
+assert Z.a 0
+why-not Z.a
+why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set data
+set Z.d[0] 1
+cycle
+assert Z.a 1
+why-not Z.a
+why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset data
+set Z.d[0] 0
+cycle
+assert Z.a 0
+why-not Z.a
+why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set data
+set Z.d[1] 1
+cycle
+assert Z.a 1
+why-not Z.a
+why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-stop Z
+echo freezing channel Z, and resetting data
+set Z.d[1] 0
+cycle
+channel-show Z
+assert Z.a 1
+why-not Z.a
+why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-release Z
+echo releasing channel Z
+cycle
+assert Z.a 0
+
+echo - - - - - - - - - - - - - - - - - - -
+getall Z
+echo setting Z.d[0] -> U
+set Z.d[0] X
+cycle
+channel-show Z
+assert Z.a X
+why-x Z.a
+why-x-verbose Z.a
+
+echo - - - - - - - - - - - - - - - - - - -
+echo setting Z.d[0] -> 1
+set Z.d[0] 1
+step-event
+assert Z.a X
+why-not Z.a 1
+why-not Z.a 0
+why Z.a 1
+why Z.a 0
+queue
+time
+cycle
+assert Z.a 1
+
+echo - - - - - - - - - - - - - - - - - - -
+echo resetting data
+set Z.d[0] 0
+step-event
+queue
+time
+why-not Z.a
+why-not-verbose Z.a
+why Z.a
+why-verbose Z.a
+cycle
+assert Z.a 0
+
+echo - - - - - - - - - - - - - - - - - - -
+echo stopping channel Z
+channel-stop Z
+set Z.d[1] 1
+cycle
+channel-show Z
+assert Z.a 0
+why-not Z.a
+why Z.a
+
+echo - - - - - - - - - - - - - - - - - - -
+echo releasing channel Z
+channel-release Z
+queue
+time
+assert Z.a 0
+why-not Z.a
+why Z.a
+step-event
+assert Z.a 1
+why-not Z.a
+why Z.a
+
+assertn-queue
+
+echo DONE.
+

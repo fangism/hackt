@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.13 2007/09/28 05:37:03 fang Exp $
+	$Id: Command.cc,v 1.14 2008/03/17 23:02:46 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -215,6 +215,20 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Aliases, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/echo-commands.texi
+@deffn Command echo-commands arg
+Enables or disables echoing of each interpreted command and 
+tracing through sourced script files.  
+@var{arg} is either "on" or "off".  
+Default off.
+@end deffn
+@end texinfo
+***/
+typedef	EchoCommands<State>				EchoCommands;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::EchoCommands, CHPSIM::builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/source.texi
 @deffn Command source script
 @anchor{command-source}
@@ -354,6 +368,20 @@ default values.
 ***/
 typedef	Reset<State>				Reset;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Reset, CHPSIM::simulation)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/seed48.texi
+@deffn Command seed48 [int int int]
+Corresponds to libc's seed48 function.  
+With no argument, print the current values of the internal random number seed.
+With three (unsigned short) integers, sets the random number seed.
+Note: the seed is automatically saved and restored in checkpoints.  
+@end deffn
+@end texinfo
+***/
+typedef	Seed48<State>			Seed48;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Seed48, CHPSIM::modes)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1228,6 +1256,18 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/autosave.texi
+@deffn Command autosave [on|off]
+Automatically save checkpoint upon end of simulation, 
+regardless of exit status.
+@end deffn
+@end texinfo
+***/
+typedef	AutoSave<State>				AutoSave;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AutoSave, CHPSIM::simulation)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/dump-state.texi
 @deffn Command dump-state
 Print textual summary of entire state of simulation.  
@@ -1727,6 +1767,17 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AssertQueue, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/assertn-queue.texi
+@deffn Command assertn-queue
+Error out if the event queue is not empty.
+@end deffn
+@end texinfo
+***/
+typedef	AssertNQueue<State>			AssertNQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AssertNQueue, CHPSIM::info)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/time.texi
 @deffn Command time
 Print the current simulator time.
@@ -2117,10 +2168,13 @@ ShowEventWatches::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO: FINISH ME
+#if 0
 /***
 @texinfo cmd/watch-queue.texi
 @deffn Command watch-queue
-Print events as they enter the event queue (either for checking or execution).
+Print events on watched events and values as they enter the event queue 
+(either for checking or execution).
 This is generally recommended for debugging, 
 as it prints @emph{a lot} of information.  
 @end deffn
@@ -2139,6 +2193,31 @@ Disables @command{watch-queue}.
 ***/
 typedef	NoWatchQueue<State>			NoWatchQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::NoWatchQueue, CHPSIM::view)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watchall-queue.texi
+@deffn Command watchall-queue
+Print events as they enter the event queue (either for checking or execution).
+This is generally recommended for debugging, 
+as it prints @emph{a lot} of information.  
+@end deffn
+@end texinfo
+***/
+typedef	WatchAllQueue<State>			WatchAllQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::WatchAllQueue, CHPSIM::view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/nowatchall-queue.texi
+@deffn Command nowatchall-queue
+Disables @command{watchall-queue}.
+@end deffn
+@end texinfo
+***/
+typedef	NoWatchAllQueue<State>			NoWatchAllQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::NoWatchAllQueue, CHPSIM::view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

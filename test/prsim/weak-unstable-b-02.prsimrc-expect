@@ -1,0 +1,10 @@
+enqueued:	10	c : 1	[from _p:=0]
+	10	c : 1	[by _p:=0]
+time: 10
+enqueued:	20	c : 0	[from a:=1]	(weak)
+time: 10
+queue:	20	c : 0	[from a:=1]	(weak)
+queue:	20	c : 0	[from a:=1]	(weak)
+a high should mask instability of b 
+queue:	20	c : 0	[from a:=1]	(weak)
+	20	c : 0	[by a:=1]

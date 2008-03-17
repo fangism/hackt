@@ -1,0 +1,37 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+Warning: channel acknowledge `X.e' has no fanin!
+Warning: channel acknowledge `Y.e' has no fanin!
+channel	X (.data) : 0
+channel	Y (.data) : 0
+All subnodes of 'X':
+X.d[0] : 1
+X.d[1] : 0
+X.e : 1
+All subnodes of 'Y':
+Y.d[0] : 1
+Y.d[1] : 0
+Y.d[2] : 0
+Y.d[3] : 0
+Y.e : 1
+All subnodes of 'Z':
+Z.d[0] : 0
+Z.d[1] : 1
+Z.d[2] : 0
+Z.a : 1
+initializing... 
+X : .e(init:0) 1x1of2 source,watch {0,0,0,1,} @0
+	count: 0, unknowns: 2
+Y : .e(init:1) 1x1of4 source,watch {0,2,0,1,}* @0
+	count: 0, unknowns: 4
+Z : .a(init:0) 1x1of3 sink,watch
+	count: 0, unknowns: 3
+resetting... 
+channels:
+all gone! 

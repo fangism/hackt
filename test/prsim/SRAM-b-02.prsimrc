@@ -1,0 +1,36 @@
+# "SRAM-b-02.prsimrc"
+# @haco@ SRAM-b.haco-a
+
+echo testing RAM writing with random timing ...
+# echo-commands on
+initialize
+timing random
+weak-rules on
+# watchall
+unstable warn
+unstable-dequeue
+
+set _pchg 0
+set wl[0] 0
+set wl[1] 0
+set we 0
+set wv 0
+cycle
+# echo done precharging, now writing...
+
+set _pchg 1
+cycle
+
+# echo enabled write, set zero value, now setting wordline
+set wv 0
+set we 1
+set wl[0] 1
+cycle
+
+assert c[0].r.t 1
+assert c[0].r.f 0
+
+unsetall
+queue
+echo queue should be empty after unsetall
+

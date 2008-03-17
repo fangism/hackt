@@ -1,0 +1,6 @@
+// "strengths-01.hac"
+// testing cflat with conductance calculations
+// @hflat-flags@ -fstrengths
+
+import "size-03.hac";
+

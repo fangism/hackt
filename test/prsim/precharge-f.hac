@@ -1,0 +1,32 @@
+// "precharge-f.hac"
+// copy-modified from "precharge-b.hac"
+// multiple redundant rings
+// this test case was found from a gi-normous simulation that crashed
+// and took 60 hours to diagnose.
+// This will go down in history as a nasty notorious bug.  
+
+template <pint N>
+defproc mk_1of(bool d[N]) {
+spec {
+	mk_excllo(d)
+}
+}
+
+// resembles a precharge stage
+template <pint N>
+defproc precharger(bool en, x[N], _o[N]) {
+mk_1of<N> y(_o);
+prs {
+(:i:N:
+	en & x[i]		-> _o[i]-
+	~en			-> _o[i]+
+)
+}
+}
+
+bool en, x[2], _o[2];
+precharger<2> P[2];
+(;i:2:
+	P[i](en, x, _o);
+)
+

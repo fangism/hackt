@@ -1,0 +1,26 @@
+# "interference-01.prsimrc"
+# @haco@ interference.haco-a
+
+# ~a -> c+
+# b  -> c-
+
+timing uniform 10
+
+set a 1
+set b 0
+cycle
+assert c X
+echo c: still unknown value
+
+echo testing for interference
+
+set a 0
+advance 5
+queue
+assert c X
+
+set b 1
+echo expecting interference from guard
+cycle
+assert c X
+

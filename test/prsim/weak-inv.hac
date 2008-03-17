@@ -1,0 +1,9 @@
+// "weak-inv.hac"
+// weak inverter
+
+bool a, b;
+
+prs {
+[weak=1]	a => b-
+}
+

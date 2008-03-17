@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.36 2007/09/15 18:56:43 fang Exp $
+	$Id: footprint.cc,v 1.37 2008/03/17 23:02:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -613,6 +613,41 @@ try {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Removes all instances that share the same key as collections
+	found in the referenced scopespace.  
+	Purpose is to fake process-type creation while preserving
+	top-level parameters that are referenced out-of-scope.  
+	This works because top-level parameters have already been resolved
+	to constants.  
+	It should be sufficient to just dissociate the map?
+	This means that new parameter collection 
+ */
+void
+footprint::remove_shadowed_collections(const scopespace& s) {
+	scopespace::const_map_iterator
+		i(s.id_map_begin()), e(s.id_map_end());
+for ( ; i!=e; ++i) {
+	const string& k(i->first);
+	const instance_collection_map_type::iterator
+		mf(instance_collection_map.find(k));
+	if (mf != instance_collection_map.end()) {
+		const collection_map_entry_type& x(mf->second);
+	switch (x.meta_type) {
+	case META_TYPE_PBOOL:
+	case META_TYPE_PINT:
+	case META_TYPE_PREAL:
+		// dissociate, rather than destroy
+		instance_collection_map.erase(mf);
+		break;
+	default: break;
+	// ignore all other collections, they pose no threat
+	}	// end switch
+	}	// end if
+}	// end for
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Collects all aliases in this scope and also creates a set
 	of port aliases for the sake of replaying internal aliases.  
 	\pre the sequential scope was already played for creation.  
@@ -787,6 +822,7 @@ if (chp_footprint) {
 void
 footprint::cflat_aliases(ostream& o, const state_manager& sm, 
 		const cflat_options& cf) const {
+	STACKTRACE_VERBOSE;
 	wire_alias_set wires;
 	const global_entry_pool<bool_tag>& gbp(sm.get_pool<bool_tag>());
 	const size_t s = gbp.size();

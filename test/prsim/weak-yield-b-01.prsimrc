@@ -1,0 +1,33 @@
+# "weak-yield-b-01.prsimrc"
+# @haco@ weak-yield-b.haco-a
+# an instability on a strong rule should then yield to a 
+# weak rule (either direction)
+
+# echo-commands on
+weak-rules on
+unstable warn
+unstable-dequeue
+interference warn
+watch t
+watch-queue
+
+set wl 1
+set f 1
+set bl X
+cycle
+assert t X
+
+set bl 1
+step-event
+pending t
+assert-pending t
+
+# expect instability
+set bl 0
+step-event
+pending t
+assert-pending t
+
+cycle
+assert t 0
+

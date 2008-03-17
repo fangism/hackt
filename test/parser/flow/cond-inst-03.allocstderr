@@ -1,0 +1,9 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	A	spec_test<2, 4>
+	bool: 1,2,3
+2	(top)	-	2	B	spec_test<3, 1>
+[global bool entries]
+1	process	1	1	A.y	
+2	process	1	2	A.z[0]	
+3	process	1	3	A.z[1]	

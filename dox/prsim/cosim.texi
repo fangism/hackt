@@ -1,0 +1,166 @@
+@c "hacprsim/commands.texi"
+@c $Id: cosim.texi,v 1.2 2008/03/17 23:02:03 fang Exp $
+
+@node Co-simulation
+@chapter Co-simulation
+
+One may desire to run @command{hacprsim} with another simulator.
+This chapter describes ways in which this can be accomplished.  
+
+@menu
+* Verilog PLI::
+* VPI Example::
+* VPI with Channels::
+* VPI Hacker's Guide::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Verilog PLI
+@section Verilog PLI
+
+Popular commercial tools sometimes provide an interface for
+mixing simulators.  
+In this section, we describe how @command{hacprsim} can be
+integrated with Synopsys' VCS Verilog Simulator.  
+The interface they provide is called VPI for Verilog PLI 
+(Programming Language Interface).  
+
+All of the functionality of the @command{hacprsim} is provided
+in the @file{libhacktsim.la} library. 
+If you've built the @HAC{} tools with shared libraries, 
+then all the necessary libraries should already be available
+in your installation path.  
+
+The first step is to enable support for building a plug-in
+to be loaded into the VPI.  
+During the configure step, pass the option:
+@t{--with-vpi=@i{/path/to/vpi/development-files}}
+
+@example
+./configure --with-vpi=/usr/local/cad/synopsys/vcs
+@end example
+
+The path should point to one directory up from 
+where the C headers reside.
+(Basically exclude the @t{/include} from the path argument, 
+as it is automatically appended.)
+@t{configure} checks for @file{vpi_user.h} in the given path.  
+If it is found, then compilation will create a module for VCS's VPI,
+@file{vpihacprsim.la} (which is installed with the actual @t{.so/dll/dylib}
+shared library).  
+This configuration check also looks for @command{vcs} in the path;
+@command{vcs} is used to compile Verilog into a simulation executable.  
+
+@strong{Disclaimer}: the following instructions are taken from the
+author's trials, and do not necessary reflect the actual
+documented use.  
+Consult the vendor's VPI documentation for more information.  
+
+To enable VPI in the VCS compiler, pass @option{+vpi} to the @command{vcs}
+command.  
+
+To specify the prsim module, pass: 
+@option{-use_vpiobj} @file{/prefix/lib/hackt/vpihacprsim.so}
+and @option{-L/prefix/lib/hackt}.
+The @option{-L} flag is forwarded to the linker used by VCS
+in the final stage of compilation, and is @emph{also required} 
+at run-time for finding dependent shared libraries.  
+The method described here uses a dynamic library (plug-in module), 
+however a static library could also suffice, as long as 
+all symbols were resolved at link time.
+Dependent libraries should be linked with the @option{-l} option
+which is forwarded to the linker.  
+
+VCS produces an executable @file{simv} which is dynamically
+linked to @file{vpihacprsim.so}.  
+If the @HAC{} libraries do not already reside in one
+of the default run-time library search paths
+(searched by @command{ld.so}), then you must help @command{simv}
+find dependent libraries by passing the same linker flags
+through @code{LD_LIBRARY_PATH}.
+
+@example
+sh$ LD_LIBRARY_PATH=/prefix/lib/hackt:$LD_LIBRARY_PATH ./simv
+
+csh% env sh$ LD_LIBRARY_PATH=/prefix/lib/hackt:$LD_LIBRARY_PATH ./simv
+@end example
+
+@c ----------------------------------------------------------------------------
+@node VPI Example
+@section VPI Example
+
+Several examples are installed in the 
+@file{/prefix/share/hackt/doc/example/vpiprsim-inverters} directory.
+This example demonstrates several inverters communicating 
+across the @command{hacprsim} and VPI boundary, in a shoelace connection.
+
+Copy the contents of the directory to a temporary directory, 
+and rename @file{Makefile.copy} (created from template @file{example.mk}) 
+to @file{Makefile}. 
+The Makefile is already setup to include @file{hackt.mk} and provides
+some basic rules for compiling and running the Verilog simulation. 
+The @file{shoelace.v} file is compiled to an executable @file{shoelace.vx}
+which runs the simulation.  
+@file{shoelace.v} references @file{inverters.haco-a}, which is a
+prerequisite for running (but not compiling) the simulation executable.  
+
+@command{make check} will run all the necessary steps in order
+and print the result of running the executable to @file{stdout}.
+Note that the invocation of the executable is prefixed with 
+an environment extension for @code{LD_LIBRARY_PATH}.  
+This is not necessary if you have already included @code{/prefix/lib/hackt}
+(a.k.a. @code{pkglibdir}) in your environment.  
+
+@c ----------------------------------------------------------------------------
+@node VPI with Channels
+@section VPI with Channels
+
+The same example directory contains an example that uses @t{hacprsim}'s
+channel features and commands, called @file{channel-source-sink.v}, 
+@xref{Channel Commands}.
+The @HAC{} source file contains only declarations for a pair of e1of2 channels 
+-- the rest is set up in Verilog.
+
+In the Verilog source, we connect the @var{L} and @var{R} channel
+rails with delay-elements.  
+Using @code{$prsim_cmd}, we configure @var{L} as a source 
+and @var{R} as a sink, as one normally would in an @command{hacprsim} session.
+
+@strong{Here's the important part!}
+The @command{channel-reset} and @command{channel-release} commands
+inject events into @command{hacprsim}'s event queue, however the host Verilog
+simulator is not aware of direct updates to that event queue!
+(This is also the case when you invoke @code{$prsim_cmd("set ...");}.)
+To notify the Verilog simulator and synchronize its main event queue, 
+we need to invoke @command{$prsim_sync()} immediately after any command
+that affects the @command{hacprsim} event queue, 
+including @command{channel-reset[-all]} and @command{channel-release[-all]}. 
+Prior to @command{channel-release[-all]}, 
+we also call @command{$prsim_sync()} to flush out any remaining
+events in @command{hacprsim} that have not caught up to the present time.  
+
+Until there is any other user-driven change to the @command{hacprsim}
+event queue, there should be no need to call @command{$prsim_sync()}
+again.  
+
+@c ----------------------------------------------------------------------------
+@node VPI Hacker's Guide
+@section VPI Hacker's Guide
+
+This section is for documenting development of the VPI @t{hacprsim} module.
+The module is compiled and installed as a dymamic shared library, 
+a run-time loadable plug-in.  
+The advantage is that the simulation executable need not link a static
+copy of the library; nor does it need to be recompiled for 
+non-ABI changing updates to the library.  
+
+How it works...
+
+event queues
+
+breakpoints
+
+callbacks
+
+synchronization
+

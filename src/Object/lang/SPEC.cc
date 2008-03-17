@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.3 2006/02/10 21:50:40 fang Exp $
+	$Id: SPEC.cc,v 1.4 2008/03/17 23:02:30 fang Exp $
  */
 
 #include <iostream>
@@ -9,25 +9,29 @@
 #include "Object/lang/SPEC.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/PRS_literal_unroller.h"	// for PRS::literal
-#include "Object/expr/param_expr.h"
-#include "Object/expr/expr_dump_context.h"
 #include "Object/persistent_type_hash.h"
-#include "Object/traits/bool_traits.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/unroll/meta_conditional.tcc"
+#include "Object/unroll/meta_loop.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/persistent_object_manager.tcc"
-#include "util/persistent_functor.tcc"
 #include "util/memory/chunk_map_pool.tcc"	// for memory pool
-#include "util/indent.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directive, "SPEC::directive")
+SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directives_loop, "SPEC::directive")
+SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directives_conditional,
+		"SPEC::directive")
+
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::SPEC::directive, SPEC_DIRECTIVE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::SPEC::directives_loop, SPEC_DIRECTIVE_LOOP_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::SPEC::directives_conditional, SPEC_DIRECTIVE_CONDITIONAL_TYPE_KEY, 0)
 }
 
 namespace HAC {
@@ -48,7 +52,7 @@ using util::write_value;
 /**
 	ostream binding functor.  
  */
-struct directive::dumper {
+struct directive_abstract::dumper {
 	ostream&				os;
 	const rule_dump_context&		rdc;
 
@@ -65,10 +69,11 @@ struct directive::dumper {
 //=============================================================================
 // class directive method definitions
 
-directive::directive() : persistent(), directive_source() { }
+directive::directive() : directive_abstract(), directive_source() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-directive::directive(const string& n) : persistent(), directive_source(n) { }
+directive::directive(const string& n) :
+		directive_abstract(), directive_source(n) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 directive::~directive() { }
@@ -150,7 +155,7 @@ directives_set::~directives_set() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 directives_set::dump(ostream& o, const rule_dump_context& rdc) const {
-	for_each(begin(), end(), directive::dumper(o, rdc));
+	for_each(begin(), end(), directive_abstract::dumper(o, rdc));
 	return o;
 }
 
@@ -191,6 +196,128 @@ void
 directives_set::load_object_base(const persistent_object_manager& m,
 		istream& i) {
 	m.read_pointer_list(i, AS_A(parent_type&, *this));
+}
+
+//=============================================================================
+// class directives_loop method definitions
+// mostly ripped from "Object/lang/PRS.cc":rule_loop
+
+directives_loop::directives_loop() : directives_set(), meta_loop_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+directives_loop::directives_loop(const ind_var_ptr_type& i, 
+		const range_ptr_type& r) :
+		directives_set(), meta_loop_base(i, r) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+directives_loop::~directives_loop() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(directives_loop)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+directives_loop::dump(ostream& o, const rule_dump_context& c) const {
+	return meta_loop::dump(*this, o, c, ':');
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls a set of loop-dependent spec directives.  
+ */
+good_bool
+directives_loop::unroll(const unroll_context& c, const node_pool_type& np, 
+		footprint& sfp) const {
+	return meta_loop::unroll(*this, c, np, sfp, "spec directive");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+directives_loop::collect_transient_info(persistent_object_manager& m) const {
+	meta_loop::collect_transient_info(*this, m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+directives_loop::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	meta_loop::write_object(*this, m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+directives_loop::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	meta_loop::load_object(*this, m, i);
+}
+
+//=============================================================================
+// class directives_conditional method definitions
+// mostly ripped from "Object/lang/PRS.cc":rule_conditional
+
+directives_conditional::directives_conditional() : directive_abstract(), 
+		meta_conditional_base(), clauses() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+directives_conditional::~directives_conditional() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(directives_conditional)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if ALL clauses are empty.  
+ */
+bool
+directives_conditional::empty(void) const {
+	return meta_conditional::empty(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+directives_conditional::dump(ostream& o, const rule_dump_context& c) const {
+	INVARIANT(guards.size());
+	INVARIANT(guards.size() == clauses.size());
+	return meta_conditional::dump(*this, o, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls the directives in the body of guard evaluates true.  
+ */
+good_bool
+directives_conditional::unroll(const unroll_context& c,
+		const node_pool_type& np, footprint& sfp) const {
+	return meta_conditional::unroll(*this, c, np, sfp, "SPEC");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+directives_conditional::append_guarded_clause(const guard_ptr_type& g) {
+	meta_conditional::append_guarded_clause(*this, g);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+directives_conditional::collect_transient_info(
+		persistent_object_manager& m) const {
+	meta_conditional::collect_transient_info(*this, m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+directives_conditional::write_object(const persistent_object_manager& m,
+		ostream& o) const {
+	meta_conditional::write_object(*this, m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+directives_conditional::load_object(const persistent_object_manager& m,
+		istream& i) {
+	meta_conditional::load_object(*this, m, i);
 }
 
 //=============================================================================

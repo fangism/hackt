@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.171 2008/02/26 22:44:21 fang Exp $
+#	$Id: configure.ac,v 1.172 2008/03/17 23:01:57 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20080218, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20080317, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -182,6 +182,7 @@ dnl from "config/rl_el.m4"
 FANG_ARG_WITH_READLINE_EDITLINE
 HACKT_ARG_WITH_GMP
 HACKT_ARG_WITH_XDR
+HACKT_ARG_WITH_VPI
 
 dnl whether or not to build universal binary (config/hackt.m4)
 dnl not actually implemented yet
@@ -249,6 +250,7 @@ FANG_HASH_MAP_NAMESPACE
 FANG_HASH_MAP_STYLE
 FANG_CXX_STL_FUNCTIONAL_SELECT
 FANG_CXX_STL_REVERSE_ITERATOR_COMPARISONS
+FANG_CXX_STL_TREE
 FANG_CXX_STD_IFSTREAM_DEV_STDIN
 FANG_CXX_STD_OFSTREAM_DEV_STDOUT
 FANG_CXX_STD_OFSTREAM_DEV_STDERR
@@ -541,6 +543,7 @@ AC_CONFIG_FILES([
 	test/parser/connect/Makefile
 	test/parser/flow/Makefile
 	test/prsim/Makefile
+	test/prsim/vpi/Makefile
 	test/chpsim/Makefile
 	test/chpsim/testlib/Makefile
 	test/chpsim/router/Makefile

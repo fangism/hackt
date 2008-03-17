@@ -1,0 +1,8 @@
+event queue:
+	10	b : 0	[from a:=1]
+time: 4
+now overtake (unstably) 
+WARNING: unstable `b'-
+>> cause: `a' (val: 0)
+event queue:
+	14	b : 1	[from a:=0]

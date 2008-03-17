@@ -1,0 +1,29 @@
+# "inv-18.prsimrc"
+# @haco@ inv.haco-a
+# trying to reproduce stuck-away-from-X bug
+
+unstable warn
+unstable-dequeue
+watchall
+set a 1
+cycle
+assert b 0
+assert c 1
+
+set a X
+cycle
+assert b X
+assert c X
+
+set a 1
+advance 4
+set a X
+cycle
+assert b X
+assert c X
+
+unsetall
+queue
+assertn-queue
+
+

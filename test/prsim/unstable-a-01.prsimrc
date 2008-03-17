@@ -1,0 +1,23 @@
+# "unstable-a-01.prsimrc"
+# @haco@ unstable-a.haco-a
+
+set g.GND 0
+set g.Vdd 1
+set ghi.Vdd 1
+cycle
+
+timing after
+unstable warn
+unstable-dequeue
+
+set in 0
+cycle
+
+set in 1
+advance 4
+check-queue
+
+set in X
+advance 4
+check-queue
+

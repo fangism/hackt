@@ -2,7 +2,7 @@
 	\file "util/packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.16 2006/10/24 07:27:43 fang Exp $
+	$Id: packed_array.h,v 1.17 2008/03/17 23:03:08 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -177,8 +177,8 @@ protected:
 
 public:
 
-	key_type
-	size(void) const { return sizes; }
+	const key_type&
+	size(void) const { return this->sizes; }
 
 	bool
 	empty(void) const { return !values.size(); }

@@ -1,0 +1,11 @@
+# "unused-01.prsimrc"
+# @haco@ unused.haco-a
+
+echo unknown-inputs with fanout:
+unknown-inputs-fanout
+
+source inv-17.prsimrc
+
+echo unknown-inputs with fanout:
+unknown-inputs-fanout
+

@@ -1,0 +1,21 @@
+# "keeper-a-01.prsimrc"
+# @haco@ keeper-a.haco-a
+
+# MUST disable weak rules (default)
+weak-rules off
+initialize
+mode reset
+set g.Vdd 1
+set g.GND 0
+timing random
+set g._pReset 0
+set g._sReset 0
+cycle
+status U
+mode run
+set g._pReset 1
+cycle
+status U
+set g._sReset 1
+step 100000
+

@@ -1,0 +1,40 @@
+# "SRAM-a-06.prsimrc"
+# @haco@ SRAM-a.haco-a
+# testing yielding to weak pulls
+
+# echo-commands on
+watch bl _bl
+watch-queue
+weak-rules on
+interference warn
+
+set wv 0
+set wl[0] 0
+set _pchg 0
+set we 0
+set wl[1] 0
+cycle
+
+set wl[0] X
+cycle
+assert bl 1
+assert _bl 1
+echo bitlines still high due to precharge
+
+set _pchg 1
+step-event
+assert _pchg 1
+queue
+pending bl
+pending _bl
+assert-pending bl
+assert-pending _bl
+
+fanin-get bl
+fanin-get _bl
+
+# expect weak vs. weak fight if there is explicit staticizer
+cycle
+assert bl X
+assert _bl X
+

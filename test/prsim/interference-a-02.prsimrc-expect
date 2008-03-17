@@ -1,0 +1,19 @@
+WARNING: weak-interference `c'
+>> cause: `b' (val: 1)
+	0	b : 1
+	0	a : 1
+	10	c : 0	[by a:=1]
+	20	d : 1	[by c:=0]
+	20	b : 0
+	20	a : 0
+expect c+ in queue 
+queue:	30	c : 1	[from a:=0]
+WARNING: interference `c'
+>> cause: `b' (val: 1)
+	24	b : 1
+expect c -> X in queue 
+queue:	30	c : X	[from b:=1]
+WARNING: weak-interference `d'
+>> cause: `c' (val: X)
+	30	c : X	[by b:=1]
+	40	d : X	[by c:=X]

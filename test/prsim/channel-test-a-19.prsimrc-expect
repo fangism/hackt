@@ -1,0 +1,31 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+X : .e(init:0) 1x1of2 sink
+	count: 0, unknowns: 2
+enqueued:	0	X.d[0] : 0
+enqueued:	0	X.d[1] : 0
+enqueued:	10	X.e : 0
+	0	X.d[0] : 0
+	0	X.d[1] : 0
+	10	X.e : 0
+enqueued:	20	X.e : 1
+	20	X.e : 1
+setting first data rail to X 
+enqueued:	20	X.d[0] : X
+setting second data rail to X 
+enqueued:	20	X.d[1] : X
+enqueued:	20	X.e : X	[from X.d[0]:=X]
+	20	X.d[0] : X
+event queue:
+	20	X.d[1] : X
+	20	X.e : X	[from X.d[0]:=X]
+time: 20
+after step queue is: 
+	20	X.d[1] : X
+event queue:
+	20	X.e : X	[from X.d[0]:=X]
+time: 20
+finishing... 
+	20	X.e : X	[by X.d[0]:=X]

@@ -1,0 +1,429 @@
+Fanins of node `o':
+[after 10]	(~a | ~b) & (~c | ~d) -> o+
+[after 10]	(a & b) | (c & d) -> o-
+why is o X? 
+o:X, pull up/dn are both X
+  a:X, pull up/dn undriven, no fanin
+  b:X, pull up/dn undriven, no fanin
+  c:X, pull up/dn undriven, no fanin
+  d:X, pull up/dn undriven, no fanin
+  a:X, (visited before, see above)
+  b:X, (visited before, see above)
+  c:X, (visited before, see above)
+  d:X, (visited before, see above)
+o:X, pull up/dn are both X
++-+
++ &-+
++ & | ~a:X, pull up/dn undriven, no fanin
++ & | ~b:X, pull up/dn undriven, no fanin
++ &-+
++ & | ~c:X, pull up/dn undriven, no fanin
++ & | ~d:X, pull up/dn undriven, no fanin
+--+
+- |-+
+- | & a:X, (visited before, see above)
+- | & b:X, (visited before, see above)
+- |-+
+- | & c:X, (visited before, see above)
+- | & d:X, (visited before, see above)
+-------------------- 
+	0	a : 1
+o:X, pull up/dn are both X
+  b:X, pull up/dn undriven, no fanin
+  c:X, pull up/dn undriven, no fanin
+  d:X, pull up/dn undriven, no fanin
+  b:X, (visited before, see above)
+  c:X, (visited before, see above)
+  d:X, (visited before, see above)
+o:X, pull up/dn are both X
++-+
++ &-+
++ & | ~b:X, pull up/dn undriven, no fanin
++ &-+
++ & | ~c:X, pull up/dn undriven, no fanin
++ & | ~d:X, pull up/dn undriven, no fanin
+--+
+- |-+
+- | & b:X, (visited before, see above)
+- |-+
+- | & c:X, (visited before, see above)
+- | & d:X, (visited before, see above)
+-------------------- 
+	0	c : 1
+o:X, pull up/dn are both X
+  b:X, pull up/dn undriven, no fanin
+  d:X, pull up/dn undriven, no fanin
+  b:X, (visited before, see above)
+  d:X, (visited before, see above)
+o:X, pull up/dn are both X
++-+
++ &-+
++ & | ~b:X, pull up/dn undriven, no fanin
++ &-+
++ & | ~d:X, pull up/dn undriven, no fanin
+--+
+- |-+
+- | & b:X, (visited before, see above)
+- |-+
+- | & d:X, (visited before, see above)
+-------------------- 
+	0	b : 1
+	10	o : 0	[by b:=1]
+o is not X.
+o is not X.
+o:0
+  a:1, input
+  b:1, input
+o:0
+.-+
+. |-+
+. | & a:1, input
+. | & b:1, input
+gray code transitions... 
+-------------------- 
+	10	d : 1
+o:0
+  a:1, input
+  b:1, input
+  c:1, input
+  d:1, input
+o:0
+.-+
+. &-+
+. & | ~a:1, input
+. & | ~b:1, input
+. &-+
+. & | ~c:1, input
+. & | ~d:1, input
+o:0
+  a:1, input
+  b:1, input
+  c:1, input
+  d:1, input
+o:0
+.-+
+. |-+
+. | & a:1, input
+. | & b:1, input
+. |-+
+. | & c:1, input
+. | & d:1, input
+-------------------- 
+	10	d : 0
+o:0
+  a:1, input
+  b:1, input
+o:0
+.-+
+. &-+
+. & | ~a:1, input
+. & | ~b:1, input
+o:0
+  a:1, input
+  b:1, input
+o:0
+.-+
+. |-+
+. | & a:1, input
+. | & b:1, input
+-------------------- 
+	10	c : 0
+o:0
+  a:1, input
+  b:1, input
+o:0
+.-+
+. &-+
+. & | ~a:1, input
+. & | ~b:1, input
+o:0
+  a:1, input
+  b:1, input
+o:0
+.-+
+. |-+
+. | & a:1, input
+. | & b:1, input
+-------------------- 
+	10	d : 1
+o:0
+  a:1, input
+  b:1, input
+o:0
+.-+
+. &-+
+. & | ~a:1, input
+. & | ~b:1, input
+o:0
+  a:1, input
+  b:1, input
+o:0
+.-+
+. |-+
+. | & a:1, input
+. | & b:1, input
+-------------------- 
+	10	a : 0
+	20	o : 1	[by a:=0]
+o:1
+  a:0, input
+  c:0, input
+o:1
+.-+
+. |-+
+. | & a:0, input
+. |-+
+. | & c:0, input
+o:1
+  a:0, input
+  c:0, input
+o:1
+.-+
+. &-+
+. & | ~a:0, input
+. &-+
+. & | ~c:0, input
+-------------------- 
+	20	c : 1
+	30	o : 0	[by c:=1]
+o:0
+  c:1, input
+  d:1, input
+o:0
+.-+
+. &-+
+. & | ~c:1, input
+. & | ~d:1, input
+o:0
+  c:1, input
+  d:1, input
+o:0
+.-+
+. |-+
+. | & c:1, input
+. | & d:1, input
+-------------------- 
+	30	d : 0
+	40	o : 1	[by d:=0]
+o:1
+  a:0, input
+  d:0, input
+o:1
+.-+
+. |-+
+. | & a:0, input
+. |-+
+. | & d:0, input
+o:1
+  a:0, input
+  d:0, input
+o:1
+.-+
+. &-+
+. & | ~a:0, input
+. &-+
+. & | ~d:0, input
+-------------------- 
+	40	c : 0
+o:1
+  a:0, input
+  c:0, input
+  d:0, input
+o:1
+.-+
+. |-+
+. | & a:0, input
+. |-+
+. | & c:0, input
+. | & d:0, input
+o:1
+  a:0, input
+  c:0, input
+  d:0, input
+o:1
+.-+
+. &-+
+. & | ~a:0, input
+. &-+
+. & | ~c:0, input
+. & | ~d:0, input
+-------------------- 
+	40	b : 0
+o:1
+  a:0, input
+  b:0, input
+  c:0, input
+  d:0, input
+o:1
+.-+
+. |-+
+. | & a:0, input
+. | & b:0, input
+. |-+
+. | & c:0, input
+. | & d:0, input
+o:1
+  a:0, input
+  b:0, input
+  c:0, input
+  d:0, input
+o:1
+.-+
+. &-+
+. & | ~a:0, input
+. & | ~b:0, input
+. &-+
+. & | ~c:0, input
+. & | ~d:0, input
+-------------------- 
+	40	d : 1
+o:1
+  a:0, input
+  b:0, input
+  c:0, input
+o:1
+.-+
+. |-+
+. | & a:0, input
+. | & b:0, input
+. |-+
+. | & c:0, input
+o:1
+  a:0, input
+  b:0, input
+  c:0, input
+o:1
+.-+
+. &-+
+. & | ~a:0, input
+. & | ~b:0, input
+. &-+
+. & | ~c:0, input
+-------------------- 
+	40	c : 1
+	50	o : 0	[by c:=1]
+o:0
+  c:1, input
+  d:1, input
+o:0
+.-+
+. &-+
+. & | ~c:1, input
+. & | ~d:1, input
+o:0
+  c:1, input
+  d:1, input
+o:0
+.-+
+. |-+
+. | & c:1, input
+. | & d:1, input
+-------------------- 
+	50	d : 0
+	60	o : 1	[by d:=0]
+o:1
+  a:0, input
+  b:0, input
+  d:0, input
+o:1
+.-+
+. |-+
+. | & a:0, input
+. | & b:0, input
+. |-+
+. | & d:0, input
+o:1
+  a:0, input
+  b:0, input
+  d:0, input
+o:1
+.-+
+. &-+
+. & | ~a:0, input
+. & | ~b:0, input
+. &-+
+. & | ~d:0, input
+-------------------- 
+	60	a : 1
+o:1
+  b:0, input
+  d:0, input
+o:1
+.-+
+. |-+
+. | & b:0, input
+. |-+
+. | & d:0, input
+o:1
+  b:0, input
+  d:0, input
+o:1
+.-+
+. &-+
+. & | ~b:0, input
+. &-+
+. & | ~d:0, input
+-------------------- 
+	60	c : 0
+o:1
+  b:0, input
+  c:0, input
+  d:0, input
+o:1
+.-+
+. |-+
+. | & b:0, input
+. |-+
+. | & c:0, input
+. | & d:0, input
+o:1
+  b:0, input
+  c:0, input
+  d:0, input
+o:1
+.-+
+. &-+
+. & | ~b:0, input
+. &-+
+. & | ~c:0, input
+. & | ~d:0, input
+-------------------- 
+	60	d : 1
+o:1
+  b:0, input
+  c:0, input
+o:1
+.-+
+. |-+
+. | & b:0, input
+. |-+
+. | & c:0, input
+o:1
+  b:0, input
+  c:0, input
+o:1
+.-+
+. &-+
+. & | ~b:0, input
+. &-+
+. & | ~c:0, input
+-------------------- 
+	60	c : 1
+	70	o : 0	[by c:=1]
+o:0
+  c:1, input
+  d:1, input
+o:0
+.-+
+. &-+
+. & | ~c:1, input
+. & | ~d:1, input
+o:0
+  c:1, input
+  d:1, input
+o:0
+.-+
+. |-+
+. | & c:1, input
+. | & d:1, input
+done! 

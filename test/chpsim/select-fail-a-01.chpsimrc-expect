@@ -10,3 +10,4 @@ Run-time error: multiple exclusive guards of deterministic selection evaluated T
 Run-time error while checking event.
 event[1]:	10	1	0	[ true -> ... [] true -> ... ]
 Caught run-time exception during execution.  Halting.
+... at line 8

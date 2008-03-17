@@ -1,0 +1,49 @@
+# "precharge-d-repeat.prsimrc"
+# @haco@ precharge-d.haco-a
+
+# repeat
+
+echo en[0] -> 1
+echo en[1] -> 0
+set en[0] 1
+set en[1] 0
+advance 5
+check-queue
+cycle
+assertn-queue
+assert _o[0] 0
+assert _o[1] 1
+
+echo en[] -> X
+set en[0] X
+set en[1] X
+advance 5
+queue
+check-queue
+cycle
+assert _o[0] X
+assert _o[1] X
+assertn-queue
+
+echo en[1] -> 1
+echo en[0] -> 0
+set en[0] 0
+set en[1] 1
+advance 5
+check-queue
+cycle
+assert _o[1] 0
+assert _o[0] 1
+assertn-queue
+
+echo en[] -> X
+set en[0] X
+set en[1] X
+advance 5
+queue
+check-queue
+cycle
+assert _o[0] X
+assert _o[1] X
+assertn-queue
+

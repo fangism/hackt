@@ -1,0 +1,39 @@
+Fanins of node `c':
+[after 10]	~a | ~b -> c+
+[after 10]	a & b -> c-
+c is X.
+...................... 
+	0	a : 1
+	0	b : 1
+	10	c : 0	[by b:=1]
+c:0
+  a:1, input
+  b:1, input
+c:0
+.-+
+. | ~a:1, input
+. | ~b:1, input
+...................... 
+	10	a : 0
+	20	c : 1	[by a:=0]
+c:1
+  a:0, input
+c:1
+.-+
+. & a:0, input
+...................... 
+	20	b : 0
+c:1
+  a:0, input
+  b:0, input
+c:1
+.-+
+. & a:0, input
+. & b:0, input
+...................... 
+	20	a : 1
+c:1
+  b:0, input
+c:1
+.-+
+. & b:0, input

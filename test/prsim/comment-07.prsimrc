@@ -1,0 +1,8 @@
+# "comment-07.prsimrc"
+# @haco@ inv.haco-a
+
+echo expect source to die...
+source comment-05.prsimrc
+
+echo never reached
+

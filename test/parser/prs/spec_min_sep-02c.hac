@@ -1,0 +1,17 @@
+// "spec_min_sep-02c.hac"
+// copy-modified from "spec_min_sep-02.hac"
+// this test case has no grouped nodes
+// macro should fail, require exactly one parameter argument
+// and exactly two (group) arguments.  
+
+defproc groupie (bool p, q, r) {
+spec {
+	min_sep<20>(p, q, r)
+	// now stops at first error, won't get to the next two..
+	min_sep(p, r)
+	min_sep<15, 10>(p, q)
+}
+}
+
+groupie g;
+

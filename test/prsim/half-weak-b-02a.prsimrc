@@ -1,0 +1,6 @@
+# "half-weak-b-02a.prsimrc"
+# @haco@ half-weak-b.haco-a
+
+unstable-dequeue
+source half-weak-a-02a.prsimrc
+

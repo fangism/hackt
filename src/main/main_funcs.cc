@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.20 2008/02/09 02:57:40 fang Exp $
+	$Id: main_funcs.cc,v 1.21 2008/03/17 23:02:42 fang Exp $
  */
 
 #include <iostream>
@@ -423,6 +423,7 @@ load_module_debug(const char* fname) {
  */
 count_ptr<const process_type_reference>
 parse_and_create_complete_process_type(const char* _type, const module& m) {
+	STACKTRACE_VERBOSE;
 	typedef	count_ptr<const process_type_reference>	return_type;
 	NEVER_NULL(_type);
 	// parse the type
@@ -453,6 +454,7 @@ parse_and_create_complete_process_type(const char* _type, const module& m) {
 
 void
 compile_options::export_include_paths(file_manager& fm) const {
+	STACKTRACE_VERBOSE;
 	typedef	include_paths_type::const_iterator	const_iterator;
 	const_iterator i(include_paths.begin());
 	const const_iterator e(include_paths.end());
@@ -476,10 +478,13 @@ compile_options::export_include_paths(file_manager& fm) const {
 // class create method definitions
 
 /**
+	Preserve the global variables optind, optarg because getopt
+	will modify them.  
 	\param f the flag returned by getopt.  
  */
 int
 parse_create_flag(const int f, compile_options& opt) {
+	STACKTRACE_VERBOSE;
 switch (f) {
 /***
 @texinfo compile/option-c.texi
@@ -505,7 +510,13 @@ in the shell.
 	case 'C': {
 		// forward bundled arguments to compile-driver
 		// because getopt is not re-entrant...
-		util::value_saver<int> s(optind);
+		const util::value_saver<int> _1(optind);
+		const util::value_saver<int> _2(optopt);
+		const util::value_saver<int> _3(opterr);
+		const util::value_saver<char*> _4(optarg);
+		// despite my best efforts, this STILL doesn't work
+		// because getopt is simply not required to be re-entrant
+		// TODO: re-implement own re-entrant getopt.
 		optind = 0;	// don't skip the first argument
 		std::vector<char*> cargs;
 		util::splitopt(optarg, cargs);
@@ -528,6 +539,7 @@ in the shell.
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 create::parse_command_options(const int argc, char* argv[], options& opt) {
+	STACKTRACE_VERBOSE;
 	static const char* optstring = "+hcC:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {

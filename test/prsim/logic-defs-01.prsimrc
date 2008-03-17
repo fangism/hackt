@@ -1,0 +1,8 @@
+# "logic-defs-01.prsimrc"
+# @haco@ logic-defs.haco-a
+# @hacprsim-flags@ -t inv
+
+status U
+fanin-get y
+fanout-get x
+

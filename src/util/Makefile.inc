@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.36 2007/10/08 01:21:56 fang Exp $
+#	$Id: Makefile.inc,v 1.37 2008/03/17 23:03:08 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -123,6 +123,7 @@ UTIL_HEADER_FILES = \
 	util/member_select.h \
 	util/memory/deallocation_policy_fwd.h \
 	util/memory/deallocation_policy.h \
+	util/memory/deep_copy.h \
 	util/memory/chunk_map_pool_fwd.h \
 	util/memory/list_vector_pool_fwd.h \
 	util/memory/pointer_classes_fwd.h \
@@ -154,7 +155,9 @@ UTIL_HEADER_FILES = \
 	util/numeric/bigger_ints.h \
 	util/numeric/clz.h \
 	util/numeric/ctz.h \
+	util/numeric/div.h \
 	util/numeric/ffs.h \
+	util/numeric/functional.h \
 	util/numeric/integer_traits.h \
 	util/numeric/inttype_traits.h \
 	util/numeric/nibble_tables.h \

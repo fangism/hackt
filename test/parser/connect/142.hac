@@ -1,0 +1,9 @@
+// "142.hac"
+// copy-modified from "141.hac"
+// bug test case for cflatted connections (.prs)
+
+defproc top_type (bool co[1][5][2]) { }
+top_type top;
+bool co[1][5][2];
+co = top.co;
+

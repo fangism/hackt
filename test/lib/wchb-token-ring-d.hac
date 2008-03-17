@@ -1,0 +1,17 @@
+// "wchb-token-ring-d.hac"
+// copy-modified from "wchb-token-ring-b.hac"
+//	$Id: wchb-token-ring-d.hac,v 1.2 2008/03/17 23:04:20 fang Exp $
+// expected to fail: deadlock
+
+import "copy.hac";
+
+bool _Reset, Reset;
+e1of2 L, M, R;
+// initial value 0
+wchb_copy_e1of2<1>
+	X(L, {M}, _Reset),
+	Y(M, {R}, _Reset),
+	Z(R, {L}, _Reset);
+
+// 3 half-buffer cycle: DEADLOCK, no tokens, duh...
+

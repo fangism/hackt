@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.88 2007/11/06 21:40:00 fang Exp $
+#	$Id: Make.test-tail,v 1.89 2008/03/17 23:03:29 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -47,7 +47,7 @@ HACO_FLAGS += -I$(srcdir)
 # if executable did not successfully build, then skip.
 
 HAC_DEPEND_FILTER = $(SED) -e '/haco:/s|^$(srcdir)\/||g' \
-	-e 's/haco:/haco $@:/g'
+	-e 's/haco:/haco $@:/g' -e 's/^:/$@:/' -e 's/\.depend:/.haco:/'
 # the following works for VPATH, but need to test for srcdir = .
 # -e 's|$(srcdir)|$$(srcdir)|g'
 
@@ -97,22 +97,25 @@ EXTRACT_HACO_FLAGS_PIPE = $(GREP) "@haco-flags@" | $(HEAD) -n1 | \
 	$(SED) 's/^.*@haco-flags@[ ]*//g'
 EXTRACT_HACPP_FLAGS_PIPE = $(GREP) "@hacpp-flags@" | $(HEAD) -n1 | \
 	$(SED) 's/^.*@hacpp-flags@[ ]*//g'
+EXTRACT_HFLAT_FLAGS_PIPE = $(GREP) "@hflat-flags@" | $(HEAD) -n1 | \
+	$(SED) 's/^.*@hflat-flags@[ ]*//g'
 
 # useful for extracting object file name from a source script
 # EXTRACT_HACO_PIPE = $(GREP) "^\#" ...
 EXTRACT_HACO_PIPE = $(GREP) "@haco@" | $(HEAD) -n1 | \
-	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
+	$(SED) 's/^.*@haco@[ ]*//'
+#	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
 
 # This analogously extracts the name of a tracefile from source.
 EXTRACT_CHPSIMTRACE_PIPE = $(GREP) "@chpsimtrace@" | $(HEAD) -n1 | \
 	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
 
 # General script for extracting additional dependencies from source files.
-EXTRACT_DEPS_PIPE = $(GREP) "@deps@" | $(SED) 's/^.*@deps@//g'
+EXTRACT_DEPS_PIPE = $(GREP) "@deps@" | $(SED) 's/^.*@deps@[ ]*//g'
 
 # General script for extracting additional anti-dependencies from source files.
 # Useful for automatically cleaning side-effect files.
-EXTRACT_ANTIDEPS_PIPE = $(GREP) "@antideps@" | $(SED) 's/^.*@antideps@//g'
+EXTRACT_ANTIDEPS_PIPE = $(GREP) "@antideps@" | $(SED) 's/^.*@antideps@[ ]*//g'
 
 
 # This mechanism could be generalized to produce extra dependencies
@@ -134,6 +137,7 @@ include $(top_srcdir)/test/Make.test-alloc
 include $(top_srcdir)/test/Make.test-cflat
 include $(top_srcdir)/test/Make.test-graph
 include $(top_srcdir)/test/Make.test-prsim
+include $(top_srcdir)/test/Make.test-vpi
 include $(top_srcdir)/test/Make.test-chpsim
 include $(top_srcdir)/test/Make.test-guile
 

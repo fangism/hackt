@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.6 2007/10/08 01:21:51 fang Exp $
+	$Id: command_common.tcc,v 1.7 2008/03/17 23:02:44 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -24,6 +24,8 @@
 #include "common/TODO.h"
 #include "common/ltdl-wrap.h"
 #include "util/compose.h"
+#include "util/string.tcc"
+#include "util/utypes.h"
 
 namespace HAC {
 namespace SIM {
@@ -32,6 +34,7 @@ using std::ofstream;
 using std::for_each;
 using std::ptr_fun;
 using std::mem_fun_ref;
+using util::strings::string_to_num;
 #include "util/using_ostream.h"
 using parser::parse_name_to_what;
 using parser::parse_name_to_aliases;
@@ -234,6 +237,45 @@ Aliases<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(EchoCommands, "echo-commands",
+	"whether or not each command is echoed back")
+
+template <class State>
+int
+EchoCommands<State>::main(state_type&, const string_list& a) {
+switch (a.size()) {
+case 1:
+	cout << "echo-commands is " <<
+		(command_registry_type::echo_commands ? "on" : "off") << endl;
+	return command_type::NORMAL;
+case 2: {
+	const string& arg(a.back());
+	if (arg == "on") {
+		command_registry_type::echo_commands = true;
+	} else if (arg == "off") {
+		command_registry_type::echo_commands = false;
+	} else {
+		cerr << "Bad argument." << endl;
+		usage(cerr);
+		return command_type::BADARG;
+	}
+	return command_type::NORMAL;
+}
+default:
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+}
+
+template <class State>
+void
+EchoCommands<State>::usage(ostream& o) {
+	o << "echo-commands [on|off]" << endl;
+	o << "Enable or disable printing of each command as it is interpreted."
+ 		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INITIALIZE_COMMON_COMMAND_CLASS(Source, "source",
 	"execute commands from script file(s)")
 
@@ -379,6 +421,55 @@ Queue<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(Seed48, "seed48", "set/get random number seed")
+
+template <class State>
+int
+Seed48<State>::main(State&, const string_list& a) {
+const size_t sz = a.size();
+switch (sz) {
+case 1: {
+	ushort sd[3] = {0, 0, 0};
+	// grab seed (destructive)
+	const ushort* tmp = seed48(sd);
+	sd[0] = tmp[0];
+	sd[1] = tmp[1];
+	sd[2] = tmp[2];
+	cout << "seed48 = " << sd[0] << ' ' << sd[1] << ' ' << sd[2] << endl;
+	// restore it
+	seed48(sd);
+	break;
+}
+case 4: {
+	ushort sd[3];
+	string_list::const_iterator i(a.begin());
+	// pre-increment to skip first command token
+	if (string_to_num(*++i, sd[0]) ||
+		string_to_num(*++i, sd[1]) ||
+		string_to_num(*++i, sd[2])) {
+		usage(cerr << "usage: ");
+		return command_type::BADARG;
+	}
+	seed48(sd);
+	break;
+}
+default:
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+	return command_type::NORMAL;
+}
+
+template <class State>
+void
+Seed48<State>::usage(ostream& o) {
+	o << "seed48 [int int int]" << endl;
+	o <<
+"Shows the current seed values used by the random number generator.\n"
+"Setting the seed requires 3 (unsigned short) integers." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INITIALIZE_COMMON_COMMAND_CLASS(Save, "save",
 	"saves simulation state to a checkpoint")
 
@@ -447,6 +538,45 @@ template <class State>
 void
 Load<State>::usage(ostream& o) {
 	o << "load <file>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(AutoSave, "autosave",
+	"automatically save checkpoint upon exit")
+
+template <class State>
+int
+AutoSave<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+	const string& arg(a.back());
+	if (arg == "1") {
+		command_registry_type::autosave_on_exit = true;
+	} else if (arg == "on") {
+		command_registry_type::autosave_on_exit = true;
+	} else if (arg == "yes") {
+		command_registry_type::autosave_on_exit = true;
+	} else if (arg == "0") {
+		command_registry_type::autosave_on_exit = false;
+	} else if (arg == "off") {
+		command_registry_type::autosave_on_exit = false;
+	} else if (arg == "no") {
+		command_registry_type::autosave_on_exit = false;
+	} else {
+		cerr << "Error: invalid argument." << endl;
+		usage(cerr);
+		return command_type::BADARG;
+	}
+	return command_type::NORMAL;
+}
+
+template <class State>
+void
+AutoSave<State>::usage(ostream& o) {
+	o << name << " <on|off>" << endl;
 	o << brief << endl;
 }
 
@@ -532,6 +662,34 @@ AssertQueue<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(AssertNQueue, "assertn-queue",
+	"assert that the event queue is empty")
+
+template <class State>
+int
+AssertNQueue<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (!s.pending_events()) {
+		return command_type::NORMAL;
+	} else {
+		cout << "assert failed: expecting empty event queue."
+			<< endl;
+		return command_type::FATAL;
+	}
+}
+}
+
+template <class State>
+void
+AssertNQueue<State>::usage(ostream& o) {
+	o << "assertn-queue" << endl;
+	o << "signal an error if the event queue is not empty" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INITIALIZE_COMMON_COMMAND_CLASS(Time, "time",
 	"display current simulation time")
 
@@ -563,7 +721,7 @@ Time<State>::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INITIALIZE_COMMON_COMMAND_CLASS(WatchQueue, "watch-queue",
-	"print each event as it is enqueued into the event queue")
+	"print each event on watched nodes as it is enqueued")
 
 template <class State>
 int
@@ -581,7 +739,7 @@ template <class State>
 void
 WatchQueue<State>::usage(ostream& o) {
 	o << "watch-queue" << endl;
-	o << "Print events as they are inserted into the event queue."
+	o << "Print events on watched nodes only as they enter the event queue."
 		<< endl;
 }
 
@@ -605,6 +763,54 @@ template <class State>
 void
 NoWatchQueue<State>::usage(ostream& o) {
 	o << "nowatch-queue" << endl;
+	o << "Silence events on watched nodes as they enter the event queue."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(WatchAllQueue, "watchall-queue",
+	"print each event on all nodes as it is enqueued")
+
+template <class State>
+int
+WatchAllQueue<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	s.watchall_event_queue();
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+WatchAllQueue<State>::usage(ostream& o) {
+	o << "watchall-queue" << endl;
+	o << "Print all events as they are inserted into the event queue."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(NoWatchAllQueue, "nowatchall-queue",
+	"silence enqueuing into the event queue (default)")
+
+template <class State>
+int
+NoWatchAllQueue<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	s.nowatchall_event_queue();
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+NoWatchAllQueue<State>::usage(ostream& o) {
+	o << "nowatchall-queue" << endl;
 	o << "Silence events as they are inserted into the event queue."
 		<< endl;
 }

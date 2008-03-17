@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4 2007/10/08 01:21:54 fang Exp $
+#	$Id: TODO,v 1.5 2008/03/17 23:03:05 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -16,11 +16,59 @@ Simulation:
 		counter.  
 
 prsim:
+	Add guile/Scheme interface for static queries and simulation control!
+	
 	category of 'debug' commands for inspecting state, etc...
+		memory analysis, invariant checking
+
+	weak vs. possible: rename formerly 'weak' anomalies to 'possible'
+		to avoid confusion with weak-rules.  (poor naming)
+
+	random: seed48 [int int int] command to set/get libc::seed48
+		already save/restore seed in checkpoint
 
 	direction-specific breakpoints
 
-	deadlock diagnosis, akin to backtrace, but using fanin state analysis
+	breakpoint policies *per-node*
+	breakpoint options: halt or error-out
+
+	breakpoint might want to return to interaction with user
+		momentarily (fix and continue), and let a 'continue'
+		command return to the previous point in the script.  
+		In batch-mode, will just continue.  
+		Also needs a 'where' command to show file-stack and 
+			line positions for reference.
+
+	add -t <type> argument analogous to cflat's
+
+	channel commands:
+		channel-auto : auto-infer channel type
+			what about initial ack?
+		channel-type (map types to defchan)
+		enable validity protocol variants
+		test bundles
+		delay control for setting and resetting source/sinks
+		value formatting input and output
+
+	timestamp last causes -- automatic cycle time
+		Will cost some more memory per node.
+		Difficulty: easy (hour)
+		Consider the cost of increased memory! 'memstats'
+
+	causes: sometimes a rule firing is attributed to the opposite
+		pull turning *off* ... do we attribute the cause to the
+		rule that turned off or the rule that was on?
+		Is there a clean way to keep track? with cause flags?
+
+	'backtrace' add optional starting value argument, 
+		default uses current value.
+
+	unstab attribute: is checked on nodes, but only applied to rules
+		so this needs to be fixed to check for rules.  
+		Should wipe it from node attributes.
+		Difficulty: easy (few hours)
+		Q: what should unstable policy do? dequeue? re-queue overtake?
+		This would require events to track which *rule* caused firing.
 
 	interpreter commands:
 		interp key [value]
@@ -34,11 +82,15 @@ prsim:
 			Q: do we allow nodes to belong to multiple vectors?
 				current state of old prsims cannot.
 		use getopt-style interpretation?
+		fix 'getall' to work with arrays (getall x, where x is array)
+			dies on member arrays, but not top-level arrays
+		line-continuation with '\'
 
 	concept of environment variables?
 
 	far future: expression evaluation! variable expansion!
 		make use of existing interpreter functions in parser/
+		better yet: attach guile Scheme interpreter (gprsim)
 
 	Q: should initialize clear the watching state?
 		in the old prsim, watch/break points are preserved
@@ -57,6 +109,23 @@ prsim:
 
 	trace recording, playback, and analysis (like chpsim)
 
+graph-dumping:
+	after restructuring rule maps by process (like chpsim),
+	print out graph node in process clusters
+
+execution model:
+	weak rules (drive floating nodes, overpowered by normal rules)
+		[status: drafted]
+	TODO: interaction with coerced exclusive hi/lo rings?
+
+mk and check rings:
+	sort/order rings to eliminate duplicates which arise from
+		poor hierarchy in the source.  
+		e.g. use lexicograpichal ordering.  
+		[difficulty: easy]
+	filter rings that are strict subsets of others (redundancy)
+		[difficulty: more difficult, got algorithm?]
+
 state-allocation:
 	consider alternative to re-allocating every rule for every
 	instance, when the footprint can be reused, by adding
@@ -73,5 +142,12 @@ sprsim:
 
 grusim (pronounced 'gruesome')
 	the GRand Unified SIMulator, haha.
+
+parallelization:
+	be able to run multiple instances of a manually partitioned
+		hacprsim, by connecting their top-level instances
+		through an interface, and managing through a 
+		meta simulator (one simulator to combine them).  
+		Might be able to multi-thread this way?
 
 ===============================================================================

@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.30 2007/11/14 17:35:07 fang Exp $
+ 	$Id: namespace.cc,v 1.31 2008/03/17 23:02:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -549,7 +549,7 @@ if (probe) {
  */
 never_ptr<const instance_placeholder_base>
 scopespace::add_instance(excl_ptr<instance_placeholder_base>& i) {
-	STACKTRACE("scopespace::add_instance(excl_ptr<instance_collection_base>&)");
+	STACKTRACE_VERBOSE;
 	typedef never_ptr<const instance_placeholder_base>	return_type;
 	return_type ret(i);
 	NEVER_NULL(i);
@@ -560,6 +560,39 @@ scopespace::add_instance(excl_ptr<instance_placeholder_base>& i) {
 	INVARIANT(used_id_map[id].owned());
 	INVARIANT(!i);
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Clobber all physical instances in top-level, 
+	preserve parameter value collections.  
+	Import only physical instances from argument scope.  
+	Overwrite any parameter collections that come from referenced scope, 
+	be it template parameter or definition-local parameter.  
+	Over-shadowing is correct, because inside definition scope, 
+	wouldn't see global parameters anyway.  
+ */
+void
+scopespace::import_physical_instances(const scopespace& s) {
+{
+	// remove all physical instance collections (placeholders)
+	used_id_map_type::iterator i(used_id_map.begin()), e(used_id_map.end());
+	for ( ; i!=e; ) {
+		// copy-increment interator first
+		const used_id_map_type::iterator j(i++);
+		if (i->second.is_a<const physical_instance_placeholder>()) {
+			// b/c erase may invalidate the iterator
+			used_id_map.erase(j);
+		}
+	}
+}
+	used_id_map_type::const_iterator
+		si(s.used_id_map.begin()), se(s.used_id_map.end());
+	for ( ; si!=se; ++si) {
+		// including value parameters and physical instances
+		// overriding any previous bindings
+		used_id_map[si->first] = si->second;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

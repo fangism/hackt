@@ -1,0 +1,245 @@
+R.x[6]:X, pull up/dn are both X
+  R.x[5]:X, pull up/dn are both X
+    R.x[4]:X, pull up/dn are both X
+      R.x[3]:X, pull up/dn are both X
+        R.x[2]:X, pull up/dn are both X
+          R.x[1]:X, pull up/dn are both X
+            R.x[0]:X, pull up/dn are both X
+              R.x[12]:X, pull up/dn are both X
+                R.x[11]:X, pull up/dn are both X
+                  R.x[10]:X, pull up/dn are both X
+                    R.x[9]:X, pull up/dn are both X
+                      R.x[8]:X, pull up/dn are both X
+                        R.x[7]:X, pull up/dn are both X
+                          R.x[6]:X, cycle reached
+                          R.x[6]:X, cycle reached
+                        R.x[7]:X, (visited before, see above)
+                      R.x[8]:X, (visited before, see above)
+                    R.x[9]:X, (visited before, see above)
+                  R.x[10]:X, (visited before, see above)
+                R.x[11]:X, (visited before, see above)
+              _Reset:X, pull up/dn undriven, no fanin
+              R.x[12]:X, (visited before, see above)
+              _Reset:X, (visited before, see above)
+            R.x[0]:X, (visited before, see above)
+          R.x[1]:X, (visited before, see above)
+        R.x[2]:X, (visited before, see above)
+      R.x[3]:X, (visited before, see above)
+    R.x[4]:X, (visited before, see above)
+  R.x[5]:X, (visited before, see above)
+R.x[6]:X, pull up/dn are both X
++ ~R.x[5]:X, pull up/dn are both X
++ ~+ ~R.x[4]:X, pull up/dn are both X
++ ~+ ~+ ~R.x[3]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~R.x[2]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~R.x[1]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~R.x[0]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+-+
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~R.x[12]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~R.x[11]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~R.x[10]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~R.x[9]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~R.x[8]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~+ ~R.x[7]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[6]:X, cycle reached
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~+ ~- R.x[6]:X, cycle reached
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~+ ~- R.x[8]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~+ ~- R.x[9]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~+ ~- R.x[10]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~- R.x[11]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~+ | ~_Reset:X, pull up/dn undriven, no fanin
++ ~+ ~+ ~+ ~+ ~+ ~--+
++ ~+ ~+ ~+ ~+ ~+ ~- & R.x[12]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~- & _Reset:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~- R.x[0]:X, (visited before, see above)
++ ~+ ~+ ~+ ~- R.x[1]:X, (visited before, see above)
++ ~+ ~+ ~- R.x[2]:X, (visited before, see above)
++ ~+ ~- R.x[3]:X, (visited before, see above)
++ ~- R.x[4]:X, (visited before, see above)
+- R.x[5]:X, (visited before, see above)
+	0	_Reset : 0
+	10	R.x[0] : 1	[by _Reset:=0]
+	20	R.x[1] : 0	[by R.x[0]:=1]
+	30	R.x[2] : 1	[by R.x[1]:=0]
+	40	R.x[3] : 0	[by R.x[2]:=1]
+	50	R.x[4] : 1	[by R.x[3]:=0]
+	60	R.x[5] : 0	[by R.x[4]:=1]
+	70	R.x[6] : 1	[by R.x[5]:=0]
+	80	R.x[7] : 0	[by R.x[6]:=1]
+	90	R.x[8] : 1	[by R.x[7]:=0]
+	100	R.x[9] : 0	[by R.x[8]:=1]
+	110	R.x[10] : 1	[by R.x[9]:=0]
+	120	R.x[11] : 0	[by R.x[10]:=1]
+	130	R.x[12] : 1	[by R.x[11]:=0]
+R.x[6]:1
+  R.x[5]:0
+    R.x[4]:1
+      R.x[3]:0
+        R.x[2]:1
+          R.x[1]:0
+            R.x[0]:1
+              _Reset:0, input
+R.x[6]:1
+. R.x[5]:0
+. . ~R.x[4]:1
+. . ~. R.x[3]:0
+. . ~. . ~R.x[2]:1
+. . ~. . ~. R.x[1]:0
+. . ~. . ~. . ~R.x[0]:1
+. . ~. . ~. . ~.-+
+. . ~. . ~. . ~. & _Reset:0, input
+R.x[6]:1
+  R.x[5]:0
+    R.x[4]:1
+      R.x[3]:0
+        R.x[2]:1
+          R.x[1]:0
+            R.x[0]:1
+              _Reset:0, input
+R.x[6]:1
+. ~R.x[5]:0
+. ~. R.x[4]:1
+. ~. . ~R.x[3]:0
+. ~. . ~. R.x[2]:1
+. ~. . ~. . ~R.x[1]:0
+. ~. . ~. . ~. R.x[0]:1
+. ~. . ~. . ~. .-+
+. ~. . ~. . ~. . | ~_Reset:0, input
+R.x[12]:1
+  R.x[11]:0
+    R.x[10]:1
+      R.x[9]:0
+        R.x[8]:1
+          R.x[7]:0
+            R.x[6]:1
+              R.x[5]:0
+                R.x[4]:1
+                  R.x[3]:0
+                    R.x[2]:1
+                      R.x[1]:0
+                        R.x[0]:1
+                          _Reset:0, input
+R.x[12]:1
+. R.x[11]:0
+. . ~R.x[10]:1
+. . ~. R.x[9]:0
+. . ~. . ~R.x[8]:1
+. . ~. . ~. R.x[7]:0
+. . ~. . ~. . ~R.x[6]:1
+. . ~. . ~. . ~. R.x[5]:0
+. . ~. . ~. . ~. . ~R.x[4]:1
+. . ~. . ~. . ~. . ~. R.x[3]:0
+. . ~. . ~. . ~. . ~. . ~R.x[2]:1
+. . ~. . ~. . ~. . ~. . ~. R.x[1]:0
+. . ~. . ~. . ~. . ~. . ~. . ~R.x[0]:1
+. . ~. . ~. . ~. . ~. . ~. . ~.-+
+. . ~. . ~. . ~. . ~. . ~. . ~. & _Reset:0, input
+R.x[12]:1
+  R.x[11]:0
+    R.x[10]:1
+      R.x[9]:0
+        R.x[8]:1
+          R.x[7]:0
+            R.x[6]:1
+              R.x[5]:0
+                R.x[4]:1
+                  R.x[3]:0
+                    R.x[2]:1
+                      R.x[1]:0
+                        R.x[0]:1
+                          _Reset:0, input
+R.x[12]:1
+. ~R.x[11]:0
+. ~. R.x[10]:1
+. ~. . ~R.x[9]:0
+. ~. . ~. R.x[8]:1
+. ~. . ~. . ~R.x[7]:0
+. ~. . ~. . ~. R.x[6]:1
+. ~. . ~. . ~. . ~R.x[5]:0
+. ~. . ~. . ~. . ~. R.x[4]:1
+. ~. . ~. . ~. . ~. . ~R.x[3]:0
+. ~. . ~. . ~. . ~. . ~. R.x[2]:1
+. ~. . ~. . ~. . ~. . ~. . ~R.x[1]:0
+. ~. . ~. . ~. . ~. . ~. . ~. R.x[0]:1
+. ~. . ~. . ~. . ~. . ~. . ~. .-+
+. ~. . ~. . ~. . ~. . ~. . ~. . | ~_Reset:0, input
+	130	_Reset : 1
+	140	R.x[0] : 0	[by _Reset:=1]
+	150	R.x[1] : 1	[by R.x[0]:=0]
+	160	R.x[2] : 0	[by R.x[1]:=1]
+	170	R.x[3] : 1	[by R.x[2]:=0]
+	180	R.x[4] : 0	[by R.x[3]:=1]
+	190	R.x[5] : 1	[by R.x[4]:=0]
+	200	R.x[6] : 0	[by R.x[5]:=1]
+	210	R.x[7] : 1	[by R.x[6]:=0]
+	220	R.x[8] : 0	[by R.x[7]:=1]
+	230	R.x[9] : 1	[by R.x[8]:=0]
+	240	R.x[10] : 0	[by R.x[9]:=1]
+	250	R.x[11] : 1	[by R.x[10]:=0]
+	260	R.x[12] : 0	[by R.x[11]:=1]
+	270	R.x[0] : 1	[by R.x[12]:=0]
+	280	R.x[1] : 0	[by R.x[0]:=1]
+	290	R.x[2] : 1	[by R.x[1]:=0]
+	300	R.x[3] : 0	[by R.x[2]:=1]
+	310	R.x[4] : 1	[by R.x[3]:=0]
+	320	R.x[5] : 0	[by R.x[4]:=1]
+	330	R.x[6] : 1	[by R.x[5]:=0]
+	340	R.x[7] : 0	[by R.x[6]:=1]
+	350	R.x[8] : 1	[by R.x[7]:=0]
+	360	R.x[9] : 0	[by R.x[8]:=1]
+	370	R.x[10] : 1	[by R.x[9]:=0]
+	380	R.x[11] : 0	[by R.x[10]:=1]
+	390	R.x[12] : 1	[by R.x[11]:=0]
+	400	R.x[0] : 0	[by R.x[12]:=1]
+	410	R.x[1] : 1	[by R.x[0]:=0]
+	420	R.x[2] : 0	[by R.x[1]:=1]
+	430	R.x[3] : 1	[by R.x[2]:=0]
+R.x[6]:1
+  R.x[5]:0
+    R.x[4]:1, pending event -> 0
+R.x[6]:1
+. R.x[5]:0
+. . ~R.x[4]:1, pending event -> 0
+R.x[6]:1
+  R.x[5]:0
+    R.x[4]:1, pending event -> 0
+R.x[6]:1
+. ~R.x[5]:0
+. ~. R.x[4]:1, pending event -> 0
+R.x[12]:1
+  R.x[11]:0
+    R.x[10]:1
+      R.x[9]:0
+        R.x[8]:1
+          R.x[7]:0
+            R.x[6]:1
+              R.x[5]:0
+                R.x[4]:1, pending event -> 0
+R.x[12]:1
+. R.x[11]:0
+. . ~R.x[10]:1
+. . ~. R.x[9]:0
+. . ~. . ~R.x[8]:1
+. . ~. . ~. R.x[7]:0
+. . ~. . ~. . ~R.x[6]:1
+. . ~. . ~. . ~. R.x[5]:0
+. . ~. . ~. . ~. . ~R.x[4]:1, pending event -> 0
+R.x[12]:1
+  R.x[11]:0
+    R.x[10]:1
+      R.x[9]:0
+        R.x[8]:1
+          R.x[7]:0
+            R.x[6]:1
+              R.x[5]:0
+                R.x[4]:1, pending event -> 0
+R.x[12]:1
+. ~R.x[11]:0
+. ~. R.x[10]:1
+. ~. . ~R.x[9]:0
+. ~. . ~. R.x[8]:1
+. ~. . ~. . ~R.x[7]:0
+. ~. . ~. . ~. R.x[6]:1
+. ~. . ~. . ~. . ~R.x[5]:0
+. ~. . ~. . ~. . ~. R.x[4]:1, pending event -> 0

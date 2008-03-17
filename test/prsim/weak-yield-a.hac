@@ -1,0 +1,10 @@
+// "weak-yield-a.hac"
+// simulating a write to a half-cell, late change on bitline
+
+bool t, f, bl, wl;
+
+prs {
+[weak=1]	f	=> t-
+	wl & ~bl	-> t-
+}
+

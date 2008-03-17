@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4 2007/12/01 04:25:31 fang Exp $
+	$Id: Command-prsim.cc,v 1.5 2008/03/17 23:02:56 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -28,6 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iterator>
 
 #include "sim/prsim/Command-prsim.h"
+#include "sim/prsim/Command-prsim-export.h"
 #include "sim/prsim/State-prsim.h"
 #include "sim/command_base.tcc"
 #include "sim/command_category.tcc"
@@ -76,8 +77,9 @@ using parser::parse_name_to_get_subnodes;
 static CommandCategory
 	builtin("builtin", "built-in commands"),
 	general("general", "general commands"),
+	debug("debug", "debugging internals"),
 	simulation("simulation", "simulation commands"),
-	channel("channel", "channel commands"),
+	channels("channels", "channel commands"),
 	info("info", "information about simulated circuit"),
 	view("view", "instance to watch"),
 	modes("modes", "timing model, error handling");
@@ -221,6 +223,20 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Aliases, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/echo-commands.texi
+@deffn Command echo-commands arg
+Enables or disables echoing of each interpreted command and 
+tracing through sourced script files.  
+@var{arg} is either "on" or "off".  
+Default off.
+@end deffn
+@end texinfo
+***/
+typedef	EchoCommands<State>				EchoCommands;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::EchoCommands, PRSIM::builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/source.texi
 @deffn Command source script
 @anchor{command-source}
@@ -282,16 +298,19 @@ typedef	Reset<State>				Reset;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Reset, PRSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Command class for stepping through one event at a time from
+/***
+	Command class for stepping through one time-step at a time from
 	the event queue. 
 @texinfo cmd/step.texi
 @deffn Command step [n]
-Advances the simulation by @var{n} steps (events).  
+Advances the simulation by @var{n} time steps.  
 Without @var{n}, takes only a single step.  
+Time steps may cover multiple events if they are at the exact same time.
+To step by events count, use @command{step-event}.  
 @end deffn
 @end texinfo
- */
+***/
+#if 0
 struct Step {
 public:
 	static const char               name[];
@@ -299,81 +318,13 @@ public:
 	static CommandCategory&         category;
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
-	static ostream& print_watched_node(ostream&, const State&, 
-		const node_index_type, const string&);
-	static ostream& print_watched_node(ostream&, const State&, 
-		const State::step_return_type&);
-	static ostream& print_watched_node(ostream&, const State&, 
-		const State::step_return_type&, const string&);
 private:
 	static const size_t             receipt_id;
 };      // end class Step
+#endif
 
-INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
-	"step through event")
-
-static
-inline
-node_index_type
-GET_NODE(const State::step_return_type& x) {
-	return x.first;
-}
-
-static
-inline
-node_index_type
-GET_CAUSE(const State::step_return_type& x) {
-	return x.second;
-}
-
-/**
-	Yeah, I know looking up already looked up node, but we don't
-	care because printing and diagnostics are not performance-critical.  
-	\param nodename the name to use for reporting, which need not be
-		the canonical name of the node, but some equivalent.  
- */
-ostream&
-Step::print_watched_node(ostream& o, const State& s, 
-		const State::step_return_type& r, const string& nodename) {
-	const node_index_type ni = GET_NODE(r);
-	// const string nodename(s.get_node_canonical_name(ni));
-	const State::node_type& n(s.get_node(ni));
-	n.dump_value(o << nodename << " : ");
-	const node_index_type ci = GET_CAUSE(r);
-	if (ci) {
-		const string causename(s.get_node_canonical_name(ci));
-		const State::node_type& c(s.get_node(ci));
-		c.dump_value(o << "\t[by " << causename << ":=") << ']';
-	}
-	if (s.show_tcounts()) {
-		o << "\t(" << n.tcount << " T)";
-	}
-	return o << endl;
-}
-
-/**
-	This automatically uses the canonical name.  
- */
-ostream&
-Step::print_watched_node(ostream& o, const State& s, 
-		const State::step_return_type& r) {
-	const node_index_type ni = GET_NODE(r);
-	const string nodename(s.get_node_canonical_name(ni));
-	return print_watched_node(o, s, r, nodename);
-}
-
-/**
-	This variation deduces the cause of the given node's last transition,
-	the last arriving input to a firing rule.  
-	\param nodename the name to use for reporting.  
- */
-ostream&
-Step::print_watched_node(ostream& o, const State& s, 
-		const node_index_type ni, const string& nodename) {
-	return print_watched_node(o, s,
-		State::step_return_type(ni, s.get_node(ni).get_cause_node()), 
-		nodename);
-}
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
+	"step through event(s), by time increments")
 
 /**
 	Like process_step() from original prsim.  
@@ -442,8 +393,8 @@ if (a.size() > 2) {
 			}
 		}
 	}	// end while
-	} catch (const State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
+	} catch (const step_exception& exex) {
+		s.inspect_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
 	return Command::NORMAL;
@@ -452,10 +403,106 @@ if (a.size() > 2) {
 
 void
 Step::usage(ostream& o) {
-	o << "step [#steps]" << endl;
+	o << "step [#timesteps]" << endl;
 	o <<
 "Advances the simulation by a number of steps (default: 1).\n"
-"Simulation will stop prematurely if any event violations are encountered."
+"Simulation will stop prematurely if any event violations are encountered.\n"
+"Note: the argument is the number of time *increments* to simulate, not the\n"
+"number of events (see step-event)."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+	Command class for stepping through one event at a time from
+	the event queue. 
+@texinfo cmd/step-event.texi
+@deffn Command step-event [n]
+Advances the simulation by @var{n} events.  
+Without @var{n}, takes only a single event.  
+A single event is not necessarily guaranteed to advance the time, 
+if multiple events are enqueued at the same time.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StepEvent, "step-event", simulation,
+	"step through event(s), by event count")
+
+int
+StepEvent::main(State& s, const string_list& a) {
+if (a.size() > 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::time_type		time_type;
+	typedef	State::node_type		node_type;
+	size_t i;		// the number of discrete time steps
+		// not necessarily == the number of discrete events
+	State::step_return_type ni;	// also stores the cause of the event
+	if (a.size() == 2) {
+		if (string_to_num(a.back(), i)) {
+			cerr << "Error parsing #steps." << endl;
+			// usage()?
+			return Command::BADARG;
+		}
+	} else {
+		i = 1;
+	}
+	s.resume();
+	// could check s.pending_events()
+	try {
+	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
+		--i;
+		// NB: may need specialization for real-valued (float) time.  
+		const time_type ct(s.time());
+		const node_type& n(s.get_node(GET_NODE(ni)));
+		/***
+			The following code should be consistent with
+			Cycle::main() and Advance::main().
+			tracing stuff here later...
+		***/
+		if (s.watching_all_nodes()) {
+			print_watched_node(cout << '\t' << ct << '\t', s, ni);
+		}
+		if (n.is_breakpoint()) {
+			// this includes watchpoints
+			const bool w = s.is_watching_node(GET_NODE(ni));
+			const string nodename(
+				s.get_node_canonical_name(GET_NODE(ni)));
+			if (w) {
+			if (!s.watching_all_nodes()) {
+				print_watched_node(cout << '\t' << ct << '\t',
+					s, ni);
+			}	// else already have message from before
+			}
+			// channel support
+			if (!w) {
+				// node is plain breakpoint
+				cout << "\t*** break, " << i <<
+					" steps left: `" << nodename <<
+					"\' became ";
+				n.dump_value(cout) << endl;
+				return Command::NORMAL;
+				// or Command::BREAK; ?
+			}
+		}
+	}	// end while
+	} catch (const step_exception& exex) {
+		s.inspect_exception(exex, cerr);
+		return Command::FATAL;
+	}	// no other exceptions
+	return Command::NORMAL;
+}
+}	// end StepEvent::main
+
+void
+StepEvent::usage(ostream& o) {
+	o << "step-event [#events]" << endl;
+	o <<
+"Advances the simulation by a number of events (default: 1).\n"
+"Simulation will stop prematurely if any event violations are encountered.\n"
+"Note: the argument is the number of discrete events to simulate, not the\n"
+"number of time steps (see step)."
 	<< endl;
 }
 
@@ -487,59 +534,7 @@ if (a.size() != 2) {
 		return Command::BADARG;
 	}
 	const time_type stop_time = s.time() +add;
-	State::step_return_type ni;
-	s.resume();
-	try {
-	while (!s.stopped() && s.pending_events() &&
-			(s.next_event_time() < stop_time) &&
-			GET_NODE((ni = s.step()))) {
-		// NB: may need specialization for real-valued (float) time.  
-
-		// honor breakpoints?
-		// tracing stuff here later...
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Step::main().
-			TODO: factor this out for maintainability.  
-		***/
-		if (s.watching_all_nodes()) {
-			Step::print_watched_node(cout << '\t' << s.time() <<
-				'\t', s, ni);
-		}
-		if (n.is_breakpoint()) {
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(s.get_node_canonical_name(
-				GET_NODE(ni)));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				Step::print_watched_node(cout << '\t' <<
-					s.time() << '\t', s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-				// node is plain breakpoint
-				cout << "\t*** break, " <<
-					stop_time -s.time() <<
-					" time left: `" << nodename <<
-					"\' became ";
-				n.dump_value(cout) << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-			}
-		}
-	}	// end while
-	} catch (const State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
-		return Command::FATAL;
-	}	// no other exceptions
-	if (!s.stopped() && s.time() < stop_time) {
-		s.update_time(stop_time);
-	}
-	// else leave the time at the time as of the last event
-	return Command::NORMAL;
+	return prsim_advance(s, stop_time, true);
 }
 }	// end Advance::main()
 
@@ -588,7 +583,7 @@ if (a.size() != 1) {
 			Step::main() and Advance::main().
 		***/
 		if (s.watching_all_nodes()) {
-			Step::print_watched_node(cout << '\t' << s.time() <<
+			print_watched_node(cout << '\t' << s.time() <<
 				'\t', s, ni);
 		}
 		if (n.is_breakpoint()) {
@@ -598,7 +593,7 @@ if (a.size() != 1) {
 				GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-				Step::print_watched_node(cout << '\t' <<
+				print_watched_node(cout << '\t' <<
 					s.time() << '\t', s, ni);
 			}	// else already have message from before
 			}
@@ -613,8 +608,8 @@ if (a.size() != 1) {
 			}
 		}
 	}	// end while (!s.stopped())
-	} catch (const State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
+	} catch (const step_exception& exex) {
+		s.inspect_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
 	return Command::NORMAL;
@@ -1140,6 +1135,18 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Load, PRSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/autosave.texi
+@deffn Command autosave [on|off]
+Automatically save checkpoint upon end of simulation, 
+regardless of exit status.
+@end deffn
+@end texinfo
+***/
+typedef	AutoSave<State>				AutoSave;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AutoSave, PRSIM::simulation)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/what.texi
 @deffn Command what name
 Print the type of the instance named @var{name}.  
@@ -1159,6 +1166,144 @@ Print all equivalent aliases of instance @var{name}.
 ***/
 typedef	Who<State>				Who;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Who, PRSIM::info)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/pending.texi
+@deffn Command pending node
+@deffnx Command pending-debug node
+Shows pending event on node (if any).
+The debug variant shows the internal event index number, 
+which should really never be exposed to the public API.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Pending, "pending", info,
+	"print any pending event on node")
+
+int
+Pending::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		// we have ni = the canonically allocated index of the bool node
+		// just look it up in the node_pool
+		s.dump_node_pending(cout, ni, false);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Pending::usage(ostream& o) {
+	o << "pending <node>" << endl;
+	o << "prints pending even on node if there is one" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(PendingDebug, "pending-debug", debug,
+	"print any pending event on node (with index)")
+
+int
+PendingDebug::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.dump_node_pending(cout, ni, true);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+PendingDebug::usage(ostream& o) {
+	o << "pending-debug <node>" << endl;
+	o << "prints pending even on node if there is one" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/check-structure.texi
+@deffn Command check-structure
+Check internal graph/tree/map data structures for consistency and coherence.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CheckStructure, "check-structure", debug,
+	"check internal data structures")
+
+int
+CheckStructure::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	try {
+		s.check_structure();
+		// will ISE (crash) on inconsistency (intentional)
+	} catch (...) {
+		return Command::FATAL;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+CheckStructure::usage(ostream& o) {
+	o << "check-structure" << endl;
+	o << "Halt on error if any internal data structure "
+		"inconsistencies are found." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/check-queue.texi
+@deffn Command check-queue
+Check internal event queue (as seen by @command{queue}) for
+inconsistencies, such as missing back-links, multiply referenced nodes...
+(Because the simulator was not perfect.)
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CheckQueue, "check-queue", debug,
+	"check for inconsistencies in event-queue")
+
+int
+CheckQueue::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	try {
+		s.check_event_queue();
+		// will ISE (crash) on inconsistency (intentional)
+	} catch (...) {
+		return Command::FATAL;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+CheckQueue::usage(ostream& o) {
+	o << "check-queue" << endl;
+	o << "Halt on error if any event-node inconsistencies are found."
+		<< endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1185,7 +1330,7 @@ if (a.size() != 2) {
 	if (ni) {
 		// we have ni = the canonically allocated index of the bool node
 		// just look it up in the node_pool
-		Step::print_watched_node(cout, s, ni, objname);
+		print_watched_node(cout, s, ni, objname);
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
@@ -1250,10 +1395,13 @@ GetAll::usage(ostream& o) {
 /***
 @texinfo cmd/status.texi
 @deffn Command status value
+@deffnx Command status-newline value
 Print all nodes whose current value is @var{value}.  
 Frequently used to find nodes that are in an unknown ('X') state.  
 Valid @var{value} arguments are [0fF] for logic-low, [1tT] for logic-high,
 [xXuU] for unknown value.  
+The @command{-newline} variant prints each node on a separate line
+for readability.  
 @end deffn
 @end texinfo
 ***/
@@ -1269,7 +1417,7 @@ if (a.size() != 2) {
 	typedef	State::node_type		node_type;
 	const char v = node_type::string_to_value(a.back());
 	if (node_type::is_valid_value(v)) {
-		s.status_nodes(cout, v);
+		s.status_nodes(cout, v, false);
 		return Command::NORMAL;
 	} else {
 		cerr << "Bad status value." << endl;
@@ -1283,6 +1431,132 @@ void
 Status::usage(ostream& o) {
 	o << "status <[0fF1tTxXuU]>" << endl;
 	o << "list all nodes with the matching current value" << endl;
+}
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusNewline, "status-newline", info, 
+	"show all nodes matching a value, line separated")
+
+int
+StatusNewline::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	const char v = node_type::string_to_value(a.back());
+	if (node_type::is_valid_value(v)) {
+		s.status_nodes(cout, v, true);
+		return Command::NORMAL;
+	} else {
+		cerr << "Bad status value." << endl;
+		usage(cerr);
+		return Command::BADARG;
+	}
+}
+}
+
+void
+StatusNewline::usage(ostream& o) {
+	o << "status-newline <[0fF1tTxXuU]>" << endl;
+	o << "list all nodes with the matching current value" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unknown-inputs.texi
+@deffn Command unknown-inputs
+Print all nodes with value X that have no fanins, i.e. input-only nodes.  
+Connections to channel sinks or sources can count as inputs (fake fanin).
+Great for debugging forgotten environment inputs and connections!
+This variant includes X-nodes with no fanouts (unused nodes).  
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnknownInputs, "unknown-inputs", info, 
+	"list all nodes at value X with no fanin")
+
+int
+UnknownInputs::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_dangling_unknown_nodes(cout, true);
+	return Command::NORMAL;
+}
+}
+
+void
+UnknownInputs::usage(ostream& o) {
+	o << name <<
+	" -- list all nodes at value X with no fanin (channels counted)."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unknown-inputs-fanout.texi
+@deffn Command unknown-inputs-fanout
+Print all nodes with value X that have no fanins, i.e. input-only nodes.  
+This variant excludes X-nodes with no fanouts (unused nodes).  
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnknownInputsFanout,
+	"unknown-inputs-fanout", info, 
+	"list all X nodes with no fanin, with fanout")
+
+int
+UnknownInputsFanout::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_dangling_unknown_nodes(cout, false);
+	return Command::NORMAL;
+}
+}
+
+void
+UnknownInputsFanout::usage(ostream& o) {
+	o << name <<
+	" -- list X nodes with no fanin, with fanout (channels counted)."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unknown-outputs.texi
+@deffn Command unknown-outputs
+Print all nodes with value X that have no fanouts, i.e. output-only nodes.  
+Connections to channel sinks and sources can counts as outputs (fake fanout).
+This will not catch output nodes that are fed back into circuits.  
+This variant excludes X-nodes with no fanouts (unused nodes).  
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnknownOutputs,
+	"unknown-outputs", info, 
+	"list all X nodes with no fanout")
+
+int
+UnknownOutputs::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_output_unknown_nodes(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+UnknownOutputs::usage(ostream& o) {
+	o << name << " -- list X nodes with no fanout (channels counted)."
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1693,6 +1967,91 @@ AssertN::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/assert-pending.texi
+@deffn Command assert-pending node
+Error out if @var{node} does not have a pending event in queue.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertPending, "assert-pending", info, 
+	"error if node does not have event in queue")
+
+
+int
+AssertPending::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		const node_type& n(s.get_node(ni));
+		if (!n.pending_event()) {
+			cout <<
+			"assert failed: expecting pending event on node `"
+				<< objname << "\', but none found." << endl;
+			return Command::FATAL;
+		}
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+AssertPending::usage(ostream& o) {
+	o << "assert-pending <node>" << endl;
+	o << "signal an error and halt if node has pending event" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assertn-pending.texi
+@deffn Command assert-pending node
+Error out if @var{node} does have a pending event in queue.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertNPending, "assertn-pending", info, 
+	"error if node does have event in queue")
+
+int
+AssertNPending::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		const node_type& n(s.get_node(ni));
+		if (n.pending_event()) {
+			cout <<
+			"assert failed: expecting no pending event on node `"
+				<< objname << "\', but found one." << endl;
+			return Command::FATAL;
+		}
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+AssertNPending::usage(ostream& o) {
+	o << "assertn-pending <node>" << endl;
+	o << "signal an error and halt if node has no pending event" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/assert-queue.texi
 @deffn Command assert-queue
 Error out if event queue is empty.  
@@ -1702,6 +2061,18 @@ Useful for checking for deadlock.
 ***/
 typedef	AssertQueue<State>			AssertQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertQueue, PRSIM::info)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assertn-queue.texi
+@deffn Command assertn-queue
+Error out if event queue is not empty.  
+Useful for checking for checking result of cycle.  
+@end deffn
+@end texinfo
+***/
+typedef	AssertNQueue<State>			AssertNQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertNQueue, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1746,7 +2117,6 @@ if (a.size() != 2) {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
-		// Step::print_watched_node(cout, s, ni, objname);
 		s.backtrace_node(cout, ni);
 		return Command::NORMAL;
 	} else {
@@ -1765,6 +2135,236 @@ BackTrace::usage(ostream& o) {
 }
 
 #endif	// PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/why-x.texi
+@deffn Command why-x node
+@deffnx Command why-x-verbose node
+Print causality chain for why a particular node (at value X) remains X.  
+In expressions, X nodes that are masked out (e.g. 1 | X or 0 & X) 
+are not followed.  
+The verbose variant prints more information about the subexpressions
+visited (whether conjunctive or disjunctive), 
+and pretty prints in tree-indent form.  
+Recursion terminates on cycles and already-visited nodes.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyX, "why-x", info, 
+	"recursively trace cause of X value on node")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyXVerbose, "why-x-verbose", info, 
+	"recursively trace cause of X value on node (verbose)")
+
+static
+int
+why_X_main(State& s, const string_list& a, const bool verbose) {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.dump_node_why_X(cout, ni, verbose);
+		return Command::NORMAL;
+	} else {
+		return Command::BADARG;
+	}
+}
+
+int
+WhyX::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	return why_X_main(s, a, false);
+}
+}
+
+int
+WhyXVerbose::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	return why_X_main(s, a, true);
+}
+}
+
+void
+WhyX::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o <<
+"Recursively finds the cause for the node being X through other X nodes."
+		<< endl;
+}
+
+void
+WhyXVerbose::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o <<
+"Recursively finds the cause for the node being X through other X nodes.\n"
+"Verbose variant prints more details about expression structures."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/why.texi
+@deffn Command why node [val]
+@deffnx Command why-verbose node [val]
+Print reason for node being driven to a given value, 0 or 1.
+X is not a valid value for this procedure.  
+If @var{val} is not given, it is assumed to be the current value of the node.  
+The algorithm examines each node's fanins and follows
+nodes on paths where the subexpression is true 
+(path through transistors is on).  
+The analysis will terminate at state-holding nodes that are not being
+driven to their current value.
+This is an excellent aid in debugging unexpected values.  
+The verbose variant prints expression types as it auto-indents, 
+which is more informative but may appear more cluttered.  
+@end deffn
+@end texinfo
+***/
+/***
+@texinfo cmd/why-not.texi
+@deffn Command why-not node [val]
+@deffnx Command why-not-verbose node [val]
+Print reason for node not being a given value, 0 or 1.
+X is not a valid value for this procedure.  
+If @var{val} is not given, it is assumed to be opposite of the
+current value of the node.  
+The algorithm examines each node's fanins and follows
+nodes that prevent the relevant expression from evaluating true.  
+This is an excellent tool for debugging deadlocks.  
+The verbose variant prints expression types as it auto-indents, 
+which is more informative but may appear more cluttered.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Why, "why", info, 
+	"recursively trace why node is driven to value")
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyVerbose, "why-verbose", info, 
+	"recursively trace why node is driven to value (verbose)")
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot, "why-not", info, 
+	"recursively trace why node is not at value")
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotVerbose, "why-not-verbose", info, 
+	"recursively trace why node is not at value (verbose)")
+
+/**
+	Template procedure for invoking node_why[_not] with various options.
+	\param why_not true if querying negatively
+	\param verbose true if expression structure verbosity requested
+ */
+static
+int
+why_not_main(State& s, const string_list& a, 
+		const bool why_not, const bool verbose, 
+		void (usage)(ostream&)) {
+const size_t a_s = a.size();
+if (a_s < 2 || a_s > 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+if (ni) {
+	bool v;
+	if (a_s == 3) {
+		const string& b(a.back());
+		if (b == "0") {
+			v = false;
+		} else if (b == "1") {
+			v = true;
+		} else {
+			usage(cerr << "usage: ");
+			return Command::BADARG;
+		}
+	} else {
+		typedef	State::node_type	node_type;
+		switch (s.get_node(ni).current_value()) {
+		case node_type::LOGIC_LOW:
+			v = why_not;
+			break;
+		case node_type::LOGIC_HIGH:
+			v = !why_not;
+			break;
+		default:
+			cerr << "why[-not] <node> X is not supported." << endl;
+			return Command::BADARG;
+		}
+	}
+	s.dump_node_why_not(cout, ni, v, why_not, verbose);
+	return Command::NORMAL;
+} else {
+	return Command::BADARG;
+}
+}
+}
+
+int
+Why::main(State& s, const string_list& a) {
+	return why_not_main(s, a, false, false, usage);
+}
+
+int
+WhyVerbose::main(State& s, const string_list& a) {
+	return why_not_main(s, a, false, true, usage);
+}
+
+int
+WhyNot::main(State& s, const string_list& a) {
+	return why_not_main(s, a, true, false, usage);
+}
+
+int
+WhyNotVerbose::main(State& s, const string_list& a) {
+	return why_not_main(s, a, true, true, usage);
+}
+
+static
+void
+why_usage(ostream& o, const char* name) {
+	o << name << " <node> [01]" << endl;
+	o <<
+"Recursively trace back reason why named node is driven to a given value.\n"
+"Value must be 0 or 1.  If value is omitted, then assumes the current value.\n"
+"This can be used to detect unexpected firings in circuits."
+	<< endl;
+}
+
+static
+void
+why_not_usage(ostream& o, const char* name) {
+	o << name << " <node> [01]" << endl;
+	o <<
+"Recursively trace back reason why named node has not become a given value.\n"
+"Value must be 0 or 1.  If value is omitted, then assumes the opposite value.\n"
+"This can be used to detect deadlock in circuits."
+	<< endl;
+}
+
+void
+Why::usage(ostream& o) {
+	why_usage(o, name);
+}
+
+void
+WhyVerbose::usage(ostream& o) {
+	why_usage(o, name);
+}
+
+void
+WhyNot::usage(ostream& o) {
+	why_not_usage(o, name);
+}
+
+void
+WhyNotVerbose::usage(ostream& o) {
+	why_not_usage(o, name);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1974,7 +2574,7 @@ Watches::usage(ostream& o) {
 @texinfo cmd/watch-queue.texi
 @deffn Command watch-queue
 @deffnx Command nowatch-queue
-Show changes to the event-queue as events are scheduled.
+Show changes to the event-queue as events on only watched nodes are scheduled.
 Typically only used during debugging or detailed diagnostics.  
 @end deffn
 @end texinfo
@@ -1985,6 +2585,74 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WatchQueue, PRSIM::view)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	NoWatchQueue<State>			NoWatchQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoWatchQueue, PRSIM::view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watchall-queue.texi
+@deffn Command watchall-queue
+@deffnx Command nowatchall-queue
+Show changes to the event-queue as @emph{every} event is scheduled.
+Typically only used during debugging or detailed diagnostics.  
+@end deffn
+@end texinfo
+***/
+typedef	WatchAllQueue<State>			WatchAllQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WatchAllQueue, PRSIM::view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	NoWatchAllQueue<State>			NoWatchAllQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoWatchAllQueue, PRSIM::view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/cause.texi
+@deffn Command cause
+@deffnx Command nocause
+@command{cause} displays causal information of nodes as they change value.  
+@command{nocause} hides cause information, but silently keeps track.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cause, "cause", view, 
+	"show causal transitions on watched nodes")
+
+int
+Cause::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.set_show_cause();
+	return Command::NORMAL;
+}
+}
+
+void
+Cause::usage(ostream& o) {
+	o << name << endl;
+	o << "report causal transitions of watched nodes" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoCause, "nocause", view, 
+	"hide causal transitions on watched nodes")
+
+int
+NoCause::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.clear_show_cause();
+	return Command::NORMAL;
+}
+}
+
+void
+NoCause::usage(ostream& o) {
+	o << name << endl;
+	o << "suppress causal transitions of watched nodes" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2012,7 +2680,7 @@ if (a.size() != 1) {
 
 void
 TCounts::usage(ostream& o) {
-	o << "tcounts" << endl;
+	o << name<< endl;
 	o << "report transition counts of watched nodes" << endl;
 }
 
@@ -2033,7 +2701,7 @@ if (a.size() != 1) {
 
 void
 NoTCounts::usage(ostream& o) {
-	o << "notcounts" << endl;
+	o << name << endl;
 	o << "suppress transition counts of watched nodes" << endl;
 }
 
@@ -2183,6 +2851,61 @@ EvalOrder::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_WEAK_RULES
+/***
+@texinfo cmd/weak-rules.texi
+@deffn Command weak-rules [on|off]
+Simulation mode switch which globally enables or disables (ignores)
+weak-rules.  
+Weak-rules can only take effect when normal rules pulling a node are off.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WeakRules, "weak-rules", modes, 
+	"enable/disable weak rules")
+
+int
+WeakRules::main(State& s, const string_list& a) {
+switch (a.size()) {
+case 1: {
+	cout << "weak-rules ";
+	if (s.weak_rules_enabled()) {
+		cout << "on";
+	} else {
+		cout << "off";
+	}
+	cout << endl;
+	return Command::NORMAL;
+}
+case 2: {
+	const string& arg(a.back());
+	if (arg == "on") {
+		s.enable_weak_rules();
+	} else if (arg == "off") {
+		s.disable_weak_rules();
+	} else {
+		cerr << "Bad argument." << endl;
+		usage(cerr);
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+default:
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+}
+}
+
+void
+WeakRules::usage(ostream& o) {
+	o << "weak-rules [on|off]" << endl;
+	o <<
+"Simulate or ignore weak-rules, which can drive nodes, but are overpowered "
+"by normal rules." << endl;
+}
+#endif	// PRSIM_WEAK_RULES
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/timing.texi
 @deffn Command timing [mode] ...
@@ -2223,6 +2946,20 @@ Timing::usage(ostream& o) {
 	o << "if no mode is given, just reports the current mode." << endl;
 	State::help_timing(o);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/seed48.texi
+@deffn Command seed48 [int int int]
+Corresponds to libc's seed48 function.  
+With no argument, print the current values of the internal random number seed.
+With three (unsigned short) integers, sets the random number seed.
+Note: the seed is automatically saved and restored in checkpoints.  
+@end deffn
+@end texinfo
+***/
+typedef	Seed48<State>			Seed48;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Seed48, PRSIM::modes)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2517,6 +3254,1111 @@ SetMode::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/memstats.texi
+@deffn Command memstats
+Show memory usage breakdown of the simulator.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(MemStats, "memstats", 
+	debug, "show memory usage statistics")
+
+int
+MemStats::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_memory_usage(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+MemStats::usage(ostream& o) {
+	o << "memstats" << endl;
+	o << "show memory usage details of simulator state" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SUPPORT
+// TODO: texinfo documentation! oh, and implement these.
+// TODO: support PxeMx1ofN (array source, auto-expand and decouple?)
+// TODO: typedef-channel command
+
+/***
+@texinfo cmd/channel.texi
+@deffn Command channel name type bundle rails
+Registers a named channel (with constituents) in a separate namespace in
+the simulator, typically used to drive or log the environment.
+The @var{name} of the channel should match that of an instance 
+(process or channel) in the source file.  
+@itemize
+@item @var{name} is the name of the new channel in the simulator's namespace
+@item @var{type} is a regular expression of the form @t{[ae][nv]?:[01]}, where
+@itemize
+	@item @t{a} means active-high acknowledge
+	@item @t{e} means active-low acknowledge (a.k.a. enable)
+	@item @t{n} means active-low validity (a.k.a. neutrality)
+	@item @t{v} means active-high validity.
+	These are also the names of the channel signals.
+	@item @t{[01]} is the initial value of the acknowledge during reset, 
+		which is only relevant to channel sinks.  
+@end itemize
+@item @var{bundle} is the name of the data bundle (rail group) of the channel
+	in the form @t{[name]:size}, where @var{size} is the number of 
+	rail bundles (M in Mx1ofN).
+	If there are no bundles, then leave the name blank,
+		i.e. just write @t{:0}
+	If there is only one bundle (1x1ofN), use @var{size} 0 to 
+		indicate that named bundle is not an array.
+@item @var{rails} (@t{rname:radix}) is the name and size of each bundle's 
+	data rails, @var{rname} is the name of the data rail of the channel.
+	@var{radix} is the number of data rails per bundle (N in Mx1ofN).
+	Use @var{radix} 0 to indicate that rail is not an array (1of1).
+@end itemize
+For example, @t{channel e:0 :0 d:4} is a conventional e1of4 channel with
+data rails @t{d[0..3]}, and an active-low acknowledge reset to 0, no bundles.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Channel, "channel", 
+	channels, "declare a handshake channel from a group of nodes")
+
+int
+Channel::main(State& s, const string_list& a) {
+if (a.size() != 5) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string& chan_name(*i);
+	const string& ev_type(*++i);
+	const string& bundle(*++i);
+	const string& rail(*++i);
+	// could confirm that 'name' exists as a process/channel/datatype?
+	bool ack_sense;
+	bool ack_init;
+	bool have_valid = false;
+	bool valid_sense = false;
+	try {
+		// parse ev-type
+		const size_t evl = ev_type.length();
+		if (evl < 3 || evl > 4) { THROW_EXIT; }
+		switch (tolower(ev_type[0])) {
+		case 'a': ack_sense = true; break;
+		case 'e': ack_sense = false; break;
+		default: THROW_EXIT;
+		}
+		size_t c = ev_type.find(':');
+		if (c == string::npos) { THROW_EXIT; }
+		if (evl == 4) {
+			have_valid = true;
+			switch (tolower(ev_type[c-1])) {
+			case 'n': valid_sense = false; break;
+			case 'v': valid_sense = true; break;
+			default: THROW_EXIT;
+			}
+		}
+		switch (*--ev_type.end()) {
+		case '0': ack_init = false; break;
+		case '1': ack_init = true; break;
+		default: THROW_EXIT;
+		}
+	} catch (...) {
+		cerr << "Error: invalid channel ev-type argument." << endl;
+		cerr << "See \"help " << name << "\"." << endl;
+		return Command::BADARG;
+	}
+	string bundle_name;	// default blank
+	size_t bundle_size = 0;
+	try {
+		// parse bundle
+		size_t c = bundle.find(':');
+		if (c == string::npos || (c == bundle.length() -1)) {
+			THROW_EXIT;
+		}
+		const string::const_iterator b(bundle.begin());
+		bundle_name.assign(b, b+c);
+		string v(b +c +1, bundle.end());
+		if (string_to_num(v, bundle_size)) { THROW_EXIT; }
+	} catch (...) {
+		cerr << "Error: invalid channel bundle argument." << endl;
+		cerr << "See \"help " << name << "\"." << endl;
+		return Command::BADARG;
+	}
+	string rail_name;
+	size_t rail_size = 0;
+	try {
+		// parse rail
+		size_t c = rail.find(':');
+		if (c == string::npos || (c == rail.length() -1)) {
+			THROW_EXIT;
+		}
+		const string::const_iterator b(rail.begin());
+		rail_name.assign(b, b+c);
+		if (!rail_name.length()) { THROW_EXIT; }
+		string v(b +c +1, rail.end());
+		if (string_to_num(v, rail_size)) { THROW_EXIT; }
+	} catch (...) {
+		cerr << "Error: invalid channel rail argument." << endl;
+		cerr << "See \"help " << name << "\"." << endl;
+		return Command::BADARG;
+	}
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.new_channel(s, chan_name, bundle_name, bundle_size, 
+			rail_name, rail_size) ||
+			cm.set_channel_ack_valid(s, chan_name, ack_sense, 
+				ack_init, have_valid, valid_sense)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}	// end Channel::main
+
+void
+Channel::usage(ostream& o) {
+	o << name << " <name> <type:init> <bundle:size> <rail:radix>" << endl;
+	o <<
+"Registers a named channel (with constituents) in a separate namespace in \n"
+"the simulator, typically used to drive or log the environment.\n"
+"\'name\' is the name of the new channel in the simulator's namespace\n"
+"\'type\' is a regular expression of the form [ae][nv]?, where \n"
+	"\t\'a\' means active-high acknowledge\n"
+	"\t\'e\' means active-low acknowledge (a.k.a. enable)\n"
+	"\t\'n\' means active-low validity (a.k.a. neutrality)\n"
+	"\t\'v\' means active-high validity.\n"
+	"\tThese are also the names of the channel signals.\n"
+"\'init\' is [01], the initial value of the acknowledge during reset\n"
+"\'bundle\' is the name of the data bundle (rail group) of the channel.\n"
+"\'size\' is the number of rail bundles (M in Mx1ofN)\n"
+	"\tnote: if there are no bundles, then leave the name blank,\n"
+		"\t\ti.e. just write \":0\"\n"
+	"\tUse size 0 to indicate that bundle name is not an array.\n"
+"\'rail\' is the name of the data rail of the channel.\n"
+"\'radix\' is the number of data rails per bundle (N in Mx1ofN).\n"
+	"\tUse radix 0 to indicate that rails are not an array (1of1).\n"
+"For example, \"channel e:0 :0 d:4\", is a conventional e1of4 channel with\n"
+"data rails d[0..3], and an active-low acknowledge reset to 0, no bundles."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// for finesse
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AutoChannel, "auto-channel", 
+	channels, "register a channel based on internal type")
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-show.texi
+@deffn Command channel-show chan
+Print the current configuration and state of channel @var{chan}.
+This also shows the sequence of values associated with sources and 
+expectations with sequence position, if applicable.  
+Looping values are indicated with @t{*}.  
+This also shows the origin of the value sequence and the 
+name of the current log file to which values are dumped, if enabled.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelShow, "channel-show", 
+	channels, "show configuration of registered channel")
+
+int
+ChannelShow::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.dump_channel(cout, a.back())) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelShow::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-show-all.texi
+@deffn Command channel-show-all
+Print the current configuration for all registered channels.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelShowAll, "channel-show-all", 
+	channels, "list configuration of all registered channels")
+
+int
+ChannelShowAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_channels(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelShowAll::usage(ostream& o) {
+	o << name << endl;
+o << "Print list of all registered channels with their type information."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// change loop configuration
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLoop, "channel-loop", 
+	channels, "cycle through source/expect values")
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLoop, "channel-unloop", 
+	channels, "stop sourcing/expecting at end of values")
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-watch.texi
+@deffn Command channel-watch chan
+Report value of data rails when channel @var{chan} has valid data.  
+Data validity is only determined by the state of the data rails, 
+and not the acknowledge signal. 
+An unstable channel (that can transiently take valid states)
+will report @emph{every} transient value.
+Channels in the stopped state will NOT be reported, 
+make sure that they are resumed by @command{channel-release}.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelWatch, "channel-watch", 
+	channels, "report when spcified channel changes state")
+
+int
+ChannelWatch::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().watch_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelWatch::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-unwatch.texi
+@deffn Command channel-unwatch chan
+Remove channel @var{chan} from watch list.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelUnWatch, "channel-unwatch", 
+	channels, "ignore when spcified channel changes state")
+
+int
+ChannelUnWatch::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().unwatch_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelUnWatch::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-watchall.texi
+@deffn Command channel-watchall
+Report values on all channels when data rails become valid.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelWatchAll, "channel-watchall", 
+	channels, "report when any channel changes state")
+
+int
+ChannelWatchAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().watch_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelWatchAll::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-unwatchall.texi
+@deffn Command channel-unwatchall
+Silence value-reporting on all channels.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelUnWatchAll, "channel-unwatchall", 
+	channels, "ignore when any channel changes state")
+
+int
+ChannelUnWatchAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().unwatch_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelUnWatchAll::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-reset.texi
+@deffn Command channel-reset chan
+Force a environment-configured channel into its reset state, i.e. 
+a source will reset its data rails to neutral (ignoring state of acknowledge),
+and a sink will set the acknowledge to the initial value (from configuration)
+regardless of the data rails (and validity).  
+@strong{IMPORTANT}: This command also freezes a channel in the stopped state, 
+like @command{channel-stop} and will not respond to signal changes until 
+resumed by @command{channel-release}.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelReset, "channel-reset", 
+	channels, "set a channel into its reset state")
+
+int
+ChannelReset::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.reset_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelReset::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Hold a source/sink channel in its reset state." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-reset-all.texi
+@deffn Command channel-reset-all
+Force all source- or sink- configured channels into their reset state, 
+as done by @command{channel-reset}.
+This is typically done at the same time as global reset initalization.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelResetAll, "channel-reset-all", 
+	channels, "set all registered channel into reset state")
+
+int
+ChannelResetAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.reset_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelResetAll::usage(ostream& o) {
+	o << name << endl;
+	o << "Hold all registered source/sink channels into reset state."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-stop.texi
+@deffn Command channel-stop chan
+Freeze a source- or sink-configured channel so that it stops responding 
+to signal transitions from the circuit.  
+Stopped channels will not log data nor assert expected values
+because they may be in a transient state.  
+A channel can be unfrozen by @command{channel-release}.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStop, "channel-stop", 
+	channels, "hold a channel in its current state")
+
+int
+ChannelStop::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().stop_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelStop::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Prevent a source/sink channel from operating (pause)." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-stop-all.texi
+@deffn Command channel-stop-all
+Applies @command{channel-stop} to all channels.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStopAll,
+	"channel-stop-all", channels,
+	"hold all registered channels in current state")
+
+int
+ChannelStopAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().stop_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelStopAll::usage(ostream& o) {
+	o << name << endl;
+	o << "Prevent all source/sink channels from operating." << endl;
+}
+
+// could call these Resume...
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-release.texi
+@deffn Command channel-release chan
+Releases a source- or sink-configured channel from the stopped state, 
+so that it begins to respond to circuit signal transitions
+(and continue logging and expecting).  
+Upon resuming, the channel evaluates its inputs and adds events
+to the event queue as deemed appropriate.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelRelease, "channel-release", 
+	channels, "release a channel from its reset or stopped state")
+
+int
+ChannelRelease::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.resume_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelRelease::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Release a source/sink channel from paused state." << endl;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-release-all.texi
+@deffn Command channel-release-all
+Applies @command{channel-release} to all channels.  
+This is typically used at the end of a reset initialization sequence
+as the circuit is brought out of the reset state.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelReleaseAll,
+	"channel-release-all", channels,
+	"channel-release all registered channels")
+
+int
+ChannelReleaseAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.resume_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelReleaseAll::usage(ostream& o) {
+	o << name << endl;
+	o << "Release all source/sink channels from reset/stopped state."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-close.texi
+@deffn Command channel-close chan
+Close any output file streams associated with channel @var{chan}.
+This flush the current log file, closes the file, and stops logging.  
+This does not affect source nor expect value sequences since those
+files are read in their entirety upon configuration.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelClose, "channel-close", 
+	channels, "close any files/streams associated with channel")
+
+int
+ChannelClose::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().close_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelClose::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Close streams associated with channel." << endl;
+	o << "Note: this does not affect sources and expects." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-close-all.texi
+@deffn Command channel-close-all
+Apply @command{channel-close} to all channels.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelCloseAll, "channel-close-all", 
+	channels, "close files/streams associated with any channel")
+
+int
+ChannelCloseAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().close_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelCloseAll::usage(ostream& o) {
+	o << name << endl;
+	o << "Close all streams associated with channels." << endl;
+	o << "Note: this does not affect sources and expects." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-source.texi
+@deffn Command channel-source-file chan file
+@deffnx Command channel-source chan file
+Configure channel @var{chan} to source values from the environment.
+Values are take from @var{file} and read into an internal array.
+Once values are exhausted, the channel stops sourcing.  
+To repeat values, use @command{channel-source-file-loop}.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceFile, "channel-source-file", 
+	channels, "source values on channel from file (once)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSource, "channel-source", 
+	channels, "alias to channel-source (deprecated)")
+
+int
+ChannelSourceFile::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().source_channel_file(s, 
+			*++a.begin(), a.back(), false))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelSourceFile::usage(ostream& o) {
+	o << name << " <channel> <file>" << endl;
+	// TODO optional start argument for offset
+	o << "Source channel values from file.  \n"
+		"Once values are exhausted, channel stops sourcing." << endl;
+}
+
+int
+ChannelSource::main(State& s, const string_list& a) {
+	return ChannelSourceFile::main(s, a);
+}
+
+void
+ChannelSource::usage(ostream& o) {
+	ChannelSourceFile::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-source-loop.texi
+@deffn Command channel-source-file-loop chan file
+@deffnx Command channel-source-loop chan file
+Like @command{channel-source-file} except that value sequence is repeated
+infintely.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceFileLoop, 
+	"channel-source-file-loop", 
+	channels, "source values on channel from file (loop)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceLoop, "channel-source-loop", 
+	channels, "alias to channel-source-loop (deprecated)")
+
+int
+ChannelSourceFileLoop::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().source_channel_file(s, 
+			*++a.begin(), a.back(), true))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelSourceFileLoop::usage(ostream& o) {
+	o << name << " <channel> <file>" << endl;
+	// TODO optional start argument for offset
+	o << "Source channel values from file infinitely.  \n"
+		"Once values are exhausted, sequence restarts." << endl;
+}
+
+int
+ChannelSourceLoop::main(State& s, const string_list& a) {
+	return ChannelSourceFileLoop::main(s, a);
+}
+
+void
+ChannelSourceLoop::usage(ostream& o) {
+	ChannelSourceFileLoop::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-source-args.texi
+@deffn Command channel-source-args chan values...
+Source values on channel @var{chan} using the @var{values} passed
+on the command.  
+Sourcing stops after last value is used. 
+Legal values are integers and 'X' for random.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceArgs,
+	"channel-source-args", 
+	channels, "source values on channel from arguments (once)")
+
+int
+ChannelSourceArgs::main(State& s, const string_list& a) {
+if (a.size() < 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list v;
+	copy(++++a.begin(), a.end(), back_inserter(v));
+	if (s.get_channel_manager().source_channel_args(s, 
+			*++a.begin(), v, false))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelSourceArgs::usage(ostream& o) {
+	o << name << " <channel> <values...>" << endl;
+	o <<
+"Sources a channel with finite sequence of values passed in arguments.\n"
+"Argument values may be integer or \'X\' (don\'t care or random)."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-source-args-loop.texi
+@deffn Command channel-source-args-loop chan values...
+Source values on channel @var{chan} using the @var{values} passed
+on the command.  
+Value sequence is repeated infinitely.  
+Legal values are integers and 'X' for random.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceArgsLoop,
+	"channel-source-args-loop", 
+	channels, "source values on channel from arguments (loop)")
+
+int
+ChannelSourceArgsLoop::main(State& s, const string_list& a) {
+if (a.size() < 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list v;
+	copy(++++a.begin(), a.end(), back_inserter(v));
+	if (s.get_channel_manager().source_channel_args(s, 
+			*++a.begin(), v, true))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelSourceArgsLoop::usage(ostream& o) {
+	o << name << " <channel> <values...>" << endl;
+	o <<
+"Sources a channel with repeating sequence of values passed in arguments.\n"
+"Argument values may be integer or \'X\' (don\'t care or random)."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-rsource.texi
+@deffn Command channel-rsource chan
+Configures a channel to source random data values.  
+This is useful for tests that do not depend on data values.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelRandomSource, "channel-rsource", 
+	channels, "source random values on channel (infinite)")
+
+int
+ChannelRandomSource::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().rsource_channel(s, a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelRandomSource::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Source channel using random values." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-sink.texi
+@deffn Command channel-sink chan
+Configure a channel to consume all data values (infinitely).  
+A sink-configured channel can also log and expect values.  
+Mmmmm... tokens!  Nom-nom-nom...
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSink, "channel-sink", 
+	channels, "consume tokens infinitely on channel")
+
+int
+ChannelSink::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().sink_channel(s, a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelSink::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << "Sink channel tokens infinitely." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-log.texi
+@deffn Command channel-log chan file
+Record all valid data values on channel @var{chan} to output @var{file}.
+File stream automatically closes upon end of simulation, 
+or with an explicit @command{channel-close}.  
+Channels in the stopped state will NOT be reported, 
+make sure that they are resumed by @command{channel-release}.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLog, "channel-log", 
+	channels, "log channel values to file")
+
+int
+ChannelLog::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().log_channel(*++a.begin(), a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelLog::usage(ostream& o) {
+	o << name << " <channel> <file>" << endl;
+	o << "Record channel values to file (non-append)." << endl;
+	o << "Logging only passively observes the state of channel data, "
+		"without controlling any handshake signals.  " << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-expect.texi
+@deffn Command channel-expect-file chan file
+@deffnx Command channel-expect chan file
+Compare data values seen on channel @var{chan} against a sequence of
+values from @var{file}.
+Error out as soon as there is a value mismatch.  
+In this variant, once value sequence is exhausted, 
+no more comparisons are done, and channel values go unchecked.  
+See also @command{channel-expect-file-loop}.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectFile, "channel-expect-file", 
+	channels, "assert values on channel from file (once)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpect, "channel-expect", 
+	channels, "alias to channel-expect-file (deprecated)")
+
+int
+ChannelExpectFile::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& chan_name(*++a.begin());
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.expect_channel_file(chan_name, a.back(), false))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelExpectFile::usage(ostream& o) {
+	// TODO optional start argument for offset
+	o << name << " <channel> <file>" << endl;
+	o <<
+"Assert that values observed on channel match expected values from file.\n"
+"Expecting only passively observes the state of channel data, "
+	"without controlling any handshake signals." << endl;
+}
+
+int
+ChannelExpect::main(State& s, const string_list& a) {
+	return ChannelExpectFile::main(s, a);
+}
+
+void
+ChannelExpect::usage(ostream& o) {
+	ChannelExpectFile::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-expect-loop.texi
+@deffn Command channel-expect-file-loop chan file
+@deffnx Command channel-expect-loop chan file
+Like @command{channel-expect-file} but repeats value sequence infintely.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectFileLoop,
+	"channel-expect-file-loop", 
+	channels, "assert values on channel from file (loop)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectLoop, "channel-expect-loop", 
+	channels, "alias to channel-expect-loop (deprecated)")
+
+int
+ChannelExpectFileLoop::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& chan_name(*++a.begin());
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.expect_channel_file(chan_name, a.back(), true))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelExpectFileLoop::usage(ostream& o) {
+	o << name << " <channel> <file>" << endl;
+	o <<
+"Assert that values observed on channel match expected values from file.\n"
+"Expecting only passively observes the state of channel data, "
+	"without controlling any handshake signals." << endl;
+}
+
+int
+ChannelExpectLoop::main(State& s, const string_list& a) {
+	return ChannelExpectFileLoop::main(s, a);
+}
+
+void
+ChannelExpectLoop::usage(ostream& o) {
+	ChannelExpectFileLoop::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-expect-args.texi
+@deffn Command channel-expect-args chan values...
+Tells a channel @var{chan} to expect @var{values} on data rails.
+Stops checking values after last value is used.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectArgs,
+	"channel-expect-args", 
+	channels, "assert values on channel from arguments (once)")
+
+int
+ChannelExpectArgs::main(State& s, const string_list& a) {
+if (a.size() < 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& chan_name(*++a.begin());
+	string_list v;
+	copy(++++a.begin(), a.end(), back_inserter(v));
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.expect_channel_args(chan_name, v, false))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelExpectArgs::usage(ostream& o) {
+	o << name << " <channel> <values...>" << endl;
+	o << 
+"Assert that values seen on channel match those listed in argument values.\n"
+"Stops checking after last value is used."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-expect-args-loop.texi
+@deffn Command channel-expect-args-loop chan values...
+Tells a channel @var{chan} to expect @var{values} on data rails.
+Checks that value sequence repeats infintely.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectArgsLoop,
+	"channel-expect-args-loop", 
+	channels, "assert values on channel from arguments (loop)")
+
+int
+ChannelExpectArgsLoop::main(State& s, const string_list& a) {
+if (a.size() < 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& chan_name(*++a.begin());
+	string_list v;
+	copy(++++a.begin(), a.end(), back_inserter(v));
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.expect_channel_args(chan_name, v, true))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelExpectArgsLoop::usage(ostream& o) {
+	o << name << " <channel> <values...>" << endl;
+	o << 
+"Assert that values seen on channel match those listed in argument values.\n"
+"Checks that value sequence repeats infintely."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelGet, "channel-get", 
+	channels, "show current state of channel")
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert", 
+	channels, "assert value on channel immediately")
+
+#endif
+
+#endif	// PRSIM_CHANNEL_SUPPORT
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

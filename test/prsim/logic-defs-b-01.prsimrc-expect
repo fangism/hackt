@@ -1,0 +1,85 @@
+x refers to process-inst-ref inv<>{1-dim}
+x[0] refers to process-inst-ref inv<>
+All subnodes of 'x[3]':
+z[3] : X
+z[4] : X
+o:X, pull up/dn are both X
+  z[6]:X, pull up/dn are both X
+    z[5]:X, pull up/dn are both X
+      z[4]:X, pull up/dn are both X
+        z[3]:X, pull up/dn are both X
+          z[2]:X, pull up/dn are both X
+            z[1]:X, pull up/dn are both X
+              i:X, pull up/dn undriven, no fanin
+              i:X, (visited before, see above)
+            z[1]:X, (visited before, see above)
+          z[2]:X, (visited before, see above)
+        z[3]:X, (visited before, see above)
+      z[4]:X, (visited before, see above)
+    z[5]:X, (visited before, see above)
+  z[6]:X, (visited before, see above)
+o:X, pull up/dn are both X
++ ~z[6]:X, pull up/dn are both X
++ ~+ ~z[5]:X, pull up/dn are both X
++ ~+ ~+ ~z[4]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~z[3]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~z[2]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~z[1]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~i:X, pull up/dn undriven, no fanin
++ ~+ ~+ ~+ ~+ ~+ ~- i:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~- z[1]:X, (visited before, see above)
++ ~+ ~+ ~+ ~- z[2]:X, (visited before, see above)
++ ~+ ~+ ~- z[3]:X, (visited before, see above)
++ ~+ ~- z[4]:X, (visited before, see above)
++ ~- z[5]:X, (visited before, see above)
+- z[6]:X, (visited before, see above)
+o:1
+  z[6]:0
+    z[5]:1
+      z[4]:0
+        z[3]:1
+          z[2]:0
+            z[1]:1
+              i:0, input
+o:1
+  z[6]:0
+    z[5]:1
+      z[4]:0
+        z[3]:1
+          z[2]:0
+            z[1]:1
+              i:0, input
+node at: `o' : 1
+caused by: `z[6]' : 0
+caused by: `z[5]' : 1
+caused by: `z[4]' : 0
+caused by: `z[3]' : 1
+caused by: `z[2]' : 0
+caused by: `z[1]' : 1
+caused by: `i' : 0
+(no cycle)
+o:0
+  z[6]:1
+    z[5]:0
+      z[4]:1
+        z[3]:0
+          z[2]:1
+            z[1]:0
+              i:1, input
+o:0
+  z[6]:1
+    z[5]:0
+      z[4]:1
+        z[3]:0
+          z[2]:1
+            z[1]:0
+              i:1, input
+node at: `o' : 0
+caused by: `z[6]' : 1
+caused by: `z[5]' : 0
+caused by: `z[4]' : 1
+caused by: `z[3]' : 0
+caused by: `z[2]' : 1
+caused by: `z[1]' : 0
+caused by: `i' : 1
+(no cycle)

@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.14 2006/11/07 06:35:35 fang Exp $
+ 	$Id: loop_scope.cc,v 1.15 2008/03/17 23:02:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -10,21 +10,13 @@
 #define	ENABLE_STACKTRACE		0
 
 #include "Object/unroll/loop_scope.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/unroll/meta_loop.tcc"
 #include "Object/def/template_formals_manager.h"
-#include "Object/def/footprint.h"		// for debug dump footprint
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
-#include "Object/expr/const_range.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/inst/value_scalar.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/common/dump_flags.h"
 #include "Object/persistent_type_hash.h"
 #include "common/TODO.h"
 #include "common/ICE.h"
-#include "util/persistent_object_manager.tcc"
-#include "util/indent.h"
 #include "util/stacktrace.h"
 
 namespace util {
@@ -64,15 +56,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(loop_scope)
  */
 ostream&
 loop_scope::dump(ostream& o, const expr_dump_context& dc) const {
-	NEVER_NULL(ind_var);
-	NEVER_NULL(range);
-	o << "(;" << ind_var->get_name() << ':';
-	range->dump(o, dc) << ':' << endl;
-	{
-		INDENT_SECTION(o);
-		parent_type::dump(o, dc);
-	}
-	return o << auto_indent << ')';
+	return meta_loop::dump(*this, o, dc, ';');
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -124,25 +108,19 @@ loop_scope::unroll(const unroll_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 loop_scope::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this,
-		persistent_traits<this_type>::type_key)) {
-	meta_loop_base::collect_transient_info_base(m);
-	parent_type::collect_transient_info_base(m);
-}
+	meta_loop::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 loop_scope::write_object(const persistent_object_manager& m, ostream& o) const {
-	meta_loop_base::write_object_base(m, o);
-	parent_type::write_object_base(m, o);
+	meta_loop::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 loop_scope::load_object(const persistent_object_manager& m, istream& i) {
-	meta_loop_base::load_object_base(m, i);
-	parent_type::load_object_base(m, i);
+	meta_loop::load_object(*this, m, i);
 }
 
 //=============================================================================

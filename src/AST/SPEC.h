@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.h"
-	$Id: SPEC.h,v 1.4 2007/11/26 08:27:22 fang Exp $
+	$Id: SPEC.h,v 1.5 2008/03/17 23:02:13 fang Exp $
  */
 
 #ifndef	__HAC_AST_SPEC_H__
@@ -27,7 +27,7 @@ namespace SPEC {
  */
 class directive {
 public:
-	typedef	count_ptr<const entity::SPEC::directive>	return_type;
+	typedef	void					return_type;
 private:
 	const excl_ptr<const token_identifier>		name;
 	const excl_ptr<const expr_list>			params;
@@ -73,6 +73,11 @@ public:
 
 	// uses the return type of language_body
 	ROOT_CHECK_PROTO;
+
+protected:
+	bool
+	__check_specs(context&) const;
+
 };	// end class body
 
 //=============================================================================

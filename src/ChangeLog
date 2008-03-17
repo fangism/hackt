@@ -3,6 +3,208 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-07-merged-ACT-03-59:
+	  Massive branch merge of -ACT-03.
+	  Language (mostly for ACT compatbility):
+		PRS now accepts optional 3rd parameter in rule literal
+			to represent transistor type (faked), same with 
+			passn/passp macros.  
+		send/recv/set/get bodies now optional.
+	  prsim:
+		support for weak rules, stronger than no-drive, but
+			overtaken by non-weak (normal) rules.  
+			Complicates code A LOT -- needs a complete rewrite.
+			Much tested with sync/async mixed circuits.  
+		channel commands, at long last, not compatible with
+			original prsim's commands (by Clint)
+		VPI interface for mixing with verilog simulators, 
+			mostly ripped from reference prsim (by Rajit).
+		oodles of new commands:
+			cause/nocause -- turn of cause reporting
+			ehco-commands -- print command that just executed
+			unknown-inputs[-fanout], unkonwn-outputs --
+				further filtered versions of "status X"
+			step-event -- step 1 event, not 1 time-step
+		new recursive diagnostics:
+			why[-verbose] -- what is driving node to current value?
+			why-not[-verbose] -- what is value-change waiting for?
+			why-x[-verbose] -- why is node X?
+		improved exception handling
+		-t <type> command option added
+		numerous non-regression fixes along the way
+		stronger internal consistency checking
+	cflat:
+		fix: honor top-level spec directives
+		-t <type> now handles top-level parameters correctly
+		new option to report best/worst/typical rule strengths
+			based on path conductance.
+	documentation: all of the above, new features documented.  
+	util library critical fixes (util/ChangeLog)
+
+
+2008-03-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-59:
+	  Latent bug fix in commands with -t <type> option not
+		being able to reference top-level parameters, now fixed.  
+		Resolution: unroll top-level parameters before unrolling
+		per-type instance hierarchy.  This makes values available, 
+		and correctly overshadows globals with local parameters.  
+	  Added new test cases.  
+	  Branch now closed.  
+
+
+2008-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-58:
+	  Added commands 'cause' and 'nocause' to hide causality tracking, 
+		motivated by need to test randomized data on channels.
+	  Documented, now used in some tests.  
+	  Minor update to util/numeric/random.h.
+
+
+2008-03-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-57:
+	  prsim critical bug fix:
+		channel was not properly maintaining state when finite
+		value sequecne was exhausted, fixed.  
+		Resulted in nasty memory corruption.  
+	  prsim: initialize and reset now also aply to channel-manager.
+		Upon initialize, channels retain configuration, but streams
+		are closed, while values are retained, but restarted.  
+		Upon reset, completely clobber all registered channel, 
+		as if freshly started.  
+	  Added bunch of new test cases for initialize/reset, 
+		updated some old tests to account for random values.  
+	  Initialization also documented.  
+	  Tested and committed from powerpc-apple-darwin8
+
+
+2008-03-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-56:
+	  prsim+VPI:
+		__advance_prsim (kernel of _run_prsim) now breaks
+		out of loop as soon as registered breakpoint is encountered, 
+		to return control back to VCS as eagerly.  
+		This didn't seem to change the behavior visibly, though
+		it seems more correct...
+		At end of _run_prsim, only conditionally register self-
+			callback if there is actually a pending event, 
+			now in reregister_next_callback().  
+		$prsim_sync (new): catch up prsim to VCS's current time, 
+			executing past breakpoints as necessary.
+		__advance_prsim(): change vpiPureTransportDelay to
+			vpiNoDelay to take effects immediately, and to
+			support multiple successive breakpoints during sync.  
+	  Added several new test cases, including demonstration of
+		mixing VPI with channel features, using $prsim_sync.
+		Documented in new section in dox/prsim/cosim.texi.
+
+
+2008-03-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-55:
+	  prsim: implemented 'why-x-verbose'
+		'why-x' now prints a bit more instances of "already visited"
+		because expressions are walked, and not just collecting 
+		unique X nodes, which reveals logic.  
+		Also supported through channels.  
+	  No test cases added, but all old test cases with 'why-x' 
+		now also call 'why-x-verbose', and updated accordingly.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-54:
+	  prsim/State-prsim.cc: cleanups and additions, refactoring code
+		to make more use of function pointers.  
+		Added more generalized queries for input/output states.
+	  prsim channels: source/sink configured channels now count
+		as effective 'fanin' and 'fanouts' in queries.
+	  New command: unknown-outputs: report X nodes that have no
+		fanout, useful when they are going into environment.
+		Documented, tested.  
+
+
+2008-03-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-53:
+	  prsim: Functional-style clean-ups will make it easier to pass 
+		around arbitary functions.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-52:
+	  prsim critical bug fix: assessment of interference should
+		ignore when weak-rule tries to fight against strong rule, 
+		similar patch to -03-45 on this branch.  
+		Initially reported by Ilya Ganusov, reduced by Fang.  
+	  Fixed with test case prsim/crash-bug-01.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-51:
+	  prsim channel bug fix: was mistakenly enqueueing multiple
+		X events from sink, where latter X's should have been vacuous.
+		Initially reported by Ilya Ganusov, reduced by Fang.  
+	  Fixed with test case prsim/channel-test-a-19.
+
+
+2008-03-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-50:
+	  No real source revision.
+	  Updated documentation and help for chpsim -t and -T, 
+		also support chpsim-flags in test suite.  
+	  Branch is in good standing, expect merge this week.
+
+
+2008-02-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-49:
+	  prsim: added command line option -t <type> to instantiate
+		one instance of the named type as the top-level, in place
+		of the source's original top-level instances.
+	  Documented and tested.  
+	  TODO: also patch chpsim likewise.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-48:
+	  util-only addition: deep_copy (util/ChangeLog)
+
+
+2008-02-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-47:
+	  By request, prsim channel commands:
+		channel-source-args[-loop]
+		channel-expect-args[-loop]
+		instead of reading a file, take values from interpreted
+			command line arguments directly (avoids files).
+		Now old source/expect commands are called source-file[-loop], 
+			and expect-file[-loop] respectively, but the old
+			names will continue to work (but consider deprecated).
+		Some internal functions were renamed to avoid ambiguity.
+		Documented and tested.
+	  Moved step_exception to sim/prsim/Exception.h for better
+		extensibility, relocated channel_exception to Channel-prsim.h
+		where it makes sense.  
+	  prsim: State::step now uses automatic queue-flushing via RAII
+		for exception safety and consistency enforcing, 
+		when exception can come from within (e.g. channel-assert fail).
+
+
+2008-02-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-46:
+	  prsim channel features: input files for channel values may now 
+		contain 'X's, which are interpreted as don't cares for
+		channel-expect, and as treated as random values for 
+		channel-source.  
+	  Documented (dox/prsim/commands.texi) and tested.  
+	  Few tests updated to remove non-determinstic output (random).
+
+
 2008-02-28	Sandra Jackson		<sandra@csl.cornell.edu>
 
 	* HACKT-00-01-04-main-00-82-06:
@@ -18,6 +220,137 @@
 		tests during non-VPATH build.  (only test/lexer affected)
 
 
+2008-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-45:
+	  prsim weak-rules critical bug fix: false positive diagnostic on
+		a weak rule cutting off (from X->0) should not impact
+		a pending non-weak event (in the same direction).  
+		Symptom: wrongly X'd out events on non-instability.
+		Fixed, with reduced test case added.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-44:
+	  No source revision, updating tests to support installcheck
+		tests on VPI/prsim, improved testing harness.
+
+
+2008-02-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-43:
+	  Extended vpi-prsim with prsim_set/prsim_get commands, as an 
+		additional interface, even though $prsim_cmd suffices. 
+	  prsim/vpi-prsim.cc: replace memory-leaking strdup calls with
+		properly constructed std::strings.  
+	  Added first vpi test to test suite, only enabled if configure
+		detects vcs (verilog compiler).
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-42:
+	  Improved 'why-x' diagnostic output, test-cases updated.
+
+
+2008-02-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-41:
+	  prsim: added 'why' and 'why-verbose' commands to recursively
+		query why a signal is being driven to its value.
+		Minor fix in recusion logic for why-not.  
+	  Documented, extended previous tests, and added new ones.  
+
+
+2008-02-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-40-merged-prsim-09-13:
+	  Branch merge: added prsim channel command support.
+		and there was much rejoicing...
+		Documented and reasonably tested.
+		Replaced event-queue priority_queue (heap) with multiset, for 
+		FCFS ordering and precise checkpoint reconstructibility.
+
+
+2008-02-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-13:
+	  ALERT: potentially risky change: replaces priority queue (heap) with
+		multiset/map, to guarantee FCFS ordering among identically
+		timestamped events, and to preserve sane ordering
+		upon reconstruction from checkpoint.  
+		There is no measurable performance difference from
+		running the lib/ tests.
+	  Several test cases in prsim/ updated to reflect re-orderings.  
+		This fixes non-regression test failures that were sensitive
+		to queue ordering in checkpoint reconstruction.
+	  Even though this affects chpsim, there were no visible changes
+		in the chpsim test suite.
+	  This patch should apply (and reversible) on trunk as well.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-12:
+	  Minor patch, channel-show now indicates whether channel is watched.
+	  Two new failures in test suite (prsim,lib) are NOT regressions;
+		they expose a latent problem with precise queue reconstruction
+		using any heap structure.  Next revision will change this
+		over to red-black-tree (multimap) which is order-preserving, 
+		with first-come-first-serve tie-breakers.  
+	  Added bunch of channel feature test cases.  
+
+
+2008-02-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-11:
+	  Bug fixes in prsim::channel:
+		Now always set all data rails (high and low) in response
+			to acknoledge on sources.  
+		Now advancing data immediate after using data for
+			settting channel data rails.  
+	  Extended why-not[-verbose] and why-x to search through channels!
+	  Few new test cases.  
+
+
+2008-02-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-10:
+	  Changed channel::value_type to unsigned type to facilitate
+		translation of values to and from data rails.
+		Note, however that ldiv() and family still operates on
+		signed integers, so values may still be limited to 
+		unsigned::max (warning issued).  
+	  Tested random-sources (fix) and channel-stop with channel-resume.
+		Added new tests cases for these.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-09:
+	  Failed attempt to fix compile-option-forwarding (-C "...")
+		attributed to getopt() being non-reentrant.  
+		What a load of crap.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-08:
+	  Implemented random sources (channel-rsource), untested. 
+	  Texinfo-documented all channel commands.  
+
+
+2008-02-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-07:
+	  Ironed out most initial bugs for channel commands, now works!
+		Call it beta.
+	  Now advance value in sequence *after* data rails are reset.
+		Resume no longer auto-advances.
+	  Fixed exception throw specifier for State::step,cycle, 
+		which otherwise, prevented channel_exception from
+		being caught (channel value assert-fail).
+	  Added bunch of source/sink/log/expect test cases.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-06:
+	  channel::resume() now properly spawns events from the environment
+		of sources and sink.
+	  Channel sink initial tests are working.
+	  Added test case with manual toggling of data rails.
+
+
 2008-02-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-04:
@@ -29,11 +362,662 @@
 		Few other expect-fail tests updated with new diagnostic.
 
 
+2008-02-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-05:
+	  Continued development of prsim:channels, mostly implementation
+		of source/sink commands, and interactions with 
+		the simulator state's events. 
+	  State::excl_exception now derived from common base step_exception
+		to support different exception types. 
+	  Cleaned up previous patch #if's.
+	  Still untested.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-04:
+	  prsim/Channel-prsim.{h,cc}: use packed 2D array structure
+		instead of vector-of-vector, cleaner and faster.
+		Started to implement channel::process_node.
+
+
+2008-02-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-03:
+	  Slight redesign of prsim::channel structure, allowing for
+		concurrent non-conflicting modes of operation.
+		Handful of new channel commands: stop, release, 
+			source, sink, expect, log (-all variants).
+	  Added basic test case.
+
+
+2008-02-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-02:
+	  More channel development.
+	  Can now declare a channel, but not do anything with it yet.
+
+
+2008-02-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-01:
+	  This branch is for the development of the long awaited
+		channel features in prsim.
+	  Initial revision is incomplete (link-fail), work in progress.
+	  Added sim/prsim/Channel-prsim.{h,cc}
+
+
+2008-02-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-39:
+	  By request, autosave in prsim and chpsim.
+		either pass -a on command invocation, or use
+		'autosave' [on|off] command in interpreter.
+	  Documented and basically tested.  
+
+
+2008-02-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38:
+	  cflat -strengths now also computes strongest-single-path
+		drive strength ('one'), along with min,max.
+	  Test cases updated.
+
+
+2008-02-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-37:
+	  Experimental: cflat mode to compute and print minimum
+		and maximum drive strengths for every rule.
+		Documented, and somewhat tested.
+	  prs macros: turned off negative value checking for macros
+		as a temporary workaround to support strength deduction
+		AND prs-literal extra (bogus) parameter for transistor type.
+
+
+2008-02-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-36:
+	  prsim command: 'why-not', recursively figures out why a
+		node is NOT a given value, following fanins and exprs.
+		This pretty much performs deadlock analysis, 
+		and any other query for "why isn't this doing what I
+		think it should be doing?"
+		This would've been useful years ago...
+	  Documented, and well tested with cases in prsim/ and lib/.
+	  prsim/TODO -- one item down!
+
+
+2008-02-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-35:
+	  prism::why-x: now prune already-visited backtrace paths, 
+		makes output much more scalable and comprehensible for huge
+		directed-acyclic clouds of X nodes.  
+	  Tested in lib/ on token-ring structures.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-34:
+	  prsim command: 'why-x', recursively traces back the source of
+		signals in the X state, through other X signals, 
+		and other related diagnostics, also detects cycles. 
+		TODO: maintain a global set for pruning.  
+	  Documented and minimally tested with new test cases.  
+	  Coming soon: 'why-not' [01]
+
+
 2008-02-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-03:
 	  yyparse() prototypes now take a flex::lexer_state& instead of FILE*
 		to be able to change lexer buffers (next).  
+
+
+2008-02-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-33:
+	  prsim command: status-newline, like status but prints each
+		node on its own line for readability.
+	  Documented and tested.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-32:
+	  prsim command: unknown-inputs-fanout
+	  like 'unknown-input' but filters out nodes with no fanout.
+	  Documented and tested.
+
+
+2008-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-31:
+	  prsim: bug fix: 
+		strong pulls turning off should not be unstable if
+		there is already a weak pull in the same direction on.
+		Assign cause to the active weak rule.  
+		Technically, rule *is* unstable...
+	  Added test case: prsim/SRAM-d-02
+
+
+2008-01-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-30:
+	  prsim: CRITICAL bug fix(es):
+		when pull-off yields to opposite rule, 
+			set event's weak flag as necessary.
+		when overwriting event in-queue, also update weak-flag
+			WITH THE RULE THAT IS ACTUALLY ON, and not the
+			one that turned off.  
+	  prsim diagnostic enhancements:
+		report instabilities on dequeued/overtaken events,
+			except user-set.
+		Many test cases updated with improved feedback.
+	  NUMEROUS test cases added to prsim/ to cover many corners.  
+
+
+2008-01-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-29:
+	  prsim: major bug fix:
+		shutting off of strong rules should yield to weak rules
+		pulling in opposite direction, overtake in queue.
+	  New test cases: prsim/weak-yield-*
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-28:
+	  prsim: critical bug fix (suitable for trunk!)
+		dequeue *weak* unstable events now checks if a pending X
+		node should be left in queue based on the new pull state
+		and possible change of node value.  (3 line patch)
+	  Test cases added for strong and weak rules alike.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-27:
+	  prsim: kill-event-node function factored out for maintainence, 
+		now print confirmation if node (and its events) 
+		is being watched.  Minor adjust to test cases.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-26:
+	  prsim: major bug fix: X events were not being (pending) enqueued
+		when strong rules turned off, yielding to weakly (and
+		possibly) pulling weak rules (possible interfering).
+	  Fixed in test case prsim/SRAM-a-06.
+	  For the record, this was particularly nasty and difficult to 
+		analyze, after several botched patch attempts.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-25:
+	  prsim new commands: assert-pending, assertn-pending
+		assert whether or not node has pending event in queue.
+	  Documented, not tested. 
+
+
+2008-01-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-24:
+	  prsim: minor bug fix: enqueuing of events in propagate_evaluate()
+		failed to for presence of opposing weak rules, when they
+		are enabled, test cases include single weak inverter.
+	  Updated some tests with more asserts.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-23:
+	  prsim: critical bug fix(es):
+		fatal typo in Event-prsim.h: pending_interference.
+		interference event handling: case immediate -> X was botched,
+			now can accommodate unstably-dequeued events 
+			while flushing interference events from pending queue.
+	  Several test cases added, regression free.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-22:
+	  prsim: 'step-event' command to advance by step count, 
+		as opposed to time increments (old 'step'). 
+		Sometime, you only want ONE event.
+	  Documented, not tested.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-21:
+	  prsim: CRITICAL bug fix: nodes stuck, failing to enqueue X
+		events during interference.  bug was sensitive to
+		production rule ordering (e.g. inverter) but now symmetrized.
+	  Test cases added: inv-{20,21}, inv-alt-{03,04}.
+
+
+2008-01-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-20:
+	  prsim: bug fix: 'unset' was incorrectly setting some nodes to X
+		in the event queue.  Test cases added: prsim/interference-*.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-19:
+	  prsim, chpsim: added support to save/restore random number seed
+		through libc's seed48.  Checkpointing now preserves seed.
+	  Documented, added new test cases, prsim/oscil-random-*.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-18:
+	  parser: parse but ignore attributes on PRS macros.
+		TODO: Actually process them later...
+
+
+2008-01-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-17:
+	  prsim: major bug fixed, related to that patched by -09, -10.
+		enqueued events resulting from instabilities (overtake)
+		we're not synchronized with nodes for consistency.
+	  Test cases added: prsim/unstable-{a,b}-01
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-16:
+	  prsim: bug fixed: checkpoint reconstruction failed to properly
+		account for killed events in the event queue.
+		Also related issue with loading affected nodes, fixed. 
+		Test case added: prsim/killed-01.prsimrc
+	  extra sanity check: pending-queue uses std::set to assert uniqueness
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-15:
+	  prsim: new command 'memstats' to report detailed memory usage 
+		by simulator state.
+	  Documented, tested only interactively.  
+
+
+2008-01-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-14:
+	  prsim, chpsim: print line number of current source/input on any
+		error condition, easier to find position in files!
+	  Updated all expect-fail test cases (expects) accordingly.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-13:
+	  prsim, chpsim: added support for pseudo C-style block comments in
+		input scripts.  Tests cases added to prsim/comment-0*.
+		Useful for quickly disabling sections in scripts.  
+
+
+2008-01-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-12:
+	  Cleaned up some of #if mess from previous patch.  Less eye-sore.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-11:
+	  prsim: another CRITICAL bug fix (crash/assert-fail)
+		graduation of events from exclusive queues to main
+		event queue failed to check for uniqueness of events
+		which resulted in duplicate events in the queue.  
+		Now using a map data-structure for the exclusive queues.  
+	  sim/event.h: added optional uniqueness checking
+	  Finallly able to add reduced test case prsim/precharge-f-01.prismrc
+
+
+2008-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-10:
+	  prsim: continuation of previous patch, applied to pending event
+		with AND without interference.
+		Fixes a large test case in working project that was
+		unabled to be reduced.  
+	  Would be nice to have a small test case to trigger this fix/bug.  
+	  Added a few more debugging commands to interpreter.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-09:
+	  prsim: continued critical bug fixed!
+		Added more consistency checks: check_event_queue()
+			between events and affected nodes.
+		When flushing interference event from pending-queue to 
+			main event queue, compare event back-link from nodes
+			before clearing.  (only triggered crash in
+			weak-vs-weak-04 test case)
+	  Added new test cases for strong interference.
+		Patch is also appropriate for trunk.  
+
+
+2008-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-08:
+	  prsim: critical bug fix:
+		failed to keep n.pending_event consistent with events
+		that entered the queue.  this fix set_event's properly
+		when flushing events from the pending queue (no interference)
+		to the main event queue.
+		Interestingly, only one test case (unstab-03) caught this.
+		Suspect bug is present in original prsim as well...
+	  Patch is appropriate for trunk, merge ASAP.
+	  No new test cases, no regressions.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-07:
+	  As promised from ACT-03-03, re-factored loop and conditional
+		class code into template implementation class.  
+		new: Object/unroll/meta_{loop,conditional}.{h,tcc}
+	  Net loss of 500 LoC!  much easier to maintain, with less duplication
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-06:
+	  prsim: Correction to pending consistency check.
+	  sim/prsim/Event-prsim.h: for now use slower more paranoid unique-set 
+		for event free-list to catch inconsistencies sooner.
+	  TODO: more debugging diagnostics
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-05:
+	  prsim: 'pending' command to check if event is already
+		pending on node.  Also comes with debug mode.  Tested.
+	  Now allow interpreter to accept comments like "#foobar".
+
+
+2008-01-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-04:
+	  Grammar update, allow empty instance management clauses 
+		in conditionals, to make it easy to comment out bodies.  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-03:
+	  Bug fix: forgot top-level spec-directives in cflat
+	  Added support for loop and conditional spec directives.  
+		Includes several new test cases.  
+	  Next: cleanup, refactor loop/conditional code.
+
+
+2008-01-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-02-merged-prsim-08-29:
+	  Major child branch merge:
+	  Mostly prsim additions and enhancements, no regressions.  
+		Support for weak rules (can be disabled).
+		Better support for non-QDI (synchronous) simulation, 
+			mostly with unstable-dequeue mode.  
+		VPI (verilog PLI) interface added, with plug-in shared lib.
+		has undergone a *decent* amount of testing, as the audit
+			trail of bug fixes shows.
+	  Includes a few critical fixes, high priority for trunk.
+
+
+2008-01-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-29:
+	  Critical util library bug fix in util/packed_array.tcc, 
+		see util/ChangeLog.   Symptom was botched printing of
+		3D array indices, due to bad index_to_key lookup.  
+	  Many test cases added to parser/connect.
+	  This patch is appropriate for main trunk.  
+
+
+2008-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-28:
+	  prsim: new commands
+		assertn-queue : error out if event queue is not empty.
+			also added to chpsim
+		unknown-inputs : show X-nodes with no fanin.
+	  Documented and added test case.
+
+
+2008-01-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-27:
+	  State-prsim.cc: Minor clean-up for cause.node for readability.  
+		No real source revision.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-26:
+	  prsim: bug fix: stuck-node attributed to failure to 'overtake'
+		a firing (by killing it), fixed.
+	  Added new test case: SRAM-c.
+	  Former test case SRAM-b-01 behavior updated, no longer
+		enqueues an X event (is killed while pending).  
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-25:
+	  prsim/chpsim command update: 'watch-queue' is renamed 
+		'watchall-queue', new 'watch-queue' replacement command
+		prints events on watched nodes ONLY as they participate
+		in the event queue -- much less mess than watchall-queue.
+	  Documented, and test case updated.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-24:
+	  prsim: bug fix: mistakenly enqueued weak-rules that should've
+		been ignored due to strong rules overpowering.
+		also hoisated some pull-evaluation code above conditionals.
+	  Updated some test cases, and added new ones for this fix.
+
+
+2008-01-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-23:
+	  by request, prsim mode: echo-commands [on|off]
+		print each line as it is interpreted (with #), 
+		and also traces recursively sourced scripts.  
+	  also added to chpsim
+	  documented (texinfo).
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-22:
+	  Tiny fix: Event-prsim.cc free-list check-sum argument explicitly
+		cast to size_t to avoid overflow problems in 64b mode.  
+	  No test case added.  :-/
+
+
+2008-01-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-21:
+	  hacprsim: fixed stuck-node case, by allowing pending X events
+		to be overridden or killed in the unstable-dequeue mode, 
+		intended for synchronous-mode circuit simulations.  
+	  Added new test case to demonstrate difference between these modes.
+
+
+2008-01-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-20:
+	  Clean-up: factor inline function get_pull() for maintainability
+		and comprehensibility, no real source revision.
+
+
+2008-01-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-19:
+	  By request, mode switch to disable (ignore) all weak rules, 
+		which is the default, or enable them.
+		command: weak-rules [on|off]
+	  Documented in dox/prsim, and basically tested.
+		Old tests updated (script +"weak-rules on"), 
+		and one new tested.  
+
+
+2008-01-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-18:
+	  prsim: ExprAlloc now quietly ignores supply_x SPEC directive.
+
+
+2008-01-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-17:
+	  Fixed unset_node() to apply correct delay on X nodes.
+	  Still stuck on X error, not yet reproduced, worked around
+		using 'unsetall' command.  (GAG)
+
+
+2007-12-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-16:
+	  prsim: check for weak-rules that are pulling as strong rules
+		are turned off, which fixes many cases of nodes being
+		stuck with weak-pulls on (inconsistency).
+		New test case added.
+		Opinion: wake up event processing needs to be completely
+			re-written with weak rule model.
+
+
+2007-12-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-15:
+	  Weak vs. non-weak rules in the pending queue are now handled
+		"more properly", pending weak-rules overpowered by normal
+		rules are simply killed and replaced, and underpowered
+		new weak firings are merely dropped.
+		This fixes some long-standing problems (on this branch)
+		of events 'hanging' on pulling rules (requiring 'unset'
+		or 'unsetall' to trigger forced re-evaluation)
+	  Several new test cases added using SRAM like cell.  
+
+
+2007-12-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-14:
+	  Interference checking now distinguishes between weak rule flavors.
+		Only applicable when both strong up/dn rules are off. 
+		Results in fixing some expect-fail test cases.
+	  More explicit typing and conversions of node_type and expr_type's
+		pull_enum.  Seems more clear now.
+	
+
+2007-12-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-13:
+	  sim/prsim/Expr.h: pul_enum made a true enum, not uchar typedef.
+	  sim/prsim/State-prsim.cc: propagate_evaluate():
+		when !in_excl_q, and pull turns off, check both the 
+		normal AND weak rules of the opposing pull.
+		I'm certain this is bug fixed, but have no test case to
+		trigger or prove it, unfortunately.  It seems obvious.
+		Now updated event reflects strength of pull.
+	  Known issue: can get into a state where a node is inconsistent
+		with its fanins, i.e. not right value and not
+		enqueued with firing to correct value.
+
+
+2007-12-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-12:
+	  New prsim mode switch: PRSIM_ALLOW_OVERTAKE_EVENTS:
+		Allow events with known values to overtake pending
+		X-events (preserving monotonicity) in the unstable-dequeue
+		mode, to further accommodate synchronous circuit
+		simulation.  New test cases added.
+
+
+2007-12-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-11:
+	  VPI-hacprsim works on basic test case (hurray!)
+		Lesson: call initialize first!
+		TODO: compose some basic test case with vcs -> simv
+	  Factored out some useful functions from sim/prsim/Command-prsim.cc
+		into Command-prsim-export.cc (for lack of better name).
+
+
+2007-12-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-10:
+	  prsim: print which events are weak in output
+		Added some debugging code, updated TODO list.
+		Added new test case with different behavior from reference.
+
+
+2007-12-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-09:
+	  First draft of VPI plug-in, based on reference vpi_prsim.c.
+	  Makefile.am: build vpihacprsim.la as a shared-library module.
+	  sim/prsim/vpi-prsim.cc: ported from reference code.
+		Successfully loads as a plug-in! automatically bringing
+		in dependent shared libraries.
+		Doesn't fully work yet, still debugging callbacks, 
+		and timing, and mystery return values.
+	  Documented in dox/prsim/cosim.texi (of hacprsim.texi.info)
+	  TODO: somehow test-case?
+
+
+2007-12-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-08:
+	  util/ChangeLog: critical tokenize bug fix, memory-related.  
+
+
+2007-12-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-07:
+	  No source revision, added TODO notes and a few test cases.
+
+
+2007-12-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-06:
+	  prsim: fanin-get: also print the pull state of the memoized
+		subexpression for convenient debugging.  
+		Prints <1> for pull-on, <0> for pull-off, 
+		and <X> for pull-unknown.  Updated few test cases.
+	  Added bunch more small test cases for weak rules.
+		Still seeing some suspicious behavior, marked as expect-fail.
+
+
+2007-12-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-05:
+	  One more patch for consistent behavior with reference prsim:
+		flush_pending_queue initially check non-weak pulls, 
+		then before flushing_pending_events to main queue, 
+		check for weak-rule vs opposite non-weak pull if necessary.
+	  No regressions, but needs new test case contributed by Clint.
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-04:
+	  Some fixes for pending-queue insertion, w.r.t. weak rules.  
+	  No regressions, still not perfect... investigating.
+
+
+2007-12-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-03:
+	  First round of test cases, discovered some discrepancies with
+		reference version of prsim (some disagreeable).
+	  Removed a failing assertion: State-prsim.cc:flush_pending_queue.
+	  Still dies on a large test, hard to reduce. 
+
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-02:
+	  Completed first draft of weak rule/events.
+		Enabled PRSIM_WEAK_RULES switch.
+	  No regressions, but desparately need new test cases, forthcoming.
+		This needs rigorous testing.
+
+
+2007-12-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-01:
+	  Grandchild branch for 'weak' prsim rules.
+		Switch: PRSIM_WEAK_RULES (currently disabled)
+		Initial revision setting up for easy modifications.
+		Had to re-order prs attribute handling before
+		rule allocation in the rule map to pave way for
+		attribute-based rule connections.
+		Passes regression tests.  
+
+
+2007-12-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01:
+	  Branch for another round of ACT compatibility.  
+	  First revision:
+		Object/lang/PRS.cc AST/PRS.cc: allow literals to take 
+			optional 3rd parameter for transistor 
+			type (ignored in middle-end).
+		AST/SPEC.cc: loop/conditionals warning with 'where'
+		Object/lang/PRS_macro_common.cc: 
+			allow optional 3rd (type) parameter for passn/passp
+		Object/lang/SPEC_common.{cc,h}, SPEC_registry.cc:
+			new directive 'supply_x': currently does nothing.
+		parser/hackt-parse.yy.in:
+			allow optional send/recv/set/get bodies (ignored)
 
 
 2007-11-30	David Fang		<fangism@users.sourceforge.net>

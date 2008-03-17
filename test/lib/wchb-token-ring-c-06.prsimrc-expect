@@ -1,0 +1,17 @@
+channels:
+L : .e(init:1) 1x1of2 off > wchb-token-ring-c-06-L.txt
+M : .e(init:1) 1x1of2 off > wchb-token-ring-c-06-M.txt
+R : .e(init:1) 1x1of2 off > wchb-token-ring-c-06-R.txt
+stopping channels will suppress logging/watching! 
+channels:
+L : .e(init:1) 1x1of2 off,stopped > wchb-token-ring-c-06-L.txt
+M : .e(init:1) 1x1of2 off,stopped > wchb-token-ring-c-06-M.txt
+R : .e(init:1) 1x1of2 off,stopped > wchb-token-ring-c-06-R.txt
+channel value order should be strict repeat because 
+there is only one hole in the ring 
+expect to see on channel L: [1,0]* 
+# log for channel: L
+expect to see on channel M: [0,1]* 
+# log for channel: M
+expect to see on channel R: [0,1]* 
+# log for channel: R

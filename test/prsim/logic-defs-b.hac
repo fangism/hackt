@@ -1,0 +1,14 @@
+// "logic-defs-b.hac"
+// testing templates with -t <type>
+
+import "logic-defs.hac";
+
+template <pint N>
+defproc inv_chain(bool i, o) {
+	bool z[N+1];
+	z[0] = i;
+	z[N] = o;
+	inv x[N];
+	(;j:N: x[j](z[j], z[j+1]);	)
+}
+

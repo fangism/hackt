@@ -1,0 +1,26 @@
+// "precharge-d.hac"
+// copy-modified from "precharge-c.hac"
+// now involving mk_excllo rings
+
+// resembles a precharge stage
+template <pint N>
+defproc precharger(bool en; bool x[N], _o) {
+prs {
+(:i:N:
+	en & x[i]		-> _o-
+)
+	~en			-> _o+
+}
+}
+
+bool x[2][2], en[2], _o[2];
+
+spec {
+	mk_excllo(_o)
+	// mulitple rings?
+}
+
+precharger<2>
+	A(en[0], x[0], _o[0]),
+	B(en[1], x[1], _o[1]);
+

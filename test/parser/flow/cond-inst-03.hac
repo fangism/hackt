@@ -1,0 +1,15 @@
+// "cond-inst-03.hac"
+// copy-modified from "cond-inst-02.hac"
+
+template <pint N, M>
+defproc spec_test() {
+[(N > M) ->
+[] else ->
+	bool z[3];
+	bool y = z[2];
+]
+}
+
+spec_test<2,4> A;
+spec_test<3,1> B;
+

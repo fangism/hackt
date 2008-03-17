@@ -1,0 +1,80 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	34
+	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	34
+	23	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	290
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  2 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    S = pint<> S
+    T = pint<> T
+  Definitions:
+    foo = process-definition (defined) foo<
+      pint<> S
+      >(
+        bool<> x
+        bool<> y
+      )
+      In definition "foo", we have: {
+      Parameters:
+        S = pint<> foo::S
+      Instances:
+        x = bool<> foo::x
+        y = bool<> foo::y
+      unroll sequence: 
+        bool<> x
+        bool<> y
+      prs:
+        x -> y- [after=S; ]
+        ~x -> y+ [after=T; ]
+      }
+
+}
+
+footprint: {
+  S = pint^0 value: 100
+  T = pint^0 value: 200
+  Created state:
+}

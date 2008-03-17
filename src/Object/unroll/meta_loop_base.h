@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.h"
-	$Id: meta_loop_base.h,v 1.7 2006/11/07 06:35:35 fang Exp $
+	$Id: meta_loop_base.h,v 1.8 2008/03/17 23:02:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_H__
@@ -22,6 +22,8 @@ using std::istream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
+
+template <class T> struct meta_loop;
 
 //=============================================================================
 /**

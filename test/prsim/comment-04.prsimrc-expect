@@ -1,0 +1,3 @@
+end-of-comment outside comment block is bad 
+this is ignored */ 
+continues fine 

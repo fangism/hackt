@@ -1,0 +1,15 @@
+// "celem-fb.hac"
+// explicitly staticized C-element
+
+defproc celem(bool a, b, c) {
+bool _c;
+prs {
+	a & b		#> _c-
+	_c		=> c-
+[weak=1]	c	=> _c-
+}
+}
+
+bool a, b, c;
+celem Z(a, b, c);
+

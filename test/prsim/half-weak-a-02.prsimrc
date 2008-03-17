@@ -1,0 +1,15 @@
+# "half-weak-a-02.prsimrc"
+# @haco@ half-weak-a.haco-a
+
+watchall
+weak-rules on
+# unstable-dequeue
+echo initially all Xs
+
+set a 0
+step-event
+pending b
+set a 1
+step-event
+pending b
+

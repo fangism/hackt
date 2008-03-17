@@ -1,0 +1,25 @@
+// "interleave-b.hac"
+// to be connected to VPI and back
+// testing event queue interleaving
+
+import "inverters.hac";
+
+/**
+prs {
+	in0	=> out0-
+	in1	=> out1-
+	in2	=> out2-
+	in3	=> out3-
+	in4	=> out4-
+}
+**/
+
+// attach extra inverters, don't feedback to VCS
+// observe how events are interleaved
+inv_chain<8,21> Q[5];
+Q[0](out0, );
+Q[1](out1, );
+Q[2](out2, );
+Q[3](out3, );
+Q[4](out4, );
+

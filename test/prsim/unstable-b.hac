@@ -1,0 +1,11 @@
+// "unstable-b.hac"
+// super-reduced from "unstable-a.hac"
+// trying to trigger assert fail, reduced bug test case
+
+bool a, b, c;
+
+prs {
+	~a & ~b		-> c+
+	a		-> c-
+}
+

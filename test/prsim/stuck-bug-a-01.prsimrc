@@ -1,0 +1,28 @@
+# "stuck-bug-a-01.prsimrc"
+# @haco@ stuck-bug-a.haco-a
+
+# weak-rules off
+
+watchall
+watchall-queue
+
+set l_ 1
+cycle
+set en 0
+cycle
+
+set _pR 0
+step-event
+set mp 1
+step-event
+
+set s 0
+set e 0
+cycle
+
+fanin-get _r
+
+unset _r
+queue
+assertn-queue
+

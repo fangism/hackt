@@ -1,0 +1,5 @@
+# "weak-unstable-b-01.prsimrc"
+# @haco@ weak-unstable-b.haco-a
+
+source weak-unstable-a-01.prsimrc
+

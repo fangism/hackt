@@ -1,0 +1,14 @@
+# "inv-17.prsimrc"
+# @haco@ inv.haco-a
+
+unknown-inputs
+echo expect first node to be X
+
+echo expect queue initially empty
+assertn-queue
+
+set a 0
+cycle
+unknown-inputs
+echo should be not more unknown inputs
+

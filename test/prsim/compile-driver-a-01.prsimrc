@@ -1,0 +1,12 @@
+# "compile-driver-a-01.prsimrc"
+# NOTE: this fakes the object file!
+# @haco@ -c -C "$(HACO_FLAGS)" $srcdir/compile-driver-a.hac
+# or: -c -C "-I$srcdir" $srcdir/compile-driver-a.hac
+
+watchall
+set a 0
+cycle
+assertn-queue
+
+echo YIPPEE!!!
+

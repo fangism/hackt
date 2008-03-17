@@ -1,0 +1,11 @@
+// "half-weak-a.hac"
+// input literal is in weak and non-weak rule of same output
+// bug reproducing test case
+
+bool a, b;
+prs {
+		a		-> b-
+[weak=1]	~a		-> b+
+//		z		-> b-
+}
+

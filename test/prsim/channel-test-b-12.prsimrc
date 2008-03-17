@@ -1,0 +1,43 @@
+# "channel-test-b-10.prsimrc"
+# copy-modified from "channel-test-b-05.prsimrc"
+# @haco@ channel-test-b.haco-a
+# @deps@ channel-dont-cares.txt
+# testing source/sinks on different channels
+# adding expect, looped, with don't care values
+
+source channel-test-b-01.prsimrc
+
+channel-source L channel-dont-cares.txt
+channel-sink R
+channel-expect-loop R channel-dont-cares.txt
+channel-show L
+channel-show R
+channel-watchall
+
+channel-reset-all
+channel-show L
+channel-show R
+cycle
+channel-show L
+channel-show R
+assert L.d[0] 0
+assert L.d[1] 0
+assert L.e 1
+assert R.d[0] 0
+assert R.d[1] 0
+assert R.e 0
+
+channel-unwatchall
+channel-release-all
+watch L.e R.e
+queue
+
+# because data is random
+nocause
+
+cycle
+assertn-queue
+echo no asserts failed, yay!
+channel-show L
+channel-show R
+

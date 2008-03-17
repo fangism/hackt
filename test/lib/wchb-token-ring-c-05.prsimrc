@@ -1,0 +1,41 @@
+# "wchb-token-ring-c-05.prsimrc"
+#	$Id: wchb-token-ring-c-05.prsimrc,v 1.2 2008/03/17 23:04:15 fang Exp $
+# @haco@ wchb-token-ring-c.haco-a
+# testing stability of token ring
+
+source initial-reset.prsimrc
+set Reset 0
+set _Reset 1
+
+channel L e:1 :0 d:2
+channel M e:1 :0 d:2
+channel R e:1 :0 d:2
+channel-log L wchb-token-ring-c-05-L.txt
+channel-log M wchb-token-ring-c-05-M.txt
+channel-log R wchb-token-ring-c-05-R.txt
+
+channel-show-all
+# no need
+# channel-release-all
+
+timing random
+
+echo channel value order should be strict repeat because
+echo there is only one hole in the ring
+step 177
+assert-queue
+
+channel-close-all
+
+echo expect to see on channel L: [1,0]*
+!cat wchb-token-ring-c-05-L.txt
+echo expect to see on channel M: [0,1]*
+!cat wchb-token-ring-c-05-M.txt
+echo expect to see on channel R: [0,1]*
+!cat wchb-token-ring-c-05-R.txt
+
+
+!rm wchb-token-ring-c-05-L.txt
+!rm wchb-token-ring-c-05-M.txt
+!rm wchb-token-ring-c-05-R.txt
+

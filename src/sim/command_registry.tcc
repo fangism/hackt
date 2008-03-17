@@ -1,12 +1,13 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.3 2007/02/14 04:57:24 fang Exp $
+	$Id: command_registry.tcc,v 1.4 2008/03/17 23:02:45 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
 #define	__HAC_SIM_COMMAND_REGISTRY_TCC__
 
 #include <iostream>
+#include <iterator>
 
 #include "sim/command_registry.h"
 #include "sim/command_base.h"
@@ -20,6 +21,7 @@ namespace HAC {
 namespace SIM {
 using std::cin;
 using std::istream;
+using std::ostream_iterator;
 using util::readline_wrapper;
 using util::ifstream_manager;
 using util::strings::eat_whitespace;
@@ -53,6 +55,32 @@ command_registry<Command>::category_map;
 template <class Command>
 typename command_registry<Command>::aliases_map_type
 command_registry<Command>::aliases;
+
+/**
+	For block style comments. 
+ */
+template <class Command>
+int
+command_registry<Command>::comment_level = 0;
+
+template <class Command>
+int
+command_registry<Command>::begin_outermost_comment = 0;
+
+/**
+	Switch to enable/disable echo-ing each interpreted command.
+ */
+template <class Command>
+bool
+command_registry<Command>::echo_commands = false;
+
+/**
+	Flag to automatically save checkpoint on exit.
+	Only really used by top-level caller.
+ */
+template <class Command>
+bool
+command_registry<Command>::autosave_on_exit = false;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Command>
@@ -226,6 +254,7 @@ command_registry<Command>::expand_aliases(string_list& c) {
 	Interprets a single command line.  
 	Capable of executing shell commands with '!' prefix.  
 	Now capable of expanding alias commands.  
+	TODO: pass '$' lines to Scheme interpreter, or support Scheme mode
 	\pre there are no cyclic aliases.  
  */
 template <class Command>
@@ -242,15 +271,46 @@ command_registry<Command>::interpret_line(state_type& s, const string& line) {
 			cerr << "*** Exit " << es << endl;
 		}
 		return Command::NORMAL;
+	} else if (*cursor == '#') {
+		// this catches lines like "#blah"
+		return Command::NORMAL;
 	} else {
+		// static const char begin_comment[] = "/*";
+		// static const char end_comment[] = "*/";
 		string_list toks;
 		tokenize(line, toks);
+	if (!toks.empty()) {
+		// check for block comments
+		const string& front(toks.front());
+		const string& back(toks.back());
+		const size_t fl = front.size();
+		const size_t bl = back.size();
+		if (fl >= 2 && front[0] == '/' && front[1] == '*') {
+			++comment_level;
+#if 0
+			if (comment_level == 1) {
+				begin_outermost_comment = lineno;
+			}
+#endif
+		}
+	if (!comment_level) {
 		// check if command is aliased :)
 		if (expand_aliases(toks) != Command::NORMAL) {
 			return Command::BADARG;
 		} else {
 			return execute(s, toks);
 		}
+	}
+		if (bl >= 2 && back[bl-2] == '*' && back[bl-1] == '/')  {
+			if (comment_level) {
+				--comment_level;
+			} else {
+cerr << "Error: encountered end-comment outside of comment block." << endl;
+				return Command::FATAL;
+			}
+		}
+	}	// end if !empty
+		return Command::NORMAL;
 	}
 }
 
@@ -279,6 +339,7 @@ if (interactive) {
 	int status = Command::NORMAL;
 	size_t lineno = 0;
 	do {
+		++lineno;
 		line = rl.gets();	// already eaten leading whitespace
 		// GOTCHA: readline eats '\t' characters!?
 	if (line) {
@@ -286,7 +347,9 @@ if (interactive) {
 		cout << "echo: " << line << endl;
 #endif
 		status = interpret_line(s, line);
-		++lineno;
+		if (status != Command::NORMAL && status != Command::END) {
+			cerr << "error at line " << lineno << endl;
+		}
 	}
 	} while (line && continue_interpreter(status, interactive));
 	// end-line for neatness
@@ -298,6 +361,7 @@ if (interactive) {
 			", aborting commands." << endl;
 		return status;
 	} else	return Command::NORMAL;
+	// TODO: catch unterminated block comments?
 } else {
 	// non interactive, skip readline, preserves tab-characters
 	return __source(cin, s);
@@ -313,10 +377,12 @@ if (interactive) {
 template <class Command>
 int
 command_registry<Command>::__source(istream& i, state_type& s) {
+	size_t lineno = 0;
 	int status = Command::NORMAL;
 	// const interactive_mode tmp(false);
 	string line;
 	do {
+		++lineno;
 		std::getline(i, line);
 	if (i) {
 #if 0
@@ -325,6 +391,17 @@ command_registry<Command>::__source(istream& i, state_type& s) {
 		status = interpret_line(s, line);
 	}	// end if
 	} while (i && continue_interpreter(status, false));
+	if ((status == Command::NORMAL) && comment_level) {
+		cerr << "Error: unterminated block comment in source." << endl;
+#if 0
+		cerr << "(comment block began at line " <<
+			begin_outermost_comment << ")" << endl;
+#endif
+		status = Command::FATAL;
+	}
+	if (status != Command::NORMAL && status != Command::END) {
+		cerr << "... at line " << lineno << endl;
+	}
 	return status;
 }
 
@@ -342,11 +419,21 @@ command_registry<Command>::__source(istream& i, state_type& s) {
 template <class Command>
 int
 command_registry<Command>::source(state_type& st, const string& f) {
-	ifstream_manager::placeholder p(st.get_stream_manager(), f);
+	ifstream_manager& ifm(st.get_stream_manager());
+	ifstream_manager::placeholder p(ifm, f);
 	// ifstream i(f.c_str());
 if (p) {
-	return __source(p.get_stream(), st);
+	if (echo_commands) {
+		cout << "## enter: \"" << ifm.top_named_ifstream_name() << "\""
+			<< endl;
+	}
+	const int ret = __source(p.get_stream(), st);
 	// return __source(i, st);
+	if (echo_commands) {
+		cout << "## leave: \"" << ifm.top_named_ifstream_name() << "\""
+			<< endl;
+	}
+	return ret;
 } else {
 	cerr << "Error opening file: \"" << f << '\"' << endl;
 	p.error_msg(cerr) << endl;
@@ -368,6 +455,13 @@ if (s) {
 	const typename command_map_type::const_iterator
 		p(command_map.find(*argi));
 	if (p != command_map.end()) {
+		// skip # comments
+		if (echo_commands && (args.front() != "#")) {
+			cout << "# ";
+			copy(argi, args.end(),
+				ostream_iterator<string>(cout, " "));
+			cout << endl;
+		}
 		return p->second.main(st, args);
 	} else {
 		cerr << "Unknown command: " << *argi << endl;

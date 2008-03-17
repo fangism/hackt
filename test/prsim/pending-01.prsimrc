@@ -1,0 +1,25 @@
+# "pending-01.prsimrc"
+# @haco@ inv.haco-a
+
+watchall
+pending a
+pending b
+pending c
+
+set a 0
+echo expect pending event on a, not b
+pending a
+pending b
+time
+
+advance 5
+pending a
+pending b
+time
+
+cycle
+pending a
+pending b
+pending c
+time
+

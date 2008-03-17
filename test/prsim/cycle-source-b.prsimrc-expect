@@ -4,5 +4,8 @@ b : X
 Error opening file: #FILE#
 Cyclic file reference.
 Error encountered during source #FILE#.
+... at line 9
 Error encountered during source #FILE#.
+... at line 9
 Error encountered during source #FILE#.
+... at line 9

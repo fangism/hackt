@@ -1,0 +1,17 @@
+	0	b : 0
+	0	a : 1
+	10	c : 0	[by a:=1]
+glitch X on A 
+WARNING: weak-interference `c'
+>> cause: `a' (val: X)
+	10	a : X
+event queue:
+	20	c : X	[from a:=X]
+	13	b : 1
+event queue:
+	20	c : X	[from a:=X]
+expect c -> 0 to overtake X 
+	20	c : X	[by a:=X]
+time: 20
+assert failed: expecting node `c' at 0, but got X.
+... at line 21

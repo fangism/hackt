@@ -1,0 +1,512 @@
+initially all X... 
+L.e:X, pull up/dn are both X
+  X._le:X, pull up/dn are both X
+    X._r.d[0]:X, pull up/dn are both X
+      _Reset:X, pull up/dn undriven, no fanin
+      M.e:X, pull up/dn are both X
+        Y._le:X, pull up/dn are both X
+          Y._r.d[0]:X, pull up/dn are both X
+            _Reset:X, (visited before, see above)
+            R.e:X, pull up/dn are both X
+              Z._le:X, pull up/dn are both X
+                Z._r.d[0]:X, pull up/dn are both X
+                  _Reset:X, (visited before, see above)
+                  L.e:X, cycle reached
+                  R.d[0]:X, pull up/dn are both X
+                    Y._r.d[0]:X, cycle reached
+                    Y._r.d[0]:X, cycle reached
+                  _Reset:X, (visited before, see above)
+                  L.e:X, cycle reached
+                  R.d[0]:X, (visited before, see above)
+                  _Reset:X, (visited before, see above)
+                Z._r.d[1]:X, pull up/dn are both X
+                  _Reset:X, (visited before, see above)
+                  L.e:X, cycle reached
+                  R.d[1]:X, pull up/dn are both X
+                    Y._r.d[1]:X, pull up/dn are both X
+                      _Reset:X, (visited before, see above)
+                      R.e:X, cycle reached
+                      M.d[1]:X, pull up/dn are both X
+                        X._r.d[1]:X, pull up/dn are both X
+                          _Reset:X, (visited before, see above)
+                          M.e:X, cycle reached
+                          L.d[1]:X, pull up/dn are both X
+                            Z._r.d[1]:X, cycle reached
+                            Z._r.d[1]:X, cycle reached
+                          _Reset:X, (visited before, see above)
+                          M.e:X, cycle reached
+                          L.d[1]:X, (visited before, see above)
+                          _Reset:X, (visited before, see above)
+                        X._r.d[1]:X, (visited before, see above)
+                      _Reset:X, (visited before, see above)
+                      R.e:X, cycle reached
+                      M.d[1]:X, (visited before, see above)
+                      _Reset:X, (visited before, see above)
+                    Y._r.d[1]:X, (visited before, see above)
+                  _Reset:X, (visited before, see above)
+                  L.e:X, cycle reached
+                  R.d[1]:X, (visited before, see above)
+                  _Reset:X, (visited before, see above)
+                Z._r.d[0]:X, (visited before, see above)
+                Z._r.d[1]:X, (visited before, see above)
+              Z._le:X, (visited before, see above)
+            M.d[0]:X, pull up/dn are both X
+              X._r.d[0]:X, cycle reached
+              X._r.d[0]:X, cycle reached
+            _Reset:X, (visited before, see above)
+            R.e:X, (visited before, see above)
+            M.d[0]:X, (visited before, see above)
+            _Reset:X, (visited before, see above)
+          Y._r.d[1]:X, (visited before, see above)
+          Y._r.d[0]:X, (visited before, see above)
+          Y._r.d[1]:X, (visited before, see above)
+        Y._le:X, (visited before, see above)
+      L.d[0]:X, pull up/dn are both X
+        Z._r.d[0]:X, (visited before, see above)
+        Z._r.d[0]:X, (visited before, see above)
+      _Reset:X, (visited before, see above)
+      M.e:X, (visited before, see above)
+      L.d[0]:X, (visited before, see above)
+      _Reset:X, (visited before, see above)
+    X._r.d[1]:X, (visited before, see above)
+    X._r.d[0]:X, (visited before, see above)
+    X._r.d[1]:X, (visited before, see above)
+  X._le:X, (visited before, see above)
+L.e:X, pull up/dn are both X
++ ~X._le:X, pull up/dn are both X
++ ~+-+
++ ~+ | ~X._r.d[0]:X, pull up/dn are both X
++ ~+ | ~+-+
++ ~+ | ~+ | ~_Reset:X, pull up/dn undriven, no fanin
++ ~+ | ~+ |-+
++ ~+ | ~+ | &  ~M.e:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~Y._le:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+-+
++ ~+ | ~+ | &  ~+ ~+ | ~Y._r.d[0]:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | ~_Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ |-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~R.e:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~Z._le:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~Z._r.d[0]:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | ~_Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ |-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~L.e:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~R.d[0]:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~Y._r.d[0]:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~- Y._r.d[0]:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & _Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~--+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- &  L.e:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- & R.d[0]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- & _Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~Z._r.d[1]:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | ~_Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ |-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~L.e:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~R.d[1]:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~Y._r.d[1]:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | ~_Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ |-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | &  ~R.e:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~M.d[1]:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~X._r.d[1]:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | ~_Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ |-+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | &  ~M.e:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | & ~L.d[1]:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | & ~+ ~Z._r.d[1]:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | & ~- Z._r.d[1]:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | & _Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~--+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~- &  M.e:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~- & L.d[1]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~- & _Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~- X._r.d[1]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & _Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~--+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~- &  R.e:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~- & M.d[1]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~- & _Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~- Y._r.d[1]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & _Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~--+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- &  L.e:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- & R.d[1]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- & _Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~--+
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~- & Z._r.d[0]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~- & Z._r.d[1]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~- Z._le:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~M.d[0]:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~X._r.d[0]:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~- X._r.d[0]:X, cycle reached
++ ~+ | ~+ | &  ~+ ~+ | ~+ | & _Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~--+
++ ~+ | ~+ | &  ~+ ~+ | ~- &  R.e:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~- & M.d[0]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~- & _Reset:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~+ | ~Y._r.d[1]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~--+
++ ~+ | ~+ | &  ~+ ~- & Y._r.d[0]:X, (visited before, see above)
++ ~+ | ~+ | &  ~+ ~- & Y._r.d[1]:X, (visited before, see above)
++ ~+ | ~+ | &  ~- Y._le:X, (visited before, see above)
++ ~+ | ~+ | & ~L.d[0]:X, pull up/dn are both X
++ ~+ | ~+ | & ~+ ~Z._r.d[0]:X, (visited before, see above)
++ ~+ | ~+ | & ~- Z._r.d[0]:X, (visited before, see above)
++ ~+ | ~+ | & _Reset:X, (visited before, see above)
++ ~+ | ~--+
++ ~+ | ~- &  M.e:X, (visited before, see above)
++ ~+ | ~- & L.d[0]:X, (visited before, see above)
++ ~+ | ~- & _Reset:X, (visited before, see above)
++ ~+ | ~X._r.d[1]:X, (visited before, see above)
++ ~--+
++ ~- & X._r.d[0]:X, (visited before, see above)
++ ~- & X._r.d[1]:X, (visited before, see above)
+- X._le:X, (visited before, see above)
+L.d[0]:X, pull up/dn are both X
+  Z._r.d[0]:X, pull up/dn are both X
+    _Reset:X, pull up/dn undriven, no fanin
+    L.e:X, pull up/dn are both X
+      X._le:X, pull up/dn are both X
+        X._r.d[0]:X, pull up/dn are both X
+          _Reset:X, (visited before, see above)
+          M.e:X, pull up/dn are both X
+            Y._le:X, pull up/dn are both X
+              Y._r.d[0]:X, pull up/dn are both X
+                _Reset:X, (visited before, see above)
+                R.e:X, pull up/dn are both X
+                  Z._le:X, pull up/dn are both X
+                    Z._r.d[0]:X, cycle reached
+                    Z._r.d[1]:X, pull up/dn are both X
+                      _Reset:X, (visited before, see above)
+                      L.e:X, cycle reached
+                      R.d[1]:X, pull up/dn are both X
+                        Y._r.d[1]:X, pull up/dn are both X
+                          _Reset:X, (visited before, see above)
+                          R.e:X, cycle reached
+                          M.d[1]:X, pull up/dn are both X
+                            X._r.d[1]:X, pull up/dn are both X
+                              _Reset:X, (visited before, see above)
+                              M.e:X, cycle reached
+                              L.d[1]:X, pull up/dn are both X
+                                Z._r.d[1]:X, cycle reached
+                                Z._r.d[1]:X, cycle reached
+                              _Reset:X, (visited before, see above)
+                              M.e:X, cycle reached
+                              L.d[1]:X, (visited before, see above)
+                              _Reset:X, (visited before, see above)
+                            X._r.d[1]:X, (visited before, see above)
+                          _Reset:X, (visited before, see above)
+                          R.e:X, cycle reached
+                          M.d[1]:X, (visited before, see above)
+                          _Reset:X, (visited before, see above)
+                        Y._r.d[1]:X, (visited before, see above)
+                      _Reset:X, (visited before, see above)
+                      L.e:X, cycle reached
+                      R.d[1]:X, (visited before, see above)
+                      _Reset:X, (visited before, see above)
+                    Z._r.d[0]:X, cycle reached
+                    Z._r.d[1]:X, (visited before, see above)
+                  Z._le:X, (visited before, see above)
+                M.d[0]:X, pull up/dn are both X
+                  X._r.d[0]:X, cycle reached
+                  X._r.d[0]:X, cycle reached
+                _Reset:X, (visited before, see above)
+                R.e:X, (visited before, see above)
+                M.d[0]:X, (visited before, see above)
+                _Reset:X, (visited before, see above)
+              Y._r.d[1]:X, (visited before, see above)
+              Y._r.d[0]:X, (visited before, see above)
+              Y._r.d[1]:X, (visited before, see above)
+            Y._le:X, (visited before, see above)
+          L.d[0]:X, cycle reached
+          _Reset:X, (visited before, see above)
+          M.e:X, (visited before, see above)
+          L.d[0]:X, cycle reached
+          _Reset:X, (visited before, see above)
+        X._r.d[1]:X, (visited before, see above)
+        X._r.d[0]:X, (visited before, see above)
+        X._r.d[1]:X, (visited before, see above)
+      X._le:X, (visited before, see above)
+    R.d[0]:X, pull up/dn are both X
+      Y._r.d[0]:X, (visited before, see above)
+      Y._r.d[0]:X, (visited before, see above)
+    _Reset:X, (visited before, see above)
+    L.e:X, (visited before, see above)
+    R.d[0]:X, (visited before, see above)
+    _Reset:X, (visited before, see above)
+  Z._r.d[0]:X, (visited before, see above)
+L.d[0]:X, pull up/dn are both X
++ ~Z._r.d[0]:X, pull up/dn are both X
++ ~+-+
++ ~+ | ~_Reset:X, pull up/dn undriven, no fanin
++ ~+ |-+
++ ~+ | &  ~L.e:X, pull up/dn are both X
++ ~+ | &  ~+ ~X._le:X, pull up/dn are both X
++ ~+ | &  ~+ ~+-+
++ ~+ | &  ~+ ~+ | ~X._r.d[0]:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+-+
++ ~+ | &  ~+ ~+ | ~+ | ~_Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ |-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~M.e:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~Y._le:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~Y._r.d[0]:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | ~_Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ |-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~R.e:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~Z._le:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~Z._r.d[0]:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~Z._r.d[1]:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | ~_Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ |-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~L.e:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~R.d[1]:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~Y._r.d[1]:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | ~_Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ |-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | &  ~R.e:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~M.d[1]:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~X._r.d[1]:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | ~_Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ |-+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | &  ~M.e:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | & ~L.d[1]:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | & ~+ ~Z._r.d[1]:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | & ~- Z._r.d[1]:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~+ | & _Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~--+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~- &  M.e:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~- & L.d[1]:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~+ ~- & _Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & ~- X._r.d[1]:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~+ | & _Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~--+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~- &  R.e:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~- & M.d[1]:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~- & _Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~- Y._r.d[1]:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & _Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~--+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- &  L.e:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- & R.d[1]:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- & _Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~--+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~- & Z._r.d[0]:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~+ ~- & Z._r.d[1]:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | &  ~- Z._le:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~M.d[0]:X, pull up/dn are both X
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~+ ~X._r.d[0]:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & ~- X._r.d[0]:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~+ | & _Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~--+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- &  R.e:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- & M.d[0]:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~- & _Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~+ | ~Y._r.d[1]:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~--+
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~- & Y._r.d[0]:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~+ ~- & Y._r.d[1]:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | &  ~- Y._le:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~+ | & ~L.d[0]:X, cycle reached
++ ~+ | &  ~+ ~+ | ~+ | & _Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~--+
++ ~+ | &  ~+ ~+ | ~- &  M.e:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~- & L.d[0]:X, cycle reached
++ ~+ | &  ~+ ~+ | ~- & _Reset:X, (visited before, see above)
++ ~+ | &  ~+ ~+ | ~X._r.d[1]:X, (visited before, see above)
++ ~+ | &  ~+ ~--+
++ ~+ | &  ~+ ~- & X._r.d[0]:X, (visited before, see above)
++ ~+ | &  ~+ ~- & X._r.d[1]:X, (visited before, see above)
++ ~+ | &  ~- X._le:X, (visited before, see above)
++ ~+ | & ~R.d[0]:X, pull up/dn are both X
++ ~+ | & ~+ ~Y._r.d[0]:X, (visited before, see above)
++ ~+ | & ~- Y._r.d[0]:X, (visited before, see above)
++ ~+ | & _Reset:X, (visited before, see above)
++ ~--+
++ ~- &  L.e:X, (visited before, see above)
++ ~- & R.d[0]:X, (visited before, see above)
++ ~- & _Reset:X, (visited before, see above)
+- Z._r.d[0]:X, (visited before, see above)
+resetting ... 
+X nodes:
+
+L.e:1
+  X._le:0
+    X._r.d[0]:1
+      L.d[0]:0
+        Z._r.d[0]:1
+          R.d[0]:0
+            Y._r.d[0]:1
+              M.d[0]:0
+                X._r.d[0]:1, cycle: possible deadlock
+              _Reset:0, input
+          _Reset:0, (visited before, see above)
+      _Reset:0, (visited before, see above)
+    X._r.d[1]:1
+      L.d[1]:0
+        Z._r.d[1]:1
+          R.d[1]:0
+            Y._r.d[1]:1
+              M.d[1]:0
+                X._r.d[1]:1, cycle: possible deadlock
+              _Reset:0, (visited before, see above)
+          _Reset:0, (visited before, see above)
+      _Reset:0, (visited before, see above)
+L.e:1
+. X._le:0
+. .-+
+. . | ~X._r.d[0]:1
+. . | ~.-+
+. . | ~. & L.d[0]:0
+. . | ~. & . ~Z._r.d[0]:1
+. . | ~. & . ~.-+
+. . | ~. & . ~. & R.d[0]:0
+. . | ~. & . ~. & . ~Y._r.d[0]:1
+. . | ~. & . ~. & . ~.-+
+. . | ~. & . ~. & . ~. & M.d[0]:0
+. . | ~. & . ~. & . ~. & . ~X._r.d[0]:1, cycle: possible deadlock
+. . | ~. & . ~. & . ~. & _Reset:0, input
+. . | ~. & . ~. & _Reset:0, (visited before, see above)
+. . | ~. & _Reset:0, (visited before, see above)
+. . | ~X._r.d[1]:1
+. . | ~.-+
+. . | ~. & L.d[1]:0
+. . | ~. & . ~Z._r.d[1]:1
+. . | ~. & . ~.-+
+. . | ~. & . ~. & R.d[1]:0
+. . | ~. & . ~. & . ~Y._r.d[1]:1
+. . | ~. & . ~. & . ~.-+
+. . | ~. & . ~. & . ~. & M.d[1]:0
+. . | ~. & . ~. & . ~. & . ~X._r.d[1]:1, cycle: possible deadlock
+. . | ~. & . ~. & . ~. & _Reset:0, (visited before, see above)
+. . | ~. & . ~. & _Reset:0, (visited before, see above)
+. . | ~. & _Reset:0, (visited before, see above)
+L.e:1
+  X._le:0
+    X._r.d[0]:1
+      _Reset:0, input
+    X._r.d[1]:1
+      _Reset:0, (visited before, see above)
+L.e:1
+. ~X._le:0
+. ~.-+
+. ~. & X._r.d[0]:1
+. ~. & .-+
+. ~. & . | ~_Reset:0, input
+. ~. & X._r.d[1]:1
+. ~. & .-+
+. ~. & . | ~_Reset:0, (visited before, see above)
+L.d[0]:0
+  Z._r.d[0]:1
+    R.d[0]:0
+      Y._r.d[0]:1
+        M.d[0]:0
+          X._r.d[0]:1
+            L.d[0]:0, cycle: possible deadlock
+            _Reset:0, input
+        _Reset:0, (visited before, see above)
+    _Reset:0, (visited before, see above)
+L.d[0]:0
+. ~Z._r.d[0]:1
+. ~.-+
+. ~. & R.d[0]:0
+. ~. & . ~Y._r.d[0]:1
+. ~. & . ~.-+
+. ~. & . ~. & M.d[0]:0
+. ~. & . ~. & . ~X._r.d[0]:1
+. ~. & . ~. & . ~.-+
+. ~. & . ~. & . ~. & L.d[0]:0, cycle: possible deadlock
+. ~. & . ~. & . ~. & _Reset:0, input
+. ~. & . ~. & _Reset:0, (visited before, see above)
+. ~. & _Reset:0, (visited before, see above)
+L.d[0]:0
+  Z._r.d[0]:1
+    _Reset:0, input
+L.d[0]:0
+. Z._r.d[0]:1
+. .-+
+. . | ~_Reset:0, input
+releasing ... 
+X nodes:
+
+L.e:1
+  X._le:0
+    X._r.d[0]:1
+      L.d[0]:0
+        Z._r.d[0]:1
+          R.d[0]:0
+            Y._r.d[0]:1
+              M.d[0]:0
+                X._r.d[0]:1, cycle: possible deadlock
+    X._r.d[1]:1
+      L.d[1]:0
+        Z._r.d[1]:1
+          R.d[1]:0
+            Y._r.d[1]:1
+              M.d[1]:0
+                X._r.d[1]:1, cycle: possible deadlock
+L.e:1
+. X._le:0
+. .-+
+. . | ~X._r.d[0]:1
+. . | ~.-+
+. . | ~. & L.d[0]:0
+. . | ~. & . ~Z._r.d[0]:1
+. . | ~. & . ~.-+
+. . | ~. & . ~. & R.d[0]:0
+. . | ~. & . ~. & . ~Y._r.d[0]:1
+. . | ~. & . ~. & . ~.-+
+. . | ~. & . ~. & . ~. & M.d[0]:0
+. . | ~. & . ~. & . ~. & . ~X._r.d[0]:1, cycle: possible deadlock
+. . | ~X._r.d[1]:1
+. . | ~.-+
+. . | ~. & L.d[1]:0
+. . | ~. & . ~Z._r.d[1]:1
+. . | ~. & . ~.-+
+. . | ~. & . ~. & R.d[1]:0
+. . | ~. & . ~. & . ~Y._r.d[1]:1
+. . | ~. & . ~. & . ~.-+
+. . | ~. & . ~. & . ~. & M.d[1]:0
+. . | ~. & . ~. & . ~. & . ~X._r.d[1]:1, cycle: possible deadlock
+L.e:1
+  X._le:0
+    X._r.d[0]:1, state-holding
+    X._r.d[1]:1, state-holding
+L.e:1
+. ~X._le:0
+. ~.-+
+. ~. & X._r.d[0]:1, state-holding
+. ~. & X._r.d[1]:1, state-holding
+L.d[0]:0
+  Z._r.d[0]:1
+    R.d[0]:0
+      Y._r.d[0]:1
+        M.d[0]:0
+          X._r.d[0]:1
+            L.d[0]:0, cycle: possible deadlock
+L.d[0]:0
+. ~Z._r.d[0]:1
+. ~.-+
+. ~. & R.d[0]:0
+. ~. & . ~Y._r.d[0]:1
+. ~. & . ~.-+
+. ~. & . ~. & M.d[0]:0
+. ~. & . ~. & . ~X._r.d[0]:1
+. ~. & . ~. & . ~.-+
+. ~. & . ~. & . ~. & L.d[0]:0, cycle: possible deadlock
+L.d[0]:0
+  Z._r.d[0]:1, state-holding
+L.d[0]:0
+. Z._r.d[0]:1, state-holding

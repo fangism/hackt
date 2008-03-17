@@ -1,0 +1,16 @@
+// "inv-alt.hac"
+// copy-modified from "inv.hac"
+// just pair of inverters in tandem
+
+defproc inv(bool a, b) {
+prs {
+	// note: rules in different order -- to test evaluation ordering
+	~a	-> b+
+	a	-> b-
+}
+}
+
+bool a, b, c;
+inv I(a, b);
+inv J(b, c);
+

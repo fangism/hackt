@@ -1,0 +1,15 @@
+# "inv-why-03.prsimrc"
+# @haco@ inv.haco-a
+# testing 'why' commands family
+
+echo why isn't a 0?
+why-not a
+
+echo expect to fail because a:X
+
+echo why isn't b 0?
+why-not b
+
+echo why isn't c 0?
+why-not c
+

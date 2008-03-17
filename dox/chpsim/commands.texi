@@ -1,5 +1,5 @@
 @c "commands.texi"
-@c $Id: commands.texi,v 1.4 2007/09/28 05:36:49 fang Exp $
+@c $Id: commands.texi,v 1.5 2008/03/17 23:02:02 fang Exp $
 @c TODO: index commands
 
 @node Commands
@@ -76,6 +76,10 @@ and report an error.
 @include cmd/unalias.texi
 @include cmd/unaliasall.texi
 
+The following command is useful for showing each executed command.
+
+@include cmd/echo-commands.texi
+
 @c ****************************************************************************
 @node general
 @section @t{general} commands
@@ -107,6 +111,7 @@ More on shared modules can be found in @ref{Extending simulation}.
 @cindex info commands
 
 @include cmd/assert-queue.texi
+@include cmd/assertn-queue.texi
 @include cmd/queue.texi
 @include cmd/dump-event.texi
 @include cmd/dump-event-source.texi
@@ -130,6 +135,7 @@ More on shared modules can be found in @ref{Extending simulation}.
 
 @include cmd/null-event-delay.texi
 @include cmd/timing.texi
+@include cmd/seed48.texi
 @include cmd/uniform-delay.texi
 
 @c ****************************************************************************
@@ -223,8 +229,10 @@ printed, but without interrupting simulation.
 @include cmd/nocause.texi
 
 @cindex event queue
-@include cmd/watch-queue.texi
-@include cmd/nowatch-queue.texi
+@c @include cmd/watch-queue.texi
+@c @include cmd/nowatch-queue.texi
+@include cmd/watchall-queue.texi
+@include cmd/nowatchall-queue.texi
 
 @cindex watchpoints
 

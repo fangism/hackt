@@ -1,0 +1,10 @@
+// "weak-feedback-b.hac"
+
+bool a, b;
+prs {
+		a	=> b-
+[weak=1; after=0]	b	=> a-
+// after 0 delay works around false positive instability in other prsim
+// except that testing shows that this doesn't work either
+}
+

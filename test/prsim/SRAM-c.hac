@@ -1,0 +1,51 @@
+// "SRAM-c.hac"
+//	$Id: SRAM-c.hac,v 1.2 2008/03/17 23:07:04 fang Exp $
+// minimized test case to reproduce a stuck-node bug
+// with artificial delays to produce timing scenario
+
+import "SRAM.hac";
+
+defproc skew_cell(bool bl, _bl, wl) {
+c1of2 r;
+prs {
+	// [keeper=0]
+	[weak=1] r.f		-> r.t-
+	[weak=1] r.t		-> r.f-
+	[weak=1] ~r.f		-> r.t+
+	[weak=1] ~r.t		-> r.f+
+	/*
+	passn(wl,bl,r.f)
+	passn(wl,_bl,r.t)
+	*/
+	wl & ~_bl		-> r.t-
+	wl & ~bl		-> r.f-
+	[weak=1] r.t & wl	-> bl-
+	[after=30;weak=1] r.f & wl	-> _bl-
+}
+}
+
+/**
+	Slower version
+ */
+defproc slow_writer(bool we, wv, bl, _bl) {
+	bool we_, wv_;
+prs {
+[after=65]	we		=> we_-
+	wv		=> wv_-
+
+	we & wv_	-> bl-
+	~we_ & ~wv_	-> bl+
+
+	we & wv		-> _bl-
+[after=4]	~we_ & ~wv	-> _bl+
+}
+}
+
+bool _pchg;
+bool bl, _bl, wl[2], we, wv;
+skew_cell c[2];
+c[0](bl, _bl, wl[0]);
+c[1](bl, _bl, wl[1]);
+slow_writer w(we, wv, bl, _bl);
+pc_nostat p(_pchg, bl, _bl);
+

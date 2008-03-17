@@ -2,7 +2,7 @@
 	\file "Object/unroll/loop_scope.h"
 	This file contains class definitions for control-flow scopes
 	of the HAC language.  
-	$Id: loop_scope.h,v 1.7 2006/03/15 04:38:24 fang Exp $
+	$Id: loop_scope.h,v 1.8 2008/03/17 23:02:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_H__
@@ -41,6 +41,9 @@ class loop_scope : public instance_management_base,
 	typedef	loop_scope				this_type;
 	typedef	instance_management_base		interface_type;
 	typedef	sequential_scope			parent_type;
+	typedef	sequential_scope			implementation_type;
+	friend struct meta_loop<this_type>;
+	typedef	meta_loop<this_type>			meta_loop;
 protected:
 	// inherits a list of sequential instance_management items
 	// induction variable (inherited)

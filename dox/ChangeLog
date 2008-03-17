@@ -1,5 +1,17 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.31 2007/10/08 21:49:55 fang Exp $
+#	$Id: ChangeLog,v 1.32 2008/03/17 23:02:01 fang Exp $
+
+2008-02-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-38-prsim-09-08:
+	  prsim/commands.texi: new section on channel commands.
+
+
+2008-01-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-19:
+	  prsim/commands.texi: include cmd/weak-rules.texi (generated)
+
 
 2007-10-08	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.7 2008/03/03 21:10:36 sandra Exp $
+	$Id: State-prsim.cc,v 1.8 2008/03/17 23:03:04 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -12,6 +12,7 @@
 #define	ENABLE_STACKTRACE		0
 #define	DEBUG_FANOUT			(0 && ENABLE_STACKTRACE)
 #define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
+#define	DEBUG_CHECK			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <algorithm>
@@ -44,6 +45,8 @@
 #include "util/string.tcc"
 #include "util/IO_utils.tcc"
 #include "util/binders.h"
+#include "util/utypes.h"
+#include "util/indent.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -51,6 +54,14 @@
 #else
 #define	DEBUG_STEP_PRINT(x)
 #define	STACKTRACE_VERBOSE_STEP
+#endif
+
+#if	DEBUG_CHECK
+#define	DEBUG_CHECK_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
+#define	STACKTRACE_VERBOSE_CHECK	STACKTRACE_VERBOSE
+#else
+#define	DEBUG_CHECK_PRINT(x)
+#define	STACKTRACE_VERBOSE_CHECK
 #endif
 
 #if	DEBUG_FANOUT
@@ -81,6 +92,7 @@
  */
 #define	EXTRA_ALIGN_MARKERS			0
 
+
 namespace HAC {
 namespace entity { }
 
@@ -102,11 +114,14 @@ using util::read_value;
 using util::write_value;
 using util::bind2nd_argval;
 using util::bind2nd_argval_void;
+using util::auto_indent;
+using util::indent;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
 using entity::process_tag;
 #include "util/using_ostream.h"
+
 //=============================================================================
 // class State::event_deallocator definition
 
@@ -171,6 +186,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		current_time(0), 
 		uniform_delay(time_traits::default_delay), 
 		watch_list(), 
+#if PRSIM_CHANNEL_SUPPORT
+		_channel_manager(), 
+#endif
 		flags(FLAGS_DEFAULT),
 		unstable_policy(ERROR_DEFAULT_UNSTABLE),
 		weak_unstable_policy(ERROR_DEFAULT_WEAK_UNSTABLE),
@@ -263,13 +281,11 @@ State::destroy(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Resets the state of simulation by X-ing all nodes, but
-	also preserves some simulator modes, such as the 
-	watch/break point state.
-	\pre expressions are already properly sized.  
+	Clears internal data structures.
+	Procedure is common to initialize() and reset().
  */
 void
-State::initialize(void) {
+State::__initialize(void) {
 	STACKTRACE_VERBOSE;
 	for_each(node_pool.begin(), node_pool.end(), 
 		mem_fun_ref(&node_type::initialize));
@@ -283,12 +299,181 @@ State::initialize(void) {
 	ISE_INVARIANT(event_pool.check_valid_empty());
 	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
-	flags |= FLAGS_INITIALIZE_SET_MASK;
-	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
 	// unwatchall()? no, preserved
 	// timing mode preserved
 	current_time = 0;
+#if PRSIM_CHANNEL_SUPPORT
+	_channel_manager.initialize();
+#endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets the state of simulation by X-ing all nodes, but
+	also preserves some simulator modes, such as the 
+	watch/break point state.
+	\pre expressions are already properly sized.  
+ */
+void
+State::initialize(void) {
+	STACKTRACE_VERBOSE;
+	__initialize();
+	flags |= FLAGS_INITIALIZE_SET_MASK;
+	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A node is driven if it has fanin rule, or can be driven from channel.
+ */
+bool
+State::node_is_driven(const node_index_type ni) const {
+	return get_node(ni).has_fanin() || node_is_driven_by_channel(ni);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A node is used if it has fanout or can cause a channel event.  
+ */
+bool
+State::node_is_used(const node_index_type ni) const {
+	return get_node(ni).fanout.size() || node_drives_any_channel(ni);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+State::node_is_driven_by_channel(const node_index_type ni) const {
+#if PRSIM_CHANNEL_SUPPORT
+	return get_node(ni).in_channel() &&
+		_channel_manager.node_has_fanin(ni);
+#else
+	return false;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+State::node_drives_any_channel(const node_index_type ni) const {
+#if PRSIM_CHANNEL_SUPPORT
+	return get_node(ni).in_channel() &&
+		_channel_manager.node_has_fanout(ni);
+#else
+	return false;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SUPPORT
+	// Q: is this the best place to handle this?
+void
+State::flush_channel_events(const vector<env_event_type>& env_events, 
+		const event_cause_type& c) {
+	STACKTRACE_VERBOSE;
+	// cause of these events must be 'ni', this node
+	vector<env_event_type>::const_iterator
+		i(env_events.begin()), e(env_events.end());
+	// const event_cause_type c(ni, next);
+	for ( ; i!=e; ++i) {
+#if 0
+		cerr << "channel event on node: " <<
+			get_node_canonical_name(i->first) << endl;
+#endif
+		node_type& _n(get_node(i->first));
+		const uchar _v = i->second;
+		if (_n.current_value() != _v) {
+		const event_index_type pe = _n.get_event();
+		if (pe) {
+	// interaction with other enqueued events? anomalies?
+	// for now, give up if there are conflicting events in queue
+			// instability!?
+			cerr << "pending event on node: " <<
+				get_node_canonical_name(i->first) << endl;
+			dump_event(cerr, pe, 0) << endl;
+			cerr << "but got from channel: -> " <<
+				node_type::value_to_char[i->second] << endl;
+			cerr << "caused by node: " <<
+				get_node_canonical_name(c.node) << " -> " <<
+				node_type::value_to_char[c.val] << endl;
+			ISE_INVARIANT(!pe);
+			// not true, but we bomb out for now...
+			// TODO: proper diagnostic
+		} else {
+			// __allocate_event
+			const event_index_type pn =
+				__allocate_event(_n, i->first, c,
+					INVALID_RULE_INDEX, _v
+#if PRSIM_WEAK_RULES
+					, false	// environment never weak
+#endif
+				);
+			// enqueue_event
+			const event_type& ev(get_event(pn));
+			switch (_v) {
+			case node_type::LOGIC_LOW:
+				enqueue_event(get_delay_dn(ev), pn);
+				break;
+			case node_type::LOGIC_HIGH:
+				enqueue_event(get_delay_up(ev), pn);
+				break;
+			default: enqueue_event(current_time
+				// +delay_policy<time_type>::zero
+				, pn);
+			}
+		}
+		} // else filter out vacuous events
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set a single channel into reset state.  
+ */
+bool
+State::reset_channel(const string& cn) {
+	vector<env_event_type> temp;
+	if (_channel_manager.reset_channel(cn, temp))	return true;
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reset all channels.  
+ */
+void
+State::reset_all_channels(void) {
+	vector<env_event_type> temp;
+	_channel_manager.reset_all_channels(temp);
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set a single channel into reset state.  
+ */
+bool
+State::resume_channel(const string& cn) {
+	vector<env_event_type> temp;
+	if (_channel_manager.resume_channel(*this, cn, temp))	return true;
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reset all channels.  
+ */
+void
+State::resume_all_channels(void) {
+	vector<env_event_type> temp;
+	_channel_manager.resume_all_channels(*this, temp);
+	const event_cause_type c(INVALID_NODE_INDEX, node_type::LOGIC_OTHER);
+	flush_channel_events(temp, c);
+}
+#endif	// PRSIM_CHANNEL_SUPPORT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -312,18 +497,7 @@ State::reset_tcounts(void) {
 void
 State::reset(void) {
 	STACKTRACE_VERBOSE;
-	for_each(node_pool.begin(), node_pool.end(), 
-		mem_fun_ref(&node_type::reset));
-	for_each(expr_pool.begin(), expr_pool.end(), 
-		mem_fun_ref(&expr_type::reset));
-	// the expr_graph_node_pool contains no stateful information.  
-	while (!event_queue.empty()) {
-		const event_placeholder_type next(event_queue.pop());
-		event_pool.deallocate(next.event_index);
-	}
-	ISE_INVARIANT(event_pool.check_valid_empty());
-	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
-	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
+	__initialize();
 	flags = FLAGS_DEFAULT;
 	unstable_policy = ERROR_DEFAULT_UNSTABLE;
 	weak_unstable_policy = ERROR_DEFAULT_WEAK_UNSTABLE;
@@ -332,7 +506,9 @@ State::reset(void) {
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
 	uniform_delay = time_traits::default_delay;
-	current_time = 0;
+#if PRSIM_CHANNEL_SUPPORT
+	_channel_manager.clobber_all();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -430,23 +606,30 @@ State::void_expr(const expr_index_type ei) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 State::check_node(const node_index_type i) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE_CHECK;
 	const node_type& n(node_pool[i]);
 	// check pull-up/dn if applicable
-	const expr_index_type upi = n.pull_up_index;
+#if PRSIM_WEAK_RULES
+size_t k = 0;	// NORMAL_RULE = 0, WEAK_RULE = 1 (Node.h)
+for ( ; k<2; ++k) {
+#endif
+	const expr_index_type upi = n.pull_up_index STR_INDEX(k);
 	if (is_valid_expr_index(upi)) {
 		const expr_type& e __ATTRIBUTE_UNUSED_CTOR__((expr_pool[upi]));
 		assert(e.is_root());
 		assert(e.direction());
 		assert(e.parent == i);
 	}
-	const expr_index_type dni = n.pull_dn_index;
+	const expr_index_type dni = n.pull_dn_index STR_INDEX(k);
 	if (is_valid_expr_index(dni)) {
 		const expr_type& e __ATTRIBUTE_UNUSED_CTOR__((expr_pool[dni]));
 		assert(e.is_root());
 		assert(!e.direction());
 		assert(e.parent == i);
 	}
+#if PRSIM_WEAK_RULES
+}
+#endif
 	// check fanout
 	const size_t fs = n.fanout.size();
 	size_t j = 0;
@@ -463,7 +646,7 @@ State::check_node(const node_index_type i) const {
  */
 void
 State::check_expr(const expr_index_type i) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE_CHECK;
 	const expr_type& e(expr_pool[i]);
 	const graph_node_type& g(expr_graph_node_pool[i]);
 if (!e.wiped()) {
@@ -473,7 +656,23 @@ if (!e.wiped()) {
 		assert(e.parent < node_pool.size());
 		const node_type& n
 			__ATTRIBUTE_UNUSED_CTOR__((node_pool[e.parent]));
+#if 0
+		// root expression may still be OR-combined by parent!
+		rule_map_type::const_iterator fi(rule_map.begin());
+		const rule_map_type::const_iterator fe(rule_map.end());
+		for ( ; fi!=fe; ++fi) {
+			cerr << fi->first << ',';
+		}
+		cerr << endl;
+		const rule_map_type::const_iterator f(rule_map.find(i));
+		assert(f != rule_map.end());
+#endif
+#if PRSIM_WEAK_RULES
+		assert(n.get_pull_expr(e.direction(), NORMAL_RULE) == i ||
+			n.get_pull_expr(e.direction(), WEAK_RULE) == i);
+#else
 		assert(n.get_pull_expr(e.direction()) == i);
+#endif
 	} else {
 		assert(e.parent < expr_pool.size());
 		// const Expr& pe(expr_pool[e.parent]);
@@ -594,10 +793,18 @@ State::__allocate_event(node_type& n,
 		const node_index_type ni,
 		cause_arg_type c, 
 		const rule_index_type ri,
-		const uchar val) {
+		const uchar val
+#if PRSIM_WEAK_RULES
+		, const bool weak
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	ISE_INVARIANT(!n.pending_event());
-	n.set_event(event_pool.allocate(event_type(ni, c, ri, val)));
+	n.set_event(event_pool.allocate(event_type(ni, c, ri, val
+#if PRSIM_WEAK_RULES
+		, weak
+#endif
+		)));
 	// n.set_cause_node(ci);	// now assign *after* dequeue_event
 	return n.get_event();
 }
@@ -616,14 +823,23 @@ event_index_type
 State::__allocate_pending_interference_event(node_type& n,
 		const node_index_type ni,
 		cause_arg_type c, 
-		const uchar next) {
+		const uchar next
+#if PRSIM_WEAK_RULES
+		, const bool weak
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	// node may or may not have pending event (?)
 	// don't care about the node value
 	const event_index_type ne = event_pool.allocate(
-		event_type(ni, c, INVALID_RULE_INDEX, next));
+		event_type(ni, c, INVALID_RULE_INDEX, next
+#if PRSIM_WEAK_RULES
+		, weak
+#endif
+		));
 	get_event(ne).pending_interference(true);
-	// n.set_event(ne);
+	// not yet because hasn't been committed to event queue yet
+	// n.set_event(ne);		// for consistency?
 	// n.set_cause_node(ci);	// now assign *after* dequeue_event
 	return ne;
 }
@@ -637,8 +853,11 @@ State::__allocate_pending_interference_event(node_type& n,
 event_index_type
 State::__load_allocate_event(const event_type& ev) {
 	node_type& n(get_node(ev.node));
-	n.load_event(event_pool.allocate(ev));
-	return n.get_event();
+	const size_t ne = event_pool.allocate(ev);
+	if (!ev.killed()) {
+		n.load_event(ne);
+	}
+	return ne;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -683,12 +902,14 @@ State::__deallocate_killed_event(const event_index_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// inline
 const State::event_type&
 State::get_event(const event_index_type i) const {
 	return event_pool[i];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// inline
 State::event_type&
 State::get_event(const event_index_type i) {
 	return event_pool[i];
@@ -696,17 +917,59 @@ State::get_event(const event_index_type i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Registers event in the primary event queue.  
+	Removes event from main event queue and dissociates it from
+	its affected node.  (node and event are invariably consistent)
+	This is only a non-static member function because we want to
+	check the state's watch-list for dequeue feedback.  
+	Yes, usually the node& and event& are already lookedup, 
+	but this should be infrequent enough to not suffer from pessimization.
  */
 void
-State::enqueue_event(const time_type t, const event_index_type ei) {
+State::kill_event(const event_index_type ei, const node_index_type ni) {
+	get_event(ei).kill();
+	get_node(ni).clear_event();
+	if (UNLIKELY(watching_all_event_queue() ||
+			(watching_event_queue() && is_watching_node(ni)))) {
+		dump_event_force(cout << "killed  :", ei,
+			delay_policy<time_type>::zero, true);
+		// flush?
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers event in the primary event queue.  
+	Only this is allowed to load killed events.  
+ */
+// inline
+node_index_type
+State::load_enqueue_event(const time_type t, const event_index_type ei) {
+	INVARIANT(ei);
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
 		" at time " << t << endl);
-	if (watching_event_queue()) {
+	const event_type& e(get_event(ei));
+	const node_index_type ni = e.node;
+	if (UNLIKELY(watching_all_event_queue() ||
+		(watching_event_queue() &&
+			is_watching_node(e.node)))) {
 		dump_event(cout << "enqueued:", ei, t);
 	}
 	event_queue.push(event_placeholder_type(t, ei));
+	return ni;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers event in the primary event queue.  
+	\pre corresponding node must back-reference event ei
+ */
+void
+State::enqueue_event(const time_type t, const event_index_type ei) {
+	const node_index_type ni = load_enqueue_event(t, ei);
+	const node_type& n(get_node(ni));
+	ISE_INVARIANT(n.pending_event());
+	ISE_INVARIANT(n.get_event() == ei);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -717,10 +980,15 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
 void
 State::enqueue_exclhi(const time_type t, const event_index_type ei) {
 	ISE_INVARIANT(t >= current_time);
+	// FAILED ONCE! (no test case) 20071213 after weak rules added
 	DEBUG_STEP_PRINT("enqueuing exclhi ID " << ei <<
 		" at time " << t << endl);
-	exclhi_queue.push_back(event_placeholder_type(t, ei));
-	get_node(event_pool[ei].node).set_excl_queue();
+	typedef	mk_excl_queue_type::value_type		value_type;
+	typedef	mk_excl_queue_type::iterator		iterator;
+	const pair<iterator, bool> i(exclhi_queue.insert(value_type(ei, t)));
+	// eliminate duplicates, check time consistency
+	ISE_INVARIANT(i.second || (t == i.first->second));
+	get_node(get_event(ei).node).set_excl_queue();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -733,8 +1001,12 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing excllo ID " << ei <<
 		" at time " << t << endl);
-	excllo_queue.push_back(event_placeholder_type(t, ei));
-	get_node(event_pool[ei].node).set_excl_queue();
+	typedef	mk_excl_queue_type::value_type		value_type;
+	typedef	mk_excl_queue_type::iterator		iterator;
+	const pair<iterator, bool> i(excllo_queue.insert(value_type(ei, t)));
+	// eliminate duplicates, check time consistency
+	ISE_INVARIANT(i.second || (t == i.first->second));
+	get_node(get_event(ei).node).set_excl_queue();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -745,7 +1017,13 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 void
 State::enqueue_pending(const event_index_type ei) {
 	DEBUG_STEP_PRINT("enqueuing pending ID " << ei << endl);
+#if UNIQUE_PENDING_QUEUE
+	typedef	pending_queue_type::iterator	iterator;
+	const pair<iterator, bool> p(pending_queue.insert(ei));
+	INVARIANT(p.second);		// was inserted uniquely
+#else
 	pending_queue.push_back(ei);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -759,6 +1037,7 @@ State::event_placeholder_type
 State::dequeue_event(void) {
 	STACKTRACE_VERBOSE_STEP;
 	event_placeholder_type ret(event_queue.pop());
+//	n.clear_event();	???
 	while (get_event(ret.event_index).killed()) {
 		__deallocate_killed_event(ret.event_index);
 		if (event_queue.empty()) {
@@ -818,8 +1097,7 @@ if (pending) {
 		// cancel former event, but don't deallocate it until dequeued
 		cout << "WARNING: pending event for node `" << objname <<
 			"\' was overridden." << endl;
-		get_event(pending).kill();
-		n.clear_event();
+		kill_event(pending, ni);
 	} else if (!unchanged) {
 		// not forcing: if new value is different, issue warning
 		cout << "WARNING: pending value for node `" << objname <<
@@ -838,7 +1116,11 @@ if (pending) {
 		// node cause to assign, since this is externally set
 		__allocate_event(n, ni, 
 			EMPTY_CAUSE,
-			INVALID_RULE_INDEX, val);
+			INVALID_RULE_INDEX, val
+#if PRSIM_WEAK_RULES
+			, NORMAL_RULE	// normal strength of 'set'
+#endif
+			);
 #if 0
 	const event_type& e(get_event(ei));
 	STACKTRACE_INDENT_PRINT("new event: (node,val)" << endl);
@@ -868,14 +1150,17 @@ State::unset_node(const node_index_type ni) {
 	STACKTRACE_VERBOSE;
 	node_type& n(get_node(ni));
 	const event_index_type pending = n.get_event();
+#if PRSIM_WEAK_RULES
+	// strong events take precedence over weak ones
+size_t w = 0;	// NORMAL_RULE
+do {
+#endif
 	// evaluate node's pull-up and pull-down
-	const expr_index_type u = n.pull_up_index;
-	const expr_index_type d = n.pull_dn_index;
+	const expr_index_type u = n.pull_up_index STR_INDEX(w);
+	const expr_index_type d = n.pull_dn_index STR_INDEX(w);
 	// if there is no pull-*, it's as good as off!
-	const uchar pu =
-		(u ? expr_pool[u].pull_state() : char(expr_type::PULL_OFF));
-	const uchar pd =
-		(d ? expr_pool[d].pull_state() : char(expr_type::PULL_OFF));
+	const pull_enum pu = get_pull(u);
+	const pull_enum pd = get_pull(d);
 if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 	const uchar new_val = pull_to_value[size_t(pu)][size_t(pd)];
 	if (pending) {
@@ -883,17 +1168,28 @@ if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 		if (e.val != new_val) {
 			cerr << "Overriding pending event\'s value on node `"
 				<< get_node_canonical_name(ni) << "\' from " <<
-				node_type::char_to_value(e.val) << " to " <<
-				node_type::char_to_value(new_val) <<
+				node_type::value_to_char[e.val] << " to " <<
+				node_type::value_to_char[new_val] <<
 				", keeping the same event time." << endl;
 			e.val = new_val;
 		}
+#if PRSIM_WEAK_RULES
+		e.set_weak(w);
+#endif
 		e.unforce();
 		// else do nothing, correct value already pending
 	} else {
 		// no event pending, can make one
 		const uchar current = n.current_value();
-		if (current != new_val) {
+		if (current == node_type::LOGIC_LOW &&
+				pu == expr_type::PULL_OFF) {
+			// nothing pulling up, no change
+			return;
+		} else if (current == node_type::LOGIC_HIGH &&
+				pd == expr_type::PULL_OFF) {
+			// nothing pulling down, no change
+			return;
+		} else if (current != new_val) {
 #if 0
 			rule_index_type ri;
 			// not true, rule index may be from OR-combination...
@@ -914,7 +1210,11 @@ if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 			// will use a delay of 0.  
 #endif
 			const event_index_type ei = __allocate_event(
-				n, ni, EMPTY_CAUSE, ri, new_val);
+				n, ni, EMPTY_CAUSE, ri, new_val
+#if PRSIM_WEAK_RULES
+				, w
+#endif
+				);
 			event_type& e(get_event(ei));
 			time_type t;
 			switch (new_val) {
@@ -922,13 +1222,21 @@ if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 				t = get_delay_up(e); break;
 			case node_type::LOGIC_LOW:
 				t = get_delay_dn(e); break;
-			default: t = delay_policy<time_type>::zero;
+			default: t = current_time;
+				// +delay_policy<time_type>::zero;
 			}
 			enqueue_event(t, ei);
 		}
 		// else node is already in correct state
 	}
+#if PRSIM_WEAK_RULES
+	break;	// ignore weak rules, normal rules will take precedence
+#endif
 }	// else neither side is pulling, leave node as is
+#if PRSIM_WEAK_RULES
+	++w;
+} while (weak_rules_enabled() && w<2);
+#endif
 }	// end State::unset_node
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1034,9 +1342,13 @@ State::string_to_error_policy(const string& s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print the current mode.  
+ */
 ostream&
 State::dump_mode(ostream& o) const {
 	o << "mode: ";
+	o << "\tweak rules " << (weak_rules_enabled() ? "on" : "off") << endl;
 	o << "\tunstable events " <<
 		(dequeue_unstable_events() ? "are dequeued" : "propagate Xs")
 			<< endl;
@@ -1052,6 +1364,10 @@ State::dump_mode(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Show current timing mode.
+	Show random seed?
+ */
 ostream&
 State::dump_timing(ostream& o) const {
 	o << "timing: ";
@@ -1070,7 +1386,6 @@ switch (timing_mode) {
 /**
 	\return true if there is a syntax error.  
 	TODO: use a map to parsers.  
-	TODO: use random seed.  
  */
 bool
 State::set_timing(const string& m, const string_list& a) {
@@ -1079,11 +1394,10 @@ State::set_timing(const string& m, const string_list& a) {
 	static const string __after("after");
 	if (m == __random) {
 		timing_mode = TIMING_RANDOM;
-		// TODO: use random seed
 		switch (a.size()) {
 		case 0:	return false;
-		case 1:	FINISH_ME(Fang);
-			cerr << "TODO: plant random seed." << endl;
+		case 1:	cerr << "use \'seed48' to set random number seed"
+			<< endl;
 			return false;
 		default:	return true;
 		}
@@ -1109,7 +1423,7 @@ State::set_timing(const string& m, const string_list& a) {
 ostream&
 State::help_timing(ostream& o) {
 	o << "available timing modes:" << endl;
-	o << "\trandom [seed]" << endl;
+	o << "\trandom" << endl;
 	o << "\tuniform [delay]" << endl;
 	o << "\tafter" << endl;
 	o <<
@@ -1118,7 +1432,8 @@ State::help_timing(ostream& o) {
 "Uniform mode ignores all after-delay annotations and uses a fixed delay "
 "for all events, which can be used to count transitions.\n"
 "After mode uses fixed after-annotated delays for timing, and assumes "
-"default delays where none are given." << endl;
+"default delays where none are given.\n"
+"Use \'seed48\' to set a random number seed." << endl;
 	return o;
 }
 
@@ -1215,11 +1530,25 @@ for ( ; i!=e; ++i) {
 	DEBUG_STEP_PRINT("... on node " <<
 		get_node_canonical_name(_ni) << endl);
 	node_type& _n(get_node(_ni));
-	const uchar pull_up_state = expr_pool[_n.pull_up_index].pull_state();
-	const uchar pull_dn_state = expr_pool[_n.pull_dn_index].pull_state();
+
+	// are weak events ever inserted into the pending queue?
+	const expr_index_type up_ex = _n.pull_up_index STR_INDEX(NORMAL_RULE);
+	const expr_index_type dn_ex = _n.pull_dn_index STR_INDEX(NORMAL_RULE);
+	const pull_enum pull_up_state = get_pull(up_ex);
+	const pull_enum pull_dn_state = get_pull(dn_ex);
 	DEBUG_STEP_PRINT("current pull-states: up=" <<
 		size_t(pull_up_state) << ", dn=" <<
 		size_t(pull_dn_state) << endl);
+#if PRSIM_WEAK_RULES
+	const expr_index_type wup_ex = _n.pull_up_index STR_INDEX(WEAK_RULE);
+	const expr_index_type wdn_ex = _n.pull_dn_index STR_INDEX(WEAK_RULE);
+	const pull_enum wpull_up_state = get_pull(wup_ex);
+	const pull_enum wpull_dn_state = get_pull(wdn_ex);
+	DEBUG_STEP_PRINT("weak pull-states:    up=" <<
+		size_t(wpull_up_state) << ", dn=" <<
+		size_t(wpull_dn_state) << endl);
+#endif
+	// check strong (normal) rules first
 	if ((pull_up_state != expr_type::PULL_OFF) &&
 		(pull_dn_state != expr_type::PULL_OFF)) {
 	/***
@@ -1239,21 +1568,85 @@ for ( ; i!=e; ++i) {
 			__report_interference(cout, pending_weak, _ni, ev);
 		}
 		if (ev.pending_interference()) {
-			ISE_INVARIANT(_n.pending_event());
+			DEBUG_STEP_PRINT("immediate -> X." << endl);
+			// ISE_INVARIANT(_n.pending_event());
+			// might have been dequeued due to unstable-dequeue
+			// in which case, enqueue this event
+			const bool still_pending = _n.pending_event();
+		if (still_pending) {
 			// always set the cause and new value together
+			event_type& pe(get_event(_n.get_event()));
+			pe.val = node_type::LOGIC_OTHER;
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-			_n.set_value_and_cause(node_type::LOGIC_OTHER, 
-				ev.cause);
+			pe.cause.node = ev.cause.node;
+			pe.cause.val = ev.cause.val;
 #else
-			_n.set_cause_node(ev.cause_node);
-			_n.set_value(node_type::LOGIC_OTHER);
+			pe.cause_node = ev.cause_node;
 #endif
 			__deallocate_pending_interference_event(ne);
 		} else {
+			INVARIANT(dequeue_unstable_events());
+			DEBUG_STEP_PRINT("re-queue to X." << endl);
+			ev.val = node_type::LOGIC_OTHER;
+			__flush_pending_event_with_interference(_n, ne, ev);
+		}	// end if still_pending
+		} else {
+			DEBUG_STEP_PRINT("overwrite to X." << endl);
 			ev.val = node_type::LOGIC_OTHER;
 			__flush_pending_event_with_interference(_n, ne, ev);
 		}	// end if pending_interference
+#if PRSIM_WEAK_RULES
+	} else if (weak_rules_enabled() &&
+		(pull_up_state == expr_type::PULL_OFF) &&
+		(pull_dn_state == expr_type::PULL_OFF) &&
+		(wpull_up_state != expr_type::PULL_OFF) &&
+			(wpull_dn_state != expr_type::PULL_OFF)) {
+	/***
+		There is interference between weak rules. 
+		Rest of the code in this clause is copied from above.
+	***/
+		DEBUG_STEP_PRINT("some interference (weak rules)." << endl);
+		const bool pending_weak =
+			(wpull_up_state == expr_type::PULL_WEAK) ||
+			(wpull_dn_state == expr_type::PULL_WEAK);
+			// not XOR (^), see pending_weak table in prs.c
+		// issue diagnostic
+		if ((weak_interference_policy != ERROR_IGNORE) ||
+				!pending_weak) {
+			err |=
+			__report_interference(cout, pending_weak, _ni, ev);
+		}
+		if (ev.pending_interference()) {
+			DEBUG_STEP_PRINT("immediate -> X." << endl);
+			// ISE_INVARIANT(_n.pending_event());
+			// might have been dequeued due to unstable-dequeue
+			// in which case, enqueue this event
+			const bool still_pending = _n.pending_event();
+		if (still_pending) {
+			// always set the cause and new value together
+			event_type& pe(get_event(_n.get_event()));
+			pe.val = node_type::LOGIC_OTHER;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+			pe.cause.node = ev.cause.node;
+			pe.cause.val = ev.cause.val;
+#else
+			pe.cause_node = ev.cause_node;
+#endif
+			__deallocate_pending_interference_event(ne);
+		} else {
+			INVARIANT(dequeue_unstable_events());
+			DEBUG_STEP_PRINT("re-queue to X." << endl);
+			ev.val = node_type::LOGIC_OTHER;
+			__flush_pending_event_with_interference(_n, ne, ev);
+		}	// end if still_pending
+		} else {
+			DEBUG_STEP_PRINT("overwrite to X." << endl);
+			ev.val = node_type::LOGIC_OTHER;
+			__flush_pending_event_with_interference(_n, ne, ev);
+		}	// end if pending_interference
+#endif	// PRSIM_WEAK_RULES
 	} else {
+		// should also cover overpowered weak-rules
 		DEBUG_STEP_PRINT("no interference." << endl);
 		const event_index_type pe = _n.get_event();
 		DEBUG_STEP_PRINT("prior enqueued event on this node (possibly killed): " <<
@@ -1274,8 +1667,16 @@ for ( ; i!=e; ++i) {
 				// new behavior: cancel the original event
 				// which was updated to X
 				_n.clear_event();
+#if 1
+				if (UNLIKELY(!pv.killed())) {
+				cerr << "former event: (pe)" << endl;
+				dump_event(cerr, pe, 0.0) << endl;
+				cerr << "new event: (ne)" << endl;
+				dump_event(cerr, ne, 0.0) << endl;
+				}
+#endif
 				ISE_INVARIANT(pv.killed());
-				_n.set_event(ne);
+				// FAILED ONCE: 20071217, since weak rules
 				__flush_pending_event_replacement(_n, ne, ev);
 			} else {
 			DEBUG_STEP_PRINT("keeping original event" << endl);
@@ -1296,24 +1697,34 @@ for ( ; i!=e; ++i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For the sake of shortening long code.  
+	\param ev pending event, corresponds to index...
+	\param ne index of the pending event.
  */
 // inline
 void
 State::__flush_pending_event_with_interference(node_type& _n, 
 		const event_index_type ne, event_type& ev) {
+	STACKTRACE_VERBOSE_STEP;
 	switch (_n.current_value()) {
 	case node_type::LOGIC_LOW:
 	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
+		_n.set_event_consistent(ne);	// not necessarily linked yet
 		enqueue_event(get_delay_dn(ev), ne);
 		break;
 	case node_type::LOGIC_HIGH:
 	DEBUG_STEP_PRINT("moving + event to event queue" << endl);
+		_n.set_event_consistent(ne);	// not necessarily linked yet
 		enqueue_event(get_delay_up(ev), ne);
 		break;
 	case node_type::LOGIC_OTHER:
-	DEBUG_STEP_PRINT("cancelling event" << endl);
+	DEBUG_STEP_PRINT("cancelling new event" << endl);
 		_n.clear_excl_queue();
-		__deallocate_event(_n, ne);
+		if (_n.get_event() == ne) {
+			__deallocate_event(_n, ne);
+		} else {
+			__deallocate_pending_interference_event(ne);
+		}
+		// difference: n.clear_event()
 		break;
 	default:
 		ISE(cerr, 
@@ -1330,19 +1741,55 @@ State::__flush_pending_event_with_interference(node_type& _n,
 void
 State::__flush_pending_event_no_interference(node_type& _n, 
 		const event_index_type ne, event_type& ev) {
+	STACKTRACE_VERBOSE_STEP;
+	// if event is weak rule, require the opposing pull to be off
 	if (_n.current_value() != ev.val) {
+#if PRSIM_WEAK_RULES
+		const bool w = ev.is_weak();
+#endif
+		// not necessarily linked yet
+		_n.set_event_consistent(ne);
 		if (ev.val == node_type::LOGIC_HIGH) {
 		DEBUG_STEP_PRINT("moving + event to event queue" << endl);
+#if PRSIM_WEAK_RULES
+			// the opposing strong pull:
+			const expr_index_type opp =
+				_n.pull_dn_index[NORMAL_RULE];
+			if (!w || get_pull(opp) == expr_type::PULL_OFF) {
+#endif
 			enqueue_event(get_delay_up(ev), ne);
+			return;
+#if PRSIM_WEAK_RULES
+			}
+#endif
 		} else {
 		DEBUG_STEP_PRINT("moving - event to event queue" << endl);
+#if PRSIM_WEAK_RULES
+			// the opposing strong pull:
+			const expr_index_type opp =
+				_n.pull_up_index[NORMAL_RULE];
+			if (!w || get_pull(opp) == expr_type::PULL_OFF) {
+#endif
 			enqueue_event(get_delay_dn(ev), ne);
+			return;
+#if PRSIM_WEAK_RULES
+			}
+#endif
 		}
-	} else {
+	}
+	// fall-through
+	{
 		DEBUG_STEP_PRINT("cancelling event" << endl);
 		// no change in value, just cancel
 		_n.clear_excl_queue();
+	// fixed? copied from above, with interference
+	// TODO: need test case to reach this code
+	if (_n.get_event() == ne) {
 		__deallocate_event(_n, ne);
+	} else {
+		__deallocate_pending_interference_event(ne);
+	}
+		// difference: n.clear_event()
 	}	// end switch
 }
 
@@ -1354,6 +1801,8 @@ State::__flush_pending_event_no_interference(node_type& _n,
 void
 State::__flush_pending_event_replacement(node_type& _n, 
 		const event_index_type ne, event_type& ev) {
+	STACKTRACE_VERBOSE_STEP;
+	_n.set_event(ne);
 	switch (ev.val) {
 	case node_type::LOGIC_LOW:
 	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
@@ -1365,6 +1814,7 @@ State::__flush_pending_event_replacement(node_type& _n,
 		break;
 	case node_type::LOGIC_OTHER:
 	DEBUG_STEP_PRINT("don't know what to do!" << endl);
+		// should depend on pull up or down...
 		FINISH_ME(Fang);
 		enqueue_event(get_delay_up(ev), ne);
 		// _n.clear_excl_queue();
@@ -1385,11 +1835,15 @@ State::__flush_pending_event_replacement(node_type& _n,
  */
 void
 State::flush_exclhi_queue(void) {
+	typedef	mk_excl_queue_type::value_type		value_type;
+	typedef	mk_excl_queue_type::iterator		iterator;
 	typedef	mk_excl_queue_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
+	// where graduating events are collected, and made unique
+	mk_excl_queue_type staging_q;
 	const_iterator i(exclhi_queue.begin()), e(exclhi_queue.end());
 for ( ; i!=e; ++i) {
-	const event_placeholder_type& ep(*i);
+	const event_placeholder_type ep(i->second, i->first);
 	const node_index_type epni = get_event(ep.event_index).node;
 	node_type& epn(get_node(epni));
 	/***
@@ -1410,21 +1864,9 @@ for ( ; i!=e; ++i) {
 		for ( ; ii!=ie; ++ii) {
 			const node_index_type ni = *ii;
 			const node_type& n(get_node(ni));
-#if DEBUG_STEP
-		DEBUG_STEP_PRINT("examining node: " <<
-			get_node_canonical_name(ni) << endl);
-		DEBUG_STEP_PRINT("n.val == " << size_t(n.current_value())
-			<< endl);
-		if (n.pending_event()) {
-			DEBUG_STEP_PRINT("event.val == " <<
-				size_t(event_pool[n.get_event()].val) << endl);
-			DEBUG_STEP_PRINT("n.in_excl_queue == " <<
-				size_t(n.in_excl_queue()) << endl);
-		}
-#endif
 			if (n.current_value() == node_type::LOGIC_HIGH ||
 				(n.pending_event() && 
-				(event_pool[n.get_event()].val ==
+				(get_event(n.get_event()).val ==
 					node_type::LOGIC_HIGH) &&
 				!n.in_excl_queue())) {
 				DEBUG_STEP_PRINT("++prev" << endl);
@@ -1439,7 +1881,11 @@ for ( ; i!=e; ++i) {
 		DEBUG_STEP_PRINT("enqueuing event" << endl);
 			// then insert event into primary queue
 			// keep the same event_index
-			enqueue_event(ep.time, ep.event_index);
+			const pair<iterator, bool>
+				r(staging_q.insert(value_type(
+					ep.event_index, ep.time)));
+			ISE_INVARIANT(r.second || r.first->second == ep.time);
+			// not sure whether or not this should be delayed
 			epn.clear_excl_queue();
 		}
 	}	// end for all excl ring nodes
@@ -1450,6 +1896,12 @@ for ( ; i!=e; ++i) {
 		__deallocate_event(epn, ep.event_index);
 	}
 }	// end for all exclhi_queue events
+	// now we've guaranteed uniqueness
+	const_iterator si(staging_q.begin()), se(staging_q.end());
+	for ( ; si!=se; ++si) {
+		enqueue_event(si->second, si->first);
+		// get_node(get_event(si->first).node).clear_excl_queue();
+	}
 	exclhi_queue.clear();
 }	// end method flush_exclhi_queue
 
@@ -1459,11 +1911,15 @@ for ( ; i!=e; ++i) {
  */
 void
 State::flush_excllo_queue(void) {
+	typedef	mk_excl_queue_type::value_type		value_type;
+	typedef	mk_excl_queue_type::iterator		iterator;
 	typedef	mk_excl_queue_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
+	// where graduating events are collected, and made unique
+	mk_excl_queue_type staging_q;
 	const_iterator i(excllo_queue.begin()), e(excllo_queue.end());
 for ( ; i!=e; ++i) {
-	const event_placeholder_type& ep(*i);
+	const event_placeholder_type ep(i->second, i->first);
 	const node_index_type epni = get_event(ep.event_index).node;
 	node_type& epn(get_node(epni));
 	/***
@@ -1486,7 +1942,7 @@ for ( ; i!=e; ++i) {
 			const node_type& n(get_node(ni));
 			if (n.current_value() == node_type::LOGIC_LOW ||
 				(n.pending_event() && 
-				(event_pool[n.get_event()].val ==
+				(get_event(n.get_event()).val ==
 					node_type::LOGIC_LOW) &&
 				!n.in_excl_queue())) {
 				++prev;
@@ -1495,11 +1951,16 @@ for ( ; i!=e; ++i) {
 				flag = true;
 			}
 		}
+		// alert: can belong to more than one ring!
 		if (flag && !prev) {
 			DEBUG_STEP_PRINT("enqueuing event" << endl);
 			// then insert event into primary queue
 			// keep the same event_index
-			enqueue_event(ep.time, ep.event_index);
+			const pair<iterator, bool>
+				r(staging_q.insert(value_type(
+					ep.event_index, ep.time)));
+			ISE_INVARIANT(r.second || r.first->second == ep.time);
+			// not sure whether or not this should be delayed
 			epn.clear_excl_queue();
 		}
 	}	// end for all excl ring nodes
@@ -1510,6 +1971,12 @@ for ( ; i!=e; ++i) {
 		__deallocate_event(epn, ep.event_index);
 	}
 }	// end for all excllo_queue events
+	// now we've guaranteed uniqueness
+	const_iterator si(staging_q.begin()), se(staging_q.end());
+	for ( ; si!=se; ++si) {
+		enqueue_event(si->second, si->first);
+		// get_node(get_event(si->first).node).clear_excl_queue();
+	}
 	excllo_queue.clear();
 }	// end method flush_excllo_queue
 
@@ -1544,11 +2011,17 @@ for ( ; i!=e; ++i) {
 		if (ii!=si) {
 			const node_index_type eri = *ii;
 			node_type& er(get_node(eri));
-			if (!er.pending_event() && er.pull_up_index &&
+			const event_index_type ei =
+#if PRSIM_WEAK_RULES
+				er.pull_up_index[NORMAL_RULE];
+				// strong rules only
+#else
+				er.pull_up_index;
+#endif
+			if (!er.pending_event() &&
 				// er->n->up->val == PRS_VAL_T
 				// what if is pulling weakly?
-				expr_pool[er.pull_up_index].pull_state()
-					== expr_type::PULL_ON) {
+				get_pull(ei) == expr_type::PULL_ON) {
 			DEBUG_STEP_PRINT("enqueuing pull-up event" << endl);
 				const event_index_type ne =
 					// the pull-up index may not necessarily
@@ -1557,7 +2030,11 @@ for ( ; i!=e; ++i) {
 						// not sure...
 						// er.pull_up_index, 
 						INVALID_RULE_INDEX, 
-						node_type::LOGIC_HIGH);
+						node_type::LOGIC_HIGH
+#if PRSIM_WEAK_RULES
+						, NORMAL_RULE
+#endif
+						);
 				// ne->cause = ni
 				enqueue_exclhi(get_delay_up(get_event(ne)), ne);
 			}
@@ -1598,18 +2075,28 @@ for ( ; i!=e; ++i) {
 		if (ii!=si) {
 			const node_index_type eri = *ii;
 			node_type& er(get_node(eri));
-			if (!er.pending_event() && er.pull_dn_index &&
+			const event_index_type ei =
+#if PRSIM_WEAK_RULES
+				er.pull_dn_index[NORMAL_RULE];
+				// strong rules only
+#else
+				er.pull_dn_index;
+#endif
+			if (!er.pending_event() &&
 				// er->n->dn->val == PRS_VAL_T
 				// what if is pulling weakly?
-				expr_pool[er.pull_dn_index].pull_state()
-					== expr_type::PULL_ON) {
+				get_pull(ei) == expr_type::PULL_ON) {
 			DEBUG_STEP_PRINT("enqueuing pull-dn event" << endl);
 				const event_index_type ne =
 					// same comment as enforce_exclhi
 					__allocate_event(er, eri, c, 
 						// er.pull_dn_index, 
 						INVALID_RULE_INDEX,
-						node_type::LOGIC_LOW);
+						node_type::LOGIC_LOW
+#if PRSIM_WEAK_RULES
+						, NORMAL_RULE
+#endif
+						);
 				// ne->cause = ni
 				enqueue_excllo(get_delay_dn(get_event(ne)), ne);
 			}
@@ -1718,8 +2205,10 @@ State::check_excl_rings(const node_index_type ni, const node_type& n,
 	Uses extremely slow search because this only occurs on exception.  
  */
 void
-State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
+State::inspect_exception(const step_exception& ex, ostream& o) const {
+if (IS_A(const excl_exception*, &ex)) {
 	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
+	const excl_exception& exex(AS_A(const excl_exception&, ex));
 	ring_set_type ring;
 	const_iterator i, e;
 	if (exex.type) {
@@ -1755,7 +2244,40 @@ State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
 		"but you may further inspect the state." << endl;
 	o << "You probably want to disable excl-checking with `nocheckexcl\' "
 		"if you wish to continue the simulation." << endl;
+#if PRSIM_CHANNEL_SUPPORT
+} else if (IS_A(const channel_exception*, &ex)) {
+	const channel_exception& exex(AS_A(const channel_exception&, ex));
+	o << "ERROR: value assertion failed on channel `" <<
+		exex.name << "\'." << endl;
+	o << "\texpected: " << exex.expect << ", got: " << exex.got << endl;
+#endif
+} else {
+	o << "Unkonwn step_exception." << endl;
+}
 }	// end method State::inspect_excl_exception
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For the sake of exception safety, 
+	Upon destruction, flush intermediate event queues.  
+ */
+struct State::auto_flush_queues {
+	State&		state;
+
+	explicit
+	auto_flush_queues(State& s) : state(s) { }
+
+	~auto_flush_queues() {
+		// check and flush pending queue, spawn fanout events
+		if (UNLIKELY(state.flush_pending_queue())) {
+			state.stop();		// set stop flag
+		}
+
+		// check and flush pending queue against exclhi/lo events
+		state.flush_exclhi_queue();
+		state.flush_excllo_queue();
+	}
+} __ATTRIBUTE_UNUSED__ ;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1770,12 +2292,14 @@ State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
 		leaving violating event in queue.  
  */
 State::step_return_type
-State::step(void) THROWS_EXCL_EXCEPTION {
+State::step(void) THROWS_STEP_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
 	ISE_INVARIANT(pending_queue.empty());
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
+
+	const auto_flush_queues __auto_flush(*this);
 	if (event_queue.empty()) {
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
@@ -1804,6 +2328,8 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	_ci = ci;
 	DEBUG_STEP_PRINT("examining node: " <<
 		get_node_canonical_name(ni) << endl);
+	ISE_INVARIANT(n.pending_event());	// must have been pending
+	ISE_INVARIANT(n.get_event() == ei);	// must be consistent!
 {
 	// event-deallocation scope (optional)
 	// const event_deallocator __d(*this, n, ei);	// auto-deallocate?
@@ -1834,6 +2360,8 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	} else {
 		// vacuous event is allowed if set was forced by user
 		ISE_INVARIANT(prev != pe.val || n.is_unstab() || force);
+		// FAILED ONCE! (test case?)
+		// occurred on 20071214 after adding weak rules
 	}
 	// saved previous value above already
 	if (checking_excl()) {
@@ -1859,7 +2387,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	if (pe.val != node_type::LOGIC_OTHER) {
 		++n.tcount;
 	}
-	 __deallocate_event(n, ei);
+	__deallocate_event(n, ei);
 }
 }
 	// note: pe is invalid, deallocated beyond this point, could scope it
@@ -1885,17 +2413,34 @@ if (eval_ordering_is_random()) {
 	e = n.fanout.end();
 }
 	for ( ; i!=e; ++i) {
+		// when evaluating a node as an expression, 
+		// is appropriate to interpret node value
+		// as a pull-value
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		if (UNLIKELY(propagate_evaluation(new_cause, *i, prev))) {
+		if (UNLIKELY(propagate_evaluation(new_cause, *i, pull_enum(prev)))) {
 			stop();
 		}
 #else
-		if (UNLIKELY(propagate_evaluation(ni, *i, prev, next))) {
+		if (UNLIKELY(propagate_evaluation(ni, *i, prev, pull_enum(next)))) {
 			stop();
 		}
 #endif
 	}
 }
+#if PRSIM_CHANNEL_SUPPORT
+	// Q: is this the best place to handle this?
+if (n.in_channel()) {
+	// predicate may not filter precisely
+	// channel manager should 'ignore' irrelevant nodes
+	vector<env_event_type> env_events;
+	// the following may throw channel_exception
+	_channel_manager.process_node(*this, ni,
+			prev, next, env_events);
+	// cause of these events must be 'ni', this node
+	const event_cause_type c(ni, next);
+	flush_channel_events(env_events, c);
+}
+#endif	// PRSIM_CHANNEL_SUPPORT
 	/***
 		If an event is forced (say, by user), then check node's own
 		guards to determine whether or not a new event needs to
@@ -1903,27 +2448,68 @@ if (eval_ordering_is_random()) {
 	***/
 	if (force && n.get_event()) {
 		DEBUG_STEP_PRINT("detected a forced event vs. pending event" << endl);
-		if (n.pull_up_index && 
-			get_event(n.pull_up_index).val == node_type::LOGIC_HIGH
-				&& next != node_type::LOGIC_HIGH) {
+#if PRSIM_WEAK_RULES
+	// the opposing strong pull:
+	const expr_index_type nup = n.pull_up_index[NORMAL_RULE];
+	const expr_index_type ndn = n.pull_dn_index[NORMAL_RULE];
+	size_t w = NORMAL_RULE;		// 0
+	do {
+#endif
+		const event_index_type ui = n.pull_up_index STR_INDEX(w);
+		const event_index_type di = n.pull_dn_index STR_INDEX(w);
+		const event_type* up_rule = ui ? &get_event(ui) : NULL;
+		const event_type* dn_rule = di ? &get_event(di) : NULL;
+		const bool possible_up = up_rule &&
+			up_rule->val == node_type::LOGIC_HIGH
+				&& next != node_type::LOGIC_HIGH
+#if PRSIM_WEAK_RULES
+				// check opposition
+				&& (!w || get_pull(ndn) == expr_type::PULL_OFF)
+#endif
+				;
+		const bool possible_dn = dn_rule &&
+			dn_rule->val == node_type::LOGIC_LOW
+				&& next != node_type::LOGIC_LOW
+#if PRSIM_WEAK_RULES
+				// check opposition
+				&& (!w || get_pull(nup) == expr_type::PULL_OFF)
+#endif
+				;
+		if (possible_up) {
 			DEBUG_STEP_PRINT("force pull-up" << endl);
 			const event_index_type _ne =
 				__allocate_event(n, ni, EMPTY_CAUSE, 
-					n.pull_up_index, 	// cause?
-					node_type::LOGIC_HIGH);
+					ui, 	// cause?
+					node_type::LOGIC_HIGH
+#if PRSIM_WEAK_RULES
+					, w	// rule_strength
+#endif
+					);
 			enqueue_pending(_ne);
+#if PRSIM_WEAK_RULES
+			break;
+#endif
 		}
-		else if (n.pull_dn_index && 
-			get_event(n.pull_dn_index).val == node_type::LOGIC_LOW
-				&& next != node_type::LOGIC_LOW) {
+		else if (possible_dn) {
 			DEBUG_STEP_PRINT("force pull-dn" << endl);
 			const event_index_type _ne =
 				__allocate_event(n, ni, EMPTY_CAUSE, 
-					n.pull_dn_index, 	// cause?
-					node_type::LOGIC_LOW);
+					di, 	// cause?
+					node_type::LOGIC_LOW
+#if PRSIM_WEAK_RULES
+					, w	// rule_strength
+#endif
+					);
 			enqueue_pending(_ne);
+#if PRSIM_WEAK_RULES
+			break;
+#endif
 		}
-		// no weak events yet
+#if PRSIM_WEAK_RULES
+		// above strong pulls take precedence over weak pulls
+		++w;
+	} while (weak_rules_enabled() && w<2);
+#endif
 	}
 
 	// exclhi ring enforcement
@@ -1945,15 +2531,12 @@ if (eval_ordering_is_random()) {
 	}	// end if (excllo enforcement)
 
 	// energy estimation?  TODO later for a different sim variant
+	// queues automatically flushed by dtor of auto_flush_queues
 
-	// check and flush pending queue, spawn fanout events
-	if (UNLIKELY(flush_pending_queue())) {
-		stop();		// set stop flag
-	}
-
-	// check and flush pending queue against exclhi/lo events
-	flush_exclhi_queue();
-	flush_excllo_queue();
+#if 0
+	// very slow, but terrific for debugging!!!
+	check_event_queue();
+#endif
 
 	// return the affected node's index
 	DEBUG_STEP_PRINT("returning node index " << ni << endl);
@@ -2010,7 +2593,7 @@ State::kill_evaluation(const node_index_type ni, expr_index_type ui,
 // inline
 State::evaluate_return_type
 State::evaluate(const node_index_type ni, expr_index_type ui, 
-		uchar prev, uchar next) {
+		pull_enum prev, pull_enum next) {
 	STACKTRACE_VERBOSE_STEP;
 	DEBUG_STEP_PRINT("node " << ni << " from " <<
 		node_type::value_to_char[size_t(prev)] << " -> " <<
@@ -2018,7 +2601,7 @@ State::evaluate(const node_index_type ni, expr_index_type ui,
 	expr_type* u;
 	__scratch_expr_trace.clear();
 do {
-	uchar old_pull, new_pull;	// pulling state of the subexpression
+	pull_enum old_pull, new_pull;	// pulling state of the subexpression
 	u = &expr_pool[ui];
 	__scratch_expr_trace.push_back(ui);
 #if DEBUG_STEP
@@ -2086,20 +2669,22 @@ State::break_type
 State::propagate_evaluation(
 		cause_arg_type c, 
 		expr_index_type ui, 
-		uchar prev
+		pull_enum prev
 #if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		, uchar next
+		, pull_enum next
 #endif 
 		) {
+	STACKTRACE_VERBOSE_STEP;
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
-	uchar next;	// just local variable
+	pull_enum next;	// just local variable
 #else
 	const node_index_type& ni(c);
 #endif
+	// when evaluating node as expression, interpret value as pull
 	const evaluate_return_type
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		ev_result(evaluate(ni, ui, prev, c.val));
+		ev_result(evaluate(ni, ui, prev, pull_enum(c.val)));
 #else
 		ev_result(evaluate(ni, ui, prev, next));
 #endif
@@ -2121,13 +2706,82 @@ State::propagate_evaluation(
 	root_rule = *ri;
 }
 	ISE_INVARIANT(root_rule);
+#if PRSIM_WEAK_RULES
+	const size_t is_weak = rule_map.find(root_rule)->second.is_weak();
+#endif
 // propagation made it to the root node, indexed by ui (now node_index_type)
 	node_type& n(get_node(ui));
 	DEBUG_STEP_PRINT("propagated to output node: " <<
 		get_node_canonical_name(ui) << " with pull state " <<
 		size_t(next) << endl);
+#if PRSIM_WEAK_RULES
+	DEBUG_STEP_PRINT("root is " << (is_weak ? "" : "not") << " weak" << endl);
+#endif
 	const event_index_type ei = n.get_event();
+#if DEBUG_STEP
+	if (ei) dump_event(cerr << "pending:\t", ei, 0.0) << endl;
+#endif
+	const expr_index_type up_index = n.pull_up_index STR_INDEX(NORMAL_RULE);
+	const pull_enum up_pull = get_pull(up_index);
+	const expr_index_type dn_index = n.pull_dn_index STR_INDEX(NORMAL_RULE);
+	const pull_enum dn_pull = get_pull(dn_index);
+#if PRSIM_WEAK_RULES
+	const expr_index_type wndn_ind = n.pull_dn_index STR_INDEX(WEAK_RULE);
+	const char wndn_pull = weak_rules_enabled() ?
+		get_pull(wndn_ind) : expr_type::PULL_OFF;
+	const expr_index_type wnup_ind = n.pull_up_index STR_INDEX(WEAK_RULE);
+	const char wnup_pull = weak_rules_enabled() ?
+		get_pull(wnup_ind) : expr_type::PULL_OFF;
+#endif	// PRSIM_WEAK_RULES
 	break_type err = false;
+#if PRSIM_WEAK_RULES
+	// weak rule pre-filtering
+if (weak_rules_enabled()) {
+if (n.pending_event()) {
+	event_type& e(get_event(ei));	// previous scheduled event
+	if (e.is_weak() && !is_weak && next != expr_type::PULL_OFF) {
+		DEBUG_STEP_PRINT("old weak event killed" << endl);
+		// it was weak, and should be overtaken
+		// what if new event is weak-off?
+		if (e.val != node_type::LOGIC_OTHER) {
+			err |= __report_instability(cout,
+				next == expr_type::PULL_WEAK, 
+				e.val == node_type::LOGIC_HIGH, e.node, e);
+		}
+		kill_event(ei, ui);
+		// ei = 0;
+		// don't return, continue processing non-weak events
+	} else if (!e.is_weak() && is_weak
+			// && previous-pull != expr_type::PULL_OFF
+			// since vacuous events are dropped, events 
+			// must be enqueued by some value-changing pull
+			// assert: that pull was not OFF
+			) {
+		DEBUG_STEP_PRINT("new weak event dropped" << endl);
+		// previous event was strong and not off, overriding any
+		// new weak events -- just drop weak events
+		// HERE: is event already in main event queue? flush?
+		return err;	// no error
+	}
+} else {	// no pending event
+	if (is_weak &&
+			(up_pull != expr_type::PULL_OFF ||
+			dn_pull != expr_type::PULL_OFF)) {
+		DEBUG_STEP_PRINT("weak event suppressed" << endl);
+		// drops weak-firings overpowered by strong on rules
+		// regardless of what 'next' weak pull is
+		return err;	// no error
+	}
+}
+}	// end if weak_rules_enabled
+
+	const expr_index_type wdn_index = n.pull_dn_index STR_INDEX(WEAK_RULE);
+	const pull_enum wdn_pull = weak_rules_enabled()
+		? get_pull(wdn_index) : expr_type::PULL_OFF;
+	const expr_index_type wup_index = n.pull_up_index STR_INDEX(WEAK_RULE);
+	const pull_enum wup_pull = weak_rules_enabled()
+		? get_pull(wup_index) : expr_type::PULL_OFF;
+#endif	// PRSIM_WEAK_RULES
 if (u->direction()) {
 	// pull-up
 /***
@@ -2143,23 +2797,37 @@ if (!n.pending_event()) {
 	if ((next == expr_type::PULL_ON &&
 			n.current_value() != node_type::LOGIC_HIGH) ||
 		(next == expr_type::PULL_WEAK &&
-			n.current_value() == node_type::LOGIC_LOW)) {
+			(n.current_value() == node_type::LOGIC_LOW
+			|| dn_pull != expr_type::PULL_OFF))) {
 		/***
 			if (PULL_ON and wasn't already HIGH ||
-				PULL_WEAK and was LOW before)
+				PULL_WEAK and was LOW before ||
+				weak-interference)
 			then we enqueue the event somewhere.
 		***/
 		DEBUG_STEP_PRINT("pulling up (on or weak)" << endl);
 		const event_index_type pe =
 			__allocate_event(n, ui, c,
-				root_rule, next);
+				root_rule, next
+#if PRSIM_WEAK_RULES
+				, is_weak
+#endif
+				);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
 		if (n.has_mk_exclhi()) {
 			// insert into exclhi queue
 			enqueue_exclhi(get_delay_up(e), pe);
 		} else {
-			if (n.pull_dn_index) {
+			// not sure why: checking against non-weak only:
+#if PRSIM_WEAK_RULES
+			if (n.pull_dn_index STR_INDEX(NORMAL_RULE)
+				|| (weak_rules_enabled() &&
+					n.pull_dn_index STR_INDEX(WEAK_RULE)))
+#else
+			if (n.pull_dn_index STR_INDEX(NORMAL_RULE))
+#endif
+			{
 				enqueue_pending(pe);
 			} else {
 				enqueue_event(get_delay_up(e), pe);
@@ -2168,19 +2836,34 @@ if (!n.pending_event()) {
 	}
 	// "Is this right??" expr_pool[n.pull_dn_index] 
 	// might not have been updated yet...
-	else if (next == expr_type::PULL_OFF && n.pull_dn_index &&
+	else if (next == expr_type::PULL_OFF) {
+	DEBUG_STEP_PRINT("pull-up turned off" << endl);
+	if (dn_pull == expr_type::PULL_ON
+#if PRSIM_WEAK_RULES
+		|| (!is_weak && 
+			wdn_pull == expr_type::PULL_ON &&
+			wup_pull == expr_type::PULL_OFF)
+		|| (wdn_pull == expr_type::PULL_WEAK &&
+			n.current_value() != node_type::LOGIC_OTHER)
+#endif
+		) {
 		// n->dn->val == PRS_VAL_T
-		expr_pool[n.pull_dn_index].pull_state() == expr_type::PULL_ON) {
 		/***
 			if (PULL_OFF and opposing pull-down is ON)
 			then enqueue the pull-down event.  
 		***/
-		DEBUG_STEP_PRINT(
-			"pull-up turned off, yielding to opposing pull-down."
-			<< endl);
+		DEBUG_STEP_PRINT("yielding to opposing pull-down." << endl);
 		const event_index_type pe =
 			__allocate_event(n, ui, c,
-				root_rule, node_type::LOGIC_LOW);
+				root_rule, node_type::LOGIC_LOW 
+#if PRSIM_WEAK_RULES
+				// if cause is the rule that turned off
+				// , is_weak
+				// if cause is the opposition that was on
+				, (dn_pull == expr_type::PULL_OFF)
+				// important for interference checking
+#endif
+				);
 		// pe->cause = root
 		if (n.has_mk_excllo()) {
 			const event_type& e(get_event(pe));
@@ -2189,16 +2872,27 @@ if (!n.pending_event()) {
 			enqueue_pending(pe);
 		}
 	}
+	}	// end if next is PULL_OFF
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in the exclusive queue
 	event_type& e(get_event(ei));
-	if (next == expr_type::PULL_OFF && n.pull_dn_index &&
-		expr_pool[n.pull_dn_index].pull_state() == expr_type::PULL_ON &&
+	const expr_index_type ndn_ind = n.pull_dn_index STR_INDEX(NORMAL_RULE);
+	const char ndn_pull = get_pull(ndn_ind);
+	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
+	DEBUG_STEP_PRINT("pull-dn = " << size_t(get_pull(ndn_ind)) << endl);
+	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
+	DEBUG_STEP_PRINT("n.val = " << size_t(n.current_value()) << endl);
+	if (next == expr_type::PULL_OFF && 
+		((ndn_pull == expr_type::PULL_ON)
+#if PRSIM_WEAK_RULES
+		|| (wndn_pull == expr_type::PULL_ON)
+#endif
+		) &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() != node_type::LOGIC_LOW) {
 		/***
-			if (PULL_OFF and opposing pull-down is ON and
+			if (pull-up is PULL_OFF, opposing pull-down is ON and
 			the pending event's value is X and
 			the current node value is NOT LOW)
 			The pending X should be cancelled and replaced
@@ -2206,16 +2900,103 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
 		e.val = node_type::LOGIC_LOW;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		e.cause.node = ni;
-#else
-		e.cause_node = ni;
+		e.set_cause_node(ni);
+#if PRSIM_WEAK_RULES
+		e.set_weak(wndn_pull != expr_type::PULL_OFF
+			&& ndn_pull == expr_type::PULL_OFF);
 #endif
+#if PRSIM_ALLOW_OVERTAKE_EVENTS
+	} else if (dequeue_unstable_events() &&
+		next == expr_type::PULL_ON && 
+		get_pull(ndn_ind) == expr_type::PULL_OFF &&
+		e.val == node_type::LOGIC_OTHER &&
+		n.current_value() == node_type::LOGIC_LOW
+		// n.current_value() != node_type::LOGIC_HIGH
+		// NOTE: weak rules accounted for by pre-filter above
+		) {
+		/***
+			Terrible overload of the dequeue-unstable mode.
+			If (pull-up is ON, opposing pull-dn is OFF, 
+			and pending event's value is X, 
+			and node's current value is low, monotonic)
+			Either:
+			1) replace the previous event with new value 1,
+				using the same time, or
+			2) cancel previous event, and re-insert new event
+				with new time.
+		***/
+		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
+		e.val = node_type::LOGIC_HIGH;
+		e.set_cause_node(ni);
+	} else if (dequeue_unstable_events() &&
+		next == expr_type::PULL_OFF && 
+		(get_pull(ndn_ind) == expr_type::PULL_ON ||
+			n.current_value() == node_type::LOGIC_LOW) &&
+		e.val == node_type::LOGIC_OTHER) {
+		if (n.current_value() == node_type::LOGIC_LOW) {
+			// already low, just kill pending X
+			kill_event(ei, ui);
+		} else {
+		/***
+			Terrible overload of the dequeue-unstable mode.
+			If (pull-up is OFF, opposing pull-dn is ON, 
+			and pending event's value is X, 
+			and node's current value is high, monotonic)
+			Either:
+			1) replace the previous event with new value 0,
+				using the same time, or
+			2) cancel previous event, and re-insert new event
+				with new time.
+		***/
+		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
+		e.val = node_type::LOGIC_LOW;
+		e.set_cause_node(ni);
+		}
+	} else if (dequeue_unstable_events() && !is_weak &&
+		next == expr_type::PULL_OFF && 
+		get_pull(wnup_ind) == expr_type::PULL_OFF &&
+		get_pull(wndn_ind) == expr_type::PULL_ON) {
+		/***
+			Strong rule turning off, yielding to weak rule 
+			pulling in opposite direction.
+			TODO: kill pending event and re-enqueue.
+			Really doesn't make sense to use the same delay
+			if changing to opposite direction.  
+		***/
+		DEBUG_STEP_PRINT("changing pending 1 to 0 in queue." << endl);
+		// for now, out of laziness, overwrite the pending event
+		err |= __report_instability(cout, false, true, e.node, e);
+		e.val = node_type::LOGIC_LOW;
+		e.set_cause_node(ni);
+#if PRSIM_WEAK_RULES
+		e.set_weak(true);
+#endif
+#if 1
+	} else if (next == expr_type::PULL_OFF && 
+		get_pull(ndn_ind) == expr_type::PULL_OFF &&
+		get_pull(wndn_ind) == expr_type::PULL_OFF &&
+		get_pull(wnup_ind) == expr_type::PULL_ON &&
+		e.val == node_type::LOGIC_HIGH) {
+		// technically, is this unstable?
+		// instability is masked because weak-rule continues to pull...
+		// everything but weak pull-up is off
+		// then keep event in queue
+		// change node cause?
+		e.set_cause_node(ni);
+#if PRSIM_WEAK_RULES
+		e.set_weak(true);
+#endif
+#endif
+#endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
 		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
-			c, u->direction());
+			c, u->direction()
+#if PRSIM_WEAK_RULES
+			, is_weak
+#endif
+			);
 	}	// end if diagnostic
 }	// end if (!n.ex_queue)
 } else {
@@ -2227,21 +3008,35 @@ if (!n.pending_event()) {
 	if ((next == expr_type::PULL_ON &&
 			n.current_value() != node_type::LOGIC_LOW) ||
 		(next == expr_type::PULL_WEAK &&
-			n.current_value() == node_type::LOGIC_HIGH)) {
+			(n.current_value() == node_type::LOGIC_HIGH
+			|| up_pull != expr_type::PULL_OFF))) {
 		/***
 			if (PULL_ON and wasn't already LOW ||
-				PULL_WEAK and was HIGH before)
+				PULL_WEAK and was HIGH before ||
+				weak-interference)
 			then we enqueue the event somewhere.
 		***/
 		DEBUG_STEP_PRINT("pulling down (on or weak)" << endl);
-		const event_index_type pe = __allocate_event(n, ui, c, 
-			root_rule, node_type::invert_value[size_t(next)]);
+		const event_index_type pe =
+			__allocate_event(n, ui, c, 
+				root_rule, 
+				node_type::invert_value[size_t(next)]
+#if PRSIM_WEAK_RULES
+				, is_weak
+#endif
+				);
 		const event_type& e(get_event(pe));
 		if (n.has_mk_excllo()) {
 			// insert into exclhi queue
 			enqueue_excllo(get_delay_dn(e), pe);
 		} else {
-			if (n.pull_up_index) {
+#if PRSIM_WEAK_RULES
+			if (n.pull_up_index STR_INDEX(NORMAL_RULE)
+				|| (n.pull_up_index STR_INDEX(WEAK_RULE)))
+#else
+			if (n.pull_up_index STR_INDEX(NORMAL_RULE))
+#endif
+			{
 				enqueue_pending(pe);
 			} else {
 				enqueue_event(get_delay_dn(e), pe);
@@ -2250,18 +3045,34 @@ if (!n.pending_event()) {
 	}
 	// "Is this right??" expr_pool[n.pull_dn_index] 
 	// might not have been updated yet...
-	else if (next == expr_type::PULL_OFF && n.pull_up_index &&
+	else if (next == expr_type::PULL_OFF) {
+	DEBUG_STEP_PRINT("pull-down turned off" << endl);
+	if (up_pull == expr_type::PULL_ON
+#if PRSIM_WEAK_RULES
+		|| (!is_weak &&
+			wup_pull == expr_type::PULL_ON &&
+			wdn_pull == expr_type::PULL_OFF)
+		|| (wup_pull == expr_type::PULL_WEAK && 
+			n.current_value() != node_type::LOGIC_OTHER)
+#endif
+		) {
 		// n->up->val == PRS_VAL_T
-		expr_pool[n.pull_up_index].pull_state() == expr_type::PULL_ON) {
 		/***
 			if (PULL_OFF and opposing pull-up is ON)
 			then enqueue the pull-up event.  
 		***/
-		DEBUG_STEP_PRINT(
-			"pull-down turned off, yielding to opposing pull-up."
-			<< endl);
-		const event_index_type pe = __allocate_event(n, ui, c,
-				root_rule, node_type::LOGIC_HIGH);
+		DEBUG_STEP_PRINT("yielding to opposing pull-up." << endl);
+		const event_index_type pe =
+			__allocate_event(n, ui, c,
+				root_rule, node_type::LOGIC_HIGH
+#if PRSIM_WEAK_RULES
+				// if cause is the rule that turned off
+				// , is_weak
+				// if cause is the opposition that was on
+				, (up_pull == expr_type::PULL_OFF)
+				// important for interference checking
+#endif
+				);
 		// pe->cause = root
 		if (n.has_mk_exclhi()) {
 			const event_type& e(get_event(pe));
@@ -2270,33 +3081,131 @@ if (!n.pending_event()) {
 			enqueue_pending(pe);
 		}
 	}
+	}	// end if next is PULL_OFF
 } else if (!n.in_excl_queue()) {
+	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in an exclusive queue
 	event_type& e(get_event(ei));
-	if (next == node_type::LOGIC_LOW && n.pull_up_index &&
-		expr_pool[n.pull_up_index].pull_state() == expr_type::PULL_ON &&
+	const expr_index_type nup_ind = n.pull_up_index STR_INDEX(NORMAL_RULE);
+	const char nup_pull = get_pull(nup_ind);
+	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
+	DEBUG_STEP_PRINT("pull-up = " << size_t(get_pull(nup_ind)) << endl);
+	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
+	DEBUG_STEP_PRINT("n.val = " << size_t(n.current_value()) << endl);
+	if (next == expr_type::PULL_OFF && 
+		((nup_pull == expr_type::PULL_ON)
+#if PRSIM_WEAK_RULES
+		|| (wnup_pull == expr_type::PULL_ON)
+#endif
+		) &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() != node_type::LOGIC_HIGH) {
 		/***
-			if (PULL_OFF and opposing pull-up is ON and
+			if (pull-dn is PULL_OFF, opposing pull-up is ON and
 			the pending event's value is X and
 			the current node value is NOT HIGH)
 			The pending X should be cancelled and replaced
 			with a pending HIGH (keeping the same time).
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
-		// there is a pending 'X' in the queue
 		e.val = node_type::LOGIC_HIGH;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		e.cause.node = ni;
-#else
-		e.cause_node = ni;
+		e.set_cause_node(ni);
+#if PRSIM_WEAK_RULES
+		e.set_weak(wnup_pull != expr_type::PULL_OFF
+			&& nup_pull == expr_type::PULL_OFF);
 #endif
+#if PRSIM_ALLOW_OVERTAKE_EVENTS
+	} else if (dequeue_unstable_events() &&
+		next == expr_type::PULL_ON &&
+		get_pull(nup_ind) == expr_type::PULL_OFF &&
+		e.val == node_type::LOGIC_OTHER &&
+		n.current_value() == node_type::LOGIC_HIGH
+		// n.current_value() != node_type::LOGIC_LOW
+		// NOTE: weak rules accounted for by pre-filter above
+		) {
+		/***
+			Terrible overload of the dequeue-unstable mode.
+			If (pull-dn is ON, opposing pull-up is OFF, 
+			and pending event's value is X, 
+			and node's current value is HIGH, monotonic)
+			Either:
+			1) replace the previous event with new value 0,
+				using the same time, or
+			2) cancel previous event, and re-insert new event
+				with new time.
+		***/
+		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
+		e.val = node_type::LOGIC_LOW;
+		e.set_cause_node(ni);
+	} else if (dequeue_unstable_events() &&
+		next == expr_type::PULL_OFF &&
+		(get_pull(nup_ind) == expr_type::PULL_ON ||
+			n.current_value() == node_type::LOGIC_HIGH) &&
+		e.val == node_type::LOGIC_OTHER) {
+		if (n.current_value() == node_type::LOGIC_HIGH) {
+			// kill pending X, node is already high
+			kill_event(ei, ui);
+		} else {
+		/***
+			Terrible overload of the dequeue-unstable mode.
+			If (pull-dn is ON, opposing pull-up is OFF, 
+			and pending event's value is X, 
+			and node's current value is HIGH, monotonic)
+			Either:
+			1) replace the previous event with new value 0,
+				using the same time, or
+			2) cancel previous event, and re-insert new event
+				with new time.
+		***/
+		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
+		e.val = node_type::LOGIC_HIGH;
+		e.set_cause_node(ni);
+		}
+	} else if (dequeue_unstable_events() && !is_weak &&
+		next == expr_type::PULL_OFF && 
+		get_pull(wndn_ind) == expr_type::PULL_OFF &&
+		get_pull(wnup_ind) == expr_type::PULL_ON) {
+		/***
+			Strong rule turning off, yielding to weak rule 
+			pulling in opposite direction.
+			TODO: kill pending event and re-enqueue.
+			Really doesn't make sense to use the same delay
+			if changing to opposite direction.  
+		***/
+		DEBUG_STEP_PRINT("changing pending 0 to 1 in queue." << endl);
+		// for now, out of laziness, overwrite the pending event
+		err |= __report_instability(cout, false, false, e.node, e);
+		e.val = node_type::LOGIC_HIGH;
+		e.set_cause_node(ni);
+#if PRSIM_WEAK_RULES
+		e.set_weak(true);
+#endif
+#if 1
+	} else if (next == expr_type::PULL_OFF && 
+		get_pull(nup_ind) == expr_type::PULL_OFF &&
+		get_pull(wnup_ind) == expr_type::PULL_OFF &&
+		get_pull(wndn_ind) == expr_type::PULL_ON &&
+		e.val == node_type::LOGIC_LOW) {
+		// technically, is this unstable?
+		// instability is masked because weak-rule continues to pull...
+		// everything but weak pull-up is off
+		// then keep event in queue
+		// change node cause?
+		e.set_cause_node(ni);
+#if PRSIM_WEAK_RULES
+		e.set_weak(true);
+#endif
+#endif
+#endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
 		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
-			c, u->direction());
+			c, u->direction()
+#if PRSIM_WEAK_RULES
+			, is_weak
+#endif
+			);
 	}	// end if diagonstic
 }	// end if (!n.ex_queue)
 }	// end if (u->direction())
@@ -2347,7 +3256,12 @@ State::__report_interference(ostream& o, const bool weak,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param weak is true if unstable was *possible*, i.e. caused by X
+	\param dir the direction of the unstable firing
+	\param _ni affected node (ev.node?)
+	\param ev the unstable event
 	\return true if error causes break in events.  
+	If node is flagged unstable, 
  */
 State::break_type
 State::__report_instability(ostream& o, const bool weak, const bool dir, 
@@ -2383,6 +3297,7 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 	\param n the node that fired
 	\param ni the node involved in event e
 	\param dir the direction of pull of the causing rule
+	\param weak true if rule was pulling rule is weak
 	\return true if error causes break.
  */
 State::break_type
@@ -2390,8 +3305,15 @@ State::__diagnose_violation(ostream& o, const uchar next,
 		const event_index_type ei, event_type& e, 
 		const node_index_type ui, node_type& n, 
 		cause_arg_type c, 
-		const bool dir) {
+		const bool dir
+#if PRSIM_WEAK_RULES
+		, const bool weak
+#endif
+		) {
 	STACKTRACE_VERBOSE;
+#if PRSIM_WEAK_RULES
+	DEBUG_STEP_PRINT("is " << (weak ? "" : "not") << " weak" << endl);
+#endif
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
 #else
@@ -2408,15 +3330,27 @@ State::__diagnose_violation(ostream& o, const uchar next,
 		// then must be unstable or interfering (exclusive)
 		const bool instability =
 			(eu & event_type::EVENT_UNSTABLE) &&
-			!n.is_unstab();
+			!n.is_unstab()
+#if PRSIM_WEAK_RULES
+			&& !(weak && !e.is_weak())
+			// is not instability if original event was strong
+			// and this new event is weak
+#endif
+			;
 		/***
-			This last condition !unstab violates exact exclution 
+			This last condition !unstab violates exact exclusion 
 			between unstable and interference!
 			Do not use this undocumented feature, it is not 
 			expected to work as presently coded.  
 		***/
 		const bool interference =
-			eu & event_type::EVENT_INTERFERENCE;
+			eu & event_type::EVENT_INTERFERENCE
+#if PRSIM_WEAK_RULES
+			&& !(weak && !e.is_weak())
+			// is not interference if original event was strong
+			// and this new event is weak
+#endif
+			;
 		const string cause_name(get_node_canonical_name(ni));
 		const string out_name(get_node_canonical_name(ui));
 
@@ -2426,17 +3360,16 @@ State::__diagnose_violation(ostream& o, const uchar next,
 			// check for conflicting/redundant events 
 			// on pending queue (result of instability)
 		if (instability) {
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-			e.cause.node = ni;
-#else
-			e.cause_node = ni;
-#endif
-			if (dequeue_unstable_events()) {
+			e.set_cause_node(ni);
+			if (dequeue_unstable_events() &&
+				(next == expr_type::PULL_OFF ||
+				n.current_value() == node_type::LOGIC_OTHER)) {
 				// let dequeuer deallocate killed events
+				// weak-unstable should leave X in queue
 				const size_t pe = n.get_event();
 				DEBUG_STEP_PRINT("dequeuing unstable event " << pe << endl);
-				get_event(pe).kill();
-				n.clear_event();
+				// instability will be reported below
+				kill_event(pe, ui);
 #if 0
 	{	// pardon momentary ugly indentation...
 		typedef	node_type::const_fanout_iterator	const_iterator;
@@ -2447,6 +3380,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 	}
 #endif
 			} else {
+				DEBUG_STEP_PRINT("changing event to X" << endl);
 				e.val = node_type::LOGIC_OTHER;
 			}
 		}
@@ -2460,15 +3394,37 @@ State::__diagnose_violation(ostream& o, const uchar next,
 				__allocate_pending_interference_event(
 					n, ui, c, 
 					dir ? node_type::LOGIC_HIGH :
-						node_type::LOGIC_LOW);
+						node_type::LOGIC_LOW
+#if PRSIM_WEAK_RULES
+						, NORMAL_RULE	// not weak
+#endif
+						);
 			enqueue_pending(pe);
 		}
 		// diagnostic message
 		// suppress message for interferences until pending queue
 		if (instability) {
+#if PRSIM_WEAK_RULES
+			bool b = !weak;
+			if (!b) {
+			if (dir) {
+				const expr_index_type up =
+					n.pull_up_index STR_INDEX(NORMAL_RULE);
+				b = get_pull(up) != expr_type::PULL_ON;
+			} else {
+				const expr_index_type dn =
+					n.pull_dn_index STR_INDEX(NORMAL_RULE);
+				b = get_pull(dn) != expr_type::PULL_ON;
+			}
+			}
+			if (b) {
+#endif
 			err |=
 			__report_instability(o, eu & event_type::EVENT_WEAK, 
 				dir, ui, e);
+#if PRSIM_WEAK_RULES
+			}
+#endif
 		}	// end if unstable
 	}	// end if !vacuous
 	// else vacuous is OK
@@ -2482,7 +3438,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 		the ID of the node that tripped a breakpoint.  
  */
 State::step_return_type
-State::cycle(void) THROWS_EXCL_EXCEPTION {
+State::cycle(void) THROWS_STEP_EXCEPTION {
 	step_return_type ret;
 	while ((ret = step()).first) {
 		if (get_node(ret.first).is_breakpoint() || stopped())
@@ -2556,6 +3512,7 @@ State::unwatch_all_nodes(void) {
 /**
 	Prints list of explicitly watched nodes.  
 	Doesn't count watchall flag.  
+	TODO: show values
  */
 ostream&
 State::dump_watched_nodes(ostream& o) const {
@@ -2569,21 +3526,89 @@ State::dump_watched_nodes(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+bool
+node_is_0(const State::node_type& n) {
+	return n.current_value() == State::node_type::LOGIC_LOW;
+}
+
+static
+bool
+node_is_1(const State::node_type& n) {
+	return n.current_value() == State::node_type::LOGIC_HIGH;
+}
+
+static
+bool
+node_is_X(const State::node_type& n) {
+	return n.current_value() == State::node_type::LOGIC_OTHER;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param val node_type::LOGIC_{LOW,HIGH,OTHER}.  
+	\param nl use newline delimiter instead of space.
  */
 ostream&
-State::status_nodes(ostream& o, const uchar val) const {
+State::status_nodes(ostream& o, const uchar val, const bool nl) const {
 	ISE_INVARIANT(node_type::is_valid_value(val));
-	const size_t ns = node_pool.size();
-	size_t i = INVALID_NODE_INDEX +1;
 	o << node_type::value_to_char[size_t(val)] << " nodes:" << endl;
-	for ( ; i<ns; ++i) {
-		if (node_pool[i].current_value() == val) {
-			o << get_node_canonical_name(i) << ' ';
+	bool (*f)(const node_type&) = &node_is_X;
+	switch (val) {
+	case node_type::LOGIC_LOW: f = &node_is_0; break;
+	case node_type::LOGIC_HIGH: f = &node_is_1; break;
+	default: break;
+	}
+	vector<node_index_type> nodes;
+	find_nodes(nodes, f);
+	print_nodes(o, nodes, nl ? "\n" : " ");
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Verify event-to-node consistency.
+	invariant: every node can be referenced at most once 
+		by events in the event queue.  
+	invariant: every node referenced in the event queue
+		points back to the event which affects it.  
+ */
+void
+State::check_event_queue(void) const {
+	typedef	temp_queue_type::const_iterator		const_iterator;
+	typedef	std::map<node_index_type, event_index_type>	node_map_type;
+	typedef	node_map_type::value_type			value_type;
+	typedef	std::pair<node_map_type::iterator, bool>	check_type;
+	node_map_type unique_nodes;
+	temp_queue_type temp;
+	event_queue.copy_to(temp);
+	const_iterator qi(temp.begin()), qe(temp.end());
+	for ( ; qi!=qe; ++qi) {
+		const event_type& e(get_event(qi->event_index));
+		const node_type& n(get_node(e.node));
+		const event_index_type ne = n.get_event();
+	if (e.killed()) {
+		ISE_INVARIANT(!ne || (ne != qi->event_index));
+		// should have been dissociated when it was killed
+	} else {
+		const check_type p(unique_nodes.insert(
+			value_type(e.node, qi->event_index)));
+		const bool tru = (ne &&		// is linked back
+			ne == qi->event_index &&	// is consistent
+			p.second);	// was inserted uniquely
+		if (!tru) {
+			cerr << "Event queue corrupted!" << endl;
+			cerr << "n.event_index = " << ne << endl;
+			cerr << "queue:event   = " << qi->event_index << endl;
+			cerr << "insert unique = " << p.second << endl;
+			if (!p.second) {
+				cerr << "\talready set by: " <<
+					unique_nodes[e.node] << endl;
+			}
+			ISE_INVARIANT(tru);
 		}
 	}
-	return o << endl;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2599,7 +3624,7 @@ State::check_structure(void) const {
 	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
 	expr_index_type i = FIRST_VALID_EXPR;
 	for ( ; i<exprs; ++i) {
-		STACKTRACE_INDENT_PRINT("checking Expr " << i << ":" << endl);
+		DEBUG_CHECK_PRINT("checking Expr " << i << ":" << endl);
 		check_expr(i);
 	}
 }
@@ -2607,7 +3632,7 @@ State::check_structure(void) const {
 	const node_index_type nodes = node_pool.size();
 	node_index_type j = FIRST_VALID_NODE;
 	for ( ; j<nodes; ++j) {
-		STACKTRACE_INDENT_PRINT("checking Node " << j << ":" << endl);
+		DEBUG_CHECK_PRINT("checking Node " << j << ":" << endl);
 		check_node(j);
 	}
 }
@@ -2717,43 +3742,51 @@ State::dump_struct_dot(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Internal event printer.
+	\param force pass true to show killed events.
+ */
+ostream&
+State::dump_event_force(ostream& o, const event_index_type ei, 
+		const time_type t, const bool force) const {
+	DEBUG_STEP_PRINT(ei);
+	const event_type& ev(get_event(ei));
+#if 0
+	o << '[' << ei << ']';		// for debugging
+#endif
+	if (!ev.killed() || force) {
+		o << '\t' << t << '\t' <<
+			get_node_canonical_name(ev.node) << " : " <<
+			node_type::value_to_char[ev.val];
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		if (ev.cause.node) {
+			o << '\t' << "[from " <<
+			get_node_canonical_name(ev.cause.node) << ":=" <<
+			node_type::value_to_char[ev.cause.val] << "]";
+		}
+#endif
+#if PRSIM_WEAK_RULES
+		if (ev.is_weak()) { o << '\t' << "(weak)"; }
+#endif
+		if (ev.killed()) {
+			o << '\t' << "(killed)";
+		}
+		o << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Print a single event.  
  */
 ostream&
 State::dump_event(ostream& o, const event_index_type ei, 
 		const time_type t) const {
-	DEBUG_STEP_PRINT(ei);
-	const event_type& ev(get_event(ei));
-	if (!ev.killed()) {
-		o << '\t' << t << '\t' <<
-			get_node_canonical_name(ev.node) << " : " <<
-			node_type::value_to_char[ev.val];
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		if (ev.cause.node) {
-			o << '\t' << "[from " <<
-			get_node_canonical_name(ev.cause.node) << ":=" <<
-			node_type::value_to_char[ev.cause.val] << "]";
-		}
-#endif
-		o << endl;
-	}
 #if DEBUG_STEP
-	else {
-		o << '\t' << t << '\t' <<
-			get_node_canonical_name(ev.node) << " : " <<
-			node_type::value_to_char[ev.val];
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		if (ev.cause.node) {
-			o << '\t' << "[from " <<
-			get_node_canonical_name(ev.cause.node) << ":=" <<
-			node_type::value_to_char[ev.cause.val] << "]";
-		}
+	return dump_event_force(o, ei, t, true);
+#else
+	return dump_event_force(o, ei, t, false);
 #endif
-			'\t' << "(killed)";
-		o << endl;
-	}
-#endif
-	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2769,6 +3802,48 @@ State::dump_event_queue(ostream& o) const {
 	o << "event queue:" << endl;
 	for ( ; i!=e; ++i) {
 		dump_event(o, i->event_index, i->time);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Shows pending event on node if any.  
+	\param ni node index.  
+	\param dbg whether or not to show internal event index.
+ */
+ostream&
+State::dump_node_pending(ostream& o, const node_index_type ni, 
+		const bool dbg) const {
+	const node_type& n(get_node(ni));
+	const event_index_type pending = n.get_event();
+	if (pending) {
+		if (dbg) {
+			o << "pending event index = " << pending << endl;
+		}
+		// find event in queue: O(N) search
+		typedef	temp_queue_type::const_iterator		const_iterator;
+		temp_queue_type temp;
+		event_queue.copy_to(temp);
+		const_iterator i(temp.begin()), e(temp.end());
+		// this only works for signed types, such as floating point
+		time_type t = delay_policy<time_type>::invalid_value;
+		while (i!=e) {
+			if (i->event_index == pending) {
+				t = i->time;
+				break;
+			}
+			++i;
+		}
+		o << "queue:";
+		dump_event(o, pending, t);
+		if (t == delay_policy<time_type>::invalid_value) {
+			cerr << "Internal error: pending event was not found "
+				"in event queue!" << endl;
+		}
+	} else {
+		o << "No event pending on `" << get_node_canonical_name(ni)
+			<< "\'." << endl;
 	}
 	return o;
 }
@@ -2830,15 +3905,31 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 		// track the direction of propagation (pull-up/dn)
 		const bool dir = e->direction();
 		// then print the *entire* fanin rule for that node, 
+#if PRSIM_WEAK_RULES
+	size_t w = NORMAL_RULE;
+	do {
+#endif
 		const expr_index_type pi =
-			(dir ? no.pull_up_index : no.pull_dn_index);
+			(dir ? no.pull_up_index STR_INDEX(w) : 
+				no.pull_dn_index STR_INDEX(w));
 		DEBUG_FANOUT_PRINT("pi = " << pi << endl);
+#if PRSIM_WEAK_RULES
+		if (pi) {
+			// account for empty weak-rules
+#endif
 		dump_subexpr(o, pi, v) << " -> ";
 		o << get_node_canonical_name(nr) << (dir ? '+' : '-');
 		if (v) {
 			n.dump_value(o << ':');
 		}
 		o << endl;
+#if PRSIM_WEAK_RULES
+		}	// end if
+#endif
+#if PRSIM_WEAK_RULES
+		++w;
+	} while (w<2);	// even if !weak_rules_enabled()
+#endif
 	}
 	return o;
 }
@@ -2846,29 +3937,717 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: OR-combinations on separate lines?
+	TODO: Rajit's prsim suppreses weak rule fanins (copy?)
+		For now, we print those as well.
 	\param v true if literal should be printed with its value.  
+		also print expression with pull-state.
  */
 ostream&
 State::dump_node_fanin(ostream& o, const node_index_type ni, 
 		const bool v) const {
 	const node_type& n(get_node(ni));
 	const string cn(get_node_canonical_name(ni));
-	if (n.pull_up_index) {
-		dump_subexpr(o, n.pull_up_index, v)
+#if PRSIM_WEAK_RULES
+	size_t w = NORMAL_RULE;
+do {
+#endif
+	const expr_index_type ui = n.pull_up_index STR_INDEX(w);
+	const expr_index_type di = n.pull_dn_index STR_INDEX(w);
+	if (ui) {
+		dump_subexpr(o, ui, v)
 			<< " -> " << cn << '+';
 		if (v) {
 			n.dump_value(o << ':');
 		}
 		o << endl;
 	}
-	if (n.pull_dn_index) {
-		dump_subexpr(o, n.pull_dn_index, v)
+	if (di) {
+		dump_subexpr(o, di, v)
 			<< " -> " << cn << '-';
 		if (v) {
 			n.dump_value(o << ':');
 		}
+		o << endl;
 	}
-	return o << endl;
+#if PRSIM_WEAK_RULES
+	++w;
+} while (w<2);		// even if !weak_rules_enabled()
+#endif
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints why a node is X.
+ */
+ostream&
+State::dump_node_why_X(ostream& o, const node_index_type ni, 
+		const bool verbose) const {
+	// unique set to terminate cyclic recursion
+	const node_type& n(get_node(ni));
+if (n.current_value() == node_type::LOGIC_OTHER) {
+	node_set_type u, v;	// cycle-detect set, globally-visited set
+	return __node_why_X(o, ni, verbose, u, v);
+} else {
+	o << get_node_canonical_name(ni) << " is not X." << endl;
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Why is a node NOT at a value.  
+	\param dir true for 1, false for 0.
+ */
+ostream&
+State::dump_node_why_not(ostream& o, const node_index_type ni, 
+		const bool dir, const bool why_not, const bool verbose) const {
+	const node_type& n(get_node(ni));
+	node_set_type u, v;
+switch (n.current_value()) {
+case node_type::LOGIC_LOW:
+	if (dir ^ !why_not) {
+		return __node_why_not(o, ni, dir, why_not, verbose, u, v);
+	} else {
+		o << get_node_canonical_name(ni) << " is 0." << endl;
+	}
+	break;
+case node_type::LOGIC_HIGH:
+	if (dir ^ !why_not) {
+		o << get_node_canonical_name(ni) << " is 1." << endl;
+	} else {
+		return __node_why_not(o, ni, dir, why_not, verbose, u, v);
+	}
+	break;
+default:
+	o << get_node_canonical_name(ni) << " is X." << endl;
+	// recommend try 'why-x'
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param u the current stack of visited nodes, for cycle detection, 
+		is pushed and popped like a stack.
+	\param v the set of all visited nodes, for cross-referencing
+		already visited sub-trees, accumulatess without popping.  
+ */
+ostream&
+State::__node_why_X(ostream& o, const node_index_type ni, const bool verbose, 
+		node_set_type& u, node_set_type& v) const {
+	const std::pair<node_set_type::iterator, bool>
+		p(u.insert(ni)), y(v.insert(ni));
+	const string nn(get_node_canonical_name(ni));
+	o << auto_indent << nn << ":X";
+if (p.second) {
+if (y.second) {
+	// inserted uniquely
+	const node_type& n(get_node(ni));
+	INVARIANT(n.current_value() == node_type::LOGIC_OTHER);
+	const bool from_channel =
+#if PRSIM_CHANNEL_SUPPORT
+		node_is_driven_by_channel(ni);
+#else
+		false;
+#endif
+	if (from_channel) {
+		o << ", from-channel";
+		// channel may be in stopped state...
+	}
+	// inspect pull state (and event queue)
+	const event_index_type pe = n.get_event();
+	if (pe) {
+		o << ", pending event -> " <<
+			node_type::value_to_char[size_t(get_event(pe).val)]
+			<< endl;
+	} else {
+#if 0
+	node_set_type xs;
+#endif
+#if PRSIM_WEAK_RULES
+	size_t w = NORMAL_RULE;
+do {
+#endif
+	const expr_index_type ui = n.pull_up_index STR_INDEX(w);
+	const expr_index_type di = n.pull_dn_index STR_INDEX(w);
+	const pull_enum up = get_pull(ui);
+	const pull_enum dp = get_pull(di);
+	const size_t ux = (up == expr_type::PULL_WEAK);
+	const size_t dx = (dp == expr_type::PULL_WEAK);
+	switch (ux +dx) {
+	case 0:
+		if (up == expr_type::PULL_ON && dp == expr_type::PULL_ON) {
+			o << ", pull up/dn interfere";
+		} else
+		if (
+#if PRSIM_WEAK_RULES
+			w &&
+#endif
+				up == expr_type::PULL_OFF &&
+				dp == expr_type::PULL_OFF) {
+			o << ", pull up/dn undriven";
+			if (!n.has_fanin() && !from_channel) {
+				o << ", no fanin";
+			}
+		} else if (w) {
+			o << endl;
+		}
+		break;
+	case 1: {	// one pull is X
+		// recursively, find X nodes that are exposed
+		const expr_index_type xi = (ux ? ui : di);
+		const expr_index_type oi = (ux ? di : ui);	// other pull
+		if (get_pull(oi) == expr_type::PULL_ON) {
+			o << ", weak-interference vs. " << (ux ? "dn" : "up");
+		} else {	// is OFF
+			o << ", unknown-pull " << (ux ? "up" : "dn");
+		}
+		INVARIANT(xi);
+#if 0
+		__get_X_fanins(xi, xs);
+#else
+		o << endl;
+		const string __ind_str(verbose ? (ux ? "+" : "-") : "  ");
+		const indent __indent(o, __ind_str);
+		__expr_why_X(o, xi, verbose, u, v);
+#endif
+		break;
+	}
+	case 2:
+		o << ", pull up/dn are both X";
+#if 0
+		__get_X_fanins(ui, xs);
+		__get_X_fanins(di, xs);
+#else
+		o << endl;
+		{
+			const indent __indent(o, verbose ? "+" : "  ");
+			__expr_why_X(o, ui, verbose, u, v);
+		}{
+			const indent __indent(o, verbose ? "-" : "  ");
+			__expr_why_X(o, di, verbose, u, v);
+		}
+#endif
+		break;
+	default:
+		DIE;
+	}	// end switch
+#if PRSIM_WEAK_RULES
+	if (up != expr_type::PULL_OFF ||
+			dp != expr_type::PULL_OFF) {
+#endif
+#if 0
+		o << endl;
+#endif
+#if PRSIM_WEAK_RULES
+		break;
+	} else if (w) {
+		o << endl;
+	}
+	++w;
+} while (w<2);		// even if !weak_rules_enabled()
+#endif
+#if PRSIM_CHANNEL_SUPPORT
+	if (n.in_channel()) {
+		// if node is part of source or sink
+#if 0
+		_channel_manager.__get_X_fanins(*this, ni, xs);
+#else
+		_channel_manager.__node_why_X(*this, o, ni, verbose, u, v);
+#endif
+	}
+#endif
+#if 0
+	INDENT_SECTION(o);
+	node_set_type::const_iterator ii(xs.begin()), ee(xs.end());
+	for ( ; ii!=ee; ++ii) {
+		__node_why_X(o, *ii, u, v);	// recursion
+	}
+#endif
+	}
+} else {
+	// don't print the same subtree twice, just cross-reference
+	o << ", (visited before, see above)" << endl;
+}	// end if visited
+	u.erase(ni);
+	return o;
+} else {
+	INVARIANT(!y.second);
+	return o << ", cycle reached" << endl;
+}
+	return o;
+}	// end __node_why_X
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Why is a node not a certain value?
+	Q: X nodes are not followed?
+	\param d if true, ask why node isn't pulled up, else ... why not down
+	\param u the current stack of visited nodes, for cycle detection, 
+		is pushed and popped like a stack.
+	\param v the set of all visited nodes, for cross-referencing
+		already visited sub-trees, accumulatess without popping.  
+ */
+ostream&
+State::__node_why_not(ostream& o, const node_index_type ni, const bool dir,
+		const bool why_not, const bool verbose, 
+		node_set_type& u, node_set_type& v) const {
+	const std::pair<node_set_type::iterator, bool>
+		p(u.insert(ni)), y(v.insert(ni));
+	const node_type& n(get_node(ni));
+	const string nn(get_node_canonical_name(ni));
+	n.dump_value(o << auto_indent << nn << ":");
+if (p.second) {
+if (y.second) {
+	// inserted uniquely
+	// inspect pull state (and event queue)
+	const event_index_type pe = n.get_event();
+	if (pe) {
+		// if there is pending event, don't recurse
+		o << ", pending event -> " <<
+			node_type::value_to_char[size_t(get_event(pe).val)]
+			<< endl;
+		// check that pending event's value matches
+	} else {
+		const pull_enum pull_query = why_not ? 
+			expr_type::PULL_OFF : expr_type::PULL_ON;
+		const indent __ind_nd(o, verbose ? "." : "  ");
+		// only check for the side that is off
+		const expr_index_type pi = dir ?
+			n.pull_up_index STR_INDEX(NORMAL_RULE) :
+			n.pull_dn_index STR_INDEX(NORMAL_RULE);
+		const pull_enum ps = get_pull(pi);
+#if PRSIM_WEAK_RULES
+		// skip this
+		const expr_index_type wpi = dir ?
+			n.pull_up_index STR_INDEX(WEAK_RULE) :
+			n.pull_dn_index STR_INDEX(WEAK_RULE);
+		const pull_enum wps = get_pull(wpi);
+#endif
+		if ((ps == expr_type::PULL_OFF)
+#if PRSIM_WEAK_RULES
+			&& (wps == expr_type::PULL_OFF)
+#endif
+			) {
+			const bool from_channel =
+				node_is_driven_by_channel(ni);
+			if (n.has_fanin() || from_channel) {
+			if (!why_not && !from_channel) {
+				o << ", state-holding";
+			}
+			} else {
+				o << ", input";
+			}
+		}
+		o << endl;
+		// INDENT_SCOPE(o);
+		if (pi && (ps == pull_query)) {
+			__expr_why_not(o, pi, why_not, verbose, u, v);
+		}
+#if PRSIM_WEAK_RULES
+		if (wpi && (wps == pull_query)) {
+			__expr_why_not(o, wpi, why_not, verbose, u, v);
+		}
+#endif
+#if PRSIM_CHANNEL_SUPPORT
+		if (n.in_channel()) {
+			// ask channel why it has not driven the node
+			_channel_manager.__node_why_not(*this, o, 
+				ni, dir, why_not, verbose, u, v);
+		}
+#endif
+	}	// end if pending event
+} else {
+	// don't print the same subtree twice, just cross-reference
+	o << ", (visited before, see above)" << endl;
+}	// end if visited
+	u.erase(ni);
+	return o;
+} else {
+	INVARIANT(!y.second);
+	o << ", cycle";
+	if (why_not) {
+		o << ": possible deadlock";
+	}
+	o << endl;
+}
+	return o;
+}	// end __node_why_not
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In an expression tree, find nodes that are exposed X's.
+	Cut-off X nodes will not be visited.  
+	1s and 0s are not visited.  
+	Should follow similar flow to dump_subexpr.
+	\param u set of X node to accumulate
+	TODO: generalize this to take any pull-state value!!!
+ */
+void
+State::__get_X_fanins(const expr_index_type xi, node_set_type& u) const {
+	ISE_INVARIANT(xi);
+	ISE_INVARIANT(xi < expr_pool.size());
+	const expr_type& x(expr_pool[xi]);
+	ISE_INVARIANT(x.pull_state() == expr_type::PULL_WEAK);
+	const graph_node_type& g(expr_graph_node_pool[xi]);
+	typedef	graph_node_type::const_iterator		const_iterator;
+	const_iterator ci(g.begin()), ce(g.end());
+	for ( ; ci!=ce; ++ci) {
+		INVARIANT(ci->second);
+		if (ci->first) {
+			// is a leaf node, visit if value is X
+			if (get_node(ci->second).current_value()
+					== node_type::LOGIC_OTHER) {
+				u.insert(ci->second);
+			}
+		} else {
+			// is a sub-expresion, recurse if pull is X
+			if (expr_pool[ci->second].pull_state()
+					== expr_type::PULL_WEAK) {
+				__get_X_fanins(ci->second, u);
+			}
+		}
+	}	// end for
+}	// end __get_X_fanins
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In an expression tree, find nodes that are cutting expressions off.
+	now also finds subexpressions that are actively pulling.  
+	Xs are not visited.  
+	Should follow similar flow to dump_subexpr.
+	\param off_on true asks why a node is/not on, false asks ... off
+	\param why_not is true if asking why-not? (negative-query), 
+		else is asking 'why'? (positive-query)
+	\param u anti-cycle stack
+	\param v globally visited stack
+ */
+void
+State::__expr_why_not(ostream& o, const expr_index_type xi, 
+		// const bool off_on, 
+		const bool why_not, const bool verbose,
+		node_set_type& u, node_set_type& v) const {
+	ISE_INVARIANT(xi);
+	ISE_INVARIANT(xi < expr_pool.size());
+	const expr_type& x(expr_pool[xi]);
+	const graph_node_type& g(expr_graph_node_pool[xi]);
+	const pull_enum xp(x.pull_state());
+	INVARIANT(xp != expr_type::PULL_WEAK);
+	typedef	graph_node_type::const_iterator		const_iterator;
+	const_iterator ci(g.begin()), ce(g.end());
+	string ind_str;
+	if (verbose) {
+		ind_str += " ";
+		if (x.is_not()) ind_str += "~";
+		if (g.children.size() > 1) {
+			ind_str += x.is_conjunctive() ? "&" : "|";
+			o << auto_indent << "-+" << endl;
+		}
+		// ind_str += " ";
+	}
+	const indent __ind_ex(o, ind_str);	// INDENT_SCOPE(o);
+	for ( ; ci!=ce; ++ci) {
+		INVARIANT(ci->second);
+		if (ci->first) {
+			// is a leaf node, visit if value is not X
+			switch (get_node(ci->second).current_value()) {
+			case node_type::LOGIC_LOW:
+				__node_why_not(o, ci->second, why_not,
+					why_not, verbose, u, v);
+			break;
+			case node_type::LOGIC_HIGH:
+				__node_why_not(o, ci->second, !why_not,
+					why_not, verbose, u, v);
+			break;
+			default:
+				break;
+			}
+		} else {
+			// is a sub-expresion, recurse if pull is off
+#if 0
+			o << auto_indent << "examining expr..." << endl;
+			dump_subexpr(o, ci->second, false,
+				expr_type::EXPR_ROOT, false) << endl;
+#endif
+			const expr_type& s(expr_pool[ci->second]);
+			const pull_enum match_pull = x.is_not() ?
+				expr_type::negate_pull(xp) : xp;
+		// maintain same (positive/negative) query type recursively
+			if (s.pull_state() == match_pull) {
+				__expr_why_not(o, ci->second, 
+					why_not, verbose, u, v);
+			}
+		}
+	}	// end for
+}	// end expr_why_not
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In an expression tree, find nodes that are X's that are not cut off
+	(by and-0) nor overtaken (or or-1).  
+	Ripped from __node_why_not, above.
+	\param off_on true asks why a node is/not on, false asks ... off
+	\param why_not is true if asking why-not? (negative-query), 
+		else is asking 'why'? (positive-query)
+	\param u anti-cycle stack
+	\param v globally visited stack
+ */
+void
+State::__expr_why_X(ostream& o, const expr_index_type xi, 
+		const bool verbose, node_set_type& u, node_set_type& v) const {
+	ISE_INVARIANT(xi);
+	ISE_INVARIANT(xi < expr_pool.size());
+	const expr_type& x(expr_pool[xi]);
+	const graph_node_type& g(expr_graph_node_pool[xi]);
+	const pull_enum xp(x.pull_state());
+	INVARIANT(xp == expr_type::PULL_WEAK);
+	typedef	graph_node_type::const_iterator		const_iterator;
+	const_iterator ci(g.begin()), ce(g.end());
+	string ind_str;
+	if (verbose) {
+		ind_str += " ";
+		if (x.is_not()) ind_str += "~";
+		if (g.children.size() > 1) {
+			ind_str += x.is_conjunctive() ? "&" : "|";
+			o << auto_indent << "-+" << endl;
+		}
+		// ind_str += " ";
+	}
+	const indent __ind_ex(o, ind_str);	// INDENT_SCOPE(o);
+	for ( ; ci!=ce; ++ci) {
+		INVARIANT(ci->second);
+		if (ci->first) {
+			// is a leaf node, visit if value is X
+			if (get_node(ci->second).current_value()
+				== node_type::LOGIC_OTHER) {
+				__node_why_X(o, ci->second, verbose, u, v);
+			}
+		} else {
+			// is a sub-expresion, recurse if pull is X
+#if 0
+			o << auto_indent << "examining expr..." << endl;
+			dump_subexpr(o, ci->second, false,
+				expr_type::EXPR_ROOT, false) << endl;
+#endif
+			const expr_type& s(expr_pool[ci->second]);
+			if (s.pull_state() == expr_type::PULL_WEAK) {
+				__expr_why_X(o, ci->second, 
+					verbose, u, v);
+			}
+		}
+	}	// end for
+}	// end expr_why_X
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generic traversal to find all nodes meeting a certain criterion.  
+ */
+void
+State::find_nodes(vector<node_index_type>& ret, 
+		bool (*pred)(const node_type&)) const {
+	const node_index_type ns = node_pool.size();
+	node_index_type i = INVALID_NODE_INDEX +1;
+	for ( ; i<ns; ++i) {
+		const node_type& n(node_pool[i]);
+		if ((*pred)(n)) {
+			ret.push_back(i);
+		}
+	}
+}
+
+// pointer-to-member-function variant overload
+// suitable for queries that don't require the State object
+void
+State::find_nodes(vector<node_index_type>& ret, 
+		bool (node_type::*predmf)(void) const) const {
+	const node_index_type ns = node_pool.size();
+	node_index_type i = INVALID_NODE_INDEX +1;
+	for ( ; i<ns; ++i) {
+		const node_type& n(node_pool[i]);
+		if ((n.*predmf)()) {
+			ret.push_back(i);
+		}
+	}
+}
+
+// pointer-to-state member function
+void
+State::find_nodes(vector<node_index_type>& ret, 
+		bool (this_type::*predmf)(const node_index_type) const) const {
+	const node_index_type ns = node_pool.size();
+	node_index_type i = INVALID_NODE_INDEX +1;
+	for ( ; i<ns; ++i) {
+		if ((this->*predmf)(i)) {
+			ret.push_back(i);
+		}
+	}
+}
+
+// pointer to function
+void
+State::find_nodes(vector<node_index_type>& ret, 
+		bool (*p)(const this_type&, const node_index_type)) const {
+	const node_index_type ns = node_pool.size();
+	node_index_type i = INVALID_NODE_INDEX +1;
+	for ( ; i<ns; ++i) {
+		if ((*p)(*this, i)) {
+			ret.push_back(i);
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	printing functor, like output_iterator
+	Caller should call a flush after this.  
+ */
+struct node_printer_base {
+	const State&			state;
+	ostream&			os;
+	const char*			delim;
+
+	explicit
+	node_printer_base(const State& s, ostream& o, const char* d) :
+			state(s), os(o), delim(d) {
+		NEVER_NULL(delim);
+	}
+
+};
+
+struct node_printer : public node_printer_base {
+	node_printer(const State& s, ostream& o, const char* d) :
+			node_printer_base(s, o, d) { }
+
+	void
+	operator () (const node_index_type ni) const {
+		os << state.get_node_canonical_name(ni) << delim;
+	}
+};
+
+struct node_printer_prefix : public node_printer_base {
+	node_printer_prefix(const State& s, ostream& o, const char* d) :
+			node_printer_base(s, o, d) { }
+
+	void
+	operator () (const node_index_type ni) const {
+		os << delim << state.get_node_canonical_name(ni);
+	}
+};
+
+template <typename Iter>
+ostream&
+State::__print_nodes(ostream& o, Iter b, Iter e, const char* delim) const {
+	for_each(b, e, node_printer(*this, o, delim));
+	return o << std::flush;
+}
+
+template <typename Iter>
+ostream&
+State::__print_nodes_infix(ostream& o, Iter b, Iter e,
+		const char* delim) const {
+if (b != e) {
+	node_printer(*this, o, "")(*b);
+	++b;
+	for_each(b, e, node_printer_prefix(*this, o, delim));
+}
+	return o << std::flush;
+}
+
+ostream&
+State::print_nodes(ostream& o, const vector<node_index_type>& nodes, 
+		const char* delim) const {
+	return __print_nodes(o, nodes.begin(), nodes.end(), delim);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+static
+bool
+node_is_X_no_fanin(const State::node_type& n) {
+	return node_is_X(n) && !n.has_fanin();
+}
+
+static
+bool
+node_is_X_no_fanin_with_fanout(const State::node_type& n) {
+	return node_is_X_no_fanin(n) && n.fanout.size();
+		// FIXME: node_is_used
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+ 	No driver means also not driven by channel
+ */
+static
+bool
+node_is_X_no_driver(const State& s, const node_index_type ni) {
+	return node_is_X(s.get_node(ni)) && !s.node_is_driven(ni);
+}
+
+/**
+	Nodes that are X and undriven, and used outputs.  
+ */
+static
+bool
+node_is_X_no_driver_with_fanout(const State& s, const node_index_type ni) {
+	return node_is_X_no_driver(s, ni) && s.node_is_used(ni);
+}
+
+/**
+	Find nodes that are X's and unused outputs.  
+ */
+static
+bool
+node_is_X_not_used(const State& s, const node_index_type ni) {
+	return node_is_X(s.get_node(ni)) && !s.node_is_used(ni);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print all X nodes with no fanin.  
+	This won't find X cycles, however.  
+	\param b true to include node with no fanout
+ */
+ostream&
+State::dump_dangling_unknown_nodes(ostream& o, const bool b) const {
+	o << "X nodes with no fanin";
+	if (!b) {
+		o << ", with fanout";
+	}
+	o << ":" << endl;
+	vector<node_index_type> nodes;
+	find_nodes(nodes,
+		b ? &node_is_X_no_driver : &node_is_X_no_driver_with_fanout);
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print all nodes with no fanout, presumed to be outputs.
+ */
+ostream&
+State::dump_output_nodes(ostream& o) const {
+	o << "nodes with no fanout (unused): " << endl;
+	vector<node_index_type> nodes;
+	find_nodes(nodes, &this_type::node_is_not_used);
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Status X intersected with nodes with no fanout (not used).
+ */
+ostream&
+State::dump_output_unknown_nodes(ostream& o) const {
+	o << "X nodes with no fanout (unused): " << endl;
+	vector<node_index_type> nodes;
+	find_nodes(nodes, &node_is_X_not_used);
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2942,6 +4721,12 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	if (need_parens) {
 		o << ')';
 	}
+	if (v && (e.size > 1)) {
+		// if verbose, and expression has more than one subexpr
+		// print pull-state
+		o << '<' << node_type::value_to_char[size_t(e.pull_state())]
+			<< '>';
+	}
 	return o;
 }
 
@@ -2950,13 +4735,7 @@ ostream&
 State::dump_mk_excl_ring(ostream& o, const ring_set_type& r) const {
 	typedef	ring_set_type::const_iterator	const_iterator;
 	ISE_INVARIANT(r.size() > 1);
-	const_iterator i(r.begin()), e(r.end());
-	o << "{ ";
-	o << get_node_canonical_name(*i);
-	for (++i; i!=e; ++i) {
-		o << ", " << get_node_canonical_name(*i);
-	}
-	return o << " }";
+	return __print_nodes_infix(o << "{ ", r.begin(), r.end(), ", ") << " }";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3018,13 +4797,7 @@ ostream&
 State::dump_check_excl_ring(ostream& o, const lock_index_list_type& r) const {
 	typedef	lock_index_list_type::const_iterator	const_iterator;
 	ISE_INVARIANT(r.size() > 1);
-	const_iterator i(r.begin()), e(r.end());
-	o << "{ ";
-	o << get_node_canonical_name(*i);
-	for (++i; i!=e; ++i) {
-		o << ", " << get_node_canonical_name(*i);
-	}
-	return o << " }";
+	return __print_nodes_infix(o << "{ ", r.begin(), r.end(), ", ") << " }";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3148,6 +4921,172 @@ State::dump_node_check_excl_rings(ostream& o, const node_index_type ni) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
+/**
+	Got lambda?
+ */
+template <class E, class M, M E::*member>
+static
+size_t
+member_size_plus(const size_t sum, const E& n) {
+	return sum +n.*member.size();
+}
+
+template <class E>
+static
+size_t
+add_size(const size_t sum, const E& s) {
+	return sum +s.size();
+}
+
+template <class P>
+static
+size_t
+add_second_capacity(const size_t sum, const P& s) {
+	return sum +s.second.capacity();
+}
+#endif
+
+/**
+	Print memory usage statistics.
+ */
+ostream&
+State::dump_memory_usage(ostream& o) const {
+#ifdef HAVE_STL_TREE
+#define	sizeof_tree_node(type)	sizeof(std::_Rb_tree_node<type>)
+#else
+	// assume tree/set/map nodes have 3 pointers +enum color
+	static const size_t tree_node_base_size = (3*(sizeof(void*)) +1);
+#define	sizeof_tree_node(type)	(sizeof(type) +tree_node_base_size)
+#endif
+{
+	const size_t ns = node_pool.size();
+	o << "node-state: ("  << ns << " * " << sizeof(node_type) <<
+		" B/node) = " << ns * sizeof(node_type) << " B" << endl;
+	// give me boost::lambda!!!
+	const size_t fo = std::accumulate(
+		node_pool.begin(), node_pool.end(), size_t(0),
+		&node_type::add_fanout_size);
+	o << "node::fanout: (" << fo << " * " << sizeof(expr_index_type) <<
+		" B/FO) = " << fo * sizeof(expr_index_type) << " B" << endl;
+}{
+	const size_t es = expr_pool.size();
+	o << "expr-state: ("  << es << " * " << sizeof(expr_type) <<
+		" B/expr) = " << es * sizeof(expr_type) << " B" << endl;
+}{
+	const size_t es = expr_graph_node_pool.size();
+	o << "expr-graph: ("  << es << " * " << sizeof(graph_node_type) <<
+		" B/expr) = " << es * sizeof(graph_node_type) << " B" << endl;
+	const size_t gs = std::accumulate(
+		node_pool.begin(), node_pool.end(), size_t(0),
+		&node_type::add_fanout_size);
+	o << "expr::children: (" << gs << " * " << sizeof(expr_index_type) <<
+		" B/child) = " << gs * sizeof(expr_index_type) << " B" << endl;
+}
+	event_pool.dump_memory_usage(o);
+{
+	const size_t es = event_queue.size();
+	o << "event-queue: ("  << es << " * " << sizeof(event_placeholder_type)
+		<< " B/event) = " << es * sizeof(event_placeholder_type)
+		<< " B" << endl;
+	// may be bigger due to reserved capacity
+}
+{
+	typedef	mk_excl_queue_type::const_iterator::value_type	value_type;
+	const size_t hs = exclhi_queue.size();
+	o << "exclhi-queue: ("  << hs << " * " << sizeof_tree_node(value_type)
+		<< " B/event) = " << hs * sizeof_tree_node(value_type)
+		<< " B" << endl;
+	const size_t ls = excllo_queue.size();
+	o << "excllo-queue: ("  << ls << " * " << sizeof_tree_node(value_type)
+		<< " B/event) = " << ls * sizeof_tree_node(value_type)
+		<< " B" << endl;
+#if UNIQUE_PENDING_QUEUE
+	const size_t ps = pending_queue.size();
+	o << "pending-queue: ("  << ps << " * " <<
+		sizeof_tree_node(event_index_type) << " B/event) = " <<
+		ps * sizeof_tree_node(event_index_type) << " B" << endl;
+#else
+	const size_t ps = pending_queue.capacity();	// reserved
+	o << "pending-queue: ("  << ps << " * " << sizeof(event_index_type) <<
+		" B/event) = " << ps * sizeof(event_index_type)
+		<< " B" << endl;
+#endif
+}
+{
+	// hashtable iterator value-types
+	typedef	rule_map_type::iterator::value_type	value_type;
+	const size_t rs = rule_map.size();
+	o << "expr-rule-map: ("  << rs << " * " << sizeof_tree_node(value_type)
+		<< " B/rule) = " << rs * sizeof_tree_node(value_type) << " B"
+		<< endl;
+}{
+	// rings
+	const size_t rs = mk_exhi.size();
+	o << "mk-exclhi-rings: ("  << rs << " * " << sizeof(ring_set_type) <<
+		" B/ring) = " << rs * sizeof(ring_set_type) << " B" << endl;
+	const size_t rr = std::accumulate(mk_exhi.begin(), mk_exhi.end(), 
+		size_t(0), &add_size<ring_set_type>);
+	typedef	ring_set_type::iterator::value_type	value_type;
+	o << "mk-exclhi::nodes: (" << rr << " * " <<
+		sizeof_tree_node(value_type) <<
+		" B/node) = " << rr * sizeof_tree_node(value_type)
+		<< " B" << endl;
+	// alternative to set: sorted valarray/vector
+}{
+	// rings
+	const size_t rs = mk_exlo.size();
+	o << "mk-excllo-rings: ("  << rs << " * " << sizeof(ring_set_type) <<
+		" B/ring) = " << rs * sizeof(ring_set_type) << " B" << endl;
+	const size_t rr = std::accumulate(mk_exlo.begin(), mk_exlo.end(), 
+		size_t(0), &add_size<ring_set_type>);
+	typedef	ring_set_type::iterator::value_type	value_type;
+	o << "mk-excllo::nodes: (" << rr << " * " <<
+		sizeof_tree_node(value_type) <<
+		" B/node) = " << rr * sizeof_tree_node(value_type)
+		<< " B" << endl;
+	// alternative to set: sorted valarray/vector
+}{
+	const size_t ch = check_exhi_ring_pool.capacity();
+	o << "chk-exclhi-locks: ("  << ch << " / 8 lock/B) >= "
+		<< ((ch +7)>>3) << " B" << endl;	// round-up
+	const size_t cl = check_exlo_ring_pool.capacity();
+	o << "chk-excllo-locks: ("  << cl << " / 8 lock/B) >= "
+		<< ((cl +7)>>3) << " B" << endl;	// round-up
+}{
+	typedef	check_excl_ring_map_type::const_iterator::value_type
+						value_type;
+	const size_t hs = check_exhi.size();
+	o << "chk-exclhi-rings: ("  << hs << " * " <<
+		sizeof_tree_node(value_type) << " B/ring) = " <<
+		hs * sizeof_tree_node(value_type) << " B" << endl;
+	const size_t hc = std::accumulate(check_exhi.begin(), check_exhi.end(), 
+		size_t(0), &add_second_capacity<value_type>);
+	o << "chk-exclhi::nodes: (" << hc << " * " << sizeof(node_index_type) <<
+		" B/node) = " << hc * sizeof(node_index_type) << " B" << endl;
+	const size_t ls = check_exhi.size();
+	o << "chk-excllo-rings: ("  << ls << " * " <<
+		sizeof_tree_node(value_type) << " B/ring) = " <<
+		ls * sizeof_tree_node(value_type) << " B" << endl;
+	const size_t lc = std::accumulate(check_exhi.begin(), check_exhi.end(), 
+		size_t(0), &add_second_capacity<value_type>);
+	o << "chk-excllo::nodes: (" << lc << " * " << sizeof(node_index_type) <<
+		" B/node) = " << lc * sizeof(node_index_type) << " B" << endl;
+}{
+	typedef	watch_list_type::value_type		value_type;
+	const size_t ws = watch_list.size();
+	o << "watch-list: ("  << ws << " * " <<
+		sizeof_tree_node(value_type) << " B/node) = " <<
+		ws * sizeof_tree_node(value_type) << " B" << endl;
+}{
+	// smaller stuff
+	// expr_trace_type __scratch_expr_trace
+	// fanout_array_type __shuffle_indices
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: need to check consistency with module.  
 	Write out a header for safety checks.  
@@ -3162,7 +5101,21 @@ State::save_checkpoint(ostream& o) const {
 #else
 #define	WRITE_ALIGN_MARKER		{}
 #endif
+	check_event_queue();		// internal structure consistency
 	write_value(o, magic_string);
+{
+	// save the random seed
+	ushort seed[3] = {0, 0, 0};
+	const ushort* old_seed = seed48(seed);	// libc
+	seed[0] = old_seed[0];
+	seed[1] = old_seed[1];
+	seed[2] = old_seed[2];
+	// put it back
+	seed48(seed);
+	write_value(o, seed[0]);
+	write_value(o, seed[1]);
+	write_value(o, seed[2]);
+}
 {
 	// node_pool
 	write_value(o, node_pool.size());
@@ -3193,7 +5146,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, temp.size());
 	for ( ;i!=e; ++i) {
 		write_value(o, i->time);
-		event_pool[i->event_index].save_state(o);
+		get_event(i->event_index).save_state(o);
 	}
 }
 	WRITE_ALIGN_MARKER
@@ -3222,6 +5175,9 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, interference_policy);
 	write_value(o, weak_interference_policy);
 	write_value(o, timing_mode);
+#if PRSIM_CHANNEL_SUPPORT
+	if (_channel_manager.save_checkpoint(o)) return true;
+#endif
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
@@ -3260,8 +5216,14 @@ try {
 } catch (...) {
 	cerr << bad_ckpt << endl;
 	return true;
-}
-{
+}{
+	// restore random seed
+	ushort seed[3];
+	read_value(i, seed[0]);
+	read_value(i, seed[1]);
+	read_value(i, seed[2]);
+	seed48(seed);
+}{
 	// node_pool
 	size_t s;
 	read_value(i, s);
@@ -3300,7 +5262,9 @@ try {
 		if (next != prev) {
 			const expr_index_type nj(distance(nb, ni));
 			for ( ; fi!=fe; ++fi) {
-				evaluate(nj, *fi, prev, next);
+				// interpret node value as pull-value
+				evaluate(nj, *fi,
+					pull_enum(prev), pull_enum(next));
 				// evaluate does not modify any queues
 				// just updates expression states
 			}
@@ -3344,8 +5308,11 @@ try {
 		read_value(i, t);
 		event_type ev;
 		ev.load_state(i);
-		enqueue_event(t, __load_allocate_event(ev));
+		// can enqueue a killed event
+		load_enqueue_event(t, __load_allocate_event(ev));
 	}
+	// nodes and events should be consistent by now
+	check_event_queue();
 }
 	READ_ALIGN_MARKER		// sanity alignment check
 	// excl_rings -- structural only
@@ -3376,6 +5343,9 @@ try {
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
+#if PRSIM_CHANNEL_SUPPORT
+	if (_channel_manager.load_checkpoint(i)) return true;
+#endif
 
 	// this must be run *after* mode flags are loaded
 if (checking_excl()) {
@@ -3390,7 +5360,7 @@ if (checking_excl()) {
 		const excl_exception
 			e(check_excl_rings(distance(nb, ni), n, prev, next));
 		if (e.lock_id) {
-			inspect_excl_exception(e, cerr);
+			inspect_exception(e, cerr);
 			// don't bother throwing
 		}
 	}
@@ -3422,6 +5392,13 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	read_value(i, header_check);
 	o << "header string: " << header_check << endl;
 {
+	// show random seed
+	ushort seed[3];
+	read_value(i, seed[0]);
+	read_value(i, seed[1]);
+	read_value(i, seed[2]);
+	o << "seed48: " << seed[0] << ' ' << seed[1] << ' ' << seed[2] << endl;
+}{
 	// node_pool
 	size_t s;
 	read_value(i, s);
@@ -3499,6 +5476,13 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	char timing_mode;
 	read_value(i, timing_mode);
 	o << "timing mode: " << size_t(timing_mode) << endl;
+#if PRSIM_CHANNEL_SUPPORT
+{
+	channel_manager tmp;
+	tmp.load_checkpoint(i);
+	tmp.dump_checkpoint_state(o) << endl;
+}
+#endif
 	read_value(i, header_check);
 	o << "footer string: " << header_check << endl;
 	return o;

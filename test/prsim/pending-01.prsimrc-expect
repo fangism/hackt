@@ -1,0 +1,17 @@
+No event pending on `a'.
+No event pending on `b'.
+No event pending on `c'.
+expect pending event on a, not b 
+queue:	0	a : 0
+No event pending on `b'.
+time: 0
+	0	a : 0
+No event pending on `a'.
+queue:	10	b : 1	[from a:=0]
+time: 5
+	10	b : 1	[by a:=0]
+	20	c : 0	[by b:=1]
+No event pending on `a'.
+No event pending on `b'.
+No event pending on `c'.
+time: 20

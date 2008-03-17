@@ -1,0 +1,10 @@
+# "inv-27.prsimrc"
+# @haco@ inv.haco-a
+
+echo propagate 0s and 1s first
+watchall
+set a 0
+cycle
+
+source inv-25.prsimrc
+

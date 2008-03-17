@@ -1,0 +1,198 @@
+# "channel-test-a-09.prsimrc"
+# copy-modified from "channel-test-a-03.prsimrc"
+# @haco@ channel-test-a.haco-a
+# testing channel sink, with expect
+
+# register channels
+source channel-test-a-01.prsimrc
+
+watchall
+# set up some channels with commands
+channel-watch X
+channel-sink X
+channel-expect X channel-test-a-values-X.txt
+channel-reset X
+getall X
+
+echo manually resetting data
+set X.d[0] 0
+set X.d[1] 0
+cycle
+assert X.e 0
+
+echo releasing channel X
+channel-release X
+cycle
+assert X.e 1
+# because data is neutral, X.e should request new data
+
+echo ------------------------------------
+set X.d[0] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[0] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[1] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[1] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[1] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[1] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[0] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[0] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[0] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[0] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[0] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[0] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[1] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[1] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[1] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[1] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[1] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[1] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[1] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[1] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+echo expect values exhausted, now can be any value
+echo ------------------------------------
+set X.d[1] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[1] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[1] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[1] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[0] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[0] 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[0] 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[0] 0
+cycle
+assert X.e 1
+channel-show X
+

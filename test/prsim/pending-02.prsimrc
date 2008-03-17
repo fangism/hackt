@@ -1,0 +1,53 @@
+# "pending-02.prsimrc"
+# @haco@ inv.haco-a
+
+# echo-commands on
+echo testing pending state of node
+watch a
+watch-queue
+
+pending a
+
+set a 0
+pending a
+cycle
+
+get a
+pending a
+
+echo setting to same value as current
+set a 0
+queue
+pending a
+
+cycle
+
+echo setting to new value
+set a 1
+queue
+pending a
+
+cycle
+queue
+pending a
+
+echo setting to same value
+set a 1
+queue
+pending a
+
+cycle
+queue
+pending a
+
+echo setting to new value
+set a 0
+queue
+pending a
+
+cycle
+queue
+pending a
+
+time
+

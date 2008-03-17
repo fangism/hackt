@@ -1,7 +1,7 @@
 /**
 	\file "util/IO_utils.h"
 	General-purpose handy utilities.
-	$Id: IO_utils.h,v 1.8 2006/04/12 08:53:21 fang Exp $
+	$Id: IO_utils.h,v 1.9 2008/03/17 23:03:07 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_H__
@@ -89,14 +89,19 @@ void	read_string(istream& f, string& s);
 /***
 	Consider container read/writing policies with trait tags...
 ***/
-
 template <class S>
 void	write_sequence(ostream& f, const S& s);
+
+template <class Iter>
+void	write_range(ostream& f, Iter, const Iter);
 
 /// does not require iterator concept, just operator [] access
 // cannot partial specialize functions, drat
 template <class S>
 void	write_array(ostream&, const S& );
+
+template <class Iter>
+void	read_range(istream&, Iter, const Iter);
 
 template <class S>
 void	read_sequence_in_place(istream& f, S& s);

@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.20 2007/04/15 05:52:32 fang Exp $
+	$Id: packed_array.tcc,v 1.21 2008/03/17 23:03:08 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -554,6 +554,11 @@ PACKED_ARRAY_GENERIC_CLASS::key_to_index(const key_type& k) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i index is the offset into the linear array that represents
+		the multidimensional array, is lexicographical index. 
+	\return a key for the multidimensional indices
+ */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_ARRAY_GENERIC_CLASS::key_type
 PACKED_ARRAY_GENERIC_CLASS::index_to_key(const size_type i) const {
@@ -564,9 +569,9 @@ if (dim == 1) {
 } else {
 	ret[0] = i / coeffs[0];
 	size_type j = 1;
-	for ( ; j<dim -1; ++j) {
+	for ( ; j<dim-1; ++j) {
 		// vectorize me, Mr. Compiler!
-		ret[j] = (i % coeffs[j-1]) / sizes[j];
+		ret[j] = (i / coeffs[j]) % sizes[j];
 	}
 	ret[j] = i % sizes[j];
 }

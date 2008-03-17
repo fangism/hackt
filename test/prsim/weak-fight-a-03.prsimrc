@@ -1,0 +1,43 @@
+# "weak-fight-a-03.prsimrc"
+# @haco@ weak-fight-a.haco-a
+
+# weak ~a -> c+
+# b -> c-
+
+timing uniform 10
+# fanin c
+
+echo both off
+set a 1
+set b 0
+queue
+cycle
+assert c X
+time
+
+echo pull with strong first
+set b 1
+advance 4
+queue
+
+echo weak pull should lose fight
+set a 0
+advance 3
+echo expect instability to be suppressed
+queue
+cycle
+assert c 0
+time
+
+echo de-assert weak
+set a 1
+cycle
+assert c 0
+time
+
+echo de-assert strong
+set b 0
+cycle
+assert c 0
+time
+

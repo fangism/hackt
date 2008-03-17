@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.28 2007/11/26 08:27:21 fang Exp $
+	$Id: PRS.cc,v 1.29 2008/03/17 23:02:11 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -240,10 +240,10 @@ if (internal) {
 }
 if (ret && params) {
 	// NOTE: parameters are not applicable to RHS or rules
-	if (params->size() > 2) {
-		// TODO: update me to take a transistor type [ACT]
-		cerr << "Error: rule literals can take a maximum of 2 "
-			"(width, length) parameters.  " << where(*params)
+	if (params->size() > 3) {
+		// third optional parameter is transistor type [ACT]
+		cerr << "Error: rule literals can take a maximum of 3 "
+			"(width, length, type) parameters.  " << where(*params)
 			<< endl;
 		return prs_literal_ptr_type(NULL);
 	}
@@ -798,20 +798,8 @@ op_loop::check_prs_expr(context& c) const {
 //=============================================================================
 // class macro method definitions
 
-#if 0
-macro::macro(const token_identifier* i, const inst_ref_expr_list* r) :
-		name(i), args(r) {
-	NEVER_NULL(name); NEVER_NULL(args);
-}
-
-macro::macro(excl_ptr<const token_identifier>& i, const inst_ref_expr_list* r) :
-		name(i), args(r) {
-	NEVER_NULL(name); NEVER_NULL(args);
-}
-#endif
-
-macro::macro(literal* l, const inst_ref_expr_list* r) :
-		name(), params(), args(r) {
+macro::macro(const attribute_list* a, literal* l, const inst_ref_expr_list* r) :
+		attribs(a), name(), params(), args(r) {
 	const excl_ptr<literal> lit(l);	// will self-destruct at end of ctor
 	name = lit->extract_identifier();
 	params = lit->extract_parameters();
@@ -825,7 +813,9 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(macro)
 line_position
 macro::leftmost(void) const {
 	// there could be an error extracting the name
-	if (name)
+	if (attribs)
+		return attribs->leftmost();
+	else if (name)
 		return name->leftmost();
 	else if (params)
 		return params->leftmost();
@@ -907,6 +897,11 @@ if (params) {
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_nodes()));
+}
+if (attribs) {
+	cerr << "WARNING: attributes on PRS macros are tentatively ignored.  "
+		<< where(*attribs) << endl;
+	// FINISH_ME(Fang);
 }
 	c.get_current_prs_body().append_rule(ret);
 }	// end macro::check_rule

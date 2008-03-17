@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.14 2006/11/07 06:35:41 fang Exp $
+	$Id: excl_ptr.h,v 1.15 2008/03/17 23:03:10 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -251,6 +251,13 @@ public:
 	// virtual
 	~excl_ptr() { this->reset(); }
 
+	/**
+		\return a deep copy of this, using operator new to allocate.
+	 */
+	this_type
+	deep_copy(void) const {
+		return this_type(new T(*ptr));
+	}
 public:
 	/**
 		\return reference at the pointer.  
@@ -547,6 +554,14 @@ public:
 		ptr(p.release()) { INVARIANT(!p); }
 
 	~sticky_ptr() { this->reset(); }
+
+	/**
+		\return a deep copy of this, using operator new to allocate.
+	 */
+	this_type
+	deep_copy(void) const {
+		return this_type(new T(*ptr));
+	}
 
 	reference
 	operator * () const { EXCL_PTR_NEVER_NULL(ptr); return *ptr; }

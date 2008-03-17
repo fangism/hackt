@@ -1,0 +1,8 @@
+// "cross-coupled-weak.hac"
+
+bool t, f;
+prs {
+[weak=1]	t => f-
+[weak=1]	f => t-
+}
+

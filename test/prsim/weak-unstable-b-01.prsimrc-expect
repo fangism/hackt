@@ -1,0 +1,12 @@
+enqueued:	10	c : 1	[from _p:=0]
+	10	c : 1	[by _p:=0]
+time: 10
+enqueued:	20	c : X	[from a:=X]	(weak)
+time: 10
+queue:	20	c : X	[from a:=X]	(weak)
+queue:	20	c : 0	[from b:=X]	(weak)
+WARNING: weak-unstable `c'-
+>> cause: `b' (val: 0)
+weak-unstable should leave x-pull in queue 
+queue:	20	c : X	[from b:=X]	(weak)
+	20	c : X	[by b:=0]

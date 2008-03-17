@@ -1,0 +1,12 @@
+// "loop-spec-01.hac"
+// testing spec directives inside loops
+
+pint N = 4;
+bool x[N][2];
+
+(;i:N:
+	spec {
+		mk_exclhi(x[i][0], x[i][1])
+	}
+)
+

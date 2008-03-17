@@ -1,0 +1,3 @@
+The 'min_sep' directive requires exactly 1 parameters.
+	at [9:2..14]
+ERROR: at least one error in spec body.

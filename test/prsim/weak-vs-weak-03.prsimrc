@@ -1,0 +1,26 @@
+# "weak-vs-weak-03.prsimrc"
+# @haco@ weak-vs-weak.haco-a
+
+# [weak] ~a -> c+
+# [weak] b  -> c-
+
+timing uniform 10
+
+set a 1
+set b 0
+cycle
+assert c X
+echo c: still unknown value
+
+echo testing for instability
+
+set b 1
+advance 5
+queue
+assert c X
+
+set b 0
+echo unstable guard, expect unstable
+cycle
+assert c X
+

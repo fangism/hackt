@@ -1,0 +1,17 @@
+# "autosave-02.prsimrc"
+# @haco@ inv.haco-a
+# @deps@ autosave.prsimckpt
+
+load autosave.prsimckpt
+watchall
+time
+assert c 0
+
+set a 1
+cycle
+assert c 1
+time
+
+echo success!
+# !rm autosave.prsimckpt
+

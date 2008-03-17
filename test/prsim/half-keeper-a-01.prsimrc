@@ -1,0 +1,19 @@
+# "half-keeper-a-01.prsimrc"
+# @haco@ half-keeper-a.haco-a
+
+watchall
+set _p 0
+set w 0
+cycle
+set _p 1
+cycle
+
+source half-keeper-cycle.prsimrc
+source half-keeper-cycle.prsimrc
+source half-keeper-cycle.prsimrc
+source half-keeper-cycle.prsimrc
+source half-keeper-cycle.prsimrc
+source half-keeper-cycle.prsimrc
+source half-keeper-cycle.prsimrc
+source half-keeper-cycle.prsimrc
+
