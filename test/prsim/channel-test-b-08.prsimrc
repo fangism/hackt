@@ -35,7 +35,8 @@ assert-queue
 step 50
 assert-queue
 # time
-channel-show L
+# channel-show L
+# due to randomness differences
 channel-show R
 
 step 79
