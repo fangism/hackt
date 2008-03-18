@@ -31,13 +31,16 @@ assert R.e 0
 channel-release-all
 assert-queue
 
-step 51
+# step 51
+step 50
 assert-queue
 # time
 channel-show L
 channel-show R
 
-step 78
+step 79
+# step 78
+
 # time
 assert-queue
 channel-show L
