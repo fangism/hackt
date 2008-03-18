@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.106 2007/10/31 18:48:57 fang Exp $
+	$Id: BUILDS,v 1.107 2008/03/18 19:58:54 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -326,6 +326,19 @@ lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875c
 readline: none
 
+(Fang)
+Version: hackt 0.1.4-devel-20080317
+CVS Tag: HACKT-00-01-04-main-00-82-07-merged-ACT-03-59
+Configured with: '--prefix=/usr/local/cad' '--without-guile-config' '--disable-static' '--with-readline' 'CC=ccache gcc' 'CXX=ccache g++' 'YACC=yacc' '--with-vpi=/usr/local/cad/synopsys/vcs-mx/linux' '-C' '--enable-ltdl-convenience'
+build-triplet: i686-redhat-linux-gnu
+c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-8)
+config-CXXFLAGS: -g -O2
+config-LIBS:  -lreadline -lncurses 
+lex: flex version 2.5.4
+yacc: /usr/bin/yacc
+readline: GNU readline 4.3
+guile: 
+
 
 (Nathan Smith)
 Version: hackt 0.1.4-devel-20070121
@@ -372,6 +385,19 @@ config-LIBS: -lncurses
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875
 readline: none
+
+(Fang)
+Version: hackt 0.1.4-devel-20080317
+CVS Tag: HACKT-00-01-04-main-00-82-07-merged-ACT-03-59
+Configured with: '--with-readline' '--disable-static' 'YACC=yacc' '--prefix=/usr/local/cad/cad64' '-C' 'CC=ccache gcc' 'CXX=ccache g++' --enable-ltdl-convenience
+build-triplet: x86_64-redhat-linux-gnu
+c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-8)
+config-CXXFLAGS: -g -O2
+config-LIBS:  -lreadline -lncurses 
+lex: flex version 2.5.4
+yacc: /usr/bin/yacc
+readline: GNU readline 4.3
+guile: guile-config - Guile version 1.6.8
 
 
 // What the hell do you guys have against shared libraries?
