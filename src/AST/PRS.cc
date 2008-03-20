@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.29 2008/03/17 23:02:11 fang Exp $
+	$Id: PRS.cc,v 1.30 2008/03/20 00:03:13 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -19,6 +19,7 @@
 #include "AST/PRS.h"
 #include "AST/reference.h"	// for id_expr
 #include "AST/expr_list.h"	// for attributes
+#include "AST/attribute.h"
 #include "AST/range.h"
 #include "AST/range_list.h"
 #include "AST/token.h"
@@ -71,9 +72,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::op_loop, "(prs-op-loop)")
 
 namespace memory {
 // explicit template instantiations
-using HAC::parser::PRS::attribute;
 using HAC::parser::PRS::body_item;
-template class count_ptr<const attribute>;
 template class count_ptr<const body_item>;
 }	// end namespace memory
 }	// end namespace util
@@ -344,7 +343,7 @@ literal::check_nonmeta_reference(const context& c) const {
 	\param atts the attribute list is optional.  
  */
 CONSTRUCTOR_INLINE
-rule::rule(const attribute_list* atts, const expr* g, 
+rule::rule(const generic_attribute_list* atts, const expr* g, 
 		const char_punctuation_type* a,
 		literal* rhs, const char_punctuation_type* d) :
 		body_item(), attribs(atts), guard(g), arrow(a),
@@ -414,7 +413,7 @@ rule::check_rule(context& c) const {
 	if (attribs) {
 		entity::PRS::rule_attribute_list_type&
 			atts(ret->get_attribute_list());
-		attribs->check_list(atts, &attribute::check, c);
+		attribs->check_list(atts, &check_prs_attribute, c);
 		if (find(atts.begin(), atts.end(), false) != atts.end()) {
 			cerr << "ERROR in attributes list before rule." << endl;
 			THROW_EXIT;
@@ -798,7 +797,8 @@ op_loop::check_prs_expr(context& c) const {
 //=============================================================================
 // class macro method definitions
 
-macro::macro(const attribute_list* a, literal* l, const inst_ref_expr_list* r) :
+macro::macro(const generic_attribute_list* a, 
+		literal* l, const inst_ref_expr_list* r) :
 		attribs(a), name(), params(), args(r) {
 	const excl_ptr<literal> lit(l);	// will self-destruct at end of ctor
 	name = lit->extract_identifier();
@@ -909,48 +909,29 @@ if (attribs) {
 //=============================================================================
 // class attribute method definitions
 
-attribute::attribute(const token_identifier* i, const expr_list* e)
-		: key(i), values(e) {
-	NEVER_NULL(key); NEVER_NULL(values);
-}
-
-attribute::~attribute() { }
-
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(attribute)
-
-line_position
-attribute::leftmost(void) const {
-	return key->leftmost();
-}
-
-line_position
-attribute::rightmost(void) const {
-	return values->rightmost();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-attribute::return_type
-attribute::check(context& c) const {
+rule::attribute_type
+rule::check_prs_attribute(const generic_attribute& a, context& c) {
+	typedef	attribute_type			return_type;
 	typedef	expr_list::checked_meta_exprs_type vals_type;
 	typedef	vals_type::const_iterator	const_iterator;
 	typedef	vals_type::value_type		val_type;
 	// all macros must be registered with the master registry list (cflat)
-	if (!entity::PRS::cflat_attribute_registry[*key]) {
-		cerr << "Error: unrecognized PRS rule attribute \"" << *key <<
-			"\" at " << where(*key) << endl;
+	if (!entity::PRS::cflat_attribute_registry[*a.key]) {
+		cerr << "Error: unrecognized PRS rule attribute \"" << *a.key <<
+			"\" at " << where(*a.key) << endl;
 		return return_type();
 	}
 	vals_type vals;
-	values->postorder_check_meta_exprs(vals, c);
+	a.values->postorder_check_meta_exprs(vals, c);
 	const const_iterator i(vals.begin()), e(vals.end());
 	if (find(i, e, val_type(NULL)) != e) {
 		// one of the param expressions failed checking
 		// blank will signal error
 		cerr << "Error in checking attribute value expressions in "
-			<< where(*values) << endl;
+			<< where(*a.values) << endl;
 		return return_type();
 	}
-	return_type ret(*key);
+	return_type ret(*a.key);
 	copy(i, e, back_inserter(ret));
 	return ret;
 }
@@ -1008,26 +989,6 @@ template
 line_position
 node_list<const PRS::guarded_body>::rightmost(void) const;
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// template class node_list<const attribute>;
-
-template
-node_list<const PRS::attribute>::node_list(const PRS::attribute*);
-
-template
-node_list<const PRS::attribute>::~node_list();
-
-template
-ostream&
-node_list<const PRS::attribute>::what(ostream&) const;
-
-template
-line_position
-node_list<const PRS::attribute>::leftmost(void) const;
-
-template
-line_position
-node_list<const PRS::attribute>::rightmost(void) const;
 #endif
 
 //=============================================================================

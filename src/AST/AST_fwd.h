@@ -1,7 +1,7 @@
 /**
 	\file "AST/AST_fwd.h"
 	Forward declarations for classes in HAC::parser.
-	$Id: AST_fwd.h,v 1.7 2007/02/08 02:10:57 fang Exp $
+	$Id: AST_fwd.h,v 1.8 2008/03/20 00:03:11 fang Exp $
  */
 
 #ifndef	__HAC_AST_AST_FWD_H__
@@ -138,6 +138,12 @@ typedef	node_list<const guarded_instance_management>
 class conditional_instantiation;
 class type_completion_statement;
 class type_completion_connection_statement;
+
+//-----------------------------------------------------------------------------
+// declared in "AST/attribute.h"
+
+struct generic_attribute;
+typedef	node_list<const generic_attribute>	generic_attribute_list;
 
 //-----------------------------------------------------------------------------
 // declared in "AST/token.h"

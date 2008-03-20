@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.34 2008/03/17 23:02:43 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.35 2008/03/20 00:03:19 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -311,6 +311,8 @@ extern const char* const yyrule[];
 	statement*		_statement;
 	HAC::parser::instance_alias*	_instance_alias;
 	alias_list*		_alias_list;
+	generic_attribute*	_generic_attribute;
+	generic_attribute_list*	_generic_attribute_list;
 
 	expr*			_expr;
 	inst_ref_expr*		_inst_ref_expr;
@@ -364,8 +366,6 @@ extern const char* const yyrule[];
 	CHP::receive*		_chp_receive;
 	CHP::binary_assignment*	_chp_binary_assignment;
 	CHP::bool_assignment*	_chp_bool_assignment;
-	CHP::stmt_attr_list*	_chp_stmt_attr_list;
-	CHP::stmt_attribute*	_chp_stmt_attr;
 	CHP::function_call_expr*	_chp_func_expr;
 
 	HSE::body*		_hse_body;
@@ -392,8 +392,6 @@ extern const char* const yyrule[];
 	PRS::guarded_body*	_prs_guarded_body;
 	PRS::guarded_prs_list*	_prs_guarded_list;
 	PRS::macro*		_prs_macro;
-	PRS::attribute*		_prs_attribute;
-	PRS::attribute_list*	_prs_attribute_list;
 
 	SPEC::body*		_spec_body;
 	SPEC::directive*	_spec_directive;
@@ -634,7 +632,11 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_instance_base>	instance_id_item
 %type	<_connection_statement>	connection_statement
 %type	<_type_completion_statement>	instance_type_completion_statement
+%type	<_type_completion_statement>	instance_attribute_statement
 %type	<_type_completion_connection_statement>	instance_type_completion_connection_statement
+%type	<_generic_attribute>	generic_attribute
+%type	<_generic_attribute_list>	generic_attribute_list
+%type	<_generic_attribute_list>	generic_attribute_list_in_brackets
 /* %type	<_instance_alias>	instance_alias	*/
 %type	<_alias_list>	alias_list nonempty_alias_list
 %type	<_expr_list>	connection_actuals_list
@@ -653,9 +655,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_chp_stmt_list>	chp_sequence_group
 %type	<_chp_stmt>	full_chp_body_item chp_body_item
 %type	<_chp_stmt>	chp_statement
-%type	<_chp_stmt_attr_list>	chp_statement_attributes
-%type	<_chp_stmt_attr_list>	chp_statement_attr_list
-%type	<_chp_stmt_attr>	chp_statement_attr
+%type	<_generic_attribute_list>	chp_statement_attributes
 %type	<_chp_stmt>	chp_concurrent_item
 %type	<_chp_stmt>	chp_body_or_skip
 %type	<_chp_loop>	chp_loop
@@ -702,9 +702,6 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_prs_rule_list>	prs_body
 %type	<_prs_body_item>	prs_body_item
 %type	<_prs_rule>	single_prs
-%type	<_prs_attribute>	prs_rule_attribute
-%type	<_prs_attribute_list>	prs_rule_attribute_list
-%type	<_prs_attribute_list>	prs_rule_attribute_list_in_brackets
 %type	<_prs_loop>	prs_loop
 %type	<_prs_conditional>	prs_conditional
 %type	<_prs_guarded_list>	prs_guarded_list prs_guarded_list_unmatched
@@ -1529,6 +1526,8 @@ connection_body_item_base
 		{ $$ = $1; DELETE_TOKEN($2); }
 	| instance_type_completion_statement { $$ = $1; }
 	| instance_type_completion_connection_statement { $$ = $1; }
+	| instance_attribute_statement { $$ = $1; }
+	;
 
 connection_body_item
 	: connection_body_item_base { $$ = $1; }
@@ -1647,7 +1646,35 @@ connection_statement
 		  DELETE_TOKEN($3); }
 	;
 
+// key-value pair
+generic_attribute
+	: ID '=' expr_list
+		{ $$ = new generic_attribute($1, $3); DELETE_TOKEN($2); }
+	;
+
+generic_attribute_list
+	: generic_attribute_list ';' generic_attribute
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| generic_attribute
+		{ $$ = new generic_attribute_list($1); }
+	;
+
+generic_attribute_list_in_brackets
+	: '[' generic_attribute_list ']'
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
+/**
+generic_attribute_list_in_brackets_optional
+	: '@' generic_attributes_list_in_brackets
+		{ DELETE_TOKEN($1); $$ = $2; }
+	| { $$ = NULL; }
+	;
+**/
+
+/* note: lvalue excludes member references, thus restricting to local scope */
 /* completing the relaxed template arguments of an instance */
+/* now also used to attach attributes */
 instance_type_completion_statement
 	: index_expr complex_expr_optional_list_in_angles ';'
 		{ $$ = new type_completion_statement($1, $2);
@@ -1657,7 +1684,30 @@ instance_type_completion_statement
 		  DELETE_TOKEN($3); }
 	;
 
-/* want to use type_completion_reference, but conflicts */
+instance_attribute_statement
+	: index_expr '@' generic_attribute_list_in_brackets  ';'
+		{ $$ = new type_completion_statement($1, NULL, $3);
+		  DELETE_TOKEN($2); DELETE_TOKEN($4); }
+/**
+	| index_expr complex_expr_optional_list_in_angles 
+		'@ instance_attribute_list_in_brackets ';'
+		{ $$ = new type_completion_statement($1, $2, $4);
+		  DELETE_TOKEN($3); DELETE_TOKEN($5); }
+**/
+	| generic_id '@' generic_attribute_list_in_brackets  ';'
+		{ $$ = new type_completion_statement(new id_expr($1), NULL, $3);
+		  DELETE_TOKEN($2); DELETE_TOKEN($4); }
+/**
+	| generic_id complex_expr_optional_list_in_angles 
+		'@ instance_attribute_list_in_brackets ';'
+		{ $$ = new type_completion_statement(new id_expr($1), $2, $4);
+		  DELETE_TOKEN($3); DELETE_TOKEN($5); }
+**/
+	;
+
+/* want to use type_completion_reference, but conflicts
+   because (generic_id '<' ...) can look like type ref. or instance ref.
+ */
 instance_type_completion_connection_statement
 	: index_expr complex_expr_optional_list_in_angles
 		connection_actuals_list ';'
@@ -1830,26 +1880,10 @@ chp_body_item
 	;
 
 /* attributes are optionally prefixed to statements */
+// e.g.: after=10, assert=expr
 chp_statement_attributes
-	: '$' '(' chp_statement_attr_list ')'
+	: '$' '(' generic_attribute_list ')'
 		{ DELETE_TOKEN($2); WRAP_LIST($1, $3, $4); $$ = $3; }
-	;
-
-/* we use ';' to delimit, just in case we want expr_list in future */
-chp_statement_attr_list
-	: chp_statement_attr_list ';' chp_statement_attr
-		{ $$ = $1; APPEND_LIST($1, $2, $3); }
-	| chp_statement_attr
-		{ $$ = new CHP::stmt_attr_list($1); }
-	;
-
-/* key-value pairs */
-/* e.g.: after=10, assert=expr */
-chp_statement_attr
-	: ID '=' expr
-		{ DELETE_TOKEN($2); $$ = new CHP::stmt_attribute($1, $3); }
-/*	: ID '=' expr_list	*/
-/* possibly introduce shorthand for some common ones? assert, delay? */
 	;
 
 chp_statement
@@ -2313,7 +2347,7 @@ prs_macro
 			$$ = new PRS::macro(NULL, $1, $2);
 		}
 	/* optional, tentatively ignored */
-	| prs_rule_attribute_list_in_brackets
+	| generic_attribute_list_in_brackets
 	  prs_literal mandatory_member_index_expr_list_in_parens
 		{ $$ = new PRS::macro($1, $2, $3); }
 	;
@@ -2357,39 +2391,11 @@ prs_else_clause
 single_prs
 	/* note: type-check prs_expr as boolean return type */
 	/* conflict: expr can end ID, and prs_expr can start ID, S/R on :: */
-	: prs_rule_attribute_list_in_brackets
+	: generic_attribute_list_in_brackets
 		prs_expr prs_arrow prs_literal_base dir
 		{ $$ = new PRS::rule($1, $2, $3, $4, $5); }
 	| prs_expr prs_arrow prs_literal_base dir
 		{ $$ = new PRS::rule(NULL, $1, $2, $3, $4); }
-	;
-
-/**
-// using this construct instead of inlined (as above)
-// results in a conflict on '(' and ID
-prs_rule_attribute_list_in_brackets_opt
-	: prs_rule_attribute_list_in_brackets
-	| 
-	;
-**/
-
-prs_rule_attribute_list_in_brackets
-	: '[' prs_rule_attribute_list ']'
-		{ $$ = $2; WRAP_LIST($1, $2, $3); }
-	;
-
-prs_rule_attribute_list
-	: prs_rule_attribute_list ';' prs_rule_attribute
-		{ $$ = $1; APPEND_LIST($1, $2, $3); }
-		/* or toss the semicolon? doesn't matter */
-	| prs_rule_attribute
-		{ $$ = new PRS::attribute_list($1); }
-	;
-
-/* key-value pair */
-prs_rule_attribute
-	: ID '=' expr_list
-		{ $$ = new PRS::attribute($1, $3); DELETE_TOKEN($2); }
 	;
 
 prs_arrow

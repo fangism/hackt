@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.27 2007/11/26 08:27:55 fang Exp $
+#	$Id: Makefile.am,v 1.28 2008/03/20 00:03:32 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -15,6 +15,7 @@ HACKT_PARSE_TEST_PASSES = \
 	014 015 016 019 \
 	022 \
 	oper-02 oper-04 \
+	inst-attrib-01 inst-attrib-02 inst-attrib-03 inst-attrib-04 \
 	act-001
 
 HACKT_FLATTEN_TEST_PASSES = \

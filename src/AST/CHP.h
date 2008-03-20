@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.11 2007/11/26 08:27:20 fang Exp $
+	$Id: CHP.h,v 1.12 2008/03/20 00:03:12 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -77,11 +77,12 @@ public:
 class statement {
 public:
 	typedef	count_ptr<entity::CHP::action>		return_type;
+	typedef	entity::CHP::attribute			attribute_type;
 protected:
 	/**
 		Optional attributes. 
 	 */
-	excl_ptr<const stmt_attr_list>			attrs;
+	excl_ptr<const generic_attribute_list>		attrs;
 public:
 	statement();
 
@@ -97,7 +98,7 @@ virtual	line_position
 	rightmost(void) const = 0;
 
 	void
-	prepend_attributes(const stmt_attr_list*);
+	prepend_attributes(const generic_attribute_list*);
 
 #define	CHP_CHECK_STMT_PROTO						\
 	CHP::statement::return_type					\
@@ -111,6 +112,12 @@ virtual	line_position
 	check_attributes(context&, entity::CHP::action&) const;
 
 virtual	CHP_CHECK_STMT_PROTO = 0;
+
+protected:
+	static
+	attribute_type
+	check_chp_attribute(const generic_attribute&, context&);
+
 };	// end class statement
 
 //=============================================================================
@@ -621,33 +628,6 @@ public:
 
 	CHP_CHECK_STMT_PROTO;
 };	// end class do_until
-
-//=============================================================================
-/**
-	Key-value pair for CHP statement attribute.  
- */
-class stmt_attribute {
-	const excl_ptr<const token_identifier>		key;
-	const excl_ptr<const chp_expr>			value;
-public:
-	typedef	entity::CHP::attribute			return_type;
-public:
-	stmt_attribute(const token_identifier*, const chp_expr*);
-	~stmt_attribute();
-
-	ostream&
-	what(ostream&) const;
-
-	line_position
-	leftmost(void) const;
-
-	line_position
-	rightmost(void) const;
-
-	return_type
-	check(context&) const;
-
-};	// end class stmt_attribute
 
 //=============================================================================
 /**

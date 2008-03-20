@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.9 2008/03/17 23:02:13 fang Exp $
+	$Id: PRS.h,v 1.10 2008/03/20 00:03:14 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -13,6 +13,7 @@
 #include "AST/PRS_fwd.h"
 #include "AST/expr_base.h"
 #include "AST/lang.h"
+#include "AST/attribute.h"
 #include "util/STL/vector_fwd.h"
 #include "util/STL/pair_fwd.h"
 #include "util/memory/count_ptr.h"
@@ -153,14 +154,16 @@ public:
 	Single production rule.  
  */
 class rule : public body_item {
+public:
+	typedef	entity::PRS::attribute		attribute_type;
 protected:
-	const excl_ptr<const attribute_list>		attribs;
+	const excl_ptr<const generic_attribute_list>		attribs;
 	const excl_ptr<const expr>		guard;
 	const excl_ptr<const char_punctuation_type>	arrow;
 	const excl_ptr<const literal>		r;
 	const excl_ptr<const char_punctuation_type>	dir;
 public:
-	rule(const attribute_list*, const expr* g, 
+	rule(const generic_attribute_list*, const expr* g, 
 		const char_punctuation_type* a,
 		literal* rhs, const char_punctuation_type* d);
 
@@ -176,6 +179,11 @@ public:
 	rightmost(void) const;
 
 	PRS_ITEM_CHECK_PROTO;
+
+protected:
+	static
+	attribute_type
+	check_prs_attribute(const generic_attribute&, context&);
 };	// end class rule
 
 //=============================================================================
@@ -267,12 +275,13 @@ public:
 	The programmer can design these to do whatever.  
  */
 class macro : public body_item {
-	const excl_ptr<const attribute_list>		attribs;
+	const excl_ptr<const generic_attribute_list>		attribs;
 	excl_ptr<const token_identifier>		name;
 	excl_ptr<const expr_list>			params;
 	const excl_ptr<const inst_ref_expr_list>	args;
 public:
-	macro(const attribute_list*, literal*, const inst_ref_expr_list*);
+	macro(const generic_attribute_list*, literal*, 
+		const inst_ref_expr_list*);
 	~macro();
 
 	ostream&
@@ -355,33 +364,6 @@ public:
 	CHECK_NONMETA_EXPR_PROTO;
 	CHECK_PRS_EXPR_PROTO;
 };	// end class op_loop
-
-//=============================================================================
-/**
-	Production rule attributes.
- */
-class attribute {
-	const excl_ptr<const token_identifier>		key;
-	const excl_ptr<const expr_list>			values;
-public:
-	typedef	entity::PRS::attribute			return_type;
-public:
-	attribute(const token_identifier*, const expr_list*);
-	~attribute();
-
-	ostream&
-	what(ostream& o) const;
-
-	line_position
-	leftmost(void) const;
-
-	line_position
-	rightmost(void) const;
-
-	// TODO: param can be const& after branch merge...
-	return_type
-	check(context&) const;
-};	// end class attribute
 
 //=============================================================================
 }	// end namespace PRS

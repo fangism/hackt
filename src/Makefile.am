@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.194 2008/03/17 23:02:06 fang Exp $
+#	$Id: Makefile.am,v 1.195 2008/03/20 00:03:10 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -369,6 +369,7 @@ libbogus4_la_SOURCES = \
 
 AST_CC_FILES = \
 	AST/node_position.cc \
+	AST/attribute.cc \
 	AST/expr.cc \
 	AST/range.cc \
 	AST/token.cc \

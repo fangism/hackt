@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.89 2008/03/17 23:03:29 fang Exp $
+#	$Id: Make.test-tail,v 1.90 2008/03/20 00:03:26 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -31,7 +31,7 @@ POM_HEADER_FILTER = $(AWK) -f $(TEST_BUILDDIR)/POM-header-filter.awk
 POM_INDEX_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-index-filter.awk
 POM_SIZE_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-size-filter.awk
 HEX_ADDRESS_FILTER = $(SED) -f $(TEST_SRCDIR)/address_filter.sed
-HACKT_OBJ_DIFF_FILTER = $(POM_HEADER_FILTER)
+HACKT_OBJ_DIFF_FILTER = $(POM_HEADER_FILTER) | $(GREP) -v "finish writing"
 ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk
 CHPSIM_TRACE_BINARY_FILTER = $(AWK) -f $(TEST_SRCDIR)/chpsim-binary-size-filter.awk
 

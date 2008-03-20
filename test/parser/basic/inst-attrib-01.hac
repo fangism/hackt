@@ -1,0 +1,7 @@
+// "inst-attrib-01.hac"
+// testing parsing of instance attributes
+
+bool x;
+x @[key=0];
+
+

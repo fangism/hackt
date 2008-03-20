@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: node_list.tcc,v 1.7 2007/11/26 08:27:30 fang Exp $
+	$Id: node_list.tcc,v 1.8 2008/03/20 00:03:18 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.tcc,v 1.10.34.1 2005/12/11 00:45:09 fang Exp
  */
@@ -174,7 +174,7 @@ node_list<T>::check_list(R& r,
 	INVARIANT(r.empty());
 	const_iterator i(this->begin());
 	const const_iterator e(this->end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		NEVER_NULL(*i);
 		r.push_back(mem_fun_ref(f)(**i, a));
 	}
@@ -191,9 +191,38 @@ void
 node_list<T>::check_list_void(void (T::*f)(A&) const, A& a) const {
 	const_iterator i(this->begin());
 	const const_iterator e(this->end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		if (*i) {
 			mem_fun_ref(f)(**i, a);
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NODE_LIST_TEMPLATE_SIGNATURE
+template <class R, class A>
+void
+node_list<T>::check_list(R& r, typename R::value_type (*f)(const T&, A&),
+		A& a) const {
+	INVARIANT(r.empty());
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+		r.push_back((*f)(**i, a));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NODE_LIST_TEMPLATE_SIGNATURE
+template <class A>
+void
+node_list<T>::check_list_void(void (*f)(const T&, A&), A& a) const {
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; ++i) {
+		if (*i) {
+			(*f)(**i, a);
 		}
 	}
 }

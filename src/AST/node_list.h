@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.h"
 	Base set of classes for the HAC parser.  
-	$Id: node_list.h,v 1.7 2007/11/26 08:27:29 fang Exp $
+	$Id: node_list.h,v 1.8 2008/03/20 00:03:17 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.h,v 1.10.12.1 2005/12/11 00:45:08 fang Exp
  */
@@ -163,6 +163,7 @@ public:
 	never_ptr<const object>
 	check_build(context&) const;
 
+	// member function visitors
 	template <class R, class A>
 	void
 	check_list(R&, typename R::value_type (T::*)(A&) const, A&) const;
@@ -170,6 +171,15 @@ public:
 	template <class A>
 	void
 	check_list_void(void (T::*)(A&) const, A&) const;
+
+	// non-member function overloads
+	template <class R, class A>
+	void
+	check_list(R&, typename R::value_type (*)(const T&, A&), A&) const;
+
+	template <class A>
+	void
+	check_list_void(void (*)(const T&, A&), A&) const;
 
 	template <class R, class A>
 	void

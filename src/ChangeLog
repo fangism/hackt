@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-08:
+	  Preliminary parser support for instance attributes, as discussed
+		with Rajit and Virantha.  "inst-ref @[key=value;...];"
+	  grammar: provisional instance attributes, 
+		CHP,PRS attributes reomved in favor of common, generic
+		attribute construct (ease of maintainence).
+			much copy-paste code 
+		AST/{CHP,PRS}.* updated accordingly.
+	  AST/attribute.{h,cc}: common attribute struct
+	  AST/instance.cc: on attribute processing, 
+		currently just ignores with a finish-me message.
+	  Not yet properly documented... :(
+
+
 2008-03-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-07-merged-ACT-03-59:

@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.27 2008/03/17 23:02:14 fang Exp $
+	$Id: instance.cc,v 1.28 2008/03/20 00:03:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -23,6 +23,7 @@
 #include "AST/token_string.h"
 #include "AST/token.h"			// for token_else
 #include "AST/type.h"
+#include "AST/attribute.h"
 #include "AST/node_list.tcc"
 #include "AST/parse_context.h"
 
@@ -1257,9 +1258,10 @@ conditional_instantiation::check_build(context& c) const {
 // class type_completion_statement method definitions
 
 type_completion_statement::type_completion_statement(const inst_ref_expr* ir, 
-		const expr_list* ta) : inst_ref(ir), args(ta) {
+		const expr_list* ta, const generic_attribute_list* at) :
+		inst_ref(ir), args(ta), attribs(at) {
 	NEVER_NULL(inst_ref);
-	NEVER_NULL(args);
+	// NEVER_NULL(args);
 }
 
 type_completion_statement::~type_completion_statement() { }
@@ -1273,7 +1275,11 @@ type_completion_statement::leftmost(void) const {
 
 line_position
 type_completion_statement::rightmost(void) const {
-	return args->rightmost();
+	if (attribs)
+		return attribs->rightmost();
+	else if (args)
+		return args->rightmost();
+	else	return inst_ref->rightmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1292,6 +1298,7 @@ type_completion_statement::check_build(context& c) const {
 			<< endl;
 		THROW_EXIT;
 	}
+if (args) {
 	expr_list::checked_meta_exprs_type temp;
 	args->postorder_check_meta_exprs(temp, c);
 	// should throw on error
@@ -1302,6 +1309,10 @@ type_completion_statement::check_build(context& c) const {
 		THROW_EXIT;
 	}
 	c.add_instance_management(nr);
+}
+if (attribs) {
+	FINISH_ME(Fang);
+}
 	// additional error handling?
 	return c.top_namespace();
 #else

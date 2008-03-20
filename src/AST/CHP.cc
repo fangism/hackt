@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.23 2008/03/17 23:02:09 fang Exp $
+	$Id: CHP.cc,v 1.24 2008/03/20 00:03:11 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -23,6 +23,7 @@
 #include "AST/parse_context.h"
 #include "AST/range.h"
 #include "AST/reference.h"		// for id_expr
+#include "AST/attribute.h"
 
 #include "Object/lang/CHP.tcc"
 #include "Object/type/data_type_reference.h"
@@ -83,10 +84,8 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::function_call_expr, "(chp-func-call)")
 
 namespace memory {
 // explicit template instantiations
-using HAC::parser::CHP::stmt_attribute;
 using HAC::parser::CHP::guarded_command;
 using HAC::parser::CHP::statement;
-template class count_ptr<const stmt_attribute>;
 template class count_ptr<const guarded_command>;
 template class count_ptr<const statement>;
 }	// end namespace memory
@@ -192,8 +191,8 @@ statement::~statement() { }
 	\param al exclusively owned attribute list pointer.
  */
 void
-statement::prepend_attributes(const stmt_attr_list* al) {
-	attrs = excl_ptr<const stmt_attr_list>(al);
+statement::prepend_attributes(const generic_attribute_list* al) {
+	attrs = excl_ptr<const generic_attribute_list>(al);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -218,8 +217,8 @@ bool
 statement::check_attributes(context& c, entity::CHP::action& a) const {
 if (attrs) {
 if (attrs->size() == 1) {
-	const stmt_attribute::return_type
-		ret(attrs->front()->check(c));
+	const attribute_type
+		ret(check_chp_attribute(*attrs->front(), c));
 	// but we strip out hard-coded delay attribute
 	const string& k(ret.key());
 	if (k == "after") {
@@ -1466,39 +1465,15 @@ do_until::__check_action(context& c) const {
 //=============================================================================
 // class stmt_attribute method definitions
 
-stmt_attribute::stmt_attribute(const token_identifier* i, const chp_expr* e) :
-		key(i), value(e) {
-	NEVER_NULL(key);
-	NEVER_NULL(value);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-stmt_attribute::~stmt_attribute() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(stmt_attribute)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-line_position
-stmt_attribute::leftmost(void) const {
-	return key->leftmost();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-line_position
-stmt_attribute::rightmost(void) const {
-	return value->rightmost();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-stmt_attribute::return_type
-stmt_attribute::check(context& c) const {
-	const expr::meta_return_type v(value->check_meta_expr(c));
+statement::attribute_type
+statement::check_chp_attribute(const generic_attribute& a, context& c) {
+	// ignore values after the first for now
+	const expr::meta_return_type v(a.values->front()->check_meta_expr(c));
 	if (!v) {
 		cerr << "Error in CHP attribute value expression. "
-			<< where(*value) << endl;
+			<< where(*a.values) << endl;
 	}
-	return return_type(*key, v);
+	return attribute_type(*a.key, v);
 }
 
 //=============================================================================
@@ -1635,27 +1610,6 @@ function_call_expr::__check_nonmeta_expr(const context& c) const {
 
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS
-
-template 
-node_list<const CHP::stmt_attribute>::node_list();
-
-template 
-node_list<const CHP::stmt_attribute>::node_list(const CHP::stmt_attribute*);
-
-template 
-node_list<const CHP::stmt_attribute>::~node_list();
-
-template 
-ostream&
-node_list<const CHP::stmt_attribute>::what(ostream&) const;
-
-template 
-line_position
-node_list<const CHP::stmt_attribute>::leftmost(void) const;
-
-template 
-line_position
-node_list<const CHP::stmt_attribute>::rightmost(void) const;
 
 //=============================================================================
 }	// end namespace parser

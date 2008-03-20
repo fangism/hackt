@@ -1,0 +1,8 @@
+// "inst-attrib-04.hac"
+// copy-modified from "inst-attrib-02.hac"
+// testing parsing of instance attributes
+
+bool x[4];
+x @[key=0;key2=1];
+x[0] @[key=true];
+
