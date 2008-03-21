@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.35 2008/03/20 00:03:19 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.36 2008/03/21 00:20:21 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -406,13 +406,6 @@ extern const char* const yyrule[];
 // extern	int yylex(void);		// ancient compiler rejects
 extern	YY_DECL;			// something like the above
 
-namespace HAC {
-namespace lexer {
-extern	int hackt_at_eof(const flex::lexer_state&);	// from "hackt-lex.ll"
-}
-}
-using HAC::lexer::hackt_at_eof;
-
 static void yyerror(const char* msg);	// ancient compiler rejects
 
 /* automatically generated function to resolve parser symbol type
@@ -432,14 +425,6 @@ yyfreestacks(const short* yyss, const short* yyssp,
 		const YYSTYPE yylval, const int yychar,
 		const flex::lexer_state& _lexer_state);
 %}
-
-/*
-	A bogus token to catch the starting value of the token enumeration.
-	Because yacc and different versions of bison disagree on this.  
-	Usually either 257 or 258, POSIX wants 257 methinks, but this avoids
-	second guessing.  
- */
-%token	MINIMUM_BOGOSITY
 
 /*
 	The lexer returns newly allocated nodes FOR ALL TOKENS, 
@@ -536,13 +521,6 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_token_pint_type>	PINT_TYPE
 %token	<_token_pbool_type>	PBOOL_TYPE
 %token	<_token_preal_type>	PREAL_TYPE
-
-/*
-	Special yacc/bison-independent hack to get the maximum token enum
-	because different versions of them start at either 257 or 258, 
-	and the #define number for them can change!
- */
-%token	MAXIMUM_BOGOSITY
 
 /* non-terminals */
 %type	<_root_body>	module
@@ -3152,7 +3130,7 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 			yy_union_resolve_delete(*v, *(s-1), *s);
 		}
 	}
-	if (!hackt_at_eof(_lexer_state)) {
+	if (!_lexer_state.at_eof()) {
 		// cerr << "Deleting last token..." << endl;
 		// free the last token (if not EOF)
 		yy_union_lookup_delete(_yylval_, _yychar_);
@@ -3196,10 +3174,8 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 
 #if YYBISON
 // shit... bison-isms: names were changed to protect the innocent
-/**
-	#define	YYMAXTOKEN	YYMAXUTOK
-	use MAXIMUM_BOGOSITY instead for bounding yychar
-**/
+// yacc symbol for maximum token number, renamed in bison
+#define	YYMAXTOKEN	YYMAXUTOK
 #define	__symbol_names	yytname
 #define	__shift_table	yypact
 #define	__reduce_table	yydefact
@@ -3253,7 +3229,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
 //	NULL check not necessarily valid if last token normally returned NULL
-	if (hackt_at_eof(_lexer_state)) {
+	if (_lexer_state.at_eof()) {
 		cerr << "\t" << __symbol_names[0];	// "end-of-file"
 	} else {
 //		The last token from the lexer, yychar, tells us the last
@@ -3280,7 +3256,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	{
 		int _yychar_ = 0;
 		int yyn;
-		for ( ; _yychar_ <= MAXIMUM_BOGOSITY; _yychar_++) {
+		for ( ; _yychar_ <= YYMAXTOKEN; _yychar_++) {
 			// try all terminal tokens
 			if ((yyn = __shift_table[*yyssp]) && 
 					(yyn += _yychar_) >= 0 && 

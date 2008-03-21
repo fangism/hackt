@@ -1,5 +1,5 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.7 2007/11/02 01:15:05 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.8 2008/03/21 00:19:17 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
@@ -111,23 +111,103 @@ dnl
 dnl Enables YACC as a configurable variable.  
 dnl This usually picks up bison by default if found, 
 dnl but can be manually overridden.
+dnl Note: automake-1.10+ already provides YACC variable
+dnl This macro now runs some test to detect certain traits
+dnl of the parser generator.
 dnl
 dnl @category InstalledPackages
-dnl @version 2006-05-08
+dnl @version 2008-03-14
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_VAR_YACC],
 [AC_REQUIRE([AC_PROG_YACC])
 AC_ARG_VAR(YACC, [parser generator, requires LALR(1), such as yacc/bison])
+cat > conftest.y <<ACEOF
+%token	FIRST_TOK
+%token	LAST_TOK
+%start top
+%%
+top: FIRST_TOK LAST_TOK
+%%
+ACEOF
+dnl fake cache variable< should probably use different name prefix
+ac_cv_prog_yacc_root="y.tab"
+ac_compile_yacc='$CC -c $CFLAGS $CPPFLAGS $ac_cv_prog_yacc_root.c >&5'
+
+dnl test 1: find the enumeral value of the first token
+if $YACC -d -t -v conftest.y && eval "$ac_compile_yacc"
+then
+if ! test -f $ac_cv_prog_yacc_root.c
+then AC_MSG_ERROR([$YACC does not produce $ac_cv_prog_yacc_root.c.])
+fi
+if ! test -f $ac_cv_prog_yacc_root.h
+then AC_MSG_ERROR([$YACC does not produce $ac_cv_prog_yacc_root.h.])
+fi
+YACC_FIRST_TOKEN_ENUM=`grep "^#define.*FIRST_TOK" $ac_cv_prog_yacc_root.h | cut -d\  -f3`
+fi
+AC_SUBST(YACC_FIRST_TOKEN_ENUM)
+
+dnl test 2: if yacc, get the version string of the skeleton
+dnl eventually pass this into YACC_VERSION
+yacc_skeleton_version=`grep "skeleton" $ac_cv_prog_yacc_root.c | \
+	cut -d\" -f2 | sed 's/[$]//g'`
+
+dnl test 3: find name of preprocessor symbol for MAXTOK
+dnl is YYMAXTOKEN for yacc, YYMAXUTOK for bison
+
+dnl test 4: what is the real underlying parser generator?
+ac_for_real_yacc=
+if grep -q YYBISON $ac_cv_prog_yacc_root.c ; then
+	ac_for_real_yacc=bison
+	AC_DEFINE(USING_BISON, 1, [Define to 1 if we're using bison.])
+elif grep -q YYBYACC $ac_cv_prog_yacc_root.c ; then
+	ac_for_real_yacc=byacc
+	AC_DEFINE(USING_BYACC, 1, [Define to 1 if we're using byacc.])
+else
+	dnl is YACC
+	ac_for_real_yacc=yacc
+	AC_DEFINE(USING_YACC, 1, [Define to 1 if we're using yacc.])
+fi
+AC_MSG_NOTICE(parser generator is really $ac_for_real_yacc)
+AM_CONDITIONAL(HAVE_BISON, test $ac_for_real_yacc = bison)
+AM_CONDITIONAL(HAVE_BYACC, test $ac_for_real_yacc = byacc)
+AM_CONDITIONAL(HAVE_YACC, test $ac_for_real_yacc = yacc)
+
+dnl test 5: directive support
+case $ac_for_real_yacc in
+dnl (
+bison ) YACC_PURE_PARSER=%pure_parser ;;
+dnl (
+*)	YACC_PURE_PARSER="" ;;
+esac
+AC_SUBST(YACC_PURE_PARSER)
+
+dnl test 6: version string
+case $ac_for_real_yacc in
+dnl (
+bison )
+	YACC_VERSION=`$YACC --version 2>&1 | head -n 1`
+	[BISON_VERSION=`echo x$YACC_VERSION | sed 's/[^.0-9]//g'`]
+	AC_MSG_NOTICE([found bison version $BISON_VERSION.]) ;;
+dnl (
+*)	YACC_VERSION="$yacc_skeleton_version" ;;
+esac
+AC_SUBST(YACC_VERSION)
+
+dnl TODO: run more tests
+dnl clean up files: y.tab.c y.tab.h y.output
+rm -f y.*
+dnl for use in Makefile
 ])dnl
 
 dnl @synopsis HACKT_LEX_VERSION
 dnl
 dnl Detects and records the LEX version as LEX_VERSION.  
+dnl Warns about known bad version of flex.  
 dnl
 dnl @category InstalledPackages
-dnl @version 2006-05-08
+dnl @version 2008-03-11
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -146,10 +226,17 @@ case $LEX in
 	* ) AC_MSG_ERROR([No lexer-generator found.]) ;;
 esac
 LEX_VERSION=`$LEX --version | head -n 1`
+dnl known bad version
+lex_version_number=`echo "$LEX_VERSION" | $AWK '{n=split($''0,t); print t[[n]];}'`
+if test "$lex_version_number" = "2.5.33" ; then
+AC_MSG_WARN([flex $lex_version_number is known to FAIL with this project.])
+AC_MSG_WARN([See the README.  Proceed at your own risk.])
+fi
 AC_SUBST(LEX_VERSION)
 ])dnl
 
 dnl @synopsis HACKT_AM_CONDITIONAL_HAVE_YACC
+dnl OBSOLETE, folded into HACKT_ARG_VAR_YACC, above
 dnl
 dnl Defines one of {HAVE_BISON, HAVE_BYACC, HAVE_YACC} to be true for automake.
 dnl check whether or not bison is disguising as yacc (with bison -y)
@@ -170,6 +257,7 @@ AM_CONDITIONAL(HAVE_YACC, echo "$YACC" | grep -v byacc | grep -q yacc)
 ])dnl
 
 dnl @synopsis HACKT_YACC_PURE
+dnl OBSOLETE, folded into HACKT_ARG_VAR_YACC, above
 dnl
 dnl AC_SUBST the variable YACC_PURE_PARSER for use in yacc sources
 dnl if the %pure-parser directive is supported.
@@ -192,6 +280,7 @@ AC_SUBST(YACC_PURE_PARSER)
 
 
 dnl @synopsis HACKT_YACC_VERSION
+dnl OBSOLETE, folded into HACKT_ARG_VAR_YACC, above
 dnl
 dnl defines YACC_VERSION or BISON_VERSION with a version string if possible
 dnl TODO: check whether or not bison/yacc works on a basic file
@@ -204,7 +293,8 @@ dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_YACC_VERSION],
-[AC_REQUIRE([AC_PROG_YACC])
+[AC_REQUIRE([HACKT_ARG_VAR_YACC])	dnl for test results
+dnl AC_REQUIRE([AC_PROG_YACC])
 case $YACC in
 	dnl (
 	*bison* )
@@ -238,7 +328,8 @@ dnl	fi
 		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
 		AC_DEFINE(USING_BYACC, 1, [Define to 1 if we're using byacc.])
 		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
-		YACC_VERSION=`which $YACC | head -n 1`
+		YACC_VERSION="$yacc_skeleton_version"
+		dnl YACC_VERSION=`which $YACC | head -n 1`
 		;;
 	dnl (
 	*yacc* )
@@ -246,13 +337,13 @@ dnl	fi
 		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
 		AC_DEFINE(USING_BYACC, 0, [Define to 1 if we're using byacc.])
 		AC_DEFINE(USING_YACC, 1, [Define to 1 if we're using yacc.])
+		YACC_VERSION="$yacc_skeleton_version"
 		dnl traditional yacc has no version flag :S
-		YACC_VERSION=`which $YACC | head -n 1`
+		dnl YACC_VERSION=`which $YACC | head -n 1`
 		;;
 	dnl (
 	* ) AC_MSG_ERROR([No parser-generator found.]) ;;
 esac
 AC_SUBST(YACC_VERSION)
 ])dnl
-
 

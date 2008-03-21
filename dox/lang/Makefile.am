@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.30 2007/09/14 04:29:53 fang Exp $
+#	$Id: Makefile.am,v 1.31 2008/03/21 00:19:23 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -52,13 +52,13 @@ hacmacros.texi: $(srcdir)/../common/hacmacros.texi
 CLEANFILES += hacmacros.texi
 
 $(srcdir)/prsmacros.mk: chapters/PRS.texi
-	{ $(ECHO) -n "PRS_MACROS_TEXI = " ; \
+	{ $(PRINTF) "PRS_MACROS_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@
 
 $(srcdir)/spec.mk: chapters/SPEC.texi
-	{ $(ECHO) -n "SPEC_DIRECTIVES_TEXI = " ; \
+	{ $(PRINTF) "SPEC_DIRECTIVES_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@

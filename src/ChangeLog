@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-09-merged-parser-06-07:
+	  Minor branch merge: improvements in lexer/parser 
+		includes top-level configury.
+			better version reporting.
+		no longer creates temporary files for scanning strings.
+		much lexer code common to all scanners has been
+			factored out into separate file, now shared.
+		validated against flex 2.5.4, 2.5.31 (gracias, Tadeo!)
+	  General portability improvements: (POSIX)
+		use printf over echo -n, project-wide Makefile.am's
+
+
 2008-03-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-08:
@@ -60,6 +74,16 @@
 	util library critical fixes (util/ChangeLog)
 
 
+2008-03-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-07:
+	  {lexer,parser}/*options.h: change cpp conditional to use defined()
+		on USING_{YACC,BISON}, easier to generate from configure.
+	  Elsewhere in project: Makefile maintainence, use printf vs. echo -n
+	  Now validated against flex 2.5.31 too.
+	  End of branch.
+
+
 2008-03-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-59:
@@ -70,6 +94,36 @@
 		and correctly overshadows globals with local parameters.  
 	  Added new test cases.  
 	  Branch now closed.  
+
+
+2008-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-06:
+	  Reasonable attempt to acommodate flex 2.5.33, but as was before
+		this branch, it still crashes, so it shall remain on the 
+		blacklist (described in README).
+		May consider investigating, this is the branch to do it.
+	  Makefile.am: use hand-written lexer/flex_common_marker.awk instead 
+		of lexer/flex_common_marker.patch, which is harder to
+		apply across flex variants.  AWK AWK AWK!
+	  lexer/flex_lexer_state.h: added yy_flex_debug member.
+	  No regressions.  
+
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-05:
+	  Makefile.am: replaced yyparse prototype sed-hack with updated
+		parameter (flex::lexer_state&).  
+		Validated against yacc skeleton 1.14, from *-apple-darwin8.  
+	  TODO: validate branch against other flex versions.
+
+
+2008-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-04:
+	  lexer/flex_common_marker.patch:
+		updated to soften patch match (flex 2.5.4, patch 2.5.9)
+		also validated against older bison-1.875.
+	  Makefile.am: added dependencies on patch file.
 
 
 2008-03-09	David Fang		<fangism@users.sourceforge.net>
@@ -164,6 +218,50 @@
 		X events from sink, where latter X's should have been vacuous.
 		Initially reported by Ilya Ganusov, reduced by Fang.  
 	  Fixed with test case prsim/channel-test-a-19.
+
+
+2008-03-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-03:
+	  Mission accomplished.
+	  Deleted rotten pasta code with opening temporary files for
+		parsing, by replacing with string-initialized lexer-state.
+		Wish code could be this elegant more often.  
+		Net reduction in line count!
+		Files: parser/instref.cc parser/type.cc
+
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-02:
+	  Makefile.am purge-ry, parser surgery, config patchery.
+	  configury: test minimalist example to determine properties
+		of the chosen parser generator.
+		e.g. no longer need MINIMUM_BOGOSITY token
+		Now have a proper yacc skeleton version string.
+	  Makefile.am: clean-up, better script re-use for maintainence, 
+		eliminating eye-sore duplicates
+	  lexer/*.ll: remove all references to yywrap and *_at_eof.
+	  parser/*.yy.in: eliminate MINIMUM_BOGOSITY placeholder, 
+		replace MAXUMIN_BOGOSITY with YYMAXTOKEN, aliases
+		to YYMAXUTOK for bison.
+	  Next: rewrite string parse calls.
+
+
+2008-03-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-01:
+	  New branch for invasive changes to lexers.  
+	  Extract code common to all generated lexers with 
+		lexer/flex_common_marker.patch and sed script.
+	  Makefile.am: some clean-up and re-use of script variables.
+		Generation of lexer/*-real.cc updated to use new patch.
+		NOTE: all lexer/*-lex-real.cc use the same patch!
+	  util/lang/lexyacc/lexyacc-prefix-generator.awk:
+		new option -v keep_common to NOT transform selected
+		symbols to make use of common-extracted functions.
+	  lexer/*.ll: replace *_at_eof() with flex_lexer_state::at_eof().
+	  automatically extract lexer/flex_buffer_state.h struct definition.
+	  Next: continued clean-up and also re-write of string parse calls.
+	  TODO: this is going to need re-validation against flex 2.5.31+
 
 
 2008-03-01	David Fang		<fangism@users.sourceforge.net>

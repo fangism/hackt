@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.26 2007/10/08 01:21:47 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.27 2008/03/21 00:20:18 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -319,12 +319,6 @@ static inline void
 MULTILINE_NEWLINE(token_position& p, const lexer_state& foo) {
 	p.leng = yyleng -1; NEWLINE_UPDATE();
 }
-
-/* checking whether or not we are at end of file, defined below */
-extern
-int
-hackt_at_eof(const flex::lexer_state&);
-
 
 static
 void
@@ -1043,48 +1037,9 @@ EMBEDFILE	^#FILE
 %%
 /****** user-code ************************************************************/
 
-/**
-	If this is already the outermost file, then return 1, 
-		signaling the end of all input.  
-	\return 0 to continue lexing, after restoring yyin to its 
-		former value.  
- */
-int yywrap(void) {
-#if 0
-	const bool err = (YYSTATE) != INITIAL;
-	if (err) {
-		// cerr << "yywrap() reached in state " << YYSTATE << 
-		//	", should be " << INITIAL << endl;
-		// then there was an unexpected (premature) EOF error
-		// hackt_parse_file_manager.dump_file_stack_top(cerr);
-		// hackt_parse_file_manager.dump_file_stack(cerr);
-	}
-	const size_t d = hackt_parse_file_manager.file_depth();
-	// cerr << "file-depth remaining = " << d << endl;
-	if (d > 1) {
-		input_manager::leave_file(yyin, hackt_parse_file_manager, 
-			err ? &cerr : NULL);
-		// yyrestart(yyin);	// need this?
-		return 0;
-	}
-	else
-#endif
-		return 1;		// no more input
-}
 
 namespace HAC {
 namespace lexer {
-/**
-	Public function that indicates whether or not the lexer is
-	in the EOF (end-of-file) state.  
-	This must be defined in this file because it makes reference
-	to a statically linked variable, (which makes it invisible 
-	to the outside world).  
- */
-int hackt_at_eof(const flex::lexer_state& foo) {
-	assert(YY_CURRENT_BUFFER);
-	return YY_CURRENT_BUFFER->yy_n_chars == 0;
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 /**
@@ -1101,7 +1056,7 @@ hackt_lex_expect(YYSTYPE& temp, lexer_state& foo,
 	const int expect = __hackt_lex(&temp, foo);
 	if (expect != tok) {
 		cerr << errmsg << endl;
-		if (!hackt_at_eof(foo)) {
+		if (!foo.at_eof()) {
 			yy_union_lookup_dump(temp, expect,
 				cerr << "got: ") << endl;
 			yy_union_lookup_delete(temp, expect);

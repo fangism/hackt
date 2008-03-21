@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.27 2007/11/27 06:10:10 fang Exp $
+	$Id: README,v 1.28 2008/03/21 00:19:15 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -33,12 +33,11 @@ be used to compile this project:
 	gcc-3.2.x or earlier
 
 The following compilers are supported and recommended:
-	gcc-3.3.x, -3.4.x, -4.0.x, -4.1.x
-	gcc-4.2-pre (20060610 prerelease in good standing so far)
+	gcc-3.3.x, -3.4.x, -4.0.x, -4.1.x, -4.2.x
 
 The following platforms and compilers are actively supported by this project:
 	Mac OS X 10.3+, gcc-3.3+ (either Apple* or FSF)
-	FreeBSD 4.3+, gcc-3.4+)
+	FreeBSD 4.3+, gcc-3.4+
 	SuSE (or any) linux, gcc-3.3+
 
 * Apple's gcc-4.0 release with OS X 10.4 (build 4061) is buggy and missing

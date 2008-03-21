@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.15 2007/11/30 09:45:22 fang Exp $
+#	$Id: Make.test-guile,v 1.16 2008/03/21 00:20:55 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -154,7 +154,7 @@ endif
 
 hacscm-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
-	$(ECHO) -n "" > $@ ; \
+	$(RM) $@ ; \
 	list='$(HACKT_GUILE_TEST_SCRIPTS_PASSES)' ; \
 	exts='hacscm-out' ; \
 	test -z "$$list" || \
@@ -163,7 +163,7 @@ hacscm-out.autodepend: Makefile
 	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
-	    $(ECHO) -n "$$target " ; \
+	    $(PRINTF) "$$target " ; \
 	  done ; \
 	  $(ECHO) ": $$obj" ; \
 	done > $@ ; \
@@ -174,7 +174,7 @@ AUTO_DEPENDS += hacscm-out.autodepend
 
 hacscmfail-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
-	$(ECHO) -n "" > $@ ; \
+	$(RM) $@ ; \
 	list='$(HACKT_GUILE_TEST_SCRIPTS_FAILURES)' ; \
 	exts='hacscmfail-out' ; \
 	test -z "$$list" || \
@@ -183,7 +183,7 @@ hacscmfail-out.autodepend: Makefile
 	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
-	    $(ECHO) -n "$$target " ; \
+	    $(PRINTF) "$$target " ; \
 	  done ; \
 	  $(ECHO) ": $$obj" ; \
 	done > $@ ; \
@@ -335,7 +335,7 @@ endif
 # NOTE: optional extra dependence on generated tracefile from other test
 hacchpsimscm-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
-	$(ECHO) -n "" > $@ ; \
+	$(RM) $@ ; \
 	rlist='$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_PASSES)' ; \
 	list='$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES)'" $$rlist" ; \
 	exts='hacchpsimscm-out' ; \
@@ -346,7 +346,7 @@ hacchpsimscm-out.autodepend: Makefile
 	  obj="$$obj "`$(CAT) "$$src" | $(EXTRACT_CHPSIMTRACE_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
-	    $(ECHO) -n "$$target " ; \
+	    $(PRINTF) "$$target " ; \
 	  done ; \
 	  $(ECHO) ": $$obj" ; \
 	done > $@ ; \
@@ -357,7 +357,7 @@ AUTO_DEPENDS += hacchpsimscm-out.autodepend
 
 hacchpsimscmfail-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
-	$(ECHO) -n "" > $@ ; \
+	$(RM) $@ ; \
 	rlist='$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_FAILURES)' ; \
 	list='$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES)'" $$rlist" ; \
 	exts='hacchpsimscmfail-out' ; \
@@ -368,7 +368,7 @@ hacchpsimscmfail-out.autodepend: Makefile
 	  obj="$$obj "`$(CAT) "$$src" | $(EXTRACT_CHPSIMTRACE_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
-	    $(ECHO) -n "$$target " ; \
+	    $(PRINTF) "$$target " ; \
 	  done ; \
 	  $(ECHO) ": $$obj" ; \
 	done > $@ ; \

@@ -1,9 +1,33 @@
 "ChangeLog"
 
+2008-03-20	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-09-merged-parser-06-07:
+	  Branch merge: improved lexer/parser configury checking.
+		Project-wide Makefiles use printf over echo -n for portability
+
+
 2008-03-17	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-07-merged-ACT-03-59:
 	  Branch merge.
+
+
+2008-03-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-07:
+	  Project-wide cleanup of "echo -n", replaced with equivalent
+		'printf' for POSIX standards-compliant behavior.  
+		echo is not required to accept options.
+	  config/lexyacc.m4: improved yacc/bison traits checking, 
+		no longer based on executable name, but generator output
+		which is much more reliable.
+
+
+2008-03-11	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-06:
+	  config/lexyacc.m4: detect and warn against known bad flex.
 
 
 2008-03-06	David Fang	<fangism@users.sourceforge.net>
@@ -11,6 +35,12 @@
 	* HACKT-00-01-04-main-00-82-02-ACT-03-56:
 	  Make.stddef, Make.global: added CLEANDIRS variable, cleandirs target
 		Revised check.log rule to catch more specific errors in log.
+
+
+2008-03-02	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-02:
+	  config/lexyacc.m4: added parser property tests.
 
 
 2008-02-28	David Fang	<fangism@users.sourceforge.net>

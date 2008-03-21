@@ -1,5 +1,18 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.32 2008/03/17 23:02:01 fang Exp $
+#	$Id: ChangeLog,v 1.33 2008/03/21 00:19:18 fang Exp $
+
+2008-03-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-09-merged-parser-06-07:
+	  Branch merge.
+
+
+2008-03-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-05-parser-06-07:
+	  mk/Make.* templates: use POSIX method of formatted printing, 
+		printf over echo -n (which doesn't always work).
+
 
 2008-02-19	David Fang		<fangism@users.sourceforge.net>
 

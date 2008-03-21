@@ -3,7 +3,7 @@
  *	vi: ft=lex
  *	Will flattens a HAC source file into a single file by dumping
  *	imported files (visit-once only).  
- *	$Id: hacflat-lex.ll,v 1.7 2007/11/20 01:31:16 cto3 Exp $
+ *	$Id: hacflat-lex.ll,v 1.8 2008/03/21 00:20:16 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -219,11 +219,6 @@ MULTILINE_NEWLINE(token_position& p, const lexer_state& foo) {
 	NEWLINE_UPDATE();
 }
 #endif
-
-/* checking whether or not we are at end of file, defined below */
-extern
-int
-hacflat_at_eof(const flex::lexer_state&);
 
 }	/* end namespace lexer */
 }	/* end namespace HAC */
@@ -648,31 +643,9 @@ IMPORT		"import"
 %%
 /****** user-code ************************************************************/
 
-/**
-	If this is already the outermost file, then return 1, 
-		signaling the end of all input.  
-	\return 0 to continue lexing, after restoring yyin to its 
-		former value.  
- */
-int yywrap(void) {
-	return 1;		// no more input
-}
-
 namespace HAC {
 namespace lexer {
 using util::good_bool;
-
-/**
-	Public function that indicates whether or not the lexer is
-	in the EOF (end-of-file) state.  
-	This must be defined in this file because it makes reference
-	to a statically linked variable, (which makes it invisible 
-	to the outside world).  
- */
-int hacflat_at_eof(const flex::lexer_state& foo) {
-	assert(YY_CURRENT_BUFFER);
-	return YY_CURRENT_BUFFER->yy_n_chars == 0;
-}
 
 /**
 	Internal routine for flattening source.  

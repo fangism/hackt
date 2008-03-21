@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.29 2008/03/17 23:01:56 fang Exp $
+	$Id: BRANCHES,v 1.30 2008/03/21 00:19:15 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -9,10 +9,6 @@ When a branch is merged for the last time, delete the entry from this file.
 
 Open branches:
 
-	HACKT-00-01-04-main-00-82-05-parser-06
-		invasive changes to lexer/parser infrastructure
-		goal: coalesce common symbols through linking, 
-			use yy_scan_string to avoid parsing temporary files!
 
 Coming soon:
 

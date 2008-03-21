@@ -2,7 +2,7 @@
  *	\file "lexer/instref-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: instref-lex.ll,v 1.5 2006/07/30 05:49:37 fang Exp $
+ *	$Id: instref-lex.ll,v 1.6 2008/03/21 00:20:19 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -95,9 +95,6 @@ NODE_POSITION_UPDATE(YYSTYPE& lval __YYLEX_PARAM) {
 	lval._node_position = new node_position(yytext, CURRENT);
 	TOKEN_UPDATE(__YYLEX_ARG_VOID);
 }
-
-/* checking whether or not we are at end of file, defined below */
-int instref_at_eof(void);
 
 }	/* end namespace lexer */
 }	/* end namespace HAC */
@@ -225,28 +222,4 @@ RANGE		".."
 %%
 /****** user-code ************************************************************/
 
-/**
-	\return 0 to continue lexing, after restoring yyin to its 
-		former value.  
- */
-int yywrap(void) {
-	return 1;		// no more input
-}
-
-namespace HAC {
-namespace lexer {
-/**
-	Public function that indicates whether or not the lexer is
-	in the EOF (end-of-file) state.  
-	This must be defined in this file because it makes reference
-	to a statically linked variable, (which makes it invisible 
-	to the outside world).  
- */
-int instref_at_eof(AT_EOF_PARAM) {
-	assert(YY_CURRENT_BUFFER);
-	return YY_CURRENT_BUFFER->yy_n_chars == 0;
-}
-
-}	/* end namespace lexer */
-}	/* end namespace HAC */
 

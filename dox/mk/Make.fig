@@ -1,5 +1,5 @@
 # "mk/Make.fig"
-#	$Id: Make.fig,v 1.4 2007/06/18 18:24:30 fang Exp $
+#	$Id: Make.fig,v 1.5 2008/03/21 00:19:36 fang Exp $
 #	vi: ft=automake
 # This makefile includes rules for converting to and from xfig figures.
 
@@ -36,7 +36,7 @@ endif
 	@$(ECHO) "Generating $@ from $<" ; \
 	pdf=`$(ECHO) $@ | $(SED) 's|figtex$$|pdftex_t|'` ; \
 	ps=`$(ECHO) $@ | $(SED) 's|figtex$$|pstex_t|'` ; \
-	$(ECHO) "\ifpdf\input{$$pdf}\else\input{$$ps}\fi" > $@
+	$(PRINTF) "\\\\ifpdf\\\\input{$$pdf}\\\\else\\\\input{$$ps}\\\\fi\\n" > $@
 
 if FIG2DEV_PDFTEX
 PDFTEX_LANG = pdftex
@@ -64,9 +64,9 @@ endif
 if HAVE_FIG2DEV
 	@$(ECHO) "$(FIG2DEV) -L$(PDFTEX_T_LANG) $< > $@ ..." ; \
 	pdf=`$(ECHO) $@ | $(SED) 's|\.pdftex_t$$||'` ; \
-	{ $(ECHO) "\begin{picture}(0,0)%" ; \
-	$(ECHO) "\includegraphics{$$pdf}%" ; \
-	$(ECHO) "\end{picture}%" ; \
+	{ $(PRINTF) "\\\\begin{picture}(0,0)%%\\n" ; \
+	$(PRINTF) "\\\\includegraphics{$$pdf}%%\\n" ; \
+	$(PRINTF) "\\\\end{picture}%%\\n" ; \
 	$(FIG2DEV) -L$(PDFTEX_T_LANG) $< ;} > $@
 else
 	@$(ECHO_NO_FIG2DEV)
@@ -97,9 +97,9 @@ endif
 if HAVE_FIG2DEV
 	@$(ECHO) "$(FIG2DEV) -Lpstex_t $< > $@ ..." ; \
 	ps=`$(ECHO) $@ | $(SED) 's|\.pstex_t$$||'` ; \
-	{ $(ECHO) "\begin{picture}(0,0)%" ; \
-	$(ECHO) "\includegraphics{$$ps}%" ; \
-	$(ECHO) "\end{picture}%" ; \
+	{ $(PRINTF) "\\\\begin{picture}(0,0)%%\\n" ; \
+	$(PRINTF) "\\\\includegraphics{$$ps}%%\\n" ; \
+	$(PRINTF) "\\\\end{picture}%%\\n" ; \
 	$(FIG2DEV) -Lpstex_t $< ;} > $@
 else
 	@$(ECHO_NO_FIG2DEV)

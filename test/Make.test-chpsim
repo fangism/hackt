@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.21 2008/03/17 23:03:27 fang Exp $
+#	$Id: Make.test-chpsim,v 1.22 2008/03/21 00:20:52 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -255,7 +255,7 @@ EXTRACT_CHPSIM_TRACE_UNDEP_PIPE = $(GREP) "^!rm" | $(CUT) -d\  -f2
 
 chpsimrc-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
-	$(ECHO) -n "" > $@ ; \
+	$(RM) $@ ; \
 	rlist='$(HACKT_CHPSIMRC_RANDOM_TEST_SCRIPTS_PASSES)' ; \
 	list='$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)'" $$rlist" ; \
 	exts='chpsimrc-out' ; \
@@ -267,7 +267,7 @@ chpsimrc-out.autodepend: Makefile
 	  antideps=`$(CAT) "$$src" | $(EXTRACT_ANTIDEPS_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
-	    $(ECHO) -n "$$target " ; \
+	    $(PRINTF) "$$target " ; \
 	  done ; \
 	  $(ECHO) ": $$obj $$deps" ; \
 	  mktrc=`$(CAT) $$src | $(EXTRACT_CHPSIM_TRACE_DEP_PIPE)` ; \
@@ -294,7 +294,7 @@ AUTO_DEPENDS += chpsimrc-out.autodepend
 
 chpsimrcfail-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
-	$(ECHO) -n "" > $@ ; \
+	$(RM) $@ ; \
 	rlist='$(HACKT_CHPSIMRC_RANDOM_TEST_SCRIPTS_FAILURES)' ; \
 	list='$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES)'" $$rlist" ; \
 	exts='chpsimrcfail-out' ; \
@@ -305,7 +305,7 @@ chpsimrcfail-out.autodepend: Makefile
 	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
-	    $(ECHO) -n "$$target " ; \
+	    $(PRINTF) "$$target " ; \
 	  done ; \
 	  $(ECHO) ": $$obj $$deps" ; \
 	done > $@ ; \

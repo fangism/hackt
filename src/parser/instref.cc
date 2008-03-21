@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.8 2008/02/09 02:57:40 fang Exp $
+	$Id: instref.cc,v 1.9 2008/03/21 00:20:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -35,10 +35,8 @@
 #include "Object/traits/type_tag_enum.h"
 #include "Object/entry_collection.h"
 #include "common/TODO.h"
-#include "util/libc.h"			// for tmpfile, rewind,...
 #include "util/tokenize_fwd.h"		// for string_list
 #include "util/memory/excl_ptr.h"
-#include "util/memory/deallocation_policy.h"
 #include "util/packed_array.h"		// for alias_collection_type
 
 extern
@@ -66,7 +64,6 @@ using std::ostream_iterator;
 using util::string_list;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
-using util::memory::FILE_tag;
 #include "util/using_ostream.h"
 //=============================================================================
 /**
@@ -76,51 +73,20 @@ using util::memory::FILE_tag;
  */
 excl_ptr<parser::inst_ref_expr>
 parse_reference(const char* s) {
-	STACKTRACE_VERBOSE;
-	typedef	excl_ptr<FILE, FILE_tag>	FILE_ptr;
 	typedef	excl_ptr<parser::inst_ref_expr>	return_type;
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(s);
-	const FILE_ptr temp(tmpfile());	// will automatically close on return
-	if (!temp) {
-		// Woe is me!
-		cerr << "Failed to create temporary file-buffer!" << endl;
-		THROW_EXIT;
+	YYSTYPE lval;
+	try {
+		flex::lexer_state f(s);	// can now pass string to parse!
+		instref_parse(NULL, lval, f);
+	} catch (...) {
+		cerr << "Error parsing instance name: " << s << endl;
+		return return_type(NULL);;
 	}
-	// TODO: look into setting the file buffer (setvbuf, setlinebuf...)
-	/**
-		libc WARNING! (a reminder of why I hate C...)
-		FreeBSD man page:
-		"The fputs() function returns 0 on success and EOF on error"
-		SuSE-linux man page:
-		"..fputs() return a non-negative number on success,
-			or EOF on error."
-		Thus we MUST compare against EOF, and not just check for 0.  
-		TODO: This will be done away with once we emit
-			C++-stream-style scanners and parsers.
-	 */
-	if (fputs(s, &*temp) == EOF) {
-		cerr << "Error writing string to temporary file." << endl;
-		THROW_EXIT;
-	} else {
-		// need newline or some whitespace to prevent
-		// lexer from premature EOF-ing.
-		fputc('\n', &*temp);
-		// the flush doesn't seem necessary from experiments
-		// hopefully this will save from frequent writes to the FS
-		// fflush(&*temp);
-		rewind(&*temp);		// same as fseek(temp, 0, SEEK_SET);
-		YYSTYPE lval;
-		try {
-			flex::lexer_state f(&*temp);
-			instref_parse(NULL, lval, f);
-		} catch (...) {
-			cerr << "Error parsing instance name: " << s << endl;
-			return return_type(NULL);;
-		}
-		// cerr << "parsed node name successfully... " << endl;
-		// here is our mini-parse-tree:
-		return return_type(lval._inst_ref_expr);
-	}
+	// cerr << "parsed node name successfully... " << endl;
+	// here is our mini-parse-tree:
+	return return_type(lval._inst_ref_expr);
 }
 
 //=============================================================================
