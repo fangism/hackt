@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.108 2008/03/21 00:56:09 fang Exp $
+	$Id: BUILDS,v 1.109 2008/03/21 20:44:38 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -36,9 +36,9 @@ CVS Tag: HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54
 c++: g++ (GCC) 3.3 20030304 (Apple Computer, Inc. build 1640)
 
 (Fang)
-Version: hackt 0.1.4-devel-20070913
-CVS Tag: HACKT-00-01-04-main-00-81-74
-Configured with: '--prefix=/usr/local/cad' '--disable-static' '--enable-fun' '--with-readline=/sw' 'YACC=/usr/bin/yacc' '--with-guile-config=guile-1.8-config' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
+Version: hackt 0.1.4-devel-20080317
+CVS Tag: HACKT-00-01-04-main-00-82-09-merged-parser-06-07
+Configured with: '--prefix=/usr/local/cad' '--enable-random-tests' '--disable-static' '--enable-fun' '--with-readline=/sw' 'YACC=/usr/bin/yacc' '--with-guile-config=guile-1.8-config' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
 build-triplet: powerpc-apple-darwin8.10.0
 c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5367)
 AM_CPPFLAGS: -I../../../src  -I/sw/include  
@@ -46,9 +46,9 @@ AM_LDFLAGS: -L/sw/lib
 config-CXXFLAGS: -g -O2
 config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
-yacc: /usr/bin/yacc
+yacc: $NetBSD: skeleton.c,v 1.14 1997/10/20 03:41:16 lukem Exp $
 readline: GNU readline 5.0
-guile: guile-1.8-config - Guile version 1.8.1
+guile: guile-1.8-config - Guile version 1.8.3
 
 (Fang)
 Version: hackt 0.1.4-devel-20070121
