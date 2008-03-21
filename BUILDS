@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.109 2008/03/21 20:44:38 fang Exp $
+	$Id: BUILDS,v 1.110 2008/03/21 23:27:23 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -436,22 +436,24 @@ guile: guile-config - Guile version 1.6.8
 i386-unknown-freebsd
 
 (Fang)
-Version: hackt 0.1.4-devel-20070808
-CVS Tag: HACKT-00-01-04-main-00-81-46
-Configured with: '--prefix=/usr/local/compiler' '--with-readline' 'CXXFLAGS=-g -O2 -Wno-undef' 'CFLAGS=-g -O2 -Wno-undef' 'YACC=yacc' '--without-guile-config' '-C' 'CC=ccache gcc-3.4.0' 'CXX=ccache g++-3.4.0'
+Version: hackt 0.1.4-devel-20080317
+CVS Tag: HACKT-00-01-04-main-00-82-09-merged-parser-06-07
+Configured with: '--prefix=/usr/local/compiler' '--with-readline' 'CXXFLAGS=-g0 -O2 -Wno-undef' 'CFLAGS=-g0 -O2 -Wno-undef' 'YACC=yacc' '--without-guile-config' '--disable-static' 'CONFIG_SHELL=/bin/sh' '-C' 'CC=ccache gcc-3.4.0' 'CXX=ccache g++-3.4.0' '--enable-ltdl-convenience'
 build-triplet: i386-unknown-freebsd4.3
 c++: g++-3.4.0 (GCC) 3.4.0
-config-CXXFLAGS: -g -O2 -Wno-undef
+config-CXXFLAGS: -g0 -O2 -Wno-undef
 config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
-yacc: /usr/bin/yacc
+yacc: $FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.28 2000/01/17 02:04:06 bde Exp $
 readline: GNU readline 5.0
 guile: 
+
 
 NOTE: -Wno-undef worked around a false-error in configure (autoconf-2.60) 
 	dying on an undefined HAVE_STDINT_H during AC_CHECK_SIZEOF.
 NOTE: guile disabled because version (1.4) is too old and unsupported
 
+(Fang)
 Version: hackt 0.1.4-devel-20070913
 CVS Tag: HACKT-00-01-04-main-00-81-74
 Configured with: '--prefix=/usr/local/cad' '--disable-static' '--with-readline' '--enable-fun' 'YACC=yacc' 'ACLOCAL_FLAGS=-I /usr/local/share/aclocal' '-C' 'CC=ccache gcc' 'CXX=ccache g++' --enable-ltdl-convenience
