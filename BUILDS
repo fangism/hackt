@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.110 2008/03/21 23:27:23 fang Exp $
+	$Id: BUILDS,v 1.111 2008/03/23 19:21:11 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -217,6 +217,21 @@ lex: flex version 2.5.4
 yacc: bison (GNU Bison) 2.3
 readline: GNU readline 5.0
 guile: guile-1.6-config - Guile version 1.6.7
+
+(Fang)
+Version: hackt 0.1.4-devel-20080317
+CVS Tag: HACKT-00-01-04-main-00-82-09-merged-parser-06-07
+Configured with: '--prefix=/usr/local/cad' '--disable-static' '--with-guile-config=guile-1.8-config' 'YACC=/usr/bin/yacc' '--enable-fun' '--with-readline=/sw' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
+build-triplet: i386-apple-darwin9.2.0
+c++: i686-apple-darwin9-g++-4.0.1 (GCC) 4.0.1 (Apple Inc. build 5465)
+AM_CPPFLAGS: -I../../../src  -I/sw/include  
+AM_LDFLAGS: -L/sw/lib  
+config-CXXFLAGS: -g -O2
+config-LIBS:  -lreadline -lncurses 
+lex: flex version 2.5.4
+yacc: bison (GNU Bison) 2.3
+readline: GNU readline 5.0
+guile: guile-1.8-config - Guile version 1.8.3
 
 (Fang)
 // with -O3
