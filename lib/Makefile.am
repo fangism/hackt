@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.27 2007/11/03 00:21:07 fang Exp $
+#	$Id: Makefile.am,v 1.28 2008/03/25 20:00:53 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -18,6 +18,10 @@ hacktlibdir = $(pkgdatadir)/lib
 
 vimdir = $(pkgdatadir)/vim
 
+# TODO: provide a path override to KDE home
+# does not really belong here
+katesyndir = $(datadir)/katepart/syntax
+
 # library writers: add stuff here that you want to be installed standard
 # TODO: organize a standard structure for library includes
 dist_hacktlib_DATA = \
@@ -34,9 +38,14 @@ dist_hacktlib_DATA = \
 	merge.hac \
 	mux.hac
 
+# vim syntax highlight support
 vim_DATA = \
 	support/hac.vim \
 	hac.vimrc
+
+# KDE editor syntax highlight support
+katesyn_DATA = \
+	support/hac.xml
 
 CLEANFILES += hac.vimrc
 
