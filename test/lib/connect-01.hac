@@ -1,0 +1,17 @@
+// "connect-01.hac"
+
+import "connect.hac";
+
+open std;
+
+reverse_bool_array<5> _a;
+rotate_bool_array<5> _b<2>;
+
+transpose_bool_array_2d<2,3> _c;
+
+transpose_bool_array_3d_ikj<1,2,3> _d1;
+transpose_bool_array_3d_jik<1,2,3> _d2;
+transpose_bool_array_3d_jki<1,2,3> _d3;
+transpose_bool_array_3d_kij<1,2,3> _d4;
+transpose_bool_array_3d_kji<1,2,3> _d5;
+

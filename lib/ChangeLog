@@ -1,5 +1,11 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.44 2007/11/02 23:46:54 fang Exp $
+#	$Id: ChangeLog,v 1.45 2008/03/25 23:59:13 fang Exp $
+
+2008-03-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-10+:
+	  Added connect.hac utility definitions, tested in test/lib.
+
 
 2006-09-26	David Fang	<fangism@users.sourceforge.net>
 

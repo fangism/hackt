@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.30 2008/03/17 23:03:51 fang Exp $
+#	$Id: Makefile.am,v 1.31 2008/03/25 23:59:15 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -14,6 +14,7 @@ HACKT_PARSE_TEST_PASSES = \
 	logic_wrap \
 	channel_wrap env_wrap buffer_wrap \
 	alternator_wrap \
+	connect_wrap \
 	e1of1-01 \
 	source-01 \
 	e1ofN-01 e1ofN-02 \
@@ -23,7 +24,8 @@ HACKT_PARSE_TEST_PASSES = \
 # 20061017: removed these tests, too much of a pain to update
 # will re-instate later with a better testing strategy.  
 
-HACKT_CREATE_TEST_PASSES =
+HACKT_CREATE_TEST_PASSES = \
+	connect-01
 HACKT_CREATE_TEST_FAILURES =
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)

@@ -1,0 +1,126 @@
+/**
+	\file "connect.hac"
+	Utilities to make connections.  
+	TODO: language needs to support type parameters!
+	$Id: connect.hac,v 1.1 2008/03/25 23:59:14 fang Exp $
+ */
+
+namespace std {
+//=============================================================================
+/**
+	Reverses a linear array of bools.
+ */
+export
+template <pint N>
+defproc reverse_bool_array(bool i[N], o[N]) {
+(;j:N:	i[j] = o[N-1-j];	)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Barrel-rotate an array of bools.  
+ */
+export
+template <pint N><pint K>
+defproc rotate_bool_array(bool i[N], o[N]) {
+(;j:N:	o[j] = i[(j+K) %N];	)
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Transposes a 2D array of bools.
+ */
+export
+template <pint N, M>
+defproc transpose_bool_array_2d(bool i[N][M], o[M][N]) {
+(;j:N:
+(;k:M:
+	i[j][k] = o[k][j];	
+)
+)
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Transposes a 3D array of bools (i,j,k) -> (i,k,j).
+ */
+export
+template <pint N, M, P>
+defproc transpose_bool_array_3d_ikj(bool i[N][M][P], o[N][P][M]) {
+(;j:N:
+(;k:M:
+(;l:P:
+	i[j][k][l] = o[j][l][k];	
+)
+)
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Transposes a 3D array of bools (i,j,k) -> (j,i,k).
+ */
+export
+template <pint N, M, P>
+defproc transpose_bool_array_3d_jik(bool i[N][M][P], o[M][N][P]) {
+(;j:N:
+(;k:M:
+(;l:P:
+	i[j][k][l] = o[k][j][l];	
+)
+)
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Transposes a 3D array of bools (i,j,k) -> (j,k,i).
+ */
+export
+template <pint N, M, P>
+defproc transpose_bool_array_3d_jki(bool i[N][M][P], o[M][P][N]) {
+(;j:N:
+(;k:M:
+(;l:P:
+	i[j][k][l] = o[k][l][j];	
+)
+)
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Transposes a 3D array of bools (i,j,k) -> (k,i,j).
+ */
+export
+template <pint N, M, P>
+defproc transpose_bool_array_3d_kij(bool i[N][M][P], o[P][N][M]) {
+(;j:N:
+(;k:M:
+(;l:P:
+	i[j][k][l] = o[l][j][k];	
+)
+)
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Transposes a 3D array of bools (i,j,k) -> (k,j,i).
+ */
+export
+template <pint N, M, P>
+defproc transpose_bool_array_3d_kji(bool i[N][M][P], o[P][M][N]) {
+(;j:N:
+(;k:M:
+(;l:P:
+	i[j][k][l] = o[l][k][j];	
+)
+)
+)
+}
+
+//=============================================================================
+}	// end namespace std
+
+

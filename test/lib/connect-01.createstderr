@@ -1,0 +1,1357 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	11	##ADDR##	namespc_	0	#HEAD#	#TAIL#	55
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	127
+	13	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	20	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	35	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	47	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	48	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	438
+	53	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	54	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	55	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	57	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	59	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	60	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	66	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	73	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	75	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	76	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	77	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	79	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	80	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	82	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	87	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	89	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	90	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	91	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	92	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	93	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	94	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	95	##ADDR##	footprnt	0	#HEAD#	#TAIL#	454
+	96	##ADDR##	procdefn	0	#HEAD#	#TAIL#	144
+	97	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	98	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	99	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	100	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	101	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	102	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	103	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	104	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	105	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
+	106	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	107	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	108	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	109	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	110	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	111	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	112	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	113	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	114	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	115	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	116	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	117	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
+	118	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	119	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	120	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	121	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	122	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	123	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	124	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	125	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	126	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	127	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	128	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	129	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	130	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	131	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	132	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	133	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	134	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	135	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	136	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	137	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	138	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	139	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	140	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	141	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	142	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	143	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	144	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
+	145	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	146	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	147	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	148	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
+	149	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	150	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	151	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	152	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	153	##ADDR##	footprnt	0	#HEAD#	#TAIL#	490
+	154	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
+	155	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	156	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	157	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	158	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	159	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	160	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	161	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	162	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	163	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	164	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	165	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	166	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	167	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	168	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	169	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	170	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	171	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	172	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	173	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	174	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	175	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	176	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	177	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	178	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	179	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	180	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	181	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	182	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	183	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	184	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	185	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	186	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	187	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	188	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	189	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	190	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	191	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	192	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	193	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	194	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	195	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	196	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	197	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	198	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	199	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	200	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	201	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	202	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	203	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	204	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	205	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	206	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	207	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	208	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	209	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	210	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	211	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	212	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	213	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	214	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	215	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	216	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	217	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	218	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	219	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	220	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	221	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	222	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	223	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	224	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	225	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	226	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	227	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	228	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	229	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	230	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	231	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	232	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	233	##ADDR##	footprnt	0	#HEAD#	#TAIL#	514
+	234	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
+	235	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	236	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	237	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	238	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	239	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	240	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	241	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	242	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	243	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	244	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	245	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	246	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	247	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	248	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	249	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	250	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	251	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	252	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	253	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	254	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	255	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	256	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	257	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	258	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	259	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	260	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	261	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	262	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	263	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	264	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	265	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	266	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	267	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	268	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	269	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	270	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	271	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	272	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	273	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	274	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	275	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	276	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	277	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	278	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	279	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	280	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	281	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	282	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	283	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	284	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	285	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	286	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	287	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	288	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	289	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	290	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	291	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	292	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	293	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	294	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	295	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	296	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	297	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	298	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	299	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	300	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	301	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	302	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	303	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	304	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	305	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	306	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	307	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	308	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	309	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	310	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	311	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	312	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	313	##ADDR##	footprnt	0	#HEAD#	#TAIL#	514
+	314	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
+	315	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	316	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	317	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	318	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	319	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	320	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	321	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	322	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	323	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	324	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	325	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	326	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	327	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	328	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	329	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	330	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	331	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	332	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	333	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	334	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	335	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	336	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	337	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	338	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	339	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	340	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	341	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	342	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	343	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	344	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	345	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	346	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	347	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	348	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	349	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	350	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	351	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	352	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	353	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	354	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	355	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	356	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	357	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	358	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	359	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	360	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	361	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	362	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	363	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	364	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	365	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	366	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	367	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	368	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	369	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	370	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	371	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	372	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	373	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	374	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	375	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	376	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	377	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	378	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	379	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	380	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	381	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	382	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	383	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	384	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	385	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	386	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	387	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	388	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	389	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	390	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	391	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	392	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	393	##ADDR##	footprnt	0	#HEAD#	#TAIL#	514
+	394	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
+	395	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	396	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	397	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	398	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	399	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	400	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	401	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	402	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	403	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	404	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	405	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	406	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	407	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	408	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	409	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	410	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	411	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	412	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	413	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	414	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	415	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	416	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	417	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	418	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	419	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	420	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	421	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	422	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	423	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	424	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	425	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	426	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	427	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	428	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	429	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	430	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	431	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	432	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	433	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	434	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	435	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	436	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	437	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	438	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	439	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	440	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	441	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	442	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	443	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	444	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	445	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	446	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	447	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	448	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	449	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	450	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	451	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	452	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	453	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	454	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	455	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	456	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	457	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	458	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	459	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	460	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	461	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	462	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	463	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	464	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	465	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	466	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	467	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	468	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	469	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	470	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	471	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	472	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	473	##ADDR##	footprnt	0	#HEAD#	#TAIL#	514
+	474	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
+	475	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	476	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	477	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	478	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	479	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	480	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	481	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	482	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	483	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	484	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	485	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	486	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	487	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	488	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	489	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	490	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	491	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	492	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	493	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	494	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	495	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	496	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	497	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	498	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	499	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	500	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	501	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	502	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	503	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	504	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	505	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	506	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	507	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	508	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	509	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	510	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	511	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	512	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	513	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	514	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	515	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	516	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	517	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	518	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	519	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	520	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	521	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	522	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	523	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	524	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	525	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	526	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	527	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	528	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	529	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	530	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	531	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	532	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	533	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	534	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	535	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	536	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	537	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	538	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	539	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	540	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	541	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	542	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	543	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	544	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	545	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	546	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	547	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	548	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	549	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	550	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	551	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	552	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	553	##ADDR##	footprnt	0	#HEAD#	#TAIL#	514
+	554	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	555	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	556	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	557	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	558	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	559	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	560	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	561	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	562	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	563	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	564	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	565	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	566	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	567	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	568	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	569	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	570	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	571	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	572	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	573	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	574	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	575	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	576	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	577	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	578	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	579	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	580	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	581	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2026
+	582	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	583	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	584	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	585	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	586	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	587	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	588	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	589	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	590	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  8 instantiation-collections
+  1 sub-namespaces
+  0 definitions
+  0 typedefs
+  Namespaces:
+    std =     In namespace "std", we have: {
+      0 parameter-collections
+      0 instantiation-collections
+      0 sub-namespaces
+      8 definitions
+      0 typedefs
+      Definitions:
+        reverse_bool_array = process-definition (defined) reverse_bool_array<
+          pint<> N
+          >(
+            bool<> i[0..N-1]
+            bool<> o[0..N-1]
+          )
+          In definition "reverse_bool_array", we have: {
+          Parameters:
+            N = pint<> std::reverse_bool_array::N
+          Instances:
+            i = bool<> std::reverse_bool_array::i^1
+            o = bool<> std::reverse_bool_array::o^1
+          unroll sequence: 
+            bool<> i[0..N-1]
+            bool<> o[0..N-1]
+            (;j:[0..N-1]:
+              i[$j] = o[(N-1)-$j];
+            )
+          footprint collection: {
+            <5> {
+              N = pint^0 value: 5
+              i = bool^1
+                {
+                  [0] = std::reverse_bool_array::i[0] (1) 
+                  [1] = std::reverse_bool_array::i[1] (2) 
+                  [2] = std::reverse_bool_array::i[2] (3) 
+                  [3] = std::reverse_bool_array::i[3] (4) 
+                  [4] = std::reverse_bool_array::i[4] (5) 
+                }
+              o = bool^1
+                {
+                  [0] = std::reverse_bool_array::i[4] (5) 
+                  [1] = std::reverse_bool_array::i[3] (4) 
+                  [2] = std::reverse_bool_array::i[2] (3) 
+                  [3] = std::reverse_bool_array::i[1] (2) 
+                  [4] = std::reverse_bool_array::i[0] (1) 
+                }
+              Created state:
+              bool instance pool:
+              1	std::reverse_bool_array::i[0]
+              2	std::reverse_bool_array::i[1]
+              3	std::reverse_bool_array::i[2]
+              4	std::reverse_bool_array::i[3]
+              5	std::reverse_bool_array::i[4]
+              bool port aliases:
+              1: std::reverse_bool_array::i[0] = std::reverse_bool_array::o[4]
+              2: std::reverse_bool_array::i[1] = std::reverse_bool_array::o[3]
+              3: std::reverse_bool_array::i[2] = std::reverse_bool_array::o[2]
+              4: std::reverse_bool_array::i[3] = std::reverse_bool_array::o[1]
+              5: std::reverse_bool_array::i[4] = std::reverse_bool_array::o[0]
+            }
+          }
+          }
+
+        rotate_bool_array = process-definition (defined) rotate_bool_array<
+          pint<> N
+          ><
+          pint<> K
+          >(
+            bool<> i[0..N-1]
+            bool<> o[0..N-1]
+          )
+          In definition "rotate_bool_array", we have: {
+          Parameters:
+            K = pint<> std::rotate_bool_array::K
+            N = pint<> std::rotate_bool_array::N
+          Instances:
+            i = bool<> std::rotate_bool_array::i^1
+            o = bool<> std::rotate_bool_array::o^1
+          unroll sequence: 
+            bool<> i[0..N-1]
+            bool<> o[0..N-1]
+            (;j:[0..N-1]:
+              o[$j] = i[($j+K)%N];
+            )
+          footprint collection: {
+            <5, 2> {
+              K = pint^0 value: 2
+              N = pint^0 value: 5
+              i = bool^1
+                {
+                  [0] = std::rotate_bool_array::i[0] (1) 
+                  [1] = std::rotate_bool_array::i[1] (2) 
+                  [2] = std::rotate_bool_array::i[2] (3) 
+                  [3] = std::rotate_bool_array::i[3] (4) 
+                  [4] = std::rotate_bool_array::i[4] (5) 
+                }
+              o = bool^1
+                {
+                  [0] = std::rotate_bool_array::i[2] (3) 
+                  [1] = std::rotate_bool_array::i[3] (4) 
+                  [2] = std::rotate_bool_array::i[4] (5) 
+                  [3] = std::rotate_bool_array::i[0] (1) 
+                  [4] = std::rotate_bool_array::i[1] (2) 
+                }
+              Created state:
+              bool instance pool:
+              1	std::rotate_bool_array::i[0]
+              2	std::rotate_bool_array::i[1]
+              3	std::rotate_bool_array::i[2]
+              4	std::rotate_bool_array::i[3]
+              5	std::rotate_bool_array::i[4]
+              bool port aliases:
+              1: std::rotate_bool_array::i[0] = std::rotate_bool_array::o[3]
+              2: std::rotate_bool_array::i[1] = std::rotate_bool_array::o[4]
+              3: std::rotate_bool_array::i[2] = std::rotate_bool_array::o[0]
+              4: std::rotate_bool_array::i[3] = std::rotate_bool_array::o[1]
+              5: std::rotate_bool_array::i[4] = std::rotate_bool_array::o[2]
+            }
+          }
+          }
+
+        transpose_bool_array_2d = process-definition (defined) transpose_bool_array_2d<
+          pint<> N
+          pint<> M
+          >(
+            bool<> i[0..N-1][0..M-1]
+            bool<> o[0..M-1][0..N-1]
+          )
+          In definition "transpose_bool_array_2d", we have: {
+          Parameters:
+            M = pint<> std::transpose_bool_array_2d::M
+            N = pint<> std::transpose_bool_array_2d::N
+          Instances:
+            i = bool<> std::transpose_bool_array_2d::i^2
+            o = bool<> std::transpose_bool_array_2d::o^2
+          unroll sequence: 
+            bool<> i[0..N-1][0..M-1]
+            bool<> o[0..M-1][0..N-1]
+            (;j:[0..N-1]:
+              (;k:[0..M-1]:
+                i[$j][$k] = o[$k][$j];
+              )
+            )
+          footprint collection: {
+            <2, 3> {
+              M = pint^0 value: 3
+              N = pint^0 value: 2
+              i = bool^2
+                {
+                  [0][0] = std::transpose_bool_array_2d::i[0][0] (1) 
+                  [0][1] = std::transpose_bool_array_2d::i[0][1] (2) 
+                  [0][2] = std::transpose_bool_array_2d::i[0][2] (3) 
+                  [1][0] = std::transpose_bool_array_2d::i[1][0] (4) 
+                  [1][1] = std::transpose_bool_array_2d::i[1][1] (5) 
+                  [1][2] = std::transpose_bool_array_2d::i[1][2] (6) 
+                }
+              o = bool^2
+                {
+                  [0][0] = std::transpose_bool_array_2d::i[0][0] (1) 
+                  [0][1] = std::transpose_bool_array_2d::i[1][0] (4) 
+                  [1][0] = std::transpose_bool_array_2d::i[0][1] (2) 
+                  [1][1] = std::transpose_bool_array_2d::i[1][1] (5) 
+                  [2][0] = std::transpose_bool_array_2d::i[0][2] (3) 
+                  [2][1] = std::transpose_bool_array_2d::i[1][2] (6) 
+                }
+              Created state:
+              bool instance pool:
+              1	std::transpose_bool_array_2d::i[0][0]
+              2	std::transpose_bool_array_2d::i[0][1]
+              3	std::transpose_bool_array_2d::i[0][2]
+              4	std::transpose_bool_array_2d::i[1][0]
+              5	std::transpose_bool_array_2d::i[1][1]
+              6	std::transpose_bool_array_2d::i[1][2]
+              bool port aliases:
+              1: std::transpose_bool_array_2d::i[0][0] = std::transpose_bool_array_2d::o[0][0]
+              2: std::transpose_bool_array_2d::i[0][1] = std::transpose_bool_array_2d::o[1][0]
+              3: std::transpose_bool_array_2d::i[0][2] = std::transpose_bool_array_2d::o[2][0]
+              4: std::transpose_bool_array_2d::i[1][0] = std::transpose_bool_array_2d::o[0][1]
+              5: std::transpose_bool_array_2d::i[1][1] = std::transpose_bool_array_2d::o[1][1]
+              6: std::transpose_bool_array_2d::i[1][2] = std::transpose_bool_array_2d::o[2][1]
+            }
+          }
+          }
+
+        transpose_bool_array_3d_ikj = process-definition (defined) transpose_bool_array_3d_ikj<
+          pint<> N
+          pint<> M
+          pint<> P
+          >(
+            bool<> i[0..N-1][0..M-1][0..P-1]
+            bool<> o[0..N-1][0..P-1][0..M-1]
+          )
+          In definition "transpose_bool_array_3d_ikj", we have: {
+          Parameters:
+            M = pint<> std::transpose_bool_array_3d_ikj::M
+            N = pint<> std::transpose_bool_array_3d_ikj::N
+            P = pint<> std::transpose_bool_array_3d_ikj::P
+          Instances:
+            i = bool<> std::transpose_bool_array_3d_ikj::i^3
+            o = bool<> std::transpose_bool_array_3d_ikj::o^3
+          unroll sequence: 
+            bool<> i[0..N-1][0..M-1][0..P-1]
+            bool<> o[0..N-1][0..P-1][0..M-1]
+            (;j:[0..N-1]:
+              (;k:[0..M-1]:
+                (;l:[0..P-1]:
+                  i[$j][$k][$l] = o[$j][$l][$k];
+                )
+              )
+            )
+          footprint collection: {
+            <1, 2, 3> {
+              M = pint^0 value: 2
+              N = pint^0 value: 1
+              P = pint^0 value: 3
+              i = bool^3
+                {
+                  [0][0][0] = std::transpose_bool_array_3d_ikj::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_ikj::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_ikj::i[0][0][2] (3) 
+                  [0][1][0] = std::transpose_bool_array_3d_ikj::i[0][1][0] (4) 
+                  [0][1][1] = std::transpose_bool_array_3d_ikj::i[0][1][1] (5) 
+                  [0][1][2] = std::transpose_bool_array_3d_ikj::i[0][1][2] (6) 
+                }
+              o = bool^3
+                {
+                  [0][0][0] = std::transpose_bool_array_3d_ikj::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_ikj::i[0][1][0] (4) 
+                  [0][1][0] = std::transpose_bool_array_3d_ikj::i[0][0][1] (2) 
+                  [0][1][1] = std::transpose_bool_array_3d_ikj::i[0][1][1] (5) 
+                  [0][2][0] = std::transpose_bool_array_3d_ikj::i[0][0][2] (3) 
+                  [0][2][1] = std::transpose_bool_array_3d_ikj::i[0][1][2] (6) 
+                }
+              Created state:
+              bool instance pool:
+              1	std::transpose_bool_array_3d_ikj::i[0][0][0]
+              2	std::transpose_bool_array_3d_ikj::i[0][0][1]
+              3	std::transpose_bool_array_3d_ikj::i[0][0][2]
+              4	std::transpose_bool_array_3d_ikj::i[0][1][0]
+              5	std::transpose_bool_array_3d_ikj::i[0][1][1]
+              6	std::transpose_bool_array_3d_ikj::i[0][1][2]
+              bool port aliases:
+              1: std::transpose_bool_array_3d_ikj::i[0][0][0] = std::transpose_bool_array_3d_ikj::o[0][0][0]
+              2: std::transpose_bool_array_3d_ikj::i[0][0][1] = std::transpose_bool_array_3d_ikj::o[0][1][0]
+              3: std::transpose_bool_array_3d_ikj::i[0][0][2] = std::transpose_bool_array_3d_ikj::o[0][2][0]
+              4: std::transpose_bool_array_3d_ikj::i[0][1][0] = std::transpose_bool_array_3d_ikj::o[0][0][1]
+              5: std::transpose_bool_array_3d_ikj::i[0][1][1] = std::transpose_bool_array_3d_ikj::o[0][1][1]
+              6: std::transpose_bool_array_3d_ikj::i[0][1][2] = std::transpose_bool_array_3d_ikj::o[0][2][1]
+            }
+          }
+          }
+
+        transpose_bool_array_3d_jik = process-definition (defined) transpose_bool_array_3d_jik<
+          pint<> N
+          pint<> M
+          pint<> P
+          >(
+            bool<> i[0..N-1][0..M-1][0..P-1]
+            bool<> o[0..M-1][0..N-1][0..P-1]
+          )
+          In definition "transpose_bool_array_3d_jik", we have: {
+          Parameters:
+            M = pint<> std::transpose_bool_array_3d_jik::M
+            N = pint<> std::transpose_bool_array_3d_jik::N
+            P = pint<> std::transpose_bool_array_3d_jik::P
+          Instances:
+            i = bool<> std::transpose_bool_array_3d_jik::i^3
+            o = bool<> std::transpose_bool_array_3d_jik::o^3
+          unroll sequence: 
+            bool<> i[0..N-1][0..M-1][0..P-1]
+            bool<> o[0..M-1][0..N-1][0..P-1]
+            (;j:[0..N-1]:
+              (;k:[0..M-1]:
+                (;l:[0..P-1]:
+                  i[$j][$k][$l] = o[$k][$j][$l];
+                )
+              )
+            )
+          footprint collection: {
+            <1, 2, 3> {
+              M = pint^0 value: 2
+              N = pint^0 value: 1
+              P = pint^0 value: 3
+              i = bool^3
+                {
+                  [0][0][0] = std::transpose_bool_array_3d_jik::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_jik::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_jik::i[0][0][2] (3) 
+                  [0][1][0] = std::transpose_bool_array_3d_jik::i[0][1][0] (4) 
+                  [0][1][1] = std::transpose_bool_array_3d_jik::i[0][1][1] (5) 
+                  [0][1][2] = std::transpose_bool_array_3d_jik::i[0][1][2] (6) 
+                }
+              o = bool^3
+                {
+                  [0][0][0] = std::transpose_bool_array_3d_jik::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_jik::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_jik::i[0][0][2] (3) 
+                  [1][0][0] = std::transpose_bool_array_3d_jik::i[0][1][0] (4) 
+                  [1][0][1] = std::transpose_bool_array_3d_jik::i[0][1][1] (5) 
+                  [1][0][2] = std::transpose_bool_array_3d_jik::i[0][1][2] (6) 
+                }
+              Created state:
+              bool instance pool:
+              1	std::transpose_bool_array_3d_jik::i[0][0][0]
+              2	std::transpose_bool_array_3d_jik::i[0][0][1]
+              3	std::transpose_bool_array_3d_jik::i[0][0][2]
+              4	std::transpose_bool_array_3d_jik::i[0][1][0]
+              5	std::transpose_bool_array_3d_jik::i[0][1][1]
+              6	std::transpose_bool_array_3d_jik::i[0][1][2]
+              bool port aliases:
+              1: std::transpose_bool_array_3d_jik::i[0][0][0] = std::transpose_bool_array_3d_jik::o[0][0][0]
+              2: std::transpose_bool_array_3d_jik::i[0][0][1] = std::transpose_bool_array_3d_jik::o[0][0][1]
+              3: std::transpose_bool_array_3d_jik::i[0][0][2] = std::transpose_bool_array_3d_jik::o[0][0][2]
+              4: std::transpose_bool_array_3d_jik::i[0][1][0] = std::transpose_bool_array_3d_jik::o[1][0][0]
+              5: std::transpose_bool_array_3d_jik::i[0][1][1] = std::transpose_bool_array_3d_jik::o[1][0][1]
+              6: std::transpose_bool_array_3d_jik::i[0][1][2] = std::transpose_bool_array_3d_jik::o[1][0][2]
+            }
+          }
+          }
+
+        transpose_bool_array_3d_jki = process-definition (defined) transpose_bool_array_3d_jki<
+          pint<> N
+          pint<> M
+          pint<> P
+          >(
+            bool<> i[0..N-1][0..M-1][0..P-1]
+            bool<> o[0..M-1][0..P-1][0..N-1]
+          )
+          In definition "transpose_bool_array_3d_jki", we have: {
+          Parameters:
+            M = pint<> std::transpose_bool_array_3d_jki::M
+            N = pint<> std::transpose_bool_array_3d_jki::N
+            P = pint<> std::transpose_bool_array_3d_jki::P
+          Instances:
+            i = bool<> std::transpose_bool_array_3d_jki::i^3
+            o = bool<> std::transpose_bool_array_3d_jki::o^3
+          unroll sequence: 
+            bool<> i[0..N-1][0..M-1][0..P-1]
+            bool<> o[0..M-1][0..P-1][0..N-1]
+            (;j:[0..N-1]:
+              (;k:[0..M-1]:
+                (;l:[0..P-1]:
+                  i[$j][$k][$l] = o[$k][$l][$j];
+                )
+              )
+            )
+          footprint collection: {
+            <1, 2, 3> {
+              M = pint^0 value: 2
+              N = pint^0 value: 1
+              P = pint^0 value: 3
+              i = bool^3
+                {
+                  [0][0][0] = std::transpose_bool_array_3d_jki::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_jki::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_jki::i[0][0][2] (3) 
+                  [0][1][0] = std::transpose_bool_array_3d_jki::i[0][1][0] (4) 
+                  [0][1][1] = std::transpose_bool_array_3d_jki::i[0][1][1] (5) 
+                  [0][1][2] = std::transpose_bool_array_3d_jki::i[0][1][2] (6) 
+                }
+              o = bool^3
+                {
+                  [0][0][0] = std::transpose_bool_array_3d_jki::i[0][0][0] (1) 
+                  [0][1][0] = std::transpose_bool_array_3d_jki::i[0][0][1] (2) 
+                  [0][2][0] = std::transpose_bool_array_3d_jki::i[0][0][2] (3) 
+                  [1][0][0] = std::transpose_bool_array_3d_jki::i[0][1][0] (4) 
+                  [1][1][0] = std::transpose_bool_array_3d_jki::i[0][1][1] (5) 
+                  [1][2][0] = std::transpose_bool_array_3d_jki::i[0][1][2] (6) 
+                }
+              Created state:
+              bool instance pool:
+              1	std::transpose_bool_array_3d_jki::i[0][0][0]
+              2	std::transpose_bool_array_3d_jki::i[0][0][1]
+              3	std::transpose_bool_array_3d_jki::i[0][0][2]
+              4	std::transpose_bool_array_3d_jki::i[0][1][0]
+              5	std::transpose_bool_array_3d_jki::i[0][1][1]
+              6	std::transpose_bool_array_3d_jki::i[0][1][2]
+              bool port aliases:
+              1: std::transpose_bool_array_3d_jki::i[0][0][0] = std::transpose_bool_array_3d_jki::o[0][0][0]
+              2: std::transpose_bool_array_3d_jki::i[0][0][1] = std::transpose_bool_array_3d_jki::o[0][1][0]
+              3: std::transpose_bool_array_3d_jki::i[0][0][2] = std::transpose_bool_array_3d_jki::o[0][2][0]
+              4: std::transpose_bool_array_3d_jki::i[0][1][0] = std::transpose_bool_array_3d_jki::o[1][0][0]
+              5: std::transpose_bool_array_3d_jki::i[0][1][1] = std::transpose_bool_array_3d_jki::o[1][1][0]
+              6: std::transpose_bool_array_3d_jki::i[0][1][2] = std::transpose_bool_array_3d_jki::o[1][2][0]
+            }
+          }
+          }
+
+        transpose_bool_array_3d_kij = process-definition (defined) transpose_bool_array_3d_kij<
+          pint<> N
+          pint<> M
+          pint<> P
+          >(
+            bool<> i[0..N-1][0..M-1][0..P-1]
+            bool<> o[0..P-1][0..N-1][0..M-1]
+          )
+          In definition "transpose_bool_array_3d_kij", we have: {
+          Parameters:
+            M = pint<> std::transpose_bool_array_3d_kij::M
+            N = pint<> std::transpose_bool_array_3d_kij::N
+            P = pint<> std::transpose_bool_array_3d_kij::P
+          Instances:
+            i = bool<> std::transpose_bool_array_3d_kij::i^3
+            o = bool<> std::transpose_bool_array_3d_kij::o^3
+          unroll sequence: 
+            bool<> i[0..N-1][0..M-1][0..P-1]
+            bool<> o[0..P-1][0..N-1][0..M-1]
+            (;j:[0..N-1]:
+              (;k:[0..M-1]:
+                (;l:[0..P-1]:
+                  i[$j][$k][$l] = o[$l][$j][$k];
+                )
+              )
+            )
+          footprint collection: {
+            <1, 2, 3> {
+              M = pint^0 value: 2
+              N = pint^0 value: 1
+              P = pint^0 value: 3
+              i = bool^3
+                {
+                  [0][0][0] = std::transpose_bool_array_3d_kij::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_kij::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_kij::i[0][0][2] (3) 
+                  [0][1][0] = std::transpose_bool_array_3d_kij::i[0][1][0] (4) 
+                  [0][1][1] = std::transpose_bool_array_3d_kij::i[0][1][1] (5) 
+                  [0][1][2] = std::transpose_bool_array_3d_kij::i[0][1][2] (6) 
+                }
+              o = bool^3
+                {
+                  [0][0][0] = std::transpose_bool_array_3d_kij::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_kij::i[0][1][0] (4) 
+                  [1][0][0] = std::transpose_bool_array_3d_kij::i[0][0][1] (2) 
+                  [1][0][1] = std::transpose_bool_array_3d_kij::i[0][1][1] (5) 
+                  [2][0][0] = std::transpose_bool_array_3d_kij::i[0][0][2] (3) 
+                  [2][0][1] = std::transpose_bool_array_3d_kij::i[0][1][2] (6) 
+                }
+              Created state:
+              bool instance pool:
+              1	std::transpose_bool_array_3d_kij::i[0][0][0]
+              2	std::transpose_bool_array_3d_kij::i[0][0][1]
+              3	std::transpose_bool_array_3d_kij::i[0][0][2]
+              4	std::transpose_bool_array_3d_kij::i[0][1][0]
+              5	std::transpose_bool_array_3d_kij::i[0][1][1]
+              6	std::transpose_bool_array_3d_kij::i[0][1][2]
+              bool port aliases:
+              1: std::transpose_bool_array_3d_kij::i[0][0][0] = std::transpose_bool_array_3d_kij::o[0][0][0]
+              2: std::transpose_bool_array_3d_kij::i[0][0][1] = std::transpose_bool_array_3d_kij::o[1][0][0]
+              3: std::transpose_bool_array_3d_kij::i[0][0][2] = std::transpose_bool_array_3d_kij::o[2][0][0]
+              4: std::transpose_bool_array_3d_kij::i[0][1][0] = std::transpose_bool_array_3d_kij::o[0][0][1]
+              5: std::transpose_bool_array_3d_kij::i[0][1][1] = std::transpose_bool_array_3d_kij::o[1][0][1]
+              6: std::transpose_bool_array_3d_kij::i[0][1][2] = std::transpose_bool_array_3d_kij::o[2][0][1]
+            }
+          }
+          }
+
+        transpose_bool_array_3d_kji = process-definition (defined) transpose_bool_array_3d_kji<
+          pint<> N
+          pint<> M
+          pint<> P
+          >(
+            bool<> i[0..N-1][0..M-1][0..P-1]
+            bool<> o[0..P-1][0..M-1][0..N-1]
+          )
+          In definition "transpose_bool_array_3d_kji", we have: {
+          Parameters:
+            M = pint<> std::transpose_bool_array_3d_kji::M
+            N = pint<> std::transpose_bool_array_3d_kji::N
+            P = pint<> std::transpose_bool_array_3d_kji::P
+          Instances:
+            i = bool<> std::transpose_bool_array_3d_kji::i^3
+            o = bool<> std::transpose_bool_array_3d_kji::o^3
+          unroll sequence: 
+            bool<> i[0..N-1][0..M-1][0..P-1]
+            bool<> o[0..P-1][0..M-1][0..N-1]
+            (;j:[0..N-1]:
+              (;k:[0..M-1]:
+                (;l:[0..P-1]:
+                  i[$j][$k][$l] = o[$l][$k][$j];
+                )
+              )
+            )
+          footprint collection: {
+            <1, 2, 3> {
+              M = pint^0 value: 2
+              N = pint^0 value: 1
+              P = pint^0 value: 3
+              i = bool^3
+                {
+                  [0][0][0] = std::transpose_bool_array_3d_kji::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_kji::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_kji::i[0][0][2] (3) 
+                  [0][1][0] = std::transpose_bool_array_3d_kji::i[0][1][0] (4) 
+                  [0][1][1] = std::transpose_bool_array_3d_kji::i[0][1][1] (5) 
+                  [0][1][2] = std::transpose_bool_array_3d_kji::i[0][1][2] (6) 
+                }
+              o = bool^3
+                {
+                  [0][0][0] = std::transpose_bool_array_3d_kji::i[0][0][0] (1) 
+                  [0][1][0] = std::transpose_bool_array_3d_kji::i[0][1][0] (4) 
+                  [1][0][0] = std::transpose_bool_array_3d_kji::i[0][0][1] (2) 
+                  [1][1][0] = std::transpose_bool_array_3d_kji::i[0][1][1] (5) 
+                  [2][0][0] = std::transpose_bool_array_3d_kji::i[0][0][2] (3) 
+                  [2][1][0] = std::transpose_bool_array_3d_kji::i[0][1][2] (6) 
+                }
+              Created state:
+              bool instance pool:
+              1	std::transpose_bool_array_3d_kji::i[0][0][0]
+              2	std::transpose_bool_array_3d_kji::i[0][0][1]
+              3	std::transpose_bool_array_3d_kji::i[0][0][2]
+              4	std::transpose_bool_array_3d_kji::i[0][1][0]
+              5	std::transpose_bool_array_3d_kji::i[0][1][1]
+              6	std::transpose_bool_array_3d_kji::i[0][1][2]
+              bool port aliases:
+              1: std::transpose_bool_array_3d_kji::i[0][0][0] = std::transpose_bool_array_3d_kji::o[0][0][0]
+              2: std::transpose_bool_array_3d_kji::i[0][0][1] = std::transpose_bool_array_3d_kji::o[1][0][0]
+              3: std::transpose_bool_array_3d_kji::i[0][0][2] = std::transpose_bool_array_3d_kji::o[2][0][0]
+              4: std::transpose_bool_array_3d_kji::i[0][1][0] = std::transpose_bool_array_3d_kji::o[0][1][0]
+              5: std::transpose_bool_array_3d_kji::i[0][1][1] = std::transpose_bool_array_3d_kji::o[1][1][0]
+              6: std::transpose_bool_array_3d_kji::i[0][1][2] = std::transpose_bool_array_3d_kji::o[2][1][0]
+            }
+          }
+          }
+
+    }
+  Instances:
+    _a = std::reverse_bool_array<5> _a
+    _b = std::rotate_bool_array<5> _b
+    _c = std::transpose_bool_array_2d<2, 3> _c
+    _d1 = std::transpose_bool_array_3d_ikj<1, 2, 3> _d1
+    _d2 = std::transpose_bool_array_3d_jik<1, 2, 3> _d2
+    _d3 = std::transpose_bool_array_3d_jki<1, 2, 3> _d3
+    _d4 = std::transpose_bool_array_3d_kij<1, 2, 3> _d4
+    _d5 = std::transpose_bool_array_3d_kji<1, 2, 3> _d5
+}
+
+footprint: {
+  _a = process std::reverse_bool_array<5>^0 = _a (1) (
+    i = bool^1
+      {
+        [0] = _a.i[0] (1) 
+        [1] = _a.i[1] (2) 
+        [2] = _a.i[2] (3) 
+        [3] = _a.i[3] (4) 
+        [4] = _a.i[4] (5) 
+      }
+    o = bool^1
+      {
+        [0] = _a.i[4] (5) 
+        [1] = _a.i[3] (4) 
+        [2] = _a.i[2] (3) 
+        [3] = _a.i[1] (2) 
+        [4] = _a.i[0] (1) 
+      }
+  )
+  _b = process std::rotate_bool_array<5>^0<2> = _b (2) (
+    i = bool^1
+      {
+        [0] = _b.i[0] (6) 
+        [1] = _b.i[1] (7) 
+        [2] = _b.i[2] (8) 
+        [3] = _b.i[3] (9) 
+        [4] = _b.i[4] (10) 
+      }
+    o = bool^1
+      {
+        [0] = _b.o[0] (11) 
+        [1] = _b.o[1] (12) 
+        [2] = _b.o[2] (13) 
+        [3] = _b.o[3] (14) 
+        [4] = _b.o[4] (15) 
+      }
+  )
+  _c = process std::transpose_bool_array_2d<2, 3>^0 = _c (3) (
+    i = bool^2
+      {
+        [0][0] = _c.i[0][0] (16) 
+        [0][1] = _c.i[0][1] (17) 
+        [0][2] = _c.i[0][2] (18) 
+        [1][0] = _c.i[1][0] (19) 
+        [1][1] = _c.i[1][1] (20) 
+        [1][2] = _c.i[1][2] (21) 
+      }
+    o = bool^2
+      {
+        [0][0] = _c.i[0][0] (16) 
+        [0][1] = _c.i[1][0] (19) 
+        [1][0] = _c.i[0][1] (17) 
+        [1][1] = _c.i[1][1] (20) 
+        [2][0] = _c.i[0][2] (18) 
+        [2][1] = _c.i[1][2] (21) 
+      }
+  )
+  _d1 = process std::transpose_bool_array_3d_ikj<1, 2, 3>^0 = _d1 (4) (
+    i = bool^3
+      {
+        [0][0][0] = _d1.i[0][0][0] (22) 
+        [0][0][1] = _d1.i[0][0][1] (23) 
+        [0][0][2] = _d1.i[0][0][2] (24) 
+        [0][1][0] = _d1.i[0][1][0] (25) 
+        [0][1][1] = _d1.i[0][1][1] (26) 
+        [0][1][2] = _d1.i[0][1][2] (27) 
+      }
+    o = bool^3
+      {
+        [0][0][0] = _d1.i[0][0][0] (22) 
+        [0][0][1] = _d1.i[0][1][0] (25) 
+        [0][1][0] = _d1.i[0][0][1] (23) 
+        [0][1][1] = _d1.i[0][1][1] (26) 
+        [0][2][0] = _d1.i[0][0][2] (24) 
+        [0][2][1] = _d1.i[0][1][2] (27) 
+      }
+  )
+  _d2 = process std::transpose_bool_array_3d_jik<1, 2, 3>^0 = _d2 (5) (
+    i = bool^3
+      {
+        [0][0][0] = _d2.i[0][0][0] (28) 
+        [0][0][1] = _d2.i[0][0][1] (29) 
+        [0][0][2] = _d2.i[0][0][2] (30) 
+        [0][1][0] = _d2.i[0][1][0] (31) 
+        [0][1][1] = _d2.i[0][1][1] (32) 
+        [0][1][2] = _d2.i[0][1][2] (33) 
+      }
+    o = bool^3
+      {
+        [0][0][0] = _d2.i[0][0][0] (28) 
+        [0][0][1] = _d2.i[0][0][1] (29) 
+        [0][0][2] = _d2.i[0][0][2] (30) 
+        [1][0][0] = _d2.i[0][1][0] (31) 
+        [1][0][1] = _d2.i[0][1][1] (32) 
+        [1][0][2] = _d2.i[0][1][2] (33) 
+      }
+  )
+  _d3 = process std::transpose_bool_array_3d_jki<1, 2, 3>^0 = _d3 (6) (
+    i = bool^3
+      {
+        [0][0][0] = _d3.i[0][0][0] (34) 
+        [0][0][1] = _d3.i[0][0][1] (35) 
+        [0][0][2] = _d3.i[0][0][2] (36) 
+        [0][1][0] = _d3.i[0][1][0] (37) 
+        [0][1][1] = _d3.i[0][1][1] (38) 
+        [0][1][2] = _d3.i[0][1][2] (39) 
+      }
+    o = bool^3
+      {
+        [0][0][0] = _d3.i[0][0][0] (34) 
+        [0][1][0] = _d3.i[0][0][1] (35) 
+        [0][2][0] = _d3.i[0][0][2] (36) 
+        [1][0][0] = _d3.i[0][1][0] (37) 
+        [1][1][0] = _d3.i[0][1][1] (38) 
+        [1][2][0] = _d3.i[0][1][2] (39) 
+      }
+  )
+  _d4 = process std::transpose_bool_array_3d_kij<1, 2, 3>^0 = _d4 (7) (
+    i = bool^3
+      {
+        [0][0][0] = _d4.i[0][0][0] (40) 
+        [0][0][1] = _d4.i[0][0][1] (41) 
+        [0][0][2] = _d4.i[0][0][2] (42) 
+        [0][1][0] = _d4.i[0][1][0] (43) 
+        [0][1][1] = _d4.i[0][1][1] (44) 
+        [0][1][2] = _d4.i[0][1][2] (45) 
+      }
+    o = bool^3
+      {
+        [0][0][0] = _d4.i[0][0][0] (40) 
+        [0][0][1] = _d4.i[0][1][0] (43) 
+        [1][0][0] = _d4.i[0][0][1] (41) 
+        [1][0][1] = _d4.i[0][1][1] (44) 
+        [2][0][0] = _d4.i[0][0][2] (42) 
+        [2][0][1] = _d4.i[0][1][2] (45) 
+      }
+  )
+  _d5 = process std::transpose_bool_array_3d_kji<1, 2, 3>^0 = _d5 (8) (
+    i = bool^3
+      {
+        [0][0][0] = _d5.i[0][0][0] (46) 
+        [0][0][1] = _d5.i[0][0][1] (47) 
+        [0][0][2] = _d5.i[0][0][2] (48) 
+        [0][1][0] = _d5.i[0][1][0] (49) 
+        [0][1][1] = _d5.i[0][1][1] (50) 
+        [0][1][2] = _d5.i[0][1][2] (51) 
+      }
+    o = bool^3
+      {
+        [0][0][0] = _d5.i[0][0][0] (46) 
+        [0][1][0] = _d5.i[0][1][0] (49) 
+        [1][0][0] = _d5.i[0][0][1] (47) 
+        [1][1][0] = _d5.i[0][1][1] (50) 
+        [2][0][0] = _d5.i[0][0][2] (48) 
+        [2][1][0] = _d5.i[0][1][2] (51) 
+      }
+  )
+  Created state:
+  process instance pool:
+  1	_a
+  2	_b<2>
+  3	_c
+  4	_d1
+  5	_d2
+  6	_d3
+  7	_d4
+  8	_d5
+  bool instance pool:
+  1	_a.i[0]
+  2	_a.i[1]
+  3	_a.i[2]
+  4	_a.i[3]
+  5	_a.i[4]
+  6	_b.i[0]
+  7	_b.i[1]
+  8	_b.i[2]
+  9	_b.i[3]
+  10	_b.i[4]
+  11	_b.o[0]
+  12	_b.o[1]
+  13	_b.o[2]
+  14	_b.o[3]
+  15	_b.o[4]
+  16	_c.i[0][0]
+  17	_c.i[0][1]
+  18	_c.i[0][2]
+  19	_c.i[1][0]
+  20	_c.i[1][1]
+  21	_c.i[1][2]
+  22	_d1.i[0][0][0]
+  23	_d1.i[0][0][1]
+  24	_d1.i[0][0][2]
+  25	_d1.i[0][1][0]
+  26	_d1.i[0][1][1]
+  27	_d1.i[0][1][2]
+  28	_d2.i[0][0][0]
+  29	_d2.i[0][0][1]
+  30	_d2.i[0][0][2]
+  31	_d2.i[0][1][0]
+  32	_d2.i[0][1][1]
+  33	_d2.i[0][1][2]
+  34	_d3.i[0][0][0]
+  35	_d3.i[0][0][1]
+  36	_d3.i[0][0][2]
+  37	_d3.i[0][1][0]
+  38	_d3.i[0][1][1]
+  39	_d3.i[0][1][2]
+  40	_d4.i[0][0][0]
+  41	_d4.i[0][0][1]
+  42	_d4.i[0][0][2]
+  43	_d4.i[0][1][0]
+  44	_d4.i[0][1][1]
+  45	_d4.i[0][1][2]
+  46	_d5.i[0][0][0]
+  47	_d5.i[0][0][1]
+  48	_d5.i[0][0][2]
+  49	_d5.i[0][1][0]
+  50	_d5.i[0][1][1]
+  51	_d5.i[0][1][2]
+}
