@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.173 2008/03/21 00:19:16 fang Exp $
+#	$Id: configure.ac,v 1.174 2008/03/25 23:29:41 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -404,6 +404,7 @@ AC_LANG_POP(C++)
 dnl test whether or not we're expecting 32b binari interface
 dnl this is used to expect binary differences on non-LP32 platforms.
 AM_CONDITIONAL(ABI_ILP32, test "$ac_cv_sizeof_size_t" = "4")
+AM_CONDITIONAL(ABI_ILP64, test "$ac_cv_sizeof_size_t" = "8")
 
 CFLAGS="$top_saved_CFLAGS"
 CXXFLAGS="$top_saved_CXXFLAGS"

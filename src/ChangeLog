@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-10:
+	  No source revision, just testing VPI under 64b native mode.
+
+
 2008-03-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-09-merged-parser-06-07:

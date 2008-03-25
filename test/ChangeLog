@@ -1,6 +1,12 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.82 2008/03/17 23:03:24 fang Exp $
+#	$Id: ChangeLog,v 1.83 2008/03/25 23:29:45 fang Exp $
 # ChangeLog for test directory.
+
+2008-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-10:
+	  Make.test-vpi: test VPI runs in -full64 mode automatically.
+
 
 2008-02-29	David Fang		<fangism@users.sourceforge.net>
 

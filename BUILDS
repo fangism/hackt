@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.111 2008/03/23 19:21:11 fang Exp $
+	$Id: BUILDS,v 1.112 2008/03/25 23:29:41 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -400,10 +400,10 @@ lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875
 readline: none
 
-(Fang)
+(Fang, with VCS-64!)
 Version: hackt 0.1.4-devel-20080317
-CVS Tag: HACKT-00-01-04-main-00-82-09-merged-parser-06-07
-Configured with: '--with-readline' '--disable-static' 'YACC=yacc' '--prefix=/usr/local/cad/cad64' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
+CVS Tag: HACKT-00-01-04-main-00-82-10
+Configured with: '--with-readline' '--with-vpi=/usr/local/cad/synopsys/vcs-mx/amd64' '--disable-static' 'YACC=yacc' '--prefix=/usr/local/cad/cad64' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
 build-triplet: x86_64-redhat-linux-gnu
 c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-8)
 config-CXXFLAGS: -g -O2
