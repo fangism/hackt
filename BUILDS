@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.112 2008/03/25 23:29:41 fang Exp $
+	$Id: BUILDS,v 1.113 2008/03/26 06:45:16 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -286,6 +286,18 @@ yacc: bison (GNU Bison) 2.3
 readline: GNU readline 5.2
 guile: guile-config - Guile version 1.8.1
 
+(Tadeo: CentOS)
+Version: hackt 0.1.4-devel-20080317
+CVS Tag: HACKT-00-01-04-main-00-82-09-merged-parser-06-07
+Configured with: '--with-readline' '--prefix=/usr/local/cad/' '--enable-ltdl-convenience'
+build-triplet: i686-pc-linux-gnu
+c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-9)
+config-CXXFLAGS: -g -O2
+config-LIBS:  -lreadline -lncurses
+lex: flex version 2.5.4
+yacc: bison (GNU Bison) 1.875c
+readline: GNU readline 4.3
+guile: none
 
 (Fang: duma)
 Version: hackt 0.1.4-devel-20070913
