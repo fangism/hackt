@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.113 2008/03/26 06:45:16 fang Exp $
+	$Id: BUILDS,v 1.114 2008/04/01 16:52:33 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -126,9 +126,9 @@ readline: GNU readline 5.0
 
 
 (Fang)
-Version: hackt 0.1.4-devel-20071007
-CVS Tag: HACKT-00-01-04-main-00-81-84
-Configured with: '--prefix=/usr/local/cad' '--enable-fun' '--with-editline' '--with-guile-config=guile-1.8-config' '-C' '--enable-ltdl-convenience'
+Version: hackt 0.1.4-devel-20080317
+CVS Tag: HACKT-00-01-04-main-00-82-10
+Configured with: '--enable-random-tests' '--prefix=/usr/local/cad' '--enable-fun' '--with-editline' '--with-guile-config=guile-1.8-config' '-C' '--enable-ltdl-convenience'
 build-triplet: powerpc-apple-darwin8.9.0
 c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5367)
 config-CXXFLAGS: -g -O2
@@ -136,7 +136,7 @@ config-LIBS: -ledit  -lncurses
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 2.3
 readline: BSD EditLine (histedit interface) ver. 2.9
-guile: guile-1.8-config - Guile version 1.8.2
+guile: guile-1.8-config - Guile version 1.8.3
 
 
 (Fang)
