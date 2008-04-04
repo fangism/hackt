@@ -1,0 +1,7 @@
+// "124.hac"
+// testing implicit conversion from pint to preal (arithmetic)
+
+pint WCH = 3;
+preal PS = WCH * 1.5;
+preal NS = WCH * 1.5;
+

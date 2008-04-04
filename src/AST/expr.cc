@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.32 2008/02/19 05:48:56 fang Exp $
+	$Id: expr.cc,v 1.33 2008/04/04 21:16:07 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -45,6 +45,7 @@
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/meta_index_list.h"
 #include "Object/expr/nonmeta_index_list.h"
+#include "Object/expr/convert_expr.h"
 #include "Object/expr/pbool_unary_expr.h"
 #include "Object/expr/pint_unary_expr.h"
 #include "Object/expr/pint_arith_expr.h"
@@ -166,6 +167,7 @@ using entity::meta_range_expr;
 using entity::nonmeta_func_call;
 using entity::physical_instance_placeholder;
 using entity::param_value_placeholder;
+using entity::convert_pint_to_preal_expr;
 
 //=============================================================================
 // local prototypes
@@ -1855,6 +1857,21 @@ if (li && ri) {
 	} else {
 		return ret;
 	}
+#if 1
+// accept implicit conversion from pint to preal
+} else if (li && rr) {
+	const count_ptr<convert_pint_to_preal_expr>
+		clr(new convert_pint_to_preal_expr(li));
+	const count_ptr<preal_arith_expr>
+		ret(new entity::preal_arith_expr(clr, ch, rr));
+	return ret;
+} else if (lr && ri) {
+	const count_ptr<convert_pint_to_preal_expr>
+		crr(new convert_pint_to_preal_expr(ri));
+	const count_ptr<preal_arith_expr>
+		ret(new entity::preal_arith_expr(lr, ch, crr));
+	return ret;
+#endif
 } else if (lb && rb) {
 	// accidentally using arithmetic operations on booleans
 	// will forgive with a warning for now...

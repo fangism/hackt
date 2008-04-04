@@ -1,0 +1,11 @@
+// "123.hac"
+// testing implicit conversion of heterogenous param arith expressions
+// namely pint -> preal implicit conversion
+
+pint Z = 3;
+preal pi = 3.1415936;
+
+preal three_pi = Z * pi;
+preal pi_three = pi * Z;
+
+

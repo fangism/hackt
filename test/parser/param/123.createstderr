@@ -1,0 +1,55 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	prealplh	0	#HEAD#	#TAIL#	30
+	6	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	prealplh	0	#HEAD#	#TAIL#	36
+	8	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	prealplh	0	#HEAD#	#TAIL#	36
+	10	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	prarthex	0	#HEAD#	#TAIL#	17
+	19	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	prarthex	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	313
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  4 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    Z = pint<> Z
+    pi = preal<> pi
+    pi_three = preal<> pi_three
+    three_pi = preal<> three_pi
+}
+
+footprint: {
+  Z = pint^0 value: 3
+  pi = preal^0 value: 3.14159
+  pi_three = preal^0 value: 9.42478
+  three_pi = preal^0 value: 9.42478
+  Created state:
+}
