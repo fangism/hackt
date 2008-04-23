@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.14 2008/03/17 23:03:03 fang Exp $
+	$Id: Node.h,v 1.15 2008/04/23 00:55:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -301,18 +301,10 @@ protected:
 		INVALID_EVENT_INDEX (0) means no pending event.  
 	 */
 	event_index_type			event_index;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	/**
 		Structure for tracking last cause, by node and value.  
 	 */
 	LastCause				causes;
-#else
-	/**
-		The firing of this node was caused by...
-		like last arriving input, for critical path analysis.  
-	 */
-	node_index_type				caused_by_node;
-#endif
 public:
 	/**
 		Transition counts.  
@@ -323,11 +315,7 @@ public:
 	NodeState() : parent_type(), value(LOGIC_OTHER), 
 		state_flags(NODE_INITIAL_STATE_FLAGS),
 		event_index(INVALID_EVENT_INDEX), 
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		causes(), 
-#else
-		caused_by_node(INVALID_NODE_INDEX), 
-#endif
 		tcount(0) { }
 
 	/// count on compiler to optimize zero comparison
@@ -336,7 +324,6 @@ public:
 		return event_index != INVALID_EVENT_INDEX;
 	}
 
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	/**
 		By default, uses the current value.  
 	 */
@@ -354,13 +341,6 @@ public:
 	get_cause(const uchar v) const {
 		return causes.get_cause(v);
 	}
-#else
-	node_index_type
-	get_cause_node(void) const { return caused_by_node; }
-
-	void
-	set_cause_node(const node_index_type ci) { caused_by_node = ci; }
-#endif
 
 	event_index_type
 	get_event(void) const { return event_index; }
@@ -430,17 +410,12 @@ public:
 	uchar
 	current_value(void) const { return value; }
 
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	void
 	set_value_and_cause(const uchar c, const event_cause_type& e) {
 		value = c;
 		causes.set_cause(c, e);
 	}
-#else
-	void
-	set_value(const uchar c) { value = c; }
 
-#endif
 	ostream&
 	dump_value(ostream&) const;
 

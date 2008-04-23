@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.11 2008/03/17 23:03:03 fang Exp $
+	$Id: Node.cc,v 1.12 2008/04/23 00:55:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -169,12 +169,8 @@ NodeState::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
 void
 NodeState::initialize(void) {
 	event_index = INVALID_EVENT_INDEX;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	// placement destruct for good measure?
 	new (&causes) LastCause;	// placement construct to initialize
-#else
-	caused_by_node = INVALID_NODE_INDEX;
-#endif
 	value = LOGIC_OTHER;
 	tcount = 0;
 	state_flags |= NODE_INITIALIZE_SET_MASK;
@@ -188,12 +184,8 @@ NodeState::initialize(void) {
 void
 NodeState::reset(void) {
 	event_index = INVALID_EVENT_INDEX;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	// placement destruct for good measure?
 	new (&causes) LastCause;	// placement construct to initialize
-#else
-	caused_by_node = INVALID_NODE_INDEX;
-#endif
 	value = LOGIC_OTHER;
 	tcount = 0;
 	state_flags = NODE_INITIAL_STATE_FLAGS;
@@ -277,11 +269,7 @@ NodeState::save_state(ostream& o) const {
 	write_value(o, value);
 	write_value(o, state_flags);
 //	omit event index, which is reconstructed
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	causes.save_state(o);
-#else
-	write_value(o, caused_by_node);
-#endif
 	write_value(o, tcount);
 #if NODE_ALIGN_MARKERS
 	static const char dd = 0xDD;
@@ -307,11 +295,7 @@ NodeState::load_state(istream& i) {
 	read_value(i, state_flags);
 //	omit event index, which is reconstructed
 	INVARIANT(event_index == INVALID_EVENT_INDEX);
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	causes.load_state(i);
-#else
-	read_value(i, caused_by_node);
-#endif
 	read_value(i, tcount);
 #if NODE_ALIGN_MARKERS
 	read_value(i, dd);
@@ -331,11 +315,7 @@ NodeState::dump_checkpoint_state(ostream& o, istream& i) {
 	temp.load_state(i);
 	temp.dump_value(o) << '\t' << size_t(temp.state_flags) <<
 		'\t';
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	temp.causes.dump_checkpoint_state(o);
-#else
-	o << temp.caused_by_node;
-#endif
 	return o << '\t' << temp.tcount;
 }
 

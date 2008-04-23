@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.3 2008/03/17 23:03:04 fang Exp $
+	$Id: State-prsim.h,v 1.4 2008/04/23 00:55:47 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -98,14 +98,10 @@ public:
 	typedef	delay_policy<time_type>		time_traits;
 	typedef	NodeState			node_type;
 	typedef	node_type::event_cause_type	event_cause_type;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	/**
 		NOTE: pass by event_cause_type by reference.  
 	 */
 	typedef	const event_cause_type&		cause_arg_type;
-#else
-	typedef	const node_index_type		cause_arg_type;
-#endif
 	typedef	ExprState			expr_type;
 	typedef	ExprGraphNode			graph_node_type;
 	typedef	Event				event_type;
@@ -506,10 +502,8 @@ public:
 	string
 	get_node_canonical_name(const node_index_type) const;
 
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	void
 	backtrace_node(ostream&, const node_index_type) const;
-#endif
 
 	/// only called by ExprAlloc
 	void
@@ -1014,11 +1008,7 @@ private:
 		pull_enum prev, pull_enum next);
 
 	break_type
-	propagate_evaluation(cause_arg_type, expr_index_type, pull_enum prev
-#if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		, pull_enum next
-#endif
-		);
+	propagate_evaluation(cause_arg_type, expr_index_type, pull_enum prev);
 
 #if 0
 	void

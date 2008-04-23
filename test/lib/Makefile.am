@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.31 2008/03/25 23:59:15 fang Exp $
+#	$Id: Makefile.am,v 1.32 2008/04/23 00:55:49 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -15,6 +15,7 @@ HACKT_PARSE_TEST_PASSES = \
 	channel_wrap env_wrap buffer_wrap \
 	alternator_wrap \
 	connect_wrap \
+	connect-01 \
 	e1of1-01 \
 	source-01 \
 	e1ofN-01 e1ofN-02 \

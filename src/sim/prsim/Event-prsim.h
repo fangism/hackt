@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.2 2008/03/17 23:02:59 fang Exp $
+	$Id: Event-prsim.h,v 1.3 2008/04/23 00:55:44 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -88,21 +88,10 @@ public:
 		The index of the node to switch.
 	 */
 	node_index_type			node;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	/**
 		The (node, value) pair that spawned this event.
 	 */
 	cause_type			cause;
-#else
-	/**
-		The index of the node that caused this event to 
-		become enqueued.  
-		This is often the last arriving input to some guard
-		expression, but can also be attributed to exclusive rings.  
-		This index may be null/invalid.  
-	 */
-	node_index_type			cause_node;
-#endif
 	/**
 		The index of the rule expression that caused this to fire, 
 		also the source of the delay value.  
@@ -145,11 +134,7 @@ protected:
 	// note: room for one more short int
 public:
 	Event() : node(INVALID_NODE_INDEX),
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		cause(), 
-#else
-		cause_node(INVALID_NODE_INDEX), 
-#endif
 		cause_rule(INVALID_RULE_INDEX), 
 		val(0), 
 		flags(EVENT_FLAGS_DEFAULT_VALUE) { }
@@ -160,11 +145,7 @@ public:
 		\param w true for weak rules
 	 */
 	Event(const node_index_type n,
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		const cause_type& c, 
-#else
-		const node_index_type c, 
-#endif
 		const rule_index_type r, 
 		const uchar v
 #if PRSIM_WEAK_RULES
@@ -172,11 +153,7 @@ public:
 #endif
 		) :
 		node(n),
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		cause(c), 
-#else
-		cause_node(c), 
-#endif
 		cause_rule(r),
 		val(v),
 		flags(
@@ -214,11 +191,7 @@ public:
 
 	void
 	set_cause_node(const node_index_type ni) {
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		cause.node = ni;
-#else
-		cause_node = ni;
-#endif
 	}
 
 	void

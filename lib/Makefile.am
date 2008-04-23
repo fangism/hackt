@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.29 2008/03/25 23:59:14 fang Exp $
+#	$Id: Makefile.am,v 1.30 2008/04/23 00:55:38 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -45,7 +45,7 @@ vim_DATA = \
 	hac.vimrc
 
 # KDE editor syntax highlight support
-katesyn_DATA = \
+dist_katesyn_DATA = \
 	support/hac.xml
 
 CLEANFILES += hac.vimrc

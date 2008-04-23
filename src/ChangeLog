@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-04-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-12:
+	  prsim: perm'd switch PRSIM_SEPARATE_CAUSE_NODE_DIRECTION, 
+		which has been stable since 2006.  (cleaner!)
+
+
 2008-04-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-11:

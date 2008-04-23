@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.5 2008/03/17 23:03:05 fang Exp $
+	$Id: devel_switches.h,v 1.6 2008/04/23 00:55:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -38,10 +38,10 @@
 	Consequence: more memory per node, due to increased structure size.  
 	Status: done and tested, save for new dependent features.
 	Goal: 1
-	Status: completed, stable, tested for a long time, perm-ready
+	Status: Perm'd
 		Only reason to not use: memory reduction.
  */
-#define	PRSIM_SEPARATE_CAUSE_NODE_DIRECTION		1
+// #define	PRSIM_SEPARATE_CAUSE_NODE_DIRECTION		1
 
 /**
 	Whether or not cause history should bother tracking timestamps.  
@@ -62,7 +62,6 @@
 	Note: this should not cause any regressions on previous simulations
 		that were never aware of the weak attribute.  
 	Status: done, fairly tested
-	Priority: TOP
  */
 #define	PRSIM_WEAK_RULES				1
 
@@ -77,7 +76,6 @@
 	Status: done, fairly tested
 	Note: this should be orthogonal to weak rules
 	Rationale: for synchronous circuit simulation.  
-	Priority: HIGH
  */
 #define	PRSIM_ALLOW_OVERTAKE_EVENTS			1
 
@@ -87,10 +85,35 @@
 	Rationale: legacy prsim support, testing utility and convenience
 	Status: complete, tested, though interface may change in future
 	Priority: high
-	TODO: preserve/restore some channel state in checkpoints?
 	TODO: test support for validity protocol channels
  */
 #define	PRSIM_CHANNEL_SUPPORT				1
+
+/**
+	INVASIVE change.
+	Eliminate pre-translated, allocated top-level expressions in favor
+	of performing footprint translationsat run-time.
+	Tradeoff: slower, but much more memory-scalable.
+	Rationale: memory is more critical for massive designs
+	Priority: HIGH
+	Goal: 1
+	Status: not begun
+ */
+#define	PRSIM_INDIRECT_EXPRESSION_MAP			0
+
+/**
+	Complete rewrite of prsim event system core, accounting properly
+	for strength of rules, etc.
+	Rationale: the current hacked spaghetti mess is both
+		incomprehensible and unmaintainable.
+		Rewrite will gain back performance, from simplicity.
+	Status: not begun
+	Priority: high
+	Goal: 1
+ */
+#define	PRSIM_NEW_EVENT_MODEL				0
+
+// TODO: prsim-guile interface
 
 //-----------------------------------------------------------------------------
 // ready-to-commit the flags below

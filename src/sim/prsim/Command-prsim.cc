@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.5 2008/03/17 23:02:56 fang Exp $
+	$Id: Command-prsim.cc,v 1.6 2008/04/23 00:55:42 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2094,7 +2094,6 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Time, PRSIM::info)
 //	"confirm assertions silently")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 /***
 @texinfo cmd/backtrace.texi
 @deffn Command backtrace node
@@ -2133,8 +2132,6 @@ BackTrace::usage(ostream& o) {
 "This is useful for finding critical paths and diagnosing instabilities."
 	<< endl;
 }
-
-#endif	// PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

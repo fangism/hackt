@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.8 2008/03/17 23:03:04 fang Exp $
+	$Id: State-prsim.cc,v 1.9 2008/04/23 00:55:47 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -70,11 +70,8 @@
 #define	DEBUG_FANOUT_PRINT(x)
 #endif
 
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+// PRSIM_SEPARATE_CAUSE_NODE_DIRECTION == 1
 #define	EMPTY_CAUSE			event_cause_type()
-#else
-#define	EMPTY_CAUSE			INVALID_NODE_INDEX
-#endif
 
 /**
 	Currently, the rule map is just a map to structural information
@@ -552,7 +549,6 @@ State::get_node(const node_index_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 /**
 	Traces backwards in event history until repeat (cycle) found.  
  */
@@ -589,7 +585,6 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 		o << "(no cycle)" << endl;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1577,12 +1572,8 @@ for ( ; i!=e; ++i) {
 			// always set the cause and new value together
 			event_type& pe(get_event(_n.get_event()));
 			pe.val = node_type::LOGIC_OTHER;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 			pe.cause.node = ev.cause.node;
 			pe.cause.val = ev.cause.val;
-#else
-			pe.cause_node = ev.cause_node;
-#endif
 			__deallocate_pending_interference_event(ne);
 		} else {
 			INVARIANT(dequeue_unstable_events());
@@ -1626,12 +1617,8 @@ for ( ; i!=e; ++i) {
 			// always set the cause and new value together
 			event_type& pe(get_event(_n.get_event()));
 			pe.val = node_type::LOGIC_OTHER;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 			pe.cause.node = ev.cause.node;
 			pe.cause.val = ev.cause.val;
-#else
-			pe.cause_node = ev.cause_node;
-#endif
 			__deallocate_pending_interference_event(ne);
 		} else {
 			INVARIANT(dequeue_unstable_events());
@@ -1995,11 +1982,7 @@ State::enforce_exclhi(cause_arg_type c) {
 	***/
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
-#else
-	const node_index_type& ni(c);		// alias
-#endif
 	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
 for ( ; i!=e; ++i) {
 	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
@@ -2059,11 +2042,7 @@ State::enforce_excllo(cause_arg_type c) {
 	***/
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
-#else
-	const node_index_type& ni(c);
-#endif
 	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
 for ( ; i!=e; ++i) {
 	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
@@ -2319,12 +2298,8 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	const uchar prev = n.current_value();
 	node_index_type _ci;	// just a copy
 {
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const event_cause_type& cause(pe.cause);
 	const node_index_type& ci(cause.node);
-#else
-	const node_index_type ci = pe.cause_node;
-#endif
 	_ci = ci;
 	DEBUG_STEP_PRINT("examining node: " <<
 		get_node_canonical_name(ni) << endl);
@@ -2377,12 +2352,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 		}
 	}
 	// only set the cause of the node when we change its value
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	n.set_value_and_cause(pe.val, cause);
-#else
-	n.set_cause_node(ci);
-	n.set_value(pe.val);
-#endif
 	// count transition only if new value is not X
 	if (pe.val != node_type::LOGIC_OTHER) {
 		++n.tcount;
@@ -2395,9 +2365,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	// could scope the reference to prevent it...
 	const uchar next = n.current_value();
 	// value propagation...
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const event_cause_type new_cause(ni, next);
-#endif
 {
 	typedef	node_type::const_fanout_iterator	const_iterator;
 	const_iterator i, e;
@@ -2416,15 +2384,9 @@ if (eval_ordering_is_random()) {
 		// when evaluating a node as an expression, 
 		// is appropriate to interpret node value
 		// as a pull-value
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		if (UNLIKELY(propagate_evaluation(new_cause, *i, pull_enum(prev)))) {
 			stop();
 		}
-#else
-		if (UNLIKELY(propagate_evaluation(ni, *i, prev, pull_enum(next)))) {
-			stop();
-		}
-#endif
 	}
 }
 #if PRSIM_CHANNEL_SUPPORT
@@ -2514,20 +2476,12 @@ if (n.in_channel()) {
 
 	// exclhi ring enforcement
 	if (n.has_mk_exclhi() && (next == node_type::LOGIC_LOW)) {
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		enforce_exclhi(new_cause);
-#else
-		enforce_exclhi(ni);
-#endif
 	}	// end if (exclhi enforcement)
 
 	// excllo ring enforcement
 	if (n.has_mk_excllo() && (next == node_type::LOGIC_HIGH)) {
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		enforce_excllo(new_cause);
-#else
-		enforce_excllo(ni);
-#endif
 	}	// end if (excllo enforcement)
 
 	// energy estimation?  TODO later for a different sim variant
@@ -2670,24 +2624,13 @@ State::propagate_evaluation(
 		cause_arg_type c, 
 		expr_index_type ui, 
 		pull_enum prev
-#if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		, pull_enum next
-#endif 
 		) {
 	STACKTRACE_VERBOSE_STEP;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
 	pull_enum next;	// just local variable
-#else
-	const node_index_type& ni(c);
-#endif
 	// when evaluating node as expression, interpret value as pull
 	const evaluate_return_type
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		ev_result(evaluate(ni, ui, prev, pull_enum(c.val)));
-#else
-		ev_result(evaluate(ni, ui, prev, next));
-#endif
 	if (!ev_result.node_index) {
 		return false;
 	}
@@ -3215,12 +3158,7 @@ if (!n.pending_event()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 State::__report_cause(ostream& o, const event_type& ev) const {
-	const node_index_type&
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		ni(ev.cause.node);
-#else
-		ni(ev.cause_node);
-#endif
+	const node_index_type& ni(ev.cause.node);
 	if (ni) {
 		o << ">> cause: `" <<
 			get_node_canonical_name(ni) << "\' (val: ";
@@ -3314,11 +3252,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 #if PRSIM_WEAK_RULES
 	DEBUG_STEP_PRINT("is " << (weak ? "" : "not") << " weak" << endl);
 #endif
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
-#else
-	const node_index_type& ni(c);	// alias
-#endif
 	break_type err = false;
 	// something is amiss!
 	const uchar eu = dir ?
@@ -3757,13 +3691,11 @@ State::dump_event_force(ostream& o, const event_index_type ei,
 		o << '\t' << t << '\t' <<
 			get_node_canonical_name(ev.node) << " : " <<
 			node_type::value_to_char[ev.val];
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		if (ev.cause.node) {
 			o << '\t' << "[from " <<
 			get_node_canonical_name(ev.cause.node) << ":=" <<
 			node_type::value_to_char[ev.cause.val] << "]";
 		}
-#endif
 #if PRSIM_WEAK_RULES
 		if (ev.is_weak()) { o << '\t' << "(weak)"; }
 #endif
