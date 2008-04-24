@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.9 2008/03/21 00:20:32 fang Exp $
+	$Id: instref.cc,v 1.10 2008/04/24 22:47:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,6 +24,7 @@
 #include <string>
 #include "AST/parse_context.h"
 #include "Object/module.h"
+#include "Object/common/namespace.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/expr/expr_dump_context.h"
@@ -240,6 +241,56 @@ parse_name_to_what(ostream& o, const string& n, const module& m) {
 		r.inst_ref()->dump_type_size(o) << endl;
 		return 0;
 	}
+}
+
+//=============================================================================
+/**
+	Prints list of members of the definition of the referenced type.
+	TODO: currently uses pre-instantiated definition's members, 
+	which may include conditionally instantiated members.  
+	\return 0 upon success, 1 upon error.  
+ */
+int
+parse_name_to_members(ostream& o, const string& n, const module& m) {
+	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
+	STACKTRACE_VERBOSE;
+	// scopespace::const_map_iterator i, e;
+if (n == ".") {
+	// special designator for top-level
+	o << "top-level instances: " << endl;
+	m.get_global_namespace()->dump_for_definitions(o);
+} else {
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	if (!r || !r.inst_ref()) {
+		return 1;
+	} else if (r.inst_ref()->dimensions()) {
+		o << "Error: referenced instance must be a single (scalar)."
+			<< endl;
+		return 1;
+	} else {
+		o << n << " (type: ";
+		r.inst_ref()->dump_type_size(o) << ") has members: " << endl;
+		const never_ptr<const definition_base>
+			def(r.inst_ref()->get_base_def());
+		NEVER_NULL(def);
+		const never_ptr<const scopespace>
+			mscope(def->get_scopespace());
+		// mscope->dump_instance_members(o) << endl;
+		mscope->dump_for_definitions(o);
+	}
+}
+#if 0
+	for ( ; i!=e; ++i) {
+	const never_ptr<const physical_instance_placeholder>
+		p(i->second.is_a<const physical_instance_placeholder>());
+	if (p) {
+		o << '\t' << i->first << endl;
+		// get_unresolved_type_ref
+		// get_base_def
+	}
+	}
+#endif
+	return 0;
 }
 
 //=============================================================================

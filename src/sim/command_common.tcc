@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.7 2008/03/17 23:02:44 fang Exp $
+	$Id: command_common.tcc,v 1.8 2008/04/24 22:47:07 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -37,6 +37,7 @@ using std::mem_fun_ref;
 using util::strings::string_to_num;
 #include "util/using_ostream.h"
 using parser::parse_name_to_what;
+using parser::parse_name_to_members;
 using parser::parse_name_to_aliases;
 USING_UTIL_COMPOSE
 
@@ -578,6 +579,31 @@ void
 AutoSave<State>::usage(ostream& o) {
 	o << name << " <on|off>" << endl;
 	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(LS, "ls",
+	"list subinstances of the referenced instance")
+
+template <class State>
+int
+LS<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (parse_name_to_members(cout, a.back(), s.get_module()))
+		return command_type::BADARG;
+	else	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+LS<State>::usage(ostream& o) {
+	o << "ls <name>" << endl;
+	o << "prints list of subinstances of the referenced instance" << endl;
+	o << "\"ls .\" lists top-level instances" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

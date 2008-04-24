@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-04-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-13:
+	  prsim, chpsim: new command 'ls' to list all immediate subinstances
+		of the named instance (really, its type).
+		Should make debugging and navigating foreign circuits
+		much easier and tester-friendly.  
+	  Documented and tested.  
+
+
 2008-04-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-12:

@@ -1,0 +1,13 @@
+# "ls-01.prsimrc"
+# @haco@ deep.haco-a
+# testing the 'ls' command
+
+ls .
+ls poo
+ls poo.p
+ls poo.q
+ls poo.q.x
+ls poo.q.y
+ls poo.q.y.a
+ls poo.q.y.b
+

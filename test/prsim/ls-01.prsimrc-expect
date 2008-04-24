@@ -1,0 +1,17 @@
+top-level instances: 
+Instances:
+  I = inv<> I
+  J = inv<> J
+  a = bool<> a
+  b = bool<> b
+  c = bool<> c
+a (type: bool<>) has members: 
+I (type: inv<>) has members: 
+Instances:
+  a = bool<> inv::a
+  b = bool<> inv::b
+J (type: inv<>) has members: 
+Instances:
+  a = bool<> inv::a
+  b = bool<> inv::b
+I.a (type: bool<>) has members: 

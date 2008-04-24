@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.6 2008/04/23 00:55:42 fang Exp $
+	$Id: Command-prsim.cc,v 1.7 2008/04/24 22:47:17 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1144,6 +1144,17 @@ regardless of exit status.
 ***/
 typedef	AutoSave<State>				AutoSave;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AutoSave, PRSIM::simulation)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/ls.texi
+@deffn Command ls name
+List immediate subinstances of the instance named @var{name}.  
+@end deffn
+@end texinfo
+***/
+typedef	LS<State>				LS;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::LS, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

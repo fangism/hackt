@@ -1,5 +1,5 @@
 @c "commands.texi"
-@c $Id: commands.texi,v 1.5 2008/03/17 23:02:02 fang Exp $
+@c $Id: commands.texi,v 1.6 2008/04/24 22:46:42 fang Exp $
 @c TODO: index commands
 
 @node Commands
@@ -124,6 +124,7 @@ More on shared modules can be found in @ref{Extending simulation}.
 @include cmd/time.texi
 @include cmd/what.texi
 @include cmd/who.texi
+@include cmd/ls.texi
 
 @c ****************************************************************************
 @node modes

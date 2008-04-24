@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.19 2008/03/17 23:02:21 fang Exp $
+	$Id: scopespace.h,v 1.20 2008/04/24 22:46:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -253,7 +253,6 @@ virtual	bool
 	const_map_iterator
 	id_map_end(void) const { return used_id_map.end(); }
 
-protected:
 	ostream&
 	dump_for_definitions(ostream&) const;
 

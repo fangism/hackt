@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.14 2008/03/17 23:02:46 fang Exp $
+	$Id: Command.cc,v 1.15 2008/04/24 22:47:15 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1295,6 +1295,17 @@ DumpState::usage(ostream& o) {
 "Prints all the stateful information of variables, channels, and events that\n"
 "would be recorded and restored by a checkpoint." << endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/ls.texi
+@deffn Command ls name
+List immediate subinstances of the instance named @var{name}.  
+@end deffn
+@end texinfo
+***/
+typedef	LS<State>				LS;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::LS, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

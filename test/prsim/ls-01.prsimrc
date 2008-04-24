@@ -1,0 +1,10 @@
+# "ls-01.prsimrc"
+# @haco@ inv.haco-a
+# testing the 'ls' command
+
+ls .
+ls a
+ls I
+ls J
+ls I.a
+

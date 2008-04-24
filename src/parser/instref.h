@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.2 2007/01/21 06:00:10 fang Exp $
+	$Id: instref.h,v 1.3 2008/04/24 22:47:07 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -49,6 +49,11 @@ parse_global_reference(const std::string&, const entity::module&);
 extern
 int
 parse_name_to_what(std::ostream&, const std::string&, const entity::module&);
+
+extern
+int
+parse_name_to_members(std::ostream&,
+	const std::string&, const entity::module&);
 
 extern
 int
