@@ -1,5 +1,19 @@
 "scm/ChangeLog"
 
+2008-04-28	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-14:
+	  hackt/chpsim.scm: added some DFS traversals, 
+		most importantly, an interative traversal
+		that doesn't explode the stack.  
+	  DFS uses worklist to be tail-recursive.
+		Re-defined static-loop-events structures with it.
+		static-loop-bound-events now finds both forever-loops
+		and do-while loops.
+		Added a set of routines to find just do-while loops.  
+		Tests updated accordingly.
+
+
 2007-11-26	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-85-router-01-12:

@@ -1,0 +1,12 @@
+#!hacchpsimguile -b
+!#
+;; "euclid-gcd-dec-a-02.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: euclid-gcd-dec-a-02.hacchpsimscm,v 1.1 2008/04/29 05:23:04 fang Exp $
+;; @haco@ euclid-gcd-dec-a-02.haco-a
+;; @chpsimtrace@ euclid-gcd-dec-a-02.chpsimtrace
+
+(define trace-name "euclid-gcd-dec-a-02.chpsimtrace")
+
+(load-from-path "basic-analysis-nocrit.hacchpsimscm")
+

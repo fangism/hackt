@@ -1,0 +1,20 @@
+// "testlib/int-sort.hac"
+//	$Id: int-sort.hac,v 1.1 2008/04/29 05:23:08 fang Exp $
+
+/**
+	\param L input integers
+	\param R output integers sorted in increasing order
+ */
+template <pint N>
+defproc int_sort2(chan?(int<N>) L[2]; chan!(int<N>) R[2]) {
+int<N> v[2];
+chp {
+*[
+	L[0]?(v[0]),L[1]?(v[1]);
+	[(v[0] < v[1]) -> R[0]!(v[0]), R[1]!(v[1])
+	[]else -> R[0]!(v[1]), R[1]!(v[0])
+	]
+]
+}
+}
+

@@ -1,0 +1,12 @@
+// "gcd-source-AB-02.hac"
+// copy-reduced from "gcd-source-AB-01.hac"
+
+import "gcd-env-channels.hac";
+import "int-source.hac";
+
+twin_int_source_once<32><3,{
+	24,25,27
+}, 4, {
+	15,16,18,20
+}> absrc(A, B);
+

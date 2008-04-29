@@ -1,6 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.83 2008/03/25 23:29:45 fang Exp $
+#	$Id: ChangeLog,v 1.84 2008/04/29 05:22:44 fang Exp $
 # ChangeLog for test directory.
+
+2008-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-14:
+	  Added more sources to chpsim/testlib/int-source.hac.
+	  Added chpsim/bingcd test dir.
+
 
 2008-03-21	David Fang		<fangism@users.sourceforge.net>
 

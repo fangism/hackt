@@ -1,5 +1,5 @@
 // "int-source.hac"
-//	$Id: int-source.hac,v 1.4 2007/10/12 22:44:22 fang Exp $
+//	$Id: int-source.hac,v 1.5 2008/04/29 05:23:09 fang Exp $
 // cyclic and non-cyclic sources of int tokens
 
 
@@ -56,6 +56,37 @@ template <pint W><pint V>
 defproc int_source_constant(chan!(int<W>) S) {
 chp {
 *[ S!(V) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Exhausts all combination of values from both arrays on two channels.
+ */
+template <pint W><pint N1, V1[N1], N2, V2[N2]>
+defproc twin_int_source_once(chan!(int<W>) A, B) {
+chp {
+{;i:N1:
+{;j:N2:
+	A!(V1[i]), B!(V2[j])
+}}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Exhausts all combination of values from both arrays on two channels, 
+	and repeats in loop, infinitely.
+ */
+template <pint W><pint N1, V1[N1], N2, V2[N2]>
+defproc twin_int_source(chan!(int<W>) A, B) {
+chp {
+*[
+{;i:N1:
+{;j:N2:
+	A!(V1[i]), B!(V2[j])
+}}
+]
 }
 }
 

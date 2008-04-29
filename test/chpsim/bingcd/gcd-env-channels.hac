@@ -1,0 +1,8 @@
+// "gcd-env-channels.hac"
+
+import "int-sink.hac";
+
+chan(int<32>) A, B, C;
+
+int_sink<32> csnk(C);
+

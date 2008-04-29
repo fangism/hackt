@@ -1,0 +1,7 @@
+# "euclid-gcd-seq-a-01-01.chpsimrc"
+# @haco@ euclid-gcd-seq-a-01-01.haco-a
+
+trace euclid-gcd-seq-a-01-01.chpsimtrace
+source gcd-test-template.chpsimrc
+trace-close
+

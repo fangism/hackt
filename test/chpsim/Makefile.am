@@ -1,12 +1,12 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.28 2007/11/27 06:10:20 fang Exp $
+#	$Id: Makefile.am,v 1.29 2008/04/29 05:22:50 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
 include $(top_srcdir)/installdirs.mk
 # for examplesdir
 
-SUBDIRS = testlib . router
+SUBDIRS = testlib . router bingcd
 
 HACO_FLAGS += -I$(srcdir)/testlib
 CHPSIM_LIB_PATH = ../../lib
@@ -401,6 +401,7 @@ srcdir_EXTRA_DIST += \
 	event-types.hacchpsimscm \
 	event-source-context.hacchpsimscm \
 	event-process-map.hacchpsimscm \
+	basic-analysis-nocrit.hacchpsimscm \
 	basic-trace-analysis.hacchpsimscm \
 	critical-path-verbose.hacchpsimscm \
 	trace-reference-cycle.hacchpsimscm

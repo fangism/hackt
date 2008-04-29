@@ -3,7 +3,7 @@
 ;; "basic-trace-analysis.hacchpsimscm"
 ;; common analysis routines
 ;; vi: ft=scheme
-;;	$Id: basic-trace-analysis.hacchpsimscm,v 1.4 2007/11/27 06:10:23 fang Exp $
+;;	$Id: basic-trace-analysis.hacchpsimscm,v 1.5 2008/04/29 05:22:51 fang Exp $
 
 ;; don't call this script directly, but load me from another
 
@@ -17,7 +17,7 @@
 ; (use-modules (ice-9 streams))
 ; (use-modules (srfi srfi-1))	; for alist (associative lists)
 
-; (define trace-name "select-nested-loop-a-03.chpsimtrace")
+; (define trace-name "...")
 ; (define rand-trace (hac:open-chpsim-trace-accessor trace-name))
 
 (display "procesing tracefile: ")

@@ -1,0 +1,7 @@
+// "euclid-gcd-dec-a.hac"
+
+import "euclid-gcd.hac";
+import "gcd-env-channels.hac";
+
+euclid_gcd_dec<32> G(A, B, C);
+

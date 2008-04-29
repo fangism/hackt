@@ -1,5 +1,5 @@
 ;; "hackt/algorithm.scm"
-;;	$Id: algorithm.scm,v 1.4 2007/11/27 06:10:15 fang Exp $
+;;	$Id: algorithm.scm,v 1.5 2008/04/29 05:22:35 fang Exp $
 ;; Additional handy algorithms not fund in guile scheme libs.
 
 (define-module (hackt algorithm)
@@ -10,6 +10,7 @@
 ; when we want confirmation:
 ; (display "Loading module: (hackt algorithm)") (newline)
 
+; accumulate is better known as reduce in the functional programming world...
 ; std::accumulate: iteratively applies binary operator over elements (forward)
 ; iteratively runs in bounded space
 (define-public (forward-accumulate binop init lst)

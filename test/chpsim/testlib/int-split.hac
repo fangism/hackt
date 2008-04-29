@@ -1,0 +1,55 @@
+// "int-split.hac"
+//	$Id: int-split.hac,v 1.1 2008/04/29 05:23:11 fang Exp $
+// conditional routing
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: use log(N) bits for select channel
+	This version is written using array indexing on channels.
+	An out-of-bounds access should trigger a run-time error.  
+ */
+template <pint N, M>
+defproc int_split (chan?(int) C; chan?(int<N>) I; chan!(int<N>) O[M]) {
+int c;
+int<N> x;
+chp {
+*[ C?(c),I?(x);
+	O[c]!(x)
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Two-way split.
+	Specialized to use a bool control channel.  
+ */
+template <pint N>
+defproc int_split_2 (chan?(bool) C; chan?(int<N>) I; chan!(int<N>) O[2]) {
+bool c;
+int<N> x;
+chp {
+*[ C?(c),I?(x);
+	[ c -> O[1]!(x)
+	[] else -> O[0]!(x)
+	]
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version is written using deterministic selection.  
+	An out-of-bounds access will simply cause deadlock.  
+ */
+template <pint N, M>
+defproc bool_split_select (chan?(int) C; chan?(int<N>) I; chan!(int<N>) O[M]) {
+int c;
+int<N> x;
+chp {
+*[ C?(c),I?(x);
+	[ [] i:M: (c == i) -> O[i]!(x) ]
+]
+}
+}
+

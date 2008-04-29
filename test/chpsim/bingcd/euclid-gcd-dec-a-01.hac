@@ -1,0 +1,5 @@
+// "euclid-gcd-dec-a-01.hac"
+
+import "euclid-gcd-dec-a.hac";
+import "gcd-source-AB-01.hac";
+

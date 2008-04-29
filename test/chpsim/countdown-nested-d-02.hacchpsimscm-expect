@@ -37,6 +37,8 @@ branch/select histogram:
 (9 . ((2 . 1) (8 . 3)))
 
 loop histogram:
+(5 . 9)
+(9 . 4)
 
 critical-event histogram:
 (1 . ((0 . 1)))

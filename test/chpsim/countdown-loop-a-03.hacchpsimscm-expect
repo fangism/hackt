@@ -6,9 +6,9 @@
 2
 3
 "showing loop-head-tail map:"
-((1 . 2))
+((1 . 2) (2 . 3))
 "showing loop-tail-head map:"
-((2 . 1))
+((2 . 1) (3 . 2))
 "only one loop"
 "showing branch-head-tail pairs:"
 ()

@@ -1,0 +1,54 @@
+// "int-merge.hac"
+//	$Id: int-merge.hac,v 1.1 2008/04/29 05:23:07 fang Exp $
+// conditional routing
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version uses array access to do the channel selection.  
+ */
+template <pint N, M>
+defproc int_merge(chan?(int) C; chan?(int<N>) I[M]; chan!(int<N>) O) {
+int c;
+int<N> x;
+chp {
+*[ C?(c);
+	I[c]?(x);
+	O!(x)
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialization using bool-control input.  
+ */
+template <pint N>
+defproc int_merge_2(chan?(bool) S; chan?(int<N>) I[2]; chan!(int<N>) O) {
+bool c;
+int<N> x;
+chp {
+*[ S?(c);
+	[ c -> I[1]?(x) [] else -> I[0]?(x) ];
+	O!(x)
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version uses array access to do the channel selection.  
+ */
+template <pint N, M>
+defproc int_merge_select(chan?(int) C; chan?(int<N>) I[M]; chan!(int<N>) O) {
+int c;
+int<N> x;
+chp {
+*[ C?(c);
+	[ []i:M: (c == i) -> I[N]?(x) ];
+	O!(x)
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+

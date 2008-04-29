@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.3 2007/11/27 06:10:15 fang Exp $
+;;	$Id: chpsim.scm,v 1.4 2008/04/29 05:22:36 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -11,6 +11,7 @@
 #:autoload (hackt rb-tree) (make-rb-tree rb-tree/insert!)
 )
 
+(use-modules (srfi srfi-1))		; for 'any'
 (use-modules (hackt chpsim-primitives))	; defined in C++
 ; (use-modules (hackt streams))		; now autoloaded
 ; (use-modules (ice-9 streams))		; now autoloaded
@@ -28,7 +29,7 @@
 "Stream of integers from 0 to (num-static-events -1)"
 !#
 (define-public chpsim-static-event-index-stream
-  (enumerate-interval-stream 0 (1- chpsim-num-events))
+  (enumerate-interval-stream root-event-id (1- chpsim-num-events))
 )
 ; (display "done.") (newline)
 
@@ -264,23 +265,34 @@ Delayed object is accessed using (force) and is memoized."
 ) ; end delay
 ) ; end define
 
+; TODO: replace visited rb-tree with pre-allocated vector instead
 (define-public (static-events-depth-first-walk-predicated thunk pred?)
 "Predicated depth-first walk over static event nodes reachable from the root.
 Predicate is tested on the current node to recurse conditionally."
   (let ((visited (make-rb-tree = <))
         (succs-map (force static-event-successors-map-delayed)))
-    (let loop ((n root-event-id))	; start with first top-level node
-      (if (not (rb-tree/lookup-key visited n #f))
-        (begin
-          (rb-tree/insert! visited n '()) ; mark
-          (thunk n) ; apply
-          (if (pred? n)
-            (for-each (lambda (s) (loop s)) (rb-tree/lookup succs-map n #f))
+    (let loop ((worklist (list root-event-id)))
+      ; start with first top-level node
+      (if (not (null? worklist))
+        (let ((n (car worklist)))
+          (if (not (rb-tree/lookup-key visited n #f))
+            (begin
+              (rb-tree/insert! visited n '()) ; mark
+              (thunk n) ; apply
+              (loop (append (if (pred? n) (rb-tree/lookup succs-map n #f) '())
+                (cdr worklist)))
+              ; for-each - lambda - loop ... is NOT tail recursive
+;              (if (pred? n)
+;                (for-each (lambda (s) (loop s))
+;                  (rb-tree/lookup succs-map n #f))
+;              ) ; end if
+            ) ; end begin
+            ; else keep processing worklist
+            (loop (cdr worklist))
           ) ; end if
-        ) ; end begin
-        ; else do nothing
+        ) ; end let
       ) ; end if
-    ) ; end let
+    ) ; end let loop
   ) ; end let
 ) ; end define
 
@@ -291,25 +303,161 @@ Predicate is tested on the current node to recurse conditionally."
   (static-events-depth-first-walk-predicated thunk (lambda (x) #t))
 ) ; end define
 
+#!
+"thunk-back is action for back edges, expecting an edge represented as a pair.
+Uses a two-level (list-of-list) worklist.
+breadcumbs is the growing and shrinking stack of predecessors.  
+This is searched linearly (unordered) to detect back edges.  
+When *car* of worklist is empty, backtrack *iteratively*.
+Iteration has the advantage of taking constant stack space.
+Recursive DFS is not tail-recursive, hence this alternative.
+Note: breadcrumbs is just the car's of the worklist-of-lists."
+!#
+(define-public (static-events-depth-first-walk-iterative thunk-node thunk-back)
+  (let ((visited (make-vector chpsim-num-events #f))
+        (succs-map (force static-event-successors-map-delayed)))
+    (let loop ((breadcrumbs '())
+               (worklist (list (list root-event-id))))
+; (display "crumbs: ") (display breadcrumbs) (display ", ")
+; (display "worklist: ") (display worklist) (newline)
+      (if (not (null? worklist))
+        (let ((l (car worklist))
+              (r (cdr worklist))) ; is a list!
+          (if (null? l)
+            ; tail call, return up, remove last predecessor
+            (if (not (null? r))
+              (loop (cdr breadcrumbs) (cons (cdar r) (cdr r))))
+            ; else we still have outgoing edge in last list
+            (let ((n (car l)))
+              (if (vector-ref visited n)
+                (begin
+                  ; then detect cycle
+                  (if (any (lambda (x) (= x n)) breadcrumbs) ; O(n) search :S
+                      ; long loops will have O(n^2) time :S
+                      (thunk-back (cons (caadr worklist) n)) ; cadr is prev!
+                    ; else this is a forward-edge, do nothing
+                  ) ; end if
+                  (loop breadcrumbs (cons (cdr l) (cdr worklist)))
+                ) ; end begin
+                ; else not already visited
+                (begin
+                  (vector-set! visited n #t) ; mark
+                  (thunk-node n)
+                  (loop (cons n breadcrumbs)
+                    (cons (rb-tree/lookup succs-map n #f) ; unpredicated
+                      worklist))
+                ) ; end if-else
+              ) ; end if
+            ) ; end let
+          ) ; end if
+        ) ; end let
+      ) ; else we're done
+    ) ; end let loop
+  ) ; end let loop
+) ; end define
+
 (define (static-events-depth-first-walk-with-trace thunk)
 "Similar to walk, but also retains a stack-set of node, like Ariadne's thread.
 The procedure thunk should expect a node-index argument and the a recursive
 loop procedure that expects a node-index argument."
   (let ((visited (make-rb-tree = <)) ; ever visited
-        (visit-stack (make-rb-tree = <)) ; visit stack (balanced)
+        ; (visit-stack (make-rb-tree = <)) ; visit stack (balanced)
+        (visit-stack '()) ; visit stack (balanced)
        )
     (let loop ((n root-event-id))
       (if (not (rb-tree/lookup-key visited n #f))
         (begin
           (rb-tree/insert! visited n '()) ; mark
-          (rb-tree/insert! visit-stack n '()) ; mark
-          (thunk n loop visited visit-stack)
-          (rb-tree/delete! visit-stack n) ; undo trail
+          ; (rb-tree/insert! visit-stack n '()) ; mark
+          ; (thunk n loop visited visit-stack)
+          (thunk n loop visited (cons n visit-stack))
+          ; (rb-tree/delete! visit-stack n) ; undo trail
         ) ; end begin
       ) ; end if
     ) ; end let
   ) ; end let
 ) ; end define
+
+
+
+(define static-do-while-bound-events-delayed
+(delay
+  (let ((succs-map (force static-event-successors-map-delayed))
+        ; (all-do-whiles (make-rb-tree = <))
+        (do-while-backs (make-rb-tree = <))
+        (do-while-heads (make-rb-tree = <))
+        ; (visited (make-rb-tree = <))
+        ; (do-while-stack '(root-event-id))
+       )
+    ; one pass over all events
+    (stream-for-each
+      (lambda (ev) 
+        (let* ((n (static-event-node-index ev))
+              (this-succs (rb-tree/lookup succs-map n #f)))
+          (for-each
+            (lambda (s)
+              (if (hac:chpsim-event-do-while?
+                    (static-event-raw-entry (hac:chpsim-get-event s)))
+                (begin
+                  ; invariant: head-tails are 1-1 mapping
+                  (rb-tree/insert! do-while-backs n s)
+                  (rb-tree/insert! do-while-heads s n)
+                )
+              )
+            ) ; end lambda
+          this-succs)
+        )
+      )
+    all-static-events-stream)
+    (cons do-while-heads do-while-backs)
+  ) ; end let
+) ; delay
+)
+
+#!
+"Events that are the start of do-while loops, set is a red-black tree."
+!#
+(define-public static-do-while-head-events-delayed
+  (delay (car (force static-do-while-bound-events-delayed))))
+
+#!
+"Events that jump to heads of do-while do-whiles, set is a red-black tree."
+!#
+(define-public static-do-while-tail-events-delayed
+  (delay (cdr (force static-do-while-bound-events-delayed))))
+
+
+#!
+"Produce a pair of re-numeration maps (vectors) to translate to/from 
+toplogically sorted event nodes.  This is useful for efficient back-edge 
+and cycle detection.  Returns a pair of vector-maps (event->topo, topo->event)."
+!#
+(define-public topological-sort-map-events-delayed
+(delay
+  (let ((counter 0)
+        (succs-map (force static-event-successors-map-delayed))
+        (event->topo (make-vector chpsim-num-events))
+        (topo->event (make-vector chpsim-num-events)))
+        ; reminder: vectors are 0-indexed
+    (static-events-depth-first-walk
+      (lambda (n)
+        (let ((e (static-event-raw-entry (hac:chpsim-get-event n)))
+              (this-succs (rb-tree/lookup succs-map n #f)))
+;          (display counter) (display " <-> ") (display n) (newline)
+          (vector-set! event->topo n counter)
+          (vector-set! topo->event counter n)
+          (set! counter (1+ counter))
+        ) ; end let
+      ) ; end lambda
+    ) ; end walk
+;    (display "event->topo:") (newline)
+;    (display event->topo) (newline)
+;    (display "topo->event:") (newline)
+;    (display topo->event) (newline)
+    (cons event->topo topo->event)
+  ) ; end let
+) ; end delay
+) ; end 
 
 #!
 "Find set of loopback events with DFS.
@@ -319,28 +467,18 @@ The result is a pair of maps, matching loop head-to-tail and vice versa."
 !#
 (define static-loop-bound-events-delayed
 (delay
-  (let ((succs-map (force static-event-successors-map-delayed))
+  (let ((event->topo (car (force topological-sort-map-events-delayed)))
+        (succs-map (force static-event-successors-map-delayed))
         (loop-backs (make-rb-tree = <))
         (loop-heads (make-rb-tree = <))
+        ; (visited (make-rb-tree = <))
        )
-     (static-events-depth-first-walk-with-trace
-       (lambda (n loop visited visit-stack)
-         (let ((e (static-event-raw-entry (hac:chpsim-get-event n)))
-              (this-succs (rb-tree/lookup succs-map n #f))
-              (classify (lambda (s)
-                (if (rb-tree/lookup-key visit-stack s #f)
-                   (begin
-                     (rb-tree/insert! loop-backs n s)
-                     (rb-tree/insert! loop-heads s n)
-                   )
-                   (if (not (rb-tree/lookup-key visited s #f)) (loop s))
-                ) ; end if
-              ))
-             )
-          (if (hac:chpsim-event-do-while? e)
-            (classify (car (reverse this-succs)))
-            (for-each classify this-succs)
-          )
+    (static-events-depth-first-walk-iterative
+      (lambda (n) #f) ; do nothing
+      (lambda (p)
+        (let ((n (car p)) (s (cdr p)))
+          (rb-tree/insert! loop-backs n s)
+          (rb-tree/insert! loop-heads s n)
         ) ; end let
       ) ; end lambda
     ) ; end walk

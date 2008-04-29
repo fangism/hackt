@@ -1,0 +1,14 @@
+# "bitrouter-test-template.chpsimrc
+#	$Id: gcd-test-template.chpsimrc,v 1.1 2008/04/29 05:23:07 fang Exp $
+
+timing per-event
+# watch-value C
+echo running (traced) ...
+step 100000
+# due to arbitration, time *may* be different (pseudo-random)
+# echo BEGIN-RANDOM
+time
+# echo END-RANDOM
+echo done.
+# really, is automatic
+

@@ -1,0 +1,7 @@
+# "euclid-gcd-dec-a-01-01.chpsimrc"
+# @haco@ euclid-gcd-dec-a-01-01.haco-a
+
+trace euclid-gcd-dec-a-01-01.chpsimtrace
+source gcd-dec-test-template.chpsimrc
+trace-close
+

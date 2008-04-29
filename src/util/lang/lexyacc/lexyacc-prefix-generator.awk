@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: lexyacc-prefix-generator.awk,v 1.4 2008/03/21 00:20:44 fang Exp $
+#	$Id: lexyacc-prefix-generator.awk,v 1.5 2008/04/29 05:22:36 fang Exp $
 # "lexyacc-prefix-generator.awk"
 #
 # generates a header suitable for preprocessing and performing
@@ -145,7 +145,9 @@ if (!keep_common) {
 	roots["push_buffer_state"] = 1;
 	roots["free"] = 1;
 	roots["realloc"] = 1;
+if (!keep_common) {
 	roots["_flex_debug"] = 1;
+}
 
 	for (r in roots) {
 		print "#define yy" r "\t\t" PREFIX r;
