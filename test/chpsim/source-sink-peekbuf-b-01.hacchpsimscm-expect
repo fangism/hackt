@@ -1,4 +1,4 @@
-procesing tracefile: source-sink-peekbuf-b-02.chpsimtrace
+processing tracefile: source-sink-peekbuf-b-02.chpsimtrace
 critical-path:
 (99 129.0 4 . 98)
 (98 126.0 5 . 96)

@@ -1,4 +1,4 @@
-procesing tracefile: timed-token-ring-b-01.chpsimtrace
+processing tracefile: timed-token-ring-b-01.chpsimtrace
 critical-path:
 (99 108.0 4 . 98)
 (98 108.0 3 . 97)

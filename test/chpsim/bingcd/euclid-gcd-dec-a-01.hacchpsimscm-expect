@@ -1,4 +1,4 @@
-procesing tracefile: euclid-gcd-dec-a-01.chpsimtrace
+processing tracefile: euclid-gcd-dec-a-01.chpsimtrace
 branch/select histogram:
 (2407 . ((2405 . 598) (2406 . 4420)))
 (2413 . ((2411 . 598) (2412 . 4420)))

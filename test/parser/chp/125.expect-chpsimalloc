@@ -1,0 +1,12 @@
+Variables: 
+int[1]: "p" 
+
+Event graph: 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[0]:
+event[1]: assign: p := 13, pid: 0, #pred: 1, succ: 4 
+event[2]: null: null, pid: 0, #pred: 1, succ: 
+event[3]: assign: p := p-1, pid: 0, #pred: 1, succ: 4 
+event[4]: select: *[ ~p&1!=0 -> ... ], pid: 0, #pred: 1, succ: 3 2 
+

@@ -1,0 +1,7 @@
+// "binary-gcd-seq-a.hac"
+
+import "binary-gcd.hac";
+import "gcd-env-channels.hac";
+
+binary_gcd_seq<32> G(A, B, C);
+

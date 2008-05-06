@@ -1,5 +1,5 @@
 # "test/chpsim/bingcd/Makefile.am"
-#	$Id: Makefile.am,v 1.1 2008/04/29 05:22:56 fang Exp $
+#	$Id: Makefile.am,v 1.2 2008/05/06 17:43:35 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -25,8 +25,11 @@ HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_PASSES)
 HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	gcd-env-channels \
 	euclid-gcd \
+	binary-gcd \
 	euclid-gcd-seq-a \
 	euclid-gcd-dec-a \
+	euclidmod-gcd-seq-a \
+	binary-gcd-seq-a \
 	gcd-source-A-01 \
 	gcd-source-B-01 \
 	gcd-source-AB-01 \
@@ -34,7 +37,9 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	euclid-gcd-seq-a-01-01 \
 	euclid-gcd-dec-a-01-01 \
 	euclid-gcd-seq-a-01 euclid-gcd-seq-a-02 \
-	euclid-gcd-dec-a-01 euclid-gcd-dec-a-02
+	euclidmod-gcd-seq-a-01 euclidmod-gcd-seq-a-02 \
+	euclid-gcd-dec-a-01 euclid-gcd-dec-a-02 \
+	binary-gcd-seq-a-01 binary-gcd-seq-a-02
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -44,7 +49,9 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	euclid-gcd-seq-a-01-01 \
 	euclid-gcd-dec-a-01-01 \
 	euclid-gcd-seq-a-01 euclid-gcd-seq-a-02 \
-	euclid-gcd-dec-a-01 euclid-gcd-dec-a-02
+	euclid-gcd-dec-a-01 euclid-gcd-dec-a-02 \
+	euclidmod-gcd-seq-a-01 euclidmod-gcd-seq-a-02 \
+	binary-gcd-seq-a-01 binary-gcd-seq-a-02
 
 # TODO: parallel-fifo test cases
 
@@ -60,7 +67,9 @@ endif
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	euclid-gcd-seq-a-01 euclid-gcd-seq-a-02 \
-	euclid-gcd-dec-a-01 euclid-gcd-dec-a-02
+	euclid-gcd-dec-a-01 euclid-gcd-dec-a-02 \
+	euclidmod-gcd-seq-a-01 euclidmod-gcd-seq-a-02 \
+	binary-gcd-seq-a-01 binary-gcd-seq-a-02
 
 HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_PASSES =
 
@@ -71,6 +80,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 # produce automatic dependencies in chpsimrc-out.autodepend
 
 srcdir_EXTRA_DIST += \
+	analyze-gcd.hacchpsimscm \
 	gcd-cycle-template.chpsimrc \
 	gcd-test-template.chpsimrc \
 	gcd-dec-test-template.chpsimrc

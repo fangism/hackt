@@ -2,11 +2,11 @@
 !#
 ;; "euclid-gcd-seq-a-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: euclid-gcd-seq-a-01.hacchpsimscm,v 1.1 2008/04/29 05:23:05 fang Exp $
+;;	$Id: euclid-gcd-seq-a-01.hacchpsimscm,v 1.2 2008/05/06 17:43:47 fang Exp $
 ;; @haco@ euclid-gcd-seq-a-01.haco-a
 ;; @chpsimtrace@ euclid-gcd-seq-a-01.chpsimtrace
 
 (define trace-name "euclid-gcd-seq-a-01.chpsimtrace")
 
-(load-from-path "basic-analysis-nocrit.hacchpsimscm")
+(load-from-path "analyze-gcd.hacchpsimscm")
 

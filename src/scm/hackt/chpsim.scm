@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.4 2008/04/29 05:22:36 fang Exp $
+;;	$Id: chpsim.scm,v 1.5 2008/05/06 17:43:14 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -123,6 +123,18 @@ NOTE: this should really be a map, not a stream."
 Argument is a stream of static events.
 NOTE: this should really be a map, not a stream."
   (chpsim-filter-static-events hac:chpsim-event-select? static-events-stream)
+) ; end define
+
+#!
+"Find all events that may depend on a given channel (id)"
+!#
+(define-public (chpsim-find-events-involving-channel-id cid static-events-stream)
+  (chpsim-filter-static-events
+    (lambda (e)
+      (any (lambda (i) (= i cid))
+        (dependence-set-channels (hac:chpsim-event-may-block-deps-internal e)))
+    ) ; end lambda
+  static-events-stream) ; end filter
 ) ; end define
 
 #!

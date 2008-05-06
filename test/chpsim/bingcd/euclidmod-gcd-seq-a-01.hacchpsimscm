@@ -1,0 +1,12 @@
+#!hacchpsimguile -b
+!#
+;; "euclidmod-gcd-seq-a-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: euclidmod-gcd-seq-a-01.hacchpsimscm,v 1.1 2008/05/06 17:43:48 fang Exp $
+;; @haco@ euclidmod-gcd-seq-a-01.haco-a
+;; @chpsimtrace@ euclidmod-gcd-seq-a-01.chpsimtrace
+
+(define trace-name "euclidmod-gcd-seq-a-01.chpsimtrace")
+
+(load-from-path "analyze-gcd.hacchpsimscm")
+

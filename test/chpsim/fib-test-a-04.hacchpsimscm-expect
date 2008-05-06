@@ -1,4 +1,4 @@
-procesing tracefile: fib-test-a-01.chpsimtrace
+processing tracefile: fib-test-a-01.chpsimtrace
 critical-path (verbose):
 trace-index: 199
 cause-index: 197

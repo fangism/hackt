@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.29 2008/04/29 05:22:50 fang Exp $
+#	$Id: Makefile.am,v 1.30 2008/05/06 17:43:15 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -360,6 +360,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bool-merge-alternator-a-01 \
 	source-sink-peekbuf-a-01 source-sink-peekbuf-a-02 \
 	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02 \
+	source-sink-void-a-01 \
 	bool-and-test-a-01 \
 	channel-probe-a-01 \
 	gcd-nested-a-01 \

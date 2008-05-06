@@ -12,6 +12,7 @@ import "testlib/bool-copy.hac";
 //=============================================================================
 /**
 	Sequential CHP: Find GCD of (A,B), return result in C.
+	Uses subtraction.  
 	Initially, a, b, must be non-zero.
  */
 template <pint N>
@@ -32,14 +33,14 @@ chp {
 /**
 	Sequential CHP for euclid GCD using modulo operation.  
  */
-template <pint N>
-defproc euclid_gcd_mod_seq(chan?(int<N>) A, B; chan!(int<N>) C) {
+template <pint N><preal D>
+defproc euclid_mod_gcd_seq(chan?(int<N>) A, B; chan!(int<N>) C) {
 int<N> a, b, p, q, r;
 chp {
 *[A?(a),B?(b);
 	[(a>b) -> p:=a, q:=b [] else -> p:=b, q:=a ];	// pre-sort
 	*[ q!=0 ->
-		q:=p%q, r:=p;
+		$(after=D) q:=p%q, r:=p;
 		p:=q; q:=r
 	];
 	C!(p)
@@ -48,6 +49,21 @@ chp {
 }
 
 //=============================================================================
+/**
+	Computes p % q.
+	p should be greated than q, both should be positive.  
+ */
+template <pint W><preal D>
+defproc remainder(chan?(int<W>) P, Q; chan!(int<W>) R) {
+int<W> p, q;
+chp {
+*[ P?(p),Q?(q);
+	$(after=D) R!(p%q)
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Forwards input to O.  
 	\return Z true if integer is zero.
@@ -60,7 +76,7 @@ chp { *[ I?(i); [i!=0 -> O!(i),Z!(false) [] else -> Z!(true)] ] }
 
 //=============================================================================
 /**
-	Decomposed CHP for Euclid GCD algorithm.
+	Decomposed CHP for Euclid GCD algorithm, using subtraction.
  */
 template <pint N>
 defproc euclid_gcd_dec(chan?(int<N>) A, B; chan!(int<N>) C) {
@@ -75,6 +91,25 @@ bool_copy<2> jc(J, {_I, SP});
 int_split_2<N> cs(SP, PS, {CI, C});
 int_copy<2,N> qc(QL, {QB, AI});
 subtractor<N> sub(CI, QB, BI);
+}
+
+//=============================================================================
+/**
+	Decomposed CHP for Euclid GCD algorithm, using modulo.
+ */
+template <pint N><preal D>
+defproc euclid_mod_gcd_dec(chan?(int<N>) A, B; chan!(int<N>) C) {
+chan(bool) I, IA, IB, _I, J, SP;
+chan(int<N>) AI, BI, CI, P, Q, PS, QS, QL, QB;
+bool_buf_init<true> init(_I, I);	// initial-selection for do-while
+bool_copy<2> ic(I, {IA, IB});
+int_merge_2<N> am(IA, {AI, A}, P), bm(IB, {BI, B}, Q);
+int_sort2<N> pqs({Q, P}, {QS, PS});	// QS < PS
+zero_comp_tap<N> qz(QS, J, QL);
+bool_copy<2> jc(J, {_I, SP});
+int_split_2<N> cs(SP, PS, {CI, C});
+int_copy<2,N> qc(QL, {QB, AI});
+remainder<N><D> rem(CI, QB, BI);
 }
 
 //=============================================================================

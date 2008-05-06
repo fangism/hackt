@@ -1,0 +1,9 @@
+// "125.hac"
+// dumping could use better parenthesization...
+
+int<32> p;
+chp {
+p:=13;
+*[ ~((p&1) != 0) -> p:=p-1 ]
+}
+

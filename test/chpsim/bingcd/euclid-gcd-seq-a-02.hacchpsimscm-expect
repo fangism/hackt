@@ -1,4 +1,4 @@
-procesing tracefile: euclid-gcd-seq-a-02.chpsimtrace
+processing tracefile: euclid-gcd-seq-a-02.chpsimtrace
 branch/select histogram:
 (4 . ((3 . 12) (18 . 71)))
 (18 . ((13 . 38) (17 . 33)))

@@ -1,4 +1,4 @@
-procesing tracefile: bool-split-alternator-a-01.chpsimtrace
+processing tracefile: bool-split-alternator-a-01.chpsimtrace
 critical-path:
 (99 175.0 7 . 97)
 (97 173.0 2 . 95)

@@ -3,7 +3,7 @@
 ;; "critical-path-verbose.hacchpsimscm"
 ;; common analysis routines
 ;; vi: ft=scheme
-;;	$Id: critical-path-verbose.hacchpsimscm,v 1.3 2007/11/27 06:10:30 fang Exp $
+;;	$Id: critical-path-verbose.hacchpsimscm,v 1.4 2008/05/06 17:43:20 fang Exp $
 
 ;; don't call this script directly, but load me from another
 
@@ -16,7 +16,7 @@
 (use-modules (hackt streams))
 (use-modules (ice-9 streams))
 
-(display "procesing tracefile: ")
+(display "processing tracefile: ")
 (display trace-name)
 (newline)
 

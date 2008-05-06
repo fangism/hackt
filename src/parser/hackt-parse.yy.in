@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.36 2008/03/21 00:20:21 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.37 2008/05/06 17:43:07 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -2050,7 +2050,7 @@ chp_relational_expr
 	: chp_shift_expr relational_op chp_shift_expr
 		{ $$ = new relational_expr($1, $2, $3); }
 /*	| chp_shift_expr	*/
-	| chp_unary_bool_expr
+	| chp_paren_add_expr
 	;
 
 chp_bitwise_and_expr

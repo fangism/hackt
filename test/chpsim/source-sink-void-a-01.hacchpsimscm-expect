@@ -1,0 +1,39 @@
+processing tracefile: source-sink-void-a-01.chpsimtrace
+critical-path:
+(10 25.0 1 . 9)
+(9 25.0 2 . 7)
+(7 20.0 2 . 5)
+(5 15.0 2 . 3)
+(3 10.0 2 . 1)
+(1 5.0 2 . 0)
+(0 0.0 0 . 0)
+
+branch/select histogram:
+
+loop histogram:
+(1 . 5)
+(2 . 5)
+
+critical-event histogram:
+(1 . ((2 . 1)))
+(2 . ((0 . 1) (2 . 4)))
+
+void_chan is channel ID 1
+(1 . #<raw-chpsim-event-node: send: A.S!, pid: 1, #pred: 1, succ: 1 
+channel deps: 1 
+>)
+(2 . #<raw-chpsim-event-node: receive: B.B?, pid: 2, #pred: 1, succ: 2 
+channel deps: 1 
+>)
+(1 . #t)
+(2 . #t)
+folded critical channel events (some paired):
+((1 5.0 2 . 0))
+((3 10.0 2 . 1))
+((5 15.0 2 . 3))
+((7 20.0 2 . 5))
+((9 25.0 2 . 7) (10 25.0 1 . 9))
+critical send-receive pairs:
+(((9 25.0 2 . 7) (10 25.0 1 . 9)))
+criticality (send . receive):
+(0 . 1)

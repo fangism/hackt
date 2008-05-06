@@ -1,0 +1,64 @@
+/**
+	\file "binary-gcd.hac"
+	Binary GCD algorithm.
+	$Id: binary-gcd.hac,v 1.1 2008/05/06 17:43:44 fang Exp $
+ */
+
+//=============================================================================
+/**
+	Sequential CHP for binary GCD.  
+	Input values should not be zero.  
+
+	Courtesy of Wikipedia:
+	1. gcd(0, v) = v, because everything divides zero, 
+		and v is the largest number that divides v. 
+		Similarly, gcd(u, 0) = u. gcd(0, 0) is not defined.
+	2. If u and v are both even, then gcd(u, v) = 2·gcd(u/2, v/2)
+		because 2 is a common divisor.
+	3. If u is even and v is odd, then gcd(u, v) = gcd(u/2, v),
+		because 2 is not a common divisor.
+		Similarly, if u is odd and v is even,
+		then gcd(u, v) = gcd(u, v/2).
+	4. If u and v are both odd, and u >= v, 
+		then gcd(u, v) = gcd((u-v)/2, v). 
+		If both are odd and u < v, then gcd(u, v) = gcd((v-u)/2, u). 
+		These are combinations of one step of the simple Euclidean 
+		algorithm, which uses subtraction at each step, 
+		and an application of step 3 above. 
+		The division by 2 results in an integer because the 
+		difference of two odd numbers is even.[2]
+	5. Repeat steps 3 and 4 until u = v, or (one more step) until u = 0. 
+		In either case, the result is 2^k v, where k is the number 
+		of common factors of 2 found in step 2.
+ */
+template <pint W>
+defproc binary_gcd_seq(chan?(int<W>) A, B; chan!(int<W>) C) {
+int<W> u, v, k;
+chp {
+*[A?(u),B?(v),k:=0;
+	// collect powers of 2
+	*[(u&1) == 0 && (v&1) == 0 -> u:=u>>1, v:=v>>1, k:=k+1 ];
+	// [(a>b) -> u:=a, v:=b [] else -> u:=b, v:=a ];	// pre-sort?
+	*[ (u!=0) && (v!=0) ->
+	// symmetric
+	[ (u&1) != 0 ->
+		[ (v&1) != 0 -> [(u>v) -> u:=(u-v)>>1 [] else -> v:=(v-u)>>1 ]
+		[] else -> v:=v>>1
+		]
+	[] else ->
+		[ (v&1) != 0 -> u:=u>>1
+		[] else -> v:=v/0	// should never happen by construction
+		// both even
+		]
+	]
+        ];
+	[(v==0) -> C!(u<<k) [] else -> C!(v<<k) ]
+]
+}
+}
+
+//=============================================================================
+
+//=============================================================================
+
+

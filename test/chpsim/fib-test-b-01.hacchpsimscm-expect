@@ -1,4 +1,4 @@
-procesing tracefile: fib-test-b-01.chpsimtrace
+processing tracefile: fib-test-b-01.chpsimtrace
 critical-path:
 (199 116.0 3 . 198)
 (198 116.0 14 . 191)

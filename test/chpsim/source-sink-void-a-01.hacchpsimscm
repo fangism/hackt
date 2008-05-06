@@ -1,0 +1,47 @@
+#!hacchpsimguile -b
+!#
+;; "source-sink-void-a-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: source-sink-void-a-01.hacchpsimscm,v 1.1 2008/05/06 17:43:27 fang Exp $
+;; @haco@ source-sink-void-a.haco-a
+;; @chpsimtrace@ source-sink-void-a-01.chpsimtrace
+
+(use-modules (ice-9 streams))
+(use-modules (hackt hackt-primitives))
+(use-modules (hackt chpsim))
+(use-modules (hackt chpsim-trace))
+(use-modules (hackt rb-tree))
+
+(define trace-name "source-sink-void-a-01.chpsimtrace")
+(load-from-path "basic-trace-analysis.hacchpsimscm")
+
+(define ch (hac:parse-reference "void_chan"))
+(display "void_chan is channel ID ")
+(display (cdr ch))
+(newline)
+
+(define ch-event-strm
+  (chpsim-find-events-involving-channel-id (cdr ch) all-static-events-stream))
+
+(stream-for-each-display-newline ch-event-strm)
+
+; make a temporary associative list
+(define ch-astrm (stream-map (lambda (e) (cons (car e) #t)) ch-event-strm))
+
+(define ch-event-set (alist->rb-tree (stream->list ch-astrm) = <))
+
+(rb-tree/for-each-display-newline ch-event-set)
+
+(define ch-trace (make-critical-channel-event-pairs-list crit (cdr ch)))
+(display "folded critical channel events (some paired):") (newline)
+(for-each (lambda (x) (display x) (newline)) ch-trace)
+
+; defined as make-critical-send-receive-pairs-list in module
+(define ch-trace-pairs (filter (lambda (x) (= (length x) 2)) ch-trace))
+(display "critical send-receive pairs:") (newline)
+ch-trace-pairs
+
+(display "criticality (send . receive):") (newline)
+(define ch-crit-count (count-send-receive-criticality ch-trace-pairs))
+ch-crit-count
+

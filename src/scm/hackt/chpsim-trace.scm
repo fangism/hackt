@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.7 2008/03/17 23:02:44 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.8 2008/05/06 17:43:11 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -20,7 +20,7 @@
 ;; in other words, we have to export the imports.  :S
 
 (define-module (hackt chpsim-trace)
-#:autoload (srfi srfi-1) (any)
+#:autoload (srfi srfi-1) (any fold)
 #:autoload (hackt algorithm) (find-assoc-ref accumulate)
 #:autoload (hackt rb-tree)
   (make-rb-tree rb-tree/insert! rb-tree/lookup rb-tree/lookup-mutate!)
@@ -405,4 +405,71 @@ and occurrences."
 (define-public make-critical-event-histogram make-event-adjacency-histogram)
 
 ; TODO: 3-level tree
+#!
+"Takes a critical event stream and returns a stream of send-receive event-pairs
+in the trace that occurred on the critical path.  Recall that the critical path is listed
+in reverse-chronological order.  The result will be in forward-chronological order."
+!#
+(define-public (make-critical-channel-event-pairs-list crit-stream cid)
+(let* ((cev (alist->rb-tree (stream->list (stream-map (lambda (e) (cons (car e) #t))
+         (chpsim-find-events-involving-channel-id cid all-static-events-stream))) = <))
+       (sr-estrm (stream-filter
+         (lambda (e) (rb-tree/lookup cev (chpsim-trace-entry-event e) #f))
+         crit-stream)))
+  (stream-fold (lambda (elem init)
+    ; init will accumulate as a list
+    (if (null? init)
+      (list (list elem))
+      (let ((recent (car init)) (rest (cdr init)))
+        (if (= (length recent) 2)
+          (cons (list elem) init) ; last event already paired
+          (let* ((prev (car recent))
+                 (crit-prev (chpsim-trace-entry-critical prev)))
+            (if (and (= (chpsim-trace-entry-index elem) crit-prev)
+                 (= (1+ crit-prev) (chpsim-trace-entry-index prev))
+                 (not (= (chpsim-trace-entry-event elem) (chpsim-trace-entry-event prev))))
+              (cons (cons elem recent) rest) ; pair up events
+              (cons (list elem) init)
+            ) ; end if
+          ) ; end let
+        ) ; end if
+      ) ; end let
+    ) ; end if
+    ) ; end lambda
+    '() sr-estrm) ; end stream-fold
+) ; end let
+) ; end define
+
+#!
+"Unfiltered list may contain singleton lists or lists of length 2.
+Since we want critical send-receive pairs, we preserve elements of length 2."
+!#
+(define-public (filter-critical-send-receive-pairs-list unfiltered-list)
+  (filter (lambda (x) (= (length x) 2)) unfiltered-list))
+
+#!
+"Given a channel id, return a list of critical event pairs, consisting of only send-receive
+atomic event pairs."
+!#
+(define-public (make-critical-send-receive-pairs-list crit-stream cid)
+  (filter-critical-send-receive-pairs-list (make-critical-channel-event-pairs-list crit-stream cid)))
+
+#!
+"Takes a list of send-receive critical event pairs, and returns a pair of counters, where the
+first value is the number of times sender was critical, and the second value is the number of times
+the receiver was more critical."
+!#
+(define-public (count-send-receive-criticality lst)
+  (fold (lambda (elem init)
+    (let ((ev (cdr (hac:chpsim-get-event (chpsim-trace-entry-event (car elem))))))
+      ; check the first element of each send-receive pair: which is it?
+      (cond
+        ((hac:chpsim-event-send? ev) (cons (1+ (car init)) (cdr init)))
+        ((hac:chpsim-event-receive? ev) (cons (car init) (1+ (cdr init))))
+        (else init)
+      ) ; end cond
+    ) ; end let
+    ) ; end lambda
+  '(0 . 0) lst) ; end fold
+) ; end define
 

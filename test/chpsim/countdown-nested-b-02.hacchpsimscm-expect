@@ -1,4 +1,4 @@
-procesing tracefile: countdown-nested-b-03.chpsimtrace
+processing tracefile: countdown-nested-b-03.chpsimtrace
 critical-path:
 (27 260.0 2 . 26)
 (26 260.0 7 . 25)

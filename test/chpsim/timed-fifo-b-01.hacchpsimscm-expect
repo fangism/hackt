@@ -1,4 +1,4 @@
-procesing tracefile: timed-fifo-b-01.chpsimtrace
+processing tracefile: timed-fifo-b-01.chpsimtrace
 critical-path:
 (99 137.0 5 . 97)
 (97 133.0 4 . 94)

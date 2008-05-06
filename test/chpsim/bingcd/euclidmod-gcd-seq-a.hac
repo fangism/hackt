@@ -1,0 +1,7 @@
+// "euclidmod-gcd-seq-a.hac"
+
+import "euclid-gcd.hac";
+import "gcd-env-channels.hac";
+
+euclid_mod_gcd_seq<32><100.0> G(A, B, C);
+

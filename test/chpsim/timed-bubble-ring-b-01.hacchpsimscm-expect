@@ -1,4 +1,4 @@
-procesing tracefile: timed-bubble-ring-b-01.chpsimtrace
+processing tracefile: timed-bubble-ring-b-01.chpsimtrace
 critical-path:
 (99 108.0 5 . 98)
 (98 108.0 7 . 97)

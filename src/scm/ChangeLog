@@ -1,5 +1,19 @@
 "scm/ChangeLog"
 
+2008-05-06	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-15:
+	  New scheme routines.  
+	  hackt/chpsim.scm:
+		chpsim-find-events-involving-channel-id (self-expl.)
+	  hackt/chpsim-trace.scm:
+		make-critical-channel-event-pairs-list
+		filter-critical-send-receive-pairs-list
+		make-critical-send-receive-pairs-list
+		these figure out how critical a channel is.
+	  Tested in at least a few chpsim tests.  
+
+
 2008-04-28	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-14:

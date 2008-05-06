@@ -1,0 +1,39 @@
+#!hacchpsimguile -b
+!#
+;; "analyze-gcd.hacchpsimscm"
+;; common analysis routines, no critical path displayed
+;; vi: ft=scheme
+;;	$Id: analyze-gcd.hacchpsimscm,v 1.1 2008/05/06 17:43:36 fang Exp $
+
+;; don't call this script directly, but load me from another
+
+(use-modules (hackt chpsim-trace))
+(use-modules (hackt rb-tree))
+(use-modules (hackt streams))
+
+(display "processing tracefile: ")
+(display trace-name)
+(newline)
+
+(define trace-stream (open-chpsim-trace-stream trace-name))
+
+; (display "critical-path:\n")
+(define crit (chpsim-trace-critical-path trace-name))
+; (stream-for-each-display-newline crit)
+; (newline)
+
+(display "branch/select histogram:\n")
+(define branch-histo (make-select-branch-histogram trace-stream))
+(rb-tree/for-each-display-newline branch-histo)
+(newline)
+
+(display "loop histogram:\n")
+(define loop-histo (make-loop-histogram trace-stream))
+(rb-tree/for-each-display-newline loop-histo)
+(newline)
+
+(display "critical-event histogram:\n")
+(define crit-histo (make-critical-event-histogram crit))
+(rb-tree/for-each-display-newline crit-histo)
+(newline)
+
