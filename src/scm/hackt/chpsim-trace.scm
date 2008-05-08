@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.9 2008/05/08 04:34:25 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.10 2008/05/08 20:06:32 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -20,7 +20,7 @@
 ;; in other words, we have to export the imports.  :S
 
 (define-module (hackt chpsim-trace)
-#:autoload (srfi srfi-1) (any fold)
+#:autoload (srfi srfi-1) (any fold filter)
 #:autoload (hackt algorithm) (find-assoc-ref accumulate)
 #:autoload (hackt rb-tree)
   (make-rb-tree rb-tree/insert! rb-tree/lookup rb-tree/lookup-mutate!)

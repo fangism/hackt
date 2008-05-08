@@ -1,5 +1,5 @@
 # "test/chpsim/router/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2008/05/08 04:34:48 fang Exp $
+#	$Id: Makefile.am,v 1.5 2008/05/08 20:06:33 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -173,7 +173,11 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bitrouter-twin-test-a-06-trace-crit \
 	bitrouter-twin-test-a-07-trace-crit \
 	bitrouter-twin-test-a-08-trace-crit \
-	bitrouter-twin-test-a-09-trace-crit \
+	bitrouter-twin-test-a-09-trace-crit
+ 
+HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_PASSES = \
+	bitrouter-dec-test-a-08-trace-crit bitrouter-dec-test-a-09-trace-crit \
+	bitrouter-dec-test-b-01-trace-crit \
 	quad-bitrouter-mmss-test-01-trace quad-bitrouter-mmss-test-02-trace \
 	quad-bitrouter-mmss-test-03-trace quad-bitrouter-mmss-test-04-trace \
 	quad-bitrouter-mmss-test-05-trace quad-bitrouter-mmss-test-06-trace \
@@ -200,10 +204,6 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	quad-bitrouter-ssmm-test-05-trace quad-bitrouter-ssmm-test-06-trace \
 	quad-bitrouter-ssmm-test-07-trace quad-bitrouter-ssmm-test-08-trace \
 	quad-bitrouter-ssmm-test-09-trace quad-bitrouter-ssmm-test-10-trace
- 
-HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_PASSES = \
-	bitrouter-dec-test-a-08-trace-crit bitrouter-dec-test-a-09-trace-crit \
-	bitrouter-dec-test-b-01-trace-crit
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 
