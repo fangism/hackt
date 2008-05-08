@@ -1,7 +1,7 @@
 ; "hackt/rb-tree.scm"
 ; Adapted from MIT-Scheme-7.7.1 implementation "rbtree.scm".  
 
-; $Id: rb-tree.scm,v 1.4 2007/11/27 06:10:16 fang Exp $
+; $Id: rb-tree.scm,v 1.5 2008/05/08 04:34:26 fang Exp $
 
 ; Copyright (c) 1993-2000 Massachusetts Institute of Technology
 
@@ -685,4 +685,15 @@ Apply combine-value on two values when their keys match."
 (define-public (rb-tree/delete-max-pair! tree)
   (guarantee-rb-tree tree 'RB-TREE/DELETE-MAX-PAIR!)
   (mm-del tree max-node node-pair #f))
+
+#!
+"Increment counter by 1 or set to 1 if entry doesn't already exist at key."
+!#
+(define-public (rb-tree/increment! tree key)
+  (let ((c (rb-tree/insert-if-new! tree key 1)))
+    (if (not (unspecified? c)) ; then we found previous entry
+      (rb-tree/lookup-mutate! tree key 1+ #f) ; increment
+    ) ; end if
+  ) ; end let
+) ; define
 

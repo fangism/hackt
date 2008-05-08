@@ -3,7 +3,7 @@
 ;; "basic-trace-analysis.hacchpsimscm"
 ;; common analysis routines
 ;; vi: ft=scheme
-;;	$Id: basic-trace-analysis.hacchpsimscm,v 1.6 2008/05/06 17:43:17 fang Exp $
+;;	$Id: basic-trace-analysis.hacchpsimscm,v 1.7 2008/05/08 04:34:34 fang Exp $
 
 ;; don't call this script directly, but load me from another
 
@@ -44,5 +44,10 @@
 (display "critical-event histogram:\n")
 (define crit-histo (make-critical-event-histogram crit))
 (rb-tree/for-each-display-newline crit-histo)
+(newline)
+
+(display "critical-process histogram:\n")
+(define proc-histo (make-critical-process-histogram crit))
+(print-named-critical-process-histogram proc-histo)
 (newline)
 

@@ -72,6 +72,15 @@ critical-event histogram:
 (12 . ((13 . 3)))
 (13 . ((2 . 3)))
 
+critical-process histogram:
+ring.bi: (2 . 10)
+ring.b[0]: (3 . 8)
+ring.b[1]: (4 . 8)
+ring.b[2]: (5 . 7)
+ring.b[3]: (6 . 6)
+ring.b[4]: (7 . 6)
+[global-root]: (8 . 1)
+
 "expect cycle time 8 (1 +7), self-throughput is limiting factor."
 tracing reference for cycle time: (channel . 1)
 canonical name: ring.M[5]
@@ -107,3 +116,6 @@ canonical name: ring.M[5]
 (181 134.0 ack)
 (192 144.0 (1))
 (193 144.0 ack)
+"Expect channel to be receiver-critical:"
+(1 . 3)
+(0 . 3)

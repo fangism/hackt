@@ -1,5 +1,17 @@
 "scm/ChangeLog"
 
+2008-05-07	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-16:
+	  More scheme trace analysis routines.
+	  hackt/chpsim-trace.scm:
+		make-critical-process-histogram: identify critical processes
+		print-named-critical-process-histogram: pretty print result
+		channel-send-receive-criticality: print with channel name
+	  hackt/rb-tree.scm: added increment! function
+	  chpsim trace scm tests updated accordingly
+
+
 2008-05-06	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-15:

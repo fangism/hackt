@@ -894,3 +894,7 @@ critical-event histogram:
 (11 . ((12 . 40)))
 (12 . ((1 . 40)))
 
+critical-process histogram:
+BR: (1 . 880)
+[global-root]: (28 . 1)
+

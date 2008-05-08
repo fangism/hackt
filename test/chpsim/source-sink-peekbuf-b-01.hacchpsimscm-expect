@@ -72,6 +72,10 @@ critical-event histogram:
 (6 . ((8 . 14)))
 (8 . ((4 . 14)))
 
+critical-process histogram:
+B: (2 . 57)
+[global-root]: (4 . 1)
+
 "expect cycle time 9 limiting by buffer."
 tracing reference for cycle time: (channel . 1)
 canonical name: L

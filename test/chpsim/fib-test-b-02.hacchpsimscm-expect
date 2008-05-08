@@ -719,3 +719,11 @@ critical-event histogram:
 (17 . ((18 . 5)))
 (18 . ((14 . 5)))
 
+critical-process histogram:
+fibber.b0: (2 . 1)
+fibber.b1: (3 . 9)
+fibber.b2: (4 . 6)
+fibber.a: (5 . 15)
+fibber.c: (6 . 26)
+[global-root]: (7 . 1)
+

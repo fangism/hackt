@@ -69,6 +69,10 @@ critical-event histogram:
 (6 . ((7 . 8)))
 (7 . ((2 . 9)))
 
+critical-process histogram:
+spltr: (2 . 50)
+[global-root]: (6 . 1)
+
 "expect cycle time 7 (2 +5), self-throughput is limiting factor."
 tracing reference for cycle time: (channel . 1)
 canonical name: I

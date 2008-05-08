@@ -112,6 +112,13 @@ critical-event histogram:
 (15 . ((16 . 7)))
 (16 . ((12 . 7)))
 
+critical-process histogram:
+fibber.b0: (2 . 2)
+fibber.b1: (3 . 14)
+fibber.a: (4 . 35)
+fibber.c: (5 . 35)
+[global-root]: (6 . 1)
+
 tracing reference for cycle time: (channel . 1)
 canonical name: fibber.S
 (14 17.0 (2))
@@ -143,3 +150,13 @@ canonical name: fibber.S
 (194 153.0 (987))
 (195 153.0 ack)
 "cycle-time: 10-11"
+"channel A[0]:"
+(0 . 7)
+"channel A[1]:"
+(7 . 0)
+"channel B:"
+(0 . 7)
+"channel S:"
+(0 . 0)
+"channel S2:"
+(1 . 0)

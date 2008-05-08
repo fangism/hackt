@@ -39,4 +39,10 @@ critical-event histogram:
 (6 . ((5 . 1) (7 . 1)))
 (7 . ((3 . 1) (6 . 1)))
 
+critical-process histogram:
+snk: (2 . 16)
+fifo.b[0]: (4 . 2)
+fifo.b[1]: (5 . 4)
+[global-root]: (6 . 1)
+
 "expect cycle time 10, sink is limiting factor."

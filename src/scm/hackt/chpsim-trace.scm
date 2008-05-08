@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.8 2008/05/06 17:43:11 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.9 2008/05/08 04:34:25 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -38,6 +38,7 @@
 (use-modules (hackt chpsim-primitives)) ; for hac:lookup-trace-entry
 (use-modules (ice-9 streams))
 (use-modules (hackt streams))
+(use-modules (hackt hackt-primitives)) ; for hac:parse-reference
 (use-modules (hackt hackt)) ; for reference-equal?
 (use-modules (hackt chpsim)) ; for type-tag->offset, all-static-events-stream
 
@@ -374,9 +375,7 @@ and occurrences."
   (define (init-bin key) ; initialize a tree with pair [key, 1]
     (let ((tree (make-rb-tree = <)))
       (rb-tree/insert! tree key 1)
-      tree
-    )
-  )
+      tree))
   (let ((edge-histo (make-rb-tree = <))
         (crit-ev (stream-map chpsim-trace-entry-event crit-stream)))
     (stream-for-each
@@ -403,6 +402,38 @@ and occurrences."
 
 ;; alias
 (define-public make-critical-event-histogram make-event-adjacency-histogram)
+
+#!
+"Translates critical path to a critical process histogram."
+!#
+(define-public (make-critical-process-histogram crit-path)
+  (let ((proc-histo (make-rb-tree = <)))
+    (stream-for-each
+      (lambda (pid) (rb-tree/increment! proc-histo pid))
+      (stream-map
+        (lambda (e)
+          (hac:chpsim-event-process-id (static-event-raw-entry
+            (hac:chpsim-get-event (chpsim-trace-entry-event e))))
+        ) ; end lambda
+      crit-path) ; end for-each
+    ) ; end for-each
+    proc-histo
+  ) ; end let
+) ; end define
+
+#!
+"Print critical processes histogram with names."
+!#
+(define-public (print-named-critical-process-histogram proc-histo)
+  (rb-tree/for-each
+    (lambda (p)
+      (display (process-id->string (car p)))
+      (display ": ")
+      (display p)
+      (newline)
+    ) ; end lambda
+  proc-histo)
+) ; end define
 
 ; TODO: 3-level tree
 #!
@@ -471,5 +502,15 @@ the receiver was more critical."
     ) ; end let
     ) ; end lambda
   '(0 . 0) lst) ; end fold
+) ; end define
+
+#!
+"Combined procedure to report channel criticality given a named channel."
+!#
+(define-public (channel-send-receive-criticality crit-stream cname)
+  (count-send-receive-criticality
+    (make-critical-send-receive-pairs-list crit-stream
+      (cdr (hac:parse-reference cname)))
+  ) ; end count
 ) ; end define
 

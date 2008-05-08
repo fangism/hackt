@@ -53,4 +53,10 @@ critical-event histogram:
 (6 . ((5 . 1) (7 . 16)))
 (7 . ((6 . 16)))
 
+critical-process histogram:
+src: (1 . 1)
+fifo.b[0]: (4 . 2)
+fifo.b[1]: (5 . 33)
+[global-root]: (6 . 1)
+
 "expect cycle time 10 (8 +2), FIFO is limiting factor."

@@ -2,7 +2,7 @@
 !#
 ;; "timed-token-ring-b-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: timed-token-ring-b-01.hacchpsimscm,v 1.2 2007/05/04 03:39:11 fang Exp $
+;;	$Id: timed-token-ring-b-01.hacchpsimscm,v 1.3 2008/05/08 04:34:47 fang Exp $
 ;; @haco@ timed-token-ring-b.haco-a
 ;; @chpsimtrace@ timed-token-ring-b-01.chpsimtrace
 
@@ -20,4 +20,9 @@
 (define cycle-reference '(channel . 1))
 
 (load-from-path "trace-reference-cycle.hacchpsimscm")
+
+"Expect channel to be send-critical:"
+(channel-send-receive-criticality crit "ring.M[0]")
+(channel-send-receive-criticality crit "ring.M[3]")
+
 

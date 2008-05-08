@@ -714,3 +714,12 @@ critical-event histogram:
 (59 . ((0 . 1)))
 (63 . ((59 . 1)))
 
+critical-process histogram:
+LC[0]: (2 . 2)
+BR.RM[0]: (12 . 69)
+BR.RM[1]: (13 . 259)
+BR.RS[0]: (14 . 176)
+BR.RS[1]: (15 . 172)
+LS[0].S[0]: (16 . 2)
+[global-root]: (32 . 1)
+

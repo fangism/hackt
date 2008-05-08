@@ -121,6 +121,15 @@ critical-event histogram:
 (16 . ((17 . 8)))
 (17 . ((1 . 7) (15 . 1)))
 
+critical-process histogram:
+ring.bi: (2 . 14)
+ring.b[0]: (3 . 15)
+ring.b[1]: (4 . 16)
+ring.b[2]: (5 . 16)
+ring.b[3]: (6 . 16)
+ring.b[4]: (7 . 17)
+[global-root]: (8 . 1)
+
 "expect cycle time 12 (6 * 2.0), backward-latency is limiting factor."
 tracing reference for cycle time: (channel . 1)
 canonical name: ring.M[5]

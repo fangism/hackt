@@ -46,3 +46,7 @@ critical-event histogram:
 (6 . ((7 . 3)))
 (7 . ((1 . 1) (3 . 3)))
 
+critical-process histogram:
+[top]: (0 . 27)
+[global-root]: (1 . 1)
+

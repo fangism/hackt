@@ -2,7 +2,7 @@
 !#
 ;; "fib-test-b-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: fib-test-b-01.hacchpsimscm,v 1.2 2007/05/04 03:38:14 fang Exp $
+;;	$Id: fib-test-b-01.hacchpsimscm,v 1.3 2008/05/08 04:34:42 fang Exp $
 ;; @haco@ fib-test-b.haco-a
 ;; @chpsimtrace@ fib-test-b-01.chpsimtrace
 
@@ -19,4 +19,19 @@
 (load-from-path "trace-reference-cycle.hacchpsimscm")
 
 "cycle-time: 8-10"
+
+"channel A[0]:"
+(channel-send-receive-criticality crit "fibber.A[0]")
+"channel A[1]:"
+(channel-send-receive-criticality crit "fibber.A[1]")
+"channel B:"
+(channel-send-receive-criticality crit "fibber.B")
+"channel BB:"
+(channel-send-receive-criticality crit "fibber.BB")
+"channel S:"
+(channel-send-receive-criticality crit "fibber.S")
+"channel S2:"
+(channel-send-receive-criticality crit "fibber.S2")
+
+
 

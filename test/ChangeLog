@@ -1,6 +1,15 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.84 2008/04/29 05:22:44 fang Exp $
+#	$Id: ChangeLog,v 1.85 2008/05/08 04:34:29 fang Exp $
 # ChangeLog for test directory.
+
+2008-05-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-16:
+	  In chpsim/, basic-trace-analysis, basic-analysis-nocrit, 
+		critical-path-verbose: added call to 
+		make-critical-process-histogram.
+		Used by many test cases, updated accordingly.
+
 
 2008-04-28	David Fang		<fangism@users.sourceforge.net>
 

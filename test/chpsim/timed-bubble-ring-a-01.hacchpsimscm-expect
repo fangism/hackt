@@ -49,6 +49,15 @@ critical-event histogram:
 (16 . ((14 . 1)))
 (17 . ((15 . 1) (16 . 1)))
 
+critical-process histogram:
+ring.bi: (2 . 4)
+ring.b[0]: (3 . 5)
+ring.b[1]: (4 . 5)
+ring.b[2]: (5 . 2)
+ring.b[3]: (6 . 2)
+ring.b[4]: (7 . 4)
+[global-root]: (8 . 1)
+
 "expect cycle time 8 (7 +1), self-throughput is limiting factor."
 tracing reference for cycle time: (channel . 1)
 canonical name: ring.M[5]

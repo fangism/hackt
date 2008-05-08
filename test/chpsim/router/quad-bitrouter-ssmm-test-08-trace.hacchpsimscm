@@ -1,0 +1,14 @@
+#!hacchpsimguile -b
+!#
+;; "quad-bitrouter-ssmm-test-08-trace.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: quad-bitrouter-ssmm-test-08-trace.hacchpsimscm,v 1.1 2008/05/08 04:35:17 fang Exp $
+;; @haco@ quad-bitrouter-ssmm-test-08.haco-a
+;; @chpsimtrace@ quad-bitrouter-ssmm-test-08.chpsimtrace
+
+(define trace-name "quad-bitrouter-ssmm-test-08.chpsimtrace")
+
+; (load-from-path "basic-trace-analysis.hacchpsimscm")
+(load-from-path "basic-analysis-nocrit.hacchpsimscm")
+; (load-from-path "critical-path-verbose.hacchpsimscm")
+

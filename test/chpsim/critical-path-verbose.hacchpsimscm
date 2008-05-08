@@ -3,7 +3,7 @@
 ;; "critical-path-verbose.hacchpsimscm"
 ;; common analysis routines
 ;; vi: ft=scheme
-;;	$Id: critical-path-verbose.hacchpsimscm,v 1.4 2008/05/06 17:43:20 fang Exp $
+;;	$Id: critical-path-verbose.hacchpsimscm,v 1.5 2008/05/08 04:34:39 fang Exp $
 
 ;; don't call this script directly, but load me from another
 
@@ -31,6 +31,11 @@
 (display "critical-event histogram:\n")
 (define crit-histo (make-critical-event-histogram crit))
 (rb-tree/for-each-display-newline crit-histo)
+(newline)
+
+(display "critical-process histogram:\n")
+(define proc-histo (make-critical-process-histogram crit))
+(print-named-critical-process-histogram proc-histo)
 (newline)
 
 

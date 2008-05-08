@@ -18,6 +18,11 @@ critical-event histogram:
 (1 . ((2 . 1)))
 (2 . ((0 . 1) (2 . 4)))
 
+critical-process histogram:
+A: (1 . 1)
+B: (2 . 5)
+[global-root]: (3 . 1)
+
 void_chan is channel ID 1
 (1 . #<raw-chpsim-event-node: send: A.S!, pid: 1, #pred: 1, succ: 1 
 channel deps: 1 

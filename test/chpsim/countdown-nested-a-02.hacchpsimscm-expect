@@ -50,6 +50,10 @@ critical-event histogram:
 (8 . ((9 . 3)))
 (9 . ((1 . 1) (3 . 3)))
 
+critical-process histogram:
+[top]: (0 . 30)
+[global-root]: (1 . 1)
+
 "NOTE: branch histogram entry 3->1 is one too high because the initial arrival
 at the do-while loop-head event is counted as a branch taken when it shouldn't 
 be.  This is a consequence of multiple entry events."

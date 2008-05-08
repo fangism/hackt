@@ -30,7 +30,7 @@ For example: (reference-equal? '(channel . 1) '(channel . 1)) -> #t."
 
 (define-public (process-id->string pid)
 "Print the canonical name of the process.  If @var{pid} is too high, assume
-it is a globa-root (fake process) for spawning events.  If @var{pid} is
+it is a global-root (fake process) for spawning events.  If @var{pid} is
 0, then call it the [top] process."
   (if (hac:valid-process-id? pid)
     (if (= pid 0) "[top]"

@@ -1097,3 +1097,10 @@ critical-event histogram:
 (15 . ((16 . 7)))
 (16 . ((12 . 7)))
 
+critical-process histogram:
+fibber.b0: (2 . 2)
+fibber.b1: (3 . 14)
+fibber.a: (4 . 35)
+fibber.c: (5 . 35)
+[global-root]: (6 . 1)
+
