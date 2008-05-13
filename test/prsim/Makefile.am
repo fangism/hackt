@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.23 2008/04/24 22:47:25 fang Exp $
+#	$Id: Makefile.am,v 1.24 2008/05/13 23:06:00 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -41,7 +41,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	keeper-a \
 	channel-test-a channel-test-b \
 	stuck-bug-a \
-	crash-bug-01
+	crash-bug-01 \
+	always_random-a
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -154,7 +155,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-b-random-03 channel-test-b-random-04 \
 	channel-test-b-random-05 \
 	stuck-bug-a-01 \
-	crash-bug-01-a
+	crash-bug-01-a \
+	always_random-a-01
 
 # positive different test:
 # oscil-random-01 and oscil-random-01a are *supposed* to differ (seeds)

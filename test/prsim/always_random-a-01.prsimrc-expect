@@ -1,0 +1,3 @@
+Fanins of node `b':
+[after 5, always-random]	a -> b-
+[after 10, weak]	~a -> b+

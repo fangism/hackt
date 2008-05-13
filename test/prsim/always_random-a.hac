@@ -1,0 +1,8 @@
+// "always_random-00.hac"
+
+bool a, b;
+prs {
+	[after=5;always_random=1]	a -> b-
+	[weak=1]			~a -> b+
+}
+

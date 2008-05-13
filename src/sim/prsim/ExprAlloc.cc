@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.23 2008/03/17 23:03:01 fang Exp $
+	$Id: ExprAlloc.cc,v 1.24 2008/05/13 23:05:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -867,12 +867,13 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Always_Random, "always_random")
  */
 void
 Always_Random::main(visitor_type& v, const values_type& a) {
-        typedef visitor_type::rule_type rule_type;
-        rule_type& r(v.st_rule_map[v.last_expr_index()]);
-        const values_type::value_type& w(a.front());
-        if (w.is_a<const pint_const>()->static_constant_value())
-                r.set_always_random();
-        else    r.clear_always_random();
+	typedef visitor_type::rule_type rule_type;
+//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
+	rule_type& r(v.get_temp_rule());
+	const values_type::value_type& w(a.front());
+	if (w.is_a<const pint_const>()->static_constant_value())
+		r.set_always_random();
+	else    r.clear_always_random();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
