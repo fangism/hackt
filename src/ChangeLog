@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-05-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-18:
+	  Minor error message update from parser on bad prs identifier.
+
+
 2008-05-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-17:

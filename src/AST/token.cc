@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.12 2007/11/14 20:50:22 fang Exp $
+	$Id: token.cc,v 1.13 2008/05/15 17:00:59 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -358,7 +358,8 @@ token_identifier::check_meta_reference(const context& c) const {
 		}
 	} else {
 		// better error handling later...
-		what(cerr << "failed to find ") << endl;
+		what(cerr << "failed to find ") <<
+			" at " << where(*this) << endl;
 		THROW_EXIT;		// temporary termination
 		return return_type(NULL);
 	}
@@ -393,7 +394,8 @@ token_identifier::check_nonmeta_reference(const context& c) const {
 		return inst->make_nonmeta_instance_reference();
 	} else {
 		// better error handling later...
-		what(cerr << "failed to find ") << endl;
+		what(cerr << "failed to find ") <<
+			" at " << where(*this) << endl;
 		THROW_EXIT;		// temporary termination
 		return return_type(NULL);
 	}

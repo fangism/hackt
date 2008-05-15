@@ -1,0 +1,10 @@
+// "025.hac"
+// expect fail: identifier not found
+
+defproc foo() {
+	bool a;
+prs {
+	g.a -> a-
+}
+}
+
