@@ -1,0 +1,6 @@
+// "065.hac"
+// reject-valid, ICE-on-valid test case from Tadeo, reduced by Fang
+
+pint X = 3;
+bool foo[1..X][0..1];
+

@@ -1,0 +1,6 @@
+// "066.hac"
+// copy-modified from "065.hac"
+
+pint X = 3;
+bool foo[0..1][1..X];
+

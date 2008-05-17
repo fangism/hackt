@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.11 2007/10/08 01:21:03 fang Exp $
+	$Id: range.cc,v 1.12 2008/05/17 04:38:47 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.11 2007/10/08 01:21:03 fang Exp $
+	$Id: range.cc,v 1.12 2008/05/17 04:38:47 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -583,9 +583,14 @@ range_list::check_meta_ranges(const context& c) const {
 				// convert N to 0..N-1
 				ret->push_back(count_ptr<pint_range>(
 					new pint_range(j->is_a<pint_expr>())));
-			} else {
-				INVARIANT(j->is_a<pint_range>());
+			} else if (j->is_a<pint_range>()) {
 				ret->push_back(j->is_a<pint_range>());
+			} else {
+				const count_ptr<const_range>
+					cr((j->is_a<const_range>()));
+				INVARIANT(cr);
+				ret->push_back(count_ptr<pint_range>(
+					new pint_range(*cr)));
 			}
 		}
 		return ret;

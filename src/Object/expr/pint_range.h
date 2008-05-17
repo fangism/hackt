@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_range.h,v 1.13 2007/01/21 05:59:06 fang Exp $
+	$Id: pint_range.h,v 1.14 2008/05/17 04:38:49 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RANGE_H__
@@ -41,6 +41,8 @@ public:
 
 	pint_range(const count_ptr<const pint_expr>& l,
 		const count_ptr<const pint_expr>& u);
+
+	pint_range(const const_range&);
 
 #if 0
 	pint_range(const pint_range& pr);

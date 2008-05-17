@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-05-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-19:
+	  Critical ICE-on-valid/reject-valid bug fix:
+		failed range conversion in front-end, fixed.
+		Test cases added: parser/array/065,066.  Gracias, Tadeo.
+
+
 2008-05-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-18:
