@@ -1,0 +1,11 @@
+// "125.hac"
+// reduced test case from Tadeo
+// check for meaningful error message
+
+pbool T = true;
+pint z = 12;
+[T->
+    z = 12;
+]
+
+

@@ -1,5 +1,6 @@
 lvalue/rvalue references dimensions mismatch in pint assignment.
 	got: [3][3] and: [4][3]
 ERROR: at position 1 of expression-assignment list.
+ERROR: failed to assign pint: y = { x[2], x[1], x[0], x[2] };
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

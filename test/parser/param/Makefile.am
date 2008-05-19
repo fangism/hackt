@@ -1,5 +1,5 @@
 # "test/parser/param/Makefile.am"
-#	$Id: Makefile.am,v 1.22 2008/04/04 21:16:16 fang Exp $
+#	$Id: Makefile.am,v 1.23 2008/05/19 20:16:04 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -33,7 +33,7 @@ HACKT_PARSE_TEST_PASSES = \
 	093 094 095 096 097 098 \
 	102 103 104 105 106 107 108 109 \
 	110 111 113 114 115 116 117 118 119 \
-	120 121 123 124
+	120 121 123 124 125
 
 # subset of HACKT_OBJ_TEST_SUBJECTS
 # TODO: sync this list up with CREATE_PASSES
@@ -50,7 +50,8 @@ HACKT_CREATE_TEST_FAILURES = \
 	084 085 \
 	095 \
 	107 \
-	113 114 115
+	113 114 115 \
+	125
 
 # TODO: preal test cases
 # do some serious arithmetic

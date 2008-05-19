@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.19 2006/11/21 05:00:14 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.20 2008/05/19 20:15:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -26,7 +26,7 @@
 #include "Object/expr/const_collection.h"
 #include "Object/ref/meta_value_reference.h"
 
-#include "util/what.h"
+#include "util/what.tcc"
 #include "util/binders.h"
 #include "util/compose.h"
 #include "util/dereference.h"
@@ -343,19 +343,27 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 	const count_ptr<const const_collection_type>
 		bunch_of_consts(src_values
 			.template is_a<const const_collection_type>());
+	good_bool g;
 	if (scalar_const) {
 		static const multikey_index_type blank;
 		// temporary 0-D, scalar value
 		const_collection_type the_lonesome_value(blank);
 		*the_lonesome_value.begin() =
 			scalar_const->static_constant_value();
-		return assign_dests(this->dests.begin(), this->dests.end(),
+		g = assign_dests(this->dests.begin(), this->dests.end(),
 			the_lonesome_value, c);
 	} else {
 		NEVER_NULL(bunch_of_consts);
-		return assign_dests(this->dests.begin(), this->dests.end(),
+		g = assign_dests(this->dests.begin(), this->dests.end(),
 			*bunch_of_consts, c);
 	}
+	if (!g.good) {
+		this->dump(
+			cerr << "ERROR: failed to assign " <<
+				traits_type::tag_name << ": ",
+			expr_dump_context::default_value) << endl;
+	}
+	return g;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
