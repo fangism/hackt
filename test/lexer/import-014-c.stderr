@@ -12,8 +12,8 @@ state	value
 #STATE#	(prs-literal) [17:3..5]
 #STATE#	+ [17:6]
 in state #STATE#, possible rules are:
-	prs_literal : prs_literal_base . expr_list_in_angles_optional  (#RULE#)
-	expr_list_in_angles_optional : .  (#RULE#)
+	prs_literal : prs_literal_base . prs_literal_params_in_angles_optional  (#RULE#)
+	prs_literal_params_in_angles_optional : .  (#RULE#)
 acceptable tokens are: 
 	'&' (reduce)
 	'(' (reduce)
