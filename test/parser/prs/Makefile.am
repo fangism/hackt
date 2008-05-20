@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.36 2008/03/17 23:06:21 fang Exp $
+#	$Id: Makefile.am,v 1.37 2008/05/20 19:50:56 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -70,7 +70,8 @@ HACKT_PARSE_TEST_PASSES = \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
-	strengths-01 strengths-02
+	strengths-01 strengths-02 \
+	flavor-01
 # pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
 
 srcdir_EXTRA_DIST += \
@@ -117,7 +118,8 @@ HACKT_CREATE_TEST_PASSES = \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
-	strengths-01 strengths-02
+	strengths-01 strengths-02 \
+	flavor-01
 
 # TODO: precharge-00 etc. to middle and back-end tests
 # pending: act-003 act-004 act-005
@@ -168,7 +170,8 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
-	act-001 act-002 act-005 act-006 act-007 act-010
+	act-001 act-002 act-005 act-006 act-007 act-010 \
+	flavor-01
 # pending: act-003 act-004
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
