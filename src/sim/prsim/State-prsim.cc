@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.9 2008/04/23 00:55:47 fang Exp $
+	$Id: State-prsim.cc,v 1.10 2008/05/28 23:59:15 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4891,6 +4891,14 @@ State::dump_memory_usage(ostream& o) const {
 	static const size_t tree_node_base_size = (3*(sizeof(void*)) +1);
 #define	sizeof_tree_node(type)	(sizeof(type) +tree_node_base_size)
 #endif
+
+#ifdef	HAVE_EXT_HASHTABLE_H
+#define	sizeof_hashtable_node(type)	sizeof(HASH_MAP_NAMESPACE::_Hashtable_node<type>)
+#else
+	// assume hashtable nodes have 1 pointer (next, singly-linked list)
+	static const size_t hashtable_node_base_size = (sizeof(void*));
+#define	sizeof_hashtable_node(type)	(sizeof(type) +tree_node_base_size)
+#endif
 {
 	const size_t ns = node_pool.size();
 	o << "node-state: ("  << ns << " * " << sizeof(node_type) <<
@@ -4914,6 +4922,12 @@ State::dump_memory_usage(ostream& o) const {
 		&node_type::add_fanout_size);
 	o << "expr::children: (" << gs << " * " << sizeof(expr_index_type) <<
 		" B/child) = " << gs * sizeof(expr_index_type) << " B" << endl;
+}{
+	typedef	rule_map_type::const_iterator::value_type	value_type;
+	const size_t rs = rule_map.size();
+	o << "rule-map: (" << rs << " * " << sizeof_hashtable_node(value_type)
+		<< " B/rule) = " << rs * sizeof_hashtable_node(value_type)
+		<< " B" << endl;
 }
 	event_pool.dump_memory_usage(o);
 {

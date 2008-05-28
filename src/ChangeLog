@@ -7,7 +7,9 @@
 
 	* HACKT-00-01-04-main-00-82-21+:
 	  simulator command interpreters can now accept "   #foo" comments.
-	  Tested: test/prsim/command-08.prsimrc
+		Tested: test/prsim/command-08.prsimrc
+	  prsim: memstats now reports memory usage of rule_map, 
+		which can be significant.
 
 
 2008-05-20	David Fang		<fangism@users.sourceforge.net>
