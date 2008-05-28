@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.4 2008/03/17 23:02:45 fang Exp $
+	$Id: command_registry.tcc,v 1.5 2008/05/28 22:28:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -452,8 +452,12 @@ command_registry<Command>::execute(state_type& st, const string_list& args) {
 	const size_t s = args.size();
 if (s) {
 	const string_list::const_iterator argi(args.begin());
+	const string& cmd(*argi);
+	if (!cmd.size() || cmd[0] == '#') {
+		return Command::NORMAL;
+	}
 	const typename command_map_type::const_iterator
-		p(command_map.find(*argi));
+		p(command_map.find(cmd));
 	if (p != command_map.end()) {
 		// skip # comments
 		if (echo_commands && (args.front() != "#")) {
@@ -464,7 +468,7 @@ if (s) {
 		}
 		return p->second.main(st, args);
 	} else {
-		cerr << "Unknown command: " << *argi << endl;
+		cerr << "Unknown command: " << cmd << endl;
 		return Command::SYNTAX;
 	}
 } else	return Command::NORMAL;
