@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.10 2008/05/28 23:59:15 fang Exp $
+	$Id: State-prsim.cc,v 1.11 2008/05/29 01:18:06 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4923,6 +4923,7 @@ State::dump_memory_usage(ostream& o) const {
 	o << "expr::children: (" << gs << " * " << sizeof(expr_index_type) <<
 		" B/child) = " << gs * sizeof(expr_index_type) << " B" << endl;
 }{
+	// hashtable iterator value-types
 	typedef	rule_map_type::const_iterator::value_type	value_type;
 	const size_t rs = rule_map.size();
 	o << "rule-map: (" << rs << " * " << sizeof_hashtable_node(value_type)
@@ -4960,13 +4961,6 @@ State::dump_memory_usage(ostream& o) const {
 #endif
 }
 {
-	// hashtable iterator value-types
-	typedef	rule_map_type::iterator::value_type	value_type;
-	const size_t rs = rule_map.size();
-	o << "expr-rule-map: ("  << rs << " * " << sizeof_tree_node(value_type)
-		<< " B/rule) = " << rs * sizeof_tree_node(value_type) << " B"
-		<< endl;
-}{
 	// rings
 	const size_t rs = mk_exhi.size();
 	o << "mk-exclhi-rings: ("  << rs << " * " << sizeof(ring_set_type) <<
