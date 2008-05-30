@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.36 2007/09/28 05:37:18 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.37 2008/05/30 05:17:03 fang Exp $
  */
 
 // flags and switches
@@ -843,6 +843,54 @@ persistent_object_manager::dump_text(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This *could* go into IO_utils as a means of dynamically
+	changing the endianness of reading based on input tests.
+	Writing should be in native endian, but at least files
+	with same integer sizes could inter-operate.  
+ */
+template <typename T>
+static
+T
+endian_stamp(void) {
+	T t = 0;
+	size_t s = sizeof(T);
+	do {
+		t <<= 8;
+		--s;
+		t += s;
+	} while (s);
+	return t;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param T should be unsigned type
+ */
+template <typename T>
+static
+void
+sign_endian(ostream& f) {
+	static const T v = endian_stamp<T>();
+	write_value(f, v);
+}
+
+template <typename T>
+static
+void
+verify_endian(istream& f) {
+	static const T v = endian_stamp<T>();
+	T t;
+	read_value(f, t);
+	if (t != v) {
+		cerr << "FATAL: endian mismatch in binary format!\n"
+			<< "\texpected: " << std::hex << v
+			<< "\n\tgot: " << std::hex << t << endl;
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Just write out the reconstruction_table to output file stream.
 	This should only be called AFTER the header entries are finalized.  
 	Not constant because it sets start_of_objects.  
@@ -851,6 +899,15 @@ persistent_object_manager::dump_text(ostream& o) const {
 void
 persistent_object_manager::write_header(ofstream& f) {
 	STACKTRACE("pom::write_header()");
+{
+	// first, binary format check
+	static const unsigned char ss = sizeof(size_t);
+	write_value(f, ss);
+	sign_endian<unsigned char>(f);		// space-filler
+	sign_endian<unsigned short>(f);
+	sign_endian<unsigned int>(f);
+	sign_endian<size_t>(f);
+}
 	// How many entries to expect?
 	const size_t max = reconstruction_table.size();
 	write_value(f, max);
@@ -879,6 +936,21 @@ persistent_object_manager::write_header(ofstream& f) {
 void
 persistent_object_manager::load_header(ifstream& f) {
 	STACKTRACE("pom::load_header()");
+{
+	// first, binary format check
+	unsigned char ss;
+	read_value(f, ss);
+	if (ss != sizeof(size_t)) {
+		cerr << "Object binary format mismatch: sizeof(size_t)\n"
+			<< "\texpected: " << sizeof(size_t)
+			<< "\n\tgot: " << size_t(ss) << endl;
+		THROW_EXIT;
+	}
+	verify_endian<unsigned char>(f);	// space-filler
+	verify_endian<unsigned short>(f);
+	verify_endian<unsigned int>(f);
+	verify_endian<size_t>(f);
+}
 	size_t max;
 	INVARIANT(f.good());
 	read_value(f, max);

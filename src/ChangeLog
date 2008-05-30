@@ -5,6 +5,10 @@
 
 2008-05-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-23:
+	  util/ChangeLog: object binary format is now checked and diagnosed. 
+
+
 	* HACKT-00-01-04-main-00-82-22:
 	  sim/prsim/ExprAlloc.cc: when taking OR combination of rules 
 		on the same node, check for size-limit before appending 

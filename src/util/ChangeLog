@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.94 2008/03/17 23:03:06 fang Exp $
+#	$Id: ChangeLog,v 1.95 2008/05/30 05:17:01 fang Exp $
+
+2008-05-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-23:
+	  persistent_object_manager.cc: sign binary format and endianess, 
+		and verify on reading in an object file. 
+		Gives appropriate diagnostic on mismatch.  
+
 
 2008-03-17	David Fang		<fangism@users.sourceforge.net>
 
