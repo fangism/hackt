@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.11 2008/05/29 01:18:06 fang Exp $
+	$Id: State-prsim.cc,v 1.12 2008/05/30 03:41:56 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4897,7 +4897,7 @@ State::dump_memory_usage(ostream& o) const {
 #else
 	// assume hashtable nodes have 1 pointer (next, singly-linked list)
 	static const size_t hashtable_node_base_size = (sizeof(void*));
-#define	sizeof_hashtable_node(type)	(sizeof(type) +tree_node_base_size)
+#define	sizeof_hashtable_node(type)	(sizeof(type) +hashtable_node_base_size)
 #endif
 {
 	const size_t ns = node_pool.size();

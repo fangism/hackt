@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.24 2008/05/13 23:05:59 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25 2008/05/30 03:41:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -742,6 +742,10 @@ if (d) {
 	its root pull-up or pull-down expression.  
 	This automatically takes care of OR-combination by allocating
 	new root expressions when necessary.  
+	\param ni is the target output node.
+	\param top_ex_index is the root expression pulling the target node.
+	\param dir is true if pulling up, false if pulling down.
+	\param w is true if rule is weak.  
  */
 void
 ExprAlloc::link_node_to_root_expr(const node_index_type ni,
@@ -752,7 +756,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		) {
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
 	STACKTRACE_INDENT_PRINT("linking expr " << top_ex_index <<
-		" to node " << ni << (dir ? '+' : '-') << endl);
+		" to node " << ni << ' ' << (dir ? '+' : '-') << endl);
 	node_type& output(st_node_pool[ni]);
 	// now link root expression to node
 	expr_type& ne(st_expr_pool[top_ex_index]);
@@ -770,6 +774,8 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 #endif
 		));
 	if (dir_index) {
+		static const size_t ex_max =
+			std::numeric_limits<expr_count_type>::max();
 		STACKTRACE_INDENT_PRINT("pull-up/dn already set" << endl);
 		// already set, need OR-combination
 		expr_type& pe(st_expr_pool[dir_index]);
@@ -780,8 +786,10 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 
 		// we don't OR-combine if the expression being examined
 		// is already a top-level root-expression.  
+			// FIXME: check for size exceeding limit!
 		// NOTE: we mean is_or(), not just is_disjunctive()
-		if (pe.is_or() && !state.is_rule_expr(top_ex_index)) {
+		if (pe.is_or() && !state.is_rule_expr(top_ex_index)
+				&& pe.size < ex_max) {
 		STACKTRACE_INDENT_PRINT("prev. root expr is OR" << endl);
 			// then simply extend the previous expr's children
 			INVARIANT(dir == pe.direction());
@@ -792,8 +800,9 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			ne.set_parent_expr(dir_index);
 			ng.offset = pe.size;
 			++pe.size;
-		} else if (ne.is_or() && !state.is_rule_expr(dir_index)) {
-			STACKTRACE_INDENT_PRINT("new expr is OR" << endl);
+		} else if (ne.is_or() && !state.is_rule_expr(dir_index)
+				&& ne.size < ex_max) {
+		STACKTRACE_INDENT_PRINT("new expr is OR" << endl);
 			ng.push_back_expr(dir_index);
 			dir_index = top_ex_index;
 			ne.pull(ni, dir);
@@ -801,6 +810,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			pg.offset = ne.size;
 			++ne.size;
 		} else {
+			// backup plan, in case max_size is exceeded
 			STACKTRACE_INDENT_PRINT("neither expr is OR" << endl);
 			// then need to allocate new root-expression
 			// and old expressions are no longer root!

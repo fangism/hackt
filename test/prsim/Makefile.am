@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.25 2008/05/28 22:28:05 fang Exp $
+#	$Id: Makefile.am,v 1.26 2008/05/30 03:41:57 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -49,7 +49,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 # register with read/write ports, cross-coupled
 
 HACKT_PARSE_TEST_PASSES = \
-	expr-limit-b
+	expr-limit-b \
+	large_OR_fanin huge_OR_fanin
 
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	comment-01 comment-02 comment-04 comment-06 comment-08 \
@@ -73,6 +74,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	ls-01 ls-02 \
 	logic-defs-01 logic-defs-a-01 logic-defs-b-01 \
 	expr-limit-a-01 \
+	large_OR_fanin-01 huge_OR_fanin-01 \
 	interference-01 interference-02 interference-03 interference-04 \
 	interference-05 interference-06 interference-07 interference-08 \
 	interference-09 interference-10 \
@@ -215,8 +217,14 @@ EXTRA_DIST += cbit_test_stat-01.prsimrc gen_cbit_test.awk
 
 # NOTE: expr-limit-a-01 should fail before limit was increased beyond 255
 
+HACKT_CREATE_TEST_PASSES = \
+	large_OR_fanin
+
 HACKT_CREATE_TEST_FAILURES = \
 	expr-limit-b
+
+HACKT_CFLAT_TEST_SUBJECTS = \
+	large_OR_fanin
 
 HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	comment-03 comment-05 comment-07 \

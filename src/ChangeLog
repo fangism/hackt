@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-05-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-22:
+	  sim/prsim/ExprAlloc.cc: when taking OR combination of rules 
+		on the same node, check for size-limit before appending 
+		subtrees to OR-expressions.  Fallback to allocating
+		new OR expression when it is exceeded.  
+		Thus immediate top-level fanin of node is unlimited.  
+		Fixes ACX-PR-1400.  Reduced test cases added.  
+
+
 2008-05-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-21+:

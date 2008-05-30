@@ -1,0 +1,11 @@
+// "huge_OR_fanin.hac"
+// reduced test case for process that exceeds fanin limit by OR-combination
+
+defproc foo(bool V, G) {
+prs { passn(V,G,G) }
+}
+
+bool G;
+foo bar[65537];
+(;i:65537: bar[i].G = G;)
+

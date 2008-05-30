@@ -1,0 +1,514 @@
+after 0	"bar[0].V" & ~"G" -> "G"-
+after 0	"bar[1].V" & ~"G" -> "G"-
+after 0	"bar[2].V" & ~"G" -> "G"-
+after 0	"bar[3].V" & ~"G" -> "G"-
+after 0	"bar[4].V" & ~"G" -> "G"-
+after 0	"bar[5].V" & ~"G" -> "G"-
+after 0	"bar[6].V" & ~"G" -> "G"-
+after 0	"bar[7].V" & ~"G" -> "G"-
+after 0	"bar[8].V" & ~"G" -> "G"-
+after 0	"bar[9].V" & ~"G" -> "G"-
+after 0	"bar[10].V" & ~"G" -> "G"-
+after 0	"bar[11].V" & ~"G" -> "G"-
+after 0	"bar[12].V" & ~"G" -> "G"-
+after 0	"bar[13].V" & ~"G" -> "G"-
+after 0	"bar[14].V" & ~"G" -> "G"-
+after 0	"bar[15].V" & ~"G" -> "G"-
+after 0	"bar[16].V" & ~"G" -> "G"-
+after 0	"bar[17].V" & ~"G" -> "G"-
+after 0	"bar[18].V" & ~"G" -> "G"-
+after 0	"bar[19].V" & ~"G" -> "G"-
+after 0	"bar[20].V" & ~"G" -> "G"-
+after 0	"bar[21].V" & ~"G" -> "G"-
+after 0	"bar[22].V" & ~"G" -> "G"-
+after 0	"bar[23].V" & ~"G" -> "G"-
+after 0	"bar[24].V" & ~"G" -> "G"-
+after 0	"bar[25].V" & ~"G" -> "G"-
+after 0	"bar[26].V" & ~"G" -> "G"-
+after 0	"bar[27].V" & ~"G" -> "G"-
+after 0	"bar[28].V" & ~"G" -> "G"-
+after 0	"bar[29].V" & ~"G" -> "G"-
+after 0	"bar[30].V" & ~"G" -> "G"-
+after 0	"bar[31].V" & ~"G" -> "G"-
+after 0	"bar[32].V" & ~"G" -> "G"-
+after 0	"bar[33].V" & ~"G" -> "G"-
+after 0	"bar[34].V" & ~"G" -> "G"-
+after 0	"bar[35].V" & ~"G" -> "G"-
+after 0	"bar[36].V" & ~"G" -> "G"-
+after 0	"bar[37].V" & ~"G" -> "G"-
+after 0	"bar[38].V" & ~"G" -> "G"-
+after 0	"bar[39].V" & ~"G" -> "G"-
+after 0	"bar[40].V" & ~"G" -> "G"-
+after 0	"bar[41].V" & ~"G" -> "G"-
+after 0	"bar[42].V" & ~"G" -> "G"-
+after 0	"bar[43].V" & ~"G" -> "G"-
+after 0	"bar[44].V" & ~"G" -> "G"-
+after 0	"bar[45].V" & ~"G" -> "G"-
+after 0	"bar[46].V" & ~"G" -> "G"-
+after 0	"bar[47].V" & ~"G" -> "G"-
+after 0	"bar[48].V" & ~"G" -> "G"-
+after 0	"bar[49].V" & ~"G" -> "G"-
+after 0	"bar[50].V" & ~"G" -> "G"-
+after 0	"bar[51].V" & ~"G" -> "G"-
+after 0	"bar[52].V" & ~"G" -> "G"-
+after 0	"bar[53].V" & ~"G" -> "G"-
+after 0	"bar[54].V" & ~"G" -> "G"-
+after 0	"bar[55].V" & ~"G" -> "G"-
+after 0	"bar[56].V" & ~"G" -> "G"-
+after 0	"bar[57].V" & ~"G" -> "G"-
+after 0	"bar[58].V" & ~"G" -> "G"-
+after 0	"bar[59].V" & ~"G" -> "G"-
+after 0	"bar[60].V" & ~"G" -> "G"-
+after 0	"bar[61].V" & ~"G" -> "G"-
+after 0	"bar[62].V" & ~"G" -> "G"-
+after 0	"bar[63].V" & ~"G" -> "G"-
+after 0	"bar[64].V" & ~"G" -> "G"-
+after 0	"bar[65].V" & ~"G" -> "G"-
+after 0	"bar[66].V" & ~"G" -> "G"-
+after 0	"bar[67].V" & ~"G" -> "G"-
+after 0	"bar[68].V" & ~"G" -> "G"-
+after 0	"bar[69].V" & ~"G" -> "G"-
+after 0	"bar[70].V" & ~"G" -> "G"-
+after 0	"bar[71].V" & ~"G" -> "G"-
+after 0	"bar[72].V" & ~"G" -> "G"-
+after 0	"bar[73].V" & ~"G" -> "G"-
+after 0	"bar[74].V" & ~"G" -> "G"-
+after 0	"bar[75].V" & ~"G" -> "G"-
+after 0	"bar[76].V" & ~"G" -> "G"-
+after 0	"bar[77].V" & ~"G" -> "G"-
+after 0	"bar[78].V" & ~"G" -> "G"-
+after 0	"bar[79].V" & ~"G" -> "G"-
+after 0	"bar[80].V" & ~"G" -> "G"-
+after 0	"bar[81].V" & ~"G" -> "G"-
+after 0	"bar[82].V" & ~"G" -> "G"-
+after 0	"bar[83].V" & ~"G" -> "G"-
+after 0	"bar[84].V" & ~"G" -> "G"-
+after 0	"bar[85].V" & ~"G" -> "G"-
+after 0	"bar[86].V" & ~"G" -> "G"-
+after 0	"bar[87].V" & ~"G" -> "G"-
+after 0	"bar[88].V" & ~"G" -> "G"-
+after 0	"bar[89].V" & ~"G" -> "G"-
+after 0	"bar[90].V" & ~"G" -> "G"-
+after 0	"bar[91].V" & ~"G" -> "G"-
+after 0	"bar[92].V" & ~"G" -> "G"-
+after 0	"bar[93].V" & ~"G" -> "G"-
+after 0	"bar[94].V" & ~"G" -> "G"-
+after 0	"bar[95].V" & ~"G" -> "G"-
+after 0	"bar[96].V" & ~"G" -> "G"-
+after 0	"bar[97].V" & ~"G" -> "G"-
+after 0	"bar[98].V" & ~"G" -> "G"-
+after 0	"bar[99].V" & ~"G" -> "G"-
+after 0	"bar[100].V" & ~"G" -> "G"-
+after 0	"bar[101].V" & ~"G" -> "G"-
+after 0	"bar[102].V" & ~"G" -> "G"-
+after 0	"bar[103].V" & ~"G" -> "G"-
+after 0	"bar[104].V" & ~"G" -> "G"-
+after 0	"bar[105].V" & ~"G" -> "G"-
+after 0	"bar[106].V" & ~"G" -> "G"-
+after 0	"bar[107].V" & ~"G" -> "G"-
+after 0	"bar[108].V" & ~"G" -> "G"-
+after 0	"bar[109].V" & ~"G" -> "G"-
+after 0	"bar[110].V" & ~"G" -> "G"-
+after 0	"bar[111].V" & ~"G" -> "G"-
+after 0	"bar[112].V" & ~"G" -> "G"-
+after 0	"bar[113].V" & ~"G" -> "G"-
+after 0	"bar[114].V" & ~"G" -> "G"-
+after 0	"bar[115].V" & ~"G" -> "G"-
+after 0	"bar[116].V" & ~"G" -> "G"-
+after 0	"bar[117].V" & ~"G" -> "G"-
+after 0	"bar[118].V" & ~"G" -> "G"-
+after 0	"bar[119].V" & ~"G" -> "G"-
+after 0	"bar[120].V" & ~"G" -> "G"-
+after 0	"bar[121].V" & ~"G" -> "G"-
+after 0	"bar[122].V" & ~"G" -> "G"-
+after 0	"bar[123].V" & ~"G" -> "G"-
+after 0	"bar[124].V" & ~"G" -> "G"-
+after 0	"bar[125].V" & ~"G" -> "G"-
+after 0	"bar[126].V" & ~"G" -> "G"-
+after 0	"bar[127].V" & ~"G" -> "G"-
+after 0	"bar[128].V" & ~"G" -> "G"-
+after 0	"bar[129].V" & ~"G" -> "G"-
+after 0	"bar[130].V" & ~"G" -> "G"-
+after 0	"bar[131].V" & ~"G" -> "G"-
+after 0	"bar[132].V" & ~"G" -> "G"-
+after 0	"bar[133].V" & ~"G" -> "G"-
+after 0	"bar[134].V" & ~"G" -> "G"-
+after 0	"bar[135].V" & ~"G" -> "G"-
+after 0	"bar[136].V" & ~"G" -> "G"-
+after 0	"bar[137].V" & ~"G" -> "G"-
+after 0	"bar[138].V" & ~"G" -> "G"-
+after 0	"bar[139].V" & ~"G" -> "G"-
+after 0	"bar[140].V" & ~"G" -> "G"-
+after 0	"bar[141].V" & ~"G" -> "G"-
+after 0	"bar[142].V" & ~"G" -> "G"-
+after 0	"bar[143].V" & ~"G" -> "G"-
+after 0	"bar[144].V" & ~"G" -> "G"-
+after 0	"bar[145].V" & ~"G" -> "G"-
+after 0	"bar[146].V" & ~"G" -> "G"-
+after 0	"bar[147].V" & ~"G" -> "G"-
+after 0	"bar[148].V" & ~"G" -> "G"-
+after 0	"bar[149].V" & ~"G" -> "G"-
+after 0	"bar[150].V" & ~"G" -> "G"-
+after 0	"bar[151].V" & ~"G" -> "G"-
+after 0	"bar[152].V" & ~"G" -> "G"-
+after 0	"bar[153].V" & ~"G" -> "G"-
+after 0	"bar[154].V" & ~"G" -> "G"-
+after 0	"bar[155].V" & ~"G" -> "G"-
+after 0	"bar[156].V" & ~"G" -> "G"-
+after 0	"bar[157].V" & ~"G" -> "G"-
+after 0	"bar[158].V" & ~"G" -> "G"-
+after 0	"bar[159].V" & ~"G" -> "G"-
+after 0	"bar[160].V" & ~"G" -> "G"-
+after 0	"bar[161].V" & ~"G" -> "G"-
+after 0	"bar[162].V" & ~"G" -> "G"-
+after 0	"bar[163].V" & ~"G" -> "G"-
+after 0	"bar[164].V" & ~"G" -> "G"-
+after 0	"bar[165].V" & ~"G" -> "G"-
+after 0	"bar[166].V" & ~"G" -> "G"-
+after 0	"bar[167].V" & ~"G" -> "G"-
+after 0	"bar[168].V" & ~"G" -> "G"-
+after 0	"bar[169].V" & ~"G" -> "G"-
+after 0	"bar[170].V" & ~"G" -> "G"-
+after 0	"bar[171].V" & ~"G" -> "G"-
+after 0	"bar[172].V" & ~"G" -> "G"-
+after 0	"bar[173].V" & ~"G" -> "G"-
+after 0	"bar[174].V" & ~"G" -> "G"-
+after 0	"bar[175].V" & ~"G" -> "G"-
+after 0	"bar[176].V" & ~"G" -> "G"-
+after 0	"bar[177].V" & ~"G" -> "G"-
+after 0	"bar[178].V" & ~"G" -> "G"-
+after 0	"bar[179].V" & ~"G" -> "G"-
+after 0	"bar[180].V" & ~"G" -> "G"-
+after 0	"bar[181].V" & ~"G" -> "G"-
+after 0	"bar[182].V" & ~"G" -> "G"-
+after 0	"bar[183].V" & ~"G" -> "G"-
+after 0	"bar[184].V" & ~"G" -> "G"-
+after 0	"bar[185].V" & ~"G" -> "G"-
+after 0	"bar[186].V" & ~"G" -> "G"-
+after 0	"bar[187].V" & ~"G" -> "G"-
+after 0	"bar[188].V" & ~"G" -> "G"-
+after 0	"bar[189].V" & ~"G" -> "G"-
+after 0	"bar[190].V" & ~"G" -> "G"-
+after 0	"bar[191].V" & ~"G" -> "G"-
+after 0	"bar[192].V" & ~"G" -> "G"-
+after 0	"bar[193].V" & ~"G" -> "G"-
+after 0	"bar[194].V" & ~"G" -> "G"-
+after 0	"bar[195].V" & ~"G" -> "G"-
+after 0	"bar[196].V" & ~"G" -> "G"-
+after 0	"bar[197].V" & ~"G" -> "G"-
+after 0	"bar[198].V" & ~"G" -> "G"-
+after 0	"bar[199].V" & ~"G" -> "G"-
+after 0	"bar[200].V" & ~"G" -> "G"-
+after 0	"bar[201].V" & ~"G" -> "G"-
+after 0	"bar[202].V" & ~"G" -> "G"-
+after 0	"bar[203].V" & ~"G" -> "G"-
+after 0	"bar[204].V" & ~"G" -> "G"-
+after 0	"bar[205].V" & ~"G" -> "G"-
+after 0	"bar[206].V" & ~"G" -> "G"-
+after 0	"bar[207].V" & ~"G" -> "G"-
+after 0	"bar[208].V" & ~"G" -> "G"-
+after 0	"bar[209].V" & ~"G" -> "G"-
+after 0	"bar[210].V" & ~"G" -> "G"-
+after 0	"bar[211].V" & ~"G" -> "G"-
+after 0	"bar[212].V" & ~"G" -> "G"-
+after 0	"bar[213].V" & ~"G" -> "G"-
+after 0	"bar[214].V" & ~"G" -> "G"-
+after 0	"bar[215].V" & ~"G" -> "G"-
+after 0	"bar[216].V" & ~"G" -> "G"-
+after 0	"bar[217].V" & ~"G" -> "G"-
+after 0	"bar[218].V" & ~"G" -> "G"-
+after 0	"bar[219].V" & ~"G" -> "G"-
+after 0	"bar[220].V" & ~"G" -> "G"-
+after 0	"bar[221].V" & ~"G" -> "G"-
+after 0	"bar[222].V" & ~"G" -> "G"-
+after 0	"bar[223].V" & ~"G" -> "G"-
+after 0	"bar[224].V" & ~"G" -> "G"-
+after 0	"bar[225].V" & ~"G" -> "G"-
+after 0	"bar[226].V" & ~"G" -> "G"-
+after 0	"bar[227].V" & ~"G" -> "G"-
+after 0	"bar[228].V" & ~"G" -> "G"-
+after 0	"bar[229].V" & ~"G" -> "G"-
+after 0	"bar[230].V" & ~"G" -> "G"-
+after 0	"bar[231].V" & ~"G" -> "G"-
+after 0	"bar[232].V" & ~"G" -> "G"-
+after 0	"bar[233].V" & ~"G" -> "G"-
+after 0	"bar[234].V" & ~"G" -> "G"-
+after 0	"bar[235].V" & ~"G" -> "G"-
+after 0	"bar[236].V" & ~"G" -> "G"-
+after 0	"bar[237].V" & ~"G" -> "G"-
+after 0	"bar[238].V" & ~"G" -> "G"-
+after 0	"bar[239].V" & ~"G" -> "G"-
+after 0	"bar[240].V" & ~"G" -> "G"-
+after 0	"bar[241].V" & ~"G" -> "G"-
+after 0	"bar[242].V" & ~"G" -> "G"-
+after 0	"bar[243].V" & ~"G" -> "G"-
+after 0	"bar[244].V" & ~"G" -> "G"-
+after 0	"bar[245].V" & ~"G" -> "G"-
+after 0	"bar[246].V" & ~"G" -> "G"-
+after 0	"bar[247].V" & ~"G" -> "G"-
+after 0	"bar[248].V" & ~"G" -> "G"-
+after 0	"bar[249].V" & ~"G" -> "G"-
+after 0	"bar[250].V" & ~"G" -> "G"-
+after 0	"bar[251].V" & ~"G" -> "G"-
+after 0	"bar[252].V" & ~"G" -> "G"-
+after 0	"bar[253].V" & ~"G" -> "G"-
+after 0	"bar[254].V" & ~"G" -> "G"-
+after 0	"bar[255].V" & ~"G" -> "G"-
+after 0	"bar[256].V" & ~"G" -> "G"-
+= "G" "bar[0].G"
+= "G" "bar[1].G"
+= "G" "bar[2].G"
+= "G" "bar[3].G"
+= "G" "bar[4].G"
+= "G" "bar[5].G"
+= "G" "bar[6].G"
+= "G" "bar[7].G"
+= "G" "bar[8].G"
+= "G" "bar[9].G"
+= "G" "bar[10].G"
+= "G" "bar[11].G"
+= "G" "bar[12].G"
+= "G" "bar[13].G"
+= "G" "bar[14].G"
+= "G" "bar[15].G"
+= "G" "bar[16].G"
+= "G" "bar[17].G"
+= "G" "bar[18].G"
+= "G" "bar[19].G"
+= "G" "bar[20].G"
+= "G" "bar[21].G"
+= "G" "bar[22].G"
+= "G" "bar[23].G"
+= "G" "bar[24].G"
+= "G" "bar[25].G"
+= "G" "bar[26].G"
+= "G" "bar[27].G"
+= "G" "bar[28].G"
+= "G" "bar[29].G"
+= "G" "bar[30].G"
+= "G" "bar[31].G"
+= "G" "bar[32].G"
+= "G" "bar[33].G"
+= "G" "bar[34].G"
+= "G" "bar[35].G"
+= "G" "bar[36].G"
+= "G" "bar[37].G"
+= "G" "bar[38].G"
+= "G" "bar[39].G"
+= "G" "bar[40].G"
+= "G" "bar[41].G"
+= "G" "bar[42].G"
+= "G" "bar[43].G"
+= "G" "bar[44].G"
+= "G" "bar[45].G"
+= "G" "bar[46].G"
+= "G" "bar[47].G"
+= "G" "bar[48].G"
+= "G" "bar[49].G"
+= "G" "bar[50].G"
+= "G" "bar[51].G"
+= "G" "bar[52].G"
+= "G" "bar[53].G"
+= "G" "bar[54].G"
+= "G" "bar[55].G"
+= "G" "bar[56].G"
+= "G" "bar[57].G"
+= "G" "bar[58].G"
+= "G" "bar[59].G"
+= "G" "bar[60].G"
+= "G" "bar[61].G"
+= "G" "bar[62].G"
+= "G" "bar[63].G"
+= "G" "bar[64].G"
+= "G" "bar[65].G"
+= "G" "bar[66].G"
+= "G" "bar[67].G"
+= "G" "bar[68].G"
+= "G" "bar[69].G"
+= "G" "bar[70].G"
+= "G" "bar[71].G"
+= "G" "bar[72].G"
+= "G" "bar[73].G"
+= "G" "bar[74].G"
+= "G" "bar[75].G"
+= "G" "bar[76].G"
+= "G" "bar[77].G"
+= "G" "bar[78].G"
+= "G" "bar[79].G"
+= "G" "bar[80].G"
+= "G" "bar[81].G"
+= "G" "bar[82].G"
+= "G" "bar[83].G"
+= "G" "bar[84].G"
+= "G" "bar[85].G"
+= "G" "bar[86].G"
+= "G" "bar[87].G"
+= "G" "bar[88].G"
+= "G" "bar[89].G"
+= "G" "bar[90].G"
+= "G" "bar[91].G"
+= "G" "bar[92].G"
+= "G" "bar[93].G"
+= "G" "bar[94].G"
+= "G" "bar[95].G"
+= "G" "bar[96].G"
+= "G" "bar[97].G"
+= "G" "bar[98].G"
+= "G" "bar[99].G"
+= "G" "bar[100].G"
+= "G" "bar[101].G"
+= "G" "bar[102].G"
+= "G" "bar[103].G"
+= "G" "bar[104].G"
+= "G" "bar[105].G"
+= "G" "bar[106].G"
+= "G" "bar[107].G"
+= "G" "bar[108].G"
+= "G" "bar[109].G"
+= "G" "bar[110].G"
+= "G" "bar[111].G"
+= "G" "bar[112].G"
+= "G" "bar[113].G"
+= "G" "bar[114].G"
+= "G" "bar[115].G"
+= "G" "bar[116].G"
+= "G" "bar[117].G"
+= "G" "bar[118].G"
+= "G" "bar[119].G"
+= "G" "bar[120].G"
+= "G" "bar[121].G"
+= "G" "bar[122].G"
+= "G" "bar[123].G"
+= "G" "bar[124].G"
+= "G" "bar[125].G"
+= "G" "bar[126].G"
+= "G" "bar[127].G"
+= "G" "bar[128].G"
+= "G" "bar[129].G"
+= "G" "bar[130].G"
+= "G" "bar[131].G"
+= "G" "bar[132].G"
+= "G" "bar[133].G"
+= "G" "bar[134].G"
+= "G" "bar[135].G"
+= "G" "bar[136].G"
+= "G" "bar[137].G"
+= "G" "bar[138].G"
+= "G" "bar[139].G"
+= "G" "bar[140].G"
+= "G" "bar[141].G"
+= "G" "bar[142].G"
+= "G" "bar[143].G"
+= "G" "bar[144].G"
+= "G" "bar[145].G"
+= "G" "bar[146].G"
+= "G" "bar[147].G"
+= "G" "bar[148].G"
+= "G" "bar[149].G"
+= "G" "bar[150].G"
+= "G" "bar[151].G"
+= "G" "bar[152].G"
+= "G" "bar[153].G"
+= "G" "bar[154].G"
+= "G" "bar[155].G"
+= "G" "bar[156].G"
+= "G" "bar[157].G"
+= "G" "bar[158].G"
+= "G" "bar[159].G"
+= "G" "bar[160].G"
+= "G" "bar[161].G"
+= "G" "bar[162].G"
+= "G" "bar[163].G"
+= "G" "bar[164].G"
+= "G" "bar[165].G"
+= "G" "bar[166].G"
+= "G" "bar[167].G"
+= "G" "bar[168].G"
+= "G" "bar[169].G"
+= "G" "bar[170].G"
+= "G" "bar[171].G"
+= "G" "bar[172].G"
+= "G" "bar[173].G"
+= "G" "bar[174].G"
+= "G" "bar[175].G"
+= "G" "bar[176].G"
+= "G" "bar[177].G"
+= "G" "bar[178].G"
+= "G" "bar[179].G"
+= "G" "bar[180].G"
+= "G" "bar[181].G"
+= "G" "bar[182].G"
+= "G" "bar[183].G"
+= "G" "bar[184].G"
+= "G" "bar[185].G"
+= "G" "bar[186].G"
+= "G" "bar[187].G"
+= "G" "bar[188].G"
+= "G" "bar[189].G"
+= "G" "bar[190].G"
+= "G" "bar[191].G"
+= "G" "bar[192].G"
+= "G" "bar[193].G"
+= "G" "bar[194].G"
+= "G" "bar[195].G"
+= "G" "bar[196].G"
+= "G" "bar[197].G"
+= "G" "bar[198].G"
+= "G" "bar[199].G"
+= "G" "bar[200].G"
+= "G" "bar[201].G"
+= "G" "bar[202].G"
+= "G" "bar[203].G"
+= "G" "bar[204].G"
+= "G" "bar[205].G"
+= "G" "bar[206].G"
+= "G" "bar[207].G"
+= "G" "bar[208].G"
+= "G" "bar[209].G"
+= "G" "bar[210].G"
+= "G" "bar[211].G"
+= "G" "bar[212].G"
+= "G" "bar[213].G"
+= "G" "bar[214].G"
+= "G" "bar[215].G"
+= "G" "bar[216].G"
+= "G" "bar[217].G"
+= "G" "bar[218].G"
+= "G" "bar[219].G"
+= "G" "bar[220].G"
+= "G" "bar[221].G"
+= "G" "bar[222].G"
+= "G" "bar[223].G"
+= "G" "bar[224].G"
+= "G" "bar[225].G"
+= "G" "bar[226].G"
+= "G" "bar[227].G"
+= "G" "bar[228].G"
+= "G" "bar[229].G"
+= "G" "bar[230].G"
+= "G" "bar[231].G"
+= "G" "bar[232].G"
+= "G" "bar[233].G"
+= "G" "bar[234].G"
+= "G" "bar[235].G"
+= "G" "bar[236].G"
+= "G" "bar[237].G"
+= "G" "bar[238].G"
+= "G" "bar[239].G"
+= "G" "bar[240].G"
+= "G" "bar[241].G"
+= "G" "bar[242].G"
+= "G" "bar[243].G"
+= "G" "bar[244].G"
+= "G" "bar[245].G"
+= "G" "bar[246].G"
+= "G" "bar[247].G"
+= "G" "bar[248].G"
+= "G" "bar[249].G"
+= "G" "bar[250].G"
+= "G" "bar[251].G"
+= "G" "bar[252].G"
+= "G" "bar[253].G"
+= "G" "bar[254].G"
+= "G" "bar[255].G"
+= "G" "bar[256].G"
