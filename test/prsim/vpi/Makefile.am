@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.2 2008/03/17 23:10:49 fang Exp $
+#	$Id: Makefile.am,v 1.3 2008/06/03 18:47:31 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -52,11 +52,13 @@ inverters.vxi-subdir-out: Makefile.copy force
 
 CLEANFILES += Makefile.copy
 
-# TODO: provide Makefile?
-dist_vpiinv_DATA = example.mk clkgen.v \
+EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	inverters.hac inverters.v shoelace.v \
 	channel-source-sink.hac channel-source-sink.v
-vpiinv_DATA = Makefile.copy
+EXTRA_DIST += example.mk clkgen.v \
+	inverters.hac inverters.v shoelace.v \
+	channel-source-sink.hac channel-source-sink.v
+vpiinv_DATA = $(EXAMPLE_DATA_FILES) Makefile.copy
 
 include $(top_srcdir)/test/Make.test-tail
 
