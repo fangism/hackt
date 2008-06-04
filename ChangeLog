@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2008-06-03	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-24:
+	  Long time no distcheck, passes after minor dist fixes.  
+		Make available as minor release.
+	  configure.ac: date bump for release
+
+
 2008-03-20	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-09-merged-parser-06-07:
