@@ -7,7 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.31 2008/03/17 23:01:56 fang Exp $
+#	$Id: Make.global,v 1.32 2008/06/04 04:06:35 fang Exp $
 
 # automatically runs autotools (and recursively in subdirectories)
 reconf: force
@@ -392,6 +392,14 @@ endif
 	$(ECHO) "	texinfos, dvis, pdfs, pss, htmls" ; \
 	$(ECHO) "	program-transform-name, package{,-version,-bugreport}" ; \
 	$(ECHO) "	CFLAGS, CXXFLAGS, CPPFLAGS, LDFLAGS, AM_*FLAGS, LIBS, LEX, YACC"
+
+# http://xkcd.com/149/
+sandwich:
+	@if test `whoami` = "root" ; then \
+	  $(ECHO) "Okay." ; \
+	else \
+	  $(ECHO) "What? Make it yourself." ; \
+	fi
 
 # standard phony target for unconditional targets
 force:
