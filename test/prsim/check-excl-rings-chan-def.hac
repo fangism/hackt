@@ -1,0 +1,24 @@
+// "check-excl-rings-chan-def.hac"
+// copy-modified from check-excl-rings-def.hac"
+
+defchan	check_exclhi_pair <: chan(bool) (bool a, b) {
+spec {
+	exclhi(a, b)
+}
+}
+
+
+defchan	check_excllo_pair <: chan(bool) (bool a, b) {
+spec {
+	excllo(a, b)
+}
+}
+
+defproc	check_invs(bool a, b, x, y) {
+check_exclhi_pair e(x, y);
+prs {
+	a	=> x-
+	b	=> y-
+}
+}
+

@@ -1,0 +1,31 @@
+# "check-excl-rings-chan-05.prsimrc"
+#	$Id: check-excl-rings-chan-05.prsimrc,v 1.1 2008/06/05 03:58:01 fang Exp $
+# @haco@ check-excl-rings-chan.haco-a
+
+# default: checkexcl
+
+watchall
+set a 1
+set b 1
+cycle
+
+set a 0
+cycle
+
+# xy-ring is locked
+initialize
+# initialize should clear the lock
+
+set b 1
+cycle
+set a 0
+cycle
+
+# OK
+initialize
+
+set a 1
+cycle
+set b 0
+cycle
+

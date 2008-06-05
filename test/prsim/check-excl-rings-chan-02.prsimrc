@@ -1,0 +1,11 @@
+# "check-excl-rings-chan-02.prsimrc"
+#	$Id: check-excl-rings-chan-02.prsimrc,v 1.1 2008/06/05 03:57:57 fang Exp $
+# @haco@ check-excl-rings-chan.haco-a
+
+# default: checkexcl
+
+nocheckexcl
+source check-excl-rings-chan-01.prsimrc
+
+# error on exclhi(x, y) not caught
+

@@ -1,0 +1,7 @@
+// "check-excl-rings-chan.hac"
+
+import "check-excl-rings-chan-def.hac";
+
+bool a, b, x, y;
+check_invs foo(a, b, x, y);
+

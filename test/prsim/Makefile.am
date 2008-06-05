@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.26 2008/05/30 03:41:57 fang Exp $
+#	$Id: Makefile.am,v 1.27 2008/06/05 03:57:54 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -15,6 +15,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem-share after-celem-def after-celem after-celem-more \
 	pass-gates-def pass-gates excl-rings-def excl-rings \
 	check-excl-rings-def check-excl-rings \
+	check-excl-rings-chan-def check-excl-rings-chan \
 	logic-defs logic-defs-a logic-defs-b \
 	and nand or nor array \
 	and-nand or-nor nand-or \
@@ -107,6 +108,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pass-gates-01 pass-gates-02 pass-gates-03 \
 	excl-rings-01 excl-rings-02 excl-rings-03 \
 	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05 \
+	check-excl-rings-chan-02 check-excl-rings-chan-04 \
+	check-excl-rings-chan-05 \
 	precharge-a-01 precharge-b-01 \
 	precharge-c-01 precharge-d-01 \
 	precharge-e-01 precharge-f-01 \
@@ -237,6 +240,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	aliases-05 aliases-06 aliases-07 \
 	check-excl-rings-01 check-excl-rings-03 \
+	check-excl-rings-chan-01 check-excl-rings-chan-03 \
 	weak-feedback-a-02 weak-feedback-b-02 \
 	celem-fb-02 \
 	channel-test-a-10 channel-test-a-12 \
