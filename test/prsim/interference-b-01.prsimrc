@@ -1,0 +1,11 @@
+# "interference-b-01.prsimrc"
+# @haco@ interference-b.haco-a
+# reduced from bug-inducing test case, fixed
+
+# echo-commands on
+watchall
+set a 0
+cycle
+set a 1
+cycle
+

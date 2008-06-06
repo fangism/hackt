@@ -1,0 +1,8 @@
+WARNING: weak-interference `c'
+>> cause: `a' (val: 0)
+	0	a : 0
+WARNING: weak-interference `c'
+>> cause: `a' (val: 1)
+WARNING: weak-interference `c'
+>> cause: `a' (val: 1)
+	0	a : 1

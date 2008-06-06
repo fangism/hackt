@@ -1,0 +1,14 @@
+// "interference-b.hac"
+// reduced bug-inducing test case, originally from Tadeo
+// Assertion failed: (dequeue_unstable_events()), function
+// flush_pending_queue, file ../../src/sim/prsim/State-prsim.cc, line 1579.
+// FIXED: HACKT-00-01-04-main-00-82-25
+
+bool a, b, c;
+prs {
+	a	-> c-
+	b	-> c-
+	~a	-> c+
+	~b	-> c+
+}
+

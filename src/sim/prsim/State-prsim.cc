@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.12 2008/05/30 03:41:56 fang Exp $
+	$Id: State-prsim.cc,v 1.13 2008/06/06 21:57:58 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1576,7 +1576,12 @@ for ( ; i!=e; ++i) {
 			pe.cause.val = ev.cause.val;
 			__deallocate_pending_interference_event(ne);
 		} else {
-			INVARIANT(dequeue_unstable_events());
+			// INVARIANT(dequeue_unstable_events());
+			/**
+				This can happen b/c pending_queue may
+				contain duplicates for the node, 
+				from interference and evaluation ordering.  
+			**/
 			DEBUG_STEP_PRINT("re-queue to X." << endl);
 			ev.val = node_type::LOGIC_OTHER;
 			__flush_pending_event_with_interference(_n, ne, ev);
