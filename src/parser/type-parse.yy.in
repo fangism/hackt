@@ -5,7 +5,7 @@
 	ALERT: Make sure you are editing "parser/type-parse.yy.in"
 	and NOT the configure-generated "parser/type-parse.yy"
 	or else your changes will be clobbered during the next configure!
-	$Id: type-parse.yy.in,v 1.4 2008/03/21 00:20:33 fang Exp $
+	$Id: type-parse.yy.in,v 1.5 2008/06/07 02:12:04 fang Exp $
  */
 
 %{
@@ -286,7 +286,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 ******************************************************************************/
 
 type_id
-	: physical_type_ref { $$ = $1; yylval._concrete_type_ref = $1; }
+	: physical_type_ref
+		{ $$ = $1;
+		if (!yychar) { yylval._concrete_type_ref = $1; }
+		}
 /*	| base_param_type { $$ = $1; }	*/
 	;
 

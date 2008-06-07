@@ -1,0 +1,5 @@
+// "027.hac"
+// type: ICE-on-invalid
+
+bool a[2}];
+

@@ -4,7 +4,7 @@
 	This will be used in prsim and other simulators, for example.  
 	The grammar in here is an extremely small snippet
 	of the hackt language grammar.  
-	$Id: instref-parse.yy.in,v 1.7 2008/03/21 00:20:32 fang Exp $
+	$Id: instref-parse.yy.in,v 1.8 2008/06/07 02:12:04 fang Exp $
  */
 
 %{
@@ -135,10 +135,12 @@ yyfreestacks(const short* yyss, const short* yyssp,
 
 instref
 	: member_index_expr
-			// for pure-parsing, we pass in the return YYSTYPE&
-			// as yylval.  This MUST be set when returning from
-			// yyparse (except when exception thrown).
-			{ $$ = $1; yylval._inst_ref_expr = $1; }
+		// for pure-parsing, we pass in the return YYSTYPE&
+		// as yylval.  This MUST be set when returning from
+		// yyparse (except when exception thrown).
+		{ $$ = $1;
+		if (!yychar) { yylval._inst_ref_expr = $1; }
+		}
 	;
 
 member_index_expr

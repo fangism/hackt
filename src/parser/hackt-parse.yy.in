@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.38 2008/05/20 19:50:56 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.39 2008/06/07 02:12:03 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -773,9 +773,14 @@ module
 		// In the name of pure-parsing, 
 		// we've hacked yyparse's prototype to take a
 		// YYSTYPE& yylval as an argument, which must be
-		// passed un by the caller.  
+		// passed up by the caller.  
 		$$ = $1;
+		// ... but yylval also holds the last offending token
+		// in the event of a syntax error!  
+		// Cannot just blindly clobber!
+	if (!yychar) {
 		yylval._root_body = $$;
+	}
 	}
 	;
 

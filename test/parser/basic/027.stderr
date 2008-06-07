@@ -1,0 +1,18 @@
+At: "027.hac":4:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	(type-ref) [4:1..4]
+#STATE#	identifier: a [4:6]
+#STATE#	(null) 
+#STATE#	[ [4:7]
+#STATE#	int: 2 [4:8]
+#STATE#	} [4:9]
+in state #STATE#, possible rules are:
+	range : expr . RANGE expr  (#RULE#)
+	range : expr .  (#RULE#)
+acceptable tokens are: 
+	':' (reduce)
+	']' (reduce)
+	RANGE (shift)

@@ -1,0 +1,47 @@
+At: "028.hac":6:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	list<(root_item)>: (instance-decl) ... [5:1..6]
+#STATE#	] [6:1]
+in state #STATE#, possible rules are:
+	top_root : body .  (#RULE#)
+	body : body . body_item  (#RULE#)
+	optional_export : .  (#RULE#)
+acceptable tokens are: 
+	end-of-file (reduce)
+	'!' (shift)
+	'(' (shift)
+	'-' (shift)
+	'[' (shift)
+	'{' (shift)
+	'}' (reduce)
+	'~' (shift)
+	ID (shift)
+	FLOAT (shift)
+	INT (shift)
+	STRING (shift)
+	SCOPE (shift)
+	NAMESPACE (shift)
+	OPEN (shift)
+	CHP_LANG (shift)
+	HSE_LANG (shift)
+	PRS_LANG (shift)
+	SPEC_LANG (shift)
+	DEFINE (reduce)
+	DEFPROC (reduce)
+	DEFCHAN (reduce)
+	DEFTYPE (reduce)
+	TYPEDEF (reduce)
+	CHANNEL (shift)
+	TEMPLATE (reduce)
+	ENUM (shift)
+	EXPORT (shift)
+	BOOL_TRUE (shift)
+	BOOL_FALSE (shift)
+	INT_TYPE (shift)
+	BOOL_TYPE (shift)
+	PINT_TYPE (shift)
+	PBOOL_TYPE (shift)
+	PREAL_TYPE (shift)

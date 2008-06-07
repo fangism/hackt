@@ -5,6 +5,14 @@
 
 2008-06-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-26:
+	  Fixed ICE-on-invalid bug in error recovery in parsers:
+		return value of YYSTYPE should not clobber yylval
+		in the event of a syntax error (check yychar).
+		Validated against yacc and bison-2.0.
+		Test cases added: basic/026,027,028.
+
+
 	* HACKT-00-01-04-main-00-82-25:
 	  prsim: State-prsim.cc: removed invalid assert in
 		flush_pending_queue(), where there can be multiple 

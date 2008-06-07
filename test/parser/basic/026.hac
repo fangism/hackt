@@ -1,0 +1,7 @@
+// "026.hac"
+// reduced test case from Carlos Tadeo Ortega Otero
+// type: ICE-on-invalid
+
+bool a;
+}	// mismatched
+
