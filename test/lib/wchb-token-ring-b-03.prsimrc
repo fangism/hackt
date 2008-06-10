@@ -1,5 +1,5 @@
 # "wchb-token-ring-b-03.prsimrc"
-#	$Id: wchb-token-ring-b-03.prsimrc,v 1.2 2008/03/17 23:04:11 fang Exp $
+#	$Id: wchb-token-ring-b-03.prsimrc,v 1.3 2008/06/10 22:45:01 fang Exp $
 # @haco@ wchb-token-ring-b.haco-a
 # testing why-not commands
 
@@ -28,8 +28,15 @@ why L.e
 why-verbose L.e
 why-not L.d[0]
 why-not-verbose L.d[0]
+
+why-not-1 L.d[0]
+why-not-1-verbose L.d[0]
+why-not-N L.d[0] 4
+why-not-N-verbose L.d[0] 4
+
 why L.d[0]
 why-verbose L.d[0]
+
 
 # deadlock: why? (we know why...)
 

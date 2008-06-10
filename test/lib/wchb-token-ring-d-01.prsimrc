@@ -1,13 +1,15 @@
 # "wchb-token-ring-d-01.prsimrc"
-#	$Id: wchb-token-ring-d-01.prsimrc,v 1.2 2008/03/17 23:04:19 fang Exp $
+#	$Id: wchb-token-ring-d-01.prsimrc,v 1.3 2008/06/10 22:45:02 fang Exp $
 # @haco@ wchb-token-ring-d.haco-a
 # testing deadlock analysis commands
 
 echo initially all X.
 why-x L.e
 why-x-verbose L.e
+why-x-N-verbose L.e 5
 why-x L.d[0]
 why-x-verbose L.d[0]
+why-x-N-verbose L.d[0] 5
 
 echo resetting ...
 set _Reset 0

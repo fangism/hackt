@@ -1,5 +1,5 @@
 # "wchb-token-ring-b-02.prsimrc"
-#	$Id: wchb-token-ring-b-02.prsimrc,v 1.2 2008/03/17 23:04:09 fang Exp $
+#	$Id: wchb-token-ring-b-02.prsimrc,v 1.3 2008/06/10 22:45:01 fang Exp $
 # @haco@ wchb-token-ring-b.haco-a
 # testing stability of token ring
 
@@ -30,4 +30,5 @@ why-x L.d[0]
 why-x-verbose L.d[0]
 
 # deadlock: why? (we know why...)
+
 

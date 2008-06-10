@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.13 2008/06/06 21:57:58 fang Exp $
+	$Id: State-prsim.cc,v 1.14 2008/06/10 22:44:59 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3919,12 +3919,12 @@ do {
  */
 ostream&
 State::dump_node_why_X(ostream& o, const node_index_type ni, 
-		const bool verbose) const {
+		const size_t limit, const bool verbose) const {
 	// unique set to terminate cyclic recursion
 	const node_type& n(get_node(ni));
 if (n.current_value() == node_type::LOGIC_OTHER) {
 	node_set_type u, v;	// cycle-detect set, globally-visited set
-	return __node_why_X(o, ni, verbose, u, v);
+	return __node_why_X(o, ni, limit, verbose, u, v);
 } else {
 	o << get_node_canonical_name(ni) << " is not X." << endl;
 }
@@ -3938,13 +3938,15 @@ if (n.current_value() == node_type::LOGIC_OTHER) {
  */
 ostream&
 State::dump_node_why_not(ostream& o, const node_index_type ni, 
+		const size_t limit,
 		const bool dir, const bool why_not, const bool verbose) const {
 	const node_type& n(get_node(ni));
 	node_set_type u, v;
 switch (n.current_value()) {
 case node_type::LOGIC_LOW:
 	if (dir ^ !why_not) {
-		return __node_why_not(o, ni, dir, why_not, verbose, u, v);
+		return __node_why_not(o, ni, limit, 
+			dir, why_not, verbose, u, v);
 	} else {
 		o << get_node_canonical_name(ni) << " is 0." << endl;
 	}
@@ -3953,7 +3955,8 @@ case node_type::LOGIC_HIGH:
 	if (dir ^ !why_not) {
 		o << get_node_canonical_name(ni) << " is 1." << endl;
 	} else {
-		return __node_why_not(o, ni, dir, why_not, verbose, u, v);
+		return __node_why_not(o, ni, limit, 
+			dir, why_not, verbose, u, v);
 	}
 	break;
 default:
@@ -3971,7 +3974,8 @@ default:
 		already visited sub-trees, accumulatess without popping.  
  */
 ostream&
-State::__node_why_X(ostream& o, const node_index_type ni, const bool verbose, 
+State::__node_why_X(ostream& o, const node_index_type ni, 
+		const size_t limit, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
 	const std::pair<node_set_type::iterator, bool>
 		p(u.insert(ni)), y(v.insert(ni));
@@ -4047,12 +4051,13 @@ do {
 		o << endl;
 		const string __ind_str(verbose ? (ux ? "+" : "-") : "  ");
 		const indent __indent(o, __ind_str);
-		__expr_why_X(o, xi, verbose, u, v);
+		__expr_why_X(o, xi, limit, verbose, u, v);
 #endif
 		break;
 	}
 	case 2:
 		o << ", pull up/dn are both X";
+		if (v.size() <= limit) {
 #if 0
 		__get_X_fanins(ui, xs);
 		__get_X_fanins(di, xs);
@@ -4060,12 +4065,15 @@ do {
 		o << endl;
 		{
 			const indent __indent(o, verbose ? "+" : "  ");
-			__expr_why_X(o, ui, verbose, u, v);
+			__expr_why_X(o, ui, limit, verbose, u, v);
 		}{
 			const indent __indent(o, verbose ? "-" : "  ");
-			__expr_why_X(o, di, verbose, u, v);
+			__expr_why_X(o, di, limit, verbose, u, v);
 		}
 #endif
+		} else {	// recursion limit
+			o << " (more ...)" << endl;
+		}
 		break;
 	default:
 		DIE;
@@ -4091,7 +4099,8 @@ do {
 #if 0
 		_channel_manager.__get_X_fanins(*this, ni, xs);
 #else
-		_channel_manager.__node_why_X(*this, o, ni, verbose, u, v);
+		_channel_manager.__node_why_X(*this, o, ni, 
+			limit, verbose, u, v);
 #endif
 	}
 #endif
@@ -4099,7 +4108,7 @@ do {
 	INDENT_SECTION(o);
 	node_set_type::const_iterator ii(xs.begin()), ee(xs.end());
 	for ( ; ii!=ee; ++ii) {
-		__node_why_X(o, *ii, u, v);	// recursion
+		__node_why_X(o, *ii, limint, verbose, u, v);	// recursion
 	}
 #endif
 	}
@@ -4127,7 +4136,8 @@ do {
 		already visited sub-trees, accumulatess without popping.  
  */
 ostream&
-State::__node_why_not(ostream& o, const node_index_type ni, const bool dir,
+State::__node_why_not(ostream& o, const node_index_type ni, 
+		const size_t limit, const bool dir,
 		const bool why_not, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
 	const std::pair<node_set_type::iterator, bool>
@@ -4177,23 +4187,27 @@ if (y.second) {
 				o << ", input";
 			}
 		}
+		if (v.size() <= limit) {
 		o << endl;
 		// INDENT_SCOPE(o);
 		if (pi && (ps == pull_query)) {
-			__expr_why_not(o, pi, why_not, verbose, u, v);
+			__expr_why_not(o, pi, limit, why_not, verbose, u, v);
 		}
 #if PRSIM_WEAK_RULES
 		if (wpi && (wps == pull_query)) {
-			__expr_why_not(o, wpi, why_not, verbose, u, v);
+			__expr_why_not(o, wpi, limit, why_not, verbose, u, v);
 		}
 #endif
 #if PRSIM_CHANNEL_SUPPORT
 		if (n.in_channel()) {
 			// ask channel why it has not driven the node
 			_channel_manager.__node_why_not(*this, o, 
-				ni, dir, why_not, verbose, u, v);
+				ni, limit, dir, why_not, verbose, u, v);
 		}
 #endif
+		} else {	// recursion limit
+		o << ", (more ...)" << endl;
+		}
 	}	// end if pending event
 } else {
 	// don't print the same subtree twice, just cross-reference
@@ -4261,7 +4275,7 @@ State::__get_X_fanins(const expr_index_type xi, node_set_type& u) const {
 	\param v globally visited stack
  */
 void
-State::__expr_why_not(ostream& o, const expr_index_type xi, 
+State::__expr_why_not(ostream& o, const expr_index_type xi, const size_t limit,
 		// const bool off_on, 
 		const bool why_not, const bool verbose,
 		node_set_type& u, node_set_type& v) const {
@@ -4290,11 +4304,11 @@ State::__expr_why_not(ostream& o, const expr_index_type xi,
 			// is a leaf node, visit if value is not X
 			switch (get_node(ci->second).current_value()) {
 			case node_type::LOGIC_LOW:
-				__node_why_not(o, ci->second, why_not,
+				__node_why_not(o, ci->second, limit, why_not,
 					why_not, verbose, u, v);
 			break;
 			case node_type::LOGIC_HIGH:
-				__node_why_not(o, ci->second, !why_not,
+				__node_why_not(o, ci->second, limit, !why_not,
 					why_not, verbose, u, v);
 			break;
 			default:
@@ -4312,7 +4326,7 @@ State::__expr_why_not(ostream& o, const expr_index_type xi,
 				expr_type::negate_pull(xp) : xp;
 		// maintain same (positive/negative) query type recursively
 			if (s.pull_state() == match_pull) {
-				__expr_why_not(o, ci->second, 
+				__expr_why_not(o, ci->second, limit, 
 					why_not, verbose, u, v);
 			}
 		}
@@ -4331,7 +4345,7 @@ State::__expr_why_not(ostream& o, const expr_index_type xi,
 	\param v globally visited stack
  */
 void
-State::__expr_why_X(ostream& o, const expr_index_type xi, 
+State::__expr_why_X(ostream& o, const expr_index_type xi, const size_t limit, 
 		const bool verbose, node_set_type& u, node_set_type& v) const {
 	ISE_INVARIANT(xi);
 	ISE_INVARIANT(xi < expr_pool.size());
@@ -4358,7 +4372,8 @@ State::__expr_why_X(ostream& o, const expr_index_type xi,
 			// is a leaf node, visit if value is X
 			if (get_node(ci->second).current_value()
 				== node_type::LOGIC_OTHER) {
-				__node_why_X(o, ci->second, verbose, u, v);
+				__node_why_X(o, ci->second, 
+					limit, verbose, u, v);
 			}
 		} else {
 			// is a sub-expresion, recurse if pull is X
@@ -4370,7 +4385,7 @@ State::__expr_why_X(ostream& o, const expr_index_type xi,
 			const expr_type& s(expr_pool[ci->second]);
 			if (s.pull_state() == expr_type::PULL_WEAK) {
 				__expr_why_X(o, ci->second, 
-					verbose, u, v);
+					limit, verbose, u, v);
 			}
 		}
 	}	// end for

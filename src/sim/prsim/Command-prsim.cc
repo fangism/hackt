@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.7 2008/04/24 22:47:17 fang Exp $
+	$Id: Command-prsim.cc,v 1.8 2008/06/10 22:44:58 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2149,6 +2149,10 @@ BackTrace::usage(ostream& o) {
 @texinfo cmd/why-x.texi
 @deffn Command why-x node
 @deffnx Command why-x-verbose node
+@deffnx Command why-x-1 node
+@deffnx Command why-x-1-verbose node
+@deffnx Command why-x-N node maxdepth
+@deffnx Command why-x-N-verbose node maxdepth
 Print causality chain for why a particular node (at value X) remains X.  
 In expressions, X nodes that are masked out (e.g. 1 | X or 0 & X) 
 are not followed.  
@@ -2156,6 +2160,8 @@ The verbose variant prints more information about the subexpressions
 visited (whether conjunctive or disjunctive), 
 and pretty prints in tree-indent form.  
 Recursion terminates on cycles and already-visited nodes.  
+The @option{-1} variant only queries through depth 1, 
+and the @option{-N} variant queries to a maximum depth of @var{maxdepth}.  
 @end deffn
 @end texinfo
 ***/
@@ -2163,18 +2169,48 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyX, "why-x", info,
 	"recursively trace cause of X value on node")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyXVerbose, "why-x-verbose", info, 
 	"recursively trace cause of X value on node (verbose)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyXN, "why-x-N", info, 
+	"recursively trace cause of X on node (N-level)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyXNVerbose, "why-x-N-verbose", info, 
+	"recursively trace cause of X on node (N-level, verbose)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyX1, "why-x-1", info, 
+	"recursively trace cause of X on node (1-level)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyX1Verbose, "why-x-1-verbose", info, 
+	"recursively trace cause of X on node (1-level, verbose)")
 
 static
 int
-why_X_main(State& s, const string_list& a, const bool verbose) {
-	const string& objname(a.back());
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+__why_X_N_main(State& s, const node_index_type ni, 
+		const size_t limit, const bool verbose) {
 	if (ni) {
-		s.dump_node_why_X(cout, ni, verbose);
+		s.dump_node_why_X(cout, ni, limit, verbose);
 		return Command::NORMAL;
 	} else {
 		return Command::BADARG;
 	}
+}
+
+static
+int
+why_X_N_main(State& s, const string_list& a, const bool verbose) {
+	const string& objname(*++a.begin());
+	const string& _limit(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	size_t limit;
+	if (string_to_num(_limit, limit)) {
+		cerr << "Error: expected integer depth-limit argument." << endl;
+		return Command::BADARG;
+	}
+	return __why_X_N_main(s, ni, limit, verbose);
+}
+
+static
+int
+why_X_main(State& s, const string_list& a, 
+		const size_t limit, const bool verbose) {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	return __why_X_N_main(s, ni, limit, verbose);
 }
 
 int
@@ -2183,7 +2219,7 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	return why_X_main(s, a, false);
+	return why_X_main(s, a, size_t(-1), false);
 }
 }
 
@@ -2193,7 +2229,47 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	return why_X_main(s, a, true);
+	return why_X_main(s, a, size_t(-1), true);
+}
+}
+
+int
+WhyX1::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	return why_X_main(s, a, 1, false);
+}
+}
+
+int
+WhyX1Verbose::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	return why_X_main(s, a, 1, true);
+}
+}
+
+int
+WhyXN::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	return why_X_N_main(s, a, false);
+}
+}
+
+int
+WhyXNVerbose::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	return why_X_N_main(s, a, true);
 }
 }
 
@@ -2201,17 +2277,38 @@ void
 WhyX::usage(ostream& o) {
 	o << name << " <node>" << endl;
 	o <<
-"Recursively finds the cause for the node being X through other X nodes."
+"Recursively finds the cause for the node being X through other X nodes.\n"
+"Verbose variant prints more details about expression structures."
 		<< endl;
 }
 
 void
 WhyXVerbose::usage(ostream& o) {
+	WhyX::usage(o);
+}
+
+void
+WhyX1::usage(ostream& o) {
 	o << name << " <node>" << endl;
 	o <<
-"Recursively finds the cause for the node being X through other X nodes.\n"
-"Verbose variant prints more details about expression structures."
-		<< endl;
+"Finds the cause for the node being X through other X nodes, depth 1." << endl;
+}
+
+void
+WhyX1Verbose::usage(ostream& o) {
+	WhyX1::usage(o);
+}
+
+void
+WhyXN::usage(ostream& o) {
+	o << name << " <node> <limit>" << endl;
+	o <<
+"Finds the cause for the node being X through other X nodes, depth N." << endl;
+}
+
+void
+WhyXNVerbose::usage(ostream& o) {
+	WhyXN::usage(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2219,6 +2316,10 @@ WhyXVerbose::usage(ostream& o) {
 @texinfo cmd/why.texi
 @deffn Command why node [val]
 @deffnx Command why-verbose node [val]
+@deffnx Command why-1 node [val]
+@deffnx Command why-1-verbose node [val]
+@deffnx Command why-N node maxdepth [val]
+@deffnx Command why-N-verbose node maxdepth [val]
 Print reason for node being driven to a given value, 0 or 1.
 X is not a valid value for this procedure.  
 If @var{val} is not given, it is assumed to be the current value of the node.  
@@ -2230,6 +2331,8 @@ driven to their current value.
 This is an excellent aid in debugging unexpected values.  
 The verbose variant prints expression types as it auto-indents, 
 which is more informative but may appear more cluttered.  
+The @option{-1} variant only queries through depth 1, 
+and the @option{-N} variant queries to a maximum depth of @var{maxdepth}.  
 @end deffn
 @end texinfo
 ***/
@@ -2237,40 +2340,64 @@ which is more informative but may appear more cluttered.
 @texinfo cmd/why-not.texi
 @deffn Command why-not node [val]
 @deffnx Command why-not-verbose node [val]
+@deffnx Command why-not-1 node [val]
+@deffnx Command why-not-1-verbose node [val]
+@deffnx Command why-not-N node maxdepth [val]
+@deffnx Command why-not-N-verbose node maxdepth [val]
 Print reason for node not being a given value, 0 or 1.
 X is not a valid value for this procedure.  
 If @var{val} is not given, it is assumed to be opposite of the
 current value of the node.  
+"Why isn't this node changing?"
 The algorithm examines each node's fanins and follows
 nodes that prevent the relevant expression from evaluating true.  
 This is an excellent tool for debugging deadlocks.  
 The verbose variant prints expression types as it auto-indents, 
 which is more informative but may appear more cluttered.  
+The @option{-1} variant only queries through depth 1, 
+and the @option{-N} variant queries to a maximum depth of @var{maxdepth}.  
 @end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Why, "why", info, 
 	"recursively trace why node is driven to value")
-
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyVerbose, "why-verbose", info, 
+	"recursively trace why node is driven to value (verbose)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Why1, "why-1", info, 
+	"trace why node is driven to value")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Why1Verbose, "why-1-verbose", info, 
+	"trace why node is driven to value (verbose)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyN, "why-N", info, 
+	"recursively trace why node is driven to value")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNVerbose, "why-N-verbose", info, 
 	"recursively trace why node is driven to value (verbose)")
 
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot, "why-not", info, 
 	"recursively trace why node is not at value")
-
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotVerbose, "why-not-verbose", info, 
+	"recursively trace why node is not at value (verbose)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot1, "why-not-1", info, 
+	"trace why node is not at value")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot1Verbose, "why-not-1-verbose", info, 
+	"trace why node is not at value (verbose)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotN, "why-not-N", info, 
+	"recursively trace why node is not at value")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotNVerbose, "why-not-N-verbose", info, 
 	"recursively trace why node is not at value (verbose)")
 
 /**
 	Template procedure for invoking node_why[_not] with various options.
+	\param b optional: value to query (or NULL -> automatic)
 	\param why_not true if querying negatively
 	\param verbose true if expression structure verbosity requested
  */
 static
 int
-why_not_main(State& s, const string_list& a, 
-		const bool why_not, const bool verbose, 
+__why_not_N_main(State& s, const node_index_type ni, 
+		const string* b,
+		const size_t limit, const bool why_not, const bool verbose, 
 		void (usage)(ostream&)) {
+#if 0
 const size_t a_s = a.size();
 if (a_s < 2 || a_s > 3) {
 	usage(cerr << "usage: ");
@@ -2278,13 +2405,13 @@ if (a_s < 2 || a_s > 3) {
 } else {
 	const string& objname(*++a.begin());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+#endif
 if (ni) {
 	bool v;
-	if (a_s == 3) {
-		const string& b(a.back());
-		if (b == "0") {
+	if (b) {
+		if (*b == "0") {
 			v = false;
-		} else if (b == "1") {
+		} else if (*b == "1") {
 			v = true;
 		} else {
 			usage(cerr << "usage: ");
@@ -2304,32 +2431,114 @@ if (ni) {
 			return Command::BADARG;
 		}
 	}
-	s.dump_node_why_not(cout, ni, v, why_not, verbose);
+	s.dump_node_why_not(cout, ni, limit, v, why_not, verbose);
 	return Command::NORMAL;
 } else {
 	return Command::BADARG;
 }
+#if 0
+}
+#endif
+}
+
+static
+int
+why_not_main(State& s, const string_list& a, const size_t limit, 
+		const bool why_not, const bool verbose, 
+		void (usage)(ostream&)) {
+const size_t a_s = a.size();
+if (a_s < 2 || a_s > 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	return __why_not_N_main(s, ni, (a_s == 3 ? &a.back() : NULL),
+		limit, why_not, verbose, usage);
+}
+}
+
+static
+int
+why_not_N_main(State& s, const string_list& a,
+		const bool why_not, const bool verbose, 
+		void (usage)(ostream&)) {
+const size_t a_s = a.size();
+if (a_s < 3 || a_s > 4) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	const string& _limit(*++++a.begin());
+	size_t limit;
+	if (string_to_num(_limit, limit)) {
+		cerr << "Error: expected integer depth-limit argument." << endl;
+		return Command::BADARG;
+	}
+	return __why_not_N_main(s, ni, (a_s == 4 ? &a.back() : NULL),
+		limit, why_not, verbose, usage);
 }
 }
 
 int
 Why::main(State& s, const string_list& a) {
-	return why_not_main(s, a, false, false, usage);
+	return why_not_main(s, a, size_t(-1), false, false, usage);
 }
 
 int
 WhyVerbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, false, true, usage);
+	return why_not_main(s, a, size_t(-1), false, true, usage);
 }
 
 int
 WhyNot::main(State& s, const string_list& a) {
-	return why_not_main(s, a, true, false, usage);
+	return why_not_main(s, a, size_t(-1), true, false, usage);
 }
 
 int
 WhyNotVerbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, true, true, usage);
+	return why_not_main(s, a, size_t(-1), true, true, usage);
+}
+
+int
+Why1::main(State& s, const string_list& a) {
+	return why_not_main(s, a, 1, false, false, usage);
+}
+
+int
+Why1Verbose::main(State& s, const string_list& a) {
+	return why_not_main(s, a, 1, false, true, usage);
+}
+
+int
+WhyNot1::main(State& s, const string_list& a) {
+	return why_not_main(s, a, 1, true, false, usage);
+}
+
+int
+WhyNot1Verbose::main(State& s, const string_list& a) {
+	return why_not_main(s, a, 1, true, true, usage);
+}
+
+int
+WhyN::main(State& s, const string_list& a) {
+	return why_not_N_main(s, a, false, false, usage);
+}
+
+int
+WhyNVerbose::main(State& s, const string_list& a) {
+	return why_not_N_main(s, a, false, true, usage);
+}
+
+int
+WhyNotN::main(State& s, const string_list& a) {
+	return why_not_N_main(s, a, true, false, usage);
+}
+
+int
+WhyNotNVerbose::main(State& s, const string_list& a) {
+	return why_not_N_main(s, a, true, true, usage);
 }
 
 static
@@ -2354,6 +2563,52 @@ why_not_usage(ostream& o, const char* name) {
 	<< endl;
 }
 
+static
+void
+why_1_usage(ostream& o, const char* name) {
+	o << name << " <node> [01]" << endl;
+	o <<
+"Query why named node is driven to a given value.\n"
+"Value must be 0 or 1.  If value is omitted, then assumes the current value.\n"
+"This can be used to detect unexpected firings in circuits."
+	<< endl;
+}
+
+static
+void
+why_not_1_usage(ostream& o, const char* name) {
+	o << name << " <node> [01]" << endl;
+	o <<
+"Query why named node has not become a given value.\n"
+"Value must be 0 or 1.  If value is omitted, then assumes the opposite value.\n"
+"This can be used to detect deadlock in circuits."
+	<< endl;
+}
+
+static
+void
+why_N_usage(ostream& o, const char* name) {
+	o << name << " <node> <maxdepth> [01]" << endl;
+	o <<
+"Recursively trace back reason why named node is driven to a given value.\n"
+"Value must be 0 or 1.  If value is omitted, then assumes the current value.\n"
+"This can be used to detect unexpected firings in circuits.\n"
+"Recursion depth is limited to maxdepth."
+	<< endl;
+}
+
+static
+void
+why_not_N_usage(ostream& o, const char* name) {
+	o << name << " <node> <maxdepth> [01]" << endl;
+	o <<
+"Recursively trace back reason why named node has not become a given value.\n"
+"Value must be 0 or 1.  If value is omitted, then assumes the opposite value.\n"
+"This can be used to detect deadlock in circuits.\n"
+"Recursion depth is limited to maxdepth."
+	<< endl;
+}
+
 void
 Why::usage(ostream& o) {
 	why_usage(o, name);
@@ -2372,6 +2627,46 @@ WhyNot::usage(ostream& o) {
 void
 WhyNotVerbose::usage(ostream& o) {
 	why_not_usage(o, name);
+}
+
+void
+Why1::usage(ostream& o) {
+	why_1_usage(o, name);
+}
+
+void
+Why1Verbose::usage(ostream& o) {
+	why_1_usage(o, name);
+}
+
+void
+WhyNot1::usage(ostream& o) {
+	why_not_1_usage(o, name);
+}
+
+void
+WhyNot1Verbose::usage(ostream& o) {
+	why_not_1_usage(o, name);
+}
+
+void
+WhyN::usage(ostream& o) {
+	why_N_usage(o, name);
+}
+
+void
+WhyNVerbose::usage(ostream& o) {
+	why_N_usage(o, name);
+}
+
+void
+WhyNotN::usage(ostream& o) {
+	why_not_N_usage(o, name);
+}
+
+void
+WhyNotNVerbose::usage(ostream& o) {
+	why_not_N_usage(o, name);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

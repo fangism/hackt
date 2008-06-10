@@ -145,6 +145,25 @@ L.e:X, pull up/dn are both X
 + ~- & X._r.d[0]:X, (visited before, see above)
 + ~- & X._r.d[1]:X, (visited before, see above)
 - X._le:X, (visited before, see above)
+L.e:X, pull up/dn are both X
++ ~X._le:X, pull up/dn are both X
++ ~+-+
++ ~+ | ~X._r.d[0]:X, pull up/dn are both X
++ ~+ | ~+-+
++ ~+ | ~+ | ~_Reset:X, pull up/dn undriven, no fanin
++ ~+ | ~+ |-+
++ ~+ | ~+ | &  ~M.e:X, pull up/dn are both X
++ ~+ | ~+ | &  ~+ ~Y._le:X, pull up/dn are both X (more ...)
++ ~+ | ~+ | &  ~- Y._le:X, (visited before, see above)
++ ~+ | ~+ | & ~L.d[0]:X, pull up/dn are both X (more ...)
++ ~+ | ~--+
++ ~+ | ~- &  M.e:X, (visited before, see above)
++ ~+ | ~- & L.d[0]:X, (visited before, see above)
++ ~+ | ~X._r.d[1]:X, pull up/dn are both X (more ...)
++ ~--+
++ ~- & X._r.d[0]:X, (visited before, see above)
++ ~- & X._r.d[1]:X, (visited before, see above)
+- X._le:X, (visited before, see above)
 L.d[0]:X, pull up/dn are both X
   Z._r.d[0]:X, pull up/dn are both X
     _Reset:X, pull up/dn undriven, no fanin
@@ -287,6 +306,25 @@ L.d[0]:X, pull up/dn are both X
 + ~+ | & ~R.d[0]:X, pull up/dn are both X
 + ~+ | & ~+ ~Y._r.d[0]:X, (visited before, see above)
 + ~+ | & ~- Y._r.d[0]:X, (visited before, see above)
++ ~--+
++ ~- &  L.e:X, (visited before, see above)
++ ~- & R.d[0]:X, (visited before, see above)
+- Z._r.d[0]:X, (visited before, see above)
+L.d[0]:X, pull up/dn are both X
++ ~Z._r.d[0]:X, pull up/dn are both X
++ ~+-+
++ ~+ | ~_Reset:X, pull up/dn undriven, no fanin
++ ~+ |-+
++ ~+ | &  ~L.e:X, pull up/dn are both X
++ ~+ | &  ~+ ~X._le:X, pull up/dn are both X
++ ~+ | &  ~+ ~+-+
++ ~+ | &  ~+ ~+ | ~X._r.d[0]:X, pull up/dn are both X (more ...)
++ ~+ | &  ~+ ~+ | ~X._r.d[1]:X, pull up/dn are both X (more ...)
++ ~+ | &  ~+ ~--+
++ ~+ | &  ~+ ~- & X._r.d[0]:X, (visited before, see above)
++ ~+ | &  ~+ ~- & X._r.d[1]:X, (visited before, see above)
++ ~+ | &  ~- X._le:X, (visited before, see above)
++ ~+ | & ~R.d[0]:X, pull up/dn are both X (more ...)
 + ~--+
 + ~- &  L.e:X, (visited before, see above)
 + ~- & R.d[0]:X, (visited before, see above)

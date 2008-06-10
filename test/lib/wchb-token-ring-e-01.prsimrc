@@ -1,6 +1,6 @@
 # "wchb-token-ring-e-01.prsimrc"
 # copied from "wchb-token-ring-b-03.prsimrc"
-#	$Id: wchb-token-ring-e-01.prsimrc,v 1.2 2008/03/17 23:04:21 fang Exp $
+#	$Id: wchb-token-ring-e-01.prsimrc,v 1.3 2008/06/10 22:45:03 fang Exp $
 # @haco@ wchb-token-ring-e.haco-a
 # testing why-not commands
 
@@ -19,6 +19,8 @@ why-not L.e
 why-not-verbose L.e
 why L.e
 why-verbose L.e
+why-N L.e 3
+why-N-verbose L.e 3
 why-not L.d[0]
 why-not-verbose L.d[0]
 why L.d[0]
@@ -33,6 +35,8 @@ why-not L.e
 why-not-verbose L.e
 why L.e
 why-verbose L.e
+why-N L.e 3
+why-N-verbose L.e 3
 why-not L.d[0]
 why-not-verbose L.d[0]
 why L.d[0]

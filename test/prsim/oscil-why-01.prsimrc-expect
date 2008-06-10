@@ -178,6 +178,21 @@ R.x[12]:X, pull up/dn are both X
 + ~+ ~- R.x[9]:X, (visited before, see above)
 + ~- R.x[10]:X, (visited before, see above)
 - R.x[11]:X, (visited before, see above)
+R.x[12]:X, pull up/dn are both X
++ ~R.x[11]:X, pull up/dn are both X
++ ~+ ~R.x[10]:X, pull up/dn are both X
++ ~+ ~+ ~R.x[9]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~R.x[8]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~R.x[7]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~R.x[6]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[5]:X, pull up/dn are both X (more ...)
++ ~+ ~+ ~+ ~+ ~+ ~- R.x[5]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~- R.x[6]:X, (visited before, see above)
++ ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)
++ ~+ ~+ ~- R.x[8]:X, (visited before, see above)
++ ~+ ~- R.x[9]:X, (visited before, see above)
++ ~- R.x[10]:X, (visited before, see above)
+- R.x[11]:X, (visited before, see above)
 setting _Reset : 1 
 	0	_Reset : 1
 R.x[12]:X, pull up/dn are both X
@@ -229,6 +244,21 @@ R.x[12]:X, pull up/dn are both X
 + ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[2]:X, (visited before, see above)
 + ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[3]:X, (visited before, see above)
 + ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[4]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~- R.x[5]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~- R.x[6]:X, (visited before, see above)
++ ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)
++ ~+ ~+ ~- R.x[8]:X, (visited before, see above)
++ ~+ ~- R.x[9]:X, (visited before, see above)
++ ~- R.x[10]:X, (visited before, see above)
+- R.x[11]:X, (visited before, see above)
+R.x[12]:X, pull up/dn are both X
++ ~R.x[11]:X, pull up/dn are both X
++ ~+ ~R.x[10]:X, pull up/dn are both X
++ ~+ ~+ ~R.x[9]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~R.x[8]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~R.x[7]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~R.x[6]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[5]:X, pull up/dn are both X (more ...)
 + ~+ ~+ ~+ ~+ ~+ ~- R.x[5]:X, (visited before, see above)
 + ~+ ~+ ~+ ~+ ~- R.x[6]:X, (visited before, see above)
 + ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)
@@ -442,6 +472,21 @@ R.x[12]:X, pull up/dn are both X
 + ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[2]:X, (visited before, see above)
 + ~+ ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[3]:X, (visited before, see above)
 + ~+ ~+ ~+ ~+ ~+ ~+ ~- R.x[4]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~+ ~- R.x[5]:X, (visited before, see above)
++ ~+ ~+ ~+ ~+ ~- R.x[6]:X, (visited before, see above)
++ ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)
++ ~+ ~+ ~- R.x[8]:X, (visited before, see above)
++ ~+ ~- R.x[9]:X, (visited before, see above)
++ ~- R.x[10]:X, (visited before, see above)
+- R.x[11]:X, (visited before, see above)
+R.x[12]:X, pull up/dn are both X
++ ~R.x[11]:X, pull up/dn are both X
++ ~+ ~R.x[10]:X, pull up/dn are both X
++ ~+ ~+ ~R.x[9]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~R.x[8]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~R.x[7]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~R.x[6]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~+ ~+ ~R.x[5]:X, pull up/dn are both X (more ...)
 + ~+ ~+ ~+ ~+ ~+ ~- R.x[5]:X, (visited before, see above)
 + ~+ ~+ ~+ ~+ ~- R.x[6]:X, (visited before, see above)
 + ~+ ~+ ~+ ~- R.x[7]:X, (visited before, see above)

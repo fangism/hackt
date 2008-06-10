@@ -58,6 +58,17 @@ R.x[6]:X, pull up/dn are both X
 + ~+ ~- R.x[3]:X, (visited before, see above)
 + ~- R.x[4]:X, (visited before, see above)
 - R.x[5]:X, (visited before, see above)
+R.x[6]:X, pull up/dn are both X
++ ~R.x[5]:X, pull up/dn are both X
++ ~+ ~R.x[4]:X, pull up/dn are both X
++ ~+ ~+ ~R.x[3]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~R.x[2]:X, pull up/dn are both X
++ ~+ ~+ ~+ ~+ ~R.x[1]:X, pull up/dn are both X (more ...)
++ ~+ ~+ ~+ ~- R.x[1]:X, (visited before, see above)
++ ~+ ~+ ~- R.x[2]:X, (visited before, see above)
++ ~+ ~- R.x[3]:X, (visited before, see above)
++ ~- R.x[4]:X, (visited before, see above)
+- R.x[5]:X, (visited before, see above)
 	0	_Reset : 0
 	10	R.x[0] : 1	[by _Reset:=0]
 	20	R.x[1] : 0	[by R.x[0]:=1]
@@ -106,6 +117,11 @@ R.x[6]:1
 . ~. . ~. . ~. R.x[0]:1
 . ~. . ~. . ~. .-+
 . ~. . ~. . ~. . | ~_Reset:0, input
+R.x[6]:1
+. ~R.x[5]:0
+. ~. R.x[4]:1
+. ~. . ~R.x[3]:0
+. ~. . ~. R.x[2]:1, (more ...)
 R.x[12]:1
   R.x[11]:0
     R.x[10]:1
@@ -136,6 +152,13 @@ R.x[12]:1
 . . ~. . ~. . ~. . ~. . ~. . ~.-+
 . . ~. . ~. . ~. . ~. . ~. . ~. & _Reset:0, input
 R.x[12]:1
+. R.x[11]:0
+. . ~R.x[10]:1
+. . ~. R.x[9]:0
+. . ~. . ~R.x[8]:1
+. . ~. . ~. R.x[7]:0
+. . ~. . ~. . ~R.x[6]:1, (more ...)
+R.x[12]:1
   R.x[11]:0
     R.x[10]:1
       R.x[9]:0
@@ -164,6 +187,13 @@ R.x[12]:1
 . ~. . ~. . ~. . ~. . ~. . ~. R.x[0]:1
 . ~. . ~. . ~. . ~. . ~. . ~. .-+
 . ~. . ~. . ~. . ~. . ~. . ~. . | ~_Reset:0, input
+R.x[12]:1
+. ~R.x[11]:0
+. ~. R.x[10]:1
+. ~. . ~R.x[9]:0
+. ~. . ~. R.x[8]:1
+. ~. . ~. . ~R.x[7]:0
+. ~. . ~. . ~. R.x[6]:1, (more ...)
 	130	_Reset : 1
 	140	R.x[0] : 0	[by _Reset:=1]
 	150	R.x[1] : 1	[by R.x[0]:=0]
@@ -226,6 +256,13 @@ R.x[12]:1
 . . ~. . ~. . ~. R.x[5]:0
 . . ~. . ~. . ~. . ~R.x[4]:1, pending event -> 0
 R.x[12]:1
+. R.x[11]:0
+. . ~R.x[10]:1
+. . ~. R.x[9]:0
+. . ~. . ~R.x[8]:1
+. . ~. . ~. R.x[7]:0
+. . ~. . ~. . ~R.x[6]:1, (more ...)
+R.x[12]:1
   R.x[11]:0
     R.x[10]:1
       R.x[9]:0
@@ -243,3 +280,10 @@ R.x[12]:1
 . ~. . ~. . ~. R.x[6]:1
 . ~. . ~. . ~. . ~R.x[5]:0
 . ~. . ~. . ~. . ~. R.x[4]:1, pending event -> 0
+R.x[12]:1
+. ~R.x[11]:0
+. ~. R.x[10]:1
+. ~. . ~R.x[9]:0
+. ~. . ~. R.x[8]:1
+. ~. . ~. . ~R.x[7]:0
+. ~. . ~. . ~. R.x[6]:1, (more ...)

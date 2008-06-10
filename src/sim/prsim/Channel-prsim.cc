@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.2 2008/03/17 23:02:50 fang Exp $
+	$Id: Channel-prsim.cc,v 1.3 2008/06/10 22:44:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1036,7 +1036,8 @@ channel::__get_fanins(const node_index_type ni,
  */
 ostream&
 channel::__node_why_not(const State& s, ostream& o, const node_index_type ni, 
-		const bool dir, const bool why_not, const bool verbose, 
+		const size_t limit, const bool dir, 
+		const bool why_not, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
 	typedef	State::node_type		node_type;
 	const indent __ind_outer(o, verbose ? " " : "");
@@ -1066,7 +1067,7 @@ if (stopped()) {
 			// the opposite (active).  
 			// const indent __ind_nd(o, verbose ? "." : "  ");
 			// INDENT_SCOPE(o);
-			s.__node_why_not(o, ack_signal, 
+			s.__node_why_not(o, ack_signal, limit, 
 				dir ^ get_ack_active() ^ !why_not,
 				why_not, verbose, u, v);
 		}
@@ -1079,10 +1080,10 @@ if (stopped()) {
 		// it may be backwards, if I just think about it...
 		// TODO: account for why_not parameter
 		if (get_ack_active() ^ dir ^ get_valid_sense()) {
-			s.__node_why_not(o, validity_signal, 
+			s.__node_why_not(o, validity_signal, limit, 
 				true, why_not, verbose, u, v);
 		} else {
-			s.__node_why_not(o, validity_signal, 
+			s.__node_why_not(o, validity_signal, limit, 
 				false, why_not, verbose, u, v);
 		}
 	} else
@@ -1135,14 +1136,16 @@ if (stopped()) {
 			case node_type::LOGIC_LOW:
 				if (get_ack_active() ^
 					(av == node_type::LOGIC_HIGH)) {
-					s.__node_why_not(o, di, why_not, 
+					s.__node_why_not(o, di, 
+						limit, why_not, 
 						why_not, verbose, u, v);
 				}
 				break;
 			case node_type::LOGIC_HIGH:
 				if (get_ack_active() ^
 					(av == node_type::LOGIC_LOW)) {
-					s.__node_why_not(o, di, !why_not, 
+					s.__node_why_not(o, di, 
+						limit, !why_not, 
 						why_not, verbose, u, v);
 				}
 				break;
@@ -1165,7 +1168,8 @@ if (stopped()) {
  */
 ostream&
 channel::__node_why_X(const State& s, ostream& o, const node_index_type ni, 
-		const bool verbose, node_set_type& u, node_set_type& v) const {
+		const size_t limit, const bool verbose, 
+		node_set_type& u, node_set_type& v) const {
 	typedef	State::node_type		node_type;
 	const indent __ind_outer(o, verbose ? " " : "");
 if (stopped()) {
@@ -1194,14 +1198,14 @@ if (stopped()) {
 			// the opposite (active).  
 			const indent __ind_nd(o, verbose ? "." : "  ");
 			// INDENT_SCOPE(o);
-			s.__node_why_X(o, ack_signal, verbose, u, v);
+			s.__node_why_X(o, ack_signal, limit, verbose, u, v);
 		}
 	}
 	if (is_sinking() && (ni == ack_signal)) {
 		// no other signal should be driven by sink
 #if PRSIM_CHANNEL_VALIDITY
 	if (validity_signal) {
-		s.__node_why_X(o, validity_signal, verbose, u, v);
+		s.__node_why_X(o, validity_signal, limit, verbose, u, v);
 	} else
 #endif
 	{
@@ -1233,7 +1237,8 @@ if (stopped()) {
 				const node_index_type d(data[key]);
 				if (s.get_node(d).current_value() ==
 						node_type::LOGIC_OTHER) {
-					s.__node_why_X(o, d, verbose, u, v);
+					s.__node_why_X(o, d, 
+						limit, verbose, u, v);
 				}
 			}	// end for rails
 		}	// end for bundles
@@ -2266,7 +2271,7 @@ if (f != node_channels_map.end()) {
  */
 ostream&
 channel_manager::__node_why_not(const State& s, ostream& o, 
-		const node_index_type ni, const bool dir, 
+		const node_index_type ni, const size_t limit, const bool dir, 
 		const bool why_not, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
 	const node_channels_map_type::const_iterator
@@ -2276,7 +2281,7 @@ if (f != node_channels_map.end()) {
 		i(f->second.begin()), e(f->second.end());
 	for ( ; i!=e; ++i) {
 		channel_pool[*i].__node_why_not(
-			s, o, ni, dir, why_not, verbose, u, v);
+			s, o, ni, limit, dir, why_not, verbose, u, v);
 	}
 }
 	return o;
@@ -2285,15 +2290,15 @@ if (f != node_channels_map.end()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_manager::__node_why_X(const State& s, ostream& o, 
-		const node_index_type ni, const bool verbose, 
-		node_set_type& u, node_set_type& v) const {
+		const node_index_type ni, const size_t limit, 
+		const bool verbose, node_set_type& u, node_set_type& v) const {
 	const node_channels_map_type::const_iterator
 		f(node_channels_map.find(ni));
 if (f != node_channels_map.end()) {
 	std::set<channel_index_type>::const_iterator
 		i(f->second.begin()), e(f->second.end());
 	for ( ; i!=e; ++i) {
-		channel_pool[*i].__node_why_X(s, o, ni, verbose, u, v);
+		channel_pool[*i].__node_why_X(s, o, ni, limit, verbose, u, v);
 	}
 }
 	return o;

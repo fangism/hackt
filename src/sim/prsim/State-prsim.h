@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.4 2008/04/23 00:55:47 fang Exp $
+	$Id: State-prsim.h,v 1.5 2008/06/10 22:45:00 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1091,11 +1091,12 @@ public:
 	dump_node_fanin(ostream&, const node_index_type, const bool) const;
 
 	ostream&
-	dump_node_why_X(ostream&, const node_index_type, const bool) const;
+	dump_node_why_X(ostream&, const node_index_type, 
+		const size_t, const bool) const;
 
 	ostream&
-	dump_node_why_not(ostream&, const node_index_type, const bool, 
-		const bool, const bool) const;
+	dump_node_why_not(ostream&, const node_index_type, 
+		const size_t, const bool, const bool, const bool) const;
 
 	void
 	find_nodes(vector<node_index_type>&,
@@ -1192,12 +1193,13 @@ private:
 
 	// recursive
 	void
-	__expr_why_X(ostream&, const expr_index_type, const bool, 
+	__expr_why_X(ostream&, const expr_index_type, 
+		const size_t, const bool, 
 		node_set_type&, node_set_type&) const;
 
 	void
 	__expr_why_not(ostream&, const expr_index_type, 
-		const bool, const bool, 
+		const size_t, const bool, const bool, 
 		node_set_type&, node_set_type&) const;
 
 	template <typename Iter>
@@ -1211,11 +1213,12 @@ private:
 public:
 	// so channel_manager has access (or pass callback?)
 	ostream&
-	__node_why_not(ostream&, const node_index_type, const bool, 
+	__node_why_not(ostream&, const node_index_type, 
+		const size_t, const bool, 
 		const bool, const bool, node_set_type&, node_set_type&) const;
 
 	ostream&
-	__node_why_X(ostream&, const node_index_type, const bool, 
+	__node_why_X(ostream&, const node_index_type, const size_t, const bool, 
 		node_set_type&, node_set_type&) const;
 
 private:

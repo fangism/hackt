@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.2 2008/03/17 23:02:52 fang Exp $
+	$Id: Channel-prsim.h,v 1.3 2008/06/10 22:44:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -468,12 +468,13 @@ public:
 
 	ostream&
 	__node_why_not(const State&, ostream&, const node_index_type, 
-		const bool d, const bool wn, const bool v, 
+		const size_t, const bool d, const bool wn, const bool v, 
 		node_set_type&, node_set_type&) const;
 
 	ostream&
 	__node_why_X(const State&, ostream&, const node_index_type, 
-		const bool v, node_set_type&, node_set_type&) const;
+		const size_t, const bool v, 
+		node_set_type&, node_set_type&) const;
 
 	void
 	process_node(const State&, const node_index_type, 
@@ -654,7 +655,7 @@ public:
 
 	ostream&
 	__node_why_not(const State&, ostream&, const node_index_type, 
-		const bool d, const bool wn, const bool v, 
+		const size_t, const bool d, const bool wn, const bool v, 
 		node_set_type&, node_set_type&) const;
 
 	void
@@ -665,7 +666,8 @@ public:
 
 	ostream&
 	__node_why_X(const State&, ostream&, const node_index_type, 
-		const bool v, node_set_type&, node_set_type&) const;
+		const size_t, const bool v, 
+		node_set_type&, node_set_type&) const;
 
 	ostream&
 	dump_memory_usage(ostream&) const;

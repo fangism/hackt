@@ -173,6 +173,22 @@ L.d[0]:0
 . ~. & . ~. & . & ~. . | ~. & . ~. & L.d[1]:0
 . ~. & . ~. & . & ~. . | ~. & . ~. & . ~X.aft._r.d[1]:1, cycle: possible deadlock
 L.d[0]:0
+  X.aft._r.d[0]:1, (more ...)
+L.d[0]:0
+. ~X.aft._r.d[0]:1, (more ...)
+L.d[0]:0
+  X.aft._r.d[0]:1
+    L.e:0
+      X.fore.rv:1
+        X.fore._r.d[0]:0, (more ...)
+L.d[0]:0
+. ~X.aft._r.d[0]:1
+. ~.-+
+. ~. & L.e:0
+. ~. & . ~X.fore.rv:1
+. ~. & . ~.-+
+. ~. & . ~. & X.fore._r.d[0]:0, (more ...)
+L.d[0]:0
   X.aft._r.d[0]:1, state-holding
 L.d[0]:0
 . X.aft._r.d[0]:1, state-holding
