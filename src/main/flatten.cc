@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: flatten.cc,v 1.6 2007/11/20 01:31:17 cto3 Exp $
+	$Id: flatten.cc,v 1.7 2008/06/11 17:00:43 fang Exp $
  */
 
 #include <iostream>
@@ -246,8 +246,9 @@ flatten::parse_command_options(const int argc, char* argv[], options& opt) {
  */
 void
 flatten::usage(void) {
-	cerr << "flatten: flattens input file to single file" << endl;
-	cerr << "usage: flatten [options] <hackt-source-file>"
+	cerr << "flatten: flattens input file to single file, print to stdout"
+		<< endl;
+	cerr << "usage: flatten [options] <hac-source-file>"
 		<< endl;
 	cerr << "options:" << endl;
 #if 0
@@ -265,8 +266,6 @@ flatten::usage(void) {
 		"\t-I <path> : adds include path (repeatable)" << endl;
 	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
 	cerr << "\t-P : suppress #FILE hierarchical wrappers in output" << endl;
-	cerr << "\tIf no output object file is given, flattend module will not be saved."
-		<< endl;
 }
 
 //=============================================================================
