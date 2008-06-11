@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.3 2008/04/24 22:47:07 fang Exp $
+	$Id: instref.h,v 1.4 2008/06/11 21:19:02 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -64,7 +64,8 @@ parse_name_to_get_subnodes(
 
 extern
 int
-parse_name_to_aliases(std::ostream&, const std::string&, const entity::module&);
+parse_name_to_aliases(std::ostream&, const std::string&, 
+	const entity::module&, const char* sep);
 
 }	// end namespace parser
 }	// end namespace HAC

@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.8 2008/04/24 22:47:07 fang Exp $
+	$Id: command_common.tcc,v 1.9 2008/06/11 21:19:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -642,7 +642,7 @@ if (a.size() != 2) {
 	return command_type::SYNTAX;
 } else {
 	cout << "aliases of \"" << a.back() << "\":" << endl;
-	if (parse_name_to_aliases(cout, a.back(), s.get_module())) {
+	if (parse_name_to_aliases(cout, a.back(), s.get_module(), " ")) {
 		return command_type::BADARG;
 	} else {
 		cout << endl;
@@ -655,6 +655,35 @@ template <class State>
 void
 Who<State>::usage(ostream& o) {
 	o << "who <name>" << endl;
+	o << "prints all aliases (equivalent names) of the referenced instance"
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(WhoNewline, "who-newline",
+	"print aliases of node or structure, newline separated")
+
+template <class State>
+int
+WhoNewline<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	cout << "aliases of \"" << a.back() << "\":" << endl;
+	if (parse_name_to_aliases(cout, a.back(), s.get_module(), "\n")) {
+		return command_type::BADARG;
+	} else {
+		cout << endl;
+		return command_type::NORMAL;
+	}
+}
+}
+
+template <class State>
+void
+WhoNewline<State>::usage(ostream& o) {
+	o << "who-newline <name>" << endl;
 	o << "prints all aliases (equivalent names) of the referenced instance"
 		<< endl;
 }

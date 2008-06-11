@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.15 2008/04/24 22:47:15 fang Exp $
+	$Id: Command.cc,v 1.16 2008/06/11 21:19:03 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1324,12 +1324,17 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::What, CHPSIM::info)
 @texinfo cmd/who.texi
 @cindex aliases, instance
 @deffn Command who inst
-Print all equivalent aliases of the instance named @var{inst}.  
+@deffnx Command who-newline name
+Print all equivalent aliases of instance @var{name}.  
+The @option{-newline} variant separates names by line instead of spaces
+for improved readability.  
 @end deffn
 @end texinfo
 ***/
 typedef	Who<State>				Who;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Who, CHPSIM::info)
+typedef	WhoNewline<State>			WhoNewline;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::WhoNewline, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

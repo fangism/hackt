@@ -1,6 +1,6 @@
 # "inv-07.prsimrc"
 # @haco@ inv.haco-a
-#	$Id: inv-07.prsimrc,v 1.2 2006/04/11 07:54:54 fang Exp $
+#	$Id: inv-07.prsimrc,v 1.3 2008/06/11 21:19:05 fang Exp $
 # just testing the 'what' and 'who' command features
 
 
@@ -17,12 +17,13 @@ who J
 
 what a
 who a
+who-newline a
 
 what b
-who b
+who-newline b
 
 what c
-who c
+who-newline c
 
 what I.a
 who I.a

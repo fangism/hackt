@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.8 2008/06/10 22:44:58 fang Exp $
+	$Id: Command-prsim.cc,v 1.9 2008/06/11 21:19:03 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1171,12 +1171,17 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::What, PRSIM::info)
 /***
 @texinfo cmd/who.texi
 @deffn Command who name
+@deffnx Command who-newline name
 Print all equivalent aliases of instance @var{name}.  
+The @option{-newline} variant separates names by line instead of spaces
+for improved readability.  
 @end deffn
 @end texinfo
 ***/
 typedef	Who<State>				Who;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Who, PRSIM::info)
+typedef	WhoNewline<State>			WhoNewline;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WhoNewline, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

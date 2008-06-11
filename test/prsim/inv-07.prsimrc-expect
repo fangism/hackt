@@ -13,12 +13,21 @@ J
 a refers to bool-inst-ref bool<>
 aliases of "a":
 I.a a 
+aliases of "a":
+I.a
+a
+
 b refers to bool-inst-ref bool<>
 aliases of "b":
-I.b J.a b 
+I.b
+J.a
+b
+
 c refers to bool-inst-ref bool<>
 aliases of "c":
-J.b c 
+J.b
+c
+
 I.a refers to bool-member-inst-ref bool<>
 aliases of "I.a":
 I.a a 

@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.10 2008/04/24 22:47:03 fang Exp $
+	$Id: instref.cc,v 1.11 2008/06/11 21:19:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -328,12 +328,16 @@ parse_name_to_get_subnodes(ostream& o, const string& n, const module& m,
 	Prints reference identity information. 
 	TODO: check non-instance-references:
 		namespaces, definitions, typedefs, value-references.
+	\param list separator
 	\return 0 upon success, 1 upon error.  
  */
 int
-parse_name_to_aliases(ostream& o, const string& n, const module& m) {
+parse_name_to_aliases(ostream& o, const string& n, const module& m, 
+		const char* _sep) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
+	const char* sep = _sep ? _sep : " ";
+	NEVER_NULL(sep);
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	if (!r || !r.inst_ref()) {
 		return 1;
@@ -344,7 +348,7 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m) {
 	} else {
 		string_list aliases;
 		r.inst_ref()->collect_aliases(m, aliases);
-		ostream_iterator<string> osi(o, " ");
+		ostream_iterator<string> osi(o, sep);
 		copy(aliases.begin(), aliases.end(), osi);
 		return 0;
 	}
