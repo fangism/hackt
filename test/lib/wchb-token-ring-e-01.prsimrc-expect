@@ -412,14 +412,17 @@ L.e:1
   X._le:0
     X._r.d[0]:1
       _Reset:0, input, (more ...)
-    X._r.d[1]:1, (more ...)
+    X._r.d[1]:1
+      _Reset:0, (visited before, see above)
 L.e:1
 . ~X._le:0
 . ~.-+
 . ~. & X._r.d[0]:1
 . ~. & .-+
 . ~. & . | ~_Reset:0, input, (more ...)
-. ~. & X._r.d[1]:1, (more ...)
+. ~. & X._r.d[1]:1
+. ~. & .-+
+. ~. & . | ~_Reset:0, (visited before, see above)
 L.d[0]:0
   Z._r.d[0]:1
     R.d[0]:0
@@ -504,12 +507,12 @@ L.e:1
 L.e:1
   X._le:0
     X._r.d[0]:1, state-holding
-    X._r.d[1]:1, state-holding, (more ...)
+    X._r.d[1]:1, state-holding
 L.e:1
 . ~X._le:0
 . ~.-+
 . ~. & X._r.d[0]:1, state-holding
-. ~. & X._r.d[1]:1, state-holding, (more ...)
+. ~. & X._r.d[1]:1, state-holding
 L.d[0]:0
   Z._r.d[0]:1
     R.d[0]:0

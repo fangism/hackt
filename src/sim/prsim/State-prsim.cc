@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.14 2008/06/10 22:44:59 fang Exp $
+	$Id: State-prsim.cc,v 1.15 2008/06/11 03:22:52 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4057,7 +4057,7 @@ do {
 	}
 	case 2:
 		o << ", pull up/dn are both X";
-		if (v.size() <= limit) {
+		if (u.size() <= limit) {
 #if 0
 		__get_X_fanins(ui, xs);
 		__get_X_fanins(di, xs);
@@ -4187,7 +4187,7 @@ if (y.second) {
 				o << ", input";
 			}
 		}
-		if (v.size() <= limit) {
+		if (u.size() <= limit) {
 		o << endl;
 		// INDENT_SCOPE(o);
 		if (pi && (ps == pull_query)) {
