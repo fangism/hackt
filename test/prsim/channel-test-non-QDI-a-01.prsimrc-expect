@@ -1,0 +1,28 @@
+Warning: channel acknowledge `C.e' has no fanin!
+	0	C.e : 0
+	10	C.d[0] : 0
+	10	C.d[1] : 0
+All subnodes of 'C':
+C.d[0] : 0
+C.d[1] : 0
+C.e : 0
+time: 10
+	10	C.e : 1
+	20	C.d[0] : 1	[by C.e:=1]
+	20	C.e : 0
+	30	C.d[0] : 0	[by C.e:=0]
+	30	C.e : 1
+	40	C.d[1] : 1	[by C.e:=1]
+time: 40
+intentional non-QDI firing 
+	40	C.e : 0
+event queue:
+	50	C.d[1] : 0	[from C.e:=0]
+WARNING: unstable `C.d[1]'-
+>> cause: `C.e' (val: 1)
+	40	C.e : 1
+event queue:
+	50	C.d[1] : X	[from C.e:=0]
+	50	C.d[0] : 1	[from C.e:=1]
+	50	C.d[1] : X	[by C.e:=1]
+	50	C.d[0] : 1	[by C.e:=1]

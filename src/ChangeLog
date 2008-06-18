@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-06-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-29:
+	  prsim: handle channel events non-QDI behavior (instability)
+		honor unstable-dequeue if set.  
+		Fixes ISE-on-invalid bug.
+		Test cases added.
+
+
 2008-06-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-28:

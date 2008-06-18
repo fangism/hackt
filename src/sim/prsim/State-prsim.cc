@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.15 2008/06/11 03:22:52 fang Exp $
+	$Id: State-prsim.cc,v 1.16 2008/06/18 01:41:56 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -362,10 +362,14 @@ State::node_drives_any_channel(const node_index_type ni) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_CHANNEL_SUPPORT
 	// Q: is this the best place to handle this?
-void
+/**
+	\return true if there is an event exception
+ */
+State::break_type
 State::flush_channel_events(const vector<env_event_type>& env_events, 
 		const event_cause_type& c) {
 	STACKTRACE_VERBOSE;
+	bool err = false;
 	// cause of these events must be 'ni', this node
 	vector<env_event_type>::const_iterator
 		i(env_events.begin()), e(env_events.end());
@@ -379,30 +383,31 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 		const uchar _v = i->second;
 		if (_n.current_value() != _v) {
 		const event_index_type pe = _n.get_event();
+
 		if (pe) {
 	// interaction with other enqueued events? anomalies?
 	// for now, give up if there are conflicting events in queue
 			// instability!?
-			cerr << "pending event on node: " <<
-				get_node_canonical_name(i->first) << endl;
-			dump_event(cerr, pe, 0) << endl;
-			cerr << "but got from channel: -> " <<
-				node_type::value_to_char[i->second] << endl;
-			cerr << "caused by node: " <<
-				get_node_canonical_name(c.node) << " -> " <<
-				node_type::value_to_char[c.val] << endl;
-			ISE_INVARIANT(!pe);
-			// not true, but we bomb out for now...
-			// TODO: proper diagnostic
-		} else {
-			// __allocate_event
-			const event_index_type pn =
-				__allocate_event(_n, i->first, c,
-					INVALID_RULE_INDEX, _v
+			event_type& ev(get_event(pe));
+			err |= __report_instability(cout,
+				_v == node_type::LOGIC_OTHER, 
+				ev.val == node_type::LOGIC_HIGH, ev.node, ev);
+			if (dequeue_unstable_events()) {
+				// overtake
+				kill_event(pe, ev.node);
+			} else {
+				ev.val = node_type::LOGIC_OTHER;
+				continue;
+			}
+		}
+		// __allocate_event
+		const event_index_type pn =
+			__allocate_event(_n, i->first, c,
+				INVALID_RULE_INDEX, _v
 #if PRSIM_WEAK_RULES
-					, false	// environment never weak
+				, false	// environment never weak
 #endif
-				);
+			);
 			// enqueue_event
 			const event_type& ev(get_event(pn));
 			switch (_v) {
@@ -416,14 +421,15 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 				// +delay_policy<time_type>::zero
 				, pn);
 			}
-		}
 		} // else filter out vacuous events
 	}
+	return err;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Set a single channel into reset state.  
+	NB: flush_channel_events may result in instabilities!
  */
 bool
 State::reset_channel(const string& cn) {
@@ -437,6 +443,7 @@ State::reset_channel(const string& cn) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Reset all channels.  
+	NB: flush_channel_events may result in instabilities!
  */
 void
 State::reset_all_channels(void) {
@@ -449,6 +456,7 @@ State::reset_all_channels(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Set a single channel into reset state.  
+	NB: flush_channel_events may result in instabilities!
  */
 bool
 State::resume_channel(const string& cn) {
@@ -462,6 +470,7 @@ State::resume_channel(const string& cn) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Reset all channels.  
+	NB: flush_channel_events may result in instabilities!
  */
 void
 State::resume_all_channels(void) {
@@ -2405,7 +2414,10 @@ if (n.in_channel()) {
 			prev, next, env_events);
 	// cause of these events must be 'ni', this node
 	const event_cause_type c(ni, next);
-	flush_channel_events(env_events, c);
+	if (UNLIKELY(flush_channel_events(env_events, c))) {
+		stop();
+	}
+	// HERE: error status?
 }
 #endif	// PRSIM_CHANNEL_SUPPORT
 	/***

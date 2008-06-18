@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.5 2008/06/10 22:45:00 fang Exp $
+	$Id: State-prsim.h,v 1.6 2008/06/18 01:41:57 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -605,7 +605,7 @@ public:
 	get_channel_manager(void) { return _channel_manager; }
 
 private:
-	void
+	break_type
 	flush_channel_events(const vector<env_event_type>&, 
 		const event_cause_type&);
 

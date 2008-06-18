@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.28 2008/06/06 21:57:59 fang Exp $
+#	$Id: Makefile.am,v 1.29 2008/06/18 01:41:57 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -42,6 +42,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	SRAM SRAM-a SRAM-b SRAM-c SRAM-d \
 	keeper-a \
 	channel-test-a channel-test-b \
+	channel-test-non-QDI-a \
 	stuck-bug-a \
 	crash-bug-01 \
 	always_random-a
@@ -161,6 +162,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-b-random-01 channel-test-b-random-02 \
 	channel-test-b-random-03 channel-test-b-random-04 \
 	channel-test-b-random-05 \
+	channel-test-non-QDI-a-01 \
 	stuck-bug-a-01 \
 	crash-bug-01-a \
 	always_random-a-01
@@ -247,7 +249,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	celem-fb-02 \
 	channel-test-a-10 channel-test-a-12 \
 	channel-test-a-21 \
-	channel-test-b-21
+	channel-test-b-21 \
+	channel-test-non-QDI-a-02
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

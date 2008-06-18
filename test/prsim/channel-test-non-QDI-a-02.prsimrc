@@ -1,0 +1,8 @@
+# "channel-test-non-QDI-a-02.prsimrc"
+# @haco@ channel-test-non-QDI-a.haco-a
+
+unstable-dequeue
+source channel-test-non-QDI-a-01.prsimrc
+
+# happens to die because of exclhi violation
+
