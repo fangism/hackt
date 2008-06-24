@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.9 2008/06/11 21:19:03 fang Exp $
+	$Id: Command-prsim.cc,v 1.10 2008/06/24 04:35:21 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -933,6 +933,98 @@ SetrF::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setrwhen, "setrwhen", simulation,
 //	"set node with random delay after event")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/reschedule.texi
+@deffn Command reschedule node time
+@deffnx Command reschedule-from-now node time
+@deffnx Command reschedule-relative node time
+If there is a pending event on @var{node} in the event queue, 
+reschedule it as follows:
+@command{reschedule} interprets @var{time} as an absolute time.
+@command{reschedule-from-now} interprets @var{time} relative 
+to the current time.
+@command{reschedule-relative} interprets @var{time} relative to the 
+pending event's presently scheduled time.  
+The resulting rescheduled time cannot be in the past; 
+it must be greater than or equal to the current time.  
+Return with error status if there is no pending event on @var{node}.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Reschedule, "reschedule", simulation,
+	"reschedule event on node to absolute time")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(RescheduleFromNow, "reschedule-from-now", 
+	simulation,
+	"reschedule event on node to future time")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(RescheduleRelative, "reschedule-relative", 
+	simulation,
+	"reschedule event relative to pending event time")
+
+static
+int
+reschedule_main(State& s, const string_list& a,
+		bool (State::*smf)(const node_index_type, const time_type), 
+		void (usage)(ostream&)) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+if (ni) {
+	time_type t;
+	if (string_to_num(a.back(), t)) {
+		cerr << "Error: invalid time argument." << endl;
+		return Command::BADARG;
+	}
+	if ((s.*smf)(ni, t)) {
+		// already have error message
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+} else {
+	cerr << "No such node found: " << objname << endl;
+	return Command::BADARG;
+}
+}
+}
+
+int
+Reschedule::main(State& s, const string_list& a) {
+	return reschedule_main(s, a, &State::reschedule_event, usage);
+}
+
+int
+RescheduleFromNow::main(State& s, const string_list& a) {
+	return reschedule_main(s, a, &State::reschedule_event_future, usage);
+}
+
+int
+RescheduleRelative::main(State& s, const string_list& a) {
+	return reschedule_main(s, a, &State::reschedule_event_relative, usage);
+}
+
+void
+Reschedule::usage(ostream& o) {
+	o << name << " <node> <time>" << endl;
+	o << "Reschedules a pending event on node at an absolute time." << endl;
+}
+
+void
+RescheduleFromNow::usage(ostream& o) {
+	o << name << " <node> <time>" << endl;
+	o << "Reschedules a pending event on node at a time in future." << endl;
+}
+
+void
+RescheduleRelative::usage(ostream& o) {
+	o << name << " <node> <time>" << endl;
+	o <<
+"Reschedules a pending event on node relative to its currently scheduled time."
+	<< endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

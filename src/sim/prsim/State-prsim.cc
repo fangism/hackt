@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.16 2008/06/18 01:41:56 fang Exp $
+	$Id: State-prsim.cc,v 1.17 2008/06/24 04:35:25 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -780,6 +780,16 @@ State::append_check_excllo_ring(const ring_set_type& r) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Duplicates an event *without* binding the node's pending event.
+	\return new id of copied event.
+ */
+event_index_type
+State::__copy_event(const event_type& e) {
+	return event_pool.allocate(e);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Like the old prsim's newevent macro.  
 	Should be inline only.  
 	\param n the reference to the node.
@@ -974,6 +984,76 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
 	const node_type& n(get_node(ni));
 	ISE_INVARIANT(n.pending_event());
 	ISE_INVARIANT(n.get_event() == ei);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reschedules a pending event at a different time.  
+	\param ni the node whose event is to be rescheduled
+	\param t the absolute time at which to reschedule, 
+		must be >= current_time.
+	\return true to signal error: there was no pending event on that node,
+		or time is illegal (in the past).
+ */
+bool
+State::reschedule_event(const node_index_type ni, const time_type t) {
+if (t < current_time) {
+	cerr << "Error: reschedule time must be >= current time." << endl;
+	return true;
+}
+	node_type& n(get_node(ni));
+	const event_index_type ei = n.get_event();
+	if (ei) {
+		const event_index_type ne = __copy_event(get_event(ei));
+		kill_event(ei, ni);
+		n.set_event(ne);
+		enqueue_event(t, ne);
+		return false;
+	} else {
+		cerr << "Error: there is no pending event on node `" <<
+			get_node_canonical_name(ni) << "\'" << endl;
+		return true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param dt is relative time to previously scheduled event.  
+ */
+bool
+State::reschedule_event_relative(const node_index_type ni, const time_type dt) {
+	node_type& n(get_node(ni));
+	const event_index_type ei = n.get_event();
+	if (ei) {
+		// bah! copy and linear search
+		typedef	temp_queue_type::const_iterator		const_iterator;
+		temp_queue_type temp;
+		event_queue.copy_to(temp);
+		const_iterator i(temp.begin()), e(temp.end());
+		time_type t = delay_policy<time_type>::invalid_value;
+		while (i!=e) {
+			if (i->event_index == ei) {
+				t = i->time;
+				break;
+			}
+			++i;
+		}
+		INVARIANT(t != delay_policy<time_type>::invalid_value);
+		return reschedule_event(ni, t +dt);
+	} else {
+		cerr << "Error: there is no pending event on node `" <<
+			get_node_canonical_name(ni) << "\'" << endl;
+		return true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param dt is relative time into the future, must be >= 0.
+ */
+bool
+State::reschedule_event_future(const node_index_type ni, const time_type dt) {
+	return reschedule_event(ni, current_time +dt);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

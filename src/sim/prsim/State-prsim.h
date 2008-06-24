@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.6 2008/06/18 01:41:57 fang Exp $
+	$Id: State-prsim.h,v 1.7 2008/06/24 04:35:25 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -904,6 +904,9 @@ private:
 
 private:
 	event_index_type
+	__copy_event(const event_type&);
+
+	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
 		const rule_index_type, const uchar
@@ -951,6 +954,17 @@ private:
 	void
 	enqueue_event(const time_type, const event_index_type);
 
+public:
+	bool
+	reschedule_event(const node_index_type, const time_type);
+
+	bool
+	reschedule_event_future(const node_index_type, const time_type);
+
+	bool
+	reschedule_event_relative(const node_index_type, const time_type);
+
+private:
 	void
 	enqueue_exclhi(const time_type, const event_index_type);
 

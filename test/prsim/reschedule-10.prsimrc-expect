@@ -1,0 +1,8 @@
+	0	a : 0
+	10	b : 1	[by a:=0]
+time: 10
+event queue:
+	20	c : 0	[from b:=1]
+trying to schedule at time 1009 ... 
+event queue:
+	1009	c : 0	[from b:=1]

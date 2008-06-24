@@ -1,0 +1,17 @@
+# "reschedule-09.prsimrc"
+# @haco@ inv.haco-a
+
+# expect fail: cannot change the past!
+
+timing uniform 10
+watchall
+set a 0
+step-event 2
+time
+
+assert-pending c
+queue
+echo trying to schedule at time 18 ...
+reschedule-from-now c 8
+queue
+

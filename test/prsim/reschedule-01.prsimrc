@@ -1,0 +1,7 @@
+# "reschedule-01.prsimrc"
+# @haco@ inv.haco-a
+
+# expect fail: no pending event on `a' yet
+
+reschedule a 10
+

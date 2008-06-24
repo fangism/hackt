@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.4 2008/04/24 22:46:46 fang Exp $
+@c $Id: commands.texi,v 1.5 2008/06/24 04:35:14 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -95,6 +95,10 @@ Breakpoints.
 @include cmd/breaks.texi
 @include cmd/nobreakpt.texi
 @include cmd/nobreakptall.texi
+
+Rescheduling events.
+
+@include cmd/reschedule.texi
 
 Checkpointing.
 

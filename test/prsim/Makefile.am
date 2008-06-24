@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.29 2008/06/18 01:41:57 fang Exp $
+#	$Id: Makefile.am,v 1.30 2008/06/24 04:35:26 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -165,7 +165,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-non-QDI-a-01 \
 	stuck-bug-a-01 \
 	crash-bug-01-a \
-	always_random-a-01
+	always_random-a-01 \
+	reschedule-07 reschedule-08 reschedule-09 reschedule-10 reschedule-11 \
+	reschedule-12 reschedule-13 reschedule-14 reschedule-15
 
 # positive different test:
 # oscil-random-01 and oscil-random-01a are *supposed* to differ (seeds)
@@ -250,7 +252,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-test-a-10 channel-test-a-12 \
 	channel-test-a-21 \
 	channel-test-b-21 \
-	channel-test-non-QDI-a-02
+	channel-test-non-QDI-a-02 \
+	reschedule-01 reschedule-02 reschedule-03 reschedule-04 reschedule-05 \
+	reschedule-06
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

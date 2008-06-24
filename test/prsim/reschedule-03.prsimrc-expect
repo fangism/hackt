@@ -1,0 +1,7 @@
+	0	a : 0
+	10	b : 1	[by a:=0]
+	20	c : 0	[by b:=1]
+time: 20
+trying to schedule at time 15 ... 
+Error: reschedule time must be >= current time.
+... at line 13
