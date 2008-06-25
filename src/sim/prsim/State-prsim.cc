@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.17 2008/06/24 04:35:25 fang Exp $
+	$Id: State-prsim.cc,v 1.18 2008/06/25 05:18:55 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -988,7 +988,40 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Move event to front of queue.
+	Tricky: breaking ties at front of queue!
+ */
+bool
+State::reschedule_event_now(const node_index_type ni) {
+	node_type& n(get_node(ni));
+	const event_index_type ei = n.get_event();
+	if (ei) {
+		const event_index_type ne = __copy_event(get_event(ei));
+		kill_event(ei, ni);
+		n.set_event(ne);
+		// HACK the event queue to handle ties at current time
+		temp_queue_type tmp;
+		while (!event_queue.empty() &&
+				event_queue.top().time == current_time) {
+			tmp.push_back(event_queue.pop());
+		}
+		enqueue_event(current_time, ne);
+		// silently reschedule the remaining events 
+		// behind the rescheduled one
+		copy(tmp.begin(), tmp.end(), set_inserter(event_queue));
+		return false;
+	} else {
+		cerr << "Error: there is no pending event on node `" <<
+			get_node_canonical_name(ni) << "\'" << endl;
+		return true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reschedules a pending event at a different time.  
+	Within a group of events at the same time, the rescheduled event will
+	be *last*.  
 	\param ni the node whose event is to be rescheduled
 	\param t the absolute time at which to reschedule, 
 		must be >= current_time.

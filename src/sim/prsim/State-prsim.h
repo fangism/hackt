@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.7 2008/06/24 04:35:25 fang Exp $
+	$Id: State-prsim.h,v 1.8 2008/06/25 05:18:58 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -955,6 +955,9 @@ private:
 	enqueue_event(const time_type, const event_index_type);
 
 public:
+	bool
+	reschedule_event_now(const node_index_type);
+
 	bool
 	reschedule_event(const node_index_type, const time_type);
 

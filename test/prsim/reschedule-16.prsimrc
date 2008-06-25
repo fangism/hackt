@@ -1,0 +1,31 @@
+# "reschedule-16.prsimrc"
+# @haco@ invs.haco-a
+
+timing uniform 10
+watchall
+set a 0
+step-event 1
+time
+queue
+
+echo accelerate b[13] ...
+reschedule-now b[13]
+queue
+advance 10
+queue
+
+echo trying to schedule at time 10 ...
+reschedule-now b[10]
+queue
+
+echo trying to schedule at time 10 ...
+reschedule-now b[5]
+queue
+
+echo trying to schedule at time 10 ...
+reschedule-now b[15]
+queue
+
+echo will move to front of event-queue, ahead of ties
+cycle
+

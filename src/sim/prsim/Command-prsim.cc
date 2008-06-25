@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.10 2008/06/24 04:35:21 fang Exp $
+	$Id: Command-prsim.cc,v 1.11 2008/06/25 05:18:55 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -428,29 +428,16 @@ if multiple events are enqueued at the same time.
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(StepEvent, "step-event", simulation,
 	"step through event(s), by event count")
 
+/**
+	\param i the maximum number of steps to execute
+ */
+static
 int
-StepEvent::main(State& s, const string_list& a) {
-if (a.size() > 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	typedef	State::time_type		time_type;
-	typedef	State::node_type		node_type;
-	size_t i;		// the number of discrete time steps
-		// not necessarily == the number of discrete events
-	State::step_return_type ni;	// also stores the cause of the event
-	if (a.size() == 2) {
-		if (string_to_num(a.back(), i)) {
-			cerr << "Error parsing #steps." << endl;
-			// usage()?
-			return Command::BADARG;
-		}
-	} else {
-		i = 1;
-	}
+step_event_main(State& s, size_t i) {
 	s.resume();
 	// could check s.pending_events()
 	try {
+	State::step_return_type ni;	// also stores the cause of the event
 	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
 		--i;
 		// NB: may need specialization for real-valued (float) time.  
@@ -492,6 +479,76 @@ if (a.size() > 2) {
 		return Command::FATAL;
 	}	// no other exceptions
 	return Command::NORMAL;
+}
+
+int
+StepEvent::main(State& s, const string_list& a) {
+if (a.size() > 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::time_type		time_type;
+	typedef	State::node_type		node_type;
+	size_t i;		// the number of discrete time steps
+		// not necessarily == the number of discrete events
+	if (a.size() == 2) {
+		if (string_to_num(a.back(), i)) {
+			cerr << "Error parsing #steps." << endl;
+			// usage()?
+			return Command::BADARG;
+		}
+	} else {
+		i = 1;
+	}
+#if 0
+	s.resume();
+	// could check s.pending_events()
+	try {
+	State::step_return_type ni;	// also stores the cause of the event
+	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
+		--i;
+		// NB: may need specialization for real-valued (float) time.  
+		const time_type ct(s.time());
+		const node_type& n(s.get_node(GET_NODE(ni)));
+		/***
+			The following code should be consistent with
+			Cycle::main() and Advance::main().
+			tracing stuff here later...
+		***/
+		if (s.watching_all_nodes()) {
+			print_watched_node(cout << '\t' << ct << '\t', s, ni);
+		}
+		if (n.is_breakpoint()) {
+			// this includes watchpoints
+			const bool w = s.is_watching_node(GET_NODE(ni));
+			const string nodename(
+				s.get_node_canonical_name(GET_NODE(ni)));
+			if (w) {
+			if (!s.watching_all_nodes()) {
+				print_watched_node(cout << '\t' << ct << '\t',
+					s, ni);
+			}	// else already have message from before
+			}
+			// channel support
+			if (!w) {
+				// node is plain breakpoint
+				cout << "\t*** break, " << i <<
+					" steps left: `" << nodename <<
+					"\' became ";
+				n.dump_value(cout) << endl;
+				return Command::NORMAL;
+				// or Command::BREAK; ?
+			}
+		}
+	}	// end while
+	} catch (const step_exception& exex) {
+		s.inspect_exception(exex, cerr);
+		return Command::FATAL;
+	}	// no other exceptions
+	return Command::NORMAL;
+#else
+	return step_event_main(s, i);
+#endif
 }
 }	// end StepEvent::main
 
@@ -940,6 +997,7 @@ SetrF::usage(ostream& o) {
 @deffn Command reschedule node time
 @deffnx Command reschedule-from-now node time
 @deffnx Command reschedule-relative node time
+@deffnx Command reschedule-now node
 If there is a pending event on @var{node} in the event queue, 
 reschedule it as follows:
 @command{reschedule} interprets @var{time} as an absolute time.
@@ -949,12 +1007,19 @@ to the current time.
 pending event's presently scheduled time.  
 The resulting rescheduled time cannot be in the past; 
 it must be greater than or equal to the current time.  
+Tie-breakers: given a group of events with the same time, 
+a newly rescheduled event at that time will be *last* among them.
+@command{reschedule-now}, however, will guarantee that the 
+rescheduled event occurs next at the current time.  
 Return with error status if there is no pending event on @var{node}.
 @end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Reschedule, "reschedule", simulation,
 	"reschedule event on node to absolute time")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(RescheduleNow, "reschedule-now",
+	simulation,
+	"reschedule event at current time")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RescheduleFromNow, "reschedule-from-now", 
 	simulation,
 	"reschedule event on node to future time")
@@ -992,6 +1057,27 @@ if (ni) {
 }
 
 int
+RescheduleNow::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+if (ni) {
+	if (s.reschedule_event_now(ni)) {
+		// already have error message
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+} else {
+	cerr << "No such node found: " << objname << endl;
+	return Command::BADARG;
+}
+}
+}
+
+int
 Reschedule::main(State& s, const string_list& a) {
 	return reschedule_main(s, a, &State::reschedule_event, usage);
 }
@@ -1004,6 +1090,13 @@ RescheduleFromNow::main(State& s, const string_list& a) {
 int
 RescheduleRelative::main(State& s, const string_list& a) {
 	return reschedule_main(s, a, &State::reschedule_event_relative, usage);
+}
+
+void
+RescheduleNow::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o << "Reschedules a pending event on node to current time, *now*."
+		<< endl;
 }
 
 void
@@ -1024,6 +1117,48 @@ RescheduleRelative::usage(ostream& o) {
 	o <<
 "Reschedules a pending event on node relative to its currently scheduled time."
 	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/execute.texi
+@deffn Command execute node
+Reschedules a pending event to the current time and executes it immediately.
+Equivalent to @command{reschedule-now node}, followed by @command{step-event}.
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Execute, "execute", simulation,
+	"execute a pending event now")
+
+int
+Execute::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+if (ni) {
+	// RescheduleNow::main
+	if (s.reschedule_event_now(ni)) {
+		// already have error message
+		return Command::BADARG;
+	}
+	// StepEvent::main
+	return step_event_main(s, 1);
+} else {
+	cerr << "No such node found: " << objname << endl;
+	return Command::BADARG;
+}
+}
+}
+
+void
+Execute::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o << "Execute a pending event on the node at the current time." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2269,11 +2404,11 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyXVerbose, "why-x-verbose", info,
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyXN, "why-x-N", info, 
 	"recursively trace cause of X on node (N-level)")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyXNVerbose, "why-x-N-verbose", info, 
-	"recursively trace cause of X on node (N-level, verbose)")
+	"recursively trace cause of X (N-level, verbose)")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyX1, "why-x-1", info, 
-	"recursively trace cause of X on node (1-level)")
+	"trace cause of X on node (1-level)")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyX1Verbose, "why-x-1-verbose", info, 
-	"recursively trace cause of X on node (1-level, verbose)")
+	"trace cause of X on node (1-level, verbose)")
 
 static
 int
@@ -2472,7 +2607,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNVerbose, "why-N-verbose", info,
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot, "why-not", info, 
 	"recursively trace why node is not at value")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotVerbose, "why-not-verbose", info, 
-	"recursively trace why node is not at value (verbose)")
+	"recursively trace why node is not value (verbose)")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot1, "why-not-1", info, 
 	"trace why node is not at value")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot1Verbose, "why-not-1-verbose", info, 
@@ -2480,7 +2615,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot1Verbose, "why-not-1-verbose", info,
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotN, "why-not-N", info, 
 	"recursively trace why node is not at value")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotNVerbose, "why-not-N-verbose", info, 
-	"recursively trace why node is not at value (verbose)")
+	"recursively trace why node is not value (verbose)")
 
 /**
 	Template procedure for invoking node_why[_not] with various options.
@@ -4449,7 +4584,7 @@ Legal values are integers and 'X' for random.
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceArgsLoop,
 	"channel-source-args-loop", 
-	channels, "source values on channel from arguments (loop)")
+	channels, "source channel values from arguments (loop)")
 
 int
 ChannelSourceArgsLoop::main(State& s, const string_list& a) {
@@ -4721,7 +4856,7 @@ Checks that value sequence repeats infintely.
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectArgsLoop,
 	"channel-expect-args-loop", 
-	channels, "assert values on channel from arguments (loop)")
+	channels, "assert channel values from arguments (loop)")
 
 int
 ChannelExpectArgsLoop::main(State& s, const string_list& a) {

@@ -8,8 +8,10 @@
 	* HACKT-00-01-04-main-00-82-30:
 	  prsim: new commands to play with event queue
 		'reschedule' <node>: set to absolute time
+		'reschedule-now' <node>: force to head of event queue
 		'reschedule-from-now' <node>: set to time in future
 		'reschedule-relative' <node>: change relative to pending time
+		'execute' <node>: move to head of event queue and execute now!
 	  Documented, and added test cases.
 
 

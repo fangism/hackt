@@ -1,7 +1,7 @@
 /**
 	\file "sim/event.h"
 	Generic event placeholder type.  
-	$Id: event.h,v 1.3 2008/03/17 23:02:45 fang Exp $
+	$Id: event.h,v 1.4 2008/06/25 05:18:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_EVENT_H__
@@ -115,6 +115,7 @@ class EventQueue {
 	typedef	EVENT_QUEUE_CLASS		this_type;
 public:
 	typedef	E				value_type;
+	typedef	const value_type&		const_reference;
 private:
 	/**
 		Heap-like structure. 
@@ -166,6 +167,12 @@ public:
 		INVARIANT(i.second);
 #endif
 	}
+
+#if MULTIMAP_EVENT_QUEUE
+	// for set insertion interface
+	void
+	insert(const value_type& p) { push(p); }
+#endif
 
 	size_t
 	size(void) const { return equeue.size(); }

@@ -1,8 +1,6 @@
 # "reschedule-07.prsimrc"
 # @haco@ inv.haco-a
 
-# expect fail: cannot change the past!
-
 timing uniform 10
 watchall
 set a 0

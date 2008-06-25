@@ -1,0 +1,13 @@
+# "reschedule-18.prsimrc"
+# @haco@ invs.haco-a
+
+timing uniform 10
+watchall
+set a 0
+step-event 1
+time
+queue
+
+echo expect fail: no pending event on 'a'
+execute a
+
