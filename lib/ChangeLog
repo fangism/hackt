@@ -1,5 +1,12 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.45 2008/03/25 23:59:13 fang Exp $
+#	$Id: ChangeLog,v 1.46 2008/06/27 00:01:37 fang Exp $
+
+2008-06-26	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-31:
+	  channel.hac: updated channels to defchan, and datatypes to deftype
+	  *.hac: removed syntax highlight directives to use C++
+
 
 2008-03-25	David Fang	<fangism@users.sourceforge.net>
 

@@ -1,6 +1,5 @@
 /**
 	\file "alternator.hac"
-	vi: ft=cpp
 	Library for alternator structures and ring-counted structures.
 	Everything defined in here is CMOS-implementable and may be
 	used to synthesize netlists of environment sources.  
@@ -10,7 +9,7 @@
 
 	TODO: e1ofN alterators.
 
-	$Id: alternator.hac,v 1.14 2006/10/17 23:12:28 fang Exp $
+	$Id: alternator.hac,v 1.15 2008/06/27 00:01:39 fang Exp $
  */
 
 import "channel.hac";

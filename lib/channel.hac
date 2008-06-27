@@ -1,9 +1,8 @@
 /**
 	"channel.hac"
-	vi: ft=cpp
 	Standard channel definitions in HAC.  
 	Q: place these in some namespace?  std::channel?
-	$Id: channel.hac,v 1.9 2006/09/19 04:11:42 fang Exp $
+	$Id: channel.hac,v 1.10 2008/06/27 00:01:39 fang Exp $
  */
 
 /*** e1of<N> definitions ********************************/
@@ -13,7 +12,7 @@
 	Active-low acknowledge is e.  
  */
 template <pint N>
-defproc e1of(bool d[N], e)
+defchan e1of <: chan(int) (bool d[N], e)
 {
 spec {
 	exclhi(d)		// all nodes: d[0..N-1]
@@ -36,7 +35,7 @@ typedef e1of<8> e1of8;
 	Active-high acknowledge is a.  
  */
 template <pint N>
-defproc a1of(bool d[N], a)
+defchan a1of <: chan(int) (bool d[N], a)
 {
 spec {
 	exclhi(d)		// all nodes: d[0..N-1]
@@ -59,7 +58,7 @@ typedef a1of<8> a1of8;
 	'c' is for active-high channel.  
  */
 template <pint N>
-defproc c1of(bool d[N])
+deftype c1of <: int (bool d[N])
 {
 spec {
 	exclhi(d)		// all nodes: d[0..N-1]
@@ -71,7 +70,7 @@ spec {
 	'_c' is for active-low channel.  
  */
 template <pint N>
-defproc _c1of(bool d[N])
+deftype _c1of <: int (bool d[N])
 {
 spec {
 	excllo(d)		// all nodes: d[0..N-1]
@@ -103,7 +102,7 @@ typedef _c1of<8> _c1of8;
 	Active-high request (completion) is v.
  */
 template <pint N>
-defproc ev1of(bool d[N], e, v)
+defchan ev1of <: chan(int) (bool d[N], e, v)
 {
 spec {
 	exclhi(d)
@@ -125,7 +124,7 @@ typedef	ev1of<8>	ev1of8;
 	Active-low request (completion) is n.
  */
 template <pint N>
-defproc en1of(bool d[N], e, n)
+defchan en1of <: chan(int) (bool d[N], e, n)
 {
 spec {
 	exclhi(d)
@@ -147,7 +146,7 @@ typedef	en1of<8>	en1of8;
 	Active-high request (completion) is v.
  */
 template <pint N>
-defproc av1of(bool d[N], a, v)
+defchan av1of <: chan(int) (bool d[N], a, v)
 {
 spec {
 	exclhi(d)
@@ -169,7 +168,7 @@ typedef	av1of<8>	av1of8;
 	Active-low request (completion) is n.
  */
 template <pint N>
-defproc an1of(bool d[N], a, n)
+defchan an1of <: chan(int) (bool d[N], a, n)
 {
 spec {
 	exclhi(d)
@@ -190,12 +189,12 @@ typedef	an1of<8>	an1of8;
 
 /*** <M>x1of<N> definitions ********************************/
 template <pint N,M>
-defproc eMx1ofN(c1of<N> b[M]; bool e)
+defchan eMx1ofN <: chan(int) (c1of<N> b[M]; bool e)
 {
 }
 
 template <pint N,M>
-defproc aMx1ofN(c1of<N> b[M]; bool a)
+defchan aMx1ofN <: chan(int) (c1of<N> b[M]; bool a)
 {
 }
 
@@ -203,16 +202,16 @@ typedef eMx1ofN<2,2> e2x1of2;
 typedef aMx1ofN<2,2> a2x1of2;
 
 /*** 1of1 definitions ********************************/
-defproc e1of1d(bool d, e)
+defchan e1of1d <: chan() (bool d, e)
 {
 }
 
-defproc a1of1d(bool d, a)
+defchan a1of1d <: chan() (bool d, a)
 {
 }
 
 /*** 1of2 definitions *******************************/
-defproc e1of2tf(bool d[2]; bool z,o,t,f,e)
+defchan e1of2tf <: chan(bool) (bool d[2]; bool z,o,t,f,e)
 {
   z=d[0]=f;
   o=d[1]=t;
@@ -221,7 +220,7 @@ spec {
 }
 }
 
-defproc a1of2tf(bool d[2]; bool z,o,t,f,a)
+defchan a1of2tf <: chan(bool) (bool d[2]; bool z,o,t,f,a)
 {
   z=d[0]=f;
   o=d[1]=t;
