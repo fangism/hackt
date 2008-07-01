@@ -1,0 +1,14 @@
+# "paranoid-01.prsimrc"
+# @haco@ inv.haco-a
+
+watchall
+mode paranoid
+set a 1
+cycle
+set a X
+cycle
+echo expect break on weak-interference!
+assert-queue
+queue
+time
+

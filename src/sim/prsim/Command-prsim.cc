@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.12 2008/07/01 04:59:03 fang Exp $
+	$Id: Command-prsim.cc,v 1.13 2008/07/01 23:57:13 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3749,11 +3749,13 @@ With argument @var{md}, @t{run} is the default set of policies,
 @t{reset} is only different in that @t{weak-unstable} is @t{ignore}d.  
 @t{reset} is useful during the initalization phase, when some rules
 may transiently and weakly interfere, as they come out of unknown state.  
+@t{paranoid} causes the simulation to break on weak-instabilities
+and weak-interferences, which is useful for debugging.  
 @end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetMode, "mode", 
-	modes, "enable/disable weak-interference warnings")
+	modes, "set weak-unstable/interference policies (presets)")
 
 int
 SetMode::main(State& s, const string_list& a) {
@@ -3762,11 +3764,14 @@ if (a.size() == 1) {
 } else if (a.size() == 2) {
 	static const string reset("reset");
 	static const string run("run");
+	static const string paranoid("paranoid");
 	const string& m(a.back());
 	if (m == reset) {
 		s.set_mode_reset();
 	} else if (m == run) {
 		s.set_mode_run();
+	} else if (m == paranoid) {
+		s.set_mode_breakall();
 	} else {
 		usage(cerr << "usage: ");
 		return Command::BADARG;
@@ -3780,9 +3785,10 @@ if (a.size() == 1) {
 
 void
 SetMode::usage(ostream& o) {
-	o << "mode [reset|run]\n"
+	o << "mode [reset|run|paranoid]\n"
 "\t\'reset\' disables weak-interference warnings, useful during initialization\n"
-"\t\'run\' (default) enables weak-interference warnings" << endl;
+"\t\'run\' (default) enables weak-interference warnings\n"
+"\t\'paranoid\' also break on weak-instability and weak-interference" << endl;
 	o <<
 "Instabilities and interferences still cause simulations to halt, while \n"
 "weak-instabilities trigger warnings." << endl;
