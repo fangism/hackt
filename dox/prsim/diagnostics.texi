@@ -1,0 +1,207 @@
+@c "diagnostics.texi"
+
+@node Diagnostics
+@chapter Diagnostics
+@cindex diagnostics
+
+Over the course of simulation, one is likely to encounter
+various diagnostic messages.  
+This chapter describes some of the message one might encounter
+in simulations.  
+
+@menu
+* Interactive Diagnostics:: meanings of errors and warnings
+* Delay-insensitivity Violations::
+* Exclusion Violations::
+* Channel Diagnostics::
+* Fatal Diagnostics::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Interactive Diagnostics
+@section Interactive Diagnostics
+@c @cindex diagnostics, interactive
+
+@example
+WARNING: pending event for node `$1'; ignoring request.
+@end example
+
+The above message is displayed whenever the user tries to @command{set}
+a node to a value, when it is already scheduled to take on a different
+value in the event-queue.  
+This is a safe-guard to prevent users from accidentally 
+modifying events that are caused by the circuits.  
+This message also appears if a user tries to set a node to different
+values without @command{cycle}-ing in between.  
+To forcefully override the event queue, use the @command{setf} command, 
+which will issue the following warning.  
+
+@example
+WARNING: pending event for node `$1' was overidden.
+@end example
+
+Assertion failures are pretty self-documenting.
+
+@c ----------------------------------------------------------------------------
+@node Delay-insensitivity Violations
+@section Delay-insensitivity Violations
+
+@cindex unstable rules
+@cindex instability
+A rule is said to be stable if its guards remain stably 
+true before the output fires.  
+An unstable rule can have its guards momentarily evaluate
+true before the output fires.  
+In the simulation this translates into an event being
+enqueued, and dequeued (or altered) before it fires.  
+The simulator uses the policy set by @command{unstable}
+to choose an action when there is an instability.  
+For any policy except @t{ignore}, the simulator prints:
+
+@example
+WARNING: unstable `$1'+/-
+>> cause: `$2' (val:$3)
+@end example
+
+This means that the new transition on node @t{$2} to value @t{$3}, 
+caused the guard for rule @t{$1} + or - to become false
+while the event was still scheduled.  
+
+@example
+WARNING: weak-unstable `$1'+/-
+@end example
+
+@noindent
+just means that the instability was caused by the guard expression
+becoming @t{X}, meaning that there @emph{may} be an instability.  
+@cindex weak-instability
+
+In the @command{unstable-unknown} (default) mode, 
+the previous pending event on @t{$1} will be over-written to
+become @t{X}, which is a conservative model of what could 
+potentially happen in a real circuit.  
+The alternative is to use the @command{unstable-dequeue} policy, 
+which simply dequeues the unstable rule from firing.  
+
+@cindex interference
+Rules are interfering if the pull-up and pull-down rules can
+both fire at the same time, i.e. they form a short path between
+Vdd and GND.  
+
+@example
+WARNING: interference `$1'
+>> cause: `$2' (val:$3)
+@end example
+
+@noindent
+reports the latest rule that turned on to cause interference.  
+Usually this means that there is an error in the production rules.  
+Take a look at @command{fanin-get} @t{$1} to see which subexpressions
+in the rules are on.  
+
+@cindex weak-interference
+A weak-interference occurs when an @t{X} is fighting a @t{1} or @t{X} pull. 
+This can frequently occur transiently during reset, when nodes
+are still coming into known values.  
+@command{mode reset} can be used to ignore these, 
+for example, during the reset phase.  
+
+
+@c ----------------------------------------------------------------------------
+@node Exclusion Violations
+@section Exclusion Violations
+@cindex exclusion violations
+@cindex mutual exclusion
+
+The production rules can be annotated with one class
+of invariant directives for mutual exclusion:
+@command{exclhi} and @command{excllo}.
+These check at run-time that mutual exclusion among
+rings of nodes is maintained throughout execution.  
+They assume that @t{X} values of nodes are safe and do not
+cause violations.
+(Implementation note: each ring's exclusion state is actually
+a single boolean value, one bit of a long bit-field.)  
+A violation of exclusion will result in the following message:
+
+@example
+ERROR: exclhi/lo violation detected!
+ring-state:
+node1 : val1
+node2 : val2
+...
+but node `$1' tried to become $2.
+The simulator's excl-check-lock state is no longer coherent;
+do not bother trying to continue the simulation,
+but you may further inspect the state.
+You probably want to disable excl-checking with `nocheckexcl'
+if you wish to continue the simulation.
+@end example
+
+This just identifies participants of the ring that is violated, 
+and the last member that tried to fire.  
+Since the data structure for the ring locks does not support
+counting, you will have to disable exclusion checking
+with @command{nocheckexcl} to continue.  
+Debugging the state of the simulation at the time of violation
+is highly recommended.  
+(Use @command{backtrace} and @command{why}.)
+
+@c ----------------------------------------------------------------------------
+@node Channel Diagnostics
+@section Channel Diagnostics
+@cindex channel diagnostics
+
+Typically when a channel is configured as a source, 
+the data-rails have no fanin from the production rules, 
+and the acknowledge is driven by the production rules.  
+When this is not the case, the simulator issues a warning:
+
+@example
+Warning: channel acknowledge `$1.a/e' has no fanin!
+
+Warning: channel data rail `$1' ($2,$3) has fanin.
+@end example
+
+@noindent
+While this is not fatal, it usually indicates a user-error in configuration.
+
+Likewise, sinks expect to have data rails driven by production rules, 
+and the acknowledge fanout to production rules.  
+
+Channels also expect data rails to behave sanely, maintaing mutual exclusion
+within each data bundle.  Violation will produce:
+
+@example
+Channel data rails are in an invalid state!
+In channel `$1', got $2 high rails, whereas only $3 are permitted.
+@end example
+
+@noindent
+This is similar in meaning to exclusion violations.  
+
+TODO: this section doesn't exhaust the list of diagnostic message.
+Add as needed.  
+
+@c ----------------------------------------------------------------------------
+@node Fatal Diagnostics
+@section Fatal Diagnostics
+@cindex fatal diagnostics
+@cindex internal simulation error
+@cindex crash
+
+In the worst-case scenario, the simulator may enter an invalid
+state where some invariant (assertion) no longer holds.  
+(This can indicate some corruption of data structures, for instance.)
+If you see such an internal simulation error (ISE), 
+calmly back away from the computer and file a bug-report.  
+
+@example
+Internal simulator error: in some_function at some_file:line:
+*** Please submit a bug report including version
+*** "HACKT-...", VERSION,
+*** (preferably reduced) test case, steps to reproduce, and configuration,
+*** if appropriate, to <email@@address>.
+*** This program will now self-destruct.  Thank you, and have a nice day.
+@end example
+

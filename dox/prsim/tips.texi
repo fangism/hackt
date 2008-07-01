@@ -1,0 +1,42 @@
+@c "tips.texi"
+
+@node Tips
+@chapter Tips
+
+This section contains the collected wisdom of users of 
+the simulator.  
+Think of this as an FAQ.  
+
+@menu
+* Interactive mode::
+* Scripting::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Interactive mode
+@section Interactive mode
+
+TODO: write me
+
+@c ----------------------------------------------------------------------------
+@node Scripting
+@section Scripting
+
+@b{Long simulations.}
+Q: If I have a simulation that is supposed to run infinitely, deadlock-free, 
+with the @command{cycle} command how do I check it non-interactively?
+(By now you've figured out that in interactive mode, you can
+interrupt the simulation with @t{Ctrl-C} to give you back the command prompt, 
+or equivalently, send the process a @t{SIGINT} signal.)
+
+A: Instead of @command{cycle}, use @command{advance} or @command{step}
+or @command{step-event} to run for a finite time.  
+Upon completion of the command, however, one typically wants to verify
+that the system did not deadlock.  
+@command{assert-queue} will error out if the event queue is empty.  
+
+@b{Checkpointing}.
+
+Q: 
+
+
