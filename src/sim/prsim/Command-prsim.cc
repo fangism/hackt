@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.11 2008/06/25 05:18:55 fang Exp $
+	$Id: Command-prsim.cc,v 1.12 2008/07/01 04:59:03 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4446,6 +4446,9 @@ Configure channel @var{chan} to source values from the environment.
 Values are take from @var{file} and read into an internal array.
 Once values are exhausted, the channel stops sourcing.  
 To repeat values, use @command{channel-source-file-loop}.  
+A channel configured as a source should have the production rules
+drive the acknowledge signal and no other rules driving the data rails
+(otherwise the simulator will issue a warning).  
 @end deffn
 @end texinfo
 ***/
@@ -4645,6 +4648,9 @@ ChannelRandomSource::usage(ostream& o) {
 @texinfo cmd/channel-sink.texi
 @deffn Command channel-sink chan
 Configure a channel to consume all data values (infinitely).  
+A sink-configured channel should have data rails driven by the production rules
+and nothing else driving the acknowledge signal 
+(simulator will issue warning otherwise).
 A sink-configured channel can also log and expect values.  
 Mmmmm... tokens!  Nom-nom-nom...
 @end deffn
