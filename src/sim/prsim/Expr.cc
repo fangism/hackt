@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.5 2006/08/12 00:36:33 fang Exp $
+	$Id: Expr.cc,v 1.5.82.1 2008/07/09 04:34:44 fang Exp $
  */
 
 #include <iostream>
@@ -132,6 +132,16 @@ Expr::dump_type_dot_shape(ostream& o) const {
 }
 
 //=============================================================================
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#define	EXPR_PARAM		const Expr& e
+#define	EXPR_REF		e
+#define	EXPR_MEM(x)		(e.x)
+#else
+#define	EXPR_PARAM		void
+#define	EXPR_REF
+#define	EXPR_MEM(x)		x
+#endif
+
 /**
 	Initializes expression state.  
 	Assuming everything is X on startup, the initialization
@@ -139,17 +149,22 @@ Expr::dump_type_dot_shape(ostream& o) const {
 	is conjunctive or disjunctive.  
  */
 void
-ExprState::initialize(void) {
-	unknowns = size;
+ExprState::initialize(EXPR_PARAM) {
+	unknowns = EXPR_MEM(size);
 	countdown = 0;	// All X's, no 1's or 0's
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-ExprState::dump_state(ostream& o) const {
+ExprState::dump_state(ostream& o
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		, EXPR_PARAM
+#endif
+		) const {
 	o << "ctdn: " << size_t(countdown) <<
-		" X: " << size_t(unknowns) << "(/" << size_t(size) << ')'
-		<< " pull: " << size_t(pull_state());
+		" X: " << size_t(unknowns) << "(/" <<
+		size_t(EXPR_MEM(size)) << ')'
+		<< " pull: " << size_t(pull_state(EXPR_REF));
 	return o;
 }
 
@@ -186,6 +201,10 @@ ExprState::dump_checkpoint_state(ostream& o, istream& i) {
 	temp.load_state(i);
 	return o << size_t(temp.countdown) << '\t' << size_t(temp.unknowns);
 }
+
+#undef	EXPR_PARAM
+#undef	EXPR_REF
+#undef	EXPR_MEM
 
 //=============================================================================
 // class ExprGraphNode method definitions

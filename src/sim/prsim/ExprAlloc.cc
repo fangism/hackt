@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25 2008/05/30 03:41:55 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.1 2008/07/09 04:34:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -184,9 +184,13 @@ ExprAlloc::ExprAlloc(state_type& _s) :
 		cflat_context_visitor(), 
 		state(_s),
 		st_node_pool(state.node_pool), 
+#if 0
 		st_expr_pool(state.expr_pool), 
-		st_graph_node_pool(state.expr_graph_node_pool), 
+		st_expr_graph_node_pool(state.expr_expr_graph_node_pool), 
 		st_rule_map(state.get_rule_map()),
+#else
+		g(&_s), 
+#endif
 		ret_ex_index(INVALID_EXPR_INDEX), 
 		temp_rule(NULL),
 		flags(), expr_free_list() {
@@ -197,9 +201,13 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 		cflat_context_visitor(), 
 		state(_s),
 		st_node_pool(state.node_pool), 
+#if 0
 		st_expr_pool(state.expr_pool), 
-		st_graph_node_pool(state.expr_graph_node_pool), 
+		st_expr_graph_node_pool(state.expr_expr_graph_node_pool), 
 		st_rule_map(state.get_rule_map()),
+#else
+		g(&_s), 
+#endif
 		ret_ex_index(INVALID_EXPR_INDEX), 
 		temp_rule(NULL),
 		flags(f), expr_free_list() {
@@ -234,7 +242,7 @@ ExprAlloc::compact_expr_pools(void) {
 	cerr << "expr_free_list has " << holes <<
 		" entries remaining."  << endl;
 #endif
-	const size_t eps = st_expr_pool.size();
+	const size_t eps = g->expr_pool.size();
 	const size_t move_end = eps -holes;
 	// all expression indices from [move_end, eps) need to be relocated.
 	std::set<expr_index_type> free_set, discard_set;
@@ -265,41 +273,41 @@ ExprAlloc::compact_expr_pools(void) {
 			// move rule_map_entry, if applicable
 			typedef	State::rule_map_type::iterator
 				rule_map_iterator;
-			const rule_map_iterator f(st_rule_map.find(i));
-			if (f != st_rule_map.end()) {
-				st_rule_map[n] = f->second;
-				st_rule_map.erase(f);
+			const rule_map_iterator f(g->rule_map.find(i));
+			if (f != g->rule_map.end()) {
+				g->rule_map[n] = f->second;
+				g->rule_map.erase(f);
 			}
 		}
 #endif
-		expr_type& e(st_expr_pool[n]);
-		graph_node_type& g(st_graph_node_pool[n]);
+		expr_state_type& e(g->expr_pool[n]);
+		graph_node_type& gn(g->expr_graph_node_pool[n]);
 		INVARIANT(e.wiped());
-		INVARIANT(g.wiped());
-		e = st_expr_pool[i];
-		g = st_graph_node_pool[i];
+		INVARIANT(gn.wiped());
+		e = g->expr_pool[i];
+		gn = g->expr_graph_node_pool[i];
 		// TODO: this code is re-used several times in this file.  
 		// relink parent, which may be node or expression
 		if (e.is_root()) {
 			node_type& nd(st_node_pool[e.parent]);
 			nd.replace_pull_index(e.direction(), n
 #if PRSIM_WEAK_RULES
-				, rule_strength(st_rule_map[n].is_weak())
+				, rule_strength(g->rule_map[n].is_weak())
 				// careful: consistent with enum rule_strength
 #endif
 				);
 		} else {
 			graph_node_type::child_entry_type&
-				c(st_graph_node_pool[e.parent]
-					.children[g.offset]);
+				c(g->expr_graph_node_pool[e.parent]
+					.children[gn.offset]);
 			c.first = false;	// mark as expression
 			c.second = n;		// re-establish child reference
 		}
 		// relink children
 		size_t j = 0;
-		INVARIANT(e.size == g.children.size());
+		INVARIANT(e.size == gn.children.size());
 		for ( ; j<e.size; ++j) {
-			graph_node_type::child_entry_type& c(g.children[j]);
+			graph_node_type::child_entry_type& c(gn.children[j]);
 			if (c.first) {
 				// then child is a node, update its fanout
 				node_type& nd(st_node_pool[c.second]);
@@ -307,7 +315,7 @@ ExprAlloc::compact_expr_pools(void) {
 					i, n);
 			} else {
 				// child is an expression, update its parent
-				st_expr_pool[c.second].parent = n;
+				g->expr_pool[c.second].parent = n;
 			}
 		}
 	} // else just discard it
@@ -315,15 +323,15 @@ ExprAlloc::compact_expr_pools(void) {
 	INVARIANT(free_set.empty());
 	// define an expression MOVE that reassigns IDs
 	// and maintains connectivity
-	st_expr_pool.resize(move_end);
+	g->expr_pool.resize(move_end);
 #if 0
 	// interface is missing right now from list_vector
-	st_graph_node_pool.resize(move_end);
+	g->expr_graph_node_pool.resize(move_end);
 #else
 	{
 	size_t k = holes;
 	for ( ; k; --k) {
-		st_graph_node_pool.pop_back();
+		g->expr_graph_node_pool.pop_back();
 	}
 	}
 #endif
@@ -350,7 +358,7 @@ try {
 	// const size_t j = bfm[r.output_index-1];
 	const size_t ni = __lookup_global_bool_id(r.output_index);
 
-	// ignored: state.expr_graph_node_pool[top_ex_index].offset
+	// ignored: state.expr_expr_graph_node_pool[top_ex_index].offset
 	// not computing node fanin?  this would be the place to do it...
 	// can always compute it (cacheable) offline
 	STACKTRACE_INDENT_PRINT("expr " << top_ex_index << " pulls node " <<
@@ -365,7 +373,7 @@ try {
 {
 	// first, unconditionally create a rule entry in the state's rule
 	// map for every top-level (root) expression that affects a node.  
-//	rule_type& rule __ATTRIBUTE_UNUSED_CTOR__((st_rule_map[ret_ex_index]));
+//	rule_type& rule __ATTRIBUTE_UNUSED_CTOR__((g->rule_map[ret_ex_index]));
 	rule_type dummy_rule;
 	const util::value_saver<rule_type*> rs(temp_rule, &dummy_rule);
 	// now iterate over attributes to apply changes
@@ -382,7 +390,7 @@ try {
 		, rule_strength(dummy_rule.is_weak())
 #endif
 		);
-	st_rule_map[ret_ex_index] = dummy_rule;	// copy over temporary
+	g->rule_map[ret_ex_index] = dummy_rule;	// copy over temporary
 }
 } catch (...) {
 	cerr << "FATAL: error during prs rule allocation." << endl;
@@ -418,15 +426,17 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 	expr_index_type ret;
 	if (expr_free_list.size()) {
 		ret = free_list_acquire(expr_free_list);
-		st_expr_pool[ret] = expr_type(expr_type::EXPR_NODE,1);
-		st_graph_node_pool[ret] = graph_node_type();
+		g->expr_pool[ret] =
+			expr_state_type(expr_struct_type::EXPR_NODE,1);
+		g->expr_graph_node_pool[ret] = graph_node_type();
 	} else {
-		ret = st_expr_pool.size();
-		st_expr_pool.push_back(expr_type(expr_type::EXPR_NODE,1));
-		st_graph_node_pool.push_back(graph_node_type());
+		ret = g->expr_pool.size();
+		g->expr_pool.push_back(expr_state_type(
+			expr_struct_type::EXPR_NODE,1));
+		g->expr_graph_node_pool.push_back(graph_node_type());
 	}
 	st_node_pool[ni].push_back_fanout(ret);
-	st_graph_node_pool[ret].push_back_node(ni);
+	g->expr_graph_node_pool[ret].push_back_node(ni);
 	// literal graph node has no children
 	return ret;
 }
@@ -441,22 +451,9 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 expr_index_type
 ExprAlloc::allocate_new_not_expr(const expr_index_type ei) {
 	STACKTRACE_INDENT_PRINT("sub_ex_index = " << ei << endl);
-#if 0
-	// correct, but wasteful!
-	st_expr_pool.push_back(expr_type(expr_type::EXPR_NOT,1));
-	st_graph_node_pool.push_back(graph_node_type());
-	// now link parent to only-child
-	const expr_index_type last = st_expr_pool.size() -1;
-	st_expr_pool[ei].parent = last;
-	graph_node_type& child(st_graph_node_pool[ei]);
-	child.offset = 0;
-	st_graph_node_pool.back().push_back_expr(ei);
-	return st_expr_pool.size() -1;
-#else
 	// just negate the expression, duh!
-	st_expr_pool[ei].toggle_not();
+	g->expr_pool[ei].toggle_not();
 	return ei;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -470,11 +467,11 @@ void
 ExprAlloc::link_child_expr(const expr_index_type parent,
 		const expr_index_type child, const size_t offset) {
 	STACKTRACE_VERBOSE;
-	// st_expr_pool[child].parent = parent;
-	st_expr_pool[child].set_parent_expr(parent);
-	graph_node_type& child_node(st_graph_node_pool[child]);
+	// g->expr_pool[child].parent = parent;
+	g->expr_pool[child].set_parent_expr(parent);
+	graph_node_type& child_node(g->expr_graph_node_pool[child]);
 	child_node.offset = offset;
-	st_graph_node_pool[parent].push_back_expr(child);
+	g->expr_graph_node_pool[parent].push_back_expr(child);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -495,17 +492,18 @@ ExprAlloc::allocate_new_Nary_expr(const char type, const size_t sz) {
 			sz << " > " << lim << endl;
 		THROW_EXIT;
 	}
-	const expr_type temp((type == entity::PRS::PRS_AND_EXPR_TYPE_ENUM ?
-		expr_type::EXPR_AND : expr_type::EXPR_OR), sz);
+	const expr_state_type
+		temp((type == entity::PRS::PRS_AND_EXPR_TYPE_ENUM ?
+		expr_struct_type::EXPR_AND : expr_struct_type::EXPR_OR), sz);
 if (expr_free_list.size()) {
 	const expr_index_type ret = free_list_acquire(expr_free_list);
-	st_expr_pool[ret] = temp;
-	st_graph_node_pool[ret] = graph_node_type();
+	g->expr_pool[ret] = temp;
+	g->expr_graph_node_pool[ret] = graph_node_type();
 	return ret;
 } else {
-	const expr_index_type ret = st_expr_pool.size();
-	st_expr_pool.push_back(temp);
-	st_graph_node_pool.push_back(graph_node_type());
+	const expr_index_type ret = g->expr_pool.size();
+	g->expr_pool.push_back(temp);
+	g->expr_graph_node_pool.push_back(graph_node_type());
 	return ret;
 }
 }
@@ -523,16 +521,16 @@ ExprAlloc::fold_literal(const expr_index_type _e) {
 	// then transform the leaf node out.
 	typedef	graph_node_type::child_entry_type	child_entry_type;
 	size_t j = 0;
-	graph_node_type& g(st_graph_node_pool[_e]);
-	const size_t sz = st_expr_pool[_e].size;
+	graph_node_type& gn(g->expr_graph_node_pool[_e]);
+	const size_t sz = g->expr_pool[_e].size;
 	for ( ; j<sz; ++j) {
-		child_entry_type& c(g.children[j]);
+		child_entry_type& c(gn.children[j]);
 		// child indexes expr, not node
 		if (!c.first) {
 		// index of entry refers to expression
 		const expr_index_type ei(c.second);
-		const expr_type& oe(st_expr_pool[ei]);
-		const graph_node_type& og(st_graph_node_pool[ei]);
+		const expr_state_type& oe(g->expr_pool[ei]);
+		const graph_node_type& og(g->expr_graph_node_pool[ei]);
 		const child_entry_type& ogc(og.children[0]);
 		// if is single node-child parent
 		if (oe.is_trivial() && ogc.first) {
@@ -570,15 +568,15 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 	typedef	graph_node_type::child_entry_type	child_entry_type;
 	size_t j = 0;
 	bool denorm = true;
-	const size_t sz = st_expr_pool[_e].size;
-	graph_node_type& g(st_graph_node_pool[_e]);
+	const size_t sz = g->expr_pool[_e].size;
+	graph_node_type& gn(g->expr_graph_node_pool[_e]);
 	// first pass: 
 	for ( ; j<sz && denorm; ++j) {
-		const child_entry_type& c(g.children[j]);
+		const child_entry_type& c(gn.children[j]);
 		if (!c.first) {		// is expression
 			const expr_index_type ei(c.second);
-			const expr_type& oe(st_expr_pool[ei]);
-			// const graph_node_type& og(st_graph_node_pool[ei]);
+			const expr_state_type& oe(g->expr_pool[ei]);
+			// const graph_node_type& og(g->expr_graph_node_pool[ei]);
 			// const child_entry_type& ogc(og.children[0]);
 			// if is single node-child parent
 			if (oe.size == 1 && oe.is_not()) {
@@ -591,11 +589,11 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 		// second pass, qualified for denormalization
 		STACKTRACE_INDENT_PRINT("denormalizing... " << endl);
 		for (j=0; j<sz; ++j) {
-			child_entry_type& c(g.children[j]);
+			child_entry_type& c(gn.children[j]);
 			// child indexes expr, not node
 			// index of entry refers to expression
 			const expr_index_type ei(c.second);
-			const graph_node_type& og(st_graph_node_pool[ei]);
+			const graph_node_type& og(g->expr_graph_node_pool[ei]);
 			const child_entry_type& ogc(og.children[0]);
 			// if is single node-child parent
 			// re-connect graph, skipping over
@@ -617,11 +615,11 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 				// is an expression, just keep structure
 				// the same and negate the type
 				const expr_index_type ce = ogc.second;
-				st_expr_pool[ce].toggle_not();
+				g->expr_pool[ce].toggle_not();
 			}
 		}	// end for all subexpressions
 		// apply DeMorgan's law
-		st_expr_pool[_e].toggle_demorgan();
+		g->expr_pool[_e].toggle_demorgan();
 	}	// end if denorm
 } 	// end ExprAlloc::denoramlize_negation
 
@@ -759,8 +757,8 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		" to node " << ni << ' ' << (dir ? '+' : '-') << endl);
 	node_type& output(st_node_pool[ni]);
 	// now link root expression to node
-	expr_type& ne(st_expr_pool[top_ex_index]);
-	graph_node_type& ng(st_graph_node_pool[top_ex_index]);
+	expr_state_type& ne(g->expr_pool[top_ex_index]);
+	graph_node_type& ng(g->expr_graph_node_pool[top_ex_index]);
 	// prepare to take OR-combination?
 	// or can we get away with multiple pull-up/dn roots?
 	// or cheat! short-cut to root during operation.  
@@ -778,8 +776,8 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			std::numeric_limits<expr_count_type>::max();
 		STACKTRACE_INDENT_PRINT("pull-up/dn already set" << endl);
 		// already set, need OR-combination
-		expr_type& pe(st_expr_pool[dir_index]);
-		graph_node_type& pg(st_graph_node_pool[dir_index]);
+		expr_state_type& pe(g->expr_pool[dir_index]);
+		graph_node_type& pg(g->expr_graph_node_pool[dir_index]);
 		// see if either previous pull-up expr is OR-type already
 		// may also work with NAND! in the case of NAND, need to 
 		// make sure appending expression is negated...
@@ -817,7 +815,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			const expr_index_type root_ex_id =
 				allocate_new_Nary_expr(
 					entity::PRS::PRS_OR_EXPR_TYPE_ENUM, 2);
-			expr_type& new_ex(st_expr_pool[root_ex_id]);
+			expr_state_type& new_ex(g->expr_pool[root_ex_id]);
 			new_ex.pull(ni, dir);	// sets parent node
 			link_child_expr(root_ex_id, dir_index, 0);
 			link_child_expr(root_ex_id, top_ex_index, 1);
@@ -861,7 +859,6 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(After, "after")
 void
 After::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
-//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& d(a.front());
 	// assert type cast, b/c already checked
@@ -878,7 +875,6 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Always_Random, "always_random")
 void
 Always_Random::main(visitor_type& v, const values_type& a) {
 	typedef visitor_type::rule_type rule_type;
-//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& w(a.front());
 	if (w.is_a<const pint_const>()->static_constant_value())
@@ -896,7 +892,6 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Weak, "weak")
 void
 Weak::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
-//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& w(a.front());
 	if (w.is_a<const pint_const>()->static_constant_value())
@@ -914,7 +909,6 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Unstab, "unstab")
 void
 Unstab::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
-//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& w(a.front());
 	if (w.is_a<const pint_const>()->static_constant_value())
@@ -1018,7 +1012,7 @@ PassN::main(visitor_type& v, const param_args_type& params,
 		);	// pull-down
 
 	typedef	visitor_type::rule_type	rule_type;
-	rule_type& r(v.st_rule_map[pe]);
+	rule_type& r(v.g->rule_map[pe]);
 	r.set_delay(visitor_type::state_type::time_traits::zero);
 }
 
@@ -1055,7 +1049,7 @@ PassP::main(visitor_type& v, const param_args_type& params,
 		);	// pull-up
 
 	typedef	visitor_type::rule_type	rule_type;
-	rule_type& r(v.st_rule_map[pe]);
+	rule_type& r(v.g->rule_map[pe]);
 	r.set_delay(visitor_type::state_type::time_traits::zero);
 }
 

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.9 2008/03/17 23:03:02 fang Exp $
+	$Id: ExprAlloc.h,v 1.9.2.1 2008/07/09 04:34:45 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -16,6 +16,10 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 class State;
+class unique_process_subgraph;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+class unique_process_subgraph;
+#endif
 using entity::state_manager;
 using entity::PRS::footprint_rule;
 using entity::PRS::footprint_expr_node;
@@ -31,22 +35,32 @@ using entity::cflat_context_visitor;
 class ExprAlloc : public cflat_context_visitor {
 public:
 	typedef	State					state_type;
-	typedef	State::node_type			node_type;
-	typedef	State::node_pool_type			node_pool_type;
-	typedef	State::expr_type			expr_type;
-	typedef	State::expr_pool_type			expr_pool_type;
-	typedef	State::graph_node_type			graph_node_type;
-	typedef	State::expr_graph_node_pool_type	graph_node_pool_type;
-	typedef	State::rule_map_type			rule_map_type;
-	typedef	State::rule_type			rule_type;
+	typedef	state_type::node_type			node_type;
+	typedef	state_type::node_pool_type		node_pool_type;
+	typedef	state_type::expr_struct_type		expr_struct_type;
+	typedef	state_type::expr_state_type		expr_state_type;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	typedef	unique_process_subgraph			unique_type;
+#else
+	typedef	State					unique_type;
+#endif
+	typedef	unique_type::expr_pool_type		expr_pool_type;
+	typedef	unique_type::graph_node_type		graph_node_type;
+	typedef	unique_type::expr_graph_node_pool_type	graph_node_pool_type;
+	typedef	unique_type::rule_map_type		rule_map_type;
+	typedef	unique_type::rule_type			rule_type;
 protected:
 	typedef	std::queue<expr_index_type>	free_list_type;
 public:
 	state_type&				state;
 	node_pool_type&				st_node_pool;
+#if 0
 	expr_pool_type&				st_expr_pool;
 	graph_node_pool_type&			st_graph_node_pool;
 	rule_map_type&				st_rule_map;
+#else
+	unique_process_subgraph*		g;
+#endif
 protected:
 	/// the expression index last returned
 	expr_index_type				ret_ex_index;

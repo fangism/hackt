@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.6 2008/03/17 23:03:04 fang Exp $
+	$Id: Rule.h,v 1.6.2.1 2008/07/09 04:34:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -90,7 +90,13 @@ public:
 	Nothing new yet.  
  */
 template <typename Time>
-struct RuleState : public Rule<Time> {
+struct RuleState
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
+	: public Rule<Time>
+#else
+	// don't really need Time template parameter!
+#endif
+{
 
 	void
 	save_state(ostream&) const { }

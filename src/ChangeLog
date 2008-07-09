@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-07-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-01:
+	  Branch for the promised restructuring of prsim data structures
+		to reduce memory at the expense of some performance.
+		Before branch is complete, should benchmark difference.
+		Goal-flag: PRSIM_INDIRECT_EXPRESSIONS_MAP
+	  This initial revision has factored out some data structures
+		in preparation for per-type lookup structures.  
+		State-prsim.h: factored out unique_process_subgraph
+		ExprAlloc.cc: use unique_process_subgraph members
+
+
 2008-07-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32:

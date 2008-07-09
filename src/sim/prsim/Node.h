@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.15 2008/04/23 00:55:46 fang Exp $
+	$Id: Node.h,v 1.15.2.1 2008/07/09 04:34:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -106,6 +106,9 @@ struct Node {
 	/**
 		List of expression indices to which this node fans out.  
 		Size of vector: 3 x sizeof(pointer), 12B on 32b arch.
+		TODO: far future, only fanout to *processes* and 
+			do additional rule lookups from there.
+			Performance-memory tradeoff.
 	 */
 	fanout_array_type		fanout;
 
