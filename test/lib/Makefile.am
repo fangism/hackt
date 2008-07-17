@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.32 2008/04/23 00:55:49 fang Exp $
+#	$Id: Makefile.am,v 1.33 2008/07/17 03:29:37 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -96,7 +96,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	init-source-sink-a init-source-sink-b init-source-sink-c \
 	wchb-token-ring-a wchb-token-ring-b wchb-token-ring-c \
 	wchb-token-ring-d wchb-token-ring-e \
-	pcehb_mux_4xe1of2-a
+	pcehb_mux_4xe1of2-a \
+	channel-bundle
 
 # .prsimrc inputs (no suffix)
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
@@ -171,7 +172,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	wchb-token-ring-c-04 wchb-token-ring-c-05 wchb-token-ring-c-06 \
 	wchb-token-ring-d-01 \
 	wchb-token-ring-e-01 \
-	pcehb_mux_4xe1of2-a-01
+	pcehb_mux_4xe1of2-a-01 \
+	channel-bundle-01 channel-bundle-02
 
 HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	wchb-token-ring-b-01

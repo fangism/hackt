@@ -1,0 +1,9 @@
+# "channel-test-a-31.prsimrc"
+# @haco@ channel-test-a.haco-a
+
+# testing hexadecimal values
+source channel-test-a-01.prsimrc
+channel-expect-args X 0x0 0x1
+channel-expect-args Y 0x0 0x1 0x3 0x2
+channel-show-all
+

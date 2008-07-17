@@ -1,0 +1,8 @@
+// "channel-bundle.hac"
+
+import "channel.hac";
+
+eMx1ofN<4,8> C;
+
+// test channels in prsim
+

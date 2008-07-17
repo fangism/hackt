@@ -1,0 +1,8 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+channels:
+X : .e(init:0) 1x1of2 expect {0,1,} @0
+Y : .e(init:1) 1x1of4 expect {0,1,3,2,} @0
+Z : .a(init:0) 1x1of3 off

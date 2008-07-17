@@ -1,7 +1,7 @@
 /**
 	\file "util/string.tcc"
 	Implementations of some useful string functions.  
-	$Id: string.tcc,v 1.2 2006/04/03 05:30:39 fang Exp $
+	$Id: string.tcc,v 1.3 2008/07/17 03:29:37 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_TCC__
@@ -56,6 +56,9 @@ string_to_num(const std::string& s, I& i) {
 #else
 	// prefer this over error-prone libc functions.  
 	istringstream str(s);
+	if (s.length() >= 2 && s[0] == '0' && s[1] == 'x') {
+		str >> std::hex;
+	}
 	str >> i;
 	return str.fail();
 #endif

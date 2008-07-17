@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-07-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-33:
+	  util::string_to_num(): auto-detect hexadecimal numbers
+
+
 2008-07-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32:

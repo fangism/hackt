@@ -1,0 +1,8 @@
+# "channel-bundle-01.prsimrc"
+# @haco@ channel-bundle.haco-a
+
+# testing hexadecimal values
+channel C e:0 b:8 d:4
+channel-expect-args C 0x0 0x1 0x3 0x2 0xF00D 0xdead 0xbeef
+channel-show-all
+

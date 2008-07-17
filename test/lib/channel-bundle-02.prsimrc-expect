@@ -1,0 +1,8 @@
+Warning: channel acknowledge `C.e' has no fanin!
+channel	C (.data) : 0
+channel	C (.data) : 1
+channel	C (.data) : 3
+channel	C (.data) : 2
+channel	C (.data) : 61453
+channel	C (.data) : 57005
+channel	C (.data) : 48879

@@ -1,0 +1,18 @@
+# "channel-test-a-32.prsimrc"
+# @haco@ channel-bundle.haco-a
+
+# testing hexadecimal values
+# source channel-test-a-31.prsimrc
+channel C e:0 b:8 d:4
+channel-source-args C 0x0 0x1 0x3 0x2 0xf00d 0xdead 0xBEEF
+# channel-show-all
+channel-sink C
+
+channel-watch C
+channel-reset-all
+cycle
+channel-release-all
+cycle
+
+assertn-queue
+
