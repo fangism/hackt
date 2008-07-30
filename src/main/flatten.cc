@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: flatten.cc,v 1.8 2008/07/30 05:26:48 fang Exp $
+	$Id: flatten.cc,v 1.9 2008/07/30 22:55:00 fang Exp $
  */
 
 #include <iostream>
@@ -188,12 +188,12 @@ flatten::main(const int _argc, char* argv[], const global_options&) {
 	***/
 	opt.export_include_paths(hackt_parse_file_manager);
 
-	const int max_args = opt.use_stdin ? 0 : 1;
-	if (argc > max_args || argc < 0) {
+	// const int max_args = opt.use_stdin ? 0 : 1;
+	if (argc > 1 || argc < 0) {
 		usage();
 		return 1;
 	}
-if (!opt.use_stdin) {
+if (argc == 1) {
 	// check file readability
 	FILE* f = open_source_file(argv[0]);
 	if (!f)	return 1;
@@ -205,7 +205,7 @@ if (!opt.use_stdin) {
 
 	// flatten it
 	return flatten_source(
-		opt.use_stdin ? NULL : opt.source_file.c_str()).good ? 0 : 1;
+		(argc == 0) ? NULL : opt.source_file.c_str()).good ? 0 : 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -217,15 +217,12 @@ if (!opt.use_stdin) {
  */
 int
 flatten::parse_command_options(const int argc, char* argv[], options& opt) {
-	static const char* optstring = "+hpI:M:P";
+	static const char* optstring = "+hI:M:P";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
 	case 'h':
 		return 1;
-	case 'p':
-		opt.use_stdin = true;
-		break;
 	case 'I':
 		// no need to check validity of paths yet
 		opt.include_paths.push_back(optarg);
@@ -257,10 +254,9 @@ flatten::parse_command_options(const int argc, char* argv[], options& opt) {
  */
 void
 flatten::usage(void) {
-	cerr << "flatten: flattens input file to single file, print to stdout"
+	cerr << "hacpp: flattens input file to single file, print to stdout"
 		<< endl;
-	cerr << "usage: flatten [options] <hac-source-file>"
-		<< endl;
+	cerr << "usage: hacpp [options] [hac-source-file]" << endl;
 	cerr << "options:" << endl;
 #if 0
 {
@@ -274,7 +270,6 @@ flatten::usage(void) {
 }
 #endif
 	cerr << "\t-h : gives this usage messsage" << endl <<
-		"\t-p : pipe input from stdin, instead of opening source file" << endl <<
 		"\t-I <path> : adds include path (repeatable)" << endl;
 	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
 	cerr << "\t-P : suppress #FILE hierarchical wrappers in output" << endl;

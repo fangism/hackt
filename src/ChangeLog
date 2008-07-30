@@ -6,8 +6,9 @@
 2008-07-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-34:
-	  hacpp and haco now have option (-p) to accept input from stdin
+	  haco now has option (-p) to accept input from stdin
 		instead of a named file.
+	  hacpp assumes stdin is used when there is no argument.  
 	  Documented and tested with new test cases in basic/.  
 
 
