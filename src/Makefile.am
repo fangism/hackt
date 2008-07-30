@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.196 2008/03/21 00:20:02 fang Exp $
+#	$Id: Makefile.am,v 1.197 2008/07/30 22:56:00 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1728,8 +1728,6 @@ installcheck-local:
 			if test ! -f $$run ; then \
 				$(ECHO) "*** DID YOU FORGET TO make install FIRST? ***" ; \
 			fi ; \
-			$(ECHO) "======== running: $$run ================" ; \
-			$$run || : ; \
 			$(ECHO) "======== running: $$run -h =============" ; \
 			$$run -h || : ; \
 			$(ECHO) "======== running: $$run version ========" ; \
