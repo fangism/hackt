@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.21 2008/03/17 23:02:42 fang Exp $
+	$Id: main_funcs.cc,v 1.22 2008/07/30 05:26:49 fang Exp $
  */
 
 #include <iostream>
@@ -271,6 +271,7 @@ check_AST(const root_body& r, const char* name, const parse_options& po) {
 	TODO: move this to "lexer/hacflat-lex.ll"
 	NOTE: we don't use a parser because there is no grammar 
 		associated with preprocessing.  
+	\param name is name of file or NULL for using stdin
 	\param b pass true to use search paths, 
 		false to use path to file as is.  
  */

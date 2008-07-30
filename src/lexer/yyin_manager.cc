@@ -1,6 +1,6 @@
 /**
 	\file "lexer/yyin_manager.cc"
-	$Id: yyin_manager.cc,v 1.5 2006/11/15 00:08:55 fang Exp $
+	$Id: yyin_manager.cc,v 1.6 2008/07/30 05:26:44 fang Exp $
  */
 
 #include <iostream>
@@ -55,9 +55,10 @@ yyin_manager::status
 yyin_manager::enter_file(FILE*& _yyin, file_manager& _file_manager,
 		const char* fn, ostream* o, const bool b) {
 	STACKTRACE_VERBOSE;
-if (b) {
+if (b && fn) {
 	// search paths
-	NEVER_NULL(fn);
+	// is irrelevant if input is stdin (when fn is NULL)
+	NEVER_NULL(fn);	// if you meant stdin, then pass b = false
 	const file_manager::return_type fp(_file_manager.open_FILE(fn));
 	switch (fp.second) {
 	case file_status::NEW_FILE:
@@ -79,7 +80,7 @@ if (b) {
 	}
 	return fp.second;
 } else {
-	// don't search include paths, just open the file
+	// don't search include paths, just open the file or stdin
 	// we already checked the file
 	// often called for the top-most file
 	FILE* f = (fn ? fopen(fn, "r") : stdin);

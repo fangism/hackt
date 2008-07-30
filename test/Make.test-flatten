@@ -1,6 +1,6 @@
 # "Make.test-flatten"
 #	vi: ft=automake
-#	$Id: Make.test-flatten,v 1.10 2007/11/06 21:40:00 fang Exp $
+#	$Id: Make.test-flatten,v 1.11 2008/07/30 05:26:56 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -48,9 +48,10 @@ HACKT_FLATTEN_CLEAN_IGNORE_PATTERNS = \
 AUTO_IGNORE += $(HACKT_FLATTEN_CLEAN_IGNORE_PATTERNS)
 
 ###############################################################################
-# dependency tracking enabled by default
-.hac.hacf:
-	@flags=`$(CAT) $< | $(EXTRACT_HACPP_FLAGS_PIPE)` && \
+# TODO: enable dependency tracking by default (see compile script)
+
+HACKT_FLATTEN_TEST_DEFAULT_SCRIPT = \
+	flags=`$(CAT) $< | $(EXTRACT_HACPP_FLAGS_PIPE)` && \
 	cmd="$(HACKT_FLATTEN_EXE) $$flags $(HACO_FLAGS) $<" && \
 	$(ECHO) "$$cmd > $@" && \
 	$$cmd > $@ && \
@@ -64,6 +65,17 @@ AUTO_IGNORE += $(HACKT_FLATTEN_CLEAN_IGNORE_PATTERNS)
 #		$(RM) "$$depbase.tmpd" ; \
 #	else $(RM) "$$depbase.tmpd" ; exit 1 ; \
 #	fi
+
+# use this variant when piping stdin
+HACKT_FLATTEN_TEST_STDIN_SCRIPT = \
+	flags=`$(CAT) $< | $(EXTRACT_HACPP_FLAGS_PIPE)` && \
+	cmd="$(HACKT_FLATTEN_EXE) $$flags $(HACO_FLAGS) -p" && \
+	$(ECHO) "$$cmd < $< > $@" && \
+	$$cmd < $< > $@ && \
+	$(TOUCH) $@
+
+.hac.hacf:
+	@$(HACKT_FLATTEN_TEST_DEFAULT_SCRIPT)
 
 .hacf.hacf-filter:
 	@$(CAT) $< | $(HACKT_FLATTEN_ERROR_FILTER) > $@

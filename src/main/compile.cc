@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.19 2008/03/17 23:02:42 fang Exp $
+	$Id: compile.cc,v 1.20 2008/07/30 05:26:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -266,20 +266,25 @@ compile::make_module(int argc, char* argv[], options& opt,
 	argv += optind;		// shift
 	argc -= optind;
 
-	if (argc > 2 || argc <= 0) {
+	const int max_args = opt.use_stdin ? 1 : 2;
+	const int target_ind = max_args -1;
+	if (argc > max_args || argc <= 0) {
 		usage();
-		return 0;
+		return 1;
 	}
+if (!opt.use_stdin) {
 	opt.source_file = argv[0];
 	FILE* f = open_source_file(opt.source_file.c_str());
 	if (!f)
 		return 1;
+	fclose(f);
+}
 
 	// dependency generation setup
 	if (!opt.have_target()) {
 		// if not already named by -o, use next non-option argument
-	if (argc >= 2) {
-		opt.target_object = argv[1];
+	if (argc >= max_args) {
+		opt.target_object = argv[target_ind];
 	} else {
 		// default: append 'o' to get object file name
 		// problem: doesn't automatically strip srcdir
@@ -293,7 +298,8 @@ compile::make_module(int argc, char* argv[], options& opt,
 	}
 
 	// parse it
-	ret = parse_and_check(opt.source_file.c_str(), opt);
+	ret = parse_and_check(
+		opt.use_stdin ? NULL : opt.source_file.c_str(), opt);
 	if (!ret) {
 		return 1;
 	}
@@ -339,7 +345,7 @@ compile::main(const int argc, char* argv[], const global_options&) {
 int
 compile::parse_command_options(const int argc, char* argv[], options& opt) {
 	STACKTRACE_VERBOSE;
-	static const char* optstring = "+df:hI:M:o:";
+	static const char* optstring = "+df:hI:M:o:p";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -444,6 +450,19 @@ non-option argument.
 	case 'o':
 		opt.target_object = optarg;
 		break;
+/***
+@texinfo compile/option-p.texi
+@defopt -p
+Expect input to be piped from stdin rather than a named file.  
+Since the name of the input file is omitted in this case, 
+the only non-option argument (if any) is interpreted as the name
+of the output object file.  
+@end defopt
+@end texinfo
+***/
+	case 'p':
+		opt.use_stdin = true;
+		break;
 	case ':':
 		cerr << "Expected but missing non-option argument." << endl;
 		return 1;
@@ -493,6 +512,7 @@ compile::usage(void) {
 		"\t-I <path> : adds include path (repeatable)" << endl;
 	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
 	cerr << "\t-o <objfile> : option to name output object file" << endl;
+	cerr << "\t-p : pipe in source from stdin" << endl;
 	cerr << "\tIf no output object file is given, compiled module will not be saved."
 		<< endl;
 }

@@ -1,5 +1,5 @@
 @c "hackt/compiler.texi"
-@c $Id: compiler.texi,v 1.2 2007/09/13 01:14:00 fang Exp $
+@c $Id: compiler.texi,v 1.3 2008/07/30 05:26:33 fang Exp $
 
 @node Compiler
 @chapter Compiler
@@ -9,6 +9,7 @@ TODO: figure of compile flow and phases.
 
 @menu
 * Compile::
+* Preprocessor::
 * Create::
 * Allocate::
 * File Conventions::
@@ -40,12 +41,28 @@ Options:
 @include compile/option-f.texi
 @include compile/option-M-upper.texi
 @include compile/option-o.texi
+@include compile/option-p.texi
 
 @t{haco} is provided as a single-command alias to 
 @t{hackt compile}@footnote{Thus named because we use @t{.haco} 
 as the extension for compiled object files}.
 
 @strong{TODO:} quick explanation of parse errors.  
+
+@c ----------------------------------------------------------------------------
+@node Preprocessor
+@section Preprocessor
+@cindex preprocessor
+
+@t{hacpp} is a preprocessor that expands imports, much like @t{cpp} 
+expands @t{#include} and other preprocessor directives.  
+This can be convenient for flattening hierarchies of imported
+sources into a self-contained file.  
+
+One nice feature is that the output (by default) preserves precise
+information about which files were imported, so compiling a flattened
+source file should result in the same error messages as compiling the
+original source file.  
 
 @c ----------------------------------------------------------------------------
 @node Create
@@ -106,6 +123,7 @@ source and object files.
 
 @itemize
 @item @t{.haco} -- compiled only
+@item @t{.hacf} -- preprocessed source only
 @item @t{.haco-c} -- compiled and created
 @item @t{.haco-a} -- compiled and allocated
 @end itemize

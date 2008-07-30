@@ -1,7 +1,7 @@
 /**
 	\file "main/compile_options.h"
 	Common compile options class.  
-	$Id: compile_options.h,v 1.10 2007/10/08 01:21:49 fang Exp $
+	$Id: compile_options.h,v 1.11 2008/07/30 05:26:47 fang Exp $
  */
 
 #include <list>
@@ -31,6 +31,8 @@ public:
 	bool					dump_object_header;
 	/// whether or not to emit make dependencies
 	bool					make_depend;
+	/// true if input is redirected from stdin
+	bool					use_stdin;
 	/**
 		Whether or not input file should be compiled (default no)
 		Alternatively, input may already be an object file
@@ -57,6 +59,7 @@ public:
 		dump_include_paths(false), 
 		dump_object_header(false),
 		make_depend(false),
+		use_stdin(false),
 		compile_input(false),
 		make_depend_target(),
 		source_file(), 

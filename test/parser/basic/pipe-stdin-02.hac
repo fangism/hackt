@@ -1,0 +1,7 @@
+// "pipe-stdin-02.hac"
+// pipe me in!
+
+import "pipe-stdin-01.hac";
+
+pint milk = 4;
+

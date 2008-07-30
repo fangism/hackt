@@ -1,0 +1,14 @@
+// "pipe-stdin-02.hac"
+// pipe me in!
+
+#FILE "pipe-stdin-01.hac" {
+// "pipe-stdin-01.hac"
+// pipe me in!
+
+pint orange_juice = 0;
+
+}	// #FILE "pipe-stdin-01.hac"
+
+
+pint milk = 4;
+

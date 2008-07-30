@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.30 2008/06/07 02:12:06 fang Exp $
+#	$Id: Makefile.am,v 1.31 2008/07/30 05:27:01 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,11 +16,29 @@ HACKT_PARSE_TEST_PASSES = \
 	022 \
 	oper-02 oper-04 \
 	inst-attrib-01 inst-attrib-02 inst-attrib-03 inst-attrib-04 \
+	pipe-stdin-01 pipe-stdin-02 \
 	act-001
 
 HACKT_FLATTEN_TEST_PASSES = \
 	015 016 017 018 019 \
-	020 021 022 023
+	020 021 022 023 \
+	pipe-stdin-01 pipe-stdin-02
+
+# override some default rules
+pipe-stdin-01.haco: pipe-stdin-01.hac
+	@$(HACKT_COMPILE_TEST_STDIN_SCRIPT)
+pipe-stdin-02.haco: pipe-stdin-02.hac
+	@$(HACKT_COMPILE_TEST_STDIN_SCRIPT)
+
+pipe-stdin-01.hacf: pipe-stdin-01.hac
+	@$(HACKT_FLATTEN_TEST_STDIN_SCRIPT)
+pipe-stdin-02.hacf: pipe-stdin-02.hac
+	@$(HACKT_FLATTEN_TEST_STDIN_SCRIPT)
+
+pipe-stdin-01.compileobjdiff:
+	$(TOUCH) $@
+pipe-stdin-02.compileobjdiff:
+	$(TOUCH) $@
 
 HACKT_FLATTEN_PARSE_TEST_PASSES = \
 	015 016 019 \

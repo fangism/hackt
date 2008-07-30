@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: flatten.cc,v 1.7 2008/06/11 17:00:43 fang Exp $
+	$Id: flatten.cc,v 1.8 2008/07/30 05:26:48 fang Exp $
  */
 
 #include <iostream>
@@ -169,12 +169,15 @@ flatten::flatten() { }
 	TODO: clean up file manager after done?
  */
 int
-flatten::main(const int argc, char* argv[], const global_options&) {
+flatten::main(const int _argc, char* argv[], const global_options&) {
+	int argc = _argc;
 	options opt;
 	if (parse_command_options(argc, argv, opt)) {
 		usage();
 		return 1;
 	}
+	argc -= optind;	// shift
+	argv += optind;	// shift
 	/***
 		Now would be a good time to add include paths 
 		to the parser's file manager.  
@@ -185,19 +188,24 @@ flatten::main(const int argc, char* argv[], const global_options&) {
 	***/
 	opt.export_include_paths(hackt_parse_file_manager);
 
-	if (argc -optind > 1 || argc -optind <= 0) {
+	const int max_args = opt.use_stdin ? 0 : 1;
+	if (argc > max_args || argc < 0) {
 		usage();
-		return 0;
+		return 1;
 	}
-	argv += optind;		// shift
+if (!opt.use_stdin) {
+	// check file readability
 	FILE* f = open_source_file(argv[0]);
 	if (!f)	return 1;
+	fclose(f);
 
 	// dependency generation setup
 	opt.source_file = argv[0];
+}
 
 	// flatten it
-	return flatten_source(argv[0]).good ? 0 : 1;
+	return flatten_source(
+		opt.use_stdin ? NULL : opt.source_file.c_str()).good ? 0 : 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -209,12 +217,15 @@ flatten::main(const int argc, char* argv[], const global_options&) {
  */
 int
 flatten::parse_command_options(const int argc, char* argv[], options& opt) {
-	static const char* optstring = "+hI:M:P";
+	static const char* optstring = "+hpI:M:P";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
 	case 'h':
 		return 1;
+	case 'p':
+		opt.use_stdin = true;
+		break;
 	case 'I':
 		// no need to check validity of paths yet
 		opt.include_paths.push_back(optarg);
@@ -263,6 +274,7 @@ flatten::usage(void) {
 }
 #endif
 	cerr << "\t-h : gives this usage messsage" << endl <<
+		"\t-p : pipe input from stdin, instead of opening source file" << endl <<
 		"\t-I <path> : adds include path (repeatable)" << endl;
 	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
 	cerr << "\t-P : suppress #FILE hierarchical wrappers in output" << endl;

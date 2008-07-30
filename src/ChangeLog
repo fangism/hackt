@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-07-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-34:
+	  hacpp and haco now have option (-p) to accept input from stdin
+		instead of a named file.
+	  Documented and tested with new test cases in basic/.  
+
+
 2008-07-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-33:

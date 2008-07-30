@@ -1,6 +1,6 @@
 # "Make.test-compile"
 #	vi: ft=automake
-#	$Id: Make.test-compile,v 1.21 2008/03/20 00:03:21 fang Exp $
+#	$Id: Make.test-compile,v 1.22 2008/07/30 05:26:55 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -46,19 +46,39 @@ HACKT_COMPILE_ERROR_FILTER = $(AWK) \
 		-f $(TEST_SRCDIR)/state_enum_filter.awk \
 		-f $(TEST_SRCDIR)/vpath_file_filter.awk
 
-# dependency tracking enabled by default
-.hac.haco:
-	@depbase=`$(ECHO) $@ | $(SED) 's/\.haco$$//g'` ; \
-	log="$$depbase.compiledump" ; \
-	flags=`$(CAT) $< | $(EXTRACT_HACO_FLAGS_PIPE)` ; \
-	$(ECHO) "$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags -M $$depbase.depend $< $@" ; \
+HACKT_COMPILE_SETUP = \
+	depbase=`$(ECHO) $@ | $(SED) 's/\.haco$$//g'` && \
+	log="$$depbase.compiledump" && \
+	flags=`$(CAT) $< | $(EXTRACT_HACO_FLAGS_PIPE)`
+
+HACKT_COMPILE_TEST_DEFAULT_SCRIPT = \
+	$(HACKT_COMPILE_SETUP) && \
+	$(ECHO) "$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags -M $$depbase.depend $< $@" && \
 	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags -M "$$depbase.tmpd" $< $@ > "$$log" 2>&1 ; \
+	then $(CAT) "$$depbase.tmpd" | \
+		$(HAC_DEPEND_FILTER) > "$$depbase.depend" && \
+		$(RM) "$$depbase.tmpd" ; \
+	else $(RM) "$$depbase.tmpd" ; exit 1 ; \
+	fi
+#	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $< $@
+
+# use this variant for piping stdin
+HACKT_COMPILE_TEST_STDIN_SCRIPT = \
+	$(HACKT_COMPILE_SETUP) && \
+	flags="$$flags -p" && \
+	$(ECHO) "$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags -M $$depbase.depend $@ < $<" && \
+	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags -M "$$depbase.tmpd" $@ < $< > "$$log" 2>&1 ; \
 	then $(CAT) "$$depbase.tmpd" | \
 		$(HAC_DEPEND_FILTER) > "$$depbase.depend" ; \
 		$(RM) "$$depbase.tmpd" ; \
 	else $(RM) "$$depbase.tmpd" ; exit 1 ; \
 	fi
 #	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $< $@
+
+# dependency tracking enabled by default
+# note: echoed command is slightly 'simplified' of actual executed command
+.hac.haco:
+	@$(HACKT_COMPILE_TEST_DEFAULT_SCRIPT)
 
 # -MD generates dependencies as a side-effect of preprocessing
 # HACKT_CPP_FLAGS = $(HACO_FLAGS) -MP -MD -MF $@depend -MT $@
