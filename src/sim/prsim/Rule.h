@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.6.2.1 2008/07/09 04:34:46 fang Exp $
+	$Id: Rule.h,v 1.6.2.2 2008/08/02 03:51:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -43,6 +43,8 @@ public:
 	time_type			after;
 	/**
 		Uses rule_enum_type to signal flags.  
+		TODO: move direction bit here,
+			add strength vector/bitfield here
 	 */
 	short				rule_flags;
 public:

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.9.2.1 2008/07/09 04:34:45 fang Exp $
+	$Id: ExprAlloc.h,v 1.9.2.2 2008/08/02 03:51:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -11,6 +11,9 @@
 #include "sim/prsim/ExprAllocFlags.h"
 #include "sim/prsim/State-prsim.h"		// for nested typedefs
 #include "sim/common.h"
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#include <map>
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -18,7 +21,7 @@ namespace PRSIM {
 class State;
 class unique_process_subgraph;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-class unique_process_subgraph;
+using std::map;
 #endif
 using entity::state_manager;
 using entity::PRS::footprint_rule;
@@ -40,8 +43,12 @@ public:
 	typedef	state_type::expr_struct_type		expr_struct_type;
 	typedef	state_type::expr_state_type		expr_state_type;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+	typedef	expr_struct_type			expr_type;
 	typedef	unique_process_subgraph			unique_type;
+	typedef	map<const entity::PRS::footprint*, size_t>
+						process_footprint_map_type;
 #else
+	typedef	expr_state_type				expr_type;
 	typedef	State					unique_type;
 #endif
 	typedef	unique_type::expr_pool_type		expr_pool_type;
@@ -62,6 +69,16 @@ public:
 	unique_process_subgraph*		g;
 #endif
 protected:
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/**
+		Currently running unique process index.
+	 */
+	size_t					current_process_index;
+	/**
+		Translates unique prs_footprint to unique process index.  
+	 */
+	process_footprint_map_type		process_footprint_map;
+#endif
 	/// the expression index last returned
 	expr_index_type				ret_ex_index;
 	/**
@@ -79,8 +96,10 @@ protected:
 	 */
 	free_list_type				expr_free_list;
 public:
+#if 0
 	explicit
 	ExprAlloc(state_type&);
+#endif
 
 	ExprAlloc(state_type&, const ExprAllocFlags&);
 
@@ -103,6 +122,11 @@ protected:
 
 	void
 	visit(const state_manager&);
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	void
+	visit(const entity::PRS::footprint&);
+#endif
 
 	void
 	visit(const footprint_rule&);

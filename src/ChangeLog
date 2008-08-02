@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-08-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-02:
+	  Continued restructuring of prsim structures.  
+	  PRSIM_INDIRECT_EXPRESSION_MAP doesn't fully compile yet.
+	  Next: replacing nodes' pull-up/dn structure with pseudo
+		expression for taking OR-combinations of rules, essentially
+		folding OR expression into node.
+		Rationale: simplify structural transition
+		Consider using a *gasp* union for memory efficiency.  
+	
+
 2008-07-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-01:

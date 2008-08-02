@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.1 2008/07/09 04:34:45 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.2 2008/08/02 03:51:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -34,6 +34,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
 #include "Object/traits/classification_tags.h"
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#include "Object/module.h"
+#include "Object/traits/proc_traits.h"
+#endif
 #include "Object/global_entry.h"
 #include "util/offset_array.h"
 #include "util/stacktrace.h"
@@ -47,11 +51,21 @@ namespace SIM {
 namespace PRSIM {
 using std::replace;
 using entity::bool_tag;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+using entity::process_tag;
+#endif
 using entity::pint_const;
 using util::good_bool;
 using util::memory::free_list_acquire;
 using util::memory::free_list_release;
 #include "util/using_ostream.h"
+
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#define	REF_RULE_MAP(g,i)		g->rule_pool[g->rule_map[i]]
+#else
+#define	REF_RULE_MAP(g,i)		g->rule_map[i]
+#endif
 
 //=============================================================================
 typedef	entity::PRS::attribute_visitor_entry<ExprAlloc>
@@ -180,37 +194,48 @@ register_ExprAlloc_spec_class(void) {
 /**
 	NOTE: 0 is an invalid index to the state's expr_pool.  
  */
+#if 0
 ExprAlloc::ExprAlloc(state_type& _s) :
 		cflat_context_visitor(), 
 		state(_s),
 		st_node_pool(state.node_pool), 
-#if 0
-		st_expr_pool(state.expr_pool), 
-		st_expr_graph_node_pool(state.expr_expr_graph_node_pool), 
-		st_rule_map(state.get_rule_map()),
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		g(NULL), 
+		current_process_index(0), 
 #else
 		g(&_s), 
 #endif
 		ret_ex_index(INVALID_EXPR_INDEX), 
 		temp_rule(NULL),
 		flags(), expr_free_list() {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	state.unique_process_pool.reserve(
+		state.get_pool<process_tag>().size() +2);
+#endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 		cflat_context_visitor(), 
 		state(_s),
 		st_node_pool(state.node_pool), 
-#if 0
-		st_expr_pool(state.expr_pool), 
-		st_expr_graph_node_pool(state.expr_expr_graph_node_pool), 
-		st_rule_map(state.get_rule_map()),
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		g(NULL), 
+		current_process_index(0), 
+		process_footprint_map(), 	// empty
 #else
 		g(&_s), 
 #endif
 		ret_ex_index(INVALID_EXPR_INDEX), 
 		temp_rule(NULL),
 		flags(f), expr_free_list() {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	// pre-allocate array of process states
+	state.unique_process_pool.resize(
+		state.get_module().get_state_manager()
+			.get_pool<process_tag>().size() +2);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -221,10 +246,73 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 void
 ExprAlloc::visit(const state_manager& _sm) {
 	cflat_visitor::visit(_sm);
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	if (flags.any_optimize() && expr_free_list.size()) {
 		compact_expr_pools();
 	}
+#endif
 }
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	Lookup this PRS_footprint in the address map.
+	If this is the irst time this type is visited, then allocate
+	appropriate structures uniquely for this type.  
+	Then all subsequent references to this type can just reference
+	this and need no further allocation.  
+	Note that the first process (index 0) should be reserved
+	for the top-level process.  
+ */
+void
+ExprAlloc::visit(const entity::PRS::footprint& pfp) {
+	STACKTRACE_VERBOSE;
+	// also set up proper unique_process references
+	typedef	process_footprint_map_type::const_iterator	const_iterator;
+	const const_iterator f(process_footprint_map.find(&pfp));
+	size_t type_index;	// unique process type index
+	if (f == process_footprint_map.end()) {
+		type_index = state.unique_process_pool.size();
+		state.unique_process_pool.push_back(unique_process_subgraph());
+		const util::value_saver<unique_process_subgraph*>
+			tmp(g, &state.unique_process_pool.back());
+		cflat_visitor::visit(pfp);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		if (flags.any_optimize() && expr_free_list.size()) {
+			compact_expr_pools();
+		}
+#endif
+		// auto-restore graph pointer
+	} else {
+		// found existing type
+		type_index = f->second;
+	}
+	// append-allocate new state, based on type
+	state.process_type_map.push_back(type_index);
+	state.process_state_array.push_back(process_sim_state());
+	// now, allocate state for instance of this process type
+	state.process_state_array.back().allocate_from_type(
+		state.unique_process_pool[type_index]);
+	// mapping update: for expr->process map, assign value
+	if (current_process_index) {
+		typedef state_type::process_expr_map_type::const_iterator
+				map_iterator;
+		const map_iterator x(--state.process_expr_map.end());
+		// get the cumulative number of expressions (state)
+		// by adding the lower bound of the last appended entry
+		// to its corresponding size.  
+		const size_t s = x->first
+			+state.unique_process_pool[x->first].expr_pool.size();
+		state.process_expr_map[s] = current_process_index;
+	} else {
+		// first process, first expressions indexed
+		state.process_expr_map[0] = current_process_index;
+	}
+	// assume that processes are visited in sequence
+	++current_process_index;
+}
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #define	DEBUG_CLEANUP		(0 && ENABLE_STACKTRACE)
@@ -271,8 +359,7 @@ ExprAlloc::compact_expr_pools(void) {
 #if 1
 		{
 			// move rule_map_entry, if applicable
-			typedef	State::rule_map_type::iterator
-				rule_map_iterator;
+			typedef	rule_map_type::iterator	rule_map_iterator;
 			const rule_map_iterator f(g->rule_map.find(i));
 			if (f != g->rule_map.end()) {
 				g->rule_map[n] = f->second;
@@ -280,7 +367,7 @@ ExprAlloc::compact_expr_pools(void) {
 			}
 		}
 #endif
-		expr_state_type& e(g->expr_pool[n]);
+		expr_type& e(g->expr_pool[n]);
 		graph_node_type& gn(g->expr_graph_node_pool[n]);
 		INVARIANT(e.wiped());
 		INVARIANT(gn.wiped());
@@ -292,7 +379,7 @@ ExprAlloc::compact_expr_pools(void) {
 			node_type& nd(st_node_pool[e.parent]);
 			nd.replace_pull_index(e.direction(), n
 #if PRSIM_WEAK_RULES
-				, rule_strength(g->rule_map[n].is_weak())
+				, rule_strength(REF_RULE_MAP(g, n).is_weak())
 				// careful: consistent with enum rule_strength
 #endif
 				);
@@ -342,6 +429,7 @@ ExprAlloc::compact_expr_pools(void) {
 #undef	DEBUG_CLEANUP
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Update node fanin, and keep it consistent.  
 	\pre state's node_array is already allocated.  
@@ -390,7 +478,7 @@ try {
 		, rule_strength(dummy_rule.is_weak())
 #endif
 		);
-	g->rule_map[ret_ex_index] = dummy_rule;	// copy over temporary
+	REF_RULE_MAP(g, ret_ex_index) = dummy_rule;	// copy over temporary
 }
 } catch (...) {
 	cerr << "FATAL: error during prs rule allocation." << endl;
@@ -427,11 +515,11 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 	if (expr_free_list.size()) {
 		ret = free_list_acquire(expr_free_list);
 		g->expr_pool[ret] =
-			expr_state_type(expr_struct_type::EXPR_NODE,1);
+			expr_type(expr_struct_type::EXPR_NODE,1);
 		g->expr_graph_node_pool[ret] = graph_node_type();
 	} else {
 		ret = g->expr_pool.size();
-		g->expr_pool.push_back(expr_state_type(
+		g->expr_pool.push_back(expr_type(
 			expr_struct_type::EXPR_NODE,1));
 		g->expr_graph_node_pool.push_back(graph_node_type());
 	}
@@ -492,7 +580,7 @@ ExprAlloc::allocate_new_Nary_expr(const char type, const size_t sz) {
 			sz << " > " << lim << endl;
 		THROW_EXIT;
 	}
-	const expr_state_type
+	const expr_type
 		temp((type == entity::PRS::PRS_AND_EXPR_TYPE_ENUM ?
 		expr_struct_type::EXPR_AND : expr_struct_type::EXPR_OR), sz);
 if (expr_free_list.size()) {
@@ -529,7 +617,7 @@ ExprAlloc::fold_literal(const expr_index_type _e) {
 		if (!c.first) {
 		// index of entry refers to expression
 		const expr_index_type ei(c.second);
-		const expr_state_type& oe(g->expr_pool[ei]);
+		const expr_type& oe(g->expr_pool[ei]);
 		const graph_node_type& og(g->expr_graph_node_pool[ei]);
 		const child_entry_type& ogc(og.children[0]);
 		// if is single node-child parent
@@ -546,7 +634,11 @@ ExprAlloc::fold_literal(const expr_index_type _e) {
 			replace(ln.fanout.begin(), ln.fanout.end(), ei, _e);
 			// there should be no references to 
 			// expression ei remaining
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+			g->void_expr(ei);
+#else
 			state.void_expr(ei);
+#endif
 			free_list_release(expr_free_list, ei);
 		}	// else no excision
 		}	// end if is node_index
@@ -575,7 +667,7 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 		const child_entry_type& c(gn.children[j]);
 		if (!c.first) {		// is expression
 			const expr_index_type ei(c.second);
-			const expr_state_type& oe(g->expr_pool[ei]);
+			const expr_type& oe(g->expr_pool[ei]);
 			// const graph_node_type& og(g->expr_graph_node_pool[ei]);
 			// const child_entry_type& ogc(og.children[0]);
 			// if is single node-child parent
@@ -609,7 +701,11 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 				// there should be no references to 
 				// expression ei remaining
 			STACKTRACE_INDENT_PRINT("releasing " << ei << endl);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+				g->void_expr(ei);
+#else
 				state.void_expr(ei);
+#endif
 				free_list_release(expr_free_list, ei);
 			} else {
 				// is an expression, just keep structure
@@ -757,7 +853,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		" to node " << ni << ' ' << (dir ? '+' : '-') << endl);
 	node_type& output(st_node_pool[ni]);
 	// now link root expression to node
-	expr_state_type& ne(g->expr_pool[top_ex_index]);
+	expr_type& ne(g->expr_pool[top_ex_index]);
 	graph_node_type& ng(g->expr_graph_node_pool[top_ex_index]);
 	// prepare to take OR-combination?
 	// or can we get away with multiple pull-up/dn roots?
@@ -776,7 +872,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			std::numeric_limits<expr_count_type>::max();
 		STACKTRACE_INDENT_PRINT("pull-up/dn already set" << endl);
 		// already set, need OR-combination
-		expr_state_type& pe(g->expr_pool[dir_index]);
+		expr_type& pe(g->expr_pool[dir_index]);
 		graph_node_type& pg(g->expr_graph_node_pool[dir_index]);
 		// see if either previous pull-up expr is OR-type already
 		// may also work with NAND! in the case of NAND, need to 
@@ -815,7 +911,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			const expr_index_type root_ex_id =
 				allocate_new_Nary_expr(
 					entity::PRS::PRS_OR_EXPR_TYPE_ENUM, 2);
-			expr_state_type& new_ex(g->expr_pool[root_ex_id]);
+			expr_type& new_ex(g->expr_pool[root_ex_id]);
 			new_ex.pull(ni, dir);	// sets parent node
 			link_child_expr(root_ex_id, dir_index, 0);
 			link_child_expr(root_ex_id, top_ex_index, 1);
@@ -1012,7 +1108,7 @@ PassN::main(visitor_type& v, const param_args_type& params,
 		);	// pull-down
 
 	typedef	visitor_type::rule_type	rule_type;
-	rule_type& r(v.g->rule_map[pe]);
+	rule_type& r(REF_RULE_MAP(v.g, pe));
 	r.set_delay(visitor_type::state_type::time_traits::zero);
 }
 
@@ -1049,7 +1145,7 @@ PassP::main(visitor_type& v, const param_args_type& params,
 		);	// pull-up
 
 	typedef	visitor_type::rule_type	rule_type;
-	rule_type& r(v.g->rule_map[pe]);
+	rule_type& r(REF_RULE_MAP(v.g, pe));
 	r.set_delay(visitor_type::state_type::time_traits::zero);
 }
 

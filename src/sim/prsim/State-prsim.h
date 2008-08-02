@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.1 2008/07/09 04:34:47 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.2 2008/08/02 03:51:13 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -118,7 +118,7 @@ protected:
 	/**
 		Collection of all subexpressions.  
 		These expressions, unlike those in the footprint,
-		point from leaf to root, bottom up.  
+		point and propagate from leaf to root, bottom up.  
 		Indices are *local* to process (type)!
 	 */
 	typedef	vector<expr_struct_type>	expr_pool_type;
@@ -155,14 +155,18 @@ protected:
 	typedef	std::set<node_index_type>	ring_set_type;
 #endif
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-	expr_pool_type				propagate_expr_pool;
-#else
 	expr_pool_type				expr_pool;
-#endif
 	expr_graph_node_pool_type		expr_graph_node_pool;
 	rule_pool_type				rule_pool;
 	rule_map_type				rule_map;
+
+	unique_process_subgraph();
+	~unique_process_subgraph();
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	void
+	void_expr(const expr_index_type);
+#endif
 
 };	// end struct unique_process_subgraph
 
@@ -178,6 +182,15 @@ struct process_sim_state {
 	typedef	RuleState<rule_time_type>	rule_state_type;
 	valarray<expr_state_type>		expr_states;
 	valarray<rule_state_type>		rule_states;
+
+	void
+	allocate_from_type(const unique_process_subgraph&);
+
+	void
+	clear(void);
+
+	void
+	initialize(void);
 };	// end struct process_sim_state
 
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
@@ -214,6 +227,10 @@ public:
 	 */
 	typedef	const event_cause_type&		cause_arg_type;
 	typedef	ExprState			expr_state_type;
+	typedef	unique_process_subgraph::expr_struct_type
+						expr_struct_type;
+	typedef	unique_process_subgraph::rule_type
+						rule_type;
 	typedef	Event				event_type;
 	typedef	EventPool			event_pool_type;
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
@@ -519,7 +536,6 @@ protected:
 		process_expr_map (and process_rule_map).  
 	 */
 	typedef	vector<process_sim_state>	process_state_array_type;
-	typedef	map<const footprint*, size_t>	process_footprint_map_type;
 	// TODO: per process instance attributes!
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 private:
@@ -527,6 +543,7 @@ private:
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	/**
 		Maps each process to its unique type.  
+		Indices are unique process IDs.  
 		Values are indices into unique_process_pool.
 	 */
 	vector<size_t>				process_type_map;
@@ -539,6 +556,12 @@ private:
 	 */
 	process_expr_map_type			process_expr_map;
 	/**
+		Per-process state is kept in an array, indexed
+		by process index.  0 is valid, but reserved for 
+		the top-level process. 
+		Alternative idea is to just use one contiguous array 
+		for all state, but still be able to extract out
+		ranges based on indexed mapping.  
 	 */
 	process_state_array_type		process_state_array;
 #endif
@@ -654,9 +677,11 @@ public:
 	void
 	backtrace_node(ostream&, const node_index_type) const;
 
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	/// only called by ExprAlloc
 	void
 	void_expr(const expr_index_type);
+#endif
 
 #if !PRSIM_INDIRECT_EXPRESSION_MAP
 	rule_map_type&
@@ -668,6 +693,9 @@ public:
 
 	bool
 	is_rule_expr(const expr_index_type) const;
+
+	const rule_type*
+	lookup_rule(const expr_index_type) const;
 
 	void
 	update_time(const time_type t) {
@@ -1182,7 +1210,8 @@ private:
 		pull_enum prev, pull_enum next);
 
 	break_type
-	propagate_evaluation(cause_arg_type, expr_index_type, pull_enum prev);
+	propagate_evaluation(cause_arg_type, const expr_index_type, 
+		pull_enum prev);
 
 #if 0
 	void
@@ -1300,6 +1329,14 @@ public:
 
 	ostream&
 	dump_output_unknown_nodes(ostream&) const;
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	ostream&
+	dump_local_subexpr(ostream&, const expr_index_type, 
+		const process_index_type pid, 
+		const bool v, const uchar p, 
+		const bool cp) const;
+#endif
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
