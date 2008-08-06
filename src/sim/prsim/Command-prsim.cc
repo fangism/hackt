@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.13 2008/07/01 23:57:13 fang Exp $
+	$Id: Command-prsim.cc,v 1.13.2.1 2008/08/06 08:06:06 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2652,10 +2652,10 @@ if (ni) {
 	} else {
 		typedef	State::node_type	node_type;
 		switch (s.get_node(ni).current_value()) {
-		case node_type::LOGIC_LOW:
+		case LOGIC_LOW:
 			v = why_not;
 			break;
-		case node_type::LOGIC_HIGH:
+		case LOGIC_HIGH:
 			v = !why_not;
 			break;
 		default:

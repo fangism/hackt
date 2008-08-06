@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.12 2008/04/23 00:55:45 fang Exp $
+	$Id: Node.cc,v 1.12.2.1 2008/08/06 08:06:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,9 @@
 #include "util/macros.h"
 #include "util/stacktrace.h"
 #include "util/IO_utils.tcc"
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#include "util/STL/valarray_iterator.h"
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -33,6 +36,9 @@ using util::read_value;
 // class Node method definitions
 
 Node::Node() : 
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	fanin(), 
+#else
 #if PRSIM_WEAK_RULES
 //	The next standard of C++ better have aggregate initializers...
 //	pull_up_index({INVALID_EXPR_INDEX}),
@@ -41,12 +47,15 @@ Node::Node() :
 	pull_up_index(INVALID_EXPR_INDEX),
 	pull_dn_index(INVALID_EXPR_INDEX), 
 #endif
+#endif
 	fanout(),
 	struct_flags(NODE_DEFAULT_STRUCT_FLAGS) {
 	INVARIANT(!fanout.size());
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 #if PRSIM_WEAK_RULES
 	pull_up_index[0] = pull_up_index[1] = INVALID_EXPR_INDEX;
 	pull_dn_index[0] = pull_dn_index[1] = INVALID_EXPR_INDEX;
+#endif
 #endif
 }
 
@@ -54,6 +63,7 @@ Node::Node() :
 Node::~Node() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 /**
 	TODO: add ONLY if not already found in fanout list?
 	Realloc-ing on every push_back could be slow... consider vector.  
@@ -95,6 +105,7 @@ Node::replace_pull_index(const bool dir, const expr_index_type _new
 		pull_dn_index STR_INDEX(w) = _new;
 	}
 }
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -104,6 +115,13 @@ Node::replace_pull_index(const bool dir, const expr_index_type _new
  */
 ostream&
 Node::dump_struct(ostream& o) const {
+	ostream_iterator<expr_index_type> osi(o, ", ");
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	o << "fanin-processes: ";
+	std::copy(begin(fanin), end(fanin), osi);
+	// o << endl;
+	// TODO: expand process fanins to rule expresions?
+#else
 	o << "up: ";
 	if (pull_up_index STR_INDEX(NORMAL_RULE))
 		o << pull_up_index STR_INDEX(NORMAL_RULE);
@@ -122,10 +140,10 @@ Node::dump_struct(ostream& o) const {
 		o << '<' << pull_dn_index STR_INDEX(WEAK_RULE);
 	// else just omit
 #endif
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 	o << " fanout: ";
 #if 1
 //	o << '<' << fanout.size() << "> ";
-	ostream_iterator<expr_index_type> osi(o, ", ");
 	std::copy(fanout.begin(), fanout.end(), osi);
 	// std::copy(&fanout[0], &fanout[fanout.size()], osi);
 #else

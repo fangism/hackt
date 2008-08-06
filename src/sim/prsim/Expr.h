@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.11.2.1 2008/07/09 04:34:45 fang Exp $
+	$Id: Expr.h,v 1.11.2.2 2008/08/06 08:06:07 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -16,6 +16,7 @@
 #include "util/attributes.h"
 #include "Object/lang/PRS_fwd.h"	// for expr_count_type
 #include "sim/prsim/devel_switches.h"
+#include "sim/prsim/enums.h"
 
 /**
 	Define to 1 to use PULL_WEAK == 1.
@@ -232,18 +233,6 @@ public:
 #else
 	typedef	Expr			parent_type;
 #endif
-	/**
-		These values are special, they correspond to 
-		LOGIC_LOW, LOGIC_HIGH, LOGIC_OTHER.  
-		Consider re-enumerating so that 2-x can be used
-		to invert.  (Will need to recode some tables in this case.)
-	 */
-	enum pull_enum {
-		PULL_OFF = 0x00,
-		PULL_ON = 0x01,
-		PULL_WEAK = 0x02
-	};
-
 public:
 	/**
 		'val' of the old PrsExpr.

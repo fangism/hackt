@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.3 2008/06/10 22:44:58 fang Exp $
+	$Id: Channel-prsim.cc,v 1.3.2.1 2008/08/06 08:06:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -657,10 +657,10 @@ channel::initialize_data_counter(const State& s) {
 	for ( ; i!=e; ++i) {
 		const node_type& n(s.get_node(*i));
 		switch (n.current_value()) {
-		case node_type::LOGIC_HIGH:
+		case LOGIC_HIGH:
 			++counter_state;
 			break;
-		case node_type::LOGIC_OTHER:
+		case LOGIC_OTHER:
 			++x_counter;
 			break;
 		default: break;
@@ -743,12 +743,11 @@ channel::reset(vector<env_event_type>& events) {
 	typedef	State::node_type		node_type;
 	if (is_sourcing()) {
 		transform(data.begin(), data.end(), back_inserter(events), 
-			__node_setter(node_type::LOGIC_LOW));
+			__node_setter(LOGIC_LOW));
 	}
 	if (is_sinking()) {
 		events.push_back(env_event_type(ack_signal, 
-			(get_ack_init() ? node_type::LOGIC_HIGH
-				: node_type::LOGIC_LOW)));
+			(get_ack_init() ? LOGIC_HIGH : LOGIC_LOW)));
 	}
 	// else nothing else to do
 	stop();	// freeze this channel until it is resumed
@@ -842,7 +841,7 @@ if (have_value()) {
 		for ( ; k[1] < size_t(rdx); ++k[1]) {
 			r.push_back(env_event_type(data[k], 	// node index
 				(k[1] == size_t(qr.rem)) ?
-				node_type::LOGIC_HIGH : node_type::LOGIC_LOW));
+				LOGIC_HIGH : LOGIC_LOW));
 		}
 	}
 } else {
@@ -850,7 +849,7 @@ if (have_value()) {
 	// otherwise following code would wipe the random value slot!
 	// no next value, just hold all data rails neutral
 	transform(data.begin(), data.end(), back_inserter(r), 
-		__node_setter(node_type::LOGIC_LOW));
+		__node_setter(LOGIC_LOW));
 	flags &= ~CHANNEL_SOURCING;
 	if (!values.empty()) {
 		values.clear();
@@ -910,8 +909,8 @@ channel::data_rails_value(const State& s) const {
 		for ( ; k[1] < rdx; ++k[1]) {
 			const node_type& n(s.get_node(data[k]));
 			switch (n.current_value()) {
-			case node_type::LOGIC_LOW: break;
-			case node_type::LOGIC_HIGH:
+			case LOGIC_LOW: break;
+			case LOGIC_HIGH:
 				INVARIANT(!have_hi);
 				have_hi = true;
 				hi = k[1];
@@ -1108,7 +1107,7 @@ if (stopped()) {
 			key[1] = 0;
 			for ( ; key[1] < radix(); ++key[1]) {
 				if (s.get_node(data[key]).current_value() ==
-					node_type::LOGIC_HIGH) {
+					LOGIC_HIGH) {
 					++partial_valid;
 				}
 			}
@@ -1119,7 +1118,7 @@ if (stopped()) {
 				// when to negate (nor)?
 				// when data wants to be neutral, 
 				// i.e. when acknowledge is active
-				if ((av == node_type::LOGIC_LOW) ^ !why_not ^
+				if ((av == LOGIC_LOW) ^ !why_not ^
 						get_ack_active()) {
 					i_s += "~";
 				}
@@ -1133,17 +1132,15 @@ if (stopped()) {
 				const node_index_type di = data[key];
 				const node_type& d(s.get_node(di));
 			switch (d.current_value()) {
-			case node_type::LOGIC_LOW:
-				if (get_ack_active() ^
-					(av == node_type::LOGIC_HIGH)) {
+			case LOGIC_LOW:
+				if (get_ack_active() ^ (av == LOGIC_HIGH)) {
 					s.__node_why_not(o, di, 
 						limit, why_not, 
 						why_not, verbose, u, v);
 				}
 				break;
-			case node_type::LOGIC_HIGH:
-				if (get_ack_active() ^
-					(av == node_type::LOGIC_LOW)) {
+			case LOGIC_HIGH:
+				if (get_ack_active() ^ (av == LOGIC_LOW)) {
 					s.__node_why_not(o, di, 
 						limit, !why_not, 
 						why_not, verbose, u, v);
@@ -1236,7 +1233,7 @@ if (stopped()) {
 			for ( ; key[1] < radix(); ++key[1]) {
 				const node_index_type d(data[key]);
 				if (s.get_node(d).current_value() ==
-						node_type::LOGIC_OTHER) {
+						LOGIC_OTHER) {
 					s.__node_why_X(o, d, 
 						limit, verbose, u, v);
 				}
@@ -1279,7 +1276,7 @@ if (ni == ack_signal) {
 	STACKTRACE_INDENT_PRINT("source responding..." << endl);
 	switch (next) {
 		// assumes that data rails are active high
-	case node_type::LOGIC_LOW:
+	case LOGIC_LOW:
 		if (get_ack_active()) {
 			// \pre all data rails are neutral
 			// set data rails to next data value
@@ -1289,15 +1286,15 @@ if (ni == ack_signal) {
 			// reset all data rails
 			transform(data.begin(), data.end(),
 				back_inserter(new_events), 
-				__node_setter(node_type::LOGIC_LOW));
+				__node_setter(LOGIC_LOW));
 		}
 		break;
-	case node_type::LOGIC_HIGH:
+	case LOGIC_HIGH:
 		if (get_ack_active()) {
 			// reset all data rails
 			transform(data.begin(), data.end(),
 				back_inserter(new_events), 
-				__node_setter(node_type::LOGIC_LOW));
+				__node_setter(LOGIC_LOW));
 		} else {
 			// \pre all data rails are neutral
 			// set data rails to next data value
@@ -1309,7 +1306,7 @@ if (ni == ack_signal) {
 		// set all data to X
 		// do not advance
 		transform(data.begin(), data.end(), back_inserter(new_events), 
-			__node_setter(node_type::LOGIC_OTHER));
+			__node_setter(LOGIC_OTHER));
 		break;
 	}
 	}
@@ -1320,35 +1317,30 @@ if (ni == ack_signal) {
 	// only need to take action if this is a sink
 	if (is_sinking() && !stopped()) {
 	switch (next) {
-	case node_type::LOGIC_LOW:
+	case LOGIC_LOW:
 		if (get_valid_sense()) {
 			// neutral, reset ack
 			new_events.push_back(env_event_type(ack_signal, 
-				get_ack_active() ? node_type::LOGIC_LOW
-					: node_type::LOGIC_HIGH));
+				get_ack_active() ? LOGIC_LOW : LOGIC_HIGH));
 		} else {
 			// valid, ack
 			new_events.push_back(env_event_type(ack_signal, 
-				get_ack_active() ? node_type::LOGIC_HIGH
-					: node_type::LOGIC_LOW));
+				get_ack_active() ? LOGIC_HIGH : LOGIC_LOW));
 		}
 		break;
-	case node_type::LOGIC_HIGH:
+	case LOGIC_HIGH:
 		if (get_valid_sense()) {
 			// valid, ack
 			new_events.push_back(env_event_type(ack_signal, 
-				get_ack_active() ? node_type::LOGIC_HIGH
-					: node_type::LOGIC_LOW));
+				get_ack_active() ? LOGIC_HIGH : LOGIC_LOW));
 		} else {
 			// neutral, reset ack
 			new_events.push_back(env_event_type(ack_signal, 
-				get_ack_active() ? node_type::LOGIC_LOW
-					: node_type::LOGIC_HIGH));
+				get_ack_active() ? LOGIC_LOW : LOGIC_HIGH));
 		}
 		break;
 	default:
-		new_events.push_back(env_event_type(ack_signal, 
-			node_type::LOGIC_OTHER));
+		new_events.push_back(env_event_type(ack_signal, LOGIC_OTHER));
 		break;
 	}
 	}
@@ -1358,19 +1350,19 @@ if (ni == ack_signal) {
 	// invariant: must be data rail
 	// update state counters
 	switch (prev) {
-	case node_type::LOGIC_HIGH:
+	case LOGIC_HIGH:
 		INVARIANT(counter_state);
 		--counter_state;
 		break;
-	case node_type::LOGIC_OTHER:
+	case LOGIC_OTHER:
 		INVARIANT(x_counter);
 		--x_counter;
 		break;
 	default: break;
 	}
 	switch (next) {
-	case node_type::LOGIC_HIGH: ++counter_state; break;
-	case node_type::LOGIC_OTHER: ++x_counter; break;
+	case LOGIC_HIGH: ++counter_state; break;
+	case LOGIC_OTHER: ++x_counter; break;
 	default: break;
 	}
 	if (x_counter) {
@@ -1382,11 +1374,11 @@ if (ni == ack_signal) {
 			// for validity protocol, set valid to X
 			if (valid_signal) {
 				new_events.push_back(env_event_type(
-					valid_signal, node_type::LOGIC_OTHER));
+					valid_signal, LOGIC_OTHER));
 			}
 #endif
 		}
-		if (is_sinking() && (next == node_type::LOGIC_OTHER)
+		if (is_sinking() && (next == LOGIC_OTHER)
 				&& (x_counter == 1)) {
 			// if counter was JUST incremented to 1
 			// otherwise multiple X's are vacuous
@@ -1394,12 +1386,12 @@ if (ni == ack_signal) {
 			// if not validity protocol, set ack to X
 			if (!valid_signal) {
 				new_events.push_back(env_event_type(
-					ack_signal, node_type::LOGIC_OTHER));
+					ack_signal, LOGIC_OTHER));
 			}
 			// otherwise wait for validity to go X
 #else
 			new_events.push_back(env_event_type(
-				ack_signal, node_type::LOGIC_OTHER));
+				ack_signal, LOGIC_OTHER));
 #endif
 		}
 		}	// end if !stopped
@@ -1417,8 +1409,7 @@ if (ni == ack_signal) {
 		if (is_sourcing() && valid_signal) {
 			// source is responsible for resetting valid signal
 			new_events.push_back(env_event_type(valid_signal, 
-				get_ack_active() ? node_type::LOGIC_LOW
-					: node_type::LOGIC_HIGH));
+				get_ack_active() ? LOGIC_LOW : LOGIC_HIGH));
 		}
 #else
 		// if this is sourcing, then don't care
@@ -1431,8 +1422,7 @@ if (ni == ack_signal) {
 			// sink should reply with ack reset
 			// otherwise, valid_signal is an input
 			new_events.push_back(env_event_type(ack_signal, 
-				get_ack_active() ? node_type::LOGIC_LOW
-					: node_type::LOGIC_HIGH));
+				get_ack_active() ? LOGIC_LOW : LOGIC_HIGH));
 		}
 		}
 	} else if (counter_state == bundles()) {
@@ -1479,8 +1469,7 @@ if (ni == ack_signal) {
 		if (is_sourcing() && valid_signal) {
 			// source is responsible for setting valid signal
 			new_events.push_back(env_event_type(valid_signal, 
-				get_ack_active() ? node_type::LOGIC_HIGH
-					: node_type::LOGIC_LOW));
+				get_ack_active() ? LOGIC_HIGH : LOGIC_LOW));
 		}
 #else
 		// if this is sourcing, then don't care
@@ -1493,8 +1482,7 @@ if (ni == ack_signal) {
 			// sink should reply with ack reset
 			// otherwise, valid_signal is an input
 			new_events.push_back(env_event_type(ack_signal, 
-				get_ack_active() ? node_type::LOGIC_HIGH
-					: node_type::LOGIC_LOW));
+				get_ack_active() ? LOGIC_HIGH : LOGIC_LOW));
 		}
 	}
 	}
@@ -1522,7 +1510,7 @@ if (is_sourcing()) {
 	// validity should be set after all data rails are valid/neutral
 	const node_type& a(s.get_node(ack_signal));
 	switch (a.current_value()) {
-	case node_type::LOGIC_LOW:
+	case LOGIC_LOW:
 		if (get_ack_active()) {
 			// should send new data, if available
 			// Q: if counter_state is *between* 0 and #bundles, 
@@ -1540,20 +1528,19 @@ if (is_sourcing()) {
 			if (valid_signal) {
 				if (x_counter) {
 					events.push_back(env_event_type(
-						valid_signal, 
-						node_type::LOGIC_OTHER));
+						valid_signal, LOGIC_OTHER));
 				} else if (!counter_state) {
 					events.push_back(env_event_type(
 						valid_signal, 
 						get_valid_sense() ?
-							node_type::LOGIC_LOW :
-							node_type::LOGIC_HIGH));
+							LOGIC_LOW :
+							LOGIC_HIGH));
 				} else if (counter_state == bundles()) {
 					events.push_back(env_event_type(
 						valid_signal, 
 						get_valid_sense() ?
-							node_type::LOGIC_HIGH :
-							node_type::LOGIC_LOW));
+							LOGIC_HIGH :
+							LOGIC_LOW));
 				}
 				// else leave alone in intermediate state
 			}
@@ -1562,15 +1549,15 @@ if (is_sourcing()) {
 			// reset data
 			transform(data.begin(), data.end(),
 				back_inserter(events),
-				__node_setter(node_type::LOGIC_LOW));
+				__node_setter(LOGIC_LOW));
 		}
 		break;
-	case node_type::LOGIC_HIGH:
+	case LOGIC_HIGH:
 		if (get_ack_active()) {
 			// reset data
 			transform(data.begin(), data.end(),
 				back_inserter(events),
-				__node_setter(node_type::LOGIC_LOW));
+				__node_setter(LOGIC_LOW));
 		} else {
 			if (counter_state && (counter_state != bundles())) {
 				// ambiguous
@@ -1584,20 +1571,19 @@ if (is_sourcing()) {
 			if (valid_signal) {
 				if (x_counter) {
 					events.push_back(env_event_type(
-						valid_signal, 
-						node_type::LOGIC_OTHER));
+						valid_signal, LOGIC_OTHER));
 				} else if (!counter_state) {
 					events.push_back(env_event_type(
 						valid_signal, 
 						get_valid_sense() ?
-							node_type::LOGIC_LOW :
-							node_type::LOGIC_HIGH));
+							LOGIC_LOW :
+							LOGIC_HIGH));
 				} else if (counter_state == bundles()) {
 					events.push_back(env_event_type(
 						valid_signal, 
 						get_valid_sense() ?
-							node_type::LOGIC_HIGH :
-							node_type::LOGIC_LOW));
+							LOGIC_HIGH :
+							LOGIC_LOW));
 				}
 				// else leave alone in intermediate state
 			}
@@ -1607,7 +1593,7 @@ if (is_sourcing()) {
 	default:
 		transform(data.begin(), data.end(),
 			back_inserter(events),
-			__node_setter(node_type::LOGIC_OTHER));
+			__node_setter(LOGIC_OTHER));
 	}	// end switch
 }
 // could also be sinking at the same time
@@ -1617,57 +1603,48 @@ if (is_sinking()) {
 		const node_type& v(get_node(valid_signal));
 		// TODO: use xor and value inversion to simplify the following:
 		switch (v.current_value()) {
-		case node_type::LOGIC_LOW:
+		case LOGIC_LOW:
 			if (get_valid_sense()) {
 				// reset ack
 				events.push_back(env_event_type(ack_signal, 
 					get_ack_active() ?
-						node_type::LOGIC_LOW :
-						node_type::LOGIC_HIGH));
+						LOGIC_LOW : LOGIC_HIGH));
 			} else {
 				// ack
 				events.push_back(env_event_type(ack_signal, 
 					get_ack_active() ?
-						node_type::LOGIC_HIGH :
-						node_type::LOGIC_LOW));
+						LOGIC_HIGH : LOGIC_LOW));
 			}
 			break;
-		case node_type::LOGIC_HIGH:
+		case LOGIC_HIGH:
 			if (get_valid_sense()) {
 				// ack
 				events.push_back(env_event_type(ack_signal, 
 					get_ack_active() ?
-						node_type::LOGIC_HIGH :
-						node_type::LOGIC_LOW));
+						LOGIC_HIGH : LOGIC_LOW));
 			} else {
 				// reset ack
 				events.push_back(env_event_type(ack_signal, 
 					get_ack_active() ?
-						node_type::LOGIC_LOW :
-						node_type::LOGIC_HIGH));
+						LOGIC_LOW : LOGIC_HIGH));
 			}
 			break;
 		default:
 			events.push_back(env_event_type(
-				ack_signal, node_type::LOGIC_OTHER));
+				ack_signal, LOGIC_OTHER));
 		}
 	} else
 #endif
 	if (x_counter) {
-		events.push_back(env_event_type(
-			ack_signal, node_type::LOGIC_OTHER));
+		events.push_back(env_event_type(ack_signal, LOGIC_OTHER));
 	} else if (!counter_state) {
 		// data is neutral, reset ack
 		events.push_back(env_event_type(ack_signal, 
-			get_ack_active() ?
-				node_type::LOGIC_LOW :
-				node_type::LOGIC_HIGH));
+			get_ack_active() ?  LOGIC_LOW : LOGIC_HIGH));
 	} else if (counter_state == bundles()) {
 		// data is valid, ack
 		events.push_back(env_event_type(ack_signal, 
-			get_ack_active() ?
-				node_type::LOGIC_HIGH :
-				node_type::LOGIC_LOW));
+			get_ack_active() ?  LOGIC_HIGH : LOGIC_LOW));
 	}
 	// else in some intermediate state, leave acknowledge alone
 }
@@ -2233,8 +2210,7 @@ struct IfNodeX : public std::unary_function<const node_index_type, bool> {
 
 	result_type
 	operator () (argument_type ni) const {
-		return state.get_node(ni).current_value()
-			== State::node_type::LOGIC_OTHER;
+		return state.get_node(ni).current_value() == LOGIC_OTHER;
 	}
 };	// end struct IfNodeX
 

@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.6.2.1 2008/07/09 04:34:47 fang Exp $
+	$Id: devel_switches.h,v 1.6.2.2 2008/08/06 08:06:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -96,6 +96,8 @@
 	INVASIVE change.
 	Eliminate pre-translated, allocated top-level expressions in favor
 	of performing footprint translationsat run-time.
+	This also significantly changes the way node fanin will work
+	because of process hierarchy; cannot use existing OR-combinations.  
 	Tradeoff: slower, but much more memory-scalable.
 	Rationale: memory is more critical for massive designs
 	Priority: HIGH

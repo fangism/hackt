@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.196 2008/03/21 00:20:02 fang Exp $
+#	$Id: Makefile.am,v 1.196.2.1 2008/08/06 08:06:04 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -938,6 +938,7 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/common.h \
 	sim/devel_switches.h \
 	sim/prsim/devel_switches.h \
+	sim/prsim/enums.h \
 	sim/prsim/ExprAllocFlags.h \
 	sim/prsim/Exception.h \
 	sim/chpsim/chpsim_dlfunction.h \

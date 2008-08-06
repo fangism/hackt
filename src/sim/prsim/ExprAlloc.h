@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.9.2.2 2008/08/02 03:51:10 fang Exp $
+	$Id: ExprAlloc.h,v 1.9.2.3 2008/08/06 08:06:09 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -38,8 +38,6 @@ using entity::cflat_context_visitor;
 class ExprAlloc : public cflat_context_visitor {
 public:
 	typedef	State					state_type;
-	typedef	state_type::node_type			node_type;
-	typedef	state_type::node_pool_type		node_pool_type;
 	typedef	state_type::expr_struct_type		expr_struct_type;
 	typedef	state_type::expr_state_type		expr_state_type;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -48,6 +46,8 @@ public:
 	typedef	map<const entity::PRS::footprint*, size_t>
 						process_footprint_map_type;
 #else
+	typedef	state_type::node_type			node_type;
+	typedef	state_type::node_pool_type		node_pool_type;
 	typedef	expr_state_type				expr_type;
 	typedef	State					unique_type;
 #endif
@@ -60,14 +60,10 @@ protected:
 	typedef	std::queue<expr_index_type>	free_list_type;
 public:
 	state_type&				state;
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	node_pool_type&				st_node_pool;
-#if 0
-	expr_pool_type&				st_expr_pool;
-	graph_node_pool_type&			st_graph_node_pool;
-	rule_map_type&				st_rule_map;
-#else
-	unique_process_subgraph*		g;
 #endif
+	unique_process_subgraph*		g;
 protected:
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	/**
@@ -96,10 +92,6 @@ protected:
 	 */
 	free_list_type				expr_free_list;
 public:
-#if 0
-	explicit
-	ExprAlloc(state_type&);
-#endif
 
 	ExprAlloc(state_type&, const ExprAllocFlags&);
 

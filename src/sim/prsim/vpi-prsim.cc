@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.2 2008/03/17 23:03:05 fang Exp $
+	$Id: vpi-prsim.cc,v 1.2.2.1 2008/08/06 08:06:13 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -367,19 +367,19 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 	const char* const nodename = name.c_str();
 #endif
       switch (n.current_value()) {
-      case node_type::LOGIC_HIGH:
+      case LOGIC_HIGH:
 #if VERBOSE_DEBUG
 	vpi_printf ("Set net %s (%x) to TRUE\n", nodename, net);
 #endif
 	v.value.scalar = vpi1;
 	break;
-      case node_type::LOGIC_LOW:
+      case LOGIC_LOW:
 #if VERBOSE_DEBUG
 	vpi_printf ("Set net %s (%x) to FALSE\n", nodename, net);
 #endif
 	v.value.scalar = vpi0;
 	break;
-      case node_type::LOGIC_OTHER:
+      case LOGIC_OTHER:
 #if VERBOSE_DEBUG
 	vpi_printf ("Set net %s (%x) to X\n", nodename, net);
 #endif
@@ -599,14 +599,14 @@ static const bool set_force = true;
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_F, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_LOW, vcstime, set_force);
+    prsim_state->set_node_time(n, LOGIC_LOW, vcstime, set_force);
 #endif
     break;
   case vpi1:
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_T, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_HIGH, vcstime, set_force);
+    prsim_state->set_node_time(n, LOGIC_HIGH, vcstime, set_force);
 #endif
     break;
   case vpiZ:
@@ -616,7 +616,7 @@ static const bool set_force = true;
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_X, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_OTHER, vcstime, set_force);
+    prsim_state->set_node_time(n, LOGIC_OTHER, vcstime, set_force);
 #endif
     break;
   default:
@@ -1129,9 +1129,9 @@ static PLI_INT32 prsim_set (PLI_BYTE8 *args)
 #endif
 	// can't set X, huh?
   if (arg.value.integer == 0) {
-          val = node_type::LOGIC_LOW;
+          val = LOGIC_LOW;
   } else {
-          val = node_type::LOGIC_HIGH;
+          val = LOGIC_HIGH;
   }
 #if 0
   n = prs_node (P, arg1);

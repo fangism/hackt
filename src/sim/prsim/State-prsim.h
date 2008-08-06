@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.2 2008/08/02 03:51:13 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.3 2008/08/06 08:06:12 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -106,15 +106,12 @@ protected:
 #endif
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	Expr				expr_struct_type;
-#else
-	typedef	ExprState			expr_struct_type;
-#endif
-	typedef	ExprGraphNode			graph_node_type;
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	Rule<rule_time_type>		rule_type;
 #else
+	typedef	ExprState			expr_struct_type;
 	typedef	RuleState<rule_time_type>	rule_type;
 #endif
+	typedef	ExprGraphNode			graph_node_type;
 	/**
 		Collection of all subexpressions.  
 		These expressions, unlike those in the footprint,
@@ -159,6 +156,54 @@ protected:
 	expr_graph_node_pool_type		expr_graph_node_pool;
 	rule_pool_type				rule_pool;
 	rule_map_type				rule_map;
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	// structures to account for local fanin contribution
+	typedef	std::vector<expr_index_type>	fanin_array_type;
+	typedef	fanin_array_type		fanout_array_type;
+	/**
+		This resembles Node(Struct), but only contains 
+		fanin and fanout information.  
+	 */
+	struct faninout_struct_type {
+#if PRSIM_WEAK_RULES
+		fanin_array_type		pull_up[2];
+		fanin_array_type		pull_dn[2];
+#else
+		fanin_array_type		pull_up;
+		fanin_array_type		pull_dn;
+#endif
+		fanout_array_type		fanout;
+		// default ctor/dtor/copy
+		fanin_array_type&
+		get_pull_expr(const bool b
+#if PRSIM_WEAK_RULES
+			, const rule_strength w
+#endif
+			) {
+			return b ? pull_up STR_INDEX(w)
+				: pull_dn STR_INDEX(w);
+		}
+
+		const fanin_array_type&
+		get_pull_expr(const bool b
+#if PRSIM_WEAK_RULES
+			, const rule_strength w
+#endif
+			) const {
+			return b ? pull_up STR_INDEX(w)
+				: pull_dn STR_INDEX(w);
+		}
+
+	};
+	typedef	std::vector<faninout_struct_type>	faninout_map_type;
+	/**
+		This array-size should match number of nodes in unique_process.
+	 */
+	faninout_map_type			local_faninout_map;
+#else
+	// don't bother with flattened global view
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	unique_process_subgraph();
 	~unique_process_subgraph();
@@ -236,7 +281,6 @@ public:
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
 	typedef	vector<node_type>		node_pool_type;
-	typedef	expr_state_type::pull_enum	pull_enum;
 
 	typedef	map<node_index_type, watch_entry>	watch_list_type;
 	/**
@@ -1200,8 +1244,7 @@ private:
 	;	// define in .cc file
 #else
 	{
-		return ei ? expr_pool[ei].pull_state() :
-			expr_state_type::PULL_OFF;
+		return ei ? expr_pool[ei].pull_state() : PULL_OFF;
 	}
 #endif
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.2 2008/08/02 03:51:09 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.3 2008/08/06 08:06:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -194,37 +194,15 @@ register_ExprAlloc_spec_class(void) {
 /**
 	NOTE: 0 is an invalid index to the state's expr_pool.  
  */
-#if 0
-ExprAlloc::ExprAlloc(state_type& _s) :
-		cflat_context_visitor(), 
-		state(_s),
-		st_node_pool(state.node_pool), 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		g(NULL), 
-		current_process_index(0), 
-#else
-		g(&_s), 
-#endif
-		ret_ex_index(INVALID_EXPR_INDEX), 
-		temp_rule(NULL),
-		flags(), expr_free_list() {
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-	state.unique_process_pool.reserve(
-		state.get_pool<process_tag>().size() +2);
-#endif
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 		cflat_context_visitor(), 
 		state(_s),
-		st_node_pool(state.node_pool), 
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		g(NULL), 
 		current_process_index(0), 
 		process_footprint_map(), 	// empty
 #else
+		st_node_pool(state.node_pool), 
 		g(&_s), 
 #endif
 		ret_ex_index(INVALID_EXPR_INDEX), 
@@ -376,6 +354,21 @@ ExprAlloc::compact_expr_pools(void) {
 		// TODO: this code is re-used several times in this file.  
 		// relink parent, which may be node or expression
 		if (e.is_root()) {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#if PRSIM_WEAK_RULES
+			const rule_strength
+				str(REF_RULE_MAP(g, n).is_weak() ?
+					WEAK_RULE : NORMAL_RULE);
+#endif
+			unique_process_subgraph::faninout_struct_type&
+				f(g->local_faninout_map[e.parent]);
+			unique_process_subgraph::fanin_array_type&
+				fi(e.direction() ? 
+					f.pull_up STR_INDEX(str) :
+					f.pull_dn STR_INDEX(str));
+			replace(fi.begin(), fi.end(), i, n);
+#undef	STR_INDEX
+#else	// PRSIM_INDIRECT_EXPRESSION_MAP
 			node_type& nd(st_node_pool[e.parent]);
 			nd.replace_pull_index(e.direction(), n
 #if PRSIM_WEAK_RULES
@@ -383,6 +376,7 @@ ExprAlloc::compact_expr_pools(void) {
 				// careful: consistent with enum rule_strength
 #endif
 				);
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 		} else {
 			graph_node_type::child_entry_type&
 				c(g->expr_graph_node_pool[e.parent]
@@ -397,9 +391,16 @@ ExprAlloc::compact_expr_pools(void) {
 			graph_node_type::child_entry_type& c(gn.children[j]);
 			if (c.first) {
 				// then child is a node, update its fanout
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+				unique_process_subgraph::faninout_struct_type&
+					f(g->local_faninout_map[c.second]);
+				unique_process_subgraph::fanout_array_type&
+					fo(f.fanout);
+#else
 				node_type& nd(st_node_pool[c.second]);
-				replace(nd.fanout.begin(), nd.fanout.end(), 
-					i, n);
+				node_type::fanout_array_type& fo(nd.fanout);
+#endif
+				replace(fo.begin(), fo.end(), i, n);
 			} else {
 				// child is an expression, update its parent
 				g->expr_pool[c.second].parent = n;
@@ -501,6 +502,7 @@ try {
 /**
 	Allocates a new leaf literal expression in the sim state object.  
 	\param ni resolved global ID of unique node.
+		NOW is LOCAL node index.  
 	\return index of new literal expression, allocated in the state. 
 		NOTE: this does not set ret_ex_index on return, it is the
 		caller's responsibility to use it.  
@@ -523,7 +525,11 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 			expr_struct_type::EXPR_NODE,1));
 		g->expr_graph_node_pool.push_back(graph_node_type());
 	}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	g->local_faninout_map[ni].fanout.push_back(ret);
+#else
 	st_node_pool[ni].push_back_fanout(ret);
+#endif
 	g->expr_graph_node_pool[ret].push_back_node(ni);
 	// literal graph node has no children
 	return ret;
@@ -628,10 +634,16 @@ ExprAlloc::fold_literal(const expr_index_type _e) {
 			const node_index_type cn = ogc.second;
 			// replace grandparent's child connect.
 			c = ogc;
-			node_type& ln(st_node_pool[cn]);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+			unique_process_subgraph::fanout_array_type&
+				fo(g->local_faninout_map[cn].fanout);
+#else
+			node_type::fanout_array_type&
+				fo(st_node_pool[cn].fanout);
+#endif
 			// grandchild's has no parent connect.
 			// replace child's fanout: ei -> _e
-			replace(ln.fanout.begin(), ln.fanout.end(), ei, _e);
+			replace(fo.begin(), fo.end(), ei, _e);
 			// there should be no references to 
 			// expression ei remaining
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -694,10 +706,16 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 			if (ogc.first) {
 				c = ogc;
 				const node_index_type cn = ogc.second;
-				node_type& ln(st_node_pool[cn]);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+				unique_process_subgraph::fanout_array_type&
+					fo(g->local_faninout_map[cn].fanout);
+#else
+				node_type::fanout_array_type&
+					fo(st_node_pool[cn].fanout);
+#endif
 				// grandchild's has no parent connect.
 				// replace child's fanout: ei -> _e
-				replace(ln.fanout.begin(), ln.fanout.end(), ei, _e);
+				replace(fo.begin(), fo.end(), ei, _e);
 				// there should be no references to 
 				// expression ei remaining
 			STACKTRACE_INDENT_PRINT("releasing " << ei << endl);
@@ -851,6 +869,13 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
 	STACKTRACE_INDENT_PRINT("linking expr " << top_ex_index <<
 		" to node " << ni << ' ' << (dir ? '+' : '-') << endl);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	g->local_faninout_map[ni].get_pull_expr(dir
+#if PRSIM_WEAK_RULES
+		, w
+#endif
+		).push_back(top_ex_index);
+#else	// PRSIM_INDIRECT_EXPRESSION_MAP
 	node_type& output(st_node_pool[ni]);
 	// now link root expression to node
 	expr_type& ne(g->expr_pool[top_ex_index]);
@@ -880,7 +905,6 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 
 		// we don't OR-combine if the expression being examined
 		// is already a top-level root-expression.  
-			// FIXME: check for size exceeding limit!
 		// NOTE: we mean is_or(), not just is_disjunctive()
 		if (pe.is_or() && !state.is_rule_expr(top_ex_index)
 				&& pe.size < ex_max) {
@@ -928,6 +952,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		dir_index = top_ex_index;
 		ne.pull(ni, dir);
 	}
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 }	// end ExprAlloc::link_node_to_root_expr(...)
 
 //=============================================================================

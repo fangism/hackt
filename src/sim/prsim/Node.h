@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.15.2.1 2008/07/09 04:34:46 fang Exp $
+	$Id: Node.h,v 1.15.2.2 2008/08/06 08:06:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -15,8 +15,11 @@
 #include "util/attributes.h"
 #include "util/utypes.h"
 #include "sim/common.h"
-#include "sim/prsim/devel_switches.h"
+#include "sim/prsim/enums.h"
 #include "sim/prsim/Cause.h"
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#include <valarray>
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -25,15 +28,62 @@ using std::ostream;
 using std::istream;
 using std::vector;
 
-#if PRSIM_WEAK_RULES
-enum rule_strength {
-	NORMAL_RULE = 0,
-	WEAK_RULE = 1
-};
-#define	STR_INDEX(w)	[w]
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	List or array of fanin expressions.  
+	OR-combination expression.  
+ */
+typedef	std::valarray<process_index_type>	process_fanin_type;
+
+/**
+	Is like ExprState, but uses size_t instead of count_type.  
+	NodeState needs one of these per direction, per strength.  
+	Should we impose a limit on the number of rules? uint16, uint32?
+ */
+struct fanin_state_type {
+#if 0
+	// smaller, should check for limit
+	typedef	expr_count_type		count_type;
 #else
-#define	STR_INDEX(w)
+	typedef	expr_index_type		count_type;
 #endif
+	/**
+		This is the total number of fanin rules that are
+			OR-combined to pull this node.
+		Value is computed by taking sum over process fanins.  
+		This isn't really state information, it's invariant, 
+			but convenient to add here.  
+	 */
+	count_type			size;
+	/**
+		For OR-expressions, this represents the number of 1's, 
+		i.e. number of rules that are currently on.
+	 */
+	count_type			countdown;
+	/**
+		The number of fanin rules that are X.  
+	 */
+	count_type			unknowns;
+
+	/**
+		Same as ExprState::initialize()
+	 */
+	void
+	initialize(void) {
+		unknowns = size;
+		countdown = 0;
+	}
+
+	/**
+		Simplified from ExprState's or_pull_state.
+	 */
+	pull_enum
+	pull(void) const {
+		return countdown ? PULL_ON :
+			(unknowns ? PULL_WEAK : PULL_OFF);
+	}
+};	// end struct fanin_state_type
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 
 //=============================================================================
@@ -48,7 +98,12 @@ enum rule_strength {
 	TODO: attribute packed for density, or align for speed?
  */
 struct Node {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	// compact: reference process instance indices with fanout
+	typedef	std::vector<process_index_type>	fanout_array_type;
+#else
 	typedef	std::vector<expr_index_type>	fanout_array_type;
+#endif
 
 	/**
 		Bit fields for node structure flags.  
@@ -82,7 +137,13 @@ struct Node {
 		NODE_CHECK_EXCLLO = 0x0010
 	} struct_flags_enum;
 
-
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/**
+		This refers to a list of global process instances (indices)
+		that can drive this node.  
+	 */
+	process_fanin_type		fanin;
+#else
 #if PRSIM_WEAK_RULES
 	/**
 		Index to the pull-up expression (normal, weak).
@@ -102,6 +163,7 @@ struct Node {
 	 */
 	expr_index_type			pull_dn_index;
 #endif
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	/**
 		List of expression indices to which this node fans out.  
@@ -132,12 +194,15 @@ public:
 	/// these aren't destroyed frequently, inline doesn't matter
 	~Node();
 
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	void
 	push_back_fanout(const expr_index_type);
 
 	bool
 	contains_fanout(const expr_index_type) const;
+#endif
 
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	expr_index_type&
 	get_pull_expr(const bool b
 #if PRSIM_WEAK_RULES
@@ -164,15 +229,20 @@ public:
 		, const rule_strength w
 #endif
 		);
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	bool
 	has_fanin(void) const {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		return fanin.size();
+#else
 #if PRSIM_WEAK_RULES
 		return pull_up_index[NORMAL_RULE] ||
 			pull_dn_index[NORMAL_RULE] ||
 			pull_up_index[WEAK_RULE] || pull_dn_index[WEAK_RULE];
 #else
 		return pull_up_index || pull_dn_index;
+#endif
 #endif
 	}
 
@@ -240,13 +310,6 @@ public:
 	typedef	parent_type::fanout_array_type	fanout_array_type;
 	typedef	LastCause::event_cause_type	event_cause_type;
 
-	typedef	enum {
-		LOGIC_LOW = 0x00,		// 0
-		LOGIC_HIGH = 0x01,		// 1
-		LOGIC_VALUE = 0x01,		// value mask
-		LOGIC_OTHER = 0x02,		// 2
-		LOGIC_MASK = 0x03
-	} value_enum;
 
 	/**
 		Enumerations for stateful information flags for a node.  
@@ -308,12 +371,25 @@ protected:
 		Structure for tracking last cause, by node and value.  
 	 */
 	LastCause				causes;
+
 public:
 	/**
 		Transition counts.  
 		Not critical to simulation, unless we want statistics.  
 	 */
 	size_t					tcount;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/**
+		The current state of each pull.  
+	 */
+#if PRSIM_WEAK_RULES
+	fanin_state_type			pull_up_state[2];
+	fanin_state_type			pull_dn_state[2];
+#else
+	fanin_state_type			pull_up_state;
+	fanin_state_type			pull_dn_state;
+#endif
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 public:
 	NodeState() : parent_type(), value(LOGIC_OTHER), 
 		state_flags(NODE_INITIAL_STATE_FLAGS),
