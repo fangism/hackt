@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.15.2.2 2008/08/06 08:06:10 fang Exp $
+	$Id: Node.h,v 1.15.2.3 2008/08/09 02:22:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -73,6 +73,9 @@ struct fanin_state_type {
 		unknowns = size;
 		countdown = 0;
 	}
+
+	bool
+	any(void) const { return size; }
 
 	/**
 		Simplified from ExprState's or_pull_state.

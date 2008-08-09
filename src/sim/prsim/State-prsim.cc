@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.5 2008/08/08 08:05:20 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.6 2008/08/09 02:22:28 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2669,13 +2669,12 @@ if (n.in_channel()) {
 	size_t w = NORMAL_RULE;		// 0
 	do {
 #endif
-// #if PRSIM_INDIRECT_EXPRESSION_MAP
-// #else
+		cout << "THIS CODE HAS NEVER BEEN REACHED?" << endl;
+		// The following code looks wrong...
 		const event_index_type ui = n.pull_up_index STR_INDEX(w);
 		const event_index_type di = n.pull_dn_index STR_INDEX(w);
 		const event_type* up_rule = ui ? &get_event(ui) : NULL;
 		const event_type* dn_rule = di ? &get_event(di) : NULL;
-// #endif
 		const bool possible_up = up_rule &&
 			up_rule->val == LOGIC_HIGH
 				&& next != LOGIC_HIGH
@@ -2980,15 +2979,27 @@ State::propagate_evaluation(
 #if DEBUG_STEP
 	if (ei) dump_event(cerr << "pending:\t", ei, 0.0) << endl;
 #endif
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	const pull_enum up_pull = n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
+	const pull_enum dn_pull = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
+#else
 	const pull_enum up_pull =
 		get_pull(n.pull_up_index STR_INDEX(NORMAL_RULE));
 	const pull_enum dn_pull =
 		get_pull(n.pull_dn_index STR_INDEX(NORMAL_RULE));
+#endif
 #if PRSIM_WEAK_RULES
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	const pull_enum wdn_pull = weak_rules_enabled() ?
+		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
+	const pull_enum wup_pull = weak_rules_enabled() ?
+		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
+#else
 	const pull_enum wdn_pull = weak_rules_enabled() ?
 		get_pull(n.pull_dn_index STR_INDEX(WEAK_RULE)) : PULL_OFF;
 	const pull_enum wup_pull = weak_rules_enabled() ?
 		get_pull(n.pull_up_index STR_INDEX(WEAK_RULE)) : PULL_OFF;
+#endif
 #endif	// PRSIM_WEAK_RULES
 	break_type err = false;
 #if PRSIM_WEAK_RULES
@@ -3070,13 +3081,22 @@ if (!n.pending_event()) {
 			enqueue_exclhi(get_delay_up(e), pe);
 		} else {
 			// not sure why: checking against non-weak only:
-#if PRSIM_WEAK_RULES
-			if (n.pull_dn_index STR_INDEX(NORMAL_RULE)
-				|| (weak_rules_enabled() &&
-					n.pull_dn_index STR_INDEX(WEAK_RULE)))
+			if (
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+			n.pull_dn_state STR_INDEX(NORMAL_RULE).any()
 #else
-			if (n.pull_dn_index STR_INDEX(NORMAL_RULE))
+			n.pull_dn_index STR_INDEX(NORMAL_RULE)
 #endif
+#if PRSIM_WEAK_RULES
+				|| (weak_rules_enabled() &&
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+					n.pull_dn_state STR_INDEX(WEAK_RULE).any()
+#else
+					n.pull_dn_index STR_INDEX(WEAK_RULE)
+#endif
+					)
+#endif
+				)
 			{
 				enqueue_pending(pe);
 			} else {
@@ -3278,12 +3298,22 @@ if (!n.pending_event()) {
 			// insert into exclhi queue
 			enqueue_excllo(get_delay_dn(e), pe);
 		} else {
-#if PRSIM_WEAK_RULES
-			if (n.pull_up_index STR_INDEX(NORMAL_RULE)
-				|| (n.pull_up_index STR_INDEX(WEAK_RULE)))
+			if (
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+				n.pull_up_state STR_INDEX(NORMAL_RULE).any()
 #else
-			if (n.pull_up_index STR_INDEX(NORMAL_RULE))
+				n.pull_up_index STR_INDEX(NORMAL_RULE)
 #endif
+#if PRSIM_WEAK_RULES
+				|| (weak_rules_enabled() &&
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+					n.pull_up_state STR_INDEX(WEAK_RULE).any()
+#else
+					n.pull_up_index STR_INDEX(WEAK_RULE)
+#endif
+				)
+#endif
+			)
 			{
 				enqueue_pending(pe);
 			} else {
@@ -3646,11 +3676,19 @@ State::__diagnose_violation(ostream& o, const uchar next,
 			if (!b) {
 			if (dir) {
 				const pull_enum up =
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+					n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
+#else
 					get_pull(n.pull_up_index STR_INDEX(NORMAL_RULE));
+#endif
 				b = (up != PULL_ON);
 			} else {
 				const pull_enum dn =
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+					n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
+#else
 					get_pull(n.pull_dn_index STR_INDEX(NORMAL_RULE));
+#endif
 				b = (dn != PULL_ON);
 			}
 			}
@@ -4914,7 +4952,7 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	// f->first is the lower bound of the global expr range for process...
 	// f->second is the global process index, used to translate names
 	// ei - f->first is the local expr id within the indexed process
-	return dump_local_subexpr(o, ei -f->first, pi, ptype, pr);
+	return dump_local_subexpr(o, ei -f->first, f->second, v, ptype, pr);
 }
 #endif
 
@@ -5255,7 +5293,10 @@ State::dump_memory_usage(ostream& o) const {
 		&node_type::add_fanout_size);
 	o << "node::fanout: (" << fo << " * " << sizeof(expr_index_type) <<
 		" B/FO) = " << fo * sizeof(expr_index_type) << " B" << endl;
-}{
+}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#else
+{
 	const size_t es = expr_pool.size();
 	o << "expr-state: ("  << es << " * " << sizeof(expr_state_type) <<
 		" B/expr) = " << es * sizeof(expr_state_type) << " B" << endl;
@@ -5276,6 +5317,7 @@ State::dump_memory_usage(ostream& o) const {
 		<< " B/rule) = " << rs * sizeof_hashtable_node(value_type)
 		<< " B" << endl;
 }
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 	event_pool.dump_memory_usage(o);
 {
 	const size_t es = event_queue.size();
