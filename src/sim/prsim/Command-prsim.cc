@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.13.2.1 2008/08/06 08:06:06 fang Exp $
+	$Id: Command-prsim.cc,v 1.13.2.2 2008/08/23 22:59:26 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -729,7 +729,7 @@ if (asz < 3 || asz > 4) {
 	const string& objname(*ai++);	// node name
 	const string& _val(*ai++);	// node value
 	// valid values are 0, 1, 2(X)
-	const char val = node_type::string_to_value(_val);
+	const value_enum val = node_type::string_to_value(_val);
 	if (!node_type::is_valid_value(val)) {
 		cerr << "Invalid logic value: " << _val << endl;
 		return Command::SYNTAX;
@@ -929,7 +929,7 @@ if (asz != 3) {
 	const string& objname(*ai++);	// node name
 	const string& _val(*ai++);	// node value
 	// valid values are 0, 1, 2(X)
-	const char val = node_type::string_to_value(_val);
+	const value_enum val = node_type::string_to_value(_val);
 	if (!node_type::is_valid_value(val)) {
 		cerr << "Invalid logic value: " << _val << endl;
 		return Command::SYNTAX;
@@ -1658,7 +1658,7 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
-	const char v = node_type::string_to_value(a.back());
+	const value_enum v = node_type::string_to_value(a.back());
 	if (node_type::is_valid_value(v)) {
 		s.status_nodes(cout, v, false);
 		return Command::NORMAL;
@@ -1686,7 +1686,7 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
-	const char v = node_type::string_to_value(a.back());
+	const value_enum v = node_type::string_to_value(a.back());
 	if (node_type::is_valid_value(v)) {
 		s.status_nodes(cout, v, true);
 		return Command::NORMAL;
@@ -2122,12 +2122,12 @@ if (a.size() != 3) {
 		const node_type& n(s.get_node(ni));
 		const string& _val(a.back());	// node value
 		// valid values are 0, 1, 2(X)
-		const char val = node_type::string_to_value(_val);
+		const value_enum val = node_type::string_to_value(_val);
 		if (!node_type::is_valid_value(val)) {
 			cerr << "Invalid logic value: " << _val << endl;
 			return Command::SYNTAX;
 		}
-		const char actual = n.current_value();
+		const value_enum actual = n.current_value();
 		if (actual != val) {
 			cout << "assert failed: expecting node `" << objname <<
 				"\' at " <<
@@ -2179,12 +2179,12 @@ if (a.size() != 3) {
 		const node_type& n(s.get_node(ni));
 		const string& _val(a.back());	// node value
 		// valid values are 0, 1, 2(X)
-		const char val = node_type::string_to_value(_val);
+		const value_enum val = node_type::string_to_value(_val);
 		if (!node_type::is_valid_value(val)) {
 			cerr << "Invalid logic value: " << _val << endl;
 			return Command::SYNTAX;
 		}
-		const char actual = n.current_value();
+		const value_enum actual = n.current_value();
 		if (actual == val) {
 			cout << "assert failed: expecting node `" << objname <<
 				"\' not at " <<

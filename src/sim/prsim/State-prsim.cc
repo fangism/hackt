@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.6 2008/08/09 02:22:28 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.7 2008/08/23 22:59:29 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -191,7 +191,7 @@ State::magic_string("hackt-prsim-ckpt");
 	Reminder enumerations for pull-state are defined in the event_type.
 	Keep it consistent.  
  */
-const uchar
+const value_enum
 State::pull_to_value[3][3] = {
 { LOGIC_OTHER, LOGIC_LOW, LOGIC_OTHER },
 { LOGIC_HIGH, LOGIC_OTHER, LOGIC_OTHER },
@@ -429,7 +429,7 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 			get_node_canonical_name(i->first) << endl;
 #endif
 		node_type& _n(get_node(i->first));
-		const uchar _v = i->second;
+		const value_enum _v = i->second;
 		if (_n.current_value() != _v) {
 		const event_index_type pe = _n.get_event();
 
@@ -617,7 +617,7 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 	typedef	set<event_cause_type>		event_set_type;
 	// start from the current value of the referenced node
 	const node_type* n(&get_node(ni));
-	const uchar v = n->current_value();
+	const value_enum v = n->current_value();
 	event_cause_type e(ni, v);
 	o << "node at: `" << get_node_canonical_name(ni) <<
 		"\' : " << node_type::value_to_char[size_t(v)] << endl;
@@ -864,6 +864,7 @@ State::__copy_event(const event_type& e) {
 		enqueue, may be INVALID_NODE_INDEX.
 	\param ri the index rule/expression that caused this event to fire, 
 		for the purposes of delay computation.
+		Q: What if set by user (set_node)?
 	\param val the future value of the node.
 	\pre n must not already have a pending event.
 	\pre n must be the node corresponding to node index ni
@@ -873,7 +874,7 @@ State::__allocate_event(node_type& n,
 		const node_index_type ni,
 		cause_arg_type c, 
 		const rule_index_type ri,
-		const uchar val
+		const value_enum val
 #if PRSIM_WEAK_RULES
 		, const bool weak
 #endif
@@ -903,7 +904,7 @@ event_index_type
 State::__allocate_pending_interference_event(node_type& n,
 		const node_index_type ni,
 		cause_arg_type c, 
-		const uchar next
+		const value_enum next
 #if PRSIM_WEAK_RULES
 		, const bool weak
 #endif
@@ -1254,7 +1255,7 @@ State::next_event_time(void) const {
 	\return status: 0 is accepted, 1 is warning.  
  */
 int
-State::set_node_time(const node_index_type ni, const uchar val,
+State::set_node_time(const node_index_type ni, const value_enum val,
 		const time_type t, const bool f) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("setting " << get_node_canonical_name(ni) <<
@@ -1264,7 +1265,7 @@ State::set_node_time(const node_index_type ni, const uchar val,
 	// just look it up in the node_pool
 	node_type& n(get_node(ni));
 	const event_index_type pending = n.get_event();
-	const uchar last_val = n.current_value();
+	const value_enum last_val = n.current_value();
 	const bool unchanged = (val == last_val);
 // If the value is the same as former value, then ignore it.
 // What if delay differs?
@@ -1350,7 +1351,7 @@ do {
 	const pull_enum pd = get_pull(d);
 #endif
 if (pu != PULL_OFF || pd != PULL_OFF) {
-	const uchar new_val = pull_to_value[size_t(pu)][size_t(pd)];
+	const value_enum new_val = pull_to_value[size_t(pu)][size_t(pd)];
 	if (pending) {
 		event_type& e(get_event(pending));
 		if (e.val != new_val) {
@@ -1368,7 +1369,7 @@ if (pu != PULL_OFF || pd != PULL_OFF) {
 		// else do nothing, correct value already pending
 	} else {
 		// no event pending, can make one
-		const uchar current = n.current_value();
+		const value_enum current = n.current_value();
 		if (current == LOGIC_LOW &&
 				pu == PULL_OFF) {
 			// nothing pulling up, no change
@@ -2340,7 +2341,7 @@ for ( ; i!=e; ++i) {
  */
 State::excl_exception
 State::check_excl_rings(const node_index_type ni, const node_type& n, 
-		const uchar prev, const uchar next) {
+		const value_enum prev, const value_enum next) {
 	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
 	typedef	lock_index_list_type::const_iterator	lock_index_iterator;
 	typedef	check_excl_lock_pool_type::reference	lock_reference;
@@ -2539,7 +2540,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	const bool force = pe.forced();
 	const node_index_type ni = pe.node;
 	node_type& n(get_node(ni));
-	const uchar prev = n.current_value();
+	const value_enum prev = n.current_value();
 	node_index_type _ci;	// just a copy
 {
 	const event_cause_type& cause(pe.cause);
@@ -2607,7 +2608,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	// note: pe is invalid, deallocated beyond this point, could scope it
 	// reminder: do not reference pe beyond this point (deallocated)
 	// could scope the reference to prevent it...
-	const uchar next = n.current_value();
+	const value_enum next = n.current_value();
 	// value propagation...
 	const event_cause_type new_cause(ni, next);
 {
@@ -2654,6 +2655,7 @@ if (n.in_channel()) {
 		If an event is forced (say, by user), then check node's own
 		guards to determine whether or not a new event needs to
 		be registered on this node.  
+		FIXME: prs.c checks for !n->queue
 	***/
 	if (force && n.get_event()) {
 		DEBUG_STEP_PRINT("detected a forced event vs. pending event" << endl);
@@ -2670,21 +2672,29 @@ if (n.in_channel()) {
 	do {
 #endif
 		cout << "THIS CODE HAS NEVER BEEN REACHED?" << endl;
+#if 0
 		// The following code looks wrong...
 		const event_index_type ui = n.pull_up_index STR_INDEX(w);
 		const event_index_type di = n.pull_dn_index STR_INDEX(w);
 		const event_type* up_rule = ui ? &get_event(ui) : NULL;
 		const event_type* dn_rule = di ? &get_event(di) : NULL;
-		const bool possible_up = up_rule &&
-			up_rule->val == LOGIC_HIGH
+#else
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		const pull_enum pup = n.pull_up_state STR_INDEX(w).pull();
+		const pull_enum pdn = n.pull_dn_state STR_INDEX(w).pull();
+#else
+		const pull_enum pup = get_pull(n.pull_up_index STR_INDEX(w));
+		const pull_enum pdn = get_pull(n.pull_dn_index STR_INDEX(w));
+#endif
+#endif
+		const bool possible_up = pup == PULL_ON
 				&& next != LOGIC_HIGH
 #if PRSIM_WEAK_RULES
 				// check opposition
 				&& (!w || (ndn == PULL_OFF))
 #endif
 				;
-		const bool possible_dn = dn_rule &&
-			dn_rule->val == LOGIC_LOW
+		const bool possible_dn = pdn == PULL_ON
 				&& next != LOGIC_LOW
 #if PRSIM_WEAK_RULES
 				// check opposition
@@ -2695,7 +2705,7 @@ if (n.in_channel()) {
 			DEBUG_STEP_PRINT("force pull-up" << endl);
 			const event_index_type _ne =
 				__allocate_event(n, ni, EMPTY_CAUSE, 
-					ui, 	// cause?
+					INVALID_RULE_INDEX, // ui, // cause?
 					LOGIC_HIGH
 #if PRSIM_WEAK_RULES
 					, w	// rule_strength
@@ -2710,7 +2720,7 @@ if (n.in_channel()) {
 			DEBUG_STEP_PRINT("force pull-dn" << endl);
 			const event_index_type _ne =
 				__allocate_event(n, ni, EMPTY_CAUSE, 
-					di, 	// cause?
+					INVALID_RULE_INDEX, // di, // cause?
 					LOGIC_LOW
 #if PRSIM_WEAK_RULES
 					, w	// rule_strength
@@ -2726,7 +2736,7 @@ if (n.in_channel()) {
 		++w;
 	} while (weak_rules_enabled() && w<2);
 #endif
-	}
+	}	// end if forced && pending event
 
 	// exclhi ring enforcement
 	if (n.has_mk_exclhi() && (next == LOGIC_LOW)) {
@@ -2776,7 +2786,7 @@ if (n.in_channel()) {
  */
 void
 State::kill_evaluation(const node_index_type ni, expr_index_type ui, 
-		uchar prev, uchar next) {
+		value_enum prev, value_enum next) {
 	FINISH_ME(Fang);
 }
 #endif
@@ -3069,7 +3079,8 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("pulling up (on or weak)" << endl);
 		const event_index_type pe =
 			__allocate_event(n, ui, c,
-				root_rule, next
+				root_rule,
+				next == PULL_ON ? LOGIC_HIGH : LOGIC_OTHER
 #if PRSIM_WEAK_RULES
 				, is_weak
 #endif
@@ -3288,7 +3299,7 @@ if (!n.pending_event()) {
 		const event_index_type pe =
 			__allocate_event(n, ui, c, 
 				root_rule, 
-				node_type::invert_value[size_t(next)]
+				next == PULL_ON ? LOGIC_LOW : LOGIC_OTHER
 #if PRSIM_WEAK_RULES
 				, is_weak
 #endif
@@ -3561,7 +3572,7 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 /**
 	Helper function for repetitive diagnostic code.  
 	\param o error output stream
-	\param next the next value of this node
+	\param next the next value of *pull* this node
 	\param ei index of the event in question
 	\param e the event in question
 	\param ui index of the node that fired
@@ -3572,7 +3583,7 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 	\return true if error causes break.
  */
 State::break_type
-State::__diagnose_violation(ostream& o, const uchar next, 
+State::__diagnose_violation(ostream& o, const pull_enum next, 
 		const event_index_type ei, event_type& e, 
 		const node_index_type ui, node_type& n, 
 		cause_arg_type c, 
@@ -3825,7 +3836,7 @@ node_is_X(const State::node_type& n) {
 	\param nl use newline delimiter instead of space.
  */
 ostream&
-State::status_nodes(ostream& o, const uchar val, const bool nl) const {
+State::status_nodes(ostream& o, const value_enum val, const bool nl) const {
 	ISE_INVARIANT(node_type::is_valid_value(val));
 	o << node_type::value_to_char[size_t(val)] << " nodes:" << endl;
 	bool (*f)(const node_type&) = &node_is_X;
@@ -5580,13 +5591,13 @@ try {
 	typedef node_pool_type::const_iterator	const_iterator;
 	const const_iterator nb(node_pool.begin()), ne(node_pool.end());
 	const_iterator ni(nb);
-	const uchar prev = LOGIC_OTHER;
+	const value_enum prev = LOGIC_OTHER;
 	for (++ni; ni!=ne; ++ni) {
 		typedef	node_type::const_fanout_iterator
 					const_fanout_iterator;
 		const node_type& n(*ni);
 		const_fanout_iterator fi(n.fanout.begin()), fe(n.fanout.end());
-		const uchar next = n.current_value();
+		const value_enum next = n.current_value();
 		if (next != prev) {
 			const expr_index_type nj(distance(nb, ni));
 			for ( ; fi!=fe; ++fi) {
@@ -5680,11 +5691,11 @@ if (checking_excl()) {
 	typedef node_pool_type::const_iterator	const_iterator;
 	const const_iterator nb(node_pool.begin()), ne(node_pool.end());
 	const_iterator ni(nb);
-	const uchar prev = LOGIC_OTHER;
+	const value_enum prev = LOGIC_OTHER;
 	for (++ni; ni!=ne; ++ni) {
 	// lock exclusive check rings
 		const node_type& n(*ni);
-		const uchar next = n.current_value();
+		const value_enum next = n.current_value();
 		const excl_exception
 			e(check_excl_rings(distance(nb, ni), n, prev, next));
 		if (e.lock_id) {

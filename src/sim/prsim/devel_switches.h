@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.6.2.2 2008/08/06 08:06:12 fang Exp $
+	$Id: devel_switches.h,v 1.6.2.3 2008/08/23 22:59:32 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -102,7 +102,7 @@
 	Rationale: memory is more critical for massive designs
 	Priority: HIGH
 	Goal: 1
-	Status: planning
+	Status: in progress...
 
  */
 #define	PRSIM_INDIRECT_EXPRESSION_MAP			0

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.2.2.1 2008/08/06 08:06:13 fang Exp $
+	$Id: vpi-prsim.cc,v 1.2.2.2 2008/08/23 22:59:33 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -1077,7 +1077,7 @@ static PLI_INT32 prsim_status_x (PLI_BYTE8 *args)
   //}
 #else
 	// arg.value.char? .str[0]?
-	prsim_state->status_nodes(cout, 'X', false);
+	prsim_state->status_nodes(cout, LOGIC_OTHER, false);
 #endif
   return 1;
 }
@@ -1094,7 +1094,7 @@ static PLI_INT32 prsim_set (PLI_BYTE8 *args)
   string arg1;
   vpiHandle fname;
   // PrsNode *n;
-  uchar val;
+  value_enum val;
   require_prsim_state(__FUNCTION__);
 
   task_call = vpi_handle (vpiSysTfCall, NULL);

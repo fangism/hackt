@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.3 2008/06/10 22:44:58 fang Exp $
+	$Id: Channel-prsim.h,v 1.3.2.1 2008/08/23 22:59:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -20,6 +20,7 @@
 #include "sim/common.h"
 #include "Object/expr/types.h"
 #include "sim/prsim/Exception.h"
+#include "sim/prsim/enums.h"
 #include "util/utypes.h"
 #include "util/macros.h"
 #include "util/memory/count_ptr.h"
@@ -65,7 +66,7 @@ typedef	node_index_type				channel_index_type;
 	The simulator state will convert these to events
 	in the primary event queue.  
  */
-typedef	std::pair<node_index_type, uchar>	env_event_type;
+typedef	std::pair<node_index_type, value_enum>	env_event_type;
 
 /**
 	When channel value mismatches expectation.
@@ -478,7 +479,7 @@ public:
 
 	void
 	process_node(const State&, const node_index_type, 
-		const uchar, const uchar, 
+		const value_enum, const value_enum, 
 		vector<env_event_type>&) throw(channel_exception);
 
 #if 0
@@ -640,7 +641,7 @@ public:
 
 	void
 	process_node(const State&, const node_index_type, 
-		const uchar, const uchar, 
+		const value_enum, const value_enum, 
 		vector<env_event_type>&) throw (channel_exception);
 
 	bool

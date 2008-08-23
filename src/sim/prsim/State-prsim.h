@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.3 2008/08/06 08:06:12 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.4 2008/08/23 22:59:31 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -484,7 +484,7 @@ private:
 		Used when node is re-evaluated.  
 		Indexed by [pull-up state][pull-down state].
 	 */
-	static const uchar			pull_to_value[3][3];
+	static const value_enum			pull_to_value[3][3];
 
 public:
 #if !PRSIM_HIERARCHICAL_RINGS
@@ -934,17 +934,17 @@ public:
 	next_event_time(void) const;
 
 	int
-	set_node_time(const node_index_type, const uchar val, 
+	set_node_time(const node_index_type, const value_enum val, 
 		const time_type t, const bool f);
 
 	int
-	set_node_after(const node_index_type n, const uchar val, 
+	set_node_after(const node_index_type n, const value_enum val, 
 		const time_type t, const bool f) {
 		return set_node_time(n, val, this->current_time +t, f);
 	}
 
 	int
-	set_node(const node_index_type n, const uchar val,
+	set_node(const node_index_type n, const value_enum val,
 			const bool f) {
 		return set_node_time(n, val, this->current_time, f);
 	}
@@ -1046,7 +1046,7 @@ public:
 	dump_watched_nodes(ostream&) const;
 
 	ostream&
-	status_nodes(ostream&, const uchar, const bool) const;
+	status_nodes(ostream&, const value_enum, const bool) const;
 
 	bool
 	dequeue_unstable_events(void) const {
@@ -1068,7 +1068,7 @@ public:
 protected:
 	excl_exception
 	check_excl_rings(const node_index_type, const node_type&, 
-		const uchar prev, const uchar next);
+		const value_enum prev, const value_enum next);
 
 public:
 	bool
@@ -1132,7 +1132,7 @@ private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const rule_index_type, const uchar
+		const rule_index_type, const value_enum
 #if PRSIM_WEAK_RULES
 		, const bool weak
 #endif
@@ -1142,7 +1142,7 @@ private:
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const uchar
+		const value_enum
 #if PRSIM_WEAK_RULES
 		, const bool weak
 #endif
@@ -1259,11 +1259,11 @@ private:
 #if 0
 	void
 	kill_evaluation(const node_index_type, expr_index_type, 
-		uchar prev, uchar next);
+		value_enum prev, value_enum next);
 #endif
 
 	break_type
-	__diagnose_violation(ostream&, const uchar next, 
+	__diagnose_violation(ostream&, const pull_enum next, 
 		const event_index_type, event_type&, 
 		const node_index_type ui, node_type& n, 
 		cause_arg_type, const bool dir

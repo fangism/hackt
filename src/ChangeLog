@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-08-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-05:
+	  prsim: Converted use of uchars for node values over to value_enum, 
+		for clarity, and caught some suspicious code!
+		Also cleaned up some uses of pull_enum, 
+		eliminating confusing conversions to/from char.
+		Hope compiler is smart enough to use size uchar, 
+		given value range.  
+	  Next: structure integrity checks, recursive diagnostics
+		with PRSIM_INDIRECT_EXPRESSION_MAP=1.
+		
+
 2008-08-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-04:

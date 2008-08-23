@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.3.2.1 2008/08/06 08:06:05 fang Exp $
+	$Id: Channel-prsim.cc,v 1.3.2.2 2008/08/23 22:59:24 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -721,10 +721,10 @@ channel::clobber(void) {
  */
 struct __node_setter :
 	public std::unary_function<const node_index_type, env_event_type> {
-	uchar				val;
+	value_enum				val;
 
 	explicit
-	__node_setter(const uchar v) : val(v) { }
+	__node_setter(const value_enum v) : val(v) { }
 
 	result_type
 	operator () (argument_type ni) const {
@@ -866,7 +866,7 @@ if (have_value()) {
  */
 void
 channel::set_current_data_rails(vector<env_event_type>& events, 
-		const uchar val) {
+		const value_enum val) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(is_sourcing());
 if (have_value()) {
@@ -1092,7 +1092,7 @@ if (stopped()) {
 		// then query completion status of the data rails, 
 		// assuming celem-of-or style completion of bundles
 		const node_type& a(s.get_node(ack_signal));
-		const uchar av = a.current_value();
+		const value_enum av = a.current_value();
 		string ind_str;
 		if (verbose && (bundles() > 1)) {
 			ind_str += " & ";
@@ -1260,7 +1260,7 @@ if (stopped()) {
  */
 void
 channel::process_node(const State& s, const node_index_type ni, 
-		const uchar prev, const uchar next, 
+		const value_enum prev, const value_enum next, 
 		vector<env_event_type>& new_events) throw(channel_exception) {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type	node_type;
@@ -2146,7 +2146,7 @@ channel_manager::clobber_all(void) {
  */
 void
 channel_manager::process_node(const State& s, const node_index_type ni, 
-		const uchar prev, const uchar next, 
+		const value_enum prev, const value_enum next, 
 		vector<env_event_type>& new_events) throw(channel_exception) {
 	STACKTRACE_VERBOSE;
 	// find all channels that this node participates in:

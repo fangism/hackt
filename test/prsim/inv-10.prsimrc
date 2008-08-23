@@ -1,8 +1,8 @@
 # "inv-10.prsimrc"
 # @haco@ inv.haco-a
-#	$Id: inv-10.prsimrc,v 1.2 2006/07/18 04:09:20 fang Exp $
+#	$Id: inv-10.prsimrc,v 1.2.84.1 2008/08/23 22:59:34 fang Exp $
 
-# testing the setf command
+
 
 watchall
 set a 0

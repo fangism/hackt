@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.15.2.3 2008/08/09 02:22:26 fang Exp $
+	$Id: Node.h,v 1.15.2.4 2008/08/23 22:59:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -353,18 +353,18 @@ public:
 
 public:
 	static const uchar		value_to_char[3];
-	static const uchar		invert_value[3];
+	static const value_enum		invert_value[3];
 protected:
 	/**
 		Uses enum value_enum:
 		0 = 0, 1 = 1, 2 = X, 3 = X
 	 */
-	uchar					value;
+	value_enum				value;
 
 	/**
 		8-bit field for flagging stateful information.  
 	 */
-	char					state_flags;
+	uchar					state_flags;
 	/**
 		Current enqueued event index associated with this node.
 		INVALID_EVENT_INDEX (0) means no pending event.  
@@ -420,7 +420,7 @@ public:
 	}
 
 	event_cause_type
-	get_cause(const uchar v) const {
+	get_cause(const value_enum v) const {
 		return causes.get_cause(v);
 	}
 
@@ -489,11 +489,11 @@ public:
 	in_channel(void) const { return state_flags & NODE_IN_CHANNEL; }
 #endif
 
-	uchar
+	value_enum
 	current_value(void) const { return value; }
 
 	void
-	set_value_and_cause(const uchar c, const event_cause_type& e) {
+	set_value_and_cause(const value_enum c, const event_cause_type& e) {
 		value = c;
 		causes.set_cause(c, e);
 	}
@@ -510,9 +510,9 @@ public:
 	 */
 	struct status_dumper {
 		ostream&		os;
-		const uchar		match_val;
+		const value_enum		match_val;
 
-		status_dumper(ostream& o, const uchar v) :
+		status_dumper(ostream& o, const value_enum v) :
 			os(o), match_val(v) { }
 
 		// no copy-ctor
@@ -525,18 +525,18 @@ public:
 
 	static
 	bool
-	is_valid_value(const uchar c) {
+	is_valid_value(const value_enum c) {
 		// return c >= LOGIC_LOW && c <= LOGIC_OTHER;
 		return c <= LOGIC_OTHER;
 	}
 
 	static
-	uchar
+	value_enum
 	char_to_value(const char);
 
 	/// \return < 0 on error, else returns 0, 1, 2
 	static
-	uchar
+	value_enum
 	string_to_value(const std::string&);
 
 	void

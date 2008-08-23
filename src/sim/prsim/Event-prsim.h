@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.3 2008/04/23 00:55:44 fang Exp $
+	$Id: Event-prsim.h,v 1.3.2.1 2008/08/23 22:59:28 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -99,9 +99,9 @@ public:
 	rule_index_type			cause_rule;
 	/**
 		The node's new value: 0, 1, 2 (X).
-		See Node::value enumeration.
+		See value_enum enumeration, "sim/prsim/enums.h"
 	 */
-	uchar				val;
+	value_enum			val;
 protected:
 	enum {
 		/**
@@ -136,18 +136,19 @@ public:
 	Event() : node(INVALID_NODE_INDEX),
 		cause(), 
 		cause_rule(INVALID_RULE_INDEX), 
-		val(0), 
+		val(LOGIC_LOW), 
 		flags(EVENT_FLAGS_DEFAULT_VALUE) { }
 
 	/**
 		The rule index is allowed to be NULL (invalid), 
 		to indicate an external (perhaps user) cause.  
+		Q: is r allowed to be NULL in the case of user-set events?
 		\param w true for weak rules
 	 */
 	Event(const node_index_type n,
 		const cause_type& c, 
 		const rule_index_type r, 
-		const uchar v
+		const value_enum v
 #if PRSIM_WEAK_RULES
 		, const bool w
 #endif
