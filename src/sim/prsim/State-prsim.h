@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.4 2008/08/23 22:59:31 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.5 2008/08/26 01:26:45 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -64,6 +64,16 @@ using entity::footprint;
 /// can switch between integer and real-valued time
 // typedef	discrete_time			rule_time_type;
 typedef	real_time			rule_time_type;
+
+//=============================================================================
+enum {
+	/// index of the first valid node
+	FIRST_VALID_NODE = SIM::INVALID_NODE_INDEX +1,
+	/// index of the first valid expr/expr_graph_node
+	FIRST_VALID_EXPR = SIM::INVALID_EXPR_INDEX +1,
+	/// index of the first valid event
+	FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
+};
 
 //=============================================================================
 /**
@@ -195,10 +205,19 @@ protected:
 				: pull_dn STR_INDEX(w);
 		}
 
-	};
+		bool
+		contains_fanout(const expr_index_type) const;
+
+	};	// end struct faninout_struct_type
+	/**
+		Member functions interpret this as a node for 
+		structural purposes.  
+	 */
+	typedef	faninout_struct_type			node_type;
 	typedef	std::vector<faninout_struct_type>	faninout_map_type;
 	/**
 		This array-size should match number of nodes in unique_process.
+		This sort of functions as a local node_pool.
 	 */
 	faninout_map_type			local_faninout_map;
 #else
@@ -211,6 +230,15 @@ protected:
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	void
 	void_expr(const expr_index_type);
+
+	void
+	check_expr(const expr_index_type) const;
+
+	void
+	check_structure(void) const;
+
+	ostream&
+	dump_struct(ostream&) const;
 #endif
 
 };	// end struct unique_process_subgraph
@@ -330,14 +358,6 @@ private:
 	 */
 	typedef	list_vector<expr_state_type>	temp_expr_pool_type;
 
-	enum {
-		/// index of the first valid node
-		FIRST_VALID_NODE = SIM::INVALID_NODE_INDEX +1,
-		/// index of the first valid expr/expr_graph_node
-		FIRST_VALID_EXPR = SIM::INVALID_EXPR_INDEX +1,
-		/// index of the first valid event
-		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
-	};
 	/**
 		Return codes for set_node_time.  
 	 */

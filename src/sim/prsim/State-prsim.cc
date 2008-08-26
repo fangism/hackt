@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.7 2008/08/23 22:59:29 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.8 2008/08/26 01:26:43 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -711,12 +711,20 @@ for ( ; k<2; ++k) {
 	\param i index of the expression, must be < expr_pool.size().  
  */
 void
-State::check_expr(const expr_index_type i) const {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+unique_process_subgraph::check_expr(const expr_index_type i) const
+#else
+State::check_expr(const expr_index_type i) const
+#endif
+{
 	STACKTRACE_VERBOSE_CHECK;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	// TODO: move this check into unique_process_subgraph
+	const faninout_map_type& node_pool(local_faninout_map);
+	const expr_struct_type& e(expr_pool[i]);
 #else
 	const expr_state_type& e(expr_pool[i]);
+#endif
 	const graph_node_type& g(expr_graph_node_pool[i]);
 if (!e.wiped()) {
 	// check parent
@@ -737,11 +745,26 @@ if (!e.wiped()) {
 		assert(f != rule_map.end());
 #endif
 #if PRSIM_WEAK_RULES
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		const fanin_array_type&
+			fin(n.get_pull_expr(e.direction(), NORMAL_RULE));
+		const fanin_array_type&
+			wfin(n.get_pull_expr(e.direction(), WEAK_RULE));
+		// can use binary search if sorted
+		assert(count(fin.begin(), fin.end(), i) == 1);
+		assert(count(wfin.begin(), wfin.end(), i) == 1);
+#else
 		assert(n.get_pull_expr(e.direction(), NORMAL_RULE) == i ||
 			n.get_pull_expr(e.direction(), WEAK_RULE) == i);
+#endif
+#else
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		const fanin_array_type& fin(n.get_pull_expr(e.direction()));
+		assert(count(fin.begin(), fin.end(), i) == 1);
 #else
 		assert(n.get_pull_expr(e.direction()) == i);
 #endif
+#endif	// PRSIM_WEAK_RULES
 	} else {
 		assert(e.parent < expr_pool.size());
 		// const Expr& pe(expr_pool[e.parent]);
@@ -767,7 +790,6 @@ if (!e.wiped()) {
 		}
 	}
 }	// else skip wiped node
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3898,6 +3920,19 @@ State::check_event_queue(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+void
+unique_process_subgraph::check_structure(void) const {
+	const expr_index_type exprs = expr_pool.size();
+	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
+	expr_index_type i = FIRST_VALID_EXPR;
+	for ( ; i<exprs; ++i) {
+		DEBUG_CHECK_PRINT("checking Expr " << i << ":" << endl);
+		check_expr(i);
+	}
+}
+#endif
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Structural assertions.  
 	TODO: run-time flag to enable/disable calls to this.  
@@ -3905,6 +3940,10 @@ State::check_event_queue(void) const {
 void
 State::check_structure(void) const {
 	STACKTRACE_VERBOSE;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	for_each(unique_process_pool.begin(), unique_process_pool.end(),
+		mem_fun_ref(&unique_process_subgraph::check_structure));
+#else
 {
 	const expr_index_type exprs = expr_pool.size();
 	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
@@ -3914,6 +3953,7 @@ State::check_structure(void) const {
 		check_expr(i);
 	}
 }
+#endif
 {
 	const node_index_type nodes = node_pool.size();
 	node_index_type j = FIRST_VALID_NODE;
@@ -3957,13 +3997,37 @@ State::dump_struct(ostream& o) const {
 		node_pool[i].dump_struct(o << "\" ") << endl;
 	}
 }
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+{
+	o << "Unique processes: {" << endl;
+	process_index_type p = 0;	// 0 is top-level type
+	unique_process_pool_type::const_iterator
+		i(unique_process_pool.begin()), e(unique_process_pool.end());
+	for ( ; i!=e; ++i, ++p) {
+		o << "type[" << p << "] ";	// << endl;
+		i->dump_struct(o);
+	}
+	o << "}" << endl;
+}
+	return o;
+}
+
+ostream&
+unique_process_subgraph::dump_struct(ostream& o) const {
+#endif
 {
 	o << "Expressions: " << endl;
 	const expr_index_type exprs = expr_pool.size();
 	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
 	expr_index_type i = FIRST_VALID_EXPR;
+	// is 0 valid? process-local?
 	for ( ; i<exprs; ++i) {
-		const expr_state_type& e(expr_pool[i]);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		const expr_struct_type&
+#else
+		const expr_state_type&
+#endif
+			e(expr_pool[i]);
 	if (!e.wiped()) {
 		e.dump_struct(o << "expr[" << i << "]: ") << endl;
 		expr_graph_node_pool[i].dump_struct(o << '\t') << endl;
