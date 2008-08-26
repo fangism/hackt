@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.31 2008/07/30 05:27:01 fang Exp $
+#	$Id: Makefile.am,v 1.32 2008/08/26 06:31:00 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -39,6 +39,9 @@ pipe-stdin-01.compileobjdiff:
 	$(TOUCH) $@
 pipe-stdin-02.compileobjdiff:
 	$(TOUCH) $@
+
+pipe-stdin-01.creatediff: pipe-stdin-01.createstderr
+pipe-stdin-02.creatediff: pipe-stdin-02.createstderr
 
 HACKT_FLATTEN_PARSE_TEST_PASSES = \
 	015 016 019 \
