@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18 2008/06/25 05:18:55 fang Exp $
+	$Id: State-prsim.cc,v 1.19 2008/08/26 02:18:30 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3982,7 +3982,7 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 		dump_subexpr(o, pi, v) << " -> ";
 		o << get_node_canonical_name(nr) << (dir ? '+' : '-');
 		if (v) {
-			n.dump_value(o << ':');
+			no.dump_value(o << ':');
 		}
 		o << endl;
 #if PRSIM_WEAK_RULES
