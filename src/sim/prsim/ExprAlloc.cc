@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.3 2008/08/06 08:06:08 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.4 2008/09/01 21:56:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -257,6 +257,7 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 			tmp(g, &state.unique_process_pool.back());
 		cflat_visitor::visit(pfp);
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+		// definitely want to keep this
 		if (flags.any_optimize() && expr_free_list.size()) {
 			compact_expr_pools();
 		}
@@ -273,19 +274,23 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	state.process_state_array.back().allocate_from_type(
 		state.unique_process_pool[type_index]);
 	// mapping update: for expr->process map, assign value
+	// TODO: be careful not to add an entry for EMPTY processes!
+	//	nice side effect of optimization: only map leaf cells with PRS!
+	// TODO: another idea, each process appends an entry for 
+	// the process that *follows* it (P+1)!  (optionally delete last one)
 	if (current_process_index) {
-		typedef state_type::process_expr_map_type::const_iterator
+		typedef state_type::global_expr_process_id_map_type::const_iterator
 				map_iterator;
-		const map_iterator x(--state.process_expr_map.end());
+		const map_iterator x(--state.global_expr_process_id_map.end());
 		// get the cumulative number of expressions (state)
 		// by adding the lower bound of the last appended entry
 		// to its corresponding size.  
 		const size_t s = x->first
 			+state.unique_process_pool[x->first].expr_pool.size();
-		state.process_expr_map[s] = current_process_index;
+		state.global_expr_process_id_map[s] = current_process_index;
 	} else {
 		// first process, first expressions indexed
-		state.process_expr_map[0] = current_process_index;
+		state.global_expr_process_id_map[0] = current_process_index;
 	}
 	// assume that processes are visited in sequence
 	++current_process_index;

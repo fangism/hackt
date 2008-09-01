@@ -3,11 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
+
 2008-08-25	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-82-32-prsim-10-05+:
+	* HACKT-00-01-04-main-00-82-32-prsim-10-06:
 	  prsim: Started migrating some structure tests to the
-		unique_process_subgraph class...
+		unique_process_subgraph class, including helper functions.
+		Renamed process_expr_map to global_expr_process_id_map.
+		Factored out lookup_global_expr_process(expr-id).
+		More clean up of get_pull() calls.
+	  Next: rewrite some recursive diagnostics, splitting off 
+		process-local functions from global lookups.  
 
 
 2008-08-23	David Fang		<fangism@users.sourceforge.net>

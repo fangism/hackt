@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.5 2008/08/26 01:26:45 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.6 2008/09/01 21:56:34 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -59,6 +59,7 @@ using HASH_MAP_NAMESPACE::hash_map;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 using std::valarray;
 using entity::footprint;
+struct process_sim_state;
 #endif
 
 /// can switch between integer and real-valued time
@@ -161,6 +162,10 @@ protected:
 	 */
 	typedef	std::set<node_index_type>	ring_set_type;
 #endif
+	/**
+		Structure for passing around set of node indices.
+	 */
+	typedef	std::set<node_index_type>	node_set_type;
 
 	expr_pool_type				expr_pool;
 	expr_graph_node_pool_type		expr_graph_node_pool;
@@ -227,6 +232,9 @@ protected:
 	unique_process_subgraph();
 	~unique_process_subgraph();
 
+	node_index_type
+	local_root_expr(expr_index_type) const;
+
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	void
 	void_expr(const expr_index_type);
@@ -239,6 +247,25 @@ protected:
 
 	ostream&
 	dump_struct(ostream&) const;
+
+	ostream&
+	dump_struct_dot(ostream&, const expr_index_type) const;
+
+	// TODO: pass state, or some callback?
+	void
+	__get_local_X_fanins(const expr_index_type, 
+		const process_sim_state&, node_set_type&) const;
+
+	void
+	__local_expr_why_not(ostream&, const expr_index_type, 
+		const process_sim_state&, const size_t, 
+		const bool, const bool, 
+		node_set_type&, node_set_type&) const;
+
+	void
+	__local_expr_why_X(ostream&, const expr_index_type, 
+		const process_sim_state&, const size_t, 
+		const bool, node_set_type&, node_set_type&) const;
 #endif
 
 };	// end struct unique_process_subgraph
@@ -520,7 +547,8 @@ public:
 	 */
 	typedef	std::set<node_index_type>	ring_set_type;
 #endif
-	typedef	std::set<node_index_type>	node_set_type;
+	typedef	unique_process_subgraph::node_set_type
+						node_set_type;
 protected:
 	typedef	vector<ring_set_type>
 						mk_excl_ring_map_type;
@@ -585,7 +613,12 @@ protected:
 		range of expr indices.  
 	 */
 	typedef	map<expr_index_type, process_index_type>
-						process_expr_map_type;
+					global_expr_process_id_map_type;
+	/**
+		pair(global expr offset, process id)
+	 */
+	typedef	global_expr_process_id_map_type::value_type
+					expr_offset_pair;
 #if 0
 	// need this? can't we just use a double-look
 	typedef	map<rule_index_type, process_index_type>
@@ -597,7 +630,7 @@ protected:
 	/**
 		Where each process's state is kept.  
 		Array is indexed by process IDs from the above
-		process_expr_map (and process_rule_map).  
+		global_expr_process_id_map (and process_rule_map).  
 	 */
 	typedef	vector<process_sim_state>	process_state_array_type;
 	// TODO: per process instance attributes!
@@ -618,7 +651,7 @@ private:
 	/**
 		Maps global expression ID to owner process.  
 	 */
-	process_expr_map_type			process_expr_map;
+	global_expr_process_id_map_type		global_expr_process_id_map;
 	/**
 		Per-process state is kept in an array, indexed
 		by process index.  0 is valid, but reserved for 
@@ -741,13 +774,15 @@ public:
 	void
 	backtrace_node(ostream&, const node_index_type) const;
 
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	const expr_offset_pair&
+	lookup_global_expr_process(const expr_index_type) const;
+
+#else
 	/// only called by ExprAlloc
 	void
 	void_expr(const expr_index_type);
-#endif
 
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	rule_map_type&
 	get_rule_map(void) { return rule_map; }
 
