@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.27 2008/03/21 00:20:18 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.28 2008/09/26 17:32:57 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -387,7 +387,6 @@ DEFINEOP	"<:"
 RANGE		".."
 
 ENDLINECOMMENT	"//"(.*)$
-NULLCOMMENT	"/*"[^\n]*"*/"
 OPENCOMMENT	"/*"
 CLOSECOMMENT	[*]+"/"
 CLOSEINCOMMENT	"*/"
@@ -725,12 +724,6 @@ EMBEDFILE	^#FILE
 
 {WHITESPACE}	TOKEN_UPDATE(foo);
 {NEWLINE}	NEWLINE_UPDATE();
-{NULLCOMMENT} { 
-	if (comment_feedback > 1) {
-		cerr << "null comment ignored " << LINE_COL(CURRENT) << endl;
-	}
-	TOKEN_UPDATE(foo);
-}
 
 {ENDLINECOMMENT} { 
 	if (comment_feedback > 1) {

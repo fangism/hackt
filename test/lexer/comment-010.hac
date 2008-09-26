@@ -1,0 +1,13 @@
+// "155.hac"
+
+defproc foo(bool a, b, c, d, e, f) { }
+
+foo bar;
+bool w, x, y, z;
+bar(w, , x, y, , z);
+bar(w, /*blank*/, x,
+	y, /*blank*/, z);
+bar(w, /*blank*/, x, y, /*blank*/, z);	// fail???
+
+// lexer bug, ate two comments on same line as one long comment
+

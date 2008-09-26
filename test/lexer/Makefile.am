@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.23 2008/02/26 22:44:26 fang Exp $
+#	$Id: Makefile.am,v 1.24 2008/09/26 17:32:58 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -41,6 +41,7 @@ endif
 
 HACKT_PARSE_TEST_PASSES = \
 	comment-003 comment-004 comment-005 comment-006 \
+	comment-010 \
 	import-004 import-012 import-013 import-015-t \
 	hex-01 hex-04 \
 	bin-01 \
@@ -100,7 +101,8 @@ endif
 # should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
 # HACKT_OBJ_TEST_SUBJECTS = $(HACKT_PARSE_TEST_PASSES)
 
-HACKT_CREATE_TEST_PASSES =
+HACKT_CREATE_TEST_PASSES = \
+	comment-010
 
 ###############################################################################
 # test for include path ordering

@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-09-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-36:
+	  lexer critical bug fix: eliminated invalid NULLCOMMENT pattern,
+		which caused multiple /**/ comments on a single
+		line to be munged together into one comment, oops!
+
+
 2008-08-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-35:
