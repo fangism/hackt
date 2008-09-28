@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.4 2008/09/01 21:56:31 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.5 2008/09/28 04:58:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -224,7 +224,16 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 void
 ExprAlloc::visit(const state_manager& _sm) {
 	cflat_visitor::visit(_sm);
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	// HERE
+	typedef	state_type::global_expr_process_id_map_type::const_iterator
+						const_iterator;
+	const_iterator i(state.global_expr_process_id_map.begin()),
+		e(state.global_expr_process_id_map.end());
+	for ( ; i!=e; ++i) {
+		state.process_first_expr_map[i->second] = i->first;
+	}
+#else
 	if (flags.any_optimize() && expr_free_list.size()) {
 		compact_expr_pools();
 	}

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.6 2008/09/01 21:56:34 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.7 2008/09/28 04:58:25 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -219,6 +219,9 @@ protected:
 		structural purposes.  
 	 */
 	typedef	faninout_struct_type			node_type;
+	/**
+		indexed by local node index.
+	 */
 	typedef	std::vector<faninout_struct_type>	faninout_map_type;
 	/**
 		This array-size should match number of nodes in unique_process.
@@ -245,6 +248,12 @@ protected:
 	void
 	check_structure(void) const;
 
+	const rule_type*
+	lookup_rule(const expr_index_type) const;
+
+	bool
+	is_rule_expr(const expr_index_type) const;
+
 	ostream&
 	dump_struct(ostream&) const;
 
@@ -254,19 +263,35 @@ protected:
 	// TODO: pass state, or some callback?
 	void
 	__get_local_X_fanins(const expr_index_type, 
-		const process_sim_state&, node_set_type&) const;
+		const process_sim_state&, const State&, node_set_type&) const;
 
 	void
 	__local_expr_why_not(ostream&, const expr_index_type, 
-		const process_sim_state&, const size_t, 
+		const process_sim_state&, const State&, const size_t, 
 		const bool, const bool, 
 		node_set_type&, node_set_type&) const;
 
 	void
 	__local_expr_why_X(ostream&, const expr_index_type, 
-		const process_sim_state&, const size_t, 
+		const process_sim_state&, const State&, const size_t, 
 		const bool, node_set_type&, node_set_type&) const;
-#endif
+
+	ostream&
+	dump_subexpr(ostream&, const expr_index_type, 
+		const process_sim_state&, const State&, 
+		const bool v, const uchar p = expr_struct_type::EXPR_ROOT,
+		const bool cp = false) const;
+
+	ostream&
+	dump_rule(ostream&, const rule_index_type, 
+		const process_sim_state&, const State&, 
+		const bool) const;
+
+	ostream&
+	dump_node_fanin(ostream&, const node_index_type, 
+		const process_sim_state&, const State&, 
+		const bool) const;
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 };	// end struct unique_process_subgraph
 
@@ -276,6 +301,7 @@ protected:
 	state information per process instance.
 	This is memory-intensive, and thus should be kept small.  
 	Node state information is kept outside of these structures.  
+	TODO: consider embedding a const unique_process_subgraph*!
  */
 struct process_sim_state {
 	typedef	ExprState			expr_state_type;
@@ -614,6 +640,8 @@ protected:
 	 */
 	typedef	map<expr_index_type, process_index_type>
 					global_expr_process_id_map_type;
+	typedef	map<process_index_type, expr_index_type>
+					process_first_expr_map_type;
 	/**
 		pair(global expr offset, process id)
 	 */
@@ -643,7 +671,7 @@ private:
 		Indices are unique process IDs.  
 		Values are indices into unique_process_pool.
 	 */
-	vector<size_t>				process_type_map;
+	vector<process_index_type>		process_type_map;
 	/**
 		Collection of unique process footprints.  
 	 */
@@ -652,6 +680,12 @@ private:
 		Maps global expression ID to owner process.  
 	 */
 	global_expr_process_id_map_type		global_expr_process_id_map;
+	/**
+		Reverse map of global_expr_process_id_map.
+		Maps process instance index to first expression index.
+		NOTE: this structure is only used for fanin traversal.
+	 */
+	process_first_expr_map_type		process_first_expr_map;
 	/**
 		Per-process state is kept in an array, indexed
 		by process index.  0 is valid, but reserved for 
@@ -778,6 +812,13 @@ public:
 	const expr_offset_pair&
 	lookup_global_expr_process(const expr_index_type) const;
 
+	node_index_type
+	translate_to_global_node(const process_sim_state&, 
+		const node_index_type) const;
+
+	node_index_type
+	translate_to_global_node(const process_index_type, 
+		const node_index_type) const;
 #else
 	/// only called by ExprAlloc
 	void
@@ -1386,6 +1427,9 @@ public:
 	dump_node_value(ostream&, const node_index_type) const;
 
 	ostream&
+	dump_rule(ostream&, const expr_index_type, const bool) const;
+
+	ostream&
 	dump_node_fanout(ostream&, const node_index_type, const bool) const;
 
 	ostream&
@@ -1428,7 +1472,7 @@ public:
 	ostream&
 	dump_output_unknown_nodes(ostream&) const;
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
+#if 0
 	ostream&
 	dump_local_subexpr(ostream&, const expr_index_type, 
 		const process_index_type pid, 

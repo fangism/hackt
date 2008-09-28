@@ -5,6 +5,15 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-09-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-07:
+	  prsim: added State::translate_to_global_node (local -> global index)
+		re-implemented many recursive traversals, including dump, 
+		fanin, fanout, and why-diagnostics.  
+		Note: rule printing for new impl. will differ from prev.
+
+
 2008-08-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-06:

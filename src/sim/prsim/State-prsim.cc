@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.9 2008/09/01 21:56:32 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.10 2008/09/28 04:58:24 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -117,6 +117,9 @@ using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
 using entity::process_tag;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+using entity::footprint_frame_map_type;
+#endif
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -209,6 +212,13 @@ State::pull_to_value[3][3] = {
 State::State(const entity::module& m, const ExprAllocFlags& f) : 
 		state_base(m, "prsim> "), 
 		node_pool(),
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		process_type_map(), 
+		unique_process_pool(), 
+		global_expr_process_id_map(), 
+		process_first_expr_map(),
+		process_state_array(), 
+#endif
 		event_pool(), event_queue(), 
 		mk_exhi(), mk_exlo(), 
 		exclhi_queue(), excllo_queue(), 
@@ -1723,6 +1733,26 @@ State::is_rule_expr(const expr_index_type ei) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+bool
+unique_process_subgraph::is_rule_expr(const expr_index_type ei) const {
+	return rule_map.find(ei) != rule_map.end();
+}
+
+const unique_process_subgraph::rule_type*
+unique_process_subgraph::lookup_rule(const expr_index_type ei) const {
+if (ei) {
+	typedef	rule_map_type::const_iterator	rule_map_iterator;
+	const rule_map_iterator i(rule_map.find(ei));
+	if (i != rule_map.end()) {
+		return &rule_pool[i->second];
+	}
+}
+	return NULL;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Convenience function, instead of calling rule_map.find() directly.
  */
@@ -2945,6 +2975,32 @@ State::lookup_global_expr_process(const expr_index_type gei) const {
 	INVARIANT(f != global_expr_process_id_map.begin());
 	--f;
 	return *f;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Given a reference to a process state object, translate a local node
+	index to the global node index using corresponding footprint frame.  
+	\param ps process-state, must belong to the process_state_array member
+	\param lni local node index, local to the unique_process_subgraph
+	\return global node index
+ */
+node_index_type
+State::translate_to_global_node(const process_sim_state& ps, 
+		const node_index_type lni) const {
+	// HACK: poor style, using pointer arithmetic to deduce index! :(
+	const process_index_type pid =
+		std::distance(&process_state_array[0], &ps);
+	return translate_to_global_node(pid, lni);
+}
+
+node_index_type
+State::translate_to_global_node(const process_index_type pid, 
+		const node_index_type lni) const {
+	// HACK: poor style, using pointer arithmetic to deduce index
+	ISE_INVARIANT(pid < process_state_array.size());
+	return get_module().get_state_manager().get_pool<process_tag>()[pid]
+		._frame.get_frame_map<bool_tag>()[lni];
 }
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
@@ -4278,6 +4334,98 @@ unique_process_subgraph::local_root_expr(expr_index_type ei) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	Prints a single rule: expr -> node+/-
+	Unlike the old implementation, this only prints rules in which
+	the literal appears, other OR-combination fanins will not be shown.
+	\param lri local expression index, also must be a valid rule index!
+	\param ps current state of process instance
+	\param st state of entire simulator (for node lookup)
+	\param v verbosity
+	May need to lookup footprint for node translation.
+ */
+ostream&
+unique_process_subgraph::dump_rule(ostream& o, const rule_index_type lri, 
+	const process_sim_state& ps, const State& st, const bool v) const {
+	const rule_map_type::const_iterator f(rule_map.find(lri));
+	ISE_INVARIANT(f != rule_map.end());
+	// const rule_index_type ri = f->second;
+	// const rule_type& r(rule_pool[ri]);
+	// TODO: rule attribute should be printed HERE, not in subexpr
+	dump_subexpr(o, lri, ps, st, v) << " -> ";
+	const expr_struct_type& e = expr_pool[lri];
+	ISE_INVARIANT(e.is_root());
+	const bool dir = e.direction();
+	const node_index_type nr = e.parent;
+	const node_index_type gnr = st.translate_to_global_node(ps, nr);
+	o << st.get_node_canonical_name(gnr);
+	if (v) {
+		st.get_node(gnr).dump_value(o << ':');
+	}
+	return o << (dir ? '+' : '-');
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints a rule by expression/rule index.
+	\param ri global expression index, that corresponds to a rule.
+	\param v true for verbose printing.  
+ */
+ostream&
+State::dump_rule(ostream& o, const expr_index_type ri, const bool v) const {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	const expr_offset_pair& f(lookup_global_expr_process(ri));
+	const expr_index_type lei = ri -f.first;
+	const process_index_type pid = f.second;
+	const process_index_type pti = process_type_map[pid];
+	const unique_process_subgraph& pg(unique_process_pool[pti]);
+	// const expr_index_type ei = f.first +pg.local_root_expr(lei);
+	// adding offset translates back to global expression id
+	return pg.dump_rule(o, lei, process_state_array[pid], *this, v);
+#else
+	const expr_state_type* const e = &expr_pool[ri];
+	// ei (*ri) is index to expression whose parent is *node*.
+	const node_index_type nr = e->parent;
+	// nr is an index to the root *node*.
+	DEBUG_FANOUT_PRINT("nr = " << nr << endl);
+	const node_type& no(get_node(nr));
+	// track the direction of propagation (pull-up/dn)
+	const bool dir = e->direction();
+	// then print the *entire* fanin rule for that node, 
+#if PRSIM_WEAK_RULES
+size_t w = NORMAL_RULE;
+do {
+#endif
+	// structure changes with indirect expression maps
+	// no longer have single root expression...
+	const expr_index_type pi =
+		(dir ? no.pull_up_index STR_INDEX(w) : 
+			no.pull_dn_index STR_INDEX(w));
+	DEBUG_FANOUT_PRINT("pi = " << pi << endl);
+#if PRSIM_WEAK_RULES
+	if (pi) {
+		// account for empty weak-rules
+#endif
+	dump_subexpr(o, pi, v) << " -> ";
+	o << get_node_canonical_name(nr) << (dir ? '+' : '-');
+	if (v) {
+		no.dump_value(o << ':');
+	}
+	o << endl;
+#if PRSIM_WEAK_RULES
+	}	// end if
+#endif
+#if PRSIM_WEAK_RULES
+	++w;
+} while (w<2);	// even if !weak_rules_enabled()
+#endif
+	return o;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints out nodes affected by the node argument.  
 	Note: this only requires structural information, no stateful info.  
@@ -4329,45 +4477,49 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 	typedef	rule_set_type::const_iterator		rule_iterator;
 	rule_iterator ri(fanout_rules.begin()), re(fanout_rules.end());
 	for ( ; ri!=re; ++ri) {
-		const expr_state_type* const e = &expr_pool[*ri];
-		// ei (*ri) is index to expression whose parent is *node*.
-		const node_index_type nr = e->parent;
-		// nr is an index to the root *node*.
-		DEBUG_FANOUT_PRINT("nr = " << nr << endl);
-		const node_type& no(get_node(nr));
-		// track the direction of propagation (pull-up/dn)
-		const bool dir = e->direction();
-		// then print the *entire* fanin rule for that node, 
-#if PRSIM_WEAK_RULES
-	size_t w = NORMAL_RULE;
-	do {
-#endif
-		// structure changes with indirect expression maps
-		// no longer have single root expression...
-		const expr_index_type pi =
-			(dir ? no.pull_up_index STR_INDEX(w) : 
-				no.pull_dn_index STR_INDEX(w));
-		DEBUG_FANOUT_PRINT("pi = " << pi << endl);
-#if PRSIM_WEAK_RULES
-		if (pi) {
-			// account for empty weak-rules
-#endif
-		dump_subexpr(o, pi, v) << " -> ";
-		o << get_node_canonical_name(nr) << (dir ? '+' : '-');
-		if (v) {
-			no.dump_value(o << ':');
-		}
-		o << endl;
-#if PRSIM_WEAK_RULES
-		}	// end if
-#endif
-#if PRSIM_WEAK_RULES
-		++w;
-	} while (w<2);	// even if !weak_rules_enabled()
-#endif
+		dump_rule(o, *ri, v);
 	}
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	Since each node now only lists which processes can drive it, 
+	we need to visit each process and expand the list of global 
+	expressions/rules (by index) drive a node.  
+	\param ni global node index.
+ */
+ostream&
+State::dump_node_fanin(ostream& o, const node_index_type ni, 
+		const bool v) const {
+	// typedef	process_fanin_type::const_iterator	const_iterator;
+	const node_type& n(get_node(ni));
+	const process_index_type* i(&n.fanin[0]),
+		*e(&n.fanin[n.fanin.size()]);
+for ( ; i!=e; ++i) {
+	const process_index_type& pid = *i;
+	const process_index_type pti = process_type_map[pid];
+	const unique_process_subgraph& pg(unique_process_pool[pti]);
+	// find the local node index that corresponds to global node
+	const footprint_frame_map_type& bfm(get_module().
+		get_state_manager().get_pool<process_tag>()[pid]
+		._frame.get_frame_map<bool_tag>());
+	// note: many local nodes may map to the same global node
+	// linear search to find them all
+	typedef	footprint_frame_map_type::const_iterator frame_iter;
+	const frame_iter b(bfm.begin()), fe(bfm.end());
+	frame_iter f = find(b, fe, ni);
+	while (f != fe) {
+		// iterate over local node's fanin expressions!
+		const node_index_type lni = std::distance(b, f);
+		pg.dump_node_fanin(o, lni, process_state_array[pid], *this, v);
+		f = find(f+1, fe, ni);
+	}
+}
+	return o;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -4378,34 +4530,75 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 		also print expression with pull-state.
  */
 ostream&
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+unique_process_subgraph::dump_node_fanin(ostream& o, const node_index_type lni, 
+		const process_sim_state& ps, const State& st, 
+		const bool v) const
+#else
 State::dump_node_fanin(ostream& o, const node_index_type ni, 
-		const bool v) const {
+		const bool v) const
+#endif
+{
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	const node_index_type ni = st.translate_to_global_node(ps, lni);
+	const State::node_type& n(st.get_node(ni));
+	const string cn(st.get_node_canonical_name(ni));
+	const faninout_struct_type& fia(local_faninout_map[lni]);
+#else
 	const node_type& n(get_node(ni));
 	const string cn(get_node_canonical_name(ni));
+#endif
 #if PRSIM_WEAK_RULES
 	size_t w = NORMAL_RULE;
 do {
 #endif
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	vector<expr_index_type>::const_iterator
+		i(fia.pull_up STR_INDEX(w).begin()),
+		e(fia.pull_up STR_INDEX(w).end());
+	for ( ; i!=e; ++i) {
+	const expr_index_type ui = *i;
+#else
 	// format is different: no single root expression
 	// fanin is listed by processes
 	const expr_index_type ui = n.pull_up_index STR_INDEX(w);
-	const expr_index_type di = n.pull_dn_index STR_INDEX(w);
+#endif
 	if (ui) {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		dump_subexpr(o, ui, ps, st, v)
+#else
 		dump_subexpr(o, ui, v)
+#endif
 			<< " -> " << cn << '+';
 		if (v) {
 			n.dump_value(o << ':');
 		}
 		o << endl;
 	}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	}
+		i = fia.pull_dn STR_INDEX(w).begin();
+		e = fia.pull_dn STR_INDEX(w).end();
+	for ( ; i!=e; ++i) {
+	const expr_index_type di = *i;
+#else
+	const expr_index_type di = n.pull_dn_index STR_INDEX(w);
+#endif
 	if (di) {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		dump_subexpr(o, di, ps, st, v)
+#else
 		dump_subexpr(o, di, v)
+#endif
 			<< " -> " << cn << '-';
 		if (v) {
 			n.dump_value(o << ':');
 		}
 		o << endl;
 	}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	}
+#endif
 #if PRSIM_WEAK_RULES
 	++w;
 } while (w<2);		// even if !weak_rules_enabled()
@@ -4772,15 +4965,16 @@ State::__get_X_fanins(const expr_index_type xi, node_set_type& u) const {
 	const expr_offset_pair& p(lookup_global_expr_process(xi));
 	const process_index_type pi(p.second);
 	unique_process_pool[process_type_map[pi]].__get_local_X_fanins(
-		xi -p.first, process_state_array[pi], u);
+		xi -p.first, process_state_array[pi], *this, u);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Uses local expression state lookup.  
  */
 void
 unique_process_subgraph::__get_local_X_fanins(const expr_index_type xi,
-	const process_sim_state& st, node_set_type& u) const {
+	const process_sim_state& ps, const State& st, node_set_type& u) const {
 #else
 	ISE_INVARIANT(xi);
 #endif
@@ -4788,7 +4982,7 @@ unique_process_subgraph::__get_local_X_fanins(const expr_index_type xi,
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	process_sim_state::expr_state_type	expr_state_type;
 	const expr_struct_type& x(expr_pool[xi]);
-	const expr_state_type& xs(st.expr_states[xi]);
+	const expr_state_type& xs(ps.expr_states[xi]);
 	ISE_INVARIANT(xs.pull_state(x) == PULL_WEAK);
 #else
 	const expr_state_type& x(expr_pool[xi]);
@@ -4801,22 +4995,32 @@ unique_process_subgraph::__get_local_X_fanins(const expr_index_type xi,
 		INVARIANT(ci->second);
 		if (ci->first) {
 			// is a leaf node, visit if value is X
-			// TODO: pass footprint translation table to process!
-			if (get_node(ci->second).current_value()
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+			const node_index_type gni =
+				st.translate_to_global_node(ps, ci->second);
+#else
+			const node_index_type& gni = ci->second;
+#endif
+			if (
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+				st.
+#endif
+				get_node(gni).current_value()
 					== LOGIC_OTHER) {
-				u.insert(ci->second);
+				u.insert(gni);
 			}
 		} else {
 			// is a sub-expresion, recurse if pull is X
+			const pull_enum p =
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-			if (st.expr_states[ci->second]
-				.pull_state(expr_pool[ci->second]) == PULL_WEAK)
+				ps.expr_states[ci->second]
+					.pull_state(expr_pool[ci->second]);
 #else
-			if (expr_pool[ci->second].pull_state() == PULL_WEAK)
+				expr_pool[ci->second].pull_state();
 #endif
-			{
+			if (p == PULL_WEAK) {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-				__get_local_X_fanins(ci->second, st, u);
+				__get_local_X_fanins(ci->second, ps, st, u);
 #else
 				__get_X_fanins(ci->second, u);
 #endif
@@ -4846,13 +5050,14 @@ State::__expr_why_not(ostream& o, const expr_index_type xi, const size_t limit,
 	const expr_offset_pair& p(lookup_global_expr_process(xi));
 	const process_index_type pi(p.second);
 	unique_process_pool[process_type_map[pi]].__local_expr_why_not(
-		o, xi -p.first, process_state_array[pi], 
+		o, xi -p.first, process_state_array[pi], *this, 
 		limit, why_not, verbose, u, v);
 }
 
 void
 unique_process_subgraph::__local_expr_why_not(ostream& o, 
-		const expr_index_type xi, const process_sim_state& st, 
+		const expr_index_type xi, const process_sim_state& ps, 
+		const State& st, 
 		const size_t limit, const bool why_not, const bool verbose,
 		node_set_type& u, node_set_type& v) const {
 #else
@@ -4862,11 +5067,13 @@ unique_process_subgraph::__local_expr_why_not(ostream& o,
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	process_sim_state::expr_state_type	expr_state_type;
 	const expr_struct_type& x(expr_pool[xi]);
-	const expr_state_type& xs(st.expr_states[xi]);
+	const expr_state_type& xs(ps.expr_states[xi]);
 	const pull_enum xp(xs.pull_state(x));
+#define	STATE_MEM	st.
 #else
 	const expr_state_type& x(expr_pool[xi]);
 	const pull_enum xp(x.pull_state());
+#define	STATE_MEM
 #endif
 	ISE_INVARIANT(xp != PULL_WEAK);
 	const graph_node_type& g(expr_graph_node_pool[xi]);
@@ -4884,18 +5091,23 @@ unique_process_subgraph::__local_expr_why_not(ostream& o,
 	}
 	const indent __ind_ex(o, ind_str);	// INDENT_SCOPE(o);
 	for ( ; ci!=ce; ++ci) {
-		INVARIANT(ci->second);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		const node_index_type gni =
+			st.translate_to_global_node(ps, ci->second);
+#else
+		const node_index_type& gni = ci->second;
+#endif
+		INVARIANT(gni);
 		if (ci->first) {
 			// is a leaf node, visit if value is not X
-			// TODO: get_node needs global node index
-			switch (get_node(ci->second).current_value()) {
+			switch (STATE_MEM get_node(gni).current_value()) {
 			case LOGIC_LOW:
-				__node_why_not(o, ci->second, limit, why_not,
-					why_not, verbose, u, v);
+				STATE_MEM __node_why_not(o, gni, limit, 
+					why_not, why_not, verbose, u, v);
 			break;
 			case LOGIC_HIGH:
-				__node_why_not(o, ci->second, limit, !why_not,
-					why_not, verbose, u, v);
+				STATE_MEM __node_why_not(o, gni, limit,
+					!why_not, why_not, verbose, u, v);
 			break;
 			default:
 				break;
@@ -4909,7 +5121,7 @@ unique_process_subgraph::__local_expr_why_not(ostream& o,
 #endif
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 			const expr_struct_type& s(expr_pool[ci->second]);
-			const expr_state_type& ss(st.expr_states[ci->second]);
+			const expr_state_type& ss(ps.expr_states[ci->second]);
 			const pull_enum sp(ss.pull_state(s));
 #else
 			const expr_state_type& s(expr_pool[ci->second]);
@@ -4920,7 +5132,7 @@ unique_process_subgraph::__local_expr_why_not(ostream& o,
 		// maintain same (positive/negative) query type recursively
 			if (sp == match_pull) {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-				__local_expr_why_not(o, ci->second, st, 
+				__local_expr_why_not(o, ci->second, ps, st,
 					limit, why_not, verbose, u, v);
 #else
 				__expr_why_not(o, ci->second, limit, 
@@ -4929,6 +5141,7 @@ unique_process_subgraph::__local_expr_why_not(ostream& o,
 			}
 		}
 	}	// end for
+#undef	STATE_MEM
 }	// end expr_why_not
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4951,13 +5164,14 @@ State::__expr_why_X(ostream& o, const expr_index_type xi, const size_t limit,
 	const expr_offset_pair& p(lookup_global_expr_process(xi));
 	const process_index_type pi(p.second);
 	unique_process_pool[process_type_map[pi]].__local_expr_why_X(
-		o, xi -p.first, process_state_array[pi], 
+		o, xi -p.first, process_state_array[pi], *this, 
 		limit, verbose, u, v);
 }
 
 void
 unique_process_subgraph::__local_expr_why_X(ostream& o, 
-		const expr_index_type xi, const process_sim_state& st, 
+		const expr_index_type xi, const process_sim_state& ps, 
+		const State& st, 
 		const size_t limit, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
 #endif
@@ -4965,11 +5179,13 @@ unique_process_subgraph::__local_expr_why_X(ostream& o,
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	process_sim_state::expr_state_type	expr_state_type;
 	const expr_struct_type& x(expr_pool[xi]);
-	const expr_state_type& xs(st.expr_states[xi]);
+	const expr_state_type& xs(ps.expr_states[xi]);
 	const pull_enum xp(xs.pull_state(x));
+#define STATE_MEM	st.
 #else
 	const expr_state_type& x(expr_pool[xi]);
 	const pull_enum xp(x.pull_state());
+#define STATE_MEM
 #endif
 	INVARIANT(xp == PULL_WEAK);
 	const graph_node_type& g(expr_graph_node_pool[xi]);
@@ -4987,13 +5203,19 @@ unique_process_subgraph::__local_expr_why_X(ostream& o,
 	}
 	const indent __ind_ex(o, ind_str);	// INDENT_SCOPE(o);
 	for ( ; ci!=ce; ++ci) {
-		INVARIANT(ci->second);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		const node_index_type gni =
+			st.translate_to_global_node(ps, ci->second);
+#else
+		const node_index_type& gni = ci->second;
+#endif
+		INVARIANT(gni);
 		if (ci->first) {
 			// is a leaf node, visit if value is X
-			if (get_node(ci->second).current_value()
+			if (STATE_MEM get_node(gni).current_value()
 				== LOGIC_OTHER) {
 				// TODO: pass state
-				__node_why_X(o, ci->second, 
+				STATE_MEM __node_why_X(o, gni, 
 					limit, verbose, u, v);
 			}
 		} else {
@@ -5005,7 +5227,7 @@ unique_process_subgraph::__local_expr_why_X(ostream& o,
 #endif
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 			const expr_struct_type& s(expr_pool[ci->second]);
-			const expr_state_type& ss(st.expr_states[ci->second]);
+			const expr_state_type& ss(ps.expr_states[ci->second]);
 			const pull_enum sp(ss.pull_state(s));
 #else
 			const expr_state_type& s(expr_pool[ci->second]);
@@ -5013,7 +5235,7 @@ unique_process_subgraph::__local_expr_why_X(ostream& o,
 #endif
 			if (sp == PULL_WEAK) {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-				__local_expr_why_X(o, ci->second, st, 
+				__local_expr_why_X(o, ci->second, ps, st, 
 					limit, verbose, u, v);
 #else
 				__expr_why_X(o, ci->second, 
@@ -5022,6 +5244,7 @@ unique_process_subgraph::__local_expr_why_X(ostream& o,
 			}
 		}
 	}	// end for
+#undef	STATE_MEM
 }	// end expr_why_X
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5237,6 +5460,7 @@ State::dump_output_unknown_nodes(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+#if 0
 ostream&
 State::dump_subexpr(ostream& o, const expr_index_type ei, 
 		const bool v, 
@@ -5252,38 +5476,68 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 }
 #endif
 
+ostream&
+State::dump_subexpr(ostream& o, const expr_index_type ei, 
+		const bool v, 
+		const uchar ptype, const bool pr) const {
+	// const expr_struct_type* s;
+	const expr_offset_pair& f(lookup_global_expr_process(ei));
+	expr_index_type ui = ei -f.first;
+	const process_index_type pid = f.second;
+	const size_t pti = process_type_map[pid];
+	const process_sim_state& ps(process_state_array[pid]);
+	const unique_process_subgraph& pg(unique_process_pool[pti]);
+	return pg.dump_subexpr(o, ui, ps, *this, v, ptype, pr);
+}
+#endif
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursive expression printer.  
 	Should be modeled after cflat's expression printer.  
 	\param ei is the *LOCAL* expression index within the owning process.  
 	\param pi is the global process index to which expression belongs.
+	\param st is the global node state
 	\param v true if literal should be printed with its value.  
 	\param ptype the parent's expression type, only used if cp is true.
 	\param pr whether or not parent is root
 		(if so, ignore type comparison for parenthesization).  
  */
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-#define	DUMP_RECURSIVE			dump_local_subexpr
-#define	CALL_DUMP_RECURSIVE(a,b,c,d,e)	dump_local_subexpr(a,b,c,d,e)
+// #define	DUMP_RECURSIVE			dump_local_subexpr
+#define	CALL_DUMP_RECURSIVE(a,b,c,d,e,f)	dump_subexpr(a,b,c,d,e,f)
+#define	STATE_MEM				st.
 #else
-#define	DUMP_RECURSIVE			dump_subexpr
-#define	CALL_DUMP_RECURSIVE(a,b,c,d,e)	dump_subexpr(a,b,d,e)
+// #define	DUMP_RECURSIVE			dump_subexpr
+#define	CALL_DUMP_RECURSIVE(a,b,c,d,e,f)	dump_subexpr(a,b,e,f)
+#define	STATE_MEM
 #endif
 ostream&
-State::DUMP_RECURSIVE
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+unique_process_subgraph::dump_subexpr
+#else
+State::dump_subexpr
+#endif
 	(ostream& o, const expr_index_type ei, 
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-		const process_index_type pi, 
+		const process_sim_state& pi, 
+		const State& st, 	// for node state
 #endif
 		const bool v, 
 		const uchar ptype, const bool pr) const {
 #if DEBUG_FANOUT
 	STACKTRACE_VERBOSE;
 #endif
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	ISE_INVARIANT(ei);
+#endif
 	ISE_INVARIANT(ei < expr_pool.size());
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	const expr_struct_type& e(expr_pool[ei]);
+	const process_sim_state::expr_state_type& es(pi.expr_states[ei]);
+#else
 	const expr_state_type& e(expr_pool[ei]);
+#endif
 	const graph_node_type& g(expr_graph_node_pool[ei]);
 	// can elaborate more on when parens are needed
 	const bool need_parens = e.parenthesize(ptype, pr);
@@ -5305,28 +5559,36 @@ State::DUMP_RECURSIVE
 		o << '(';
 	}
 	// peel out first iteration for infix printing
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	node_index_type gni = 0;
 	if (ci->first) {
-		o << get_node_canonical_name(ci->second);
+		gni = st.translate_to_global_node(pi, ci->second);
+	}
+#else
+	const node_index_type gni = ci->second;
+#endif
+	if (ci->first) {
+		o << STATE_MEM get_node_canonical_name(gni);
 		if (v) {
-			get_node(ci->second).dump_value(o << ':');
+			STATE_MEM get_node(gni).dump_value(o << ':');
 		}
 	} else {
-		CALL_DUMP_RECURSIVE(o, ci->second, pi, v, _type);
+		CALL_DUMP_RECURSIVE(o, ci->second, pi, st, v, _type);
 	}
 	if (g.children.size() >= 1) {
 	for (++ci; ci!=ce; ++ci) {
 		o << op;
 		if (ci->first) {
-			o << get_node_canonical_name(ci->second);
+			o << STATE_MEM get_node_canonical_name(gni);
 			if (v) {
-				get_node(ci->second).dump_value(o << ':');
+				STATE_MEM get_node(gni).dump_value(o << ':');
 			}
 		} else {
 			if (e.is_or() && is_rule_expr(ci->second)) {
 				// to place each 'rule' on its own line
 				o << endl;
 			}
-			CALL_DUMP_RECURSIVE(o, ci->second, pi, v, _type);
+			CALL_DUMP_RECURSIVE(o, ci->second, pi, st, v, _type);
 		}
 	}
 	}
@@ -5336,7 +5598,17 @@ State::DUMP_RECURSIVE
 	if (v && (e.size > 1)) {
 		// if verbose, and expression has more than one subexpr
 		// print pull-state
-		o << '<' << node_type::value_to_char[size_t(e.pull_state())]
+		o << '<' <<
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+			State::
+#endif
+			node_type::value_to_char[
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+				size_t(es.pull_state(e))
+#else
+				size_t(e.pull_state())
+#endif
+			]
 			<< '>';
 	}
 	return o;
