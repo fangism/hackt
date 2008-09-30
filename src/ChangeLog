@@ -5,6 +5,16 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-09-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-08:
+	  It finally compiles! (but will probably crash and burn)
+		Finished remaining functions, branch is completely untested.
+		Most importantly, implemented root_expr_why* functions, 
+		albeit mostly copy-pasted from original expr_why functions.
+	  Next: ground-up testing... PRSIM_INDIRECT_EXPRESSION_MAP -> 1.
+
+
 2008-09-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-07:

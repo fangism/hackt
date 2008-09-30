@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.7 2008/09/28 04:58:25 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.8 2008/09/30 07:39:34 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -133,8 +133,13 @@ protected:
 	/**
 		Top-down graph structure.  
 		Indices are *local* to process (type)!
+		Cannot use list_vector, which is not copy-constructible (yet).
 	 */
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	typedef	vector<graph_node_type>		expr_graph_node_pool_type;
+#else
 	typedef	list_vector<graph_node_type>	expr_graph_node_pool_type;
+#endif
 	/**
 		Collection of rule static information, attributes.  
 		Indices are *local* to process (type).
@@ -260,7 +265,8 @@ protected:
 	ostream&
 	dump_struct_dot(ostream&, const expr_index_type) const;
 
-	// TODO: pass state, or some callback?
+	// these should really be methods of process_sim_state, logically
+	// TODO: transform after pushing unique_process_subgraph member pointer
 	void
 	__get_local_X_fanins(const expr_index_type, 
 		const process_sim_state&, const State&, node_set_type&) const;
@@ -273,6 +279,18 @@ protected:
 
 	void
 	__local_expr_why_X(ostream&, const expr_index_type, 
+		const process_sim_state&, const State&, const size_t, 
+		const bool, node_set_type&, node_set_type&) const;
+
+	void
+	__recurse_expr_why_not(ostream&, const expr_index_type, 
+		const pull_enum, 
+		const process_sim_state&, const State&, const size_t, 
+		const bool, const bool, 
+		node_set_type&, node_set_type&) const;
+
+	void
+	__recurse_expr_why_X(ostream&, const expr_index_type, 
 		const process_sim_state&, const State&, const size_t, 
 		const bool, node_set_type&, node_set_type&) const;
 
@@ -316,7 +334,8 @@ struct process_sim_state {
 	clear(void);
 
 	void
-	initialize(void);
+	initialize(const unique_process_subgraph&);
+		// because needs to know structure
 };	// end struct process_sim_state
 
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
@@ -1555,6 +1574,26 @@ private:
 	__expr_why_not(ostream&, const expr_index_type, 
 		const size_t, const bool, const bool, 
 		node_set_type&, node_set_type&) const;
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	void
+	__root_expr_why_X(ostream&, const node_index_type, 
+		const bool d, 
+#if PRSIM_WEAK_RULES
+		const bool w, 
+#endif
+		const size_t, const bool, 
+		node_set_type&, node_set_type&) const;
+
+	void
+	__root_expr_why_not(ostream&, const node_index_type, 
+		const bool d,
+#if PRSIM_WEAK_RULES
+		const bool w, 
+#endif
+		const size_t, const bool, const bool, 
+		node_set_type&, node_set_type&) const;
+#endif
 
 	template <typename Iter>
 	ostream&
