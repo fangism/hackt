@@ -1,0 +1,6 @@
+iskeeper	"x" & "y" -> "z"-
+iskeeper	~"x" & ~"y" -> "z"+
+iskeeper	"y" -> "z"-
+iskeeper	~"y" -> "z"+
+"x" -> "z"-
+~"x" -> "z"+

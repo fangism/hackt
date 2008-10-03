@@ -1,10 +1,16 @@
 "TODO"
-#	$Id: TODO,v 1.59 2008/03/17 23:02:08 fang Exp $
+#	$Id: TODO,v 1.60 2008/10/03 02:04:23 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
 NOTE: see also sim/prsim/TODO
 NOTE: see also sim/chpsim/TODO
+
+===============================================================================
+Implementation clean-up of attributes and language extensions:
+	these shuold be compiled/linked through some extensible interface
+		such as plug-ins, so others can easily add their 
+		own attributes without touching source code
 
 ===============================================================================
 ACT-compatibility:

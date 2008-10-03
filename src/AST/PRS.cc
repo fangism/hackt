@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.30 2008/03/20 00:03:13 fang Exp $
+	$Id: PRS.cc,v 1.31 2008/10/03 02:04:24 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -922,13 +922,15 @@ rule::check_prs_attribute(const generic_attribute& a, context& c) {
 		return return_type();
 	}
 	vals_type vals;
-	a.values->postorder_check_meta_exprs(vals, c);
+	if (a.values) {
+		a.values->postorder_check_meta_exprs(vals, c);
+	}
 	const const_iterator i(vals.begin()), e(vals.end());
 	if (find(i, e, val_type(NULL)) != e) {
 		// one of the param expressions failed checking
 		// blank will signal error
 		cerr << "Error in checking attribute value expressions in "
-			<< where(*a.values) << endl;
+			<< (a.values ? where(*a.values) : where(a)) << endl;
 		return return_type();
 	}
 	return_type ret(*a.key);

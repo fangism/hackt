@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25 2008/05/30 03:41:55 fang Exp $
+	$Id: ExprAlloc.cc,v 1.26 2008/10/03 02:04:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -188,6 +188,7 @@ ExprAlloc::ExprAlloc(state_type& _s) :
 		st_graph_node_pool(state.expr_graph_node_pool), 
 		st_rule_map(state.get_rule_map()),
 		ret_ex_index(INVALID_EXPR_INDEX), 
+		suppress_keeper_rule(false), 
 		temp_rule(NULL),
 		flags(), expr_free_list() {
 }
@@ -201,6 +202,7 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 		st_graph_node_pool(state.expr_graph_node_pool), 
 		st_rule_map(state.get_rule_map()),
 		ret_ex_index(INVALID_EXPR_INDEX), 
+		suppress_keeper_rule(false), 
 		temp_rule(NULL),
 		flags(f), expr_free_list() {
 }
@@ -342,6 +344,23 @@ void
 ExprAlloc::visit(const footprint_rule& r) {
 	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
 try {
+	rule_type dummy_rule;
+{
+	// first, unconditionally create a rule entry in the state's rule
+	// map for every top-level (root) expression that affects a node.  
+//	rule_type& rule __ATTRIBUTE_UNUSED_CTOR__((st_rule_map[ret_ex_index]));
+	const util::value_saver<rule_type*> rs(temp_rule, &dummy_rule);
+	// now iterate over attributes to apply changes
+	typedef footprint_rule::attributes_list_type	attr_list_type;
+	typedef	attr_list_type::const_iterator		const_iterator;
+	const_iterator i(r.attributes.begin()), e(r.attributes.end());
+	for ( ; i!=e; ++i) {
+		ExprAlloc_attribute_registry[i->key].main(*this, *i->values);
+	}
+}
+if (suppress_keeper_rule) {
+	suppress_keeper_rule = false;	// reset it for next rule
+} else {
 	(*expr_pool)[r.expr_index].accept(*this);
 	const size_t top_ex_index = ret_ex_index;
 	// r.output_index gives the local unique ID,
@@ -361,20 +380,6 @@ try {
 #if ENABLE_STACKTRACE
 	state.dump_struct(cerr) << endl;
 #endif
-	INVARIANT(top_ex_index == ret_ex_index);	// sanity check
-{
-	// first, unconditionally create a rule entry in the state's rule
-	// map for every top-level (root) expression that affects a node.  
-//	rule_type& rule __ATTRIBUTE_UNUSED_CTOR__((st_rule_map[ret_ex_index]));
-	rule_type dummy_rule;
-	const util::value_saver<rule_type*> rs(temp_rule, &dummy_rule);
-	// now iterate over attributes to apply changes
-	typedef footprint_rule::attributes_list_type	attr_list_type;
-	typedef	attr_list_type::const_iterator		const_iterator;
-	const_iterator i(r.attributes.begin()), e(r.attributes.end());
-	for ( ; i!=e; ++i) {
-		ExprAlloc_attribute_registry[i->key].main(*this, *i->values);
-	}
 	INVARIANT(top_ex_index == ret_ex_index);	// sanity check
 	// following order matters b/c of rule_map access
 	link_node_to_root_expr(ni, top_ex_index, r.dir
@@ -880,10 +885,15 @@ Always_Random::main(visitor_type& v, const values_type& a) {
 	typedef visitor_type::rule_type rule_type;
 //	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
+if (a.size()) {
 	const values_type::value_type& w(a.front());
 	if (w.is_a<const pint_const>()->static_constant_value())
 		r.set_always_random();
 	else    r.clear_always_random();
+} else {
+	// unspecified value, default true
+	r.set_always_random();
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -898,10 +908,15 @@ Weak::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
 //	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
+if (a.size()) {
 	const values_type::value_type& w(a.front());
 	if (w.is_a<const pint_const>()->static_constant_value())
 		r.set_weak();
 	else	r.clear_weak();
+} else {
+	// unspecified value, default true
+	r.set_weak();
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -916,10 +931,15 @@ Unstab::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
 //	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
+if (a.size()) {
 	const values_type::value_type& w(a.front());
 	if (w.is_a<const pint_const>()->static_constant_value())
 		r.set_unstable();
 	else	r.clear_unstable();
+} else {
+	// unspecified value, default true
+	r.set_unstable();
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -932,6 +952,26 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Keeper, "keeper")
 void
 Keeper::main(visitor_type& v, const values_type& a) {
 	// do nothing
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(IsKeeper, "iskeeper")
+
+/**
+	Since prsim does not actually simulate staticizers (keepers), 
+	this tells prsim to completely ignore these rules.  
+ */
+void
+IsKeeper::main(visitor_type& v, const values_type& a) {
+	if (a.empty()) {
+		// default when no value given
+		v.suppress_keeper_rule = true;
+	} else {
+		// honor the value given
+		const values_type::value_type& k(a.front());
+		v.suppress_keeper_rule = 
+			k.is_a<const pint_const>()->static_constant_value();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

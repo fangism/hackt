@@ -1,0 +1,15 @@
+// "iskeeper-a.hac"
+
+bool a, b, c, d, e, f, g, h, z;
+
+prs {
+[iskeeper]	a -> z-
+[iskeeper=1]	~b -> z+
+[iskeeper=0]	c -> z-
+[iskeeper=0;weak]	~d -> z+
+[iskeeper=0;weak=0]	e -> z-
+[weak=1;iskeeper=0]	~f -> z+
+[iskeeper;weak=0]	g -> z-
+[weak=1;iskeeper]	~g -> z+
+}
+

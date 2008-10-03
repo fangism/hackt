@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.28 2008/03/17 23:02:25 fang Exp $
+	$Id: PRS.cc,v 1.29 2008/10/03 02:04:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -382,20 +382,27 @@ attribute::push_back(const value_type& e) {
 ostream&
 attribute::dump(ostream& o, const rule_dump_context& c) const {
 	o << key << '=';
-	NEVER_NULL(values);
-	return values->dump(o, entity::expr_dump_context(c));
+	if (values) {
+		values->dump(o, entity::expr_dump_context(c));
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_param_expr_list>
 attribute::unroll_values(const unroll_context& c) const {
-	NEVER_NULL(values);
+if (values) {
 	const count_ptr<const const_param_expr_list>
 		ret(values->unroll_resolve_rvalues(c, values));
 	if (!ret) {
 		cerr << "Error resolving attribute values!" << endl;
 	}
 	return ret;
+} else {
+	// return non-null empty value list, b/c null => error
+	return count_ptr<const const_param_expr_list>(
+		new const_param_expr_list);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -564,9 +571,11 @@ if (output.is_internal()) {
 		const count_ptr<const const_param_expr_list>
 			att_vals(i->unroll_values(c));
 		if (!att_vals) {
-			// already have minimal error message
-			return good_bool(false);
-		}
+			// allow value-less attributes
+			const const_param_expr_list empty;
+			if (!att.check_values(empty).good)
+				return good_bool(false);
+		} else
 		if (!att.check_values(*att_vals).good) {
 			// already have error message
 			return good_bool(false);

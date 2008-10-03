@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.9 2008/03/17 23:03:02 fang Exp $
+	$Id: ExprAlloc.h,v 1.10 2008/10/03 02:04:33 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -50,6 +50,18 @@ public:
 protected:
 	/// the expression index last returned
 	expr_index_type				ret_ex_index;
+public:
+	/**
+		auxiliary value which is cleared by the 'iskeeper'
+		rule attribute, and filters out keeper rules entirely
+		from prsim.  
+		When true, skip rule.  
+		Anytime this value is read as true, then immediately
+		reset it back to false, so the next rule is not
+		affected.  
+	 */
+	bool					suppress_keeper_rule;
+protected:
 	/**
 		Auxiliary temporary placeholder rule, 
 		for applying attributes.  

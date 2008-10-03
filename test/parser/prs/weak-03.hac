@@ -1,0 +1,16 @@
+// "weak-03.hac"
+// copy-modified from "weak-01.hac"
+// testing out weak rule-attribute
+// should pass
+
+defproc weakness(bool a, b) {
+bool c, d, e;
+prs {
+[weak=1]	a => b-
+[weak]		a => e-		// should be default to true
+[weak=0]	c => d-
+}
+}
+
+weakness xyz;
+

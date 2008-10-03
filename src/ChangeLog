@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-10-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-37:
+	  language attributes work:
+		hflat/prsim rule attributes always_random, unstab, weak
+			now don't require a parameter, default=1.
+			updated parser accordingly.  
+		new iskeeper rule attribute indicates that rule
+			is part of a staticizer, printed in hflat, 
+			and ignored completely by prsim.  
+		moved generic attribute value checks to separate module.
+		prsim: ExprAlloc: now conditionally process rule
+			depending on iskeeper attribute, and honor default
+			values of the above attributes.
+		Test cases added.  Documented. 
+
+
 2008-09-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-36:

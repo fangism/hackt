@@ -2,7 +2,7 @@
 	\file "Object/lang/PRS_attribute_common.h"
 	Contains base classes for all tool-independent implementations
 	of PRS rule attribute classes.  
-	$Id: PRS_attribute_common.h,v 1.6 2008/03/03 21:10:26 sandra Exp $
+	$Id: PRS_attribute_common.h,v 1.7 2008/10/03 02:04:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_COMMON_H__
@@ -64,8 +64,10 @@ DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Unstab)
 /// for automatic combinational-feedback configuration
 DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Comb)
 
-/// for explicit staticizer
+/// for explicit staticizer -- soon to be deprecated in favor of node attribute
 DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Keeper)
+/// this rule is part of a staticizer, no need to prsim-simulate
+DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(IsKeeper)
 
 /// label terminals of pass transistors as output
 DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Output)

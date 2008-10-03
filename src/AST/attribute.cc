@@ -1,6 +1,6 @@
 /**
 	\file "AST/attribute.cc"
-	$Id: attribute.cc,v 1.1 2008/03/20 00:03:14 fang Exp $
+	$Id: attribute.cc,v 1.2 2008/10/03 02:04:25 fang Exp $
  */
 
 #include "AST/attribute.h"
@@ -15,8 +15,9 @@ namespace parser {
 //=============================================================================
 generic_attribute::generic_attribute(
 		const token_identifier* i, const expr_list* e)
-                : key(i), values(e) {
-        NEVER_NULL(key); NEVER_NULL(values);
+		: key(i), values(e) {
+	NEVER_NULL(key);
+//	NEVER_NULL(values);
 }
 
 generic_attribute::~generic_attribute() { }
@@ -25,12 +26,14 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(generic_attribute)
 
 line_position
 generic_attribute::leftmost(void) const {
-        return key->leftmost();
+	return key->leftmost();
 }
 
 line_position
 generic_attribute::rightmost(void) const {
-        return values->rightmost();
+	if (values)
+		return values->rightmost();
+	else	return key->rightmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

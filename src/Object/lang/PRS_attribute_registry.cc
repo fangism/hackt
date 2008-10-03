@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.13 2008/03/03 21:10:26 sandra Exp $
+	$Id: PRS_attribute_registry.cc,v 1.14 2008/10/03 02:04:28 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -112,7 +112,8 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 @texinfo prs/attribute-always_random.texi
 @defmac always_random b
 If @var{b} is true (1), rule delay is based on random exponential    
-distrubution.
+distribution.
+If unspecified, default value is true.  
 @end defmac
 @end texinfo
 ***/
@@ -125,11 +126,15 @@ DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Always_Random, "always_random")
 void
 Always_Random::main(visitor_type& p, const values_type& v) {
 if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
-      const pint_const& pi(*v[0].is_a<const pint_const>());
-      if (pi.static_constant_value()) {
-              ostream& o(p.os);
-              o << "always_random\t";
-      }
+	pint_value_type b = 1;	// default true
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		ostream& o(p.os);
+		o << "always_random\t";
+	}
 }
 }
 
@@ -140,6 +145,7 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 @defmac weak b
 If @var{b} is true (1), rule is considered weak, e.g. feedback, 
 and may be overpowered by non-weak rules.  
+If unspecified, default value is true.  
 @end defmac
 @end texinfo
 ***/
@@ -151,8 +157,12 @@ DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Weak, "weak")
 void
 Weak::main(visitor_type& p, const values_type& v) {
 if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
-	const pint_const& pi(*v[0].is_a<const pint_const>());
-	if (pi.static_constant_value()) {
+	pint_value_type b = 1;
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
 		ostream& o(p.os);
 		o << "weak\t";
 	}
@@ -164,6 +174,7 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 @texinfo prs/attribute-unstab.texi
 @defmac unstab b
 If @var{b} is true (1), rule is allowed to be unstable, as an exception.
+If unspecified, default value is true.  
 @end defmac
 @end texinfo
 ***/
@@ -175,11 +186,15 @@ DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Unstab, "unstab")
 void
 Unstab::main(visitor_type& p, const values_type& v) {
 if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
-      const pint_const& pi(*v[0].is_a<const pint_const>());
-      if (pi.static_constant_value()) {
-              ostream& o(p.os);
-              o << "unstab\t";
-      }
+	pint_value_type b = 1;
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		ostream& o(p.os);
+		o << "unstab\t";
+	}
 }
 }
 
@@ -215,14 +230,16 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 /***
 @texinfo prs/attribute-keeper.texi
 @defmac keeper b
-If @var{b} is true (1), staticize (explicitly).
+For LVS, If @var{b} is true (1), staticize (explicitly).
+This attribute will soon be deprecated in favor of a node attribute
+@t{autokeeper}.
 @end defmac
 @end texinfo
 ***/
 DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Keeper, "keeper")
 
 /**
-      Prints out "comb" before a rule in cflat.  
+      Prints out "keeper" before a rule in cflat.  
  */
 void
 Keeper::main(visitor_type& p, const values_type& v) {
@@ -237,6 +254,40 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 #else
 	// do nothing yet
 #endif
+}
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-iskeeper.texi
+@defmac iskeeper b
+If @var{b} is true (1), staticize (explicitly).
+If unspeficied, default value is true.
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(IsKeeper, "iskeeper")
+
+/**
+      Prints out "iskeeper" before a rule in cflat.  
+ */
+void
+IsKeeper::main(visitor_type& p, const values_type& v) {
+switch (p.cfopts.primary_tool) {
+case cflat_options::TOOL_PRSIM:
+case cflat_options::TOOL_LVS: {
+	pint_value_type b = 1;
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		ostream& o(p.os);
+		o << "iskeeper\t";
+	}
+	break;
+}
+default: break;
+}
 }
 
 //-----------------------------------------------------------------------------

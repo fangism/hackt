@@ -1,0 +1,7 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	X	blah<>
+	bool: 1,2
+[global bool entries]
+1	process	1	1	X.a	
+2	process	1	2	X.b	

@@ -1,0 +1,19 @@
+// "macro-attrib-02.hac"
+// test for macro attributes
+// TODO: eventually process such tests properly
+
+template <pint SIZE>
+defproc foo(bool t, f; bool in[3], out)
+{
+  prs {
+    [iskeeper] passp<20*SIZE>(t,in[0],out)
+    [iskeeper] passn<10*SIZE>(f,in[0],out)
+    [keeper=0] passp<20*SIZE>(f,in[1],out)
+    [keeper=0] passn<10*SIZE>(t,in[1],out)
+    [weak] passp<20*SIZE>(f,in[2],out)
+    [weak] passn<10*SIZE>(t,in[2],out)
+  }
+}
+
+foo<5> bar;
+

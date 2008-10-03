@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.37 2008/05/20 19:50:56 fang Exp $
+#	$Id: Makefile.am,v 1.38 2008/10/03 02:04:35 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -21,7 +21,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	internal-node-11 internal-node-16
 
 HACKT_PARSE_TEST_WARNINGS = \
-	macro-attrib-01
+	macro-attrib-01 macro-attrib-02
 
 HACKT_PARSE_TEST_PASSES = \
 	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
@@ -44,7 +44,7 @@ HACKT_PARSE_TEST_PASSES = \
 	after-02 after-03 \
 	spec-02 spec-04 spec-06 spec-07 \
 	size-01 size-03 size-04 size-05 \
-	weak-01 weak-02 \
+	weak-01 weak-02 weak-03 \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	bug-001 \
@@ -58,9 +58,10 @@ HACKT_PARSE_TEST_PASSES = \
 	subckt-04 subckt-05 \
 	subckt-06 \
 	precharge-00 \
-	unstab-01 \
+	unstab-01 unstab-02 \
 	comb-01 \
 	keeper-01 \
+	iskeeper-01 \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
 	act-006 act-007 act-009 act-010 \
@@ -98,7 +99,7 @@ HACKT_CREATE_TEST_PASSES = \
 	after-02 after-03 \
 	spec-02 spec-04 spec-06 spec-07 \
 	size-01 size-03 size-04 size-05 \
-	weak-01 weak-02 \
+	weak-01 weak-02 weak-03 \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	bug-001 \
@@ -108,9 +109,10 @@ HACKT_CREATE_TEST_PASSES = \
 	lvs-xcpl-inv-01 \
 	tree-02 tree-03 tree-04 \
 	subckt-01 subckt-03 subckt-05 subckt-06 \
-	unstab-01 \
+	unstab-01 unstab-02 \
 	comb-01 \
 	keeper-01 \
+	iskeeper-01 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
@@ -154,15 +156,16 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	after-02 after-03 \
 	spec-02 spec-04 spec-06 spec-07 \
 	size-01 size-03 size-04 size-05 \
-	weak-01 weak-02 \
+	weak-01 weak-02 weak-03 \
 	bug-001 \
 	top-level-01 top-level-04 \
 	flat-type-01 flat-type-02 flat-type-03 \
 	tree-02 tree-03 \
 	subckt-01 \
-	unstab-01 \
+	unstab-01 unstab-02 \
 	comb-01 \
 	keeper-01 \
+	iskeeper-01 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
@@ -177,7 +180,9 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \
 	lvs-order-01 lvs-order-03 \
-	lvs-xcpl-inv-01
+	lvs-xcpl-inv-01 \
+	weak-03 \
+	iskeeper-01
 
 HACKT_CFLAT_LVS_TEST_FAILURES = \
 	lvs-order-02

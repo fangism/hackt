@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.197 2008/07/30 22:56:00 fang Exp $
+#	$Id: Makefile.am,v 1.198 2008/10/03 02:04:22 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -628,6 +628,8 @@ OBJECT_CC_FILES = \
 	Object/type/canonical_type.cc \
 	Object/type/canonical_generic_chan_type.cc \
 	Object/type/canonical_fundamental_chan_type.cc \
+	Object/lang/attribute_common.cc \
+	Object/lang/bool_attribute_common.cc \
 	Object/lang/cflat_visitor.cc \
 	Object/lang/cflat_context_visitor.cc \
 	Object/lang/cflat_printer.cc \

@@ -1,0 +1,13 @@
+// "unstab-02.hac"
+// testing that 'unstab' attribute is propagated to cflat
+
+defproc blah () {
+	bool a, b;
+	prs {
+		[unstab=0]	a->b-
+		[unstab]	a->b+	// default true
+	}
+}
+
+blah X;
+
