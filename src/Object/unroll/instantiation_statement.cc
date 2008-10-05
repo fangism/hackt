@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.17 2007/07/18 23:28:59 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.18 2008/10/05 23:00:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -34,6 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/class_traits.h"
+#include "Object/traits/instance_traits.h"
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/inst/param_value_placeholder.h"
@@ -52,6 +53,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 // #include "Object/traits/proc_traits.h"
 #include "Object/unroll/template_type_completion.tcc"
 #endif
+#include "Object/unroll/instance_attribute.tcc"
 
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
@@ -81,9 +83,19 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::process_instantiation_statement,
 SPECIALIZE_UTIL_WHAT(HAC::entity::channel_instantiation_statement,
 	"channel_instantiation_statement")
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-SPECIALIZE_UTIL_WHAT(HAC::entity::template_type_completion<HAC::entity::process_tag>,
+SPECIALIZE_UTIL_WHAT(HAC::entity::process_template_type_completion,
 	"process_template_type_completion")
 #endif
+SPECIALIZE_UTIL_WHAT(HAC::entity::process_instance_attribute,
+	"process_instance_attribute")
+SPECIALIZE_UTIL_WHAT(HAC::entity::channel_instance_attribute,
+	"channel_instance_attribute")
+SPECIALIZE_UTIL_WHAT(HAC::entity::bool_instance_attribute,
+	"bool_instance_attribute")
+SPECIALIZE_UTIL_WHAT(HAC::entity::int_instance_attribute,
+	"int_instance_attribute")
+SPECIALIZE_UTIL_WHAT(HAC::entity::enum_instance_attribute,
+	"enum_instance_attribute")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pbool_instantiation_statement, 
@@ -105,9 +117,26 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		DATA_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::template_type_completion<HAC::entity::process_tag>, 
+	HAC::entity::process_template_type_completion, 
 		PROCESS_TEMPLATE_TYPE_COMPLETION_TYPE_KEY, 0)
 #endif
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::bool_instance_attribute, 
+		DBOOL_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::int_instance_attribute, 
+		DINT_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::enum_instance_attribute, 
+		ENUM_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::channel_instance_attribute, 
+		CHANNEL_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::process_instance_attribute, 
+		PROCESS_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
+
 }	// end namespace util
 
 
@@ -305,6 +334,11 @@ template class instantiation_statement<process_tag>;
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 template class template_type_completion<process_tag>;
 #endif
+template class instance_attribute<bool_tag>;
+template class instance_attribute<int_tag>;
+template class instance_attribute<enum_tag>;
+template class instance_attribute<channel_tag>;
+template class instance_attribute<process_tag>;
 
 //=============================================================================
 }	// end namespace entity

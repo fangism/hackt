@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.5 2007/10/12 22:43:53 fang Exp $
+	$Id: connection_policy.tcc,v 1.6 2008/10/05 23:00:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -21,13 +21,48 @@ namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 //=============================================================================
+// class bool_connect_policy method definitions
+
+template <class ContainerType>
+void
+bool_connect_policy::initialize_direction(const ContainerType&) {
+	// TODO: use direction annotations like channels
+	// this->attributes = BOOL_DEFAULT_ATTRIBUTES;
+	// unnecessary, b/c default ctor
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Forces a flag synchronization.  
-	No error.  
+	No checking.  No error.  
  */
 template <class AliasType>
 void
-directional_connect_policy<true>::__update_flags(AliasType& a) {
+bool_connect_policy::__update_flags(AliasType& a) {
+	this->attributes = a.find()->attributes;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static property checking, regarding drive/use.  
+ */
+template <class AliasType>
+good_bool
+bool_connect_policy::__check_connection(const AliasType& a) {
+	// TODO: check must/must-not directions!
+	return good_bool(true);
+}
+
+//=============================================================================
+// class channel_connect_policy method definitions
+
+/**
+	Forces a flag synchronization.  
+	No checking.  No error.  
+ */
+template <class AliasType>
+void
+channel_connect_policy::__update_flags(AliasType& a) {
 	this->direction_flags = a.find()->direction_flags;
 }
 
@@ -40,7 +75,7 @@ directional_connect_policy<true>::__update_flags(AliasType& a) {
  */
 template <class AliasType>
 good_bool
-directional_connect_policy<true>::synchronize_flags(
+channel_connect_policy::synchronize_flags(
 		AliasType& l, AliasType& r) {
 	typedef	typename AliasType::traits_type		traits_type;
 	STACKTRACE_VERBOSE;
@@ -124,7 +159,7 @@ directional_connect_policy<true>::synchronize_flags(
  */
 template <class ContainerType>
 void
-directional_connect_policy<true>::initialize_direction(
+channel_connect_policy::initialize_direction(
 		const ContainerType& p) {
 	typedef	ContainerType		collection_interface_type;
 	typedef	typename collection_interface_type::traits_type
@@ -192,7 +227,7 @@ directional_connect_policy<true>::initialize_direction(
  */
 template <class AliasType>
 void
-directional_connect_policy<true>::initialize_actual_direction(
+channel_connect_policy::initialize_actual_direction(
 		const AliasType& a) {
 	typedef	typename AliasType::container_type	collection_interface_type;
 	typedef	typename collection_interface_type::traits_type
@@ -270,7 +305,7 @@ directional_connect_policy<true>::initialize_actual_direction(
  */
 template <class AliasType>
 good_bool
-directional_connect_policy<true>::__check_connection(const AliasType& a) {
+channel_connect_policy::__check_connection(const AliasType& a) {
 	typedef	typename AliasType::traits_type		traits_type;
 	const connection_flags_type f = a.direction_flags;
 	if (!(f & CONNECTED_TO_ANY_PRODUCER)) {
@@ -294,7 +329,7 @@ directional_connect_policy<true>::__check_connection(const AliasType& a) {
  */
 template <class AliasType>
 void
-directional_connect_policy<true>::connection_flag_setter::operator () (
+channel_connect_policy::connection_flag_setter::operator () (
 		AliasType& a) {
 	// important that this is done with the *canoncical* node
 	if (!a.find()->set_connection_flags(update).good) {

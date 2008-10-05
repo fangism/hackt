@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_fwd.h"
 	Forward declarations for all unroll-related classes.
-	$Id: unroll_fwd.h,v 1.3 2007/08/15 02:49:17 fang Exp $
+	$Id: unroll_fwd.h,v 1.4 2008/10/05 23:00:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_FWD_H__
@@ -58,12 +58,36 @@ typedef instantiation_statement<pint_tag>
 	pint_instantiation_statement;
 typedef instantiation_statement<preal_tag>
 	preal_instantiation_statement;
+typedef instantiation_statement<bool_tag>
+	bool_instantiation_statement;
+typedef instantiation_statement<int_tag>
+	int_instantiation_statement;
+typedef instantiation_statement<enum_tag>
+	enum_instantiation_statement;
 typedef instantiation_statement<datatype_tag>
 	data_instantiation_statement;
 typedef instantiation_statement<channel_tag>
 	channel_instantiation_statement;
 typedef instantiation_statement<process_tag>
 	process_instantiation_statement;
+
+// from "Object/unroll/template_type_completion.h"
+template <class> class template_type_completion;
+typedef	template_type_completion<process_tag>
+	process_template_type_completion;
+
+// from "Object/unroll/instance_attribute.h"
+template <class> class instance_attribute;
+typedef	instance_attribute<bool_tag>
+	bool_instance_attribute;
+typedef	instance_attribute<int_tag>
+	int_instance_attribute;
+typedef	instance_attribute<enum_tag>
+	enum_instance_attribute;
+typedef	instance_attribute<channel_tag>
+	channel_instance_attribute;
+typedef	instance_attribute<process_tag>
+	process_instance_attribute;
 
 class unroll_context;
 

@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-10-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-38:
+	  Implemented much of middle-end for instance attributes, 
+		around entity::instance_attribute class template, 
+		and instantiated in Object/unroll/instantiation_statement.cc.
+	  Factored out generic_attribute from PRS::attribute for reuse.
+	  bools' (nodes) aliases now contain a field for attribute
+		and direction flags, thus changing the object binary format.  
+		Test cases have been trivially updated (create-objdump).
+		bool (node) attributes, for now, are boolean-valued and
+			have sticky-non-default values that will be propagated
+			up the instance hierarchices via bitwise OR.  
+	  connection_policy class renamed and no longer template <bool>, 
+		affected traits-classes have been updated.
+	  TODO: populate per-meta-type attribute registries, equipped with
+		symbol/value-check calls and alias modification functions.  
+
+
 2008-10-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-37:

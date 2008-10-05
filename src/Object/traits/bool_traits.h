@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.21 2007/08/15 02:49:05 fang Exp $
+	$Id: bool_traits.h,v 1.22 2008/10/05 23:00:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -14,6 +14,7 @@
 namespace HAC {
 namespace entity {
 template <class> class null_collection_type_manager;
+
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<bool_tag> {
@@ -36,7 +37,7 @@ struct class_traits<bool_tag> {
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
 	static const bool		has_CHP = false;
-	static const bool		is_connection_directional = false;
+	typedef	bool_connect_policy		connection_policy;
 	enum {		is_nonmeta_data_lvalue = true		};
 	/// defined in "Object/inst/bool_instance_collection.h"
 	class state_instance_base;

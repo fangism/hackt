@@ -64,11 +64,11 @@ Persistent Object Manager text dump:
 	60	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1410
+	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1614
 	64	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	66	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1717
+	67	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1919
 	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
@@ -95,7 +95,7 @@ In namespace "", we have: {
         bool<> composite
         x[0] = x[1] = composite;
         (;i:[0..P-1]:
-          [ $i*$i<=P -> 
+          [ $i*$i<=P ->
             (;j:[2..$i]:
               (;k:[2..P/$j]:
                 x[$j*$k] = composite;

@@ -35,7 +35,7 @@ Persistent Object Manager text dump:
 	31	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	563
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	567
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16

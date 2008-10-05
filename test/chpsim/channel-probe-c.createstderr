@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	20	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	309
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	311
 	23	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
@@ -308,7 +308,7 @@ Persistent Object Manager text dump:
 	304	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	305	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	306	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	307	##ADDR##	footprnt	0	#HEAD#	#TAIL#	801
+	307	##ADDR##	footprnt	0	#HEAD#	#TAIL#	807
 	308	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	309	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	310	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

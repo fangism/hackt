@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_functor.tcc"
 	This is a terrible name for a file...
-	$Id: persistent_functor.tcc,v 1.5 2006/04/12 08:53:22 fang Exp $
+	$Id: persistent_functor.tcc,v 1.6 2008/10/05 23:00:38 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_TCC__
@@ -32,12 +32,16 @@ write_persistent_sequence(const persistent_object_manager& m,
 }
 
 //-----------------------------------------------------------------------------
+/**
+	Suitable for containers that lack begin/end interface, like valarray.
+ */
 template <class T>
 void
 write_persistent_array(const persistent_object_manager& m, 
 		ostream& o, const T& t) {
 	typedef	typename T::value_type		value_type;
 	const size_t s = t.size();
+	write_value(o, s);
 	size_t i = 0;
 	for ( ; i<s; ++i) {
 		persistent_writer_ref(m, o)(t[i]);

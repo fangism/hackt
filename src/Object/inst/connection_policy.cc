@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.4 2006/12/01 23:28:48 fang Exp $
+	$Id: connection_policy.cc,v 1.5 2008/10/05 23:00:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,17 +13,57 @@
 
 namespace HAC {
 namespace entity {
+using util::write_value;
+using util::read_value;
 #include "util/using_ostream.h"
 
 //=============================================================================
+// bool_connect_policy method definitions
+// TODO: handle directions
+
 /**
+	Attributes are simply copied up the instance hierarchy
+	through ports.  
+ */
+void
+bool_connect_policy::initialize_actual_direction(const this_type& t) {
+	attributes = t.attributes;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Check for conflicting flags when assigning.
+ */
+good_bool
+bool_connect_policy::set_connection_flags(const connection_flags_type f) {
+	// no possible conflicts yet
+	attributes = f;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_connect_policy::write_flags(ostream& o) const {
+	write_value(o, attributes);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_connect_policy::read_flags(istream& i) {
+	read_value(i, attributes);
+}
+
+//=============================================================================
+// channel_connect_policy method definitions
+/**
+	Check for conflicting flags.  
 	Won't bother templating this method unless something else other
 	than channels is directional.  
 	Is this only called by CHP visits?
 	Checks can be a lot more sophisticated, depending on desired semantics.
  */
 good_bool
-directional_connect_policy<true>::set_connection_flags(
+channel_connect_policy::set_connection_flags(
 		const connection_flags_type f) {
 	if (f & CONNECTED_CHP_PRODUCER) {
 		if (direction_flags & CONNECTED_TO_NONCHP_PRODUCER) {
@@ -58,7 +98,7 @@ directional_connect_policy<true>::set_connection_flags(
 	\param n meta-type name.  
  */
 good_bool
-directional_connect_policy<true>::check_meta_nonmeta_usage(
+channel_connect_policy::check_meta_nonmeta_usage(
 		const connection_flags_type _or, 
 		const char* n) {
 	bool good = true;
@@ -82,8 +122,8 @@ directional_connect_policy<true>::check_meta_nonmeta_usage(
 	Write out flags.  
  */
 void
-directional_connect_policy<true>::write_flags(ostream& o) const {
-	util::write_value(o, direction_flags);
+channel_connect_policy::write_flags(ostream& o) const {
+	write_value(o, direction_flags);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -91,8 +131,8 @@ directional_connect_policy<true>::write_flags(ostream& o) const {
 	Write out flags.  
  */
 void
-directional_connect_policy<true>::read_flags(istream& i) {
-	util::read_value(i, direction_flags);
+channel_connect_policy::read_flags(istream& i) {
+	read_value(i, direction_flags);
 }
 
 //=============================================================================

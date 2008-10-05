@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_dummy_reference.h,v 1.2 2007/10/08 01:21:35 fang Exp $
+	$Id: simple_meta_dummy_reference.h,v 1.3 2008/10/05 23:00:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_H__
@@ -110,6 +110,7 @@ public:
 	CONNECT_PORT_PROTO;
 	COLLECT_ALIASES_PROTO;
 	COLLECT_SUBENTRIES_PROTO;
+	CREATE_INSTANCE_ATTRIBUTE_PROTO;
 
 	alias_connection_ptr_type
 	make_aliases_connection_private(void) const;

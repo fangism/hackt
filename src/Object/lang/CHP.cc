@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.28 2007/09/28 05:36:52 fang Exp $
+	$Id: CHP.cc,v 1.29 2008/10/05 23:00:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1675,7 +1675,7 @@ set_channel_alias_directions(
 	const count_ptr<dynamic_meta_index_list>
 		mil(ind ? ind->make_meta_index_list() :
 			count_ptr<dynamic_meta_index_list>(NULL));
-	typedef	directional_connect_policy<true>	connect_policy;
+	typedef	channel_connect_policy		connect_policy;
 	if (ind && !mil) {
 		// there was at least one non-meta index
 		// we flag all members of the array as nonmeta-accessed

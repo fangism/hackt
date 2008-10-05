@@ -48,7 +48,7 @@ Persistent Object Manager text dump:
 	40	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	442
+	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	444
 	44	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	46	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20

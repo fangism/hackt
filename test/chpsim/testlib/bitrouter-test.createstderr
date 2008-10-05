@@ -111,7 +111,7 @@ Persistent Object Manager text dump:
 	102	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	103	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	104	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	105	##ADDR##	footprnt	0	#HEAD#	#TAIL#	620
+	105	##ADDR##	footprnt	0	#HEAD#	#TAIL#	626
 	106	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	28
 	107	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	108	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

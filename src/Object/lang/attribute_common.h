@@ -1,14 +1,13 @@
 /**
-	\file "Object/lang/attribute_common.cc"
+	\file "Object/lang/attribute_common.h"
 	Helper functions for common attribute value checking.  
-	$Id: attribute_common.h,v 1.1 2008/10/03 02:04:29 fang Exp $
+	$Id: attribute_common.h,v 1.2 2008/10/05 23:00:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_ATTRIBUTE_COMMON_H__
 #define	__HAC_OBJECT_LANG_ATTRIBUTE_COMMON_H__
 
 #include <iosfwd>
-// #include "Object/expr/const_param_expr_list.h"
 #include "util/boolean_types.h"
 
 namespace HAC {

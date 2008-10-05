@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	45
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	396
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	404
 	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	288

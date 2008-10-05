@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.23 2007/07/18 23:28:40 fang Exp $
+	$Id: instance_alias_info.h,v 1.24 2008/10/05 23:00:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -59,8 +59,7 @@ class instance_alias_info :
 			class_traits<Tag>::has_substructure>, 
 		// was protected
 		public class_traits<Tag>::instance_alias_relaxed_actuals_type, 
-		public directional_connect_policy<
-			class_traits<Tag>::is_connection_directional> {
+		public class_traits<Tag>::connection_policy {
 	typedef	INSTANCE_ALIAS_INFO_CLASS	this_type;
 friend class instance_alias_info_actuals;
 public:
@@ -71,8 +70,7 @@ public:
 						substructure_parent_type;
 	typedef	internal_aliases_policy<traits_type::can_internally_alias>
 						internal_alias_policy;
-	typedef	directional_connect_policy<
-			traits_type::is_connection_directional>
+	typedef	typename traits_type::connection_policy
 						direction_connection_policy;
 	typedef	instance_collection_pool_bundle<Tag>
 						collection_pool_bundle_type;

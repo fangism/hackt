@@ -74,7 +74,7 @@ Persistent Object Manager text dump:
 	70	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	73	##ADDR##	footprnt	0	#HEAD#	#TAIL#	3366
+	73	##ADDR##	footprnt	0	#HEAD#	#TAIL#	3422
 	74	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	75	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	76	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20

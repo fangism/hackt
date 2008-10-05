@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.21 2007/01/21 05:59:38 fang Exp $
+	$Id: chan_traits.h,v 1.22 2008/10/05 23:00:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -58,7 +58,7 @@ struct class_traits<channel_tag> {
 		This uses a specialization that adds direction semantics
 		to connections, defined in "Object/inst/connection_policy.h".
 	 */
-	static const bool		is_connection_directional = true;
+	typedef	channel_connect_policy		connection_policy;
 
 	/**
 		Closure for containership, defined by specializations only.  

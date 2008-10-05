@@ -71,7 +71,7 @@ Persistent Object Manager text dump:
 	60	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
 	61	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	62	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	632
+	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	640
 	64	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	66	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20

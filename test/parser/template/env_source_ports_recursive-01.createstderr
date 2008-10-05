@@ -39,7 +39,7 @@ Persistent Object Manager text dump:
 	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
 	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -69,16 +69,16 @@ Persistent Object Manager text dump:
 	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	67	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
-	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	440
+	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	450
 	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	71	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
-	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	440
+	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	450
 	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	74	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	76	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
-	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	440
+	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	450
 	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	80	##ADDR##	procdefn	0	#HEAD#	#TAIL#	190
@@ -148,13 +148,13 @@ Persistent Object Manager text dump:
 	144	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	145	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	146	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
-	147	##ADDR##	footprnt	0	#HEAD#	#TAIL#	496
+	147	##ADDR##	footprnt	0	#HEAD#	#TAIL#	506
 	148	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	149	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	150	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	151	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	152	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
-	153	##ADDR##	footprnt	0	#HEAD#	#TAIL#	877
+	153	##ADDR##	footprnt	0	#HEAD#	#TAIL#	907
 	154	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	155	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	156	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
@@ -162,7 +162,7 @@ Persistent Object Manager text dump:
 	158	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	159	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	160	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
-	161	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1213
+	161	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1263
 	162	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	163	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	164	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
@@ -177,7 +177,7 @@ Persistent Object Manager text dump:
 	173	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	174	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	175	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	176	##ADDR##	footprnt	0	#HEAD#	#TAIL#	789
+	176	##ADDR##	footprnt	0	#HEAD#	#TAIL#	819
 	177	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	178	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
@@ -373,7 +373,7 @@ In namespace "", we have: {
       unroll sequence: 
         source_e<source_pack_port_test::M> Src[0..N-1]
         Src[0]<1, { d[0] }>
-        [ N>1 -> 
+        [ N>1 ->
           source_pack_port_test<source_pack_port_test::M, source_pack_port_test::N-1> rec
           rec<d[1..N-1]>
           rec (Src[1..N-1]);

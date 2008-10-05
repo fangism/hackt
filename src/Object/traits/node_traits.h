@@ -1,7 +1,7 @@
 /**
 	\file "Object/traits/node_traits.h"
 	Traits and policies for internal nodes.  
-	$Id: node_traits.h,v 1.2 2007/10/08 01:21:45 fang Exp $
+	$Id: node_traits.h,v 1.3 2008/10/05 23:00:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_NODE_TRAITS_H__
@@ -39,7 +39,7 @@ struct class_traits<node_tag> {
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
 	static const bool		has_CHP = false;
-	static const bool		is_connection_directional = false;
+	typedef	null_connect_policy		connection_policy;
 #if 0
 	enum {		is_nonmeta_data_lvalue = true		};
 	/// defined in "Object/inst/bool_instance_collection.h"

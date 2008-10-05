@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.16 2007/10/08 01:21:34 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.17 2008/10/05 23:00:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -13,6 +13,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/lang/generic_attribute_fwd.h"
 #include "Object/ref/reference_enum.h"
 #include "util/boolean_types.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
@@ -29,6 +30,7 @@ class definition_base;
 class fundamental_type_reference;
 class instance_collection_base;
 class physical_instance_collection;
+class instance_management_base;
 class aliases_connection_base;
 class port_connection_base;
 class const_range_list;
@@ -156,6 +158,14 @@ virtual	COLLECT_ALIASES_PROTO = 0;
 	collect_subentries(const module&, entry_collection&) const
 
 virtual	COLLECT_SUBENTRIES_PROTO = 0;
+
+#define	CREATE_INSTANCE_ATTRIBUTE_PROTO					\
+	count_ptr<const instance_management_base>			\
+	create_instance_attribute(					\
+		const count_ptr<const meta_instance_reference_base>&, 	\
+		const generic_attribute_list_type&) const
+
+virtual	CREATE_INSTANCE_ATTRIBUTE_PROTO = 0;
 
 #define	UNROLL_RESOLVE_COPY_REFERENCE_PROTO				\
 	count_ptr<const meta_instance_reference_base>			\

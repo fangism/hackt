@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.198 2008/10/03 02:04:22 fang Exp $
+#	$Id: Makefile.am,v 1.199 2008/10/05 23:00:05 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -637,6 +637,7 @@ OBJECT_CC_FILES = \
 	Object/lang/directive_base.cc \
 	Object/lang/directive_definition.cc \
 	Object/lang/directive_source.cc \
+	Object/lang/generic_attribute.cc \
 	Object/lang/PRS.cc \
 	Object/lang/PRS_footprint.cc \
 	Object/lang/PRS_attribute_common.cc \
@@ -682,6 +683,7 @@ OBJECT_TCC_FILES = \
 	Object/unroll/alias_connection.tcc \
 	Object/unroll/expression_assignment.tcc \
 	Object/unroll/instantiation_statement.tcc \
+	Object/unroll/instance_attribute.tcc \
 	Object/unroll/meta_conditional.tcc \
 	Object/unroll/meta_loop.tcc \
 	Object/unroll/template_type_completion.tcc \
@@ -803,6 +805,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/string_expr.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
+	Object/lang/generic_attribute_fwd.h \
 	Object/lang/cflat_visitee.h \
 	Object/lang/PRS_enum.h \
 	Object/lang/PRS_footprint_expr.h \
@@ -831,6 +834,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/instance_management_base.h \
 	Object/unroll/instantiation_statement_base.h \
 	Object/unroll/instantiation_statement_type_ref_default.h \
+	Object/unroll/instance_attribute.h \
 	Object/unroll/channel_instantiation_type_ref_base.h \
 	Object/unroll/meta_conditional.h \
 	Object/unroll/meta_loop.h \

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.3 2006/12/01 23:28:49 fang Exp $
+	$Id: connection_policy.h,v 1.4 2008/10/05 23:00:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -20,9 +20,8 @@ using util::good_bool;
 /**
 	Operations in this specialization should be no-ops.  
  */
-template <>
-class directional_connect_policy<false> {
-	typedef	directional_connect_policy<false>	this_type;
+class null_connect_policy {
+	typedef	null_connect_policy		this_type;
 	// default ctor and dtor
 protected:
 	/**
@@ -79,16 +78,103 @@ protected:
 	void
 	read_flags(const istream&) const { }
 
-};	// end struct directional_connect_policy
+};	// end struct null_connect_policy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Where bool attributes and direction checking information is maintained
+	per-alias.
+	As connections are made, values are also updated and propagated. 
+ */
+class bool_connect_policy {
+	typedef	bool_connect_policy		this_type;
+public:
+	/**
+		The way boolean node attributes are propagated is
+		by bitwise OR, so values should be defined and chosen
+		so that set bits propagate when aliases are combined.  
+	 */
+	enum flags {
+	/**
+		Stipulates that the node should be treated as combinational
+		Number of bit fields is constrained by 
+		sizeof(connection_flags_tpye)
+	 */
+		BOOL_IS_COMBINATIONAL	= 0x0001,
+	/**
+		Tells netlist generations tools NOT to automatically
+		add staticizers to dynamic node.  
+	 */
+		BOOL_NO_AUTOKEEPER	= 0x0002,
+		BOOL_DEFAULT_ATTRIBUTES = 0x0000
+	};
+	connection_flags_type			attributes;
+
+	bool_connect_policy() : attributes(BOOL_DEFAULT_ATTRIBUTES) { }
+protected:
+	/**
+		No-op.  
+	 */
+	static
+	good_bool
+	synchronize_flags(this_type& l, this_type& r) {
+		l.attributes |= r.attributes;
+		r.attributes = l.attributes;
+		// TODO: handle direction checking!
+		return good_bool(true);
+	}
+
+	template <class ContainerType>
+	void
+	initialize_direction(const ContainerType&);
+
+	void
+	initialize_actual_direction(const this_type&);
+
+public:
+	good_bool
+	set_connection_flags(const connection_flags_type);
+
+protected:
+	template <class AliasType>
+	void
+	__update_flags(AliasType&);
+
+	template <class AliasType>
+	static
+	good_bool
+	__check_connection(const AliasType&);
+
+public:
+	struct connection_flag_setter {
+		const good_bool		status;
+
+		explicit
+		connection_flag_setter(const connection_flags_type) :
+			status(true) { }
+
+		/**
+			No-op, directions do not apply.  
+		 */
+		void
+		operator () (const this_type&) const { }
+	};	// end struct collection_connection_flag_setter
+
+protected:
+	void
+	write_flags(ostream&) const;
+
+	void
+	read_flags(istream&);
+};	// end struct bool_connect_policy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Specialized operations for direction-sensitive meta-types.  
  */
-template <>
-struct directional_connect_policy<true> {
+struct channel_connect_policy {
 private:
-	typedef	directional_connect_policy<true>	this_type;
+	typedef	channel_connect_policy		this_type;
 public:
 	enum direction_flags {
 		/**
@@ -200,7 +286,7 @@ public:
 protected:
 	connection_flags_type		direction_flags;
 public:
-	directional_connect_policy() :
+	channel_connect_policy() :
 		direction_flags(DEFAULT_CONNECT_FLAGS) { }
 
 	/**
@@ -259,7 +345,7 @@ public:
 	void
 	read_flags(istream&);
 
-};	// end struct directional_connect_policy
+};	// end struct channel_connect_policy
 
 //=============================================================================
 }	// end namesace entity

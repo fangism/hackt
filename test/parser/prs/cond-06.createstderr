@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	272
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	274
 	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
 	11	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
@@ -26,9 +26,9 @@ Persistent Object Manager text dump:
 	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	281
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	283
 	26	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	336
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	340
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
@@ -77,7 +77,7 @@ In namespace "", we have: {
         x = bool<> foo::x
       unroll sequence: 
         bool<> x
-        [ N -> 
+        [ N ->
           bar<> b
           b (x);
         ]

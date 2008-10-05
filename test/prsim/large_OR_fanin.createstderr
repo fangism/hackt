@@ -17,7 +17,7 @@ Persistent Object Manager text dump:
 	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	327
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	331
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
@@ -32,7 +32,7 @@ Persistent Object Manager text dump:
 	28	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	19820
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	20850
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

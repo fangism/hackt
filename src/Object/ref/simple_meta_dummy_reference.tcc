@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.cc"
 	Method definitions for the meta_dummy_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_dummy_reference.tcc,v 1.2 2007/10/08 01:21:36 fang Exp $
+ 	$Id: simple_meta_dummy_reference.tcc,v 1.3 2008/10/05 23:00:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_TCC__
@@ -235,6 +235,16 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_footprint_frame(
 		const state_manager&, const footprint&) const {
 	ICE_NEVER_CALL(cerr);
 	return NULL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const instance_management_base>
+SIMPLE_META_DUMMY_REFERENCE_CLASS::create_instance_attribute(
+		const count_ptr<const meta_instance_reference_base>&, 
+		const generic_attribute_list_type&) const {
+	ICE_NEVER_CALL(cerr);
+	return count_ptr<const instance_management_base>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

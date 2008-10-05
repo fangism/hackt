@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.22 2008/03/17 23:02:27 fang Exp $
+	$Id: PRS.h,v 1.23 2008/10/05 23:00:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -10,6 +10,7 @@
 #include "Object/lang/PRS_base.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/bool_literal.h"
+#include "Object/lang/generic_attribute.h"
 #include "Object/lang/directive_source.h"
 #include "Object/unroll/meta_loop_base.h"
 #include "Object/unroll/meta_conditional_base.h"
@@ -116,19 +117,10 @@ public:
 
 //=============================================================================
 /**
-	Consideration: for efficient copy-constructing, 
-	use a count_ptr<vector<...> > instead of a vector.  
-	String are already efficiently copied internally.  
+	Inherits mostly from generic_attribute, but gives PRS-specific
+	interface.  
  */
-class attribute {
-public:
-	typedef	dynamic_param_expr_list		values_type;
-	typedef	count_ptr<const param_expr>	value_type;
-	typedef	const value_type&		const_reference;
-	typedef	value_type&			reference;
-private:
-	string					key;
-	count_ptr<values_type>			values;
+class attribute : public generic_attribute {
 public:
 	attribute();
 
@@ -137,31 +129,10 @@ public:
 
 	~attribute();
 
-	operator bool () const;
-
-	// arg is equiv to const_reference
-	void
-	push_back(const value_type&);
-
-	const string&
-	get_key(void) const { return key; }
-
 	ostream&
 	dump(ostream&, const rule_dump_context& c) const;
 
-	count_ptr<const const_param_expr_list>
-	unroll_values(const unroll_context&) const;
-
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object(const persistent_object_manager&, istream&);
-
-};	// end class attribute
+};	// end class generic_attribute
 
 //-----------------------------------------------------------------------------
 typedef	std::vector<attribute>		rule_attribute_list_type;

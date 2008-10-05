@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.29 2008/10/03 02:04:26 fang Exp $
+	$Id: PRS.cc,v 1.30 2008/10/05 23:00:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -355,80 +355,18 @@ rule_set::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class attribute method definitions
 
-attribute::attribute() : key(), values() { }
+attribute::attribute() : generic_attribute() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-attribute::attribute(const string& k) : key(k), values() { }
+attribute::attribute(const string& k) : generic_attribute(k) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 attribute::~attribute() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-attribute::operator bool () const {
-	return key.length();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-attribute::push_back(const value_type& e) {
-	if (!values) {
-		values = count_ptr<values_type>(new values_type);
-		NEVER_NULL(values);
-	}
-	values->push_back(e);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 attribute::dump(ostream& o, const rule_dump_context& c) const {
-	o << key << '=';
-	if (values) {
-		values->dump(o, entity::expr_dump_context(c));
-	}
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const const_param_expr_list>
-attribute::unroll_values(const unroll_context& c) const {
-if (values) {
-	const count_ptr<const const_param_expr_list>
-		ret(values->unroll_resolve_rvalues(c, values));
-	if (!ret) {
-		cerr << "Error resolving attribute values!" << endl;
-	}
-	return ret;
-} else {
-	// return non-null empty value list, b/c null => error
-	return count_ptr<const const_param_expr_list>(
-		new const_param_expr_list);
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Does NOT register itself, because called by reference, not pointer.  
- */
-void
-attribute::collect_transient_info_base(persistent_object_manager& m) const {
-	if (values)
-		values->collect_transient_info(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-attribute::write_object(const persistent_object_manager& m, ostream& o) const {
-	INVARIANT(key.length());
-	write_value(o, key);
-	m.write_pointer(o, values);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-attribute::load_object(const persistent_object_manager& m, istream& i) {
-	read_value(i, key);
-	INVARIANT(key.length());
-	m.read_pointer(i, values);
+	return generic_attribute::dump(o, entity::expr_dump_context(c));
 }
 
 //=============================================================================

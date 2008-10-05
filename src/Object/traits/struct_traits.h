@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.22 2007/01/21 05:59:41 fang Exp $
+	$Id: struct_traits.h,v 1.23 2008/10/05 23:00:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -36,7 +36,7 @@ struct class_traits<datastruct_tag> {
 		This is pending implementation of set/get semantics.
 	 */
 	static const bool		has_CHP = true;
-	static const bool		is_connection_directional = false;
+	typedef	null_connect_policy		connection_policy;
 	enum {		is_nonmeta_data_lvalue = true		};
 
 	/**

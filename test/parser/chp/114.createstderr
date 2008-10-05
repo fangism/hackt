@@ -53,7 +53,7 @@ Persistent Object Manager text dump:
 	44	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	45	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	522
+	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	526
 	48	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20

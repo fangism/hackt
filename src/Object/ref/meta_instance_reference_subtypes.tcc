@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.23 2007/11/26 20:11:25 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.24 2008/10/05 23:00:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -14,6 +14,7 @@
 #include "Object/unroll/port_connection_base.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/unroll/instance_attribute.h"
 #include "Object/def/footprint.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/inst/physical_instance_collection.h"
@@ -333,6 +334,25 @@ META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 		indices.push_back((*i)->instance_index);
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Create an instance attribute statement that associates
+	Also should check per-meta-class instance attribute registry.  
+ */
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const instance_management_base>
+META_INSTANCE_REFERENCE_CLASS::create_instance_attribute(
+		const count_ptr<const meta_instance_reference_base>& _this, 
+		const generic_attribute_list_type& a) const {
+	INVARIANT(_this == this);
+	const count_ptr<const this_type>
+		p(_this.template is_a<const this_type>());
+	NEVER_NULL(p);
+	const count_ptr<const instance_management_base>
+		ret(new instance_attribute<Tag>(p, a));
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

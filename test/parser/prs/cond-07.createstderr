@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	272
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	274
 	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
 	11	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
@@ -36,9 +36,9 @@ Persistent Object Manager text dump:
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	299
 	36	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	413
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	421
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
@@ -89,7 +89,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> x
         bool<> y
-        [ N -> 
+        [ N ->
           bar<> b[0..1]
           b[0] (x);
           b[1] (y);

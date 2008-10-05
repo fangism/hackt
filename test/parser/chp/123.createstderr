@@ -37,7 +37,7 @@ Persistent Object Manager text dump:
 	31	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	32	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	364
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25

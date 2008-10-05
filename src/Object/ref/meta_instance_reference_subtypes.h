@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.13 2007/01/21 05:59:29 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.14 2008/10/05 23:00:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -109,6 +109,7 @@ protected:
 
 	COLLECT_ALIASES_PROTO;
 	COLLECT_SUBENTRIES_PROTO;
+	CREATE_INSTANCE_ATTRIBUTE_PROTO;
 
 private:
 	alias_connection_ptr_type
