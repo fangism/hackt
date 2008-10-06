@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.8 2008/09/30 07:39:34 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.9 2008/10/06 07:41:55 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -68,10 +68,16 @@ typedef	real_time			rule_time_type;
 
 //=============================================================================
 enum {
-	/// index of the first valid node
-	FIRST_VALID_NODE = SIM::INVALID_NODE_INDEX +1,
-	/// index of the first valid expr/expr_graph_node
-	FIRST_VALID_EXPR = SIM::INVALID_EXPR_INDEX +1,
+	/// index of the first valid global node
+	FIRST_VALID_GLOBAL_NODE = SIM::INVALID_NODE_INDEX +1,
+	/// index of the first valid global expr/expr_graph_node
+	FIRST_VALID_GLOBAL_EXPR = SIM::INVALID_EXPR_INDEX +1,
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/// index of the first valid local node
+	FIRST_VALID_LOCAL_NODE = 0, 
+	/// index of the first valid local expr/expr_graph_node
+	FIRST_VALID_LOCAL_EXPR = 0,
+#endif
 	/// index of the first valid event
 	FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 };
@@ -217,6 +223,13 @@ protected:
 
 		bool
 		contains_fanout(const expr_index_type) const;
+
+		static
+		ostream&
+		dump_faninout_list(ostream&, const fanin_array_type&);
+
+		ostream&
+		dump_struct(ostream&) const;
 
 	};	// end struct faninout_struct_type
 	/**

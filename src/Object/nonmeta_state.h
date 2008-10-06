@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.3 2007/02/05 06:39:43 fang Exp $
+	$Id: nonmeta_state.h,v 1.3.48.1 2008/10/06 07:41:37 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -35,7 +35,7 @@ public:
 	typedef	typename implementation::type	instance_type;
 	typedef	vector<instance_type>		pool_type;
 	enum {
-		FIRST_VALID_NODE = 1
+		FIRST_VALID_GLOBAL_NODE = 1
 			// == SIM::INVALID_NODE_INDEX +1
 	};
 protected:
@@ -86,7 +86,7 @@ class nonmeta_state_manager :
 	typedef	nonmeta_state_base<enum_tag>	enum_base_type;
 	typedef	nonmeta_state_base<channel_tag>	channel_base_type;
 	enum {
-		FIRST_VALID_NODE = 1
+		FIRST_VALID_GLOBAL_NODE = 1
 			// == SIM::INVALID_NODE_INDEX +1
 	};
 public:

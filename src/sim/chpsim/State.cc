@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.15 2008/03/17 23:02:47 fang Exp $
+	$Id: State.cc,v 1.15.2.1 2008/10/06 07:41:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1600,7 +1600,7 @@ if (g.show_channels) {
 	o << "node [shape=plaintext];" << endl;	// change node style
 	o << "edge [style=dashed];" << endl;
 	// keep arrowheads? constraint=false?
-	i = 1;	// FIRST_VALID_NODE
+	i = 1;	// FIRST_VALID_GLOBAL_NODE
 	for ( ; i<cpool.size(); ++i) {
 		const event_id_set_type& ss(send_map[i]), rs(recv_map[i]);
 		event_id_set_type::const_iterator

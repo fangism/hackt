@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.5 2008/09/28 04:58:23 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.6 2008/10/06 07:41:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -262,14 +262,24 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	if (f == process_footprint_map.end()) {
 		type_index = state.unique_process_pool.size();
 		state.unique_process_pool.push_back(unique_process_subgraph());
-		const util::value_saver<unique_process_subgraph*>
-			tmp(g, &state.unique_process_pool.back());
+		unique_process_subgraph& u(state.unique_process_pool.back());
+		const util::value_saver<unique_process_subgraph*> tmp(g, &u);
+		// resize the faninout_struct array as if it were local nodes
+		// kludgy way of inferring the correct footprint
+		u.local_faninout_map.resize(state.get_module().
+			get_state_manager().get_pool<process_tag>()
+			[state.process_state_array.size()]._frame
+			.get_frame_map<bool_tag>().size());
 		cflat_visitor::visit(pfp);
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		// definitely want to keep this
 		if (flags.any_optimize() && expr_free_list.size()) {
 			compact_expr_pools();
 		}
+#if ENABLE_STACKTRACE
+		state.dump_struct(cerr << "Final local struct:" << endl)
+			<< endl;
+#endif
 #endif
 		// auto-restore graph pointer
 	} else {
@@ -444,7 +454,6 @@ ExprAlloc::compact_expr_pools(void) {
 #undef	DEBUG_CLEANUP
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Update node fanin, and keep it consistent.  
 	\pre state's node_array is already allocated.  
@@ -459,7 +468,7 @@ try {
 	// which needs to be translated to global ID.
 	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
-	const size_t ni = __lookup_global_bool_id(r.output_index);
+	const size_t ni = lookup_local_bool_id(r.output_index);
 
 	// ignored: state.expr_expr_graph_node_pool[top_ex_index].offset
 	// not computing node fanin?  this would be the place to do it...
@@ -769,7 +778,7 @@ switch (type) {
 		// leaf node
 		INVARIANT(sz == 1);
 		// lookup global bool ID
-		const node_index_type ni = __lookup_global_bool_id(e.only());
+		const node_index_type ni = lookup_local_bool_id(e.only());
 		ret_ex_index = allocate_new_literal_expr(ni);
 		break;
 	}
@@ -815,7 +824,7 @@ switch (type) {
 		break;
 }	// end switch
 	// 'return' the index of the expr just allocated in ret_ex_index
-#if ENABLE_STACKTRACE
+#if 0 && ENABLE_STACKTRACE
 	state.dump_struct(cerr) << endl;
 #endif
 }	// end method visit(const footprint_expr_node&)
@@ -883,17 +892,22 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
 	STACKTRACE_INDENT_PRINT("linking expr " << top_ex_index <<
 		" to node " << ni << ' ' << (dir ? '+' : '-') << endl);
+	expr_type& ne(g->expr_pool[top_ex_index]);
+	graph_node_type& ng(g->expr_graph_node_pool[top_ex_index]);
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	g->local_faninout_map[ni].get_pull_expr(dir
+	unique_process_subgraph::fanin_array_type& fin(
+		g->local_faninout_map[ni].get_pull_expr(dir
 #if PRSIM_WEAK_RULES
-		, w
+			, w
 #endif
-		).push_back(top_ex_index);
+		));
+	// root expression's position in node's fanin (OR-combination)
+	ng.offset = fin.size();	
+	fin.push_back(top_ex_index);		// append to fanin rules
+	ne.pull(ni, dir);			// set as a root expression
 #else	// PRSIM_INDIRECT_EXPRESSION_MAP
 	node_type& output(st_node_pool[ni]);
 	// now link root expression to node
-	expr_type& ne(g->expr_pool[top_ex_index]);
-	graph_node_type& ng(g->expr_graph_node_pool[top_ex_index]);
 	// prepare to take OR-combination?
 	// or can we get away with multiple pull-up/dn roots?
 	// or cheat! short-cut to root during operation.  
@@ -1128,11 +1142,11 @@ PassN::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
 	const expr_index_type g =
 		v.allocate_new_literal_expr(
-			v.__lookup_global_bool_id(*nodes[0].begin()));
+			v.lookup_local_bool_id(*nodes[0].begin()));
 	const expr_index_type s =
 		v.allocate_new_literal_expr(
-			v.__lookup_global_bool_id(*nodes[1].begin()));
-	const node_index_type d = v.__lookup_global_bool_id(*nodes[2].begin());
+			v.lookup_local_bool_id(*nodes[1].begin()));
+	const node_index_type d = v.lookup_local_bool_id(*nodes[2].begin());
 	INVARIANT(g && s && d);
 	// construct and allocate rule
 	const expr_index_type ns = v.allocate_new_not_expr(s);
@@ -1165,11 +1179,11 @@ PassP::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
 	const expr_index_type g =
 		v.allocate_new_literal_expr(
-			v.__lookup_global_bool_id(*nodes[0].begin()));
+			v.lookup_local_bool_id(*nodes[0].begin()));
 	const expr_index_type s =
 		v.allocate_new_literal_expr(
-			v.__lookup_global_bool_id(*nodes[1].begin()));
-	const node_index_type d = v.__lookup_global_bool_id(*nodes[2].begin());
+			v.lookup_local_bool_id(*nodes[1].begin()));
+	const node_index_type d = v.lookup_local_bool_id(*nodes[2].begin());
 	INVARIANT(g && s && d);
 	// construct and allocate rule
 	const expr_index_type ng = v.allocate_new_not_expr(g);
@@ -1251,7 +1265,7 @@ LVS_exclhi::main(visitor_type& v, const param_args_type& params,
 		index_iterator ii(i->begin()), ie(i->end());
 		for ( ; ii!=ie; ++ii) {
 			const node_index_type ni =
-				v.__lookup_global_bool_id(*ii);
+				v.lookup_global_bool_id(*ii);
 			temp.insert(ni);
 		}
 	}
@@ -1282,7 +1296,7 @@ LVS_excllo::main(visitor_type& v, const param_args_type& params,
 		index_iterator ii(i->begin()), ie(i->end());
 		for ( ; ii!=ie; ++ii) {
 			const node_index_type ni =
-				v.__lookup_global_bool_id(*ii);
+				v.lookup_global_bool_id(*ii);
 			temp.insert(ni);
 		}
 	}
@@ -1315,7 +1329,7 @@ SIM_force_exclhi::main(visitor_type& v, const param_args_type& params,
 		index_iterator ii(i->begin()), ie(i->end());
 		for ( ; ii!=ie; ++ii) {
 			const node_index_type ni =
-				v.__lookup_global_bool_id(*ii);
+				v.lookup_global_bool_id(*ii);
 			r.insert(ni);
 		}
 	}
@@ -1323,7 +1337,7 @@ SIM_force_exclhi::main(visitor_type& v, const param_args_type& params,
 	for ( ; i!=e; ++i) {
 		INVARIANT(i->size() == 1);
 		const node_index_type ni =
-			v.__lookup_global_bool_id(*i->begin());
+			v.lookup_global_bool_id(*i->begin());
 		r.insert(ni);
 	}
 #endif
@@ -1356,7 +1370,7 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 		index_iterator ii(i->begin()), ie(i->end());
 		for ( ; ii!=ie; ++ii) {
 			const node_index_type ni =
-				v.__lookup_global_bool_id(*ii);
+				v.lookup_global_bool_id(*ii);
 			r.insert(ni);
 		}
 	}
@@ -1364,7 +1378,7 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 	for ( ; i!=e; ++i) {
 		INVARIANT(i->size() == 1);
 		const node_index_type ni =
-			v.__lookup_global_bool_id(*i->begin());
+			v.lookup_global_bool_id(*i->begin());
 		r.insert(ni);
 	}
 #endif

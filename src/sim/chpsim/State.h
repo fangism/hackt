@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.10 2008/03/17 23:02:48 fang Exp $
+	$Id: State.h,v 1.10.2.1 2008/10/06 07:41:40 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -149,7 +149,7 @@ private:
 	// NOTE: duplicate definition in InstancePools
 	enum {
 		/// index of the first valid node
-		FIRST_VALID_NODE = SIM::INVALID_NODE_INDEX +1,
+		FIRST_VALID_GLOBAL_NODE = SIM::INVALID_NODE_INDEX +1,
 		/// index of the first valid event
 		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 	};

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.9.2.3 2008/08/06 08:06:09 fang Exp $
+	$Id: ExprAlloc.h,v 1.9.2.4 2008/10/06 07:41:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -134,6 +134,29 @@ protected:
 	visit(const footprint_directive&);
 
 public:
+// wrapper implementations:
+// select depending on whether target is local scope or global scope
+
+	node_index_type
+	lookup_local_bool_id(const node_index_type ni) const {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	// DELIBERATE OVERRIDE: DO NOT TRANSLATE TO GLOBAL NODE INDICES!
+	// if node index argument comes from PRS_footprint, then it was
+	// 1-indexed, and needs to be converted to 0-indexed.
+		INVARIANT(ni);
+		return ni -1;
+#else
+		return __lookup_global_bool_id(ni);
+#endif
+	}
+
+	// for now, exclusive rings (both force and check) use this
+	// eventually, they may be pushed into local subgraphs...
+	node_index_type
+	lookup_global_bool_id(const node_index_type ni) const {
+		return __lookup_global_bool_id(ni);
+	}
+
 	// these public functions are really only intended for
 	// macro/directive/attribute visitor classes...
 

@@ -5,6 +5,21 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-10-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-09:
+	  Turned on PRSIM_INDIRECT_EXPRESSION_MAP! (beginning to debug...)
+		ExprAlloc visitors adjusted to use local node indices
+			where appropriate, properly presize the local node
+			fanin/out structure array by footprint_frame, 
+			fixed ::link_node_to_root_expr()
+		State-prsim: distinguish FIRST_VALID_GLOBAL_* indices
+			from FIRST_VALID_LOCAL_* indices, 
+			removed false nonzero assertion checks
+	  Basic inverter process passes structural testing!
+		Then the events don't quite work right yet...
+
+
 2008-09-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-08:
