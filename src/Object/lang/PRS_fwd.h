@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_fwd.h"
 	Forward declarations and typedefs for PRS-related classes;
-	$Id: PRS_fwd.h,v 1.4 2008/10/03 02:04:28 fang Exp $
+	$Id: PRS_fwd.h,v 1.5 2008/10/07 03:22:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FWD_H__
@@ -19,10 +19,11 @@
 namespace HAC {
 namespace entity {
 class const_param_expr_list;
-typedef	const_param_expr_list		bool_attribute_values_type;
+typedef	const_param_expr_list		resolved_attribute_values_type;
+typedef	resolved_attribute_values_type	bool_attribute_values_type;
 
 namespace PRS {
-typedef	const_param_expr_list		rule_attribute_values_type;
+typedef	resolved_attribute_values_type	rule_attribute_values_type;
 
 #if HUGE_MAX_EXPR_COUNT
 typedef	ushort				expr_count_type;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/instance_attribute.tcc"
 	Implementation of generic attribute statements.  
-	$Id: instance_attribute.tcc,v 1.1 2008/10/05 23:00:35 fang Exp $
+	$Id: instance_attribute.tcc,v 1.2 2008/10/07 03:22:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_ATTRIBUTE_TCC__
@@ -9,17 +9,26 @@
 
 #include "Object/unroll/instance_attribute.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/what.tcc"
 #include "common/TODO.h"
 
 namespace HAC {
 namespace entity {
+#include "util/using_ostream.h"
 using util::persistent_traits;
 
 //=============================================================================
 // class instance_attribute method definitions
 
+INSTANCE_ATTRIBUTE_TEMPLATE_SIGNATURE
+bool
+INSTANCE_ATTRIBUTE_CLASS::attribute_exists(const string& k) {
+	return attribute_registry.find(k) != attribute_registry.end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ATTRIBUTE_TEMPLATE_SIGNATURE
 INSTANCE_ATTRIBUTE_CLASS::instance_attribute() :
 		instance_management_base(), ref(), attrs() { }
@@ -54,13 +63,54 @@ INSTANCE_ATTRIBUTE_CLASS::dump(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: lookup map of functions to apply to alias
 	Use template_type_completion::unroll as a reference...
+	For now, error out on unknown attributes.  
  */
 INSTANCE_ATTRIBUTE_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ATTRIBUTE_CLASS::unroll(const unroll_context& c) const {
-	FINISH_ME(Fang);
+	typedef	typename reference_type::alias_collection_type
+					alias_collection_type;
+	alias_collection_type aliases;
+	if (ref->unroll_references_packed(c, aliases).bad) {
+		cerr << "Error resolving references of instance attribute."
+			<< endl;
+		return good_bool(false);
+	}
+	// for each alias, for each attribute... does loop order matter?
+	typedef	generic_attribute_list_type::const_iterator
+					attribute_iterator;
+	attribute_iterator ti(attrs.begin()), te(attrs.end());
+for ( ; ti!=te; ++ti) {
+	const string& k(ti->get_key());
+	const count_ptr<const const_param_expr_list>
+		v(ti->unroll_values(c));
+	if (!v) {
+		cerr << "Error resolving attribute values of \'" << k
+			<< "\'.  " << endl;
+		return good_bool(false);
+	}
+	typename attribute_registry_type::const_iterator
+		cf(attribute_registry.find(k));
+	if (cf == attribute_registry.end()) {
+		cerr << "Error: unknown instance attribute \'" << k
+			<< "\'.  " << endl;
+		return good_bool(false);
+	}
+	// check values separately?
+	if (!cf->second.check_values(*v).good) {
+		// already have error message
+		return good_bool(false);
+	}
+	// apply to all aliases
+	typedef	typename alias_collection_type::const_iterator
+					alias_iterator;
+	alias_iterator ai(aliases.begin()), ae(aliases.end());
+	for ( ; ai!=ae; ++ai) {
+		NEVER_NULL(*ai);
+		cf->second.main(**ai, *v);	// apply attribute
+	}
+}
 	return good_bool(true);
 }
 

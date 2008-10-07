@@ -1,0 +1,49 @@
+@c "chapters/attributes.texi"
+@c $Id: attributes.texi,v 1.1 2008/10/07 03:22:17 fang Exp $
+
+@node Attributes
+@chapter Attributes
+@cindex attributes
+
+Instance attributes are a way of communicating to other tools that
+something is @emph{special} about a particular instance.  
+The language provides some attributes for the standard meta-types.  
+
+@menu
+* Bool Attributes::
+* Channel Attributes::
+* Process Attributes::
+@end menu
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Bool Attributes
+@section Bool Attributes
+
+Thus far all attributes on bools (nodes) are boolean valued.  
+The default un-attributed node assumes default values for 
+all known attributes.  
+Boolean attributes are contagious in that once they are set 
+to non-default values, they cannot be unset.
+Non-default values also propagate bottom-up through ports 
+in the instance hierarchy.  
+(They cannot propagate top-down, for that would violate modularity.)
+Furthermore, when connecting nodes, the non-default value always
+dominates (spreads contagiously).  
+Keep this in mind when deciding at which level of hierarchy to
+attach attributes.  
+
+@include attrib/bool-iscomb.texi
+@include attrib/bool-autokeeper.texi
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Channel Attributes
+@section Channel Attributes
+
+TODO: add some attributes
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Process Attributes
+@section Process Attributes
+
+TODO: add some attributes
+

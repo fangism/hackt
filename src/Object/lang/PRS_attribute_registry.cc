@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.14 2008/10/03 02:04:28 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.15 2008/10/07 03:22:23 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -46,7 +46,7 @@ template <class T>
 static
 size_t
 register_cflat_attribute_class(void) {
-	typedef	cflat_attribute_registry_type::iterator		iterator;
+//	typedef	cflat_attribute_registry_type::iterator		iterator;
 	typedef	cflat_attribute_registry_type::mapped_type	mapped_type;
 	const string k(T::name);
 	mapped_type& m(__cflat_attribute_registry[k]);

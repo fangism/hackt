@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.24 2008/10/05 23:00:21 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.25 2008/10/07 03:22:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -346,13 +346,22 @@ count_ptr<const instance_management_base>
 META_INSTANCE_REFERENCE_CLASS::create_instance_attribute(
 		const count_ptr<const meta_instance_reference_base>& _this, 
 		const generic_attribute_list_type& a) const {
+	typedef	count_ptr<const instance_management_base>	return_type;
 	INVARIANT(_this == this);
 	const count_ptr<const this_type>
 		p(_this.template is_a<const this_type>());
 	NEVER_NULL(p);
-	const count_ptr<const instance_management_base>
-		ret(new instance_attribute<Tag>(p, a));
-	return ret;
+	generic_attribute_list_type::const_iterator
+		i(a.begin()), e(a.end());
+	for ( ; i!=e; ++i) {
+		const string& k(i->get_key());
+		if (!instance_attribute<Tag>::attribute_exists(k)) {
+			cerr << "Error: unknown " << traits_type::tag_name <<
+				" attribute \'" << k << "\'.  " << endl;
+			return return_type(NULL);
+		}
+	}
+	return return_type(new instance_attribute<Tag>(p, a));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

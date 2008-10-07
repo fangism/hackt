@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.29 2008/10/05 23:00:07 fang Exp $
+	$Id: instance.cc,v 1.30 2008/10/07 03:22:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -1311,31 +1311,30 @@ if (args) {
 	c.add_instance_management(nr);
 }
 if (attribs) {
-#if 0
-	FINISH_ME(Fang);
-#else
 	entity::generic_attribute_list_type atts;
 	attribs->check_list(atts, &check_generic_attribute, c);
 	if (find(atts.begin(), atts.end(), false) != atts.end()) {
-		cerr << "ERROR in attributes list." << endl;
+		cerr << "ERROR in attributes list.  "
+			<< where(*attribs) << endl;
 		THROW_EXIT;
 	}
 	// this will check for registered attributes
 	if (ref.value_ref()) {
-		cerr << "Error: values do not take attributes." << endl;
+		cerr << "Error: values do not take attributes.  " 
+			<< where(*attribs) << endl;
 		THROW_EXIT;
 	}
 	const count_ptr<meta_instance_reference_base>
 		iref(ref.inst_ref());
-	INVARIANT(iref);
+	NEVER_NULL(iref);
 	const count_ptr<const instance_management_base>
 		ia(iref->create_instance_attribute(iref, atts));
 	if (!ia) {
-		cerr << "Error in instance attributes." << endl;
+		cerr << "Error in instance attributes.  "
+			<< where(*attribs) << endl;
 		THROW_EXIT;
 	}
 	c.add_instance_management(ia);
-#endif
 }
 	// additional error handling?
 	return c.top_namespace();

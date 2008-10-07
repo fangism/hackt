@@ -8,7 +8,7 @@
 @c %**end of header
 
 @c "hac.texi"
-@c $Id: hac.texi,v 1.4 2007/10/08 19:09:36 fang Exp $
+@c $Id: hac.texi,v 1.5 2008/10/07 03:22:15 fang Exp $
 
 @dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
 @direntry
@@ -72,6 +72,7 @@ Permission is hereby granted to ...
 * Namespaces::
 * Templates::
 * Connections::
+* Attributes::
 * Typedefs::
 * Linkage::
 * CHP::
@@ -96,6 +97,7 @@ Permission is hereby granted to ...
 @include chapters/namespaces.texi
 @include chapters/templates.texi
 @include chapters/connections.texi
+@include chapters/attributes.texi
 @include chapters/typedefs.texi
 @include chapters/linkage.texi
 @include chapters/CHP.texi

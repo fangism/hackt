@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-10-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-39:
+	  Completed middle-end work on instance attributes, and registries.  
+		Only bools have any attributes right now.  
+	  Factored lang/attribute_visitor_entry from 
+		lang/PRS_attribute_registry for reuse.  
+	  Compile-time now rejects unknown attributes.  
+	  Documented texinfo for instance attributes!
+	  TODO: add printing for attribute values in object dumps for debug,
+		add a pass to hflat to visit unique instances and 
+		print unique nodes/instances with non-default attributes, 
+		actually test propagation of bool attributes.  
+
+
 2008-10-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-38:

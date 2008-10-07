@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.199 2008/10/05 23:00:05 fang Exp $
+#	$Id: Makefile.am,v 1.200 2008/10/07 03:22:21 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -668,7 +668,12 @@ OBJECT_CC_NO_H_FILES = \
 	Object/expr/meta_param_value_reference.cc \
 	Object/expr/operators.cc \
 	Object/expr/data_expr.cc \
-	Object/type/type_reference.cc
+	Object/type/type_reference.cc \
+	Object/unroll/bool_instance_attribute.cc \
+	Object/unroll/int_instance_attribute.cc \
+	Object/unroll/enum_instance_attribute.cc \
+	Object/unroll/channel_instance_attribute.cc \
+	Object/unroll/process_instance_attribute.cc
 
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
@@ -806,6 +811,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
 	Object/lang/generic_attribute_fwd.h \
+	Object/lang/attribute_visitor_entry.h \
 	Object/lang/cflat_visitee.h \
 	Object/lang/PRS_enum.h \
 	Object/lang/PRS_footprint_expr.h \
@@ -832,6 +838,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/datatype_instantiation_statement.h \
 	Object/unroll/empty_instantiation_statement_type_ref_base.h \
 	Object/unroll/instance_management_base.h \
+	Object/unroll/instance_attribute_registry.h \
 	Object/unroll/instantiation_statement_base.h \
 	Object/unroll/instantiation_statement_type_ref_default.h \
 	Object/unroll/instance_attribute.h \

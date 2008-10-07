@@ -1,69 +1,20 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.h"
-	$Id: PRS_attribute_registry.h,v 1.6 2006/04/23 07:37:21 fang Exp $
+	$Id: PRS_attribute_registry.h,v 1.7 2008/10/07 03:22:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_REGISTRY_H__
 #define	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_REGISTRY_H__
 
-#include <string>
-#include "util/NULL.h"
+#include "Object/lang/attribute_visitor_entry.h"
 #include "util/size_t.h"
-#include "util/boolean_types.h"
 #include "util/qmap.h"
-#include "Object/lang/PRS_fwd.h"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
-using std::string;
-using util::good_bool;
 class cflat_prs_printer;
-
-//=============================================================================
-/**
-	Do we need main_before, main_after?
-	Or just assume that attributes are printed (cflat)
-	as prefixes to rules?
- */
-template <class VisitorType>
-class attribute_visitor_entry {
-public:
-	typedef	VisitorType			visitor_type;
-	typedef	rule_attribute_values_type	values_type;
-	typedef void (main_type)(visitor_type&, const values_type&);
-	typedef	main_type*			main_ptr_type;
-	typedef	good_bool (check_values_type)(const values_type&);
-	typedef	check_values_type*		check_values_ptr_type;
-private:
-	string					_key;
-	main_ptr_type				_main;
-	check_values_ptr_type			_check_values;
-public:
-	attribute_visitor_entry() : _key(), _main(NULL),
-		_check_values(NULL) { }
-
-	attribute_visitor_entry(const string& k, const main_ptr_type m,
-			const check_values_ptr_type c = NULL) :
-			_key(k), _main(m), _check_values(c) { }
-
-	operator bool () const { return _main; }
-
-	void
-	main(visitor_type& p, const values_type& v) const {
-		if (this->_main) {
-			(*this->_main)(p, v);
-		}
-	}
-
-	good_bool
-	check_values(const values_type& v) const {
-		if (this->_check_values) {
-			return (*this->_check_values)(v);
-		} else	return good_bool(true);
-	}
-
-};	// end attribute_visitor_entry
+using entity::attribute_visitor_entry;
 
 //=============================================================================
 // TODO: factor these tool-dependent typedefs out to another header
@@ -84,7 +35,7 @@ extern const cflat_attribute_registry_type	cflat_attribute_registry;
 
 //=============================================================================
 /**
-	Macro for declaring attribute classes.  
+	Macro for declaring rule attribute classes.  
 	The base classes are declared in "Object/lang/PRS_attribute_common.h".
 	Here, the vistor_type is cflat_prs_printer.
 	TODO: These classes should have hidden visibility.  
@@ -95,7 +46,7 @@ extern const cflat_attribute_registry_type	cflat_attribute_registry;
 struct class_name : public entity::PRS::rule_attributes::class_name {	\
 	typedef	entity::PRS::rule_attributes::class_name parent_type;	\
 	typedef	visitor					visitor_type;	\
-	typedef	entity::PRS::attribute_visitor_entry<visitor_type>	\
+	typedef	entity::attribute_visitor_entry<visitor_type>		\
 					definition_entry_type;		\
 	typedef	definition_entry_type::values_type	values_type;	\
 	typedef	values_type::value_type			value_type;	\

@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.31 2008/03/21 00:19:23 fang Exp $
+#	$Id: Makefile.am,v 1.32 2008/10/07 03:22:15 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -51,6 +51,12 @@ hacmacros.texi: $(srcdir)/../common/hacmacros.texi
 
 CLEANFILES += hacmacros.texi
 
+$(srcdir)/attribs.mk: chapters/attributes.texi
+	{ $(PRINTF) "INSTANCE_ATTRIBUTES_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
+
 $(srcdir)/prsmacros.mk: chapters/PRS.texi
 	{ $(PRINTF) "PRS_MACROS_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
@@ -63,13 +69,23 @@ $(srcdir)/spec.mk: chapters/SPEC.texi
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@
 
+$(srcdir)/attribs.mk: Makefile.in
 $(srcdir)/prsmacros.mk: Makefile.in
 $(srcdir)/spec.mk: Makefile.in
 
+-include $(srcdir)/attribs.mk
 -include $(srcdir)/prsmacros.mk
 -include $(srcdir)/spec.mk
 
-AUTO_TEXINFO_DEPS += prsmacros.mk spec.mk
+AUTO_TEXINFO_DEPS += attribs.mk prsmacros.mk spec.mk
+
+$(INSTANCE_ATTRIBUTES_TEXI): \
+		$(top_srcdir)/src/Object/unroll/bool_instance_attribute.cc \
+		$(top_srcdir)/src/Object/unroll/channel_instance_attribute.cc \
+		$(top_srcdir)/src/Object/unroll/int_instance_attribute.cc \
+		$(top_srcdir)/src/Object/unroll/enum_instance_attribute.cc \
+		$(top_srcdir)/src/Object/unroll/process_instance_attribute.cc
+	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
 
 $(PRS_MACROS_TEXI): \
 		$(top_srcdir)/src/Object/lang/PRS_macro_registry.cc \
@@ -92,10 +108,12 @@ $(srcdir)/$(GRAMMAR_TEXI):
 
 hac_info_DEPS = \
 	$(hac_info_INCLUDES) \
+	$(INSTANCE_ATTRIBUTES_TEXI) \
 	$(PRS_MACROS_TEXI) \
 	$(SPEC_DIRECTIVES_TEXI)
 
 TEXI_CLEANFILES += \
+	$(INSTANCE_ATTRIBUTES_TEXI) \
 	$(PRS_MACROS_TEXI) \
 	$(SPEC_DIRECTIVES_TEXI) \
 	$(srcdir)/$(GRAMMAR_TEXI)
