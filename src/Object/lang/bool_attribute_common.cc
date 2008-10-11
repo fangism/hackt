@@ -1,10 +1,11 @@
 /**
 	\file "Object/lang/bool_attribute_common.cc"
-	$Id: bool_attribute_common.cc,v 1.1 2008/10/03 02:04:29 fang Exp $
+	$Id: bool_attribute_common.cc,v 1.2 2008/10/11 06:35:12 fang Exp $
  */
 
 #include <iostream>
 #include "Object/lang/bool_attribute_common.h"
+#include "Object/lang/attribute_common.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/preal_const.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -15,38 +16,7 @@ namespace HAC {
 namespace entity {
 namespace bool_attributes {
 #include "util/using_ostream.h"
-
-//=============================================================================
-// define re-usable, common checking functions here
-
-/**
-	COPIED from PRS_attribute_common.cc
- */
-static
-good_bool
-check_single_integer(const char* name, const bool_attribute_values_type& v) {
-	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
-		cerr << "The \'" << name << "\' attribute requires exactly "
-			"one pint (integer) expression argument." << endl;
-		return good_bool(false);
-	} else  return good_bool(true);
-}
-
-#if 0
-/**
-	COPIED from PRS_attribute_common.cc
- */
-static
-good_bool
-check_single_real(const char* name, const bool_attribute_values_type& v) {
-	if (v.size() != 1 || !v[0].is_a<const preal_const>()) {
-		cerr << "The \'" << name << "\' attribute requires exactly "
-			"one preal (floating-point) expression argument."
-			<< endl;
-		return good_bool(false);
-	} else  return good_bool(true);
-}
-#endif
+using namespace entity::attributes;
 
 //=============================================================================
 /**
@@ -60,16 +30,20 @@ PseudoStatic::__check_vals(const char* name, const values_type& v) {
 //=============================================================================
 /**
 	Takes a single integer value.  1 or 0.  
+	When unspecified, value is assumed to be 1, which is non-default.  
  */
 good_bool
 IsComb::__check_vals(const char* name, const values_type& v) {
-	return check_single_integer(name, v);
+	return check_optional_integer(name, v);
 }
 
 //=============================================================================
+/**
+	When unspecified, value is assumed to be 1, which is default.  
+ */
 good_bool
 AutoKeeper::__check_vals(const char* name, const values_type& v) {
-	return check_single_integer(name, v);
+	return check_optional_integer(name, v);
 }
 
 //=============================================================================

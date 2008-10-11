@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.19 2007/09/27 02:03:41 fang Exp $
+	$Id: state_manager.cc,v 1.20 2008/10/11 06:35:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -96,6 +96,30 @@ if (this->size() > 1) {
 	}
 }
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+global_entry_pool<Tag>::accept(PRS::cflat_visitor& v) const {
+	size_t j = 1;
+try {
+	const_iterator i(++this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; ++i, ++j) {
+		i->accept(v);
+	}
+} catch (...) {
+	cerr << "FATAL: error during processing of " <<
+		class_traits<Tag>::tag_name << " id " << j
+		<< "." << endl;
+#if 0
+	cerr << "\tinstance: ";
+	proc_entry_pool[pid].dump_canonical_name(cerr, topfp, sm) << endl;
+#endif
+	// topfp footprint is not available here, pass pid in exception
+	throw PRS::cflat_visitor::instance_exception<Tag>(j);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -248,6 +272,13 @@ state_manager::make_process_dump_context(const footprint& topfp,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+state_manager::__accept(PRS::cflat_visitor& v) const {
+	global_entry_pool<Tag>::accept(v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	A cflat visitor only visits processes -- nothing else can accept them.
 	Should we generalize this to include nodes as well?
@@ -257,15 +288,16 @@ state_manager::make_process_dump_context(const footprint& topfp,
 void
 state_manager::accept(PRS::cflat_visitor& v) const {
 #if 0
-	size_t pid = 1;		// 0-indexed, but 0th entry is null
-	const global_entry_pool<process_tag>& proc_entry_pool(*this);
-	// Could re-write in terms of begin() and end() iterators.  
-	const size_t plim = proc_entry_pool.size();
-	for ( ; pid < plim; pid++) {
-		production_rule_substructure::accept(proc_entry_pool[pid], v);
-	}
-#else
 	v.visit(*this);
+#else
+	__accept<process_tag>(v);
+	__accept<channel_tag>(v);
+#if ENABLE_DATASTRUCTS
+	__accept<datastruct_tag>(v);
+#endif
+	__accept<enum_tag>(v);
+	__accept<int_tag>(v);
+	__accept<bool_tag>(v);
 #endif
 }
 

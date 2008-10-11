@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.5 2008/10/05 23:00:10 fang Exp $
+	$Id: connection_policy.cc,v 1.6 2008/10/11 06:35:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -39,6 +39,36 @@ bool_connect_policy::set_connection_flags(const connection_flags_type f) {
 	// no possible conflicts yet
 	attributes = f;
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print only names of non-default attribute values.  
+	This is only for object dump debugging purposes, 
+	format is not important.
+	TODO: print direction flags separately?
+ */
+ostream&
+bool_connect_policy::dump_attributes(ostream& o) const {
+	// maintain order of these strings w.r.t. flag enums
+	static const char* attribute_names[] = {
+		"iscomb",
+		"!autokeeper",
+	};
+if (attributes) {
+	connection_flags_type temp = attributes;	// better be unsigned!
+	const char** p = attribute_names;
+	o << " @[";
+while (temp) {
+	if (temp & 1) {
+		o << ' ' << *p;
+	}
+	++p;
+	temp >>= 1;
+}
+	o << " ]";
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_event_alloc.cc"
 	Copy-ripped from "sim/chpsim/StateConstructor.cc"
-	$Id: CHP_event_alloc.cc,v 1.2 2007/09/11 06:52:45 fang Exp $
+	$Id: CHP_event_alloc.cc,v 1.3 2008/10/11 06:35:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -614,7 +614,7 @@ local_event_allocator::visit(const state_manager& _sm) {
 		// visit CHP instead
 		reset();
 		current_process_index = pid;
-		entity::CHP_substructure<true>::accept(
+		entity::CHP_substructure<true>::__accept(
 			proc_entry_pool[pid], *this);
 		// TODO: take root last_event_index and add it to
 		// the State's list of ready events (how simulation begins)

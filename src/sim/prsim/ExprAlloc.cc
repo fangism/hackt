@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.26 2008/10/03 02:04:32 fang Exp $
+	$Id: ExprAlloc.cc,v 1.27 2008/10/11 06:35:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,8 +33,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #endif
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
-#include "Object/traits/classification_tags.h"
+#include "Object/traits/instance_traits.h"
 #include "Object/global_entry.h"
+#include "Object/global_channel_entry.h"
 #include "util/offset_array.h"
 #include "util/stacktrace.h"
 #include "util/qmap.tcc"

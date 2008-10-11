@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.7 2007/09/13 20:37:20 fang Exp $
+	$Id: cflat_visitor.h,v 1.8 2008/10/11 06:35:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -8,11 +8,13 @@
 
 #include "util/NULL.h"
 #include "util/size_t.h"
+#include "Object/traits/classification_tags_fwd.h"
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 
 namespace HAC {
 namespace entity {
 class state_manager;
+template <class Tag> class global_entry;
 namespace SPEC {
 	class footprint;
 	class footprint_directive;
@@ -53,18 +55,29 @@ protected:
 		~expr_pool_setter();
 	};      // end struct expr_pool_setter
 public:
-	struct process_exception {
+	template <class Tag>
+	struct instance_exception {
 		/**
 			Identifies which top-level process id caused exception.
 		 */
 		size_t				pid;
 		explicit
-		process_exception(const size_t p) : pid(p) { }
+		instance_exception(const size_t p) : pid(p) { }
 	};
 public:
 	cflat_visitor() : expr_pool(NULL) { }
 virtual	~cflat_visitor() { }
 
+virtual	void
+	visit(const global_entry<process_tag>&);
+virtual	void
+	visit(const global_entry<channel_tag>&);
+virtual	void
+	visit(const global_entry<enum_tag>&);
+virtual	void
+	visit(const global_entry<int_tag>&);
+virtual	void
+	visit(const global_entry<bool_tag>&);
 virtual	void
 	visit(const state_manager&);
 virtual	void
@@ -79,6 +92,10 @@ virtual	void
 	visit(const SPEC::footprint&);
 virtual	void
 	visit(const SPEC::footprint_directive&) = 0;
+
+private:
+	template <class Tag>
+	void __default_visit(const global_entry<Tag>&);
 
 };	// end struct cflat_visitor
 

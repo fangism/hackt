@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-10-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-40:
+	  iscomb, autokeeper node attributes arguments now optional, 
+		default unspecified values to 1.
+	  Cleaned up, simplified implementation of visitor idiom in the 
+		unrolled instance hierarchy (state_manager, global_entry,...)
+		state_manager now forwards accecpt calls through global entries.
+		CHP footprint visitation pushed down into CHP::chp_visitor.
+	  Implemented global_entry::dump_attributes for object dump
+		printing of attributes win unrolled footprints and alloc state.
+		Also implemented bool_connect_policy::dump_attributes for this
+		and extended state_instance::dump with this.
+	  Generalized cflat_visitor::instance_exception.
+	  TODO: implement bool attribute using cflat_prs_printer override.
+
+
 2008-10-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-39:

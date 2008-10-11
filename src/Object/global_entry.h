@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.13 2007/01/21 05:58:23 fang Exp $
+	$Id: global_entry.h,v 1.14 2008/10/11 06:35:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -10,7 +10,6 @@
 #include <vector>
 #include "util/persistent_fwd.h"
 // #include <valarray>		// may be more efficient
-#include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/devel_switches.h"
 #include "util/macros.h"
@@ -27,7 +26,6 @@ namespace PRS {
 	class cflat_visitor;
 }
 
-struct bool_tag;
 struct dump_flags;
 struct global_entry_dumper;
 class alias_string_set;
@@ -42,6 +40,9 @@ struct  global_entry;
 
 template <class Tag>
 class global_entry_pool;
+
+template <class Tag>
+class instance_alias_info;
 
 typedef	std::vector<size_t>		footprint_frame_map_type;
 
@@ -328,56 +329,6 @@ struct global_entry_common {
 
 //=============================================================================
 /**
-	Substructure of processes, which may contain production rules.  
-	Need to keep hierarchical substructure to propagate up.  
-	TODO: for simulation state allocation, allocate expression
-		tree structures with back-links for up propagation.  
-		To this with another visitor.  
- */
-class production_rule_substructure {
-public:
-
-	template <class Tag>
-	static
-	void
-	accept(const global_entry<Tag>&, PRS::cflat_visitor&);
-
-};	// end class production_rule_substructure
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <bool>
-struct production_rule_parent_policy {
-	/**
-		Dummy type, used as an empty base class for meta-types
-		without production rule members.  
-	 */
-	struct type {
-	};
-};
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <>
-struct production_rule_parent_policy<true> {
-	typedef	production_rule_substructure		type;
-};
-
-//=============================================================================
-/**
-	CHP substructure of meta-types.  
- */
-template <bool>
-struct CHP_substructure { };
-
-template <>
-struct CHP_substructure<true> {
-	template <class Tag, class Visitor>
-	static
-	void
-	accept(const global_entry<Tag>&, Visitor&);
-};	// end struct CHP_substructure
-
-//=============================================================================
-/**
 	Default implementation.  
  */
 template <class Tag>
@@ -424,14 +375,9 @@ struct global_entry_base<channel_tag>;
 template <class Tag>
 struct global_entry :
 	public global_entry_base<Tag>, 
-	public production_rule_parent_policy<
-		class_traits<Tag>::has_production_rules>::type, 
 	// no need to derive from substructure policy classes, really
 	public global_entry_common {
 	typedef	global_entry_base<Tag>		parent_type;
-	typedef	typename production_rule_parent_policy<
-		class_traits<Tag>::has_production_rules>::type
-						prs_parent_type;
 public:
 	global_entry();
 	~global_entry();
@@ -440,12 +386,18 @@ public:
 	dump(global_entry_dumper&) const;
 
 	ostream&
+	dump_attributes(global_entry_dumper&) const;
+
+	ostream&
 	dump_canonical_name(ostream&,
 		const footprint&, const state_manager&) const;
 
 	ostream&
 	__dump_canonical_name(ostream&, const dump_flags&,
 		const footprint&, const state_manager&) const;
+
+	void
+	accept(PRS::cflat_visitor&) const;
 
 	using parent_type::collect_subentries;
 	using parent_type::collect_transient_info_base;

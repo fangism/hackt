@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.12 2007/09/11 06:52:38 fang Exp $
+	$Id: state_manager.h,v 1.13 2008/10/11 06:35:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
@@ -74,6 +74,9 @@ protected:
 
 	ostream&
 	dump_dot_nodes(ostream&, const footprint&) const;
+
+	void
+	accept(PRS::cflat_visitor&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&, 
@@ -174,6 +177,10 @@ public:
 private:
 	explicit
 	state_manager(const this_type&);
+
+	template <class Tag>
+	void
+	__accept(PRS::cflat_visitor&) const;
 
 	/// never actually called
 	template <class Tag>

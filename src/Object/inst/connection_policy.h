@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.4 2008/10/05 23:00:10 fang Exp $
+	$Id: connection_policy.h,v 1.5 2008/10/11 06:35:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -70,6 +70,9 @@ public:
 		void
 		operator () (const this_type&) const { }
 	};	// end struct collection_connection_flag_setter
+
+	ostream&
+	dump_attributes(ostream& o) const { return o; }
 
 protected:
 	void
@@ -159,6 +162,9 @@ public:
 		void
 		operator () (const this_type&) const { }
 	};	// end struct collection_connection_flag_setter
+
+	ostream&
+	dump_attributes(ostream&) const;
 
 protected:
 	void
@@ -338,6 +344,10 @@ public:
 
 	// only for non-directional channels?
 	// forward_local_to_external_flags(...);
+
+	// nothing yet, TODO: print out summary of connection state?
+	ostream&
+	dump_attributes(ostream& o) const { return o; }
 
 	void
 	write_flags(ostream&) const;

@@ -1,16 +1,19 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.8 2007/09/13 20:37:19 fang Exp $
+	$Id: cflat_visitor.cc,v 1.9 2008/10/11 06:35:13 fang Exp $
  */
 
 #include <algorithm>
 #include "util/visitor_functor.h"
+#include "Object/def/footprint.h"
 #include "Object/lang/cflat_visitor.h"
+#include "Object/lang/CHP_visitor.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.tcc"
-#include "Object/traits/proc_traits.h"
+#include "Object/global_channel_entry.h"
+#include "Object/traits/instance_traits.h"
 
 namespace HAC {
 namespace entity {
@@ -39,32 +42,57 @@ cflat_visitor::expr_pool_setter::~expr_pool_setter() {
 }
 
 //=============================================================================
+template <class Tag>
+void
+cflat_visitor::__default_visit(const global_entry<Tag>& e) {
+//	e.accept(*this);
+}
+
+#define	DEFINE_VISIT_GLOBAL_ENTRY(Tag)					\
+void									\
+cflat_visitor::visit(const global_entry<Tag>& e) {			\
+	__default_visit(e);						\
+}
+
+DEFINE_VISIT_GLOBAL_ENTRY(channel_tag)
+DEFINE_VISIT_GLOBAL_ENTRY(int_tag)
+DEFINE_VISIT_GLOBAL_ENTRY(enum_tag)
+DEFINE_VISIT_GLOBAL_ENTRY(bool_tag)
+
+#undef	DEFINE_VISIT_GLOBAL_ENTRY
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generic PRS footprint traversal.  
+	Order of traversal was chosen somewhat arbitrarily.  
+	Dynamic-cast (cross-cast) is needed because PRS::cflat_visitor
+	is not derived from cflat_context... should it be?
+ */
+void
+cflat_visitor::visit(const global_entry<process_tag>& e) {
+	cflat_visitor& v(*this);
+	const entity::footprint* const f(e._frame._footprint);
+	NEVER_NULL(f);
+	const PRS::footprint&
+		pfp(f->get_prs_footprint());
+// traverse production rules
+	const cflat_context::footprint_frame_setter
+		tmp(IS_A(cflat_context&, v), e._frame);
+	pfp.accept(v);
+
+// traverse SPEC directives
+	const SPEC::footprint&
+		sfp(f->get_spec_footprint());
+	sfp.accept(v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Default state_manager traversal. 
  */
 void
 cflat_visitor::visit(const state_manager& sm) {
-	size_t pid = 1;		// 0-indexed, but 0th entry is null
-	// const global_entry_pool<process_tag>& proc_entry_pool(sm);
-	const global_entry_pool<process_tag>&
-		proc_entry_pool(sm.get_pool<process_tag>());
-	// Could re-write in terms of begin() and end() iterators.  
-	const size_t plim = proc_entry_pool.size();
-try {
-	for ( ; pid < plim; ++pid) {
-		entity::production_rule_substructure::accept(
-			proc_entry_pool[pid], *this);
-	}
-} catch (...) {
-	cerr << "FATAL: error during processing of process id " << pid
-		<< "." << endl;
-#if 0
-	cerr << "\tinstance: ";
-	proc_entry_pool[pid].dump_canonical_name(cerr, topfp, sm) << endl;
-#endif
-	// topfp footprint is not available here, pass pid in exception
-	throw process_exception(pid);
-}
+	sm.accept(*this);
 }
 
 //=============================================================================

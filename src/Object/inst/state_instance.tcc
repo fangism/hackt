@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.7 2006/11/07 06:35:01 fang Exp $
+	$Id: state_instance.tcc,v 1.8 2008/10/11 06:35:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_TCC__
@@ -45,6 +45,7 @@ STATE_INSTANCE_CLASS::dump(ostream& o) const {
 	NEVER_NULL(back_ref);
 	back_ref->dump_hierarchical_name(o);
 	back_ref->dump_actuals(o);
+	back_ref->dump_attributes(o);	// new: print non-default attributes
 	return o;
 }
 

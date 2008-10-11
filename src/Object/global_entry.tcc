@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.18 2007/09/11 06:52:35 fang Exp $
+	$Id: global_entry.tcc,v 1.19 2008/10/11 06:35:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -11,7 +11,7 @@
 #endif
 
 #ifndef	STACKTRACE_PERSISTENTS
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 #endif
 
 #include <string>
@@ -190,51 +190,11 @@ global_entry_substructure_base<true>::dump(global_entry_dumper& ged) const {
 }
 
 //=============================================================================
-// class production_rule_substructure method definitions
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Generic PRS footprint traversal.  
-	Dynamic-cast (cross-cast) is needed because PRS::cflat_visitor
-	is not derived from cflat_context... should it be?
- */
-template <class Tag>
-void
-production_rule_substructure::accept(const global_entry<Tag>& _this, 
-		PRS::cflat_visitor& v) {
-	const footprint* const f(_this._frame._footprint);
-	NEVER_NULL(f);
-	const PRS::footprint&
-		pfp(f->get_prs_footprint());
-	const cflat_context::footprint_frame_setter
-		tmp(IS_A(cflat_context&, v), _this._frame);
-	pfp.accept(v);
-	const SPEC::footprint&
-		sfp(f->get_spec_footprint());
-	sfp.accept(v);
-}
-
-//=============================================================================
-// class CHP_substructure method definitions
-
-template <class Tag, class Visitor>
-void
-CHP_substructure<true>::accept(const global_entry<Tag>& _this, Visitor& v) {
-	const footprint* const f(_this._frame._footprint);
-	NEVER_NULL(f);
-	const typename Visitor::footprint_frame_setter tmp(v, _this._frame);
-if (f->has_chp_footprint()) {
-	const CHP::concurrent_actions& cfp(f->get_chp_footprint());
-	cfp.accept(v);
-}
-}
-
-//=============================================================================
 // class global_entry method definitions
 
 template <class Tag>
-global_entry<Tag>::global_entry() : parent_type(), prs_parent_type(),
-		global_entry_common() {
+global_entry<Tag>::global_entry() : 
+		parent_type(), global_entry_common() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -364,8 +324,45 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 	}
 	o << local_offset << '\t';
 	dump_canonical_name(o, *ged.topfp, *ged.sm) << '\t';
+	dump_attributes(ged);
 	parent_type::template dump<Tag>(ged);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+ostream&
+global_entry<Tag>::dump_attributes(global_entry_dumper& ged) const {
+	typedef	typename state_instance<Tag>::pool_type	pool_type;
+	const pool_type& _pool(ged.topfp->template get_instance_pool<Tag>());
+	const state_instance<Tag>* _inst;
+	switch (parent_tag_value) {
+	case PARENT_TYPE_NONE:
+		_inst = &_pool[local_offset];
+		break;
+	case PARENT_TYPE_PROCESS: {
+		const global_entry<process_tag>&
+			p_ent(extract_parent_entry<process_tag>(*ged.sm, *this));
+		const pool_type&
+			_lpool(p_ent._frame._footprint
+				->template get_instance_pool<Tag>());
+		_inst = &_lpool[local_offset];
+		break;
+	}
+	default:
+		ICE(cerr, 
+			cerr << "Unknown parent tag enumeration: " <<
+				parent_tag_value << endl;
+		)
+	}
+	return _inst->get_back_ref()->dump_attributes(ged.os);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+global_entry<Tag>::accept(PRS::cflat_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

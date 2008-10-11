@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.19 2008/08/26 02:18:30 fang Exp $
+	$Id: State-prsim.cc,v 1.20 2008/10/11 06:35:16 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -231,7 +231,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// this may throw an exception!
 try {
 	sm.accept(v);
-} catch (const entity::cflat_visitor::process_exception& e) {
+} catch (const entity::cflat_visitor::instance_exception<process_tag>& e) {
 	const global_entry_pool<process_tag>&
 		proc_entry_pool(sm.get_pool<process_tag>());
 	cerr << "Error with process instance: ";

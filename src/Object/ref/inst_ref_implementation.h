@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.21 2007/04/15 05:52:22 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.22 2008/10/11 06:35:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -31,6 +31,8 @@ using util::memory::never_ptr;
 using util::memory::count_ptr;
 #include "util/using_ostream.h"
 template <class> class simple_meta_instance_reference;
+template <class> class member_meta_instance_reference;
+template <class> class port_connection;
 
 //=============================================================================
 // struct simple_meta_instance_reference_implementation method definitions
