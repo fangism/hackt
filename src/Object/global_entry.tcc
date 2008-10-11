@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.19 2008/10/11 06:35:07 fang Exp $
+	$Id: global_entry.tcc,v 1.20 2008/10/11 22:49:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -333,16 +333,34 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 template <class Tag>
 ostream&
 global_entry<Tag>::dump_attributes(global_entry_dumper& ged) const {
+	return get_canonical_instance(ged)
+		.get_back_ref()->dump_attributes(ged.os);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This returns a unique leaf instance in the hierarchy that contains the
+	instance and alias information.  
+	The instance reference returned can be either top-level
+	or a subinstance of a structure in the instance hierarchy.  
+ */
+template <class Tag>
+const state_instance<Tag>&
+global_entry<Tag>::get_canonical_instance(
+		const global_entry_context_base& ged) const {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
-	const pool_type& _pool(ged.topfp->template get_instance_pool<Tag>());
+	const footprint& topfp(*ged.get_top_footprint_ptr());
+	const state_manager& sm(*ged.get_state_manager());
+	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
 	const state_instance<Tag>* _inst;
 	switch (parent_tag_value) {
 	case PARENT_TYPE_NONE:
 		_inst = &_pool[local_offset];
 		break;
+	// for now, only processes can be parents
 	case PARENT_TYPE_PROCESS: {
 		const global_entry<process_tag>&
-			p_ent(extract_parent_entry<process_tag>(*ged.sm, *this));
+			p_ent(extract_parent_entry<process_tag>(sm, *this));
 		const pool_type&
 			_lpool(p_ent._frame._footprint
 				->template get_instance_pool<Tag>());
@@ -355,7 +373,8 @@ global_entry<Tag>::dump_attributes(global_entry_dumper& ged) const {
 				parent_tag_value << endl;
 		)
 	}
-	return _inst->get_back_ref()->dump_attributes(ged.os);
+	NEVER_NULL(_inst);
+	return *_inst;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

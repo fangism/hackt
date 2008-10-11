@@ -1,0 +1,4 @@
+@ "a" iscomb
+@ "c" iscomb
+= "a" "b"
+= "c" "d"

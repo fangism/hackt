@@ -1,0 +1,10 @@
+@ "w" iscomb
+@ "y" iscomb
+@ "a" iscomb
+@ "c" iscomb
+@ "e" iscomb
+connect "a" "b"
+connect "c" "d"
+connect "e" "f"
+connect "w" "x"
+connect "y" "z"

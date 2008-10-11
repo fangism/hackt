@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.5 2008/10/11 06:35:09 fang Exp $
+	$Id: connection_policy.h,v 1.6 2008/10/11 22:49:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -91,7 +91,7 @@ protected:
  */
 class bool_connect_policy {
 	typedef	bool_connect_policy		this_type;
-public:
+protected:
 	/**
 		The way boolean node attributes are propagated is
 		by bitwise OR, so values should be defined and chosen
@@ -101,7 +101,7 @@ public:
 	/**
 		Stipulates that the node should be treated as combinational
 		Number of bit fields is constrained by 
-		sizeof(connection_flags_tpye)
+		sizeof(connection_flags_type)
 	 */
 		BOOL_IS_COMBINATIONAL	= 0x0001,
 	/**
@@ -113,19 +113,12 @@ public:
 	};
 	connection_flags_type			attributes;
 
+public:
 	bool_connect_policy() : attributes(BOOL_DEFAULT_ATTRIBUTES) { }
 protected:
-	/**
-		No-op.  
-	 */
 	static
 	good_bool
-	synchronize_flags(this_type& l, this_type& r) {
-		l.attributes |= r.attributes;
-		r.attributes = l.attributes;
-		// TODO: handle direction checking!
-		return good_bool(true);
-	}
+	synchronize_flags(this_type& l, this_type& r);
 
 	template <class ContainerType>
 	void
@@ -137,6 +130,21 @@ protected:
 public:
 	good_bool
 	set_connection_flags(const connection_flags_type);
+
+	bool
+	has_nondefault_attributes(void) const {
+		return attributes;	// if any bits are set
+	}
+
+	void
+	set_is_comb(void) {
+		attributes |= BOOL_IS_COMBINATIONAL;
+	}
+
+	void
+	set_no_autokeeper(void) {
+		attributes |= BOOL_NO_AUTOKEEPER;
+	}
 
 protected:
 	template <class AliasType>
@@ -165,6 +173,9 @@ public:
 
 	ostream&
 	dump_attributes(ostream&) const;
+
+	ostream&
+	dump_flat_attributes(ostream&) const;
 
 protected:
 	void

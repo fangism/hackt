@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.6 2008/10/11 06:35:08 fang Exp $
+	$Id: connection_policy.cc,v 1.7 2008/10/11 22:49:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,6 +27,7 @@ using util::read_value;
  */
 void
 bool_connect_policy::initialize_actual_direction(const this_type& t) {
+	STACKTRACE_VERBOSE;
 	attributes = t.attributes;
 }
 
@@ -36,8 +37,22 @@ bool_connect_policy::initialize_actual_direction(const this_type& t) {
  */
 good_bool
 bool_connect_policy::set_connection_flags(const connection_flags_type f) {
+	STACKTRACE_VERBOSE;
 	// no possible conflicts yet
 	attributes = f;
+	return good_bool(true);
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+bool_connect_policy::synchronize_flags(this_type& l, this_type& r) {
+	STACKTRACE_VERBOSE;
+	l.attributes |= r.attributes;
+	r.attributes = l.attributes;
+	// TODO: handle direction checking!
+	STACKTRACE_INDENT_PRINT("flags = " << l.attributes << ", "
+		<< r.attributes << endl);
 	return good_bool(true);
 }
 
@@ -51,22 +66,32 @@ bool_connect_policy::set_connection_flags(const connection_flags_type f) {
 ostream&
 bool_connect_policy::dump_attributes(ostream& o) const {
 	// maintain order of these strings w.r.t. flag enums
+if (has_nondefault_attributes()) {
+	o << " @[";
+	dump_flat_attributes(o);
+	o << " ]";
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only applies to hflat, called by cflat_prs_printer()
+ */
+ostream&
+bool_connect_policy::dump_flat_attributes(ostream& o) const {
 	static const char* attribute_names[] = {
 		"iscomb",
 		"!autokeeper",
 	};
-if (attributes) {
 	connection_flags_type temp = attributes;	// better be unsigned!
 	const char** p = attribute_names;
-	o << " @[";
 while (temp) {
 	if (temp & 1) {
 		o << ' ' << *p;
 	}
 	++p;
 	temp >>= 1;
-}
-	o << " ]";
 }
 	return o;
 }
@@ -95,6 +120,7 @@ bool_connect_policy::read_flags(istream& i) {
 good_bool
 channel_connect_policy::set_connection_flags(
 		const connection_flags_type f) {
+	STACKTRACE_VERBOSE;
 	if (f & CONNECTED_CHP_PRODUCER) {
 		if (direction_flags & CONNECTED_TO_NONCHP_PRODUCER) {
 			cerr << "Error: cannot connect to producer by both "
@@ -131,6 +157,7 @@ good_bool
 channel_connect_policy::check_meta_nonmeta_usage(
 		const connection_flags_type _or, 
 		const char* n) {
+	STACKTRACE_VERBOSE;
 	bool good = true;
 	if ((_or & CONNECTED_PRODUCER_IS_META) &&
 			(_or & CONNECTED_PRODUCER_IS_NONMETA)) {

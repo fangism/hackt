@@ -1,0 +1,96 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	322
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	396
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        bool<> w
+        bool<> x
+        bool<> y
+        bool<> z
+      )
+      In definition "foo", we have: {
+      Instances:
+        w = bool<> foo::w
+        x = bool<> foo::x
+        y = bool<> foo::y
+        z = bool<> foo::z
+      unroll sequence: 
+        bool<> w
+        bool<> x
+        bool<> y
+        bool<> z
+        x@[iscomb=]
+        y@[iscomb=0]
+        z@[iscomb=1]
+      footprint: {
+        w = bool^0 = foo::w (1) 
+        x = bool^0 = foo::x (2) 
+        y = bool^0 = foo::y (3) 
+        z = bool^0 = foo::z (4) 
+        Created state:
+        bool instance pool:
+        1	foo::w
+        2	foo::x @[ iscomb ]
+        3	foo::y
+        4	foo::z @[ iscomb ]
+      }
+      }
+
+  Instances:
+    bar = foo<> bar
+}
+
+footprint: {
+  bar = process foo<>^0 = bar (1) (
+    w = bool^0 = bar.w (1) 
+    x = bool^0 = bar.x (2) 
+    y = bool^0 = bar.y (3) 
+    z = bool^0 = bar.z (4) 
+  )
+  Created state:
+  process instance pool:
+  1	bar
+  bool instance pool:
+  1	bar.w
+  2	bar.x @[ iscomb ]
+  3	bar.y
+  4	bar.z @[ iscomb ]
+}

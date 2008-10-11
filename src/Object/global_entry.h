@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.14 2008/10/11 06:35:06 fang Exp $
+	$Id: global_entry.h,v 1.15 2008/10/11 22:49:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -27,6 +27,7 @@ namespace PRS {
 }
 
 struct dump_flags;
+class global_entry_context_base;
 struct global_entry_dumper;
 class alias_string_set;
 class footprint;
@@ -43,6 +44,10 @@ class global_entry_pool;
 
 template <class Tag>
 class instance_alias_info;
+
+template <class Tag>
+struct  state_instance;
+
 
 typedef	std::vector<size_t>		footprint_frame_map_type;
 
@@ -395,6 +400,9 @@ public:
 	ostream&
 	__dump_canonical_name(ostream&, const dump_flags&,
 		const footprint&, const state_manager&) const;
+
+	const state_instance<Tag>&
+	get_canonical_instance(const global_entry_context_base&) const;
 
 	void
 	accept(PRS::cflat_visitor&) const;

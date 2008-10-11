@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.20 2008/03/17 23:02:40 fang Exp $
+	$Id: cflat.cc,v 1.21 2008/10/11 22:49:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -200,6 +200,14 @@ __cflat_lvs(cflat::options& cf) {
 #endif
 	cf.use_referenced_type_instead_of_top_level = false;
 }
+
+static
+void
+__cflat_java_lvs(cflat::options& cf) {
+	__cflat_lvs(cf);
+	cf.node_attributes = true;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Also works for:
@@ -286,12 +294,15 @@ const cflat::register_options_modifier
 @texinfo cflat/mode-lvs.texi
 @defvr {@t{cflat} option} lvs
 @defvrx {@t{cflat} option} LVS
+@defvrx {@t{cflat} option} java-lvs
 LVS output mode.
+The java-lvs option is a slight variant from the traditional lvs.  
 @end defvr
 @end texinfo
 ***/
 	cflat::_lvs("lvs", &__cflat_lvs),
 	cflat::_LVS("LVS", &__cflat_lvs),		// re-use lvs
+	cflat::_java_lvs("java-lvs", &__cflat_java_lvs),
 
 /***
 @texinfo cflat/mode-ergen.texi
@@ -546,6 +557,34 @@ __cflat_no_quote_names(cflat::options& cf) {
 const cflat::register_options_modifier
 	cflat::_no_quote_names("no-quote-names", &__cflat_no_quote_names, 
 		"no quote around node names");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-node-attributes.texi
+@defvr {@t{cflat -f} option} node-attributes
+@defvrx {@t{cflat -f} option} no-node-attributes
+Whether or not to print node attributes.  
+@end defvr
+@end texinfo
+***/
+static
+void
+__cflat_node_attributes(cflat::options& cf) {
+	cf.node_attributes = true;
+}
+const cflat::register_options_modifier
+	cflat::_node_attributes("node-attributes", &__cflat_node_attributes,
+		"print node attributes");
+
+static
+void
+__cflat_no_node_attributes(cflat::options& cf) {
+	cf.node_attributes = false;
+}
+const cflat::register_options_modifier
+	cflat::_no_node_attributes("no-node-attributes",
+		&__cflat_no_node_attributes, 
+		"suppress node attributes");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

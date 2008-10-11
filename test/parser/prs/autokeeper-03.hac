@@ -1,0 +1,27 @@
+// "autokeeper-03.hac"
+// @hflat-flags@ -fnode-attributes
+
+defproc inv(bool a, b) {
+prs {
+	a => b-
+}
+}
+
+defproc wrap(bool w, x, y, z) {
+bool j, k, l;
+inv P(w, x);
+x @ [autokeeper=0];
+inv Q(j, k);
+y @ [autokeeper=0];
+inv R(k, l);
+l @ [autokeeper=0];
+}
+
+bool a, b, c, d;
+wrap present;
+present.z = a;
+present.y = b;
+c = present.x;
+d = present.w;
+
+

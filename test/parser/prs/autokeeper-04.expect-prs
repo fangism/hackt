@@ -1,0 +1,10 @@
+@ "w" !autokeeper
+@ "y" !autokeeper
+@ "a" !autokeeper
+@ "c" !autokeeper
+@ "e" !autokeeper
+= "a" "b"
+= "c" "d"
+= "e" "f"
+= "w" "x"
+= "y" "z"

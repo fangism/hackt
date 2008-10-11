@@ -1,0 +1,4 @@
+@ "a" iscomb
+@ "c" iscomb
+connect "a" "b"
+connect "c" "d"

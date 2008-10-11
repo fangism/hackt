@@ -1,0 +1,10 @@
+@ "bar.x" iscomb
+@ "bar.z" iscomb
+@ "bar.b" iscomb
+@ "bar.d" iscomb
+@ "bar.f" iscomb
+connect "bar.b" "bar.a"
+connect "bar.d" "bar.c"
+connect "bar.f" "bar.e"
+connect "bar.x" "bar.w"
+connect "bar.z" "bar.y"

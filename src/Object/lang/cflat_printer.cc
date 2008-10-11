@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.16 2008/03/17 23:02:32 fang Exp $
+	$Id: cflat_printer.cc,v 1.17 2008/10/11 22:49:09 fang Exp $
  */
 
 #include <iostream>
@@ -16,6 +16,10 @@
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/SPEC_registry.h"
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/connection_policy.h"
 #include "Object/global_entry.h"
 #include "Object/state_manager.h"
 #include "Object/traits/bool_traits.h"
@@ -70,12 +74,9 @@ if (!cfopts.check_prs) {
 	// which needs to be translated to global ID.
 	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
-	if (cfopts.enquote_names) os << '\"';
 	const size_t global_bool_index =
 		parent_type::__lookup_global_bool_id(r.output_index);
-	sm->get_pool<bool_tag>()[global_bool_index]
-		.dump_canonical_name(os, *topfp, *sm);
-	if (cfopts.enquote_names) os << '\"';
+	print_node_name(sm->get_pool<bool_tag>()[global_bool_index]);
 	os << (r.dir ? '+' : '-');
 #if CFLAT_WITH_CONDUCTANCES
 	if (cfopts.compute_conductances) {
@@ -87,6 +88,18 @@ if (!cfopts.check_prs) {
 #endif
 	os << endl;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Automatically adds quotes if the options desire it.  
+ */
+ostream&
+cflat_prs_printer::print_node_name(const global_entry<bool_tag>& b) const {
+	if (cfopts.enquote_names) os << '\"';
+	b.dump_canonical_name(os, *topfp, *sm);
+	if (cfopts.enquote_names) os << '\"';
+	return os;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -382,6 +395,23 @@ cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
 	} else {
 		s.main(*this, d.params, d.nodes);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print attributes for nodes with non-default attribute values.  
+ */
+void
+cflat_prs_printer::visit(const global_entry<bool_tag>& b) {
+if (cfopts.node_attributes) {
+	const state_instance<bool_tag>& i(b.get_canonical_instance(*this));
+	const instance_alias_info<bool_tag>& a(*i.get_back_ref());
+	if (a.has_nondefault_attributes()) {
+		os << "@ ";
+		print_node_name(b);	// auto-quote
+		a.dump_flat_attributes(os) << endl;
+	}
+}
 }
 
 //=============================================================================

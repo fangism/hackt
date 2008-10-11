@@ -1,0 +1,9 @@
+// "autokeeper-01.hac"
+// testing the autokeeper node attribute
+// @hflat-flags@ -fnode-attributes
+
+bool w, x, y, z;
+x @[autokeeper];
+y @[autokeeper=0];
+z @[autokeeper=1];
+

@@ -4,7 +4,7 @@
 	which are applied at create-time.  
 	Because these attributes are applied at create-time, 
 	they are back-end independent.  
-	$Id: bool_instance_attribute.cc,v 1.1 2008/10/07 03:22:28 fang Exp $
+	$Id: bool_instance_attribute.cc,v 1.2 2008/10/11 22:49:10 fang Exp $
  */
 
 #include "Object/unroll/instance_attribute_registry.h"
@@ -60,8 +60,7 @@ IsComb::main(visitor_type& a, const values_type& v) {
 		b = pi.static_constant_value();
 	}
 	if (b) {
-		// TODO: privatize attribute flags!
-		a.attributes |= bool_connect_policy::BOOL_IS_COMBINATIONAL;
+		a.set_is_comb();
 	}
 }
 
@@ -86,8 +85,7 @@ AutoKeeper::main(visitor_type& a, const values_type& v) {
 		b = pi.static_constant_value();
 	}
 	if (!b) {
-		// TODO: privatize attribute flags!
-		a.attributes |= bool_connect_policy::BOOL_NO_AUTOKEEPER;
+		a.set_no_autokeeper();
 	}
 }
 

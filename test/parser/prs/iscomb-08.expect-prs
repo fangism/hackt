@@ -1,0 +1,10 @@
+@ "bar.w" iscomb
+@ "bar.y" iscomb
+@ "bar.a" iscomb
+@ "bar.c" iscomb
+@ "bar.e" iscomb
+= "bar.a" "bar.b"
+= "bar.c" "bar.d"
+= "bar.e" "bar.f"
+= "bar.w" "bar.x"
+= "bar.y" "bar.z"

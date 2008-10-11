@@ -1,0 +1,29 @@
+// "iscomb-09.hac"
+// copy-modified from "iscomb-07.hac"
+// testing connection coherence of attributes
+// @hflat-flags@ -fnode-attributes
+
+defproc foo(bool x, z, b, d, f) {
+bool w, y, a, c, e;
+
+w @ [iscomb];
+x @ [iscomb=0];
+w = x;
+
+y = z;
+z @ [iscomb];
+
+a = b;
+a @ [iscomb];
+b @ [iscomb=0];
+
+c @[iscomb];
+c = d;
+d @[ iscomb=0];
+
+e = f;
+e @ [iscomb];
+}
+
+foo bar;
+

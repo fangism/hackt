@@ -1,0 +1,10 @@
+@ "w" !autokeeper
+@ "y" !autokeeper
+@ "a" !autokeeper
+@ "c" !autokeeper
+@ "e" !autokeeper
+connect "a" "b"
+connect "c" "d"
+connect "e" "f"
+connect "w" "x"
+connect "y" "z"

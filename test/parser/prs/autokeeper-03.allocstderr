@@ -1,0 +1,19 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	present	wrap<>
+	process: 2,3,4
+	bool: 1,2,5,6,7,3,4
+2	process	1	1	present.P	inv<>
+	bool: 1,2
+3	process	1	2	present.Q	inv<>
+	bool: 5,6
+4	process	1	3	present.R	inv<>
+	bool: 6,7
+[global bool entries]
+1	(top)	-	1	d	
+2	(top)	-	2	c	 @[ !autokeeper ]
+3	(top)	-	3	b	 @[ !autokeeper ]
+4	(top)	-	4	a	
+5	process	1	3	present.j	
+6	process	1	4	present.k	
+7	process	1	5	present.l	 @[ !autokeeper ]

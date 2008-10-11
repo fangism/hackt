@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.14 2008/03/17 23:02:41 fang Exp $
+	$Id: cflat_options.h,v 1.15 2008/10/11 22:49:12 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -93,6 +93,10 @@ public:
 	bool				dump_self_connect;
 
 	// bool				canonical_first;
+	/**
+		Print node attributes.
+	 */
+	bool				node_attributes;
 
 	/**
 		Whether or not node names should be wrapped in quote.  
@@ -177,6 +181,7 @@ public:
 		tool_options(TOOL_OPTIONS_DEFAULT), 
 		connect_style(CONNECT_STYLE_EQUAL), 
 		include_prs(true), dump_self_connect(false), 
+		node_attributes(false),
 		enquote_names(true), dump_non_bools(false), 
 		namespace_policy(NAMESPACE_POLICY_NONE), 
 		check_prs(false), wire_mode(false), 

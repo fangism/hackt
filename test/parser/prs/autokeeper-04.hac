@@ -1,0 +1,26 @@
+// "autokeeper-05.hac"
+// testing connection coherence of attributes
+// @hflat-flags@ -fnode-attributes
+
+bool w, x, y, z, a, b, c, d, e, f;
+
+w @ [autokeeper=0];
+x @ [autokeeper=1];
+w = x;
+
+y = z;
+z @ [autokeeper=0];
+
+a = b;
+a @ [autokeeper=0];
+b @ [autokeeper=1];
+
+c @[autokeeper=0];
+c = d;
+d @[ autokeeper=1];
+
+e = f;
+e @ [autokeeper=0];
+
+// all 5 unique nodes should be !autokeeper
+

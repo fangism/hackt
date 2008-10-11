@@ -1,0 +1,12 @@
+// "iscomb-02.hac"
+// testing the iscomb node attribute
+// @hflat-flags@ -fnode-attributes
+
+defproc foo(bool w, x, y, z) {
+x @[iscomb];
+y @[iscomb=0];
+z @[iscomb=1];
+}
+
+foo bar;
+

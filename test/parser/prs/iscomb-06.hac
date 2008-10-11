@@ -1,0 +1,14 @@
+// "iscomb-06.hac"
+// copy-reduced from "iscomb-05.hac"
+// testing connection coherence of attributes
+// @hflat-flags@ -fnode-attributes
+
+bool a, b, c, d;
+
+a = b;
+a @ [iscomb];
+
+c @ [iscomb];
+c = d;
+
+// both unique nodes should be iscomb

@@ -1,0 +1,10 @@
+@ "w" iscomb
+@ "y" iscomb
+@ "a" iscomb
+@ "c" iscomb
+@ "e" iscomb
+= "a" "b"
+= "c" "d"
+= "e" "f"
+= "w" "x"
+= "y" "z"

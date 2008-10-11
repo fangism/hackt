@@ -1,0 +1,21 @@
+// "iscomb-10.hac"
+// @hflat-flags@ -fnode-attributes
+
+defproc inv(bool a, b) {
+prs {
+	a => b-
+}
+}
+
+defproc wrap(bool w, x, y, z) {
+bool j, k, l;
+inv P(w, x);
+j @ [iscomb];
+inv Q(j, k);
+k @ [iscomb];
+inv R(k, l);
+l @ [iscomb];
+}
+
+wrap present;
+

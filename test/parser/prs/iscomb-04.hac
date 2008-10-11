@@ -1,0 +1,11 @@
+// "iscomb-04.hac"
+// @hflat-flags@ -fnode-attributes
+import "iscomb-01.hac";
+
+// ...
+// y @[iscomb=0];
+// z @[iscomb=1];
+
+z @[iscomb=0];	// no effect, alraedy set
+y @[iscomb=1];	// sets it
+

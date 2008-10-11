@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/instance_attribute.tcc"
 	Implementation of generic attribute statements.  
-	$Id: instance_attribute.tcc,v 1.2 2008/10/07 03:22:32 fang Exp $
+	$Id: instance_attribute.tcc,v 1.3 2008/10/11 22:49:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_ATTRIBUTE_TCC__
@@ -12,6 +12,7 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/what.tcc"
+#include "util/stacktrace.h"
 #include "common/TODO.h"
 
 namespace HAC {
@@ -69,6 +70,7 @@ INSTANCE_ATTRIBUTE_CLASS::dump(ostream& o, const expr_dump_context& c) const {
 INSTANCE_ATTRIBUTE_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ATTRIBUTE_CLASS::unroll(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	typedef	typename reference_type::alias_collection_type
 					alias_collection_type;
 	alias_collection_type aliases;
@@ -108,7 +110,8 @@ for ( ; ti!=te; ++ti) {
 	alias_iterator ai(aliases.begin()), ae(aliases.end());
 	for ( ; ai!=ae; ++ai) {
 		NEVER_NULL(*ai);
-		cf->second.main(**ai, *v);	// apply attribute
+		// apply attribute to *canonical* alias
+		cf->second.main(*(*ai)->find(), *v);
 	}
 }
 	return good_bool(true);

@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-10-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-41:
+	  hflat now prints node attributes with new flag 
+		-fnode-attributes (default false), 
+		which is folded into the 'java-lvs' preset (main/cflat.cc).
+		Use "hflat java-lvs" for convenience. 
+	  cflat_prs_printer now calls print attributes on nodes, 
+		node name quotation honors flag.  
+	  Bug fix: instance_attribute::unroll now operates on the
+		*canonical* node referenced by an alias.  
+	  Documented new hflat option, bunch of test cases added.
+	  This concludes the initial implementation of node attributes
+		for hflat.  
+
+
 2008-10-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-40:
