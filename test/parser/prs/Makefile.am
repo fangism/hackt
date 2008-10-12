@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.39 2008/10/11 22:49:13 fang Exp $
+#	$Id: Makefile.am,v 1.40 2008/10/12 00:21:42 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -41,6 +41,8 @@ HACKT_PARSE_TEST_PASSES = \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
+	macro-pass-05b macro-pass-07b \
+	macro-pass-05c macro-pass-07c \
 	after-02 after-03 \
 	spec-02 spec-04 spec-06 spec-07 \
 	size-01 size-03 size-04 size-05 \
@@ -159,6 +161,8 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
+	macro-pass-05b macro-pass-07b \
+	macro-pass-05c macro-pass-07c \
 	after-02 after-03 \
 	spec-02 spec-04 spec-06 spec-07 \
 	size-01 size-03 size-04 size-05 \
@@ -190,6 +194,8 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \
 	lvs-order-01 lvs-order-03 \
 	lvs-xcpl-inv-01 \
+	macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
+	macro-pass-05b macro-pass-07b \
 	weak-03 \
 	iscomb-01 iscomb-02 iscomb-03 iscomb-04 iscomb-05 iscomb-06 \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \
@@ -211,6 +217,7 @@ HACKT_ALLOC_TEST_PASSES = \
 HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
 	size-01 size-03 size-04 size-05 \
 	strengths-01 strengths-02 \
+	macro-pass-03 macro-pass-05 macro-pass-07 \
 	act-005 act-010
 # pending: act-004
 

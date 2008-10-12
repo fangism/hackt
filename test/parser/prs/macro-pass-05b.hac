@@ -1,0 +1,6 @@
+// "macro-pass-05b.hac"
+// for testing lvs
+// @hflat-flags@ -fsizes
+import "macro-pass-05.hac";
+
+

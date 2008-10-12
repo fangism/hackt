@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.21 2008/10/11 22:49:11 fang Exp $
+	$Id: cflat.cc,v 1.22 2008/10/12 00:21:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -206,6 +206,7 @@ void
 __cflat_java_lvs(cflat::options& cf) {
 	__cflat_lvs(cf);
 	cf.node_attributes = true;
+	cf.expand_pass_gates = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -585,6 +586,36 @@ const cflat::register_options_modifier
 	cflat::_no_node_attributes("no-node-attributes",
 		&__cflat_no_node_attributes, 
 		"suppress node attributes");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-expand-pass-gates.texi
+@defvr {@t{cflat -f} option} expand-pass-gates
+@defvrx {@t{cflat -f} option} no-expand-pass-gates
+Whether or not to expand pass gates to their equivalent
+unidirectional production rules.  
+@end defvr
+@end texinfo
+***/
+static
+void
+__cflat_expand_pass_gates(cflat::options& cf) {
+	cf.expand_pass_gates = true;
+}
+const cflat::register_options_modifier
+	cflat::_expand_pass_gates("expand-pass-gates",
+		&__cflat_expand_pass_gates,
+		"expand pass gates to production rules");
+
+static
+void
+__cflat_no_expand_pass_gates(cflat::options& cf) {
+	cf.expand_pass_gates = false;
+}
+const cflat::register_options_modifier
+	cflat::_no_expand_pass_gates("no-expand-pass-gates",
+		&__cflat_no_expand_pass_gates, 
+		"do not expand pass gates as production rules");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

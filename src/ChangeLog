@@ -5,6 +5,12 @@
 
 2008-10-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-42:
+	  hflat prsim: print pass-gate sizes if sizes requested.
+		Suppress pass-gate expansion if options dictate it.  
+		Added test cases.
+
+
 	* HACKT-00-01-04-main-00-82-41:
 	  hflat now prints node attributes with new flag 
 		-fnode-attributes (default false), 

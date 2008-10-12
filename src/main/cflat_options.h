@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.15 2008/10/11 22:49:12 fang Exp $
+	$Id: cflat_options.h,v 1.16 2008/10/12 00:21:41 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -94,10 +94,15 @@ public:
 
 	// bool				canonical_first;
 	/**
-		Print node attributes.
+		Print node attributes.  Default=false.
 	 */
 	bool				node_attributes;
-
+	/**
+		Whether or not to expand passn/passp directives
+		to their equivalent (uni-directional) production rules.
+		Default=true.
+	 */
+	bool				expand_pass_gates;
 	/**
 		Whether or not node names should be wrapped in quote.  
 	 */
@@ -181,7 +186,7 @@ public:
 		tool_options(TOOL_OPTIONS_DEFAULT), 
 		connect_style(CONNECT_STYLE_EQUAL), 
 		include_prs(true), dump_self_connect(false), 
-		node_attributes(false),
+		node_attributes(false), expand_pass_gates(true), 
 		enquote_names(true), dump_non_bools(false), 
 		namespace_policy(NAMESPACE_POLICY_NONE), 
 		check_prs(false), wire_mode(false), 

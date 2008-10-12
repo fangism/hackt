@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.11 2007/08/22 02:09:26 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.12 2008/10/12 00:21:38 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -203,12 +203,13 @@ Usage: @samp{passn<W,L>(g, s, d)} or @samp{passn(g, s, d)}
 Declares an NFET pass-transistor with gate @var{g}, source @var{s}, 
 and drain @var{d}.
 Sizing parameters @var{W} and @var{L} are optional.
-In @command{cflat prsim} mode, 
+In @command{hflat prsim} mode, 
 this prints a uni-directional (sized) production rule 
 @example
 after 0  g & ~s -> d-
 @end example
-In @command{cflat lvs} mode, this just prints @samp{passn(g, s, d)} back out.  
+In @command{hflat lvs} mode, this just prints @samp{passn(g, s, d)} back out.  
+Sizes are printed only if @option{-fsizes} is passed to hflat.
 @end defmac
 @end texinfo
 
@@ -219,12 +220,13 @@ Usage: @samp{passp<W,L>(g, s, d)} or @samp{passp(g, s, d)}
 Declares a PFET pass-transistor with gate @var{g}, source @var{s}, 
 and drain @var{d}.
 Sizing parameters @var{W} and @var{L} are optional.
-In @command{cflat prsim} mode, 
+In @command{hflat prsim} mode, 
 this prints a uni-directional (sized) production rule 
 @example
 after 0 ~g & s -> d+
 @end example
-In @command{cflat lvs} mode, this just prints @samp{passp(g, s, d)} back out.  
+In @command{hflat lvs} mode, this just prints @samp{passp(g, s, d)} back out.  
+Sizes are printed only if @option{-fsizes} is passed to hflat.
 @end defmac
 @end texinfo
 ***/
@@ -251,14 +253,20 @@ PassN::main(cflat_prs_printer& p, const param_args_type& params,
 	ostream& o(p.os);
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
+	if (p.cfopts.expand_pass_gates) {
 		o << "after 0\t";
 		p.__dump_canonical_literal(*nodes[0].begin());
+		if (p.cfopts.size_prs && params.front()) {
+			print_param_args_list(p, params);
+		}
 		o << " & ~";
 		p.__dump_canonical_literal(*nodes[1].begin());
 		o << " -> ";
 		p.__dump_canonical_literal(*nodes[2].begin());
 		o << '-' << endl;
 		break;
+	}
+	// else fall-through, yes
 	case cflat_options::TOOL_LVS:
 		o << "passn";
 		if (p.cfopts.size_prs && params.front()) {
@@ -280,14 +288,20 @@ PassP::main(cflat_prs_printer& p, const param_args_type& params,
 	ostream& o(p.os);
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
+	if (p.cfopts.expand_pass_gates) {
 		o << "after 0\t~";
 		p.__dump_canonical_literal(*nodes[0].begin());
+		if (p.cfopts.size_prs && params.front()) {
+			print_param_args_list(p, params);
+		}
 		o << " & ";
 		p.__dump_canonical_literal(*nodes[1].begin());
 		o << " -> ";
 		p.__dump_canonical_literal(*nodes[2].begin());
 		o << '+' << endl;
 		break;
+	}
+	// else fall-through, yes
 	case cflat_options::TOOL_LVS:
 		o << "passp";
 		if (p.cfopts.size_prs && params.front()) {

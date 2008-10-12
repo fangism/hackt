@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.14 2008/10/11 22:49:12 fang Exp $
+	$Id: cflat.h,v 1.15 2008/10/12 00:21:40 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_H__
@@ -88,6 +88,7 @@ private:
 		_include_prs, _exclude_prs, _no_include_prs, _no_exclude_prs,
 		_self_aliases, _no_self_aliases,
 		_node_attributes, _no_node_attributes, 
+		_expand_pass_gates, _no_expand_pass_gates, 
 		_quote_names, _no_quote_names,
 		_check_mode, _no_check_mode,
 		_wire_mode, _no_wire_mode,
