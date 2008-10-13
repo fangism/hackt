@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.9.2.4 2008/10/06 07:41:48 fang Exp $
+	$Id: ExprAlloc.h,v 1.9.2.5 2008/10/13 05:10:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -162,7 +162,7 @@ public:
 
 	void
 	link_node_to_root_expr(const node_index_type, 
-		const expr_index_type, const bool dir
+		const expr_index_type, const bool dir, const rule_type&
 #if PRSIM_WEAK_RULES
 		, const rule_strength
 #endif

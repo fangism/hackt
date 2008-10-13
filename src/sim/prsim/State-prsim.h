@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.9 2008/10/06 07:41:55 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.10 2008/10/13 05:10:14 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -77,6 +77,8 @@ enum {
 	FIRST_VALID_LOCAL_NODE = 0, 
 	/// index of the first valid local expr/expr_graph_node
 	FIRST_VALID_LOCAL_EXPR = 0,
+	/// index of first valid process, 0 is the top-level process
+	FIRST_VALID_PROCESS = 0,
 #endif
 	/// index of the first valid event
 	FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
@@ -105,6 +107,62 @@ struct watch_entry {
 	dump_checkpoint_state(ostream&, istream&);
 
 } __ATTRIBUTE_ALIGNED__ ;
+
+//=============================================================================
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+// structures to account for local fanin contribution
+typedef	std::vector<expr_index_type>	fanin_array_type;
+typedef	fanin_array_type		fanout_array_type;
+
+/**
+	This resembles Node(Struct), but only contains 
+	fanin and fanout information.  
+ */
+struct faninout_struct_type {
+#if PRSIM_WEAK_RULES
+	fanin_array_type		pull_up[2];
+	fanin_array_type		pull_dn[2];
+#else
+	fanin_array_type		pull_up;
+	fanin_array_type		pull_dn;
+#endif
+	fanout_array_type		fanout;
+	// default ctor/dtor/copy
+	fanin_array_type&
+	get_pull_expr(const bool b
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) {
+		return b ? pull_up STR_INDEX(w)
+			: pull_dn STR_INDEX(w);
+	}
+
+	const fanin_array_type&
+	get_pull_expr(const bool b
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) const {
+		return b ? pull_up STR_INDEX(w)
+			: pull_dn STR_INDEX(w);
+	}
+
+	bool
+	has_fanin(void) const;
+
+	bool
+	contains_fanout(const expr_index_type) const;
+
+	static
+	ostream&
+	dump_faninout_list(ostream&, const fanin_array_type&);
+
+	ostream&
+	dump_struct(ostream&) const;
+
+};	// end struct faninout_struct_type
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //=============================================================================
 /**
@@ -184,54 +242,6 @@ protected:
 	rule_map_type				rule_map;
 
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	// structures to account for local fanin contribution
-	typedef	std::vector<expr_index_type>	fanin_array_type;
-	typedef	fanin_array_type		fanout_array_type;
-	/**
-		This resembles Node(Struct), but only contains 
-		fanin and fanout information.  
-	 */
-	struct faninout_struct_type {
-#if PRSIM_WEAK_RULES
-		fanin_array_type		pull_up[2];
-		fanin_array_type		pull_dn[2];
-#else
-		fanin_array_type		pull_up;
-		fanin_array_type		pull_dn;
-#endif
-		fanout_array_type		fanout;
-		// default ctor/dtor/copy
-		fanin_array_type&
-		get_pull_expr(const bool b
-#if PRSIM_WEAK_RULES
-			, const rule_strength w
-#endif
-			) {
-			return b ? pull_up STR_INDEX(w)
-				: pull_dn STR_INDEX(w);
-		}
-
-		const fanin_array_type&
-		get_pull_expr(const bool b
-#if PRSIM_WEAK_RULES
-			, const rule_strength w
-#endif
-			) const {
-			return b ? pull_up STR_INDEX(w)
-				: pull_dn STR_INDEX(w);
-		}
-
-		bool
-		contains_fanout(const expr_index_type) const;
-
-		static
-		ostream&
-		dump_faninout_list(ostream&, const fanin_array_type&);
-
-		ostream&
-		dump_struct(ostream&) const;
-
-	};	// end struct faninout_struct_type
 	/**
 		Member functions interpret this as a node for 
 		structural purposes.  
@@ -424,18 +434,7 @@ public:
 
 #define	THROWS_STEP_EXCEPTION	throw (step_exception)
 private:
-	struct evaluate_return_type {
-		node_index_type			node_index;
-		expr_state_type*		root_ex;
-		pull_enum			root_pull;
-
-		evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
-
-		evaluate_return_type(const node_index_type ni,
-			expr_state_type* const e, const pull_enum p) :
-			node_index(ni), root_ex(e), root_pull(p) { }
-	};	// end struct evaluate_return_type
-private:
+	struct evaluate_return_type;
 	/**
 		A fast, realloc-free vector-like structure
 		to built-up expressions.  
@@ -672,6 +671,9 @@ protected:
 	 */
 	typedef	map<expr_index_type, process_index_type>
 					global_expr_process_id_map_type;
+	/**
+		TODO: Possibly fold into process_sim_state?
+	 */
 	typedef	map<process_index_type, expr_index_type>
 					process_first_expr_map_type;
 	/**

@@ -1,14 +1,13 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.15.2.4 2008/08/23 22:59:29 fang Exp $
+	$Id: Node.h,v 1.15.2.5 2008/10/13 05:10:09 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
 #define	__HAC_SIM_PRSIM_NODE_H__
 
 #include <iosfwd>
-// #include <valarray>
 #include <vector>
 #include "util/string_fwd.h"
 #include "util/macros.h"
@@ -29,11 +28,22 @@ using std::istream;
 using std::vector;
 
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+struct faninout_struct_type;		// from "State-prsim.h"
+
+/**
+	Define to 1 to use vector for node fanin, else valarray.
+ */
+#define	VECTOR_NODE_FANIN		1
 /**
 	List or array of fanin expressions.  
 	OR-combination expression.  
+	Valarray is lighter, but lacks container/iterator interface :(
  */
+#if VECTOR_NODE_FANIN
+typedef	std::vector<process_index_type>	process_fanin_type;
+#else
 typedef	std::valarray<process_index_type>	process_fanin_type;
+#endif
 
 /**
 	Is like ExprState, but uses size_t instead of count_type.  
@@ -42,7 +52,7 @@ typedef	std::valarray<process_index_type>	process_fanin_type;
  */
 struct fanin_state_type {
 #if 0
-	// smaller, should check for limit
+	// smaller?, should check for limit
 	typedef	expr_count_type		count_type;
 #else
 	typedef	expr_index_type		count_type;
@@ -65,6 +75,8 @@ struct fanin_state_type {
 	 */
 	count_type			unknowns;
 
+	fanin_state_type() : size(0), countdown(0), unknowns(0) { }
+
 	/**
 		Same as ExprState::initialize()
 	 */
@@ -85,6 +97,9 @@ struct fanin_state_type {
 		return countdown ? PULL_ON :
 			(unknowns ? PULL_WEAK : PULL_OFF);
 	}
+
+	ostream&
+	dump_state(ostream&) const;
 };	// end struct fanin_state_type
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
@@ -547,6 +562,31 @@ public:
 
 	void
 	reset_tcount(void) { tcount = 0; }
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	void
+	count_fanins(const faninout_struct_type&);
+
+	fanin_state_type&
+	get_pull_struct(const bool dir
+#if PRSIM_WEAK_RULES
+		, const bool w
+#endif
+		) {
+		return dir ? pull_up_state STR_INDEX(w) :
+			pull_dn_state STR_INDEX(w);
+	}
+
+	const fanin_state_type&
+	get_pull_struct(const bool dir
+#if PRSIM_WEAK_RULES
+		, const bool w
+#endif
+		) const {
+		return dir ? pull_up_state STR_INDEX(w) :
+			pull_dn_state STR_INDEX(w);
+	}
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	void
 	save_state(ostream&) const;

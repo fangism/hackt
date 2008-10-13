@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.11.2.2 2008/08/06 08:06:07 fang Exp $
+	$Id: Expr.h,v 1.11.2.3 2008/10/13 05:09:57 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -61,6 +61,7 @@ struct Expr {
 		EXPR_NAND = 0x03,
 		EXPR_MASK = 0x03, ///< two LSB encode the logic function
 		EXPR_ROOT = 0x04, ///< if the parent expression is a node
+		// TODO: direction field should belong to Rule
 		EXPR_DIR = 0x08	///< if parent is node, what direction to pull
 	} type_enum;
 

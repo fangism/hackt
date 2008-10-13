@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.12 2008/10/06 07:41:51 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.13 2008/10/13 05:10:11 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -121,6 +121,86 @@ using entity::process_tag;
 using entity::footprint_frame_map_type;
 #endif
 #include "util/using_ostream.h"
+
+//=============================================================================
+/**
+	Convenient repetitive dump function.  
+ */
+template <class MapType>
+static
+ostream&
+dump_pair_map(ostream& o, const MapType& m) {
+	typename MapType::const_iterator i(m.begin()), e(m.end());
+	for ( ; i!=e; ++i) {
+		o << '(' << i->first << "," << i->second << ") ";
+	}
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class ListType>
+static
+ostream&
+dump_pair_vector(ostream& o, const ListType& m) {
+	typename ListType::const_iterator i(m.begin()), e(m.end());
+	size_t j = 0;
+	for ( ; i!=e; ++i, ++j) {
+		o << '(' << j << "," << *i << ") ";
+	}
+	return o << endl;
+}
+
+
+//=============================================================================
+/**
+	Passing around information from expression evaluation.  
+	TODO: figure out which members are actually needed...
+ */
+struct State::evaluate_return_type {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	typedef	expr_struct_type	root_ex_type;
+#else
+	typedef	expr_state_type		root_ex_type;
+#endif
+	/// the node affected by propagation
+	node_index_type			node_index;
+	/// state of the root expression
+	const root_ex_type*		root_ex;
+	/// new pull state
+	pull_enum			root_pull;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/// root rule struct
+	const rule_type*		root_rule;
+	/// root rule index
+	rule_index_type			root_rule_index;
+	/// process instance index
+	process_index_type		pid;
+	/// process type indef
+	process_index_type		pti;
+	/// process instance's expression offset
+	expr_index_type			ex_offset;
+#endif
+
+	/// other fields may remain uninitialized, we won't use them
+	evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
+
+	evaluate_return_type(const node_index_type ni,
+		const root_ex_type* const e, const pull_enum p
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		, const rule_type* const r
+		, const rule_index_type ri
+		, const process_index_type pi
+		, const process_index_type t
+		, const expr_index_type o
+#endif
+		) :
+		node_index(ni), root_ex(e), root_pull(p)
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+			, root_rule(r), root_rule_index(ri)
+			, pid(pi), pti(t), ex_offset(o)
+#endif
+			{ }
+};	// end struct evaluate_return_type
 
 //=============================================================================
 // class unique_process_subgraph method definitions
@@ -289,8 +369,15 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// are done constructing this State's members at this point.  
 	ExprAlloc v(*this, f);
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+	// pre-allocate array of process states
+	process_state_array.reserve(sm.get_pool<process_tag>().size() +2);
+	// unique_process_pool.reserve() ?
+	// first valid global expression ID is 1, 0 is reserved as NULL
+	global_expr_process_id_map[FIRST_VALID_GLOBAL_EXPR]
+		= FIRST_VALID_PROCESS;
+	// if top-level process is empty, will need to replace this entry!
 	// top-level prs in the module, pid=0
-	mod.get_footprint().get_prs_footprint().accept(v);
+	mod.get_footprint().get_prs_footprint().accept(v);	// throw?
 #endif
 	// this may throw an exception!
 try {
@@ -840,7 +927,19 @@ if (!e.wiped()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 bool
-unique_process_subgraph::faninout_struct_type::contains_fanout(
+faninout_struct_type::has_fanin(void) const {
+	return pull_up STR_INDEX(NORMAL_RULE).size() ||
+		pull_dn STR_INDEX(NORMAL_RULE).size()
+#if PRSIM_WEAK_RULES
+		|| pull_up STR_INDEX(WEAK_RULE).size()
+		|| pull_dn STR_INDEX(WEAK_RULE).size()
+#endif
+		;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+faninout_struct_type::contains_fanout(
 		const expr_index_type ei) const {
 	STACKTRACE_VERBOSE;
 	return find(fanout.begin(), fanout.end(), ei) != fanout.end();
@@ -848,7 +947,7 @@ unique_process_subgraph::faninout_struct_type::contains_fanout(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-unique_process_subgraph::faninout_struct_type::dump_faninout_list(
+faninout_struct_type::dump_faninout_list(
 		ostream& o, const fanin_array_type& a) {
 if (a.size()) {
 	std::ostream_iterator<expr_index_type> osi(o, " ");
@@ -864,7 +963,7 @@ if (a.size()) {
 	Ripped from Node::dump_struct.
  */
 ostream&
-unique_process_subgraph::faninout_struct_type::dump_struct(ostream& o) const {
+faninout_struct_type::dump_struct(ostream& o) const {
 	o << "up: ";
 	dump_faninout_list(o, pull_up STR_INDEX(NORMAL_RULE));
 #if PRSIM_WEAK_RULES
@@ -1848,6 +1947,8 @@ const State::rule_type*
 State::lookup_rule(const expr_index_type ei) const {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	STACKTRACE_VERBOSE;
+	INVARIANT(ei);
+	STACKTRACE_INDENT_PRINT("global-rule: " << ei << endl);
 	// translate global expression index to 
 	// global process index with local expression index,
 	// and forward the lookup
@@ -2763,6 +2864,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 {
 	typedef	node_type::const_fanout_iterator	const_iterator;
 	const_iterator i, e;
+	DEBUG_STEP_PRINT("#fanouts: " << n.fanout.size() << endl);
 if (eval_ordering_is_random()) {
 	__shuffle_indices.clear();
 	std::copy(n.fanout.begin(), n.fanout.end(), 
@@ -2973,6 +3075,7 @@ State::evaluate(const node_index_type ni,
 	expr_state_type* u;
 	__scratch_expr_trace.clear();
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+	// first, localize evaulation to a single process!
 	const expr_struct_type* s;
 	const expr_offset_pair& f(lookup_global_expr_process(gui));
 	expr_index_type ui = gui -f.first;
@@ -2980,6 +3083,7 @@ State::evaluate(const node_index_type ni,
 	const size_t pti = process_type_map[pid];
 	process_sim_state& ps(process_state_array[pid]);
 	unique_process_subgraph& pg(unique_process_pool[pti]);
+	expr_index_type ri;
 #define	STRUCT	s
 #else
 #define	STRUCT	u
@@ -2989,14 +3093,21 @@ do {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	s = &pg.expr_pool[ui];
 	u = &ps.expr_states[ui];
+	__scratch_expr_trace.push_back(ui +f.first);
+	// TODO: do away with __scratch_expr_trace entirely, 
+	// now that we have restructured nodes and fanins
 #else
 	u = &expr_pool[ui];
-#endif
 	__scratch_expr_trace.push_back(ui);
+#endif
 #if DEBUG_STEP
 	DEBUG_STEP_PRINT("examining expression ID: " << ui << endl);
 	STRUCT->dump_struct(STACKTRACE_INDENT) << endl;
-	u->dump_state(STACKTRACE_INDENT << "before: ") << endl;
+	u->dump_state(STACKTRACE_INDENT << "before: "
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		, *s
+#endif
+		) << endl;
 #endif
 	// trust compiler to effectively perform branch-invariant
 	// code-motion
@@ -3035,7 +3146,11 @@ do {
 #endif
 	}	// end if
 #if DEBUG_STEP
-	u->dump_state(STACKTRACE_INDENT << "after : ") << endl;
+	u->dump_state(STACKTRACE_INDENT << "after : "
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		, *s
+#endif
+		) << endl;
 #endif
 	if (old_pull == new_pull) {
 		// then the pull-state did not change.
@@ -3046,16 +3161,50 @@ do {
 	// NOTE: cannot equate pull with value!
 	prev = old_pull;
 	next = new_pull;
+	ri = ui;		// save previous index
 	ui = STRUCT->parent;
 } while (!STRUCT->is_root());
-#undef	STRUCT
+	DEBUG_STEP_PRINT("propagated to root rule" << endl);
 	// made it to root
 	// negation already accounted for
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	return evaluate_return_type(gui, u, next);
-#else
-	return evaluate_return_type(ui, u, next);
+	// new: remember to update node-fanin state structure!
+	const node_index_type oni = translate_to_global_node(pid, ui);
+	// local -> global node
+//	const expr_struct_type& e(pg.expr_pool[ri]);	// for direction
+	ri = pg.rule_map[ri];	// expr -> rule
+	const rule_type& r(pg.rule_pool[ri]);
+	node_type& n(get_node(oni));
+	fanin_state_type& fs(n.get_pull_struct(STRUCT->direction()
+#if PRSIM_WEAK_RULES
+		, r.is_weak()
 #endif
+		));
+	// root rules of a node are disjunctive (OR-combination)
+#if DEBUG_STEP
+	fs.dump_state(STACKTRACE_INDENT << "before : ") << endl;
+#endif
+	const pull_enum old_pull = fs.pull();
+	fs.unknowns += (next >> 1) - (prev >> 1);
+	fs.countdown += (next & LOGIC_VALUE) - (prev & LOGIC_VALUE);
+	const pull_enum new_pull = fs.pull();
+#if DEBUG_STEP
+	fs.dump_state(STACKTRACE_INDENT << "after : ") << endl;
+#endif
+	if (old_pull == new_pull) {
+		// then the pull-state did not change.
+		DEBUG_STEP_PRINT("end of propagation." << endl);
+		return evaluate_return_type();
+	}
+#else
+	const node_index_type oni = ui;
+#endif
+	return evaluate_return_type(oni, STRUCT, next
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		, &r, ri +f.first, pid, pti, f.first
+#endif
+		);
+#undef	STRUCT
 }	// end State::evaluate()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3067,6 +3216,9 @@ do {
 // inline
 const State::expr_offset_pair&
 State::lookup_global_expr_process(const expr_index_type gei) const {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("global-expr: " << gei << endl);
+	INVARIANT(gei);
 	global_expr_process_id_map_type::const_iterator
 		f(global_expr_process_id_map.upper_bound(gei));
 	INVARIANT(f != global_expr_process_id_map.begin());
@@ -3112,6 +3264,7 @@ State::translate_to_global_node(const process_index_type pid,
 		unlike original prsim.  
 		Locally, this is used as the index of the affected node.  
 		NOW, THIS IS A LOCAL EXPRESSION INDEX, relative to pid
+	\param exi is the global expression index to update.  
 	\param pid process index.
 	\param prev the former value of the node/subexpression
 	\param next the new value of the node/subexpression.
@@ -3119,6 +3272,8 @@ State::translate_to_global_node(const process_index_type pid,
 		in the event that an evaluation propagates to root.  
 	NOTE: the action table here depends on the expression-type's
 		subtype encoding.  For now, we use the Expr's encoding.  
+	TODO: optimize reuse of root_rule, don't waste lookups
+	TODO: move ::evaluate into a member function of unique_process_subgraph
  */
 State::break_type
 State::propagate_evaluation(
@@ -3128,29 +3283,27 @@ State::propagate_evaluation(
 		) {
 	STACKTRACE_VERBOSE_STEP;
 	const node_index_type& ni(c.node);
-	pull_enum next;	// just local variable
 	// when evaluating node as expression, interpret value as pull
 	const evaluate_return_type
 		ev_result(evaluate(ni, exi, prev, pull_enum(c.val)));
 	if (!ev_result.node_index) {
 		return false;
 	}
-	next = ev_result.root_pull;
+	pull_enum next = ev_result.root_pull;
 	const node_index_type ui = ev_result.node_index;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	const expr_offset_pair& f(lookup_global_expr_process(exi));
-	const expr_index_type lei = exi -f.first;
-	const process_index_type pid = f.second;
-	const size_t pti = process_type_map[pid];
-	// process_sim_state& ps(process_state_array[pid]);
-	unique_process_subgraph& pg(unique_process_pool[pti]);
-	const expr_struct_type* const u = &pg.expr_pool[lei];
+	const expr_struct_type* const u(ev_result.root_ex);
 #else
 	const expr_state_type* const u(ev_result.root_ex);
 #endif
 	// we delay the root rule search until here to reduce the amount
 	// of searching required to find the responsible rule expression.  
 	rule_index_type root_rule;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+//	INVARIANT(__scratch_expr_trace.size());
+//	root_rule = __scratch_expr_trace.back();
+	root_rule = ev_result.root_rule_index;
+#else
 {
 	typedef	expr_trace_type::const_reverse_iterator	trace_iterator;
 	trace_iterator ri(__scratch_expr_trace.rbegin()),
@@ -3159,9 +3312,15 @@ State::propagate_evaluation(
 	while (ri!=re && !is_rule_expr(*ri)) { ++ri; }
 	root_rule = *ri;
 }
+#endif
+	DEBUG_STEP_PRINT("root_rule: " << root_rule << endl);
 	ISE_INVARIANT(root_rule);
 #if PRSIM_WEAK_RULES
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	const size_t is_weak = ev_result.root_rule->is_weak();
+#else
 	const size_t is_weak = lookup_rule(root_rule)->is_weak();
+#endif
 #endif
 // propagation made it to the root node, indexed by ui (now node_index_type)
 	node_type& n(get_node(ui));
@@ -4165,7 +4324,7 @@ State::dump_struct(ostream& o) const {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 {
 	o << "Unique processes: {" << endl;
-	process_index_type p = 0;	// 0 is top-level type
+	process_index_type p = FIRST_VALID_PROCESS;	// 0 is top-level type
 	unique_process_pool_type::const_iterator
 		i(unique_process_pool.begin()), e(unique_process_pool.end());
 	for ( ; i!=e; ++i, ++p) {
@@ -4174,6 +4333,13 @@ State::dump_struct(ostream& o) const {
 	}
 	o << "}" << endl;
 }
+	// print maps (debug only?)
+	o << "map: process index -> type index" << endl;
+	dump_pair_vector(o, process_type_map);
+	o << "map: global-expr-id -> process-id" << endl;
+	dump_pair_map(o, global_expr_process_id_map);
+	o << "map: process-id -> global-expr-offset" << endl;
+	dump_pair_map(o, process_first_expr_map);
 	return o;
 }
 
@@ -4215,6 +4381,19 @@ unique_process_subgraph::dump_struct(ostream& o) const {
 		expr_graph_node_pool[i].dump_struct(o << '\t') << endl;
 	}
 	}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+{
+	o << "Local expression -> rule map:" << endl;	// hash_map is unsorted!
+	dump_pair_map(o, rule_map);
+	o << "Local rules:" << endl;
+	rule_pool_type::const_iterator
+		ri(rule_pool.begin()), re(rule_pool.end());
+	rule_index_type j = 0;
+	for ( ; ri!=re; ++ri, ++j) {
+		ri->dump(o << '[' << j << "]\t") << endl;
+	}
+}
+#endif
 }
 	return o;
 }
@@ -4611,8 +4790,11 @@ State::dump_node_fanin(ostream& o, const node_index_type ni,
 		const bool v) const {
 	// typedef	process_fanin_type::const_iterator	const_iterator;
 	const node_type& n(get_node(ni));
-	const process_index_type* i(&n.fanin[0]),
-		*e(&n.fanin[n.fanin.size()]);
+#if VECTOR_NODE_FANIN
+	process_fanin_type::const_iterator i(n.fanin.begin()), e(n.fanin.end());
+#else
+	const process_index_type* i(&n.fanin[0]), *e(&n.fanin[n.fanin.size()]);
+#endif
 for ( ; i!=e; ++i) {
 	const process_index_type& pid = *i;
 	const process_index_type pti = process_type_map[pid];
@@ -5316,8 +5498,11 @@ State::__root_expr_why_not(ostream& o, const node_index_type ni,
 	const pull_enum match_pull = nf.pull();
 	// iterate over processes, collect root expressions/rules
 	const process_fanin_type& fanin(get_node(ni).fanin);
-	const process_index_type* i(&fanin[0]),
-		*e(&fanin[fanin.size()]);
+#if VECTOR_NODE_FANIN
+	process_fanin_type::const_iterator i(fanin.begin()), e(fanin.end());
+#else
+	const process_index_type* i(&fanin[0]), *e(&fanin[fanin.size()]);
+#endif
 for ( ; i!=e; ++i) {		// for all processes
 	const process_index_type& pid = *i;
 	const process_index_type pti = process_type_map[pid];
@@ -5335,10 +5520,8 @@ for ( ; i!=e; ++i) {		// for all processes
 	while (f != fe) {	// for all local nodes that reference node ni
 		// collect local node's fanin expressions!
 		const node_index_type lni = std::distance(b, f);
-		const unique_process_subgraph::faninout_struct_type&
+		const faninout_struct_type&
 			fm(pg.local_faninout_map[lni]);
-		typedef unique_process_subgraph::fanin_array_type
-						fanin_array_type;
 		const fanin_array_type&
 			fia(dir ? fm.pull_up STR_INDEX(wk)
 				: fm.pull_dn STR_INDEX(wk));
@@ -5501,7 +5684,6 @@ unique_process_subgraph::__recurse_expr_why_X(ostream& o,
 	Need this specialization because root expressions are now structured
 	separate as part of nodes fanin structures.  
 	This should behave like __local_expr_why_X.
-	HERE
  */
 void
 State::__root_expr_why_X(ostream& o, const node_index_type ni, 
@@ -5526,8 +5708,11 @@ State::__root_expr_why_X(ostream& o, const node_index_type ni,
 
 	// iterate over processes, collect root expressions/rules
 	const process_fanin_type& fanin(get_node(ni).fanin);
-	const process_index_type* i(&fanin[0]),
-		*e(&fanin[fanin.size()]);
+#if VECTOR_NODE_FANIN
+	process_fanin_type::const_iterator i(fanin.begin()), e(fanin.end());
+#else
+	const process_index_type* i(&fanin[0]), *e(&fanin[fanin.size()]);
+#endif
 for ( ; i!=e; ++i) {		// for all processes
 	const process_index_type& pid = *i;
 	const process_index_type pti = process_type_map[pid];
@@ -5545,10 +5730,8 @@ for ( ; i!=e; ++i) {		// for all processes
 	while (f != fe) {	// for all local nodes that reference node ni
 		// collect local node's fanin expressions!
 		const node_index_type lni = std::distance(b, f);
-		const unique_process_subgraph::faninout_struct_type&
+		const faninout_struct_type&
 			fm(pg.local_faninout_map[lni]);
-		typedef unique_process_subgraph::fanin_array_type
-						fanin_array_type;
 		const fanin_array_type&
 			fia(dir ? fm.pull_up STR_INDEX(wk)
 				: fm.pull_dn STR_INDEX(wk));

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.6 2008/10/06 07:41:44 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.7 2008/10/13 05:09:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -208,12 +208,6 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 		ret_ex_index(INVALID_EXPR_INDEX), 
 		temp_rule(NULL),
 		flags(f), expr_free_list() {
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-	// pre-allocate array of process states
-	state.unique_process_pool.resize(
-		state.get_module().get_state_manager()
-			.get_pool<process_tag>().size() +2);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -225,7 +219,6 @@ void
 ExprAlloc::visit(const state_manager& _sm) {
 	cflat_visitor::visit(_sm);
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	// HERE
 	typedef	state_type::global_expr_process_id_map_type::const_iterator
 						const_iterator;
 	const_iterator i(state.global_expr_process_id_map.begin()),
@@ -237,6 +230,9 @@ ExprAlloc::visit(const state_manager& _sm) {
 	if (flags.any_optimize() && expr_free_list.size()) {
 		compact_expr_pools();
 	}
+#endif
+#if ENABLE_STACKTRACE
+	state.dump_struct(cerr << "Final global struct:" << endl) << endl;
 #endif
 }
 
@@ -258,6 +254,10 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	// also set up proper unique_process references
 	typedef	process_footprint_map_type::const_iterator	const_iterator;
 	const const_iterator f(process_footprint_map.find(&pfp));
+	const entity::footprint_frame_map_type& bmap(
+		state.get_module().get_state_manager().get_pool<process_tag>()
+			[state.process_state_array.size()]
+			._frame.get_frame_map<bool_tag>());
 	size_t type_index;	// unique process type index
 	if (f == process_footprint_map.end()) {
 		type_index = state.unique_process_pool.size();
@@ -266,20 +266,14 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 		const util::value_saver<unique_process_subgraph*> tmp(g, &u);
 		// resize the faninout_struct array as if it were local nodes
 		// kludgy way of inferring the correct footprint
-		u.local_faninout_map.resize(state.get_module().
-			get_state_manager().get_pool<process_tag>()
-			[state.process_state_array.size()]._frame
-			.get_frame_map<bool_tag>().size());
+		u.local_faninout_map.resize(bmap.size());
 		cflat_visitor::visit(pfp);
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 		// definitely want to keep this
 		if (flags.any_optimize() && expr_free_list.size()) {
 			compact_expr_pools();
 		}
 #if ENABLE_STACKTRACE
-		state.dump_struct(cerr << "Final local struct:" << endl)
-			<< endl;
-#endif
+		u.dump_struct(cerr << "Final local struct:" << endl) << endl;
 #endif
 		// auto-restore graph pointer
 	} else {
@@ -288,29 +282,67 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	}
 	// append-allocate new state, based on type
 	state.process_type_map.push_back(type_index);
-	state.process_state_array.push_back(process_sim_state());
+	state.process_state_array.push_back(process_sim_state()); // resize +1
 	// now, allocate state for instance of this process type
-	state.process_state_array.back().allocate_from_type(
-		state.unique_process_pool[type_index]);
+	const unique_process_subgraph&
+		ptemplate(state.unique_process_pool[type_index]);
+	state.process_state_array.back().allocate_from_type(ptemplate);
 	// mapping update: for expr->process map, assign value
 	// TODO: be careful not to add an entry for EMPTY processes!
 	//	nice side effect of optimization: only map leaf cells with PRS!
-	// TODO: another idea, each process appends an entry for 
+	STACKTRACE_INDENT_PRINT("current process index = "
+		<< current_process_index << endl);
+	STACKTRACE_INDENT_PRINT("current type index = " << type_index << endl);
+	const expr_index_type pxs = ptemplate.expr_pool.size();
+	STACKTRACE_INDENT_PRINT("has " << pxs << " exprs" << endl);
+	INVARIANT(!state.global_expr_process_id_map.empty());
+if (pxs) {
+	// Each process appends an entry for 
 	// the process that *follows* it (P+1)!  (optionally delete last one)
-	if (current_process_index) {
-		typedef state_type::global_expr_process_id_map_type::const_iterator
-				map_iterator;
-		const map_iterator x(--state.global_expr_process_id_map.end());
-		// get the cumulative number of expressions (state)
-		// by adding the lower bound of the last appended entry
-		// to its corresponding size.  
-		const size_t s = x->first
-			+state.unique_process_pool[x->first].expr_pool.size();
-		state.global_expr_process_id_map[s] = current_process_index;
-	} else {
-		// first process, first expressions indexed
-		state.global_expr_process_id_map[0] = current_process_index;
+	typedef state_type::global_expr_process_id_map_type::const_iterator
+			map_iterator;
+	const map_iterator x(--state.global_expr_process_id_map.end());	// last
+	// get the cumulative number of expressions (state)
+	// by adding the lower bound of the last appended entry
+	// to its corresponding size.  
+	const expr_index_type ex_offset =
+		x->first +ptemplate.expr_pool.size();
+	// STACKTRACE_INDENT_PRINT("prev offset = " << x->first << endl);
+	STACKTRACE_INDENT_PRINT("offset[" << ex_offset << "] -> process " <<
+		current_process_index +1 << endl);
+	state.global_expr_process_id_map[ex_offset] = current_process_index +1;
+	// connect global nodes to global fanout expressions
+	node_index_type lni = 0;	// frame-map is 0-indexed
+	for ( ; lni < bmap.size(); ++lni) {
+		const node_index_type gni = bmap[lni];	// global
+		const faninout_struct_type&
+			ff(ptemplate.local_faninout_map[lni]);
+		const fanout_array_type& lfo(ff.fanout);
+		State::node_type& n(state.node_pool[gni]);
+		transform(lfo.begin(), lfo.end(), back_inserter(n.fanout), 
+			bind2nd(std::plus<expr_index_type>(), x->first));
+		if (ff.has_fanin()) {
+#if VECTOR_NODE_FANIN
+			n.fanin.push_back(current_process_index);
+#else
+			finish(me);
+#endif
+			n.count_fanins(ff);	// count total OR-fanins
+		}
 	}
+} else {
+	// we have an empty process, but previous entry already added an 
+	// entry pointing to this one.  
+	// so we just "modify" the key in place without removing/re-inserting
+	// a new entry in the sorted map, preserving order.
+	typedef state_type::global_expr_process_id_map_type::iterator
+			map_iterator;
+	const map_iterator x(--state.global_expr_process_id_map.end());	// last
+	x->second = current_process_index +1;	// equiv: ++(x->second);
+	STACKTRACE_INDENT_PRINT("offset[" << x->first << "] -> process "
+		<< x->second << endl);
+}
+	// the very last process will add an entry pointing one-past-the-end
 	// assume that processes are visited in sequence
 	++current_process_index;
 }
@@ -384,9 +416,9 @@ ExprAlloc::compact_expr_pools(void) {
 				str(REF_RULE_MAP(g, n).is_weak() ?
 					WEAK_RULE : NORMAL_RULE);
 #endif
-			unique_process_subgraph::faninout_struct_type&
+			faninout_struct_type&
 				f(g->local_faninout_map[e.parent]);
-			unique_process_subgraph::fanin_array_type&
+			fanin_array_type&
 				fi(e.direction() ? 
 					f.pull_up STR_INDEX(str) :
 					f.pull_dn STR_INDEX(str));
@@ -416,9 +448,9 @@ ExprAlloc::compact_expr_pools(void) {
 			if (c.first) {
 				// then child is a node, update its fanout
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-				unique_process_subgraph::faninout_struct_type&
+				faninout_struct_type&
 					f(g->local_faninout_map[c.second]);
-				unique_process_subgraph::fanout_array_type&
+				fanout_array_type&
 					fo(f.fanout);
 #else
 				node_type& nd(st_node_pool[c.second]);
@@ -477,9 +509,12 @@ try {
 		ni << (r.dir ? " up" : " down") << endl);
 	// need to process attributes BEFORE linking to node
 	// because depends on weak attribute
-//	link_node_to_root_expr(ni, top_ex_index, r.dir);	// moved later
 #if ENABLE_STACKTRACE
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	g->dump_struct(cerr) << endl;
+#else
 	state.dump_struct(cerr) << endl;
+#endif
 #endif
 	INVARIANT(top_ex_index == ret_ex_index);	// sanity check
 {
@@ -497,12 +532,12 @@ try {
 	}
 	INVARIANT(top_ex_index == ret_ex_index);	// sanity check
 	// following order matters b/c of rule_map access
-	link_node_to_root_expr(ni, top_ex_index, r.dir
+	link_node_to_root_expr(ni, top_ex_index, r.dir, dummy_rule
 #if PRSIM_WEAK_RULES
 		, rule_strength(dummy_rule.is_weak())
 #endif
 		);
-	REF_RULE_MAP(g, ret_ex_index) = dummy_rule;	// copy over temporary
+	// REF_RULE_MAP(g, ret_ex_index) = dummy_rule;	// copy over temporary
 }
 } catch (...) {
 	cerr << "FATAL: error during prs rule allocation." << endl;
@@ -658,8 +693,7 @@ ExprAlloc::fold_literal(const expr_index_type _e) {
 			// replace grandparent's child connect.
 			c = ogc;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-			unique_process_subgraph::fanout_array_type&
-				fo(g->local_faninout_map[cn].fanout);
+			fanout_array_type& fo(g->local_faninout_map[cn].fanout);
 #else
 			node_type::fanout_array_type&
 				fo(st_node_pool[cn].fanout);
@@ -730,7 +764,7 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 				c = ogc;
 				const node_index_type cn = ogc.second;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-				unique_process_subgraph::fanout_array_type&
+				fanout_array_type&
 					fo(g->local_faninout_map[cn].fanout);
 #else
 				node_type::fanout_array_type&
@@ -825,7 +859,11 @@ switch (type) {
 }	// end switch
 	// 'return' the index of the expr just allocated in ret_ex_index
 #if 0 && ENABLE_STACKTRACE
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	g->dump_struct(cerr) << endl;
+#else
 	state.dump_struct(cerr) << endl;
+#endif
 #endif
 }	// end method visit(const footprint_expr_node&)
 
@@ -884,7 +922,8 @@ if (d) {
  */
 void
 ExprAlloc::link_node_to_root_expr(const node_index_type ni,
-		const expr_index_type top_ex_index, const bool dir
+		const expr_index_type top_ex_index, const bool dir, 
+		const rule_type& dummy
 #if PRSIM_WEAK_RULES
 		, const rule_strength w
 #endif
@@ -895,8 +934,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	expr_type& ne(g->expr_pool[top_ex_index]);
 	graph_node_type& ng(g->expr_graph_node_pool[top_ex_index]);
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	unique_process_subgraph::fanin_array_type& fin(
-		g->local_faninout_map[ni].get_pull_expr(dir
+	fanin_array_type& fin(g->local_faninout_map[ni].get_pull_expr(dir
 #if PRSIM_WEAK_RULES
 			, w
 #endif
@@ -905,6 +943,8 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	ng.offset = fin.size();	
 	fin.push_back(top_ex_index);		// append to fanin rules
 	ne.pull(ni, dir);			// set as a root expression
+	g->rule_map[top_ex_index] = g->rule_pool.size();	// map
+	g->rule_pool.push_back(dummy);
 #else	// PRSIM_INDIRECT_EXPRESSION_MAP
 	node_type& output(st_node_pool[ni]);
 	// now link root expression to node
@@ -980,6 +1020,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		dir_index = top_ex_index;
 		ne.pull(ni, dir);
 	}
+	state.rule_map[top_ex_index] = dummy;
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 }	// end ExprAlloc::link_node_to_root_expr(...)
 
@@ -1152,15 +1193,15 @@ PassN::main(visitor_type& v, const param_args_type& params,
 	const expr_index_type ns = v.allocate_new_not_expr(s);
 	const expr_index_type pe =
 		v.allocate_new_Nary_expr(entity::PRS::PRS_AND_EXPR_TYPE_ENUM,2);
+	typedef	visitor_type::rule_type	rule_type;
 	v.link_child_expr(pe, g, 0);
 	v.link_child_expr(pe, ns, 1);
-	v.link_node_to_root_expr(d, pe, false
+	v.link_node_to_root_expr(d, pe, false, rule_type()
 #if PRSIM_WEAK_RULES
 		, NORMAL_RULE
 #endif
 		);	// pull-down
 
-	typedef	visitor_type::rule_type	rule_type;
 	rule_type& r(REF_RULE_MAP(v.g, pe));
 	r.set_delay(visitor_type::state_type::time_traits::zero);
 }
@@ -1189,15 +1230,15 @@ PassP::main(visitor_type& v, const param_args_type& params,
 	const expr_index_type ng = v.allocate_new_not_expr(g);
 	const expr_index_type pe =
 		v.allocate_new_Nary_expr(entity::PRS::PRS_AND_EXPR_TYPE_ENUM,2);
+	typedef	visitor_type::rule_type	rule_type;
 	v.link_child_expr(pe, ng, 0);
 	v.link_child_expr(pe, s, 1);
-	v.link_node_to_root_expr(d, pe, true
+	v.link_node_to_root_expr(d, pe, true, rule_type()
 #if PRSIM_WEAK_RULES
 		, NORMAL_RULE
 #endif
 		);	// pull-up
 
-	typedef	visitor_type::rule_type	rule_type;
 	rule_type& r(REF_RULE_MAP(v.g, pe));
 	r.set_delay(visitor_type::state_type::time_traits::zero);
 }

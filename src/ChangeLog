@@ -5,6 +5,23 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-10-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-10:
+	  Ton of minor fixes during debugging, successfully simulated
+		one hierarchical inverter (parser/prs/inv-14)!!!
+		Details: expression allocation fixes, initialization fixes, 
+		local-global translation fixes, expression propagation fixes,
+		structural coherence fixes, dump-strict enhancements
+		For now, node_fanin array is vector (bigger than valarray)
+		Moved evaluation_return_type to State-prsim.cc
+		faninout_struct_type no longer nested in unique_process_subgf.
+	  Next: continue debugging bigger tests until no regressions, 
+		accurate memory statistics.
+	  cleanup: remove State::__scratch_expr_trace, 
+		pass evaluate_return_type by ref instead of returning copy
+
+
 2008-10-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-09:
