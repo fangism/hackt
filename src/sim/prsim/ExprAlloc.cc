@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.7 2008/10/13 05:09:58 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.8 2008/10/15 06:09:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -253,12 +253,23 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	STACKTRACE_VERBOSE;
 	// also set up proper unique_process references
 	typedef	process_footprint_map_type::const_iterator	const_iterator;
-	const const_iterator f(process_footprint_map.find(&pfp));
-	const entity::footprint_frame_map_type& bmap(
-		state.get_module().get_state_manager().get_pool<process_tag>()
+	node_index_type node_pool_size;
+	const entity::footprint_frame_map_type* bmap = NULL;
+	const module& m(state.get_module());
+	if (current_process_index) {
+		bmap = &m.get_state_manager()
+			.get_pool<process_tag>()
 			[state.process_state_array.size()]
-			._frame.get_frame_map<bool_tag>());
+			._frame.get_frame_map<bool_tag>();
+		node_pool_size = bmap->size();
+	} else {
+		// top-level process (id=0) is different, use local footprint
+		node_pool_size = m.get_footprint()
+			.get_instance_pool<bool_tag>().size();
+		// recall: local pool is padded with 0 reserved
+	}
 	size_t type_index;	// unique process type index
+	const const_iterator f(process_footprint_map.find(&pfp));
 	if (f == process_footprint_map.end()) {
 		type_index = state.unique_process_pool.size();
 		state.unique_process_pool.push_back(unique_process_subgraph());
@@ -266,7 +277,7 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 		const util::value_saver<unique_process_subgraph*> tmp(g, &u);
 		// resize the faninout_struct array as if it were local nodes
 		// kludgy way of inferring the correct footprint
-		u.local_faninout_map.resize(bmap.size());
+		u.local_faninout_map.resize(node_pool_size);
 		cflat_visitor::visit(pfp);
 		// definitely want to keep this
 		if (flags.any_optimize() && expr_free_list.size()) {
@@ -313,8 +324,10 @@ if (pxs) {
 	state.global_expr_process_id_map[ex_offset] = current_process_index +1;
 	// connect global nodes to global fanout expressions
 	node_index_type lni = 0;	// frame-map is 0-indexed
-	for ( ; lni < bmap.size(); ++lni) {
-		const node_index_type gni = bmap[lni];	// global
+	for ( ; lni < node_pool_size; ++lni) {
+		const node_index_type gni =
+			current_process_index ? (*bmap)[lni] : lni;
+		// global index coversion, or local if top-level (pid=0)
 		const faninout_struct_type&
 			ff(ptemplate.local_faninout_map[lni]);
 		const fanout_array_type& lfo(ff.fanout);
@@ -1181,6 +1194,7 @@ DECLARE_AND_DEFINE_PRSIM_MACRO_CLASS(PassN, "passn")
 void
 PassN::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
+	STACKTRACE_VERBOSE;
 	const expr_index_type g =
 		v.allocate_new_literal_expr(
 			v.lookup_local_bool_id(*nodes[0].begin()));
@@ -1188,7 +1202,11 @@ PassN::main(visitor_type& v, const param_args_type& params,
 		v.allocate_new_literal_expr(
 			v.lookup_local_bool_id(*nodes[1].begin()));
 	const node_index_type d = v.lookup_local_bool_id(*nodes[2].begin());
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	INVARIANT(d);	// local expressions are 0-indexed
+#else
 	INVARIANT(g && s && d);
+#endif
 	// construct and allocate rule
 	const expr_index_type ns = v.allocate_new_not_expr(s);
 	const expr_index_type pe =
@@ -1218,6 +1236,7 @@ DECLARE_AND_DEFINE_PRSIM_MACRO_CLASS(PassP, "passp")
 void
 PassP::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
+	STACKTRACE_VERBOSE;
 	const expr_index_type g =
 		v.allocate_new_literal_expr(
 			v.lookup_local_bool_id(*nodes[0].begin()));
@@ -1225,7 +1244,11 @@ PassP::main(visitor_type& v, const param_args_type& params,
 		v.allocate_new_literal_expr(
 			v.lookup_local_bool_id(*nodes[1].begin()));
 	const node_index_type d = v.lookup_local_bool_id(*nodes[2].begin());
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	INVARIANT(d);	// local expressions are 0-indexed
+#else
 	INVARIANT(g && s && d);
+#endif
 	// construct and allocate rule
 	const expr_index_type ng = v.allocate_new_not_expr(g);
 	const expr_index_type pe =

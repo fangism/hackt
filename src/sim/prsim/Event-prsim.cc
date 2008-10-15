@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event-prsim.cc"
 	Implementation of prsim event structures.  
-	$Id: Event-prsim.cc,v 1.3 2008/04/23 00:55:44 fang Exp $
+	$Id: Event-prsim.cc,v 1.3.2.1 2008/10/15 06:09:39 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.cc,v 1.8 2007/01/21 06:00:58 fang Exp
@@ -13,6 +13,7 @@
 #include <iterator>
 #include <numeric>
 #include "sim/prsim/Event-prsim.h"
+#include "sim/prsim/Node.h"		// for value_to_char
 #include "sim/time.h"
 #include "util/memory/index_pool.tcc"
 #include "util/IO_utils.tcc"
@@ -98,6 +99,18 @@ Event::load_state(istream& i) {
 #endif
 	read_value(i, val);
 	read_value(i, flags);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+Event::dump_raw(ostream& o) const {
+	typedef	NodeState	node_type;
+	o << "node: " << node << " -> val: " <<
+		node_type::value_to_char[size_t(val)] << ", ";
+	cause.dump_raw(o << "(cause ");
+	o << "), cause-rule: " << cause_rule <<
+		", flags: " << size_t(flags);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -5,6 +5,16 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-10-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-11:
+	  Tons of simple little bugs fixed, still much more to go.
+		Many easy bugs related to incorrect assertions due to
+		local indexing vs. global indexing.  
+	  Most regression tests in prsim/ still die on 
+		crashes and assert fails.  
+
+
 2008-10-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-10:

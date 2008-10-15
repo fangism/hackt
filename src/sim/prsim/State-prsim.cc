@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.13 2008/10/13 05:10:11 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.14 2008/10/15 06:09:42 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1096,11 +1096,15 @@ State::__allocate_event(node_type& n,
 		) {
 	STACKTRACE_VERBOSE;
 	ISE_INVARIANT(!n.pending_event());
-	n.set_event(event_pool.allocate(event_type(ni, c, ri, val
+	const event_type e(ni, c, ri, val
 #if PRSIM_WEAK_RULES
 		, weak
 #endif
-		)));
+		);
+#if DEBUG_STEP
+	e.dump_raw(STACKTRACE_INDENT_PRINT("")) << endl;
+#endif
+	n.set_event(event_pool.allocate(e));
 	// n.set_cause_node(ci);	// now assign *after* dequeue_event
 	return n.get_event();
 }
@@ -1133,10 +1137,14 @@ State::__allocate_pending_interference_event(node_type& n,
 		, weak
 #endif
 		));
-	get_event(ne).pending_interference(true);
+	event_type& e(get_event(ne));
+	e.pending_interference(true);
 	// not yet because hasn't been committed to event queue yet
 	// n.set_event(ne);		// for consistency?
 	// n.set_cause_node(ci);	// now assign *after* dequeue_event
+#if DEBUG_STEP
+	e.dump_raw(STACKTRACE_INDENT_PRINT("")) << endl;
+#endif
 	return ne;
 }
 
@@ -1859,7 +1867,8 @@ State::random_delay(void) {
 // inline
 State::time_type
 State::get_delay_up(const event_type& e) const {
-	const rule_type* r(lookup_rule(e.cause_rule));
+	const rule_type* const r(lookup_rule(e.cause_rule));
+	NEVER_NULL(r);
 return current_time +
 	(timing_mode == TIMING_RANDOM ?
 		(e.cause_rule && time_traits::is_zero(r->after) ?
@@ -1884,7 +1893,8 @@ return current_time +
 // inline
 State::time_type
 State::get_delay_dn(const event_type& e) const {
-	const rule_type* r(lookup_rule(e.cause_rule));
+	const rule_type* const r(lookup_rule(e.cause_rule));
+	NEVER_NULL(r);
 	return current_time +
 		(timing_mode == TIMING_RANDOM ?
 		(e.cause_rule && time_traits::is_zero(r->after) ?
@@ -1923,16 +1933,19 @@ unique_process_subgraph::is_rule_expr(const expr_index_type ei) const {
 	return rule_map.find(ei) != rule_map.end();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param ei local 0-indexed expression index
+ */
 const unique_process_subgraph::rule_type*
 unique_process_subgraph::lookup_rule(const expr_index_type ei) const {
 	STACKTRACE_VERBOSE;
-if (ei) {
 	typedef	rule_map_type::const_iterator	rule_map_iterator;
 	const rule_map_iterator i(rule_map.find(ei));
 	if (i != rule_map.end()) {
 		return &rule_pool[i->second];
 	}
-}
+	else
 	return NULL;
 }
 #endif
@@ -1947,8 +1960,8 @@ const State::rule_type*
 State::lookup_rule(const expr_index_type ei) const {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	STACKTRACE_VERBOSE;
-	INVARIANT(ei);
 	STACKTRACE_INDENT_PRINT("global-rule: " << ei << endl);
+if (ei) {
 	// translate global expression index to 
 	// global process index with local expression index,
 	// and forward the lookup
@@ -1960,6 +1973,7 @@ State::lookup_rule(const expr_index_type ei) const {
 	// process_sim_state& ps(process_state_array[pid]);
 	const unique_process_subgraph& pg(unique_process_pool[pti]);
 	return pg.lookup_rule(lei);
+}
 #else
 	if (ei) {
 		typedef	rule_map_type::const_iterator	rule_map_iterator;
@@ -1968,8 +1982,8 @@ State::lookup_rule(const expr_index_type ei) const {
 			return &i->second;
 		}
 	}
-	return NULL;
 #endif
+	return NULL;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3248,8 +3262,10 @@ State::translate_to_global_node(const process_index_type pid,
 		const node_index_type lni) const {
 	// HACK: poor style, using pointer arithmetic to deduce index
 	ISE_INVARIANT(pid < process_state_array.size());
-	return get_module().get_state_manager().get_pool<process_tag>()[pid]
-		._frame.get_frame_map<bool_tag>()[lni];
+	return pid ? 
+		get_module().get_state_manager().get_pool<process_tag>()[pid]
+		._frame.get_frame_map<bool_tag>()[lni] : lni;
+	// for top-level process, to not lookup
 }
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
@@ -4349,6 +4365,7 @@ unique_process_subgraph::dump_struct(ostream& o) const {
 {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 {
+	// Technically, top-level should omit reserved local node 0...
 	o << "Local nodes: " << endl;
 	node_index_type i = FIRST_VALID_LOCAL_NODE;
 	for ( ; i<local_faninout_map.size(); ++i) {
@@ -4861,10 +4878,10 @@ do {
 	// fanin is listed by processes
 	const expr_index_type ui = n.pull_up_index STR_INDEX(w);
 #endif
-	if (ui) {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		dump_subexpr(o, ui, ps, st, v)
 #else
+	if (ui) {
 		dump_subexpr(o, ui, v)
 #endif
 			<< " -> " << cn << '+';
@@ -4872,7 +4889,9 @@ do {
 			n.dump_value(o << ':');
 		}
 		o << endl;
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	}
+#endif
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	}
 		i = fia.pull_dn STR_INDEX(w).begin();
@@ -4881,8 +4900,8 @@ do {
 	const expr_index_type di = *i;
 #else
 	const expr_index_type di = n.pull_dn_index STR_INDEX(w);
-#endif
 	if (di) {
+#endif
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		dump_subexpr(o, di, ps, st, v)
 #else
@@ -4893,8 +4912,9 @@ do {
 			n.dump_value(o << ':');
 		}
 		o << endl;
-	}
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+	}
+#else
 	}
 #endif
 #if PRSIM_WEAK_RULES
@@ -5410,12 +5430,12 @@ unique_process_subgraph::__local_expr_why_not(ostream& o,
 	}
 	const indent __ind_ex(o, ind_str);	// INDENT_SCOPE(o);
 	for ( ; ci!=ce; ++ci) {
-		INVARIANT(ci->second);
 		if (ci->first) {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		const node_index_type gni =
 			st.translate_to_global_node(ps, ci->second);
 #else
+		INVARIANT(ci->second);
 		const node_index_type& gni = ci->second;
 #endif
 			// is a leaf node, visit if value is not X
@@ -5528,8 +5548,8 @@ for ( ; i!=e; ++i) {		// for all processes
 		fanin_array_type::const_iterator ci(fia.begin()), ce(fia.end());
 		for ( ; ci!=ce; ++ci) {
 			const expr_index_type& lei(*ci);
-			ISE_INVARIANT(lei);
-			pg.__recurse_expr_why_not(o, *ci, match_pull, 
+			// ISE_INVARIANT(lei);	// locally 0-indexed
+			pg.__recurse_expr_why_not(o, lei, match_pull, 
 				ps, *this, limit, why_not, verbose, u, v);
 		}	// end for
 		f = find(f+1, fe, ni);
@@ -5621,12 +5641,12 @@ unique_process_subgraph::__local_expr_why_X(ostream& o,
 	}
 	const indent __ind_ex(o, ind_str);	// INDENT_SCOPE(o);
 	for ( ; ci!=ce; ++ci) {
-		INVARIANT(ci->second);		// valid node or expr
 		if (ci->first) {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		const node_index_type gni =
 			st.translate_to_global_node(ps, ci->second);
 #else
+		INVARIANT(ci->second);		// valid node or expr
 		const node_index_type& gni = ci->second;
 #endif
 			// is a leaf node, visit if value is X
@@ -5738,7 +5758,7 @@ for ( ; i!=e; ++i) {		// for all processes
 		fanin_array_type::const_iterator ci(fia.begin()), ce(fia.end());
 		for ( ; ci!=ce; ++ci) {
 			const expr_index_type& lei(*ci);
-			ISE_INVARIANT(lei);
+			// ISE_INVARIANT(lei);	// locally 0-indexed
 			pg.__recurse_expr_why_X(o, lei, ps, *this, 
 				limit, verbose, u, v);
 		}	// end for
@@ -6045,7 +6065,9 @@ State::dump_subexpr
 	const uchar _type = e.type;
 	// check if this sub-expression is a root expression by looking
 	// up the expression index in the rule_map.  
-	const rule_type* ri(lookup_rule(ei));
+	const rule_type* const ri(lookup_rule(ei));
+	// TODO: move rule attributes to dump_node_fanin...
+	// local rules are 0-indexed
 	if (ri) {
 		// then we can print out its attributes
 		ri->dump(o << '[') << "]\t";

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.5.82.1 2008/07/09 04:34:44 fang Exp $
+	$Id: Expr.cc,v 1.5.82.2 2008/10/15 06:09:40 fang Exp $
  */
 
 #include <iostream>
@@ -87,14 +87,22 @@ Expr::dump_struct(ostream& o) const {
 	o << size_t(size) << '>';
 	if (type & EXPR_ROOT) {
 		o << ((type & EXPR_DIR) ? " (pull-up: " : " (pull-dn: ");
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		// parent local node index is 0-indexed
+#else
 		// parent node index must be non-zero
 		INVARIANT(is_valid_node_index(parent));
+#endif
 		o << parent << ')';
 	} else {
 		o << " (parent: ";
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		o << parent;		// local expressions are 0-indexed
+#else
 		if (is_valid_expr_index(parent))
 			o << parent;
 		else	o << '-';
+#endif
 		o << ')';
 	}
 	return o;

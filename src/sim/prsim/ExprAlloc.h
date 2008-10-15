@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.9.2.5 2008/10/13 05:10:03 fang Exp $
+	$Id: ExprAlloc.h,v 1.9.2.6 2008/10/15 06:09:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -143,8 +143,12 @@ public:
 	// DELIBERATE OVERRIDE: DO NOT TRANSLATE TO GLOBAL NODE INDICES!
 	// if node index argument comes from PRS_footprint, then it was
 	// 1-indexed, and needs to be converted to 0-indexed.
+	if (current_process_index) {
 		INVARIANT(ni);
 		return ni -1;
+	} else {	// top-level, keep 1-indexed, 0 is reserved
+		return ni;
+	}
 #else
 		return __lookup_global_bool_id(ni);
 #endif
@@ -154,6 +158,11 @@ public:
 	// eventually, they may be pushed into local subgraphs...
 	node_index_type
 	lookup_global_bool_id(const node_index_type ni) const {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		if (!current_process_index)
+			return ni;
+		else
+#endif
 		return __lookup_global_bool_id(ni);
 	}
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Cause.h"
 	Structure of basic node event.  
-	$Id: Cause.h,v 1.3.68.1 2008/08/23 22:59:23 fang Exp $
+	$Id: Cause.h,v 1.3.68.2 2008/10/15 06:09:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CAUSE_H__
@@ -39,6 +39,9 @@ struct EventCause {
 	operator < (const EventCause& e) const {
 		return node < e.node || val < e.val;
 	}
+
+	ostream&
+	dump_raw(ostream&) const;
 
 	void
 	save_state(ostream&) const;

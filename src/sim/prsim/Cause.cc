@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Cause.cc"
 	Implementation of EventCause node.  
-	$Id: Cause.cc,v 1.2 2006/08/12 00:36:28 fang Exp $
+	$Id: Cause.cc,v 1.2.82.1 2008/10/15 06:09:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,6 +18,14 @@ using util::write_value;
 using util::read_value;
 
 //=============================================================================
+ostream&
+EventCause::dump_raw(ostream& o) const {
+	typedef	NodeState	node_type;
+	return o << "node: " << node << " -> val: " <<
+		node_type::value_to_char[size_t(val)];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 EventCause::save_state(ostream& o) const {
 	write_value(o, node);

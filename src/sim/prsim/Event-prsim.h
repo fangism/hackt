@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.3.2.1 2008/08/23 22:59:28 fang Exp $
+	$Id: Event-prsim.h,v 1.3.2.2 2008/10/15 06:09:40 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -211,6 +211,9 @@ public:
 		if (i)	flags |= EVENT_FLAG_PENDING_INTERFERENCE;
 		else	flags &= ~EVENT_FLAG_PENDING_INTERFERENCE;
 	}
+
+	ostream&
+	dump_raw(ostream&) const;
 
 	static
 	ostream&
