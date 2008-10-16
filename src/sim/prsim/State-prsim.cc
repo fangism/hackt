@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.14 2008/10/15 06:09:42 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.15 2008/10/16 06:14:30 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1629,6 +1629,9 @@ if (pu != PULL_OFF || pd != PULL_OFF) {
 				);
 			event_type& e(get_event(ei));
 			time_type t;
+		// TODO: find minimum delay of ON fanin rules (*slow*)
+		// there must be at least one rule ON to pull
+		// get_delay will fail because INVALID_RULE_INDEX
 			switch (new_val) {
 			case LOGIC_HIGH:
 				t = get_delay_up(e); break;
@@ -1895,20 +1898,20 @@ State::time_type
 State::get_delay_dn(const event_type& e) const {
 	const rule_type* const r(lookup_rule(e.cause_rule));
 	NEVER_NULL(r);
-	return current_time +
-		(timing_mode == TIMING_RANDOM ?
-		(e.cause_rule && time_traits::is_zero(r->after) ?
-			time_traits::zero : ((0x01 << 11)*random_delay()))
-			:
-		(timing_mode == TIMING_UNIFORM ? uniform_delay :
-		// timing_mode == TIMING_AFTER
-		//	(e.cause_rule ?
-		//		r->after : 0)
-			(e.cause_rule ?
-				(r->is_always_random() ?
-					(r->after * random_delay())
-                        : r->after) : 0)	
-		));
+return current_time +
+	(timing_mode == TIMING_RANDOM ?
+	(e.cause_rule && time_traits::is_zero(r->after) ?
+		time_traits::zero : ((0x01 << 11)*random_delay()))
+		:
+	(timing_mode == TIMING_UNIFORM ? uniform_delay :
+	// timing_mode == TIMING_AFTER
+	//	(e.cause_rule ?
+	//		r->after : 0)
+		(e.cause_rule ?
+			(r->is_always_random() ?
+				(r->after * random_delay())
+		: r->after) : 0)	
+	));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3186,8 +3189,8 @@ do {
 	const node_index_type oni = translate_to_global_node(pid, ui);
 	// local -> global node
 //	const expr_struct_type& e(pg.expr_pool[ri]);	// for direction
-	ri = pg.rule_map[ri];	// expr -> rule
-	const rule_type& r(pg.rule_pool[ri]);
+	const rule_index_type lri = pg.rule_map[ri];	// expr -> rule
+	const rule_type& r(pg.rule_pool[lri]);
 	node_type& n(get_node(oni));
 	fanin_state_type& fs(n.get_pull_struct(STRUCT->direction()
 #if PRSIM_WEAK_RULES
@@ -4790,6 +4793,9 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 	rule_iterator ri(fanout_rules.begin()), re(fanout_rules.end());
 	for ( ; ri!=re; ++ri) {
 		dump_rule(o, *ri, v);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		o << endl;
+#endif
 	}
 	return o;
 }
@@ -4816,6 +4822,8 @@ for ( ; i!=e; ++i) {
 	const process_index_type& pid = *i;
 	const process_index_type pti = process_type_map[pid];
 	const unique_process_subgraph& pg(unique_process_pool[pti]);
+	const process_sim_state& ps(process_state_array[pid]);
+if (pid) {
 	// find the local node index that corresponds to global node
 	const footprint_frame_map_type& bfm(get_module().
 		get_state_manager().get_pool<process_tag>()[pid]
@@ -4828,9 +4836,13 @@ for ( ; i!=e; ++i) {
 	while (f != fe) {
 		// iterate over local node's fanin expressions!
 		const node_index_type lni = std::distance(b, f);
-		pg.dump_node_fanin(o, lni, process_state_array[pid], *this, v);
+		pg.dump_node_fanin(o, lni, ps, *this, v);
 		f = find(f+1, fe, ni);
 	}
+} else {
+	// top-level node requires no further lookup, still 1-indexed
+	pg.dump_node_fanin(o, ni, ps, *this, v);
+}
 }
 	return o;
 }

@@ -5,6 +5,16 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-10-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-11+:
+	  More fixes: faulty rule index returned (bad lookup), 
+		bad fanin/fanout printing fixed.
+	  Next bug: get_delay fails when no valid rule_index is provided, 
+		so must search for an ON rule, and take minimum delay.
+		This causes many remaining crashes, e.g. State::unset_node().
+
+
 2008-10-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-11:
