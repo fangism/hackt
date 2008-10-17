@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.11 2008/10/11 22:49:10 fang Exp $
+	$Id: cflat_printer.h,v 1.12 2008/10/17 21:52:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -57,7 +57,7 @@ public:
 			os(_os), cfopts(_cfo) { }
 
 	ostream&
-	print_node_name(const global_entry<bool_tag>&) const;
+	print_node_name(ostream&, const global_entry<bool_tag>&) const;
 
 	void
 	__dump_canonical_literal(const size_t) const;

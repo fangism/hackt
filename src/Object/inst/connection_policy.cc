@@ -1,11 +1,12 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.7 2008/10/11 22:49:08 fang Exp $
+	$Id: connection_policy.cc,v 1.8 2008/10/17 21:52:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
+#include <string>
 #include "Object/inst/connection_policy.h"
 #include "Object/devel_switches.h"
 #include "util/IO_utils.tcc"
@@ -13,6 +14,7 @@
 
 namespace HAC {
 namespace entity {
+using std::string;
 using util::write_value;
 using util::read_value;
 #include "util/using_ostream.h"
@@ -21,6 +23,13 @@ using util::read_value;
 // bool_connect_policy method definitions
 // TODO: handle directions
 
+const char*
+bool_connect_policy::attribute_names[] = {
+	"iscomb",
+	"!autokeeper",
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Attributes are simply copied up the instance hierarchy
 	through ports.  
@@ -80,15 +89,29 @@ if (has_nondefault_attributes()) {
  */
 ostream&
 bool_connect_policy::dump_flat_attributes(ostream& o) const {
-	static const char* attribute_names[] = {
-		"iscomb",
-		"!autokeeper",
-	};
 	connection_flags_type temp = attributes;	// better be unsigned!
 	const char** p = attribute_names;
 while (temp) {
 	if (temp & 1) {
 		o << ' ' << *p;
+	}
+	++p;
+	temp >>= 1;
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only applies to hflat, called by cflat_prs_printer()
+ */
+ostream&
+bool_connect_policy::dump_split_attributes(ostream& o, const string& n) const {
+	connection_flags_type temp = attributes;	// better be unsigned!
+	const char** p = attribute_names;
+while (temp) {
+	if (temp & 1) {
+		o << "@ " << n << ' ' << *p << endl;
 	}
 	++p;
 	temp >>= 1;

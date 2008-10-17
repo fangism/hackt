@@ -1,12 +1,13 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.17 2008/10/11 22:49:09 fang Exp $
+	$Id: cflat_printer.cc,v 1.18 2008/10/17 21:52:53 fang Exp $
  */
 
 #include <iostream>
 #include <algorithm>
 #include <set>
+#include <sstream>
 #include "Object/lang/cflat_printer.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/PRS_footprint_expr.h"
@@ -76,7 +77,7 @@ if (!cfopts.check_prs) {
 	// const size_t j = bfm[r.output_index-1];
 	const size_t global_bool_index =
 		parent_type::__lookup_global_bool_id(r.output_index);
-	print_node_name(sm->get_pool<bool_tag>()[global_bool_index]);
+	print_node_name(os, sm->get_pool<bool_tag>()[global_bool_index]);
 	os << (r.dir ? '+' : '-');
 #if CFLAT_WITH_CONDUCTANCES
 	if (cfopts.compute_conductances) {
@@ -95,11 +96,12 @@ if (!cfopts.check_prs) {
 	Automatically adds quotes if the options desire it.  
  */
 ostream&
-cflat_prs_printer::print_node_name(const global_entry<bool_tag>& b) const {
-	if (cfopts.enquote_names) os << '\"';
-	b.dump_canonical_name(os, *topfp, *sm);
-	if (cfopts.enquote_names) os << '\"';
-	return os;
+cflat_prs_printer::print_node_name(ostream& o, 
+		const global_entry<bool_tag>& b) const {
+	if (cfopts.enquote_names) o << '\"';
+	b.dump_canonical_name(o, *topfp, *sm);
+	if (cfopts.enquote_names) o << '\"';
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -406,11 +408,17 @@ cflat_prs_printer::visit(const global_entry<bool_tag>& b) {
 if (cfopts.node_attributes) {
 	const state_instance<bool_tag>& i(b.get_canonical_instance(*this));
 	const instance_alias_info<bool_tag>& a(*i.get_back_ref());
-	if (a.has_nondefault_attributes()) {
-		os << "@ ";
-		print_node_name(b);	// auto-quote
+if (a.has_nondefault_attributes()) {
+	std::ostringstream oss;
+	print_node_name(oss, b);	// auto-quote
+	const string& n(oss.str());
+	if (cfopts.split_instance_attributes) {
+		a.dump_split_attributes(os, n);
+	} else {
+		os << "@ " << n;
 		a.dump_flat_attributes(os) << endl;
 	}
+}
 }
 }
 

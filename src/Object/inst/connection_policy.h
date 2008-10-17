@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.6 2008/10/11 22:49:08 fang Exp $
+	$Id: connection_policy.h,v 1.7 2008/10/17 21:52:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -9,6 +9,7 @@
 
 #include "Object/inst/connection_policy_fwd.h"
 #include <iosfwd>
+#include "util/string_fwd.h"
 #include "util/boolean_types.h"
 
 namespace HAC {
@@ -91,6 +92,8 @@ protected:
  */
 class bool_connect_policy {
 	typedef	bool_connect_policy		this_type;
+	/// strings for names of flags
+	static const char*			attribute_names[];
 protected:
 	/**
 		The way boolean node attributes are propagated is
@@ -176,6 +179,9 @@ public:
 
 	ostream&
 	dump_flat_attributes(ostream&) const;
+
+	ostream&
+	dump_split_attributes(ostream&, const std::string&) const;
 
 protected:
 	void

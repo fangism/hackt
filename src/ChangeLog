@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-10-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-42+:
+	  Aded hflat option to split instance/node attributes to one-per-line
+		instead of grouping all of them on one line before.
+	  Documented and tested.
+
+
 2008-10-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-42:

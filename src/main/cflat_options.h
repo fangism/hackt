@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.16 2008/10/12 00:21:41 fang Exp $
+	$Id: cflat_options.h,v 1.17 2008/10/17 21:53:11 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -98,6 +98,10 @@ public:
 	 */
 	bool				node_attributes;
 	/**
+		Print instance attributes one-per-line.  Default=false.
+	 */
+	bool				split_instance_attributes;
+	/**
 		Whether or not to expand passn/passp directives
 		to their equivalent (uni-directional) production rules.
 		Default=true.
@@ -186,7 +190,9 @@ public:
 		tool_options(TOOL_OPTIONS_DEFAULT), 
 		connect_style(CONNECT_STYLE_EQUAL), 
 		include_prs(true), dump_self_connect(false), 
-		node_attributes(false), expand_pass_gates(true), 
+		node_attributes(false), 
+		split_instance_attributes(false), 
+		expand_pass_gates(true), 
 		enquote_names(true), dump_non_bools(false), 
 		namespace_policy(NAMESPACE_POLICY_NONE), 
 		check_prs(false), wire_mode(false), 

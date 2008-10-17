@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.22 2008/10/12 00:21:40 fang Exp $
+	$Id: cflat.cc,v 1.23 2008/10/17 21:52:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -201,11 +201,15 @@ __cflat_lvs(cflat::options& cf) {
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 
+/**
+	For the java-lvs flavor, some variations.  
+ */
 static
 void
 __cflat_java_lvs(cflat::options& cf) {
 	__cflat_lvs(cf);
 	cf.node_attributes = true;
+	cf.split_instance_attributes = true;
 	cf.expand_pass_gates = false;
 }
 
@@ -586,6 +590,46 @@ const cflat::register_options_modifier
 	cflat::_no_node_attributes("no-node-attributes",
 		&__cflat_no_node_attributes, 
 		"suppress node attributes");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-split-instance-attributes.texi
+@defvr {@t{cflat -f} option} split-instance-attributes
+@defvrx {@t{cflat -f} option} join-instance-attributes
+Determines whether to print instance attributes (including nodes)
+on a single line like:
+@example
+@@ "node" attr1 attr2 attr3 ...
+@end example
+or one attribute per line:
+@example
+@@ "node" attr1
+@@ "node" attr2
+@@ "node" attr3
+...
+@end example
+@end defvr
+@end texinfo
+***/
+static
+void
+__cflat_split_instance_attributes(cflat::options& cf) {
+	cf.split_instance_attributes = true;
+}
+const cflat::register_options_modifier
+	cflat::_split_instance_attributes("split-instance-attributes",
+		&__cflat_split_instance_attributes,
+		"print one attribute per line");
+
+static
+void
+__cflat_join_instance_attributes(cflat::options& cf) {
+	cf.split_instance_attributes = false;
+}
+const cflat::register_options_modifier
+	cflat::_join_instance_attributes("join-instance-attributes",
+		&__cflat_join_instance_attributes, 
+		"group instance attributes in a single line");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
