@@ -1,0 +1,17 @@
+// "067.hac"
+// ICE-on-valid bug
+// ACX PR 1591 -- contributed by Mitchell Kotler, reduced by Fang
+// seems to have been fixed already, 
+// most likely by HACKT-00-01-04-main-00-82-19
+
+// template <><pint N>
+defproc fifo() { }
+
+template <pint N>
+defproc mult() {
+	fifo x[N-1][2];
+	fifo x[N-1..N-1][1..1];	//your code breaks here
+}
+
+mult<5> m;
+

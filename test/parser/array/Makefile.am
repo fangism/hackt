@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.23 2008/05/17 04:39:00 fang Exp $
+#	$Id: Makefile.am,v 1.24 2008/10/17 22:44:56 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -22,7 +22,7 @@ HACKT_PARSE_TEST_PASSES = \
 	030 031 033 034 035 036 037 038 039 \
 	040 041 043 044 046 047 \
 	050 054 055 056 058 059 \
-	060 061 062 063 064 065 066 \
+	060 061 062 063 064 065 066 067 \
 	act-001 act-002 act-003
 
 HACKT_CREATE_TEST_FAILURES = \
@@ -42,7 +42,7 @@ HACKT_CREATE_TEST_PASSES = \
 	037 038 039 \
 	040 043 044 046 \
 	054 \
-	060 061 065 066 \
+	060 061 065 066 067 \
 	act-001 act-003
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
