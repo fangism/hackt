@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.3 2008/06/10 22:44:58 fang Exp $
+	$Id: Channel-prsim.cc,v 1.4 2008/10/21 04:06:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -391,10 +391,11 @@ channel::set_source_file(const State& s, const string& file_name,
 	value_index = 0;	// TODO: optional offset or initial position
 	if (read_values_from_file(file_name, values)) return true;
 	if (!values.size()) {
-		cerr << "Error: no values found in file \"" << file_name
+		cerr << "Warning: no values found in file \"" << file_name
 			<< "\", cannot source channel."
 			<< endl;
-		return true;
+		flags &= ~CHANNEL_SOURCING;
+		return false;	// downgraded from error
 	}
 	// no need to set inject/expect file handle's underlying stream
 	inject_expect_file = file_name;
@@ -415,9 +416,10 @@ channel::set_source_args(const State& s, const string_list& v,
 	value_index = 0;	// TODO: optional offset or initial position
 	read_values_from_list(v, values);
 	if (!values.size()) {
-		cerr << "Error: no values given, cannot source channel."
+		cerr << "Warning: no values given, cannot source channel."
 			<< endl;
-		return true;
+		flags &= ~CHANNEL_SOURCING;
+		return false;	// downgraded from error
 	}
 	return false;
 }

@@ -5,6 +5,12 @@
 
 2008-10-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-43+:
+	  By popular demand, hacprsim: channel-source on empty args
+		or empty file is now downgraded from error to warning.
+		No tests were affected, not bothering to add a test for this.
+
+
 	* HACKT-00-01-04-main-00-82-43:
 	  parser: allow attributes on member references
 	  minor bug fixes:
