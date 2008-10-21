@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.16 2007/07/18 23:28:36 fang Exp $
+	$Id: alias_actuals.tcc,v 1.17 2008/10/21 00:24:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -164,7 +164,7 @@ template <class AliasType>
 void
 instance_alias_info_actuals::finalize_actuals_and_substructure_aliases(
 		AliasType& _this, const unroll_context& c) {
-
+	STACKTRACE_VERBOSE;
 	if (_this.copy_actuals(*_this.next)) {
 		STACKTRACE_INDENT_PRINT("instantiating after copying actuals");
 		// may not want to initialize_direction in this call!
@@ -194,6 +194,7 @@ void
 instance_alias_info_actuals::__finalize_find(
 		AliasType& _this, const unroll_context& c) {
 	typedef	typename AliasType::canonical_container_type	container_type;
+	STACKTRACE_VERBOSE;
 	const container_type& cont(_this.container->get_canonical_collection());
 	if (cont.has_relaxed_type() && !_this.get_relaxed_actuals()) {
 		cerr << "Error: instance alias `";

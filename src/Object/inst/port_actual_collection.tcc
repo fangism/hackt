@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.9 2007/10/12 22:43:54 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.10 2008/10/21 00:24:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -146,10 +146,10 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 size_t
 PORT_ACTUAL_COLLECTION_CLASS::lookup_index(
 		const instance_alias_info_type& a) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	const size_t offset = distance(this->begin(), &a);
 	INVARIANT(offset < this->value_array.size());
-	STACKTRACE_INDENT_PRINT("return " << offset +1);
+//	STACKTRACE_INDENT_PRINT("return " << offset +1);
 	return offset +1;
 }
 

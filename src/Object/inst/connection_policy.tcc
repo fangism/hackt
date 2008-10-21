@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.6 2008/10/05 23:00:10 fang Exp $
+	$Id: connection_policy.tcc,v 1.7 2008/10/21 00:24:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -51,6 +51,16 @@ good_bool
 bool_connect_policy::__check_connection(const AliasType& a) {
 	// TODO: check must/must-not directions!
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+void
+bool_connect_policy::connection_flag_setter::operator () (AliasType& a) {
+	// important that this is done with the *canoncical* node
+	if (!a.find()->set_connection_flags(update).good) {
+		status.good = false;
+	}
 }
 
 //=============================================================================

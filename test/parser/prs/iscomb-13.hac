@@ -1,0 +1,14 @@
+// "iscomb-13.hac"
+// testing that member references can be attached to attributes
+// bugzilla: ACX-PR-2040
+// @hflat-flags@ -fnode-attributes
+
+defproc inv(bool a, b) {
+prs {
+	a => b-
+}
+}
+
+inv x;
+x.a @ [iscomb];
+

@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-10-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-43:
+	  parser: allow attributes on member references
+	  minor bug fixes:
+		bool_connection_policy: implement connection_flag_setter
+		port_alias_tracker: print attributes of port aliases
+	  Test cases added.
+	  New known bug: attributes not properly propagated hierarchically,
+		will be fixed next.
+
+
 2008-10-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-42+:

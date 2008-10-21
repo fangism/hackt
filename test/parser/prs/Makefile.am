@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.40 2008/10/12 00:21:42 fang Exp $
+#	$Id: Makefile.am,v 1.41 2008/10/21 00:24:34 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -64,6 +64,7 @@ HACKT_PARSE_TEST_PASSES = \
 	comb-01 \
 	iscomb-01 iscomb-02 iscomb-03 iscomb-04 iscomb-05 iscomb-06 \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \
+	iscomb-13 iscomb-14 iscomb-15 \
 	keeper-01 \
 	iskeeper-01 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
@@ -118,6 +119,7 @@ HACKT_CREATE_TEST_PASSES = \
 	comb-01 \
 	iscomb-01 iscomb-02 iscomb-03 iscomb-04 iscomb-05 iscomb-06 \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \
+	iscomb-13 iscomb-14 iscomb-15 \
 	keeper-01 \
 	iskeeper-01 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
@@ -176,6 +178,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	comb-01 \
 	iscomb-01 iscomb-02 iscomb-03 iscomb-04 iscomb-05 iscomb-06 \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \
+	iscomb-13 iscomb-14 iscomb-15 \
 	keeper-01 \
 	iskeeper-01 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
@@ -199,6 +202,7 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	weak-03 \
 	iscomb-01 iscomb-02 iscomb-03 iscomb-04 iscomb-05 iscomb-06 \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \
+	iscomb-13 iscomb-14 iscomb-15 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	iskeeper-01
 

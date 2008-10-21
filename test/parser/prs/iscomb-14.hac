@@ -1,0 +1,15 @@
+// "iscomb-14.hac"
+// copy-modified from "iscomb-13.hac"
+// testing that member references can be attached to attributes
+// @hflat-flags@ -fnode-attributes
+
+defproc inv(bool a, b) {
+prs {
+	a => b-
+}
+}
+
+bool p, q;
+inv x(p, q);
+x.a @ [iscomb];
+

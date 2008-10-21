@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.40 2008/10/03 02:04:31 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.41 2008/10/21 00:24:33 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -1671,25 +1671,11 @@ instance_type_completion_statement
 		  DELETE_TOKEN($3); }
 	;
 
+/* note: lvalue allows member references */
 instance_attribute_statement
-	: index_expr '@' generic_attribute_list_in_brackets  ';'
+	: member_index_expr '@' generic_attribute_list_in_brackets  ';'
 		{ $$ = new type_completion_statement($1, NULL, $3);
 		  DELETE_TOKEN($2); DELETE_TOKEN($4); }
-/**
-	| index_expr complex_expr_optional_list_in_angles 
-		'@ instance_attribute_list_in_brackets ';'
-		{ $$ = new type_completion_statement($1, $2, $4);
-		  DELETE_TOKEN($3); DELETE_TOKEN($5); }
-**/
-	| generic_id '@' generic_attribute_list_in_brackets  ';'
-		{ $$ = new type_completion_statement(new id_expr($1), NULL, $3);
-		  DELETE_TOKEN($2); DELETE_TOKEN($4); }
-/**
-	| generic_id complex_expr_optional_list_in_angles 
-		'@ instance_attribute_list_in_brackets ';'
-		{ $$ = new type_completion_statement(new id_expr($1), $2, $4);
-		  DELETE_TOKEN($3); DELETE_TOKEN($5); }
-**/
 	;
 
 /* want to use type_completion_reference, but conflicts

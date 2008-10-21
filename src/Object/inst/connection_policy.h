@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.7 2008/10/17 21:52:51 fang Exp $
+	$Id: connection_policy.h,v 1.8 2008/10/21 00:24:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -161,17 +161,16 @@ protected:
 
 public:
 	struct connection_flag_setter {
-		const good_bool		status;
+		const connection_flags_type	update;
+		good_bool			status;
 
 		explicit
-		connection_flag_setter(const connection_flags_type) :
-			status(true) { }
+		connection_flag_setter(const connection_flags_type f) :
+			update(f), status(true) { }
 
-		/**
-			No-op, directions do not apply.  
-		 */
+		template <class AliasType>
 		void
-		operator () (const this_type&) const { }
+		operator () (AliasType&);
 	};	// end struct collection_connection_flag_setter
 
 	ostream&

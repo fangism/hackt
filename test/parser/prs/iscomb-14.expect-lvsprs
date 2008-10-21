@@ -1,0 +1,5 @@
+"p" -> "q"-
+~"p" -> "q"+
+@ "p" iscomb
+connect "p" "x.a"
+connect "q" "x.b"

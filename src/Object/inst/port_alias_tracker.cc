@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.20 2007/09/15 18:56:44 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.21 2008/10/21 00:24:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -101,6 +101,7 @@ alias_reference_set<Tag>::dump(ostream& o) const {
 	} else if (!alias_array.empty()) {
 		alias_array.front()->dump_hierarchical_name(o);
 	}
+	alias_array.front()->dump_attributes(o);	// show attributes
 	return o;
 }
 

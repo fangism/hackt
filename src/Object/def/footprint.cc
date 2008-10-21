@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.37 2008/03/17 23:02:21 fang Exp $
+	$Id: footprint.cc,v 1.38 2008/10/21 00:24:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -472,7 +472,7 @@ footprint::operator [] (const string& k) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint::instance_collection_ptr_type
 footprint::operator [] (const collection_map_entry_type& e) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	// this internal number-type map is documented and maintained in:
 	// "Object/traits/type_tag_enum.h"
 	switch (e.meta_type) {
