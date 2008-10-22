@@ -43,7 +43,7 @@ In namespace "", we have: {
 footprint: {
   w = bool^0 = w (1) 
   x = bool^0 = x (2) 
-  y = bool^0 = y (3) 
+  y = bool^0 = y (3) @[ !autokeeper ] 
   z = bool^0 = z (4) 
   Created state:
   bool instance pool:

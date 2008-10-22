@@ -42,9 +42,9 @@ In namespace "", we have: {
 
 footprint: {
   w = bool^0 = w (1) 
-  x = bool^0 = x (2) 
+  x = bool^0 = x (2) @[ iscomb ] 
   y = bool^0 = y (3) 
-  z = bool^0 = z (4) 
+  z = bool^0 = z (4) @[ iscomb ] 
   Created state:
   bool instance pool:
   1	w

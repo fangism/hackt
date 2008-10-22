@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.11 2007/07/18 23:28:47 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.12 2008/10/22 22:16:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_TCC__
@@ -28,7 +28,7 @@ namespace entity {
  */
 template <class Tag>
 good_bool
-subinstance_manager::unroll_port_instances(
+subinstance_manager::__unroll_port_instances(
 		const collection_interface<Tag>& inst, 
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_actuals_type& a,

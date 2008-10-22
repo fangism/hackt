@@ -62,9 +62,9 @@ In namespace "", we have: {
         z@[iscomb=1]
       footprint: {
         w = bool^0 = foo::w (1) 
-        x = bool^0 = foo::x (2) 
+        x = bool^0 = foo::x (2) @[ iscomb ] 
         y = bool^0 = foo::y (3) 
-        z = bool^0 = foo::z (4) 
+        z = bool^0 = foo::z (4) @[ iscomb ] 
         Created state:
         bool instance pool:
         1	foo::w
@@ -81,9 +81,9 @@ In namespace "", we have: {
 footprint: {
   bar = process foo<>^0 = bar (1) (
     w = bool^0 = bar.w (1) 
-    x = bool^0 = bar.x (2) 
+    x = bool^0 = bar.x (2) @[ iscomb ] 
     y = bool^0 = bar.y (3) 
-    z = bool^0 = bar.z (4) 
+    z = bool^0 = bar.z (4) @[ iscomb ] 
   )
   Created state:
   process instance pool:

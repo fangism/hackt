@@ -161,7 +161,7 @@ In namespace "", we have: {
       footprint: {
         P = process inv<>^0 = wrap::P (1) (
           a = bool^0 = wrap::w (1) 
-          b = bool^0 = wrap::x (2) 
+          b = bool^0 = wrap::x (2) @[ iscomb ] 
         )
         Q = process inv<>^0 = wrap::Q (2) (
           a = bool^0 = wrap::j (3) 
@@ -169,14 +169,14 @@ In namespace "", we have: {
         )
         R = process inv<>^0 = wrap::R (3) (
           a = bool^0 = wrap::k (4) 
-          b = bool^0 = wrap::l (5) 
+          b = bool^0 = wrap::l (5) @[ iscomb ] 
         )
         j = bool^0 = wrap::j (3) 
         k = bool^0 = wrap::k (4) 
-        l = bool^0 = wrap::l (5) 
+        l = bool^0 = wrap::l (5) @[ iscomb ] 
         w = bool^0 = wrap::w (1) 
-        x = bool^0 = wrap::x (2) 
-        y = bool^0 = wrap::y (6) 
+        x = bool^0 = wrap::x (2) @[ iscomb ] 
+        y = bool^0 = wrap::y (6) @[ iscomb ] 
         z = bool^0 = wrap::z (7) 
         Created state:
         process instance pool:
@@ -204,13 +204,13 @@ In namespace "", we have: {
 
 footprint: {
   a = bool^0 = a (1) 
-  b = bool^0 = b (2) 
-  c = bool^0 = c (3) 
+  b = bool^0 = b (2) @[ iscomb ] 
+  c = bool^0 = c (3) @[ iscomb ] 
   d = bool^0 = d (4) 
   present = process wrap<>^0 = present (1) (
     w = bool^0 = a (1) 
-    x = bool^0 = b (2) 
-    y = bool^0 = c (3) 
+    x = bool^0 = b (2) @[ iscomb ] 
+    y = bool^0 = c (3) @[ iscomb ] 
     z = bool^0 = d (4) 
   )
   Created state:

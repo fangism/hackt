@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.20 2007/07/18 23:28:47 fang Exp $
+	$Id: subinstance_manager.h,v 1.21 2008/10/22 22:16:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -111,7 +111,7 @@ public:
 	get_array(void) const { return subinstance_array; }
 
 	ostream&
-	dump(ostream&, const dump_flags&) const;
+	dump_ports(ostream&, const dump_flags&) const;
 
 	// TODO: assertion check that arg is a port member of this type?
 	value_type
@@ -120,13 +120,12 @@ public:
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>
 	good_bool
-	unroll_port_instances(
+	__unroll_port_instances(
 		const collection_interface<Tag>&, 
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_actuals_type&,
 #endif
 		const unroll_context&);
-	// unroll_port_instances(const physical_instance_collection&);
 
 #if RECURSE_COLLECT_ALIASES
 	void
@@ -134,7 +133,8 @@ public:
 #endif
 
 	good_bool
-	connect_ports(const connection_references_type&, const unroll_context&);
+	__connect_ports(const connection_references_type&,
+		const unroll_context&);
 
 	good_bool
 	connect_port_aliases_recursive(this_type&
@@ -144,14 +144,14 @@ public:
 		);
 
 	void
-	allocate(footprint&);
+	allocate_subinstances(footprint&);
 
 	void
-	construct_port_context(port_member_context&, 
+	__construct_port_context(port_member_context&, 
 		const footprint_frame&) const;
 
 	void
-	assign_footprint_frame(footprint_frame&,
+	__assign_footprint_frame(footprint_frame&,
 		const port_member_context&) const;
 
 	void

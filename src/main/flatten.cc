@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: flatten.cc,v 1.9 2008/07/30 22:55:00 fang Exp $
+	$Id: flatten.cc,v 1.10 2008/10/22 22:17:00 fang Exp $
  */
 
 #include <iostream>
@@ -188,7 +188,7 @@ flatten::main(const int _argc, char* argv[], const global_options&) {
 	***/
 	opt.export_include_paths(hackt_parse_file_manager);
 
-	// const int max_args = opt.use_stdin ? 0 : 1;
+	// TODO: support multi-file flattening, or just defer to cat?
 	if (argc > 1 || argc < 0) {
 		usage();
 		return 1;
@@ -201,6 +201,8 @@ if (argc == 1) {
 
 	// dependency generation setup
 	opt.source_file = argv[0];
+} else {
+	opt.use_stdin = true;
 }
 
 	// flatten it
@@ -231,6 +233,12 @@ flatten::parse_command_options(const int argc, char* argv[], options& opt) {
 		opt.make_depend = true;
 		opt.make_depend_target = optarg;
 		break;
+#if 0
+	// implicitly detected by number of arguments
+	case 'p':
+		opt.use_stdin = true;
+		break;
+#endif
 	case 'P':
 		// doesn't have complement or undo...
 		lexer::flatten_with_wrappers(false);
@@ -254,9 +262,12 @@ flatten::parse_command_options(const int argc, char* argv[], options& opt) {
  */
 void
 flatten::usage(void) {
-	cerr << "hacpp: flattens input file to single file, print to stdout"
+	cerr <<
+"hacpp: flattens input file (import directives) to single file, print to stdout"
 		<< endl;
 	cerr << "usage: hacpp [options] [hac-source-file]" << endl;
+	cerr << "\tIf no input file is named, then read from stdin (pipe)"
+		<< endl;
 	cerr << "options:" << endl;
 #if 0
 {
@@ -272,6 +283,7 @@ flatten::usage(void) {
 	cerr << "\t-h : gives this usage messsage" << endl <<
 		"\t-I <path> : adds include path (repeatable)" << endl;
 	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
+//	cerr << "\t-p : pipe in source from stdin" << endl;
 	cerr << "\t-P : suppress #FILE hierarchical wrappers in output" << endl;
 }
 

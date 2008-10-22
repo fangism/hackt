@@ -149,16 +149,16 @@ In namespace "", we have: {
           b = bool^0 = wrap::x (2) 
         )
         Q = process inv<>^0 = wrap::Q (2) (
-          a = bool^0 = wrap::j (3) 
-          b = bool^0 = wrap::k (4) 
+          a = bool^0 = wrap::j (3) @[ iscomb ] 
+          b = bool^0 = wrap::k (4) @[ iscomb ] 
         )
         R = process inv<>^0 = wrap::R (3) (
-          a = bool^0 = wrap::k (4) 
-          b = bool^0 = wrap::l (5) 
+          a = bool^0 = wrap::k (4) @[ iscomb ] 
+          b = bool^0 = wrap::l (5) @[ iscomb ] 
         )
-        j = bool^0 = wrap::j (3) 
-        k = bool^0 = wrap::k (4) 
-        l = bool^0 = wrap::l (5) 
+        j = bool^0 = wrap::j (3) @[ iscomb ] 
+        k = bool^0 = wrap::k (4) @[ iscomb ] 
+        l = bool^0 = wrap::l (5) @[ iscomb ] 
         w = bool^0 = wrap::w (1) 
         x = bool^0 = wrap::x (2) 
         y = bool^0 = wrap::y (6) 

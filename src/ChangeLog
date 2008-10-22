@@ -5,6 +5,16 @@
 
 2008-10-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-45:
+	  debug diagnostics: print alias attributes in hierarchical
+		collection dumps.  (updated some expect dumps w/ attributes)
+	  code re-org.: subinstance_manager now a base class (was member)
+		of substructure_alias_base<true>, simplifying code, 
+		reducing unnecessary useless forwarding wrappers.  
+
+
+2008-10-20	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-44:
 	  By popular demand, hacprsim: channel-source on empty args
 		or empty file is now downgraded from error to warning.

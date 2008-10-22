@@ -79,10 +79,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  p = bool^0 = p (1) 
+  p = bool^0 = p (1) @[ iscomb ] 
   q = bool^0 = q (2) 
   x = process inv<>^0 = x (1) (
-    a = bool^0 = p (1) 
+    a = bool^0 = p (1) @[ iscomb ] 
     b = bool^0 = q (2) 
   )
   Created state:

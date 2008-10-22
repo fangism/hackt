@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.23 2007/07/18 23:28:48 fang Exp $
+	$Id: substructure_alias_base.h,v 1.24 2008/10/22 22:16:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -38,28 +38,28 @@ using util::persistent_object_manager;
 	Parent to all aliases that may contain substructures.
  */
 template <>
-class substructure_alias_base<true> {
+class substructure_alias_base<true> : protected subinstance_manager {
 private:
 	typedef	substructure_alias_base<true>	this_type;
-	typedef	subinstance_manager::connection_references_type
+	typedef	subinstance_manager		parent_type;
+	typedef	parent_type::connection_references_type
 						connection_references_type;
 	typedef	physical_instance_placeholder	port_type;
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	typedef	subinstance_manager::relaxed_actuals_type
+	typedef	parent_type::relaxed_actuals_type
 						relaxed_actuals_type;
 #endif
-protected:
-	/**
-		Container of sub-instances.  
-	 */
-	subinstance_manager			subinstances;
 public:
+	/**
+		ID number assigned by unique allocation, after all aliases
+		and connections have been processed.
+	 */
 	size_t					instance_index;
 
 protected:
 virtual	~substructure_alias_base() { }
 
-	substructure_alias_base() : instance_index(0) { }
+	substructure_alias_base() : parent_type(), instance_index(0) { }
 
 	/**
 		Visits children of the subinstance manager and 
@@ -68,7 +68,7 @@ virtual	~substructure_alias_base() { }
 	 */
 	void
 	restore_parent_child_links(void) {
-		subinstances.relink_super_instance_alias(*this);
+		relink_super_instance_alias(*this);
 	}
 
 	template <class Tag>
@@ -79,7 +79,7 @@ virtual	~substructure_alias_base() { }
 			const relaxed_actuals_type& a,
 #endif
 			const unroll_context& c) {
-		if (subinstances.unroll_port_instances(p,
+		if (parent_type::__unroll_port_instances(p,
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 				a,
 #endif
@@ -89,13 +89,10 @@ virtual	~substructure_alias_base() { }
 		} else	return good_bool(false);
 	}
 
-	void
-	allocate_subinstances(footprint&);
+	using parent_type::allocate_subinstances;
 
 public:
-	// just a forwarded call
-	subinstance_manager::value_type
-	lookup_port_instance(const port_type& i) const;
+	using parent_type::lookup_port_instance;
 
 virtual	never_ptr<const physical_instance_collection>
 	get_container_base(void) const;
@@ -107,49 +104,28 @@ virtual	ostream&
 virtual	size_t
 	hierarchical_depth(void) const;
 
-	ostream&
-	dump_ports(ostream& o, const dump_flags& df) const {
-		return subinstances.dump(o, df);
-	}
+	using parent_type::dump_ports;
 
 	// simply forwarded call
 	good_bool
 	connect_ports(const connection_references_type&, const unroll_context&);
 
 #if RECURSE_COLLECT_ALIASES
-	void
-	collect_port_aliases(port_alias_tracker&) const;
+	using parent_type::collect_port_aliases;
 #endif
 
 virtual	this_type&
 	__trace_alias_base(const this_type&) const;
 
 protected:
+// not used yet
 	good_bool
 	__allocate_subinstance_footprint(
 		footprint_frame&, state_manager&) const;
 
-	void
-	__assign_footprint_frame(footprint_frame&,
-		const port_member_context&) const;
-
-	void
-	__construct_port_context(port_member_context&,
-		const footprint_frame&) const;
-
-	good_bool
-	connect_port_aliases_recursive(this_type& r
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, const unroll_context& c
-#endif
-			) {
-		return subinstances.connect_port_aliases_recursive(
-			r.subinstances
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, c
-#endif
-			);
-	}
+	using parent_type::__assign_footprint_frame;
+	using parent_type::__construct_port_context;
+	using parent_type::connect_port_aliases_recursive;
 
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 public:
@@ -158,17 +134,13 @@ virtual	void
 #endif
 
 protected:
-	// call forwarding
-	void
-	collect_transient_info_base(persistent_object_manager& m) const;
-
-	void
-	write_object_base(const footprint&, ostream&) const;
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
 
 	void
 	load_object_base(const footprint&, istream&);
 
-};	// end class substructure_alias_base
+};	// end class substructure_alias_base<true>
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -205,7 +177,7 @@ protected:
 		No-op.  
 	 */
 	void
-	restore_parent_child_links(void) { }
+	restore_parent_child_links(void) const { }
 
 public:
 	ostream&
@@ -257,7 +229,7 @@ protected:
 	void
 	load_object_base(const footprint&, const istream&) const { }
 
-};	// end class substructure_alias_base
+};	// end class substructure_alias_base<false>
 
 //=============================================================================
 }	// end namespace entity

@@ -125,15 +125,15 @@ In namespace "", we have: {
         e@[iscomb=]
       footprint: {
         a = bool^0 = foo::b (3) 
-        b = bool^0 = foo::b (3) 
-        c = bool^0 = foo::d (4) 
-        d = bool^0 = foo::d (4) 
+        b = bool^0 = foo::b (3) @[ iscomb ] 
+        c = bool^0 = foo::d (4) @[ iscomb ] 
+        d = bool^0 = foo::d (4) @[ iscomb ] 
         e = bool^0 = foo::f (5) 
-        f = bool^0 = foo::f (5) 
-        w = bool^0 = foo::x (1) 
-        x = bool^0 = foo::x (1) 
+        f = bool^0 = foo::f (5) @[ iscomb ] 
+        w = bool^0 = foo::x (1) @[ iscomb ] 
+        x = bool^0 = foo::x (1) @[ iscomb ] 
         y = bool^0 = foo::z (2) 
-        z = bool^0 = foo::z (2) 
+        z = bool^0 = foo::z (2) @[ iscomb ] 
         Created state:
         bool instance pool:
         1	foo::x @[ iscomb ]
@@ -150,11 +150,11 @@ In namespace "", we have: {
 
 footprint: {
   bar = process foo<>^0 = bar (1) (
-    x = bool^0 = bar.x (1) 
-    z = bool^0 = bar.z (2) 
-    b = bool^0 = bar.b (3) 
-    d = bool^0 = bar.d (4) 
-    f = bool^0 = bar.f (5) 
+    x = bool^0 = bar.x (1) @[ iscomb ] 
+    z = bool^0 = bar.z (2) @[ iscomb ] 
+    b = bool^0 = bar.b (3) @[ iscomb ] 
+    d = bool^0 = bar.d (4) @[ iscomb ] 
+    f = bool^0 = bar.f (5) @[ iscomb ] 
   )
   Created state:
   process instance pool:

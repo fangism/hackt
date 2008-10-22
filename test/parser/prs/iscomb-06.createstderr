@@ -41,10 +41,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  a = bool^0 = a (1) 
-  b = bool^0 = a (1) 
-  c = bool^0 = c (2) 
-  d = bool^0 = c (2) 
+  a = bool^0 = a (1) @[ iscomb ] 
+  b = bool^0 = a (1) @[ iscomb ] 
+  c = bool^0 = c (2) @[ iscomb ] 
+  d = bool^0 = c (2) @[ iscomb ] 
   Created state:
   bool instance pool:
   1	a @[ iscomb ]

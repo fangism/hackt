@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.22 2007/07/18 23:28:46 fang Exp $
+	$Id: subinstance_manager.cc,v 1.23 2008/10/22 22:16:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -53,7 +53,7 @@ subinstance_manager::~subinstance_manager() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-subinstance_manager::dump(ostream& o, const dump_flags& df) const {
+subinstance_manager::dump_ports(ostream& o, const dump_flags& df) const {
 if (subinstance_array.empty()) {
 	return o;
 } else {
@@ -139,7 +139,7 @@ subinstance_manager::collect_port_aliases(port_alias_tracker& t) const {
 		so check whether or not this is expanded first.  
  */
 good_bool
-subinstance_manager::connect_ports(
+subinstance_manager::__connect_ports(
 		const connection_references_type& cr, 
 		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
@@ -220,7 +220,7 @@ subinstance_manager::relink_super_instance_alias(
 	TODO: give this a return value for error handling.  
  */
 void
-subinstance_manager::allocate(footprint& f) {
+subinstance_manager::allocate_subinstances(footprint& f) {
 	STACKTRACE("subinstance_manager::allocate()");
 	iterator i(subinstance_array.begin());
 	const iterator e(subinstance_array.end());
@@ -235,7 +235,7 @@ subinstance_manager::allocate(footprint& f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-subinstance_manager::construct_port_context(port_member_context& pmc, 
+subinstance_manager::__construct_port_context(port_member_context& pmc, 
 		const footprint_frame& ff) const {
 	STACKTRACE_VERBOSE;
 	pmc.resize(size());
@@ -249,7 +249,7 @@ subinstance_manager::construct_port_context(port_member_context& pmc,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-subinstance_manager::assign_footprint_frame(footprint_frame& ff, 
+subinstance_manager::__assign_footprint_frame(footprint_frame& ff, 
 		const port_member_context& pmc) const {
 	INVARIANT(pmc.size() == subinstance_array.size());
 	size_t j = 0;

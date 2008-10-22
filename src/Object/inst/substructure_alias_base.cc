@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.15 2007/10/12 22:43:54 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.16 2008/10/22 22:16:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -47,21 +47,6 @@ substructure_alias::hierarchical_depth(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-subinstance_manager::value_type
-substructure_alias::lookup_port_instance(const port_type& inst) const {
-	return subinstances.lookup_port_instance(inst);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// OBSOLETE -- remove
-subinstance_manager::value_type
-substructure_alias::lookup_member_instance(const port_type& inst) const {
-	return subinstances.lookup_member_instance(inst);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const physical_instance_collection>
 substructure_alias::get_container_base(void) const {
 	ICE_NEVER_CALL(cerr);
@@ -91,21 +76,7 @@ substructure_alias::connect_ports(const connection_references_type& cr,
 		return good_bool(false);
 	}
 #endif
-	return subinstances.connect_ports(cr, c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if RECURSE_COLLECT_ALIASES
-void
-substructure_alias::collect_port_aliases(port_alias_tracker& p) const {
-	return subinstances.collect_port_aliases(p);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-substructure_alias::allocate_subinstances(footprint& f) {
-	return subinstances.allocate(f);
+	return parent_type::__connect_ports(cr, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -129,44 +100,14 @@ substructure_alias::__allocate_subinstance_footprint(footprint_frame& ff,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-substructure_alias::__assign_footprint_frame(footprint_frame& ff, 
-		const port_member_context& pmc) const {
-	subinstances.assign_footprint_frame(ff, pmc);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Called recursively through substrcuture hierarchy.  
- */
-void
-substructure_alias::__construct_port_context(port_member_context& pmc, 
-		const footprint_frame& ff) const {
-	subinstances.construct_port_context(pmc, ff);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-substructure_alias::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	subinstances.collect_transient_info_base(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-substructure_alias::write_object_base(const footprint& m, ostream& o) const {
-	subinstances.write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Once the children pointers have been loaded, this can
 	go in and restore the link to the parents (this).  
  */
 void
 substructure_alias::load_object_base(const footprint& m, istream& i) {
-	subinstances.load_object_base(m, i);
-	subinstances.relink_super_instance_alias(*this);
+	parent_type::load_object_base(m, i);
+	relink_super_instance_alias(*this);	// restore_parent_child_links
 }
 
 //=============================================================================

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.47 2007/07/18 23:28:42 fang Exp $
+	$Id: instance_collection.tcc,v 1.48 2008/10/22 22:16:56 fang Exp $
 	TODO: trim includes
  */
 
@@ -522,10 +522,12 @@ INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 	if (p.container->get_canonical_collection().has_relaxed_type())
 		p.dump_actuals(os);
 	os << " = ";
-	NEVER_NULL(p.peek());
-	p.peek()->dump_hierarchical_name(os, df);
+	const instance_alias_info_type* peek = p.peek();
+	NEVER_NULL(peek);
+	peek->dump_hierarchical_name(os, df);
 	if (p.instance_index)
 		os << " (" << p.instance_index << ')';
+	p.dump_attributes(os);	// attributes of *this* alias only (p)
 	p.dump_ports(os << ' ', df);
 	if (dim)
 		os << endl;
