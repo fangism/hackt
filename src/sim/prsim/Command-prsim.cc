@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.13 2008/07/01 23:57:13 fang Exp $
+	$Id: Command-prsim.cc,v 1.14 2008/10/22 05:15:29 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4544,11 +4544,13 @@ ChannelSourceLoop::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/channel-source-args.texi
-@deffn Command channel-source-args chan values...
+@deffn Command channel-source-args chan [values...]
 Source values on channel @var{chan} using the @var{values} passed
 on the command.  
 Sourcing stops after last value is used. 
 Legal values are integers and 'X' for random.  
+If no values are given, then the channel will not souce any values, 
+but it will still reset the data rails to neutral state.  
 @end deffn
 @end texinfo
 ***/
@@ -4558,7 +4560,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceArgs,
 
 int
 ChannelSourceArgs::main(State& s, const string_list& a) {
-if (a.size() < 3) {
+if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
@@ -4583,11 +4585,13 @@ ChannelSourceArgs::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/channel-source-args-loop.texi
-@deffn Command channel-source-args-loop chan values...
+@deffn Command channel-source-args-loop chan [values...]
 Source values on channel @var{chan} using the @var{values} passed
 on the command.  
 Value sequence is repeated infinitely.  
 Legal values are integers and 'X' for random.  
+If no values are given, then the channel will not souce any values, 
+but it will still reset the data rails to neutral state.  
 @end deffn
 @end texinfo
 ***/
@@ -4597,7 +4601,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceArgsLoop,
 
 int
 ChannelSourceArgsLoop::main(State& s, const string_list& a) {
-if (a.size() < 3) {
+if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {

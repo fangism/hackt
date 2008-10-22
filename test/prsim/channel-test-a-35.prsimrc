@@ -1,0 +1,43 @@
+# "channel-test-a-35.prsimrc"
+# @haco@ channel-test-a.haco-a
+
+# testing hexadecimal values
+source channel-test-a-01.prsimrc
+echo no values given: will reset to neutral
+channel-source-args Y
+channel-show-all
+# channel-sink Y
+echo this time, no sink
+
+channel-watch Y
+
+echo resetting all channels...
+channel-reset-all
+watchall
+cycle
+
+echo releasing all channels...
+channel-release-all
+cycle
+
+assertn-queue
+echo all values went to X because Y.e is X
+
+channel-show Y
+echo setting Y.e -> 1
+echo first time, reset rails to 0
+set Y.e 1
+cycle
+
+channel-show Y
+echo setting Y.e -> X
+echo no values to source, so channel stopped responding
+set Y.e X
+cycle
+
+echo setting Y.e -> 0 (no change)
+echo forces data rails to reset, regardles of value
+set Y.e 0
+cycle
+
+

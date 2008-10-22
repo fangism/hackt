@@ -1,0 +1,18 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+no values given: will reset to neutral 
+Warning: channel acknowledge `Y.e' has no fanin!
+Warning: no values given, channel will remain neutral.
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 source
+Z : .a(init:0) 1x1of3 off
+resetting all channels... 
+	10	Y.d[0] : 0
+	10	Y.d[1] : 0
+	10	Y.d[2] : 0
+	10	Y.d[3] : 0
+	10	Y.e : 1
+releasing all channels... 

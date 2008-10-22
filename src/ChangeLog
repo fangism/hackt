@@ -5,10 +5,16 @@
 
 2008-10-20	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-82-43+:
+	* HACKT-00-01-04-main-00-82-44:
 	  By popular demand, hacprsim: channel-source on empty args
 		or empty file is now downgraded from error to warning.
-		No tests were affected, not bothering to add a test for this.
+		channel-source-args: value arguments now optional.
+		An empty-valued sourced channel will reset properly
+		upon channel-reset; the data-rails will turn neutral.
+		No 1/0 activity on the acknowledge will take the data rails
+		out of neutral, however, an X *may* cause data-rails 
+		to become X, the exact behavior remains unspecified.
+	  Command documentation updated, test cases added.  
 
 
 	* HACKT-00-01-04-main-00-82-43:
