@@ -3,7 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2008-10-20	David Fang		<fangism@users.sourceforge.net>
+2008-10-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-46:
+	  Critical bug fix: node attributes were not being properly applied
+		to subinstances (ports) of freshly instantiated processes
+		because process_connect_policy did not yet exist.
+		Implemented port_alias_tracker::export_alias_properties()
+		Test cases added to parser/prs.  
+
+
+2008-10-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-45:
 	  debug diagnostics: print alias attributes in hierarchical

@@ -1,0 +1,8 @@
+// "connect-053a.hac"
+// expect to fail because channels are in wrong direction
+
+import "connect-053.hac";
+
+chan_pair P;
+left L1(P), L2(P);
+

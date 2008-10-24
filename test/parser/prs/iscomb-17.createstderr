@@ -1,0 +1,100 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	290
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
+	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	17	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	375
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv(
+        bool<> a
+        bool<> b
+      )
+      In definition "inv", we have: {
+      Instances:
+        a = bool<> inv::a
+        b = bool<> inv::b
+      unroll sequence: 
+        bool<> a
+        bool<> b
+      footprint: {
+        a = bool^0 = inv::a (1) 
+        b = bool^0 = inv::b (2) 
+        Created state:
+        bool instance pool:
+        1	inv::a
+        2	inv::b
+      }
+      }
+
+    multi_inv = process-definition (defined) multi_inv(
+        inv<> x
+      )
+      In definition "multi_inv", we have: {
+      Instances:
+        x = inv<> multi_inv::x
+      unroll sequence: 
+        inv<> x
+        x.a@[iscomb=]
+      footprint: {
+        x = process inv<>^0 = multi_inv::x (1) (
+          a = bool^0 = multi_inv::x.a (1) @[ iscomb ] 
+          b = bool^0 = multi_inv::x.b (2) 
+        )
+        Created state:
+        process instance pool:
+        1	multi_inv::x
+        bool instance pool:
+        1	multi_inv::x.a @[ iscomb ]
+        2	multi_inv::x.b
+      }
+      }
+
+  Instances:
+    foo = multi_inv<> foo
+}
+
+footprint: {
+  foo = process multi_inv<>^0 = foo (1) (
+    x = process inv<>^0 = foo.x (2) (
+      a = bool^0 = foo.x.a (1) @[ iscomb ] 
+      b = bool^0 = foo.x.b (2) 
+    )
+  )
+  Created state:
+  process instance pool:
+  1	foo
+  2	foo.x
+  bool instance pool:
+  1	foo.x.a @[ iscomb ]
+  2	foo.x.b
+}

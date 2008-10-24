@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.21 2008/10/21 00:24:31 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.22 2008/10/24 01:08:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -130,6 +130,28 @@ alias_reference_set<Tag>::replay_internal_aliases(substructure_alias& s) const {
 		// doesn't require unroll_context
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Copy the relaxed actuals and attribute flags (properties) of
+	each alias (in this definition scope) to the corresponding alias 
+	in the substructure (of the instance scope).  
+ */
+template <class Tag>
+void
+alias_reference_set<Tag>::export_alias_properties(substructure_alias& s) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(!alias_array.empty());
+	const alias_type& a(*alias_array.front());
+	if (a.is_port_alias()) {
+		alias_type& _inst(a.trace_alias(s));
+	// this call should NOT be recursive because iteration over ports
+	// mitigates the need to recurse.
+		// predicate is needed because this is called on the 
+		// set of *scope* aliases which includes non-ports.
+		_inst.import_properties(a);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -264,7 +286,7 @@ if (!_ids.empty()) {
 		<< " port aliases:" << endl;
 	const_iterator i(_ids.begin());
 	const const_iterator e(_ids.end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		i->second.dump(o << auto_indent << i->first << ": ") << endl;
 	}
 }
@@ -278,11 +300,24 @@ port_alias_tracker_base<Tag>::__replay_aliases(substructure_alias& s) const {
 	STACKTRACE_VERBOSE;
 	const_iterator i(_ids.begin());
 	const const_iterator e(_ids.end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		if (!i->second.replay_internal_aliases(s).good)
 			return good_bool(false);
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+port_alias_tracker_base<Tag>::__export_alias_properties(
+		substructure_alias& s) const {
+	STACKTRACE_VERBOSE;
+	const_iterator i(_ids.begin());
+	const const_iterator e(_ids.end());
+	for ( ; i!=e; ++i) {
+		i->second.export_alias_properties(s);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -300,7 +335,7 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 	STACKTRACE_INDENT_PRINT("p.size() = " << p.size() << endl);
 	iterator i(_ids.begin());
 	const iterator e(_ids.end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		typedef	typename alias_reference_set<Tag>::const_alias_ptr_type
 						const_alias_ptr_type;
 		const const_alias_ptr_type al(i->second.shortest_alias());
@@ -457,6 +492,20 @@ if (has_internal_aliases) {
 } else {
 	return good_bool(true);
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+port_alias_tracker::export_alias_properties(substructure_alias& s) const {
+	STACKTRACE_VERBOSE;
+	port_alias_tracker_base<process_tag>::__export_alias_properties(s);
+	port_alias_tracker_base<channel_tag>::__export_alias_properties(s);
+#if ENABLE_DATASTRUCTS
+	port_alias_tracker_base<datastruct_tag>::__export_alias_properties(s);
+#endif
+	port_alias_tracker_base<enum_tag>::__export_alias_properties(s);
+	port_alias_tracker_base<int_tag>::__export_alias_properties(s);
+	port_alias_tracker_base<bool_tag>::__export_alias_properties(s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

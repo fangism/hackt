@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/sparse_collection.tcc"
-	$Id: sparse_collection.tcc,v 1.3 2006/11/07 06:35:00 fang Exp $
+	$Id: sparse_collection.tcc,v 1.4 2008/10/24 01:09:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SPARSE_COLLECTION_TCC__
@@ -310,7 +310,7 @@ SPARSE_COLLECTION_CLASS::lookup_key(const value_type& v) const {
 SPARSE_COLLECTION_TEMPLATE_SIGNATURE
 typename SPARSE_COLLECTION_CLASS::size_type
 SPARSE_COLLECTION_CLASS::__lookup_index(const key_type& k) const {
-	STACKTRACE_BRIEF;
+//	STACKTRACE_BRIEF;
 	const key_index_map_const_iterator f(key_index_map.find(k));
 	INVARIANT(f != key_index_map.end());
 	return f->second;
@@ -347,7 +347,7 @@ SPARSE_COLLECTION_CLASS::lookup_index(const key_type& k) const {
 SPARSE_COLLECTION_TEMPLATE_SIGNATURE
 typename SPARSE_COLLECTION_CLASS::size_type
 SPARSE_COLLECTION_CLASS::__lookup_index(const value_type& v) const {
-	STACKTRACE_BRIEF;
+//	STACKTRACE_BRIEF;
 	address_chunk_map_const_iterator f(address_chunk_map.upper_bound(&v));
 	INVARIANT(f != address_chunk_map.begin());
 	--f;

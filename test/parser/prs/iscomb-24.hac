@@ -1,0 +1,24 @@
+// "iscomb-23.hac"
+// testing that member references can be attached to attributes
+// @hflat-flags@ -fnode-attributes
+
+defproc inv(bool a, b) {
+a @ [iscomb];
+}
+
+defproc deep(inv x) {
+inv y;
+x.a @ [autokeeper=0];
+y.b @ [autokeeper=0];
+}
+
+defproc deeper(deep d[2]) {
+deep e;
+d[0].x.b @ [iscomb];
+d[0].x.a @ [iscomb];
+}
+
+defproc deepest(deeper y) { }
+
+deepest sh1t;
+

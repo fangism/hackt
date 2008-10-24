@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.21 2008/10/05 23:00:31 fang Exp $
+	$Id: proc_traits.h,v 1.22 2008/10/24 01:09:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PROC_TRAITS_H__
@@ -14,6 +14,7 @@
 namespace HAC {
 namespace entity {
 template <class> class general_collection_type_manager;
+class process_connect_policy;
 //-----------------------------------------------------------------------------
 /**
 	Class traits specialization for processes.  
@@ -36,7 +37,7 @@ struct class_traits<process_tag> {
 	static const bool		can_internally_alias = true;
 	static const bool		has_production_rules = true;
 	static const bool		has_CHP = true;
-	typedef	null_connect_policy		connection_policy;
+	typedef	process_connect_policy		connection_policy;
 
 	/**
 		closure for may-contains, defined by specialization only.

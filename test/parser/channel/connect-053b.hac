@@ -1,0 +1,10 @@
+// "connect-053a.hac"
+// expect to pass because channels are in right direction
+// but system will deadlock
+
+import "connect-053.hac";
+
+chan_pair P;
+left L1(P);
+right R1(P);
+

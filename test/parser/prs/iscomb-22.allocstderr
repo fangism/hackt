@@ -1,0 +1,12 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	foo	multi_inv<>
+	process: 2,3
+	bool: 1,2
+2	(top)	-	2	foo.x[0]	inv<>
+	bool: 1,2
+3	(top)	-	3	foo.x[1]	inv<>
+	bool: 2,1
+[global bool entries]
+1	(top)	-	1	foo.x[0].a	 @[ iscomb !autokeeper ]
+2	(top)	-	2	foo.x[0].b	 @[ iscomb !autokeeper ]

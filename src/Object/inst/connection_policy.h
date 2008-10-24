@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.8 2008/10/21 00:24:30 fang Exp $
+	$Id: connection_policy.h,v 1.9 2008/10/24 01:08:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -14,6 +14,7 @@
 
 namespace HAC {
 namespace entity {
+class unroll_context;
 using std::istream;
 using std::ostream;
 using util::good_bool;
@@ -34,9 +35,9 @@ protected:
 		return good_bool(true);
 	}
 
-	template <class ContainerType>
+	template <class AliasType>
 	void
-	initialize_direction(const ContainerType&) const { }
+	initialize_direction(const AliasType&, const unroll_context&) const { }
 
 	void
 	initialize_actual_direction(const this_type&) const { }
@@ -123,9 +124,9 @@ protected:
 	good_bool
 	synchronize_flags(this_type& l, this_type& r);
 
-	template <class ContainerType>
+	template <class AliasType>
 	void
-	initialize_direction(const ContainerType&);
+	initialize_direction(const AliasType&, const unroll_context&);
 
 	void
 	initialize_actual_direction(const this_type&);
@@ -311,6 +312,7 @@ public:
 	channel_connect_policy() :
 		direction_flags(DEFAULT_CONNECT_FLAGS) { }
 
+protected:
 	/**
 		Also print diagnostic.
 	 */
@@ -319,6 +321,7 @@ public:
 	good_bool
 	synchronize_flags(AliasType&, AliasType&);
 
+public:
 	good_bool
 	set_connection_flags(const connection_flags_type);
 
@@ -327,9 +330,9 @@ public:
 	check_meta_nonmeta_usage(const connection_flags_type, const char*);
 
 protected:
-	template <class ContainerType>
+	template <class AliasType>
 	void
-	initialize_direction(const ContainerType&);
+	initialize_direction(const AliasType&, const unroll_context&);
 
 	template <class AliasType>
 	void
@@ -372,6 +375,27 @@ public:
 	read_flags(istream&);
 
 };	// end struct channel_connect_policy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Mostly just redirects many calls to substructure, for recursion.
+ */
+struct process_connect_policy : public null_connect_policy {
+// parent type is temporary as we gradually implement this...
+private:
+	typedef	process_connect_policy		this_type;
+public:
+	// default ctor
+private:
+	using null_connect_policy::initialize_direction;
+
+protected:
+
+	template <class AliasType>
+	void
+	initialize_direction(AliasType&, const unroll_context&);
+
+};	// end struct process_connect_policy
 
 //=============================================================================
 }	// end namesace entity

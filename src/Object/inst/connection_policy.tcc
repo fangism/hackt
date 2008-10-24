@@ -1,16 +1,21 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.7 2008/10/21 00:24:30 fang Exp $
+	$Id: connection_policy.tcc,v 1.8 2008/10/24 01:08:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
 #define	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
 
 #include <iostream>
+#include "Object/def/footprint.h"
 #include "Object/inst/connection_policy.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
+// #include "Object/inst/port_alias_tracker.h"
 #include "Object/type/channel_direction_enum.h"	// for direction enum
+#include "Object/unroll/unroll_context.h"
+#include "Object/type/canonical_type.h"
+#include "Object/common/dump_flags.h"		// debug only
 #include "common/ICE.h"
 
 #include "util/stacktrace.h"
@@ -23,9 +28,10 @@ namespace entity {
 //=============================================================================
 // class bool_connect_policy method definitions
 
-template <class ContainerType>
+template <class AliasType>
 void
-bool_connect_policy::initialize_direction(const ContainerType&) {
+bool_connect_policy::initialize_direction(const AliasType&, 
+		const unroll_context&) {
 	// TODO: use direction annotations like channels
 	// this->attributes = BOOL_DEFAULT_ATTRIBUTES;
 	// unnecessary, b/c default ctor
@@ -167,16 +173,18 @@ channel_connect_policy::synchronize_flags(
 	NOTE: called by instance_alias_info::instantiate().
 	optimization: refactor code to avoid repeated calls to same container.
  */
-template <class ContainerType>
+template <class AliasType>
 void
-channel_connect_policy::initialize_direction(
-		const ContainerType& p) {
+channel_connect_policy::initialize_direction(const AliasType& a, 
+		const unroll_context&) {
+	typedef	typename AliasType::container_type	ContainerType;
 	typedef	ContainerType		collection_interface_type;
 	typedef	typename collection_interface_type::traits_type
 					traits_type;
 	typedef	typename traits_type::tag_type		tag_type;
 	typedef	instance_collection<tag_type>	instance_collection_type;
 	STACKTRACE_VERBOSE;
+	const ContainerType& p(*a.container);
 	const bool f = p.is_formal();
 	const instance_collection_type& c(p.get_canonical_collection());
 	const direction_type d = c.__get_raw_type().get_direction();
@@ -345,6 +353,67 @@ channel_connect_policy::connection_flag_setter::operator () (
 	if (!a.find()->set_connection_flags(update).good) {
 		status.good = false;
 	}
+}
+
+//=============================================================================
+// class process_connect_policy method definitions
+
+/**
+	Take footprint of this type, from context and apply to subinstances.  
+	This should be called upon instantiation, and also upon
+	type completion, the case of relaxed actuals.  
+	This could potentially be used to replay internal aliases, 
+	which is currently managed by port_alias_tracker.  
+	\param AliasType must be a substructured type, like process.
+	TODO: calling type-completion for every alias that is 
+		instantiated seems wasteful, especially if part of
+		a strictly typed array... rewrite me.
+ */
+template <class AliasType>
+void
+process_connect_policy::initialize_direction(AliasType& a, 
+		const unroll_context& c) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	a.dump_hierarchical_name(cerr << "alias: ") << endl;
+	a.dump_ports(cerr, dump_flags::default_value) << endl;
+	c.dump(cerr << "context: ") << endl;
+#endif
+	// check to make sure type is complete (no longer relaxed)
+	// lookup resolved type of the alias or its container
+	// a.complete_type_actuals(*a.container); from "alias_actuals.tcc"
+
+	typedef	typename AliasType::container_type	container_type;
+	typedef	typename container_type::instance_collection_parameter_type
+						complete_type_type;
+	typedef	typename complete_type_type::canonical_definition_type
+						canonical_definition_type;
+	// ordering issue: cannot complete type actuals if collection
+	// was declared relaxed, so this work will have to be punted
+ if (!a.container->get_canonical_collection().__get_raw_type().is_relaxed()) {
+	const complete_type_type
+		_type(a.complete_type_actuals(*a.container));
+	INVARIANT(_type);
+	// acquire the (already created) footprint
+	const footprint&
+		f(_type.get_base_def()->get_footprint(
+			_type.get_raw_template_params()));
+	// walk ports and apply flags from the local unique instance pool
+	const port_alias_tracker& pt(f.get_scope_alias_tracker());
+	// b/c port_alias_tracker only lists ports with *aliases*
+	// copy-initialize: alias actuals and attributes and flags
+#if ENABLE_STACKTRACE
+	pt.dump(cerr << "scope_alias_tracker:" << endl);
+#endif
+	pt.export_alias_properties(a);
+	// TODO: use footprint.port_alias_tracker::replay_internal_aliases
+	// TODO: should connections occur before or after copying properties?
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("after inheriting alias properties: " << endl);
+	a.dump_ports(cerr, dump_flags::default_value) << endl;
+#endif
+}
+	// else type is relaxed, skip this until type is complete
 }
 
 //=============================================================================

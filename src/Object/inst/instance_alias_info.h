@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.24 2008/10/05 23:00:11 fang Exp $
+	$Id: instance_alias_info.h,v 1.25 2008/10/24 01:08:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -204,6 +204,7 @@ public:
 	const this_type*
 	peek(void) const { return this->next; }
 
+protected:
 	good_bool
 	unite(this_type&
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
@@ -211,6 +212,7 @@ public:
 #endif
 	);
 
+public:
 	pseudo_const_iterator
 	find(void) const;
 
@@ -251,6 +253,9 @@ public:
 	void
 	instantiate_actual_from_formal(const port_actuals_ptr_type, 
 		const unroll_context&, const this_type&);
+
+	void
+	import_properties(const this_type&);
 
 	good_bool
 	check_connection(void) const;

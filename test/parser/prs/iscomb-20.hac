@@ -1,0 +1,25 @@
+// "iscomb-20.hac"
+// testing that member references can be attached to attributes
+// @hflat-flags@ -fnode-attributes
+
+defproc inv(bool a, b) {
+prs {
+	a => b-
+}
+}
+
+defproc multi_inv(inv x[6]; bool y, z) {
+bool p, q;
+x[0](p, q);
+x[0].a @ [iscomb];
+y @ [autokeeper=0];
+z @ [autokeeper=0];
+y = x[1].a;
+z = x[2].b;
+x[3] = x[0];
+x[5] = x[1];
+x[4] = x[2];
+}
+
+multi_inv foo;
+

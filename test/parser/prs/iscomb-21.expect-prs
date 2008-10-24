@@ -1,0 +1,14 @@
+"foo.y" -> "foo.x[0].b"-
+~"foo.y" -> "foo.x[0].b"+
+"foo.x[2].a" -> "foo.z"-
+~"foo.x[2].a" -> "foo.z"+
+@ "foo.y" iscomb !autokeeper
+@ "foo.z" !autokeeper
+= "foo.y" "foo.p"
+= "foo.x[0].b" "foo.q"
+= "foo.y" "foo.x[0].a"
+= "foo.y" "foo.x[1].a"
+= "foo.x[0].b" "foo.x[1].b"
+= "foo.z" "foo.x[2].b"
+= "foo.x[2].a" "foo.x[3].a"
+= "foo.z" "foo.x[3].b"

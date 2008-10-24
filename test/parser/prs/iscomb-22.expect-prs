@@ -1,0 +1,4 @@
+@ "foo.x[0].a" iscomb !autokeeper
+@ "foo.x[0].b" iscomb !autokeeper
+= "foo.x[0].b" "foo.x[1].a"
+= "foo.x[0].a" "foo.x[1].b"

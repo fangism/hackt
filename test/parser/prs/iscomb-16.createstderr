@@ -1,0 +1,204 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
+	20	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	36	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	41	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	614
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	34
+	50	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	34
+	58	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	607
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv(
+        bool<> a
+        bool<> b
+      )
+      In definition "inv", we have: {
+      Instances:
+        a = bool<> inv::a
+        b = bool<> inv::b
+      unroll sequence: 
+        bool<> a
+        bool<> b
+      prs:
+        a -> b-
+        ~a -> b+
+      footprint: {
+        a = bool^0 = inv::a (1) 
+        b = bool^0 = inv::b (2) 
+        Created state:
+        bool instance pool:
+        1	inv::a
+        2	inv::b
+        resolved prs:
+        a -> b-
+        ~a -> b+
+      }
+      }
+
+    multi_inv = process-definition (defined) multi_inv(
+        inv<> x[0..3]
+      )
+      In definition "multi_inv", we have: {
+      Instances:
+        p = bool<> multi_inv::p
+        q = bool<> multi_inv::q
+        x = inv<> multi_inv::x^1
+      unroll sequence: 
+        inv<> x[0..3]
+        bool<> p
+        bool<> q
+        x[0] (p, q);
+        x[0].a@[iscomb=]
+        x[3].b@[iscomb=]
+      footprint: {
+        p = bool^0 = multi_inv::p (1) @[ iscomb ] 
+        q = bool^0 = multi_inv::q (2) 
+        x = process inv<>^1
+          {
+            [0] = multi_inv::x[0] (1) (
+              a = bool^0 = multi_inv::p (1) @[ iscomb ] 
+              b = bool^0 = multi_inv::q (2) 
+            )
+            [1] = multi_inv::x[1] (2) (
+              a = bool^0 = multi_inv::x[1].a (3) 
+              b = bool^0 = multi_inv::x[1].b (4) 
+            )
+            [2] = multi_inv::x[2] (3) (
+              a = bool^0 = multi_inv::x[2].a (5) 
+              b = bool^0 = multi_inv::x[2].b (6) 
+            )
+            [3] = multi_inv::x[3] (4) (
+              a = bool^0 = multi_inv::x[3].a (7) 
+              b = bool^0 = multi_inv::x[3].b (8) @[ iscomb ] 
+            )
+          }
+        Created state:
+        process instance pool:
+        1	multi_inv::x[0]
+        2	multi_inv::x[1]
+        3	multi_inv::x[2]
+        4	multi_inv::x[3]
+        bool instance pool:
+        1	multi_inv::p @[ iscomb ]
+        2	multi_inv::q
+        3	multi_inv::x[1].a
+        4	multi_inv::x[1].b
+        5	multi_inv::x[2].a
+        6	multi_inv::x[2].b
+        7	multi_inv::x[3].a
+        8	multi_inv::x[3].b @[ iscomb ]
+      }
+      }
+
+  Instances:
+    foo = multi_inv<> foo
+}
+
+footprint: {
+  foo = process multi_inv<>^0 = foo (1) (
+    x = process inv<>^1
+      {
+        [0] = foo.x[0] (2) (
+          a = bool^0 = foo.x[0].a (1) @[ iscomb ] 
+          b = bool^0 = foo.x[0].b (2) 
+        )
+        [1] = foo.x[1] (3) (
+          a = bool^0 = foo.x[1].a (3) 
+          b = bool^0 = foo.x[1].b (4) @[ !autokeeper ] 
+        )
+        [2] = foo.x[2] (4) (
+          a = bool^0 = foo.x[2].a (5) @[ !autokeeper ] 
+          b = bool^0 = foo.x[2].b (6) 
+        )
+        [3] = foo.x[3] (5) (
+          a = bool^0 = foo.x[3].a (7) 
+          b = bool^0 = foo.x[3].b (8) @[ iscomb ] 
+        )
+      }
+  )
+  Created state:
+  process instance pool:
+  1	foo
+  2	foo.x[0]
+  3	foo.x[1]
+  4	foo.x[2]
+  5	foo.x[3]
+  bool instance pool:
+  1	foo.x[0].a @[ iscomb ]
+  2	foo.x[0].b
+  3	foo.x[1].a
+  4	foo.x[1].b @[ !autokeeper ]
+  5	foo.x[2].a @[ !autokeeper ]
+  6	foo.x[2].b
+  7	foo.x[3].a
+  8	foo.x[3].b @[ iscomb ]
+}

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/collection_pool.tcc"
-	$Id: collection_pool.tcc,v 1.3 2007/07/18 23:28:37 fang Exp $
+	$Id: collection_pool.tcc,v 1.4 2008/10/24 01:08:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_POOL_TCC__
@@ -224,7 +224,7 @@ COLLECTION_POOL_CLASS::operator [] (const size_type i) {
 COLLECTION_POOL_TEMPLATE_SIGNATURE
 typename COLLECTION_POOL_CLASS::size_type
 COLLECTION_POOL_CLASS::__lookup_index(const value_type& v) const {
-	STACKTRACE_BRIEF;
+//	STACKTRACE_BRIEF;
 	address_chunk_map_const_iterator f(address_chunk_map.upper_bound(&v));
 	INVARIANT(f != address_chunk_map.begin());
 	--f;

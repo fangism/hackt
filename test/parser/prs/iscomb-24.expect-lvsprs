@@ -1,0 +1,10 @@
+@ "sh1t.y.d[0].x.a" iscomb !autokeeper
+@ "sh1t.y.d[0].x.b" iscomb
+@ "sh1t.y.d[1].x.a" iscomb !autokeeper
+@ "sh1t.y.e.x.a" iscomb !autokeeper
+@ "sh1t.y.e.y.a" iscomb
+@ "sh1t.y.e.y.b" !autokeeper
+@ "sh1t.y.d[0].y.a" iscomb
+@ "sh1t.y.d[0].y.b" !autokeeper
+@ "sh1t.y.d[1].y.a" iscomb
+@ "sh1t.y.d[1].y.b" !autokeeper

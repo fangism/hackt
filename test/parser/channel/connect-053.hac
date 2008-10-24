@@ -1,0 +1,20 @@
+// "connect-053.hac"
+// making sure that connection flags are processed hierarchically
+
+// just a struct of two channels
+defproc chan_pair(chan(bool) X, Y) { }
+
+defproc left(chan_pair P) {
+bool x;
+chp {
+*[P.X?(x); P.Y!(x)]
+}
+}
+
+defproc right(chan_pair P) {
+bool x;
+chp {
+*[P.Y?(x); P.X!(x)]
+}
+}
+

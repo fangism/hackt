@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.14 2007/07/18 23:28:51 fang Exp $
+	$Id: canonical_type.tcc,v 1.15 2008/10/24 01:09:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -206,6 +206,7 @@ CANONICAL_TYPE_CLASS::type_mismatch_error(ostream& o,
 /**
 	This is only applicable to process_definitions.
 	Don't delete this, good for reference.  
+	This can't be instantiated with datatype_definition_base...
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 const footprint&

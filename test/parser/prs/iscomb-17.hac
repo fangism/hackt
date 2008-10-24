@@ -1,0 +1,15 @@
+// "iscomb-17.hac"
+// reduced from "iscomb-16.hac"
+// testing that node attributes are propagated through ports, reduced
+// ACX-PR-2043
+// @hflat-flags@ -fnode-attributes
+
+defproc inv(bool a, b) {
+}
+
+defproc multi_inv(inv x) {
+x.a @ [iscomb];
+}
+
+multi_inv foo;
+

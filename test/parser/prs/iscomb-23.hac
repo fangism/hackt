@@ -1,0 +1,31 @@
+// "iscomb-23.hac"
+// testing that member references can be attached to attributes
+// @hflat-flags@ -fnode-attributes
+
+defproc inv(bool a, b) {
+a @ [iscomb];
+}
+
+defproc inv2(bool a, b) {
+b @ [autokeeper=0];
+}
+
+defproc smoosh(inv j; inv2 k) {
+j.a = k.a;
+j.b = k.b;
+}
+
+defproc twist(inv f; inv2 g) {
+f.a = g.b;
+f.b = g.a;
+}
+
+defproc multi_inv(inv s[2]; inv2 t[2]) { }
+
+defproc deep(multi_inv x, y) {
+smoosh P(x.s[0], x.t[0]);
+twist Q(x.s[1], x.t[1]);
+}
+
+deep sh1t;
+

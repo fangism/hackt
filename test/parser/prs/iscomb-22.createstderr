@@ -1,0 +1,137 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	290
+	18	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
+	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	455
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv(
+        bool<> a
+        bool<> b
+      )
+      In definition "inv", we have: {
+      Instances:
+        a = bool<> inv::a
+        b = bool<> inv::b
+      unroll sequence: 
+        bool<> a
+        bool<> b
+        a@[iscomb=]
+        b@[autokeeper=0]
+      footprint: {
+        a = bool^0 = inv::a (1) @[ iscomb ] 
+        b = bool^0 = inv::b (2) @[ !autokeeper ] 
+        Created state:
+        bool instance pool:
+        1	inv::a @[ iscomb ]
+        2	inv::b @[ !autokeeper ]
+      }
+      }
+
+    multi_inv = process-definition (defined) multi_inv(
+        inv<> x[0..1]
+      )
+      In definition "multi_inv", we have: {
+      Instances:
+        x = inv<> multi_inv::x^1
+      unroll sequence: 
+        inv<> x[0..1]
+        x[0] (x[1].b, x[1].a);
+      footprint: {
+        x = process inv<>^1
+          {
+            [0] = multi_inv::x[0] (1) (
+              a = bool^0 = multi_inv::x[0].a (1) @[ iscomb !autokeeper ] 
+              b = bool^0 = multi_inv::x[0].b (2) @[ iscomb !autokeeper ] 
+            )
+            [1] = multi_inv::x[1] (2) (
+              a = bool^0 = multi_inv::x[0].b (2) @[ iscomb !autokeeper ] 
+              b = bool^0 = multi_inv::x[0].a (1) @[ iscomb !autokeeper ] 
+            )
+          }
+        Created state:
+        process instance pool:
+        1	multi_inv::x[0]
+        2	multi_inv::x[1]
+        bool instance pool:
+        1	multi_inv::x[0].a @[ iscomb !autokeeper ]
+        2	multi_inv::x[0].b @[ iscomb !autokeeper ]
+        bool port aliases:
+        1: multi_inv::x[0].a = multi_inv::x[1].b @[ iscomb !autokeeper ]
+        2: multi_inv::x[0].b = multi_inv::x[1].a @[ iscomb !autokeeper ]
+      }
+      }
+
+  Instances:
+    foo = multi_inv<> foo
+}
+
+footprint: {
+  foo = process multi_inv<>^0 = foo (1) (
+    x = process inv<>^1
+      {
+        [0] = foo.x[0] (2) (
+          a = bool^0 = foo.x[0].a (1) @[ iscomb !autokeeper ] 
+          b = bool^0 = foo.x[0].b (2) @[ iscomb !autokeeper ] 
+        )
+        [1] = foo.x[1] (3) (
+          a = bool^0 = foo.x[0].b (2) @[ iscomb !autokeeper ] 
+          b = bool^0 = foo.x[0].a (1) @[ iscomb !autokeeper ] 
+        )
+      }
+  )
+  Created state:
+  process instance pool:
+  1	foo
+  2	foo.x[0]
+  3	foo.x[1]
+  bool instance pool:
+  1	foo.x[0].a @[ iscomb !autokeeper ]
+  2	foo.x[0].b @[ iscomb !autokeeper ]
+}

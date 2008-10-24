@@ -1,0 +1,19 @@
+@ "sh1t.x.s[0].a" iscomb
+@ "sh1t.x.s[0].b" !autokeeper
+@ "sh1t.x.s[1].a" iscomb !autokeeper
+@ "sh1t.y.s[0].a" iscomb
+@ "sh1t.y.s[1].a" iscomb
+@ "sh1t.y.t[0].b" !autokeeper
+@ "sh1t.y.t[1].b" !autokeeper
+connect "sh1t.x.s[0].a" "sh1t.P.j.a"
+connect "sh1t.x.s[0].b" "sh1t.P.j.b"
+connect "sh1t.x.s[0].a" "sh1t.P.k.a"
+connect "sh1t.x.s[0].b" "sh1t.P.k.b"
+connect "sh1t.x.s[1].a" "sh1t.Q.f.a"
+connect "sh1t.x.s[1].b" "sh1t.Q.f.b"
+connect "sh1t.x.s[1].b" "sh1t.Q.g.a"
+connect "sh1t.x.s[1].a" "sh1t.Q.g.b"
+connect "sh1t.x.s[0].a" "sh1t.x.t[0].a"
+connect "sh1t.x.s[0].b" "sh1t.x.t[0].b"
+connect "sh1t.x.s[1].b" "sh1t.x.t[1].a"
+connect "sh1t.x.s[1].a" "sh1t.x.t[1].b"

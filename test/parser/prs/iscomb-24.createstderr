@@ -1,0 +1,265 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	101
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	290
+	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	34
+	21	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	34
+	26	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	426
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	procdefn	0	#HEAD#	#TAIL#	103
+	34	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	42	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	48	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	footprnt	0	#HEAD#	#TAIL#	613
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
+	57	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	58	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	521
+	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	63	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	554
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  4 definitions
+  0 typedefs
+  Definitions:
+    deep = process-definition (defined) deep(
+        inv<> x
+      )
+      In definition "deep", we have: {
+      Instances:
+        x = inv<> deep::x
+        y = inv<> deep::y
+      unroll sequence: 
+        inv<> x
+        inv<> y
+        x.a@[autokeeper=0]
+        y.b@[autokeeper=0]
+      footprint: {
+        x = process inv<>^0 = deep::x (1) (
+          a = bool^0 = deep::x.a (1) @[ iscomb !autokeeper ] 
+          b = bool^0 = deep::x.b (2) 
+        )
+        y = process inv<>^0 = deep::y (2) (
+          a = bool^0 = deep::y.a (3) @[ iscomb ] 
+          b = bool^0 = deep::y.b (4) @[ !autokeeper ] 
+        )
+        Created state:
+        process instance pool:
+        1	deep::x
+        2	deep::y
+        bool instance pool:
+        1	deep::x.a @[ iscomb !autokeeper ]
+        2	deep::x.b
+        3	deep::y.a @[ iscomb ]
+        4	deep::y.b @[ !autokeeper ]
+      }
+      }
+
+    deeper = process-definition (defined) deeper(
+        deep<> d[0..1]
+      )
+      In definition "deeper", we have: {
+      Instances:
+        d = deep<> deeper::d^1
+        e = deep<> deeper::e
+      unroll sequence: 
+        deep<> d[0..1]
+        deep<> e
+        d[0].x.b@[iscomb=]
+        d[0].x.a@[iscomb=]
+      footprint: {
+        d = process deep<>^1
+          {
+            [0] = deeper::d[0] (3) (
+              x = process inv<>^0 = deeper::d[0].x (4) (
+                a = bool^0 = deeper::d[0].x.a (3) @[ iscomb !autokeeper ] 
+                b = bool^0 = deeper::d[0].x.b (4) @[ iscomb ] 
+              )
+            )
+            [1] = deeper::d[1] (5) (
+              x = process inv<>^0 = deeper::d[1].x (6) (
+                a = bool^0 = deeper::d[1].x.a (5) @[ iscomb !autokeeper ] 
+                b = bool^0 = deeper::d[1].x.b (6) 
+              )
+            )
+          }
+        e = process deep<>^0 = deeper::e (1) (
+          x = process inv<>^0 = deeper::e.x (2) (
+            a = bool^0 = deeper::e.x.a (1) @[ iscomb !autokeeper ] 
+            b = bool^0 = deeper::e.x.b (2) 
+          )
+        )
+        Created state:
+        process instance pool:
+        1	deeper::e
+        2	deeper::e.x
+        3	deeper::d[0]
+        4	deeper::d[0].x
+        5	deeper::d[1]
+        6	deeper::d[1].x
+        bool instance pool:
+        1	deeper::e.x.a @[ iscomb !autokeeper ]
+        2	deeper::e.x.b
+        3	deeper::d[0].x.a @[ iscomb !autokeeper ]
+        4	deeper::d[0].x.b @[ iscomb ]
+        5	deeper::d[1].x.a @[ iscomb !autokeeper ]
+        6	deeper::d[1].x.b
+      }
+      }
+
+    deepest = process-definition (defined) deepest(
+        deeper<> y
+      )
+      In definition "deepest", we have: {
+      Instances:
+        y = deeper<> deepest::y
+      unroll sequence: 
+        deeper<> y
+      footprint: {
+        y = process deeper<>^0 = deepest::y (1) (
+          d = process deep<>^1
+            {
+              [0] = deepest::y.d[0] (2) (
+                x = process inv<>^0 = deepest::y.d[0].x (3) (
+                  a = bool^0 = deepest::y.d[0].x.a (1) @[ iscomb !autokeeper ] 
+                  b = bool^0 = deepest::y.d[0].x.b (2) @[ iscomb ] 
+                )
+              )
+              [1] = deepest::y.d[1] (4) (
+                x = process inv<>^0 = deepest::y.d[1].x (5) (
+                  a = bool^0 = deepest::y.d[1].x.a (3) @[ iscomb !autokeeper ] 
+                  b = bool^0 = deepest::y.d[1].x.b (4) 
+                )
+              )
+            }
+        )
+        Created state:
+        process instance pool:
+        1	deepest::y
+        2	deepest::y.d[0]
+        3	deepest::y.d[0].x
+        4	deepest::y.d[1]
+        5	deepest::y.d[1].x
+        bool instance pool:
+        1	deepest::y.d[0].x.a @[ iscomb !autokeeper ]
+        2	deepest::y.d[0].x.b @[ iscomb ]
+        3	deepest::y.d[1].x.a @[ iscomb !autokeeper ]
+        4	deepest::y.d[1].x.b
+      }
+      }
+
+    inv = process-definition (defined) inv(
+        bool<> a
+        bool<> b
+      )
+      In definition "inv", we have: {
+      Instances:
+        a = bool<> inv::a
+        b = bool<> inv::b
+      unroll sequence: 
+        bool<> a
+        bool<> b
+        a@[iscomb=]
+      footprint: {
+        a = bool^0 = inv::a (1) @[ iscomb ] 
+        b = bool^0 = inv::b (2) 
+        Created state:
+        bool instance pool:
+        1	inv::a @[ iscomb ]
+        2	inv::b
+      }
+      }
+
+  Instances:
+    sh1t = deepest<> sh1t
+}
+
+footprint: {
+  sh1t = process deepest<>^0 = sh1t (1) (
+    y = process deeper<>^0 = sh1t.y (2) (
+      d = process deep<>^1
+        {
+          [0] = sh1t.y.d[0] (3) (
+            x = process inv<>^0 = sh1t.y.d[0].x (4) (
+              a = bool^0 = sh1t.y.d[0].x.a (1) @[ iscomb !autokeeper ] 
+              b = bool^0 = sh1t.y.d[0].x.b (2) @[ iscomb ] 
+            )
+          )
+          [1] = sh1t.y.d[1] (5) (
+            x = process inv<>^0 = sh1t.y.d[1].x (6) (
+              a = bool^0 = sh1t.y.d[1].x.a (3) @[ iscomb !autokeeper ] 
+              b = bool^0 = sh1t.y.d[1].x.b (4) 
+            )
+          )
+        }
+    )
+  )
+  Created state:
+  process instance pool:
+  1	sh1t
+  2	sh1t.y
+  3	sh1t.y.d[0]
+  4	sh1t.y.d[0].x
+  5	sh1t.y.d[1]
+  6	sh1t.y.d[1].x
+  bool instance pool:
+  1	sh1t.y.d[0].x.a @[ iscomb !autokeeper ]
+  2	sh1t.y.d[0].x.b @[ iscomb ]
+  3	sh1t.y.d[1].x.a @[ iscomb !autokeeper ]
+  4	sh1t.y.d[1].x.b
+}

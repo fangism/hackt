@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2007/10/12 22:44:26 fang Exp $
+#	$Id: Makefile.am,v 1.20 2008/10/24 01:09:04 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -107,6 +107,10 @@ BISON_OUTPUTS += 000 003 004 006 007 \
 
 srcdir_EXTRA_DIST += \
 	nonmeta-bool-merge.hac nonmeta-bool-split.hac
+
+# TODO: add these once member_nonmeta_instance_references is implemented
+srcdir_EXTRA_DIST += \
+	connect-053.hac connect-053a.hac connect-053b.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.32 2007/07/18 23:28:38 fang Exp $
+	$Id: instance_alias.tcc,v 1.33 2008/10/24 01:08:58 fang Exp $
 	TODO: trim includes
  */
 
@@ -176,7 +176,7 @@ if (!this->container->get_canonical_collection().has_relaxed_type()
 	// did we forget this accidentally?
 	actuals_parent_type::copy_actuals(f);
 #endif
-	direction_connection_policy::initialize_direction(*this->container);
+	direction_connection_policy::initialize_direction(*this, c);
 }
 #endif
 
@@ -212,7 +212,7 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	}
 
 	// initialize directions, if applicable
-	direction_connection_policy::initialize_direction(*this->container);
+	direction_connection_policy::initialize_direction(*this, c);
 #endif
 	// we do this here for now merely for convenience/coverage:
 	// it is certainly correct.  
@@ -256,6 +256,17 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
 		// already have error message
 		THROW_EXIT;
 	}
+	import_properties(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param f is the corresponding alias in the definition scope, 
+		from which properties are to be copied over.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::import_properties(const this_type& f) {
 	actuals_parent_type::copy_actuals(f);
 	direction_connection_policy::initialize_actual_direction(f);
 }
@@ -855,7 +866,10 @@ INSTANCE_ALIAS_INFO_CLASS::__trace_alias_base(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Need comment, what is this used for again? diagnostics?
+	Given this alias, find the corresponding element
+	in the given substructure.
+	This is useful for following instance aliases in identical
+	parallel subinstance hierarchies.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
