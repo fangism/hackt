@@ -1,0 +1,59 @@
+channels:
+X : .e(init:0) .v 1x1of2 off
+Y : .e(init:1) .v 1x1of4 off
+Z : .a(init:0) .v 1x1of3 off
+Warning: channel validity `X.v' has no fanin.
+All subnodes of 'X':
+X.d[0] : X
+X.d[1] : X
+X.e : X
+X.v : X
+manually resetting data 
+	0	X.d[0] : 0
+	0	X.d[1] : 0
+	10	X.e : 0
+	10	X.v : 0
+releasing channel X 
+	20	X.e : 1
+------------------------------------ 
+setting data rail 
+	20	X.d[0] : 1
+channel	X (.data) : 0
+	20	X.v : 1
+	30	X.e : 0	[by X.v:=1]
+X : .e(init:0) .v 1x1of2 sink,watch
+	count: 1, unknowns: 0
+node at: `X.e' : 0
+caused by: `X.v' : 1
+(no cycle)
+------------------------------------ 
+resetting data rail 
+	30	X.d[0] : 0
+	30	X.v : 0
+	40	X.e : 1	[by X.v:=0]
+X : .e(init:0) .v 1x1of2 sink,watch
+	count: 0, unknowns: 0
+node at: `X.e' : 1
+caused by: `X.v' : 0
+(no cycle)
+------------------------------------ 
+setting data rail 
+	40	X.d[1] : 1
+channel	X (.data) : 1
+	40	X.v : 1
+	50	X.e : 0	[by X.v:=1]
+X : .e(init:0) .v 1x1of2 sink,watch
+	count: 1, unknowns: 0
+node at: `X.e' : 0
+caused by: `X.v' : 1
+(no cycle)
+------------------------------------ 
+resetting data rail 
+	50	X.d[1] : 0
+	50	X.v : 0
+	60	X.e : 1	[by X.v:=0]
+X : .e(init:0) .v 1x1of2 sink,watch
+	count: 0, unknowns: 0
+node at: `X.e' : 1
+caused by: `X.v' : 0
+(no cycle)

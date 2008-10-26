@@ -1,0 +1,164 @@
+# "channel-test-c-17.prsimrc"
+# copy-modified from "channel-test-c-13.prsimrc"
+# @haco@ channel-test-c.haco-a
+# @deps@ channel-test-a-values-X.txt
+
+# echo-commands on
+watchall
+source channel-test-c-01.prsimrc
+
+channel-source Z channel-test-a-values-X.txt
+channel-show Z
+echo why-x: Z is sourced, should be able to trace back through acknowledge
+why-x Z.v
+why-x-verbose Z.v
+
+echo - - - - - - - - - - - - - - - - - - -
+echo resetting channel Z
+channel-reset Z
+cycle
+assert Z.d[0] 0
+assert Z.d[1] 0
+assert Z.d[2] 0
+assert Z.v 0
+why-not Z.v
+why-not-verbose Z.v
+why Z.v
+why-verbose Z.v
+
+echo - - - - - - - - - - - - - - - - - - -
+echo releasing channel Z, but ack is still X
+channel-release Z
+# watchall
+cycle
+# we know the first values sourced
+assert Z.d[0] X
+assert Z.d[1] X
+assert Z.v X
+why-x Z.v
+why-x-verbose Z.v
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset ack
+set Z.a 1
+cycle
+# we know the first values sourced
+assert Z.d[0] 0
+assert Z.d[1] 0
+assert Z.v 0
+why-not Z.v
+why-not-verbose Z.v
+why Z.v
+why-verbose Z.v
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set ack
+set Z.a 0
+cycle
+# we know the first values sourced
+assert Z.d[0] 1
+assert Z.d[1] 0
+assert Z.v 1
+why-not Z.v
+why-not-verbose Z.v
+why-verbose Z.v
+
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset ack
+set Z.a 1
+cycle
+# we know the first values sourced
+assert Z.d[0] 0
+assert Z.d[1] 0
+assert Z.v 0
+why-not Z.v
+why-not-verbose Z.v
+why-verbose Z.v
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set ack
+set Z.a 0
+cycle
+# we know the second values sourced
+assert Z.d[0] 0
+assert Z.d[1] 1
+assert Z.v 1
+why-not Z.v
+why-not-verbose Z.v
+why-verbose Z.v
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-stop Z
+echo freezing channel Z, and setting ack
+set Z.a 1
+cycle
+channel-show Z
+assert Z.d[0] 0
+assert Z.d[1] 1
+assert Z.v 1
+why-not Z.v
+why-not-verbose Z.v
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-release Z
+echo releasing channel Z
+cycle
+assert Z.d[0] 0
+assert Z.d[1] 0
+assert Z.v 0
+
+echo - - - - - - - - - - - - - - - - - - -
+echo setting Z.a -> U
+set Z.a X
+cycle
+channel-show Z
+assert Z.d[0] X
+assert Z.d[1] X
+assert Z.v X
+why-x Z.v
+why-x-verbose Z.v
+why-x Z.v
+why-not Z.v 1
+why-not Z.v 0
+why Z.v 1
+
+echo - - - - - - - - - - - - - - - - - - -
+echo setting Z.a -> 0
+set Z.a 0
+step-event
+assert Z.d[0] X
+assert Z.d[1] X
+assert Z.v X
+why-not Z.d[0] 1
+why-not Z.d[0] 0
+why-not Z.d[1] 1
+why-not Z.d[1] 0
+# why-not Z.v
+why Z.d[0] 1
+why Z.d[0] 0
+why Z.d[1] 1
+why Z.d[1] 0
+# why Z.v 0
+queue
+time
+cycle
+assert Z.d[0] 0
+assert Z.d[1] 1
+
+echo - - - - - - - - - - - - - - - - - - -
+echo ack-ing Z.a
+set Z.a 1
+step-event
+queue
+time
+why-not Z.v
+why-not-verbose Z.v
+why-verbose Z.v
+cycle
+assert Z.d[0] 0
+assert Z.d[1] 0
+assert Z.v 0
+
+echo DONE.
+

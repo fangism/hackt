@@ -1,0 +1,248 @@
+channels:
+X : .e(init:0) .v 1x1of2 off
+Y : .e(init:1) .v 1x1of4 off
+Z : .a(init:0) .v 1x1of3 off
+Warning: channel acknowledge `Z.a' has no fanin!
+Warning: channel validity `Z.v' has no fanout, but is being sourced.
+Z : .a(init:0) .v 1x1of3 source {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 3
+why-x: Z is sourced, should be able to trace back through acknowledge 
+Z.v:X, from-channel, pull up/dn undriven
+  Z.d[0]:X, from-channel, pull up/dn undriven
+    Z.a:X, pull up/dn undriven, no fanin
+  Z.d[1]:X, from-channel, pull up/dn undriven
+    Z.a:X, (visited before, see above)
+  Z.d[2]:X, from-channel, pull up/dn undriven
+    Z.a:X, (visited before, see above)
+Z.v:X, from-channel, pull up/dn undriven
+ -+
+  | Z.d[0]:X, from-channel, pull up/dn undriven
+  |  .Z.a:X, pull up/dn undriven, no fanin
+  | Z.d[1]:X, from-channel, pull up/dn undriven
+  |  .Z.a:X, (visited before, see above)
+  | Z.d[2]:X, from-channel, pull up/dn undriven
+  |  .Z.a:X, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+resetting channel Z 
+	10	Z.d[0] : 0
+	10	Z.d[1] : 0
+	10	Z.d[2] : 0
+	20	Z.v : 0	[by Z.d[2]:=0]
+Z.v:0
+  (channel Z is stopped.)
+Z.v:0
+. (channel Z is stopped.)
+Z.v:0
+  (channel Z is stopped.)
+Z.v:0
+. (channel Z is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel Z, but ack is still X 
+	20	Z.d[0] : X
+WARNING: weak-unstable `Z.v'-
+>> cause: `Z.d[0]' (val: X)
+	20	Z.d[1] : X
+WARNING: weak-unstable `Z.v'-
+>> cause: `Z.d[0]' (val: X)
+	20	Z.d[2] : X
+	20	Z.v : X	[by Z.d[0]:=X]
+Z.v:X, from-channel, pull up/dn undriven
+  Z.d[0]:X, from-channel, pull up/dn undriven
+    Z.a:X, pull up/dn undriven, no fanin
+  Z.d[1]:X, from-channel, pull up/dn undriven
+    Z.a:X, (visited before, see above)
+  Z.d[2]:X, from-channel, pull up/dn undriven
+    Z.a:X, (visited before, see above)
+Z.v:X, from-channel, pull up/dn undriven
+ -+
+  | Z.d[0]:X, from-channel, pull up/dn undriven
+  |  .Z.a:X, pull up/dn undriven, no fanin
+  | Z.d[1]:X, from-channel, pull up/dn undriven
+  |  .Z.a:X, (visited before, see above)
+  | Z.d[2]:X, from-channel, pull up/dn undriven
+  |  .Z.a:X, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+reset ack 
+	20	Z.a : 1
+	30	Z.d[0] : 0	[by Z.a:=1]
+	30	Z.d[1] : 0	[by Z.a:=1]
+	30	Z.d[2] : 0	[by Z.a:=1]
+	40	Z.v : 0	[by Z.d[2]:=0]
+Z.v:0
+  Z.d[0]:0
+    Z.a:1, input
+  Z.d[1]:0
+    Z.a:1, (visited before, see above)
+  Z.d[2]:0
+    Z.a:1, (visited before, see above)
+Z.v:0
+. -+
+.  | Z.d[0]:0
+.  | . Z.a:1, input
+.  | Z.d[1]:0
+.  | . Z.a:1, (visited before, see above)
+.  | Z.d[2]:0
+.  | . Z.a:1, (visited before, see above)
+Z.v:0
+  Z.d[0]:0
+    Z.a:1, input
+  Z.d[1]:0
+    Z.a:1, (visited before, see above)
+  Z.d[2]:0
+    Z.a:1, (visited before, see above)
+Z.v:0
+. -+
+.  ~| Z.d[0]:0
+.  ~| . Z.a:1, input
+.  ~| Z.d[1]:0
+.  ~| . Z.a:1, (visited before, see above)
+.  ~| Z.d[2]:0
+.  ~| . Z.a:1, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+set ack 
+	40	Z.a : 0
+	50	Z.d[0] : 1	[by Z.a:=0]
+	60	Z.v : 1	[by Z.d[0]:=1]
+Z.v:1
+  Z.d[0]:1
+    Z.a:0, input
+Z.v:1
+. -+
+.  ~| Z.d[0]:1
+.  ~| . Z.a:0, input
+Z.v:1
+. -+
+.  | Z.d[0]:1
+.  | . Z.a:0, input
+- - - - - - - - - - - - - - - - - - - 
+reset ack 
+	60	Z.a : 1
+	70	Z.d[0] : 0	[by Z.a:=1]
+	80	Z.v : 0	[by Z.d[0]:=0]
+Z.v:0
+  Z.d[0]:0
+    Z.a:1, input
+  Z.d[1]:0
+    Z.a:1, (visited before, see above)
+  Z.d[2]:0
+    Z.a:1, (visited before, see above)
+Z.v:0
+. -+
+.  | Z.d[0]:0
+.  | . Z.a:1, input
+.  | Z.d[1]:0
+.  | . Z.a:1, (visited before, see above)
+.  | Z.d[2]:0
+.  | . Z.a:1, (visited before, see above)
+Z.v:0
+. -+
+.  ~| Z.d[0]:0
+.  ~| . Z.a:1, input
+.  ~| Z.d[1]:0
+.  ~| . Z.a:1, (visited before, see above)
+.  ~| Z.d[2]:0
+.  ~| . Z.a:1, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+set ack 
+	80	Z.a : 0
+	90	Z.d[1] : 1	[by Z.a:=0]
+	100	Z.v : 1	[by Z.d[1]:=1]
+Z.v:1
+  Z.d[1]:1
+    Z.a:0, input
+Z.v:1
+. -+
+.  ~| Z.d[1]:1
+.  ~| . Z.a:0, input
+Z.v:1
+. -+
+.  | Z.d[1]:1
+.  | . Z.a:0, input
+- - - - - - - - - - - - - - - - - - - 
+freezing channel Z, and setting ack 
+	100	Z.a : 1
+Z : .a(init:0) .v 1x1of3 source,stopped {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+	count: 1, unknowns: 0
+Z.v:1
+  (channel Z is stopped.)
+Z.v:1
+. (channel Z is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel Z 
+	110	Z.d[1] : 0
+	120	Z.v : 0	[by Z.d[1]:=0]
+- - - - - - - - - - - - - - - - - - - 
+setting Z.a -> U 
+	120	Z.a : X
+	120	Z.d[0] : X	[by Z.a:=X]
+WARNING: weak-unstable `Z.v'-
+>> cause: `Z.d[0]' (val: X)
+	120	Z.d[1] : X	[by Z.a:=X]
+WARNING: weak-unstable `Z.v'-
+>> cause: `Z.d[0]' (val: X)
+	120	Z.d[2] : X	[by Z.a:=X]
+	120	Z.v : X	[by Z.d[0]:=X]
+Z : .a(init:0) .v 1x1of3 source {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+	count: 0, unknowns: 3
+Z.v:X, from-channel, pull up/dn undriven
+  Z.d[0]:X, from-channel, pull up/dn undriven
+    Z.a:X, pull up/dn undriven, no fanin
+  Z.d[1]:X, from-channel, pull up/dn undriven
+    Z.a:X, (visited before, see above)
+  Z.d[2]:X, from-channel, pull up/dn undriven
+    Z.a:X, (visited before, see above)
+Z.v:X, from-channel, pull up/dn undriven
+ -+
+  | Z.d[0]:X, from-channel, pull up/dn undriven
+  |  .Z.a:X, pull up/dn undriven, no fanin
+  | Z.d[1]:X, from-channel, pull up/dn undriven
+  |  .Z.a:X, (visited before, see above)
+  | Z.d[2]:X, from-channel, pull up/dn undriven
+  |  .Z.a:X, (visited before, see above)
+Z.v:X, from-channel, pull up/dn undriven
+  Z.d[0]:X, from-channel, pull up/dn undriven
+    Z.a:X, pull up/dn undriven, no fanin
+  Z.d[1]:X, from-channel, pull up/dn undriven
+    Z.a:X, (visited before, see above)
+  Z.d[2]:X, from-channel, pull up/dn undriven
+    Z.a:X, (visited before, see above)
+Z.v is X.
+Z.v is X.
+Z.v is X.
+- - - - - - - - - - - - - - - - - - - 
+setting Z.a -> 0 
+	120	Z.a : 0
+Z.d[0] is X.
+Z.d[0] is X.
+Z.d[1] is X.
+Z.d[1] is X.
+Z.d[0] is X.
+Z.d[0] is X.
+Z.d[1] is X.
+Z.d[1] is X.
+event queue:
+	130	Z.d[0] : 0	[from Z.a:=0]
+	130	Z.d[1] : 1	[from Z.a:=0]
+	130	Z.d[2] : 0	[from Z.a:=0]
+time: 120
+	130	Z.d[0] : 0	[by Z.a:=0]
+	130	Z.d[1] : 1	[by Z.a:=0]
+	130	Z.d[2] : 0	[by Z.a:=0]
+	140	Z.v : 1	[by Z.d[2]:=0]
+- - - - - - - - - - - - - - - - - - - 
+ack-ing Z.a 
+	140	Z.a : 1
+event queue:
+	150	Z.d[1] : 0	[from Z.a:=1]
+time: 140
+Z.v:1
+  Z.d[1]:1, pending event -> 0
+Z.v:1
+. -+
+.  ~| Z.d[1]:1, pending event -> 0
+Z.v:1
+. -+
+.  | Z.d[1]:1, pending event -> 0
+	150	Z.d[1] : 0	[by Z.a:=1]
+	160	Z.v : 0	[by Z.d[1]:=0]
+DONE. 

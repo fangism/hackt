@@ -1,11 +1,11 @@
-# "channel-test-a-09.prsimrc"
-# copy-modified from "channel-test-a-03.prsimrc"
-# @haco@ channel-test-a.haco-a
+# "channel-test-c-09.prsimrc"
+# copy-modified from "channel-test-c-03.prsimrc"
+# @haco@ channel-test-c.haco-a
 # @deps@ channel-test-a-values-X.txt
 # testing channel sink, expect-fail
 
 # register channels
-source channel-test-a-01.prsimrc
+source channel-test-c-01.prsimrc
 
 watchall
 # set up some channels with commands
@@ -19,6 +19,8 @@ echo manually resetting data
 set X.d[0] 0
 set X.d[1] 0
 cycle
+set X.v 0
+cycle
 assert X.e 0
 
 echo releasing channel X
@@ -30,11 +32,15 @@ assert X.e 1
 echo ------------------------------------
 set X.d[0] 1
 cycle
+set X.v 1
+cycle
 assert X.e 0
 channel-show X
 
 echo - - - - - - - - - - - - - - - - - -
 set X.d[0] 0
+cycle
+set X.v 0
 cycle
 assert X.e 1
 channel-show X
@@ -42,11 +48,15 @@ channel-show X
 echo ------------------------------------
 set X.d[1] 1
 cycle
+set X.v 1
+cycle
 assert X.e 0
 channel-show X
 
 echo - - - - - - - - - - - - - - - - - -
 set X.d[1] 0
+cycle
+set X.v 0
 cycle
 assert X.e 1
 channel-show X
@@ -55,6 +65,8 @@ echo ------------------------------------
 set X.d[0] 1
 echo expect to assert fail here:
 cycle
+set X.v 1
+cycle
 assert X.e 0
 channel-show X
 
@@ -62,6 +74,8 @@ echo should not be reached
 
 echo - - - - - - - - - - - - - - - - - -
 set X.d[0] 0
+cycle
+set X.v 0
 cycle
 assert X.e 1
 channel-show X

@@ -1,0 +1,45 @@
+# "channel-test-c-19.prsimrc"
+# @haco@ channel-test-c.haco-a
+# reduced test case for a crash on vacuous Xs from channel sink
+
+source channel-test-c-01.prsimrc
+
+timing uniform
+
+# set up some channels with commands
+channel-sink X
+channel-show X
+
+watchall
+watchall-queue
+
+set X.d[0] 0
+set X.d[1] 0
+set X.v 0
+channel-reset X
+cycle
+channel-release X
+cycle
+
+echo setting first data rail to X
+set X.d[0] X
+echo setting second data rail to X
+set X.d[1] X
+step-event
+queue
+time
+# should filter out vacuous X
+echo after step queue is:
+step-event
+queue
+time
+
+cycle
+assert X.e 1
+echo .e only responds to .v
+
+echo finishing...
+set X.v X
+cycle
+assert X.e X
+

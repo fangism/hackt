@@ -39,4 +39,4 @@ expect to assert fail here:
 channel	X (.data) : 0
 ERROR: value assertion failed on channel `X'.
 	expected: 1, got: 0
-... at line 56
+... at line 57

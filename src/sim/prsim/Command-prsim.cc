@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.14 2008/10/22 05:15:29 fang Exp $
+	$Id: Command-prsim.cc,v 1.15 2008/10/26 01:04:37 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3879,10 +3879,16 @@ if (a.size() != 5) {
 	const string& bundle(*++i);
 	const string& rail(*++i);
 	// could confirm that 'name' exists as a process/channel/datatype?
+#if PRSIM_ACKLESS_CHANNELS
+	bool have_ack;
+#endif
 	bool ack_sense;
 	bool ack_init;
 	bool have_valid = false;
 	bool valid_sense = false;
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	bool data_sense = true;
+#endif
 	try {
 		// parse ev-type
 		const size_t evl = ev_type.length();
@@ -3937,6 +3943,9 @@ if (a.size() != 5) {
 		if (c == string::npos || (c == rail.length() -1)) {
 			THROW_EXIT;
 		}
+#if PRSIM_CHANNEL_RAILS_INVERTED
+		// TODO: finish me
+#endif
 		const string::const_iterator b(rail.begin());
 		rail_name.assign(b, b+c);
 		if (!rail_name.length()) { THROW_EXIT; }

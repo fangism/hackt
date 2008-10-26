@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-10-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-47:
+	  prsim: Initial implementation of shared-validity channels enabled,
+		and tested.
+	  Next: more testing and documentation.
+
+
 2008-10-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-46:

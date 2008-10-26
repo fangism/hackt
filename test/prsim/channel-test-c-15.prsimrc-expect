@@ -1,0 +1,254 @@
+channels:
+X : .e(init:0) .v 1x1of2 off
+Y : .e(init:1) .v 1x1of4 off
+Z : .a(init:0) .v 1x1of3 off
+Warning: channel acknowledge `Y.e' has no fanin!
+Warning: channel validity `Y.v' has no fanout, but is being sourced.
+Y : .e(init:1) .v 1x1of4 source {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @0 < channel-test-a-values-Y.txt
+	count: 0, unknowns: 4
+why-x: Y is sourced, should be able to trace back through acknowledge 
+Y.d[0]:X, from-channel, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
+Y.d[1]:X, from-channel, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
+Y.d[1]:X, from-channel, pull up/dn undriven
+ .Y.e:X, pull up/dn undriven, no fanin
+- - - - - - - - - - - - - - - - - - - 
+resetting channel Y 
+	10	Y.d[0] : 0
+	10	Y.d[1] : 0
+	10	Y.d[2] : 0
+	10	Y.d[3] : 0
+	20	Y.v : 0	[by Y.d[3]:=0]
+Y.d[0]:0
+  (channel Y is stopped.)
+Y.d[0]:0
+. (channel Y is stopped.)
+Y.v:0
+  (channel Y is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel Y, but ack is still X 
+	20	Y.d[0] : X
+WARNING: weak-unstable `Y.v'-
+>> cause: `Y.d[0]' (val: X)
+	20	Y.d[1] : X
+WARNING: weak-unstable `Y.v'-
+>> cause: `Y.d[0]' (val: X)
+	20	Y.d[2] : X
+WARNING: weak-unstable `Y.v'-
+>> cause: `Y.d[0]' (val: X)
+	20	Y.d[3] : X
+	20	Y.v : X	[by Y.d[0]:=X]
+Y.d[0]:X, from-channel, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
+Y.d[1]:X, from-channel, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
+Y.d[2]:X, from-channel, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
+Y.d[3]:X, from-channel, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
+Y.d[0]:X, from-channel, pull up/dn undriven
+ .Y.e:X, pull up/dn undriven, no fanin
+Y.v:X, from-channel, pull up/dn undriven
+ -+
+  | Y.d[0]:X, from-channel, pull up/dn undriven
+  |  .Y.e:X, pull up/dn undriven, no fanin
+  | Y.d[1]:X, from-channel, pull up/dn undriven
+  |  .Y.e:X, (visited before, see above)
+  | Y.d[2]:X, from-channel, pull up/dn undriven
+  |  .Y.e:X, (visited before, see above)
+  | Y.d[3]:X, from-channel, pull up/dn undriven
+  |  .Y.e:X, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+reset ack 
+	20	Y.e : 0
+	30	Y.d[0] : 0	[by Y.e:=0]
+	30	Y.d[1] : 0	[by Y.e:=0]
+	30	Y.d[2] : 0	[by Y.e:=0]
+	30	Y.d[3] : 0	[by Y.e:=0]
+	40	Y.v : 0	[by Y.d[3]:=0]
+Y.d[0]:0
+  Y.e:0, input
+Y.d[0]:0
+. Y.e:0, input
+Y.d[3]:0
+  Y.e:0, input
+Y.d[3]:0
+. Y.e:0, input
+Y.d[3]:0
+  Y.e:0, input
+Y.d[3]:0
+. Y.e:0, input
+Y.v:0
+. -+
+.  ~| Y.d[0]:0
+.  ~| . Y.e:0, input
+.  ~| Y.d[1]:0
+.  ~| . Y.e:0, (visited before, see above)
+.  ~| Y.d[2]:0
+.  ~| . Y.e:0, (visited before, see above)
+.  ~| Y.d[3]:0
+.  ~| . Y.e:0, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+set ack 
+	40	Y.e : 1
+	50	Y.d[0] : 1	[by Y.e:=1]
+	60	Y.v : 1	[by Y.d[0]:=1]
+Y.d[0]:1
+  Y.e:1, input
+Y.d[1]:0
+  Y.e:1, input
+Y.d[0]:1
+. Y.e:1, input
+Y.d[1]:0
+. Y.e:1, input
+Y.d[0]:1
+. Y.e:1, input
+Y.d[1]:0
+. Y.e:1, input
+Y.v:1
+. -+
+.  | Y.d[0]:1
+.  | . Y.e:1, input
+- - - - - - - - - - - - - - - - - - - 
+reset ack 
+	60	Y.e : 0
+	70	Y.d[0] : 0	[by Y.e:=0]
+	80	Y.v : 0	[by Y.d[0]:=0]
+Y.d[0]:0
+  Y.e:0, input
+Y.d[2]:0
+  Y.e:0, input
+Y.d[0]:0
+. Y.e:0, input
+Y.d[2]:0
+. Y.e:0, input
+Y.d[0]:0
+. Y.e:0, input
+Y.d[2]:0
+. Y.e:0, input
+Y.v:0
+. -+
+.  ~| Y.d[0]:0
+.  ~| . Y.e:0, input
+.  ~| Y.d[1]:0
+.  ~| . Y.e:0, (visited before, see above)
+.  ~| Y.d[2]:0
+.  ~| . Y.e:0, (visited before, see above)
+.  ~| Y.d[3]:0
+.  ~| . Y.e:0, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+set ack 
+	80	Y.e : 1
+	90	Y.d[3] : 1	[by Y.e:=1]
+	100	Y.v : 1	[by Y.d[3]:=1]
+Y.d[2]:0
+  Y.e:1, input
+Y.d[3]:1
+  Y.e:1, input
+Y.d[2]:0
+. Y.e:1, input
+Y.d[3]:1
+. Y.e:1, input
+Y.v:1
+. -+
+.  ~| Y.d[3]:1
+.  ~| . Y.e:1, input
+- - - - - - - - - - - - - - - - - - - 
+freezing channel Y, and setting ack 
+	100	Y.e : 0
+Y : .e(init:1) .v 1x1of4 source,stopped {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @2 < channel-test-a-values-Y.txt
+	count: 1, unknowns: 0
+Y.d[1]:0
+  (channel Y is stopped.)
+Y.d[2]:0
+  (channel Y is stopped.)
+Y.d[1]:0
+. (channel Y is stopped.)
+Y.d[2]:0
+. (channel Y is stopped.)
+Y.d[1]:0
+. (channel Y is stopped.)
+Y.d[2]:0
+. (channel Y is stopped.)
+Y.v:1
+. (channel Y is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel Y 
+	110	Y.d[3] : 0
+	120	Y.v : 0	[by Y.d[3]:=0]
+- - - - - - - - - - - - - - - - - - - 
+setting Y.e -> U 
+	120	Y.e : X
+	120	Y.d[0] : X	[by Y.e:=X]
+WARNING: weak-unstable `Y.v'-
+>> cause: `Y.d[0]' (val: X)
+	120	Y.d[1] : X	[by Y.e:=X]
+WARNING: weak-unstable `Y.v'-
+>> cause: `Y.d[0]' (val: X)
+	120	Y.d[2] : X	[by Y.e:=X]
+WARNING: weak-unstable `Y.v'-
+>> cause: `Y.d[0]' (val: X)
+	120	Y.d[3] : X	[by Y.e:=X]
+	120	Y.v : X	[by Y.d[0]:=X]
+Y : .e(init:1) .v 1x1of4 source {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @2 < channel-test-a-values-Y.txt
+	count: 0, unknowns: 4
+Y.d[0]:X, from-channel, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
+Y.d[1]:X, from-channel, pull up/dn undriven
+  Y.e:X, pull up/dn undriven, no fanin
+Y.d[0]:X, from-channel, pull up/dn undriven
+ .Y.e:X, pull up/dn undriven, no fanin
+Y.v:X, from-channel, pull up/dn undriven
+ -+
+  | Y.d[0]:X, from-channel, pull up/dn undriven
+  |  .Y.e:X, pull up/dn undriven, no fanin
+  | Y.d[1]:X, from-channel, pull up/dn undriven
+  |  .Y.e:X, (visited before, see above)
+  | Y.d[2]:X, from-channel, pull up/dn undriven
+  |  .Y.e:X, (visited before, see above)
+  | Y.d[3]:X, from-channel, pull up/dn undriven
+  |  .Y.e:X, (visited before, see above)
+Y.d[3] is X.
+Y.d[3] is X.
+Y.d[3] is X.
+Y.d[3] is X.
+- - - - - - - - - - - - - - - - - - - 
+setting Y.e -> 1 
+	120	Y.e : 1
+Y.d[0] is X.
+Y.d[0] is X.
+Y.d[1] is X.
+Y.d[1] is X.
+event queue:
+	130	Y.d[0] : 0	[from Y.e:=1]
+	130	Y.d[1] : 0	[from Y.e:=1]
+	130	Y.d[2] : 1	[from Y.e:=1]
+	130	Y.d[3] : 0	[from Y.e:=1]
+time: 120
+	130	Y.d[0] : 0	[by Y.e:=1]
+	130	Y.d[1] : 0	[by Y.e:=1]
+	130	Y.d[2] : 1	[by Y.e:=1]
+	130	Y.d[3] : 0	[by Y.e:=1]
+	140	Y.v : 1	[by Y.d[3]:=0]
+- - - - - - - - - - - - - - - - - - - 
+ack-ing Y.e 
+	140	Y.e : 0
+event queue:
+	150	Y.d[2] : 0	[from Y.e:=0]
+time: 140
+Y.d[1]:0
+  Y.e:0, input
+Y.d[3]:0
+  Y.e:0, input
+Y.d[1]:0
+. Y.e:0, input
+Y.d[3]:0
+. Y.e:0, input
+Y.d[1]:0
+. Y.e:0, input
+Y.d[3]:0
+. Y.e:0, input
+	150	Y.d[2] : 0	[by Y.e:=0]
+	160	Y.v : 0	[by Y.d[2]:=0]
+DONE. 

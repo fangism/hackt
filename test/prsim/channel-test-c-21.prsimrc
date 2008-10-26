@@ -1,0 +1,26 @@
+# "channel-test-c-21.prsimrc"
+# @haco@ channel-test-c.haco-a
+# testing initialization and reset
+# can source this script after running any other test
+# by itself, will fail, since channels are not registered
+
+# source channel-test-c-01.prsimrc
+# channel-show-all
+
+echo initializing...
+initialize
+# channel-show-all
+channel-show X
+channel-show Y
+channel-show Z
+
+echo resetting...
+reset
+channel-show-all
+# channel-show X
+# channel-show Y
+# channel-show Z
+echo all gone!
+
+
+

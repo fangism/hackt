@@ -1,0 +1,23 @@
+# "channel-test-c-33.prsimrc"
+# @haco@ channel-test-c.haco-a
+
+# testing hexadecimal values
+source channel-test-c-01.prsimrc
+echo no values given: will reset to neutral
+channel-source-args Y
+channel-show-all
+channel-sink Y
+
+channel-watch Y
+
+echo resetting all channels...
+channel-reset-all
+watchall
+cycle
+
+echo releasing all channels...
+channel-release-all
+cycle
+
+assertn-queue
+

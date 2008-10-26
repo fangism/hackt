@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.3 2008/06/10 22:44:58 fang Exp $
+	$Id: Channel-prsim.h,v 1.4 2008/10/26 01:04:37 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -32,7 +32,7 @@
 	with 'ev' protocols.  
 	TODO: finish me, test me
  */
-#define	PRSIM_CHANNEL_VALIDITY			0
+#define	PRSIM_CHANNEL_VALIDITY			1
 
 /**
 	Define to 1 to support don't care values in channels, 
@@ -40,6 +40,21 @@
 	Status: done and tested, can perm this
  */
 #define	PRSIM_CHANNEL_DONT_CARES		1
+
+/**
+	Define to 1 to allow interaction with dataless channels, 
+	useful for watching, logging, and expecting, just not
+	for sourcing and sinking.  
+	TODO: start me, test me
+ */
+#define	PRSIM_ACKLESS_CHANNELS			0
+
+/**
+	Define to 1 to support an option to interpret data-rails
+	as active-low in their inverted sense.  
+	TODO: start me, test me
+ */
+#define	PRSIM_CHANNEL_RAILS_INVERTED		0
 
 namespace HAC {
 namespace SIM {
@@ -157,12 +172,19 @@ private:
 		/// true for active high (v), false for active low (n)
 		CHANNEL_VALID_ACTIVE_SENSE =	0x0004,
 #endif
+#if PRSIM_CHANNEL_RAILS_INVERTED
+		/// true if data rails are inverted, active low
+		CHANNEL_DATA_ACTIVE_SENSE =	0x0008,
+#endif
 		/// derived mask
 		CHANNEL_TYPE_FLAGS =
 			CHANNEL_ACK_RESET_VALUE
 			| CHANNEL_ACK_ACTIVE_SENSE
 #if PRSIM_CHANNEL_VALIDITY
-			| CHANNEL_VALID_RESET_VALUE
+			| CHANNEL_VALID_ACTIVE_SENSE
+#endif
+#if PRSIM_CHANNEL_RAILS_INVERTED
+			| CHANNEL_DATA_ACTIVE_SENSE
 #endif
 			,
 		/**
@@ -268,7 +290,8 @@ private:
 	 */
 	vector<array_value_type>		values;
 	/**
-		Position in values list.
+		Position in values list, meaninful to source
+		and expect on channels.
 	 */
 	size_t					value_index;
 private:
@@ -454,6 +477,9 @@ public:
 	void
 	clobber(void);		// simulation reset
 
+	bool
+	data_is_valid(void) const;
+
 	value_type
 	data_rails_value(const State&) const;
 
@@ -476,6 +502,23 @@ public:
 		const size_t, const bool v, 
 		node_set_type&, node_set_type&) const;
 
+private:
+	static
+	ostream&
+	__node_why_not_data_rails(const State&, ostream&, 
+		const node_index_type, const bool a, 
+		const data_bundle_array_type&, 
+		const size_t, const bool d, const bool wn, const bool v, 
+		node_set_type&, node_set_type&);
+
+	static
+	ostream&
+	__node_why_X_data_rails(const State&, ostream&, 
+		const bool a, const data_bundle_array_type&, 
+		const size_t, const bool v, 
+		node_set_type&, node_set_type&);
+
+public:
 	void
 	process_node(const State&, const node_index_type, 
 		const uchar, const uchar, 
@@ -495,6 +538,9 @@ private:
 	dump_state(ostream&) const;
 
 private:
+	void
+	process_data(const State&) throw(channel_exception);
+
 	void
 	get_all_nodes(vector<node_index_type>&) const;
 
@@ -575,7 +621,7 @@ public:
 
 private:
 	bool
-	check_source(const channel& c) const;
+	check_source(const channel& c, const string&) const;
 
 public:
 	// most of these functions differ in only the channel method called

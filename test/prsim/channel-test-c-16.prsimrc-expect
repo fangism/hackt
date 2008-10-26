@@ -1,0 +1,171 @@
+channels:
+X : .e(init:0) .v 1x1of2 off
+Y : .e(init:1) .v 1x1of4 off
+Z : .a(init:0) .v 1x1of3 off
+Warning: channel validity `Y.v' has no fanin.
+Y : .e(init:1) .v 1x1of4 sink
+	count: 0, unknowns: 4
+why-x: Y is sinking, should be able to trace back through acknowledge 
+Y.e:X, from-channel, pull up/dn undriven
+Y.v:X, pull up/dn undriven, no fanin
+Y.e:X, from-channel, pull up/dn undriven
+ Y.v:X, pull up/dn undriven, no fanin
+- - - - - - - - - - - - - - - - - - - 
+resetting channel Y 
+	10	Y.e : 1
+Y.e:1
+  (channel Y is stopped.)
+Y.e:1
+. (channel Y is stopped.)
+Y.e:1
+  (channel Y is stopped.)
+Y.e:1
+. (channel Y is stopped.)
+Y : .e(init:1) .v 1x1of4 sink,stopped
+	count: 0, unknowns: 4
+- - - - - - - - - - - - - - - - - - - 
+releasing channel Y, but data is still X 
+Y : .e(init:1) .v 1x1of4 sink
+	count: 0, unknowns: 4
+	10	Y.e : X
+Y.e:X, from-channel, pull up/dn undriven
+Y.v:X, pull up/dn undriven, no fanin
+Y.e:X, from-channel, pull up/dn undriven
+ Y.v:X, pull up/dn undriven, no fanin
+- - - - - - - - - - - - - - - - - - - 
+reset data 
+	10	Y.d[0] : 0
+	10	Y.d[1] : 0
+	10	Y.d[2] : 0
+	10	Y.d[3] : 0
+	10	Y.v : 0
+	20	Y.e : 1	[by Y.v:=0]
+Y.e:1
+  Y.v:0, input
+Y.e:1
+. Y.v:0, input
+Y.e:1
+  Y.v:0, input
+Y.e:1
+. Y.v:0, input
+- - - - - - - - - - - - - - - - - - - 
+set data 
+	20	Y.d[0] : 1
+	20	Y.v : 1
+	30	Y.e : 0	[by Y.v:=1]
+Y.e:0
+  Y.v:1, input
+Y.e:0
+. Y.v:1, input
+Y.e:0
+  Y.v:1, input
+Y.e:0
+. Y.v:1, input
+- - - - - - - - - - - - - - - - - - - 
+reset data 
+	30	Y.d[0] : 0
+	30	Y.v : 0
+	40	Y.e : 1	[by Y.v:=0]
+Y.e:1
+  Y.v:0, input
+Y.e:1
+. Y.v:0, input
+Y.e:1
+  Y.v:0, input
+Y.e:1
+. Y.v:0, input
+- - - - - - - - - - - - - - - - - - - 
+set data 
+	40	Y.d[3] : 1
+	40	Y.v : 1
+	50	Y.e : 0	[by Y.v:=1]
+Y.e:0
+  Y.v:1, input
+Y.e:0
+. Y.v:1, input
+Y.e:0
+  Y.v:1, input
+Y.e:0
+. Y.v:1, input
+- - - - - - - - - - - - - - - - - - - 
+freezing channel Y, and resetting data 
+	50	Y.d[3] : 0
+	50	Y.v : 0
+Y : .e(init:1) .v 1x1of4 sink,stopped
+	count: 0, unknowns: 0
+Y.e:0
+  (channel Y is stopped.)
+Y.e:0
+. (channel Y is stopped.)
+Y.e:0
+  (channel Y is stopped.)
+Y.e:0
+. (channel Y is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel Y 
+	60	Y.e : 1
+- - - - - - - - - - - - - - - - - - - 
+All subnodes of 'Y':
+Y.d[0] : 0
+Y.d[1] : 0
+Y.d[2] : 0
+Y.d[3] : 0
+Y.e : 1
+Y.v : 0
+setting Y.d[0] -> U 
+	60	Y.d[2] : X
+	60	Y.v : X
+	60	Y.e : X	[by Y.v:=X]
+Y : .e(init:1) .v 1x1of4 sink
+	count: 0, unknowns: 1
+Y.e:X, from-channel, pull up/dn undriven
+Y.v:X, pull up/dn undriven, no fanin
+Y.e:X, from-channel, pull up/dn undriven
+ Y.v:X, pull up/dn undriven, no fanin
+- - - - - - - - - - - - - - - - - - - 
+setting Y.d[0] -> 1 
+	60	Y.d[2] : 1
+	60	Y.v : 1
+Y.e is X.
+Y.e is X.
+Y.e is X.
+Y.e is X.
+event queue:
+	70	Y.e : 0	[from Y.v:=1]
+time: 60
+	70	Y.e : 0	[by Y.v:=1]
+- - - - - - - - - - - - - - - - - - - 
+resetting data 
+	70	Y.d[2] : 0
+	70	Y.v : 0
+event queue:
+	80	Y.e : 1	[from Y.v:=0]
+time: 70
+Y.e:0, pending event -> 1
+Y.e:0, pending event -> 1
+Y.e:0, pending event -> 1
+Y.e:0, pending event -> 1
+	80	Y.e : 1	[by Y.v:=0]
+- - - - - - - - - - - - - - - - - - - 
+stopping channel Y 
+	80	Y.d[1] : 1
+	80	Y.v : 1
+Y : .e(init:1) .v 1x1of4 sink,stopped
+	count: 1, unknowns: 0
+Y.e:1
+  (channel Y is stopped.)
+Y.e:1
+  (channel Y is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel Y 
+event queue:
+	90	Y.e : 0
+time: 80
+Y.e:1, pending event -> 0
+Y.e:1, pending event -> 0
+	90	Y.e : 0
+Y.e:0
+  Y.v:1, input
+Y.e:0
+  Y.v:1, input
+DONE. 

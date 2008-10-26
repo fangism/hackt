@@ -1,0 +1,53 @@
+# "channel-test-c-30.prsimrc"
+# copy-modified from "channel-test-c-29.prsimrc"
+# @haco@ channel-test-c.haco-a
+# testing initialization and reset
+# can source this script after running any other test
+
+source channel-test-c-01.prsimrc
+channel-show-all
+
+channel-source-args X 0 0 0 1
+channel-source-args-loop Y 0 2 0 1
+channel-sink Z
+channel-expect-args Z 0 1 2
+
+channel-watchall
+channel-reset-all
+
+set X.e 0
+set Y.e 1
+set Z.d[0] 0
+set Z.d[1] 0
+set Z.d[2] 0
+# set Z.v 0
+
+cycle
+channel-release-all
+
+cycle
+getall X
+getall Y
+getall Z
+
+set Z.d[0] 1
+cycle
+assert Z.v X
+set Z.d[0] 0
+cycle
+assert Z.v X
+set Z.d[1] 1
+cycle
+assert Z.v X
+set Z.d[1] 0
+cycle
+
+channel-show X
+channel-show Y
+channel-show Z
+
+source channel-test-c-21.prsimrc
+getall X
+getall Y
+getall Z
+
