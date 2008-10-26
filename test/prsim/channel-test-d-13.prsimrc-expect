@@ -1,0 +1,225 @@
+channels:
+X : .e(init:0) .n 1x1of2 off
+Y : .e(init:1) .n 1x1of4 off
+Z : .a(init:0) .n 1x1of3 off
+Warning: channel acknowledge `X.e' has no fanin!
+Warning: channel validity `X.n' has no fanout, but is being sourced.
+X : .e(init:0) .n 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+why-x: X is sourced, should be able to trace back through acknowledge 
+X.n:X, from-channel, pull up/dn undriven
+  X.d[0]:X, from-channel, pull up/dn undriven
+    X.e:X, pull up/dn undriven, no fanin
+  X.d[1]:X, from-channel, pull up/dn undriven
+    X.e:X, (visited before, see above)
+X.n:X, from-channel, pull up/dn undriven
+ -+
+  ~| X.d[0]:X, from-channel, pull up/dn undriven
+  ~|  .X.e:X, pull up/dn undriven, no fanin
+  ~| X.d[1]:X, from-channel, pull up/dn undriven
+  ~|  .X.e:X, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+resetting channel X 
+	10	X.d[0] : 0
+	10	X.d[1] : 0
+	20	X.n : 1	[by X.d[1]:=0]
+X.n:1
+  (channel X is stopped.)
+X.n:1
+  (channel X is stopped.)
+X.n:1
+. (channel X is stopped.)
+X.n:1
+. (channel X is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel X, but ack is still X 
+	20	X.d[0] : X
+WARNING: weak-unstable `X.n'-
+>> cause: `X.d[0]' (val: X)
+	20	X.d[1] : X
+	20	X.n : X	[by X.d[0]:=X]
+X.n:X, from-channel, pull up/dn undriven
+  X.d[0]:X, from-channel, pull up/dn undriven
+    X.e:X, pull up/dn undriven, no fanin
+  X.d[1]:X, from-channel, pull up/dn undriven
+    X.e:X, (visited before, see above)
+X.n:X, from-channel, pull up/dn undriven
+ -+
+  ~| X.d[0]:X, from-channel, pull up/dn undriven
+  ~|  .X.e:X, pull up/dn undriven, no fanin
+  ~| X.d[1]:X, from-channel, pull up/dn undriven
+  ~|  .X.e:X, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+reset ack 
+	20	X.e : 0
+	30	X.d[0] : 0	[by X.e:=0]
+	30	X.d[1] : 0	[by X.e:=0]
+	40	X.n : 1	[by X.d[1]:=0]
+X.n:1
+  X.d[0]:0
+    X.e:0, input
+  X.d[1]:0
+    X.e:0, (visited before, see above)
+X.n:1
+  X.d[0]:0
+    X.e:0, input
+  X.d[1]:0
+    X.e:0, (visited before, see above)
+X.n:1
+. -+
+.  | X.d[0]:0
+.  | . X.e:0, input
+.  | X.d[1]:0
+.  | . X.e:0, (visited before, see above)
+X.n:1
+. -+
+.  ~| X.d[0]:0
+.  ~| . X.e:0, input
+.  ~| X.d[1]:0
+.  ~| . X.e:0, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+set ack 
+	40	X.e : 1
+	50	X.d[0] : 1	[by X.e:=1]
+	60	X.n : 0	[by X.d[0]:=1]
+X.d[0]:1
+  X.e:1, input
+X.d[1]:0
+  X.e:1, input
+X.n:0
+  X.d[0]:1
+    X.e:1, input
+X.d[0]:1
+. X.e:1, input
+X.d[1]:0
+. X.e:1, input
+X.n:0
+. -+
+.  ~| X.d[0]:1
+.  ~| . X.e:1, input
+X.d[0]:1
+. X.e:1, input
+X.d[1]:0
+. X.e:1, input
+X.n:0
+. -+
+.  | X.d[0]:1
+.  | . X.e:1, input
+- - - - - - - - - - - - - - - - - - - 
+reset ack 
+	60	X.e : 0
+	70	X.d[0] : 0	[by X.e:=0]
+	80	X.n : 1	[by X.d[0]:=0]
+X.n:1
+  X.d[0]:0
+    X.e:0, input
+  X.d[1]:0
+    X.e:0, (visited before, see above)
+X.n:1
+. -+
+.  | X.d[0]:0
+.  | . X.e:0, input
+.  | X.d[1]:0
+.  | . X.e:0, (visited before, see above)
+X.n:1
+. -+
+.  ~| X.d[0]:0
+.  ~| . X.e:0, input
+.  ~| X.d[1]:0
+.  ~| . X.e:0, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+set ack 
+	80	X.e : 1
+	90	X.d[1] : 1	[by X.e:=1]
+	100	X.n : 0	[by X.d[1]:=1]
+X.n:0
+  X.d[1]:1
+    X.e:1, input
+X.n:0
+. -+
+.  ~| X.d[1]:1
+.  ~| . X.e:1, input
+X.n:0
+. -+
+.  | X.d[1]:1
+.  | . X.e:1, input
+- - - - - - - - - - - - - - - - - - - 
+freezing channel X, and setting ack 
+	100	X.e : 0
+X : .e(init:0) .n 1x1of2 source,stopped {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+	count: 1, unknowns: 0
+X.d[0]:0
+  (channel X is stopped.)
+X.d[1]:1
+  (channel X is stopped.)
+X.n:0
+  (channel X is stopped.)
+X.d[0]:0
+. (channel X is stopped.)
+X.d[1]:1
+. (channel X is stopped.)
+X.n:0
+. (channel X is stopped.)
+X.d[0]:0
+. (channel X is stopped.)
+X.d[1]:1
+. (channel X is stopped.)
+X.n:0
+. (channel X is stopped.)
+- - - - - - - - - - - - - - - - - - - 
+releasing channel X 
+	110	X.d[1] : 0
+	120	X.n : 1	[by X.d[1]:=0]
+- - - - - - - - - - - - - - - - - - - 
+setting X.e -> U 
+	120	X.e : X
+	120	X.d[0] : X	[by X.e:=X]
+WARNING: weak-unstable `X.n'-
+>> cause: `X.d[0]' (val: X)
+	120	X.d[1] : X	[by X.e:=X]
+	120	X.n : X	[by X.d[0]:=X]
+X : .e(init:0) .n 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+	count: 0, unknowns: 2
+X.n:X, from-channel, pull up/dn undriven
+  X.d[0]:X, from-channel, pull up/dn undriven
+    X.e:X, pull up/dn undriven, no fanin
+  X.d[1]:X, from-channel, pull up/dn undriven
+    X.e:X, (visited before, see above)
+X.n:X, from-channel, pull up/dn undriven
+ -+
+  ~| X.d[0]:X, from-channel, pull up/dn undriven
+  ~|  .X.e:X, pull up/dn undriven, no fanin
+  ~| X.d[1]:X, from-channel, pull up/dn undriven
+  ~|  .X.e:X, (visited before, see above)
+- - - - - - - - - - - - - - - - - - - 
+setting X.e -> 1 
+	120	X.e : 1
+X.d[0] is X.
+X.d[0] is X.
+X.d[1] is X.
+X.d[1] is X.
+event queue:
+	130	X.d[0] : 0	[from X.e:=1]
+	130	X.d[1] : 1	[from X.e:=1]
+time: 120
+	130	X.d[0] : 0	[by X.e:=1]
+	130	X.d[1] : 1	[by X.e:=1]
+	140	X.n : 0	[by X.d[1]:=1]
+- - - - - - - - - - - - - - - - - - - 
+ack-ing X.e 
+	140	X.e : 0
+event queue:
+	150	X.d[1] : 0	[from X.e:=0]
+time: 140
+X.d[0]:0
+  X.e:0, input
+X.d[1]:1, pending event -> 0
+X.d[0]:0
+. X.e:0, input
+X.d[1]:1, pending event -> 0
+X.d[0]:0
+. X.e:0, input
+X.d[1]:1, pending event -> 0
+	150	X.d[1] : 0	[by X.e:=0]
+	160	X.n : 1	[by X.d[1]:=0]
+DONE. 

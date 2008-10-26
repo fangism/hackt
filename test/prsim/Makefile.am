@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.36 2008/10/26 01:04:38 fang Exp $
+#	$Id: Makefile.am,v 1.37 2008/10/26 21:43:16 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -42,7 +42,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	SRAM SRAM-a SRAM-b SRAM-c SRAM-d \
 	keeper-a \
 	iskeeper-a \
-	channel-test-a channel-test-b channel-test-c \
+	channel-test-a channel-test-b channel-test-c channel-test-d \
 	channel-test-non-QDI-a \
 	stuck-bug-a \
 	crash-bug-01 \
@@ -176,6 +176,12 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-c-19 channel-test-c-30 \
 	channel-test-c-33 channel-test-c-34 channel-test-c-35 \
 	channel-test-c-36 channel-test-c-37 channel-test-c-38 \
+	channel-test-d-01 channel-test-d-03 channel-test-d-04 \
+	channel-test-d-06 channel-test-d-07 channel-test-d-08 \
+	channel-test-d-13 channel-test-d-14 channel-test-d-19 \
+	channel-test-d-30 channel-test-d-33 \
+	channel-test-d-34 channel-test-d-35 channel-test-d-36 \
+	channel-test-d-37 channel-test-d-38 \
 	stuck-bug-a-01 \
 	crash-bug-01-a \
 	always_random-a-01 \
@@ -267,6 +273,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-test-a-21 \
 	channel-test-b-21 \
 	channel-test-c-10 channel-test-c-21 \
+	channel-test-d-21 \
 	channel-test-non-QDI-a-02 \
 	reschedule-01 reschedule-02 reschedule-03 reschedule-04 reschedule-05 \
 	reschedule-06 reschedule-18

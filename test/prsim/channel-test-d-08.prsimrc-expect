@@ -1,0 +1,94 @@
+channels:
+X : .e(init:0) .n 1x1of2 off
+Y : .e(init:1) .n 1x1of4 off
+Z : .a(init:0) .n 1x1of3 off
+X : .e(init:0) .n 1x1of2 off
+	count: 0, unknowns: 2
+Warning: channel validity `X.n' has no fanin.
+All subnodes of 'X':
+X.d[0] : X
+X.d[1] : X
+X.e : 0
+X.n : X
+X : .e(init:0) .n 1x1of2 sink,watch,stopped > channel-test-d-08-X.txt
+	count: 0, unknowns: 2
+releasing channel X (source) 
+	10	X.e : X
+	10	X.d[0] : 0
+	10	X.d[1] : 0
+All subnodes of 'X':
+X.d[0] : 0
+X.d[1] : 0
+X.e : X
+X.n : X
+	10	X.n : 1
+	20	X.e : 1	[by X.n:=1]
+a channel value is logged when X.n- 
+if data rails are invalid, 'X' will be logged 
+channel	X (.data) : X
+	20	X.n : 0
+	30	X.e : 0	[by X.n:=0]
+	30	X.n : 1
+	40	X.e : 1	[by X.n:=1]
+channel	X (.data) : X
+	40	X.n : 0
+	50	X.e : 0	[by X.n:=0]
+	50	X.n : 1
+	60	X.e : 1	[by X.n:=1]
+	60	X.d[0] : 1
+should not produce a value until X.n- 
+	60	X.d[0] : 0
+	60	X.d[1] : 1
+channel	X (.data) : 1
+	60	X.n : 0
+	70	X.e : 0	[by X.n:=0]
+	70	X.n : 1
+	80	X.e : 1	[by X.n:=1]
+channel	X (.data) : 1
+	80	X.n : 0
+	90	X.e : 0	[by X.n:=0]
+	90	X.d[1] : 0
+	90	X.n : 1
+	100	X.e : 1	[by X.n:=1]
+	100	X.d[0] : 1
+channel	X (.data) : 0
+	100	X.n : 0
+	110	X.e : 0	[by X.n:=0]
+	110	X.n : 1
+	120	X.e : 1	[by X.n:=1]
+channel	X (.data) : 0
+	120	X.n : 0
+	130	X.e : 0	[by X.n:=0]
+	130	X.n : 1
+	140	X.e : 1	[by X.n:=1]
+	140	X.d[0] : 0
+produce an X 
+	140	X.d[0] : X
+channel	X (.data) : X
+	140	X.n : 0
+	150	X.e : 0	[by X.n:=0]
+	150	X.n : 1
+	160	X.e : 1	[by X.n:=1]
+	160	X.d[0] : 1
+channel	X (.data) : 0
+	160	X.n : 0
+	170	X.e : 0	[by X.n:=0]
+	170	X.n : 1
+	170	X.d[0] : 0
+	180	X.e : 1	[by X.n:=1]
+	180	X.d[1] : 1
+channel	X (.data) : 1
+	180	X.n : 0
+	190	X.e : 0	[by X.n:=0]
+	190	X.n : 1
+	200	X.e : 1	[by X.n:=1]
+# log for channel: X
+X
+X
+1
+1
+0
+0
+X
+0
+1

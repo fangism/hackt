@@ -1,0 +1,9 @@
+# "channel-test-d-01.prsimrc"
+# @haco@ channel-test-d.haco-a
+
+channel X en:0 :0 d:2
+channel Y en:1 :0 d:4
+channel Z an:0 :0 d:3
+
+channel-show-all
+

@@ -1,0 +1,164 @@
+# "channel-test-d-13.prsimrc"
+# @haco@ channel-test-d.haco-a
+# @deps@ channel-test-a-values-X.txt
+
+# echo-commands on
+watchall
+source channel-test-d-01.prsimrc
+
+channel-source X channel-test-a-values-X.txt
+channel-show X
+echo why-x: X is sourced, should be able to trace back through acknowledge
+why-x X.n
+why-x-verbose X.n
+
+echo - - - - - - - - - - - - - - - - - - -
+echo resetting channel X
+channel-reset X
+cycle
+assert X.n 1
+why-not X.n
+why X.n
+why-not-verbose X.n
+why-verbose X.n
+
+echo - - - - - - - - - - - - - - - - - - -
+echo releasing channel X, but ack is still X
+channel-release X
+# watchall
+cycle
+# we know the first values sourced
+assert X.n X
+why-x X.n
+why-x-verbose X.n
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset ack
+set X.e 0
+cycle
+# we know the first values sourced
+assert X.n 1
+why-not X.n
+why X.n
+why-not-verbose X.n
+why-verbose X.n
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set ack
+set X.e 1
+cycle
+# we know the first values sourced
+assert X.d[0] 1
+assert X.d[1] 0
+assert X.n 0
+why-not X.d[0]
+why-not X.d[1]
+why-not X.n
+why-not-verbose X.d[0]
+why-not-verbose X.d[1]
+why-not-verbose X.n
+why-verbose X.d[0]
+why-verbose X.d[1]
+why-verbose X.n
+
+echo - - - - - - - - - - - - - - - - - - -
+echo reset ack
+set X.e 0
+cycle
+# we know the first values sourced
+assert X.d[0] 0
+assert X.d[1] 0
+assert X.n 1
+why-not X.n
+why-not-verbose X.n
+why-verbose X.n
+
+echo - - - - - - - - - - - - - - - - - - -
+echo set ack
+set X.e 1
+cycle
+# we know the second values sourced
+assert X.d[0] 0
+assert X.d[1] 1
+assert X.n 0
+why-not X.n
+why-not-verbose X.n
+why-verbose X.n
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-stop X
+echo freezing channel X, and setting ack
+set X.e 0
+cycle
+channel-show X
+assert X.d[0] 0
+assert X.d[1] 1
+assert X.n 0
+why-not X.d[0]
+why-not X.d[1]
+why-not X.n
+why-not-verbose X.d[0]
+why-not-verbose X.d[1]
+why-not-verbose X.n
+why-verbose X.d[0]
+why-verbose X.d[1]
+why-verbose X.n
+
+echo - - - - - - - - - - - - - - - - - - -
+channel-release X
+echo releasing channel X
+cycle
+assert X.d[0] 0
+assert X.d[1] 0
+assert X.e 0
+
+echo - - - - - - - - - - - - - - - - - - -
+echo setting X.e -> U
+set X.e X
+cycle
+channel-show X
+assert X.d[0] X
+assert X.d[1] X
+assert X.n X
+why-x X.n
+why-x-verbose X.n
+# why-not X.n
+# why X.n
+
+echo - - - - - - - - - - - - - - - - - - -
+echo setting X.e -> 1
+set X.e 1
+step-event
+assert X.d[0] X
+assert X.d[1] X
+assert X.n X
+why-not X.d[0] 1
+why-not X.d[0] 0
+why-not X.d[1] 1
+why-not X.d[1] 0
+queue
+time
+cycle
+assert X.d[0] 0
+assert X.d[1] 1
+assert X.n 0
+
+echo - - - - - - - - - - - - - - - - - - -
+echo ack-ing X.e
+set X.e 0
+step-event
+queue
+time
+why-not X.d[0]
+why-not X.d[1]
+why-not-verbose X.d[0]
+why-not-verbose X.d[1]
+why-verbose X.d[0]
+why-verbose X.d[1]
+cycle
+assert X.d[0] 0
+assert X.d[1] 0
+assert X.n 1
+
+echo DONE.
+
