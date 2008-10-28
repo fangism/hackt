@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.37 2008/10/26 21:43:16 fang Exp $
+#	$Id: Makefile.am,v 1.38 2008/10/28 00:59:35 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -230,6 +230,7 @@ channel-dont-cares.txt:
 
 # extra dep
 cbit_test_stat-01.prsimrc-out: cbit_test_stat.haco-a
+cbit_test_stat-01.prsimckpt: cbit_test_stat.haco-a
 
 CLEANFILES += cbit_test_stat-01.prsimrc \
 	channel-test-a-values-X.txt \
