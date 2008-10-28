@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.32 2008/10/07 03:22:15 fang Exp $
+#	$Id: Makefile.am,v 1.33 2008/10/28 01:41:18 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -37,6 +37,7 @@ hac_info_INCLUDES = \
 	chapters/namespaces.texi \
 	chapters/templates.texi \
 	chapters/connections.texi \
+	chapters/attributes.texi \
 	chapters/typedefs.texi \
 	chapters/linkage.texi \
 	chapters/CHP.texi \
