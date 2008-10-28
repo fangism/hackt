@@ -1,6 +1,8 @@
-// "iskeeper-01.hac"
+// "iskeeper-04.hac"
+// copy-modified from "iskeeper-03.hac"
 // testing iskeeper attribute
 
+defproc foo() {
 bool x, y, z, w;
 prs {
 [iskeeper=1]	x & y	#> z-
@@ -8,5 +10,8 @@ prs {
 [iskeeper=0]	x	=> z-		
 	// should be the only rule that isn't keeper
 }
+}
+
+foo f;
 
 

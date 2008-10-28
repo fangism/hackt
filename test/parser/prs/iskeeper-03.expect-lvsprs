@@ -1,0 +1,6 @@
+iskeeper	"f.x" & "f.y" -> "f.z"-
+iskeeper	~"f.x" & ~"f.y" -> "f.z"+
+iskeeper	"f.y" -> "f.z"-
+iskeeper	~"f.y" -> "f.z"+
+"f.x" -> "f.z"-
+~"f.x" -> "f.z"+

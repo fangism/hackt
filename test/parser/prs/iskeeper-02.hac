@@ -1,0 +1,10 @@
+// "iskeeper-02.hac"
+// testing iskeeper attribute
+
+bool x, y, z;
+prs {
+[iskeeper=1;keeper=0]	x & y	#> z-
+	// should be the only rule that isn't keeper
+}
+
+

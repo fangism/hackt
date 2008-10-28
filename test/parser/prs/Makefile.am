@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.42 2008/10/24 01:09:06 fang Exp $
+#	$Id: Makefile.am,v 1.43 2008/10/28 00:45:18 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -67,7 +67,7 @@ HACKT_PARSE_TEST_PASSES = \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
 	keeper-01 \
-	iskeeper-01 \
+	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
@@ -123,7 +123,7 @@ HACKT_CREATE_TEST_PASSES = \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
 	keeper-01 \
-	iskeeper-01 \
+	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
@@ -183,7 +183,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
 	keeper-01 \
-	iskeeper-01 \
+	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
@@ -208,7 +208,7 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
-	iskeeper-01
+	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04
 
 HACKT_CFLAT_LVS_TEST_FAILURES = \
 	lvs-order-02
