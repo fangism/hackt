@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.16 2008/10/29 05:50:32 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.17 2008/10/29 20:14:53 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4475,11 +4475,17 @@ State::dump_struct_dot(ostream& o) const {
 	process_index_type j = 0;	// first valid process index
 	global_expr_process_id_map_type::const_iterator
 		i(global_expr_process_id_map.begin()),
-		e(global_expr_process_id_map.end());
+		e(--global_expr_process_id_map.end());	// last entry invalid
 	for ( ; i!=e; ++i, ++j) {
 		const expr_index_type offset = i->first;
 		const process_index_type pid = i->second;
 		const process_index_type tid = process_type_map[pid];
+#if 0
+		cerr << "pid: " << pid << ", tid: " << tid <<
+			", offset: " << offset << endl;
+#endif
+		INVARIANT(pid < process_type_map.size());
+		INVARIANT(tid < unique_process_pool.size());
 		// TODO: create subgraph cluster wrapper here
 		// TODO: pass translation table for process footprint frame
 		unique_process_pool[tid].dump_struct_dot(o, offset);
@@ -4502,6 +4508,10 @@ unique_process_subgraph::dump_struct_dot(ostream& o,
 {
 	o << "# Expressions: " << endl;
 	const expr_index_type exprs = expr_pool.size();
+#if 0
+	cerr << "exprs = " << exprs << ", graph = " <<
+		expr_graph_node_pool.size() << endl;
+#endif
 	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
 	expr_index_type i = FIRST_VALID_GLOBAL_EXPR;
 	for ( ; i<exprs; ++i) {
@@ -6014,7 +6024,7 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 		const bool v, 
 		const uchar ptype, const bool pr) const {
 	global_expr_process_id_map_type::const_iterator
-		f(global_expr_process_id_map.upper_bound(ei));
+		f(--global_expr_process_id_map.upper_bound(ei));
 	INVARIANT(f != global_expr_process_id_map.begin());
 	--f;
 	// f->first is the lower bound of the global expr range for process...
