@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.15 2008/10/16 06:14:30 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.16 2008/10/29 05:50:32 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1866,12 +1866,20 @@ State::random_delay(void) {
 	NOTE: possible reasons for null e.cause_rule:
 		due to exclhi/exclo ring enforcement?
 	NOTE: event's cause_rule is not checkpointed.  
+	TODO: if rule not found, infer delay from fanin-get state...
  */
 // inline
 State::time_type
 State::get_delay_up(const event_type& e) const {
-	const rule_type* const r(lookup_rule(e.cause_rule));
+	const rule_type* r = NULL;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+if (e.cause_rule) {
+	r = lookup_rule(e.cause_rule);
 	NEVER_NULL(r);
+}
+#else
+	NEVER_NULL(r);
+#endif
 return current_time +
 	(timing_mode == TIMING_RANDOM ?
 		(e.cause_rule && time_traits::is_zero(r->after) ?
@@ -1896,8 +1904,15 @@ return current_time +
 // inline
 State::time_type
 State::get_delay_dn(const event_type& e) const {
-	const rule_type* const r(lookup_rule(e.cause_rule));
+	const rule_type* r = NULL;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+if (e.cause_rule) {
+	r = lookup_rule(e.cause_rule);
 	NEVER_NULL(r);
+}
+#else
+	NEVER_NULL(r);
+#endif
 return current_time +
 	(timing_mode == TIMING_RANDOM ?
 	(e.cause_rule && time_traits::is_zero(r->after) ?

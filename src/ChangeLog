@@ -5,6 +5,17 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-10-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-12:
+	  prsim: fix get_delay_up/dn assertion, but would still like to
+		automatically find the appropriate delay based on fanin-get
+		eventually, however this is low priority.
+		No regression tests crash anymore!
+		Only differences seem to be in fanin/fanout printing
+		and why-analysis feedback (68 test failures).
+
+
 2008-10-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-11+:
