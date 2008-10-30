@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2008/06/03 18:47:31 fang Exp $
+#	$Id: Makefile.am,v 1.4 2008/10/30 02:15:24 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -10,13 +10,15 @@ include $(top_srcdir)/installdirs.mk
 HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 	interleave-a interleave-b interleave-c \
 	oscillator \
-	channel-source-sink
+	channel-source-sink \
+	and_tree
 
 # for .v verilog tests
 HACKT_VPI_TEST_SCRIPTS_PASSES = inverters shoelace \
 	interleave-a interleave-b interleave-c \
 	independent-01 \
-	channel-source-sink
+	channel-source-sink \
+	and_tree
 
 EXAMPLE_NAME = vpiprsim-inverters
 CLEANDIRS += $(EXAMPLE_NAME)
@@ -36,11 +38,27 @@ endif
 
 Makefile.copy: example.mk
 	$(SED) -e 's|@pkgdatadir@|$(pkgdatadir)|g' \
+		-e 's|@install_bindir@|$(bindir)|g' \
 		-e 's|@vcs_flags@|$(INSTALLCHECK_VCS_FLAGS)|g' \
 		-e 's|@vpi_flags@|$(INSTALLCHECK_VCS_VPI_FLAGS)|g' \
 		-e 's|@vpi_env@|$(VPI_INSTALLCHECK_ENV)|g' \
 		-e '/^VPI_ENV/s|\$$|$$$$|g' \
 		$< > $@
+
+# PLI tab file
+pli.tab:
+	$(ECHO) "acc=wn:*" > $@
+
+PLI_FLAGS = -P pli.tab
+
+# custom rule
+and_tree.vx: and_tree.v standard.v-wrap pli.tab
+if HAVE_VPI
+	+$(VCS_ENV) $(VCS) $(AM_VCS_FLAGS) $(AM_VCS_VPI_FLAGS) $(PLI_FLAGS) -o $@ $<
+else
+	@$(ECHO) "VPI not explicitly enabled during configure."
+endif
+
 
 # force: always re-run this test
 inverters.vxi-subdir-out: Makefile.copy force
@@ -50,14 +68,13 @@ inverters.vxi-subdir-out: Makefile.copy force
 	$(MV) $(EXAMPLE_NAME)/Makefile.copy $(EXAMPLE_NAME)/Makefile && \
 	( cd $(EXAMPLE_NAME) && $(MAKE) check ) > $@
 
-CLEANFILES += Makefile.copy
+CLEANFILES += Makefile.copy pli.tab
 
 EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	inverters.hac inverters.v shoelace.v \
-	channel-source-sink.hac channel-source-sink.v
-EXTRA_DIST += example.mk clkgen.v \
-	inverters.hac inverters.v shoelace.v \
-	channel-source-sink.hac channel-source-sink.v
+	channel-source-sink.hac channel-source-sink.v \
+	and_tree.hac and_tree.v standard.v
+EXTRA_DIST += $(EXAMPLE_DATA_FILES)
 vpiinv_DATA = $(EXAMPLE_DATA_FILES) Makefile.copy
 
 include $(top_srcdir)/test/Make.test-tail

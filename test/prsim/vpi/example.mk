@@ -5,6 +5,7 @@
 # VPATH = @srcdir@
 # srcdir = @srcdir@
 srcdir = .
+bindir = @install_bindir@
 pkgdatadir = @pkgdatadir@
 
 # generic definitions
@@ -13,34 +14,49 @@ VCS_ENV =
 VCS_FLAGS = @vcs_flags@
 VPI_FLAGS = @vpi_flags@
 VPI_ENV = @vpi_env@
+PLI_FLAGS = -P pli.tab
 
-.SUFFIXES: .v .vx .vx-log
+.SUFFIXES: .v .vx .vx-log .v-wrap
 
 include $(pkgdatadir)/mk/hackt.mk
 
 .v.vx:
 	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) -o $@ $<
 
+.v.v-wrap:
+	{ echo "\`include \"$<\"" ; echo "" ; \
+	awk -f $(bindir)/wrap_verilog_modules_to_hacprsim.awk $< ;} > $@
+
 .vx.vx-log:
 	$(VPI_ENV) ./$< > $@ 2>&1
 
-all: inverters.vx shoelace.vx channel-source-sink.vx
+all: inverters.vx shoelace.vx channel-source-sink.vx and_tree.vx
+
+# special cases
+and_tree.vx: and_tree.v standard.v-wrap pli.tab
+	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(PLI_FLAGS) -o $@ $<
+
 
 # extra deps
 inverters.vx-log: inverters.haco-a
 shoelace.vx-log: inverters.haco-a
 channel-source-sink.vx-log: channel-source-sink.haco-a
-# really, is only run-time dep, not build-time dep
+and_tree.vx-log: and_tree.haco-a
+
+pli.tab:
+	echo "acc=wn:*" > $@
 
 # .NOTPARALLEL: check
-check: inverters.vx-log shoelace.vx-log channel-source-sink.vx-log
+check: inverters.vx-log shoelace.vx-log channel-source-sink.vx-log and_tree.vx-log
 	cat $^
 #	for f in $^ ; do cat $$f ; done
 
 clean:
 	rm -f *.haco*
+	rm -f *.v-wrap
 	rm -f *.vx
 	rm -rf *.vx.*
 	rm -rf *csrc
 	rm -f *.vx-log
+	rm -f pli.tab
 

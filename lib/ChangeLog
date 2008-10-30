@@ -1,5 +1,14 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.46 2008/06/27 00:01:37 fang Exp $
+#	$Id: ChangeLog,v 1.47 2008/10/30 02:15:14 fang Exp $
+
+2008-10-29	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-48:
+	  added Verilog support directory, with
+		"wrap_verilog_modules_to_hacprsim.awk" which takes
+		a Verilog library and automatically generates
+		wrapper definitions that connect Verilog to prsim through VPI.
+
 
 2008-06-26	David Fang	<fangism@users.sourceforge.net>
 

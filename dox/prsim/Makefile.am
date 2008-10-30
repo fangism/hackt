@@ -1,5 +1,5 @@
 # "dox/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2008/07/01 04:59:13 fang Exp $
+#	$Id: Makefile.am,v 1.10 2008/10/30 02:15:08 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -41,12 +41,20 @@ $(srcdir)/commands.mk: commands.texi
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@
 
+$(srcdir)/vpifuncs.mk: cosim.texi
+	{ $(PRINTF) "VPI_FUNCTIONS_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
+
 $(srcdir)/options.mk: Makefile.in
 $(srcdir)/commands.mk: Makefile.in
+$(srcdir)/vpifuncs.mk: Makefile.in
 
 -include $(srcdir)/options.mk
 -include $(srcdir)/commands.mk
-AUTO_TEXINFO_DEPS += options.mk commands.mk
+-include $(srcdir)/vpifuncs.mk
+AUTO_TEXINFO_DEPS += options.mk commands.mk vpifuncs.mk
 
 $(HACPRSIM_OPTIONS_TEXI): $(top_srcdir)/src/main/prsim.cc
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
@@ -54,9 +62,14 @@ $(HACPRSIM_OPTIONS_TEXI): $(top_srcdir)/src/main/prsim.cc
 $(HACPRSIM_COMMANDS_TEXI): $(top_srcdir)/src/sim/prsim/Command-prsim.cc
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
 
+$(VPI_FUNCTIONS_TEXI): $(top_srcdir)/src/sim/prsim/vpi-prsim.cc
+	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
+
+
 auto_hacprsim_info_DEPS = \
 	$(HACPRSIM_OPTIONS_TEXI) \
-	$(HACPRSIM_COMMANDS_TEXI)
+	$(HACPRSIM_COMMANDS_TEXI) \
+	$(VPI_FUNCTIONS_TEXI)
 
 hacprsim_info_DEPS = \
 	$(hacprsim_INCLUDES) \

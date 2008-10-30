@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-10-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-48:
+	  No source revision, just lots of prsim documentation, especially
+		for VPI, and also added examples +scripts of working
+		with hierarchical co-simulation with VCS (huge!).  
+		Texinfo documented in sim/prsim/vpi-prsim.cc
+	  Examples directories are now separated by $(host) to avoid
+		architecture-specific collisions.  
+
+
 2008-10-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-47:

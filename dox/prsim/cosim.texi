@@ -1,22 +1,28 @@
 @c "hacprsim/commands.texi"
-@c $Id: cosim.texi,v 1.2 2008/03/17 23:02:03 fang Exp $
+@c $Id: cosim.texi,v 1.3 2008/10/30 02:15:09 fang Exp $
 
 @node Co-simulation
 @chapter Co-simulation
+@cindex co-simulation
 
 One may desire to run @command{hacprsim} with another simulator.
 This chapter describes ways in which this can be accomplished.  
 
 @menu
-* Verilog PLI::
+* Verilog PLI Setup::
+* VPI Basics::
 * VPI Example::
 * VPI with Channels::
+* Hierarchical co-simulation::
 * VPI Hacker's Guide::
 @end menu
 
 @c ----------------------------------------------------------------------------
-@node Verilog PLI
-@section Verilog PLI
+@node Verilog PLI Setup
+@section Verilog PLI Setup
+@cindex Verilog
+@cindex PLI
+@cindex VPI
 
 Popular commercial tools sometimes provide an interface for
 mixing simulators.  
@@ -60,8 +66,8 @@ To enable VPI in the VCS compiler, pass @option{+vpi} to the @command{vcs}
 command.  
 
 To specify the prsim module, pass: 
-@option{-use_vpiobj} @file{/prefix/lib/hackt/vpihacprsim.so}
-and @option{-L/prefix/lib/hackt}.
+@option{-use_vpiobj /prefix/lib/hackt/vpihacprsim.so} and 
+@option{-L/prefix/lib/hackt}.
 The @option{-L} flag is forwarded to the linker used by VCS
 in the final stage of compilation, and is @emph{also required} 
 at run-time for finding dependent shared libraries.  
@@ -71,7 +77,7 @@ all symbols were resolved at link time.
 Dependent libraries should be linked with the @option{-l} option
 which is forwarded to the linker.  
 
-VCS produces an executable @file{simv} which is dynamically
+VCS produces an executable, say @file{simv}, which is dynamically
 linked to @file{vpihacprsim.so}.  
 If the @HAC{} libraries do not already reside in one
 of the default run-time library search paths
@@ -86,11 +92,102 @@ csh% env sh$ LD_LIBRARY_PATH=/prefix/lib/hackt:$LD_LIBRARY_PATH ./simv
 @end example
 
 @c ----------------------------------------------------------------------------
+@node VPI Basics
+@section VPI Basics
+
+Now that you've setup your VCS compilation environment to link 
+in the @command{hacprsim} library.  It's time to connect your Verilog
+instances to @command{hacprsim}.  
+This section walks you through the basic steps.  
+
+The @file{vpihacprsim.so} object you linked in to your simulation executable
+defines some new functions that one can call from Verilog.  
+The first thing you should do is tell VCS what HAC 
+circuit you are co-simulating.
+
+@include vpi/prsim.texi
+
+@example
+initial
+begin
+  $prsim("my_hac_circuit.haco-a");
+  ...
+end
+@end example
+
+@noindent
+The named object file should be compiled from HAC source. 
+Though the object file doesn't not needed to be compiled through
+the allocation phase, it is recommended to catch errors as early as possible.
+In any case, the @command{hacprsim} library will automatically compile
+the object file further if needed.  
+It is important to load this in the @t{initial} block before any further
+actions are done with @command{hacprsim}.
+Before running the simulation executable, you need to make sure
+that the object file loaded by @command{$prsim()} exists.  
+(Otherwise the simulation will fail with a thrown exception, 
+showing a stack dump.)
+
+Continuing in the @t{initial} block, you can make connections
+between Verilog and @command{hacprsim}.  
+Suppose your HAC file instantiates the following:
+
+@example
+defproc inv(bool a, b) @{ prs @{ a => b- @} @}
+inv foo, bar;
+@end example
+
+@noindent
+You could write connections in Verilog with the following functions:
+
+@include vpi/to_prsim.texi
+@include vpi/from_prsim.texi
+
+@noindent
+A signal can go both ways between the simulation environments, 
+as in the following example:
+
+@example
+module TOP;
+  reg a, b, c;
+initial
+begin
+  $prsim("my_hac_circuit.haco-a");
+  $to_prsim("TOP.a", "foo.a");
+  $from_prsim("foo.b", "TOP.b");
+  $to_prsim("TOP.b", "bar.a");
+  $from_prsim("bar.b", "TOP.c");
+end
+endmodule
+@end example
+
+@noindent
+@t{"TOP.b"} is both driven by @command{hacprsim} and also fans out
+to circuits in @command{hacprsim}.  
+
+There are other useful functions in the @command{hacprsim} VPI library.
+
+@include vpi/prsim_cmd.texi
+@include vpi/prsim_sync.texi
+@include vpi/prsim_set.texi
+@include vpi/prsim_get.texi
+@include vpi/prsim_watch.texi
+@include vpi/prsim_mkrandom.texi
+@include vpi/prsim_resetmode.texi
+
+The following sections walk you through examples of co-simulating
+hacprsim with VCS.  
+The author highly recommends copying these examples to run them
+and study them.
+
+@c ----------------------------------------------------------------------------
 @node VPI Example
 @section VPI Example
 
 Several examples are installed in the 
-@file{/prefix/share/hackt/doc/example/vpiprsim-inverters} directory.
+@file{/prefix/share/hackt/doc/example/ARCH/vpiprsim-inverters} directory, 
+where @var{ARCH} is the host-triplet of the machine you are running on, 
+as determined by configure (See @command{hackt version}).
 This example demonstrates several inverters communicating 
 across the @command{hacprsim} and VPI boundary, in a shoelace connection.
 
@@ -142,6 +239,136 @@ events in @command{hacprsim} that have not caught up to the present time.
 Until there is any other user-driven change to the @command{hacprsim}
 event queue, there should be no need to call @command{$prsim_sync()}
 again.  
+
+@c ----------------------------------------------------------------------------
+@node Hierarchical co-simulation
+@section Hierarchical co-simulation
+
+The final example demonstrates how to co-simulate
+with Verilog placeholder definitions in HAC.  
+This allows one to co-simulate any Verilog definition with 
+circuits @emph{anywhere} in the instance hierarchy in HAC.  
+
+Suppose you have some Verilog library that contains definitions that you 
+wish to connect in HAC but simulate in Verilog.  
+
+@example
+// "lib.v"
+module FLIPFLOP(d, q, clk);
+  in d, clk;
+  out q;
+...
+end module
+@end example
+
+@noindent
+In HAC one would define a placeholder definition:
+
+@example
+defproc FLIPFLOP(bool d, q, clk) @{ @}
+@end example
+
+@noindent
+and you could instantiate @t{FLIPFLOP}s anywhere and everywhere 
+in the circuit hierarchy.  
+It would be extremely tedious to connect each HAC instance to
+a corresponding Verilog instance by hand, using just
+@command{$to_prsim} and @command{$from_prsim} calls.  
+
+This problem is solved by taking advantage of modularity of
+Verilog module definitions.  
+
+@example
+// "lib.v-wrap"
+module HAC_FLIPFLOP;
+  wire d, q, clk;
+  parameter prsim_name="";
+  reg [64*8:1] verilog_name;
+  FLIPFLOP dummy(d, q, clk);
+  initial begin
+  #0
+  if (prsim_name != "") begin
+    $sformat(verilog_name, "%m");
+    $from_prsim(@{prsim_name, ".d"@}, @{verilog_name, ".d"@});
+    $from_prsim(@{prsim_name, ".clk"@}, @{verilog_name, ".clk"@});
+    $to_prsim(@{verilog_name, ".q"@}, @{prsim_name, ".q"@});
+  end
+  end
+endmodule
+@end example
+
+Every Verilog instance of @t{HAC_FLIPFLOP} instantiates
+a local @t{FLIPFLOP} and automatically connect its ports
+to @command{hacprsim}, provided you set the @var{prsim_name} parameter
+using @t{defparam}.  
+The explicit @code{#0} timestamp guarantees that the functions
+are not called until @emph{after} @t{initial} statements, 
+when the HAC object file is supposed to be loaded.  
+For every instance of @t{FLIPFLOP} in the HAC hierarchy:
+
+@example
+module TOP;
+...
+HAC_FLIPFLOP __0();
+defparam __0.prsim_name="x.y[0]";
+HAC_FLIPFLOP __1();
+defparam __1.prsim_name="x.y[1]";
+HAC_FLIPFLOP __2();
+defparam __2.prsim_name="x.q.w";
+...
+endmodule
+@end example
+
+How do you find every instance of @t{FLIPFLOP} in the HAC hierarchy?
+The current method is to query the @emph{allocate}-compiled object file:
+
+@example
+$ hacobjdump inst_foo.haco-a > inst_foo.objdump 2>&1
+$ sed -n  '/Globally allocated state/,$p' inst_foo.objdump | \
+    sed -n '/\[global process entries\]/,/\[global.*entries\]/p' | \
+    grep "^[0-9]" | cut -f5-6 > inst_foo.processes
+@end example
+
+@noindent
+The resulting @file{inst_foo.proceses} lists every unique process with its
+type@footnote{This would much more elegant using the Scheme interface 
+of @command{hacguile}.}.
+The user can construct a database of known Verilog types to extract the 
+canonical @t{prsim} names of all Verilog wrapper processes
+in the HAC namespace.  
+From there, it is trivial to generate top-level Verilog instantiations
+of all wrappers.  
+
+What if there are a hundred definitions across Verilog libraries?
+Fortunately, we have already written such script to convert entire libraries
+into wrapper definitions.  
+
+@example
+$ @i{bindir}/wrap_verilog_modules_to_hacprsim.awk lib.v > lib.v-wrap
+@end example
+
+To use this in your top-level Verilog file:
+
+@example
+`include "lib.b"
+`include "lib.v-wrap"
+
+module TOP;
+// instantiate Verilog wrappers, set their prsim_names
+...
+endmodule
+@end example
+
+If you've copied the example directory already, 
+the target that demonstrates this process is @file{and_tree.vx-log}.  
+The Verilog library is @file{standard.v} which begets @file{standard.v-wrap}.
+@file{and_tree.hac} instantiates and connects a tree of AND gates which
+are defined in the Verilog library.  
+@file{and_tree.v} includes the library and its wrapper,
+and instantiates top-level instances to connect to @command{hacprsim}.  
+The simulation stimulus just toggles some of the input signals to the 
+AND-tree.  
+
 
 @c ----------------------------------------------------------------------------
 @node VPI Hacker's Guide

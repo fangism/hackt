@@ -8,7 +8,7 @@
 @c %**end of header
 
 @c "prsim.texi"
-@c $Id: hacprsim.texi,v 1.4 2008/07/01 04:59:14 fang Exp $
+@c $Id: hacprsim.texi,v 1.5 2008/10/30 02:15:10 fang Exp $
 
 @dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
 @direntry
@@ -68,7 +68,7 @@ Permission is hereby granted to ...
 * Diagnostics:: Diagnostic message from the simulator.
 * Co-simulation:: Mixing with foreign simulators.
 * Tips:: Tips
-* Command Index:: Interpreter commands.
+* Command Index:: Interpreter commands and interface functions.
 @c * Variable Index:: Variables.
 * Concept Index:: Concepts and terms.
 @end menu

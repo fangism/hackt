@@ -1,5 +1,5 @@
 # "installdirs.mk[.in]
-#	$Id: installdirs.mk,v 1.1 2007/08/08 23:01:25 fang Exp $
+#	$Id: installdirs.mk,v 1.2 2008/10/30 02:15:05 fang Exp $
 # install paths that depend on variables defined in installcheck.mk
 # Rationale for this file:
 # * Minimize definition clutter in Make.stddef
@@ -19,5 +19,6 @@ docdir = $(pkgdatadir)/doc
 htmldir = $(docdir)/html
 pdfdir = $(docdir)/pdf
 psdir = $(docdir)/ps
-examplesdir = $(docdir)/examples
+# using arch-specific directories because they reference exec_prefix paths
+examplesdir = $(docdir)/examples/$(host)
 

@@ -1,0 +1,24 @@
+// "and_tree.hac"
+// example to be compiled and co-simulated with verilog
+
+// don't really need these, but what the heck...
+defproc globals(bool Vdd, GND) { }
+
+// this empty definition could be generated automatically from verilog
+defproc AND2(bool A1, A2, Z, VDD, VSS) { }
+
+defproc and_tree(globals g; bool a, b, c, d, z) {
+	bool Vdd = g.Vdd;
+	bool GND = g.GND;
+	bool x1, x2;
+	AND2 and_0(a, b, x1, Vdd, GND);
+	AND2 and_1(c, d, x2, Vdd, GND);
+	AND2 and_2(x1, x2, z, Vdd, GND);
+}
+
+globals g;
+bool a, b, c, d;
+bool z;
+
+and_tree mytree(g, a, b, c, d, z);
+

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.2 2008/03/17 23:03:05 fang Exp $
+	$Id: vpi-prsim.cc,v 1.3 2008/10/30 02:15:19 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -489,11 +489,16 @@ static void _run_prsim (const Time_t& vcstime, const int context)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Synchronize callbacks with current prsim event queue.
-	Needed because some $prsim_cmd commands may introduce new events into 
-	the event queue, which requires re-registration of the callback
-	function with updated times.  
-	Expects no parameters (void).  
+Expects no parameters (void).  
+@texinfo vpi/prsim_sync.texi
+@deffn Function $prsim_sync
+Synchronize callbacks with current @command{hacprsim} event queue.
+This is needed because some @command{$prsim_cmd} commands may 
+introduce new events into the event queue, 
+which requires re-registration of the callback
+function with updated times.  
+@end deffn
+@end texinfo
  */
 static
 PLI_INT32
@@ -635,6 +640,15 @@ static const bool set_force = true;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
   Register a VCS-driven node with VCS and prsim
+
+@texinfo vpi/to_prsim.texi
+@deffn Function $to_prsim vname pname
+Establish a connection from Verilog signal @var{vname}
+to @command{hacprsim} signal @var{pname}.
+When @var{vname} changes value, @command{hacprsim} will be updated
+accordingly.  
+@end deffn
+@end texinfo
 */
 static
 void register_to_prsim (const char *vcs_name, const char *prsim_name)
@@ -676,6 +690,15 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
   Register a prsim-driven node with VCS and prsim
+
+@texinfo vpi/from_prsim.texi
+@deffn Function $from_prsim pname vname
+Establish a connection from @command{hacprsim} signal @var{pname} to
+Verilog signal @var{vname}.
+When @var{pname} changes value in @command{hacprsim},
+the Verilog simulator will be notified accordingly.  
+@end deffn
+@end texinfo
 */
 static
 void register_from_prsim (const char *vcs_name, const char *prsim_name)
@@ -732,7 +755,12 @@ void register_from_prsim(const string& s, const string& p) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
-  Register a prsim-driven node watch-point
+@texinfo vpi/prsim_watch.texi
+@deffn Function $prsim_watch node
+Register a prsim-driven node watch-point.
+Synonymous with @command{$prsim_cmd("watch node");}.
+@end deffn
+@end texinfo
 */
 void register_prsim_watchpoint (const char *prsim_name)
 {
@@ -858,6 +886,14 @@ static PLI_INT32 from_prsim (PLI_BYTE8 *args)
 	One command to rule them all, 
 	and in the simulator bind them.  
 	This passes strings to prsim's command interpreter.  
+@texinfo vpi/prsim_cmd.texi
+@deffn Function $prsim_cmd cmd
+Runs an arbitrary command @var{cmd} (string) that would normally 
+be interpreted by @command{hacprsim}.  
+This is the one command to rule them all, 
+the last command you will ever need.  
+@end deffn
+@end texinfo
  */
 static PLI_INT32 prsim_cmd (PLI_BYTE8* args)
 {
@@ -914,6 +950,16 @@ static PLI_INT32 prsim_watch (PLI_BYTE8* args)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo vpi/prsim.texi
+@deffn Function $prsim obj
+Loads HAC object file @var{obj} for @command{hacprsim} co-simulation.  
+The object file need not be compiled through the allocation phase, 
+the library will automatically compile it through the allocation phase 
+for you if needed.  
+@end deffn
+@end texinfo
+***/
 static PLI_INT32 prsim_file (PLI_BYTE8* args)
 {
   STACKTRACE_VERBOSE;
@@ -935,6 +981,10 @@ static PLI_INT32 prsim_file (PLI_BYTE8* args)
 #if 0
   P = prs_fopen (arg.value.str);
 #else
+if (!check_object_loadable(arg.value.str).good) {
+	// already have error message
+	THROW_EXIT;	// abort
+}
   HAC_module = load_module(arg.value.str);
 if (HAC_module) {
 	if (!HAC_module->is_allocated()) {
@@ -953,6 +1003,14 @@ if (HAC_module) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo vpi/prsim_mkrandom.texi
+@deffn Function $prsim_mkrandom v
+For @var{v} 1, synonymous with @command{$prsim_cmd("timing random");}.
+For @var{v} 0, synonymous with @command{$prsim_cmd("timing after");}.
+@end deffn
+@end texinfo
+***/
 static PLI_INT32 prsim_random (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
@@ -992,6 +1050,14 @@ static PLI_INT32 prsim_random (PLI_BYTE8 *args)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo vpi/prsim_resetmode.texi
+@deffn Function $prsim_resetmode v
+For @var{v} 1, synonymous with @command{$prsim_cmd("mode reset");}.
+For @var{v} 0, synonymous with @command{$prsim_cmd("mode run");}.
+@end deffn
+@end texinfo
+***/
 static PLI_INT32 prsim_resetmode (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
@@ -1031,6 +1097,13 @@ static PLI_INT32 prsim_resetmode (PLI_BYTE8 *args)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo vpi/prsim_status_x.texi
+@deffn Function $prsim_status_x
+Synonymous with @command{$prsim_cmd("status X");}.
+@end deffn
+@end texinfo
+***/
 static PLI_INT32 prsim_status_x (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
@@ -1083,7 +1156,14 @@ static PLI_INT32 prsim_status_x (PLI_BYTE8 *args)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// just set a node in prsim
+/***
+@texinfo vpi/prsim_set.texi
+@deffn Function $prsim_set node val
+Sets a @var{node} in @command{hacprsim} to @var{val}.
+Synonymous with @command{$prsim_cmd("set node val");}.
+@end deffn
+@end texinfo
+***/
 static PLI_INT32 prsim_set (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
@@ -1155,7 +1235,14 @@ static PLI_INT32 prsim_set (PLI_BYTE8 *args)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// just get a node in prsim
+/***
+@texinfo vpi/prsim_get.texi
+@deffn Function $prsim_get node
+Prints value of @var{node} in @command{hacprsim}.  
+Synonymous with @command{$prsim_cmd("get node");}.
+@end deffn
+@end texinfo
+***/
 static PLI_INT32 prsim_get (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;

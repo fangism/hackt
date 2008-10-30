@@ -1,0 +1,26 @@
+$start of simulation 
+prsim: 	10	a : 0
+prsim: 	10	b : 0
+prsim: 	10	c : 0
+prsim: 	10	d : 0
+prsim: 	13	mytree.x2 : 0
+prsim: 	13	mytree.x1 : 0
+prsim: 	16	z : 0
+prsim: 	110	a : 1
+prsim: 	110	b : 1
+prsim: 	110	c : 1
+prsim: 	110	d : 1
+prsim: 	115	mytree.x2 : 1
+prsim: 	115	mytree.x1 : 1
+prsim: 	120	z : 1
+prsim: 	210	a : 0
+prsim: 	213	mytree.x1 : 0
+prsim: 	216	z : 0
+prsim: 	310	d : 0
+prsim: 	313	mytree.x2 : 0
+prsim: 	410	a : 1
+prsim: 	415	mytree.x1 : 1
+prsim: 	510	d : 1
+prsim: 	515	mytree.x2 : 1
+prsim: 	520	z : 1
+$finish at simulation time    0.6 ns

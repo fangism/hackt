@@ -1,12 +1,13 @@
 # "Make.test-vpi"
 #	vi: ft=automake
-#	$Id: Make.test-vpi,v 1.3 2008/03/25 23:29:46 fang Exp $
+#	$Id: Make.test-vpi,v 1.4 2008/10/30 02:15:22 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
 
-HACKT_VPI_SUFFIXES = .v .vx .vxi .vx-out .vxi-out .vx-out-filter .vx-diff
+HACKT_VPI_SUFFIXES = .v .vx .vxi .vx-out .vxi-out .vx-out-filter .vx-diff \
+	.v-wrap
 
 HACKT_VPI_TEST_SUFFIXES = .vpitest 
 SUFFIXES += $(HACKT_VPI_SUFFIXES) $(HACKT_VPI_TEST_SUFFIXES)
@@ -14,6 +15,7 @@ BOGUS_SUFFIX_TARGETS += $(HACKT_VPI_SUFFIXES)
 
 HACKT_VPI_CLEAN_IGNORE_PATTERNS = \
 	"*.vx" \
+	"*.v-wrap" \
 	"*.vxi" \
 	"*.vx-out" \
 	"*.vxi-out" \
@@ -24,6 +26,7 @@ HACKT_VPI_CLEAN_IGNORE_PATTERNS = \
 	"*.daidir"
 
 VPI_PRSIM_MODULE = $(top_builddir)/src/vpihacprsim.la
+AUTO_WRAP_VERILOG_AWK = $(AWK) -f $(top_srcdir)/lib/verilog/wrap_verilog_modules_to_hacprsim.awk
 
 AUTO_IGNORE += $(HACKT_VPI_CLEAN_IGNORE_PATTERNS)
 AUTO_IGNORE += .vcsmx_rebuild
@@ -68,6 +71,10 @@ if HAVE_VPI
 else
 	@$(ECHO) "VPI not explicitly enabled during configure."
 endif
+
+.v.v-wrap:
+	{ $(ECHO) "\`include \"$<\"" ; $(ECHO) "" ; \
+		$(AUTO_WRAP_VERILOG_AWK) $< ;} > $@
 
 # post-install tests!
 .v.vxi:
