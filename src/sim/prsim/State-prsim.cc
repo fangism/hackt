@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.17 2008/10/29 20:14:53 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.18 2008/10/30 17:33:52 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -5522,39 +5522,24 @@ State::__root_expr_why_not(ostream& o, const node_index_type ni,
 #endif          
                 const size_t limit, const bool why_not, const bool verbose, 
                 node_set_type& u, node_set_type& v) const {
+	const node_type& n(get_node(ni));
+	const process_fanin_type& fanin(n.fanin);
 	string ind_str;
 	if (verbose) {
 		// root is OR-combination of rules
-		ind_str += " ";
 		// TODO: figure out how many rules fanin, using struct...
-		// if (x.is_not()) ind_str += "~";
-		// if (g.children.size() > 1) {
-			ind_str += "|";
+		if (fanin.size() > 1) {
+			ind_str += " |";
 			o << auto_indent << "-+" << endl;
-		// }
+		}
 		// ind_str += " ";
 	}
 	const indent __ind_ex(o, ind_str);	// INDENT_SCOPE(o);
 
-#if 0
-	ISE_INVARIANT(xi < expr_pool.size());
-	typedef	process_sim_state::expr_state_type	expr_state_type;
-	const expr_struct_type& x(expr_pool[xi]);
-	const expr_state_type& xs(ps.expr_states[xi]);
-	const pull_enum xp(xs.pull_state(x));
-	const pull_enum match_pull = x.is_not() ?
-		expr_state_type::negate_pull(xp) : xp;
-	ISE_INVARIANT(xp != PULL_WEAK);
-	const graph_node_type& g(expr_graph_node_pool[xi]);
-	typedef	graph_node_type::const_iterator		const_iterator;
-	const_iterator ci(g.begin()), ce(g.end());
-#else
-	const node_type& n(get_node(ni));
 	const fanin_state_type&
 		nf((dir ? n.pull_up_state : n.pull_dn_state) STR_INDEX(wk));
 	const pull_enum match_pull = nf.pull();
 	// iterate over processes, collect root expressions/rules
-	const process_fanin_type& fanin(get_node(ni).fanin);
 #if VECTOR_NODE_FANIN
 	process_fanin_type::const_iterator i(fanin.begin()), e(fanin.end());
 #else
@@ -5592,7 +5577,6 @@ for ( ; i!=e; ++i) {		// for all processes
 		f = find(f+1, fe, ni);
 	}
 }	// end for
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5751,20 +5735,26 @@ State::__root_expr_why_X(ostream& o, const node_index_type ni,
 		const size_t limit, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
 	string ind_str;
+	const process_fanin_type& fanin(get_node(ni).fanin);
 	if (verbose) {
 		// treat rules as OR-combination
-		ind_str += " ";
+		// ind_str += " ";
 		// TODO: figure out number of OR-combinations > 1?
-//		if (g.children.size() > 1) {
-			ind_str += "|";
+		// remember, fanin.size() is number of *processes*
+#if 0
+		if (g.children.size() > 1)
+#else
+		if (fanin.size() > 1)
+#endif
+		{
+			ind_str += " |";
 			o << auto_indent << "-+" << endl;
-//		}
+		}
 		// ind_str += " ";
 	}
 	const indent __ind_ex(o, ind_str);	// INDENT_SCOPE(o);
 
 	// iterate over processes, collect root expressions/rules
-	const process_fanin_type& fanin(get_node(ni).fanin);
 #if VECTOR_NODE_FANIN
 	process_fanin_type::const_iterator i(fanin.begin()), e(fanin.end());
 #else

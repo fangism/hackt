@@ -5,6 +5,15 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-10-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-12+:
+	  Fixed formatting of State::__root_why analysis.  
+	  Known bug remaining: some tests outputs have dropped subtrees
+		of why-analysis, a few unstable diagnostics differ, 
+		see test/prsim/prsimrcdiffs.
+
+
 2008-10-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-12:
