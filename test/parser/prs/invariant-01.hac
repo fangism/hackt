@@ -1,0 +1,9 @@
+// "invariant-01.hac"
+// testing basic invariant expressions
+ 
+bool x, y;
+spec {
+	$(~(x & y))
+	// synonymous with exclhi(x, y)
+}
+

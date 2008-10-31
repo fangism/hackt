@@ -1,5 +1,5 @@
 @c "chapters/SPEC.texi"
-@c $Id: SPEC.texi,v 1.2 2007/08/21 00:50:39 fang Exp $
+@c $Id: SPEC.texi,v 1.3 2008/10/31 19:49:05 fang Exp $
 
 @node SPEC Directives
 @chapter SPEC Directives
@@ -37,4 +37,28 @@ The following documentation is extracted from source file
 @include spec/mk_exclhi.texi
 @include spec/mk_excllo.texi
 @include spec/min_sep.texi
+
+Another class of specification directives is @emph{invariants}.
+Invariants are conditions which should always hold true.
+Invariants are useful for telling other tools what assumptions can
+be made about circuits.  
+@t{exclhi} and @t{excllo} are examples of invariants that use 
+the normal directive syntax.  
+
+@deffn Directive $ PRS-expr
+This declares a run-time invariant expression that is emits
+invariant directives to back-end tools and also tells 
+simulators to check and report violations of violations, 
+similar to @t{exclhi} and @t{excllo}. 
+@var{PRS-expr} is a production rule guard that should #@emph{always} be true.  
+@example
+spec {
+  $(~(x & y))
+}
+@end example
+@noindent
+is equivalent to @t{exclhi(x, y)}.
+@end deffn
+
+@end deffn
 

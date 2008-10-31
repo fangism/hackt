@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.43 2008/10/28 00:45:18 fang Exp $
+#	$Id: Makefile.am,v 1.44 2008/10/31 19:49:09 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -79,6 +79,7 @@ HACKT_PARSE_TEST_PASSES = \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
 	strengths-01 strengths-02 \
+	invariant-01 invariant-02 invariant-03 invariant-04 \
 	flavor-01
 # pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
 
@@ -133,6 +134,7 @@ HACKT_CREATE_TEST_PASSES = \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
 	strengths-01 strengths-02 \
+	invariant-01 invariant-02 invariant-03 invariant-04 \
 	flavor-01
 
 # TODO: precharge-00 etc. to middle and back-end tests
@@ -189,6 +191,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
 	strengths-01 strengths-02 \
+	invariant-01 invariant-02 invariant-03 invariant-04 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
@@ -203,6 +206,7 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-05b macro-pass-07b \
 	weak-03 \
+	invariant-01 invariant-02 invariant-03 invariant-04 \
 	iscomb-01 iscomb-02 iscomb-03 iscomb-04 iscomb-05 iscomb-06 \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \

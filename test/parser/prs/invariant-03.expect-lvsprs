@@ -1,0 +1,6 @@
+invariant "a" | "b"
+invariant ~("b" & "a")
+connect "b" "barfu.w"
+connect "a" "barfu.z"
+connect "a" "fubar.x"
+connect "b" "fubar.y"

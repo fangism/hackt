@@ -1,0 +1,75 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	337
+	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	346
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        bool<> x
+        bool<> y
+      )
+      In definition "foo", we have: {
+      Instances:
+        x = bool<> foo::x
+        y = bool<> foo::y
+      unroll sequence: 
+        bool<> x
+        bool<> y
+      spec:
+        $(x | y)
+      footprint: {
+        x = bool^0 = foo::x (1) 
+        y = bool^0 = foo::y (2) 
+        Created state:
+        bool instance pool:
+        1	foo::x
+        2	foo::y
+        invariant exprs: 
+        $(x | y)
+      }
+      }
+
+  Instances:
+    bar = foo<> bar
+}
+
+footprint: {
+  bar = process foo<>^0 = bar (1) (
+    x = bool^0 = bar.x (1) 
+    y = bool^0 = bar.y (2) 
+  )
+  Created state:
+  process instance pool:
+  1	bar
+  bool instance pool:
+  1	bar.x
+  2	bar.y
+}

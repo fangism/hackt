@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.17 2008/03/17 23:02:32 fang Exp $
+	$Id: SPEC_registry.cc,v 1.18 2008/10/31 19:49:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -291,8 +291,11 @@ UnAliased::main(cflat_prs_printer& p, const param_args_type&,
 Usage: @samp{assert<P>()}
 
 Error out if predicate expression @var{P} is false.
-Tool-independent.
+Note that this is a @emph{compile-time} check, which is enforced
+during unroll/create compilation.  
 Useful for enforcing parametric constraints.  
+Tool-independent.
+For run-time invariants, see $t{$(expr)}-syntax below.  
 @end deffn
 @end texinfo
 ***/

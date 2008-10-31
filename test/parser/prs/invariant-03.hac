@@ -1,0 +1,21 @@
+// "invariant-03.hac"
+// copy-modified from "invariant-02.hac"
+// testing basic invariant expressions
+ 
+defproc foo(bool x, y) {
+spec {
+	$(x | y)
+	// synonymous with excllo(x, y)
+}
+}
+
+defproc bar(bool w, z) {
+spec {
+	$(~(w & z))	// exclhi
+}
+}
+
+bool a, b;
+foo fubar(a, b);
+bar barfu(b, a);
+

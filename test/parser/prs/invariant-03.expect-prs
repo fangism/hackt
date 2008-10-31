@@ -1,0 +1,6 @@
+invariant "a" | "b"
+invariant ~("b" & "a")
+= "b" "barfu.w"
+= "a" "barfu.z"
+= "a" "fubar.x"
+= "b" "fubar.y"

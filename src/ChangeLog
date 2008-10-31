@@ -8,7 +8,7 @@
 	* HACKT-00-01-04-main-00-82-49:
 	  Implemented invariant expressions from front-end through
 		hflat back-end, hacprsim not yet supported.
-		Not documented, only minimally tested.
+		Texinfo (lang) documented and tested.
 		Object format is updated b/c new member of PRS::footprint.
 
 
