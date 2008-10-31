@@ -5,6 +5,13 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-10-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-13:
+	  Fixed bug with propagating wrong pull-state to root, as returned
+		by ::evaluate(), fixing a few tests with unstable-dequeue.
+
+
 2008-10-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-12+:

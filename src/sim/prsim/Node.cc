@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.12.2.3 2008/10/13 05:10:05 fang Exp $
+	$Id: Node.cc,v 1.12.2.4 2008/10/31 23:07:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -178,6 +178,7 @@ Node::dump_fanout_dot(ostream& o, const string& s) const {
 //=============================================================================
 // class fanin_state_type method definitions
 
+#if PRSIM_INDIRECT_EXPRESSION_MAP
 /**
 	Ripped from ExprState::dump_state()
  */
@@ -186,6 +187,7 @@ fanin_state_type::dump_state(ostream& o) const {
 	return o << "ctdn: " << countdown << " X: " << unknowns << "(/" <<
 		size << ')' << " pull: " << size_t(pull());
 }
+#endif
 
 //=============================================================================
 // class NodeState method definitions

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.18 2008/10/30 17:33:52 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.19 2008/10/31 23:07:08 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1877,8 +1877,6 @@ if (e.cause_rule) {
 	r = lookup_rule(e.cause_rule);
 	NEVER_NULL(r);
 }
-#else
-	NEVER_NULL(r);
 #endif
 return current_time +
 	(timing_mode == TIMING_RANDOM ?
@@ -1910,8 +1908,6 @@ if (e.cause_rule) {
 	r = lookup_rule(e.cause_rule);
 	NEVER_NULL(r);
 }
-#else
-	NEVER_NULL(r);
 #endif
 return current_time +
 	(timing_mode == TIMING_RANDOM ?
@@ -3193,7 +3189,9 @@ do {
 	// NOTE: cannot equate pull with value!
 	prev = old_pull;
 	next = new_pull;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
 	ri = ui;		// save previous index
+#endif
 	ui = STRUCT->parent;
 } while (!STRUCT->is_root());
 	DEBUG_STEP_PRINT("propagated to root rule" << endl);
@@ -3228,6 +3226,7 @@ do {
 		DEBUG_STEP_PRINT("end of propagation." << endl);
 		return evaluate_return_type();
 	}
+	next = fs.pull();
 #else
 	const node_index_type oni = ui;
 #endif
@@ -3323,7 +3322,7 @@ State::propagate_evaluation(
 	if (!ev_result.node_index) {
 		return false;
 	}
-	pull_enum next = ev_result.root_pull;
+	const pull_enum next = ev_result.root_pull;
 	const node_index_type ui = ev_result.node_index;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	const expr_struct_type* const u(ev_result.root_ex);
