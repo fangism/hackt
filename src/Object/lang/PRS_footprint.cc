@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.18 2008/10/11 06:35:12 fang Exp $
+	$Id: PRS_footprint.cc,v 1.19 2008/10/31 02:11:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -91,7 +91,7 @@ footprint_rule_attribute::load_object(const persistent_object_manager& m,
 // class footprint method definitions
 
 footprint::footprint() : rule_pool(), expr_pool(), macro_pool(), 
-		internal_node_expr_map() {
+		internal_node_expr_map(), invariant_pool() {
 	rule_pool.set_chunk_size(8);
 	expr_pool.set_chunk_size(16);
 	macro_pool.set_chunk_size(8);
@@ -265,6 +265,17 @@ if (internal_node_expr_map.size()) {
 			o, bpool, expr_pool, PRS_LITERAL_TYPE_ENUM) << endl;
 	}
 }
+if (invariant_pool.size()) {
+	o << auto_indent << "invariant exprs: " << endl;
+	typedef	invariant_pool_type::const_iterator	const_iterator;
+	const_iterator i(invariant_pool.begin()), e(invariant_pool.end());
+	for ( ; i!=e; ++i) {
+		o << auto_indent << "$(";
+		dump_expr(expr_pool[*i], o, bpool, expr_pool, 
+			PRS_LITERAL_TYPE_ENUM);
+		o << ')' << endl;
+	}
+}
 	return o;
 }
 
@@ -370,6 +381,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 }
 	// the expr_pool doesn't need persistence management yet
 	// the internal_node_expr_map doesn't contain pointers
+	// invariant_pool contains no pointers
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -408,8 +420,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	for ( ; i!=e; i++) {
 		i->write_object_base(m, o);
 	}
-}
-{
+}{
 	typedef internal_node_expr_map_type::const_iterator	const_iterator;
 	write_value(o, internal_node_expr_map.size());
 	const_iterator i(internal_node_expr_map.begin());
@@ -419,6 +430,8 @@ footprint::write_object_base(const persistent_object_manager& m,
 		write_value(o, i->second.first);	// expr index
 		write_value(o, i->second.second);	// direction
 	}
+}{
+	util::write_sequence(o, invariant_pool);
 }
 }
 
@@ -467,6 +480,8 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		read_value(i, n.first);		// expr index
 		read_value(i, n.second);	// direction
 	}
+}{
+	util::read_sequence_resize(i, invariant_pool);
 }
 }
 

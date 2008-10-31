@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.10 2007/10/08 01:21:24 fang Exp $
+	$Id: PRS_footprint.h,v 1.11 2008/10/31 02:11:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -17,7 +17,7 @@
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 #include "util/macros.h"
 #include "util/boolean_types.h"
-#include "util/list_vector.h"
+#include "util/list_vector.h"	// is this really necessary?
 #include "util/offset_array.h"
 #include "util/persistent_fwd.h"
 
@@ -60,6 +60,7 @@ class footprint : public cflat_visitee {
 	friend class cflat_visitor;
 public:
 	typedef	footprint_expr_node		expr_node;
+	typedef	size_t				invariant_type;
 	typedef	footprint_rule			rule;
 	typedef	footprint_macro			macro;
 	/**
@@ -77,6 +78,8 @@ public:
 		of their string representations?  (yes, but not critical now)
 	 */
 	typedef	map<string, node_expr_type>	internal_node_expr_map_type;
+	/// list of root expression indices
+	typedef	vector<invariant_type>		invariant_pool_type;
 private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
@@ -89,7 +92,8 @@ private:
 	expr_pool_type				expr_pool;
 	macro_pool_type				macro_pool;
 	internal_node_expr_map_type		internal_node_expr_map;
-
+public:
+	invariant_pool_type			invariant_pool;
 public:
 	footprint();
 	~footprint();
@@ -99,6 +103,9 @@ public:
 
 	const expr_pool_type&
 	get_expr_pool(void) const { return expr_pool; }
+
+	const invariant_pool_type&
+	get_invariant_pool(void) const { return invariant_pool; }
 
 private:
 	static
@@ -132,6 +139,11 @@ public:
 
 	macro&
 	push_back_macro(const string&);
+
+	void
+	push_back_invariant(const invariant_type t) {
+		invariant_pool.push_back(t);
+	}
 
 	size_t
 	current_expr_index(void) const {

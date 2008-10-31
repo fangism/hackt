@@ -1,10 +1,9 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.9 2008/10/11 06:35:13 fang Exp $
+	$Id: cflat_visitor.cc,v 1.10 2008/10/31 02:11:44 fang Exp $
  */
 
 #include <algorithm>
-#include "util/visitor_functor.h"
 #include "Object/def/footprint.h"
 #include "Object/lang/cflat_visitor.h"
 #include "Object/lang/CHP_visitor.h"
@@ -14,15 +13,28 @@
 #include "Object/global_entry.tcc"
 #include "Object/global_channel_entry.h"
 #include "Object/traits/instance_traits.h"
+#include "util/visitor_functor.h"
+#include "util/index_functor.h"
+#include "util/compose.h"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
+using ADS::unary_compose_void;
 using util::visitor_ref;
+using util::typed_visitor_ref;
+using util::index_functor;
 using std::for_each;
 //=============================================================================
 // struct cflat_visitor class definition
 
+cflat_visitor::expr_pool_setter::expr_pool_setter(
+		cflat_visitor& _cfv, const PRS_footprint_expr_pool_type& _p) :
+		cfv(_cfv) {
+	cfv.expr_pool = &_p;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 cflat_visitor::expr_pool_setter::expr_pool_setter(
 		cflat_visitor& _cfv, const footprint& _fp) :
 		cfv(_cfv) {
@@ -105,6 +117,14 @@ cflat_visitor::visit(const footprint& f) {
 	const expr_pool_setter temp(*this, f);	// will expire end of scope
 	for_each(f.rule_pool.begin(), f.rule_pool.end(), visitor_ref(*this));
 	for_each(f.macro_pool.begin(), f.macro_pool.end(), visitor_ref(*this));
+#if 0
+	for_each(f.invariant_pool.begin(), f.invariant_pool.end(), 
+		unary_compose_void(
+		typed_visitor_ref<this_type, const footprint_expr_node>(*this),
+			index_functor(f.expr_pool)));
+#else
+	// defer invariant expression visiting to subclasses
+#endif
 }
 
 //=============================================================================

@@ -46,7 +46,7 @@ Persistent Object Manager text dump:
 	42	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	43	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1674
+	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1678
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

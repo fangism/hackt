@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	nfuncexp	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	nexplist	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	stringex	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	274
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	278
 	9	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	CHPfcall	0	#HEAD#	#TAIL#	12

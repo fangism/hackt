@@ -1,8 +1,10 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.18 2008/10/17 21:52:53 fang Exp $
+	$Id: cflat_printer.cc,v 1.19 2008/10/31 02:11:44 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE				0
 
 #include <iostream>
 #include <algorithm>
@@ -10,9 +12,7 @@
 #include <sstream>
 #include "Object/lang/cflat_printer.h"
 #include "Object/lang/PRS_enum.h"
-#include "Object/lang/PRS_footprint_expr.h"
-#include "Object/lang/PRS_footprint_rule.h"
-#include "Object/lang/PRS_footprint_macro.h"
+#include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/lang/SPEC_footprint.h"
@@ -22,11 +22,13 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/connection_policy.h"
 #include "Object/global_entry.h"
+#include "Object/global_channel_entry.h"
 #include "Object/state_manager.h"
 #include "Object/traits/bool_traits.h"
 #include "main/cflat_options.h"
 #include "common/ICE.h"
 #include "common/TODO.h"
+#include "util/stacktrace.h"
 #include "util/offset_array.h"
 #include "util/member_saver.h"
 #include "util/qmap.tcc"		// for const_assoc_query symbols??
@@ -49,6 +51,31 @@ using util::numeric::reciprocate;
 //=============================================================================
 // class cflat_prs_printer method definitions
 
+void
+cflat_prs_printer::visit(const PRS::footprint& p) {
+	STACKTRACE_VERBOSE;
+	parent_type::visit(p);
+	// now handle invariant expressions
+// if (cfopts.primary_tool == cflat_options::TOOL_LVS) {
+// ah, hell, just print it for everything, it's easy to grep out
+	typedef	PRS::footprint::invariant_pool_type::const_iterator
+						const_iterator;
+	const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
+	const PRS::footprint::invariant_pool_type& ip(p.invariant_pool);
+	const PRS_footprint_expr_pool_type& ep(p.get_expr_pool());
+	const expr_pool_setter __p(*this, ep);
+	NEVER_NULL(expr_pool);
+	const_iterator i(ip.begin()), e(ip.end());
+	for ( ; i!=e; ++i) {
+		os << "invariant ";
+		// ep[*i].accept(*this);
+		visit(ep[*i]);
+		os << endl;
+	}
+// }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints out the entire rule.  
 	Adapted from footprint::cflat_rule().  
@@ -58,6 +85,7 @@ using util::numeric::reciprocate;
  */
 void
 cflat_prs_printer::visit(const footprint_rule& r) {
+	STACKTRACE_VERBOSE;
 	const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
 if (!cfopts.check_prs) {
 	if (r.attributes.size()) {
@@ -222,6 +250,7 @@ extract_float_param(const count_ptr<const const_param>& p) {
  */
 void
 cflat_prs_printer::visit(const footprint_expr_node& e) {
+	STACKTRACE_VERBOSE;
 	const size_t sz = e.size();
 	const char type = e.get_type();
 	const char ptype = parent_expr_type;
@@ -371,6 +400,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
  */
 void
 cflat_prs_printer::visit(const footprint_macro& m) {
+	STACKTRACE_VERBOSE;
 	const cflat_macro_definition_entry& d(cflat_macro_registry[m.name]);
 	INVARIANT(d);		// was already checked during unroll
 	if (!d.check_param_args(m.params).good
@@ -386,6 +416,7 @@ cflat_prs_printer::visit(const footprint_macro& m) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
+	STACKTRACE_VERBOSE;
 	const SPEC::cflat_spec_definition_entry&
 		s(SPEC::cflat_spec_registry[d.name]);
 	INVARIANT(s);		// was already checked during unroll

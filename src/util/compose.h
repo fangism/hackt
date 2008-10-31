@@ -10,7 +10,7 @@
 
 	TODO: use config.h to determine what definitions are missing, 
 		whether or not additional functional headers are available.
-	$Id: compose.h,v 1.8 2005/09/04 21:15:06 fang Exp $
+	$Id: compose.h,v 1.9 2008/10/31 02:11:47 fang Exp $
  */
 
 #ifndef	__UTIL_COMPOSE_H__
@@ -33,7 +33,7 @@ using std::binary_function;
 
 //=============================================================================
 /**
-	Composes f(g(x).
+	Composes f(g(x)).
  */
 template <class F, class G>
 class unary_compose_unary_unary
@@ -60,7 +60,7 @@ public:
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Composes f(g(x), but without any return value.
+	Composes f(g(x)), but without any return value.
  */
 template <class F, class G>
 class unary_compose_unary_unary_void

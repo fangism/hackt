@@ -9,14 +9,14 @@ Persistent Object Manager text dump:
 	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	258
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	322
+	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	326
 	11	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	347
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
 	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

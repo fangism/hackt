@@ -1,7 +1,9 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.4 2008/03/17 23:02:30 fang Exp $
+	$Id: SPEC.cc,v 1.5 2008/10/31 02:11:44 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE				0
 
 #include <iostream>
 #include <algorithm>
@@ -9,6 +11,7 @@
 #include "Object/lang/SPEC.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/PRS_literal_unroller.h"	// for PRS::literal
+#include "Object/lang/PRS_footprint.h"	// for PRS::literal
 #include "Object/persistent_type_hash.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -22,12 +25,15 @@
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directive, "SPEC::directive")
+SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::invariant, "SPEC::invariant")
 SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directives_loop, "SPEC::directive")
 SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directives_conditional,
 		"SPEC::directive")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::SPEC::directive, SPEC_DIRECTIVE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::SPEC::invariant, SPEC_INVARIANT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::SPEC::directives_loop, SPEC_DIRECTIVE_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -121,9 +127,6 @@ directive::unroll(const unroll_context& c, const node_pool_type& np,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: params
- */
 void
 directive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -142,6 +145,70 @@ directive::write_object(const persistent_object_manager& m, ostream& o) const {
 void
 directive::load_object(const persistent_object_manager& m, istream& i) {
 	load_object_base(m, i);
+}
+
+//=============================================================================
+// class invariant method definitions
+
+invariant::invariant() : directive_abstract(), invar_expr() { }
+
+invariant::invariant(const count_ptr<const prs_expr>& e) :
+		directive_abstract(), invar_expr(e) {
+	NEVER_NULL(invar_expr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+invariant::~invariant() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(invariant)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+invariant::dump(ostream& o, const PRS::rule_dump_context& c) const {
+	return invar_expr->dump(o << "$(", c) << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Kludge: SPEC directive crossing over into PRS body...
+ */
+good_bool
+invariant::unroll(const unroll_context& c, const node_pool_type& np, 
+		footprint& sfp) const {
+	STACKTRACE_VERBOSE;
+	// append to PRS footprint of target context
+	// this should work inside conditionals and loops
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
+	const size_t n = invar_expr->unroll(c, np, pfp);
+	// returns 1-indexed!!! (but expr_pool is also offset-by-1)
+	if (!n) {
+		cerr << "Error resolving invariant expression." << endl;
+		return good_bool(false);
+	}
+	pfp.push_back_invariant(n);
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+invariant::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		util::persistent_traits<this_type>::type_key)) {
+	invar_expr->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+invariant::write_object(const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, invar_expr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+invariant::load_object(const persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, invar_expr);
 }
 
 //=============================================================================

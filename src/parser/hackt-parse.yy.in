@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.41 2008/10/21 00:24:33 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.42 2008/10/31 02:11:45 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -394,7 +394,9 @@ extern const char* const yyrule[];
 	PRS::macro*		_prs_macro;
 
 	SPEC::body*		_spec_body;
+	SPEC::directive_base*	_spec_directive_base;
 	SPEC::directive*	_spec_directive;
+	SPEC::invariant*	_spec_invariant;
 	SPEC::directive_list*	_spec_directive_list;
 }
 
@@ -697,7 +699,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_spec_body>		lang_spec
 %type	<_spec_directive_list>	spec_body_optional
 %type	<_spec_directive_list>	spec_body
-%type	<_spec_directive>	spec_item spec_directive
+%type	<_spec_directive_base>	spec_item
+%type	<_spec_directive>	spec_directive
+%type	<_spec_invariant>	spec_invariant
 %type	<_expr>	paren_expr expr
 %type	<_expr>	literal
 %type	<_id_expr>	id_expr
@@ -2485,6 +2489,7 @@ prs_or
 	;
 
 /* even the operators get attributes now... no token left behind! */
+/* TODO: save away these precharge expressions */
 prs_operator_attribute
 	: '{' dir prs_expr '}'
 		{ DELETE_TOKEN($1); DELETE_TOKEN($2); 
@@ -2527,6 +2532,13 @@ spec_body
 
 spec_item
 	: spec_directive { $$ = $1; }
+	| spec_invariant { $$ = $1; }
+	;
+
+spec_invariant
+	: '$' '(' prs_expr ')'
+		{ $$ = new SPEC::invariant($3); 
+		DELETE_TOKEN($1); DELETE_TOKEN($2); DELETE_TOKEN($4); }
 	;
 
 /* identical to prs_macro, but we call it a directive */

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.6 2008/03/17 23:02:31 fang Exp $
+	$Id: SPEC.h,v 1.7 2008/10/31 02:11:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -19,7 +19,11 @@
 
 namespace HAC {
 namespace entity {
+namespace PRS {
+class prs_expr;
+}
 namespace SPEC {
+using PRS::prs_expr;
 
 //=============================================================================
 /**
@@ -67,8 +71,36 @@ public:
 	dump(ostream&, const PRS::rule_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
+	// is pooling really necessary for these?
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class directive
+
+//=============================================================================
+/**
+	Invariant expression, always-assert!
+ */
+class invariant : public directive_abstract {
+	typedef	invariant				this_type;
+	const count_ptr<const prs_expr>			invar_expr;
+public:
+	invariant();
+
+	explicit
+	invariant(const count_ptr<const prs_expr>&);
+
+	~invariant();
+
+	SPEC_UNROLL_DIRECTIVE_PROTO;
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const PRS::rule_dump_context&) const;
+
+	PERSISTENT_METHODS_DECLARATIONS
+
+};	// end class invariant
 
 //=============================================================================
 typedef	std::vector<count_ptr<const directive_abstract> >

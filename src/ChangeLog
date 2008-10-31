@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-10-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-49:
+	  Implemented invariant expressions from front-end through
+		hflat back-end, hacprsim not yet supported.
+		Not documented, only minimally tested.
+		Object format is updated b/c new member of PRS::footprint.
+
+
 2008-10-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-48:

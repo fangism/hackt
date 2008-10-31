@@ -20,7 +20,7 @@ Persistent Object Manager text dump:
 	16	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	378
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

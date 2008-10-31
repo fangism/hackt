@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.96 2008/07/17 03:29:36 fang Exp $
+#	$Id: ChangeLog,v 1.97 2008/10/31 02:11:46 fang Exp $
+
+2008-10-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-49:
+	  Added util/index_functor.h: for basic[index] functors
+
 
 2008-07-16	David Fang		<fangism@users.sourceforge.net>
 

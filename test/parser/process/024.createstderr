@@ -6,10 +6,10 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
-	5	##ADDR##	footprnt	0	#HEAD#	#TAIL#	258
+	5	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	288
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
 	9	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

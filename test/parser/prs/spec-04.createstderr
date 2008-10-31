@@ -36,10 +36,10 @@ Persistent Object Manager text dump:
 	32	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	45
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	526
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	530
 	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	288
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

@@ -63,7 +63,7 @@ Persistent Object Manager text dump:
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	418
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	422
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

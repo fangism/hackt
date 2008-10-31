@@ -38,7 +38,7 @@ Persistent Object Manager text dump:
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	970
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	974
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

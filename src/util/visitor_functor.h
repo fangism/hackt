@@ -2,11 +2,13 @@
 	\file "util/visitor_functor.h"
 	Convenient visitor functors that bind the visitor.  
 	Why not use std::mem_fun, std::mem_fun_ref, and std::bind?
-	$Id: visitor_functor.h,v 1.2 2006/02/04 06:43:23 fang Exp $
+	$Id: visitor_functor.h,v 1.3 2008/10/31 02:11:48 fang Exp $
  */
 
 #ifndef	__UTIL_VISITOR_FUNCTOR_H__
 #define	__UTIL_VISITOR_FUNCTOR_H__
+
+// #include <functional>
 
 namespace util {
 //=============================================================================
@@ -28,6 +30,25 @@ struct visitor_ref_t {
 	}
 };	// end struct visitor_ref_t
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Statically typed version, for use with functional composition.
+ */
+template <class V, class T>
+struct typed_visitor_ref_t : public visitor_ref_t<V> {
+	typedef	visitor_ref_t<V>	base_type;
+	typedef	T&			argument_type;
+	typedef	void			result_type;
+
+	explicit
+	typed_visitor_ref_t(V& v) : base_type(v) { }
+
+	void
+	operator () (T& t) const {
+		base_type::operator()(t);
+	}
+};
+
 //-----------------------------------------------------------------------------
 /**
 	Helper functor generator.  
@@ -37,6 +58,13 @@ inline
 visitor_ref_t<V>
 visitor_ref(V& v) {
 	return visitor_ref_t<V>(v);
+}
+
+template <class V, class T>
+inline
+typed_visitor_ref_t<V, T>
+typed_visitor_ref(V& v) {
+	return typed_visitor_ref_t<V, T>(v);
 }
 
 //=============================================================================

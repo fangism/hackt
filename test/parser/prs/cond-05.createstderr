@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
-	4	##ADDR##	footprnt	0	#HEAD#	#TAIL#	258
+	4	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
 	7	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
@@ -16,9 +16,9 @@ Persistent Object Manager text dump:
 	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	267
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	271
 	16	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	297
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	301
 	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
@@ -27,7 +27,7 @@ Persistent Object Manager text dump:
 	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	318
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	322
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
@@ -57,7 +57,7 @@ In namespace "", we have: {
       Instances:
         b = bar<> foo::b
       unroll sequence: 
-        [ N -> 
+        [ N ->
           bar<> b
         ]
       footprint collection: {

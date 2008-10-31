@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.8 2008/10/11 06:35:13 fang Exp $
+	$Id: cflat_visitor.h,v 1.9 2008/10/31 02:11:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -33,6 +33,7 @@ class footprint_macro;
 	No need to include state_manager -- its traversal is fixed.  
  */
 class cflat_visitor {
+	typedef	cflat_visitor				this_type;
 protected:
 	/**
 		This needs to be set by the visit to the footprint.  
@@ -50,6 +51,8 @@ protected:
 	private:
 		cflat_visitor&                          cfv;
 	public:
+		expr_pool_setter(cflat_visitor&,
+			const PRS_footprint_expr_pool_type&);
 		expr_pool_setter(cflat_visitor&, const footprint&);
 		expr_pool_setter(cflat_visitor&, const cflat_visitor&);
 		~expr_pool_setter();

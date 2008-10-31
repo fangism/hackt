@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.37 2008/03/17 23:03:08 fang Exp $
+#	$Id: Makefile.inc,v 1.38 2008/10/31 02:11:47 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -110,6 +110,7 @@ UTIL_HEADER_FILES = \
 	util/hash_specializations.h \
 	util/ifthenelse.h \
 	util/indent.h \
+	util/index_functor.h \
 	util/inttypes.h \
 	util/iterator_more.h \
 	util/libc.h \

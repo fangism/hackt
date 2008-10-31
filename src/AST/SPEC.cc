@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.12 2008/03/17 23:02:13 fang Exp $
+	$Id: SPEC.cc,v 1.13 2008/10/31 02:11:40 fang Exp $
  */
 
 #include <iostream>
@@ -32,8 +32,8 @@
 namespace util {
 namespace memory {
 // explicit template instantiations
-using HAC::parser::SPEC::directive;
-template class count_ptr<const directive>;
+using HAC::parser::SPEC::directive_base;
+template class count_ptr<const directive_base>;
 }	// end namespace memory
 }	// end namespace util
 
@@ -51,10 +51,16 @@ using std::mem_fun_ref;
 using std::find_if;
 
 //=============================================================================
+// class directive_base method definitions
+
+directive_base::~directive_base() { }
+
+//=============================================================================
 // class directive method definitions
 
 directive::directive(const token_identifier* n, const expr_list* l, 
 		const inst_ref_expr_list* a) :
+		directive_base(), 
 		name(n), params(l), args(a) {
 	NEVER_NULL(name); NEVER_NULL(args);
 }
@@ -142,6 +148,42 @@ if (params) {
 }	// end method directive::check_spec
 
 //=============================================================================
+// class invariant method definitions
+
+invariant::invariant(const expr* const e) :
+		directive_base(), _expr(e) {
+	NEVER_NULL(_expr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+invariant::~invariant() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(invariant)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+invariant::leftmost(void) const { return _expr->leftmost(); }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+invariant::rightmost(void) const { return _expr->rightmost(); }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+invariant::return_type
+invariant::check_spec(context& c) const {
+	const prs_expr_return_type p(_expr->check_prs_expr(c));
+	if (!p) {
+		cerr << "Error checking invariant expression at "
+			<< where(*_expr) << endl;
+		SPEC_THROW_ERROR;
+	}
+	const count_ptr<entity::SPEC::invariant>
+		ret(new entity::SPEC::invariant(p));
+	c.get_current_spec_body().push_back(ret);
+}
+
+//=============================================================================
 // class body method definitions
 
 body::body(const generic_keyword_type* t, const directive_list* d) :
@@ -168,7 +210,7 @@ bool
 body::__check_specs(context& c) const {
 if (directives) {
 	try {
-		directives->check_list_void(&directive::check_spec, c);
+		directives->check_list_void(&directive_base::check_spec, c);
 	} catch (...) {
 		return false;
 	}
@@ -222,12 +264,12 @@ if (directives) {
 // EXPLICIT TEMPLATE INSTANTIATIONS
 
 // template class node_list<const directive>;
-template node_list<const SPEC::directive>::node_list();
-template node_list<const SPEC::directive>::node_list(const SPEC::directive*);
-template node_list<const SPEC::directive>::~node_list();
-template ostream& node_list<const SPEC::directive>::what(ostream&) const;
-template line_position node_list<const SPEC::directive>::leftmost(void) const;
-template line_position node_list<const SPEC::directive>::rightmost(void) const;
+template node_list<const SPEC::directive_base>::node_list();
+template node_list<const SPEC::directive_base>::node_list(const SPEC::directive_base*);
+template node_list<const SPEC::directive_base>::~node_list();
+template ostream& node_list<const SPEC::directive_base>::what(ostream&) const;
+template line_position node_list<const SPEC::directive_base>::leftmost(void) const;
+template line_position node_list<const SPEC::directive_base>::rightmost(void) const;
 
 //=============================================================================
 }	// end namespace parser

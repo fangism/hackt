@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.h"
-	$Id: SPEC.h,v 1.5 2008/03/17 23:02:13 fang Exp $
+	$Id: SPEC.h,v 1.6 2008/10/31 02:11:40 fang Exp $
  */
 
 #ifndef	__HAC_AST_SPEC_H__
@@ -20,14 +20,33 @@ namespace SPEC {
 }	// end namespace entity
 
 namespace parser {
+class expr;		// used for PRS-expr
 namespace SPEC {
 //=============================================================================
 /**
-	Syntax structure for a spec directive
+	Abstract base class for SPEC directives.  
  */
-class directive {
+class directive_base {
 public:
 	typedef	void					return_type;
+public:
+virtual	~directive_base();
+
+	PURE_VIRTUAL_NODE_METHODS
+
+virtual	return_type
+	check_spec(context&) const = 0;
+
+};	// end class directive_base
+
+//=============================================================================
+/**
+	Syntax structure for a spec directive
+	Kinda similar/identical to PRS-macros.  
+ */
+class directive : public directive_base {
+public:
+	typedef	directive_base::return_type		return_type;
 private:
 	const excl_ptr<const token_identifier>		name;
 	const excl_ptr<const expr_list>			params;
@@ -50,6 +69,32 @@ public:
 	check_spec(context&) const;
 
 };	// end class directive
+
+//=============================================================================
+/**
+	Production rule invariant expression, always-assert.
+ */
+class invariant : public directive_base {
+	const excl_ptr<const expr>			_expr;
+public:
+	typedef	directive_base::return_type		return_type;
+
+	invariant(const expr* const);
+	~invariant();
+
+	ostream&
+	what(ostream&) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	return_type
+	check_spec(context&) const;
+
+};	// end class invariant
 
 //=============================================================================
 /**
