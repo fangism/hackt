@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.11 2008/11/01 20:02:18 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.12 2008/11/01 21:56:03 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -284,53 +284,7 @@ struct unique_process_subgraph {
 
 	ostream&
 	dump_struct_dot(ostream&, const expr_index_type) const;
-
-	// these should really be methods of process_sim_state, logically
-	// TODO: transform after pushing unique_process_subgraph member pointer
-	void
-	__get_local_X_fanins(const expr_index_type, 
-		const process_sim_state&, const State&, node_set_type&) const;
-
-	void
-	__local_expr_why_not(ostream&, const expr_index_type, 
-		const process_sim_state&, const State&, const size_t, 
-		const bool, const bool, 
-		node_set_type&, node_set_type&) const;
-
-	void
-	__local_expr_why_X(ostream&, const expr_index_type, 
-		const process_sim_state&, const State&, const size_t, 
-		const bool, node_set_type&, node_set_type&) const;
-
-	void
-	__recurse_expr_why_not(ostream&, const expr_index_type, 
-		const pull_enum, 
-		const process_sim_state&, const State&, const size_t, 
-		const bool, const bool, 
-		node_set_type&, node_set_type&) const;
-
-	void
-	__recurse_expr_why_X(ostream&, const expr_index_type, 
-		const process_sim_state&, const State&, const size_t, 
-		const bool, node_set_type&, node_set_type&) const;
-
-	ostream&
-	dump_subexpr(ostream&, const expr_index_type, 
-		const process_sim_state&, const State&, 
-		const bool v, const uchar p = expr_struct_type::EXPR_ROOT,
-		const bool cp = false) const;
-
-	ostream&
-	dump_rule(ostream&, const rule_index_type, 
-		const process_sim_state&, const State&, 
-		const bool) const;
-
-	ostream&
-	dump_node_fanin(ostream&, const node_index_type, 
-		const process_sim_state&, const State&, 
-		const bool) const;
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
-
+#endif
 };	// end struct unique_process_subgraph
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -339,11 +293,18 @@ struct unique_process_subgraph {
 	state information per process instance.
 	This is memory-intensive, and thus should be kept small.  
 	Node state information is kept outside of these structures.  
-	TODO: consider embedding a const unique_process_subgraph*!
  */
 struct process_sim_state {
 	typedef	ExprState			expr_state_type;
 	typedef	RuleState<rule_time_type>	rule_state_type;
+	typedef	unique_process_subgraph::rule_type
+						rule_type;
+	typedef	unique_process_subgraph::node_set_type
+						node_set_type;
+	typedef	unique_process_subgraph::expr_struct_type
+						expr_struct_type;
+	typedef	unique_process_subgraph::graph_node_type
+						graph_node_type;
 	union {
 		process_index_type		index;
 		const unique_process_subgraph*	ptr;
@@ -372,6 +333,47 @@ struct process_sim_state {
 
 	void
 	initialize(void);
+
+	void
+	__get_local_X_fanins(const expr_index_type, 
+		const State&, node_set_type&) const;
+
+	void
+	__local_expr_why_not(ostream&, const expr_index_type, 
+		const State&, const size_t, 
+		const bool, const bool, 
+		node_set_type&, node_set_type&) const;
+
+	void
+	__local_expr_why_X(ostream&, const expr_index_type, 
+		const State&, const size_t, 
+		const bool, node_set_type&, node_set_type&) const;
+
+	void
+	__recurse_expr_why_not(ostream&, const expr_index_type, 
+		const pull_enum, 
+		const State&, const size_t, 
+		const bool, const bool, 
+		node_set_type&, node_set_type&) const;
+
+	void
+	__recurse_expr_why_X(ostream&, const expr_index_type, 
+		const State&, const size_t, 
+		const bool, node_set_type&, node_set_type&) const;
+
+	ostream&
+	dump_subexpr(ostream&, const expr_index_type, 
+		const State&, 
+		const bool v, const uchar p = expr_struct_type::EXPR_ROOT,
+		const bool cp = false) const;
+
+	ostream&
+	dump_rule(ostream&, const rule_index_type, 
+		const State&, const bool) const;
+
+	ostream&
+	dump_node_fanin(ostream&, const node_index_type, 
+		const State&, const bool) const;
 
 };	// end struct process_sim_state
 
@@ -687,6 +689,9 @@ protected:
 					global_expr_process_id_map_type;
 	/**
 		TODO: Possibly fold into process_sim_state?
+		TODO: exploit monotinicity property to convert this
+		into a plain sequence of (bi-sorted) pairs, 
+		and use binary_search for both forward and reverse lookups.
 	 */
 	typedef	map<process_index_type, expr_index_type>
 					process_first_expr_map_type;
