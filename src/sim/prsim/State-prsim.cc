@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.19 2008/10/31 23:07:08 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.20 2008/11/01 01:21:37 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -13,6 +13,7 @@
 #define	DEBUG_FANOUT			(0 && ENABLE_STACKTRACE)
 #define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
 #define	DEBUG_CHECK			(0 && ENABLE_STACKTRACE)
+#define	DEBUG_WHY			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <algorithm>
@@ -62,6 +63,14 @@
 #else
 #define	DEBUG_CHECK_PRINT(x)
 #define	STACKTRACE_VERBOSE_CHECK
+#endif
+
+#if	DEBUG_WHY
+#define	DEBUG_WHY_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
+#define	STACKTRACE_VERBOSE_WHY		STACKTRACE_VERBOSE
+#else
+#define	DEBUG_WHY_PRINT(x)
+#define	STACKTRACE_VERBOSE_WHY
 #endif
 
 #if	DEBUG_FANOUT
@@ -4967,6 +4976,7 @@ do {
 ostream&
 State::dump_node_why_X(ostream& o, const node_index_type ni, 
 		const size_t limit, const bool verbose) const {
+	STACKTRACE_VERBOSE_WHY;
 	// unique set to terminate cyclic recursion
 	const node_type& n(get_node(ni));
 if (n.current_value() == LOGIC_OTHER) {
@@ -4987,6 +4997,7 @@ ostream&
 State::dump_node_why_not(ostream& o, const node_index_type ni, 
 		const size_t limit,
 		const bool dir, const bool why_not, const bool verbose) const {
+	STACKTRACE_VERBOSE_WHY;
 	const node_type& n(get_node(ni));
 	node_set_type u, v;
 switch (n.current_value()) {
@@ -5024,6 +5035,7 @@ ostream&
 State::__node_why_X(ostream& o, const node_index_type ni, 
 		const size_t limit, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
+	STACKTRACE_VERBOSE_WHY;
 	const std::pair<node_set_type::iterator, bool>
 		p(u.insert(ni)), y(v.insert(ni));
 	const string nn(get_node_canonical_name(ni));
@@ -5207,6 +5219,7 @@ State::__node_why_not(ostream& o, const node_index_type ni,
 		const size_t limit, const bool dir,
 		const bool why_not, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
+	STACKTRACE_VERBOSE_WHY;
 	const std::pair<node_set_type::iterator, bool>
 		p(u.insert(ni)), y(v.insert(ni));
 	const node_type& n(get_node(ni));
@@ -5224,8 +5237,7 @@ if (y.second) {
 			<< endl;
 		// check that pending event's value matches
 	} else {
-		const pull_enum pull_query = why_not ? 
-			PULL_OFF : PULL_ON;
+		const pull_enum pull_query = why_not ?  PULL_OFF : PULL_ON;
 		const indent __ind_nd(o, verbose ? "." : "  ");
 		// only check for the side that is off
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -5417,6 +5429,7 @@ void
 State::__expr_why_not(ostream& o, const expr_index_type xi, const size_t limit,
 		const bool why_not, const bool verbose,
 		node_set_type& u, node_set_type& v) const {
+	STACKTRACE_VERBOSE_WHY;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	// translate global to local
 	const expr_offset_pair& p(lookup_global_expr_process(xi));
@@ -5432,7 +5445,7 @@ unique_process_subgraph::__local_expr_why_not(ostream& o,
 		const State& st, 
 		const size_t limit, const bool why_not, const bool verbose,
 		node_set_type& u, node_set_type& v) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE_WHY;
 #else
 	ISE_INVARIANT(xi);
 #endif
@@ -5521,6 +5534,8 @@ State::__root_expr_why_not(ostream& o, const node_index_type ni,
 #endif          
                 const size_t limit, const bool why_not, const bool verbose, 
                 node_set_type& u, node_set_type& v) const {
+	STACKTRACE_VERBOSE_WHY;
+	DEBUG_WHY_PRINT("querying node: " << ni << endl);
 	const node_type& n(get_node(ni));
 	const process_fanin_type& fanin(n.fanin);
 	string ind_str;
@@ -5537,7 +5552,7 @@ State::__root_expr_why_not(ostream& o, const node_index_type ni,
 
 	const fanin_state_type&
 		nf((dir ? n.pull_up_state : n.pull_dn_state) STR_INDEX(wk));
-	const pull_enum match_pull = nf.pull();
+	const pull_enum match_pull = nf.pull();	// never negate OR
 	// iterate over processes, collect root expressions/rules
 #if VECTOR_NODE_FANIN
 	process_fanin_type::const_iterator i(fanin.begin()), e(fanin.end());
@@ -5549,18 +5564,31 @@ for ( ; i!=e; ++i) {		// for all processes
 	const process_index_type pti = process_type_map[pid];
 	const process_sim_state& ps = process_state_array[pid];
 	const unique_process_subgraph& pg(unique_process_pool[pti]);
+	DEBUG_WHY_PRINT("fanin process: " << pid << ", type: " << pti << endl);
 	// find local node indices that corresponds to global node
-	const footprint_frame_map_type& bfm(get_module().
-		get_state_manager().get_pool<process_tag>()[pid]
-		._frame.get_frame_map<bool_tag>());
+	footprint_frame_map_type topbfm;
+	const footprint_frame_map_type* bfm;
+	if (pid) {
+		bfm = &(get_module().get_state_manager()
+			.get_pool<process_tag>()[pid]
+			._frame.get_frame_map<bool_tag>());
+	} else {
+		// HACK: fake a frame map locally, FIXME later
+		topbfm.resize(ni+1, 0);
+			// or: get_module().get_footprint()
+			// .get_instance_pool<bool_tag>().size()
+		topbfm[ni] = ni;
+		bfm = &topbfm;
+	}
 	// note: many local nodes may map to the same global node
 	// so linear search to find them all
 	typedef	footprint_frame_map_type::const_iterator frame_iter;
-	const frame_iter b(bfm.begin()), fe(bfm.end());
+	const frame_iter b(bfm->begin()), fe(bfm->end());
 	frame_iter f = find(b, fe, ni);
 	while (f != fe) {	// for all local nodes that reference node ni
 		// collect local node's fanin expressions!
 		const node_index_type lni = std::distance(b, f);
+		DEBUG_WHY_PRINT("local node: " << lni << endl);
 		const faninout_struct_type&
 			fm(pg.local_faninout_map[lni]);
 		const fanin_array_type&
@@ -5569,6 +5597,7 @@ for ( ; i!=e; ++i) {		// for all processes
 		fanin_array_type::const_iterator ci(fia.begin()), ce(fia.end());
 		for ( ; ci!=ce; ++ci) {
 			const expr_index_type& lei(*ci);
+			DEBUG_WHY_PRINT("local expr: " << lei << endl);
 			// ISE_INVARIANT(lei);	// locally 0-indexed
 			pg.__recurse_expr_why_not(o, lei, match_pull, 
 				ps, *this, limit, why_not, verbose, u, v);
@@ -5588,7 +5617,7 @@ unique_process_subgraph::__recurse_expr_why_not(ostream& o,
 		const process_sim_state& ps, const State& st, 
 		const size_t limit, const bool why_not, const bool verbose,
 		node_set_type& u, node_set_type& v) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE_WHY;
 	typedef	process_sim_state::expr_state_type	expr_state_type;
 	const expr_struct_type& s(expr_pool[lei]);
 	const expr_state_type& ss(ps.expr_states[lei]);
@@ -5615,6 +5644,7 @@ unique_process_subgraph::__recurse_expr_why_not(ostream& o,
 void
 State::__expr_why_X(ostream& o, const expr_index_type xi, const size_t limit, 
 		const bool verbose, node_set_type& u, node_set_type& v) const {
+	STACKTRACE_VERBOSE_WHY;
 	ISE_INVARIANT(xi);
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	// translate global to local
@@ -5631,7 +5661,7 @@ unique_process_subgraph::__local_expr_why_X(ostream& o,
 		const State& st, 
 		const size_t limit, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE_WHY;
 #endif
 	ISE_INVARIANT(xi < expr_pool.size());
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -5708,7 +5738,7 @@ unique_process_subgraph::__recurse_expr_why_X(ostream& o,
 		const expr_index_type lei, const process_sim_state& ps, 
 		const State& st, const size_t limit, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE_WHY;
 	// is a sub-expression, recurse if pull is X
 	typedef	process_sim_state::expr_state_type	expr_state_type;
 	const expr_struct_type& s(expr_pool[lei]);
@@ -5733,6 +5763,7 @@ State::__root_expr_why_X(ostream& o, const node_index_type ni,
 #endif
 		const size_t limit, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
+	STACKTRACE_VERBOSE_WHY;
 	string ind_str;
 	const process_fanin_type& fanin(get_node(ni).fanin);
 	if (verbose) {
@@ -5765,13 +5796,24 @@ for ( ; i!=e; ++i) {		// for all processes
 	const process_sim_state& ps = process_state_array[pid];
 	const unique_process_subgraph& pg(unique_process_pool[pti]);
 	// find local node indices that corresponds to global node
-	const footprint_frame_map_type& bfm(get_module().
+	footprint_frame_map_type topbfm;
+	const footprint_frame_map_type* bfm;
+	if (pid) {
+		bfm = &(get_module().
 		get_state_manager().get_pool<process_tag>()[pid]
 		._frame.get_frame_map<bool_tag>());
+	} else {
+		// HACK: fake a frame map locally, FIXME later
+		topbfm.resize(ni+1, 0);
+			// or: get_module().get_footprint()
+			// .get_instance_pool<bool_tag>().size()
+		topbfm[ni] = ni;
+		bfm = &topbfm;
+	}
 	// note: many local nodes may map to the same global node
 	// so linear search to find them all
 	typedef	footprint_frame_map_type::const_iterator frame_iter;
-	const frame_iter b(bfm.begin()), fe(bfm.end());
+	const frame_iter b(bfm->begin()), fe(bfm->end());
 	frame_iter f = find(b, fe, ni);
 	while (f != fe) {	// for all local nodes that reference node ni
 		// collect local node's fanin expressions!

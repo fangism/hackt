@@ -10,6 +10,8 @@ BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 	* HACKT-00-01-04-main-00-82-32-prsim-10-13:
 	  Fixed bug with propagating wrong pull-state to root, as returned
 		by ::evaluate(), fixing a few tests with unstable-dequeue.
+	  Fixed bug with improper searching through top-level nodes with
+		wrong frame map.  Considering a better fix next...
 
 
 2008-10-29	David Fang		<fangism@users.sourceforge.net>
