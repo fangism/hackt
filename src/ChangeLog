@@ -5,6 +5,17 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-11-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-14:
+	  Cleaned up implementation of bool frame lookup without having
+		to always check for special case pid=0 (top-level), 
+		simplifying code, making less error prone.  
+		Added some global_entry methods to help with this.
+		Could re-factor out repetitive calls to get_frame_map still...
+	  Only test differences in fanin/fanout print formatting.
+
+
 2008-10-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-13:

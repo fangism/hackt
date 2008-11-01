@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.8 2008/10/15 06:09:41 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.9 2008/11/01 08:01:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -253,21 +253,14 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	STACKTRACE_VERBOSE;
 	// also set up proper unique_process references
 	typedef	process_footprint_map_type::const_iterator	const_iterator;
-	node_index_type node_pool_size;
-	const entity::footprint_frame_map_type* bmap = NULL;
 	const module& m(state.get_module());
-	if (current_process_index) {
-		bmap = &m.get_state_manager()
-			.get_pool<process_tag>()
-			[state.process_state_array.size()]
-			._frame.get_frame_map<bool_tag>();
-		node_pool_size = bmap->size();
-	} else {
-		// top-level process (id=0) is different, use local footprint
-		node_pool_size = m.get_footprint()
-			.get_instance_pool<bool_tag>().size();
-		// recall: local pool is padded with 0 reserved
-	}
+	// this now works for pid=0, top-level
+	const entity::footprint_frame_map_type&
+		bmap(m.get_state_manager()
+			.get_pool<process_tag>()[current_process_index]
+			._frame.get_frame_map<bool_tag>());
+	const node_index_type node_pool_size = bmap.size();
+	STACKTRACE_INDENT_PRINT("node_pool_size = " << node_pool_size << endl);
 	size_t type_index;	// unique process type index
 	const const_iterator f(process_footprint_map.find(&pfp));
 	if (f == process_footprint_map.end()) {
@@ -325,9 +318,8 @@ if (pxs) {
 	// connect global nodes to global fanout expressions
 	node_index_type lni = 0;	// frame-map is 0-indexed
 	for ( ; lni < node_pool_size; ++lni) {
-		const node_index_type gni =
-			current_process_index ? (*bmap)[lni] : lni;
-		// global index coversion, or local if top-level (pid=0)
+		const node_index_type gni = bmap[lni];
+		// global index conversion, or local if top-level (pid=0)
 		const faninout_struct_type&
 			ff(ptemplate.local_faninout_map[lni]);
 		const fanout_array_type& lfo(ff.fanout);

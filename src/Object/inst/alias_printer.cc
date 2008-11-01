@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.7 2007/04/15 05:52:17 fang Exp $
+	$Id: alias_printer.cc,v 1.7.40.1 2008/11/01 08:01:39 fang Exp $
  */
 
 #include "Object/inst/alias_printer.h"
@@ -119,11 +119,16 @@ if (a.valid()) {
 if (this->fpf) {
 	this->prefix += ".";
 	// this is not a top-level instance (from recursion)
+#if 0
 	const size_t local_offset = a.instance_index -1;
 	const footprint_frame_map_type&
 		fm(this->fpf->template get_frame_map<Tag>());
 	// footprint_frame yields the global offset
 	gindex = fm[local_offset];
+#else
+	const footprint_frame_transformer ft(*this->fpf, Tag());
+	gindex = ft(a.instance_index);
+#endif
 } else {
 	// footprint_frame is null, this is a top-level instance
 	// the instance_index can be used directly as the offset into

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.9.2.6 2008/10/15 06:09:42 fang Exp $
+	$Id: ExprAlloc.h,v 1.9.2.7 2008/11/01 08:01:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -158,11 +158,8 @@ public:
 	// eventually, they may be pushed into local subgraphs...
 	node_index_type
 	lookup_global_bool_id(const node_index_type ni) const {
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		if (!current_process_index)
-			return ni;
-		else
-#endif
+		// works without catching pid=0 (top-level)
+		// b/c we populated its frame map with identity indices
 		return __lookup_global_bool_id(ni);
 	}
 

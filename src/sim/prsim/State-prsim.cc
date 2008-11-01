@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.21 2008/11/01 02:07:29 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.22 2008/11/01 08:02:00 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3292,10 +3292,9 @@ State::translate_to_global_node(const process_index_type pid,
 		const node_index_type lni) const {
 	// HACK: poor style, using pointer arithmetic to deduce index
 	ISE_INVARIANT(pid < process_state_array.size());
-	return pid ? 
-		get_module().get_state_manager().get_pool<process_tag>()[pid]
-		._frame.get_frame_map<bool_tag>()[lni] : lni;
-	// for top-level process, to not lookup
+	// no longer need special case for pid=0, b/c frame is identity
+	return get_module().get_state_manager().get_pool<process_tag>()[pid]
+		._frame.get_frame_map<bool_tag>()[lni];
 }
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
@@ -4860,7 +4859,6 @@ for ( ; i!=e; ++i) {
 	const process_index_type pti = process_type_map[pid];
 	const unique_process_subgraph& pg(unique_process_pool[pti]);
 	const process_sim_state& ps(process_state_array[pid]);
-if (pid) {
 	// find the local node index that corresponds to global node
 	const footprint_frame_map_type& bfm(get_module().
 		get_state_manager().get_pool<process_tag>()[pid]
@@ -4876,10 +4874,6 @@ if (pid) {
 		pg.dump_node_fanin(o, lni, ps, *this, v);
 		f = find(f+1, fe, ni);
 	}
-} else {
-	// top-level node requires no further lookup, still 1-indexed
-	pg.dump_node_fanin(o, ni, ps, *this, v);
-}
 }
 	return o;
 }
@@ -5570,24 +5564,14 @@ for ( ; i!=e; ++i) {		// for all processes
 	const unique_process_subgraph& pg(unique_process_pool[pti]);
 	DEBUG_WHY_PRINT("fanin process: " << pid << ", type: " << pti << endl);
 	// find local node indices that corresponds to global node
-	footprint_frame_map_type topbfm;
-	const footprint_frame_map_type* bfm;
-	if (pid) {
-		bfm = &(get_module().get_state_manager()
+	const footprint_frame_map_type&
+		bfm(get_module().get_state_manager()
 			.get_pool<process_tag>()[pid]
 			._frame.get_frame_map<bool_tag>());
-	} else {
-		// HACK: fake a frame map locally, FIXME later
-		topbfm.resize(ni+1, 0);
-			// or: get_module().get_footprint()
-			// .get_instance_pool<bool_tag>().size()
-		topbfm[ni] = ni;
-		bfm = &topbfm;
-	}
 	// note: many local nodes may map to the same global node
 	// so linear search to find them all
 	typedef	footprint_frame_map_type::const_iterator frame_iter;
-	const frame_iter b(bfm->begin()), fe(bfm->end());
+	const frame_iter b(bfm.begin()), fe(bfm.end());
 	frame_iter f = find(b, fe, ni);
 	while (f != fe) {	// for all local nodes that reference node ni
 		// collect local node's fanin expressions!
@@ -5800,24 +5784,14 @@ for ( ; i!=e; ++i) {		// for all processes
 	const process_sim_state& ps = process_state_array[pid];
 	const unique_process_subgraph& pg(unique_process_pool[pti]);
 	// find local node indices that corresponds to global node
-	footprint_frame_map_type topbfm;
-	const footprint_frame_map_type* bfm;
-	if (pid) {
-		bfm = &(get_module().
-		get_state_manager().get_pool<process_tag>()[pid]
-		._frame.get_frame_map<bool_tag>());
-	} else {
-		// HACK: fake a frame map locally, FIXME later
-		topbfm.resize(ni+1, 0);
-			// or: get_module().get_footprint()
-			// .get_instance_pool<bool_tag>().size()
-		topbfm[ni] = ni;
-		bfm = &topbfm;
-	}
+	const footprint_frame_map_type&
+		bfm(get_module().get_state_manager()
+			.get_pool<process_tag>()[pid]
+			._frame.get_frame_map<bool_tag>());
 	// note: many local nodes may map to the same global node
 	// so linear search to find them all
 	typedef	footprint_frame_map_type::const_iterator frame_iter;
-	const frame_iter b(bfm->begin()), fe(bfm->end());
+	const frame_iter b(bfm.begin()), fe(bfm.end());
 	frame_iter f = find(b, fe, ni);
 	while (f != fe) {	// for all local nodes that reference node ni
 		// collect local node's fanin expressions!

@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.34.2.1 2008/11/01 02:07:24 fang Exp $
+ 	$Id: module.cc,v 1.34.2.2 2008/11/01 08:01:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -32,6 +32,8 @@
 #include "Object/type/process_type_reference.h"
 #include "Object/type/canonical_type.h"
 #include "Object/def/process_definition.h"
+#include "Object/global_entry.h"
+#include "Object/traits/proc_traits.h"
 
 #if ENABLE_STACKTRACE
 #include "Object/common/dump_flags.h"
@@ -329,7 +331,12 @@ module::allocate_unique(void) {
  */
 void
 module::populate_top_footprint_frame(void) {
-	// FIXME
+	global_entry<process_tag>&
+		ptop(global_state.get_pool<process_tag>()[0]);
+//	global_entry_dumper g(cerr, global_state, get_footprint());
+//	ptop.dump_frame_only(cerr << "before:") << endl;
+	ptop.initialize_top_frame(get_footprint());
+//	ptop.dump_frame_only(cerr << "after:") << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
