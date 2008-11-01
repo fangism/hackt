@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.10 2008/10/13 05:10:14 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.11 2008/11/01 20:02:18 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -176,9 +176,6 @@ struct faninout_struct_type {
 	TODO: rings for mk_excl and check_excl!
  */
 struct unique_process_subgraph {
-#if 0 && !PRSIM_INDIRECT_EXPRESSION_MAP
-protected:
-#endif
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	Expr				expr_struct_type;
 	typedef	Rule<rule_time_type>		rule_type;
@@ -347,18 +344,35 @@ protected:
 struct process_sim_state {
 	typedef	ExprState			expr_state_type;
 	typedef	RuleState<rule_time_type>	rule_state_type;
+	union {
+		process_index_type		index;
+		const unique_process_subgraph*	ptr;
+	} type_ref;
+#if 0
+	/// the global offset of the first expression belonging to this process
+	expr_index_type				global_expr_offset;
+#endif
 	valarray<expr_state_type>		expr_states;
 	valarray<rule_state_type>		rule_states;
 
+#if 0
+	struct expr_offset_comparator;
+#endif
+
+	/// only call this after ptr has been set by finish_process...
+	const unique_process_subgraph&
+	type(void) const { return *type_ref.ptr; }
+
 	void
-	allocate_from_type(const unique_process_subgraph&);
+	allocate_from_type(const unique_process_subgraph&, 
+		const process_index_type);
 
 	void
 	clear(void);
 
 	void
-	initialize(const unique_process_subgraph&);
-		// because needs to know structure
+	initialize(void);
+
 };	// end struct process_sim_state
 
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
@@ -681,12 +695,8 @@ protected:
 	 */
 	typedef	global_expr_process_id_map_type::value_type
 					expr_offset_pair;
-#if 0
-	// need this? can't we just use a double-look
-	typedef	map<rule_index_type, process_index_type>
-						process_rule_map_type;
-#endif
 	/**
+		Collection of unique process footprints.
 	 */
 	typedef	vector<unique_process_subgraph>	unique_process_pool_type;
 	/**
@@ -700,12 +710,6 @@ protected:
 private:
 	node_pool_type				node_pool;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	/**
-		Maps each process to its unique type.  
-		Indices are unique process IDs.  
-		Values are indices into unique_process_pool.
-	 */
-	vector<process_index_type>		process_type_map;
 	/**
 		Collection of unique process footprints.  
 	 */
@@ -843,6 +847,9 @@ public:
 	backtrace_node(ostream&, const node_index_type) const;
 
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+	void
+	finish_process_type_map(void);
+
 	const expr_offset_pair&
 	lookup_global_expr_process(const expr_index_type) const;
 
@@ -1505,14 +1512,6 @@ public:
 
 	ostream&
 	dump_output_unknown_nodes(ostream&) const;
-
-#if 0
-	ostream&
-	dump_local_subexpr(ostream&, const expr_index_type, 
-		const process_index_type pid, 
-		const bool v, const uchar p, 
-		const bool cp) const;
-#endif
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 

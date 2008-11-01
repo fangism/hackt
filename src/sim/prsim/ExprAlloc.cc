@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.9 2008/11/01 08:01:54 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.10 2008/11/01 20:02:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -226,6 +226,7 @@ ExprAlloc::visit(const state_manager& _sm) {
 	for ( ; i!=e; ++i) {
 		state.process_first_expr_map[i->second] = i->first;
 	}
+	state.finish_process_type_map();	// finalize indices to pointers
 #else
 	if (flags.any_optimize() && expr_free_list.size()) {
 		compact_expr_pools();
@@ -285,12 +286,13 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 		type_index = f->second;
 	}
 	// append-allocate new state, based on type
-	state.process_type_map.push_back(type_index);
+//	state.process_type_map.push_back(type_index);
 	state.process_state_array.push_back(process_sim_state()); // resize +1
 	// now, allocate state for instance of this process type
 	const unique_process_subgraph&
 		ptemplate(state.unique_process_pool[type_index]);
-	state.process_state_array.back().allocate_from_type(ptemplate);
+	state.process_state_array.back()
+		.allocate_from_type(ptemplate, type_index);
 	// mapping update: for expr->process map, assign value
 	// TODO: be careful not to add an entry for EMPTY processes!
 	//	nice side effect of optimization: only map leaf cells with PRS!
