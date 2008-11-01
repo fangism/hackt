@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.34 2008/03/17 23:02:18 fang Exp $
+ 	$Id: module.cc,v 1.34.2.1 2008/11/01 02:07:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -315,6 +315,21 @@ module::allocate_unique(void) {
 	if (!create_unique().good)
 		return good_bool(false);
 	else return __allocate_unique();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Normally, the state_manager's top-level process, indexed at 0, 
+	has an empty footprint_frame because each entry's value
+	would be equal to its index.  
+	This 'special' case creates a need for error-prone practice, 
+	and unecessary code replication, so for consistency, 
+	we provide a function to automatically load proces[0]'s frame.
+	Consider moving this automatically into the allocate() methods...
+ */
+void
+module::populate_top_footprint_frame(void) {
+	// FIXME
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

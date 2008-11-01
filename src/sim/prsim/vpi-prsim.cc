@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.2.2.2 2008/08/23 22:59:33 fang Exp $
+	$Id: vpi-prsim.cc,v 1.2.2.3 2008/11/01 02:07:34 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -943,6 +943,7 @@ if (HAC_module) {
 			return 1;
 		}
 	}
+	HAC_module->populate_top_footprint_frame();
 	prsim_state = count_ptr<State>(
 		new State(*HAC_module, ExprAllocFlags()));
 	prsim_state->initialize();

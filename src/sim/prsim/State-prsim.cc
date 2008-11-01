@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.20 2008/11/01 01:21:37 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.21 2008/11/01 02:07:29 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1886,6 +1886,8 @@ if (e.cause_rule) {
 	r = lookup_rule(e.cause_rule);
 	NEVER_NULL(r);
 }
+#else
+	r = lookup_rule(e.cause_rule);
 #endif
 return current_time +
 	(timing_mode == TIMING_RANDOM ?
@@ -1917,6 +1919,8 @@ if (e.cause_rule) {
 	r = lookup_rule(e.cause_rule);
 	NEVER_NULL(r);
 }
+#else
+	r = lookup_rule(e.cause_rule);
 #endif
 return current_time +
 	(timing_mode == TIMING_RANDOM ?

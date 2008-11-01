@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.16 2008/03/17 23:02:19 fang Exp $
+	$Id: module.h,v 1.16.2.1 2008/11/01 02:07:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -128,6 +128,9 @@ public:
 
 	good_bool
 	allocate_unique(void);
+
+	void
+	populate_top_footprint_frame(void);
 
 	good_bool
 	cflat(ostream&, const cflat_options&) const;
