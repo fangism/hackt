@@ -7,7 +7,12 @@ BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
 2008-11-01	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-82-32-prsim-10-15a: (srcdir only tag)
+	* HACKT-00-01-04-main-00-82-32-prsim-10-15-b: (srcdir only tag)
+	  Eliminated process_first_expr_map, 
+		folded into process_sim_state-base.
+
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-15-a: (srcdir only tag)
 	  Moved many methods of unique_process_subgraph into 
 		process_sim_state, where it makes more sense, 
 		thereby simplifying many function calls.  

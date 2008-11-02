@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.12 2008/11/01 21:56:03 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.13 2008/11/02 00:17:00 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -290,11 +290,48 @@ struct unique_process_subgraph {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 /**
+	This base structure contains simulation-invariant structural data only.
+ */
+class process_sim_state_base {
+protected:
+	/**
+		While state is being allocated, the index field is valid, 
+		after the array is finished, the ptr replaces the index.
+	 */
+	union {
+		process_index_type		index;
+		const unique_process_subgraph*	ptr;
+	} type_ref;
+	/**
+		global offset of first expression belonging to this process
+		must be non-zero.
+		In the global array of processes, these offset values
+		must increase monotonically (sorted).
+	 */
+	expr_index_type				global_expr_offset;
+
+public:
+	/// only call this after ptr has been set by finish_process...
+	const unique_process_subgraph&
+	type(void) const { return *type_ref.ptr; }
+
+	const process_index_type&
+	get_index(void) const { return type_ref.index; }
+
+	void
+	set_ptr(const unique_process_subgraph& g) {
+		type_ref.ptr = &g;
+	}
+
+};	// end struct process_sim_state_base
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	state information per process instance.
 	This is memory-intensive, and thus should be kept small.  
 	Node state information is kept outside of these structures.  
  */
-struct process_sim_state {
+struct process_sim_state : public process_sim_state_base {
 	typedef	ExprState			expr_state_type;
 	typedef	RuleState<rule_time_type>	rule_state_type;
 	typedef	unique_process_subgraph::rule_type
@@ -305,28 +342,18 @@ struct process_sim_state {
 						expr_struct_type;
 	typedef	unique_process_subgraph::graph_node_type
 						graph_node_type;
-	union {
-		process_index_type		index;
-		const unique_process_subgraph*	ptr;
-	} type_ref;
-#if 0
-	/// the global offset of the first expression belonging to this process
-	expr_index_type				global_expr_offset;
-#endif
+	/// array of expression states
 	valarray<expr_state_type>		expr_states;
+	/// array of rule states
 	valarray<rule_state_type>		rule_states;
 
 #if 0
 	struct expr_offset_comparator;
 #endif
 
-	/// only call this after ptr has been set by finish_process...
-	const unique_process_subgraph&
-	type(void) const { return *type_ref.ptr; }
-
 	void
 	allocate_from_type(const unique_process_subgraph&, 
-		const process_index_type);
+		const process_index_type, const expr_index_type);
 
 	void
 	clear(void);
@@ -684,17 +711,12 @@ protected:
 		the value-indexed process.  
 		Basically each process owns a contiguous 
 		range of expr indices.  
-	 */
-	typedef	map<expr_index_type, process_index_type>
-					global_expr_process_id_map_type;
-	/**
-		TODO: Possibly fold into process_sim_state?
 		TODO: exploit monotinicity property to convert this
 		into a plain sequence of (bi-sorted) pairs, 
 		and use binary_search for both forward and reverse lookups.
 	 */
-	typedef	map<process_index_type, expr_index_type>
-					process_first_expr_map_type;
+	typedef	map<expr_index_type, process_index_type>
+					global_expr_process_id_map_type;
 	/**
 		pair(global expr offset, process id)
 	 */
@@ -721,14 +743,9 @@ private:
 	unique_process_pool_type		unique_process_pool;
 	/**
 		Maps global expression ID to owner process.  
+		TODO: eliminate me, use smart sorted search
 	 */
 	global_expr_process_id_map_type		global_expr_process_id_map;
-	/**
-		Reverse map of global_expr_process_id_map.
-		Maps process instance index to first expression index.
-		NOTE: this structure is only used for fanin traversal.
-	 */
-	process_first_expr_map_type		process_first_expr_map;
 	/**
 		Per-process state is kept in an array, indexed
 		by process index.  0 is valid, but reserved for 

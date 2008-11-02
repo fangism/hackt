@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.10 2008/11/01 20:02:16 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.11 2008/11/02 00:16:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -200,6 +200,7 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		g(NULL), 
 		current_process_index(0), 
+		total_exprs(FIRST_VALID_GLOBAL_EXPR), 	// non-zero!
 		process_footprint_map(), 	// empty
 #else
 		st_node_pool(state.node_pool), 
@@ -219,13 +220,6 @@ void
 ExprAlloc::visit(const state_manager& _sm) {
 	cflat_visitor::visit(_sm);
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	typedef	state_type::global_expr_process_id_map_type::const_iterator
-						const_iterator;
-	const_iterator i(state.global_expr_process_id_map.begin()),
-		e(state.global_expr_process_id_map.end());
-	for ( ; i!=e; ++i) {
-		state.process_first_expr_map[i->second] = i->first;
-	}
 	state.finish_process_type_map();	// finalize indices to pointers
 #else
 	if (flags.any_optimize() && expr_free_list.size()) {
@@ -292,7 +286,7 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	const unique_process_subgraph&
 		ptemplate(state.unique_process_pool[type_index]);
 	state.process_state_array.back()
-		.allocate_from_type(ptemplate, type_index);
+		.allocate_from_type(ptemplate, type_index, total_exprs);
 	// mapping update: for expr->process map, assign value
 	// TODO: be careful not to add an entry for EMPTY processes!
 	//	nice side effect of optimization: only map leaf cells with PRS!
@@ -300,6 +294,7 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 		<< current_process_index << endl);
 	STACKTRACE_INDENT_PRINT("current type index = " << type_index << endl);
 	const expr_index_type pxs = ptemplate.expr_pool.size();
+	total_exprs += pxs;
 	STACKTRACE_INDENT_PRINT("has " << pxs << " exprs" << endl);
 	INVARIANT(!state.global_expr_process_id_map.empty());
 if (pxs) {
@@ -311,8 +306,7 @@ if (pxs) {
 	// get the cumulative number of expressions (state)
 	// by adding the lower bound of the last appended entry
 	// to its corresponding size.  
-	const expr_index_type ex_offset =
-		x->first +ptemplate.expr_pool.size();
+	const expr_index_type ex_offset = x->first +pxs;
 	// STACKTRACE_INDENT_PRINT("prev offset = " << x->first << endl);
 	STACKTRACE_INDENT_PRINT("offset[" << ex_offset << "] -> process " <<
 		current_process_index +1 << endl);

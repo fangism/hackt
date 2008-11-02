@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.9.2.7 2008/11/01 08:01:58 fang Exp $
+	$Id: ExprAlloc.h,v 1.9.2.8 2008/11/02 00:16:54 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -70,6 +70,10 @@ protected:
 		Currently running unique process index.
 	 */
 	size_t					current_process_index;
+	/**
+		Running total of the number of global expressions.
+	 */
+	size_t					total_exprs;
 	/**
 		Translates unique prs_footprint to unique process index.  
 	 */

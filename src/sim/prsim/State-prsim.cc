@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.24 2008/11/01 21:56:02 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.25 2008/11/02 00:16:54 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -236,9 +236,10 @@ unique_process_subgraph::~unique_process_subgraph() { }
 // class process_sim_state method definitions
 void
 process_sim_state::allocate_from_type(const unique_process_subgraph& t, 
-		const process_index_type tid) {
+		const process_index_type tid, const expr_index_type ex_off) {
 	STACKTRACE_VERBOSE;
 	type_ref.index = tid;	// eventually link to pointer
+	global_expr_offset = ex_off;
 	expr_states.resize(t.expr_pool.size());
 	rule_states.resize(t.rule_pool.size());
 	// default constructors of these must initalize state values
@@ -319,10 +320,8 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		state_base(m, "prsim> "), 
 		node_pool(),
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-//		process_type_map(), 
 		unique_process_pool(), 
 		global_expr_process_id_map(), 
-		process_first_expr_map(),
 		process_state_array(), 
 #endif
 		event_pool(), event_queue(), 
@@ -3242,7 +3241,7 @@ State::finish_process_type_map(void) {
 	process_state_array_type::iterator
 		i(process_state_array.begin()), e(process_state_array.end());
 	for ( ; i!=e; ++i) {
-		i->type_ref.ptr = &unique_process_pool[i->type_ref.index];
+		i->set_ptr(unique_process_pool[i->get_index()]);
 	}
 }
 
@@ -4375,8 +4374,6 @@ State::dump_struct(ostream& o) const {
 	// print maps (debug only?)
 	o << "map: global-expr-id -> process-id" << endl;
 	dump_pair_map(o, global_expr_process_id_map);
-	o << "map: process-id -> global-expr-offset" << endl;
-	dump_pair_map(o, process_first_expr_map);
 	return o;
 }
 
