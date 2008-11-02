@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.27 2008/11/02 09:56:06 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.28 2008/11/02 19:55:03 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4551,10 +4551,11 @@ State::dump_struct_dot(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: need parameter to translate local node to global node!
 	Traverses a unique process subgraph to print rules that are owned
 	by that process.
 	\param offset expression index offset
+	Q: need parameter to translate local node to global node?
+	A: No, let the global node labels appear in the top-level super-graph.  
  */
 ostream&
 unique_process_subgraph::dump_struct_dot(ostream& o, 
@@ -4737,20 +4738,24 @@ ostream&
 process_sim_state::dump_rule(ostream& o, const rule_index_type lri, 
 	const State& st, const bool v) const {
 	const unique_process_subgraph& pg(type());
-	ISE_INVARIANT(pg.lookup_rule(lri));
+	const rule_type* const r = pg.lookup_rule(lri);
+	NEVER_NULL(r);
 	// const rule_type& r(rule_pool[ri]);
-	// TODO: rule attribute should be printed HERE, not in subexpr
-	dump_subexpr(o, lri, st, v) << " -> ";
+	r->dump(o << '[') << "]\t";	// moved here from dump_subexpr
+	dump_subexpr(o, lri, st, v, expr_struct_type::EXPR_ROOT, true)
+		// or pass (!v) to proot to parenthesize in verbose mode
+		<< " -> ";
 	const expr_struct_type& e(pg.expr_pool[lri]);
 	ISE_INVARIANT(e.is_root());
 	const bool dir = e.direction();
 	const node_index_type nr = e.parent;
 	const node_index_type gnr = st.translate_to_global_node(*this, nr);
 	o << st.get_node_canonical_name(gnr);
+	o << (dir ? '+' : '-');
 	if (v) {
 		st.get_node(gnr).dump_value(o << ':');
 	}
-	return o << (dir ? '+' : '-');
+	return o;
 }
 #endif
 
@@ -4924,7 +4929,6 @@ State::dump_node_fanin(ostream& o, const node_index_type ni,
 {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	const node_index_type ni = st.translate_to_global_node(*this, lni);
-	const State::node_type& n(st.get_node(ni));
 	const string cn(st.get_node_canonical_name(ni));
 	const faninout_struct_type& fia(type().local_faninout_map[lni]);
 #else
@@ -4940,24 +4944,18 @@ do {
 		i(fia.pull_up STR_INDEX(w).begin()),
 		e(fia.pull_up STR_INDEX(w).end());
 	for ( ; i!=e; ++i) {
-	const expr_index_type ui = *i;
+		const expr_index_type ui = *i;
+		dump_rule(o, ui, st, v) << endl;
 #else
 	// format is different: no single root expression
 	// fanin is listed by processes
 	const expr_index_type ui = n.pull_up_index STR_INDEX(w);
-#endif
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		dump_subexpr(o, ui, st, v)
-#else
 	if (ui) {
-		dump_subexpr(o, ui, v)
-#endif
-			<< " -> " << cn << '+';
+		dump_subexpr(o, ui, v) << " -> " << cn << '+';
 		if (v) {
 			n.dump_value(o << ':');
 		}
 		o << endl;
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	}
 #endif
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -4965,24 +4963,17 @@ do {
 		i = fia.pull_dn STR_INDEX(w).begin();
 		e = fia.pull_dn STR_INDEX(w).end();
 	for ( ; i!=e; ++i) {
-	const expr_index_type di = *i;
+		const expr_index_type di = *i;
+		dump_rule(o, di, st, v) << endl;
+	}
 #else
 	const expr_index_type di = n.pull_dn_index STR_INDEX(w);
 	if (di) {
-#endif
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		dump_subexpr(o, di, st, v)
-#else
-		dump_subexpr(o, di, v)
-#endif
-			<< " -> " << cn << '-';
+		dump_subexpr(o, di, v) << " -> " << cn << '-';
 		if (v) {
 			n.dump_value(o << ':');
 		}
 		o << endl;
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-	}
-#else
 	}
 #endif
 #if PRSIM_WEAK_RULES
@@ -6083,15 +6074,18 @@ State::dump_subexpr
 	// can elaborate more on when parens are needed
 	const bool need_parens = e.parenthesize(ptype, pr);
 	const uchar _type = e.type;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	// rule attribute printing has moved! (was here)
+#else
 	// check if this sub-expression is a root expression by looking
 	// up the expression index in the rule_map.  
-	const rule_type* const ri(PG lookup_rule(ei));
-	// TODO: move rule attributes to dump_node_fanin...
+	const rule_type* const ri(lookup_rule(ei));
 	// local rules are 0-indexed
 	if (ri) {
-		// then we can print out its attributes
-		ri->dump(o << '[') << "]\t";
+	       // then we can print out its attributes
+	       ri->dump(o << '[') << "]\t";
 	}
+#endif
 	if (e.is_not()) {
 		o << '~';
 	}

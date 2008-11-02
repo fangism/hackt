@@ -7,6 +7,10 @@ BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
 2008-11-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-32-prsim-10-16-a: (srcdir only tag)
+	  Better printing of rules, further reducing test differences.
+
+
 	* HACKT-00-01-04-main-00-82-32-prsim-10-16:
 	  Cleaned up evaluate_return_type struct, removed unused refs
 		to __scratch_expr_trace.
