@@ -5,6 +5,16 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-11-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-15-c: (srcdir only tag)
+	  Confined uses of process_expr_id_map to lookup and setup functions.
+		Defined PRSIM_SEPARATE_PROCESS_EXPR_MAP for later exploration
+		between two implementation, small tradeoff memory/performance.
+	  Next simplify some process_sim_state call sites, involving
+		local/global indices.
+
+
 2008-11-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-15-b: (srcdir only tag)

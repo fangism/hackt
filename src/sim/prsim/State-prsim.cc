@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.25 2008/11/02 00:16:54 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.26 2008/11/02 08:08:29 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -321,7 +321,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		node_pool(),
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		unique_process_pool(), 
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 		global_expr_process_id_map(), 
+#endif
 		process_state_array(), 
 #endif
 		event_pool(), event_queue(), 
@@ -375,10 +377,12 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// pre-allocate array of process states
 	process_state_array.reserve(sm.get_pool<process_tag>().size() +2);
 	// unique_process_pool.reserve() ?
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	// first valid global expression ID is 1, 0 is reserved as NULL
 	global_expr_process_id_map[FIRST_VALID_GLOBAL_EXPR]
 		= FIRST_VALID_PROCESS;
 	// if top-level process is empty, will need to replace this entry!
+#endif
 	// top-level prs in the module, pid=0
 	mod.get_footprint().get_prs_footprint().accept(v);	// throw?
 #endif
@@ -1973,12 +1977,8 @@ State::lookup_rule(const expr_index_type ei) const {
 if (ei) {
 	// translate global expression index to 
 	// global process index with local expression index,
-	// and forward the lookup
-	// const expr_struct_type* s;
-	const expr_offset_pair& f(lookup_global_expr_process(ei));
-	const expr_index_type lei = ei -f.first;
-	const process_index_type pid = f.second;
-	return process_state_array[pid].type().lookup_rule(lei);
+	const process_sim_state& s(lookup_global_expr_process(ei));
+	return s.lookup_rule(ei);
 }
 #else
 	if (ei) {
@@ -3097,10 +3097,9 @@ State::evaluate(const node_index_type ni,
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	// first, localize evaulation to a single process!
 	const expr_struct_type* s;
-	const expr_offset_pair& f(lookup_global_expr_process(gui));
-	expr_index_type ui = gui -f.first;
-	const process_index_type pid = f.second;
-	process_sim_state& ps(process_state_array[pid]);
+	process_sim_state& ps(lookup_global_expr_process(gui));
+	const process_index_type pid = lookup_process_index(ps);
+	expr_index_type ui = ps.local_expr_index(gui);
 	const unique_process_subgraph& pg(ps.type());
 	expr_index_type ri;
 #define	STRUCT	s
@@ -3112,7 +3111,7 @@ do {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	s = &pg.expr_pool[ui];
 	u = &ps.expr_states[ui];
-	__scratch_expr_trace.push_back(ui +f.first);
+	__scratch_expr_trace.push_back(ps.global_expr_index(ui));
 	// TODO: do away with __scratch_expr_trace entirely, 
 	// now that we have restructured nodes and fanins
 #else
@@ -3224,7 +3223,7 @@ do {
 #endif
 	return evaluate_return_type(oni, STRUCT, next
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-		, &r, ri +f.first, pid, f.first
+		, &r, ps.global_expr_index(ri), pid, ps.get_offset()
 #endif
 		);
 #undef	STRUCT
@@ -3247,20 +3246,72 @@ State::finish_process_type_map(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Computes index based on address.  
+	\param s must be an element of the process_state_array.
+ */
+process_index_type
+State::lookup_process_index(const process_sim_state& s) const {
+	return std::distance(&process_state_array[0], &s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct process_sim_state_base::offset_comparator {
+	bool
+	operator () (const process_index_type l, 
+			const process_sim_state_base& r) {
+		return l < r.global_expr_offset;
+	}
+};	// end struct offset_comparator
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param gei global expression index
 	\return pair: local process expression index offset, process ID
  */
 // inline
-const State::expr_offset_pair&
+const process_sim_state&
 State::lookup_global_expr_process(const expr_index_type gei) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("global-expr: " << gei << endl);
 	INVARIANT(gei);
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	global_expr_process_id_map_type::const_iterator
 		f(global_expr_process_id_map.upper_bound(gei));
 	INVARIANT(f != global_expr_process_id_map.begin());
 	--f;
+	return process_state_array[f->second];
+#else
+	process_state_array_type::const_iterator
+		e(process_state_array.end()),
+		f(std::upper_bound(process_state_array.begin(), e, gei, 
+			process_sim_state_base::offset_comparator()));
+	INVARIANT(f != e);
+	--f;
 	return *f;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Modifiable version.
+ */
+process_sim_state&
+State::lookup_global_expr_process(const expr_index_type gei) {
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+	global_expr_process_id_map_type::const_iterator
+		f(global_expr_process_id_map.upper_bound(gei));
+	INVARIANT(f != global_expr_process_id_map.begin());
+	--f;
+	return process_state_array[f->second];
+#else
+	process_state_array_type::iterator
+		e(process_state_array.end()),
+		f(std::upper_bound(process_state_array.begin(), e, gei, 
+			process_sim_state_base::offset_comparator()));
+	INVARIANT(f != e);
+	--f;
+	return *f;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4372,8 +4423,10 @@ State::dump_struct(ostream& o) const {
 	o << "}" << endl;
 }
 	// print maps (debug only?)
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	o << "map: global-expr-id -> process-id" << endl;
 	dump_pair_map(o, global_expr_process_id_map);
+#endif
 	return o;
 }
 
@@ -4465,16 +4518,13 @@ State::dump_struct_dot(ostream& o) const {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 {
 	o << "# Processes: " << endl;
-	process_index_type j = 0;	// first valid process index
-	global_expr_process_id_map_type::const_iterator
-		i(global_expr_process_id_map.begin()),
-		e(--global_expr_process_id_map.end());	// last entry invalid
-	for ( ; i!=e; ++i, ++j) {
-		const expr_index_type offset = i->first;
-		const process_index_type pid = i->second;
-		// TODO: create subgraph cluster wrapper here
-		// TODO: pass translation table for process footprint frame
-		process_state_array[pid].type().dump_struct_dot(o, offset);
+	process_state_array_type::const_iterator
+		i(process_state_array.begin()), e(process_state_array.end());
+	for ( ; i!=e; ++i) {
+		const unique_process_subgraph& pg(i->type());
+		if (pg.expr_pool.size()) {
+			pg.dump_struct_dot(o, i->get_offset());
+		}
 	}
 }
 	return o << "}" << endl;
@@ -4695,14 +4745,8 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 ostream&
 State::dump_rule(ostream& o, const expr_index_type ri, const bool v) const {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	const expr_offset_pair& f(lookup_global_expr_process(ri));
-	const expr_index_type lei = ri -f.first;
-	const process_index_type pid = f.second;
-	const process_sim_state& ps(process_state_array[pid]);
-//	const unique_process_subgraph& pg(ps.type());
-	// const expr_index_type ei = f.first +pg.local_root_expr(lei);
-	// adding offset translates back to global expression id
-	return ps.dump_rule(o, lei, *this, v);
+	const process_sim_state& ps(lookup_global_expr_process(ri));
+	return ps.dump_rule(o, ps.local_expr_index(ri), *this, v);
 #else
 	const expr_state_type* const e = &expr_pool[ri];
 	// ei (*ri) is index to expression whose parent is *node*.
@@ -4777,17 +4821,16 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 			e = &expr_pool[ei];
 		}
 #else
+		const expr_index_type& gei = *fi;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-		const expr_index_type gei = *fi;
-		const expr_offset_pair& f(lookup_global_expr_process(gei));
-		const expr_index_type lei = gei -f.first;
-		const process_index_type pid = f.second;
-		const unique_process_subgraph&
-			pg(process_state_array[pid].type());
-		const expr_index_type ei = f.first +pg.local_root_expr(lei);
+		const process_sim_state& ps(lookup_global_expr_process(gei));
+		const expr_index_type lei = ps.local_expr_index(gei);
+		const unique_process_subgraph& pg(ps.type());
+		const expr_index_type ei =
+			ps.global_expr_index(pg.local_root_expr(lei));
 		// adding offset translates back to global expression id
 #else
-		const expr_index_type ei = local_root_expr(*fi);
+		const expr_index_type ei = local_root_expr(gei);
 #endif
 #endif
 		DEBUG_FANOUT_PRINT("ei = " << ei << endl);
@@ -5307,11 +5350,8 @@ void
 State::__get_X_fanins(const expr_index_type xi, node_set_type& u) const {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	ISE_INVARIANT(xi);
-	// translate global to local
-	const expr_offset_pair& p(lookup_global_expr_process(xi));
-	const process_index_type pid(p.second);
-	const process_sim_state& ps(process_state_array[pid]);
-	ps.__get_local_X_fanins(xi -p.first, *this, u);
+	const process_sim_state& ps(lookup_global_expr_process(xi));
+	ps.__get_local_X_fanins(ps.local_expr_index(xi), *this, u);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5397,10 +5437,8 @@ State::__expr_why_not(ostream& o, const expr_index_type xi, const size_t limit,
 	STACKTRACE_VERBOSE_WHY;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	// translate global to local
-	const expr_offset_pair& p(lookup_global_expr_process(xi));
-	const process_index_type pi(p.second);
-	const process_sim_state& ps(process_state_array[pi]);
-	ps.__local_expr_why_not(o, xi -p.first, *this, 
+	const process_sim_state& ps(lookup_global_expr_process(xi));
+	ps.__local_expr_why_not(o, ps.local_expr_index(xi), *this, 
 		limit, why_not, verbose, u, v);
 }
 
@@ -5601,11 +5639,9 @@ State::__expr_why_X(ostream& o, const expr_index_type xi, const size_t limit,
 	STACKTRACE_VERBOSE_WHY;
 	ISE_INVARIANT(xi);
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	// translate global to local
-	const expr_offset_pair& p(lookup_global_expr_process(xi));
-	const process_index_type pi(p.second);
-	const process_sim_state& ps(process_state_array[pi]);
-	ps.__local_expr_why_X(o, xi -p.first, *this, limit, verbose, u, v);
+	const process_sim_state& ps(lookup_global_expr_process(xi));
+	ps.__local_expr_why_X(o, ps.local_expr_index(xi), 
+		*this, limit, verbose, u, v);
 }
 
 void
@@ -5972,11 +6008,8 @@ ostream&
 State::dump_subexpr(ostream& o, const expr_index_type ei, 
 		const bool v, 
 		const uchar ptype, const bool pr) const {
-	const expr_offset_pair& f(lookup_global_expr_process(ei));
-	expr_index_type ui = ei -f.first;
-	const process_index_type pid = f.second;
-	const process_sim_state& ps(process_state_array[pid]);
-	return ps.dump_subexpr(o, ui, *this, v, ptype, pr);
+	const process_sim_state& ps(lookup_global_expr_process(ei));
+	return ps.dump_subexpr(o, ps.local_expr_index(ei), *this, v, ptype, pr);
 }
 #endif
 

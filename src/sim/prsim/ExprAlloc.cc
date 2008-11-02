@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.11 2008/11/02 00:16:54 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.12 2008/11/02 08:08:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -285,8 +285,10 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	// now, allocate state for instance of this process type
 	const unique_process_subgraph&
 		ptemplate(state.unique_process_pool[type_index]);
-	state.process_state_array.back()
-		.allocate_from_type(ptemplate, type_index, total_exprs);
+	// TODO: ALERT! if (pxs == 0) this will still cost to 
+	// lookup empty process with binary search through process_state_array
+	process_sim_state& ps(state.process_state_array.back());
+	ps.allocate_from_type(ptemplate, type_index, total_exprs);
 	// mapping update: for expr->process map, assign value
 	// TODO: be careful not to add an entry for EMPTY processes!
 	//	nice side effect of optimization: only map leaf cells with PRS!
@@ -296,8 +298,11 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	const expr_index_type pxs = ptemplate.expr_pool.size();
 	total_exprs += pxs;
 	STACKTRACE_INDENT_PRINT("has " << pxs << " exprs" << endl);
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	INVARIANT(!state.global_expr_process_id_map.empty());
+#endif
 if (pxs) {
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	// Each process appends an entry for 
 	// the process that *follows* it (P+1)!  (optionally delete last one)
 	typedef state_type::global_expr_process_id_map_type::const_iterator
@@ -312,6 +317,7 @@ if (pxs) {
 		current_process_index +1 << endl);
 	state.global_expr_process_id_map[ex_offset] = current_process_index +1;
 	// connect global nodes to global fanout expressions
+#endif
 	node_index_type lni = 0;	// frame-map is 0-indexed
 	for ( ; lni < node_pool_size; ++lni) {
 		const node_index_type gni = bmap[lni];
@@ -321,7 +327,7 @@ if (pxs) {
 		const fanout_array_type& lfo(ff.fanout);
 		State::node_type& n(state.node_pool[gni]);
 		transform(lfo.begin(), lfo.end(), back_inserter(n.fanout), 
-			bind2nd(std::plus<expr_index_type>(), x->first));
+			bind2nd(std::plus<expr_index_type>(), ps.get_offset()));
 		if (ff.has_fanin()) {
 #if VECTOR_NODE_FANIN
 			n.fanin.push_back(current_process_index);
@@ -332,6 +338,7 @@ if (pxs) {
 		}
 	}
 } else {
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	// we have an empty process, but previous entry already added an 
 	// entry pointing to this one.  
 	// so we just "modify" the key in place without removing/re-inserting
@@ -342,6 +349,7 @@ if (pxs) {
 	x->second = current_process_index +1;	// equiv: ++(x->second);
 	STACKTRACE_INDENT_PRINT("offset[" << x->first << "] -> process "
 		<< x->second << endl);
+#endif
 }
 	// the very last process will add an entry pointing one-past-the-end
 	// assume that processes are visited in sequence

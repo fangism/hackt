@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.13 2008/11/02 00:17:00 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.14 2008/11/02 08:08:39 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -60,6 +60,18 @@ using HASH_MAP_NAMESPACE::hash_map;
 using std::valarray;
 using entity::footprint;
 struct process_sim_state;
+#endif
+
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	Define to 1 to maintain a separate expr->process id map.
+	TODO: benchmark the different between performance
+	on large hierarchical designs.  
+	Whe the map is combined search may need to be modified
+	to use lower_bound rather than --upper_bound
+ */
+#define	PRSIM_SEPARATE_PROCESS_EXPR_MAP		1
 #endif
 
 /// can switch between integer and real-valued time
@@ -311,6 +323,8 @@ protected:
 	expr_index_type				global_expr_offset;
 
 public:
+	struct offset_comparator;
+
 	/// only call this after ptr has been set by finish_process...
 	const unique_process_subgraph&
 	type(void) const { return *type_ref.ptr; }
@@ -318,9 +332,35 @@ public:
 	const process_index_type&
 	get_index(void) const { return type_ref.index; }
 
+	const expr_index_type&
+	get_offset(void) const { return global_expr_offset; }
+
 	void
 	set_ptr(const unique_process_subgraph& g) {
 		type_ref.ptr = &g;
+	}
+
+	/**
+		\param gei is a global expression index.
+		\return local expression index.
+	 */
+	expr_index_type
+	local_expr_index(const expr_index_type gei) const {
+		return gei -global_expr_offset;
+	}
+
+	/**
+		\param lei is a local expression index.
+		\return global expression index.
+	 */
+	expr_index_type
+	global_expr_index(const expr_index_type lei) const {
+		return lei +global_expr_offset;
+	}
+
+	const unique_process_subgraph::rule_type*
+	lookup_rule(const expr_index_type gei) const {
+		return type().lookup_rule(local_expr_index(gei));
 	}
 
 };	// end struct process_sim_state_base
@@ -704,6 +744,7 @@ protected:
 	 */
 	typedef	vector<ring_set_type>		check_excl_array_type;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	/**
 		Translates a global expression ID to the process ID
 		to which the expression belongs.  
@@ -717,11 +758,7 @@ protected:
 	 */
 	typedef	map<expr_index_type, process_index_type>
 					global_expr_process_id_map_type;
-	/**
-		pair(global expr offset, process id)
-	 */
-	typedef	global_expr_process_id_map_type::value_type
-					expr_offset_pair;
+#endif
 	/**
 		Collection of unique process footprints.
 	 */
@@ -741,11 +778,18 @@ private:
 		Collection of unique process footprints.  
 	 */
 	unique_process_pool_type		unique_process_pool;
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	/**
 		Maps global expression ID to owner process.  
-		TODO: eliminate me, use smart sorted search
+		TODO: eliminate me, use binary sorted search?
+		Tradeoff: this map will be smaller to search than
+		the entire process_state_array because many processes
+		in the hierarchy that would be empty and omitted
+		would be included in the search tree.  
+		TODO: implement both and benchmark the difference.  
 	 */
 	global_expr_process_id_map_type		global_expr_process_id_map;
+#endif
 	/**
 		Per-process state is kept in an array, indexed
 		by process index.  0 is valid, but reserved for 
@@ -872,9 +916,17 @@ public:
 	void
 	finish_process_type_map(void);
 
-	const expr_offset_pair&
+	process_index_type
+	lookup_process_index(const process_sim_state&) const;
+
+	const process_sim_state&
 	lookup_global_expr_process(const expr_index_type) const;
 
+private:
+	process_sim_state&
+	lookup_global_expr_process(const expr_index_type);
+
+public:
 	node_index_type
 	translate_to_global_node(const process_sim_state&, 
 		const node_index_type) const;
