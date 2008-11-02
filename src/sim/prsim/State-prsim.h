@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.14 2008/11/02 08:08:39 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.15 2008/11/02 09:56:12 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -36,11 +36,12 @@
 #endif
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
-#include "util/list_vector.h"
 #include "util/named_ifstream_manager.h"
 #include "util/tokenize_fwd.h"
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 #include <valarray>
+#else
+#include "util/list_vector.h"
 #endif
 
 namespace HAC {
@@ -54,12 +55,13 @@ namespace PRSIM {
 class ExprAlloc;
 struct ExprAllocFlags;
 using std::map;
-using util::list_vector;
 using HASH_MAP_NAMESPACE::hash_map;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 using std::valarray;
 using entity::footprint;
 struct process_sim_state;
+#else
+using util::list_vector;
 #endif
 
 
@@ -183,7 +185,7 @@ struct faninout_struct_type {
 	This extends information that would normally go into
 		a process's footprint. 
 	TODO: eventually, PRSIM_UNIFY_GRAPH_STRUCTURES to avoid 
-		unnecessary data replication.
+		unnecessary data replication, structure from create/unrolling.
 	No stateful information should be kept here.  
 	TODO: rings for mk_excl and check_excl!
  */
@@ -281,6 +283,9 @@ struct unique_process_subgraph {
 
 	void
 	check_expr(const expr_index_type) const;
+
+	void
+	check_node(const node_index_type) const;
 
 	void
 	check_structure(void) const;
@@ -518,12 +523,6 @@ public:
 #define	THROWS_STEP_EXCEPTION	throw (step_exception)
 private:
 	struct evaluate_return_type;
-	/**
-		A fast, realloc-free vector-like structure
-		to built-up expressions.  
-		Will have log(N) time access due to internal tree structure.
-	 */
-	typedef	list_vector<expr_state_type>	temp_expr_pool_type;
 
 	/**
 		Return codes for set_node_time.  
@@ -752,9 +751,6 @@ protected:
 		the value-indexed process.  
 		Basically each process owns a contiguous 
 		range of expr indices.  
-		TODO: exploit monotinicity property to convert this
-		into a plain sequence of (bi-sorted) pairs, 
-		and use binary_search for both forward and reverse lookups.
 	 */
 	typedef	map<expr_index_type, process_index_type>
 					global_expr_process_id_map_type;
@@ -781,12 +777,10 @@ private:
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	/**
 		Maps global expression ID to owner process.  
-		TODO: eliminate me, use binary sorted search?
 		Tradeoff: this map will be smaller to search than
 		the entire process_state_array because many processes
 		in the hierarchy that would be empty and omitted
 		would be included in the search tree.  
-		TODO: implement both and benchmark the difference.  
 	 */
 	global_expr_process_id_map_type		global_expr_process_id_map;
 #endif
@@ -852,11 +846,13 @@ private:
 		(is this redundant with the STOP flag?)
 	 */
 	volatile bool				interrupted;
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	/**
 		For efficient tracing and lookup of root rule expressions.  
 		Should not be maintained for state checkpointing.  
 	 */
 	expr_trace_type				__scratch_expr_trace;
+#endif
 	/**
 		Auxiliary array for in-place random reordering
 		of fanout indices for evaluation.  
@@ -896,9 +892,10 @@ private:
 	__initialize(void);
 
 public:
-
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	void
 	check_node(const node_index_type) const;
+#endif
 
 	const node_type&
 	get_node(const node_index_type) const;

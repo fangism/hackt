@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.12 2008/11/02 08:08:21 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.13 2008/11/02 09:56:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -290,8 +290,8 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	process_sim_state& ps(state.process_state_array.back());
 	ps.allocate_from_type(ptemplate, type_index, total_exprs);
 	// mapping update: for expr->process map, assign value
-	// TODO: be careful not to add an entry for EMPTY processes!
-	//	nice side effect of optimization: only map leaf cells with PRS!
+	// We are careful not to add an entry for EMPTY processes!
+	// nice side effect of optimization: only map leaf cells with PRS!
 	STACKTRACE_INDENT_PRINT("current process index = "
 		<< current_process_index << endl);
 	STACKTRACE_INDENT_PRINT("current type index = " << type_index << endl);
@@ -416,7 +416,6 @@ ExprAlloc::compact_expr_pools(void) {
 		INVARIANT(gn.wiped());
 		e = g->expr_pool[i];
 		gn = g->expr_graph_node_pool[i];
-		// TODO: this code is re-used several times in this file.  
 		// relink parent, which may be node or expression
 		if (e.is_root()) {
 #if PRSIM_INDIRECT_EXPRESSION_MAP

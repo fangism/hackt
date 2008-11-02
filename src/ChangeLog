@@ -7,6 +7,14 @@ BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
 2008-11-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-32-prsim-10-16:
+	  Cleaned up evaluate_return_type struct, removed unused refs
+		to __scratch_expr_trace.
+	  Added unique_process_subgraph::check_node(), from check_structure().
+	  TODO: memstats, fanin/out-get print-info, 
+		print rule attributes properly at rule, update tests.
+
+
 	* HACKT-00-01-04-main-00-82-32-prsim-10-15-c: (srcdir only tag)
 	  Confined uses of process_expr_id_map to lookup and setup functions.
 		Defined PRSIM_SEPARATE_PROCESS_EXPR_MAP for later exploration

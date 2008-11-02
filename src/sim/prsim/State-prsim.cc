@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.26 2008/11/02 08:08:29 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.27 2008/11/02 09:56:06 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -26,7 +26,6 @@
 #include "sim/prsim/Rule.tcc"
 #include "sim/random_time.h"
 #include "sim/signal_handler.tcc"
-#include "util/list_vector.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
 #include "Object/traits/classification_tags.h"
@@ -36,6 +35,9 @@
 #include "Object/global_entry.h"
 #include "sim/ISE.h"
 #include "common/TODO.h"
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
+#include "util/list_vector.tcc"
+#endif
 #include "util/attributes.h"
 #include "util/sstream.h"
 #include "util/stacktrace.h"
@@ -163,7 +165,6 @@ dump_pair_vector(ostream& o, const ListType& m) {
 //=============================================================================
 /**
 	Passing around information from expression evaluation.  
-	TODO: figure out which members are actually needed...
  */
 struct State::evaluate_return_type {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -182,10 +183,6 @@ struct State::evaluate_return_type {
 	const rule_type*		root_rule;
 	/// root rule index
 	rule_index_type			root_rule_index;
-	/// process instance index
-	process_index_type		pid;
-	/// process instance's expression offset
-	expr_index_type			ex_offset;
 #endif
 
 	/// other fields may remain uninitialized, we won't use them
@@ -196,14 +193,11 @@ struct State::evaluate_return_type {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		, const rule_type* const r
 		, const rule_index_type ri
-		, const process_index_type pi
-		, const expr_index_type o
 #endif
 		) :
 		node_index(ni), root_ex(e), root_pull(p)
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 			, root_rule(r), root_rule_index(ri)
-			, pid(pi), ex_offset(o)
 #endif
 			{ }
 };	// end struct evaluate_return_type
@@ -311,7 +305,6 @@ State::pull_to_value[3][3] = {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Allocates simulation state, given a module.
-	TODO: do this work in module?
 	\param m the expanded module object.
 	\pre m must already be past the allcoate phase.  
 	\throw exception if there is an error
@@ -344,7 +337,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		interference_policy(ERROR_DEFAULT_INTERFERENCE),
 		weak_interference_policy(ERROR_DEFAULT_WEAK_INTERFERENCE),
 		timing_mode(TIMING_DEFAULT),
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 		__scratch_expr_trace(),
+#endif
 		__shuffle_indices(0) {
 	const state_manager& sm(mod.get_state_manager());
 	const global_entry_pool<bool_tag>&
@@ -357,15 +352,12 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	node_pool.resize(s);
 
 	// not expect expression-trees deeper than 8, but is growable
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	__scratch_expr_trace.reserve(8);
+#endif
 	__shuffle_indices.reserve(32);
 	// then go through all processes to generate expressions
-#if 0
-	// create a temporary vector of expressions using list_vector first
-	// then transfer them over to the expr_pool
-	temp_expr_pool_type build_exprs;
-	build_exprs.set_chunk_size(1024);
-#endif
+
 	// use a cflat-prs-like pass to construct the expression netlist
 	// got a walker? and prs_expr_visitor?
 	// see "ExprAlloc.h"
@@ -663,7 +655,7 @@ State::reset_tcounts(void) {
 	Resets the state of simulation, as if it had just started up.  
 	Preserve the watch/break point state.
 	\pre expressions are already properly sized.  
-	TODO: this unfortunately still preserves interpreter aliases.  
+	This unfortunately still preserves interpreter aliases.  
 		The 'unalias-all' command should clear all aliases.
  */
 void
@@ -783,33 +775,58 @@ State::void_expr(const expr_index_type ei)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-State::check_node(const node_index_type i) const {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+unique_process_subgraph
+#else
+State
+#endif
+::check_node(const node_index_type i) const {
 	STACKTRACE_VERBOSE_CHECK;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	// TODO: move this check into unique_process_subgraph
+	INVARIANT(i < local_faninout_map.size());
+	const node_type& n(local_faninout_map[i]);
 #else
 	const node_type& n(node_pool[i]);
+#endif
 	// check pull-up/dn if applicable
 #if PRSIM_WEAK_RULES
 size_t k = 0;	// NORMAL_RULE = 0, WEAK_RULE = 1 (Node.h)
 for ( ; k<2; ++k) {
 #endif
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	const fanin_array_type& fu(n.pull_up STR_INDEX(k));
+	fanin_array_type::const_iterator fui(fu.begin()), fue(fu.end());
+	for ( ; fui!=fue; ++fui) {
+	const expr_index_type upi = *fui;
+#else
 	const expr_index_type upi = n.pull_up_index STR_INDEX(k);
+#endif
 	if (is_valid_expr_index(upi)) {
-		const expr_state_type& e
+		const expr_struct_type& e
 			__ATTRIBUTE_UNUSED_CTOR__((expr_pool[upi]));
 		assert(e.is_root());
 		assert(e.direction());
 		assert(e.parent == i);
 	}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	}
+	const fanin_array_type& fd(n.pull_dn STR_INDEX(k));
+	fanin_array_type::const_iterator fdi(fd.begin()), fde(fd.end());
+	for ( ; fdi!=fde; ++fdi) {
+	const expr_index_type dni = *fdi;
+#else
 	const expr_index_type dni = n.pull_dn_index STR_INDEX(k);
+#endif
 	if (is_valid_expr_index(dni)) {
-		const expr_state_type& e
+		const expr_struct_type& e
 			__ATTRIBUTE_UNUSED_CTOR__((expr_pool[dni]));
 		assert(e.is_root());
 		assert(!e.direction());
 		assert(e.parent == i);
 	}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	}
+#endif
 #if PRSIM_WEAK_RULES
 }
 #endif
@@ -820,7 +837,6 @@ for ( ; k<2; ++k) {
 		assert(expr_graph_node_pool[n.fanout[j]]
 			.contains_node_fanin(i));
 	}
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3093,17 +3109,16 @@ State::evaluate(const node_index_type ni,
 		node_type::value_to_char[size_t(prev)] << " -> " <<
 		node_type::value_to_char[size_t(next)] << endl);
 	expr_state_type* u;
-	__scratch_expr_trace.clear();
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	// first, localize evaulation to a single process!
 	const expr_struct_type* s;
 	process_sim_state& ps(lookup_global_expr_process(gui));
-	const process_index_type pid = lookup_process_index(ps);
 	expr_index_type ui = ps.local_expr_index(gui);
 	const unique_process_subgraph& pg(ps.type());
 	expr_index_type ri;
 #define	STRUCT	s
 #else
+	__scratch_expr_trace.clear();
 #define	STRUCT	u
 #endif
 do {
@@ -3111,9 +3126,6 @@ do {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	s = &pg.expr_pool[ui];
 	u = &ps.expr_states[ui];
-	__scratch_expr_trace.push_back(ps.global_expr_index(ui));
-	// TODO: do away with __scratch_expr_trace entirely, 
-	// now that we have restructured nodes and fanins
 #else
 	u = &expr_pool[ui];
 	__scratch_expr_trace.push_back(ui);
@@ -3188,6 +3200,7 @@ do {
 	// made it to root
 	// negation already accounted for
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+	const process_index_type pid = lookup_process_index(ps);
 	// new: remember to update node-fanin state structure!
 	const node_index_type oni = translate_to_global_node(pid, ui);
 	// local -> global node
@@ -3223,7 +3236,7 @@ do {
 #endif
 	return evaluate_return_type(oni, STRUCT, next
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-		, &r, ps.global_expr_index(ri), pid, ps.get_offset()
+		, &r, ps.global_expr_index(ri)
 #endif
 		);
 #undef	STRUCT
@@ -3361,8 +3374,6 @@ State::translate_to_global_node(const process_index_type pid,
 		in the event that an evaluation propagates to root.  
 	NOTE: the action table here depends on the expression-type's
 		subtype encoding.  For now, we use the Expr's encoding.  
-	TODO: optimize reuse of root_rule, don't waste lookups
-	TODO: move ::evaluate into a member function of unique_process_subgraph
  */
 State::break_type
 State::propagate_evaluation(
@@ -3389,8 +3400,6 @@ State::propagate_evaluation(
 	// of searching required to find the responsible rule expression.  
 	rule_index_type root_rule;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-//	INVARIANT(__scratch_expr_trace.size());
-//	root_rule = __scratch_expr_trace.back();
 	root_rule = ev_result.root_rule_index;
 #else
 {
@@ -4336,6 +4345,7 @@ State::check_event_queue(void) const {
 void
 unique_process_subgraph::check_structure(void) const {
 	STACKTRACE_VERBOSE_CHECK;
+{
 	const expr_index_type exprs = expr_pool.size();
 	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
 	expr_index_type i = FIRST_VALID_LOCAL_EXPR;
@@ -4343,8 +4353,17 @@ unique_process_subgraph::check_structure(void) const {
 		DEBUG_CHECK_PRINT("checking Expr " << i << ":" << endl);
 		check_expr(i);
 	}
+}{
+	node_index_type i = FIRST_VALID_LOCAL_NODE;
+	const node_index_type nodes = local_faninout_map.size();
+	for ( ; i<nodes; ++i) {
+		DEBUG_CHECK_PRINT("checking Node " << i << ":" << endl);
+		check_node(i);
+	}
+}
 }
 #endif
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Structural assertions.  
@@ -4356,6 +4375,7 @@ State::check_structure(void) const {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	for_each(unique_process_pool.begin(), unique_process_pool.end(),
 		mem_fun_ref(&unique_process_subgraph::check_structure));
+	// assert size consistency between each process_sim_state and its type
 #else
 {
 	const expr_index_type exprs = expr_pool.size();
@@ -4365,9 +4385,7 @@ State::check_structure(void) const {
 		DEBUG_CHECK_PRINT("checking Expr " << i << ":" << endl);
 		check_expr(i);
 	}
-}
-#endif
-{
+}{
 	const node_index_type nodes = node_pool.size();
 	node_index_type j = FIRST_VALID_GLOBAL_NODE;
 	for ( ; j<nodes; ++j) {
@@ -4375,6 +4393,7 @@ State::check_structure(void) const {
 		check_node(j);
 	}
 }
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4559,7 +4578,6 @@ unique_process_subgraph::dump_struct_dot(ostream& o,
 		const expr_state_type& e(expr_pool[i]);
 #endif
 		e.dump_type_dot_shape(o) << "];" << endl;
-		// TODO: translate local node to global node
 		e.dump_parent_dot_edge(o << "EXPR_" << gi << " -> ")
 			<< ';'<< endl;
 	}
@@ -4723,7 +4741,7 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 	// const rule_type& r(rule_pool[ri]);
 	// TODO: rule attribute should be printed HERE, not in subexpr
 	dump_subexpr(o, lri, st, v) << " -> ";
-	const expr_struct_type& e = pg.expr_pool[lri];
+	const expr_struct_type& e(pg.expr_pool[lri]);
 	ISE_INVARIANT(e.is_root());
 	const bool dir = e.direction();
 	const node_index_type nr = e.parent;
@@ -4890,7 +4908,6 @@ for ( ; i!=e; ++i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: OR-combinations on separate lines?
 	TODO: Rajit's prsim suppreses weak rule fanins (copy?)
 		For now, we print those as well.
 	\param v true if literal should be printed with its value.  
@@ -5287,7 +5304,7 @@ if (y.second) {
 		if (u.size() <= limit) {
 		o << endl;
 		// INDENT_SCOPE(o);
-		// TODO: can't use pi, wpi
+		// can't use pi, wpi
 		// unroll fanin rules: iterate over all relevant rules
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		if (ps == pull_query) {
@@ -5348,6 +5365,7 @@ if (y.second) {
  */
 void
 State::__get_X_fanins(const expr_index_type xi, node_set_type& u) const {
+	STACKTRACE_VERBOSE;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	ISE_INVARIANT(xi);
 	const process_sim_state& ps(lookup_global_expr_process(xi));
@@ -5357,15 +5375,11 @@ State::__get_X_fanins(const expr_index_type xi, node_set_type& u) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Uses local expression state lookup.  
+	\param xi local expr index, whose pull state is X.
  */
 void
 process_sim_state::__get_local_X_fanins(const expr_index_type xi,
 	const State& st, node_set_type& u) const {
-#else
-	STACKTRACE_VERBOSE;
-	ISE_INVARIANT(xi);
-#endif
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	const unique_process_subgraph& pg(type());
 	ISE_INVARIANT(xi < pg.expr_pool.size());
 	const expr_struct_type& x(pg.expr_pool[xi]);
@@ -5373,6 +5387,7 @@ process_sim_state::__get_local_X_fanins(const expr_index_type xi,
 	ISE_INVARIANT(xs.pull_state(x) == PULL_WEAK);
 	const graph_node_type& g(pg.expr_graph_node_pool[xi]);
 #else
+	ISE_INVARIANT(xi);
 	ISE_INVARIANT(xi < expr_pool.size());
 	const expr_state_type& x(expr_pool[xi]);
 	ISE_INVARIANT(x.pull_state() == PULL_WEAK);
@@ -5706,7 +5721,7 @@ process_sim_state::__local_expr_why_X(ostream& o,
 			dump_subexpr(o, ci->second, false,
 				expr_struct_type::EXPR_ROOT, false) << endl;
 #endif
-			const expr_state_type& s(pg.expr_pool[ci->second]);
+			const expr_state_type& s(expr_pool[ci->second]);
 			const pull_enum sp = s.pull_state();
 			if (sp == PULL_WEAK) {
 				__expr_why_X(o, ci->second, 
@@ -6058,17 +6073,19 @@ State::dump_subexpr
 	const expr_struct_type& e(pg.expr_pool[ei]);
 	const expr_state_type& es(expr_states[ei]);
 	const graph_node_type& g(pg.expr_graph_node_pool[ei]);
+#define PG	pg.
 #else
 	ISE_INVARIANT(ei < expr_pool.size());
 	const expr_state_type& e(expr_pool[ei]);
 	const graph_node_type& g(expr_graph_node_pool[ei]);
+#define PG
 #endif
 	// can elaborate more on when parens are needed
 	const bool need_parens = e.parenthesize(ptype, pr);
 	const uchar _type = e.type;
 	// check if this sub-expression is a root expression by looking
 	// up the expression index in the rule_map.  
-	const rule_type* const ri(pg.lookup_rule(ei));
+	const rule_type* const ri(PG lookup_rule(ei));
 	// TODO: move rule attributes to dump_node_fanin...
 	// local rules are 0-indexed
 	if (ri) {
@@ -6110,7 +6127,7 @@ State::dump_subexpr
 				STATE_MEM get_node(gni).dump_value(o << ':');
 			}
 		} else {
-			if (e.is_or() && pg.is_rule_expr(ci->second)) {
+			if (e.is_or() && PG is_rule_expr(ci->second)) {
 				// to place each 'rule' on its own line
 				o << endl;
 			}
@@ -6139,6 +6156,7 @@ State::dump_subexpr
 	}
 	return o;
 }
+#undef	PG
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
