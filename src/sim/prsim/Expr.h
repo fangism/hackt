@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.11.2.3 2008/10/13 05:09:57 fang Exp $
+	$Id: Expr.h,v 1.11.2.4 2008/11/03 07:58:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -214,7 +214,11 @@ private:
 		parent = 
 	}
 #endif
-};	// end struct Expr
+}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+__ATTRIBUTE_ALIGNED__
+#endif
+;	// end struct Expr
 
 //=============================================================================
 /**
@@ -355,7 +359,13 @@ public:
 	ostream&
 	dump_checkpoint_state(ostream&, istream&);
 
-} __ATTRIBUTE_ALIGNED__ ;	// end struct ExprState
+}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+__ATTRIBUTE_PACKED__
+#else
+__ATTRIBUTE_ALIGNED__
+#endif
+;	// end struct ExprState
 
 #undef	EXPR_PARAM
 #undef	EXPR_REF

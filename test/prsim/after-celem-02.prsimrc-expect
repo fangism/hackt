@@ -3,14 +3,14 @@ x refers to process-inst-ref after_celem<15>
 y refers to process-inst-ref after_celem<35>
 z refers to process-inst-ref after_celem<50>
 Fanins of node `c':
-[after 30]	(~a[0] & ~b[0]) | 
-[after 45]	(~a[1] & ~b[1]) | 
-[after 105]	(~a[2] & ~b[2]) | 
-[after 150]	(~a[3] & ~b[3]) -> c+
-[after 20]	(a[0] & b[0]) | 
-[after 30]	(a[1] & b[1]) | 
-[after 70]	(a[2] & b[2]) | 
-[after 100]	(a[3] & b[3]) -> c-
+[after 30]	~a[0] & ~b[0] -> c+
+[after 20]	a[0] & b[0] -> c-
+[after 45]	~a[1] & ~b[1] -> c+
+[after 30]	a[1] & b[1] -> c-
+[after 105]	~a[2] & ~b[2] -> c+
+[after 70]	a[2] & b[2] -> c-
+[after 150]	~a[3] & ~b[3] -> c+
+[after 100]	a[3] & b[3] -> c-
 	0	a[0] : 0
 	0	a[1] : 0
 	0	a[2] : 0

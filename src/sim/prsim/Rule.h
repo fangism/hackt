@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.6.2.3 2008/10/13 05:10:11 fang Exp $
+	$Id: Rule.h,v 1.6.2.4 2008/11/03 07:58:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -110,7 +110,13 @@ struct RuleState
 	ostream&
 	dump_checkpoint_state(ostream& o, istream&) { return o; }
 
-} __ATTRIBUTE_ALIGNED__ ;	// end struct RuleState
+}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+__ATTRIBUTE_PACKED__
+#else
+__ATTRIBUTE_ALIGNED__
+#endif
+;	// end struct RuleState
 
 //-----------------------------------------------------------------------------
 }	// end namespace PRSIM

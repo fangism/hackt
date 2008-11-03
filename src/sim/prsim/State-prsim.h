@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.16 2008/11/03 03:18:07 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.17 2008/11/03 07:58:37 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -168,12 +168,31 @@ struct faninout_struct_type {
 	bool
 	contains_fanout(const expr_index_type) const;
 
+	size_t
+	fans(void) const {
+		return fanout.size()
+#if PRSIM_WEAK_RULES
+			+pull_up[NORMAL_RULE].size()
+			+pull_up[WEAK_RULE].size()
+			+pull_dn[NORMAL_RULE].size()
+			+pull_dn[WEAK_RULE].size();
+#else
+			+pull_up.size() +pull_dn.size();
+#endif
+	}
+
 	static
 	ostream&
 	dump_faninout_list(ostream&, const fanin_array_type&);
 
 	ostream&
 	dump_struct(ostream&) const;
+
+	static
+	expr_index_type
+	add_size(const expr_index_type N, const faninout_struct_type& f) {
+		return N +f.fans();
+	}
 
 };	// end struct faninout_struct_type
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
@@ -267,6 +286,8 @@ struct unique_process_subgraph {
 		This sort of functions as a local node_pool.
 	 */
 	faninout_map_type			local_faninout_map;
+
+	struct memory_accumulator;
 #else
 	// don't bother with flattened global view
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
@@ -289,6 +310,9 @@ struct unique_process_subgraph {
 
 	void
 	check_structure(void) const;
+
+	expr_index_type
+	fan_count(void) const;
 
 	const rule_type*
 	lookup_rule(const expr_index_type) const;
@@ -387,14 +411,15 @@ struct process_sim_state : public process_sim_state_base {
 						expr_struct_type;
 	typedef	unique_process_subgraph::graph_node_type
 						graph_node_type;
+
+	struct memory_accumulator;
+//	struct expr_offset_comparator;
+
 	/// array of expression states
 	valarray<expr_state_type>		expr_states;
 	/// array of rule states
 	valarray<rule_state_type>		rule_states;
 
-#if 0
-	struct expr_offset_comparator;
-#endif
 
 	void
 	allocate_from_type(const unique_process_subgraph&, 

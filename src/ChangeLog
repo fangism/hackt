@@ -5,6 +5,19 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-11-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-17:
+	  Bug fix: forgot to register new unique types with 
+		process_footprint_map during ExprAlloc, oops!
+	  Wrote memory statistics for new structures, 'memstats' command.
+	  Redeclared packed vs. aligned attributes for memory-critical
+		expr and rule structs (huge difference).  
+	  Many remaining regression tests difference re-validated (all format), 
+		test-expects have been updated.  (in test/prsim, parser/prs)
+		Few remaining differences in why*-verbose in lib/.
+
+
 2008-11-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-16-b: (srcdir only tag)

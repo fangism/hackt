@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.29 2008/11/03 03:18:03 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.30 2008/11/03 07:58:30 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -6383,11 +6383,6 @@ add_second_capacity(const size_t sum, const P& s) {
 }
 #endif
 
-/**
-	Print memory usage statistics.
- */
-ostream&
-State::dump_memory_usage(ostream& o) const {
 #ifdef HAVE_STL_TREE
 #define	sizeof_tree_node(type)	sizeof(std::_Rb_tree_node<type>)
 #else
@@ -6403,6 +6398,120 @@ State::dump_memory_usage(ostream& o) const {
 	static const size_t hashtable_node_base_size = (sizeof(void*));
 #define	sizeof_hashtable_node(type)	(sizeof(type) +hashtable_node_base_size)
 #endif
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	\return the aggregate number of fanins and fanouts.
+ */
+expr_index_type
+unique_process_subgraph::fan_count(void) const {
+	return std::accumulate(local_faninout_map.begin(), 
+		local_faninout_map.end(), expr_index_type(0), 
+		&faninout_struct_type::add_size);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper functor for counting memory usage.
+ */
+struct unique_process_subgraph::memory_accumulator {
+	/// counts both expr_pool and expr_graph_node_pool
+	expr_index_type			exprs;
+	/// counts both rule_pool and rule_map
+	rule_index_type			rules;
+	/// number of local nodes
+	node_index_type			local_nodes;
+	/// aggregate count of all fanin and fanouts of all nodes
+	expr_index_type			fans;
+
+	memory_accumulator() : exprs(0), rules(0), local_nodes(0), fans(0) { }
+
+	memory_accumulator(const expr_index_type e, const rule_index_type r, 
+		const node_index_type n, const expr_index_type f) :
+		exprs(e), rules(r), local_nodes(n), fans(f) { }
+
+	static
+	inline
+	memory_accumulator
+	add(const memory_accumulator& l, const unique_process_subgraph& s) {
+		INVARIANT(s.expr_pool.size() == s.expr_graph_node_pool.size());
+		INVARIANT(s.rule_pool.size() == s.rule_map.size());
+		return memory_accumulator(
+			l.exprs +s.expr_pool.size(),
+			l.rules +s.rule_pool.size(),
+			l.local_nodes +s.local_faninout_map.size(),
+			l.fans +s.fan_count()
+		);
+	}
+
+	ostream&
+	report(ostream& o) const {
+		o << "\texprs+graph_nodes: (" << exprs << " *(" <<
+			sizeof(expr_struct_type) << '+' <<
+			sizeof(graph_node_type) << ") B/expr) = " <<
+			exprs *(sizeof(expr_struct_type)
+				+sizeof(graph_node_type)) << " B" << endl;
+		typedef	rule_map_type::const_iterator::value_type
+					value_type;
+		o << "\trules+map_nodes: (" << rules << " *(" <<
+			sizeof(rule_type) << '+' <<
+			sizeof_hashtable_node(value_type) << ") B/rule) = " <<
+			exprs *(sizeof(rule_type)
+				+sizeof_hashtable_node(value_type))
+			<< " B" << endl;
+		o << "\tlocal_nodes: (" << local_nodes << " * " << 
+			sizeof(faninout_struct_type) << " B/node) = " <<
+			local_nodes *sizeof(faninout_struct_type)
+			<< " B" << endl;
+		o << "\tfanin/outs: (" << fans << " * " << 
+			sizeof(expr_index_type) << " B/fan) = " <<
+			fans *sizeof(expr_index_type) << " B" << endl;
+		return o;
+	}
+};	// end struct unique_process_subgraph::memory_accumulator
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct process_sim_state::memory_accumulator {
+	/// counts both expr_pool and expr_graph_node_pool
+	expr_index_type			exprs;
+	/// counts both rule_pool and rule_map
+	rule_index_type			rules;
+
+	memory_accumulator() : exprs(0), rules(0) { }
+
+	memory_accumulator(const expr_index_type e, const rule_index_type r) :
+		exprs(e), rules(r) { }
+
+	static
+	inline
+	memory_accumulator
+	add(const memory_accumulator& l, const process_sim_state& s) {
+		return memory_accumulator(
+			l.exprs +s.expr_states.size(),
+			l.rules +s.rule_states.size()
+		);
+	}
+
+	ostream&
+	report(ostream& o) const {
+		o << "\texpr-state: (" << exprs << " * " << 
+			sizeof(expr_state_type) << " B/expr) = " <<
+			exprs *sizeof(expr_state_type) << " B" << endl;
+		o << "\trule-state: (" << rules << " * " << 
+			sizeof(rule_state_type) << " B/rule) = " <<
+			rules *sizeof(rule_state_type) << " B" << endl;
+		return o;
+	}
+};	// end struct process_sim_state::memory_accumulator
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print memory usage statistics.
+	TODO: write re-usable memory usage report library.
+ */
+ostream&
+State::dump_memory_usage(ostream& o) const {
 {
 	const size_t ns = node_pool.size();
 	o << "node-state: ("  << ns << " * " << sizeof(node_type) <<
@@ -6415,6 +6524,39 @@ State::dump_memory_usage(ostream& o) const {
 		" B/FO) = " << fo * sizeof(expr_index_type) << " B" << endl;
 }
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+{
+	const size_t u = unique_process_pool.size();
+	o << "unique-process: (" << u << " * " <<
+		sizeof(unique_process_subgraph) << " B/type) = " <<
+		u *sizeof(unique_process_subgraph) << " B" << endl;
+	const unique_process_subgraph::memory_accumulator
+		m(std::accumulate(unique_process_pool.begin(),
+			unique_process_pool.end(), 
+			unique_process_subgraph::memory_accumulator(), 
+			&unique_process_subgraph::memory_accumulator::add));
+	m.report(o);
+}{
+	const size_t u = process_state_array.size();
+	o << "process-instances: (" << u << " * "  <<
+		sizeof(process_sim_state) << " B/proc) = " <<
+		u *sizeof(process_sim_state) << " B" << endl;
+	const process_sim_state::memory_accumulator
+		m(std::accumulate(process_state_array.begin(),
+			process_state_array.end(), 
+			process_sim_state::memory_accumulator(), 
+			&process_sim_state::memory_accumulator::add));
+	m.report(o);
+}{
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+	// hashtable iterator value-types
+	typedef	global_expr_process_id_map_type::const_iterator::value_type
+							value_type;
+	const size_t n = global_expr_process_id_map.size();
+	o << "expr-process-map: (" << n << " * " << sizeof_tree_node(value_type)
+		<< " B/proc) = " << n * sizeof_tree_node(value_type)
+		<< " B" << endl;
+#endif
+}
 #else
 {
 	const size_t es = expr_pool.size();

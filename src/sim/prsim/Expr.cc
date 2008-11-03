@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.5.82.2 2008/10/15 06:09:40 fang Exp $
+	$Id: Expr.cc,v 1.5.82.3 2008/11/03 07:58:23 fang Exp $
  */
 
 #include <iostream>
@@ -192,8 +192,17 @@ ExprState::save_state(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 ExprState::load_state(istream& i) {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	// due to packing
+	expr_count_type temp;
+	read_value(i, temp);
+	countdown = temp;
+	read_value(i, temp);
+	unknowns = temp;
+#else
 	read_value(i, countdown);
 	read_value(i, unknowns);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

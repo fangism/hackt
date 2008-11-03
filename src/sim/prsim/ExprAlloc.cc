@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.13 2008/11/02 09:56:04 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.14 2008/11/03 07:58:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -242,6 +242,8 @@ ExprAlloc::visit(const state_manager& _sm) {
 	this and need no further allocation.  
 	Note that the first process (index 0) should be reserved
 	for the top-level process.  
+	TODO: optimization: eliminate empty types, i.e. those without
+		any expressions or rules, from the unique_process_pool.
  */
 void
 ExprAlloc::visit(const entity::PRS::footprint& pfp) {
@@ -259,7 +261,9 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	size_t type_index;	// unique process type index
 	const const_iterator f(process_footprint_map.find(&pfp));
 	if (f == process_footprint_map.end()) {
+		STACKTRACE_INDENT_PRINT("first time with this type" << endl);
 		type_index = state.unique_process_pool.size();
+		process_footprint_map[&pfp] = type_index;
 		state.unique_process_pool.push_back(unique_process_subgraph());
 		unique_process_subgraph& u(state.unique_process_pool.back());
 		const util::value_saver<unique_process_subgraph*> tmp(g, &u);
@@ -278,9 +282,17 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	} else {
 		// found existing type
 		type_index = f->second;
+		STACKTRACE_INDENT_PRINT("found existing type " <<
+			type_index << endl);
+#if 0
+		const unique_process_subgraph&
+			u(state.unique_process_pool[type_index]);
+		STACKTRACE_INDENT_PRINT("N = " <<
+			u.local_faninout_map.size() << endl);
+		INVARIANT(u.local_faninout_map.size() == node_pool_size);
+#endif
 	}
 	// append-allocate new state, based on type
-//	state.process_type_map.push_back(type_index);
 	state.process_state_array.push_back(process_sim_state()); // resize +1
 	// now, allocate state for instance of this process type
 	const unique_process_subgraph&

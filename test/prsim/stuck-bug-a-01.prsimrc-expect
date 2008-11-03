@@ -13,8 +13,8 @@ enqueued:	0	e : 0
 	0	e : 0
 	10	_r : 1	[by _pR:=0]
 Fanins of node `_r':
-[after 10]	~_pR:0 | (~s:0 & ~e:0)<1> | (~e:0 & ~s:0)<1><1> -> _r+:1
-[after 10]	(en:0 | en:0)<0> & ((c:X & l_:1 & s:0 & e:0)<0> | (e:0 & s:0 & l_:1 & c:X)<0>)<0><0> -> _r-:1
-[after 10, weak]	~mp:1 & ~d:X<0> -> _r+:1
-[after 10, weak]	_pR:0 & d:X<0> -> _r-:1
+[after 10]	~_pR:0 | (~s:0 & ~e:0)<1> | (~e:0 & ~s:0)<1><1><1> -> _r+:1
+[after 10]	(en:0 | en:0)<0> & ((c:X & l_:1 & s:0 & e:0)<0> | (e:0 & s:0 & l_:1 & c:X)<0>)<0><0><0> -> _r-:1
+[after 10, weak]	~mp:1 & ~d:X<0><0> -> _r+:1
+[after 10, weak]	_pR:0 & d:X<0><0> -> _r-:1
 event queue:

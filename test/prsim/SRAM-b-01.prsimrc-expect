@@ -1,15 +1,15 @@
 Fanins of node `bl':
-[after 10]	(~w.we_ & ~w.wv_) | 
-[after 10]	~_pchg -> bl+
+[after 10]	~w.we_ & ~w.wv_ -> bl+
 [after 10]	we & w.wv_ -> bl-
-[after 10, weak]	(c[0].r.d[1] & wl[0]) | 
-[after 10, weak]	(c[1].r.d[1] & wl[1]) -> bl-
+[after 10]	~_pchg -> bl+
+[after 10, weak]	c[0].r.d[1] & wl[0] -> bl-
+[after 10, weak]	c[1].r.d[1] & wl[1] -> bl-
 Fanins of node `_bl':
-[after 10]	(~w.we_ & ~wv) | 
-[after 10]	~_pchg -> _bl+
+[after 10]	~w.we_ & ~wv -> _bl+
 [after 10]	we & wv -> _bl-
-[after 50, weak]	(c[0].r.d[0] & wl[0]) | 
-[after 50, weak]	(c[1].r.d[0] & wl[1]) -> _bl-
+[after 10]	~_pchg -> _bl+
+[after 50, weak]	c[0].r.d[0] & wl[0] -> _bl-
+[after 50, weak]	c[1].r.d[0] & wl[1] -> _bl-
 enqueued:	0	_pchg : 0
 enqueued:	0	wl[1] : 0
 enqueued:	0	wv : 0
@@ -56,24 +56,24 @@ enqueued:	130	c[0].r.d[1] : 1	[from c[0].r.d[0]:=0]	(weak)
 	200	w.we_ : 0	[by we:=1]
 time: 200
 Fanins of node `c[0].r.t':
-[after 10]	wl[0]:1 & ~_bl:1<0> -> c[0].r.d[1]-:1
+[after 10]	wl[0]:1 & ~_bl:1<0><0> -> c[0].r.d[1]-:1
 [after 10, weak]	~c[0].r.d[0]:0 -> c[0].r.d[1]+:1
 [after 10, weak]	c[0].r.d[0]:0 -> c[0].r.d[1]-:1
 Fanins of node `c[0].r.f':
-[after 10]	wl[0]:1 & ~bl:0<1> -> c[0].r.d[0]-:0
+[after 10]	wl[0]:1 & ~bl:0<1><1> -> c[0].r.d[0]-:0
 [after 10, weak]	~c[0].r.d[1]:1 -> c[0].r.d[0]+:0
 [after 10, weak]	c[0].r.d[1]:1 -> c[0].r.d[0]-:0
 Fanins of node `bl':
-[after 10]	(~w.we_:0 & ~w.wv_:1)<0> | 
+[after 10]	~w.we_:0 & ~w.wv_:1<0><0> -> bl+:0
+[after 10]	we:1 & w.wv_:1<1><1> -> bl-:0
 [after 10]	~_pchg:1<0> -> bl+:0
-[after 10]	we:1 & w.wv_:1<1> -> bl-:0
-[after 10, weak]	(c[0].r.d[1]:1 & wl[0]:1)<1> | 
-[after 10, weak]	(c[1].r.d[1]:X & wl[1]:0)<0><1> -> bl-:0
+[after 10, weak]	c[0].r.d[1]:1 & wl[0]:1<1><1> -> bl-:0
+[after 10, weak]	c[1].r.d[1]:X & wl[1]:0<0><1> -> bl-:0
 Fanins of node `_bl':
-[after 10]	(~w.we_:0 & ~wv:0)<1> | 
+[after 10]	~w.we_:0 & ~wv:0<1><1> -> _bl+:1
+[after 10]	we:1 & wv:0<0><0> -> _bl-:1
 [after 10]	~_pchg:1<1> -> _bl+:1
-[after 10]	we:1 & wv:0<0> -> _bl-:1
-[after 50, weak]	(c[0].r.d[0]:0 & wl[0]:1)<0> | 
-[after 50, weak]	(c[1].r.d[0]:X & wl[1]:0)<0><0> -> _bl-:1
+[after 50, weak]	c[0].r.d[0]:0 & wl[0]:1<0><0> -> _bl-:1
+[after 50, weak]	c[1].r.d[0]:X & wl[1]:0<0><0> -> _bl-:1
 event queue:
 queue should be empty after unsetall 
