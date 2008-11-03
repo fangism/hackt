@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.28 2008/11/02 19:55:03 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.29 2008/11/03 03:18:03 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4731,25 +4731,37 @@ unique_process_subgraph::local_root_expr(expr_index_type ei) const {
 	\param lri local expression index, also must be a valid rule index!
 	\param ps current state of process instance
 	\param st state of entire simulator (for node lookup)
-	\param v verbosity
+	\param v verbosity level
+	\param root_pull for verbose mode, print overall pull value on node.
+	\param multi_fi is true if the affected node is driven by more than
+		one process.  
 	May need to lookup footprint for node translation.
  */
 ostream&
 process_sim_state::dump_rule(ostream& o, const rule_index_type lri, 
-	const State& st, const bool v) const {
+		const State& st, const bool v, 
+		const bool multi_fi) const {
 	const unique_process_subgraph& pg(type());
 	const rule_type* const r = pg.lookup_rule(lri);
 	NEVER_NULL(r);
-	// const rule_type& r(rule_pool[ri]);
 	r->dump(o << '[') << "]\t";	// moved here from dump_subexpr
-	dump_subexpr(o, lri, st, v, expr_struct_type::EXPR_ROOT, true)
+	dump_subexpr(o, lri, st, v, expr_struct_type::EXPR_ROOT, true);
 		// or pass (!v) to proot to parenthesize in verbose mode
-		<< " -> ";
 	const expr_struct_type& e(pg.expr_pool[lri]);
 	ISE_INVARIANT(e.is_root());
 	const bool dir = e.direction();
+	// print overall pull state (OR combined)
 	const node_index_type nr = e.parent;
 	const node_index_type gnr = st.translate_to_global_node(*this, nr);
+	const State::node_type& n(st.get_node(gnr));
+	const pull_set root_pull(n);	// repetitive waste for fanin...
+	if (v && (multi_fi || 
+		(pg.expr_graph_node_pool[lri].children.size() > 1))) {
+		const pull_enum p = (dir ? root_pull.up : root_pull.dn)
+			STR_INDEX(r->is_weak());
+		o << '<' << State::node_type::value_to_char[p] << '>';
+	}
+	o << " -> ";
 	o << st.get_node_canonical_name(gnr);
 	o << (dir ? '+' : '-');
 	if (v) {
@@ -4766,10 +4778,11 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 	\param v true for verbose printing.  
  */
 ostream&
-State::dump_rule(ostream& o, const expr_index_type ri, const bool v) const {
+State::dump_rule(ostream& o, const expr_index_type ri, const bool v, 
+		const bool multi_fanin) const {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	const process_sim_state& ps(lookup_global_expr_process(ri));
-	return ps.dump_rule(o, ps.local_expr_index(ri), *this, v);
+	return ps.dump_rule(o, ps.local_expr_index(ri), *this, v, multi_fanin);
 #else
 	const expr_state_type* const e = &expr_pool[ri];
 	// ei (*ri) is index to expression whose parent is *node*.
@@ -4862,7 +4875,7 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 	typedef	rule_set_type::const_iterator		rule_iterator;
 	rule_iterator ri(fanout_rules.begin()), re(fanout_rules.end());
 	for ( ; ri!=re; ++ri) {
-		dump_rule(o, *ri, v);
+		dump_rule(o, *ri, v, (n.fanin.size() > 1));
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		o << endl;
 #endif
@@ -4929,6 +4942,7 @@ State::dump_node_fanin(ostream& o, const node_index_type ni,
 {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	const node_index_type ni = st.translate_to_global_node(*this, lni);
+	const State::node_type& n(st.get_node(ni));
 	const string cn(st.get_node_canonical_name(ni));
 	const faninout_struct_type& fia(type().local_faninout_map[lni]);
 #else
@@ -4945,7 +4959,7 @@ do {
 		e(fia.pull_up STR_INDEX(w).end());
 	for ( ; i!=e; ++i) {
 		const expr_index_type ui = *i;
-		dump_rule(o, ui, st, v) << endl;
+		dump_rule(o, ui, st, v, (n.fanin.size() > 1)) << endl;
 #else
 	// format is different: no single root expression
 	// fanin is listed by processes
@@ -4964,7 +4978,7 @@ do {
 		e = fia.pull_dn STR_INDEX(w).end();
 	for ( ; i!=e; ++i) {
 		const expr_index_type di = *i;
-		dump_rule(o, di, st, v) << endl;
+		dump_rule(o, di, st, v, (n.fanin.size() < 1)) << endl;
 	}
 #else
 	const expr_index_type di = n.pull_dn_index STR_INDEX(w);
@@ -6947,6 +6961,9 @@ watch_entry::dump_checkpoint_state(ostream& o, istream& i) {
 }
 
 //=============================================================================
+// explicit class template instantiations
+template class Rule<State::time_type>;
+template class RuleState<State::time_type>;
 }	// end namespace PRSIM
 
 // explicit template instantiation of signal handler class

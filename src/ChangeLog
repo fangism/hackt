@@ -7,6 +7,12 @@ BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
 2008-11-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-32-prsim-10-16-b: (srcdir only tag)
+	  fanin/fanout-get printing now shows the overall root pull for 
+		every rule b/c rules are no longer grouped by pull direction
+		and weakness, they are ordered by process fanin.  
+
+
 	* HACKT-00-01-04-main-00-82-32-prsim-10-16-a: (srcdir only tag)
 	  Better printing of rules, further reducing test differences.
 

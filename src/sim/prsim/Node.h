@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.15.2.5 2008/10/13 05:10:09 fang Exp $
+	$Id: Node.h,v 1.15.2.6 2008/11/03 03:18:02 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -101,6 +101,7 @@ struct fanin_state_type {
 	ostream&
 	dump_state(ostream&) const;
 };	// end struct fanin_state_type
+
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 
@@ -603,6 +604,34 @@ public:
 	dump_checkpoint_state(ostream&, istream&);
 
 } __ATTRIBUTE_ALIGNED__ ;	// end struct NodeState
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set of pull states, in all directions.  
+ */
+struct pull_set {
+#if PRSIM_WEAK_RULES
+	pull_enum			up[2];
+	pull_enum			dn[2];
+#else
+	pull_enum			up;
+	pull_enum			dn;
+#endif
+
+	explicit
+	pull_set(const NodeState& n) {
+		up STR_INDEX(NORMAL_RULE) =
+			n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
+		dn STR_INDEX(NORMAL_RULE) =
+			n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
+#if PRSIM_WEAK_RULES
+		up STR_INDEX(WEAK_RULE) =
+			n.pull_up_state STR_INDEX(WEAK_RULE).pull();
+		dn STR_INDEX(WEAK_RULE) =
+			n.pull_dn_state STR_INDEX(WEAK_RULE).pull();
+#endif
+	}
+};	// end struct pull_set
 
 //=============================================================================
 }	// end namespace PRSIM

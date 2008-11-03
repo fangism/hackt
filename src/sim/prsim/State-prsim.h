@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.15 2008/11/02 09:56:12 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.16 2008/11/03 03:18:07 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -441,7 +441,7 @@ struct process_sim_state : public process_sim_state_base {
 
 	ostream&
 	dump_rule(ostream&, const rule_index_type, 
-		const State&, const bool) const;
+		const State&, const bool, const bool) const;
 
 	ostream&
 	dump_node_fanin(ostream&, const node_index_type, 
@@ -1539,7 +1539,8 @@ public:
 	dump_node_value(ostream&, const node_index_type) const;
 
 	ostream&
-	dump_rule(ostream&, const expr_index_type, const bool) const;
+	dump_rule(ostream&, const expr_index_type, const bool, 
+		const bool) const;
 
 	ostream&
 	dump_node_fanout(ostream&, const node_index_type, const bool) const;
