@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8.2.17 2008/11/03 07:58:37 fang Exp $
+	$Id: State-prsim.h,v 1.8.2.18 2008/11/03 22:59:00 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -39,6 +39,7 @@
 #include "util/named_ifstream_manager.h"
 #include "util/tokenize_fwd.h"
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+#include "Object/common/frame_map.h"
 #include <valarray>
 #else
 #include "util/list_vector.h"
@@ -60,6 +61,7 @@ using HASH_MAP_NAMESPACE::hash_map;
 using std::valarray;
 using entity::footprint;
 struct process_sim_state;
+using entity::footprint_frame_map_type;
 #else
 using util::list_vector;
 #endif
@@ -141,6 +143,8 @@ struct faninout_struct_type {
 	fanin_array_type		pull_dn;
 #endif
 	fanout_array_type		fanout;
+
+	struct counter;			// counter
 	// default ctor/dtor/copy
 	fanin_array_type&
 	get_pull_expr(const bool b
@@ -935,6 +939,17 @@ public:
 	backtrace_node(ostream&, const node_index_type) const;
 
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+	const footprint_frame_map_type&
+	get_footprint_frame_map(const process_index_type pid) const;
+
+	const process_sim_state&
+	get_process_state(const process_index_type pid) const {
+		return process_state_array[pid];
+	}
+
+	faninout_struct_type::counter
+	count_node_fanins(const node_index_type) const;
+
 	void
 	finish_process_type_map(void);
 

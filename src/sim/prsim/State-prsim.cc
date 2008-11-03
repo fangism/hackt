@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.30 2008/11/03 07:58:30 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.31 2008/11/03 22:58:51 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -756,6 +756,16 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/** 
+	Returns the local-to-global node translation map for process pid.
+	This *really* should be inlined...
+ */
+const footprint_frame_map_type&
+State::get_footprint_frame_map(const process_index_type pid) const {
+	return get_module().get_state_manager().get_bool_frame_map(pid);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wipes out the indexed node, to mark as deallocated and free.  
 	Such nodes are skipped during dump.  
@@ -870,17 +880,6 @@ if (!e.wiped()) {
 		assert(e.parent < node_pool.size());
 		const node_type& n
 			__ATTRIBUTE_UNUSED_CTOR__((node_pool[e.parent]));
-#if 0
-		// root expression may still be OR-combined by parent!
-		rule_map_type::const_iterator fi(rule_map.begin());
-		const rule_map_type::const_iterator fe(rule_map.end());
-		for ( ; fi!=fe; ++fi) {
-			cerr << fi->first << ',';
-		}
-		cerr << endl;
-		const rule_map_type::const_iterator f(rule_map.find(i));
-		assert(f != rule_map.end());
-#endif
 #if PRSIM_WEAK_RULES
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		const fanin_array_type&
@@ -1612,25 +1611,14 @@ if (pu != PULL_OFF || pd != PULL_OFF) {
 			// nothing pulling down, no change
 			return;
 		} else if (current != new_val) {
-#if 0
-			rule_index_type ri;
-			// not true, rule index may be from OR-combination...
-			if (pu == char(PULL_ON) &&
-				pd == char(PULL_OFF)) {
-				ri = u;
-			} else if (pd == char(PULL_ON) &&
-				pu == char(PULL_OFF)) {
-				ri = d;
-			} else {
-				ri = INVALID_RULE_INDEX;
-			}
-#else
+		// TODO: find minimum delay of ON fanin rules (*slow*)
+		// there must be at least one rule ON to pull
+		// get_delay will fail because INVALID_RULE_INDEX
 			const rule_index_type ri = INVALID_RULE_INDEX;
 			// a real rule index would help determine the delay
 			// but we don't know which delay in a multi-delay
 			// fanin to use!  Passing INVALID_RULE_INDEX
 			// will use a delay of 0.  
-#endif
 			const event_index_type ei = __allocate_event(
 				n, ni, EMPTY_CAUSE, ri, new_val
 #if PRSIM_WEAK_RULES
@@ -1639,9 +1627,6 @@ if (pu != PULL_OFF || pd != PULL_OFF) {
 				);
 			event_type& e(get_event(ei));
 			time_type t;
-		// TODO: find minimum delay of ON fanin rules (*slow*)
-		// there must be at least one rule ON to pull
-		// get_delay will fail because INVALID_RULE_INDEX
 			switch (new_val) {
 			case LOGIC_HIGH:
 				t = get_delay_up(e); break;
@@ -3204,7 +3189,6 @@ do {
 	// new: remember to update node-fanin state structure!
 	const node_index_type oni = translate_to_global_node(pid, ui);
 	// local -> global node
-//	const expr_struct_type& e(pg.expr_pool[ri]);	// for direction
 	const rule_index_type lri = pg.rule_map.find(ri)->second;
 		// expr -> rule
 	const rule_type& r(pg.rule_pool[lri]);
@@ -3350,8 +3334,9 @@ State::translate_to_global_node(const process_index_type pid,
 	// HACK: poor style, using pointer arithmetic to deduce index
 	ISE_INVARIANT(pid < process_state_array.size());
 	// no longer need special case for pid=0, b/c frame is identity
-	return get_module().get_state_manager().get_pool<process_tag>()[pid]
-		._frame.get_frame_map<bool_tag>()[lni];
+	return get_footprint_frame_map(pid)[lni];
+//	return get_module().get_state_manager().get_pool<process_tag>()[pid]
+//		._frame.get_frame_map<bool_tag>()[lni];
 }
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
@@ -4848,15 +4833,6 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 	for ( ; fi!=fe; ++fi) {
 		// for each leaf expression in the fanout list, 
 		// trace up the propagation path to find the affected node.
-#if 0
-		expr_index_type ei = *fi;
-		const expr_state_type* e = &expr_pool[ei];
-		while (!e->is_root()) {
-			DEBUG_FANOUT_PRINT("ei = " << ei << endl);
-			ei = e->parent;
-			e = &expr_pool[ei];
-		}
-#else
 		const expr_index_type& gei = *fi;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		const process_sim_state& ps(lookup_global_expr_process(gei));
@@ -4867,7 +4843,6 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 		// adding offset translates back to global expression id
 #else
 		const expr_index_type ei = local_root_expr(gei);
-#endif
 #endif
 		DEBUG_FANOUT_PRINT("ei = " << ei << endl);
 		fanout_rules.insert(ei);	// ignore duplicates
@@ -4885,6 +4860,94 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	Counts number of pulling rules in each category.
+	Used only for diagnostics.  
+ */
+struct faninout_struct_type::counter {
+#if PRSIM_WEAK_RULES
+	rule_index_type			up[2];
+	rule_index_type			dn[2];
+#else
+	rule_index_type			up;
+	rule_index_type			dn;
+#endif
+	counter() {
+#if PRSIM_WEAK_RULES
+		up[NORMAL_RULE] = 0;
+		up[WEAK_RULE] = 0;
+		dn[NORMAL_RULE] = 0;
+		dn[WEAK_RULE] = 0;
+#else
+		up = 0;
+		dn = 0;
+#endif
+	}
+
+	// defauilt copy-ctor
+
+	size_t
+	sum(void) const {
+#if PRSIM_WEAK_RULES
+		return up[NORMAL_RULE] +up[WEAK_RULE]
+			+dn[NORMAL_RULE] +dn[WEAK_RULE];
+#else
+		return up +dn;
+#endif
+	}
+
+	counter&
+	operator += (const faninout_struct_type& r) {
+#if PRSIM_WEAK_RULES
+		up[NORMAL_RULE] += r.pull_up[NORMAL_RULE].size();
+		up[WEAK_RULE] += r.pull_up[WEAK_RULE].size();
+		dn[NORMAL_RULE] += r.pull_dn[NORMAL_RULE].size();
+		dn[WEAK_RULE] += r.pull_dn[WEAK_RULE].size();
+#else
+		up += r.pull_up.size();
+		dn += r.pull_dn.size();
+#endif
+		return *this;
+	}
+};	// end struct faninout_struct_type::counter
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if node has more than one rule that pulls it in
+		a particular direction.
+ */
+faninout_struct_type::counter
+State::count_node_fanins(const node_index_type ni) const {
+	typedef	faninout_struct_type::counter		counter_type;
+	const node_type& n(get_node(ni));
+#if VECTOR_NODE_FANIN
+	process_fanin_type::const_iterator i(n.fanin.begin()), e(n.fanin.end());
+#else
+	const process_index_type* i(&n.fanin[0]), *e(&n.fanin[n.fanin.size()]);
+#endif
+	counter_type ret;
+for ( ; i!=e; ++i) {
+	const process_index_type& pid = *i;
+	const process_sim_state& ps(process_state_array[pid]);
+	const unique_process_subgraph& pg(ps.type());
+	// find the local node index that corresponds to global node
+	const footprint_frame_map_type& bfm(get_footprint_frame_map(pid));
+	// note: many local nodes may map to the same global node
+	// linear search to find them all
+	typedef	footprint_frame_map_type::const_iterator frame_iter;
+	const frame_iter b(bfm.begin()), fe(bfm.end());
+	frame_iter f = find(b, fe, ni);
+	while (f != fe) {
+		// iterate over local node's fanin expressions!
+		const node_index_type lni = std::distance(b, f);
+		ret += pg.local_faninout_map[lni];
+		f = find(f+1, fe, ni);
+	}
+}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Since each node now only lists which processes can drive it, 
 	we need to visit each process and expand the list of global 
@@ -4905,9 +4968,7 @@ for ( ; i!=e; ++i) {
 	const process_index_type& pid = *i;
 	const process_sim_state& ps(process_state_array[pid]);
 	// find the local node index that corresponds to global node
-	const footprint_frame_map_type& bfm(get_module().
-		get_state_manager().get_pool<process_tag>()[pid]
-		._frame.get_frame_map<bool_tag>());
+	const footprint_frame_map_type& bfm(get_footprint_frame_map(pid));
 	// note: many local nodes may map to the same global node
 	// linear search to find them all
 	typedef	footprint_frame_map_type::const_iterator frame_iter;
@@ -5090,9 +5151,6 @@ if (y.second) {
 			node_type::value_to_char[size_t(get_event(pe).val)]
 			<< endl;
 	} else {
-#if 0
-	node_set_type xs;
-#endif
 #if PRSIM_WEAK_RULES
 	size_t w = NORMAL_RULE;
 do {
@@ -5203,19 +5261,8 @@ do {
 #if PRSIM_CHANNEL_SUPPORT
 	if (n.in_channel()) {
 		// if node is part of source or sink
-#if 0
-		_channel_manager.__get_X_fanins(*this, ni, xs);
-#else
 		_channel_manager.__node_why_X(*this, o, ni, 
 			limit, verbose, u, v);
-#endif
-	}
-#endif
-#if 0
-	INDENT_SECTION(o);
-	node_set_type::const_iterator ii(xs.begin()), ee(xs.end());
-	for ( ; ii!=ee; ++ii) {
-		__node_why_X(o, *ii, limint, verbose, u, v);	// recursion
 	}
 #endif
 	}
@@ -5565,8 +5612,8 @@ State::__root_expr_why_not(ostream& o, const node_index_type ni,
 	string ind_str;
 	if (verbose) {
 		// root is OR-combination of rules
-		// TODO: figure out how many rules fanin, using struct...
-		if (fanin.size() > 1) {
+		const faninout_struct_type::counter c(count_node_fanins(ni));
+		if ((dir ? c.up : c.dn) STR_INDEX(wk) > 1) {
 			ind_str += " |";
 			o << auto_indent << "-+" << endl;
 		}
@@ -5588,10 +5635,7 @@ for ( ; i!=e; ++i) {		// for all processes
 	const process_sim_state& ps(process_state_array[pid]);
 	const unique_process_subgraph& pg(ps.type());
 	// find local node indices that corresponds to global node
-	const footprint_frame_map_type&
-		bfm(get_module().get_state_manager()
-			.get_pool<process_tag>()[pid]
-			._frame.get_frame_map<bool_tag>());
+	const footprint_frame_map_type& bfm(get_footprint_frame_map(pid));
 	// note: many local nodes may map to the same global node
 	// so linear search to find them all
 	typedef	footprint_frame_map_type::const_iterator frame_iter;
@@ -5776,9 +5820,9 @@ State::__root_expr_why_X(ostream& o, const node_index_type ni,
 	string ind_str;
 	const process_fanin_type& fanin(get_node(ni).fanin);
 	if (verbose) {
-		// TODO: figure out number of OR-combinations > 1?
 		// remember, fanin.size() is number of *processes*
-		if (fanin.size() > 1) {
+		const faninout_struct_type::counter c(count_node_fanins(ni));
+		if ((dir ? c.up : c.dn) STR_INDEX(wk) > 1) {
 			ind_str += " |";
 			o << auto_indent << "-+" << endl;
 		}
@@ -5796,10 +5840,7 @@ for ( ; i!=e; ++i) {		// for all processes
 	const process_sim_state& ps = process_state_array[pid];
 	const unique_process_subgraph& pg(ps.type());
 	// find local node indices that corresponds to global node
-	const footprint_frame_map_type&
-		bfm(get_module().get_state_manager()
-			.get_pool<process_tag>()[pid]
-			._frame.get_frame_map<bool_tag>());
+	const footprint_frame_map_type& bfm(get_footprint_frame_map(pid));
 	// note: many local nodes may map to the same global node
 	// so linear search to find them all
 	typedef	footprint_frame_map_type::const_iterator frame_iter;

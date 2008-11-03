@@ -1,17 +1,17 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.13.52.1 2008/11/01 08:01:28 fang Exp $
+	$Id: global_entry.h,v 1.13.52.2 2008/11/03 22:58:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
 #define	__HAC_OBJECT_GLOBAL_ENTRY_H__
 
 #include <iosfwd>
-#include <vector>
 #include "util/persistent_fwd.h"
 // #include <valarray>		// may be more efficient
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
+#include "Object/common/frame_map.h"
 #include "Object/devel_switches.h"
 #include "util/macros.h"
 
@@ -42,8 +42,6 @@ struct  global_entry;
 
 template <class Tag>
 class global_entry_pool;
-
-typedef	std::vector<size_t>		footprint_frame_map_type;
 
 //=============================================================================
 /**
