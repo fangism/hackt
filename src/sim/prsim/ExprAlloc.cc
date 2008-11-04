@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.25.2.14 2008/11/03 07:58:26 fang Exp $
+	$Id: ExprAlloc.cc,v 1.25.2.15 2008/11/04 02:27:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1209,9 +1209,7 @@ PassN::main(visitor_type& v, const param_args_type& params,
 		v.allocate_new_literal_expr(
 			v.lookup_local_bool_id(*nodes[1].begin()));
 	const node_index_type d = v.lookup_local_bool_id(*nodes[2].begin());
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-	INVARIANT(d);	// local expressions are 0-indexed
-#else
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	INVARIANT(g && s && d);
 #endif
 	// construct and allocate rule
@@ -1251,9 +1249,7 @@ PassP::main(visitor_type& v, const param_args_type& params,
 		v.allocate_new_literal_expr(
 			v.lookup_local_bool_id(*nodes[1].begin()));
 	const node_index_type d = v.lookup_local_bool_id(*nodes[2].begin());
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-	INVARIANT(d);	// local expressions are 0-indexed
-#else
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	INVARIANT(g && s && d);
 #endif
 	// construct and allocate rule

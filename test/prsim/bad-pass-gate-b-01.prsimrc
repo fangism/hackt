@@ -1,0 +1,7 @@
+# "bad-pass-gate-b-01.prsimrc"
+# @haco@ bad-pass-gate-b.haco-a
+# test case for pass-gate allocation bug
+
+fanin-get a
+echo Done.
+

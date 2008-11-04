@@ -1,0 +1,11 @@
+// "bad-pass-gate-a.hac"
+// test case for pass-gate allocation bug
+
+defproc pn(bool a) {
+prs {
+	passn(a, a, a)
+}
+}
+
+pn X;
+

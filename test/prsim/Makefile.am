@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.32 2008/07/01 23:57:14 fang Exp $
+#	$Id: Makefile.am,v 1.32.2.1 2008/11/04 02:27:48 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -15,6 +15,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	inv-alt unused \
 	celem-share after-celem-def after-celem after-celem-more \
 	pass-gates-def pass-gates excl-rings-def excl-rings \
+	bad-pass-gate-a bad-pass-gate-b \
 	check-excl-rings-def check-excl-rings \
 	check-excl-rings-chan-def check-excl-rings-chan \
 	logic-defs logic-defs-a logic-defs-b \
@@ -110,6 +111,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	after-celem-base \
 	after-celem-01 after-celem-02 after-celem-03 \
 	pass-gates-01 pass-gates-02 pass-gates-03 \
+	bad-pass-gate-a-01 bad-pass-gate-b-01 \
 	excl-rings-01 excl-rings-02 excl-rings-03 \
 	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05 \
 	check-excl-rings-chan-02 check-excl-rings-chan-04 \

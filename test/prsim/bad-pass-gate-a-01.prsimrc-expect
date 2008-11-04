@@ -1,0 +1,3 @@
+Fanins of node `X.a':
+[after 0]	X.a:X & ~X.a:X<X><X> -> X.a-:X
+Done. 

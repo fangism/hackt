@@ -7,6 +7,12 @@ BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
 2008-11-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-32-prsim-10-19:
+	  Bug fix: ExprAlloc assert failed on wrong invariant
+		on local node index in pass-gate macros.
+		Fixed and added test casees: prsim/bad-pass-gate-*
+
+
 	* HACKT-00-01-04-main-00-82-32-prsim-10-18:
 	  Final formatting fix, now properly count the number of fanins
 		per node, categorized by pull-direction and strength, 
