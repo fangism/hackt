@@ -23,8 +23,8 @@ event queue:
 Fanins of node `_bl':
 [after 10]	~_pchg:1 -> _bl+:1
 [after 20, weak]	~blst:0 -> _bl+:1
-[after 20, weak]	(wl:1 & pb:1)<1> | 
-[after 20, weak]	(wlx:1 & pbx:X)<X><1> -> _bl-:1
+[after 20, weak]	wl:1 & pb:1<1><1> -> _bl-:1
+[after 20, weak]	wlx:1 & pbx:X<X><1> -> _bl-:1
 time: 28
 _bl : 1	[by _pchg:=1]
 blst : 0	[by _bl:=1]
@@ -37,8 +37,8 @@ event queue:
 Fanins of node `_bl':
 [after 10]	~_pchg:1 -> _bl+:X
 [after 20, weak]	~blst:0 -> _bl+:X
-[after 20, weak]	(wl:1 & pb:1)<1> | 
-[after 20, weak]	(wlx:1 & pbx:X)<X><1> -> _bl-:X
+[after 20, weak]	wl:1 & pb:1<1><1> -> _bl-:X
+[after 20, weak]	wlx:1 & pbx:X<X><1> -> _bl-:X
 time: 30
 step 
 	40	blst : X	[by _bl:=X]

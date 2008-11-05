@@ -1,6 +1,6 @@
 Fanins of node `z':
-[after 10]	c | 
+[after 10]	c -> z-
 [after 10]	e -> z-
-[after 10, weak]	~d | 
+[after 10, weak]	~d -> z+
 [after 10, weak]	~f -> z+
 iskeeper rules should have be completely filtered out 

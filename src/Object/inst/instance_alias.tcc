@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.33 2008/10/24 01:08:58 fang Exp $
+	$Id: instance_alias.tcc,v 1.34 2008/11/05 23:03:33 fang Exp $
 	TODO: trim includes
  */
 
@@ -609,6 +609,7 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 	STACKTRACE_VERBOSE;
 	footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
 	// could use footprint_frame_transformer here for consistency
+	// except that this is with modify intent
 	const size_t local_offset = this->instance_index -1;
 	STACKTRACE_INDENT_PRINT("local_offset = " << local_offset << endl);
 	STACKTRACE_INDENT_PRINT("global_id = " << pcc.id_map[ind] << endl);
@@ -910,13 +911,17 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 		port_collection_context& pcc, const footprint_frame& ff,
 		const size_t ind) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	const footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
-	// could use footprint_frame_transformer here for consistency
 	const size_t local_placeholder_id = this->instance_index -1;
 	STACKTRACE_INDENT_PRINT("local_id = " << local_placeholder_id << endl);
 	STACKTRACE_INDENT_PRINT("global_id = " << fm[local_placeholder_id]
 		<< endl);
 	pcc.id_map[ind] = fm[local_placeholder_id];
+#else
+	const footprint_frame_transformer ft(ff, Tag());
+	pcc.id_map[ind] = ft(this->instance_index);
+#endif
 	this->__construct_port_context(pcc.substructure_array[ind], ff);
 }
 

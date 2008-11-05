@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.11 2008/03/17 23:03:01 fang Exp $
+	$Id: Expr.h,v 1.12 2008/11/05 23:03:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -15,6 +15,8 @@
 #include "util/macros.h"
 #include "util/attributes.h"
 #include "Object/lang/PRS_fwd.h"	// for expr_count_type
+#include "sim/prsim/devel_switches.h"
+#include "sim/prsim/enums.h"
 
 /**
 	Define to 1 to use PULL_WEAK == 1.
@@ -59,6 +61,7 @@ struct Expr {
 		EXPR_NAND = 0x03,
 		EXPR_MASK = 0x03, ///< two LSB encode the logic function
 		EXPR_ROOT = 0x04, ///< if the parent expression is a node
+		// TODO: direction field should belong to Rule
 		EXPR_DIR = 0x08	///< if parent is node, what direction to pull
 	} type_enum;
 
@@ -211,30 +214,30 @@ private:
 		parent = 
 	}
 #endif
-};	// end struct Expr
+}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+__ATTRIBUTE_ALIGNED__
+#endif
+;	// end struct Expr
 
 //=============================================================================
 /**
 	Stateful expression class, derived from expression structure.  
 	TODO: figure out a clean way to use enums in code rather than chars.  
  */
-struct ExprState : public Expr {
+struct ExprState
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
+	: public Expr
+#endif
+{
 private:
 	typedef	ExprState		this_type;
 public:
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	typedef	expr_count_type		count_type;
+#else
 	typedef	Expr			parent_type;
-	/**
-		These values are special, they correspond to 
-		LOGIC_LOW, LOGIC_HIGH, LOGIC_OTHER.  
-		Consider re-enumerating so that 2-x can be used
-		to invert.  (Will need to recode some tables in this case.)
-	 */
-	enum pull_enum {
-		PULL_OFF = 0x00,
-		PULL_ON = 0x01,
-		PULL_WEAK = 0x02
-	};
-
+#endif
 public:
 	/**
 		'val' of the old PrsExpr.
@@ -249,22 +252,39 @@ public:
 protected:
 	// consider a redundant pull-state enum (cached) to avoid re-evaluation?
 public:
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	ExprState() { }
+#else
 	ExprState() : parent_type() { }
+#endif
 
 	/**
 		Leaves countdown and unknowns uninitialized, 
 		because they shouldn't be set until the structure is finalized
 		by the responsible State object.  
 	 */
-	ExprState(const uchar t, const count_type s) :
-		parent_type(t, s) { }
+	ExprState(const uchar t, const count_type s)
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
+		: parent_type(t, s)
+#endif
+		{ }
 
+// these macros also used in .cc file
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#define	EXPR_PARAM		const Expr& e
+#define	EXPR_REF		e
+#define	EXPR_MEM(x)		(e.x)
+#else
+#define	EXPR_PARAM		void
+#define	EXPR_REF
+#define	EXPR_MEM(x)		x
+#endif
 
 	void
-	initialize(void);
+	initialize(EXPR_PARAM);
 
 	void
-	reset(void) { initialize(); }
+	reset(EXPR_PARAM) { initialize(EXPR_REF); }
 
 	/**
 		TODO: re-encode pull states so we can use 2-x.
@@ -276,6 +296,7 @@ public:
 			((p == PULL_OFF) ? PULL_ON : PULL_OFF);
 	}
 
+
 	/**
 		\pre this->is_or();
 		countdown represents the number of 1's
@@ -285,10 +306,10 @@ public:
 		Negation only affects the ON/OFF states.
 	 */
 	pull_enum
-	or_pull_state(void) const {
+	or_pull_state(EXPR_PARAM) const {
 		const pull_enum ret = (countdown ? PULL_ON :
 			(unknowns ? PULL_WEAK : PULL_OFF));
-		return is_not() ? negate_pull(ret) : ret;
+		return EXPR_MEM(is_not()) ? negate_pull(ret) : ret;
 	}
 
 	/**
@@ -300,10 +321,10 @@ public:
 		Negation only affects the ON/OFF states.
 	 */
 	pull_enum
-	and_pull_state(void) const {
+	and_pull_state(EXPR_PARAM) const {
 		const pull_enum ret = (countdown ? PULL_OFF :
 			(unknowns ? PULL_WEAK : PULL_ON));
-		return is_not() ? negate_pull(ret) : ret;
+		return EXPR_MEM(is_not()) ? negate_pull(ret) : ret;
 	}
 
 	/**
@@ -312,12 +333,17 @@ public:
 		\return 0 if off, 1 if on, 2 if weak (X)
 	 */
 	pull_enum
-	pull_state(void) const {
-		return is_disjunctive() ? or_pull_state() : and_pull_state();
+	pull_state(EXPR_PARAM) const {
+		return EXPR_MEM(is_disjunctive()) ?
+			or_pull_state(EXPR_REF) : and_pull_state(EXPR_REF);
 	}
 
 	ostream&
-	dump_state(ostream&) const;
+	dump_state(ostream&
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		, EXPR_PARAM
+#endif
+		) const;
 
 	void
 	save_state(ostream&) const;
@@ -333,7 +359,17 @@ public:
 	ostream&
 	dump_checkpoint_state(ostream&, istream&);
 
-} __ATTRIBUTE_ALIGNED__ ;	// end struct ExprState
+}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+__ATTRIBUTE_PACKED__
+#else
+__ATTRIBUTE_ALIGNED__
+#endif
+;	// end struct ExprState
+
+#undef	EXPR_PARAM
+#undef	EXPR_REF
+#undef	EXPR_MEM
 
 //=============================================================================
 /**
@@ -383,6 +419,7 @@ public:
 		ExprGraphNode::children array.  
 		This field is ignored for the root expressions
 		(whose parents are nodes).  
+		BEWARE of 2^k limit approached for high fanin!
 	 */
 	count_type			offset;
 
@@ -399,10 +436,10 @@ public:
 	ExprGraphNode() : offset(INVALID_OFFSET), children() { }
 
 	void
-	push_back_expr(const size_t);
+	push_back_expr(const expr_index_type);
 
 	void
-	push_back_node(const size_t);
+	push_back_node(const node_index_type);
 
 	ostream&
 	dump_struct(ostream&) const;

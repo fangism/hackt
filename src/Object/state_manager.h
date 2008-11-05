@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.13 2008/10/11 06:35:07 fang Exp $
+	$Id: state_manager.h,v 1.14 2008/11/05 23:03:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
@@ -10,8 +10,9 @@
 #include <iosfwd>
 #include "util/persistent_fwd.h"
 #include "Object/traits/classification_tags.h"
+#include "Object/common/frame_map.h"
 #include "Object/devel_switches.h"
-#include "util/list_vector.h"
+#include "util/list_vector.h"	// TODO: revert to std::vector
 #include "util/memory/index_pool.h"
 #include "util/boolean_types.h"
 
@@ -89,6 +90,9 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&, 
 		const footprint&);
+
+	ostream&
+	__dump_memory_usage(ostream&) const;
 
 };	// end class global_entry_pool
 
@@ -169,18 +173,29 @@ public:
 
 	template <class Tag>
 	void
+	__accept(PRS::cflat_visitor&) const;
+
+	template <class Tag>
+	void
 	collect_subentries(entry_collection&, const size_t) const;
 
 	// TODO: templatize to other metatypes (with structure)
 	expr_dump_context
 	make_process_dump_context(const footprint&, const size_t) const;
+
+	/**
+		Frequenty used function...
+		Lookups up global process index, and returns the corresponding
+		bool frame map.  
+	 */
+	const footprint_frame_map_type&
+	get_bool_frame_map(const size_t pid) const;
+
+	ostream&
+	dump_memory_usage(ostream&) const;
 private:
 	explicit
 	state_manager(const this_type&);
-
-	template <class Tag>
-	void
-	__accept(PRS::cflat_visitor&) const;
 
 	/// never actually called
 	template <class Tag>

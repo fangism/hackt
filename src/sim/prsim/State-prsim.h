@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.8 2008/06/25 05:18:58 fang Exp $
+	$Id: State-prsim.h,v 1.9 2008/11/05 23:03:56 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -36,18 +36,69 @@
 #endif
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
-#include "util/list_vector.h"
 #include "util/named_ifstream_manager.h"
 #include "util/tokenize_fwd.h"
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#include "Object/common/frame_map.h"
+#include <valarray>
+#else
+#include "util/list_vector.h"
+#endif
 
 namespace HAC {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+namespace entity {
+	class footprint;
+}
+#endif
 namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
 struct ExprAllocFlags;
 using std::map;
-using util::list_vector;
 using HASH_MAP_NAMESPACE::hash_map;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+using std::valarray;
+using entity::footprint;
+struct process_sim_state;
+using entity::footprint_frame_map_type;
+#else
+using util::list_vector;
+#endif
+
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	Define to 1 to maintain a separate expr->process id map.
+	TODO: benchmark the different between performance
+	on large hierarchical designs.  
+	Whe the map is combined search may need to be modified
+	to use lower_bound rather than --upper_bound
+ */
+#define	PRSIM_SEPARATE_PROCESS_EXPR_MAP		1
+#endif
+
+/// can switch between integer and real-valued time
+// typedef	discrete_time			rule_time_type;
+typedef	real_time			rule_time_type;
+
+//=============================================================================
+enum {
+	/// index of the first valid global node
+	FIRST_VALID_GLOBAL_NODE = SIM::INVALID_NODE_INDEX +1,
+	/// index of the first valid global expr/expr_graph_node
+	FIRST_VALID_GLOBAL_EXPR = SIM::INVALID_EXPR_INDEX +1,
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/// index of the first valid local node
+	FIRST_VALID_LOCAL_NODE = 0, 
+	/// index of the first valid local expr/expr_graph_node
+	FIRST_VALID_LOCAL_EXPR = 0,
+	/// index of first valid process, 0 is the top-level process
+	FIRST_VALID_PROCESS = 0,
+#endif
+	/// index of the first valid event
+	FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
+};
 
 //=============================================================================
 /**
@@ -74,6 +125,365 @@ struct watch_entry {
 } __ATTRIBUTE_ALIGNED__ ;
 
 //=============================================================================
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+// structures to account for local fanin contribution
+typedef	std::vector<expr_index_type>	fanin_array_type;
+typedef	fanin_array_type		fanout_array_type;
+
+/**
+	This resembles Node(Struct), but only contains 
+	fanin and fanout information.  
+ */
+struct faninout_struct_type {
+#if PRSIM_WEAK_RULES
+	fanin_array_type		pull_up[2];
+	fanin_array_type		pull_dn[2];
+#else
+	fanin_array_type		pull_up;
+	fanin_array_type		pull_dn;
+#endif
+	fanout_array_type		fanout;
+
+	struct counter;			// counter
+	// default ctor/dtor/copy
+	fanin_array_type&
+	get_pull_expr(const bool b
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) {
+		return b ? pull_up STR_INDEX(w)
+			: pull_dn STR_INDEX(w);
+	}
+
+	const fanin_array_type&
+	get_pull_expr(const bool b
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) const {
+		return b ? pull_up STR_INDEX(w)
+			: pull_dn STR_INDEX(w);
+	}
+
+	bool
+	has_fanin(void) const;
+
+	bool
+	contains_fanout(const expr_index_type) const;
+
+	size_t
+	fans(void) const {
+		return fanout.size()
+#if PRSIM_WEAK_RULES
+			+pull_up[NORMAL_RULE].size()
+			+pull_up[WEAK_RULE].size()
+			+pull_dn[NORMAL_RULE].size()
+			+pull_dn[WEAK_RULE].size();
+#else
+			+pull_up.size() +pull_dn.size();
+#endif
+	}
+
+	static
+	ostream&
+	dump_faninout_list(ostream&, const fanin_array_type&);
+
+	ostream&
+	dump_struct(ostream&) const;
+
+	static
+	expr_index_type
+	add_size(const expr_index_type N, const faninout_struct_type& f) {
+		return N +f.fans();
+	}
+
+};	// end struct faninout_struct_type
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
+
+//=============================================================================
+/**
+	shared structures used per process type
+	This is where we save memory!
+	This extends information that would normally go into
+		a process's footprint. 
+	TODO: eventually, PRSIM_UNIFY_GRAPH_STRUCTURES to avoid 
+		unnecessary data replication, structure from create/unrolling.
+	No stateful information should be kept here.  
+	TODO: rings for mk_excl and check_excl!
+ */
+struct unique_process_subgraph {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	typedef	Expr				expr_struct_type;
+	typedef	Rule<rule_time_type>		rule_type;
+#else
+	typedef	ExprState			expr_struct_type;
+	typedef	RuleState<rule_time_type>	rule_type;
+#endif
+	typedef	ExprGraphNode			graph_node_type;
+	/**
+		Collection of all subexpressions.  
+		These expressions, unlike those in the footprint,
+		point and propagate from leaf to root, bottom up.  
+		Indices are *local* to process (type)!
+	 */
+	typedef	vector<expr_struct_type>	expr_pool_type;
+	/**
+		Top-down graph structure.  
+		Indices are *local* to process (type)!
+		Cannot use list_vector, which is not copy-constructible (yet).
+	 */
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	typedef	vector<graph_node_type>		expr_graph_node_pool_type;
+#else
+	typedef	list_vector<graph_node_type>	expr_graph_node_pool_type;
+#endif
+	/**
+		Collection of rule static information, attributes.  
+		Indices are *local* to process (type).
+	 */
+	typedef	vector<rule_type>		rule_pool_type;
+	/**
+		Sparse map from top-level expressions to rules.
+		Can probably use ordered map.  
+	 */
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	typedef	hash_map<expr_index_type, rule_index_type>
+#else
+	typedef	hash_map<expr_index_type, rule_type>
+#endif
+						rule_map_type;
+#if PRSIM_HIERARCHICAL_RINGS
+	/**
+		Instead of using circular linked lists with pointers, 
+		we use a map of (cyclic referenced) indices to represent
+		the exclusive rings. 
+		Requires half as much memory as equivalent ring of pointers.  
+		Another possiblity: fold these next-indices into the 
+			Node structure.  
+		Alternative: use map for sparser exclusive rings.  
+	 */
+	typedef	std::set<node_index_type>	ring_set_type;
+#endif
+	/**
+		Structure for passing around set of node indices.
+	 */
+	typedef	std::set<node_index_type>	node_set_type;
+
+	expr_pool_type				expr_pool;
+	expr_graph_node_pool_type		expr_graph_node_pool;
+	rule_pool_type				rule_pool;
+	rule_map_type				rule_map;
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/**
+		Member functions interpret this as a node for 
+		structural purposes.  
+	 */
+	typedef	faninout_struct_type			node_type;
+	/**
+		indexed by local node index.
+	 */
+	typedef	std::vector<faninout_struct_type>	faninout_map_type;
+	/**
+		This array-size should match number of nodes in unique_process.
+		This sort of functions as a local node_pool.
+	 */
+	faninout_map_type			local_faninout_map;
+
+	struct memory_accumulator;
+#else
+	// don't bother with flattened global view
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
+
+	unique_process_subgraph();
+	~unique_process_subgraph();
+
+	node_index_type
+	local_root_expr(expr_index_type) const;
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	void
+	void_expr(const expr_index_type);
+
+	void
+	check_expr(const expr_index_type) const;
+
+	void
+	check_node(const node_index_type) const;
+
+	void
+	check_structure(void) const;
+
+	expr_index_type
+	fan_count(void) const;
+
+	const rule_type*
+	lookup_rule(const expr_index_type) const;
+
+	bool
+	is_rule_expr(const expr_index_type) const;
+
+	ostream&
+	dump_struct(ostream&) const;
+
+	ostream&
+	dump_struct_dot(ostream&, const expr_index_type) const;
+#endif
+};	// end struct unique_process_subgraph
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	This base structure contains simulation-invariant structural data only.
+ */
+class process_sim_state_base {
+protected:
+	/**
+		While state is being allocated, the index field is valid, 
+		after the array is finished, the ptr replaces the index.
+	 */
+	union {
+		process_index_type		index;
+		const unique_process_subgraph*	ptr;
+	} type_ref;
+	/**
+		global offset of first expression belonging to this process
+		must be non-zero.
+		In the global array of processes, these offset values
+		must increase monotonically (sorted).
+	 */
+	expr_index_type				global_expr_offset;
+
+public:
+	struct offset_comparator;
+
+	/// only call this after ptr has been set by finish_process...
+	const unique_process_subgraph&
+	type(void) const {
+		NEVER_NULL(type_ref.ptr);
+		return *type_ref.ptr;
+	}
+
+	const process_index_type&
+	get_index(void) const { return type_ref.index; }
+
+	const expr_index_type&
+	get_offset(void) const { return global_expr_offset; }
+
+	void
+	set_ptr(const unique_process_subgraph& g) {
+		type_ref.ptr = &g;
+	}
+
+	/**
+		\param gei is a global expression index.
+		\return local expression index.
+	 */
+	expr_index_type
+	local_expr_index(const expr_index_type gei) const {
+		return gei -global_expr_offset;
+	}
+
+	/**
+		\param lei is a local expression index.
+		\return global expression index.
+	 */
+	expr_index_type
+	global_expr_index(const expr_index_type lei) const {
+		return lei +global_expr_offset;
+	}
+
+	const unique_process_subgraph::rule_type*
+	lookup_rule(const expr_index_type gei) const {
+		return type().lookup_rule(local_expr_index(gei));
+	}
+
+};	// end struct process_sim_state_base
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	state information per process instance.
+	This is memory-intensive, and thus should be kept small.  
+	Node state information is kept outside of these structures.  
+ */
+struct process_sim_state : public process_sim_state_base {
+	typedef	ExprState			expr_state_type;
+	typedef	RuleState<rule_time_type>	rule_state_type;
+	typedef	unique_process_subgraph::rule_type
+						rule_type;
+	typedef	unique_process_subgraph::node_set_type
+						node_set_type;
+	typedef	unique_process_subgraph::expr_struct_type
+						expr_struct_type;
+	typedef	unique_process_subgraph::graph_node_type
+						graph_node_type;
+
+	struct memory_accumulator;
+//	struct expr_offset_comparator;
+
+	/// array of expression states
+	valarray<expr_state_type>		expr_states;
+	/// array of rule states
+	valarray<rule_state_type>		rule_states;
+
+
+	void
+	allocate_from_type(const unique_process_subgraph&, 
+		const process_index_type, const expr_index_type);
+
+	void
+	clear(void);
+
+	void
+	initialize(void);
+
+	void
+	__get_local_X_fanins(const expr_index_type, 
+		const State&, node_set_type&) const;
+
+	void
+	__local_expr_why_not(ostream&, const expr_index_type, 
+		const State&, const size_t, 
+		const bool, const bool, 
+		node_set_type&, node_set_type&) const;
+
+	void
+	__local_expr_why_X(ostream&, const expr_index_type, 
+		const State&, const size_t, 
+		const bool, node_set_type&, node_set_type&) const;
+
+	void
+	__recurse_expr_why_not(ostream&, const expr_index_type, 
+		const pull_enum, 
+		const State&, const size_t, 
+		const bool, const bool, 
+		node_set_type&, node_set_type&) const;
+
+	void
+	__recurse_expr_why_X(ostream&, const expr_index_type, 
+		const State&, const size_t, 
+		const bool, node_set_type&, node_set_type&) const;
+
+	ostream&
+	dump_subexpr(ostream&, const expr_index_type, 
+		const State&, 
+		const bool v, const uchar p = expr_struct_type::EXPR_ROOT,
+		const bool cp = false) const;
+
+	ostream&
+	dump_rule(ostream&, const rule_index_type, 
+		const State&, const bool, const bool) const;
+
+	ostream&
+	dump_node_fanin(ostream&, const node_index_type, 
+		const State&, const bool) const;
+
+};	// end struct process_sim_state
+
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
+
+//=============================================================================
 /**
 	The prsim simulation state.
 		(modeled after old prsim's struct Prs)
@@ -85,16 +495,18 @@ struct watch_entry {
 		For now, only the expr_graph_node_pool is log(N) access, 
 		but it's not accessed during simulation, so HA!
  */
-class State : public state_base {
+class State : public state_base
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
+	, protected unique_process_subgraph	// flattened view
+#endif
+	{
 	// too lazy to write public mutator methods for the moment.  
 	friend class ExprAlloc;
 	typedef	State				this_type;
 public:
 	// these typedefs will make it convenient to template this
 	// class in the future...
-	/// can switch between integer and real-valued time
-	// typedef	discrete_time			time_type;
-	typedef	real_time			time_type;
+	typedef	rule_time_type			time_type;
 	typedef	delay_policy<time_type>		time_traits;
 	typedef	NodeState			node_type;
 	typedef	node_type::event_cause_type	event_cause_type;
@@ -102,17 +514,16 @@ public:
 		NOTE: pass by event_cause_type by reference.  
 	 */
 	typedef	const event_cause_type&		cause_arg_type;
-	typedef	ExprState			expr_type;
-	typedef	ExprGraphNode			graph_node_type;
+	typedef	ExprState			expr_state_type;
+	typedef	unique_process_subgraph::expr_struct_type
+						expr_struct_type;
+	typedef	unique_process_subgraph::rule_type
+						rule_type;
 	typedef	Event				event_type;
 	typedef	EventPool			event_pool_type;
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
 	typedef	vector<node_type>		node_pool_type;
-	typedef	vector<expr_type>		expr_pool_type;
-	typedef	expr_type::pull_enum		pull_enum;
-	typedef	RuleState<time_type>		rule_type;
-	typedef	hash_map<expr_index_type, rule_type>	rule_map_type;
 
 	typedef	map<node_index_type, watch_entry>	watch_list_type;
 	/**
@@ -143,38 +554,8 @@ public:
 
 #define	THROWS_STEP_EXCEPTION	throw (step_exception)
 private:
-	struct evaluate_return_type {
-		node_index_type			node_index;
-		expr_type*			root_ex;
-		pull_enum			root_pull;
+	struct evaluate_return_type;
 
-		evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
-
-		evaluate_return_type(const node_index_type ni,
-			expr_type* const e, const pull_enum p) :
-			node_index(ni), root_ex(e), root_pull(p) { }
-	};	// end struct evaluate_return_type
-private:
-	/**
-		A fast, realloc-free vector-like structure
-		to built-up expressions.  
-		Will have log(N) time access due to internal tree structure.
-	 */
-	typedef	list_vector<expr_type>		temp_expr_pool_type;
-	/**
-		The structure for top-down expression topology.  
-		Will have log(N) time access due to internal tree structure.
-	 */
-	typedef	list_vector<graph_node_type>	expr_graph_node_pool_type;
-
-	enum {
-		/// index of the first valid node
-		FIRST_VALID_NODE = SIM::INVALID_NODE_INDEX +1,
-		/// index of the first valid expr/expr_graph_node
-		FIRST_VALID_EXPR = SIM::INVALID_EXPR_INDEX +1,
-		/// index of the first valid event
-		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
-	};
 	/**
 		Return codes for set_node_time.  
 	 */
@@ -321,9 +702,10 @@ private:
 		Used when node is re-evaluated.  
 		Indexed by [pull-up state][pull-down state].
 	 */
-	static const uchar			pull_to_value[3][3];
+	static const value_enum			pull_to_value[3][3];
 
 public:
+#if !PRSIM_HIERARCHICAL_RINGS
 	/**
 		Instead of using circular linked lists with pointers, 
 		we use a map of (cyclic referenced) indices to represent
@@ -332,9 +714,12 @@ public:
 		Another possiblity: fold these next-indices into the 
 			Node structure.  
 		Alternative: use map for sparser exclusive rings.  
+		Alternative: use sorted array (for fast binary search)
 	 */
 	typedef	std::set<node_index_type>	ring_set_type;
-	typedef	std::set<node_index_type>	node_set_type;
+#endif
+	typedef	unique_process_subgraph::node_set_type
+						node_set_type;
 protected:
 	typedef	vector<ring_set_type>
 						mk_excl_ring_map_type;
@@ -371,11 +756,13 @@ protected:
 		FIRST_VALID_LOCK = INVALID_LOCK_INDEX +1
 	};
 	typedef	vector<lock_index_type>		lock_index_list_type;
+#if !PRSIM_HIERARCHICAL_RINGS
 	/**
 		Sparse map of nodes to their check-exclusive rings.  
 	 */
 	typedef	map<node_index_type, lock_index_list_type>
 						check_excl_ring_map_type;
+#endif
 	/**
 		Useful for collating check-excl rings sparsely, 
 		a reverse map of lock_index to set of nodes.  
@@ -387,14 +774,60 @@ protected:
 		Useful for reverse-mapping all check-excl rings.  
 	 */
 	typedef	vector<ring_set_type>		check_excl_array_type;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+	/**
+		Translates a global expression ID to the process ID
+		to which the expression belongs.  
+		key is the *lowest* expression-index 'owned' by
+		the value-indexed process.  
+		Basically each process owns a contiguous 
+		range of expr indices.  
+	 */
+	typedef	map<expr_index_type, process_index_type>
+					global_expr_process_id_map_type;
+#endif
+	/**
+		Collection of unique process footprints.
+	 */
+	typedef	vector<unique_process_subgraph>	unique_process_pool_type;
+	/**
+		Where each process's state is kept.  
+		Array is indexed by process IDs from the above
+		global_expr_process_id_map (and process_rule_map).  
+	 */
+	typedef	vector<process_sim_state>	process_state_array_type;
+	// TODO: per process instance attributes!
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 private:
 	node_pool_type				node_pool;
-	expr_pool_type				expr_pool;
-	expr_graph_node_pool_type		expr_graph_node_pool;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/**
+		Collection of unique process footprints.  
+	 */
+	unique_process_pool_type		unique_process_pool;
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+	/**
+		Maps global expression ID to owner process.  
+		Tradeoff: this map will be smaller to search than
+		the entire process_state_array because many processes
+		in the hierarchy that would be empty and omitted
+		would be included in the search tree.  
+	 */
+	global_expr_process_id_map_type		global_expr_process_id_map;
+#endif
+	/**
+		Per-process state is kept in an array, indexed
+		by process index.  0 is valid, but reserved for 
+		the top-level process. 
+		Alternative idea is to just use one contiguous array 
+		for all state, but still be able to extract out
+		ranges based on indexed mapping.  
+	 */
+	process_state_array_type		process_state_array;
+#endif
 	event_pool_type				event_pool;
 	event_queue_type			event_queue;
-	// rule state and structural information (sparse map)
-	rule_map_type				rule_map;
 	/// coerce exclusive-hi ring
 	mk_excl_ring_map_type			mk_exhi;
 	/// coerce exclusive-low ring
@@ -445,11 +878,13 @@ private:
 		(is this redundant with the STOP flag?)
 	 */
 	volatile bool				interrupted;
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	/**
 		For efficient tracing and lookup of root rule expressions.  
 		Should not be maintained for state checkpointing.  
 	 */
 	expr_trace_type				__scratch_expr_trace;
+#endif
 	/**
 		Auxiliary array for in-place random reordering
 		of fanout indices for evaluation.  
@@ -489,9 +924,10 @@ private:
 	__initialize(void);
 
 public:
-
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	void
 	check_node(const node_index_type) const;
+#endif
 
 	const node_type&
 	get_node(const node_index_type) const;
@@ -505,6 +941,40 @@ public:
 	void
 	backtrace_node(ostream&, const node_index_type) const;
 
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	const footprint_frame_map_type&
+	get_footprint_frame_map(const process_index_type pid) const;
+
+	const process_sim_state&
+	get_process_state(const process_index_type pid) const {
+		return process_state_array[pid];
+	}
+
+	faninout_struct_type::counter
+	count_node_fanins(const node_index_type) const;
+
+	void
+	finish_process_type_map(void);
+
+	process_index_type
+	lookup_process_index(const process_sim_state&) const;
+
+	const process_sim_state&
+	lookup_global_expr_process(const expr_index_type) const;
+
+private:
+	process_sim_state&
+	lookup_global_expr_process(const expr_index_type);
+
+public:
+	node_index_type
+	translate_to_global_node(const process_sim_state&, 
+		const node_index_type) const;
+
+	node_index_type
+	translate_to_global_node(const process_index_type, 
+		const node_index_type) const;
+#else
 	/// only called by ExprAlloc
 	void
 	void_expr(const expr_index_type);
@@ -514,9 +984,13 @@ public:
 
 	const rule_map_type&
 	get_rule_map(void) const { return rule_map; }
+#endif
 
 	bool
 	is_rule_expr(const expr_index_type) const;
+
+	const rule_type*
+	lookup_rule(const expr_index_type) const;
 
 	void
 	update_time(const time_type t) {
@@ -711,17 +1185,17 @@ public:
 	next_event_time(void) const;
 
 	int
-	set_node_time(const node_index_type, const uchar val, 
+	set_node_time(const node_index_type, const value_enum val, 
 		const time_type t, const bool f);
 
 	int
-	set_node_after(const node_index_type n, const uchar val, 
+	set_node_after(const node_index_type n, const value_enum val, 
 		const time_type t, const bool f) {
 		return set_node_time(n, val, this->current_time +t, f);
 	}
 
 	int
-	set_node(const node_index_type n, const uchar val,
+	set_node(const node_index_type n, const value_enum val,
 			const bool f) {
 		return set_node_time(n, val, this->current_time, f);
 	}
@@ -823,7 +1297,7 @@ public:
 	dump_watched_nodes(ostream&) const;
 
 	ostream&
-	status_nodes(ostream&, const uchar, const bool) const;
+	status_nodes(ostream&, const value_enum, const bool) const;
 
 	bool
 	dequeue_unstable_events(void) const {
@@ -845,7 +1319,7 @@ public:
 protected:
 	excl_exception
 	check_excl_rings(const node_index_type, const node_type&, 
-		const uchar prev, const uchar next);
+		const value_enum prev, const value_enum next);
 
 public:
 	bool
@@ -909,7 +1383,7 @@ private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const rule_index_type, const uchar
+		const rule_index_type, const value_enum
 #if PRSIM_WEAK_RULES
 		, const bool weak
 #endif
@@ -919,7 +1393,7 @@ private:
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const uchar
+		const value_enum
 #if PRSIM_WEAK_RULES
 		, const bool weak
 #endif
@@ -1016,25 +1490,31 @@ private:
 	get_delay_dn(const event_type&) const;
 
 	pull_enum
-	get_pull(const expr_index_type ei) const {
-		return ei ? expr_pool[ei].pull_state() : expr_type::PULL_OFF;
+	get_pull(const expr_index_type ei) const
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	;	// define in .cc file
+#else
+	{
+		return ei ? expr_pool[ei].pull_state() : PULL_OFF;
 	}
+#endif
 
 	evaluate_return_type
 	evaluate(const node_index_type, expr_index_type, 
 		pull_enum prev, pull_enum next);
 
 	break_type
-	propagate_evaluation(cause_arg_type, expr_index_type, pull_enum prev);
+	propagate_evaluation(cause_arg_type, const expr_index_type, 
+		pull_enum prev);
 
 #if 0
 	void
 	kill_evaluation(const node_index_type, expr_index_type, 
-		uchar prev, uchar next);
+		value_enum prev, value_enum next);
 #endif
 
 	break_type
-	__diagnose_violation(ostream&, const uchar next, 
+	__diagnose_violation(ostream&, const pull_enum next, 
 		const event_index_type, event_type&, 
 		const node_index_type ui, node_type& n, 
 		cause_arg_type, const bool dir
@@ -1102,6 +1582,10 @@ public:
 	dump_node_value(ostream&, const node_index_type) const;
 
 	ostream&
+	dump_rule(ostream&, const expr_index_type, const bool, 
+		const bool) const;
+
+	ostream&
 	dump_node_fanout(ostream&, const node_index_type, const bool) const;
 
 	ostream&
@@ -1153,7 +1637,8 @@ public:
 	dump_subexpr(ostream& o, const expr_index_type ei, 
 		const bool v) const {
 		// really don't care what kind of expr, is ignored
-		return dump_subexpr(o, ei, v, expr_type::EXPR_ROOT, true);
+		return dump_subexpr(o, ei, v,
+			expr_struct_type::EXPR_ROOT, true);
 	}
 
 #if PRSIM_CHANNEL_SUPPORT
@@ -1218,6 +1703,26 @@ private:
 	__expr_why_not(ostream&, const expr_index_type, 
 		const size_t, const bool, const bool, 
 		node_set_type&, node_set_type&) const;
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	void
+	__root_expr_why_X(ostream&, const node_index_type, 
+		const bool d, 
+#if PRSIM_WEAK_RULES
+		const bool w, 
+#endif
+		const size_t, const bool, 
+		node_set_type&, node_set_type&) const;
+
+	void
+	__root_expr_why_not(ostream&, const node_index_type, 
+		const bool d,
+#if PRSIM_WEAK_RULES
+		const bool w, 
+#endif
+		const size_t, const bool, const bool, 
+		node_set_type&, node_set_type&) const;
+#endif
 
 	template <typename Iter>
 	ostream&

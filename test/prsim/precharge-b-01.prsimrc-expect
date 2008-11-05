@@ -1,10 +1,10 @@
 fanin o: 
 Fanins of node `o':
 [after 10]	~P.en -> o+
-[after 10]	(P.en & x[0] & y[0]) | 
-[after 10]	(P.en & x[1] & y[1]) -> o-
+[after 10]	P.en & x[0] & y[0] -> o-
+[after 10]	P.en & x[1] & y[1] -> o-
 fanout P.en: 
 Fanouts of node `P.en':
-[after 10]	(P.en & x[0] & y[0]) | 
-[after 10]	(P.en & x[1] & y[1]) -> o-
+[after 10]	P.en & x[0] & y[0] -> o-
+[after 10]	P.en & x[1] & y[1] -> o-
 [after 10]	~P.en -> o+

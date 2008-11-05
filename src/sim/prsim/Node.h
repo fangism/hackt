@@ -1,22 +1,24 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.15 2008/04/23 00:55:46 fang Exp $
+	$Id: Node.h,v 1.16 2008/11/05 23:03:54 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
 #define	__HAC_SIM_PRSIM_NODE_H__
 
 #include <iosfwd>
-// #include <valarray>
 #include <vector>
 #include "util/string_fwd.h"
 #include "util/macros.h"
 #include "util/attributes.h"
 #include "util/utypes.h"
 #include "sim/common.h"
-#include "sim/prsim/devel_switches.h"
+#include "sim/prsim/enums.h"
 #include "sim/prsim/Cause.h"
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#include <valarray>
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -25,15 +27,82 @@ using std::ostream;
 using std::istream;
 using std::vector;
 
-#if PRSIM_WEAK_RULES
-enum rule_strength {
-	NORMAL_RULE = 0,
-	WEAK_RULE = 1
-};
-#define	STR_INDEX(w)	[w]
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+struct faninout_struct_type;		// from "State-prsim.h"
+
+/**
+	Define to 1 to use vector for node fanin, else valarray.
+ */
+#define	VECTOR_NODE_FANIN		1
+/**
+	List or array of fanin expressions.  
+	OR-combination expression.  
+	Valarray is lighter, but lacks container/iterator interface :(
+ */
+#if VECTOR_NODE_FANIN
+typedef	std::vector<process_index_type>	process_fanin_type;
 #else
-#define	STR_INDEX(w)
+typedef	std::valarray<process_index_type>	process_fanin_type;
 #endif
+
+/**
+	Is like ExprState, but uses size_t instead of count_type.  
+	NodeState needs one of these per direction, per strength.  
+	Should we impose a limit on the number of rules? uint16, uint32?
+ */
+struct fanin_state_type {
+#if 0
+	// smaller?, should check for limit
+	typedef	expr_count_type		count_type;
+#else
+	typedef	expr_index_type		count_type;
+#endif
+	/**
+		This is the total number of fanin rules that are
+			OR-combined to pull this node.
+		Value is computed by taking sum over process fanins.  
+		This isn't really state information, it's invariant, 
+			but convenient to add here.  
+	 */
+	count_type			size;
+	/**
+		For OR-expressions, this represents the number of 1's, 
+		i.e. number of rules that are currently on.
+	 */
+	count_type			countdown;
+	/**
+		The number of fanin rules that are X.  
+	 */
+	count_type			unknowns;
+
+	fanin_state_type() : size(0), countdown(0), unknowns(0) { }
+
+	/**
+		Same as ExprState::initialize()
+	 */
+	void
+	initialize(void) {
+		unknowns = size;
+		countdown = 0;
+	}
+
+	bool
+	any(void) const { return size; }
+
+	/**
+		Simplified from ExprState's or_pull_state.
+	 */
+	pull_enum
+	pull(void) const {
+		return countdown ? PULL_ON :
+			(unknowns ? PULL_WEAK : PULL_OFF);
+	}
+
+	ostream&
+	dump_state(ostream&) const;
+};	// end struct fanin_state_type
+
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 
 //=============================================================================
@@ -48,7 +117,12 @@ enum rule_strength {
 	TODO: attribute packed for density, or align for speed?
  */
 struct Node {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	// compact: reference process instance indices with fanout
+	typedef	std::vector<process_index_type>	fanout_array_type;
+#else
 	typedef	std::vector<expr_index_type>	fanout_array_type;
+#endif
 
 	/**
 		Bit fields for node structure flags.  
@@ -82,7 +156,13 @@ struct Node {
 		NODE_CHECK_EXCLLO = 0x0010
 	} struct_flags_enum;
 
-
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/**
+		This refers to a list of global process instances (indices)
+		that can drive this node.  
+	 */
+	process_fanin_type		fanin;
+#else
 #if PRSIM_WEAK_RULES
 	/**
 		Index to the pull-up expression (normal, weak).
@@ -102,10 +182,14 @@ struct Node {
 	 */
 	expr_index_type			pull_dn_index;
 #endif
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	/**
 		List of expression indices to which this node fans out.  
 		Size of vector: 3 x sizeof(pointer), 12B on 32b arch.
+		TODO: far future, only fanout to *processes* and 
+			do additional rule lookups from there.
+			Performance-memory tradeoff.
 	 */
 	fanout_array_type		fanout;
 
@@ -129,12 +213,15 @@ public:
 	/// these aren't destroyed frequently, inline doesn't matter
 	~Node();
 
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	void
 	push_back_fanout(const expr_index_type);
 
 	bool
 	contains_fanout(const expr_index_type) const;
+#endif
 
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	expr_index_type&
 	get_pull_expr(const bool b
 #if PRSIM_WEAK_RULES
@@ -161,15 +248,20 @@ public:
 		, const rule_strength w
 #endif
 		);
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	bool
 	has_fanin(void) const {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		return fanin.size();
+#else
 #if PRSIM_WEAK_RULES
 		return pull_up_index[NORMAL_RULE] ||
 			pull_dn_index[NORMAL_RULE] ||
 			pull_up_index[WEAK_RULE] || pull_dn_index[WEAK_RULE];
 #else
 		return pull_up_index || pull_dn_index;
+#endif
 #endif
 	}
 
@@ -237,13 +329,6 @@ public:
 	typedef	parent_type::fanout_array_type	fanout_array_type;
 	typedef	LastCause::event_cause_type	event_cause_type;
 
-	typedef	enum {
-		LOGIC_LOW = 0x00,		// 0
-		LOGIC_HIGH = 0x01,		// 1
-		LOGIC_VALUE = 0x01,		// value mask
-		LOGIC_OTHER = 0x02,		// 2
-		LOGIC_MASK = 0x03
-	} value_enum;
 
 	/**
 		Enumerations for stateful information flags for a node.  
@@ -284,18 +369,18 @@ public:
 
 public:
 	static const uchar		value_to_char[3];
-	static const uchar		invert_value[3];
+	static const value_enum		invert_value[3];
 protected:
 	/**
 		Uses enum value_enum:
 		0 = 0, 1 = 1, 2 = X, 3 = X
 	 */
-	uchar					value;
+	value_enum				value;
 
 	/**
 		8-bit field for flagging stateful information.  
 	 */
-	char					state_flags;
+	uchar					state_flags;
 	/**
 		Current enqueued event index associated with this node.
 		INVALID_EVENT_INDEX (0) means no pending event.  
@@ -305,12 +390,25 @@ protected:
 		Structure for tracking last cause, by node and value.  
 	 */
 	LastCause				causes;
+
 public:
 	/**
 		Transition counts.  
 		Not critical to simulation, unless we want statistics.  
 	 */
 	size_t					tcount;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/**
+		The current state of each pull.  
+	 */
+#if PRSIM_WEAK_RULES
+	fanin_state_type			pull_up_state[2];
+	fanin_state_type			pull_dn_state[2];
+#else
+	fanin_state_type			pull_up_state;
+	fanin_state_type			pull_dn_state;
+#endif
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 public:
 	NodeState() : parent_type(), value(LOGIC_OTHER), 
 		state_flags(NODE_INITIAL_STATE_FLAGS),
@@ -338,7 +436,7 @@ public:
 	}
 
 	event_cause_type
-	get_cause(const uchar v) const {
+	get_cause(const value_enum v) const {
 		return causes.get_cause(v);
 	}
 
@@ -407,11 +505,11 @@ public:
 	in_channel(void) const { return state_flags & NODE_IN_CHANNEL; }
 #endif
 
-	uchar
+	value_enum
 	current_value(void) const { return value; }
 
 	void
-	set_value_and_cause(const uchar c, const event_cause_type& e) {
+	set_value_and_cause(const value_enum c, const event_cause_type& e) {
 		value = c;
 		causes.set_cause(c, e);
 	}
@@ -428,9 +526,9 @@ public:
 	 */
 	struct status_dumper {
 		ostream&		os;
-		const uchar		match_val;
+		const value_enum		match_val;
 
-		status_dumper(ostream& o, const uchar v) :
+		status_dumper(ostream& o, const value_enum v) :
 			os(o), match_val(v) { }
 
 		// no copy-ctor
@@ -443,18 +541,18 @@ public:
 
 	static
 	bool
-	is_valid_value(const uchar c) {
+	is_valid_value(const value_enum c) {
 		// return c >= LOGIC_LOW && c <= LOGIC_OTHER;
 		return c <= LOGIC_OTHER;
 	}
 
 	static
-	uchar
+	value_enum
 	char_to_value(const char);
 
 	/// \return < 0 on error, else returns 0, 1, 2
 	static
-	uchar
+	value_enum
 	string_to_value(const std::string&);
 
 	void
@@ -465,6 +563,31 @@ public:
 
 	void
 	reset_tcount(void) { tcount = 0; }
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	void
+	count_fanins(const faninout_struct_type&);
+
+	fanin_state_type&
+	get_pull_struct(const bool dir
+#if PRSIM_WEAK_RULES
+		, const bool w
+#endif
+		) {
+		return dir ? pull_up_state STR_INDEX(w) :
+			pull_dn_state STR_INDEX(w);
+	}
+
+	const fanin_state_type&
+	get_pull_struct(const bool dir
+#if PRSIM_WEAK_RULES
+		, const bool w
+#endif
+		) const {
+		return dir ? pull_up_state STR_INDEX(w) :
+			pull_dn_state STR_INDEX(w);
+	}
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	void
 	save_state(ostream&) const;
@@ -481,6 +604,34 @@ public:
 	dump_checkpoint_state(ostream&, istream&);
 
 } __ATTRIBUTE_ALIGNED__ ;	// end struct NodeState
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set of pull states, in all directions.  
+ */
+struct pull_set {
+#if PRSIM_WEAK_RULES
+	pull_enum			up[2];
+	pull_enum			dn[2];
+#else
+	pull_enum			up;
+	pull_enum			dn;
+#endif
+
+	explicit
+	pull_set(const NodeState& n) {
+		up STR_INDEX(NORMAL_RULE) =
+			n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
+		dn STR_INDEX(NORMAL_RULE) =
+			n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
+#if PRSIM_WEAK_RULES
+		up STR_INDEX(WEAK_RULE) =
+			n.pull_up_state STR_INDEX(WEAK_RULE).pull();
+		dn STR_INDEX(WEAK_RULE) =
+			n.pull_dn_state STR_INDEX(WEAK_RULE).pull();
+#endif
+	}
+};	// end struct pull_set
 
 //=============================================================================
 }	// end namespace PRSIM

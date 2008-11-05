@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.3 2008/10/30 02:15:19 fang Exp $
+	$Id: vpi-prsim.cc,v 1.4 2008/11/05 23:04:00 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -367,19 +367,19 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 	const char* const nodename = name.c_str();
 #endif
       switch (n.current_value()) {
-      case node_type::LOGIC_HIGH:
+      case LOGIC_HIGH:
 #if VERBOSE_DEBUG
 	vpi_printf ("Set net %s (%x) to TRUE\n", nodename, net);
 #endif
 	v.value.scalar = vpi1;
 	break;
-      case node_type::LOGIC_LOW:
+      case LOGIC_LOW:
 #if VERBOSE_DEBUG
 	vpi_printf ("Set net %s (%x) to FALSE\n", nodename, net);
 #endif
 	v.value.scalar = vpi0;
 	break;
-      case node_type::LOGIC_OTHER:
+      case LOGIC_OTHER:
 #if VERBOSE_DEBUG
 	vpi_printf ("Set net %s (%x) to X\n", nodename, net);
 #endif
@@ -604,14 +604,14 @@ static const bool set_force = true;
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_F, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_LOW, vcstime, set_force);
+    prsim_state->set_node_time(n, LOGIC_LOW, vcstime, set_force);
 #endif
     break;
   case vpi1:
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_T, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_HIGH, vcstime, set_force);
+    prsim_state->set_node_time(n, LOGIC_HIGH, vcstime, set_force);
 #endif
     break;
   case vpiZ:
@@ -621,7 +621,7 @@ static const bool set_force = true;
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_X, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_OTHER, vcstime, set_force);
+    prsim_state->set_node_time(n, LOGIC_OTHER, vcstime, set_force);
 #endif
     break;
   default:
@@ -993,6 +993,7 @@ if (HAC_module) {
 			return 1;
 		}
 	}
+	HAC_module->populate_top_footprint_frame();
 	prsim_state = count_ptr<State>(
 		new State(*HAC_module, ExprAllocFlags()));
 	prsim_state->initialize();
@@ -1150,7 +1151,7 @@ static PLI_INT32 prsim_status_x (PLI_BYTE8 *args)
   //}
 #else
 	// arg.value.char? .str[0]?
-	prsim_state->status_nodes(cout, 'X', false);
+	prsim_state->status_nodes(cout, LOGIC_OTHER, false);
 #endif
   return 1;
 }
@@ -1174,7 +1175,7 @@ static PLI_INT32 prsim_set (PLI_BYTE8 *args)
   string arg1;
   vpiHandle fname;
   // PrsNode *n;
-  uchar val;
+  value_enum val;
   require_prsim_state(__FUNCTION__);
 
   task_call = vpi_handle (vpiSysTfCall, NULL);
@@ -1209,9 +1210,9 @@ static PLI_INT32 prsim_set (PLI_BYTE8 *args)
 #endif
 	// can't set X, huh?
   if (arg.value.integer == 0) {
-          val = node_type::LOGIC_LOW;
+          val = LOGIC_LOW;
   } else {
-          val = node_type::LOGIC_HIGH;
+          val = LOGIC_HIGH;
   }
 #if 0
   n = prs_node (P, arg1);

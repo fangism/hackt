@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.200 2008/10/07 03:22:21 fang Exp $
+#	$Id: Makefile.am,v 1.201 2008/11/05 23:03:17 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -583,6 +583,7 @@ OBJECT_COMMON_CC_FILES = \
 
 OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 	Object/common/alias_string_cache.h \
+	Object/common/frame_map.h \
 	Object/common/multikey_index.h \
 	Object/common/util_types.h \
 	common/devel_switches.h
@@ -951,6 +952,7 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/common.h \
 	sim/devel_switches.h \
 	sim/prsim/devel_switches.h \
+	sim/prsim/enums.h \
 	sim/prsim/ExprAllocFlags.h \
 	sim/prsim/Exception.h \
 	sim/chpsim/chpsim_dlfunction.h \

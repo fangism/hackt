@@ -1,7 +1,7 @@
 /**
 	\file "sim/state_base.h"
 	Facilities common to all simulator states.  (Recommended)
-	$Id: state_base.h,v 1.2 2007/01/21 06:00:36 fang Exp $
+	$Id: state_base.h,v 1.3 2008/11/05 23:03:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_STATE_BASE_H__
@@ -80,6 +80,9 @@ public:
 
 	ostream&
 	dump_source_paths(ostream&) const;
+
+	ostream&
+	dump_memory_usage(ostream&) const;
 
 };	// end class state_base
 

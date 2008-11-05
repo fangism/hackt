@@ -1,9 +1,9 @@
 Fanins of node `_o':
 [after 10]	~en:X -> _o+:X
-[after 10]	(en:X & x[0]:X)<X> | 
-[after 10]	(en:X & x[1]:X)<X> | 
-[after 10]	(en:X & x[2]:X)<X> | 
-[after 10]	(en:X & x[3]:X)<X><X> -> _o-:X
+[after 10]	en:X & x[0]:X<X><X> -> _o-:X
+[after 10]	en:X & x[1]:X<X><X> -> _o-:X
+[after 10]	en:X & x[2]:X<X><X> -> _o-:X
+[after 10]	en:X & x[3]:X<X><X> -> _o-:X
 en -> X 
 event queue:
 	10	en : X

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.12 2008/04/23 00:55:45 fang Exp $
+	$Id: Node.cc,v 1.13 2008/11/05 23:03:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,10 @@
 #include "util/macros.h"
 #include "util/stacktrace.h"
 #include "util/IO_utils.tcc"
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#include "util/STL/valarray_iterator.h"
+#include "sim/prsim/State-prsim.h"	// for faninout_struct_type
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -33,6 +37,9 @@ using util::read_value;
 // class Node method definitions
 
 Node::Node() : 
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	fanin(), 
+#else
 #if PRSIM_WEAK_RULES
 //	The next standard of C++ better have aggregate initializers...
 //	pull_up_index({INVALID_EXPR_INDEX}),
@@ -41,12 +48,15 @@ Node::Node() :
 	pull_up_index(INVALID_EXPR_INDEX),
 	pull_dn_index(INVALID_EXPR_INDEX), 
 #endif
+#endif
 	fanout(),
 	struct_flags(NODE_DEFAULT_STRUCT_FLAGS) {
 	INVARIANT(!fanout.size());
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 #if PRSIM_WEAK_RULES
 	pull_up_index[0] = pull_up_index[1] = INVALID_EXPR_INDEX;
 	pull_dn_index[0] = pull_dn_index[1] = INVALID_EXPR_INDEX;
+#endif
 #endif
 }
 
@@ -54,6 +64,7 @@ Node::Node() :
 Node::~Node() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 /**
 	TODO: add ONLY if not already found in fanout list?
 	Realloc-ing on every push_back could be slow... consider vector.  
@@ -95,6 +106,7 @@ Node::replace_pull_index(const bool dir, const expr_index_type _new
 		pull_dn_index STR_INDEX(w) = _new;
 	}
 }
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -104,6 +116,17 @@ Node::replace_pull_index(const bool dir, const expr_index_type _new
  */
 ostream&
 Node::dump_struct(ostream& o) const {
+	ostream_iterator<expr_index_type> osi(o, ", ");
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	o << "fanin-processes: ";
+#if VECTOR_NODE_FANIN
+	std::copy(fanin.begin(), fanin.end(), osi);
+#else
+	std::copy(begin(fanin), end(fanin), osi);
+#endif
+	// o << endl;
+	// TODO: expand process fanins to rule expresions?
+#else
 	o << "up: ";
 	if (pull_up_index STR_INDEX(NORMAL_RULE))
 		o << pull_up_index STR_INDEX(NORMAL_RULE);
@@ -122,10 +145,10 @@ Node::dump_struct(ostream& o) const {
 		o << '<' << pull_dn_index STR_INDEX(WEAK_RULE);
 	// else just omit
 #endif
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 	o << " fanout: ";
 #if 1
 //	o << '<' << fanout.size() << "> ";
-	ostream_iterator<expr_index_type> osi(o, ", ");
 	std::copy(fanout.begin(), fanout.end(), osi);
 	// std::copy(&fanout[0], &fanout[fanout.size()], osi);
 #else
@@ -153,12 +176,26 @@ Node::dump_fanout_dot(ostream& o, const string& s) const {
 }
 
 //=============================================================================
+// class fanin_state_type method definitions
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	Ripped from ExprState::dump_state()
+ */
+ostream&
+fanin_state_type::dump_state(ostream& o) const {
+	return o << "ctdn: " << countdown << " X: " << unknowns << "(/" <<
+		size << ')' << " pull: " << size_t(pull());
+}
+#endif
+
+//=============================================================================
 // class NodeState method definitions
 
 const uchar
 NodeState::value_to_char[3] = { '0', '1', 'X' };
 
-const uchar
+const value_enum
 NodeState::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -175,7 +212,38 @@ NodeState::initialize(void) {
 	tcount = 0;
 	state_flags |= NODE_INITIALIZE_SET_MASK;
 	state_flags &= ~NODE_INITIALIZE_CLEAR_MASK;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	pull_up_state STR_INDEX(NORMAL_RULE).initialize();
+	pull_dn_state STR_INDEX(NORMAL_RULE).initialize();
+#if PRSIM_WEAK_RULES
+	pull_up_state STR_INDEX(WEAK_RULE).initialize();
+	pull_dn_state STR_INDEX(WEAK_RULE).initialize();
+#endif
+#endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+static
+void
+__count_fanins(fanin_state_type& s, const fanin_array_type& v) {
+	s.size += v.size();
+}
+
+void
+NodeState::count_fanins(const faninout_struct_type& f) {
+	__count_fanins(pull_up_state STR_INDEX(NORMAL_RULE), 
+		f.pull_up STR_INDEX(NORMAL_RULE));
+	__count_fanins(pull_dn_state STR_INDEX(NORMAL_RULE), 
+		f.pull_dn STR_INDEX(NORMAL_RULE));
+#if PRSIM_WEAK_RULES
+	__count_fanins(pull_up_state STR_INDEX(WEAK_RULE), 
+		f.pull_up STR_INDEX(WEAK_RULE));
+	__count_fanins(pull_dn_state STR_INDEX(WEAK_RULE), 
+		f.pull_dn STR_INDEX(WEAK_RULE));
+#endif
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -216,7 +284,7 @@ NodeState::dump_state(ostream& o) const {
 	NOTE: reserving H/L for weak logic levels.  
 	\return 0, 1, 2 (X), or -1 on error.  
  */
-uchar
+value_enum
 NodeState::char_to_value(const char v) {
 	switch (v) {
 	case 'f':	// fall-through
@@ -233,7 +301,7 @@ NodeState::char_to_value(const char v) {
 	case 'u':	// fall-through
 		return LOGIC_OTHER;
 	default:
-		return uchar(-1);
+		return value_enum(-1);
 	}
 }
 
@@ -243,10 +311,10 @@ NodeState::char_to_value(const char v) {
 	TODO: add synonymous character mappings.  
 	\return 0, 1, 2 (X), or -1 on error.  
  */
-uchar
+value_enum
 NodeState::string_to_value(const string& v) {
 	if (v.length() != 1) {
-		return uchar(-1);
+		return value_enum(-1);
 	} else {
 		return char_to_value(v[0]);
 	}

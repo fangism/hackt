@@ -1,7 +1,7 @@
 /**
 	\file "sim/common.h"
 	Definitions useful for ALL simulations.  
-	$Id: common.h,v 1.4 2006/04/23 07:37:25 fang Exp $
+	$Id: common.h,v 1.5 2008/11/05 23:03:38 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMON_H__
@@ -20,6 +20,7 @@ typedef	size_t		index_type;
 typedef	index_type	node_index_type;
 typedef	index_type	expr_index_type;
 typedef	index_type	event_index_type;
+typedef	index_type	process_index_type;
 /**
 	The set of rules is just a subset of the set of expressions.  
  */

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.20 2008/10/11 22:49:06 fang Exp $
+	$Id: global_entry.tcc,v 1.21 2008/11/05 23:03:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -187,6 +187,14 @@ ostream&
 global_entry_substructure_base<true>::dump(global_entry_dumper& ged) const {
 	this->_frame.template dump_footprint<Tag>(ged);
 	return this->_frame.dump_frame(ged.os);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+size_t
+global_entry_substructure_base<true>::count_frame_size(const size_t s, 
+		const this_type& t) {
+	return s +t._frame.count_frame_size();
 }
 
 //=============================================================================
@@ -381,6 +389,7 @@ global_entry<Tag>::get_canonical_instance(
 template <class Tag>
 void
 global_entry<Tag>::accept(PRS::cflat_visitor& v) const {
+	STACKTRACE_VERBOSE;
 	v.visit(*this);
 }
 

@@ -11,27 +11,19 @@ e d
 1 nodes:
 a b c 
 Fanouts of node `a':
-[after 10]	(a:1 & b:1)<1> | 
-[after 10]	(c:1 & d:0)<0><1> -> e-:0
-[after 10]	(~a:1 & ~b:1)<0> | 
-[after 10]	(~c:1 & ~d:0)<0><0> -> e+:0
+[after 10]	a:1 & b:1<1><1> -> e-:0
+[after 10]	~a:1 & ~b:1<0><0> -> e+:0
 Fanouts of node `b':
-[after 10]	(a:1 & b:1)<1> | 
-[after 10]	(c:1 & d:0)<0><1> -> e-:0
-[after 10]	(~a:1 & ~b:1)<0> | 
-[after 10]	(~c:1 & ~d:0)<0><0> -> e+:0
+[after 10]	a:1 & b:1<1><1> -> e-:0
+[after 10]	~a:1 & ~b:1<0><0> -> e+:0
 Fanouts of node `c':
-[after 10]	(a:1 & b:1)<1> | 
-[after 10]	(c:1 & d:0)<0><1> -> e-:0
-[after 10]	(~a:1 & ~b:1)<0> | 
-[after 10]	(~c:1 & ~d:0)<0><0> -> e+:0
+[after 10]	c:1 & d:0<0><1> -> e-:0
+[after 10]	~c:1 & ~d:0<0><0> -> e+:0
 Fanouts of node `d':
-[after 10]	(a:1 & b:1)<1> | 
-[after 10]	(c:1 & d:0)<0><1> -> e-:0
-[after 10]	(~a:1 & ~b:1)<0> | 
-[after 10]	(~c:1 & ~d:0)<0><0> -> e+:0
+[after 10]	c:1 & d:0<0><1> -> e-:0
+[after 10]	~c:1 & ~d:0<0><0> -> e+:0
 Fanins of node `e':
-[after 10]	(~a:1 & ~b:1)<0> | 
-[after 10]	(~c:1 & ~d:0)<0><0> -> e+:0
-[after 10]	(a:1 & b:1)<1> | 
-[after 10]	(c:1 & d:0)<0><1> -> e-:0
+[after 10]	~a:1 & ~b:1<0><0> -> e+:0
+[after 10]	a:1 & b:1<1><1> -> e-:0
+[after 10]	~c:1 & ~d:0<0><0> -> e+:0
+[after 10]	c:1 & d:0<0><1> -> e-:0

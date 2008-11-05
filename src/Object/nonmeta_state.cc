@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.3 2007/02/05 06:39:43 fang Exp $
+	$Id: nonmeta_state.cc,v 1.4 2008/11/05 23:03:25 fang Exp $
  */
 
 #include <iostream>
@@ -62,7 +62,7 @@ nonmeta_state_base<Tag>::__dump_all_subscriptions(ostream& o,
 	typedef	class_traits<Tag>		traits_type;
 	const global_entry_pool<Tag>& ip(sm.template get_pool<Tag>());
 	const size_t s = this->pool.size();
-	size_t i = FIRST_VALID_NODE;
+	size_t i = FIRST_VALID_GLOBAL_NODE;
 	for ( ; i<s; ++i) {
 		const instance_type& nsi(this->pool[i]);
 		if (nsi.has_subscribers()) {
@@ -203,7 +203,7 @@ nonmeta_state_manager::dump_struct(ostream& o, const state_manager& sm,
 	{
 		const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
 		const size_t bools = bool_base_type::pool.size();
-		size_t i = FIRST_VALID_NODE;
+		size_t i = FIRST_VALID_GLOBAL_NODE;
 		for ( ; i<bools; ++i) {
 			o << "bool[" << i << "]: \"";
 			bp[i].dump_canonical_name(o, topfp, sm);
@@ -215,7 +215,7 @@ nonmeta_state_manager::dump_struct(ostream& o, const state_manager& sm,
 	}{
 		const global_entry_pool<int_tag>& ip(sm.get_pool<int_tag>());
 		const size_t ints = int_base_type::pool.size();
-		size_t i = FIRST_VALID_NODE;
+		size_t i = FIRST_VALID_GLOBAL_NODE;
 		for ( ; i<ints; ++i) {
 			o << "int[" << i << "]: \"";
 			ip[i].dump_canonical_name(o, topfp, sm);
@@ -227,7 +227,7 @@ nonmeta_state_manager::dump_struct(ostream& o, const state_manager& sm,
 	}{
 		const global_entry_pool<enum_tag>& ip(sm.get_pool<enum_tag>());
 		const size_t enums = enum_base_type::pool.size();
-		size_t i = FIRST_VALID_NODE;
+		size_t i = FIRST_VALID_GLOBAL_NODE;
 		for ( ; i<enums; ++i) {
 			o << "enum[" << i << "]: \"";
 			ip[i].dump_canonical_name(o, topfp, sm);
@@ -240,7 +240,7 @@ nonmeta_state_manager::dump_struct(ostream& o, const state_manager& sm,
 		const global_entry_pool<channel_tag>&
 			cp(sm.get_pool<channel_tag>());
 		const size_t chans = channel_base_type::pool.size();
-		size_t i = FIRST_VALID_NODE;
+		size_t i = FIRST_VALID_GLOBAL_NODE;
 		for ( ; i<chans; ++i) {
 			o << "chan[" << i << "]: \"";
 			cp[i].dump_canonical_name(o, topfp, sm);

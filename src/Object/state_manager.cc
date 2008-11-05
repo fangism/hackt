@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.20 2008/10/11 06:35:07 fang Exp $
+	$Id: state_manager.cc,v 1.21 2008/11/05 23:03:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <functional>
+#include <algorithm>		// for std::accumulate
 #include <sstream>
 #include "Object/state_manager.tcc"
 #include "Object/global_entry.tcc"
@@ -100,26 +101,21 @@ if (this->size() > 1) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
-void
-global_entry_pool<Tag>::accept(PRS::cflat_visitor& v) const {
-	size_t j = 1;
-try {
-	const_iterator i(++this->begin());
-	const const_iterator e(this->end());
-	for ( ; i!=e; ++i, ++j) {
-		i->accept(v);
-	}
-} catch (...) {
-	cerr << "FATAL: error during processing of " <<
-		class_traits<Tag>::tag_name << " id " << j
-		<< "." << endl;
-#if 0
-	cerr << "\tinstance: ";
-	proc_entry_pool[pid].dump_canonical_name(cerr, topfp, sm) << endl;
-#endif
-	// topfp footprint is not available here, pass pid in exception
-	throw PRS::cflat_visitor::instance_exception<Tag>(j);
+ostream&
+global_entry_pool<Tag>::__dump_memory_usage(ostream& o) const {
+	const size_t s = this->size();
+	o << "\t" << class_traits<Tag>::tag_name << "-entry-pool: (" <<
+		s << " * " << sizeof(entry_type) << " B/inst) = " <<
+		s *sizeof(entry_type) << " B" << endl;
+	const size_t f = std::accumulate(this->begin(), this->end(), 
+		size_t(0), &entry_type::template count_frame_size<Tag>);
+if (f) {
+	o << "\t\tsum(frame-map): (" << f << " * " <<
+		sizeof(footprint_frame_map_type::value_type) << " B/entry) = "
+		<< f *sizeof(footprint_frame_map_type::value_type)
+		<< " B" << endl;
 }
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -272,10 +268,12 @@ state_manager::make_process_dump_context(const footprint& topfp,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-state_manager::__accept(PRS::cflat_visitor& v) const {
-	global_entry_pool<Tag>::accept(v);
+/**
+	Want to inline...
+ */
+const footprint_frame_map_type&
+state_manager::get_bool_frame_map(const size_t pid) const {
+	return get_pool<process_tag>()[pid]._frame.get_frame_map<bool_tag>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -287,18 +285,8 @@ state_manager::__accept(PRS::cflat_visitor& v) const {
  */
 void
 state_manager::accept(PRS::cflat_visitor& v) const {
-#if 0
+	STACKTRACE_VERBOSE;
 	v.visit(*this);
-#else
-	__accept<process_tag>(v);
-	__accept<channel_tag>(v);
-#if ENABLE_DATASTRUCTS
-	__accept<datastruct_tag>(v);
-#endif
-	__accept<enum_tag>(v);
-	__accept<int_tag>(v);
-	__accept<bool_tag>(v);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -333,6 +321,21 @@ state_manager::__collect_subentries_test(void) const {
 	collect_subentries<enum_tag>(foo, 1);
 	collect_subentries<int_tag>(foo, 1);
 	collect_subentries<bool_tag>(foo, 1);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+state_manager::dump_memory_usage(ostream& o) const {
+	o << "global-state-manager:" << endl;
+	global_entry_pool<process_tag>::__dump_memory_usage(o);
+#if ENABLE_DATASTRUCTS
+	global_entry_pool<datastruct_tag>::__dump_memory_usage(o);
+#endif
+	global_entry_pool<channel_tag>::__dump_memory_usage(o);
+	global_entry_pool<enum_tag>::__dump_memory_usage(o);
+	global_entry_pool<int_tag>::__dump_memory_usage(o);
+	global_entry_pool<bool_tag>::__dump_memory_usage(o);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.tcc"
-	$Id: global_entry_context.tcc,v 1.2 2007/01/21 05:58:25 fang Exp $
+	$Id: global_entry_context.tcc,v 1.3 2008/11/05 23:03:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
@@ -27,13 +27,7 @@ size_t
 global_entry_context::lookup_global_id(const size_t lni) const {
 	INVARIANT(lni);
 	if (fpf) {
-		// see also footprint_frame_transformer in global_entry.h
-#if 1
-		// equivalent
 		return footprint_frame_transformer(*fpf, Tag())(lni);
-#else
-		return fpf->template get_frame_map<Tag>()[lni-1];
-#endif
 	} else {
 		// is top-level footprint
 		return lni;

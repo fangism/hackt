@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_base.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint_base.h,v 1.3 2007/01/21 05:58:39 fang Exp $
+	$Id: footprint_base.h,v 1.4 2008/11/05 23:03:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_H__
@@ -51,6 +51,9 @@ private:
 	typedef	typename instance_pool_type::const_iterator	const_iterator;
 protected:
 	const excl_ptr<collection_pool_bundle_type>	collection_pool_bundle;
+	/**
+		This is where final unique instances are allocated.
+	 */
 	const excl_ptr<instance_pool_type>		_instance_pool;
 
 	footprint_base();

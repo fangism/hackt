@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.34 2008/03/17 23:02:18 fang Exp $
+ 	$Id: module.cc,v 1.35 2008/11/05 23:03:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -32,6 +32,8 @@
 #include "Object/type/process_type_reference.h"
 #include "Object/type/canonical_type.h"
 #include "Object/def/process_definition.h"
+#include "Object/global_entry.h"
+#include "Object/traits/proc_traits.h"
 
 #if ENABLE_STACKTRACE
 #include "Object/common/dump_flags.h"
@@ -315,6 +317,26 @@ module::allocate_unique(void) {
 	if (!create_unique().good)
 		return good_bool(false);
 	else return __allocate_unique();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Normally, the state_manager's top-level process, indexed at 0, 
+	has an empty footprint_frame because each entry's value
+	would be equal to its index.  
+	This 'special' case creates a need for error-prone practice, 
+	and unecessary code replication, so for consistency, 
+	we provide a function to automatically load proces[0]'s frame.
+	Consider moving this automatically into the allocate() methods...
+ */
+void
+module::populate_top_footprint_frame(void) {
+	global_entry<process_tag>&
+		ptop(global_state.get_pool<process_tag>()[0]);
+//	global_entry_dumper g(cerr, global_state, get_footprint());
+//	ptop.dump_frame_only(cerr << "before:") << endl;
+	ptop.initialize_top_frame(get_footprint());
+//	ptop.dump_frame_only(cerr << "after:") << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

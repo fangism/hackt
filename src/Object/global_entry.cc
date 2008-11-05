@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.12 2007/04/15 05:52:10 fang Exp $
+	$Id: global_entry.cc,v 1.13 2008/11/05 23:03:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -54,6 +54,22 @@ footprint_frame_map<Tag>::__init_top_level(void) {
 	size_t i = 0;
 	for ( ; i<s; i++) {
 		id_map[i] = i+1;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reserved for top-level process footprint frame.
+ */
+template <class Tag>
+void
+footprint_frame_map<Tag>::__initialize_top_frame(const footprint& f) {
+	id_map.resize(f.template get_instance_pool<Tag>().size());
+//	this->__init_top_level();
+	const size_t s = id_map.size();
+	size_t i = 0;
+	for ( ; i<s; ++i) {
+		id_map[i] = i;
 	}
 }
 
@@ -233,6 +249,20 @@ footprint_frame::dump_footprint(ostream& o, const size_t ind,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+footprint_frame::count_frame_size(void) const {
+	return footprint_frame_map<process_tag>::id_map.size()
+		+footprint_frame_map<channel_tag>::id_map.size()
+#if ENABLE_DATASTRUCTS
+		+footprint_frame_map<datastruct_tag>::id_map.size()
+#endif
+		+footprint_frame_map<enum_tag>::id_map.size()
+		+footprint_frame_map<int_tag>::id_map.size()
+		+footprint_frame_map<bool_tag>::id_map.size();
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint_frame::init_top_level(void) {
 	footprint_frame_map<process_tag>::__init_top_level();
@@ -243,6 +273,24 @@ footprint_frame::init_top_level(void) {
 	footprint_frame_map<enum_tag>::__init_top_level();
 	footprint_frame_map<int_tag>::__init_top_level();
 	footprint_frame_map<bool_tag>::__init_top_level();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reserved for process[0], the top-level process.
+	Creates identity mapping to allocated indices.
+ */
+void
+footprint_frame::initialize_top_frame(const footprint& f) {
+	_footprint = &f;
+	footprint_frame_map<process_tag>::__initialize_top_frame(f);
+	footprint_frame_map<channel_tag>::__initialize_top_frame(f);
+#if ENABLE_DATASTRUCTS
+	footprint_frame_map<datastruct_tag>::__initialize_top_frame(f);
+#endif
+	footprint_frame_map<enum_tag>::__initialize_top_frame(f);
+	footprint_frame_map<int_tag>::__initialize_top_frame(f);
+	footprint_frame_map<bool_tag>::__initialize_top_frame(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

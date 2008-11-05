@@ -1,16 +1,16 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.15 2008/10/11 22:49:05 fang Exp $
+	$Id: global_entry.h,v 1.16 2008/11/05 23:03:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
 #define	__HAC_OBJECT_GLOBAL_ENTRY_H__
 
 #include <iosfwd>
-#include <vector>
 #include "util/persistent_fwd.h"
 // #include <valarray>		// may be more efficient
 #include "Object/traits/type_tag_enum.h"
+#include "Object/common/frame_map.h"
 #include "Object/devel_switches.h"
 #include "util/macros.h"
 
@@ -87,6 +87,10 @@ protected:
 	__init_top_level(void);
 
 	void
+	__initialize_top_frame(const footprint&);
+
+
+	void
 	__allocate_remaining_sub(const footprint&, state_manager&, 
 		const parent_tag_enum, const size_t);
 
@@ -152,8 +156,14 @@ struct footprint_frame :
 	const footprint_frame_map_type&
 	get_frame_map(void) const;
 
+	size_t
+	count_frame_size(void) const;
+
 	void
 	init_top_level(void);
+
+	void
+	initialize_top_frame(const footprint&);
 
 	ostream&
 	dump_frame(ostream&) const;
@@ -250,6 +260,13 @@ struct global_entry_substructure_base<false> {
 	ostream&
 	dump(global_entry_dumper&) const;
 
+	template <class Tag>
+	static
+	const size_t&
+	count_frame_size(const size_t& s, const global_entry<Tag>&) {
+		return s;
+	}
+
 	void
 	collect_subentries(entry_collection&, const state_manager&) const { }
 
@@ -273,11 +290,29 @@ struct global_entry_substructure_base<false> {
  */
 template <>
 struct global_entry_substructure_base<true> {
+private:
+	typedef	global_entry_substructure_base		this_type;
+public:
 	footprint_frame			_frame;
 
 	template <class Tag>
 	ostream&
 	dump(global_entry_dumper&) const;
+
+	ostream&
+	dump_frame_only(ostream& o) const {
+		return _frame.dump_frame(o);
+	}
+
+	template <class Tag>
+	static
+	size_t
+	count_frame_size(const size_t s, const this_type&);
+
+	void
+	initialize_top_frame(const footprint& f) {
+		_frame.initialize_top_frame(f);
+	}
 
 	void
 	collect_subentries(entry_collection& e, const state_manager& sm) const {

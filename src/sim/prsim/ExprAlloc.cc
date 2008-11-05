@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.27 2008/10/11 06:35:15 fang Exp $
+	$Id: ExprAlloc.cc,v 1.28 2008/11/05 23:03:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -34,6 +34,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
 #include "Object/traits/instance_traits.h"
+#include "Object/traits/classification_tags.h"
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#include "Object/module.h"
+#endif
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
 #include "util/offset_array.h"
@@ -48,11 +52,21 @@ namespace SIM {
 namespace PRSIM {
 using std::replace;
 using entity::bool_tag;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+using entity::process_tag;
+#endif
 using entity::pint_const;
 using util::good_bool;
 using util::memory::free_list_acquire;
 using util::memory::free_list_release;
 #include "util/using_ostream.h"
+
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#define	REF_RULE_MAP(g,i)		g->rule_pool[g->rule_map[i]]
+#else
+#define	REF_RULE_MAP(g,i)		g->rule_map[i]
+#endif
 
 //=============================================================================
 typedef	entity::PRS::attribute_visitor_entry<ExprAlloc>
@@ -181,27 +195,18 @@ register_ExprAlloc_spec_class(void) {
 /**
 	NOTE: 0 is an invalid index to the state's expr_pool.  
  */
-ExprAlloc::ExprAlloc(state_type& _s) :
-		cflat_context_visitor(), 
-		state(_s),
-		st_node_pool(state.node_pool), 
-		st_expr_pool(state.expr_pool), 
-		st_graph_node_pool(state.expr_graph_node_pool), 
-		st_rule_map(state.get_rule_map()),
-		ret_ex_index(INVALID_EXPR_INDEX), 
-		suppress_keeper_rule(false), 
-		temp_rule(NULL),
-		flags(), expr_free_list() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 		cflat_context_visitor(), 
 		state(_s),
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+		g(NULL), 
+		current_process_index(0), 
+		total_exprs(FIRST_VALID_GLOBAL_EXPR), 	// non-zero!
+		process_footprint_map(), 	// empty
+#else
 		st_node_pool(state.node_pool), 
-		st_expr_pool(state.expr_pool), 
-		st_graph_node_pool(state.expr_graph_node_pool), 
-		st_rule_map(state.get_rule_map()),
+		g(&_s), 
+#endif
 		ret_ex_index(INVALID_EXPR_INDEX), 
 		suppress_keeper_rule(false), 
 		temp_rule(NULL),
@@ -215,11 +220,150 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
  */
 void
 ExprAlloc::visit(const state_manager& _sm) {
+	STACKTRACE_VERBOSE;
 	cflat_visitor::visit(_sm);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	state.finish_process_type_map();	// finalize indices to pointers
+#else
 	if (flags.any_optimize() && expr_free_list.size()) {
 		compact_expr_pools();
 	}
+#endif
+#if ENABLE_STACKTRACE
+	state.dump_struct(cerr << "Final global struct:" << endl) << endl;
+#endif
 }
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/**
+	Lookup this PRS_footprint in the address map.
+	If this is the irst time this type is visited, then allocate
+	appropriate structures uniquely for this type.  
+	Then all subsequent references to this type can just reference
+	this and need no further allocation.  
+	Note that the first process (index 0) should be reserved
+	for the top-level process.  
+	TODO: optimization: eliminate empty types, i.e. those without
+		any expressions or rules, from the unique_process_pool.
+ */
+void
+ExprAlloc::visit(const entity::PRS::footprint& pfp) {
+	STACKTRACE_VERBOSE;
+	// also set up proper unique_process references
+	typedef	process_footprint_map_type::const_iterator	const_iterator;
+	const module& m(state.get_module());
+	// this now works for pid=0, top-level
+	const entity::footprint_frame_map_type&
+		bmap(m.get_state_manager()
+			.get_pool<process_tag>()[current_process_index]
+			._frame.get_frame_map<bool_tag>());
+	const node_index_type node_pool_size = bmap.size();
+	STACKTRACE_INDENT_PRINT("node_pool_size = " << node_pool_size << endl);
+	size_t type_index;	// unique process type index
+	const const_iterator f(process_footprint_map.find(&pfp));
+	if (f == process_footprint_map.end()) {
+		STACKTRACE_INDENT_PRINT("first time with this type" << endl);
+		type_index = state.unique_process_pool.size();
+		process_footprint_map[&pfp] = type_index;
+		state.unique_process_pool.push_back(unique_process_subgraph());
+		unique_process_subgraph& u(state.unique_process_pool.back());
+		const util::value_saver<unique_process_subgraph*> tmp(g, &u);
+		// resize the faninout_struct array as if it were local nodes
+		// kludgy way of inferring the correct footprint
+		u.local_faninout_map.resize(node_pool_size);
+		cflat_visitor::visit(pfp);
+		// definitely want to keep this
+		if (flags.any_optimize() && expr_free_list.size()) {
+			compact_expr_pools();
+		}
+#if ENABLE_STACKTRACE
+		u.dump_struct(cerr << "Final local struct:" << endl) << endl;
+#endif
+		// auto-restore graph pointer
+	} else {
+		// found existing type
+		type_index = f->second;
+		STACKTRACE_INDENT_PRINT("found existing type " <<
+			type_index << endl);
+	}
+	// append-allocate new state, based on type
+	state.process_state_array.push_back(process_sim_state()); // resize +1
+	// now, allocate state for instance of this process type
+	const unique_process_subgraph&
+		ptemplate(state.unique_process_pool[type_index]);
+	// TODO: ALERT! if (pxs == 0) this will still cost to 
+	// lookup empty process with binary search through process_state_array
+	process_sim_state& ps(state.process_state_array.back());
+	ps.allocate_from_type(ptemplate, type_index, total_exprs);
+	// mapping update: for expr->process map, assign value
+	// We are careful not to add an entry for EMPTY processes!
+	// nice side effect of optimization: only map leaf cells with PRS!
+	STACKTRACE_INDENT_PRINT("current process index = "
+		<< current_process_index << endl);
+	STACKTRACE_INDENT_PRINT("current type index = " << type_index << endl);
+	const expr_index_type pxs = ptemplate.expr_pool.size();
+	total_exprs += pxs;
+	STACKTRACE_INDENT_PRINT("has " << pxs << " exprs" << endl);
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+	INVARIANT(!state.global_expr_process_id_map.empty());
+#endif
+if (pxs) {
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+	// Each process appends an entry for 
+	// the process that *follows* it (P+1)!  (optionally delete last one)
+	typedef state_type::global_expr_process_id_map_type::const_iterator
+			map_iterator;
+	const map_iterator x(--state.global_expr_process_id_map.end());	// last
+	// get the cumulative number of expressions (state)
+	// by adding the lower bound of the last appended entry
+	// to its corresponding size.  
+	const expr_index_type ex_offset = x->first +pxs;
+	// STACKTRACE_INDENT_PRINT("prev offset = " << x->first << endl);
+	STACKTRACE_INDENT_PRINT("offset[" << ex_offset << "] -> process " <<
+		current_process_index +1 << endl);
+	state.global_expr_process_id_map[ex_offset] = current_process_index +1;
+	// connect global nodes to global fanout expressions
+#endif
+	node_index_type lni = 0;	// frame-map is 0-indexed
+	for ( ; lni < node_pool_size; ++lni) {
+		const node_index_type gni = bmap[lni];
+		// global index conversion, or local if top-level (pid=0)
+		const faninout_struct_type&
+			ff(ptemplate.local_faninout_map[lni]);
+		const fanout_array_type& lfo(ff.fanout);
+		State::node_type& n(state.node_pool[gni]);
+		transform(lfo.begin(), lfo.end(), back_inserter(n.fanout), 
+			bind2nd(std::plus<expr_index_type>(), ps.get_offset()));
+		if (ff.has_fanin()) {
+#if VECTOR_NODE_FANIN
+			n.fanin.push_back(current_process_index);
+#else
+			finish(me);
+#endif
+			n.count_fanins(ff);	// count total OR-fanins
+		}
+	}
+} else {
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+	// we have an empty process, but previous entry already added an 
+	// entry pointing to this one.  
+	// so we just "modify" the key in place without removing/re-inserting
+	// a new entry in the sorted map, preserving order.
+	typedef state_type::global_expr_process_id_map_type::iterator
+			map_iterator;
+	const map_iterator x(--state.global_expr_process_id_map.end());	// last
+	x->second = current_process_index +1;	// equiv: ++(x->second);
+	STACKTRACE_INDENT_PRINT("offset[" << x->first << "] -> process "
+		<< x->second << endl);
+#endif
+}
+	// the very last process will add an entry pointing one-past-the-end
+	// assume that processes are visited in sequence
+	++current_process_index;
+}
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #define	DEBUG_CLEANUP		(0 && ENABLE_STACKTRACE)
@@ -237,7 +381,7 @@ ExprAlloc::compact_expr_pools(void) {
 	cerr << "expr_free_list has " << holes <<
 		" entries remaining."  << endl;
 #endif
-	const size_t eps = st_expr_pool.size();
+	const size_t eps = g->expr_pool.size();
 	const size_t move_end = eps -holes;
 	// all expression indices from [move_end, eps) need to be relocated.
 	std::set<expr_index_type> free_set, discard_set;
@@ -266,51 +410,72 @@ ExprAlloc::compact_expr_pools(void) {
 #if 1
 		{
 			// move rule_map_entry, if applicable
-			typedef	State::rule_map_type::iterator
-				rule_map_iterator;
-			const rule_map_iterator f(st_rule_map.find(i));
-			if (f != st_rule_map.end()) {
-				st_rule_map[n] = f->second;
-				st_rule_map.erase(f);
+			typedef	rule_map_type::iterator	rule_map_iterator;
+			const rule_map_iterator f(g->rule_map.find(i));
+			if (f != g->rule_map.end()) {
+				g->rule_map[n] = f->second;
+				g->rule_map.erase(f);
 			}
 		}
 #endif
-		expr_type& e(st_expr_pool[n]);
-		graph_node_type& g(st_graph_node_pool[n]);
+		expr_type& e(g->expr_pool[n]);
+		graph_node_type& gn(g->expr_graph_node_pool[n]);
 		INVARIANT(e.wiped());
-		INVARIANT(g.wiped());
-		e = st_expr_pool[i];
-		g = st_graph_node_pool[i];
-		// TODO: this code is re-used several times in this file.  
+		INVARIANT(gn.wiped());
+		e = g->expr_pool[i];
+		gn = g->expr_graph_node_pool[i];
 		// relink parent, which may be node or expression
 		if (e.is_root()) {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#if PRSIM_WEAK_RULES
+			const rule_strength
+				str(REF_RULE_MAP(g, n).is_weak() ?
+					WEAK_RULE : NORMAL_RULE);
+#endif
+			faninout_struct_type&
+				f(g->local_faninout_map[e.parent]);
+			fanin_array_type&
+				fi(e.direction() ? 
+					f.pull_up STR_INDEX(str) :
+					f.pull_dn STR_INDEX(str));
+			replace(fi.begin(), fi.end(), i, n);
+#undef	STR_INDEX
+#else	// PRSIM_INDIRECT_EXPRESSION_MAP
 			node_type& nd(st_node_pool[e.parent]);
 			nd.replace_pull_index(e.direction(), n
 #if PRSIM_WEAK_RULES
-				, rule_strength(st_rule_map[n].is_weak())
+				, rule_strength(REF_RULE_MAP(g, n).is_weak())
 				// careful: consistent with enum rule_strength
 #endif
 				);
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 		} else {
 			graph_node_type::child_entry_type&
-				c(st_graph_node_pool[e.parent]
-					.children[g.offset]);
+				c(g->expr_graph_node_pool[e.parent]
+					.children[gn.offset]);
 			c.first = false;	// mark as expression
 			c.second = n;		// re-establish child reference
 		}
 		// relink children
 		size_t j = 0;
-		INVARIANT(e.size == g.children.size());
+		INVARIANT(e.size == gn.children.size());
 		for ( ; j<e.size; ++j) {
-			graph_node_type::child_entry_type& c(g.children[j]);
+			graph_node_type::child_entry_type& c(gn.children[j]);
 			if (c.first) {
 				// then child is a node, update its fanout
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+				faninout_struct_type&
+					f(g->local_faninout_map[c.second]);
+				fanout_array_type&
+					fo(f.fanout);
+#else
 				node_type& nd(st_node_pool[c.second]);
-				replace(nd.fanout.begin(), nd.fanout.end(), 
-					i, n);
+				node_type::fanout_array_type& fo(nd.fanout);
+#endif
+				replace(fo.begin(), fo.end(), i, n);
 			} else {
 				// child is an expression, update its parent
-				st_expr_pool[c.second].parent = n;
+				g->expr_pool[c.second].parent = n;
 			}
 		}
 	} // else just discard it
@@ -318,15 +483,15 @@ ExprAlloc::compact_expr_pools(void) {
 	INVARIANT(free_set.empty());
 	// define an expression MOVE that reassigns IDs
 	// and maintains connectivity
-	st_expr_pool.resize(move_end);
+	g->expr_pool.resize(move_end);
 #if 0
 	// interface is missing right now from list_vector
-	st_graph_node_pool.resize(move_end);
+	g->expr_graph_node_pool.resize(move_end);
 #else
 	{
 	size_t k = holes;
 	for ( ; k; --k) {
-		st_graph_node_pool.pop_back();
+		g->expr_graph_node_pool.pop_back();
 	}
 	}
 #endif
@@ -368,27 +533,30 @@ if (suppress_keeper_rule) {
 	// which needs to be translated to global ID.
 	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
-	const size_t ni = __lookup_global_bool_id(r.output_index);
+	const size_t ni = lookup_local_bool_id(r.output_index);
 
-	// ignored: state.expr_graph_node_pool[top_ex_index].offset
+	// ignored: state.expr_expr_graph_node_pool[top_ex_index].offset
 	// not computing node fanin?  this would be the place to do it...
 	// can always compute it (cacheable) offline
 	STACKTRACE_INDENT_PRINT("expr " << top_ex_index << " pulls node " <<
 		ni << (r.dir ? " up" : " down") << endl);
 	// need to process attributes BEFORE linking to node
 	// because depends on weak attribute
-//	link_node_to_root_expr(ni, top_ex_index, r.dir);	// moved later
 #if ENABLE_STACKTRACE
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	g->dump_struct(cerr) << endl;
+#else
 	state.dump_struct(cerr) << endl;
+#endif
 #endif
 	INVARIANT(top_ex_index == ret_ex_index);	// sanity check
 	// following order matters b/c of rule_map access
-	link_node_to_root_expr(ni, top_ex_index, r.dir
+	link_node_to_root_expr(ni, top_ex_index, r.dir, dummy_rule
 #if PRSIM_WEAK_RULES
 		, rule_strength(dummy_rule.is_weak())
 #endif
 		);
-	st_rule_map[ret_ex_index] = dummy_rule;	// copy over temporary
+	// REF_RULE_MAP(g, ret_ex_index) = dummy_rule;	// copy over temporary
 }
 } catch (...) {
 	cerr << "FATAL: error during prs rule allocation." << endl;
@@ -411,6 +579,7 @@ if (suppress_keeper_rule) {
 /**
 	Allocates a new leaf literal expression in the sim state object.  
 	\param ni resolved global ID of unique node.
+		NOW is LOCAL node index.  
 	\return index of new literal expression, allocated in the state. 
 		NOTE: this does not set ret_ex_index on return, it is the
 		caller's responsibility to use it.  
@@ -424,15 +593,21 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 	expr_index_type ret;
 	if (expr_free_list.size()) {
 		ret = free_list_acquire(expr_free_list);
-		st_expr_pool[ret] = expr_type(expr_type::EXPR_NODE,1);
-		st_graph_node_pool[ret] = graph_node_type();
+		g->expr_pool[ret] =
+			expr_type(expr_struct_type::EXPR_NODE,1);
+		g->expr_graph_node_pool[ret] = graph_node_type();
 	} else {
-		ret = st_expr_pool.size();
-		st_expr_pool.push_back(expr_type(expr_type::EXPR_NODE,1));
-		st_graph_node_pool.push_back(graph_node_type());
+		ret = g->expr_pool.size();
+		g->expr_pool.push_back(expr_type(
+			expr_struct_type::EXPR_NODE,1));
+		g->expr_graph_node_pool.push_back(graph_node_type());
 	}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	g->local_faninout_map[ni].fanout.push_back(ret);
+#else
 	st_node_pool[ni].push_back_fanout(ret);
-	st_graph_node_pool[ret].push_back_node(ni);
+#endif
+	g->expr_graph_node_pool[ret].push_back_node(ni);
 	// literal graph node has no children
 	return ret;
 }
@@ -447,22 +622,9 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 expr_index_type
 ExprAlloc::allocate_new_not_expr(const expr_index_type ei) {
 	STACKTRACE_INDENT_PRINT("sub_ex_index = " << ei << endl);
-#if 0
-	// correct, but wasteful!
-	st_expr_pool.push_back(expr_type(expr_type::EXPR_NOT,1));
-	st_graph_node_pool.push_back(graph_node_type());
-	// now link parent to only-child
-	const expr_index_type last = st_expr_pool.size() -1;
-	st_expr_pool[ei].parent = last;
-	graph_node_type& child(st_graph_node_pool[ei]);
-	child.offset = 0;
-	st_graph_node_pool.back().push_back_expr(ei);
-	return st_expr_pool.size() -1;
-#else
 	// just negate the expression, duh!
-	st_expr_pool[ei].toggle_not();
+	g->expr_pool[ei].toggle_not();
 	return ei;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -476,11 +638,11 @@ void
 ExprAlloc::link_child_expr(const expr_index_type parent,
 		const expr_index_type child, const size_t offset) {
 	STACKTRACE_VERBOSE;
-	// st_expr_pool[child].parent = parent;
-	st_expr_pool[child].set_parent_expr(parent);
-	graph_node_type& child_node(st_graph_node_pool[child]);
+	// g->expr_pool[child].parent = parent;
+	g->expr_pool[child].set_parent_expr(parent);
+	graph_node_type& child_node(g->expr_graph_node_pool[child]);
 	child_node.offset = offset;
-	st_graph_node_pool[parent].push_back_expr(child);
+	g->expr_graph_node_pool[parent].push_back_expr(child);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -501,17 +663,18 @@ ExprAlloc::allocate_new_Nary_expr(const char type, const size_t sz) {
 			sz << " > " << lim << endl;
 		THROW_EXIT;
 	}
-	const expr_type temp((type == entity::PRS::PRS_AND_EXPR_TYPE_ENUM ?
-		expr_type::EXPR_AND : expr_type::EXPR_OR), sz);
+	const expr_type
+		temp((type == entity::PRS::PRS_AND_EXPR_TYPE_ENUM ?
+		expr_struct_type::EXPR_AND : expr_struct_type::EXPR_OR), sz);
 if (expr_free_list.size()) {
 	const expr_index_type ret = free_list_acquire(expr_free_list);
-	st_expr_pool[ret] = temp;
-	st_graph_node_pool[ret] = graph_node_type();
+	g->expr_pool[ret] = temp;
+	g->expr_graph_node_pool[ret] = graph_node_type();
 	return ret;
 } else {
-	const expr_index_type ret = st_expr_pool.size();
-	st_expr_pool.push_back(temp);
-	st_graph_node_pool.push_back(graph_node_type());
+	const expr_index_type ret = g->expr_pool.size();
+	g->expr_pool.push_back(temp);
+	g->expr_graph_node_pool.push_back(graph_node_type());
 	return ret;
 }
 }
@@ -529,16 +692,16 @@ ExprAlloc::fold_literal(const expr_index_type _e) {
 	// then transform the leaf node out.
 	typedef	graph_node_type::child_entry_type	child_entry_type;
 	size_t j = 0;
-	graph_node_type& g(st_graph_node_pool[_e]);
-	const size_t sz = st_expr_pool[_e].size;
+	graph_node_type& gn(g->expr_graph_node_pool[_e]);
+	const size_t sz = g->expr_pool[_e].size;
 	for ( ; j<sz; ++j) {
-		child_entry_type& c(g.children[j]);
+		child_entry_type& c(gn.children[j]);
 		// child indexes expr, not node
 		if (!c.first) {
 		// index of entry refers to expression
 		const expr_index_type ei(c.second);
-		const expr_type& oe(st_expr_pool[ei]);
-		const graph_node_type& og(st_graph_node_pool[ei]);
+		const expr_type& oe(g->expr_pool[ei]);
+		const graph_node_type& og(g->expr_graph_node_pool[ei]);
 		const child_entry_type& ogc(og.children[0]);
 		// if is single node-child parent
 		if (oe.is_trivial() && ogc.first) {
@@ -548,13 +711,22 @@ ExprAlloc::fold_literal(const expr_index_type _e) {
 			const node_index_type cn = ogc.second;
 			// replace grandparent's child connect.
 			c = ogc;
-			node_type& ln(st_node_pool[cn]);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+			fanout_array_type& fo(g->local_faninout_map[cn].fanout);
+#else
+			node_type::fanout_array_type&
+				fo(st_node_pool[cn].fanout);
+#endif
 			// grandchild's has no parent connect.
 			// replace child's fanout: ei -> _e
-			replace(ln.fanout.begin(), ln.fanout.end(), ei, _e);
+			replace(fo.begin(), fo.end(), ei, _e);
 			// there should be no references to 
 			// expression ei remaining
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+			g->void_expr(ei);
+#else
 			state.void_expr(ei);
+#endif
 			free_list_release(expr_free_list, ei);
 		}	// else no excision
 		}	// end if is node_index
@@ -576,15 +748,15 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 	typedef	graph_node_type::child_entry_type	child_entry_type;
 	size_t j = 0;
 	bool denorm = true;
-	const size_t sz = st_expr_pool[_e].size;
-	graph_node_type& g(st_graph_node_pool[_e]);
+	const size_t sz = g->expr_pool[_e].size;
+	graph_node_type& gn(g->expr_graph_node_pool[_e]);
 	// first pass: 
 	for ( ; j<sz && denorm; ++j) {
-		const child_entry_type& c(g.children[j]);
+		const child_entry_type& c(gn.children[j]);
 		if (!c.first) {		// is expression
 			const expr_index_type ei(c.second);
-			const expr_type& oe(st_expr_pool[ei]);
-			// const graph_node_type& og(st_graph_node_pool[ei]);
+			const expr_type& oe(g->expr_pool[ei]);
+			// const graph_node_type& og(g->expr_graph_node_pool[ei]);
 			// const child_entry_type& ogc(og.children[0]);
 			// if is single node-child parent
 			if (oe.size == 1 && oe.is_not()) {
@@ -597,11 +769,11 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 		// second pass, qualified for denormalization
 		STACKTRACE_INDENT_PRINT("denormalizing... " << endl);
 		for (j=0; j<sz; ++j) {
-			child_entry_type& c(g.children[j]);
+			child_entry_type& c(gn.children[j]);
 			// child indexes expr, not node
 			// index of entry refers to expression
 			const expr_index_type ei(c.second);
-			const graph_node_type& og(st_graph_node_pool[ei]);
+			const graph_node_type& og(g->expr_graph_node_pool[ei]);
 			const child_entry_type& ogc(og.children[0]);
 			// if is single node-child parent
 			// re-connect graph, skipping over
@@ -610,24 +782,34 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 			if (ogc.first) {
 				c = ogc;
 				const node_index_type cn = ogc.second;
-				node_type& ln(st_node_pool[cn]);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+				fanout_array_type&
+					fo(g->local_faninout_map[cn].fanout);
+#else
+				node_type::fanout_array_type&
+					fo(st_node_pool[cn].fanout);
+#endif
 				// grandchild's has no parent connect.
 				// replace child's fanout: ei -> _e
-				replace(ln.fanout.begin(), ln.fanout.end(), ei, _e);
+				replace(fo.begin(), fo.end(), ei, _e);
 				// there should be no references to 
 				// expression ei remaining
 			STACKTRACE_INDENT_PRINT("releasing " << ei << endl);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+				g->void_expr(ei);
+#else
 				state.void_expr(ei);
+#endif
 				free_list_release(expr_free_list, ei);
 			} else {
 				// is an expression, just keep structure
 				// the same and negate the type
 				const expr_index_type ce = ogc.second;
-				st_expr_pool[ce].toggle_not();
+				g->expr_pool[ce].toggle_not();
 			}
 		}	// end for all subexpressions
 		// apply DeMorgan's law
-		st_expr_pool[_e].toggle_demorgan();
+		g->expr_pool[_e].toggle_demorgan();
 	}	// end if denorm
 } 	// end ExprAlloc::denoramlize_negation
 
@@ -649,7 +831,7 @@ switch (type) {
 		// leaf node
 		INVARIANT(sz == 1);
 		// lookup global bool ID
-		const node_index_type ni = __lookup_global_bool_id(e.only());
+		const node_index_type ni = lookup_local_bool_id(e.only());
 		ret_ex_index = allocate_new_literal_expr(ni);
 		break;
 	}
@@ -695,8 +877,12 @@ switch (type) {
 		break;
 }	// end switch
 	// 'return' the index of the expr just allocated in ret_ex_index
-#if ENABLE_STACKTRACE
+#if 0 && ENABLE_STACKTRACE
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	g->dump_struct(cerr) << endl;
+#else
 	state.dump_struct(cerr) << endl;
+#endif
 #endif
 }	// end method visit(const footprint_expr_node&)
 
@@ -755,7 +941,8 @@ if (d) {
  */
 void
 ExprAlloc::link_node_to_root_expr(const node_index_type ni,
-		const expr_index_type top_ex_index, const bool dir
+		const expr_index_type top_ex_index, const bool dir, 
+		const rule_type& dummy
 #if PRSIM_WEAK_RULES
 		, const rule_strength w
 #endif
@@ -763,10 +950,23 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
 	STACKTRACE_INDENT_PRINT("linking expr " << top_ex_index <<
 		" to node " << ni << ' ' << (dir ? '+' : '-') << endl);
+	expr_type& ne(g->expr_pool[top_ex_index]);
+	graph_node_type& ng(g->expr_graph_node_pool[top_ex_index]);
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	fanin_array_type& fin(g->local_faninout_map[ni].get_pull_expr(dir
+#if PRSIM_WEAK_RULES
+			, w
+#endif
+		));
+	// root expression's position in node's fanin (OR-combination)
+	ng.offset = fin.size();	
+	fin.push_back(top_ex_index);		// append to fanin rules
+	ne.pull(ni, dir);			// set as a root expression
+	g->rule_map[top_ex_index] = g->rule_pool.size();	// map
+	g->rule_pool.push_back(dummy);
+#else	// PRSIM_INDIRECT_EXPRESSION_MAP
 	node_type& output(st_node_pool[ni]);
 	// now link root expression to node
-	expr_type& ne(st_expr_pool[top_ex_index]);
-	graph_node_type& ng(st_graph_node_pool[top_ex_index]);
 	// prepare to take OR-combination?
 	// or can we get away with multiple pull-up/dn roots?
 	// or cheat! short-cut to root during operation.  
@@ -784,15 +984,14 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			std::numeric_limits<expr_count_type>::max();
 		STACKTRACE_INDENT_PRINT("pull-up/dn already set" << endl);
 		// already set, need OR-combination
-		expr_type& pe(st_expr_pool[dir_index]);
-		graph_node_type& pg(st_graph_node_pool[dir_index]);
+		expr_type& pe(g->expr_pool[dir_index]);
+		graph_node_type& pg(g->expr_graph_node_pool[dir_index]);
 		// see if either previous pull-up expr is OR-type already
 		// may also work with NAND! in the case of NAND, need to 
 		// make sure appending expression is negated...
 
 		// we don't OR-combine if the expression being examined
 		// is already a top-level root-expression.  
-			// FIXME: check for size exceeding limit!
 		// NOTE: we mean is_or(), not just is_disjunctive()
 		if (pe.is_or() && !state.is_rule_expr(top_ex_index)
 				&& pe.size < ex_max) {
@@ -823,7 +1022,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			const expr_index_type root_ex_id =
 				allocate_new_Nary_expr(
 					entity::PRS::PRS_OR_EXPR_TYPE_ENUM, 2);
-			expr_type& new_ex(st_expr_pool[root_ex_id]);
+			expr_type& new_ex(g->expr_pool[root_ex_id]);
 			new_ex.pull(ni, dir);	// sets parent node
 			link_child_expr(root_ex_id, dir_index, 0);
 			link_child_expr(root_ex_id, top_ex_index, 1);
@@ -840,6 +1039,8 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		dir_index = top_ex_index;
 		ne.pull(ni, dir);
 	}
+	state.rule_map[top_ex_index] = dummy;
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 }	// end ExprAlloc::link_node_to_root_expr(...)
 
 //=============================================================================
@@ -867,7 +1068,6 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(After, "after")
 void
 After::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
-//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& d(a.front());
 	// assert type cast, b/c already checked
@@ -884,7 +1084,6 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Always_Random, "always_random")
 void
 Always_Random::main(visitor_type& v, const values_type& a) {
 	typedef visitor_type::rule_type rule_type;
-//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
 if (a.size()) {
 	const values_type::value_type& w(a.front());
@@ -907,7 +1106,6 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Weak, "weak")
 void
 Weak::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
-//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
 if (a.size()) {
 	const values_type::value_type& w(a.front());
@@ -930,7 +1128,6 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Unstab, "unstab")
 void
 Unstab::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
-//	rule_type& r(v.st_rule_map[v.last_expr_index()]);
 	rule_type& r(v.get_temp_rule());
 if (a.size()) {
 	const values_type::value_type& w(a.front());
@@ -1038,28 +1235,31 @@ DECLARE_AND_DEFINE_PRSIM_MACRO_CLASS(PassN, "passn")
 void
 PassN::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
+	STACKTRACE_VERBOSE;
 	const expr_index_type g =
 		v.allocate_new_literal_expr(
-			v.__lookup_global_bool_id(*nodes[0].begin()));
+			v.lookup_local_bool_id(*nodes[0].begin()));
 	const expr_index_type s =
 		v.allocate_new_literal_expr(
-			v.__lookup_global_bool_id(*nodes[1].begin()));
-	const node_index_type d = v.__lookup_global_bool_id(*nodes[2].begin());
+			v.lookup_local_bool_id(*nodes[1].begin()));
+	const node_index_type d = v.lookup_local_bool_id(*nodes[2].begin());
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	INVARIANT(g && s && d);
+#endif
 	// construct and allocate rule
 	const expr_index_type ns = v.allocate_new_not_expr(s);
 	const expr_index_type pe =
 		v.allocate_new_Nary_expr(entity::PRS::PRS_AND_EXPR_TYPE_ENUM,2);
+	typedef	visitor_type::rule_type	rule_type;
 	v.link_child_expr(pe, g, 0);
 	v.link_child_expr(pe, ns, 1);
-	v.link_node_to_root_expr(d, pe, false
+	v.link_node_to_root_expr(d, pe, false, rule_type()
 #if PRSIM_WEAK_RULES
 		, NORMAL_RULE
 #endif
 		);	// pull-down
 
-	typedef	visitor_type::rule_type	rule_type;
-	rule_type& r(v.st_rule_map[pe]);
+	rule_type& r(REF_RULE_MAP(v.g, pe));
 	r.set_delay(visitor_type::state_type::time_traits::zero);
 }
 
@@ -1075,28 +1275,31 @@ DECLARE_AND_DEFINE_PRSIM_MACRO_CLASS(PassP, "passp")
 void
 PassP::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
+	STACKTRACE_VERBOSE;
 	const expr_index_type g =
 		v.allocate_new_literal_expr(
-			v.__lookup_global_bool_id(*nodes[0].begin()));
+			v.lookup_local_bool_id(*nodes[0].begin()));
 	const expr_index_type s =
 		v.allocate_new_literal_expr(
-			v.__lookup_global_bool_id(*nodes[1].begin()));
-	const node_index_type d = v.__lookup_global_bool_id(*nodes[2].begin());
+			v.lookup_local_bool_id(*nodes[1].begin()));
+	const node_index_type d = v.lookup_local_bool_id(*nodes[2].begin());
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	INVARIANT(g && s && d);
+#endif
 	// construct and allocate rule
 	const expr_index_type ng = v.allocate_new_not_expr(g);
 	const expr_index_type pe =
 		v.allocate_new_Nary_expr(entity::PRS::PRS_AND_EXPR_TYPE_ENUM,2);
+	typedef	visitor_type::rule_type	rule_type;
 	v.link_child_expr(pe, ng, 0);
 	v.link_child_expr(pe, s, 1);
-	v.link_node_to_root_expr(d, pe, true
+	v.link_node_to_root_expr(d, pe, true, rule_type()
 #if PRSIM_WEAK_RULES
 		, NORMAL_RULE
 #endif
 		);	// pull-up
 
-	typedef	visitor_type::rule_type	rule_type;
-	rule_type& r(v.st_rule_map[pe]);
+	rule_type& r(REF_RULE_MAP(v.g, pe));
 	r.set_delay(visitor_type::state_type::time_traits::zero);
 }
 
@@ -1163,7 +1366,7 @@ LVS_exclhi::main(visitor_type& v, const param_args_type& params,
 		index_iterator ii(i->begin()), ie(i->end());
 		for ( ; ii!=ie; ++ii) {
 			const node_index_type ni =
-				v.__lookup_global_bool_id(*ii);
+				v.lookup_global_bool_id(*ii);
 			temp.insert(ni);
 		}
 	}
@@ -1194,7 +1397,7 @@ LVS_excllo::main(visitor_type& v, const param_args_type& params,
 		index_iterator ii(i->begin()), ie(i->end());
 		for ( ; ii!=ie; ++ii) {
 			const node_index_type ni =
-				v.__lookup_global_bool_id(*ii);
+				v.lookup_global_bool_id(*ii);
 			temp.insert(ni);
 		}
 	}
@@ -1227,7 +1430,7 @@ SIM_force_exclhi::main(visitor_type& v, const param_args_type& params,
 		index_iterator ii(i->begin()), ie(i->end());
 		for ( ; ii!=ie; ++ii) {
 			const node_index_type ni =
-				v.__lookup_global_bool_id(*ii);
+				v.lookup_global_bool_id(*ii);
 			r.insert(ni);
 		}
 	}
@@ -1235,7 +1438,7 @@ SIM_force_exclhi::main(visitor_type& v, const param_args_type& params,
 	for ( ; i!=e; ++i) {
 		INVARIANT(i->size() == 1);
 		const node_index_type ni =
-			v.__lookup_global_bool_id(*i->begin());
+			v.lookup_global_bool_id(*i->begin());
 		r.insert(ni);
 	}
 #endif
@@ -1268,7 +1471,7 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 		index_iterator ii(i->begin()), ie(i->end());
 		for ( ; ii!=ie; ++ii) {
 			const node_index_type ni =
-				v.__lookup_global_bool_id(*ii);
+				v.lookup_global_bool_id(*ii);
 			r.insert(ni);
 		}
 	}
@@ -1276,7 +1479,7 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 	for ( ; i!=e; ++i) {
 		INVARIANT(i->size() == 1);
 		const node_index_type ni =
-			v.__lookup_global_bool_id(*i->begin());
+			v.lookup_global_bool_id(*i->begin());
 		r.insert(ni);
 	}
 #endif

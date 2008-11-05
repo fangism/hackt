@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.18 2008/10/31 19:49:08 fang Exp $
+	$Id: SPEC_registry.cc,v 1.19 2008/11/05 23:03:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -295,7 +295,7 @@ Note that this is a @emph{compile-time} check, which is enforced
 during unroll/create compilation.  
 Useful for enforcing parametric constraints.  
 Tool-independent.
-For run-time invariants, see $t{$(expr)}-syntax below.  
+For run-time invariants, see @t{$(expr)}-syntax below.  
 @end deffn
 @end texinfo
 ***/

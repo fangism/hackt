@@ -1,7 +1,9 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.10 2008/10/31 02:11:44 fang Exp $
+	$Id: cflat_visitor.cc,v 1.11 2008/11/05 23:03:35 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE				0
 
 #include <algorithm>
 #include "Object/def/footprint.h"
@@ -9,13 +11,14 @@
 #include "Object/lang/CHP_visitor.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
-#include "Object/state_manager.h"
+#include "Object/state_manager.tcc"	// for __accept<Tag>()
 #include "Object/global_entry.tcc"
 #include "Object/global_channel_entry.h"
 #include "Object/traits/instance_traits.h"
 #include "util/visitor_functor.h"
 #include "util/index_functor.h"
 #include "util/compose.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
@@ -63,6 +66,7 @@ cflat_visitor::__default_visit(const global_entry<Tag>& e) {
 #define	DEFINE_VISIT_GLOBAL_ENTRY(Tag)					\
 void									\
 cflat_visitor::visit(const global_entry<Tag>& e) {			\
+	STACKTRACE_VERBOSE;						\
 	__default_visit(e);						\
 }
 
@@ -82,6 +86,7 @@ DEFINE_VISIT_GLOBAL_ENTRY(bool_tag)
  */
 void
 cflat_visitor::visit(const global_entry<process_tag>& e) {
+	STACKTRACE_VERBOSE;
 	cflat_visitor& v(*this);
 	const entity::footprint* const f(e._frame._footprint);
 	NEVER_NULL(f);
@@ -104,7 +109,16 @@ cflat_visitor::visit(const global_entry<process_tag>& e) {
  */
 void
 cflat_visitor::visit(const state_manager& sm) {
-	sm.accept(*this);
+	STACKTRACE_VERBOSE;
+	cflat_visitor& v(*this);
+	sm.__accept<process_tag>(v);
+	sm.__accept<channel_tag>(v);
+#if ENABLE_DATASTRUCTS
+	sm.__accept<datastruct_tag>(v);
+#endif
+	sm.__accept<enum_tag>(v);
+	sm.__accept<int_tag>(v);
+	sm.__accept<bool_tag>(v);
 }
 
 //=============================================================================
@@ -114,6 +128,7 @@ cflat_visitor::visit(const state_manager& sm) {
  */
 void
 cflat_visitor::visit(const footprint& f) {
+	STACKTRACE_VERBOSE;
 	const expr_pool_setter temp(*this, f);	// will expire end of scope
 	for_each(f.rule_pool.begin(), f.rule_pool.end(), visitor_ref(*this));
 	for_each(f.macro_pool.begin(), f.macro_pool.end(), visitor_ref(*this));
@@ -130,6 +145,7 @@ cflat_visitor::visit(const footprint& f) {
 //=============================================================================
 void
 cflat_visitor::visit(const SPEC::footprint& f) {
+	STACKTRACE_VERBOSE;
 	for_each(f.begin(), f.end(), visitor_ref(*this));
 }
 

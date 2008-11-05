@@ -1,7 +1,40 @@
 # "NOTES"
-#	$Id: NOTES,v 1.19 2007/07/18 23:28:13 fang Exp $
+#	$Id: NOTES,v 1.20 2008/11/05 23:03:18 fang Exp $
 
 Developer's Notes (transcripts of fangism muttering to himself...)
+
+//=============================================================================
+2008-08-01:
+	prsim data structures: in the process of restructuring expressions 
+		hierarchically to avoid replicating structures unnecessarily
+		for improved scalability.
+		Instances sharing the same type will lookup the same
+		process footprint for local rule/expression structures.  
+	issue: OR-combination rules for nodes
+		to support process hierarchy and structure re-use, 
+			process subgraphs cannot contain OR-combination 
+			expressions of rules; they must go in a different
+			auxiliary process (not the top-level), or be 
+			folded into the nodes' fanin.  
+		Instead of including expr structures, use simpler arrays.
+		For state, maintain countdown and number of unknowns.  
+		Might be simpler to make a special subgraph for OR combinations
+		in an auxiliary process...
+	difficulty: as each unique_process is processed, there is no
+		global context information, thus each unique subgraph will
+		need to summmarize local fanins, to translate to global
+		fanin per process instance.  
+	memory: weak-rules are exceptional, 
+		rules with multiple fanin and single fanin are both common,
+		but don't want to pay memory for both, consider a union?
+		Want to compact and be efficient where only one rule
+			pulls a node (common), and for OR-combination.  
+	rule-attributes (strength):
+		currently, the strength of a rule is encoded at the node, 
+			by attaching the root expression to the weak or
+			strong group (indexed).  
+		propose to store information in rule-struct flags to be shared
+		
 
 //=============================================================================
 2007-07-10:

@@ -1,0 +1,8 @@
+// "bad-pass-gate-b.hac"
+// test case for pass-gate allocation bug
+
+bool a;
+prs {
+	passn(a, a, a)
+}
+

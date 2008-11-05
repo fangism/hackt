@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Cause.h"
 	Structure of basic node event.  
-	$Id: Cause.h,v 1.3 2006/10/06 23:38:51 fang Exp $
+	$Id: Cause.h,v 1.4 2008/11/05 23:03:44 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CAUSE_H__
@@ -9,6 +9,7 @@
 
 #include <iosfwd>
 #include "sim/common.h"
+#include "sim/prsim/enums.h"
 #include "util/utypes.h"
 
 namespace HAC {
@@ -23,11 +24,12 @@ using std::istream;
  */
 struct EventCause {
 	node_index_type				node;
-	uchar					val;
+	value_enum				val;
 
-	EventCause() : node(INVALID_NODE_INDEX), val(0) { }
+	EventCause() : node(INVALID_NODE_INDEX), val(LOGIC_LOW) { }
+	// initial value doesn't matter, could be LOGIC_OTHER
 
-	EventCause(const node_index_type n, const uchar v) :
+	EventCause(const node_index_type n, const value_enum v) :
 		node(n), val(v) { }
 
 	/**
@@ -37,6 +39,9 @@ struct EventCause {
 	operator < (const EventCause& e) const {
 		return node < e.node || val < e.val;
 	}
+
+	ostream&
+	dump_raw(ostream&) const;
 
 	void
 	save_state(ostream&) const;
@@ -63,7 +68,7 @@ struct LastCause {
 		3 of 4 slots used for better padding.  
 		Indexed by node's current value. 
 	 */
-	uchar					caused_by_value[4];
+	value_enum				caused_by_value[4];
 
 	/**
 		How the f-- do you initialize aggregate members?
@@ -78,10 +83,10 @@ struct LastCause {
 		caused_by_node[0] = INVALID_NODE_INDEX;
 		caused_by_node[1] = INVALID_NODE_INDEX;
 		caused_by_node[2] = INVALID_NODE_INDEX;
-		caused_by_value[0] = 0;	// don't care
-		caused_by_value[1] = 0;	// don't care
-		caused_by_value[2] = 0;	// don't care
-		caused_by_value[3] = 0;	// really don't care
+		caused_by_value[0] = LOGIC_LOW;	// don't care
+		caused_by_value[1] = LOGIC_LOW;	// don't care
+		caused_by_value[2] = LOGIC_LOW;	// don't care
+		caused_by_value[3] = LOGIC_LOW;	// really don't care
 		// but needs to be initialized else binary will be
 		// non-deterministic
 	}
@@ -91,18 +96,18 @@ struct LastCause {
 		\return the index of the last node to cause this change.
 	 */
 	node_index_type
-	get_cause_node(const uchar v) const {
+	get_cause_node(const value_enum v) const {
 		return caused_by_node[size_t(v)];
 	}
 
 	event_cause_type
-	get_cause(const uchar v) const {
+	get_cause(const value_enum v) const {
 		const size_t i(v);
 		return event_cause_type(caused_by_node[i], caused_by_value[i]);
 	}
 
 	void
-	set_cause(const uchar v, const event_cause_type& e) {
+	set_cause(const value_enum v, const event_cause_type& e) {
 		const size_t i(v);
 		caused_by_node[i] = e.node;
 		caused_by_value[i] = e.val;

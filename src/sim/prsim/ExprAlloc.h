@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.10 2008/10/03 02:04:33 fang Exp $
+	$Id: ExprAlloc.h,v 1.11 2008/11/05 23:03:53 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -11,11 +11,18 @@
 #include "sim/prsim/ExprAllocFlags.h"
 #include "sim/prsim/State-prsim.h"		// for nested typedefs
 #include "sim/common.h"
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+#include <map>
+#endif
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 class State;
+class unique_process_subgraph;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+using std::map;
+#endif
 using entity::state_manager;
 using entity::PRS::footprint_rule;
 using entity::PRS::footprint_expr_node;
@@ -31,23 +38,47 @@ using entity::cflat_context_visitor;
 class ExprAlloc : public cflat_context_visitor {
 public:
 	typedef	State					state_type;
-	typedef	State::node_type			node_type;
-	typedef	State::node_pool_type			node_pool_type;
-	typedef	State::expr_type			expr_type;
-	typedef	State::expr_pool_type			expr_pool_type;
-	typedef	State::graph_node_type			graph_node_type;
-	typedef	State::expr_graph_node_pool_type	graph_node_pool_type;
-	typedef	State::rule_map_type			rule_map_type;
-	typedef	State::rule_type			rule_type;
+	typedef	state_type::expr_struct_type		expr_struct_type;
+	typedef	state_type::expr_state_type		expr_state_type;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	typedef	expr_struct_type			expr_type;
+	typedef	unique_process_subgraph			unique_type;
+	typedef	map<const entity::PRS::footprint*, size_t>
+						process_footprint_map_type;
+#else
+	typedef	state_type::node_type			node_type;
+	typedef	state_type::node_pool_type		node_pool_type;
+	typedef	expr_state_type				expr_type;
+	typedef	State					unique_type;
+#endif
+	typedef	unique_type::expr_pool_type		expr_pool_type;
+	typedef	unique_type::graph_node_type		graph_node_type;
+	typedef	unique_type::expr_graph_node_pool_type	graph_node_pool_type;
+	typedef	unique_type::rule_map_type		rule_map_type;
+	typedef	unique_type::rule_type			rule_type;
 protected:
 	typedef	std::queue<expr_index_type>	free_list_type;
 public:
 	state_type&				state;
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
 	node_pool_type&				st_node_pool;
-	expr_pool_type&				st_expr_pool;
-	graph_node_pool_type&			st_graph_node_pool;
-	rule_map_type&				st_rule_map;
+#endif
+	unique_process_subgraph*		g;
 protected:
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	/**
+		Currently running unique process index.
+	 */
+	size_t					current_process_index;
+	/**
+		Running total of the number of global expressions.
+	 */
+	size_t					total_exprs;
+	/**
+		Translates unique prs_footprint to unique process index.  
+	 */
+	process_footprint_map_type		process_footprint_map;
+#endif
 	/// the expression index last returned
 	expr_index_type				ret_ex_index;
 public:
@@ -77,8 +108,6 @@ protected:
 	 */
 	free_list_type				expr_free_list;
 public:
-	explicit
-	ExprAlloc(state_type&);
 
 	ExprAlloc(state_type&, const ExprAllocFlags&);
 
@@ -102,6 +131,11 @@ protected:
 	void
 	visit(const state_manager&);
 
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	void
+	visit(const entity::PRS::footprint&);
+#endif
+
 	void
 	visit(const footprint_rule&);
 
@@ -116,12 +150,41 @@ protected:
 	visit(const footprint_directive&);
 
 public:
+// wrapper implementations:
+// select depending on whether target is local scope or global scope
+
+	node_index_type
+	lookup_local_bool_id(const node_index_type ni) const {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	// DELIBERATE OVERRIDE: DO NOT TRANSLATE TO GLOBAL NODE INDICES!
+	// if node index argument comes from PRS_footprint, then it was
+	// 1-indexed, and needs to be converted to 0-indexed.
+	if (current_process_index) {
+		INVARIANT(ni);
+		return ni -1;
+	} else {	// top-level, keep 1-indexed, 0 is reserved
+		return ni;
+	}
+#else
+		return __lookup_global_bool_id(ni);
+#endif
+	}
+
+	// for now, exclusive rings (both force and check) use this
+	// eventually, they may be pushed into local subgraphs...
+	node_index_type
+	lookup_global_bool_id(const node_index_type ni) const {
+		// works without catching pid=0 (top-level)
+		// b/c we populated its frame map with identity indices
+		return __lookup_global_bool_id(ni);
+	}
+
 	// these public functions are really only intended for
 	// macro/directive/attribute visitor classes...
 
 	void
 	link_node_to_root_expr(const node_index_type, 
-		const expr_index_type, const bool dir
+		const expr_index_type, const bool dir, const rule_type&
 #if PRSIM_WEAK_RULES
 		, const rule_strength
 #endif

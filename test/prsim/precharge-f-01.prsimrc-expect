@@ -3,15 +3,15 @@ forced excllo rings:
 { _o[0], _o[1] }
 { _o[0], _o[1] }
 Fanins of node `_o[0]':
-[after 10]	~en:X | 
 [after 10]	~en:X<X> -> _o[0]+:X
-[after 10]	(en:X & x[0]:X)<X> | 
-[after 10]	(en:X & x[0]:X)<X><X> -> _o[0]-:X
+[after 10]	en:X & x[0]:X<X><X> -> _o[0]-:X
+[after 10]	~en:X<X> -> _o[0]+:X
+[after 10]	en:X & x[0]:X<X><X> -> _o[0]-:X
 Fanins of node `_o[1]':
-[after 10]	~en:X | 
 [after 10]	~en:X<X> -> _o[1]+:X
-[after 10]	(en:X & x[1]:X)<X> | 
-[after 10]	(en:X & x[1]:X)<X><X> -> _o[1]-:X
+[after 10]	en:X & x[1]:X<X><X> -> _o[1]-:X
+[after 10]	~en:X<X> -> _o[1]+:X
+[after 10]	en:X & x[1]:X<X><X> -> _o[1]-:X
 en -> X 
 event queue:
 	10	en : X

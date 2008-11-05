@@ -1,0 +1,5 @@
+# "memstats64-inv.prsimrc"
+# @haco@ inv.haco-a
+
+memstats
+# expect 64b architecture

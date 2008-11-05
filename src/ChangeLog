@@ -3,6 +3,134 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-50-merged-prsim-10-20:
+	  Major branch merge: Scalability rework in hacprsim
+	  Replaced flat-world model of production rules with hierarchical 
+		process view of rules, and separate structure from state, 
+		so that each unique process can reuse its subgraph of 
+		expressions/nodes/rules with ALL instance of the same type, 
+		thus dramatically reducing memory usage, improving scalability.
+		Improved memory usage reporting for data collection.  
+		Performance has degraded 4% to 8%, with *no*
+			optimization effort -- only after profiling.  
+	  Further improvements to memory to be researched later.
+		Hierarchical structuring of rules will further enable 
+		development of per-process and per-rule control, as well
+		as global rule enumeration, and a notion of ownership, 
+		i.e. each rule can be identified with its owning process.  
+	  Testing: zero functional regressions, tests were updated to account
+		for only formatting differences in the reporting of 
+		fanins and fanouts: fanout no longer reports branches of
+		rules of which the queried node does not directly participate.
+		prsim expression dumps no longer print monolithic graphs, 
+		but rather one graph per unique type.  
+	  This branch has been brought to you by Fang's spare time.
+
+
+2008-11-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-20:
+	  Added more memory usage statistics of the global state manager.
+	  tests: minor VPI installcheck environment/PATH fixes.
+
+
+2008-11-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-19:
+	  Bug fix: ExprAlloc assert failed on wrong invariant
+		on local node index in pass-gate macros.
+		Fixed and added test casees: prsim/bad-pass-gate-*
+
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-18:
+	  Final formatting fix, now properly count the number of fanins
+		per node, categorized by pull-direction and strength, 
+		which fixes the remaining formatting differences 
+		in test/lib, on why*-verbose analyses.  
+	  For convenience, implemented state_manager::get_bool_frame_map()
+	  Added Object/common/frame_map.h for typedef.  
+	  Some general clean-up.
+	  Ready to merge to trunk.  
+
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-17:
+	  Bug fix: forgot to register new unique types with 
+		process_footprint_map during ExprAlloc, oops!
+	  Wrote memory statistics for new structures, 'memstats' command.
+	  Redeclared packed vs. aligned attributes for memory-critical
+		expr and rule structs (huge difference).  
+	  Many remaining regression tests difference re-validated (all format), 
+		test-expects have been updated.  (in test/prsim, parser/prs)
+		Few remaining differences in why*-verbose in lib/.
+
+
+2008-11-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-16-b: (srcdir only tag)
+	  fanin/fanout-get printing now shows the overall root pull for 
+		every rule b/c rules are no longer grouped by pull direction
+		and weakness, they are ordered by process fanin.  
+
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-16-a: (srcdir only tag)
+	  Better printing of rules, further reducing test differences.
+
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-16:
+	  Cleaned up evaluate_return_type struct, removed unused refs
+		to __scratch_expr_trace.
+	  Added unique_process_subgraph::check_node(), from check_structure().
+	  TODO: memstats, fanin/out-get print-info, 
+		print rule attributes properly at rule, update tests.
+
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-15-c: (srcdir only tag)
+	  Confined uses of process_expr_id_map to lookup and setup functions.
+		Defined PRSIM_SEPARATE_PROCESS_EXPR_MAP for later exploration
+		between two implementation, small tradeoff memory/performance.
+	  Next simplify some process_sim_state call sites, involving
+		local/global indices.
+
+
+2008-11-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-15-b: (srcdir only tag)
+	  Eliminated process_first_expr_map, 
+		folded into process_sim_state-base.
+
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-15-a: (srcdir only tag)
+	  Moved many methods of unique_process_subgraph into 
+		process_sim_state, where it makes more sense, 
+		thereby simplifying many function calls.  
+
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-15:
+	  Eliminated process_type_map, folded type reference into
+		process_sim_state union member, type_ref.
+		More clean-up transformations to come...
+
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-14:
+	  Cleaned up implementation of bool frame lookup without having
+		to always check for special case pid=0 (top-level), 
+		simplifying code, making less error prone.  
+		Added some global_entry methods to help with this.
+		Could re-factor out repetitive calls to get_frame_map still...
+	  Only test differences in fanin/fanout print formatting.
+
+
+2008-10-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-13:
+	  Fixed bug with propagating wrong pull-state to root, as returned
+		by ::evaluate(), fixing a few tests with unstable-dequeue.
+	  Fixed bug with improper searching through top-level nodes with
+		wrong frame map.  Considering a better fix next...
+
+
 2008-10-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-49:
@@ -21,6 +149,26 @@
 		Texinfo documented in sim/prsim/vpi-prsim.cc
 	  Examples directories are now separated by $(host) to avoid
 		architecture-specific collisions.  
+
+
+2008-10-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-12+:
+	  Fixed formatting of State::__root_why analysis.  
+	  Known bug remaining: some tests outputs have dropped subtrees
+		of why-analysis, a few unstable diagnostics differ, 
+		see test/prsim/prsimrcdiffs.
+
+
+2008-10-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-12:
+	  prsim: fix get_delay_up/dn assertion, but would still like to
+		automatically find the appropriate delay based on fanin-get
+		eventually, however this is low priority.
+		No regression tests crash anymore!
+		Only differences seem to be in fanin/fanout printing
+		and why-analysis feedback (68 test failures).
 
 
 2008-10-25	David Fang		<fangism@users.sourceforge.net>
@@ -83,6 +231,43 @@
 	  Documented and tested.
 
 
+2008-10-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-11+:
+	  More fixes: faulty rule index returned (bad lookup), 
+		bad fanin/fanout printing fixed.
+	  Next bug: get_delay fails when no valid rule_index is provided, 
+		so must search for an ON rule, and take minimum delay.
+		This causes many remaining crashes, e.g. State::unset_node().
+
+
+2008-10-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-11:
+	  Tons of simple little bugs fixed, still much more to go.
+		Many easy bugs related to incorrect assertions due to
+		local indexing vs. global indexing.  
+	  Most regression tests in prsim/ still die on 
+		crashes and assert fails.  
+
+
+2008-10-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-10:
+	  Ton of minor fixes during debugging, successfully simulated
+		one hierarchical inverter (parser/prs/inv-14)!!!
+		Details: expression allocation fixes, initialization fixes, 
+		local-global translation fixes, expression propagation fixes,
+		structural coherence fixes, dump-strict enhancements
+		For now, node_fanin array is vector (bigger than valarray)
+		Moved evaluation_return_type to State-prsim.cc
+		faninout_struct_type no longer nested in unique_process_subgf.
+	  Next: continue debugging bigger tests until no regressions, 
+		accurate memory statistics.
+	  cleanup: remove State::__scratch_expr_trace, 
+		pass evaluate_return_type by ref instead of returning copy
+
+
 2008-10-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-42:
@@ -137,6 +322,21 @@
 		actually test propagation of bool attributes.  
 
 
+2008-10-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-09:
+	  Turned on PRSIM_INDIRECT_EXPRESSION_MAP! (beginning to debug...)
+		ExprAlloc visitors adjusted to use local node indices
+			where appropriate, properly presize the local node
+			fanin/out structure array by footprint_frame, 
+			fixed ::link_node_to_root_expr()
+		State-prsim: distinguish FIRST_VALID_GLOBAL_* indices
+			from FIRST_VALID_LOCAL_* indices, 
+			removed false nonzero assertion checks
+	  Basic inverter process passes structural testing!
+		Then the events don't quite work right yet...
+
+
 2008-10-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-38:
@@ -173,6 +373,25 @@
 		Test cases added.  Documented. 
 
 
+2008-09-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-08:
+	  It finally compiles! (but will probably crash and burn)
+		Finished remaining functions, branch is completely untested.
+		Most importantly, implemented root_expr_why* functions, 
+		albeit mostly copy-pasted from original expr_why functions.
+	  Next: ground-up testing... PRSIM_INDIRECT_EXPRESSION_MAP -> 1.
+
+
+2008-09-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-07:
+	  prsim: added State::translate_to_global_node (local -> global index)
+		re-implemented many recursive traversals, including dump, 
+		fanin, fanout, and why-diagnostics.  
+		Note: rule printing for new impl. will differ from prev.
+
+
 2008-09-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-36:
@@ -190,6 +409,67 @@
 		One test case updated in prsim test suite.  
 
 
+2008-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-06:
+	  prsim: Started migrating some structure tests to the
+		unique_process_subgraph class, including helper functions.
+		Renamed process_expr_map to global_expr_process_id_map.
+		Factored out lookup_global_expr_process(expr-id).
+		More clean up of get_pull() calls.
+	  Next: rewrite some recursive diagnostics, splitting off 
+		process-local functions from global lookups.  
+
+
+2008-08-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-05:
+	  prsim: Converted use of uchars for node values over to value_enum, 
+		for clarity, and caught some suspicious code!
+		Also cleaned up some uses of pull_enum, 
+		eliminating confusing conversions to/from char.
+		Hope compiler is smart enough to use size uchar, 
+		given value range.  
+	  Next: structure integrity checks, recursive diagnostics
+		with PRSIM_INDIRECT_EXPRESSION_MAP=1.
+		
+
+2008-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-04:
+	  More simple conversions of node pull-states using new fanin struct.
+	  Next: work on structure integrity checks and recursive diagnostics.
+
+
+2008-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-03:
+	  Moved enumerations to "enums.h" outside of structs, cleaned-up.
+	  unique_process_subgraph now has local node fanin/out summaries,
+		much like Node-struct, which are populated during 
+		type-pass (once per type) in ExprAlloc.
+		These summaries come into play because nodes now list
+		processes as fanins, since they are not needed during
+		simulation, only diagnostics.   
+	  State::get_pull: many short-lived expr_indicies have been
+		removed, which will simplify get_pull() replacement.
+		Except, recursive diagnostics (why*) were untouched, 
+		need to be rewritten differently.
+	  PRSIM_INDIRECT_EXPRESSION_MAP doesn't fully compile yet.
+
+
+2008-08-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-02:
+	  Continued restructuring of prsim structures.  
+	  PRSIM_INDIRECT_EXPRESSION_MAP doesn't fully compile yet.
+	  Next: replacing nodes' pull-up/dn structure with pseudo
+		expression for taking OR-combinations of rules, essentially
+		folding OR expression into node.
+		Rationale: simplify structural transition
+		Consider using a *gasp* union for memory efficiency.  
+	
+
 2008-07-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-34:
@@ -203,6 +483,19 @@
 
 	* HACKT-00-01-04-main-00-82-33:
 	  util::string_to_num(): auto-detect hexadecimal numbers
+
+
+2008-07-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-01:
+	  Branch for the promised restructuring of prsim data structures
+		to reduce memory at the expense of some performance.
+		Before branch is complete, should benchmark difference.
+		Goal-flag: PRSIM_INDIRECT_EXPRESSIONS_MAP
+	  This initial revision has factored out some data structures
+		in preparation for per-type lookup structures.  
+		State-prsim.h: factored out unique_process_subgraph
+		ExprAlloc.cc: use unique_process_subgraph members
 
 
 2008-07-01	David Fang		<fangism@users.sourceforge.net>

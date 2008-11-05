@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.6 2008/03/17 23:03:04 fang Exp $
+	$Id: Rule.h,v 1.7 2008/11/05 23:03:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -43,6 +43,8 @@ public:
 	time_type			after;
 	/**
 		Uses rule_enum_type to signal flags.  
+		TODO: move direction bit here from Expr,
+			add strength vector/bitfield here
 	 */
 	short				rule_flags;
 public:
@@ -90,7 +92,13 @@ public:
 	Nothing new yet.  
  */
 template <typename Time>
-struct RuleState : public Rule<Time> {
+struct RuleState
+#if !PRSIM_INDIRECT_EXPRESSION_MAP
+	: public Rule<Time>
+#else
+	// don't really need Time template parameter!
+#endif
+{
 
 	void
 	save_state(ostream&) const { }
@@ -102,7 +110,13 @@ struct RuleState : public Rule<Time> {
 	ostream&
 	dump_checkpoint_state(ostream& o, istream&) { return o; }
 
-} __ATTRIBUTE_ALIGNED__ ;	// end struct RuleState
+}
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+__ATTRIBUTE_PACKED__
+#else
+__ATTRIBUTE_ALIGNED__
+#endif
+;	// end struct RuleState
 
 //-----------------------------------------------------------------------------
 }	// end namespace PRSIM

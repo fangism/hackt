@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.6 2008/04/23 00:55:48 fang Exp $
+	$Id: devel_switches.h,v 1.7 2008/11/05 23:03:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -62,6 +62,7 @@
 	Note: this should not cause any regressions on previous simulations
 		that were never aware of the weak attribute.  
 	Status: done, fairly tested
+	This will eventually be superceded by PRSIM_NEW_EVENT_MODEL, below.
  */
 #define	PRSIM_WEAK_RULES				1
 
@@ -86,20 +87,61 @@
 	Status: complete, tested, though interface may change in future
 	Priority: high
 	TODO: test support for validity protocol channels
+	TODO: automate channels, based on type information
  */
 #define	PRSIM_CHANNEL_SUPPORT				1
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	INVASIVE change.
 	Eliminate pre-translated, allocated top-level expressions in favor
 	of performing footprint translationsat run-time.
+	This also significantly changes the way node fanin will work
+	because of process hierarchy; cannot use existing OR-combinations.  
 	Tradeoff: slower, but much more memory-scalable.
 	Rationale: memory is more critical for massive designs
 	Priority: HIGH
 	Goal: 1
-	Status: not begun
+	Status: complete and debugged
+
  */
-#define	PRSIM_INDIRECT_EXPRESSION_MAP			0
+#define	PRSIM_INDIRECT_EXPRESSION_MAP			1
+
+/**
+	Eventually unify the structures and enumerations between
+	sim/prsim/Expr.h and Object/lang/PRS_footprint_expr.h.
+	This will save on per-type memory footprint.  
+	Tradeoff: will result in slightly larger memory footprint
+	for process PRS footprints, but eliminate redundant structures.
+	Issue: should there be graph optimization, like prsim -O1?
+	Goal: 1?
+	Prerequisite: PRSIM_INDIRECT_EXPRESSION_MAP
+	Rationale: doing this in a separate second rewrite phase 
+	to minimize the invasiveness of change, 
+	for maintainability and stability.  
+ */
+#define	PRSIM_UNIFY_GRAPH_STRUCTURES	(0 && PRSIM_INDIRECT_EXPRESSION_MAP)
+
+/**
+	Summary: Also plan to use a hierarchical fanin/fanout structure, 
+	where lookups will ascend to parents through ports, 
+	and descend through children through ports.  
+	Rationale: This will eliminate fanin-fanout caching, memory-hog.  
+	May require static direction-tracking of nodes!
+	Goal: ?
+ */
+#define	PRSIM_HIERARCHICAL_FANOUT_ONLY	(0 && PRSIM_INDIRECT_EXPRESSION_MAP)
+
+/**
+	In addition to un-caching expression structures, also maintain
+	check and force-excl rings per process type.  
+	Might be more difficult, less benefit?
+	Goal: ?
+	Rationale: further memory reduction
+ */
+#define	PRSIM_HIERARCHICAL_RINGS	(0 && PRSIM_INDIRECT_EXPRESSION_MAP)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /**
 	Complete rewrite of prsim event system core, accounting properly

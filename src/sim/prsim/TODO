@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.5 2008/03/17 23:03:05 fang Exp $
+#	$Id: TODO,v 1.6 2008/11/05 23:03:57 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -126,14 +126,13 @@ mk and check rings:
 	filter rings that are strict subsets of others (redundancy)
 		[difficulty: more difficult, got algorithm?]
 
-state-allocation:
-	consider alternative to re-allocating every rule for every
-	instance, when the footprint can be reused, by adding
-	one additional lookup through the parent process' footprint-frame.  
-	Trade-off performance for memory (scalability).  
-	This is similar to the idea behind chpsim's CHP footprints.  
-	Instead of event-ids, we'll have expanded rule-ids.  
-	Will be interesting to benchmark.  
+further memory scalability:
+	after the -prsim-10 merge, which brought significant memory 
+	improvement, there is still room for improvement.
+	A large chunk of the remaining memory lies in the frame maps
+	and global entries of large empty processes that are just
+	for the sake of connection in the hierarchy.  
+	Can these be reduced?
 
 sprsim:
 	size-based timing prsim
