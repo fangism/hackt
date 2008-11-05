@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.18.2.31 2008/11/03 22:58:51 fang Exp $
+	$Id: State-prsim.cc,v 1.18.2.32 2008/11/05 05:58:22 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -6553,6 +6553,7 @@ struct process_sim_state::memory_accumulator {
  */
 ostream&
 State::dump_memory_usage(ostream& o) const {
+	state_base::dump_memory_usage(o);
 {
 	const size_t ns = node_pool.size();
 	o << "node-state: ("  << ns << " * " << sizeof(node_type) <<

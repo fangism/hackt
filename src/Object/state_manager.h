@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.12.22.1 2008/11/03 22:58:41 fang Exp $
+	$Id: state_manager.h,v 1.12.22.2 2008/11/05 05:58:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
@@ -87,6 +87,9 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&, 
 		const footprint&);
+
+	ostream&
+	__dump_memory_usage(ostream&) const;
 
 };	// end class global_entry_pool
 
@@ -180,6 +183,9 @@ public:
 	 */
 	const footprint_frame_map_type&
 	get_bool_frame_map(const size_t pid) const;
+
+	ostream&
+	dump_memory_usage(ostream&) const;
 private:
 	explicit
 	state_manager(const this_type&);

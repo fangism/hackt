@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.19.16.1 2008/11/03 22:58:37 fang Exp $
+	$Id: state_manager.cc,v 1.19.16.2 2008/11/05 05:58:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <functional>
+#include <algorithm>		// for std::accumulate
 #include <sstream>
 #include "Object/state_manager.tcc"
 #include "Object/global_entry.tcc"
@@ -94,6 +95,25 @@ if (this->size() > 1) {
 		i->dump_canonical_name(o, topfp, sm);
 		o << "\"];" << endl;
 	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+ostream&
+global_entry_pool<Tag>::__dump_memory_usage(ostream& o) const {
+	const size_t s = this->size();
+	o << "\t" << class_traits<Tag>::tag_name << "-entry-pool: (" <<
+		s << " * " << sizeof(entry_type) << " B/inst) = " <<
+		s *sizeof(entry_type) << " B" << endl;
+	const size_t f = std::accumulate(this->begin(), this->end(), 
+		size_t(0), &entry_type::template count_frame_size<Tag>);
+if (f) {
+	o << "\t\tsum(frame-map): (" << f << " * " <<
+		sizeof(footprint_frame_map_type::value_type) << " B/entry) = "
+		<< f *sizeof(footprint_frame_map_type::value_type)
+		<< " B" << endl;
 }
 	return o;
 }
@@ -310,6 +330,21 @@ state_manager::__collect_subentries_test(void) const {
 	collect_subentries<enum_tag>(foo, 1);
 	collect_subentries<int_tag>(foo, 1);
 	collect_subentries<bool_tag>(foo, 1);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+state_manager::dump_memory_usage(ostream& o) const {
+	o << "global-state-manager:" << endl;
+	global_entry_pool<process_tag>::__dump_memory_usage(o);
+#if ENABLE_DATASTRUCTS
+	global_entry_pool<datastruct_tag>::__dump_memory_usage(o);
+#endif
+	global_entry_pool<channel_tag>::__dump_memory_usage(o);
+	global_entry_pool<enum_tag>::__dump_memory_usage(o);
+	global_entry_pool<int_tag>::__dump_memory_usage(o);
+	global_entry_pool<bool_tag>::__dump_memory_usage(o);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.12.40.1 2008/11/01 08:01:27 fang Exp $
+	$Id: global_entry.cc,v 1.12.40.2 2008/11/05 05:58:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -247,6 +247,20 @@ footprint_frame::dump_footprint(ostream& o, const size_t ind,
 	return o;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+footprint_frame::count_frame_size(void) const {
+	return footprint_frame_map<process_tag>::id_map.size()
+		+footprint_frame_map<channel_tag>::id_map.size()
+#if ENABLE_DATASTRUCTS
+		+footprint_frame_map<datastruct_tag>::id_map.size()
+#endif
+		+footprint_frame_map<enum_tag>::id_map.size()
+		+footprint_frame_map<int_tag>::id_map.size()
+		+footprint_frame_map<bool_tag>::id_map.size();
+}
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

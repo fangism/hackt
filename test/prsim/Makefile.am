@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.32.2.1 2008/11/04 02:27:48 fang Exp $
+#	$Id: Makefile.am,v 1.32.2.2 2008/11/05 05:58:25 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -171,7 +171,17 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	always_random-a-01 \
 	reschedule-07 reschedule-08 reschedule-09 reschedule-10 reschedule-11 \
 	reschedule-12 reschedule-13 reschedule-14 reschedule-15 \
-	reschedule-16 reschedule-17
+	reschedule-16 reschedule-17 \
+	memstats32-inv memstats64-inv
+
+# override defaults for non-matched architectures
+if ABI_ILP32
+memstats64-inv.prsimtest: memstats64-inv.prsimrc
+	$(SKIP_TEST_SCRIPT)
+else
+memstats32-inv.prsimtest: memstats32-inv.prsimrc
+	$(SKIP_TEST_SCRIPT)
+endif
 
 # positive different test:
 # oscil-random-01 and oscil-random-01a are *supposed* to differ (seeds)

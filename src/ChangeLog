@@ -5,6 +5,13 @@
 
 BRANCH CHECKLIST: code review TODO/FIXME through all prsim code!
 
+2008-11-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-32-prsim-10-20:
+	  Added more memory usage statistics of the global state manager.
+	  tests: minor VPI installcheck environment/PATH fixes.
+
+
 2008-11-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-32-prsim-10-19:

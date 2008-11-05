@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.13.52.2 2008/11/03 22:58:32 fang Exp $
+	$Id: global_entry.h,v 1.13.52.3 2008/11/05 05:58:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -148,6 +148,9 @@ struct footprint_frame :
 	const footprint_frame_map_type&
 	get_frame_map(void) const;
 
+	size_t
+	count_frame_size(void) const;
+
 	void
 	init_top_level(void);
 
@@ -249,6 +252,13 @@ struct global_entry_substructure_base<false> {
 	ostream&
 	dump(global_entry_dumper&) const;
 
+	template <class Tag>
+	static
+	const size_t&
+	count_frame_size(const size_t& s, const global_entry<Tag>&) {
+		return s;
+	}
+
 	void
 	collect_subentries(entry_collection&, const state_manager&) const { }
 
@@ -272,6 +282,9 @@ struct global_entry_substructure_base<false> {
  */
 template <>
 struct global_entry_substructure_base<true> {
+private:
+	typedef	global_entry_substructure_base		this_type;
+public:
 	footprint_frame			_frame;
 
 	template <class Tag>
@@ -282,6 +295,11 @@ struct global_entry_substructure_base<true> {
 	dump_frame_only(ostream& o) const {
 		return _frame.dump_frame(o);
 	}
+
+	template <class Tag>
+	static
+	size_t
+	count_frame_size(const size_t s, const this_type&);
 
 	void
 	initialize_top_frame(const footprint& f) {

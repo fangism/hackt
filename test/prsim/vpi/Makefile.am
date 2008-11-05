@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2008/06/03 18:47:31 fang Exp $
+#	$Id: Makefile.am,v 1.3.2.1 2008/11/05 05:58:34 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -34,7 +34,7 @@ installcheck-local: $(INSTALLCHECK_TARGETS)
 	do $(CAT) $$o ; done
 endif
 
-Makefile.copy: example.mk
+Makefile.copy: example.mk Makefile.am
 	$(SED) -e 's|@pkgdatadir@|$(pkgdatadir)|g' \
 		-e 's|@vcs_flags@|$(INSTALLCHECK_VCS_FLAGS)|g' \
 		-e 's|@vpi_flags@|$(INSTALLCHECK_VCS_VPI_FLAGS)|g' \
@@ -48,7 +48,8 @@ inverters.vxi-subdir-out: Makefile.copy force
 	$(RM) -r $(EXAMPLE_NAME) && \
 	$(CP) -r $(vpiinvdir) . && \
 	$(MV) $(EXAMPLE_NAME)/Makefile.copy $(EXAMPLE_NAME)/Makefile && \
-	( cd $(EXAMPLE_NAME) && $(MAKE) check ) > $@
+	( cd $(EXAMPLE_NAME) && \
+		PATH=$(bindir)$(PATH_SEPARATOR)$$PATH $(MAKE) check ) > $@
 
 CLEANFILES += Makefile.copy
 
