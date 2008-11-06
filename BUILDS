@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.115 2008/11/06 00:42:31 fang Exp $
+	$Id: BUILDS,v 1.116 2008/11/06 01:09:47 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -426,6 +426,20 @@ yacc: $FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.28 2000/01/17 02:04:06 bde Exp $
 readline: GNU readline 4.3
 guile: guile-config - Guile version 1.6.8
 
+(Fang, hal-03)
+Version: hackt 0.1.4-devel-20081105
+CVS Tag: HACKT-00-01-04-main-00-82-50-merged-prsim-10-20
+Configured with: '--prefix=/usr/local/cad' '--disable-static' '--with-readline' 'YACC=yacc' '--enable-fun' '-C' 'CC=gcc' 'CXX=g++' '--enable-ltdl-convenience'
+build-triplet: x86_64-redhat-linux-gnu
+c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-9)
+config-CXXFLAGS: -g -O2
+config-LIBS:  -lreadline -lncurses 
+lex: flex version 2.5.4
+yacc: $FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.28 2000/01/17 02:04:06 bde Exp $
+readline: GNU readline 4.3
+guile: none
+
+
 // What the hell do you guys have against shared libraries?
 (Clint Kelly)
 Version: hackt 0.1.4-devel-20070318
@@ -446,16 +460,16 @@ readline: BSD EditLine (histedit interface) ver. 2.10
 amd64-unknown-freebsd
 NOTE: this is an LP64 platform
 
-(Fang)
-Version: hackt 0.1.4-devel-20070913
-CVS Tag: HACKT-00-01-04-main-00-81-74
-Configured with: '--prefix=/usr/local/cad' '--with-readline' '--enable-fun' 'YACC=yacc' 'ACLOCAL_FLAGS=-I /usr/local/share/aclocal' 'CONFIG_SHELL=/bin/sh' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
+(Fang, hal-00)
+Version: hackt 0.1.4-devel-20081105
+CVS Tag: HACKT-00-01-04-main-00-82-50-merged-prsim-10-20
+Configured with: '--prefix=/usr/local/cad' '--disable-static' '--with-readline' '--enable-random-tests' 'YACC=yacc' 'ACLOCAL_FLAGS=-I /usr/local/share/aclocal' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
 build-triplet: amd64-unknown-freebsd6.2
 c++: g++ (GCC) 3.4.6 [FreeBSD] 20060305
 config-CXXFLAGS: -g -O2
 config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
-yacc: /usr/bin/yacc
+yacc: $FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.37 2003/02/12 18:03:55 davidc Exp $
 readline: GNU readline 5.0
 guile: guile-config - Guile version 1.6.8
 
