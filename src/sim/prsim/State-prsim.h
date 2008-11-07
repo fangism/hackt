@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.9 2008/11/05 23:03:56 fang Exp $
+	$Id: State-prsim.h,v 1.10 2008/11/07 02:42:36 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -246,6 +246,11 @@ struct unique_process_subgraph {
 	/**
 		Sparse map from top-level expressions to rules.
 		Can probably use ordered map.  
+		TODO: even better, since both keys increase monotonically, 
+		just binary search through a vector of pairs, 
+		which can support reverse-lookups.
+		ALERT: the trick is to keep it sorted by both keys
+		in the face of pool-compaction optimizations...
 	 */
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	hash_map<expr_index_type, rule_index_type>
@@ -465,6 +470,11 @@ struct process_sim_state : public process_sim_state_base {
 		const State&, const size_t, 
 		const bool, node_set_type&, node_set_type&) const;
 
+#if PRSIM_INVARIANT_RULES
+	bool
+	check_invariants(void) const;
+#endif
+
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
 		const State&, 
@@ -660,6 +670,10 @@ public:
 		ERROR_NOTIFY = ERROR_WARN,
 		ERROR_BREAK = 2,
 		ERROR_INVALID,
+#if PRSIM_INVARIANT_RULES
+		ERROR_DEFAULT_INVARIANT_FAIL = ERROR_BREAK,
+		ERROR_DEFAULT_INVARIANT_UNKNOWN = ERROR_WARN,
+#endif
 		ERROR_DEFAULT_UNSTABLE = ERROR_BREAK,
 		ERROR_DEFAULT_WEAK_UNSTABLE = ERROR_WARN,
 		ERROR_DEFAULT_INTERFERENCE = ERROR_BREAK,
@@ -861,6 +875,12 @@ private:
 	// mode of operation
 	// operation flags
 	flags_type				flags;
+#if PRSIM_INVARIANT_RULES
+	/// poicy when invariants are violated
+	error_policy_enum			invariant_fail_policy;
+	/// poicy when invariants are *possibly* violated, due to 'X' pull
+	error_policy_enum			invariant_unknown_policy;
+#endif
 	/// controls the simulation behavior upon instability
 	error_policy_enum			unstable_policy;
 	/// controls the simulation behavior upon weak-instability
@@ -869,7 +889,7 @@ private:
 	error_policy_enum			interference_policy;
 	/// controls the simulation behavior upon weak-interference
 	error_policy_enum			weak_interference_policy;
-	
+
 	/// timing mode
 	uchar					timing_mode;
 	// loadable random seed?
@@ -1141,38 +1161,39 @@ public:
 		return e != ERROR_INVALID;
 	}
 
-	void
-	set_unstable_policy(const error_policy_enum e) {
-		unstable_policy = e;
+#define	DEFINE_POLICY_CONTROL_SET(name)				\
+	void							\
+	set_##name##_policy(const error_policy_enum e) {	\
+		name##_policy = e;				\
 	}
 
-	void
-	set_weak_unstable_policy(const error_policy_enum e) {
-		weak_unstable_policy = e;
+#define	DEFINE_POLICY_CONTROL_GET(name)				\
+	error_policy_enum					\
+	get_##name##_policy(void) const {			\
+		return name##_policy;				\
 	}
 
-	void
-	set_interference_policy(const error_policy_enum e) {
-		interference_policy = e;
-	}
+#if PRSIM_INVARIANT_RULES
+	bool
+	check_all_invariants(void) const;
 
-	void
-	set_weak_interference_policy(const error_policy_enum e) {
-		weak_interference_policy = e;
-	}
+	DEFINE_POLICY_CONTROL_SET(invariant_fail)
+	DEFINE_POLICY_CONTROL_GET(invariant_fail)
+	DEFINE_POLICY_CONTROL_SET(invariant_unknown)
+	DEFINE_POLICY_CONTROL_GET(invariant_unknown)
+#endif
 
-	error_policy_enum
-	get_unstable_policy(void) const { return unstable_policy; }
+	DEFINE_POLICY_CONTROL_SET(unstable)
+	DEFINE_POLICY_CONTROL_SET(weak_unstable)
+	DEFINE_POLICY_CONTROL_SET(interference)
+	DEFINE_POLICY_CONTROL_SET(weak_interference)
+	DEFINE_POLICY_CONTROL_GET(unstable)
+	DEFINE_POLICY_CONTROL_GET(weak_unstable)
+	DEFINE_POLICY_CONTROL_GET(interference)
+	DEFINE_POLICY_CONTROL_GET(weak_interference)
 
-	error_policy_enum
-	get_weak_unstable_policy(void) const { return weak_unstable_policy; }
-
-	error_policy_enum
-	get_interference_policy(void) const { return interference_policy; }
-
-	error_policy_enum
-	get_weak_interference_policy(void) const
-		{ return weak_interference_policy; }
+#undef	DEFINE_POLICY_CONTROL_SET
+#undef	DEFINE_POLICY_CONTROL_GET
 
 	bool
 	pending_events(void) const { return !event_queue.empty(); }

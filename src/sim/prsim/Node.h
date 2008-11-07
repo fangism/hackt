@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.16 2008/11/05 23:03:54 fang Exp $
+	$Id: Node.h,v 1.17 2008/11/07 02:42:33 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -606,6 +606,7 @@ public:
 } __ATTRIBUTE_ALIGNED__ ;	// end struct NodeState
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
 /**
 	Set of pull states, in all directions.  
  */
@@ -632,6 +633,7 @@ struct pull_set {
 #endif
 	}
 };	// end struct pull_set
+#endif
 
 //=============================================================================
 }	// end namespace PRSIM

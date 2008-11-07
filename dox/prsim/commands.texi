@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.7 2008/10/26 22:21:03 fang Exp $
+@c $Id: commands.texi,v 1.8 2008/11/07 02:42:26 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -349,6 +349,8 @@ The use of weak-rules can be globally enabled or disabled.
 @include cmd/weak-unstable.texi
 @include cmd/interference.texi
 @include cmd/weak-interference.texi
+@include cmd/invariant-fail.texi
+@include cmd/invariant-unknown.texi
 @include cmd/mode.texi
 
 Two additional commands control the behavior of unstable rules.  

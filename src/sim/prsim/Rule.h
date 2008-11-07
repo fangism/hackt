@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.7 2008/11/05 23:03:55 fang Exp $
+	$Id: Rule.h,v 1.8 2008/11/07 02:42:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -23,15 +23,19 @@ using std::istream;
 	This is where rule-attributes are loaded during the ExprAlloc phase.  
  */
 template <typename Time>
-struct Rule {
-	typedef	Time			time_type;
+class Rule {
 	typedef	enum {
 		RULE_DEFAULT_FLAGS = 0x00,
 		RULE_UNSTAB = 0x01,
 		RULE_WEAK = 0x02,
-		RULE_ALWAYS_RANDOM = 0x04
+		RULE_ALWAYS_RANDOM = 0x04,
+#if PRSIM_INVARIANT_RULES
+		RULE_INVARIANT = 0x08,
+#endif
+		RULE_BIT_MASK = 0xFFFF	/// unsigned short flags
 	}	rule_enum_type;
 public:
+	typedef	Time			time_type;
 #if PRSIM_WEAK_RULES
 	/**
 		Since each rule is maintained separately, 
@@ -65,6 +69,14 @@ public:
 
 	void
 	set_weak(void) { this->rule_flags |= RULE_WEAK; }
+
+#if PRSIM_INVARIANT_RULES
+	bool
+	is_invariant(void) const { return this->rule_flags & RULE_INVARIANT; }
+
+	void
+	set_invariant(void) { this->rule_flags |= RULE_INVARIANT; }
+#endif
 
 	void
 	clear_weak(void) { this->rule_flags &= ~RULE_WEAK; }

@@ -1,0 +1,9 @@
+// "invariant-a.hac"
+// testing invariant checking in prsim
+
+bool a;
+
+spec {
+	$(a)
+}
+

@@ -1,0 +1,12 @@
+# "invariant-a-04.prsimrc"
+# @haco@ invariant-a.haco-a
+
+# source thrice in a row
+# should only be warnings
+
+source invariant-a-02.prsimrc
+set a 1
+cycle
+source invariant-a-02.prsimrc
+echo breaking doesn't cause abrupt termination of script
+

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.11 2008/11/05 23:03:53 fang Exp $
+	$Id: ExprAlloc.h,v 1.12 2008/11/07 02:42:32 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -181,7 +181,13 @@ public:
 
 	// these public functions are really only intended for
 	// macro/directive/attribute visitor classes...
+protected:
+#if PRSIM_INVARIANT_RULES
+	void
+	link_invariant_expr(const expr_index_type);
+#endif
 
+public:
 	void
 	link_node_to_root_expr(const node_index_type, 
 		const expr_index_type, const bool dir, const rule_type&

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.12 2008/11/05 23:03:51 fang Exp $
+	$Id: Expr.h,v 1.13 2008/11/07 02:42:31 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -178,6 +178,15 @@ public:
 		set_root();
 		parent = ni;
 	}
+
+#if PRSIM_INVARIANT_RULES
+	void
+	invariant_root(void) {
+		type &= ~EXPR_DIR;	// pull-down (doesn't matter)
+		set_root();
+		// parent = 0;		// doesn't matter
+	}
+#endif
 
 	bool
 	is_or(void) const { return !(type & EXPR_AND) && !(type & EXPR_NOT); }

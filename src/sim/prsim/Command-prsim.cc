@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.16 2008/11/05 23:03:47 fang Exp $
+	$Id: Command-prsim.cc,v 1.17 2008/11/07 02:42:29 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3587,6 +3587,10 @@ UnstableUnknown::usage(ostream& o) {
 @deffn Command unstable-dequeue
 When set, this causes unstable rules to be dequeued from the event queue.
 The opposite effect is the @command{unstable-unknown} command.  
+This option also allows events that drive a node to 'X' in the queue
+to be @emph{overtaken} and replaced with known values if the fanin pull
+of the node is resolved to a non-interfering direction @emph{before}
+the 'X' event on the node is dequeued.  
 @end deffn
 @end texinfo
 ***/
@@ -3637,7 +3641,8 @@ if (a.size() != 2) {							\
 	return Command::SYNTAX;						\
 } else {								\
 	const string& m(a.back());					\
-	State::error_policy_enum e = State::string_to_error_policy(m);	\
+	const State::error_policy_enum e = 				\
+		State::string_to_error_policy(m);			\
 	if (State::valid_error_policy(e)) {				\
 		s.set_##func_name##_policy(e);				\
 		return Command::NORMAL;					\
@@ -3737,6 +3742,36 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference",
 	"alter simulation behavior on weak-interference",
 	"Alters simulator behavior on a weak-interference violation.",
 	weak_interference)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INVARIANT_RULES
+/***
+@texinfo cmd/invariant-fail.texi
+@deffn Command invariant-fail [mode]
+Set the error-handling policy for certain invariant violations, 
+when an invariant expression evaluates to @t{false}.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(InvariantFail, "invariant-fail", 
+	"set error-handling policy on invariant failures",
+	"Set error-handling policy on invariant violations.",
+	invariant_fail)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/invariant-unknown.texi
+@deffn Command invariant-unknown [mode]
+Set the error-handling policy for possible invariant violations, i.e.
+when an invariant expression evaluates to @t{X}.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(InvariantUnknown, "invariant-unknown", 
+	"set error-handling of possible invariant failures",
+	"Set error-handling policy on possible invariant violations.",
+	invariant_unknown)
+#endif
 
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 

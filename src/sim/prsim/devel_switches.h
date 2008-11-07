@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.7 2008/11/05 23:03:58 fang Exp $
+	$Id: devel_switches.h,v 1.8 2008/11/07 02:42:37 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -50,14 +50,24 @@
 	Rationale: slack time and critical path analysis
 	Priority: low
 	Cost: increase in memory proportional to number of unique nodes.
+	Alternative: rely on history tracing (trace files), perhaps
+		using some finite window for history keeping.  
  */
 #define	PRSIM_TRACK_CAUSE_TIME				0
+
+/**
+	Define to 1 to enable tracing, recording event history.  
+	Application: post-mortem analysis, performance analysis, 
+	bug root-causing, possible rewinding (time machine!).
+	Goal: 1
+ */
+#define	PRSIM_TRACE_GENERATION				0
 
 /**
 	Define to 1 to support 'weak' flavored rules in prsim.
 	Generally speaking, weak rules are overpowered by non-weak rules, 
 	and can also drive rules that are otherwise not driven.  
-	Goal: 1
+	Goal: 1 (for now)
 	Rationale: explicit staticizers, memories with bidirectional bitlines
 	Note: this should not cause any regressions on previous simulations
 		that were never aware of the weak attribute.  
@@ -86,7 +96,7 @@
 	Rationale: legacy prsim support, testing utility and convenience
 	Status: complete, tested, though interface may change in future
 	Priority: high
-	TODO: test support for validity protocol channels
+	Can perm this flag for now...
 	TODO: automate channels, based on type information
  */
 #define	PRSIM_CHANNEL_SUPPORT				1
@@ -102,10 +112,28 @@
 	Rationale: memory is more critical for massive designs
 	Priority: HIGH
 	Goal: 1
-	Status: complete and debugged
+	Status: complete, debugged, merged to trunk
 
  */
 #define	PRSIM_INDIRECT_EXPRESSION_MAP			1
+
+/**
+	Define to 1 to create special pseudo-rules which have no real
+	output node, but are actually run-time invariant checks.  
+	Will require a new rule flag in the bit-field.  
+	Rationale: stronger assertion checking
+	Status: mostly done, in testing ...
+	Goal: 1
+ */
+#define	PRSIM_INVARIANT_RULES		(1 && PRSIM_INDIRECT_EXPRESSION_MAP)
+
+/**
+	Define to 1 to move direction flag to rules, currently in expressions.
+	Rationale: because it makes sense.
+	Status: incomplete
+	Goal: 1
+ */
+#define	PRSIM_RULE_DIRECTION		0
 
 /**
 	Eventually unify the structures and enumerations between
@@ -128,6 +156,7 @@
 	and descend through children through ports.  
 	Rationale: This will eliminate fanin-fanout caching, memory-hog.  
 	May require static direction-tracking of nodes!
+	Difficulty: supprorting random eval-ordering, or any shuffling...
 	Goal: ?
  */
 #define	PRSIM_HIERARCHICAL_FANOUT_ONLY	(0 && PRSIM_INDIRECT_EXPRESSION_MAP)
@@ -150,7 +179,7 @@
 		incomprehensible and unmaintainable.
 		Rewrite will gain back performance, from simplicity.
 	Status: not begun
-	Priority: high
+	Priority: medium
 	Goal: 1
  */
 #define	PRSIM_NEW_EVENT_MODEL				0

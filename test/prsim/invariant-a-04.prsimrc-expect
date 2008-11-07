@@ -1,0 +1,6 @@
+Error: invariant violation: (a:0) by node a:0
+	0	a : 0
+	0	a : 1
+Error: invariant violation: (a:0) by node a:0
+	0	a : 0
+breaking doesn't cause abrupt termination of script 

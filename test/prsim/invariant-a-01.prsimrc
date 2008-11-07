@@ -1,0 +1,9 @@
+# "invariant-a-01.prsimrc"
+# @haco@ invariant-a.haco-a
+
+watchall
+set a 1
+cycle
+set a X
+cycle
+

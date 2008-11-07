@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.39 2008/11/05 23:04:08 fang Exp $
+#	$Id: Makefile.am,v 1.40 2008/11/07 02:42:38 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -59,6 +59,7 @@ HACKT_PARSE_TEST_PASSES = \
 
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	comment-01 comment-02 comment-04 comment-06 comment-08 \
+	default-mode \
 	celem-01 celem-02 celem-03 celem-04 \
 	celem-why-01 celem-why-02 \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-07 inv-08 inv-09 \
@@ -190,6 +191,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	reschedule-07 reschedule-08 reschedule-09 reschedule-10 reschedule-11 \
 	reschedule-12 reschedule-13 reschedule-14 reschedule-15 \
 	reschedule-16 reschedule-17 \
+	invariant-a-01 invariant-a-02 invariant-a-03 invariant-a-04 \
+	invariant-a-05 \
+	invariant-b-01 invariant-b-02 invariant-b-03 invariant-b-04 \
+	invariant-b-05 \
 	memstats32-inv memstats64-inv
 
 # override defaults for non-matched architectures

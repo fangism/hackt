@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-51:
+	  Implemented generalized run-time invariant checking in hacprsim.
+		devel flag: PRSIM_INVARIANT_RULES
+		error-handling is similar to that of unstable, interference
+	  new commands:
+		invariant-fail [mode]
+		invariant-unknown [mode]
+			These set the error-handling policy upon violation, 
+			or possible violation of invariants.  
+	  Documented and tested minimally, added new test cases.  
+	  Next: replace rule_map with some ordered map, 
+		add a 'check-all-invariants' prsim command.
+
+
 2008-11-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-50-merged-prsim-10-20:

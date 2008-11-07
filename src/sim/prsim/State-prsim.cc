@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.21 2008/11/05 23:03:56 fang Exp $
+	$Id: State-prsim.cc,v 1.22 2008/11/07 02:42:35 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -184,9 +184,24 @@ struct State::evaluate_return_type {
 	/// root rule index
 	rule_index_type			root_rule_index;
 #endif
+#if PRSIM_INVARIANT_RULES
+	/// true signals that simulation should halt, e.g. if there is error
+	bool				invariant_break;
+#endif
 
 	/// other fields may remain uninitialized, we won't use them
-	evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
+	evaluate_return_type() : node_index(INVALID_NODE_INDEX)
+		// other fields, don't care
+#if PRSIM_INVARIANT_RULES
+		, invariant_break(false)
+#endif
+		{ }
+
+#if PRSIM_INVARIANT_RULES
+	explicit
+	evaluate_return_type(const bool s) : 
+		node_index(INVALID_NODE_INDEX), invariant_break(s) { }
+#endif
 
 	evaluate_return_type(const node_index_type ni,
 		const root_ex_type* const e, const pull_enum p
@@ -198,6 +213,9 @@ struct State::evaluate_return_type {
 		node_index(ni), root_ex(e), root_pull(p)
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 			, root_rule(r), root_rule_index(ri)
+#if PRSIM_INVARIANT_RULES
+			, invariant_break(false)
+#endif
 #endif
 			{ }
 };	// end struct evaluate_return_type
@@ -257,7 +275,39 @@ process_sim_state::initialize(void) {
 		i->initialize(*j);
 	}
 }
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INVARIANT_RULES
+/**
+	Convenient accumulator functor.
+ */
+static
+inline
+bool
+or_state_errors(const bool e, const process_sim_state& s) {
+	return s.check_invariants() || e;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if there are any errors.
+ */
+bool
+process_sim_state::check_invariants(void) const {
+	const unique_process_subgraph& pg(type());
+	bool ret = false;
+	typedef	unique_process_subgraph::rule_pool_type::const_iterator
+						const_iterator;
+	const_iterator i(pg.rule_pool.begin()), e(pg.rule_pool.end());
+	for ( ; i!=e; ++i) {
+	if (i->is_invariant()) {
+		// find expression index!
+		// HERE, TODO
+	}
+	}
+	return ret;
+}
 #endif
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //=============================================================================
 // class State::event_deallocator definition
@@ -332,6 +382,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		_channel_manager(), 
 #endif
 		flags(FLAGS_DEFAULT),
+#if PRSIM_INVARIANT_RULES
+		invariant_fail_policy(ERROR_DEFAULT_INVARIANT_FAIL),
+		invariant_unknown_policy(ERROR_DEFAULT_INVARIANT_UNKNOWN),
+#endif
 		unstable_policy(ERROR_DEFAULT_UNSTABLE),
 		weak_unstable_policy(ERROR_DEFAULT_WEAK_UNSTABLE),
 		interference_policy(ERROR_DEFAULT_INTERFERENCE),
@@ -867,6 +921,10 @@ State::check_expr(const expr_index_type i) const
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	const faninout_map_type& node_pool(local_faninout_map);
 	const expr_struct_type& e(expr_pool[i]);
+#if PRSIM_INVARIANT_RULES
+	const rule_type* const r(lookup_rule(i));
+	const bool is_invariant = r && r->is_invariant();
+#endif
 #else
 	const expr_state_type& e(expr_pool[i]);
 #endif
@@ -879,6 +937,9 @@ if (!e.wiped()) {
 	assert(e.parent);
 #endif
 	if (e.is_root()) {
+#if PRSIM_INVARIANT_RULES
+	if (!is_invariant) {
+#endif
 		assert(e.parent < node_pool.size());
 		const node_type& n
 			__ATTRIBUTE_UNUSED_CTOR__((node_pool[e.parent]));
@@ -904,6 +965,9 @@ if (!e.wiped()) {
 		assert(n.get_pull_expr(e.direction()) == i);
 #endif
 #endif	// PRSIM_WEAK_RULES
+#if PRSIM_INVARIANT_RULES
+	}
+#endif
 	} else {
 		assert(e.parent < expr_pool.size());
 		// const Expr& pe(expr_pool[e.parent]);
@@ -1755,12 +1819,12 @@ State::string_to_error_policy(const string& s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Print the current mode.  
+	Print the current mode: mostly checking and error-handling policies.  
  */
 ostream&
 State::dump_mode(ostream& o) const {
-	o << "mode: ";
-	o << "\tweak rules " << (weak_rules_enabled() ? "on" : "off") << endl;
+	o << "mode: " << endl;
+	o << "\tweak rules: " << (weak_rules_enabled() ? "on" : "off") << endl;
 	o << "\tunstable events " <<
 		(dequeue_unstable_events() ? "are dequeued" : "propagate Xs")
 			<< endl;
@@ -1772,6 +1836,14 @@ State::dump_mode(ostream& o) const {
 		error_policy_string(interference_policy) << endl;
 	o << "\ton weak-interference: " <<
 		error_policy_string(weak_interference_policy) << endl;
+	o << "\tchecking exclusions: " <<
+		(checking_excl() ? "on" : "off") << endl;
+#if PRSIM_INVARIANT_RULES
+	o << "\ton invariant-fail: " <<
+		error_policy_string(invariant_fail_policy) << endl;
+	o << "\ton invariant-unknown: " <<
+		error_policy_string(invariant_unknown_policy) << endl;
+#endif
 	return o;
 }
 
@@ -2905,6 +2977,7 @@ if (eval_ordering_is_random()) {
 		// as a pull-value
 		if (UNLIKELY(propagate_evaluation(new_cause, *i, pull_enum(prev)))) {
 			stop();
+			// just signal to break
 		}
 	}
 }
@@ -3097,7 +3170,10 @@ State::evaluate(const node_index_type ni,
 		node_type::value_to_char[size_t(next)] << endl);
 	expr_state_type* u;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
-	// first, localize evaulation to a single process!
+#if PRSIM_INVARIANT_RULES
+	const pull_enum node_val = next;	// for invariant diagnostic
+#endif
+	// first, localize evaluation to a single process!
 	const expr_struct_type* s;
 	process_sim_state& ps(lookup_global_expr_process(gui));
 	expr_index_type ui = ps.local_expr_index(gui);
@@ -3113,9 +3189,11 @@ do {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	s = &pg.expr_pool[ui];
 	u = &ps.expr_states[ui];
+#define	PULL_ARG		*s
 #else
 	u = &expr_pool[ui];
 	__scratch_expr_trace.push_back(ui);
+#define	PULL_ARG
 #endif
 #if DEBUG_STEP
 	DEBUG_STEP_PRINT("examining expression ID: " << ui << endl);
@@ -3132,35 +3210,19 @@ do {
 		// is disjunctive (or)
 		DEBUG_STEP_PRINT("is_or()" << endl);
 		// countdown represents the number of 1's
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		old_pull = u->or_pull_state(*s);
-#else
-		old_pull = u->or_pull_state();
-#endif
+		old_pull = u->or_pull_state(PULL_ARG);
 		u->unknowns += (next >> 1) - (prev >> 1);
 		u->countdown += (next & LOGIC_VALUE)
 			- (prev & LOGIC_VALUE);
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		new_pull = u->or_pull_state(*s);
-#else
-		new_pull = u->or_pull_state();
-#endif
+		new_pull = u->or_pull_state(PULL_ARG);
 	} else {
 		DEBUG_STEP_PRINT("is_and()" << endl);
 		// is conjunctive (and)
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		old_pull = u->and_pull_state(*s);
-#else
-		old_pull = u->and_pull_state();
-#endif
+		old_pull = u->and_pull_state(PULL_ARG);
 		// countdown represents the number of 0's
 		u->unknowns += (next >> 1) - (prev >> 1);
 		u->countdown += !next - !prev;
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		new_pull = u->and_pull_state(*s);
-#else
-		new_pull = u->and_pull_state();
-#endif
+		new_pull = u->and_pull_state(PULL_ARG);
 	}	// end if
 #if DEBUG_STEP
 	u->dump_state(STACKTRACE_INDENT << "after : "
@@ -3169,6 +3231,7 @@ do {
 #endif
 		) << endl;
 #endif
+#undef	PULL_ARG
 	if (old_pull == new_pull) {
 		// then the pull-state did not change.
 		DEBUG_STEP_PRINT("end of propagation." << endl);
@@ -3187,13 +3250,16 @@ do {
 	// made it to root
 	// negation already accounted for
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+	const rule_index_type lri = pg.rule_map.find(ri)->second;
+		// expr -> rule
+	const rule_type& r(pg.rule_pool[lri]);
+#if PRSIM_INVARIANT_RULES
+if (!r.is_invariant()) {
+#endif
 	const process_index_type pid = lookup_process_index(ps);
 	// new: remember to update node-fanin state structure!
 	const node_index_type oni = translate_to_global_node(pid, ui);
 	// local -> global node
-	const rule_index_type lri = pg.rule_map.find(ri)->second;
-		// expr -> rule
-	const rule_type& r(pg.rule_pool[lri]);
 	node_type& n(get_node(oni));
 	fanin_state_type& fs(n.get_pull_struct(STRUCT->direction()
 #if PRSIM_WEAK_RULES
@@ -3225,6 +3291,27 @@ do {
 		, &r, ps.global_expr_index(ri)
 #endif
 		);
+#if PRSIM_INVARIANT_RULES
+} else {
+	// then this rule doesn't actually pull a node
+	const bool fail = (next == PULL_OFF);
+	const bool maybe = (next == PULL_WEAK);
+	if ((fail && invariant_fail_policy != ERROR_IGNORE) ||
+		(maybe && invariant_unknown_policy != ERROR_IGNORE)) {
+		const bool halt =
+			((fail && invariant_fail_policy == ERROR_BREAK) ||
+			(maybe && invariant_unknown_policy == ERROR_BREAK));
+		cerr << (halt ? "Error: " : "Warning: ") <<
+			(maybe ? "possible " : "" ) <<
+			"invariant violation: (";
+		ps.dump_subexpr(cerr, ri, *this, true);	// always verbose
+		cerr << ") by node " << get_node_canonical_name(ni) << ':' <<
+			node_type::value_to_char[size_t(node_val)] << endl;
+		return evaluate_return_type(halt);
+	}
+	return evaluate_return_type();	// continue
+}
+#endif
 #undef	STRUCT
 }	// end State::evaluate()
 
@@ -3374,6 +3461,13 @@ State::propagate_evaluation(
 	// when evaluating node as expression, interpret value as pull
 	const evaluate_return_type
 		ev_result(evaluate(ni, exi, prev, pull_enum(c.val)));
+#if PRSIM_INVARIANT_RULES
+	if (ev_result.invariant_break) {
+		// then violation is not a result of a real rule
+		// thus, there can be no change or addition of events
+		return true;
+	}
+#endif
 	if (!ev_result.node_index) {
 		return false;
 	}
@@ -4327,6 +4421,19 @@ State::check_event_queue(void) const {
 	}
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INVARIANT_RULES
+/**
+	Report all violations of invariants.  
+	\return true if there are any invariant violations.  
+ */
+bool
+State::check_all_invariants(void) const {
+	return std::accumulate(process_state_array.begin(),
+		process_state_array.end(), false, &or_state_errors);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -6811,6 +6918,10 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, weak_unstable_policy);
 	write_value(o, interference_policy);
 	write_value(o, weak_interference_policy);
+#if PRSIM_INVARIANT_RULES
+	write_value(o, invariant_fail_policy);
+	write_value(o, invariant_unknown_policy);
+#endif
 	write_value(o, timing_mode);
 #if PRSIM_CHANNEL_SUPPORT
 	if (_channel_manager.save_checkpoint(o)) return true;
@@ -6884,6 +6995,11 @@ try {
 #endif
 	READ_ALIGN_MARKER		// sanity alignment check
 }{
+#if PRSIM_INVARIANT_RULES
+	// loading checkpoint, ignore violations
+	invariant_fail_policy = ERROR_IGNORE;
+	invariant_unknown_policy = ERROR_IGNORE;
+#endif
 	// to reconstruct from nodes only, we perform propagation evaluation
 	// on every node, as if it had just fired out of X state.  
 	typedef node_pool_type::const_iterator	const_iterator;
@@ -6976,6 +7092,10 @@ try {
 	read_value(i, weak_unstable_policy);
 	read_value(i, interference_policy);
 	read_value(i, weak_interference_policy);
+#if PRSIM_INVARIANT_RULES
+	read_value(i, invariant_fail_policy);
+	read_value(i, invariant_unknown_policy);
+#endif
 	read_value(i, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -7109,6 +7229,12 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	o << "interference policy: " << error_policy_string(p) << endl;
 	read_value(i, p);
 	o << "weak-interference policy: " << error_policy_string(p) << endl;
+#if PRSIM_INVARIANT_RULES
+	read_value(i, p);
+	o << "invariant-fail policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "invariant-unknown policy: " << error_policy_string(p) << endl;
+#endif
 }
 	char timing_mode;
 	read_value(i, timing_mode);

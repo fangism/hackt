@@ -1,0 +1,12 @@
+mode: 
+	weak rules: off
+	unstable events propagate Xs
+	on unstable: break
+	on weak-unstable: warn
+	on interference: break
+	on weak-interference: warn
+	checking exclusions: on
+	on invariant-fail: break
+	on invariant-unknown: warn
+timing: uniform (10)
+seed48 = 0 0 0

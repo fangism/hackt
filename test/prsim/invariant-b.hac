@@ -1,0 +1,13 @@
+// "invariant-b.hac"
+// copy-modified from "invariant-a.hac"
+// testing invariant checking in prsim
+
+defproc because_I_got_high(bool z) {
+spec {
+	$(z)
+}
+}
+
+bool a;
+because_I_got_high x(a);
+

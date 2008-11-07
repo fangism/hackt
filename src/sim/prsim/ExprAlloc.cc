@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.28 2008/11/05 23:03:51 fang Exp $
+	$Id: ExprAlloc.cc,v 1.29 2008/11/07 02:42:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,9 +17,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Expr.h"
 #include "sim/prsim/State-prsim.h"
 #include "Object/lang/PRS_enum.h"
-#include "Object/lang/PRS_footprint_rule.h"
-#include "Object/lang/PRS_footprint_expr.h"
-#include "Object/lang/PRS_footprint_macro.h"
+#include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_common.h"
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_common.h"
@@ -274,6 +272,26 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 		// kludgy way of inferring the correct footprint
 		u.local_faninout_map.resize(node_pool_size);
 		cflat_visitor::visit(pfp);
+#if PRSIM_INVARIANT_RULES
+		{
+		using entity::PRS::PRS_footprint_expr_pool_type;
+		using entity::PRS::footprint;
+		typedef footprint::invariant_pool_type::const_iterator
+							const_iterator;
+		// const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
+		const footprint::invariant_pool_type& ip(pfp.invariant_pool);
+		const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
+		// const expr_pool_setter __p(*this, ep);
+		// NEVER_NULL(expr_pool);
+		const_iterator i(ip.begin()), e(ip.end());
+		for ( ; i!=e; ++i) {
+			// construct invariant expression
+		//	ep[*i].accept(*this);
+			visit(ep[*i]);
+			link_invariant_expr(ret_ex_index);
+		}
+		}
+#endif
 		// definitely want to keep this
 		if (flags.any_optimize() && expr_free_list.size()) {
 			compact_expr_pools();
@@ -927,6 +945,24 @@ if (d) {
 		<< s.name << "\'." << endl;
 }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INVARIANT_RULES
+/**
+	Fake a rule as an invariant that doesn't really pull any node.
+ */
+void
+ExprAlloc::link_invariant_expr(const expr_index_type top_ex_index) {
+	expr_type& ne(g->expr_pool[top_ex_index]);
+//	graph_node_type& ng(g->expr_graph_node_pool[top_ex_index]);
+	rule_type dummy;
+	dummy.set_invariant();
+//	ng.offset = fin.size();	
+	ne.invariant_root();
+	g->rule_map[top_ex_index] = g->rule_pool.size();	// map
+	g->rule_pool.push_back(dummy);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,0 +1,10 @@
+# "invariant-a-03.prsimrc"
+# @haco@ invariant-a.haco-a
+
+# source thrice in a row
+# should only be warnings
+
+source invariant-a-01.prsimrc
+source invariant-a-01.prsimrc
+source invariant-a-01.prsimrc
+
