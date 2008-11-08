@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.11 2008/06/11 21:19:02 fang Exp $
+	$Id: instref.cc,v 1.12 2008/11/08 04:25:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -27,6 +27,7 @@
 #include "Object/common/namespace.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/traits/proc_traits.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_meta_instance_reference.h"
@@ -53,6 +54,7 @@ using entity::expr_dump_context;
 using entity::module;
 using entity::footprint;
 using entity::simple_bool_meta_instance_reference;
+using entity::simple_process_meta_instance_reference;
 using entity::substructure_alias;
 using entity::entry_collection;
 using entity::index_set_type;
@@ -156,11 +158,8 @@ parse_and_check_reference(const char* s, const module& m) {
 //=============================================================================
 /**
 	Finds the allocated index for a bool (node).  
-	TODO: figure out a way to parse a string without
-		going through a friggin' temp file.  
-		This is really sad.  
-		Need to convert parser to stream interface.
 	TODO: be able to cache already checked references with a hash.  
+		Could be memory expensive?
 	\param n the string that names the instance reference
 	\param m the compiled module with the top-level namespace
 		and allocated state_manager.  
@@ -176,7 +175,6 @@ parse_node_to_index(const string& n, const module& m) {
 	if (!r) {
 		return INVALID_NODE_INDEX;
 	}
-	// cerr << "Woo-hoo! we found it!" << endl;
 	typedef	simple_bool_meta_instance_reference	bool_ref_type;
 	const count_ptr<const bool_ref_type>
 		b(r.inst_ref().is_a<const bool_ref_type>());
@@ -198,6 +196,43 @@ parse_node_to_index(const string& n, const module& m) {
 	cerr << "index = " << ret << endl;
 #endif
 	return ret;
+}
+
+//=============================================================================
+/**
+	\return globally allocated index of a named process, 
+		which can be 0 to reference the top-level process.
+ */
+size_t
+parse_process_to_index(const string& n, const module& m) {
+	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
+	STACKTRACE_VERBOSE;
+if (n == ".") {
+	// refers to the top-level process
+	return 0;
+} else {
+#define	INVALID_PROCESS_INDEX			size_t(-1)
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	if (!r) {
+		return INVALID_PROCESS_INDEX;
+	}
+	typedef	simple_process_meta_instance_reference	proc_ref_type;
+	const count_ptr<const proc_ref_type>
+		b(r.inst_ref().is_a<const proc_ref_type>());
+	if (!b) {
+		cerr << "Error: " << n << " does not reference a process."
+			<< endl;
+		return INVALID_PROCESS_INDEX;
+	}
+	// reminder: this is a packed_array_generic
+	// this code uses the allocation information from the 
+	// alloc phase to find the canonical ID number.  
+	const state_manager& sm(m.get_state_manager());
+	const footprint& top(m.get_footprint());
+	const size_t ret = b->lookup_globally_allocated_index(sm, top);
+	return ret;
+}
+#undef	INVALID_PROCESS_INDEX
 }
 
 //=============================================================================

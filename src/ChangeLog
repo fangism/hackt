@@ -5,6 +5,18 @@
 
 2008-11-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-53:
+	  Implemented diagnostic commands in hacprsim:
+		rules[-verbose] proc -- print all rules belonging to process
+		allrules[-verbose] -- print ALL rules in simulation
+		invariants[-verbose] proc -- invariants belonging to process
+		allinvariants[-verbose] -- print ALL invariants in simulation
+	  parser/instref.cc: added parse_process_to_index()
+	  State-prsim.cc: provide dump_canonical_node_name() and
+		dump_canonical_process_name() for direct use of ostream&.
+	  Documented and tested.
+
+
 	* HACKT-00-01-04-main-00-82-52:
 	  Fix: expr-alloc of invariant exprs was broken in last rev. :(
 	  prsim command: check-invariants -- checks ALL invariants NOW

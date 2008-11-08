@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.23 2008/11/08 01:30:07 fang Exp $
+	$Id: State-prsim.cc,v 1.24 2008/11/08 04:25:58 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -275,6 +275,62 @@ process_sim_state::initialize(void) {
 		i->initialize(*j);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct process_sim_state::dumper_base {
+	ostream&			os;
+	const State&			st;
+	const bool			verbose;
+
+	dumper_base(ostream& o, const State& s, const bool v) :
+		os(o), st(s), verbose(v) { }
+
+};	// end struct invariant_checker
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct process_sim_state::rules_dumper : public dumper_base {
+
+	rules_dumper(ostream& o, const State& s, const bool v) :
+		dumper_base(o, s, v) { }
+
+	ostream&
+	operator () (const process_sim_state& s) {
+		// skip empty processes
+		const unique_process_subgraph& pg(s.type());
+		// TODO: count number of non-invariant rules
+	if (pg.rule_pool.size()) {
+		st.dump_process_canonical_name(os << "process: ", s) << endl;
+		// TODO: print type?
+		return s.dump_rules(os, st, verbose);
+	} else {
+		return os;
+	}
+	}
+};	// end struct invariant_checker
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print all rules belonging to this process.
+ */
+ostream&
+process_sim_state::dump_rules(ostream& o, const State& st, 
+		const bool v) const {
+	const unique_process_subgraph& pg(type());
+if (pg.rule_pool.size()) {
+	typedef	unique_process_subgraph::rule_map_type::const_iterator
+						const_iterator;
+	const_iterator i(pg.rule_map.begin()), e(pg.rule_map.end());
+	for ( ; i!=e; ++i) {
+		const rule_type& r(pg.rule_pool[i->second]);
+	if (!r.is_invariant()) {
+		// what to assume about multi-fanin?
+		dump_rule(o, i->second, st, v, true) << endl;
+	}
+	}
+}
+	return o;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_INVARIANT_RULES
 /**
@@ -325,17 +381,22 @@ process_sim_state::check_invariants(ostream& o, const State& st) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct process_sim_state::invariant_dumper {
-	ostream&			os;
-	const State&			st;
-	const bool			verbose;
+struct process_sim_state::invariant_dumper : public dumper_base {
 
 	invariant_dumper(ostream& o, const State& s, const bool v) :
-		os(o), st(s), verbose(v) { }
+		dumper_base(o, s, v) { }
 
 	ostream&
 	operator () (const process_sim_state& s) {
+		const unique_process_subgraph& pg(s.type());
+		// TODO: count number of invariant rules
+	if (pg.rule_pool.size()) {
+		st.dump_process_canonical_name(os << "process: ", s) << endl;
 		return s.dump_invariants(os, st, verbose);
+	} else {
+		// skip empty processes
+		return os;
+	}
 	}
 };	// end struct invariant_checker
 
@@ -643,8 +704,8 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 	// const event_cause_type c(ni, next);
 	for ( ; i!=e; ++i) {
 #if 0
-		cerr << "channel event on node: " <<
-			get_node_canonical_name(i->first) << endl;
+		dump_node_canonical_name(cerr << "channel event on node: ",
+			i->first) << endl;
 #endif
 		node_type& _n(get_node(i->first));
 		const value_enum _v = i->second;
@@ -837,7 +898,7 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 	const node_type* n(&get_node(ni));
 	const value_enum v = n->current_value();
 	event_cause_type e(ni, v);
-	o << "node at: `" << get_node_canonical_name(ni) <<
+	dump_node_canonical_name(o << "node at: `", ni) <<
 		"\' : " << node_type::value_to_char[size_t(v)] << endl;
 	event_set_type l;
 	bool cyc = l.insert(e).second;	// return true if actually inserted
@@ -849,7 +910,7 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 		n = &get_node(e.node);
 		e = n->get_cause(e.val);
 		if (e.node) {
-			o << "caused by: `" << get_node_canonical_name(e.node)
+			dump_node_canonical_name(o << "caused by: `", e.node)
 				<< "\' : " <<
 				node_type::value_to_char[size_t(e.val)] << endl;
 			cyc = l.insert(e).second;
@@ -1429,8 +1490,9 @@ State::reschedule_event_now(const node_index_type ni) {
 		copy(tmp.begin(), tmp.end(), set_inserter(event_queue));
 		return false;
 	} else {
-		cerr << "Error: there is no pending event on node `" <<
-			get_node_canonical_name(ni) << "\'" << endl;
+		dump_node_canonical_name(
+			cerr << "Error: there is no pending event on node `", 
+			ni) << "\'" << endl;
 		return true;
 	}
 }
@@ -1461,8 +1523,9 @@ if (t < current_time) {
 		enqueue_event(t, ne);
 		return false;
 	} else {
-		cerr << "Error: there is no pending event on node `" <<
-			get_node_canonical_name(ni) << "\'" << endl;
+		dump_node_canonical_name(
+			cerr << "Error: there is no pending event on node `",
+			ni) << "\'" << endl;
 		return true;
 	}
 }
@@ -1492,8 +1555,9 @@ State::reschedule_event_relative(const node_index_type ni, const time_type dt) {
 		INVARIANT(t != delay_policy<time_type>::invalid_value);
 		return reschedule_event(ni, t +dt);
 	} else {
-		cerr << "Error: there is no pending event on node `" <<
-			get_node_canonical_name(ni) << "\'" << endl;
+		dump_node_canonical_name(
+			cerr << "Error: there is no pending event on node `",
+			ni) << "\'" << endl;
 		return true;
 	}
 }
@@ -1706,8 +1770,9 @@ if (pu != PULL_OFF || pd != PULL_OFF) {
 	if (pending) {
 		event_type& e(get_event(pending));
 		if (e.val != new_val) {
-			cerr << "Overriding pending event\'s value on node `"
-				<< get_node_canonical_name(ni) << "\' from " <<
+			dump_node_canonical_name(
+			cerr << "Overriding pending event\'s value on node `",
+				ni) << "\' from " <<
 				node_type::value_to_char[e.val] << " to " <<
 				node_type::value_to_char[new_val] <<
 				", keeping the same event time." << endl;
@@ -1830,7 +1895,7 @@ State::dump_breakpoints(ostream& o) const {
 			then we have a true breakpoint.  
 		 */
 		if (f == watch_list.end() || f->second.breakpoint) {
-			o << get_node_canonical_name(ni) << ' ';
+			dump_node_canonical_name(o, ni) << ' ';
 		}
 	}	// end if is_breakpoint
 	}	// end for-all nodes
@@ -2856,10 +2921,10 @@ if (IS_A(const excl_exception*, &ex)) {
 	ring_set_type::const_iterator ri(ring.begin()), re(ring.end());
 	o << "ring-state:" << endl;
 	for (; ri!=re; ++ri) {
-		o << "\t" << get_node_canonical_name(*ri) << " : ";
+		dump_node_canonical_name(o << "\t", *ri) << " : ";
 		get_node(*ri).dump_value(o) << endl;
 	}
-	o << "but node `" << get_node_canonical_name(exex.node_id) <<
+	dump_node_canonical_name(o << "but node `", exex.node_id) <<
 		"\' tried to become " << (exex.type ? 1 : 0) << "." << endl;
 	o << "The simulator\'s excl-check-lock state is no longer coherent; "
 		"do not bother trying to continue the simulation, "
@@ -3358,7 +3423,7 @@ if (!r.is_invariant()) {
 			(maybe ? "possible " : "" ) <<
 			"invariant violation: (";
 		ps.dump_subexpr(cerr, ri, *this, true);	// always verbose
-		cerr << ") by node " << get_node_canonical_name(ni) << ':' <<
+		dump_node_canonical_name(cerr << ") by node ", ni) << ':' <<
 			node_type::value_to_char[size_t(node_val)] << endl;
 		return evaluate_return_type(halt);
 	}
@@ -4082,8 +4147,8 @@ ostream&
 State::__report_cause(ostream& o, const event_type& ev) const {
 	const node_index_type& ni(ev.cause.node);
 	if (ni) {
-		o << ">> cause: `" <<
-			get_node_canonical_name(ni) << "\' (val: ";
+		dump_node_canonical_name(o << ">> cause: `", ni)
+			<< "\' (val: ";
 		get_node(ni).dump_value(o) << ')' << endl;
 	}
 	return o;
@@ -4098,15 +4163,15 @@ State::__report_interference(ostream& o, const bool weak,
 		const node_index_type _ni, const event_type& ev) const {
 	if (weak) {
 	if (weak_interference_policy != ERROR_IGNORE) {
-		o << "WARNING: weak-interference `" <<
-			get_node_canonical_name(_ni) << "\'" << endl;
+		dump_node_canonical_name(o << "WARNING: weak-interference `", 
+			_ni) << "\'" << endl;
 		__report_cause(o, ev);
 		return weak_interference_policy == ERROR_BREAK;
 	}	// endif weak_interference_policy
 	} else {	// !weak
 	if (interference_policy != ERROR_IGNORE) {
-		o << "WARNING: interference `" <<
-			get_node_canonical_name(_ni) << "\'" << endl;
+		dump_node_canonical_name(o << "WARNING: interference `", _ni)
+			<< "\'" << endl;
 		__report_cause(o, ev);
 		return interference_policy == ERROR_BREAK;
 	}	// endif interference_policy
@@ -4128,17 +4193,15 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 		const node_index_type _ni, const event_type& ev) const {
 	if (weak) {
 	if (weak_unstable_policy != ERROR_IGNORE) {
-		o << "WARNING: weak-unstable `" <<
-			get_node_canonical_name(_ni) << "\'" <<
-				(dir ? '+' : '-') << endl;
+		dump_node_canonical_name(o << "WARNING: weak-unstable `",
+			_ni) << "\'" << (dir ? '+' : '-') << endl;
 		__report_cause(o, ev);
 		return weak_unstable_policy == ERROR_BREAK;
 	}	// endif weak_unstable_policy
 	} else {	// !weak
 	if (unstable_policy != ERROR_IGNORE) {
-		o << "WARNING: unstable `" <<
-			get_node_canonical_name(_ni) << "\'" <<
-				(dir ? '+' : '-') << endl;
+		dump_node_canonical_name(o << "WARNING: unstable `", _ni)
+			<< "\'" << (dir ? '+' : '-') << endl;
 		__report_cause(o, ev);
 		return unstable_policy == ERROR_BREAK;
 	}	// endif unstable_policy
@@ -4384,7 +4447,7 @@ State::dump_watched_nodes(ostream& o) const {
 	const_iterator i(watch_list.begin()), e(watch_list.end());
 	o << "watched nodes: ";
 	for (; i!=e; ++i) {
-		o << get_node_canonical_name(i->first) << ' ';
+		dump_node_canonical_name(o, i->first) << ' ';
 	}
 	return o << endl;
 }
@@ -4490,6 +4553,13 @@ State::check_all_invariants(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+State::dump_invariants(ostream& o, const process_index_type pid, 
+		const bool v) const {
+	return process_state_array[pid].dump_invariants(o, *this, v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
 State::dump_all_invariants(ostream& o, const bool v) const {
 	for_each(process_state_array.begin(),
 		process_state_array.end(), 
@@ -4559,17 +4629,65 @@ State::check_structure(void) const {
 	\param i global node index.  
 	\return string of the canonical node name.  
  */
-string
-State::get_node_canonical_name(const node_index_type i) const {
+ostream&
+State::dump_node_canonical_name(ostream& o, const node_index_type i) const {
 	ISE_INVARIANT(i);
 	ISE_INVARIANT(i < node_pool.size());
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
+	return bp[i].dump_canonical_name(o, topfp, sm);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i global node index.  
+	\return string of the canonical node name.  
+ */
+string
+State::get_node_canonical_name(const node_index_type i) const {
 	ostringstream oss;
-	bp[i].dump_canonical_name(oss, topfp, sm);
+	dump_node_canonical_name(oss, i);
 	return oss.str();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+ostream&
+State::dump_process_canonical_name(ostream& o, 
+		const process_index_type i) const {
+if (i) {
+	ISE_INVARIANT(i < process_state_array.size());
+	const state_manager& sm(mod.get_state_manager());
+	const entity::footprint& topfp(mod.get_footprint());
+	const global_entry_pool<process_tag>& pp(sm.get_pool<process_tag>());
+	return pp[i].dump_canonical_name(o, topfp, sm);
+} else {
+	return o << "[top-level]";
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_process_canonical_name(ostream& o, 
+		const process_sim_state& s) const {
+	return dump_process_canonical_name(o, lookup_process_index(s));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+string
+State::get_process_canonical_name(const process_index_type i) const {
+if (i) {
+	ostringstream oss;
+	dump_process_canonical_name(oss, i);
+	return oss.str();
+} else {
+	// pid=0 corresponds to top-level
+	static const string top("[top-level]");
+	return top;
+}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -4762,12 +4880,11 @@ State::dump_event_force(ostream& o, const event_index_type ei,
 	const event_type& ev(get_event(ei));
 //	o << '[' << ei << ']';		// for debugging
 	if (!ev.killed() || force) {
-		o << '\t' << t << '\t' <<
-			get_node_canonical_name(ev.node) << " : " <<
-			node_type::value_to_char[ev.val];
+		dump_node_canonical_name(o << '\t' << t << '\t', ev.node) <<
+			" : " << node_type::value_to_char[ev.val];
 		if (ev.cause.node) {
-			o << '\t' << "[from " <<
-			get_node_canonical_name(ev.cause.node) << ":=" <<
+			dump_node_canonical_name(o << '\t' << "[from ",
+				ev.cause.node) << ":=" <<
 			node_type::value_to_char[ev.cause.val] << "]";
 		}
 #if PRSIM_WEAK_RULES
@@ -4848,7 +4965,7 @@ State::dump_node_pending(ostream& o, const node_index_type ni,
 				"in event queue!" << endl;
 		}
 	} else {
-		o << "No event pending on `" << get_node_canonical_name(ni)
+		dump_node_canonical_name(o << "No event pending on `", ni)
 			<< "\'." << endl;
 	}
 	return o;
@@ -4861,7 +4978,7 @@ State::dump_node_pending(ostream& o, const node_index_type ni,
 ostream&
 State::dump_node_value(ostream& o, const node_index_type ni) const {
 	const node_type& n(get_node(ni));
-	n.dump_value(o << get_node_canonical_name(ni) << " : ");
+	n.dump_value(dump_node_canonical_name(o, ni) << " : ");
 	return o;
 }
 
@@ -4921,9 +5038,7 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 			STR_INDEX(r->is_weak());
 		o << '<' << State::node_type::value_to_char[p] << '>';
 	}
-	o << " -> ";
-	o << st.get_node_canonical_name(gnr);
-	o << (dir ? '+' : '-');
+	st.dump_node_canonical_name(o << " -> ", gnr) << (dir ? '+' : '-');
 	if (v) {
 		st.get_node(gnr).dump_value(o << ':');
 	}
@@ -4968,7 +5083,7 @@ do {
 		// account for empty weak-rules
 #endif
 	dump_subexpr(o, pi, v) << " -> ";
-	o << get_node_canonical_name(nr) << (dir ? '+' : '-');
+	dump_node_canonical_name(o, nr) << (dir ? '+' : '-');
 	if (v) {
 		no.dump_value(o << ':');
 	}
@@ -5234,6 +5349,23 @@ do {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+ostream&
+State::dump_rules(ostream& o, const process_index_type pid, 
+		const bool v) const {
+	return process_state_array[pid].dump_rules(o, *this, v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_all_rules(ostream& o, const bool v) const {
+	for_each(process_state_array.begin(), process_state_array.end(), 
+		process_sim_state::rules_dumper(o, *this, v));
+	return o;
+}
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints why a node is X.
  */
@@ -5247,7 +5379,7 @@ if (n.current_value() == LOGIC_OTHER) {
 	node_set_type u, v;	// cycle-detect set, globally-visited set
 	return __node_why_X(o, ni, limit, verbose, u, v);
 } else {
-	o << get_node_canonical_name(ni) << " is not X." << endl;
+	dump_node_canonical_name(o, ni) << " is not X." << endl;
 }
 	return o;
 }
@@ -5270,19 +5402,19 @@ case LOGIC_LOW:
 		return __node_why_not(o, ni, limit, 
 			dir, why_not, verbose, u, v);
 	} else {
-		o << get_node_canonical_name(ni) << " is 0." << endl;
+		dump_node_canonical_name(o, ni) << " is 0." << endl;
 	}
 	break;
 case LOGIC_HIGH:
 	if (dir ^ !why_not) {
-		o << get_node_canonical_name(ni) << " is 1." << endl;
+		dump_node_canonical_name(o, ni) << " is 1." << endl;
 	} else {
 		return __node_why_not(o, ni, limit, 
 			dir, why_not, verbose, u, v);
 	}
 	break;
 default:
-	o << get_node_canonical_name(ni) << " is X." << endl;
+	dump_node_canonical_name(o, ni) << " is X." << endl;
 	// recommend try 'why-x'
 }
 	return o;
@@ -6124,7 +6256,7 @@ struct node_printer : public node_printer_base {
 
 	void
 	operator () (const node_index_type ni) const {
-		os << state.get_node_canonical_name(ni) << delim;
+		state.dump_node_canonical_name(os, ni) << delim;
 	}
 };
 
@@ -6134,7 +6266,7 @@ struct node_printer_prefix : public node_printer_base {
 
 	void
 	operator () (const node_index_type ni) const {
-		os << delim << state.get_node_canonical_name(ni);
+		state.dump_node_canonical_name(os << delim, ni);
 	}
 };
 
@@ -6335,7 +6467,7 @@ State::dump_subexpr
 	const node_index_type gni = ci->second;
 #endif
 	if (ci->first) {
-		o << STATE_MEM get_node_canonical_name(gni);
+		STATE_MEM dump_node_canonical_name(o, gni);
 		if (v) {
 			STATE_MEM get_node(gni).dump_value(o << ':');
 		}
@@ -6346,7 +6478,7 @@ State::dump_subexpr
 	for (++ci; ci!=ce; ++ci) {
 		o << op;
 		if (ci->first) {
-			o << STATE_MEM get_node_canonical_name(gni);
+			STATE_MEM dump_node_canonical_name(o, gni);
 			if (v) {
 				STATE_MEM get_node(gni).dump_value(o << ':');
 			}

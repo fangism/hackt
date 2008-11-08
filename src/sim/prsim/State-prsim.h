@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.11 2008/11/08 01:30:08 fang Exp $
+	$Id: State-prsim.h,v 1.12 2008/11/08 04:25:59 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -487,6 +487,9 @@ struct process_sim_state : public process_sim_state_base {
 		const bool v, const uchar p = expr_struct_type::EXPR_ROOT,
 		const bool cp = false) const;
 
+	struct dumper_base;
+	struct rules_dumper;
+
 	ostream&
 	dump_rules(ostream&, const State&, const bool) const;
 
@@ -964,6 +967,9 @@ public:
 	node_type&
 	get_node(const node_index_type);
 
+	ostream&
+	dump_node_canonical_name(ostream&, const node_index_type) const;
+
 	string
 	get_node_canonical_name(const node_index_type) const;
 
@@ -971,6 +977,18 @@ public:
 	backtrace_node(ostream&, const node_index_type) const;
 
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+	process_index_type
+	get_num_processes(void) const { return process_state_array.size(); }
+
+	ostream&
+	dump_process_canonical_name(ostream&, const process_sim_state&) const;
+
+	ostream&
+	dump_process_canonical_name(ostream&, const process_index_type) const;
+
+	string
+	get_process_canonical_name(const process_index_type) const;
+
 	const footprint_frame_map_type&
 	get_footprint_frame_map(const process_index_type pid) const;
 
@@ -1185,6 +1203,9 @@ public:
 #if PRSIM_INVARIANT_RULES
 	bool
 	check_all_invariants(ostream&) const;
+
+	ostream&
+	dump_invariants(ostream&, const process_index_type, const bool) const;
 
 	ostream&
 	dump_all_invariants(ostream&, const bool) const;
@@ -1623,6 +1644,14 @@ public:
 
 	ostream&
 	dump_node_fanin(ostream&, const node_index_type, const bool) const;
+
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	ostream&
+	dump_rules(ostream&, const process_index_type, const bool) const;
+
+	ostream&
+	dump_all_rules(ostream&, const bool) const;
+#endif
 
 	ostream&
 	dump_node_why_X(ostream&, const node_index_type, 

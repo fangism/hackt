@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.9 2008/11/08 01:29:59 fang Exp $
+@c $Id: commands.texi,v 1.10 2008/11/08 04:25:52 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -275,6 +275,8 @@ simulated production rules and contain no stateful information.
 @include cmd/fanin-get.texi
 @include cmd/fanout.texi
 @include cmd/fanout-get.texi
+@include cmd/rules.texi
+@include cmd/allrules.texi
 @include cmd/rings-mk.texi
 @include cmd/allrings-mk.texi
 @include cmd/rings-chk.texi

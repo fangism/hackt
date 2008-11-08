@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.4 2008/06/11 21:19:02 fang Exp $
+	$Id: instref.h,v 1.5 2008/11/08 04:25:56 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -41,6 +41,11 @@ extern
 // node_index_type
 size_t
 parse_node_to_index(const std::string&, const entity::module&);
+
+extern
+// process_index_type
+size_t
+parse_process_to_index(const std::string&, const entity::module&);
 
 extern
 entity::global_indexed_reference

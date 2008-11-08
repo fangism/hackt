@@ -1,0 +1,31 @@
+# "invariant-c-02.prsimrc"
+# @haco@ invariant-c.haco-a
+
+echo RULES:
+rules .
+echo INVARIANTS:
+invariants .
+echo RULES:
+allrules
+echo INVARIANTS:
+allinvariants
+
+# watchall
+echo ---------------------
+set a 0
+cycle
+rules-verbose .
+check-invariants
+
+echo ---------------------
+set a 1
+cycle
+allrules-verbose
+check-invariants
+
+echo ---------------------
+set a X
+cycle
+check-invariants
+allinvariants-verbose
+

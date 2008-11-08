@@ -1,0 +1,42 @@
+RULES: 
+[top-level]
+rules:
+[after 10]	a -> b-
+[after 10]	~a -> b+
+[after 10]	b -> c-
+[after 10]	~b -> c+
+INVARIANTS: 
+[top-level]
+invariants:
+$(a | b | c)
+RULES: 
+process: [top-level]
+[after 10]	a -> b-
+[after 10]	~a -> b+
+[after 10]	b -> c-
+[after 10]	~b -> c+
+INVARIANTS: 
+process: [top-level]
+$(a | b | c)
+--------------------- 
+[top-level]
+rules:
+[after 10]	a:0<0> -> b-:1
+[after 10]	~a:0<1> -> b+:1
+[after 10]	b:1<1> -> c-:0
+[after 10]	~b:1<0> -> c+:0
+--------------------- 
+process: [top-level]
+[after 10]	a:1<1> -> b-:0
+[after 10]	~a:1<0> -> b+:0
+[after 10]	b:0<0> -> c-:1
+[after 10]	~b:0<1> -> c+:1
+--------------------- 
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+Warning: possible invariant violation: (a:X | b:X | c:X<X>) by node c:X
+Warning: possible invariant violation: (a:X | b:X | c:X<X>)
+process: [top-level]
+$(a:X | b:X | c:X<X>)

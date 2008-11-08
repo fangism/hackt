@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.18 2008/11/08 01:30:05 fang Exp $
+	$Id: Command-prsim.cc,v 1.19 2008/11/08 04:25:56 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -66,6 +66,7 @@ using std::front_inserter;
 using util::excl_malloc_ptr;
 using util::strings::string_to_num;
 using parser::parse_node_to_index;
+using parser::parse_process_to_index;
 using parser::parse_name_to_what;
 using parser::parse_name_to_aliases;
 using parser::parse_name_to_get_subnodes;
@@ -3776,7 +3777,254 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(InvariantUnknown, "invariant-unknown",
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+/***
+@texinfo cmd/rules.texi
+@deffn Command rules proc
+@deffnx Command rules-verbose proc
+Print all rules belonging to the named process @var{proc}.  
+'@t{.}' can be used to refer to the top-level process.
+The @t{-verbose} variant prints the state of each node and expression
+appearing in each rule.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Rules, "rules", info, 
+	"print rules belonging to a process")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(RulesVerbose, "rules-verbose", info, 
+	"print rules belonging to a process with values")
+
+/***
+@texinfo cmd/allrules.texi
+@deffn Command allrules
+@deffnx Command allrules-verbose
+Print @emph{all} rules in the simulator, similar to @command{hflat}.  
+The @t{-verbose} variant prints the state of each node and expression
+appearing in each rule.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRules, "allrules", info, 
+	"print ALL rules being simulated")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRulesVerbose, "allrules-verbose", info, 
+	"print ALL rules being simulated with values")
+
+static
+int
+rules_main(const State& s, const string_list& a, const bool verbose, 
+		void (usage)(ostream&)) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const process_index_type pid =
+		parse_process_to_index(a.back(), s.get_module());
+	if (pid < s.get_num_processes()) {
+		if (pid) {
+			parse_name_to_what(cout, a.back(), s.get_module());
+		} else {
+			cout << "[top-level]" << endl;
+		}
+		cout << "rules:" << endl;
+		s.dump_rules(cout, pid, verbose);
+		return Command::NORMAL;
+	} else {
+		cerr << "Error: process not found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+static
+int
+all_rules_main(const State& s, const string_list& a, const bool verbose, 
+		void (usage)(ostream&)) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_all_rules(cout, verbose);
+	return Command::NORMAL;
+}
+}
+
+static
+void
+rules_usage(ostream& o) {
+	o << "rules[-verbose] process-name\n"
+"Prints all rules that belong to the named process (\".\" is the top-level).\n"
+"The -verbose variant prints values of each node and expression in the guards."
+	<< endl;
+}
+
+static
+void
+all_rules_usage(ostream& o) {
+	o << "allrules[-verbose]\n"
+"Prints all rules in the simuation, like the \'hflat\' tool.\n"
+"The -verbose variant prints values of each node and expression in the guards."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+Rules::main(State& s, const string_list& a) {
+	return rules_main(s, a, false, usage);
+}
+
+void
+Rules::usage(ostream& o) { rules_usage(o); }
+
+int
+RulesVerbose::main(State& s, const string_list& a) {
+	return rules_main(s, a, true, usage);
+}
+
+void
+RulesVerbose::usage(ostream& o) { rules_usage(o); }
+
+int
+AllRules::main(State& s, const string_list& a) {
+	return all_rules_main(s, a, false, usage);
+}
+
+void
+AllRules::usage(ostream& o) { all_rules_usage(o); }
+
+int
+AllRulesVerbose::main(State& s, const string_list& a) {
+	return all_rules_main(s, a, true, usage);
+}
+
+void
+AllRulesVerbose::usage(ostream& o) { all_rules_usage(o); }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_INVARIANT_RULES
+/***
+@texinfo cmd/invariants.texi
+@deffn Command invariants proc
+@deffnx Command invariants-verbose proc
+Print all invariants belonging to the named process @var{proc}.  
+'@t{.}' can be used to refer to the top-level process.
+The @t{-verbose} variant prints the state of each node and expression
+appearing in each invariant.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Invariants, "invariants", info, 
+	"print invariants belonging to a process")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(InvariantsVerbose, 
+	"invariants-verbose", info, 
+	"print invariants belonging to a process with values")
+
+/***
+@texinfo cmd/allinvariants.texi
+@deffn Command allinvariants
+@deffnx Command allinvariants-verbose
+Print @emph{all} invariants in the simulator, similar to @command{hflat}.  
+The @t{-verbose} variant prints the state of each node and expression
+appearing in each invariant.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllInvariants, "allinvariants", info, 
+	"print ALL invariants being simulated")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllInvariantsVerbose, 
+	"allinvariants-verbose", info, 
+	"print ALL invariants being simulated with values")
+
+static
+int
+invariants_main(const State& s, const string_list& a, const bool verbose, 
+		void (usage)(ostream&)) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const process_index_type pid =
+		parse_process_to_index(a.back(), s.get_module());
+	if (pid < s.get_num_processes()) {
+		if (pid) {
+			parse_name_to_what(cout, a.back(), s.get_module());
+		} else {
+			cout << "[top-level]" << endl;
+		}
+		cout << "invariants:" << endl;
+		s.dump_invariants(cout, pid, verbose);
+		return Command::NORMAL;
+	} else {
+		cerr << "Error: process not found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+static
+int
+all_invariants_main(const State& s, const string_list& a, const bool verbose, 
+		void (usage)(ostream&)) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_all_invariants(cout, verbose);
+	return Command::NORMAL;
+}
+}
+
+static
+void
+invariants_usage(ostream& o) {
+	o << "invariants[-verbose] process-name\n"
+"Prints all invariants that belong to the named process (\".\" is the top-level).\n"
+"The -verbose variant prints values of each node and expression."
+	<< endl;
+}
+
+static
+void
+all_invariants_usage(ostream& o) {
+	o << "allinvariants[-verbose]\n"
+"Prints all invariants in the simuation, like the \'hflat\' tool.\n"
+"The -verbose variant prints values of each node and expression."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+Invariants::main(State& s, const string_list& a) {
+	return invariants_main(s, a, false, usage);
+}
+
+void
+Invariants::usage(ostream& o) { invariants_usage(o); }
+
+int
+InvariantsVerbose::main(State& s, const string_list& a) {
+	return invariants_main(s, a, true, usage);
+}
+
+void
+InvariantsVerbose::usage(ostream& o) { invariants_usage(o); }
+
+int
+AllInvariants::main(State& s, const string_list& a) {
+	return all_invariants_main(s, a, false, usage);
+}
+
+void
+AllInvariants::usage(ostream& o) { all_invariants_usage(o); }
+
+int
+AllInvariantsVerbose::main(State& s, const string_list& a) {
+	return all_invariants_main(s, a, true, usage);
+}
+
+void
+AllInvariantsVerbose::usage(ostream& o) { all_invariants_usage(o); }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 /***
 @texinfo cmd/check-invariants.texi
 @deffn Command check-invariants
@@ -3809,7 +4057,8 @@ CheckInvariants::usage(ostream& o) {
 " : checks all invariants in the design and reports all\n"
 "and possible violations." << endl;
 }
-#endif
+#endif	// PRSIM_INVARIANT_RULES
+#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
