@@ -1,0 +1,6 @@
+# "inv-invariant-03.prsimrc"
+# @haco@ inv-invariant.haco-a
+
+source inv-invariant-01.prsimrc
+queue
+

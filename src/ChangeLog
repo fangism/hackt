@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-52:
+	  Fix: expr-alloc of invariant exprs was broken in last rev. :(
+	  prsim command: check-invariants -- checks ALL invariants NOW
+	  Added more invariant tests.
+
+
 2008-11-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-51:

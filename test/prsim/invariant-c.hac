@@ -1,0 +1,10 @@
+// "invariant-c.hac"
+
+bool a, b, c;
+spec { $(a | b | c) }
+prs {
+	a	=> b-
+	b	=> c-
+}
+
+

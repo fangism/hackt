@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.40 2008/11/07 02:42:38 fang Exp $
+#	$Id: Makefile.am,v 1.41 2008/11/08 01:30:09 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -9,7 +9,8 @@ SUBDIRS = . vpi
 # .hac inputs
 HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem inv oscillator half-celem deep tree interference \
-	invs \
+	invs inv-invariant \
+	invariant-a invariant-b invariant-c invariant-d \
 	oscillator-wrong \
 	interference-a interference-b \
 	inv-alt unused \
@@ -192,9 +193,12 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	reschedule-12 reschedule-13 reschedule-14 reschedule-15 \
 	reschedule-16 reschedule-17 \
 	invariant-a-01 invariant-a-02 invariant-a-03 invariant-a-04 \
-	invariant-a-05 \
+	invariant-a-05 invariant-a-06 invariant-a-08 \
 	invariant-b-01 invariant-b-02 invariant-b-03 invariant-b-04 \
-	invariant-b-05 \
+	invariant-b-05 invariant-b-06 invariant-b-08 \
+	invariant-c-01 \
+	invariant-d-01 \
+	inv-invariant-01 inv-invariant-02 inv-invariant-03 inv-invariant-04 \
 	memstats32-inv memstats64-inv
 
 # override defaults for non-matched architectures
@@ -293,6 +297,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-test-c-10 channel-test-c-21 \
 	channel-test-d-21 \
 	channel-test-non-QDI-a-02 \
+	invariant-a-07 invariant-b-07 \
 	reschedule-01 reschedule-02 reschedule-03 reschedule-04 reschedule-05 \
 	reschedule-06 reschedule-18
 

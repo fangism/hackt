@@ -1,0 +1,7 @@
+# "inv-invariant-04.prsimrc"
+# @haco@ inv-invariant.haco-a
+
+source inv-invariant-02.prsimrc
+queue
+echo there should be events left in the queue
+

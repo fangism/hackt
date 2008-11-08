@@ -1,0 +1,7 @@
+# "invariant-b-07.prsimrc"
+# @haco@ invariant-a.haco-a
+
+source invariant-b-02.prsimrc
+echo checking invariants...
+check-invariants
+

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.22 2008/11/07 02:42:35 fang Exp $
+	$Id: State-prsim.cc,v 1.23 2008/11/08 01:30:07 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -280,33 +280,85 @@ process_sim_state::initialize(void) {
 /**
 	Convenient accumulator functor.
  */
-static
-inline
-bool
-or_state_errors(const bool e, const process_sim_state& s) {
-	return s.check_invariants() || e;
-}
+struct process_sim_state::invariant_checker {
+	ostream&			os;
+	const State&			st;
+
+	invariant_checker(ostream& o, const State& s) : os(o), st(s) { }
+
+	bool
+	operator () (const bool e, const process_sim_state& s) {
+		return s.check_invariants(os, st) || e;
+	}
+};	// end struct invariant_checker
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return true if there are any errors.
  */
 bool
-process_sim_state::check_invariants(void) const {
+process_sim_state::check_invariants(ostream& o, const State& st) const {
 	const unique_process_subgraph& pg(type());
 	bool ret = false;
-	typedef	unique_process_subgraph::rule_pool_type::const_iterator
+	typedef	unique_process_subgraph::rule_map_type::const_iterator
 						const_iterator;
-	const_iterator i(pg.rule_pool.begin()), e(pg.rule_pool.end());
+	const_iterator i(pg.rule_map.begin()), e(pg.rule_map.end());
 	for ( ; i!=e; ++i) {
-	if (i->is_invariant()) {
-		// find expression index!
-		// HERE, TODO
+		const rule_type& r(pg.rule_pool[i->second]);
+	if (r.is_invariant()) {
+		const expr_index_type lei = i->first;
+		switch (expr_states[lei].pull_state(pg.expr_pool[lei])) {
+		case PULL_OFF:
+			ret |= true;
+			o << "Error: invariant violation: (";
+			dump_subexpr(o, lei, st, true) << ')' << endl;
+			break;
+		case PULL_WEAK:
+			o << "Warning: possible invariant violation: (";
+			dump_subexpr(o, lei, st, true) << ')' << endl;
+			break;
+		default: break;
+		}
 	}
 	}
 	return ret;
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct process_sim_state::invariant_dumper {
+	ostream&			os;
+	const State&			st;
+	const bool			verbose;
+
+	invariant_dumper(ostream& o, const State& s, const bool v) :
+		os(o), st(s), verbose(v) { }
+
+	ostream&
+	operator () (const process_sim_state& s) {
+		return s.dump_invariants(os, st, verbose);
+	}
+};	// end struct invariant_checker
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if there are any errors.
+ */
+ostream&
+process_sim_state::dump_invariants(ostream& o, const State& st, 
+		const bool v) const {
+	const unique_process_subgraph& pg(type());
+	typedef	unique_process_subgraph::rule_map_type::const_iterator
+						const_iterator;
+	const_iterator i(pg.rule_map.begin()), e(pg.rule_map.end());
+	for ( ; i!=e; ++i) {
+		const rule_type& r(pg.rule_pool[i->second]);
+	if (r.is_invariant()) {
+		dump_subexpr(o << "$(", i->first, st, v) << ')' << endl;
+	}
+	}
+	return o;
+}
+#endif	// PRSIM_INVARIANT_RULES
 #endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //=============================================================================
@@ -454,6 +506,7 @@ try {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: possibly run some checks?
+	TODO: auto-checkpoint here if desired, even if state incoherent
  */
 State::~State() {
 	// dequeue all events and check consistency with event pool 
@@ -4429,9 +4482,19 @@ State::check_event_queue(void) const {
 	\return true if there are any invariant violations.  
  */
 bool
-State::check_all_invariants(void) const {
+State::check_all_invariants(ostream& o) const {
 	return std::accumulate(process_state_array.begin(),
-		process_state_array.end(), false, &or_state_errors);
+		process_state_array.end(), false,
+		process_sim_state::invariant_checker(o, *this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_all_invariants(ostream& o, const bool v) const {
+	for_each(process_state_array.begin(),
+		process_state_array.end(), 
+		process_sim_state::invariant_dumper(o, *this, v));
+	return o;
 }
 #endif
 

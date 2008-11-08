@@ -1,0 +1,27 @@
+	0	a : 0
+	10	bar.b : 1	[by a:=0]
+	20	c : 0	[by bar.b:=1]
+	30	bq.b : 1	[by c:=0]
+	40	e : 0	[by bq.b:=1]
+	40	a : 1
+	50	bar.b : 0	[by a:=1]
+	60	c : 1	[by bar.b:=0]
+	70	bq.b : 0	[by c:=1]
+	80	e : 1	[by bq.b:=0]
+WARNING: weak-interference `bar.b'
+>> cause: `a' (val: X)
+	80	a : X
+WARNING: weak-interference `c'
+>> cause: `bar.b' (val: X)
+	90	bar.b : X	[by a:=X]
+Warning: possible invariant violation: (a:X | bar.b:X | c:X<X>) by node c:X
+WARNING: weak-interference `bq.b'
+>> cause: `c' (val: X)
+	100	c : X	[by bar.b:=X]
+WARNING: weak-interference `e'
+>> cause: `bq.b' (val: X)
+	110	bq.b : X	[by c:=X]
+Warning: possible invariant violation: (c:X | bq.b:X | e:X<X>) by node e:X
+	120	e : X	[by bq.b:=X]
+Warning: possible invariant violation: (a:X | bar.b:X | c:X<X>)
+Warning: possible invariant violation: (c:X | bq.b:X | e:X<X>)

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.10 2008/11/07 02:42:36 fang Exp $
+	$Id: State-prsim.h,v 1.11 2008/11/08 01:30:08 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -471,8 +471,14 @@ struct process_sim_state : public process_sim_state_base {
 		const bool, node_set_type&, node_set_type&) const;
 
 #if PRSIM_INVARIANT_RULES
+	struct invariant_checker;
+	struct invariant_dumper;
+
 	bool
-	check_invariants(void) const;
+	check_invariants(ostream&, const State&) const;
+
+	ostream&
+	dump_invariants(ostream&, const State&, const bool) const;
 #endif
 
 	ostream&
@@ -480,6 +486,9 @@ struct process_sim_state : public process_sim_state_base {
 		const State&, 
 		const bool v, const uchar p = expr_struct_type::EXPR_ROOT,
 		const bool cp = false) const;
+
+	ostream&
+	dump_rules(ostream&, const State&, const bool) const;
 
 	ostream&
 	dump_rule(ostream&, const rule_index_type, 
@@ -1175,7 +1184,10 @@ public:
 
 #if PRSIM_INVARIANT_RULES
 	bool
-	check_all_invariants(void) const;
+	check_all_invariants(ostream&) const;
+
+	ostream&
+	dump_all_invariants(ostream&, const bool) const;
 
 	DEFINE_POLICY_CONTROL_SET(invariant_fail)
 	DEFINE_POLICY_CONTROL_GET(invariant_fail)

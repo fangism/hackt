@@ -1,0 +1,11 @@
+	0	a : 0
+	10	b : 1	[by a:=0]
+	20	c : 0	[by b:=1]
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+	20	a : X
+Warning: possible invariant violation: (b:X) by node b:X
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	30	b : X	[by a:=X]
+	40	c : X	[by b:=X]

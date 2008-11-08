@@ -1,0 +1,14 @@
+// "invariant-c.hac"
+
+defproc foo(bool a, c) {
+bool b;
+spec { $(a | b | c) }
+prs {
+	a	=> b-
+	b	=> c-
+}
+}
+
+bool a, c, e;
+foo bar(a, c), bq(c, e);
+

@@ -1,10 +1,10 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.29 2008/11/07 02:42:32 fang Exp $
+	$Id: ExprAlloc.cc,v 1.30 2008/11/08 01:30:06 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE		0
+#define	ENABLE_STACKTRACE				0
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
@@ -281,8 +281,8 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 		// const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
 		const footprint::invariant_pool_type& ip(pfp.invariant_pool);
 		const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
-		// const expr_pool_setter __p(*this, ep);
-		// NEVER_NULL(expr_pool);
+		const expr_pool_setter __p(*this, ep);
+		NEVER_NULL(expr_pool);
 		const_iterator i(ip.begin()), e(ip.end());
 		for ( ; i!=e; ++i) {
 			// construct invariant expression

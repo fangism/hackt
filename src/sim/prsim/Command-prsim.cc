@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.17 2008/11/07 02:42:29 fang Exp $
+	$Id: Command-prsim.cc,v 1.18 2008/11/08 01:30:05 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3776,6 +3776,42 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(InvariantUnknown, "invariant-unknown",
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_INVARIANT_RULES
+/***
+@texinfo cmd/check-invariants.texi
+@deffn Command check-invariants
+Checks every invariant expression in the design.  
+Returns true if there were any certain violations, 
+excluding possible violations of invariants.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CheckInvariants, "check-invariants",
+	info, "check all invariant expressions now")
+
+int
+CheckInvariants::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.check_all_invariants(cout)) {
+		return Command::BADARG;	// appropriate?
+	} else {
+		return Command::NORMAL;
+	}
+}
+}
+
+void
+CheckInvariants::usage(ostream& o) {
+	o << name <<
+" : checks all invariants in the design and reports all\n"
+"and possible violations." << endl;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/mode.texi
 @deffn Command mode [md]
@@ -3813,7 +3849,7 @@ if (a.size() == 1) {
 	}
 } else {
 	usage(cerr << "usage: ");
-	return Command::BADARG;
+	return Command::SYNTAX;
 }
 	return Command::NORMAL;
 }

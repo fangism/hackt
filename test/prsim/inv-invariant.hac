@@ -1,0 +1,9 @@
+// "inv-invariant.hac"
+// testing event-handling of invariant violations
+
+import "inv.hac";
+
+spec {
+$(b)
+}
+

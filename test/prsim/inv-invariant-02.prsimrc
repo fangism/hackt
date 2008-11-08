@@ -1,0 +1,9 @@
+# "inv-invariant-02.prsimrc"
+# @haco@ inv-invariant.haco-a
+
+watchall
+set a 1
+cycle
+
+# should fail
+
