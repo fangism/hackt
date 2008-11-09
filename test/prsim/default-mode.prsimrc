@@ -3,5 +3,6 @@
 
 mode
 timing
-seed48
+# seed48
+# omit seed because not all systems start with same seed
 
