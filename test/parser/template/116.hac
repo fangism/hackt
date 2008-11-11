@@ -1,0 +1,20 @@
+// "116.hac"
+// copy-reduced from "116b.hac"
+// ACX-PR-1611: wrong-result
+// original test case by Mitchell Kotler, reduced by Fang
+
+defproc fa(bool x, y) {
+	x = y;
+}
+
+
+template <><pbool C>
+defproc cpa(bool x, y) {
+	[C -> fa fa0(x, y); ]
+}
+
+fa top1;
+cpa t<true>;
+// should have one unique bool, not two
+
+

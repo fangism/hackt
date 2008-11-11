@@ -1,0 +1,24 @@
+// "119.hac"
+// copy-modified from "118.hac"
+
+template <><pbool C>
+defproc fa(bool x, y) {
+[ C ->
+	x = y;
+]
+}
+
+
+template <><pbool C>
+defproc foo(bool x, y) {
+	fa fa0<C>(x, y);
+}
+
+// foo t<true>;
+foo t, s, r, q;
+t<true>;
+r<false>;
+s = t;
+r = q;
+
+

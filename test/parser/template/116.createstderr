@@ -1,0 +1,145 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
+	4	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	5	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	condscop	0	#HEAD#	#TAIL#	32
+	14	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	99
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
+	27	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	387
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    cpa = process-definition (defined) cpa<>
+<
+      pbool<> C
+      >(
+        bool<> x
+        bool<> y
+      )
+      In definition "cpa", we have: {
+      Parameters:
+        C = pbool<> cpa::C
+      Instances:
+        fa0 = fa<> cpa::fa0
+        x = bool<> cpa::x
+        y = bool<> cpa::y
+      unroll sequence: 
+        bool<> x
+        bool<> y
+        [ C ->
+          fa<> fa0
+          fa0 (x, y);
+        ]
+      footprint collection: {
+        <true> {
+          C = pbool^0 value: 1
+          fa0 = process fa<>^0 = cpa::fa0 (1) (
+            x = bool^0 = cpa::x (1) 
+            y = bool^0 = cpa::x (1) 
+          )
+          x = bool^0 = cpa::x (1) 
+          y = bool^0 = cpa::x (1) 
+          Created state:
+          process instance pool:
+          1	cpa::fa0
+          bool instance pool:
+          1	cpa::x
+          bool port aliases:
+          1: cpa::x = cpa::y
+        }
+      }
+      }
+
+    fa = process-definition (defined) fa(
+        bool<> x
+        bool<> y
+      )
+      In definition "fa", we have: {
+      Instances:
+        x = bool<> fa::x
+        y = bool<> fa::y
+      unroll sequence: 
+        bool<> x
+        bool<> y
+        x = y;
+      footprint: {
+        x = bool^0 = fa::x (1) 
+        y = bool^0 = fa::x (1) 
+        Created state:
+        bool instance pool:
+        1	fa::x
+        bool port aliases:
+        1: fa::x = fa::y
+      }
+      }
+
+  Instances:
+    t = cpa<> t
+    top1 = fa<> top1
+}
+
+footprint: {
+  t = process cpa<>^0<true> = t (2) (
+    x = bool^0 = t.x (2) 
+    y = bool^0 = t.x (2) 
+  )
+  top1 = process fa<>^0 = top1 (1) (
+    x = bool^0 = top1.x (1) 
+    y = bool^0 = top1.x (1) 
+  )
+  Created state:
+  process instance pool:
+  1	top1
+  2	t<true>
+  bool instance pool:
+  1	top1.x
+  2	t.x
+}

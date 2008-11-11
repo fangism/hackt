@@ -1,0 +1,29 @@
+// "121.hac"
+// copy-modified from "120.hac"
+
+template <pbool C>
+defproc fa(bool x, y) {
+[ C ->
+	x = y;
+]
+}
+
+
+template <><pbool C>
+defproc foo(bool x, y) {
+	fa<C> fa0(x, y);
+}
+
+template <><pbool D>
+defproc bar(foo t, s, r, q) {
+t<D>;
+r<~D>;
+[D ->
+s = t;
+r = q;
+]	// will fail for D false
+}
+
+bar X<true>;
+bar Y<false>;	// expect fail
+

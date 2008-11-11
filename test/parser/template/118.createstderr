@@ -1,0 +1,185 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	99
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
+	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
+	15	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	16	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	387
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	387
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	37	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	38	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	598
+	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    fa = process-definition (defined) fa(
+        bool<> x
+        bool<> y
+      )
+      In definition "fa", we have: {
+      Instances:
+        x = bool<> fa::x
+        y = bool<> fa::y
+      unroll sequence: 
+        bool<> x
+        bool<> y
+        x = y;
+      footprint: {
+        x = bool^0 = fa::x (1) 
+        y = bool^0 = fa::x (1) 
+        Created state:
+        bool instance pool:
+        1	fa::x
+        bool port aliases:
+        1: fa::x = fa::y
+      }
+      }
+
+    foo = process-definition (defined) foo<>
+<
+      pbool<> C
+      >(
+        bool<> x
+        bool<> y
+      )
+      In definition "foo", we have: {
+      Parameters:
+        C = pbool<> foo::C
+      Instances:
+        fa0 = fa<> foo::fa0
+        x = bool<> foo::x
+        y = bool<> foo::y
+      unroll sequence: 
+        bool<> x
+        bool<> y
+        fa<> fa0
+        fa0 (x, y);
+      footprint collection: {
+        <false> {
+          C = pbool^0 value: 0
+          fa0 = process fa<>^0 = foo::fa0 (1) (
+            x = bool^0 = foo::x (1) 
+            y = bool^0 = foo::x (1) 
+          )
+          x = bool^0 = foo::x (1) 
+          y = bool^0 = foo::x (1) 
+          Created state:
+          process instance pool:
+          1	foo::fa0
+          bool instance pool:
+          1	foo::x
+          bool port aliases:
+          1: foo::x = foo::y
+        }
+        <true> {
+          C = pbool^0 value: 1
+          fa0 = process fa<>^0 = foo::fa0 (1) (
+            x = bool^0 = foo::x (1) 
+            y = bool^0 = foo::x (1) 
+          )
+          x = bool^0 = foo::x (1) 
+          y = bool^0 = foo::x (1) 
+          Created state:
+          process instance pool:
+          1	foo::fa0
+          bool instance pool:
+          1	foo::x
+          bool port aliases:
+          1: foo::x = foo::y
+        }
+      }
+      }
+
+  Instances:
+    q = foo<> q
+    r = foo<> r
+    s = foo<> s
+    t = foo<> t
+}
+
+footprint: {
+  q = process foo<>^0<false> = r (2) (
+    x = bool^0 = r.x (2) 
+    y = bool^0 = r.x (2) 
+  )
+  r = process foo<>^0<false> = r (2) (
+    x = bool^0 = r.x (2) 
+    y = bool^0 = r.x (2) 
+  )
+  s = process foo<>^0<true> = t (1) (
+    x = bool^0 = t.x (1) 
+    y = bool^0 = t.x (1) 
+  )
+  t = process foo<>^0<true> = t (1) (
+    x = bool^0 = t.x (1) 
+    y = bool^0 = t.x (1) 
+  )
+  Created state:
+  process instance pool:
+  1	t<true>
+  2	r<false>
+  bool instance pool:
+  1	t.x
+  2	r.x
+}

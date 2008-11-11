@@ -1,0 +1,50 @@
+// "116.hac"
+// reduced test case for ACX-PR-1611
+// from Mitchell Kotler, Reduced by Fang
+// see also "116b.hac" for further reduction
+
+deftype globals <: int<5>() {
+	set {}
+	get{}
+}
+
+template <pint N>
+defchan e1of <: chan(int) (bool d[N], e) { spec { exclhi(d) } }
+
+typedef e1of<2> e1of2;
+
+defproc foo(globals g; e1of2 x, y, z, co, so)
+{
+	bool ie;
+	x.e = y.e = z.e = ie;
+}
+
+template <><pbool Q>
+defproc doh(globals g; e1of2 x, y, z, co, so) {
+	[Q  -> foo fa0(g, x, y , z, co, so); ]
+//	[~Q -> bar ha0(g, x, y ,    co, so); ]
+}
+
+defproc top_type(globals g; e1of2 x, y, z, co, so)
+{
+	/*
+	The doh<true> should be equivalent to the foo
+	However, the doh is not tying the x.e and y.e to i.e, but
+	it is connecting z.e
+	*/
+	//doh top_cpa<true>(g, x0, y0, z0, co0, so0);
+	//foo top_fa(g, x0, y0, z0, co0, so0);
+	foo top_fa(g, x, y, z, co, so);
+
+}
+defproc top_type2(globals g; e1of2 x, y, z, co, so) {
+	//doh top_cpa<true>(g, x0, y0, z0, co0, so0);
+	//foo top_fa(g, x0, y0, z0, co0, so0);
+	doh top_cpa<true>(g, x, y, z, co, so);
+
+}
+
+top_type top;
+top_type2 top2;
+
+

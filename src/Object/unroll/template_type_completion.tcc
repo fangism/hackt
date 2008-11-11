@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/template_type_completion.tcc"
-	$Id: template_type_completion.tcc,v 1.2 2007/07/18 23:29:06 fang Exp $
+	$Id: template_type_completion.tcc,v 1.3 2008/11/11 22:30:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_TEMPLATE_TYPE_COMPLETION_TCC__
@@ -13,6 +13,7 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_actuals.tcc"	// for create_dependent_types
 #include "Object/inst/instance_collection.h"
+#include "Object/inst/internal_aliases_policy.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/unroll/unroll_context.h"
@@ -121,7 +122,7 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 		coll((*i)->container->get_canonical_collection());
 	canonical_type_type ct(coll.get_resolved_canonical_type());
 	ct.combine_relaxed_actuals(resolved);
-	INVARIANT(ct.is_strict());
+	INVARIANT(ct.is_strict());	// we now have a complete type
 	if (!ct.create_definition_footprint(topfp).good) {
 		// already have error message?
 		cerr << "Instantiated by: ";
@@ -184,9 +185,19 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 			a.dump_hierarchical_name(cerr) << "\'" << endl;
 			return good_bool(false);
 		}
-	}
+		// replay_internal_aliases
+		// it is sufficient to connect just the canonical alias
+		// of each group because substructures will already be aliased.
+		typedef	typename instance_alias_info<Tag>::internal_alias_policy
+					internal_alias_policy;
+		if (!internal_alias_policy::connect(ca, ct).good) {
+			cerr << "Error making internal connections of `";
+			a.dump_hierarchical_name(cerr) << "\'" << endl;
+			return good_bool(false);
+		}
+	}	// end for-each alias in collection
 	return good_bool(true);
-}
+}	// end method unroll
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
