@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.19 2008/11/08 04:25:56 fang Exp $
+	$Id: Command-prsim.cc,v 1.20 2008/11/11 20:06:20 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4143,7 +4143,6 @@ MemStats::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_CHANNEL_SUPPORT
 // TODO: texinfo documentation! oh, and implement these.
 // TODO: support PxeMx1ofN (array source, auto-expand and decouple?)
 // TODO: typedef-channel command
@@ -5237,8 +5236,6 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert",
 	channels, "assert value on channel immediately")
 
 #endif
-
-#endif	// PRSIM_CHANNEL_SUPPORT
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

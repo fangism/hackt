@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.12 2008/11/08 04:25:59 fang Exp $
+	$Id: State-prsim.h,v 1.13 2008/11/11 20:06:28 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -31,9 +31,7 @@
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
 #include "sim/prsim/Rule.h"
-#if PRSIM_CHANNEL_SUPPORT
 #include "sim/prsim/Channel-prsim.h"	// for channels support
-#endif
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
 #include "util/named_ifstream_manager.h"
@@ -878,12 +876,10 @@ private:
 	// watched nodes
 	watch_list_type				watch_list;
 	// vectors
-#if PRSIM_CHANNEL_SUPPORT
 	/**
 		Extension to manage channel environments and actions. 
 	 */
 	channel_manager				_channel_manager;
-#endif
 	// mode of operation
 	// operation flags
 	flags_type				flags;
@@ -1118,7 +1114,6 @@ public:
 	}
 #endif	// PRSIM_WEAK_RULES
 
-#if PRSIM_CHANNEL_SUPPORT
 	/**
 		Extension to manage channel environments and actions. 
 	 */
@@ -1142,7 +1137,6 @@ public:
 
 	void
 	resume_all_channels(void);
-#endif
 
 	void
 	reset_tcounts(void);
@@ -1703,7 +1697,6 @@ public:
 			expr_struct_type::EXPR_ROOT, true);
 	}
 
-#if PRSIM_CHANNEL_SUPPORT
 	bool
 	dump_channel(ostream& o, const string& s) const {
 		return _channel_manager.dump_channel(o, *this, s);
@@ -1713,7 +1706,6 @@ public:
 	dump_channels(ostream& o) const {
 		return _channel_manager.dump(o, *this);
 	}
-#endif
 
 	bool
 	node_is_driven_by_channel(const node_index_type) const;

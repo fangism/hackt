@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.30 2008/03/21 00:19:15 fang Exp $
+	$Id: BRANCHES,v 1.31 2008/11/11 20:06:07 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -12,14 +12,7 @@ Open branches:
 
 Coming soon:
 
-	HACKT-00-01-04-main-00-82-??-scm-02
-		guile/scheme work for chpsim trace analysis framework
-		for dissertation (continuation)
-
-	HACKT-00-01-04-main-00-82-??-prsim-10
+	HACKT-00-01-04-main-00-82-??-prsim-11
 		Completely rewrite of event model (simplification).
-		Removal of translated expression structure cache, 
-			for improved scalability (already decent), 
-			will cost performance a tad...
 		Guile Scheme interface to data structures, like chpsim.
 

@@ -1,5 +1,5 @@
 dnl "config/rl_el.m4"
-dnl	$Id: rl_el.m4,v 1.5 2006/07/01 21:00:28 fang Exp $
+dnl	$Id: rl_el.m4,v 1.6 2008/11/11 20:06:10 fang Exp $
 dnl Readline and Editline support for the utility library used by hackt.
 dnl This is not only specific to hackt, so we place these macros here.  
 dnl
@@ -29,11 +29,12 @@ AC_ARG_WITH(readline,
 dnl	AS_HELP_STRING([[--with-readline[=yes/no]]],
 dnl		[Enable GNU readline support for CLI.  Default=no.])
 )
-if test x"$with_readline" != xno && test "$with_readline" ; then
-	AC_MSG_WARN([
-	This project license is not GPL-compatible to qualify for using GNU
-	readline.  Please consider linking against BSD editline instead.])
-fi
+dnl This project is now GPL (2008-Nov).  
+dnl if test x"$with_readline" != xno && test "$with_readline" ; then
+dnl	AC_MSG_WARN([
+dnl	This project license is not GPL-compatible to qualify for using GNU
+dnl	readline.  Please consider linking against BSD editline instead.])
+dnl fi
 ])dnl
 
 dnl @synopsis _FANG_ARG_WITH_EDITLINE

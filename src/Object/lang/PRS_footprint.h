@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.11 2008/10/31 02:11:43 fang Exp $
+	$Id: PRS_footprint.h,v 1.12 2008/11/11 20:06:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -17,7 +17,6 @@
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 #include "util/macros.h"
 #include "util/boolean_types.h"
-#include "util/list_vector.h"	// is this really necessary?
 #include "util/offset_array.h"
 #include "util/persistent_fwd.h"
 
@@ -84,9 +83,9 @@ private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
 						node_pool_type;
-	typedef	util::list_vector<rule>		rule_pool_type;
+	typedef	vector<rule>			rule_pool_type;
 	typedef	PRS_footprint_expr_pool_type	expr_pool_type;
-	typedef	util::list_vector<macro>	macro_pool_type;
+	typedef	vector<macro>			macro_pool_type;
 
 	rule_pool_type				rule_pool;
 	expr_pool_type				expr_pool;

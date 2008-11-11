@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.6 2008/11/05 23:03:57 fang Exp $
+#	$Id: TODO,v 1.7 2008/11/11 20:06:28 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -43,9 +43,8 @@ prsim:
 
 	channel commands:
 		channel-auto : auto-infer channel type
-			what about initial ack?
+			what about initial ack? (leave that to bucket)
 		channel-type (map types to defchan)
-		enable validity protocol variants
 		test bundles
 		delay control for setting and resetting source/sinks
 		value formatting input and output

@@ -1,13 +1,13 @@
 /**
 	\file "Object/lang/PRS_footprint_expr_pool_fwd.h"
 	All this trouble for a measly forward declaration.  
-	$Id: PRS_footprint_expr_pool_fwd.h,v 1.2 2006/01/22 06:53:03 fang Exp $
+	$Id: PRS_footprint_expr_pool_fwd.h,v 1.3 2008/11/11 20:06:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_POOL_FWD_H__
 #define	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_POOL_FWD_H__
 
-#include "util/list_vector_fwd.h"
+#include "util/STL/vector_fwd.h"
 
 namespace util {
 	template <class, int>	class offset_array;
@@ -18,7 +18,7 @@ namespace entity {
 namespace PRS {
 class footprint_expr_node;
 
-typedef util::offset_array<util::list_vector<footprint_expr_node>, 1>
+typedef util::offset_array<std::default_vector<footprint_expr_node>::type, 1>
 				PRS_footprint_expr_pool_type;
 
 }	// end namespace PRS

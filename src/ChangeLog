@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-54:
+	  Minor clean-up: PRS_footprint_expr_pool_type is now
+		based on plain std::vector instead of util::list_vector.
+	  prsim: perm'd PRSIM_CHANNEL_SUPPORT.
+
+
 2008-11-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-53:

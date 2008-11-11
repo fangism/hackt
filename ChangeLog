@@ -1,5 +1,20 @@
 "ChangeLog"
 
+2008-11-11	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-54:
+	  configure.ac: default AC_DISABLE_STATIC, AC_ENABLE_SHARED.
+	  config/rl_el.m4: removed warning about GPL incompatbility, 
+		b/c this project is now officially GPL, thanks to Cornell.
+	  Updated NEWS, for once.  
+
+
+2008-11-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-50-merged-prsim-10-20:
+	  Major branch merge: prsim scalability rework.
+
+
 2008-06-03	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-24:

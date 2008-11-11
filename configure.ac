@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.181 2008/11/05 23:03:10 fang Exp $
+#	$Id: configure.ac,v 1.182 2008/11/11 20:06:08 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -26,9 +26,6 @@ AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
 
 # Enable or disable automatic reconfiguring.  
 # AM_MAINTAINER_MODE
-
-# Disabling shared library linking may speed up beta-testing and building.  
-# AC_DISABLE_SHARED
 
 AC_CANONICAL_HOST
 if test "$AWK" = "mawk" ; then
@@ -145,7 +142,7 @@ AC_SUBST(LIBLTDL)
 AC_LIB_LTDL
 AC_LIBTOOL_DLOPEN
 dnl to support dlopen plug-ins and module shared objects/libraries
-dnl AC_DISABLE_STATIC
+AC_DISABLE_STATIC	dnl default to not building static libraries
 AC_PROG_LIBTOOL
 AC_CONFIG_SUBDIRS(libltdl)
 dnl now, always use verbose libtool script, instead of --silent
