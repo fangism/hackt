@@ -25,5 +25,5 @@ util/memory/chunk_map_pool.tcc:328: failed assertion `p < use_chunk->past_end_ad
 
 // BUG:
 // classification: ICE on invalid
-// status: open
+// status: fixed (long ago)
 
