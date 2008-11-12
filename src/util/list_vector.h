@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.16 2006/11/07 06:35:39 fang Exp $
+	$Id: list_vector.h,v 1.17 2008/11/12 21:43:11 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_H__
@@ -134,6 +134,8 @@ private:
 	typedef	typename vec_map_type::const_iterator	const_vec_map_iterator;
 private:
 	static const size_type		DEFAULT_CHUNK_SIZE = 16;
+	/// minimum vector list size to function properly
+	enum { INIT_VEC_LIST_SIZE = 2 };
 private:
 	/**
 		The number of elements to allocate at a time, 
@@ -236,7 +238,7 @@ public:
 		Initializes with head and tail sentinels, empty vectors.
 	 */
 	list_vector() : current_chunk_size(DEFAULT_CHUNK_SIZE), 
-			vec_list(2), vec_map() {
+			vec_list(INIT_VEC_LIST_SIZE), vec_map() {
 	}
 
 	/**
@@ -245,7 +247,7 @@ public:
 		\param c number of elements, and new chunk size.
 	 */
 	list_vector(const size_type c) : current_chunk_size(c), 
-			vec_list(2), vec_map() {
+			vec_list(INIT_VEC_LIST_SIZE), vec_map() {
 		size_type i = 0;
 		for ( ; i < c; i++)
 			push_back(value_type());
@@ -260,7 +262,7 @@ public:
 	 */
 	list_vector(const size_type c, const value_type& v) :
 			current_chunk_size(c),
-			vec_list(2), vec_map() {
+			vec_list(INIT_VEC_LIST_SIZE), vec_map() {
 		size_type i = 0;
 		for ( ; i < c; i++)
 			push_back(v);
@@ -270,11 +272,15 @@ public:
 	// cannot use default copy-constructor because of pointers
 	list_vector(const this_type&);
 
+	// optimizing copy-ctor
+	list_vector(const this_type&, const size_type c);
+
 	/// construct from a sequence of values
 	template <class InIter>
 	list_vector(InIter first, InIter last,
 			const size_type s = DEFAULT_CHUNK_SIZE) :
-			current_chunk_size(s), vec_list(), vec_map() {
+			current_chunk_size(s), 
+			vec_list(INIT_VEC_LIST_SIZE), vec_map() {
 		copy(first, last, back_inserter(*this));
 	}
 
@@ -496,7 +502,8 @@ public:
 	 */
 	bool
 	empty(void) const {
-		return (vec_list.size() == 2) || (vec_list_front()->empty());
+		return (vec_list.size() == INIT_VEC_LIST_SIZE)
+			|| (vec_list_front()->empty());
 		// only includes head- and end-sentinels
 	}
 
@@ -752,6 +759,9 @@ public:
 		vec_list.erase(vec_list_front(), this->end_sentinel_iter());
 		vec_map.clear();
 	}
+
+	void
+	flatten(void);
 
 	/**
 		Checks that this structure satisfies all invariants.  

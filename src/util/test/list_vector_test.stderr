@@ -3,81 +3,289 @@ indexed :
 reversed: 
 reversed: 
 forward : 
+original:
 iterated: 0 
 indexed : 0 
 reversed: 0 
 reversed: 0 
 forward : 0 
+default copy:
+iterated: 0 
+indexed : 0 
+reversed: 0 
+reversed: 0 
+forward : 0 
+flattened copy:
+iterated: 0 
+indexed : 0 
+reversed: 0 
+reversed: 0 
+forward : 0 
+original:
 iterated: 0 1 
 indexed : 0 1 
 reversed: 1 0 
 reversed: 1 0 
 forward : 0 1 
+default copy:
+iterated: 0 1 
+indexed : 0 1 
+reversed: 1 0 
+reversed: 1 0 
+forward : 0 1 
+flattened copy:
+iterated: 0 1 
+indexed : 0 1 
+reversed: 1 0 
+reversed: 1 0 
+forward : 0 1 
+original:
 iterated: 0 1 2 
 indexed : 0 1 2 
 reversed: 2 1 0 
 reversed: 2 1 0 
 forward : 0 1 2 
+default copy:
+iterated: 0 1 2 
+indexed : 0 1 2 
+reversed: 2 1 0 
+reversed: 2 1 0 
+forward : 0 1 2 
+flattened copy:
+iterated: 0 1 2 
+indexed : 0 1 2 
+reversed: 2 1 0 
+reversed: 2 1 0 
+forward : 0 1 2 
+original:
 iterated: 0 1 2 3 
 indexed : 0 1 2 3 
 reversed: 3 2 1 0 
 reversed: 3 2 1 0 
 forward : 0 1 2 3 
+default copy:
+iterated: 0 1 2 3 
+indexed : 0 1 2 3 
+reversed: 3 2 1 0 
+reversed: 3 2 1 0 
+forward : 0 1 2 3 
+flattened copy:
+iterated: 0 1 2 3 
+indexed : 0 1 2 3 
+reversed: 3 2 1 0 
+reversed: 3 2 1 0 
+forward : 0 1 2 3 
+original:
 iterated: 0 1 2 3 4 
 indexed : 0 1 2 3 4 
 reversed: 4 3 2 1 0 
 reversed: 4 3 2 1 0 
 forward : 0 1 2 3 4 
+default copy:
+iterated: 0 1 2 3 4 
+indexed : 0 1 2 3 4 
+reversed: 4 3 2 1 0 
+reversed: 4 3 2 1 0 
+forward : 0 1 2 3 4 
+flattened copy:
+iterated: 0 1 2 3 4 
+indexed : 0 1 2 3 4 
+reversed: 4 3 2 1 0 
+reversed: 4 3 2 1 0 
+forward : 0 1 2 3 4 
+original:
 iterated: 0 1 2 3 4 5 
 indexed : 0 1 2 3 4 5 
 reversed: 5 4 3 2 1 0 
 reversed: 5 4 3 2 1 0 
 forward : 0 1 2 3 4 5 
+default copy:
+iterated: 0 1 2 3 4 5 
+indexed : 0 1 2 3 4 5 
+reversed: 5 4 3 2 1 0 
+reversed: 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 
+flattened copy:
+iterated: 0 1 2 3 4 5 
+indexed : 0 1 2 3 4 5 
+reversed: 5 4 3 2 1 0 
+reversed: 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 
+original:
 iterated: 0 1 2 3 4 5 6 
 indexed : 0 1 2 3 4 5 6 
 reversed: 6 5 4 3 2 1 0 
 reversed: 6 5 4 3 2 1 0 
 forward : 0 1 2 3 4 5 6 
+default copy:
+iterated: 0 1 2 3 4 5 6 
+indexed : 0 1 2 3 4 5 6 
+reversed: 6 5 4 3 2 1 0 
+reversed: 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 
+flattened copy:
+iterated: 0 1 2 3 4 5 6 
+indexed : 0 1 2 3 4 5 6 
+reversed: 6 5 4 3 2 1 0 
+reversed: 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 
+original:
 iterated: 0 1 2 3 4 5 6 7 
 indexed : 0 1 2 3 4 5 6 7 
 reversed: 7 6 5 4 3 2 1 0 
 reversed: 7 6 5 4 3 2 1 0 
 forward : 0 1 2 3 4 5 6 7 
+default copy:
+iterated: 0 1 2 3 4 5 6 7 
+indexed : 0 1 2 3 4 5 6 7 
+reversed: 7 6 5 4 3 2 1 0 
+reversed: 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 
+flattened copy:
+iterated: 0 1 2 3 4 5 6 7 
+indexed : 0 1 2 3 4 5 6 7 
+reversed: 7 6 5 4 3 2 1 0 
+reversed: 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 
+original:
 iterated: 0 1 2 3 4 5 6 7 8 
 indexed : 0 1 2 3 4 5 6 7 8 
 reversed: 8 7 6 5 4 3 2 1 0 
 reversed: 8 7 6 5 4 3 2 1 0 
 forward : 0 1 2 3 4 5 6 7 8 
+default copy:
+iterated: 0 1 2 3 4 5 6 7 8 
+indexed : 0 1 2 3 4 5 6 7 8 
+reversed: 8 7 6 5 4 3 2 1 0 
+reversed: 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 
+flattened copy:
+iterated: 0 1 2 3 4 5 6 7 8 
+indexed : 0 1 2 3 4 5 6 7 8 
+reversed: 8 7 6 5 4 3 2 1 0 
+reversed: 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 
+original:
 iterated: 0 1 2 3 4 5 6 7 8 9 
 indexed : 0 1 2 3 4 5 6 7 8 9 
 reversed: 9 8 7 6 5 4 3 2 1 0 
 reversed: 9 8 7 6 5 4 3 2 1 0 
 forward : 0 1 2 3 4 5 6 7 8 9 
+default copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 
+indexed : 0 1 2 3 4 5 6 7 8 9 
+reversed: 9 8 7 6 5 4 3 2 1 0 
+reversed: 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 
+flattened copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 
+indexed : 0 1 2 3 4 5 6 7 8 9 
+reversed: 9 8 7 6 5 4 3 2 1 0 
+reversed: 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 
+original:
 iterated: 0 1 2 3 4 5 6 7 8 9 10 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 
 reversed: 10 9 8 7 6 5 4 3 2 1 0 
 reversed: 10 9 8 7 6 5 4 3 2 1 0 
 forward : 0 1 2 3 4 5 6 7 8 9 10 
+default copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 
+reversed: 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 
+flattened copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 
+reversed: 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 
+original:
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 
 reversed: 11 10 9 8 7 6 5 4 3 2 1 0 
 reversed: 11 10 9 8 7 6 5 4 3 2 1 0 
 forward : 0 1 2 3 4 5 6 7 8 9 10 11 
+default copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 11 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 11 
+reversed: 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 
+flattened copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 11 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 11 
+reversed: 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 
+original:
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 
 reversed: 12 11 10 9 8 7 6 5 4 3 2 1 0 
 reversed: 12 11 10 9 8 7 6 5 4 3 2 1 0 
 forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 
+default copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 
+reversed: 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 
+flattened copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 
+reversed: 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 
+original:
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
 reversed: 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
 reversed: 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
 forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
+default copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
+reversed: 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
+flattened copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
+reversed: 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
+original:
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
 reversed: 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
 reversed: 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
 forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
+default copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
+reversed: 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
+flattened copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
+reversed: 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
+original:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+reversed: 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+default copy:
+iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+reversed: 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+flattened copy:
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
 reversed: 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 

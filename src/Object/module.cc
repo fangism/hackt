@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.35 2008/11/05 23:03:23 fang Exp $
+ 	$Id: module.cc,v 1.36 2008/11/12 21:43:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -301,6 +301,7 @@ module::__allocate_unique(void) {
 		if (!_footprint.expand_unique_subinstances(global_state).good) {
 			return good_bool(false);
 		}
+		global_state.optimize_pools();
 #if 0
 		// only for debugging
 		global_state.cache_process_parent_refs();

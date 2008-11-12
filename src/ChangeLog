@@ -5,6 +5,15 @@
 
 2008-11-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-57:
+	  enhancement: module::__allocate_unique(), now calls 
+		state_manager::optimize_pools() to conver list_vector
+		into a monolithic array for constant-time accesses.
+	  see also util/ChangeLog -- for util::list_vector additions
+
+
+2008-11-11	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-56:
 	  Massive cleanup: perm'd ENABLE_RELAXED_TEMPLATE_PARAMETERS, 
 		removing about 1000 lines of deprecated code.

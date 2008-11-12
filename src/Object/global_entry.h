@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.16 2008/11/05 23:03:20 fang Exp $
+	$Id: global_entry.h,v 1.17 2008/11/12 21:43:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -48,7 +48,7 @@ class instance_alias_info;
 template <class Tag>
 struct  state_instance;
 
-
+// TODO: use valarray for memory efficiency
 typedef	std::vector<size_t>		footprint_frame_map_type;
 
 //=============================================================================

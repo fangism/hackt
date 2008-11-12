@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.97 2008/10/31 02:11:46 fang Exp $
+#	$Id: ChangeLog,v 1.98 2008/11/12 21:43:09 fang Exp $
+
+2008-11-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-57:
+	  util/list_vector.{h,tcc}: added flattening copy-constructor
+		and also flatten() method, to turn log-time accesses
+		into constant-time accesses to a monolithic array.
+		Updated util/test/list_vector_test.{cc,stderr}
+
 
 2008-10-30	David Fang		<fangism@users.sourceforge.net>
 

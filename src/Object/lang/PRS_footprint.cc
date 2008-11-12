@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.20 2008/11/11 20:06:15 fang Exp $
+	$Id: PRS_footprint.cc,v 1.21 2008/11/12 21:43:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -91,11 +91,7 @@ footprint_rule_attribute::load_object(const persistent_object_manager& m,
 
 footprint::footprint() : rule_pool(), expr_pool(), macro_pool(), 
 		internal_node_expr_map(), invariant_pool() {
-#if 0
-	rule_pool.set_chunk_size(8);
-	expr_pool.set_chunk_size(16);
-	macro_pool.set_chunk_size(8);
-#endif
+	// used to set_chunk_size of list_vector_pools here
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -446,7 +442,6 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 {
 	size_t s;
 	read_value(i, s);
-	// opportunity to resize (chunk) list_vector_pool
 	rule_pool.reserve(s);
 	size_t j = 0;
 	for ( ; j<s; j++) {
@@ -456,7 +451,6 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 }{
 	size_t s;
 	read_value(i, s);
-	// opportunity to resize (chunk) list_vector_pool
 	expr_pool.reserve(s);
 	size_t j = 0;
 	for ( ; j<s; j++) {
@@ -466,7 +460,6 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 }{
 	size_t s;
 	read_value(i, s);
-	// opportunity to resize (chunk) list_vector_pool
 	macro_pool.reserve(s);
 	size_t j = 0;
 	for ( ; j<s; j++) {
@@ -639,12 +632,6 @@ using HAC::entity::PRS::footprint;
 template class footprint::rule_pool_type;
 template class footprint::expr_pool_type;
 template class footprint::macro_pool_type;
-#else
-#if 0
-template class list_vector<footprint::expr_node>;
-template class list_vector<footprint::rule>;
-template class list_vector<footprint::macro>;
-#endif
 #endif
 }
 

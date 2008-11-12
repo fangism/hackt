@@ -2,7 +2,7 @@
 	\file "util/list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.15 2006/10/24 07:27:40 fang Exp $
+	$Id: list_vector.tcc,v 1.16 2008/11/12 21:43:11 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_TCC__
@@ -71,8 +71,10 @@ struct LIST_VECTOR_CLASS::list_map_checker {
 /**
 	Custom copy-constructor because the map of pointers (vec_map)
 	needs to be reconstructed.  
+	This is an internally-structure-preserving copy.
 	If we want to be smart, we can resize and re-chunk
 	upon copy construction, possibly even flatten.
+	See the other copy-ctor.
  */
 LIST_VECTOR_TEMPLATE_SIGNATURE
 LIST_VECTOR_CLASS::list_vector(const this_type& t) :
@@ -88,6 +90,32 @@ LIST_VECTOR_CLASS::list_vector(const this_type& t) :
 		this->vec_map[vmi->first] = &*li;
 		cumulative_size += li->size();
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Optimizing and flattening copy-constructor.
+	Accesses to the newly constructed list will be constant-time.  
+	\param c is the overriding chunk size.
+ */
+LIST_VECTOR_TEMPLATE_SIGNATURE
+LIST_VECTOR_CLASS::list_vector(const this_type& t, const size_type c) :
+		current_chunk_size(c), 
+		vec_list(INIT_VEC_LIST_SIZE), 
+		vec_map() {
+	copy(t.begin(), t.end(), back_inserter(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Optimizes array by flattening into a contiguous vector.
+	Warning: this invalidates all previous iterators and references!
+ */
+LIST_VECTOR_TEMPLATE_SIGNATURE
+void
+LIST_VECTOR_CLASS::flatten(void) {
+	this_type temp(*this, this->size());	// use optimizing copy-ctor
+	this->swap(temp);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -110,13 +138,13 @@ LIST_VECTOR_TEMPLATE_SIGNATURE
 void
 LIST_VECTOR_CLASS::check_invariants(void) const {
 	const size_type this_size = this->size();
-	assert(vec_list.size() >= 2);
+	assert(vec_list.size() >= INIT_VEC_LIST_SIZE);
 	/***
 		These local variables are unused when NDEBUG is predefined, 
 		because they are used only for debugging.  
 	***/
 	const size_type vdiff __ATTRIBUTE_UNUSED__
-		= vec_list.size() -vec_map.size() -2;
+		= vec_list.size() -vec_map.size() -INIT_VEC_LIST_SIZE;
 	const difference_type dist __ATTRIBUTE_UNUSED__
 		= distance(this->begin(), this->end());
 	const difference_type rdist __ATTRIBUTE_UNUSED__
@@ -199,7 +227,7 @@ LIST_VECTOR_CLASS::dump_details(ostream& o) const {
 		", vec_list_rback at " << &*vec_list_rback() << endl;
 	// start map one-ahead, skip the last vector chunk, 
 	// because it may not be full.
-	assert(vec_list.size() == vec_map.size() +2);
+	assert(vec_list.size() == vec_map.size() +INIT_VEC_LIST_SIZE);
 	const_vec_map_iterator mi(vec_map.begin());
 	const_list_iterator li(vec_list.begin());
 	const const_list_iterator le(--vec_list.end());

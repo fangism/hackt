@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.21 2008/11/05 23:03:27 fang Exp $
+	$Id: state_manager.cc,v 1.22 2008/11/12 21:43:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -159,7 +159,7 @@ global_entry_pool<Tag>::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_VERBOSE;
 	size_t s;
 	read_value(i, s);
-	// consider setting chunk size to s+1 for optimization
+	this->set_chunk_size(s+1);	// will inhibit multiple reallocation!
 	size_t j = 1;
 	for ( ; j<=s; j++) {
 		STACKTRACE_INDENT_PRINT("loading entry " << j << endl);
@@ -321,6 +321,22 @@ state_manager::__collect_subentries_test(void) const {
 	collect_subentries<enum_tag>(foo, 1);
 	collect_subentries<int_tag>(foo, 1);
 	collect_subentries<bool_tag>(foo, 1);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Optimize global entry pools by flattening list-vector implementation.
+ */
+void
+state_manager::optimize_pools(void) {
+	global_entry_pool<process_tag>::flatten();
+#if ENABLE_DATASTRUCTS
+	global_entry_pool<datastruct_tag>::flatten();
+#endif
+	global_entry_pool<channel_tag>::flatten();
+	global_entry_pool<enum_tag>::flatten();
+	global_entry_pool<int_tag>::flatten();
+	global_entry_pool<bool_tag>::flatten();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

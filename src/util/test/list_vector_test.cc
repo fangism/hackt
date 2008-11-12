@@ -1,7 +1,7 @@
 /**
 	\file "list_vector_test.cc"
 	Example for using the list_vector class.  
-	$Id: list_vector_test.cc,v 1.5 2006/02/26 02:28:04 fang Exp $
+	$Id: list_vector_test.cc,v 1.6 2008/11/12 21:43:12 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -157,8 +157,17 @@ main(int, char*[]) {
 		assert(v.front() == 0);
 		assert(v.back() == i);
 		assert(*(--v.end()) == i);
+		cerr << "original:" << endl;
 		dump_list_vector(v, cerr);
 		check_iterators(v.begin(), v.end());
+		cerr << "default copy:" << endl;
+		const vec_type dv(v);
+		dump_list_vector(dv, cerr);
+		check_iterators(dv.begin(), dv.end());
+		cerr << "flattened copy:" << endl;
+		const vec_type fv(v);
+		dump_list_vector(fv, cerr);
+		check_iterators(fv.begin(), fv.end());
 	}
 	dump_list_vector(v, cerr);
 
