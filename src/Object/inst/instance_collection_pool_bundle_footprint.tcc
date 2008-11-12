@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle_footprint.tcc"
 	This contains select methods to export to Object/def/footprint.cc
-	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.6 2007/09/15 18:56:44 fang Exp $
+	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.7 2008/11/12 03:00:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_FOOTPRINT_TCC__
@@ -15,6 +15,7 @@
 #include "Object/inst/port_formal_array.h"
 #include "Object/inst/port_actual_collection.h"
 #include "Object/port_context.h"
+#include "Object/devel_switches.h"
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -105,7 +106,6 @@ struct instance_collection_pool_wrapper<T>::footprint_frame_assigner {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 template <class T>
 struct instance_collection_pool_wrapper<T>::substructure_finalizer {
 	const unroll_context&	context;
@@ -119,7 +119,6 @@ struct instance_collection_pool_wrapper<T>::substructure_finalizer {
 		// throws exception on error
 	}
 };
-#endif
 
 //=============================================================================
 // selected class instance_collection_pool_wrapper method definitions
@@ -163,7 +162,6 @@ instance_collection_pool_wrapper<T>::assign_footprint_frame(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 template <class T>
 good_bool
 instance_collection_pool_wrapper<T>::finalize_substructure_aliases(
@@ -176,7 +174,6 @@ instance_collection_pool_wrapper<T>::finalize_substructure_aliases(
 	}
 	return good_bool(true);
 }
-#endif
 
 //=============================================================================
 // selected class instance_collection_pool_bundle method definitions
@@ -260,7 +257,6 @@ instance_collection_pool_bundle<Tag>::collect_scope_aliases(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 template <class Tag>
 good_bool
 instance_collection_pool_bundle<Tag>::finalize_substructure_aliases(
@@ -282,7 +278,6 @@ instance_collection_pool_bundle<Tag>::finalize_substructure_aliases(
 //		::finalize_substructure_aliases(c);
 	);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

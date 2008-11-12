@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.12 2008/10/22 22:16:58 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.13 2008/11/12 03:00:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_TCC__
@@ -30,9 +30,7 @@ template <class Tag>
 good_bool
 subinstance_manager::__unroll_port_instances(
 		const collection_interface<Tag>& inst, 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_actuals_type& a,
-#endif
 		const unroll_context& c) {
 	typedef	collection_interface<Tag>	collection_type;
 	typedef	instance_collection<Tag>	canonical_collection_type;
@@ -47,17 +45,10 @@ subinstance_manager::__unroll_port_instances(
 	typedef	typename type_ref_ptr_type::element_type
 						type_ref_pointee_type;
 	STACKTRACE_VERBOSE;
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	if (!this->empty()) {
 		cerr << "Error: ports have already been instantiated!" << endl;
 		return good_bool(false);
 	}
-#else
-	INVARIANT(this->empty());
-#endif
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	const
-#endif
 	resolved_type_ref_type
 		resolved_super_type(inst.get_canonical_collection()
 			.get_resolved_canonical_type());
@@ -67,11 +58,9 @@ subinstance_manager::__unroll_port_instances(
 				<< endl;
 		return good_bool(false);
 	}
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	if (a) {
 		resolved_super_type.combine_relaxed_actuals(a);
 	}
-#endif
 #if 0
 	unresolved_super_type->dump(cerr << "unresolved type: ") << endl;
 	resolved_super_type->dump(cerr << "resolved type:   ") << endl;

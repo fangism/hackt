@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.7 2007/07/18 23:28:45 fang Exp $
+	$Id: port_formal_array.h,v 1.8 2008/11/12 03:00:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -152,9 +152,7 @@ public:
 	COLLECT_PORT_ALIASES_PROTO;
 	CONSTRUCT_PORT_CONTEXT_PROTO;
 	ASSIGN_FOOTPRINT_FRAME_PROTO;
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	FINALIZE_SUBSTRUCTURE_ALIASES_PROTO;
-#endif
 
 	void
 	accept(alias_visitor&) const;

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.7 2007/07/18 23:28:41 fang Exp $
+	$Id: instance_array.h,v 1.8 2008/11/12 03:00:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -157,9 +157,7 @@ public:
 
 	ASSIGN_FOOTPRINT_FRAME_PROTO;
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	FINALIZE_SUBSTRUCTURE_ALIASES_PROTO;
-#endif
 
 	GET_ALL_ALIASES_PROTO;
 

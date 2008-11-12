@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.17 2008/10/21 00:24:29 fang Exp $
+	$Id: alias_actuals.tcc,v 1.18 2008/11/12 02:59:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -125,7 +125,6 @@ instance_alias_info_actuals::dump_complete_type(const AliasType& _alias,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 /**
 	When connecting two relaxed aliases, copy one over to the
 	other.  If they are both non-null, then they should be equivalent, 
@@ -204,7 +203,6 @@ instance_alias_info_actuals::__finalize_find(
 		THROW_EXIT;
 	}
 }
-#endif	// ENABLE_RELAXED_TEMPLATE_PARAMETERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -235,7 +233,6 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 	STACKTRACE_VERBOSE;
 	const complete_type_type
 		_type(_alias.complete_type_actuals(*_alias.container));
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	// now possible because relaxed template types may be bound
 	// later, not necessarily upon first instantiation.  
 	if (!_type) {
@@ -246,9 +243,6 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 #if ENABLE_STACKTRACE
 	_alias.dump_hierarchical_name(STACKTRACE_INDENT_PRINT("instance: ")) << endl;
 	_type.dump(STACKTRACE_INDENT_PRINT("_type: ")) << endl;
-#endif
-#else
-	INVARIANT(_type);
 #endif
 	return canonical_type_footprint_frame_policy<canonical_definition_type>
 		::initialize_and_assign(_type, ff, sm, pmc, ind);

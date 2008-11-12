@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.34 2008/11/05 23:03:33 fang Exp $
+	$Id: instance_alias.tcc,v 1.35 2008/11/12 03:00:01 fang Exp $
 	TODO: trim includes
  */
 
@@ -148,7 +148,6 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 /**
 	This variant asserts that the parent container of this alias
 	has already been established, and that this is only ever called
@@ -178,7 +177,6 @@ if (!this->container->get_canonical_collection().has_relaxed_type()
 #endif
 	direction_connection_policy::initialize_direction(*this, c);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -201,19 +199,7 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 		&*this->container << endl);
 	this->container = p;
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	instantiate_actuals_only(c);
-#else
-	// do we ever want to instantiate more than the ports? no
-	if (!substructure_parent_type::unroll_port_instances(
-			*this->container, c).good) {
-		// already have error message
-		THROW_EXIT;
-	}
-
-	// initialize directions, if applicable
-	direction_connection_policy::initialize_direction(*this, c);
-#endif
 	// we do this here for now merely for convenience/coverage:
 	// it is certainly correct.  
 	// future optimization: loop-transformation to eliminate
@@ -249,9 +235,7 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
 	// do we ever want to instantiate more than the ports? no
 	if (!substructure_parent_type::unroll_port_instances(
 			*this->container, 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 			f.get_relaxed_actuals(), 
-#endif
 			c).good) {
 		// already have error message
 		THROW_EXIT;
@@ -483,11 +467,8 @@ INSTANCE_ALIAS_INFO_CLASS::dump_key(ostream& o) const {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context& c
-#endif
-		) {
+INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r, 
+		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	if (!l.must_match_type(r)) {
 		// already have error message
@@ -496,16 +477,8 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r
 		return good_bool(false);
 	}
 	// checking of directions and relaxed actuals is done in unite()
-	return good_bool(l.unite(r
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, c
-#endif
-			).good &&
-		l.connect_port_aliases_recursive(r
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, c
-#endif
-			).good);
+	return good_bool(l.unite(r, c).good &&
+		l.connect_port_aliases_recursive(r, c).good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -537,11 +510,8 @@ INSTANCE_ALIAS_INFO_CLASS::replay_connect_port(this_type& l, this_type& r) {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context& c
-#endif
-		) {
+INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
+		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	if (!l.must_match_type(r)) {
 		// already have error message
@@ -550,16 +520,8 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r
 		return good_bool(false);
 	}
 	// checking of directions and relaxed actuals is done in unite()
-	return good_bool(l.unite(r
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, c
-#endif
-			).good &&
-		l.connect_port_aliases_recursive(r
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, c
-#endif
-			).good);
+	return good_bool(l.unite(r, c).good &&
+		l.connect_port_aliases_recursive(r, c).good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -705,30 +667,18 @@ INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context& c
-#endif
-		) {
+INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r, const unroll_context& c) {
 	STACKTRACE_VERBOSE;
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	const pseudo_iterator lc(this->find(c));
 	this_type* const rc = &*r.find(c);
-#else
-	const pseudo_iterator lc(this->find());
-	this_type* const rc = &*r.find();
-#endif
 	lc->next = rc;
 	// synchronize direction_connection_flags
 		// commutative
 	if (!direction_connection_policy::synchronize_flags(*lc, *rc).good)
 		return good_bool(false);
 		// symmetric
-	const good_bool ret(actuals_parent_type::synchronize_actuals(*lc, *rc
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, c
-#endif
-		));
+	const good_bool
+		ret(actuals_parent_type::synchronize_actuals(*lc, *rc, c));
 	if (!ret.good) {
 		this->dump_hierarchical_name(cerr << "\tfrom: ") << endl;
 		r.dump_hierarchical_name(cerr << "\tand:  ") << endl;
@@ -760,7 +710,6 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 /**
 	This variant of find() automatically instantiates ports
 	as relaxed actuals are synchronized.  
@@ -797,8 +746,6 @@ INSTANCE_ALIAS_INFO_CLASS::finalize_find(const unroll_context& c) {
 	this->find(c);
 	actuals_parent_type::__finalize_find(*this, c);
 }
-
-#endif	// ENABLE_RELAXED_TEMPLATE_PARAMETERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

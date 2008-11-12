@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.13 2007/07/18 23:28:36 fang Exp $
+	$Id: alias_empty.h,v 1.14 2008/11/12 03:00:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -12,7 +12,6 @@
 #define	DEBUG_ALIAS_EMPTY		1
 
 #include <iosfwd>
-#include "Object/devel_switches.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
@@ -25,9 +24,7 @@ class footprint_frame;
 class state_manager;
 class port_member_context;
 template <class> class instance_alias_info;
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 class unroll_context;
-#endif
 using std::istream;
 using std::ostream;
 using util::good_bool;
@@ -117,15 +114,10 @@ protected:
 
 	static
 	good_bool
-	synchronize_actuals(this_type&, this_type&
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, const unroll_context&
-#endif
-			) {
+	synchronize_actuals(this_type&, this_type&, const unroll_context&) {
 		return good_bool(true);
 	}
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	static
 	void
 	finalize_actuals_and_substructure_aliases(const this_type&, 
@@ -136,7 +128,6 @@ protected:
 	static
 	void
 	__finalize_find(const this_type&, const unroll_context&) { }
-#endif
 
 public:
 	static

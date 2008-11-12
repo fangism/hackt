@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.51 2008/03/17 23:02:18 fang Exp $
+	$Id: devel_switches.h,v 1.52 2008/11/12 02:59:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -31,18 +31,10 @@
 // define your module-wide development switches here:
 
 /**
-	TODO: decide policy for handling relaxed type actuals.  
-	Define to 1 to finish implementation of relaxed parameters, 
-	whereby partial template parameters may be established
-	in a second phase through connections.  
-	Goal: 1
-	Priority: medium
-	Status: complete and tested
-		(as of 00-01-04-main-00-81-40-merged-template-02-28)
-	Notes: will need mechanism similar to port-summaries to 
-		pass pre-determined port parameters up the instance hierarchy.
- */
 #define	ENABLE_RELAXED_TEMPLATE_PARAMETERS		1
+	Status: complete (as of 00-01-04-main-00-81-40-merged-template-02-28)
+	Perm'd: 00-01-04-main-00-82-56
+**/
 
 /**
 	Define to 0 to remove formal instance management (template, port)

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.21 2008/10/22 22:16:57 fang Exp $
+	$Id: subinstance_manager.h,v 1.22 2008/11/12 03:00:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -32,9 +32,7 @@ class state_manager;
 class footprint_frame;
 template <class> class collection_interface;
 struct dump_flags;
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 class const_param_expr_list;
-#endif
 using std::ostream;
 using std::istream;
 using std::string;
@@ -74,9 +72,7 @@ public:
 	typedef	vector<value_type>			array_type;
 	typedef	vector<count_ptr<const meta_instance_reference_base> >
 						connection_references_type;
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	typedef	count_ptr<const const_param_expr_list>	relaxed_actuals_type;
-#endif
 protected:
 	typedef	array_type::const_iterator		const_iterator;
 	typedef	array_type::iterator			iterator;
@@ -122,9 +118,7 @@ public:
 	good_bool
 	__unroll_port_instances(
 		const collection_interface<Tag>&, 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_actuals_type&,
-#endif
 		const unroll_context&);
 
 #if RECURSE_COLLECT_ALIASES
@@ -137,11 +131,7 @@ public:
 		const unroll_context&);
 
 	good_bool
-	connect_port_aliases_recursive(this_type&
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context&
-#endif
-		);
+	connect_port_aliases_recursive(this_type&, const unroll_context&);
 
 	void
 	allocate_subinstances(footprint&);

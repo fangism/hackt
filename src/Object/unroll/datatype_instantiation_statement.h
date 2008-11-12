@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_data.h"
 		in a previous life.  
-	$Id: datatype_instantiation_statement.h,v 1.16 2007/07/18 23:28:59 fang Exp $
+	$Id: datatype_instantiation_statement.h,v 1.17 2008/11/12 03:00:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
@@ -19,7 +19,6 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/inst/alias_empty.h"
-#include "Object/devel_switches.h"
 #include "util/persistent_object_manager.h"
 
 namespace HAC {
@@ -44,42 +43,17 @@ class class_traits<datatype_tag>::instantiation_statement_type_ref_base {
 	typedef class_traits<datatype_tag>		traits_type;
 	typedef instantiation_statement_type_ref_base	this_type;
 public:
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
-	typedef	count_ptr<const dynamic_param_expr_list>
-						const_relaxed_args_type;
-	typedef	count_ptr<const const_param_expr_list>
-						instance_relaxed_actuals_type;
-#endif
 	typedef	traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
 protected:
 	type_ref_ptr_type				type;
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	const_relaxed_args_type				relaxed_args;
-#endif
 
 protected:
-	instantiation_statement_type_ref_base() :
-		type(NULL)
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, relaxed_args(NULL)
-#endif
-		{ }
+	instantiation_statement_type_ref_base() : type(NULL) { }
 
 	explicit
 	instantiation_statement_type_ref_base(const type_ref_ptr_type& t) :
-			type(t)
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, relaxed_args(NULL)
-#endif
-			{ }
-
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	instantiation_statement_type_ref_base(
-		const type_ref_ptr_type& t, const const_relaxed_args_type& a) :
-			type(t), relaxed_args(a) { }
-#endif
+			type(t) { }
 
 	~instantiation_statement_type_ref_base() { }
 
@@ -96,13 +70,6 @@ protected:
 		}
 		return t->make_canonical_type();
 	}
-
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	const_relaxed_args_type
-	get_relaxed_actuals(void) const {
-		return relaxed_args;
-	}
-#endif
 
 	/**
 		2005-07-09: NOT fusing
@@ -145,43 +112,25 @@ protected:
 	good_bool
 	instantiate_indices_with_actuals(instance_collection_generic_type& v, 
 			const const_range_list& crl, 
-			const unroll_context& c
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, const instance_relaxed_actuals_type& a
-#endif
-			) {
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			const unroll_context& c) {
 		return v.instantiate_indices(crl, c);
-#else
-		return v.instantiate_indices(crl, a, c);
-#endif
 	}
 
 	void
 	collect_transient_info_base(persistent_object_manager& m) const {
 		type->collect_transient_info(m);
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		if (relaxed_args)
-			relaxed_args->collect_transient_info(m);
-#endif
 	}
 
 	void
 	write_object_base(const persistent_object_manager& m, 
 			ostream& o) const {
 		m.write_pointer(o, type);
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		m.write_pointer(o, relaxed_args);
-#endif
 	}
 
 	void
 	load_object_base(const persistent_object_manager& m, 
 			istream& i) {
 		m.read_pointer(i, type);
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		m.read_pointer(i, relaxed_args);
-#endif
 	}
 
 };      // end class instantiation_statement_type_ref_base

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: channel_instantiation_type_ref_base.h,v 1.4 2007/07/18 23:28:58 fang Exp $
+	$Id: channel_instantiation_type_ref_base.h,v 1.5 2008/11/12 03:00:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CHANNEL_INSTANTIATION_TYPE_REF_H__
@@ -48,14 +48,6 @@ public:
 					instance_collection_generic_type;
 	typedef	typename class_traits<Tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	// TODO: use typedef
-	typedef	count_ptr<const dynamic_param_expr_list>
-						const_relaxed_args_type;
-	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
-	typedef	count_ptr<const const_param_expr_list>
-					instance_relaxed_actuals_type;
-#endif
 protected:
 	/**
 		Note: this may be a partial or relaxed type, 
@@ -70,14 +62,6 @@ protected:
 	channel_instantiation_type_ref(
 		const type_ref_ptr_type& t) :
 		type(t) { }
-
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	channel_instantiation_type_ref(
-		const type_ref_ptr_type& t, const const_relaxed_args_type& a) :
-		type(t) {
-		MUST_BE_NULL(a);
-	}
-#endif
 
 	// default destructor
 	~channel_instantiation_type_ref() { }
@@ -97,13 +81,6 @@ protected:
 		return t->make_canonical_type();
 		// return t->make_canonical_type(c);
 	}
-
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	const_relaxed_args_type
-	get_relaxed_actuals(void) const {
-		return const_relaxed_args_type(NULL);
-	}
-#endif
 
 	/**
 		2005-07-09: changed mind, NOT FUSING
@@ -149,16 +126,8 @@ protected:
 	good_bool
 	instantiate_indices_with_actuals(instance_collection_generic_type& v, 
 			const const_range_list& crl, 
-			const unroll_context& c
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, const instance_relaxed_actuals_type& a
-#endif
-			) {
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			const unroll_context& c) {
 		return v.instantiate_indices(crl, c);
-#else
-		return v.instantiate_indices(crl, a, c);
-#endif
 	}
 
 	void

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.5 2007/09/15 18:56:43 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.6 2008/11/12 03:00:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
@@ -9,7 +9,6 @@
 #include <iosfwd>
 #include "Object/inst/collection_pool.h"
 #include "Object/inst/collection_index_entry.h"
-#include "Object/devel_switches.h"	// for ENABLE_RELAXED_TEMPLATE_PARAMETERS
 #include "util/boolean_types.h"
 #include "util/size_t.h"
 #include "util/persistent_fwd.h"
@@ -74,10 +73,8 @@ protected:
 	assign_footprint_frame(footprint_frame&, 
 		const port_member_context&) const;
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	good_bool
 	finalize_substructure_aliases(const unroll_context&);
-#endif
 
 private:
 	// helper functors... "I want tr1/functional binders!!!"
@@ -85,9 +82,7 @@ private:
 	struct index_allocator;
 	struct scope_alias_collector;
 	struct footprint_frame_assigner;
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	struct substructure_finalizer;
-#endif
 
 // serialization helper routines
 protected:
@@ -204,10 +199,8 @@ struct instance_collection_pool_bundle :
 	void
 	collect_scope_aliases(port_alias_tracker&) const;
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	good_bool
 	finalize_substructure_aliases(const unroll_context&);
-#endif
 
 	void
 	assign_footprint_frame(footprint_frame&, 

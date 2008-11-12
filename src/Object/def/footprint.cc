@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.38 2008/10/21 00:24:28 fang Exp $
+	$Id: footprint.cc,v 1.39 2008/11/12 02:59:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -73,9 +73,7 @@
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
 #endif
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 #include "Object/unroll/unroll_context.h"
-#endif
 #include "main/cflat_options.h"
 
 #include "util/stacktrace.h"
@@ -565,7 +563,6 @@ try {
 		dump_flags::default_value, 
 		expr_dump_context::default_value) << endl;
 #endif
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	// final pass (backpatching) to instantiate processes
 	// with relaxed types, whose types were implicitly bound 
 	// *after* aliasing to a complete-typed alias.  
@@ -579,7 +576,6 @@ try {
 	}
 	// this call must precede collecting of scope aliases and
 	// shorten_canonical_aliases
-#endif
 {
 	const good_bool g(
 		get_instance_collection_pool_bundle<process_tag>()

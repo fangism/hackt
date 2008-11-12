@@ -3,7 +3,7 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.16 2007/07/18 23:29:00 fang Exp $
+	$Id: instantiation_statement.h,v 1.17 2008/11/12 03:00:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -81,10 +81,6 @@ public:
 							type_ref_ptr_type;
 	typedef	typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	typedef	instantiation_statement_base::const_relaxed_args_type
-							const_relaxed_args_type;
-#endif
 protected:
 	placeholder_ptr_type			inst_base;
 protected:
@@ -100,12 +96,6 @@ public:
 		const placeholder_ptr_type p,
 		const type_ref_ptr_type& t, 
 		const index_collection_item_ptr_type& i);
-
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	instantiation_statement(const type_ref_ptr_type& t, 
-		const index_collection_item_ptr_type& i, 
-		const const_relaxed_args_type&);
-#endif
 
 	~instantiation_statement();
 
@@ -129,11 +119,6 @@ public:
 
 	type_ref_ptr_type
 	get_type_ref_subtype(void) const;
-
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	const_relaxed_args_type
-	get_relaxed_actuals(void) const;
-#endif
 
 	good_bool
 	unroll(const unroll_context&) const;

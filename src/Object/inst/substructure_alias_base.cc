@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.16 2008/10/22 22:16:59 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.17 2008/11/12 03:00:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,9 +9,7 @@
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/port_context.h"
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 #include "Object/common/dump_flags.h"
-#endif
 #include "common/ICE.h"
 #include "util/macros.h"
 #include "util/stacktrace.h"
@@ -66,7 +64,6 @@ substructure_alias::__trace_alias_base(const this_type&) const {
 good_bool
 substructure_alias::connect_ports(const connection_references_type& cr, 
 		const unroll_context& c) {
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	try {
 		this->finalize_find(c);
 	} catch (...) {
@@ -75,7 +72,6 @@ substructure_alias::connect_ports(const connection_references_type& cr,
 		cerr << "\'." << endl;
 		return good_bool(false);
 	}
-#endif
 	return parent_type::__connect_ports(cr, c);
 }
 

@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.16 2007/07/18 23:28:57 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.17 2008/11/12 03:00:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -21,7 +21,6 @@
 #include "Object/unroll/alias_connection.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/expr/expr_dump_context.h"
-#include "Object/devel_switches.h"
 
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
@@ -268,11 +267,7 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 			// all type-checking is done in this call:
 			// punt relaxed type checking until create
 			if (!instance_alias_info_type::checked_connect_alias(
-					*head, *connectee
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-					, c
-#endif
-					).good) {
+					*head, *connectee, c).good) {
 				// already have error message
 				return good_bool(false);
 			}

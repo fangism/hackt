@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.4 2007/07/18 23:28:37 fang Exp $
+	$Id: collection_interface.h,v 1.5 2008/11/12 03:00:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -12,7 +12,6 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
-#include "Object/devel_switches.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -147,17 +146,9 @@ virtual	bool
 	NOTE: context shouldn't be necessary at the collection, 
 	only needed to resolved placeholders!
  */
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 #define	INSTANTIATE_INDICES_PROTO					\
 	good_bool							\
 	instantiate_indices(const const_range_list&, const unroll_context&)
-#else
-#define	INSTANTIATE_INDICES_PROTO					\
-	good_bool							\
-	instantiate_indices(const const_range_list& i, 			\
-		const instance_relaxed_actuals_type&, 			\
-		const unroll_context&)
-#endif
 
 virtual	INSTANTIATE_INDICES_PROTO = 0;
 
@@ -193,13 +184,11 @@ virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
 
 virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 #define	FINALIZE_SUBSTRUCTURE_ALIASES_PROTO				\
 	void								\
 	finalize_substructure_aliases(const unroll_context&)
 
 // virtual	FINALIZE_SUBSTRUCTURE_ALIASES_PROTO = 0;
-#endif
 
 virtual	void
 	accept(alias_visitor&) const = 0;

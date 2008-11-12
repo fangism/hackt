@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.27 2007/10/08 01:21:33 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.28 2008/11/12 03:00:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -126,7 +126,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	const physical_instance_placeholder&
 		phys_inst(IS_A(const physical_instance_placeholder&, 
 			*this->get_inst_base()));
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	// possible that this may not be instantiated yet 
 	// due to late type binding of relaxed parameters.
 	// If so, do a finalize_find(c) to automatically instantiate 
@@ -139,7 +138,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 			expr_dump_context::default_value) << endl;
 		return return_type(NULL);
 	}
-#endif
 	const never_ptr<instance_collection_base>
 		resolved_instance(
 			parent_struct->lookup_port_instance(phys_inst));

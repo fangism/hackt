@@ -5,6 +5,11 @@
 
 2008-11-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-56:
+	  Massive cleanup: perm'd ENABLE_RELAXED_TEMPLATE_PARAMETERS, 
+		removing about 1000 lines of deprecated code.
+
+
 	* HACKT-00-01-04-main-00-82-55:
 	  Critical bug fix: (ACX-PR-1611)
 		internal aliases were not being replayed for relaxed-typed

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.24 2008/10/22 22:16:59 fang Exp $
+	$Id: substructure_alias_base.h,v 1.25 2008/11/12 03:00:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -45,10 +45,8 @@ private:
 	typedef	parent_type::connection_references_type
 						connection_references_type;
 	typedef	physical_instance_placeholder	port_type;
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	typedef	parent_type::relaxed_actuals_type
 						relaxed_actuals_type;
-#endif
 public:
 	/**
 		ID number assigned by unique allocation, after all aliases
@@ -75,15 +73,9 @@ virtual	~substructure_alias_base() { }
 	good_bool
 	unroll_port_instances(
 			const collection_interface<Tag>& p, 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 			const relaxed_actuals_type& a,
-#endif
 			const unroll_context& c) {
-		if (parent_type::__unroll_port_instances(p,
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-				a,
-#endif
-				c).good) {
+		if (parent_type::__unroll_port_instances(p, a, c).good) {
 			restore_parent_child_links();
 			return good_bool(true);
 		} else	return good_bool(false);
@@ -127,11 +119,9 @@ protected:
 	using parent_type::__construct_port_context;
 	using parent_type::connect_port_aliases_recursive;
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 public:
 virtual	void
 	finalize_find(const unroll_context&) = 0;
-#endif
 
 protected:
 	using parent_type::collect_transient_info_base;
@@ -151,10 +141,8 @@ class substructure_alias_base<false> {
 	typedef	substructure_alias_base<false>		this_type;
 protected:
 	// has no sub-instances
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	typedef	subinstance_manager::relaxed_actuals_type
 						relaxed_actuals_type;
-#endif
 public:
 	size_t					instance_index;
 protected:
@@ -165,9 +153,7 @@ protected:
 	template <class Tag>
 	good_bool
 	unroll_port_instances(const collection_interface<Tag>&, 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_actuals_type&,
-#endif
 		const unroll_context&) const { return good_bool(true); }
 
 	void
@@ -211,11 +197,7 @@ protected:
 
 	// has no substructure
 	good_bool
-	connect_port_aliases_recursive(this_type&
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, const unroll_context&
-#endif
-			) {
+	connect_port_aliases_recursive(this_type&, const unroll_context&) {
 		return good_bool(true);
 	}
 

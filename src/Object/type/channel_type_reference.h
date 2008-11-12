@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference.h,v 1.8 2007/07/18 23:28:52 fang Exp $
+ 	$Id: channel_type_reference.h,v 1.9 2008/11/12 03:00:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_H__
@@ -80,10 +80,6 @@ private:
 	struct canonical_compare_result_type;
 public:
 	TYPE_EQUIVALENT_PROTOS
-
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	MERGE_RELAXED_ACTUALS_PROTO;
-#endif
 
 	UNROLL_PORT_INSTANCES_PROTO;
 

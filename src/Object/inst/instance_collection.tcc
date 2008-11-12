@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.48 2008/10/22 22:16:56 fang Exp $
+	$Id: instance_collection.tcc,v 1.49 2008/11/12 03:00:03 fang Exp $
 	TODO: trim includes
  */
 
@@ -544,9 +544,6 @@ INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges, 
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		const instance_relaxed_actuals_type& actuals, 
-#endif
 		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
@@ -557,13 +554,8 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 	}
 	// for process only (or anything with relaxed typing)
 	if (!collection_type_manager_parent_type::
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 			complete_type_definition_footprint(
-				instance_relaxed_actuals_type(NULL)).good
-#else
-			complete_type_definition_footprint(actuals).good
-#endif
-			) {
+				instance_relaxed_actuals_type(NULL)).good) {
 		return good_bool(false);
 	}
 	// now iterate through, unrolling one at a time...
@@ -592,19 +584,6 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			} catch (...) {
 				err = true;
 			}
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			// then insertion of new value was successful
-			// set its relaxed actuals!!! (if appropriate)
-			if (actuals) {
-			const bool attached(new_elem->attach_actuals(actuals));
-			if (!attached) {
-				cerr << "ERROR: attaching relaxed actuals to "
-					<< this->source_placeholder->get_qualified_name() <<
-					key_gen << endl;
-				err = true;
-			}
-			}
-#endif
 		} else {
 			// found one that already exists!
 			// more detailed message, please!
@@ -847,11 +826,7 @@ INSTANCE_ARRAY_CLASS::get_all_aliases(
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context& c
-#endif
-		) {
+		physical_instance_collection& p, const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->collection.size() == t.collection.size());
@@ -866,11 +841,7 @@ INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
 		element_type& jj(const_cast<element_type&>(
 			AS_A(const element_type&, *j)));
 		// possibly redundant port type checking is unnecessary
-		if (!element_type::checked_connect_port(ii, jj
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-				, c
-#endif
-				).good) {
+		if (!element_type::checked_connect_port(ii, jj, c).good) {
 			// error message?
 			return good_bool(false);
 		}
@@ -901,7 +872,6 @@ if (i == e) {
 if (this->has_relaxed_type()) {
 	STACKTRACE_INDENT_PRINT("collection has relaxed type" << endl);
 	for ( ; i!=e; ++i) {
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	// not canonical alias
 	if (i->get_relaxed_actuals()) {
 	// then postpone until relaxed template parameters are bound
@@ -912,7 +882,6 @@ if (this->has_relaxed_type()) {
 			expr_dump_context::default_value);
 		cerr << endl;
 #endif
-#endif
 		if (!element_type::create_dependent_types(*i, top).good)
 			return good_bool(false);
 		element_type& ii(const_cast<element_type&>(
@@ -921,9 +890,7 @@ if (this->has_relaxed_type()) {
 		if (!internal_alias_policy::connect(ii).good) {
 			return good_bool(false);
 		}
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	}
-#endif
 	}
 } else {
 	STACKTRACE_INDENT_PRINT("collection has strict type" << endl);
@@ -1145,7 +1112,6 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame&,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::finalize_substructure_aliases(
@@ -1159,7 +1125,6 @@ INSTANCE_ARRAY_CLASS::finalize_substructure_aliases(
 		// catch/rethrow exception?
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1495,9 +1460,6 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::instantiate_indices(
 		const const_range_list& r, 
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		const instance_relaxed_actuals_type& actuals, 
-#endif
 		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
@@ -1516,28 +1478,12 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 	}
 	// for process only (or anything with relaxed typing)
 	if (!collection_type_manager_parent_type::
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 			complete_type_definition_footprint(
 				instance_relaxed_actuals_type(NULL)).good
-#else
-			complete_type_definition_footprint(actuals).good
-#endif
 			) {
 		return good_bool(false);
 	}
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	const bool attached(actuals ?
-		this->the_instance.attach_actuals(actuals) : true);
-	if (!attached) {
-		cerr << "ERROR: attaching relaxed actuals to scalar ";
-		this->type_dump(cerr) << " " <<
-			this->source_placeholder->get_qualified_name()
-			<< endl;
-	}
-	return good_bool(attached);
-#else
 	return good_bool(true);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1652,19 +1598,11 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type&,
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context& c
-#endif
-		) {
+		physical_instance_collection& p, const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	return instance_type::checked_connect_port(
-		this->the_instance, t.the_instance
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, c
-#endif
-		);
+		this->the_instance, t.the_instance, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1680,15 +1618,8 @@ if (!this->the_instance.valid()) {
 	return good_bool(true);
 }
 if (this->has_relaxed_type()) {
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	// then postpone until relaxed template parameters are bound
 	return good_bool(true);
-#else
-	if (!instance_type::create_dependent_types(
-			this->the_instance, top).good) {
-		return good_bool(false);
-	}
-#endif
 } else {
 	const typename parent_type::instance_collection_parameter_type
 		t(collection_type_manager_parent_type::__get_raw_type());
@@ -1765,7 +1696,6 @@ INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::finalize_substructure_aliases(
@@ -1773,7 +1703,6 @@ INSTANCE_SCALAR_CLASS::finalize_substructure_aliases(
 	this->the_instance.finalize_find(c);
 	// catch/rethrow exception?
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

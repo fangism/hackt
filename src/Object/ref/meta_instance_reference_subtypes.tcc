@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.25 2008/10/07 03:22:26 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.26 2008/11/12 03:00:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -452,11 +452,7 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 		NEVER_NULL(lp);
 		NEVER_NULL(rp);
 		if (!instance_alias_info_type::checked_connect_port(
-				*lp, *rp
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-				, c
-#endif
-				).good) {
+				*lp, *rp, c).good) {
 			// already have error message
 			return bad_bool(true);
 		}

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.33 2008/04/04 21:16:07 fang Exp $
+	$Id: expr.cc,v 1.34 2008/11/12 02:59:53 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -784,11 +784,8 @@ template_argument_list_pair::check_template_args(const context& c) const {
 		strict_args->postorder_check_meta_exprs(temp, c);
 		// NULL are allowed, where should we check?
 		copy(temp.begin(), temp.end(), back_inserter(*strict));
-		if (
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		if (c.get_current_prototype() &&
 			// is now OK outside of formal context
-			c.get_current_prototype() &&
-#endif
 				strict->is_relaxed_formal_dependent()) {
 			cerr << "ERROR at " << where(*this) <<
 				": strict template arguments may never "

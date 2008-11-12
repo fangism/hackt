@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.25 2008/10/24 01:08:58 fang Exp $
+	$Id: instance_alias_info.h,v 1.26 2008/11/12 03:00:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -206,24 +206,18 @@ public:
 
 protected:
 	good_bool
-	unite(this_type&
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context&
-#endif
-	);
+	unite(this_type&, const unroll_context&);
 
 public:
 	pseudo_const_iterator
 	find(void) const;
 
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	pseudo_iterator
 	find(const unroll_context&);
 
 	void
 	finalize_find(const unroll_context&);
-#endif
 
 	pseudo_iterator
 	find(void);
@@ -242,10 +236,8 @@ public:
 		FYI: This is only called by instance_array<0> (scalar)
 			in instantiate_indices().
 	 */
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	void
 	instantiate_actuals_only(const unroll_context&);
-#endif
 
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
@@ -389,20 +381,12 @@ public:
 
 	static
 	good_bool
-	checked_connect_port(this_type&, this_type&
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context&
-#endif
-	);
+	checked_connect_port(this_type&, this_type&, const unroll_context&);
 
 	// punting relaxed actuals checking until after unroll phase
 	static
 	good_bool
-	checked_connect_alias(this_type&, this_type&
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context&
-#endif
-	);
+	checked_connect_alias(this_type&, this_type&, const unroll_context&);
 
 	/// counterpart to load_next_connection
 	void

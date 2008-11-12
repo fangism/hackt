@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.9 2007/07/18 23:28:45 fang Exp $
+	$Id: port_formal_array.tcc,v 1.10 2008/11/12 03:00:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -293,36 +293,14 @@ PORT_FORMAL_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges, 
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		const instance_relaxed_actuals_type& actuals, 
-#endif
 		const unroll_context& c) {
 	INVARIANT(!this->value_array.dimensions());
 	const key_type k(ranges.resolve_sizes());
 	this->value_array.resize(k);
 	iterator i(this->begin()), e(this->end());
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	if (actuals) {
-	try {
-		// if ports are ever allowed to depend on relaxed parameters,
-		// then must attach actuals first before instantiating.  
-		for ( ; i!=e; ++i) {
-			i->instantiate(never_ptr<this_type>(this), c);
-			// can throw
-			const bool attached = i->attach_actuals(actuals);
-			NEVER_NULL(attached);
-		}
-	} catch (...) {
-		return good_bool(false);
-	}
-	} else {
-#endif
 		for ( ; i!=e; ++i) {
 			i->instantiate(never_ptr<this_type>(this), c);
 		}
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	}
-#endif
 	return good_bool(true);
 }
 
@@ -489,11 +467,7 @@ PORT_FORMAL_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context& c
-#endif
-		) {
+		physical_instance_collection& p, const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->value_array.size() == t.value_array.size());
@@ -507,11 +481,7 @@ PORT_FORMAL_ARRAY_CLASS::connect_port_aliases_recursive(
 		element_type& jj(*j);
 		// possibly redundant port type checking is unnecessary
 		if (!instance_alias_info_type::checked_connect_port(
-				ii, jj
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-				, c
-#endif
-				).good) {
+				ii, jj, c).good) {
 			// error message?
 			return good_bool(false);
 		}
@@ -630,7 +600,6 @@ PORT_FORMAL_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::finalize_substructure_aliases(
@@ -644,7 +613,6 @@ PORT_FORMAL_ARRAY_CLASS::finalize_substructure_aliases(
 		// catch or rethrow exception?
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE

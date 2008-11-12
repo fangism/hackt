@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.23 2008/10/22 22:16:57 fang Exp $
+	$Id: subinstance_manager.cc,v 1.24 2008/11/12 03:00:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -173,11 +173,8 @@ subinstance_manager::__connect_ports(
 		so check whether or not this is expanded first.  
  */
 good_bool
-subinstance_manager::connect_port_aliases_recursive(this_type& r
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const unroll_context& c
-#endif
-		) {
+subinstance_manager::connect_port_aliases_recursive(this_type& r,
+		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(subinstance_array.size() == r.subinstance_array.size());
 	iterator pi(subinstance_array.begin());	// instance_collection_type
@@ -185,11 +182,7 @@ subinstance_manager::connect_port_aliases_recursive(this_type& r
 	const iterator pe(subinstance_array.end());
 	for ( ; pi!=pe; ++pi, ++ri) {
 		NEVER_NULL(*ri);
-		if (!(*ri)->connect_port_aliases_recursive(**pi
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, c
-#endif
-			).good) {
+		if (!(*ri)->connect_port_aliases_recursive(**pi, c).good) {
 			// already have error message?
 			return good_bool(false);
 		}	// else good to continue

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.7 2007/07/18 23:28:44 fang Exp $
+	$Id: instance_scalar.h,v 1.8 2008/11/12 03:00:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -137,9 +137,7 @@ public:
 
 	ASSIGN_FOOTPRINT_FRAME_PROTO;
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	FINALIZE_SUBSTRUCTURE_ALIASES_PROTO;
-#endif
 
 	GET_ALL_ALIASES_PROTO;
 

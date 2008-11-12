@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.12 2007/07/18 23:28:36 fang Exp $
+	$Id: alias_actuals.h,v 1.13 2008/11/12 02:59:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
@@ -14,7 +14,6 @@
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
 #include "Object/expr/const_param_expr_list.h"
-#include "Object/devel_switches.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 
@@ -26,9 +25,7 @@ class footprint_frame;
 class port_member_context;
 class state_manager;
 template <class> class instance_alias_info;
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 class unroll_context;
-#endif
 using std::istream;
 using std::ostream;
 using util::memory::count_ptr;
@@ -101,20 +98,11 @@ protected:
 	__initialize_assign_footprint_frame(const AliasType&, footprint_frame&, 
 		state_manager&, const port_member_context&, const size_t);
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	template <class AliasType>
-#endif
 	static
 	good_bool
-	synchronize_actuals(
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		AliasType&, AliasType&, const unroll_context&
-#else
-		this_type&, this_type&
-#endif
-		);
+	synchronize_actuals(AliasType&, AliasType&, const unroll_context&);
 
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	template <class AliasType>
 	static
 	void
@@ -125,7 +113,6 @@ protected:
 	static
 	void
 	__finalize_find(AliasType&, const unroll_context&);
-#endif
 
 public:
 	static

@@ -4,7 +4,7 @@
 	Possibly factor out implementations into another file?
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.15 2007/07/18 23:29:03 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.16 2008/11/12 03:00:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -84,14 +84,7 @@ protected:
 	good_bool
 	instantiate_indices_with_actuals(value_collection_generic_type& v,
 			const const_range_list& crl,
-			const unroll_context& 
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, const instance_relaxed_actuals_type& a
-#endif
-			) {
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		INVARIANT(!a);
-#endif
+			const unroll_context&) {
 		return v.instantiate_indices(crl);
 	}
 
@@ -107,12 +100,6 @@ class class_traits<preal_tag>::instantiation_statement_type_ref_base :
 	// has no type member!
 	// consider importing built-in type ref as a static member
 public:
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	typedef	count_ptr<const dynamic_param_expr_list>
-						const_relaxed_args_type;
-	typedef	count_ptr<const const_param_expr_list>
-						instance_relaxed_actuals_type;
-#endif
 	// probably null_parameter_type
 	typedef	traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
@@ -172,14 +159,7 @@ protected:
 	good_bool
 	instantiate_indices_with_actuals(value_collection_generic_type& v,
 			const const_range_list& crl,
-			const unroll_context& 
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, const instance_relaxed_actuals_type& a
-#endif
-			) {
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		INVARIANT(!a);
-#endif
+			const unroll_context&) {
 		return v.instantiate_indices(crl);
 	}
 
@@ -197,15 +177,7 @@ class class_traits<pbool_tag>::instantiation_statement_type_ref_base :
 public:
 	typedef	traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	typedef	count_ptr<const dynamic_param_expr_list>
-						const_relaxed_args_type;
-#endif
 protected:
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	typedef	count_ptr<const const_param_expr_list>
-						instance_relaxed_actuals_type;
-#endif
 	instantiation_statement_type_ref_base() { }
 
 	/**
@@ -261,14 +233,7 @@ protected:
 	good_bool
 	instantiate_indices_with_actuals(value_collection_generic_type& v,
 			const const_range_list& crl,
-			const unroll_context& 
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, const instance_relaxed_actuals_type& a
-#endif
-			) {
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		INVARIANT(!a);
-#endif
+			const unroll_context&) {
 		return v.instantiate_indices(crl);
 	}
 

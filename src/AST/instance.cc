@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.30 2008/10/07 03:22:22 fang Exp $
+	$Id: instance.cc,v 1.31 2008/11/12 02:59:54 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -46,11 +46,9 @@
 #include "Object/unroll/port_connection.h"
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/conditional_scope.h"
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 #include "Object/unroll/template_type_completion.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
-#endif
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/meta_reference_union.h"
 
@@ -133,10 +131,8 @@ using entity::conditional_scope;
 using entity::pint_scalar;
 using entity::pbool_expr;
 using entity::pbool_const;
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 using entity::process_tag;
 using entity::template_type_completion;
-#endif
 
 //=============================================================================
 // class instance_management method definitions
@@ -509,46 +505,17 @@ instance_base::check_build(context& c) const {
 			THROW_EXIT;
 			return never_ptr<const object>(NULL);
 		}
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		// TODO: not done yet... need to alter c.add_instance
-		// copied from template_argument_list_pair::check_template_args
-		expr_list::checked_meta_exprs_type temp;
-		relaxed_args->postorder_check_meta_exprs(temp, c);
-		// by syntactic construction, all expressions are non NULL
-		checked_relaxed_actuals =
-			relaxed_args_ptr_type(
-				new dynamic_param_expr_list(
-					relaxed_args->size()));
-		NEVER_NULL(checked_relaxed_actuals);
-		copy(temp.begin(), temp.end(),
-			back_inserter(*checked_relaxed_actuals));
-#endif
 	}
-#if 0
-	// change of mind:
 	// we allow scalar instance declarations to be relaxed
 	// for the sake of forming aliases with other instances.  
-	else if (type->is_relaxed()) {
-		// this is a scalar declaration, so the type MUST be strict
-		cerr << "ERROR: scalar declarations require relaxed actual "
-			"parameters for definitions that have them.  " <<
-			where(*this) << endl;
-		return never_ptr<const object>(NULL);
-	}
-#endif
 	// otherwise do nothing different from before.  
 	const context::placeholder_ptr_type
-		inst(c.add_instance(*id
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, checked_relaxed_actuals
-#endif
-			));
+		inst(c.add_instance(*id));
 	if (!inst) {
 		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
 		THROW_EXIT;
 		return never_ptr<const object>(NULL);
 	}
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	if (relaxed_args) {
 		// add an auxiliary type_completion statement
 		const inst_ref_expr::meta_return_type
@@ -567,7 +534,6 @@ instance_base::check_build(context& c) const {
 		c.add_instance_management(nr);
 		// error handling?
 	}
-#endif
 	// need current_instance?  no, not using as reference.
 	// return inst;
 	return c.top_namespace();
@@ -613,9 +579,6 @@ if (ranges) {
 						relaxed_args_ptr_type;
 	const count_ptr<const fundamental_type_reference>
 		type(c.get_current_fundamental_type());
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-	relaxed_args_ptr_type checked_relaxed_actuals;
-#endif
 	INVARIANT(type);
 	if (relaxed_args) {
 		if (type->is_strict()) {
@@ -628,18 +591,6 @@ if (ranges) {
 		}
 		// TODO: not done yet... need to alter c.add_instance
 		// copied from template_argument_list_pair::check_template_args
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		expr_list::checked_meta_exprs_type temp;
-		relaxed_args->postorder_check_meta_exprs(temp, c);
-		// by syntactic construction, all expressions are non NULL
-		checked_relaxed_actuals =
-			relaxed_args_ptr_type(
-				new dynamic_param_expr_list(
-					relaxed_args->size()));
-		NEVER_NULL(checked_relaxed_actuals);
-		copy(temp.begin(), temp.end(),
-			back_inserter(*checked_relaxed_actuals));
-#endif
 	}
 	const range_list::checked_meta_ranges_type
 		d(ranges->check_meta_ranges(c));
@@ -649,11 +600,8 @@ if (ranges) {
 		THROW_EXIT;
 	}
 	if (c.get_current_open_definition()) {
-		if (
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		if (c.get_current_prototype() &&
 			// is now OK outside of formal context
-			c.get_current_prototype() &&
-#endif
 				d->is_relaxed_formal_dependent()) {
 			cerr << "ERROR in instance-array declaration "
 				"at " << where(*ranges) <<
@@ -664,13 +612,8 @@ if (ranges) {
 		}
 	}
 	const never_ptr<const instance_placeholder_base>
-		t(c.add_instance(*id, 
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			checked_relaxed_actuals, 
-#endif
-			d));
+		t(c.add_instance(*id, d));
 	// if there was error, would've THROW_EXIT'd (temporary)
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	if (relaxed_args) {
 		// add an auxiliary type_completion statement
 		// create an index_expr -> reference
@@ -693,7 +636,6 @@ if (ranges) {
 		c.add_instance_management(nr);
 		// error handling?
 	}
-#endif
 	return t;
 } else {
 	return instance_base::check_build(c);
@@ -1288,7 +1230,6 @@ type_completion_statement::rightmost(void) const {
  */
 never_ptr<const object>
 type_completion_statement::check_build(context& c) const {
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	STACKTRACE_VERBOSE;
 	// add an auxiliary type_completion statement
 	const inst_ref_expr::meta_return_type
@@ -1338,10 +1279,6 @@ if (attribs) {
 }
 	// additional error handling?
 	return c.top_namespace();
-#else
-	FINISH_ME(Fang);
-	return never_ptr<const object>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1371,7 +1308,6 @@ type_completion_statement::check_generic_attribute(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 /**
 	\return a template_type_completion statement for unrolling.
  */
@@ -1397,7 +1333,6 @@ type_completion_statement::create_type_completion(
 	const count_ptr<const return_type> ret(new return_type(pr, p));
 	return ret;
 }
-#endif
 
 //=============================================================================
 // class type_completion_connection_statement method definitions

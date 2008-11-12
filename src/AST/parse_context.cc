@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.24 2008/03/17 23:02:16 fang Exp $
+ 	$Id: parse_context.cc,v 1.25 2008/11/12 02:59:54 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -779,18 +779,10 @@ context::get_current_named_scope(void) {
 	Make overloaded version with dimensions.  
  */
 context::placeholder_ptr_type
-context::add_instance(const token_identifier& id 
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		, const relaxed_args_ptr_type& a
-#endif
-		) {
+context::add_instance(const token_identifier& id) {
 	STACKTRACE_VERBOSE;
 	// wrapper
-	return add_instance(id, 
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		a, 
-#endif
-		index_collection_item_ptr_type(NULL));
+	return add_instance(id, index_collection_item_ptr_type(NULL));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -818,9 +810,6 @@ context::add_instance(const token_identifier& id
  */
 context::placeholder_ptr_type
 context::add_instance(const token_identifier& id, 
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		const relaxed_args_ptr_type& a, 
-#endif
 		const index_collection_item_ptr_type dim) {
 	typedef	placeholder_ptr_type		return_type;
 	STACKTRACE_VERBOSE;
@@ -855,11 +844,7 @@ context::add_instance(const token_identifier& id,
 
 	const count_ptr<instantiation_statement_base> inst_stmt(
 		fundamental_type_reference::make_instantiation_statement(
-			current_fundamental_type, dim
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, a
-#endif
-			));
+			current_fundamental_type, dim));
 	NEVER_NULL(inst_stmt);
 	const return_type
 		inst_base(current_named_scope->add_instance(inst_stmt, id, 
@@ -921,11 +906,7 @@ context::add_template_formal(const token_identifier& id,
 	const relaxed_args_ptr_type bogus(NULL);
 	const count_ptr<instantiation_statement_base> inst_stmt(
 		fundamental_type_reference::make_instantiation_statement(
-			ptype, dim
-#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
-			, bogus
-#endif
-			));
+			ptype, dim));
 	// template formals cannot have relaxed types!
 	NEVER_NULL(inst_stmt);
 	// formal instance is constructed and added in add_instance
