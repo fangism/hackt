@@ -1,0 +1,12 @@
+# "celem-rules.prsimrc"
+# @haco@ celem.haco-a
+
+echo . rules
+rules .
+
+echo C's rules
+rules C
+
+echo allrules:
+allrules
+

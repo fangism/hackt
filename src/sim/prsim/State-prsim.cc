@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.25 2008/11/11 20:06:25 fang Exp $
+	$Id: State-prsim.cc,v 1.26 2008/11/13 22:26:42 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -324,7 +324,7 @@ if (pg.rule_pool.size()) {
 		const rule_type& r(pg.rule_pool[i->second]);
 	if (!r.is_invariant()) {
 		// what to assume about multi-fanin?
-		dump_rule(o, i->second, st, v, true) << endl;
+		dump_rule(o, i->first, st, v, true) << endl;
 	}
 	}
 }

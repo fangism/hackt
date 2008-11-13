@@ -3,7 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2008-11-11	David Fang		<fangism@users.sourceforge.net>
+2008-11-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-58:
+	  hacprsim bug-fix: 'rules' command implementation crashed.
+	  Test case added.
+
+
+2008-11-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-57:
 	  enhancement: module::__allocate_unique(), now calls 

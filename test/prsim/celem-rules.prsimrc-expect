@@ -1,0 +1,12 @@
+. rules 
+[top-level]
+rules:
+C's rules 
+C refers to process-inst-ref celem<>
+rules:
+[after 10]	a & b -> c-
+[after 10]	~a & ~b -> c+
+allrules: 
+process: C
+[after 10]	a & b -> c-
+[after 10]	~a & ~b -> c+
