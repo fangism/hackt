@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-59:
+	  hacprsim: direction bit moved from expression to rule structure, 
+		where it makes more sense.  
+	  Minor fix in dumping dot-structures, missing index 0 expr.
+
+
 2008-11-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-58:

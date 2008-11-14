@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.9 2008/11/11 20:06:29 fang Exp $
+	$Id: devel_switches.h,v 1.10 2008/11/14 23:06:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -102,7 +102,8 @@
 	Priority: HIGH
 	Goal: 1
 	Status: complete, debugged, merged to trunk
-
+	When this is perm'd refactor out classes and methods from
+		State-prsim.cc.
  */
 #define	PRSIM_INDIRECT_EXPRESSION_MAP			1
 
@@ -111,7 +112,7 @@
 	output node, but are actually run-time invariant checks.  
 	Will require a new rule flag in the bit-field.  
 	Rationale: stronger assertion checking
-	Status: mostly done, in testing ...
+	Status: done, tested
 	Goal: 1
  */
 #define	PRSIM_INVARIANT_RULES		(1 && PRSIM_INDIRECT_EXPRESSION_MAP)
@@ -119,10 +120,10 @@
 /**
 	Define to 1 to move direction flag to rules, currently in expressions.
 	Rationale: because it makes sense.
-	Status: incomplete
+	Status: done, tested
 	Goal: 1
  */
-#define	PRSIM_RULE_DIRECTION		0
+#define	PRSIM_RULE_DIRECTION		(1 && PRSIM_INDIRECT_EXPRESSION_MAP)
 
 /**
 	Eventually unify the structures and enumerations between

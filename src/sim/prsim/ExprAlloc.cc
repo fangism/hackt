@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.30 2008/11/08 01:30:06 fang Exp $
+	$Id: ExprAlloc.cc,v 1.31 2008/11/14 23:06:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -425,7 +425,6 @@ ExprAlloc::compact_expr_pools(void) {
 #if DEBUG_CLEANUP
 		cerr << "moving expr " << i << " to slot " << n << endl;
 #endif
-#if 1
 		{
 			// move rule_map_entry, if applicable
 			typedef	rule_map_type::iterator	rule_map_iterator;
@@ -434,8 +433,10 @@ ExprAlloc::compact_expr_pools(void) {
 				g->rule_map[n] = f->second;
 				g->rule_map.erase(f);
 			}
+			// this operation may disrupt the otherwise
+			// bi-sorted (monotonic) relationship between
+			// expr indices and rule indices...
 		}
-#endif
 		expr_type& e(g->expr_pool[n]);
 		graph_node_type& gn(g->expr_graph_node_pool[n]);
 		INVARIANT(e.wiped());
@@ -444,6 +445,11 @@ ExprAlloc::compact_expr_pools(void) {
 		gn = g->expr_graph_node_pool[i];
 		// relink parent, which may be node or expression
 		if (e.is_root()) {
+#if PRSIM_RULE_DIRECTION
+			const bool dir = g->lookup_rule(n)->direction();
+#else
+			const bool dir = e.direction();
+#endif
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 #if PRSIM_WEAK_RULES
 			const rule_strength
@@ -453,14 +459,14 @@ ExprAlloc::compact_expr_pools(void) {
 			faninout_struct_type&
 				f(g->local_faninout_map[e.parent]);
 			fanin_array_type&
-				fi(e.direction() ? 
+				fi(dir ? 
 					f.pull_up STR_INDEX(str) :
 					f.pull_dn STR_INDEX(str));
 			replace(fi.begin(), fi.end(), i, n);
 #undef	STR_INDEX
 #else	// PRSIM_INDIRECT_EXPRESSION_MAP
 			node_type& nd(st_node_pool[e.parent]);
-			nd.replace_pull_index(e.direction(), n
+			nd.replace_pull_index(dir, n
 #if PRSIM_WEAK_RULES
 				, rule_strength(REF_RULE_MAP(g, n).is_weak())
 				// careful: consistent with enum rule_strength
@@ -997,9 +1003,16 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	// root expression's position in node's fanin (OR-combination)
 	ng.offset = fin.size();	
 	fin.push_back(top_ex_index);		// append to fanin rules
+#if PRSIM_RULE_DIRECTION
+	ne.pull(ni);				// set as a root expression
+#else
 	ne.pull(ni, dir);			// set as a root expression
+#endif
 	g->rule_map[top_ex_index] = g->rule_pool.size();	// map
 	g->rule_pool.push_back(dummy);
+#if PRSIM_RULE_DIRECTION
+	g->rule_pool.back().set_direction(dir);
+#endif
 #else	// PRSIM_INDIRECT_EXPRESSION_MAP
 	node_type& output(st_node_pool[ni]);
 	// now link root expression to node

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.26 2008/11/13 22:26:42 fang Exp $
+	$Id: State-prsim.cc,v 1.27 2008/11/14 23:06:34 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -969,7 +969,12 @@ for ( ; k<2; ++k) {
 		const expr_struct_type& e
 			__ATTRIBUTE_UNUSED_CTOR__((expr_pool[upi]));
 		assert(e.is_root());
-		assert(e.direction());
+#if PRSIM_RULE_DIRECTION
+		const rule_type& r(*lookup_rule(upi));
+#else
+		const expr_struct_type& r(e);
+#endif
+		assert(r.direction());
 		assert(e.parent == i);
 	}
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -984,8 +989,13 @@ for ( ; k<2; ++k) {
 	if (is_valid_expr_index(dni)) {
 		const expr_struct_type& e
 			__ATTRIBUTE_UNUSED_CTOR__((expr_pool[dni]));
+#if PRSIM_RULE_DIRECTION
+		const rule_type& r(*lookup_rule(dni));
+#else
+		const expr_struct_type& r(e);
+#endif
 		assert(e.is_root());
-		assert(!e.direction());
+		assert(!r.direction());
 		assert(e.parent == i);
 	}
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -1001,7 +1011,7 @@ for ( ; k<2; ++k) {
 		assert(expr_graph_node_pool[n.fanout[j]]
 			.contains_node_fanin(i));
 	}
-}
+}	// end method check_node
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1041,26 +1051,31 @@ if (!e.wiped()) {
 		assert(e.parent < node_pool.size());
 		const node_type& n
 			__ATTRIBUTE_UNUSED_CTOR__((node_pool[e.parent]));
+#if PRSIM_RULE_DIRECTION
+		const bool dir = r->direction();
+#else
+		const bool dir = e.direction();
+#endif
 #if PRSIM_WEAK_RULES
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		const fanin_array_type&
-			fin(n.get_pull_expr(e.direction(), NORMAL_RULE));
+			fin(n.get_pull_expr(dir, NORMAL_RULE));
 		const fanin_array_type&
-			wfin(n.get_pull_expr(e.direction(), WEAK_RULE));
+			wfin(n.get_pull_expr(dir, WEAK_RULE));
 		// the following check is a linear search
 		// can use binary search if sorted
 		assert((count(fin.begin(), fin.end(), i) == 1) || 
 			(count(wfin.begin(), wfin.end(), i) == 1));
 #else
-		assert(n.get_pull_expr(e.direction(), NORMAL_RULE) == i ||
-			n.get_pull_expr(e.direction(), WEAK_RULE) == i);
+		assert(n.get_pull_expr(dir, NORMAL_RULE) == i ||
+			n.get_pull_expr(dir(), WEAK_RULE) == i);
 #endif
 #else
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		const fanin_array_type& fin(n.get_pull_expr(e.direction()));
 		assert(count(fin.begin(), fin.end(), i) == 1);
 #else
-		assert(n.get_pull_expr(e.direction()) == i);
+		assert(n.get_pull_expr(dir) == i);
 #endif
 #endif	// PRSIM_WEAK_RULES
 #if PRSIM_INVARIANT_RULES
@@ -3359,7 +3374,12 @@ if (!r.is_invariant()) {
 	const node_index_type oni = translate_to_global_node(pid, ui);
 	// local -> global node
 	node_type& n(get_node(oni));
-	fanin_state_type& fs(n.get_pull_struct(STRUCT->direction()
+#if PRSIM_RULE_DIRECTION
+	const bool dir = r.direction();
+#else
+	const bool dir = STRUCT->direction();
+#endif
+	fanin_state_type& fs(n.get_pull_struct(dir
 #if PRSIM_WEAK_RULES
 		, r.is_weak()
 #endif
@@ -3571,10 +3591,12 @@ State::propagate_evaluation(
 	}
 	const pull_enum next = ev_result.root_pull;
 	const node_index_type ui = ev_result.node_index;
+#if !PRSIM_RULE_DIRECTION
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	const expr_struct_type* const u(ev_result.root_ex);
 #else
 	const expr_state_type* const u(ev_result.root_ex);
+#endif
 #endif
 	// we delay the root rule search until here to reduce the amount
 	// of searching required to find the responsible rule expression.  
@@ -3676,7 +3698,12 @@ if (n.pending_event()) {
 }
 }	// end if weak_rules_enabled
 #endif	// PRSIM_WEAK_RULES
-if (u->direction()) {
+#if PRSIM_RULE_DIRECTION
+const bool dir = ev_result.root_rule->direction();
+#else
+const bool dir = u->direction();
+#endif
+if (dir) {
 	// pull-up
 /***
 	The node is either T, F, or X. Either way, it's a change.
@@ -3894,7 +3921,7 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
 		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
-			c, u->direction()
+			c, dir
 #if PRSIM_WEAK_RULES
 			, is_weak
 #endif
@@ -4111,7 +4138,7 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
 		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
-			c, u->direction()
+			c, dir
 #if PRSIM_WEAK_RULES
 			, is_weak
 #endif
@@ -4741,7 +4768,11 @@ unique_process_subgraph::dump_struct(ostream& o) const {
 #endif
 			e(expr_pool[i]);
 	if (!e.wiped()) {
-		e.dump_struct(o << "expr[" << i << "]: ") << endl;
+		e.dump_struct(o << "expr[" << i << "]: "
+#if PRSIM_RULE_DIRECTION
+			, (e.is_root() ? lookup_rule(i)->direction() : false)
+#endif
+			) << endl;
 		expr_graph_node_pool[i].dump_struct(o << '\t') << endl;
 	}
 	}
@@ -4823,7 +4854,11 @@ unique_process_subgraph::dump_struct_dot(ostream& o,
 	o << "# Expressions: " << endl;
 	const expr_index_type exprs = expr_pool.size();
 	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	expr_index_type i = FIRST_VALID_LOCAL_EXPR;
+#else
 	expr_index_type i = FIRST_VALID_GLOBAL_EXPR;
+#endif
 	for ( ; i<exprs; ++i) {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		const expr_index_type gi = i +offset;
@@ -4837,8 +4872,11 @@ unique_process_subgraph::dump_struct_dot(ostream& o,
 		const expr_state_type& e(expr_pool[i]);
 #endif
 		e.dump_type_dot_shape(o) << "];" << endl;
-		e.dump_parent_dot_edge(o << "EXPR_" << gi << " -> ")
-			<< ';'<< endl;
+		e.dump_parent_dot_edge(o << "EXPR_" << gi << " -> "
+#if PRSIM_RULE_DIRECTION
+			, (e.is_root() ? lookup_rule(i)->direction() : false)
+#endif
+			) << ';'<< endl;
 	}
 }
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -5006,7 +5044,11 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 		// or pass (!v) to proot to parenthesize in verbose mode
 	const expr_struct_type& e(pg.expr_pool[lri]);
 	ISE_INVARIANT(e.is_root());
+#if PRSIM_RULE_DIRECTION
+	const bool dir = r->direction();
+#else
 	const bool dir = e.direction();
+#endif
 	// print overall pull state (OR combined)
 	const node_index_type nr = e.parent;
 	const node_index_type gnr = st.translate_to_global_node(*this, nr);
