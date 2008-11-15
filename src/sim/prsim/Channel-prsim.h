@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.6 2008/11/15 03:05:50 fang Exp $
+	$Id: Channel-prsim.h,v 1.7 2008/11/15 08:00:02 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -28,13 +28,7 @@
 #include "util/numeric/sign_traits.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
 
-/**
-	Define to 1 to add support for channel validity, for example
-	with 'ev' protocols.  
-	Status: done, tested
- */
-#define	PRSIM_CHANNEL_VALIDITY			1
-
+// #define	PRSIM_CHANNEL_VALIDITY			1
 // #define	PRSIM_CHANNEL_DONT_CARES		1
 
 /**
@@ -172,10 +166,8 @@ private:
 		CHANNEL_ACK_RESET_VALUE =	0x0001,
 		/// true for active high (a), false for active low (e)
 		CHANNEL_ACK_ACTIVE_SENSE =	0x0002,
-#if PRSIM_CHANNEL_VALIDITY
 		/// true for active high (v), false for active low (n)
 		CHANNEL_VALID_ACTIVE_SENSE =	0x0004,
-#endif
 #if PRSIM_CHANNEL_RAILS_INVERTED
 		/// true if data rails are inverted, active low
 		CHANNEL_DATA_ACTIVE_SENSE =	0x0008,
@@ -184,9 +176,7 @@ private:
 		CHANNEL_TYPE_FLAGS =
 			CHANNEL_ACK_RESET_VALUE
 			| CHANNEL_ACK_ACTIVE_SENSE
-#if PRSIM_CHANNEL_VALIDITY
 			| CHANNEL_VALID_ACTIVE_SENSE
-#endif
 #if PRSIM_CHANNEL_RAILS_INVERTED
 			| CHANNEL_DATA_ACTIVE_SENSE
 #endif
@@ -234,10 +224,8 @@ private:
 	string					name;
 	/// node index for acknowledge/enable
 	node_index_type				ack_signal;
-#if PRSIM_CHANNEL_VALIDITY
 	/// node index for validity/neutrality (some types)
 	node_index_type				valid_signal;
-#endif
 
 	/**
 		General attribute and mode flags.  
@@ -345,13 +333,11 @@ private:
 		return alias_data_rails(ai);
 	}
 
-#if PRSIM_CHANNEL_VALIDITY
 	bool
 	set_valid_signal(const node_index_type vi) {
 		valid_signal = vi;
 		return alias_data_rails(vi);
 	}
-#endif
 
 	void
 	set_ack_active(const bool h) {
@@ -378,7 +364,6 @@ public:
 		return flags & CHANNEL_ACK_RESET_VALUE;
 	}
 
-#if PRSIM_CHANNEL_VALIDITY
 private:
 	void
 	set_valid_sense(const bool v) {
@@ -391,7 +376,6 @@ public:
 	get_valid_sense(void) const {
 		return flags & CHANNEL_VALID_ACTIVE_SENSE;
 	}
-#endif
 
 	bool
 	is_sourcing(void) const {

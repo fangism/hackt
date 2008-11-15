@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.8 2008/11/15 03:05:49 fang Exp $
+	$Id: Channel-prsim.cc,v 1.9 2008/11/15 08:00:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -163,9 +163,7 @@ channel_file_handle::load_checkpoint(istream& i) {
 channel::channel() :
 		name(), 
 		ack_signal(INVALID_NODE_INDEX), 
-#if PRSIM_CHANNEL_VALIDITY
 		valid_signal(INVALID_NODE_INDEX), 
-#endif
 		flags(CHANNEL_DEFAULT_FLAGS), 
 		counter_state(0), 	// invalid
 		x_counter(0),		// invalid
@@ -186,9 +184,9 @@ channel::~channel() { }
 void
 channel::get_all_nodes(vector<node_index_type>& ret) const {
 	ret.push_back(ack_signal);
-#if PRSIM_CHANNEL_VALIDITY
+if (valid_signal) {
 	ret.push_back(valid_signal);
-#endif
+}
 	copy(data.begin(), data.end(), back_inserter(ret));
 }
 
@@ -222,11 +220,9 @@ channel::dump(ostream& o) const {
 	o << name << " : ";
 	o << (get_ack_active() ? ".a" : ".e");
 	o << "(init:" << (get_ack_init() ? '1' : '0') << ')';
-#if PRSIM_CHANNEL_VALIDITY
 	if (valid_signal) {
 		o << ' ' << (get_valid_sense() ? ".v" : ".n");
 	}
-#endif
 	// didn't store names of bundles and rails
 	o << ' ' << bundles() << "x1of" << radix();
 	// print internal node IDs? names?
@@ -465,7 +461,6 @@ if (ack_signal) {
 }
 #endif
 	bool maybe_externally_driven = false;
-#if PRSIM_CHANNEL_VALIDITY
 if (valid_signal) {
 	const State::node_type& vn(s.get_node(valid_signal));
 	if (vn.has_fanin()) {
@@ -485,7 +480,6 @@ if (valid_signal) {
 			"\' has no fanout, but is being sourced." << endl;
 	}
 }
-#endif
 	data_bundle_array_type::const_iterator i(data.begin()), e(data.end());
 	for ( ; i!=e; ++i) {
 		const State::node_type& d(s.get_node(*i));
@@ -529,7 +523,6 @@ channel::set_sink(const State& s) {
 			"Channel sink may not operator properly, "
 			"if driven from elsewhere." << endl;
 	}
-#if PRSIM_CHANNEL_VALIDITY
 if (valid_signal) {
 	const State::node_type& vn(s.get_node(valid_signal));
 	if (!vn.has_fanin()) {
@@ -552,7 +545,6 @@ if (valid_signal) {
 	}
 #endif
 }
-#endif
 	// TODO: do we care if data rails lack fanin?
 	return false;
 }	// end channel::set_sink
@@ -704,10 +696,8 @@ channel::clobber(void) {
 	data.~data_bundle_array_type();		// placement dtor
 	new (&data) data_bundle_array_type;	// placement ctor
 	__node_to_rail.clear();
-	ack_signal = 0;
-#if PRSIM_CHANNEL_VALIDITY
-	valid_signal = 0;
-#endif
+	ack_signal = INVALID_NODE_INDEX;
+	valid_signal = INVALID_NODE_INDEX;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -739,9 +729,7 @@ channel::reset(vector<env_event_type>& events) {
 	if (is_sourcing()) {
 		transform(data.begin(), data.end(), back_inserter(events), 
 			__node_setter(LOGIC_LOW));
-#if PRSIM_CHANNEL_VALIDITY
 		// once nodes all become neutral, the validity should be reset
-#endif
 	}
 	if (is_sinking()) {
 		events.push_back(env_event_type(ack_signal, 
@@ -942,11 +930,9 @@ channel::data_rails_value(const State& s) const {
 bool
 channel::may_drive_node(const node_index_type ni) const {
 	if (is_sourcing()) {
-#if PRSIM_CHANNEL_VALIDITY
 		if (valid_signal && (ni == valid_signal)) {
 			return true;
 		}
-#endif
 		// check: is it data rail of source?
 		const data_rail_map_type::const_iterator
 			f(__node_to_rail.find(ni));
@@ -976,22 +962,17 @@ channel::reads_node(const node_index_type ni) const {
 		if (ni == ack_signal) {
 			return true;
 		}
-#if PRSIM_CHANNEL_VALIDITY
 		if (valid_signal && is_data_rail) {
 			// source's validity must respond to its own data rails
 			return true;
 		}
-#endif
 	}
 	if (is_sinking()) {
-#if PRSIM_CHANNEL_VALIDITY
 		if (valid_signal) {
 			// ack only responds to validity, not data rails
 			if (ni == valid_signal)
 				return true;
-		} else
-#endif
-		{
+		} else {
 			// yes, ack responds to data rails
 			if (is_data_rail)
 				return true;
@@ -1009,12 +990,10 @@ void
 channel::__get_fanins(const node_index_type ni, 
 		std::set<node_index_type>& ret) const {
 	if (is_sourcing()) {
-#if PRSIM_CHANNEL_VALIDITY
 		if (valid_signal && (ni == valid_signal)) {
 			// source-validity responds to data rails
 			copy(data.begin(), data.end(), set_inserter(ret));
 		}
-#endif
 		// if node is data rail, then effective input is ack
 		const data_rail_map_type::const_iterator
 			f(__node_to_rail.find(ni));
@@ -1024,14 +1003,11 @@ channel::__get_fanins(const node_index_type ni,
 	}
 	if (is_sinking()) {
 	if (ack_signal == ni) {
-#if PRSIM_CHANNEL_VALIDITY
 		// validity is responsibility of the circuit, not the sink.
 		// the acknowledge only follows the validity signal directly
 		if (valid_signal)
 			ret.insert(valid_signal);
-		else
-#endif
-		copy(data.begin(), data.end(), set_inserter(ret));
+		else	copy(data.begin(), data.end(), set_inserter(ret));
 	}
 	}
 }	// end channel::get_fanins
@@ -1061,14 +1037,11 @@ if (stopped()) {
 	// const node_type& n(s.get_node(ni));
 	if (is_sourcing()) {
 		// only data or validity can be driven by source
-#if PRSIM_CHANNEL_VALIDITY
 		if (valid_signal && (ni == valid_signal)) {
 			__node_why_not_data_rails(s, o, 
 				valid_signal, get_valid_sense(), 
 				data, limit, dir, why_not, verbose, u, v);
-		} else
-#endif
-		{
+		} else {
 		const data_rail_map_type::const_iterator
 			f(__node_to_rail.find(ni));
 		if (f != __node_to_rail.end()) {
@@ -1086,7 +1059,6 @@ if (stopped()) {
 	}
 	if (is_sinking() && (ni == ack_signal)) {
 		// no other signal should be driven by sink
-#if PRSIM_CHANNEL_VALIDITY
 	if (valid_signal) {
 		// TODO: not sure if the following is correct
 		// it may be backwards, if I just think about it...
@@ -1098,10 +1070,10 @@ if (stopped()) {
 			s.__node_why_not(o, valid_signal, limit, 
 				false, why_not, verbose, u, v);
 		}
-	} else
-#endif
+	} else {
 		__node_why_not_data_rails(s, o, ack_signal, get_ack_active(), 
 			data, limit, dir, why_not, verbose, u, v);
+	}
 	}	// end if sinking
 }	// end if !stopped
 	return o;
@@ -1210,15 +1182,12 @@ if (stopped()) {
 	// const node_type& n(s.get_node(ni));
 	if (is_sourcing()) {
 		// only data or validity can be driven by source
-#if PRSIM_CHANNEL_VALIDITY
 		if (valid_signal && (ni == valid_signal)) {
 			// then point back to data rails, see below
 			// eventually refactor that code out
 			__node_why_X_data_rails(s, o, get_valid_sense(), 
 				data, limit, verbose, u, v);
-		} else
-#endif
-		{
+		} else {
 		const data_rail_map_type::const_iterator
 			f(__node_to_rail.find(ni));
 		if (f != __node_to_rail.end()) {
@@ -1234,13 +1203,12 @@ if (stopped()) {
 	}
 	if (is_sinking() && (ni == ack_signal)) {
 		// no other signal should be driven by sink
-#if PRSIM_CHANNEL_VALIDITY
 	if (valid_signal) {
 		s.__node_why_X(o, valid_signal, limit, verbose, u, v);
-	} else	// depends on data rails directly
-#endif
+	} else {	// depends on data rails directly
 		__node_why_X_data_rails(s, o, get_ack_active(), 
 			data, limit, verbose, u, v);
+	}
 	}	// end if sinking
 }	// end if !stopped
 	return o;
@@ -1360,7 +1328,6 @@ if (ni == ack_signal) {
 	}
 	}
 	// logging and expect mode don't care
-#if PRSIM_CHANNEL_VALIDITY
 } else if (valid_signal && (ni == valid_signal)) {
 	STACKTRACE_INDENT_PRINT("got validity update" << endl);
 	switch (next) {
@@ -1406,7 +1373,6 @@ if (ni == ack_signal) {
 		break;
 	}
 	}
-#endif
 } else {
 	STACKTRACE_INDENT_PRINT("got data-rail update" << endl);
 	// invariant: must be data rail
@@ -1430,7 +1396,6 @@ if (ni == ack_signal) {
 	if (x_counter) {
 		// if there are ANY Xs, then cannot log/expect values
 		// sources/sinks should respond accordingly with X signals
-#if PRSIM_CHANNEL_VALIDITY
 		if (is_sourcing()) {
 			// for validity protocol, set valid to X
 			// validity signal reacts even when channel stopped
@@ -1439,18 +1404,16 @@ if (ni == ack_signal) {
 					valid_signal, LOGIC_OTHER));
 			}
 		}
-#endif
 		if (!stopped()) {
 		if (is_sinking() && (next == LOGIC_OTHER)
 				&& (x_counter == 1)) {
 			// if counter was JUST incremented to 1
 			// otherwise multiple X's are vacuous
-#if PRSIM_CHANNEL_VALIDITY
 			// if not validity protocol, set ack to X
-			if (!valid_signal)
-#endif
+			if (!valid_signal) {
 			new_events.push_back(env_event_type(
 				ack_signal, LOGIC_OTHER));
+			}
 			// otherwise wait for validity to go X
 		}
 		}	// end if !stopped
@@ -1463,7 +1426,6 @@ if (ni == ack_signal) {
 	// 4) this is being expected
 	} else if (!counter_state) {
 		// then data rails are in neutral state
-#if PRSIM_CHANNEL_VALIDITY
 		if (is_sourcing() && valid_signal) {
 			// source is responsible for resetting valid signal
 			// should react to data rails 
@@ -1472,13 +1434,8 @@ if (ni == ack_signal) {
 				get_valid_sense() ? LOGIC_LOW
 					: LOGIC_HIGH));
 		}
-#endif
 		if (!stopped()) {
-		if (is_sinking()
-#if PRSIM_CHANNEL_VALIDITY
-			&& !valid_signal
-#endif
-		) {
+		if (is_sinking() && !valid_signal) {
 			// sink should reply with ack reset
 			// otherwise, valid_signal is an input
 			new_events.push_back(env_event_type(ack_signal, 
@@ -1488,7 +1445,6 @@ if (ni == ack_signal) {
 		}
 	} else if (counter_state == bundles()) {
 		// NOTE: stopped channels will not assert expected data nor log!
-#if PRSIM_CHANNEL_VALIDITY
 		if (is_sourcing() && valid_signal) {
 			// source is responsible for setting valid signal
 			// validity signal always reacts to data rails
@@ -1497,20 +1453,14 @@ if (ni == ack_signal) {
 				get_valid_sense() ? LOGIC_HIGH
 					: LOGIC_LOW));
 		}
-#endif
 	if (!stopped()) {
 		// then data rails are in valid state
-#if PRSIM_CHANNEL_VALIDITY
-	if (!valid_signal)
-#endif
+	if (!valid_signal) {
 		process_data(s);
+	}
 		// otherwise, data is logged/checked on validity signal
 		// if no value available, just ignore
-		if (is_sinking()
-#if PRSIM_CHANNEL_VALIDITY
-			&& !valid_signal
-#endif
-		) {
+		if (is_sinking() && !valid_signal) {
 			// sink should reply with ack reset
 			// otherwise, valid_signal is an input
 			new_events.push_back(env_event_type(ack_signal, 
@@ -1613,7 +1563,6 @@ if (is_sourcing()) {
 				set_all_data_rails(events);
 				advance_value();
 			}
-#if PRSIM_CHANNEL_VALIDITY
 			if (valid_signal) {
 				if (x_counter) {
 					events.push_back(env_event_type(
@@ -1634,7 +1583,6 @@ if (is_sourcing()) {
 				}
 				// else leave alone in intermediate state
 			}
-#endif
 		} else {
 			// reset data
 			transform(data.begin(), data.end(),
@@ -1657,7 +1605,6 @@ if (is_sourcing()) {
 				set_all_data_rails(events);
 				advance_value();
 			}
-#if PRSIM_CHANNEL_VALIDITY
 			if (valid_signal) {
 				if (x_counter) {
 					events.push_back(env_event_type(
@@ -1678,7 +1625,6 @@ if (is_sourcing()) {
 				}
 				// else leave alone in intermediate state
 			}
-#endif
 		}
 		break;
 	default:
@@ -1689,7 +1635,6 @@ if (is_sourcing()) {
 }
 // could also be sinking at the same time
 if (is_sinking()) {
-#if PRSIM_CHANNEL_VALIDITY
 	if (valid_signal) {
 		// only react to the valid signal
 		const node_type& v(s.get_node(valid_signal));
@@ -1729,9 +1674,7 @@ if (is_sinking()) {
 			events.push_back(env_event_type(
 				ack_signal, LOGIC_OTHER));
 		}
-	} else
-#endif
-	if (x_counter) {
+	} else if (x_counter) {
 		events.push_back(env_event_type(
 			ack_signal, LOGIC_OTHER));
 	} else if (!counter_state) {
@@ -1761,9 +1704,7 @@ channel::save_checkpoint(ostream& o) const {
 	STACKTRACE_VERBOSE;
 	// don't write the name, let caller save it
 	write_value(o, ack_signal);
-#if PRSIM_CHANNEL_VALIDITY
 	write_value(o, valid_signal);
-#endif
 	write_value(o, flags);
 	write_value(o, counter_state);
 	write_value(o, x_counter);
@@ -1783,9 +1724,7 @@ channel::load_checkpoint(istream& i) {
 	STACKTRACE_VERBOSE;
 	// don't restore the name here, let caller set it
 	read_value(i, ack_signal);
-#if PRSIM_CHANNEL_VALIDITY
 	read_value(i, valid_signal);
-#endif
 	read_value(i, flags);
 	read_value(i, counter_state);
 	read_value(i, x_counter);
@@ -1944,7 +1883,6 @@ if (have_ack)
 	state.get_node(ai).set_in_channel();		// flag in channel
 	node_channels_map[ai].insert(f->second);	// reverse lookup
 }
-#if PRSIM_CHANNEL_VALIDITY
 if (have_validity) {
 	c.set_valid_sense(validity_sense);
 	const string v_name(base + (validity_sense ? ".v" : ".n"));
@@ -1967,7 +1905,6 @@ if (have_validity) {
 	state.get_node(vi).set_in_channel();		// flag in channel
 	node_channels_map[vi].insert(f->second);	// reverse lookup
 }
-#endif
 	return false;
 }
 
@@ -2020,7 +1957,6 @@ bool
 channel_manager::check_source(const channel& c, const string& chan_name) const {
 	// warn if channel happens to be connected in wrong direction
 	// TODO: check that data/validity are not driven by other sources!
-#if PRSIM_CHANNEL_VALIDITY
 if (c.valid_signal) {
 	STACKTRACE_VERBOSE;
 	__GET_NAMED_CHANNEL(chan_name)
@@ -2041,7 +1977,6 @@ if (c.valid_signal) {
 	}
 	}
 }
-#endif
 	return false;
 }
 
