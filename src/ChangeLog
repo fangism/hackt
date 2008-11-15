@@ -5,6 +5,10 @@
 
 2008-11-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-59-a:
+	  Perm'd PRSIM_CHANNEL_DONT_CARES.  (src only tag)
+
+
 	* HACKT-00-01-04-main-00-82-59:
 	  hacprsim: direction bit moved from expression to rule structure, 
 		where it makes more sense.  

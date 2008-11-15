@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.7 2008/11/05 23:03:45 fang Exp $
+	$Id: Channel-prsim.cc,v 1.8 2008/11/15 03:05:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,7 +27,6 @@
 #include "util/stacktrace.h"
 #include "common/TODO.h"
 
-#if PRSIM_CHANNEL_DONT_CARES
 namespace util {
 using std::istream;
 using std::ostream;
@@ -60,13 +59,8 @@ struct value_reader<channel::array_value_type> {
 };
 
 }	// end namespace util
-#endif	// PRSIM_CHANNEL_DONT_CARES
 
-#if PRSIM_CHANNEL_DONT_CARES
 #define	DATA_VALUE(x)			x.first
-#else
-#define	DATA_VALUE(x)			x
-#endif
 
 namespace HAC {
 namespace SIM {
@@ -210,7 +204,6 @@ channel::alias_data_rails(const node_index_type ni) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_CHANNEL_DONT_CARES
 ostream&
 operator << (ostream& o, const channel::array_value_type& p) {
 	if (p.second) {
@@ -219,7 +212,6 @@ operator << (ostream& o, const channel::array_value_type& p) {
 		return o << p.first;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -315,7 +307,6 @@ read_values_from_list(const string_list& s,
 	string_list::const_iterator j(s.begin()), e(s.end());
 	for ( ; j!=e; ++j) {
 		const string& tok(*j);
-#if PRSIM_CHANNEL_DONT_CARES
 		channel::array_value_type p;
 		channel::value_type& i(p.first);
 		p.first = 0;
@@ -323,9 +314,6 @@ read_values_from_list(const string_list& s,
 		if (tok == "X") {
 			p.second = true;
 		} else
-#else
-		channel::array_value_type i;
-#endif
 		if (string_to_num(tok, i)) {
 			cerr << "Error: invalid value \"" << tok <<
 				"\"." << endl;
@@ -336,11 +324,7 @@ read_values_from_list(const string_list& s,
 				"max(unsigned value_type)/2, which may screw "
 				"up ldiv() when translating to rails." << endl;
 		}
-#if PRSIM_CHANNEL_DONT_CARES
 		v.push_back(p);
-#else
-		v.push_back(i);
-#endif
 	}
 	return false;
 }
@@ -795,12 +779,10 @@ if (is_random()) {
 		}
 	}
 	// else if values.size(), values.clear() ?
-#if PRSIM_CHANNEL_DONT_CARES
 	if (have_value() && values[value_index].second) {
 		// if values is X (don't care), then choose a random value
 		values[value_index].first = rand48<value_type>()();
 	}
-#endif
 }
 }
 
@@ -1571,9 +1553,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 	if (is_expecting()) {
 	if (have_value()) {
 		const array_value_type& expect = current_value();
-#if PRSIM_CHANNEL_DONT_CARES
 		if (!expect.second) {
-#endif
 		if (v) {
 		const value_type got = data_rails_value(s);
 		advance_value();
@@ -1585,9 +1565,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 			throw channel_exception(name, 
 				DATA_VALUE(expect), 0xDEADBEEF);
 		}
-#if PRSIM_CHANNEL_DONT_CARES
 		}	// else don't care
-#endif
 	} else {
 		// exhausted values, disable expecting
 		flags &= ~CHANNEL_EXPECTING;

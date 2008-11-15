@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.5 2008/11/05 23:03:46 fang Exp $
+	$Id: Channel-prsim.h,v 1.6 2008/11/15 03:05:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -31,16 +31,11 @@
 /**
 	Define to 1 to add support for channel validity, for example
 	with 'ev' protocols.  
-	TODO: finish me, test me
+	Status: done, tested
  */
 #define	PRSIM_CHANNEL_VALIDITY			1
 
-/**
-	Define to 1 to support don't care values in channels, 
-	only applicable to expects.  
-	Status: done and tested, can perm this
- */
-#define	PRSIM_CHANNEL_DONT_CARES		1
+// #define	PRSIM_CHANNEL_DONT_CARES		1
 
 /**
 	Define to 1 to allow interaction with dataless channels, 
@@ -56,6 +51,18 @@
 	TODO: start me, test me
  */
 #define	PRSIM_CHANNEL_RAILS_INVERTED		0
+
+/**
+	TODO: enable ability to 'set' channel values or to 
+	unset them to 'null'.
+ */
+#define	PRSIM_CHANNEL_SET			0
+
+/**
+	An option to treat a vector of nodes as a bus.
+	Useful for synchronous bus interfaces.  
+ */
+#define	PRSIM_CHANNEL_VECTORS			0
 
 namespace HAC {
 namespace SIM {
@@ -154,11 +161,7 @@ public:
 		Second member bool is true means don't care for expects.  
 		Define to struct to be able to overload ostream& operator <<
 	 */
-#if PRSIM_CHANNEL_DONT_CARES
 	struct array_value_type : public std::pair<value_type, bool> { };
-#else
-	typedef	value_type			array_value_type;
-#endif
 	/**
 		Utility data structure for set of unique node indices. 
 	 */
@@ -553,10 +556,8 @@ private:
 
 };	// end class channel
 
-#if PRSIM_CHANNEL_DONT_CARES
 ostream&
 operator << (ostream&, const channel::array_value_type&);
-#endif
 
 //=============================================================================
 // wrap these into a channel_manager?
