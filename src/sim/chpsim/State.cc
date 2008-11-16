@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.16 2008/11/05 23:03:40 fang Exp $
+	$Id: State.cc,v 1.17 2008/11/16 02:17:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -309,7 +309,9 @@ State::State(const module& m) :
 		value_watches(), 
 		value_breaks(), 
 		trace_manager(), 
-		trace_flush_interval(1L<<16)
+		trace_flush_interval(1L<<16),
+		checkpoint_name("autosave.chpsimckpt"),
+		checkpoint_interval(1000000)
 		{
 	// perform initializations here
 	event_pool.reserve(256);	// pre-allocate some
@@ -352,6 +354,19 @@ State::State(const module& m) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 State::~State() {
+	if ((flags & FLAG_AUTOSAVE) && checkpoint_name.size()) {
+		ofstream o(checkpoint_name.c_str());
+		if (o) {
+		try {
+			save_checkpoint(o);
+		} catch (...) {
+			cerr << "Fatal error during checkpoint save." << endl;
+		}
+		} else {
+			cerr << "Error opening \'" << checkpoint_name <<
+				"\' for saving checkpoint." << endl;
+		}
+	}
 	// clean-up
 	// optional, but recommended: run some diagnostics
 	// anything to do with trace_manager?
@@ -1791,6 +1806,16 @@ ostream&
 State::print_all_subscriptions(ostream& o) const {
 	return instances.dump_all_subscriptions(o, 
 		mod.get_state_manager(), mod.get_footprint());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::autosave(const bool b, const string& n) {
+	if (b)	flags |= FLAG_AUTOSAVE;
+	else	flags &= ~FLAG_AUTOSAVE;
+	if (n.length()) {
+		checkpoint_name = n;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

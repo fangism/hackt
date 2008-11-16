@@ -1,8 +1,9 @@
 # "autosave-02.prsimrc"
 # @haco@ inv.haco-a
-# @deps@ autosave.prsimckpt
+# @deps@ autosave-01.prsimckpt
 
-load autosave.prsimckpt
+load autosave-01.prsimckpt
+autosave off
 watchall
 time
 assert c 0

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.27 2008/11/14 23:06:34 fang Exp $
+	$Id: State-prsim.cc,v 1.28 2008/11/16 02:17:09 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -501,6 +501,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		weak_unstable_policy(ERROR_DEFAULT_WEAK_UNSTABLE),
 		interference_policy(ERROR_DEFAULT_INTERFERENCE),
 		weak_interference_policy(ERROR_DEFAULT_WEAK_INTERFERENCE),
+		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
 #if !PRSIM_INDIRECT_EXPRESSION_MAP
 		__scratch_expr_trace(),
@@ -568,6 +569,19 @@ try {
 	TODO: auto-checkpoint here if desired, even if state incoherent
  */
 State::~State() {
+	if ((flags & FLAG_AUTOSAVE) && autosave_name.size()) {
+		ofstream o(autosave_name.c_str());
+		if (o) {
+		try {
+			save_checkpoint(o);
+		} catch (...) {
+			cerr << "Fatal error during checkpoint save." << endl;
+		}
+		} else {
+			cerr << "Error opening \'" << autosave_name <<
+				"\' for saving checkpoint." << endl;
+		}
+	}
 	// dequeue all events and check consistency with event pool 
 	// upon its destruction.
 	while (!event_queue.empty()) {
@@ -7040,6 +7054,19 @@ State::dump_memory_usage(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Set autosave policy and checkpoint name.
+ */
+void
+State::autosave(const bool b, const string& n) {
+	if (b)	flags |= FLAG_AUTOSAVE;
+	else	flags &= ~FLAG_AUTOSAVE;
+	if (n.length()) {
+		autosave_name = n;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	TODO: need to check consistency with module.  
 	Write out a header for safety checks.  
 	TODO: save state only? without structure?
@@ -7130,6 +7157,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, invariant_fail_policy);
 	write_value(o, invariant_unknown_policy);
 #endif
+	write_value(o, autosave_name);
 	write_value(o, timing_mode);
 	if (_channel_manager.save_checkpoint(o)) return true;
 	// interrupted flag, just ignore
@@ -7302,6 +7330,7 @@ try {
 	read_value(i, invariant_fail_policy);
 	read_value(i, invariant_unknown_policy);
 #endif
+	read_value(i, autosave_name);
 	read_value(i, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.

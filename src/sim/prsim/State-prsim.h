@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.13 2008/11/11 20:06:28 fang Exp $
+	$Id: State-prsim.h,v 1.14 2008/11/16 02:17:10 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -651,6 +651,10 @@ private:
 			Causes are always tracked.  
 		 */
 		FLAG_SHOW_CAUSE = 0x800,
+		/**
+			Autosave on exit.
+		 */
+		FLAG_AUTOSAVE = 0x1000,
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL | FLAG_SHOW_CAUSE,
 		/**
@@ -897,7 +901,8 @@ private:
 	error_policy_enum			interference_policy;
 	/// controls the simulation behavior upon weak-interference
 	error_policy_enum			weak_interference_policy;
-
+	/// name of automatically taken checkpoint
+	string					autosave_name;
 	/// timing mode
 	uchar					timing_mode;
 	// loadable random seed?
@@ -1731,6 +1736,9 @@ public:
 
 	ostream&
 	dump_memory_usage(ostream&) const;
+
+	void
+	autosave(const bool, const string&);
 
 	bool
 	save_checkpoint(ostream&) const;

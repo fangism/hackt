@@ -1,12 +1,12 @@
 # "autosave-01.prsimrc"
 # @haco@ inv.haco-a
-# @antideps@ autosave.prsimckpt
+# @antideps@ autosave-01.prsimckpt
 # testing autosave feature
 # will produce an "autosave.prsimckpt"
 
-autosave on
+autosave on autosave-01.prsimckpt
 # remove it first
-!rm -f autosave.prsimckpt
+!rm -f autosave-01.prsimckpt
 
 watchall
 set a 0

@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim_options.h"
 	Main module for new CHPSIM.
-	$Id: chpsim_options.h,v 1.3 2007/09/13 01:14:13 fang Exp $
+	$Id: chpsim_options.h,v 1.4 2008/11/16 02:17:04 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CHPSIM_OPTIONS_H__
@@ -33,6 +33,7 @@ public:
 	bool				dump_dot_struct;
 	/// whether or not to print checkpoint dump
 	bool				dump_checkpoint;
+	bool				autosave;
 	/// list of paths to search for sourced scripts
 	typedef	std::list<std::string>	source_paths_type;
 	source_paths_type		source_paths;
@@ -44,12 +45,14 @@ public:
 	bool				instantiate_type_recursively;
 	/// name of type to instantiate
 	std::string			complete_type_name;
+	std::string			autosave_name;
 	/// compiler-driver flags
 	compile_options			comp_opt;
 
 	chpsim_options() : help_only(false), interactive(true), 
 		run(true), dump_graph_alloc(false), check_structure(true),
 		dump_dot_struct(false), dump_checkpoint(false), 
+		autosave(false),
 		source_paths(), 
 		use_type(false), instantiate_type_recursively(false),
 		complete_type_name(), 

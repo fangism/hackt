@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.11 2008/11/05 23:03:41 fang Exp $
+	$Id: State.h,v 1.12 2008/11/16 02:17:08 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -190,6 +190,8 @@ private:
 			Initially off.  
 		 */
 		FLAG_SHOW_CAUSE = 0x0010,
+		/// flag to control automatic checkpointing
+		FLAG_AUTOSAVE = 0x0020,
 		/**
 			Set true if named trace file is opened successfully.  
 			Initially off.  
@@ -668,6 +670,9 @@ public:
 
 	ostream&
 	dump_state(ostream&) const;
+
+	void
+	autosave(const bool, const string&);
 
 	bool
 	save_checkpoint(ostream&) const;

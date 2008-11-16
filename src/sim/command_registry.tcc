@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.5 2008/05/28 22:28:05 fang Exp $
+	$Id: command_registry.tcc,v 1.6 2008/11/16 02:17:07 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -73,14 +73,6 @@ command_registry<Command>::begin_outermost_comment = 0;
 template <class Command>
 bool
 command_registry<Command>::echo_commands = false;
-
-/**
-	Flag to automatically save checkpoint on exit.
-	Only really used by top-level caller.
- */
-template <class Command>
-bool
-command_registry<Command>::autosave_on_exit = false;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Command>

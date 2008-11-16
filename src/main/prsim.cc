@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.16 2008/11/05 23:03:36 fang Exp $
+	$Id: prsim.cc,v 1.17 2008/11/16 02:17:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -34,6 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "install_paths.h"
 
 namespace HAC {
+using std::string;
 using SIM::PRSIM::State;
 using SIM::PRSIM::CommandRegistry;
 using SIM::PRSIM::ExprAllocFlags;
@@ -68,6 +69,8 @@ public:
 	bool			dump_dot_struct;
 	/// whether or not checkpoint dump is requested
 	bool			dump_checkpoint;
+	/// whether or not to automatically save
+	bool			autosave;
 	/**
 		Copied from cflat_options.
 		Ignore top-level instances and flatten one anonymous
@@ -81,7 +84,8 @@ public:
 		The string of the complete process type to process
 		in lieu of the top-level instance hierarchy.  
 	 */
-	std::string			named_process_type;
+	string			named_process_type;
+	string			autosave_name;
 	ExprAllocFlags		expr_alloc_flags;
 	/// compiler-driver flags
 	compile_options		comp_opt;
@@ -94,8 +98,10 @@ public:
 		dump_expr_alloc(false), run(true),
 		check_structure(true), dump_dot_struct(false), 
 		dump_checkpoint(false),
+		autosave(false),
 		use_referenced_type_instead_of_top_level(false),
 		named_process_type(),
+		autosave_name("autosave.prsimckpt"),
 		expr_alloc_flags(), 
 		comp_opt(),
 		source_paths() { }
@@ -212,6 +218,7 @@ try {
 			// return value only has meaning to the interpreter
 			// if autosave is on, save checkpoint for
 			// post-mortem analysis.
+#if 0
 			if (CommandRegistry::autosave_on_exit) {
 				std::ofstream ofs("autosave.prsimckpt");
 				if (ofs) {
@@ -221,8 +228,10 @@ try {
 				"Error saving autosave.prsimckpt" << endl;
 				}
 			}
+#endif
 			return 1;	// ret;
 		}
+		// do we want to autosave when exit status is 0?
 	}
 } catch (...) {
 	cerr << "Caught exception during construction of simulator state."
@@ -241,7 +250,7 @@ try {
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+abcC:d:f:hiI:O:t:";
+	static const char optstring[] = "+a:bcC:d:f:hiI:O:t:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -249,15 +258,16 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 @texinfo opt/option-a.texi
 @cindex checkpoint
 @cindex autosave
-@defopt -a
-Automatically save checkpoint "autosave.prsimckpt" upon exit, 
+@defopt -a file
+Automatically save checkpoint @var{file} upon exit, 
 regardless of the exit status.
 Useful for debugging and resuming simulations.  
 @end defopt
 @end texinfo
 ***/
 		case 'a':
-			CommandRegistry::autosave_on_exit = true;
+			o.autosave = true;
+			o.autosave_name = optarg;
 			break;
 /***
 @texinfo opt/option-b.texi
@@ -432,7 +442,7 @@ void
 prsim::usage(void) {
 	cerr << "usage: " << name << " [options] <hackt-obj-infile>" << endl;
 	cerr << "options:\n"
-"\t-a : auto-save checkpoint (autosave.prsimckpt) upon exit\n"
+"\t-a <file> : auto-save checkpoint upon exit\n"
 "\t-b : batch-mode, non-interactive (promptless)\n"
 "\t-c : input file is source, not object, compile it\n"
 "\t-C <opts> : forward options to compile driver\n"

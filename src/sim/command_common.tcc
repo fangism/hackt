@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.9 2008/06/11 21:19:03 fang Exp $
+	$Id: command_common.tcc,v 1.10 2008/11/16 02:17:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -549,23 +549,18 @@ INITIALIZE_COMMON_COMMAND_CLASS(AutoSave, "autosave",
 template <class State>
 int
 AutoSave<State>::main(state_type& s, const string_list& a) {
-if (a.size() != 2) {
+const size_t sz = a.size();
+if ((sz != 2) && (sz != 3)) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
 }
-	const string& arg(a.back());
-	if (arg == "1") {
-		command_registry_type::autosave_on_exit = true;
-	} else if (arg == "on") {
-		command_registry_type::autosave_on_exit = true;
-	} else if (arg == "yes") {
-		command_registry_type::autosave_on_exit = true;
-	} else if (arg == "0") {
-		command_registry_type::autosave_on_exit = false;
-	} else if (arg == "off") {
-		command_registry_type::autosave_on_exit = false;
-	} else if (arg == "no") {
-		command_registry_type::autosave_on_exit = false;
+	static const string empty;
+	const string& cname(sz == 3 ? a.back() : empty);
+	const string& arg(*++a.begin());
+	if (arg == "1" || (arg == "on") || (arg == "yes")) {
+		s.autosave(true, cname);
+	} else if (arg == "0" || (arg == "off") || (arg == "no")) {
+		s.autosave(false, cname);
 	} else {
 		cerr << "Error: invalid argument." << endl;
 		usage(cerr);
@@ -577,7 +572,7 @@ if (a.size() != 2) {
 template <class State>
 void
 AutoSave<State>::usage(ostream& o) {
-	o << name << " <on|off>" << endl;
+	o << name << " <on|off> [file]" << endl;
 	o << brief << endl;
 }
 
