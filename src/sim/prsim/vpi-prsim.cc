@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.4 2008/11/05 23:04:00 fang Exp $
+	$Id: vpi-prsim.cc,v 1.5 2008/11/19 20:42:20 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -89,6 +89,14 @@ static Prs *P = NULL;
 static count_ptr<module> HAC_module(NULL);
 static count_ptr<State>	prsim_state(NULL);
 #endif
+
+/**
+	Only need to call this upon abrupt termination.
+ */
+static void __destroy_globals(void) {
+	prsim_state = count_ptr<State>();	// destroy, auto-checkpoint
+	HAC_module = count_ptr<module>();	// destroy
+}
 
 static void _run_prsim (const Time_t& vcstime, const int context);
 static void __register_self_callback_have_event(Time_t);
@@ -467,7 +475,18 @@ static void _run_prsim (const Time_t& vcstime, const int context)
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;
 #endif
+try {
 	__advance_prsim(vcstime, context);
+} catch (const step_exception& exex) {
+	prsim_state->inspect_exception(exex, cerr);
+	__destroy_globals();
+	THROW_EXIT;	// re-throw
+} catch (...) {
+	// catch all remaining exceptions here, destroy globals and rethrow
+	cerr << "hacprsim (VPI) encountered error, terminating..." << endl;
+	__destroy_globals();
+	throw;		// re-throw
+}
 #if 0
 	if (!prsim_state->pending_events()) {
 		// catch up to vcs time?

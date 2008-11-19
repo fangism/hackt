@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-62:
+	  vpi-prsim.cc: _run_prsim now catches uncaught exceptions
+		and destroys globals before re-throwing to terminate.
+		This allows automatic checkpoints to be taken in time.
+		step/exclusion violations exceptions are now caught
+		and reported prior to termination.  
+	  No test case added.
+
+
 2008-11-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-61:
