@@ -1,259 +1,516 @@
 WOOHOO! 
 Fanins of node `G':
+(from bar[0]):
 [after 0]	bar[0].V & ~G -> G-
+(from bar[1]):
 [after 0]	bar[1].V & ~G -> G-
+(from bar[2]):
 [after 0]	bar[2].V & ~G -> G-
+(from bar[3]):
 [after 0]	bar[3].V & ~G -> G-
+(from bar[4]):
 [after 0]	bar[4].V & ~G -> G-
+(from bar[5]):
 [after 0]	bar[5].V & ~G -> G-
+(from bar[6]):
 [after 0]	bar[6].V & ~G -> G-
+(from bar[7]):
 [after 0]	bar[7].V & ~G -> G-
+(from bar[8]):
 [after 0]	bar[8].V & ~G -> G-
+(from bar[9]):
 [after 0]	bar[9].V & ~G -> G-
+(from bar[10]):
 [after 0]	bar[10].V & ~G -> G-
+(from bar[11]):
 [after 0]	bar[11].V & ~G -> G-
+(from bar[12]):
 [after 0]	bar[12].V & ~G -> G-
+(from bar[13]):
 [after 0]	bar[13].V & ~G -> G-
+(from bar[14]):
 [after 0]	bar[14].V & ~G -> G-
+(from bar[15]):
 [after 0]	bar[15].V & ~G -> G-
+(from bar[16]):
 [after 0]	bar[16].V & ~G -> G-
+(from bar[17]):
 [after 0]	bar[17].V & ~G -> G-
+(from bar[18]):
 [after 0]	bar[18].V & ~G -> G-
+(from bar[19]):
 [after 0]	bar[19].V & ~G -> G-
+(from bar[20]):
 [after 0]	bar[20].V & ~G -> G-
+(from bar[21]):
 [after 0]	bar[21].V & ~G -> G-
+(from bar[22]):
 [after 0]	bar[22].V & ~G -> G-
+(from bar[23]):
 [after 0]	bar[23].V & ~G -> G-
+(from bar[24]):
 [after 0]	bar[24].V & ~G -> G-
+(from bar[25]):
 [after 0]	bar[25].V & ~G -> G-
+(from bar[26]):
 [after 0]	bar[26].V & ~G -> G-
+(from bar[27]):
 [after 0]	bar[27].V & ~G -> G-
+(from bar[28]):
 [after 0]	bar[28].V & ~G -> G-
+(from bar[29]):
 [after 0]	bar[29].V & ~G -> G-
+(from bar[30]):
 [after 0]	bar[30].V & ~G -> G-
+(from bar[31]):
 [after 0]	bar[31].V & ~G -> G-
+(from bar[32]):
 [after 0]	bar[32].V & ~G -> G-
+(from bar[33]):
 [after 0]	bar[33].V & ~G -> G-
+(from bar[34]):
 [after 0]	bar[34].V & ~G -> G-
+(from bar[35]):
 [after 0]	bar[35].V & ~G -> G-
+(from bar[36]):
 [after 0]	bar[36].V & ~G -> G-
+(from bar[37]):
 [after 0]	bar[37].V & ~G -> G-
+(from bar[38]):
 [after 0]	bar[38].V & ~G -> G-
+(from bar[39]):
 [after 0]	bar[39].V & ~G -> G-
+(from bar[40]):
 [after 0]	bar[40].V & ~G -> G-
+(from bar[41]):
 [after 0]	bar[41].V & ~G -> G-
+(from bar[42]):
 [after 0]	bar[42].V & ~G -> G-
+(from bar[43]):
 [after 0]	bar[43].V & ~G -> G-
+(from bar[44]):
 [after 0]	bar[44].V & ~G -> G-
+(from bar[45]):
 [after 0]	bar[45].V & ~G -> G-
+(from bar[46]):
 [after 0]	bar[46].V & ~G -> G-
+(from bar[47]):
 [after 0]	bar[47].V & ~G -> G-
+(from bar[48]):
 [after 0]	bar[48].V & ~G -> G-
+(from bar[49]):
 [after 0]	bar[49].V & ~G -> G-
+(from bar[50]):
 [after 0]	bar[50].V & ~G -> G-
+(from bar[51]):
 [after 0]	bar[51].V & ~G -> G-
+(from bar[52]):
 [after 0]	bar[52].V & ~G -> G-
+(from bar[53]):
 [after 0]	bar[53].V & ~G -> G-
+(from bar[54]):
 [after 0]	bar[54].V & ~G -> G-
+(from bar[55]):
 [after 0]	bar[55].V & ~G -> G-
+(from bar[56]):
 [after 0]	bar[56].V & ~G -> G-
+(from bar[57]):
 [after 0]	bar[57].V & ~G -> G-
+(from bar[58]):
 [after 0]	bar[58].V & ~G -> G-
+(from bar[59]):
 [after 0]	bar[59].V & ~G -> G-
+(from bar[60]):
 [after 0]	bar[60].V & ~G -> G-
+(from bar[61]):
 [after 0]	bar[61].V & ~G -> G-
+(from bar[62]):
 [after 0]	bar[62].V & ~G -> G-
+(from bar[63]):
 [after 0]	bar[63].V & ~G -> G-
+(from bar[64]):
 [after 0]	bar[64].V & ~G -> G-
+(from bar[65]):
 [after 0]	bar[65].V & ~G -> G-
+(from bar[66]):
 [after 0]	bar[66].V & ~G -> G-
+(from bar[67]):
 [after 0]	bar[67].V & ~G -> G-
+(from bar[68]):
 [after 0]	bar[68].V & ~G -> G-
+(from bar[69]):
 [after 0]	bar[69].V & ~G -> G-
+(from bar[70]):
 [after 0]	bar[70].V & ~G -> G-
+(from bar[71]):
 [after 0]	bar[71].V & ~G -> G-
+(from bar[72]):
 [after 0]	bar[72].V & ~G -> G-
+(from bar[73]):
 [after 0]	bar[73].V & ~G -> G-
+(from bar[74]):
 [after 0]	bar[74].V & ~G -> G-
+(from bar[75]):
 [after 0]	bar[75].V & ~G -> G-
+(from bar[76]):
 [after 0]	bar[76].V & ~G -> G-
+(from bar[77]):
 [after 0]	bar[77].V & ~G -> G-
+(from bar[78]):
 [after 0]	bar[78].V & ~G -> G-
+(from bar[79]):
 [after 0]	bar[79].V & ~G -> G-
+(from bar[80]):
 [after 0]	bar[80].V & ~G -> G-
+(from bar[81]):
 [after 0]	bar[81].V & ~G -> G-
+(from bar[82]):
 [after 0]	bar[82].V & ~G -> G-
+(from bar[83]):
 [after 0]	bar[83].V & ~G -> G-
+(from bar[84]):
 [after 0]	bar[84].V & ~G -> G-
+(from bar[85]):
 [after 0]	bar[85].V & ~G -> G-
+(from bar[86]):
 [after 0]	bar[86].V & ~G -> G-
+(from bar[87]):
 [after 0]	bar[87].V & ~G -> G-
+(from bar[88]):
 [after 0]	bar[88].V & ~G -> G-
+(from bar[89]):
 [after 0]	bar[89].V & ~G -> G-
+(from bar[90]):
 [after 0]	bar[90].V & ~G -> G-
+(from bar[91]):
 [after 0]	bar[91].V & ~G -> G-
+(from bar[92]):
 [after 0]	bar[92].V & ~G -> G-
+(from bar[93]):
 [after 0]	bar[93].V & ~G -> G-
+(from bar[94]):
 [after 0]	bar[94].V & ~G -> G-
+(from bar[95]):
 [after 0]	bar[95].V & ~G -> G-
+(from bar[96]):
 [after 0]	bar[96].V & ~G -> G-
+(from bar[97]):
 [after 0]	bar[97].V & ~G -> G-
+(from bar[98]):
 [after 0]	bar[98].V & ~G -> G-
+(from bar[99]):
 [after 0]	bar[99].V & ~G -> G-
+(from bar[100]):
 [after 0]	bar[100].V & ~G -> G-
+(from bar[101]):
 [after 0]	bar[101].V & ~G -> G-
+(from bar[102]):
 [after 0]	bar[102].V & ~G -> G-
+(from bar[103]):
 [after 0]	bar[103].V & ~G -> G-
+(from bar[104]):
 [after 0]	bar[104].V & ~G -> G-
+(from bar[105]):
 [after 0]	bar[105].V & ~G -> G-
+(from bar[106]):
 [after 0]	bar[106].V & ~G -> G-
+(from bar[107]):
 [after 0]	bar[107].V & ~G -> G-
+(from bar[108]):
 [after 0]	bar[108].V & ~G -> G-
+(from bar[109]):
 [after 0]	bar[109].V & ~G -> G-
+(from bar[110]):
 [after 0]	bar[110].V & ~G -> G-
+(from bar[111]):
 [after 0]	bar[111].V & ~G -> G-
+(from bar[112]):
 [after 0]	bar[112].V & ~G -> G-
+(from bar[113]):
 [after 0]	bar[113].V & ~G -> G-
+(from bar[114]):
 [after 0]	bar[114].V & ~G -> G-
+(from bar[115]):
 [after 0]	bar[115].V & ~G -> G-
+(from bar[116]):
 [after 0]	bar[116].V & ~G -> G-
+(from bar[117]):
 [after 0]	bar[117].V & ~G -> G-
+(from bar[118]):
 [after 0]	bar[118].V & ~G -> G-
+(from bar[119]):
 [after 0]	bar[119].V & ~G -> G-
+(from bar[120]):
 [after 0]	bar[120].V & ~G -> G-
+(from bar[121]):
 [after 0]	bar[121].V & ~G -> G-
+(from bar[122]):
 [after 0]	bar[122].V & ~G -> G-
+(from bar[123]):
 [after 0]	bar[123].V & ~G -> G-
+(from bar[124]):
 [after 0]	bar[124].V & ~G -> G-
+(from bar[125]):
 [after 0]	bar[125].V & ~G -> G-
+(from bar[126]):
 [after 0]	bar[126].V & ~G -> G-
+(from bar[127]):
 [after 0]	bar[127].V & ~G -> G-
+(from bar[128]):
 [after 0]	bar[128].V & ~G -> G-
+(from bar[129]):
 [after 0]	bar[129].V & ~G -> G-
+(from bar[130]):
 [after 0]	bar[130].V & ~G -> G-
+(from bar[131]):
 [after 0]	bar[131].V & ~G -> G-
+(from bar[132]):
 [after 0]	bar[132].V & ~G -> G-
+(from bar[133]):
 [after 0]	bar[133].V & ~G -> G-
+(from bar[134]):
 [after 0]	bar[134].V & ~G -> G-
+(from bar[135]):
 [after 0]	bar[135].V & ~G -> G-
+(from bar[136]):
 [after 0]	bar[136].V & ~G -> G-
+(from bar[137]):
 [after 0]	bar[137].V & ~G -> G-
+(from bar[138]):
 [after 0]	bar[138].V & ~G -> G-
+(from bar[139]):
 [after 0]	bar[139].V & ~G -> G-
+(from bar[140]):
 [after 0]	bar[140].V & ~G -> G-
+(from bar[141]):
 [after 0]	bar[141].V & ~G -> G-
+(from bar[142]):
 [after 0]	bar[142].V & ~G -> G-
+(from bar[143]):
 [after 0]	bar[143].V & ~G -> G-
+(from bar[144]):
 [after 0]	bar[144].V & ~G -> G-
+(from bar[145]):
 [after 0]	bar[145].V & ~G -> G-
+(from bar[146]):
 [after 0]	bar[146].V & ~G -> G-
+(from bar[147]):
 [after 0]	bar[147].V & ~G -> G-
+(from bar[148]):
 [after 0]	bar[148].V & ~G -> G-
+(from bar[149]):
 [after 0]	bar[149].V & ~G -> G-
+(from bar[150]):
 [after 0]	bar[150].V & ~G -> G-
+(from bar[151]):
 [after 0]	bar[151].V & ~G -> G-
+(from bar[152]):
 [after 0]	bar[152].V & ~G -> G-
+(from bar[153]):
 [after 0]	bar[153].V & ~G -> G-
+(from bar[154]):
 [after 0]	bar[154].V & ~G -> G-
+(from bar[155]):
 [after 0]	bar[155].V & ~G -> G-
+(from bar[156]):
 [after 0]	bar[156].V & ~G -> G-
+(from bar[157]):
 [after 0]	bar[157].V & ~G -> G-
+(from bar[158]):
 [after 0]	bar[158].V & ~G -> G-
+(from bar[159]):
 [after 0]	bar[159].V & ~G -> G-
+(from bar[160]):
 [after 0]	bar[160].V & ~G -> G-
+(from bar[161]):
 [after 0]	bar[161].V & ~G -> G-
+(from bar[162]):
 [after 0]	bar[162].V & ~G -> G-
+(from bar[163]):
 [after 0]	bar[163].V & ~G -> G-
+(from bar[164]):
 [after 0]	bar[164].V & ~G -> G-
+(from bar[165]):
 [after 0]	bar[165].V & ~G -> G-
+(from bar[166]):
 [after 0]	bar[166].V & ~G -> G-
+(from bar[167]):
 [after 0]	bar[167].V & ~G -> G-
+(from bar[168]):
 [after 0]	bar[168].V & ~G -> G-
+(from bar[169]):
 [after 0]	bar[169].V & ~G -> G-
+(from bar[170]):
 [after 0]	bar[170].V & ~G -> G-
+(from bar[171]):
 [after 0]	bar[171].V & ~G -> G-
+(from bar[172]):
 [after 0]	bar[172].V & ~G -> G-
+(from bar[173]):
 [after 0]	bar[173].V & ~G -> G-
+(from bar[174]):
 [after 0]	bar[174].V & ~G -> G-
+(from bar[175]):
 [after 0]	bar[175].V & ~G -> G-
+(from bar[176]):
 [after 0]	bar[176].V & ~G -> G-
+(from bar[177]):
 [after 0]	bar[177].V & ~G -> G-
+(from bar[178]):
 [after 0]	bar[178].V & ~G -> G-
+(from bar[179]):
 [after 0]	bar[179].V & ~G -> G-
+(from bar[180]):
 [after 0]	bar[180].V & ~G -> G-
+(from bar[181]):
 [after 0]	bar[181].V & ~G -> G-
+(from bar[182]):
 [after 0]	bar[182].V & ~G -> G-
+(from bar[183]):
 [after 0]	bar[183].V & ~G -> G-
+(from bar[184]):
 [after 0]	bar[184].V & ~G -> G-
+(from bar[185]):
 [after 0]	bar[185].V & ~G -> G-
+(from bar[186]):
 [after 0]	bar[186].V & ~G -> G-
+(from bar[187]):
 [after 0]	bar[187].V & ~G -> G-
+(from bar[188]):
 [after 0]	bar[188].V & ~G -> G-
+(from bar[189]):
 [after 0]	bar[189].V & ~G -> G-
+(from bar[190]):
 [after 0]	bar[190].V & ~G -> G-
+(from bar[191]):
 [after 0]	bar[191].V & ~G -> G-
+(from bar[192]):
 [after 0]	bar[192].V & ~G -> G-
+(from bar[193]):
 [after 0]	bar[193].V & ~G -> G-
+(from bar[194]):
 [after 0]	bar[194].V & ~G -> G-
+(from bar[195]):
 [after 0]	bar[195].V & ~G -> G-
+(from bar[196]):
 [after 0]	bar[196].V & ~G -> G-
+(from bar[197]):
 [after 0]	bar[197].V & ~G -> G-
+(from bar[198]):
 [after 0]	bar[198].V & ~G -> G-
+(from bar[199]):
 [after 0]	bar[199].V & ~G -> G-
+(from bar[200]):
 [after 0]	bar[200].V & ~G -> G-
+(from bar[201]):
 [after 0]	bar[201].V & ~G -> G-
+(from bar[202]):
 [after 0]	bar[202].V & ~G -> G-
+(from bar[203]):
 [after 0]	bar[203].V & ~G -> G-
+(from bar[204]):
 [after 0]	bar[204].V & ~G -> G-
+(from bar[205]):
 [after 0]	bar[205].V & ~G -> G-
+(from bar[206]):
 [after 0]	bar[206].V & ~G -> G-
+(from bar[207]):
 [after 0]	bar[207].V & ~G -> G-
+(from bar[208]):
 [after 0]	bar[208].V & ~G -> G-
+(from bar[209]):
 [after 0]	bar[209].V & ~G -> G-
+(from bar[210]):
 [after 0]	bar[210].V & ~G -> G-
+(from bar[211]):
 [after 0]	bar[211].V & ~G -> G-
+(from bar[212]):
 [after 0]	bar[212].V & ~G -> G-
+(from bar[213]):
 [after 0]	bar[213].V & ~G -> G-
+(from bar[214]):
 [after 0]	bar[214].V & ~G -> G-
+(from bar[215]):
 [after 0]	bar[215].V & ~G -> G-
+(from bar[216]):
 [after 0]	bar[216].V & ~G -> G-
+(from bar[217]):
 [after 0]	bar[217].V & ~G -> G-
+(from bar[218]):
 [after 0]	bar[218].V & ~G -> G-
+(from bar[219]):
 [after 0]	bar[219].V & ~G -> G-
+(from bar[220]):
 [after 0]	bar[220].V & ~G -> G-
+(from bar[221]):
 [after 0]	bar[221].V & ~G -> G-
+(from bar[222]):
 [after 0]	bar[222].V & ~G -> G-
+(from bar[223]):
 [after 0]	bar[223].V & ~G -> G-
+(from bar[224]):
 [after 0]	bar[224].V & ~G -> G-
+(from bar[225]):
 [after 0]	bar[225].V & ~G -> G-
+(from bar[226]):
 [after 0]	bar[226].V & ~G -> G-
+(from bar[227]):
 [after 0]	bar[227].V & ~G -> G-
+(from bar[228]):
 [after 0]	bar[228].V & ~G -> G-
+(from bar[229]):
 [after 0]	bar[229].V & ~G -> G-
+(from bar[230]):
 [after 0]	bar[230].V & ~G -> G-
+(from bar[231]):
 [after 0]	bar[231].V & ~G -> G-
+(from bar[232]):
 [after 0]	bar[232].V & ~G -> G-
+(from bar[233]):
 [after 0]	bar[233].V & ~G -> G-
+(from bar[234]):
 [after 0]	bar[234].V & ~G -> G-
+(from bar[235]):
 [after 0]	bar[235].V & ~G -> G-
+(from bar[236]):
 [after 0]	bar[236].V & ~G -> G-
+(from bar[237]):
 [after 0]	bar[237].V & ~G -> G-
+(from bar[238]):
 [after 0]	bar[238].V & ~G -> G-
+(from bar[239]):
 [after 0]	bar[239].V & ~G -> G-
+(from bar[240]):
 [after 0]	bar[240].V & ~G -> G-
+(from bar[241]):
 [after 0]	bar[241].V & ~G -> G-
+(from bar[242]):
 [after 0]	bar[242].V & ~G -> G-
+(from bar[243]):
 [after 0]	bar[243].V & ~G -> G-
+(from bar[244]):
 [after 0]	bar[244].V & ~G -> G-
+(from bar[245]):
 [after 0]	bar[245].V & ~G -> G-
+(from bar[246]):
 [after 0]	bar[246].V & ~G -> G-
+(from bar[247]):
 [after 0]	bar[247].V & ~G -> G-
+(from bar[248]):
 [after 0]	bar[248].V & ~G -> G-
+(from bar[249]):
 [after 0]	bar[249].V & ~G -> G-
+(from bar[250]):
 [after 0]	bar[250].V & ~G -> G-
+(from bar[251]):
 [after 0]	bar[251].V & ~G -> G-
+(from bar[252]):
 [after 0]	bar[252].V & ~G -> G-
+(from bar[253]):
 [after 0]	bar[253].V & ~G -> G-
+(from bar[254]):
 [after 0]	bar[254].V & ~G -> G-
+(from bar[255]):
 [after 0]	bar[255].V & ~G -> G-
+(from bar[256]):
 [after 0]	bar[256].V & ~G -> G-

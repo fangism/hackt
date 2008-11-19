@@ -1,12 +1,18 @@
 Fanins of node `d':
+(from n):
 [after 0]	g & ~s -> d-
+(from p):
 [after 0]	~_g & s -> d+
 Fanouts of node `s':
+(to n):
 [after 0]	g & ~s -> d-
+(to p):
 [after 0]	~_g & s -> d+
 Fanouts of node `g':
+(to n):
 [after 0]	g & ~s -> d-
 Fanouts of node `_g':
+(to p):
 [after 0]	~_g & s -> d+
 	0	s : 0
 	0	g : 0

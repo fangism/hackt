@@ -1,7 +1,9 @@
 Fanins of node `b':
+(from [top-level]):
 [after 10]	~a -> b+
 [after 10]	a -> b-
 Fanins of node `a':
+(from [top-level]):
 [after 10, weak]	~b -> a+
 [after 10, weak]	b -> a-
 event queue:

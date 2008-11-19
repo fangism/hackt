@@ -1,7 +1,9 @@
 Fanins of node `t':
+(from [top-level]):
 [after 10]	~f -> t+
 [after 10]	f -> t-
 Fanins of node `f':
+(from [top-level]):
 [after 10]	~t -> f+
 [after 10]	t -> f-
 setting X -> 1 

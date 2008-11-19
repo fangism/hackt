@@ -1,9 +1,11 @@
 Fanins of node `Z._c':
+(from Z):
 [after 10]	~a & ~b -> Z._c+
 [after 10]	a & b -> Z._c-
 [after 10, weak]	~c -> Z._c+
 [after 10, weak]	c -> Z._c-
 Fanouts of node `Z._c':
+(to Z):
 [after 10]	Z._c -> c-
 [after 10]	~Z._c -> c+
 	0	a : 0

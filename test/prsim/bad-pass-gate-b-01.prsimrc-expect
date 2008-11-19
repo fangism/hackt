@@ -1,3 +1,4 @@
 Fanins of node `a':
+(from [top-level]):
 [after 0]	a:X & ~a:X<X><X> -> a-:X
 Done. 

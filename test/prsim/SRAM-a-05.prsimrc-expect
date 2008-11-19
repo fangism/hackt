@@ -5,18 +5,26 @@ enqueued:	10	bl : 1	[from we:=0]
 	10	_bl : 1	[by _pchg:=0]
 	10	bl : 1	[by we:=0]
 Fanins of node `bl':
+(from w):
 [after 10]	~w.we_:1 & ~w.wv_:1<0><0> -> bl+:1
 [after 10]	we:0 & w.wv_:1<0><0> -> bl-:1
+(from p):
 [after 10]	~_pchg:1<0> -> bl+:1
 [after 10, weak]	~p.bls:0<1> -> bl+:1
+(from c[0]):
 [after 10, weak]	c[0].r.d[1]:X & wl[0]:0<0><0> -> bl-:1
+(from c[1]):
 [after 10, weak]	c[1].r.d[1]:X & wl[1]:0<0><0> -> bl-:1
 Fanins of node `_bl':
+(from w):
 [after 10]	~w.we_:1 & ~wv:0<0><0> -> _bl+:1
 [after 10]	we:0 & wv:0<0><0> -> _bl-:1
+(from p):
 [after 10]	~_pchg:1<0> -> _bl+:1
 [after 10, weak]	~p._bls:0<1> -> _bl+:1
+(from c[0]):
 [after 10, weak]	c[0].r.d[0]:X & wl[0]:0<0><0> -> _bl-:1
+(from c[1]):
 [after 10, weak]	c[1].r.d[0]:X & wl[1]:0<0><0> -> _bl-:1
 enabling wordline should expose bitline to cell 
 WARNING: weak-interference `bl'

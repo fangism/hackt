@@ -1,10 +1,12 @@
 forced exclhi rings:
 forced excllo rings:
 Fanins of node `_o[0]':
+(from A):
 [after 10]	~en[0]:X -> _o[0]+:X
 [after 10]	en[0]:X & x[0][0]:X<X><X> -> _o[0]-:X
 [after 10]	en[0]:X & x[0][1]:X<X><X> -> _o[0]-:X
 Fanins of node `_o[1]':
+(from B):
 [after 10]	~en[1]:X -> _o[1]+:X
 [after 10]	en[1]:X & x[1][0]:X<X><X> -> _o[1]-:X
 [after 10]	en[1]:X & x[1][1]:X<X><X> -> _o[1]-:X

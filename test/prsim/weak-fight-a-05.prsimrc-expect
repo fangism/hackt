@@ -1,4 +1,5 @@
 Fanins of node `c':
+(from [top-level]):
 [after 10]	b -> c-
 [after 10, weak]	~a -> c+
 weak pull-up 

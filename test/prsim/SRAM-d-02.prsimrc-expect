@@ -21,16 +21,24 @@ WARNING: unstable `w.we_'-
 queue:	60	bl : 0	[from we:=1]	(weak)
 No event pending on `_bl'.
 Fanins of node `bl':
+(from w):
 [after 10]	~w.we_:1 & ~w.wv_:1<0><0> -> bl+:1
 [after 10]	we:0 & w.wv_:1<0><0> -> bl-:1
+(from p):
 [after 10]	~_pchg:1<0> -> bl+:1
+(from c[0]):
 [after 10, weak]	c[0].r.d[1]:1 & wl[0]:1<1><1> -> bl-:1
+(from c[1]):
 [after 10, weak]	c[1].r.d[1]:X & wl[1]:0<0><1> -> bl-:1
 Fanins of node `_bl':
+(from w):
 [after 10]	~w.we_:1 & ~wv:0<0><0> -> _bl+:1
 [after 10]	we:0 & wv:0<0><0> -> _bl-:1
+(from p):
 [after 10]	~_pchg:1<0> -> _bl+:1
+(from c[0]):
 [after 10, weak]	c[0].r.d[0]:0 & wl[0]:1<0><0> -> _bl-:1
+(from c[1]):
 [after 10, weak]	c[1].r.d[0]:X & wl[1]:0<0><0> -> _bl-:1
 All subnodes of 'w':
 we : 0

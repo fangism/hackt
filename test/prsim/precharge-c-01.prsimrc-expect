@@ -1,4 +1,5 @@
 Fanins of node `_o':
+(from A):
 [after 10]	~en:X -> _o+:X
 [after 10]	en:X & x[0]:X<X><X> -> _o-:X
 [after 10]	en:X & x[1]:X<X><X> -> _o-:X

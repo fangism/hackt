@@ -3,12 +3,16 @@ x refers to process-inst-ref after_celem<15>
 y refers to process-inst-ref after_celem<35>
 z refers to process-inst-ref after_celem<50>
 Fanins of node `c':
+(from w):
 [after 30]	~a[0]:X & ~b[0]:X<X><X> -> c+:X
 [after 20]	a[0]:X & b[0]:X<X><X> -> c-:X
+(from x):
 [after 45]	~a[1]:X & ~b[1]:X<X><X> -> c+:X
 [after 30]	a[1]:X & b[1]:X<X><X> -> c-:X
+(from y):
 [after 105]	~a[2]:X & ~b[2]:X<X><X> -> c+:X
 [after 70]	a[2]:X & b[2]:X<X><X> -> c-:X
+(from z):
 [after 150]	~a[3]:X & ~b[3]:X<X><X> -> c+:X
 [after 100]	a[3]:X & b[3]:X<X><X> -> c-:X
 	0	a[0] : 0
@@ -20,23 +24,31 @@ Fanins of node `c':
 	0	b[2] : 1
 	0	b[3] : 1
 Fanins of node `c':
+(from w):
 [after 30]	~a[0]:0 & ~b[0]:1<0><0> -> c+:X
 [after 20]	a[0]:0 & b[0]:1<0><0> -> c-:X
+(from x):
 [after 45]	~a[1]:0 & ~b[1]:1<0><0> -> c+:X
 [after 30]	a[1]:0 & b[1]:1<0><0> -> c-:X
+(from y):
 [after 105]	~a[2]:0 & ~b[2]:1<0><0> -> c+:X
 [after 70]	a[2]:0 & b[2]:1<0><0> -> c-:X
+(from z):
 [after 150]	~a[3]:0 & ~b[3]:1<0><0> -> c+:X
 [after 100]	a[3]:0 & b[3]:1<0><0> -> c-:X
 	0	a[3] : 1
 	100	c : 0	[by a[3]:=1]
 Fanins of node `c':
+(from w):
 [after 30]	~a[0]:0 & ~b[0]:1<0><0> -> c+:0
 [after 20]	a[0]:0 & b[0]:1<0><1> -> c-:0
+(from x):
 [after 45]	~a[1]:0 & ~b[1]:1<0><0> -> c+:0
 [after 30]	a[1]:0 & b[1]:1<0><1> -> c-:0
+(from y):
 [after 105]	~a[2]:0 & ~b[2]:1<0><0> -> c+:0
 [after 70]	a[2]:0 & b[2]:1<0><1> -> c-:0
+(from z):
 [after 150]	~a[3]:1 & ~b[3]:1<0><0> -> c+:0
 [after 100]	a[3]:1 & b[3]:1<1><1> -> c-:0
 time: 100

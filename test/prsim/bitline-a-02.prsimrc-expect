@@ -21,6 +21,7 @@ setting another pull-down rule on to overtake X
 event queue:
 	30	_bl : 0	[from wl:=1]	(weak)
 Fanins of node `_bl':
+(from [top-level]):
 [after 10]	~_pchg:1 -> _bl+:1
 [after 20, weak]	~blst:0 -> _bl+:1
 [after 20, weak]	wl:1 & pb:1<1><1> -> _bl-:1
@@ -33,6 +34,7 @@ step: expect pull-down to overtake previous pull down
 event queue:
 	40	blst : 1	[from _bl:=0]
 Fanins of node `_bl':
+(from [top-level]):
 [after 10]	~_pchg:1 -> _bl+:0
 [after 20, weak]	~blst:0 -> _bl+:0
 [after 20, weak]	wl:1 & pb:1<1><1> -> _bl-:0

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.28 2008/11/16 02:17:09 fang Exp $
+	$Id: State-prsim.cc,v 1.29 2008/11/19 02:22:54 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -5175,7 +5175,14 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 	}
 	typedef	rule_set_type::const_iterator		rule_iterator;
 	rule_iterator ri(fanout_rules.begin()), re(fanout_rules.end());
+	// index-sorted expressions *should* be sorted by process!
+	const process_sim_state* last = NULL;
 	for ( ; ri!=re; ++ri) {
+		const process_sim_state& ps(lookup_global_expr_process(*ri));
+		if (last != &ps) {
+			last = &ps;
+			dump_process_canonical_name(o << "(to ", ps) << "):\n";
+		}
 		dump_rule(o, *ri, v, (n.fanin.size() > 1));
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		o << endl;
@@ -5292,6 +5299,7 @@ State::dump_node_fanin(ostream& o, const node_index_type ni,
 #endif
 for ( ; i!=e; ++i) {
 	const process_index_type& pid = *i;
+	dump_process_canonical_name(o << "(from ", pid) << "):\n";
 	const process_sim_state& ps(process_state_array[pid]);
 	// find the local node index that corresponds to global node
 	const footprint_frame_map_type& bfm(get_footprint_frame_map(pid));

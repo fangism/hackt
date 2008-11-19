@@ -1,8 +1,10 @@
 X nodes:
 x y 
 Fanins of node `y':
+(from [top-level]):
 [after 10]	~x:X -> y+:X
 [after 10]	x:X -> y-:X
 Fanouts of node `x':
+(to [top-level]):
 [after 10]	x:X -> y-:X
 [after 10]	~x:X -> y+:X

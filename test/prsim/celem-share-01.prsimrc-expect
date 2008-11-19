@@ -11,19 +11,25 @@ e d
 1 nodes:
 a b c 
 Fanouts of node `a':
+(to C):
 [after 10]	a & b -> e-
 [after 10]	~a & ~b -> e+
 Fanouts of node `b':
+(to C):
 [after 10]	a & b -> e-
 [after 10]	~a & ~b -> e+
 Fanouts of node `c':
+(to D):
 [after 10]	c & d -> e-
 [after 10]	~c & ~d -> e+
 Fanouts of node `d':
+(to D):
 [after 10]	c & d -> e-
 [after 10]	~c & ~d -> e+
 Fanins of node `e':
+(from C):
 [after 10]	~a & ~b -> e+
 [after 10]	a & b -> e-
+(from D):
 [after 10]	~c & ~d -> e+
 [after 10]	c & d -> e-

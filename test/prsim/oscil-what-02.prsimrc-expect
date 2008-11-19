@@ -5,20 +5,25 @@ _Reset refers to bool-inst-ref bool<>
 aliases of "_Reset":
 R._Reset _Reset 
 Fanouts of node `_Reset':
+(to R):
 [after 10]	R.x[12]:X & _Reset:X<X><X> -> R.x[0]-:X
 [after 10]	~R.x[12]:X | ~_Reset:X<X><X> -> R.x[0]+:X
 R.x[6] refers to bool-member-inst-ref bool<>
 aliases of "R.x[6]":
 R.x[6] 
 Fanins of node `R.x[6]':
+(from R):
 [after 10]	~R.x[5]:X -> R.x[6]+:X
 [after 10]	R.x[5]:X -> R.x[6]-:X
 Fanouts of node `R.x[6]':
+(to R):
 [after 10]	R.x[6]:X -> R.x[7]-:X
 [after 10]	~R.x[6]:X -> R.x[7]+:X
 Fanins of node `R.x[6]':
+(from R):
 [after 10]	~R.x[5]:0 -> R.x[6]+:1
 [after 10]	R.x[5]:0 -> R.x[6]-:1
 Fanouts of node `R.x[6]':
+(to R):
 [after 10]	R.x[6]:1 -> R.x[7]-:1
 [after 10]	~R.x[6]:1 -> R.x[7]+:1

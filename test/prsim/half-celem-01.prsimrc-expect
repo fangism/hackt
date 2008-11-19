@@ -1,4 +1,5 @@
 Fanins of node `c':
+(from X):
 [after 10]	~a & ~b -> c+
 [after 10]	a -> c-
 	0	b : 1

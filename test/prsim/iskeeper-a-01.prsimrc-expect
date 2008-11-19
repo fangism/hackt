@@ -1,4 +1,5 @@
 Fanins of node `z':
+(from [top-level]):
 [after 10]	c -> z-
 [after 10]	e -> z-
 [after 10, weak]	~d -> z+

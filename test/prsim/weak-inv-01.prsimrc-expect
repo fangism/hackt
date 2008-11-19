@@ -1,5 +1,6 @@
 compare with "inv-22.prsimrc" 
 Fanins of node `b':
+(from [top-level]):
 [after 10, weak]	~a:X -> b+:X
 [after 10, weak]	a:X -> b-:X
 	0	a : 0

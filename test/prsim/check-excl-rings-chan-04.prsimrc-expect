@@ -1,8 +1,10 @@
 foo refers to process-inst-ref check_invs<>
 Fanins of node `x':
+(from foo):
 [after 10]	~a -> x+
 [after 10]	a -> x-
 Fanins of node `y':
+(from foo):
 [after 10]	~b -> y+
 [after 10]	b -> y-
 allrings-chk: 

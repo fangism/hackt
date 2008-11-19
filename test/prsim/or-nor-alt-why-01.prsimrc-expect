@@ -1,4 +1,5 @@
 Fanins of node `o':
+(from x):
 [after 10]	~(a | b) | ~(c | d) -> o+
 [after 10]	(a | b) & (c | d) -> o-
 why is o X? 

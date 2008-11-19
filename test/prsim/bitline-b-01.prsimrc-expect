@@ -19,6 +19,7 @@ setting another pull-down rule on to overtake X
 event queue:
 	30	_bl : X	[from wlx:=1]
 Fanins of node `_bl':
+(from [top-level]):
 [after 10]	~_pchg:1 -> _bl+:1
 [after 10]	wl:1 & pb:1<1><1> -> _bl-:1
 [after 10]	wlx:1 & pbx:X<X><1> -> _bl-:1
@@ -33,6 +34,7 @@ WARNING: weak-interference `blst'
 event queue:
 	40	blst : X	[from _bl:=X]
 Fanins of node `_bl':
+(from [top-level]):
 [after 10]	~_pchg:1 -> _bl+:X
 [after 10]	wl:1 & pb:1<1><1> -> _bl-:X
 [after 10]	wlx:1 & pbx:X<X><1> -> _bl-:X

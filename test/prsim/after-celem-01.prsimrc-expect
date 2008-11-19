@@ -1,7 +1,9 @@
 timing: uniform (10)
 Fanins of node `e':
+(from x):
 [after 30]	~a & ~b -> e+
 [after 20]	a & b -> e-
+(from y):
 [after 150]	~c & ~d -> e+
 [after 100]	c & d -> e-
 all events should have default uniform delay 
