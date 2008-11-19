@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.5 2008/10/31 02:11:44 fang Exp $
+	$Id: SPEC.cc,v 1.5.2.1 2008/11/19 05:44:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -286,7 +286,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(directives_loop)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 directives_loop::dump(ostream& o, const rule_dump_context& c) const {
-	return meta_loop::dump(*this, o, c, ':');
+	return meta_loop_type::dump(*this, o, c, ':');
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -296,27 +296,27 @@ directives_loop::dump(ostream& o, const rule_dump_context& c) const {
 good_bool
 directives_loop::unroll(const unroll_context& c, const node_pool_type& np, 
 		footprint& sfp) const {
-	return meta_loop::unroll(*this, c, np, sfp, "spec directive");
+	return meta_loop_type::unroll(*this, c, np, sfp, "spec directive");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_loop::collect_transient_info(persistent_object_manager& m) const {
-	meta_loop::collect_transient_info(*this, m);
+	meta_loop_type::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_loop::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
-	meta_loop::write_object(*this, m, o);
+	meta_loop_type::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_loop::load_object(const persistent_object_manager& m, 
 		istream& i) {
-	meta_loop::load_object(*this, m, i);
+	meta_loop_type::load_object(*this, m, i);
 }
 
 //=============================================================================
@@ -339,7 +339,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(directives_conditional)
  */
 bool
 directives_conditional::empty(void) const {
-	return meta_conditional::empty(*this);
+	return meta_conditional_type::empty(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -347,7 +347,7 @@ ostream&
 directives_conditional::dump(ostream& o, const rule_dump_context& c) const {
 	INVARIANT(guards.size());
 	INVARIANT(guards.size() == clauses.size());
-	return meta_conditional::dump(*this, o, c);
+	return meta_conditional_type::dump(*this, o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -357,34 +357,34 @@ directives_conditional::dump(ostream& o, const rule_dump_context& c) const {
 good_bool
 directives_conditional::unroll(const unroll_context& c,
 		const node_pool_type& np, footprint& sfp) const {
-	return meta_conditional::unroll(*this, c, np, sfp, "SPEC");
+	return meta_conditional_type::unroll(*this, c, np, sfp, "SPEC");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_conditional::append_guarded_clause(const guard_ptr_type& g) {
-	meta_conditional::append_guarded_clause(*this, g);
+	meta_conditional_type::append_guarded_clause(*this, g);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_conditional::collect_transient_info(
 		persistent_object_manager& m) const {
-	meta_conditional::collect_transient_info(*this, m);
+	meta_conditional_type::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_conditional::write_object(const persistent_object_manager& m,
 		ostream& o) const {
-	meta_conditional::write_object(*this, m, o);
+	meta_conditional_type::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_conditional::load_object(const persistent_object_manager& m,
 		istream& i) {
-	meta_conditional::load_object(*this, m, i);
+	meta_conditional_type::load_object(*this, m, i);
 }
 
 //=============================================================================

@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.21 2008/11/12 02:59:54 fang Exp $
+	$Id: parse_context.h,v 1.21.2.1 2008/11/19 05:44:30 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -12,6 +12,7 @@
 #include "util/string_fwd.h"
 #include <stack>
 #include <list>
+#include <iosfwd>
 
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"

@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.cc"
-	$Id: scm_chpsim_trace_streamer.cc,v 1.3 2007/06/10 02:57:05 fang Exp $
+	$Id: scm_chpsim_trace_streamer.cc,v 1.3.38.1 2008/11/19 05:44:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,6 +12,7 @@
 #include "guile/hackt-documentation.h"
 #include "util/for_all.h"
 #include "util/caller.h"
+#include "util/memory/excl_ptr.h"
 
 namespace HAC {
 namespace guile_wrap {
@@ -22,6 +23,7 @@ using util::guile::make_scm;
 using util::guile::extract_scm;
 using util::guile::scm_gsubr_type;
 using util::guile::scm_c_define_gsubr_exported;
+using util::memory::excl_ptr;
 USING_SCM_ASSERT_SMOB_TYPE
 USING_SCM_IS_STRING
 
@@ -384,11 +386,9 @@ HAC_GUILE_DEFINE(wrap_open_chpsim_trace, FUNC_NAME, 1, 0, 0, (SCM trfn),
 	extract_scm(trfn, peek);	// check error?
 	// alternately string_to_locale_stringbuf
 	// alert: heap-allocating though naked pointer, copy-constructing
-	std::auto_ptr<scm_chpsim_trace_stream>
-		tf(new scm_chpsim_trace_stream(peek));
-//	NEVER_NULL(tf);		// damn it, no operator bool in auto_ptr...
 	SCM ret_smob;
-	SCM_NEWSMOB(ret_smob, raw_chpsim_trace_stream_tag, tf.release());
+	SCM_NEWSMOB(ret_smob, raw_chpsim_trace_stream_tag,
+		new scm_chpsim_trace_stream(peek));
 	return ret_smob;
 }
 #undef	FUNC_NAME
@@ -407,12 +407,9 @@ HAC_GUILE_DEFINE(wrap_open_chpsim_reverse_trace, FUNC_NAME, 1, 0, 0, (SCM trfn),
 	extract_scm(trfn, peek);	// check error?
 	// alternately string_to_locale_stringbuf
 	// alert: heap-allocating though naked pointer, copy-constructing
-	std::auto_ptr<scm_chpsim_trace_reverse_stream>
-		tf(new scm_chpsim_trace_reverse_stream(peek));
-//	NEVER_NULL(tf);
 	SCM ret_smob;
 	SCM_NEWSMOB(ret_smob, raw_chpsim_trace_reverse_stream_tag,
-		tf.release());
+		new scm_chpsim_trace_reverse_stream(peek));
 	return ret_smob;
 }
 #undef	FUNC_NAME
@@ -433,7 +430,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_trace_num_entries, FUNC_NAME, 1, 0, 0, (SCM trf),
 if (scm_is_string(trf)) {
 	std::string peek;
 	extract_scm(trf, peek);
-	const std::auto_ptr<scm_chpsim_trace_reverse_stream>
+	const excl_ptr<scm_chpsim_trace_reverse_stream>
 		tf(new scm_chpsim_trace_reverse_stream(peek));
 //	NEVER_NULL(tf);
 	return make_scm(tf->num_entries());
@@ -460,11 +457,9 @@ HAC_GUILE_DEFINE(wrap_open_chpsim_random_accessor, FUNC_NAME, 1, 0, 0,
 	extract_scm(trfn, peek);	// check error?
 	// alternately string_to_locale_stringbuf
 	// alert: heap-allocating though naked pointer, copy-constructing
-	std::auto_ptr<scm_chpsim_trace_random_accessor>
-		tf(new scm_chpsim_trace_random_accessor(peek));
 	SCM ret_smob;
 	SCM_NEWSMOB(ret_smob, raw_chpsim_trace_random_accessor_tag,
-		tf.release());
+		new scm_chpsim_trace_random_accessor(peek));
 	return ret_smob;
 }
 #undef	FUNC_NAME
@@ -480,11 +475,9 @@ HAC_GUILE_DEFINE(wrap_open_chpsim_state_trace, FUNC_NAME, 1, 0, 0,
 	STACKTRACE_VERBOSE;
 	std::string peek;
 	extract_scm(trfn, peek);	// check error?
-	std::auto_ptr<scm_chpsim_state_change_stream>
-		tf(new scm_chpsim_state_change_stream(peek));
 	SCM ret_smob;
 	SCM_NEWSMOB(ret_smob, raw_chpsim_state_change_stream_tag,
-		tf.release());
+		new scm_chpsim_state_change_stream(peek));
 	return ret_smob;
 }
 #undef	FUNC_NAME

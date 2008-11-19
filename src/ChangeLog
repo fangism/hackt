@@ -5,6 +5,18 @@
 
 2008-11-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-61-gcc43-01:
+	  Branch for gcc-4.3 patching.
+		Initial revision does not compile yet.
+	  Added missing include headers.
+	  Updated for stricter ISO conformance, and for c++0x conformance.
+	  Explicit casts on some integer conversions.
+	  Eliminate use of deprecated std::auto_ptr.
+	  Conditionally replaced hash_map with unordered_map, if found.
+
+
+2008-11-18	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-61:
 	  prism: fanin/fanout now print the processes to which each
 		rule belongs, making process tracing much easier!

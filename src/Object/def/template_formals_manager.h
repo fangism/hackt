@@ -3,7 +3,7 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.11 2007/10/10 06:04:34 fang Exp $
+	$Id: template_formals_manager.h,v 1.11.18.1 2008/11/19 05:44:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
@@ -11,6 +11,7 @@
 
 #include <iosfwd>
 #include <vector>
+#include <string>
 
 #include "util/macros.h"
 #include "util/boolean_types.h"

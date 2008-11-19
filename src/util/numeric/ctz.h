@@ -2,7 +2,7 @@
 	\file "util/numeric/ctz.h"
 	Count-trailing zero related functions.
 	Includes most-significant-bit functions.  
-	$Id: ctz.h,v 1.2 2007/08/29 18:56:44 fang Exp $
+	$Id: ctz.h,v 1.2.26.1 2008/11/19 05:45:08 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_CTZ_H__
@@ -30,7 +30,7 @@ struct trailing_zeros_counter<uint8> {
 #ifdef HAVE_BUILTIN_CTZ
 		// adjust for integer size difference in casting
 		// unsigned casting is OK
-		return __builtin_ctz(c);
+		return char(__builtin_ctz(c));
 #else	// HAVE_BUILTIN_CTZ
 		const arg_type lower = c & half_mask;
 		return lower ? nibble_LSB_position[lower] :
@@ -69,7 +69,7 @@ struct trailing_zeros_counter<type> {					\
 	char								\
 	operator () (const arg_type s) const {				\
 		/* technically, result is undefined when argument 0 */	\
-		return func(s);						\
+		return char(func(s));					\
 	}								\
 };	// end struct trailing_zeros_counter
 

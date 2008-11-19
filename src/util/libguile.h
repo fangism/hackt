@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.h"
-	$Id: libguile.h,v 1.6 2007/06/18 18:24:34 fang Exp $
+	$Id: libguile.h,v 1.6.36.1 2008/11/19 05:44:59 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -20,6 +20,7 @@
 #define	HAVE_SYS_STDTYPES_H		0
 #endif
 
+#include <cstdio>		// because <gmp.h> needs std::FILE
 #include <libguile.h>
 // really only need <libguile/tags.h> for the SCM type
 

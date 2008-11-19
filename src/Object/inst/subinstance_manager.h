@@ -1,11 +1,12 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.22 2008/11/12 03:00:09 fang Exp $
+	$Id: subinstance_manager.h,v 1.22.2.1 2008/11/19 05:44:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
 #define	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
 
+#include <iosfwd>
 #include <vector>
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"

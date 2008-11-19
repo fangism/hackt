@@ -2,7 +2,7 @@
 	\file "util/numeric/clz.h"
 	Count-leading zero related functions.
 	Includes most-significant-bit functions.  
-	$Id: clz.h,v 1.2 2007/08/29 18:56:44 fang Exp $
+	$Id: clz.h,v 1.2.26.1 2008/11/19 05:45:07 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_CLZ_H__
@@ -39,7 +39,7 @@ struct leading_zeros_counter<uint8> {
 #ifdef HAVE_BUILTIN_CLZ
 		// adjust for integer size difference in casting
 		// unsigned casting is OK
-		return __builtin_clz(c) -sizediff;
+		return char(__builtin_clz(c) -sizediff);
 		// return c ? __builtin_clz(c) -sizediff : sizeof(arg_type) << 3;
 		// make 0 -> numbits? no, leave as undefined
 #else	// HAVE_BUILTIN_CLZ
@@ -79,7 +79,7 @@ struct leading_zeros_counter<type> {					\
 	char								\
 	operator () (const arg_type s) const {				\
 		/* technically, result is undefined when argument 0 */	\
-		return func(s);						\
+		return char(func(s));					\
 	}								\
 };	// end struct leading_zeros_counter
 

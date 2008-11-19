@@ -3,7 +3,7 @@
 	Parity counter.  
 	TODO: fallback implementation should look for popcount, 
 	and use its LSB as the result (& 1).  
-	$Id: parity.h,v 1.2 2007/08/29 18:56:45 fang Exp $
+	$Id: parity.h,v 1.2.26.1 2008/11/19 05:45:12 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_PARITY_H__
@@ -41,7 +41,7 @@ struct parity_counter<uint8> {
 	char
 	operator () (const arg_type c) const {
 #ifdef HAVE_BUILTIN_PARITY
-		return __builtin_parity(c);
+		return char(__builtin_parity(c));
 #else	// HAVE_BUILTIN_PARITY
 		// unsigned shift is OK
 		return nibble_parity[(c >> half_size)]
@@ -85,7 +85,7 @@ struct parity_counter<type> {						\
 	typedef	type					arg_type;	\
 	char								\
 	operator () (const arg_type s) const {				\
-		return func(s);						\
+		return char(func(s));						\
 	}								\
 };	// end struct parity_counter
 

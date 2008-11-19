@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.98 2008/11/12 21:43:09 fang Exp $
+#	$Id: ChangeLog,v 1.98.2.1 2008/11/19 05:44:55 fang Exp $
+
+2008-11-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-61-gcc43-01:
+	  First crack at compiling against gcc43 and std=c++0x.
+	  Updated guile helper headers.
+	  Use unordered map where possible, instead of hash_map.
+	  Built-in numeric functions have proper conversion casts.
+
 
 2008-11-12	David Fang		<fangism@users.sourceforge.net>
 

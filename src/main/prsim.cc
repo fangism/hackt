@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.17 2008/11/16 02:17:04 fang Exp $
+	$Id: prsim.cc,v 1.17.2.1 2008/11/19 05:44:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -198,7 +198,7 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	// the simulator state object, initialized with the module
 try {
 	State sim_state(*top_module, opt.expr_alloc_flags);	// may throw
-	const State::signal_handler int_handler(&sim_state);
+	const State::signal_handler_type int_handler(&sim_state);
 	if (opt.dump_expr_alloc)
 		sim_state.dump_struct(cout) << endl;
 	if (opt.check_structure)

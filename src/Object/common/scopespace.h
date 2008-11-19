@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.20 2008/04/24 22:46:56 fang Exp $
+	$Id: scopespace.h,v 1.20.4.1 2008/11/19 05:44:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -11,6 +11,7 @@
 
 #include <list>
 #include <map>
+#include <string>
 #include "Object/common/util_types.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/boolean_types.h"

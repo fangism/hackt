@@ -2,7 +2,7 @@
 	\file "util/STL/hash_map_fwd.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
 	\todo Make this configuration dependent on ac_cxx_ext_hash_map.
-	$Id: hash_map_fwd.h,v 1.10 2006/04/27 00:17:23 fang Exp $
+	$Id: hash_map_fwd.h,v 1.10.98.1 2008/11/19 05:45:04 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_FWD_H__
@@ -17,7 +17,11 @@
 #endif
 
 // compiler-version dependent location of hash_map
-#if	defined(HASH_MAP_IN___GNU_CXX)
+#if	defined(HAVE_UNORDERED_MAP)
+#define	HASH_MAP_NAMESPACE	std
+#define	hash_map		unordered_map
+// yes, i know this is dirty...
+#elif	defined(HASH_MAP_IN___GNU_CXX)
 #define	HASH_MAP_NAMESPACE	__gnu_cxx
 #elif	defined(HASH_MAP_IN_STD)
 #define	HASH_MAP_NAMESPACE	std

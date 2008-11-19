@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.15 2007/11/27 06:10:13 fang Exp $
+dnl	$Id: guile.m4,v 1.15.12.1 2008/11/19 05:44:25 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -92,7 +92,8 @@ AC_CHECK_LIB(guile, scm_boot_guile)
 AC_CHECK_LIB(guile, scm_init_guile)
 
 guile_save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS -include libguile.h"
+dnl gmp.h (guile-1.8+) needs std::FILE
+CPPFLAGS="$CPPFLAGS -include cstdio -include libguile.h"
 AC_CHECK_TYPES(scm_t_bits)
 AC_CHECK_TYPES(scm_bits_t)
 CPPFLAGS="$guile_save_CPPFLAGS"
