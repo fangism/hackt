@@ -1,7 +1,7 @@
 /**
 	\file "util/STL/hash_map.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
-	$Id: hash_map.h,v 1.5.140.1 2008/11/19 05:45:03 fang Exp $
+	$Id: hash_map.h,v 1.5.140.2 2008/11/20 09:44:32 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_H__
@@ -11,8 +11,8 @@
 
 #if defined(HAVE_UNORDERED_MAP)
 #include <unordered_map>		// C++0x
-// #elif defined(HAVE_TR1_UNORDERED_MAP)
-// #include <tr1/unordered_map>
+#elif defined(HAVE_TR1_UNORDERED_MAP)
+#include <tr1/unordered_map>
 #elif defined(HAVE_EXT_HASH_MAP) && HAVE_EXT_HASH_MAP
 #include <ext/hash_map>
 #elif defined(HAVE_HASH_MAP) && HAVE_HASH_MAP

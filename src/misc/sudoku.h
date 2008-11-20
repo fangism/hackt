@@ -5,7 +5,7 @@
 	1) each row contains each digit exactly once
 	2) each column contains each digit exactly once
 	3) each 3x3 sub-block contains each digit exactly once
-	$Id: sudoku.h,v 1.2 2006/01/22 06:53:16 fang Exp $
+	$Id: sudoku.h,v 1.2.132.1 2008/11/20 09:44:27 fang Exp $
 	TODO: generalize for variations!
 	http://www.maa.org/editorial/mathgames/mathgames_09_05_05.html
 	Implement general constraints!
@@ -104,7 +104,7 @@ public:
 	set(const uchar pos) {
 		SUDOKU_ASSERT(avail);
 		SUDOKU_ASSERT(pos < 9);
-		ushort n = ints & ~masks[pos];
+		ushort n = ushort(ints & ~masks[pos]);
 		if (ints != n)
 			--avail;
 		ints = n;

@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_hash.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent_hash.h,v 1.2 2007/07/31 23:23:45 fang Exp $
+	$Id: persistent_hash.h,v 1.2.32.1 2008/11/20 09:44:30 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_HASH_H__
@@ -81,7 +81,7 @@ public:
 }	// end namespace util
 
 //=============================================================================
-namespace HASH_MAP_NAMESPACE {
+BEGIN_HASH_MAP_NS
 using util::persistent;
 
 /**
@@ -95,7 +95,7 @@ struct hash<persistent::hash_key> {
 		{ return k.get_hash(); }
 };	// end struct hash
 
-}	// end namespace HASH_MAP_NAMESPACE
+END_HASH_MAP_NS	// end namespace HASH_MAP_NAMESPACE
 
 //=============================================================================
 
