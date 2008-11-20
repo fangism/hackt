@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.cc"
-	$Id: command_registry.cc,v 1.3 2007/02/14 04:57:24 fang Exp $
+	$Id: command_registry.cc,v 1.3.50.1 2008/11/20 23:18:45 fang Exp $
  */
 
 #include <iostream>
@@ -100,6 +100,24 @@ if (c.size()) {
 }
 // else nothing to expand
 	return CommandBase::NORMAL;
+}
+
+//=============================================================================
+// member struct auto_file_echo method definitions
+
+command_aliases_base::auto_file_echo::auto_file_echo(
+		ostream& o, const bool e, const string& n) :
+		os(o), echo(e), name(n) {
+	if (echo) {
+		os << "## enter: \"" << name << "\"" << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+command_aliases_base::auto_file_echo::~auto_file_echo() {
+	if (echo) {
+		os << "## leave: \"" << name << "\"" << endl;
+	}
 }
 
 //=============================================================================

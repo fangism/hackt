@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.29 2008/11/19 02:22:54 fang Exp $
+	$Id: State-prsim.cc,v 1.29.4.1 2008/11/20 23:18:49 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1922,6 +1922,8 @@ State::error_policy_string(const error_policy_enum e) {
 	case ERROR_IGNORE:	return "ignore";
 	case ERROR_WARN:	return "warn";
 	case ERROR_BREAK:	return "break";
+	case ERROR_INTERACTIVE:	return "interactive";
+	case ERROR_FATAL:	return "fatal";
 	default:		DIE;
 	}	// end switch
 	 return NULL;
@@ -1937,12 +1939,18 @@ State::string_to_error_policy(const string& s) {
 	static const string _warn("warn");
 	static const string _notify("notify");
 	static const string _break("break");
+	static const string _interactive("interactive");
+	static const string _fatal("fatal");
 	if (s == _ignore) {
 		return ERROR_IGNORE;
 	} else if (s == _warn || s == _notify) {
 		return ERROR_WARN;
 	} else if (s == _break) {
 		return ERROR_BREAK;
+	} else if (s == _interactive) {
+		return ERROR_INTERACTIVE;
+	} else if (s == _fatal) {
+		return ERROR_FATAL;
 	}
 	// else
 	return ERROR_INVALID;
@@ -3431,8 +3439,8 @@ if (!r.is_invariant()) {
 	if ((fail && invariant_fail_policy != ERROR_IGNORE) ||
 		(maybe && invariant_unknown_policy != ERROR_IGNORE)) {
 		const bool halt =
-			((fail && invariant_fail_policy == ERROR_BREAK) ||
-			(maybe && invariant_unknown_policy == ERROR_BREAK));
+			((fail && invariant_fail_policy >= ERROR_BREAK) ||
+			(maybe && invariant_unknown_policy >= ERROR_BREAK));
 		cerr << (halt ? "Error: " : "Warning: ") <<
 			(maybe ? "possible " : "" ) <<
 			"invariant violation: (";
@@ -4187,14 +4195,14 @@ State::__report_interference(ostream& o, const bool weak,
 		dump_node_canonical_name(o << "WARNING: weak-interference `", 
 			_ni) << "\'" << endl;
 		__report_cause(o, ev);
-		return weak_interference_policy == ERROR_BREAK;
+		return weak_interference_policy >= ERROR_BREAK;
 	}	// endif weak_interference_policy
 	} else {	// !weak
 	if (interference_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: interference `", _ni)
 			<< "\'" << endl;
 		__report_cause(o, ev);
-		return interference_policy == ERROR_BREAK;
+		return interference_policy >= ERROR_BREAK;
 	}	// endif interference_policy
 	}	// endif weak
 	return false;
@@ -4217,14 +4225,14 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 		dump_node_canonical_name(o << "WARNING: weak-unstable `",
 			_ni) << "\'" << (dir ? '+' : '-') << endl;
 		__report_cause(o, ev);
-		return weak_unstable_policy == ERROR_BREAK;
+		return weak_unstable_policy >= ERROR_BREAK;
 	}	// endif weak_unstable_policy
 	} else {	// !weak
 	if (unstable_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: unstable `", _ni)
 			<< "\'" << (dir ? '+' : '-') << endl;
 		__report_cause(o, ev);
-		return unstable_policy == ERROR_BREAK;
+		return unstable_policy >= ERROR_BREAK;
 	}	// endif unstable_policy
 	}	// endif weak
 	return false;
@@ -7330,6 +7338,9 @@ try {
 }
 	READ_ALIGN_MARKER		// sanity alignment check
 	read_value(i, flags);
+	// DO NOT auto-checkpoint with the same name!
+	// this prevents accidental overwrite due to loading!
+	flags &= ~FLAG_AUTOSAVE;
 	read_value(i, unstable_policy);
 	read_value(i, weak_unstable_policy);
 	read_value(i, interference_policy);
@@ -7338,7 +7349,7 @@ try {
 	read_value(i, invariant_fail_policy);
 	read_value(i, invariant_unknown_policy);
 #endif
-	read_value(i, autosave_name);
+	read_value(i, autosave_name);	// safe to load the name of checkpoint
 	read_value(i, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.

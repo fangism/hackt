@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.20 2008/11/11 20:06:20 fang Exp $
+	$Id: Command-prsim.cc,v 1.20.4.1 2008/11/20 23:18:48 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -501,55 +501,7 @@ if (a.size() > 2) {
 	} else {
 		i = 1;
 	}
-#if 0
-	s.resume();
-	// could check s.pending_events()
-	try {
-	State::step_return_type ni;	// also stores the cause of the event
-	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
-		--i;
-		// NB: may need specialization for real-valued (float) time.  
-		const time_type ct(s.time());
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Advance::main().
-			tracing stuff here later...
-		***/
-		if (s.watching_all_nodes()) {
-			print_watched_node(cout << '\t' << ct << '\t', s, ni);
-		}
-		if (n.is_breakpoint()) {
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(
-				s.get_node_canonical_name(GET_NODE(ni)));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				print_watched_node(cout << '\t' << ct << '\t',
-					s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-				// node is plain breakpoint
-				cout << "\t*** break, " << i <<
-					" steps left: `" << nodename <<
-					"\' became ";
-				n.dump_value(cout) << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-			}
-		}
-	}	// end while
-	} catch (const step_exception& exex) {
-		s.inspect_exception(exex, cerr);
-		return Command::FATAL;
-	}	// no other exceptions
-	return Command::NORMAL;
-#else
 	return step_event_main(s, i);
-#endif
 }
 }	// end StepEvent::main
 
@@ -618,12 +570,11 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
  	"run until event queue empty or breakpoint")
 
 /**
-	TODO: handle breakpoint.
 	TODO: implement no/globaltime policy for resetting.  
 	Isn't the while-loop made redundant by State::cycle()?
  */
 int
-Cycle::main(State& s, const string_list & a) {
+Cycle::main(State& s, const string_list& a) {
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;

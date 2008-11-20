@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.4 2008/11/16 02:17:06 fang Exp $
+	$Id: command_registry.h,v 1.4.4.1 2008/11/20 23:18:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -11,6 +11,7 @@
 #include "util/macros.h"
 #include "util/qmap.h"	// TODO: use std::map instead
 #include "util/tokenize_fwd.h"
+#include "util/attributes.h"
 
 namespace HAC {
 namespace SIM {
@@ -26,6 +27,14 @@ template <class> class command_category;
 	State-independent base class for alias support.  
  */
 class command_aliases_base {
+protected:
+	struct auto_file_echo {
+		ostream&		os;
+		const bool		echo;
+		const string		name;
+		auto_file_echo(ostream&, const bool, const string&);
+		~auto_file_echo();
+	} __ATTRIBUTE_UNUSED__ ;	// end struct auto_file_echo
 public:
 	/**
 		An alias is just a string_list, the key string
@@ -80,6 +89,7 @@ private:
 							command_iterator;
 	typedef	typename category_map_type::const_iterator
 							category_iterator;
+	using command_aliases_base::auto_file_echo;
 public:
 	typedef	typename command_type::main_ptr_type	main_ptr_type;
 	typedef	typename command_type::usage_ptr_type	usage_ptr_type;
@@ -102,6 +112,7 @@ public:
 	/**
 		Switch: whether or not each command is echoed as it is
 		interpreted.  Default off (false).
+		TODO: use local switch instead?
 	 */
 	static bool			echo_commands;
 public:

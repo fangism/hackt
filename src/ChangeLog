@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-62-prsim-11-01-a:
+	  Branch for generalizing the error-handling policies of hacprsim.
+	  Added new error-code in State-prsim.cc:
+		ERROR_INTERACTIVE, ERROR_FATAL.
+
+
 2008-11-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-62:
@@ -17,7 +25,7 @@
 2008-11-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-61:
-	  prism: fanin/fanout now print the processes to which each
+	  prsim: fanin/fanout now print the processes to which each
 		rule belongs, making process tracing much easier!
 	  Test expects updated accordingly.
 
@@ -1374,7 +1382,7 @@
 2008-02-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-35:
-	  prism::why-x: now prune already-visited backtrace paths, 
+	  prsim::why-x: now prune already-visited backtrace paths, 
 		makes output much more scalable and comprehensible for huge
 		directed-acyclic clouds of X nodes.  
 	  Tested in lib/ on token-ring structures.  
@@ -1575,7 +1583,7 @@
 		which resulted in duplicate events in the queue.  
 		Now using a map data-structure for the exclusive queues.  
 	  sim/event.h: added optional uniqueness checking
-	  Finallly able to add reduced test case prsim/precharge-f-01.prismrc
+	  Finallly able to add reduced test case prsim/precharge-f-01.prsimrc
 
 
 2008-01-19	David Fang		<fangism@users.sourceforge.net>

@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.6 2008/11/16 02:17:07 fang Exp $
+	$Id: command_registry.tcc,v 1.6.4.1 2008/11/20 23:18:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -415,17 +415,9 @@ command_registry<Command>::source(state_type& st, const string& f) {
 	ifstream_manager::placeholder p(ifm, f);
 	// ifstream i(f.c_str());
 if (p) {
-	if (echo_commands) {
-		cout << "## enter: \"" << ifm.top_named_ifstream_name() << "\""
-			<< endl;
-	}
-	const int ret = __source(p.get_stream(), st);
-	// return __source(i, st);
-	if (echo_commands) {
-		cout << "## leave: \"" << ifm.top_named_ifstream_name() << "\""
-			<< endl;
-	}
-	return ret;
+	const auto_file_echo
+		__(cout, echo_commands, ifm.top_named_ifstream_name());
+	return __source(p.get_stream(), st);
 } else {
 	cerr << "Error opening file: \"" << f << '\"' << endl;
 	p.error_msg(cerr) << endl;
