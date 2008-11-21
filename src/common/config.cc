@@ -2,10 +2,11 @@
 	\file "common/config.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: config.cc,v 1.4 2007/05/03 06:38:50 fang Exp $
+	$Id: config.cc,v 1.4.40.1 2008/11/21 17:26:30 fang Exp $
  */
 
 #include <iostream>
+#include <cstring>
 #include "common/config.h"
 // #include "main/main_funcs.h"
 #include "config.h"

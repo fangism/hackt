@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.17 2008/11/12 21:43:05 fang Exp $
+	$Id: global_entry.h,v 1.17.2.1 2008/11/21 17:26:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -150,11 +150,15 @@ struct footprint_frame :
 
 	template <class Tag>
 	footprint_frame_map_type&
-	get_frame_map(void);
+	get_frame_map(void) {
+		return footprint_frame_map<Tag>::id_map;
+	}
 
 	template <class Tag>
 	const footprint_frame_map_type&
-	get_frame_map(void) const;
+	get_frame_map(void) const {
+		return footprint_frame_map<Tag>::id_map;
+	}
 
 	size_t
 	count_frame_size(void) const;

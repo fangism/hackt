@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.12 2008/05/17 04:38:47 fang Exp $
+	$Id: range.cc,v 1.12.4.1 2008/11/21 17:26:25 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.12 2008/05/17 04:38:47 fang Exp $
+	$Id: range.cc,v 1.12.4.1 2008/11/21 17:26:25 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -38,6 +38,7 @@
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/memory/unique_ptr.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -67,7 +68,7 @@ namespace parser {
 using namespace entity;
 using std::back_inserter;
 using std::ptr_fun;
-
+using util::memory::unique_ptr;
 
 //=============================================================================
 // class range method definitions
@@ -291,7 +292,7 @@ range_list::~range_list() { }
 range_list*
 range_list::make_explicit_ranges(void) const {
 	// copy-first
-	std::auto_ptr<range_list> ret(new range_list);
+	unique_ptr<range_list> ret(new range_list);
 	// substitute expansions
 	transform(begin(), end(), back_inserter(*ret), 
 		ptr_fun(range::make_explicit_range));

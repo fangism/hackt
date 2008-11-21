@@ -3,7 +3,7 @@
 	Contains hash function specializations.  
 	Include this file before using any hash_map for specializations
 	to take effect.
-	$Id: hash_specializations.h,v 1.9.98.2 2008/11/20 09:44:28 fang Exp $
+	$Id: hash_specializations.h,v 1.9.98.3 2008/11/21 17:26:40 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_SPECIALIZATIONS_H__
@@ -57,7 +57,7 @@ struct hash<const T*> {
 	}
 };	// end hash<>
 
-#if	!defined(HAVE_UNORDERED_MAP) && !defined(HAVE_TR1_UNORDERED_MAP)
+#if	!USING_ORDERED_MAP
 /**
 	Explicit template specialization of hash of a string class, 
 	which just uses the internal char* representation as a wrapper.

@@ -4,11 +4,12 @@
 	All this does is character-for-character cat. 
 	Copied (slightly modified) from:
 	http://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html#Example-of-Getopt
-	$Id: getopt_test.cc,v 1.3 2005/08/04 23:02:55 fang Exp $
+	$Id: getopt_test.cc,v 1.3.168.1 2008/11/21 17:26:37 fang Exp $
  */
 
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 #include "util/getopt_portable.h"
 #include "util/using_ostream.h"
 

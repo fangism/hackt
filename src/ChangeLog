@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-61-gcc43-03:
+	  Compiles! Fixed some undefined references (template instantiation)
+		and majority of regression tests pass, some minor diffs.
+		This was tested with g++-4.3.2, no c++0x mode.  
+	  Need to test against c++0x mode.
+
+
 2008-11-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-61-gcc43-02:

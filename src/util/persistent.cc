@@ -1,10 +1,11 @@
 /**
 	\file "util/persistent.cc"
 	Method definitions for persistent class interface.  
-	$Id: persistent.cc,v 1.8 2007/07/31 23:23:43 fang Exp $
+	$Id: persistent.cc,v 1.8.32.1 2008/11/21 17:26:41 fang Exp $
  */
 
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <algorithm>
 

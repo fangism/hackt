@@ -1,7 +1,7 @@
 /**
 	\file "util/STL/construct_fwd.h"
 	Forward declaration of std::_Construct, and std::_Destroy.
-	$Id: construct_fwd.h,v 1.5.106.1 2008/11/19 05:45:02 fang Exp $
+	$Id: construct_fwd.h,v 1.5.106.2 2008/11/21 17:26:44 fang Exp $
  */
 
 #ifndef	__UTIL_STL_CONSTRUCT_FWD_H__
@@ -51,6 +51,20 @@ _Destroy(FwdIter, FwdIter);
 
 }	// end namespace std
 #endif	// HAVE_BITS_STL_CONSTRUCT_H
+
+#if	!defined(HAVE_STL_CONSTRUCT_DEFAULT)
+/**
+	Stolen from gcc-4.0 libstdc++...
+ */
+namespace std {
+template <class _T1>
+inline
+void
+_Construct(_T1* __p) {
+	::new(static_cast<void*>(__p)) _T1();
+}
+}
+#endif
 
 #define	USING_CONSTRUCT		using std::_Construct;
 #define	USING_DESTROY		using std::_Destroy;

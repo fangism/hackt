@@ -1,10 +1,11 @@
 /**
 	\file "sim/command_registry.cc"
-	$Id: command_registry.cc,v 1.3 2007/02/14 04:57:24 fang Exp $
+	$Id: command_registry.cc,v 1.3.48.1 2008/11/21 17:26:33 fang Exp $
  */
 
 #include <iostream>
 #include <iterator>
+#include <algorithm>			// for reverse_copy
 #include <set>
 #include <list>
 #include <string>
@@ -93,7 +94,7 @@ if (c.size()) {
 			return CommandBase::BADARG;
 		}
 		c.pop_front();
-		reverse_copy(x.begin(), x.end(), front_inserter(c));
+		std::reverse_copy(x.begin(), x.end(), front_inserter(c));
 		a = aliases.find(c.front());
 	}
 	// stops expanding as soon as non-alias is found.  

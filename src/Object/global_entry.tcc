@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.21 2008/11/05 23:03:21 fang Exp $
+	$Id: global_entry.tcc,v 1.21.2.1 2008/11/21 17:26:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -210,6 +210,7 @@ template <class Tag>
 global_entry<Tag>::~global_entry() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 template <class Tag>
 footprint_frame_map_type&
 footprint_frame::get_frame_map(void) {
@@ -222,6 +223,7 @@ const footprint_frame_map_type&
 footprint_frame::get_frame_map(void) const {
 	return footprint_frame_map<Tag>::id_map;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

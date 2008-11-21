@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.11.4.1 2008/11/19 05:44:24 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.11.4.2 2008/11/21 17:26:20 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -47,6 +47,41 @@ AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, [],
 	[True if STL <iterator> header defines reverse_iterator comparisons])
 fi
 ])dnl
+
+dnl @synopsis FANG_CXX_STL_CONSTRUCT
+dnl
+dnl Check for certain declarations of libstdc++ internal function
+dnl std::_Construct, which may have changed.
+dnl
+dnl @category Cxx
+dnl @version 2008-11-20
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STL_CONSTRUCT],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[whether libstdc++ (STL) contains std::_Construct(T*) default ctor],
+[fang_cv_cxx_stl_construct_default],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <vector>
+		#ifdef	HAVE_BITS_STL_CONSTRUCT_H
+		#include <bits/stl_construct.h>
+		#endif
+		]], []
+	),
+	[fang_cv_cxx_stl_construct_default=no],
+	[fang_cv_cxx_stl_construct_default=yes]
+)
+])
+if test "$fang_cv_cxx_stl_construct_default" = "yes" ; then
+AC_DEFINE(HAVE_STL_CONSTRUCT_DEFAULT, [],
+	[True if STL header defines std::_Construct(T*) default ctor])
+fi
+])dnl
+	
 
 dnl @synopsis FANG_CXX_STD_IFSTREAM_DEV_STDIN
 dnl

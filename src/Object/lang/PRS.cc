@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.30.2.1 2008/11/19 05:44:36 fang Exp $
+	$Id: PRS.cc,v 1.30.2.2 2008/11/21 17:26:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -13,6 +13,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #define	ENABLE_STACKTRACE		0
 
 #include <sstream>
+#include <limits>
 #include "Object/lang/PRS.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_registry.h"

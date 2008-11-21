@@ -2,7 +2,7 @@
 	\file "util/STL/hash_map_fwd.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
 	\todo Make this configuration dependent on ac_cxx_ext_hash_map.
-	$Id: hash_map_fwd.h,v 1.10.98.2 2008/11/20 09:44:33 fang Exp $
+	$Id: hash_map_fwd.h,v 1.10.98.3 2008/11/21 17:26:47 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_FWD_H__
@@ -34,6 +34,9 @@
 // your guess is as good as mine
 #error	"If you know where hash_map is for your library, add it here."
 #endif	// __GNUC__
+
+// condition under which we force use of unordered_map over hash_map
+#define	USING_ORDERED_MAP	(defined(HAVE_UNORDERED_MAP) || defined(HAVE_TR1_UNORDERED_MAP))
 
 // because namespace foo::bar { ... } is not yet part of the standard :-/
 #if	defined(HAVE_TR1_UNORDERED_MAP) && !defined(HAVE_UNORDERED_MAP)
