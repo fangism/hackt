@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.11.4.2 2008/11/21 17:26:20 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.11.4.3 2008/11/23 09:24:49 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -70,6 +70,14 @@ AC_COMPILE_IFELSE(
 		#ifdef	HAVE_BITS_STL_CONSTRUCT_H
 		#include <bits/stl_construct.h>
 		#endif
+		namespace std {
+		template <class _T1>
+		inline
+		void
+		_Construct(_T1* __p) {
+			::new(static_cast<void*>(__p)) _T1();
+		}
+		}
 		]], []
 	),
 	[fang_cv_cxx_stl_construct_default=no],
