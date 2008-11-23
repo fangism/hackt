@@ -8,7 +8,9 @@
 	* HACKT-00-01-04-main-00-82-61-gcc43-04:
 	  scopespace: replaced hash_map/unordered_map with just std::map.
 		Updated 1 enum test case.  
-	  No important differences.
+	  No important differences (only memstats).
+	  Now validates against -std=c++0x.
+	  Ready to merge.
 
 
 2008-11-21	David Fang		<fangism@users.sourceforge.net>

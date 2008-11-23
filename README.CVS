@@ -1,5 +1,5 @@
 "README.CVS"
-	$Id: README.CVS,v 1.13 2008/03/25 23:29:41 fang Exp $
+	$Id: README.CVS,v 1.13.4.1 2008/11/23 08:43:04 fang Exp $
 
 -------------------------------------------------------------------------------
 You've just checked out HACKT from CVS, what do you need to need to work?
@@ -61,7 +61,7 @@ Currently, built documentation is NOT distributed with the source,
 so both users and developers need to have the documentation generators.  
 GNU TexInfo is required for documentation generation.
 
-TexInfo 4.8,4.10,4.11 are known to work.  
+TexInfo 4.8,4.10,4.11,4.13 are known to work.  
 TexInfo 4.6 is known to not support the following commands:
 	@float, @caption, @LaTeX{}, @sansserif, @headitem
 TexInfo 4.0 is known to not support the following commands:
