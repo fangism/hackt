@@ -19,7 +19,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     foo = enum-datatype-def: foo
-      { two, one, bar,  }
+      { bar, one, two,  }
   Instances:
     bar = foo<> bar
 }
