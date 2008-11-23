@@ -1,10 +1,11 @@
 /**
 	\file "util/getopt_mapped.cc"
-	$Id: getopt_mapped.cc,v 1.3 2007/09/13 01:14:20 fang Exp $
+	$Id: getopt_mapped.cc,v 1.4 2008/11/23 17:54:45 fang Exp $
  */
 
 #include "util/getopt_mapped.h"
 #include <iostream>
+#include <cstring>
 #include "util/libc.h"		// for strsep
 
 namespace util {

@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.16 2008/11/16 02:17:03 fang Exp $
+	$Id: chpsim.cc,v 1.17 2008/11/23 17:54:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -160,7 +160,7 @@ try {
 	canonical_fundamental_chan_type_base::refresh_all_footprints();
 	State sim_state(*top_module);		// may throw
 	// install interrupt signal handler
-	const State::signal_handler int_handler(&sim_state);
+	const State::signal_handler_type int_handler(&sim_state);
 	if (opt.dump_graph_alloc) {
 	if (opt.use_type && !opt.instantiate_type_recursively) {
 		NEVER_NULL(fp);

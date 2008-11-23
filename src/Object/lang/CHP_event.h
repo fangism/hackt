@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_event.h"
 	Various classes of chpsim events.  
-	$Id: CHP_event.h,v 1.3 2007/09/28 05:36:59 fang Exp $
+	$Id: CHP_event.h,v 1.4 2008/11/23 17:53:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_EVENT_H__
@@ -10,6 +10,7 @@
 #include "util/size_t.h"
 #include "util/attributes.h"
 #include "util/string_fwd.h"
+#include "util/utypes.h"
 #include <iosfwd>
 #include <vector>
 #include "util/persistent_fwd.h"
@@ -106,7 +107,7 @@ private:
 		enumeration for this event, 
 		semi-redundant with the action pointer.  
 	 */
-	unsigned short			event_type;
+	ushort				event_type;
 #if 0
 	/**
 		General purpose flags (space-filler).  
@@ -122,7 +123,7 @@ private:
 		Do we keep predecessor edge information anywhere else?
 		Should be const, incidentally...
 	 */
-	unsigned short			predecessors;
+	ushort				predecessors;
 public:
 	local_event();
 
@@ -198,7 +199,7 @@ public:
 	get_event_type(void) const { return event_type; }
 
 	void
-	set_predecessors(const event_index_type n) { predecessors = n; }
+	set_predecessors(const event_index_type n) { predecessors = ushort(n); }
 
 	unsigned short
 	get_predecessors(void) const { return predecessors; }

@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim-guile.cc"
 	Main module for new CHPSIM guile interface.
-	$Id: chpsim-guile.cc,v 1.4 2007/09/13 01:14:11 fang Exp $
+	$Id: chpsim-guile.cc,v 1.5 2008/11/23 17:54:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -130,7 +130,7 @@ try {
 	NEVER_NULL(chpsim_state);
 	// install interrupt signal handler
 	// do we really need this?
-	const State::signal_handler int_handler(&*chpsim_state);
+	const State::signal_handler_type int_handler(&*chpsim_state);
 #if 0
 	if (opt.dump_graph_alloc)
 		sim_state.dump_struct(cout) << endl;

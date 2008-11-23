@@ -2,7 +2,7 @@
 	\file "util/STL/hash_map_fwd.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
 	\todo Make this configuration dependent on ac_cxx_ext_hash_map.
-	$Id: hash_map_fwd.h,v 1.10 2006/04/27 00:17:23 fang Exp $
+	$Id: hash_map_fwd.h,v 1.11 2008/11/23 17:55:14 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_FWD_H__
@@ -17,14 +17,35 @@
 #endif
 
 // compiler-version dependent location of hash_map
-#if	defined(HASH_MAP_IN___GNU_CXX)
+#if	defined(HAVE_UNORDERED_MAP)
+#define	HASH_MAP_NAMESPACE	std
+#define	hash_map		unordered_map
+// yes, i know this is dirty...
+#elif	defined(HAVE_TR1_UNORDERED_MAP)
+#define	HASH_MAP_NAMESPACE	std::tr1
+#define	hash_map		unordered_map
+// at least for transitional gcc-4.3, prefer tr1::unordered_map over hash_map
+#elif	defined(HASH_MAP_IN___GNU_CXX)
 #define	HASH_MAP_NAMESPACE	__gnu_cxx
 #elif	defined(HASH_MAP_IN_STD)
 #define	HASH_MAP_NAMESPACE	std
+// for pre-standard: gcc-2.95
 #else	// __GNUC__
 // your guess is as good as mine
 #error	"If you know where hash_map is for your library, add it here."
 #endif	// __GNUC__
+
+// condition under which we force use of unordered_map over hash_map
+#define	USING_ORDERED_MAP	(defined(HAVE_UNORDERED_MAP) || defined(HAVE_TR1_UNORDERED_MAP))
+
+// because namespace foo::bar { ... } is not yet part of the standard :-/
+#if	defined(HAVE_TR1_UNORDERED_MAP) && !defined(HAVE_UNORDERED_MAP)
+#define	BEGIN_HASH_MAP_NS	namespace std { namespace tr1 {
+#define	END_HASH_MAP_NS		} }
+#else
+#define	BEGIN_HASH_MAP_NS	namespace HASH_MAP_NAMESPACE {
+#define	END_HASH_MAP_NS		}
+#endif
 
 namespace std {
 // forward declaration of default comparator
@@ -41,7 +62,7 @@ struct hash_compare;
 
 }	// end namespace std
 
-namespace HASH_MAP_NAMESPACE {
+BEGIN_HASH_MAP_NS
 
 template <class K>
 struct hash;
@@ -87,7 +108,7 @@ struct default_hash_map {
 	struct rebind : public default_hash_map<K2, T2> { };
 };	// end struct default_hash_map
 
-}	// end namespace HASH_MAP_NAMESPACE
+END_HASH_MAP_NS	// end namespace HASH_MAP_NAMESPACE
 
 #define	USING_HASH	using HASH_MAP_NAMESPACE::hash;
 #define	USING_HASH_MAP	using HASH_MAP_NAMESPACE::hash_map;

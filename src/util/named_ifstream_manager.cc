@@ -1,6 +1,6 @@
 /**
 	\file "lexer/ifstream_manager.cc"
-	$Id: named_ifstream_manager.cc,v 1.3 2007/10/31 23:16:36 fang Exp $
+	$Id: named_ifstream_manager.cc,v 1.4 2008/11/23 17:54:56 fang Exp $
  */
 
 #include <iostream>
@@ -138,7 +138,7 @@ ifstream_manager::open_ifstream(const string& fs) {
 	}
 }
 	// else not found
-	return return_type(NULL, file_status::NOT_FOUND);
+	return return_type(AS_A(named_ifstream*, NULL), file_status::NOT_FOUND);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

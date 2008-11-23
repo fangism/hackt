@@ -4,7 +4,7 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.4 2007/11/27 06:10:13 fang Exp $
+	$Id: io.cc,v 1.5 2008/11/23 17:53:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -176,7 +176,7 @@ xzscan(istream& i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
-static
+// static
 string_value_type
 __scan<string_value_type>(istream& i, const char* eof_msg) {
 	STACKTRACE_VERBOSE;

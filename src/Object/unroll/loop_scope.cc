@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.15 2008/03/17 23:02:37 fang Exp $
+ 	$Id: loop_scope.cc,v 1.16 2008/11/23 17:54:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -56,7 +56,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(loop_scope)
  */
 ostream&
 loop_scope::dump(ostream& o, const expr_dump_context& dc) const {
-	return meta_loop::dump(*this, o, dc, ';');
+	return meta_loop_type::dump(*this, o, dc, ';');
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -108,19 +108,19 @@ loop_scope::unroll(const unroll_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 loop_scope::collect_transient_info(persistent_object_manager& m) const {
-	meta_loop::collect_transient_info(*this, m);
+	meta_loop_type::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 loop_scope::write_object(const persistent_object_manager& m, ostream& o) const {
-	meta_loop::write_object(*this, m, o);
+	meta_loop_type::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 loop_scope::load_object(const persistent_object_manager& m, istream& i) {
-	meta_loop::load_object(*this, m, i);
+	meta_loop_type::load_object(*this, m, i);
 }
 
 //=============================================================================

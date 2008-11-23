@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-61-gcc43-04:
+	  scopespace: replaced hash_map/unordered_map with just std::map.
+		Updated 1 enum test case.  
+	  No important differences (only memstats).
+	  Now validates against -std=c++0x.
+	  Ready to merge.
+
+
+2008-11-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-61-gcc43-03:
+	  Compiles! Fixed some undefined references (template instantiation)
+		and majority of regression tests pass, some minor diffs.
+		This was tested with g++-4.3.2, no c++0x mode.  
+	  Need to test against c++0x mode.
+
+
 2008-11-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-62:
@@ -12,6 +31,25 @@
 		step/exclusion violations exceptions are now caught
 		and reported prior to termination.  
 	  No test case added.
+
+
+2008-11-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-61-gcc43-02:
+	  Few more casts for conversion warnings.
+	  Prefer using tr1::unordered_map over hash_map where available.
+
+
+2008-11-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-61-gcc43-01:
+	  Branch for gcc-4.3 patching.
+		Initial revision does not compile yet.
+	  Added missing include headers.
+	  Updated for stricter ISO conformance, and for c++0x conformance.
+	  Explicit casts on some integer conversions.
+	  Eliminate use of deprecated std::auto_ptr.
+	  Conditionally replaced hash_map with unordered_map, if found.
 
 
 2008-11-18	David Fang		<fangism@users.sourceforge.net>

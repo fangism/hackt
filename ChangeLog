@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2008-11-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-63-merged-gcc43-01:
+	  Merged gcc43 branch, which requires -Wno-conversion.  
+	  Also works in std=c++0x mode!
+
+
+2008-11-18	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-61-gcc43-01:
+	  First crack at patching for gcc-4.3.  (does not compile yet)
+	  config/cxx_STL.m4: updated standard header checks to account
+		for -std=c++0x.
+	  config/guile.m4: -include cstdio in header check.
+
+
 2008-11-11	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-54:

@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_reference.cc"
-	$Id: scm_reference.cc,v 1.3 2007/06/10 02:57:05 fang Exp $
+	$Id: scm_reference.cc,v 1.4 2008/11/23 17:54:05 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -12,7 +12,6 @@
 #include "guile/scm_reference.h"
 #include <iostream>
 #include <sstream>
-#include <memory>			// for auto_ptr
 #include "util/guile_STL.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/ref/reference_set.h"
@@ -20,6 +19,7 @@
 #include "parser/instref.h"
 #include "guile/hackt-documentation.h"
 #include "guile/libhackt-wrap.h"
+#include "util/memory/unique_ptr.h"
 #include "util/for_all.h"
 #include "util/caller.h"
 
@@ -41,6 +41,7 @@ using entity::global_references_set;
 using entity::entry_collection;
 using util::guile::make_scm;
 using util::guile::extract_scm;
+using util::memory::unique_ptr;
 USING_SCM_ASSERT_SMOB_TYPE
 
 /**
@@ -226,7 +227,7 @@ HAC_GUILE_DEFINE(wrap_parse_raw_reference, FUNC_NAME, 1, 0, 0, (SCM sref),
 	// alternately string_to_locale_stringbuf
 	const module& mod(*obj_module);
 	// alert: heap-allocating though naked pointer, copy-constructing
-	std::auto_ptr<meta_reference_union>
+	unique_ptr<meta_reference_union>
 		ref(new meta_reference_union(
 			parser::parse_and_check_reference(peek, mod)));
 	SCM ret_smob;

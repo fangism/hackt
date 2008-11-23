@@ -2,7 +2,7 @@
 	\file "util/STL/hash_map_utils.h"
 	This file contains some external utility functions related
 	to hash_maps.  
-	$Id: hash_map_utils.h,v 1.2 2006/04/27 00:17:23 fang Exp $
+	$Id: hash_map_utils.h,v 1.3 2008/11/23 17:55:15 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_UTILS_H__
@@ -11,7 +11,7 @@
 #include "util/STL/hash_map.h"
 #include "util/hash_qmap.h"
 
-namespace HASH_MAP_NAMESPACE {
+BEGIN_HASH_MAP_NS
 //=============================================================================
 // just declaration
 HASH_MAP_TEMPLATE_SIGNATURE
@@ -27,7 +27,11 @@ void
 hash_map_copy_reverse_buckets(const HASH_MAP_CLASS& s, HASH_MAP_CLASS& d) {
 	typedef	typename HASH_MAP_CLASS::const_iterator	const_iterator;
 	d.clear();
+#if USING_ORDERED_MAP
+	d.rehash(s.bucket_count());
+#else
 	d.resize(s.bucket_count());
+#endif
 	const const_iterator e(s.end());
 	const_iterator i(s.begin());
 	for ( ; i!=e; ++i) {
@@ -85,7 +89,7 @@ copy_map_reverse_bucket(const T& s, T& d) {
 }
 
 //=============================================================================
-}	// end namespace HASH_MAP_NAMESPACE
+END_HASH_MAP_NS	// end namespace HASH_MAP_NAMESPACE
 
 #endif	// __UTIL_STL_HASH_MAP_UTILS_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/conditional_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: conditional_scope.cc,v 1.9 2008/03/17 23:02:35 fang Exp $
+ 	$Id: conditional_scope.cc,v 1.10 2008/11/23 17:53:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_CC__
@@ -52,7 +52,7 @@ if (guards.empty()) {
 	// should only occur during debugging
 	return o << "[EMPTY]";
 }
-	return meta_conditional::dump(*this, o, dc);
+	return meta_conditional_type::dump(*this, o, dc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -61,13 +61,13 @@ if (guards.empty()) {
  */
 bool
 conditional_scope::empty(void) const {
-	return meta_conditional::empty(*this);
+	return meta_conditional_type::empty(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 conditional_scope::append_guarded_clause(const guard_ptr_type& g) {
-	meta_conditional::append_guarded_clause(*this, g);
+	meta_conditional_type::append_guarded_clause(*this, g);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -107,20 +107,20 @@ if (b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 conditional_scope::collect_transient_info(persistent_object_manager& m) const {
-	meta_conditional::collect_transient_info(*this, m);
+	meta_conditional_type::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 conditional_scope::write_object(const persistent_object_manager& m,
 		ostream& o) const {
-	meta_conditional::write_object(*this, m, o);
+	meta_conditional_type::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 conditional_scope::load_object(const persistent_object_manager& m, istream& i) {
-	meta_conditional::load_object(*this, m, i);
+	meta_conditional_type::load_object(*this, m, i);
 }
 
 //=============================================================================

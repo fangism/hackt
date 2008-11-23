@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.12 2008/11/16 02:17:08 fang Exp $
+	$Id: State.h,v 1.13 2008/11/23 17:54:25 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -72,7 +72,7 @@ public:
 	/**
 		For managing SIGINT interruption.
 	 */
-	typedef	signal_handler<this_type>	signal_handler;
+	typedef	signal_handler<this_type>	signal_handler_type;
 	/**
 		Basic tuple for event scheduling.  
 	 */

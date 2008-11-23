@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.14 2008/11/16 02:17:10 fang Exp $
+	$Id: State-prsim.h,v 1.15 2008/11/23 17:54:30 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -929,7 +929,7 @@ public:
 		Signal handler class that binds the State reference
 		for the duration of the scope in which it is declared.  
 	 */
-	typedef	signal_handler<this_type>	signal_handler;
+	typedef	signal_handler<this_type>	signal_handler_type;
 public:
 	explicit
 	State(const module&, const ExprAllocFlags&);

@@ -1,7 +1,7 @@
 /**
 	\file "util/guile_gh.h"
 	Configure-wrapped header to deprecated guile interface 'gh'.
-	$Id: guile_gh.h,v 1.2 2007/03/14 04:06:26 fang Exp $
+	$Id: guile_gh.h,v 1.3 2008/11/23 17:54:46 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_GH_H__
@@ -12,6 +12,7 @@
 #ifdef	SIZEOF_LONG_LONG
 #undef	SIZEOF_LONG_LONG
 #endif	// already defined by libguile/scmconfig.h
+#include <cstdio>	// for std::FILE, required by <gmp.h>
 #include <guile/gh.h>
 
 #endif	// HAVE_GUILE_GH_H

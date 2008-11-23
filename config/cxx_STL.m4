@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.11 2008/05/28 23:59:06 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.12 2008/11/23 17:53:18 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -47,6 +47,49 @@ AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, [],
 	[True if STL <iterator> header defines reverse_iterator comparisons])
 fi
 ])dnl
+
+dnl @synopsis FANG_CXX_STL_CONSTRUCT
+dnl
+dnl Check for certain declarations of libstdc++ internal function
+dnl std::_Construct, which may have changed.
+dnl
+dnl @category Cxx
+dnl @version 2008-11-20
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STL_CONSTRUCT],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[whether libstdc++ (STL) contains std::_Construct(T*) default ctor],
+[fang_cv_cxx_stl_construct_default],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <vector>
+		#ifdef	HAVE_BITS_STL_CONSTRUCT_H
+		#include <bits/stl_construct.h>
+		#endif
+		namespace std {
+		template <class _T1>
+		inline
+		void
+		_Construct(_T1* __p) {
+			::new(static_cast<void*>(__p)) _T1();
+		}
+		}
+		]], []
+	),
+	[fang_cv_cxx_stl_construct_default=no],
+	[fang_cv_cxx_stl_construct_default=yes]
+)
+])
+if test "$fang_cv_cxx_stl_construct_default" = "yes" ; then
+AC_DEFINE(HAVE_STL_CONSTRUCT_DEFAULT, [],
+	[True if STL header defines std::_Construct(T*) default ctor])
+fi
+])dnl
+	
 
 dnl @synopsis FANG_CXX_STD_IFSTREAM_DEV_STDIN
 dnl
@@ -245,33 +288,36 @@ AC_DEFUN([FANG_HEADER_STDCXX],
 [AC_REQUIRE([AC_PROG_CXX])
 AC_LANG_PUSH(C++)
 dnl C++ wrappers to standard C headers
-AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath cctype])
-AC_CHECK_HEADERS([cerrno cfloat climits clocale csignal csetjmp cstdarg ctime])
-AC_CHECK_HEADERS([cwchar cwctype])
+AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath cctype \]
+	[cerrno cfloat climits clocale csignal csetjmp cstdarg ctime \]
+	[cwchar cwctype \]
 dnl checking all possible locations of (some equivalent) header files
 dnl spanning versions gcc-2.95 to 4.x
 dnl I bet you didn't know some of these locations were ever used!
 dnl However, you're not supposed to use anything older than gcc-3.3 anyways...
 dnl where is that damn hash_map?
-AC_CHECK_HEADERS([ext/hash_map hash_map alt/hash_map])
-AC_CHECK_HEADERS([ext/hashtable.h])
+	[ext/hash_map hash_map alt/hash_map \]
+	[ext/hashtable.h \]
 dnl used mainly in "src/util/hash_specializations.h"
-AC_CHECK_HEADERS([ext/stl_hash_fun.h ext/hash_fun.h stl_hash_fun.h])
-AC_CHECK_HEADERS([ext/hash_set hash_set alt/hash_set])
-AC_CHECK_HEADERS([ext/slist slist alt/slist])
-AC_CHECK_HEADERS([ext/hashtable.h tr1/hashtable hashtable.h])
-AC_CHECK_HEADERS([tr1/unordered_map tr1/unordered_set])
-AC_CHECK_HEADERS([ext/new_allocator.h])
-AC_CHECK_HEADERS([ext/functional tr1/functional])
+	[ext/stl_hash_fun.h ext/hash_fun.h \]
+	[stl_hash_fun.h bits/functional_hash.h\]
+	[ext/hash_set hash_set alt/hash_set \]
+	[ext/slist slist alt/slist \]
+	[ext/hashtable.h tr1/hashtable hashtable.h \]
+	[unordered_map tr1/unordered_map unordered_set tr1/unordered_set \]
+	[ext/new_allocator.h \]
+	[ext/functional tr1/functional \]
 dnl used in "src/util/string_fwd.h"
-AC_CHECK_HEADERS([bits/stringfwd.h])
-AC_CHECK_HEADERS([bits/concept_check.h])
-AC_CHECK_HEADERS([bits/type_traits.h tr1/type_traits tr1/type_traits_fwd.h type_traits.h])
+	[bits/stringfwd.h \]
+	[bits/concept_check.h \]
+	[bits/stl_construct.h \]
+	[type_traits bits/type_traits.h \]
+	[tr1/type_traits tr1/type_traits_fwd.h type_traits.h \]
 dnl among these, only sstream should be used, the rest are long gone
-AC_CHECK_HEADERS([sstream strstream stringstream])
+	[sstream strstream stringstream \]
 dnl can't include <tr1/boost_shared_ptr.h> directly
-AC_CHECK_HEADERS([tr1/memory])
-AC_CHECK_HEADERS([tr1/tuple tr1/array])
+	[tr1/memory random tr1/random regex tr1/random \]
+	[tuple tr1/tuple array tr1/array])
 AC_LANG_POP(C++)
 ])dnl
 

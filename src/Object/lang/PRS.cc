@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.30 2008/10/05 23:00:14 fang Exp $
+	$Id: PRS.cc,v 1.31 2008/11/23 17:53:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -13,6 +13,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #define	ENABLE_STACKTRACE		0
 
 #include <sstream>
+#include <limits>
 #include "Object/lang/PRS.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_registry.h"
@@ -819,13 +820,13 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(rule_conditional)
  */
 bool
 rule_conditional::empty(void) const {
-	return meta_conditional::empty(*this);
+	return meta_conditional_type::empty(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
-	return meta_conditional::dump(*this, o, c);
+	return meta_conditional_type::dump(*this, o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -835,7 +836,7 @@ rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
 good_bool
 rule_conditional::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
-	return meta_conditional::unroll(*this, c, np, pfp, "PRS");
+	return meta_conditional_type::unroll(*this, c, np, pfp, "PRS");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -862,26 +863,26 @@ rule_conditional::expand_complement(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_conditional::append_guarded_clause(const guard_ptr_type& g) {
-	meta_conditional::append_guarded_clause(*this, g);
+	meta_conditional_type::append_guarded_clause(*this, g);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_conditional::collect_transient_info(persistent_object_manager& m) const {
-	meta_conditional::collect_transient_info(*this, m);
+	meta_conditional_type::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_conditional::write_object(const persistent_object_manager& m,
 		ostream& o) const {
-	meta_conditional::write_object(*this, m, o);
+	meta_conditional_type::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_conditional::load_object(const persistent_object_manager& m, istream& i) {
-	meta_conditional::load_object(*this, m, i);
+	meta_conditional_type::load_object(*this, m, i);
 }
 
 //=============================================================================
@@ -904,7 +905,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(rule_loop)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_loop::dump(ostream& o, const rule_dump_context& c) const {
-	return meta_loop::dump(*this, o, c, ':');
+	return meta_loop_type::dump(*this, o, c, ':');
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -914,27 +915,27 @@ rule_loop::dump(ostream& o, const rule_dump_context& c) const {
 good_bool
 rule_loop::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
-	return meta_loop::unroll(*this, c, np, pfp, "production rule");
+	return meta_loop_type::unroll(*this, c, np, pfp, "production rule");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_loop::collect_transient_info(persistent_object_manager& m) const {
-	meta_loop::collect_transient_info(*this, m);
+	meta_loop_type::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_loop::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
-	meta_loop::write_object(*this, m, o);
+	meta_loop_type::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_loop::load_object(const persistent_object_manager& m, 
 		istream& i) {
-	meta_loop::load_object(*this, m, i);
+	meta_loop_type::load_object(*this, m, i);
 }
 
 //=============================================================================

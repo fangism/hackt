@@ -1,7 +1,7 @@
 /**
 	\file "util/numeric/popcount.h"
 	Population count of bits.  
-	$Id: popcount.h,v 1.2 2007/08/29 18:56:45 fang Exp $
+	$Id: popcount.h,v 1.3 2008/11/23 17:55:20 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_POPCOUNT_H__
@@ -39,7 +39,7 @@ struct population_counter<uint8> {
 	char
 	operator () (const arg_type c) const {
 #ifdef HAVE_BUILTIN_POPCOUNT
-		return __builtin_popcount(c);
+		return char(__builtin_popcount(c));
 #else	// HAVE_BUILTIN_POPCOUNT
 		// unsigned shift is OK
 		return nibble_popcount[(c >> half_size)]
@@ -83,7 +83,7 @@ struct population_counter<type> {					\
 	typedef	type					arg_type;	\
 	char								\
 	operator () (const arg_type s) const {				\
-		return func(s);						\
+		return char(func(s));					\
 	}								\
 };	// end struct population_counter
 

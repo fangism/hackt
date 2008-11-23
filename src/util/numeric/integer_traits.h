@@ -2,7 +2,7 @@
 	\file "util/numeric/integer_traits.h"
 	The templates in this file allow compile time decisions
 	based on traits of constant integer values.  
-	$Id: integer_traits.h,v 1.9 2006/04/27 00:17:51 fang Exp $
+	$Id: integer_traits.h,v 1.10 2008/11/23 17:55:18 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_INTEGER_TRAITS_H__
@@ -28,7 +28,7 @@ struct composite_tag { };	typedef	composite_tag	not_prime_tag;
 
 template <size_t N>
 struct is_power_of_2 {
-	enum {	value = N && !(N & N-1) };
+	enum {	value = N && !(N & (N-1)) };
 };
 
 /**

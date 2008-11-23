@@ -3,19 +3,28 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.20 2008/04/24 22:46:56 fang Exp $
+	$Id: scopespace.h,v 1.21 2008/11/23 17:53:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
 #define	__HAC_OBJECT_COMMON_SCOPESPACE_H__
 
+/**
+	Define to 1 to use sorted map instead of hash_map or unordered_map
+	for the used_id_map_type of scopespace.
+	Rationale: consistent sorting
+ */
+#define	USE_SCOPESPACE_STD_MAP				1
+
 #include <list>
 #include <map>
+#include <string>
 #include "Object/common/util_types.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/boolean_types.h"
-#include "util/STL/map_fwd.h"
+#if !USE_SCOPESPACE_STD_MAP
 #include "util/STL/hash_map.h"
+#endif
 #include "util/memory/excl_ptr.h"
 #include "util/unique_list.h"
 
@@ -40,6 +49,7 @@ class param_value_placeholder;
 struct node_tag;
 template <class> class dummy_placeholder;
 using std::list;
+using std::map;
 using std::string;
 using std::istream;
 using std::ostream;
@@ -72,7 +82,7 @@ protected:	// typedefs -- keep these here for re-use
 		Aliased namespaces, which are not owned, 
 		cannot be modified.  
 	 */
-	typedef	std::default_map<string, never_ptr<const name_space> >::type
+	typedef	map<string, never_ptr<const name_space> >
 							alias_map_type;
 
 	/**
@@ -103,7 +113,7 @@ protected:	// typedefs -- keep these here for re-use
 		The stored value is a generic polymorphic object pointer 
 		whose type is deduced in the grammar.  
 		EVERY addition to this namespace must register
-		through this hash_map.  
+		through this associative container.  
 		Again, these pointers are not owned.  
 		These (redundantly) stored copies of pointers are read-only.  
 		To get the modifiable pointers, you'll need to look them up 
@@ -116,8 +126,12 @@ protected:	// typedefs -- keep these here for re-use
 		Tip (g++-3.3): setenv GLIBCPP_FORCE_NEW 1
 		Tip (g++-3.4+): setenv GLIBCXX_FORCE_NEW 1
 	 */
+#if USE_SCOPESPACE_STD_MAP
+	typedef	std::map<string, some_ptr<object> >
+#else
 	typedef	HASH_MAP_NAMESPACE::default_hash_map<string,
 			some_ptr<object> >::type
+#endif
 						used_id_map_type;
 
 	// new idea: use used_id_map as cache for type references and 
@@ -133,20 +147,15 @@ protected:
 	class bin_sort {
 	// public unary_function<const used_id_map_type::const_iterator&, void>
 	public:
-		typedef std::default_map<string,
-				never_ptr<name_space> >::type
+		typedef map<string, never_ptr<name_space> >
 							ns_bin_type;
-		typedef std::default_map<string,
-				never_ptr<definition_base> >::type
+		typedef map<string, never_ptr<definition_base> >
 							def_bin_type;
-		typedef std::default_map<string,
-				never_ptr<typedef_base> >::type
+		typedef map<string, never_ptr<typedef_base> >
 							alias_bin_type;
-		typedef std::default_map<string,
-				never_ptr<instance_placeholder_base> >::type
+		typedef map<string, never_ptr<instance_placeholder_base> >
 							inst_bin_type;
-		typedef std::default_map<string,
-				never_ptr<param_value_placeholder> >::type
+		typedef map<string, never_ptr<param_value_placeholder> >
 							param_bin_type;
 
 		ns_bin_type		ns_bin;
@@ -168,20 +177,15 @@ protected:
 	class const_bin_sort {
 	// public unary_function<const used_id_map_type::const_iterator&, void>
 	public:
-		typedef std::default_map<string,
-				never_ptr<const name_space> >::type
+		typedef map<string, never_ptr<const name_space> >
 							ns_bin_type;
-		typedef std::default_map<string,
-				never_ptr<const definition_base> >::type
+		typedef map<string, never_ptr<const definition_base> >
 							def_bin_type;
-		typedef std::default_map<string,
-				never_ptr<const typedef_base> >::type
+		typedef map<string, never_ptr<const typedef_base> >
 							alias_bin_type;
-		typedef std::default_map<string,
-				never_ptr<const instance_placeholder_base> >::type
+		typedef map<string, never_ptr<const instance_placeholder_base> >
 							inst_bin_type;
-		typedef std::default_map<string,
-				never_ptr<const param_value_placeholder> >::type
+		typedef map<string, never_ptr<const param_value_placeholder> >
 							param_bin_type;
 
 		ns_bin_type		ns_bin;

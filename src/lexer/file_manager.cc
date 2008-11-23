@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.9 2007/11/06 21:39:59 fang Exp $
+	$Id: file_manager.cc,v 1.10 2008/11/23 17:54:06 fang Exp $
  */
 
 #include <iostream>
@@ -166,7 +166,8 @@ file_manager::open_FILE(const char* fs) {
 	// else didn't find, continue searching include paths
 }
 	// else not found
-	return return_type(NULL, file_status::NOT_FOUND);
+	return return_type(AS_A(file_position*, NULL),
+		file_status::NOT_FOUND);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
