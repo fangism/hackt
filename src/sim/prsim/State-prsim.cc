@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.29 2008/11/19 02:22:54 fang Exp $
+	$Id: State-prsim.cc,v 1.30 2008/11/24 20:49:52 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -501,6 +501,11 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		weak_unstable_policy(ERROR_DEFAULT_WEAK_UNSTABLE),
 		interference_policy(ERROR_DEFAULT_INTERFERENCE),
 		weak_interference_policy(ERROR_DEFAULT_WEAK_INTERFERENCE),
+#if PRSIM_NEW_ERROR_POLICIES
+		assert_command_fail_policy(ERROR_DEFAULT_ASSERT_COMMAND_FAIL),
+		check_excl_fail_policy(ERROR_DEFAULT_CHECK_EXCL_FAIL),
+		channel_expect_fail_policy(ERROR_DEFAULT_CHANNEL_ASSERT_FAIL),
+#endif
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
 #if !PRSIM_INDIRECT_EXPRESSION_MAP
@@ -1975,6 +1980,14 @@ State::dump_mode(ostream& o) const {
 	o << "\ton invariant-unknown: " <<
 		error_policy_string(invariant_unknown_policy) << endl;
 #endif
+#if PRSIM_NEW_ERROR_POLICIES
+	o << "\ton assert-fail (bool): " <<
+		error_policy_string(assert_command_fail_policy) << endl;
+	o << "\ton channel-expect-fail: " <<
+		error_policy_string(channel_expect_fail_policy) << endl;
+	o << "\ton exclusion-fail: " <<
+		error_policy_string(check_excl_fail_policy) << endl;
+#endif
 	return o;
 }
 
@@ -2904,7 +2917,11 @@ State::check_excl_rings(const node_index_type ni, const node_type& n,
 	Diagnostic subroutine for dissecting excl violation exceptions.  
 	Uses extremely slow search because this only occurs on exception.  
  */
+#if PRSIM_NEW_ERROR_POLICIES
+CommandStatus
+#else
 void
+#endif
 State::inspect_exception(const step_exception& ex, ostream& o) const {
 if (IS_A(const excl_exception*, &ex)) {
 	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
@@ -2944,14 +2961,33 @@ if (IS_A(const excl_exception*, &ex)) {
 		"but you may further inspect the state." << endl;
 	o << "You probably want to disable excl-checking with `nocheckexcl\' "
 		"if you wish to continue the simulation." << endl;
+#if PRSIM_NEW_ERROR_POLICIES
+#define	RETURN_COMMAND_ERROR_CODE(policy)				\
+	switch (policy) {						\
+	/* will always break */						\
+	case ERROR_IGNORE:	/* not applicable */			\
+	case ERROR_WARN:	/* not applicable */			\
+	case ERROR_BREAK:	return Command::NORMAL;			\
+	case ERROR_INTERACTIVE:	return Command::INTERACT;		\
+	default: break;		/* just return FATAL */			\
+	}
+#else
+#define	RETURN_COMMAND_ERROR_CODE(policy)
+#endif
+	RETURN_COMMAND_ERROR_CODE(check_excl_fail_policy)
 } else if (IS_A(const channel_exception*, &ex)) {
 	const channel_exception& exex(AS_A(const channel_exception&, ex));
 	o << "ERROR: value assertion failed on channel `" <<
 		exex.name << "\'." << endl;
 	o << "\texpected: " << exex.expect << ", got: " << exex.got << endl;
+	RETURN_COMMAND_ERROR_CODE(channel_expect_fail_policy)
 } else {
 	o << "Unkonwn step_exception." << endl;
 }
+#if PRSIM_NEW_ERROR_POLICIES
+	return Command::FATAL;
+#endif
+#undef	RETURN_COMMAND_ERROR_CODE
 }	// end method State::inspect_excl_exception
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -7165,6 +7201,11 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, invariant_fail_policy);
 	write_value(o, invariant_unknown_policy);
 #endif
+#if PRSIM_NEW_ERROR_POLICIES
+	write_value(o, assert_command_fail_policy);
+	write_value(o, channel_expect_fail_policy);
+	write_value(o, check_excl_fail_policy);
+#endif
 	write_value(o, autosave_name);
 	write_value(o, timing_mode);
 	if (_channel_manager.save_checkpoint(o)) return true;
@@ -7338,7 +7379,12 @@ try {
 	read_value(i, invariant_fail_policy);
 	read_value(i, invariant_unknown_policy);
 #endif
-	read_value(i, autosave_name);
+#if PRSIM_NEW_ERROR_POLICIES
+	read_value(i, assert_command_fail_policy);
+	read_value(i, channel_expect_fail_policy);
+	read_value(i, check_excl_fail_policy);
+#endif
+	read_value(i, autosave_name);	// safe to load the name of checkpoint
 	read_value(i, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -7475,6 +7521,14 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	o << "invariant-fail policy: " << error_policy_string(p) << endl;
 	read_value(i, p);
 	o << "invariant-unknown policy: " << error_policy_string(p) << endl;
+#endif
+#if PRSIM_NEW_ERROR_POLICIES
+	read_value(i, p);
+	o << "assert-fail policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "channel-expect-fail policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "exclusion-fail policy: " << error_policy_string(p) << endl;
 #endif
 }
 	char timing_mode;

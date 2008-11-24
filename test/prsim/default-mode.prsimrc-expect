@@ -8,4 +8,7 @@ mode:
 	checking exclusions: on
 	on invariant-fail: break
 	on invariant-unknown: warn
+	on assert-fail (bool): fatal
+	on channel-expect-fail: fatal
+	on exclusion-fail: fatal
 timing: uniform (10)
