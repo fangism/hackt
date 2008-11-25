@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.43 2008/11/13 22:26:44 fang Exp $
+#	$Id: Makefile.am,v 1.44 2008/11/25 04:59:33 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -250,6 +250,9 @@ channel-dont-cares.txt:
 	$(ECHO) "X" ; $(ECHO) "X" ; $(ECHO) "X" ; $(ECHO) "X" ; \
 		} > $@
 
+# override default
+autosave-01.prsimckpt: autosave-01.prsimrcfail-out
+	@:
 # extra dep
 cbit_test_stat-01.prsimrc-out: cbit_test_stat.haco-a
 cbit_test_stat-01.prsimckpt: cbit_test_stat.haco-a

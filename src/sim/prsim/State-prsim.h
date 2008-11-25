@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.16 2008/11/24 20:49:53 fang Exp $
+	$Id: State-prsim.h,v 1.17 2008/11/25 04:59:31 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -32,9 +32,6 @@
 #include "sim/prsim/Expr.h"
 #include "sim/prsim/Rule.h"
 #include "sim/prsim/Channel-prsim.h"	// for channels support
-#if PRSIM_NEW_ERROR_POLICIES
-#include "sim/command_error_codes.h"
-#endif
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
 #include "util/named_ifstream_manager.h"
@@ -686,19 +683,10 @@ public:
 		ERROR_WARN = 1,
 		ERROR_NOTIFY = ERROR_WARN,
 		ERROR_BREAK = 2,
-#if PRSIM_NEW_ERROR_POLICIES
-		ERROR_INTERACTIVE = 3,
-		ERROR_FATAL = 4,
-#endif
 		ERROR_INVALID,
 #if PRSIM_INVARIANT_RULES
 		ERROR_DEFAULT_INVARIANT_FAIL = ERROR_BREAK,
 		ERROR_DEFAULT_INVARIANT_UNKNOWN = ERROR_WARN,
-#endif
-#if PRSIM_NEW_ERROR_POLICIES
-		ERROR_DEFAULT_ASSERT_COMMAND_FAIL = ERROR_FATAL,
-		ERROR_DEFAULT_CHECK_EXCL_FAIL = ERROR_FATAL,
-		ERROR_DEFAULT_CHANNEL_ASSERT_FAIL = ERROR_FATAL,
 #endif
 		ERROR_DEFAULT_UNSTABLE = ERROR_BREAK,
 		ERROR_DEFAULT_WEAK_UNSTABLE = ERROR_WARN,
@@ -888,7 +876,6 @@ private:
 	check_excl_ring_map_type		check_exlo;
 	// current time, etc...
 	time_type				current_time;
-	/// in timing uniform mode, the constant delay per transition
 	time_type				uniform_delay;
 	// watched nodes
 	watch_list_type				watch_list;
@@ -914,18 +901,11 @@ private:
 	error_policy_enum			interference_policy;
 	/// controls the simulation behavior upon weak-interference
 	error_policy_enum			weak_interference_policy;
-#if PRSIM_NEW_ERROR_POLICIES
-	/// policy for all assert-class *commands* that fail
-	error_policy_enum			assert_command_fail_policy;
-	/// policy for exclusion violations
-	error_policy_enum			check_excl_fail_policy;
-	/// policy for channel assertion failures
-	error_policy_enum			channel_expect_fail_policy;
-#endif
 	/// name of automatically taken checkpoint
 	string					autosave_name;
 	/// timing mode
 	uchar					timing_mode;
+	// loadable random seed?
 	/**
 		set by the SIGINT signal handler
 		(is this redundant with the STOP flag?)
@@ -1175,13 +1155,6 @@ public:
 		weak_unstable_policy = ERROR_WARN;
 		interference_policy = ERROR_BREAK;
 		weak_interference_policy = ERROR_IGNORE;
-		// invariant_fail_policy = ...
-		// invariant_unknown_policy = ...
-#if PRSIM_NEW_ERROR_POLICIES
-		// assert_command_fail_policy = ...
-		// check_excl_fail_policy = ...
-		// channel_expect_fail_policy = ...
-#endif
 	}
 
 	void
@@ -1190,13 +1163,6 @@ public:
 		weak_unstable_policy = ERROR_WARN;
 		interference_policy = ERROR_BREAK;
 		weak_interference_policy = ERROR_WARN;
-		// invariant_fail_policy = ...
-		// invariant_unknown_policy = ...
-#if PRSIM_NEW_ERROR_POLICIES
-		// assert_command_fail_policy = ...
-		// check_excl_fail_policy = ...
-		// channel_expect_fail_policy = ...
-#endif
 	}
 
 	void
@@ -1205,13 +1171,6 @@ public:
 		weak_unstable_policy = ERROR_BREAK;
 		interference_policy = ERROR_BREAK;
 		weak_interference_policy = ERROR_BREAK;
-		// invariant_fail_policy = ...
-		// invariant_unknown_policy = ...
-#if PRSIM_NEW_ERROR_POLICIES
-		// assert_command_fail_policy = ...
-		// check_excl_fail_policy = ...
-		// channel_expect_fail_policy = ...
-#endif
 	}
 
 	static
@@ -1431,13 +1390,7 @@ public:
 	void
 	append_check_excllo_ring(const ring_set_type&);
 
-#if PRSIM_NEW_ERROR_POLICIES
-	typedef	command_error_codes		Command;
-
-	CommandStatus
-#else
 	void
-#endif
 	inspect_exception(const step_exception&, ostream&) const;
 
 	ostream&

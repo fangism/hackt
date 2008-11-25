@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.11 2008/11/24 20:49:53 fang Exp $
+	$Id: devel_switches.h,v 1.12 2008/11/25 04:59:32 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -90,16 +90,6 @@
  */
 #define	PRSIM_ALLOW_OVERTAKE_EVENTS			1
 
-/**
-	Define to 1 to allow new generalized error-handling policies
-	for various error conditions.
-	Rationale: finer-grain user control of error handling, 
-		and granting user opportunity to interactively inspect.
-	Goal: 1
-	Status: begun
- */
-#define	PRSIM_NEW_ERROR_POLICIES			1
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	INVASIVE change.
@@ -122,7 +112,7 @@
 	output node, but are actually run-time invariant checks.  
 	Will require a new rule flag in the bit-field.  
 	Rationale: stronger assertion checking
-	Status: done, tested, can perm
+	Status: done, tested
 	Goal: 1
  */
 #define	PRSIM_INVARIANT_RULES		(1 && PRSIM_INDIRECT_EXPRESSION_MAP)
@@ -130,7 +120,7 @@
 /**
 	Define to 1 to move direction flag to rules, currently in expressions.
 	Rationale: because it makes sense.
-	Status: done, tested, can perm
+	Status: done, tested
 	Goal: 1
  */
 #define	PRSIM_RULE_DIRECTION		(1 && PRSIM_INDIRECT_EXPRESSION_MAP)

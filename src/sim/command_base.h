@@ -2,7 +2,7 @@
 	\file "sim/command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: command_base.h,v 1.2 2008/11/24 20:49:49 fang Exp $
+	$Id: command_base.h,v 1.3 2008/11/25 04:59:24 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_BASE_H__
@@ -12,7 +12,6 @@
 #include <string>
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
-#include "sim/command_error_codes.h"
 
 namespace HAC {
 namespace SIM {
@@ -26,9 +25,23 @@ class command_category;
 /**
 	State-independent base class of Command.  
  */
-class CommandBase : public command_error_codes {
+class CommandBase {
 public:
-	typedef	CommandStatus		Status;	// enum
+	/**
+		A few reserved exit codes for main functions.  
+		TODO: validate the range of these values w.r.t. 
+			return type size or standard enums.
+	 */
+	enum Status {
+		FATAL = -4,	///< terminate immediately (e.g. assert fail)
+		BADFILE = -3,	///< source file not found
+		SYNTAX = -2,	///< bad syntax
+		UNKNOWN = -1,	///< unknown command
+		NORMAL = 0,	///< command executed fine
+		BADARG = 1,	///< other error with input
+		END = 0xFF	///< normal exit, such as EOF
+	};
+
 	typedef	void (usage_type) (ostream&);
 	typedef	usage_type*		usage_ptr_type;
 protected:
@@ -93,6 +106,85 @@ public:
 	main(state_type&, const string_list&) const;
 
 };	// end class command
+
+//=============================================================================
+#if 0
+/**
+	Not a real class but a template of what a typical command class 
+	should look like, interface-wise.
+	The command-registration template function expects 
+	members in this class.  
+	The CommandTemplate is used to construct a Command object.
+	TODO: perhaps a helper functor, leveraging template argument deduction?
+ */
+template <class State>
+struct CommandTemplate {
+	static const char		name[];
+	static const char		brief[];
+	static const CommandCategory&	category;
+
+	static
+	int
+	main(State&, const string_list&);
+
+	static
+	void
+	usage(ostream& o);
+private:
+	static const size_t		receipt_id;
+};	// end class CommandTemplate
+#endif
+
+//=============================================================================
+#if 0
+/**
+	The user may define custom alias commands at run time.  
+	Aliasing just performs string substitution.  
+	Need to define scope of duration for alias commands.  
+	Don't want to affect successive invocations.  
+ */
+class CommandAlias {
+};	// end class command
+#endif
+
+//=============================================================================
+
+#if 0
+/**
+	Declares a command class.  
+	TODO: Make this generic macro...
+ */
+#define	DECLARE_COMMAND_CLASS(class_name)				\
+struct class_name {                                                     \
+public:                                                                 \
+	static const char		name[];				\
+	static const char		brief[];			\
+	static CommandCategory&		category;			\
+	static int	main(State&, const string_list&);		\
+	static void	usage(ostream&);				\
+private:								\
+	static const size_t		receipt_id;			\
+};
+#endif
+
+#if 0
+// declare some generally useful commands
+/**
+	The 'help' command class.  
+	Not using the macro to define because we extend the interface somewhat.
+ */
+struct Help {
+public:
+	static const char		name[];
+	static const char		brief[];
+	static CommandCategory&		category;
+	static int	main(const string_list&);	// no state needed
+	static int	main(State&, const string_list&);
+	static void	usage(ostream&);
+private:
+	static const size_t		receipt_id;
+};	// end class Help
+#endif
 
 //=============================================================================
 }	// end namespace SIM
