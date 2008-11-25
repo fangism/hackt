@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-64:
+	  portability with gcc4 series:
+		don't use unordered_map unless hash_map is deprecated.
+		prefer std::ordered_map over tr1.
+		re-validated on powerpc-apple-darwin8-gcc-4.0.1.
+
+
 2008-11-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-61-gcc43-04:

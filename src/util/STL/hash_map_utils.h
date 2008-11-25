@@ -2,7 +2,7 @@
 	\file "util/STL/hash_map_utils.h"
 	This file contains some external utility functions related
 	to hash_maps.  
-	$Id: hash_map_utils.h,v 1.3 2008/11/23 17:55:15 fang Exp $
+	$Id: hash_map_utils.h,v 1.4 2008/11/25 21:52:47 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_UTILS_H__
@@ -27,7 +27,7 @@ void
 hash_map_copy_reverse_buckets(const HASH_MAP_CLASS& s, HASH_MAP_CLASS& d) {
 	typedef	typename HASH_MAP_CLASS::const_iterator	const_iterator;
 	d.clear();
-#if USING_ORDERED_MAP
+#if USING_UNORDERED_MAP
 	d.rehash(s.bucket_count());
 #else
 	d.resize(s.bucket_count());

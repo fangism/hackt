@@ -1,7 +1,7 @@
 /**
 	\file "util/hash_qmap_fwd.h"
 	Forward declarations for queryable hash_map, defined in "hash_qmap.h"
-	$Id: hash_qmap_fwd.h,v 1.11 2006/04/27 00:16:54 fang Exp $
+	$Id: hash_qmap_fwd.h,v 1.12 2008/11/25 21:52:44 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_QMAP_FWD_H__
@@ -11,7 +11,12 @@
 // needed for reference to default hash function
 
 // these class parameters are explained below
-#if	defined(HASH_MAP_SGI_STYLE)
+#if	USING_UNORDERED_MAP
+// #include "util/STL/pair_fwd.h"
+	#define HASH_QMAP_TEMPLATE_SIGNATURE				\
+	template <class K, class T, class H, class E, class A>
+	#define	HASH_QMAP_CLASS		hash_qmap<K, T, H, E, A>
+#elif	defined(HASH_MAP_SGI_STYLE)
 	#define HASH_QMAP_TEMPLATE_SIGNATURE				\
 	template <class K, class T, class H, class E, class A>
 	#define	HASH_QMAP_CLASS		hash_qmap<K, T, H, E, A >
@@ -31,7 +36,12 @@ HASH_QMAP_TEMPLATE_SIGNATURE
 class hash_qmap;
 
 // default arguments, only key and value type are needed
-#if	defined(HASH_MAP_SGI_STYLE)
+#if	USING_UNORDERED_MAP
+template <class K, class T, 
+          class H = HASH_MAP_NAMESPACE::hash<K>,
+          class E = std::equal_to<K>,
+          class A = std::allocator<T> >
+#elif	defined(HASH_MAP_SGI_STYLE)
 template <class K, class T, 
           class H = HASH_MAP_NAMESPACE::hash<K>,
           class E = std::equal_to<K>,

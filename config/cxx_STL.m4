@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.12 2008/11/23 17:53:18 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.13 2008/11/25 21:52:40 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -394,6 +394,51 @@ fi
 rm -f conftest2.h
 ])dnl
 
+
+dnl @synopsis HAVE_HASH_MAP_DEPRECATED
+dnl
+dnl Checks whether or not any hash_map is deprecated, especially for newer
+dnl compiler in strict ANSI/ISO mode.
+dnl
+dnl @category Cxx
+dnl @version 2008-11-24
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_HASH_MAP_DEPRECATED],
+[AC_REQUIRE([FANG_HASH_MAP_NAMESPACE])
+AC_CACHE_CHECK([if hash_map is deprecated],
+[fang_cv_hash_map_deprecated],
+[AC_LANG_PUSH(C++)
+dnl we want deprecation warnings to be promoted errors for this test
+saved_CXXFLAGS=$CXXFLAGS
+CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([[
+	#ifdef HAVE_EXT_HASH_MAP
+	#include <ext/hash_map>
+	#elif defined(HAVE_HASH_MAP)
+	#include <hash_map>
+	#endif
+	#ifdef	HASH_MAP_IN___GNU_CXX
+	#define	HASH_MAP_NS	__gnu_cxx
+	#else
+	#define	HASH_MAP_NS	std
+	#endif
+	using HASH_MAP_NS::hash_map;
+	typedef	hash_map<int, int> map_type;
+	static map_type foo;
+	]], []),
+	[fang_cv_hash_map_deprecated=no],
+	[fang_cv_hash_map_deprecated=yes]
+)
+CXXFLAGS="$saved_CXXFLAGS"
+AC_LANG_POP
+])
+if test "$fang_cv_hash_map_deprecated" = "yes" ; then
+	AC_DEFINE(HASH_MAP_DEPRECATED, [], [Define if hash_maps are deprecated])
+fi
+])
 
 dnl @synopsis FANG_HASH_MAP_STYLE
 dnl

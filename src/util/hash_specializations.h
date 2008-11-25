@@ -3,7 +3,7 @@
 	Contains hash function specializations.  
 	Include this file before using any hash_map for specializations
 	to take effect.
-	$Id: hash_specializations.h,v 1.10 2008/11/23 17:54:47 fang Exp $
+	$Id: hash_specializations.h,v 1.11 2008/11/25 21:52:45 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_SPECIALIZATIONS_H__
@@ -54,10 +54,11 @@ struct hash<const T*> {
 #endif
 		register const __type y = reinterpret_cast<const __type>(x);
 		return hash<__type>()(y ^ (y >> 7));
+		// Apple g++-4.0.1 ICEs without explicit operator()...
 	}
 };	// end hash<>
 
-#if	!USING_ORDERED_MAP
+#if	!USING_UNORDERED_MAP
 /**
 	Explicit template specialization of hash of a string class, 
 	which just uses the internal char* representation as a wrapper.

@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.29 2008/11/23 17:55:04 fang Exp $
+	$Id: persistent_object_manager.h,v 1.30 2008/11/25 21:52:45 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -158,7 +158,7 @@ private:
 		Every pointer will be mapped to an auxiliary index.  
 		Is the reverse map of reconstruction_table_type.
 	 */
-#if USING_ORDERED_MAP
+#if USING_UNORDERED_MAP
 	typedef	HASH_MAP_NAMESPACE::hash_map<const void*, Long>
 	// is actually unordered_map
 #else
