@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.4.4.1 2008/11/20 23:18:46 fang Exp $
+	$Id: command_registry.h,v 1.4.4.2 2008/11/25 08:36:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -20,7 +20,10 @@ using util::default_qmap;
 using util::string_list;
 using std::string;
 using std::ostream;
+using std::istream;
 template <class> class command_category;
+
+// TODO: typedef CommandStatus command_return_type; (instead of int)
 
 //=============================================================================
 /**
@@ -110,6 +113,10 @@ private:
 	static int			begin_outermost_comment;
 public:
 	/**
+		User-modifiable prompt string. 
+	 */
+	static	string			prompt;
+	/**
 		Switch: whether or not each command is echoed as it is
 		interpreted.  Default off (false).
 		TODO: use local switch instead?
@@ -135,7 +142,11 @@ public:
 
 	static
 	int
-	interpret(state_type&, const bool);
+	interpret(state_type&, istream&, const bool);
+
+	static
+	int
+	interpret_stdin(state_type&);
 
 	static
 	int
@@ -186,7 +197,7 @@ private:
 
 	static
 	int
-	__source(std::istream&, state_type&);
+	__source(istream&, state_type&);
 
 };	// end class command_registry
 

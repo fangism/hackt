@@ -56,6 +56,12 @@ function parse_expect(st) {
 	}
 }
 
+function assert_token(tok, str) {
+	if (tok != str) {
+		parse_error("expected token \"" tok "\" but got \"" str "\".");
+	}
+}
+
 # print the parse stack
 function parse_debug(i) {
 	printf("stack: ");
@@ -67,7 +73,7 @@ function parse_debug(i) {
 
 # pad syntactic sugar (tokens) with spaces for easy splitting
 function tokenize(str) {
-	gsub("[][(,;'#)]", " & ", str);	# pad with spaces
+	gsub("[][(,:;'#)]", " & ", str);	# pad with spaces
 	return str;
 }
 
@@ -78,6 +84,23 @@ function reset_globals() {
 	for (p in ports) {
 		delete ports[p];
 	}
+}
+
+function set_port_dir(tok, dir) {
+if (tok == "[") {
+	parse_push("expect-range-first");
+} else {
+	if (tok != ";") {
+	if (tok != ",") {
+		if (length(range_first) && length(range_second)) {
+			directions[tok] = "[" range_first ":" range_second "]";
+		}
+		ports[tok] = dir;
+	} # else ignore
+	} else {
+		parse_pop();
+	}
+}
 }
 
 # where the parsing happens...
@@ -115,6 +138,9 @@ if (state == "top") {
 	}
 } else if (state == "module-body") {
 	# now look for input and output direction specs
+	# reset globals, yuck!
+	range_first = "";
+	range_second = "";
 	if (tok == "input") {
 		parse_push("input-list");
 	} else if (tok == "output") {
@@ -134,30 +160,24 @@ if (state == "top") {
 		write_out_wrapper();
 		parse_expect("top");
 	}
+} else if (state == "expect-range-first") {
+	range_first = tok;
+	parse_replace("expect-range-colon");
+} else if (state == "expect-range-second") {
+	range_second = tok;
+	parse_replace("expect-range-end");
+} else if (state == "expect-range-colon") {
+	assert_token(tok, ":");
+	parse_replace("expect-range-second");
+} else if (state == "expect-range-end") {
+	assert_token(tok, "]");
+	parse_pop();
 } else if (state == "input-list") {
-	if (tok != ";") {
-	if (tok != ",") {
-		ports[tok] = "in";
-	} # else ignore
-	} else {
-		parse_pop();
-	}
+	set_port_dir(tok, "in");
 } else if (state == "output-list") {
-	if (tok != ";") {
-	if (tok != ",") {
-		ports[tok] = "out";
-	} # else ignore
-	} else {
-		parse_pop();
-	}
+	set_port_dir(tok, "out");
 } else if (state == "inout-list") {
-	if (tok != ";") {
-	if (tok != ",") {
-		ports[tok] = "inout";
-	} # else ignore
-	} else {
-		parse_pop();
-	}
+	set_port_dir(tok, "inout");
 } else if (state == "ignore-block") {
 	if (tok == "begin") {
 		parse_replace("ignore-to-end");
@@ -182,11 +202,12 @@ if (state == "top") {
 }
 
 # emit wrapper function
-function write_out_wrapper() {
+function write_out_wrapper(tmp) {
 	print "module " wrapper_prefix "_" type_name ";";
 	print "// need not be reg with acc: wn:*";
 	for (p in ports) {
-		print "\twire " p ";";
+		tmp = direction[p];
+		print "\twire " (length(tmp) ? tmp " " : "") p ";";
 	}
 	print "\tparameter prsim_name=\"\";";
 	print "\treg [" max_strlen "*8:1] verilog_name;";
@@ -219,7 +240,7 @@ for (p in ports) {
 		exit(1);
 	}
 }
-	print "end // end if";
+	print "\tend // end if";
 	print "end // end initial";
 	print "endmodule";
 	print "";
@@ -248,7 +269,9 @@ for (p in ports) {
 	# lex_it
 	ntoks = split(tokenize($0), toks);
 	for (i=1; i<= ntoks; ++i) {
+	if (length(toks[i])) {
 		parse_it(toks[i]);
+	}
 	}
 }
 

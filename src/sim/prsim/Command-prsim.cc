@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.20.4.1 2008/11/20 23:18:48 fang Exp $
+	$Id: Command-prsim.cc,v 1.20.4.2 2008/11/25 08:36:44 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -166,14 +166,23 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::All, PRSIM::builtin)
 Exit the simulator.
 @end deffn
 @end texinfo
+
+@texinfo cmd/abort.texi
+@deffn Command abort
+Exit the simulator with a fatal (non-zero) exit status.
+@end deffn
+@end texinfo
 ***/
 typedef	stateless_command_wrapper<Exit, State>		Exit;
 typedef	stateless_command_wrapper<Quit, State>		Quit;
+typedef	stateless_command_wrapper<Abort, State>		Abort;
 
 INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Exit,
 	"exit", PRSIM::builtin, "exits simulator")
 INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Quit,
 	"quit", PRSIM::builtin, "exits simulator")
+INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Abort,
+	"abort", PRSIM::builtin, "exits simulator with fatal status")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -221,6 +230,43 @@ Print a list of all known aliases registered with the interpreter.
 ***/
 typedef	Aliases<State>				Aliases;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Aliases, PRSIM::builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/interpret.texi
+@deffn Command interpret
+Open an interactive subshell of the interpreter, by re-opening
+the standard input stream.  
+This is useful when you want to break in the middle of a non-interactive
+script and let the user take control temporarily before returning
+control back to the script.  
+The @command{exit} command or @kbd{Ctrl-D} sends the EOF signal to exit 
+the current interactive level of input and return control to the parent.  
+The level of shell is indicated by additional @t{>} characters in the prompt.
+This works if @command{hacprsim} was originally launched interactively
+and without redirecting a script through stdin.  
+
+@example
+$ @kbd{hacprsim foo.haco}
+prsim> @kbd{!cat foo.prsimrc}
+# foo.prsimrc
+echo hello world
+interpret
+echo goodbye world
+prsim> @kbd{source foo.prsimrc}
+hello world
+prsim>> @kbd{echo where am I?}
+where am I?
+prsim>> @kbd{exit}
+goodbye world
+prsim> @kbd{exit}
+$
+@end example
+@end deffn
+@end texinfo
+***/
+typedef	Interpret<State>			Interpret;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Interpret, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_error_codes.h"
-	$Id: command_error_codes.h,v 1.1.2.1 2008/11/24 20:49:51 fang Exp $
+	$Id: command_error_codes.h,v 1.1.2.2 2008/11/25 08:36:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_ERROR_CODES_H__
@@ -20,9 +20,7 @@ namespace SIM {
 struct command_error_codes {
 enum CommandStatus {
 	FATAL = -5,	///< terminate immediately (e.g. assert fail)
-#if PRSIM_NEW_ERROR_POLICIES
 	INTERACT = -4,	///< open a sub-shell to inspect state
-#endif
 	BADFILE = -3,	///< source file not found
 	SYNTAX = -2,	///< bad syntax
 	UNKNOWN = -1,	///< unknown command

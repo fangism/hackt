@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.16 2008/06/11 21:19:03 fang Exp $
+	$Id: Command.cc,v 1.16.6.1 2008/11/25 08:36:42 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -157,14 +157,23 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::All, CHPSIM::builtin)
 Exit the simulator.
 @end deffn
 @end texinfo
+
+@texinfo cmd/abort.texi
+@deffn Command abort
+Exit the simulator with a fatal (non-zero) exit status.
+@end deffn
+@end texinfo
 ***/
 typedef	stateless_command_wrapper<Exit, State>		Exit;
 typedef	stateless_command_wrapper<Quit, State>		Quit;
+typedef	stateless_command_wrapper<Abort, State>		Abort;
 
 INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Exit,
 	"exit", CHPSIM::builtin, "exits simulator")
 INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Quit,
 	"quit", CHPSIM::builtin, "exits simulator")
+INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Abort,
+	"abort", CHPSIM::builtin, "exits simulator with fatal status")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -212,6 +221,23 @@ Print a list of all known aliases registered with the interpreter.
 ***/
 typedef	Aliases<State>				Aliases;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Aliases, CHPSIM::builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/interpret.texi
+@deffn Command interpret
+Open an interactive subshell of the interpreter, by re-opening
+the standard input stream.  
+This is useful when you want to break in the middle of a non-interactive
+script and let the user take control temporarily before returning
+control back to the script.  
+@kbd{Ctrl-D} sends the EOF signal to exit the current interactive level
+of input and return control to the parent.  
+@end deffn
+@end texinfo
+***/
+typedef	Interpret<State>			Interpret;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Interpret, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
