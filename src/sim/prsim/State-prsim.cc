@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.29.4.1 2008/11/20 23:18:49 fang Exp $
+	$Id: State-prsim.cc,v 1.29.4.2 2008/11/26 00:31:56 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -698,7 +698,7 @@ State::break_type
 State::flush_channel_events(const vector<env_event_type>& env_events, 
 		const event_cause_type& c) {
 	STACKTRACE_VERBOSE;
-	bool err = false;
+	break_type err = ERROR_NONE;
 	// cause of these events must be 'ni', this node
 	vector<env_event_type>::const_iterator
 		i(env_events.begin()), e(env_events.end());
@@ -718,9 +718,11 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 	// for now, give up if there are conflicting events in queue
 			// instability!?
 			event_type& ev(get_event(pe));
-			err |= __report_instability(cout,
+			const break_type E =
+			__report_instability(cout,
 				_v == LOGIC_OTHER, 
 				ev.val == LOGIC_HIGH, ev.node, ev);
+			if (E > err) err = E;
 			if (dequeue_unstable_events()) {
 				// overtake
 				kill_event(pe, ev.node);
@@ -759,6 +761,7 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 /**
 	Set a single channel into reset state.  
 	NB: flush_channel_events may result in instabilities!
+	\return ?
  */
 bool
 State::reset_channel(const string& cn) {
@@ -2217,7 +2220,7 @@ State::break_type
 State::flush_pending_queue(void) {
 	typedef	pending_queue_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
-	break_type err = false;
+	break_type err = ERROR_NONE;
 	const_iterator i(pending_queue.begin()), e(pending_queue.end());
 for ( ; i!=e; ++i) {
 	const event_index_type ne = *i;
@@ -2275,8 +2278,9 @@ for ( ; i!=e; ++i) {
 		// issue diagnostic
 		if ((weak_interference_policy != ERROR_IGNORE) ||
 				!pending_weak) {
-			err |=
+			const break_type E =
 			__report_interference(cout, pending_weak, _ni, ev);
+			if (E > err) err = E;
 		}
 		if (ev.pending_interference()) {
 			DEBUG_STEP_PRINT("immediate -> X." << endl);
@@ -2325,8 +2329,9 @@ for ( ; i!=e; ++i) {
 		// issue diagnostic
 		if ((weak_interference_policy != ERROR_IGNORE) ||
 				!pending_weak) {
-			err |=
+			const break_type E =
 			__report_interference(cout, pending_weak, _ni, ev);
+			if (E > err) err = E;
 		}
 		if (ev.pending_interference()) {
 			DEBUG_STEP_PRINT("immediate -> X." << endl);
@@ -2975,7 +2980,8 @@ struct State::auto_flush_queues {
 
 	~auto_flush_queues() {
 		// check and flush pending queue, spawn fanout events
-		if (UNLIKELY(state.flush_pending_queue())) {
+		const break_type E(state.flush_pending_queue());
+		if (UNLIKELY(E >= ERROR_BREAK)) {
 			state.stop();		// set stop flag
 		}
 
@@ -3112,9 +3118,12 @@ if (eval_ordering_is_random()) {
 		// when evaluating a node as an expression, 
 		// is appropriate to interpret node value
 		// as a pull-value
-		if (UNLIKELY(propagate_evaluation(new_cause, *i, pull_enum(prev)))) {
+		const break_type E =
+		propagate_evaluation(new_cause, *i, pull_enum(prev));
+		if (UNLIKELY(E >= ERROR_BREAK)) {
 			stop();
 			// just signal to break
+			// TODO: signal FATAL and INTERACTIVE
 		}
 	}
 }
@@ -3128,7 +3137,8 @@ if (n.in_channel()) {
 			prev, next, env_events);
 	// cause of these events must be 'ni', this node
 	const event_cause_type c(ni, next);
-	if (UNLIKELY(flush_channel_events(env_events, c))) {
+	const break_type E = flush_channel_events(env_events, c);
+	if (UNLIKELY(E >= ERROR_BREAK)) {
 		stop();
 	}
 	// HERE: error status?
@@ -3605,11 +3615,13 @@ State::propagate_evaluation(
 	if (ev_result.invariant_break) {
 		// then violation is not a result of a real rule
 		// thus, there can be no change or addition of events
-		return true;
+		return invariant_fail_policy;
+		// return true;
 	}
 #endif
 	if (!ev_result.node_index) {
-		return false;
+		return ERROR_NONE;
+		// return false;
 	}
 	const pull_enum next = ev_result.root_pull;
 	const node_index_type ui = ev_result.node_index;
@@ -3678,7 +3690,7 @@ State::propagate_evaluation(
 		get_pull(n.pull_up_index STR_INDEX(WEAK_RULE)) : PULL_OFF;
 #endif
 #endif	// PRSIM_WEAK_RULES
-	break_type err = false;
+	break_type err = ERROR_NONE;
 #if PRSIM_WEAK_RULES
 	// weak rule pre-filtering
 if (weak_rules_enabled()) {
@@ -3689,9 +3701,11 @@ if (n.pending_event()) {
 		// it was weak, and should be overtaken
 		// what if new event is weak-off?
 		if (e.val != LOGIC_OTHER) {
-			err |= __report_instability(cout,
+			const break_type E =
+			__report_instability(cout,
 				next == PULL_WEAK, 
 				e.val == LOGIC_HIGH, e.node, e);
+			if (E > err) err = E;
 		}
 		kill_event(ei, ui);
 		// ei = 0;
@@ -3916,7 +3930,9 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending 1 to 0 in queue." << endl);
 		// for now, out of laziness, overwrite the pending event
-		err |= __report_instability(cout, false, true, e.node, e);
+		const break_type E =
+		__report_instability(cout, false, true, e.node, e);
+		if (E > err) err = E;
 		e.val = LOGIC_LOW;
 		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
@@ -3942,12 +3958,14 @@ if (!n.pending_event()) {
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
-		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
+		const break_type E =
+		__diagnose_violation(cout, next, ei, e, ui, n, 
 			c, dir
 #if PRSIM_WEAK_RULES
 			, is_weak
 #endif
 			);
+		if (E > err) err = E;
 	}	// end if diagnostic
 }	// end if (!n.ex_queue)
 } else {
@@ -4133,7 +4151,9 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending 0 to 1 in queue." << endl);
 		// for now, out of laziness, overwrite the pending event
-		err |= __report_instability(cout, false, false, e.node, e);
+		const break_type E =
+		__report_instability(cout, false, false, e.node, e);
+		if (E > err) err = E;
 		e.val = LOGIC_HIGH;
 		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
@@ -4159,12 +4179,14 @@ if (!n.pending_event()) {
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
-		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
+		const break_type E =
+		__diagnose_violation(cout, next, ei, e, ui, n, 
 			c, dir
 #if PRSIM_WEAK_RULES
 			, is_weak
 #endif
 			);
+		if (E > err) err = E;
 	}	// end if diagonstic
 }	// end if (!n.ex_queue)
 }	// end if (u->direction())
@@ -4195,17 +4217,17 @@ State::__report_interference(ostream& o, const bool weak,
 		dump_node_canonical_name(o << "WARNING: weak-interference `", 
 			_ni) << "\'" << endl;
 		__report_cause(o, ev);
-		return weak_interference_policy >= ERROR_BREAK;
+		return weak_interference_policy;	// >= ERROR_BREAK;
 	}	// endif weak_interference_policy
 	} else {	// !weak
 	if (interference_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: interference `", _ni)
 			<< "\'" << endl;
 		__report_cause(o, ev);
-		return interference_policy >= ERROR_BREAK;
+		return interference_policy;		// >= ERROR_BREAK;
 	}	// endif interference_policy
 	}	// endif weak
-	return false;
+	return ERROR_NONE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4225,17 +4247,17 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 		dump_node_canonical_name(o << "WARNING: weak-unstable `",
 			_ni) << "\'" << (dir ? '+' : '-') << endl;
 		__report_cause(o, ev);
-		return weak_unstable_policy >= ERROR_BREAK;
+		return weak_unstable_policy;		// >= ERROR_BREAK;
 	}	// endif weak_unstable_policy
 	} else {	// !weak
 	if (unstable_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: unstable `", _ni)
 			<< "\'" << (dir ? '+' : '-') << endl;
 		__report_cause(o, ev);
-		return unstable_policy >= ERROR_BREAK;
+		return unstable_policy;			// >= ERROR_BREAK;
 	}	// endif unstable_policy
 	}	// endif weak
-	return false;
+	return ERROR_NONE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4267,7 +4289,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 	DEBUG_STEP_PRINT("is " << (weak ? "" : "not") << " weak" << endl);
 #endif
 	const node_index_type& ni(c.node);
-	break_type err = false;
+	break_type err = ERROR_NONE;
 	// something is amiss!
 	const uchar eu = dir ?
 		event_type::upguard[size_t(next)][size_t(e.val)] :
@@ -4375,9 +4397,10 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			}
 			if (b) {
 #endif
-			err |=
+			const break_type E =
 			__report_instability(o, eu & event_type::EVENT_WEAK, 
 				dir, ui, e);
+			if (E > err) err = E;
 #if PRSIM_WEAK_RULES
 			}
 #endif

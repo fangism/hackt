@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.14.4.1 2008/11/20 23:18:50 fang Exp $
+	$Id: State-prsim.h,v 1.14.4.2 2008/11/26 00:31:58 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -681,6 +681,7 @@ public:
 	 */
 	typedef enum {
 		ERROR_IGNORE = 0,
+		ERROR_NONE = ERROR_IGNORE,
 		ERROR_WARN = 1,
 		ERROR_NOTIFY = ERROR_WARN,
 		ERROR_BREAK = 2,
@@ -703,7 +704,7 @@ private:
 	/**
 		Return type to indicate whether or not to break.  
 	 */
-	typedef	bool				break_type;
+	typedef	error_policy_enum			break_type;
 
 	enum {
 		/**

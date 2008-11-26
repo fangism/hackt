@@ -93,7 +93,9 @@ if (tok == "[") {
 	if (tok != ";") {
 	if (tok != ",") {
 		if (length(range_first) && length(range_second)) {
-			directions[tok] = "[" range_first ":" range_second "]";
+			upper[tok] = range_first;
+			lower[tok] = range_second;
+			dimensions[tok] = "[" range_first ":" range_second "]";
 		}
 		ports[tok] = dir;
 	} # else ignore
@@ -202,11 +204,12 @@ if (state == "top") {
 }
 
 # emit wrapper function
-function write_out_wrapper(tmp) {
+# no parameters, variables are only local
+function write_out_wrapper(tmp, u, l) {
 	print "module " wrapper_prefix "_" type_name ";";
 	print "// need not be reg with acc: wn:*";
 	for (p in ports) {
-		tmp = direction[p];
+		tmp = dimensions[p];
 		print "\twire " (length(tmp) ? tmp " " : "") p ";";
 	}
 	print "\tparameter prsim_name=\"\";";
@@ -225,15 +228,31 @@ function write_out_wrapper(tmp) {
 	print "\t$sformat(verilog_name, \"%m\");"
 for (p in ports) {
 	type = ports[p];
+	u = upper[p];
+	l = lower[p];
 	good = 0;
 	# ports may be "inout" bidirectional, so I'm guessing both to and from
 	if (match(type, "in")) {
 		good = 1;
+	if (length(u) && length(l)) {
+	for ( ; l<=u; ++l) {
+		print "\t$from_prsim({prsim_name, \"." p \
+			"[" l "]\"}, {verilog_name, \"." p "[" l "]\"});";
+	}
+	} else {
 		print "\t$from_prsim({prsim_name, \"." p "\"}, {verilog_name, \"." p "\"});";
+	}
 	}
 	if (match(type, "out")) {
 		good = 1;
+	if (length(u) && length(l)) {
+	for ( ; l<=u; ++l) {
+		print "\t$to_prsim({verilog_name, \"." p \
+			"[" l "]\"}, {prsim_name, \"." p "[" l "]\"});";
+	}
+	} else {
 		print "\t$to_prsim({verilog_name, \"." p "\"}, {prsim_name, \"." p "\"});";
+	}
 	}
 	if (!good) {
 		print "Error: unknown port direction for " p;

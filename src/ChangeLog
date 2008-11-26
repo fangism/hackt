@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-62-prsim-11-03:
+	  Changed internal State::break_type to match error_policy_enum.
+		Diagnostic methods now return more meaningful value.
+		Due to error encoding, the highest ranked error policy
+		value returned will dictate the action to be taken
+		by the command interpreter.  No regressions in tests.  
+	  Next: propagate and make use of theses error policy return values.
+
+
 2008-11-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-62-prsim-11-02:
