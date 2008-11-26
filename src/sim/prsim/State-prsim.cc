@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.29.4.2 2008/11/26 00:31:56 fang Exp $
+	$Id: State-prsim.cc,v 1.29.4.3 2008/11/26 05:16:29 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -219,6 +219,26 @@ struct State::evaluate_return_type {
 #endif
 			{ }
 };	// end struct evaluate_return_type
+
+//=============================================================================
+/**
+	Converts simulator's error code signal into an error code
+	for the interpreter.  
+ */
+CommandStatus
+error_policy_to_status(const error_policy_enum e) {
+switch (e) {
+case ERROR_IGNORE:
+case ERROR_WARN:
+case ERROR_BREAK:
+	return command_error_codes::NORMAL;
+case ERROR_INTERACTIVE:
+	return command_error_codes::INTERACT;
+case ERROR_FATAL:
+default:
+	return command_error_codes::FATAL;
+}
+}
 
 //=============================================================================
 // class unique_process_subgraph method definitions
@@ -493,16 +513,21 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		watch_list(), 
 		_channel_manager(), 
 		flags(FLAGS_DEFAULT),
+#define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
 #if PRSIM_INVARIANT_RULES
-		invariant_fail_policy(ERROR_DEFAULT_INVARIANT_FAIL),
-		invariant_unknown_policy(ERROR_DEFAULT_INVARIANT_UNKNOWN),
+		invariant_fail_policy(E(INVARIANT_FAIL)),
+		invariant_unknown_policy(E(INVARIANT_UNKNOWN)),
 #endif
-		unstable_policy(ERROR_DEFAULT_UNSTABLE),
-		weak_unstable_policy(ERROR_DEFAULT_WEAK_UNSTABLE),
-		interference_policy(ERROR_DEFAULT_INTERFERENCE),
-		weak_interference_policy(ERROR_DEFAULT_WEAK_INTERFERENCE),
+		unstable_policy(E(UNSTABLE)),
+		weak_unstable_policy(E(WEAK_UNSTABLE)),
+		interference_policy(E(INTERFERENCE)),
+		weak_interference_policy(E(WEAK_INTERFERENCE)),
+		assert_fail_policy(E(ASSERT_FAIL)),
+		channel_expect_fail_policy(E(CHANNEL_EXPECT_FAIL)),
+		excl_check_fail_policy(E(EXCL_CHECK_FAIL)),
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
+#undef	E
 #if !PRSIM_INDIRECT_EXPRESSION_MAP
 		__scratch_expr_trace(),
 #endif
@@ -836,10 +861,19 @@ State::reset(void) {
 	STACKTRACE_VERBOSE;
 	__initialize();
 	flags = FLAGS_DEFAULT;
-	unstable_policy = ERROR_DEFAULT_UNSTABLE;
-	weak_unstable_policy = ERROR_DEFAULT_WEAK_UNSTABLE;
-	interference_policy = ERROR_DEFAULT_INTERFERENCE;
-	weak_interference_policy = ERROR_DEFAULT_WEAK_INTERFERENCE;
+#define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
+	unstable_policy = E(UNSTABLE);
+	weak_unstable_policy = E(WEAK_UNSTABLE);
+	interference_policy = E(INTERFERENCE);
+	weak_interference_policy = E(WEAK_INTERFERENCE);
+#if PRSIM_INVARIANT_RULES
+	invariant_fail_policy = E(INVARIANT_FAIL),
+	invariant_unknown_policy = E(INVARIANT_UNKNOWN),
+#endif
+	assert_fail_policy = E(ASSERT_FAIL);
+	channel_expect_fail_policy = E(CHANNEL_EXPECT_FAIL);
+	excl_check_fail_policy = E(EXCL_CHECK_FAIL);
+#undef	E
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
 	uniform_delay = time_traits::default_delay;
@@ -1936,7 +1970,7 @@ State::error_policy_string(const error_policy_enum e) {
 /**
 	Too lazy to write a map...
  */
-State::error_policy_enum
+error_policy_enum
 State::string_to_error_policy(const string& s) {
 	static const string _ignore("ignore");
 	static const string _warn("warn");
@@ -2917,55 +2951,46 @@ State::check_excl_rings(const node_index_type ni, const node_type& n,
 	Diagnostic subroutine for dissecting excl violation exceptions.  
 	Uses extremely slow search because this only occurs on exception.  
  */
-void
-State::inspect_exception(const step_exception& ex, ostream& o) const {
-if (IS_A(const excl_exception*, &ex)) {
+error_policy_enum
+State::excl_exception::inspect(const State& s, ostream& o) const {
 	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
-	const excl_exception& exex(AS_A(const excl_exception&, ex));
 	ring_set_type ring;
 	const_iterator i, e;
-	if (exex.type) {
-		i = check_exhi.begin();
-		e = check_exhi.end();
+	if (type) {
+		i = s.check_exhi.begin();
+		e = s.check_exhi.end();
 	} else {
-		i = check_exlo.begin();
-		e = check_exlo.end();
+		i = s.check_exlo.begin();
+		e = s.check_exlo.end();
 	}
 	// find all nodes that contain the lock index
 	for ( ; i!=e; ++i) {
 		const lock_index_list_type::const_iterator
 			le(i->second.end()), 
-			lf(find(i->second.begin(), le, exex.lock_id));
+			lf(find(i->second.begin(), le, lock_id));
 		if (lf != le) {
 			// then this node_index belongs to this ring
 			ring.insert(i->first);
 		}
 	}
 	ISE_INVARIANT(ring.size() > 1);
-	o << "ERROR: excl" << (exex.type ? "hi" : "lo") << 
+	o << "ERROR: excl" << (type ? "hi" : "lo") << 
 		" violation detected!" << endl;
 	ring_set_type::const_iterator ri(ring.begin()), re(ring.end());
 	o << "ring-state:" << endl;
 	for (; ri!=re; ++ri) {
-		dump_node_canonical_name(o << "\t", *ri) << " : ";
-		get_node(*ri).dump_value(o) << endl;
+		s.dump_node_canonical_name(o << "\t", *ri) << " : ";
+		s.get_node(*ri).dump_value(o) << endl;
 	}
-	dump_node_canonical_name(o << "but node `", exex.node_id) <<
-		"\' tried to become " << (exex.type ? 1 : 0) << "." << endl;
+	s.dump_node_canonical_name(o << "but node `", node_id) <<
+		"\' tried to become " << (type ? 1 : 0) << "." << endl;
 	o << "The simulator\'s excl-check-lock state is no longer coherent; "
 		"do not bother trying to continue the simulation, "
 		"but you may further inspect the state." << endl;
 	o << "You probably want to disable excl-checking with `nocheckexcl\' "
 		"if you wish to continue the simulation." << endl;
-} else if (IS_A(const channel_exception*, &ex)) {
-	const channel_exception& exex(AS_A(const channel_exception&, ex));
-	o << "ERROR: value assertion failed on channel `" <<
-		exex.name << "\'." << endl;
-	o << "\texpected: " << exex.expect << ", got: " << exex.got << endl;
-} else {
-	o << "Unkonwn step_exception." << endl;
+	return s.get_excl_check_fail_policy();
 }
-}	// end method State::inspect_excl_exception
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -7196,6 +7221,9 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, invariant_fail_policy);
 	write_value(o, invariant_unknown_policy);
 #endif
+	write_value(o, assert_fail_policy);
+	write_value(o, channel_expect_fail_policy);
+	write_value(o, excl_check_fail_policy);
 	write_value(o, autosave_name);
 	write_value(o, timing_mode);
 	if (_channel_manager.save_checkpoint(o)) return true;
@@ -7372,6 +7400,9 @@ try {
 	read_value(i, invariant_fail_policy);
 	read_value(i, invariant_unknown_policy);
 #endif
+	read_value(i, assert_fail_policy);
+	read_value(i, channel_expect_fail_policy);
+	read_value(i, excl_check_fail_policy);
 	read_value(i, autosave_name);	// safe to load the name of checkpoint
 	read_value(i, timing_mode);
 	// interrupted flag, just ignore
@@ -7392,8 +7423,9 @@ if (checking_excl()) {
 		const excl_exception
 			e(check_excl_rings(distance(nb, ni), n, prev, next));
 		if (e.lock_id) {
-			inspect_exception(e, cerr);
+			e.inspect(*this, cerr);
 			// don't bother throwing
+			// TODO: handle error code
 		}
 	}
 }
@@ -7510,6 +7542,12 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	read_value(i, p);
 	o << "invariant-unknown policy: " << error_policy_string(p) << endl;
 #endif
+	read_value(i, p);
+	o << "assert-fail (bool) policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "channel-expect-fail policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "exclusion-fail policy: " << error_policy_string(p) << endl;
 }
 	char timing_mode;
 	read_value(i, timing_mode);

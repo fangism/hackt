@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.7 2008/11/15 08:00:02 fang Exp $
+	$Id: Channel-prsim.h,v 1.7.4.1 2008/11/26 05:16:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -91,9 +91,14 @@ struct channel_exception : public step_exception {
 	const string			name;
 	int_value_type			expect;
 	int_value_type			got;
+
 	channel_exception(const string& n, 
 		const int_value_type e, const int_value_type g) :
 		name(n), expect(e), got(g) { }
+
+	error_policy_enum
+	inspect(const State&, ostream&) const;
+
 };	// end struct channel_exception
 
 //=============================================================================

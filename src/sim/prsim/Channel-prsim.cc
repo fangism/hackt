@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.9 2008/11/15 08:00:01 fang Exp $
+	$Id: Channel-prsim.cc,v 1.9.4.1 2008/11/26 05:16:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -88,6 +88,17 @@ using util::strings::string_to_num;
 using util::numeric::div;
 using util::numeric::div_type;
 using util::numeric::rand48;
+
+//=============================================================================
+// class channel_exception method definitions
+
+error_policy_enum
+channel_exception::inspect(const State& s, ostream& o) const {
+	o << "ERROR: value assertion failed on channel `" <<
+		name << "\'." << endl;
+	o << "\texpected: " << expect << ", got: " << got << endl;
+	return s.get_channel_expect_fail_policy();
+}
 
 //=============================================================================
 // class channel_file_handle method definitions

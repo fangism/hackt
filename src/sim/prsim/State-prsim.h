@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.14.4.2 2008/11/26 00:31:58 fang Exp $
+	$Id: State-prsim.h,v 1.14.4.3 2008/11/26 05:16:30 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -32,6 +32,7 @@
 #include "sim/prsim/Expr.h"
 #include "sim/prsim/Rule.h"
 #include "sim/prsim/Channel-prsim.h"	// for channels support
+#include "sim/command_error_codes.h"
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
 #include "util/named_ifstream_manager.h"
@@ -121,6 +122,11 @@ struct watch_entry {
 	dump_checkpoint_state(ostream&, istream&);
 
 } __ATTRIBUTE_ALIGNED__ ;
+
+//-----------------------------------------------------------------------------
+extern
+CommandStatus
+error_policy_to_status(const error_policy_enum);
 
 //=============================================================================
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -569,6 +575,9 @@ public:
 		excl_exception(const bool b, const lock_index_type li, 
 			const node_index_type ni) : type(b), 
 			lock_id(li), node_id(ni) { }
+
+		error_policy_enum
+		inspect(const State&, ostream&) const;
 	};	// end struct excl_exception
 
 
@@ -675,11 +684,10 @@ private:
 
 public:
 	/**
-		Policy enumeration for determining simulation behavior
-		in the event of a delay-insensitivity violation.  
-		Absolute values matter, in increasing order of severity.
+		Default enumeration values.
 	 */
-	typedef enum {
+	enum {
+#if 0
 		ERROR_IGNORE = 0,
 		ERROR_NONE = ERROR_IGNORE,
 		ERROR_WARN = 1,
@@ -690,6 +698,7 @@ public:
 		/// halt the simulation immediately
 		ERROR_FATAL = 4,
 		ERROR_INVALID,
+#endif
 #if PRSIM_INVARIANT_RULES
 		ERROR_DEFAULT_INVARIANT_FAIL = ERROR_BREAK,
 		ERROR_DEFAULT_INVARIANT_UNKNOWN = ERROR_WARN,
@@ -697,8 +706,11 @@ public:
 		ERROR_DEFAULT_UNSTABLE = ERROR_BREAK,
 		ERROR_DEFAULT_WEAK_UNSTABLE = ERROR_WARN,
 		ERROR_DEFAULT_INTERFERENCE = ERROR_BREAK,
-		ERROR_DEFAULT_WEAK_INTERFERENCE = ERROR_WARN
-	} error_policy_enum;
+		ERROR_DEFAULT_WEAK_INTERFERENCE = ERROR_WARN,
+		ERROR_DEFAULT_ASSERT_FAIL = ERROR_FATAL,
+		ERROR_DEFAULT_CHANNEL_EXPECT_FAIL = ERROR_FATAL,
+		ERROR_DEFAULT_EXCL_CHECK_FAIL = ERROR_FATAL
+	};
 
 private:
 	/**
@@ -907,6 +919,12 @@ private:
 	error_policy_enum			interference_policy;
 	/// controls the simulation behavior upon weak-interference
 	error_policy_enum			weak_interference_policy;
+	/// control affect of assertion fail
+	error_policy_enum			assert_fail_policy;
+	/// control handling of channel expect failures
+	error_policy_enum			channel_expect_fail_policy;
+	/// control handling of exclusion failures
+	error_policy_enum			excl_check_fail_policy;
 	/// name of automatically taken checkpoint
 	string					autosave_name;
 	/// timing mode
@@ -1230,6 +1248,13 @@ public:
 	DEFINE_POLICY_CONTROL_GET(interference)
 	DEFINE_POLICY_CONTROL_GET(weak_interference)
 
+	DEFINE_POLICY_CONTROL_SET(assert_fail)
+	DEFINE_POLICY_CONTROL_SET(channel_expect_fail)
+	DEFINE_POLICY_CONTROL_SET(excl_check_fail)
+	DEFINE_POLICY_CONTROL_GET(assert_fail)
+	DEFINE_POLICY_CONTROL_GET(channel_expect_fail)
+	DEFINE_POLICY_CONTROL_GET(excl_check_fail)
+
 #undef	DEFINE_POLICY_CONTROL_SET
 #undef	DEFINE_POLICY_CONTROL_GET
 
@@ -1395,9 +1420,6 @@ public:
 
 	void
 	append_check_excllo_ring(const ring_set_type&);
-
-	void
-	inspect_exception(const step_exception&, ostream&) const;
 
 	ostream&
 	dump_mk_excl_ring(ostream&, const ring_set_type&) const;

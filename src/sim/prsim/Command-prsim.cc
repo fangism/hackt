@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.20.4.2 2008/11/25 08:36:44 fang Exp $
+	$Id: Command-prsim.cc,v 1.20.4.3 2008/11/26 05:16:27 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -441,8 +441,7 @@ if (a.size() > 2) {
 		}
 	}	// end while
 	} catch (const step_exception& exex) {
-		s.inspect_exception(exex, cerr);
-		return Command::FATAL;
+		return error_policy_to_status(exex.inspect(s, cerr));
 	}	// no other exceptions
 	return Command::NORMAL;
 }
@@ -522,8 +521,7 @@ step_event_main(State& s, size_t i) {
 		}
 	}	// end while
 	} catch (const step_exception& exex) {
-		s.inspect_exception(exex, cerr);
-		return Command::FATAL;
+		return error_policy_to_status(exex.inspect(s, cerr));
 	}	// no other exceptions
 	return Command::NORMAL;
 }
@@ -664,8 +662,7 @@ if (a.size() != 1) {
 		}
 	}	// end while (!s.stopped())
 	} catch (const step_exception& exex) {
-		s.inspect_exception(exex, cerr);
-		return Command::FATAL;
+		return error_policy_to_status(exex.inspect(s, cerr));
 	}	// no other exceptions
 	return Command::NORMAL;
 }	// end if
@@ -3639,7 +3636,7 @@ if (a.size() != 2) {							\
 	return Command::SYNTAX;						\
 } else {								\
 	const string& m(a.back());					\
-	const State::error_policy_enum e = 				\
+	const error_policy_enum e =	 				\
 		State::string_to_error_policy(m);			\
 	if (State::valid_error_policy(e)) {				\
 		s.set_##func_name##_policy(e);				\
@@ -3769,7 +3766,49 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(InvariantUnknown, "invariant-unknown",
 	"set error-handling of possible invariant failures",
 	"Set error-handling policy on possible invariant violations.",
 	invariant_unknown)
-#endif
+#endif	// PRSIM_INVARIANT_RULES
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assert-fail.texi
+@deffn Command assert-fail [mode]
+Set the error-handling policy for when the @command{assert} command fails.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(AssertFail, "assert-fail", 
+	"set error-handling of assert command failures",
+	"Set error-handling policy on assert command failures.",
+	assert_fail)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-expect-fail.texi
+@deffn Command channel-expect-fail [mode]
+Set the error-handling policy for when the a channel encounters
+a value different from was expected.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(ChannelExpectFail, 
+	"channel-expect-fail", 
+	"set error-handling of channel-expect failures",
+	"Set error-handling policy on channel-expect failures.",
+	channel_expect_fail)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/checkexcl-fail.texi
+@deffn Command checkexcl-fail [mode]
+Set the error-handling policy for when an exclusion check fails.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(CheckExclFail, 
+	"checkexcl-fail", 
+	"set error-handling of exclusion failures",
+	"Set error-handling policy on exclusion failures.",
+	excl_check_fail)
 
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 

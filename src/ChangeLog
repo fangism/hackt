@@ -5,6 +5,15 @@
 
 2008-11-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-62-prsim-11-04:
+	  prsim: added State members for new error-handling policies:
+		assert_fail, channel_expect_fail, excl_check_fail.
+		Implemented commands to alter these policies.
+		Moved error_policy_enum to enums.h.
+		replaced State::inspect_exception with 
+			virtual step_exception::inspect().
+
+
 	* HACKT-00-01-04-main-00-82-62-prsim-11-03:
 	  Changed internal State::break_type to match error_policy_enum.
 		Diagnostic methods now return more meaningful value.
