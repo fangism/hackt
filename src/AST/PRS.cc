@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.31 2008/10/03 02:04:24 fang Exp $
+	$Id: PRS.cc,v 1.32 2008/11/26 01:57:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -55,6 +55,7 @@
 
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 
 #define	CONSTRUCTOR_INLINE
@@ -72,8 +73,9 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::op_loop, "(prs-op-loop)")
 
 namespace memory {
 // explicit template instantiations
-using HAC::parser::PRS::body_item;
+using namespace HAC::parser::PRS;
 template class count_ptr<const body_item>;
+template class count_ptr<const guarded_body>;
 }	// end namespace memory
 }	// end namespace util
 

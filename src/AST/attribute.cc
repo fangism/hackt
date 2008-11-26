@@ -1,6 +1,6 @@
 /**
 	\file "AST/attribute.cc"
-	$Id: attribute.cc,v 1.2 2008/10/03 02:04:25 fang Exp $
+	$Id: attribute.cc,v 1.3 2008/11/26 01:57:45 fang Exp $
  */
 
 #include "AST/attribute.h"
@@ -8,6 +8,13 @@
 #include "AST/node_list.tcc"
 #include "AST/token_string.h"
 #include "AST/expr_list.h"
+#include "util/memory//count_ptr.tcc"
+
+namespace util {
+namespace memory {
+template class count_ptr<const HAC::parser::generic_attribute>;
+}	// end namespace memory
+}	// end namespace util
 
 namespace HAC {
 namespace parser {

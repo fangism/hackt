@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.31 2008/11/23 17:53:52 fang Exp $
+	$Id: PRS.cc,v 1.32 2008/11/26 01:57:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -38,6 +38,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/IO_utils.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
+#include "util/qmap.tcc"	// for const_assoc_query::operator[]
 #include "util/packed_array.h"	// for bool_alias_collection_type
 #include "util/likely.h"
 #include "util/stacktrace.h"

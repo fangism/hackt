@@ -5,6 +5,11 @@
 
 2008-11-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-64-a:
+	  Minor fixes: explicit template instantiations to link properly
+		with aggressive inlining optimizations (-O3).
+
+
 	* HACKT-00-01-04-main-00-82-64:
 	  portability with gcc4 series:
 		don't use unordered_map unless hash_map is deprecated.
