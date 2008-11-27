@@ -1,14 +1,14 @@
 /**
 	\file "sim/prsim/Exception.h"
 	Generic run-time exceptions for simulator.  
-	$Id: Exception.h,v 1.2.6.1 2008/11/26 05:16:28 fang Exp $
+	$Id: Exception.h,v 1.2.6.2 2008/11/27 03:40:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXCEPTION_H__
 #define	__HAC_SIM_PRSIM_EXCEPTION_H__
 
 #include <iosfwd>
-#include "sim/prsim/enums.h"
+#include "sim/command_error_codes.h"
 
 namespace HAC {
 namespace SIM {

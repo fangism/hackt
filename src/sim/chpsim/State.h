@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.12 2008/11/16 02:17:08 fang Exp $
+	$Id: State.h,v 1.12.4.1 2008/11/27 03:40:55 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -16,6 +16,7 @@
 #include "sim/state_base.h"
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
+#include "sim/command_error_codes.h"
 #include "Object/nonmeta_state.h"
 #include "Object/ref/reference_set.h"
 #include "Object/lang/CHP_event.h"	// for global_root event
@@ -228,6 +229,9 @@ private:
 		 */
 		TIMING_DEFAULT = TIMING_UNIFORM
 	};
+	enum {
+		ERROR_DEFAULT_ASSERT_FAIL = ERROR_FATAL
+	};
 	struct recheck_transformer;
 	struct event_enqueuer;
 
@@ -337,6 +341,10 @@ private:
 		Not preserved by checkpointing.  
 	 */
 	global_references_set			value_breaks;
+	/**
+		Determines error handling policy upon assert fail.
+	 */
+	error_policy_enum			assert_fail_policy;
 	/**
 		Private pointer to the event trace manager.  
 		Data checkpointed persistently.  
@@ -557,6 +565,24 @@ public:
 	watching_all_event_queue(void) const {
 		return flags & FLAG_WATCHALL_QUEUE;
 	}
+
+#define	DEFINE_POLICY_CONTROL_SET(name)				\
+	void							\
+	set_##name##_policy(const error_policy_enum e) {	\
+		name##_policy = e;				\
+	}
+
+#define	DEFINE_POLICY_CONTROL_GET(name)				\
+	error_policy_enum					\
+	get_##name##_policy(void) const {			\
+		return name##_policy;				\
+	}
+
+	DEFINE_POLICY_CONTROL_SET(assert_fail)
+	DEFINE_POLICY_CONTROL_GET(assert_fail)
+
+#undef	DEFINE_POLICY_CONTROL_SET
+#undef	DEFINE_POLICY_CONTROL_GET
 
 	void
 	check_structure(void) const;

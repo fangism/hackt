@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.17 2008/11/16 02:17:07 fang Exp $
+	$Id: State.cc,v 1.17.4.1 2008/11/27 03:40:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -308,6 +308,9 @@ State::State(const module& m) :
 		event_breaks(),
 		value_watches(), 
 		value_breaks(), 
+#define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
+		assert_fail_policy(E(ASSERT_FAIL)),
+#undef	E
 		trace_manager(), 
 		trace_flush_interval(1L<<16),
 		checkpoint_name("autosave.chpsimckpt"),
@@ -509,6 +512,9 @@ State::reset(void) {
 	event_breaks.clear();
 	value_watches.clear();
 	value_breaks.clear();
+#define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
+	assert_fail_policy = E(ASSERT_FAIL);
+#undef	E
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1873,6 +1879,7 @@ State::save_checkpoint(ostream& o) const {
 	for_each(temp.begin(), temp.end(), 
 		value_writer<event_placeholder_type>(o));
 }
+	write_value(o, assert_fail_policy);
 	// save current time
 	write_value(o, current_time);
 	// delay settings?
@@ -1952,6 +1959,7 @@ State::load_checkpoint(istream& i) {
 		check_event_queue.insert(ep);
 	}
 }
+	read_value(i, assert_fail_policy);
 	read_value(i, current_time);
 #if 0
 	read_value(i, uniform_delay);
@@ -2005,6 +2013,9 @@ State::dump_raw_checkpoint(ostream& o, istream& i) {
 		}
 	}
 }
+	error_policy_enum p;
+	read_value(i, p);
+	o << "assert-fail policy: " << error_policy_string(p) << endl;
 	time_type current_time;
 	read_value(i, current_time);
 	o << "current time: " << current_time << endl;

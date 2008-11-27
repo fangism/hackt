@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/enums.h"
-	$Id: enums.h,v 1.2.4.1 2008/11/26 05:16:31 fang Exp $
+	$Id: enums.h,v 1.2.4.2 2008/11/27 03:41:00 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_ENUMS_H__
@@ -49,25 +49,6 @@ enum rule_strength {
 #else
 #define	STR_INDEX(w)
 #endif
-
-//-----------------------------------------------------------------------------
-/**
-	Policy enumeration for determining simulation behavior
-	in the event of a delay-insensitivity violation.  
-	Absolute values matter, in increasing order of severity.
- */
-enum error_policy_enum {
-	ERROR_IGNORE = 0,
-	ERROR_NONE = ERROR_IGNORE,
-	ERROR_WARN = 1,
-	ERROR_NOTIFY = ERROR_WARN,
-	ERROR_BREAK = 2,
-	/// return control to user temporarily before resuming script
-	ERROR_INTERACTIVE = 3,
-	/// halt the simulation immediately
-	ERROR_FATAL = 4,
-	ERROR_INVALID
-};
 
 //=============================================================================
 }	// end namespace PRSIM

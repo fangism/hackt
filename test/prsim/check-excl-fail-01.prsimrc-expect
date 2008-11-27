@@ -1,0 +1,12 @@
+checked exclhi rings:
+{ a, b, c }
+checked excllo rings:
+	0	a : 1
+	0	b : 0
+	0	c : 0
+ignoring... 
+WARNING: detected exclusion violation, but because the simulation is
+continuing (current policy), further exclusion checking is automatically
+disabled because the checking structures would be incoherent otherwise.
+	0	b : 1
+	0	b : 0

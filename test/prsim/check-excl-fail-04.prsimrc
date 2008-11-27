@@ -1,0 +1,32 @@
+# "check-excl-fail-04.prsimrc"
+# @haco@ check-excl-fail.haco-a
+
+allrings-chk
+watchall
+checkexcl
+set a 1
+set b 0
+set c 0
+cycle
+
+checkexcl-fail interactive
+echo interactive...
+set b 1
+set c X
+cycle
+
+# hard to test interactive session
+echo in interactive session...
+queue
+nocheckexcl
+echo leaving interactive session...
+
+# exit
+# echo back to parent session
+# assert-pending c
+# cycle
+# assertn-queue
+# set c 0
+# set b 0
+# cycle
+

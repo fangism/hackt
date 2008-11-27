@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-62-prsim-11-05:
+	  Critical bug fix: top-level spec attributes (footprint) were not 
+		being applied in hacprsim!  Had to adjust a few test cases.  :S
+	  Now share error codes between simulators.
+	  chpsim state now has assert_fail_policy, but no mutator.
+	  prsim: now honor error handling policies, and convert
+		error codes to the interpreter.
+	  Documented and tested new features.  
+	  Branch is ready to merge.
+
+
 2008-11-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-62-prsim-11-04:

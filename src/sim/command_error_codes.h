@@ -1,17 +1,40 @@
 /**
 	\file "sim/command_error_codes.h"
-	$Id: command_error_codes.h,v 1.1.2.2 2008/11/25 08:36:39 fang Exp $
+	$Id: command_error_codes.h,v 1.1.2.3 2008/11/27 03:40:53 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_ERROR_CODES_H__
 #define	__HAC_SIM_COMMAND_ERROR_CODES_H__
 
+#include "util/string_fwd.h"
 #include "sim/prsim/devel_switches.h"
 
 namespace HAC {
 namespace SIM {
 
+//-----------------------------------------------------------------------------
 /**
+	These error codes are to be returned by the simulator methods.  
+	Policy enumeration for determining simulation behavior
+	in the event of a delay-insensitivity violation.  
+	Absolute values matter, in increasing order of severity.
+ */
+enum error_policy_enum {
+	ERROR_IGNORE = 0,
+	ERROR_NONE = ERROR_IGNORE,
+	ERROR_WARN = 1,
+	ERROR_NOTIFY = ERROR_WARN,
+	ERROR_BREAK = 2,
+	/// return control to user temporarily before resuming script
+	ERROR_INTERACTIVE = 3,
+	/// halt the simulation immediately
+	ERROR_FATAL = 4,
+	ERROR_INVALID
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	These codes are used by command interpreter.  
 	A few reserved exit codes for main functions.  
 	Should use an int for base integer type.
 	TODO: validate the range of these values w.r.t. 
@@ -31,6 +54,27 @@ enum CommandStatus {
 };	// end struct command_error_codes
 
 typedef	command_error_codes::CommandStatus	CommandStatus;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the following functions are defined in "sim/command_base.cc"
+
+extern
+const char*
+error_policy_string(const error_policy_enum);
+
+extern
+error_policy_enum
+string_to_error_policy(const std::string&);
+
+inline
+bool
+valid_error_policy(const error_policy_enum e) {
+	return e != ERROR_INVALID;
+}
+
+extern
+CommandStatus
+error_policy_to_status(const error_policy_enum);
 
 //=============================================================================
 }	// end namespace SIM

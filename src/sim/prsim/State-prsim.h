@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.14.4.3 2008/11/26 05:16:30 fang Exp $
+	$Id: State-prsim.h,v 1.14.4.4 2008/11/27 03:40:59 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -122,11 +122,6 @@ struct watch_entry {
 	dump_checkpoint_state(ostream&, istream&);
 
 } __ATTRIBUTE_ALIGNED__ ;
-
-//-----------------------------------------------------------------------------
-extern
-CommandStatus
-error_policy_to_status(const error_policy_enum);
 
 //=============================================================================
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -1195,20 +1190,6 @@ public:
 		weak_unstable_policy = ERROR_BREAK;
 		interference_policy = ERROR_BREAK;
 		weak_interference_policy = ERROR_BREAK;
-	}
-
-	static
-	const char*
-	error_policy_string(const error_policy_enum);
-
-	static
-	error_policy_enum
-	string_to_error_policy(const string&);
-
-	static
-	bool
-	valid_error_policy(const error_policy_enum e) {
-		return e != ERROR_INVALID;
 	}
 
 #define	DEFINE_POLICY_CONTROL_SET(name)				\

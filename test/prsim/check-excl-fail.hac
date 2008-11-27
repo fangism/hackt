@@ -1,0 +1,7 @@
+// "check-excl-fail.hac"
+
+bool a, b, c;
+spec {
+	exclhi(a, b, c)
+}
+

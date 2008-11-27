@@ -6,6 +6,9 @@ mode:
 	on interference: break
 	on weak-interference: warn
 	checking exclusions: on
+	on exclusion-fail: fatal
 	on invariant-fail: break
 	on invariant-unknown: warn
+	on assert-fail: fatal
+	on channe-expect-fail: fatal
 timing: uniform (10)

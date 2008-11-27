@@ -1,0 +1,18 @@
+# "check-excl-fail-02.prsimrc"
+# @haco@ check-excl-fail.haco-a
+
+allrings-chk
+watchall
+checkexcl
+set a 1
+set b 0
+set c 0
+cycle
+
+checkexcl-fail warn
+echo warning...
+set b 1
+cycle
+set b 0
+cycle
+

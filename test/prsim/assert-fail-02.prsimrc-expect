@@ -1,0 +1,11 @@
+testing different error handling policies 
+ignoring... (silent) 
+warning... 
+assert failed: expecting node `a' at 0, but got X.
+assert failed: expecting node `a' at 1, but got X.
+breaking... (same as warning) 
+assert failed: expecting node `a' at 0, but got X.
+assert failed: expecting node `a' at 1, but got X.
+fatal... 
+assert failed: expecting node `a' at 0, but got X.
+... at line 27

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.29.4.3 2008/11/26 05:16:29 fang Exp $
+	$Id: State-prsim.cc,v 1.29.4.4 2008/11/27 03:40:58 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -31,6 +31,7 @@
 #include "Object/traits/classification_tags.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/lang/SPEC_footprint.h"
 #include "Object/traits/proc_traits.h"	// for diagnostic
 #include "Object/global_entry.h"
 #include "sim/ISE.h"
@@ -219,26 +220,6 @@ struct State::evaluate_return_type {
 #endif
 			{ }
 };	// end struct evaluate_return_type
-
-//=============================================================================
-/**
-	Converts simulator's error code signal into an error code
-	for the interpreter.  
- */
-CommandStatus
-error_policy_to_status(const error_policy_enum e) {
-switch (e) {
-case ERROR_IGNORE:
-case ERROR_WARN:
-case ERROR_BREAK:
-	return command_error_codes::NORMAL;
-case ERROR_INTERACTIVE:
-	return command_error_codes::INTERACT;
-case ERROR_FATAL:
-default:
-	return command_error_codes::FATAL;
-}
-}
 
 //=============================================================================
 // class unique_process_subgraph method definitions
@@ -568,7 +549,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 #endif
 	// top-level prs in the module, pid=0
 	STACKTRACE_INDENT_PRINT("top-level process ..." << endl);
-	mod.get_footprint().get_prs_footprint().accept(v);	// throw?
+	const footprint& topfp(mod.get_footprint());
+	topfp.get_prs_footprint().accept(v);	// throw?
+	topfp.get_spec_footprint().accept(v);	// throw?
 #endif
 	// this may throw an exception!
 try {
@@ -1953,47 +1936,6 @@ State::dump_breakpoints(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const char*
-State::error_policy_string(const error_policy_enum e) {
-	switch (e) {
-	case ERROR_IGNORE:	return "ignore";
-	case ERROR_WARN:	return "warn";
-	case ERROR_BREAK:	return "break";
-	case ERROR_INTERACTIVE:	return "interactive";
-	case ERROR_FATAL:	return "fatal";
-	default:		DIE;
-	}	// end switch
-	 return NULL;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Too lazy to write a map...
- */
-error_policy_enum
-State::string_to_error_policy(const string& s) {
-	static const string _ignore("ignore");
-	static const string _warn("warn");
-	static const string _notify("notify");
-	static const string _break("break");
-	static const string _interactive("interactive");
-	static const string _fatal("fatal");
-	if (s == _ignore) {
-		return ERROR_IGNORE;
-	} else if (s == _warn || s == _notify) {
-		return ERROR_WARN;
-	} else if (s == _break) {
-		return ERROR_BREAK;
-	} else if (s == _interactive) {
-		return ERROR_INTERACTIVE;
-	} else if (s == _fatal) {
-		return ERROR_FATAL;
-	}
-	// else
-	return ERROR_INVALID;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Print the current mode: mostly checking and error-handling policies.  
  */
@@ -2014,12 +1956,18 @@ State::dump_mode(ostream& o) const {
 		error_policy_string(weak_interference_policy) << endl;
 	o << "\tchecking exclusions: " <<
 		(checking_excl() ? "on" : "off") << endl;
+	o << "\ton exclusion-fail: " <<
+		error_policy_string(excl_check_fail_policy) << endl;
 #if PRSIM_INVARIANT_RULES
 	o << "\ton invariant-fail: " <<
 		error_policy_string(invariant_fail_policy) << endl;
 	o << "\ton invariant-unknown: " <<
 		error_policy_string(invariant_unknown_policy) << endl;
 #endif
+	o << "\ton assert-fail: " <<
+		error_policy_string(assert_fail_policy) << endl;
+	o << "\ton channe-expect-fail: " <<
+		error_policy_string(channel_expect_fail_policy) << endl;
 	return o;
 }
 
@@ -3101,12 +3049,28 @@ State::step(void) THROWS_STEP_EXCEPTION {
 		const excl_exception
 			exex(check_excl_rings(ni, n, prev, pe.val));
 		if (UNLIKELY(exex.lock_id)) {
+		switch (excl_check_fail_policy) {
+		case ERROR_BREAK:
+			stop();				// fall-through
+		case ERROR_WARN:
+			exex.inspect(*this, cerr);	// fall-through
+		case ERROR_IGNORE:
+			cerr <<
+"WARNING: detected exclusion violation, but because the simulation is\n"
+"continuing (current policy), further exclusion checking is automatically\n"
+"disabled because the checking structures would be incoherent otherwise.\n";
+			nocheck_excl();
+			break;
+		case ERROR_INTERACTIVE:	// fall-through
+		case ERROR_FATAL:
+		default:
 			// to keep event queue coherent, re-enqueue event
 			// because event will not be deallocated!
 			// next attempt to step will hit same exception
 			// forcing simulation to be stuck (intentional)
 			enqueue_event(ep.time, ep.event_index);
 			throw exex;
+		}	// end switch
 		}
 	}
 	// only set the cause of the node when we change its value

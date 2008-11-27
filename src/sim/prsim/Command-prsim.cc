@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.20.4.3 2008/11/26 05:16:27 fang Exp $
+	$Id: Command-prsim.cc,v 1.20.4.4 2008/11/27 03:40:57 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2094,6 +2094,10 @@ AllRingsChk::usage(ostream& o) {
 @texinfo cmd/assert.texi
 @deffn Command assert node value
 Error out if @var{node} is not at value @var{value}.  
+The error-handling policy can actually be determined by
+the @command{assert-fail} command.  
+By default, such errors are fatal and cause the simulator to terminate
+upon first error.  
 @end deffn
 @end texinfo
 ***/
@@ -2124,12 +2128,15 @@ if (a.size() != 3) {
 		}
 		const value_enum actual = n.current_value();
 		if (actual != val) {
+			const error_policy_enum e(s.get_assert_fail_policy());
+			if (e != ERROR_IGNORE) {
 			cout << "assert failed: expecting node `" << objname <<
 				"\' at " <<
 				node_type::value_to_char[size_t(val)] <<
 				", but got ";
 			n.dump_value(cout) << "." << endl;
-			return Command::FATAL;
+			}	// yes, actually allow suppression
+			return error_policy_to_status(e);
 		}
 		return Command::NORMAL;
 	} else {
@@ -2151,6 +2158,8 @@ Assert::usage(ostream& o) {
 @texinfo cmd/assertn.texi
 @deffn Command assertn node value
 Error out if @var{node} @emph{is} at value @var{value}.  
+Error handling policy can be set by the @command{assert-fail} command.
+By default such errors are fatal.  
 @end deffn
 @end texinfo
 ***/
@@ -2181,12 +2190,15 @@ if (a.size() != 3) {
 		}
 		const value_enum actual = n.current_value();
 		if (actual == val) {
+			const error_policy_enum e(s.get_assert_fail_policy());
+			if (e != ERROR_IGNORE) {
 			cout << "assert failed: expecting node `" << objname <<
 				"\' not at " <<
 				node_type::value_to_char[size_t(val)] <<
 				", but got ";
 			n.dump_value(cout) << "." << endl;
-			return Command::FATAL;
+			}
+			return error_policy_to_status(e);
 		}
 		return Command::NORMAL;
 	} else {
@@ -2208,6 +2220,8 @@ AssertN::usage(ostream& o) {
 @texinfo cmd/assert-pending.texi
 @deffn Command assert-pending node
 Error out if @var{node} does not have a pending event in queue.
+The error handling policy is determined by the @command{assert-fail} command.
+By default, such assertion failures are fatal.  
 @end deffn
 @end texinfo
 ***/
@@ -2227,10 +2241,13 @@ if (a.size() != 2) {
 	if (ni) {
 		const node_type& n(s.get_node(ni));
 		if (!n.pending_event()) {
+			const error_policy_enum e(s.get_assert_fail_policy());
+			if (e != ERROR_IGNORE) {
 			cout <<
 			"assert failed: expecting pending event on node `"
 				<< objname << "\', but none found." << endl;
-			return Command::FATAL;
+			}
+			return error_policy_to_status(e);
 		}
 		return Command::NORMAL;
 	} else {
@@ -2251,6 +2268,8 @@ AssertPending::usage(ostream& o) {
 @texinfo cmd/assertn-pending.texi
 @deffn Command assert-pending node
 Error out if @var{node} does have a pending event in queue.
+The error handling policy is determined by the @command{assert-fail} command.
+By default, such assertion failures are fatal.  
 @end deffn
 @end texinfo
 ***/
@@ -2269,10 +2288,13 @@ if (a.size() != 2) {
 	if (ni) {
 		const node_type& n(s.get_node(ni));
 		if (n.pending_event()) {
+			const error_policy_enum e(s.get_assert_fail_policy());
+			if (e != ERROR_IGNORE) {
 			cout <<
 			"assert failed: expecting no pending event on node `"
 				<< objname << "\', but found one." << endl;
-			return Command::FATAL;
+			}
+			return error_policy_to_status(e);
 		}
 		return Command::NORMAL;
 	} else {
@@ -2294,6 +2316,8 @@ AssertNPending::usage(ostream& o) {
 @deffn Command assert-queue
 Error out if event queue is empty.  
 Useful for checking for deadlock.  
+The error handling policy is determined by the @command{assert-fail} command.
+By default, such assertion failures are fatal.  
 @end deffn
 @end texinfo
 ***/
@@ -2306,6 +2330,8 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertQueue, PRSIM::info)
 @deffn Command assertn-queue
 Error out if event queue is not empty.  
 Useful for checking for checking result of cycle.  
+The error handling policy is determined by the @command{assert-fail} command.
+By default, such assertion failures are fatal.  
 @end deffn
 @end texinfo
 ***/
@@ -3631,14 +3657,14 @@ class_name::main(State& s, const string_list& a) {			\
 if (a.size() != 2) {							\
 	usage(cerr << "usage: ");					\
 	cerr << "current mode: " <<					\
-		State::error_policy_string(s.get_##func_name##_policy()) \
+		error_policy_string(s.get_##func_name##_policy()) \
 		<< endl;						\
 	return Command::SYNTAX;						\
 } else {								\
 	const string& m(a.back());					\
 	const error_policy_enum e =	 				\
-		State::string_to_error_policy(m);			\
-	if (State::valid_error_policy(e)) {				\
+		string_to_error_policy(m);				\
+	if (valid_error_policy(e)) {					\
 		s.set_##func_name##_policy(e);				\
 		return Command::NORMAL;					\
 	} else {							\

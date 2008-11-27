@@ -1,5 +1,5 @@
-// "precharge-d.hac"
-// copy-modified from "precharge-c.hac"
+// "precharge-h.hac"
+// copy-modified from "precharge-e.hac"
 // now involving multiple mk_excllo rings
 
 // resembles a precharge stage
@@ -17,9 +17,9 @@ bool x[3][2], en[3], _o[3];
 
 spec {
 	// mulitple rings
-//	mk_excllo(_o[0], _o[1])
-//	mk_excllo(_o[0], _o[2])
-//	mk_excllo(_o[1], _o[2])
+	mk_excllo(_o[0], _o[1])
+	mk_excllo(_o[0], _o[2])
+	mk_excllo(_o[1], _o[2])
 }
 
 precharger<2>

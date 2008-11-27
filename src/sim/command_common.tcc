@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.10.4.1 2008/11/25 08:36:39 fang Exp $
+	$Id: command_common.tcc,v 1.10.4.2 2008/11/27 03:40:52 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -719,9 +719,12 @@ if (a.size() != 1) {
 	if (s.pending_events()) {
 		return command_type::NORMAL;
 	} else {
+		const error_policy_enum e(s.get_assert_fail_policy());
+		if (e != ERROR_IGNORE) {
 		cout << "assert failed: expecting non-empty event queue."
 			<< endl;
-		return command_type::FATAL;
+		}
+		return error_policy_to_status(e);
 	}
 }
 }
@@ -747,9 +750,12 @@ if (a.size() != 1) {
 	if (!s.pending_events()) {
 		return command_type::NORMAL;
 	} else {
+		const error_policy_enum e(s.get_assert_fail_policy());
+		if (e != ERROR_IGNORE) {
 		cout << "assert failed: expecting empty event queue."
 			<< endl;
-		return command_type::FATAL;
+		}
+		return error_policy_to_status(e);
 	}
 }
 }

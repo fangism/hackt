@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.9.4.1 2008/11/26 05:16:25 fang Exp $
+	$Id: Channel-prsim.cc,v 1.9.4.2 2008/11/27 03:40:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1515,16 +1515,27 @@ channel::process_data(const State& s) throw (channel_exception) {
 	if (have_value()) {
 		const array_value_type& expect = current_value();
 		if (!expect.second) {
+		const error_policy_enum e(s.get_channel_expect_fail_policy());
 		if (v) {
 		const value_type got = data_rails_value(s);
 		advance_value();
 		if (DATA_VALUE(expect) != got) {
-			throw channel_exception(name, 
-				DATA_VALUE(expect), got);
+			const channel_exception
+				ex(name, DATA_VALUE(expect), got);
+			if (e == ERROR_WARN) {
+				ex.inspect(s, cout);
+			} else if (e > ERROR_WARN) {
+				throw ex;
+			}
 		}
 		} else {	// cannot expect invalid value
-			throw channel_exception(name, 
-				DATA_VALUE(expect), 0xDEADBEEF);
+			const channel_exception
+				ex(name, DATA_VALUE(expect), 0xDEADBEEF);
+			if (e == ERROR_WARN) {
+				ex.inspect(s, cout);
+			} else if (e > ERROR_WARN) {
+				throw ex;
+			}
 		}
 		}	// else don't care
 	} else {
