@@ -1,0 +1,20 @@
+checked exclhi rings:
+{ a, b, c }
+checked excllo rings:
+	0	a : 1
+	0	b : 0
+	0	c : 0
+warning... 
+ERROR: exclhi violation detected!
+ring-state:
+	a : 1
+	b : 0
+	c : 0
+but node `b' tried to become 1.
+The simulator's excl-check-lock state is no longer coherent; do not bother trying to continue the simulation, but you may further inspect the state.
+You probably want to disable excl-checking with `nocheckexcl' if you wish to continue the simulation.
+WARNING: detected exclusion violation, but because the simulation is
+continuing (current policy), further exclusion checking is automatically
+disabled because the checking structures would be incoherent otherwise.
+	0	b : 1
+	0	b : 0

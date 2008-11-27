@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.6 2008/11/16 02:17:07 fang Exp $
+	$Id: command_registry.tcc,v 1.7 2008/11/27 11:09:28 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <iterator>
+#include <fstream>
 
 #include "sim/command_registry.h"
 #include "sim/command_base.h"
@@ -16,11 +17,13 @@
 #include "util/named_ifstream_manager.h"
 #include "util/tokenize.h"
 #include "util/string.tcc"
+#include "util/value_saver.h"
 
 namespace HAC {
 namespace SIM {
 using std::cin;
 using std::istream;
+using std::ifstream;
 using std::ostream_iterator;
 using util::readline_wrapper;
 using util::ifstream_manager;
@@ -66,6 +69,13 @@ command_registry<Command>::comment_level = 0;
 template <class Command>
 int
 command_registry<Command>::begin_outermost_comment = 0;
+
+/**
+	Switch to enable/disable echo-ing each interpreted command.
+ */
+template <class Command>
+string
+command_registry<Command>::prompt;
 
 /**
 	Switch to enable/disable echo-ing each interpreted command.
@@ -290,7 +300,12 @@ command_registry<Command>::interpret_line(state_type& s, const string& line) {
 		if (expand_aliases(toks) != Command::NORMAL) {
 			return Command::BADARG;
 		} else {
-			return execute(s, toks);
+			// should be CommandStatus
+			const int ret = execute(s, toks);
+			if (ret == Command::INTERACT) {
+				return interpret_stdin(s);
+			}
+			return ret;
 		}
 	}
 		if (bl >= 2 && back[bl-2] == '*' && back[bl-1] == '/')  {
@@ -322,10 +337,11 @@ cerr << "Error: encountered end-comment outside of comment block." << endl;
  */
 template <class Command>
 int
-command_registry<Command>::interpret(state_type& s, const bool interactive) {
+command_registry<Command>::interpret(state_type& s, istream& _cin, 
+		const bool interactive) {
 	static const char noprompt[] = "";
 if (interactive) {
-	readline_wrapper rl(interactive ? s.get_prompt().c_str() : noprompt);
+	readline_wrapper rl(interactive ? prompt.c_str() : noprompt);
 	// do NOT delete this line string, it is already managed.
 	const char* line = NULL;
 	int status = Command::NORMAL;
@@ -356,8 +372,23 @@ if (interactive) {
 	// TODO: catch unterminated block comments?
 } else {
 	// non interactive, skip readline, preserves tab-characters
-	return __source(cin, s);
+	return __source(_cin, s);
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Re-opens stdin in a subshell.
+ */
+template <class Command>
+int
+command_registry<Command>::interpret_stdin(state_type& s) {
+	const util::value_saver<string> p(prompt);
+	prompt[prompt.size() -1] = '>';
+	prompt += ' ';
+	// re-open stdin, don't use cin
+	ifstream i(DEV_STDIN);
+	return interpret(s, i, true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -415,17 +446,9 @@ command_registry<Command>::source(state_type& st, const string& f) {
 	ifstream_manager::placeholder p(ifm, f);
 	// ifstream i(f.c_str());
 if (p) {
-	if (echo_commands) {
-		cout << "## enter: \"" << ifm.top_named_ifstream_name() << "\""
-			<< endl;
-	}
-	const int ret = __source(p.get_stream(), st);
-	// return __source(i, st);
-	if (echo_commands) {
-		cout << "## leave: \"" << ifm.top_named_ifstream_name() << "\""
-			<< endl;
-	}
-	return ret;
+	const auto_file_echo
+		__(cout, echo_commands, ifm.top_named_ifstream_name());
+	return __source(p.get_stream(), st);
 } else {
 	cerr << "Error opening file: \"" << f << '\"' << endl;
 	p.error_msg(cerr) << endl;

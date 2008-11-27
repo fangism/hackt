@@ -1,5 +1,6 @@
-// "precharge-d.hac"
-// copy-modified from "precharge-c.hac"
+// "precharge-g.hac"
+// copy-modified from "precharge-d.hac"
+// now involving mk_excllo rings
 
 // resembles a precharge stage
 template <pint N>
@@ -15,7 +16,7 @@ prs {
 bool x[2][2], en[2], _o[2];
 
 spec {
-//	mk_excllo(_o)
+	mk_excllo(_o)
 	// mulitple rings?
 }
 

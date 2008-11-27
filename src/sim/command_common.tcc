@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.10 2008/11/16 02:17:05 fang Exp $
+	$Id: command_common.tcc,v 1.11 2008/11/27 11:09:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -235,6 +235,28 @@ void
 Aliases<State>::usage(ostream& o) {
 	o << "aliases" << endl;
 	o << "lists all active defined command aliases" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(Interpret, "interpret",
+	"re-open stdin interactively as a subshell")
+
+template <class State>
+int
+Interpret<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	return command_registry_type::interpret_stdin(s);
+}
+}
+
+template <class State>
+void
+Interpret<State>::usage(ostream& o) {
+	o << "interpret" << endl;
+	o << "Re-opens standard-input interactive as a subshell." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -697,9 +719,12 @@ if (a.size() != 1) {
 	if (s.pending_events()) {
 		return command_type::NORMAL;
 	} else {
+		const error_policy_enum e(s.get_assert_fail_policy());
+		if (e != ERROR_IGNORE) {
 		cout << "assert failed: expecting non-empty event queue."
 			<< endl;
-		return command_type::FATAL;
+		}
+		return error_policy_to_status(e);
 	}
 }
 }
@@ -725,9 +750,12 @@ if (a.size() != 1) {
 	if (!s.pending_events()) {
 		return command_type::NORMAL;
 	} else {
+		const error_policy_enum e(s.get_assert_fail_policy());
+		if (e != ERROR_IGNORE) {
 		cout << "assert failed: expecting empty event queue."
 			<< endl;
-		return command_type::FATAL;
+		}
+		return error_policy_to_status(e);
 	}
 }
 }

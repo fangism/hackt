@@ -3,6 +3,26 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-11-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-65-merged-prsim-11-05:
+	  Branch merge: prsim:
+		Improved user control over error handling policies, 
+		and a bug fix in top-level spec handling.
+
+2008-11-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-62-prsim-11-05:
+	  Critical bug fix: top-level spec attributes (footprint) were not 
+		being applied in hacprsim!  Had to adjust a few test cases.  :S
+	  Now share error codes between simulators.
+	  chpsim state now has assert_fail_policy, but no mutator.
+	  prsim: now honor error handling policies, and convert
+		error codes to the interpreter.
+	  Documented and tested new features.  
+	  Branch is ready to merge.
+
+
 2008-11-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-64-a:
@@ -15,6 +35,35 @@
 		don't use unordered_map unless hash_map is deprecated.
 		prefer std::ordered_map over tr1.
 		re-validated on powerpc-apple-darwin8-gcc-4.0.1.
+
+
+2008-11-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-62-prsim-11-04:
+	  prsim: added State members for new error-handling policies:
+		assert_fail, channel_expect_fail, excl_check_fail.
+		Implemented commands to alter these policies.
+		Moved error_policy_enum to enums.h.
+		replaced State::inspect_exception with 
+			virtual step_exception::inspect().
+
+
+	* HACKT-00-01-04-main-00-82-62-prsim-11-03:
+	  Changed internal State::break_type to match error_policy_enum.
+		Diagnostic methods now return more meaningful value.
+		Due to error encoding, the highest ranked error policy
+		value returned will dictate the action to be taken
+		by the command interpreter.  No regressions in tests.  
+	  Next: propagate and make use of theses error policy return values.
+
+
+2008-11-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-62-prsim-11-02:
+	  Handle new error codes returned by interpreter.
+		Implemented 'interpret' command: ability to open subshell
+		that is interactive, in the middle of non-interactive script.
+	  Next: add commands to alter error policies.
 
 
 2008-11-22	David Fang		<fangism@users.sourceforge.net>
@@ -34,6 +83,14 @@
 		and majority of regression tests pass, some minor diffs.
 		This was tested with g++-4.3.2, no c++0x mode.  
 	  Need to test against c++0x mode.
+
+
+2008-11-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-62-prsim-11-01-a:
+	  Branch for generalizing the error-handling policies of hacprsim.
+	  Added new error-code in State-prsim.cc:
+		ERROR_INTERACTIVE, ERROR_FATAL.
 
 
 2008-11-19	David Fang		<fangism@users.sourceforge.net>
@@ -69,7 +126,7 @@
 2008-11-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-61:
-	  prism: fanin/fanout now print the processes to which each
+	  prsim: fanin/fanout now print the processes to which each
 		rule belongs, making process tracing much easier!
 	  Test expects updated accordingly.
 
@@ -1426,7 +1483,7 @@
 2008-02-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-35:
-	  prism::why-x: now prune already-visited backtrace paths, 
+	  prsim::why-x: now prune already-visited backtrace paths, 
 		makes output much more scalable and comprehensible for huge
 		directed-acyclic clouds of X nodes.  
 	  Tested in lib/ on token-ring structures.  
@@ -1627,7 +1684,7 @@
 		which resulted in duplicate events in the queue.  
 		Now using a map data-structure for the exclusive queues.  
 	  sim/event.h: added optional uniqueness checking
-	  Finallly able to add reduced test case prsim/precharge-f-01.prismrc
+	  Finallly able to add reduced test case prsim/precharge-f-01.prsimrc
 
 
 2008-01-19	David Fang		<fangism@users.sourceforge.net>

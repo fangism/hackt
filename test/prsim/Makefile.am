@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.44 2008/11/25 04:59:33 fang Exp $
+#	$Id: Makefile.am,v 1.45 2008/11/27 11:09:41 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -27,7 +27,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	unstable-a unstable-b \
 	weak-unstable-a weak-unstable-b \
 	precharge-a precharge-b precharge-c precharge-d \
-	precharge-e precharge-f \
+	precharge-e precharge-f precharge-g precharge-h \
 	weak-inv \
 	weak-fight-a weak-fight-b \
 	weak-vs-weak \
@@ -123,6 +123,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	precharge-a-01 precharge-b-01 \
 	precharge-c-01 precharge-d-01 \
 	precharge-e-01 precharge-f-01 \
+	precharge-h-01 \
 	weak-inv-01 weak-inv-02 \
 	weak-fight-a-01 weak-fight-a-02 weak-fight-a-03 weak-fight-a-04 \
 	weak-fight-a-05 \
@@ -161,6 +162,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-a-30 channel-test-a-31 channel-test-a-32 \
 	channel-test-a-33 channel-test-a-34 channel-test-a-35 \
 	channel-test-a-36 channel-test-a-37 channel-test-a-38 \
+	channel-test-a-39 channel-test-a-40 \
 	channel-test-b-01 channel-test-b-02 channel-test-b-03 \
 	channel-test-b-04 channel-test-b-05 channel-test-b-06 \
 	channel-test-b-07 channel-test-b-08 \
@@ -200,6 +202,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	invariant-c-01 invariant-c-02 \
 	invariant-d-01 invariant-d-02 \
 	inv-invariant-01 inv-invariant-02 inv-invariant-03 inv-invariant-04 \
+	assert-fail-01 \
+	check-excl-fail-01 check-excl-fail-02 check-excl-fail-03 \
+	check-excl-fail-04 \
 	memstats32-inv memstats64-inv
 
 # override defaults for non-matched architectures
@@ -301,7 +306,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-test-c-10 channel-test-c-21 \
 	channel-test-d-21 \
 	channel-test-non-QDI-a-02 \
+	precharge-g-01 \
 	invariant-a-07 invariant-b-07 \
+	assert-fail-02 \
+	check-excl-fail-05 \
 	reschedule-01 reschedule-02 reschedule-03 reschedule-04 reschedule-05 \
 	reschedule-06 reschedule-18
 

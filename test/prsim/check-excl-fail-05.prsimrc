@@ -1,0 +1,25 @@
+# "check-excl-fail-03.prsimrc"
+# @haco@ check-excl-fail.haco-a
+
+allrings-chk
+watchall
+checkexcl
+set a 1
+set b 0
+set c 0
+cycle
+
+checkexcl-fail fatal
+echo errors fatal...
+set b 1
+set c X
+cycle
+
+echo will die before this is reached
+assert-pending c
+cycle
+assertn-queue
+set c 0
+set b 0
+cycle
+

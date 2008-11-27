@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.17 2008/11/23 17:54:11 fang Exp $
+	$Id: chpsim.cc,v 1.18 2008/11/27 11:09:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -190,9 +190,10 @@ try {
 	sim_state.import_source_paths(opt.source_paths);
 	if (opt.run) {
 		sim_state.initialize();
+		CommandRegistry::prompt = sim_state.get_prompt();
 		// run command interpreter
 		// return error if necessary
-		const int ret = CommandRegistry::interpret(sim_state, 
+		const int ret = CommandRegistry::interpret(sim_state, std::cin,
 			opt.interactive);
 		if (ret) {
 			// return value only has meaning to the interpreter

@@ -2,7 +2,7 @@
 	\file "sim/command_builtin.h"
 	Converts/imports state-independent commands into
 	a state-dependent command registry.  
-	$Id: command_builtin.h,v 1.2 2007/01/21 06:00:21 fang Exp $
+	$Id: command_builtin.h,v 1.3 2008/11/27 11:09:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_BUILTIN_H__
@@ -78,6 +78,7 @@ DECLARE_STATELESS_COMMAND_CLASS(CommentPound)
 DECLARE_STATELESS_COMMAND_CLASS(CommentComment)
 DECLARE_STATELESS_COMMAND_CLASS(Exit)
 DECLARE_STATELESS_COMMAND_CLASS(Quit)
+DECLARE_STATELESS_COMMAND_CLASS(Abort)
 
 //=============================================================================
 }	// end namespace SIM

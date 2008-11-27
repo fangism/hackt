@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.18 2008/11/23 17:54:14 fang Exp $
+	$Id: prsim.cc,v 1.19 2008/11/27 11:09:24 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -210,9 +210,10 @@ try {
 	sim_state.import_source_paths(opt.source_paths);
 	if (opt.run) {
 		sim_state.initialize();
+		CommandRegistry::prompt = sim_state.get_prompt();
 		// outermost level is interactive
 		// until later, when we give a source file, or redirect in
-		const int ret = CommandRegistry::interpret(sim_state,
+		const int ret = CommandRegistry::interpret(sim_state, std::cin, 
 			opt.interactive);
 		if (ret) {
 			// return value only has meaning to the interpreter

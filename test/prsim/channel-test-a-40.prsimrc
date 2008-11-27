@@ -1,11 +1,14 @@
-# "channel-test-a-10.prsimrc"
-# copy-modified from "channel-test-a-09.prsimrc"
+# "channel-test-a-40.prsimrc"
+# copy-modified from "channel-test-a-10.prsimrc"
 # @haco@ channel-test-a.haco-a
 # @deps@ channel-test-a-values-X.txt
 # testing channel sink, expect-fail
 
 # register channels
 source channel-test-a-01.prsimrc
+
+# continue after failure
+channel-expect-fail ignore
 
 watchall
 # set up some channels with commands
@@ -53,7 +56,7 @@ channel-show X
 
 echo ------------------------------------
 set X.d[0] 1
-echo expect to assert fail here:
+echo expect to assert fail here: (but silenced)
 cycle
 assert X.e 0
 channel-show X

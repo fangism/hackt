@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.9 2008/11/15 08:00:01 fang Exp $
+	$Id: Channel-prsim.cc,v 1.10 2008/11/27 11:09:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -88,6 +88,17 @@ using util::strings::string_to_num;
 using util::numeric::div;
 using util::numeric::div_type;
 using util::numeric::rand48;
+
+//=============================================================================
+// class channel_exception method definitions
+
+error_policy_enum
+channel_exception::inspect(const State& s, ostream& o) const {
+	o << "ERROR: value assertion failed on channel `" <<
+		name << "\'." << endl;
+	o << "\texpected: " << expect << ", got: " << got << endl;
+	return s.get_channel_expect_fail_policy();
+}
 
 //=============================================================================
 // class channel_file_handle method definitions
@@ -1504,16 +1515,27 @@ channel::process_data(const State& s) throw (channel_exception) {
 	if (have_value()) {
 		const array_value_type& expect = current_value();
 		if (!expect.second) {
+		const error_policy_enum e(s.get_channel_expect_fail_policy());
 		if (v) {
 		const value_type got = data_rails_value(s);
 		advance_value();
 		if (DATA_VALUE(expect) != got) {
-			throw channel_exception(name, 
-				DATA_VALUE(expect), got);
+			const channel_exception
+				ex(name, DATA_VALUE(expect), got);
+			if (e == ERROR_WARN) {
+				ex.inspect(s, cout);
+			} else if (e > ERROR_WARN) {
+				throw ex;
+			}
 		}
 		} else {	// cannot expect invalid value
-			throw channel_exception(name, 
-				DATA_VALUE(expect), 0xDEADBEEF);
+			const channel_exception
+				ex(name, DATA_VALUE(expect), 0xDEADBEEF);
+			if (e == ERROR_WARN) {
+				ex.inspect(s, cout);
+			} else if (e > ERROR_WARN) {
+				throw ex;
+			}
 		}
 		}	// else don't care
 	} else {

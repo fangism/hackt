@@ -2,7 +2,7 @@
 	\file "sim/command_builtin.cc"
 	NOTE: this file should NOT contain any global static initializations
 	because their initialization ordering is not defined between TUs.  
-	$Id: command_builtin.cc,v 1.3 2007/02/14 04:57:24 fang Exp $
+	$Id: command_builtin.cc,v 1.4 2008/11/27 11:09:25 fang Exp $
  */
 
 #include "sim/command_builtin.h"
@@ -76,6 +76,19 @@ Quit::main(const string_list& a) {
 void
 Quit::usage(ostream& o) {
 	Exit::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+int
+Abort::main(const string_list&) {
+	return CommandBase::FATAL;
+}
+
+void
+Abort::usage(ostream& o) {
+	o << "abort" << endl;
+	o << "abort: exits simulator with fatal status" << endl;
 }
 
 //=============================================================================

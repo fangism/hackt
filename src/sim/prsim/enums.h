@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/enums.h"
-	$Id: enums.h,v 1.2 2008/11/05 23:03:59 fang Exp $
+	$Id: enums.h,v 1.3 2008/11/27 11:09:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_ENUMS_H__

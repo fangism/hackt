@@ -2,7 +2,7 @@
 	\file "sim/command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: command_base.h,v 1.3 2008/11/25 04:59:24 fang Exp $
+	$Id: command_base.h,v 1.4 2008/11/27 11:09:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_BASE_H__
@@ -12,6 +12,7 @@
 #include <string>
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
+#include "sim/command_error_codes.h"
 
 namespace HAC {
 namespace SIM {
@@ -25,23 +26,9 @@ class command_category;
 /**
 	State-independent base class of Command.  
  */
-class CommandBase {
+class CommandBase : public command_error_codes {
 public:
-	/**
-		A few reserved exit codes for main functions.  
-		TODO: validate the range of these values w.r.t. 
-			return type size or standard enums.
-	 */
-	enum Status {
-		FATAL = -4,	///< terminate immediately (e.g. assert fail)
-		BADFILE = -3,	///< source file not found
-		SYNTAX = -2,	///< bad syntax
-		UNKNOWN = -1,	///< unknown command
-		NORMAL = 0,	///< command executed fine
-		BADARG = 1,	///< other error with input
-		END = 0xFF	///< normal exit, such as EOF
-	};
-
+	typedef	CommandStatus		Status;
 	typedef	void (usage_type) (ostream&);
 	typedef	usage_type*		usage_ptr_type;
 protected:

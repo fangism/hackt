@@ -1,5 +1,5 @@
 @c "commands.texi"
-@c $Id: commands.texi,v 1.6 2008/04/24 22:46:42 fang Exp $
+@c $Id: commands.texi,v 1.7 2008/11/27 11:09:16 fang Exp $
 @c TODO: index commands
 
 @node Commands
@@ -55,6 +55,8 @@ and have no relation to simulation.
 @include cmd/comment.texi
 @include cmd/echo.texi
 @include cmd/exit.texi
+@include cmd/abort.texi
+@include cmd/interpret.texi
 
 @deffn Command ! shell-cmd
 Shell escape.

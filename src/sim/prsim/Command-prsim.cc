@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.22 2008/11/25 04:59:25 fang Exp $
+	$Id: Command-prsim.cc,v 1.23 2008/11/27 11:09:36 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -166,14 +166,23 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::All, PRSIM::builtin)
 Exit the simulator.
 @end deffn
 @end texinfo
+
+@texinfo cmd/abort.texi
+@deffn Command abort
+Exit the simulator with a fatal (non-zero) exit status.
+@end deffn
+@end texinfo
 ***/
 typedef	stateless_command_wrapper<Exit, State>		Exit;
 typedef	stateless_command_wrapper<Quit, State>		Quit;
+typedef	stateless_command_wrapper<Abort, State>		Abort;
 
 INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Exit,
 	"exit", PRSIM::builtin, "exits simulator")
 INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Quit,
 	"quit", PRSIM::builtin, "exits simulator")
+INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Abort,
+	"abort", PRSIM::builtin, "exits simulator with fatal status")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -221,6 +230,43 @@ Print a list of all known aliases registered with the interpreter.
 ***/
 typedef	Aliases<State>				Aliases;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Aliases, PRSIM::builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/interpret.texi
+@deffn Command interpret
+Open an interactive subshell of the interpreter, by re-opening
+the standard input stream.  
+This is useful when you want to break in the middle of a non-interactive
+script and let the user take control temporarily before returning
+control back to the script.  
+The @command{exit} command or @kbd{Ctrl-D} sends the EOF signal to exit 
+the current interactive level of input and return control to the parent.  
+The level of shell is indicated by additional @t{>} characters in the prompt.
+This works if @command{hacprsim} was originally launched interactively
+and without redirecting a script through stdin.  
+
+@example
+$ @kbd{hacprsim foo.haco}
+prsim> @kbd{!cat foo.prsimrc}
+# foo.prsimrc
+echo hello world
+interpret
+echo goodbye world
+prsim> @kbd{source foo.prsimrc}
+hello world
+prsim>> @kbd{echo where am I?}
+where am I?
+prsim>> @kbd{exit}
+goodbye world
+prsim> @kbd{exit}
+$
+@end example
+@end deffn
+@end texinfo
+***/
+typedef	Interpret<State>			Interpret;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Interpret, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -395,8 +441,7 @@ if (a.size() > 2) {
 		}
 	}	// end while
 	} catch (const step_exception& exex) {
-		s.inspect_exception(exex, cerr);
-		return Command::FATAL;
+		return error_policy_to_status(exex.inspect(s, cerr));
 	}	// no other exceptions
 	return Command::NORMAL;
 }
@@ -476,8 +521,7 @@ step_event_main(State& s, size_t i) {
 		}
 	}	// end while
 	} catch (const step_exception& exex) {
-		s.inspect_exception(exex, cerr);
-		return Command::FATAL;
+		return error_policy_to_status(exex.inspect(s, cerr));
 	}	// no other exceptions
 	return Command::NORMAL;
 }
@@ -501,55 +545,7 @@ if (a.size() > 2) {
 	} else {
 		i = 1;
 	}
-#if 0
-	s.resume();
-	// could check s.pending_events()
-	try {
-	State::step_return_type ni;	// also stores the cause of the event
-	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
-		--i;
-		// NB: may need specialization for real-valued (float) time.  
-		const time_type ct(s.time());
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Advance::main().
-			tracing stuff here later...
-		***/
-		if (s.watching_all_nodes()) {
-			print_watched_node(cout << '\t' << ct << '\t', s, ni);
-		}
-		if (n.is_breakpoint()) {
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(
-				s.get_node_canonical_name(GET_NODE(ni)));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				print_watched_node(cout << '\t' << ct << '\t',
-					s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-				// node is plain breakpoint
-				cout << "\t*** break, " << i <<
-					" steps left: `" << nodename <<
-					"\' became ";
-				n.dump_value(cout) << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-			}
-		}
-	}	// end while
-	} catch (const step_exception& exex) {
-		s.inspect_exception(exex, cerr);
-		return Command::FATAL;
-	}	// no other exceptions
-	return Command::NORMAL;
-#else
 	return step_event_main(s, i);
-#endif
 }
 }	// end StepEvent::main
 
@@ -618,12 +614,11 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
  	"run until event queue empty or breakpoint")
 
 /**
-	TODO: handle breakpoint.
 	TODO: implement no/globaltime policy for resetting.  
 	Isn't the while-loop made redundant by State::cycle()?
  */
 int
-Cycle::main(State& s, const string_list & a) {
+Cycle::main(State& s, const string_list& a) {
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -667,8 +662,7 @@ if (a.size() != 1) {
 		}
 	}	// end while (!s.stopped())
 	} catch (const step_exception& exex) {
-		s.inspect_exception(exex, cerr);
-		return Command::FATAL;
+		return error_policy_to_status(exex.inspect(s, cerr));
 	}	// no other exceptions
 	return Command::NORMAL;
 }	// end if
@@ -2100,6 +2094,10 @@ AllRingsChk::usage(ostream& o) {
 @texinfo cmd/assert.texi
 @deffn Command assert node value
 Error out if @var{node} is not at value @var{value}.  
+The error-handling policy can actually be determined by
+the @command{assert-fail} command.  
+By default, such errors are fatal and cause the simulator to terminate
+upon first error.  
 @end deffn
 @end texinfo
 ***/
@@ -2130,12 +2128,15 @@ if (a.size() != 3) {
 		}
 		const value_enum actual = n.current_value();
 		if (actual != val) {
+			const error_policy_enum e(s.get_assert_fail_policy());
+			if (e != ERROR_IGNORE) {
 			cout << "assert failed: expecting node `" << objname <<
 				"\' at " <<
 				node_type::value_to_char[size_t(val)] <<
 				", but got ";
 			n.dump_value(cout) << "." << endl;
-			return Command::FATAL;
+			}	// yes, actually allow suppression
+			return error_policy_to_status(e);
 		}
 		return Command::NORMAL;
 	} else {
@@ -2157,6 +2158,8 @@ Assert::usage(ostream& o) {
 @texinfo cmd/assertn.texi
 @deffn Command assertn node value
 Error out if @var{node} @emph{is} at value @var{value}.  
+Error handling policy can be set by the @command{assert-fail} command.
+By default such errors are fatal.  
 @end deffn
 @end texinfo
 ***/
@@ -2187,12 +2190,15 @@ if (a.size() != 3) {
 		}
 		const value_enum actual = n.current_value();
 		if (actual == val) {
+			const error_policy_enum e(s.get_assert_fail_policy());
+			if (e != ERROR_IGNORE) {
 			cout << "assert failed: expecting node `" << objname <<
 				"\' not at " <<
 				node_type::value_to_char[size_t(val)] <<
 				", but got ";
 			n.dump_value(cout) << "." << endl;
-			return Command::FATAL;
+			}
+			return error_policy_to_status(e);
 		}
 		return Command::NORMAL;
 	} else {
@@ -2214,6 +2220,8 @@ AssertN::usage(ostream& o) {
 @texinfo cmd/assert-pending.texi
 @deffn Command assert-pending node
 Error out if @var{node} does not have a pending event in queue.
+The error handling policy is determined by the @command{assert-fail} command.
+By default, such assertion failures are fatal.  
 @end deffn
 @end texinfo
 ***/
@@ -2233,10 +2241,13 @@ if (a.size() != 2) {
 	if (ni) {
 		const node_type& n(s.get_node(ni));
 		if (!n.pending_event()) {
+			const error_policy_enum e(s.get_assert_fail_policy());
+			if (e != ERROR_IGNORE) {
 			cout <<
 			"assert failed: expecting pending event on node `"
 				<< objname << "\', but none found." << endl;
-			return Command::FATAL;
+			}
+			return error_policy_to_status(e);
 		}
 		return Command::NORMAL;
 	} else {
@@ -2257,6 +2268,8 @@ AssertPending::usage(ostream& o) {
 @texinfo cmd/assertn-pending.texi
 @deffn Command assert-pending node
 Error out if @var{node} does have a pending event in queue.
+The error handling policy is determined by the @command{assert-fail} command.
+By default, such assertion failures are fatal.  
 @end deffn
 @end texinfo
 ***/
@@ -2275,10 +2288,13 @@ if (a.size() != 2) {
 	if (ni) {
 		const node_type& n(s.get_node(ni));
 		if (n.pending_event()) {
+			const error_policy_enum e(s.get_assert_fail_policy());
+			if (e != ERROR_IGNORE) {
 			cout <<
 			"assert failed: expecting no pending event on node `"
 				<< objname << "\', but found one." << endl;
-			return Command::FATAL;
+			}
+			return error_policy_to_status(e);
 		}
 		return Command::NORMAL;
 	} else {
@@ -2300,6 +2316,8 @@ AssertNPending::usage(ostream& o) {
 @deffn Command assert-queue
 Error out if event queue is empty.  
 Useful for checking for deadlock.  
+The error handling policy is determined by the @command{assert-fail} command.
+By default, such assertion failures are fatal.  
 @end deffn
 @end texinfo
 ***/
@@ -2312,6 +2330,8 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertQueue, PRSIM::info)
 @deffn Command assertn-queue
 Error out if event queue is not empty.  
 Useful for checking for checking result of cycle.  
+The error handling policy is determined by the @command{assert-fail} command.
+By default, such assertion failures are fatal.  
 @end deffn
 @end texinfo
 ***/
@@ -3637,14 +3657,14 @@ class_name::main(State& s, const string_list& a) {			\
 if (a.size() != 2) {							\
 	usage(cerr << "usage: ");					\
 	cerr << "current mode: " <<					\
-		State::error_policy_string(s.get_##func_name##_policy()) \
+		error_policy_string(s.get_##func_name##_policy()) \
 		<< endl;						\
 	return Command::SYNTAX;						\
 } else {								\
 	const string& m(a.back());					\
-	const State::error_policy_enum e = 				\
-		State::string_to_error_policy(m);			\
-	if (State::valid_error_policy(e)) {				\
+	const error_policy_enum e =	 				\
+		string_to_error_policy(m);				\
+	if (valid_error_policy(e)) {					\
 		s.set_##func_name##_policy(e);				\
 		return Command::NORMAL;					\
 	} else {							\
@@ -3772,7 +3792,49 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(InvariantUnknown, "invariant-unknown",
 	"set error-handling of possible invariant failures",
 	"Set error-handling policy on possible invariant violations.",
 	invariant_unknown)
-#endif
+#endif	// PRSIM_INVARIANT_RULES
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assert-fail.texi
+@deffn Command assert-fail [mode]
+Set the error-handling policy for when the @command{assert} command fails.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(AssertFail, "assert-fail", 
+	"set error-handling of assert command failures",
+	"Set error-handling policy on assert command failures.",
+	assert_fail)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-expect-fail.texi
+@deffn Command channel-expect-fail [mode]
+Set the error-handling policy for when the a channel encounters
+a value different from was expected.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(ChannelExpectFail, 
+	"channel-expect-fail", 
+	"set error-handling of channel-expect failures",
+	"Set error-handling policy on channel-expect failures.",
+	channel_expect_fail)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/checkexcl-fail.texi
+@deffn Command checkexcl-fail [mode]
+Set the error-handling policy for when an exclusion check fails.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(CheckExclFail, 
+	"checkexcl-fail", 
+	"set error-handling of exclusion failures",
+	"Set error-handling policy on exclusion failures.",
+	excl_check_fail)
 
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 

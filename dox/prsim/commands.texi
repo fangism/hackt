@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.10 2008/11/08 04:25:52 fang Exp $
+@c $Id: commands.texi,v 1.11 2008/11/27 11:09:17 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -32,6 +32,8 @@ The following commands are listed in the @t{builtin} category.
 @include cmd/echo.texi
 @include cmd/comment.texi
 @include cmd/exit.texi
+@include cmd/abort.texi
+@include cmd/interpret.texi
 
 The following command is useful for showing each executed command.
 
@@ -354,6 +356,9 @@ The use of weak-rules can be globally enabled or disabled.
 @include cmd/weak-interference.texi
 @include cmd/invariant-fail.texi
 @include cmd/invariant-unknown.texi
+@include cmd/assert-fail.texi
+@include cmd/channel-expect-fail.texi
+@include cmd/checkexcl-fail.texi
 @include cmd/mode.texi
 
 Two additional commands control the behavior of unstable rules.  

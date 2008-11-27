@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.31 2008/11/25 04:59:27 fang Exp $
+	$Id: State-prsim.cc,v 1.32 2008/11/27 11:09:38 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -31,6 +31,7 @@
 #include "Object/traits/classification_tags.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/lang/SPEC_footprint.h"
 #include "Object/traits/proc_traits.h"	// for diagnostic
 #include "Object/global_entry.h"
 #include "sim/ISE.h"
@@ -493,16 +494,21 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		watch_list(), 
 		_channel_manager(), 
 		flags(FLAGS_DEFAULT),
+#define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
 #if PRSIM_INVARIANT_RULES
-		invariant_fail_policy(ERROR_DEFAULT_INVARIANT_FAIL),
-		invariant_unknown_policy(ERROR_DEFAULT_INVARIANT_UNKNOWN),
+		invariant_fail_policy(E(INVARIANT_FAIL)),
+		invariant_unknown_policy(E(INVARIANT_UNKNOWN)),
 #endif
-		unstable_policy(ERROR_DEFAULT_UNSTABLE),
-		weak_unstable_policy(ERROR_DEFAULT_WEAK_UNSTABLE),
-		interference_policy(ERROR_DEFAULT_INTERFERENCE),
-		weak_interference_policy(ERROR_DEFAULT_WEAK_INTERFERENCE),
+		unstable_policy(E(UNSTABLE)),
+		weak_unstable_policy(E(WEAK_UNSTABLE)),
+		interference_policy(E(INTERFERENCE)),
+		weak_interference_policy(E(WEAK_INTERFERENCE)),
+		assert_fail_policy(E(ASSERT_FAIL)),
+		channel_expect_fail_policy(E(CHANNEL_EXPECT_FAIL)),
+		excl_check_fail_policy(E(EXCL_CHECK_FAIL)),
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
+#undef	E
 #if !PRSIM_INDIRECT_EXPRESSION_MAP
 		__scratch_expr_trace(),
 #endif
@@ -543,7 +549,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 #endif
 	// top-level prs in the module, pid=0
 	STACKTRACE_INDENT_PRINT("top-level process ..." << endl);
-	mod.get_footprint().get_prs_footprint().accept(v);	// throw?
+	const footprint& topfp(mod.get_footprint());
+	topfp.get_prs_footprint().accept(v);	// throw?
+	topfp.get_spec_footprint().accept(v);	// throw?
 #endif
 	// this may throw an exception!
 try {
@@ -698,7 +706,7 @@ State::break_type
 State::flush_channel_events(const vector<env_event_type>& env_events, 
 		const event_cause_type& c) {
 	STACKTRACE_VERBOSE;
-	bool err = false;
+	break_type err = ERROR_NONE;
 	// cause of these events must be 'ni', this node
 	vector<env_event_type>::const_iterator
 		i(env_events.begin()), e(env_events.end());
@@ -718,9 +726,11 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 	// for now, give up if there are conflicting events in queue
 			// instability!?
 			event_type& ev(get_event(pe));
-			err |= __report_instability(cout,
+			const break_type E =
+			__report_instability(cout,
 				_v == LOGIC_OTHER, 
 				ev.val == LOGIC_HIGH, ev.node, ev);
+			if (E > err) err = E;
 			if (dequeue_unstable_events()) {
 				// overtake
 				kill_event(pe, ev.node);
@@ -759,6 +769,7 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 /**
 	Set a single channel into reset state.  
 	NB: flush_channel_events may result in instabilities!
+	\return ?
  */
 bool
 State::reset_channel(const string& cn) {
@@ -833,10 +844,19 @@ State::reset(void) {
 	STACKTRACE_VERBOSE;
 	__initialize();
 	flags = FLAGS_DEFAULT;
-	unstable_policy = ERROR_DEFAULT_UNSTABLE;
-	weak_unstable_policy = ERROR_DEFAULT_WEAK_UNSTABLE;
-	interference_policy = ERROR_DEFAULT_INTERFERENCE;
-	weak_interference_policy = ERROR_DEFAULT_WEAK_INTERFERENCE;
+#define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
+	unstable_policy = E(UNSTABLE);
+	weak_unstable_policy = E(WEAK_UNSTABLE);
+	interference_policy = E(INTERFERENCE);
+	weak_interference_policy = E(WEAK_INTERFERENCE);
+#if PRSIM_INVARIANT_RULES
+	invariant_fail_policy = E(INVARIANT_FAIL),
+	invariant_unknown_policy = E(INVARIANT_UNKNOWN),
+#endif
+	assert_fail_policy = E(ASSERT_FAIL);
+	channel_expect_fail_policy = E(CHANNEL_EXPECT_FAIL);
+	excl_check_fail_policy = E(EXCL_CHECK_FAIL);
+#undef	E
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
 	uniform_delay = time_traits::default_delay;
@@ -1916,39 +1936,6 @@ State::dump_breakpoints(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const char*
-State::error_policy_string(const error_policy_enum e) {
-	switch (e) {
-	case ERROR_IGNORE:	return "ignore";
-	case ERROR_WARN:	return "warn";
-	case ERROR_BREAK:	return "break";
-	default:		DIE;
-	}	// end switch
-	 return NULL;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Too lazy to write a map...
- */
-State::error_policy_enum
-State::string_to_error_policy(const string& s) {
-	static const string _ignore("ignore");
-	static const string _warn("warn");
-	static const string _notify("notify");
-	static const string _break("break");
-	if (s == _ignore) {
-		return ERROR_IGNORE;
-	} else if (s == _warn || s == _notify) {
-		return ERROR_WARN;
-	} else if (s == _break) {
-		return ERROR_BREAK;
-	}
-	// else
-	return ERROR_INVALID;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Print the current mode: mostly checking and error-handling policies.  
  */
@@ -1969,12 +1956,18 @@ State::dump_mode(ostream& o) const {
 		error_policy_string(weak_interference_policy) << endl;
 	o << "\tchecking exclusions: " <<
 		(checking_excl() ? "on" : "off") << endl;
+	o << "\ton exclusion-fail: " <<
+		error_policy_string(excl_check_fail_policy) << endl;
 #if PRSIM_INVARIANT_RULES
 	o << "\ton invariant-fail: " <<
 		error_policy_string(invariant_fail_policy) << endl;
 	o << "\ton invariant-unknown: " <<
 		error_policy_string(invariant_unknown_policy) << endl;
 #endif
+	o << "\ton assert-fail: " <<
+		error_policy_string(assert_fail_policy) << endl;
+	o << "\ton channe-expect-fail: " <<
+		error_policy_string(channel_expect_fail_policy) << endl;
 	return o;
 }
 
@@ -2209,7 +2202,7 @@ State::break_type
 State::flush_pending_queue(void) {
 	typedef	pending_queue_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
-	break_type err = false;
+	break_type err = ERROR_NONE;
 	const_iterator i(pending_queue.begin()), e(pending_queue.end());
 for ( ; i!=e; ++i) {
 	const event_index_type ne = *i;
@@ -2267,8 +2260,9 @@ for ( ; i!=e; ++i) {
 		// issue diagnostic
 		if ((weak_interference_policy != ERROR_IGNORE) ||
 				!pending_weak) {
-			err |=
+			const break_type E =
 			__report_interference(cout, pending_weak, _ni, ev);
+			if (E > err) err = E;
 		}
 		if (ev.pending_interference()) {
 			DEBUG_STEP_PRINT("immediate -> X." << endl);
@@ -2317,8 +2311,9 @@ for ( ; i!=e; ++i) {
 		// issue diagnostic
 		if ((weak_interference_policy != ERROR_IGNORE) ||
 				!pending_weak) {
-			err |=
+			const break_type E =
 			__report_interference(cout, pending_weak, _ni, ev);
+			if (E > err) err = E;
 		}
 		if (ev.pending_interference()) {
 			DEBUG_STEP_PRINT("immediate -> X." << endl);
@@ -2904,55 +2899,46 @@ State::check_excl_rings(const node_index_type ni, const node_type& n,
 	Diagnostic subroutine for dissecting excl violation exceptions.  
 	Uses extremely slow search because this only occurs on exception.  
  */
-void
-State::inspect_exception(const step_exception& ex, ostream& o) const {
-if (IS_A(const excl_exception*, &ex)) {
+error_policy_enum
+State::excl_exception::inspect(const State& s, ostream& o) const {
 	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
-	const excl_exception& exex(AS_A(const excl_exception&, ex));
 	ring_set_type ring;
 	const_iterator i, e;
-	if (exex.type) {
-		i = check_exhi.begin();
-		e = check_exhi.end();
+	if (type) {
+		i = s.check_exhi.begin();
+		e = s.check_exhi.end();
 	} else {
-		i = check_exlo.begin();
-		e = check_exlo.end();
+		i = s.check_exlo.begin();
+		e = s.check_exlo.end();
 	}
 	// find all nodes that contain the lock index
 	for ( ; i!=e; ++i) {
 		const lock_index_list_type::const_iterator
 			le(i->second.end()), 
-			lf(find(i->second.begin(), le, exex.lock_id));
+			lf(find(i->second.begin(), le, lock_id));
 		if (lf != le) {
 			// then this node_index belongs to this ring
 			ring.insert(i->first);
 		}
 	}
 	ISE_INVARIANT(ring.size() > 1);
-	o << "ERROR: excl" << (exex.type ? "hi" : "lo") << 
+	o << "ERROR: excl" << (type ? "hi" : "lo") << 
 		" violation detected!" << endl;
 	ring_set_type::const_iterator ri(ring.begin()), re(ring.end());
 	o << "ring-state:" << endl;
 	for (; ri!=re; ++ri) {
-		dump_node_canonical_name(o << "\t", *ri) << " : ";
-		get_node(*ri).dump_value(o) << endl;
+		s.dump_node_canonical_name(o << "\t", *ri) << " : ";
+		s.get_node(*ri).dump_value(o) << endl;
 	}
-	dump_node_canonical_name(o << "but node `", exex.node_id) <<
-		"\' tried to become " << (exex.type ? 1 : 0) << "." << endl;
+	s.dump_node_canonical_name(o << "but node `", node_id) <<
+		"\' tried to become " << (type ? 1 : 0) << "." << endl;
 	o << "The simulator\'s excl-check-lock state is no longer coherent; "
 		"do not bother trying to continue the simulation, "
 		"but you may further inspect the state." << endl;
 	o << "You probably want to disable excl-checking with `nocheckexcl\' "
 		"if you wish to continue the simulation." << endl;
-} else if (IS_A(const channel_exception*, &ex)) {
-	const channel_exception& exex(AS_A(const channel_exception&, ex));
-	o << "ERROR: value assertion failed on channel `" <<
-		exex.name << "\'." << endl;
-	o << "\texpected: " << exex.expect << ", got: " << exex.got << endl;
-} else {
-	o << "Unkonwn step_exception." << endl;
+	return s.get_excl_check_fail_policy();
 }
-}	// end method State::inspect_excl_exception
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2967,7 +2953,8 @@ struct State::auto_flush_queues {
 
 	~auto_flush_queues() {
 		// check and flush pending queue, spawn fanout events
-		if (UNLIKELY(state.flush_pending_queue())) {
+		const break_type E(state.flush_pending_queue());
+		if (UNLIKELY(E >= ERROR_BREAK)) {
 			state.stop();		// set stop flag
 		}
 
@@ -3062,12 +3049,28 @@ State::step(void) THROWS_STEP_EXCEPTION {
 		const excl_exception
 			exex(check_excl_rings(ni, n, prev, pe.val));
 		if (UNLIKELY(exex.lock_id)) {
+		switch (excl_check_fail_policy) {
+		case ERROR_BREAK:
+			stop();				// fall-through
+		case ERROR_WARN:
+			exex.inspect(*this, cerr);	// fall-through
+		case ERROR_IGNORE:
+			cerr <<
+"WARNING: detected exclusion violation, but because the simulation is\n"
+"continuing (current policy), further exclusion checking is automatically\n"
+"disabled because the checking structures would be incoherent otherwise.\n";
+			nocheck_excl();
+			break;
+		case ERROR_INTERACTIVE:	// fall-through
+		case ERROR_FATAL:
+		default:
 			// to keep event queue coherent, re-enqueue event
 			// because event will not be deallocated!
 			// next attempt to step will hit same exception
 			// forcing simulation to be stuck (intentional)
 			enqueue_event(ep.time, ep.event_index);
 			throw exex;
+		}	// end switch
 		}
 	}
 	// only set the cause of the node when we change its value
@@ -3104,9 +3107,12 @@ if (eval_ordering_is_random()) {
 		// when evaluating a node as an expression, 
 		// is appropriate to interpret node value
 		// as a pull-value
-		if (UNLIKELY(propagate_evaluation(new_cause, *i, pull_enum(prev)))) {
+		const break_type E =
+		propagate_evaluation(new_cause, *i, pull_enum(prev));
+		if (UNLIKELY(E >= ERROR_BREAK)) {
 			stop();
 			// just signal to break
+			// TODO: signal FATAL and INTERACTIVE
 		}
 	}
 }
@@ -3120,7 +3126,8 @@ if (n.in_channel()) {
 			prev, next, env_events);
 	// cause of these events must be 'ni', this node
 	const event_cause_type c(ni, next);
-	if (UNLIKELY(flush_channel_events(env_events, c))) {
+	const break_type E = flush_channel_events(env_events, c);
+	if (UNLIKELY(E >= ERROR_BREAK)) {
 		stop();
 	}
 	// HERE: error status?
@@ -3431,8 +3438,8 @@ if (!r.is_invariant()) {
 	if ((fail && invariant_fail_policy != ERROR_IGNORE) ||
 		(maybe && invariant_unknown_policy != ERROR_IGNORE)) {
 		const bool halt =
-			((fail && invariant_fail_policy == ERROR_BREAK) ||
-			(maybe && invariant_unknown_policy == ERROR_BREAK));
+			((fail && invariant_fail_policy >= ERROR_BREAK) ||
+			(maybe && invariant_unknown_policy >= ERROR_BREAK));
 		cerr << (halt ? "Error: " : "Warning: ") <<
 			(maybe ? "possible " : "" ) <<
 			"invariant violation: (";
@@ -3597,11 +3604,13 @@ State::propagate_evaluation(
 	if (ev_result.invariant_break) {
 		// then violation is not a result of a real rule
 		// thus, there can be no change or addition of events
-		return true;
+		return invariant_fail_policy;
+		// return true;
 	}
 #endif
 	if (!ev_result.node_index) {
-		return false;
+		return ERROR_NONE;
+		// return false;
 	}
 	const pull_enum next = ev_result.root_pull;
 	const node_index_type ui = ev_result.node_index;
@@ -3670,7 +3679,7 @@ State::propagate_evaluation(
 		get_pull(n.pull_up_index STR_INDEX(WEAK_RULE)) : PULL_OFF;
 #endif
 #endif	// PRSIM_WEAK_RULES
-	break_type err = false;
+	break_type err = ERROR_NONE;
 #if PRSIM_WEAK_RULES
 	// weak rule pre-filtering
 if (weak_rules_enabled()) {
@@ -3681,9 +3690,11 @@ if (n.pending_event()) {
 		// it was weak, and should be overtaken
 		// what if new event is weak-off?
 		if (e.val != LOGIC_OTHER) {
-			err |= __report_instability(cout,
+			const break_type E =
+			__report_instability(cout,
 				next == PULL_WEAK, 
 				e.val == LOGIC_HIGH, e.node, e);
+			if (E > err) err = E;
 		}
 		kill_event(ei, ui);
 		// ei = 0;
@@ -3908,7 +3919,9 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending 1 to 0 in queue." << endl);
 		// for now, out of laziness, overwrite the pending event
-		err |= __report_instability(cout, false, true, e.node, e);
+		const break_type E =
+		__report_instability(cout, false, true, e.node, e);
+		if (E > err) err = E;
 		e.val = LOGIC_LOW;
 		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
@@ -3934,12 +3947,14 @@ if (!n.pending_event()) {
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
-		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
+		const break_type E =
+		__diagnose_violation(cout, next, ei, e, ui, n, 
 			c, dir
 #if PRSIM_WEAK_RULES
 			, is_weak
 #endif
 			);
+		if (E > err) err = E;
 	}	// end if diagnostic
 }	// end if (!n.ex_queue)
 } else {
@@ -4125,7 +4140,9 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending 0 to 1 in queue." << endl);
 		// for now, out of laziness, overwrite the pending event
-		err |= __report_instability(cout, false, false, e.node, e);
+		const break_type E =
+		__report_instability(cout, false, false, e.node, e);
+		if (E > err) err = E;
 		e.val = LOGIC_HIGH;
 		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
@@ -4151,12 +4168,14 @@ if (!n.pending_event()) {
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
-		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
+		const break_type E =
+		__diagnose_violation(cout, next, ei, e, ui, n, 
 			c, dir
 #if PRSIM_WEAK_RULES
 			, is_weak
 #endif
 			);
+		if (E > err) err = E;
 	}	// end if diagonstic
 }	// end if (!n.ex_queue)
 }	// end if (u->direction())
@@ -4187,17 +4206,17 @@ State::__report_interference(ostream& o, const bool weak,
 		dump_node_canonical_name(o << "WARNING: weak-interference `", 
 			_ni) << "\'" << endl;
 		__report_cause(o, ev);
-		return weak_interference_policy == ERROR_BREAK;
+		return weak_interference_policy;	// >= ERROR_BREAK;
 	}	// endif weak_interference_policy
 	} else {	// !weak
 	if (interference_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: interference `", _ni)
 			<< "\'" << endl;
 		__report_cause(o, ev);
-		return interference_policy == ERROR_BREAK;
+		return interference_policy;		// >= ERROR_BREAK;
 	}	// endif interference_policy
 	}	// endif weak
-	return false;
+	return ERROR_NONE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4217,17 +4236,17 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 		dump_node_canonical_name(o << "WARNING: weak-unstable `",
 			_ni) << "\'" << (dir ? '+' : '-') << endl;
 		__report_cause(o, ev);
-		return weak_unstable_policy == ERROR_BREAK;
+		return weak_unstable_policy;		// >= ERROR_BREAK;
 	}	// endif weak_unstable_policy
 	} else {	// !weak
 	if (unstable_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: unstable `", _ni)
 			<< "\'" << (dir ? '+' : '-') << endl;
 		__report_cause(o, ev);
-		return unstable_policy == ERROR_BREAK;
+		return unstable_policy;			// >= ERROR_BREAK;
 	}	// endif unstable_policy
 	}	// endif weak
-	return false;
+	return ERROR_NONE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4259,7 +4278,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 	DEBUG_STEP_PRINT("is " << (weak ? "" : "not") << " weak" << endl);
 #endif
 	const node_index_type& ni(c.node);
-	break_type err = false;
+	break_type err = ERROR_NONE;
 	// something is amiss!
 	const uchar eu = dir ?
 		event_type::upguard[size_t(next)][size_t(e.val)] :
@@ -4367,9 +4386,10 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			}
 			if (b) {
 #endif
-			err |=
+			const break_type E =
 			__report_instability(o, eu & event_type::EVENT_WEAK, 
 				dir, ui, e);
+			if (E > err) err = E;
 #if PRSIM_WEAK_RULES
 			}
 #endif
@@ -7165,6 +7185,9 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, invariant_fail_policy);
 	write_value(o, invariant_unknown_policy);
 #endif
+	write_value(o, assert_fail_policy);
+	write_value(o, channel_expect_fail_policy);
+	write_value(o, excl_check_fail_policy);
 	write_value(o, autosave_name);
 	write_value(o, timing_mode);
 	if (_channel_manager.save_checkpoint(o)) return true;
@@ -7330,6 +7353,9 @@ try {
 }
 	READ_ALIGN_MARKER		// sanity alignment check
 	read_value(i, flags);
+	// DO NOT auto-checkpoint with the same name!
+	// this prevents accidental overwrite due to loading!
+	flags &= ~FLAG_AUTOSAVE;
 	read_value(i, unstable_policy);
 	read_value(i, weak_unstable_policy);
 	read_value(i, interference_policy);
@@ -7338,7 +7364,10 @@ try {
 	read_value(i, invariant_fail_policy);
 	read_value(i, invariant_unknown_policy);
 #endif
-	read_value(i, autosave_name);
+	read_value(i, assert_fail_policy);
+	read_value(i, channel_expect_fail_policy);
+	read_value(i, excl_check_fail_policy);
+	read_value(i, autosave_name);	// safe to load the name of checkpoint
 	read_value(i, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -7358,8 +7387,9 @@ if (checking_excl()) {
 		const excl_exception
 			e(check_excl_rings(distance(nb, ni), n, prev, next));
 		if (e.lock_id) {
-			inspect_exception(e, cerr);
+			e.inspect(*this, cerr);
 			// don't bother throwing
+			// TODO: handle error code
 		}
 	}
 }
@@ -7476,6 +7506,12 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	read_value(i, p);
 	o << "invariant-unknown policy: " << error_policy_string(p) << endl;
 #endif
+	read_value(i, p);
+	o << "assert-fail (bool) policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "channel-expect-fail policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "exclusion-fail policy: " << error_policy_string(p) << endl;
 }
 	char timing_mode;
 	read_value(i, timing_mode);

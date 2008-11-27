@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.7 2008/11/25 04:59:32 fang Exp $
+	$Id: vpi-prsim.cc,v 1.8 2008/11/27 11:09:41 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -478,7 +478,8 @@ static void _run_prsim (const Time_t& vcstime, const int context)
 try {
 	__advance_prsim(vcstime, context);
 } catch (const step_exception& exex) {
-	prsim_state->inspect_exception(exex, cerr);
+	exex.inspect(*prsim_state, cerr);	// ignore return code?
+	// no need to translate error_policy_to_status
 	__destroy_globals();
 	THROW_EXIT;	// re-throw
 } catch (...) {

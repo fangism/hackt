@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2008-11-26	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-65-merged-gprsim-11-05:
+	  Branch merge: improvements of prsim error handling policy.
+
+
 2008-11-22	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-63-merged-gcc43-01:

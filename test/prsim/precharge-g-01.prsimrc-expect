@@ -1,0 +1,36 @@
+forced exclhi rings:
+forced excllo rings:
+{ _o[0], _o[1] }
+Fanins of node `_o[0]':
+(from A):
+[after 10]	~en[0]:X -> _o[0]+:X
+[after 10]	en[0]:X & x[0][0]:X<X><X> -> _o[0]-:X
+[after 10]	en[0]:X & x[0][1]:X<X><X> -> _o[0]-:X
+Fanins of node `_o[1]':
+(from B):
+[after 10]	~en[1]:X -> _o[1]+:X
+[after 10]	en[1]:X & x[1][0]:X<X><X> -> _o[1]-:X
+[after 10]	en[1]:X & x[1][1]:X<X><X> -> _o[1]-:X
+en[] -> X 
+event queue:
+	10	en[0] : X
+	10	en[1] : X
+time: 10
+advance 
+event queue:
+	20	_o[0] : X	[from en[0]:=X]
+	20	_o[1] : X	[from en[1]:=X]
+time: 20
+en[0] -> 1 
+en[1] -> 0 
+en[] -> X 
+WARNING: weak-interference `_o[0]'
+>> cause: `en[0]' (val: X)
+event queue:
+	40	_o[0] : X	[from en[0]:=X]
+assert failed: expecting node `_o[1]' at X, but got 1.
+... at line 25
+Error encountered during source #FILE#.
+... at line 43
+Error encountered during source #FILE#.
+... at line 4

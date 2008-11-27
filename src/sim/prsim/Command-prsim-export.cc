@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Command-prsim-export.cc"
-	$Id: Command-prsim-export.cc,v 1.2 2008/03/17 23:02:54 fang Exp $
+	$Id: Command-prsim-export.cc,v 1.3 2008/11/27 11:09:35 fang Exp $
 	Useful functions to be exported to elsewhere.  
  */
 
@@ -116,8 +116,7 @@ while (!s.stopped() && s.pending_events() &&
 	}
 }	// end while
 } catch (const step_exception& exex) {
-	s.inspect_exception(exex, cerr);
-	return Command::FATAL;
+	return error_policy_to_status(exex.inspect(s, cerr));
 }	// no other exceptions
 	if (!s.stopped() && s.time() < stop_time) {
 		s.update_time(stop_time);

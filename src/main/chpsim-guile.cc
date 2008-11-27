@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim-guile.cc"
 	Main module for new CHPSIM guile interface.
-	$Id: chpsim-guile.cc,v 1.5 2008/11/23 17:54:10 fang Exp $
+	$Id: chpsim-guile.cc,v 1.6 2008/11/27 11:09:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -151,7 +151,7 @@ try {
 		sim_state.initialize();
 		// run command interpreter
 		// return error if necessary
-		const int ret = CommandRegistry::interpret(sim_state, 
+		const int ret = CommandRegistry::interpret(sim_state, std::cin,
 			opt.interactive);
 		if (ret)	return ret;
 	}
