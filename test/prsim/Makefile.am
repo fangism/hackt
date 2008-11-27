@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.45 2008/11/27 11:09:41 fang Exp $
+#	$Id: Makefile.am,v 1.46 2008/11/27 20:34:52 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -19,6 +19,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	bad-pass-gate-a bad-pass-gate-b \
 	check-excl-rings-def check-excl-rings \
 	check-excl-rings-chan-def check-excl-rings-chan \
+	check-excl-fail \
 	logic-defs logic-defs-a logic-defs-b \
 	and nand or nor array \
 	and-nand or-nor nand-or \
