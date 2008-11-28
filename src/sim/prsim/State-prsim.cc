@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.32 2008/11/27 11:09:38 fang Exp $
+	$Id: State-prsim.cc,v 1.33 2008/11/28 23:15:12 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -5090,8 +5090,11 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 	const pull_set root_pull(n);	// repetitive waste for fanin...
 	if (v && (multi_fi || 
 		(pg.expr_graph_node_pool[lri].children.size() > 1))) {
-		const pull_enum p = (dir ? root_pull.up : root_pull.dn)
-			STR_INDEX(r->is_weak());
+		const bool w = r->is_weak();
+		const pull_enum p = dir ? root_pull.up STR_INDEX(w)
+			: root_pull.dn STR_INDEX(w);
+		// rewritten this way because g++-3.3 ICEs-on-valid.
+		// was: (dir ? root_pull.up : root_pull.dn) STR_INDEX(w);
 		o << '<' << State::node_type::value_to_char[p] << '>';
 	}
 	st.dump_node_canonical_name(o << " -> ", gnr) << (dir ? '+' : '-');

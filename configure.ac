@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.185 2008/11/27 11:09:15 fang Exp $
+#	$Id: configure.ac,v 1.186 2008/11/28 23:15:05 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -172,6 +172,7 @@ FANG_ARG_ENABLE_HEADER_VALIDATION
 dnl test control
 HACKT_ARG_ENABLE_CHECK_TESTS
 HACKT_ARG_ENABLE_RANDOM_TESTS
+HACKT_ARG_ENABLE_INTERACTIVE_TESTS
 HACKT_ARG_ENABLE_INSTALL_TESTS
 dnl from "config/rl_el.m4"
 FANG_ARG_WITH_READLINE_EDITLINE

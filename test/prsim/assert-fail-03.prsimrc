@@ -1,13 +1,7 @@
-# "assert-fail-01.prsimrc"
+# "assert-fail-03.prsimrc"
 # @haco@ inv.haco-a
 
 echo testing different error handling policies
-
-assert-fail ignore
-echo ignoring... (silent)
-assert a X
-assert a 0
-assert a 1
 
 assert-fail warn
 echo warning...
@@ -15,9 +9,13 @@ assert a X
 assert a 0
 assert a 1
 
-assert-fail break
-echo breaking... (same as warning)
+assert-fail interactive
+echo interactive (will prompt)...
 assert a X
+assert a 0
+assert a 1
+assert a 0
+assert a 1
 assert a 0
 assert a 1
 

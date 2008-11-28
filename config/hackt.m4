@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.15 2008/03/21 00:19:17 fang Exp $
+dnl	$Id: hackt.m4,v 1.16 2008/11/28 23:15:08 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -519,6 +519,30 @@ AC_ARG_ENABLE(random_tests,
 	AC_MSG_RESULT([no (default)])
 )
 AM_CONDITIONAL(RANDOM_TESTS, test x"$enable_random_tests" = "xyes")
+])dnl
+
+dnl @synopsis HACKT_ARG_ENABLE_INTERACTIVE_TESTS
+dnl
+dnl Enable to run tests that try to mimic interacive effects.  
+dnl
+dnl @category ProjectSpecific
+dnl @version 2008-11-27
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([HACKT_ARG_ENABLE_INTERACTIVE_TESTS],
+[AC_MSG_CHECKING([for requested interactive tests])
+AC_ARG_ENABLE(interactive_tests,
+	AS_HELP_STRING([--enable-interactive-tests],
+		[Tests with interactive emulation. (default=disabled)]),
+	[if test "$enable_interactive_tests" = "yes"
+	then    AC_MSG_RESULT([yes])
+	else    AC_MSG_RESULT([no])
+	fi
+	],
+	AC_MSG_RESULT([no (default)])
+)
+AM_CONDITIONAL(INTERACTIVE_TESTS, test x"$enable_interactive_tests" = "xyes")
 ])dnl
 
 dnl @synopsis HACKT_ARG_ENABLE_MULTILIB

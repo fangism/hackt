@@ -1,0 +1,17 @@
+testing different error handling policies 
+warning... 
+assert failed: expecting node `a' at 0, but got X.
+assert failed: expecting node `a' at 1, but got X.
+interactive (will prompt)... 
+assert failed: expecting node `a' at 0, but got X.
+prsim>> 
+assert failed: expecting node `a' at 1, but got X.
+prsim>> 
+assert failed: expecting node `a' at 0, but got X.
+prsim>> 
+assert failed: expecting node `a' at 1, but got X.
+prsim>> 
+assert failed: expecting node `a' at 0, but got X.
+prsim>> 
+assert failed: expecting node `a' at 1, but got X.
+prsim>> 

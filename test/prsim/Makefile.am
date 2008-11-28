@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.46 2008/11/27 20:34:52 fang Exp $
+#	$Id: Makefile.am,v 1.47 2008/11/28 23:15:13 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -203,7 +203,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	invariant-c-01 invariant-c-02 \
 	invariant-d-01 invariant-d-02 \
 	inv-invariant-01 inv-invariant-02 inv-invariant-03 inv-invariant-04 \
-	assert-fail-01 \
+	assert-fail-01 assert-fail-03 \
 	check-excl-fail-01 check-excl-fail-02 check-excl-fail-03 \
 	check-excl-fail-04 \
 	memstats32-inv memstats64-inv
@@ -214,6 +214,16 @@ memstats64-inv.prsimtest: memstats64-inv.prsimrc
 	$(SKIP_TEST_SCRIPT)
 else
 memstats32-inv.prsimtest: memstats32-inv.prsimrc
+	$(SKIP_TEST_SCRIPT)
+endif
+
+# interactive tests
+if INTERACTIVE_TESTS
+else
+assert-fail-03.prsimtest: assert-fail-03.prsimrc
+	$(SKIP_TEST_SCRIPT)
+
+check-excl-fail-04.prsimtest: check-excl-fail-04.prsimrc
 	$(SKIP_TEST_SCRIPT)
 endif
 
