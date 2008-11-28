@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.19 2008/11/12 03:00:30 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.20 2008/11/28 22:07:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -52,6 +52,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 // #include "Object/traits/proc_traits.h"
 #include "Object/unroll/template_type_completion.tcc"
 #include "Object/unroll/instance_attribute.tcc"
+#include "Object/inst/internal_aliases_policy.tcc"
 
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"

@@ -8,15 +8,21 @@
 @c %**end of header
 
 @c "hac.texi"
-@c $Id: hac.texi,v 1.5 2008/10/07 03:22:15 fang Exp $
+@c $Id: hac.texi,v 1.6 2008/11/28 22:07:05 fang Exp $
 
 @dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
 @direntry
 * Hierarchical Asynchronous Circuits: (hac).  The HAC Language Reference.
 @end direntry
 
+@include hacmacros.texi
+
 @copying
 This manual describes the HAC language specification.
+
+This document can also be found online at @homepagesubref{hac}.
+
+The main project home page is @homepageref{}.
 
 Copyright @copyright{} 2007 Cornell University
 
@@ -55,8 +61,6 @@ Permission is hereby granted to ...
 @top The HAC Language
 @insertcopying
 @end ifnottex
-
-@include hacmacros.texi
 
 @c @copying is recommended here as well
 @menu

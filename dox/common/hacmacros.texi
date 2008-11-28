@@ -1,6 +1,15 @@
 @c "macros.texi"
-@c $Id: hacmacros.texi,v 1.3 2007/10/08 01:20:46 fang Exp $
+@c $Id: hacmacros.texi,v 1.4 2008/11/28 22:07:03 fang Exp $
 @c Eventually share this file across several documents
+
+@c ****************************** macros **************************************
+@macro homepageref
+@url{http://www.csl.cornell.edu/~fang/hackt/}
+@end macro
+
+@macro homepagesubref{page}
+@url{http://www.csl.cornell.edu/~fang/hackt/\page\}
+@end macro
 
 @c ****************************** macros **************************************
 @macro bool

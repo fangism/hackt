@@ -8,16 +8,22 @@
 @c %**end of header
 
 @c "prsim.texi"
-@c $Id: hacprsim.texi,v 1.5 2008/10/30 02:15:10 fang Exp $
+@c $Id: hacprsim.texi,v 1.6 2008/11/28 22:07:06 fang Exp $
 
 @dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
 @direntry
 * HAC PRSIM: (hacprsim).    HAC PRS Simulator.
 @end direntry
 
+@include hacmacros.texi
+
 @copying
 This manual describes the usage and operation of HACKT's @command{prsim} 
 simulator.  
+
+This document can also be found online at @homepagesubref{hacprsim}.
+
+The main project home page is @homepageref{}.
 
 Copyright @copyright{} 2007 Cornell University
 
@@ -56,8 +62,6 @@ Permission is hereby granted to ...
 @top PRSIM Manual Outline
 @insertcopying
 @end ifnottex
-
-@include hacmacros.texi
 
 @c @copying is recommended here as well
 @menu

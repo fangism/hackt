@@ -8,16 +8,25 @@
 @c %**end of header
 
 @c "cast2hac.texi"
-@c $Id: cast2hac.texi,v 1.3 2007/11/26 08:27:18 fang Exp $
+@c $Id: cast2hac.texi,v 1.4 2008/11/28 22:07:00 fang Exp $
 
 @dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
 @direntry
 * CAST to HAC Migration: (cast2hac).    CAST to HAC Migration Guide.
 @end direntry
 
+@c ****************************** macros **************************************
+@include hacmacros.texi
+
+@everyfooting left @| @today{} @| right
+
 @copying
 This document describes language and tool migration from old CAST to
 HAC tools.  
+
+This document can also be found online at @homepagesubref{cast2hac}.
+
+The main project home page is @homepageref{}.
 
 Copyright @copyright{} 2007 Cornell University
 
@@ -36,10 +45,6 @@ Permission is hereby granted to ...
 @vskip 0pt plus 1filll
 @insertcopying
 @end titlepage
-
-@c ****************************** macros **************************************
-@include hacmacros.texi
-@c @include ../common/hacmacros.texi
 
 @c ****************************** contents ************************************
 @shortcontents

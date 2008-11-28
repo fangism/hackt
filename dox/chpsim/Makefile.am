@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2008/03/21 00:19:21 fang Exp $
+#	$Id: Makefile.am,v 1.17 2008/11/28 22:07:01 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -12,11 +12,18 @@ PSS = $(PDFS:.pdf=.ps)
 info_TEXINFOS += hacchpsim.texi
 INFOS = $(TEXINFOS:.texi=.info)
 
+AM_MAKEINFOFLAGS = -I$(srcdir)/../common -I../common
+hacmacros.texi: $(srcdir)/../common/hacmacros.texi
+	$(LN_S) $< $@
+
+CLEANFILES += hacmacros.texi
+
 # install doesn't know how to handle generated html *directory* :(
 # html_DATA = hacchpsim.html
 HTML_HOOKS += hacchpsim.html
 
 hacchpsim_INCLUDES = \
+	hacmacros.texi \
 	intro.texi \
 	usage.texi \
 	commands.texi \
