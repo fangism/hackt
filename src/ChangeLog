@@ -3,7 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2008-11-27	David Fang		<fangism@users.sourceforge.net>
+2008-11-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-68:
+	  prsim/vpi fix: prsim_sync command is now deprecated, 
+		every $prsim_cmd automatically performs queue
+		synchronization conservatively, relieving the user
+		of the burden of having to manually prsim_sync
+		around commands that modify the event_queue.  
+		One test cases fixed, others updated to remove
+		deprecated calls to $prsim_sync.  
+	  sim/command_registry.{h,tcc}: new flag 'external_cosimulation'
+		to prevent user from accidentally issuing forbidden
+		commands during co-simulation, e.g. ones that advance
+		the simulation time or alter breakpoints.  
+
+
+2008-11-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-67:
 	  Added production rule attributes: after_min, after_max
@@ -12,6 +28,8 @@
 		delay values per rule (memstats tests updated).  
 	  Docmented.  Minimally tested. 
 
+
+2008-11-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-66:
 	  State-prsim.cc rewrote one line to work around g++-3.3 ICE-on-valid.

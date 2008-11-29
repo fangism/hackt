@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.5 2008/11/27 11:09:28 fang Exp $
+	$Id: command_registry.h,v 1.6 2008/11/29 23:46:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -122,6 +122,11 @@ public:
 		TODO: use local switch instead?
 	 */
 	static bool			echo_commands;
+	/**
+		Set to true if co-simulating, and thus, should forbid
+		user from manually advancing time with simulation commands.
+	 */
+	static bool			external_cosimulation;
 public:
 	template <class C>
 	static
@@ -159,6 +164,10 @@ public:
 	static
 	bool
 	continue_interpreter(const int _status, const bool);
+
+	static
+	void
+	forbid_cosimulation(const string_list&);	// throw std::exception
 
 	static
 	int

@@ -1,7 +1,7 @@
 /**
 	\file "independent-01.v"
 	Completely decoupled simulations.  
-	$Id: independent-01.v,v 1.2 2008/03/17 23:10:51 fang Exp $
+	$Id: independent-01.v,v 1.3 2008/11/29 23:46:29 fang Exp $
 	Thanks to Ilya Ganusov for contributing this test.
  */
 
@@ -28,15 +28,9 @@ module TOP;
 		$prsim_cmd("watchall");
 	end
 
-	initial #0.050	$prsim_sync();
 	/** schedules to prsim's event queue **/
 	initial #0.050	$prsim_cmd("set _Reset 0");
-	/** but VCS doesn't know about it, so we have to synchronize **/
-	initial #0.050	$prsim_sync();
-
 	initial #0.200	$prsim_cmd("set _Reset 1");
-	initial #0.200	$prsim_sync();
-
 	initial #2 $finish;
 
 /**

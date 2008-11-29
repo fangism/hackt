@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.7 2008/11/27 11:09:28 fang Exp $
+	$Id: command_registry.tcc,v 1.8 2008/11/29 23:46:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -83,6 +83,10 @@ command_registry<Command>::prompt;
 template <class Command>
 bool
 command_registry<Command>::echo_commands = false;
+
+template <class Command>
+bool
+command_registry<Command>::external_cosimulation = false;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Command>
@@ -453,6 +457,24 @@ if (p) {
 	cerr << "Error opening file: \"" << f << '\"' << endl;
 	p.error_msg(cerr) << endl;
 	return Command::BADFILE;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Throws fatal exception when attempting to use such a command
+	in co-simulation mode.  
+ */
+template <class Command>
+void
+command_registry<Command>::forbid_cosimulation(const string_list& cmd) {
+if (external_cosimulation) {
+	cerr <<
+"Error: attempt to use command that explicitly advances co-simulation!\n"
+"cmd: ";
+	copy(cmd.begin(), cmd.end(), ostream_iterator<string>(cerr, " "));
+	cerr << endl;
+	THROW_EXIT;
 }
 }
 

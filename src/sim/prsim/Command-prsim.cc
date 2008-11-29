@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.24 2008/11/29 03:24:51 fang Exp $
+	$Id: Command-prsim.cc,v 1.25 2008/11/29 23:46:26 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -378,6 +378,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
  */
 int
 Step::main(State& s, const string_list& a) {
+	CommandRegistry::forbid_cosimulation(a);
 if (a.size() > 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -528,6 +529,7 @@ step_event_main(State& s, size_t i) {
 
 int
 StepEvent::main(State& s, const string_list& a) {
+	CommandRegistry::forbid_cosimulation(a);
 if (a.size() > 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -573,6 +575,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Advance, "advance", simulation,
 
 int
 Advance::main(State& s, const string_list& a) {
+	CommandRegistry::forbid_cosimulation(a);
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -619,6 +622,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
  */
 int
 Cycle::main(State& s, const string_list& a) {
+	CommandRegistry::forbid_cosimulation(a);
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -1172,6 +1176,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakPt, "breakpt", simulation,
 
 int
 BreakPt::main(State& s, const string_list& a) {
+	CommandRegistry::forbid_cosimulation(a);
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -1215,6 +1220,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPt, "nobreakpt", simulation,
 
 int
 NoBreakPt::main(State& s, const string_list& a) {
+	CommandRegistry::forbid_cosimulation(a);
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -1271,6 +1277,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPtAll, "nobreakptall", simulation,
 
 int
 NoBreakPtAll::main(State& s, const string_list& a) {
+	CommandRegistry::forbid_cosimulation(a);
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;

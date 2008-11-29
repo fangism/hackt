@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.8 2008/11/27 11:09:41 fang Exp $
+	$Id: vpi-prsim.cc,v 1.9 2008/11/29 23:46:27 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -144,6 +144,16 @@ static int scheduled = 0;
   last scheduled _run_prsim_callback. We need to remove it!!! Insane! 
 */
 static vpiHandle last_registered_callback;
+
+static
+PLI_INT32
+prsim_sync(PLI_BYTE8*);
+
+static
+PLI_INT32
+__no_op__(PLI_BYTE8*) {
+	return 1;
+}
 
 //=============================================================================
 // common error routines
@@ -517,12 +527,16 @@ This is needed because some @command{$prsim_cmd} commands may
 introduce new events into the event queue, 
 which requires re-registration of the callback
 function with updated times.  
+
+Update: this command is now deprecated because now all @command{$prsim_cmd}
+calls automatically re-synchronize the event queues, as a conservative measure.
 @end deffn
 @end texinfo
  */
+
 static
-PLI_INT32
-prsim_sync(PLI_BYTE8*) {
+void
+prsim_catch_up(void) {
 	STACKTRACE_VERBOSE;
 	require_prsim_state(__FUNCTION__);
 	const vpiHandle queue = vpi_handle(vpiTimeQueue, NULL);
@@ -561,6 +575,12 @@ prsim_sync(PLI_BYTE8*) {
 		} while (prsim_state->pending_events() &&
 			(prsim_state->next_event_time() <= pcur_time));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PLI_INT32
+prsim_sync(PLI_BYTE8*) {
+	prsim_catch_up();
 	reregister_next_callback();
 #if 0
 	cout << "prsim caught up to time: " << prsim_state->time() << endl;
@@ -935,10 +955,14 @@ require_prsim_state(__FUNCTION__);
     return 0;
   }
 
+	prsim_sync(NULL);
   if (CommandRegistry::interpret_line (*prsim_state, arg.value.str)) {
+	// conservatively, any command might alter event queue
+	prsim_sync(NULL);
 	// return on first error
 	return 0;
   } else {
+	prsim_sync(NULL);
 	return 1;
   }
 }
@@ -1017,6 +1041,8 @@ if (HAC_module) {
 	prsim_state = count_ptr<State>(
 		new State(*HAC_module, ExprAllocFlags()));
 	prsim_state->initialize();
+	// forbid step/advance/cycle commands
+	CommandRegistry::external_cosimulation = true;
 }
 #endif
 
@@ -1251,7 +1277,9 @@ static PLI_INT32 prsim_set (PLI_BYTE8 *args)
   //}
 
   //register_to_prsim (arg1, arg.value.str);
-
+	// reregister_next_callback();
+	prsim_sync(NULL);
+	// because this command alters the event queue
   return 1;
 }
 
@@ -1328,7 +1356,7 @@ static struct funcs f[] = {
   { "$from_prsim", from_prsim },
   { "$prsim", prsim_file },
   { "$prsim_cmd", prsim_cmd },		// one command to rule them all
-  { "$prsim_sync", prsim_sync },
+  { "$prsim_sync", __no_op__ },		// deprecated, should be automatic now
 	// these other commands are not needed, only for convenience
   { "$prsim_status_x", prsim_status_x },
   { "$prsim_set", prsim_set },

@@ -1,7 +1,7 @@
 /**
 	\file "channel-source-sink.v"
 	Chain a source and sink in prsim to verilog.
-	$Id: channel-source-sink.v,v 1.2 2008/03/17 23:10:50 fang Exp $
+	$Id: channel-source-sink.v,v 1.3 2008/11/29 23:46:28 fang Exp $
  */
 
 `timescale 1ns/1ps 
@@ -67,18 +67,13 @@ module TOP;
 		$prsim_cmd("channel-watchall");
 		$prsim_cmd("channel-reset-all");
 		$prsim_cmd("channel-show-all");
-		$prsim_sync();
 		$prsim_cmd("breaks");
 	end
 
 
-	initial #5 $prsim_sync();
 	initial #5 $prsim_cmd("channel-release-all");
 	initial #5 $prsim_cmd("channel-show-all");
-	initial #5 $prsim_sync();
 	initial #6 $prsim_cmd("nowatchall");
-
-	// initial #6 $prsim_sync();
 
 	initial #9 $prsim_cmd("why-not-verbose R.e");
 	initial #9 $prsim_cmd("why-not-verbose R.d[0]");
