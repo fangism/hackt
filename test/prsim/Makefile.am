@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.48 2008/11/29 00:28:43 fang Exp $
+#	$Id: Makefile.am,v 1.49 2008/11/29 03:24:55 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -49,6 +49,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	channel-test-non-QDI-a \
 	stuck-bug-a \
 	crash-bug-01 \
+	after_min_max after_min_max-bad \
 	always_random-a
 
 # TODO: more cross-coupled test cases
@@ -206,6 +207,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	assert-fail-01 assert-fail-03 \
 	check-excl-fail-01 check-excl-fail-02 check-excl-fail-03 \
 	check-excl-fail-04 \
+	after_min_max-01 after_min_max-02 after_min_max-03 \
 	memstats32-inv memstats64-inv
 
 # override defaults for non-matched architectures
@@ -230,6 +232,13 @@ check-excl-fail-04.prsimtest: check-excl-fail-04.prsimrc
 	$(SKIP_TEST_SCRIPT)
 
 check-excl-fail-04.prsimckpttest: check-excl-fail-04.prsimrc
+	$(SKIP_TEST_SCRIPT)
+endif
+
+# non-deterministic tests
+if RANDOM_TESTS
+else
+after_min_max-03.prsimtest: after_min_max-03.prsimrc
 	$(SKIP_TEST_SCRIPT)
 endif
 
@@ -327,6 +336,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	invariant-a-07 invariant-b-07 \
 	assert-fail-02 \
 	check-excl-fail-05 \
+	after_min_max-bad-01 \
 	reschedule-01 reschedule-02 reschedule-03 reschedule-04 reschedule-05 \
 	reschedule-06 reschedule-18
 

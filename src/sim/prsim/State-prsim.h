@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.18 2008/11/27 11:09:39 fang Exp $
+	$Id: State-prsim.h,v 1.19 2008/11/29 03:24:54 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1244,7 +1244,11 @@ public:
 
 	static
 	time_type
-	random_delay(void);
+	uniform_random_delay(void);
+
+	static
+	time_type
+	exponential_random_delay(void);
 
 	time_type
 	next_event_time(void) const;

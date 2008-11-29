@@ -1,6 +1,6 @@
 /**
 	\file "sim/random_time.h"
-	$Id: random_time.h,v 1.3 2008/03/03 21:10:31 sandra Exp $
+	$Id: random_time.h,v 1.4 2008/11/29 03:24:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_RANDOM_TIME_H__
@@ -44,6 +44,7 @@ struct random_time;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Should return positive time in range [0, 2^16).
+	Distribution is an exponential variate.
  */
 template <>
 struct random_time<unsigned short> {
@@ -83,6 +84,7 @@ struct random_time<unsigned short> {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Should return positive time in range [0, 2^16).
+	Distribution is an exponential variate.
  */
 template <>
 struct random_time<double> {

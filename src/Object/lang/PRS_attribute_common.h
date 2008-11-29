@@ -2,7 +2,7 @@
 	\file "Object/lang/PRS_attribute_common.h"
 	Contains base classes for all tool-independent implementations
 	of PRS rule attribute classes.  
-	$Id: PRS_attribute_common.h,v 1.7 2008/10/03 02:04:27 fang Exp $
+	$Id: PRS_attribute_common.h,v 1.8 2008/11/29 03:24:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_COMMON_H__
@@ -40,6 +40,8 @@ struct class_name {							\
 	Delay specification for a single rule.  
  */
 DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(After)
+DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(AfterMin)
+DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(AfterMax)
 
 /**
 	Random Delay Specification for a single rule.

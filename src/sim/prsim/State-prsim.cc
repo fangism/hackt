@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.33 2008/11/28 23:15:12 fang Exp $
+	$Id: State-prsim.cc,v 1.34 2008/11/29 03:24:53 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2047,10 +2047,18 @@ State::help_timing(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 State::time_type
-State::random_delay(void) {
+State::exponential_random_delay(void) {
 	typedef	random_time<random_time_limit<time_type>::type>
 				random_generator_type;
 	return random_generator_type()();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+State::time_type
+State::uniform_random_delay(void) {
+	typedef	random_time<random_time_limit<time_type>::type>
+				random_generator_type;
+	return rand48<time_type>()();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2073,20 +2081,37 @@ if (e.cause_rule) {
 #else
 	r = lookup_rule(e.cause_rule);
 #endif
-return current_time +
-	(timing_mode == TIMING_RANDOM ?
-		(e.cause_rule && time_traits::is_zero(r->after) ?
-			time_traits::zero : ((0x01 << 11)*random_delay()))
-		:
-	(timing_mode == TIMING_UNIFORM ? uniform_delay :
+	time_type delta;
+	if (timing_mode == TIMING_UNIFORM) {
+		delta = uniform_delay;
+	} else if (timing_mode == TIMING_RANDOM ||
+			(r && r->is_always_random())) {
+		const bool after_zero = r && time_traits::is_zero(r->after);
+#if PRSIM_AFTER_RANGE
+		const bool have_min = r && !time_traits::is_zero(r->after_min);
+		const bool have_max = r && !time_traits::is_zero(r->after_max);
+		if (have_max) {
+			if (have_min) {
+				delta = r->after_min +
+					(r->after_max -r->after_min)
+					* uniform_random_delay();
+			} else {
+				delta = r->after_max * uniform_random_delay();
+			}
+		} else {
+#endif
+		delta = after_zero ?
+			time_traits::zero : 
+			((0x01 << 11) * exponential_random_delay());
+#if PRSIM_AFTER_RANGE
+			if (have_min) delta += r->after_min;
+		}
+#endif
+	} else {
 	// timing_mode == TIMING_AFTER
-	//	(e.cause_rule ?
-	//		r->after : 0)
-		(e.cause_rule ?
-			(r->is_always_random() ? 
-				(r->after * random_delay())
-			: r->after) : 0)
-	));
+		delta = r ? r->after : time_traits::zero;
+	}
+	return current_time +delta;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2097,6 +2122,7 @@ return current_time +
 // inline
 State::time_type
 State::get_delay_dn(const event_type& e) const {
+#if 0
 	const rule_type* r = NULL;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 if (e.cause_rule) {
@@ -2109,7 +2135,7 @@ if (e.cause_rule) {
 return current_time +
 	(timing_mode == TIMING_RANDOM ?
 	(e.cause_rule && time_traits::is_zero(r->after) ?
-		time_traits::zero : ((0x01 << 11)*random_delay()))
+		time_traits::zero : ((0x01 << 11)*exponential_random_delay()))
 		:
 	(timing_mode == TIMING_UNIFORM ? uniform_delay :
 	// timing_mode == TIMING_AFTER
@@ -2117,9 +2143,12 @@ return current_time +
 	//		r->after : 0)
 		(e.cause_rule ?
 			(r->is_always_random() ?
-				(r->after * random_delay())
+				(r->after * exponential_random_delay())
 		: r->after) : 0)	
 	));
+#else
+	return get_delay_up(e);		// is identical, actually
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

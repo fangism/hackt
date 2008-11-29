@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/attribute_common.h"
 	Helper functions for common attribute value checking.  
-	$Id: attribute_common.h,v 1.2 2008/10/05 23:00:16 fang Exp $
+	$Id: attribute_common.h,v 1.3 2008/11/29 03:24:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_ATTRIBUTE_COMMON_H__
@@ -36,6 +36,10 @@ check_single_integer(const char*, const attribute_values_type&);
 extern
 good_bool
 check_single_real(const char*, const attribute_values_type&);
+
+extern
+good_bool
+check_delay_value(const char*, const attribute_values_type&);
 
 //=============================================================================
 }	// end namespace attributes

@@ -5,6 +5,14 @@
 
 2008-11-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-67:
+	  Added production rule attributes: after_min, after_max
+		which specify bounds on random delays in hacprsim.
+		Rule structure grew because of storing these new 
+		delay values per rule (memstats tests updated).  
+	  Docmented.  Minimally tested. 
+
+
 	* HACKT-00-01-04-main-00-82-66:
 	  State-prsim.cc rewrote one line to work around g++-3.3 ICE-on-valid.
 	  No real source revision, just configury and testing.

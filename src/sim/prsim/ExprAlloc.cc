@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.31 2008/11/14 23:06:32 fang Exp $
+	$Id: ExprAlloc.cc,v 1.32 2008/11/29 03:24:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -1122,6 +1122,49 @@ After::main(visitor_type& v, const values_type& a) {
 	// assert type cast, b/c already checked
 	r.set_delay(d.is_a<const pint_const>()->static_constant_value());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_AFTER_RANGE
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(AfterMin, "after_min")
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(AfterMax, "after_max")
+
+static
+void
+check_after_min_max(const State::rule_type& r) {
+	if (r.after_max < r.after_min) {
+		cerr << "Error: after_min must be <= after_max! (got: "
+			<< r.after_min << " and " << r.after_max
+			<< ")" << endl;
+		THROW_EXIT;
+	}
+}
+
+void
+AfterMin::main(visitor_type& v, const values_type& a) {
+	typedef	visitor_type::rule_type	rule_type;
+	rule_type& r(v.get_temp_rule());
+	const values_type::value_type& d(a.front());
+	// assert type cast, b/c already checked
+	r.after_min = d.is_a<const pint_const>()->static_constant_value();
+	typedef	State::time_traits	time_traits;
+	if (!time_traits::is_zero(r.after_max)) {
+		check_after_min_max(r);
+	}
+}
+
+void
+AfterMax::main(visitor_type& v, const values_type& a) {
+	typedef	visitor_type::rule_type	rule_type;
+	rule_type& r(v.get_temp_rule());
+	const values_type::value_type& d(a.front());
+	// assert type cast, b/c already checked
+	r.after_max = d.is_a<const pint_const>()->static_constant_value();
+	typedef	State::time_traits	time_traits;
+	if (!time_traits::is_zero(r.after_min)) {
+		check_after_min_max(r);
+	}
+}
+#endif	// PRSIM_AFTER_RANGE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Always_Random, "always_random")

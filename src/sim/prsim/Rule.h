@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.9 2008/11/14 23:06:33 fang Exp $
+	$Id: Rule.h,v 1.10 2008/11/29 03:24:52 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -10,6 +10,11 @@
 #include "sim/time.h"
 #include "util/attributes.h"
 #include "sim/prsim/devel_switches.h"
+
+/**
+	Define to 1 to support bounded delay random timing simulation.
+ */
+#define	PRSIM_AFTER_RANGE		1
 
 namespace HAC {
 namespace SIM {
@@ -48,6 +53,10 @@ public:
 	 */
 #endif
 	time_type			after;
+#if PRSIM_AFTER_RANGE
+	time_type			after_min;
+	time_type			after_max;
+#endif
 	/**
 		Uses rule_enum_type to signal flags.  
 		TODO: move direction bit here from Expr,
@@ -56,6 +65,10 @@ public:
 	short				rule_flags;
 public:
 	Rule() : after(delay_policy<time_type>::default_delay), 
+#if PRSIM_AFTER_RANGE
+		after_min(delay_policy<time_type>::zero), 
+		after_max(delay_policy<time_type>::zero), 
+#endif
 		rule_flags(RULE_DEFAULT_FLAGS) { }
 
 #if PRSIM_RULE_DIRECTION
@@ -116,6 +129,7 @@ public:
 /**
 	Per-rule stateful information.  
 	Nothing new yet.  
+	TODO: one bit coverage flag (ever fired)
  */
 template <typename Time>
 struct RuleState

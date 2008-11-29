@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.23 2008/11/27 11:09:36 fang Exp $
+	$Id: Command-prsim.cc,v 1.24 2008/11/29 03:24:51 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -932,7 +932,7 @@ if (asz != 3) {
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
 		const int err = s.set_node_after(ni, val,
-			State::random_delay(), force);
+			State::exponential_random_delay(), force);
 		return (err < 1) ? Command::NORMAL : Command::BADARG;
 	} else {
 		cerr << "No such node found." << endl;
@@ -3472,6 +3472,20 @@ Modes:
 @t{random} is most useful for detecting non-QDI logic violations.  
 @samp{after} applies a different delay for each rule, as determined
 by the @t{after} PRS rule attribute.  
+
+The @t{after_min} and @t{after_max} rule attributes only have any effect
+in random mode or on nodes marked @t{always_random}.  
+In random-mode, @t{after_min} specifies a lower bound on delay, 
+and @t{after_max} specifies an upper bound on delay.  
+When no upper bound is specified, the delay distribution is an 
+exponential variate; when an upper bound is specified, a delay 
+is generated with uniform distribution between the bounds.  
+If only a lower bound is specified, its value is added to the 
+exponentially distribtued random delay.  
+
+In the future, we may consider distributions that favor the bounds, 
+(e.g. 50% chance of min or max) to stress the limits of the specified delays
+in testing and timing closure.  
 @end deffn
 @end texinfo
 ***/

@@ -1,14 +1,14 @@
 /**
 	\file "Object/lang/PRS_attribute_common.cc"
-	$Id: PRS_attribute_common.cc,v 1.7 2008/10/03 02:04:27 fang Exp $
+	$Id: PRS_attribute_common.cc,v 1.8 2008/11/29 03:24:48 fang Exp $
  */
 
 #include <iostream>
 #include "Object/lang/PRS_attribute_common.h"
 #include "Object/lang/attribute_common.h"
-#include "Object/expr/pint_const.h"
+// #include "Object/expr/pint_const.h"
 // #include "Object/expr/preal_const.h"
-#include "Object/expr/const_param_expr_list.h"
+// #include "Object/expr/const_param_expr_list.h"
 #include "common/TODO.h"
 #include "util/memory/count_ptr.h"
 
@@ -26,21 +26,17 @@ using namespace entity::attributes;
  */
 good_bool
 After::__check_vals(const char* name, const values_type& v) {
-	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
-		cerr << "The \'" << name << "\' attribute requires exactly "
-			"one pint (integer) expression argument." << endl;
-		return good_bool(false);
-	} else {
-		const pint_value_type d =
-			v[0].is_a<const pint_const>()->static_constant_value();
-		if (d < 0) {
-			cerr << "Delay value must be >= 0, but got: " << d
-				<< endl;
-			return good_bool(false);
-		} else {
-			return good_bool(true);
-		}
-	}
+        return check_delay_value(name, v);
+}
+
+good_bool
+AfterMin::__check_vals(const char* name, const values_type& v) {
+        return check_delay_value(name, v);
+}
+
+good_bool
+AfterMax::__check_vals(const char* name, const values_type& v) {
+        return check_delay_value(name, v);
 }
 
 //=============================================================================

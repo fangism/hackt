@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.15 2008/10/07 03:22:23 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.16 2008/11/29 03:24:49 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -89,9 +89,18 @@ namespace cflat_rule_attributes {
 Applies a fixed delay @var{d} to a single rule.
 Affects @command{hflat} output and @command{hacprsim} operation.  
 @end defmac
+
+@defmac after_min d
+@defmacx after_max d
+Specifies upper and lower bounds on delays for a rule.
+The upper bound should be greater than or equal to the lower bound, 
+however, this is not checked here.  
+@end defmac
 @end texinfo
 ***/
 DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(After, "after")
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(AfterMin, "after_min")
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(AfterMax, "after_max")
 
 /**
 	Prints out "after x" before a rule in cflat.  
@@ -102,6 +111,26 @@ After::main(visitor_type& p, const values_type& v) {
 if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 	ostream& o(p.os);
 	o << "after ";
+	v.at(0).is_a<const pint_const>()->dump(o,
+		entity::expr_dump_context::default_value) << '\t';
+}
+}
+
+void
+AfterMin::main(visitor_type& p, const values_type& v) {
+if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
+	ostream& o(p.os);
+	o << "after_min ";
+	v.at(0).is_a<const pint_const>()->dump(o,
+		entity::expr_dump_context::default_value) << '\t';
+}
+}
+
+void
+AfterMax::main(visitor_type& p, const values_type& v) {
+if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
+	ostream& o(p.os);
+	o << "after_max ";
 	v.at(0).is_a<const pint_const>()->dump(o,
 		entity::expr_dump_context::default_value) << '\t';
 }
