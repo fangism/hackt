@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.47 2008/11/28 23:15:13 fang Exp $
+#	$Id: Makefile.am,v 1.48 2008/11/29 00:28:43 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -223,7 +223,13 @@ else
 assert-fail-03.prsimtest: assert-fail-03.prsimrc
 	$(SKIP_TEST_SCRIPT)
 
+assert-fail-03.prsimckpttest: assert-fail-03.prsimrc
+	$(SKIP_TEST_SCRIPT)
+
 check-excl-fail-04.prsimtest: check-excl-fail-04.prsimrc
+	$(SKIP_TEST_SCRIPT)
+
+check-excl-fail-04.prsimckpttest: check-excl-fail-04.prsimrc
 	$(SKIP_TEST_SCRIPT)
 endif
 
