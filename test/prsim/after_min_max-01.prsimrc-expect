@@ -1,0 +1,16 @@
+Fanins of node `b[0]':
+(from [top-level]):
+[after 10]	~a[0] -> b[0]+
+[after 10]	a[0] -> b[0]-
+Fanins of node `b[1]':
+(from [top-level]):
+[after 10 [10, *]]	~a[1] -> b[1]+
+[after 10 [10, *]]	a[1] -> b[1]-
+Fanins of node `b[2]':
+(from [top-level]):
+[after 10 [0, 20]]	~a[2] -> b[2]+
+[after 10 [0, 20]]	a[2] -> b[2]-
+Fanins of node `b[3]':
+(from [top-level]):
+[after 10 [10, 20]]	~a[3] -> b[3]+
+[after 10 [10, 20]]	a[3] -> b[3]-

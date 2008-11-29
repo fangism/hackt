@@ -1,0 +1,9 @@
+// "after_min_max-bad.hac"
+// expect fail on bad delay range
+
+bool a, b;
+
+prs {
+[after_min=20; after_max=10]	a	=> b-
+}
+

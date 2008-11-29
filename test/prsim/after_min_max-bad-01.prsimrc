@@ -1,0 +1,5 @@
+# "after_min_max-bad-01.prsimrc"
+# @haco@ after_min_max-bad.haco-a
+
+echo should die during construction
+

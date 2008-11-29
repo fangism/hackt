@@ -1,0 +1,8 @@
+# "after_min_max-01.prsimrc"
+# @haco@ after_min_max.haco-a
+
+fanin b[0]
+fanin b[1]
+fanin b[2]
+fanin b[3]
+

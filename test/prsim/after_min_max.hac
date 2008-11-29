@@ -1,0 +1,11 @@
+// "after_min_max.hac"
+
+bool a[4], b[4];
+
+prs {
+		a[0]		=> b[0]-
+[after_min=10]	a[1]		=> b[1]-
+[after_max=20]	a[2]		=> b[2]-
+[after_min=10;after_max=20]	a[3]	=> b[3]-
+}
+

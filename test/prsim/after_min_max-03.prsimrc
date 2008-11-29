@@ -1,0 +1,21 @@
+# "after_min_max-01.prsimrc"
+# @haco@ after_min_max.haco-a
+
+watchall
+timing random
+
+echo random sampling...
+
+source after_min_max-02.prsimrc
+source after_min_max-02.prsimrc
+source after_min_max-02.prsimrc
+source after_min_max-02.prsimrc
+source after_min_max-02.prsimrc
+
+source after_min_max-02.prsimrc
+source after_min_max-02.prsimrc
+source after_min_max-02.prsimrc
+source after_min_max-02.prsimrc
+source after_min_max-02.prsimrc
+
+echo --------------------------------

@@ -1,0 +1,3 @@
+Error: after_min must be <= after_max! (got: 20 and 10)
+FATAL: error during prs rule allocation.
+Caught exception during construction of simulator state.
