@@ -79,10 +79,14 @@ function tokenize(str) {
 
 function reset_globals() {
 	type_name = "";
+	port_index = 0;
 	# clear the associative arrays
 	# delete ports;		# not POSIX
 	for (p in ports) {
 		delete ports[p];
+	}
+	for (p in ordered_ports) {
+		delete ordered_ports[p];
 	}
 }
 
@@ -91,7 +95,8 @@ if (tok == "[") {
 	parse_push("expect-range-first");
 } else {
 	if (tok != ";") {
-	if (tok != ",") {
+	# permit declarations like "output reg ..."
+	if (tok != "," && tok != "reg") {
 		if (length(range_first) && length(range_second)) {
 			upper[tok] = range_first;
 			lower[tok] = range_second;
@@ -132,6 +137,8 @@ if (state == "top") {
 } else if (state == "ports-list") {
 	if (tok != ")") {
 	if (tok != ",") {
+		ordered_ports[port_index] = tok;
+		port_index++;
 		ports[tok] = "";	# initialize to unknown direction
 		# technically this isn't really needed
 	} # else ignore commas
@@ -215,17 +222,17 @@ function write_out_wrapper(tmp, u, l) {
 	print "\tparameter prsim_name=\"\";";
 	print "\treg [" max_strlen "*8:1] verilog_name;";
 	printf("\t" type_name " dummy(");
-	i=0;
-	for (p in ports) {
+	# order matters for port fowarding
+	for (i=0; i<port_index; ++i) {
 		if (i!=0) printf(", ");
-		printf(p);
-		++i;
+		printf(ordered_ports[i]);
 	}
 	print ");";
 	print "initial begin";
 	print "#0\t// happens *after* initial";
 	print "\tif (prsim_name != \"\") begin";
 	print "\t$sformat(verilog_name, \"%m\");"
+# this order does not matter
 for (p in ports) {
 	type = ports[p];
 	u = upper[p];

@@ -1,5 +1,13 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.47 2008/10/30 02:15:14 fang Exp $
+#	$Id: ChangeLog,v 1.48 2008/11/30 22:53:46 fang Exp $
+
+2008-11-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-68:
+	  verilog/wrap_verilog_modules_to_hacprsim.awk:
+		added support for buses and ports declared "output reg".
+		Fixed port forwarding to dummy instance to use correct order.
+
 
 2008-10-29	David Fang	<fangism@users.sourceforge.net>
 
