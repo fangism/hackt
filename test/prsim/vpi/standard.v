@@ -2,6 +2,7 @@
 // original verilog definitions (e.g. from vendor's standard cell library)
 
 // two-input and-gate
+`celldefine
 module AND2 (A1, A2, Z);
     input A1, A2;
     output Z;
@@ -11,8 +12,10 @@ module AND2 (A1, A2, Z);
        (A2 => Z)=(5, 3);
     endspecify
 endmodule
+`endcelldefine
 
 // two-input or gate
+`celldefine
 module OR2 (A1, A2, Z);
     input A1, A2;
     output Z;
@@ -22,8 +25,10 @@ module OR2 (A1, A2, Z);
        (A2 => Z)=(6, 4);
     endspecify
 endmodule
+`endcelldefine
 
 // an array/bus test
+`celldefine
 module bus_array_test(CLK, A, B, C, D, E, F, G, H);
 	input		CLK;
 	input 		A;
@@ -42,4 +47,5 @@ begin
 	H <= D;
 end
 endmodule
+`endcelldefine
 

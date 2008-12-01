@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-12-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-69:
+	  prsim: added -D time command line option to override the
+		default after delay.
+	  vpi-prsim: new command $prsim_default_after(<Int>) to 
+		override default after delay in co-simulation, 
+		use this command *before* loading the object file.
+	  Documented, and tested.
+
+
 2008-11-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-68:

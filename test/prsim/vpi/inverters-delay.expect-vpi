@@ -1,0 +1,62 @@
+$start of simulation 
+at time   0.000, observed in 0
+at time   0.125, observed out = 1
+at time   1.000, observed in 1
+at time   1.125, observed out = 0
+at time   2.000, observed in 0
+at time   2.125, observed out = 1
+at time   3.000, observed in 1
+at time   3.125, observed out = 0
+at time   4.000, observed in 0
+at time   4.125, observed out = 1
+at time   5.000, observed in 1
+at time   5.125, observed out = 0
+at time   6.000, observed in 0
+at time   6.125, observed out = 1
+at time   7.000, observed in 1
+at time   7.125, observed out = 0
+at time   8.000, observed in 0
+at time   8.125, observed out = 1
+at time   9.000, observed in 1
+at time   9.125, observed out = 0
+at time  10.000, observed in 0
+at time  10.125, observed out = 1
+at time  11.000, observed in 1
+at time  11.125, observed out = 0
+at time  12.000, observed in 0
+at time  12.125, observed out = 1
+at time  13.000, observed in 1
+at time  13.125, observed out = 0
+at time  14.000, observed in 0
+at time  14.125, observed out = 1
+at time  15.000, observed in 1
+at time  15.125, observed out = 0
+at time  16.000, observed in 0
+at time  16.125, observed out = 1
+at time  17.000, observed in 1
+at time  17.125, observed out = 0
+at time  18.000, observed in 0
+at time  18.125, observed out = 1
+at time  19.000, observed in 1
+at time  19.125, observed out = 0
+at time  20.000, observed in 0
+at time  20.125, observed out = 1
+at time  21.000, observed in 1
+at time  21.125, observed out = 0
+at time  22.000, observed in 0
+at time  22.125, observed out = 1
+at time  23.000, observed in 1
+at time  23.125, observed out = 0
+at time  24.000, observed in 0
+at time  24.125, observed out = 1
+at time  25.000, observed in 1
+at time  25.125, observed out = 0
+at time  26.000, observed in 0
+at time  26.125, observed out = 1
+at time  27.000, observed in 1
+at time  27.125, observed out = 0
+at time  28.000, observed in 0
+at time  28.125, observed out = 1
+at time  29.000, observed in 1
+at time  29.125, observed out = 0
+$finish at simulation time   30.0 ns

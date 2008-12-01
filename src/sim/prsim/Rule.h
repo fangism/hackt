@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.10 2008/11/29 03:24:52 fang Exp $
+	$Id: Rule.h,v 1.11 2008/12/01 20:27:37 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -44,6 +44,12 @@ class Rule {
 	}	rule_enum_type;
 public:
 	typedef	Time			time_type;
+	/**
+		Mutable value for default delay. 
+		To take effect, this value must be changed before 
+		state allocation.  
+	 */
+	static	time_type		default_unspecified_delay;
 #if PRSIM_WEAK_RULES
 	/**
 		Since each rule is maintained separately, 
@@ -64,7 +70,7 @@ public:
 	 */
 	short				rule_flags;
 public:
-	Rule() : after(delay_policy<time_type>::default_delay), 
+	Rule() : after(default_unspecified_delay), 
 #if PRSIM_AFTER_RANGE
 		after_min(delay_policy<time_type>::zero), 
 		after_max(delay_policy<time_type>::zero), 

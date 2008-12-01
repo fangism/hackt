@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.9 2008/11/29 23:46:27 fang Exp $
+	$Id: vpi-prsim.cc,v 1.10 2008/12/01 20:27:38 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -41,6 +41,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/inttypes.h"
 #include "util/c_decl.h"
 #include "util/stacktrace.h"
+#include "util/utypes.h"
 
 #ifndef	WIN32
 #define	WIN32	0
@@ -144,6 +145,16 @@ static int scheduled = 0;
   last scheduled _run_prsim_callback. We need to remove it!!! Insane! 
 */
 static vpiHandle last_registered_callback;
+
+/**
+	Wrapper around vpi_printf that casts away constness
+	for an incorrect prototype.
+ */
+static
+PLI_INT32
+vpi_puts_c(const char* str) {
+	return vpi_printf(const_cast<PLI_BYTE8*>(str));
+}
 
 static
 PLI_INT32
@@ -848,12 +859,13 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
   vpiHandle net1, net2;
   s_vpi_value arg;
   string arg1;
+  static const char usage[] = "Usage: $to_prsim(vcs-name, prsim-name)\n";
 
   task_call = vpi_handle (vpiSysTfCall, NULL);
   h = vpi_iterate (vpiArgument, task_call);
   net1 = vpi_scan (h);
   if (!net1) {
-    vpi_printf ("Usage: $to_prsim(vcs-name, prsim-name)\n");
+    vpi_puts_c (usage);
     return 0;
   }
   arg.format = vpiStringVal;
@@ -863,7 +875,7 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
 
   net2 = vpi_scan (h);
   if (!net2) {
-    vpi_printf ("Usage: $to_prsim(vcs-name, prsim-name)\n");
+    vpi_puts_c (usage);
     return 0;
   }
   arg.format = vpiStringVal;
@@ -874,7 +886,7 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
 #endif
 
   if (vpi_scan (h)) {
-    vpi_printf ("Usage: $to_prsim(vcs-name, prsim-name)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -891,12 +903,13 @@ static PLI_INT32 from_prsim (PLI_BYTE8 *args)
   vpiHandle net1, net2;
   s_vpi_value arg;
   string arg1;
+  static const char usage[] = "Usage: $from_prsim(prsim-name, vcs-name)\n";
 
   task_call = vpi_handle (vpiSysTfCall, NULL);
   h = vpi_iterate (vpiArgument, task_call);
   net1 = vpi_scan (h);
   if (!net1) {
-    vpi_printf ("Usage: $from_prsim(prsim-name,vcs-name)\n");
+    vpi_puts_c (usage);
     return 0;
   }
   arg.format = vpiStringVal;
@@ -906,14 +919,14 @@ static PLI_INT32 from_prsim (PLI_BYTE8 *args)
 
   net2 = vpi_scan (h);
   if (!net2) {
-    vpi_printf ("Usage: $from_prsim(prsim-name,vcs-name)\n");
+    vpi_puts_c (usage);
     return 0;
   }
   arg.format = vpiStringVal;
   vpi_get_value (net2, &arg);
 
   if (vpi_scan (h)) {
-    vpi_printf ("Usage: $from_prsim(prsim-name, vcs-name)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -939,19 +952,20 @@ static PLI_INT32 prsim_cmd (PLI_BYTE8* args)
 {
   STACKTRACE_VERBOSE;
   s_vpi_value arg;
+  static const char usage[] = "Usage: $prsim_cmd(prsim-command)\n";
 require_prsim_state(__FUNCTION__);
   const vpiHandle task_call = vpi_handle (vpiSysTfCall, NULL);
   const vpiHandle h = vpi_iterate (vpiArgument, task_call);
   const vpiHandle net1 = vpi_scan (h);
   if (!net1) {
-    vpi_printf ("Usage: $prsim_cmd(prsim-command)\n");
+    vpi_puts_c (usage);
     return 0;
   }
   arg.format = vpiStringVal;
   vpi_get_value (net1, &arg);
 
   if (vpi_scan (h)) {
-    vpi_printf ("Usage: $prsim_cmd(prsim-command)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -972,19 +986,20 @@ static PLI_INT32 prsim_watch (PLI_BYTE8* args)
 {
   STACKTRACE_VERBOSE;
   s_vpi_value arg;
+  static const char usage[] = "Usage: $prsim_watch(prsim-name)\n";
 
   const vpiHandle task_call = vpi_handle (vpiSysTfCall, NULL);
   const vpiHandle h = vpi_iterate (vpiArgument, task_call);
   const vpiHandle net1 = vpi_scan (h);
   if (!net1) {
-    vpi_printf ("Usage: $prsim_watch(prsim-name)\n");
+    vpi_puts_c (usage);
     return 0;
   }
   arg.format = vpiStringVal;
   vpi_get_value (net1, &arg);
 
   if (vpi_scan (h)) {
-    vpi_printf ("Usage: $prsim_watch(prsim-name)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -1008,18 +1023,19 @@ static PLI_INT32 prsim_file (PLI_BYTE8* args)
 {
   STACKTRACE_VERBOSE;
   s_vpi_value arg;
+  static const char usage[] = "Usage: $prsim(filename)\n";
   const vpiHandle task_call = vpi_handle (vpiSysTfCall, NULL);
   const vpiHandle h = vpi_iterate (vpiArgument, task_call);
   const vpiHandle fname = vpi_scan (h);
   if (!fname) {
-    vpi_printf ("Usage: $prsim(filename)\n");
+    vpi_puts_c (usage);
     return 0;
   }
   arg.format = vpiStringVal;
   vpi_get_value (fname, &arg);
 
   if (vpi_scan (h)) {
-    vpi_printf ("Usage: $prsim(filename)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 #if 0
@@ -1062,20 +1078,21 @@ static PLI_INT32 prsim_random (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
   s_vpi_value arg;
+  static const char usage[] = "Usage: $prsim_mkrandom(1 or 0)\n";
 
   require_prsim_state(__FUNCTION__);
   const vpiHandle task_call = vpi_handle (vpiSysTfCall, NULL);
   const vpiHandle h = vpi_iterate (vpiArgument, task_call);
   const vpiHandle fname = vpi_scan (h);
   if (!fname) {
-    vpi_printf ("Usage: $prsim_mkrandom(1 or 0)\n");
+    vpi_puts_c (usage);
     return 0;
   }
   arg.format = vpiIntVal;
   vpi_get_value (fname, &arg);
 
   if (vpi_scan (h)) {
-    vpi_printf ("Usage: $prsim_mkrandom(1 or 0)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -1109,20 +1126,21 @@ static PLI_INT32 prsim_resetmode (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
   s_vpi_value arg;
+  static const char usage[] = "Usage: $prsim_resetmode(1 or 0)\n";
 
   require_prsim_state(__FUNCTION__);
   const vpiHandle task_call = vpi_handle (vpiSysTfCall, NULL);
   const vpiHandle h = vpi_iterate (vpiArgument, task_call);
   const vpiHandle fname = vpi_scan (h);
   if (!fname) {
-    vpi_printf ("Usage: $prsim_resetmode(1 or 0)\n");
+    vpi_puts_c (usage);
     return 0;
   }
   arg.format = vpiIntVal;
   vpi_get_value (fname, &arg);
 
   if (vpi_scan (h)) {
-    vpi_printf ("Usage: $prsim_resetmode(1 or 0)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -1158,6 +1176,7 @@ static PLI_INT32 prsim_status_x (PLI_BYTE8 *args)
   vpiHandle h;
   vpiHandle fname;
   s_vpi_value arg;
+  static const char usage[] = "Usage: $prsim_status(1 or 0 or U)\n";
 
 #if 0
   if (!prsim_state) {
@@ -1171,14 +1190,14 @@ static PLI_INT32 prsim_status_x (PLI_BYTE8 *args)
   h = vpi_iterate (vpiArgument, task_call);
   fname = vpi_scan (h);
   if (!fname) {
-    vpi_printf ("Usage: $prsim_status(1 or 0 or U)\n");
+    vpi_puts_c (usage);
     return 0;
   }
   arg.format = vpiIntVal;
   vpi_get_value (fname, &arg);
 
   if (vpi_scan (h)) {
-    vpi_printf ("Usage: $prsim_status(1 or 0 or U)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -1222,13 +1241,14 @@ static PLI_INT32 prsim_set (PLI_BYTE8 *args)
   vpiHandle fname;
   // PrsNode *n;
   value_enum val;
+  static const char usage[] = "Usage: $prsim_set(prsim-name, val)\n";
   require_prsim_state(__FUNCTION__);
 
   task_call = vpi_handle (vpiSysTfCall, NULL);
   h = vpi_iterate (vpiArgument, task_call);
   net1 = vpi_scan (h);
   if (!net1) {
-    vpi_printf ("Usage: $prsim_set(prsim-name, val)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -1239,7 +1259,7 @@ static PLI_INT32 prsim_set (PLI_BYTE8 *args)
 
   fname = vpi_scan (h);
   if (!fname) {
-    vpi_printf ("Usage: $prsim_set(prsim-name, val)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -1247,7 +1267,7 @@ static PLI_INT32 prsim_set (PLI_BYTE8 *args)
   vpi_get_value (fname, &arg);
 
   if (vpi_scan (h)) {
-    vpi_printf ("Usage: $prsim_set(prsim-name, val)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -1303,13 +1323,14 @@ static PLI_INT32 prsim_get (PLI_BYTE8 *args)
   // vpiHandle fname;
   // PrsNode *n;
   // int val;
+  static const char usage[] = "Usage: $prsim_get(prsim-name)\n";
 
   require_prsim_state(__FUNCTION__);
   task_call = vpi_handle (vpiSysTfCall, NULL);
   h = vpi_iterate (vpiArgument, task_call);
   net1 = vpi_scan (h);
   if (!net1) {
-    vpi_printf ("Usage: $prsim_get(prsim-name)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -1319,7 +1340,7 @@ static PLI_INT32 prsim_get (PLI_BYTE8 *args)
   arg1 = arg.value.str;
 
   if (vpi_scan (h)) {
-    vpi_printf ("Usage: $prsim_set(prsim-name, val)\n");
+    vpi_puts_c (usage);
     return 0;
   }
 
@@ -1345,6 +1366,54 @@ static PLI_INT32 prsim_get (PLI_BYTE8 *args)
   return 1;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo vpi/prsim_default_after.texi
+@deffn Function $prsim_default_after time
+Set the default delay for unspecified rules to @var{time}, 
+in @command{hacprsim}'s time units (unitless).
+This is analogous to the command-line @option{-D time} option.  
+This command should be invoked @emph{before} loading the 
+object file (@command{$prsim()}) that initializes the state of the simulation.  
+@end deffn
+@end texinfo
+***/
+static
+PLI_INT32
+prsim_default_after(PLI_BYTE8 *args) {
+  STACKTRACE_VERBOSE;
+  vpiHandle task_call;
+  vpiHandle h;
+  vpiHandle fname;
+  s_vpi_value arg;
+  static const char usage[] = "Usage: $prsim_default_after(<Int>)\n";
+
+  // require_prsim_state(__FUNCTION__);		// doesn't require state
+
+  task_call = vpi_handle (vpiSysTfCall, NULL);
+  h = vpi_iterate (vpiArgument, task_call);
+  fname = vpi_scan (h);
+  if (!fname) {
+    vpi_puts_c (usage);
+    return 0;
+  }
+  arg.format = vpiIntVal;
+  vpi_get_value (fname, &arg);
+  if (arg.value.integer < 0) {
+    vpi_printf ("Error: delay value must be non-negative!");
+    return 0;
+  }
+  State::rule_type::default_unspecified_delay = arg.value.integer;
+
+  if (vpi_scan (h)) {
+	// excess arguments
+    vpi_puts_c (usage);
+    return 0;
+  }
+
+  return 1;
+}
+
 //=============================================================================
 struct funcs {
   char *name;
@@ -1355,6 +1424,7 @@ static struct funcs f[] = {
   { "$to_prsim", to_prsim },
   { "$from_prsim", from_prsim },
   { "$prsim", prsim_file },
+  { "$prsim_default_after", prsim_default_after },
   { "$prsim_cmd", prsim_cmd },		// one command to rule them all
   { "$prsim_sync", __no_op__ },		// deprecated, should be automatic now
 	// these other commands are not needed, only for convenience

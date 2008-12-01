@@ -1,0 +1,16 @@
+# "after-override-01.prsimrc"
+# @haco@ inv.haco-a
+# @hacprsim-flags@ -D 666
+
+watchall
+timing after
+
+fanout a
+fanin b
+fanin c
+
+set a 0
+cycle
+set a 1
+cycle
+

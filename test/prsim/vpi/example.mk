@@ -30,7 +30,8 @@ include $(pkgdatadir)/mk/hackt.mk
 .vx.vx-log:
 	$(VPI_ENV) ./$< > $@ 2>&1
 
-all: inverters.vx shoelace.vx channel-source-sink.vx and_tree.vx
+all: inverters.vx inverters-delay.vx \
+	shoelace.vx channel-source-sink.vx and_tree.vx
 
 # special cases
 and_tree.vx: and_tree.v standard.v-wrap pli.tab
@@ -39,6 +40,7 @@ and_tree.vx: and_tree.v standard.v-wrap pli.tab
 
 # extra deps
 inverters.vx-log: inverters.haco-a
+inverters-delay.vx-log: inverters.haco-a
 shoelace.vx-log: inverters.haco-a
 channel-source-sink.vx-log: channel-source-sink.haco-a
 and_tree.vx-log: and_tree.haco-a
@@ -47,7 +49,8 @@ pli.tab:
 	echo "acc=wn:*" > $@
 
 # .NOTPARALLEL: check
-check: inverters.vx-log shoelace.vx-log channel-source-sink.vx-log and_tree.vx-log
+check: inverters.vx-log inverters-delay.vx-log \
+	shoelace.vx-log channel-source-sink.vx-log and_tree.vx-log
 	cat $^
 #	for f in $^ ; do cat $$f ; done
 

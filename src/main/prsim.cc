@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.19 2008/11/27 11:09:24 fang Exp $
+	$Id: prsim.cc,v 1.20 2008/12/01 20:27:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -251,7 +251,7 @@ try {
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+a:bcC:d:f:hiI:O:t:";
+	static const char optstring[] = "+a:bcC:d:D:f:hiI:O:t:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -300,6 +300,8 @@ as opposed to an object file.
 @texinfo opt/option-C-upper.texi
 @defopt -C options
 When input is a source file, forward @var{options} to the compiler driver.  
+@strong{NOTE:} This feature does not work yet, 
+due to non-reentrant @command{getopt()}.  
 @end defopt
 @end texinfo
 ***/
@@ -323,6 +325,23 @@ Print textual dump of prsim checkpoint file @var{ckpt}.
 					"\" for reading." << endl;
 			}
 			State::dump_checkpoint(cout, f);
+			break;
+		}
+/***
+@texinfo opt/option-D-upper.texi
+@defopt -D time
+Override the default delay value applied to unspecified rules.  
+@end defopt
+@end texinfo
+***/
+		case 'D': {
+			State::time_type t;
+			if (string_to_num(optarg, t)) {
+				cerr << "Invalid delay value: " <<
+					optarg << "." << endl;
+				return 1;
+			}
+			State::rule_type::default_unspecified_delay = t;
 			break;
 		}
 /***

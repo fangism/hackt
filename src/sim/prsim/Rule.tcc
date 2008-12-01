@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.tcc"
-	$Id: Rule.tcc,v 1.5 2008/11/29 03:24:53 fang Exp $
+	$Id: Rule.tcc,v 1.6 2008/12/01 20:27:37 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_TCC__
@@ -13,6 +13,11 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 //=============================================================================
+template <class Time>
+Time
+Rule<Time>::default_unspecified_delay = delay_policy<time_type>::default_delay;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Dump it.  
  */

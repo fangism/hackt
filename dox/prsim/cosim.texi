@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: cosim.texi,v 1.4 2008/11/05 23:03:12 fang Exp $
+@c $Id: cosim.texi,v 1.5 2008/12/01 20:27:32 fang Exp $
 
 @node Co-simulation
 @chapter Co-simulation
@@ -168,6 +168,7 @@ to circuits in @command{hacprsim}.
 There are other useful functions in the @command{hacprsim} VPI library.
 
 @include vpi/prsim_cmd.texi
+@include vpi/prsim_default_after.texi
 @include vpi/prsim_sync.texi
 @include vpi/prsim_set.texi
 @include vpi/prsim_get.texi

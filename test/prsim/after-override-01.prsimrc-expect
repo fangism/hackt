@@ -1,0 +1,18 @@
+Fanouts of node `a':
+(to I):
+[after 666]	a -> b-
+[after 666]	~a -> b+
+Fanins of node `b':
+(from I):
+[after 666]	~a -> b+
+[after 666]	a -> b-
+Fanins of node `c':
+(from J):
+[after 666]	~b -> c+
+[after 666]	b -> c-
+	0	a : 0
+	666	b : 1	[by a:=0]
+	1332	c : 0	[by b:=1]
+	1332	a : 1
+	1998	b : 0	[by a:=1]
+	2664	c : 1	[by b:=0]
