@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.29 2008/11/23 17:53:10 fang Exp $
+	$Id: README,v 1.30 2008/12/02 07:59:03 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -83,6 +83,7 @@ Unsupported versions of flex:
 	2.5.33 -- fails -Wundef (__STDC_VERSION__) and -Werror (signed comp.)
 		workaround: pass -Wno-error to CXXFLAGS at configure-time
 		but WORST of all, after workarounds, lexing crashes horribly.
+	2.5.35 -- after workarounds, crashes on normal input
 Unsupported versions of yacc (skeleton): 1.9 (1993)
 
 Other required tools:

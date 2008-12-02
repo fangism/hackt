@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2008-12-01	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-70:
+	  config/lexyacc.m4, README: warn against flex 2.5.35 :(
+
+
 2008-11-27	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-66:

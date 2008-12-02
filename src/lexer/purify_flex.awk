@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.10 2008/03/21 00:20:19 fang Exp $
+#	$Id: purify_flex.awk,v 1.11 2008/12/02 07:59:08 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -261,7 +261,7 @@ function append_call_args(str, arg) {
 		$0 = replace_proto_params($0, state_decl);
 	} else if (match($0, "yy_get_next_buffer\\([ ]*\\)")) {
 		# rewrite this function call
-		gsub("buffer\\(.*\\)[^)]", "buffer(" name ")", $0);
+		gsub("buffer\\([^)]*\\)", "buffer(" name ")", $0);
 	} else if (match($0, "static yy_state_type yy_get_previous_state(.*)")) {
 		# need to rewrite prototype of this function
 		$0 = replace_proto_params($0, state_decl);
@@ -360,8 +360,10 @@ function append_call_args(str, arg) {
 	} else if (match($0, "void yyensure_buffer_stack(.*)")) {
 		# (2.5.31 only)
 		$0 = replace_proto_params($0, state_decl);
-	} else if (match($0, "yyensure_buffer_stack(.*)")) {
-		# (2.5.31 only)
+	} else if (match($0, "yyensure_buffer_stack(.*)") && 
+		!match($0, "YY_FATAL_ERROR")) {
+		# (2.5.31+ only)
+		# (2.5.35: be careful not to catch inside a error msg string)
 		$0 = replace_call_args($0, name);
 	} else if (match($0, "void yypush_buffer_state(.*)")) {
 		# (2.5.31 only)
@@ -447,6 +449,10 @@ function append_call_args(str, arg) {
 	} else if (match($0, "yy_init_globals(.*)")) {
 		# (2.5.33 only)
 		$0 = replace_call_args($0, name);
+	} else if (match($0, "size_t.*num_to_read[ ]*);")) {
+		# (2.5.35 only): remove incorrect cast to unsigned
+		# which triggers sign comparison warning (false positive)
+		gsub("\\(size_t\\)", "", $0);
 	}
 	str = $0;
 	# ignore .yy, and ->yy

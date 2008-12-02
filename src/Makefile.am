@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.204 2008/11/27 11:09:21 fang Exp $
+#	$Id: Makefile.am,v 1.205 2008/12/02 07:59:07 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1372,6 +1372,7 @@ lexer/flex_buffer_state.h: lexer/$(HACKT_LEX_ROOT)-real.cc
 	$(ECHO) "#ifndef	__LEXER_FLEX_BUFFER_STATE_H__" ; \
 	$(ECHO) "#define	__LEXER_FLEX_BUFFER_STATE_H__" ; \
 	$(ECHO) "#include \"util/FILE_fwd.h\"" ; \
+	$(ECHO) "#include \"util/size_t.h\"" ; \
 	$(SED) -n '/STRUCT_BUFFER_STATE/,/STRUCT_BUFFER_STATE/p' $< ; \
 	$(ECHO) "#endif	// __LEXER_FLEX_BUFFER_STATE_H__" ; } > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`

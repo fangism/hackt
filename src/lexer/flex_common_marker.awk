@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "lexer/flex_common_marker.awk"
-#	$Id: flex_common_marker.awk,v 1.2 2008/03/21 00:20:04 fang Exp $
+#	$Id: flex_common_marker.awk,v 1.3 2008/12/02 07:59:08 fang Exp $
 # annotate lex.yy.cc source into sections for consumption
 # to be made suitable for extracting common functions.
 
@@ -81,6 +81,13 @@ function flush_saved_lines( \
 
 # patch section 2b begin:
 /cannot portably get our hands on size_t/ {
+	print begin_buffer_state;
+	++patch_count;
+	++insert_mark_level;
+}
+
+# patch section 2c begin: for flex-2.5.35
+/#ifndef.*YY_TYPEDEF_YY_SIZE_T/ {
 	print begin_buffer_state;
 	++patch_count;
 	++insert_mark_level;
@@ -324,6 +331,7 @@ END {
 	if (insert_mark_level) {
 		print "ERROR: mark insertions were not balanced: " \
 			insert_mark_level;
+		exit(1);
 	}
 	if (patch_count != 29 && patch_count != 28) {
 		# && patch_count != 28
