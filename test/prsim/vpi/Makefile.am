@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2008/12/01 20:27:40 fang Exp $
+#	$Id: Makefile.am,v 1.7 2008/12/03 05:32:21 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -17,6 +17,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	inverters inverters-delay shoelace \
 	interleave-a interleave-b interleave-c \
+	oscillator-fanout \
 	independent-01 \
 	channel-source-sink \
 	and_tree
@@ -75,7 +76,8 @@ CLEANFILES += Makefile.copy pli.tab
 EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	inverters.hac inverters.v inverters-delay.v shoelace.v \
 	channel-source-sink.hac channel-source-sink.v \
-	and_tree.hac and_tree.v standard.v
+	and_tree.hac and_tree.v standard.v \
+	oscillator.hac oscillator-fanout.v
 EXTRA_DIST += $(EXAMPLE_DATA_FILES)
 vpiinv_DATA = $(EXAMPLE_DATA_FILES) Makefile.copy
 

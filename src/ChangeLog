@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-12-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-71:
+	  Critical vpi-prsim.cc bug fix:
+		prsim nodes that were connected to multiple Verilog node
+		fanouts via $from_prsim() were not properly propagating
+		value to all fanouts because the vpiHandleMap only
+		registered single handles.  Fix: maintain set of handles.
+	  Test case added to test/prsim/vpi/oscillator-fanout.
+
+
 2008-12-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-70:

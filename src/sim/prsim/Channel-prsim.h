@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.8 2008/11/27 11:09:35 fang Exp $
+	$Id: Channel-prsim.h,v 1.9 2008/12/03 05:32:17 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -19,6 +19,7 @@
 #include <vector>
 #include "sim/common.h"
 #include "Object/expr/types.h"
+#include "sim/time.h"
 #include "sim/prsim/Exception.h"
 #include "sim/prsim/enums.h"
 #include "util/utypes.h"
@@ -53,6 +54,15 @@
 #define	PRSIM_CHANNEL_SET			0
 
 /**
+	Define to 1 to enable channel-timing features.  
+	This enables channels to use separate timing policies
+	from the global policy.  
+	A single delay value will be associated per channel, 
+	so a source/sink on the same channel will use the same value.
+ */
+#define	PRSIM_CHANNEL_TIMING			0
+
+/**
 	An option to treat a vector of nodes as a bus.
 	Useful for synchronous bus interfaces.  
  */
@@ -75,6 +85,9 @@ class channel;
 class channel_manager;
 
 typedef	node_index_type				channel_index_type;
+#if	PRSIM_CHANNEL_TIMING
+typedef	real_time				channel_time_type;
+#endif
 
 /**
 	pair: node_index, next value

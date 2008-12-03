@@ -1,14 +1,16 @@
 #!/usr/bin/awk -f
 # "lexer/flex_common_marker.awk"
-#	$Id: flex_common_marker.awk,v 1.3 2008/12/02 07:59:08 fang Exp $
+#	$Id: flex_common_marker.awk,v 1.4 2008/12/03 05:32:16 fang Exp $
 # annotate lex.yy.cc source into sections for consumption
 # to be made suitable for extracting common functions.
 
 # Rationale: a diff-style patch was not sufficient to cover multiple versions 
 # of flex, so a more intelligent patch method was required.  
 # validated against flex versions:
-# 2.5.4
-# 2.5.33
+# 2.5.4 (works, supported)
+# 2.5.31 (works, supported)
+# 2.5.33 (patch works, but runtime craches!)
+# 2.5.35 (patch works, but runtime craches!)
 
 # this actually does some fake C-preprocessing
 # by keeping track of levels of nesting.

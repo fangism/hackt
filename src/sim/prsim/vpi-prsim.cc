@@ -1,12 +1,10 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.10 2008/12/01 20:27:38 fang Exp $
+	$Id: vpi-prsim.cc,v 1.11 2008/12/03 05:32:18 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
 /*************************************************************************
- *  Copyright (c) 2007 Achronix Semiconductor
- *  All Rights Reserved
  *  Id: vpi_prsim.c,v 1.3 2007/11/26 19:20:02 rajit Exp
  **************************************************************************
  */
@@ -27,6 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <cstdio>
 #include <cctype>
 #include <map>
+#include <set>
 #include <iostream>
 #include <sstream>
 #include "sim/prsim/State-prsim.h"
@@ -65,6 +64,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+using std::set;
 using std::ostringstream;
 #include "util/using_ostream.h"
 using parser::parse_node_to_index;
@@ -74,11 +74,12 @@ using util::strings::eat_whitespace;
 typedef	State::time_type		Time_t;
 typedef	State::node_type		node_type;
 
+typedef	set<vpiHandle>			vpiHandleSetType;
 /**
 	Spare map for keeping track of vpiHandles per node.
 	Could use a hash_map too, if we cared...
  */
-typedef	std::map<node_index_type, vpiHandle>	vpiHandleMapType;
+typedef	std::map<node_index_type, set<vpiHandle> >	vpiHandleMapType;
 
 //=============================================================================
 static vpiHandleMapType			vpiHandleMap;
@@ -363,7 +364,7 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
     const node_type& n(prsim_state->get_node(ni));
     const node_index_type m = GET_CAUSE(nr);
     const Time_t prsim_time = prsim_state->time();
-    const vpiHandleMapType::iterator
+    const vpiHandleMapType::const_iterator
 	n_space(vpiHandleMap.find(ni)),
 	n_end(vpiHandleMap.end());
     // "n_space" in honor of the abuse of a certain void* PrsNode::*space
@@ -380,7 +381,6 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 	}
     if (n.is_breakpoint() && (n_space != n_end)) {
 	STACKTRACE("breakpt && registered");
-      s_vpi_value v;
       s_vpi_time tm;
 
       const Time_t prsdiff = prsim_time - vcstime;
@@ -388,7 +388,13 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
       tm.type = vpiSimTime;
       prs_to_vcstime (&tm, &prsdiff);
       /* aha, schedule an event into the vcs queue */
-      const vpiHandle& net = n_space->second;
+      const vpiHandleSetType& net_set(n_space->second);
+      vpiHandleSetType::const_iterator
+	net_iter(net_set.begin()), net_end(net_set.end());
+      INVARIANT(net_iter != net_end);	// must be at least 1
+for ( ; net_iter != net_end; ++net_iter) {
+      const vpiHandle& net(*net_iter);
+      s_vpi_value v;
       v.format = vpiScalarVal;
       INVARIANT(net);
 #if VERBOSE_DEBUG
@@ -398,19 +404,19 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
       switch (n.current_value()) {
       case LOGIC_HIGH:
 #if VERBOSE_DEBUG
-	vpi_printf ("Set net %s (%x) to TRUE\n", nodename, net);
+	vpi_printf ("Set net %s (0x%x) to TRUE\n", nodename, net);
 #endif
 	v.value.scalar = vpi1;
 	break;
       case LOGIC_LOW:
 #if VERBOSE_DEBUG
-	vpi_printf ("Set net %s (%x) to FALSE\n", nodename, net);
+	vpi_printf ("Set net %s (0x%x) to FALSE\n", nodename, net);
 #endif
 	v.value.scalar = vpi0;
 	break;
       case LOGIC_OTHER:
 #if VERBOSE_DEBUG
-	vpi_printf ("Set net %s (%x) to X\n", nodename, net);
+	vpi_printf ("Set net %s (0x%x) to X\n", nodename, net);
 #endif
 	v.value.scalar = vpiX;
 	break;
@@ -432,9 +438,10 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
       // vpi_free_object (vpi_put_value (net, &v, &tm, vpiPureTransportDelay));
       vpi_free_object (vpi_put_value (net, &v, &tm, vpiNoDelay));
 	// Q: shouldn't control return immediately to VCS?
-	break;
 	// experimenting shows that this makes no difference!? both work
 	// WHY?
+}	// end for each fanout to VPI
+	break;	// from while loop
     }
     else if (n.is_breakpoint() && (n_space == n_end)) {
 	STACKTRACE("breakpt && unregistered");
@@ -785,8 +792,8 @@ void register_from_prsim (const char *vcs_name, const char *prsim_name)
 #if 0
   n->space = (void *)net;
 #else
-	// TODO: check for existence first?
-	vpiHandleMap[ni] = net;
+	vpiHandleMap[ni].insert(net);
+	// support multiple unique Handles
 #endif
 }
 
@@ -970,14 +977,18 @@ require_prsim_state(__FUNCTION__);
   }
 
 	prsim_sync(NULL);
-  if (CommandRegistry::interpret_line (*prsim_state, arg.value.str)) {
+  switch (CommandRegistry::interpret_line (*prsim_state, arg.value.str)) {
+  case command_error_codes::FATAL:
+	THROW_EXIT;	// abort
+  case command_error_codes::NORMAL:
+  case command_error_codes::END:
 	// conservatively, any command might alter event queue
 	prsim_sync(NULL);
-	// return on first error
-	return 0;
-  } else {
-	prsim_sync(NULL);
 	return 1;
+  default:
+	// return on first error
+	prsim_sync(NULL);
+	return 0;
   }
 }
 

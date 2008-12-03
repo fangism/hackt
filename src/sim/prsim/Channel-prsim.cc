@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.10 2008/11/27 11:09:33 fang Exp $
+	$Id: Channel-prsim.cc,v 1.11 2008/12/03 05:32:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -504,7 +504,7 @@ if (valid_signal) {
 		}
 	}
 	if (maybe_externally_driven) {
-		cerr << "Channel source may not operator properly, "
+		cerr << "Channel source may not operate properly, "
 			"if driven from elsewhere." << endl;
 	}
 	return false;
@@ -531,7 +531,7 @@ channel::set_sink(const State& s) {
 		cerr << "Warning: channel acknowledge `" << name <<
 			(get_ack_active() ? ".a" : ".e") <<
 			"\' already has fanin!\n"
-			"Channel sink may not operator properly, "
+			"Channel sink may not operate properly, "
 			"if driven from elsewhere." << endl;
 	}
 if (valid_signal) {

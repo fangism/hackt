@@ -1,6 +1,6 @@
 # "Make.test-vpi"
 #	vi: ft=automake
-#	$Id: Make.test-vpi,v 1.4 2008/10/30 02:15:22 fang Exp $
+#	$Id: Make.test-vpi,v 1.5 2008/12/03 05:32:19 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -53,6 +53,7 @@ AM_VCS_VPI_FLAGS = +vpi \
 	-use_vpiobj $(VPI_LIB_PATH)/$(LTDL_OBJDIR)/vpihacprsim.so \
 	-LDFLAGS="-L$(VPI_LIB_PATH)/$(LTDL_OBJDIR)" 
 AM_VCS_FLAGS = +incdir+$(srcdir) $(COMMON_VCS_FLAGS) -Mdir=$@.csrc
+AM_PLI_FLAGS =
 
 # for install-time tests, use installed library, not the built one
 INSTALLCHECK_VCS_VPI_FLAGS = +vpi \
@@ -62,12 +63,13 @@ INSTALLCHECK_VCS_VPI_FLAGS = +vpi \
 # because compilation is done in a temporary subdirectory
 # the generated Makefiles have a variable named $(VSRC) that could be used...
 INSTALLCHECK_VCS_FLAGS = +incdir+$(srcdir) $(COMMON_VCS_FLAGS) -Mdir=$$@.csrc
+INSTALLCHECK_PLI_FLAGS =
 
 # create simulation executable
 # '+' connects child make (vcs) to parent's jobserver
 .v.vx:
 if HAVE_VPI
-	+$(VCS_ENV) $(VCS) $(AM_VCS_FLAGS) $(AM_VCS_VPI_FLAGS) -o $@ $<
+	+$(VCS_ENV) $(VCS) $(AM_VCS_FLAGS) $(AM_VCS_VPI_FLAGS) $(AM_PLI_FLAGS) -o $@ $<
 else
 	@$(ECHO) "VPI not explicitly enabled during configure."
 endif
@@ -79,7 +81,8 @@ endif
 # post-install tests!
 .v.vxi:
 if HAVE_VPI
-	+$(VCS_ENV) $(VCS) $(INSTALLCHECK_VCS_FLAGS) $(INSTALLCHECK_VCS_VPI_FLAGS) -o $@ $<
+	+$(VCS_ENV) $(VCS) $(INSTALLCHECK_VCS_FLAGS) \
+		$(INSTALLCHECK_VCS_VPI_FLAGS) $(INSTALLCHECK_PLI_FLAGS) -o $@ $<
 else
 	@$(ECHO) "VPI not explicitly enabled during configure."
 endif

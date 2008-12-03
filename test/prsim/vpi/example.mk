@@ -14,14 +14,15 @@ VCS_ENV =
 VCS_FLAGS = @vcs_flags@
 VPI_FLAGS = @vpi_flags@
 VPI_ENV = @vpi_env@
-PLI_FLAGS = -P pli.tab
+PLI_FLAGS =
+MORE_PLI_FLAGS = $(PLI_FLAGS) -P pli.tab
 
 .SUFFIXES: .v .vx .vx-log .v-wrap
 
 include $(pkgdatadir)/mk/hackt.mk
 
 .v.vx:
-	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) -o $@ $<
+	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(PLI_FLAGS) -o $@ $<
 
 .v.v-wrap:
 	{ echo "\`include \"$<\"" ; echo "" ; \
@@ -30,12 +31,12 @@ include $(pkgdatadir)/mk/hackt.mk
 .vx.vx-log:
 	$(VPI_ENV) ./$< > $@ 2>&1
 
-all: inverters.vx inverters-delay.vx \
+all: inverters.vx inverters-delay.vx oscillator-fanout.vx \
 	shoelace.vx channel-source-sink.vx and_tree.vx
 
 # special cases
 and_tree.vx: and_tree.v standard.v-wrap pli.tab
-	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(PLI_FLAGS) -o $@ $<
+	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(MORE_PLI_FLAGS) -o $@ $<
 
 
 # extra deps
@@ -44,12 +45,13 @@ inverters-delay.vx-log: inverters.haco-a
 shoelace.vx-log: inverters.haco-a
 channel-source-sink.vx-log: channel-source-sink.haco-a
 and_tree.vx-log: and_tree.haco-a
+oscillator-fanout.vx-log: oscillator.haco-a
 
 pli.tab:
 	echo "acc=wn:*" > $@
 
 # .NOTPARALLEL: check
-check: inverters.vx-log inverters-delay.vx-log \
+check: inverters.vx-log inverters-delay.vx-log oscillator-fanout.vx-log \
 	shoelace.vx-log channel-source-sink.vx-log and_tree.vx-log
 	cat $^
 #	for f in $^ ; do cat $$f ; done
