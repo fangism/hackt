@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.28 2008/03/17 23:01:57 fang Exp $
+#	$Id: Make.stddef,v 1.29 2008/12/04 21:27:08 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -36,6 +36,7 @@ SORT = @SORT@
 TAIL = @TAIL@
 TEE = @TEE@
 TEA = $(TEE) -a
+TR = @TR@
 PASTE = @PASTE@
 PATCH = @PATCH@
 PWD = @PWD@
@@ -88,8 +89,8 @@ DISTHOOK_CLEANFILES =
 
 # yeah, stupid place to put a globally useful script, move it later...
 # WARNING: don't put spaces in file names!
-# SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
-SPACES_TO_NEWLINE = $(AWK) '{gsub("[ \t]+","\n"); print;}'
+# SPACES_TO_NEWLINE = $(AWK) '{gsub("[ \t]+","\n"); print;}'
+SPACES_TO_NEWLINE = $(TR) '[:blank:]' '\n'
 
 # to accumulate and generate automatic .cvsignore
 # we've provided some project wide definitions in Make.global

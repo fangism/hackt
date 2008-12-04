@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.186 2008/11/28 23:15:05 fang Exp $
+#	$Id: configure.ac,v 1.187 2008/12/04 21:27:09 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -67,6 +67,7 @@ AC_CHECK_PROG([PASTE], paste, paste)
 AC_CHECK_PROG([HEAD], head, head)
 AC_CHECK_PROG([TAIL], tail, tail)
 AC_CHECK_PROG([TEE], tee, tee)
+AC_CHECK_PROG([TR], tr, tr)
 # AC_CHECK_PROG([PWD], pwd, pwd)
 #	checking for PWD doesn't work as expected...
 AC_CHECK_PROG([SED], sed, sed)

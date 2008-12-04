@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2008-12-04	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-71+:
+	  configure.ac: check for tr
+	  Make.stddef: use tr to convert spaces to newlines
+	  fixed a few test dependencies
+
+
 2008-12-01	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-70:

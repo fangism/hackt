@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.51 2008/12/03 05:32:20 fang Exp $
+#	$Id: Makefile.am,v 1.52 2008/12/04 21:27:10 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -285,10 +285,12 @@ channel-dont-cares.txt:
 # override default
 autosave-01.prsimckpt: autosave-01.prsimrcfail-out
 	@:
-# extra dep
-cbit_test_stat-01.prsimrc-out: cbit_test_stat.haco-a
-cbit_test_stat-01.prsimckpt: cbit_test_stat.haco-a
-cbit_test_stat-01.prsimckpt-O1: cbit_test_stat.haco-a
+# extra deps
+# cbit_test_stat-01.prsimrc-out: cbit_test_stat.haco-a
+# cbit_test_stat-01.prsimckpt: cbit_test_stat.haco-a
+# cbit_test_stat-01.prsimckpt-O1: cbit_test_stat.haco-a
+# generated tests needs to be built before auto-dependencies
+prsimrc-out.autodepend: $(srcdir)/cbit_test_stat-01.prsimrc
 
 CLEANFILES += cbit_test_stat-01.prsimrc \
 	channel-test-a-values-X.txt \
