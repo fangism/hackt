@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.32 2008/10/30 02:15:15 fang Exp $
+#	$Id: Makefile.am,v 1.33 2008/12/07 03:25:33 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -51,6 +51,7 @@ dist_katesyn_DATA = \
 CLEANFILES += hac.vimrc
 
 dist_bin_SCRIPTS = \
+	scripts/prsim_timed_backtrace.awk \
 	verilog/wrap_verilog_modules_to_hacprsim.awk
 
 EXTRA_DIST += README \
