@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.52 2008/12/04 21:27:10 fang Exp $
+#	$Id: Makefile.am,v 1.53 2008/12/07 00:27:11 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -11,6 +11,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem inv oscillator half-celem deep tree interference \
 	invs inv-invariant \
 	invariant-a invariant-b invariant-c invariant-d \
+	invariant-not-X \
 	oscillator-wrong \
 	interference-a interference-b \
 	inv-alt unused \
@@ -50,6 +51,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	stuck-bug-a \
 	crash-bug-01 \
 	after_min_max after_min_max-bad \
+	non-CMOS-a \
 	always_random-a
 
 # TODO: more cross-coupled test cases
@@ -211,6 +213,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	after_min_max-01 after_min_max-02 after_min_max-03 \
 	memstats32-inv memstats64-inv
 
+# temporarily quarantined tests: ISE with -O1
+#	invariant-not-X-01
+#	non-CMOS-a-01 non-CMOS-a-02
+
 # override defaults for non-matched architectures
 if ABI_ILP32
 memstats64-inv.prsimtest: memstats64-inv.prsimrc
@@ -286,9 +292,6 @@ channel-dont-cares.txt:
 autosave-01.prsimckpt: autosave-01.prsimrcfail-out
 	@:
 # extra deps
-# cbit_test_stat-01.prsimrc-out: cbit_test_stat.haco-a
-# cbit_test_stat-01.prsimckpt: cbit_test_stat.haco-a
-# cbit_test_stat-01.prsimckpt-O1: cbit_test_stat.haco-a
 # generated tests needs to be built before auto-dependencies
 prsimrc-out.autodepend: $(srcdir)/cbit_test_stat-01.prsimrc
 

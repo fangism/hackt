@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.12 2008/11/07 02:42:32 fang Exp $
+	$Id: ExprAlloc.h,v 1.13 2008/12/07 00:27:09 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -15,6 +15,12 @@
 #include <map>
 #endif
 
+/**
+	Define to 1 to try to use simple allocation traversal
+	without peeling out top-level process separately.  
+ */
+#define	PRSIM_SIMPLE_ALLOC			0
+
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
@@ -22,6 +28,8 @@ class State;
 class unique_process_subgraph;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 using std::map;
+using entity::global_entry;
+using entity::process_tag;
 #endif
 using entity::state_manager;
 using entity::PRS::footprint_rule;
@@ -38,12 +46,17 @@ using entity::cflat_context_visitor;
 class ExprAlloc : public cflat_context_visitor {
 public:
 	typedef	State					state_type;
+	typedef	cflat_context_visitor			parent_type;
 	typedef	state_type::expr_struct_type		expr_struct_type;
 	typedef	state_type::expr_state_type		expr_state_type;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	expr_struct_type			expr_type;
 	typedef	unique_process_subgraph			unique_type;
-	typedef	map<const entity::PRS::footprint*, size_t>
+#if PRSIM_SIMPLE_ALLOC
+	typedef	map<const entity::footprint*, process_index_type>
+#else
+	typedef	map<const entity::PRS::footprint*, process_index_type>
+#endif
 						process_footprint_map_type;
 #else
 	typedef	state_type::node_type			node_type;
@@ -132,6 +145,11 @@ protected:
 	visit(const state_manager&);
 
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+#if PRSIM_SIMPLE_ALLOC
+	void
+	visit(const global_entry<process_tag>&);
+#endif
+
 	void
 	visit(const entity::PRS::footprint&);
 #endif
@@ -176,7 +194,15 @@ public:
 	lookup_global_bool_id(const node_index_type ni) const {
 		// works without catching pid=0 (top-level)
 		// b/c we populated its frame map with identity indices
+#if PRSIM_SIMPLE_ALLOC
+	if (current_process_index) {
 		return __lookup_global_bool_id(ni);
+	} else {
+		return __lookup_global_bool_id(ni) +1;
+	}
+#else
+		return __lookup_global_bool_id(ni);
+#endif
 	}
 
 	// these public functions are really only intended for

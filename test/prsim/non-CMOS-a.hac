@@ -1,0 +1,17 @@
+// "non-CMOS-a.hac"
+// reduced from "invariant-not-X.hac"
+// reduced test case
+// ICE with hacprsim -O1 (optimization bug?)
+// prsim> invariants .
+// prsim> rules .
+
+bool b, c;
+
+spec {
+	$(~b | b)
+}
+
+prs {
+	~b | b -> c-
+}
+

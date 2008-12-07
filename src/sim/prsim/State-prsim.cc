@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.34 2008/11/29 03:24:53 fang Exp $
+	$Id: State-prsim.cc,v 1.35 2008/12/07 00:27:09 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -548,10 +548,15 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// if top-level process is empty, will need to replace this entry!
 #endif
 	// top-level prs in the module, pid=0
+#if !PRSIM_SIMPLE_ALLOC
 	STACKTRACE_INDENT_PRINT("top-level process ..." << endl);
 	const footprint& topfp(mod.get_footprint());
 	topfp.get_prs_footprint().accept(v);	// throw?
 	topfp.get_spec_footprint().accept(v);	// throw?
+	// ALERT: when is compact_expr_pool() called!? (hint: before SPEC)
+#else
+	// fold into state_manager's visit
+#endif
 #endif
 	// this may throw an exception!
 try {
@@ -1471,6 +1476,13 @@ State::kill_event(const event_index_type ei, const node_index_type ni) {
 node_index_type
 State::load_enqueue_event(const time_type t, const event_index_type ei) {
 	INVARIANT(ei);
+#if 1
+	// keep this on for now b/c VPI co-sim seems to trip this a lot
+	if (UNLIKELY(!(t >= current_time))) {
+		cerr << "FATAL: attempt to schedule event in the past!" << endl;
+		cerr << "\tnew: " << t << " vs. now: " << current_time << endl;
+	}
+#endif
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
 		" at time " << t << endl);

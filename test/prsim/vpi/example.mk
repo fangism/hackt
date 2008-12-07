@@ -22,7 +22,7 @@ MORE_PLI_FLAGS = $(PLI_FLAGS) -P pli.tab
 include $(pkgdatadir)/mk/hackt.mk
 
 .v.vx:
-	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(PLI_FLAGS) -o $@ $<
+	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(PLI_FLAGS) -o $@ $< && touch $@
 
 .v.v-wrap:
 	{ echo "\`include \"$<\"" ; echo "" ; \
@@ -36,7 +36,7 @@ all: inverters.vx inverters-delay.vx oscillator-fanout.vx \
 
 # special cases
 and_tree.vx: and_tree.v standard.v-wrap pli.tab
-	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(MORE_PLI_FLAGS) -o $@ $<
+	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(MORE_PLI_FLAGS) -o $@ $< && touch $@
 
 
 # extra deps

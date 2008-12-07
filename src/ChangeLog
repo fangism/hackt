@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-12-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-72:
+	  Print more informative diagnostic when scheduling invalid event
+		in the past, b/c VCS cosimulation trips it a lot.  
+	  hacprsim: Initial markup for simplifying allocation pass.
+	  NOTE: discovered new bug with hacprsim -O1, reduced tests
+		quarantined in test/prsim/non-CMOS-*.  
+
+
 2008-12-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-71:

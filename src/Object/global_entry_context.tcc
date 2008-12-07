@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.tcc"
-	$Id: global_entry_context.tcc,v 1.3 2008/11/05 23:03:23 fang Exp $
+	$Id: global_entry_context.tcc,v 1.4 2008/12/07 00:27:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
@@ -26,6 +26,8 @@ template <class Tag>
 size_t
 global_entry_context::lookup_global_id(const size_t lni) const {
 	INVARIANT(lni);
+	// ALERT: some back ends now populate the footprint_frame_pointer
+	// for the top-level process, which invalidates this conditional :S
 	if (fpf) {
 		return footprint_frame_transformer(*fpf, Tag())(lni);
 	} else {

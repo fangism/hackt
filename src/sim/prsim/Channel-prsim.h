@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.9 2008/12/03 05:32:17 fang Exp $
+	$Id: Channel-prsim.h,v 1.10 2008/12/07 00:27:08 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -29,6 +29,7 @@
 #include "util/numeric/sign_traits.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
 
+// old perm'd switches
 // #define	PRSIM_CHANNEL_VALIDITY			1
 // #define	PRSIM_CHANNEL_DONT_CARES		1
 

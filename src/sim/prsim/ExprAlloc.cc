@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.32 2008/11/29 03:24:52 fang Exp $
+	$Id: ExprAlloc.cc,v 1.33 2008/12/07 00:27:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -194,11 +194,15 @@ register_ExprAlloc_spec_class(void) {
 	NOTE: 0 is an invalid index to the state's expr_pool.  
  */
 ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
-		cflat_context_visitor(), 
+		parent_type(), 
 		state(_s),
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		g(NULL), 
+#if PRSIM_SIMPLE_ALLOC
+		current_process_index(size_t(-1)), 
+#else
 		current_process_index(0), 
+#endif
 		total_exprs(FIRST_VALID_GLOBAL_EXPR), 	// non-zero!
 		process_footprint_map(), 	// empty
 #else
@@ -219,7 +223,15 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 void
 ExprAlloc::visit(const state_manager& _sm) {
 	STACKTRACE_VERBOSE;
-	cflat_visitor::visit(_sm);
+#if PRSIM_SIMPLE_ALLOC
+	STACKTRACE_INDENT_PRINT("top-level process ..." << endl);
+	const entity::global_entry_pool<entity::process_tag>&
+		proc_entry_pool(_sm.get_pool<entity::process_tag>());
+	// relies on module::populate_top_footprint_frame()
+	proc_entry_pool[0].accept(*this);	// b/c state_manager skips [0]
+#endif
+	STACKTRACE_INDENT_PRINT("instantiated processes ..." << endl);
+	parent_type::visit(_sm);
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 	state.finish_process_type_map();	// finalize indices to pointers
 #else
@@ -235,9 +247,55 @@ ExprAlloc::visit(const state_manager& _sm) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_INDIRECT_EXPRESSION_MAP
+#if PRSIM_SIMPLE_ALLOC
+/**
+	Only visit once per type!
+ */
+void
+ExprAlloc::visit(const entity::PRS::footprint& pfp) {
+	STACKTRACE_VERBOSE;
+#if 0
+	state.unique_process_pool.push_back(unique_process_subgraph());
+	unique_process_subgraph& u(state.unique_process_pool.back());
+	const util::value_saver<unique_process_subgraph*> tmp(g, &u);
+	// resize the faninout_struct array as if it were local nodes
+	// kludgy way of inferring the correct footprint
+	u.local_faninout_map.resize(node_pool_size);
+#endif
+	parent_type::visit(pfp);	// visit rules/macros/exprs
+#if PRSIM_INVARIANT_RULES
+	{
+	using entity::PRS::PRS_footprint_expr_pool_type;
+	using entity::PRS::footprint;
+	typedef footprint::invariant_pool_type::const_iterator
+						const_iterator;
+	// const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
+	const footprint::invariant_pool_type& ip(pfp.invariant_pool);
+	const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
+	const expr_pool_setter __p(*this, ep);
+	NEVER_NULL(expr_pool);
+	const_iterator i(ip.begin()), e(ip.end());
+	for ( ; i!=e; ++i) {
+		// construct invariant expression
+	//	ep[*i].accept(*this);
+		visit(ep[*i]);
+		link_invariant_expr(ret_ex_index);
+	}
+	}
+#endif
+#if 0
+	// definitely want to keep this
+	if (flags.any_optimize() && expr_free_list.size()) {
+		compact_expr_pools();
+	}
+#endif
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Lookup this PRS_footprint in the address map.
-	If this is the irst time this type is visited, then allocate
+	If this is the first time this type is visited, then allocate
 	appropriate structures uniquely for this type.  
 	Then all subsequent references to this type can just reference
 	this and need no further allocation.  
@@ -247,10 +305,21 @@ ExprAlloc::visit(const state_manager& _sm) {
 		any expressions or rules, from the unique_process_pool.
  */
 void
-ExprAlloc::visit(const entity::PRS::footprint& pfp) {
+#if PRSIM_SIMPLE_ALLOC
+ExprAlloc::visit(const global_entry<process_tag>& gp)
+#else
+ExprAlloc::visit(const entity::PRS::footprint& pfp)
+#endif
+{
 	STACKTRACE_VERBOSE;
+//	++current_process_index;
 	// also set up proper unique_process references
 	typedef	process_footprint_map_type::const_iterator	const_iterator;
+#if PRSIM_SIMPLE_ALLOC
+	const entity::footprint* const fp(gp._frame._footprint);
+#else
+	const entity::PRS::footprint* const fp(&pfp);
+#endif
 	const module& m(state.get_module());
 	// this now works for pid=0, top-level
 	const entity::footprint_frame_map_type&
@@ -260,17 +329,19 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	const node_index_type node_pool_size = bmap.size();
 	STACKTRACE_INDENT_PRINT("node_pool_size = " << node_pool_size << endl);
 	size_t type_index;	// unique process type index
-	const const_iterator f(process_footprint_map.find(&pfp));
+	const const_iterator f(process_footprint_map.find(fp));
 	if (f == process_footprint_map.end()) {
 		STACKTRACE_INDENT_PRINT("first time with this type" << endl);
 		type_index = state.unique_process_pool.size();
-		process_footprint_map[&pfp] = type_index;
+		process_footprint_map[fp] = type_index;
 		state.unique_process_pool.push_back(unique_process_subgraph());
 		unique_process_subgraph& u(state.unique_process_pool.back());
 		const util::value_saver<unique_process_subgraph*> tmp(g, &u);
 		// resize the faninout_struct array as if it were local nodes
 		// kludgy way of inferring the correct footprint
 		u.local_faninout_map.resize(node_pool_size);
+#if !PRSIM_SIMPLE_ALLOC
+		// const entity::PRS::footprint& pfp(fp->get_prs_footprint());
 		cflat_visitor::visit(pfp);
 #if PRSIM_INVARIANT_RULES
 		{
@@ -291,6 +362,19 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 			link_invariant_expr(ret_ex_index);
 		}
 		}
+#endif
+#else
+#if 1
+		// problem: spec directives are still global, not per-process
+		const entity::PRS::footprint& pfp(fp->get_prs_footprint());
+		// cflat_visitor::visit(pfp);
+		pfp.accept(*this);
+#else
+		// use this once spec rings, etc. have been moved 
+		// into process subgraphs
+		parent_type::visit(gp);
+#endif
+		// should cover PRS and SPEC footprint
 #endif
 		// definitely want to keep this
 		if (flags.any_optimize() && expr_free_list.size()) {
@@ -326,6 +410,11 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	STACKTRACE_INDENT_PRINT("has " << pxs << " exprs" << endl);
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	INVARIANT(!state.global_expr_process_id_map.empty());
+#endif
+#if PRSIM_SIMPLE_ALLOC
+	// problem: spec directives are still global, not per-process
+	const entity::SPEC::footprint& sfp(fp->get_spec_footprint());
+	sfp.accept(*this);
 #endif
 if (pxs) {
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP

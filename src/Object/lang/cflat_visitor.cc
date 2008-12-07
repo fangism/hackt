@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.11 2008/11/05 23:03:35 fang Exp $
+	$Id: cflat_visitor.cc,v 1.12 2008/12/07 00:27:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -96,7 +96,7 @@ cflat_visitor::visit(const global_entry<process_tag>& e) {
 	const cflat_context::footprint_frame_setter
 		tmp(IS_A(cflat_context&, v), e._frame);
 	pfp.accept(v);
-
+// TODO: traverse CHP?
 // traverse SPEC directives
 	const SPEC::footprint&
 		sfp(f->get_spec_footprint());
