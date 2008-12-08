@@ -66,14 +66,14 @@ WARNING: weak-interference `bar.b'
 >> cause: `a' (val: X)
 WARNING: weak-interference `c'
 >> cause: `bar.b' (val: X)
-Warning: possible invariant violation: (a:X | bar.b:X | c:X<X>) by node c:X
+Warning: possible invariant violation in bar: (a:X | bar.b:X | c:X<X>) by node c:X
 WARNING: weak-interference `bq.b'
 >> cause: `c' (val: X)
 WARNING: weak-interference `e'
 >> cause: `bq.b' (val: X)
-Warning: possible invariant violation: (c:X | bq.b:X | e:X<X>) by node e:X
-Warning: possible invariant violation: (a:X | bar.b:X | c:X<X>)
-Warning: possible invariant violation: (c:X | bq.b:X | e:X<X>)
+Warning: possible invariant violation in bq: (c:X | bq.b:X | e:X<X>) by node e:X
+Warning: possible invariant violation in bar: (a:X | bar.b:X | c:X<X>)
+Warning: possible invariant violation in bq: (c:X | bq.b:X | e:X<X>)
 process: bar
 $(a:X | bar.b:X | c:X<X>)
 process: bq

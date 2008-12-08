@@ -1,5 +1,5 @@
 	0	a : 1
-Warning: possible invariant violation: (a:X) by node a:X
+Warning: possible invariant violation in [top-level]: (a:X) by node a:X
 	0	a : X
 checking invariants... 
-Warning: possible invariant violation: (a:X)
+Warning: possible invariant violation in [top-level]: (a:X)

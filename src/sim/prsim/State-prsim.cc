@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.35 2008/12/07 00:27:09 fang Exp $
+	$Id: State-prsim.cc,v 1.36 2008/12/08 21:38:11 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -360,6 +360,8 @@ process_sim_state::check_invariants(ostream& o, const State& st) const {
 	typedef	unique_process_subgraph::rule_map_type::const_iterator
 						const_iterator;
 	const_iterator i(pg.rule_map.begin()), e(pg.rule_map.end());
+	const string pn(st.get_process_canonical_name(
+		st.lookup_process_index(*this)));
 	for ( ; i!=e; ++i) {
 		const rule_type& r(pg.rule_pool[i->second]);
 	if (r.is_invariant()) {
@@ -367,11 +369,12 @@ process_sim_state::check_invariants(ostream& o, const State& st) const {
 		switch (expr_states[lei].pull_state(pg.expr_pool[lei])) {
 		case PULL_OFF:
 			ret |= true;
-			o << "Error: invariant violation: (";
+			o << "Error: invariant violation in " << pn << ": (";
 			dump_subexpr(o, lei, st, true) << ')' << endl;
 			break;
 		case PULL_WEAK:
-			o << "Warning: possible invariant violation: (";
+			o << "Warning: possible invariant violation in "
+				<< pn << ": (";
 			dump_subexpr(o, lei, st, true) << ')' << endl;
 			break;
 		default: break;
@@ -3481,9 +3484,11 @@ if (!r.is_invariant()) {
 		const bool halt =
 			((fail && invariant_fail_policy >= ERROR_BREAK) ||
 			(maybe && invariant_unknown_policy >= ERROR_BREAK));
+		const string pn(get_process_canonical_name(
+			lookup_process_index(ps)));
 		cerr << (halt ? "Error: " : "Warning: ") <<
 			(maybe ? "possible " : "" ) <<
-			"invariant violation: (";
+			"invariant violation in " << pn << ": (";
 		ps.dump_subexpr(cerr, ri, *this, true);	// always verbose
 		dump_node_canonical_name(cerr << ") by node ", ni) << ':' <<
 			node_type::value_to_char[size_t(node_val)] << endl;

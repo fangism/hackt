@@ -1,5 +1,5 @@
 	0	a : 1
-Error: invariant violation: (b:0) by node b:0
+Error: invariant violation in [top-level]: (b:0) by node b:0
 	10	b : 0	[by a:=1]
 event queue:
 	20	c : 1	[from b:=0]

@@ -10,6 +10,6 @@ WARNING: weak-interference `b'
 WARNING: weak-interference `c'
 >> cause: `b' (val: X)
 	50	b : X	[by a:=X]
-Warning: possible invariant violation: (a:X | b:X | c:X<X>) by node c:X
+Warning: possible invariant violation in [top-level]: (a:X | b:X | c:X<X>) by node c:X
 	60	c : X	[by b:=X]
-Warning: possible invariant violation: (a:X | b:X | c:X<X>)
+Warning: possible invariant violation in [top-level]: (a:X | b:X | c:X<X>)
