@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.10 2008/12/07 00:27:08 fang Exp $
+	$Id: Channel-prsim.h,v 1.11 2008/12/09 22:11:32 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -226,16 +226,21 @@ private:
 		 */
 		CHANNEL_STOPPED =		0x0100,
 		/**
+			Set to true to ignore channel values for
+			logging, and expecting.  (But watching not masked.)
+		 */
+		CHANNEL_IGNORED =		0x0200,
+		/**
 			Random values, infinite sequence, 
 			override value sequence.
 			Only useful for sources really.
 		 */
-		CHANNEL_RANDOM = 		0x0200,
+		CHANNEL_RANDOM = 		0x0400,
 		/**
 			If true, print all valid channel values
 			in the data-valid state.  
 		 */
-		CHANNEL_WATCHED =		0x0400,
+		CHANNEL_WATCHED =		0x0800,
 		/// default initial value
 		CHANNEL_DEFAULT_FLAGS = 	0x0000
 	};
@@ -442,6 +447,15 @@ public:
 
 	void
 	unwatch(void) { flags &= ~CHANNEL_WATCHED; }
+
+	bool
+	ignored(void) const { return flags & CHANNEL_IGNORED; }
+
+	void
+	ignore(void) { flags |= CHANNEL_IGNORED; }
+
+	void
+	heed(void) { flags &= ~CHANNEL_IGNORED; }
 
 private:
 	bool
@@ -653,6 +667,19 @@ public:
 	bool
 	log_channel(const string&, const string&);
 
+	// TODO: reduce these functions to take channel::*function
+	channel*
+	lookup(const string&);
+
+	const channel*
+	lookup(const string&) const;
+
+	bool
+	apply_one(const string&, void (channel::*)(void));
+
+	void
+	apply_all(void (channel::*)(void));
+
 	bool
 	close_channel(const string&);
 
@@ -688,6 +715,18 @@ public:
 
 	void
 	unwatch_all_channels(void);
+
+	bool
+	ignore_channel(const string&);
+
+	void
+	ignore_all_channels(void);
+
+	bool
+	heed_channel(const string&);
+
+	void
+	heed_all_channels(void);
 
 	void
 	process_node(const State&, const node_index_type, 

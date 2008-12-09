@@ -1,0 +1,23 @@
+channels:
+L : .e(init:0) 1x1of2 off
+R : .e(init:0) 1x1of2 off
+sending 1s 
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 1
+channel	R (.data) : 1
+stopping channel R, sending 0 
+channel	L (.data) : 0
+channel	R (.data) : 0
+R has not ack'd yet 
+releasing R 
+sending 1s again 
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 0
+channel	R (.data) : 0
+releasing R 
+R : .e(init:0) 1x1of2 sink,expect,watch {1,1,0,}* @0
+	count: 0, unknowns: 0

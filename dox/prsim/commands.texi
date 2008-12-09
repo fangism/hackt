@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.11 2008/11/27 11:09:17 fang Exp $
+@c $Id: commands.texi,v 1.12 2008/12/09 22:11:29 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -187,6 +187,18 @@ expected values.
 
 @noindent
 It is legal to log and expect values on the same channel.  
+
+The following commands can further control when channels
+log or check values.  
+Ignoring can be useful for masking out atypical phases of behavior
+or turning off checking.  
+Ignoring channels is independent of the stopped/released state 
+of a channel. 
+
+@include cmd/channel-ignore.texi
+@include cmd/channel-heed.texi
+@include cmd/channel-ignore-all.texi
+@include cmd/channel-heed-all.texi
 
 @b{Value files}: The files referenced by @command{channel-expect} and 
 @command{channel-source} may contain @t{#} comments and blank lines, 

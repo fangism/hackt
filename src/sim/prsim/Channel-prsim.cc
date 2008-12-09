@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.11 2008/12/03 05:32:17 fang Exp $
+	$Id: Channel-prsim.cc,v 1.12 2008/12/09 22:11:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -266,6 +266,9 @@ channel::dump(ostream& o) const {
 	}
 	if (stopped()) {
 		o << ",stopped";
+	}
+	if (ignored()) {
+		o << ",ignored";
 	}
 	if (have_value() &&
 			((is_sourcing() && !is_random()) || is_expecting())) {
@@ -1464,11 +1467,11 @@ if (ni == ack_signal) {
 				get_valid_sense() ? LOGIC_HIGH
 					: LOGIC_LOW));
 		}
-	if (!stopped()) {
-		// then data rails are in valid state
 	if (!valid_signal) {
+		// then data rails are in valid state
 		process_data(s);
 	}
+	if (!stopped()) {
 		// otherwise, data is logged/checked on validity signal
 		// if no value available, just ignore
 		if (is_sinking() && !valid_signal) {
@@ -1501,7 +1504,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 			cout << 'X' << endl;
 		}
 	}
-	if (dumplog.stream && *dumplog.stream) {
+	if (!ignored() && dumplog.stream && *dumplog.stream) {
 		// TODO: format me, hex, dec, bin, etc...
 		// should be able to just setbase()
 		if (v) {
@@ -1511,7 +1514,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 		}
 		// really flush every line?
 	}
-	if (is_expecting()) {
+	if (is_expecting() && !ignored()) {
 	if (have_value()) {
 		const array_value_type& expect = current_value();
 		if (!expect.second) {
@@ -1547,7 +1550,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 		}
 	}
 	}
-}
+}	// end method process_data
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1849,10 +1852,37 @@ if (i.second) {
 }	// end new_channel
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+channel*
+channel_manager::lookup(const string& name) {
+	const channel_set_type::const_iterator
+		f(channel_index_set.find(name));
+	if (f == channel_index_set.end()) {
+		cerr << "Error, channel `" << name <<
+			"\' not yet registered." << endl;
+		return NULL;
+	}
+	return &channel_pool[f->second];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const channel*
+channel_manager::lookup(const string& name) const {
+	const channel_set_type::const_iterator
+		f(channel_index_set.find(name));
+	if (f == channel_index_set.end()) {
+		cerr << "Error, channel `" << name <<
+			"\' not yet registered." << endl;
+		return NULL;
+	}
+	return &channel_pool[f->second];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // convenient macro to reduce copy-pasting...
 
 /**
 	Results in a channel reference named 'chan'.
+	TODO: use lookup() instead.
 	\return true on error
  */
 #define	__GET_NAMED_CHANNEL(name)					\
@@ -2063,6 +2093,25 @@ channel_manager::expect_channel_args(const string& channel_name,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
+channel_manager::apply_one(const string& channel_name,
+		void (channel::*f)(void)) {
+	STACKTRACE_VERBOSE;
+	channel* const c = lookup(channel_name);	// has error message
+	if (c) {
+		(c->*f)();
+		return false;
+	} else	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_manager::apply_all(void (channel::*f)(void)) {
+	STACKTRACE_VERBOSE;
+	for_each(channel_pool.begin(), channel_pool.end(), mem_fun_ref(f));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
 channel_manager::close_channel(const string& channel_name) {
 	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
@@ -2171,6 +2220,40 @@ channel_manager::unwatch_all_channels(void) {
 	STACKTRACE_VERBOSE;
 	for_each(channel_pool.begin(), channel_pool.end(), 
 		mem_fun_ref(&channel::unwatch));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_manager::ignore_channel(const string& channel_name) {
+	STACKTRACE_VERBOSE;
+	GET_NAMED_CHANNEL(c, channel_name)
+	c.ignore();
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_manager::ignore_all_channels(void) {
+	STACKTRACE_VERBOSE;
+	for_each(channel_pool.begin(), channel_pool.end(), 
+		mem_fun_ref(&channel::ignore));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_manager::heed_channel(const string& channel_name) {
+	STACKTRACE_VERBOSE;
+	GET_NAMED_CHANNEL(c, channel_name)
+	c.heed();
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_manager::heed_all_channels(void) {
+	STACKTRACE_VERBOSE;
+	for_each(channel_pool.begin(), channel_pool.end(), 
+		mem_fun_ref(&channel::heed));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

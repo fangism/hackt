@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.25 2008/11/29 23:46:26 fang Exp $
+	$Id: Command-prsim.cc,v 1.26 2008/12/09 22:11:33 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4486,13 +4486,13 @@ Data validity is only determined by the state of the data rails,
 and not the acknowledge signal. 
 An unstable channel (that can transiently take valid states)
 will report @emph{every} transient value.
-Channels in the stopped state will NOT be reported, 
+Channels in the stopped state will still be reported, 
 make sure that they are resumed by @command{channel-release}.  
 @end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelWatch, "channel-watch", 
-	channels, "report when spcified channel changes state")
+	channels, "report when specified channel changes state")
 
 int
 ChannelWatch::main(State& s, const string_list& a) {
@@ -4593,6 +4593,123 @@ if (a.size() != 1) {
 
 void
 ChannelUnWatchAll::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-heed.texi
+@deffn Command channel-heed chan
+Take channel @var{chan} out of the ignored state.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelHeed, "channel-heed", 
+	channels, "resume logging and checking channel values")
+
+int
+ChannelHeed::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().heed_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelHeed::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-ignore.texi
+@deffn Command channel-ignore chan
+Stop logging and checking expected values on channel @var{chan}. 
+This can be useful for momentarily ignoring a sequence of values.  
+An ignored channel will continue to respond to changes until it
+is stopped, by a @command{stop} command.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelIgnore, "channel-ignore", 
+	channels, "stop logging and checking channel values")
+
+int
+ChannelIgnore::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.get_channel_manager().ignore_channel(a.back()))
+		return Command::BADARG;
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelIgnore::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-heed-all.texi
+@deffn Command channel-heed-all
+Continue logging and checking all channel values.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelHeedAll, "channel-heed-all", 
+	channels, "resume logging and checking channel values")
+
+int
+ChannelHeedAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().heed_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelHeedAll::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-ignore-all.texi
+@deffn Command channel-ignore-all
+Stop logging and checking all channel values.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelIgnoreAll, "channel-ignore-all", 
+	channels, "stop checking and logging all channel values")
+
+int
+ChannelIgnoreAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().ignore_all_channels();
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelIgnoreAll::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
 }

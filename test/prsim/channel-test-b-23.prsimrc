@@ -1,0 +1,73 @@
+# "channel-test-b-23.prsimrc"
+# copy-modified from "channel-test-b-22.prsimrc"
+# @haco@ channel-test-b.haco-a
+# testing behavior of channel-stop w.r.t. logging and expecting
+
+source channel-test-b-01.prsimrc
+channel-watchall
+channel-sink R
+channel-expect-args-loop R 1
+# manually controlling channel L
+set L.d[0] 0
+set L.d[1] 0
+channel-reset-all
+cycle
+assert L.e 1
+channel-release-all
+cycle
+assert L.e 1
+
+echo sending 1s
+set L.d[1] 1
+cycle
+assert L.e 0
+set L.d[1] 0
+cycle
+assert L.e 1
+
+set L.d[1] 1
+cycle
+assert L.e 0
+set L.d[1] 0
+cycle
+assert L.e 1
+
+set L.d[1] 1
+cycle
+assert L.e 0
+set L.d[1] 0
+cycle
+assert L.e 1
+
+echo stopping channel R, sending 0
+channel-stop R
+
+set L.d[0] 1
+cycle
+assert L.e 0
+set L.d[0] 0
+cycle
+echo R has not ack'd yet
+assert L.e 0
+
+echo WILL NOT REACH HERE
+echo releasing R
+channel-release R
+cycle
+assert L.e 1
+
+echo sending 1s again
+set L.d[1] 1
+cycle
+assert L.e 0
+set L.d[1] 0
+cycle
+assert L.e 1
+
+set L.d[1] 1
+cycle
+assert L.e 0
+set L.d[1] 0
+cycle
+assert L.e 1
+

@@ -78,6 +78,7 @@ R : .e(init:0) 1x1of2 sink,watch,stopped
 --------------------------- 
 resume channel L 
 channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
 channels:
 L : .e(init:0) 1x1of2 source,watch {X,}* @0
 R : .e(init:0) 1x1of2 sink,watch,stopped
@@ -99,6 +100,7 @@ R : .e(init:0) 1x1of2 sink,watch
 --------------------------- 
 stop channel R 
 channel	L (.data) : #VALUE#
+channel	R (.data) : #VALUE#
 channels:
 L : .e(init:0) 1x1of2 source,watch {X,}* @0
 R : .e(init:0) 1x1of2 sink,watch,stopped
