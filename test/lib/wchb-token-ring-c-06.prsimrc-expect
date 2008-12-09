@@ -11,7 +11,22 @@ channel value order should be strict repeat because
 there is only one hole in the ring 
 expect to see on channel L: [1,0]* 
 # log for channel: L
+1
+0
+1
+0
+1
 expect to see on channel M: [0,1]* 
 # log for channel: M
+0
+1
+0
+1
+0
 expect to see on channel R: [0,1]* 
 # log for channel: R
+1
+0
+1
+0
+1
