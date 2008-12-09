@@ -1,0 +1,7 @@
+invariant "x.d[0]" | "x.d[1]"
+invariant "x.d[1]" | "x.d[2]"
+invariant "x.d[2]" | "x.d[0]"
+invariant "y.d[0]" | "y.d[1]"
+invariant "y.d[1]" | "y.d[2]"
+invariant "y.d[2]" | "y.d[3]"
+invariant "y.d[3]" | "y.d[0]"

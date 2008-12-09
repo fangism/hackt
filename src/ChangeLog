@@ -5,6 +5,12 @@
 
 2008-12-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-74:
+	  hackt-parse.yy.in: datatype and channel definitions now can take the 
+		same definition body syntax as general process definitions.
+		Rationale: allow conditional spec bodies.
+
+
 	* HACKT-00-01-04-main-00-82-73:
 	  prsim diagnostic improvement, invariant failures print the
 		process to which the failing invariant belongs.

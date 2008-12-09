@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.42 2008/10/31 02:11:45 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.43 2008/12/09 04:30:27 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -591,23 +591,22 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_data_param_id>	data_param_id
 ***/
 %type	<_definition_body>	definition_body optional_definition_body
-%type	<_definition_body>	datatype_body optional_datatype_body
-%type	<_instance_management_list>	connection_body_optional
-%type	<_instance_management_list>	connection_body
+/* %type	<_definition_body>	datatype_body optional_datatype_body */
+/* %type	<_instance_management_list>	connection_body_optional connection_body */
 %type	<_instance_management_list>	instance_management_list
 %type	<_instance_management_list>	instance_management_list_optional
 %type	<_instance_management>	connection_body_item_base
-%type	<_instance_management>	connection_body_item
+/* %type	<_instance_management>	connection_body_item */
 %type	<_def_body_item>	definition_body_item
-%type	<_def_body_item>	datatype_body_item
+/* %type	<_def_body_item>	datatype_body_item */
 /* %type	<_def_body_item>	instance_item_extended	*/
 %type	<_instance_management>	instance_item_extended
 %type	<_instance_management>	instance_item
 %type	<_instance_declaration>	type_instance_declaration 
 %type	<_loop_instantiation>	loop_instantiation
 %type	<_conditional_instantiation>	conditional_instantiation
-%type	<_loop_instantiation>	loop_connections
-%type	<_conditional_instantiation>	conditional_connections
+/* %type	<_loop_instantiation>	loop_connections */
+/* %type	<_conditional_instantiation>	conditional_connections */
 %type	<_instance_id_list>	instance_id_list
 %type	<_instance_base>	instance_id_item
 %type	<_connection_statement>	connection_statement
@@ -624,10 +623,12 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_guarded_instance_management_list>	guarded_instance_management_list_unmatched
 %type	<_guarded_instance_management>	guarded_instance_management
 %type	<_guarded_instance_management>	instance_management_else_clause
+/***
 %type	<_guarded_instance_management_list>	guarded_connection_body
 %type	<_guarded_instance_management_list>	guarded_connection_body_unmatched
 %type	<_guarded_instance_management>	guarded_connection_body_clause
 %type	<_guarded_instance_management>	connection_body_else_clause
+***/
 %type	<_language_body>	language_body
 %type	<_chp_stmt_list>	chp_body chp_body_optional
 %type	<_chp_stmt_list>	full_chp_body_item_list
@@ -1276,7 +1277,8 @@ declare_datatype_proto
 
 defdatatype
 	: declare_datatype_proto
-	  '{' optional_datatype_body set_body_optional get_body_optional '}'
+	  '{' optional_definition_body
+		set_body_optional get_body_optional '}'
 		{
 #if DEFTYPE_LIKE_PROCESS
 /**
@@ -1361,7 +1363,8 @@ declare_chan_proto
 	
 defchan
 	: declare_chan_proto
-	  '{' optional_datatype_body send_body_optional recv_body_optional '}'
+	  '{' optional_definition_body
+		send_body_optional recv_body_optional '}'
 		{
 #if DEFCHAN_LIKE_PROCESS
 /**
@@ -1468,6 +1471,7 @@ optional_definition_body
 			because it needs to be wrapped in braces */
 	;
 
+/**
 optional_datatype_body
 	: datatype_body { $$ = $1; }
 	| { $$ = new definition_body(); }
@@ -1481,16 +1485,6 @@ datatype_body
 	;
 
 datatype_body_item
-/***
-	: connection_body
-		{ $$ = new definition_body();
-		  std::transform($1->begin(), $1->end(), 
-			std::back_inserter(*$$), 
-			util::auto_converter<definition_body::value_type>()
-		  );
-		  DELETE_TOKEN($1);
-		}
-***/
 	: connection_body_item { $$ = $1; }
 	| lang_spec { $$ = $1; }
 	;
@@ -1506,6 +1500,7 @@ connection_body
 	| connection_body_item
 		{ $$ = new instance_management_list($1); }
 	;
+**/
 
 /* connection_body_item is a limited item, confined to connection statements */
 connection_body_item_base
@@ -1518,11 +1513,13 @@ connection_body_item_base
 	| instance_attribute_statement { $$ = $1; }
 	;
 
+/**
 connection_body_item
 	: connection_body_item_base { $$ = $1; }
 	| loop_connections { $$ = $1; }
 	| conditional_connections { $$ = $1; }
 	;
+**/
 
 instance_management_list_optional
 	: instance_management_list { $$ = $1; }
@@ -1583,6 +1580,7 @@ conditional_instantiation
 		{ WRAP_LIST($1, $2, $3);
 		  $$ = new conditional_instantiation($2); }
 	;
+/**
 loop_connections
 	: '(' ';' ID ':' range ':' connection_body ')'
 		{ $$ = new loop_instantiation($1, $3, $5, $7, $8);
@@ -1594,6 +1592,7 @@ conditional_connections
 		{ WRAP_LIST($1, $2, $3);
 		  $$ = new conditional_instantiation($2); }
 	;
+**/
 
 type_instance_declaration
 	/* type template is included in type_id, and is part of the type */
@@ -1757,6 +1756,7 @@ instance_management_else_clause
 	;
 
 /* connection lists */
+/**
 guarded_connection_body
 	: guarded_connection_body_unmatched THICKBAR connection_body_else_clause
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
@@ -1781,7 +1781,7 @@ connection_body_else_clause
 	: ELSE RARROW connection_body_optional
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
-
+**/
 
 /******************************************************************************
 //	Supported Languages

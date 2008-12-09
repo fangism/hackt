@@ -1,0 +1,19 @@
+// "040.hac"
+// testing for conditional support in deftype
+
+template <pbool B>
+deftype s1of2 <:bool (bool d[2]; bool t, f) {
+	d[0] = f;
+	d[1] = t;
+[ ~B ->
+// may transiently fail in simulation
+spec { $( ( ~d[0] & d[1] ) | ( d[0] & ~d[1] ) ) }
+]
+set{}
+get{}
+}
+
+s1of2<false> x;
+s1of2<true> y;
+
+

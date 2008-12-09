@@ -1,0 +1,16 @@
+// "041.hac"
+// testing for loop support in deftype
+
+template <pint B>
+deftype s1of2 <:bool (bool d[B]) {
+(;i:B:
+spec { $(d[i] | d[(i+1) % B]) }
+)
+set{}
+get{}
+}
+
+s1of2<3> x;
+s1of2<4> y;
+
+
