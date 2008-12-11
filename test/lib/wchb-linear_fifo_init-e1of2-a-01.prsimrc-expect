@@ -1,12 +1,12 @@
 channels:
-L : .e(init:0) 1x1of2 source {0,1,0,0,1,1,0,0,0,1,1,1,} @0 < 1of2_values.txt
-R : .e(init:0) 1x1of2 sink > wchb-linear_fifo_init-e1of2-a-01-R.txt
+L : .e(init:0) 1x1of2 source, timing: global {0,1,0,0,1,1,0,0,0,1,1,1,} @0 < 1of2_values.txt
+R : .e(init:0) 1x1of2 sink, timing: global > wchb-linear_fifo_init-e1of2-a-01-R.txt
 channels:
-L : .e(init:0) 1x1of2 source,stopped {0,1,0,0,1,1,0,0,0,1,1,1,} @0 < 1of2_values.txt
-R : .e(init:0) 1x1of2 sink,watch,stopped > wchb-linear_fifo_init-e1of2-a-01-R.txt
+L : .e(init:0) 1x1of2 source,stopped, timing: global {0,1,0,0,1,1,0,0,0,1,1,1,} @0 < 1of2_values.txt
+R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global > wchb-linear_fifo_init-e1of2-a-01-R.txt
 channels:
-L : .e(init:0) 1x1of2 source {0,1,0,0,1,1,0,0,0,1,1,1,} @0 < 1of2_values.txt
-R : .e(init:0) 1x1of2 sink,watch > wchb-linear_fifo_init-e1of2-a-01-R.txt
+L : .e(init:0) 1x1of2 source, timing: global {0,1,0,0,1,1,0,0,0,1,1,1,} @0 < 1of2_values.txt
+R : .e(init:0) 1x1of2 sink,watch, timing: global > wchb-linear_fifo_init-e1of2-a-01-R.txt
 channel	R (.data) : 1
 channel	R (.data) : 0
 channel	R (.data) : 0
@@ -23,7 +23,7 @@ channel	R (.data) : 1
 channel	R (.data) : 1
 channels:
 L : .e(init:0) 1x1of2 off
-R : .e(init:0) 1x1of2 sink,watch > wchb-linear_fifo_init-e1of2-a-01-R.txt
+R : .e(init:0) 1x1of2 sink,watch, timing: global > wchb-linear_fifo_init-e1of2-a-01-R.txt
 # log for channel: R
 1
 0

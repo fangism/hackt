@@ -2,7 +2,7 @@ channels:
 X : .e(init:0) 1x1of2 off
 Y : .e(init:1) 1x1of4 off
 Z : .a(init:0) 1x1of3 off
-Z : .a(init:0) 1x1of3 sink
+Z : .a(init:0) 1x1of3 sink, timing: global
 	count: 0, unknowns: 3
 why-x: Z is sinking, should be able to trace back through acknowledge 
 Z.a:X, from-channel, pull up/dn undriven
@@ -25,7 +25,7 @@ Z.a:0
   (channel Z is stopped.)
 Z.a:0
 . (channel Z is stopped.)
-Z : .a(init:0) 1x1of3 sink,stopped
+Z : .a(init:0) 1x1of3 sink,stopped, timing: global
 	count: 0, unknowns: 3
 - - - - - - - - - - - - - - - - - - - 
 releasing channel Z, but data is still X 
@@ -116,7 +116,7 @@ Z.a:1
 - - - - - - - - - - - - - - - - - - - 
 freezing channel Z, and resetting data 
 	50	Z.d[1] : 0
-Z : .a(init:0) 1x1of3 sink,stopped
+Z : .a(init:0) 1x1of3 sink,stopped, timing: global
 	count: 0, unknowns: 0
 Z.a:1
   (channel Z is stopped.)
@@ -138,7 +138,7 @@ Z.a : 0
 setting Z.d[0] -> U 
 	60	Z.d[0] : X
 	60	Z.a : X	[by Z.d[0]:=X]
-Z : .a(init:0) 1x1of3 sink
+Z : .a(init:0) 1x1of3 sink, timing: global
 	count: 0, unknowns: 1
 Z.a:X, from-channel, pull up/dn undriven
   Z.d[0]:X, pull up/dn undriven, no fanin
@@ -170,7 +170,7 @@ Z.a:1, pending event -> 0
 - - - - - - - - - - - - - - - - - - - 
 stopping channel Z 
 	80	Z.d[1] : 1
-Z : .a(init:0) 1x1of3 sink,stopped
+Z : .a(init:0) 1x1of3 sink,stopped, timing: global
 	count: 1, unknowns: 0
 Z.a:0
   (channel Z is stopped.)

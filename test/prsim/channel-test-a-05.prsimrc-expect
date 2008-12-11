@@ -15,7 +15,7 @@ All subnodes of 'X':
 X.d[0] : 0
 X.d[1] : 0
 X.e : X
-X : .e(init:0) 1x1of2 source,watch,stopped {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 manually bucketing, channel source is stopped 
 	10	X.e : 1
@@ -24,113 +24,113 @@ channel	X (.data) : 0
 	20	X.d[0] : 1
 should be data yet because ack is already on 
 ----------------------------------- 
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @1 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @1 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 node at: `X.d[0]' : 1
 (no cycle)
 - - - - - - - - - - - - - - - - - - 
 	20	X.e : 0
 	30	X.d[0] : 0	[by X.e:=0]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @1 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @1 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ----------------------------------- 
 	30	X.e : 1
 channel	X (.data) : 1
 	40	X.d[1] : 1	[by X.e:=1]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	40	X.e : 0
 	50	X.d[1] : 0	[by X.e:=0]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ----------------------------------- 
 	50	X.e : 1
 channel	X (.data) : 1
 	60	X.d[1] : 1	[by X.e:=1]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @3 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @3 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	60	X.e : 0
 	70	X.d[1] : 0	[by X.e:=0]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @3 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @3 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ----------------------------------- 
 	70	X.e : 1
 channel	X (.data) : 0
 	80	X.d[0] : 1	[by X.e:=1]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @4 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @4 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	80	X.e : 0
 	90	X.d[0] : 0	[by X.e:=0]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @4 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @4 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ----------------------------------- 
 	90	X.e : 1
 channel	X (.data) : 0
 	100	X.d[0] : 1	[by X.e:=1]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @5 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @5 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	100	X.e : 0
 	110	X.d[0] : 0	[by X.e:=0]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @5 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @5 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ----------------------------------- 
 	110	X.e : 1
 channel	X (.data) : 0
 	120	X.d[0] : 1	[by X.e:=1]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @6 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @6 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	120	X.e : 0
 	130	X.d[0] : 0	[by X.e:=0]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @6 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @6 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ----------------------------------- 
 	130	X.e : 1
 channel	X (.data) : 1
 	140	X.d[1] : 1	[by X.e:=1]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @7 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @7 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	140	X.e : 0
 	150	X.d[1] : 0	[by X.e:=0]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @7 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @7 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ----------------------------------- 
 	150	X.e : 1
 channel	X (.data) : 1
 	160	X.d[1] : 1	[by X.e:=1]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @8 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @8 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	160	X.e : 0
 	170	X.d[1] : 0	[by X.e:=0]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @8 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @8 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ----------------------------------- 
 	170	X.e : 1
 channel	X (.data) : 1
 	180	X.d[1] : 1	[by X.e:=1]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @9 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @9 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	180	X.e : 0
 	190	X.d[1] : 0	[by X.e:=0]
-X : .e(init:0) 1x1of2 source,watch {0,1,1,0,0,0,1,1,1,1,} @9 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @9 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ----------------------------------- 
 	190	X.e : 1
 channel	X (.data) : 1
 	200	X.d[1] : 1	[by X.e:=1]
-X : .e(init:0) 1x1of2 source,watch
+X : .e(init:0) 1x1of2 source,watch, timing: global
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	200	X.e : 0
 	210	X.d[1] : 0	[by X.e:=0]
-X : .e(init:0) 1x1of2 source,watch
+X : .e(init:0) 1x1of2 source,watch, timing: global
 	count: 0, unknowns: 0
 ----------------------------------- 
 no more values!!! 

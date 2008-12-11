@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.12 2008/12/09 22:11:31 fang Exp $
+	$Id: Channel-prsim.cc,v 1.13 2008/12/11 05:39:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -90,6 +90,30 @@ using util::numeric::div_type;
 using util::numeric::rand48;
 
 //=============================================================================
+#if PRSIM_CHANNEL_TIMING
+env_event_type::env_event_type(const node_index_type ni, 
+		const value_enum v, const channel& c) :
+		node_index(ni), value(v) {
+	switch (c.timing_mode) {
+	case CHANNEL_TIMING_GLOBAL:
+		use_global = true; break;
+	case CHANNEL_TIMING_AFTER:
+		use_global = false;
+		delay = c.after; break;
+	case CHANNEL_TIMING_RANDOM:
+		use_global = false;
+		if (c.after < 0) {	// negative signals unbounded
+		delay = State::exponential_random_delay(); break;
+		} else {
+		delay = State::uniform_random_delay() *c.after; break;
+		}
+		break;
+	default: DIE;
+	}
+}
+#endif
+
+//=============================================================================
 // class channel_exception method definitions
 
 error_policy_enum
@@ -175,6 +199,10 @@ channel::channel() :
 		name(), 
 		ack_signal(INVALID_NODE_INDEX), 
 		valid_signal(INVALID_NODE_INDEX), 
+#if PRSIM_CHANNEL_TIMING
+		timing_mode(CHANNEL_TIMING_DEFAULT),
+		after(State::rule_type::default_unspecified_delay),
+#endif
 		flags(CHANNEL_DEFAULT_FLAGS), 
 		counter_state(0), 	// invalid
 		x_counter(0),		// invalid
@@ -270,6 +298,11 @@ channel::dump(ostream& o) const {
 	if (ignored()) {
 		o << ",ignored";
 	}
+#if PRSIM_CHANNEL_TIMING
+if (is_sinking() || is_sourcing()) {
+	dump_timing(o << ", ");
+}	// otherwise, is irrelevant
+#endif
 	if (have_value() &&
 			((is_sourcing() && !is_random()) || is_expecting())) {
 		o << " {";
@@ -321,7 +354,7 @@ read_values_from_list(const string_list& s,
 		channel::value_type& i(p.first);
 		p.first = 0;
 		p.second = false;
-		if (tok == "X") {
+		if (tok == "X" || tok == "x") {
 			p.second = true;
 		} else
 		if (string_to_num(tok, i)) {
@@ -715,25 +748,114 @@ channel::clobber(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_TIMING
+/**
+	\return true if there is a syntax error.  
+	TODO: use a map to parsers.  
+ */
+bool
+channel::set_timing(const string& m, const string_list& a) {
+	static const string __random("random");
+	static const string __global("global");
+	static const string __after("after");
+	if (m == __random) {
+		timing_mode = CHANNEL_TIMING_RANDOM;
+		if (a.size()) {
+			// bounded, uniform
+			return string_to_num(a.front(), after);
+			// ignore trailing values
+		} else {
+			after = -1;
+			// unbounded, exponential var.
+		}
+	} else if (m == __global) {
+		timing_mode = CHANNEL_TIMING_GLOBAL;
+		// no need to set after
+	} else if (m == __after) {
+		timing_mode = CHANNEL_TIMING_AFTER;
+		if (a.size()) {
+			return string_to_num(a.front(), after);
+		}
+	} else {
+		cerr << "Error: invalid mode: " << m << endl;
+		return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel::dump_timing(ostream& o) const {
+	o << "timing: ";
+	switch (timing_mode) {
+	case CHANNEL_TIMING_GLOBAL: o << "global"; break;
+	case CHANNEL_TIMING_AFTER: o << "after=" << after; break;
+	case CHANNEL_TIMING_RANDOM: o << "random"; 
+		if (after < 0.0) o << "(exp.)";
+		else	o << "(<" << after << ')';
+		break;
+	default: o << "unknown"; DIE;
+	}
+	return o;
+	// NOTE: no endl
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel::help_timing(ostream& o) {
+o << "available channel timing modes:" << endl;
+o << "\tglobal : use the global policy set by \'timing\'" << endl;
+o << "\trandom [max] : if max given, uniform bounded, else exponential variate" << endl;
+o << "\tafter [del] : if del given, set fixed delay, else use prev. value" << endl;
+	return o;
+}
+#endif	// PRSIM_CHANNEL_TIMING
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Binding constructor functor.
  */
+#if PRSIM_CHANNEL_TIMING
+#define	__node_setter(x)	__node_setter__(x, *this)
+struct __node_setter__ :
+#else
 struct __node_setter :
+#endif
 	public std::unary_function<const node_index_type, env_event_type> {
 	value_enum				val;
+#if PRSIM_CHANNEL_TIMING
+	const channel&				chan;
+#endif
 
+#if PRSIM_CHANNEL_TIMING
+	__node_setter__(const value_enum v, const channel& c) : 
+		val(v), chan(c) { }
+#else
 	explicit
 	__node_setter(const value_enum v) : val(v) { }
+#endif
 
 	result_type
 	operator () (argument_type ni) const {
+#if PRSIM_CHANNEL_TIMING
+		// set immediately, like a set command?
+		// or use delay mode?
+		return result_type(ni, val, chan);
+#else
 		return result_type(ni, val);
+#endif
 	}
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_TIMING
+#define	ENV_EVENT(x, y)	env_event_type(x, y, *this)
+#else
+#define	ENV_EVENT(x, y)	env_event_type(x, y)
+#endif
 /**
 	Sources will lower all data rails, 
+	Sources with validity signals will react to the data-rails being set.
 	sinks will set acknowledges according to the reset value.
  */
 void
@@ -746,9 +868,10 @@ channel::reset(vector<env_event_type>& events) {
 		// once nodes all become neutral, the validity should be reset
 	}
 	if (is_sinking()) {
-		events.push_back(env_event_type(ack_signal, 
+		events.push_back(ENV_EVENT(ack_signal, 
 			(get_ack_init() ? LOGIC_HIGH
 				: LOGIC_LOW)));
+		// use global timing policy
 	}
 	// else nothing else to do
 	stop();	// freeze this channel until it is resumed
@@ -838,9 +961,10 @@ if (have_value()) {
 		qr = div(qr.quot, rdx);
 		k[1] = 0;
 		for ( ; k[1] < size_t(rdx); ++k[1]) {
-			r.push_back(env_event_type(data[k], 	// node index
-				(k[1] == size_t(qr.rem)) ?
-				LOGIC_HIGH : LOGIC_LOW));
+			const node_index_type ni = data[k];	// node index
+			const value_enum v = (k[1] == size_t(qr.rem)) ?
+				LOGIC_HIGH : LOGIC_LOW;
+			r.push_back(ENV_EVENT(ni, v));
 		}
 	}
 } else {
@@ -1358,12 +1482,12 @@ if (ni == ack_signal) {
 	case LOGIC_LOW:
 		if (get_valid_sense()) {
 			// neutral, reset ack
-			new_events.push_back(env_event_type(ack_signal, 
+			new_events.push_back(ENV_EVENT(ack_signal, 
 				get_ack_active() ? LOGIC_LOW
 					: LOGIC_HIGH));
 		} else {
 			// valid, ack
-			new_events.push_back(env_event_type(ack_signal, 
+			new_events.push_back(ENV_EVENT(ack_signal, 
 				get_ack_active() ? LOGIC_HIGH
 					: LOGIC_LOW));
 		}
@@ -1371,18 +1495,18 @@ if (ni == ack_signal) {
 	case LOGIC_HIGH:
 		if (get_valid_sense()) {
 			// valid, ack
-			new_events.push_back(env_event_type(ack_signal, 
+			new_events.push_back(ENV_EVENT(ack_signal, 
 				get_ack_active() ? LOGIC_HIGH
 					: LOGIC_LOW));
 		} else {
 			// neutral, reset ack
-			new_events.push_back(env_event_type(ack_signal, 
+			new_events.push_back(ENV_EVENT(ack_signal, 
 				get_ack_active() ? LOGIC_LOW
 					: LOGIC_HIGH));
 		}
 		break;
 	default:
-		new_events.push_back(env_event_type(ack_signal, 
+		new_events.push_back(ENV_EVENT(ack_signal, 
 			LOGIC_OTHER));
 		break;
 	}
@@ -1414,7 +1538,7 @@ if (ni == ack_signal) {
 			// for validity protocol, set valid to X
 			// validity signal reacts even when channel stopped
 			if (valid_signal) {
-				new_events.push_back(env_event_type(
+				new_events.push_back(ENV_EVENT(
 					valid_signal, LOGIC_OTHER));
 			}
 		}
@@ -1425,7 +1549,7 @@ if (ni == ack_signal) {
 			// otherwise multiple X's are vacuous
 			// if not validity protocol, set ack to X
 			if (!valid_signal) {
-			new_events.push_back(env_event_type(
+			new_events.push_back(ENV_EVENT(
 				ack_signal, LOGIC_OTHER));
 			}
 			// otherwise wait for validity to go X
@@ -1444,7 +1568,7 @@ if (ni == ack_signal) {
 			// source is responsible for resetting valid signal
 			// should react to data rails 
 			// EVEN WHEN CHANNEL IS STOPPED
-			new_events.push_back(env_event_type(valid_signal, 
+			new_events.push_back(ENV_EVENT(valid_signal, 
 				get_valid_sense() ? LOGIC_LOW
 					: LOGIC_HIGH));
 		}
@@ -1452,7 +1576,7 @@ if (ni == ack_signal) {
 		if (is_sinking() && !valid_signal) {
 			// sink should reply with ack reset
 			// otherwise, valid_signal is an input
-			new_events.push_back(env_event_type(ack_signal, 
+			new_events.push_back(ENV_EVENT(ack_signal, 
 				get_ack_active() ? LOGIC_LOW
 					: LOGIC_HIGH));
 		}
@@ -1463,7 +1587,7 @@ if (ni == ack_signal) {
 			// source is responsible for setting valid signal
 			// validity signal always reacts to data rails
 			// even when channel is stopped
-			new_events.push_back(env_event_type(valid_signal, 
+			new_events.push_back(ENV_EVENT(valid_signal, 
 				get_valid_sense() ? LOGIC_HIGH
 					: LOGIC_LOW));
 		}
@@ -1477,7 +1601,7 @@ if (ni == ack_signal) {
 		if (is_sinking() && !valid_signal) {
 			// sink should reply with ack reset
 			// otherwise, valid_signal is an input
-			new_events.push_back(env_event_type(ack_signal, 
+			new_events.push_back(ENV_EVENT(ack_signal, 
 				get_ack_active() ? LOGIC_HIGH
 					: LOGIC_LOW));
 		}
@@ -1590,17 +1714,17 @@ if (is_sourcing()) {
 			}
 			if (valid_signal) {
 				if (x_counter) {
-					events.push_back(env_event_type(
+					events.push_back(ENV_EVENT(
 						valid_signal, 
 						LOGIC_OTHER));
 				} else if (!counter_state) {
-					events.push_back(env_event_type(
+					events.push_back(ENV_EVENT(
 						valid_signal, 
 						get_valid_sense() ?
 							LOGIC_LOW :
 							LOGIC_HIGH));
 				} else if (counter_state == bundles()) {
-					events.push_back(env_event_type(
+					events.push_back(ENV_EVENT(
 						valid_signal, 
 						get_valid_sense() ?
 							LOGIC_HIGH :
@@ -1632,17 +1756,17 @@ if (is_sourcing()) {
 			}
 			if (valid_signal) {
 				if (x_counter) {
-					events.push_back(env_event_type(
+					events.push_back(ENV_EVENT(
 						valid_signal, 
 						LOGIC_OTHER));
 				} else if (!counter_state) {
-					events.push_back(env_event_type(
+					events.push_back(ENV_EVENT(
 						valid_signal, 
 						get_valid_sense() ?
 							LOGIC_LOW :
 							LOGIC_HIGH));
 				} else if (counter_state == bundles()) {
-					events.push_back(env_event_type(
+					events.push_back(ENV_EVENT(
 						valid_signal, 
 						get_valid_sense() ?
 							LOGIC_HIGH :
@@ -1668,13 +1792,13 @@ if (is_sinking()) {
 		case LOGIC_LOW:
 			if (get_valid_sense()) {
 				// reset ack
-				events.push_back(env_event_type(ack_signal, 
+				events.push_back(ENV_EVENT(ack_signal, 
 					get_ack_active() ?
 						LOGIC_LOW :
 						LOGIC_HIGH));
 			} else {
 				// ack
-				events.push_back(env_event_type(ack_signal, 
+				events.push_back(ENV_EVENT(ack_signal, 
 					get_ack_active() ?
 						LOGIC_HIGH :
 						LOGIC_LOW));
@@ -1683,34 +1807,34 @@ if (is_sinking()) {
 		case LOGIC_HIGH:
 			if (get_valid_sense()) {
 				// ack
-				events.push_back(env_event_type(ack_signal, 
+				events.push_back(ENV_EVENT(ack_signal, 
 					get_ack_active() ?
 						LOGIC_HIGH :
 						LOGIC_LOW));
 			} else {
 				// reset ack
-				events.push_back(env_event_type(ack_signal, 
+				events.push_back(ENV_EVENT(ack_signal, 
 					get_ack_active() ?
 						LOGIC_LOW :
 						LOGIC_HIGH));
 			}
 			break;
 		default:
-			events.push_back(env_event_type(
+			events.push_back(ENV_EVENT(
 				ack_signal, LOGIC_OTHER));
 		}
 	} else if (x_counter) {
-		events.push_back(env_event_type(
+		events.push_back(ENV_EVENT(
 			ack_signal, LOGIC_OTHER));
 	} else if (!counter_state) {
 		// data is neutral, reset ack
-		events.push_back(env_event_type(ack_signal, 
+		events.push_back(ENV_EVENT(ack_signal, 
 			get_ack_active() ?
 				LOGIC_LOW :
 				LOGIC_HIGH));
 	} else if (counter_state == bundles()) {
 		// data is valid, ack
-		events.push_back(env_event_type(ack_signal, 
+		events.push_back(ENV_EVENT(ack_signal, 
 			get_ack_active() ?
 				LOGIC_HIGH :
 				LOGIC_LOW));
@@ -1730,6 +1854,10 @@ channel::save_checkpoint(ostream& o) const {
 	// don't write the name, let caller save it
 	write_value(o, ack_signal);
 	write_value(o, valid_signal);
+#if PRSIM_CHANNEL_TIMING
+	write_value(o, timing_mode);
+	write_value(o, after);
+#endif
 	write_value(o, flags);
 	write_value(o, counter_state);
 	write_value(o, x_counter);
@@ -1750,6 +1878,10 @@ channel::load_checkpoint(istream& i) {
 	// don't restore the name here, let caller set it
 	read_value(i, ack_signal);
 	read_value(i, valid_signal);
+#if PRSIM_CHANNEL_TIMING
+	read_value(i, timing_mode);
+	read_value(i, after);
+#endif
 	read_value(i, flags);
 	read_value(i, counter_state);
 	read_value(i, x_counter);
@@ -2518,6 +2650,7 @@ for ( ; j<s; ++j) {
 }
 
 //=============================================================================
+#undef	ENV_EVENT
 #undef	__GET_NAMED_CHANNEL
 #undef	GET_NAMED_CHANNEL
 #undef	GET_NAMED_CHANNEL_CONST

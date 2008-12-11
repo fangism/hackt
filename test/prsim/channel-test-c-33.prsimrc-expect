@@ -8,7 +8,7 @@ Warning: channel validity `Y.v' has no fanout, but is being sourced.
 Warning: no values given, channel will remain neutral.
 channels:
 X : .e(init:0) .v 1x1of2 off
-Y : .e(init:1) .v 1x1of4 source
+Y : .e(init:1) .v 1x1of4 source, timing: global
 Z : .a(init:0) .v 1x1of3 off
 Warning: channel validity `Y.v' has no fanin.
 resetting all channels... 

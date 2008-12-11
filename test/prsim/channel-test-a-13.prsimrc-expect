@@ -3,7 +3,7 @@ X : .e(init:0) 1x1of2 off
 Y : .e(init:1) 1x1of4 off
 Z : .a(init:0) 1x1of3 off
 Warning: channel acknowledge `X.e' has no fanin!
-X : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source, timing: global {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 2
 why-x: X is sourced, should be able to trace back through acknowledge 
 X.d[0]:X, from-channel, pull up/dn undriven
@@ -98,7 +98,7 @@ X.d[1]:1
 - - - - - - - - - - - - - - - - - - - 
 freezing channel X, and setting ack 
 	50	X.e : 0
-X : .e(init:0) 1x1of2 source,stopped {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,stopped, timing: global {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 X.d[0]:0
   (channel X is stopped.)
@@ -120,7 +120,7 @@ setting X.e -> U
 	60	X.e : X
 	60	X.d[0] : X	[by X.e:=X]
 	60	X.d[1] : X	[by X.e:=X]
-X : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source, timing: global {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
 	count: 0, unknowns: 2
 X.d[0]:X, from-channel, pull up/dn undriven
   X.e:X, pull up/dn undriven, no fanin

@@ -10,7 +10,7 @@ X.d[0] : X
 X.d[1] : X
 X.e : 0
 X.v : X
-X : .e(init:0) .v 1x1of2 sink,watch,stopped > channel-test-c-08-X.txt
+X : .e(init:0) .v 1x1of2 sink,watch,stopped, timing: global > channel-test-c-08-X.txt
 	count: 0, unknowns: 2
 releasing channel X (source) 
 	10	X.e : X

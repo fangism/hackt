@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.12 2008/12/09 22:11:29 fang Exp $
+@c $Id: commands.texi,v 1.13 2008/12/11 05:39:49 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -226,6 +226,11 @@ the following commands.
 
 @noindent
 It is legal to source and sink on the same channel.  
+
+Channel sources and sinks can be configured to respond with 
+a different timing from the global policy.
+
+@include cmd/channel-timing.texi
 
 @b{Shared-validity environments}:
 Shared-validity sources operate slightly differently from the

@@ -8,7 +8,7 @@ Warning: channel validity `Y.n' has no fanout, but is being sourced.
 Warning: no values given, channel will remain neutral.
 channels:
 X : .e(init:0) .n 1x1of2 off
-Y : .e(init:1) .n 1x1of4 source
+Y : .e(init:1) .n 1x1of4 source, timing: global
 Z : .a(init:0) .n 1x1of3 off
 this time, no sink 
 resetting all channels... 
@@ -30,7 +30,7 @@ WARNING: weak-unstable `Y.n'-
 	20	Y.d[3] : X
 	20	Y.n : X	[by Y.d[0]:=X]
 all values went to X because Y.e is X 
-Y : .e(init:1) .n 1x1of4 source,watch
+Y : .e(init:1) .n 1x1of4 source,watch, timing: global
 	count: 0, unknowns: 4
 setting Y.e -> 1 
 first time, reset rails to 0 

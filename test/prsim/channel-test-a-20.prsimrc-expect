@@ -5,9 +5,9 @@ Z : .a(init:0) 1x1of3 off
 Warning: channel acknowledge `Y.e' has no fanin!
 Warning: channel acknowledge `Z.a' has no fanin!
 channels:
-X : .e(init:0) 1x1of2 sink
-Y : .e(init:1) 1x1of4 source {2,1,0,} @0
-Z : .a(init:0) 1x1of3 source,sink {0,2,1,} @0
+X : .e(init:0) 1x1of2 sink, timing: global
+Y : .e(init:1) 1x1of4 source, timing: global {2,1,0,} @0
+Z : .a(init:0) 1x1of3 source,sink, timing: global {0,2,1,} @0
 undriven X inputs 
 X nodes with no fanin:
 X.d[0]

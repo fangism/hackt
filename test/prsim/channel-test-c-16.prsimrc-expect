@@ -3,7 +3,7 @@ X : .e(init:0) .v 1x1of2 off
 Y : .e(init:1) .v 1x1of4 off
 Z : .a(init:0) .v 1x1of3 off
 Warning: channel validity `Y.v' has no fanin.
-Y : .e(init:1) .v 1x1of4 sink
+Y : .e(init:1) .v 1x1of4 sink, timing: global
 	count: 0, unknowns: 4
 why-x: Y is sinking, should be able to trace back through acknowledge 
 Y.e:X, from-channel, pull up/dn undriven
@@ -21,11 +21,11 @@ Y.e:1
   (channel Y is stopped.)
 Y.e:1
 . (channel Y is stopped.)
-Y : .e(init:1) .v 1x1of4 sink,stopped
+Y : .e(init:1) .v 1x1of4 sink,stopped, timing: global
 	count: 0, unknowns: 4
 - - - - - - - - - - - - - - - - - - - 
 releasing channel Y, but data is still X 
-Y : .e(init:1) .v 1x1of4 sink
+Y : .e(init:1) .v 1x1of4 sink, timing: global
 	count: 0, unknowns: 4
 	10	Y.e : X
 Y.e:X, from-channel, pull up/dn undriven
@@ -91,7 +91,7 @@ Y.e:0
 freezing channel Y, and resetting data 
 	50	Y.d[3] : 0
 	50	Y.v : 0
-Y : .e(init:1) .v 1x1of4 sink,stopped
+Y : .e(init:1) .v 1x1of4 sink,stopped, timing: global
 	count: 0, unknowns: 0
 Y.e:0
   (channel Y is stopped.)
@@ -116,7 +116,7 @@ setting Y.d[0] -> U
 	60	Y.d[2] : X
 	60	Y.v : X
 	60	Y.e : X	[by Y.v:=X]
-Y : .e(init:1) .v 1x1of4 sink
+Y : .e(init:1) .v 1x1of4 sink, timing: global
 	count: 0, unknowns: 1
 Y.e:X, from-channel, pull up/dn undriven
 Y.v:X, pull up/dn undriven, no fanin
@@ -150,7 +150,7 @@ Y.e:0, pending event -> 1
 stopping channel Y 
 	80	Y.d[1] : 1
 	80	Y.v : 1
-Y : .e(init:1) .v 1x1of4 sink,stopped
+Y : .e(init:1) .v 1x1of4 sink,stopped, timing: global
 	count: 1, unknowns: 0
 Y.e:1
   (channel Y is stopped.)

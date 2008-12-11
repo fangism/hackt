@@ -9,11 +9,11 @@ Z : .a(init:0) 1x1of3 off
 Warning: channel acknowledge `X.e' has no fanin!
 Warning: channel acknowledge `Y.e' has no fanin!
 initializing... 
-X : .e(init:0) 1x1of2 source {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source, timing: global {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 2
-Y : .e(init:1) 1x1of4 source {0,1,1,0,0,0,1,1,1,1,}* @0 < channel-test-a-values-X.txt
+Y : .e(init:1) 1x1of4 source, timing: global {0,1,1,0,0,0,1,1,1,1,}* @0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 4
-Z : .a(init:0) 1x1of3 sink
+Z : .a(init:0) 1x1of3 sink, timing: global
 	count: 0, unknowns: 3
 resetting... 
 channels:

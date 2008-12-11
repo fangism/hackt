@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.26 2008/12/09 22:11:33 fang Exp $
+	$Id: Command-prsim.cc,v 1.27 2008/12/11 05:39:54 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -5426,6 +5426,63 @@ ChannelExpectArgsLoop::usage(ostream& o) {
 "Checks that value sequence repeats infintely."
 	<< endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_TIMING
+/***
+@texinfo cmd/channel-timing.texi
+@deffn Command channel-timing chan [mode [args]]
+With no additional arguments, report the timing mode of channel @var{chan}.
+Timing only applies to channels that are configured as a source or a sink.
+Modes:
+@itemize
+@item @t{global} : use the global simulation-wide timing policy.
+@item @t{after [delay]} : use a fixed delay.
+@item @t{random [max]} : if @var{max} is specified, 
+	use a uniform distribution delay bounded by @var{max}, 
+	otherwise return an exponential variate delay.  
+@end itemize
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelTiming, "channel-timing", modes, 
+	"set/get per channel timing mode")
+
+int
+ChannelTiming::main(State& s, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else if (a.size() == 2) {
+	const string& cn(*++a.begin());
+	channel* const c = s.get_channel_manager().lookup(cn);
+	if (c) {
+		c->dump_timing(cout << "channel " << cn << ": ") << endl;
+		return Command::NORMAL;
+	} else	return Command::BADARG;	// have error message
+} else {
+	string_list b(a);
+	b.pop_front();
+	const string cn(b.front());
+	b.pop_front();
+	const string m(b.front());
+	b.pop_front();
+	channel* const c = s.get_channel_manager().lookup(cn);
+	if (c && c->set_timing(m, b)) {
+		usage(cerr << "usage: ");
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelTiming::usage(ostream& o) {
+	o << name << " channel [mode [args]]" << endl;
+	o << "if no mode is given, just reports the current mode." << endl;
+	channel::help_timing(o);
+}
+#endif	// PRSIM_CHANNEL_TIMING
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

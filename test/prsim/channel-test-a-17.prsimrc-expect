@@ -3,7 +3,7 @@ X : .e(init:0) 1x1of2 off
 Y : .e(init:1) 1x1of4 off
 Z : .a(init:0) 1x1of3 off
 Warning: channel acknowledge `Z.a' has no fanin!
-Z : .a(init:0) 1x1of3 source {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+Z : .a(init:0) 1x1of3 source, timing: global {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 3
 why-x: Z is sourced, should be able to trace back through acknowledge 
 Z.d[0]:X, from-channel, pull up/dn undriven
@@ -103,7 +103,7 @@ Z.d[1]:1
 - - - - - - - - - - - - - - - - - - - 
 freezing channel Z, and setting ack 
 	50	Z.a : 1
-Z : .a(init:0) 1x1of3 source,stopped {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+Z : .a(init:0) 1x1of3 source,stopped, timing: global {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 Z.d[0]:0
   (channel Z is stopped.)
@@ -122,7 +122,7 @@ setting Z.a -> U
 	60	Z.d[0] : X	[by Z.a:=X]
 	60	Z.d[1] : X	[by Z.a:=X]
 	60	Z.d[2] : X	[by Z.a:=X]
-Z : .a(init:0) 1x1of3 source {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
+Z : .a(init:0) 1x1of3 source, timing: global {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
 	count: 0, unknowns: 3
 Z.d[0]:X, from-channel, pull up/dn undriven
   Z.a:X, pull up/dn undriven, no fanin

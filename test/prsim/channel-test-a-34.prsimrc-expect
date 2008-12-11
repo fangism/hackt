@@ -7,7 +7,7 @@ Warning: channel acknowledge `Y.e' has no fanin!
 Warning: no values given, channel will remain neutral.
 channels:
 X : .e(init:0) 1x1of2 off
-Y : .e(init:1) 1x1of4 source
+Y : .e(init:1) 1x1of4 source, timing: global
 Z : .a(init:0) 1x1of3 off
 this time, no sink 
 resetting all channels... 
@@ -21,7 +21,7 @@ releasing all channels...
 	10	Y.d[2] : X
 	10	Y.d[3] : X
 all values went to X because Y.e is X 
-Y : .e(init:1) 1x1of4 source,watch
+Y : .e(init:1) 1x1of4 source,watch, timing: global
 	count: 0, unknowns: 4
 setting Y.e -> 0, resets data rails 
 	10	Y.e : 0
@@ -29,7 +29,7 @@ setting Y.e -> 0, resets data rails
 	20	Y.d[1] : 0	[by Y.e:=0]
 	20	Y.d[2] : 0	[by Y.e:=0]
 	20	Y.d[3] : 0	[by Y.e:=0]
-Y : .e(init:1) 1x1of4 source,watch
+Y : .e(init:1) 1x1of4 source,watch, timing: global
 	count: 0, unknowns: 0
 setting Y.e -> X 
 	20	Y.e : X
@@ -37,7 +37,7 @@ setting Y.e -> X
 	20	Y.d[1] : X	[by Y.e:=X]
 	20	Y.d[2] : X	[by Y.e:=X]
 	20	Y.d[3] : X	[by Y.e:=X]
-Y : .e(init:1) 1x1of4 source,watch
+Y : .e(init:1) 1x1of4 source,watch, timing: global
 	count: 0, unknowns: 4
 setting Y.e -> 1, also causes data rails to reset 
 	20	Y.e : 1

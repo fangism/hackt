@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.36 2008/12/08 21:38:11 fang Exp $
+	$Id: State-prsim.cc,v 1.37 2008/12/11 05:39:54 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -724,8 +724,15 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 		dump_node_canonical_name(cerr << "channel event on node: ",
 			i->first) << endl;
 #endif
-		node_type& _n(get_node(i->first));
+#if PRSIM_CHANNEL_TIMING
+		const node_index_type& ni(i->node_index);
+		const value_enum _v = i->value;
+		const time_type& t = i->delay;
+#else
+		const node_index_type& ni(i->first);
 		const value_enum _v = i->second;
+#endif
+		node_type& _n(get_node(ni));
 		if (_n.current_value() != _v) {
 		const event_index_type pe = _n.get_event();
 
@@ -749,7 +756,7 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 		}
 		// __allocate_event
 		const event_index_type pn =
-			__allocate_event(_n, i->first, c,
+			__allocate_event(_n, ni, c,
 				INVALID_RULE_INDEX, _v
 #if PRSIM_WEAK_RULES
 				, false	// environment never weak
@@ -757,6 +764,11 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 			);
 			// enqueue_event
 			const event_type& ev(get_event(pn));
+#if PRSIM_CHANNEL_TIMING
+		if (!i->use_global) {
+			enqueue_event(current_time +t, pn);
+		} else {
+#endif
 			switch (_v) {
 			case LOGIC_LOW:
 				enqueue_event(get_delay_dn(ev), pn);
@@ -768,6 +780,9 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 				// +delay_policy<time_type>::zero
 				, pn);
 			}
+#if PRSIM_CHANNEL_TIMING
+		}
+#endif
 		} // else filter out vacuous events
 	}
 	return err;

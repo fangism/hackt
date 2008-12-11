@@ -1,0 +1,25 @@
+# "channel-test-a-41.prsimrc"
+# @haco@ channel-test-a.haco-a
+# testing channel timing policies
+
+source channel-test-a-01.prsimrc
+
+channel-show X
+channel-timing X
+
+channel-timing X after
+channel-timing X
+
+channel-timing X after 50
+channel-timing X
+
+channel-timing X random
+channel-timing X
+
+channel-timing X random 1000
+channel-timing X
+
+channel-timing X global
+channel-timing X
+
+

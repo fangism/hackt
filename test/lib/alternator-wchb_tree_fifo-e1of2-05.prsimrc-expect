@@ -1,9 +1,9 @@
 channels:
-L : .e(init:0) 1x1of2 source-random
-R : .e(init:0) 1x1of2 sink
+L : .e(init:0) 1x1of2 source-random, timing: global
+R : .e(init:0) 1x1of2 sink, timing: global
 channels:
-L : .e(init:0) 1x1of2 source-random,stopped
-R : .e(init:0) 1x1of2 sink,stopped
+L : .e(init:0) 1x1of2 source-random,stopped, timing: global
+R : .e(init:0) 1x1of2 sink,stopped, timing: global
 channels:
-L : .e(init:0) 1x1of2 source-random
-R : .e(init:0) 1x1of2 sink
+L : .e(init:0) 1x1of2 source-random, timing: global
+R : .e(init:0) 1x1of2 sink, timing: global

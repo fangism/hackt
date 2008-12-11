@@ -1,0 +1,34 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+timing: uniform (10)
+Warning: channel acknowledge `X.e' has no fanin!
+	0	X.e : 0
+	10	X.d[0] : 0
+	10	X.d[1] : 0
+X : .e(init:0) 1x1of2 source,stopped, timing: global {0,1,}* @0
+	count: 0, unknowns: 0
+channel X: timing: global
+	10	X.e : 1
+	20	X.d[0] : 1	[by X.e:=1]
+	20	X.e : 0
+	30	X.d[0] : 0	[by X.e:=0]
+channel X: timing: after=10
+	30	X.e : 1
+	40	X.d[1] : 1	[by X.e:=1]
+	40	X.e : 0
+	50	X.d[1] : 0	[by X.e:=0]
+channel X: timing: after=50
+	50	X.e : 1
+	100	X.d[0] : 1	[by X.e:=1]
+	100	X.e : 0
+	150	X.d[0] : 0	[by X.e:=0]
+channel X: timing: random(exp.)
+channel X: timing: random(<1000)
+timing: uniform (10)
+channel X: timing: global
+	150	X.e : 1
+	160	X.d[1] : 1	[by X.e:=1]
+	160	X.e : 0
+	170	X.d[1] : 0	[by X.e:=0]

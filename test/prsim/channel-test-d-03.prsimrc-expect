@@ -21,7 +21,7 @@ setting data rail
 channel	X (.data) : 0
 	20	X.n : 0
 	30	X.e : 0	[by X.n:=0]
-X : .e(init:0) .n 1x1of2 sink,watch
+X : .e(init:0) .n 1x1of2 sink,watch, timing: global
 	count: 1, unknowns: 0
 node at: `X.e' : 0
 caused by: `X.n' : 0
@@ -31,7 +31,7 @@ resetting data rail
 	30	X.d[0] : 0
 	30	X.n : 1
 	40	X.e : 1	[by X.n:=1]
-X : .e(init:0) .n 1x1of2 sink,watch
+X : .e(init:0) .n 1x1of2 sink,watch, timing: global
 	count: 0, unknowns: 0
 node at: `X.e' : 1
 caused by: `X.n' : 1
@@ -42,7 +42,7 @@ setting data rail
 channel	X (.data) : 1
 	40	X.n : 0
 	50	X.e : 0	[by X.n:=0]
-X : .e(init:0) .n 1x1of2 sink,watch
+X : .e(init:0) .n 1x1of2 sink,watch, timing: global
 	count: 1, unknowns: 0
 node at: `X.e' : 0
 caused by: `X.n' : 0
@@ -52,7 +52,7 @@ resetting data rail
 	50	X.d[1] : 0
 	50	X.n : 1
 	60	X.e : 1	[by X.n:=1]
-X : .e(init:0) .n 1x1of2 sink,watch
+X : .e(init:0) .n 1x1of2 sink,watch, timing: global
 	count: 0, unknowns: 0
 node at: `X.e' : 1
 caused by: `X.n' : 1

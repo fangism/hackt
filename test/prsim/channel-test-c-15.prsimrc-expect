@@ -4,7 +4,7 @@ Y : .e(init:1) .v 1x1of4 off
 Z : .a(init:0) .v 1x1of3 off
 Warning: channel acknowledge `Y.e' has no fanin!
 Warning: channel validity `Y.v' has no fanout, but is being sourced.
-Y : .e(init:1) .v 1x1of4 source {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @0 < channel-test-a-values-Y.txt
+Y : .e(init:1) .v 1x1of4 source, timing: global {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @0 < channel-test-a-values-Y.txt
 	count: 0, unknowns: 4
 why-x: Y is sourced, should be able to trace back through acknowledge 
 Y.d[0]:X, from-channel, pull up/dn undriven
@@ -157,7 +157,7 @@ Y.v:1
 - - - - - - - - - - - - - - - - - - - 
 freezing channel Y, and setting ack 
 	100	Y.e : 0
-Y : .e(init:1) .v 1x1of4 source,stopped {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @2 < channel-test-a-values-Y.txt
+Y : .e(init:1) .v 1x1of4 source,stopped, timing: global {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @2 < channel-test-a-values-Y.txt
 	count: 1, unknowns: 0
 Y.d[1]:0
   (channel Y is stopped.)
@@ -191,7 +191,7 @@ WARNING: weak-unstable `Y.v'-
 >> cause: `Y.d[0]' (val: X)
 	120	Y.d[3] : X	[by Y.e:=X]
 	120	Y.v : X	[by Y.d[0]:=X]
-Y : .e(init:1) .v 1x1of4 source {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @2 < channel-test-a-values-Y.txt
+Y : .e(init:1) .v 1x1of4 source, timing: global {0,3,2,3,1,1,0,1,2,0,2,3,1,3,0,2,} @2 < channel-test-a-values-Y.txt
 	count: 0, unknowns: 4
 Y.d[0]:X, from-channel, pull up/dn undriven
   Y.e:X, pull up/dn undriven, no fanin

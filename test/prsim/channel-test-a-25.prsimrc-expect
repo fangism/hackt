@@ -18,11 +18,11 @@ event queue:
 	10	Z.a : 0
 time: 0
 initializing... 
-X : .e(init:0) 1x1of2 source,stopped {0,0,0,1,} @0
+X : .e(init:0) 1x1of2 source,stopped, timing: global {0,0,0,1,} @0
 	count: 0, unknowns: 2
-Y : .e(init:1) 1x1of4 source,stopped {0,2,0,1,}* @0
+Y : .e(init:1) 1x1of4 source,stopped, timing: global {0,2,0,1,}* @0
 	count: 0, unknowns: 4
-Z : .a(init:0) 1x1of3 sink,stopped
+Z : .a(init:0) 1x1of3 sink,stopped, timing: global
 	count: 0, unknowns: 3
 resetting... 
 channels:

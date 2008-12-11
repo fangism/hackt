@@ -1,0 +1,12 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+X : .e(init:0) 1x1of2 off
+	count: 0, unknowns: 2
+channel X: timing: global
+channel X: timing: after=10
+channel X: timing: after=50
+channel X: timing: random(exp.)
+channel X: timing: random(<1000)
+channel X: timing: global

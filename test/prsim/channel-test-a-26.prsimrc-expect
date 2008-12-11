@@ -9,11 +9,11 @@ Z : .a(init:0) 1x1of3 off
 Warning: channel acknowledge `X.e' has no fanin!
 Warning: channel acknowledge `Y.e' has no fanin!
 initializing... 
-X : .e(init:0) 1x1of2 source,watch,stopped {0,0,0,1,} @0
+X : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,0,0,1,} @0
 	count: 0, unknowns: 2
-Y : .e(init:1) 1x1of4 source,watch,stopped {0,2,0,1,}* @0
+Y : .e(init:1) 1x1of4 source,watch,stopped, timing: global {0,2,0,1,}* @0
 	count: 0, unknowns: 4
-Z : .a(init:0) 1x1of3 sink,watch,stopped
+Z : .a(init:0) 1x1of3 sink,watch,stopped, timing: global
 	count: 0, unknowns: 3
 resetting... 
 channels:

@@ -2,17 +2,17 @@ channels:
 L : .e(init:0) 1x1of2 off
 R : .e(init:0) 1x1of2 off
 excess expect values will not be used 
-L : .e(init:0) 1x1of2 source {0,1,1,0,1,1,} @0
+L : .e(init:0) 1x1of2 source, timing: global {0,1,1,0,1,1,} @0
 	count: 0, unknowns: 2
-R : .e(init:0) 1x1of2 sink,expect {0,1,1,0,1,1,0,1,1,} @0
+R : .e(init:0) 1x1of2 sink,expect, timing: global {0,1,1,0,1,1,0,1,1,} @0
 	count: 0, unknowns: 2
-L : .e(init:0) 1x1of2 source,watch,stopped {0,1,1,0,1,1,} @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,1,1,} @0
 	count: 0, unknowns: 2
-R : .e(init:0) 1x1of2 sink,expect,watch,stopped {0,1,1,0,1,1,0,1,1,} @0
+R : .e(init:0) 1x1of2 sink,expect,watch,stopped, timing: global {0,1,1,0,1,1,0,1,1,} @0
 	count: 0, unknowns: 2
-L : .e(init:0) 1x1of2 source,watch,stopped {0,1,1,0,1,1,} @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,1,1,} @0
 	count: 0, unknowns: 0
-R : .e(init:0) 1x1of2 sink,expect,watch,stopped {0,1,1,0,1,1,0,1,1,} @0
+R : .e(init:0) 1x1of2 sink,expect,watch,stopped, timing: global {0,1,1,0,1,1,0,1,1,} @0
 	count: 0, unknowns: 0
 event queue:
 	50	L.d[0] : 1
@@ -32,5 +32,5 @@ channel	R (.data) : 1
 no asserts failed, yay! 
 L : .e(init:0) 1x1of2 watch
 	count: 0, unknowns: 0
-R : .e(init:0) 1x1of2 sink,expect,watch {0,1,1,0,1,1,0,1,1,} @6
+R : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,1,1,0,1,1,} @6
 	count: 0, unknowns: 0

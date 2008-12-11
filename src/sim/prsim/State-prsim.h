@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.19 2008/11/29 03:24:54 fang Exp $
+	$Id: State-prsim.h,v 1.20 2008/12/11 05:39:55 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -609,10 +609,12 @@ private:
 		 */
 		FLAG_STOP_SIMULATION = 0x02,
 		FLAG_ESTIMATE_ENERGY = 0x04,
+#if 0
 		/**
-			TODO: use different field to track timing mode.  
+			Deprecated long ago.
 		 */
 		FLAG_RANDOM_TIMING = 0x08,
+#endif
 		/**
 			Use this to determine whether or not to print
 			transition on every node, rather than using the

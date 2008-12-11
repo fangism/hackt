@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-12-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-76:
+	  prsim: new command 'channel-timing' to set per-channel
+		timing policies {global, after, random}
+	  Test cases updated (channel-show), and new test cases added.
+
+
 2008-12-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-75:
