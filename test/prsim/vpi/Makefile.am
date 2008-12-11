@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2008/12/03 05:32:21 fang Exp $
+#	$Id: Makefile.am,v 1.8 2008/12/11 22:45:11 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -16,6 +16,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 # for .v verilog tests
 HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	inverters inverters-delay shoelace \
+	inverters-watch inverters-watch2 \
 	interleave-a interleave-b interleave-c \
 	oscillator-fanout \
 	independent-01 \

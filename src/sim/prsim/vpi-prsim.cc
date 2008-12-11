@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.11 2008/12/03 05:32:18 fang Exp $
+	$Id: vpi-prsim.cc,v 1.12 2008/12/11 22:45:10 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -362,7 +362,7 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
   {
     const node_index_type ni = GET_NODE(nr);
     const node_type& n(prsim_state->get_node(ni));
-    const node_index_type m = GET_CAUSE(nr);
+    // const node_index_type m = GET_CAUSE(nr);
     const Time_t prsim_time = prsim_state->time();
     const vpiHandleMapType::const_iterator
 	n_space(vpiHandleMap.find(ni)),
@@ -376,10 +376,16 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 	cout << "prsim time: " << prsim_time << endl;
 #endif
 	if (prsim_state->watching_all_nodes()) {
-		print_watched_node(cout << "prsim: \t" << prsim_time << '\t', 
+		print_watched_node(cout << "prsim:\t" << prsim_time << '\t', 
 			*prsim_state, nr);
 	}
-    if (n.is_breakpoint() && (n_space != n_end)) {
+    if (n.is_breakpoint()) {
+	if (prsim_state->is_watching_node(GET_NODE(nr)) &&
+			!prsim_state->watching_all_nodes()) {
+		print_watched_node(cout << "prsim:\t" << prsim_time << '\t', 
+			*prsim_state, nr);
+	}
+    if (n_space != n_end) {
 	STACKTRACE("breakpt && registered");
       s_vpi_time tm;
 
@@ -443,25 +449,11 @@ for ( ; net_iter != net_end; ++net_iter) {
 }	// end for each fanout to VPI
 	break;	// from while loop
     }
-    else if (n.is_breakpoint() && (n_space == n_end)) {
-	STACKTRACE("breakpt && unregistered");
-	const string name(prsim_state->get_node_canonical_name(ni));
-	ostringstream oss;
-	oss << "\t" << prsim_time << " " << name << " : ";
-	n.dump_value(oss);
-	vpi_printf("%s", oss.str().c_str());
-      if (m) {
-	ostringstream oss2;
-	oss2 << "  [by " << prsim_state->get_node_canonical_name(m) << ":=";
-	prsim_state->get_node(m).dump_value(oss2);
-	oss2 << "]";
-	vpi_printf("%s", oss2.str().c_str());
-      }
-      vpi_printf ("\n");
-    }
-  }
+	// is not registered $from_prsim
+    }	// end if is_breakpoint
+  }	// end while
 }
-// end _run_prsim
+// end __advance_prsim
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

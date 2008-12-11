@@ -1,0 +1,182 @@
+$start of simulation 
+at time   0.000, observed in 0
+prsim:	10	in1 : 1
+prsim:	40	out3 : 0	[by in3:=1]
+at time   0.050, observed out = 1
+at time   1.000, observed in 1
+prsim:	1010	in1 : 0
+prsim:	1040	out3 : 1	[by in3:=0]
+at time   1.050, observed out = 0
+at time   2.000, observed in 0
+prsim:	2010	in1 : 1
+prsim:	2040	out3 : 0	[by in3:=1]
+at time   2.050, observed out = 1
+at time   3.000, observed in 1
+prsim:	3010	in1 : 0
+prsim:	3040	out3 : 1	[by in3:=0]
+at time   3.050, observed out = 0
+at time   4.000, observed in 0
+prsim:	4010	in1 : 1
+prsim:	4040	out3 : 0	[by in3:=1]
+at time   4.050, observed out = 1
+at time   5.000, observed in 1
+prsim:	5010	in1 : 0
+prsim:	5040	out3 : 1	[by in3:=0]
+at time   5.050, observed out = 0
+at time   6.000, observed in 0
+prsim:	6010	in1 : 1
+prsim:	6040	out3 : 0	[by in3:=1]
+at time   6.050, observed out = 1
+at time   7.000, observed in 1
+prsim:	7010	in1 : 0
+prsim:	7040	out3 : 1	[by in3:=0]
+at time   7.050, observed out = 0
+at time   8.000, observed in 0
+prsim:	8010	in1 : 1
+prsim:	8040	out3 : 0	[by in3:=1]
+at time   8.050, observed out = 1
+at time   9.000, observed in 1
+prsim:	9010	in1 : 0
+prsim:	9040	out3 : 1	[by in3:=0]
+at time   9.050, observed out = 0
+at time  10.000, observed in 0
+prsim:	10010	in1 : 1
+prsim:	10040	out3 : 0	[by in3:=1]
+at time  10.050, observed out = 1
+at time  11.000, observed in 1
+prsim:	11010	in1 : 0
+prsim:	11040	out3 : 1	[by in3:=0]
+at time  11.050, observed out = 0
+at time  12.000, observed in 0
+prsim:	12010	in1 : 1
+prsim:	12040	out3 : 0	[by in3:=1]
+at time  12.050, observed out = 1
+at time  13.000, observed in 1
+prsim:	13010	in1 : 0
+prsim:	13040	out3 : 1	[by in3:=0]
+at time  13.050, observed out = 0
+at time  14.000, observed in 0
+prsim:	14010	in1 : 1
+prsim:	14040	out3 : 0	[by in3:=1]
+at time  14.050, observed out = 1
+at time  15.000, observed in 1
+prsim:	15010	in1 : 0
+prsim:	15040	out3 : 1	[by in3:=0]
+at time  15.050, observed out = 0
+at time  16.000, observed in 0
+prsim:	16010	in1 : 1
+prsim:	16040	out3 : 0	[by in3:=1]
+at time  16.050, observed out = 1
+at time  17.000, observed in 1
+prsim:	17010	in1 : 0
+prsim:	17040	out3 : 1	[by in3:=0]
+at time  17.050, observed out = 0
+at time  18.000, observed in 0
+prsim:	18010	in1 : 1
+prsim:	18040	out3 : 0	[by in3:=1]
+at time  18.050, observed out = 1
+at time  19.000, observed in 1
+prsim:	19010	in1 : 0
+prsim:	19040	out3 : 1	[by in3:=0]
+at time  19.050, observed out = 0
+at time  20.000, observed in 0
+prsim:	20010	in1 : 1
+prsim:	20040	out3 : 0	[by in3:=1]
+at time  20.050, observed out = 1
+at time  21.000, observed in 1
+prsim:	21010	in1 : 0
+prsim:	21040	out3 : 1	[by in3:=0]
+at time  21.050, observed out = 0
+at time  22.000, observed in 0
+prsim:	22010	in1 : 1
+prsim:	22040	out3 : 0	[by in3:=1]
+at time  22.050, observed out = 1
+at time  23.000, observed in 1
+prsim:	23010	in1 : 0
+prsim:	23040	out3 : 1	[by in3:=0]
+at time  23.050, observed out = 0
+at time  24.000, observed in 0
+prsim:	24010	in1 : 1
+prsim:	24040	out3 : 0	[by in3:=1]
+at time  24.050, observed out = 1
+at time  25.000, observed in 1
+prsim:	25010	in1 : 0
+prsim:	25040	out3 : 1	[by in3:=0]
+at time  25.050, observed out = 0
+at time  26.000, observed in 0
+prsim:	26010	in1 : 1
+prsim:	26040	out3 : 0	[by in3:=1]
+at time  26.050, observed out = 1
+at time  27.000, observed in 1
+prsim:	27010	in1 : 0
+prsim:	27040	out3 : 1	[by in3:=0]
+at time  27.050, observed out = 0
+at time  28.000, observed in 0
+prsim:	28010	in1 : 1
+prsim:	28040	out3 : 0	[by in3:=1]
+at time  28.050, observed out = 1
+at time  29.000, observed in 1
+prsim:	29010	in1 : 0
+prsim:	29040	out3 : 1	[by in3:=0]
+at time  29.050, observed out = 0
+at time  30.000, observed in 0
+prsim:	30010	in1 : 1
+prsim:	30040	out3 : 0	[by in3:=1]
+at time  30.050, observed out = 1
+at time  31.000, observed in 1
+prsim:	31010	in1 : 0
+prsim:	31040	out3 : 1	[by in3:=0]
+at time  31.050, observed out = 0
+at time  32.000, observed in 0
+prsim:	32010	in1 : 1
+prsim:	32040	out3 : 0	[by in3:=1]
+at time  32.050, observed out = 1
+at time  33.000, observed in 1
+prsim:	33010	in1 : 0
+prsim:	33040	out3 : 1	[by in3:=0]
+at time  33.050, observed out = 0
+at time  34.000, observed in 0
+prsim:	34010	in1 : 1
+prsim:	34040	out3 : 0	[by in3:=1]
+at time  34.050, observed out = 1
+at time  35.000, observed in 1
+prsim:	35010	in1 : 0
+prsim:	35040	out3 : 1	[by in3:=0]
+at time  35.050, observed out = 0
+at time  36.000, observed in 0
+prsim:	36010	in1 : 1
+prsim:	36040	out3 : 0	[by in3:=1]
+at time  36.050, observed out = 1
+at time  37.000, observed in 1
+prsim:	37010	in1 : 0
+prsim:	37040	out3 : 1	[by in3:=0]
+at time  37.050, observed out = 0
+at time  38.000, observed in 0
+prsim:	38010	in1 : 1
+prsim:	38040	out3 : 0	[by in3:=1]
+at time  38.050, observed out = 1
+at time  39.000, observed in 1
+prsim:	39010	in1 : 0
+prsim:	39040	out3 : 1	[by in3:=0]
+at time  39.050, observed out = 0
+at time  40.000, observed in 0
+prsim:	40010	in1 : 1
+prsim:	40040	out3 : 0	[by in3:=1]
+at time  40.050, observed out = 1
+at time  41.000, observed in 1
+prsim:	41010	in1 : 0
+prsim:	41040	out3 : 1	[by in3:=0]
+at time  41.050, observed out = 0
+at time  42.000, observed in 0
+prsim:	42010	in1 : 1
+prsim:	42040	out3 : 0	[by in3:=1]
+at time  42.050, observed out = 1
+at time  43.000, observed in 1
+prsim:	43010	in1 : 0
+prsim:	43040	out3 : 1	[by in3:=0]
+at time  43.050, observed out = 0
+at time  44.000, observed in 0
+prsim:	44010	in1 : 1
+prsim:	44040	out3 : 0	[by in3:=1]
+at time  44.050, observed out = 1
+$finish at simulation time   45.0 ns
