@@ -1,0 +1,23 @@
+// "cbit.hac"
+// reduced from "cbit_test_stat.hac"
+
+deftype bit <: bool (bool t,f) {
+	set {}
+	get {}
+}
+
+defproc cbit(bool bl, _bl, wl; bit p) {
+prs {
+	wl & ~_bl -> p.f-
+	wl & ~bl -> p.t-
+	[weak=1] p.f => p.t-
+	[weak=1] p.t => p.f-
+	[weak=1] p.t & wl -> _bl-
+	[weak=1] p.f & wl -> bl-
+}
+}
+
+bool bl, _bl, wl;
+bit p;
+cbit c(bl, _bl, wl, p);
+
