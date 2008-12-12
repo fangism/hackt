@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.37 2008/12/11 05:39:54 fang Exp $
+	$Id: State-prsim.cc,v 1.38 2008/12/12 18:30:35 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3390,7 +3390,11 @@ do {
 #endif
 #if DEBUG_STEP
 	DEBUG_STEP_PRINT("examining expression ID: " << ui << endl);
-	STRUCT->dump_struct(STACKTRACE_INDENT) << endl;
+	STRUCT->dump_struct(STACKTRACE_INDENT
+#if PRSIM_RULE_DIRECTION
+		, false		// doesn't matter, is not root
+#endif
+		) << endl;
 	u->dump_state(STACKTRACE_INDENT << "before: "
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		, *s
@@ -3712,7 +3716,7 @@ State::propagate_evaluation(
 		get_node_canonical_name(ui) << " with pull state " <<
 		size_t(next) << endl);
 #if PRSIM_WEAK_RULES
-	DEBUG_STEP_PRINT("root is " << (is_weak ? "" : "not") << " weak" << endl);
+	DEBUG_STEP_PRINT("root is" << (is_weak ? " " : " not") << " weak" << endl);
 #endif
 	const event_index_type ei = n.get_event();
 #if DEBUG_STEP
@@ -3782,6 +3786,9 @@ if (n.pending_event()) {
 		return err;	// no error
 	}
 }
+} else if (is_weak) {
+	DEBUG_STEP_PRINT("weak rules off" << endl);
+	return ERROR_NONE;
 }	// end if weak_rules_enabled
 #endif	// PRSIM_WEAK_RULES
 #if PRSIM_RULE_DIRECTION

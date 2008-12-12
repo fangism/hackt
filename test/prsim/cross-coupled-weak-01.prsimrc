@@ -1,5 +1,10 @@
 # "cross-coupled-weak-01.prsimrc"
 # @haco@ cross-coupled-weak.haco-a
 
+weak-rules on
 source cross-coupled-01.prsimrc
+
+echo TODO: the interference warnings do not exactly match those of 
+echo the non-weak version of this test!
+
 

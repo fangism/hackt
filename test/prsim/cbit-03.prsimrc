@@ -1,0 +1,23 @@
+# "cbit-03.prsimrc"
+# copy-modified from "cbit-02.prsimrc"
+# @haco@ cbit.haco-a
+# testing some weak rules
+
+# mode
+weak-rules off
+# by default
+watchall
+watchall-queue
+set p.f 1
+step-event
+queue
+assertn-queue
+fanin-get p.t
+fanin-get p.f
+
+set wl 0
+step-event
+echo re-evaluation of p.f's fanin will not expose X to p.f
+queue
+assertn-queue
+

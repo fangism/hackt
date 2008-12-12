@@ -1,0 +1,16 @@
+enqueued:	0	p.f : 0
+	0	p.f : 0
+event queue:
+Fanins of node `p.t':
+(from c):
+[after 10]	wl:X & ~bl:X<X><X> -> p.t-:X
+[after 10, weak]	~p.f:0 -> p.t+:X
+[after 10, weak]	p.f:0 -> p.t-:X
+Fanins of node `p.f':
+(from c):
+[after 10]	wl:X & ~_bl:X<X><X> -> p.f-:0
+[after 10, weak]	~p.t:X -> p.f+:0
+[after 10, weak]	p.t:X -> p.f-:0
+enqueued:	0	wl : 0
+	0	wl : 0
+event queue:

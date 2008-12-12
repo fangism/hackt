@@ -1,0 +1,22 @@
+# "cbit-07.prsimrc"
+# copy-modified from "cbit-06.prsimrc"
+# @haco@ cbit.haco-a
+# testing some weak rules
+
+# mode
+weak-rules on
+# by default
+watchall
+watchall-queue
+
+set wl 0
+step-event
+assertn-queue
+
+set p.f 0
+step-event
+queue
+assert-queue
+step-event
+assertn-queue
+

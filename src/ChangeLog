@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-12-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-78:
+	  CRITICAL bug: weak rules were not being filtered out properly,
+		meaning that some tests were mistakenly simulating with
+		weak-rules on when the mode was off.  
+	  Few test updates were non-trivial, some differences in 
+		weak-interference warnings need to be resolved.
+		Consider this patch medium-risk.  
+
+
 2008-12-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-77:

@@ -1,0 +1,13 @@
+# "cbit-01.prsimrc"
+# @haco@ cbit.haco-a
+# testing some weak rules
+
+# mode
+watchall
+watchall-queue
+set p.f 1
+step-event
+queue
+assertn-queue
+
+

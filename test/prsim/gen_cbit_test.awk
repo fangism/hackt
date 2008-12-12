@@ -4,6 +4,7 @@
 
 BEGIN {
 	print "initialize";
+	print "weak-rules on";
 	print "set write 0";
 	print "set _pchg 0";
 	print "set din 0";

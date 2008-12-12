@@ -1,0 +1,22 @@
+enqueued:	0	p.f : 1
+	0	p.f : 1
+event queue:
+Fanins of node `p.t':
+(from c):
+[after 10]	wl:X & ~bl:X<X><X> -> p.t-:X
+[after 10, weak]	~p.f:1 -> p.t+:X
+[after 10, weak]	p.f:1 -> p.t-:X
+Fanins of node `p.f':
+(from c):
+[after 10]	wl:X & ~_bl:X<X><X> -> p.f-:1
+[after 10, weak]	~p.t:X -> p.f+:1
+[after 10, weak]	p.t:X -> p.f-:1
+enqueued:	0	wl : 0
+WARNING: weak-interference `p.f'
+>> cause: `wl' (val: 0)
+enqueued:	10	p.f : X	[from wl:=0]	(weak)
+	0	wl : 0
+re-evaluation of p.f's fanin will expose X to p.f 
+event queue:
+	10	p.f : X	[from wl:=0]	(weak)
+	10	p.f : X	[by wl:=0]

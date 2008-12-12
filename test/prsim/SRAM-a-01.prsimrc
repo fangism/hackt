@@ -1,6 +1,7 @@
 # "SRAM-a-01.prsimrc"
 # @haco@ SRAM-a.haco-a
 
+weak-rules on
 fanin bl
 fanin _bl
 watchall
@@ -13,6 +14,7 @@ set wv 0
 set wl[0] 0
 set we 0
 cycle
+echo TODO: missing weak-interference warning on bl?
 status U
 time
 echo done precharging, now writing...
