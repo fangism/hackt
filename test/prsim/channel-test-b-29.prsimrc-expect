@@ -1,0 +1,5 @@
+channels:
+L : .e(init:0) 1x1of2 off
+R : .e(init:0) 1x1of2 off
+Expecting no more channel values on R, but found some.
+... at line 18

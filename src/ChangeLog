@@ -5,6 +5,15 @@
 
 2008-12-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-79:
+	  CRITICAL bug: prsim channel expects were failing to advance
+		on 'X' (don't care) values, thereby missing errors
+		after the first X.  (Fixed.)
+	  new command: channel-assert-value-queue -- check the state
+		of channel sourcing/expecting a finite value sequence.
+	  Documented, tested.
+
+
 	* HACKT-00-01-04-main-00-82-78:
 	  CRITICAL bug: weak rules were not being filtered out properly,
 		meaning that some tests were mistakenly simulating with

@@ -1,0 +1,20 @@
+# "channel-test-b-27.prsimrc"
+# copy-modified from "channel-test-b-26.prsimrc"
+# @haco@ channel-test-b.haco-a
+# bug fix test case -- expect fail
+
+source channel-test-b-01.prsimrc
+
+channel-source-args L 0 1 0 0 1 1
+channel-sink R
+channel-expect-args R 0 1 X 1 0 X
+
+channel-watchall
+
+channel-reset-all
+cycle
+channel-release-all
+cycle
+
+channel-show-all
+

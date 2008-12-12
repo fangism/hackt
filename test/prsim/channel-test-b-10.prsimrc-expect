@@ -39,5 +39,5 @@ channel	R (.data) : 1
 no asserts failed, yay! 
 L : .e(init:0) 1x1of2 watch
 	count: 0, unknowns: 0
-R : .e(init:0) 1x1of2 sink,expect,watch, timing: global {X,X,X,X,}* @0 < channel-dont-cares.txt
+R : .e(init:0) 1x1of2 sink,expect,watch, timing: global {X,X,X,X,}* @2 < channel-dont-cares.txt
 	count: 0, unknowns: 0

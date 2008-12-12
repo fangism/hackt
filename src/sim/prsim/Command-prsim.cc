@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.27 2008/12/11 05:39:54 fang Exp $
+	$Id: Command-prsim.cc,v 1.28 2008/12/12 22:36:53 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -5428,6 +5428,70 @@ ChannelExpectArgsLoop::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-assert-value-queue.texi
+@deffn Command channel-assert-value-queue chan val
+For channels that are sourcing or expecting values, 
+assert the state of the channel value array being used.  
+@var{val} is 1 to assert that values are still remaining, 
+0 to assert that values are empty (channel is finished).
+Looped sources and expects will never be empty.  
+This is useful for checking that finite sequence tests
+have actually completed.  
+Exits fatally if assertion fails.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssertValueQueue,
+	"channel-assert-value-queue", channels, 
+	"Assert whether channel is out of source/expect values")
+
+int
+ChannelAssertValueQueue::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string& cn(*i);
+	channel* const c = s.get_channel_manager().lookup(cn);
+	if (c) {
+		++i;
+		const string& v(*i);
+		int x;
+		if (string_to_num(v, x)) {
+			cerr << "Error: expecting 0 or 1 to assert." << endl;
+			usage(cerr);
+			return Command::BADARG;
+		}
+		if (c->have_value()) {
+			if (!x) {
+				cerr << "Expecting no more channel values on "
+					<< cn << ", but found some." << endl;
+				return Command::FATAL;
+			}
+		} else {
+			if (x) {
+				cerr << "Expecting more channel values on "
+					<< cn << ", but found none." << endl;
+				return Command::FATAL;
+			}
+		}
+		return Command::NORMAL;
+	} else	return Command::BADARG;
+}
+}
+
+void
+ChannelAssertValueQueue::usage(ostream& o) {
+o << name << " channel [01]\n";
+o << "Checks the value status of a source/expecting channel.\n";
+o << "If argument is 1, assert that channel still has values remaining.\n";
+o << "If argument is 0, assert that channel still has no values remaining."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_CHANNEL_TIMING
 /***
 @texinfo cmd/channel-timing.texi
@@ -5445,8 +5509,8 @@ Modes:
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelTiming, "channel-timing", modes, 
-	"set/get per channel timing mode")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelTiming, "channel-timing", 
+	channels, "set/get per channel timing mode")
 
 int
 ChannelTiming::main(State& s, const string_list& a) {

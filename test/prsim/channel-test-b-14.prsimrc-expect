@@ -44,7 +44,7 @@ event queue:
 time: 540
 L : .e(init:0) 1x1of2 source, timing: global {X,X,X,X,}* @3 < channel-dont-cares.txt
 	count: 1, unknowns: 0
-R : .e(init:0) 1x1of2 sink,expect, timing: global {X,X,X,X,}* @0 < channel-dont-cares.txt
+R : .e(init:0) 1x1of2 sink,expect, timing: global {X,X,X,X,}* @2 < channel-dont-cares.txt
 	count: 0, unknowns: 0
 	560	R.e : 0
 	560	L.e : 0

@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.13 2008/12/11 05:39:49 fang Exp $
+@c $Id: commands.texi,v 1.14 2008/12/12 22:36:49 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -226,6 +226,11 @@ the following commands.
 
 @noindent
 It is legal to source and sink on the same channel.  
+
+It is often useful to query the status of a channel
+that is sourcing or expecting values.
+
+@include cmd/channel-assert-value-queue.texi
 
 Channel sources and sinks can be configured to respond with 
 a different timing from the global policy.
