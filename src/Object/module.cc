@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.36 2008/11/12 21:43:06 fang Exp $
+ 	$Id: module.cc,v 1.37 2008/12/13 00:27:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -155,6 +155,17 @@ module::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+module::dump_instance_map(ostream& o) const {
+	if (is_allocated()) {
+		o << "Globally allocated state:" << endl;
+		const footprint& _footprint(get_footprint());
+		global_state.dump(o, _footprint);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
 module::dump(ostream& o) const {
 	o << "In module created from: " << key;
 	if (is_unrolled())
@@ -164,7 +175,6 @@ module::dump(ostream& o) const {
 	o << endl;
 
 	global_namespace->dump(o) << endl;
-	const footprint& _footprint(get_footprint());
 	const expr_dump_context& dc(expr_dump_context::default_value);
 	if (!is_unrolled()) {
 		o << "Sequential instance management (to unroll): " << endl;
@@ -193,14 +203,7 @@ module::dump(ostream& o) const {
 
 	if (is_unrolled()) {
 		footprint_map.dump(o, expr_dump_context::default_value) << endl;
-	if (is_allocated()) {
-#if 0
-		// only for debugging
-		global_state.cache_process_parent_refs();
-#endif
-		o << "Globally allocated state:" << endl;
-		global_state.dump(o, _footprint);
-	}
+		dump_instance_map(o);
 	}
 	return o;
 }

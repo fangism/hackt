@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.205 2008/12/02 07:59:07 fang Exp $
+#	$Id: Makefile.am,v 1.206 2008/12/13 00:27:51 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -51,7 +51,7 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt haco haccreate hacalloc \
-	hacobjdump hflat hacpp hacprsim hacchpsim
+	hacobjdump hacinstdump hflat hacpp hacprsim hacchpsim
 if HAVE_LIBGUILE
 bin_PROGRAMS += hacguile hacchpsimguile
 endif
@@ -107,6 +107,10 @@ haco_CPPFLAGS = -DWITH_MAIN
 haco_LDADD = libhacktlib.la
 # goal: just libhacktparsers.la
 
+
+hacinstdump_SOURCES = main/instdump.cc
+# hacinstdump_CPPFLAGS =
+hacinstdump_LDADD = libhacktlib.la
 
 hacobjdump_SOURCES = main/objdump.cc
 hacobjdump_CPPFLAGS = -DWITH_MAIN

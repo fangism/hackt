@@ -1,5 +1,5 @@
 @c "hackt/compiler.texi"
-@c $Id: compiler.texi,v 1.3 2008/07/30 05:26:33 fang Exp $
+@c $Id: compiler.texi,v 1.4 2008/12/13 00:27:48 fang Exp $
 
 @node Compiler
 @chapter Compiler
@@ -12,6 +12,7 @@ TODO: figure of compile flow and phases.
 * Preprocessor::
 * Create::
 * Allocate::
+* Instance Dump::
 * File Conventions::
 * Program Examples::
 @end menu
@@ -110,6 +111,17 @@ the create, and allocate compile phases
 automatically run the necessary prerequisite phases where needed.  
 All developed tools should also implement this behavior.  
 
+@c ----------------------------------------------------------------------------
+@node Instance Dump
+@section Instance Dump
+@cindex instance dump
+
+We provide a utility to print instance and type information, 
+which can be used by other programs for performing text-based queries.
+@t{hacinstdump} takes an object file and prints a table of
+all instances in the (flattened) hierarchy.  
+The table contains information about the type of each named instance.  
+The program takes an object file as an argument, and has no other options.
 
 @c ----------------------------------------------------------------------------
 @node File Conventions
