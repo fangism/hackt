@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.206 2008/12/13 00:27:51 fang Exp $
+#	$Id: Makefile.am,v 1.207 2008/12/15 03:15:59 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1322,8 +1322,8 @@ PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 MAKE_REAL_LEXER_SCRIPT = $(AWK) -f $(srcdir)/$(FLEX_COMMON_PATCH) $< > $@.tmp
 
 MAKE_REAL_LEXER_SCRIPT += && \
-	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" ; \
-	$(ECHO) "\#include \"lexer/flex_lexer_state.h\"" ; \
+	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" && \
+	$(ECHO) "\#include \"lexer/flex_lexer_state.h\"" && \
 	$(CAT) $@.tmp | $(PURIFY_LEXER_PIPE) ;} > $@ && \
 	$(RM) $@.tmp $@.tmp.orig
 

@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.11 2008/12/02 07:59:08 fang Exp $
+#	$Id: purify_flex.awk,v 1.12 2008/12/15 03:16:02 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -14,6 +14,8 @@
 
 # We accomplish this by moving global variables to local variables.  
 # the following variables are needed.  
+
+# TODO: properly escape parentheses in regular expressions
 
 BEGIN {
 	script_name = "\"lexer/purify_flex.awk\"";
@@ -449,7 +451,7 @@ function append_call_args(str, arg) {
 	} else if (match($0, "yy_init_globals(.*)")) {
 		# (2.5.33 only)
 		$0 = replace_call_args($0, name);
-	} else if (match($0, "size_t.*num_to_read[ ]*);")) {
+	} else if (match($0, "size_t.*num_to_read[ ]*\\);")) {
 		# (2.5.35 only): remove incorrect cast to unsigned
 		# which triggers sign comparison warning (false positive)
 		gsub("\\(size_t\\)", "", $0);

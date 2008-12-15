@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.57 2008/12/12 22:36:54 fang Exp $
+#	$Id: Makefile.am,v 1.58 2008/12/15 03:16:03 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -40,6 +40,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	half-keeper-a \
 	cross-coupled cross-coupled-weak \
 	cross-pulldown \
+	cbit \
 	cbit_test_stat \
 	cross-pull-a \
 	bitline-a bitline-b \
