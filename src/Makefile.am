@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.207 2008/12/15 03:15:59 fang Exp $
+#	$Id: Makefile.am,v 1.208 2008/12/16 21:48:09 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1658,6 +1658,9 @@ sim/prsim/devel_switches.hchk: sim/prsim/devel_switches.h
 
 ../libltdl/ltdl.hchk: ../libltdl/ltdl.h
 	@$(TOUCH) $@
+
+../libltdl/libltdl.la:
+	+cd ../libltdl && $(MAKE)
 
 CLEANFILES += ../libltdl/ltdl.hchk
 

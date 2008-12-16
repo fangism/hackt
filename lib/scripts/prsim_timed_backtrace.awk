@@ -1,8 +1,9 @@
 #!/usr/bin/awk -f
 # "prsim_timed_backtrace.awk"
 # follows a causality chain of events from a prsim watchall dump
+# The algorithm used is precisely that of critical path finding. 
 
-# recommended use: (where $< is the log file)
+# recommended use: (where $< is the log file with 'watchall')
 # tac $< | awk -f <this_script>
 # optional prefilter:
 # grep "\t[0-9][0-9]*.* : [01X]" $< | tac | awk -f <this_script>

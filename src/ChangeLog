@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-12-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-81:
+	  Revert patch for revision -00-82-74, no longer allow
+		conditional spec directives in deftypes.
+	  Test cases updated.
+
+
 2008-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-80:
