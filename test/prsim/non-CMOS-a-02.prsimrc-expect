@@ -1,0 +1,3 @@
+[top-level]
+rules:
+[after 10]	~b | b -> c-

@@ -1,0 +1,6 @@
+# "non-CMOS-b-01.prsimrc"
+# @haco@ non-CMOS-b.haco-a
+# reduced bug test case for -O1
+
+invariants .
+

@@ -10,13 +10,13 @@ $(c | ~c | c | ~c)
 $(~d | d | ~d | d)
 abcd: X -> 0 
 abcd: 0 -> 1 
-Warning: invariant violation: (~b:1 | b:1<0>) by node b:1
+Warning: invariant violation in [top-level]: (~b:1 | b:1<0>) by node b:1
 abcd: 1 -> X 
-Warning: possible invariant violation: (a:X | ~a:X<X>) by node a:X
-Warning: possible invariant violation: (~b:X | b:X<X>) by node b:X
+Warning: possible invariant violation in [top-level]: (a:X | ~a:X<X>) by node a:X
+Warning: possible invariant violation in [top-level]: (~b:X | b:X<X>) by node b:X
 abcd: X -> 1 
 abcd: 1 -> 0 
-Warning: invariant violation: (a:0 | ~a:0<0>) by node a:0
+Warning: invariant violation in [top-level]: (a:0 | ~a:0<0>) by node a:0
 abcd: 0 -> X 
-Warning: possible invariant violation: (a:X | ~a:X<X>) by node a:X
-Warning: possible invariant violation: (~b:X | b:X<X>) by node b:X
+Warning: possible invariant violation in [top-level]: (a:X | ~a:X<X>) by node a:X
+Warning: possible invariant violation in [top-level]: (~b:X | b:X<X>) by node b:X

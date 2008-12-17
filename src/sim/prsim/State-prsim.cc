@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.38 2008/12/12 18:30:35 fang Exp $
+	$Id: State-prsim.cc,v 1.39 2008/12/17 03:41:02 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -6584,15 +6584,13 @@ State::dump_subexpr
 		o << '(';
 	}
 	// peel out first iteration for infix printing
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	node_index_type gni = 0;
 	if (ci->first) {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
 		gni = st.translate_to_global_node(*this, ci->second);
-	}
 #else
-	const node_index_type gni = ci->second;
+		gni = ci->second;
 #endif
-	if (ci->first) {
 		STATE_MEM dump_node_canonical_name(o, gni);
 		if (v) {
 			STATE_MEM get_node(gni).dump_value(o << ':');
@@ -6604,6 +6602,11 @@ State::dump_subexpr
 	for (++ci; ci!=ce; ++ci) {
 		o << op;
 		if (ci->first) {
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+			gni = st.translate_to_global_node(*this, ci->second);
+#else
+			gni = ci->second;
+#endif
 			STATE_MEM dump_node_canonical_name(o, gni);
 			if (v) {
 				STATE_MEM get_node(gni).dump_value(o << ':');

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.33 2008/12/07 00:27:08 fang Exp $
+	$Id: ExprAlloc.cc,v 1.34 2008/12/17 03:41:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -487,6 +487,10 @@ ExprAlloc::compact_expr_pools(void) {
 	// may need to clean up
 	cerr << "expr_free_list has " << holes <<
 		" entries remaining."  << endl;
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	cerr << "before compaction:" << endl;
+	g->dump_struct(cerr);
+#endif
 #endif
 	const size_t eps = g->expr_pool.size();
 	const size_t move_end = eps -holes;
@@ -609,7 +613,12 @@ ExprAlloc::compact_expr_pools(void) {
 	}
 #endif
 #if DEBUG_CLEANUP
+#if PRSIM_INDIRECT_EXPRESSION_MAP
+	cerr << "after compaction:" << endl;
+	g->dump_struct(cerr);
+#else
 	state.dump_struct(cerr << "Final state:" << endl) << endl;
+#endif
 #endif
 }	// end visit(const state_manager&)
 #undef	DEBUG_CLEANUP

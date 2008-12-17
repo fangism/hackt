@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.7 2008/11/14 23:06:31 fang Exp $
+	$Id: Expr.cc,v 1.8 2008/12/17 03:41:01 fang Exp $
  */
 
 #include <iostream>
@@ -94,14 +94,15 @@ Expr::dump_struct(ostream& o
 #if !PRSIM_RULE_DIRECTION
 		const bool dir = direction();
 #endif
-		o << (dir ? " (pull-up: " : " (pull-dn: ");
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		// parent local node index is 0-indexed
 #else
 		// parent node index must be non-zero
 		INVARIANT(is_valid_node_index(parent));
 #endif
-		o << parent << ')';
+		// the following is meaningless if rule is an invariant
+		// unfortunately, can't tell from expr, need rule...
+		o << (dir ? " (pull-up: " : " (pull-dn: ") << parent << ')';
 	} else {
 		o << " (parent: ";
 #if PRSIM_INDIRECT_EXPRESSION_MAP

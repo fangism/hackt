@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.58 2008/12/15 03:16:03 fang Exp $
+#	$Id: Makefile.am,v 1.59 2008/12/17 03:41:03 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -52,7 +52,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	stuck-bug-a \
 	crash-bug-01 \
 	after_min_max after_min_max-bad \
-	non-CMOS-a \
+	non-CMOS-a non-CMOS-b \
 	always_random-a
 
 # TODO: more cross-coupled test cases
@@ -212,15 +212,14 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	invariant-c-01 invariant-c-02 \
 	invariant-d-01 invariant-d-02 \
 	inv-invariant-01 inv-invariant-02 inv-invariant-03 inv-invariant-04 \
+	invariant-not-X-01 \
+	non-CMOS-a-01 non-CMOS-a-02 \
+	non-CMOS-b-01 non-CMOS-b-02 \
 	assert-fail-01 assert-fail-03 \
 	check-excl-fail-01 check-excl-fail-02 check-excl-fail-03 \
 	check-excl-fail-04 \
 	after_min_max-01 after_min_max-02 after_min_max-03 \
 	memstats32-inv memstats64-inv
-
-# temporarily quarantined tests: ISE with -O1
-#	invariant-not-X-01
-#	non-CMOS-a-01 non-CMOS-a-02
 
 # override defaults for non-matched architectures
 if ABI_ILP32

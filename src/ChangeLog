@@ -5,6 +5,12 @@
 
 2008-12-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-82:
+	  prsim: horrendous bug in printing subexpressions, somehow 
+		exposed only when -ffold-literal optimization turned on.
+		Fixed, added test cases.  (ACX-PR-2335)
+
+
 	* HACKT-00-01-04-main-00-82-81:
 	  Revert patch for revision -00-82-74, no longer allow
 		conditional spec directives in deftypes.
