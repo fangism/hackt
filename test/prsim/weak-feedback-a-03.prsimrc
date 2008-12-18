@@ -1,0 +1,16 @@
+# "weak-feedback-03.prsimrc"
+# @haco@ weak-feedback-a.haco-a
+# testing show/hide
+
+rules .
+
+echo weak-rules hide
+weak-rules hide
+rules .
+
+echo weak-rules show
+weak-rules show
+rules .
+
+
+

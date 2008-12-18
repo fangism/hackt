@@ -1,0 +1,22 @@
+# "assert-confirm-01.prsimrc"
+# @haco@ inv.haco-a
+
+echo testing assert confirmation
+confirm
+assert a X
+assertn a 1
+assertn a 0
+
+set a 1
+cycle
+assert a 1
+assert b 0
+assert c 1
+
+noconfirm
+set a 0
+cycle
+assert a 0
+assert b 1
+assert c 0
+

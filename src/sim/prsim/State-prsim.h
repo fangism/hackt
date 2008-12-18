@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.20 2008/12/11 05:39:55 fang Exp $
+	$Id: State-prsim.h,v 1.21 2008/12/18 21:00:05 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -609,12 +609,11 @@ private:
 		 */
 		FLAG_STOP_SIMULATION = 0x02,
 		FLAG_ESTIMATE_ENERGY = 0x04,
-#if 0
 		/**
-			Deprecated long ago.
+			Print cause information on watched nodes.  
+			Causes are always tracked.  
 		 */
-		FLAG_RANDOM_TIMING = 0x08,
-#endif
+		FLAG_SHOW_CAUSE = 0x08,
 		/**
 			Use this to determine whether or not to print
 			transition on every node, rather than using the
@@ -651,16 +650,21 @@ private:
 			Default off.  
 		 */
 		FLAG_WEAK_RULES = 0x400,
-#endif
 		/**
-			Print cause information on watched nodes.  
-			Causes are always tracked.  
+			Whether or not to print weak rules in fanin/out.
 		 */
-		FLAG_SHOW_CAUSE = 0x800,
+		FLAG_HIDE_WEAK_RULES = 0x800,
+#endif
 		/**
 			Autosave on exit.
 		 */
 		FLAG_AUTOSAVE = 0x1000,
+		/**
+			Flag used by the interpreter to control
+			whether or not successful assertions are 
+			confirmed with a message. 
+		 */
+		FLAG_CONFIRM_ASSERTS = 0x2000,
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL | FLAG_SHOW_CAUSE,
 		/**
@@ -1125,20 +1129,34 @@ public:
 
 #if PRSIM_WEAK_RULES
 	void
-	enable_weak_rules(void) {
-		flags |= FLAG_WEAK_RULES;
+	enable_weak_rules(void) { flags |= FLAG_WEAK_RULES; }
+
+	void
+	disable_weak_rules(void) { flags &= ~FLAG_WEAK_RULES; }
+
+	bool
+	weak_rules_enabled(void) const { return flags & FLAG_WEAK_RULES; }
+
+	void
+	show_weak_rules(void) { flags &= ~FLAG_HIDE_WEAK_RULES; }
+
+	void
+	hide_weak_rules(void) { flags |= FLAG_HIDE_WEAK_RULES; }
+
+	bool
+	weak_rules_shown(void) const { return !(flags & FLAG_HIDE_WEAK_RULES); }
+#endif	// PRSIM_WEAK_RULES
+
+	bool
+	confirm_asserts(void) const {
+		return flags & FLAG_CONFIRM_ASSERTS;
 	}
 
 	void
-	disable_weak_rules(void) {
-		flags &= ~FLAG_WEAK_RULES;
+	confirm_asserts(const bool b) {
+		if (b)	flags |= FLAG_CONFIRM_ASSERTS;
+		else	flags &= ~FLAG_CONFIRM_ASSERTS;
 	}
-
-	bool
-	weak_rules_enabled(void) const {
-		return flags & FLAG_WEAK_RULES;
-	}
-#endif	// PRSIM_WEAK_RULES
 
 	/**
 		Extension to manage channel environments and actions. 

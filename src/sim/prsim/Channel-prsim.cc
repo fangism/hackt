@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.14 2008/12/12 22:36:52 fang Exp $
+	$Id: Channel-prsim.cc,v 1.15 2008/12/18 21:00:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1654,6 +1654,9 @@ channel::process_data(const State& s) throw (channel_exception) {
 			} else if (e > ERROR_WARN) {
 				throw ex;
 			}
+		} else if (s.confirm_asserts()) {
+			cout << "channel " << name << " has value " <<
+				DATA_VALUE(expect) << ", as expected." << endl;
 		}
 		} else {	// cannot expect invalid value
 			const channel_exception
@@ -1665,6 +1668,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 			}
 		}
 		} else {	// else don't care
+			// don't print confirmed values for don't cares
 			if (v) {
 				// on valid data, advance
 				advance_value();

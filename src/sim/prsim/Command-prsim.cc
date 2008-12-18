@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.28 2008/12/12 22:36:53 fang Exp $
+	$Id: Command-prsim.cc,v 1.29 2008/12/18 21:00:03 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2144,6 +2144,10 @@ if (a.size() != 3) {
 			n.dump_value(cout) << "." << endl;
 			}	// yes, actually allow suppression
 			return error_policy_to_status(e);
+		} else if (s.confirm_asserts()) {
+			cout << "node `" << objname << "\' is " <<
+				node_type::value_to_char[size_t(val)] <<
+				", as expected." << endl;
 		}
 		return Command::NORMAL;
 	} else {
@@ -2206,6 +2210,10 @@ if (a.size() != 3) {
 			n.dump_value(cout) << "." << endl;
 			}
 			return error_policy_to_status(e);
+		} else if (s.confirm_asserts()) {
+			cout << "node `" << objname << "\' is not " <<
+				node_type::value_to_char[size_t(val)] <<
+				", as expected." << endl;
 		}
 		return Command::NORMAL;
 	} else {
@@ -2255,6 +2263,9 @@ if (a.size() != 2) {
 				<< objname << "\', but none found." << endl;
 			}
 			return error_policy_to_status(e);
+		} else if (s.confirm_asserts()) {
+			cout << "node `" << objname <<
+				"\' has a pending event, as expected." << endl;
 		}
 		return Command::NORMAL;
 	} else {
@@ -2302,6 +2313,9 @@ if (a.size() != 2) {
 				<< objname << "\', but found one." << endl;
 			}
 			return error_policy_to_status(e);
+		} else if (s.confirm_asserts()) {
+			cout << "node `" << objname <<
+				"\' has no pending event, as expected." << endl;
 		}
 		return Command::NORMAL;
 	} else {
@@ -2357,12 +2371,18 @@ typedef	Time<State>				Time;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Time, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Confirm, "confirm", info, 
-//	"confirm assertions verbosely")
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoConfirm, "noconfirm", info, 
-//	"confirm assertions silently")
+/***
+@texinfo cmd/confirm.texi
+@deffn Command confirm
+@deffnx Command noconfirm
+Controls whether or not correct assertions are reported.  
+@end deffn
+@end texinfo
+***/
+typedef	Confirm<State>				Confirm;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Confirm, PRSIM::info)
+typedef	NoConfirm<State>			NoConfirm;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoConfirm, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -3417,15 +3437,18 @@ EvalOrder::usage(ostream& o) {
 #if PRSIM_WEAK_RULES
 /***
 @texinfo cmd/weak-rules.texi
-@deffn Command weak-rules [on|off]
+@deffn Command weak-rules [on|off|show|hide]
 Simulation mode switch which globally enables or disables (ignores)
 weak-rules.  
 Weak-rules can only take effect when normal rules pulling a node are off.
+The @t{hide} and @t{show} options control whether or not weak rules are 
+displayed in rule queries, such as @command{fanin}, @command{fanout}, 
+and @command{rules}.  
 @end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WeakRules, "weak-rules", modes, 
-	"enable/disable weak rules")
+	"enable/disable, show/hide weak rules")
 
 int
 WeakRules::main(State& s, const string_list& a) {
@@ -3437,6 +3460,9 @@ case 1: {
 	} else {
 		cout << "off";
 	}
+	if (!s.weak_rules_shown()) {
+		cout << ", hidden";
+	}
 	cout << endl;
 	return Command::NORMAL;
 }
@@ -3446,6 +3472,10 @@ case 2: {
 		s.enable_weak_rules();
 	} else if (arg == "off") {
 		s.disable_weak_rules();
+	} else if (arg == "show") {
+		s.show_weak_rules();
+	} else if (arg == "hide") {
+		s.hide_weak_rules();
 	} else {
 		cerr << "Bad argument." << endl;
 		usage(cerr);
@@ -3461,10 +3491,11 @@ default:
 
 void
 WeakRules::usage(ostream& o) {
-	o << "weak-rules [on|off]" << endl;
+	o << "weak-rules [on|off|show|hide]" << endl;
 	o <<
 "Simulate or ignore weak-rules, which can drive nodes, but are overpowered "
-"by normal rules." << endl;
+"by normal rules.  \'show\' and \'hide\' control whether or not weak rules "
+"are displayed in command queries." << endl;
 }
 #endif	// PRSIM_WEAK_RULES
 
@@ -5469,12 +5500,20 @@ if (a.size() != 3) {
 				cerr << "Expecting no more channel values on "
 					<< cn << ", but found some." << endl;
 				return Command::FATAL;
+			} else if (s.confirm_asserts()) {
+				cout << "channel " << cn <<
+					" has no more values, as expected."
+					<< endl;
 			}
 		} else {
 			if (x) {
 				cerr << "Expecting more channel values on "
 					<< cn << ", but found none." << endl;
 				return Command::FATAL;
+			} else if (s.confirm_asserts()) {
+				cout << "channel " << cn <<
+					" has more values, as expected."
+					<< endl;
 			}
 		}
 		return Command::NORMAL;

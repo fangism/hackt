@@ -1,0 +1,7 @@
+testing assert confirmation 
+node `a' is X, as expected.
+node `a' is not 1, as expected.
+node `a' is not 0, as expected.
+node `a' is 1, as expected.
+node `b' is 0, as expected.
+node `c' is 1, as expected.

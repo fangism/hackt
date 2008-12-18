@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-12-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-84:
+	  prsim: weak-rules command now takes 'hide' or 'show' to control
+		whether or not weak rules are displayed in queries.
+	  prsim: added 'confirm' and 'noconfirm' commands to turn on/off
+		verbose confirmations of asserts.
+	  Documented, test cases added.  
+
+
 2008-12-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-83:

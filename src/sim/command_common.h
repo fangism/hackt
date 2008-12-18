@@ -4,7 +4,7 @@
 	in various simulators.  We define them as trivial templates
 	for ease of re-use.  
 	To use, just instantiate template.  
-	$Id: command_common.h,v 1.7 2008/11/27 11:09:26 fang Exp $
+	$Id: command_common.h,v 1.8 2008/12/18 20:59:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_H__
@@ -68,6 +68,8 @@ DECLARE_COMMON_COMMAND_CLASS(What)
 DECLARE_COMMON_COMMAND_CLASS(LS)	// as in UNIX: ls
 DECLARE_COMMON_COMMAND_CLASS(Time)
 DECLARE_COMMON_COMMAND_CLASS(Seed48)
+DECLARE_COMMON_COMMAND_CLASS(Confirm)
+DECLARE_COMMON_COMMAND_CLASS(NoConfirm)
 DECLARE_COMMON_COMMAND_CLASS(AssertQueue)
 DECLARE_COMMON_COMMAND_CLASS(AssertNQueue)
 DECLARE_COMMON_COMMAND_CLASS(WatchQueue)

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.14 2008/11/27 11:09:32 fang Exp $
+	$Id: State.h,v 1.15 2008/12/18 21:00:01 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -193,6 +193,10 @@ private:
 		FLAG_SHOW_CAUSE = 0x0010,
 		/// flag to control automatic checkpointing
 		FLAG_AUTOSAVE = 0x0020,
+		/**
+			Set to true to verbosely confirm correct assertions.
+		 */
+		FLAG_CONFIRM_ASSERTS = 0x0040,
 		/**
 			Set true if named trace file is opened successfully.  
 			Initially off.  
@@ -564,6 +568,17 @@ public:
 	bool
 	watching_all_event_queue(void) const {
 		return flags & FLAG_WATCHALL_QUEUE;
+	}
+
+	bool
+	confirm_asserts(void) const {
+		return flags & FLAG_CONFIRM_ASSERTS;
+	}
+
+	void
+	confirm_asserts(const bool b) {
+		if (b)	flags |= FLAG_CONFIRM_ASSERTS;
+		else	flags &= ~FLAG_CONFIRM_ASSERTS;
 	}
 
 #define	DEFINE_POLICY_CONTROL_SET(name)				\

@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.11 2008/11/27 11:09:26 fang Exp $
+	$Id: command_common.tcc,v 1.12 2008/12/18 20:59:59 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -706,6 +706,50 @@ WhoNewline<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(Confirm, "confirm", 
+	"confirm assertions verbosely")
+
+INITIALIZE_COMMON_COMMAND_CLASS(NoConfirm, "noconfirm", 
+	"confirm assertions silently (default)")
+
+template <class State>
+int
+Confirm<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	s.confirm_asserts(true);
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+int
+NoConfirm<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	s.confirm_asserts(false);
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+Confirm<State>::usage(ostream& o) { 
+o << name << " : " << brief << endl;
+}
+
+template <class State>
+void
+NoConfirm<State>::usage(ostream& o) {
+o << name << " : " << brief << endl;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INITIALIZE_COMMON_COMMAND_CLASS(AssertQueue, "assert-queue",
 	"assert that the event queue is not empty")
 
@@ -717,6 +761,10 @@ if (a.size() != 1) {
 	return command_type::SYNTAX;
 } else {
 	if (s.pending_events()) {
+		if (s.confirm_asserts()) {
+			cout << "Event queue is non-empty, as expected."
+				<< endl;
+		}
 		return command_type::NORMAL;
 	} else {
 		const error_policy_enum e(s.get_assert_fail_policy());
@@ -748,6 +796,9 @@ if (a.size() != 1) {
 	return command_type::SYNTAX;
 } else {
 	if (!s.pending_events()) {
+		if (s.confirm_asserts()) {
+			cout << "Event queue is empty, as expected." << endl;
+		}
 		return command_type::NORMAL;
 	} else {
 		const error_policy_enum e(s.get_assert_fail_policy());

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.11 2008/12/01 20:27:37 fang Exp $
+	$Id: Rule.h,v 1.12 2008/12/18 21:00:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -109,6 +109,9 @@ public:
 
 	void
 	set_invariant(void) { this->rule_flags |= RULE_INVARIANT; }
+#else
+	bool
+	is_invariant(void) const { return false; }
 #endif
 
 	void

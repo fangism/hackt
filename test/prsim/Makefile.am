@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.60 2008/12/18 00:25:59 fang Exp $
+#	$Id: Makefile.am,v 1.61 2008/12/18 21:00:06 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -130,13 +130,14 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	precharge-c-01 precharge-d-01 \
 	precharge-e-01 precharge-f-01 \
 	precharge-h-01 \
-	weak-inv-01 weak-inv-02 \
+	weak-inv-01 weak-inv-02 weak-inv-03 \
 	weak-fight-a-01 weak-fight-a-02 weak-fight-a-03 weak-fight-a-04 \
 	weak-fight-a-05 \
 	weak-fight-b-01 \
 	weak-vs-weak-01 weak-vs-weak-02 weak-vs-weak-03 \
 	weak-vs-weak-04 \
-	weak-feedback-a-01 weak-feedback-b-01 \
+	weak-feedback-a-01 weak-feedback-a-03 \
+	weak-feedback-b-01 \
 	celem-fb-01 \
 	half-keeper-a-01 half-keeper-a-02 \
 	cross-coupled-01 cross-coupled-weak-01 \
@@ -216,6 +217,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	non-CMOS-a-01 non-CMOS-a-02 \
 	non-CMOS-b-01 non-CMOS-b-02 \
 	assert-fail-01 assert-fail-03 \
+	assert-confirm-01 \
 	check-excl-fail-01 check-excl-fail-02 check-excl-fail-03 \
 	check-excl-fail-04 \
 	after_min_max-01 after_min_max-02 after_min_max-03 \

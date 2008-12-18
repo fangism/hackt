@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.39 2008/12/17 03:41:02 fang Exp $
+	$Id: State-prsim.cc,v 1.40 2008/12/18 21:00:04 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -324,10 +324,16 @@ if (pg.rule_pool.size()) {
 	for ( ; i!=e; ++i) {
 		const rule_type& r(pg.rule_pool[i->second]);
 	if (!r.is_invariant()) {
+#if PRSIM_WEAK_RULES
+	if (!r.is_weak() || st.weak_rules_shown()) {
+#endif
 		// what to assume about multi-fanin?
 		dump_rule(o, i->first, st, v, true) << endl;
+#if PRSIM_WEAK_RULES
 	}
+#endif
 	}
+	}	// end for
 }
 	return o;
 }
@@ -5217,12 +5223,10 @@ do {
 	o << endl;
 #if PRSIM_WEAK_RULES
 	}	// end if
-#endif
-#if PRSIM_WEAK_RULES
 	++w;
 } while (w<2);	// even if !weak_rules_enabled()
 #endif
-	return o;
+	return o;	// no endl
 #endif
 }
 
@@ -5274,11 +5278,17 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 			last = &ps;
 			dump_process_canonical_name(o << "(to ", ps) << "):\n";
 		}
+#if PRSIM_WEAK_RULES
+	if (!ps.lookup_rule(*ri)->is_weak() || weak_rules_shown()) {
+#endif
 		dump_rule(o, *ri, v, (n.fanin.size() > 1));
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		o << endl;
 #endif
+#if PRSIM_WEAK_RULES
 	}
+#endif
+	}	// end for
 	return o;
 }
 
@@ -5477,7 +5487,11 @@ do {
 	}
 #endif
 #if PRSIM_WEAK_RULES
-	++w;
+	if (st.weak_rules_shown()) {
+		++w;
+	} else {
+		break;
+	}
 } while (w<2);		// even if !weak_rules_enabled()
 #endif
 	return o;

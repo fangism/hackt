@@ -1,0 +1,36 @@
+# "weak-inv-03.prsimrc"
+# @haco@ weak-inv.haco-a
+# testing weak-rules hide/show
+
+watchall
+weak-rules on
+weak-rules hide
+
+set a 0
+cycle
+set a 1
+cycle
+
+weak-rules show
+fanout-get a
+fanin-get b
+set a 0
+cycle
+set a 1
+cycle
+
+echo expect no effect of changing a
+weak-rules off
+set a 0
+cycle
+set a 1
+cycle
+
+weak-rules hide
+fanout-get a
+fanin-get b
+set a 0
+cycle
+set a 1
+cycle
+

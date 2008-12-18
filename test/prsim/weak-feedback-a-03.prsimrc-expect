@@ -1,0 +1,18 @@
+[top-level]
+rules:
+[after 10]	a -> b-
+[after 10]	~a -> b+
+[after 10, weak]	b -> a-
+[after 10, weak]	~b -> a+
+weak-rules hide 
+[top-level]
+rules:
+[after 10]	a -> b-
+[after 10]	~a -> b+
+weak-rules show 
+[top-level]
+rules:
+[after 10]	a -> b-
+[after 10]	~a -> b+
+[after 10, weak]	b -> a-
+[after 10, weak]	~b -> a+
