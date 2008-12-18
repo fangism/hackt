@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-12-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-83:
+	  Several hacprsim reference parse bugs fixed:
+		ACX-PR-1484: ISE on invalid array ref
+		ACX-PR-1708: ISE on invalid reference for 'ls'
+		ACX-PR-2310: ls accepted invalid reference
+		ACX-PR-2400: ISE on invalid reference to getall
+	  parsers' yyerror() and yyfreestacks() code factored out into
+		parser/yyerror.cc and parser/yyfreestacks.cc for 
+		reusability and maintainability.
+		yyerror(), yyfreestacks(): 
+			fix to check for (yychar == 0) as alternative EOF.
+
+
 2008-12-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-82:

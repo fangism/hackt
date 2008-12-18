@@ -1,0 +1,9 @@
+b[19] (type: bool<>) has members: 
+All subnodes of 'b[19]':
+b[19] : X
+expect following reference to be out-of-bounds: 
+FATAL: reference to uninstantiated bool index [20]
+ERROR: unrolling aliases.
+Error resolving a single instance alias.
+ERROR: bad instance reference: b[20]
+... at line 9

@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.44 2008/12/16 21:48:11 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.45 2008/12/18 00:25:53 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -3126,44 +3126,12 @@ complex_aggregate_reference_list
 
 /* ---- end complex expressions ------------------------------------------- */
 %%
-/**
-	Upon error or exception, must clean up stacks!
-	Now clean-up the symbol stack by calling destructors.
-	Technically, this is not needed, as bulk memory is 
-	reclaimed upon exit().  (This is a good exercise anyhow.)
-	We are currently assuming that no other handler will
-	take care of deleting the pointers on the stack.  
 
-	OBSOLETE COMMENT, after removing mother-node type.  
-	Because the union-pointer resolution can only return
-	one type, the base type, the mother destructor, 
-	HAC::parser::node::~node(), must be virtual.  
- */
-static
-void
-yyfreestacks(const short* _yyss_, const short* _yyssp_, 
-		const YYSTYPE* _yyvs_, const YYSTYPE* _yyvsp_, 
-		const YYSTYPE _yylval_, const int _yychar_, 
-		const flex::lexer_state& _lexer_state) {
-	STACKTRACE_VERBOSE;
-	const short* s;
-	const YYSTYPE* v;
-	s=_yyss_+1;
-	v=_yyvs_+1;
-	for ( ; s <= _yyssp_ && v <= _yyvsp_; s++, v++) {
-		if (v) {
-			// cerr << "Deleting stack token..." << endl;
-			yy_union_resolve_delete(*v, *(s-1), *s);
-		}
-	}
-	if (!_lexer_state.at_eof()) {
-		// cerr << "Deleting last token..." << endl;
-		// free the last token (if not EOF)
-		yy_union_lookup_delete(_yylval_, _yychar_);
-	}
-}
+#include "parser/yyfreestacks.cc"		// we've moved!
+#include "parser/yyerror.cc"			// we've moved!
 
 /*---------------------------------------------------------------------------*/
+#if 0
 /**
 	The goal is to keep the grammar in this "art.yy" clean, and not
 	litter the various productions with error handling cases.  
@@ -3213,16 +3181,20 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 #define	__reduce_table	yyrindex
 #define	__YYTABLESIZE	YYTABLESIZE
 #endif
+#endif
 
 // following prototype MUST appear as is (after "static") for awk hack...
 static
 void yyerror(const char* msg) { 	// ancient compiler rejects
 	STACKTRACE_VERBOSE;
+#if 0
 	const short* s;
 	const YYSTYPE* v;
+#endif
 	// msg is going to be "syntax error" from y.tab.cc
 	//	very useless in general
 	hackt_parse_file_manager.dump_file_stack(cerr);
+#if 0
 	cerr << "parse error: " << msg << endl;
 
 /*	Define the following (-D) to disable sophisticated error reporting, 
@@ -3255,8 +3227,8 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
 //	NULL check not necessarily valid if last token normally returned NULL
-	if (_lexer_state.at_eof()) {
-		cerr << "\t" << __symbol_names[0];	// "end-of-file"
+	if (_lexer_state.at_eof() || !yychar) {
+		cerr << "\t" << __symbol_names[yychar];	// "end-of-file"
 	} else {
 //		The last token from the lexer, yychar, tells us the last
 //		token type returned.  
@@ -3325,7 +3297,9 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		...
 	}
 ***/
-	
+#else
+	__yyerror(msg);
+#endif
 	// or throw exception
 	THROW_EXIT;
 }	// end yyerror(...)

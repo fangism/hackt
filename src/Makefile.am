@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.208 2008/12/16 21:48:09 fang Exp $
+#	$Id: Makefile.am,v 1.209 2008/12/18 00:25:50 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1684,6 +1684,8 @@ EXTRA_DIST += local.cvsignore \
 	parser/purify_yacc.awk \
 	parser/try_lex_catch.awk \
 	parser/yacc_const_char.awk \
+	parser/yyfreestacks.cc \
+	parser/yyerror.cc \
 	parser/NOTES \
 	parser/hackt-parse.yy.in \
 	lexer/local.cvsignore \

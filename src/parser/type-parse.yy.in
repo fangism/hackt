@@ -5,7 +5,7 @@
 	ALERT: Make sure you are editing "parser/type-parse.yy.in"
 	and NOT the configure-generated "parser/type-parse.yy"
 	or else your changes will be clobbered during the next configure!
-	$Id: type-parse.yy.in,v 1.5 2008/06/07 02:12:04 fang Exp $
+	$Id: type-parse.yy.in,v 1.6 2008/12/18 00:25:56 fang Exp $
  */
 
 %{
@@ -711,6 +711,10 @@ mandatory_complex_aggregate_reference_list
 
 /* ---- end complex expressions ------------------------------------------- */
 %%
+
+#include "parser/yyfreestacks.cc"		// we've moved!
+#include "parser/yyerror.cc"			// we've moved!
+#if 0
 /**
 	Upon error or exception, must clean up stacks!
 	Now clean-up the symbol stack by calling destructors.
@@ -797,11 +801,14 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 #define	__reduce_table	yyrindex
 #define	__YYTABLESIZE	YYTABLESIZE
 #endif
+#endif
 
 // following prototype MUST appear as is (after "static") for awk hack...
 static
 void yyerror(const char* msg) { 	// ancient compiler rejects
 	STACKTRACE_VERBOSE;
+	__yyerror(msg);
+#if 0
 	const short* s;
 	const YYSTYPE* v;
 	// msg is going to be "syntax error" from y.tab.cc
@@ -908,7 +915,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		...
 	}
 ***/
-	
+#endif
 	// or throw exception
 	THROW_EXIT;
 }	// end yyerror(...)

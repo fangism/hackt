@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.17 2008/10/05 23:00:19 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.18 2008/12/18 00:25:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -39,6 +39,7 @@ class footprint;
 class aggregate_meta_instance_reference_base;
 class nonmeta_expr_visitor;
 using util::bad_bool;
+using util::good_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
@@ -154,7 +155,7 @@ virtual	LOOKUP_TOP_LEVEL_REFERENCE_PROTO = 0;
 virtual	COLLECT_ALIASES_PROTO = 0;
 
 #define	COLLECT_SUBENTRIES_PROTO					\
-	void								\
+	good_bool							\
 	collect_subentries(const module&, entry_collection&) const
 
 virtual	COLLECT_SUBENTRIES_PROTO = 0;

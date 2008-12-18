@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.26 2008/11/12 03:00:15 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.27 2008/12/18 00:25:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -120,7 +120,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 	all instances in range.  
  */
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-void
+good_bool
 META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod, 
 		entry_collection& v) const {
 	const simple_reference_type&
@@ -133,7 +133,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 		if (!_this.lookup_globally_allocated_indices(sm, 
 				top, inds).good) {
 			// got error message already
-			THROW_EXIT;
+			return good_bool(false);
 		}
 		// else we're good
 		vector<size_t>::const_iterator i(inds.begin()), e(inds.end());
@@ -143,9 +143,14 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 	} else {
 		const size_t index =
 			_this.lookup_globally_allocated_index(sm, top);
-		INVARIANT(index);	// because we already checked reference?
+		if (!index) {
+			this->dump(cerr << "ERROR: bad instance reference: ",
+				expr_dump_context::default_value) << endl;
+			return good_bool(false);
+		}
 		sm.template collect_subentries<Tag>(v, index);
 	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

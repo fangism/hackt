@@ -1,0 +1,7 @@
+# "ls-05.prsimrc"
+# @haco@ inv.haco-a
+# reduced test case for ISE-on-invalid (ACX-PR-1708)
+
+echo expect fail: bad reference
+ls foo.
+

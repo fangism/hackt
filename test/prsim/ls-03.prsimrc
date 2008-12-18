@@ -1,0 +1,10 @@
+# "ls-03.prsimrc"
+# @haco@ invs.haco-a
+# test case for ISE on invalid reference to getall (ACX-PR-2400)
+# expect-fail
+
+ls b[19]
+getall b[19]
+echo expect following reference to be out-of-bounds:
+getall b[20]
+

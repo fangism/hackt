@@ -4,7 +4,7 @@
 	This will be used in prsim and other simulators, for example.  
 	The grammar in here is an extremely small snippet
 	of the hackt language grammar.  
-	$Id: instref-parse.yy.in,v 1.8 2008/06/07 02:12:04 fang Exp $
+	$Id: instref-parse.yy.in,v 1.9 2008/12/18 00:25:55 fang Exp $
  */
 
 %{
@@ -215,6 +215,9 @@ relative_id
 
 %%
 
+#include "parser/yyfreestacks.cc"		// we've moved!
+#include "parser/yyerror.cc"			// we've moved!
+#if 0
 /* copied from "parser/hackt-parse.yy.in" */
 static
 void
@@ -233,7 +236,7 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 			yy_union_resolve_delete(*v, *(s-1), *s);
 		}
 	}
-	if (!_lexer_state.at_eof()) {
+	if (!_lexer_state.at_eof() && _yychar_) {
 		// cerr << "Deleting last token..." << endl;
 		// free the last token (if not EOF)
 		yy_union_lookup_delete(_yylval_, _yychar_);
@@ -252,10 +255,13 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 #define __reduce_table  yyrindex
 #define __YYTABLESIZE   YYTABLESIZE
 #endif
+#endif
 
 static
 void yyerror(const char* msg) {
 	STACKTRACE_VERBOSE;
+	__yyerror(msg);		// standard implementation
+#if 0
 	const short* s;
 	const YYSTYPE* v;
 	// msg is going to be "syntax error" from y.tab.cc
@@ -290,8 +296,9 @@ void yyerror(const char* msg) {
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
 //      NULL check not necessarily valid if last token normally returned NULL
-	if (_lexer_state.at_eof()) {
-		cerr << "\t" << __symbol_names[0];      // "end-of-file"
+//	cerr << "yychar = " << yychar << endl;
+	if (_lexer_state.at_eof() || !yychar) {
+		cerr << "\t" << __symbol_names[yychar];      // "end-of-file"
 	} else {
 //              The last token from the lexer, yychar, tells us the last
 //              token type returned.  
@@ -338,6 +345,7 @@ void yyerror(const char* msg) {
 	}
 
 	yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval, yychar, _lexer_state);
+#endif
 #endif
 	THROW_EXIT;
 }

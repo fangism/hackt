@@ -1,0 +1,10 @@
+# "ls-04.prsimrc"
+# @haco@ invs.haco-a
+# test case for accepts-invalid reference (ACX-PR-2310)
+# expect-fail
+
+ls b[19]
+getall b[19]
+echo expect following reference to be out-of-bounds:
+ls b[20]
+

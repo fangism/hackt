@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.cc"
 	Method definitions for the meta_dummy_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_dummy_reference.tcc,v 1.3 2008/10/05 23:00:23 fang Exp $
+ 	$Id: simple_meta_dummy_reference.tcc,v 1.4 2008/12/18 00:25:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_TCC__
@@ -355,10 +355,11 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::collect_aliases(const module& mod,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
-void
+good_bool
 SIMPLE_META_DUMMY_REFERENCE_CLASS::collect_subentries(const module&, 
 		entry_collection&) const {
 	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

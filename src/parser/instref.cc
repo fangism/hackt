@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.12 2008/11/08 04:25:55 fang Exp $
+	$Id: instref.cc,v 1.13 2008/12/18 00:25:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -125,6 +125,7 @@ check_reference(const parser::inst_ref_expr& ref_tree,
 		// but we should allow PRIVATE references too!
 		// perhaps flag through context?
 		r = ref_tree.check_meta_reference(c);
+		// this only checks that reference is syntactically well-formed
 	} catch (...) {
 		// temporary have shitty error-handling...
 		// already have type-check error message
@@ -303,6 +304,15 @@ if (n == ".") {
 			<< endl;
 		return 1;
 	} else {
+		// check for valid reference first
+		const global_indexed_reference
+			gref(r.inst_ref()->lookup_top_level_reference(
+				m.get_state_manager(), m.get_footprint()));
+		if (!gref.second) {
+			o << "Error resolving instance reference: "
+				<< n << endl;
+			return 1;
+		}
 		o << n << " (type: ";
 		r.inst_ref()->dump_type_size(o) << ") has members: " << endl;
 		const never_ptr<const definition_base>
@@ -350,7 +360,9 @@ parse_name_to_get_subnodes(ostream& o, const string& n, const module& m,
 	// TODO: allow non-scalar collections, sloppy arrays, etc...
 	} else {
 		entry_collection e;
-		r.inst_ref()->collect_subentries(m, e);
+		if (!r.inst_ref()->collect_subentries(m, e).good) {
+			return 1;
+		}
 		const index_set_type& b(e.get_index_set<bool_tag>());
 		v.resize(b.size());
 		copy(b.begin(), b.end(), v.begin());
