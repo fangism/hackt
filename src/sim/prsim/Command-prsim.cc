@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.29 2008/12/18 21:00:03 fang Exp $
+	$Id: Command-prsim.cc,v 1.30 2008/12/18 23:27:58 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -65,8 +65,13 @@ using std::ostream_iterator;
 using std::front_inserter;
 using util::excl_malloc_ptr;
 using util::strings::string_to_num;
+using entity::global_indexed_reference;
+using entity::META_TYPE_PROCESS;
+using entity::META_TYPE_BOOL;
+using entity::META_TYPE_NONE;
 using parser::parse_node_to_index;
 using parser::parse_process_to_index;
+using parser::parse_global_reference;
 using parser::parse_name_to_what;
 using parser::parse_name_to_aliases;
 using parser::parse_name_to_get_subnodes;
@@ -1905,7 +1910,7 @@ if (a.size() != 2) {
 	if (ni) {
 		// const State::node_type& n(s.get_node(ni));
 		cout << "Fanouts of node `" << objname << "\':" << endl;
-		s.dump_node_fanout(cout, ni, false);
+		s.dump_node_fanout(cout, ni, true, false, false);
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
@@ -1943,7 +1948,7 @@ if (a.size() != 2) {
 	if (ni) {
 		// const State::node_type& n(s.get_node(ni));
 		cout << "Fanouts of node `" << objname << "\':" << endl;
-		s.dump_node_fanout(cout, ni, true);
+		s.dump_node_fanout(cout, ni, true, false, true);
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
@@ -4017,9 +4022,10 @@ AllRulesVerbose::usage(ostream& o) { all_rules_usage(o); }
 #if PRSIM_INVARIANT_RULES
 /***
 @texinfo cmd/invariants.texi
-@deffn Command invariants proc
-@deffnx Command invariants-verbose proc
-Print all invariants belonging to the named process @var{proc}.  
+@deffn Command invariants ref
+@deffnx Command invariants-verbose ref
+Print all invariants belonging to the named process @var{ref}, 
+or all invariants that the node @var{ref} participates in.  
 '@t{.}' can be used to refer to the top-level process.
 The @t{-verbose} variant prints the state of each node and expression
 appearing in each invariant.  
@@ -4027,7 +4033,7 @@ appearing in each invariant.
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Invariants, "invariants", info, 
-	"print invariants belonging to a process")
+	"print invariants belonging to a process or node")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(InvariantsVerbose, 
 	"invariants-verbose", info, 
 	"print invariants belonging to a process with values")
@@ -4056,8 +4062,12 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	const process_index_type pid =
-		parse_process_to_index(a.back(), s.get_module());
+	const string& iname(a.back());
+	const global_indexed_reference gref = (iname == ".") ?
+			global_indexed_reference(META_TYPE_PROCESS, 0) :
+			parse_global_reference(iname, s.get_module());
+if (gref.first == META_TYPE_PROCESS) {
+	const process_index_type& pid = gref.second;
 	if (pid < s.get_num_processes()) {
 		if (pid) {
 			parse_name_to_what(cout, a.back(), s.get_module());
@@ -4071,6 +4081,20 @@ if (a.size() != 2) {
 		cerr << "Error: process not found." << endl;
 		return Command::BADARG;
 	}
+} else if (gref.first == META_TYPE_BOOL) {
+	const node_index_type& ni = gref.second;
+	INVARIANT(ni);
+	cout << "Invariants involving node `" << iname << "\':" << endl;
+	s.dump_node_fanout(cout, ni, false, true, verbose);
+	return Command::NORMAL;
+} else if (gref.first == META_TYPE_NONE) {
+	cerr << "Error: invalid reference: " << iname << endl;
+	return Command::BADARG;
+} else {
+	cerr << "Error: referenced instance is neither a bool nor a process."
+		<< endl;
+	return Command::BADARG;
+}
 }
 }
 

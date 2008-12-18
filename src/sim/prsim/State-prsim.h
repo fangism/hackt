@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.21 2008/12/18 21:00:05 fang Exp $
+	$Id: State-prsim.h,v 1.22 2008/12/18 23:28:00 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1672,7 +1672,8 @@ public:
 		const bool) const;
 
 	ostream&
-	dump_node_fanout(ostream&, const node_index_type, const bool) const;
+	dump_node_fanout(ostream&, const node_index_type, 
+		const bool r, const bool i, const bool v) const;
 
 	ostream&
 	dump_node_fanin(ostream&, const node_index_type, const bool) const;

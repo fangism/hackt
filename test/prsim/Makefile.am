@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.61 2008/12/18 21:00:06 fang Exp $
+#	$Id: Makefile.am,v 1.62 2008/12/18 23:28:01 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -210,8 +210,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	invariant-a-05 invariant-a-06 invariant-a-08 \
 	invariant-b-01 invariant-b-02 invariant-b-03 invariant-b-04 \
 	invariant-b-05 invariant-b-06 invariant-b-08 \
-	invariant-c-01 invariant-c-02 \
-	invariant-d-01 invariant-d-02 \
+	invariant-c-01 invariant-c-02 invariant-c-03 \
+	invariant-d-01 invariant-d-02 invariant-d-03 \
 	inv-invariant-01 inv-invariant-02 inv-invariant-03 inv-invariant-04 \
 	invariant-not-X-01 \
 	non-CMOS-a-01 non-CMOS-a-02 \

@@ -1,0 +1,12 @@
+# "invariant-d-03.prsimrc"
+# @haco@ invariant-d.haco-a
+
+
+echo testing invariants on node names:
+invariants a
+invariants c
+invariants e
+invariants-verbose c
+invariants-verbose bar.b
+
+

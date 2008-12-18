@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.40 2008/12/18 21:00:04 fang Exp $
+	$Id: State-prsim.cc,v 1.41 2008/12/18 23:27:59 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -5236,11 +5236,14 @@ do {
 	Note: this only requires structural information, no stateful info.  
 	TODO: including all OR combinations, or just the paths that
 		include this node directly?  (just the paths that include)
+	\param ni global index of the 
+	\param sr if normal rules should be printed.
+	\param si if invariant rules should be printed.
 	\param v true if literals should be printed with current values.
  */
 ostream&
 State::dump_node_fanout(ostream& o, const node_index_type ni, 
-		const bool v) const {
+		const bool sr, const bool si, const bool v) const {
 	typedef	fanout_array_type::const_iterator	const_iterator;
 	typedef	std::set<expr_index_type>		rule_set_type;
 #if DEBUG_FANOUT
@@ -5278,16 +5281,20 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 			last = &ps;
 			dump_process_canonical_name(o << "(to ", ps) << "):\n";
 		}
+		const rule_type* r = ps.lookup_rule(*ri);
 #if PRSIM_WEAK_RULES
-	if (!ps.lookup_rule(*ri)->is_weak() || weak_rules_shown()) {
+		const bool w = !r->is_weak() || weak_rules_shown();
+#else
+		const bool w = true;
 #endif
+	if ((r->is_invariant()) && si) {
+		dump_subexpr(o << "$(", *ri, v) << ')' << endl;
+	} else if (w && sr) {
 		dump_rule(o, *ri, v, (n.fanin.size() > 1));
 #if PRSIM_INDIRECT_EXPRESSION_MAP
 		o << endl;
 #endif
-#if PRSIM_WEAK_RULES
 	}
-#endif
 	}	// end for
 	return o;
 }

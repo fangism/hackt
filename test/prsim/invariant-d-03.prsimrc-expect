@@ -1,0 +1,20 @@
+testing invariants on node names: 
+Invariants involving node `a':
+(to bar):
+$(a | bar.b | c)
+Invariants involving node `c':
+(to bar):
+$(a | bar.b | c)
+(to bq):
+$(c | bq.b | e)
+Invariants involving node `e':
+(to bq):
+$(c | bq.b | e)
+Invariants involving node `c':
+(to bar):
+$(a:X | bar.b:X | c:X<X>)
+(to bq):
+$(c:X | bq.b:X | e:X<X>)
+Invariants involving node `bar.b':
+(to bar):
+$(a:X | bar.b:X | c:X<X>)

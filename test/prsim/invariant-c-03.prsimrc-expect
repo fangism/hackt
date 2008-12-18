@@ -1,0 +1,10 @@
+testing invariants on node names: 
+Invariants involving node `a':
+(to [top-level]):
+$(a | b | c)
+Invariants involving node `b':
+(to [top-level]):
+$(a:X | b:X | c:X<X>)
+Invariants involving node `c':
+(to [top-level]):
+$(a | b | c)
