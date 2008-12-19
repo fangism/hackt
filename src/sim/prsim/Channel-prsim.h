@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.12 2008/12/11 05:39:53 fang Exp $
+	$Id: Channel-prsim.h,v 1.13 2008/12/19 01:04:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -60,6 +60,7 @@
 	from the global policy.  
 	A single delay value will be associated per channel, 
 	so a source/sink on the same channel will use the same value.
+	Status: done, can perm this
  */
 #define	PRSIM_CHANNEL_TIMING			1
 
@@ -735,18 +736,6 @@ public:
 	apply_all(void (channel::*)(void));
 
 	bool
-	close_channel(const string&);
-
-	void
-	close_all_channels(void);
-
-	bool
-	stop_channel(const string&);
-
-	void
-	stop_all_channels(void);
-
-	bool
 	resume_channel(const State&, const string&, vector<env_event_type>&);
 
 	void
@@ -757,30 +746,6 @@ public:
 
 	void
 	reset_all_channels(vector<env_event_type>&);
-
-	bool
-	watch_channel(const string&);
-
-	void
-	watch_all_channels(void);
-
-	bool
-	unwatch_channel(const string&);
-
-	void
-	unwatch_all_channels(void);
-
-	bool
-	ignore_channel(const string&);
-
-	void
-	ignore_all_channels(void);
-
-	bool
-	heed_channel(const string&);
-
-	void
-	heed_all_channels(void);
 
 	void
 	process_node(const State&, const node_index_type, 

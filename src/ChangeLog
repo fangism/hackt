@@ -5,6 +5,11 @@
 
 2008-12-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-85-b:
+	  prsim: channel code cleanup reorganize command code to
+		use apply and apply-all functions.  
+
+
 	* HACKT-00-01-04-main-00-82-85:
 	  prsim: invariants command now accepts bool/nodes as argument, 
 		printing invariants that a node participates in.

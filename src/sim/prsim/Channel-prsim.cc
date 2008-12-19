@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.15 2008/12/18 21:00:02 fang Exp $
+	$Id: Channel-prsim.cc,v 1.16 2008/12/19 01:04:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -2253,40 +2253,6 @@ channel_manager::apply_all(void (channel::*f)(void)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-channel_manager::close_channel(const string& channel_name) {
-	STACKTRACE_VERBOSE;
-	GET_NAMED_CHANNEL(c, channel_name)
-	c.close_stream();
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_manager::close_all_channels(void) {
-	STACKTRACE_VERBOSE;
-	for_each(channel_pool.begin(), channel_pool.end(), 
-		mem_fun_ref(&channel::close_stream));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-channel_manager::stop_channel(const string& channel_name) {
-	STACKTRACE_VERBOSE;
-	GET_NAMED_CHANNEL(c, channel_name)
-	c.stop();
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_manager::stop_all_channels(void) {
-	STACKTRACE_VERBOSE;
-	for_each(channel_pool.begin(), channel_pool.end(), 
-		mem_fun_ref(&channel::stop));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
 channel_manager::resume_channel(const State& s, const string& channel_name, 
 		vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
@@ -2327,74 +2293,6 @@ channel_manager::reset_all_channels(vector<env_event_type>& events) {
 	for ( ; i!=e; ++i) {
 		i->reset(events);	// could bind2nd_argval...
 	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-channel_manager::watch_channel(const string& channel_name) {
-	STACKTRACE_VERBOSE;
-	GET_NAMED_CHANNEL(c, channel_name)
-	c.watch();
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_manager::watch_all_channels(void) {
-	STACKTRACE_VERBOSE;
-	for_each(channel_pool.begin(), channel_pool.end(), 
-		mem_fun_ref(&channel::watch));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-channel_manager::unwatch_channel(const string& channel_name) {
-	STACKTRACE_VERBOSE;
-	GET_NAMED_CHANNEL(c, channel_name)
-	c.unwatch();
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_manager::unwatch_all_channels(void) {
-	STACKTRACE_VERBOSE;
-	for_each(channel_pool.begin(), channel_pool.end(), 
-		mem_fun_ref(&channel::unwatch));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-channel_manager::ignore_channel(const string& channel_name) {
-	STACKTRACE_VERBOSE;
-	GET_NAMED_CHANNEL(c, channel_name)
-	c.ignore();
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_manager::ignore_all_channels(void) {
-	STACKTRACE_VERBOSE;
-	for_each(channel_pool.begin(), channel_pool.end(), 
-		mem_fun_ref(&channel::ignore));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-channel_manager::heed_channel(const string& channel_name) {
-	STACKTRACE_VERBOSE;
-	GET_NAMED_CHANNEL(c, channel_name)
-	c.heed();
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_manager::heed_all_channels(void) {
-	STACKTRACE_VERBOSE;
-	for_each(channel_pool.begin(), channel_pool.end(), 
-		mem_fun_ref(&channel::heed));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.15 2008/12/18 20:59:56 fang Exp $
+@c $Id: commands.texi,v 1.16 2008/12/19 01:04:52 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -316,7 +316,6 @@ simulator and the simulated production rules.
 @include cmd/getall.texi
 @include cmd/assert.texi
 @include cmd/assertn.texi
-@include cmd/confirm.texi
 @include cmd/assert-pending.texi
 @include cmd/assertn-pending.texi
 @include cmd/queue.texi
@@ -339,6 +338,7 @@ simulator and the simulated production rules.
 
 View commands affect what is displayed while the simulation is running.  
 
+@include cmd/confirm.texi
 @include cmd/watch.texi
 @include cmd/unwatch.texi
 @include cmd/watches.texi

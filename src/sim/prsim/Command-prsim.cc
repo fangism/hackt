@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.30 2008/12/18 23:27:58 fang Exp $
+	$Id: Command-prsim.cc,v 1.31 2008/12/19 01:04:56 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2385,9 +2385,9 @@ Controls whether or not correct assertions are reported.
 @end texinfo
 ***/
 typedef	Confirm<State>				Confirm;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Confirm, PRSIM::info)
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Confirm, PRSIM::view)
 typedef	NoConfirm<State>			NoConfirm;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoConfirm, PRSIM::info)
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoConfirm, PRSIM::view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -4533,6 +4533,41 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLoop, "channel-unloop",
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Standard channel command implementation.
+	No additional arguments beyond the name of the channel.  
+ */
+static
+int
+standard_channel_command_main(State& s, const string_list& a, 
+		void (channel::*memfn)(void), void (usage)(ostream&)) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	return s.get_channel_manager().apply_one(a.back(), memfn) ?
+		Command::BADARG : Command::NORMAL;
+}
+}
+
+/**
+	Standard apply-all channel command implementation.
+	No arguments required.
+ */
+static
+int
+standard_channel_apply_all_main(State& s, const string_list& a, 
+		void (channel::*memfn)(void), void (usage)(ostream&)) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.get_channel_manager().apply_all(memfn);
+	return Command::NORMAL;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/channel-watch.texi
 @deffn Command channel-watch chan
@@ -4551,14 +4586,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelWatch, "channel-watch",
 
 int
 ChannelWatch::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (s.get_channel_manager().watch_channel(a.back()))
-		return Command::BADARG;
-	return Command::NORMAL;
-}
+	return standard_channel_command_main(s, a, &channel::watch, usage);
 }
 
 void
@@ -4580,14 +4608,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelUnWatch, "channel-unwatch",
 
 int
 ChannelUnWatch::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (s.get_channel_manager().unwatch_channel(a.back()))
-		return Command::BADARG;
-	return Command::NORMAL;
-}
+	return standard_channel_command_main(s, a, &channel::unwatch, usage);
 }
 
 void
@@ -4609,13 +4630,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelWatchAll, "channel-watchall",
 
 int
 ChannelWatchAll::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.get_channel_manager().watch_all_channels();
-	return Command::NORMAL;
-}
+	return standard_channel_apply_all_main(s, a, &channel::watch, usage);
 }
 
 void
@@ -4637,13 +4652,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelUnWatchAll, "channel-unwatchall",
 
 int
 ChannelUnWatchAll::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.get_channel_manager().unwatch_all_channels();
-	return Command::NORMAL;
-}
+	return standard_channel_apply_all_main(s, a, &channel::unwatch, usage);
 }
 
 void
@@ -4665,14 +4674,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelHeed, "channel-heed",
 
 int
 ChannelHeed::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (s.get_channel_manager().heed_channel(a.back()))
-		return Command::BADARG;
-	return Command::NORMAL;
-}
+	return standard_channel_command_main(s, a, &channel::heed, usage);
 }
 
 void
@@ -4697,14 +4699,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelIgnore, "channel-ignore",
 
 int
 ChannelIgnore::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (s.get_channel_manager().ignore_channel(a.back()))
-		return Command::BADARG;
-	return Command::NORMAL;
-}
+	return standard_channel_command_main(s, a, &channel::ignore, usage);
 }
 
 void
@@ -4726,13 +4721,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelHeedAll, "channel-heed-all",
 
 int
 ChannelHeedAll::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.get_channel_manager().heed_all_channels();
-	return Command::NORMAL;
-}
+	return standard_channel_apply_all_main(s, a, &channel::heed, usage);
 }
 
 void
@@ -4754,13 +4743,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelIgnoreAll, "channel-ignore-all",
 
 int
 ChannelIgnoreAll::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.get_channel_manager().ignore_all_channels();
-	return Command::NORMAL;
-}
+	return standard_channel_apply_all_main(s, a, &channel::ignore, usage);
 }
 
 void
@@ -4852,14 +4835,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStop, "channel-stop",
 
 int
 ChannelStop::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (s.get_channel_manager().stop_channel(a.back()))
-		return Command::BADARG;
-	return Command::NORMAL;
-}
+	return standard_channel_command_main(s, a, &channel::stop, usage);
 }
 
 void
@@ -4882,13 +4858,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStopAll,
 
 int
 ChannelStopAll::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.get_channel_manager().stop_all_channels();
-	return Command::NORMAL;
-}
+	return standard_channel_apply_all_main(s, a, &channel::stop, usage);
 }
 
 void
@@ -4980,14 +4950,8 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelClose, "channel-close",
 
 int
 ChannelClose::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (s.get_channel_manager().close_channel(a.back()))
-		return Command::BADARG;
-	return Command::NORMAL;
-}
+	return standard_channel_command_main(s, a, &channel::close_stream, 
+		usage);
 }
 
 void
@@ -5010,13 +4974,8 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelCloseAll, "channel-close-all",
 
 int
 ChannelCloseAll::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.get_channel_manager().close_all_channels();
-	return Command::NORMAL;
-}
+	return standard_channel_apply_all_main(s, a, &channel::close_stream, 
+		usage);
 }
 
 void
