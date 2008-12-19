@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.13 2008/12/19 01:04:55 fang Exp $
+	$Id: Channel-prsim.h,v 1.14 2008/12/19 22:34:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -37,9 +37,9 @@
 	Define to 1 to allow interaction with dataless channels, 
 	useful for watching, logging, and expecting, just not
 	for sourcing and sinking.  
-	TODO: start me, test me
+	Status: done, tested.
  */
-#define	PRSIM_ACKLESS_CHANNELS			0
+// #define	PRSIM_ACKLESS_CHANNELS			1
 
 /**
 	Define to 1 to support an option to interpret data-rails
@@ -675,7 +675,7 @@ public:
 
 	bool
 	set_channel_ack_valid(State&, const string&, 
-		const bool, const bool, const bool, const bool);
+		const bool, const bool, const bool, const bool, const bool);
 
 	ostream&
 	__dump(ostream&, const bool) const;

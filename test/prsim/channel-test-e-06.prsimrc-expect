@@ -1,0 +1,16 @@
+testing acknowledgeless channels 
+should be able to log channels 
+X : 1x1of2 off > channel-test-e-06-X.log
+	count: 0, unknowns: 0
+X : 1x1of2 off > channel-test-e-06-X.log
+	count: 1, unknowns: 0
+X : 1x1of2 off > channel-test-e-06-X.log
+	count: 0, unknowns: 0
+X : 1x1of2 off
+	count: 0, unknowns: 0
+# log for channel: X
+0
+0
+1
+1
+0

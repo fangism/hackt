@@ -1,0 +1,8 @@
+# "channel-test-e-02.prsimrc"
+# @haco@ channel-test-a.haco-a
+# testing acknowledgeless channels
+
+source channel-test-e-01.prsimrc
+
+channel-show-all
+

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.16 2008/12/19 01:04:54 fang Exp $
+	$Id: Channel-prsim.cc,v 1.17 2008/12/19 22:34:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -222,7 +222,9 @@ channel::~channel() { }
  */
 void
 channel::get_all_nodes(vector<node_index_type>& ret) const {
+if (ack_signal) {
 	ret.push_back(ack_signal);
+}
 if (valid_signal) {
 	ret.push_back(valid_signal);
 }
@@ -256,9 +258,11 @@ operator << (ostream& o, const channel::array_value_type& p) {
  */
 ostream&
 channel::dump(ostream& o) const {
-	o << name << " : ";
-	o << (get_ack_active() ? ".a" : ".e");
+	o << name << " :";
+	if (ack_signal) {
+	o << (get_ack_active() ? " .a" : " .e");
 	o << "(init:" << (get_ack_init() ? '1' : '0') << ')';
+	}
 	if (valid_signal) {
 		o << ' ' << (get_valid_sense() ? ".v" : ".n");
 	}
@@ -493,20 +497,16 @@ channel::__configure_source(const State& s, const bool loop) {
 		flags |= CHANNEL_VALUE_LOOP;
 
 	// safety checks on signal directions
-#if PRSIM_ACKLESS_CHANNELS
 if (ack_signal) {
-#endif
 	if (!s.get_node(ack_signal).has_fanin()) {
 		cerr << "Warning: channel acknowledge `" << name <<
 			(get_ack_active() ? ".a" : ".e") <<
 			"\' has no fanin!" << endl;
 	}
-#if PRSIM_ACKLESS_CHANNELS
 } else {
-	cerr << "Error: acknowledgeless channels cannot be sourced!";
+	cerr << "Error: acknowledgeless channels cannot be sourced!" << endl;
 	return true;
 }
-#endif
 	bool maybe_externally_driven = false;
 if (valid_signal) {
 	const State::node_type& vn(s.get_node(valid_signal));
@@ -563,6 +563,7 @@ channel::set_sink(const State& s) {
 
 	// additional signal checks
 	// warn if channel happens to be connected in wrong direction
+if (ack_signal) {
 	if (s.get_node(ack_signal).has_fanin()) {
 		cerr << "Warning: channel acknowledge `" << name <<
 			(get_ack_active() ? ".a" : ".e") <<
@@ -570,6 +571,10 @@ channel::set_sink(const State& s) {
 			"Channel sink may not operate properly, "
 			"if driven from elsewhere." << endl;
 	}
+} else {
+	cerr << "Error: acknowledgeless channel cannot consume tokens!" << endl;
+	return true;
+}
 if (valid_signal) {
 	const State::node_type& vn(s.get_node(valid_signal));
 	if (!vn.has_fanin()) {
@@ -868,6 +873,7 @@ channel::reset(vector<env_event_type>& events) {
 		// once nodes all become neutral, the validity should be reset
 	}
 	if (is_sinking()) {
+		INVARIANT(ack_signal);	// ack-less cannot configure source/sink
 		events.push_back(ENV_EVENT(ack_signal, 
 			(get_ack_init() ? LOGIC_HIGH
 				: LOGIC_LOW)));
@@ -1079,7 +1085,7 @@ channel::may_drive_node(const node_index_type ni) const {
 		}
 	}
 	if (is_sinking()) {
-		if (ack_signal == ni) {
+		if (ack_signal && (ack_signal == ni)) {
 			return true;
 		}
 	}
@@ -1097,7 +1103,7 @@ channel::reads_node(const node_index_type ni) const {
 		f(__node_to_rail.find(ni));
 	const bool is_data_rail = (f != __node_to_rail.end());
 	if (is_sourcing()) {
-		if (ni == ack_signal) {
+		if (ack_signal && (ni == ack_signal)) {
 			return true;
 		}
 		if (valid_signal && is_data_rail) {
@@ -1133,14 +1139,16 @@ channel::__get_fanins(const node_index_type ni,
 			copy(data.begin(), data.end(), set_inserter(ret));
 		}
 		// if node is data rail, then effective input is ack
+		if (ack_signal) {
 		const data_rail_map_type::const_iterator
 			f(__node_to_rail.find(ni));
 		if (f != __node_to_rail.end()) {
 			ret.insert(ack_signal);
 		}
+		}
 	}
 	if (is_sinking()) {
-	if (ack_signal == ni) {
+	if (ack_signal && (ack_signal == ni)) {
 		// validity is responsibility of the circuit, not the sink.
 		// the acknowledge only follows the validity signal directly
 		if (valid_signal)
@@ -1179,7 +1187,7 @@ if (stopped()) {
 			__node_why_not_data_rails(s, o, 
 				valid_signal, get_valid_sense(), 
 				data, limit, dir, why_not, verbose, u, v);
-		} else {
+		} else if (ack_signal) {
 		const data_rail_map_type::const_iterator
 			f(__node_to_rail.find(ni));
 		if (f != __node_to_rail.end()) {
@@ -1195,7 +1203,7 @@ if (stopped()) {
 		}
 		}
 	}
-	if (is_sinking() && (ni == ack_signal)) {
+	if (is_sinking() && ack_signal && (ni == ack_signal)) {
 		// no other signal should be driven by sink
 	if (valid_signal) {
 		// TODO: not sure if the following is correct
@@ -1325,7 +1333,7 @@ if (stopped()) {
 			// eventually refactor that code out
 			__node_why_X_data_rails(s, o, get_valid_sense(), 
 				data, limit, verbose, u, v);
-		} else {
+		} else if (ack_signal) {
 		const data_rail_map_type::const_iterator
 			f(__node_to_rail.find(ni));
 		if (f != __node_to_rail.end()) {
@@ -1339,7 +1347,7 @@ if (stopped()) {
 		}
 		}
 	}
-	if (is_sinking() && (ni == ack_signal)) {
+	if (is_sinking() && ack_signal && (ni == ack_signal)) {
 		// no other signal should be driven by sink
 	if (valid_signal) {
 		s.__node_why_X(o, valid_signal, limit, verbose, u, v);
@@ -1424,7 +1432,7 @@ channel::process_node(const State& s, const node_index_type ni,
 		" -> " << size_t(next) << endl;
 #endif
 // first identify which channel node member this node is
-if (ni == ack_signal) {
+if (ack_signal && (ni == ack_signal)) {
 	STACKTRACE_INDENT_PRINT("got ack update" << endl);
 	// only need to take action if this is a source
 	if (is_sourcing() && !stopped()) {
@@ -1478,6 +1486,7 @@ if (ni == ack_signal) {
 	}
 	// only need to take action if this is a sink
 	if (is_sinking() && !stopped()) {
+		INVARIANT(ack_signal);
 	switch (next) {
 	case LOGIC_LOW:
 		if (get_valid_sense()) {
@@ -1545,6 +1554,7 @@ if (ni == ack_signal) {
 		if (!stopped()) {
 		if (is_sinking() && (next == LOGIC_OTHER)
 				&& (x_counter == 1)) {
+			INVARIANT(ack_signal);
 			// if counter was JUST incremented to 1
 			// otherwise multiple X's are vacuous
 			// if not validity protocol, set ack to X
@@ -1574,6 +1584,7 @@ if (ni == ack_signal) {
 		}
 		if (!stopped()) {
 		if (is_sinking() && !valid_signal) {
+			INVARIANT(ack_signal);
 			// sink should reply with ack reset
 			// otherwise, valid_signal is an input
 			new_events.push_back(ENV_EVENT(ack_signal, 
@@ -1599,6 +1610,7 @@ if (ni == ack_signal) {
 		// otherwise, data is logged/checked on validity signal
 		// if no value available, just ignore
 		if (is_sinking() && !valid_signal) {
+			INVARIANT(ack_signal);
 			// sink should reply with ack reset
 			// otherwise, valid_signal is an input
 			new_events.push_back(ENV_EVENT(ack_signal, 
@@ -1704,6 +1716,7 @@ channel::resume(const State& s, vector<env_event_type>& events) {
 "so I\'m assuming that current sequence value has NOT already been used; "
 "we are using the current value.";
 if (is_sourcing()) {
+	INVARIANT(ack_signal);
 	// validity should be set after all data rails are valid/neutral
 	const node_type& a(s.get_node(ack_signal));
 	switch (a.current_value()) {
@@ -1793,6 +1806,7 @@ if (is_sourcing()) {
 }
 // could also be sinking at the same time
 if (is_sinking()) {
+	INVARIANT(ack_signal);
 	if (valid_signal) {
 		// only react to the valid signal
 		const node_type& v(s.get_node(valid_signal));
@@ -2050,15 +2064,12 @@ channel_manager::lookup(const string& name) const {
  */
 bool
 channel_manager::set_channel_ack_valid(State& state, const string& base, 
-		const bool ack_sense, const bool ack_init, 
+		const bool have_ack, const bool ack_sense, const bool ack_init, 
 		const bool have_validity, const bool validity_sense) {
 	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, base)
 	const entity::module& m(state.get_module());
-#if PRSIM_ACKLESS_CHANNELS
-if (have_ack)
-#endif
-{
+if (have_ack) {
 	c.set_ack_active(ack_sense);
 	c.set_ack_init(ack_init);
 	const string ack_name(base + (ack_sense ? ".a" : ".e"));
@@ -2184,6 +2195,7 @@ channel_manager::sink_channel(const State& s, const string& channel_name) {
 	STACKTRACE_VERBOSE;
 	GET_NAMED_CHANNEL(c, channel_name)
 	if (c.set_sink(s)) return true; // does many checks
+	// already asserts(ack_signal)
 
 	// check if signal is registered with other sinking channels?
 	node_channels_map_type::const_iterator

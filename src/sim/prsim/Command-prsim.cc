@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.31 2008/12/19 01:04:56 fang Exp $
+	$Id: Command-prsim.cc,v 1.32 2008/12/19 22:34:44 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4294,7 +4294,7 @@ The @var{name} of the channel should match that of an instance
 (process or channel) in the source file.  
 @itemize
 @item @var{name} is the name of the new channel in the simulator's namespace
-@item @var{type} is a regular expression of the form @t{[ae][nv]?:[01]}, where
+@item @var{type} is a regular expression of the form @t{[ae]?[nv]?:[01]?}, where
 @itemize
 	@item @t{a} means active-high acknowledge
 	@item @t{e} means active-low acknowledge (a.k.a. enable)
@@ -4336,11 +4336,9 @@ if (a.size() != 5) {
 	const string& bundle(*++i);
 	const string& rail(*++i);
 	// could confirm that 'name' exists as a process/channel/datatype?
-#if PRSIM_ACKLESS_CHANNELS
-	bool have_ack;
-#endif
-	bool ack_sense;
-	bool ack_init;
+	bool have_ack = false;
+	bool ack_sense = false;
+	bool ack_init = false;
 	bool have_valid = false;
 	bool valid_sense = false;
 #if PRSIM_CHANNEL_RAILS_INVERTED
@@ -4348,28 +4346,29 @@ if (a.size() != 5) {
 #endif
 	try {
 		// parse ev-type
-		const size_t evl = ev_type.length();
-		if (evl < 3 || evl > 4) { THROW_EXIT; }
-		switch (tolower(ev_type[0])) {
-		case 'a': ack_sense = true; break;
-		case 'e': ack_sense = false; break;
-		default: THROW_EXIT;
-		}
-		size_t c = ev_type.find(':');
-		if (c == string::npos) { THROW_EXIT; }
-		if (evl == 4) {
-			have_valid = true;
-			switch (tolower(ev_type[c-1])) {
-			case 'n': valid_sense = false; break;
-			case 'v': valid_sense = true; break;
-			default: THROW_EXIT;
-			}
-		}
-		switch (*--ev_type.end()) {
+		string::const_iterator si(ev_type.begin()), se(ev_type.end());
+		// const size_t evl = ev_type.length();
+		// if (evl < 3 || evl > 4) { THROW_EXIT; }
+		bool have_colon = false;
+		for ( ; si!=se && !have_colon; ++si) {
+		switch (tolower(*si)) {
+		case 'a': ack_sense = true; have_ack = true; break;
+		case 'e': ack_sense = false; have_ack = true; break;
+		case 'n': valid_sense = false; have_valid = true; break;
+		case 'v': valid_sense = true; have_valid = true; break;
+		case ':': have_colon = true; break;
+		}	// end switch
+		}	// end for
+		if (have_ack) {
+		for ( ; si!=se; ++si) {
+		switch (*si) {
 		case '0': ack_init = false; break;
 		case '1': ack_init = true; break;
 		default: THROW_EXIT;
-		}
+		}	// end switch
+		}	// end for
+		}	// end if
+		if (!have_colon) { THROW_EXIT; }
 	} catch (...) {
 		cerr << "Error: invalid channel ev-type argument." << endl;
 		cerr << "See \"help " << name << "\"." << endl;
@@ -4416,8 +4415,9 @@ if (a.size() != 5) {
 	channel_manager& cm(s.get_channel_manager());
 	if (cm.new_channel(s, chan_name, bundle_name, bundle_size, 
 			rail_name, rail_size) ||
-			cm.set_channel_ack_valid(s, chan_name, ack_sense, 
-				ack_init, have_valid, valid_sense)) {
+			cm.set_channel_ack_valid(s, chan_name, 
+				have_ack, ack_sense, ack_init, 
+				have_valid, valid_sense)) {
 		return Command::BADARG;
 	}
 	return Command::NORMAL;

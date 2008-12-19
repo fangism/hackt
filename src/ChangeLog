@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-12-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-86:
+	  prsim: implemented acknowledgeless channels, which can still be
+		watched, logged, and value-checked (expect), but
+		cannot be sinks/sources.  (ACX-PR-1998)
+		Documented, and tested.  
+
+
 2008-12-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-85-b:

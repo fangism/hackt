@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.16 2008/12/19 01:04:52 fang Exp $
+@c $Id: commands.texi,v 1.17 2008/12/19 22:34:40 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -128,27 +128,41 @@ actual channel (or process) in the input description.
 own namespace, separate from the compiled circuits.)
 Upon registering a channel name, the simulator locates all
 relevant subnodes of the channel by appending @t{.e} or @t{.a}
+(or @t{.v} or @t{.n})
 and @t{.d[i]} (or however the rails are named) to the end of 
 the channel's name.  The following are examples of @command{channel} commands.  
 
 @example
-channel e:0 :0 d:2
-channel e:1 :0 d:2
-channel e:1 :0 r:2
-channel e:1 :0 d:0
-channel a:1 :0 r:4
-channel e:1 d:4 r:4
-channel ev:0 :0 d:2
+channel A e:0 :0 d:2
+channel B e:1 :0 d:2
+channel C e:1 :0 r:2
+channel D e:1 :0 d:0
+channel E a:1 :0 r:4
+channel F e:1 d:4 r:4
+channel G ev:0 :0 d:2
+channel H : :0 d:2
 @end example
 
 @noindent
-Respectively, an @t{e1of2} channel with @t{.e} initially low (if coming 
-from the environment), an @t{e1of2} with @t{.e} initially high, 
-an @t{e1of2} with array data rails named @t{r}, 
-an @t{e1of2} with one non-array data rail @t{r}, 
-an @t{a1of4} with @t{.a} initially high, 
-an @t{e4x1of4} channel, 
-and an @t{ev1of2} (enable-valid protocol).  
+Respectively the channel declarations are: 
+(A) an @t{e1of2} channel with @t{.e} initially low (if coming 
+from the environment), 
+(B) an @t{e1of2} with @t{.e} initially high, 
+(C) an @t{e1of2} with array data rails named @t{r}, 
+(D) an @t{e1of2} with one non-array data rail @t{r}, 
+(E) an @t{a1of4} with @t{.a} initially high, 
+(F) an @t{e4x1of4} channel, 
+(G) an @t{ev1of2} (enable-valid protocol), 
+and (H) an acknowledgeless @t{1of2} channel (just data-rails).  
+
+A channel can be declared without an acknowledge by omitting
+the @t{a} or @t{e} desginator and the initial value after the colon, 
+as in example H, above.  
+Acknowledgeless channels cannot be used as sources or sinks, 
+however, they can still be watched, logged, and checked against 
+expected values.  
+(Watching, logging, and checking values on channels does not
+use the acknowledge signal of channels.)
 
 The shared-valid protocols use a additional validity (or neutrality) signal
 in the channel to perform the handshake.  

@@ -1,0 +1,11 @@
+# "channel-test-e-04.prsimrc"
+# @haco@ channel-test-a.haco-a
+# testing acknowledgeless channels
+
+source channel-test-e-01.prsimrc
+
+echo expect fail: cannot source without acknowledge signal
+channel-source-args Y 2 1 0
+
+echo not reached.
+

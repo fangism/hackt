@@ -1,0 +1,4 @@
+testing acknowledgeless channels 
+expect fail: cannot sink without acknowledge signal 
+Error: acknowledgeless channel cannot consume tokens!
+... at line 8

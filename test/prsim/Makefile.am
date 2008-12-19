@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.62 2008/12/18 23:28:01 fang Exp $
+#	$Id: Makefile.am,v 1.63 2008/12/19 22:34:45 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -200,6 +200,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-d-30 channel-test-d-33 \
 	channel-test-d-34 channel-test-d-35 channel-test-d-36 \
 	channel-test-d-37 channel-test-d-38 \
+	channel-test-e-01 channel-test-e-02 \
+	channel-test-e-05 channel-test-e-06 channel-test-e-07 \
 	stuck-bug-a-01 \
 	crash-bug-01-a \
 	always_random-a-01 \
@@ -347,6 +349,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-test-b-27 channel-test-b-29 channel-test-b-30 \
 	channel-test-c-10 channel-test-c-21 \
 	channel-test-d-21 \
+	channel-test-e-03 channel-test-e-04 \
 	channel-test-non-QDI-a-02 \
 	precharge-g-01 \
 	invariant-a-07 invariant-b-07 \
