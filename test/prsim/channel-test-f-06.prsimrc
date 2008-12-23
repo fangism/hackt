@@ -1,0 +1,49 @@
+# "channel-test-f-06.prsimrc"
+# @haco@ channel-test-f.haco-a
+# testing acknowledgeless channels
+
+source channel-test-f-01.prsimrc
+
+echo should be able to log channels
+!rm -f channel-test-f-06-X.log
+channel-log X channel-test-f-06-X.log
+
+set X.d[0] 1
+set X.d[1] 1
+# leave X.e:X
+cycle
+
+channel-show X
+
+set X.d[0] 0
+cycle
+set X.d[0] 1
+cycle
+
+set X.d[0] 0
+cycle
+set X.d[0] 1
+cycle
+
+set X.d[1] 0
+cycle
+set X.d[1] 1
+cycle
+
+set X.d[1] 0
+cycle
+set X.d[1] 1
+cycle
+
+set X.d[0] 0
+cycle
+channel-show X
+set X.d[0] 1
+cycle
+channel-show X
+channel-close X
+channel-show X
+
+!cat channel-test-f-06-X.log
+!rm -f channel-test-f-06-X.log
+

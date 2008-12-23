@@ -1,0 +1,52 @@
+# "channel-test-g-04.prsimrc"
+# @haco@ channel-test-g.haco-a
+# testing acknowledgeless channels
+
+source channel-test-g-01.prsimrc
+
+channel-source-args-loop Y 2 1 0
+channel-watch Y
+
+set Y.e 1
+cycle
+
+channel-reset-all
+cycle
+
+assert Y.d[0] 1
+assert Y.d[1] 1
+
+channel-release-all
+cycle
+
+set Y.e 0
+cycle
+set Y.e 1
+cycle
+
+set Y.e 0
+cycle
+set Y.e 1
+cycle
+
+set Y.e 0
+cycle
+set Y.e 1
+cycle
+
+set Y.e 0
+cycle
+set Y.e 1
+cycle
+
+set Y.e 0
+cycle
+set Y.e 1
+cycle
+
+set Y.e 0
+cycle
+set Y.e 1
+cycle
+
+

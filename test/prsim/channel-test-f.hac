@@ -1,0 +1,8 @@
+// "channel-test-f.hac"
+//	$Id: channel-test-f.hac,v 1.1 2008/12/23 01:51:42 fang Exp $
+
+import "../../lib/channel.hac";
+
+_c1of2 X;
+_c1of4 Y;
+

@@ -1,0 +1,16 @@
+testing active-low data-rails 
+should be able to log channels 
+X : 1x~1of2 off > channel-test-f-06-X.log
+	count: 0, unknowns: 0
+X : 1x~1of2 off > channel-test-f-06-X.log
+	count: 1, unknowns: 0
+X : 1x~1of2 off > channel-test-f-06-X.log
+	count: 0, unknowns: 0
+X : 1x~1of2 off
+	count: 0, unknowns: 0
+# log for channel: X
+0
+0
+1
+1
+0

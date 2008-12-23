@@ -1,0 +1,7 @@
+testing active-low data-rails 
+should be able to watch channels 
+channel	X (.data) : 0
+channel	X (.data) : 0
+channel	X (.data) : 1
+channel	X (.data) : 1
+channel	X (.data) : 0

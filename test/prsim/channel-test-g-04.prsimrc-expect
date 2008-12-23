@@ -1,0 +1,10 @@
+testing active-low data-rails 
+Warning: channel acknowledge `Y.e' has no fanin!
+channel	Y (.data) : 2
+channel	Y (.data) : 1
+channel	Y (.data) : 0
+channel	Y (.data) : 2
+channel	Y (.data) : 1
+channel	Y (.data) : 0
+channel	Y (.data) : 2
+channel	Y (.data) : 1

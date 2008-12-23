@@ -1,0 +1,6 @@
+# "channel-test-f-02.prsimrc"
+# @haco@ channel-test-f.haco-a
+
+source channel-test-f-01.prsimrc
+channel-show-all
+

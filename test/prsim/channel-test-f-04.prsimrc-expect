@@ -1,0 +1,4 @@
+testing active-low data-rails 
+expect fail: cannot source without acknowledge signal 
+Error: acknowledgeless channels cannot be sourced!
+... at line 8

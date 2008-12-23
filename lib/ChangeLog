@@ -1,5 +1,11 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.49 2008/12/07 03:25:32 fang Exp $
+#	$Id: ChangeLog,v 1.50 2008/12/23 01:51:29 fang Exp $
+
+2008-12-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-87:
+	  channel.hac: added _e1of<N> definitions, and _a1ofN defs.
+
 
 2008-12-06	David Fang	<fangism@users.sourceforge.net>
 

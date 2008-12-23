@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.14 2008/12/19 22:34:43 fang Exp $
+	$Id: Channel-prsim.h,v 1.15 2008/12/23 01:51:35 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -46,7 +46,7 @@
 	as active-low in their inverted sense.  
 	TODO: start me, test me
  */
-#define	PRSIM_CHANNEL_RAILS_INVERTED		0
+#define	PRSIM_CHANNEL_RAILS_INVERTED		1
 
 /**
 	TODO: enable ability to 'set' channel values or to 
@@ -221,7 +221,7 @@ private:
 		/// true for active high (v), false for active low (n)
 		CHANNEL_VALID_ACTIVE_SENSE =	0x0004,
 #if PRSIM_CHANNEL_RAILS_INVERTED
-		/// true if data rails are inverted, active low
+		/// true if data rails are inverted, i.e. active low
 		CHANNEL_DATA_ACTIVE_SENSE =	0x0008,
 #endif
 		/// derived mask
@@ -308,6 +308,8 @@ private:
 		invariant: [return-to-zero] counter must monotonically
 		increase/decrease between 0 and M, the nmuber of bundles.  
 		Limit: 255
+		When the data is active-low (inverted), this counter
+		counts the number of *active* rails.  
 	 */
 	uchar					counter_state;
 	/**
@@ -392,6 +394,12 @@ private:
 #endif
 
 	void
+	X_all_data_rails(vector<env_event_type>&);
+
+	void
+	reset_all_data_rails(vector<env_event_type>&);
+
+	void
 	set_all_data_rails(vector<env_event_type>&);
 
 	bool
@@ -444,6 +452,25 @@ public:
 		return flags & CHANNEL_VALID_ACTIVE_SENSE;
 	}
 
+	/// \return true if data is active-low
+	bool
+	get_data_sense(void) const {
+#if PRSIM_CHANNEL_RAILS_INVERTED
+		return flags & CHANNEL_DATA_ACTIVE_SENSE;
+#else
+		return false;
+#endif
+	}
+
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	void
+	set_data_sense(bool al) {
+		if (al)	{ flags |= CHANNEL_DATA_ACTIVE_SENSE; }
+		else	{ flags &= ~CHANNEL_DATA_ACTIVE_SENSE; }
+	}
+#endif
+
+public:
 	bool
 	is_sourcing(void) const {
 		return flags & CHANNEL_SOURCING;
@@ -506,6 +533,7 @@ private:
 
 	void
 	__configure_expect(const bool);
+
 
 public:
 	bool
@@ -579,20 +607,17 @@ public:
 		node_set_type&, node_set_type&) const;
 
 private:
-	static
 	ostream&
 	__node_why_not_data_rails(const State&, ostream&, 
 		const node_index_type, const bool a, 
-		const data_bundle_array_type&, 
 		const size_t, const bool d, const bool wn, const bool v, 
-		node_set_type&, node_set_type&);
+		node_set_type&, node_set_type&) const;
 
-	static
 	ostream&
 	__node_why_X_data_rails(const State&, ostream&, 
-		const bool a, const data_bundle_array_type&, 
+		const bool a, 
 		const size_t, const bool v, 
-		node_set_type&, node_set_type&);
+		node_set_type&, node_set_type&) const;
 
 public:
 	void
@@ -671,7 +696,7 @@ public:
 	bool
 	new_channel(State&, const string&, 
 		const string& bn, const size_t b,
-		const string& rn, const size_t r);
+		const string& rn, const size_t r, const bool al);
 
 	bool
 	set_channel_ack_valid(State&, const string&, 

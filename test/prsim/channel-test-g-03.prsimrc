@@ -1,0 +1,50 @@
+# "channel-test-g-03.prsimrc"
+# @haco@ channel-test-g.haco-a
+# testing acknowledgeless channels
+
+source channel-test-g-01.prsimrc
+
+channel-sink X
+echo should be able to watch channels
+channel-watch X
+channel-reset-all
+
+set X.d[0] 1
+set X.d[1] 1
+# leave X.e:X
+cycle
+assert X.e 1
+
+channel-release-all
+cycle
+
+assert X.e 1
+set X.d[0] 0
+cycle
+assert X.e 0
+set X.d[0] 1
+cycle
+
+assert X.e 1
+set X.d[0] 0
+cycle
+assert X.e 0
+set X.d[0] 1
+cycle
+
+set X.d[1] 0
+cycle
+set X.d[1] 1
+cycle
+
+set X.d[1] 0
+cycle
+set X.d[1] 1
+cycle
+
+set X.d[0] 0
+cycle
+set X.d[0] 1
+cycle
+
+

@@ -1,0 +1,43 @@
+# "channel-test-f-07.prsimrc"
+# @haco@ channel-test-f.haco-a
+# testing acknowledgeless channels
+
+source channel-test-f-01.prsimrc
+
+echo should be able to expect channels
+confirm
+channel-expect-args-loop X 0 0 1 1 0 0
+
+set X.d[0] 1
+set X.d[1] 1
+# leave X.e:X
+cycle
+
+set X.d[0] 0
+cycle
+set X.d[0] 1
+cycle
+
+set X.d[0] 0
+cycle
+set X.d[0] 1
+cycle
+
+set X.d[1] 0
+cycle
+set X.d[1] 1
+cycle
+
+set X.d[1] 0
+cycle
+set X.d[1] 1
+cycle
+
+set X.d[0] 0
+cycle
+channel-show X
+
+set X.d[0] 1
+cycle
+channel-show X
+

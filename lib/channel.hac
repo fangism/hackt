@@ -2,7 +2,7 @@
 	"channel.hac"
 	Standard channel definitions in HAC.  
 	Q: place these in some namespace?  std::channel?
-	$Id: channel.hac,v 1.10 2008/06/27 00:01:39 fang Exp $
+	$Id: channel.hac,v 1.11 2008/12/23 01:51:30 fang Exp $
  */
 
 /*** e1of<N> definitions ********************************/
@@ -94,6 +94,44 @@ typedef _c1of<5> _c1of5;
 typedef _c1of<6> _c1of6;
 typedef _c1of<7> _c1of7;
 typedef _c1of<8> _c1of8;
+
+/*** _e1of<N> definitions **********************************/
+
+template <pint N>
+defchan _e1of <: chan(int) (bool d[N], e)
+{
+spec {
+	excllo(d)		// all nodes: d[0..N-1]
+}
+}
+
+typedef _e1of<1> _e1of1;
+typedef _e1of<2> _e1of2;
+typedef _e1of<3> _e1of3;
+typedef _e1of<4> _e1of4;
+typedef _e1of<5> _e1of5;
+typedef _e1of<6> _e1of6;
+typedef _e1of<7> _e1of7;
+typedef _e1of<8> _e1of8;
+
+/*** _a1of<N> definitions **********************************/
+
+template <pint N>
+defchan _a1of <: chan(int) (bool d[N], e)
+{
+spec {
+	excllo(d)		// all nodes: d[0..N-1]
+}
+}
+
+typedef _a1of<1> _a1of1;
+typedef _a1of<2> _a1of2;
+typedef _a1of<3> _a1of3;
+typedef _a1of<4> _a1of4;
+typedef _a1of<5> _a1of5;
+typedef _a1of<6> _a1of6;
+typedef _a1of<7> _a1of7;
+typedef _a1of<8> _a1of8;
 
 /*** shared-rail 1of<N> definitions ************************/
 /**

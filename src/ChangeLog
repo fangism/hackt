@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-12-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-87:
+	  prsim: implemented active-low data-rails in channels, 
+		designated with '~' in ~d:2 of channel declaration command.
+	  Documented and tested.
+
+
 2008-12-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-86:

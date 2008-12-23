@@ -1,0 +1,4 @@
+testing active-low data-rails 
+channels:
+X : .e(init:1) 1x~1of2 off
+Y : .e(init:1) 1x~1of4 off

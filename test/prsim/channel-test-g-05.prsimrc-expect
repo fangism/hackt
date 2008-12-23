@@ -1,0 +1,11 @@
+testing active-low data-rails 
+should be able to watch channels, not using acknowledes or env. 
+channel	X (.data) : 0
+channel	X (.data) : 0
+channel	X (.data) : 1
+channel	X (.data) : 1
+channel	X (.data) : 0
+X : .e(init:1) 1x~1of2 watch
+	count: 1, unknowns: 0
+X : .e(init:1) 1x~1of2 watch
+	count: 0, unknowns: 0

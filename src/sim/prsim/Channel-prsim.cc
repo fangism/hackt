@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.17 2008/12/19 22:34:42 fang Exp $
+	$Id: Channel-prsim.cc,v 1.18 2008/12/23 01:51:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -267,7 +267,11 @@ channel::dump(ostream& o) const {
 		o << ' ' << (get_valid_sense() ? ".v" : ".n");
 	}
 	// didn't store names of bundles and rails
-	o << ' ' << bundles() << "x1of" << radix();
+	o << ' ' << bundles() << 'x';
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	if (get_data_sense()) { o << '~'; }
+#endif
+	o << "1of" << radix();
 	// print internal node IDs? names?
 	bool something = false;
 	o << ' ';
@@ -527,11 +531,14 @@ if (valid_signal) {
 			"\' has no fanout, but is being sourced." << endl;
 	}
 }
-	data_bundle_array_type::const_iterator i(data.begin()), e(data.end());
+	const data_bundle_array_type::const_iterator
+		b(data.begin()), e(data.end());
+	data_bundle_array_type::const_iterator i(b);
 	for ( ; i!=e; ++i) {
 		const State::node_type& d(s.get_node(*i));
 		if (d.has_fanin()) {
-			const size_t pos = i -data.begin();	// std::distance
+			const size_t pos = i -b;	// std::distance
+			// TODO: use lldiv
 			const size_t j = pos / radix();
 			const size_t k = pos % radix();
 			cerr << "Warning: channel data rail `" << name <<
@@ -697,7 +704,10 @@ channel::initialize_data_counter(const State& s) {
 		const node_type& n(s.get_node(*i));
 		switch (n.current_value()) {
 		case LOGIC_HIGH:
-			++counter_state;
+			if (!get_data_sense()) ++counter_state;
+			break;
+		case LOGIC_LOW:
+			if (get_data_sense()) ++counter_state;
 			break;
 		case LOGIC_OTHER:
 			++x_counter;
@@ -708,7 +718,7 @@ channel::initialize_data_counter(const State& s) {
 	if (counter_state > bundles()) {
 		cerr << "Channel data rails are in an invalid state!" << endl;
 		cerr << "In channel `" << name << "\', got " << counter_state
-			<< " high rails, whereas only " << bundles() <<
+			<< " active rails, whereas only " << bundles() <<
 			" are permitted." << endl;
 		THROW_EXIT;
 	}
@@ -724,6 +734,7 @@ channel::initialize_data_counter(const State& s) {
 void
 channel::initialize(void) {
 	counter_state = 0;
+	// independent of data-rail sense
 	x_counter = bundles() * radix();
 	// retain values in sequence, but reset index
 	value_index = 0;
@@ -868,8 +879,7 @@ channel::reset(vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type		node_type;
 	if (is_sourcing()) {
-		transform(data.begin(), data.end(), back_inserter(events), 
-			__node_setter(LOGIC_LOW));
+		reset_all_data_rails(events);
 		// once nodes all become neutral, the validity should be reset
 	}
 	if (is_sinking()) {
@@ -921,6 +931,7 @@ if (is_random()) {
 /**
 	\return in r the list of data rails selected by current value.
 	If there is no current value, then return nothing.  
+	Active sense of data rails is irrelevant here. 
  */
 void
 channel::current_data_rails(vector<node_index_type>& r) const {
@@ -940,6 +951,22 @@ if (have_value()) {
 		++k[0];
 	}
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+void
+channel::reset_all_data_rails(vector<env_event_type>& events) {
+	transform(data.begin(), data.end(), back_inserter(events),
+		__node_setter(get_data_sense() ?  LOGIC_HIGH : LOGIC_LOW));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+void
+channel::X_all_data_rails(vector<env_event_type>& events) {
+	transform(data.begin(), data.end(), back_inserter(events),
+		__node_setter(LOGIC_OTHER));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -968,7 +995,8 @@ if (have_value()) {
 		k[1] = 0;
 		for ( ; k[1] < size_t(rdx); ++k[1]) {
 			const node_index_type ni = data[k];	// node index
-			const value_enum v = (k[1] == size_t(qr.rem)) ?
+			const value_enum v = 
+				(k[1] == size_t(qr.rem)) ^ get_data_sense() ?
 				LOGIC_HIGH : LOGIC_LOW;
 			r.push_back(ENV_EVENT(ni, v));
 		}
@@ -977,8 +1005,7 @@ if (have_value()) {
 	INVARIANT(!is_random());
 	// otherwise following code would wipe the random value slot!
 	// no next value, just hold all data rails neutral
-	transform(data.begin(), data.end(), back_inserter(r), 
-		__node_setter(LOGIC_LOW));
+	reset_all_data_rails(r);
 	flags &= ~CHANNEL_SOURCING;
 	if (!values.empty()) {
 		values.clear();
@@ -1001,6 +1028,7 @@ channel::set_current_data_rails(vector<env_event_type>& events,
 if (have_value()) {
 	vector<node_index_type> nodes;
 	current_data_rails(nodes);	// use current values[value_index]
+	// TODO: mind the data-active sense!
 	transform(nodes.begin(), nodes.end(), back_inserter(events), 
 		__node_setter(val));
 } else {
@@ -1017,6 +1045,7 @@ if (have_value()) {
 /**
 	TODO: Almost correct: need exactly one rail high per bundle, 
 	but that's more effort to check. 
+	This is independent of data-sense.  
  */
 bool
 channel::data_is_valid(void) const {
@@ -1048,11 +1077,19 @@ channel::data_rails_value(const State& s) const {
 		for ( ; k[1] < rdx; ++k[1]) {
 			const node_type& n(s.get_node(data[k]));
 			switch (n.current_value()) {
-			case LOGIC_LOW: break;
-			case LOGIC_HIGH:
+			case LOGIC_LOW:
+			if (get_data_sense()) {
 				INVARIANT(!have_hi);
 				have_hi = true;
 				hi = k[1];
+			}
+				break;
+			case LOGIC_HIGH:
+			if (!get_data_sense()) {
+				INVARIANT(!have_hi);
+				have_hi = true;
+				hi = k[1];
+			}
 				break;
 			default: DIE;
 			}
@@ -1186,7 +1223,7 @@ if (stopped()) {
 		if (valid_signal && (ni == valid_signal)) {
 			__node_why_not_data_rails(s, o, 
 				valid_signal, get_valid_sense(), 
-				data, limit, dir, why_not, verbose, u, v);
+				limit, dir, why_not, verbose, u, v);
 		} else if (ack_signal) {
 		const data_rail_map_type::const_iterator
 			f(__node_to_rail.find(ni));
@@ -1218,7 +1255,7 @@ if (stopped()) {
 		}
 	} else {
 		__node_why_not_data_rails(s, o, ack_signal, get_ack_active(), 
-			data, limit, dir, why_not, verbose, u, v);
+			limit, dir, why_not, verbose, u, v);
 	}
 	}	// end if sinking
 }	// end if !stopped
@@ -1228,6 +1265,7 @@ if (stopped()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Asks why the data rails are/not in their present state.
+	This analysis will depend on the sense of the data signals.  
 	\param ni is the node in question, e.g. validity signal, 
 		or acknowledge signal.  
 	\param is the active sense of the ni signal.  
@@ -1235,44 +1273,44 @@ if (stopped()) {
 ostream&
 channel::__node_why_not_data_rails(const State& s, ostream& o, 
 		const node_index_type ni, const bool active, 
-		const data_bundle_array_type& data, 
 		const size_t limit, const bool dir, 
 		const bool why_not, const bool verbose, 
-		node_set_type& u, node_set_type& v) {
+		node_set_type& u, node_set_type& v) const {
 	// query completion status of the data rails, 
 	// assuming celem-of-or style completion of bundles
 	typedef	State::node_type		node_type;
-	const size_t bundles = data.size()[0];
-	const size_t radix = data.size()[1];
+	const size_t _bundles = bundles();
+	const size_t _radix = radix();
 	const node_type& a(s.get_node(ni));
 	const value_enum av = a.current_value();
 	string ind_str;
-	if (verbose && (bundles > 1)) {
+	if (verbose && (_bundles > 1)) {
 		ind_str += " & ";
 		o << auto_indent << "-+" << endl;
 	}
 	const indent __ind_celem(o, ind_str);      // INDENT_SCOPE(o);
 	data_rail_index_type key;
 	key[0] = 0;
-	for ( ; key[0] < bundles; ++key[0]) {
+	for ( ; key[0] < _bundles; ++key[0]) {
 		// first find out if bundle is valid
 		size_t partial_valid = 0;
 		key[1] = 0;
-		for ( ; key[1] < radix; ++key[1]) {
+		for ( ; key[1] < _radix; ++key[1]) {
 			if (s.get_node(data[key]).current_value() ==
-				LOGIC_HIGH) {
+				get_data_sense() ? LOGIC_LOW : LOGIC_HIGH) {
 				++partial_valid;
 			}
 		}
 		// second pass, only if bundle is not ready
 		string i_s;
-		if (verbose && (radix > 1)) {
+		if (verbose && (_radix > 1)) {
 			i_s += " ";
 			// when to negate (nor)?
 			// when data wants to be neutral, 
 			// i.e. when acknowledge is active
-			if ((av == LOGIC_LOW) ^ !why_not ^ active) {
-				i_s += "~";
+			if ((av == LOGIC_LOW) ^ !why_not ^ active
+					^ get_data_sense()) {
+				i_s += "~";	// nor
 			}
 			i_s += "| ";
 			o << auto_indent << "-+" << endl;
@@ -1280,23 +1318,40 @@ channel::__node_why_not_data_rails(const State& s, ostream& o,
 		const indent __ind_or(o, i_s);	// INDENT_SCOPE(o);
 
 		key[1] = 0;
-		for ( ; key[1] < radix; ++key[1]) {
+		for ( ; key[1] < _radix; ++key[1]) {
 			const node_index_type di = data[key];
 			const node_type& d(s.get_node(di));
 		switch (d.current_value()) {
+		// TODO: simplify me (logic)
 		case LOGIC_LOW:
+		if (get_data_sense()) {		// active-low
+			if (active ^ (av == LOGIC_LOW)) {
+				s.__node_why_not(o, di, 
+					limit, why_not, 
+					why_not, verbose, u, v);
+			}
+		} else {
 			if (active ^ (av == LOGIC_HIGH)) {
 				s.__node_why_not(o, di, 
 					limit, why_not, 
 					why_not, verbose, u, v);
 			}
+		}
 			break;
 		case LOGIC_HIGH:
+		if (get_data_sense()) {		// active-low
+			if (active ^ (av == LOGIC_HIGH)) {
+				s.__node_why_not(o, di, 
+					limit, !why_not, 
+					why_not, verbose, u, v);
+			}
+		} else {
 			if (active ^ (av == LOGIC_LOW)) {
 				s.__node_why_not(o, di, 
 					limit, !why_not, 
 					why_not, verbose, u, v);
 			}
+		}
 			break;
 		default: break;	// ignore Xs
 		}	// end switch
@@ -1332,7 +1387,7 @@ if (stopped()) {
 			// then point back to data rails, see below
 			// eventually refactor that code out
 			__node_why_X_data_rails(s, o, get_valid_sense(), 
-				data, limit, verbose, u, v);
+				limit, verbose, u, v);
 		} else if (ack_signal) {
 		const data_rail_map_type::const_iterator
 			f(__node_to_rail.find(ni));
@@ -1353,7 +1408,7 @@ if (stopped()) {
 		s.__node_why_X(o, valid_signal, limit, verbose, u, v);
 	} else {	// depends on data rails directly
 		__node_why_X_data_rails(s, o, get_ack_active(), 
-			data, limit, verbose, u, v);
+			limit, verbose, u, v);
 	}
 	}	// end if sinking
 }	// end if !stopped
@@ -1367,40 +1422,38 @@ if (stopped()) {
 ostream&
 channel::__node_why_X_data_rails(const State& s, ostream& o, 
 		const bool active, 
-		const data_bundle_array_type& data, 
 		const size_t limit, const bool verbose, 
-		node_set_type& u, node_set_type& v) {
+		node_set_type& u, node_set_type& v) const {
 	typedef	State::node_type		node_type;
-	const size_t bundles = data.size()[0];
-	const size_t radix = data.size()[1];
+	const size_t _bundles = bundles();
+	const size_t _radix = radix();
 	string ind_str(verbose ? "" : "  ");
-	if (verbose && (bundles > 1)) {
+	if (verbose && (_bundles > 1)) {
 		ind_str += " & ";
 		o << auto_indent << "-+" << endl;
 	}
 	const indent __ind_celem(o, ind_str);      // INDENT_SCOPE(o);
 	data_rail_index_type key;
 	key[0] = 0;
-	for ( ; key[0] < bundles; ++key[0]) {
+	for ( ; key[0] < _bundles; ++key[0]) {
 		// first find out if bundle is X
 		key[1] = 0;
 		string i_s;
-		if (verbose && (radix > 1)) {
+		if (verbose && (_radix > 1)) {
 			i_s += " ";
 			// when to negate (nor)?
 			// when data wants to be neutral, 
 			// i.e. when acknowledge is active
-			if (!active) {
+			if (!active ^ get_data_sense()) {
 				i_s += "~";
 			}
 			i_s += "| ";
 			o << auto_indent << "-+" << endl;
 		}
 		const indent __ind_or(o, i_s);	// INDENT_SCOPE(o);
-		for ( ; key[1] < radix; ++key[1]) {
+		for ( ; key[1] < _radix; ++key[1]) {
 			const node_index_type d(data[key]);
-			if (s.get_node(d).current_value() ==
-					LOGIC_OTHER) {
+			if (s.get_node(d).current_value() == LOGIC_OTHER) {
 				s.__node_why_X(o, d, limit, verbose, u, v);
 			}
 		}	// end for rails
@@ -1446,18 +1499,12 @@ if (ack_signal && (ni == ack_signal)) {
 			set_all_data_rails(new_events);
 			advance_value();
 		} else {
-			// reset all data rails
-			transform(data.begin(), data.end(),
-				back_inserter(new_events), 
-				__node_setter(LOGIC_LOW));
+			reset_all_data_rails(new_events);
 		}
 		break;
 	case LOGIC_HIGH:
 		if (get_ack_active()) {
-			// reset all data rails
-			transform(data.begin(), data.end(),
-				back_inserter(new_events), 
-				__node_setter(LOGIC_LOW));
+			reset_all_data_rails(new_events);
 		} else {
 			// \pre all data rails are neutral
 			// set data rails to next data value
@@ -1468,8 +1515,7 @@ if (ack_signal && (ni == ack_signal)) {
 	default:
 		// set all data to X
 		// do not advance
-		transform(data.begin(), data.end(), back_inserter(new_events), 
-			__node_setter(LOGIC_OTHER));
+		X_all_data_rails(new_events);
 		break;
 	}
 	}
@@ -1525,9 +1571,17 @@ if (ack_signal && (ni == ack_signal)) {
 	// invariant: must be data rail
 	// update state counters
 	switch (prev) {
-	case LOGIC_HIGH:
+	case LOGIC_LOW:
+	if (get_data_sense()) {
 		INVARIANT(counter_state);
 		--counter_state;
+	}
+		break;
+	case LOGIC_HIGH:
+	if (!get_data_sense()) {
+		INVARIANT(counter_state);
+		--counter_state;
+	}
 		break;
 	case LOGIC_OTHER:
 		INVARIANT(x_counter);
@@ -1536,7 +1590,8 @@ if (ack_signal && (ni == ack_signal)) {
 	default: break;
 	}
 	switch (next) {
-	case LOGIC_HIGH: ++counter_state; break;
+	case LOGIC_LOW: if (get_data_sense()) ++counter_state; break;
+	case LOGIC_HIGH: if (!get_data_sense()) ++counter_state; break;
 	case LOGIC_OTHER: ++x_counter; break;
 	default: break;
 	}
@@ -1755,18 +1810,12 @@ if (is_sourcing()) {
 				// else leave alone in intermediate state
 			}
 		} else {
-			// reset data
-			transform(data.begin(), data.end(),
-				back_inserter(events),
-				__node_setter(LOGIC_LOW));
+			reset_all_data_rails(events);
 		}
 		break;
 	case LOGIC_HIGH:
 		if (get_ack_active()) {
-			// reset data
-			transform(data.begin(), data.end(),
-				back_inserter(events),
-				__node_setter(LOGIC_LOW));
+			reset_all_data_rails(events);
 		} else {
 			if (counter_state && (counter_state != bundles())) {
 				// ambiguous
@@ -1799,9 +1848,7 @@ if (is_sourcing()) {
 		}
 		break;
 	default:
-		transform(data.begin(), data.end(),
-			back_inserter(events),
-			__node_setter(LOGIC_OTHER));
+		X_all_data_rails(events);
 	}	// end switch
 }
 // could also be sinking at the same time
@@ -1943,7 +1990,8 @@ channel_manager::~channel_manager() { }
 bool
 channel_manager::new_channel(State& state, const string& base, 
 		const string& bundle_name, const size_t _num_bundles, 
-		const string& rail_name, const size_t _num_rails) {
+		const string& rail_name, const size_t _num_rails, 
+		const bool active_low) {
 	STACKTRACE_VERBOSE;
 	// 0 indicates that bundle/rail is scalar, not array
 	// in any case, size should be at least 1
@@ -1957,6 +2005,9 @@ if (i.second) {
 	channel_pool.resize(key +1);	// default construct
 	channel& c(channel_pool.back());
 	c.name = base;
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	c.set_data_sense(active_low);
+#endif
 	// allocate data rail references:
 	channel::data_rail_index_type dk;
 	dk[0] = num_bundles;

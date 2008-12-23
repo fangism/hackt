@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.32 2008/12/19 22:34:44 fang Exp $
+	$Id: Command-prsim.cc,v 1.33 2008/12/23 01:51:35 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3695,7 +3695,7 @@ UnstableDequeue::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static const char
-break_options[] = "[ignore|warn|notify|break]";
+break_options[] = "[ignore|warn|notify|break|interactive|fatal]";
 
 static const char
 break_descriptions[] = 
@@ -4315,9 +4315,12 @@ The @var{name} of the channel should match that of an instance
 	data rails, @var{rname} is the name of the data rail of the channel.
 	@var{radix} is the number of data rails per bundle (N in Mx1ofN).
 	Use @var{radix} 0 to indicate that rail is not an array (1of1).
+	If @var{rails} is prefixed with a @t{~}, then the data rails
+	will be interpreted as active low.  
 @end itemize
 For example, @t{channel e:0 :0 d:4} is a conventional e1of4 channel with
-data rails @t{d[0..3]}, and an active-low acknowledge reset to 0, no bundles.
+active-high data rails @t{d[0..3]}, 
+and an active-low acknowledge (enable) reset to 0, no bundles.
 @end deffn
 @end texinfo
 ***/
@@ -4341,9 +4344,7 @@ if (a.size() != 5) {
 	bool ack_init = false;
 	bool have_valid = false;
 	bool valid_sense = false;
-#if PRSIM_CHANNEL_RAILS_INVERTED
-	bool data_sense = true;
-#endif
+	bool data_sense = false;
 	try {
 		// parse ev-type
 		string::const_iterator si(ev_type.begin()), se(ev_type.end());
@@ -4401,9 +4402,10 @@ if (a.size() != 5) {
 		}
 #if PRSIM_CHANNEL_RAILS_INVERTED
 		// TODO: finish me
+		data_sense = (rail[0] == '~');		// active low
 #endif
 		const string::const_iterator b(rail.begin());
-		rail_name.assign(b, b+c);
+		rail_name.assign(b +size_t(data_sense), b+c);
 		if (!rail_name.length()) { THROW_EXIT; }
 		string v(b +c +1, rail.end());
 		if (string_to_num(v, rail_size)) { THROW_EXIT; }
@@ -4414,7 +4416,7 @@ if (a.size() != 5) {
 	}
 	channel_manager& cm(s.get_channel_manager());
 	if (cm.new_channel(s, chan_name, bundle_name, bundle_size, 
-			rail_name, rail_size) ||
+			rail_name, rail_size, data_sense) ||
 			cm.set_channel_ack_valid(s, chan_name, 
 				have_ack, ack_sense, ack_init, 
 				have_valid, valid_sense)) {
