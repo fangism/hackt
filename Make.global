@@ -7,7 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.32 2008/06/04 04:06:35 fang Exp $
+#	$Id: Make.global,v 1.33 2008/12/23 04:42:20 fang Exp $
 
 # automatically runs autotools (and recursively in subdirectories)
 reconf: force
@@ -312,7 +312,7 @@ check.log: force
 #	@$(ECHO) `$(GREP) "Abort trap" $@ | wc -l` cases crashed.
 #	@$(ECHO) Total of `$(GREP) ^FAIL $@ | wc -l` failures encountered.
 	$(AWK) -f $(top_srcdir)/scripts/tally_tests.awk $@
-	@if $(GREP) " \*\*\* " $@ ; then \
+	@if $(GREP) "make.* \*\*\* " $@ ; then \
 		$(ECHO) "Errors found!  see $@." ; \
 		exit 1 ; \
 	fi
