@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.9 2008/10/24 01:08:57 fang Exp $
+	$Id: connection_policy.h,v 1.10 2009/01/13 00:48:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -113,6 +113,12 @@ protected:
 		add staticizers to dynamic node.  
 	 */
 		BOOL_NO_AUTOKEEPER	= 0x0002,
+	/**
+		Attributes added by request.
+	 */
+		BOOL_IS_RVC1		= 0x0004,
+		BOOL_IS_RVC2		= 0x0008,
+		BOOL_IS_RVC3		= 0x0010,
 		BOOL_DEFAULT_ATTRIBUTES = 0x0000
 	};
 	connection_flags_type			attributes;
@@ -148,6 +154,21 @@ public:
 	void
 	set_no_autokeeper(void) {
 		attributes |= BOOL_NO_AUTOKEEPER;
+	}
+
+	void
+	set_is_rvc1(void) {
+		attributes |= BOOL_IS_RVC1;
+	}
+
+	void
+	set_is_rvc2(void) {
+		attributes |= BOOL_IS_RVC2;
+	}
+
+	void
+	set_is_rvc3(void) {
+		attributes |= BOOL_IS_RVC3;
 	}
 
 protected:

@@ -4,7 +4,7 @@
 	which are applied at create-time.  
 	Because these attributes are applied at create-time, 
 	they are back-end independent.  
-	$Id: bool_instance_attribute.cc,v 1.2 2008/10/11 22:49:10 fang Exp $
+	$Id: bool_instance_attribute.cc,v 1.3 2009/01/13 00:48:51 fang Exp $
  */
 
 #include "Object/unroll/instance_attribute_registry.h"
@@ -88,6 +88,44 @@ AutoKeeper::main(visitor_type& a, const values_type& v) {
 		a.set_no_autokeeper();
 	}
 }
+
+//=============================================================================
+// attributes added by request
+
+DECLARE_AND_DEFINE_BOOL_INSTANCE_ATTRIBUTE_CLASS(IsRVC1, "isrvc1")
+DECLARE_AND_DEFINE_BOOL_INSTANCE_ATTRIBUTE_CLASS(IsRVC2, "isrvc2")
+DECLARE_AND_DEFINE_BOOL_INSTANCE_ATTRIBUTE_CLASS(IsRVC3, "isrvc3")
+
+/***
+@texinfo attrib/bool-isrvc.texi
+@defmac isrvc1 b
+@defmacx isrvc2 b
+@defmacx isrvc3 b
+Nodes are initially @t{isrvc1=false}, @t{isrvc2=false}, @t{isrvc3=false}.
+If @var{b} is true, label this node in a way meaningful for 
+redundant keeper circuits.  
+If unspecified, argument is implicitly true.  
+@end defmac
+@end texinfo
+***/
+#define	DEFINE_ISRVC_ATTRIBUTE(class_name, setter)			\
+void									\
+class_name::main(visitor_type& a, const values_type& v) {		\
+	pint_value_type b = 1;						\
+	if (v.size()) {							\
+		const pint_const& pi(*v[0].is_a<const pint_const>());	\
+		b = pi.static_constant_value();				\
+	}								\
+	if (b) {							\
+		a.setter();						\
+	}								\
+}
+
+DEFINE_ISRVC_ATTRIBUTE(IsRVC1, set_is_rvc1)
+DEFINE_ISRVC_ATTRIBUTE(IsRVC2, set_is_rvc2)
+DEFINE_ISRVC_ATTRIBUTE(IsRVC3, set_is_rvc3)
+
+#undef	DEFINE_ISRVC_ATTRIBUTE
 
 //=============================================================================
 }	// end namespace bool_attributes_impl

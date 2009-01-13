@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.8 2008/10/17 21:52:51 fang Exp $
+	$Id: connection_policy.cc,v 1.9 2009/01/13 00:48:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,6 +27,9 @@ const char*
 bool_connect_policy::attribute_names[] = {
 	"iscomb",
 	"!autokeeper",
+	"isrvc1",
+	"isrvc2",
+	"isrvc3",
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

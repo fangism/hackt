@@ -1,0 +1,9 @@
+// "isrvc-01.hac"
+// @hflat-flags@ -fnode-attributes
+
+bool a, b, c, d;
+
+b @ [isrvc1=1];
+c @ [isrvc2];
+d @ [isrvc3];
+

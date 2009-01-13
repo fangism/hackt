@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_attribute_common.cc"
-	$Id: bool_attribute_common.cc,v 1.2 2008/10/11 06:35:12 fang Exp $
+	$Id: bool_attribute_common.cc,v 1.3 2009/01/13 00:48:50 fang Exp $
  */
 
 #include <iostream>
@@ -43,6 +43,22 @@ IsComb::__check_vals(const char* name, const values_type& v) {
  */
 good_bool
 AutoKeeper::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
+}
+
+//=============================================================================
+good_bool
+IsRVC1::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
+}
+
+good_bool
+IsRVC2::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
+}
+
+good_bool
+IsRVC3::__check_vals(const char* name, const values_type& v) {
 	return check_optional_integer(name, v);
 }
 

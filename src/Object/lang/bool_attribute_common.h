@@ -2,7 +2,7 @@
 	\file "Object/lang/PRS_attribute_common.h"
 	Contains base classes for all tool-independent implementations
 	of bool (node) attribute classes.  
-	$Id: bool_attribute_common.h,v 1.1 2008/10/03 02:04:30 fang Exp $
+	$Id: bool_attribute_common.h,v 1.2 2009/01/13 00:48:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_ATTRIBIBUTE_COMMON_H__
@@ -53,6 +53,14 @@ DECLARE_BOOL_ATTRIBIBUTE_COMMON_STRUCT(IsComb)
 	back-end tools on a dynamically driven node.  
  */
 DECLARE_BOOL_ATTRIBIBUTE_COMMON_STRUCT(AutoKeeper)
+
+//=============================================================================
+// miscellaneous attributes requested by others
+// TODO: make attributes plug-in extendable
+
+DECLARE_BOOL_ATTRIBIBUTE_COMMON_STRUCT(IsRVC1)
+DECLARE_BOOL_ATTRIBIBUTE_COMMON_STRUCT(IsRVC2)
+DECLARE_BOOL_ATTRIBIBUTE_COMMON_STRUCT(IsRVC3)
 
 //=============================================================================
 }	// end namespace attributes
