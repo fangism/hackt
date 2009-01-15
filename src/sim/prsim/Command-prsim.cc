@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.33 2008/12/23 01:51:35 fang Exp $
+	$Id: Command-prsim.cc,v 1.34 2009/01/15 18:36:14 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -331,6 +331,7 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Paths, PRSIM::general)
 @deffn Command initialize
 Resets the variable state of the simulation (to unknown), 
 while preserving other settings such as mode and breakpoints.  
+The random number generator seed is untouched by this command.
 @end deffn
 @end texinfo
 ***/
@@ -343,6 +344,9 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Initialize, PRSIM::simulation)
 @deffn Command reset
 Similar to @command{initialize}, but also resets all modes to their
 default values.  
+This command can be used to quickly bring the simulator to the initial
+startup state, without having to exit and relaunch.  
+This also resets the random number generator seed used with @command{seed48}.
 @end deffn
 @end texinfo
 ***/
@@ -3568,6 +3572,8 @@ Corresponds to libc's seed48 function.
 With no argument, print the current values of the internal random number seed.
 With three (unsigned short) integers, sets the random number seed.
 Note: the seed is automatically saved and restored in checkpoints.  
+The seed value is reset to 0 0 0 with the @command{reset} command, 
+but not with the @command{initialize} command.
 @end deffn
 @end texinfo
 ***/

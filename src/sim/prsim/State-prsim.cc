@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.41 2008/12/18 23:27:59 fang Exp $
+	$Id: State-prsim.cc,v 1.42 2009/01/15 18:36:15 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -890,6 +890,9 @@ State::reset(void) {
 	unwatch_all_nodes();
 	uniform_delay = time_traits::default_delay;
 	_channel_manager.clobber_all();
+	// reset seed
+	ushort seed[3] = {0,0,0};
+	seed48(seed);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

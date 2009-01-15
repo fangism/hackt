@@ -1,0 +1,15 @@
+# "seed48-01.prsimrc"
+# @haco@ inv.haco-a
+
+# testing setting and resetting of random seed
+
+echo initial seed should be 0s
+seed48
+
+timing random
+echo step a few events in random timing
+set a 0
+cycle
+
+echo just compare checkpoints...
+

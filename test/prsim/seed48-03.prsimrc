@@ -1,0 +1,15 @@
+# "seed48-02.prsimrc"
+# @haco@ inv.haco-a
+
+# testing setting and resetting of random seed
+
+echo initial seed should be 0s
+seed48
+
+seed48 1 2 3
+seed48
+
+echo make sure initialize does NOT resets the seed
+initialize
+seed48
+
