@@ -1,0 +1,35 @@
+// "iscomb-25.hac"
+// reduced test case for bug (ACX-PR-2513)
+// found by Robert Orefice, reduced by Fang
+// @hflat-flags@ -fnode-attributes
+
+defchan e1of2 <: chan(bool) (bool t,f,e) { }
+
+defproc A (e1of2 l, r) {
+        bool l_e = l.e;
+        l_e @ [iscomb=1];
+}
+
+template<pint ID; pint W>
+defproc B ( e1of2 l[W]; e1of2 r) {
+        A mb[W];
+        (;i:W: mb[i] (l[i], r); )
+/**
+        bool r_t = r.t;
+        bool r_f = r.f;
+        r_t @ [iscomb=1];
+        r_f @ [iscomb=1];
+**/
+}
+
+defproc C () {
+//      pint W = 2; pint ID = 0;
+        B<0,2> bar;
+}
+
+C foo;
+
+// expect to see in prs output:
+// @ "foo.bar.l[0].e" iscomb
+// @ "foo.bar.l[1].e" iscomb
+

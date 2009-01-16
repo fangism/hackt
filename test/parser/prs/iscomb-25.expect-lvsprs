@@ -1,0 +1,16 @@
+@ "foo.bar.l[0].e" iscomb
+@ "foo.bar.l[1].e" iscomb
+connect "foo.bar.l[0].e" "foo.bar.mb[0].l.e"
+connect "foo.bar.l[0].f" "foo.bar.mb[0].l.f"
+connect "foo.bar.l[0].t" "foo.bar.mb[0].l.t"
+connect "foo.bar.l[0].e" "foo.bar.mb[0].l_e"
+connect "foo.bar.r.e" "foo.bar.mb[0].r.e"
+connect "foo.bar.r.f" "foo.bar.mb[0].r.f"
+connect "foo.bar.r.t" "foo.bar.mb[0].r.t"
+connect "foo.bar.l[1].e" "foo.bar.mb[1].l.e"
+connect "foo.bar.l[1].f" "foo.bar.mb[1].l.f"
+connect "foo.bar.l[1].t" "foo.bar.mb[1].l.t"
+connect "foo.bar.l[1].e" "foo.bar.mb[1].l_e"
+connect "foo.bar.r.e" "foo.bar.mb[1].r.e"
+connect "foo.bar.r.f" "foo.bar.mb[1].r.f"
+connect "foo.bar.r.t" "foo.bar.mb[1].r.t"

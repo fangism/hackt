@@ -1,0 +1,24 @@
+// "iscomb-26-a.hac"
+// copy-reduced from "iscomb-26.hac"
+// @hflat-flags@ -fnode-attributes
+
+defchan e1of2 <: chan(bool) (bool t,f,e) { }
+
+defproc A (e1of2 l, r) {
+        bool l_e = l.e;
+        l_e @ [iscomb=1];
+}
+
+defproc B ( e1of2 l; e1of2 r) {
+        A m(l, r);
+}
+
+defproc C () {
+        B bar;
+}
+
+C foo;
+
+// expect to see in prs output:
+// @ "foo.bar.l.e" iscomb
+

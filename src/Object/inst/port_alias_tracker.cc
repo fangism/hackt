@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.22 2008/10/24 01:08:59 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.23 2009/01/16 21:55:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -143,15 +143,23 @@ void
 alias_reference_set<Tag>::export_alias_properties(substructure_alias& s) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!alias_array.empty());
-	const alias_type& a(*alias_array.front());
-	if (a.is_port_alias()) {
+	// find a direct port alias in the set, if one exists
+	const const_iterator e(alias_array.end());
+	const const_iterator f(std::find_if(alias_array.begin(), e, 
+		port_alias_predicate()));
+if (f != e) {
+	const alias_type& a(**f);
+#if ENABLE_STACKTRACE
+	a.dump_hierarchical_name(STACKTRACE_INDENT_PRINT("name: ")) << endl;
+#endif
+		STACKTRACE_INDENT_PRINT("is port alias" << endl);
 		alias_type& _inst(a.trace_alias(s));
 	// this call should NOT be recursive because iteration over ports
 	// mitigates the need to recurse.
 		// predicate is needed because this is called on the 
 		// set of *scope* aliases which includes non-ports.
 		_inst.import_properties(a);
-	}
+} else { STACKTRACE_INDENT_PRINT("is not port alias" << endl); }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -217,6 +225,12 @@ struct alias_reference_set<Tag>::port_alias_predicate {
 		cerr << "a formal alias." << endl;
 #endif
 		return ret;
+	}
+
+	bool
+	operator () (const bool b, const const_alias_ptr_type a) const {
+		return b || a->is_port_alias();
+		// should short-circuit
 	}
 };	// end struct port_alias_predicate
 

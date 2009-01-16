@@ -1,57 +1,57 @@
 START-initialization: named_pooled_thing.o
-\- list_vector_pool()
-Reserved named_thing chunk of size 16*4 starting at 0x805d3b0
-/- list_vector_pool()
+\-{ list_vector_pool()
+Reserved named_thing chunk of size 16*4 starting at ##ADDR##
+/-} list_vector_pool()
 END---initialization: named_pooled_thing.o
-\- int main(int, char**)
-| \- operator new
-| | \- list_vector_pool::allocate()
-| | | \- empty ctor
-0xbfffe180
-| | | /- empty ctor
-| | | \- dtor
-0xbfffe180 -> 
-| | | /- dtor
-Allocated named_thing from pool @ 0x805d3b0
-| | /- list_vector_pool::allocate()
-| /- operator new
-| \- empty ctor
-0x805d3b0
-| /- empty ctor
-| \- for-loop
+\-{ int main(int, char**)
+| \-{ operator new
+| | \-{ list_vector_pool::allocate()
+| | | \-{ empty ctor
+##ADDR##
+| | | /-} empty ctor
+| | | \-{ dtor
+##ADDR## -> 
+| | | /-} dtor
+Allocated named_thing from pool @ ##ADDR##
+| | /-} list_vector_pool::allocate()
+| /-} operator new
+| \-{ empty ctor
+##ADDR##
+| /-} empty ctor
+| \-{ for-loop
 count = 3
-| /- for-loop
-| \- for-loop
+| /-} for-loop
+| \-{ for-loop
 count = 3
-| /- for-loop
-| \- for-loop
+| /-} for-loop
+| \-{ for-loop
 count = 3
-| /- for-loop
-| \- for-loop
+| /-} for-loop
+| \-{ for-loop
 count = 3
-| /- for-loop
+| /-} for-loop
 count = 2
-/- int main(int, char**)
-\- dtor
-0x805d3b0 -> 
-/- dtor
-\- operator delete
-| \- list_vector_pool::deallocate()
-Returned named_thing @ 0x805d3b0 to free-list.
-| /- list_vector_pool::deallocate()
-/- operator delete
+/-} int main(int, char**)
+\-{ dtor
+##ADDR## -> 
+/-} dtor
+\-{ operator delete
+| \-{ list_vector_pool::deallocate()
+Returned named_thing @ ##ADDR## to free-list.
+| /-} list_vector_pool::deallocate()
+/-} operator delete
 START-destruction: named_pooled_thing.o
-\- ~list_vector_pool()
-~list_vector_pool<named_thing>() at 0x805c9b8
-| \- list_vector_pool::status()
+\-{ ~list_vector_pool()
+~list_vector_pool<named_thing>() at ##ADDR##
+| \-{ list_vector_pool::status()
 	1 chunks of 16*4 named_thing allocated.
 	Peak usage: 1 elements, free-list has 1 remaining.
-| /- list_vector_pool::status()
-| \- empty ctor
-0x805d3b0
-| /- empty ctor
-/- ~list_vector_pool()
-\- dtor
-0x805d3b0 -> 
-/- dtor
+| /-} list_vector_pool::status()
+| \-{ empty ctor
+##ADDR##
+| /-} empty ctor
+/-} ~list_vector_pool()
+\-{ dtor
+##ADDR## -> 
+/-} dtor
 END---destruction: named_pooled_thing.o

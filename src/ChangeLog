@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-01-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90:
+	  CRITICAL (very latent) bug fix: 
+		node attributes and properties were not always being 
+		propagated up instance hierarchy, ACX-PR-2513.
+		Fix: (port_alias_tracker) find port alias in a set, instead 
+			of assuming that the first element is a 
+			representative port alias.
+		Test cases added: parser/prs/iscomb-{25,26}*
+
+
 2009-01-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-89:

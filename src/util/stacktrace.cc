@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.15 2006/07/02 00:42:06 fang Exp $
+	$Id: stacktrace.cc,v 1.16 2009/01/16 21:55:31 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -164,7 +164,7 @@ const stacktrace::indent	stacktrace_auto_indent = stacktrace::indent();
 ostream&
 operator << (ostream& o, const stacktrace::indent&) {
 	// need static initializers?
-	return stacktrace::manager::print_auto_indent(o) << ":  ";
+	return stacktrace::manager::print_auto_indent(o) << ":   ";
 }
 
 //=============================================================================
@@ -186,7 +186,8 @@ stacktrace::stacktrace(const string& s) {
 	if (stack_echo.top()) {
 		ostream& os(*stack_streams.top());
 		if (LIKELY(os.good())) {
-			manager::print_auto_indent(os) << "\\- " <<
+			// use brace characters to be able to %-match
+			manager::print_auto_indent(os) << "\\-{ " <<
 				stack_text.back() << endl;
 		} else {
 #if 0
@@ -213,7 +214,8 @@ stacktrace::~stacktrace() {
 	if (stack_echo.top()) {
 		ostream& os(*stack_streams.top());
 		if (LIKELY(os.good())) {
-			manager::print_auto_indent(os) << "/- " <<
+			// use brace characters to be able to %-match
+			manager::print_auto_indent(os) << "/-} " <<
 				stack_text.back() << endl;
 		} else {
 #if 0

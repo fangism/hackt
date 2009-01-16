@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.24 2008/11/12 03:00:08 fang Exp $
+	$Id: subinstance_manager.cc,v 1.25 2009/01/16 21:55:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -93,6 +93,7 @@ subinstance_manager::reserve(const size_t s) {
 	\param i reference to formal instance, to be translated to an
 		actual (unrolled) instance reference.  
 	TODO: invariant check for matching definitions and types.  
+	\return pointer to the subinstance-collection.
  */
 subinstance_manager::value_type
 subinstance_manager::lookup_port_instance(

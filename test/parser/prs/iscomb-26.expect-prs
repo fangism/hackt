@@ -1,0 +1,16 @@
+@ "foo.bar.l[0].e" iscomb
+@ "foo.poo.l.e" iscomb
+= "foo.bar.l[0].e" "foo.bar.m1.l.e"
+= "foo.bar.l[0].f" "foo.bar.m1.l.f"
+= "foo.bar.l[0].t" "foo.bar.m1.l.t"
+= "foo.bar.l[0].e" "foo.bar.m1.l_e"
+= "foo.bar.r.e" "foo.bar.m1.r.e"
+= "foo.bar.r.f" "foo.bar.m1.r.f"
+= "foo.bar.r.t" "foo.bar.m1.r.t"
+= "foo.poo.l.e" "foo.poo.m2.l.e"
+= "foo.poo.l.f" "foo.poo.m2.l.f"
+= "foo.poo.l.t" "foo.poo.m2.l.t"
+= "foo.poo.l.e" "foo.poo.m2.l_e"
+= "foo.poo.r.e" "foo.poo.m2.r.e"
+= "foo.poo.r.f" "foo.poo.m2.r.f"
+= "foo.poo.r.t" "foo.poo.m2.r.t"

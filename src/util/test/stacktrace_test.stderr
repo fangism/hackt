@@ -1,16 +1,16 @@
-\- int main(int, char**)
-| \- f_g
-| | \- f_c
-| | | \- f_a
-| | | /- f_a
-| | | \- f_b
-| | | /- f_b
-| | /- f_c
-| /- f_g
+\-{ int main(int, char**)
+| \-{ f_g
+| | \-{ f_c
+| | | \-{ f_a
+| | | /-} f_a
+| | | \-{ f_b
+| | | /-} f_b
+| | /-} f_c
+| /-} f_g
 10
-| \- dude_wheres_my_prototype
-| /- dude_wheres_my_prototype
-| \- float verbose_function_trace(const char*, int*)
-| /- float verbose_function_trace(const char*, int*)
+| \-{ dude_wheres_my_prototype
+| /-} dude_wheres_my_prototype
+| \-{ float verbose_function_trace(const char*, int*)
+| /-} float verbose_function_trace(const char*, int*)
 10
-/- int main(int, char**)
+/-} int main(int, char**)

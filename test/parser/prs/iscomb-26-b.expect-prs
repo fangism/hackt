@@ -1,0 +1,8 @@
+@ "foo.bar.l[0].e" iscomb
+= "foo.bar.l[0].e" "foo.bar.m.l.e"
+= "foo.bar.l[0].f" "foo.bar.m.l.f"
+= "foo.bar.l[0].t" "foo.bar.m.l.t"
+= "foo.bar.l[0].e" "foo.bar.m.l_e"
+= "foo.bar.r.e" "foo.bar.m.r.e"
+= "foo.bar.r.f" "foo.bar.m.r.f"
+= "foo.bar.r.t" "foo.bar.m.r.t"

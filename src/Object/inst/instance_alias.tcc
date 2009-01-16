@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.35 2008/11/12 03:00:01 fang Exp $
+	$Id: instance_alias.tcc,v 1.36 2009/01/16 21:55:29 fang Exp $
 	TODO: trim includes
  */
 
@@ -251,6 +251,7 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::import_properties(const this_type& f) {
+	STACKTRACE_VERBOSE;
 	actuals_parent_type::copy_actuals(f);
 	direction_connection_policy::initialize_actual_direction(f);
 }
