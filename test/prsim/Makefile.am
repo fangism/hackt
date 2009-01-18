@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.65 2009/01/15 18:36:16 fang Exp $
+#	$Id: Makefile.am,v 1.66 2009/01/18 00:19:00 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -244,17 +244,31 @@ endif
 # interactive tests
 if INTERACTIVE_TESTS
 else
+assert-fail-03.prsimrc-out: assert-fail-03.prsimrc
+	@$(ECHO) "<<skipped>>" > $@
 assert-fail-03.prsimtest: assert-fail-03.prsimrc
 	$(SKIP_TEST_SCRIPT)
-
 assert-fail-03.prsimckpttest: assert-fail-03.prsimrc
 	$(SKIP_TEST_SCRIPT)
+assert-fail-03.prsimckpt: assert-fail-03.prsimrc
+	@$(TOUCH) $@
+assert-fail-03.prsimckpt-O1: assert-fail-03.prsimrc
+	@$(TOUCH) $@
+assert-fail-03.prsimckpt-O1-err: assert-fail-03.prsimrc
+	@$(TOUCH) $@
 
+check-excl-fail-04.prsimrc-out: check-excl-fail-04.prsimrc
+	@$(ECHO) "<<skipped>>" > $@
 check-excl-fail-04.prsimtest: check-excl-fail-04.prsimrc
 	$(SKIP_TEST_SCRIPT)
-
 check-excl-fail-04.prsimckpttest: check-excl-fail-04.prsimrc
 	$(SKIP_TEST_SCRIPT)
+check-excl-fail-04.prsimckpt: check-excl-fail-04.prsimrc
+	@$(TOUCH) $@
+check-excl-fail-04.prsimckpt-O1: check-excl-fail-04.prsimrc
+	@$(TOUCH) $@
+check-excl-fail-04.prsimckpt-O1-err: check-excl-fail-04.prsimrc
+	@$(TOUCH) $@
 endif
 
 # non-deterministic tests
