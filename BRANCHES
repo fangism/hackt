@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.31 2008/11/11 20:06:07 fang Exp $
+	$Id: BRANCHES,v 1.31.6.1 2009/01/20 02:56:56 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -9,10 +9,12 @@ When a branch is merged for the last time, delete the entry from this file.
 
 Open branches:
 
+	HACKT-00-01-04-main-00-82-90-prsim-12
+		prsim tracing capabilities
 
 Coming soon:
 
-	HACKT-00-01-04-main-00-82-??-prsim-11
+	HACKT-00-01-04-main-00-82-??-prsim-??
 		Completely rewrite of event model (simplification).
 		Guile Scheme interface to data structures, like chpsim.
 
