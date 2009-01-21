@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.6 2007/09/11 06:52:58 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.6.28.1 2009/01/21 00:04:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -33,7 +33,7 @@ namespace HAC {
 namespace guile_wrap {
 using SIM::CHPSIM::State;
 using SIM::CHPSIM::TraceManager;
-using SIM::CHPSIM::event_trace_point;
+using SIM::event_trace_point;
 using SIM::CHPSIM::state_trace_window_base;
 using SIM::CHPSIM::state_trace_time_window;
 using entity::canonical_fundamental_chan_type_base;

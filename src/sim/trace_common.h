@@ -1,6 +1,6 @@
 /**
 	\file "sim/trace_common.h"
-	$Id: trace_common.h,v 1.1.2.1 2009/01/20 02:57:04 fang Exp $
+	$Id: trace_common.h,v 1.1.2.2 2009/01/21 00:04:52 fang Exp $
 	Generic simulation execution trace structures.  
  */
 
@@ -15,6 +15,13 @@
 #include <string>
 #include "util/memory/excl_ptr.h"
 
+/**
+	Option for the paranoid.  
+	Define to 1 to plan extra sanity check alignment markers
+	in the trace file, e.g. at section boundaries.  
+ */
+#define	CHPSIM_TRACE_ALIGNMENT_MARKERS		1
+
 namespace HAC {
 namespace SIM {
 using std::istream;
@@ -24,7 +31,6 @@ using std::ifstream;
 using std::ofstream;
 using std::string;
 using std::vector;
-// using entity::bool_tag;
 using util::memory::excl_ptr;
 
 /**
@@ -307,8 +313,103 @@ public:
 };	// end class trace_file_contents
 
 //=============================================================================
+/**
+	Minimal trace information to reproduce all information.
+	Trace should be replayable.
+	TODO: trace consistency and integrity checks.  
+ */
+class trace_manager_base {
+protected:
+	/**
+		Name of the trace file to output to.  
+	 */
+	string					trace_file_name;
+	/**
+		The name of a temporary file for staging
+		trace concatenation.  
+	 */
+	string					temp_file_name;
+	/**
+		This is the stream to the temp file.  
+		Bidirectional because we need to read it to finalize
+		the output stream.  
+	 */
+	excl_ptr<fstream>			trace_ostream;
+	/**
+		This is the stream to the header, also the final file.  
+		Nothing is actually written to this file until
+		finish() is called.  
+	 */
+	excl_ptr<ofstream>			header_ostream;
+	/**
+		Table of contents.  
+		This is the first section written to the trace file
+		that is a directory for the entire trace file.
+	 */
+	trace_file_contents			contents;
+	/**
+		The cumulative size of the body of the trace-file.  
+		Update this each time a chunk is flushed.  
+	 */
+	size_t					trace_payload_size;
+	/**
+		Running count of events before this chunk.  
+	 */
+	trace_index_type			previous_events;
+public:
+	static bool				notify_flush;
+protected:
+	// for temporary construction only
+	trace_manager_base();
+public:
+	explicit
+	trace_manager_base(const string&);
+
+	// warn if trace file is not finished!
+	~trace_manager_base();
+
+	bool
+	good(void) const;
+
+	operator bool () const { return good(); }
+
+	const string&
+	get_trace_name(void) const { return trace_file_name; }
+
+#if 0
+	void
+	flush(void);
+
+	size_t
+	get_previous_events(void) const {
+		return previous_events;
+	}
+#endif
+
+#if 0
+	// text-dump?
+	// load?
+
+	static
+	void
+	text_dump(ifstream&, ostream&);	// we all stream for istream!
+
+	static
+	bool
+	text_dump(const string&, ostream&);
+#endif
+
+private:
+	// write out header
+	void
+	__finish(void);
+
+};	// end class trace_manager_base
+
+//=============================================================================
 }	// end namespace SIM
 }	// end namespace HAC
 
 #endif	// __HAC_SIM_TRACE_COMMON_H__
+
 

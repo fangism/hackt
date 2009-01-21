@@ -1,15 +1,9 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.4.46.1 2009/01/20 02:57:05 fang Exp $
+	$Id: Trace.cc,v 1.4.46.2 2009/01/21 00:04:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
-/**
-	Option for the paranoid.  
-	Define to 1 to plan extra sanity check alignment markers
-	in the trace file, e.g. at section boundaries.  
- */
-#define	CHPSIM_TRACE_ALIGNMENT_MARKERS		1
 
 #include "sim/chpsim/Trace.h"
 #include "sim/chpsim/TraceStreamer.h"
@@ -275,24 +269,11 @@ trace_chunk::dump(ostream& o, const size_t previous_events) const {
 // class TraceManager method definitions
 
 /**
-	I'm lazy... global flag, initialization.
- */
-bool
-TraceManager::notify_flush = false;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Private default constructor, only used to construct a temporary.  
  */
 TraceManager::TraceManager() : 
-		trace_file_name(), 
-		temp_file_name(),
-		trace_ostream(NULL), 
-		header_ostream(NULL), 
-		contents(), 
-		current_chunk(),
-		trace_payload_size(0), 
-		previous_events(0) {
+		trace_manager_base(), 
+		current_chunk() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -301,59 +282,15 @@ TraceManager::TraceManager() :
 	Caller should check good() immediately after construction.  
  */
 TraceManager::TraceManager(const string& fn) : 
-		trace_file_name(fn), 
-#if 0
-		// tmpname is flagged dangerous/deprecated on some systems.
-		temp_file_name(tmpnam(NULL)), 		// libc/cstdio
-#else
-		temp_file_name(fn + "-tmp"),	// could append random number
-#endif
-		trace_ostream(new fstream(	// read and write
-			temp_file_name.c_str(), 
-			ios_base::binary | ios_base::trunc
-				// that's silly, these should be default...
-				| ios_base::in | ios_base::out
-				)),
-		header_ostream(new ofstream(
-			trace_file_name.c_str(), ios_base::binary)), 
-		contents(), 
-		current_chunk(),
-		trace_payload_size(0), 
-		previous_events(0) {
-#if 0 && USE_MKSTEMP
-	// can we assume that 
-	char tmp_template[] = "/tmp/hackt-chpsim-trace-XXXXXXXXXXXXX";	// null
-	// convert file descriptor to fstream
-#endif
-	NEVER_NULL(trace_ostream);
-	NEVER_NULL(header_ostream);
-	// should always be allocated, but not necessarily in a good state
-#if 0
-	cerr << "Trace file name: " << trace_file_name;
-	cerr << ((*header_ostream) ? " (opened)" : " (failed)") << endl;
-	cerr << "Temp file name: " << temp_file_name;
-	cerr << ((*trace_ostream) ? " (opened)" : " (failed)") << endl;
-#endif
+		trace_manager_base(fn), 
+		current_chunk() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 TraceManager::~TraceManager() {
-	finish();
-#if 1
-	// remove temp file (libc)
-	remove(temp_file_name.c_str());
-	// check int return value?
-#endif
+if (good()) {
+	flush();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\return true if both output streams are good to go.  
- */
-bool
-TraceManager::good(void) const {
-	return trace_ostream && header_ostream &&
-		*trace_ostream && *header_ostream;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -393,62 +330,6 @@ if (current_chunk.event_count()) {
 	new (&current_chunk) trace_chunk();
 }
 	// else there is nothing to flush
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This MUST be called to finish writing the trace.  
- */
-void
-TraceManager::finish(void) {
-	STACKTRACE_VERBOSE;
-if (good()) {
-	flush();	// one last flush (if needed)
-	// write out header to file to final file
-	NEVER_NULL(header_ostream);
-	contents.write(*header_ostream);
-	// align to natural boundary? maybe sanity check code.
-	const streampos start_of_objects = header_ostream->tellp();
-	STACKTRACE_INDENT_PRINT("header written up to offset: "
-		<< start_of_objects << endl);
-#if CHPSIM_TRACE_ALIGNMENT_MARKERS
-	static const size_t marker = 0xFFFFFFFF;
-	write_value(*header_ostream, marker);
-	STACKTRACE_INDENT_PRINT("starting body at: "
-		<< header_ostream->tellp() << endl);
-#endif
-	// concatenate trace payload (from temp.) to final file.  
-{
-	// std::copy using stream iterators will NOT work
-	static const size_t buf_size = 1<<12;	// stack buffer size
-	char buf[buf_size];	// stack big enough?
-	size_t trace_end = trace_ostream->tellp();
-	STACKTRACE_INDENT_PRINT("trace body ends at: " << trace_end << endl);
-	trace_ostream->seekg(0);
-	while (trace_end > buf_size) {
-		// massive transfer
-		trace_ostream->read(buf, buf_size);
-		header_ostream->write(buf, buf_size);
-		trace_end -= buf_size;
-	}
-	// cleanup
-	trace_ostream->read(buf, trace_end);
-	header_ostream->write(buf, trace_end);
-	const streampos end_of_objects = header_ostream->tellp();
-	STACKTRACE_INDENT_PRINT("payload finished at offset: " <<
-		end_of_objects << endl);
-}
-	trace_ostream = excl_ptr<fstream>(NULL);
-	header_ostream = excl_ptr<ofstream>(NULL);
-#if 0
-	// remove the temporary file if it wasn't generated by tmpnam
-	remove(temp_file_name.c_str());		// libc/stdio
-	// don't care about exit status?
-#endif
-	if (notify_flush) {
-		cout << "trace manager: trace file complete." << endl;
-	}
-}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

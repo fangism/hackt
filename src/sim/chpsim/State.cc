@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.19 2008/11/27 11:09:31 fang Exp $
+	$Id: State.cc,v 1.19.2.1 2009/01/21 00:04:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -684,8 +684,7 @@ State::__notify_updates_for_recheck(const size_t ti) {
 		const variable_type<Tag>::type&				\
 			v(instances.get_pool<Tag>()[*ui]);		\
 		if (is_tracing()) {					\
-			trace_manager->current_chunk			\
-				.push_back<Tag>(v, ti, *ui);		\
+			trace_manager->push_back_data<Tag>(v, ti, *ui);	\
 		}							\
 		const event_subscribers_type& es(v.get_subscribers());	\
 		copy(es.begin(), es.end(), set_inserter(__rechecks));	\

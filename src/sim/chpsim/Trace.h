@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.5.28.1 2009/01/20 02:57:06 fang Exp $
+	$Id: Trace.h,v 1.5.28.2 2009/01/21 00:04:56 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -214,51 +214,12 @@ struct trace_chunk :
 	TODO: trace consistency and integrity checks.  
 	TODO: record chpsim invoked options and compare on trace load
  */
-class TraceManager {
-	friend class State;
+class TraceManager : public trace_manager_base {
 private:
-	/**
-		Name of the trace file to output to.  
-	 */
-	string					trace_file_name;
-	/**
-		The name of a temporary file for staging
-		trace concatenation.  
-	 */
-	string					temp_file_name;
-	/**
-		This is the stream to the temp file.  
-		Bidirectional because we need to read it to finalize
-		the output stream.  
-	 */
-	excl_ptr<fstream>			trace_ostream;
-	/**
-		This is the stream to the header, also the final file.  
-		Nothing is actually written to this file until
-		finish() is called.  
-	 */
-	excl_ptr<ofstream>			header_ostream;
-	/**
-		Table of contents.  
-		This is the first section written to the
-		
-	 */
-	trace_file_contents			contents;
 	/**
 		Current record of recent history.  
 	 */
 	trace_chunk				current_chunk;
-	/**
-		The cumulative size of the body of the trace-file.  
-		Update this each time a chunk is flushed.  
-	 */
-	size_t					trace_payload_size;
-	/**
-		Running count of events before this chunk.  
-	 */
-	trace_index_type			previous_events;
-public:
-	static bool				notify_flush;
 private:
 	// for temporary construction only
 	TraceManager();
@@ -269,17 +230,16 @@ public:
 	// warn if trace file is not finished!
 	~TraceManager();
 
-	bool
-	good(void) const;
-
-	operator bool () const { return good(); }
-
-	const string&
-	get_trace_name(void) const { return trace_file_name; }
-
 	trace_index_type
 	push_back_event(const event_trace_point& p) {
 		return current_chunk.push_back_event(p) +previous_events;
+	}
+
+	template <class Tag>
+	void
+	push_back_data(const typename variable_type<Tag>::type& v, 
+			const trace_index_type t, const size_t g) {
+		current_chunk.push_back<Tag>(v, t, g);
 	}
 
 	trace_index_type
@@ -303,10 +263,7 @@ public:
 		return current_chunk.event_count();
 	}
 
-	// write out header
-	void
-	finish(void);
-
+public:
 	// text-dump?
 	// load?
 

@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-01-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-02:
+	  Factored out reusable code to SIM::trace_manager_base class from 
+		SIM::CHPSIM::TraceManager.
+
+
 2009-01-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-90-prsim-12-01:
