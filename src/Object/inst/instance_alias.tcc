@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.36 2009/01/16 21:55:29 fang Exp $
+	$Id: instance_alias.tcc,v 1.37 2009/01/22 21:01:42 fang Exp $
 	TODO: trim includes
  */
 
@@ -795,6 +795,9 @@ INSTANCE_ALIAS_INFO_CLASS::update_direction_flags(void) {
 /**
 	This is called by alias_reference_set::shortest_alias()
 	to manually flatten or restructure the union-find.  
+	ALERT: Don't do anything else here that uses the next pointer, 
+	because union-find structure is momentarily incoherent 
+	(as pointers are updated in a for-loop).
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void

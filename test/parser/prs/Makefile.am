@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.46 2009/01/16 21:55:37 fang Exp $
+#	$Id: Makefile.am,v 1.47 2009/01/22 21:01:43 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -67,6 +67,11 @@ HACKT_PARSE_TEST_PASSES = \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
 	iscomb-25 iscomb-26 iscomb-26-a iscomb-26-b \
+	iscomb-27 \
+	iscomb-27-a iscomb-27-b iscomb-27-c iscomb-27-d iscomb-27-e \
+	iscomb-27-f iscomb-27-g iscomb-27-h iscomb-27-i iscomb-27-j \
+	iscomb-27-k iscomb-27-l iscomb-27-m iscomb-27-n iscomb-27-o \
+	iscomb-27-p iscomb-27-q \
 	keeper-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
@@ -126,6 +131,11 @@ HACKT_CREATE_TEST_PASSES = \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
 	iscomb-25 iscomb-26 iscomb-26-a iscomb-26-b \
+	iscomb-27 \
+	iscomb-27-a iscomb-27-b iscomb-27-c iscomb-27-d iscomb-27-e \
+	iscomb-27-f iscomb-27-g iscomb-27-h iscomb-27-i iscomb-27-j \
+	iscomb-27-k iscomb-27-l iscomb-27-m iscomb-27-n iscomb-27-o \
+	iscomb-27-p iscomb-27-q \
 	keeper-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
@@ -189,6 +199,11 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
 	iscomb-25 iscomb-26 iscomb-26-a iscomb-26-b \
+	iscomb-27 \
+	iscomb-27-a iscomb-27-b iscomb-27-c iscomb-27-d iscomb-27-e \
+	iscomb-27-f iscomb-27-g iscomb-27-h iscomb-27-i iscomb-27-j \
+	iscomb-27-k iscomb-27-l iscomb-27-m iscomb-27-n iscomb-27-o \
+	iscomb-27-p iscomb-27-q \
 	keeper-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
@@ -218,6 +233,11 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
 	iscomb-25 iscomb-26 iscomb-26-a iscomb-26-b \
+	iscomb-27 \
+	iscomb-27-a iscomb-27-b iscomb-27-c iscomb-27-d iscomb-27-e \
+	iscomb-27-f iscomb-27-g iscomb-27-h iscomb-27-i iscomb-27-j \
+	iscomb-27-k iscomb-27-l iscomb-27-m iscomb-27-n iscomb-27-o \
+	iscomb-27-p iscomb-27-q \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	isrvc-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04

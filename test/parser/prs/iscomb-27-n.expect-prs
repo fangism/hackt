@@ -1,0 +1,3 @@
+@ "foo.bar.in.a.e" iscomb
+= "foo.bar.in.a.e" "foo.bar.in_a"
+= "foo.bar.in.a.e" "foo.bar.ma.l"

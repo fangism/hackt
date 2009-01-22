@@ -149,7 +149,7 @@ In namespace "", we have: {
         x[1] = x[0];
         x[2] = x[3];
       footprint: {
-        p = bool^0 = multi_inv::y (1) 
+        p = bool^0 = multi_inv::y (1) @[ iscomb !autokeeper ] 
         q = bool^0 = multi_inv::q (2) 
         x = process inv<>^1
           {

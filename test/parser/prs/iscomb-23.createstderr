@@ -152,7 +152,7 @@ In namespace "", we have: {
             b = bool^0 = deep::x.s[0].b (2) @[ !autokeeper ] 
           )
           k = process inv2<>^0 = deep::x.t[0] (4) (
-            a = bool^0 = deep::x.s[0].a (1) 
+            a = bool^0 = deep::x.s[0].a (1) @[ iscomb ] 
             b = bool^0 = deep::x.s[0].b (2) @[ !autokeeper ] 
           )
         )
@@ -163,7 +163,7 @@ In namespace "", we have: {
           )
           g = process inv2<>^0 = deep::x.t[1] (5) (
             a = bool^0 = deep::x.s[1].b (4) 
-            b = bool^0 = deep::x.s[1].a (3) @[ !autokeeper ] 
+            b = bool^0 = deep::x.s[1].a (3) @[ iscomb !autokeeper ] 
           )
         )
         x = process multi_inv<>^0 = deep::x (1) (

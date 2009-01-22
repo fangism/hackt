@@ -1,0 +1,3 @@
+@ "foo.bar.in.a.e" iscomb
+connect "foo.bar.in.a.e" "foo.bar.in_a"
+connect "foo.bar.in.a.e" "foo.bar.ma.l"

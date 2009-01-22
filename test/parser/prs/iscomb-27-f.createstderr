@@ -1,0 +1,382 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	310
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	75
+	23	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
+	44	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	45	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	50	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	484
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
+	58	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	59	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	60	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	61	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	69	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	73	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	75	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	79	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	80	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	84	##ADDR##	footprnt	0	#HEAD#	#TAIL#	758
+	85	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	86	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	88	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
+	89	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	90	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	91	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	92	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	93	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	95	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	96	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	97	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	98	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	99	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	100	##ADDR##	aprcmref	0	#HEAD#	#TAIL#	17
+	101	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	102	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	103	##ADDR##	footprnt	0	#HEAD#	#TAIL#	742
+	104	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	105	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	106	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	107	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	108	##ADDR##	procdefn	0	#HEAD#	#TAIL#	81
+	109	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	110	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	111	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	112	##ADDR##	footprnt	0	#HEAD#	#TAIL#	520
+	113	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	114	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	115	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	116	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
+	117	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  7 definitions
+  0 typedefs
+  Definitions:
+    alt_e1of2 = process-definition (defined) alt_e1of2(
+        e1of2<> a
+        bp<> t
+        bp<> f
+        bp<> e
+      )
+      In definition "alt_e1of2", we have: {
+      Instances:
+        a = e1of2<> alt_e1of2::a
+        e = bp<> alt_e1of2::e
+        f = bp<> alt_e1of2::f
+        t = bp<> alt_e1of2::t
+      unroll sequence: 
+        e1of2<> a
+        bp<> t
+        bp<> f
+        bp<> e
+        t.a = a.t;
+        f.a = a.f;
+        e.a = a.e;
+      }
+
+    blah1 = process-definition (defined) blah1(
+        e1of2<> l
+        e1of2<> r
+      )
+      In definition "blah1", we have: {
+      Instances:
+        l = e1of2<> blah1::l
+        r = e1of2<> blah1::r
+      unroll sequence: 
+        e1of2<> l
+        e1of2<> r
+        l.e@[iscomb=1]
+      footprint: {
+        l = process e1of2<>^0 = blah1::l (1) (
+          t = bool^0 = blah1::l.t (1) 
+          f = bool^0 = blah1::l.f (2) 
+          e = bool^0 = blah1::l.e (3) @[ iscomb ] 
+        )
+        r = process e1of2<>^0 = blah1::r (2) (
+          t = bool^0 = blah1::r.t (4) 
+          f = bool^0 = blah1::r.f (5) 
+          e = bool^0 = blah1::r.e (6) 
+        )
+        Created state:
+        process instance pool:
+        1	blah1::l
+        2	blah1::r
+        bool instance pool:
+        1	blah1::l.t
+        2	blah1::l.f
+        3	blah1::l.e @[ iscomb ]
+        4	blah1::r.t
+        5	blah1::r.f
+        6	blah1::r.e
+      }
+      }
+
+    blah2 = process-definition (defined) blah2(
+        e1of2<> l[0..0]
+        e1of2<> r
+      )
+      In definition "blah2", we have: {
+      Instances:
+        l = e1of2<> blah2::l^1
+        r = e1of2<> blah2::r
+        xx = blah1<> blah2::xx
+      unroll sequence: 
+        e1of2<> l[0..0]
+        e1of2<> r
+        blah1<> xx
+        xx (l[0], r);
+        r.t@[iscomb=1]
+        r.f@[iscomb=1]
+      footprint: {
+        l = process e1of2<>^1
+          {
+            [0] = blah2::l[0] (3) (
+              t = bool^0 = blah2::l[0].t (4) 
+              f = bool^0 = blah2::l[0].f (5) 
+              e = bool^0 = blah2::l[0].e (6) @[ iscomb ] 
+            )
+          }
+        r = process e1of2<>^0 = blah2::r (1) (
+          t = bool^0 = blah2::r.t (1) @[ iscomb ] 
+          f = bool^0 = blah2::r.f (2) @[ iscomb ] 
+          e = bool^0 = blah2::r.e (3) 
+        )
+        xx = process blah1<>^0 = blah2::xx (2) (
+          l = process e1of2<>^0 = blah2::l[0] (3) (
+            t = bool^0 = blah2::l[0].t (4) 
+            f = bool^0 = blah2::l[0].f (5) 
+            e = bool^0 = blah2::l[0].e (6) @[ iscomb ] 
+          )
+          r = process e1of2<>^0 = blah2::r (1) (
+            t = bool^0 = blah2::r.t (1) @[ iscomb ] 
+            f = bool^0 = blah2::r.f (2) @[ iscomb ] 
+            e = bool^0 = blah2::r.e (3) 
+          )
+        )
+        Created state:
+        process instance pool:
+        1	blah2::r
+        2	blah2::xx
+        3	blah2::l[0]
+        bool instance pool:
+        1	blah2::r.t @[ iscomb ]
+        2	blah2::r.f @[ iscomb ]
+        3	blah2::r.e
+        4	blah2::l[0].t
+        5	blah2::l[0].f
+        6	blah2::l[0].e @[ iscomb ]
+      }
+      }
+
+    blah3 = process-definition (defined) blah3(
+        e1of2<> in
+        e1of2<> out
+      )
+      In definition "blah3", we have: {
+      Instances:
+        in = e1of2<> blah3::in
+        ma = blah2<> blah3::ma
+        out = e1of2<> blah3::out
+      unroll sequence: 
+        e1of2<> in
+        e1of2<> out
+        blah2<> ma
+        ma ({ in }, out);
+      footprint: {
+        in = process e1of2<>^0 = blah3::in (1) (
+          t = bool^0 = blah3::in.t (1) 
+          f = bool^0 = blah3::in.f (2) 
+          e = bool^0 = blah3::in.e (3) @[ iscomb ] 
+        )
+        ma = process blah2<>^0 = blah3::ma (3) (
+          l = process e1of2<>^1
+            {
+              [0] = blah3::in (1) (
+                t = bool^0 = blah3::in.t (1) 
+                f = bool^0 = blah3::in.f (2) 
+                e = bool^0 = blah3::in.e (3) @[ iscomb ] 
+              )
+            }
+          r = process e1of2<>^0 = blah3::out (2) (
+            t = bool^0 = blah3::out.t (4) @[ iscomb ] 
+            f = bool^0 = blah3::out.f (5) @[ iscomb ] 
+            e = bool^0 = blah3::out.e (6) 
+          )
+        )
+        out = process e1of2<>^0 = blah3::out (2) (
+          t = bool^0 = blah3::out.t (4) @[ iscomb ] 
+          f = bool^0 = blah3::out.f (5) @[ iscomb ] 
+          e = bool^0 = blah3::out.e (6) 
+        )
+        Created state:
+        process instance pool:
+        1	blah3::in
+        2	blah3::out
+        3	blah3::ma
+        bool instance pool:
+        1	blah3::in.t
+        2	blah3::in.f
+        3	blah3::in.e @[ iscomb ]
+        4	blah3::out.t @[ iscomb ]
+        5	blah3::out.f @[ iscomb ]
+        6	blah3::out.e
+      }
+      }
+
+    bp = process-definition (defined) bp(
+        bool<> a
+      )
+      In definition "bp", we have: {
+      Instances:
+        a = bool<> bp::a
+      unroll sequence: 
+        bool<> a
+      }
+
+    e1of2 = process-definition (defined) e1of2(
+        bool<> t
+        bool<> f
+        bool<> e
+      )
+      In definition "e1of2", we have: {
+      Instances:
+        e = bool<> e1of2::e
+        f = bool<> e1of2::f
+        t = bool<> e1of2::t
+      unroll sequence: 
+        bool<> t
+        bool<> f
+        bool<> e
+      footprint: {
+        e = bool^0 = e1of2::e (3) 
+        f = bool^0 = e1of2::f (2) 
+        t = bool^0 = e1of2::t (1) 
+        Created state:
+        bool instance pool:
+        1	e1of2::t
+        2	e1of2::f
+        3	e1of2::e
+      }
+      }
+
+    obox = process-definition (defined) obox(
+      )
+      In definition "obox", we have: {
+      Instances:
+        bar = blah3<> obox::bar
+      unroll sequence: 
+        blah3<> bar
+      footprint: {
+        bar = process blah3<>^0 = obox::bar (1) (
+          in = process e1of2<>^0 = obox::bar.in (2) (
+            t = bool^0 = obox::bar.in.t (1) 
+            f = bool^0 = obox::bar.in.f (2) 
+            e = bool^0 = obox::bar.in.e (3) @[ iscomb ] 
+          )
+          out = process e1of2<>^0 = obox::bar.out (3) (
+            t = bool^0 = obox::bar.out.t (4) @[ iscomb ] 
+            f = bool^0 = obox::bar.out.f (5) @[ iscomb ] 
+            e = bool^0 = obox::bar.out.e (6) 
+          )
+        )
+        Created state:
+        process instance pool:
+        1	obox::bar
+        2	obox::bar.in
+        3	obox::bar.out
+        bool instance pool:
+        1	obox::bar.in.t
+        2	obox::bar.in.f
+        3	obox::bar.in.e @[ iscomb ]
+        4	obox::bar.out.t @[ iscomb ]
+        5	obox::bar.out.f @[ iscomb ]
+        6	obox::bar.out.e
+      }
+      }
+
+  Instances:
+    foo = obox<> foo
+}
+
+footprint: {
+  foo = process obox<>^0 = foo (1) 
+  Created state:
+  process instance pool:
+  1	foo
+}

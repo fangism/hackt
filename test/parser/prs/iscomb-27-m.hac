@@ -1,0 +1,30 @@
+// "iscomb-27-m.hac"
+// copy-modified from "iscomb-27-l.hac"
+// @hflat-flags@ -fnode-attributes
+
+defchan e1of2 <: chan(bool) (bool e) { }
+defchan alt_e1of2 <: chan(bool) (e1of2 a) { }
+
+defproc blah2 (e1of2 l) {
+	l.e @ [iscomb=1];	// look for this attribute
+}
+
+defproc blah3 (
+	alt_e1of2 in
+) {
+	e1of2 in_a;
+	in_a = in.a;
+	blah2 ma;		// attribute re-appears
+}
+
+defproc obox() {
+	blah3 bar;
+}
+
+obox foo;
+
+/**
+// expect to see:
+@ "foo.bar.in[0].e" iscomb
+@ "foo.bar.in[1].e" iscomb
+**/

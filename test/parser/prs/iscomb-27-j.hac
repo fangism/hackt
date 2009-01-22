@@ -1,0 +1,36 @@
+// "iscomb-27-j.hac"
+// copy-modified from "iscomb-27-g.hac"
+// @hflat-flags@ -fnode-attributes
+
+deftype bp <: bool (bool a) { }
+defchan e1of2 <: chan(bool) (bool t,e) { }
+defchan alt_e1of2 <: chan(bool) (e1of2 a; bp t, e) {
+	t.a = a.t;
+	e.a = a.e;
+}
+
+defproc blah2 (e1of2 l, r) {
+	r.t @ [iscomb=1];
+	l.e @ [iscomb=1];
+}
+
+defproc blah3 (
+	alt_e1of2 in;
+	alt_e1of2 out
+) {
+	e1of2 in_a;
+	in_a = in.a;
+	blah2 ma (in_a, out.a);
+}
+
+defproc obox() {
+	blah3 bar;
+}
+
+obox foo;
+
+/**
+// expect to see:
+@ "foo.bar.in[0].e" iscomb
+@ "foo.bar.in[1].e" iscomb
+**/

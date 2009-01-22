@@ -1,0 +1,12 @@
+@ "foo.bar.in.a.e" iscomb
+@ "foo.bar.out.a.t" iscomb
+connect "foo.bar.in.a.e" "foo.bar.in.e.a"
+connect "foo.bar.in.a.t" "foo.bar.in.t.a"
+connect "foo.bar.in.a.e" "foo.bar.in_a.e"
+connect "foo.bar.in.a.t" "foo.bar.in_a.t"
+connect "foo.bar.in.a.e" "foo.bar.ma.l.e"
+connect "foo.bar.in.a.t" "foo.bar.ma.l.t"
+connect "foo.bar.out.a.e" "foo.bar.ma.r.e"
+connect "foo.bar.out.a.t" "foo.bar.ma.r.t"
+connect "foo.bar.out.a.e" "foo.bar.out.e.a"
+connect "foo.bar.out.a.t" "foo.bar.out.t.a"

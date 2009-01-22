@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.23 2009/01/16 21:55:30 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.24 2009/01/22 21:01:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -83,6 +83,7 @@ alias_reference_set<Tag>::refresh_string_cache(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#define	VERBOSE_ALIAS_ATTRIBUTES		0
 /**
 	Prints all equivalent aliases as determined by this set.  
  */
@@ -94,16 +95,29 @@ alias_reference_set<Tag>::dump(ostream& o) const {
 		const const_iterator e(alias_array.end());
 		NEVER_NULL(*i);
 		(*i)->dump_hierarchical_name(o);
-		for (i++; i!=e; i++) {
+#if VERBOSE_ALIAS_ATTRIBUTES
+		(*i)->dump_attributes(o);	// check consistency
+#endif
+		for (++i; i!=e; ++i) {
 			NEVER_NULL(*i);
 			(*i)->dump_hierarchical_name(o << " = ");
+#if VERBOSE_ALIAS_ATTRIBUTES
+			(*i)->dump_attributes(o);	// check consistency
+#endif
 		}
 	} else if (!alias_array.empty()) {
 		alias_array.front()->dump_hierarchical_name(o);
+#if VERBOSE_ALIAS_ATTRIBUTES
+		alias_array.front()->dump_attributes(o);
+#endif
 	}
-	alias_array.front()->dump_attributes(o);	// show attributes
+#if !VERBOSE_ALIAS_ATTRIBUTES
+	alias_array.front()->dump_attributes(o);
+#endif
 	return o;
 }
+
+#undef VERBOSE_ALIAS_ATTRIBUTES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -172,10 +186,10 @@ if (f != e) {
 template <class Tag>
 typename alias_reference_set<Tag>::const_alias_ptr_type
 alias_reference_set<Tag>::shortest_alias(void) {
-	// typedef	alias_array_type::iterator		iterator;
+	STACKTRACE_VERBOSE;
 	INVARIANT(alias_array.size());
-	const_iterator i(alias_array.begin());
-	const const_iterator e(alias_array.end());
+	const iterator b(alias_array.begin()), e(alias_array.end());
+	iterator i(b);
 	// accumulate to find the index of the shallowest alias
 	// alias_ptr_type __shortest_alias(&*(*i)->find());
 	alias_ptr_type __shortest_alias(*i);
@@ -197,10 +211,15 @@ alias_reference_set<Tag>::shortest_alias(void) {
 	// restructuring the union-find.
 	__shortest_alias->update_direction_flags();
 
-	iterator ii(alias_array.begin());
+	iterator ii(b);
 	// const iterator ee(alias_array.end());
 	for ( ; ii!=e; ++ii) {
 		(*ii)->finalize_canonicalize(*__shortest_alias);
+	}
+	// after flattening array, and updating canonical flags
+	// copy flags to all other aliases
+	for (ii=b ; ii!=e; ++ii) {
+		(*ii)->update_direction_flags();
 	}
 }
 	// pardon the const_cast :S, we intend to modify, yes

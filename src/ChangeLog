@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-01-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-91:
+	  CRITICAL bug fix: ACX-PR-2552
+		more node attributes were wrongly dropped.
+		Fix: port_alias_tracker::...shortest_alias():
+			after finalize_canonicalize(), needed one more
+			pass of update_direction_flags() for each alias.
+		Test cases added: parser/prs/iscomb-27*
+
+
 2009-01-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-90:
