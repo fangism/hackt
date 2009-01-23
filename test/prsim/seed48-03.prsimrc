@@ -3,6 +3,7 @@
 
 # testing setting and resetting of random seed
 
+seed48 0 0 0
 echo initial seed should be 0s
 seed48
 
