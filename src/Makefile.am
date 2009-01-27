@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.209.2.1 2009/01/20 02:56:59 fang Exp $
+#	$Id: Makefile.am,v 1.209.2.2 2009/01/27 00:18:45 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -932,6 +932,7 @@ SIM_CC_FILES = \
 	sim/prsim/ExprAlloc.cc \
 	sim/prsim/Event-prsim.cc \
 	sim/prsim/State-prsim.cc \
+	sim/prsim/Trace-prsim.cc \
 	sim/chpsim/nonmeta_context.cc \
 	sim/chpsim/Command.cc \
 	sim/chpsim/Dependence.cc \

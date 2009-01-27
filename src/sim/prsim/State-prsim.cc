@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.42 2009/01/15 18:36:15 fang Exp $
+	$Id: State-prsim.cc,v 1.42.2.1 2009/01/27 00:18:55 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -22,6 +22,9 @@
 #include <set>
 #include "sim/prsim/State-prsim.h"
 #include "sim/prsim/ExprAlloc.h"
+#if PRSIM_TRACE_GENERATION
+#include "sim/prsim/Trace-prsim.h"
+#endif
 #include "sim/event.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/random_time.h"
@@ -502,6 +505,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		uniform_delay(time_traits::default_delay), 
 		watch_list(), 
 		_channel_manager(), 
+#if PRSIM_TRACE_GENERATION
+		trace_manager(),
+		trace_flush_interval(1L<<16),
+#endif
 		flags(FLAGS_DEFAULT),
 #define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
 #if PRSIM_INVARIANT_RULES
@@ -718,7 +725,7 @@ State::node_drives_any_channel(const node_index_type ni) const {
  */
 State::break_type
 State::flush_channel_events(const vector<env_event_type>& env_events, 
-		const event_cause_type& c) {
+		cause_arg_type c) {
 	STACKTRACE_VERBOSE;
 	break_type err = ERROR_NONE;
 	// cause of these events must be 'ni', this node
@@ -943,11 +950,12 @@ State::get_node(const node_index_type i) {
  */
 void
 State::backtrace_node(ostream& o, const node_index_type ni) const {
-	typedef	set<event_cause_type>		event_set_type;
+	typedef	set<node_cause_type>		event_set_type;
 	// start from the current value of the referenced node
 	const node_type* n(&get_node(ni));
 	const value_enum v = n->current_value();
-	event_cause_type e(ni, v);
+	node_cause_type e(ni, v);
+	// TODO: could look at critical event index if tracing...
 	dump_node_canonical_name(o << "node at: `", ni) <<
 		"\' : " << node_type::value_to_char[size_t(v)] << endl;
 	event_set_type l;
@@ -3061,7 +3069,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
 	const event_index_type& ei(ep.event_index);
 	if (!ei) {
-		// possible in the event that last events are killed
+		// possible in the queue that last events are killed
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
@@ -3071,6 +3079,14 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	node_type& n(get_node(ni));
 	const value_enum prev = n.current_value();
 	node_index_type _ci;	// just a copy
+#if PRSIM_TRACE_GENERATION
+	trace_index_type critical = INVALID_TRACE_INDEX;
+	if (is_tracing()) {
+		critical = trace_manager->push_back_event(
+			state_trace_point(current_time, pe.cause_rule, 
+				pe.cause.critical_trace_event, ni, pe.val));
+	}
+#endif
 {
 	const event_cause_type& cause(pe.cause);
 	const node_index_type& ci(cause.node);
@@ -3155,7 +3171,11 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	// could scope the reference to prevent it...
 	const value_enum next = n.current_value();
 	// value propagation...
+#if PRSIM_TRACE_GENERATION
+	const event_cause_type new_cause(ni, next, critical);
+#else
 	const event_cause_type new_cause(ni, next);
+#endif
 {
 	typedef	node_type::const_fanout_iterator	const_iterator;
 	const_iterator i, e;
@@ -3193,8 +3213,8 @@ if (n.in_channel()) {
 	_channel_manager.process_node(*this, ni,
 			prev, next, env_events);
 	// cause of these events must be 'ni', this node
-	const event_cause_type c(ni, next);
-	const break_type E = flush_channel_events(env_events, c);
+//	const event_cause_type c(ni, next);	// same as new_cause
+	const break_type E = flush_channel_events(env_events, new_cause);
 	if (UNLIKELY(E >= ERROR_BREAK)) {
 		stop();
 	}
@@ -3647,6 +3667,7 @@ State::translate_to_global_node(const process_index_type pid,
 /**
 	The main expression evaluation method, ripped off of
 	old prsim's propagate_up.  
+	\param c is the event that triggered these expressions re-evaluation.  
 	\param ni the index of the node causing this propagation (root),
 		only used for diagnostic purposes.
 	\param ui the index of the sub expression being evaluated, 
@@ -4335,7 +4356,8 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 	\param e the event in question
 	\param ui index of the node that fired
 	\param n the node that fired
-	\param ni the node involved in event e
+	\param ui the node involved in event e
+	\param c the node/event that just fired and caused this violation.
 	\param dir the direction of pull of the causing rule
 	\param weak true if rule was pulling rule is weak
 	\return true if error causes break.

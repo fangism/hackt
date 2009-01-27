@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-01-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-03:
+	  Completed draft of prsim trace-file generation code, 
+		yet untested, but regression free.
+		Event-prsim.h: extended cause_type to track the 
+			critical event trace index.
+		State-prsim.{h,cc}: pass around the new event_cause_type
+			containing critical trace index.  
+	  Next: adding interpreter commands and testing...
+
+
 2009-01-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-90-prsim-12-02:

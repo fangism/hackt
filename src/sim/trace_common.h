@@ -1,6 +1,6 @@
 /**
 	\file "sim/trace_common.h"
-	$Id: trace_common.h,v 1.1.2.2 2009/01/21 00:04:52 fang Exp $
+	$Id: trace_common.h,v 1.1.2.3 2009/01/27 00:18:47 fang Exp $
 	Generic simulation execution trace structures.  
  */
 
@@ -42,6 +42,10 @@ typedef	real_time			trace_time_type;
  */
 typedef	event_index_type		trace_index_type;
 
+enum {
+	INVALID_TRACE_INDEX = 0
+};
+
 //=============================================================================
 /**
 	Single point of data in the execution trace.  
@@ -82,7 +86,7 @@ struct event_trace_point {
 
 	event_trace_point() { }		// default uninitialized, lazy
 	event_trace_point(const time_type& t, const trace_index_type ei, 
-			const trace_index_type c = 0) :
+			const trace_index_type c = INVALID_TRACE_INDEX) :
 			timestamp(t), event_id(ei), cause_id(c)
 			{ }
 
@@ -91,6 +95,9 @@ struct event_trace_point {
 
 	void
 	read(istream&);
+
+	ostream&
+	__dump(ostream&) const;
 
 	ostream&
 	dump(ostream&) const;
@@ -376,15 +383,10 @@ public:
 	const string&
 	get_trace_name(void) const { return trace_file_name; }
 
-#if 0
-	void
-	flush(void);
-
-	size_t
+	trace_index_type
 	get_previous_events(void) const {
 		return previous_events;
 	}
-#endif
 
 #if 0
 	// text-dump?

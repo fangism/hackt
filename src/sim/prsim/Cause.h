@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Cause.h"
 	Structure of basic node event.  
-	$Id: Cause.h,v 1.4 2008/11/05 23:03:44 fang Exp $
+	$Id: Cause.h,v 1.4.6.1 2009/01/27 00:18:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CAUSE_H__
@@ -55,6 +55,7 @@ struct EventCause {
 /**
 	Structure for tracking event causality in greater detail.  
 	Members kept in separate arrays for better alignment.  
+	Note: don't want to trace critical trace index here, costs memory.
  */
 struct LastCause {
 	typedef	EventCause			event_cause_type;

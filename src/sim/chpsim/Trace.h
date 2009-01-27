@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.5.28.2 2009/01/21 00:04:56 fang Exp $
+	$Id: Trace.h,v 1.5.28.3 2009/01/27 00:18:50 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -97,7 +97,7 @@ protected:
 	ostream&
 	dump(ostream&) const;
 
-};	// end struct trace_window_base
+};	// end struct state_trace_window_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -249,13 +249,6 @@ public:
 
 	void
 	flush(void);
-
-#if 0
-	size_t
-	get_previous_events(void) const {
-		return previous_events;
-	}
-#endif
 
 	/// \return number of events accumulated in since last flush
 	size_t

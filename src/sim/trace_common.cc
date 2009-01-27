@@ -1,6 +1,6 @@
 /**
 	\file "sim/trace_common.cc"
-	$Id: trace_common.cc,v 1.1.2.2 2009/01/21 00:04:51 fang Exp $
+	$Id: trace_common.cc,v 1.1.2.3 2009/01/27 00:18:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -59,10 +59,15 @@ event_trace_point::read(istream& i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-event_trace_point::dump(ostream& o) const {
+event_trace_point::__dump(ostream& o) const {
 	o << '\t' << timestamp << '\t' << event_id;
 	o << "\t" << cause_id;
-	return o << endl;
+	return o;
+}
+
+ostream&
+event_trace_point::dump(ostream& o) const {
+	return __dump(o) << endl;
 }
 
 //=============================================================================

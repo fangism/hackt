@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.22 2008/12/18 23:28:00 fang Exp $
+	$Id: State-prsim.h,v 1.22.2.1 2009/01/27 00:18:56 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -16,6 +16,7 @@
 #define	CHECK_UNIQUE_EVENTS			0
 
 // define to 1 to use a unique-set container for pending queue
+// a wee bit slower, but saner
 #define	UNIQUE_PENDING_QUEUE			1
 
 #include <iosfwd>
@@ -43,6 +44,9 @@
 #else
 #include "util/list_vector.h"
 #endif
+#if PRSIM_TRACE_GENERATION
+#include "util/memory/excl_ptr.h"
+#endif
 
 namespace HAC {
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -54,6 +58,12 @@ namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
 struct ExprAllocFlags;
+#if PRSIM_TRACE_GENERATION
+class TraceManager;
+using util::memory::excl_ptr;
+using util::memory::never_ptr;
+using SIM::INVALID_TRACE_INDEX;
+#endif
 using std::map;
 using HASH_MAP_NAMESPACE::hash_map;
 #if PRSIM_INDIRECT_EXPRESSION_MAP
@@ -530,7 +540,12 @@ public:
 	typedef	rule_time_type			time_type;
 	typedef	delay_policy<time_type>		time_traits;
 	typedef	NodeState			node_type;
-	typedef	node_type::event_cause_type	event_cause_type;
+	typedef	Event				event_type;
+	typedef	EventPool			event_pool_type;
+#if PRSIM_TRACE_GENERATION
+	typedef	event_type::cause_type		event_cause_type;
+#endif
+	typedef	node_type::event_cause_type	node_cause_type;
 	/**
 		NOTE: pass by event_cause_type by reference.  
 	 */
@@ -540,8 +555,9 @@ public:
 						expr_struct_type;
 	typedef	unique_process_subgraph::rule_type
 						rule_type;
-	typedef	Event				event_type;
-	typedef	EventPool			event_pool_type;
+#if PRSIM_TRACE_GENERATION
+	typedef	size_t				trace_index_type;
+#endif
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
 	typedef	vector<node_type>		node_pool_type;
@@ -665,6 +681,12 @@ private:
 			confirmed with a message. 
 		 */
 		FLAG_CONFIRM_ASSERTS = 0x2000,
+#if PRSIM_TRACE_GENERATION
+		/**
+			Set to true when events are being traced.
+		 */
+		FLAG_TRACE_ON = 0x8000,
+#endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL | FLAG_SHOW_CAUSE,
 		/**
@@ -903,6 +925,10 @@ private:
 		Extension to manage channel environments and actions. 
 	 */
 	channel_manager				_channel_manager;
+#if PRSIM_TRACE_GENERATION
+	excl_ptr<TraceManager>			trace_manager;
+	trace_index_type			trace_flush_interval;
+#endif
 	// mode of operation
 	// operation flags
 	flags_type				flags;
@@ -1166,8 +1192,7 @@ public:
 
 private:
 	break_type
-	flush_channel_events(const vector<env_event_type>&, 
-		const event_cause_type&);
+	flush_channel_events(const vector<env_event_type>&, cause_arg_type);
 
 public:
 	bool
@@ -1621,6 +1646,37 @@ private:
 	__report_cause(ostream&, const event_type&) const;
 
 public:
+#if PRSIM_TRACE_GENERATION
+	bool
+	is_tracing(void) const { return flags & FLAG_TRACE_ON; }
+
+	void
+	stop_trace(void) { flags &= ~FLAG_TRACE_ON; }
+
+	never_ptr<TraceManager>
+	get_trace_manager(void) const {
+		return trace_manager;
+	}
+
+	never_ptr<TraceManager>
+	get_trace_manager_if_tracing(void) const {
+		return is_tracing() ? trace_manager
+			: never_ptr<TraceManager>(NULL);
+	}
+
+	bool
+	open_trace(const string&);
+
+	void
+	close_trace(void);
+
+	void
+	set_trace_flush_interval(const size_t i) {
+		INVARIANT(i);
+		trace_flush_interval = i;
+	}
+#endif
+
 	void
 	check_expr(const expr_index_type) const;
 

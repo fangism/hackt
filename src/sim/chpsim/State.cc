@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.19.2.1 2009/01/21 00:04:54 fang Exp $
+	$Id: State.cc,v 1.19.2.2 2009/01/27 00:18:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -765,7 +765,8 @@ State::__step(const event_index_type ei,
 	typedef	step_return_type	return_type;
 	return_type event_trig = false;
 	// event tracing
-	size_t ti = 0;	// because we'll want to reference it later...
+	size_t ti = INVALID_TRACE_INDEX;
+	// because we'll want to reference it later...
 	if (is_tracing()) {
 		// should only be true if trace opening succeeded
 		NEVER_NULL(trace_manager);

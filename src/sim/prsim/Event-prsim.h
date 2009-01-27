@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.4 2008/11/05 23:03:49 fang Exp $
+	$Id: Event-prsim.h,v 1.4.6.1 2009/01/27 00:18:53 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -23,6 +23,9 @@
 #include "util/memory/free_list.h"
 #include "sim/prsim/devel_switches.h"
 #include "sim/prsim/Cause.h"
+#if PRSIM_TRACE_GENERATION
+#include "sim/trace_common.h"		// for trace_index_type
+#endif
 
 /**
 	Verbosely trace each item added and removed from pool free list.
@@ -49,6 +52,10 @@ using std::vector;
 using util::memory::index_pool;
 using util::memory::free_list_acquire;
 using util::memory::free_list_release;
+#if PRSIM_TRACE_GENERATION
+using SIM::trace_index_type;
+using SIM::INVALID_TRACE_INDEX;
+#endif
 
 //=============================================================================
 /**
@@ -71,16 +78,44 @@ public:
 		EVENT_WEAK_INTERFERENCE = EVENT_INTERFERENCE | EVENT_WEAK
 	} event_flags_enum;
 
+#if PRSIM_TRACE_GENERATION
+	/**
+		Extension of cause that includes trace index.  
+		This is a good place to keep track of the critical
+		event trace index, because this is passed around, 
+		and helps minimize invasiveness of change in code.  
+	 */
+	struct cause_type : public EventCause {
+		/**
+			When simulation tracing is on, this index references
+			an event in the entire event history.  
+			This points to the last event that corresponds
+			to the cause_rule firing, hence critical path.  
+		 */
+		trace_index_type	critical_trace_event;
+
+		cause_type() : EventCause(),
+			critical_trace_event(INVALID_TRACE_INDEX) { }
+
+		cause_type(const node_index_type n, const value_enum v, 
+			const trace_index_type t = INVALID_TRACE_INDEX) :
+			EventCause(n, v), critical_trace_event(t) { }
+
+	};	// end struct cause_type
+#else
 	typedef	EventCause		cause_type;
+#endif
 public:
 	/**
 		Event classification table of 
 		pull-up-state vs. event pending value.  
+		Q: would this be faster to access array was 4-char aligned?
 	 */
 	static const uchar		upguard[3][3];
 	/**
 		Event classification table of 
 		pull-dn-state vs. event pending value.  
+		Q: would this be faster to access array was 4-char aligned?
 	 */
 	static const uchar		dnguard[3][3];
 public:
@@ -120,6 +155,8 @@ protected:
 #if PRSIM_WEAK_RULES
 		/**
 			True if event was attributed to a weak rule.
+			This could be inferred from the cause_rule, 
+			so it should at least be consistent.  
 		 */
 		EVENT_WEAK_RULE = 0x08,
 #endif

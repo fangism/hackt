@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.12 2008/12/18 21:00:04 fang Exp $
+	$Id: Rule.h,v 1.12.2.1 2009/01/27 00:18:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -139,6 +139,8 @@ public:
 	Per-rule stateful information.  
 	Nothing new yet.  
 	TODO: one bit coverage flag (ever fired)
+	Note: decided not to track critical trace index here because
+		of memory cost per rule_state.
  */
 template <typename Time>
 struct RuleState
