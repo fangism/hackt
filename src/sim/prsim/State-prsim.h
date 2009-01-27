@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.22.2.1 2009/01/27 00:18:56 fang Exp $
+	$Id: State-prsim.h,v 1.22.2.2 2009/01/27 22:16:45 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -557,6 +557,7 @@ public:
 						rule_type;
 #if PRSIM_TRACE_GENERATION
 	typedef	size_t				trace_index_type;
+	typedef	TraceManager			trace_manager_type;
 #endif
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
@@ -926,7 +927,7 @@ private:
 	 */
 	channel_manager				_channel_manager;
 #if PRSIM_TRACE_GENERATION
-	excl_ptr<TraceManager>			trace_manager;
+	excl_ptr<trace_manager_type>		trace_manager;
 	trace_index_type			trace_flush_interval;
 #endif
 	// mode of operation
@@ -1653,15 +1654,15 @@ public:
 	void
 	stop_trace(void) { flags &= ~FLAG_TRACE_ON; }
 
-	never_ptr<TraceManager>
+	never_ptr<trace_manager_type>
 	get_trace_manager(void) const {
 		return trace_manager;
 	}
 
-	never_ptr<TraceManager>
+	never_ptr<trace_manager_type>
 	get_trace_manager_if_tracing(void) const {
 		return is_tracing() ? trace_manager
-			: never_ptr<TraceManager>(NULL);
+			: never_ptr<trace_manager_type>(NULL);
 	}
 
 	bool
@@ -1670,8 +1671,13 @@ public:
 	void
 	close_trace(void);
 
+	trace_index_type
+	get_trace_flush_interval(void) const {
+		return trace_flush_interval;
+	}
+
 	void
-	set_trace_flush_interval(const size_t i) {
+	set_trace_flush_interval(const trace_index_type i) {
 		INVARIANT(i);
 		trace_flush_interval = i;
 	}

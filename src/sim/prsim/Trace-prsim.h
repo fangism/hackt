@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Trace-prsim.h"
-	$Id: Trace-prsim.h,v 1.1.2.1 2009/01/27 00:18:59 fang Exp $
+	$Id: Trace-prsim.h,v 1.1.2.2 2009/01/27 22:16:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_TRACE_PRSIM_H__
@@ -69,6 +69,9 @@ public:
 	read_value_only(istream&);
 
 	ostream&
+	__dump(ostream&) const;
+
+	ostream&
 	dump(ostream&) const;
 
 };	// end class state_trace_point
@@ -105,7 +108,7 @@ public:
 	read(istream&);
 
 	ostream&
-	dump(ostream&, const trace_index_type) const;
+	dump(ostream&, const trace_index_type, const State&) const;
 
 };	// end class state_trace_point
 
@@ -147,13 +150,6 @@ public:
 	void
 	flush(void);
 
-#if 0
-	size_t
-	get_previous_events(void) const {
-		return previous_events;
-	}
-#endif
-
 	/// \return number of events accumulated in since last flush
 	size_t
 	current_event_count(void) const {
@@ -166,11 +162,12 @@ public:
 
 	static
 	void
-	text_dump(ifstream&, ostream&); // we all stream for istream!
+	text_dump(ifstream&, ostream&, const State&);
+	 // we all stream for istream!
 
 	static
 	bool
-	text_dump(const string&, ostream&);
+	text_dump(const string&, ostream&, const State&);
 
 #if 0
 	// defined in "sim/prsim/TraceStreamer.h"

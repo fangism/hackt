@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.4.46.2 2009/01/21 00:04:54 fang Exp $
+	$Id: Trace.cc,v 1.4.46.3 2009/01/27 22:16:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -337,10 +337,10 @@ if (current_chunk.event_count()) {
 	\return true to signal error opening file. 
  */
 bool
-TraceManager::text_dump(const string& fn, ostream& o) {
+TraceManager::text_dump(const string& fn, ostream& o, const State& s) {
 	ifstream f(fn.c_str(), ios_base::binary);
 	if (f) {
-		text_dump(f, o);
+		text_dump(f, o, s);
 		return false;
 	} else {
 		return true;
@@ -356,7 +356,7 @@ TraceManager::text_dump(const string& fn, ostream& o) {
 	\param o text output stream for human(?) grokability.  
  */
 void
-TraceManager::text_dump(ifstream& i, ostream& o) {
+TraceManager::text_dump(ifstream& i, ostream& o, const State&) {
 #if 0
 	INVARIANT(i.flags() & ios_base::binary);
 	INVARIANT(!(o.flags() & ios_base::binary));

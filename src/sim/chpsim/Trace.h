@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.5.28.3 2009/01/27 00:18:50 fang Exp $
+	$Id: Trace.h,v 1.5.28.4 2009/01/27 22:16:41 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -262,11 +262,12 @@ public:
 
 	static
 	void
-	text_dump(ifstream&, ostream&);	// we all stream for istream!
+	text_dump(ifstream&, ostream&, const State&);
+	// we all stream for istream!
 
 	static
 	bool
-	text_dump(const string&, ostream&);
+	text_dump(const string&, ostream&, const State&);
 
 	// defined in "sim/chpsim/TraceStreamer.h"
 	class entry_streamer;

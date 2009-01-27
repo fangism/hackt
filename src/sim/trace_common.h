@@ -1,6 +1,6 @@
 /**
 	\file "sim/trace_common.h"
-	$Id: trace_common.h,v 1.1.2.3 2009/01/27 00:18:47 fang Exp $
+	$Id: trace_common.h,v 1.1.2.4 2009/01/27 22:16:36 fang Exp $
 	Generic simulation execution trace structures.  
  */
 
@@ -361,6 +361,7 @@ protected:
 	size_t					trace_payload_size;
 	/**
 		Running count of events before this chunk.  
+		Update this value each time a chunk is flushed out.
 	 */
 	trace_index_type			previous_events;
 public:

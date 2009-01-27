@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-04:
+	  Added prsim trace commands, preliminary testing looks reasonable.
+		Factored trace command code from sim/chpsim/Command.cc to 
+		sim/command_common.{tcc,h} for re-use.
+		Honor the trace-flush-interval value set by user.  
+		Documented.  
+	  Next: enhancements for human readability.
+
+
 2009-01-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-90-prsim-12-03:

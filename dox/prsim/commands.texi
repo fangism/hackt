@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.17 2008/12/19 22:34:40 fang Exp $
+@c $Id: commands.texi,v 1.17.2.1 2009/01/27 22:16:32 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -19,6 +19,7 @@ source file @file{sim/prsim/Command-prsim.cc}.
 * Info Commands::
 * View Commands::
 * Modes Commands::
+* Tracing Commands::
 * Debug Commands::
 @end menu
 
@@ -102,11 +103,6 @@ Rescheduling events.
 
 @include cmd/reschedule.texi
 @include cmd/execute.texi
-
-Checkpointing.
-
-@include cmd/save.texi
-@include cmd/load.texi
 
 @c ----------------------------------------------------------------------------
 @node Channel Commands
@@ -404,6 +400,31 @@ glitch, such as synchronous (clocked) circuits.
 
 @include cmd/unstable-unknown.texi
 @include cmd/unstable-dequeue.texi
+
+@c ----------------------------------------------------------------------------
+@node Tracing Commands
+@section @t{tracing} Commands
+@cindex checkpoint
+@cindex trace file
+
+Checkpointing is useful for saving the state of the simulator, 
+which allows one to interrupt and resume long simulations, 
+and also examine points of failure in detail.  
+
+@include cmd/save.texi
+@include cmd/load.texi
+@include cmd/autosave.texi
+
+The simulator supports trace file recording.
+Unlike checkpoints, trace files contain information for 
+the entire history of execution, not just the state at one point in time.  
+
+@include cmd/trace.texi
+@include cmd/trace-file.texi
+@include cmd/trace-close.texi
+@include cmd/trace-flush-notify.texi
+@include cmd/trace-flush-interval.texi
+@include cmd/trace-dump.texi
 
 @c ----------------------------------------------------------------------------
 @node Debug Commands

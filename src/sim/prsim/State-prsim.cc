@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.42.2.1 2009/01/27 00:18:55 fang Exp $
+	$Id: State-prsim.cc,v 1.42.2.2 2009/01/27 22:16:44 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3085,6 +3085,10 @@ State::step(void) THROWS_STEP_EXCEPTION {
 		critical = trace_manager->push_back_event(
 			state_trace_point(current_time, pe.cause_rule, 
 				pe.cause.critical_trace_event, ni, pe.val));
+		if (trace_manager->current_event_count() >=
+				trace_flush_interval) {
+			trace_manager->flush();
+		}
 	}
 #endif
 {
@@ -7647,6 +7651,39 @@ State::dump_checkpoint(ostream& o, istream& i) {
 }	// end State::dump_checkpoint
 
 #undef	READ_ALIGN_MARKER
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if result is successful/good.  
+ */
+bool
+State::open_trace(const string& tfn) {
+	if (trace_manager) {
+		cerr << "Error: trace stream already open." << endl;
+	}
+	trace_manager = excl_ptr<TraceManager>(new TraceManager(tfn));
+	NEVER_NULL(trace_manager);
+	if (trace_manager->good()) {
+		flags |= FLAG_TRACE_ON;
+		return true;
+	} else {
+		stop_trace();
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Invoke this if you want tracing to end early.  
+ */
+void
+State::close_trace(void) {
+if (trace_manager) {
+	// destroying the trace manager should cause it to finish writing out.
+	trace_manager = excl_ptr<TraceManager>(NULL);
+}
+	stop_trace();
+}
 
 //=============================================================================
 // struct watch_entry method definitions

@@ -4,7 +4,7 @@
 	in various simulators.  We define them as trivial templates
 	for ease of re-use.  
 	To use, just instantiate template.  
-	$Id: command_common.h,v 1.8 2008/12/18 20:59:58 fang Exp $
+	$Id: command_common.h,v 1.8.2.1 2009/01/27 22:16:35 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_H__
@@ -77,6 +77,7 @@ DECLARE_COMMON_COMMAND_CLASS(NoWatchQueue)
 DECLARE_COMMON_COMMAND_CLASS(WatchAllQueue)
 DECLARE_COMMON_COMMAND_CLASS(NoWatchAllQueue)
 
+// loading and handling of dynamic libraries
 DECLARE_COMMON_COMMAND_CLASS(DLOpen)
 DECLARE_COMMON_COMMAND_CLASS(DLPaths)
 DECLARE_COMMON_COMMAND_CLASS(DLAddPath)
@@ -84,6 +85,14 @@ DECLARE_COMMON_COMMAND_CLASS(DLAddPath)
 DECLARE_COMMON_COMMAND_CLASS(DLCheckFunc)
 DECLARE_COMMON_COMMAND_CLASS(DLAssertFunc)
 DECLARE_COMMON_COMMAND_CLASS(DLFuncs)
+
+// trace file interface
+DECLARE_COMMON_COMMAND_CLASS(Trace)
+DECLARE_COMMON_COMMAND_CLASS(TraceFile)
+DECLARE_COMMON_COMMAND_CLASS(TraceClose)
+DECLARE_COMMON_COMMAND_CLASS(TraceFlushNotify)
+DECLARE_COMMON_COMMAND_CLASS(TraceFlushInterval)
+DECLARE_COMMON_COMMAND_CLASS(TraceDump)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

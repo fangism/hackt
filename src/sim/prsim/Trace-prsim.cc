@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Trace-prsim.cc"
-	$Id: Trace-prsim.cc,v 1.1.2.1 2009/01/27 00:18:57 fang Exp $
+	$Id: Trace-prsim.cc,v 1.1.2.2 2009/01/27 22:16:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -68,9 +68,15 @@ state_trace_point::read_value_only(istream& i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-state_trace_point::dump(ostream& o) const {
+state_trace_point::__dump(ostream& o) const {
 	return event_trace_point::__dump(o) << '\t' << node_index <<
-		'\t' << NodeState::value_to_char[size_t(node_value)] << endl;
+		'\t' << NodeState::value_to_char[size_t(node_value)];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+state_trace_point::dump(ostream& o) const {
+	return dump(o) << endl;
 }
 
 //=============================================================================
@@ -119,7 +125,8 @@ trace_chunk::read(istream& i) {
 	\param previous_events the event offset number
  */
 ostream&
-trace_chunk::dump(ostream& o, const trace_index_type previous_events) const {
+trace_chunk::dump(ostream& o, const trace_index_type previous_events, 
+		const State& s) const {
 #if 0
 	for_each(begin(), end(), bind2nd_argval(
 		mem_fun_ref(&state_trace_point::dump), o));
@@ -130,7 +137,8 @@ trace_chunk::dump(ostream& o, const trace_index_type previous_events) const {
 	event_array_type::const_iterator i(begin()), e(end());
 	size_t j = previous_events;
 	for ( ; i!=e; ++i, ++j) {
-		i->dump(o << '\t' << j);	// has endl already
+		i->__dump(o << '\t' << j) << endl;
+		// TODO: print human-comprehensible text: rule, node...
 	}
 #endif
 	return o;
@@ -155,6 +163,14 @@ TraceManager::TraceManager() :
 TraceManager::TraceManager(const string& fn) : 
 		trace_manager_base(fn), 
 		current_chunk() {
+if (good()) {
+	// reserve the 0th event as a NULL event?
+	const trace_index_type i = push_back_event(state_trace_point(
+		delay_policy<trace_time_type>::zero, 
+		INVALID_EXPR_INDEX, INVALID_TRACE_INDEX, 
+		INVALID_NODE_INDEX, LOGIC_OTHER));
+	INVARIANT(!i);		// must have been index 0
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -208,10 +224,10 @@ if (current_chunk.event_count()) {
 	\return true to signal error opening file. 
  */
 bool
-TraceManager::text_dump(const string& fn, ostream& o) {
+TraceManager::text_dump(const string& fn, ostream& o, const State& s) {
 	ifstream f(fn.c_str(), ios_base::binary);
 	if (f) {
-		text_dump(f, o);
+		text_dump(f, o, s);
 		return false;
 	} else {
 		return true;
@@ -227,7 +243,7 @@ TraceManager::text_dump(const string& fn, ostream& o) {
 	\param o text output stream for human(?) grokability.  
  */
 void
-TraceManager::text_dump(ifstream& i, ostream& o) {
+TraceManager::text_dump(ifstream& i, ostream& o, const State& s) {
 #if 0
 	INVARIANT(i.flags() & ios_base::binary);
 	INVARIANT(!(o.flags() & ios_base::binary));
@@ -264,7 +280,7 @@ if (i) {
 			const streampos tail = i.tellg();
 			cerr << "read chunk of size: " << tail -head << endl;
 #endif
-			tm.current_chunk.dump(o, tm.previous_events);
+			tm.current_chunk.dump(o, tm.previous_events, s);
 			tm.previous_events += tm.current_event_count();
 		} else {
 			cerr << "Error encountered in reading trace payload!"
