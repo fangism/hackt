@@ -1,0 +1,33 @@
+# "oscil-trace-02.prsimrc"
+# @haco@ oscillator.haco-a
+# @antideps@ oscil-trace-02.prsimtrace
+# testing out tracing features
+
+trace oscil-trace-02.prsimtrace
+trace-file
+trace-flush-interval 32
+
+set _Reset 0
+cycle
+advance 100
+
+set _Reset 1
+step-event 50
+
+time
+set _Reset X
+cycle
+
+time
+advance 100
+set _Reset 0
+cycle
+
+advance 100
+set _Reset 1
+step-event 100
+
+trace-close
+trace-dump oscil-trace-02.prsimtrace
+
+

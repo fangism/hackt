@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.42.2.2 2009/01/27 22:16:44 fang Exp $
+	$Id: State-prsim.cc,v 1.42.2.3 2009/01/28 03:05:34 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3084,7 +3084,8 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	if (is_tracing()) {
 		critical = trace_manager->push_back_event(
 			state_trace_point(current_time, pe.cause_rule, 
-				pe.cause.critical_trace_event, ni, pe.val));
+				pe.cause.critical_trace_event, 
+				ni, pe.val, prev));
 		if (trace_manager->current_event_count() >=
 				trace_flush_interval) {
 			trace_manager->flush();

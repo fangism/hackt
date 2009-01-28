@@ -5,6 +5,16 @@
 
 2009-01-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-90-prsim-12-05:
+	  By default, prsim trace dump always prints verbose information
+		in extra columns: expanded production rule or node name
+		if event was not due to a rule (user, or channel).  
+	  Trace now crams a node's old and new value into the node_value
+		field, which will come in handy for reverse playback!
+	  Next: attempt to deduce node and/or value from rule for
+		more compact storage.
+
+
 	* HACKT-00-01-04-main-00-82-90-prsim-12-04:
 	  Added prsim trace commands, preliminary testing looks reasonable.
 		Factored trace command code from sim/chpsim/Command.cc to 

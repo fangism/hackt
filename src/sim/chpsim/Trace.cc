@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.4.46.3 2009/01/27 22:16:40 fang Exp $
+	$Id: Trace.cc,v 1.4.46.4 2009/01/28 03:05:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -371,13 +371,6 @@ if (i) {
 #endif
 	tm.contents.dump(o);
 	// note header offset? start of payload?
-#if CHPSIM_TRACE_ALIGNMENT_MARKERS
-{
-	size_t check;
-	read_value(i, check);
-	INVARIANT(check == 0xFFFFFFFF);
-}
-#endif
 //	o << "Trace events and data, by epoch:" << endl;
 	size_t j = 0;
 	trace_file_contents::const_iterator
@@ -448,13 +441,6 @@ TraceManager::entry_streamer::partial_init(void) {
 if (fin) {
 	tracefile.contents.read(fin);
 	if (fin) {
-#if CHPSIM_TRACE_ALIGNMENT_MARKERS
-{
-	size_t check;
-	read_value(fin, check);
-	INVARIANT(check == 0xFFFFFFFF);
-}
-#endif
 		return good_bool(true);
 	}
 }

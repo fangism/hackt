@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.1 2009/01/27 22:16:51 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.2 2009/01/28 03:05:42 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -110,7 +110,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	oscil-status-01 \
 	oscil-why-01 oscil-why-02 \
 	oscil-wrong-why-01 \
-	oscil-trace-01 \
+	oscil-trace-01 oscil-trace-02 \
 	celem-rules \
 	half-celem-01 \
 	celem-share-01 celem-share-02 \

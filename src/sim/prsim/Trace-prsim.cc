@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Trace-prsim.cc"
-	$Id: Trace-prsim.cc,v 1.1.2.2 2009/01/27 22:16:47 fang Exp $
+	$Id: Trace-prsim.cc,v 1.1.2.3 2009/01/28 03:05:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -70,7 +70,7 @@ state_trace_point::read_value_only(istream& i) {
 ostream&
 state_trace_point::__dump(ostream& o) const {
 	return event_trace_point::__dump(o) << '\t' << node_index <<
-		'\t' << NodeState::value_to_char[size_t(node_value)];
+		'\t' << NodeState::value_to_char[size_t(new_value())];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -108,6 +108,9 @@ trace_chunk::write(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: write signature that confirms the architecture of the binary.
+ */
 void
 trace_chunk::read(istream& i) {
 	STACKTRACE_VERBOSE;
@@ -132,13 +135,29 @@ trace_chunk::dump(ostream& o, const trace_index_type previous_events,
 		mem_fun_ref(&state_trace_point::dump), o));
 #else
 	o << "\tevent\t\tevent\tcause\tnode\tnode" << endl;
-	o << "\tindex\ttime\tnode\tindex\tindex\tvalue" << endl;
+	o << "\tindex\ttime\tnode\tindex\tindex\tvalue";
+// if (v) {
+	o << "\trule/node";
+// }
+	o << endl;
 
 	event_array_type::const_iterator i(begin()), e(end());
 	size_t j = previous_events;
 	for ( ; i!=e; ++i, ++j) {
-		i->__dump(o << '\t' << j) << endl;
+		i->__dump(o << '\t' << j);
 		// TODO: print human-comprehensible text: rule, node...
+		const rule_index_type& r = i->event_id;
+		const node_index_type& ni = i->node_index;
+		if (r) {
+			s.dump_rule(o << '\t', r, false, false);
+		} else if (ni) {
+			// just print (node:value)
+			s.dump_node_canonical_name(o << "\t(", ni) << ':' <<
+			NodeState::value_to_char[size_t(i->new_value())] << ')';
+		} else {
+			o << "\t(null)";
+		}
+		o << endl;
 	}
 #endif
 	return o;
@@ -168,7 +187,7 @@ if (good()) {
 	const trace_index_type i = push_back_event(state_trace_point(
 		delay_policy<trace_time_type>::zero, 
 		INVALID_EXPR_INDEX, INVALID_TRACE_INDEX, 
-		INVALID_NODE_INDEX, LOGIC_OTHER));
+		INVALID_NODE_INDEX, LOGIC_OTHER, LOGIC_OTHER));
 	INVARIANT(!i);		// must have been index 0
 }
 }
@@ -258,13 +277,6 @@ if (i) {
 #endif
 	tm.contents.dump(o);
 	// note header offset? start of payload?
-#if CHPSIM_TRACE_ALIGNMENT_MARKERS
-{
-	size_t check;
-	read_value(i, check);
-	INVARIANT(check == 0xFFFFFFFF);
-}
-#endif
 //	o << "Trace events and data, by epoch:" << endl;
 	size_t j = 0;
 	trace_file_contents::const_iterator
@@ -336,13 +348,6 @@ TraceManager::entry_streamer::partial_init(void) {
 if (fin) {
 	tracefile.contents.read(fin);
 	if (fin) {
-#if CHPSIM_TRACE_ALIGNMENT_MARKERS
-{
-	size_t check;
-	read_value(fin, check);
-	INVARIANT(check == 0xFFFFFFFF);
-}
-#endif
 		return good_bool(true);
 	}
 }

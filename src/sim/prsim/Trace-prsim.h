@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Trace-prsim.h"
-	$Id: Trace-prsim.h,v 1.1.2.2 2009/01/27 22:16:48 fang Exp $
+	$Id: Trace-prsim.h,v 1.1.2.3 2009/01/28 03:05:36 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_TRACE_PRSIM_H__
@@ -33,7 +33,7 @@ Handling channel-caused events, since they do not correspond to any rules.
 	referencing 0, which is interpreted as an external event.  
 	Such events can come from channel environments or user-induced events.  
  */
-struct state_trace_point : protected event_trace_point {
+struct state_trace_point : public event_trace_point {
 	typedef	char				value_type;
 	using event_trace_point::timestamp;
 	/**
@@ -41,18 +41,39 @@ struct state_trace_point : protected event_trace_point {
 		This can usually be inferred from the rule index.  
 	 */
 	node_index_type				node_index;
+protected:
 	/**
 		The direction of the rule should suffice to deduce 
 		the value of the node!
 		X's will not be deducible.
+		We use this byte field to also store the node's 
+		*previous* value, which makes the trace file
+		extremely efficient for rewinding (playing in reverse!)
+		The only case where the old value will not be the 
+		opposite of the new value is when there is an X.  
+		The new value is stored in the 4 LSB, old value in 4 MSB.
 	 */
 	value_type				node_value;
 public:
 	state_trace_point() { }		// uninitialized
+	/**
+		\param nv node's new value
+		\param ov node's old value
+	 */
 	state_trace_point(const time_type& t, const trace_index_type ei, 
 		const trace_index_type c, const node_index_type ni, 
-		const char v) : event_trace_point(t, ei, c), 
-		node_index(ni), node_value(v) { }
+		const char nv, const char ov) : event_trace_point(t, ei, c), 
+		node_index(ni), node_value((ov << 4) | nv) { }
+
+	value_type
+	new_value(void) const {
+		return node_value & 0x0F;
+	}
+
+	value_type
+	old_value(void) const {
+		return node_value >> 4;
+	}
 
 // for memory alignment (performance), 
 // character values are written out in a separate array

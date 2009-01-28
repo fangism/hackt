@@ -1,6 +1,6 @@
 /**
 	\file "sim/trace_common.cc"
-	$Id: trace_common.cc,v 1.1.2.3 2009/01/27 00:18:46 fang Exp $
+	$Id: trace_common.cc,v 1.1.2.4 2009/01/28 03:05:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -17,6 +17,14 @@
 #include "util/libc_temp.h"	// for temp file functions
 #include "util/IO_utils.tcc"	// .tcc?
 #include "util/binders.h"
+
+/**
+	Option for the paranoid.  
+	Define to 1 to plan extra sanity check alignment markers
+	in the trace file, e.g. at section boundaries.  
+ */
+#define	TRACE_ALIGNMENT_MARKERS		1
+
 
 namespace HAC {
 namespace SIM {
@@ -282,6 +290,13 @@ if (i) {
 	for_each(entry_array.begin(), entry_array.end(),
 		bind(&entry::read, _1, ref(i)));
 #endif
+#if TRACE_ALIGNMENT_MARKERS
+{
+	size_t check;
+	read_value(i, check);
+	INVARIANT(check == 0xFFFFFFFF);
+}
+#endif
 } else {
 	cerr << "Error reading contents size." << endl;
 }
@@ -390,7 +405,7 @@ if (good()) {
 	const streampos start_of_objects = header_ostream->tellp();
 	STACKTRACE_INDENT_PRINT("header written up to offset: "
 		<< start_of_objects << endl);
-#if CHPSIM_TRACE_ALIGNMENT_MARKERS
+#if TRACE_ALIGNMENT_MARKERS
 	static const size_t marker = 0xFFFFFFFF;
 	write_value(*header_ostream, marker);
 	STACKTRACE_INDENT_PRINT("starting body at: "

@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.16.2.1 2009/01/27 22:16:48 fang Exp $
+#	$Id: Make.test-prsim,v 1.16.2.2 2009/01/28 03:05:39 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -53,7 +53,6 @@ HACKT_PRSIM_CLEAN_IGNORE_PATTERNS = \
 	"*.prsimtrace"
 
 AUTO_IGNORE += $(HACKT_PRSIM_CLEAN_IGNORE_PATTERNS)
-
 
 PRSIMRC_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-filter.awk
 PRSIMRC_TIME_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-random-time-filter.awk
@@ -220,10 +219,32 @@ PRSIMRC_TEST_FILTER_SCRIPT = \
 	  $(SED) '/^parser stacks:/,$$d' > $@
 #	@$(PRSIMRC_TEST_FILTER_SCRIPT)
 
+HACKT_PRSIMRC_TEST_DIFF = $(DIFF) -bu
+
 if VERBOSE_CHECK
-ECHO_PRSIMRC_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
+ECHO_PRSIMRC_DIFF_COMMAND = $(ECHO) "$(HACKT_PRSIMRC_TEST_DIFF) $$expect $<"
 else
 ECHO_PRSIMRC_DIFF_COMMAND = :
+endif
+
+# additional heuristic checking for trivial differences
+if ABI_ILP32
+PRSIM_TRACE_DUMP_FILTER_SCRIPT = :
+else
+PRSIM_TRACE_DUMP_FILTER_SCRIPT = \
+	$(ECHO) "Filtering out binary trace differences in $@ ..." ; \
+	filtered=`$(ECHO) $@ | $(SED) 's/\.prsimrc-diff$$/.prsimrc-expect-nosize/g'` ; \
+	diffout=`$(ECHO) $@ | $(SED) 's/\.prsimrc-diff$$/.prsimrc-diff-nosize/g'` ; \
+	$(CAT) "$$expect" | $(PRSIM_TRACE_BINARY_FILTER) > "$$filtered" ; \
+	$(CAT) $< | $(PRSIM_TRACE_BINARY_FILTER) > $<-nosize ; \
+	$(HACKT_PRSIMRC_TEST_DIFF) "$$filtered" $<-nosize > "$$diffout" 2>&1 ; \
+	if test -s "$$diffout" ; then \
+	  $(ECHO) "Non-trace differences remain!" ; \
+	else \
+	  $(ECHO) "Binary trace differences resolved." ; \
+	  $(MV) $@ $@-orig ; \
+	  $(CP) "$$diffout" $@ ; \
+	fi
 endif
 
 .prsimrc-out-filter.prsimrc-diff:
@@ -235,6 +256,7 @@ endif
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
+	    $(PRSIM_TRACE_DUMP_FILTER_SCRIPT) ; \
 	  fi ; \
 	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
 	fi ; \

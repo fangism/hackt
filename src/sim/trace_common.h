@@ -1,6 +1,6 @@
 /**
 	\file "sim/trace_common.h"
-	$Id: trace_common.h,v 1.1.2.4 2009/01/27 22:16:36 fang Exp $
+	$Id: trace_common.h,v 1.1.2.5 2009/01/28 03:05:30 fang Exp $
 	Generic simulation execution trace structures.  
  */
 
@@ -14,13 +14,6 @@
 #include <vector>
 #include <string>
 #include "util/memory/excl_ptr.h"
-
-/**
-	Option for the paranoid.  
-	Define to 1 to plan extra sanity check alignment markers
-	in the trace file, e.g. at section boundaries.  
- */
-#define	CHPSIM_TRACE_ALIGNMENT_MARKERS		1
 
 namespace HAC {
 namespace SIM {

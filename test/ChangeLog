@@ -1,6 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.86 2008/07/30 05:26:52 fang Exp $
+#	$Id: ChangeLog,v 1.86.6.1 2009/01/28 03:05:38 fang Exp $
 # ChangeLog for test directory.
+
+2009-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-05:
+	  Added support for prsim tests with trace files that need
+		filtering on non-32-ILP platforms.
+
 
 2008-07-29	David Fang		<fangism@users.sourceforge.net>
 

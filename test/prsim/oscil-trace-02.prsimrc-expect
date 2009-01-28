@@ -1,0 +1,257 @@
+Writing simulation trace to "oscil-trace-02.prsimtrace".
+Active trace file: oscil-trace-02.prsimtrace
+time: 720
+WARNING: weak-interference `R.x[0]'
+>> cause: `R.x[12]' (val: 1)
+WARNING: weak-interference `R.x[1]'
+>> cause: `R.x[0]' (val: X)
+WARNING: weak-interference `R.x[2]'
+>> cause: `R.x[1]' (val: X)
+WARNING: weak-interference `R.x[3]'
+>> cause: `R.x[2]' (val: X)
+WARNING: weak-interference `R.x[4]'
+>> cause: `R.x[3]' (val: X)
+WARNING: weak-interference `R.x[5]'
+>> cause: `R.x[4]' (val: X)
+WARNING: weak-interference `R.x[6]'
+>> cause: `R.x[5]' (val: X)
+WARNING: weak-interference `R.x[7]'
+>> cause: `R.x[6]' (val: X)
+WARNING: weak-interference `R.x[8]'
+>> cause: `R.x[7]' (val: X)
+WARNING: weak-interference `R.x[9]'
+>> cause: `R.x[8]' (val: X)
+WARNING: weak-interference `R.x[10]'
+>> cause: `R.x[9]' (val: X)
+WARNING: weak-interference `R.x[11]'
+>> cause: `R.x[10]' (val: X)
+WARNING: weak-interference `R.x[12]'
+>> cause: `R.x[11]' (val: X)
+time: 880
+Trace file contents: 7 epochs.
+		start	start	file	chunk
+	epoch	index	time	offset	size
+	0	0	0	0	676
+	1	32	400	676	676
+	2	64	720	1352	676
+	3	96	1210	2028	676
+	4	128	1530	2704	676
+	5	160	1850	3380	676
+	6	192	2170	4056	88
+Epoch 0:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	0	0	0	0	0	X	(null)
+	1	0	0	0	14	0	(_Reset:0)
+	2	10	28	1	1	1	[after 10]	~R.x[12] | ~_Reset -> R.x[0]+
+	3	20	1	2	2	0	[after 10]	R.x[0] -> R.x[1]-
+	4	30	4	3	3	1	[after 10]	~R.x[1] -> R.x[2]+
+	5	40	5	4	4	0	[after 10]	R.x[2] -> R.x[3]-
+	6	50	8	5	5	1	[after 10]	~R.x[3] -> R.x[4]+
+	7	60	9	6	6	0	[after 10]	R.x[4] -> R.x[5]-
+	8	70	12	7	7	1	[after 10]	~R.x[5] -> R.x[6]+
+	9	80	13	8	8	0	[after 10]	R.x[6] -> R.x[7]-
+	10	90	16	9	9	1	[after 10]	~R.x[7] -> R.x[8]+
+	11	100	17	10	10	0	[after 10]	R.x[8] -> R.x[9]-
+	12	110	20	11	11	1	[after 10]	~R.x[9] -> R.x[10]+
+	13	120	21	12	12	0	[after 10]	R.x[10] -> R.x[11]-
+	14	130	24	13	13	1	[after 10]	~R.x[11] -> R.x[12]+
+	15	230	0	0	14	1	(_Reset:1)
+	16	240	25	15	1	0	[after 10]	R.x[12] & _Reset -> R.x[0]-
+	17	250	2	16	2	1	[after 10]	~R.x[0] -> R.x[1]+
+	18	260	3	17	3	0	[after 10]	R.x[1] -> R.x[2]-
+	19	270	6	18	4	1	[after 10]	~R.x[2] -> R.x[3]+
+	20	280	7	19	5	0	[after 10]	R.x[3] -> R.x[4]-
+	21	290	10	20	6	1	[after 10]	~R.x[4] -> R.x[5]+
+	22	300	11	21	7	0	[after 10]	R.x[5] -> R.x[6]-
+	23	310	14	22	8	1	[after 10]	~R.x[6] -> R.x[7]+
+	24	320	15	23	9	0	[after 10]	R.x[7] -> R.x[8]-
+	25	330	18	24	10	1	[after 10]	~R.x[8] -> R.x[9]+
+	26	340	19	25	11	0	[after 10]	R.x[9] -> R.x[10]-
+	27	350	22	26	12	1	[after 10]	~R.x[10] -> R.x[11]+
+	28	360	23	27	13	0	[after 10]	R.x[11] -> R.x[12]-
+	29	370	28	28	1	1	[after 10]	~R.x[12] | ~_Reset -> R.x[0]+
+	30	380	1	29	2	0	[after 10]	R.x[0] -> R.x[1]-
+	31	390	4	30	3	1	[after 10]	~R.x[1] -> R.x[2]+
+Epoch 1:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	32	400	5	31	4	0	[after 10]	R.x[2] -> R.x[3]-
+	33	410	8	32	5	1	[after 10]	~R.x[3] -> R.x[4]+
+	34	420	9	33	6	0	[after 10]	R.x[4] -> R.x[5]-
+	35	430	12	34	7	1	[after 10]	~R.x[5] -> R.x[6]+
+	36	440	13	35	8	0	[after 10]	R.x[6] -> R.x[7]-
+	37	450	16	36	9	1	[after 10]	~R.x[7] -> R.x[8]+
+	38	460	17	37	10	0	[after 10]	R.x[8] -> R.x[9]-
+	39	470	20	38	11	1	[after 10]	~R.x[9] -> R.x[10]+
+	40	480	21	39	12	0	[after 10]	R.x[10] -> R.x[11]-
+	41	490	24	40	13	1	[after 10]	~R.x[11] -> R.x[12]+
+	42	500	25	41	1	0	[after 10]	R.x[12] & _Reset -> R.x[0]-
+	43	510	2	42	2	1	[after 10]	~R.x[0] -> R.x[1]+
+	44	520	3	43	3	0	[after 10]	R.x[1] -> R.x[2]-
+	45	530	6	44	4	1	[after 10]	~R.x[2] -> R.x[3]+
+	46	540	7	45	5	0	[after 10]	R.x[3] -> R.x[4]-
+	47	550	10	46	6	1	[after 10]	~R.x[4] -> R.x[5]+
+	48	560	11	47	7	0	[after 10]	R.x[5] -> R.x[6]-
+	49	570	14	48	8	1	[after 10]	~R.x[6] -> R.x[7]+
+	50	580	15	49	9	0	[after 10]	R.x[7] -> R.x[8]-
+	51	590	18	50	10	1	[after 10]	~R.x[8] -> R.x[9]+
+	52	600	19	51	11	0	[after 10]	R.x[9] -> R.x[10]-
+	53	610	22	52	12	1	[after 10]	~R.x[10] -> R.x[11]+
+	54	620	23	53	13	0	[after 10]	R.x[11] -> R.x[12]-
+	55	630	28	54	1	1	[after 10]	~R.x[12] | ~_Reset -> R.x[0]+
+	56	640	1	55	2	0	[after 10]	R.x[0] -> R.x[1]-
+	57	650	4	56	3	1	[after 10]	~R.x[1] -> R.x[2]+
+	58	660	5	57	4	0	[after 10]	R.x[2] -> R.x[3]-
+	59	670	8	58	5	1	[after 10]	~R.x[3] -> R.x[4]+
+	60	680	9	59	6	0	[after 10]	R.x[4] -> R.x[5]-
+	61	690	12	60	7	1	[after 10]	~R.x[5] -> R.x[6]+
+	62	700	13	61	8	0	[after 10]	R.x[6] -> R.x[7]-
+	63	710	16	62	9	1	[after 10]	~R.x[7] -> R.x[8]+
+Epoch 2:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	64	720	17	63	10	0	[after 10]	R.x[8] -> R.x[9]-
+	65	720	0	0	14	X	(_Reset:X)
+	66	730	20	64	11	1	[after 10]	~R.x[9] -> R.x[10]+
+	67	740	21	66	12	0	[after 10]	R.x[10] -> R.x[11]-
+	68	750	24	67	13	1	[after 10]	~R.x[11] -> R.x[12]+
+	69	760	25	68	1	X	[after 10]	R.x[12] & _Reset -> R.x[0]-
+	70	770	2	69	2	X	[after 10]	~R.x[0] -> R.x[1]+
+	71	780	3	70	3	X	[after 10]	R.x[1] -> R.x[2]-
+	72	790	6	71	4	X	[after 10]	~R.x[2] -> R.x[3]+
+	73	800	7	72	5	X	[after 10]	R.x[3] -> R.x[4]-
+	74	810	10	73	6	X	[after 10]	~R.x[4] -> R.x[5]+
+	75	820	11	74	7	X	[after 10]	R.x[5] -> R.x[6]-
+	76	830	14	75	8	X	[after 10]	~R.x[6] -> R.x[7]+
+	77	840	15	76	9	X	[after 10]	R.x[7] -> R.x[8]-
+	78	850	18	77	10	X	[after 10]	~R.x[8] -> R.x[9]+
+	79	860	19	78	11	X	[after 10]	R.x[9] -> R.x[10]-
+	80	870	22	79	12	X	[after 10]	~R.x[10] -> R.x[11]+
+	81	880	23	80	13	X	[after 10]	R.x[11] -> R.x[12]-
+	82	980	0	0	14	0	(_Reset:0)
+	83	990	28	82	1	1	[after 10]	~R.x[12] | ~_Reset -> R.x[0]+
+	84	1000	1	83	2	0	[after 10]	R.x[0] -> R.x[1]-
+	85	1010	4	84	3	1	[after 10]	~R.x[1] -> R.x[2]+
+	86	1020	5	85	4	0	[after 10]	R.x[2] -> R.x[3]-
+	87	1030	8	86	5	1	[after 10]	~R.x[3] -> R.x[4]+
+	88	1040	9	87	6	0	[after 10]	R.x[4] -> R.x[5]-
+	89	1050	12	88	7	1	[after 10]	~R.x[5] -> R.x[6]+
+	90	1060	13	89	8	0	[after 10]	R.x[6] -> R.x[7]-
+	91	1070	16	90	9	1	[after 10]	~R.x[7] -> R.x[8]+
+	92	1080	17	91	10	0	[after 10]	R.x[8] -> R.x[9]-
+	93	1090	20	92	11	1	[after 10]	~R.x[9] -> R.x[10]+
+	94	1100	21	93	12	0	[after 10]	R.x[10] -> R.x[11]-
+	95	1110	24	94	13	1	[after 10]	~R.x[11] -> R.x[12]+
+Epoch 3:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	96	1210	0	0	14	1	(_Reset:1)
+	97	1220	25	96	1	0	[after 10]	R.x[12] & _Reset -> R.x[0]-
+	98	1230	2	97	2	1	[after 10]	~R.x[0] -> R.x[1]+
+	99	1240	3	98	3	0	[after 10]	R.x[1] -> R.x[2]-
+	100	1250	6	99	4	1	[after 10]	~R.x[2] -> R.x[3]+
+	101	1260	7	100	5	0	[after 10]	R.x[3] -> R.x[4]-
+	102	1270	10	101	6	1	[after 10]	~R.x[4] -> R.x[5]+
+	103	1280	11	102	7	0	[after 10]	R.x[5] -> R.x[6]-
+	104	1290	14	103	8	1	[after 10]	~R.x[6] -> R.x[7]+
+	105	1300	15	104	9	0	[after 10]	R.x[7] -> R.x[8]-
+	106	1310	18	105	10	1	[after 10]	~R.x[8] -> R.x[9]+
+	107	1320	19	106	11	0	[after 10]	R.x[9] -> R.x[10]-
+	108	1330	22	107	12	1	[after 10]	~R.x[10] -> R.x[11]+
+	109	1340	23	108	13	0	[after 10]	R.x[11] -> R.x[12]-
+	110	1350	28	109	1	1	[after 10]	~R.x[12] | ~_Reset -> R.x[0]+
+	111	1360	1	110	2	0	[after 10]	R.x[0] -> R.x[1]-
+	112	1370	4	111	3	1	[after 10]	~R.x[1] -> R.x[2]+
+	113	1380	5	112	4	0	[after 10]	R.x[2] -> R.x[3]-
+	114	1390	8	113	5	1	[after 10]	~R.x[3] -> R.x[4]+
+	115	1400	9	114	6	0	[after 10]	R.x[4] -> R.x[5]-
+	116	1410	12	115	7	1	[after 10]	~R.x[5] -> R.x[6]+
+	117	1420	13	116	8	0	[after 10]	R.x[6] -> R.x[7]-
+	118	1430	16	117	9	1	[after 10]	~R.x[7] -> R.x[8]+
+	119	1440	17	118	10	0	[after 10]	R.x[8] -> R.x[9]-
+	120	1450	20	119	11	1	[after 10]	~R.x[9] -> R.x[10]+
+	121	1460	21	120	12	0	[after 10]	R.x[10] -> R.x[11]-
+	122	1470	24	121	13	1	[after 10]	~R.x[11] -> R.x[12]+
+	123	1480	25	122	1	0	[after 10]	R.x[12] & _Reset -> R.x[0]-
+	124	1490	2	123	2	1	[after 10]	~R.x[0] -> R.x[1]+
+	125	1500	3	124	3	0	[after 10]	R.x[1] -> R.x[2]-
+	126	1510	6	125	4	1	[after 10]	~R.x[2] -> R.x[3]+
+	127	1520	7	126	5	0	[after 10]	R.x[3] -> R.x[4]-
+Epoch 4:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	128	1530	10	127	6	1	[after 10]	~R.x[4] -> R.x[5]+
+	129	1540	11	128	7	0	[after 10]	R.x[5] -> R.x[6]-
+	130	1550	14	129	8	1	[after 10]	~R.x[6] -> R.x[7]+
+	131	1560	15	130	9	0	[after 10]	R.x[7] -> R.x[8]-
+	132	1570	18	131	10	1	[after 10]	~R.x[8] -> R.x[9]+
+	133	1580	19	132	11	0	[after 10]	R.x[9] -> R.x[10]-
+	134	1590	22	133	12	1	[after 10]	~R.x[10] -> R.x[11]+
+	135	1600	23	134	13	0	[after 10]	R.x[11] -> R.x[12]-
+	136	1610	28	135	1	1	[after 10]	~R.x[12] | ~_Reset -> R.x[0]+
+	137	1620	1	136	2	0	[after 10]	R.x[0] -> R.x[1]-
+	138	1630	4	137	3	1	[after 10]	~R.x[1] -> R.x[2]+
+	139	1640	5	138	4	0	[after 10]	R.x[2] -> R.x[3]-
+	140	1650	8	139	5	1	[after 10]	~R.x[3] -> R.x[4]+
+	141	1660	9	140	6	0	[after 10]	R.x[4] -> R.x[5]-
+	142	1670	12	141	7	1	[after 10]	~R.x[5] -> R.x[6]+
+	143	1680	13	142	8	0	[after 10]	R.x[6] -> R.x[7]-
+	144	1690	16	143	9	1	[after 10]	~R.x[7] -> R.x[8]+
+	145	1700	17	144	10	0	[after 10]	R.x[8] -> R.x[9]-
+	146	1710	20	145	11	1	[after 10]	~R.x[9] -> R.x[10]+
+	147	1720	21	146	12	0	[after 10]	R.x[10] -> R.x[11]-
+	148	1730	24	147	13	1	[after 10]	~R.x[11] -> R.x[12]+
+	149	1740	25	148	1	0	[after 10]	R.x[12] & _Reset -> R.x[0]-
+	150	1750	2	149	2	1	[after 10]	~R.x[0] -> R.x[1]+
+	151	1760	3	150	3	0	[after 10]	R.x[1] -> R.x[2]-
+	152	1770	6	151	4	1	[after 10]	~R.x[2] -> R.x[3]+
+	153	1780	7	152	5	0	[after 10]	R.x[3] -> R.x[4]-
+	154	1790	10	153	6	1	[after 10]	~R.x[4] -> R.x[5]+
+	155	1800	11	154	7	0	[after 10]	R.x[5] -> R.x[6]-
+	156	1810	14	155	8	1	[after 10]	~R.x[6] -> R.x[7]+
+	157	1820	15	156	9	0	[after 10]	R.x[7] -> R.x[8]-
+	158	1830	18	157	10	1	[after 10]	~R.x[8] -> R.x[9]+
+	159	1840	19	158	11	0	[after 10]	R.x[9] -> R.x[10]-
+Epoch 5:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	160	1850	22	159	12	1	[after 10]	~R.x[10] -> R.x[11]+
+	161	1860	23	160	13	0	[after 10]	R.x[11] -> R.x[12]-
+	162	1870	28	161	1	1	[after 10]	~R.x[12] | ~_Reset -> R.x[0]+
+	163	1880	1	162	2	0	[after 10]	R.x[0] -> R.x[1]-
+	164	1890	4	163	3	1	[after 10]	~R.x[1] -> R.x[2]+
+	165	1900	5	164	4	0	[after 10]	R.x[2] -> R.x[3]-
+	166	1910	8	165	5	1	[after 10]	~R.x[3] -> R.x[4]+
+	167	1920	9	166	6	0	[after 10]	R.x[4] -> R.x[5]-
+	168	1930	12	167	7	1	[after 10]	~R.x[5] -> R.x[6]+
+	169	1940	13	168	8	0	[after 10]	R.x[6] -> R.x[7]-
+	170	1950	16	169	9	1	[after 10]	~R.x[7] -> R.x[8]+
+	171	1960	17	170	10	0	[after 10]	R.x[8] -> R.x[9]-
+	172	1970	20	171	11	1	[after 10]	~R.x[9] -> R.x[10]+
+	173	1980	21	172	12	0	[after 10]	R.x[10] -> R.x[11]-
+	174	1990	24	173	13	1	[after 10]	~R.x[11] -> R.x[12]+
+	175	2000	25	174	1	0	[after 10]	R.x[12] & _Reset -> R.x[0]-
+	176	2010	2	175	2	1	[after 10]	~R.x[0] -> R.x[1]+
+	177	2020	3	176	3	0	[after 10]	R.x[1] -> R.x[2]-
+	178	2030	6	177	4	1	[after 10]	~R.x[2] -> R.x[3]+
+	179	2040	7	178	5	0	[after 10]	R.x[3] -> R.x[4]-
+	180	2050	10	179	6	1	[after 10]	~R.x[4] -> R.x[5]+
+	181	2060	11	180	7	0	[after 10]	R.x[5] -> R.x[6]-
+	182	2070	14	181	8	1	[after 10]	~R.x[6] -> R.x[7]+
+	183	2080	15	182	9	0	[after 10]	R.x[7] -> R.x[8]-
+	184	2090	18	183	10	1	[after 10]	~R.x[8] -> R.x[9]+
+	185	2100	19	184	11	0	[after 10]	R.x[9] -> R.x[10]-
+	186	2110	22	185	12	1	[after 10]	~R.x[10] -> R.x[11]+
+	187	2120	23	186	13	0	[after 10]	R.x[11] -> R.x[12]-
+	188	2130	28	187	1	1	[after 10]	~R.x[12] | ~_Reset -> R.x[0]+
+	189	2140	1	188	2	0	[after 10]	R.x[0] -> R.x[1]-
+	190	2150	4	189	3	1	[after 10]	~R.x[1] -> R.x[2]+
+	191	2160	5	190	4	0	[after 10]	R.x[2] -> R.x[3]-
+Epoch 6:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	192	2170	8	191	5	1	[after 10]	~R.x[3] -> R.x[4]+
+	193	2180	9	192	6	0	[after 10]	R.x[4] -> R.x[5]-
+	194	2190	12	193	7	1	[after 10]	~R.x[5] -> R.x[6]+
+	195	2200	13	194	8	0	[after 10]	R.x[6] -> R.x[7]-

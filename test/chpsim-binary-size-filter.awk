@@ -1,9 +1,13 @@
 #!/usr/bin/awk -f
+# "chpsim-binary-size-filter.awk"
+# for the purpose of filtering out architecture-dependent trace size info
+# happens to be reusable for prsim trace dumps too
 
 {
 if (match($0, "^[\t]+start[\t]start[\t]file[\t]chunk")) {
 	print;
 	getline;
+	# check for table of contents header
 	if (match($0, "^[\t]+epoch[\t]index[\t]time[\t]offset[\t]size")) {
 		print;
 		# then filter out binary-sensitive info: offsets, sizes
