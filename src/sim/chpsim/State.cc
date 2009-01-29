@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.19.2.2 2009/01/27 00:18:48 fang Exp $
+	$Id: State.cc,v 1.19.2.3 2009/01/29 21:45:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -358,6 +358,8 @@ State::State(const module& m) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 State::~State() {
 	if ((flags & FLAG_AUTOSAVE) && checkpoint_name.size()) {
+		// close trace before saving autocheckpoint
+		close_trace();
 		ofstream o(checkpoint_name.c_str());
 		if (o) {
 		try {
@@ -492,6 +494,8 @@ State::initialize(void) {
 	for_each(event_pool.begin(), event_pool.end(),
 		mem_fun_ref(&event_type::reset)
 	);
+	// ok to retain autosave
+	close_trace();	// close trace file
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1233,7 +1237,8 @@ State::dump_break_values(ostream& o) const {
 bool
 State::open_trace(const string& tfn) {
 	if (trace_manager) {
-		cerr << "Error: trace stream already open." << endl;
+cerr << "Error: trace stream already open.  (command ignored)" << endl;
+		return true;
 	}
 	trace_manager = excl_ptr<TraceManager>(new TraceManager(tfn));
 	NEVER_NULL(trace_manager);
@@ -1833,6 +1838,7 @@ State::autosave(const bool b, const string& n) {
 	TODO: save and re-confirm chpsim options, because it affects
 		the event graph allocationa and enumeration.  
 	TODO: running event count, even when not tracing...
+	Do not save the autosave checkpoint name.
 	\return true to signal an error
  */
 bool
@@ -1887,7 +1893,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, uniform_delay);
 	write_value(o, null_event_delay);
 #endif
-//	write_value(o, flags);
+	write_value(o, flags & FLAGS_CHECKPOINT_MASK);
 	// skip trace manager
 	// save checkpoint interval?
 	return false;
@@ -1898,6 +1904,7 @@ State::save_checkpoint(ostream& o) const {
 	Restores simulation state from checkpoint.  
 	This simulation checkpoint must use the same object file and 
 	invocation options.  
+	Preserve previous autosave settings.
 	\return true to signal an error
  */
 bool
@@ -1965,7 +1972,11 @@ State::load_checkpoint(istream& i) {
 	read_value(i, uniform_delay);
 	read_value(i, null_event_delay);
 #endif
-//	read_value(i, flags);		// but not stopped?
+{
+	flags_type tmp;
+	read_value(i, tmp);		// but not stopped?
+	flags = (flags & FLAG_AUTOSAVE) | (tmp & ~FLAG_AUTOSAVE);
+}
 	return false;
 }
 
@@ -2019,6 +2030,11 @@ State::dump_raw_checkpoint(ostream& o, istream& i) {
 	time_type current_time;
 	read_value(i, current_time);
 	o << "current time: " << current_time << endl;
+{
+	flags_type tmp;
+	read_value(i, tmp);		// but not stopped?
+	o << "flags: 0x" << std::hex << size_t(tmp) << endl;
+}
 	return o;
 }
 

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.2 2009/01/28 03:05:42 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.3 2009/01/29 21:45:57 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -110,7 +110,6 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	oscil-status-01 \
 	oscil-why-01 oscil-why-02 \
 	oscil-wrong-why-01 \
-	oscil-trace-01 oscil-trace-02 \
 	celem-rules \
 	half-celem-01 \
 	celem-share-01 celem-share-02 \
@@ -380,7 +379,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	check-excl-fail-05 \
 	after_min_max-bad-01 \
 	reschedule-01 reschedule-02 reschedule-03 reschedule-04 reschedule-05 \
-	reschedule-06 reschedule-18
+	reschedule-06 reschedule-18 \
+	oscil-trace-01 oscil-trace-02
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

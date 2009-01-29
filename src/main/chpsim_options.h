@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim_options.h"
 	Main module for new CHPSIM.
-	$Id: chpsim_options.h,v 1.4 2008/11/16 02:17:04 fang Exp $
+	$Id: chpsim_options.h,v 1.4.6.1 2009/01/29 21:45:45 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CHPSIM_OPTIONS_H__
@@ -34,6 +34,7 @@ public:
 	/// whether or not to print checkpoint dump
 	bool				dump_checkpoint;
 	bool				autosave;
+	bool				autotrace;
 	/// list of paths to search for sourced scripts
 	typedef	std::list<std::string>	source_paths_type;
 	source_paths_type		source_paths;
@@ -46,6 +47,7 @@ public:
 	/// name of type to instantiate
 	std::string			complete_type_name;
 	std::string			autosave_name;
+	std::string			autotrace_name;
 	/// compiler-driver flags
 	compile_options			comp_opt;
 
@@ -53,9 +55,12 @@ public:
 		run(true), dump_graph_alloc(false), check_structure(true),
 		dump_dot_struct(false), dump_checkpoint(false), 
 		autosave(false),
+		autotrace(false),
 		source_paths(), 
 		use_type(false), instantiate_type_recursively(false),
 		complete_type_name(), 
+		autosave_name("autosave.chpsimckpt"),
+		autotrace_name("autotrace.chpsimtrace"),
 		comp_opt() { }
 };	// end class chpsim_options
 

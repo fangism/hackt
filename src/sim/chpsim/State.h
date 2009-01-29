@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.15.2.1 2009/01/27 22:16:39 fang Exp $
+	$Id: State.h,v 1.15.2.2 2009/01/29 21:45:48 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -207,7 +207,11 @@ private:
 		/**
 			TODO: timing mode flags
 		 */
-		FLAGS_DEFAULT = 0x0000
+		FLAGS_DEFAULT = 0x0000,
+		/**
+			Flag states that should NOT be saved. 
+		 */
+		FLAGS_CHECKPOINT_MASK = ~(FLAG_AUTOSAVE | FLAG_TRACE_ON)
 	};
 	/**
 		Timing mode enumerations.

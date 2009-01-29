@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.42.2.3 2009/01/28 03:05:34 fang Exp $
+	$Id: State-prsim.cc,v 1.42.2.4 2009/01/29 21:45:49 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -599,6 +599,9 @@ try {
  */
 State::~State() {
 	if ((flags & FLAG_AUTOSAVE) && autosave_name.size()) {
+		// always clear some flags before the automatic save?
+		// close trace before checkpointing
+		close_trace();
 		ofstream o(autosave_name.c_str());
 		if (o) {
 		try {
@@ -668,6 +671,10 @@ State::__initialize(void) {
 	// unwatchall()? no, preserved
 	// timing mode preserved
 	current_time = 0;
+	// autosave? OK to keep
+	// trace file?
+	close_trace();	// close trace, else trace will be incoherent
+	// alternative is to record fact that every node went to X
 	_channel_manager.initialize();
 }
 
@@ -900,6 +907,9 @@ State::reset(void) {
 	// reset seed
 	ushort seed[3] = {0,0,0};
 	seed48(seed);
+	// FIXME, ALERT: not every libc resets with the same 0-seed!!!
+	// one option is to set upon State construction, but this
+	// would only safely accomodate one state in any program...
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -7224,6 +7234,7 @@ State::autosave(const bool b, const string& n) {
 	Write out a header for safety checks.  
 	TODO: save state only? without structure?
 	\return true if to signal that an error occurred. 
+	NOTE: we do not save the fact the a trace-file was being recorded!
  */
 bool
 State::save_checkpoint(ostream& o) const {
@@ -7301,7 +7312,7 @@ State::save_checkpoint(ostream& o) const {
 	}
 }
 	WRITE_ALIGN_MARKER
-	write_value(o, flags);
+	write_value(o, flags_type(flags & FLAGS_CHECKPOINT_MASK));
 	write_value(o, unstable_policy);
 	write_value(o, weak_unstable_policy);
 	write_value(o, interference_policy);
@@ -7313,7 +7324,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, assert_fail_policy);
 	write_value(o, channel_expect_fail_policy);
 	write_value(o, excl_check_fail_policy);
-	write_value(o, autosave_name);
+//	write_value(o, autosave_name);		// don't preserve
 	write_value(o, timing_mode);
 	if (_channel_manager.save_checkpoint(o)) return true;
 	// interrupted flag, just ignore
@@ -7477,10 +7488,20 @@ try {
 	}
 }
 	READ_ALIGN_MARKER		// sanity alignment check
-	read_value(i, flags);
+{
+	if (is_tracing()) {
+		close_trace();
+		cout << "Closing trace stream while loading checkpoint."
+			<< endl;
+	}
+	flags_type tmp;
+	read_value(i, tmp);
+	// preserve the auto-checkpointing, but not tracing
+	flags = (flags & FLAG_AUTOSAVE) | (tmp & ~FLAG_AUTOSAVE);
+}
 	// DO NOT auto-checkpoint with the same name!
 	// this prevents accidental overwrite due to loading!
-	flags &= ~FLAG_AUTOSAVE;
+	// This is already masked out during saving of checkpoint.
 	read_value(i, unstable_policy);
 	read_value(i, weak_unstable_policy);
 	read_value(i, interference_policy);
@@ -7492,7 +7513,7 @@ try {
 	read_value(i, assert_fail_policy);
 	read_value(i, channel_expect_fail_policy);
 	read_value(i, excl_check_fail_policy);
-	read_value(i, autosave_name);	// safe to load the name of checkpoint
+//	read_value(i, autosave_name);	// ignore the name of checkpoint
 	read_value(i, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -7614,7 +7635,7 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	READ_ALIGN_MARKER		// sanity alignment check
 	flags_type flags;
 	read_value(i, flags);
-	o << "flags: " << size_t(flags) << endl;
+	o << "flags: 0x" << std::hex << size_t(flags) << endl;
 {
 	error_policy_enum p;
 	read_value(i, p);
@@ -7638,6 +7659,13 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	read_value(i, p);
 	o << "exclusion-fail policy: " << error_policy_string(p) << endl;
 }
+#if 0
+{	// ignore the name of checkpoint
+	string s;
+	read_value(i, s);
+	o << "autosave: " << s << endl;
+}
+#endif
 	char timing_mode;
 	read_value(i, timing_mode);
 	o << "timing mode: " << size_t(timing_mode) << endl;
@@ -7660,7 +7688,8 @@ State::dump_checkpoint(ostream& o, istream& i) {
 bool
 State::open_trace(const string& tfn) {
 	if (trace_manager) {
-		cerr << "Error: trace stream already open." << endl;
+cerr << "Error: trace stream already open.  (command ignored)" << endl;
+		return true;
 	}
 	trace_manager = excl_ptr<TraceManager>(new TraceManager(tfn));
 	NEVER_NULL(trace_manager);

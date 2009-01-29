@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.16.2.2 2009/01/28 03:05:39 fang Exp $
+#	$Id: Make.test-prsim,v 1.16.2.3 2009/01/29 21:45:52 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -15,7 +15,8 @@ HACKT_PRSIM_SUFFIXES = \
 	.prsimckpt-indump .prsimckpt-outdump .prsimckpt-diff \
 	.prsimckpt-dupe .prsimckpt-dupe-dump \
 	.prsimckpt-O1 .prsimckpt-O1-err \
-	.prsimckpt-01-dump .prsimopt-diff
+	.prsimckpt-01-dump .prsimopt-diff \
+	.prsimtrace .prsimtrace-O1
 
 HACKT_PRSIM_TEST_SUFFIXES = \
 	.prsimtest .prsimfailtest \
@@ -50,7 +51,8 @@ HACKT_PRSIM_CLEAN_IGNORE_PATTERNS = \
 	"*.prsimopt-diff" \
 	"*.prsimexpr-O1" \
 	"*.prs-dot-O1" \
-	"*.prsimtrace"
+	"*.prsimtrace" \
+	"*.prsimtrace-O1"
 
 AUTO_IGNORE += $(HACKT_PRSIM_CLEAN_IGNORE_PATTERNS)
 
@@ -130,19 +132,30 @@ prsimexprtest.autodepend: Makefile
 # touch is needed if the redirected output is empty
 # we now perform $srcdir substitution and $(HACO_FLAGS) substitution
 # in the event where the input file is a hac source, as opposed to object file
+# Some directories will not want trace files, so we provide a hook to disable
+# automatic trace saving: PRSIMRC_AUTOTRACE_DISABLE_HOOK = autotrace=0
 PRSIMRC_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE) | \
 	  $(SED) -e 's|[$$]srcdir|$(srcdir)|g' \
 	    -e 's|[$$](HACO_FLAGS)|$(HACO_FLAGS)|g'` ; \
 	flags=`$(CAT) $< | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.prsimckpt/g'` ; \
-	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$flags $$obj" ; \
+	trace=`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.prsimtrace/g'` ; \
+	$(RM) $$ckpt $$trace ; \
+	autotrace=1 ; \
+	$(PRSIMRC_AUTOTRACE_DISABLE_HOOK) \
+	if test "$$autotrace" = 1 ; then traceflag="-r $$trace" ; fi ; \
+	cmd="$(HACKT_PRSIM_EXE) -b -a $$ckpt $$traceflag -I$(srcdir) $$flags $$obj" ; \
 	$(ECHO) "ckpt: $$cmd < $<" ; \
-	$(CAT) $(PRSIMCKPT_TEMPLATE_SCRIPT) | \
-	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
+	$(SED) -e 's|SOURCE|$<|g' $(PRSIMCKPT_TEMPLATE_SCRIPT) | \
 	  $$cmd > $@ 2>&1 ; \
+	test -f $$ckpt || $(ECHO) "Warning: $$ckpt not produced." ; \
+	test "$$autotrace" = 0 || \
+	  test -f $$trace || $(ECHO) "Warning: $$trace not produced." ; \
 	$(TOUCH) $@
+# test -f $$ckpt && test -f $$trace ?
 
+# fail test will not attempt to checkpoint or save trace files
 PRSIMRC_FAIL_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	flags=`$(CAT) $< | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
@@ -157,7 +170,13 @@ PRSIMRC_FAIL_TEST_SCRIPT = \
 .prsimrc.prsimrcfail-out:
 	-@$(PRSIMRC_FAIL_TEST_SCRIPT)
 
+# as an automatic way of inferring trace file anti-dependencies...
+# could also do this with checkpoints...
+EXTRACT_PRSIM_TRACE_DEP_PIPE = $(GREP) "^trace " | $(CUT) -d\  -f2
+EXTRACT_PRSIM_TRACE_UNDEP_PIPE = $(GREP) "^!rm" | $(CUT) -d\  -f2
+
 # this reuses the same dependency for checkpoints
+# beware of race between -O0 and -O1 tests that produce the same files!
 prsimrc-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(RM) $@ ; \
@@ -168,12 +187,28 @@ prsimrc-out.autodepend: Makefile
 	  src=$(srcdir)/$$d.prsimrc ; \
 	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
 	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
-	  antideps=`$(CAT) "$$src" | $(EXTRACT_ANTIDEPS_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
 	    $(PRINTF) "$$target " ; \
 	  done ; \
 	  $(ECHO) ": $$obj $$deps" ; \
+	  mktrc=`$(CAT) $$src | $(EXTRACT_PRSIM_TRACE_DEP_PIPE)` ; \
+	  if test "$$mktrc" ; then \
+	    rmtrc=`$(CAT) $$src | $(EXTRACT_PRSIM_TRACE_UNDEP_PIPE)` ; \
+	    if test x"$$rmtrc" != x"$$mktrc" ; then \
+	      $(ECHO) "$$mktrc: $$d.prsimrc-out" ; \
+	      $(ECHO) "	@test -f $$""@" ; \
+	      $(ECHO) "CLEANFILES += $$mktrc" ; \
+	      $(ECHO) "$$mktrc: $$""(HACKT_PRSIM_EXE)" ; \
+            fi ; \
+	  fi ; \
+	  antideps=`$(CAT) "$$src" | $(EXTRACT_ANTIDEPS_PIPE)` ; \
+	  if test "$$antideps" ; then \
+	    $(ECHO) "$$antideps: $$d.prsimrc-out" ; \
+	    $(ECHO) "	@:" ; \
+	    $(ECHO) "CLEANFILES += $$antideps" ; \
+	    $(ECHO) "AUTO_IGNORE += $$antideps" ; \
+	  fi ; \
 	done ;} > $@ ; \
 	$(TOUCH) $@
 
@@ -314,6 +349,9 @@ NO_OP_SCRIPT = test -f $< && test -f $@
 .prsimrc-out.prsimckpt:
 	@$(NO_OP_SCRIPT)
 
+.prsimrc-out.prsimtrace:
+	@$(NO_OP_SCRIPT)
+
 #	rc=$(srcdir)/`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.prsimrc/g'` ; \
 #	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)`
 PRSIM_CHECKPOINT_DUMP_SCRIPT = $(HACKT_PRSIM_EXE) -d $< > $@
@@ -386,17 +424,33 @@ PRSIMOPT_FLAG = -O1
 .prsimrc.prsimckpt-O1-err:
 	@obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-err$$//g'` ; \
+	trace=`$(ECHO) $$ckpt | $(SED) 's/ckpt-O1$$/trace-O1/g'` ; \
+	$(PRSIMRC_AUTOTRACE_DISABLE_HOOK) \
+	rm -f $$ckpt $$trace ; \
+	autotrace=1 ; \
+	$(PRSIMRC_AUTOTRACE_DISABLE_HOOK) \
+	if test "$$autotrace" = 1 ; then traceflag="-r $$trace" ; fi ; \
 	flags=`$(CAT) $< | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
-	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$flags $(PRSIMOPT_FLAG) $$obj" ; \
+	cmd="$(HACKT_PRSIM_EXE) -b -a $$ckpt $$traceflag -I$(srcdir) $$flags $(PRSIMOPT_FLAG) $$obj" ; \
 	$(ECHO) "ckpt: $$cmd" ; \
-	$(CAT) $(PRSIMOPT_TEMPLATE_SCRIPT) | \
-	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
-	  $$cmd > $@ 2>&1 ; \
+	$$cmd < $< > $@ 2>&1 ; \
+	test -f $$ckpt || $(ECHO) "Warning: $$ckpt not produced." ; \
+	test "$$autotrace" = 0 || \
+	  test -f $$trace || $(ECHO) "Warning: $$trace not produced." ; \
 	$(TOUCH) $@
+
+#	$(CAT) $(PRSIMOPT_TEMPLATE_SCRIPT) | $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g'
 
 # no-op: simultaneously produced target
 .prsimckpt-O1-err.prsimckpt-O1:
 	@$(NO_OP_SCRIPT)
+
+.prsimckpt-O1-err.prsimtrace-O1:
+	@$(NO_OP_SCRIPT)
+
+.prsimckpt-O1.prsimckpt-O1-dump:
+	$(PRSIM_CHECKPOINT_DUMP_SCRIPT)
+
 
 if VERBOSE_CHECK
 ECHO_PRSIMCKPT_OPT_DIFF_COMMAND = $(ECHO) "$(DIFF) -q $$unopt $<"

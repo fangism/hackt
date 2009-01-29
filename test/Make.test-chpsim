@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.22 2008/03/21 00:20:52 fang Exp $
+#	$Id: Make.test-chpsim,v 1.22.8.1 2009/01/29 21:45:51 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -250,6 +250,8 @@ endif
 .chpsimfailtest:
 	@$(DUMMY_TEST_SCRIPT)
 
+# as an automatic way of inferring trace file anti-dependencies...
+# could also do this with checkpoints...
 EXTRACT_CHPSIM_TRACE_DEP_PIPE = $(GREP) "^trace " | $(CUT) -d\  -f2
 EXTRACT_CHPSIM_TRACE_UNDEP_PIPE = $(GREP) "^!rm" | $(CUT) -d\  -f2
 

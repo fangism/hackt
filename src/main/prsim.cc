@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.20 2008/12/01 20:27:35 fang Exp $
+	$Id: prsim.cc,v 1.20.2.1 2009/01/29 21:45:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -71,6 +71,8 @@ public:
 	bool			dump_checkpoint;
 	/// whether or not to automatically save
 	bool			autosave;
+	/// whether or not to startup tracing all events
+	bool			autotrace;
 	/**
 		Copied from cflat_options.
 		Ignore top-level instances and flatten one anonymous
@@ -86,6 +88,7 @@ public:
 	 */
 	string			named_process_type;
 	string			autosave_name;
+	string			autotrace_name;
 	ExprAllocFlags		expr_alloc_flags;
 	/// compiler-driver flags
 	compile_options		comp_opt;
@@ -99,9 +102,11 @@ public:
 		check_structure(true), dump_dot_struct(false), 
 		dump_checkpoint(false),
 		autosave(false),
+		autotrace(false),
 		use_referenced_type_instead_of_top_level(false),
 		named_process_type(),
 		autosave_name("autosave.prsimckpt"),
+		autotrace_name("autotrace.prsimtrace"),
 		expr_alloc_flags(), 
 		comp_opt(),
 		source_paths() { }
@@ -210,26 +215,23 @@ try {
 	sim_state.import_source_paths(opt.source_paths);
 	if (opt.run) {
 		sim_state.initialize();
+		// autosave, autotrace
+		if (opt.autosave) {
+			sim_state.autosave(opt.autosave, opt.autosave_name);
+		}
+		if (opt.autotrace) {
+			sim_state.open_trace(opt.autotrace_name);
+		}
 		CommandRegistry::prompt = sim_state.get_prompt();
 		// outermost level is interactive
 		// until later, when we give a source file, or redirect in
 		const int ret = CommandRegistry::interpret(sim_state, std::cin, 
 			opt.interactive);
 		if (ret) {
-			// return value only has meaning to the interpreter
-			// if autosave is on, save checkpoint for
-			// post-mortem analysis.
-#if 0
-			if (CommandRegistry::autosave_on_exit) {
-				std::ofstream ofs("autosave.prsimckpt");
-				if (ofs) {
-					sim_state.save_checkpoint(ofs);
-				} else {
-					cerr <<
-				"Error saving autosave.prsimckpt" << endl;
-				}
-			}
-#endif
+			// non-zero return value only has meaning 
+			// to the interpreter
+			// if autosave is on, destruction of the state
+			// will save checkpoint for post-mortem analysis.
 			return 1;	// ret;
 		}
 		// do we want to autosave when exit status is 0?
@@ -251,7 +253,7 @@ try {
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+a:bcC:d:D:f:hiI:O:t:";
+	static const char optstring[] = "+a:bcC:d:D:f:hiI:O:r:t:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -423,6 +425,20 @@ For more details, @xref{Optimization Flags}.
 			break;
 		}
 /***
+@texinfo opt/option-r.texi
+@defopt -r file
+@cindex trace file
+@cindex recording trace
+Startup the simulation already recording a trace file of every event.  
+Trace file is automatically close when simulation exits.  
+@end defopt
+@end texinfo
+***/
+		case 'r':
+			o.autotrace = true;
+			o.autotrace_name = optarg;
+			break;
+/***
 @texinfo opt/option-t.texi
 @defopt -t type
 Instead of using the top-level instances in the source file, 
@@ -472,6 +488,7 @@ prsim::usage(void) {
 "\t-i : interactive (default)\n"
 "\t-I <path> : include path for scripts (repeatable)\n"
 "\t-O <0..1> : expression optimization level\n"
+"\t-r <file> : record a trace of all events to file at startup\n"
 "\t-t \"type\" : allocate one instance of the named type,\n"
 	"\t\tignoring top-level instances (quotes recommended).\n";
         const size_t flags = options_modifier_map.size();

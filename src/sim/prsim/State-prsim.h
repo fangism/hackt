@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.22.2.2 2009/01/27 22:16:45 fang Exp $
+	$Id: State-prsim.h,v 1.22.2.3 2009/01/29 21:45:50 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -699,7 +699,11 @@ private:
 			We keep the previous timing modes and watch mode.  
 		 */
 		FLAGS_INITIALIZE_CLEAR_MASK =
-			FLAG_STOP_SIMULATION
+			FLAG_STOP_SIMULATION,
+		/**
+			Flag states that should NOT be saved. 
+		 */
+		FLAGS_CHECKPOINT_MASK = ~(FLAG_AUTOSAVE | FLAG_TRACE_ON)
 	};
 	/**
 		As we add more flags this will have to expand...

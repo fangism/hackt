@@ -1,6 +1,5 @@
 # "oscil-trace-01.prsimrc"
 # @haco@ oscillator.haco-a
-# @antideps@ oscil-trace-01.prsimtrace
 # testing out tracing features
 
 trace oscil-trace-01.prsimtrace

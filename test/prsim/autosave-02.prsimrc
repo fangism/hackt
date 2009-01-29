@@ -3,7 +3,7 @@
 # @deps@ autosave-01.prsimckpt
 
 load autosave-01.prsimckpt
-autosave off
+# autosave off
 watchall
 time
 assert c 0

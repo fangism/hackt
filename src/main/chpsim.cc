@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.18 2008/11/27 11:09:23 fang Exp $
+	$Id: chpsim.cc,v 1.18.2.1 2009/01/29 21:45:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -190,6 +190,13 @@ try {
 	sim_state.import_source_paths(opt.source_paths);
 	if (opt.run) {
 		sim_state.initialize();
+		// autosave, autotrace
+		if (opt.autosave) {
+			sim_state.autosave(opt.autosave, opt.autosave_name);
+		}
+		if (opt.autotrace) {
+			sim_state.open_trace(opt.autotrace_name);
+		}
 		CommandRegistry::prompt = sim_state.get_prompt();
 		// run command interpreter
 		// return error if necessary
@@ -227,7 +234,7 @@ try {
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+a:bcC:d:f:hiI:l:L:t:T:";
+	static const char optstring[] = "+a:bcC:d:f:hiI:l:L:r:t:T:";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
@@ -400,6 +407,20 @@ For more on building and loading shared-libraries, @xref{Extending simulation}.
 		lt_dladdsearchdir(optarg);
 		break;
 /***
+@texinfo options/option-r.texi
+@defopt -r file
+@cindex trace file
+@cindex recording trace
+Startup the simulation already recording a trace file of every event.  
+Trace file is automatically close when simulation exits.  
+@end defopt
+@end texinfo
+***/
+	case 'r':
+		o.autotrace = true;
+		o.autotrace_name = optarg;
+		break;
+/***
 @texinfo options/option-t.texi
 @defopt -t type
 Instead of expanding the whole top-level instances, only operate
@@ -462,6 +483,7 @@ chpsim::usage(void) {
 "\t-I <path> : include path for scripts (repeatable)\n"
 "\t-L <path> : append load path for dlopening modules (repeatable)\n"
 "\t-l <lib> : library to dlopen (NO file extension) (repeatable)\n"
+"\t-r <file> : record a trace of all events to file at startup\n"
 "\t-t \"type\" : expand type non-recursively as top-level (recommend quotes)\n"
 "\t-T \"type\" : expand type recursively as top-level (recommend quotes)"
 	<< endl;

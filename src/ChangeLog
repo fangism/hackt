@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-01-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-06:
+	  chpsim, prsim: added -r file command-line option to automatically
+		save a trace file from startup (documented),
+		fixed -a (autosave) option to actually take effect.
+		warn if trying to open trace file for writing, when one
+			is already opened. 
+	  prsim: on initialize/reset, close trace stream.  
+		on exit, close trace stream before taking checkpoint.
+		When taking checkpoint, mask out autotrace info.
+		When loading checkpoint, preserve current autosave, 
+			and close opened trace stream.
+		no longer save the name of autocheckpoint in checkpoint.
+	  See also test/ChangeLog.
+
+
 2009-01-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-90-prsim-12-05:
