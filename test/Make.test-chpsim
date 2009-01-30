@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.22.8.1 2009/01/29 21:45:51 fang Exp $
+#	$Id: Make.test-chpsim,v 1.22.8.2 2009/01/30 00:44:57 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -28,7 +28,8 @@ HACKT_CHPSIM_SUFFIXES = \
 	.chpsimrcfail-out .chpsimrcfail-diff \
 	.chpsimckpt .chpsimckpt-outdump .chpsimckpt-indump \
 	.chpsimckpt-dupe .chpsimckpt-dupe-dump \
-	.chpsimckpt-diff
+	.chpsimckpt-diff \
+	.chpsimtrace
 HACKT_CHPSIM_TEST_SUFFIXES = \
 	.chpsimtest .chpsimfailtest \
 	.chpsimalloctest .chpsimdottest .chpsimckpttest
@@ -133,21 +134,29 @@ CHPSIM_TEST_ENV = \
 
 SHOW_CHPSIM_TEST_ENV = $(LTDL_SHLIBPATH_VAR)=$(CHPSIM_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$"$(LTDL_SHLIBPATH_VAR)"
 
-# TODO: support checkpointing in test cases that pass
 # NOTE: EXTRACT_HACO_PIPE is defined in "Make.test-prsim"
 # TODO: extract additional command-line flags from the source script
 #	maybe using @chpsim-flags@ as a match pattern
+# We privide a hook to disable automatic tracing:
+#	CHPSIMRC_AUTOTRACE_DISABLE_HOOK = autotrace=0;
 CHPSIMRC_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	mods=`$(CAT) $< | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
 	flags=`$(CAT) $< | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/\.chpsim.*$$/.chpsimckpt/g'` ; \
+	trace=`$(ECHO) $@ | $(SED) 's/\.chpsim.*$$/.chpsimtrace/g'` ; \
+	$(RM) $$ckpt $$trace ; \
+	autotrace=1 ; \
+	$(CHPSIMRC_AUTOTRACE_DISABLE_HOOK) \
+	if test "$$autotrace" = 1 ; then traceflag="-r $$trace" ; fi ; \
 	$(CHPSIM_TEST_ENV) ; \
-	cmd="$(HACKT_CHPSIM_EXE) -b -I$(srcdir) $$flags $$mods $$obj" ; \
+	cmd="$(HACKT_CHPSIM_EXE) -b -I$(srcdir) -a $$ckpt $$traceflag $$flags $$mods $$obj" ; \
 	$(ECHO) "ckpt: $(SHOW_CHPSIM_TEST_ENV) $$cmd < $<" ; \
-	$(CAT) $(CHPSIMCKPT_TEMPLATE_SCRIPT) | \
-	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
+	$(SED) 's|SOURCE|$<|g' $(CHPSIMCKPT_TEMPLATE_SCRIPT) | \
 	  $$cmd > $@ 2>&1 && \
+	test -f $$ckpt || $(ECHO) "Warning: $$ckpt not produced." ; \
+	test "$$autotrace" = 0 || \
+	  test -f $$trace || $(ECHO) "Warning: $$trace not produced." ; \
 	$(TOUCH) $@
 
 # the same until we add checkpointing to the pass test
@@ -182,6 +191,10 @@ endif
 # one option: always apply $(CHPSIM_TRACE_BINARY_FILTER)
 CHPSIMRC_TEST_FILTER_SCRIPT = \
 	$(SED) -e '/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' $< > $@
+
+# automatically tracing expect-pass tests
+.chpsimrc-out.chpsimtrace:
+	@$(NO_OP_SCRIPT)
 
 .chpsimrc-out.chpsimrc-out-filter:
 	@$(CHPSIMRC_TEST_FILTER_SCRIPT)

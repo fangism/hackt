@@ -5,6 +5,13 @@
 
 2009-01-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-90-prsim-12-07:
+	  No real source revision, inline texinfo documentation added.
+	  Tests: chpsim tests updated to take advantage of automatic
+		tracking and checkpointing.  
+	  Branch nearly done, little more prism-trace testing to go.
+
+
 	* HACKT-00-01-04-main-00-82-90-prsim-12-06:
 	  chpsim, prsim: added -r file command-line option to automatically
 		save a trace file from startup (documented),

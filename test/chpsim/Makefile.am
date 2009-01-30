@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.30 2008/05/06 17:43:15 fang Exp $
+#	$Id: Makefile.am,v 1.30.8.1 2009/01/30 00:45:00 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -149,17 +149,17 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	do-while-countdown-08 \
 	countdown-successor-01 countdown-successor-02 \
 	countdown-loop-a-01 countdown-loop-b-01 \
-	countdown-loop-a-02-trace \
+	countdown-loop-a-02 \
 	countdown-loop-a-03 \
 	countdown-sequence-a-01 \
 	countdown-nested-a-01 countdown-nested-a-02 \
-	countdown-nested-a-03-trace countdown-nested-a-04 \
+	countdown-nested-a-03 countdown-nested-a-04 \
 	countdown-nested-b-01 countdown-nested-b-02 \
-	countdown-nested-b-03-trace countdown-nested-b-04 \
+	countdown-nested-b-03 countdown-nested-b-04 \
 	countdown-nested-c-01 countdown-nested-c-02 \
-	countdown-nested-c-03-trace countdown-nested-c-04 \
+	countdown-nested-c-03 countdown-nested-c-04 \
 	countdown-nested-d-01 countdown-nested-d-02 \
-	countdown-nested-d-03-trace countdown-nested-d-04 \
+	countdown-nested-d-03 countdown-nested-d-04 \
 	countdown-domino-a-01 countdown-domino-a-02 \
 	countdown-domino-b-01 \
 	countdown-domino-b-02-cause countdown-domino-b-03-cause \
@@ -185,28 +185,28 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	arbitrate-loop-a-01 arbitrate-loop-a-02 \
 	arbitrate-loop-a-03 arbitrate-loop-a-04 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
-	select-nested-loop-a-03-trace \
+	select-nested-loop-a-03 \
 	select-nested-loop-a-04 \
 	select-nested-loop-b-01 select-nested-loop-b-02 \
-	select-nested-loop-b-03-trace \
+	select-nested-loop-b-03 \
 	select-nested-loop-b-04 \
 	select-block-a-01 select-block-a-02 select-block-a-03 \
 	bool-split-a-01 bool-split-a-02 \
 	bool-split-select-a-01 \
-	bool-split-select-a-02-trace \
+	bool-split-select-a-02 \
 	bool-split-select-a-03 \
 	bool-lookup-a-01 bool-lookup-a-02 \
 	channel-sync-desync-a-01 channel-sync-desync-a-02 \
-	channel-sync-desync-a-03-trace \
-	channel-sync-desync-a-04-trace \
-	channel-sync-desync-a-05-trace \
+	channel-sync-desync-a-03 \
+	channel-sync-desync-a-04 \
+	channel-sync-desync-a-05 \
 	channel-sync-desync-a-06 \
 	bool-memory-read-a-01 bool-memory-read-a-02 \
 	bool-memory-write-a-01 bool-memory-write-a-02 \
 	bool-and-test-a-01 \
 	bool-and-test-a-02-break \
 	bool-and-test-a-03 bool-and-test-a-04 \
-	bool-and-test-b-01 bool-and-test-b-02-trace \
+	bool-and-test-b-01 bool-and-test-b-02 \
 	bool-or-test-a-01 \
 	bool-or-test-b-01 \
 	bool-or-test-c-01 \
@@ -215,8 +215,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-probe-a-01 channel-probe-a-02 channel-probe-a-03 \
 	channel-probe-b-01 \
 	channel-probe-c-01 channel-probe-c-02 channel-probe-c-03 \
-	delayed-source-a-01 delayed-source-a-02-trace \
-	delayed-sink-a-01 delayed-sink-a-02-trace \
+	delayed-source-a-01 delayed-source-a-02 \
+	delayed-sink-a-01 delayed-sink-a-02 \
 	token-ring-a-01 token-ring-a-02 \
 	bubble-ring-a-01 bubble-ring-a-02 \
 	deadlock-buf-a-01 \

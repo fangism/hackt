@@ -1,9 +1,10 @@
 # "random-timing-test-medium.chpsimrc"
-#	$Id: random-timing-test-medium.chpsimrc,v 1.1 2007/06/16 23:05:31 fang Exp $
+#	$Id: random-timing-test-medium.chpsimrc,v 1.1.40.1 2009/01/30 00:45:43 fang Exp $
 # common test script for stability testing, short version
 
 initialize
 timing random
 step 100000
 assert-queue
+autosave on
 

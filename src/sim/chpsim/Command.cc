@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.17.2.1 2009/01/27 22:16:38 fang Exp $
+	$Id: Command.cc,v 1.17.2.2 2009/01/30 00:44:52 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1274,6 +1274,9 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Save, CHPSIM::tracing)
 @deffn Command load ckpt
 Restores the simulator state (variables and events) from a checkpoint
 file @var{ckpt}.  
+Loading a checkpoint will not overwrite the current status of
+the auto-save file, the previous autosave command will keep effect. 
+Loading a checkpoint, however, will close any open tracing streams.  
 @end deffn
 @end texinfo
 ***/
@@ -1283,9 +1286,13 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::tracing)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/autosave.texi
-@deffn Command autosave [on|off]
+@deffn Command autosave [on|off [file]]
 Automatically save checkpoint upon end of simulation, 
 regardless of exit status.
+The @command{reset} command will turn off auto-save;
+to re-enable it with the same file name, just @kbd{autosave on}.
+The @option{-a} command line option is another way of enabling and specifying 
+the autosave checkpoint name.  
 @end deffn
 @end texinfo
 ***/
@@ -2730,6 +2737,10 @@ NoCause::usage(ostream& o) {
 @deffn Command trace file
 Record events to tracefile @var{file}.  
 Overwrites @var{file} if it already exists.  
+A trace stream is automatically closed when the @command{initialize}
+or @command{reset} commands are invoked.  
+See the @option{-r} option for starting up the simulator
+with a newly opened trace stream.
 @end deffn
 @end texinfo
 ***/

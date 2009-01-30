@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.20.2.1 2009/01/29 21:45:45 fang Exp $
+	$Id: prsim.cc,v 1.20.2.2 2009/01/30 00:44:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -431,6 +431,8 @@ For more details, @xref{Optimization Flags}.
 @cindex recording trace
 Startup the simulation already recording a trace file of every event.  
 Trace file is automatically close when simulation exits.  
+This is equivalent issuing @command{trace} command at the beginning
+of a simulation session.
 @end defopt
 @end texinfo
 ***/

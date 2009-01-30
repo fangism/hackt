@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.34.2.1 2009/01/27 22:16:43 fang Exp $
+	$Id: Command-prsim.cc,v 1.34.2.2 2009/01/30 00:44:54 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1367,6 +1367,9 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Save, PRSIM::tracing)
 @texinfo cmd/load.texi
 @deffn Command load ckpt
 Loads a @command{hacprsim} checkpoint file into the simulator state.
+Loading a checkpoint will not overwrite the current status of
+the auto-save file, the previous autosave command will keep effect.  
+Loading a checkpoint, however, will close any open tracing streams.  
 @end deffn
 @end texinfo
 ***/
@@ -1376,9 +1379,13 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Load, PRSIM::tracing)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/autosave.texi
-@deffn Command autosave [on|off]
+@deffn Command autosave [on|off [file]]
 Automatically save checkpoint upon end of simulation, 
 regardless of exit status.
+The @command{reset} command will turn off auto-save;
+to re-enable it with the same file name, just @kbd{autosave on}.
+The @option{-a} command line option is another way of enabling and specifying 
+the autosave checkpoint name.  
 @end deffn
 @end texinfo
 ***/
@@ -5596,6 +5603,10 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert",
 @deffn Command trace file
 Record events to tracefile @var{file}.  
 Overwrites @var{file} if it already exists.  
+A trace stream is automatically closed when the @command{initialize}
+or @command{reset} commands are invoked.  
+See the @option{-r} option for starting up the simulator
+with a newly opened trace stream.
 @end deffn
 @end texinfo
 ***/

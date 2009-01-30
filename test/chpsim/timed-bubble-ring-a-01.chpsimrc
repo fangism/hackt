@@ -1,9 +1,9 @@
 # "timed-bubble-ring-a-01.chpsimrc"
-#	$Id: timed-bubble-ring-a-01.chpsimrc,v 1.2 2007/05/04 03:38:41 fang Exp $
+#	$Id: timed-bubble-ring-a-01.chpsimrc,v 1.2.44.1 2009/01/30 00:45:50 fang Exp $
 # @haco@ timed-bubble-ring-a.haco-a
 
 timing per-event
-trace timed-bubble-ring-a-01.chpsimtrace
+# trace timed-bubble-ring-a-01.chpsimtrace
 step 100
 trace-close
 trace-dump timed-bubble-ring-a-01.chpsimtrace

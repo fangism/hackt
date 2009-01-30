@@ -3,9 +3,9 @@
 ;; "select-nested-loop-b-03.hacchpsimscm"
 ;; copy-modified from "select-nested-loop-a-08.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: select-nested-loop-b-08.hacchpsimscm,v 1.1 2007/06/04 22:44:39 fang Exp $
+;;	$Id: select-nested-loop-b-08.hacchpsimscm,v 1.1.44.1 2009/01/30 00:45:47 fang Exp $
 ;; @haco@ select-nested-loop-b.haco-a
-;; @chpsimtrace select-nested-loop-b-03.chpsimtrace
+;; @chpsimtrace@ select-nested-loop-b-03.chpsimtrace
 
 ; (use-modules (hackt chpsim-primitives))
 (use-modules (hackt chpsim-trace))

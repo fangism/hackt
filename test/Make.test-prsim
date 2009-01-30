@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.16.2.3 2009/01/29 21:45:52 fang Exp $
+#	$Id: Make.test-prsim,v 1.16.2.4 2009/01/30 00:44:58 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -425,8 +425,7 @@ PRSIMOPT_FLAG = -O1
 	@obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-err$$//g'` ; \
 	trace=`$(ECHO) $$ckpt | $(SED) 's/ckpt-O1$$/trace-O1/g'` ; \
-	$(PRSIMRC_AUTOTRACE_DISABLE_HOOK) \
-	rm -f $$ckpt $$trace ; \
+	$(RM) $$ckpt $$trace ; \
 	autotrace=1 ; \
 	$(PRSIMRC_AUTOTRACE_DISABLE_HOOK) \
 	if test "$$autotrace" = 1 ; then traceflag="-r $$trace" ; fi ; \

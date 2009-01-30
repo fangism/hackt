@@ -1,10 +1,10 @@
 # "bool-merge-alternator-a-01.chpsimrc"
-#	$Id: bool-merge-alternator-a-01.chpsimrc,v 1.1 2007/05/26 05:34:23 fang Exp $
+#	$Id: bool-merge-alternator-a-01.chpsimrc,v 1.1.44.1 2009/01/30 00:45:07 fang Exp $
 # @haco@ bool-merge-alternator-a.haco-a
 
 # watchall-events
 timing per-event
-trace bool-merge-alternator-a-01.chpsimtrace
+# trace bool-merge-alternator-a-01.chpsimtrace
 step 100
 trace-close
 trace-dump bool-merge-alternator-a-01.chpsimtrace

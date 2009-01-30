@@ -1,5 +1,5 @@
 # "do-while-countdown-05-break.chpsimrc"
-#	$Id: do-while-countdown-05-break.chpsimrc,v 1.2 2007/02/26 22:01:38 fang Exp $
+#	$Id: do-while-countdown-05-break.chpsimrc,v 1.2.52.1 2009/01/30 00:45:40 fang Exp $
 # @haco@ do-while-countdown.haco-a
 
 
@@ -54,4 +54,5 @@ unbreak-event 2
 show-event-breaks
 show-event-watches
 
+autosave on
 

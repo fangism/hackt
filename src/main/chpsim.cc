@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.18.2.1 2009/01/29 21:45:44 fang Exp $
+	$Id: chpsim.cc,v 1.18.2.2 2009/01/30 00:44:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -413,6 +413,8 @@ For more on building and loading shared-libraries, @xref{Extending simulation}.
 @cindex recording trace
 Startup the simulation already recording a trace file of every event.  
 Trace file is automatically close when simulation exits.  
+This is equivalent issuing @command{trace} command at the beginning
+of a simulation session.
 @end defopt
 @end texinfo
 ***/

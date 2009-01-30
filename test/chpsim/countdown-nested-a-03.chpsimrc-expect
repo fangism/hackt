@@ -1,5 +1,4 @@
 null-event-delay = 0
-Writing simulation trace to "countdown-nested-a-03.chpsimtrace".
 Trace file contents: 1 epochs.
 		start	start	file	chunk
 	epoch	index	time	offset	size

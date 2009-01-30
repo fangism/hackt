@@ -1,12 +1,12 @@
 # "bool-and-test-b-02.chpsimrc"
-#	$Id: bool-and-test-b-02-trace.chpsimrc,v 1.2 2007/02/26 22:01:12 fang Exp $
+#	$Id: bool-and-test-b-02.chpsimrc,v 1.1.2.1 2009/01/30 00:45:07 fang Exp $
 # @haco@ bool-and-test-b.haco-a
 
 
-trace bool-and-test-b-02.chpsimtrace
+# trace bool-and-test-b-02.chpsimtrace
 source bool-and-test-b-01.chpsimrc
 trace-close
 trace-dump bool-and-test-b-02.chpsimtrace
-!rm bool-and-test-b-02.chpsimtrace
+# !rm bool-and-test-b-02.chpsimtrace
 echo note the critical path through the rate-limiting channel, A[3]
 
