@@ -1,0 +1,11 @@
+# "bitrouter-seq-test-a-02-trace.chpsimrc"
+#	$Id: bitrouter-seq-test-a-02.chpsimrc,v 1.1.2.1 2009/01/30 19:24:21 fang Exp $
+# @haco@ bitrouter-seq-test-a-02.haco-a
+# @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
+# @deps@ $(top_builddir)/lib/stdchpfn.la
+
+# timing after
+# trace bitrouter-seq-test-a-02.chpsimtrace
+source bitrouter-test-template.chpsimrc
+# trace-close
+

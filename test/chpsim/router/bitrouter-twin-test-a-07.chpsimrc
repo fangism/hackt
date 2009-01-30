@@ -1,0 +1,11 @@
+# "bitrouter-twin-test-a-07-trace.chpsimrc"
+#	$Id: bitrouter-twin-test-a-07.chpsimrc,v 1.1.2.1 2009/01/30 19:24:32 fang Exp $
+# @haco@ bitrouter-twin-test-a-07.haco-a
+# @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
+# @deps@ $(top_builddir)/lib/stdchpfn.la
+
+# timing after
+# trace bitrouter-twin-test-a-07.chpsimtrace
+source bitrouter-test-template.chpsimrc
+# trace-close
+
