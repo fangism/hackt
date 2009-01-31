@@ -5,6 +5,18 @@
 
 2009-01-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-90-prsim-12-09:
+	  prsim trace files now contain initial state and final state
+		checkpoints, just array of node values.
+		This is needed in case tracing starts with non-X values.
+		The final state just makes it easier to play the simulation
+		in reverse without additional work.
+		Tests updated accordingly.  
+	  Idea: could intersperse checkpoints periodically for 
+		random jumps in trace history.
+	  Closing branch, leave trace compaction for later.
+
+
 	* HACKT-00-01-04-main-00-82-90-prsim-12-08:
 	  No source revision, test infrastructure updates, and added
 		a ton of trace dump tests to regression suite.

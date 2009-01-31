@@ -1,6 +1,6 @@
 /**
 	\file "sim/trace_common.h"
-	$Id: trace_common.h,v 1.1.2.5 2009/01/28 03:05:30 fang Exp $
+	$Id: trace_common.h,v 1.1.2.6 2009/01/31 04:46:07 fang Exp $
 	Generic simulation execution trace structures.  
  */
 
@@ -340,12 +340,14 @@ protected:
 		Nothing is actually written to this file until
 		finish() is called.  
 	 */
+private:
 	excl_ptr<ofstream>			header_ostream;
 	/**
 		Table of contents.  
 		This is the first section written to the trace file
 		that is a directory for the entire trace file.
 	 */
+protected:
 	trace_file_contents			contents;
 	/**
 		The cumulative size of the body of the trace-file.  

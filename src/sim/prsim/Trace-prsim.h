@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Trace-prsim.h"
-	$Id: Trace-prsim.h,v 1.1.2.3 2009/01/28 03:05:36 fang Exp $
+	$Id: Trace-prsim.h,v 1.1.2.4 2009/01/31 04:46:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_TRACE_PRSIM_H__
@@ -12,6 +12,7 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 class State;
+class NodeState;
 
 /***
 Challenges:
@@ -138,17 +139,24 @@ public:
 	Trace file manager for prsim.
  */
 class TraceManager : public trace_manager_base {
+	typedef	vector<NodeState>			checkpoint_type;
+	typedef	state_trace_point::value_type		node_value_type;
+	typedef	vector<node_value_type>		node_value_array;
 private:
 	/**
 		Current record of recent history.  
 	 */
 	trace_chunk				current_chunk;
+	/**
+		Current snapshot of the current state of all nodes.  
+	 */
+	const checkpoint_type&			checkpoint;
 private:
 	// for temporary construction only
-	TraceManager();
-public:
 	explicit
-	TraceManager(const string&);
+	TraceManager(const checkpoint_type&);
+public:
+	TraceManager(const string&, const checkpoint_type&);
 
 	// warn if trace file is not finished!
 	~TraceManager();
@@ -176,6 +184,16 @@ public:
 	current_event_count(void) const {
 		return current_chunk.event_count();
 	}
+
+private:
+	void
+	__write_checkpoint(void);
+
+	void
+	__force_flush(void);
+
+	ostream&
+	dump_checkpoint(istream&, ostream&);
 
 public:
 	// text-dump?

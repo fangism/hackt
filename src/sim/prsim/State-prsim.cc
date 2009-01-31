@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.42.2.4 2009/01/29 21:45:49 fang Exp $
+	$Id: State-prsim.cc,v 1.42.2.5 2009/01/31 04:46:09 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -7691,7 +7691,8 @@ State::open_trace(const string& tfn) {
 cerr << "Error: trace stream already open.  (command ignored)" << endl;
 		return true;
 	}
-	trace_manager = excl_ptr<TraceManager>(new TraceManager(tfn));
+	trace_manager =
+		excl_ptr<TraceManager>(new TraceManager(tfn, node_pool));
 	NEVER_NULL(trace_manager);
 	if (trace_manager->good()) {
 		flags |= FLAG_TRACE_ON;

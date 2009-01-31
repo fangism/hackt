@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Trace-prsim.cc"
-	$Id: Trace-prsim.cc,v 1.1.2.3 2009/01/28 03:05:36 fang Exp $
+	$Id: Trace-prsim.cc,v 1.1.2.4 2009/01/31 04:46:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -19,6 +19,11 @@
 #include "util/libc_temp.h"	// for temp file functions
 #include "util/IO_utils.tcc"	// .tcc?
 #include "util/binders.h"
+
+/**
+	Define to 1 to include initial and final checkpoints.
+ */
+#define	TRACE_INITIAL_FINAL_STATES		1
 
 namespace HAC {
 namespace SIM {
@@ -169,9 +174,10 @@ trace_chunk::dump(ostream& o, const trace_index_type previous_events,
 /**
 	Private default constructor, only used to construct a temporary.  
  */
-TraceManager::TraceManager() : 
+TraceManager::TraceManager(const checkpoint_type& np) : 
 		trace_manager_base(), 
-		current_chunk() {
+		current_chunk(), 
+		checkpoint(np) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -179,10 +185,15 @@ TraceManager::TraceManager() :
 	Opens the requested file streams in binary mode for writing.  
 	Caller should check good() immediately after construction.  
  */
-TraceManager::TraceManager(const string& fn) : 
+TraceManager::TraceManager(const string& fn, const checkpoint_type& np) : 
 		trace_manager_base(fn), 
-		current_chunk() {
+		current_chunk(), 
+		checkpoint(np) {
 if (good()) {
+#if TRACE_INITIAL_FINAL_STATES
+	// write out initial state of all nodes
+	__write_checkpoint();
+#endif
 	// reserve the 0th event as a NULL event?
 	const trace_index_type i = push_back_event(state_trace_point(
 		delay_policy<trace_time_type>::zero, 
@@ -196,7 +207,35 @@ if (good()) {
 TraceManager::~TraceManager() {
 if (good()) {
 	flush();
+#if TRACE_INITIAL_FINAL_STATES
+	// write out final state of all nodes
+	__write_checkpoint();
+#endif
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Write out a checkpoint for the value of all nodes. 
+	\pre was just flushed, start of brand new section.  
+ */
+void
+TraceManager::__write_checkpoint(void) {
+	const streampos old_size = trace_ostream->tellp();
+	node_value_array init(checkpoint.size());
+	transform(checkpoint.begin(), checkpoint.end(), init.begin(), 
+		mem_fun_ref(&NodeState::current_value));
+	util::write_sequence(*trace_ostream, init);
+	// force flush out write
+	trace_ostream->flush();
+	trace_payload_size = trace_ostream->tellp();
+	const size_t prev = previous_events;
+	contents.push_back(trace_file_contents::entry(prev, 
+		delay_policy<trace_time_type>::zero, 
+		old_size, trace_payload_size -old_size));
+	// restart chunk, recycling memory (placement dtor and ctor)
+	current_chunk.~trace_chunk();
+	new (&current_chunk) trace_chunk();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -215,6 +254,17 @@ TraceManager::flush(void) {
 	// INVARIANT, there must be at least ONE event in the trace
 	// otherwise, this flush is just wasted (no-op)
 if (current_chunk.event_count()) {
+	__force_flush();
+}
+	// else there is nothing to flush
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Write out a section, even if it is empty, no events transpired.
+ */
+void
+TraceManager::__force_flush(void) {
 	if (notify_flush) {
 		cout << "trace manager: flushing out another epoch of trace."
 			<< endl;
@@ -235,7 +285,28 @@ if (current_chunk.event_count()) {
 	current_chunk.~trace_chunk();
 	new (&current_chunk) trace_chunk();
 }
-	// else there is nothing to flush
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+TraceManager::dump_checkpoint(istream& i, ostream& o) {
+	node_value_array init;
+	util::read_sequence_resize(i, init);
+	INVARIANT(init.size() == checkpoint.size());	// sanity check
+	std::ostream_iterator<char> osi(o, " ");
+	node_value_array::const_iterator ii(init.begin()), ie(init.end());
+	// wrap 40 per line:
+	static const int width = 40;
+	for ( ; ie -ii >= width; ii += width) {
+		transform(ii, ii +width, osi, 
+			&NodeState::translate_value_to_char);
+		o << endl;
+	}
+	if (ii != ie) {
+		transform(ii, ie, osi, 
+			&NodeState::translate_value_to_char);
+		o << endl;
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -267,7 +338,7 @@ TraceManager::text_dump(ifstream& i, ostream& o, const State& s) {
 	INVARIANT(i.flags() & ios_base::binary);
 	INVARIANT(!(o.flags() & ios_base::binary));
 #endif
-	TraceManager tm;
+	TraceManager tm(s.get_node_pool());
 	// reverse the process of ::finish()
 	tm.contents.read(i);
 if (i) {
@@ -281,7 +352,17 @@ if (i) {
 	size_t j = 0;
 	trace_file_contents::const_iterator
 		ci(tm.contents.begin()), ce(tm.contents.end());
-	for ( ; ci!=ce; ++ci, ++j) {
+#if TRACE_INITIAL_FINAL_STATES
+	const trace_file_contents::const_iterator
+		cc(ce -1);	// final checkpoint
+	// ci points to initial value checkpoint
+	o << "Epoch " << j << ": (initial values)" << endl;
+	tm.dump_checkpoint(i, o);
+	++ci; ++j;
+#else
+	const trace_file_contents::const_iterator cc(ce);
+#endif
+	for ( ; ci!=cc; ++ci, ++j) {
 		o << "Epoch " << j << ':' << endl;
 #if ENABLE_STACKTRACE
 		const streampos head = i.tellg();
@@ -300,6 +381,11 @@ if (i) {
 			break;
 		}
 	}
+#if TRACE_INITIAL_FINAL_STATES
+	// ci points to end checkpoint section
+	o << "Epoch " << j << ": (final values)" << endl;
+	tm.dump_checkpoint(i, o);
+#endif
 } else {
 	cerr << "Error encountered in reading trace header!" << endl;
 }

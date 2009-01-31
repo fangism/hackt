@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.22.2.3 2009/01/29 21:45:50 fang Exp $
+	$Id: State-prsim.h,v 1.22.2.4 2009/01/31 04:46:10 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1017,6 +1017,9 @@ public:
 	void
 	check_node(const node_index_type) const;
 #endif
+
+	const node_pool_type&
+	get_node_pool(void) const { return node_pool; }
 
 	const node_type&
 	get_node(const node_index_type) const;
