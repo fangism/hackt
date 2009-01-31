@@ -1,0 +1,20 @@
+Trace file contents: 1 epochs.
+		start	start	file	chunk
+	epoch	index	time	offset	size
+	0	0	0	#SIZE#	#SIZE#
+Epoch 0:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	0	0	0	0	0	X	(null)
+	1	0	0	0	1	1	(t:1)
+	2	10	1	1	2	0	[after 10]	t -> f-
+	3	10	0	0	1	0	(t:0)
+	4	20	2	3	2	1	[after 10]	~t -> f+
+	5	20	0	0	1	X	(t:X)
+	6	30	1	5	2	X	[after 10]	t -> f-
+	7	30	0	0	1	0	(t:0)
+	8	40	2	7	2	1	[after 10]	~t -> f+
+	9	40	0	0	1	1	(t:1)
+	10	50	1	9	2	0	[after 10]	t -> f-
+	11	50	0	0	1	X	(t:X)
+	12	60	2	11	2	X	[after 10]	~t -> f+

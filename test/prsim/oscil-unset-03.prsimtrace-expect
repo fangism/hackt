@@ -1,0 +1,41 @@
+Trace file contents: 1 epochs.
+		start	start	file	chunk
+	epoch	index	time	offset	size
+	0	0	0	#SIZE#	#SIZE#
+Epoch 0:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	0	0	0	0	0	X	(null)
+	1	0	0	0	14	0	(_Reset:0)
+	2	10	28	1	1	1	[after 10]	~R.x[12] | ~_Reset -> R.x[0]+
+	3	20	1	2	2	0	[after 10]	R.x[0] -> R.x[1]-
+	4	30	4	3	3	1	[after 10]	~R.x[1] -> R.x[2]+
+	5	40	5	4	4	0	[after 10]	R.x[2] -> R.x[3]-
+	6	50	8	5	5	1	[after 10]	~R.x[3] -> R.x[4]+
+	7	60	9	6	6	0	[after 10]	R.x[4] -> R.x[5]-
+	8	70	12	7	7	1	[after 10]	~R.x[5] -> R.x[6]+
+	9	80	13	8	8	0	[after 10]	R.x[6] -> R.x[7]-
+	10	90	16	9	9	1	[after 10]	~R.x[7] -> R.x[8]+
+	11	100	17	10	10	0	[after 10]	R.x[8] -> R.x[9]-
+	12	110	20	11	11	1	[after 10]	~R.x[9] -> R.x[10]+
+	13	120	21	12	12	0	[after 10]	R.x[10] -> R.x[11]-
+	14	130	24	13	13	1	[after 10]	~R.x[11] -> R.x[12]+
+	15	130	0	0	14	1	(_Reset:1)
+	16	140	25	15	1	0	[after 10]	R.x[12] & _Reset -> R.x[0]-
+	17	150	2	16	2	1	[after 10]	~R.x[0] -> R.x[1]+
+	18	150	0	0	3	1	(R.x[2]:1)
+	19	160	0	0	3	0	(R.x[2]:0)
+	20	170	6	19	4	1	[after 10]	~R.x[2] -> R.x[3]+
+	21	180	7	20	5	0	[after 10]	R.x[3] -> R.x[4]-
+	22	190	10	21	6	1	[after 10]	~R.x[4] -> R.x[5]+
+	23	200	11	22	7	0	[after 10]	R.x[5] -> R.x[6]-
+	24	210	14	23	8	1	[after 10]	~R.x[6] -> R.x[7]+
+	25	220	15	24	9	0	[after 10]	R.x[7] -> R.x[8]-
+	26	230	18	25	10	1	[after 10]	~R.x[8] -> R.x[9]+
+	27	240	19	26	11	0	[after 10]	R.x[9] -> R.x[10]-
+	28	250	22	27	12	1	[after 10]	~R.x[10] -> R.x[11]+
+	29	260	23	28	13	0	[after 10]	R.x[11] -> R.x[12]-
+	30	270	28	29	1	1	[after 10]	~R.x[12] | ~_Reset -> R.x[0]+
+	31	280	1	30	2	0	[after 10]	R.x[0] -> R.x[1]-
+	32	290	4	31	3	1	[after 10]	~R.x[1] -> R.x[2]+
+	33	300	5	32	4	0	[after 10]	R.x[2] -> R.x[3]-

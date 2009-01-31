@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.3 2009/01/29 21:45:57 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.4 2009/01/31 00:45:26 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -232,6 +232,47 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	after_min_max-01 after_min_max-02 after_min_max-03 \
 	memstats32-inv memstats64-inv
 
+# subset of prsimrc test that we wish to compare traces against regressions
+HACKT_PRSIMTRACE_TEST_SUBJECTS = \
+	after-celem-01 after-celem-02 \
+	after-override-01 \
+	bitline-a-01 bitline-a-02 \
+	bitline-b-01 bitline-b-02 \
+	channel-test-a-04 channel-test-a-05 channel-test-a-06 \
+	channel-test-a-15 channel-test-a-16 \
+	channel-test-a-17 channel-test-a-18 \
+	channel-test-a-30 channel-test-a-32 \
+	channel-test-a-34 channel-test-a-36 \
+	channel-test-b-02 channel-test-b-05 \
+	channel-test-b-09 channel-test-b-11 \
+	channel-test-b-17 channel-test-b-18 \
+	channel-test-b-22 channel-test-b-24 \
+	channel-test-b-25 channel-test-b-28 \
+	channel-test-d-04 channel-test-d-06 \
+	channel-test-d-30 channel-test-d-34 \
+	check-excl-fail-02 check-excl-fail-03 \
+	check-excl-rings-02 check-excl-rings-05 \
+	check-excl-rings-chan-02 check-excl-rings-chan-05 \
+	cross-coupled-01 cross-coupled-weak-01 \
+	excl-rings-02 excl-rings-03 \
+	interference-01 interference-02 interference-03 interference-04 \
+	interference-05 interference-06 interference-07 interference-08 \
+	interference-09 interference-10 \
+	interference-a-01 interference-a-02 \
+	interference-b-01 \
+	inv-00 \
+	oscil-unset-01 oscil-unset-03 \
+	precharge-c-01 precharge-d-01 precharge-f-01 \
+	SRAM-a-01 SRAM-a-02 SRAM-a-03 SRAM-a-04 SRAM-a-05 SRAM-a-06 \
+	SRAM-b-01 \
+	SRAM-c-01 \
+	SRAM-d-01 SRAM-d-02 \
+	stuck-bug-a-01 \
+	unstable-a-01 unstable-b-01
+
+# prsimtrace test crashes: FIXME!!!
+# logic-defs-a-01 logic-defs-b-01
+
 # override defaults for non-matched architectures
 if ABI_ILP32
 memstats64-inv.prsimtest: memstats64-inv.prsimrc
@@ -241,7 +282,9 @@ memstats32-inv.prsimtest: memstats32-inv.prsimrc
 	$(SKIP_TEST_SCRIPT)
 endif
 
-# interactive tests
+# interactive tests:
+# sometimes disabled because testing these non-interactively
+# doesn't always work as expected on all systems
 if INTERACTIVE_TESTS
 else
 assert-fail-03.prsimrc-out: assert-fail-03.prsimrc

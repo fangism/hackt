@@ -1,0 +1,48 @@
+Trace file contents: 1 epochs.
+		start	start	file	chunk
+	epoch	index	time	offset	size
+	0	0	0	#SIZE#	#SIZE#
+Epoch 0:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	0	0	0	0	0	X	(null)
+	1	0	0	0	2	1	(x[0]:1)
+	2	0	0	0	3	1	(x[1]:1)
+	3	0	0	0	4	1	(x[2]:1)
+	4	0	0	0	5	1	(x[3]:1)
+	5	0	0	0	1	0	(en:0)
+	6	10	13	5	6	1	[after 10]	~en -> _o+
+	7	10	0	0	1	X	(en:X)
+	8	20	10	7	6	X	[after 10]	en & x[3] -> _o-
+	9	20	0	0	1	1	(en:1)
+	10	30	1	9	6	0	[after 10]	en & x[0] -> _o-
+	11	30	0	0	1	X	(en:X)
+	12	40	13	11	6	X	[after 10]	~en -> _o+
+	13	40	0	0	1	0	(en:0)
+	14	50	13	13	6	1	[after 10]	~en -> _o+
+	15	50	0	0	1	X	(en:X)
+	16	60	10	15	6	X	[after 10]	en & x[3] -> _o-
+	17	60	0	0	1	1	(en:1)
+	18	70	1	17	6	0	[after 10]	en & x[0] -> _o-
+	19	70	0	0	1	X	(en:X)
+	20	80	13	19	6	X	[after 10]	~en -> _o+
+	21	80	0	0	1	0	(en:0)
+	22	90	13	21	6	1	[after 10]	~en -> _o+
+	23	90	0	0	1	X	(en:X)
+	24	100	7	23	6	X	[after 10]	en & x[2] -> _o-
+	25	100	0	0	1	1	(en:1)
+	26	110	1	25	6	0	[after 10]	en & x[0] -> _o-
+	27	110	0	0	1	X	(en:X)
+	28	120	13	27	6	X	[after 10]	~en -> _o+
+	29	120	0	0	1	0	(en:0)
+	30	130	13	29	6	1	[after 10]	~en -> _o+
+	31	130	0	0	1	X	(en:X)
+	32	140	7	31	6	X	[after 10]	en & x[2] -> _o-
+	33	140	0	0	1	1	(en:1)
+	34	150	10	33	6	0	[after 10]	en & x[3] -> _o-
+	35	150	0	0	1	X	(en:X)
+	36	160	13	35	6	X	[after 10]	~en -> _o+
+	37	160	0	0	1	0	(en:0)
+	38	170	13	37	6	1	[after 10]	~en -> _o+
+	39	170	0	0	1	X	(en:X)
+	40	180	4	39	6	X	[after 10]	en & x[1] -> _o-

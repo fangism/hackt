@@ -1,6 +1,12 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.86.6.3 2009/01/30 00:44:56 fang Exp $
+#	$Id: ChangeLog,v 1.86.6.4 2009/01/31 00:45:22 fang Exp $
 # ChangeLog for test directory.
+
+2009-01-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-08:
+	  Added prsimtrace dump test support with batch of test cases.
+
 
 2009-01-29	David Fang		<fangism@users.sourceforge.net>
 

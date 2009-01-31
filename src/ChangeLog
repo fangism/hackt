@@ -3,13 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-01-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-08:
+	  No source revision, test infrastructure updates, and added
+		a ton of trace dump tests to regression suite.
+		Found some crash issues with a few cornercases to fix.
+	  Next: store initial and final checkpoints in the trace file, 
+		because trace analysis and replay mechanisms need to
+		know boundary values.  
+	  TODO: possibly compact events' node index if deducible.
+
+
 2009-01-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-90-prsim-12-07:
 	  No real source revision, inline texinfo documentation added.
 	  Tests: chpsim tests updated to take advantage of automatic
 		tracking and checkpointing.  
-	  Branch nearly done, little more prism-trace testing to go.
+	  Branch nearly done, little more prsim-trace testing to go.
 
 
 	* HACKT-00-01-04-main-00-82-90-prsim-12-06:
