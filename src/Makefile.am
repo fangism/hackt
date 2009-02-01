@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.209 2008/12/18 00:25:50 fang Exp $
+#	$Id: Makefile.am,v 1.210 2009/02/01 07:21:16 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -922,6 +922,7 @@ SIM_CC_FILES = \
 	sim/random_time.cc \
 	sim/state_base.cc \
 	sim/signal_handler.cc \
+	sim/trace_common.cc \
 	sim/prsim/Channel-prsim.cc \
 	sim/prsim/Command-prsim.cc \
 	sim/prsim/Command-prsim-export.cc \
@@ -931,6 +932,7 @@ SIM_CC_FILES = \
 	sim/prsim/ExprAlloc.cc \
 	sim/prsim/Event-prsim.cc \
 	sim/prsim/State-prsim.cc \
+	sim/prsim/Trace-prsim.cc \
 	sim/chpsim/nonmeta_context.cc \
 	sim/chpsim/Command.cc \
 	sim/chpsim/Dependence.cc \

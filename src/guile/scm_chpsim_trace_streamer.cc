@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.cc"
-	$Id: scm_chpsim_trace_streamer.cc,v 1.4 2008/11/23 17:54:04 fang Exp $
+	$Id: scm_chpsim_trace_streamer.cc,v 1.5 2009/02/01 07:21:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,7 @@
 // #include <sstream>
 #include "util/guile_STL.h"
 #include "guile/hackt-documentation.h"
+#include "guile/chpsim-wrap.h"			// for chpsim_state
 #include "util/for_all.h"
 #include "util/caller.h"
 #include "util/memory/excl_ptr.h"
@@ -364,7 +365,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_dump_trace, FUNC_NAME, 1, 0, 0, (SCM s_str),
 	scm_assert_string(s_str, FUNC_NAME, 1);
 	const char* tf = NULL;
 	extract_scm(s_str, tf);	// check error?
-	if (TraceManager::text_dump(tf, cout)) {
+	if (TraceManager::text_dump(tf, cout, *chpsim_state)) {
 		// scm_error_misc()?
 		cerr << "Error opening trace file: " << tf << endl;
 	}

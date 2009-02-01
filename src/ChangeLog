@@ -3,6 +3,98 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-01-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-92-merged-prsim-12-09:
+	  Merged prsim tracing branch.  We can now record trace files for
+		every event in hacprsim, to be used for further analysis.
+		minor fixes to autosave, improved documentation, new
+		test support for trace files.  
+		prsim, chpsim: new -r option to startup with new trace file.
+	  Next branch for prsim will be for guile API development.
+
+
+2009-01-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-09:
+	  prsim trace files now contain initial state and final state
+		checkpoints, just array of node values.
+		This is needed in case tracing starts with non-X values.
+		The final state just makes it easier to play the simulation
+		in reverse without additional work.
+		Tests updated accordingly.  
+	  Idea: could intersperse checkpoints periodically for 
+		random jumps in trace history.
+	  Closing branch, leave trace compaction for later.
+
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-08:
+	  No source revision, test infrastructure updates, and added
+		a ton of trace dump tests to regression suite.
+		Found some crash issues with a few cornercases to fix.
+	  Next: store initial and final checkpoints in the trace file, 
+		because trace analysis and replay mechanisms need to
+		know boundary values.  
+	  TODO: possibly compact events' node index if deducible.
+
+
+2009-01-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-07:
+	  No real source revision, inline texinfo documentation added.
+	  Tests: chpsim tests updated to take advantage of automatic
+		tracking and checkpointing.  
+	  Branch nearly done, little more prsim-trace testing to go.
+
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-06:
+	  chpsim, prsim: added -r file command-line option to automatically
+		save a trace file from startup (documented),
+		fixed -a (autosave) option to actually take effect.
+		warn if trying to open trace file for writing, when one
+			is already opened. 
+	  prsim: on initialize/reset, close trace stream.  
+		on exit, close trace stream before taking checkpoint.
+		When taking checkpoint, mask out autotrace info.
+		When loading checkpoint, preserve current autosave, 
+			and close opened trace stream.
+		no longer save the name of autocheckpoint in checkpoint.
+	  See also test/ChangeLog.
+
+
+2009-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-05:
+	  By default, prsim trace dump always prints verbose information
+		in extra columns: expanded production rule or node name
+		if event was not due to a rule (user, or channel).  
+	  Trace now crams a node's old and new value into the node_value
+		field, which will come in handy for reverse playback!
+	  Next: attempt to deduce node and/or value from rule for
+		more compact storage.
+
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-04:
+	  Added prsim trace commands, preliminary testing looks reasonable.
+		Factored trace command code from sim/chpsim/Command.cc to 
+		sim/command_common.{tcc,h} for re-use.
+		Honor the trace-flush-interval value set by user.  
+		Documented.  
+	  Next: enhancements for human readability.
+
+
+2009-01-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-03:
+	  Completed draft of prsim trace-file generation code, 
+		yet untested, but regression free.
+		Event-prsim.h: extended cause_type to track the 
+			critical event trace index.
+		State-prsim.{h,cc}: pass around the new event_cause_type
+			containing critical trace index.  
+	  Next: adding interpreter commands and testing...
+
+
 2009-01-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-91:
@@ -12,6 +104,21 @@
 			after finalize_canonicalize(), needed one more
 			pass of update_direction_flags() for each alias.
 		Test cases added: parser/prs/iscomb-27*
+
+
+2009-01-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-02:
+	  Factored out reusable code to SIM::trace_manager_base class from 
+		SIM::CHPSIM::TraceManager.
+
+
+2009-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-01:
+	  This branch is for developing prsim trace file support.
+	  Initial revision: factored out some reusable code from
+		chpsim trace implementation into sim/trace_common.{h,cc}.
 
 
 2009-01-16	David Fang		<fangism@users.sourceforge.net>

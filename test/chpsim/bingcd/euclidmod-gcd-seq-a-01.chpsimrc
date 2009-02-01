@@ -1,7 +1,7 @@
 # "euclidmod-gcd-seq-a-01.chpsimrc"
 # @haco@ euclidmod-gcd-seq-a-01.haco-a
 
-trace euclidmod-gcd-seq-a-01.chpsimtrace
+# trace euclidmod-gcd-seq-a-01.chpsimtrace
 source gcd-cycle-template.chpsimrc
-trace-close
+# trace-close
 

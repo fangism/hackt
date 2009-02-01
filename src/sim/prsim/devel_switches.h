@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.12 2008/11/25 04:59:32 fang Exp $
+	$Id: devel_switches.h,v 1.13 2009/02/01 07:21:45 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -59,9 +59,12 @@
 	Define to 1 to enable tracing, recording event history.  
 	Application: post-mortem analysis, performance analysis, 
 	bug root-causing, possible rewinding (time machine!).
+	This could be a replacement for PRSIM_TRACE_CAUSE_TIME.
 	Goal: 1
+	Priorty: high
+	Status: just begun
  */
-#define	PRSIM_TRACE_GENERATION				0
+#define	PRSIM_TRACE_GENERATION				1
 
 /**
 	Define to 1 to support 'weak' flavored rules in prsim.

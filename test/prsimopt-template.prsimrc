@@ -1,6 +1,8 @@
 # "prsimopt-template.prsimrc"
-#	$Id: prsimopt-template.prsimrc,v 1.2 2006/11/12 05:58:17 fang Exp $
+#	$Id: prsimopt-template.prsimrc,v 1.3 2009/02/01 07:21:54 fang Exp $
+# This file is OBSOLETE, since we can pass auto-checkpointing on the command
 
+# autosave on CHECKPOINT
 source SOURCE
 save CHECKPOINT
 

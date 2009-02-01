@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.34 2009/01/15 18:36:14 fang Exp $
+	$Id: Command-prsim.cc,v 1.35 2009/02/01 07:21:36 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -30,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Command-prsim.h"
 #include "sim/prsim/Command-prsim-export.h"
 #include "sim/prsim/State-prsim.h"
+#include "sim/prsim/Trace-prsim.h"
 #include "sim/command_base.tcc"
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
@@ -88,6 +89,7 @@ static CommandCategory
 	channels("channels", "channel commands"),
 	info("info", "information about simulated circuit"),
 	view("view", "instance to watch"),
+	tracing("tracing", "trace and checkpoint commands"), 
 	modes("modes", "timing model, error handling");
 
 //=============================================================================
@@ -1358,30 +1360,37 @@ resume or replay a simulation later.
 @end texinfo
 ***/
 typedef	Save<State>				Save;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Save, PRSIM::simulation)
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Save, PRSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/load.texi
 @deffn Command load ckpt
 Loads a @command{hacprsim} checkpoint file into the simulator state.
+Loading a checkpoint will not overwrite the current status of
+the auto-save file, the previous autosave command will keep effect.  
+Loading a checkpoint, however, will close any open tracing streams.  
 @end deffn
 @end texinfo
 ***/
 typedef	Load<State>				Load;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Load, PRSIM::simulation)
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Load, PRSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/autosave.texi
-@deffn Command autosave [on|off]
+@deffn Command autosave [on|off [file]]
 Automatically save checkpoint upon end of simulation, 
 regardless of exit status.
+The @command{reset} command will turn off auto-save;
+to re-enable it with the same file name, just @kbd{autosave on}.
+The @option{-a} command line option is another way of enabling and specifying 
+the autosave checkpoint name.  
 @end deffn
 @end texinfo
 ***/
 typedef	AutoSave<State>				AutoSave;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AutoSave, PRSIM::simulation)
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AutoSave, PRSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -5589,8 +5598,82 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert",
 #endif
 
 //=============================================================================
-#undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS
+/***
+@texinfo cmd/trace.texi
+@deffn Command trace file
+Record events to tracefile @var{file}.  
+Overwrites @var{file} if it already exists.  
+A trace stream is automatically closed when the @command{initialize}
+or @command{reset} commands are invoked.  
+See the @option{-r} option for starting up the simulator
+with a newly opened trace stream.
+@end deffn
+@end texinfo
+***/
+typedef	Trace<State>				Trace;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Trace, PRSIM::tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-file.texi
+@deffn Command trace-file
+Print the name of the currently opened trace file.  
+@end deffn
+@end texinfo
+***/
+typedef	TraceFile<State>			TraceFile;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::TraceFile, PRSIM::tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-close.texi
+@deffn Command trace-close
+Finish writing the currently opened trace file by flushing out the last epoch
+and concatenating the header with the stream body.  
+Trace is automatically closed when the simulator exits.  
+@end deffn
+@end texinfo
+***/
+typedef	TraceClose<State>			TraceClose;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::TraceClose, PRSIM::tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-flush-notify.texi
+@deffn Command trace-flush-notify [0|1]
+Enable (1) or disable (0) notifications when trace epochs are flushed.  
+@end deffn
+@end texinfo
+***/
+typedef	TraceFlushNotify<State>			TraceFlushNotify;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::TraceFlushNotify, PRSIM::tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-flush-interval.texi
+@deffn Command trace-flush-interval steps
+If @var{steps} is given, set the size of each epoch according to the
+number of events executed, otherwise report the current epoch size.  
+This regulates the granularity of saving traces in a space-time tradeoff.  
+@end deffn
+@end texinfo
+***/
+typedef	TraceFlushInterval<State>		TraceFlushInterval;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::TraceFlushInterval, PRSIM::tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-dump.texi
+@deffn Command trace-dump file
+Produce textual dump of trace file contents in @var{file}.
+@end deffn
+@end texinfo
+***/
+typedef	TraceDump<State>			TraceDump;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::TraceDump, PRSIM::tracing)
+
 //=============================================================================
+#undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS
 }	// end namespace PRSIM
 }	// end namespace SIM
 }	// end namespace HAC

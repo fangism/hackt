@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.12 2008/12/18 20:59:59 fang Exp $
+	$Id: command_common.tcc,v 1.13 2009/02/01 07:21:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -19,6 +19,7 @@
 #include "sim/command_base.h"
 #include "sim/command_category.h"
 #include "sim/command_registry.h"
+#include "sim/trace_common.h"		// for trace_manager_base
 #include "parser/instref.h"
 #include "Object/expr/dlfunction.h"
 #include "common/TODO.h"
@@ -1112,6 +1113,199 @@ void
 DLFuncs<State>::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+// common trace file commands
+
+INITIALIZE_COMMON_COMMAND_CLASS(Trace, "trace", 
+	"record trace of all events to file")
+
+template <class State>
+int
+Trace<State>::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (s.open_trace(a.back())) {
+		// confirm message
+		cout << "Writing simulation trace to \"" << a.back()
+			<< "\"." << endl;
+		return command_type::NORMAL;
+	} else {
+		cout << "Error opening file \"" << a.back() <<
+			"\" for trace recording." << endl;
+		return command_type::BADARG;
+	}
+}
+}
+
+template <class State>
+void
+Trace<State>::usage(ostream& o) {
+	o << name << " <file>" << endl;
+	o << "Records all data and events to file for later analysis.\n"
+"Trace-file is completed with a \'trace-close\' command, or automatically\n"
+"upon termination of ths simulation." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(TraceFile, "trace-file", 
+	"show the name of the active trace file")
+
+template <class State>
+int
+TraceFile<State>::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (s.is_tracing()) {
+		cout << "Active trace file: " <<
+			s.get_trace_manager()->get_trace_name() << endl;
+	} else {
+		cout << "No active trace file." << endl;
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+TraceFile<State>::usage(ostream& o) {
+	o << name << endl;
+	o << "Prints the name of the active trace file, if applicable." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(TraceClose, "trace-close", 
+	"close the active trace file")
+
+template <class State>
+int
+TraceClose<State>::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	s.close_trace();
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+TraceClose<State>::usage(ostream& o) {
+	o << name << endl;
+	o << "Stops the active trace and writes it out to file." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(TraceFlushNotify, 
+	"trace-flush-notify", 
+	"enable/disable trace flush notifications (debug)")
+
+template <class State>
+int
+TraceFlushNotify<State>::main(State&, const string_list& a) {
+switch (a.size()) {
+case 1:
+	cout << "Trace flush notification is ";
+	if (trace_manager_base::notify_flush) {
+		cout << "enabled." << endl;
+	} else {
+		cout << "disabled." << endl;
+	}
+	return command_type::NORMAL;
+case 2:
+	size_t i;
+	if (string_to_num(a.back(), i)) {
+		cerr << "Error parsing numeric argument." << endl;
+		return command_type::BADARG;
+	}
+	trace_manager_base::notify_flush = i;
+	return command_type::NORMAL;
+default:
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+}
+
+template <class State>
+void
+TraceFlushNotify<State>::usage(ostream& o) {
+	o << name << " [0|1]" << endl;
+	o << 
+"With argument, enables (1) or disables (0) trace flush notifications\n"
+"Without argument, reports current policy." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(TraceFlushInterval, 
+	"trace-flush-interval", 
+	"set/get the current trace chunk granularity")
+
+template <class State>
+int
+TraceFlushInterval<State>::main(State& s, const string_list& a) {
+switch (a.size()) {
+case 1:
+	cout << "trace flush interval (events): " <<
+		s.get_trace_flush_interval() << endl;
+	break;
+case 2:
+	size_t i;
+	if (string_to_num(a.back(), i)) {
+		cerr << "Error parsing numeric interval argument." << endl;
+		usage(cerr << "usage: ");
+		return command_type::BADARG;
+	}
+	s.set_trace_flush_interval(i);
+	break;
+default:
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+	return command_type::NORMAL;
+}
+
+template <class State>
+void
+TraceFlushInterval<State>::usage(ostream& o) {
+	o << name << " [interval]" << endl;
+	o <<
+"If argument is passed, then set the trace flush interval to it.\n"
+"Otherwise, just report the current trace flush interval.\n"
+"The interval is counted in number of events that execute." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(TraceDump, 
+	"trace-dump", 
+	"spill a human-readable (?) text dump of a trace file")
+
+template <class State>
+int
+TraceDump<State>::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (State::trace_manager_type::text_dump(a.back(), cout, s)) {
+		cerr << "Error opening trace file: " << a.back() << endl;
+		return command_type::BADARG;
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+TraceDump<State>::usage(ostream& o) {
+	o << name << " <tracefile>" << endl;
+	o << "Dumps contents of a trace file to stdout.\n"
+"Future versions may require a proper object file to be attached." << endl;
 }
 
 //=============================================================================

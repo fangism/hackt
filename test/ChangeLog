@@ -1,6 +1,38 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.86 2008/07/30 05:26:52 fang Exp $
+#	$Id: ChangeLog,v 1.87 2009/02/01 07:21:47 fang Exp $
 # ChangeLog for test directory.
+
+2009-01-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-08:
+	  Added prsimtrace dump test support with batch of test cases.
+
+
+2009-01-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-07:
+	  chpsim tests: all automatically save trace now (+checkpoint), 
+		many tests renamed for convenience.
+	  Many chpsim tests updated trivially.  
+
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-06:
+	  Make.test-prsim and Make.test-chpsim:
+	  Added new SUFFIXES: .prsimtrace .prsimtrace-O1
+	  TODO: added prsimtrace consistency tests (-O0 vs -O1)
+	  .prsimrc-out: now always save trace, autosave checkpoint is now
+		passed on command-line instead of through template script.
+	  prsimrcout-autodepend: check for trace...
+	  TODO: add autotracing to all chpsim (pass) tests.
+	  FIX: added some missing suffix rules for .prsimtraces
+
+
+2009-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-90-prsim-12-05:
+	  Added support for prsim tests with trace files that need
+		filtering on non-32-ILP platforms.
+
 
 2008-07-29	David Fang		<fangism@users.sourceforge.net>
 

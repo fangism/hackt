@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.15 2008/12/18 21:00:01 fang Exp $
+	$Id: State.h,v 1.16 2009/02/01 07:21:33 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -17,6 +17,7 @@
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
 #include "sim/command_error_codes.h"
+#include "sim/trace_common.h"		// for trace_index_type
 #include "Object/nonmeta_state.h"
 #include "Object/ref/reference_set.h"
 #include "Object/lang/CHP_event.h"	// for global_root event
@@ -74,6 +75,7 @@ public:
 		For managing SIGINT interruption.
 	 */
 	typedef	signal_handler<this_type>	signal_handler_type;
+	typedef	TraceManager			trace_manager_type;
 	/**
 		Basic tuple for event scheduling.  
 	 */
@@ -205,7 +207,11 @@ private:
 		/**
 			TODO: timing mode flags
 		 */
-		FLAGS_DEFAULT = 0x0000
+		FLAGS_DEFAULT = 0x0000,
+		/**
+			Flag states that should NOT be saved. 
+		 */
+		FLAGS_CHECKPOINT_MASK = ~(FLAG_AUTOSAVE | FLAG_TRACE_ON)
 	};
 	/**
 		Timing mode enumerations.
@@ -353,7 +359,7 @@ private:
 		Private pointer to the event trace manager.  
 		Data checkpointed persistently.  
 	 */
-	excl_ptr<TraceManager>			trace_manager;
+	excl_ptr<trace_manager_type>		trace_manager;
 	/**
 		The interval after which the trace_manager should
 		flush out a chunk of trace.  
@@ -362,7 +368,7 @@ private:
 		Counted by the number of events that have executed.
 		Default: some big number
 	 */
-	size_t					trace_flush_interval;
+	trace_index_type			trace_flush_interval;
 	/**
 		Name of checkpoint file.  
 		The same file is overridden periodically.  
@@ -647,13 +653,13 @@ public:
 	void
 	close_trace(void);
 
-	size_t
+	trace_index_type
 	get_trace_flush_interval(void) const {
 		return trace_flush_interval;
 	}
 
 	void
-	set_trace_flush_interval(const size_t i) {
+	set_trace_flush_interval(const trace_index_type i) {
 		INVARIANT(i);
 		trace_flush_interval = i;
 	}

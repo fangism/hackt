@@ -1,10 +1,10 @@
 # "fib-test-b-01.chpsimrc"
-#	$Id: fib-test-b-01.chpsimrc,v 1.2 2007/05/04 03:38:13 fang Exp $
+#	$Id: fib-test-b-01.chpsimrc,v 1.3 2009/02/01 07:22:29 fang Exp $
 # @haco@ fib-test-b.haco-a
 
 # use default delays
 timing per-event
-trace fib-test-b-01.chpsimtrace
+# trace fib-test-b-01.chpsimtrace
 step 200
 trace-close
 trace-dump fib-test-b-01.chpsimtrace

@@ -1,6 +1,0 @@
-testing empty trace 
-Writing simulation trace to "channel-sync-desync-a-03.chpsimtrace".
-Trace file contents: 0 epochs.
-		start	start	file	chunk
-	epoch	index	time	offset	size
-Not very exciting. 

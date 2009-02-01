@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.18 2008/11/11 20:06:24 fang Exp $
+	$Id: Node.h,v 1.19 2009/02/01 07:21:38 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -545,6 +545,12 @@ public:
 	static
 	value_enum
 	char_to_value(const char);
+
+	static
+	char
+	translate_value_to_char(const char e) {
+		return value_to_char[size_t(e)];
+	}
 
 	/// \return < 0 on error, else returns 0, 1, 2
 	static

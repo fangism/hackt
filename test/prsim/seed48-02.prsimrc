@@ -14,5 +14,7 @@ cycle
 
 echo make sure reset actually resets the seed
 reset
+# keep same checkpoint name as before
+autosave on
 seed48
 

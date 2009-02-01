@@ -1,9 +1,9 @@
 # "timed-token-ring-a-01.chpsimrc"
-#	$Id: timed-token-ring-a-01.chpsimrc,v 1.2 2007/05/04 03:39:03 fang Exp $
+#	$Id: timed-token-ring-a-01.chpsimrc,v 1.3 2009/02/01 07:22:39 fang Exp $
 # @haco@ timed-token-ring-a.haco-a
 
 timing per-event
-trace timed-token-ring-a-01.chpsimtrace
+# trace timed-token-ring-a-01.chpsimtrace
 step 100
 trace-close
 trace-dump timed-token-ring-a-01.chpsimtrace

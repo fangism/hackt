@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.17 2008/11/27 11:09:30 fang Exp $
+	$Id: Command.cc,v 1.18 2009/02/01 07:21:30 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1274,6 +1274,9 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Save, CHPSIM::tracing)
 @deffn Command load ckpt
 Restores the simulator state (variables and events) from a checkpoint
 file @var{ckpt}.  
+Loading a checkpoint will not overwrite the current status of
+the auto-save file, the previous autosave command will keep effect. 
+Loading a checkpoint, however, will close any open tracing streams.  
 @end deffn
 @end texinfo
 ***/
@@ -1283,14 +1286,18 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::tracing)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/autosave.texi
-@deffn Command autosave [on|off]
+@deffn Command autosave [on|off [file]]
 Automatically save checkpoint upon end of simulation, 
 regardless of exit status.
+The @command{reset} command will turn off auto-save;
+to re-enable it with the same file name, just @kbd{autosave on}.
+The @option{-a} command line option is another way of enabling and specifying 
+the autosave checkpoint name.  
 @end deffn
 @end texinfo
 ***/
 typedef	AutoSave<State>				AutoSave;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AutoSave, CHPSIM::simulation)
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AutoSave, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1300,7 +1307,7 @@ Print textual summary of entire state of simulation.
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", info,
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", tracing,
 	"print entire state of the simulation")
 
 int
@@ -2730,38 +2737,15 @@ NoCause::usage(ostream& o) {
 @deffn Command trace file
 Record events to tracefile @var{file}.  
 Overwrites @var{file} if it already exists.  
+A trace stream is automatically closed when the @command{initialize}
+or @command{reset} commands are invoked.  
+See the @option{-r} option for starting up the simulator
+with a newly opened trace stream.
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Trace, "trace", tracing, 
-	"record trace of all events to file")
-
-int
-Trace::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (s.open_trace(a.back())) {
-		// confirm message
-		cout << "Writing simulation trace to \"" << a.back()
-			<< "\"." << endl;
-		return Command::NORMAL;
-	} else {
-		cout << "Error opening file \"" << a.back() <<
-			"\" for trace recording." << endl;
-		return Command::BADARG;
-	}
-}
-}
-
-void
-Trace::usage(ostream& o) {
-	o << name << " <file>" << endl;
-	o << "Records all data and events to file for later analysis.\n"
-"Trace-file is completed with a \'trace-close\' command, or automatically\n"
-"upon termination of ths simulation." << endl;
-}
+typedef	Trace<State>				Trace;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Trace, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2771,60 +2755,21 @@ Print the name of the currently opened trace file.
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFile, "trace-file", tracing, 
-	"show the name of the active trace file")
-
-int
-TraceFile::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (s.is_tracing()) {
-		cout << "Active trace file: " <<
-			s.get_trace_manager()->get_trace_name() << endl;
-	} else {
-		cout << "No active trace file." << endl;
-	}
-	return Command::NORMAL;
-}
-}
-
-void
-TraceFile::usage(ostream& o) {
-	o << name << endl;
-	o << "Prints the name of the active trace file, if applicable." << endl;
-}
+typedef	TraceFile<State>			TraceFile;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::TraceFile, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/trace-close.texi
 @deffn Command trace-close
-Finish writing the currently opened tracefile by flushing out the last epoch
+Finish writing the currently opened trace file by flushing out the last epoch
 and concatenating the header with the stream body.  
 Trace is automatically closed when the simulator exits.  
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceClose, "trace-close", tracing, 
-	"close the active trace file")
-
-int
-TraceClose::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.close_trace();
-	return Command::NORMAL;
-}
-}
-
-void
-TraceClose::usage(ostream& o) {
-	o << name << endl;
-	o << "Stops the active trace and writes it out to file." << endl;
-}
+typedef	TraceClose<State>			TraceClose;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::TraceClose, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2834,41 +2779,8 @@ Enable (1) or disable (0) notifications when trace epochs are flushed.
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFlushNotify, 
-	"trace-flush-notify", tracing, 
-	"enable/disable trace flush notifications (debug)")
-int
-TraceFlushNotify::main(State&, const string_list& a) {
-switch (a.size()) {
-case 1:
-	cout << "Trace flush notification is ";
-	if (TraceManager::notify_flush) {
-		cout << "enabled." << endl;
-	} else {
-		cout << "disabled." << endl;
-	}
-	return Command::NORMAL;
-case 2:
-	size_t i;
-	if (string_to_num(a.back(), i)) {
-		cerr << "Error parsing numeric argument." << endl;
-		return Command::BADARG;
-	}
-	TraceManager::notify_flush = i;
-	return Command::NORMAL;
-default:
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-}
-}
-
-void
-TraceFlushNotify::usage(ostream& o) {
-	o << name << " [0|1]" << endl;
-	o << 
-"With argument, enables (1) or disables (0) trace flush notifications\n"
-"Without argument, reports current policy." << endl;
-}
+typedef	TraceFlushNotify<State>			TraceFlushNotify;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::TraceFlushNotify, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2880,41 +2792,8 @@ This regulates the granularity of saving traces in a space-time tradeoff.
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFlushInterval, 
-	"trace-flush-interval", tracing, 
-	"set/get the current trace chunk granularity")
-
-int
-TraceFlushInterval::main(State& s, const string_list& a) {
-switch (a.size()) {
-case 1:
-	cout << "trace flush interval (events): " <<
-		s.get_trace_flush_interval() << endl;
-	break;
-case 2:
-	size_t i;
-	if (string_to_num(a.back(), i)) {
-		cerr << "Error parsing numeric interval argument." << endl;
-		usage(cerr << "usage: ");
-		return Command::BADARG;
-	}
-	s.set_trace_flush_interval(i);
-	break;
-default:
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-}
-	return Command::NORMAL;
-}
-
-void
-TraceFlushInterval::usage(ostream& o) {
-	o << name << " [interval]" << endl;
-	o <<
-"If argument is passed, then set the trace flush interval to it.\n"
-"Otherwise, just report the current trace flush interval.\n"
-"The interval is counted in number of events that execute." << endl;
-}
+typedef	TraceFlushInterval<State>		TraceFlushInterval;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::TraceFlushInterval, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2924,30 +2803,8 @@ Produce textual dump of trace file contents in @var{file}.
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceDump, 
-	"trace-dump", tracing, 
-	"spill a human-readable (?) text dump of a trace file")
-
-int
-TraceDump::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (TraceManager::text_dump(a.back(), cout)) {
-		cerr << "Error opening trace file: " << a.back() << endl;
-		return Command::BADARG;
-	}
-	return Command::NORMAL;
-}
-}
-
-void
-TraceDump::usage(ostream& o) {
-	o << name << " <tracefile>" << endl;
-	o << "Dumps contents of a trace file to stdout.\n"
-"Future versions may require a proper object file to be attached." << endl;
-}
+typedef	TraceDump<State>			TraceDump;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::TraceDump, CHPSIM::tracing)
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

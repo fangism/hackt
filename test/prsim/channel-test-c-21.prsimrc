@@ -16,6 +16,8 @@ channel-show Z
 
 echo resetting...
 reset
+# keep same checkpoint name as before
+autosave on
 channel-show-all
 # channel-show X
 # channel-show Y

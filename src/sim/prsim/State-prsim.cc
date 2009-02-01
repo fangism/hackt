@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.42 2009/01/15 18:36:15 fang Exp $
+	$Id: State-prsim.cc,v 1.43 2009/02/01 07:21:40 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -22,6 +22,9 @@
 #include <set>
 #include "sim/prsim/State-prsim.h"
 #include "sim/prsim/ExprAlloc.h"
+#if PRSIM_TRACE_GENERATION
+#include "sim/prsim/Trace-prsim.h"
+#endif
 #include "sim/event.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/random_time.h"
@@ -502,6 +505,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		uniform_delay(time_traits::default_delay), 
 		watch_list(), 
 		_channel_manager(), 
+#if PRSIM_TRACE_GENERATION
+		trace_manager(),
+		trace_flush_interval(1L<<16),
+#endif
 		flags(FLAGS_DEFAULT),
 #define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
 #if PRSIM_INVARIANT_RULES
@@ -592,6 +599,9 @@ try {
  */
 State::~State() {
 	if ((flags & FLAG_AUTOSAVE) && autosave_name.size()) {
+		// always clear some flags before the automatic save?
+		// close trace before checkpointing
+		close_trace();
 		ofstream o(autosave_name.c_str());
 		if (o) {
 		try {
@@ -661,6 +671,10 @@ State::__initialize(void) {
 	// unwatchall()? no, preserved
 	// timing mode preserved
 	current_time = 0;
+	// autosave? OK to keep
+	// trace file?
+	close_trace();	// close trace, else trace will be incoherent
+	// alternative is to record fact that every node went to X
 	_channel_manager.initialize();
 }
 
@@ -718,7 +732,7 @@ State::node_drives_any_channel(const node_index_type ni) const {
  */
 State::break_type
 State::flush_channel_events(const vector<env_event_type>& env_events, 
-		const event_cause_type& c) {
+		cause_arg_type c) {
 	STACKTRACE_VERBOSE;
 	break_type err = ERROR_NONE;
 	// cause of these events must be 'ni', this node
@@ -893,6 +907,9 @@ State::reset(void) {
 	// reset seed
 	ushort seed[3] = {0,0,0};
 	seed48(seed);
+	// FIXME, ALERT: not every libc resets with the same 0-seed!!!
+	// one option is to set upon State construction, but this
+	// would only safely accomodate one state in any program...
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -943,11 +960,12 @@ State::get_node(const node_index_type i) {
  */
 void
 State::backtrace_node(ostream& o, const node_index_type ni) const {
-	typedef	set<event_cause_type>		event_set_type;
+	typedef	set<node_cause_type>		event_set_type;
 	// start from the current value of the referenced node
 	const node_type* n(&get_node(ni));
 	const value_enum v = n->current_value();
-	event_cause_type e(ni, v);
+	node_cause_type e(ni, v);
+	// TODO: could look at critical event index if tracing...
 	dump_node_canonical_name(o << "node at: `", ni) <<
 		"\' : " << node_type::value_to_char[size_t(v)] << endl;
 	event_set_type l;
@@ -3061,7 +3079,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
 	const event_index_type& ei(ep.event_index);
 	if (!ei) {
-		// possible in the event that last events are killed
+		// possible in the queue that last events are killed
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
@@ -3071,6 +3089,19 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	node_type& n(get_node(ni));
 	const value_enum prev = n.current_value();
 	node_index_type _ci;	// just a copy
+#if PRSIM_TRACE_GENERATION
+	trace_index_type critical = INVALID_TRACE_INDEX;
+	if (is_tracing()) {
+		critical = trace_manager->push_back_event(
+			state_trace_point(current_time, pe.cause_rule, 
+				pe.cause.critical_trace_event, 
+				ni, pe.val, prev));
+		if (trace_manager->current_event_count() >=
+				trace_flush_interval) {
+			trace_manager->flush();
+		}
+	}
+#endif
 {
 	const event_cause_type& cause(pe.cause);
 	const node_index_type& ci(cause.node);
@@ -3155,7 +3186,11 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	// could scope the reference to prevent it...
 	const value_enum next = n.current_value();
 	// value propagation...
+#if PRSIM_TRACE_GENERATION
+	const event_cause_type new_cause(ni, next, critical);
+#else
 	const event_cause_type new_cause(ni, next);
+#endif
 {
 	typedef	node_type::const_fanout_iterator	const_iterator;
 	const_iterator i, e;
@@ -3193,8 +3228,8 @@ if (n.in_channel()) {
 	_channel_manager.process_node(*this, ni,
 			prev, next, env_events);
 	// cause of these events must be 'ni', this node
-	const event_cause_type c(ni, next);
-	const break_type E = flush_channel_events(env_events, c);
+//	const event_cause_type c(ni, next);	// same as new_cause
+	const break_type E = flush_channel_events(env_events, new_cause);
 	if (UNLIKELY(E >= ERROR_BREAK)) {
 		stop();
 	}
@@ -3647,6 +3682,7 @@ State::translate_to_global_node(const process_index_type pid,
 /**
 	The main expression evaluation method, ripped off of
 	old prsim's propagate_up.  
+	\param c is the event that triggered these expressions re-evaluation.  
 	\param ni the index of the node causing this propagation (root),
 		only used for diagnostic purposes.
 	\param ui the index of the sub expression being evaluated, 
@@ -4335,7 +4371,8 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 	\param e the event in question
 	\param ui index of the node that fired
 	\param n the node that fired
-	\param ni the node involved in event e
+	\param ui the node involved in event e
+	\param c the node/event that just fired and caused this violation.
 	\param dir the direction of pull of the causing rule
 	\param weak true if rule was pulling rule is weak
 	\return true if error causes break.
@@ -7197,6 +7234,7 @@ State::autosave(const bool b, const string& n) {
 	Write out a header for safety checks.  
 	TODO: save state only? without structure?
 	\return true if to signal that an error occurred. 
+	NOTE: we do not save the fact the a trace-file was being recorded!
  */
 bool
 State::save_checkpoint(ostream& o) const {
@@ -7274,7 +7312,7 @@ State::save_checkpoint(ostream& o) const {
 	}
 }
 	WRITE_ALIGN_MARKER
-	write_value(o, flags);
+	write_value(o, flags_type(flags & FLAGS_CHECKPOINT_MASK));
 	write_value(o, unstable_policy);
 	write_value(o, weak_unstable_policy);
 	write_value(o, interference_policy);
@@ -7286,7 +7324,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, assert_fail_policy);
 	write_value(o, channel_expect_fail_policy);
 	write_value(o, excl_check_fail_policy);
-	write_value(o, autosave_name);
+//	write_value(o, autosave_name);		// don't preserve
 	write_value(o, timing_mode);
 	if (_channel_manager.save_checkpoint(o)) return true;
 	// interrupted flag, just ignore
@@ -7450,10 +7488,20 @@ try {
 	}
 }
 	READ_ALIGN_MARKER		// sanity alignment check
-	read_value(i, flags);
+{
+	if (is_tracing()) {
+		close_trace();
+		cout << "Closing trace stream while loading checkpoint."
+			<< endl;
+	}
+	flags_type tmp;
+	read_value(i, tmp);
+	// preserve the auto-checkpointing, but not tracing
+	flags = (flags & FLAG_AUTOSAVE) | (tmp & ~FLAG_AUTOSAVE);
+}
 	// DO NOT auto-checkpoint with the same name!
 	// this prevents accidental overwrite due to loading!
-	flags &= ~FLAG_AUTOSAVE;
+	// This is already masked out during saving of checkpoint.
 	read_value(i, unstable_policy);
 	read_value(i, weak_unstable_policy);
 	read_value(i, interference_policy);
@@ -7465,7 +7513,7 @@ try {
 	read_value(i, assert_fail_policy);
 	read_value(i, channel_expect_fail_policy);
 	read_value(i, excl_check_fail_policy);
-	read_value(i, autosave_name);	// safe to load the name of checkpoint
+//	read_value(i, autosave_name);	// ignore the name of checkpoint
 	read_value(i, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -7587,7 +7635,7 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	READ_ALIGN_MARKER		// sanity alignment check
 	flags_type flags;
 	read_value(i, flags);
-	o << "flags: " << size_t(flags) << endl;
+	o << "flags: 0x" << std::hex << size_t(flags) << endl;
 {
 	error_policy_enum p;
 	read_value(i, p);
@@ -7611,6 +7659,13 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	read_value(i, p);
 	o << "exclusion-fail policy: " << error_policy_string(p) << endl;
 }
+#if 0
+{	// ignore the name of checkpoint
+	string s;
+	read_value(i, s);
+	o << "autosave: " << s << endl;
+}
+#endif
 	char timing_mode;
 	read_value(i, timing_mode);
 	o << "timing mode: " << size_t(timing_mode) << endl;
@@ -7625,6 +7680,41 @@ State::dump_checkpoint(ostream& o, istream& i) {
 }	// end State::dump_checkpoint
 
 #undef	READ_ALIGN_MARKER
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if result is successful/good.  
+ */
+bool
+State::open_trace(const string& tfn) {
+	if (trace_manager) {
+cerr << "Error: trace stream already open.  (command ignored)" << endl;
+		return true;
+	}
+	trace_manager =
+		excl_ptr<TraceManager>(new TraceManager(tfn, node_pool));
+	NEVER_NULL(trace_manager);
+	if (trace_manager->good()) {
+		flags |= FLAG_TRACE_ON;
+		return true;
+	} else {
+		stop_trace();
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Invoke this if you want tracing to end early.  
+ */
+void
+State::close_trace(void) {
+if (trace_manager) {
+	// destroying the trace manager should cause it to finish writing out.
+	trace_manager = excl_ptr<TraceManager>(NULL);
+}
+	stop_trace();
+}
 
 //=============================================================================
 // struct watch_entry method definitions

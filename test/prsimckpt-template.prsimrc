@@ -1,6 +1,14 @@
 # "prsimckpt-template.prsimrc"
-#	$Id: prsimckpt-template.prsimrc,v 1.2 2006/11/12 05:58:16 fang Exp $
+#	$Id: prsimckpt-template.prsimrc,v 1.3 2009/02/01 07:21:53 fang Exp $
+# used by Make.test-prsim to test prsim scripts with a wrapper
+#	added checkpointing for ckeckpoint tests
+#	should we just always autosave now?
+#	added trace recording for all tests
 
+# autosave on CHECKPOINT
+# trace TRACEFILE
+# what if we don't want to trace?
+# trace-flush-interval 32
 echo DELETE FROM HERE
 source SOURCE
 echo DELETE TO HERE
@@ -9,5 +17,5 @@ status 1
 status X
 queue
 time
-save CHECKPOINT
+# save CHECKPOINT
 

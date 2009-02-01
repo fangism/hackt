@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.7 2008/11/11 20:06:28 fang Exp $
+#	$Id: TODO,v 1.8 2009/02/01 07:21:43 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -24,9 +24,6 @@ prsim:
 	weak vs. possible: rename formerly 'weak' anomalies to 'possible'
 		to avoid confusion with weak-rules.  (poor naming)
 
-	random: seed48 [int int int] command to set/get libc::seed48
-		already save/restore seed in checkpoint
-
 	direction-specific breakpoints
 
 	breakpoint policies *per-node*
@@ -38,8 +35,6 @@ prsim:
 		In batch-mode, will just continue.  
 		Also needs a 'where' command to show file-stack and 
 			line positions for reference.
-
-	add -t <type> argument analogous to cflat's
 
 	channel commands:
 		channel-auto : auto-infer channel type
@@ -53,6 +48,7 @@ prsim:
 		Will cost some more memory per node.
 		Difficulty: easy (hour)
 		Consider the cost of increased memory! 'memstats'
+		alternative: support trace files
 
 	causes: sometimes a rule firing is attributed to the opposite
 		pull turning *off* ... do we attribute the cause to the
@@ -107,6 +103,7 @@ prsim:
 		fix: collect unique-list (or set), then print
 
 	trace recording, playback, and analysis (like chpsim)
+		[actively developing...]
 
 graph-dumping:
 	after restructuring rule maps by process (like chpsim),
@@ -147,5 +144,6 @@ parallelization:
 		through an interface, and managing through a 
 		meta simulator (one simulator to combine them).  
 		Might be able to multi-thread this way?
+	Might be easier now, with per-process structuring...
 
 ===============================================================================

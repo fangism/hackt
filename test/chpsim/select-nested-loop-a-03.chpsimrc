@@ -1,0 +1,11 @@
+# "select-nested-loop-a-03.chpsimrc"
+# copy-modified from "select-nested-loop-a-01.chpsimrc"
+#	$Id: select-nested-loop-a-03.chpsimrc,v 1.2 2009/02/01 07:22:31 fang Exp $
+# @haco@ select-nested-loop-a.haco-a
+
+trace-flush-interval 20
+# trace select-nested-loop-a-03.chpsimtrace
+step 80
+trace-close
+trace-dump select-nested-loop-a-03.chpsimtrace
+
