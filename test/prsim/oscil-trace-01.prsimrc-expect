@@ -3,16 +3,16 @@ Active trace file: oscil-trace-01.prsimtrace
 Trace file contents: 10 epochs.
 		start	start	file	chunk
 	epoch	index	time	offset	size
-	0	0	0	0	19
-	1	0	0	19	340
-	2	16	240	359	340
-	3	32	400	699	340
-	4	48	560	1039	340
-	5	64	720	1379	340
-	6	80	880	1719	340
-	7	96	1040	2059	340
-	8	112	1200	2399	67
-	9	115	0	2466	19
+	0	0	0	#SIZE#	#SIZE#
+	1	0	0	#SIZE#	#SIZE#
+	2	16	240	#SIZE#	#SIZE#
+	3	32	400	#SIZE#	#SIZE#
+	4	48	560	#SIZE#	#SIZE#
+	5	64	720	#SIZE#	#SIZE#
+	6	80	880	#SIZE#	#SIZE#
+	7	96	1040	#SIZE#	#SIZE#
+	8	112	1200	#SIZE#	#SIZE#
+	9	115	0	#SIZE#	#SIZE#
 Epoch 0: (initial values)
 X X X X X X X X X X X X X X X 
 Epoch 1:

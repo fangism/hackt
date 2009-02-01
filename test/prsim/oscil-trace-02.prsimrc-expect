@@ -31,15 +31,15 @@ time: 880
 Trace file contents: 9 epochs.
 		start	start	file	chunk
 	epoch	index	time	offset	size
-	0	0	0	0	19
-	1	0	0	19	676
-	2	32	400	695	676
-	3	64	720	1371	676
-	4	96	1210	2047	676
-	5	128	1530	2723	676
-	6	160	1850	3399	676
-	7	192	2170	4075	88
-	8	196	0	4163	19
+	0	0	0	#SIZE#	#SIZE#
+	1	0	0	#SIZE#	#SIZE#
+	2	32	400	#SIZE#	#SIZE#
+	3	64	720	#SIZE#	#SIZE#
+	4	96	1210	#SIZE#	#SIZE#
+	5	128	1530	#SIZE#	#SIZE#
+	6	160	1850	#SIZE#	#SIZE#
+	7	192	2170	#SIZE#	#SIZE#
+	8	196	0	#SIZE#	#SIZE#
 Epoch 0: (initial values)
 X X X X X X X X X X X X X X X 
 Epoch 1:

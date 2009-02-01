@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.17 2009/02/01 07:21:50 fang Exp $
+#	$Id: Make.test-prsim,v 1.18 2009/02/01 18:21:05 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -259,7 +259,7 @@ PRSIMRC_TEST_FILTER_SCRIPT = \
 	@$(PRSIMRC_TEST_FILTER_SCRIPT)
 
 .prsimrcfail-out.prsimrcfail-out-filter:
-	@$(PRSIMRC_FILTER_AWK) $< | \
+	@$(PRSIMRC_FILTER_AWK) $< | $(PRSIM_TRACE_BINARY_FILTER) | \
 	  $(SED) '/^parser stacks:/,$$d' > $@
 #	@$(PRSIMRC_TEST_FILTER_SCRIPT)
 
