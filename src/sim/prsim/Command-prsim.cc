@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.36 2009/02/05 02:53:14 fang Exp $
+	$Id: Command-prsim.cc,v 1.37 2009/02/05 02:55:50 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -245,6 +245,7 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Aliases, PRSIM::builtin)
 Repeat a command @var{cmd} a fixed number of times, @var{n}.  
 If there are any errors in during command processing, the loop
 will terminate early with a diagnostic message.
+@end deffn
 @end texinfo
 ***/
 typedef	Repeat<State>				Repeat;

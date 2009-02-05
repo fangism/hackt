@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.19 2009/02/05 02:53:13 fang Exp $
+	$Id: Command.cc,v 1.20 2009/02/05 02:55:49 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -229,6 +229,7 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Aliases, CHPSIM::builtin)
 Repeat a command @var{cmd} a fixed number of times, @var{n}.  
 If there are any errors in during command processing, the loop
 will terminate early with a diagnostic message.
+@end deffn
 @end texinfo
 ***/
 typedef	Repeat<State>				Repeat;
