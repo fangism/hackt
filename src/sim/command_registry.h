@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.6 2008/11/29 23:46:25 fang Exp $
+	$Id: command_registry.h,v 1.7 2009/02/05 02:53:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -172,6 +172,10 @@ public:
 	static
 	int
 	execute(state_type&, const string_list&);
+
+	static
+	int
+	repeat_execute(state_type&, const string_list&, const size_t);
 
 	static
 	bool

@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.35 2009/02/01 07:21:36 fang Exp $
+	$Id: Command-prsim.cc,v 1.36 2009/02/05 02:53:14 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -237,6 +237,18 @@ Print a list of all known aliases registered with the interpreter.
 ***/
 typedef	Aliases<State>				Aliases;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Aliases, PRSIM::builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/repeat.texi
+@deffn Command repeat n cmd...
+Repeat a command @var{cmd} a fixed number of times, @var{n}.  
+If there are any errors in during command processing, the loop
+will terminate early with a diagnostic message.
+@end texinfo
+***/
+typedef	Repeat<State>				Repeat;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Repeat, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

@@ -1,0 +1,4 @@
+testing the repeat command... expect fail 
+WARNING: pending value for node `a'; ignoring request
+*** Repeat-loop stopped after only 2 of 5 iterations.
+... at line 6

@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.18 2009/02/01 07:21:11 fang Exp $
+@c $Id: commands.texi,v 1.19 2009/02/05 02:53:04 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -34,6 +34,7 @@ The following commands are listed in the @t{builtin} category.
 @include cmd/comment.texi
 @include cmd/exit.texi
 @include cmd/abort.texi
+@include cmd/repeat.texi
 @include cmd/interpret.texi
 
 The following command is useful for showing each executed command.

@@ -1,0 +1,8 @@
+# "repeat-02.prsimrc"
+# @haco@ inv.haco-a
+
+echo testing the repeat command... expect fail
+watchall
+repeat 5 set a 1
+cycle
+

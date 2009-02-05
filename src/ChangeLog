@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-02-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-93:
+	  prsim, chpsim: added 'repeat' command to repeat a command a
+		fixed number of times.  Minimally tested, documented.  
+
+
 2009-01-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-92-merged-prsim-12-09:

@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.13 2009/02/01 07:21:25 fang Exp $
+	$Id: command_common.tcc,v 1.14 2009/02/05 02:53:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -297,6 +297,55 @@ EchoCommands<State>::usage(ostream& o) {
 	o << "echo-commands [on|off]" << endl;
 	o << "Enable or disable printing of each command as it is interpreted."
  		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(Repeat, "repeat",
+	"execute a command several times")
+
+template <class State>
+int
+Repeat<State>::main(state_type& s, const string_list& a) {
+if (a.size() > 2) {
+	string_list::const_iterator i(++a.begin());
+	const string& cnt(*i);
+	++i;
+	string_list cmd(i, a.end());
+	int n;
+	if (string_to_num(cnt, n) || n < 0) {
+		usage(cerr << "usage: ");
+		return command_type::BADARG;
+	}
+	// taken from command_registry_type::interpret_line:
+	// FIXME: this will not process escape-to-shell commands
+	// expand aliases first
+	if (command_registry_type::expand_aliases(cmd) != command_type::NORMAL) {
+		return command_type::BADARG;
+	}
+	int j = 0;
+	int ret = command_type::NORMAL;
+	for ( ; j<n && ret == command_type::NORMAL; ++j) {
+		ret = command_registry_type::execute(s, cmd);
+		if (ret == command_type::INTERACT) {
+			ret = command_registry_type::interpret_stdin(s);
+		}
+	}
+	if (j < n) {
+		cout << "*** Repeat-loop stopped after only " << j <<
+			" of " << n << " iterations." << endl;
+	}
+	return ret;
+} else {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+}
+
+template <class State>
+void
+Repeat<State>::usage(ostream& o) {
+	o << "repeat <int> command...\n";
+	o << "Repeats the given command a fixed number of times." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

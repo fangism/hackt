@@ -1,0 +1,6 @@
+# "repeat-01.prsimrc"
+# @haco@ inv.haco-a
+
+echo testing the repeat command...
+repeat 2 echo foo
+repeat 2 repeat 2 repeat 2 repeat 2 echo this is madness
