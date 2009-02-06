@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.23 2009/02/01 07:21:48 fang Exp $
+#	$Id: Make.test-chpsim,v 1.24 2009/02/06 02:52:06 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -191,13 +191,15 @@ endif
 # one option: always apply $(CHPSIM_TRACE_BINARY_FILTER)
 CHPSIMRC_TEST_FILTER_SCRIPT = \
 	$(SED) -e '/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' $< > $@
+#	  $(AWK) '/BEGIN-RANDOM/,/END-RANDOM/{if($$1=="time:")print "time: \#TIME\#";else print;}' | \
+#	  $(GREP) -v -e "-RANDOM" > $@
 
 # automatically tracing expect-pass tests
 .chpsimrc-out.chpsimtrace:
 	@$(NO_OP_SCRIPT)
 
 .chpsimrc-out.chpsimrc-out-filter:
-	@$(CHPSIMRC_TEST_FILTER_SCRIPT)
+	$(CHPSIMRC_TEST_FILTER_SCRIPT)
 
 # additional heuristic checking for trivial differences
 if ABI_ILP32
