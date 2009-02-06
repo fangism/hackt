@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.5 2008/03/21 00:20:56 fang Exp $
+#	$Id: Makefile.in,v 1.6 2009/02/06 02:24:52 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -34,15 +34,18 @@ include $(top_srcdir)/installdirs.mk
 
 # NOTE: we now reference the *INSTALLED* directory as the VPATH/srcdir
 #	during installcheck
-srcdir = $(examplesdir)/chpsim-stdlib
+srcdir_override = $(examplesdir)/chpsim-stdlib
+srcdir = $(srcdir_override)
 # If you're running this example out of the installed directory (VPATH), 
 # then point srcdir to the installed example directory.   
 # If you've copied the example files to a local directory, set
 # srcdir = .
 
 # keep this consistent with parent directory's Makefile.am
-VPATH = $(srcdir)
+VPATH = $(srcdir_override)
 # ALERT: not all versions of make support variable expansion of VPATH
+# We use 'srcdir_override' to prevent the configure script from
+# filtering out when srcdir = '.', as determined by a sed substitution.
 
 #############################################################################
 ################### the important Makefile example below ####################
