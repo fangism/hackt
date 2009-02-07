@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_graph.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_graph.cc,v 1.1 2009/02/07 03:00:39 fang Exp $
+	$Id: process_graph.cc,v 1.2 2009/02/07 03:33:02 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -40,20 +40,9 @@ namespace PRSIM {
 // class unique_process_subgraph method definitions
 unique_process_subgraph::unique_process_subgraph() :
 		expr_pool(), expr_graph_node_pool(),
-		rule_pool(), rule_map()
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		, local_faninout_map()
-#endif
-{
-#if PRSIM_INDIRECT_EXPRESSION_MAP
+		rule_pool(), rule_map(),
+		local_faninout_map() {
 	// local types are allowed to start at 0 index
-#else
-	// reserve 0th slot as invalid, was from State::head_sentinel
-	expr_pool.resize(FIRST_VALID_GLOBAL_EXPR);
-	expr_graph_node_pool.push_back(graph_node_type());
-	expr_graph_node_pool.set_chunk_size(1024);
-// else just use default
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -65,7 +54,6 @@ unique_process_subgraph::~unique_process_subgraph() { }
 	Such nodes are skipped during dump.  
 	Only called by ExprAlloc.  
  */
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 void
 unique_process_subgraph::void_expr(const expr_index_type ei)
 {
@@ -73,10 +61,8 @@ unique_process_subgraph::void_expr(const expr_index_type ei)
 	expr_pool[ei].wipe();
 	expr_graph_node_pool[ei].wipe();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 void
 unique_process_subgraph::check_node(const node_index_type i) const {
 	STACKTRACE_VERBOSE_CHECK;
@@ -132,14 +118,12 @@ for ( ; k<2; ++k) {
 			.contains_node_fanin(i));
 	}
 }	// end method check_node
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Double-checks parent-child relationships.  
 	\param i index of the expression, must be < expr_pool.size().  
  */
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 void
 unique_process_subgraph::check_expr(const expr_index_type i) const {
 	STACKTRACE_VERBOSE_CHECK;
@@ -207,7 +191,6 @@ if (!e.wiped()) {
 	}
 }	// else skip wiped node
 }	// end method check_expr
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -269,7 +252,6 @@ faninout_struct_type::dump_struct(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 /**
 	\param ei is a 0-indexed local expression index.
  */
@@ -292,10 +274,8 @@ unique_process_subgraph::lookup_rule(const expr_index_type ei) const {
 		return &rule_pool[i->second];
 	} else	return NULL;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 void
 unique_process_subgraph::check_structure(void) const {
 	STACKTRACE_VERBOSE_CHECK;
@@ -316,7 +296,6 @@ unique_process_subgraph::check_structure(void) const {
 	}
 }
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

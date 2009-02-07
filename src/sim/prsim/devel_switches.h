@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.13 2009/02/01 07:21:45 fang Exp $
+	$Id: devel_switches.h,v 1.14 2009/02/07 03:33:01 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -62,7 +62,7 @@
 	This could be a replacement for PRSIM_TRACE_CAUSE_TIME.
 	Goal: 1
 	Priorty: high
-	Status: just begun
+	Status: complete, tested, can probably perm.
  */
 #define	PRSIM_TRACE_GENERATION				1
 
@@ -104,11 +104,9 @@
 	Rationale: memory is more critical for massive designs
 	Priority: HIGH
 	Goal: 1
-	Status: complete, debugged, merged to trunk
-	When this is perm'd refactor out classes and methods from
-		State-prsim.cc.
+	Status: complete, debugged, merged to trunk, perm'd
  */
-#define	PRSIM_INDIRECT_EXPRESSION_MAP			1
+// #define	PRSIM_INDIRECT_EXPRESSION_MAP			1
 
 /**
 	Define to 1 to create special pseudo-rules which have no real
@@ -118,7 +116,7 @@
 	Status: done, tested
 	Goal: 1
  */
-#define	PRSIM_INVARIANT_RULES		(1 && PRSIM_INDIRECT_EXPRESSION_MAP)
+#define	PRSIM_INVARIANT_RULES		1
 
 /**
 	Define to 1 to move direction flag to rules, currently in expressions.
@@ -126,7 +124,7 @@
 	Status: done, tested
 	Goal: 1
  */
-#define	PRSIM_RULE_DIRECTION		(1 && PRSIM_INDIRECT_EXPRESSION_MAP)
+#define	PRSIM_RULE_DIRECTION		1
 
 /**
 	Eventually unify the structures and enumerations between
@@ -141,7 +139,7 @@
 	to minimize the invasiveness of change, 
 	for maintainability and stability.  
  */
-#define	PRSIM_UNIFY_GRAPH_STRUCTURES	(0 && PRSIM_INDIRECT_EXPRESSION_MAP)
+#define	PRSIM_UNIFY_GRAPH_STRUCTURES	0
 
 /**
 	Summary: Also plan to use a hierarchical fanin/fanout structure, 
@@ -152,7 +150,7 @@
 	Difficulty: supprorting random eval-ordering, or any shuffling...
 	Goal: ?
  */
-#define	PRSIM_HIERARCHICAL_FANOUT_ONLY	(0 && PRSIM_INDIRECT_EXPRESSION_MAP)
+#define	PRSIM_HIERARCHICAL_FANOUT_ONLY	0
 
 /**
 	In addition to un-caching expression structures, also maintain
@@ -161,7 +159,7 @@
 	Goal: ?
 	Rationale: further memory reduction
  */
-#define	PRSIM_HIERARCHICAL_RINGS	(0 && PRSIM_INDIRECT_EXPRESSION_MAP)
+#define	PRSIM_HIERARCHICAL_RINGS	0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

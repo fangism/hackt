@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.8 2008/12/17 03:41:01 fang Exp $
+	$Id: Expr.cc,v 1.9 2009/02/07 03:32:55 fang Exp $
  */
 
 #include <iostream>
@@ -94,24 +94,13 @@ Expr::dump_struct(ostream& o
 #if !PRSIM_RULE_DIRECTION
 		const bool dir = direction();
 #endif
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 		// parent local node index is 0-indexed
-#else
-		// parent node index must be non-zero
-		INVARIANT(is_valid_node_index(parent));
-#endif
 		// the following is meaningless if rule is an invariant
 		// unfortunately, can't tell from expr, need rule...
 		o << (dir ? " (pull-up: " : " (pull-dn: ") << parent << ')';
 	} else {
 		o << " (parent: ";
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 		o << parent;		// local expressions are 0-indexed
-#else
-		if (is_valid_expr_index(parent))
-			o << parent;
-		else	o << '-';
-#endif
 		o << ')';
 	}
 	return o;
@@ -153,15 +142,9 @@ Expr::dump_type_dot_shape(ostream& o) const {
 }
 
 //=============================================================================
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 #define	EXPR_PARAM		const Expr& e
 #define	EXPR_REF		e
 #define	EXPR_MEM(x)		(e.x)
-#else
-#define	EXPR_PARAM		void
-#define	EXPR_REF
-#define	EXPR_MEM(x)		x
-#endif
 
 /**
 	Initializes expression state.  
@@ -177,11 +160,7 @@ ExprState::initialize(EXPR_PARAM) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-ExprState::dump_state(ostream& o
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		, EXPR_PARAM
-#endif
-		) const {
+ExprState::dump_state(ostream& o, EXPR_PARAM) const {
 	o << "ctdn: " << size_t(countdown) <<
 		" X: " << size_t(unknowns) << "(/" <<
 		size_t(EXPR_MEM(size)) << ')'
@@ -205,17 +184,12 @@ ExprState::save_state(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 ExprState::load_state(istream& i) {
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	// due to packing
 	expr_count_type temp;
 	read_value(i, temp);
 	countdown = temp;
 	read_value(i, temp);
 	unknowns = temp;
-#else
-	read_value(i, countdown);
-	read_value(i, unknowns);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

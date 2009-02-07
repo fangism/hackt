@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/enums.h"
-	$Id: enums.h,v 1.4 2009/02/07 03:00:38 fang Exp $
+	$Id: enums.h,v 1.5 2009/02/07 03:33:01 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_ENUMS_H__
@@ -57,14 +57,12 @@ enum {
 	FIRST_VALID_GLOBAL_NODE = SIM::INVALID_NODE_INDEX +1,
 	/// index of the first valid global expr/expr_graph_node
 	FIRST_VALID_GLOBAL_EXPR = SIM::INVALID_EXPR_INDEX +1,
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	/// index of the first valid local node
 	FIRST_VALID_LOCAL_NODE = 0,
 	/// index of the first valid local expr/expr_graph_node
 	FIRST_VALID_LOCAL_EXPR = 0,
 	/// index of first valid process, 0 is the top-level process
 	FIRST_VALID_PROCESS = 0,
-#endif
 	/// index of the first valid event
 	FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 };

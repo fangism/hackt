@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/process_graph.h"
-	$Id: process_graph.h,v 1.1 2009/02/07 03:00:40 fang Exp $
+	$Id: process_graph.h,v 1.2 2009/02/07 03:33:02 fang Exp $
 	Unique process subgraph structure, shared by all process instances
 	of the same type.
  */
@@ -16,17 +16,13 @@
 #include "sim/prsim/devel_switches.h"
 #include "sim/prsim/Rule.h"
 #include "sim/prsim/Expr.h"
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 #include "Object/common/frame_map.h"
 #include <valarray>
-#endif
 
 namespace HAC {
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 namespace entity {
 	class footprint;
 }
-#endif
 namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
@@ -34,24 +30,21 @@ struct ExprAllocFlags;
 using std::map;
 using std::set;
 using HASH_MAP_NAMESPACE::hash_map;
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 using std::valarray;
 using entity::footprint;
 struct process_sim_state;
 using entity::footprint_frame_map_type;
-#endif
 
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 /**
 	Define to 1 to maintain a separate expr->process id map.
 	TODO: benchmark the different between performance
 	on large hierarchical designs.  
 	Whe the map is combined search may need to be modified
 	to use lower_bound rather than --upper_bound
+	Goal: 0
  */
 #define	PRSIM_SEPARATE_PROCESS_EXPR_MAP		1
-#endif
 
 /// can switch between integer and real-valued time
 // typedef      discrete_time                   rule_time_type;
@@ -144,13 +137,8 @@ struct faninout_struct_type {
 	TODO: rings for mk_excl and check_excl!
  */
 struct unique_process_subgraph {
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	Expr				expr_struct_type;
 	typedef	Rule<rule_time_type>		rule_type;
-#else
-	typedef	ExprState			expr_struct_type;
-	typedef	RuleState<rule_time_type>	rule_type;
-#endif
 	typedef	ExprGraphNode			graph_node_type;
 	/**
 		Collection of all subexpressions.  
@@ -164,11 +152,7 @@ struct unique_process_subgraph {
 		Indices are *local* to process (type)!
 		Cannot use list_vector, which is not copy-constructible (yet).
 	 */
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	vector<graph_node_type>		expr_graph_node_pool_type;
-#else
-	typedef	list_vector<graph_node_type>	expr_graph_node_pool_type;
-#endif
 	/**
 		Collection of rule static information, attributes.  
 		Indices are *local* to process (type).
@@ -183,11 +167,7 @@ struct unique_process_subgraph {
 		ALERT: the trick is to keep it sorted by both keys
 		in the face of pool-compaction optimizations...
 	 */
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	hash_map<expr_index_type, rule_index_type>
-#else
-	typedef	hash_map<expr_index_type, rule_type>
-#endif
 						rule_map_type;
 #if PRSIM_HIERARCHICAL_RINGS
 	/**
@@ -211,7 +191,6 @@ struct unique_process_subgraph {
 	rule_pool_type				rule_pool;
 	rule_map_type				rule_map;
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	/**
 		Member functions interpret this as a node for 
 		structural purposes.  
@@ -228,9 +207,6 @@ struct unique_process_subgraph {
 	faninout_map_type			local_faninout_map;
 
 	struct memory_accumulator;
-#else
-	// don't bother with flattened global view
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	unique_process_subgraph();
 	~unique_process_subgraph();
@@ -238,7 +214,6 @@ struct unique_process_subgraph {
 	node_index_type
 	local_root_expr(expr_index_type) const;
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	void
 	void_expr(const expr_index_type);
 
@@ -265,7 +240,7 @@ struct unique_process_subgraph {
 
 	ostream&
 	dump_struct_dot(ostream&, const expr_index_type) const;
-#endif
+
 };	// end struct unique_process_subgraph
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_state.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_state.cc,v 1.1 2009/02/07 03:00:40 fang Exp $
+	$Id: process_state.cc,v 1.2 2009/02/07 03:33:02 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -39,7 +39,6 @@ using util::indent;
 #include "util/using_ostream.h"
 
 //=============================================================================
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 // class process_sim_state method definitions
 void
 process_sim_state::allocate_from_type(const unique_process_subgraph& t, 
@@ -224,7 +223,6 @@ process_sim_state::dump_invariants(ostream& o, const State& st,
 	return o;
 }
 #endif	// PRSIM_INVARIANT_RULES
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //=============================================================================
 /**
@@ -235,41 +233,21 @@ process_sim_state::dump_invariants(ostream& o, const State& st,
  */
 ostream&
 process_sim_state::dump_node_fanin(ostream& o, const node_index_type lni, 
-		const State& st, const bool v) const
-{
-#if PRSIM_INDIRECT_EXPRESSION_MAP
+		const State& st, const bool v) const {
 	const node_index_type ni = st.translate_to_global_node(*this, lni);
 	const State::node_type& n(st.get_node(ni));
 	const string cn(st.get_node_canonical_name(ni));
 	const faninout_struct_type& fia(type().local_faninout_map[lni]);
-#else
-	const node_type& n(get_node(ni));
-	const string cn(get_node_canonical_name(ni));
-#endif
 #if PRSIM_WEAK_RULES
 	size_t w = NORMAL_RULE;
 do {
 #endif
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	vector<expr_index_type>::const_iterator
 		i(fia.pull_up STR_INDEX(w).begin()),
 		e(fia.pull_up STR_INDEX(w).end());
 	for ( ; i!=e; ++i) {
 		const expr_index_type ui = *i;
 		dump_rule(o, ui, st, v, (n.fanin.size() > 1)) << endl;
-#else
-	// format is different: no single root expression
-	// fanin is listed by processes
-	const expr_index_type ui = n.pull_up_index STR_INDEX(w);
-	if (ui) {
-		dump_subexpr(o, ui, v) << " -> " << cn << '+';
-		if (v) {
-			n.dump_value(o << ':');
-		}
-		o << endl;
-	}
-#endif
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	}
 		i = fia.pull_dn STR_INDEX(w).begin();
 		e = fia.pull_dn STR_INDEX(w).end();
@@ -277,16 +255,6 @@ do {
 		const expr_index_type di = *i;
 		dump_rule(o, di, st, v, (n.fanin.size() < 1)) << endl;
 	}
-#else
-	const expr_index_type di = n.pull_dn_index STR_INDEX(w);
-	if (di) {
-		dump_subexpr(o, di, v) << " -> " << cn << '-';
-		if (v) {
-			n.dump_value(o << ':');
-		}
-		o << endl;
-	}
-#endif
 #if PRSIM_WEAK_RULES
 	if (st.weak_rules_shown()) {
 		++w;
@@ -299,7 +267,6 @@ do {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 /**
 	Prints a single rule: expr -> node+/-
 	Unlike the old implementation, this only prints rules in which
@@ -350,7 +317,6 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 	}
 	return o;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

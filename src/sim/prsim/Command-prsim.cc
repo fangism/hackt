@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.37 2009/02/05 02:55:50 fang Exp $
+	$Id: Command-prsim.cc,v 1.38 2009/02/07 03:32:54 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3924,7 +3924,6 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(CheckExclFail,
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 /***
 @texinfo cmd/rules.texi
 @deffn Command rules proc
@@ -4224,7 +4223,6 @@ CheckInvariants::usage(ostream& o) {
 "and possible violations." << endl;
 }
 #endif	// PRSIM_INVARIANT_RULES
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

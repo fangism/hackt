@@ -1,19 +1,17 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.13 2008/12/07 00:27:09 fang Exp $
+	$Id: ExprAlloc.h,v 1.14 2009/02/07 03:32:57 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
 #define	__HAC_SIM_PRSIM_EXPRALLOC_H__
 
 #include <queue>
+#include <map>
 #include "Object/lang/cflat_context_visitor.h"
 #include "sim/prsim/ExprAllocFlags.h"
 #include "sim/prsim/State-prsim.h"		// for nested typedefs
 #include "sim/common.h"
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-#include <map>
-#endif
 
 /**
 	Define to 1 to try to use simple allocation traversal
@@ -26,11 +24,9 @@ namespace SIM {
 namespace PRSIM {
 class State;
 class unique_process_subgraph;
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 using std::map;
 using entity::global_entry;
 using entity::process_tag;
-#endif
 using entity::state_manager;
 using entity::PRS::footprint_rule;
 using entity::PRS::footprint_expr_node;
@@ -49,7 +45,6 @@ public:
 	typedef	cflat_context_visitor			parent_type;
 	typedef	state_type::expr_struct_type		expr_struct_type;
 	typedef	state_type::expr_state_type		expr_state_type;
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	expr_struct_type			expr_type;
 	typedef	unique_process_subgraph			unique_type;
 #if PRSIM_SIMPLE_ALLOC
@@ -58,12 +53,6 @@ public:
 	typedef	map<const entity::PRS::footprint*, process_index_type>
 #endif
 						process_footprint_map_type;
-#else
-	typedef	state_type::node_type			node_type;
-	typedef	state_type::node_pool_type		node_pool_type;
-	typedef	expr_state_type				expr_type;
-	typedef	State					unique_type;
-#endif
 	typedef	unique_type::expr_pool_type		expr_pool_type;
 	typedef	unique_type::graph_node_type		graph_node_type;
 	typedef	unique_type::expr_graph_node_pool_type	graph_node_pool_type;
@@ -73,12 +62,11 @@ protected:
 	typedef	std::queue<expr_index_type>	free_list_type;
 public:
 	state_type&				state;
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-	node_pool_type&				st_node_pool;
-#endif
+	/**
+		Structure and state is allocated one process at a time.
+	 */
 	unique_process_subgraph*		g;
 protected:
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	/**
 		Currently running unique process index.
 	 */
@@ -91,7 +79,6 @@ protected:
 		Translates unique prs_footprint to unique process index.  
 	 */
 	process_footprint_map_type		process_footprint_map;
-#endif
 	/// the expression index last returned
 	expr_index_type				ret_ex_index;
 public:
@@ -144,7 +131,6 @@ protected:
 	void
 	visit(const state_manager&);
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 #if PRSIM_SIMPLE_ALLOC
 	void
 	visit(const global_entry<process_tag>&);
@@ -152,7 +138,6 @@ protected:
 
 	void
 	visit(const entity::PRS::footprint&);
-#endif
 
 	void
 	visit(const footprint_rule&);
@@ -173,7 +158,6 @@ public:
 
 	node_index_type
 	lookup_local_bool_id(const node_index_type ni) const {
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	// DELIBERATE OVERRIDE: DO NOT TRANSLATE TO GLOBAL NODE INDICES!
 	// if node index argument comes from PRS_footprint, then it was
 	// 1-indexed, and needs to be converted to 0-indexed.
@@ -183,9 +167,6 @@ public:
 	} else {	// top-level, keep 1-indexed, 0 is reserved
 		return ni;
 	}
-#else
-		return __lookup_global_bool_id(ni);
-#endif
 	}
 
 	// for now, exclusive rings (both force and check) use this

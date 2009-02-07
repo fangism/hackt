@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.13 2008/11/05 23:03:53 fang Exp $
+	$Id: Node.cc,v 1.14 2009/02/07 03:32:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,10 +14,8 @@
 #include "util/macros.h"
 #include "util/stacktrace.h"
 #include "util/IO_utils.tcc"
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 #include "util/STL/valarray_iterator.h"
-#include "sim/prsim/State-prsim.h"	// for faninout_struct_type
-#endif
+#include "sim/prsim/process_graph.h"	// for faninout_struct_type
 
 namespace HAC {
 namespace SIM {
@@ -37,76 +35,14 @@ using util::read_value;
 // class Node method definitions
 
 Node::Node() : 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	fanin(), 
-#else
-#if PRSIM_WEAK_RULES
-//	The next standard of C++ better have aggregate initializers...
-//	pull_up_index({INVALID_EXPR_INDEX}),
-//	pull_dn_index({INVALID_EXPR_INDEX}),
-#else
-	pull_up_index(INVALID_EXPR_INDEX),
-	pull_dn_index(INVALID_EXPR_INDEX), 
-#endif
-#endif
 	fanout(),
 	struct_flags(NODE_DEFAULT_STRUCT_FLAGS) {
 	INVARIANT(!fanout.size());
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-#if PRSIM_WEAK_RULES
-	pull_up_index[0] = pull_up_index[1] = INVALID_EXPR_INDEX;
-	pull_dn_index[0] = pull_dn_index[1] = INVALID_EXPR_INDEX;
-#endif
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Node::~Node() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-/**
-	TODO: add ONLY if not already found in fanout list?
-	Realloc-ing on every push_back could be slow... consider vector.  
- */
-void
-Node::push_back_fanout(const expr_index_type ei) {
-	STACKTRACE("Node::push_back_fanout()");
-#if 0
-	fanout.resize(fanout.size() +1);
-	const size_t i = fanout.size() -1;
-	fanout[i] = ei;
-#else
-	fanout.push_back(ei);	// automatically resizes and reallocs
-#endif
-	STACKTRACE_INDENT_PRINT("fanout[" << fanout.size() -1
-		<< "]=" << fanout.back() << endl);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-Node::contains_fanout(const expr_index_type i) const {
-	return (std::find(fanout.begin(), fanout.end(), i) != fanout.end());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Called by ExprAlloc when moving expressions around.  
-	This occurs during compaction of optimized expressions.  
- */
-void
-Node::replace_pull_index(const bool dir, const expr_index_type _new
-#if PRSIM_WEAK_RULES
-		, const rule_strength w
-#endif
-		) {
-	if (dir) {
-		pull_up_index STR_INDEX(w) = _new;
-	} else {
-		pull_dn_index STR_INDEX(w) = _new;
-	}
-}
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -117,7 +53,6 @@ Node::replace_pull_index(const bool dir, const expr_index_type _new
 ostream&
 Node::dump_struct(ostream& o) const {
 	ostream_iterator<expr_index_type> osi(o, ", ");
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	o << "fanin-processes: ";
 #if VECTOR_NODE_FANIN
 	std::copy(fanin.begin(), fanin.end(), osi);
@@ -126,26 +61,6 @@ Node::dump_struct(ostream& o) const {
 #endif
 	// o << endl;
 	// TODO: expand process fanins to rule expresions?
-#else
-	o << "up: ";
-	if (pull_up_index STR_INDEX(NORMAL_RULE))
-		o << pull_up_index STR_INDEX(NORMAL_RULE);
-	else	o << '-';	// irrelevant
-#if PRSIM_WEAK_RULES
-	if (pull_up_index STR_INDEX(WEAK_RULE))
-		o << '<' << pull_up_index STR_INDEX(WEAK_RULE);
-	// else just omit
-#endif
-	o << ", dn: ";
-	if (pull_dn_index STR_INDEX(NORMAL_RULE))
-		o << pull_dn_index STR_INDEX(NORMAL_RULE);
-	else	o << '-';	// irrelevant
-#if PRSIM_WEAK_RULES
-	if (pull_dn_index STR_INDEX(WEAK_RULE))
-		o << '<' << pull_dn_index STR_INDEX(WEAK_RULE);
-	// else just omit
-#endif
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 	o << " fanout: ";
 #if 1
 //	o << '<' << fanout.size() << "> ";
@@ -178,7 +93,6 @@ Node::dump_fanout_dot(ostream& o, const string& s) const {
 //=============================================================================
 // class fanin_state_type method definitions
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 /**
 	Ripped from ExprState::dump_state()
  */
@@ -187,7 +101,6 @@ fanin_state_type::dump_state(ostream& o) const {
 	return o << "ctdn: " << countdown << " X: " << unknowns << "(/" <<
 		size << ')' << " pull: " << size_t(pull());
 }
-#endif
 
 //=============================================================================
 // class NodeState method definitions
@@ -212,18 +125,15 @@ NodeState::initialize(void) {
 	tcount = 0;
 	state_flags |= NODE_INITIALIZE_SET_MASK;
 	state_flags &= ~NODE_INITIALIZE_CLEAR_MASK;
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	pull_up_state STR_INDEX(NORMAL_RULE).initialize();
 	pull_dn_state STR_INDEX(NORMAL_RULE).initialize();
 #if PRSIM_WEAK_RULES
 	pull_up_state STR_INDEX(WEAK_RULE).initialize();
 	pull_dn_state STR_INDEX(WEAK_RULE).initialize();
 #endif
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 static
 void
 __count_fanins(fanin_state_type& s, const fanin_array_type& v) {
@@ -243,7 +153,6 @@ NodeState::count_fanins(const faninout_struct_type& f) {
 		f.pull_dn STR_INDEX(WEAK_RULE));
 #endif
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

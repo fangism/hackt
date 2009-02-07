@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.14 2008/11/14 23:06:32 fang Exp $
+	$Id: Expr.h,v 1.15 2009/02/07 03:32:56 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -247,30 +247,18 @@ private:
 		parent = 
 	}
 #endif
-}
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-__ATTRIBUTE_ALIGNED__
-#endif
-;	// end struct Expr
+} __ATTRIBUTE_ALIGNED__ ;	// end struct Expr
 
 //=============================================================================
 /**
 	Stateful expression class, derived from expression structure.  
 	TODO: figure out a clean way to use enums in code rather than chars.  
  */
-struct ExprState
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-	: public Expr
-#endif
-{
+struct ExprState {
 private:
 	typedef	ExprState		this_type;
 public:
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	typedef	expr_count_type		count_type;
-#else
-	typedef	Expr			parent_type;
-#endif
 public:
 	/**
 		'val' of the old PrsExpr.
@@ -285,33 +273,19 @@ public:
 protected:
 	// consider a redundant pull-state enum (cached) to avoid re-evaluation?
 public:
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	ExprState() { }
-#else
-	ExprState() : parent_type() { }
-#endif
 
 	/**
 		Leaves countdown and unknowns uninitialized, 
 		because they shouldn't be set until the structure is finalized
 		by the responsible State object.  
 	 */
-	ExprState(const uchar t, const count_type s)
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-		: parent_type(t, s)
-#endif
-		{ }
+	ExprState(const uchar t, const count_type s) { }
 
 // these macros also used in .cc file
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 #define	EXPR_PARAM		const Expr& e
 #define	EXPR_REF		e
 #define	EXPR_MEM(x)		(e.x)
-#else
-#define	EXPR_PARAM		void
-#define	EXPR_REF
-#define	EXPR_MEM(x)		x
-#endif
 
 	void
 	initialize(EXPR_PARAM);
@@ -372,11 +346,7 @@ public:
 	}
 
 	ostream&
-	dump_state(ostream&
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-		, EXPR_PARAM
-#endif
-		) const;
+	dump_state(ostream&, EXPR_PARAM) const;
 
 	void
 	save_state(ostream&) const;
@@ -392,13 +362,8 @@ public:
 	ostream&
 	dump_checkpoint_state(ostream&, istream&);
 
-}
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-__ATTRIBUTE_PACKED__
-#else
-__ATTRIBUTE_ALIGNED__
-#endif
-;	// end struct ExprState
+} __ATTRIBUTE_PACKED__ ;	// end struct ExprState
+// packed because state is space-critical
 
 #undef	EXPR_PARAM
 #undef	EXPR_REF

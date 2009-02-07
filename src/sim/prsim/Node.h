@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.19 2009/02/01 07:21:38 fang Exp $
+	$Id: Node.h,v 1.20 2009/02/07 03:32:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -16,9 +16,7 @@
 #include "sim/common.h"
 #include "sim/prsim/enums.h"
 #include "sim/prsim/Cause.h"
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 #include <valarray>
-#endif
 
 namespace HAC {
 namespace SIM {
@@ -27,8 +25,7 @@ using std::ostream;
 using std::istream;
 using std::vector;
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-struct faninout_struct_type;		// from "State-prsim.h"
+struct faninout_struct_type;		// from "process_graph.h"
 
 /**
 	Define to 1 to use vector for node fanin, else valarray.
@@ -102,8 +99,6 @@ struct fanin_state_type {
 	dump_state(ostream&) const;
 };	// end struct fanin_state_type
 
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
-
 
 //=============================================================================
 /**
@@ -117,12 +112,8 @@ struct fanin_state_type {
 	TODO: attribute packed for density, or align for speed?
  */
 struct Node {
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	// compact: reference process instance indices with fanout
 	typedef	std::vector<process_index_type>	fanout_array_type;
-#else
-	typedef	std::vector<expr_index_type>	fanout_array_type;
-#endif
 
 	/**
 		Bit fields for node structure flags.  
@@ -156,33 +147,11 @@ struct Node {
 		NODE_CHECK_EXCLLO = 0x0010
 	} struct_flags_enum;
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	/**
 		This refers to a list of global process instances (indices)
 		that can drive this node.  
 	 */
 	process_fanin_type		fanin;
-#else
-#if PRSIM_WEAK_RULES
-	/**
-		Index to the pull-up expression (normal, weak).
-	 */
-	expr_index_type			pull_up_index[2];
-	/**
-		Index to the pull-dn expression (normal, weak).
-	 */
-	expr_index_type			pull_dn_index[2];
-#else
-	/**
-		Index to the pull-up expression.
-	 */
-	expr_index_type			pull_up_index;
-	/**
-		Index to the pull-dn expression.
-	 */
-	expr_index_type			pull_dn_index;
-#endif
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	/**
 		List of expression indices to which this node fans out.  
@@ -213,56 +182,10 @@ public:
 	/// these aren't destroyed frequently, inline doesn't matter
 	~Node();
 
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-	void
-	push_back_fanout(const expr_index_type);
-
-	bool
-	contains_fanout(const expr_index_type) const;
-#endif
-
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-	expr_index_type&
-	get_pull_expr(const bool b
-#if PRSIM_WEAK_RULES
-		, const rule_strength w
-#endif
-		) {
-		return b ? pull_up_index STR_INDEX(w)
-			: pull_dn_index STR_INDEX(w);
-	}
-
-	const expr_index_type&
-	get_pull_expr(const bool b
-#if PRSIM_WEAK_RULES
-		, const rule_strength w
-#endif
-		) const {
-		return b ? pull_up_index STR_INDEX(w)
-			: pull_dn_index STR_INDEX(w);
-	}
-
-	void
-	replace_pull_index(const bool dir, const expr_index_type
-#if PRSIM_WEAK_RULES
-		, const rule_strength w
-#endif
-		);
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	bool
 	has_fanin(void) const {
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 		return fanin.size();
-#else
-#if PRSIM_WEAK_RULES
-		return pull_up_index[NORMAL_RULE] ||
-			pull_dn_index[NORMAL_RULE] ||
-			pull_up_index[WEAK_RULE] || pull_dn_index[WEAK_RULE];
-#else
-		return pull_up_index || pull_dn_index;
-#endif
-#endif
 	}
 
 	bool
@@ -395,7 +318,6 @@ public:
 		Not critical to simulation, unless we want statistics.  
 	 */
 	size_t					tcount;
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	/**
 		The current state of each pull.  
 	 */
@@ -406,7 +328,6 @@ public:
 	fanin_state_type			pull_up_state;
 	fanin_state_type			pull_dn_state;
 #endif
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 public:
 	NodeState() : parent_type(), value(LOGIC_OTHER), 
 		state_flags(NODE_INITIAL_STATE_FLAGS),
@@ -566,7 +487,6 @@ public:
 	void
 	reset_tcount(void) { tcount = 0; }
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	void
 	count_fanins(const faninout_struct_type&);
 
@@ -589,7 +509,6 @@ public:
 		return dir ? pull_up_state STR_INDEX(w) :
 			pull_dn_state STR_INDEX(w);
 	}
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 
 	void
 	save_state(ostream&) const;
@@ -608,7 +527,6 @@ public:
 } __ATTRIBUTE_ALIGNED__ ;	// end struct NodeState
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 /**
 	Set of pull states, in all directions.  
  */
@@ -635,7 +553,6 @@ struct pull_set {
 #endif
 	}
 };	// end struct pull_set
-#endif
 
 //=============================================================================
 }	// end namespace PRSIM

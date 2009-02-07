@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.13 2009/02/01 07:21:39 fang Exp $
+	$Id: Rule.h,v 1.14 2009/02/07 03:32:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -144,11 +144,7 @@ public:
  */
 template <typename Time>
 struct RuleState
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-	: public Rule<Time>
-#else
 	// don't really need Time template parameter!
-#endif
 {
 
 	void
@@ -161,13 +157,8 @@ struct RuleState
 	ostream&
 	dump_checkpoint_state(ostream& o, istream&) { return o; }
 
-}
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-__ATTRIBUTE_PACKED__
-#else
-__ATTRIBUTE_ALIGNED__
-#endif
-;	// end struct RuleState
+} __ATTRIBUTE_PACKED__ ;	// end struct RuleState
+// state is space-critical
 
 //-----------------------------------------------------------------------------
 }	// end namespace PRSIM

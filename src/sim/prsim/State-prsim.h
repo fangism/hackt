@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.24 2009/02/07 03:00:38 fang Exp $
+	$Id: State-prsim.h,v 1.25 2009/02/07 03:33:00 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -38,11 +38,9 @@
 #endif
 
 namespace HAC {
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 namespace entity {
 	class footprint;
 }
-#endif
 namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
@@ -92,11 +90,7 @@ struct watch_entry {
 		For now, only the expr_graph_node_pool is log(N) access, 
 		but it's not accessed during simulation, so HA!
  */
-class State : public state_base
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-	, protected unique_process_subgraph	// flattened view
-#endif
-	{
+class State : public state_base {
 	// too lazy to write public mutator methods for the moment.  
 	friend class ExprAlloc;
 	typedef	State				this_type;
@@ -414,7 +408,6 @@ protected:
 		Useful for reverse-mapping all check-excl rings.  
 	 */
 	typedef	vector<ring_set_type>		check_excl_array_type;
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	/**
 		Translates a global expression ID to the process ID
@@ -438,10 +431,8 @@ protected:
 	 */
 	typedef	vector<process_sim_state>	process_state_array_type;
 	// TODO: per process instance attributes!
-#endif	// PRSIM_INDIRECT_EXPRESSION_MAP
 private:
 	node_pool_type				node_pool;
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	/**
 		Collection of unique process footprints.  
 	 */
@@ -465,7 +456,6 @@ private:
 		ranges based on indexed mapping.  
 	 */
 	process_state_array_type		process_state_array;
-#endif
 	event_pool_type				event_pool;
 	event_queue_type			event_queue;
 	/// coerce exclusive-hi ring
@@ -533,13 +523,6 @@ private:
 		(is this redundant with the STOP flag?)
 	 */
 	volatile bool				interrupted;
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-	/**
-		For efficient tracing and lookup of root rule expressions.  
-		Should not be maintained for state checkpointing.  
-	 */
-	expr_trace_type				__scratch_expr_trace;
-#endif
 	/**
 		Auxiliary array for in-place random reordering
 		of fanout indices for evaluation.  
@@ -579,10 +562,6 @@ private:
 	__initialize(void);
 
 public:
-#if !PRSIM_INDIRECT_EXPRESSION_MAP
-	void
-	check_node(const node_index_type) const;
-#endif
 
 	const node_pool_type&
 	get_node_pool(void) const { return node_pool; }
@@ -602,7 +581,6 @@ public:
 	void
 	backtrace_node(ostream&, const node_index_type) const;
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	process_index_type
 	get_num_processes(void) const { return process_state_array.size(); }
 
@@ -647,17 +625,6 @@ public:
 	node_index_type
 	translate_to_global_node(const process_index_type, 
 		const node_index_type) const;
-#else
-	/// only called by ExprAlloc
-	void
-	void_expr(const expr_index_type);
-
-	rule_map_type&
-	get_rule_map(void) { return rule_map; }
-
-	const rule_map_type&
-	get_rule_map(void) const { return rule_map; }
-#endif
 
 	bool
 	is_rule_expr(const expr_index_type) const;
@@ -1175,14 +1142,7 @@ private:
 	get_delay_dn(const event_type&) const;
 
 	pull_enum
-	get_pull(const expr_index_type ei) const
-#if PRSIM_INDIRECT_EXPRESSION_MAP
-	;	// define in .cc file
-#else
-	{
-		return ei ? expr_pool[ei].pull_state() : PULL_OFF;
-	}
-#endif
+	get_pull(const expr_index_type ei) const;	// define in .cc file
 
 	evaluate_return_type
 	evaluate(const node_index_type, expr_index_type, 
@@ -1313,13 +1273,11 @@ public:
 	ostream&
 	dump_node_fanin(ostream&, const node_index_type, const bool) const;
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	ostream&
 	dump_rules(ostream&, const process_index_type, const bool) const;
 
 	ostream&
 	dump_all_rules(ostream&, const bool) const;
-#endif
 
 	ostream&
 	dump_node_why_X(ostream&, const node_index_type, 
@@ -1435,7 +1393,6 @@ private:
 		const size_t, const bool, const bool, 
 		node_set_type&, node_set_type&) const;
 
-#if PRSIM_INDIRECT_EXPRESSION_MAP
 	void
 	__root_expr_why_X(ostream&, const node_index_type, 
 		const bool d, 
@@ -1453,7 +1410,6 @@ private:
 #endif
 		const size_t, const bool, const bool, 
 		node_set_type&, node_set_type&) const;
-#endif
 
 	template <typename Iter>
 	ostream&
