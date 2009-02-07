@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.14 2009/02/07 03:32:58 fang Exp $
+	$Id: Rule.h,v 1.15 2009/02/07 03:55:09 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -31,9 +31,7 @@ template <typename Time>
 class Rule {
 	typedef	enum {
 		RULE_DEFAULT_FLAGS = 0x00,
-#if PRSIM_RULE_DIRECTION
 		RULE_DIR = 0x01,	///< whether rule pulls up or down
-#endif
 		RULE_WEAK = 0x02,
 		RULE_ALWAYS_RANDOM = 0x04,
 #if PRSIM_INVARIANT_RULES
@@ -77,7 +75,6 @@ public:
 #endif
 		rule_flags(RULE_DEFAULT_FLAGS) { }
 
-#if PRSIM_RULE_DIRECTION
 	void
 	set_direction(const bool d) {
 		if (d)	rule_flags |= RULE_DIR;
@@ -86,7 +83,6 @@ public:
 
 	bool
 	direction(void) const { return this->rule_flags & RULE_DIR; }
-#endif
 
         bool
         is_always_random(void) const { return this->rule_flags & RULE_ALWAYS_RANDOM; }

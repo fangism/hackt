@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.9 2009/02/07 03:32:55 fang Exp $
+	$Id: Expr.cc,v 1.10 2009/02/07 03:55:08 fang Exp $
  */
 
 #include <iostream>
@@ -75,11 +75,7 @@ Expr::parenthesize(const uchar ptype, const bool proot) const {
 	\param dir direction of pull if this is a root node, else don't care.
  */
 ostream&
-Expr::dump_struct(ostream& o
-#if PRSIM_RULE_DIRECTION
-		, const bool dir
-#endif
-		) const {
+Expr::dump_struct(ostream& o, const bool dir) const {
 	o << "type: ";
 	const uchar t = type & EXPR_MASK;
 	switch (t) {
@@ -91,9 +87,6 @@ Expr::dump_struct(ostream& o
 	}
 	o << size_t(size) << '>';
 	if (type & EXPR_ROOT) {
-#if !PRSIM_RULE_DIRECTION
-		const bool dir = direction();
-#endif
 		// parent local node index is 0-indexed
 		// the following is meaningless if rule is an invariant
 		// unfortunately, can't tell from expr, need rule...
@@ -108,15 +101,8 @@ Expr::dump_struct(ostream& o
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-Expr::dump_parent_dot_edge(ostream& o
-#if PRSIM_RULE_DIRECTION
-		, const bool dir
-#endif
-		) const {
+Expr::dump_parent_dot_edge(ostream& o, const bool dir) const {
 	if (is_root()) {
-#if !PRSIM_RULE_DIRECTION
-		const bool dir = direction();
-#endif
 		o << "NODE_" << parent << "\t[arrowhead=" <<
 			(dir ? "odot" : "dot")
 			// (dir ? "normal" : "inv")

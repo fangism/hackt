@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_state.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_state.cc,v 1.2 2009/02/07 03:33:02 fang Exp $
+	$Id: process_state.cc,v 1.3 2009/02/07 03:55:12 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -292,11 +292,7 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 		// or pass (!v) to proot to parenthesize in verbose mode
 	const expr_struct_type& e(pg.expr_pool[lri]);
 	ISE_INVARIANT(e.is_root());
-#if PRSIM_RULE_DIRECTION
 	const bool dir = r->direction();
-#else
-	const bool dir = e.direction();
-#endif
 	// print overall pull state (OR combined)
 	const node_index_type nr = e.parent;
 	const node_index_type gnr = st.translate_to_global_node(*this, nr);

@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.14 2009/02/07 03:33:01 fang Exp $
+	$Id: devel_switches.h,v 1.15 2009/02/07 03:55:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -95,7 +95,6 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	INVASIVE change.
 	Eliminate pre-translated, allocated top-level expressions in favor
 	of performing footprint translationsat run-time.
 	This also significantly changes the way node fanin will work
@@ -121,10 +120,10 @@
 /**
 	Define to 1 to move direction flag to rules, currently in expressions.
 	Rationale: because it makes sense.
-	Status: done, tested
+	Status: done, tested, perm'd
 	Goal: 1
  */
-#define	PRSIM_RULE_DIRECTION		1
+// #define	PRSIM_RULE_DIRECTION		1
 
 /**
 	Eventually unify the structures and enumerations between

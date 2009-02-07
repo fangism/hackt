@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_graph.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_graph.cc,v 1.2 2009/02/07 03:33:02 fang Exp $
+	$Id: process_graph.cc,v 1.3 2009/02/07 03:55:11 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -81,11 +81,7 @@ for ( ; k<2; ++k) {
 		const expr_struct_type& e
 			__ATTRIBUTE_UNUSED_CTOR__((expr_pool[upi]));
 		assert(e.is_root());
-#if PRSIM_RULE_DIRECTION
 		const rule_type& r(*lookup_rule(upi));
-#else
-		const expr_struct_type& r(e);
-#endif
 		assert(r.direction());
 		assert(e.parent == i);
 	}
@@ -97,11 +93,7 @@ for ( ; k<2; ++k) {
 	if (is_valid_expr_index(dni)) {
 		const expr_struct_type& e
 			__ATTRIBUTE_UNUSED_CTOR__((expr_pool[dni]));
-#if PRSIM_RULE_DIRECTION
 		const rule_type& r(*lookup_rule(dni));
-#else
-		const expr_struct_type& r(e);
-#endif
 		assert(e.is_root());
 		assert(!r.direction());
 		assert(e.parent == i);
@@ -144,11 +136,7 @@ if (!e.wiped()) {
 		assert(e.parent < node_pool.size());
 		const node_type& n
 			__ATTRIBUTE_UNUSED_CTOR__((node_pool[e.parent]));
-#if PRSIM_RULE_DIRECTION
 		const bool dir = r->direction();
-#else
-		const bool dir = e.direction();
-#endif
 #if PRSIM_WEAK_RULES
 		const fanin_array_type&
 			fin(n.get_pull_expr(dir, NORMAL_RULE));
@@ -320,10 +308,8 @@ unique_process_subgraph::dump_struct(ostream& o) const {
 		const expr_struct_type&
 			e(expr_pool[i]);
 	if (!e.wiped()) {
-		e.dump_struct(o << "expr[" << i << "]: "
-#if PRSIM_RULE_DIRECTION
-			, (e.is_root() ? lookup_rule(i)->direction() : false)
-#endif
+		e.dump_struct(o << "expr[" << i << "]: ",
+			(e.is_root() ? lookup_rule(i)->direction() : false)
 			) << endl;
 		expr_graph_node_pool[i].dump_struct(o << '\t') << endl;
 	}
@@ -365,10 +351,8 @@ unique_process_subgraph::dump_struct_dot(ostream& o,
 		o << "EXPR_" << gi << "\t[label=\"" << gi << "\", shape=";
 		const expr_struct_type& e(expr_pool[i]);
 		e.dump_type_dot_shape(o) << "];" << endl;
-		e.dump_parent_dot_edge(o << "EXPR_" << gi << " -> "
-#if PRSIM_RULE_DIRECTION
-			, (e.is_root() ? lookup_rule(i)->direction() : false)
-#endif
+		e.dump_parent_dot_edge(o << "EXPR_" << gi << " -> ",
+			(e.is_root() ? lookup_rule(i)->direction() : false)
 			) << ';'<< endl;
 	}
 }

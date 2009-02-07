@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.35 2009/02/07 03:32:56 fang Exp $
+	$Id: ExprAlloc.cc,v 1.36 2009/02/07 03:55:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -515,11 +515,7 @@ ExprAlloc::compact_expr_pools(void) {
 		gn = g->expr_graph_node_pool[i];
 		// relink parent, which may be node or expression
 		if (e.is_root()) {
-#if PRSIM_RULE_DIRECTION
 			const bool dir = g->lookup_rule(n)->direction();
-#else
-			const bool dir = e.direction();
-#endif
 #if PRSIM_WEAK_RULES
 			const rule_strength
 				str(REF_RULE_MAP(g, n).is_weak() ?
@@ -1028,16 +1024,10 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	// root expression's position in node's fanin (OR-combination)
 	ng.offset = fin.size();	
 	fin.push_back(top_ex_index);		// append to fanin rules
-#if PRSIM_RULE_DIRECTION
 	ne.pull(ni);				// set as a root expression
-#else
-	ne.pull(ni, dir);			// set as a root expression
-#endif
 	g->rule_map[top_ex_index] = g->rule_pool.size();	// map
 	g->rule_pool.push_back(dummy);
-#if PRSIM_RULE_DIRECTION
 	g->rule_pool.back().set_direction(dir);
-#endif
 }	// end ExprAlloc::link_node_to_root_expr(...)
 
 //=============================================================================

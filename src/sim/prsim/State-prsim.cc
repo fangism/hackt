@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.45 2009/02/07 03:32:59 fang Exp $
+	$Id: State-prsim.cc,v 1.46 2009/02/07 03:55:09 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2857,11 +2857,8 @@ do {
 #define	PULL_ARG		*s
 #if DEBUG_STEP
 	DEBUG_STEP_PRINT("examining expression ID: " << ui << endl);
-	STRUCT->dump_struct(STACKTRACE_INDENT
-#if PRSIM_RULE_DIRECTION
-		, false		// doesn't matter, is not root
-#endif
-		) << endl;
+	STRUCT->dump_struct(STACKTRACE_INDENT, false) << endl;
+		// direction doesn't matter, is not root
 	u->dump_state(STACKTRACE_INDENT << "before: ", *s) << endl;
 #endif
 	// trust compiler to effectively perform branch-invariant
@@ -2914,11 +2911,7 @@ if (!r.is_invariant()) {
 	const node_index_type oni = translate_to_global_node(pid, ui);
 	// local -> global node
 	node_type& n(get_node(oni));
-#if PRSIM_RULE_DIRECTION
 	const bool dir = r.direction();
-#else
-	const bool dir = STRUCT->direction();
-#endif
 	fanin_state_type& fs(n.get_pull_struct(dir
 #if PRSIM_WEAK_RULES
 		, r.is_weak()
@@ -3126,9 +3119,6 @@ State::propagate_evaluation(
 	}
 	const pull_enum next = ev_result.root_pull;
 	const node_index_type ui = ev_result.node_index;
-#if !PRSIM_RULE_DIRECTION
-	const expr_struct_type* const u(ev_result.root_ex);
-#endif
 	// we delay the root rule search until here to reduce the amount
 	// of searching required to find the responsible rule expression.  
 	rule_index_type root_rule;
@@ -3205,11 +3195,7 @@ if (n.pending_event()) {
 	return ERROR_NONE;
 }	// end if weak_rules_enabled
 #endif	// PRSIM_WEAK_RULES
-#if PRSIM_RULE_DIRECTION
 const bool dir = ev_result.root_rule->direction();
-#else
-const bool dir = u->direction();
-#endif
 if (dir) {
 	// pull-up
 /***

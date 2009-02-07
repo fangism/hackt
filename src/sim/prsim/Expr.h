@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.15 2009/02/07 03:32:56 fang Exp $
+	$Id: Expr.h,v 1.16 2009/02/07 03:55:08 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -61,10 +61,6 @@ struct Expr {
 		EXPR_NAND = 0x03,
 		EXPR_MASK = 0x03, ///< two LSB encode the logic function
 		EXPR_ROOT = 0x04 ///< if the parent expression is a node
-#if !PRSIM_RULE_DIRECTION
-		// TODO: direction field should belong to Rule
-		, EXPR_DIR = 0x08	///< if parent is node, what direction to pull
-#endif
 	} type_enum;
 
 	/**
@@ -137,18 +133,6 @@ public:
 		return (size == 1) && !is_not();
 	}
 
-#if !PRSIM_RULE_DIRECTION
-	/**
-		\pre direction is only meaningful if this expression is 
-		a root pull-up or pull-dn.  
-	 */
-	bool
-	direction(void) const {
-		INVARIANT(is_root());
-		return type & EXPR_DIR;
-	}
-#endif
-
 	void
 	set_parent_expr(const expr_index_type e) {
 		unset_root();
@@ -161,44 +145,15 @@ public:
 		parent = n;
 	}
 
-#if !PRSIM_RULE_DIRECTION
-	void
-	pull_up(const node_index_type ni) {
-		type |= EXPR_DIR;
-		set_root();
-		parent = ni;
-	}
-
-	void
-	pull_dn(const node_index_type ni) {
-		type &= ~EXPR_DIR;
-		set_root();
-		parent = ni;
-	}
-#endif
-
-#if PRSIM_RULE_DIRECTION
 	void
 	pull(const node_index_type ni) {
 		set_root();
 		parent = ni;
 	}
-#else
-	void
-	pull(const node_index_type ni, const bool d) {
-		if (d)	type |= EXPR_DIR;
-		else	type &= ~EXPR_DIR;
-		set_root();
-		parent = ni;
-	}
-#endif
 
 #if PRSIM_INVARIANT_RULES
 	void
 	invariant_root(void) {
-#if !PRSIM_RULE_DIRECTION
-		type &= ~EXPR_DIR;	// pull-down (doesn't matter)
-#endif
 		set_root();
 		// parent = 0;		// doesn't matter
 	}
@@ -224,21 +179,13 @@ public:
 	to_prs_enum(void) const;
 
 	ostream&
-	dump_struct(ostream&
-#if PRSIM_RULE_DIRECTION
-		, const bool
-#endif
-		) const;
+	dump_struct(ostream&, const bool) const;
 
 	ostream&
 	dump_type_dot_shape(ostream&) const;
 
 	ostream&
-	dump_parent_dot_edge(ostream&
-#if PRSIM_RULE_DIRECTION
-		, const bool
-#endif
-		) const;
+	dump_parent_dot_edge(ostream&, const bool) const;
 
 #if 0
 private:
