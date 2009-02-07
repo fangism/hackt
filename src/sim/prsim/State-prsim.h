@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.25 2009/02/07 03:33:00 fang Exp $
+	$Id: State-prsim.h,v 1.26 2009/02/07 04:08:43 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -275,22 +275,8 @@ public:
 		Default enumeration values.
 	 */
 	enum {
-#if 0
-		ERROR_IGNORE = 0,
-		ERROR_NONE = ERROR_IGNORE,
-		ERROR_WARN = 1,
-		ERROR_NOTIFY = ERROR_WARN,
-		ERROR_BREAK = 2,
-		/// return control to user temporarily before resuming script
-		ERROR_INTERACTIVE = 3,
-		/// halt the simulation immediately
-		ERROR_FATAL = 4,
-		ERROR_INVALID,
-#endif
-#if PRSIM_INVARIANT_RULES
 		ERROR_DEFAULT_INVARIANT_FAIL = ERROR_BREAK,
 		ERROR_DEFAULT_INVARIANT_UNKNOWN = ERROR_WARN,
-#endif
 		ERROR_DEFAULT_UNSTABLE = ERROR_BREAK,
 		ERROR_DEFAULT_WEAK_UNSTABLE = ERROR_WARN,
 		ERROR_DEFAULT_INTERFERENCE = ERROR_BREAK,
@@ -493,12 +479,10 @@ private:
 	// mode of operation
 	// operation flags
 	flags_type				flags;
-#if PRSIM_INVARIANT_RULES
 	/// poicy when invariants are violated
 	error_policy_enum			invariant_fail_policy;
 	/// poicy when invariants are *possibly* violated, due to 'X' pull
 	error_policy_enum			invariant_unknown_policy;
-#endif
 	/// controls the simulation behavior upon instability
 	error_policy_enum			unstable_policy;
 	/// controls the simulation behavior upon weak-instability
@@ -790,7 +774,6 @@ public:
 		return name##_policy;				\
 	}
 
-#if PRSIM_INVARIANT_RULES
 	bool
 	check_all_invariants(ostream&) const;
 
@@ -804,7 +787,6 @@ public:
 	DEFINE_POLICY_CONTROL_GET(invariant_fail)
 	DEFINE_POLICY_CONTROL_SET(invariant_unknown)
 	DEFINE_POLICY_CONTROL_GET(invariant_unknown)
-#endif
 
 	DEFINE_POLICY_CONTROL_SET(unstable)
 	DEFINE_POLICY_CONTROL_SET(weak_unstable)

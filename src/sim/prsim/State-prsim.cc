@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.46 2009/02/07 03:55:09 fang Exp $
+	$Id: State-prsim.cc,v 1.47 2009/02/07 04:08:42 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -148,33 +148,25 @@ struct State::evaluate_return_type {
 	const rule_type*		root_rule;
 	/// root rule index
 	rule_index_type			root_rule_index;
-#if PRSIM_INVARIANT_RULES
 	/// true signals that simulation should halt, e.g. if there is error
 	bool				invariant_break;
-#endif
 
 	/// other fields may remain uninitialized, we won't use them
-	evaluate_return_type() : node_index(INVALID_NODE_INDEX)
+	evaluate_return_type() : node_index(INVALID_NODE_INDEX),
 		// other fields, don't care
-#if PRSIM_INVARIANT_RULES
-		, invariant_break(false)
-#endif
+		invariant_break(false)
 		{ }
 
-#if PRSIM_INVARIANT_RULES
 	explicit
 	evaluate_return_type(const bool s) : 
 		node_index(INVALID_NODE_INDEX), invariant_break(s) { }
-#endif
 
 	evaluate_return_type(const node_index_type ni,
 		const root_ex_type* const e, const pull_enum p, 
 		const rule_type* const r, const rule_index_type ri) :
 		node_index(ni), root_ex(e), root_pull(p)
 			, root_rule(r), root_rule_index(ri)
-#if PRSIM_INVARIANT_RULES
 			, invariant_break(false)
-#endif
 			{ }
 };	// end struct evaluate_return_type
 
@@ -213,7 +205,6 @@ struct process_sim_state::rules_dumper : public dumper_base {
 };	// end struct invariant_checker
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INVARIANT_RULES
 /**
 	Convenient accumulator functor.
  */
@@ -248,9 +239,6 @@ struct process_sim_state::invariant_dumper : public dumper_base {
 	}
 	}
 };	// end struct invariant_checker
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#endif	// PRSIM_INVARIANT_RULES
 
 //=============================================================================
 // class State::event_deallocator definition
@@ -326,10 +314,8 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 #endif
 		flags(FLAGS_DEFAULT),
 #define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
-#if PRSIM_INVARIANT_RULES
 		invariant_fail_policy(E(INVARIANT_FAIL)),
 		invariant_unknown_policy(E(INVARIANT_UNKNOWN)),
-#endif
 		unstable_policy(E(UNSTABLE)),
 		weak_unstable_policy(E(WEAK_UNSTABLE)),
 		interference_policy(E(INTERFERENCE)),
@@ -684,10 +670,8 @@ State::reset(void) {
 	weak_unstable_policy = E(WEAK_UNSTABLE);
 	interference_policy = E(INTERFERENCE);
 	weak_interference_policy = E(WEAK_INTERFERENCE);
-#if PRSIM_INVARIANT_RULES
 	invariant_fail_policy = E(INVARIANT_FAIL),
 	invariant_unknown_policy = E(INVARIANT_UNKNOWN),
-#endif
 	assert_fail_policy = E(ASSERT_FAIL);
 	channel_expect_fail_policy = E(CHANNEL_EXPECT_FAIL);
 	excl_check_fail_policy = E(EXCL_CHECK_FAIL);
@@ -1541,12 +1525,10 @@ State::dump_mode(ostream& o) const {
 		(checking_excl() ? "on" : "off") << endl;
 	o << "\ton exclusion-fail: " <<
 		error_policy_string(excl_check_fail_policy) << endl;
-#if PRSIM_INVARIANT_RULES
 	o << "\ton invariant-fail: " <<
 		error_policy_string(invariant_fail_policy) << endl;
 	o << "\ton invariant-unknown: " <<
 		error_policy_string(invariant_unknown_policy) << endl;
-#endif
 	o << "\ton assert-fail: " <<
 		error_policy_string(assert_fail_policy) << endl;
 	o << "\ton channe-expect-fail: " <<
@@ -2840,9 +2822,7 @@ State::evaluate(const node_index_type ni,
 		node_type::value_to_char[size_t(prev)] << " -> " <<
 		node_type::value_to_char[size_t(next)] << endl);
 	expr_state_type* u;
-#if PRSIM_INVARIANT_RULES
 	const pull_enum node_val = next;	// for invariant diagnostic
-#endif
 	// first, localize evaluation to a single process!
 	const expr_struct_type* s;
 	process_sim_state& ps(lookup_global_expr_process(gui));
@@ -2903,9 +2883,7 @@ do {
 	const rule_index_type lri = pg.rule_map.find(ri)->second;
 		// expr -> rule
 	const rule_type& r(pg.rule_pool[lri]);
-#if PRSIM_INVARIANT_RULES
 if (!r.is_invariant()) {
-#endif
 	const process_index_type pid = lookup_process_index(ps);
 	// new: remember to update node-fanin state structure!
 	const node_index_type oni = translate_to_global_node(pid, ui);
@@ -2936,7 +2914,6 @@ if (!r.is_invariant()) {
 	next = fs.pull();
 	return evaluate_return_type(oni, STRUCT, next,
 		&r, ps.global_expr_index(ri));
-#if PRSIM_INVARIANT_RULES
 } else {
 	// then this rule doesn't actually pull a node
 	const bool fail = (next == PULL_OFF);
@@ -2958,7 +2935,6 @@ if (!r.is_invariant()) {
 	}
 	return evaluate_return_type();	// continue
 }
-#endif
 #undef	STRUCT
 }	// end State::evaluate()
 
@@ -3105,14 +3081,12 @@ State::propagate_evaluation(
 	// when evaluating node as expression, interpret value as pull
 	const evaluate_return_type
 		ev_result(evaluate(ni, exi, prev, pull_enum(c.val)));
-#if PRSIM_INVARIANT_RULES
 	if (ev_result.invariant_break) {
 		// then violation is not a result of a real rule
 		// thus, there can be no change or addition of events
 		return invariant_fail_policy;
 		// return true;
 	}
-#endif
 	if (!ev_result.node_index) {
 		return ERROR_NONE;
 		// return false;
@@ -4025,7 +3999,6 @@ State::check_event_queue(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INVARIANT_RULES
 /**
 	Report all violations of invariants.  
 	\return true if there are any invariant violations.  
@@ -4052,7 +4025,6 @@ State::dump_all_invariants(ostream& o, const bool v) const {
 		process_sim_state::invariant_dumper(o, *this, v));
 	return o;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -5800,10 +5772,8 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, weak_unstable_policy);
 	write_value(o, interference_policy);
 	write_value(o, weak_interference_policy);
-#if PRSIM_INVARIANT_RULES
 	write_value(o, invariant_fail_policy);
 	write_value(o, invariant_unknown_policy);
-#endif
 	write_value(o, assert_fail_policy);
 	write_value(o, channel_expect_fail_policy);
 	write_value(o, excl_check_fail_policy);
@@ -5879,11 +5849,9 @@ try {
 #endif
 	READ_ALIGN_MARKER		// sanity alignment check
 }{
-#if PRSIM_INVARIANT_RULES
-	// loading checkpoint, ignore violations
+	// while loading checkpoint, ignore violations
 	invariant_fail_policy = ERROR_IGNORE;
 	invariant_unknown_policy = ERROR_IGNORE;
-#endif
 	// to reconstruct from nodes only, we perform propagation evaluation
 	// on every node, as if it had just fired out of X state.  
 	typedef node_pool_type::const_iterator	const_iterator;
@@ -5989,10 +5957,8 @@ try {
 	read_value(i, weak_unstable_policy);
 	read_value(i, interference_policy);
 	read_value(i, weak_interference_policy);
-#if PRSIM_INVARIANT_RULES
 	read_value(i, invariant_fail_policy);
 	read_value(i, invariant_unknown_policy);
-#endif
 	read_value(i, assert_fail_policy);
 	read_value(i, channel_expect_fail_policy);
 	read_value(i, excl_check_fail_policy);
@@ -6129,12 +6095,10 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	o << "interference policy: " << error_policy_string(p) << endl;
 	read_value(i, p);
 	o << "weak-interference policy: " << error_policy_string(p) << endl;
-#if PRSIM_INVARIANT_RULES
 	read_value(i, p);
 	o << "invariant-fail policy: " << error_policy_string(p) << endl;
 	read_value(i, p);
 	o << "invariant-unknown policy: " << error_policy_string(p) << endl;
-#endif
 	read_value(i, p);
 	o << "assert-fail (bool) policy: " << error_policy_string(p) << endl;
 	read_value(i, p);

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.36 2009/02/07 03:55:09 fang Exp $
+	$Id: ExprAlloc.cc,v 1.37 2009/02/07 04:08:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -243,7 +243,6 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	u.local_faninout_map.resize(node_pool_size);
 #endif
 	parent_type::visit(pfp);	// visit rules/macros/exprs
-#if PRSIM_INVARIANT_RULES
 	{
 	using entity::PRS::PRS_footprint_expr_pool_type;
 	using entity::PRS::footprint;
@@ -262,7 +261,6 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 		link_invariant_expr(ret_ex_index);
 	}
 	}
-#endif
 #if 0
 	// definitely want to keep this
 	if (flags.any_optimize() && expr_free_list.size()) {
@@ -323,7 +321,6 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 #if !PRSIM_SIMPLE_ALLOC
 		// const entity::PRS::footprint& pfp(fp->get_prs_footprint());
 		cflat_visitor::visit(pfp);
-#if PRSIM_INVARIANT_RULES
 		{
 		using entity::PRS::PRS_footprint_expr_pool_type;
 		using entity::PRS::footprint;
@@ -342,7 +339,6 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 			link_invariant_expr(ret_ex_index);
 		}
 		}
-#endif
 #else
 #if 1
 		// problem: spec directives are still global, not per-process
@@ -975,7 +971,6 @@ if (d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INVARIANT_RULES
 /**
 	Fake a rule as an invariant that doesn't really pull any node.
  */
@@ -990,7 +985,6 @@ ExprAlloc::link_invariant_expr(const expr_index_type top_ex_index) {
 	g->rule_map[top_ex_index] = g->rule_pool.size();	// map
 	g->rule_pool.push_back(dummy);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

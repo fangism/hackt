@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_state.h"
 	The state of the prsim simulator.  
-	$Id: process_state.h,v 1.1 2009/02/07 03:00:41 fang Exp $
+	$Id: process_state.h,v 1.2 2009/02/07 04:08:45 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -150,7 +150,6 @@ struct process_sim_state : public process_sim_state_base {
 		const State&, const size_t, 
 		const bool, node_set_type&, node_set_type&) const;
 
-#if PRSIM_INVARIANT_RULES
 	struct invariant_checker;
 	struct invariant_dumper;
 
@@ -159,7 +158,6 @@ struct process_sim_state : public process_sim_state_base {
 
 	ostream&
 	dump_invariants(ostream&, const State&, const bool) const;
-#endif
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 

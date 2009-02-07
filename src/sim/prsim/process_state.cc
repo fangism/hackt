@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_state.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_state.cc,v 1.3 2009/02/07 03:55:12 fang Exp $
+	$Id: process_state.cc,v 1.4 2009/02/07 04:08:44 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -132,7 +132,6 @@ if (pg.rule_pool.size()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INVARIANT_RULES
 /**
 	Convenient accumulator functor.
  */
@@ -222,7 +221,6 @@ process_sim_state::dump_invariants(ostream& o, const State& st,
 	}
 	return o;
 }
-#endif	// PRSIM_INVARIANT_RULES
 
 //=============================================================================
 /**

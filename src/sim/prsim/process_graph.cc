@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_graph.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_graph.cc,v 1.3 2009/02/07 03:55:11 fang Exp $
+	$Id: process_graph.cc,v 1.4 2009/02/07 04:08:43 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -121,18 +121,14 @@ unique_process_subgraph::check_expr(const expr_index_type i) const {
 	STACKTRACE_VERBOSE_CHECK;
 	const faninout_map_type& node_pool(local_faninout_map);
 	const expr_struct_type& e(expr_pool[i]);
-#if PRSIM_INVARIANT_RULES
 	const rule_type* const r(lookup_rule(i));
 	const bool is_invariant = r && r->is_invariant();
-#endif
 	const graph_node_type& g(expr_graph_node_pool[i]);
 if (!e.wiped()) {
 	// check parent
 	// local indices are allowed to start at 0
 	if (e.is_root()) {
-#if PRSIM_INVARIANT_RULES
 	if (!is_invariant) {
-#endif
 		assert(e.parent < node_pool.size());
 		const node_type& n
 			__ATTRIBUTE_UNUSED_CTOR__((node_pool[e.parent]));
@@ -150,9 +146,7 @@ if (!e.wiped()) {
 		const fanin_array_type& fin(n.get_pull_expr(e.direction()));
 		assert(count(fin.begin(), fin.end(), i) == 1);
 #endif	// PRSIM_WEAK_RULES
-#if PRSIM_INVARIANT_RULES
 	}
-#endif
 	} else {
 		assert(e.parent < expr_pool.size());
 		// const Expr& pe(expr_pool[e.parent]);

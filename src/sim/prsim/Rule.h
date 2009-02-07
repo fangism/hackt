@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.15 2009/02/07 03:55:09 fang Exp $
+	$Id: Rule.h,v 1.16 2009/02/07 04:08:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -34,9 +34,7 @@ class Rule {
 		RULE_DIR = 0x01,	///< whether rule pulls up or down
 		RULE_WEAK = 0x02,
 		RULE_ALWAYS_RANDOM = 0x04,
-#if PRSIM_INVARIANT_RULES
 		RULE_INVARIANT = 0x08,
-#endif
 		RULE_UNSTAB = 0x10,
 		RULE_BIT_MASK = 0xFFFF	/// unsigned short flags
 	}	rule_enum_type;
@@ -99,16 +97,11 @@ public:
 	void
 	set_weak(void) { this->rule_flags |= RULE_WEAK; }
 
-#if PRSIM_INVARIANT_RULES
 	bool
 	is_invariant(void) const { return this->rule_flags & RULE_INVARIANT; }
 
 	void
 	set_invariant(void) { this->rule_flags |= RULE_INVARIANT; }
-#else
-	bool
-	is_invariant(void) const { return false; }
-#endif
 
 	void
 	clear_weak(void) { this->rule_flags &= ~RULE_WEAK; }

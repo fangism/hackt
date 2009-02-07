@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.38 2009/02/07 03:32:54 fang Exp $
+	$Id: Command-prsim.cc,v 1.39 2009/02/07 04:08:40 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3850,7 +3850,6 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference",
 	weak_interference)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INVARIANT_RULES
 /***
 @texinfo cmd/invariant-fail.texi
 @deffn Command invariant-fail [mode]
@@ -3877,7 +3876,6 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(InvariantUnknown, "invariant-unknown",
 	"set error-handling of possible invariant failures",
 	"Set error-handling policy on possible invariant violations.",
 	invariant_unknown)
-#endif	// PRSIM_INVARIANT_RULES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -4046,7 +4044,6 @@ void
 AllRulesVerbose::usage(ostream& o) { all_rules_usage(o); }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_INVARIANT_RULES
 /***
 @texinfo cmd/invariants.texi
 @deffn Command invariants ref
@@ -4222,7 +4219,6 @@ CheckInvariants::usage(ostream& o) {
 " : checks all invariants in the design and reports all\n"
 "and possible violations." << endl;
 }
-#endif	// PRSIM_INVARIANT_RULES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
