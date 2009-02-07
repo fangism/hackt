@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.210 2009/02/01 07:21:16 fang Exp $
+#	$Id: Makefile.am,v 1.211 2009/02/07 03:00:37 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -933,6 +933,8 @@ SIM_CC_FILES = \
 	sim/prsim/Event-prsim.cc \
 	sim/prsim/State-prsim.cc \
 	sim/prsim/Trace-prsim.cc \
+	sim/prsim/process_graph.cc \
+	sim/prsim/process_state.cc \
 	sim/chpsim/nonmeta_context.cc \
 	sim/chpsim/Command.cc \
 	sim/chpsim/Dependence.cc \
@@ -951,6 +953,7 @@ SIM_TCC_FILES = \
 	sim/command_registry.tcc \
 	sim/signal_handler.tcc \
 	sim/event.tcc \
+	sim/prsim/util.tcc \
 	sim/prsim/Rule.tcc
 
 SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \

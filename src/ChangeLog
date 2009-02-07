@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-02-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-94:
+	  Cleaning up prsim source: factored out unique_process_subgraph
+		and process_sim_state into separate modules.  
+		Next: perm-ing some flags.  
+
+
 2009-02-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-93:
