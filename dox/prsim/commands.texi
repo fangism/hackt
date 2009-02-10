@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.19 2009/02/05 02:53:04 fang Exp $
+@c $Id: commands.texi,v 1.19.2.1 2009/02/10 21:25:31 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -306,6 +306,7 @@ as if the simulator had just started up.
 The first subset of commands give information about the properties of the 
 simulated production rules and contain no stateful information.  
 
+@include cmd/attributes.texi
 @include cmd/fanin.texi
 @include cmd/fanin-get.texi
 @include cmd/fanout.texi

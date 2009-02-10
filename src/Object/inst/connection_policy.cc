@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.9 2009/01/13 00:48:47 fang Exp $
+	$Id: connection_policy.cc,v 1.9.4.1 2009/02/10 21:25:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -23,6 +23,10 @@ using util::read_value;
 // bool_connect_policy method definitions
 // TODO: handle directions
 
+/**
+	These strings should be ordered according their corresponding
+	bit fields (enum) in the attribute flags.  
+ */
 const char*
 bool_connect_policy::attribute_names[] = {
 	"iscomb",
@@ -30,6 +34,8 @@ bool_connect_policy::attribute_names[] = {
 	"isrvc1",
 	"isrvc2",
 	"isrvc3",
+	"may_interfere",
+	"may_weak_interfere",
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

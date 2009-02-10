@@ -2,7 +2,7 @@
 	\file "Object/lang/PRS_attribute_common.h"
 	Contains base classes for all tool-independent implementations
 	of PRS rule attribute classes.  
-	$Id: PRS_attribute_common.h,v 1.8 2008/11/29 03:24:48 fang Exp $
+	$Id: PRS_attribute_common.h,v 1.8.4.1 2009/02/10 21:25:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_COMMON_H__
@@ -56,6 +56,8 @@ DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Weak)
 
 /**
 	Unstable attribute.  
+	PRSIM: do not X out the output node in the event of instability,
+		and also silence instability diagnostics on the rule.
  */
 DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Unstab)
 

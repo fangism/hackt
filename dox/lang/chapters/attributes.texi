@@ -1,5 +1,5 @@
 @c "chapters/attributes.texi"
-@c $Id: attributes.texi,v 1.2 2009/01/13 00:48:44 fang Exp $
+@c $Id: attributes.texi,v 1.2.4.1 2009/02/10 21:25:30 fang Exp $
 
 @node Attributes
 @chapter Attributes
@@ -35,6 +35,11 @@ attach attributes.
 @include attrib/bool-iscomb.texi
 @include attrib/bool-autokeeper.texi
 @include attrib/bool-isrvc.texi
+
+Diagnostic attributes.
+
+@include attrib/bool-ignore_interfere.texi
+@include attrib/bool-ignore_weak_interfere.texi
 
 @c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @node Channel Attributes

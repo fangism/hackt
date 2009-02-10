@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.10 2009/01/13 00:48:49 fang Exp $
+	$Id: connection_policy.h,v 1.10.4.1 2009/02/10 21:25:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -119,6 +119,11 @@ protected:
 		BOOL_IS_RVC1		= 0x0004,
 		BOOL_IS_RVC2		= 0x0008,
 		BOOL_IS_RVC3		= 0x0010,
+	/**
+		Set if node's fanin rules are permitted to interfere.
+	 */
+		BOOL_MAY_INTERFERE	= 0x0020,
+		BOOL_MAY_WEAK_INTERFERE	= 0x0040,
 		BOOL_DEFAULT_ATTRIBUTES = 0x0000
 	};
 	connection_flags_type			attributes;
@@ -144,6 +149,26 @@ public:
 	bool
 	has_nondefault_attributes(void) const {
 		return attributes;	// if any bits are set
+	}
+
+	void
+	set_may_interfere(void) {
+		attributes |= BOOL_MAY_INTERFERE;
+	}
+
+	void
+	set_may_weak_interfere(void) {
+		attributes |= BOOL_MAY_WEAK_INTERFERE;
+	}
+
+	bool
+	may_interfere(void) const {
+		return attributes & BOOL_MAY_INTERFERE;
+	}
+
+	bool
+	may_weak_interfere(void) const {
+		return attributes & BOOL_MAY_WEAK_INTERFERE;
 	}
 
 	void

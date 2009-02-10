@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.20 2009/02/07 03:32:58 fang Exp $
+	$Id: Node.h,v 1.20.2.1 2009/02/10 21:25:47 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -19,8 +19,12 @@
 #include <valarray>
 
 namespace HAC {
+namespace entity {
+struct bool_connect_policy;	// from "Object/inst/connection_policy.h"
+}
 namespace SIM {
 namespace PRSIM {
+using entity::bool_connect_policy;
 using std::ostream;
 using std::istream;
 using std::vector;
@@ -29,8 +33,21 @@ struct faninout_struct_type;		// from "process_graph.h"
 
 /**
 	Define to 1 to use vector for node fanin, else valarray.
+	Valarray's are more compact, but less convenient for resizing.
  */
 #define	VECTOR_NODE_FANIN		1
+
+/**
+	Define to 1 to support node attribute: unstable
+	Goal: 0
+	Rationale: unstable attribute belongs to rule.
+ */
+#define	NODE_ATTR_UNSTABLE			0
+/**
+	Goal: 1
+ */
+#define	NODE_ATTR_INTERFERENCE			1
+
 /**
 	List or array of fanin expressions.  
 	OR-combination expression.  
@@ -120,11 +137,13 @@ struct Node {
 	 */
 	typedef	enum {
 		NODE_DEFAULT_STRUCT_FLAGS = 0x0000,
+#if NODE_ATTR_UNSTABLE
 		/**
 			Whether or not events on this node are allowed
 			to be unstable.  
 		 */
 		NODE_UNSTAB = 0x0001,
+#endif
 		/**
 			Whether or not this node belongs to at least one
 			forced exclusive high ring.  
@@ -145,6 +164,14 @@ struct Node {
 			checked exclusive high ring.  
 		 */
 		NODE_CHECK_EXCLLO = 0x0010
+#if NODE_ATTR_INTERFERENCE
+		/**
+			Whether or not to report interference on this node.
+		 */
+		,
+		NODE_MAY_INTERFERE = 0x0020,
+		NODE_MAY_WEAK_INTERFERE = 0x0040
+#endif
 	} struct_flags_enum;
 
 	/**
@@ -193,8 +220,32 @@ public:
 		return fanout.size();
 	}
 
+#if NODE_ATTR_UNSTABLE
 	bool
 	is_unstab(void) const { return struct_flags & NODE_UNSTAB; }
+#endif
+#if NODE_ATTR_INTERFERENCE
+private:
+	// only to be called by attribute assignment of allocation phase
+	void
+	allow_interference(void) { struct_flags |= NODE_MAY_INTERFERE; }
+
+	void
+	allow_weak_interference(void) {
+		struct_flags |= NODE_MAY_WEAK_INTERFERE;
+	}
+
+public:
+	bool
+	may_interfere(void) const { return struct_flags & NODE_MAY_INTERFERE; }
+
+	bool
+	may_weak_interfere(void) const {
+		return struct_flags & NODE_MAY_WEAK_INTERFERE;
+	}
+#endif
+	void
+	import_attributes(const bool_connect_policy&);
 
 	bool
 	has_mk_exclhi(void) const { return struct_flags & NODE_MK_EXCLHI; }
@@ -232,6 +283,9 @@ public:
 
 	ostream&
 	dump_fanout_dot(ostream&, const std::string&) const;
+
+	ostream&
+	dump_attributes(ostream&) const;
 
 	ostream&
 	dump_struct(ostream&) const;

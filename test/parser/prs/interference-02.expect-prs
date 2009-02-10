@@ -1,0 +1,6 @@
+"wee.foo" -> "wee.bar"-
+~"wee.foo" -> "wee.bar"+
+@ "wee.foo" may_interfere
+@ "wee.bar" may_interfere
+= "wee.bar" "wee.bar2"
+= "wee.foo" "wee.foo2"

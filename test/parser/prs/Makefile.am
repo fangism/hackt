@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.47 2009/01/22 21:01:43 fang Exp $
+#	$Id: Makefile.am,v 1.47.2.1 2009/02/10 21:25:52 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -76,6 +76,7 @@ HACKT_PARSE_TEST_PASSES = \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	isrvc-01 \
+	interference-01 interference-02 interference-03 \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
 	act-006 act-007 act-009 act-010 \
@@ -140,6 +141,7 @@ HACKT_CREATE_TEST_PASSES = \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	isrvc-01 \
+	interference-01 interference-02 interference-03 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
@@ -208,6 +210,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	isrvc-01 \
+	interference-01 interference-02 interference-03 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \

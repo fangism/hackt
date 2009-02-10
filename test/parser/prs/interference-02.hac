@@ -1,0 +1,16 @@
+// "interference-02.hac"
+// @hflat-flags@ -fnode-attributes
+// testing out intererence node attribute
+
+defproc yoyodyne(bool foo, bar) {
+foo @ [ignore_interference];
+bool foo2 = foo;
+bool bar2 = bar;
+bar @ [ignore_interference=1];
+prs {
+	foo	=> bar-
+}
+}
+
+yoyodyne wee;
+

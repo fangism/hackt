@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_attribute_common.cc"
-	$Id: bool_attribute_common.cc,v 1.3 2009/01/13 00:48:50 fang Exp $
+	$Id: bool_attribute_common.cc,v 1.3.4.1 2009/02/10 21:25:40 fang Exp $
  */
 
 #include <iostream>
@@ -17,6 +17,17 @@ namespace entity {
 namespace bool_attributes {
 #include "util/using_ostream.h"
 using namespace entity::attributes;
+
+//=============================================================================
+good_bool
+AllowInterference::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
+}
+
+good_bool
+AllowWeakInterference::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
+}
 
 //=============================================================================
 /**

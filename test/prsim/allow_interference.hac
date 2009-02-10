@@ -1,0 +1,19 @@
+// "allow_interference.hac"
+// testing out ignore_interference attribute
+
+bool a, b, c;
+prs {
+	~a	-> c+
+	b	-> c-
+}
+
+c @ [ignore_interference];
+
+bool aw, bw, cw;
+prs {
+	~aw	-> cw+
+	bw	-> cw-
+}
+
+cw @ [ignore_interference];
+

@@ -1,0 +1,106 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	141
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	43
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	43
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	387
+	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	346
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    yoyodyne = process-definition (defined) yoyodyne(
+        bool<> foo
+        bool<> bar
+      )
+      In definition "yoyodyne", we have: {
+      Instances:
+        bar = bool<> yoyodyne::bar
+        bar2 = bool<> yoyodyne::bar2
+        foo = bool<> yoyodyne::foo
+        foo2 = bool<> yoyodyne::foo2
+      unroll sequence: 
+        bool<> foo
+        bool<> bar
+        foo@[ignore_interference=]
+        bool<> foo2
+        foo2 = foo;
+        bool<> bar2
+        bar2 = bar;
+        bar@[ignore_interference=1]
+      prs:
+        foo -> bar-
+        ~foo -> bar+
+      footprint: {
+        bar = bool^0 = yoyodyne::bar (2) @[ may_interfere ] 
+        bar2 = bool^0 = yoyodyne::bar (2) @[ may_interfere ] 
+        foo = bool^0 = yoyodyne::foo (1) @[ may_interfere ] 
+        foo2 = bool^0 = yoyodyne::foo (1) @[ may_interfere ] 
+        Created state:
+        bool instance pool:
+        1	yoyodyne::foo @[ may_interfere ]
+        2	yoyodyne::bar @[ may_interfere ]
+        resolved prs:
+        foo -> bar-
+        ~foo -> bar+
+      }
+      }
+
+  Instances:
+    wee = yoyodyne<> wee
+}
+
+footprint: {
+  wee = process yoyodyne<>^0 = wee (1) (
+    foo = bool^0 = wee.foo (1) @[ may_interfere ] 
+    bar = bool^0 = wee.bar (2) @[ may_interfere ] 
+  )
+  Created state:
+  process instance pool:
+  1	wee
+  bool instance pool:
+  1	wee.foo @[ may_interfere ]
+  2	wee.bar @[ may_interfere ]
+}

@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-02-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-95-prsim-13-01:
+	  Branch for adding node/rule attribute support for hacprsim, 
+		namely for fine-grain interference and instability
+		diagnostic control.
+	  This revision: implemented allow_interference and 
+		allow_weak_interference node attributes, which suppress
+		the respective warnings on nodes, so if any two fanin
+		rules interfere, warning will be silenced, but
+		node will still go to X.  
+
+
 2009-02-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-94-d:

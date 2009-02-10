@@ -4,7 +4,7 @@
 	which are applied at create-time.  
 	Because these attributes are applied at create-time, 
 	they are back-end independent.  
-	$Id: bool_instance_attribute.cc,v 1.3 2009/01/13 00:48:51 fang Exp $
+	$Id: bool_instance_attribute.cc,v 1.3.4.1 2009/02/10 21:25:42 fang Exp $
  */
 
 #include "Object/unroll/instance_attribute_registry.h"
@@ -38,6 +38,59 @@ namespace bool_attributes_impl {
 
 //=============================================================================
 // bool attributes
+
+/***
+@texinfo attrib/bool-ignore_interfere.texi
+@defmac ignore_interfere b
+Diagnostic attribute.
+If @var{b} is true, then suppress diagnostics about interference 
+(opposing on-pulls) on this node.
+In simulation, the behavior should remain, just silence warnings.  
+When @var{b} is omitted, it is assumed to be true.
+@end defmac
+@end texinfo
+
+@texinfo attrib/bool-ignore_weak_interfere.texi
+@defmac ignore_weak_interfere b
+Diagnostic attribute.
+If @var{b} is true, then suppress diagnostics about weak-interference 
+(on-pull vs. X-pull or X-pull vs. X-pull) on this node.
+In simulation, the behavior should remain, just silence warnings.  
+When @var{b} is omitted, it is assumed to be true.
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_BOOL_INSTANCE_ATTRIBUTE_CLASS(AllowInterference, 
+	"ignore_interference")
+DECLARE_AND_DEFINE_BOOL_INSTANCE_ATTRIBUTE_CLASS(AllowWeakInterference,
+	"ignore_weak_interference")
+
+void
+AllowInterference::main(visitor_type& a, const values_type& v) {
+	pint_value_type b = 1;		// default unspecified value
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		a.set_may_interfere();
+	}
+}
+
+void
+AllowWeakInterference::main(visitor_type& a, const values_type& v) {
+	pint_value_type b = 1;		// default unspecified value
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		a.set_may_weak_interfere();
+	}
+}
+
+
+//=============================================================================
 
 DECLARE_AND_DEFINE_BOOL_INSTANCE_ATTRIBUTE_CLASS(IsComb, "iscomb")
 
