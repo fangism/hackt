@@ -1,0 +1,37 @@
+[top-level]
+rules:
+[after 10, unstable]	~a -> c+
+[after 10, unstable]	b -> c-
+	0	a : 1
+	0	b : 0
+	0	a : 0
+queue:	10	c : 1	[from a:=0]
+	0	a : 1
+event c+ was silently killed 
+	0	b : 1
+queue:	10	c : 0	[from b:=1]
+	0	b : 0
+event c- was silently killed 
+	0	b : 1
+	10	c : 0	[by b:=1]
+	10	b : 0
+	10	a : 0
+queue:	20	c : 1	[from a:=0]
+	10	a : 1
+event c+ was silently killed 
+testing weak instability... 
+	10	a : 0
+queue:	20	c : 1	[from a:=0]
+	10	a : X
+	20	c : X	[by a:=X]
+should suppress c+ weak unstable 
+c should still become X 
+	20	a : 0
+	30	c : 1	[by a:=0]
+	30	a : 1
+	30	b : 1
+queue:	40	c : 0	[from b:=1]
+	30	b : X
+	40	c : X	[by b:=X]
+should suppress c- weak unstable 
+c should still become X 

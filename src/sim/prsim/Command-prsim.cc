@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.39 2009/02/07 04:08:40 fang Exp $
+	$Id: Command-prsim.cc,v 1.40 2009/02/11 02:35:18 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2126,6 +2126,46 @@ AllRingsChk::usage(ostream& o) {
 // will category conflict with command?
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(Info, "info", info, 
 //	"print information about a node/vector")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/attributes.texi
+@deffn Command attributes node
+Prints the list of attributes attached to the named @var{node}.
+@end deffn
+@end texinfo
+TODO: extend to process attributes eventually
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Attributes, "attributes", info, 
+	"prints node attributes")
+
+int
+Attributes::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		// we have ni = the canonically allocated index of the bool node
+		// just look it up in the node_pool
+		s.dump_node_canonical_name(cout << "Node ", ni)
+			<< " attributes:";
+		s.get_node(ni).dump_attributes(cout) << endl;
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Attributes::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o << brief << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

@@ -2,7 +2,7 @@
 	\file "Object/lang/PRS_attribute_common.h"
 	Contains base classes for all tool-independent implementations
 	of bool (node) attribute classes.  
-	$Id: bool_attribute_common.h,v 1.2 2009/01/13 00:48:50 fang Exp $
+	$Id: bool_attribute_common.h,v 1.3 2009/02/11 02:35:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_ATTRIBIBUTE_COMMON_H__
@@ -34,6 +34,10 @@ struct class_name {							\
 	__check_vals(const char*, const values_type&);			\
 };	// end struct class_name
 
+
+//=============================================================================
+DECLARE_BOOL_ATTRIBIBUTE_COMMON_STRUCT(AllowInterference)
+DECLARE_BOOL_ATTRIBIBUTE_COMMON_STRUCT(AllowWeakInterference)
 
 //=============================================================================
 /**

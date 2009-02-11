@@ -2,6 +2,7 @@ testing overtaking of unstable rules
 	0	a : 0
 queue:	10	b : 1	[from a:=0]
 WARNING: unstable `b'+
+rule: [after 10]	~a:1 -> b+:X
 >> cause: `a' (val: 1)
 	0	a : 1
 queue:	10	b : 0	[from a:=1]

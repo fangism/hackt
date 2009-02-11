@@ -1,0 +1,18 @@
+"wee.foo" -> "wee.bar"-
+~"wee.foo" -> "wee.bar"+
+"cheezburger.foo" -> "cheezburger.bar"-
+~"cheezburger.foo" -> "cheezburger.bar"+
+weak	"wha.bar" -> "wha.foo"-
+weak	~"wha.bar" -> "wha.foo"+
+weak	"cheezburger.bar" -> "cheezburger.foo"-
+weak	~"cheezburger.bar" -> "cheezburger.foo"+
+@ "wee.foo" may_interfere
+@ "cheezburger.foo" may_interfere
+@ "cheezburger.bar" may_weak_interfere
+@ "wha.bar" may_weak_interfere
+= "cheezburger.bar" "bukkit.bar"
+= "cheezburger.bar" "bukkit.bar2"
+= "cheezburger.foo" "bukkit.foo"
+= "cheezburger.foo" "cheezburger.foo2"
+= "wee.foo" "wee.foo2"
+= "wha.bar" "wha.bar2"

@@ -1,0 +1,17 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	wee	yoyo<>
+	bool: 1,2
+2	(top)	-	2	cheezburger	yoyo<>
+	bool: 3,4
+3	(top)	-	3	wha	dyne<>
+	bool: 5,6
+4	(top)	-	4	bukkit	dyne<>
+	bool: 3,4
+[global bool entries]
+1	(top)	-	1	wee.foo	 @[ may_interfere ]
+2	(top)	-	2	wee.bar	
+3	(top)	-	3	cheezburger.foo	 @[ may_interfere ]
+4	(top)	-	4	cheezburger.bar	 @[ may_weak_interfere ]
+5	(top)	-	5	wha.foo	
+6	(top)	-	6	wha.bar	 @[ may_weak_interfere ]

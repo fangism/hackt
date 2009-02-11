@@ -3,6 +3,47 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-02-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-96-merged-prsim-13-03:
+	  Branch merge.  Honor node attributes allow_{,weak_}interference,
+		and honor rule attribute unstable in hacprsim.
+		Minor improvement to instability diagnostic.
+		Tested, documented.
+
+
+2009-02-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-95-prsim-13-03:
+	  prsim: diagnostic improvement:
+		print the rule that is unstable when reporting instability.
+		Test cases updated trivially accordingly.  
+	  End of branch.
+
+
+	* HACKT-00-01-04-main-00-82-95-prsim-13-02:
+	  Implemented pre-rule unstable policy in prsim.
+		Rules flagged 'unstab' will not trigger run-time diagnostics
+		about instability and will silently dequeue events, 
+		as if unstable-dequeue were only applied to that rule.
+	  Minor bug fix (prsim, chpsim): assert-queue and assertn-queue 
+		should have checked for *live* events in the queue, 
+		not counting killed events.  (chpsim unaffected)
+	  Added bunch of new test cases.
+	  Next: print rules during instability diagnostics.
+
+
+	* HACKT-00-01-04-main-00-82-95-prsim-13-01:
+	  Branch for adding node/rule attribute support for hacprsim, 
+		namely for fine-grain interference and instability
+		diagnostic control.
+	  This revision: implemented allow_interference and 
+		allow_weak_interference node attributes, which suppress
+		the respective warnings on nodes, so if any two fanin
+		rules interfere, warning will be silenced, but
+		node will still go to X.  
+
+
 2009-02-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-94-d:

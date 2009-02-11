@@ -1,7 +1,7 @@
 /**
 	\file "sim/event.h"
 	Generic event placeholder type.  
-	$Id: event.h,v 1.4 2008/06/25 05:18:55 fang Exp $
+	$Id: event.h,v 1.5 2009/02/11 02:35:15 fang Exp $
  */
 
 #ifndef	__HAC_SIM_EVENT_H__
@@ -136,6 +136,10 @@ private:
 	 */
 	index_set_type				index_set;
 #endif
+public:
+#if MULTIMAP_EVENT_QUEUE
+	typedef	typename queue_type::const_iterator	const_iterator;
+#endif
 private:
 	/**
 		Internal event queue.
@@ -153,6 +157,14 @@ public:
 	empty(void) const {
 		return equeue.empty();
 	}
+
+#if MULTIMAP_EVENT_QUEUE
+	const_iterator
+	begin(void) const { return equeue.begin(); }
+
+	const_iterator
+	end(void) const { return equeue.end(); }
+#endif
 
 	void
 	push(const value_type& p) {

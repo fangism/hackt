@@ -1,0 +1,58 @@
+Node a attributes:
+Node b attributes:
+Node c attributes: ignore_weak_interference
+	0	a : 1
+	0	b : 1
+	10	c : 0	[by b:=1]
+now interfere! 
+should have no diagnostic 
+WARNING: interference `c'
+>> cause: `a' (val: 0)
+	10	a : 0
+	20	c : X	[by a:=0]
+remove interference... 
+	20	a : 1
+	30	c : 0	[by a:=1]
+now weak interference... 
+	30	a : X
+	40	c : X	[by a:=X]
+remove interference... 
+	40	a : 1
+	50	c : 0	[by a:=1]
+flip side... 
+	50	b : 0
+	50	a : 0
+	60	c : 1	[by a:=0]
+interfere pull-down 
+but message should be suppressed... 
+WARNING: interference `c'
+>> cause: `b' (val: 1)
+	60	b : 1
+	70	c : X	[by b:=1]
+remove interference... 
+	70	b : 0
+	80	c : 1	[by b:=0]
+now weak interference... 
+	80	b : X
+	90	c : X	[by b:=X]
+remove interference... 
+	90	b : 0
+	100	c : 1	[by b:=0]
+both off... 
+	100	a : 1
+X-pull-up 
+	100	a : X
+	100	a : 1
+X-pull-down 
+	100	b : X
+	110	c : X	[by b:=X]
+	110	b : 0
+X vs. X 
+	110	a : X
+	110	b : X
+more weak interference... 
+	110	a : 0
+	110	a : X
+more weak interference... 
+	110	b : 1
+	110	b : X

@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.15 2008/11/12 21:43:08 fang Exp $
+	$Id: state_manager.h,v 1.16 2009/02/11 02:35:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
@@ -53,9 +53,9 @@ public:
 private:
 	typedef	global_entry_pool<Tag>			this_type;
 	typedef	Tag					tag_type;
-	typedef	typename pool_type::const_iterator	const_iterator;
 	typedef	typename pool_type::iterator		iterator;
 public:
+	typedef	typename pool_type::const_iterator	const_iterator;
 	global_entry_pool();
 	~global_entry_pool();
 

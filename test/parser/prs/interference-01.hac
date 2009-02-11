@@ -1,0 +1,12 @@
+// "interference-01.hac"
+// @hflat-flags@ -fnode-attributes
+// testing out intererence node attribute
+
+bool foo;
+foo @ [ignore_interference];
+bool foo2 = foo;
+
+bool bar;
+bool bar2 = bar;
+bar @ [ignore_interference=1];
+

@@ -1,0 +1,39 @@
+Trace file contents: 3 epochs.
+		start	start	file	chunk
+	epoch	index	time	offset	size
+	0	0	0	#SIZE#	#SIZE#
+	1	0	0	#SIZE#	#SIZE#
+	2	26	0	#SIZE#	#SIZE#
+Epoch 0: (initial values)
+X X X X 
+Epoch 1:
+	event		event	cause	node	node
+	index	time	node	index	index	value	rule/node
+	0	0	0	0	0	X	(null)
+	1	0	0	0	1	1	(a:1)
+	2	0	0	0	2	0	(b:0)
+	3	0	0	0	2	1	(b:1)
+	4	0	0	0	2	0	(b:0)
+	5	0	0	0	1	0	(a:0)
+	6	0	0	0	1	1	(a:1)
+	7	10	1	5	3	X	[after 10]	~a -> c+
+	8	10	0	0	2	1	(b:1)
+	9	20	2	8	3	0	[after 10, unstable]	b -> c-
+	10	20	0	0	2	0	(b:0)
+	11	20	0	0	1	0	(a:0)
+	12	20	0	0	1	1	(a:1)
+	13	30	1	11	3	X	[after 10]	~a -> c+
+	14	30	0	0	2	1	(b:1)
+	15	40	2	14	3	0	[after 10, unstable]	b -> c-
+	16	40	0	0	2	0	(b:0)
+	17	40	0	0	1	0	(a:0)
+	18	40	0	0	1	X	(a:X)
+	19	50	1	17	3	X	[after 10]	~a -> c+
+	20	50	0	0	1	0	(a:0)
+	21	60	1	20	3	1	[after 10]	~a -> c+
+	22	60	0	0	1	1	(a:1)
+	23	60	0	0	2	1	(b:1)
+	24	60	0	0	2	X	(b:X)
+	25	70	2	23	3	X	[after 10, unstable]	b -> c-
+Epoch 2: (final values)
+X 1 X X 

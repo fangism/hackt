@@ -1,0 +1,42 @@
+[top-level]
+rules:
+[after 10]	~a -> c+
+[after 10, unstable]	a -> c-
+	0	a : 1
+	10	c : 0	[by a:=1]
+	10	a : 0
+queue:	20	c : 1	[from a:=0]
+WARNING: unstable `c'+
+rule: [after 10]	~a:1 -> c+:0
+>> cause: `a' (val: 1)
+	10	a : 1
+queue:	20	c : X	[from a:=0]
+event c+ was converted to X 
+	20	c : X	[by a:=1]
+WARNING: weak-interference `c'
+>> cause: `a' (val: X)
+	20	a : X
+initialize to X 
+	20	a : 1
+queue:	30	c : 0	[from a:=1]
+	20	a : 0
+	30	c : 1	[by a:=0]
+event c- was silently overturned to c+ 
+testing weak instability... 
+No event pending on `c'.
+WARNING: weak-interference `c'
+>> cause: `a' (val: X)
+	30	a : X
+	40	c : X	[by a:=X]
+should suppress c+ weak unstable 
+c should still become X 
+	40	a : 0
+	50	c : 1	[by a:=0]
+	50	a : 1
+queue:	60	c : 0	[from a:=1]
+WARNING: weak-interference `c'
+>> cause: `a' (val: X)
+	50	a : X
+	60	c : X	[by a:=X]
+should suppress c- weak unstable 
+c should still become X 

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.18 2008/12/23 01:51:34 fang Exp $
+	$Id: Channel-prsim.cc,v 1.19 2009/02/11 02:35:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -2038,7 +2038,7 @@ if (i.second) {
 			if (ni) {
 				c.data[dk] = ni;
 				// flag node for consistency
-				state.get_node(ni).set_in_channel();
+				state.__get_node(ni).set_in_channel();
 				c.__node_to_rail[ni] = dk;
 				// lookup from node to channels
 				node_channels_map[ni].insert(key);
@@ -2135,7 +2135,7 @@ if (have_ack) {
 			"any of its data rails!" << endl;
 		return true;
 	}
-	state.get_node(ai).set_in_channel();		// flag in channel
+	state.__get_node(ai).set_in_channel();		// flag in channel
 	node_channels_map[ai].insert(f->second);	// reverse lookup
 }
 if (have_validity) {
@@ -2157,7 +2157,7 @@ if (have_validity) {
 			"alias each other!" << endl;
 		return true;
 	}
-	state.get_node(vi).set_in_channel();		// flag in channel
+	state.__get_node(vi).set_in_channel();		// flag in channel
 	node_channels_map[vi].insert(f->second);	// reverse lookup
 }
 	return false;

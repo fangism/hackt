@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.16 2009/02/01 07:21:33 fang Exp $
+	$Id: State.h,v 1.17 2009/02/11 02:35:16 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -399,6 +399,13 @@ public:
 		return !immediate_event_fifo.empty() ||
 			!check_event_queue.empty();
 	}
+
+	/**
+		chpsim doesn't support killing of events, so all events
+		in the queue are live.  
+	 */
+	bool
+	pending_live_events(void) const { return pending_events(); }
 
 	const time_type&
 	time(void) const { return current_time; }

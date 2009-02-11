@@ -2,6 +2,7 @@ initially all Xs
 	0	a : 1
 queue:	10	b : 0	[from a:=1]
 WARNING: unstable `b'-
+rule: [after 10]	a:0 -> b-:X
 >> cause: `a' (val: 0)
 	0	a : 0
 queue:	10	b : 1	[from a:=1]	(weak)

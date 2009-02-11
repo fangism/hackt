@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.14 2009/02/05 02:53:10 fang Exp $
+	$Id: command_common.tcc,v 1.15 2009/02/11 02:35:14 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -810,7 +810,7 @@ if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
 } else {
-	if (s.pending_events()) {
+	if (s.pending_live_events()) {
 		if (s.confirm_asserts()) {
 			cout << "Event queue is non-empty, as expected."
 				<< endl;
@@ -845,7 +845,7 @@ if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
 } else {
-	if (!s.pending_events()) {
+	if (!s.pending_live_events()) {
 		if (s.confirm_asserts()) {
 			cout << "Event queue is empty, as expected." << endl;
 		}

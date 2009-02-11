@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.47 2009/02/07 04:08:42 fang Exp $
+	$Id: State-prsim.cc,v 1.48 2009/02/11 02:35:20 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -30,11 +30,14 @@
 #include "sim/random_time.h"
 #include "sim/signal_handler.tcc"
 #include "Object/module.h"
+#include "Object/global_entry.tcc"	// for extract_parent_formal_...
 #include "Object/state_manager.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
+#include "Object/inst/instance_alias_info.h"	// for bool_connect_policy
+#include "Object/inst/alias_empty.h"
 #include "Object/traits/proc_traits.h"	// for diagnostic
 #include "Object/global_entry.h"
 #include "sim/ISE.h"
@@ -336,6 +339,16 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// the same number of elements.  
 	const size_t s = bool_pool.size();
 	node_pool.resize(s);
+	// could implement the following as a cflat_visitor...
+	// apply node attributes:
+	node_pool_type::iterator i(node_pool.begin()), ne(node_pool.end());
+	global_entry_pool<bool_tag>::const_iterator j(bool_pool.begin());
+	const entity::global_entry_context_base gec(sm, mod.get_footprint());
+	for (++i, ++j; i!=ne; ++i, ++j) {
+		const entity::state_instance<bool_tag>&
+			b(j->get_canonical_instance(gec));
+		i->import_attributes(*b.get_back_ref());
+	}
 
 	// not expect expression-trees deeper than 8, but is growable
 	__shuffle_indices.reserve(32);
@@ -530,7 +543,7 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 		const node_index_type& ni(i->first);
 		const value_enum _v = i->second;
 #endif
-		node_type& _n(get_node(ni));
+		node_type& _n(__get_node(ni));
 		if (_n.current_value() != _v) {
 		const event_index_type pe = _n.get_event();
 
@@ -720,7 +733,7 @@ State::get_node(const node_index_type i) const {
 	Can remove bounds checks if we're really confident.
  */
 State::node_type&
-State::get_node(const node_index_type i) {
+State::__get_node(const node_index_type i) {
 	ISE_INVARIANT(i);
 	ISE_INVARIANT(i < node_pool.size());
 	return node_pool[i];
@@ -787,7 +800,7 @@ State::append_mk_exclhi_ring(ring_set_type& r) {
 	typedef	ring_set_type::const_iterator	const_iterator;
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
-		get_node(*i).make_exclhi();
+		__get_node(*i).make_exclhi();
 	}
 	mk_exhi.push_back(ring_set_type());
 	mk_exhi.back().swap(r);
@@ -805,7 +818,7 @@ State::append_mk_excllo_ring(ring_set_type& r) {
 	typedef	ring_set_type::const_iterator	const_iterator;
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
-		get_node(*i).make_excllo();
+		__get_node(*i).make_excllo();
 	}
 	mk_exlo.push_back(ring_set_type());
 	mk_exlo.back().swap(r);
@@ -825,7 +838,7 @@ State::append_check_exclhi_ring(const ring_set_type& r) {
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
 		const node_index_type ni = *i;
-		get_node(ni).check_exclhi();
+		__get_node(ni).check_exclhi();
 		check_exhi[ni].push_back(j);
 	}
 }
@@ -844,7 +857,7 @@ State::append_check_excllo_ring(const ring_set_type& r) {
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
 		const node_index_type ni = *i;
-		get_node(ni).check_excllo();
+		__get_node(ni).check_excllo();
 		check_exlo[ni].push_back(j);
 	}
 }
@@ -946,7 +959,7 @@ State::__allocate_pending_interference_event(node_type& n,
  */
 event_index_type
 State::__load_allocate_event(const event_type& ev) {
-	node_type& n(get_node(ev.node));
+	node_type& n(__get_node(ev.node));
 	const size_t ne = event_pool.allocate(ev);
 	if (!ev.killed()) {
 		n.load_event(ne);
@@ -1011,6 +1024,24 @@ State::get_event(const event_index_type i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true if there are any liev (not-killed) events in the queue.
+ */
+bool
+State::pending_live_events(void) const {
+	if (event_queue.empty()) {
+		return false;
+	}
+	event_queue_type::const_iterator
+		i(event_queue.begin()), e(event_queue.end());
+	for ( ; i!=e; ++i) {
+		if (!event_pool[i->event_index].killed())
+			return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Removes event from main event queue and dissociates it from
 	its affected node.  (node and event are invariably consistent)
 	This is only a non-static member function because we want to
@@ -1021,7 +1052,7 @@ State::get_event(const event_index_type i) {
 void
 State::kill_event(const event_index_type ei, const node_index_type ni) {
 	get_event(ei).kill();
-	get_node(ni).clear_event();
+	__get_node(ni).clear_event();
 	if (UNLIKELY(watching_all_event_queue() ||
 			(watching_event_queue() && is_watching_node(ni)))) {
 		dump_event_force(cout << "killed  :", ei,
@@ -1080,7 +1111,7 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
  */
 bool
 State::reschedule_event_now(const node_index_type ni) {
-	node_type& n(get_node(ni));
+	node_type& n(__get_node(ni));
 	const event_index_type ei = n.get_event();
 	if (ei) {
 		const event_index_type ne = __copy_event(get_event(ei));
@@ -1122,7 +1153,7 @@ if (t < current_time) {
 	cerr << "Error: reschedule time must be >= current time." << endl;
 	return true;
 }
-	node_type& n(get_node(ni));
+	node_type& n(__get_node(ni));
 	const event_index_type ei = n.get_event();
 	if (ei) {
 		const event_index_type ne = __copy_event(get_event(ei));
@@ -1144,7 +1175,7 @@ if (t < current_time) {
  */
 bool
 State::reschedule_event_relative(const node_index_type ni, const time_type dt) {
-	node_type& n(get_node(ni));
+	node_type& n(__get_node(ni));
 	const event_index_type ei = n.get_event();
 	if (ei) {
 		// bah! copy and linear search
@@ -1195,7 +1226,7 @@ State::enqueue_exclhi(const time_type t, const event_index_type ei) {
 	const pair<iterator, bool> i(exclhi_queue.insert(value_type(ei, t)));
 	// eliminate duplicates, check time consistency
 	ISE_INVARIANT(i.second || (t == i.first->second));
-	get_node(get_event(ei).node).set_excl_queue();
+	__get_node(get_event(ei).node).set_excl_queue();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1213,7 +1244,7 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 	const pair<iterator, bool> i(excllo_queue.insert(value_type(ei, t)));
 	// eliminate duplicates, check time consistency
 	ISE_INVARIANT(i.second || (t == i.first->second));
-	get_node(get_event(ei).node).set_excl_queue();
+	__get_node(get_event(ei).node).set_excl_queue();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1286,7 +1317,7 @@ State::set_node_time(const node_index_type ni, const value_enum val,
 		" at " << t << endl);
 	// we have ni = the canonically allocated index of the bool node
 	// just look it up in the node_pool
-	node_type& n(get_node(ni));
+	node_type& n(__get_node(ni));
 	const event_index_type pending = n.get_event();
 	const value_enum last_val = n.current_value();
 	const bool unchanged = (val == last_val);
@@ -1355,7 +1386,7 @@ if (pending) {
 void
 State::unset_node(const node_index_type ni) {
 	STACKTRACE_VERBOSE;
-	node_type& n(get_node(ni));
+	node_type& n(__get_node(ni));
 	const event_index_type pending = n.get_event();
 #if PRSIM_WEAK_RULES
 	// strong events take precedence over weak ones
@@ -1452,7 +1483,7 @@ State::unset_all_nodes(void) {
  */
 void
 State::set_node_breakpoint(const node_index_type ni) {
-	get_node(ni).set_breakpoint();
+	__get_node(ni).set_breakpoint();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1461,7 +1492,7 @@ State::set_node_breakpoint(const node_index_type ni) {
  */
 void
 State::clear_node_breakpoint(const node_index_type ni) {
-	get_node(ni).clear_breakpoint();
+	__get_node(ni).clear_breakpoint();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1757,7 +1788,7 @@ for ( ; i!=e; ++i) {
 	const node_index_type& _ni(ev.node);
 	DEBUG_STEP_PRINT("... on node " <<
 		get_node_canonical_name(_ni) << endl);
-	node_type& _n(get_node(_ni));
+	node_type& _n(__get_node(_ni));
 
 	// are weak events ever inserted into the pending queue?
 	const pull_enum pull_up_state =
@@ -2072,7 +2103,7 @@ State::flush_exclhi_queue(void) {
 for ( ; i!=e; ++i) {
 	const event_placeholder_type ep(i->second, i->first);
 	const node_index_type epni = get_event(ep.event_index).node;
-	node_type& epn(get_node(epni));
+	node_type& epn(__get_node(epni));
 	/***
 		Look through events: if any of them have a pending
 		queue entry, then we're done (?)
@@ -2148,7 +2179,7 @@ State::flush_excllo_queue(void) {
 for ( ; i!=e; ++i) {
 	const event_placeholder_type ep(i->second, i->first);
 	const node_index_type epni = get_event(ep.event_index).node;
-	node_type& epn(get_node(epni));
+	node_type& epn(__get_node(epni));
 	/***
 		Look through events: if any of them have a pending
 		queue entry, then we're done (?)
@@ -2233,7 +2264,7 @@ for ( ; i!=e; ++i) {
 		for ( ; ii!=ie; ++ii) {
 		if (ii!=si) {
 			const node_index_type eri = *ii;
-			node_type& er(get_node(eri));
+			node_type& er(__get_node(eri));
 			// strong rules only
 			const pull_enum pei =
 				er.pull_up_state STR_INDEX(NORMAL_RULE).pull();
@@ -2289,7 +2320,7 @@ for ( ; i!=e; ++i) {
 		for ( ; ii!=ie; ++ii) {
 		if (ii!=si) {
 			const node_index_type eri = *ii;
-			node_type& er(get_node(eri));
+			node_type& er(__get_node(eri));
 				// strong rules only
 			const pull_enum pei =
 				er.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
@@ -2516,7 +2547,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	const event_type& pe(get_event(ei));
 	const bool force = pe.forced();
 	const node_index_type ni = pe.node;
-	node_type& n(get_node(ni));
+	node_type& n(__get_node(ni));
 	const value_enum prev = n.current_value();
 	node_index_type _ci;	// just a copy
 #if PRSIM_TRACE_GENERATION
@@ -2569,7 +2600,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 		// else proceed
 	} else {
 		// vacuous event is allowed if set was forced by user
-		ISE_INVARIANT(prev != pe.val || n.is_unstab() || force);
+		ISE_INVARIANT(prev != pe.val || force);
 		// FAILED ONCE! (test case?)
 		// occurred on 20071214 after adding weak rules
 	}
@@ -2888,7 +2919,7 @@ if (!r.is_invariant()) {
 	// new: remember to update node-fanin state structure!
 	const node_index_type oni = translate_to_global_node(pid, ui);
 	// local -> global node
-	node_type& n(get_node(oni));
+	node_type& n(__get_node(oni));
 	const bool dir = r.direction();
 	fanin_state_type& fs(n.get_pull_struct(dir
 #if PRSIM_WEAK_RULES
@@ -3103,7 +3134,7 @@ State::propagate_evaluation(
 	const size_t is_weak = ev_result.root_rule->is_weak();
 #endif
 // propagation made it to the root node, indexed by ui (now node_index_type)
-	node_type& n(get_node(ui));
+	node_type& n(__get_node(ui));
 	DEBUG_STEP_PRINT("propagated to output node: " <<
 		get_node_canonical_name(ui) << " with pull state " <<
 		size_t(next) << endl);
@@ -3622,20 +3653,26 @@ State::__report_cause(ostream& o, const event_type& ev) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Report a node with interfering fanin rules.  
+	Diagnostics may be suppresed by the may-interfere, and 
+	may-weak-interfere node attributes.
 	\return true if error causes break in events.  
  */
 State::break_type
 State::__report_interference(ostream& o, const bool weak, 
 		const node_index_type _ni, const event_type& ev) const {
+	const node_type& _n(get_node(_ni));
 	if (weak) {
-	if (weak_interference_policy != ERROR_IGNORE) {
+	if (weak_interference_policy != ERROR_IGNORE &&
+			!_n.may_weak_interfere()) {
 		dump_node_canonical_name(o << "WARNING: weak-interference `", 
 			_ni) << "\'" << endl;
 		__report_cause(o, ev);
 		return weak_interference_policy;	// >= ERROR_BREAK;
 	}	// endif weak_interference_policy
 	} else {	// !weak
-	if (interference_policy != ERROR_IGNORE) {
+	if (interference_policy != ERROR_IGNORE &&
+			!_n.may_interfere()) {
 		dump_node_canonical_name(o << "WARNING: interference `", _ni)
 			<< "\'" << endl;
 		__report_cause(o, ev);
@@ -3657,10 +3694,13 @@ State::__report_interference(ostream& o, const bool weak,
 State::break_type
 State::__report_instability(ostream& o, const bool weak, const bool dir, 
 		const node_index_type _ni, const event_type& ev) const {
+	const rule_type* const r = lookup_rule(ev.cause_rule);
+if (!r || !r->is_unstable()) {
 	if (weak) {
 	if (weak_unstable_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: weak-unstable `",
 			_ni) << "\'" << (dir ? '+' : '-') << endl;
+	if (r) dump_rule(o << "rule: ", ev.cause_rule, true, false) << endl;
 		__report_cause(o, ev);
 		return weak_unstable_policy;		// >= ERROR_BREAK;
 	}	// endif weak_unstable_policy
@@ -3668,10 +3708,12 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 	if (unstable_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: unstable `", _ni)
 			<< "\'" << (dir ? '+' : '-') << endl;
+	if (r) dump_rule(o << "rule: ", ev.cause_rule, true, false) << endl;
 		__report_cause(o, ev);
 		return unstable_policy;			// >= ERROR_BREAK;
 	}	// endif unstable_policy
 	}	// endif weak
+}
 	return ERROR_NONE;
 }
 
@@ -3715,8 +3757,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 	if (!vacuous) {
 		// then must be unstable or interfering (exclusive)
 		const bool instability =
-			(eu & event_type::EVENT_UNSTABLE) &&
-			!n.is_unstab()
+			(eu & event_type::EVENT_UNSTABLE)
 #if PRSIM_WEAK_RULES
 			&& !(weak && !e.is_weak())
 			// is not instability if original event was strong
@@ -3747,7 +3788,9 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			// on pending queue (result of instability)
 		if (instability) {
 			e.set_cause_node(ni);
-			if (dequeue_unstable_events() &&
+			const rule_type* const r = lookup_rule(e.cause_rule);
+			if ((dequeue_unstable_events() ||
+					(r && r->is_unstable())) &&
 				(next == PULL_OFF ||
 				n.current_value() == LOGIC_OTHER)) {
 				// let dequeuer deallocate killed events
@@ -3843,7 +3886,7 @@ void
 State::watch_node(const node_index_type ni) {
 	// this will create an entry if doesn't already exist
 	watch_entry& w(watch_list[ni]);
-	node_type& n(get_node(ni));
+	node_type& n(__get_node(ni));
 	// remember whether or not this is a breakpoint or a watchpoint
 	w.breakpoint = n.is_breakpoint();
 	n.set_breakpoint();
@@ -3860,7 +3903,7 @@ State::unwatch_node(const node_index_type ni) {
 	typedef	watch_list_type::iterator		iterator;
 	iterator i(watch_list.find(ni));	// won't add an element
 	if (i != watch_list.end()) {
-		node_type& n(get_node(ni));
+		node_type& n(__get_node(ni));
 		if (i->second.breakpoint) {
 			n.set_breakpoint();
 		} else {
@@ -3885,7 +3928,7 @@ State::unwatch_all_nodes(void) {
 	typedef	watch_list_type::const_iterator		const_iterator;
 	const_iterator i(watch_list.begin()), e(watch_list.end());
 	for ( ; i!=e; ++i) {
-		node_type& n(get_node(i->first));
+		node_type& n(__get_node(i->first));
 		if (i->second.breakpoint) {
 			n.set_breakpoint();
 		} else {

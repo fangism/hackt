@@ -1,0 +1,6 @@
+// "rule_unstable-d.hac"
+
+import "rule_unstable-a.hac";
+
+a = b;
+

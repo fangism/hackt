@@ -22,5 +22,6 @@ glitching one up
 	15	t : 1
 expect usual instability 
 WARNING: unstable `f'-
+rule: [after 10]	t:0 -> f-:X
 >> cause: `t' (val: 0)
 	20	t : 0

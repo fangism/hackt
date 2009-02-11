@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.26 2009/02/07 04:08:43 fang Exp $
+	$Id: State-prsim.h,v 1.27 2009/02/11 02:35:21 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -93,6 +93,7 @@ struct watch_entry {
 class State : public state_base {
 	// too lazy to write public mutator methods for the moment.  
 	friend class ExprAlloc;
+	friend class channel_manager;
 	typedef	State				this_type;
 public:
 	// these typedefs will make it convenient to template this
@@ -545,6 +546,9 @@ private:
 	void
 	__initialize(void);
 
+	node_type&
+	__get_node(const node_index_type);
+
 public:
 
 	const node_pool_type&
@@ -553,9 +557,7 @@ public:
 	const node_type&
 	get_node(const node_index_type) const;
 
-	node_type&
-	get_node(const node_index_type);
-
+public:
 	ostream&
 	dump_node_canonical_name(ostream&, const node_index_type) const;
 
@@ -807,8 +809,13 @@ public:
 #undef	DEFINE_POLICY_CONTROL_SET
 #undef	DEFINE_POLICY_CONTROL_GET
 
+	/// \return true if any events are in queue, *** even if killed ***
 	bool
 	pending_events(void) const { return !event_queue.empty(); }
+
+	/// \return true if any non-killed (live) events remain in queue
+	bool
+	pending_live_events(void) const;
 
 	static
 	time_type

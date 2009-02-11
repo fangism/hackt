@@ -2,6 +2,13 @@
 
 2009-01-31	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-96-merged-prsim-13-03:
+	  Branch merge: node/rule attributes for hacprsim.
+	  configure.ac: date bump
+
+
+2009-01-31	David Fang	<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-92-merged-prsim-12-09:
 	  Merged prsim tracing branch.
 	  configure.ac: date bump

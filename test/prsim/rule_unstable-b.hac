@@ -1,0 +1,10 @@
+// "rule_unstable-b.hac"
+// testing unstable rule attribute
+
+bool a, b, c;
+
+prs {
+	~a		-> c+
+[unstab]	b		-> c-
+}
+

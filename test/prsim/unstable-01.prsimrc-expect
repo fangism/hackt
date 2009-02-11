@@ -2,6 +2,7 @@ time: 0
 	0	a : 1
 expect instability 
 WARNING: unstable `b'-
+rule: [after 10]	a:0 -> b-:X
 >> cause: `a' (val: 0)
 	5	a : 0
 	10	b : X	[by a:=0]
@@ -9,6 +10,7 @@ initializing
 	0	a : 0
 expect instability 
 WARNING: unstable `b'+
+rule: [after 10]	~a:1 -> b+:X
 >> cause: `a' (val: 1)
 	5	a : 1
 	10	b : X	[by a:=1]

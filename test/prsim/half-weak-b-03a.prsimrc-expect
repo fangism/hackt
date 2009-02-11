@@ -3,6 +3,7 @@
 	10	a : 1
 queue:	20	b : 0	[from a:=1]
 WARNING: unstable `b'-
+rule: [after 10]	a:0 -> b-:1
 >> cause: `a' (val: 0)
 	10	a : 0
 queue:	20	b : 1	[from a:=1]	(weak)

@@ -1,0 +1,89 @@
+# "allow_interference-01.prsimrc"
+# @haco@ allow_interference.haco-a
+
+watchall
+weak-rules on
+attributes aw
+attributes bw
+attributes cw
+set aw 1
+set bw 1
+cycle
+
+echo now interfere!
+set aw 0
+echo should have no diagnostic
+cycle
+assert cw X
+
+echo remove interference...
+set aw 1
+cycle
+
+echo now weak interference...
+set aw X
+cycle
+
+echo remove interference...
+set aw 1
+cycle
+
+echo flip side...
+set bw 0
+cycle
+set aw 0
+cycle
+
+echo interfere pull-down
+echo but message should be suppressed...
+set bw 1
+cycle
+
+echo remove interference...
+set bw 0
+cycle
+
+echo now weak interference...
+set bw X
+cycle
+
+echo remove interference...
+set bw 0
+cycle
+
+echo both off...
+set aw 1
+cycle
+
+echo X-pull-up
+set aw X
+cycle
+
+set aw 1
+cycle
+
+echo X-pull-down
+set bw X
+cycle
+
+set bw 0
+cycle
+
+echo X vs. X
+set aw X
+set bw X
+cycle
+
+echo more weak interference...
+set aw 0
+cycle
+set aw X
+cycle
+
+echo more weak interference...
+set bw 1
+cycle
+set bw X
+cycle
+
+

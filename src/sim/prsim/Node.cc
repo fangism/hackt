@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.14 2009/02/07 03:32:58 fang Exp $
+	$Id: Node.cc,v 1.15 2009/02/11 02:35:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,6 +16,7 @@
 #include "util/IO_utils.tcc"
 #include "util/STL/valarray_iterator.h"
 #include "sim/prsim/process_graph.h"	// for faninout_struct_type
+#include "Object/inst/connection_policy.h"	// for bool_connect_policy
 
 namespace HAC {
 namespace SIM {
@@ -46,9 +47,30 @@ Node::~Node() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This grabs instance attributes from the canonical bools
+	in the instance hierarchy.
+ */
+void
+Node::import_attributes(const bool_connect_policy& b) {
+	// the only attributes we care about:
+	if (b.may_weak_interfere())	allow_weak_interference();
+	if (b.may_interfere())		allow_interference();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+Node::dump_attributes(ostream& o) const {
+	if (may_interfere())	o << " ignore_interference";
+	if (may_weak_interfere())	o << " ignore_weak_interference";
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Dumps structural information about the Node only.
 	Of each up/dn pair, the first is the strong rule, 
 		the second is weak (may not be printed).
+	TODO: dump attributes?
  */
 ostream&
 Node::dump_struct(ostream& o) const {
