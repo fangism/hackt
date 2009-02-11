@@ -1,0 +1,55 @@
+# "rule_unstable-d-01.prsimrc"
+# @haco@ rule_unstable-d.haco-a
+
+rules .
+watchall
+
+set a 1
+cycle
+
+set a 0
+step-event
+pending c
+set a 1
+cycle
+assertn-queue
+echo event c+ was silently overturned to c-
+assert c 0
+
+set a X
+cycle
+echo initialize to X
+
+set a 1
+step-event
+pending c
+set a 0
+cycle
+assertn-queue
+echo event c- was silently overturned to c+
+assert c 1
+
+
+echo testing weak instability...
+set a 0
+step-event
+pending c
+set a X
+cycle
+echo should suppress c+ weak unstable
+echo c should still become X
+assert c X
+
+set a 0
+cycle
+assert c 1
+
+set a 1
+step-event
+pending c
+set a X
+cycle
+echo should suppress c- weak unstable
+echo c should still become X
+assert c X
+

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.26.2.1 2009/02/10 21:25:50 fang Exp $
+	$Id: State-prsim.h,v 1.26.2.2 2009/02/11 01:00:39 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -809,8 +809,13 @@ public:
 #undef	DEFINE_POLICY_CONTROL_SET
 #undef	DEFINE_POLICY_CONTROL_GET
 
+	/// \return true if any events are in queue, *** even if killed ***
 	bool
 	pending_events(void) const { return !event_queue.empty(); }
+
+	/// \return true if any non-killed (live) events remain in queue
+	bool
+	pending_live_events(void) const;
 
 	static
 	time_type

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.47.2.1 2009/02/10 21:25:49 fang Exp $
+	$Id: State-prsim.cc,v 1.47.2.2 2009/02/11 01:00:38 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1020,6 +1020,24 @@ State::get_event(const event_index_type i) const {
 State::event_type&
 State::get_event(const event_index_type i) {
 	return event_pool[i];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if there are any liev (not-killed) events in the queue.
+ */
+bool
+State::pending_live_events(void) const {
+	if (event_queue.empty()) {
+		return false;
+	}
+	event_queue_type::const_iterator
+		i(event_queue.begin()), e(event_queue.end());
+	for ( ; i!=e; ++i) {
+		if (!event_pool[i->event_index].killed())
+			return true;
+	}
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3674,14 +3692,18 @@ State::__report_interference(ostream& o, const bool weak,
 	\param ev the unstable event
 	\return true if error causes break in events.  
 	If node is flagged unstable, 
+	TODO: print the rule that is unstable, if applicable
  */
 State::break_type
 State::__report_instability(ostream& o, const bool weak, const bool dir, 
 		const node_index_type _ni, const event_type& ev) const {
+	const rule_type* const r = lookup_rule(ev.cause_rule);
+if (!r || !r->is_unstable()) {
 	if (weak) {
 	if (weak_unstable_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: weak-unstable `",
 			_ni) << "\'" << (dir ? '+' : '-') << endl;
+		// dump_rule(o << "rule: ", ev.cause_rule, true, false);
 		__report_cause(o, ev);
 		return weak_unstable_policy;		// >= ERROR_BREAK;
 	}	// endif weak_unstable_policy
@@ -3689,10 +3711,12 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 	if (unstable_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: unstable `", _ni)
 			<< "\'" << (dir ? '+' : '-') << endl;
+		// dump_rule(o << "rule: ", ev.cause_rule, true, false);
 		__report_cause(o, ev);
 		return unstable_policy;			// >= ERROR_BREAK;
 	}	// endif unstable_policy
 	}	// endif weak
+}
 	return ERROR_NONE;
 }
 
@@ -3768,7 +3792,9 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			// on pending queue (result of instability)
 		if (instability) {
 			e.set_cause_node(ni);
-			if (dequeue_unstable_events() &&
+			const rule_type* const r = lookup_rule(e.cause_rule);
+			if ((dequeue_unstable_events() ||
+					(r && r->is_unstable())) &&
 				(next == PULL_OFF ||
 				n.current_value() == LOGIC_OTHER)) {
 				// let dequeuer deallocate killed events

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.68.2.1 2009/02/10 21:26:08 fang Exp $
+#	$Id: Makefile.am,v 1.68.2.2 2009/02/11 01:00:40 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -29,6 +29,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	expr-limit-a \
 	unstable-a unstable-b \
 	weak-unstable-a weak-unstable-b \
+	rule_unstable-a rule_unstable-b rule_unstable-c \
+	rule_unstable-d rule_unstable-e rule_unstable-f \
 	precharge-a precharge-b precharge-c precharge-d \
 	precharge-e precharge-f precharge-g precharge-h \
 	weak-inv \
@@ -100,6 +102,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	allow_weak_interference-01 allow_weak_interference-02 \
 	paranoid-01 \
 	killed-01 \
+	rule_unstable-a-01 rule_unstable-b-01 rule_unstable-c-01 \
+	rule_unstable-d-01 rule_unstable-e-01 rule_unstable-f-01 \
 	unstable-01 unstable-02 unstable-03 \
 	unstable-a-01 unstable-b-01 \
 	weak-unstable-a-01 weak-unstable-a-02 weak-unstable-a-03 \
@@ -267,6 +271,8 @@ HACKT_PRSIMTRACE_TEST_SUBJECTS = \
 	inv-00 \
 	oscil-unset-01 oscil-unset-03 \
 	precharge-c-01 precharge-d-01 precharge-f-01 \
+	rule_unstable-a-01 rule_unstable-b-01 rule_unstable-c-01 \
+	rule_unstable-d-01 rule_unstable-e-01 rule_unstable-f-01 \
 	SRAM-a-01 SRAM-a-02 SRAM-a-03 SRAM-a-04 SRAM-a-05 SRAM-a-06 \
 	SRAM-b-01 \
 	SRAM-c-01 \

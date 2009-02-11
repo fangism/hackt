@@ -1,0 +1,49 @@
+[top-level]
+rules:
+[after 10, unstable]	~a -> c+
+[after 10]	b -> c-
+	0	a : 1
+	0	b : 0
+	0	a : 0
+queue:	10	c : 1	[from a:=0]
+	0	a : 1
+No event pending on `c'.
+event c+ was turned into vacuous X 
+	0	b : 1
+queue:	10	c : 0	[from b:=1]
+WARNING: unstable `c'-
+>> cause: `b' (val: 0)
+	0	b : 0
+should report c- unstable 
+queue:	10	c : X	[from b:=1]
+event c- was turned into vacuous X 
+	10	c : X	[by b:=0]
+	10	b : 1
+	20	c : 0	[by b:=1]
+	20	b : 0
+	20	a : 0
+queue:	30	c : 1	[from a:=0]
+	20	a : 1
+No event pending on `c'.
+event c+ was killed 
+resetting c:0 
+	20	b : 1
+	20	b : 0
+testing weak instability... 
+	20	a : 0
+queue:	30	c : 1	[from a:=0]
+	20	a : X
+	30	c : X	[by a:=X]
+should suppress c+ weak unstable 
+c should still become X 
+	30	a : 0
+	40	c : 1	[by a:=0]
+	40	a : 1
+	40	b : 1
+queue:	50	c : 0	[from b:=1]
+WARNING: weak-unstable `c'-
+>> cause: `b' (val: X)
+	40	b : X
+	50	c : X	[by b:=X]
+should report c- weak unstable 
+c should still become X 

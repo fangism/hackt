@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.16 2009/02/07 04:08:41 fang Exp $
+	$Id: Rule.h,v 1.16.2.1 2009/02/11 01:00:38 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -35,6 +35,9 @@ class Rule {
 		RULE_WEAK = 0x02,
 		RULE_ALWAYS_RANDOM = 0x04,
 		RULE_INVARIANT = 0x08,
+		/**
+			If rule is allowed to be unstable or weak-unstable.
+		 */
 		RULE_UNSTAB = 0x10,
 		RULE_BIT_MASK = 0xFFFF	/// unsigned short flags
 	}	rule_enum_type;

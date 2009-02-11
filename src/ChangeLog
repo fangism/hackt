@@ -5,6 +5,17 @@
 
 2009-02-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-95-prsim-13-02:
+	  Implemented pre-rule unstable policy in prsim.
+		Rules flagged 'unstab' will not trigger run-time diagnostics
+		about instability and will silently dequeue events, 
+		as if unstable-dequeue were only applied to that rule.
+	  Minor bug fix (prsim, chpsim): assert-queue and assertn-queue 
+		should have checked for *live* events in the queue, 
+		not counting killed events.  (chpsim unaffected)
+	  Next: print rules during instability diagnostics.
+
+
 	* HACKT-00-01-04-main-00-82-95-prsim-13-01:
 	  Branch for adding node/rule attribute support for hacprsim, 
 		namely for fine-grain interference and instability
