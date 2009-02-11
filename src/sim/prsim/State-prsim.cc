@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.47.2.2 2009/02/11 01:00:38 fang Exp $
+	$Id: State-prsim.cc,v 1.47.2.3 2009/02/11 01:36:00 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2600,9 +2600,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 		// else proceed
 	} else {
 		// vacuous event is allowed if set was forced by user
-		ISE_INVARIANT(prev != pe.val
-			/* || n.is_unstab() */
-			|| force);
+		ISE_INVARIANT(prev != pe.val || force);
 		// FAILED ONCE! (test case?)
 		// occurred on 20071214 after adding weak rules
 	}
@@ -3692,7 +3690,6 @@ State::__report_interference(ostream& o, const bool weak,
 	\param ev the unstable event
 	\return true if error causes break in events.  
 	If node is flagged unstable, 
-	TODO: print the rule that is unstable, if applicable
  */
 State::break_type
 State::__report_instability(ostream& o, const bool weak, const bool dir, 
@@ -3703,7 +3700,7 @@ if (!r || !r->is_unstable()) {
 	if (weak_unstable_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: weak-unstable `",
 			_ni) << "\'" << (dir ? '+' : '-') << endl;
-		// dump_rule(o << "rule: ", ev.cause_rule, true, false);
+	if (r) dump_rule(o << "rule: ", ev.cause_rule, true, false) << endl;
 		__report_cause(o, ev);
 		return weak_unstable_policy;		// >= ERROR_BREAK;
 	}	// endif weak_unstable_policy
@@ -3711,7 +3708,7 @@ if (!r || !r->is_unstable()) {
 	if (unstable_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: unstable `", _ni)
 			<< "\'" << (dir ? '+' : '-') << endl;
-		// dump_rule(o << "rule: ", ev.cause_rule, true, false);
+	if (r) dump_rule(o << "rule: ", ev.cause_rule, true, false) << endl;
 		__report_cause(o, ev);
 		return unstable_policy;			// >= ERROR_BREAK;
 	}	// endif unstable_policy
@@ -3761,7 +3758,6 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 		// then must be unstable or interfering (exclusive)
 		const bool instability =
 			(eu & event_type::EVENT_UNSTABLE)
-			/* && !n.is_unstab() */
 #if PRSIM_WEAK_RULES
 			&& !(weak && !e.is_weak())
 			// is not instability if original event was strong

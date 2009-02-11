@@ -12,6 +12,7 @@ event c- was turned into vacuous X
 	0	a : 0
 queue:	10	c : 1	[from a:=0]
 WARNING: unstable `c'+
+rule: [after 10]	~a:1 -> c+:X
 >> cause: `a' (val: 1)
 	0	a : 1
 should report c+ unstable 
@@ -24,6 +25,7 @@ event c+ was turned into vacuous X
 	20	a : 0
 queue:	30	c : 1	[from a:=0]
 WARNING: unstable `c'+
+rule: [after 10]	~a:1 -> c+:0
 >> cause: `a' (val: 1)
 	20	a : 1
 queue:	30	c : X	[from a:=0]
@@ -38,6 +40,7 @@ testing weak instability...
 	40	a : 0
 queue:	50	c : 1	[from a:=0]
 WARNING: weak-unstable `c'+
+rule: [after 10]	~a:X -> c+:0
 >> cause: `a' (val: X)
 	40	a : X
 	50	c : X	[by a:=X]

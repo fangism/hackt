@@ -1,4 +1,5 @@
 WARNING: weak-unstable `shake_me.lout'-
+rule: [after 10]	in:X -> shake_me.lout-:1
 >> cause: `in' (val: X)
 WARNING: weak-interference `shake_me.lout'
 >> cause: `in' (val: X)

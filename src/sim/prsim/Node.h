@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.20.2.1 2009/02/10 21:25:47 fang Exp $
+	$Id: Node.h,v 1.20.2.2 2009/02/11 01:35:59 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -36,17 +36,6 @@ struct faninout_struct_type;		// from "process_graph.h"
 	Valarray's are more compact, but less convenient for resizing.
  */
 #define	VECTOR_NODE_FANIN		1
-
-/**
-	Define to 1 to support node attribute: unstable
-	Goal: 0
-	Rationale: unstable attribute belongs to rule.
- */
-#define	NODE_ATTR_UNSTABLE			0
-/**
-	Goal: 1
- */
-#define	NODE_ATTR_INTERFERENCE			1
 
 /**
 	List or array of fanin expressions.  
@@ -137,13 +126,7 @@ struct Node {
 	 */
 	typedef	enum {
 		NODE_DEFAULT_STRUCT_FLAGS = 0x0000,
-#if NODE_ATTR_UNSTABLE
-		/**
-			Whether or not events on this node are allowed
-			to be unstable.  
-		 */
-		NODE_UNSTAB = 0x0001,
-#endif
+		// NODE_UNSTAB = 0x0001,	// removed
 		/**
 			Whether or not this node belongs to at least one
 			forced exclusive high ring.  
@@ -164,14 +147,12 @@ struct Node {
 			checked exclusive high ring.  
 		 */
 		NODE_CHECK_EXCLLO = 0x0010
-#if NODE_ATTR_INTERFERENCE
 		/**
 			Whether or not to report interference on this node.
 		 */
 		,
 		NODE_MAY_INTERFERE = 0x0020,
 		NODE_MAY_WEAK_INTERFERE = 0x0040
-#endif
 	} struct_flags_enum;
 
 	/**
@@ -220,11 +201,6 @@ public:
 		return fanout.size();
 	}
 
-#if NODE_ATTR_UNSTABLE
-	bool
-	is_unstab(void) const { return struct_flags & NODE_UNSTAB; }
-#endif
-#if NODE_ATTR_INTERFERENCE
 private:
 	// only to be called by attribute assignment of allocation phase
 	void
@@ -243,7 +219,7 @@ public:
 	may_weak_interfere(void) const {
 		return struct_flags & NODE_MAY_WEAK_INTERFERE;
 	}
-#endif
+
 	void
 	import_attributes(const bool_connect_policy&);
 

@@ -16,6 +16,7 @@ initialize to X
 	20	a : 1
 queue:	30	c : 0	[from a:=1]
 WARNING: unstable `c'-
+rule: [after 10]	a:0 -> c-:X
 >> cause: `a' (val: 0)
 	20	a : 0
 queue:	30	c : X	[from a:=1]
@@ -33,6 +34,7 @@ c should still become X
 	40	a : 1
 queue:	50	c : 0	[from a:=1]
 WARNING: weak-unstable `c'-
+rule: [after 10]	a:X -> c-:1
 >> cause: `a' (val: X)
 WARNING: weak-interference `c'
 >> cause: `a' (val: X)

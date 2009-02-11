@@ -4,4 +4,5 @@ event queue:
 	10	c : 0	[from b:=1]	(weak)
 unstable guard, expect unstable 
 WARNING: unstable `c'-
+rule: [after 10, weak]	b:0 -> c-:X
 >> cause: `b' (val: 0)

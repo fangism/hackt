@@ -13,4 +13,5 @@ event queue:
 	10	b : 1	[from a:=0]
 expect usual instability to be reported 
 WARNING: unstable `b'+
+rule: [after 10]	~a:1 -> b+:X
 >> cause: `a' (val: 1)

@@ -14,6 +14,7 @@ event queue:
 time: 15
 introduce high-glitch on b, should cause instability 
 WARNING: unstable `c'+
+rule: [after 10]	~a:0 & ~b:1<0><0> -> c+:0
 >> cause: `b' (val: 1)
 	15	b : 1
 event queue:

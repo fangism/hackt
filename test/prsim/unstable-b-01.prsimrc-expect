@@ -3,6 +3,7 @@ event queue:
 should be c- in queue 
 time: 12
 WARNING: weak-unstable `c'-
+rule: [after 10]	a:X -> c-:1
 >> cause: `a' (val: X)
 WARNING: weak-interference `c'
 >> cause: `a' (val: X)

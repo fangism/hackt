@@ -17,6 +17,7 @@ WARNING: interference `bl'
 >> cause: `we' (val: 1)
 enqueued:	60	bl : X	[from we:=1]
 WARNING: unstable `w.we_'-
+rule: [after 10]	we:0 -> w.we_-:1
 >> cause: `we' (val: 0)
 queue:	60	bl : 0	[from we:=1]	(weak)
 No event pending on `_bl'.
