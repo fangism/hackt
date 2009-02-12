@@ -1,5 +1,14 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.50 2008/12/23 01:51:29 fang Exp $
+#	$Id: ChangeLog,v 1.51 2009/02/12 23:55:48 fang Exp $
+
+2009-02-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-96+:
+	  verilog/wrap_verilog_modules_to_hacprsim.awk:
+		support optional argument to emit wrapper definitions
+		with public ports.  Ports also emitted in consistent
+		order with original definition.
+
 
 2008-12-22	David Fang	<fangism@users.sourceforge.net>
 
