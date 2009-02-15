@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.8 2008/11/29 23:46:25 fang Exp $
+	$Id: command_registry.tcc,v 1.9 2009/02/15 23:07:00 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -18,6 +18,11 @@
 #include "util/tokenize.h"
 #include "util/string.tcc"
 #include "util/value_saver.h"
+
+// TODO: move library-dependent functionality into library
+#ifdef	USE_READLINE
+#include <readline/readline.h>
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -543,6 +548,64 @@ command_registry<Command>::help_category(ostream& o, const string& c) {
 		probe->second->list(o);
 		return true;
 	} else	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	custom tab-completion for readline library, suitable for
+		passing to rl_completion_matches.
+	\param _text string to match.
+	\param state is 0 to start from scratch.
+	TODO: consider list of aliases for candidates.
+	\return writeable malloc-allocated string for matching candidate,
+		or NULL to signal end-of-list.
+ */
+template <class Command>
+char*
+command_registry<Command>::command_generator(const char* _text, int state) {
+	typedef	typename command_map_type::const_iterator	const_iterator;
+	static const_iterator match_begin, match_end;
+#if 0
+	cout << "text=" << _text << ", state=" << state << endl;
+#endif
+	if (!state) {
+		const string text(_text);
+		string next(text);
+		++next[next.length() -1];
+		// for lexicographical bounding
+		match_begin = command_map.lower_bound(text), 
+		match_end = command_map.lower_bound(next);
+	}
+	if (match_begin != match_end) {
+		const const_iterator i(match_begin);
+		++match_begin;
+#if 0
+		cout << " match=" << i->first;
+#endif
+		return strdup(i->first.c_str());	// malloc
+	}	// match_begin == match_end
+	return NULL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Master custom tab-completion for readline.
+	TODO: refactor this code into readline_wrapper library.
+ */
+template <class Command>
+char**
+command_registry<Command>::completion(const char* text, int start, int end) {
+	char** matches = NULL;
+#ifdef	USE_READLINE
+	// TODO: use rl_line_buffer to parse entire line
+	// use tokenize
+	if (!start) {
+		// beginning-of-line: complete command
+		matches = rl_completion_matches(text, command_generator);
+	}
+	// else default to file completion
+#endif
+	return matches;
 }
 
 //=============================================================================

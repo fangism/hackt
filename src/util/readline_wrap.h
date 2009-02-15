@@ -3,7 +3,7 @@
 	Convenience wrapper for readline and editline.  
 	NOTE: the readline headers really aren't needed here, 
 	only needed in the implementation of this module.  
-	$Id: readline_wrap.h,v 1.4 2006/10/26 18:38:32 fang Exp $
+	$Id: readline_wrap.h,v 1.5 2009/02/15 23:07:00 fang Exp $
  */
 
 #ifndef	__UTIL_READLINE_WRAP_H__
@@ -79,6 +79,10 @@ private:
 	 */
 	typedef	memory::never_ptr<const_char_type>	hold_line_type;
 #else
+	/**
+		Readline returns a malloc-allocated string, and thus
+		should be free()d automatically upon destruction.
+	 */
 	typedef	excl_malloc_ptr<const_char_type>::type	hold_line_type;
 #endif
 #ifdef	USE_HISTEDIT

@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.7 2009/02/05 02:53:10 fang Exp $
+	$Id: command_registry.h,v 1.8 2009/02/15 23:06:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -127,6 +127,12 @@ public:
 		user from manually advancing time with simulation commands.
 	 */
 	static bool			external_cosimulation;
+private:
+	// not constructible
+	command_registry();
+
+	// not copy-able
+	command_registry(const this_type&);
 public:
 	template <class C>
 	static
@@ -205,12 +211,22 @@ public:
 	void
 	list_aliases(ostream&);
 
+	// for readline tab-completion
+	static
+	char**
+	completion(const char*, int, int);
+
 private:
 	class interactive_mode;
 
 	static
 	int
 	__source(istream&, state_type&);
+
+	// for readline tab-completion
+	static
+	char*
+	command_generator(const char*, int);
 
 };	// end class command_registry
 
