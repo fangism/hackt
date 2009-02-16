@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.37 2008/12/13 00:27:53 fang Exp $
+ 	$Id: module.cc,v 1.38 2009/02/16 01:38:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -166,7 +166,7 @@ module::dump_instance_map(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-module::dump(ostream& o) const {
+module::dump_definitions(ostream& o) const {
 	o << "In module created from: " << key;
 	if (is_unrolled())
 		o << " (unrolled)";
@@ -200,9 +200,17 @@ module::dump(ostream& o) const {
 		const PRS::rule_dump_context rdc(*this);
 		spec.dump(o, rdc);	// << endl;
 	}
-
 	if (is_unrolled()) {
 		footprint_map.dump(o, expr_dump_context::default_value) << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+module::dump(ostream& o) const {
+	dump_definitions(o);
+	if (is_unrolled()) {
 		dump_instance_map(o);
 	}
 	return o;

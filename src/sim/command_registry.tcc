@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.9 2009/02/15 23:07:00 fang Exp $
+	$Id: command_registry.tcc,v 1.10 2009/02/16 01:38:32 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -599,6 +599,7 @@ command_registry<Command>::completion(const char* text, int start, int end) {
 #ifdef	USE_READLINE
 	// TODO: use rl_line_buffer to parse entire line
 	// use tokenize
+	// eat leading whitespace
 	if (!start) {
 		// beginning-of-line: complete command
 		matches = rl_completion_matches(text, command_generator);

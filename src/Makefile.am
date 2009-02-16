@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.211 2009/02/07 03:00:37 fang Exp $
+#	$Id: Makefile.am,v 1.212 2009/02/16 01:38:26 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -51,14 +51,20 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt haco haccreate hacalloc \
-	hacobjdump hacinstdump hflat hacpp hacprsim hacchpsim
+	hacobjdump hflat hacpp hacprsim hacchpsim
 if HAVE_LIBGUILE
 bin_PROGRAMS += hacguile hacchpsimguile
 endif
 # no need to name EXTRA_PROGRAMS = hacguile hacchpsimguile
 
-bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh
+bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh hacinstdump
 DISTCLEANFILES += $(bin_SCRIPTS)
+
+# NOTE: this executes whatever is in PATH, not necessarily the built one
+hacinstdump: hacobjdump
+	{ $(ECHO) "#!/bin/sh -e" ; \
+	$(ECHO) "exec hacobjdump -a -G \"$$""@\"" ; } > $@ && \
+	chmod +x $@
 
 scripts/init_hackt.sh: scripts/init_hackt.sh.in $(top_builddir)/config.status
 	$(RECONFIGURE)
@@ -106,11 +112,6 @@ haco_SOURCES = main/haco.cc
 haco_CPPFLAGS = -DWITH_MAIN
 haco_LDADD = libhacktlib.la
 # goal: just libhacktparsers.la
-
-
-hacinstdump_SOURCES = main/instdump.cc
-# hacinstdump_CPPFLAGS =
-hacinstdump_LDADD = libhacktlib.la
 
 hacobjdump_SOURCES = main/objdump.cc
 hacobjdump_CPPFLAGS = -DWITH_MAIN

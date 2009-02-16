@@ -1,7 +1,7 @@
 /**
 	\file "main/objdump.h"
 	Interface header for the objdump module.  
-	$Id: objdump.h,v 1.4 2006/01/27 08:07:21 fang Exp $
+	$Id: objdump.h,v 1.5 2009/02/16 01:38:31 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_OBJDUMP_H__
@@ -35,11 +35,9 @@ private:
 	void
 	usage(void);
 
-#if 0
 	static
 	int
 	parse_command_options(const int, char*[], options&);
-#endif
 
 	static
 	const size_t

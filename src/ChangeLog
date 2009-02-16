@@ -5,6 +5,12 @@
 
 2009-02-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-98:
+	  hacobjdump: implemented command-line arguments to turn sections
+		off/on individually.
+	  hacinstdump: now just a wrapper script around hacobjdump.
+
+
 	* HACKT-00-01-04-main-00-82-97:
 	  prsim, chpsim: command-line tab-completion (readline only)
 
