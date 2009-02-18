@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.5 2008/11/08 04:25:56 fang Exp $
+	$Id: instref.h,v 1.6 2009/02/18 00:22:36 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -10,6 +10,7 @@
 #define	__HAC_PARSER_INSTREF_H__
 
 #include <iosfwd>
+#include <vector>
 #include "Object/ref/reference_enum.h"
 #include "util/string_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -71,6 +72,11 @@ extern
 int
 parse_name_to_aliases(std::ostream&, const std::string&, 
 	const entity::module&, const char* sep);
+
+extern
+void
+complete_instance_names(const char*, const entity::module&, 
+	std::vector<std::string>&);
 
 }	// end namespace parser
 }	// end namespace HAC

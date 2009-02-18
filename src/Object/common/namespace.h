@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/namespace.h"
 		in its previous life.  
-	$Id: namespace.h,v 1.7 2006/07/26 19:27:39 fang Exp $
+	$Id: namespace.h,v 1.8 2009/02/18 00:22:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_H__
@@ -163,11 +163,6 @@ public:
 
 	void
 	collect_namespaces(namespace_collection_type&) const;
-
-	// defined in "Object/common/namespace.tcc"
-	template <class L>
-	void
-	collect(L&) const;
 
 // type-specific counterparts, obsolete
 

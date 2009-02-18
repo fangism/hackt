@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.20 2009/02/05 02:55:49 fang Exp $
+	$Id: Command.cc,v 1.21 2009/02/18 00:22:45 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -72,6 +72,15 @@ static CommandCategory
 	view("view", "instance to watch"),
 	tracing("tracing", "trace and checkpoint commands"), 
 	modes("modes", "timing model, error handling");
+
+//=============================================================================
+// command completion facilities
+
+/**
+	Tell each command to override default completer.  
+ */
+#define	CHPSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)		\
+	OVERRIDE_DEFAULT_COMPLETER(CHPSIM, _class, _func)
 
 //=============================================================================
 // local Command classes

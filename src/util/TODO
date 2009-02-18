@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.16 2007/02/21 17:00:26 fang Exp $
+	$Id: TODO,v 1.17 2009/02/18 00:22:52 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -9,7 +9,13 @@ quickie:
 	remove references to util/obsolete from util/Makefile.inc
 
 ===============================================================================
+functional:
+	phase out _Select1st and _Select2nd patches in STL/functional.h
+		in favor of using util::member_select on ::first and ::second.
+		Rationale: standardizing ways of doing things for ease 
+			of maintainence. 
 
+-------------------------------------------------------------------------------
 Tired of gargantuan object files and executables with 
 grossly-replicated inlined template code?  
 Your compiler doesn't support *gasp* export template?

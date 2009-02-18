@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.8 2009/02/15 23:06:58 fang Exp $
+	$Id: command_registry.h,v 1.9 2009/02/18 00:22:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -12,15 +12,21 @@
 #include "util/qmap.h"	// TODO: use std::map instead
 #include "util/tokenize_fwd.h"
 #include "util/attributes.h"
+#include "util/value_saver.h"
 
 namespace HAC {
+namespace entity {
+class module;
+}
 namespace SIM {
 using std::string;
 using util::default_qmap;
 using util::string_list;
+using util::value_saver;
 using std::string;
 using std::ostream;
 using std::istream;
+using entity::module;
 template <class> class command_category;
 
 // TODO: typedef CommandStatus command_return_type; (instead of int)
@@ -96,6 +102,18 @@ private:
 public:
 	typedef	typename command_type::main_ptr_type	main_ptr_type;
 	typedef	typename command_type::usage_ptr_type	usage_ptr_type;
+	/**
+		Class for initializing readline and cleaning up when done.
+	 */
+	class readline_init {
+		value_saver<char** (*)(const char*, int, int)>
+							_compl;
+		value_saver<const module*>		_mod;
+	public:
+	explicit
+	readline_init(const module&);
+	~readline_init();
+	} __ATTRIBUTE_UNUSED__ ;	// end struct readline_init
 private:
 	static command_map_type		command_map;
 	static category_map_type	category_map;

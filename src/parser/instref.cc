@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.13 2008/12/18 00:25:56 fang Exp $
+	$Id: instref.cc,v 1.14 2009/02/18 00:22:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,6 +33,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/inst/instance_placeholder_base.h"
 #include "Object/ref/meta_reference_union.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/entry_collection.h"
@@ -40,6 +41,8 @@
 #include "util/tokenize_fwd.h"		// for string_list
 #include "util/memory/excl_ptr.h"
 #include "util/packed_array.h"		// for alias_collection_type
+#include "util/member_select.h"
+#include "util/copy_if.h"		// for transform_if algo
 
 extern
 int
@@ -64,6 +67,7 @@ using std::vector;
 using std::copy;
 using std::string;
 using std::ostream_iterator;
+using std::bind1st;
 using util::string_list;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
@@ -399,6 +403,107 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 		copy(aliases.begin(), aliases.end(), osi);
 		return 0;
 	}
+}
+
+//=============================================================================
+/**
+	Predicate to filter out non-instances for tab-completion.  
+ */
+static
+bool
+pair_is_instance(const scopespace::const_map_iterator::value_type& p) {
+	return p.second.is_a<const instance_placeholder_base>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param matches is the return array, should start empty, but need not be
+	\returns an array of candidate strings for instances.
+	FIXME: candidate text, replaces all of word, not just the 
+		member we wish to complete.  Help!
+ */
+void
+complete_instance_names(const char* _text, const module& m, 
+		vector<string>& matches) {
+	STACKTRACE_VERBOSE;
+	const string text(_text);
+	typedef	scopespace::const_map_iterator	const_iterator;
+	string parent, child;
+	never_ptr<const scopespace> gns;
+	// if text is blank, return items from "ls ." (top-level)
+if (!_text[0]) {
+	gns = m.get_global_namespace();
+} else {
+// does string contain a '.'?  If so, cut text into two parts.
+// else need to do partial parsing for context
+// if text ends with '.' return list of members of the parent reference
+	size_t dot = text.find_last_of('.');
+	if (dot == string::npos) {	// not found
+		gns = m.get_global_namespace();
+		child = text;
+	} else {			// split up string
+		typedef	inst_ref_expr::meta_return_type	checked_ref_type;
+		parent = string(text, 0, dot);
+		child = string(text, dot +1);
+//		cout << "parent=\"" << parent "\", child=\"" << child "\"";
+		// parse the parent to get context
+		const checked_ref_type
+			r(parse_and_check_reference(parent.c_str(), m));
+		if (!r || !r.inst_ref()) { return; }
+			// no error message
+		if (r.inst_ref()->dimensions()) { return; }
+			// no error message
+		const global_indexed_reference
+			gref(r.inst_ref()->lookup_top_level_reference(
+				m.get_state_manager(), m.get_footprint()));
+		if (!gref.second) { return; }
+			// no error message
+		const never_ptr<const definition_base>
+			def(r.inst_ref()->get_base_def());
+		NEVER_NULL(def);
+		gns = def->get_scopespace();
+		// mscope->dump_instance_members(o) << endl;
+	}
+}
+	const_iterator i(gns->id_map_begin()), e(gns->id_map_end());
+	// transform_if
+	vector<string> temp;
+	util::transform_if(i, e, back_inserter(temp), &pair_is_instance, 
+		util::member_select_ref(&const_iterator::value_type::first));
+	// filter out with child string
+	// TODO: handle array indices
+	// may need to prepend parent '.' to matched names...
+	const string root(parent.size() ? parent + '.' : "");
+/**
+	Temporary work-around for completion bug, where I'd like to
+	perform only partial word (split) completion on the tail.
+ */
+#define	PREPEND_ROOT		1
+	if (child.size()) {
+		// use child string to bound range
+		// INVARIANT: temp is already sorted because it
+		// came from a sorted structure
+		string child2(child);
+		++child2[child2.length() -1];
+		const vector<string>::const_iterator
+			f(lower_bound(temp.begin(), temp.end(), child)),
+			l(lower_bound(temp.begin(), temp.end(), child2));
+#if PREPEND_ROOT
+		transform(f, l, back_inserter(matches), 
+			bind1st(std::plus<string>(), root));
+#else
+		copy(f, l, back_inserter(matches));
+#endif
+	} else {
+		// all matches
+#if PREPEND_ROOT
+		transform(temp.begin(), temp.end(), back_inserter(matches), 
+			bind1st(std::plus<string>(), root));
+#else
+		temp.swap(matches);
+#endif
+	}
+#undef	PREPEND_ROOT
 }
 
 //=============================================================================

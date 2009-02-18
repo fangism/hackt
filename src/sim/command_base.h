@@ -2,7 +2,7 @@
 	\file "sim/command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: command_base.h,v 1.4 2008/11/27 11:09:25 fang Exp $
+	$Id: command_base.h,v 1.5 2009/02/18 00:22:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_BASE_H__
@@ -13,6 +13,7 @@
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
 #include "sim/command_error_codes.h"
+#include "sim/command_completion.h"
 
 namespace HAC {
 namespace SIM {
@@ -38,11 +39,14 @@ protected:
 	string				_brief;
 	/// verbose decription of command usage
 	usage_ptr_type			_usage;
+	/// command-line argument completer
+	command_completer		_completer;
 public:
 	CommandBase();
 
 	CommandBase(const string& _n, const string& _b, 
-		const usage_ptr_type u = NULL);
+		const usage_ptr_type u = NULL, 
+		const command_completer c = NULL);
 
 	~CommandBase();
 
@@ -54,6 +58,9 @@ public:
 
 	void
 	usage(ostream&) const;
+	
+	command_completer
+	completer(void) const { return _completer; }
 
 };	// end class CommandBase
 
@@ -81,7 +88,8 @@ public:
 
 	Command(const string& _n, const string& _b,
 		const category_ptr_type,
-		const main_ptr_type m = NULL, const usage_ptr_type u = NULL);
+		const main_ptr_type m = NULL, const usage_ptr_type u = NULL, 
+		const command_completer c = NULL);
 
 	// default copy-ctor
 

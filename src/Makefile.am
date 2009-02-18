@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.212 2009/02/16 01:38:26 fang Exp $
+#	$Id: Makefile.am,v 1.213 2009/02/18 00:22:28 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -961,6 +961,7 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	$(SIM_TCC_FILES:.tcc=.h) \
 	sim/common.h \
 	sim/command_error_codes.h \
+	sim/command_completion.h \
 	sim/devel_switches.h \
 	sim/prsim/devel_switches.h \
 	sim/prsim/enums.h \

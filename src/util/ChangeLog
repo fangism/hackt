@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.99 2008/11/23 17:54:35 fang Exp $
+#	$Id: ChangeLog,v 1.100 2009/02/18 00:22:51 fang Exp $
+
+2009-02-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-99:
+	  util/copy_if.h: added transform_if algorithm.
+	  TODO: note to deprecate use of _Select1st, etc. in favor
+		of more generalized util::member_select templates.
+
 
 2008-11-18	David Fang		<fangism@users.sourceforge.net>
 

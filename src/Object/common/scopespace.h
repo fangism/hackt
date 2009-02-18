@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.21 2008/11/23 17:53:38 fang Exp $
+	$Id: scopespace.h,v 1.22 2009/02/18 00:22:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -259,6 +259,11 @@ virtual	bool
 
 	ostream&
 	dump_for_definitions(ostream&) const;
+
+	// defined in "Object/common/namespace.tcc"
+	template <class L>
+	void
+	collect(L&) const;
 
 public:
 

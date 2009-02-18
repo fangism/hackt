@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.22 2009/02/15 23:06:57 fang Exp $
+	$Id: prsim.cc,v 1.23 2009/02/18 00:22:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -32,9 +32,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/ExprAllocFlags.h"
 #include "util/string.tcc"	// for string_to_num
 #include "install_paths.h"
-
-#include "util/readline.h"
-#include "util/readline_wrap.h"		// defines USE_READLINE
 
 namespace HAC {
 using std::string;
@@ -226,9 +223,8 @@ try {
 			sim_state.open_trace(opt.autotrace_name);
 		}
 		CommandRegistry::prompt = sim_state.get_prompt();
-#ifdef	USE_READLINE
-		rl_attempted_completion_function = CommandRegistry::completion;
-#endif
+		// initialize readline for tab-completion
+		const CommandRegistry::readline_init __rl__(*top_module);
 		// outermost level is interactive
 		// until later, when we give a source file, or redirect in
 		const int ret = CommandRegistry::interpret(sim_state, std::cin, 

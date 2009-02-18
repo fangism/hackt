@@ -3,14 +3,17 @@
 	Template method definitions for class name_space.  
 	This file was "Object/common/namespace.tcc"
 		in a previous life.  
-	$Id: namespace.tcc,v 1.5 2006/01/22 18:19:22 fang Exp $
+	$Id: namespace.tcc,v 1.6 2009/02/18 00:22:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_TCC__
 #define	__HAC_OBJECT_COMMON_NAMESPACE_TCC__
 
+#if 0
+// we may no longer need this if using ordered_maps
 #include "util/hash_specializations.h"	// needs to be first
-#include "Object/common/namespace.h"
+#endif
+#include "Object/common/scopespace.h"
 
 namespace HAC {
 namespace entity {
@@ -30,7 +33,7 @@ namespace entity {
  */
 template <class L>
 void
-name_space::collect(L& l) const {
+scopespace::collect(L& l) const {
 	typedef	typename L::value_type			pointer_type;
 	typedef	typename pointer_type::element_type	element_type;
 	used_id_map_type::const_iterator i(used_id_map.begin());

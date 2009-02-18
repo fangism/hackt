@@ -1,12 +1,16 @@
 /**
 	\file "sim/command_base.cc"
-	$Id: command_base.cc,v 1.2 2008/11/27 11:09:24 fang Exp $
+	$Id: command_base.cc,v 1.3 2009/02/18 00:22:37 fang Exp $
  */
 
 #include <iostream>
+#include <iterator>
 #include <string>
 #include "sim/command_base.h"
 #include "util/NULL.h"
+
+// stuff needed for instance completion
+#include "parser/instref.h"
 
 namespace HAC {
 namespace SIM {
@@ -75,12 +79,14 @@ string_to_error_policy(const string& s) {
 //=============================================================================
 // class CommandBase method definitions
 
-CommandBase::CommandBase() : _name(), _brief(), _usage(NULL) { }
+CommandBase::CommandBase() : _name(), _brief(), _usage(NULL), 
+		_completer(NULL) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CommandBase::CommandBase(const string& _n, const string& _b,
-		const usage_ptr_type _u) :
-		_name(_n), _brief(_b), _usage(_u) { }
+		const usage_ptr_type _u, 
+		const command_completer _c) :
+		_name(_n), _brief(_b), _usage(_u), _completer(_c) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CommandBase::~CommandBase() { }
@@ -93,6 +99,67 @@ CommandBase::usage(ostream& o) const {
 	} else {
 		o << "help/usage unavailable." << std::endl;
 	}
+}
+
+//=============================================================================
+// completion functions
+
+using std::cout;
+using std::endl;
+using std::vector;
+
+char*
+null_completer(const char*, const int) {
+//	cout << "null_completer()";
+	return NULL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set this module before calling any completion functions
+	that require a module.
+	Recommand using util::value_saver for automatic restoration.
+ */
+const entity::module* instance_completion_module = NULL;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Function is not re-entrant.
+	\return newly allocated copy of matching strings, or NULL to signal end.
+ */
+char*
+instance_completer(const char* _text, const int state) {
+	typedef vector<string>::const_iterator	const_iterator;
+//	cout << "instance_completer(" << _text << ',' << state << ")";
+	NEVER_NULL(_text);
+	static const_iterator i, e;
+	if (!state) {
+		static vector<string> matches;
+		matches.clear();
+		NEVER_NULL(instance_completion_module);
+		parser::complete_instance_names(_text, 
+			*instance_completion_module, matches);
+		i = matches.begin();
+		e = matches.end();
+#if 0
+		copy(i, e, std::ostream_iterator<string>(cout, ", "));
+			cout << endl;
+#endif
+	}
+	if (i != e) {
+		const char* n = i->c_str();
+		NEVER_NULL(n);
+#if 0
+		cout << "strdup(" << n << ")...";
+#endif
+		++i;
+		char* ret = strdup(n);
+#if 0
+		NEVER_NULL(ret);
+		cout << " success." << endl;
+#endif
+		return ret;
+	}
+	return NULL;
 }
 
 //=============================================================================

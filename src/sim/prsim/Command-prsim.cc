@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.40 2009/02/11 02:35:18 fang Exp $
+	$Id: Command-prsim.cc,v 1.41 2009/02/18 00:22:47 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -93,6 +93,15 @@ static CommandCategory
 	modes("modes", "timing model, error handling");
 
 //=============================================================================
+// command completion facilities
+
+/**
+	Tell each command to override default completer.  
+ */
+#define	PRSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)			\
+	OVERRIDE_DEFAULT_COMPLETER(PRSIM, _class, _func)
+
+//=============================================================================
 // local Command classes
 // feel free to add commands here
 
@@ -113,6 +122,8 @@ const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
 #define	DECLARE_AND_INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief) \
 	DECLARE_PRSIM_COMMAND_CLASS(_class)				\
 	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)
+
+// const command_completer _class::completer = &Completer<_class >;
 
 //-----------------------------------------------------------------------------
 /***
@@ -727,6 +738,7 @@ If @var{delay} is given with a @t{+} prefix, time is added relative to
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Set, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation,
 	"set node immediately, or after delay")
 
@@ -821,6 +833,7 @@ events on @var{node}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(SetF, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetF, "setf", simulation,
 	"same as set, but overriding pending events")
 
@@ -853,6 +866,7 @@ a coercive @command{set}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(UnSet, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSet, "unset", simulation,
 	"force re-evaluation of node\'s input state, may cancel setf")
 
@@ -927,6 +941,7 @@ Same as the @command{set} command, but using a random delay into the future.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Setr, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation,
 	"set node to value after random delay")
 
@@ -993,6 +1008,7 @@ overriding any pending events.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(SetrF, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetrF, "setrf", simulation,
 	"set node to value after random delay, overriding pending events")
 
@@ -1038,6 +1054,10 @@ Return with error status if there is no pending event on @var{node}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Reschedule, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(RescheduleNow, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(RescheduleFromNow, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(RescheduleRelative, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Reschedule, "reschedule", simulation,
 	"reschedule event on node to absolute time")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RescheduleNow, "reschedule-now",
@@ -1151,7 +1171,7 @@ Equivalent to @command{reschedule-now node}, followed by @command{step-event}.
 @end deffn
 @end texinfo
 ***/
-
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Execute, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Execute, "execute", simulation,
 	"execute a pending event now")
 
@@ -1195,6 +1215,7 @@ and return control back to the interpreter.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(BreakPt, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakPt, "breakpt", simulation,
 	"set breakpoint on node")	// no vector support yet
 
@@ -1239,6 +1260,7 @@ Removes breakpoint on @var{node}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(NoBreakPt, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPt, "nobreakpt", simulation,
 	"remove breakpoint on node")	// no vector support yet
 
@@ -1274,6 +1296,7 @@ NoBreakPt::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(UnBreak, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreak, "unbreak", simulation,
 	"alias for \'nobreakpt\'")	// no vector support yet
 
@@ -1454,6 +1477,7 @@ which should really never be exposed to the public API.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Pending, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Pending, "pending", info,
 	"print any pending event on node")
 
@@ -1484,6 +1508,7 @@ Pending::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(PendingDebug, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(PendingDebug, "pending-debug", debug,
 	"print any pending event on node (with index)")
 
@@ -1589,6 +1614,7 @@ Print the current value of @var{node}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Get, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,
 	"print value of node/vector")
 
@@ -1633,6 +1659,7 @@ Useful for observing channels and processes.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(GetAll, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetAll, "getall", info,
 	"print values of all subnodes")
 
@@ -1681,6 +1708,7 @@ for readability.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Status, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Status, "status", info, 
 	"show all nodes matching a state value")
 
@@ -1709,6 +1737,7 @@ Status::usage(ostream& o) {
 	o << "list all nodes with the matching current value" << endl;
 }
 
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(StatusNewline, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusNewline, "status-newline", info, 
 	"show all nodes matching a value, line separated")
 
@@ -1843,6 +1872,7 @@ Print all production rules that can fire @var{NODE}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Fanin, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanin, "fanin", info, 
 	"print rules that influence a node")
 
@@ -1882,6 +1912,7 @@ Also prints current values of all expression literals.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(FaninGet, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(FaninGet, "fanin-get", info, 
 	"print rules that influence a node, with values")
 
@@ -1922,6 +1953,7 @@ Print all production rules that @var{NODE} participates in.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Fanout, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanout, "fanout", info, 
 	"print rules that a node influences")
 
@@ -1960,6 +1992,7 @@ Also prints current values of all expression literals.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(FanoutGet, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(FanoutGet, "fanout-get", info, 
 	"print rules that a node influences, with values")
 
@@ -2000,6 +2033,7 @@ Print forced exclusive high/low rings of which @var{node} is a member.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(RingsMk, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsMk, "rings-mk", info, 
 	"print forced exclusive rings of which a node is a member")
 
@@ -2065,6 +2099,7 @@ Print all checked exclusive rings of which @var{node} is a member.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(RingsChk, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsChk, "rings-chk", info, 
 	"print checked exclusive rings of which a node is a member")
 
@@ -2136,6 +2171,7 @@ Prints the list of attributes attached to the named @var{node}.
 @end texinfo
 TODO: extend to process attributes eventually
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Attributes, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Attributes, "attributes", info, 
 	"prints node attributes")
 
@@ -2179,6 +2215,7 @@ upon first error.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Assert, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Assert, "assert", info, 
 	"error if node is NOT expected value")
 
@@ -2245,6 +2282,7 @@ By default such errors are fatal.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(AssertN, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertN, "assertn", info, 
 	"error if node IS expected value")
 
@@ -2311,6 +2349,7 @@ By default, such assertion failures are fatal.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(AssertPending, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertPending, "assert-pending", info, 
 	"error if node does not have event in queue")
 
@@ -2362,6 +2401,7 @@ By default, such assertion failures are fatal.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(AssertNPending, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertNPending, "assertn-pending", info, 
 	"error if node does have event in queue")
 
@@ -2466,6 +2506,7 @@ and identifying critical paths and cycle times.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(BackTrace, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BackTrace, "backtrace", info, 
 	"trace backwards partial event causality history")
 
@@ -2516,6 +2557,12 @@ and the @option{-N} variant queries to a maximum depth of @var{maxdepth}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyX, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyXVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyXN, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyXNVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyX1, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyX1Verbose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyX, "why-x", info, 
 	"recursively trace cause of X value on node")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyXVerbose, "why-x-verbose", info, 
@@ -2710,6 +2757,12 @@ and the @option{-N} variant queries to a maximum depth of @var{maxdepth}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Why, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Why1, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Why1Verbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyN, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNVerbose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Why, "why", info, 
 	"recursively trace why node is driven to value")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyVerbose, "why-verbose", info, 
@@ -2723,6 +2776,12 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyN, "why-N", info,
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNVerbose, "why-N-verbose", info, 
 	"recursively trace why node is driven to value (verbose)")
 
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNot, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNotVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNot1, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNot1Verbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNotN, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNotNVerbose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot, "why-not", info, 
 	"recursively trace why node is not at value")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotVerbose, "why-not-verbose", info, 
@@ -3029,6 +3088,7 @@ much like @command{breakpt}, but doesn't interrupt simulation.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Watch, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watch, "watch", view, 
 	"print activity on selected nodes")
 
@@ -3075,6 +3135,7 @@ Removes @var{nodes} from list of watched nodes.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(UnWatch, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatch, "unwatch", view, 
 	"silence activity reporting on selected nodes")
 
@@ -3973,6 +4034,8 @@ appearing in each rule.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Rules, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(RulesVerbose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Rules, "rules", info, 
 	"print rules belonging to a process")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RulesVerbose, "rules-verbose", info, 
@@ -4096,6 +4159,8 @@ appearing in each invariant.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Invariants, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(InvariantsVerbose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Invariants, "invariants", info, 
 	"print invariants belonging to a process or node")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(InvariantsVerbose, 
@@ -4386,6 +4451,7 @@ and an active-low acknowledge (enable) reset to 0, no bundles.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(Channel, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Channel, "channel", 
 	channels, "declare a handshake channel from a group of nodes")
 
@@ -4535,6 +4601,8 @@ name of the current log file to which values are dumped, if enabled.
 @end deffn
 @end texinfo
 ***/
+// TODO: prsim tab-completion on registered channel names
+// PRSIM_OVERRIDE_DEFAULT_COMPLETER(ChannelShow, prsim_channel_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelShow, "channel-show", 
 	channels, "show configuration of registered channel")
 

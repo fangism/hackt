@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.15 2009/02/11 02:35:14 fang Exp $
+	$Id: command_common.tcc,v 1.16 2009/02/18 00:22:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -43,8 +43,6 @@ using parser::parse_name_to_aliases;
 USING_UTIL_COMPOSE
 
 //=============================================================================
-
-
 /**
 	Use this macro to name the common command classes.
 	This includes static initializers for the non-function members.  

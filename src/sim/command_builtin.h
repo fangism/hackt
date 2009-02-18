@@ -2,7 +2,7 @@
 	\file "sim/command_builtin.h"
 	Converts/imports state-independent commands into
 	a state-dependent command registry.  
-	$Id: command_builtin.h,v 1.3 2008/11/27 11:09:25 fang Exp $
+	$Id: command_builtin.h,v 1.4 2009/02/18 00:22:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_BUILTIN_H__
@@ -11,6 +11,7 @@
 #include <iosfwd>
 #include "util/size_t.h"
 #include "util/tokenize_fwd.h"
+#include "sim/command_completion.h"
 
 namespace HAC {
 namespace SIM {

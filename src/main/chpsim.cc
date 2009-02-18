@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.20 2009/02/15 23:06:57 fang Exp $
+	$Id: chpsim.cc,v 1.21 2009/02/18 00:22:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -35,9 +35,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "common/ltdl-wrap.h"
 #include "common/TODO.h"
 #include "install_paths.h"
-
-#include "util/readline.h"
-#include "util/readline_wrap.h"		// defines USE_READLINE
 
 namespace HAC {
 #include "util/using_ostream.h"
@@ -201,9 +198,8 @@ try {
 			sim_state.open_trace(opt.autotrace_name);
 		}
 		CommandRegistry::prompt = sim_state.get_prompt();
-#ifdef	USE_READLINE
-		rl_attempted_completion_function = CommandRegistry::completion;
-#endif
+		// initialize readline for tab-completion
+		const CommandRegistry::readline_init __rl__(*top_module);
 		// run command interpreter
 		// return error if necessary
 		const int ret = CommandRegistry::interpret(sim_state, std::cin,

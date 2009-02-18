@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.12 2008/12/11 22:45:10 fang Exp $
+	$Id: vpi-prsim.cc,v 1.13 2009/02/18 00:22:49 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -194,7 +194,8 @@ lookup_prsim_name(const char* prsim_name) {
   require_prsim_state(__FUNCTION__);
   const node_index_type n = parse_node_to_index(prsim_name, *HAC_module);
   if (!n) {
-    cerr << "Node `" << prsim_name << "\' not found in .prs file!" << endl;
+//  cerr << "Node `" << prsim_name << "\' not found in .prs file!" << endl;
+    cerr << "Node `" << prsim_name << "\' not found in HAC hierarchy!" << endl;
 	THROW_EXIT;
   }
   return n;
@@ -216,7 +217,8 @@ lookup_vcs_name(const char* vcs_name) {
   const vpiHandle net =
 	vpi_handle_by_name (const_cast<PLI_BYTE8*>(vcs_name), NULL);
   if (!net) {
-    cerr << "Net name `" << vcs_name << "' not found in .v file." << endl;
+//  cerr << "Net name `" << vcs_name << "' not found in .v file." << endl;
+    cerr << "Net name `" << vcs_name << "' not found in Verilog!" << endl;
 	THROW_EXIT;
   }
   return net;

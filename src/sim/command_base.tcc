@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_base.tcc"
-	$Id: command_base.tcc,v 1.1 2007/02/14 04:57:23 fang Exp $
+	$Id: command_base.tcc,v 1.2 2009/02/18 00:22:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_BASE_TCC__
@@ -23,8 +23,9 @@ Command<State>::Command() : CommandBase(), _category(NULL), _main(NULL) { }
 template <class State>
 Command<State>::Command(const string& _n, const string& _b, 
 		const category_ptr_type _c,
-		const main_ptr_type _m, const usage_ptr_type _u) :
-		CommandBase(_n, _b, _u), 
+		const main_ptr_type _m, const usage_ptr_type _u, 
+		const command_completer _k) :
+		CommandBase(_n, _b, _u, _k), 
 		_category(_c), _main(_m) {
 }
 

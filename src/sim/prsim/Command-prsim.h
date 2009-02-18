@@ -2,7 +2,7 @@
 	\file "sim/prsim/Command-prsim.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command-prsim.h,v 1.1 2007/02/27 02:28:03 fang Exp $
+	$Id: Command-prsim.h,v 1.2 2009/02/18 00:22:48 fang Exp $
 
 	Earlier version was:
 	Id: Command.h,v 1.8 2007/02/14 04:57:27 fang Exp
@@ -87,6 +87,7 @@ public:                                                                 \
 	static CommandCategory&		category;			\
 	static int	main(State&, const string_list&);		\
 	static void	usage(ostream&);				\
+	static const command_completer	completer;			\
 private:								\
 	static const size_t		receipt_id;			\
 };

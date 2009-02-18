@@ -4,7 +4,9 @@
 	in various simulators.  We define them as trivial templates
 	for ease of re-use.  
 	To use, just instantiate template.  
-	$Id: command_common.h,v 1.10 2009/02/05 02:53:09 fang Exp $
+	TODO: many of these functions only depend on the module
+	and not the state, and could be refactored accordingly.
+	$Id: command_common.h,v 1.11 2009/02/18 00:22:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_H__
@@ -13,6 +15,7 @@
 #include <iosfwd>
 #include "util/size_t.h"
 #include "util/tokenize_fwd.h"
+#include "sim/command_completion.h"
 
 namespace HAC {
 namespace SIM {
@@ -39,6 +42,7 @@ public:									\
 	static command_category_type&		category;		\
 	static int	main(state_type&, const string_list&);		\
 	static void	usage(ostream&);				\
+	static const command_completer		completer;		\
 private:								\
 	static const size_t			receipt_id;		\
 };	// end class _class
@@ -113,6 +117,7 @@ public:
 	static int	main(const string_list&);
 	static int	main(state_type&, const string_list&);
 	static void	usage(ostream&);
+	static const command_completer		completer;
 private:
 	static const size_t			receipt_id;
 };	// end class Help

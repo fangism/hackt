@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.10 2009/02/16 01:38:32 fang Exp $
+	$Id: command_registry.tcc,v 1.11 2009/02/18 00:22:44 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -122,7 +122,7 @@ command_registry<Command>::register_command(void) {
 	typedef	C	command_class;
 	const Command temp(command_class::name, command_class::brief,
 		&command_class::category, &command_class::main, 
-		&command_class::usage);
+		&command_class::usage, &Completer<command_class>);
 	typedef	typename command_map_type::mapped_type		mapped_type;
 	const string& s(command_class::name);
 	mapped_type& probe(command_map[s]);
@@ -554,6 +554,7 @@ command_registry<Command>::help_category(ostream& o, const string& c) {
 /**
 	custom tab-completion for readline library, suitable for
 		passing to rl_completion_matches.
+	This function is not re-entrant!
 	\param _text string to match.
 	\param state is 0 to start from scratch.
 	TODO: consider list of aliases for candidates.
@@ -568,13 +569,20 @@ command_registry<Command>::command_generator(const char* _text, int state) {
 #if 0
 	cout << "text=" << _text << ", state=" << state << endl;
 #endif
+	NEVER_NULL(_text);
 	if (!state) {
+	if (_text[0]) {
 		const string text(_text);
 		string next(text);
 		++next[next.length() -1];
 		// for lexicographical bounding
 		match_begin = command_map.lower_bound(text), 
 		match_end = command_map.lower_bound(next);
+	} else {
+		// empty string, return all commands
+		match_begin = command_map.begin();
+		match_end = command_map.end();
+	}
 	}
 	if (match_begin != match_end) {
 		const const_iterator i(match_begin);
@@ -595,19 +603,66 @@ command_registry<Command>::command_generator(const char* _text, int state) {
 template <class Command>
 char**
 command_registry<Command>::completion(const char* text, int start, int end) {
-	char** matches = NULL;
+	typedef	typename command_map_type::const_iterator	const_iterator;
+#if 0
+	// for debugging/development
+	cout << "[text=" << text << ", start=" << start <<
+		", end=" << end << ']' << endl;
+#endif
 #ifdef	USE_READLINE
+	// rl_attempted_completion_over = true;
+	// don't fallback to readline's default completer even 
+	// if this returns no matches
+
 	// TODO: use rl_line_buffer to parse entire line
 	// use tokenize
 	// eat leading whitespace
-	if (!start) {
-		// beginning-of-line: complete command
-		matches = rl_completion_matches(text, command_generator);
+	const char* buf = rl_line_buffer;
+	eat_whitespace(buf);
+	if (!start || (rl_line_buffer +start == buf)) {
+		// beginning-of-line or leading whitespace: complete command
+		return rl_completion_matches(text, command_generator);
+	} else if (rl_line_buffer +start != buf) {
+		// then we have at least one whole token for the command
+		// attempt command-specific completion
+		string_list toks;
+		tokenize(buf, toks);
+		const string& key(toks.front());
+		const const_iterator f(command_map.find(key));
+		if (f == command_map.end()) {
+			// invalid command
+			cerr << "\nNo such command: " << key << endl;
+			return NULL;
+		}
+//		cout << "TODO: completion for \'" << key << "\'!" << endl;
+		const command_completer gen(f->second.completer());
+		if (gen) {
+			// TODO: be able to override readline hooks here
+			// making local modifications
+			return rl_completion_matches(text, gen);
+		}
 	}
-	// else default to file completion
 #endif
-	return matches;
+	return NULL;
 }
+
+//=============================================================================
+template <class Command>
+command_registry<Command>::readline_init::readline_init(const module& m)
+#ifdef	USE_READLINE
+		: _compl(rl_attempted_completion_function, completion), 
+		_mod(instance_completion_module, &m)
+#endif
+{
+#if 0
+	// doesn't do what I want...
+	static const char wb[] = " \t\n\"\\'`@$><=;|&{(.";	// added '.'
+	rl_completer_word_break_characters = wb;
+#endif
+}
+
+template <class Command>
+command_registry<Command>::readline_init::~readline_init() { }
 
 //=============================================================================
 }	// end namespace SIM

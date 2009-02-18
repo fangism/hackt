@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-02-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-99:
+	  hacprsim: instance name tab-completion, partially implemented, 
+		semi-usable, generator function in parser/instref.cc.  
+		Shortcomings reported in bug database.
+		Wrapped readline initialization into a wrapper class
+			of SIM::command_registry<>::readline_init.
+		SIM::CommandBase now has _completer function pointer, 
+			that defaults to null_completer, and can be
+			override by template specialization, using the
+			OVERRIDE_DEFAULT_COMPLETER macro defined in
+			sim/command_completion.h.
+	  See util/ChangeLog for: util/copy_if.h: added transform_if algo.
+	  TODO: cleanup: convert some command_common classes to use
+		a module-only wrapper, analogous to the stateless wrapper.
+
+
 2009-02-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-98:

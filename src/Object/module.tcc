@@ -1,12 +1,13 @@
 /**
 	\file "Object/art_object_module.tcc"
 	Template method definitions for the module class.
-	$Id: module.tcc,v 1.7 2006/10/18 18:38:15 fang Exp $
+	$Id: module.tcc,v 1.8 2009/02/18 00:22:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_TCC__
 #define	__HAC_OBJECT_MODULE_TCC__
 
+#include "Object/common/namespace.h"
 #include "Object/common/namespace.tcc"
 #include "Object/module.h"
 #include "Object/inst/alias_matcher.h"
