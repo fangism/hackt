@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.213 2009/02/18 00:22:28 fang Exp $
+#	$Id: Makefile.am,v 1.214 2009/02/19 02:58:26 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -918,7 +918,7 @@ SIM_CC_FILES = \
 	sim/ISE.cc \
 	sim/time.cc \
 	sim/command_base.cc \
-	sim/command_builtin.cc \
+	sim/command_common.cc \
 	sim/command_registry.cc \
 	sim/random_time.cc \
 	sim/state_base.cc \
@@ -948,9 +948,9 @@ SIM_CC_FILES = \
 
 SIM_TCC_FILES = \
 	sim/command_base.tcc \
-	sim/command_builtin.tcc \
 	sim/command_common.tcc \
 	sim/command_category.tcc \
+	sim/command_macros.tcc \
 	sim/command_registry.tcc \
 	sim/signal_handler.tcc \
 	sim/event.tcc \

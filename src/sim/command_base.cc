@@ -1,11 +1,12 @@
 /**
 	\file "sim/command_base.cc"
-	$Id: command_base.cc,v 1.3 2009/02/18 00:22:37 fang Exp $
+	$Id: command_base.cc,v 1.4 2009/02/19 02:58:29 fang Exp $
  */
 
 #include <iostream>
 #include <iterator>
 #include <string>
+#include <cstring>			// for strdup
 #include "sim/command_base.h"
 #include "util/NULL.h"
 

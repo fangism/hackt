@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_completion.h"
-	$Id: command_completion.h,v 1.1 2009/02/18 00:22:43 fang Exp $
+	$Id: command_completion.h,v 1.2 2009/02/19 02:58:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMPLETION_H__
@@ -45,21 +45,30 @@ Completer(const char* t, const int s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Note: specializations will have the same storage specification
+	as their primary templates, [DR 605], and thus need not, 
+	and shall not be re-specified.  In this case, 'static'.
+	Change is new in g++-4.3.
+ */
+#define	SPECIALIZE_COMMAND_COMPLETER(_class, _func)			\
+template <>								\
+char*									\
+Completer<_class >(const char* text, const int state) {			\
+	return _func(text, state);					\
+}
+
+/**
 	This macro must be invoked *before* initializing the 
 	command class with the INITIALIZE_COMMAND_CLASS macro
 	because the overriding specialization must be present 
 	before the point of instantiation.
 	Specializes in the Completer function's home namespace.
+	This temporarily escapes up to the parent namespace
+	then re-opens the child namespace.
  */
 #define	OVERRIDE_DEFAULT_COMPLETER(_ns, _class, _func)			\
-class _class;								\
 }	/* close namespace _ns */					\
-template <>								\
-static									\
-char*									\
-Completer<_ns::_class >(const char* text, const int state) {		\
-	return _func(text, state);					\
-}									\
+SPECIALIZE_COMMAND_COMPLETER(_ns::_class, _func)			\
 namespace _ns {	/* re-open namespace _ns */
 
 

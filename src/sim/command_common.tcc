@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.16 2009/02/18 00:22:42 fang Exp $
+	$Id: command_common.tcc,v 1.17 2009/02/19 02:58:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -43,36 +43,7 @@ using parser::parse_name_to_aliases;
 USING_UTIL_COMPOSE
 
 //=============================================================================
-/**
-	Use this macro to name the common command classes.
-	This includes static initializers for the non-function members.  
-	\param _class the name of the class.
-	\param _cmd the string-quoted name of the command.
-	\param _category the cateory object with which to associate.  
-	\param _brief one-line quoted-string description.
- */
-#define	INITIALIZE_COMMON_COMMAND_CLASS(_class, _cmd, _brief)		\
-template <class State>							\
-const char _class<State>::name[] = _cmd;				\
-template <class State>							\
-const char _class<State>::brief[] = _brief;
-
-/**
-	This should be called by the user to register the command
-	with the desired category.  
-	Explicit instantiation not necessary, automated by receipt_id.
- */
-#define	CATEGORIZE_COMMON_COMMAND_CLASS(_class, _category)		\
-template <>								\
-_class::command_category_type&						\
-_class::category(_category);						\
-template <>								\
-const size_t _class::receipt_id =					\
-_class::command_registry_type::register_command<_class >();
-
-
-//=============================================================================
-INITIALIZE_COMMON_COMMAND_CLASS(Help, "help",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Help, "help",
 	"show available commands and categories")
 
 /**
@@ -114,7 +85,7 @@ Help<State>::usage(ostream& o) {
 }
 
 //-----------------------------------------------------------------------------
-INITIALIZE_COMMON_COMMAND_CLASS(All, "all", "show all commands")
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(All, "all", "show all commands")
 
 template <class State>
 int
@@ -130,7 +101,7 @@ All<State>::usage(ostream& o) {
 }
 
 //-----------------------------------------------------------------------------
-INITIALIZE_COMMON_COMMAND_CLASS(Alias, "alias",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Alias, "alias",
 	"defines alias to auto-expand by the interpreter")
 
 /**
@@ -164,7 +135,7 @@ Alias<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(UnAlias, "unalias",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(UnAlias, "unalias",
 	"undefines an alias command")
 
 /**
@@ -189,7 +160,7 @@ UnAlias<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(UnAliasAll, "unaliasall",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(UnAliasAll, "unaliasall",
 	"undefines all alias commands")
 
 /**
@@ -214,7 +185,7 @@ UnAliasAll<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Aliases, "aliases",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Aliases, "aliases",
 	"show all registered command aliases")
 
 template <class State>
@@ -237,7 +208,7 @@ Aliases<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Interpret, "interpret",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Interpret, "interpret",
 	"re-open stdin interactively as a subshell")
 
 template <class State>
@@ -259,7 +230,7 @@ Interpret<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(EchoCommands, "echo-commands",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(EchoCommands, "echo-commands",
 	"whether or not each command is echoed back")
 
 template <class State>
@@ -298,7 +269,7 @@ EchoCommands<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Repeat, "repeat",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Repeat, "repeat",
 	"execute a command several times")
 
 template <class State>
@@ -347,7 +318,7 @@ Repeat<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Source, "source",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Source, "source",
 	"execute commands from script file(s)")
 
 /**
@@ -386,7 +357,7 @@ Source<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(AddPath, "addpath",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(AddPath, "addpath",
 	"add search paths for source scripts")
 
 template <class State>
@@ -411,7 +382,7 @@ AddPath<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Paths, "paths",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Paths, "paths",
 	"show search paths for source scripts")
 
 template <class State>
@@ -434,7 +405,7 @@ Paths<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Initialize, "initialize",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Initialize, "initialize",
 	"resets simulator state and event queue, preserving modes")
 
 template <class State>
@@ -452,7 +423,7 @@ Initialize<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Reset, "reset",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Reset, "reset",
 	"resets simulator state, queue, and modes (fresh start)")
 
 template <class State>
@@ -470,7 +441,7 @@ Reset<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Queue, "queue", "show event queue")
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Queue, "queue", "show event queue")
 
 template <class State>
 int
@@ -492,7 +463,7 @@ Queue<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Seed48, "seed48", "set/get random number seed")
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Seed48, "seed48", "set/get random number seed")
 
 template <class State>
 int
@@ -541,7 +512,7 @@ Seed48<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Save, "save",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Save, "save",
 	"saves simulation state to a checkpoint")
 
 template <class State>
@@ -579,7 +550,7 @@ Save<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Load, "load",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Load, "load",
 	"loads simulation state from a checkpoint")
 
 template <class State>
@@ -613,7 +584,7 @@ Load<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(AutoSave, "autosave",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(AutoSave, "autosave",
 	"automatically save checkpoint upon exit")
 
 template <class State>
@@ -647,117 +618,10 @@ AutoSave<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(LS, "ls",
-	"list subinstances of the referenced instance")
-
-template <class State>
-int
-LS<State>::main(state_type& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return command_type::SYNTAX;
-} else {
-	if (parse_name_to_members(cout, a.back(), s.get_module()))
-		return command_type::BADARG;
-	else	return command_type::NORMAL;
-}
-}
-
-template <class State>
-void
-LS<State>::usage(ostream& o) {
-	o << "ls <name>" << endl;
-	o << "prints list of subinstances of the referenced instance" << endl;
-	o << "\"ls .\" lists top-level instances" << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(What, "what",
-	"print type information of named entity")
-
-template <class State>
-int
-What<State>::main(state_type& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return command_type::SYNTAX;
-} else {
-	if (parse_name_to_what(cout, a.back(), s.get_module()))
-		return command_type::BADARG;
-	else	return command_type::NORMAL;
-}
-}
-
-template <class State>
-void
-What<State>::usage(ostream& o) {
-	o << "what <name>" << endl;
-	o << "prints the type/size of the referenced instance(s)" << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Who, "who",
-	"print aliases of node or structure")
-
-template <class State>
-int
-Who<State>::main(state_type& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return command_type::SYNTAX;
-} else {
-	cout << "aliases of \"" << a.back() << "\":" << endl;
-	if (parse_name_to_aliases(cout, a.back(), s.get_module(), " ")) {
-		return command_type::BADARG;
-	} else {
-		cout << endl;
-		return command_type::NORMAL;
-	}
-}
-}
-
-template <class State>
-void
-Who<State>::usage(ostream& o) {
-	o << "who <name>" << endl;
-	o << "prints all aliases (equivalent names) of the referenced instance"
-		<< endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(WhoNewline, "who-newline",
-	"print aliases of node or structure, newline separated")
-
-template <class State>
-int
-WhoNewline<State>::main(state_type& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return command_type::SYNTAX;
-} else {
-	cout << "aliases of \"" << a.back() << "\":" << endl;
-	if (parse_name_to_aliases(cout, a.back(), s.get_module(), "\n")) {
-		return command_type::BADARG;
-	} else {
-		cout << endl;
-		return command_type::NORMAL;
-	}
-}
-}
-
-template <class State>
-void
-WhoNewline<State>::usage(ostream& o) {
-	o << "who-newline <name>" << endl;
-	o << "prints all aliases (equivalent names) of the referenced instance"
-		<< endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Confirm, "confirm", 
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Confirm, "confirm", 
 	"confirm assertions verbosely")
 
-INITIALIZE_COMMON_COMMAND_CLASS(NoConfirm, "noconfirm", 
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(NoConfirm, "noconfirm", 
 	"confirm assertions silently (default)")
 
 template <class State>
@@ -798,7 +662,7 @@ o << name << " : " << brief << endl;
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(AssertQueue, "assert-queue",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(AssertQueue, "assert-queue",
 	"assert that the event queue is not empty")
 
 template <class State>
@@ -833,7 +697,7 @@ AssertQueue<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(AssertNQueue, "assertn-queue",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(AssertNQueue, "assertn-queue",
 	"assert that the event queue is empty")
 
 template <class State>
@@ -867,7 +731,7 @@ AssertNQueue<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(Time, "time",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Time, "time",
 	"display current simulation time")
 
 /**
@@ -897,7 +761,7 @@ Time<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(WatchQueue, "watch-queue",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(WatchQueue, "watch-queue",
 	"print each event on watched nodes as it is enqueued")
 
 template <class State>
@@ -921,7 +785,7 @@ WatchQueue<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(NoWatchQueue, "nowatch-queue",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(NoWatchQueue, "nowatch-queue",
 	"silence enqueuing into the event queue (default)")
 
 template <class State>
@@ -945,7 +809,7 @@ NoWatchQueue<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(WatchAllQueue, "watchall-queue",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(WatchAllQueue, "watchall-queue",
 	"print each event on all nodes as it is enqueued")
 
 template <class State>
@@ -969,7 +833,7 @@ WatchAllQueue<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(NoWatchAllQueue, "nowatchall-queue",
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(NoWatchAllQueue, "nowatchall-queue",
 	"silence enqueuing into the event queue (default)")
 
 template <class State>
@@ -993,179 +857,9 @@ NoWatchAllQueue<State>::usage(ostream& o) {
 }
 
 //-----------------------------------------------------------------------------
-INITIALIZE_COMMON_COMMAND_CLASS(DLAddPath, "dladdpath", 
-	"Append search paths for dlopening modules")
-
-template <class State>
-int
-DLAddPath<State>::main(state_type&, const string_list& a) {
-if (a.size() < 2) {
-	usage(cerr << "usage: ");
-	return command_type::SYNTAX;
-} else {
-	for_each(++a.begin(), a.end(), 
-		unary_compose(ptr_fun(&lt_dladdsearchdir),
-			mem_fun_ref(&string::c_str)));
-	return command_type::NORMAL;
-}
-}
-
-template <class State>
-void
-DLAddPath<State>::usage(ostream& o) {
-	o << name << " <paths...>" << endl;
-	o << "Loads an external library, file extension should be omitted.\n"
-"Searches user-defined path (`dlpath\') before system paths.\n"
-"Module should automatically register functions during static initization."
-		<< endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(DLPaths, "dlpaths", 
-	"List search paths for dlopening modules")
-
-template <class State>
-int
-DLPaths<State>::main(state_type&, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return command_type::SYNTAX;
-} else {
-	const char* const p = lt_dlgetsearchpath();
-	cout << "dlopen search paths: ";
-	if (p)
-		cout << lt_dlgetsearchpath();
-	else	cout << "<empty>";
-	cout << endl;
-	return command_type::NORMAL;
-}
-}
-
-template <class State>
-void
-DLPaths<State>::usage(ostream& o) {
-	o << name << endl;
-	o << "Prints current list of search paths used for dlopening." << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(DLOpen, "dlopen", 
-	"load a module (dynamically shared library)")
-
-template <class State>
-int
-DLOpen<State>::main(state_type&, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return command_type::SYNTAX;
-} else {
-	if (!ltdl_open_append(a.back())) {
-		return command_type::BADARG;
-	} else	return command_type::NORMAL;
-}
-}
-
-template <class State>
-void
-DLOpen<State>::usage(ostream& o) {
-	o << name << " <library>" << endl;
-	o << "Loads an external library, file extension should be omitted.\n"
-"Searches user-defined path (`dlpath') before system paths.\n"
-"Module should automatically register functions during static initization."
-		<< endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(DLCheckFunc, "dlcheckfunc", 
-	"query whether a nonmeta function symbol is bound")
-
-template <class State>
-int
-DLCheckFunc<State>::main(state_type& s, const string_list& a) {
-if (a.size() < 2) {
-	usage(cerr << "usage: ");
-	return command_type::SYNTAX;
-} else {
-	// ignore assert's return value
-	DLAssertFunc<State>::main(s, a);
-	return command_type::NORMAL;
-}
-}
-
-template <class State>
-void
-DLCheckFunc<State>::usage(ostream& o) {
-	o << name << " <funcs ...>" << endl;
-	o <<
-"Reports whether or not each function is already bound to a symbol from a \n"
-"loaded dynamic shared library or module.  Does not error out.\n"
-"See also `dlassertfunc\'."
-		<< endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(DLAssertFunc, "dlassertfunc", 
-	"assert-fail if a nonmeta function symbol is unbound")
-
-template <class State>
-int
-DLAssertFunc<State>::main(state_type&, const string_list& a) {
-if (a.size() < 2) {
-	usage(cerr << "usage: ");
-	return command_type::SYNTAX;
-} else {
-	bool good = true;
-	string_list::const_iterator i(++a.begin()), e(a.end());
-	for ( ; i!=e; ++i) {
-		if (entity::lookup_chpsim_function(*i)) {
-			cout << "function `" << *i << "\': bound." << endl;
-		} else {
-			cout << "function `" << *i << "\': unbound." << endl;
-			good = false;
-		}
-	}
-	return good ? command_type::NORMAL : command_type::BADARG;
-}
-}
-
-template <class State>
-void
-DLAssertFunc<State>::usage(ostream& o) {
-	o << name << " <funcs ...>" << endl;
-	o <<
-"Reports whether or not each function is already bound to a symbol from a \n"
-"loaded dynamic shared library or module.  Errors out if any are unbound.\n"
-"See also `dlcheckfunc\'."
-		<< endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(DLFuncs, "dlfuncs", 
-	"List names of all dynamically bound functions")
-
-template <class State>
-int
-DLFuncs<State>::main(state_type&, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return command_type::SYNTAX;
-} else {
-	entity::list_chpsim_functions(cout);
-	return command_type::NORMAL;
-}
-}
-
-template <class State>
-void
-DLFuncs<State>::usage(ostream& o) {
-	o << name << endl;
-	o << brief << endl;
-}
-
-//-----------------------------------------------------------------------------
 // common trace file commands
 
-INITIALIZE_COMMON_COMMAND_CLASS(Trace, "trace", 
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Trace, "trace", 
 	"record trace of all events to file")
 
 template <class State>
@@ -1198,7 +892,7 @@ Trace<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(TraceFile, "trace-file", 
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(TraceFile, "trace-file", 
 	"show the name of the active trace file")
 
 template <class State>
@@ -1226,7 +920,7 @@ TraceFile<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(TraceClose, "trace-close", 
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(TraceClose, "trace-close", 
 	"close the active trace file")
 
 template <class State>
@@ -1249,7 +943,7 @@ TraceClose<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(TraceFlushNotify, 
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(TraceFlushNotify, 
 	"trace-flush-notify", 
 	"enable/disable trace flush notifications (debug)")
 
@@ -1289,7 +983,7 @@ TraceFlushNotify<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(TraceFlushInterval, 
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(TraceFlushInterval, 
 	"trace-flush-interval", 
 	"set/get the current trace chunk granularity")
 
@@ -1328,7 +1022,7 @@ TraceFlushInterval<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMON_COMMAND_CLASS(TraceDump, 
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(TraceDump, 
 	"trace-dump", 
 	"spill a human-readable (?) text dump of a trace file")
 

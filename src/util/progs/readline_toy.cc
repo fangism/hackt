@@ -1,10 +1,11 @@
 /**
 	\file "util/progs/readline_toy.cc"
 	Just a testing tool for readline behavior.  
-	$Id: readline_toy.cc,v 1.3 2007/04/15 05:52:33 fang Exp $
+	$Id: readline_toy.cc,v 1.4 2009/02/19 02:58:39 fang Exp $
  */
 
 #include <iostream>
+#include <cstdlib>		// for system
 #include "util/readline_wrap.h"
 #include "util/using_ostream.h"
 #include "util/string.h"

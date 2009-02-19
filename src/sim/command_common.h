@@ -6,7 +6,7 @@
 	To use, just instantiate template.  
 	TODO: many of these functions only depend on the module
 	and not the state, and could be refactored accordingly.
-	$Id: command_common.h,v 1.11 2009/02/18 00:22:41 fang Exp $
+	$Id: command_common.h,v 1.12 2009/02/19 02:58:33 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_H__
@@ -15,7 +15,7 @@
 #include <iosfwd>
 #include "util/size_t.h"
 #include "util/tokenize_fwd.h"
-#include "sim/command_completion.h"
+#include "sim/command_macros.h"
 
 namespace HAC {
 namespace SIM {
@@ -25,29 +25,14 @@ template <class> class Command;
 template <class> class command_category;
 template <class> class command_registry;
 
-/**
-	TODO: factor usage() out into base class function?
- */
-#define	DECLARE_COMMON_COMMAND_CLASS(_class)				\
-template <class State>							\
-class _class {								\
-public:									\
-	typedef	State				state_type;		\
-	typedef	Command<state_type>		command_type;		\
-	typedef typename command_type::command_category_type		\
-						command_category_type;	\
-	typedef	command_registry<command_type>	command_registry_type;	\
-	static const char			name[];			\
-	static const char			brief[];		\
-	static command_category_type&		category;		\
-	static int	main(state_type&, const string_list&);		\
-	static void	usage(ostream&);				\
-	static const command_completer		completer;		\
-private:								\
-	static const size_t			receipt_id;		\
-};	// end class _class
-
 //=============================================================================
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(Echo)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(CommentPound)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(CommentComment)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(Exit)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(Quit)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(Abort)
+
 DECLARE_COMMON_COMMAND_CLASS(All)
 DECLARE_COMMON_COMMAND_CLASS(Alias)
 DECLARE_COMMON_COMMAND_CLASS(UnAlias)
@@ -67,10 +52,12 @@ DECLARE_COMMON_COMMAND_CLASS(Queue)
 DECLARE_COMMON_COMMAND_CLASS(Save)
 DECLARE_COMMON_COMMAND_CLASS(Load)
 DECLARE_COMMON_COMMAND_CLASS(AutoSave)
-DECLARE_COMMON_COMMAND_CLASS(Who)
-DECLARE_COMMON_COMMAND_CLASS(WhoNewline)
-DECLARE_COMMON_COMMAND_CLASS(What)
-DECLARE_COMMON_COMMAND_CLASS(LS)	// as in UNIX: ls
+
+DECLARE_COMMON_MODULE_COMMAND_CLASS(Who)
+DECLARE_COMMON_MODULE_COMMAND_CLASS(WhoNewline)
+DECLARE_COMMON_MODULE_COMMAND_CLASS(What)
+DECLARE_COMMON_MODULE_COMMAND_CLASS(LS)	// as in UNIX: ls
+
 DECLARE_COMMON_COMMAND_CLASS(Time)
 DECLARE_COMMON_COMMAND_CLASS(Seed48)
 DECLARE_COMMON_COMMAND_CLASS(Confirm)
@@ -83,13 +70,13 @@ DECLARE_COMMON_COMMAND_CLASS(WatchAllQueue)
 DECLARE_COMMON_COMMAND_CLASS(NoWatchAllQueue)
 
 // loading and handling of dynamic libraries
-DECLARE_COMMON_COMMAND_CLASS(DLOpen)
-DECLARE_COMMON_COMMAND_CLASS(DLPaths)
-DECLARE_COMMON_COMMAND_CLASS(DLAddPath)
-// DECLARE_COMMON_COMMAND_CLASS(DLClose)
-DECLARE_COMMON_COMMAND_CLASS(DLCheckFunc)
-DECLARE_COMMON_COMMAND_CLASS(DLAssertFunc)
-DECLARE_COMMON_COMMAND_CLASS(DLFuncs)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(DLOpen)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(DLPaths)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(DLAddPath)
+// DECLARE_COMMON_STATELESS_COMMAND_CLASS(DLClose)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(DLCheckFunc)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(DLAssertFunc)
+DECLARE_COMMON_STATELESS_COMMAND_CLASS(DLFuncs)
 
 // trace file interface
 DECLARE_COMMON_COMMAND_CLASS(Trace)

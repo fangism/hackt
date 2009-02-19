@@ -1,8 +1,8 @@
 /**
-	\file "sim/command.h"
+	\file "sim/command_base.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: command_base.h,v 1.5 2009/02/18 00:22:39 fang Exp $
+	$Id: command_base.h,v 1.6 2009/02/19 02:58:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_BASE_H__
@@ -101,85 +101,6 @@ public:
 	main(state_type&, const string_list&) const;
 
 };	// end class command
-
-//=============================================================================
-#if 0
-/**
-	Not a real class but a template of what a typical command class 
-	should look like, interface-wise.
-	The command-registration template function expects 
-	members in this class.  
-	The CommandTemplate is used to construct a Command object.
-	TODO: perhaps a helper functor, leveraging template argument deduction?
- */
-template <class State>
-struct CommandTemplate {
-	static const char		name[];
-	static const char		brief[];
-	static const CommandCategory&	category;
-
-	static
-	int
-	main(State&, const string_list&);
-
-	static
-	void
-	usage(ostream& o);
-private:
-	static const size_t		receipt_id;
-};	// end class CommandTemplate
-#endif
-
-//=============================================================================
-#if 0
-/**
-	The user may define custom alias commands at run time.  
-	Aliasing just performs string substitution.  
-	Need to define scope of duration for alias commands.  
-	Don't want to affect successive invocations.  
- */
-class CommandAlias {
-};	// end class command
-#endif
-
-//=============================================================================
-
-#if 0
-/**
-	Declares a command class.  
-	TODO: Make this generic macro...
- */
-#define	DECLARE_COMMAND_CLASS(class_name)				\
-struct class_name {                                                     \
-public:                                                                 \
-	static const char		name[];				\
-	static const char		brief[];			\
-	static CommandCategory&		category;			\
-	static int	main(State&, const string_list&);		\
-	static void	usage(ostream&);				\
-private:								\
-	static const size_t		receipt_id;			\
-};
-#endif
-
-#if 0
-// declare some generally useful commands
-/**
-	The 'help' command class.  
-	Not using the macro to define because we extend the interface somewhat.
- */
-struct Help {
-public:
-	static const char		name[];
-	static const char		brief[];
-	static CommandCategory&		category;
-	static int	main(const string_list&);	// no state needed
-	static int	main(State&, const string_list&);
-	static void	usage(ostream&);
-private:
-	static const size_t		receipt_id;
-};	// end class Help
-#endif
 
 //=============================================================================
 }	// end namespace SIM

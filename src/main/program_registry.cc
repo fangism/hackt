@@ -1,10 +1,11 @@
 /**
 	\file "main/program_registry.cc"
 	Implementation of core hackt program registration interface.  
-	$Id: program_registry.cc,v 1.5 2007/02/22 05:30:13 fang Exp $
+	$Id: program_registry.cc,v 1.6 2009/02/19 02:58:27 fang Exp $
  */
 
 #include <iostream>
+#include <cstdlib>			// for exit()
 #include "main/program_registry.h"
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"

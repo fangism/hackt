@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.21 2009/02/18 00:22:45 fang Exp $
+	$Id: Command.cc,v 1.22 2009/02/19 02:58:35 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -24,10 +24,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/chpsim/Command.h"
 #include "sim/chpsim/State.h"
 #include "sim/command_base.tcc"
-#include "sim/command_builtin.tcc"
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
 #include "sim/command_common.tcc"
+#include "sim/command_macros.tcc"
 #include "parser/instref.h"
 #include "sim/chpsim/Trace.h"
 
@@ -83,6 +83,20 @@ static CommandCategory
 	OVERRIDE_DEFAULT_COMPLETER(CHPSIM, _class, _func)
 
 //=============================================================================
+// command re-use macros
+
+#define	CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(_class, _cat)	\
+INSTANTIATE_TRIVIAL_COMMAND_CLASS(CHPSIM, _class, _cat)
+
+#define	CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(_class, _cat)	\
+typedef	stateless_command_wrapper<_class, State>	_class;		\
+INSTANTIATE_COMMON_COMMAND_CLASS(CHPSIM, stateless_command_wrapper, _class, _cat)
+
+#define	CHPSIM_INSTANTIATE_MODULE_COMMAND_CLASS(_class, _cat)		\
+typedef	module_command_wrapper<_class, State>		_class;		\
+INSTANTIATE_COMMON_COMMAND_CLASS(CHPSIM, module_command_wrapper, _class, _cat)
+
+//=============================================================================
 // local Command classes
 // feel free to add commands here
 
@@ -114,9 +128,7 @@ single spaces by the interpreter's tokenizer.
 @end deffn
 @end texinfo
 ***/
-typedef	stateless_command_wrapper<Echo, State>	Echo;
-INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Echo, "echo", CHPSIM::builtin, 
-	"prints arguments back to stdout, space-delimited")
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(Echo, builtin)
 
 //-----------------------------------------------------------------------------
 /***
@@ -128,14 +140,8 @@ Help on command or category @var{cmd}.
 @end deffn
 @end texinfo
 ***/
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Help, CHPSIM::builtin)
-}	// end namespace CHPSIM
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Help, builtin)
 
-// explicit instantiation in correct namespace
-template int CHPSIM::Help::main(const string_list&);
-
-// re-open namespace
-namespace CHPSIM {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/comment.texi
@@ -145,18 +151,12 @@ Whole line comment, ignored by interpreter.
 @end deffn
 @end texinfo
 ***/
-typedef	stateless_command_wrapper<CommentPound, State>		CommentPound;
-typedef	stateless_command_wrapper<CommentComment, State>	CommentComment;
-
-INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::CommentPound,
-	"#", CHPSIM::builtin, "comments are ignored")
-INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::CommentComment,
-	"comment", CHPSIM::builtin, "comments are ignored")
-
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(CommentPound, builtin)
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(CommentComment, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	All<State>					All;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::All, CHPSIM::builtin)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(All, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -173,16 +173,9 @@ Exit the simulator with a fatal (non-zero) exit status.
 @end deffn
 @end texinfo
 ***/
-typedef	stateless_command_wrapper<Exit, State>		Exit;
-typedef	stateless_command_wrapper<Quit, State>		Quit;
-typedef	stateless_command_wrapper<Abort, State>		Abort;
-
-INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Exit,
-	"exit", CHPSIM::builtin, "exits simulator")
-INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Quit,
-	"quit", CHPSIM::builtin, "exits simulator")
-INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Abort,
-	"abort", CHPSIM::builtin, "exits simulator with fatal status")
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(Exit, builtin)
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(Quit, builtin)
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(Abort, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -196,7 +189,7 @@ This is useful for shortening common commands.
 @end texinfo
 ***/
 typedef	Alias<State>				Alias;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Alias, CHPSIM::builtin)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Alias, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -207,7 +200,7 @@ Undefines an existing alias @var{cmd}.
 @end texinfo
 ***/
 typedef	UnAlias<State>				UnAlias;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::UnAlias, CHPSIM::builtin)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(UnAlias, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -218,7 +211,7 @@ Undefines @emph{all} aliases.
 @end texinfo
 ***/
 typedef	UnAliasAll<State>			UnAliasAll;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::UnAliasAll, CHPSIM::builtin)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(UnAliasAll, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -229,7 +222,7 @@ Print a list of all known aliases registered with the interpreter.
 @end texinfo
 ***/
 typedef	Aliases<State>				Aliases;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Aliases, CHPSIM::builtin)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Aliases, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -242,7 +235,7 @@ will terminate early with a diagnostic message.
 @end texinfo
 ***/
 typedef	Repeat<State>				Repeat;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Repeat, CHPSIM::builtin)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Repeat, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -259,7 +252,7 @@ of input and return control to the parent.
 @end texinfo
 ***/
 typedef	Interpret<State>			Interpret;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Interpret, CHPSIM::builtin)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Interpret, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -273,7 +266,7 @@ Default off.
 @end texinfo
 ***/
 typedef	EchoCommands<State>				EchoCommands;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::EchoCommands, CHPSIM::builtin)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(EchoCommands, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -288,7 +281,7 @@ or the @ref{command-addpath,, @command{addpath}} command.
 @end texinfo
 ***/
 typedef	Source<State>				Source;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Source, CHPSIM::general)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Source, general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -300,7 +293,7 @@ Appends @var{path} to the search path for sourcing scripts.
 @end texinfo
 ***/
 typedef	AddPath<State>				AddPath;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AddPath, CHPSIM::general)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(AddPath, general)
 
 /***
 @texinfo cmd/paths.texi
@@ -310,7 +303,7 @@ Print the list of paths searched for source scripts.
 @end texinfo
 ***/
 typedef	Paths<State>				Paths;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Paths, CHPSIM::general)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Paths, general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -325,8 +318,7 @@ See also @ref{option-L,, the @option{-L} option}.
 @end deffn
 @end texinfo
 ***/
-typedef	DLAddPath<State>			DLAddPath;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLAddPath, CHPSIM::general)
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(DLAddPath, general)
 
 /***
 @texinfo cmd/dlpaths.texi
@@ -335,8 +327,7 @@ Prints the list of paths used in searching for dlopen-ing modules.
 @end deffn
 @end texinfo
 ***/
-typedef	DLPaths<State>				DLPaths;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLPaths, CHPSIM::general)
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(DLPaths, general)
 
 /***
 @texinfo cmd/dlopen.texi
@@ -351,8 +342,7 @@ following the same naming guidelines.
 @end deffn
 @end texinfo
 ***/
-typedef	DLOpen<State>				DLOpen;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLOpen, CHPSIM::general)
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(DLOpen, general)
 
 /***
 @texinfo cmd/dlcheckfunc.texi
@@ -365,8 +355,7 @@ Never errors out.
 @end deffn
 @end texinfo
 ***/
-typedef	DLCheckFunc<State>			DLCheckFunc;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLCheckFunc, CHPSIM::general)
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(DLCheckFunc, general)
 
 /***
 @texinfo cmd/dlassertfunc.texi
@@ -380,8 +369,7 @@ any execution begins.
 @end deffn
 @end texinfo
 ***/
-typedef	DLAssertFunc<State>			DLAssertFunc;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLAssertFunc, CHPSIM::general)
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(DLAssertFunc, general)
 
 /***
 @texinfo cmd/dlfuncs.texi
@@ -390,8 +378,7 @@ Print list of registered functions, from dlopened modules.
 @end deffn
 @end texinfo
 ***/
-typedef	DLFuncs<State>				DLFuncs;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLFuncs, CHPSIM::general)
+CHPSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(DLFuncs, general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -403,7 +390,7 @@ other settings such as mode and breakpoints.
 @end texinfo
 ***/
 typedef	Initialize<State>			Initialize;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Initialize, CHPSIM::simulation)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Initialize, simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -415,7 +402,7 @@ default values.
 @end texinfo
 ***/
 typedef	Reset<State>				Reset;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Reset, CHPSIM::simulation)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Reset, simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -429,7 +416,7 @@ Note: the seed is automatically saved and restored in checkpoints.
 @end texinfo
 ***/
 typedef	Seed48<State>			Seed48;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Seed48, CHPSIM::modes)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Seed48, modes)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -710,7 +697,7 @@ execution event queue.
 @end texinfo
 ***/
 typedef	Queue<State>				Queue;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Queue, CHPSIM::info)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Queue, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -1288,7 +1275,7 @@ Overwrites @var{ckpt} if it already exists.
 @end texinfo
 ***/
 typedef	Save<State>				Save;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Save, CHPSIM::tracing)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Save, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1303,7 +1290,7 @@ Loading a checkpoint, however, will close any open tracing streams.
 @end texinfo
 ***/
 typedef	Load<State>				Load;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::tracing)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Load, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1319,7 +1306,7 @@ the autosave checkpoint name.
 @end texinfo
 ***/
 typedef	AutoSave<State>				AutoSave;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AutoSave, CHPSIM::tracing)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(AutoSave, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1359,8 +1346,7 @@ List immediate subinstances of the instance named @var{name}.
 @end deffn
 @end texinfo
 ***/
-typedef	LS<State>				LS;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::LS, CHPSIM::info)
+CHPSIM_INSTANTIATE_MODULE_COMMAND_CLASS(LS, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1371,8 +1357,7 @@ along with its canonical name.
 @end deffn
 @end texinfo
 ***/
-typedef	What<State>				What;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::What, CHPSIM::info)
+CHPSIM_INSTANTIATE_MODULE_COMMAND_CLASS(What, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1386,10 +1371,8 @@ for improved readability.
 @end deffn
 @end texinfo
 ***/
-typedef	Who<State>				Who;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Who, CHPSIM::info)
-typedef	WhoNewline<State>			WhoNewline;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::WhoNewline, CHPSIM::info)
+CHPSIM_INSTANTIATE_MODULE_COMMAND_CLASS(Who, info)
+CHPSIM_INSTANTIATE_MODULE_COMMAND_CLASS(WhoNewline, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1834,7 +1817,7 @@ Useful as a quick check for deadlock.
 @end texinfo
 ***/
 typedef	AssertQueue<State>			AssertQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AssertQueue, CHPSIM::info)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(AssertQueue, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1845,7 +1828,7 @@ Error out if the event queue is not empty.
 @end texinfo
 ***/
 typedef	AssertNQueue<State>			AssertNQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AssertNQueue, CHPSIM::info)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(AssertNQueue, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1856,7 +1839,7 @@ Print the current simulator time.
 @end texinfo
 ***/
 typedef	Time<State>				Time;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Time, CHPSIM::info)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Time, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(Confirm, "confirm", info, 
@@ -2252,7 +2235,7 @@ as it prints @emph{a lot} of information.
 @end texinfo
 ***/
 typedef	WatchQueue<State>			WatchQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::WatchQueue, CHPSIM::view)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WatchQueue, view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2263,7 +2246,7 @@ Disables @command{watch-queue}.
 @end texinfo
 ***/
 typedef	NoWatchQueue<State>			NoWatchQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::NoWatchQueue, CHPSIM::view)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(NoWatchQueue, view)
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2277,7 +2260,7 @@ as it prints @emph{a lot} of information.
 @end texinfo
 ***/
 typedef	WatchAllQueue<State>			WatchAllQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::WatchAllQueue, CHPSIM::view)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WatchAllQueue, view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2288,7 +2271,7 @@ Disables @command{watchall-queue}.
 @end texinfo
 ***/
 typedef	NoWatchAllQueue<State>			NoWatchAllQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::NoWatchAllQueue, CHPSIM::view)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(NoWatchAllQueue, view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -2767,7 +2750,7 @@ with a newly opened trace stream.
 @end texinfo
 ***/
 typedef	Trace<State>				Trace;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Trace, CHPSIM::tracing)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Trace, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2778,7 +2761,7 @@ Print the name of the currently opened trace file.
 @end texinfo
 ***/
 typedef	TraceFile<State>			TraceFile;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::TraceFile, CHPSIM::tracing)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceFile, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2791,7 +2774,7 @@ Trace is automatically closed when the simulator exits.
 @end texinfo
 ***/
 typedef	TraceClose<State>			TraceClose;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::TraceClose, CHPSIM::tracing)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceClose, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2802,7 +2785,7 @@ Enable (1) or disable (0) notifications when trace epochs are flushed.
 @end texinfo
 ***/
 typedef	TraceFlushNotify<State>			TraceFlushNotify;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::TraceFlushNotify, CHPSIM::tracing)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceFlushNotify, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2815,7 +2798,7 @@ This regulates the granularity of saving traces in a space-time tradeoff.
 @end texinfo
 ***/
 typedef	TraceFlushInterval<State>		TraceFlushInterval;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::TraceFlushInterval, CHPSIM::tracing)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceFlushInterval, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2826,7 +2809,7 @@ Produce textual dump of trace file contents in @var{file}.
 @end texinfo
 ***/
 typedef	TraceDump<State>			TraceDump;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::TraceDump, CHPSIM::tracing)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceDump, tracing)
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

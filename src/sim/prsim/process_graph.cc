@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_graph.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_graph.cc,v 1.4 2009/02/07 04:08:43 fang Exp $
+	$Id: process_graph.cc,v 1.5 2009/02/19 02:58:38 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -11,6 +11,7 @@
 #define	DEBUG_CHECK			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
+#include <numeric>			// for accumulate
 #include "sim/prsim/State-prsim.h"
 #include "sim/prsim/util.tcc"
 #include "sim/prsim/Rule.tcc"

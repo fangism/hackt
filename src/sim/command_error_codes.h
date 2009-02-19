@@ -1,13 +1,12 @@
 /**
 	\file "sim/command_error_codes.h"
-	$Id: command_error_codes.h,v 1.2 2008/11/27 11:09:27 fang Exp $
+	$Id: command_error_codes.h,v 1.3 2009/02/19 02:58:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_ERROR_CODES_H__
 #define	__HAC_SIM_COMMAND_ERROR_CODES_H__
 
 #include "util/string_fwd.h"
-#include "sim/prsim/devel_switches.h"
 
 namespace HAC {
 namespace SIM {

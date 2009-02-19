@@ -2,7 +2,7 @@
 	\file "exit_test.cc"
 	Demonstration that calling exit(1) will result in non-fatal
 	memory leaks, as reported by the static list_vector_pool.  
-	$Id: exit_test.cc,v 1.5 2006/02/26 02:28:04 fang Exp $
+	$Id: exit_test.cc,v 1.6 2009/02/19 02:58:40 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -10,6 +10,7 @@
 #endif
 
 #include <list>
+#include <cstdlib>		// for exit()
 #include "pooled_thing.h"
 #include "util/memory/count_ptr.tcc"
 

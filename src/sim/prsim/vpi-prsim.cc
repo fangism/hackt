@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.13 2009/02/18 00:22:49 fang Exp $
+	$Id: vpi-prsim.cc,v 1.14 2009/02/19 02:58:38 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -1405,7 +1405,7 @@ prsim_default_after(PLI_BYTE8 *args) {
   arg.format = vpiIntVal;
   vpi_get_value (fname, &arg);
   if (arg.value.integer < 0) {
-    vpi_printf ("Error: delay value must be non-negative!");
+    vpi_puts_c ("Error: delay value must be non-negative!");
     return 0;
   }
   State::rule_type::default_unspecified_delay = arg.value.integer;
@@ -1421,7 +1421,7 @@ prsim_default_after(PLI_BYTE8 *args) {
 
 //=============================================================================
 struct funcs {
-  char *name;
+  const char *name;
   PLI_INT32 (*f) (PLI_BYTE8 *);
 };
 
@@ -1456,7 +1456,7 @@ void register_prsim (void)
   /* register tasks */
   for (i=0; i < sizeof (f)/sizeof (f[0]); ++i) {
     s.type = vpiSysTask;
-    s.tfname = f[i].name;
+    s.tfname = const_cast<PLI_BYTE8*>(f[i].name);	// pffft...
     s.calltf = f[i].f;
     s.compiletf = NULL;
     s.sizetf = NULL;

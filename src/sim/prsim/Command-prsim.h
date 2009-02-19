@@ -2,7 +2,7 @@
 	\file "sim/prsim/Command-prsim.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command-prsim.h,v 1.2 2009/02/18 00:22:48 fang Exp $
+	$Id: Command-prsim.h,v 1.3 2009/02/19 02:58:37 fang Exp $
 
 	Earlier version was:
 	Id: Command.h,v 1.8 2007/02/14 04:57:27 fang Exp
@@ -19,6 +19,7 @@
 #include "sim/command_base.h"
 #include "sim/command_category.h"
 #include "sim/command_registry.h"
+#include "sim/command_macros.h"
 
 namespace HAC {
 namespace SIM {

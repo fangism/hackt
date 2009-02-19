@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.41 2009/02/18 00:22:47 fang Exp $
+	$Id: Command-prsim.cc,v 1.42 2009/02/19 02:58:36 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -34,7 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_base.tcc"
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
-#include "sim/command_builtin.tcc"
+#include "sim/command_macros.tcc"
 #include "sim/command_common.tcc"
 #include "parser/instref.h"
 
@@ -97,9 +97,35 @@ static CommandCategory
 
 /**
 	Tell each command to override default completer.  
+	\param _class can be any type name, such as a typedef.  
  */
 #define	PRSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)			\
-	OVERRIDE_DEFAULT_COMPLETER(PRSIM, _class, _func)
+OVERRIDE_DEFAULT_COMPLETER(PRSIM, _class, _func)
+
+/**
+	Same thing, but with forward declaration of class.  
+ */
+#define	PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(_class, _func)		\
+class _class;								\
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)
+
+//=============================================================================
+// macros for re-using common command classes
+
+#define	PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(_class, _cat)		\
+INSTANTIATE_TRIVIAL_COMMAND_CLASS(PRSIM, _class, _cat)
+
+#define	PRSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(_class, _cat)		\
+typedef	stateless_command_wrapper<_class, State>	_class;		\
+INSTANTIATE_COMMON_COMMAND_CLASS(PRSIM, stateless_command_wrapper, _class, _cat)
+
+/**
+	\param _compl is the overriding tab-completer function.
+ */
+#define	PRSIM_INSTANTIATE_MODULE_COMMAND_CLASS(_class, _cat, _compl)	\
+typedef	module_command_wrapper<_class, State>		_class;		\
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _compl)			\
+INSTANTIATE_COMMON_COMMAND_CLASS(PRSIM, module_command_wrapper, _class, _cat)
 
 //=============================================================================
 // local Command classes
@@ -119,11 +145,13 @@ const char _class::brief[] = _brief;					\
 CommandCategory& _class::category(_category);				\
 const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
 
+/**
+	Combined macro for declaring and defining a local command class.
+ */
 #define	DECLARE_AND_INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief) \
 	DECLARE_PRSIM_COMMAND_CLASS(_class)				\
 	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)
 
-// const command_completer _class::completer = &Completer<_class >;
 
 //-----------------------------------------------------------------------------
 /***
@@ -133,9 +161,7 @@ Prints the arguments back to stdout.
 @end deffn
 @end texinfo
 ***/
-typedef	stateless_command_wrapper<Echo, State>	Echo;
-INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Echo, "echo", PRSIM::builtin, 
-	"prints arguments back to stdout, space-delimited")
+PRSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(Echo, builtin)
 
 //-----------------------------------------------------------------------------
 /***
@@ -147,13 +173,8 @@ Help on command or category @var{cmd}.
 @end deffn
 @end texinfo
 ***/
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Help, PRSIM::builtin)
-}	// end namespace PRSIM
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Help, builtin)
 
-// template needs to be instantiated in correct namespace
-template class Help<PRSIM::State>;
-
-namespace PRSIM {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/comment.texi
@@ -163,18 +184,13 @@ Whole line comment, ignored by interpreter.
 @end deffn
 @end texinfo
 ***/
-typedef	stateless_command_wrapper<CommentPound, State>		CommentPound;
-typedef	stateless_command_wrapper<CommentComment, State>	CommentComment;
-
-INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::CommentPound,
-	"#", PRSIM::builtin, "comments are ignored")
-INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::CommentComment,
-	"comment", PRSIM::builtin, "comments are ignored")
+PRSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(CommentPound, builtin)
+PRSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(CommentComment, builtin)
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	All<State>					All;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::All, PRSIM::builtin)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(All, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -191,16 +207,9 @@ Exit the simulator with a fatal (non-zero) exit status.
 @end deffn
 @end texinfo
 ***/
-typedef	stateless_command_wrapper<Exit, State>		Exit;
-typedef	stateless_command_wrapper<Quit, State>		Quit;
-typedef	stateless_command_wrapper<Abort, State>		Abort;
-
-INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Exit,
-	"exit", PRSIM::builtin, "exits simulator")
-INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Quit,
-	"quit", PRSIM::builtin, "exits simulator")
-INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Abort,
-	"abort", PRSIM::builtin, "exits simulator with fatal status")
+PRSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(Exit, builtin)
+PRSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(Quit, builtin)
+PRSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(Abort, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -214,7 +223,7 @@ This is useful for shortening common commands.
 @end texinfo
 ***/
 typedef	Alias<State>				Alias;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Alias, PRSIM::builtin)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Alias, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -225,7 +234,7 @@ Undefines an existing alias @var{cmd}.
 @end texinfo
 ***/
 typedef	UnAlias<State>				UnAlias;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::UnAlias, PRSIM::builtin)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(UnAlias, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -236,7 +245,7 @@ Undefines @emph{all} aliases.
 @end texinfo
 ***/
 typedef	UnAliasAll<State>			UnAliasAll;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::UnAliasAll, PRSIM::builtin)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(UnAliasAll, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -247,7 +256,7 @@ Print a list of all known aliases registered with the interpreter.
 @end texinfo
 ***/
 typedef	Aliases<State>				Aliases;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Aliases, PRSIM::builtin)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Aliases, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -260,7 +269,7 @@ will terminate early with a diagnostic message.
 @end texinfo
 ***/
 typedef	Repeat<State>				Repeat;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Repeat, PRSIM::builtin)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Repeat, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -297,7 +306,7 @@ $
 @end texinfo
 ***/
 typedef	Interpret<State>			Interpret;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Interpret, PRSIM::builtin)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Interpret, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -311,7 +320,7 @@ Default off.
 @end texinfo
 ***/
 typedef	EchoCommands<State>				EchoCommands;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::EchoCommands, PRSIM::builtin)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(EchoCommands, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -326,7 +335,7 @@ or the @ref{command-addpath,, @command{addpath}} command.
 @end texinfo
 ***/
 typedef	Source<State>				Source;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Source, PRSIM::general)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Source, general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -338,7 +347,7 @@ Appends @var{path} to the search path for sourcing scripts.
 @end texinfo
 ***/
 typedef	AddPath<State>				AddPath;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AddPath, PRSIM::general)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(AddPath, general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -349,7 +358,7 @@ Print the list of paths searched for source scripts.
 @end texinfo
 ***/
 typedef	Paths<State>				Paths;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Paths, PRSIM::general)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Paths, general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -362,7 +371,7 @@ The random number generator seed is untouched by this command.
 @end texinfo
 ***/
 typedef	Initialize<State>			Initialize;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Initialize, PRSIM::simulation)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Initialize, simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -377,7 +386,7 @@ This also resets the random number generator seed used with @command{seed48}.
 @end texinfo
 ***/
 typedef	Reset<State>				Reset;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Reset, PRSIM::simulation)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Reset, simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -392,18 +401,6 @@ To step by events count, use @command{step-event}.
 @end deffn
 @end texinfo
 ***/
-#if 0
-struct Step {
-public:
-	static const char               name[];
-	static const char               brief[];
-	static CommandCategory&         category;
-	static int      main(State&, const string_list&);
-	static void     usage(ostream&);
-private:
-	static const size_t             receipt_id;
-};      // end class Step
-#endif
 
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
 	"step through event(s), by time increments")
@@ -724,7 +721,7 @@ Print the event queue.
 @end texinfo
 ***/
 typedef	Queue<State>				Queue;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Queue, PRSIM::info)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Queue, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -738,7 +735,7 @@ If @var{delay} is given with a @t{+} prefix, time is added relative to
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Set, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Set, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation,
 	"set node immediately, or after delay")
 
@@ -833,7 +830,7 @@ events on @var{node}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(SetF, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(SetF, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetF, "setf", simulation,
 	"same as set, but overriding pending events")
 
@@ -866,7 +863,7 @@ a coercive @command{set}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(UnSet, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(UnSet, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSet, "unset", simulation,
 	"force re-evaluation of node\'s input state, may cancel setf")
 
@@ -941,7 +938,7 @@ Same as the @command{set} command, but using a random delay into the future.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Setr, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Setr, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation,
 	"set node to value after random delay")
 
@@ -1008,7 +1005,7 @@ overriding any pending events.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(SetrF, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(SetrF, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetrF, "setrf", simulation,
 	"set node to value after random delay, overriding pending events")
 
@@ -1054,10 +1051,10 @@ Return with error status if there is no pending event on @var{node}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Reschedule, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(RescheduleNow, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(RescheduleFromNow, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(RescheduleRelative, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Reschedule, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(RescheduleNow, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(RescheduleFromNow, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(RescheduleRelative, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Reschedule, "reschedule", simulation,
 	"reschedule event on node to absolute time")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RescheduleNow, "reschedule-now",
@@ -1171,7 +1168,7 @@ Equivalent to @command{reschedule-now node}, followed by @command{step-event}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Execute, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Execute, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Execute, "execute", simulation,
 	"execute a pending event now")
 
@@ -1215,7 +1212,7 @@ and return control back to the interpreter.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(BreakPt, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(BreakPt, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakPt, "breakpt", simulation,
 	"set breakpoint on node")	// no vector support yet
 
@@ -1260,7 +1257,7 @@ Removes breakpoint on @var{node}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(NoBreakPt, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(NoBreakPt, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPt, "nobreakpt", simulation,
 	"remove breakpoint on node")	// no vector support yet
 
@@ -1296,7 +1293,7 @@ NoBreakPt::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(UnBreak, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(UnBreak, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreak, "unbreak", simulation,
 	"alias for \'nobreakpt\'")	// no vector support yet
 
@@ -1396,7 +1393,7 @@ resume or replay a simulation later.
 @end texinfo
 ***/
 typedef	Save<State>				Save;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Save, PRSIM::tracing)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Save, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1410,7 +1407,7 @@ Loading a checkpoint, however, will close any open tracing streams.
 @end texinfo
 ***/
 typedef	Load<State>				Load;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Load, PRSIM::tracing)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Load, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1426,7 +1423,7 @@ the autosave checkpoint name.
 @end texinfo
 ***/
 typedef	AutoSave<State>				AutoSave;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AutoSave, PRSIM::tracing)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(AutoSave, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1436,8 +1433,7 @@ List immediate subinstances of the instance named @var{name}.
 @end deffn
 @end texinfo
 ***/
-typedef	LS<State>				LS;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::LS, PRSIM::info)
+PRSIM_INSTANTIATE_MODULE_COMMAND_CLASS(LS, info, instance_completer)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1447,8 +1443,7 @@ Print the type of the instance named @var{name}.
 @end deffn
 @end texinfo
 ***/
-typedef	What<State>				What;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::What, PRSIM::info)
+PRSIM_INSTANTIATE_MODULE_COMMAND_CLASS(What, info, instance_completer)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1461,10 +1456,8 @@ for improved readability.
 @end deffn
 @end texinfo
 ***/
-typedef	Who<State>				Who;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Who, PRSIM::info)
-typedef	WhoNewline<State>			WhoNewline;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WhoNewline, PRSIM::info)
+PRSIM_INSTANTIATE_MODULE_COMMAND_CLASS(Who, info, instance_completer)
+PRSIM_INSTANTIATE_MODULE_COMMAND_CLASS(WhoNewline, info, instance_completer)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1477,7 +1470,7 @@ which should really never be exposed to the public API.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Pending, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Pending, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Pending, "pending", info,
 	"print any pending event on node")
 
@@ -1508,7 +1501,7 @@ Pending::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(PendingDebug, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(PendingDebug, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(PendingDebug, "pending-debug", debug,
 	"print any pending event on node (with index)")
 
@@ -1614,7 +1607,7 @@ Print the current value of @var{node}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Get, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Get, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,
 	"print value of node/vector")
 
@@ -1659,7 +1652,7 @@ Useful for observing channels and processes.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(GetAll, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetAll, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetAll, "getall", info,
 	"print values of all subnodes")
 
@@ -1708,7 +1701,7 @@ for readability.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Status, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Status, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Status, "status", info, 
 	"show all nodes matching a state value")
 
@@ -1737,7 +1730,7 @@ Status::usage(ostream& o) {
 	o << "list all nodes with the matching current value" << endl;
 }
 
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(StatusNewline, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(StatusNewline, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusNewline, "status-newline", info, 
 	"show all nodes matching a value, line separated")
 
@@ -1872,7 +1865,7 @@ Print all production rules that can fire @var{NODE}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Fanin, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Fanin, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanin, "fanin", info, 
 	"print rules that influence a node")
 
@@ -1912,7 +1905,7 @@ Also prints current values of all expression literals.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(FaninGet, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(FaninGet, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(FaninGet, "fanin-get", info, 
 	"print rules that influence a node, with values")
 
@@ -1953,7 +1946,7 @@ Print all production rules that @var{NODE} participates in.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Fanout, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Fanout, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanout, "fanout", info, 
 	"print rules that a node influences")
 
@@ -1992,7 +1985,7 @@ Also prints current values of all expression literals.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(FanoutGet, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(FanoutGet, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(FanoutGet, "fanout-get", info, 
 	"print rules that a node influences, with values")
 
@@ -2033,7 +2026,7 @@ Print forced exclusive high/low rings of which @var{node} is a member.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(RingsMk, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(RingsMk, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsMk, "rings-mk", info, 
 	"print forced exclusive rings of which a node is a member")
 
@@ -2099,7 +2092,7 @@ Print all checked exclusive rings of which @var{node} is a member.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(RingsChk, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(RingsChk, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsChk, "rings-chk", info, 
 	"print checked exclusive rings of which a node is a member")
 
@@ -2171,7 +2164,7 @@ Prints the list of attributes attached to the named @var{node}.
 @end texinfo
 TODO: extend to process attributes eventually
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Attributes, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Attributes, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Attributes, "attributes", info, 
 	"prints node attributes")
 
@@ -2215,7 +2208,7 @@ upon first error.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Assert, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Assert, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Assert, "assert", info, 
 	"error if node is NOT expected value")
 
@@ -2282,7 +2275,7 @@ By default such errors are fatal.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(AssertN, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(AssertN, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertN, "assertn", info, 
 	"error if node IS expected value")
 
@@ -2349,7 +2342,7 @@ By default, such assertion failures are fatal.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(AssertPending, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(AssertPending, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertPending, "assert-pending", info, 
 	"error if node does not have event in queue")
 
@@ -2401,7 +2394,7 @@ By default, such assertion failures are fatal.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(AssertNPending, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(AssertNPending, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertNPending, "assertn-pending", info, 
 	"error if node does have event in queue")
 
@@ -2454,7 +2447,7 @@ By default, such assertion failures are fatal.
 @end texinfo
 ***/
 typedef	AssertQueue<State>			AssertQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertQueue, PRSIM::info)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(AssertQueue, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2468,7 +2461,7 @@ By default, such assertion failures are fatal.
 @end texinfo
 ***/
 typedef	AssertNQueue<State>			AssertNQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertNQueue, PRSIM::info)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(AssertNQueue, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2479,7 +2472,7 @@ What time is it (in the simulator)?
 @end texinfo
 ***/
 typedef	Time<State>				Time;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Time, PRSIM::info)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Time, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2491,9 +2484,9 @@ Controls whether or not correct assertions are reported.
 @end texinfo
 ***/
 typedef	Confirm<State>				Confirm;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Confirm, PRSIM::view)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Confirm, view)
 typedef	NoConfirm<State>			NoConfirm;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoConfirm, PRSIM::view)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(NoConfirm, view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2506,7 +2499,7 @@ and identifying critical paths and cycle times.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(BackTrace, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(BackTrace, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BackTrace, "backtrace", info, 
 	"trace backwards partial event causality history")
 
@@ -2557,12 +2550,12 @@ and the @option{-N} variant queries to a maximum depth of @var{maxdepth}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyX, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyXVerbose, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyXN, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyXNVerbose, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyX1, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyX1Verbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyX, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyXVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyXN, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyXNVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyX1, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyX1Verbose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyX, "why-x", info, 
 	"recursively trace cause of X value on node")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyXVerbose, "why-x-verbose", info, 
@@ -2757,12 +2750,12 @@ and the @option{-N} variant queries to a maximum depth of @var{maxdepth}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Why, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyVerbose, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Why1, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Why1Verbose, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyN, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Why, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Why1, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Why1Verbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyN, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyNVerbose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Why, "why", info, 
 	"recursively trace why node is driven to value")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyVerbose, "why-verbose", info, 
@@ -2776,12 +2769,12 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyN, "why-N", info,
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNVerbose, "why-N-verbose", info, 
 	"recursively trace why node is driven to value (verbose)")
 
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNot, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNotVerbose, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNot1, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNot1Verbose, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNotN, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(WhyNotNVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyNot, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyNotVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyNot1, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyNot1Verbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyNotN, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WhyNotNVerbose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNot, "why-not", info, 
 	"recursively trace why node is not at value")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WhyNotVerbose, "why-not-verbose", info, 
@@ -3088,7 +3081,7 @@ much like @command{breakpt}, but doesn't interrupt simulation.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Watch, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Watch, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watch, "watch", view, 
 	"print activity on selected nodes")
 
@@ -3135,7 +3128,7 @@ Removes @var{nodes} from list of watched nodes.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(UnWatch, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(UnWatch, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatch, "unwatch", view, 
 	"silence activity reporting on selected nodes")
 
@@ -3295,11 +3288,11 @@ Typically only used during debugging or detailed diagnostics.
 @end texinfo
 ***/
 typedef	WatchQueue<State>			WatchQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WatchQueue, PRSIM::view)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WatchQueue, view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	NoWatchQueue<State>			NoWatchQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoWatchQueue, PRSIM::view)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(NoWatchQueue, view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -3312,11 +3305,11 @@ Typically only used during debugging or detailed diagnostics.
 @end texinfo
 ***/
 typedef	WatchAllQueue<State>			WatchAllQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WatchAllQueue, PRSIM::view)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WatchAllQueue, view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	NoWatchAllQueue<State>			NoWatchAllQueue;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoWatchAllQueue, PRSIM::view)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(NoWatchAllQueue, view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -3701,7 +3694,7 @@ but not with the @command{initialize} command.
 @end texinfo
 ***/
 typedef	Seed48<State>			Seed48;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Seed48, PRSIM::modes)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Seed48, modes)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -4034,8 +4027,8 @@ appearing in each rule.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Rules, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(RulesVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Rules, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(RulesVerbose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Rules, "rules", info, 
 	"print rules belonging to a process")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RulesVerbose, "rules-verbose", info, 
@@ -4159,8 +4152,8 @@ appearing in each invariant.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Invariants, instance_completer)
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(InvariantsVerbose, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Invariants, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(InvariantsVerbose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Invariants, "invariants", info, 
 	"print invariants belonging to a process or node")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(InvariantsVerbose, 
@@ -4451,7 +4444,7 @@ and an active-low acknowledge (enable) reset to 0, no bundles.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER(Channel, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Channel, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Channel, "channel", 
 	channels, "declare a handshake channel from a group of nodes")
 
@@ -4602,7 +4595,7 @@ name of the current log file to which values are dumped, if enabled.
 @end texinfo
 ***/
 // TODO: prsim tab-completion on registered channel names
-// PRSIM_OVERRIDE_DEFAULT_COMPLETER(ChannelShow, prsim_channel_completer)
+// PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelShow, prsim_channel_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelShow, "channel-show", 
 	channels, "show configuration of registered channel")
 
@@ -5726,7 +5719,7 @@ with a newly opened trace stream.
 @end texinfo
 ***/
 typedef	Trace<State>				Trace;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Trace, PRSIM::tracing)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Trace, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -5737,7 +5730,7 @@ Print the name of the currently opened trace file.
 @end texinfo
 ***/
 typedef	TraceFile<State>			TraceFile;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::TraceFile, PRSIM::tracing)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceFile, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -5750,7 +5743,7 @@ Trace is automatically closed when the simulator exits.
 @end texinfo
 ***/
 typedef	TraceClose<State>			TraceClose;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::TraceClose, PRSIM::tracing)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceClose, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -5761,7 +5754,7 @@ Enable (1) or disable (0) notifications when trace epochs are flushed.
 @end texinfo
 ***/
 typedef	TraceFlushNotify<State>			TraceFlushNotify;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::TraceFlushNotify, PRSIM::tracing)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceFlushNotify, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -5774,7 +5767,7 @@ This regulates the granularity of saving traces in a space-time tradeoff.
 @end texinfo
 ***/
 typedef	TraceFlushInterval<State>		TraceFlushInterval;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::TraceFlushInterval, PRSIM::tracing)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceFlushInterval, tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -5785,7 +5778,7 @@ Produce textual dump of trace file contents in @var{file}.
 @end texinfo
 ***/
 typedef	TraceDump<State>			TraceDump;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::TraceDump, PRSIM::tracing)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceDump, tracing)
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

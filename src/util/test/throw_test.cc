@@ -2,7 +2,7 @@
 	\file "throw_test.cc"
 	Demonstration that throwing exception will result in proper clean
 	up of objects on the stack.  
-	$Id: throw_test.cc,v 1.5 2006/02/26 02:28:06 fang Exp $
+	$Id: throw_test.cc,v 1.6 2009/02/19 02:58:40 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -11,6 +11,7 @@
 
 #include <exception>
 #include <list>
+#include <cstdlib>		// for exit()
 #include "pooled_thing.h"
 #include "util/memory/count_ptr.tcc"
 
