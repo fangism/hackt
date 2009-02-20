@@ -2,7 +2,7 @@
 	\file "util/static_trace.h"
 	Utility class for identifiying global static initialization
 	and destruction of modules, and debugging ordering...
-	$Id: static_trace.h,v 1.6 2007/02/27 05:37:43 fang Exp $
+	$Id: static_trace.h,v 1.7 2009/02/20 20:39:44 fang Exp $
  */
 
 #ifndef	__UTIL_STATIC_TRACE_H__
@@ -43,7 +43,7 @@
 #endif
 
 #define DEFAULT_STATIC_TRACE_BEGIN	STATIC_TRACE_BEGIN(__FILE__)
-#define DEFAULT_STATIC_TRACE		STATIC_TRACE_HERE(__FILE__ # ":" # __LINE__)
+#define DEFAULT_STATIC_TRACE		STATIC_TRACE_HERE(__FILE__ ":" STRINGIFY(__LINE__))
 #define DEFAULT_STATIC_TRACE_END	STATIC_TRACE_END(__FILE__)
 
 //=============================================================================

@@ -3,16 +3,11 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.22 2008/07/30 05:26:49 fang Exp $
+	$Id: main_funcs.cc,v 1.23 2009/02/20 20:39:41 fang Exp $
  */
-
-#include <iostream>
-#include <fstream>
-#include <stack>
 
 #define	ENABLE_STACKTRACE		0
 #define	ENABLE_STATIC_TRACE		0
-
 /**
 	Eventually split out parser functions to parser library
 	for better modularity.  
@@ -20,11 +15,15 @@
 #define	KEEP_PARSE_FUNCS		1
 
 #include "config.h"			// for USING_BISON / USING_YACC
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
+
+#include <iostream>
+#include <fstream>
+#include <stack>
 
 #include "util/macros.h"
 #include "main/main_funcs.h"
-#include "util/static_trace.h"
-DEFAULT_STATIC_TRACE_BEGIN
 
 #include "AST/root.h"			// for parser::root_body
 #include "AST/type_base.h"		// for parser::concrete_type_ref

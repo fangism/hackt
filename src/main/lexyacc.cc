@@ -1,11 +1,15 @@
 /**
 	\file "main/lexyacc.cc"
 	Test program using unmangled, unhacked flex/yacc code.
-	$Id: lexyacc.cc,v 1.1 2009/02/20 16:40:14 fang Exp $
+	$Id: lexyacc.cc,v 1.2 2009/02/20 20:39:41 fang Exp $
  */
 
-#include "main/main_funcs.h"
-#include "parser/hackt-parse-real.h"	// for YYSTYPE
+#define	ENABLE_STATIC_TRACE		0
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
+
+#include "parser/hackt-union.h"	// for forward declarations
+#include "parser/hackt-parse.h"	// for YYSTYPE
 #include "AST/root.h"
 #include "util/memory/count_ptr.h"
 
@@ -31,4 +35,6 @@ main(int argc, char* argv[]) {
 	}
 	return 0;
 }
+
+DEFAULT_STATIC_TRACE_END
 

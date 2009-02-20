@@ -3,7 +3,7 @@
 	Tricks for concatenating strings with the C-preprocessor.  
 	I learned this trick from:
 		http://www.slack.net/~ant/cpp/unqiue_name.html
-	$Id: cppcat.h,v 1.3 2006/03/16 03:40:29 fang Exp $
+	$Id: cppcat.h,v 1.4 2009/02/20 20:39:42 fang Exp $
  */
 
 #ifndef	__UTIL_CPPCAT_H__
@@ -36,6 +36,12 @@
 #define	CONCAT_2_(x, y)		CONCAT_3_(x,y)
 #define	CONCAT(x, y)		CONCAT_2_(x,y)
 #define	UNIQUIFY(str)		CONCAT(str,__LINE__)
+
+/**
+	Turn x into a string, typically used for debugging, asserts...
+ */
+#define	_STRINGIFY_(x)		#x
+#define	STRINGIFY(x)		_STRINGIFY_(x)
 
 /**
 	To try to protect macros with commas inside, without

@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.28 2008/09/26 17:32:57 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.29 2009/02/20 20:39:40 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -99,6 +99,14 @@ using namespace HAC::parser;
 #include "util/libc.h"			/* for strsep */
 using flex::lexer_state;
 
+/**
+	If lexyacc_test links against main parser, 
+	we will want to avoid a symbol conflict.
+ */
+#if	defined(LIBBOGUS)
+#define	hackt_parse_file_manager	yy_parse_file_manager
+#define	hackt_embedded_file_stack	yy_embedded_file_stack
+#endif
 /**
 	This is the file stack and include path manager for 
 	the hackt parser.  
