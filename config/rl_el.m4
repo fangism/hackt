@@ -1,5 +1,5 @@
 dnl "config/rl_el.m4"
-dnl	$Id: rl_el.m4,v 1.6 2008/11/11 20:06:10 fang Exp $
+dnl	$Id: rl_el.m4,v 1.7 2009/02/20 16:40:09 fang Exp $
 dnl Readline and Editline support for the utility library used by hackt.
 dnl This is not only specific to hackt, so we place these macros here.  
 dnl
@@ -86,7 +86,7 @@ dnl RL_LIB library linker flag, and
 dnl RL_LDPATH for path to library.
 dnl
 dnl @category InstalledPackages
-dnl @version 2006-05-08
+dnl @version 2009-02-19
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -132,6 +132,10 @@ CPPFLAGS="$CPPFLAGS $rl_include"
                 [AC_MSG_ERROR(Couldn't find readline libraries in LDFLAGS paths.)],
 	dnl extra library argument to link during link test
 	$NCURSES_LIB )
+	saved_LIBS="$LIBS"
+	LIBS="$LIBS $RL_LIB"
+	AC_CHECK_FUNCS(rl_completion_matches completion_matches)
+	LIBS="$saved_LIBS"
 	LDFLAGS="$saved_LDFLAGS"
 CPPFLAGS="$saved_CPPFLAGS"
 fi
@@ -153,7 +157,7 @@ dnl EL_LIB library linker flag, and
 dnl EL_LDPATH for path to library.
 dnl
 dnl @category InstalledPackages
-dnl @version 2006-05-08
+dnl @version 2009-02-19
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -175,6 +179,8 @@ saved_LDFLAGS="$LDFLAGS"
 CPPFLAGS="$CPPFLAGS $el_include"
 LDFLAGS="$LDFLAGS $el_ldpath"
 	AC_MSG_RESULT(Checking for editline:)
+	dnl sometimes editline wrapper is installs readline/readline.h header
+	AC_CHECK_HEADERS([readline/readline.h])
 	AC_CHECK_HEADERS([editline/readline.h histedit.h],
 		[AC_DEFINE([HAVE_BSDEDITLINE],[1],
 			[Define to enable BSD editline])
@@ -216,6 +222,10 @@ LDFLAGS="$LDFLAGS $el_ldpath"
 	else
 		AC_MSG_ERROR(Couldn't find editline libraries in LDFLAGS paths.)
 	fi
+	saved_LIBS="$LIBS"
+	LIBS="$LIBS $EL_LIB"
+	AC_CHECK_FUNCS(rl_completion_matches completion_matches)
+	LIBS="$saved_LIBS"
 LDFLAGS="$saved_LDFLAGS"
 CPPFLAGS="$saved_CPPFLAGS"
 fi

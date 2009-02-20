@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.46 2008/12/18 00:32:08 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.47 2009/02/20 16:40:22 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -90,6 +90,9 @@ hackt_embedded_file_stack;
  */
 #ifdef	LIBBOGUS
 static flex::lexer_state	_lexer_state;
+
+// only for debugging
+HAC::parser::root_body* global_hackt_lval;
 #endif
 
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
@@ -779,6 +782,9 @@ module
 		// YYSTYPE& yylval as an argument, which must be
 		// passed up by the caller.  
 		$$ = $1;
+#ifdef	LIBBOGUS
+		global_hackt_lval = $1;
+#endif
 		// ... but yylval also holds the last offending token
 		// in the event of a syntax error!  
 		// Cannot just blindly clobber!

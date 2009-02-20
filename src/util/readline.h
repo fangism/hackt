@@ -2,12 +2,13 @@
 	\file "util/readline.h"
 	Header wrapper implementation for readline and editline.  
 	Includes the appropriate header from configuration. 
-	$Id: readline.h,v 1.4 2006/05/06 22:08:39 fang Exp $
+	$Id: readline.h,v 1.5 2009/02/20 16:40:26 fang Exp $
  */
 
 #ifndef	__UTIL_READLINE_H__
 #define	__UTIL_READLINE_H__
 
+#include "config.h"
 #include "util/FILE_fwd.h"
 
 #if	defined(HAVE_GNUREADLINE)
@@ -21,6 +22,8 @@
 	#if	defined(EDITLINE_HAS_READLINE_INTERFACE)
 		#if	defined(HAVE_EDITLINE_READLINE_H)
 		#include <editline/readline.h>
+		#elif	defined(HAVE_READLINE_READLINE_H)
+		#include <readline/readline.h>
 		#endif
 	#endif
 	#if	defined(EDITLINE_HASH_HISTEDIT_INTERFACE)
@@ -39,6 +42,15 @@
 #endif
 #else
 #define RL_CONST_CAST(x)	x
+#endif
+
+/**
+	Editline/Readline versions have different symbol names, 
+	but they are intended to be the same.
+	Checked by config/rl_el.m4 during configure.
+ */
+#if	defined(HAVE_COMPLETION_MATCHES) && !defined(HAVE_RL_COMPLETION_MATCHES)
+#define	rl_completion_matches	completion_matches
 #endif
 
 #endif	/* __UTIL_READLINE_H__ */

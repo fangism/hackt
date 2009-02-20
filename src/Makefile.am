@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.214 2009/02/19 02:58:26 fang Exp $
+#	$Id: Makefile.am,v 1.215 2009/02/20 16:40:13 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -72,7 +72,7 @@ scripts/init_hackt.sh: scripts/init_hackt.sh.in $(top_builddir)/config.status
 scripts/init_hackt.csh: scripts/init_hackt.csh.in $(top_builddir)/config.status
 	$(RECONFIGURE)
 
-noinst_PROGRAMS = getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
+noinst_PROGRAMS = getopt_test lexyacc_test $(UTILPROGRAMS) $(FUNPROGRAMS)
 noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
@@ -112,6 +112,10 @@ haco_SOURCES = main/haco.cc
 haco_CPPFLAGS = -DWITH_MAIN
 haco_LDADD = libhacktlib.la
 # goal: just libhacktparsers.la
+
+# test program to make sure flex/yacc are sane
+lexyacc_test_SOURCES = main/lexyacc.cc
+lexyacc_test_LDADD = libbogus.la libhacktlib.la
 
 hacobjdump_SOURCES = main/objdump.cc
 hacobjdump_CPPFLAGS = -DWITH_MAIN
@@ -1569,10 +1573,12 @@ am_cxxflags.h: $(srcdir)/Makefile.am
 AM_YFLAGS = -d -t -v
 AM_LFLAGS = 
 
+FORCE_LANG_CXX = -x c++
+CXXPREPROCESS_HOOK = $(CXXPREPROCESS) $(FORCE_LANG_CXX)
 # for occasional debugging
 # SAVETEMP = $(CXXCOMPILE) -v -save-temps
 .cc.ii:
-	$(CXXPREPROCESS) $< > $@
+	$(CXXPREPROCESS_HOOK) $< > $@
 
 .c.i:
 	$(CPREPROCESS) $< > $@
@@ -1580,13 +1586,13 @@ AM_LFLAGS =
 # yes, even use C++ for .h files because we've (perhaps mistakenly)
 # named all C++ header files .h instead of .hh
 .h.hii:
-	$(CXXPREPROCESS) $< > $@
+	$(CXXPREPROCESS_HOOK) $< > $@
 
 .hh.hhii:
-	$(CXXPREPROCESS) $< > $@
+	$(CXXPREPROCESS_HOOK) $< > $@
 
 .tcc.tccii:
-	$(CXXPREPROCESS) $< > $@
+	$(CXXPREPROCESS_HOOK) $< > $@
 
 GUILE_SNARF_CPPFLAGS = -DHAVE_CONFIG_H -I. \
 	$(AM_CPPFLAGS) $(GUILE_CPPFLAGS) $(CPPFLAGS)

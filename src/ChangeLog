@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-02-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-01:
+	  Makefile.am: .ii rules added -x c++ flag to preprocessing command.
+	  Added lexyacc_test test program to try to debug flex-issue.
+		Test program uses unhacked version of scanner/parser code.
+	  Tested on powerpc-apple-darwin8.
+		Noticed some prsim test differences in trace files, 
+		which need to be investigated, not considered regression
+		because it's a new feature.
+
+
 2009-02-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-00:

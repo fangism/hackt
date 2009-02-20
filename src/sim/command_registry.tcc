@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.11 2009/02/18 00:22:44 fang Exp $
+	$Id: command_registry.tcc,v 1.12 2009/02/20 16:40:23 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -20,9 +20,7 @@
 #include "util/value_saver.h"
 
 // TODO: move library-dependent functionality into library
-#ifdef	USE_READLINE
-#include <readline/readline.h>
-#endif
+#include "util/readline.h"
 
 namespace HAC {
 namespace SIM {
