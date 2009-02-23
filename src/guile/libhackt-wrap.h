@@ -1,6 +1,6 @@
 /**
 	\file "main/libhackt-wrap.h"
-	$Id: libhackt-wrap.h,v 1.2 2007/04/20 18:25:57 fang Exp $
+	$Id: libhackt-wrap.h,v 1.3 2009/02/23 09:11:16 fang Exp $
 	Earliest history, file was "main/libhackt-wrap.h"
  */
 
@@ -64,9 +64,11 @@ extern
 void
 libhackt_guile_init(void);
 
+#if 0
 extern
 void
 scm_init_hackt_libhackt_primitives_module(void);
+#endif
 
 END_C_DECLS
 

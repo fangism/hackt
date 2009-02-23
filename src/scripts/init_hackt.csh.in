@@ -1,6 +1,6 @@
 #!/bin/sh
 # "init_hackt.csh"
-#	$Id: init_hackt.csh.in,v 1.5 2007/08/08 20:15:08 fang Exp $
+#	$Id: init_hackt.csh.in,v 1.6 2009/02/23 09:11:28 fang Exp $
 #	vi: ft=csh
 # source this file to sets up environment variables
 # MAINTAINENCE: keep this consistent with its init_hackt.sh counterpart
@@ -13,11 +13,22 @@ alias append_path 'if ( $\!:1 !~ \!:2\:* && $\!:1 !~ *\:\!:2\:* && $\!:1 !~ *\:\
 alias prepend_path 'if ( $\!:1 !~ \!:2\:* && $\!:1 !~ *\:\!:2\:* && $\!:1 !~ *\:\!:2 && $\!:1 !~ \!:2 ) setenv \!:1 \!:2\:${\!:1}; if ( $\!:1 !~ \!:2\:* ) setenv \!:1 \!:2`echo \:${\!:1} | /usr/bin/sed -e s%^\!:2\:%% -e s%:\!:2\:%:%g -e s%:\!:2\$%%`'
 
 
+
+
+
+
+
+
+
+
 # or somehow set this using Makefile substitution?
 set prefix=@prefix@
+set exec_prefix=@exec_prefix@
+set libdir=@libdir@
 set datarootdir=@datarootdir@
 set datadir=@datadir@
 set pkgdatadir=${datadir}/@PACKAGE@
+set pkglibdir=${libdir}/@PACKAGE@
 set infodir=@infodir@
 
 # TODO: possibly setup PATH? right now we assume PATH is already set
@@ -31,8 +42,17 @@ else
 	setenv GUILE_LOAD_PATH ${HACKT_GUILE_PATH}
 endif
 
-# TODO: setup hackt library path
-# TODO: setup MANPATH
+
+# setup hackt module library path (plug-ins)
+if ( $?LTDL_LIBRARY_PATH ) then
+	append_path LTDL_LIBRARY_PATH ${pkglibdir}
+else
+	setenv LTDL_LIBRARY_PATH ${pkglibdir}
+endif
+# do we need to do the same for DYLD_LIBRARY_PATH?
+
+
+# TODO: setup MANPATH (once we get man pages)
 
 if ( $?INFOPATH ) then
 	prepend_path INFOPATH ${infodir}

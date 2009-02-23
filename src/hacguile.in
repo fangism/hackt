@@ -1,0 +1,16 @@
+#!@SHELL@
+# vi: ft=sh
+# hacguile -- installed executable script
+# Do not use this for pre-installed testing.  
+# TODO: share a common installed config.sh
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+. @bindir@/init_hackt.sh
+pkgdatadir=@datadir@/@PACKAGE_NAME@
+# guile=@GUILE@
+guile=@GUILE_PATH@
+exec $guile -l $pkgdatadir/scm/hacguile.scm -- "$@"
+
+# I think it'll be safer in the long run to use the absolute path...
+

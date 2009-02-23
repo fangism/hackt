@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.7 2009/02/01 07:21:18 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.8 2009/02/23 09:11:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -111,6 +111,34 @@ release_chpsim_wrap_resources_at_exit(void) {
 // HAC_GUILE_SYMBOL(symbol_ack, "ack");
 
 //-----------------------------------------------------------------------------
+#define	FUNC_NAME "init-chpsim-state"
+HAC_GUILE_DEFINE(wrap_init, FUNC_NAME, 0, 0, 0, (void),
+	local_chpsim_registry, 
+"Constructs the chpsim simulator state after loading object file.") {
+	if (guile_wrap::obj_module) {
+		if (!chpsim_state) {
+			// first, cache all built-in channel types' summaries
+			canonical_fundamental_chan_type_base::refresh_all_footprints();
+			chpsim_state = count_ptr<State>(new State(*obj_module));
+		}	// else silently ignore
+	} else {
+		scm_misc_error(FUNC_NAME,
+		"Cannot construct simulator state until object file is loaded.", SCM_EOL);
+	}
+	return SCM_UNSPECIFIED;
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#define	FUNC_NAME "have-chpsim-state?"
+HAC_GUILE_DEFINE(wrap_have_state, FUNC_NAME, 0, 0, 0, (void),
+	local_chpsim_registry, 
+"Query whether the chpsim simulator state has been initialized.") {
+	return make_scm<bool>(chpsim_state);
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints dump of dot structure to stdout.  
 	\return nothing
@@ -518,11 +546,8 @@ using util::guile::scm_gsubr_type;
 static
 void
 __libhackt_chpsim_guile_init(void* unused) {
-	NEVER_NULL(chpsim_state);
 #if 0
-	libhackt_guile_init();		// prerequisite module
-#else
-//	scm_init_hackt_libhackt_primitives_module();
+	NEVER_NULL(chpsim_state);
 	scm_c_use_module("hackt hackt-primitives");
 #endif
 	// initialize any smob types we use
@@ -546,11 +571,8 @@ __libhackt_chpsim_guile_init(void* unused) {
 static
 void
 __libhackt_chpsim_trace_guile_init(void* unused) {
-	NEVER_NULL(chpsim_state);
 #if 0
-	libhackt_guile_init();		// prerequisite module
-#else
-//	scm_init_hackt_libhackt_primitives_module();
+	NEVER_NULL(chpsim_state);
 	scm_c_use_module("hackt hackt-primitives");
 	scm_c_use_module("hackt chpsim-primitives");
 #endif
@@ -565,7 +587,6 @@ __libhackt_chpsim_trace_guile_init(void* unused) {
 }	// end libhackt_chpsim_guile_init
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
 	Register interface function, wrapped call.  
  */
@@ -582,9 +603,9 @@ void
 libhackt_chpsim_trace_guile_init(void) {
 	__libhackt_chpsim_trace_guile_init(NULL);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Call this to load the functions into a module.  
  */
@@ -603,6 +624,7 @@ scm_init_hackt_chpsim_trace_primitives_module(void) {
 	scm_c_define_module("hackt chpsim-trace-primitives",
 		__libhackt_chpsim_trace_guile_init, NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 END_C_DECLS

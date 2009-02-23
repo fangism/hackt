@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2009-02-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-02:
+	  configure.ac: generate src/{hacguile,hacchpsimguile}
+		installed wrapper scripts, replacing binaries.
+	  config/guile.m4: now use and allow override of GUILE
+		variable (--with-guile), and find GUILE_PATH as well.
+	  Former libguile optional dependency is now replaced
+		with the guile (binary) executable because
+		HAC facilities are independently loadable plug-ins now.
+
+
 2009-02-19	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-01:

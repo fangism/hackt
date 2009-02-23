@@ -1,14 +1,18 @@
-# "installdirs.mk[.in]
-#	$Id: installdirs.mk,v 1.2 2008/10/30 02:15:05 fang Exp $
+# "installdirs.mk
+#	$Id: installdirs.mk,v 1.3 2009/02/23 09:11:10 fang Exp $
 # install paths that depend on variables defined in installcheck.mk
 # Rationale for this file:
 # * Minimize definition clutter in Make.stddef
 # * Define common install subdirectories globally with minimal
-#	configure-dependency
+#	configure-dependency, these are configure-independent relative dirs
 
 # Prerequisite:
 #include $(top_builddir)/installcheck.mk
-# or equivalent definitions
+# or equivalent definitions, which define configure-dependent dirs
+
+# this path should be consistent with scripts/init_hackt.[c]sh
+# also keep consistent with hackt-config.in
+scmdir = $(pkgdatadir)/scm
 
 # more install directories
 # NOTE: these variables may already be defined by autoconf-2.60+

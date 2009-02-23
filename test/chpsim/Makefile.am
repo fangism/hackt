@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.31 2009/02/01 07:21:56 fang Exp $
+#	$Id: Makefile.am,v 1.32 2009/02/23 09:11:35 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -489,9 +489,6 @@ $(libinstallcheckdir)/Makefile: \
 
 $(libinstallcheckdir)/Makefile: $(top_builddir)/installcheck.mk \
 	$(top_srcdir)/installdirs.mk
-
-# explicitly prepend path to force subshell to find installed executables first
-INSTALL_PATH_OVERRIDE = $(bindir)$(PATH_SEPARATOR)"$$PATH"
 
 INSTALLTEST_DIRS = $(installcheckdir) $(libinstallcheckdir)
 

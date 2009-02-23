@@ -3,7 +3,7 @@
 	We subdivide functionality into different modules:
 	(hackt chpsim-primitives): for general chpsim primitives
 	(hackt chpsim-trace-primitives): for trace-file related primitives.
-	$Id: chpsim-wrap.h,v 1.2 2007/04/20 18:25:54 fang Exp $
+	$Id: chpsim-wrap.h,v 1.3 2009/02/23 09:11:16 fang Exp $
  */
 
 #ifndef	__HAC_GUILE_CHPSIM_WRAP_H__
@@ -30,18 +30,18 @@ count_ptr<SIM::CHPSIM::State>	chpsim_state;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BEGIN_C_DECLS
 
-#if 0
 // don't really need to export this anymore
 // these might be need if we ever export as a plug-in (dynamic library)
 extern
 void
 libhackt_chpsim_guile_init(void);
 
+// this loads trace-file interface separately
 extern
 void
 libhackt_chpsim_trace_guile_init(void);
-#endif
 
+#if 0
 extern
 void
 scm_init_hackt_chpsim_primitives_module(void);
@@ -49,6 +49,7 @@ scm_init_hackt_chpsim_primitives_module(void);
 extern
 void
 scm_init_hackt_chpsim_trace_primitives_module(void);
+#endif
 
 END_C_DECLS
 

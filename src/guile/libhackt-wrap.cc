@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.6 2007/09/28 05:37:00 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.7 2009/02/23 09:11:16 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -21,6 +21,7 @@
 #include "guile/hackt-config.h"
 #include "guile/hackt-documentation.h"
 #include "guile/scm_reference.h"
+#include "main/main_funcs.h"		// for load_module
 #include "util/tokenize.h"
 #include "util/memory/excl_malloc_ptr.h"
 #include "util/guile_STL.h"
@@ -124,8 +125,43 @@ release_libhackt_wrap_resources_at_exit(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Wrapped call to 'load_module'.
+	\return nothing
+ */
+#define	FUNC_NAME "load-object"
+HAC_GUILE_DEFINE(wrap_load_object, FUNC_NAME, 1, 0, 0, (SCM objname),
+"Same result as running standalone `hacobjdump', also dumped to stdout.") {
+	scm_assert_string(objname, FUNC_NAME, 1);
+	if (obj_module) {
+		scm_misc_error(FUNC_NAME, 
+		"Error: only one HAC object file may be loaded per session.",
+			SCM_EOL);
+	}
+	const char* peek = NULL;
+	extract_scm(objname, peek);
+	obj_module = load_module(peek);
+	if (!obj_module) {
+		scm_misc_error(FUNC_NAME, 
+			"Error: unable to load HAC object file.",
+			SCM_EOL);
+	}
+	return SCM_UNSPECIFIED;
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#define	FUNC_NAME "have-object?"
+HAC_GUILE_DEFINE(wrap_have_object, FUNC_NAME, 0, 0, 0, (void),
+"Return #t if object has been loaded, else #f.") {
+	return make_scm<bool>(obj_module);
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Wrapped call to 'objdump'.
 	NOTE: this uses cout instead of an ostringstream.  
+	TODO: support options to dump different sections
 	\return nothing
  */
 #define	FUNC_NAME "objdump"
@@ -348,7 +384,6 @@ using util::guile::scm_c_define_exported;
 static
 void
 __libhackt_guile_init(void* unused) {
-	NEVER_NULL(obj_module);
 	raw_reference_smob_init();
 	// TODO: raw-reference?
 	// define some global constants
@@ -380,17 +415,29 @@ __libhackt_guile_init(void* unused) {
 }	// end libhackt_guile_init
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Call this when loading as an extension after startup.
+	e.g. for (load-extension ...)
+ */
 void
 libhackt_guile_init(void) {
 	__libhackt_guile_init(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Call this when booting from the executable.
+	The executable (main) is responsible for loading the object file
+	in advance.
+ */
 void
 scm_init_hackt_libhackt_primitives_module(void) {
+	NEVER_NULL(obj_module);
 	scm_c_define_module("hackt hackt-primitives", 
 		__libhackt_guile_init, NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -1,6 +1,14 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.87 2009/02/01 07:21:47 fang Exp $
+#	$Id: ChangeLog,v 1.88 2009/02/23 09:11:30 fang Exp $
 # ChangeLog for test directory.
+
+2009-02-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-02:
+	  Make.test-tail, Make.test-guile: updated to reflect
+		replacing hacguile/hacchpsimguile binaries with
+		guile-loaded scheme startup scripts, using plug-ins.
+
 
 2009-01-30	David Fang		<fangism@users.sourceforge.net>
 

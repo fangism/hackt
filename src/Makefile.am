@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.215 2009/02/20 16:40:13 fang Exp $
+#	$Id: Makefile.am,v 1.216 2009/02/23 09:11:13 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -52,12 +52,12 @@ endif
 
 bin_PROGRAMS = hackt haco haccreate hacalloc \
 	hacobjdump hflat hacpp hacprsim hacchpsim
-if HAVE_LIBGUILE
-bin_PROGRAMS += hacguile hacchpsimguile
-endif
-# no need to name EXTRA_PROGRAMS = hacguile hacchpsimguile
 
-bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh hacinstdump
+bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh \
+	hacinstdump
+if HAVE_LIBGUILE
+bin_SCRIPTS += hacguile hacchpsimguile
+endif
 DISTCLEANFILES += $(bin_SCRIPTS)
 
 # NOTE: this executes whatever is in PATH, not necessarily the built one
@@ -96,8 +96,14 @@ pkglib_LTLIBRARIES = \
 # lib_LTLIBRARIES = libhacktlib.la
 if HAVE_LIBGUILE
 pkglib_LTLIBRARIES += libhacktguile.la
+# and the loadable plug-in
+pkglib_LTLIBRARIES += hackt-guile.la
+
+pkglib_LTLIBRARIES += libhacktchpsimguile.la
+# and the loadable plug-in
+pkglib_LTLIBRARIES += hackt-chpsim-guile.la
 endif
-# no need to name EXTRA_LTLIBRARIES += libhacktguile.la
+# no need to name EXTRA_LTLIBRARIES += ...
 
 hackt_SOURCES = main/hackt.cc
 hackt_LDADD = libhacktexec.la
@@ -151,18 +157,12 @@ hacchpsim_SOURCES = main/chpsim.cc
 hacchpsim_CPPFLAGS = -DWITH_MAIN
 hacchpsim_LDADD = libhacktsim.la
 # -dlopen self
-hacchpsim_LDFLAGS = -export-dynamic 
+# hacchpsim_LDFLAGS = -export-dynamic 
 # (only if symbols in executable needed to resolve from modules)
 
 main/hacchpsim-chpsim.o main/hacprsim-prsim.o: install_paths.h
 main/chpsim.lo main/chpsim.o: install_paths.h
 main/prsim.lo main/prsim.o: install_paths.h
-
-hacguile_SOURCES = main/guile.cc
-hacguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
-hacguile_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
-	-Wno-old-style-cast -Werror 
-hacguile_LDADD = libhacktguile.la libhacktlib.la 
 
 LIBHACKTGUILE_H_FILES = \
 	guile/libhackt-wrap.h \
@@ -173,17 +173,16 @@ LIBHACKTGUILE_H_FILES = \
 	guile/scm_chpsim_event_node.h \
 	guile/chpsim-wrap.h
 
-hacchpsimguile_SOURCES = \
-	main/chpsim-guile.cc \
-	main/chpsim.cc \
+libhacktchpsimguile_la_SOURCES = \
 	guile/chpsim-wrap.cc \
 	guile/scm_chpsim_trace_streamer.cc \
 	guile/scm_chpsim_event_node.cc \
 	$(LIBHACKTGUILE_H_FILES)
-hacchpsimguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DNO_REGISTER
-hacchpsimguile_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
+# removed:	main/chpsim-guile.cc main/chpsim.cc
+libhacktchpsimguile_la_CPPFLAGS = $(GUILE_CPPFLAGS) -DNO_REGISTER
+libhacktchpsimguile_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
 	-Wno-old-style-cast -Werror 
-hacchpsimguile_LDADD = libhacktguile.la libhacktsim.la 
+libhacktchpsimguile_la_LIBADD = libhacktguile.la libhacktsim.la 
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
@@ -224,8 +223,17 @@ libhacktguile_la_SOURCES = \
 libhacktguile_la_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
 libhacktguile_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
 	-Wno-old-style-cast -Werror
-libhacktguile_la_LIBADD = libguileutil.la
+libhacktguile_la_LIBADD = libhacktlib.la libguileutil.la
 # libhacktguile_la_LDFLAGS = -rpath '$(pkglibdir)'
+
+# loadable plug-in:
+hackt_guile_la_SOURCES =
+hackt_guile_la_LDFLAGS = -module
+hackt_guile_la_LIBADD = libhacktguile.la
+
+hackt_chpsim_guile_la_SOURCES =
+hackt_chpsim_guile_la_LDFLAGS = -module
+hackt_chpsim_guile_la_LIBADD = libhacktchpsimguile.la
 
 # EXPERIMENTAL: self-snarf deps
 # probably not going to use guile's default snarfer in favor of our own macros.
@@ -1008,9 +1016,10 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/compile_options.h \
 	main/global_options.h \
 	main/chpsim_options.h \
-	main/main_funcs.h \
-	main/guile.h \
-	main/chpsim-guile.h
+	main/main_funcs.h
+
+# removed:
+#	main/guile.h main/chpsim-guile.h
 
 # installed development headers
 nobase_pkginclude_HEADERS += \

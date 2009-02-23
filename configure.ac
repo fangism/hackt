@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.193 2009/02/19 02:58:23 fang Exp $
+#	$Id: configure.ac,v 1.194 2009/02/23 09:11:09 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20090218, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20090222, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -504,6 +504,7 @@ configuration summary:
 	GMP libs:		$GMP_LIB
 	X11 include:		$X11_INCLUDE
 	X11 LDFLAGS:		$X11_LDPATH
+	guile:		 	$GUILE [[$GUILE_PATH]]
 	guile config:	 	$GUILE_CONFIG_VERSION
 	guile CPPFLAGS: 	$GUILE_CPPFLAGS
 	guile LDFLAGS: 		$GUILE_LDFLAGS
@@ -571,6 +572,10 @@ AC_CONFIG_FILES([
 ])
 AC_CONFIG_FILES([hackt-config],
 	[chmod +x hackt-config])
+AC_CONFIG_FILES([src/hacguile],
+	[chmod +x src/hacguile])
+AC_CONFIG_FILES([src/hacchpsimguile],
+	[chmod +x src/hacchpsimguile])
 AC_CONFIG_FILES([scripts/replace_if_changed.sh],
 	[chmod +x scripts/replace_if_changed.sh])
 AC_CONFIG_FILES([src/util/test/hash_map_iterator_O2_bug_test.test],

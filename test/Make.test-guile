@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.16 2008/03/21 00:20:55 fang Exp $
+#	$Id: Make.test-guile,v 1.17 2009/02/23 09:11:32 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -53,8 +53,10 @@ HACSCM_EXPECT_FILTER = \
 HACKT_GUILE_LOAD_PATH=$(top_srcdir)/src/scm$(PATH_SEPARATOR)$(srcdir)
 
 # strip spaces that result from appending the Makefile variable
+# point search paths to pre-installed libraries
 HACSCM_TEST_ENVIRONMENT = \
-	GUILE_LOAD_PATH=`$(ECHO) $(HACKT_GUILE_LOAD_PATH) | $(SED) 's/ //g'`
+	GUILE_LOAD_PATH=`$(ECHO) $(HACKT_GUILE_LOAD_PATH) | $(SED) 's/ //g'` \
+	LTDL_LIBRARY_PATH=$(PRE_INST_LDPATH)
 
 HACKT_GUILE_ENV_EXE = \
 	$(HACSCM_TEST_ENVIRONMENT) $(HACKT_GUILE_EXE)
@@ -217,9 +219,7 @@ AUTO_DEPENDS += hacscmfailtest.autodepend
 # separately as prerequisites of the actual check loop script.
 # Thus we must apply environment variables manually.
 # Point the GUILE_LOAD_PATH to the home of scheme modules in the source tree.
-HACCHPSIMSCM_TEST_ENVIRONMENT = \
-	GUILE_LOAD_PATH=`$(ECHO) $(HACKT_GUILE_LOAD_PATH) | $(SED) 's/ //g'`
-# strip spaces that result from appending Makefile variables
+HACCHPSIMSCM_TEST_ENVIRONMENT = $(HACSCM_TEST_ENVIRONMENT)
 
 HACKT_CHPSIM_GUILE_ENV_EXE = \
 	$(HACCHPSIMSCM_TEST_ENVIRONMENT) $(HACKT_CHPSIM_GUILE_EXE)
@@ -495,8 +495,9 @@ HACKT_CHPSIM_GUILE_OUT = \
 	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.hacchpsimscm-out) \
 	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.hacchpsimscmfail-out)
 
-$(HACKT_GUILE_OUT): $(HACKT_GUILE_EXE)
-$(HACKT_CHPSIM_GUILE_OUT): $(HACKT_CHPSIM_GUILE_EXE)
+# no longer a built executable, plug-in dependency in Make.test-guile
+# $(HACKT_GUILE_OUT): $(HACKT_GUILE_EXE)
+# $(HACKT_CHPSIM_GUILE_OUT): $(HACKT_CHPSIM_GUILE_EXE)
 
 echo-hacscm-passes: force
 	@$(ECHO) $(HACKT_GUILE_TEST_SCRIPTS_PASSES)

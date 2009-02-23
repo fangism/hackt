@@ -1,12 +1,11 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.16 2008/11/23 17:53:19 fang Exp $
+dnl	$Id: guile.m4,v 1.17 2009/02/23 09:11:10 fang Exp $
 dnl Guile-related autoconf macros
 
 
 dnl
 dnl Ripped from the stepmake excerpt of lilypond's stempake/aclocal.m4
-dnl Need an AC_ARG_WITH(...)
 dnl
 dnl AC_SUBST's the following variables
 dnl	GUILE_CPPFLAGS (include path to headers)
@@ -16,6 +15,13 @@ AC_DEFUN([FANG_GUILE],
 [
 dnl now we can pass a different guile-config, e.g. guile-1.8-config
 dnl also accepts --without-guile-config -> --with-guile-config=no
+AC_ARG_WITH(guile,
+AS_HELP_STRING(
+	[--with-guile],
+	[GNU Scheme interpreter executable (default=guile)]),
+	[GUILE=$with_guile],
+	[GUILE="guile"]
+)
 AC_ARG_WITH(guile-config,
 AS_HELP_STRING(
 	[--with-guile-config],
@@ -24,42 +30,13 @@ AS_HELP_STRING(
 	[guile_config="guile-config"]
 )
 
-
-dnl not used
-dnl AC_ARG_WITH(guile-snarf,
-dnl AS_HELP_STRING(
-dnl	[--with-guile-snarf]
-dnl	[guile's automatic function processing (default=guile-snarf)]),
-dnl	[guile_snarf=$with_guile_snarf],
-dnl	[guile_snarf="guile-snarf"]
-dnl )
-
-dnl not used
-dnl AC_ARG_WITH(guile-tools,
-dnl AS_HELP_STRING(
-dnl	[--with-guile-tools]
-dnl	[guile's tool set (default=guile-tools)]),
-dnl	[guile_tools=$with_guile_tools],
-dnl	[guile_tools="guile-tools"]
-dnl )
+AC_CHECK_PROG(GUILE, $GUILE, $GUILE)
+AC_PATH_PROG(GUILE_PATH, $GUILE)
+dnl TODO: disable guile features if guile not found in path
 
 if test "x$with_guile_config" != "xno" ; then
 dnl check path for the guile-config specified by the user
 AC_PATH_PROG(GUILE_CONFIG, $guile_config)
-dnl AC_PATH_PROG(GUILE_SNARF, $guile_snarf)
-dnl AC_PATH_PROG(GUILE_TOOLS, $guile_tools)
-dnl lilypond's stepmake/aclocal.m4 has example of how to check
-dnl for cross-compiled with target/host
-dnl AC_MSG_CHECKING([for guile-config])
-dnl for guile_config in $GUILE_CONFIG guile-config ; do
-dnl  AC_MSG_RESULT([$guile_config])
-dnl  if ! $guile_config --version > /dev/null 2>&1 ; then
-dnl    AC_MSG_WARN([cannot execute $guile_config])
-dnl  else
-dnl    GUILE_CONFIG=$guile_config
-dnl    break
-dnl  fi
-dnl done
 
 GUILE_CONFIG_VERSION="none"
 

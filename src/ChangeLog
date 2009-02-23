@@ -3,6 +3,27 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-02-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-02:
+	  Complete rework of guile/hackt programs and modules.
+		Replaced compiled executables hacguile and hacchpsimguile
+		with guile-loadable plug-ins.  
+		hacguile/hacchpsimguile are now install-only wrapper scripts
+		that emulate what the old executables did.
+		New modules are hackt-guile.la, hackt-chpsim-guile.la, 
+		the preferred way to load them is through guile's
+		command: (use-modules (hackt hackt-primitives)) which
+		call (load-extension ...).
+		Added new primitives to hac:load-object, and
+			hac:init-chpsim-state, for public API.
+	  NOTE: this effectively replaces the run-time dependency
+		from libguile to the guile executable.  So be it.
+	  Updated init_hackt.{sh,csh} to append LTDL_LIBRARY_PATH
+		for finding plug-ins at run-time for guile.
+	  Regression test suite still passes with guile.
+
+
 2009-02-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-01:

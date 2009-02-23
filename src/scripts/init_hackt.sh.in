@@ -1,6 +1,6 @@
 #!/bin/sh
 # "init_hackt.sh"
-#	$Id: init_hackt.sh.in,v 1.4 2007/08/08 20:15:09 fang Exp $
+#	$Id: init_hackt.sh.in,v 1.5 2009/02/23 09:11:29 fang Exp $
 #	vi: ft=sh
 # source this file to sets up environment variables
 # MAINTAINENCE: keep this consistent with its init_hackt.csh counterpart
@@ -25,9 +25,12 @@ prepend_path()
 
 # or somehow set this using Makefile substitution?
 prefix=@prefix@
+exec_prefix=@exec_prefix@
 datarootdir=@datarootdir@
+libdir=@libdir@
 datadir=@datadir@
 pkgdatadir=${datadir}/@PACKAGE@
+pkglibdir=${libdir}/@PACKAGE@
 infodir=@infodir@
 
 # TODO: possible setup PATH? right now we assume PATH already set
@@ -42,8 +45,16 @@ else
 fi
 export GUILE_LOAD_PATH
 
-# TODO: setup hackt library path
-# TODO: setup MANPATH
+# setup hackt module library path (plug-ins)
+if test -z "$LTDL_LIBRARY_PATH" ; then
+	LTDL_LIBRARY_PATH=$pkglibdir
+else
+	append_path LTDL_LIBRARY_PATH $pkglibdir
+fi
+export LTDL_LIBRARY_PATH
+# do we need to do the same for DYLD_LIBRARY_PATH?
+
+# TODO: setup MANPATH (once we get man pages)
 
 if test -z "$INFOPATH" ; then
 	INFOPATH=${infodir}:/usr/share/info

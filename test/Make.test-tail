@@ -3,8 +3,9 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.91 2009/02/01 07:21:51 fang Exp $
+#	$Id: Make.test-tail,v 1.92 2009/02/23 09:11:33 fang Exp $
 
+# our collection of test programs/scripts/commands
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
 HACKT_COMPILE_EXE = $(top_builddir)/src/haco
@@ -19,8 +20,23 @@ HACKT_CFLAT_SPRS_EXE = $(HACKT_CFLAT_PRSIM_EXE) -fsizes
 HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
 HACKT_PRSIM_EXE = $(top_builddir)/src/hacprsim
 HACKT_CHPSIM_EXE = $(top_builddir)/src/hacchpsim
-HACKT_GUILE_EXE = $(top_builddir)/src/hacguile
-HACKT_CHPSIM_GUILE_EXE = $(top_builddir)/src/hacchpsimguile
+
+# guile based tests will need a modified environment, see Make.test-guile
+# HACKT_GUILE_EXE = $(top_builddir)/src/hacguile
+HACKT_GUILE_EXE = $(GUILE) -l $(top_srcdir)/src/scm/hacguile.scm --
+# HACKT_CHPSIM_GUILE_EXE = $(top_builddir)/src/hacchpsimguile
+HACKT_CHPSIM_GUILE_EXE = $(GUILE) -l $(top_srcdir)/src/scm/hacchpsimguile.scm --
+
+# install-time only test scripts and executables
+INSTALLED_HACGUILE = hacguile
+INSTALLED_HACCHPSIMGUILE = hacchpsimguile
+
+# explicitly prepend path to force subshell to find installed executables first
+INSTALL_PATH_OVERRIDE = $(bindir)$(PATH_SEPARATOR)"$$PATH"
+
+
+# library path for running/linking/loading pre-installed libraries and modules
+PRE_INST_LDPATH = $(top_builddir)/src$(PATH_SEPARATOR)$(top_builddir)/src/$(LTDL_OBJDIR)
 
 # NOTE: these scripts are configure-generated from their .hac files.  
 TEST_SRCDIR = $(top_srcdir)/test
@@ -44,7 +60,7 @@ OBJDUMP_APPEND = $(HACKT_OBJDUMP_EXE) $< >> $@ 2>&1
 
 HACO_FLAGS += -I$(srcdir)
 
-# this dependency generator assymes default target suffix .haco
+# this dependency generator assumes default target suffix .haco
 # caution: concurrent builds of .haco and .depend may clobber this
 # if executable did not successfully build, then skip.
 
@@ -186,7 +202,8 @@ HACGUILE_TARGETS = \
 	$(HACKT_GUILE_TEST_SCRIPTS_BASES:=.hacscmfail-out)
 
 if HAVE_LIBGUILE
-$(HACGUILE_TARGETS): $(HACKT_GUILE_EXE)
+# depend on the plug-in
+$(HACGUILE_TARGETS): $(top_builddir)/src/hackt-guile.la
 endif
 
 HACCHPSIMGUILE_TARGETS = \
@@ -194,7 +211,8 @@ HACCHPSIMGUILE_TARGETS = \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_BASES:=.hacchpsimscmfail-out)
 
 if HAVE_LIBGUILE
-$(HACCHPSIMGUILE_TARGETS): $(HACKT_CHPSIM_GUILE_EXE)
+# depend on the plug-in
+$(HACCHPSIMGUILE_TARGETS): $(top_builddir)/src/hackt-chpsim-guile.la
 endif
 
 ALL_OBJECT_TESTS = \
