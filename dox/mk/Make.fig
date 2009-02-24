@@ -1,5 +1,5 @@
 # "mk/Make.fig"
-#	$Id: Make.fig,v 1.6 2009/02/24 02:19:13 fang Exp $
+#	$Id: Make.fig,v 1.7 2009/02/24 03:18:21 fang Exp $
 #	vi: ft=automake
 # This makefile includes rules for converting to and from xfig figures.
 
@@ -9,7 +9,7 @@ SUFFIXES += .dot .fig .figtex .ps .eps .pdf \
 # other option is to skip fig and go directly to pdf or ps
 
 ECHO_NO_DOT = $(ECHO) "Sorry, no dot found in path during configure."
-ECHO_NO_FIG2DEV = $(ECHO) "Sorry, no fig2dev found in path during configure." ; exit 1
+ECHO_NO_FIG2DEV = $(ECHO) "Sorry, no fig2dev found in path during configure."
 
 # for xfig stream editing
 include $(top_srcdir)/dox/mk/updatefig.mk
@@ -52,6 +52,7 @@ if HAVE_FIG2DEV
 	$(FIG2DEV) -L$(PDFTEX_LANG) $< $@
 else
 	@$(ECHO_NO_FIG2DEV)
+	$(LN_S) -f $(top_srcdir)/dox/common/missing-pdf.pdf $@
 endif
 
 .fig.pdftex:
@@ -59,6 +60,7 @@ if HAVE_FIG2DEV
 	$(FIG2DEV) -L$(PDFTEX_LANG) $< $@
 else
 	@$(ECHO_NO_FIG2DEV)
+	$(LN_S) -f $(top_srcdir)/dox/common/missing-pdf.pdf $@
 endif
 
 .fig.pdftex_t:
@@ -71,6 +73,10 @@ if HAVE_FIG2DEV
 	$(FIG2DEV) -L$(PDFTEX_T_LANG) $< ;} > $@
 else
 	@$(ECHO_NO_FIG2DEV)
+	@pdf=`$(ECHO) $@ | $(SED) 's|\.pdftex_t$$||'` ; \
+	{ $(PRINTF) "\\\\begin{picture}(0,0)%%\\n" ; \
+	$(PRINTF) "\\\\includegraphics{$$pdf}%%\\n" ; \
+	$(PRINTF) "\\\\end{picture}%%\\n" ;} $@
 endif
 
 .fig.ps:
@@ -78,6 +84,7 @@ if HAVE_FIG2DEV
 	$(FIG2DEV) -Lpstex $< $@
 else
 	@$(ECHO_NO_FIG2DEV)
+	$(LN_S) -f $(top_srcdir)/dox/common/missing-ps.ps $@
 endif
 
 .fig.eps:
@@ -85,6 +92,7 @@ if HAVE_FIG2DEV
 	$(FIG2DEV) -Leps $< $@
 else
 	@$(ECHO_NO_FIG2DEV)
+	$(LN_S) -f $(top_srcdir)/dox/common/missing-ps.eps $@
 endif
 
 .fig.pstex:
@@ -92,6 +100,7 @@ if HAVE_FIG2DEV
 	$(FIG2DEV) -Lpstex $< $@
 else
 	@$(ECHO_NO_FIG2DEV)
+	$(LN_S) -f $(top_srcdir)/dox/common/missing-ps.ps $@
 endif
 
 .fig.pstex_t:
@@ -104,6 +113,10 @@ if HAVE_FIG2DEV
 	$(FIG2DEV) -Lpstex_t $< ;} > $@
 else
 	@$(ECHO_NO_FIG2DEV)
+	@ps=`$(ECHO) $@ | $(SED) 's|\.pstex_t$$||'` ; \
+	{ $(PRINTF) "\\\\begin{picture}(0,0)%%\\n" ; \
+	$(PRINTF) "\\\\includegraphics{$$ps}%%\\n" ; \
+	$(PRINTF) "\\\\end{picture}%%\\n" ;} > $@
 endif
 
 .fig.png:
@@ -111,6 +124,7 @@ if HAVE_FIG2DEV
 	$(FIG2DEV) -Lpng $< $@
 else
 	@$(ECHO_NO_FIG2DEV)
+	$(LN_S) -f $(top_srcdir)/dox/common/missing-png.png $@
 endif
 
 
