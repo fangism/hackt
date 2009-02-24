@@ -1,0 +1,30 @@
+// "completion_test.hac"
+// interactive test for tab-completion
+
+defproc E() { }
+
+defproc A() {
+bool xxx, yyy, xxy, yyx;
+E null;
+}
+
+defproc B() {
+A fee, fi, fo, fum, fun;
+A bah, baz, bar, boo;
+bool twiddle_dee, twiddle_dum;
+E null;
+}
+
+defproc C() {
+A ni, neh, nah, nope;
+B ikki, ikky, ikkie, pthang, zoom, boing;
+bool zippity_doo_dah, zippity_yay;
+E null;
+}
+
+C riddle, fiddle, razzle, dazzle;
+B bubble, rubble, toil, trouble;
+A batman, fatman, catman, ratman;
+bool cheezburger, bukkit;
+E null;
+

@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-02-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-03:
+	  prsim/tab-completion: no longer auto-append space character
+		after a successful instance name completion.
+		When displaying candidate matches, prune the 
+		common hierarchical prefix (readline).
+
+
 2009-02-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-02:

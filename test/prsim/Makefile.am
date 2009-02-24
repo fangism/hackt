@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.69 2009/02/11 02:35:36 fang Exp $
+#	$Id: Makefile.am,v 1.70 2009/02/24 00:35:46 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -57,7 +57,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	crash-bug-01 \
 	after_min_max after_min_max-bad \
 	non-CMOS-a non-CMOS-b \
-	always_random-a
+	always_random-a \
+	completion_test
 
 # TODO: more cross-coupled test cases
 # SRAM cell

@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.9 2009/02/18 00:22:43 fang Exp $
+	$Id: command_registry.h,v 1.10 2009/02/24 00:35:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -247,6 +247,17 @@ private:
 	command_generator(const char*, int);
 
 };	// end class command_registry
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Display hook to print matching candidates without
+	the common prefix, basically by omitting everything
+	up to and including the last '.' in a hierarchical name.
+	Defined in command_registry.cc.
+ */
+extern
+void
+display_hierarchical_matches_hook(char**, int, int);
 
 //=============================================================================
 }	// end namespace SIM

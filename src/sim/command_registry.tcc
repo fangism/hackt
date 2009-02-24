@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.12 2009/02/20 16:40:23 fang Exp $
+	$Id: command_registry.tcc,v 1.13 2009/02/24 00:35:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -32,6 +32,7 @@ using util::readline_wrapper;
 using util::ifstream_manager;
 using util::strings::eat_whitespace;
 using util::tokenize;
+using util::value_saver;
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -390,7 +391,7 @@ if (interactive) {
 template <class Command>
 int
 command_registry<Command>::interpret_stdin(state_type& s) {
-	const util::value_saver<string> p(prompt);
+	const value_saver<string> p(prompt);
 	prompt[prompt.size() -1] = '>';
 	prompt += ' ';
 	// re-open stdin, don't use cin
@@ -612,6 +613,10 @@ command_registry<Command>::completion(const char* text, int start, int end) {
 	// don't fallback to readline's default completer even 
 	// if this returns no matches
 
+	// restore some default that may have been overridden
+	rl_completion_append_character = ' ';
+	rl_completion_display_matches_hook = NULL;
+
 	// TODO: use rl_line_buffer to parse entire line
 	// use tokenize
 	// eat leading whitespace
@@ -637,6 +642,10 @@ command_registry<Command>::completion(const char* text, int start, int end) {
 		if (gen) {
 			// TODO: be able to override readline hooks here
 			// making local modifications
+			// const value_saver<int>	// don't add space
+			rl_completion_append_character = '\0';
+			rl_completion_display_matches_hook =
+				display_hierarchical_matches_hook;
 			return rl_completion_matches(text, gen);
 		}
 	}

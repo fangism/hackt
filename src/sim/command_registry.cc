@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.cc"
-	$Id: command_registry.cc,v 1.5 2008/11/27 11:09:28 fang Exp $
+	$Id: command_registry.cc,v 1.6 2009/02/24 00:35:45 fang Exp $
  */
 
 #include <iostream>
@@ -9,9 +9,13 @@
 #include <set>
 #include <list>
 #include <string>
+#include <cstring>			// for strrchr
+#include <vector>
 #include "sim/command_registry.h"
 #include "sim/command_base.h"
 #include "util/qmap.tcc"
+#include "util/readline.h"
+#include "util/readline_wrap.h"
 
 namespace HAC {
 namespace SIM {
@@ -119,6 +123,55 @@ command_aliases_base::auto_file_echo::~auto_file_echo() {
 	if (echo) {
 		os << "## leave: \"" << name << "\"" << endl;
 	}
+}
+
+//=============================================================================
+/**
+	Custom match-list printer which omits the common
+	hierarchical prefix ('.'-delimited) prepended by our 
+	completion routine.  
+ */
+void
+display_hierarchical_matches_hook(char** matches, int len, int max) {
+#ifdef	USE_READLINE
+if (len) {
+#if 0
+	cout << '{';
+	copy(matches, matches+len+1, 
+		std::ostream_iterator<const char*>(cout, "|"));
+	cout << "}, " << len << ", " << max << endl;
+#endif
+	// find the last '.', if any
+	char* tail = strrchr(matches[0], '.');
+	if (tail) {
+		const int dist = tail -matches[0] +1;	// past '.'
+		std::vector<char*> mod_matches;
+		mod_matches.reserve(len+1);
+		mod_matches.push_back(matches[0]);
+		int i=1;
+		for ( ; i<=len; ++i) {
+			// remove common prefix
+			NEVER_NULL(matches[i]);
+//			cout << '(' << matches[i] << ')';
+			const size_t ml = strlen(matches[i]);
+			INVARIANT(ml > size_t(dist));
+			mod_matches.push_back(matches[i] +dist);
+		}
+		INVARIANT(max > dist);
+#if 0
+		cout << '{';
+		copy(mod_matches.begin(), mod_matches.end(), 
+			std::ostream_iterator<const char*>(cout, "|"));
+		cout << '}' << endl;
+#endif
+		rl_display_match_list(&mod_matches[0], len, max -dist);
+	} else {
+		// use default printer
+		rl_display_match_list(matches, len, max);
+	}
+	rl_forced_update_display();	// refresh prompt, line-buffer
+}
+#endif
 }
 
 //=============================================================================
