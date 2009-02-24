@@ -1,5 +1,15 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.51 2009/02/12 23:55:48 fang Exp $
+#	$Id: ChangeLog,v 1.52 2009/02/24 01:53:13 fang Exp $
+
+2009-02-23	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-03+:
+	  verilog/wrap_verilog_modules_to_hacprsim.awk:
+		added option -v reverse=[01] option to specify that
+		verilog definition represents a HAC implementation, 
+		and suppresses connection to a dummy instance, 
+		and reverses direction of $to_prsim/$from_prsim statements.
+
 
 2009-02-12	David Fang	<fangism@users.sourceforge.net>
 
