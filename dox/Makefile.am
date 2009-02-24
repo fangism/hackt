@@ -1,6 +1,6 @@
 # "dox/Makefile.am"
 # root Makefile for dox directory
-#	$Id: Makefile.am,v 1.13 2007/08/16 23:48:02 fang Exp $
+#	$Id: Makefile.am,v 1.14 2009/02/24 02:19:12 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -13,6 +13,7 @@ EXTRA_DIST += README TODO ChangeLog local.cvsignore \
 	common/hacdef.tex \
 	common/hacmacros.texi \
 	common/figtex.tex \
+	common/missing-dot.fig \
 	common/hac.bib
 
 .NOTPARALLEL: pdf ps

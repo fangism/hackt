@@ -1,5 +1,5 @@
 # "mk/Make.fig"
-#	$Id: Make.fig,v 1.5 2008/03/21 00:19:36 fang Exp $
+#	$Id: Make.fig,v 1.6 2009/02/24 02:19:13 fang Exp $
 #	vi: ft=automake
 # This makefile includes rules for converting to and from xfig figures.
 
@@ -8,7 +8,7 @@ SUFFIXES += .dot .fig .figtex .ps .eps .pdf \
 
 # other option is to skip fig and go directly to pdf or ps
 
-ECHO_NO_DOT = $(ECHO) "Sorry, no dot found in path during configure." ; exit 1
+ECHO_NO_DOT = $(ECHO) "Sorry, no dot found in path during configure."
 ECHO_NO_FIG2DEV = $(ECHO) "Sorry, no fig2dev found in path during configure." ; exit 1
 
 # for xfig stream editing
@@ -28,6 +28,7 @@ if HAVE_DOT
 	$(CAT) $@.orig | $(DOTFIG_FILTER) > $@
 else
 	@$(ECHO_NO_DOT)
+	$(LN_S) -f $(top_srcdir)/dox/common/missing-dot.fig $@
 endif
 
 # TODO: make a placeholder dummy box for missing figures.  

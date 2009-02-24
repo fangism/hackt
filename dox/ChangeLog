@@ -1,5 +1,12 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.35 2008/11/28 22:06:59 fang Exp $
+#	$Id: ChangeLog,v 1.36 2009/02/24 02:19:11 fang Exp $
+
+2009-02-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-03+:
+	  mk/Make.fig: if dot is missing, just copy a dummy placeholder
+		figure (common/missing-dot.fig) instead of error-ing out.
+
 
 2008-11-27	David Fang		<fangism@users.sourceforge.net>
 
