@@ -1,6 +1,6 @@
 # "dox/Make.dox-tail"
 # To be included last by Makefiles in subdirectories
-#	$Id: Make.dox-tail,v 1.14 2007/10/08 21:49:55 fang Exp $
+#	$Id: Make.dox-tail,v 1.15 2009/02/25 03:00:26 fang Exp $
 #	vim: ft=automake
 
 if AUTO_CVSIGNORE
@@ -12,6 +12,8 @@ DISTCLEANFILES += local.cvsignore
 endif
 
 ######## HTML install hooks ###################################################
+if ENABLE_DOCS
+# don't bother if configured with --disable-docs
 noinst_DATA += $(HTML_HOOKS)
 # workaround: use install hooks
 install-data-hook: $(HTML_HOOKS)
@@ -26,6 +28,7 @@ uninstall-hook:
 	  test -z "$$d" || \
 	    $(RM) -r $(DESTDIR)$(htmldir)/$$d ; \
 	done
+endif
 
 ###############################################################################
 
