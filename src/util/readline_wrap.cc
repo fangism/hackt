@@ -1,7 +1,7 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.4 2006/07/18 04:09:17 fang Exp $
+	$Id: readline_wrap.cc,v 1.5 2009/02/25 03:31:05 fang Exp $
 	TODO: for editline/histedit, set H_SETUNIQUE flag.
  */
 
@@ -254,6 +254,27 @@ readline_wrapper::version_string(ostream& o) {
 	o << "none";
 #endif
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Redraw the prompt and the current line buffer.
+ */
+void
+readline_wrapper::refresh(void) {
+#ifdef	HAVE_RL_FORCED_UPDATE_DISPLAY
+	rl_forced_update_display();
+#elif	defined(HAVE_RL_REDISPLAY)
+	rl_redisplay();
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+readline_wrapper::display_match_list(char** matches, int len, int max) {
+#ifdef	USE_READLINE
+	rl_display_match_list(matches, len, max);
+#endif
 }
 
 //=============================================================================

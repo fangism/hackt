@@ -3,7 +3,7 @@
 	Convenience wrapper for readline and editline.  
 	NOTE: the readline headers really aren't needed here, 
 	only needed in the implementation of this module.  
-	$Id: readline_wrap.h,v 1.5 2009/02/15 23:07:00 fang Exp $
+	$Id: readline_wrap.h,v 1.6 2009/02/25 03:31:07 fang Exp $
  */
 
 #ifndef	__UTIL_READLINE_WRAP_H__
@@ -183,6 +183,14 @@ public:
 	static
 	ostream&
 	version_string(ostream&);
+
+	static
+	void
+	refresh(void);
+
+	static
+	void
+	display_match_list(char**, int, int);
 
 private:
 	const_char_type*

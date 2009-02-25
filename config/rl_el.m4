@@ -1,5 +1,5 @@
 dnl "config/rl_el.m4"
-dnl	$Id: rl_el.m4,v 1.7 2009/02/20 16:40:09 fang Exp $
+dnl	$Id: rl_el.m4,v 1.8 2009/02/25 03:31:03 fang Exp $
 dnl Readline and Editline support for the utility library used by hackt.
 dnl This is not only specific to hackt, so we place these macros here.  
 dnl
@@ -135,6 +135,7 @@ CPPFLAGS="$CPPFLAGS $rl_include"
 	saved_LIBS="$LIBS"
 	LIBS="$LIBS $RL_LIB"
 	AC_CHECK_FUNCS(rl_completion_matches completion_matches)
+	AC_CHECK_FUNCS(rl_forced_update_display rl_redisplay)
 	LIBS="$saved_LIBS"
 	LDFLAGS="$saved_LDFLAGS"
 CPPFLAGS="$saved_CPPFLAGS"
@@ -225,6 +226,7 @@ LDFLAGS="$LDFLAGS $el_ldpath"
 	saved_LIBS="$LIBS"
 	LIBS="$LIBS $EL_LIB"
 	AC_CHECK_FUNCS(rl_completion_matches completion_matches)
+	AC_CHECK_FUNCS(rl_forced_update_display rl_redisplay)
 	LIBS="$saved_LIBS"
 LDFLAGS="$saved_LDFLAGS"
 CPPFLAGS="$saved_CPPFLAGS"

@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.cc"
-	$Id: command_registry.cc,v 1.6 2009/02/24 00:35:45 fang Exp $
+	$Id: command_registry.cc,v 1.7 2009/02/25 03:31:04 fang Exp $
  */
 
 #include <iostream>
@@ -14,13 +14,14 @@
 #include "sim/command_registry.h"
 #include "sim/command_base.h"
 #include "util/qmap.tcc"
-#include "util/readline.h"
+// #include "util/readline.h"
 #include "util/readline_wrap.h"
 
 namespace HAC {
 namespace SIM {
 using std::set;
 using std::ostream_iterator;
+using util::readline_wrapper;
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -164,12 +165,12 @@ if (len) {
 			std::ostream_iterator<const char*>(cout, "|"));
 		cout << '}' << endl;
 #endif
-		rl_display_match_list(&mod_matches[0], len, max -dist);
+		readline_wrapper::display_match_list(&mod_matches[0], len, max -dist);
 	} else {
 		// use default printer
-		rl_display_match_list(matches, len, max);
+		readline_wrapper::display_match_list(matches, len, max);
 	}
-	rl_forced_update_display();	// refresh prompt, line-buffer
+	readline_wrapper::refresh();	// refresh prompt, line-buffer
 }
 #endif
 }

@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.13 2009/02/24 00:35:46 fang Exp $
+	$Id: command_registry.tcc,v 1.14 2009/02/25 03:31:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -644,8 +644,15 @@ command_registry<Command>::completion(const char* text, int start, int end) {
 			// making local modifications
 			// const value_saver<int>	// don't add space
 			rl_completion_append_character = '\0';
+#ifdef	HAVE_BSDEDITLINE
+#define	VOID_FUNCTION_CAST(x)		reinterpret_cast<void (*)(void)>(x)
+#else
+// editline completely fubar'd this type
+#define	VOID_FUNCTION_CAST(x)		x
+#endif
 			rl_completion_display_matches_hook =
-				display_hierarchical_matches_hook;
+			VOID_FUNCTION_CAST(display_hierarchical_matches_hook);
+#undef	VOID_FUCNTION_CAST
 			return rl_completion_matches(text, gen);
 		}
 	}
