@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.14 2009/02/25 03:31:04 fang Exp $
+	$Id: command_registry.tcc,v 1.15 2009/02/26 22:15:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -661,12 +661,22 @@ command_registry<Command>::completion(const char* text, int start, int end) {
 }
 
 //=============================================================================
-template <class Command>
-command_registry<Command>::readline_init::readline_init(const module& m)
-#ifdef	USE_READLINE
-		: _compl(rl_attempted_completion_function, completion), 
-		_mod(instance_completion_module, &m)
+#ifndef	USE_READLINE
+// dummy function pointer, for when we are not using any readline
+static
+char** (*__dummy_completion)(const char*, int, int) = NULL;
 #endif
+
+template <class Command>
+command_registry<Command>::readline_init::readline_init(const module& m) :
+		_compl(
+#ifdef	USE_READLINE
+			rl_attempted_completion_function,
+#else
+			__dummy_completion, 
+#endif
+			completion), 
+		_mod(instance_completion_module, &m)
 {
 #if 0
 	// doesn't do what I want...
