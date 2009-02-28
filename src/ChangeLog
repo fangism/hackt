@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-02-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-04:
+	  hacprsim new commands for diagnostics:
+		getall . -- now works as one might expect
+		getlocal proc -- prints state of all nodes publicly reachable
+			in PROC, i.e. those allocated by PROC.
+		getports proc -- prints state of all public port nodes of 
+			process instance PROC.
+		Documented, test cases added.  
+	  Implemented some helper alias visitor functions, for visiting
+		reachable public ports of a process alias:
+		port_visitor, bool_port_collector.
+	  Used them in new functions in parser/instref.cc.
+
+
 2009-02-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-03:

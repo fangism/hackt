@@ -1,0 +1,26 @@
+# "getlocal-03.prsimrc"
+# @haco@ completion_test.haco-a
+
+getports .
+getlocal .
+
+echo testing top-level instance...
+getall toil
+getlocal toil
+getports toil
+
+echo testing top-level public port...
+getall fiddle.ikki
+getports fiddle.ikki
+getlocal fiddle.ikki
+
+echo testing private port...
+getall razzle.zoom
+getports razzle.zoom
+getlocal razzle.zoom
+
+echo testing another private port...
+getall razzle.zoom.bah
+getports razzle.zoom.bah
+getlocal razzle.zoom.bah
+

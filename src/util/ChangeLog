@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.101 2009/02/20 16:40:25 fang Exp $
+#	$Id: ChangeLog,v 1.102 2009/02/28 01:20:46 fang Exp $
+
+2009-02-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-04:
+	  util/copy_if.h: added binary transform_if algorithm
+
 
 2009-02-19	David Fang		<fangism@users.sourceforge.net>
 

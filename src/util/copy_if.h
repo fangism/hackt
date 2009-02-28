@@ -2,7 +2,7 @@
 	\file "util/copy_if.h"
 	This missing copy_if, and transform_ig algorithm 
 	from the standard library.  
-	$Id: copy_if.h,v 1.2 2009/02/18 00:22:52 fang Exp $
+	$Id: copy_if.h,v 1.3 2009/02/28 01:20:47 fang Exp $
  */
 
 #ifndef	__UTIL_COPY_IF_H__
@@ -45,6 +45,23 @@ transform_if(In first, In last, Out res, Pred p, Op op) {
 			*res = op(*first);
 		}
 		++first;
+		++res;
+	}
+	return res;
+}
+
+/**
+	Use a binary predicate and binary functor.
+ */
+template<class In, class In2, class Out, class Pred, class Op>
+Out
+transform_if(In first, In last, In2 first2, Out res, Pred p, Op op) {
+	while (first != last) {
+		if (p(*first, *first2)) {
+			*res = op(*first, *first2);
+		}
+		++first;
+		++first2;
 		++res;
 	}
 	return res;

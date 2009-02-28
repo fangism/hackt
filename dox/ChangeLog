@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.36 2009/02/24 02:19:11 fang Exp $
+#	$Id: ChangeLog,v 1.37 2009/02/28 01:20:34 fang Exp $
+
+2009-02-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-04:
+	  prsim/commands.texi: new getports and getlocal commands.
+
 
 2009-02-23	David Fang		<fangism@users.sourceforge.net>
 

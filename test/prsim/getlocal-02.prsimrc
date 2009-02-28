@@ -1,0 +1,6 @@
+# "getlocal-02.prsimrc"
+# @haco@ inv.haco-a
+
+getall .
+getlocal .
+

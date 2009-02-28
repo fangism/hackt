@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.6 2009/02/18 00:22:36 fang Exp $
+	$Id: instref.h,v 1.7 2009/02/28 01:20:44 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -64,9 +64,21 @@ parse_name_to_members(std::ostream&,
 extern
 int
 parse_name_to_get_subnodes(
-	std::ostream&, const std::string&, const entity::module&, 
+	const std::string&, const entity::module&, 
 	std::default_vector<size_t>::type&);
 	// node_index_type
+
+extern
+int
+parse_name_to_get_subnodes_local(
+	const std::string&, const entity::module&, 
+	std::default_vector<size_t>::type&);
+
+extern
+int
+parse_name_to_get_ports(
+	const std::string&, const entity::module&, 
+	std::default_vector<size_t>::type&);
 
 extern
 int

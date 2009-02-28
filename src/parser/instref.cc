@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.14 2009/02/18 00:22:35 fang Exp $
+	$Id: instref.cc,v 1.15 2009/02/28 01:20:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,6 +24,9 @@
 #include <string>
 #include "AST/parse_context.h"
 #include "Object/module.h"
+#include "Object/global_entry.h"
+#include "Object/global_entry_context.h"
+// #include "Object/common/dump_flags.h"
 #include "Object/common/namespace.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/bool_traits.h"
@@ -32,8 +35,10 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_actuals.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/instance_placeholder_base.h"
+#include "Object/inst/bool_port_collector.h"
 #include "Object/ref/meta_reference_union.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/entry_collection.h"
@@ -43,6 +48,7 @@
 #include "util/packed_array.h"		// for alias_collection_type
 #include "util/member_select.h"
 #include "util/copy_if.h"		// for transform_if algo
+#include "util/iterator_more.h"		// for set_inserter
 
 extern
 int
@@ -51,6 +57,9 @@ instref_parse(void*, YYSTYPE&, flex::lexer_state&);
 namespace HAC {
 namespace parser {
 using entity::bool_tag;
+using entity::process_tag;
+using entity::global_entry_pool;
+using entity::footprint_frame_map_type;
 using entity::state_manager;
 using entity::unroll_context;
 using entity::expr_dump_context;
@@ -237,7 +246,6 @@ if (n == ".") {
 	const size_t ret = b->lookup_globally_allocated_index(sm, top);
 	return ret;
 }
-#undef	INVALID_PROCESS_INDEX
 }
 
 //=============================================================================
@@ -346,18 +354,30 @@ if (n == ".") {
 /**
 	Accumlates a sequence of sub-nodes reachable from instance.  
 	\return 0 upon success, 1 upon error.  
+	TODO: can't we just work-list traverse processes and 
+	their bool members from their footprint frames?
  */
 int
-parse_name_to_get_subnodes(ostream& o, const string& n, const module& m, 
+parse_name_to_get_subnodes(const string& n, const module& m, 
 		vector<size_t>& v) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
+if (n == ".") {
+	// no lookup necessary, just copy all integers!
+	const size_t bmax = m.get_state_manager().get_pool<bool_tag>().size();
+	size_t i = INVALID_NODE_INDEX +1;
+	v.reserve(bmax -1);
+	for ( ; i<bmax; ++i) {
+		v.push_back(i);
+	}
+	return 0;
+} else {
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	if (!r || !r.inst_ref()) {
 		return 1;
 #if 0
 	} else if (r.inst_ref()->dimensions()) {
-		o << "Error: referenced instance must be a single (scalar)."
+		cerr << "Error: referenced instance must be a single (scalar)."
 			<< endl;
 		return 1;
 #endif
@@ -373,6 +393,99 @@ parse_name_to_get_subnodes(ostream& o, const string& n, const module& m,
 		return 0;
 	}
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as parse_name_to_get_subnodes, but non-recursive, 
+	only returns bools reachable through public ports.  
+	Referenced instance must be a process.  
+	\return 0 upon success, 1 upon error.  
+ */
+int
+parse_name_to_get_subnodes_local(const string& n, const module& m, 
+		vector<size_t>& v) {
+	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
+	STACKTRACE_VERBOSE;
+	const size_t pid = parse_process_to_index(n, m);
+	if (pid == INVALID_PROCESS_INDEX) {
+		return 1;
+	}
+	const footprint_frame_map_type&
+		pbf(m.get_state_manager().get_bool_frame_map(pid));
+	// unique sort it
+	std::set<size_t> s;
+	if (pid) {
+		copy(pbf.begin(), pbf.end(), util::set_inserter(s));
+	} else {	// top-level process needs transformation, yuck...
+		// FIXME: this is very BUG prone
+		copy(++pbf.begin(), pbf.end(), util::set_inserter(s));
+		// skip the 0th entry
+	}
+	copy(s.begin(), s.end(), back_inserter(v));
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns the subset of local_subnodes that are port aliases.
+	Caller may not use the port-name however, due to choice of
+	canonical names.  
+	\return 0 upon success, 1 upon error.  
+ */
+int
+parse_name_to_get_ports(const string& n, const module& m, 
+		vector<size_t>& v) {
+	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
+	STACKTRACE_VERBOSE;
+	const size_t pid = parse_process_to_index(n, m);
+	if (pid == INVALID_PROCESS_INDEX) {
+		return 1;
+	} else if (!pid) {
+		// top-level process has no ports!
+		return 0;
+	}
+	const state_manager& sm(m.get_state_manager());
+	const footprint& topfp(m.get_footprint());
+	const entity::global_entry_context_base gec(sm, topfp);
+	const global_entry_pool<process_tag>&
+		proc_pool(sm.get_pool<process_tag>());
+	// get process_instance_alias
+	const entity::global_entry<process_tag>& pe(proc_pool[pid]);
+	const entity::state_instance<process_tag>&
+		p(pe.get_canonical_instance(gec));
+	const entity::instance_alias_info<process_tag>&
+		pi(*p.get_back_ref());
+	// get subinstances, and their local indices
+	entity::bool_port_collector C;
+	pi.accept(C);
+#if 0
+	pi.dump_ports(cout, entity::dump_flags::default_value) << endl;
+	copy(C.bool_indices.begin(), C.bool_indices.end(), 
+		ostream_iterator<size_t>(cout, ","));
+	cout << endl;
+#endif
+	if (pe.parent_tag_value == entity::META_TYPE_NONE) {
+		// then parent is top-level no transformation necessary
+		copy(C.bool_indices.begin(), C.bool_indices.end(),
+			back_inserter(v));
+	} else {
+		// we need to translate local to global indices
+		INVARIANT(pe.parent_tag_value == entity::META_TYPE_PROCESS);
+		const footprint_frame_map_type&
+			pbf(sm.get_bool_frame_map(pe.parent_id));
+		transform(C.bool_indices.begin(), C.bool_indices.end(), 
+			back_inserter(v),
+			entity::footprint_frame_transformer(pbf));
+	}
+	// can't handle non-processes yet :S
+#if 0
+	copy(v.begin(), v.end(), ostream_iterator<size_t>(cout, ","));
+	cout << endl;
+#endif
+	return 0;
+}
+#undef	INVALID_PROCESS_INDEX
 
 //=============================================================================
 /**

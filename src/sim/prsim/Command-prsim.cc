@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.42 2009/02/19 02:58:36 fang Exp $
+	$Id: Command-prsim.cc,v 1.43 2009/02/28 01:20:45 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -76,6 +76,8 @@ using parser::parse_global_reference;
 using parser::parse_name_to_what;
 using parser::parse_name_to_aliases;
 using parser::parse_name_to_get_subnodes;
+using parser::parse_name_to_get_subnodes_local;
+using parser::parse_name_to_get_ports;
 
 //=============================================================================
 // local static CommandCategories
@@ -1645,6 +1647,97 @@ Get::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/getports.texi
+@deffn Command getports struct
+Print the state of all port nodes of @var{struct}.  
+Useful for observing boundaries of channels and processes.  
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetPorts, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetPorts, "getports", info,
+	"print values of ports of structure")
+
+int
+GetPorts::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	vector<node_index_type>		nodes_id_list_type;
+	const string& objname(a.back());
+	nodes_id_list_type nodes;
+	if (parse_name_to_get_ports(objname, s.get_module(), nodes)) {
+		// already got error message?
+		return Command::BADARG;
+	} else {
+		typedef	nodes_id_list_type::const_iterator	const_iterator;
+		cout << "Ports subnodes of \'" << objname << "\':" << endl;
+		const_iterator i(nodes.begin()), e(nodes.end());
+		for ( ; i!=e; ++i) {
+			s.dump_node_value(cout, *i) << endl;
+		}
+		return Command::NORMAL;
+	}
+}
+}
+
+void
+GetPorts::usage(ostream& o) {
+	o << name << " <name>" << endl;
+	o <<
+"prints the current values of public ports of the structure"
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/getlocal.texi
+@deffn Command getlocal struct
+Print the state of all publicly reachable subnodes of @var{struct}.  
+Recursive search does not visit private subnodes.  
+Useful for observing channels and processes.  
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetLocal, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetLocal, "getlocal", info,
+	"print values of public subnodes of structure")
+
+int
+GetLocal::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	vector<node_index_type>		nodes_id_list_type;
+	const string& objname(a.back());
+	nodes_id_list_type nodes;
+	if (parse_name_to_get_subnodes_local(objname, s.get_module(), nodes)) {
+		// already got error message?
+		return Command::BADARG;
+	} else {
+		typedef	nodes_id_list_type::const_iterator	const_iterator;
+		cout << "Public subnodes of \'" << objname << "\':" << endl;
+		const_iterator i(nodes.begin()), e(nodes.end());
+		for ( ; i!=e; ++i) {
+			s.dump_node_value(cout, *i) << endl;
+		}
+		return Command::NORMAL;
+	}
+}
+}
+
+void
+GetLocal::usage(ostream& o) {
+	o << name << " <name>" << endl;
+	o <<
+"prints the current values of publicly reachable subnodes of the structure"
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/getall.texi
 @deffn Command getall struct
 Print the state of all subnodes of @var{struct}.  
@@ -1654,7 +1747,7 @@ Useful for observing channels and processes.
 ***/
 PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetAll, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetAll, "getall", info,
-	"print values of all subnodes")
+	"print values of all subnodes of structure")
 
 int
 GetAll::main(State& s, const string_list& a) {
@@ -1665,7 +1758,7 @@ if (a.size() != 2) {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
 	nodes_id_list_type nodes;
-	if (parse_name_to_get_subnodes(cout, objname, s.get_module(), nodes)) {
+	if (parse_name_to_get_subnodes(objname, s.get_module(), nodes)) {
 		// already got error message?
 		return Command::BADARG;
 	} else {
@@ -1682,7 +1775,7 @@ if (a.size() != 2) {
 
 void
 GetAll::usage(ostream& o) {
-	o << "getall <name>" << endl;
+	o << name << " <name>" << endl;
 	o << "prints the current values of all subnodes of the named structure"
 		<< endl;
 }
@@ -5583,7 +5676,7 @@ Exits fatally if assertion fails.
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssertValueQueue,
 	"channel-assert-value-queue", channels, 
-	"Assert whether channel is out of source/expect values")
+	"assert whether channel has source/expect values left")
 
 int
 ChannelAssertValueQueue::main(State& s, const string_list& a) {

@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.20 2009/02/11 02:35:03 fang Exp $
+@c $Id: commands.texi,v 1.21 2009/02/28 01:20:35 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -325,6 +325,8 @@ The following commands give information about the state of the
 simulator and the simulated production rules.  
 
 @include cmd/get.texi
+@include cmd/getports.texi
+@include cmd/getlocal.texi
 @include cmd/getall.texi
 @include cmd/assert.texi
 @include cmd/assertn.texi

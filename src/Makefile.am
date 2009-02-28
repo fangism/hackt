@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.216 2009/02/23 09:11:13 fang Exp $
+#	$Id: Makefile.am,v 1.217 2009/02/28 01:20:39 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -440,6 +440,8 @@ OBJECT_INST_CC_FILES = \
 	Object/inst/subinstance_manager.cc \
 	Object/inst/connection_policy.cc \
 	Object/inst/port_alias_tracker.cc \
+	Object/inst/port_visitor.cc \
+	Object/inst/bool_port_collector.cc \
 	Object/inst/alias_actuals.cc \
 	Object/inst/alias_matcher.cc \
 	Object/inst/alias_printer.cc \

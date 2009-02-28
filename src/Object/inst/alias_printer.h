@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.h"
-	$Id: alias_printer.h,v 1.2 2006/04/11 07:54:40 fang Exp $
+	$Id: alias_printer.h,v 1.3 2009/02/28 01:20:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_PRINTER_H__
@@ -29,7 +29,7 @@ struct alias_printer : public alias_visitor, public cflat_aliases_arg_type {
 	// default dtor
 	// default copy-ctor
 
-	VISIT_INSTANCE_ALIAS_INFO_PROTOS
+	VISIT_INSTANCE_ALIAS_INFO_PROTOS()
 
 private:
 	// helper functions here

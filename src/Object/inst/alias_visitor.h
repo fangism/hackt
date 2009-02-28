@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/alias_visitor.h"
 	Visitor pattern that walks all aliases.  
-	$Id: alias_visitor.h,v 1.3 2007/01/21 05:59:09 fang Exp $
+	$Id: alias_visitor.h,v 1.4 2009/02/28 01:20:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_VISITOR_H__
@@ -38,24 +38,25 @@ virtual	VISIT_INSTANCE_ALIAS_INFO_PROTO(datastruct_tag) = 0;
 virtual	VISIT_INSTANCE_ALIAS_INFO_PROTO(channel_tag) = 0;
 virtual	VISIT_INSTANCE_ALIAS_INFO_PROTO(process_tag) = 0;
 
+
 /**
 	Convenient macro for declaring repetitive methods.  
  */
 #if ENABLE_DATASTRUCTS
-#define	VISIT_INSTANCE_ALIAS_INFO_PROTOS				\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(bool_tag);			\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(int_tag);			\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(enum_tag);			\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(datastruct_tag);		\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(channel_tag);			\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(process_tag);
+#define	VISIT_INSTANCE_ALIAS_INFO_PROTOS(virt)				\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(bool_tag);			\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(int_tag);			\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(enum_tag);			\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(datastruct_tag);		\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(channel_tag);			\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(process_tag);
 #else
-#define	VISIT_INSTANCE_ALIAS_INFO_PROTOS				\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(bool_tag);			\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(int_tag);			\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(enum_tag);			\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(channel_tag);			\
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(process_tag);
+#define	VISIT_INSTANCE_ALIAS_INFO_PROTOS(virt)				\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(bool_tag);			\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(int_tag);			\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(enum_tag);			\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(channel_tag);			\
+virt	VISIT_INSTANCE_ALIAS_INFO_PROTO(process_tag);
 #endif
 };	// end class alias_visitor
 

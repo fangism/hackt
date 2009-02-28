@@ -1,0 +1,6 @@
+# "getlocal-01.prsimrc"
+# @haco@ completion_test.haco-a
+
+getall bubble
+getlocal bubble
+

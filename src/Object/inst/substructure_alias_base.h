@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.25 2008/11/12 03:00:12 fang Exp $
+	$Id: substructure_alias_base.h,v 1.26 2009/02/28 01:20:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -38,7 +38,7 @@ using util::persistent_object_manager;
 	Parent to all aliases that may contain substructures.
  */
 template <>
-class substructure_alias_base<true> : protected subinstance_manager {
+class substructure_alias_base<true> : public subinstance_manager {
 private:
 	typedef	substructure_alias_base<true>	this_type;
 	typedef	subinstance_manager		parent_type;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.h"
-	$Id: alias_matcher.h,v 1.2 2006/04/11 07:54:40 fang Exp $
+	$Id: alias_matcher.h,v 1.3 2009/02/28 01:20:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_MATCHER_H__
@@ -63,7 +63,7 @@ struct alias_matcher : public alias_matcher_base {
 	// default dtor
 	// default copy-ctor
 
-	VISIT_INSTANCE_ALIAS_INFO_PROTOS
+	VISIT_INSTANCE_ALIAS_INFO_PROTOS()
 
 private:
 	// helper functions here
