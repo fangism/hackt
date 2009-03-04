@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.15 2009/02/28 01:20:44 fang Exp $
+	$Id: instref.cc,v 1.15.2.1 2009/03/04 23:36:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -274,6 +274,8 @@ parse_global_reference(const string& n, const module& m) {
 	Prints reference identity information. 
 	TODO: check non-instance-references:
 		namespaces, definitions, typedefs, value-references.
+	TODO: print template parameters of complete type
+	Currently footprint lacks direct back-reference to base definition.
 	\return 0 upon success, 1 upon error.  
  */
 int
@@ -431,6 +433,9 @@ parse_name_to_get_subnodes_local(const string& n, const module& m,
 	Returns the subset of local_subnodes that are port aliases.
 	Caller may not use the port-name however, due to choice of
 	canonical names.  
+	TODO?: rewrite this once footprints have back-references
+		to their base definitions, and can access their
+		port formals.  
 	\return 0 upon success, 1 upon error.  
  */
 int

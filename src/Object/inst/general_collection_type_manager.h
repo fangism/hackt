@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.13 2006/11/07 06:34:42 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.13.74.1 2009/03/04 23:36:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -15,6 +15,7 @@
 #include "Object/type/canonical_type.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 #if	ENABLE_STACKTRACE
 #include <iostream>
@@ -97,7 +98,11 @@ public:
 		if (this->is_relaxed_type() && r) {
 			const instance_collection_parameter_type
 				ct(this->type_parameter, r);
+#if FOOTPRINT_HAS_PARAMS
+			const footprint fake_top(*r);
+#else
 			const footprint fake_top;
+#endif
 			// don't have top-level footprint handy, need it?
 			return ct.unroll_definition_footprint(fake_top);
 		} else {

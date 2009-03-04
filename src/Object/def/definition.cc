@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.44 2007/11/26 08:27:33 fang Exp $
+ 	$Id: definition.cc,v 1.44.20.1 2009/03/04 23:36:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3195,7 +3195,6 @@ process_definition::__unroll_complete_type(
 		const footprint& top) const {
 	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("key = " << key << endl);
 try {
 	footprint::create_lock LOCK(f);		// will catch recursion error
 	if (!f.is_unrolled()) {

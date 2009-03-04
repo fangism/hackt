@@ -49,8 +49,8 @@ Persistent Object Manager text dump:
 	45	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	460
+	48	##ADDR##	footprnt	0	#HEAD#	#TAIL#	460
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20

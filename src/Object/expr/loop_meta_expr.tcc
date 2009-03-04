@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/loop_meta_expr.tcc"
-	$Id: loop_meta_expr.tcc,v 1.2 2007/02/08 02:11:04 fang Exp $
+	$Id: loop_meta_expr.tcc,v 1.2.58.1 2009/03/04 23:36:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_LOOP_META_EXPR_TCC__
@@ -200,7 +200,7 @@ loop_meta_expr<E>::unroll_resolve_value(const unroll_context& c,
 		return good_bool(false);
 	}
 
-	footprint f;
+	DECLARE_TEMPORARY_FOOTPRINT(f);
 	const never_ptr<pint_scalar> var(this->initialize_footprint(f));
 	pint_value_type& p(var->get_instance().value);
 	const unroll_context cc(&f, c);

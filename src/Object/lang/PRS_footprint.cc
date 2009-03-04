@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.21 2008/11/12 21:43:08 fang Exp $
+	$Id: PRS_footprint.cc,v 1.21.10.1 2009/03/04 23:36:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -66,6 +66,7 @@ footprint_rule_attribute::~footprint_rule_attribute() { }
 void
 footprint_rule_attribute::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	NEVER_NULL(values);
 	values->collect_transient_info(m);
 }
@@ -74,6 +75,7 @@ footprint_rule_attribute::collect_transient_info_base(
 void
 footprint_rule_attribute::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, key);
 	m.write_pointer(o, values);
 }
@@ -82,6 +84,7 @@ footprint_rule_attribute::write_object(const persistent_object_manager& m,
 void
 footprint_rule_attribute::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_value(i, key);
 	m.read_pointer(i, values);
 }
@@ -354,6 +357,7 @@ footprint::lookup_internal_node_expr(const string& k, const bool dir) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 {
 	typedef	rule_pool_type::const_iterator	const_iterator;
 	const_iterator i(rule_pool.begin());
@@ -390,6 +394,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 void
 footprint::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 {
 	typedef	rule_pool_type::const_iterator	const_iterator;
 	const size_t s = rule_pool.size();
@@ -439,6 +444,7 @@ footprint::write_object_base(const persistent_object_manager& m,
  */
 void
 footprint::load_object_base(const persistent_object_manager& m, istream& i) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 {
 	size_t s;
 	read_value(i, s);
@@ -526,6 +532,7 @@ footprint_expr_node::first_node_error(void) const {
 void
 footprint_expr_node::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.collect_pointer_list(params);
 	} else	INVARIANT(params.empty());
@@ -535,7 +542,7 @@ footprint_expr_node::collect_transient_info_base(
 void
 footprint_expr_node::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
-	STACKTRACE_PERSISTENT("expr_node::write_object_base()");
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, type);
 	write_array(o, nodes);
 	if (type == PRS_LITERAL_TYPE_ENUM) {
@@ -547,7 +554,7 @@ footprint_expr_node::write_object_base(const persistent_object_manager& m,
 void
 footprint_expr_node::load_object_base(const persistent_object_manager& m,
 		istream& i) {
-	STACKTRACE_PERSISTENT("expr_node::load_object_base()");
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_value(i, type);
 	read_sequence_prealloc(i, nodes);
 	STACKTRACE_PERSISTENT_PRINT("at " << this << ":" << endl);
@@ -575,6 +582,7 @@ footprint_rule::push_back(const footprint_rule_attribute& a) {
 void
 footprint_rule::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	for_each(attributes.begin(), attributes.end(), 
 		util::persistent_collector_ref(m)
 	);
@@ -584,7 +592,7 @@ footprint_rule::collect_transient_info_base(
 void
 footprint_rule::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-	STACKTRACE_PERSISTENT("rule::write_object_base()");
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, expr_index);
 	write_value(o, output_index);
 	write_value(o, dir);
@@ -595,7 +603,7 @@ footprint_rule::write_object_base(const persistent_object_manager& m,
 void
 footprint_rule::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
-	STACKTRACE_PERSISTENT("rule::load_object_base()");
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_value(i, expr_index);
 	read_value(i, output_index);
 	read_value(i, dir);

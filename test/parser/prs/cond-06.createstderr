@@ -25,10 +25,10 @@ Persistent Object Manager text dump:
 	21	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	287
-	26	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	344
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	287
+	25	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	344
+	27	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	20

@@ -44,8 +44,8 @@ Persistent Object Manager text dump:
 	40	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	41	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	581
+	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	581
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	45	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

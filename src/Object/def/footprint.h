@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.25 2008/03/17 23:02:23 fang Exp $
+	$Id: footprint.h,v 1.25.12.1 2009/03/04 23:36:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -21,6 +21,20 @@
 #include "util/memory/excl_ptr.h"
 #include "util/persistent.h"
 #include "util/memory/chunk_map_pool_fwd.h"
+
+/**
+	Define to 1 to have every footprint include a back-reference
+	to its owner.
+	Q: if a footprint has no members, do we ever need to worry
+		about back-references?  We might want to access
+		the original definition, even if it is empty.  
+ */
+#define	FOOTPRINT_OWNER_DEF			0
+
+// defined in "Object/devel_switches.h"
+#if FOOTPRINT_HAS_PARAMS
+#include "Object/expr/const_param_expr_list.h"
+#endif
 
 namespace HAC {
 class cflat_options;
@@ -46,6 +60,16 @@ using std::string;
 using util::good_bool;
 using util::memory::count_ptr;
 using util::memory::excl_ptr;
+
+#if FOOTPRINT_HAS_PARAMS
+// use this explicity to construct a default temporary footprint
+struct temp_footprint_tag_type { };
+extern const temp_footprint_tag_type	temp_footprint_tag;
+
+#define	DECLARE_TEMPORARY_FOOTPRINT(f)	entity::footprint f(temp_footprint_tag)
+#else
+#define	DECLARE_TEMPORARY_FOOTPRINT(f)	entity::footprint f
+#endif
 
 //=============================================================================
 /**
@@ -107,6 +131,9 @@ private:
 		see NOTES:2005-08-20.
 		BTW, using count_ptrs for ease of copy-constructibility.  
 		Q: do we need a separate port_formals_manager?
+		NOTE: string key can possibly contain namespace scoping!
+			... until we forbid instance declarations
+			outside the global namespace at the top-level.
 	 */
 	typedef	std::map<string, collection_map_entry_type>
 					instance_collection_map_type;
@@ -123,7 +150,28 @@ private:
 	typedef	footprint_base<enum_tag>::instance_pool_type	enum_instance_pool_type;
 	typedef	footprint_base<int_tag>::instance_pool_type	int_instance_pool_type;
 	typedef	footprint_base<bool_tag>::instance_pool_type	bool_instance_pool_type;
+#if FOOTPRINT_OWNER_DEF
+public:
+	/**
+		Back-reference to owning definition.
+		This pointer is not written to persistent object, 
+		it should be reconstructed by the owner, during load_object.
+		Could deduce this from local parameters' and ports'
+		but that would fail for empty processes.  
+		This wants to be private with only certain definition
+		classes as friends, since no one else has any business
+		modifying this.  
+	 */
+	const never_ptr<const definition_base>	owner_def;
+#endif
 private:
+#if FOOTPRINT_HAS_PARAMS
+	/**
+		We now keep template actuals here instead of
+		only in the footprint_manager's map entry.
+	 */
+	const const_param_expr_list		param_key;
+#endif
 	// state information
 	// a place to unroll instances and connections
 	// a place to create state pseudo-footprint
@@ -232,8 +280,26 @@ public:
 		operator = (const create_lock&);
 	};
 public:
+#if FOOTPRINT_HAS_PARAMS
+	explicit
+	footprint(const temp_footprint_tag_type&);
+
+	explicit	// allow implicit construction?
+	footprint(const const_param_expr_list&);
+
+private:	// only for reconstruction
 	footprint();
+	FRIEND_PERSISTENT_TRAITS
+public:
+#else
+	footprint();
+#endif
 	~footprint();
+
+#if FOOTPRINT_HAS_PARAMS
+	const const_param_expr_list&
+	get_param_key(void) const { return param_key; }
+#endif
 
 	size_t
 	map_size(void) const { return instance_collection_map.size(); }
@@ -400,6 +466,14 @@ public:
 
 	void
 	load_object(const persistent_object_manager&, istream&);
+
+#if FOOTPRINT_HAS_PARAMS
+	void
+	write_param_key(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_param_key(const persistent_object_manager&, istream&);
+#endif
 
 private:
 	/**

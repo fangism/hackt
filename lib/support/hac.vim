@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	HAC
 " Maintainer:	CARLOS TADEO ORTEGA OTERO, DAVID FANG
-" Last Change:	NOV 02, 07 
+" Last Change:	2009-03-03
 
 
 " A bunch of useful C keywords
@@ -11,6 +11,7 @@ syn keyword	cStatement  	template export open
 " syn keyword	cLabel		case default
 syn keyword	cLabel		defproc deftype defchan namespace
 syn keyword	cLabel		spec chp prs hse
+syn keyword	cConditional	else
 "syn keyword	cConditional	if else switch
 "syn keyword	cRepeat	  	for while	
 
@@ -130,6 +131,9 @@ endif
 " keep a // comment separately, it terminates a preproc. conditional
 syntax match	cCommentError	display "\*/"
 syntax match	cCommentStartError display "/\*"me=e-1 contained
+
+syn match	cOperator	display "->\|=>\|#>"
+syn match	cOperator	display "&\||\|\~"
 
 " syn keyword	cOperator	sizeof
 syn keyword	cType  		chan pint pbool preal

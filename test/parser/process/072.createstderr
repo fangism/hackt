@@ -21,10 +21,10 @@ Persistent Object Manager text dump:
 	17	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	20

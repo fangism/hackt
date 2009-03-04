@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.19 2007/07/18 23:28:32 fang Exp $
+	$Id: template_formals_manager.cc,v 1.19.40.1 2009/03/04 23:36:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -383,7 +383,7 @@ template_formals_manager::must_validate_actuals(
 		looked-up) footprint when it comes time to unroll/instantiate
 		the complete type.  
 	***/
-	footprint f;
+	DECLARE_TEMPORARY_FOOTPRINT(f);
 	unroll_context c(&f, &f);
 	unroll_formal_parameters(c, t);
 	const count_ptr<const_param_expr_list> null(NULL);

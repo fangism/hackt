@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-03-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-04-footprint-02-01:
+	  Mini-branch for reworking footprint structure so that it contains
+		template actual parameter information, along with
+		back-link to source definition.  
+	  Object binary format has been slightly reordered and restructured!
+		Tests updated accordingly (create-dumps).
+	  In this revision: footprint_map now implemented as a set using
+		specialized comparator for unique comparison of the
+		param-key member for the purposes of sorting.  
+		Simplified by using a count_ptr of footprint in map.
+	  Force default construction of temporary footprint
+		in many unroll functions to use explicit tag argument
+		for clarity of intent.  
+	  Next: embed definition_base pointer in each footprint.
+
+
 2009-02-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-04:

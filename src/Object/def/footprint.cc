@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.39 2008/11/12 02:59:57 fang Exp $
+	$Id: footprint.cc,v 1.39.10.1 2009/03/04 23:36:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -305,6 +305,12 @@ footprint::create_lock::create_lock(footprint& f) : fp(f) {
 //=============================================================================
 // class footprint method definitions
 
+// for dummy construction
+const temp_footprint_tag_type
+temp_footprint_tag = temp_footprint_tag_type();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FOOTPRINT_HAS_PARAMS
 footprint::footprint() :
 	footprint_base<process_tag>(), 
 	footprint_base<channel_tag>(), 
@@ -317,6 +323,34 @@ footprint::footprint() :
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
+	prs_footprint(new PRS::footprint), 
+	spec_footprint(new SPEC::footprint) { }
+// the other members, don't care, just placeholder ctor before loading object
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+footprint::footprint(
+#if FOOTPRINT_HAS_PARAMS
+	const const_param_expr_list& p
+#endif
+	) :
+	footprint_base<process_tag>(), 
+	footprint_base<channel_tag>(), 
+#if ENABLE_DATASTRUCTS
+	footprint_base<datastruct_tag>(), 
+#endif
+	footprint_base<enum_tag>(), 
+	footprint_base<int_tag>(), 
+	footprint_base<bool_tag>(), 
+	value_footprint_base<pbool_tag>(), 
+	value_footprint_base<pint_tag>(), 
+	value_footprint_base<preal_tag>(), 
+#if FOOTPRINT_OWNER_DEF
+	owner_def(false),
+#endif
+#if FOOTPRINT_HAS_PARAMS
+	param_key(p), 
+#endif
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
@@ -334,8 +368,30 @@ footprint::footprint() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FOOTPRINT_HAS_PARAMS
+// default construct every member! we don't care...
+// except that we need them for dumping... arg!
+// WISH: delegating ctors (C++0x)
+footprint::footprint(const temp_footprint_tag_type&) :
+	footprint_base<process_tag>(), 
+	footprint_base<channel_tag>(), 
+#if ENABLE_DATASTRUCTS
+	footprint_base<datastruct_tag>(), 
+#endif
+	footprint_base<enum_tag>(), 
+	footprint_base<int_tag>(), 
+	footprint_base<bool_tag>(), 
+	value_footprint_base<pbool_tag>(), 
+	value_footprint_base<pint_tag>(), 
+	value_footprint_base<preal_tag>(), 
+	prs_footprint(new PRS::footprint), 
+	spec_footprint(new SPEC::footprint) { }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This doesn't actually copy!
+	Is just another default ctor.
 	\pre source footprint must be default constructed (empty).
  */
 footprint::footprint(const footprint& t) :
@@ -351,6 +407,12 @@ footprint::footprint(const footprint& t) :
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
+#if FOOTPRINT_OWNER_DEF
+	owner_def(t.owner_def),
+#endif
+#if FOOTPRINT_HAS_PARAMS
+	param_key(t.param_key), 
+#endif
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
@@ -404,7 +466,6 @@ ostream&
 footprint::dump_with_collections(ostream& o, const dump_flags& df, 
 		const expr_dump_context& dc) const {
 	if (!instance_collection_map.empty()) {
-		// NOTE: hash_map is NOT sorted
 		const_instance_map_iterator
 			i(instance_collection_map.begin());
 		const const_instance_map_iterator
@@ -894,6 +955,9 @@ footprint::read_pointer(istream& i) const {
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if FOOTPRINT_HAS_PARAMS
+	param_key.collect_transient_info_base(m);
+#endif
 	// no need to visit def_back_ref
 	footprint_base<process_tag>::collect_transient_info_base(m);
 	footprint_base<channel_tag>::collect_transient_info_base(m);
@@ -980,6 +1044,26 @@ void
 footprint::write_object(const persistent_object_manager& m, ostream& o) const {
 	write_object_base(m, o);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FOOTPRINT_HAS_PARAMS
+void
+footprint::write_param_key(const persistent_object_manager& m,
+		ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	param_key.write_object(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partially load first: param key is critical to parent map.
+ */
+void
+footprint::load_param_key(const persistent_object_manager& m, istream& i) {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	const_cast<const_param_expr_list&>(param_key).load_object(m, i);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

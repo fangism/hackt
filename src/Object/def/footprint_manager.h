@@ -1,16 +1,27 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.8 2006/11/07 06:34:26 fang Exp $
+	$Id: footprint_manager.h,v 1.8.74.1 2009/03/04 23:36:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
 
+#include "Object/devel_switches.h"
 #include <iosfwd>
+#if FOOTPRINT_HAS_PARAMS
+#include <set>
+#else
 #include <map>
+#endif
 #include "Object/expr/const_param_expr_list.h"
+
+#define	FOOTPRINT_MAP_USE_COUNT_PTR		(1 && FOOTPRINT_HAS_PARAMS)
+#if FOOTPRINT_MAP_USE_COUNT_PTR
+#include "util/memory/count_ptr.h"
+#else
 #include "util/memory/excl_ptr.h"
+#endif
 #include "util/persistent_fwd.h"
 
 namespace HAC {
@@ -20,26 +31,54 @@ struct dump_flags;
 struct expr_dump_context;
 using std::istream;
 using std::ostream;
-using util::memory::excl_ptr;
+using util::memory::count_ptr;
 using util::persistent_object_manager;
+
+#if FOOTPRINT_MAP_USE_COUNT_PTR
+typedef	count_ptr<footprint>		footprint_entry_base;
+#else
+typedef	excl_ptr<footprint>		footprint_entry_base;
+#endif
 
 //=============================================================================
 /**
 	Proxy class for exclusively owned pointer to footprint.
 	Also serves as implementation privatization.  
  */
-struct footprint_entry : public excl_ptr<footprint> {
-	typedef	excl_ptr<footprint>		ptr_type;
+struct footprint_entry : public footprint_entry_base {
+	typedef	footprint_entry_base		ptr_type;
 
+	footprint_entry(const ptr_type&);
+
+#if FOOTPRINT_HAS_PARAMS
+	explicit
+	footprint_entry(footprint* f);
+#else
 	footprint_entry();
+#endif
+#if !FOOTPRINT_MAP_USE_COUNT_PTR
 	footprint_entry(const footprint_entry&);
+#endif
 	~footprint_entry();
 
+#if !FOOTPRINT_MAP_USE_COUNT_PTR
 	footprint_entry&
 	operator = (ptr_type&);
+#endif
+
+#if FOOTPRINT_HAS_PARAMS
+	bool
+	operator < (const footprint_entry&) const;
+#endif
 };
 
 //=============================================================================
+#if FOOTPRINT_HAS_PARAMS
+typedef	std::set<footprint_entry>
+#else
+typedef	std::map<const_param_expr_list, footprint_entry>
+#endif
+						footprint_manager_base;
 /**
 	The manager for a collection of definition footprints.  
 	We use std::map instead of util::qmap because we want the
@@ -48,13 +87,16 @@ struct footprint_entry : public excl_ptr<footprint> {
 	Implementation: use const_param_expr_list or pointer thereof?
  */
 class footprint_manager :
-		private std::map<const_param_expr_list, footprint_entry> {
+		private footprint_manager_base {
 private:
 	typedef	footprint_manager			this_type;
-	typedef	std::map<const_param_expr_list, footprint_entry>
-							parent_type;
+	typedef	footprint_manager_base			parent_type;
 public:
+#if FOOTPRINT_HAS_PARAMS
+	typedef	const_param_expr_list			key_type;
+#else
 	typedef	parent_type::key_type			key_type;
+#endif
 	typedef	parent_type::value_type			value_type;
 	/**
 		NOTE: the interface we provide makes the map look like

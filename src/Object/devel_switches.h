@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.52 2008/11/12 02:59:55 fang Exp $
+	$Id: devel_switches.h,v 1.52.10.1 2009/03/04 23:36:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -79,6 +79,15 @@
 	Priority: low, not memory critical
  */
 #define	DENSE_FORMAL_VALUE_COLLECTIONS		0
+
+/**
+	Define to 1 to have footprint own its instantiated template
+	parameters rather than keep a separate key in the footprint manager.
+	Rationale: make it easier to associate each footprint with
+	canonical complete type.
+	Goal: 1?
+ */
+#define	FOOTPRINT_HAS_PARAMS			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

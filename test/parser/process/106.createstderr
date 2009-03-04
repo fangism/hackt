@@ -42,12 +42,12 @@ Persistent Object Manager text dump:
 	38	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	366
-	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	402
-	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	footprnt	0	#HEAD#	#TAIL#	418
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	366
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	402
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	418
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	47	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	49	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

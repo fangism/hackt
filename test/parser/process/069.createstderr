@@ -26,8 +26,8 @@ Persistent Object Manager text dump:
 	22	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	338
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	338
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

@@ -1,5 +1,5 @@
 # "test/parser/namespace/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2007/11/14 17:35:11 fang Exp $
+#	$Id: Makefile.am,v 1.15.22.1 2009/03/04 23:38:09 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -15,7 +15,7 @@ HACKT_PARSE_TEST_FAILURES = \
 
 # should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
 HACKT_PARSE_TEST_PASSES = \
-	    001 002 003 004 005 007 008 009 \
+	    001 002 003 004 005 005b 007 008 009 \
 	010 014 015 016 017 018 019 \
 	020 022 025 027 029 \
 	033 037 038 039 \
@@ -32,7 +32,7 @@ EXTRA_DIST += \
 
 # the other tests have no instances and are uninteresting
 HACKT_CREATE_TEST_PASSES = \
-	003 004 005 027 \
+	003 004 005 005b 027 \
 	act-001
 # pending: 050 051 052 053 054 055 056 057
 # should these be accepted? (compare with act)

@@ -112,17 +112,17 @@ Persistent Object Manager text dump:
 	108	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
 	109	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	110	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	111	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	112	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	25
-	113	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	111	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	112	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	113	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	25
 	114	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	115	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	116	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
 	117	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	118	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	119	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	120	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	27
-	121	##ADDR##	footprnt	0	#HEAD#	#TAIL#	374
+	119	##ADDR##	footprnt	0	#HEAD#	#TAIL#	374
+	120	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	121	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	27
 	122	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	123	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	124	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
@@ -132,9 +132,9 @@ Persistent Object Manager text dump:
 	128	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	129	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	130	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	131	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	132	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	28
-	133	##ADDR##	footprnt	0	#HEAD#	#TAIL#	395
+	131	##ADDR##	footprnt	0	#HEAD#	#TAIL#	395
+	132	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	133	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	28
 	134	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	135	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	136	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	32
@@ -308,8 +308,8 @@ Persistent Object Manager text dump:
 	304	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	305	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	306	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	307	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	308	##ADDR##	footprnt	0	#HEAD#	#TAIL#	536
+	307	##ADDR##	footprnt	0	#HEAD#	#TAIL#	536
+	308	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	309	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	310	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	311	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
