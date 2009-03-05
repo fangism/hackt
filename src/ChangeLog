@@ -5,6 +5,11 @@
 
 2009-03-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-04-footprint-02-01-b:
+	  srcdir tag only:
+	  Permanently change footprint_manager map to use count_ptr.
+
+
 	* HACKT-00-01-04-main-00-83-04-footprint-02-01:
 	  Mini-branch for reworking footprint structure so that it contains
 		template actual parameter information, along with

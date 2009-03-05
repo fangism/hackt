@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.8.74.1 2009/03/04 23:36:19 fang Exp $
+	$Id: footprint_manager.h,v 1.8.74.2 2009/03/05 00:00:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
@@ -15,13 +15,7 @@
 #include <map>
 #endif
 #include "Object/expr/const_param_expr_list.h"
-
-#define	FOOTPRINT_MAP_USE_COUNT_PTR		(1 && FOOTPRINT_HAS_PARAMS)
-#if FOOTPRINT_MAP_USE_COUNT_PTR
 #include "util/memory/count_ptr.h"
-#else
-#include "util/memory/excl_ptr.h"
-#endif
 #include "util/persistent_fwd.h"
 
 namespace HAC {
@@ -34,11 +28,7 @@ using std::ostream;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
 
-#if FOOTPRINT_MAP_USE_COUNT_PTR
 typedef	count_ptr<footprint>		footprint_entry_base;
-#else
-typedef	excl_ptr<footprint>		footprint_entry_base;
-#endif
 
 //=============================================================================
 /**
@@ -56,15 +46,7 @@ struct footprint_entry : public footprint_entry_base {
 #else
 	footprint_entry();
 #endif
-#if !FOOTPRINT_MAP_USE_COUNT_PTR
-	footprint_entry(const footprint_entry&);
-#endif
 	~footprint_entry();
-
-#if !FOOTPRINT_MAP_USE_COUNT_PTR
-	footprint_entry&
-	operator = (ptr_type&);
-#endif
 
 #if FOOTPRINT_HAS_PARAMS
 	bool

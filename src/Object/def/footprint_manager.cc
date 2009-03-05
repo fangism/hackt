@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.12.74.1 2009/03/04 23:36:19 fang Exp $
+	$Id: footprint_manager.cc,v 1.12.74.2 2009/03/05 00:00:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -17,9 +17,7 @@
 #include "Object/common/dump_flags.h"
 #include "Object/inst/port_alias_tracker.tcc"	// why are symbols ref'd?
 
-#if FOOTPRINT_MAP_USE_COUNT_PTR
 #include "util/memory/count_ptr.tcc"
-#endif
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
@@ -45,34 +43,12 @@ footprint_entry::footprint_entry() : ptr_type(new footprint) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Destructive transfer of ownership, coercively.  
+	Shared transfer of ownership, coercively.  
  */
 footprint_entry::footprint_entry(const ptr_type& t) : ptr_type(t) { }
 
-#if !FOOTPRINT_MAP_USE_COUNT_PTR
-/**
-	Destructive transfer of ownership, coercively.  
- */
-footprint_entry::footprint_entry(const footprint_entry& t) :
-		ptr_type(const_cast<footprint_entry&>(t)) { }
-#endif
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint_entry::~footprint_entry() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !FOOTPRINT_MAP_USE_COUNT_PTR
-/**
-	Intentional transfer of ownership, as this copy-constructor
-	is only ever supposed to be called upon insertion into
-	footprint_manager's footprint map.  
- */
-footprint_entry&
-footprint_entry::operator = (ptr_type& p) {
-	static_cast<ptr_type&>(*this) = p;
-	return *this;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if FOOTPRINT_HAS_PARAMS
@@ -243,9 +219,6 @@ footprint_manager::operator [] (const key_type& k) {
 #endif
 	const footprint_entry temp(new footprint(k));
 	const std::pair<parent_type::const_iterator, bool> i(insert(temp));
-#if !FOOTPRINT_MAP_USE_COUNT_PTR
-	INVARIANT(!i.second || !temp);	// transferred if new
-#endif
 	// if inserted use new value, else use existing member
 	INVARIANT(i.first != parent_type::end());
 	NEVER_NULL(*i.first);
