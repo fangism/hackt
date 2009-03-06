@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.8.74.4 2009/03/06 02:50:06 fang Exp $
+	$Id: footprint_manager.h,v 1.8.74.5 2009/03/06 08:55:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
@@ -9,11 +9,7 @@
 
 #include "Object/devel_switches.h"
 #include <iosfwd>
-#if FOOTPRINT_HAS_PARAMS
 #include <set>
-#else
-#include <map>
-#endif
 #include "Object/expr/const_param_expr_list.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
@@ -41,27 +37,16 @@ struct footprint_entry : public footprint_entry_base {
 
 	footprint_entry(const ptr_type&);
 
-#if FOOTPRINT_HAS_PARAMS
 	explicit
 	footprint_entry(footprint* f);
-#else
-	footprint_entry();
-#endif
 	~footprint_entry();
 
-#if FOOTPRINT_HAS_PARAMS
 	bool
 	operator < (const footprint_entry&) const;
-#endif
 };
 
 //=============================================================================
-#if FOOTPRINT_HAS_PARAMS
-typedef	std::set<footprint_entry>
-#else
-typedef	std::map<const_param_expr_list, footprint_entry>
-#endif
-						footprint_manager_base;
+typedef	std::set<footprint_entry>		footprint_manager_base;
 /**
 	The manager for a collection of definition footprints.  
 	We use std::map instead of util::qmap because we want the
@@ -75,11 +60,7 @@ private:
 	typedef	footprint_manager			this_type;
 	typedef	footprint_manager_base			parent_type;
 public:
-#if FOOTPRINT_HAS_PARAMS
 	typedef	const_param_expr_list			key_type;
-#else
-	typedef	parent_type::key_type			key_type;
-#endif
 	typedef	parent_type::value_type			value_type;
 	/**
 		NOTE: the interface we provide makes the map look like

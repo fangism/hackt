@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.39.10.3 2009/03/06 02:50:04 fang Exp $
+	$Id: footprint.cc,v 1.39.10.4 2009/03/06 08:55:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -310,7 +310,6 @@ const temp_footprint_tag_type
 temp_footprint_tag = temp_footprint_tag_type();
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if FOOTPRINT_HAS_PARAMS
 footprint::footprint() :
 	footprint_base<process_tag>(), 
 	footprint_base<channel_tag>(), 
@@ -327,15 +326,12 @@ footprint::footprint() :
 	spec_footprint(new SPEC::footprint),
 	lock_state(false) { }
 // the other members, don't care, just placeholder ctor before loading object
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint::footprint(
-#if FOOTPRINT_HAS_PARAMS
 	const const_param_expr_list& p
 #if FOOTPRINT_OWNER_DEF
 	, const definition_base& d
-#endif
 #endif
 	) :
 	footprint_base<process_tag>(), 
@@ -349,9 +345,7 @@ footprint::footprint(
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
-#if FOOTPRINT_HAS_PARAMS
 	param_key(p), 
-#endif
 #if FOOTPRINT_OWNER_DEF
 	owner_def(&d),
 #endif
@@ -372,7 +366,6 @@ footprint::footprint(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if FOOTPRINT_HAS_PARAMS
 // default construct every member! we don't care...
 // except that we need them for dumping... arg!
 // WISH: delegating ctors (C++0x)
@@ -391,7 +384,6 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	prs_footprint(new PRS::footprint), 
 	spec_footprint(new SPEC::footprint),
 	lock_state(false) { }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -412,9 +404,7 @@ footprint::footprint(const footprint& t) :
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
-#if FOOTPRINT_HAS_PARAMS
 	param_key(t.param_key), 
-#endif
 #if FOOTPRINT_OWNER_DEF
 	owner_def(t.owner_def),
 #endif
@@ -960,9 +950,7 @@ footprint::read_pointer(istream& i) const {
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if FOOTPRINT_HAS_PARAMS
 	param_key.collect_transient_info_base(m);
-#endif
 	// no need to visit def_back_ref
 	footprint_base<process_tag>::collect_transient_info_base(m);
 	footprint_base<channel_tag>::collect_transient_info_base(m);
@@ -1052,7 +1040,6 @@ footprint::write_object(const persistent_object_manager& m, ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if FOOTPRINT_HAS_PARAMS
 void
 footprint::write_param_key(const persistent_object_manager& m,
 		ostream& o) const {
@@ -1078,7 +1065,6 @@ footprint::load_param_key(const persistent_object_manager& m, istream& i
 		never_ptr<const definition_base>(&d);
 #endif
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

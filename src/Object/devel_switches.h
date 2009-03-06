@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.52.10.3 2009/03/06 02:50:01 fang Exp $
+	$Id: devel_switches.h,v 1.52.10.4 2009/03/06 08:55:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -85,9 +85,9 @@
 	Rationale: make it easier to associate each footprint with
 	canonical complete type.
 	Goal: 1
-	Status: complete, tested
- */
+	Status: complete, tested, perm'd
 #define	FOOTPRINT_HAS_PARAMS			1
+ */
 
 /**
 	Define to 1 to have every footprint include a back-reference
@@ -99,7 +99,7 @@
 	Is easier to serialize dependence on has-params...
 		though not necessary.
  */
-#define	FOOTPRINT_OWNER_DEF			(1 && FOOTPRINT_HAS_PARAMS)
+#define	FOOTPRINT_OWNER_DEF			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

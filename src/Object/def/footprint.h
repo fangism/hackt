@@ -1,18 +1,19 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.25.12.3 2009/03/06 02:50:05 fang Exp $
+	$Id: footprint.h,v 1.25.12.4 2009/03/06 08:55:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_H__
 
 #include <iosfwd>
+#include "Object/devel_switches.h"
 #include "Object/def/footprint_base.h"
 #include "Object/inst/port_alias_tracker.h"
 // #include "Object/inst/alias_visitee.h"
 #include "Object/inst/collection_index_entry.h"
-#include "Object/devel_switches.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "Object/lang/CHP_footprint.h"
 
 #include "util/boolean_types.h"
@@ -22,10 +23,6 @@
 #include "util/persistent.h"
 #include "util/memory/chunk_map_pool_fwd.h"
 
-// defined in "Object/devel_switches.h"
-#if FOOTPRINT_HAS_PARAMS
-#include "Object/expr/const_param_expr_list.h"
-#endif
 
 namespace HAC {
 class cflat_options;
@@ -52,15 +49,11 @@ using util::good_bool;
 using util::memory::count_ptr;
 using util::memory::excl_ptr;
 
-#if FOOTPRINT_HAS_PARAMS
 // use this explicity to construct a default temporary footprint
 struct temp_footprint_tag_type { };
 extern const temp_footprint_tag_type	temp_footprint_tag;
 
 #define	DECLARE_TEMPORARY_FOOTPRINT(f)	entity::footprint f(temp_footprint_tag)
-#else
-#define	DECLARE_TEMPORARY_FOOTPRINT(f)	entity::footprint f
-#endif
 
 //=============================================================================
 /**
@@ -142,13 +135,11 @@ private:
 	typedef	footprint_base<int_tag>::instance_pool_type	int_instance_pool_type;
 	typedef	footprint_base<bool_tag>::instance_pool_type	bool_instance_pool_type;
 private:
-#if FOOTPRINT_HAS_PARAMS
 	/**
 		We now keep template actuals here instead of
 		only in the footprint_manager's map entry.
 	 */
 	const const_param_expr_list		param_key;
-#endif
 #if FOOTPRINT_OWNER_DEF
 	/**
 		Back-reference to owning definition.
@@ -270,7 +261,6 @@ public:
 		operator = (const create_lock&);
 	} __ATTRIBUTE_UNUSED__ ;
 public:
-#if FOOTPRINT_HAS_PARAMS
 	explicit
 	footprint(const temp_footprint_tag_type&);
 
@@ -287,15 +277,11 @@ private:	// only for reconstruction
 	footprint();
 	FRIEND_PERSISTENT_TRAITS
 public:
-#else
-	footprint();
-#endif
 	~footprint();
 
-#if FOOTPRINT_HAS_PARAMS
 	const const_param_expr_list&
 	get_param_key(void) const { return param_key; }
-#endif
+
 #if FOOTPRINT_OWNER_DEF
 	never_ptr<const definition_base>
 	get_owner_def(void) const { return owner_def; }
@@ -467,7 +453,6 @@ public:
 	void
 	load_object(const persistent_object_manager&, istream&);
 
-#if FOOTPRINT_HAS_PARAMS
 	void
 	write_param_key(const persistent_object_manager&, ostream&) const;
 
@@ -477,7 +462,6 @@ public:
 		, const definition_base&
 #endif
 		);
-#endif
 
 private:
 	/**

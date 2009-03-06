@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-03-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-04-footprint-02-02-b:
+	  Perm'd FOOTPRINT_HAS_PARAMS.  srcdir-only tag.
+
+
 2009-03-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-04-footprint-02-02:

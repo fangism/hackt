@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.12.74.4 2009/03/06 02:50:05 fang Exp $
+	$Id: footprint_manager.cc,v 1.12.74.5 2009/03/06 08:55:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -33,13 +33,9 @@ using util::auto_indent;
 //=============================================================================
 // class footprint_entry method definitions
 
-#if FOOTPRINT_HAS_PARAMS
 footprint_entry::footprint_entry(footprint* f) : ptr_type(f) {
 	NEVER_NULL(f);
 }
-#else
-footprint_entry::footprint_entry() : ptr_type(new footprint) { }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -51,7 +47,6 @@ footprint_entry::footprint_entry(const ptr_type& t) : ptr_type(t) { }
 footprint_entry::~footprint_entry() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if FOOTPRINT_HAS_PARAMS
 bool
 footprint_entry::operator < (const footprint_entry& r) const {
 	STACKTRACE_VERBOSE;
@@ -59,7 +54,6 @@ footprint_entry::operator < (const footprint_entry& r) const {
 	NEVER_NULL(r);
 	return (*this)->get_param_key() < r->get_param_key();
 }
-#endif
 
 //=============================================================================
 // class footprint_manager method definitions
@@ -80,15 +74,11 @@ footprint_manager::footprint_manager(const size_t N
 		) :
 		parent_type(), _arity(N) {
 	if (!_arity) {
-#if FOOTPRINT_HAS_PARAMS
 		insert(value_type(new footprint(const_param_expr_list()
 #if FOOTPRINT_OWNER_DEF
 			, d
 #endif
 			)));
-#else
-		parent_type::operator[](key_type());
-#endif
 	}
 }
 
@@ -111,15 +101,11 @@ footprint_manager::set_arity(const size_t a
 	_arity = a;
 	clear();
 	if (!_arity) {
-#if FOOTPRINT_HAS_PARAMS
 		insert(value_type(new footprint(const_param_expr_list()
 #if FOOTPRINT_OWNER_DEF
 			, d
 #endif
 			)));
-#else
-		parent_type::operator[](key_type());
-#endif
 	}
 }
 
@@ -137,21 +123,12 @@ if (_arity) {
 		const const_iterator e(end());
 		for ( ; i!=e; i++) {
 			o << auto_indent << '<';
-#if FOOTPRINT_HAS_PARAMS
 			NEVER_NULL(*i);
 			(*i)->get_param_key().dump(o, dc);
-#else
-			i->first.dump(o, dc);
-#endif
 			o << "> {" << endl;
 			{
 				INDENT_SECTION(o);
-#if FOOTPRINT_HAS_PARAMS
 				(*i)->dump_with_collections(o, df, dc);
-#else
-				NEVER_NULL(i->second);
-				i->second->dump_with_collections(o, df, dc);
-#endif
 			}
 			o << auto_indent << '}' << endl;
 		}
@@ -182,21 +159,12 @@ if (_arity) {
 		const const_iterator e(end());
 		for ( ; i!=e; i++) {
 			o << auto_indent << '<';
-#if FOOTPRINT_HAS_PARAMS
 			NEVER_NULL(*i);
 			(*i)->get_param_key().dump(o, dc);
-#else
-			i->first.dump(o, dc);
-#endif
 			o << "> {" << endl;
 			{
 				INDENT_SECTION(o);
-#if FOOTPRINT_HAS_PARAMS
 				(*i)->dump_with_collections(o, df, dc);
-#else
-				NEVER_NULL(i->second);
-				i->second->dump_with_collections(o, df, dc);
-#endif
 			}
 			o << auto_indent << '}' << endl;
 		}
@@ -230,7 +198,6 @@ footprint_manager::insert(const key_type& k
 #endif
 		) {
 	INVARIANT(k.size() == _arity);
-#if FOOTPRINT_HAS_PARAMS
 	const footprint_entry temp(new footprint(k
 #if FOOTPRINT_OWNER_DEF
 		, d
@@ -243,9 +210,6 @@ footprint_manager::insert(const key_type& k
 	return const_cast<mapped_type&>(**i.first);	// unfortunate
 	// but remember that the param_key member which is used for
 	// comparison is immutable
-#else
-	return *(parent_type::operator[](k));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -294,13 +258,9 @@ footprint_manager::only(
 #endif
 			);
 	}
-#if FOOTPRINT_HAS_PARAMS
 	const footprint_entry& ret(*begin());
 	NEVER_NULL(ret);
 	return *ret;
-#else
-	return *(begin()->second);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -355,13 +315,9 @@ const footprint_manager::mapped_type&
 footprint_manager::only(void) const {
 	INVARIANT(!_arity);
 	INVARIANT(size() == 1);
-#if FOOTPRINT_HAS_PARAMS
 	const footprint_entry& ret(*begin());
 	NEVER_NULL(ret);
 	return *ret;
-#else
-	return *(begin()->second);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -376,14 +332,8 @@ footprint_manager::collect_transient_info_base(
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; ++i) {
-#if FOOTPRINT_HAS_PARAMS
 		NEVER_NULL(*i);
 		(*i)->collect_transient_info(m);
-#else
-		i->first.collect_transient_info_base(m);
-		NEVER_NULL(i->second);
-		i->second->collect_transient_info(m);
-#endif
 	}
 }
 
@@ -401,17 +351,10 @@ footprint_manager::write_object_base(
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; ++i) {
-#if FOOTPRINT_HAS_PARAMS
 		const footprint_entry::ptr_type& p(*i);
-#else
-		i->first.write_object(m, o);	// same as write_object_base
-		const footprint_entry::ptr_type& p(i->second);
-#endif
 		m.write_pointer(o, p);
-#if FOOTPRINT_HAS_PARAMS
 		// must store key separately for orderly reconstruction!
 		p->write_param_key(m, o);
-#endif
 	}
 }
 
@@ -433,7 +376,6 @@ footprint_manager::load_object_base(
 	size_t j = 0;
 	for ( ; j<s; ++j) {
 		// read in key-value pairs
-#if FOOTPRINT_HAS_PARAMS
 		// \pre const_param_expr_list param_key must be loaded!
 		footprint_entry::ptr_type _f;	// static_cast
 		m.read_pointer(i, _f);
@@ -444,20 +386,6 @@ footprint_manager::load_object_base(
 #endif
 			);	// partial load only!
 		insert(footprint_entry(_f));
-#if FOOTPRINT_OWNER_DEF
-	// TODO: ...
-#endif
-#else
-		key_type temp_key;
-		temp_key.load_object(m, i);
-		// load value in-place
-		INVARIANT(temp_key.size() == _arity);
-		footprint_entry::ptr_type f;
-		m.read_pointer(i, f);
-		parent_type::operator[](temp_key) = f;
-		// transfer ownership
-		// let persistent_object_manager to the loading
-#endif
 	}
 	INVARIANT(size() == s);
 }
