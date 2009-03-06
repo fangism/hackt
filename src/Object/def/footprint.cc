@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.39.10.4 2009/03/06 08:55:04 fang Exp $
+	$Id: footprint.cc,v 1.39.10.5 2009/03/06 09:32:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -328,12 +328,8 @@ footprint::footprint() :
 // the other members, don't care, just placeholder ctor before loading object
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-footprint::footprint(
-	const const_param_expr_list& p
-#if FOOTPRINT_OWNER_DEF
-	, const definition_base& d
-#endif
-	) :
+footprint::footprint(const const_param_expr_list& p,
+	const definition_base& d) :
 	footprint_base<process_tag>(), 
 	footprint_base<channel_tag>(), 
 #if ENABLE_DATASTRUCTS
@@ -346,9 +342,7 @@ footprint::footprint(
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
 	param_key(p), 
-#if FOOTPRINT_OWNER_DEF
 	owner_def(&d),
-#endif
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
@@ -405,9 +399,7 @@ footprint::footprint(const footprint& t) :
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
 	param_key(t.param_key), 
-#if FOOTPRINT_OWNER_DEF
 	owner_def(t.owner_def),
-#endif
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
@@ -1053,17 +1045,12 @@ footprint::write_param_key(const persistent_object_manager& m,
 	Also load the owner definition reference while we're at it.
  */
 void
-footprint::load_param_key(const persistent_object_manager& m, istream& i
-#if FOOTPRINT_OWNER_DEF
-		, const definition_base& d
-#endif
-		) {
+footprint::load_param_key(const persistent_object_manager& m, istream& i,
+		const definition_base& d) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	const_cast<const_param_expr_list&>(param_key).load_object(m, i);
-#if FOOTPRINT_OWNER_DEF
 	const_cast<never_ptr<const definition_base>&>(owner_def) =
 		never_ptr<const definition_base>(&d);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

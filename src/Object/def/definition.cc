@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.44.20.3 2009/03/06 02:50:03 fang Exp $
+ 	$Id: definition.cc,v 1.44.20.4 2009/03/06 09:32:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2303,11 +2303,7 @@ void
 user_def_datatype::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
-	footprint_map.insert(p
-#if FOOTPRINT_OWNER_DEF
-		, *this
-#endif
-		);	// uses mutability of footprint_map
+	footprint_map.insert(p, *this);	// uses mutability of footprint_map
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2520,11 +2516,7 @@ user_def_datatype::load_object(
 	// body
 	set_chp.load_object_base(m, f);
 	get_chp.load_object_base(m, f);
-	footprint_map.load_object_base(m, f
-#if FOOTPRINT_OWNER_DEF
-		, *this
-#endif
-		);
+	footprint_map.load_object_base(m, f, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2856,11 +2848,7 @@ process_definition::process_definition(const string& s) :
 		parent(), 
 		port_formals(), 
 		prs(), chp(), 
-		footprint_map(0
-#if FOOTPRINT_OWNER_DEF
-			, *this
-#endif
-			) {
+		footprint_map(0, *this) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2982,11 +2970,7 @@ process_definition::get_scopespace(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 process_definition::commit_arity(void) {
-	footprint_map.set_arity(template_formals.arity()
-#if FOOTPRINT_OWNER_DEF
-		, *this
-#endif
-		);
+	footprint_map.set_arity(template_formals.arity(), *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3167,11 +3151,7 @@ void
 process_definition::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
-	footprint_map.insert(p
-#if FOOTPRINT_OWNER_DEF
-		, *this
-#endif
-		);
+	footprint_map.insert(p, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3414,11 +3394,7 @@ process_definition::load_object_base(
 	prs.load_object_base(m, f);
 	chp.load_object_base(m, f);
 	spec.load_object_base(m, f);
-	footprint_map.load_object_base(m, f
-#if FOOTPRINT_OWNER_DEF
-		, *this
-#endif
-		);
+	footprint_map.load_object_base(m, f, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

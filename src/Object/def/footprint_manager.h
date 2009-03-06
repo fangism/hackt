@@ -1,16 +1,14 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.8.74.5 2009/03/06 08:55:07 fang Exp $
+	$Id: footprint_manager.h,v 1.8.74.6 2009/03/06 09:32:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
 
-#include "Object/devel_switches.h"
 #include <iosfwd>
 #include <set>
-#include "Object/expr/const_param_expr_list.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
 
@@ -20,6 +18,7 @@ class footprint;
 struct dump_flags;
 struct expr_dump_context;
 class definition_base;
+class const_param_expr_list;
 using std::istream;
 using std::ostream;
 using util::memory::count_ptr;
@@ -79,11 +78,7 @@ public:
 	footprint_manager();
 
 	explicit
-	footprint_manager(const size_t N
-#if FOOTPRINT_OWNER_DEF
-		, const definition_base&
-#endif
-		);
+	footprint_manager(const size_t N, const definition_base&);
 
 	~footprint_manager();
 
@@ -91,11 +86,7 @@ public:
 	arity(void) const { return _arity; }
 
 	void
-	set_arity(const size_t
-#if FOOTPRINT_OWNER_DEF
-		, const definition_base&
-#endif
-		);
+	set_arity(const size_t, const definition_base&);
 
 	ostream&
 	dump(ostream&, const dump_flags&) const;
@@ -104,18 +95,10 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	mapped_type&
-	insert(const key_type& k
-#if FOOTPRINT_OWNER_DEF
-		, const definition_base&
-#endif
-		);
+	insert(const key_type& k, const definition_base&);
 
 	mapped_type&
-	insert(const count_ptr<const key_type>&
-#if FOOTPRINT_OWNER_DEF
-		, const definition_base&
-#endif
-		);
+	insert(const count_ptr<const key_type>&, const definition_base&);
 
 	mapped_type&
 	lookup(const key_type& k) const;
@@ -127,13 +110,7 @@ public:
 	using parent_type::empty;
 
 	mapped_type&
-	only(
-#if FOOTPRINT_OWNER_DEF
-		const definition_base&
-#else
-		void
-#endif
-		);
+	only(const definition_base&);
 
 	const mapped_type&
 	only(void) const;
@@ -149,11 +126,8 @@ public:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&
-#if FOOTPRINT_OWNER_DEF
-		, const definition_base&
-#endif
-		);
+	load_object_base(const persistent_object_manager&, istream&,
+		const definition_base&);
 
 };	// end class footprint_manager
 

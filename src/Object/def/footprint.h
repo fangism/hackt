@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.25.12.4 2009/03/06 08:55:06 fang Exp $
+	$Id: footprint.h,v 1.25.12.5 2009/03/06 09:32:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -140,7 +140,6 @@ private:
 		only in the footprint_manager's map entry.
 	 */
 	const const_param_expr_list		param_key;
-#if FOOTPRINT_OWNER_DEF
 	/**
 		Back-reference to owning definition.
 		This pointer is not written to persistent object, 
@@ -152,7 +151,6 @@ private:
 		modifying this.  
 	 */
 	const never_ptr<const definition_base>	owner_def;
-#endif
 	// state information
 	// a place to unroll instances and connections
 	// a place to create state pseudo-footprint
@@ -265,13 +263,7 @@ public:
 	footprint(const temp_footprint_tag_type&);
 
 	explicit	// allow implicit construction?
-	footprint(const const_param_expr_list&
-#if FOOTPRINT_OWNER_DEF
-		, const definition_base&
-//		, const never_ptr<const definition_base>
-//			o = never_ptr<const definition_base>(NULL)
-#endif
-		);
+	footprint(const const_param_expr_list&, const definition_base&);
 
 private:	// only for reconstruction
 	footprint();
@@ -282,10 +274,8 @@ public:
 	const const_param_expr_list&
 	get_param_key(void) const { return param_key; }
 
-#if FOOTPRINT_OWNER_DEF
 	never_ptr<const definition_base>
 	get_owner_def(void) const { return owner_def; }
-#endif
 
 	size_t
 	map_size(void) const { return instance_collection_map.size(); }
@@ -457,11 +447,8 @@ public:
 	write_param_key(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_param_key(const persistent_object_manager&, istream&
-#if FOOTPRINT_OWNER_DEF
-		, const definition_base&
-#endif
-		);
+	load_param_key(const persistent_object_manager&, istream&,
+		const definition_base&);
 
 private:
 	/**
