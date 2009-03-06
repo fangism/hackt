@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.8.74.2 2009/03/05 00:00:20 fang Exp $
+	$Id: footprint_manager.h,v 1.8.74.3 2009/03/06 00:43:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
@@ -114,10 +114,16 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	mapped_type&
-	operator [] (const key_type& k);
+	insert(const key_type& k);
 
 	mapped_type&
-	operator [] (const count_ptr<const key_type>&);
+	insert(const count_ptr<const key_type>&);
+
+	mapped_type&
+	lookup(const key_type& k) const;
+
+	mapped_type&
+	lookup(const count_ptr<const key_type>& k) const;
 
 	using parent_type::size;
 	using parent_type::empty;
@@ -129,6 +135,8 @@ public:
 	only(void) const;
 
 // map persistence methods
+private:
+	using parent_type::insert;
 public:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

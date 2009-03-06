@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.12.74.2 2009/03/05 00:00:19 fang Exp $
+	$Id: footprint_manager.cc,v 1.12.74.3 2009/03/06 00:43:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -55,7 +55,7 @@ footprint_entry::~footprint_entry() { }
 bool
 footprint_entry::operator < (const footprint_entry& r) const {
 	STACKTRACE_VERBOSE;
-	NEVER_NULL(this);
+	NEVER_NULL(*this);
 	NEVER_NULL(r);
 	return (*this)->get_param_key() < r->get_param_key();
 }
@@ -77,8 +77,7 @@ footprint_manager::footprint_manager(const size_t N) :
 		parent_type(), _arity(N) {
 	if (!_arity) {
 #if FOOTPRINT_HAS_PARAMS
-		parent_type::insert(value_type(
-			new footprint(const_param_expr_list())));
+		insert(value_type(new footprint(const_param_expr_list())));
 #else
 		parent_type::operator[](key_type());
 #endif
@@ -101,8 +100,7 @@ footprint_manager::set_arity(const size_t a) {
 	clear();
 	if (!_arity) {
 #if FOOTPRINT_HAS_PARAMS
-		parent_type::insert(value_type(
-			new footprint(const_param_expr_list())));
+		insert(value_type(new footprint(const_param_expr_list())));
 #else
 		parent_type::operator[](key_type());
 #endif
@@ -210,13 +208,9 @@ if (_arity) {
 		for footprint lookup.  
  */
 footprint_manager::mapped_type&
-footprint_manager::operator [] (const key_type& k) {
+footprint_manager::insert(const key_type& k) {
 	INVARIANT(k.size() == _arity);
 #if FOOTPRINT_HAS_PARAMS
-#if ENABLE_STACKTRACE
-	k.dump(STACKTRACE_INDENT << "k = ", expr_dump_context::default_value) << endl;
-	STACKTRACE_INDENT_PRINT("size-before = " << size() << endl);
-#endif
 	const footprint_entry temp(new footprint(k));
 	const std::pair<parent_type::const_iterator, bool> i(insert(temp));
 	// if inserted use new value, else use existing member
@@ -232,6 +226,23 @@ footprint_manager::operator [] (const key_type& k) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This lookup uses find() to guarantee non-modification.
+ */
+footprint_manager::mapped_type&
+footprint_manager::lookup(const key_type& k) const {
+	INVARIANT(k.size() == _arity);
+	const footprint_entry temp(new footprint(k));
+	const parent_type::const_iterator f(find(temp));
+	// if inserted use new value, else use existing member
+	INVARIANT(f != parent_type::end());
+	NEVER_NULL(*f);
+	return const_cast<mapped_type&>(**f);	// unfortunate
+	// but remember that the param_key member which is used for
+	// comparison is immutable
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\return reference to the only footprint in the map.  
 	\pre this map has zero arity, only contains one footprint.  
  */
@@ -240,7 +251,7 @@ footprint_manager::only(void) {
 	INVARIANT(!_arity);
 	if (!size()) {
 		// create if it doesn't yet exist
-		(*this)[key_type()];
+		insert(key_type());
 	}
 #if FOOTPRINT_HAS_PARAMS
 	const footprint_entry& ret(*begin());
@@ -257,12 +268,28 @@ footprint_manager::only(void) {
 	\param k the key is allowed to be NULL
  */
 footprint_manager::mapped_type&
-footprint_manager::operator [] (const count_ptr<const key_type>& k) {
+footprint_manager::insert(const count_ptr<const key_type>& k) {
 	if (k) {
 		INVARIANT(k->size() == arity());
-		return (*this)[*k];
+		return insert(*k);
 	} else {
 		return only();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre must already have singleton footprint.
+ */
+footprint_manager::mapped_type&
+footprint_manager::lookup(const count_ptr<const key_type>& k) const {
+	if (k) {
+		INVARIANT(k->size() == arity());
+		return lookup(*k);
+	} else {
+		INVARIANT(size() == 1);
+		const footprint_entry& ret(*begin());
+		return *ret;
 	}
 }
 

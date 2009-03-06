@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.25.12.1 2009/03/04 23:36:19 fang Exp $
+	$Id: footprint.h,v 1.25.12.2 2009/03/06 00:43:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -21,15 +21,6 @@
 #include "util/memory/excl_ptr.h"
 #include "util/persistent.h"
 #include "util/memory/chunk_map_pool_fwd.h"
-
-/**
-	Define to 1 to have every footprint include a back-reference
-	to its owner.
-	Q: if a footprint has no members, do we ever need to worry
-		about back-references?  We might want to access
-		the original definition, even if it is empty.  
- */
-#define	FOOTPRINT_OWNER_DEF			0
 
 // defined in "Object/devel_switches.h"
 #if FOOTPRINT_HAS_PARAMS
@@ -150,8 +141,15 @@ private:
 	typedef	footprint_base<enum_tag>::instance_pool_type	enum_instance_pool_type;
 	typedef	footprint_base<int_tag>::instance_pool_type	int_instance_pool_type;
 	typedef	footprint_base<bool_tag>::instance_pool_type	bool_instance_pool_type;
+private:
+#if FOOTPRINT_HAS_PARAMS
+	/**
+		We now keep template actuals here instead of
+		only in the footprint_manager's map entry.
+	 */
+	const const_param_expr_list		param_key;
+#endif
 #if FOOTPRINT_OWNER_DEF
-public:
 	/**
 		Back-reference to owning definition.
 		This pointer is not written to persistent object, 
@@ -163,14 +161,6 @@ public:
 		modifying this.  
 	 */
 	const never_ptr<const definition_base>	owner_def;
-#endif
-private:
-#if FOOTPRINT_HAS_PARAMS
-	/**
-		We now keep template actuals here instead of
-		only in the footprint_manager's map entry.
-	 */
-	const const_param_expr_list		param_key;
 #endif
 	// state information
 	// a place to unroll instances and connections
@@ -278,14 +268,20 @@ public:
 
 		create_lock&
 		operator = (const create_lock&);
-	};
+	} __ATTRIBUTE_UNUSED__ ;
 public:
 #if FOOTPRINT_HAS_PARAMS
 	explicit
 	footprint(const temp_footprint_tag_type&);
 
 	explicit	// allow implicit construction?
-	footprint(const const_param_expr_list&);
+	footprint(const const_param_expr_list&
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base&
+//		, const never_ptr<const definition_base>
+//			o = never_ptr<const definition_base>(NULL)
+#endif
+		);
 
 private:	// only for reconstruction
 	footprint();
@@ -299,6 +295,10 @@ public:
 #if FOOTPRINT_HAS_PARAMS
 	const const_param_expr_list&
 	get_param_key(void) const { return param_key; }
+#endif
+#if FOOTPRINT_OWNER_DEF
+	never_ptr<const definition_base>
+	get_owner_def(void) const { return owner_def; }
 #endif
 
 	size_t

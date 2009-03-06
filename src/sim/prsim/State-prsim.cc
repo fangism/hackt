@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.48 2009/02/11 02:35:20 fang Exp $
+	$Id: State-prsim.cc,v 1.48.2.1 2009/03/06 00:44:00 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1562,7 +1562,7 @@ State::dump_mode(ostream& o) const {
 		error_policy_string(invariant_unknown_policy) << endl;
 	o << "\ton assert-fail: " <<
 		error_policy_string(assert_fail_policy) << endl;
-	o << "\ton channe-expect-fail: " <<
+	o << "\ton channel-expect-fail: " <<
 		error_policy_string(channel_expect_fail_policy) << endl;
 	return o;
 }

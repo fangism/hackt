@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.39.10.1 2009/03/04 23:36:18 fang Exp $
+	$Id: footprint.cc,v 1.39.10.2 2009/03/06 00:43:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -332,6 +332,9 @@ footprint::footprint() :
 footprint::footprint(
 #if FOOTPRINT_HAS_PARAMS
 	const const_param_expr_list& p
+#if FOOTPRINT_OWNER_DEF
+	, const definition_base& d
+#endif
 #endif
 	) :
 	footprint_base<process_tag>(), 
@@ -345,11 +348,11 @@ footprint::footprint(
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
-#if FOOTPRINT_OWNER_DEF
-	owner_def(false),
-#endif
 #if FOOTPRINT_HAS_PARAMS
 	param_key(p), 
+#endif
+#if FOOTPRINT_OWNER_DEF
+	owner_def(&d),
 #endif
 	unrolled(false), created(false),
 	instance_collection_map(), 
@@ -407,11 +410,11 @@ footprint::footprint(const footprint& t) :
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
-#if FOOTPRINT_OWNER_DEF
-	owner_def(t.owner_def),
-#endif
 #if FOOTPRINT_HAS_PARAMS
 	param_key(t.param_key), 
+#endif
+#if FOOTPRINT_OWNER_DEF
+	owner_def(t.owner_def),
 #endif
 	unrolled(false), created(false),
 	instance_collection_map(), 

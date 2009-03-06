@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.44.20.1 2009/03/04 23:36:17 fang Exp $
+ 	$Id: definition.cc,v 1.44.20.2 2009/03/06 00:43:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2290,22 +2290,9 @@ const footprint&
 user_def_datatype::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	if (p) {
-		if (p->size() != footprint_map.arity()) {
-			ICE(cerr, 
-				cerr << "p->size() == " << p->size() <<
-					", while footprint_map._arity == " <<
-					footprint_map.arity() << endl;
-			);
-		}
-		return footprint_map[*p];
-	} else {
-		return footprint_map.only();
-	}
-#else
-	return footprint_map[p];
-#endif
+	// will create one, if necessary
+	// new footprints will not be unrolled until explicitly done
+	return footprint_map.lookup(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2316,7 +2303,7 @@ void
 user_def_datatype::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
-	footprint_map[p];	// operator []
+	footprint_map.insert(p);	// uses mutability of footprint_map
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3153,22 +3140,7 @@ const footprint&
 process_definition::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	if (p) {
-		if (p->size() != footprint_map.arity()) {
-			ICE(cerr, 
-				cerr << "p->size() == " << p->size() <<
-					", while footprint_map._arity == " <<
-					footprint_map.arity() << endl;
-			);
-		}
-		return footprint_map[*p];
-	} else {
-		return footprint_map.only();
-	}
-#else
-	return footprint_map[p];
-#endif
+	return footprint_map.lookup(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3179,7 +3151,7 @@ void
 process_definition::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
-	footprint_map[p];	// operator []
+	footprint_map.insert(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3196,7 +3168,7 @@ process_definition::__unroll_complete_type(
 	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
 try {
-	footprint::create_lock LOCK(f);		// will catch recursion error
+	const footprint::create_lock LOCK(f);	// will catch recursion error
 	if (!f.is_unrolled()) {
 		const canonical_type_base canonical_params(p);
 		const template_actuals
@@ -3249,16 +3221,7 @@ process_definition::unroll_complete_type(
 		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* const f = &footprint_map[p];
-#if 0
-	if (p) {
-		INVARIANT(p->size() == footprint_map.arity());
-		f = &footprint_map[*p];
-	} else {
-		INVARIANT(!footprint_map.arity());
-		f = &footprint_map.only();
-	}
-#endif
+	footprint* const f = &footprint_map.lookup(p);
 	return __unroll_complete_type(p, *f, top);
 } else {
 	cerr << "ERROR: cannot unroll incomplete process type " <<
@@ -3339,7 +3302,7 @@ process_definition::create_complete_type(
 		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* const f = &footprint_map[p];
+	footprint* const f = &footprint_map.lookup(p);
 	return __create_complete_type(p, *f, top);
 } else {
 	cerr << "ERROR: cannot create undefined process " <<

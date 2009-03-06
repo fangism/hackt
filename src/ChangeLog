@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-03-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-04-footprint-02-01-c:
+	  Code clarification: footprint_manager no longer uses operator[], 
+		but explicit lookup/insert methods to make it clear
+		where modification is intended.  Regression tested.
+
+
 2009-03-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-04-footprint-02-01-b:
