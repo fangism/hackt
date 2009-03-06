@@ -10,5 +10,5 @@ mode:
 	on invariant-fail: break
 	on invariant-unknown: warn
 	on assert-fail: fatal
-	on channe-expect-fail: fatal
+	on channel-expect-fail: fatal
 timing: uniform (10)
