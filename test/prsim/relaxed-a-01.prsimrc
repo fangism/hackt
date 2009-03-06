@@ -1,0 +1,13 @@
+# "relaxed-a-01.prsimrc"
+# @haco@ relaxed-a.haco-a
+
+ls .
+what troo
+what falsch
+
+ls troo
+ls falsch
+
+getall troo
+getall falsch
+

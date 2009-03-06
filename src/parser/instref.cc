@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.15.2.1 2009/03/04 23:36:32 fang Exp $
+	$Id: instref.cc,v 1.15.2.2 2009/03/06 22:22:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -265,13 +265,32 @@ parse_global_reference(const string& n, const module& m) {
 	}
 	const state_manager& sm(m.get_state_manager());
 	const footprint& top(m.get_footprint());
-	// is a meta_instance_reference_base
+	// r.inst_ref() is a meta_instance_reference_base
 	return r.inst_ref()->lookup_top_level_reference(sm, top);
 }
 
 //=============================================================================
 /**
+	Convenience function.
+	Maybe make this public...
+ */
+static
+const footprint*
+get_process_footprint(const size_t pid, const module& m) {
+	const state_manager& sm(m.get_state_manager());
+	const global_entry_pool<process_tag>&
+		proc_pool(sm.get_pool<process_tag>());
+	// get process_instance_alias
+	const entity::global_entry<process_tag>& pe(proc_pool[pid]);
+	const footprint* f = pe._frame._footprint;
+	NEVER_NULL(f);
+	return f;
+}
+
+//=============================================================================
+/**
 	Prints reference identity information. 
+	Currently only works for instance references.
 	TODO: check non-instance-references:
 		namespaces, definitions, typedefs, value-references.
 	TODO: print template parameters of complete type
@@ -283,14 +302,39 @@ parse_name_to_what(ostream& o, const string& n, const module& m) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
-	if (!r) {
+	const count_ptr<const entity::meta_instance_reference_base>&
+		mr(r.inst_ref());
+	if (!r || !mr) {
 		return 1;
-	} else {
+	}
+	const size_t dim = mr->dimensions();
+	// handle arrays first
+	if (dim) {
 		o << n << " refers to ";
-		r.inst_ref()->what(o) << " ";
-		r.inst_ref()->dump_type_size(o) << endl;
+		// r.inst_ref() is a meta_instance_reference_base
+		mr->what(o) << " ";
+		mr->dump_type_size(o) << endl;
 		return 0;
 	}
+	// else is scalar
+	const global_indexed_reference gref(parse_global_reference(n, m));
+	// wasteful to parse again, I know...
+	if (!gref.second) {
+		o << "Error resolving instance reference: " << n << endl;
+		return 1;
+	}
+	o << n << " refers to ";
+	mr->what(o) << " ";
+	switch (gref.first) {
+	// for now, only processes have footprints
+	case entity::META_TYPE_PROCESS: {
+		get_process_footprint(gref.second, m)->dump_type(o) << endl;
+		break;
+	}
+	default:
+		mr->dump_type_size(o) << endl;
+	}
+	return 0;
 }
 
 //=============================================================================
@@ -309,6 +353,7 @@ if (n == ".") {
 	// special designator for top-level
 	o << "top-level instances: " << endl;
 	m.get_global_namespace()->dump_for_definitions(o);
+	// TODO: use module's top_footprint
 } else {
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	if (!r || !r.inst_ref()) {
@@ -327,8 +372,18 @@ if (n == ".") {
 				<< n << endl;
 			return 1;
 		}
+		const footprint* f = NULL;
 		o << n << " (type: ";
-		r.inst_ref()->dump_type_size(o) << ") has members: " << endl;
+		switch (gref.first) {
+		case entity::META_TYPE_PROCESS:
+			f = get_process_footprint(gref.second, m);
+			f->dump_type(o);
+			break;
+		default:
+			r.inst_ref()->dump_type_size(o);
+		}
+		o << ") has members: " << endl;
+#if 1
 		const never_ptr<const definition_base>
 			def(r.inst_ref()->get_base_def());
 		NEVER_NULL(def);
@@ -336,6 +391,9 @@ if (n == ".") {
 			mscope(def->get_scopespace());
 		// mscope->dump_instance_members(o) << endl;
 		mscope->dump_for_definitions(o);
+#else
+		// TODO: use footprint* f to list what is actually instantiated
+#endif
 	}
 }
 #if 0

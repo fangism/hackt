@@ -1,0 +1,26 @@
+top-level instances: 
+Instances:
+  falsch = binary<> falsch
+  troo = binary<> troo
+troo refers to process-inst-ref binary<true>
+falsch refers to process-inst-ref binary<false>
+troo (type: binary<true>) has members: 
+Parameters:
+  TF = pbool<> binary::TF
+Instances:
+  x = bool<> binary::x
+  y = bool<> binary::y
+  z = bool<> binary::z
+falsch (type: binary<false>) has members: 
+Parameters:
+  TF = pbool<> binary::TF
+Instances:
+  x = bool<> binary::x
+  y = bool<> binary::y
+  z = bool<> binary::z
+All subnodes of 'troo':
+troo.x : X
+troo.y : X
+All subnodes of 'falsch':
+falsch.x : X
+falsch.z : X

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.39.10.5 2009/03/06 09:32:08 fang Exp $
+	$Id: footprint.cc,v 1.39.10.6 2009/03/06 22:22:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -426,6 +426,14 @@ footprint::~footprint() {
 ostream&
 footprint::what(ostream& o) const {
 	return o << "footprint";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+footprint::dump_type(ostream& o) const {
+	o << owner_def->get_key();
+	param_key.dump(o << '<', expr_dump_context::default_value) << '>';
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
