@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/attribute_common.cc"
-	$Id: attribute_common.cc,v 1.2 2008/11/29 03:24:49 fang Exp $
+	$Id: attribute_common.cc,v 1.3 2009/03/06 20:44:14 cto3 Exp $
  */
 
 #include <iostream>
@@ -51,7 +51,7 @@ check_single_integer(const char* name, const attribute_values_type& v) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 check_single_real(const char* name, const attribute_values_type& v) {
-	if (v.size() != 1 || !v[0].is_a<const preal_const>()) {
+	if (v.size() != 1 || (!v[0].is_a<const preal_const>() && !v[0].is_a<const pint_const>()) ) {
 		cerr << "The \'" << name << "\' attribute requires exactly "
 			"one preal (floating-point) expression argument."
 			<< endl;
