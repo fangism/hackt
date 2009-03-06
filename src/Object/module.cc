@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.38.2.1 2009/03/04 23:36:16 fang Exp $
+ 	$Id: module.cc,v 1.38.2.2 2009/03/06 02:50:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -112,7 +112,11 @@ module::get_footprint(void) const {
 footprint&
 module::get_footprint(void) {
 	// return parent_type::get_footprint(null_module_params);
-	return footprint_map.only();
+	return footprint_map.only(
+#if FOOTPRINT_OWNER_DEF
+		*this
+#endif
+		);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.12.74.3 2009/03/06 00:43:57 fang Exp $
+	$Id: footprint_manager.cc,v 1.12.74.4 2009/03/06 02:50:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -73,11 +73,19 @@ footprint_manager::footprint_manager() :
 /**
 	if 0-dimensions, then initialize with exactly one footprint.  
  */
-footprint_manager::footprint_manager(const size_t N) :
+footprint_manager::footprint_manager(const size_t N
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base& d
+#endif
+		) :
 		parent_type(), _arity(N) {
 	if (!_arity) {
 #if FOOTPRINT_HAS_PARAMS
-		insert(value_type(new footprint(const_param_expr_list())));
+		insert(value_type(new footprint(const_param_expr_list()
+#if FOOTPRINT_OWNER_DEF
+			, d
+#endif
+			)));
 #else
 		parent_type::operator[](key_type());
 #endif
@@ -93,14 +101,22 @@ footprint_manager::~footprint_manager() { }
 	Warning: calling this will always clear the map!
  */
 void
-footprint_manager::set_arity(const size_t a) {
+footprint_manager::set_arity(const size_t a
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base& d
+#endif
+		) {
 	INVARIANT(!size());
 	INVARIANT(!_arity);
 	_arity = a;
 	clear();
 	if (!_arity) {
 #if FOOTPRINT_HAS_PARAMS
-		insert(value_type(new footprint(const_param_expr_list())));
+		insert(value_type(new footprint(const_param_expr_list()
+#if FOOTPRINT_OWNER_DEF
+			, d
+#endif
+			)));
 #else
 		parent_type::operator[](key_type());
 #endif
@@ -208,10 +224,18 @@ if (_arity) {
 		for footprint lookup.  
  */
 footprint_manager::mapped_type&
-footprint_manager::insert(const key_type& k) {
+footprint_manager::insert(const key_type& k
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base& d
+#endif
+		) {
 	INVARIANT(k.size() == _arity);
 #if FOOTPRINT_HAS_PARAMS
-	const footprint_entry temp(new footprint(k));
+	const footprint_entry temp(new footprint(k
+#if FOOTPRINT_OWNER_DEF
+		, d
+#endif
+		));
 	const std::pair<parent_type::const_iterator, bool> i(insert(temp));
 	// if inserted use new value, else use existing member
 	INVARIANT(i.first != parent_type::end());
@@ -230,8 +254,15 @@ footprint_manager::insert(const key_type& k) {
  */
 footprint_manager::mapped_type&
 footprint_manager::lookup(const key_type& k) const {
+#if FOOTPRINT_OWNER_DEF
+	const definition_base* bogus = NULL;
+#endif
 	INVARIANT(k.size() == _arity);
-	const footprint_entry temp(new footprint(k));
+	const footprint_entry temp(new footprint(k
+#if FOOTPRINT_OWNER_DEF
+		, *bogus	// kludge - deref NULL!
+#endif
+		));
 	const parent_type::const_iterator f(find(temp));
 	// if inserted use new value, else use existing member
 	INVARIANT(f != parent_type::end());
@@ -247,11 +278,21 @@ footprint_manager::lookup(const key_type& k) const {
 	\pre this map has zero arity, only contains one footprint.  
  */
 footprint_manager::mapped_type&
-footprint_manager::only(void) {
+footprint_manager::only(
+#if FOOTPRINT_OWNER_DEF
+		const definition_base& d
+#else
+		void
+#endif
+		) {
 	INVARIANT(!_arity);
 	if (!size()) {
 		// create if it doesn't yet exist
-		insert(key_type());
+		insert(key_type()
+#if FOOTPRINT_OWNER_DEF
+			, d
+#endif
+			);
 	}
 #if FOOTPRINT_HAS_PARAMS
 	const footprint_entry& ret(*begin());
@@ -268,12 +309,24 @@ footprint_manager::only(void) {
 	\param k the key is allowed to be NULL
  */
 footprint_manager::mapped_type&
-footprint_manager::insert(const count_ptr<const key_type>& k) {
+footprint_manager::insert(const count_ptr<const key_type>& k
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base& d
+#endif
+		) {
 	if (k) {
 		INVARIANT(k->size() == arity());
-		return insert(*k);
+		return insert(*k
+#if FOOTPRINT_OWNER_DEF
+		, d
+#endif
+		);
 	} else {
-		return only();
+		return only(
+#if FOOTPRINT_OWNER_DEF
+		d
+#endif
+		);
 	}
 }
 
@@ -368,7 +421,11 @@ footprint_manager::write_object_base(
  */
 void
 footprint_manager::load_object_base(
-		const persistent_object_manager& m, istream& i) {
+		const persistent_object_manager& m, istream& i
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base& d
+#endif
+		) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	read_value(i, _arity);
 	size_t s;
@@ -381,7 +438,11 @@ footprint_manager::load_object_base(
 		footprint_entry::ptr_type _f;	// static_cast
 		m.read_pointer(i, _f);
 		NEVER_NULL(_f);
-		_f->load_param_key(m, i);	// partial load only!
+		_f->load_param_key(m, i
+#if FOOTPRINT_OWNER_DEF
+			, d
+#endif
+			);	// partial load only!
 		insert(footprint_entry(_f));
 #if FOOTPRINT_OWNER_DEF
 	// TODO: ...

@@ -5,6 +5,15 @@
 
 2009-03-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-04-footprint-02-02:
+	  Added owner-definition member to footprint, opening the doors
+		to more meaningful queries on footprints.  
+		Object binary unaffected because pointer is
+		reconstructed instead of stored.
+		No regressions.
+	  Remainder of branch will just be cleanup.
+
+
 	* HACKT-00-01-04-main-00-83-04-footprint-02-01-c:
 	  Code clarification: footprint_manager no longer uses operator[], 
 		but explicit lookup/insert methods to make it clear

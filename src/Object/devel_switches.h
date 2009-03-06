@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.52.10.2 2009/03/06 00:43:51 fang Exp $
+	$Id: devel_switches.h,v 1.52.10.3 2009/03/06 02:50:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -99,7 +99,7 @@
 	Is easier to serialize dependence on has-params...
 		though not necessary.
  */
-#define	FOOTPRINT_OWNER_DEF			(0 && FOOTPRINT_HAS_PARAMS)
+#define	FOOTPRINT_OWNER_DEF			(1 && FOOTPRINT_HAS_PARAMS)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

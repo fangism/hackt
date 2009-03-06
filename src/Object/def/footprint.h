@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.25.12.2 2009/03/06 00:43:56 fang Exp $
+	$Id: footprint.h,v 1.25.12.3 2009/03/06 02:50:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -472,7 +472,11 @@ public:
 	write_param_key(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_param_key(const persistent_object_manager&, istream&);
+	load_param_key(const persistent_object_manager&, istream&
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base&
+#endif
+		);
 #endif
 
 private:

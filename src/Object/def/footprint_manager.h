@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.8.74.3 2009/03/06 00:43:58 fang Exp $
+	$Id: footprint_manager.h,v 1.8.74.4 2009/03/06 02:50:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
@@ -23,6 +23,7 @@ namespace entity {
 class footprint;
 struct dump_flags;
 struct expr_dump_context;
+class definition_base;
 using std::istream;
 using std::ostream;
 using util::memory::count_ptr;
@@ -97,7 +98,11 @@ public:
 	footprint_manager();
 
 	explicit
-	footprint_manager(const size_t N);
+	footprint_manager(const size_t N
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base&
+#endif
+		);
 
 	~footprint_manager();
 
@@ -105,7 +110,11 @@ public:
 	arity(void) const { return _arity; }
 
 	void
-	set_arity(const size_t);
+	set_arity(const size_t
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base&
+#endif
+		);
 
 	ostream&
 	dump(ostream&, const dump_flags&) const;
@@ -114,10 +123,18 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	mapped_type&
-	insert(const key_type& k);
+	insert(const key_type& k
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base&
+#endif
+		);
 
 	mapped_type&
-	insert(const count_ptr<const key_type>&);
+	insert(const count_ptr<const key_type>&
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base&
+#endif
+		);
 
 	mapped_type&
 	lookup(const key_type& k) const;
@@ -129,7 +146,13 @@ public:
 	using parent_type::empty;
 
 	mapped_type&
-	only(void);
+	only(
+#if FOOTPRINT_OWNER_DEF
+		const definition_base&
+#else
+		void
+#endif
+		);
 
 	const mapped_type&
 	only(void) const;
@@ -145,7 +168,11 @@ public:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base&
+#endif
+		);
 
 };	// end class footprint_manager
 

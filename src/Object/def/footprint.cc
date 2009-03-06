@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.39.10.2 2009/03/06 00:43:55 fang Exp $
+	$Id: footprint.cc,v 1.39.10.3 2009/03/06 02:50:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -324,7 +324,8 @@ footprint::footprint() :
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
 	prs_footprint(new PRS::footprint), 
-	spec_footprint(new SPEC::footprint) { }
+	spec_footprint(new SPEC::footprint),
+	lock_state(false) { }
 // the other members, don't care, just placeholder ctor before loading object
 #endif
 
@@ -388,7 +389,8 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
 	prs_footprint(new PRS::footprint), 
-	spec_footprint(new SPEC::footprint) { }
+	spec_footprint(new SPEC::footprint),
+	lock_state(false) { }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1004,6 +1006,7 @@ void
 footprint::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+	// don't bother writing owner_def because it will be reconstructed
 	write_value(o, unrolled);
 	write_value(o, created);
 	// reconstruct the map AFTER all collections are loaded
@@ -1060,11 +1063,20 @@ footprint::write_param_key(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Partially load first: param key is critical to parent map.
+	Also load the owner definition reference while we're at it.
  */
 void
-footprint::load_param_key(const persistent_object_manager& m, istream& i) {
+footprint::load_param_key(const persistent_object_manager& m, istream& i
+#if FOOTPRINT_OWNER_DEF
+		, const definition_base& d
+#endif
+		) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	const_cast<const_param_expr_list&>(param_key).load_object(m, i);
+#if FOOTPRINT_OWNER_DEF
+	const_cast<never_ptr<const definition_base>&>(owner_def) =
+		never_ptr<const definition_base>(&d);
+#endif
 }
 #endif
 
@@ -1078,6 +1090,7 @@ footprint::load_param_key(const persistent_object_manager& m, istream& i) {
 void
 footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
+	// don't bother reading owner_def because it will be reconstructed
 	read_value(i, unrolled);
 	read_value(i, created);
 	// load all collections first, THEN reconstruct the local map
@@ -1119,6 +1132,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	// alternative: re-construct event footprint upon loading?
 	chp_event_footprint.load_object_base(m, i);
 	spec_footprint->load_object_base(m, i);
+	lock_state = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
