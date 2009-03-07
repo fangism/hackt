@@ -5,6 +5,11 @@
 
 2009-03-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-04-footprint-02-05:
+	  Cleaned up parser/instref.cc.
+	  End of branch, merge to trunk.
+
+
 	* HACKT-00-01-04-main-00-83-04-footprint-02-04:
 	  parser/instref.cc: listing members now only shows names
 		of members that are actually instantiated.

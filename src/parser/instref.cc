@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.15.2.3 2009/03/07 02:16:24 fang Exp $
+	$Id: instref.cc,v 1.15.2.4 2009/03/07 02:50:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -572,24 +572,6 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 
 //=============================================================================
 /**
-	Define to 1 to use footprint to complete instead of scopespace.
-	This results in more precise list of instantiated members. 
- */
-#define	COMPLETE_WITH_FOOTPRINT		1
-
-#if !COMPLETE_WITH_FOOTPRINT
-/**
-	Predicate to filter out non-instances for tab-completion.  
- */
-static
-bool
-pair_is_instance(const scopespace::const_map_iterator::value_type& p) {
-	return p.second.is_a<const instance_placeholder_base>();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	\param matches is the return array, should start empty, but need not be
 	\returns an array of candidate strings for instances.
 	Now returns only names of instances that were instantiated!
@@ -601,29 +583,17 @@ complete_instance_names(const char* _text, const module& m,
 	const string text(_text);
 	typedef	scopespace::const_map_iterator	const_iterator;
 	string parent, child;
-#if COMPLETE_WITH_FOOTPRINT
 	const footprint* f = NULL;
-#else
-	never_ptr<const scopespace> gns;
-#endif
 	// if text is blank, return items from "ls ." (top-level)
 if (!_text[0]) {
-#if COMPLETE_WITH_FOOTPRINT
 	f = &m.get_footprint();
-#else
-	gns = m.get_global_namespace();
-#endif
 } else {
 // does string contain a '.'?  If so, cut text into two parts.
 // else need to do partial parsing for context
 // if text ends with '.' return list of members of the parent reference
 	size_t dot = text.find_last_of('.');
 	if (dot == string::npos) {	// not found
-#if COMPLETE_WITH_FOOTPRINT
 		f = &m.get_footprint();
-#else
-		gns = m.get_global_namespace();
-#endif
 		child = text;
 	} else {			// split up string
 		typedef	inst_ref_expr::meta_return_type	checked_ref_type;
@@ -641,38 +611,19 @@ if (!_text[0]) {
 			gref(r.inst_ref()->lookup_top_level_reference(
 				m.get_state_manager(), m.get_footprint()));
 		if (!gref.second) { return; }
-#if COMPLETE_WITH_FOOTPRINT
 		if (gref.first != entity::META_TYPE_PROCESS) { return; }
 		// until non-process types have subinstances...
 		f = get_process_footprint(gref.second, m);
-#else
-			// no error message
-		const never_ptr<const definition_base>
-			def(r.inst_ref()->get_base_def());
-		NEVER_NULL(def);
-		gns = def->get_scopespace();
-		// mscope->dump_instance_members(o) << endl;
-#endif
 	}
 }
-	// transform_if
 	vector<string> temp;
-#if COMPLETE_WITH_FOOTPRINT
 	f->export_instance_names(temp);
-#else
-	const_iterator i(gns->id_map_begin()), e(gns->id_map_end());
-	util::transform_if(i, e, back_inserter(temp), &pair_is_instance, 
-		util::member_select_ref(&const_iterator::value_type::first));
-#endif
 	// filter out with child string
 	// TODO: handle array indices
 	// may need to prepend parent '.' to matched names...
 	const string root(parent.size() ? parent + '.' : "");
-/**
-	Temporary work-around for completion bug, where I'd like to
-	perform only partial word (split) completion on the tail.
- */
-#define	PREPEND_ROOT		1
+	// caller function will take care of custom display
+	// function to omit the common prefix in the match display.
 	if (child.size()) {
 		// use child string to bound range
 		// INVARIANT: temp is already sorted because it
@@ -682,22 +633,13 @@ if (!_text[0]) {
 		const vector<string>::const_iterator
 			f(lower_bound(temp.begin(), temp.end(), child)),
 			l(lower_bound(temp.begin(), temp.end(), child2));
-#if PREPEND_ROOT
 		transform(f, l, back_inserter(matches), 
 			bind1st(std::plus<string>(), root));
-#else
-		copy(f, l, back_inserter(matches));
-#endif
 	} else {
 		// all matches
-#if PREPEND_ROOT
 		transform(temp.begin(), temp.end(), back_inserter(matches), 
 			bind1st(std::plus<string>(), root));
-#else
-		temp.swap(matches);
-#endif
 	}
-#undef	PREPEND_ROOT
 }
 
 //=============================================================================
