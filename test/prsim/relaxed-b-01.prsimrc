@@ -1,0 +1,21 @@
+# "relaxed-b-01.hac"
+# @haco@ relaxed-b.haco-a
+
+what S
+what S[1]
+ls S[1]
+
+what S[0].bar
+what S[0].bar[0]
+ls S[0].bar[0]
+
+what S[0].bar[0].troo
+what S[0].bar[0].troo[0]
+ls S[0].bar[0].troo[0]
+
+what S[0].bar[1].falsch
+what S[0].bar[1].falsch[1]
+ls S[0].bar[1].falsch[1]
+
+# this test is also god for testing tab-completion on instantiated names
+

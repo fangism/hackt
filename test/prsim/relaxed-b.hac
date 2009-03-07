@@ -1,0 +1,26 @@
+// "relaxed-b.hac"
+// testing 'what' and 'ls' command on relaxed types
+
+template <><pbool TF>
+defproc binary() {
+bool x;
+[TF ->
+bool y;
+[] else ->
+bool z;
+]
+}
+
+template <pint K><pint L>
+defproc foo() {
+binary troo<true>[K];
+binary falsch<false>[L];
+}
+
+defproc snarf() {
+foo<2> bar<3>[2];
+foo<3> baz<2>[2];
+}
+
+snarf S[2];
+

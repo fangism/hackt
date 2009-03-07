@@ -5,6 +5,17 @@
 
 2009-03-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-04-footprint-02-04:
+	  parser/instref.cc: listing members now only shows names
+		of members that are actually instantiated.
+		This affects prsim's 'ls' command.
+		Test cases added and minor updates.
+	  tab-completion now only reports as candidates names of
+		instances that were actually instantiated, using
+		the process's footprint instead of scopespace for names.
+	  Finish branch with some minor cleanup.
+
+
 	* HACKT-00-01-04-main-00-83-04-footprint-02-03:
 	  parser/instref.cc: parse_name_to_what(), parse_name_to_members(),
 		now print a process's complete type where applicable.

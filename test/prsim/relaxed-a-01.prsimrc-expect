@@ -6,18 +6,16 @@ troo refers to process-inst-ref binary<true>
 falsch refers to process-inst-ref binary<false>
 troo (type: binary<true>) has members: 
 Parameters:
-  TF = pbool<> binary::TF
+  TF = pbool
 Instances:
-  x = bool<> binary::x
-  y = bool<> binary::y
-  z = bool<> binary::z
+  x = bool
+  y = bool
 falsch (type: binary<false>) has members: 
 Parameters:
-  TF = pbool<> binary::TF
+  TF = pbool
 Instances:
-  x = bool<> binary::x
-  y = bool<> binary::y
-  z = bool<> binary::z
+  x = bool
+  z = bool
 All subnodes of 'troo':
 troo.x : X
 troo.y : X

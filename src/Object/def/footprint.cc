@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.39.10.6 2009/03/06 22:22:13 fang Exp $
+	$Id: footprint.cc,v 1.39.10.7 2009/03/07 02:16:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -489,6 +489,87 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 	}	// end if is_created
 	}	// end if collection_map is not empty
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Suitable for listing members that were actually instantiated, 
+	as opposed to those names appearing in the scopespace.
+ */
+ostream&
+footprint::dump_member_list(ostream& o) const {
+	typedef	vector<never_ptr<const physical_instance_collection> >
+		instance_list_type;
+	typedef	vector<never_ptr<const param_value_collection> >
+		value_list_type;
+	value_list_type value_list;
+	instance_list_type instance_list;
+	const_instance_map_iterator
+		i(instance_collection_map.begin()),
+		e(instance_collection_map.end());
+	// sift: want partition-like algorithm (not in-place)
+	for ( ; i!=e; ++i) {
+		const instance_collection_ptr_type p((*this)[i->second]);
+		NEVER_NULL(p);
+		const never_ptr<const physical_instance_collection>
+			pi(p.is_a<const physical_instance_collection>());
+		if (pi) {
+			instance_list.push_back(pi);
+		} else {
+			const never_ptr<const param_value_collection>
+				pv(p.is_a<const param_value_collection>());
+			NEVER_NULL(pv);
+			value_list.push_back(pv);
+		}
+	}
+if (value_list.size()) {
+	o << auto_indent << "Parameters:" << endl;
+	value_list_type::const_iterator
+		pi(value_list.begin()), pe(value_list.end());
+	INDENT_SECTION(o);
+	for ( ; pi != pe; ++pi) {
+		o << auto_indent << (*pi)->get_footprint_key() << " = ";
+		(*pi)->type_dump(o);
+		const size_t d = (*pi)->get_dimensions();
+		if (d) o << '^' << d;
+		o << endl;
+	}
+}
+if (instance_list.size()) {
+	o << auto_indent << "Instances:" << endl;
+	instance_list_type::const_iterator
+		pi(instance_list.begin()), pe(instance_list.end());
+	INDENT_SECTION(o);
+	for ( ; pi != pe; ++pi) {
+		o << auto_indent << (*pi)->get_footprint_key() << " = ";
+		(*pi)->type_dump(o);
+		const size_t d = (*pi)->get_dimensions();
+		if (d) o << '^' << d;
+		o << endl;
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just collect list of local names of instantiated things, 
+	should be weak-subset of instance names in corresponding scopespace.
+ */
+void
+footprint::export_instance_names(vector<string>& v) const {
+	const_instance_map_iterator
+		i(instance_collection_map.begin()),
+		e(instance_collection_map.end());
+	for ( ; i!=e; ++i) {
+		const instance_collection_ptr_type p((*this)[i->second]);
+		NEVER_NULL(p);
+		const never_ptr<const physical_instance_collection>
+			pi(p.is_a<const physical_instance_collection>());
+		if (pi) {
+			v.push_back(i->first);
+		}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -11,3 +11,5 @@ ls falsch
 getall troo
 getall falsch
 
+# this test is also god for testing tab-completion on instantiated names
+

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.71.2.1 2009/03/06 22:22:19 fang Exp $
+#	$Id: Makefile.am,v 1.71.2.2 2009/03/07 02:16:25 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -58,7 +58,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	after_min_max after_min_max-bad \
 	non-CMOS-a non-CMOS-b \
 	always_random-a \
-	relaxed-a \
+	relaxed-a relaxed-b \
 	completion_test
 
 # TODO: more cross-coupled test cases
@@ -74,6 +74,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	repeat-01 \
 	default-mode \
 	relaxed-a-01 \
+	relaxed-b-01 \
 	getlocal-01 getlocal-02 getlocal-03 \
 	seed48-01 seed48-02 seed48-03 \
 	celem-01 celem-02 celem-03 celem-04 \

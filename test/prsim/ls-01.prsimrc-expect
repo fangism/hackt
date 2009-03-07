@@ -8,10 +8,10 @@ Instances:
 a (type: bool<>) has members: 
 I (type: inv<>) has members: 
 Instances:
-  a = bool<> inv::a
-  b = bool<> inv::b
+  a = bool
+  b = bool
 J (type: inv<>) has members: 
 Instances:
-  a = bool<> inv::a
-  b = bool<> inv::b
+  a = bool
+  b = bool
 I.a (type: bool<>) has members: 
