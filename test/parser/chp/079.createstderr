@@ -21,16 +21,16 @@ Persistent Object Manager text dump:
 	14	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	308
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	308
+	18	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	19	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	25	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	308
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	308
+	26	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	27	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24

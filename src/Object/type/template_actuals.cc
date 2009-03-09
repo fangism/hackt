@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.14 2006/10/18 21:38:51 fang Exp $
+	$Id: template_actuals.cc,v 1.15 2009/03/09 07:30:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -294,7 +294,8 @@ template_actuals::transform_template_actuals(const this_type& a,
 		const template_formals_manager& m) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(a.is_constant());
-	footprint f;	// temporary footprint for unroll-resolving
+	// temporary footprint for unroll-resolving
+	DECLARE_TEMPORARY_FOOTPRINT(f);
 	const unroll_context c(&f, &f);
 	const good_bool b(m.unroll_formal_parameters(c, a));
 	INVARIANT(b.good);

@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.92 2009/02/23 09:11:33 fang Exp $
+#	$Id: Make.test-tail,v 1.93 2009/03/09 07:31:07 fang Exp $
 
 # our collection of test programs/scripts/commands
 HACKT_EXE = $(top_builddir)/src/hackt
@@ -22,10 +22,10 @@ HACKT_PRSIM_EXE = $(top_builddir)/src/hacprsim
 HACKT_CHPSIM_EXE = $(top_builddir)/src/hacchpsim
 
 # guile based tests will need a modified environment, see Make.test-guile
-# HACKT_GUILE_EXE = $(top_builddir)/src/hacguile
-HACKT_GUILE_EXE = $(GUILE) -l $(top_srcdir)/src/scm/hacguile.scm --
-# HACKT_CHPSIM_GUILE_EXE = $(top_builddir)/src/hacchpsimguile
-HACKT_CHPSIM_GUILE_EXE = $(GUILE) -l $(top_srcdir)/src/scm/hacchpsimguile.scm --
+# -q flag inhibits loading of user's ~/.guile init file
+SCM_SRCDIR = $(top_srcdir)/src/scm
+HACKT_GUILE_EXE = $(GUILE) -q -l $(SCM_SRCDIR)/hacguile.scm --
+HACKT_CHPSIM_GUILE_EXE = $(GUILE) -q -l $(SCM_SRCDIR)/hacchpsimguile.scm --
 
 # install-time only test scripts and executables
 INSTALLED_HACGUILE = hacguile

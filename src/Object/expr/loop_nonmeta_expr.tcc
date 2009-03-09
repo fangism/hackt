@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/loop_nonmeta_expr.tcc"
-	$Id: loop_nonmeta_expr.tcc,v 1.3 2007/04/15 05:52:16 fang Exp $
+	$Id: loop_nonmeta_expr.tcc,v 1.4 2009/03/09 07:30:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_LOOP_NONMETA_EXPR_TCC__
@@ -132,7 +132,7 @@ loop_nonmeta_expr<E>::unroll_resolve_copy(const unroll_context& c,
 		return return_type(NULL);
 	}
 
-	footprint f;
+	DECLARE_TEMPORARY_FOOTPRINT(f);
 	const never_ptr<pint_scalar> var(this->initialize_footprint(f));
 	pint_value_type& p(var->get_instance().value);
 	const unroll_context cc(&f, c);

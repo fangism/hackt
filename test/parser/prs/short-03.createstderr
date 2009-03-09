@@ -49,10 +49,10 @@ Persistent Object Manager text dump:
 	45	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	460
-	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	51	##ADDR##	footprnt	0	#HEAD#	#TAIL#	578
+	48	##ADDR##	footprnt	0	#HEAD#	#TAIL#	460
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	578
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	52	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20

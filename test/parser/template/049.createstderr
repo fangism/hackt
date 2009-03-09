@@ -11,11 +11,11 @@ Persistent Object Manager text dump:
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
-	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

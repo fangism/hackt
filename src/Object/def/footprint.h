@@ -1,18 +1,19 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.25 2008/03/17 23:02:23 fang Exp $
+	$Id: footprint.h,v 1.26 2009/03/09 07:30:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_H__
 
 #include <iosfwd>
+#include "Object/devel_switches.h"
 #include "Object/def/footprint_base.h"
 #include "Object/inst/port_alias_tracker.h"
 // #include "Object/inst/alias_visitee.h"
 #include "Object/inst/collection_index_entry.h"
-#include "Object/devel_switches.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "Object/lang/CHP_footprint.h"
 
 #include "util/boolean_types.h"
@@ -21,6 +22,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/persistent.h"
 #include "util/memory/chunk_map_pool_fwd.h"
+
 
 namespace HAC {
 class cflat_options;
@@ -46,6 +48,12 @@ using std::string;
 using util::good_bool;
 using util::memory::count_ptr;
 using util::memory::excl_ptr;
+
+// use this explicity to construct a default temporary footprint
+struct temp_footprint_tag_type { };
+extern const temp_footprint_tag_type	temp_footprint_tag;
+
+#define	DECLARE_TEMPORARY_FOOTPRINT(f)	entity::footprint f(temp_footprint_tag)
 
 //=============================================================================
 /**
@@ -107,6 +115,9 @@ private:
 		see NOTES:2005-08-20.
 		BTW, using count_ptrs for ease of copy-constructibility.  
 		Q: do we need a separate port_formals_manager?
+		NOTE: string key can possibly contain namespace scoping!
+			... until we forbid instance declarations
+			outside the global namespace at the top-level.
 	 */
 	typedef	std::map<string, collection_map_entry_type>
 					instance_collection_map_type;
@@ -124,6 +135,22 @@ private:
 	typedef	footprint_base<int_tag>::instance_pool_type	int_instance_pool_type;
 	typedef	footprint_base<bool_tag>::instance_pool_type	bool_instance_pool_type;
 private:
+	/**
+		We now keep template actuals here instead of
+		only in the footprint_manager's map entry.
+	 */
+	const const_param_expr_list		param_key;
+	/**
+		Back-reference to owning definition.
+		This pointer is not written to persistent object, 
+		it should be reconstructed by the owner, during load_object.
+		Could deduce this from local parameters' and ports'
+		but that would fail for empty processes.  
+		This wants to be private with only certain definition
+		classes as friends, since no one else has any business
+		modifying this.  
+	 */
+	const never_ptr<const definition_base>	owner_def;
 	// state information
 	// a place to unroll instances and connections
 	// a place to create state pseudo-footprint
@@ -230,10 +257,25 @@ public:
 
 		create_lock&
 		operator = (const create_lock&);
-	};
+	} __ATTRIBUTE_UNUSED__ ;
 public:
+	explicit
+	footprint(const temp_footprint_tag_type&);
+
+	explicit	// allow implicit construction?
+	footprint(const const_param_expr_list&, const definition_base&);
+
+private:	// only for reconstruction
 	footprint();
+	FRIEND_PERSISTENT_TRAITS
+public:
 	~footprint();
+
+	const const_param_expr_list&
+	get_param_key(void) const { return param_key; }
+
+	never_ptr<const definition_base>
+	get_owner_def(void) const { return owner_def; }
 
 	size_t
 	map_size(void) const { return instance_collection_map.size(); }
@@ -261,11 +303,20 @@ public:
 	what(ostream&) const;
 
 	ostream&
+	dump_type(ostream&) const;
+
+	ostream&
 	dump(ostream&) const;
 
 	ostream&
 	dump_with_collections(ostream&, const dump_flags&, 
 		const expr_dump_context&) const;
+
+	ostream&
+	dump_member_list(ostream&) const;
+
+	void
+	export_instance_names(vector<string>&) const;
 
 	const port_alias_tracker&
 	get_port_alias_tracker(void) const {
@@ -400,6 +451,13 @@ public:
 
 	void
 	load_object(const persistent_object_manager&, istream&);
+
+	void
+	write_param_key(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_param_key(const persistent_object_manager&, istream&,
+		const definition_base&);
 
 private:
 	/**

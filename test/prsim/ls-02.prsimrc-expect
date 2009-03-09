@@ -3,23 +3,23 @@ Instances:
   poo = ick<> poo
 poo (type: ick<>) has members: 
 Instances:
-  p = bar<> ick::p
-  q = bar<> ick::q
+  p = process bar<>
+  q = process bar<>
 poo.p (type: bar<>) has members: 
 Instances:
-  x = foo<> bar::x
-  y = foo<> bar::y
+  x = process foo<>
+  y = process foo<>
 poo.q (type: bar<>) has members: 
 Instances:
-  x = foo<> bar::x
-  y = foo<> bar::y
+  x = process foo<>
+  y = process foo<>
 poo.q.x (type: foo<>) has members: 
 Instances:
-  a = bool<> foo::a
-  b = bool<> foo::b
+  a = bool
+  b = bool
 poo.q.y (type: foo<>) has members: 
 Instances:
-  a = bool<> foo::a
-  b = bool<> foo::b
+  a = bool
+  b = bool
 poo.q.y.a (type: bool<>) has members: 
 poo.q.y.b (type: bool<>) has members: 

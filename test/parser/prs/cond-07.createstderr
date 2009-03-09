@@ -35,10 +35,10 @@ Persistent Object Manager text dump:
 	31	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	303
-	36	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	425
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	303
+	35	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	425
+	37	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	20

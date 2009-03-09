@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.32 2008/11/26 01:57:46 fang Exp $
+	$Id: PRS.cc,v 1.33 2009/03/09 07:30:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -1019,7 +1019,7 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	// create context chain of lookup
 	//	using unroll_context's template_formal/actual mechanism.  
 	// copied from loop_scope::unroll()
-	entity::footprint f;
+	DECLARE_TEMPORARY_FOOTPRINT(f);
 	const never_ptr<pint_scalar>
 		var(initialize_footprint(f));
 	// create a temporary by unrolling the placeholder 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.39 2008/11/12 02:59:57 fang Exp $
+	$Id: footprint.cc,v 1.40 2009/03/09 07:30:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -305,6 +305,11 @@ footprint::create_lock::create_lock(footprint& f) : fp(f) {
 //=============================================================================
 // class footprint method definitions
 
+// for dummy construction
+const temp_footprint_tag_type
+temp_footprint_tag = temp_footprint_tag_type();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint::footprint() :
 	footprint_base<process_tag>(), 
 	footprint_base<channel_tag>(), 
@@ -317,6 +322,27 @@ footprint::footprint() :
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
+	prs_footprint(new PRS::footprint), 
+	spec_footprint(new SPEC::footprint),
+	lock_state(false) { }
+// the other members, don't care, just placeholder ctor before loading object
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+footprint::footprint(const const_param_expr_list& p,
+	const definition_base& d) :
+	footprint_base<process_tag>(), 
+	footprint_base<channel_tag>(), 
+#if ENABLE_DATASTRUCTS
+	footprint_base<datastruct_tag>(), 
+#endif
+	footprint_base<enum_tag>(), 
+	footprint_base<int_tag>(), 
+	footprint_base<bool_tag>(), 
+	value_footprint_base<pbool_tag>(), 
+	value_footprint_base<pint_tag>(), 
+	value_footprint_base<preal_tag>(), 
+	param_key(p), 
+	owner_def(&d),
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
@@ -334,8 +360,29 @@ footprint::footprint() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// default construct every member! we don't care...
+// except that we need them for dumping... arg!
+// WISH: delegating ctors (C++0x)
+footprint::footprint(const temp_footprint_tag_type&) :
+	footprint_base<process_tag>(), 
+	footprint_base<channel_tag>(), 
+#if ENABLE_DATASTRUCTS
+	footprint_base<datastruct_tag>(), 
+#endif
+	footprint_base<enum_tag>(), 
+	footprint_base<int_tag>(), 
+	footprint_base<bool_tag>(), 
+	value_footprint_base<pbool_tag>(), 
+	value_footprint_base<pint_tag>(), 
+	value_footprint_base<preal_tag>(), 
+	prs_footprint(new PRS::footprint), 
+	spec_footprint(new SPEC::footprint),
+	lock_state(false) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This doesn't actually copy!
+	Is just another default ctor.
 	\pre source footprint must be default constructed (empty).
  */
 footprint::footprint(const footprint& t) :
@@ -351,6 +398,8 @@ footprint::footprint(const footprint& t) :
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
+	param_key(t.param_key), 
+	owner_def(t.owner_def),
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
@@ -381,6 +430,14 @@ footprint::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+footprint::dump_type(ostream& o) const {
+	o << owner_def->get_key();
+	param_key.dump(o << '<', expr_dump_context::default_value) << '>';
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
 footprint::dump(ostream& o) const {
 	// unrolled? created?
 	// instance_collection_map ?
@@ -404,7 +461,6 @@ ostream&
 footprint::dump_with_collections(ostream& o, const dump_flags& df, 
 		const expr_dump_context& dc) const {
 	if (!instance_collection_map.empty()) {
-		// NOTE: hash_map is NOT sorted
 		const_instance_map_iterator
 			i(instance_collection_map.begin());
 		const const_instance_map_iterator
@@ -433,6 +489,87 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 	}	// end if is_created
 	}	// end if collection_map is not empty
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Suitable for listing members that were actually instantiated, 
+	as opposed to those names appearing in the scopespace.
+ */
+ostream&
+footprint::dump_member_list(ostream& o) const {
+	typedef	vector<never_ptr<const physical_instance_collection> >
+		instance_list_type;
+	typedef	vector<never_ptr<const param_value_collection> >
+		value_list_type;
+	value_list_type value_list;
+	instance_list_type instance_list;
+	const_instance_map_iterator
+		i(instance_collection_map.begin()),
+		e(instance_collection_map.end());
+	// sift: want partition-like algorithm (not in-place)
+	for ( ; i!=e; ++i) {
+		const instance_collection_ptr_type p((*this)[i->second]);
+		NEVER_NULL(p);
+		const never_ptr<const physical_instance_collection>
+			pi(p.is_a<const physical_instance_collection>());
+		if (pi) {
+			instance_list.push_back(pi);
+		} else {
+			const never_ptr<const param_value_collection>
+				pv(p.is_a<const param_value_collection>());
+			NEVER_NULL(pv);
+			value_list.push_back(pv);
+		}
+	}
+if (value_list.size()) {
+	o << auto_indent << "Parameters:" << endl;
+	value_list_type::const_iterator
+		pi(value_list.begin()), pe(value_list.end());
+	INDENT_SECTION(o);
+	for ( ; pi != pe; ++pi) {
+		o << auto_indent << (*pi)->get_footprint_key() << " = ";
+		(*pi)->type_dump(o);
+		const size_t d = (*pi)->get_dimensions();
+		if (d) o << '^' << d;
+		o << endl;
+	}
+}
+if (instance_list.size()) {
+	o << auto_indent << "Instances:" << endl;
+	instance_list_type::const_iterator
+		pi(instance_list.begin()), pe(instance_list.end());
+	INDENT_SECTION(o);
+	for ( ; pi != pe; ++pi) {
+		o << auto_indent << (*pi)->get_footprint_key() << " = ";
+		(*pi)->type_dump(o);
+		const size_t d = (*pi)->get_dimensions();
+		if (d) o << '^' << d;
+		o << endl;
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just collect list of local names of instantiated things, 
+	should be weak-subset of instance names in corresponding scopespace.
+ */
+void
+footprint::export_instance_names(vector<string>& v) const {
+	const_instance_map_iterator
+		i(instance_collection_map.begin()),
+		e(instance_collection_map.end());
+	for ( ; i!=e; ++i) {
+		const instance_collection_ptr_type p((*this)[i->second]);
+		NEVER_NULL(p);
+		const never_ptr<const physical_instance_collection>
+			pi(p.is_a<const physical_instance_collection>());
+		if (pi) {
+			v.push_back(i->first);
+		}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -894,6 +1031,7 @@ footprint::read_pointer(istream& i) const {
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+	param_key.collect_transient_info_base(m);
 	// no need to visit def_back_ref
 	footprint_base<process_tag>::collect_transient_info_base(m);
 	footprint_base<channel_tag>::collect_transient_info_base(m);
@@ -937,6 +1075,7 @@ void
 footprint::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+	// don't bother writing owner_def because it will be reconstructed
 	write_value(o, unrolled);
 	write_value(o, created);
 	// reconstruct the map AFTER all collections are loaded
@@ -982,6 +1121,28 @@ footprint::write_object(const persistent_object_manager& m, ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::write_param_key(const persistent_object_manager& m,
+		ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	param_key.write_object(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partially load first: param key is critical to parent map.
+	Also load the owner definition reference while we're at it.
+ */
+void
+footprint::load_param_key(const persistent_object_manager& m, istream& i,
+		const definition_base& d) {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	const_cast<const_param_expr_list&>(param_key).load_object(m, i);
+	const_cast<never_ptr<const definition_base>&>(owner_def) =
+		never_ptr<const definition_base>(&d);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	CRITICAL: should allocate all pools first before loading
 	collections because subinstance collections (of aliases) reference
@@ -991,6 +1152,7 @@ footprint::write_object(const persistent_object_manager& m, ostream& o) const {
 void
 footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
+	// don't bother reading owner_def because it will be reconstructed
 	read_value(i, unrolled);
 	read_value(i, created);
 	// load all collections first, THEN reconstruct the local map
@@ -1032,6 +1194,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	// alternative: re-construct event footprint upon loading?
 	chp_event_footprint.load_object_base(m, i);
 	spec_footprint->load_object_base(m, i);
+	lock_state = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

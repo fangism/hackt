@@ -22,12 +22,12 @@ Persistent Object Manager text dump:
 	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	37
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20

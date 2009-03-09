@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.13 2006/11/07 06:34:42 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.14 2009/03/09 07:30:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -15,6 +15,7 @@
 #include "Object/type/canonical_type.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 #if	ENABLE_STACKTRACE
 #include <iostream>
@@ -93,17 +94,7 @@ public:
 
 	good_bool
 	complete_type_definition_footprint(
-			const count_ptr<const const_param_expr_list>& r) const {
-		if (this->is_relaxed_type() && r) {
-			const instance_collection_parameter_type
-				ct(this->type_parameter, r);
-			const footprint fake_top;
-			// don't have top-level footprint handy, need it?
-			return ct.unroll_definition_footprint(fake_top);
-		} else {
-			return good_bool(true);
-		}
-	}
+		const count_ptr<const const_param_expr_list>& r) const;
 
 	bool
 	is_complete_type(void) const;

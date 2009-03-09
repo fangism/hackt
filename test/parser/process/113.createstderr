@@ -30,9 +30,9 @@ Persistent Object Manager text dump:
 	26	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

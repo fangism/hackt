@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.38 2009/02/16 01:38:27 fang Exp $
+ 	$Id: module.cc,v 1.39 2009/03/09 07:30:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -112,7 +112,7 @@ module::get_footprint(void) const {
 footprint&
 module::get_footprint(void) {
 	// return parent_type::get_footprint(null_module_params);
-	return footprint_map.only();
+	return footprint_map.only(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -533,7 +533,7 @@ void
 module::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	STACKTRACE_PERSISTENT("module::collect_transient_info()");
+	STACKTRACE_PERSISTENT_VERBOSE;
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
 	parent_type::collect_transient_info_base(m);
@@ -546,7 +546,7 @@ if (!m.register_transient_object(this,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 module::write_object(const persistent_object_manager& m, ostream& f) const {
-	STACKTRACE_PERSISTENT("module::write_object()");
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer(f, global_namespace);
 	parent_type::write_object_base(m, f);
 	const footprint& _footprint(get_footprint());
@@ -557,7 +557,7 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 module::load_object(const persistent_object_manager& m, istream& f) {
-	STACKTRACE_PERSISTENT("module::load_object()");
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer(f, global_namespace);
 //	global_namespace->load_object(m);	// not necessary
 	parent_type::load_object_base(m, f);

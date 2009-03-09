@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.tcc,v 1.10 2006/10/18 01:19:29 fang Exp $
+	$Id: general_collection_type_manager.tcc,v 1.11 2009/03/09 07:30:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_TCC__
@@ -9,6 +9,7 @@
 
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/type/canonical_type.h"	// tcc later
+#include "Object/def/footprint.h"
 #include <iostream>
 #include "util/persistent_object_manager.h"
 
@@ -39,6 +40,23 @@ struct GENERAL_COLLECTION_TYPE_MANAGER_CLASS::dumper {
 		return os;
 	}
 };	// end struct dumper
+
+
+GENERAL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
+good_bool
+GENERAL_COLLECTION_TYPE_MANAGER_CLASS::complete_type_definition_footprint(
+		const count_ptr<const const_param_expr_list>& r) const {
+	if (this->is_relaxed_type() && r) {
+		const instance_collection_parameter_type
+			ct(this->type_parameter, r);
+		// param r doesn't belong in temporary footprint
+		const DECLARE_TEMPORARY_FOOTPRINT(fake_top);
+		// don't have top-level footprint handy, need it?
+		return ct.unroll_definition_footprint(fake_top);
+	} else {
+		return good_bool(true);
+	}
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 GENERAL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE

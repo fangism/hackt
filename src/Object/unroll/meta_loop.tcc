@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop.tcc"
-	$Id: meta_loop.tcc,v 1.2 2008/03/17 23:02:39 fang Exp $
+	$Id: meta_loop.tcc,v 1.3 2009/03/09 07:31:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_TCC__
@@ -84,7 +84,7 @@ meta_loop<T>::unroll(const T& mc, const unroll_context& c,
 	// create context chain of lookup
 	//	using unroll_context's template_formal/actual mechanism.  
 	// copied from loop_scope::unroll()
-	entity::footprint f;
+	DECLARE_TEMPORARY_FOOTPRINT(f);
 	const never_ptr<pint_scalar>
 		var(mc.initialize_footprint(f));
 	// create a temporary by unrolling the placeholder 

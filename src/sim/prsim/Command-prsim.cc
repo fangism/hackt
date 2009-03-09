@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.43 2009/02/28 01:20:45 fang Exp $
+	$Id: Command-prsim.cc,v 1.44 2009/03/09 07:31:03 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1994,7 +1994,8 @@ Fanin::usage(ostream& o) {
 @texinfo cmd/fanin-get.texi
 @deffn Command fanin-get node
 Print all production rules that can fire @var{NODE}.  
-Also prints current values of all expression literals.  
+Also prints current values of all expression literals as 'node:val'
+and subexpressions as '(expr)<val>'.  
 @end deffn
 @end texinfo
 ***/
@@ -2025,9 +2026,10 @@ if (a.size() != 2) {
 void
 FaninGet::usage(ostream& o) {
 	o << "fanin-get <node>" << endl;
-	o << "print all rules and expressions that can affect this node, "
-		<< endl
-	<< "also shows current values of expression literals."
+	o <<
+"print all rules and expressions that can affect this node, also shows\n"
+"current values of expression literals.  Nodes are formatted 'node:val',\n"
+"and expressions are formatted '(expr)<val>'."
 		<< endl;
 }
 
@@ -2074,7 +2076,8 @@ Fanout::usage(ostream& o) {
 @texinfo cmd/fanout-get.texi
 @deffn Command fanout-get node
 Print all production rules that @var{NODE} participates in.  
-Also prints current values of all expression literals.  
+Also prints current values of all expression literals as 'node:val'
+and subexpressions as '(expr)<val>'.  
 @end deffn
 @end texinfo
 ***/
@@ -4251,7 +4254,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Invariants, "invariants", info,
 	"print invariants belonging to a process or node")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(InvariantsVerbose, 
 	"invariants-verbose", info, 
-	"print invariants belonging to a process with values")
+	"print invariants belonging to process with values")
 
 /***
 @texinfo cmd/allinvariants.texi
@@ -4267,7 +4270,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllInvariants, "allinvariants", info,
 	"print ALL invariants being simulated")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllInvariantsVerbose, 
 	"allinvariants-verbose", info, 
-	"print ALL invariants being simulated with values")
+	"print ALL invariants with values")
 
 static
 int

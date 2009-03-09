@@ -1,0 +1,16 @@
+// nested namespace with same name, should this be allowed?
+// reduced from "005.hac"
+
+// caught a bug while re-working footprint_map implementation:
+// using footprints' instance collection keys which were not valid
+// at the time of reconstruction... need careful ordering.
+// need a two-phase reconstruction:
+//	1) load only footprint template parameter key for sake of mapping
+//	2) load rest of footprint normally
+
+namespace yo {
+	namespace yo {
+		bool whazzup;
+	}
+}
+

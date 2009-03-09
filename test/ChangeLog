@@ -1,6 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.88 2009/02/23 09:11:30 fang Exp $
+#	$Id: ChangeLog,v 1.89 2009/03/09 07:31:06 fang Exp $
 # ChangeLog for test directory.
+
+2009-03-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-04-footprint-02-02:
+	  Make.test-{tail,guile}: suppress use of ~/.guile in
+		non-interactive guile tests, to isolate user-errors.
+
 
 2009-02-22	David Fang		<fangism@users.sourceforge.net>
 

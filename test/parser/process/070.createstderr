@@ -24,8 +24,8 @@ Persistent Object Manager text dump:
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	386
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	386
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

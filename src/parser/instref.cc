@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.15 2009/02/28 01:20:44 fang Exp $
+	$Id: instref.cc,v 1.16 2009/03/09 07:31:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -265,15 +265,36 @@ parse_global_reference(const string& n, const module& m) {
 	}
 	const state_manager& sm(m.get_state_manager());
 	const footprint& top(m.get_footprint());
-	// is a meta_instance_reference_base
+	// r.inst_ref() is a meta_instance_reference_base
 	return r.inst_ref()->lookup_top_level_reference(sm, top);
 }
 
 //=============================================================================
 /**
+	Convenience function.
+	Maybe make this public...
+ */
+static
+const footprint*
+get_process_footprint(const size_t pid, const module& m) {
+	const state_manager& sm(m.get_state_manager());
+	const global_entry_pool<process_tag>&
+		proc_pool(sm.get_pool<process_tag>());
+	// get process_instance_alias
+	const entity::global_entry<process_tag>& pe(proc_pool[pid]);
+	const footprint* f = pe._frame._footprint;
+	NEVER_NULL(f);
+	return f;
+}
+
+//=============================================================================
+/**
 	Prints reference identity information. 
+	Currently only works for instance references.
 	TODO: check non-instance-references:
 		namespaces, definitions, typedefs, value-references.
+	TODO: print template parameters of complete type
+	Currently footprint lacks direct back-reference to base definition.
 	\return 0 upon success, 1 upon error.  
  */
 int
@@ -281,14 +302,39 @@ parse_name_to_what(ostream& o, const string& n, const module& m) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
-	if (!r) {
+	const count_ptr<const entity::meta_instance_reference_base>&
+		mr(r.inst_ref());
+	if (!r || !mr) {
 		return 1;
-	} else {
+	}
+	const size_t dim = mr->dimensions();
+	// handle arrays first
+	if (dim) {
 		o << n << " refers to ";
-		r.inst_ref()->what(o) << " ";
-		r.inst_ref()->dump_type_size(o) << endl;
+		// r.inst_ref() is a meta_instance_reference_base
+		mr->what(o) << " ";
+		mr->dump_type_size(o) << endl;
 		return 0;
 	}
+	// else is scalar
+	const global_indexed_reference gref(parse_global_reference(n, m));
+	// wasteful to parse again, I know...
+	if (!gref.second) {
+		o << "Error resolving instance reference: " << n << endl;
+		return 1;
+	}
+	o << n << " refers to ";
+	mr->what(o) << " ";
+	switch (gref.first) {
+	// for now, only processes have footprints
+	case entity::META_TYPE_PROCESS: {
+		get_process_footprint(gref.second, m)->dump_type(o) << endl;
+		break;
+	}
+	default:
+		mr->dump_type_size(o) << endl;
+	}
+	return 0;
 }
 
 //=============================================================================
@@ -307,6 +353,7 @@ if (n == ".") {
 	// special designator for top-level
 	o << "top-level instances: " << endl;
 	m.get_global_namespace()->dump_for_definitions(o);
+	// TODO: use module's top_footprint
 } else {
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	if (!r || !r.inst_ref()) {
@@ -325,8 +372,20 @@ if (n == ".") {
 				<< n << endl;
 			return 1;
 		}
+		const footprint* f = NULL;
 		o << n << " (type: ";
-		r.inst_ref()->dump_type_size(o) << ") has members: " << endl;
+		switch (gref.first) {
+		case entity::META_TYPE_PROCESS:
+			f = get_process_footprint(gref.second, m);
+			f->dump_type(o);
+			break;
+		default:
+			r.inst_ref()->dump_type_size(o);
+		}
+		o << ") has members: " << endl;
+	if (f) {
+		f->dump_member_list(o);
+	} else {
 		const never_ptr<const definition_base>
 			def(r.inst_ref()->get_base_def());
 		NEVER_NULL(def);
@@ -335,18 +394,8 @@ if (n == ".") {
 		// mscope->dump_instance_members(o) << endl;
 		mscope->dump_for_definitions(o);
 	}
+	}
 }
-#if 0
-	for ( ; i!=e; ++i) {
-	const never_ptr<const physical_instance_placeholder>
-		p(i->second.is_a<const physical_instance_placeholder>());
-	if (p) {
-		o << '\t' << i->first << endl;
-		// get_unresolved_type_ref
-		// get_base_def
-	}
-	}
-#endif
 	return 0;
 }
 
@@ -431,6 +480,9 @@ parse_name_to_get_subnodes_local(const string& n, const module& m,
 	Returns the subset of local_subnodes that are port aliases.
 	Caller may not use the port-name however, due to choice of
 	canonical names.  
+	TODO?: rewrite this once footprints have back-references
+		to their base definitions, and can access their
+		port formals.  
 	\return 0 upon success, 1 upon error.  
  */
 int
@@ -520,20 +572,9 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 
 //=============================================================================
 /**
-	Predicate to filter out non-instances for tab-completion.  
- */
-static
-bool
-pair_is_instance(const scopespace::const_map_iterator::value_type& p) {
-	return p.second.is_a<const instance_placeholder_base>();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	\param matches is the return array, should start empty, but need not be
 	\returns an array of candidate strings for instances.
-	FIXME: candidate text, replaces all of word, not just the 
-		member we wish to complete.  Help!
+	Now returns only names of instances that were instantiated!
  */
 void
 complete_instance_names(const char* _text, const module& m, 
@@ -542,17 +583,17 @@ complete_instance_names(const char* _text, const module& m,
 	const string text(_text);
 	typedef	scopespace::const_map_iterator	const_iterator;
 	string parent, child;
-	never_ptr<const scopespace> gns;
+	const footprint* f = NULL;
 	// if text is blank, return items from "ls ." (top-level)
 if (!_text[0]) {
-	gns = m.get_global_namespace();
+	f = &m.get_footprint();
 } else {
 // does string contain a '.'?  If so, cut text into two parts.
 // else need to do partial parsing for context
 // if text ends with '.' return list of members of the parent reference
 	size_t dot = text.find_last_of('.');
 	if (dot == string::npos) {	// not found
-		gns = m.get_global_namespace();
+		f = &m.get_footprint();
 		child = text;
 	} else {			// split up string
 		typedef	inst_ref_expr::meta_return_type	checked_ref_type;
@@ -570,28 +611,19 @@ if (!_text[0]) {
 			gref(r.inst_ref()->lookup_top_level_reference(
 				m.get_state_manager(), m.get_footprint()));
 		if (!gref.second) { return; }
-			// no error message
-		const never_ptr<const definition_base>
-			def(r.inst_ref()->get_base_def());
-		NEVER_NULL(def);
-		gns = def->get_scopespace();
-		// mscope->dump_instance_members(o) << endl;
+		if (gref.first != entity::META_TYPE_PROCESS) { return; }
+		// until non-process types have subinstances...
+		f = get_process_footprint(gref.second, m);
 	}
 }
-	const_iterator i(gns->id_map_begin()), e(gns->id_map_end());
-	// transform_if
 	vector<string> temp;
-	util::transform_if(i, e, back_inserter(temp), &pair_is_instance, 
-		util::member_select_ref(&const_iterator::value_type::first));
+	f->export_instance_names(temp);
 	// filter out with child string
 	// TODO: handle array indices
 	// may need to prepend parent '.' to matched names...
 	const string root(parent.size() ? parent + '.' : "");
-/**
-	Temporary work-around for completion bug, where I'd like to
-	perform only partial word (split) completion on the tail.
- */
-#define	PREPEND_ROOT		1
+	// caller function will take care of custom display
+	// function to omit the common prefix in the match display.
 	if (child.size()) {
 		// use child string to bound range
 		// INVARIANT: temp is already sorted because it
@@ -601,22 +633,13 @@ if (!_text[0]) {
 		const vector<string>::const_iterator
 			f(lower_bound(temp.begin(), temp.end(), child)),
 			l(lower_bound(temp.begin(), temp.end(), child2));
-#if PREPEND_ROOT
 		transform(f, l, back_inserter(matches), 
 			bind1st(std::plus<string>(), root));
-#else
-		copy(f, l, back_inserter(matches));
-#endif
 	} else {
 		// all matches
-#if PREPEND_ROOT
 		transform(temp.begin(), temp.end(), back_inserter(matches), 
 			bind1st(std::plus<string>(), root));
-#else
-		temp.swap(matches);
-#endif
 	}
-#undef	PREPEND_ROOT
 }
 
 //=============================================================================

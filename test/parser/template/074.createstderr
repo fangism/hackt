@@ -24,9 +24,9 @@ Persistent Object Manager text dump:
 	20	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	374
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	374
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
 	26	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	27	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	29

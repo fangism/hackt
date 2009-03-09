@@ -1,0 +1,47 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	278
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  1 sub-namespaces
+  0 definitions
+  0 typedefs
+  Namespaces:
+    yo =     In namespace "yo", we have: {
+      0 parameter-collections
+      0 instantiation-collections
+      1 sub-namespaces
+      0 definitions
+      0 typedefs
+      Namespaces:
+        yo =         In namespace "yo", we have: {
+          0 parameter-collections
+          1 instantiation-collections
+          0 sub-namespaces
+          0 definitions
+          0 typedefs
+          Instances:
+            whazzup = bool<> yo::yo::whazzup
+        }
+    }
+}
+
+footprint: {
+  yo::yo::whazzup = bool^0 = yo::yo::whazzup (1) 
+  Created state:
+  bool instance pool:
+  1	yo::yo::whazzup
+}

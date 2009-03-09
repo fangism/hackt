@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.29 2008/10/05 23:00:12 fang Exp $
+	$Id: CHP.cc,v 1.30 2009/03/09 07:30:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1200,7 +1200,7 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c
 		return action_ptr_type(NULL);
 	}
 	selection_list_type result;	// unroll into here
-	entity::footprint f;
+	DECLARE_TEMPORARY_FOOTPRINT(f);
 	const never_ptr<pint_scalar>
 		var(initialize_footprint(f));
 	// create a temporary by unrolling the placeholder 
@@ -1367,7 +1367,7 @@ metaloop_statement::unroll_resolve_copy(const unroll_context& c
 		return action_ptr_type(NULL);
 	}
 	action_list_type result;	// unroll into here
-	entity::footprint f;
+	DECLARE_TEMPORARY_FOOTPRINT(f);
 	const never_ptr<pint_scalar>
 		var(initialize_footprint(f));
 	// create a temporary by unrolling the placeholder 

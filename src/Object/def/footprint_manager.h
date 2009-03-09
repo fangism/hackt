@@ -1,16 +1,15 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.8 2006/11/07 06:34:26 fang Exp $
+	$Id: footprint_manager.h,v 1.9 2009/03/09 07:30:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
 
 #include <iosfwd>
-#include <map>
-#include "Object/expr/const_param_expr_list.h"
-#include "util/memory/excl_ptr.h"
+#include <set>
+#include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
 
 namespace HAC {
@@ -18,28 +17,35 @@ namespace entity {
 class footprint;
 struct dump_flags;
 struct expr_dump_context;
+class definition_base;
+class const_param_expr_list;
 using std::istream;
 using std::ostream;
-using util::memory::excl_ptr;
+using util::memory::count_ptr;
 using util::persistent_object_manager;
+
+typedef	count_ptr<footprint>		footprint_entry_base;
 
 //=============================================================================
 /**
 	Proxy class for exclusively owned pointer to footprint.
 	Also serves as implementation privatization.  
  */
-struct footprint_entry : public excl_ptr<footprint> {
-	typedef	excl_ptr<footprint>		ptr_type;
+struct footprint_entry : public footprint_entry_base {
+	typedef	footprint_entry_base		ptr_type;
 
-	footprint_entry();
-	footprint_entry(const footprint_entry&);
+	footprint_entry(const ptr_type&);
+
+	explicit
+	footprint_entry(footprint* f);
 	~footprint_entry();
 
-	footprint_entry&
-	operator = (ptr_type&);
+	bool
+	operator < (const footprint_entry&) const;
 };
 
 //=============================================================================
+typedef	std::set<footprint_entry>		footprint_manager_base;
 /**
 	The manager for a collection of definition footprints.  
 	We use std::map instead of util::qmap because we want the
@@ -48,13 +54,12 @@ struct footprint_entry : public excl_ptr<footprint> {
 	Implementation: use const_param_expr_list or pointer thereof?
  */
 class footprint_manager :
-		private std::map<const_param_expr_list, footprint_entry> {
+		private footprint_manager_base {
 private:
 	typedef	footprint_manager			this_type;
-	typedef	std::map<const_param_expr_list, footprint_entry>
-							parent_type;
+	typedef	footprint_manager_base			parent_type;
 public:
-	typedef	parent_type::key_type			key_type;
+	typedef	const_param_expr_list			key_type;
 	typedef	parent_type::value_type			value_type;
 	/**
 		NOTE: the interface we provide makes the map look like
@@ -73,7 +78,7 @@ public:
 	footprint_manager();
 
 	explicit
-	footprint_manager(const size_t N);
+	footprint_manager(const size_t N, const definition_base&);
 
 	~footprint_manager();
 
@@ -81,7 +86,7 @@ public:
 	arity(void) const { return _arity; }
 
 	void
-	set_arity(const size_t);
+	set_arity(const size_t, const definition_base&);
 
 	ostream&
 	dump(ostream&, const dump_flags&) const;
@@ -90,21 +95,29 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	mapped_type&
-	operator [] (const key_type& k);
+	insert(const key_type& k, const definition_base&);
 
 	mapped_type&
-	operator [] (const count_ptr<const key_type>&);
+	insert(const count_ptr<const key_type>&, const definition_base&);
+
+	mapped_type&
+	lookup(const key_type& k) const;
+
+	mapped_type&
+	lookup(const count_ptr<const key_type>& k) const;
 
 	using parent_type::size;
 	using parent_type::empty;
 
 	mapped_type&
-	only(void);
+	only(const definition_base&);
 
 	const mapped_type&
 	only(void) const;
 
 // map persistence methods
+private:
+	using parent_type::insert;
 public:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -113,7 +126,8 @@ public:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&,
+		const definition_base&);
 
 };	// end class footprint_manager
 

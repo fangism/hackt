@@ -1,0 +1,16 @@
+// "relaxed-a.hac"
+// testing 'what' command on relaxed types
+
+template <><pbool TF>
+defproc binary() {
+bool x;
+[TF ->
+bool y;
+[] else ->
+bool z;
+]
+}
+
+binary troo<true>;
+binary falsch<false>;
+
