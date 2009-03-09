@@ -1,0 +1,11 @@
+
+
+defproc inv (bool a, b) {
+	prs {
+		[loadcap=2;comb=1] a->b-
+		[loadcap=1.0;comb=1] ~a->b+
+		[loadcap=1.0;comb=1] ~a->b+
+	}
+}
+
+inv i;

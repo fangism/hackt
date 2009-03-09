@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.48 2009/02/11 02:35:22 fang Exp $
+#	$Id: Makefile.am,v 1.49 2009/03/09 03:22:19 cto3 Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -88,7 +88,8 @@ HACKT_PARSE_TEST_PASSES = \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
-	flavor-01
+	flavor-01 \
+	load_cap-01 
 # pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
 
 srcdir_EXTRA_DIST += \
@@ -151,7 +152,8 @@ HACKT_CREATE_TEST_PASSES = \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
-	flavor-01
+	flavor-01 \
+	load_cap-01 
 
 # TODO: precharge-00 etc. to middle and back-end tests
 # pending: act-003 act-004 act-005
