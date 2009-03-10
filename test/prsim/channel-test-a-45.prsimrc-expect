@@ -1,0 +1,17 @@
+channels:
+X : .e(init:0) 1x1of2 off
+Y : .e(init:1) 1x1of4 off
+Z : .a(init:0) 1x1of3 off
+Fanouts of node `X.d[0]':
+Fanins of node `X.d[0]':
+Fanouts of node `X.e':
+Fanins of node `X.e':
+Warning: channel acknowledge `X.e' has no fanin!
+Fanouts of node `X.d[0]':
+to channel(s): X
+Fanins of node `X.d[0]':
+from channel(s): X
+Fanouts of node `X.e':
+to channel(s): X
+Fanins of node `X.e':
+from channel(s): X

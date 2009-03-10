@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.19 2009/02/11 02:35:17 fang Exp $
+	$Id: Channel-prsim.cc,v 1.20 2009/03/10 18:01:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -2413,6 +2413,7 @@ if (f != node_channels_map.end()) {
 	// else ignore, nothing to do, only cost one map lookup
 }
 
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return true if node is potentially driven by any registered channel. 
@@ -2449,6 +2450,40 @@ if (f != node_channels_map.end()) {
 	}
 }
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_manager::dump_node_fanin(ostream& o, const node_index_type ni) const {
+	const node_channels_map_type::const_iterator
+		f(node_channels_map.find(ni));
+if (f != node_channels_map.end()) {
+	std::set<channel_index_type>::const_iterator
+		i(f->second.begin()), e(f->second.end());
+	for ( ; i!=e; ++i) {
+		const channel& c(channel_pool[*i]);
+		if (c.may_drive_node(ni))
+			o << ' ' << c.name;
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_manager::dump_node_fanout(ostream& o, const node_index_type ni) const {
+	const node_channels_map_type::const_iterator
+		f(node_channels_map.find(ni));
+if (f != node_channels_map.end()) {
+	std::set<channel_index_type>::const_iterator
+		i(f->second.begin()), e(f->second.end());
+	for ( ; i!=e; ++i) {
+		const channel& c(channel_pool[*i]);
+		if (c.reads_node(ni))
+			o << ' ' << c.name;
+	}
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

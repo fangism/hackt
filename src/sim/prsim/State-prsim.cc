@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.49 2009/03/09 07:31:04 fang Exp $
+	$Id: State-prsim.cc,v 1.50 2009/03/10 18:01:44 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4404,6 +4404,7 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 #else
 		const bool w = true;
 #endif
+	// if we want invariants printed
 	if ((r->is_invariant()) && si) {
 		dump_subexpr(o << "$(", *ri, v) << ')' << endl;
 	} else if (w && sr) {
@@ -4411,6 +4412,10 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 		o << endl;
 	}
 	}	// end for
+	if (node_drives_any_channel(ni)) {
+		_channel_manager.dump_node_fanout(o << "to channel(s):", ni)
+			<< endl;
+	}
 	return o;
 }
 
@@ -4537,6 +4542,10 @@ for ( ; i!=e; ++i) {
 		f = find(f+1, fe, ni);
 	}
 }
+	if (node_is_driven_by_channel(ni)) {
+		_channel_manager.dump_node_fanin(o << "from channel(s):", ni)
+			<< endl;
+	}
 	return o;
 }
 

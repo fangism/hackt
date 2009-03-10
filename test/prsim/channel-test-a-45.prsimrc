@@ -1,0 +1,20 @@
+# "channel-test-a-40.prsimrc"
+# @haco@ channel-test-a.haco-a
+# testing channel sink
+
+# register channels
+source channel-test-a-01.prsimrc
+
+fanout X.d[0]
+fanin X.d[0]
+fanout X.e
+fanin X.e
+
+channel-source-args X 0 1 1 0
+channel-sink X
+
+fanout X.d[0]
+fanin X.d[0]
+fanout X.e
+fanin X.e
+

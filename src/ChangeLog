@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-07:
+	  hacprsim: fanin/fanout now report channel sinks and sources
+		in fanin/fanout feedback.  Added new test case.
+
+
 2009-03-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-06-merged-footprint-02-05:

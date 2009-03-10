@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.15 2008/12/23 01:51:35 fang Exp $
+	$Id: Channel-prsim.h,v 1.16 2009/03/10 18:01:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -782,6 +782,12 @@ public:
 
 	bool
 	node_has_fanout(const node_index_type) const;
+
+	ostream&
+	dump_node_fanin(ostream&, const node_index_type) const;
+
+	ostream&
+	dump_node_fanout(ostream&, const node_index_type) const;
 
 	void
 	__get_X_fanins(const State&, const node_index_type, 
