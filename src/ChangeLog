@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-03-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-08:
+	  Fixed MAJOR performance regression from branch merge 
+		-footprint-02-05.  footprint_manager::insert() and lookup()
+		were calling expensive construction and allocations
+		of temporary footprints for set operations, 
+		causing 10x to 20x slowdown.  :(
+		Fixed by using partial construction trick *hack* alert.
+
+
 2009-03-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-07:

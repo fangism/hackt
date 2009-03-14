@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.38 2008/10/31 02:11:47 fang Exp $
+#	$Id: Makefile.inc,v 1.39 2009/03/14 01:46:23 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -196,6 +196,7 @@ UTIL_HEADER_FILES = \
 	util/tokenize.h \
 	util/type_traits.h \
 	util/union_find.h \
+	util/uninitialized.h \
 	util/using_istream.h \
 	util/using_ostream.h \
 	util/utypes.h \
@@ -227,6 +228,7 @@ UTIL_CC_FILES = \
 	util/static_trace.cc \
 	util/tokenize.cc \
 	util/stream_ptr.cc \
+	util/uninitialized.cc \
 	util/memory/thread_lock.cc \
 	util/memory/ref_count_pool.cc \
 	util/numeric/nibble_tables.cc \

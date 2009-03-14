@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_base.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint_base.h,v 1.4 2008/11/05 23:03:31 fang Exp $
+	$Id: footprint_base.h,v 1.5 2009/03/14 01:46:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_H__
@@ -13,6 +13,7 @@
 
 #include "util/persistent_fwd.h"
 #include "util/memory/excl_ptr.h"
+#include "util/uninitialized.h"
 
 namespace HAC {
 namespace entity {
@@ -57,6 +58,11 @@ protected:
 	const excl_ptr<instance_pool_type>		_instance_pool;
 
 	footprint_base();
+
+	// inline, uninitialized!
+	explicit
+	footprint_base(const util::uninitialized_tag_type&) { }
+
 	~footprint_base();
 
 	good_bool
@@ -108,6 +114,11 @@ protected:
 	const excl_ptr<collection_pool_bundle_type>
 						collection_pool_bundle;
 	value_footprint_base();
+
+	// inline, uninitialized
+	explicit
+	value_footprint_base(const util::uninitialized_tag_type&) { }
+
 	~value_footprint_base();
 
 	void

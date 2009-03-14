@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.26 2009/03/09 07:30:42 fang Exp $
+	$Id: footprint.h,v 1.27 2009/03/14 01:46:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -40,6 +40,7 @@ class instance_collection_base;
 class port_formals_manager;
 class scopespace;
 class port_member_context;
+class footprint_manager;
 struct alias_visitor;
 struct dump_flags;
 struct expr_dump_context;
@@ -94,6 +95,7 @@ class footprint :
 // make accessible to base class
 template <class> friend class footprint_base;
 template <class> friend class value_footprint_base;
+	friend class footprint_manager;
 	typedef	footprint			this_type;
 public:
 	/**
@@ -262,12 +264,19 @@ public:
 	explicit
 	footprint(const temp_footprint_tag_type&);
 
+private:
 	explicit	// allow implicit construction?
 	footprint(const const_param_expr_list&, const definition_base&);
 
-private:	// only for reconstruction
 	footprint();
+
+	footprint(const const_param_expr_list&, 
+		const util::uninitialized_tag_type&);
+
 	FRIEND_PERSISTENT_TRAITS
+
+	void
+	__reconstruct(const const_param_expr_list&, const definition_base&);
 public:
 	~footprint();
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.40 2009/03/09 07:30:41 fang Exp $
+	$Id: footprint.cc,v 1.41 2009/03/14 01:46:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -326,6 +326,40 @@ footprint::footprint() :
 	spec_footprint(new SPEC::footprint),
 	lock_state(false) { }
 // the other members, don't care, just placeholder ctor before loading object
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial constructor, ONLY INTENDED for the footprint_manager to use.
+	To finish constructing, use __reconstruct().
+ */
+footprint::footprint(const const_param_expr_list& p,
+	const util::uninitialized_tag_type& x) :
+	footprint_base<process_tag>(x), 
+	footprint_base<channel_tag>(x), 
+#if ENABLE_DATASTRUCTS
+	footprint_base<datastruct_tag>(x), 
+#endif
+	footprint_base<enum_tag>(x), 
+	footprint_base<int_tag>(x), 
+	footprint_base<bool_tag>(x), 
+	value_footprint_base<pbool_tag>(x), 
+	value_footprint_base<pint_tag>(x), 
+	value_footprint_base<preal_tag>(x), 
+	param_key(p) {
+	// still leaves two calls to port_alias_tracker's default ctor
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Ewww... partial placement construction and destruction.  
+	This should only ever be called after a partial construct.
+ */
+void
+footprint::__reconstruct(const const_param_expr_list& p, 
+	const definition_base& d) {
+	param_key.~const_param_expr_list();
+	new (this) this_type(p, d);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint::footprint(const const_param_expr_list& p,

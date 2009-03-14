@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.102 2009/02/28 01:20:46 fang Exp $
+#	$Id: ChangeLog,v 1.103 2009/03/14 01:46:22 fang Exp $
+
+2009-03-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-08:
+	  Added util/uninitialized.h, for annotating explicit uninitialized
+		constructors in classes, or special partial initializations.
+
 
 2009-02-27	David Fang		<fangism@users.sourceforge.net>
 

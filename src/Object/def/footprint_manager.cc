@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.13 2009/03/09 07:30:43 fang Exp $
+	$Id: footprint_manager.cc,v 1.14 2009/03/14 01:46:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -16,6 +16,7 @@
 #include "Object/expr/const_param.h"
 #include "Object/common/dump_flags.h"
 #include "Object/inst/port_alias_tracker.tcc"	// why are symbols ref'd?
+#include "Object/traits/instance_traits.h"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -179,14 +180,21 @@ if (_arity) {
 footprint_manager::mapped_type&
 footprint_manager::insert(const key_type& k, const definition_base& d) {
 	INVARIANT(k.size() == _arity);
-	const footprint_entry temp(new footprint(k, d));
+	// ALERT: AVOID EXPENSIVE ALLOCATION OF TEMPORARY
+	const footprint_entry
+		temp(new footprint(k, util::uninitialized_tag));
 	const std::pair<parent_type::const_iterator, bool> i(insert(temp));
 	// if inserted use new value, else use existing member
 	INVARIANT(i.first != parent_type::end());
 	NEVER_NULL(*i.first);
-	return const_cast<mapped_type&>(**i.first);	// unfortunate
+	mapped_type& ret(const_cast<mapped_type&>(**i.first));	// unfortunate
 	// but remember that the param_key member which is used for
 	// comparison is immutable
+	if (i.second) {
+		// then it was actually newly inserted, finish construction
+		ret.__reconstruct(k, d);
+	}	// else existing copy is assumed to be properly constructed
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -196,8 +204,9 @@ footprint_manager::insert(const key_type& k, const definition_base& d) {
 footprint_manager::mapped_type&
 footprint_manager::lookup(const key_type& k) const {
 	INVARIANT(k.size() == _arity);
-	const definition_base* bogus = NULL;
-	const footprint_entry temp(new footprint(k, *bogus));
+	// ALERT: AVOID EXPENSIVE ALLOCATION OF TEMPORARY
+	const footprint_entry
+		temp(new footprint(k, util::uninitialized_tag));
 		// kludge - deref NULL!
 	const parent_type::const_iterator f(find(temp));
 	// if inserted use new value, else use existing member
