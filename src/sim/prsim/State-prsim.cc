@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.50 2009/03/10 18:01:44 fang Exp $
+	$Id: State-prsim.cc,v 1.51 2009/03/17 20:19:17 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -691,6 +691,7 @@ State::reset(void) {
 #undef	E
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
+	clear_all_breakpoints();
 	uniform_delay = time_traits::default_delay;
 	_channel_manager.clobber_all();
 	// reset seed
@@ -742,16 +743,17 @@ State::__get_node(const node_index_type i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Traces backwards in event history until repeat (cycle) found.  
+	\param v the node transition value to start query from.
  */
 void
-State::backtrace_node(ostream& o, const node_index_type ni) const {
+State::backtrace_node(ostream& o, const node_index_type ni, 
+		const value_enum v) const {
 	typedef	set<node_cause_type>		event_set_type;
 	// start from the current value of the referenced node
 	const node_type* n(&get_node(ni));
-	const value_enum v = n->current_value();
 	node_cause_type e(ni, v);
 	// TODO: could look at critical event index if tracing...
-	dump_node_canonical_name(o << "node at: `", ni) <<
+	dump_node_canonical_name(o << "event    : `", ni) <<
 		"\' : " << node_type::value_to_char[size_t(v)] << endl;
 	event_set_type l;
 	bool cyc = l.insert(e).second;	// return true if actually inserted
@@ -768,14 +770,25 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 				node_type::value_to_char[size_t(e.val)] << endl;
 			cyc = l.insert(e).second;
 		} else {
-			break;
+			cyc = false;		// break
 		}
 	} while (cyc);
 	if (e.node) {
+		// seen same transition twice
 		o << "(cycle reached)" << endl;
 	} else {
+		// cause not found (likely from environment or user)
 		o << "(no cycle)" << endl;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overload defaults to passing current value of node.  
+ */
+void
+State::backtrace_node(ostream& o, const node_index_type ni) const {
+	backtrace_node(o, ni, get_node(ni).current_value());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

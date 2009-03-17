@@ -26,7 +26,7 @@ should be data yet because ack is already on
 ----------------------------------- 
 X : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @1 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
-node at: `X.d[0]' : 1
+event    : `X.d[0]' : 1
 (no cycle)
 - - - - - - - - - - - - - - - - - - 
 	20	X.e : 0

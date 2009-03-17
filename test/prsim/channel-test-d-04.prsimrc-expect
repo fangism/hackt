@@ -32,7 +32,7 @@ channel	X (.data) : 0
 	40	X.n : 0	[by X.d[0]:=1]
 X : .e(init:0) .n 1x1of2 source,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @1 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
-node at: `X.d[0]' : 1
+event    : `X.d[0]' : 1
 caused by: `X.e' : 1
 (no cycle)
 - - - - - - - - - - - - - - - - - - 

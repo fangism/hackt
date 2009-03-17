@@ -56,7 +56,7 @@ channel	L (.data) : 0
 channel	R (.data) : 0
 could just keep going, source is looping 
 backtrace should be able to find cycle through sources and sinks! 
-node at: `L.e' : 0
+event    : `L.e' : 0
 caused by: `R.d[0]' : 1
 caused by: `_r[0]' : 0
 caused by: `L.d[0]' : 1

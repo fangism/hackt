@@ -49,7 +49,7 @@ o:1
           z[2]:0
             z[1]:1
               i:0, input
-node at: `o' : 1
+event    : `o' : 1
 caused by: `z[6]' : 0
 caused by: `z[5]' : 1
 caused by: `z[4]' : 0
@@ -74,7 +74,7 @@ o:0
           z[2]:1
             z[1]:0
               i:1, input
-node at: `o' : 0
+event    : `o' : 0
 caused by: `z[6]' : 1
 caused by: `z[5]' : 0
 caused by: `z[4]' : 1

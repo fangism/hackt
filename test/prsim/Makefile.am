@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.73 2009/03/10 18:01:45 fang Exp $
+#	$Id: Makefile.am,v 1.74 2009/03/17 20:19:20 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -119,7 +119,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	oscil-random-02 oscil-random-02a oscil-random-02b oscil-random-02c \
 	oscil-what-01 oscil-what-02 \
 	oscil-unset-01 oscil-unset-02 oscil-unset-03 \
-	oscil-backtrace-01 \
+	oscil-backtrace-01 oscil-backtrace-02 \
 	oscil-status-01 \
 	oscil-why-01 oscil-why-02 \
 	oscil-wrong-why-01 \

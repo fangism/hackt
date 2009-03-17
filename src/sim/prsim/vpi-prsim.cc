@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.14 2009/02/19 02:58:38 fang Exp $
+	$Id: vpi-prsim.cc,v 1.15 2009/03/17 20:19:19 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -692,6 +692,8 @@ static const bool set_force = true;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
   Register a VCS-driven node with VCS and prsim
+  TODO: what if node already has non-X value when this connection
+	is established?  Should we register a set-node event?
 
 @texinfo vpi/to_prsim.texi
 @deffn Function $to_prsim vname pname
@@ -699,6 +701,7 @@ Establish a connection from Verilog signal @var{vname}
 to @command{hacprsim} signal @var{pname}.
 When @var{vname} changes value, @command{hacprsim} will be updated
 accordingly.  
+This command should be invoked prior to any events in simulation.
 @end deffn
 @end texinfo
 */

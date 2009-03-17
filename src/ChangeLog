@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-03-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-09:
+	  hacprsim: backtrace command now takes optional value
+		argument to choose what value to query, if the user
+		does not want to use the default current value.  
+		Documented, tested, test case added.
+
+
 2009-03-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-08:

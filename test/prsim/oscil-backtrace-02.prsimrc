@@ -1,0 +1,29 @@
+# "oscil-backtrace-02.prsimrc"
+#	$Id: oscil-backtrace-02.prsimrc,v 1.1 2009/03/17 20:19:25 fang Exp $
+# @haco@ oscillator.haco-a
+# testing backtrace command
+
+backtrace _Reset
+
+set _Reset 0
+backtrace _Reset
+
+cycle
+status U
+
+backtrace R.x[0]
+backtrace R.x[12]
+echo expect no cycles so far
+
+set _Reset 1
+step 100
+
+echo testing backtrace from different values
+backtrace R.x[0] 0
+
+backtrace R.x[0] 1
+
+backtrace R.x[0] X
+
+assert-queue
+

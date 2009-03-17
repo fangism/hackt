@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.27 2009/02/11 02:35:21 fang Exp $
+	$Id: State-prsim.h,v 1.28 2009/03/17 20:19:18 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -566,6 +566,9 @@ public:
 
 	void
 	backtrace_node(ostream&, const node_index_type) const;
+
+	void
+	backtrace_node(ostream&, const node_index_type, const value_enum) const;
 
 	process_index_type
 	get_num_processes(void) const { return process_state_array.size(); }

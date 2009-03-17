@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.44 2009/03/09 07:31:03 fang Exp $
+	$Id: Command-prsim.cc,v 1.45 2009/03/17 20:19:16 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2587,9 +2587,10 @@ PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(NoConfirm, view)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/backtrace.texi
-@deffn Command backtrace node
+@deffn Command backtrace node [val]
 Trace backwards through a history of last-arriving transitions on
 node @var{node}, until a cycle is found.  
+If @var{val} is omitted, the current value of the node is assumed.  
 Useful for tracking down causes of instabilities, 
 and identifying critical paths and cycle times.  
 @end deffn
@@ -2601,14 +2602,27 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(BackTrace, "backtrace", info,
 
 int
 BackTrace::main(State& s, const string_list& a) {
-if (a.size() != 2) {
+const size_t sz = a.size();
+if (sz != 2 && sz != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	const string& objname(a.back());
+	string_list::const_iterator ai(++a.begin());
+	const string& objname(*ai);
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
-		s.backtrace_node(cout, ni);
+		const node_type& n(s.get_node(ni));
+		value_enum val = n.current_value();	// default current val
+		++ai;
+	if (ai != a.end()) {
+		// valid values are 0, 1, 2(X)
+		val = node_type::string_to_value(*ai);
+		if (!node_type::is_valid_value(val)) {
+			cerr << "Invalid logic value: " << *ai << endl;
+			return Command::BADARG;
+		}
+	}
+		s.backtrace_node(cout, ni, val);
 		return Command::NORMAL;
 	} else {
 		return Command::BADARG;
