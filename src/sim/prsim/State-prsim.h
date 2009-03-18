@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.28 2009/03/17 20:19:18 fang Exp $
+	$Id: State-prsim.h,v 1.29 2009/03/18 00:22:56 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -153,6 +153,21 @@ public:
 		inspect(const State&, ostream&) const;
 	};	// end struct excl_exception
 
+	/**
+		Exception type thrown when there is an invariant
+		violation and the error policy is set to fatal.
+	 */
+	struct invariant_exception : public step_exception {
+		node_index_type			node_id;
+		error_policy_enum		policy;
+
+		invariant_exception(const node_index_type n, 
+			const error_policy_enum e) : 
+			node_id(n), policy(e) { }
+
+		error_policy_enum
+		inspect(const State&, ostream&) const;
+	};	// end struct invariant_exception
 
 #define	THROWS_STEP_EXCEPTION	throw (step_exception)
 private:

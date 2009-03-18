@@ -1,0 +1,5 @@
+Error: invariant violation in [top-level]: (a:0) by node a:0
+Halting on node: a
+... at line 6
+Error encountered during source #FILE#.
+... at line 5

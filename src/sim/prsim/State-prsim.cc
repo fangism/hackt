@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.51 2009/03/17 20:19:17 fang Exp $
+	$Id: State-prsim.cc,v 1.52 2009/03/18 00:22:55 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -152,16 +152,16 @@ struct State::evaluate_return_type {
 	/// root rule index
 	rule_index_type			root_rule_index;
 	/// true signals that simulation should halt, e.g. if there is error
-	bool				invariant_break;
+	error_policy_enum		invariant_break;
 
 	/// other fields may remain uninitialized, we won't use them
 	evaluate_return_type() : node_index(INVALID_NODE_INDEX),
 		// other fields, don't care
-		invariant_break(false)
+		invariant_break(ERROR_NONE)
 		{ }
 
 	explicit
-	evaluate_return_type(const bool s) : 
+	evaluate_return_type(const error_policy_enum s) : 
 		node_index(INVALID_NODE_INDEX), invariant_break(s) { }
 
 	evaluate_return_type(const node_index_type ni,
@@ -169,7 +169,7 @@ struct State::evaluate_return_type {
 		const rule_type* const r, const rule_index_type ri) :
 		node_index(ni), root_ex(e), root_pull(p)
 			, root_rule(r), root_rule_index(ri)
-			, invariant_break(false)
+			, invariant_break(ERROR_NONE)
 			{ }
 };	// end struct evaluate_return_type
 
@@ -2501,6 +2501,16 @@ State::excl_exception::inspect(const State& s, ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+error_policy_enum
+State::invariant_exception::inspect(const State& s, ostream& o) const {
+	if (policy >= ERROR_INTERACTIVE) {
+		o << "Halting on node: " <<
+			s.get_node_canonical_name(node_id) << endl;
+	}
+	return policy;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For the sake of exception safety, 
 	Upon destruction, flush intermediate event queues.  
@@ -2680,6 +2690,7 @@ if (eval_ordering_is_random()) {
 	i = n.fanout.begin();
 	e = n.fanout.end();
 }
+	break_type __throw__ = ERROR_NONE;
 	for ( ; i!=e; ++i) {
 		// when evaluating a node as an expression, 
 		// is appropriate to interpret node value
@@ -2690,7 +2701,15 @@ if (eval_ordering_is_random()) {
 			stop();
 			// just signal to break
 			// TODO: signal FATAL and INTERACTIVE
+			if (E > __throw__) {
+				__throw__ = E;
+			}
 		}
+	}
+	// only throw after all fanouts have been processed
+	if (UNLIKELY(__throw__ >= ERROR_INTERACTIVE)) {
+		const invariant_exception invex(ni, __throw__);
+		throw invex;
 	}
 }
 	// Q: is this the best place to handle this?
@@ -2707,7 +2726,7 @@ if (n.in_channel()) {
 	if (UNLIKELY(E >= ERROR_BREAK)) {
 		stop();
 	}
-	// HERE: error status?
+	// TODO: handle FATAL and INTERACTIVE
 }
 	/***
 		If an event is forced (say, by user), then check node's own
@@ -2962,11 +2981,10 @@ if (!r.is_invariant()) {
 	// then this rule doesn't actually pull a node
 	const bool fail = (next == PULL_OFF);
 	const bool maybe = (next == PULL_WEAK);
-	if ((fail && invariant_fail_policy != ERROR_IGNORE) ||
-		(maybe && invariant_unknown_policy != ERROR_IGNORE)) {
-		const bool halt =
-			((fail && invariant_fail_policy >= ERROR_BREAK) ||
-			(maybe && invariant_unknown_policy >= ERROR_BREAK));
+	const error_policy_enum err = fail ? invariant_fail_policy :
+		maybe ? invariant_unknown_policy : ERROR_NONE;
+	if (err != ERROR_IGNORE) {
+		const bool halt = (err >= ERROR_BREAK);
 		const string pn(get_process_canonical_name(
 			lookup_process_index(ps)));
 		cerr << (halt ? "Error: " : "Warning: ") <<
@@ -2975,7 +2993,7 @@ if (!r.is_invariant()) {
 		ps.dump_subexpr(cerr, ri, *this, true);	// always verbose
 		dump_node_canonical_name(cerr << ") by node ", ni) << ':' <<
 			node_type::value_to_char[size_t(node_val)] << endl;
-		return evaluate_return_type(halt);
+		return evaluate_return_type(err);
 	}
 	return evaluate_return_type();	// continue
 }
@@ -3125,10 +3143,11 @@ State::propagate_evaluation(
 	// when evaluating node as expression, interpret value as pull
 	const evaluate_return_type
 		ev_result(evaluate(ni, exi, prev, pull_enum(c.val)));
-	if (ev_result.invariant_break) {
+	if (ev_result.invariant_break >= ERROR_BREAK) {
 		// then violation is not a result of a real rule
 		// thus, there can be no change or addition of events
-		return invariant_fail_policy;
+		// return invariant_fail_policy;
+		return ev_result.invariant_break;
 		// return true;
 	}
 	if (!ev_result.node_index) {

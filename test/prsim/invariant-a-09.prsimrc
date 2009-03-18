@@ -1,0 +1,7 @@
+# "invariant-a-09.prsimrc"
+# @haco@ invariant-a.haco-a
+
+invariant-fail fatal
+source invariant-a-02.prsimrc
+echo should not be reached!
+

@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.15 2009/02/26 22:15:50 fang Exp $
+	$Id: command_registry.tcc,v 1.16 2009/03/18 00:22:54 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -631,6 +631,10 @@ command_registry<Command>::completion(const char* text, int start, int end) {
 		string_list toks;
 		tokenize(buf, toks);
 		const string& key(toks.front());
+		if (key[0] == '!') {
+			// shell command, fallback to filename completion
+			return NULL;
+		}
 		const const_iterator f(command_map.find(key));
 		if (f == command_map.end()) {
 			// invalid command

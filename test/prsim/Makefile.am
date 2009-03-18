@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.74 2009/03/17 20:19:20 fang Exp $
+#	$Id: Makefile.am,v 1.75 2009/03/18 00:22:57 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -434,7 +434,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-test-f-03 channel-test-f-04 \
 	channel-test-non-QDI-a-02 \
 	precharge-g-01 \
-	invariant-a-07 invariant-b-07 \
+	invariant-a-07 invariant-a-09 \
+	invariant-b-07 \
 	assert-fail-02 \
 	check-excl-fail-05 \
 	after_min_max-bad-01 \

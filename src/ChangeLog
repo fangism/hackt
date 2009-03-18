@@ -5,6 +5,16 @@
 
 2009-03-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-10:
+	  hacprsim: tab-completion minor fix: handle shell commmands
+		beginning with '!' specially, defaulting to filename compl.
+	  finish implementation of treating invariant failures as fatal
+		errors by throwing/catching exceptions.  
+		This happens to be needed when we want a PLI co-simulation
+		to terminate as soon as the first error occurs.  
+		Test case added.
+
+
 	* HACKT-00-01-04-main-00-83-09:
 	  hacprsim: backtrace command now takes optional value
 		argument to choose what value to query, if the user
