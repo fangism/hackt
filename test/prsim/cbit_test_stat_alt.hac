@@ -1,0 +1,53 @@
+// "cbit_test_stat_alt.hac"
+// copy-modified from "cbit_test_stat.hac"
+
+deftype pbit <: bool (bool t,f, d[2]) {
+	t = d[1];
+	f = d[0];
+	set {}
+	get {}
+}
+
+defproc cbit2_type(bool bl, _bl, wl[2]; pbit p[2]) {
+	prs {
+		(:i:2:
+			wl[i] & ~_bl -> p[i].f-
+			wl[i] & ~bl -> p[i].t-
+			// using cut-off instead of weak rules
+			~((|:j:2: wl[j] & ~bl)) & ~p[i].f -> p[i].t+
+			~((|:j:2: wl[j] & ~_bl)) & ~p[i].t -> p[i].f+
+			p[i].f -> p[i].t-
+			p[i].t -> p[i].f-
+			[weak=1] p[i].t & wl[i] -> _bl-
+			[weak=1] p[i].f & wl[i] -> bl-
+		)
+	}
+}
+
+defproc fts (
+	bool bl, _bl, wl[4], din, _pchg, write;
+	pbit p[4]
+	) {
+	bool blx, _blx;
+	prs {
+		din & write -> bl+
+		din & write -> _bl-
+		~din & write -> bl-
+		~din & write -> _bl+
+		~_pchg -> bl+
+		~_pchg -> _bl+
+		// half-staticizer
+		[after=0] bl => blx-
+		[after=0] _bl => _blx-
+		[weak=1] ~blx -> bl+
+		[weak=1] ~_blx -> _bl+
+	}
+
+	cbit2_type b[2];
+	b[0](bl, _bl, wl[0..1], p[0..1]);
+	b[1](bl, _bl, wl[2..3], p[2..3]);
+}
+
+bool bl, _bl, wl[4], din, _pchg, write;
+pbit p[4];
+fts foo(bl, _bl, wl, din, _pchg, write, p);

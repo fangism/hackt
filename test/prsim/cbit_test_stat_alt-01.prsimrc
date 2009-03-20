@@ -1,0 +1,6 @@
+# "cbit_test_stat_alt-01.prsimrc"
+# @haco@ cbit_test_stat_alt.haco-a
+
+source cbit_test_stat-01.prsimrc
+# weak rules are not needed for writing, only reading
+

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.75 2009/03/18 00:22:57 fang Exp $
+#	$Id: Makefile.am,v 1.76 2009/03/20 20:31:20 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -45,6 +45,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	cross-pulldown \
 	cbit \
 	cbit_test_stat \
+	cbit_test_stat_alt \
 	cross-pull-a \
 	bitline-a bitline-b \
 	SRAM SRAM-a SRAM-b SRAM-c SRAM-d \
@@ -159,6 +160,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	cross-coupled-why-01 \
 	cbit-01 cbit-02 cbit-03 cbit-04 cbit-05 cbit-06 cbit-07 \
 	cbit_test_stat-01 \
+	cbit_test_stat_alt-01 \
 	cross-pull-a-01 cross-pull-a-02 \
 	bitline-a-01 bitline-a-02 \
 	bitline-b-01 bitline-b-02 \
@@ -351,6 +353,8 @@ $(srcdir)/cbit_test_stat-01.prsimrc: gen_cbit_test.awk
 	{ $(ECHO) "# $@" ; \
 	$(ECHO) "# @haco@ cbit_test_stat.haco-a" ; \
 	$(AWK) -f $< ;} > $@
+
+cbit_test_stat_alt-01.prsimrc-out: $(srcdir)/cbit_test_stat-01.prsimrc
 
 channel-test-a-values-X.txt:
 	{ $(ECHO) "# $@" ; \
