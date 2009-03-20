@@ -1,0 +1,15 @@
+# "inv-28.prsimrc"
+# @haco@ inv.haco-a
+
+unstable fatal
+timing after
+set a 1
+cycle
+set a 0
+advance 5
+queue
+set a 1
+cycle
+
+echo expect fail!!!
+

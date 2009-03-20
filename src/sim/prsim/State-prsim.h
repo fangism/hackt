@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.29 2009/03/18 00:22:56 fang Exp $
+	$Id: State-prsim.h,v 1.30 2009/03/20 23:49:47 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -154,22 +154,40 @@ public:
 	};	// end struct excl_exception
 
 	/**
-		Exception type thrown when there is an invariant
-		violation and the error policy is set to fatal.
+		Minimalist generic exception.
 	 */
-	struct invariant_exception : public step_exception {
+	struct generic_exception : public step_exception {
 		node_index_type			node_id;
 		error_policy_enum		policy;
 
-		invariant_exception(const node_index_type n, 
+		generic_exception(const node_index_type n, 
 			const error_policy_enum e) : 
 			node_id(n), policy(e) { }
 
-		error_policy_enum
+	virtual	error_policy_enum
 		inspect(const State&, ostream&) const;
 	};	// end struct invariant_exception
 
-#define	THROWS_STEP_EXCEPTION	throw (step_exception)
+#if 0
+	typedef	generic_exception	invariant_exception;
+#else
+	/**
+		Exception type thrown when there is an invariant
+		violation and the error policy is set to fatal.
+	 */
+	struct invariant_exception : public generic_exception {
+
+		invariant_exception(const node_index_type n, 
+			const error_policy_enum e) : 
+			generic_exception(n, e) { }
+
+	};	// end struct invariant_exception
+#endif
+
+	typedef	generic_exception	interference_exception;
+	typedef	generic_exception	instability_exception;
+
+#define	THROWS_STEP_EXCEPTION	throw (const step_exception&)
 private:
 	struct evaluate_return_type;
 

@@ -1,0 +1,7 @@
+event queue:
+	30	b : 1	[from a:=0]
+WARNING: unstable `b'+
+rule: [after 10]	~a:1 -> b+:0
+>> cause: `a' (val: 1)
+Halting on node: a
+... at line 12

@@ -1,0 +1,6 @@
+WARNING: weak-interference `c'
+>> cause: `a' (val: 0)
+WARNING: interference `c'
+>> cause: `b' (val: 1)
+c:X, pull up/dn interfere
+c:X, pull up/dn interfere

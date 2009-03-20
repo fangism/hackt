@@ -1,0 +1,11 @@
+# "interference-11.prsimrc"
+# @haco@ interference.haco-a
+
+interference fatal
+# echo-commands on
+set a 0
+cycle
+set b 1
+cycle
+echo expect fail!!!
+

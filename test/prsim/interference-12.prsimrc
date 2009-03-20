@@ -1,0 +1,11 @@
+# "interference-12.prsimrc"
+# @haco@ interference.haco-a
+
+# echo-commands on
+set a 0
+cycle
+set b 1
+cycle
+why-x c
+why-x-verbose c
+

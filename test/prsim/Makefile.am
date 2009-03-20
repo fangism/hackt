@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.76 2009/03/20 20:31:20 fang Exp $
+#	$Id: Makefile.am,v 1.77 2009/03/20 23:49:49 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -101,7 +101,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	large_OR_fanin-01 huge_OR_fanin-01 \
 	interference-01 interference-02 interference-03 interference-04 \
 	interference-05 interference-06 interference-07 interference-08 \
-	interference-09 interference-10 \
+	interference-09 interference-10 interference-12 \
 	interference-a-01 interference-a-02 \
 	interference-b-01 \
 	allow_interference-01 allow_interference-02 \
@@ -416,7 +416,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	repeat-02 \
 	autosave-01 \
 	celem-05 \
-	inv-06 inv-10 nor-03 \
+	inv-06 inv-10 inv-28 nor-03 \
 	inv-why-03 \
 	ls-03 ls-04 ls-05 ls-06 \
 	cross-pulldown-01 \
@@ -438,6 +438,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-test-f-03 channel-test-f-04 \
 	channel-test-non-QDI-a-02 \
 	precharge-g-01 \
+	interference-11 \
 	invariant-a-07 invariant-a-09 \
 	invariant-b-07 \
 	assert-fail-02 \

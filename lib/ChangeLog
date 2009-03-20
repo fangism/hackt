@@ -1,5 +1,14 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.52 2009/02/24 01:53:13 fang Exp $
+#	$Id: ChangeLog,v 1.53 2009/03/20 23:49:42 fang Exp $
+
+2009-03-20	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-11:
+	  verilog/wrap_verilog_modules_to_hacprsim.awk:
+		extended parser to allow signal directions to be specified
+		directly in the ports list, rather than in the module body.
+		No test cases added, unfortunately.  
+
 
 2009-02-23	David Fang	<fangism@users.sourceforge.net>
 

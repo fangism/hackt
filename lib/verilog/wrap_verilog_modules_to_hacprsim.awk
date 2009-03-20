@@ -111,13 +111,22 @@ if (tok == "[") {
 } else {
 	if (tok != ";") {
 	# permit declarations like "output reg ..."
-	if (tok != "," && tok != "reg") {
+	if (tok != "," && tok != "reg" && tok != ")") {
+		# this may be parsed directly in the module-ports
+		if (!length(ordered_ports[port_index])) {
+			ordered_ports[port_index] = tok;
+			port_index++;
+		}
 		if (length(range_first) && length(range_second)) {
 			upper[tok] = range_first;
 			lower[tok] = range_second;
 			dimensions[tok] = "[" range_first ":" range_second "]";
 		}
 		ports[tok] = dir;
+	} else if (tok == ")" || (tok == "," && parse_stack[parse_stack_ptr -1] == "ports-list")) {
+		# yuck: context dependent handling of comma
+		parse_pop();
+		parse_expect("ports-list");
 	} # else ignore
 	} else {
 		parse_pop();
@@ -150,12 +159,23 @@ if (state == "top") {
 		parse_error("expected '(' or ';'");
 	}
 } else if (state == "ports-list") {
-	if (tok != ")") {
+	# reset globals, yuck!
+	range_first = "";
+	range_second = "";
+	if (tok != ")" && tok != ";") {
 	if (tok != ",") {
+		# ports can just be identifier or directional identifier
+		if (tok == "input") {
+			parse_push("input-list");
+		} else if (tok == "output") {
+			parse_push("output-list");
+		} else {
+		# is just untyped identifier
 		ordered_ports[port_index] = tok;
 		port_index++;
 		ports[tok] = "";	# initialize to unknown direction
 		# technically this isn't really needed
+		}
 	} # else ignore commas
 	} else {
 		parse_replace("module-body");
@@ -330,6 +350,8 @@ for (p in ports) {
 	ntoks = split(tokenize($0), toks);
 	for (i=1; i<= ntoks; ++i) {
 	if (length(toks[i])) {
+#		parse_debug();
+#		print "token: " toks[i];
 		parse_it(toks[i]);
 	}
 	}

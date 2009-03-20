@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.52 2009/03/18 00:22:55 fang Exp $
+	$Id: State-prsim.cc,v 1.53 2009/03/20 23:49:46 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2502,7 +2502,7 @@ State::excl_exception::inspect(const State& s, ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 error_policy_enum
-State::invariant_exception::inspect(const State& s, ostream& o) const {
+State::generic_exception::inspect(const State& s, ostream& o) const {
 	if (policy >= ERROR_INTERACTIVE) {
 		o << "Halting on node: " <<
 			s.get_node_canonical_name(node_id) << endl;
@@ -2517,20 +2517,29 @@ State::invariant_exception::inspect(const State& s, ostream& o) const {
  */
 struct State::auto_flush_queues {
 	State&		state;
+	const node_index_type	node;
 
 	explicit
-	auto_flush_queues(State& s) : state(s) { }
+	auto_flush_queues(State& s, const node_index_type ni) :
+		state(s), node(ni) { }
 
 	~auto_flush_queues() {
 		// check and flush pending queue, spawn fanout events
 		const break_type E(state.flush_pending_queue());
-		if (UNLIKELY(E >= ERROR_BREAK)) {
-			state.stop();		// set stop flag
-		}
-
+		// can anything go wrong here?
 		// check and flush pending queue against exclhi/lo events
 		state.flush_exclhi_queue();
 		state.flush_excllo_queue();
+
+		if (UNLIKELY(E >= ERROR_BREAK)) {
+			state.stop();		// set stop flag
+			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
+				const interference_exception x(node, E);
+				// this could be an instability exception
+				// as well, so use a generic exception for now
+				throw x;
+			}
+		}
 	}
 } __ATTRIBUTE_UNUSED__ ;
 
@@ -2554,7 +2563,6 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
 
-	const auto_flush_queues __auto_flush(*this);
 	if (event_queue.empty()) {
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
@@ -2570,6 +2578,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	const event_type& pe(get_event(ei));
 	const bool force = pe.forced();
 	const node_index_type ni = pe.node;
+	const auto_flush_queues __auto_flush(*this, ni);
 	node_type& n(__get_node(ni));
 	const value_enum prev = n.current_value();
 	node_index_type _ci;	// just a copy
@@ -4696,9 +4705,8 @@ do {
 	case 0:
 		if (up == PULL_ON &&
 				dp == PULL_ON) {
-			o << ", pull up/dn interfere";
-		} else
-		if (
+			o << ", pull up/dn interfere\n";
+		} else if (
 #if PRSIM_WEAK_RULES
 			w &&
 #endif
