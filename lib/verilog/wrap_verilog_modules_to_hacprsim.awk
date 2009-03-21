@@ -105,15 +105,19 @@ function reset_globals() {
 	}
 }
 
-function set_port_dir(tok, dir) {
+# param in_port declaration is local to ports-list (true) or module-body (false)
+function set_port_dir(tok, dir, 
+	# local vars
+	in_port) {
 if (tok == "[") {
 	parse_push("expect-range-first");
 } else {
+	in_port = parse_stack[parse_stack_ptr -1] == "ports-list";
 	if (tok != ";") {
 	# permit declarations like "output reg ..."
 	if (tok != "," && tok != "reg" && tok != ")") {
 		# this may be parsed directly in the module-ports
-		if (!length(ordered_ports[port_index])) {
+		if (in_port) {
 			ordered_ports[port_index] = tok;
 			port_index++;
 		}
@@ -123,7 +127,7 @@ if (tok == "[") {
 			dimensions[tok] = "[" range_first ":" range_second "]";
 		}
 		ports[tok] = dir;
-	} else if (tok == ")" || (tok == "," && parse_stack[parse_stack_ptr -1] == "ports-list")) {
+	} else if (tok == ")" || (tok == "," && in_port)) {
 		# yuck: context dependent handling of comma
 		parse_pop();
 		parse_expect("ports-list");
@@ -169,6 +173,8 @@ if (state == "top") {
 			parse_push("input-list");
 		} else if (tok == "output") {
 			parse_push("output-list");
+		} else if (tok == "inout") {
+			parse_push("inout-list");
 		} else {
 		# is just untyped identifier
 		ordered_ports[port_index] = tok;
