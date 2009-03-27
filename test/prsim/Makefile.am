@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.77 2009/03/20 23:49:49 fang Exp $
+#	$Id: Makefile.am,v 1.78 2009/03/27 20:07:06 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -10,7 +10,7 @@ SUBDIRS = . vpi
 HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem inv oscillator half-celem deep tree interference \
 	invs inv-invariant \
-	invariant-a invariant-b invariant-c invariant-d \
+	invariant-a invariant-b invariant-c invariant-d invariant-e \
 	invariant-not-X \
 	oscillator-wrong \
 	interference-a interference-b \
@@ -237,6 +237,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	invariant-b-05 invariant-b-06 invariant-b-08 \
 	invariant-c-01 invariant-c-02 invariant-c-03 \
 	invariant-d-01 invariant-d-02 invariant-d-03 \
+	invariant-e-01 \
 	inv-invariant-01 inv-invariant-02 inv-invariant-03 inv-invariant-04 \
 	invariant-not-X-01 \
 	non-CMOS-a-01 non-CMOS-a-02 \

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.53 2009/03/20 23:49:46 fang Exp $
+	$Id: State-prsim.cc,v 1.54 2009/03/27 20:07:05 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -496,10 +496,36 @@ State::node_is_driven(const node_index_type ni) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	A node is used if it has fanout or can cause a channel event.  
+	Invariants should NOT count as fanout, thus we have to inspect.
+	Always count weak rules as fanout.
  */
 bool
 State::node_is_used(const node_index_type ni) const {
+#if 0
 	return get_node(ni).fanout.size() || node_drives_any_channel(ni);
+#else
+{
+	typedef	fanout_array_type::const_iterator	const_iterator;
+	const node_type& n(get_node(ni));
+	const fanout_array_type& foa(n.fanout);
+	const_iterator fi(foa.begin()), fe(foa.end());
+	for ( ; fi!=fe; ++fi) {
+		const expr_index_type& gei = *fi;
+		const process_sim_state& ps(lookup_global_expr_process(gei));
+		const expr_index_type lei = ps.local_expr_index(gei);
+		const unique_process_subgraph& pg(ps.type());
+		const rule_type* r = pg.lookup_rule(pg.local_root_expr(lei));
+		if (!r->is_invariant()) {
+			return true;
+		}
+	}	// end for
+	if (node_drives_any_channel(ni)) {
+		return true;
+	}
+	return false;
+}
+#endif
+
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4446,11 +4472,14 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 		const bool w = true;
 #endif
 	// if we want invariants printed
-	if ((r->is_invariant()) && si) {
+	if ((r->is_invariant())) {
+	if (si) {
 		dump_subexpr(o << "$(", *ri, v) << ')' << endl;
-	} else if (w && sr) {
-		dump_rule(o, *ri, v, (n.fanin.size() > 1));
-		o << endl;
+	}
+	} else if (w) {
+	if (sr) {
+		dump_rule(o, *ri, v, (n.fanin.size() > 1)) << endl;
+	}
 	}
 	}	// end for
 	if (node_drives_any_channel(ni)) {

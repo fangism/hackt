@@ -1,5 +1,12 @@
 "NEWS"
-	$Id: NEWS,v 1.12 2008/11/11 20:06:08 fang Exp $
+	$Id: NEWS,v 1.13 2009/03/27 20:07:03 fang Exp $
+
+2009-03-27	David Fang	<fangism@users.sourceforge.net>
+
+	The HACKT project is now CVS-read-only accessible to the public
+		via anonymous checkout.  See instructions:
+		http://www.csl.cornell.edu/~fang/hackt/source.php#cvs
+
 
 2008-11-07	David Fang	<fangism@users.sourceforge.net>
 

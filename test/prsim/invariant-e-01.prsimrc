@@ -1,0 +1,9 @@
+# "invariant-e-01.prsimrc"
+# @haco@ invariant-e.haco-a
+
+allrules
+allinvariants
+fanout foo.t
+fanout-get foo.f
+unknown-inputs-fanout
+

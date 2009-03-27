@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-03-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-12:
+	  hacprsim bug: node fanout was mistakenly reporting 
+		invariants in some cases.
+		Re-defined node_is_used to only count fanout to rules,
+		not invariants.  
+
+
 2009-03-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-11:

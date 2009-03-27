@@ -1,0 +1,8 @@
+process: foo
+process: foo
+$((~foo.d[0] & foo.d[1]) | (foo.d[0] & ~foo.d[1]))
+Fanouts of node `foo.t':
+(to foo):
+Fanouts of node `foo.f':
+(to foo):
+X nodes with no fanin, with fanout:

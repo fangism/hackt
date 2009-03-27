@@ -1,0 +1,12 @@
+// "invariant-e.hac"
+// BUG: invariants should not show up as fanout
+// also check unknown-inputs-fanout
+
+defproc bit (bool d[2]; bool t,f) {
+        spec { $( ( ~d[0] & d[1] ) | ( d[0] & ~d[1] ) ) }
+        d[0]=f;
+        d[1]=t;
+}
+
+bit foo;
+
