@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.45 2009/03/17 20:19:16 fang Exp $
+	$Id: Command-prsim.cc,v 1.46 2009/04/01 18:01:37 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -5326,7 +5326,7 @@ Source values on channel @var{chan} using the @var{values} passed
 on the command.  
 Sourcing stops after last value is used. 
 Legal values are integers and 'X' for random.  
-If no values are given, then the channel will not souce any values, 
+If no values are given, then the channel will not source any values, 
 but it will still reset the data rails to neutral state.  
 @end deffn
 @end texinfo
@@ -5367,7 +5367,7 @@ Source values on channel @var{chan} using the @var{values} passed
 on the command.  
 Value sequence is repeated infinitely.  
 Legal values are integers and 'X' for random.  
-If no values are given, then the channel will not souce any values, 
+If no values are given, then the channel will not source any values, 
 but it will still reset the data rails to neutral state.  
 @end deffn
 @end texinfo
