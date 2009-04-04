@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.217 2009/02/28 01:20:39 fang Exp $
+#	$Id: Makefile.am,v 1.218 2009/04/04 01:10:36 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -63,7 +63,7 @@ DISTCLEANFILES += $(bin_SCRIPTS)
 # NOTE: this executes whatever is in PATH, not necessarily the built one
 hacinstdump: hacobjdump
 	{ $(ECHO) "#!/bin/sh -e" ; \
-	$(ECHO) "exec hacobjdump -a -G \"$$""@\"" ; } > $@ && \
+	$(ECHO) "exec hacobjdump -a -G -M \"$$""@\"" ; } > $@ && \
 	chmod +x $@
 
 scripts/init_hackt.sh: scripts/init_hackt.sh.in $(top_builddir)/config.status

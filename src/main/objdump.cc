@@ -4,7 +4,7 @@
 	Useful for testing object file integrity.  
 	This file came from "artobjdump.cc" in a previous life.  
 
-	$Id: objdump.cc,v 1.8 2009/02/16 01:38:30 fang Exp $
+	$Id: objdump.cc,v 1.9 2009/04/04 01:10:36 fang Exp $
  */
 
 #include <iostream>
@@ -21,11 +21,13 @@ struct objdump::options {
 	bool			show_table_of_contents;
 	bool			show_hierarchical_definitions;
 	bool			show_global_allocate_table;
+	bool			auto_allocate;
 	bool			help_only;
 
 	options() : show_table_of_contents(true), 
 		show_hierarchical_definitions(true),
 		show_global_allocate_table(true),
+		auto_allocate(false),
 		help_only(false) { }
 };	// end class options
 
@@ -70,7 +72,7 @@ objdump::main(int argc, char* argv[], const global_options&) {
 	const char* objfile = argv[optind];
 	if (!check_object_loadable(objfile).good)
 		return 1;
-	count_ptr<const module> the_module;
+	count_ptr<module> the_module;	// non-const b/c may auto-allocate
 if (opt.show_table_of_contents) {
 	the_module = load_module_debug(objfile);
 } else {
@@ -83,6 +85,10 @@ if (opt.show_table_of_contents) {
 if (opt.show_hierarchical_definitions) {
 	the_module->dump_definitions(cerr);
 }
+	if (opt.auto_allocate && !the_module->allocate_unique().good) {
+		cerr << "Error allocating global instances." << endl;
+		return 1;
+	}
 if (opt.show_global_allocate_table) {
 	the_module->dump_instance_map(cerr);
 }
@@ -92,7 +98,7 @@ if (opt.show_global_allocate_table) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 objdump::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+aAcCdDgGh";
+	static const char optstring[] = "+aAcCdDgGhmM";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -127,6 +133,12 @@ objdump::parse_command_options(const int argc, char* argv[], options& o) {
 	case 'h':
 		o.help_only = true;
 		break;
+	case 'm':
+		o.auto_allocate = false;
+		break;
+	case 'M':
+		o.auto_allocate = true;
+		break;
 	case ':':
 		cerr << "Expected but missing option-argument." << endl;
 		return 1;
@@ -154,7 +166,9 @@ objdump::usage(void) {
 "\t-D : show hierarchical definitions\n"
 "\t-g : hide global allocation tables\n"
 "\t-G : show global allocation tables\n"
-"\t-h : help on usage"
+"\t-h : help on usage\n"
+"\t-m : suppress automatic global instance allocation\n"
+"\t-M : enable automatic global instance allocation"
 	<< endl;
 }
 
