@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.54 2009/03/27 20:07:05 fang Exp $
+	$Id: State-prsim.cc,v 1.55 2009/04/11 01:44:20 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -487,6 +487,7 @@ State::initialize(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	A node is driven if it has fanin rule, or can be driven from channel.
+	Has nothing to do with the state of the node.
  */
 bool
 State::node_is_driven(const node_index_type ni) const {
@@ -501,10 +502,6 @@ State::node_is_driven(const node_index_type ni) const {
  */
 bool
 State::node_is_used(const node_index_type ni) const {
-#if 0
-	return get_node(ni).fanout.size() || node_drives_any_channel(ni);
-#else
-{
 	typedef	fanout_array_type::const_iterator	const_iterator;
 	const node_type& n(get_node(ni));
 	const fanout_array_type& foa(n.fanout);
@@ -523,9 +520,6 @@ State::node_is_used(const node_index_type ni) const {
 		return true;
 	}
 	return false;
-}
-#endif
-
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4879,6 +4873,8 @@ if (y.second) {
 				o << ", input";
 			}
 		}
+		// TODO: optional interactive-mode hook here!
+		// if not descending, remove from set v
 		if (u.size() <= limit) {
 		o << endl;
 		// INDENT_SCOPE(o);
@@ -5256,8 +5252,67 @@ node_is_X_no_driver_with_fanout(const State& s, const node_index_type ni) {
  */
 static
 bool
+node_is_unused(const State& s, const node_index_type ni) {
+	return !s.node_is_driven(ni) && !s.node_is_used(ni);
+}
+
+/**
+	Find nodes that are X's and unused outputs.  
+ */
+static
+bool
 node_is_X_not_used(const State& s, const node_index_type ni) {
 	return node_is_X(s.get_node(ni)) && !s.node_is_used(ni);
+}
+
+/**
+	Find nodes that are X's and used (have fanout).  
+ */
+static
+bool
+node_is_X_used(const State& s, const node_index_type ni) {
+	return node_is_X(s.get_node(ni)) && s.node_is_used(ni);
+}
+
+/**
+	Find nodes that are X's and have fanin, 
+	and is NOT being pulled.
+ */
+static
+bool
+node_is_X_has_fanin_off(const State& s, const node_index_type ni) {
+	const State::node_type& n(s.get_node(ni));
+if (node_is_X(n) && s.node_is_driven(ni)) {
+bool w = false;
+do {
+bool d = false;
+do {
+	// HERE
+	if (n.get_pull_struct(d
+#if PRSIM_WEAK_RULES
+		, w
+#endif
+		).pull() != PULL_OFF) {
+		return false;
+	}
+	d = !d;
+} while (d);
+	w = !w;
+} while (w);
+	return true;
+} else {
+	return false;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_unused_nodes(ostream& o) const {
+	o << "Nodes with no fanin, no fanout:" << endl;
+	vector<node_index_type> nodes;
+	find_nodes(nodes, &node_is_unused);
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5302,6 +5357,32 @@ State::dump_output_unknown_nodes(ostream& o) const {
 	o << "X nodes with no fanout (unused): " << endl;
 	vector<node_index_type> nodes;
 	find_nodes(nodes, &node_is_X_not_used);
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Status X intersected with nodes with fanout (used).
+ */
+ostream&
+State::dump_unknown_nodes_fanout(ostream& o) const {
+	o << "X nodes with fanout: " << endl;
+	vector<node_index_type> nodes;
+	find_nodes(nodes, &node_is_X_used);
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Status X node with fanin, whose pull-up/dn state is off.
+ */
+ostream&
+State::dump_unknown_nodes_fanin_off(ostream& o) const {
+	o << "X nodes with fanins pull-off: " << endl;
+	vector<node_index_type> nodes;
+	find_nodes(nodes, &node_is_X_has_fanin_off);
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }

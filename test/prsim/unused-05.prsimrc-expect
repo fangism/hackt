@@ -1,0 +1,22 @@
+X nodes with fanins pull-off: 
+	0	a : 1
+	0	b : 0
+X nodes with fanins pull-off: 
+c
+	0	a : 0
+	10	c : 1	[by a:=0]
+X nodes with fanins pull-off: 
+	10	a : 1
+X nodes with fanins pull-off: 
+	10	b : 1
+	20	c : 0	[by b:=1]
+X nodes with fanins pull-off: 
+	20	b : 0
+X nodes with fanins pull-off: 
+	20	a : X
+	30	c : X	[by a:=X]
+X nodes with fanins pull-off: 
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	30	b : X
+X nodes with fanins pull-off: 

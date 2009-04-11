@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-04-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-14:
+	  prsim: new diagnostic commands:
+		unused-nodes -- nodes with no fanin, no fanout
+		unknown-undriven-fanin -- nodes with fanins, but not pulling
+		unknown-fanout -- X nodes with fanout
+	  Documented and tested with new test cases.
+
+
 2009-04-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-13:

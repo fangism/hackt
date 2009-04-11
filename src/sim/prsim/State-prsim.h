@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.30 2009/03/20 23:49:47 fang Exp $
+	$Id: State-prsim.h,v 1.31 2009/04/11 01:44:21 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1336,10 +1336,19 @@ public:
 	dump_dangling_unknown_nodes(ostream&, const bool) const;
 
 	ostream&
+	dump_unused_nodes(ostream&) const;
+
+	ostream&
 	dump_output_nodes(ostream&) const;
 
 	ostream&
 	dump_output_unknown_nodes(ostream&) const;
+
+	ostream&
+	dump_unknown_nodes_fanout(ostream&) const;
+
+	ostream&
+	dump_unknown_nodes_fanin_off(ostream&) const;
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 

@@ -1,0 +1,11 @@
+# "unused-03.prsimrc"
+# @haco@ unused.haco-a
+
+echo unknown nodes with fanout
+unknown-fanout
+
+source inv-17.prsimrc
+
+echo unknown nodes with fanout
+unknown-fanout
+

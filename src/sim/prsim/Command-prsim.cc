@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.46 2009/04/01 18:01:37 fang Exp $
+	$Id: Command-prsim.cc,v 1.47 2009/04/11 01:44:20 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1854,6 +1854,35 @@ StatusNewline::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/unused-nodes.texi
+@deffn Command unused-nodes
+Print all nodes with no fanins and no fanouts, regardless of state.  
+@end deffn
+@end texinfo
+***/
+// TODO: what about invariant-only nodes?
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnusedNodes, "unused-nodes", info, 
+	"list all nodes with no fanin, no fanout")
+
+int
+UnusedNodes::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_unused_nodes(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+UnusedNodes::usage(ostream& o) {
+	o << name << " -- " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/unknown-inputs.texi
 @deffn Command unknown-inputs
 Print all nodes with value X that have no fanins, i.e. input-only nodes.  
@@ -1919,6 +1948,38 @@ UnknownInputsFanout::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/unknown-undriven-fanin.texi
+@deffn Command unknown-undriven-fanin
+Print all nodes with value X that have fanins, but are not being pulled.
+These nodes are typically candidates for adding resets to fix.  
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnknownUndrivenFanin,
+	"unknown-undriven-fanin", info, 
+	"list all X nodes with fanin, not being pulled")
+
+int
+UnknownUndrivenFanin::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_unknown_nodes_fanin_off(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+UnknownUndrivenFanin::usage(ostream& o) {
+	o << name <<
+	" -- list X nodes with no fanin, with fanout (channels counted)."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/unknown-outputs.texi
 @deffn Command unknown-outputs
 Print all nodes with value X that have no fanouts, i.e. output-only nodes.  
@@ -1947,6 +2008,37 @@ if (a.size() != 1) {
 void
 UnknownOutputs::usage(ostream& o) {
 	o << name << " -- list X nodes with no fanout (channels counted)."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unknown-fanout.texi
+@deffn Command unknown-fanout
+Print all nodes with value X that have fanouts.
+Connections to channel sinks and sources can counts as outputs (fake fanout).
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnknownFanout,
+	"unknown-fanout", info, 
+	"list all X nodes with no fanout")
+
+int
+UnknownFanout::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_unknown_nodes_fanout(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+UnknownFanout::usage(ostream& o) {
+	o << name << " -- list X nodes with fanout (channels counted)."
 		<< endl;
 }
 

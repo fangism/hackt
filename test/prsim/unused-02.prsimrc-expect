@@ -1,0 +1,22 @@
+unused nodes 
+Nodes with no fanin, no fanout:
+d
+e
+f
+X nodes with no fanin:
+a
+d
+e
+f
+expect first node to be X 
+expect queue initially empty 
+X nodes with no fanin:
+d
+e
+f
+should be not more unknown inputs 
+unused nodes 
+Nodes with no fanin, no fanout:
+d
+e
+f
