@@ -8,4 +8,6 @@ cycle
 set b 1
 cycle
 echo expect fail!!!
+status-interference
+status-weak-interference
 

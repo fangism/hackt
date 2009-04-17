@@ -4,3 +4,6 @@ WARNING: interference `c'
 >> cause: `b' (val: 1)
 c:X, pull up/dn interfere
 c:X, pull up/dn interfere
+Nodes with interference:
+c
+Nodes with weak-interference:

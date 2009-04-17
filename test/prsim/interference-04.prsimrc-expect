@@ -1,5 +1,11 @@
 	0	a : 1
 	0	b : 1
 	10	c : 0	[by b:=1]
+Nodes with interference:
+Nodes with weak-interference:
 	10	b : X
+Nodes with interference:
+Nodes with weak-interference:
 event queue:
+Nodes with interference:
+Nodes with weak-interference:

@@ -18,6 +18,21 @@ _Reset
 
 1 nodes:
 
+Nodes with interference:
+Nodes with weak-interference:
+R.x[0]
+R.x[1]
+R.x[2]
+R.x[3]
+R.x[4]
+R.x[5]
+R.x[6]
+R.x[7]
+R.x[8]
+R.x[9]
+R.x[10]
+R.x[11]
+R.x[12]
 	0	_Reset : 0
 	10	R.x[0] : 1	[by _Reset:=0]
 	20	R.x[1] : 0	[by R.x[0]:=1]
@@ -93,3 +108,5 @@ R.x[9]
 R.x[11]
 _Reset
 
+Nodes with interference:
+Nodes with weak-interference:

@@ -10,6 +10,8 @@ set b 0
 cycle
 assert c 1
 assert d 0
+status-interference
+status-weak-interference
 
 set a 1
 cycle
@@ -18,6 +20,8 @@ set b 1
 advance 4
 echo expect c- in queue
 pending c
+status-interference
+status-weak-interference
 
 set a 0
 step-event
@@ -28,4 +32,6 @@ pending c
 cycle
 assert c X
 assert d X
+status-interference
+status-weak-interference
 

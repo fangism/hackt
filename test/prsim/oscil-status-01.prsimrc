@@ -4,6 +4,8 @@
 status-newline U
 status-newline 0
 status-newline 1
+status-interference
+status-weak-interference
 
 watchall
 set _Reset 0
@@ -15,5 +17,6 @@ assert-queue
 status-newline U
 status-newline 0
 status-newline 1
-
+status-interference
+status-weak-interference
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.55 2009/04/11 01:44:20 fang Exp $
+	$Id: State-prsim.cc,v 1.56 2009/04/17 21:14:37 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4053,7 +4053,22 @@ State::status_nodes(ostream& o, const value_enum val, const bool nl) const {
 	vector<node_index_type> nodes;
 	find_nodes(nodes, f);
 	print_nodes(o, nodes, nl ? "\n" : " ");
-	return o << endl;
+	return o << endl;	// TODO: only if !nl, else flush
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param w if true, report weak-interference, else only report
+		strong interference.  
+ */
+ostream&
+State::status_interference(ostream& o, const bool w) const {
+	vector<node_index_type> nodes;
+	o << "Nodes with " << (w ? "weak-" : "") << "interference:" << endl;
+	find_nodes(nodes,
+		w ? &node_type::weak_interfering : &node_type::interfering);
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

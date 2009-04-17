@@ -1,7 +1,17 @@
+Nodes with interference:
+Nodes with weak-interference:
+c
 c: still unknown value 
+Nodes with interference:
+Nodes with weak-interference:
 testing for interference 
 event queue:
 	10	c : 1	[from a:=0]
+Nodes with interference:
+Nodes with weak-interference:
 expecting interference from guard 
 WARNING: interference `c'
 >> cause: `b' (val: 1)
+Nodes with interference:
+c
+Nodes with weak-interference:

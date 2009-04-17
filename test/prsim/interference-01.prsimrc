@@ -6,11 +6,16 @@
 
 timing uniform 10
 
+status-interference
+status-weak-interference
+
 set a 1
 set b 0
 cycle
 assert c X
 echo c: still unknown value
+status-interference
+status-weak-interference
 
 echo testing for interference
 
@@ -18,9 +23,13 @@ set a 0
 advance 5
 queue
 assert c X
+status-interference
+status-weak-interference
 
 set b 1
 echo expecting interference from guard
 cycle
 assert c X
+status-interference
+status-weak-interference
 

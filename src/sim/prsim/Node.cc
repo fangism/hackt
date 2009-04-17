@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.15 2009/02/11 02:35:19 fang Exp $
+	$Id: Node.cc,v 1.16 2009/04/17 21:14:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -249,6 +249,56 @@ NodeState::string_to_value(const string& v) {
 	} else {
 		return char_to_value(v[0]);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if node is strongly (definitely) interfering.
+	Either strong vs. strong, or weak vs. weak.
+	But not strong vs. weak.  
+ */
+bool
+NodeState::interfering(void) const {
+#if PRSIM_WEAK_RULES
+	// check strong vs. strong rules
+	const pull_enum u(get_pull_struct(true, NORMAL_RULE).pull());
+	const pull_enum d(get_pull_struct(false, NORMAL_RULE).pull());
+	if (u == PULL_ON && d == PULL_ON) { return true; }
+	// else check weak vs. weak rules
+	const pull_enum wu(get_pull_struct(true, WEAK_RULE).pull());
+	const pull_enum wd(get_pull_struct(false, WEAK_RULE).pull());
+	return (wu == PULL_ON && wd == PULL_ON);
+#else
+	const pull_enum u(get_pull_struct(true).pull());
+	const pull_enum d(get_pull_struct(false).pull());
+	return (u == PULL_ON && d == PULL_ON);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if node is weakly (possibly) interfering.
+	This excludes nodes that are strongly interfering.  
+ */
+bool
+NodeState::weak_interfering(void) const {
+#if PRSIM_WEAK_RULES
+	// check strong vs. strong rules
+	const pull_enum u(get_pull_struct(true, NORMAL_RULE).pull());
+	const pull_enum d(get_pull_struct(false, NORMAL_RULE).pull());
+	if (u != PULL_OFF && d != PULL_OFF &&
+		(u == PULL_WEAK || d == PULL_WEAK)) { return true; }
+	// else check weak vs. weak rules
+	const pull_enum wu(get_pull_struct(true, WEAK_RULE).pull());
+	const pull_enum wd(get_pull_struct(false, WEAK_RULE).pull());
+	return (wu != PULL_OFF && wd != PULL_OFF &&
+		(wu == PULL_WEAK || wd == PULL_WEAK));
+#else
+	const pull_enum u(get_pull_struct(true).pull());
+	const pull_enum d(get_pull_struct(false).pull());
+	return (u != PULL_OFF && d != PULL_OFF &&
+		(u == PULL_WEAK || d == PULL_WEAK));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.21 2009/02/11 02:35:20 fang Exp $
+	$Id: Node.h,v 1.22 2009/04/17 21:14:37 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -539,6 +539,12 @@ public:
 		return dir ? pull_up_state STR_INDEX(w) :
 			pull_dn_state STR_INDEX(w);
 	}
+
+	bool
+	interfering(void) const;
+
+	bool
+	weak_interfering(void) const;
 
 	void
 	save_state(ostream&) const;

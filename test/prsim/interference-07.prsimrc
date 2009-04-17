@@ -6,6 +6,8 @@ watchall
 set b 1
 set c 0
 cycle
+status-interference
+status-weak-interference
 assert c 0
 unset c
 queue
@@ -13,4 +15,6 @@ assert-queue
 echo expect c -> X
 cycle
 assert c X
+status-interference
+status-weak-interference
 

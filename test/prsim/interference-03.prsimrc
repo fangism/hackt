@@ -7,12 +7,18 @@ set b 0
 set a 0
 cycle
 assert c 1
+status-interference
+status-weak-interference
 
 set a X
 cycle
 assert c 1
+status-interference
+status-weak-interference
 
 unset c
 queue
 assertn-queue
+status-interference
+status-weak-interference
 

@@ -8,4 +8,6 @@ set b 1
 cycle
 why-x c
 why-x-verbose c
+status-interference
+status-weak-interference
 

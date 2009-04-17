@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.47 2009/04/11 01:44:20 fang Exp $
+	$Id: Command-prsim.cc,v 1.48 2009/04/17 21:14:36 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1851,6 +1851,61 @@ StatusNewline::usage(ostream& o) {
 	o << "status-newline <[0fF1tTxXuU]>" << endl;
 	o << "list all nodes with the matching current value" << endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/status-interference.texi
+@deffn Command status-interference
+@deffnx Command status-weak-interference
+Print all nodes that have strongly interfering fanins, i.e.
+the pull-up and pull-downs are on and causing shorts.  
+@command{status-weak-interfere} reports possible interferences
+where at least one direction is being pulled @t{X} (unknown).  
+This command is useful for checking the safety of a particular 
+state or snapshot of your circuit.  
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusInterfere, "status-interference", info, 
+	"show all nodes with currently interfering opposing rules")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusWeakInterfere, "status-weak-interference", info, 
+	"show all nodes with possibly interfering opposing rules")
+
+int
+StatusInterfere::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.status_interference(cout, false);
+	return Command::NORMAL;
+}
+}
+
+void
+StatusInterfere::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+int
+StatusWeakInterfere::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.status_interference(cout, true);
+	return Command::NORMAL;
+}
+}
+
+void
+StatusWeakInterfere::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

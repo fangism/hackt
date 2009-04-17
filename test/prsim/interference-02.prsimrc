@@ -12,6 +12,8 @@ set a 1
 cycle
 assert c X
 echo c: still unknown value
+status-interference
+status-weak-interference
 
 echo testing for interference
 
@@ -19,9 +21,13 @@ set b 1
 advance 5
 queue
 assert c X
+status-interference
+status-weak-interference
 
 set a 0
 echo expecting interference from guards
 cycle
 assert c X
+status-interference
+status-weak-interference
 

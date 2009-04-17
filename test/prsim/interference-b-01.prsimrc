@@ -8,4 +8,6 @@ set a 0
 cycle
 set a 1
 cycle
+status-interference
+status-weak-interference
 
