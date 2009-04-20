@@ -1,0 +1,10 @@
+// "067.hac"
+// test case for improving error message
+// contributed by Carlos Tadeo Ortega Otero
+
+namespace inverter { }
+
+defproc inverter ( bool a, b ) { }
+
+inverter i;
+

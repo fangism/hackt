@@ -1,5 +1,5 @@
 # "test/parser/namespace/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2009/03/09 07:32:20 fang Exp $
+#	$Id: Makefile.am,v 1.17 2009/04/20 20:35:30 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -9,6 +9,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	021 023 024 026 028 \
 	030 031 032 034 035 036 \
 	045 046 047 \
+	067 \
 	050-act 051-act 052-act 053-act 054-act \
 	055-act 056-act 057-act 058-act 059-act \
 	act-002 act-003 act-004

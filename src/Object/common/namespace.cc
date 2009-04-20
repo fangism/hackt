@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.31 2008/03/17 23:02:20 fang Exp $
+ 	$Id: namespace.cc,v 1.32 2009/04/20 20:35:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -1724,8 +1724,9 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
 				return return_type(NULL);
 			}
 		} else {
-			probe->what(cerr << "Identifier already taken by ")
-				<< endl << "ERROR: Failed to add definition! ";
+			probe->what(cerr << "Identifier `" << k <<
+				"\' already taken by ") << endl <<
+				"ERROR: Failed to add definition! ";
 			return return_type(NULL);
 		}
 	} else {

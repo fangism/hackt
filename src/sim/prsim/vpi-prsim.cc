@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.15 2009/03/17 20:19:19 fang Exp $
+	$Id: vpi-prsim.cc,v 1.16 2009/04/20 20:35:27 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -47,6 +47,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #endif
 
 #include "vpi_user.h"
+
+// use 64b time if there is 64b native integer available
+#if	(SIZEOF_LONG >= 8)
+#define	TIME_64
+#endif
 
 /**
 	Debugging switches
@@ -130,7 +135,7 @@ static void vcs_to_prstime (const s_vpi_time *p, Time_t *tm)
 static void prs_to_vcstime (s_vpi_time *p, const Time_t *tm)
 {
 #ifdef TIME_64
-  const uint64 t = *tm;
+  const uint64 t = uint64(*tm);		// careful: double -> long conversion
   p->high = (t >> 32) & 0xffffffffUL;
   p->low = t & 0xffffffffUL;
 #else

@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-04-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-16:
+	  Improvement of compiler diagnostic when identifier conflicts
+		during definition declaration.  (Thanks, Tadeo!)
+		Test case added: namespace/067.
+	  vpi_prsim.cc: enabled TIME_64 when (SIZEOF_LONG >= 8)
+		to prevent time overflow issues from PLI.
+		Only affects 64b platforms.  No test case added. [!]
+
+
 2009-04-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-15:
