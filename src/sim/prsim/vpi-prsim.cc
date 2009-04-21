@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.16 2009/04/20 20:35:27 fang Exp $
+	$Id: vpi-prsim.cc,v 1.17 2009/04/21 17:14:31 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -37,7 +37,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/memory/count_ptr.tcc"
 #include "util/string.h"
 #include "util/tokenize.h"		// only for debugging
-#include "util/inttypes.h"
+#include "util/inttypes.h"		// for 64b int type
 #include "util/c_decl.h"
 #include "util/stacktrace.h"
 #include "util/utypes.h"
@@ -48,8 +48,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "vpi_user.h"
 
-// use 64b time if there is 64b native integer available
-#if	(SIZEOF_LONG >= 8)
+// use 64b time if there is 64b native integer available (some 32b platforms)
+#ifdef	HAVE_UINT64_TYPE	// from "util/inttypes.h"
 #define	TIME_64
 #endif
 
