@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2008/12/11 22:45:11 fang Exp $
+#	$Id: Makefile.am,v 1.9 2009/04/27 21:19:01 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -52,16 +52,10 @@ Makefile.copy: example.mk Makefile.am
 pli.tab:
 	$(ECHO) "acc=wn:*" > $@
 
-PLI_FLAGS = -P pli.tab
+# PLI_FLAGS = -P pli.tab
 
-# custom rule
-and_tree.vx: and_tree.v standard.v-wrap pli.tab
-if HAVE_VPI
-	+$(VCS_ENV) $(VCS) $(AM_VCS_FLAGS) $(AM_VCS_VPI_FLAGS) $(PLI_FLAGS) -o $@ $<
-else
-	@$(ECHO) "VPI not explicitly enabled during configure."
-endif
-
+# additional dependencies
+and_tree.vx: standard.v-wrap pli.tab
 
 # force: always re-run this test
 inverters.vxi-subdir-out: Makefile.copy force

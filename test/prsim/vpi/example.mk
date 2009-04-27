@@ -15,14 +15,18 @@ VCS_FLAGS = @vcs_flags@
 VPI_FLAGS = @vpi_flags@
 VPI_ENV = @vpi_env@
 PLI_FLAGS =
-MORE_PLI_FLAGS = $(PLI_FLAGS) -P pli.tab
 
 .SUFFIXES: .v .vx .vx-log .v-wrap
 
 include $(pkgdatadir)/mk/hackt.mk
 
+EXTRACT_VCS_FLAGS_PIPE = grep "@vcs-flags@" | sed 's/^.*@vcs-flags@[ ]*//g'
+
 .v.vx:
-	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(PLI_FLAGS) -o $@ $< && touch $@
+	+vflags=`cat $< | $(EXTRACT_VCS_FLAGS_PIPE)` && \
+	$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(PLI_FLAGS) $$vflags \
+		-o $@ $< && \
+	touch $@
 
 .v.v-wrap:
 	{ echo "\`include \"$<\"" ; echo "" ; \
@@ -34,12 +38,8 @@ include $(pkgdatadir)/mk/hackt.mk
 all: inverters.vx inverters-delay.vx oscillator-fanout.vx \
 	shoelace.vx channel-source-sink.vx and_tree.vx
 
-# special cases
-and_tree.vx: and_tree.v standard.v-wrap pli.tab
-	+$(VCS_ENV) $(VCS) $(VCS_FLAGS) $(VPI_FLAGS) $(MORE_PLI_FLAGS) -o $@ $< && touch $@
-
-
 # extra deps
+and_tree.vx: standard.v-wrap pli.tab
 inverters.vx-log: inverters.haco-a
 inverters-delay.vx-log: inverters.haco-a
 shoelace.vx-log: inverters.haco-a

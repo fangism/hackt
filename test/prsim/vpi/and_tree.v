@@ -1,4 +1,5 @@
 // "and_tree.v"
+// @vcs-flags@ -P pli.tab
 
 `timescale 1ps / 1ps
 
