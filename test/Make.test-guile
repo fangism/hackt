@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.18 2009/04/29 05:33:51 fang Exp $
+#	$Id: Make.test-guile,v 1.19 2009/04/29 22:05:40 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -56,7 +56,11 @@ HACKT_GUILE_LOAD_PATH=$(top_srcdir)/src/scm$(PATH_SEPARATOR)$(srcdir)
 # point search paths to pre-installed libraries
 HACSCM_TEST_ENVIRONMENT = \
 	GUILE_LOAD_PATH=`$(ECHO) $(HACKT_GUILE_LOAD_PATH) | $(SED) 's/ //g'` \
-	$(LTDL_SHLIBPATH_VAR)=$(PRE_INST_LDPATH)
+	LTDL_LIBRARY_PATH=$(PRE_INST_LDPATH)
+
+if BUILD_DARWIN
+HACSCM_TEST_ENVIRONMENT += $(LTDL_SHLIBPATH_VAR)=$(PRE_INST_LDPATH)
+endif
 
 HACKT_GUILE_ENV_EXE = \
 	$(HACSCM_TEST_ENVIRONMENT) $(HACKT_GUILE_EXE)

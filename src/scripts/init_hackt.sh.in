@@ -1,6 +1,6 @@
 #!/bin/sh
 # "init_hackt.sh"
-#	$Id: init_hackt.sh.in,v 1.6 2009/04/29 05:33:32 fang Exp $
+#	$Id: init_hackt.sh.in,v 1.7 2009/04/29 22:05:41 fang Exp $
 #	vi: ft=sh
 # source this file to sets up environment variables
 # MAINTAINENCE: keep this consistent with its init_hackt.csh counterpart
@@ -46,12 +46,12 @@ fi
 export GUILE_LOAD_PATH
 
 # setup hackt module library path (plug-ins)
-if test -z "$@LTDL_SHLIBPATH_VAR@" ; then
-	@LTDL_SHLIBPATH_VAR@=$pkglibdir
+if test -z "$LTDL_LIBRARY_PATH" ; then
+	LTDL_LIBRARY_PATH=$pkglibdir
 else
-	append_path @LTDL_SHLIBPATH_VAR@ $pkglibdir
+	append_path LTDL_LIBRARY_PATH $pkglibdir
 fi
-export @LTDL_SHLIBPATH_VAR@
+export LTDL_LIBRARY_PATH
 # do we need to do the same for DYLD_LIBRARY_PATH?
 
 # TODO: setup MANPATH (once we get man pages)
