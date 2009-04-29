@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.20 2009/03/10 18:01:43 fang Exp $
+	$Id: Channel-prsim.cc,v 1.21 2009/04/29 05:33:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -77,7 +77,7 @@ using std::make_pair;
 using std::mem_fun_ref;
 using std::ostream_iterator;
 using std::back_inserter;
-using util::copy_if;
+USING_COPY_IF
 using util::set_inserter;
 #include "util/using_ostream.h"
 using util::read_value;

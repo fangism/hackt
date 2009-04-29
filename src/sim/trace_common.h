@@ -1,6 +1,6 @@
 /**
 	\file "sim/trace_common.h"
-	$Id: trace_common.h,v 1.2 2009/02/01 07:21:28 fang Exp $
+	$Id: trace_common.h,v 1.3 2009/04/29 05:33:34 fang Exp $
 	Generic simulation execution trace structures.  
  */
 
@@ -77,7 +77,9 @@ struct event_trace_point {
 	 */
 	trace_index_type			cause_id;
 
-	event_trace_point() { }		// default uninitialized, lazy
+	event_trace_point() : timestamp(0), event_id(0), cause_id(0) { }
+		// default can be uninitialized, lazy
+
 	event_trace_point(const time_type& t, const trace_index_type ei, 
 			const trace_index_type c = INVALID_TRACE_INDEX) :
 			timestamp(t), event_id(ei), cause_id(c)
@@ -241,7 +243,10 @@ public:
 		 */
 		size_t				chunk_size;
 
-		entry() { }	// undefined values
+		entry() : start_index(0), start_time(0), 
+			file_offset(0), chunk_size(0) { }
+			// can be undefined values, don't care
+
 		entry(const size_t i, 
 			const trace_time_type t, const size_t o, 
 			const size_t s) :

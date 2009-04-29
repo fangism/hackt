@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.103 2009/03/14 01:46:22 fang Exp $
+#	$Id: ChangeLog,v 1.104 2009/04/29 05:33:45 fang Exp $
+
+2009-04-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-17:
+	  util/copy_if.h: now configure checks if already defined
+		by C++ STL, recently appeared in gcc-4.4 (c++0x)
+	  Minor fixes to accommodate strictire g++-4.4.
+		util/persistent.cc: re-wrote char[4] -> int cast.
+
 
 2009-03-13	David Fang		<fangism@users.sourceforge.net>
 

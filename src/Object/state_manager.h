@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.16 2009/02/11 02:35:08 fang Exp $
+	$Id: state_manager.h,v 1.17 2009/04/29 05:33:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
@@ -106,17 +106,20 @@ protected:
 	Most simulators will interact with this.  
 	Inheriting from base classes protectedly (was private) because of
 	explanation at http://gcc.gnu.org/bugzilla/show_bug.cgi?id=12265
+	As of g++-4.4 anything but public inheritance is rejected
+	in Object/state_manager.cc during static_cast... need to think why...
+	4.3 and earlier accepted this, perhaps wrongly?
  */
 class state_manager :
 	// public cflat_visitee?
-	protected global_entry_pool<process_tag>, 
-	protected global_entry_pool<channel_tag>, 
+	public global_entry_pool<process_tag>, 
+	public global_entry_pool<channel_tag>, 
 #if ENABLE_DATASTRUCTS
-	protected global_entry_pool<datastruct_tag>, 
+	public global_entry_pool<datastruct_tag>, 
 #endif
-	protected global_entry_pool<enum_tag>, 
-	protected global_entry_pool<int_tag>, 
-	protected global_entry_pool<bool_tag> {
+	public global_entry_pool<enum_tag>, 
+	public global_entry_pool<int_tag>, 
+	public global_entry_pool<bool_tag> {
 	typedef	state_manager				this_type;
 	typedef	global_entry_pool<process_tag>		process_pool_type;
 	typedef	global_entry_pool<channel_tag>		channel_pool_type;

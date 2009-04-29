@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.13 2008/05/15 17:00:59 fang Exp $
+	$Id: token.cc,v 1.14 2009/04/29 05:33:24 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -165,7 +165,7 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_char)
  */
 int
 token_char::string_compare(const char* d) const {
-	const char cs[2] = { c, 0 };
+	const char cs[2] = { char(c), '\0' };
 	return strcmp(cs,d);
 }
 

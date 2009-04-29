@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.20 2009/02/01 07:21:32 fang Exp $
+	$Id: State.cc,v 1.21 2009/04/29 05:33:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -138,7 +138,7 @@ using std::mem_fun_ref;
 using std::ostream_iterator;
 using std::ptr_fun;
 using util::set_inserter;
-using util::copy_if;
+USING_COPY_IF
 using util::write_value;
 using util::read_value;
 using util::value_writer;

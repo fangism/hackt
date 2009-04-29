@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.5 2009/02/01 07:21:34 fang Exp $
+	$Id: Trace.cc,v 1.6 2009/04/29 05:33:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -107,7 +107,7 @@ template <class Tag>
 void
 state_trace_window_base<Tag>::read(istream& i) {
 	STACKTRACE_VERBOSE;
-	size_t s;
+	size_t s = 0;
 	read_value(i, s);
 if (i) {
 	data_array.resize(s);

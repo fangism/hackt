@@ -3,9 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-04-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-17:
+	  Patched to support FSF's g++-4.4, released last week!
+		Various uninitialized warnings in some trace ctors, 
+		some invalid private accesses in Object/state_manager.h.
+	  scripts/init_hackt.*.in: replace LTDL_LIBRARY_PATH with
+		AC_SUBST'd @LTDL_SHLIBPATH_VAR@, which is DYLD_LIBRARY_PATH
+		on Darwin, this was broken since the guile re-work -83-02.
+	  SPEC registry: replaced util::qmap with std::map.
+
+
 2009-04-27	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-83-16b:
+	* HACKT-00-01-04-main-00-83-16-b:
 	  No real source revision.
 	  Added lib/scripts/prsimrc_alter_instance.awk
 	  Updated test/Make.test-vpi

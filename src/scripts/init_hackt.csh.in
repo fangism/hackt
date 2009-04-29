@@ -1,6 +1,6 @@
 #!/bin/sh
 # "init_hackt.csh"
-#	$Id: init_hackt.csh.in,v 1.6 2009/02/23 09:11:28 fang Exp $
+#	$Id: init_hackt.csh.in,v 1.7 2009/04/29 05:33:31 fang Exp $
 #	vi: ft=csh
 # source this file to sets up environment variables
 # MAINTAINENCE: keep this consistent with its init_hackt.sh counterpart
@@ -44,10 +44,10 @@ endif
 
 
 # setup hackt module library path (plug-ins)
-if ( $?LTDL_LIBRARY_PATH ) then
-	append_path LTDL_LIBRARY_PATH ${pkglibdir}
+if ( $?@LTDL_SHLIBPATH_VAR@ ) then
+	append_path @LTDL_SHLIBPATH_VAR@ ${pkglibdir}
 else
-	setenv LTDL_LIBRARY_PATH ${pkglibdir}
+	setenv @LTDL_SHLIBPATH_VAR@ ${pkglibdir}
 endif
 # do we need to do the same for DYLD_LIBRARY_PATH?
 

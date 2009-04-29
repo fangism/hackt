@@ -1,6 +1,6 @@
 /**
 	\file "sim/trace_common.cc"
-	$Id: trace_common.cc,v 1.2 2009/02/01 07:21:27 fang Exp $
+	$Id: trace_common.cc,v 1.3 2009/04/29 05:33:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -131,7 +131,7 @@ event_trace_window::write(ostream& o) const {
 void
 event_trace_window::read(istream& i) {
 	STACKTRACE_VERBOSE;
-	size_t s;
+	size_t s = 0;
 	read_value(i, s);
 if (i) {
 	event_array.resize(s);
@@ -278,7 +278,7 @@ trace_file_contents::write(ostream& o) const {
 void
 trace_file_contents::read(istream& i) {
 	STACKTRACE_VERBOSE;
-	size_t s;
+	size_t s = 0;
 	read_value(i, s);
 if (i) {
 	STACKTRACE_INDENT_PRINT("contents: " << s << " entries" << endl);
@@ -292,7 +292,7 @@ if (i) {
 #endif
 #if TRACE_ALIGNMENT_MARKERS
 {
-	size_t check;
+	size_t check = 0;
 	read_value(i, check);
 	INVARIANT(check == 0xFFFFFFFF);
 }

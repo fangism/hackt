@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.19 2008/10/31 02:11:44 fang Exp $
+	$Id: cflat_printer.cc,v 1.20 2009/04/29 05:33:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -417,9 +417,10 @@ cflat_prs_printer::visit(const footprint_macro& m) {
 void
 cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
 	STACKTRACE_VERBOSE;
-	const SPEC::cflat_spec_definition_entry&
-		s(SPEC::cflat_spec_registry[d.name]);
-	INVARIANT(s);		// was already checked during unroll
+	const SPEC::cflat_spec_registry_type::const_iterator
+		f(SPEC::cflat_spec_registry.find(d.name));
+	INVARIANT(f != SPEC::cflat_spec_registry.end());
+	const SPEC::cflat_spec_definition_entry& s(f->second);
 	if (!s.check_param_args(d.params).good
 			|| !s.check_node_args(d.nodes).good) {
 		cerr << "Error with spec directive." << endl;

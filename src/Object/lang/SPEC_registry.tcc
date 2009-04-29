@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_registry.tcc"
-	$Id: SPEC_registry.tcc,v 1.2 2006/04/23 07:37:23 fang Exp $
+	$Id: SPEC_registry.tcc,v 1.3 2009/04/29 05:33:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_REGISTRY_TCC__
@@ -8,6 +8,7 @@
 
 #include "Object/lang/SPEC_registry.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "util/macros.h"
 
 namespace HAC {
 namespace entity {

@@ -1,12 +1,12 @@
 /**
 	\file "Object/lang/SPEC_registry.h"
-	$Id: SPEC_registry.h,v 1.5 2006/04/23 07:37:22 fang Exp $
+	$Id: SPEC_registry.h,v 1.6 2009/04/29 05:33:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_REGISTRY_H__
 #define	__HAC_OBJECT_LANG_SPEC_REGISTRY_H__
 
-#include "util/qmap.h"
+#include "util/STL/map_fwd.h"
 #include "Object/lang/directive_definition.h"
 
 namespace HAC {
@@ -69,7 +69,7 @@ public:
 
 typedef	spec_visitor_entry<cflat_prs_printer>	cflat_spec_definition_entry;
 
-typedef	util::default_qmap<string, cflat_spec_definition_entry>::type
+typedef	std::default_map<string, cflat_spec_definition_entry>::type
 						cflat_spec_registry_type;
 
 extern const cflat_spec_registry_type		cflat_spec_registry;

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Trace-prsim.cc"
-	$Id: Trace-prsim.cc,v 1.2 2009/02/01 07:21:44 fang Exp $
+	$Id: Trace-prsim.cc,v 1.3 2009/04/29 05:33:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -119,7 +119,7 @@ trace_chunk::write(ostream& o) const {
 void
 trace_chunk::read(istream& i) {
 	STACKTRACE_VERBOSE;
-	size_t s;
+	size_t s = 0;
 	read_value(i, s);
 	resize(s);
 	for_each(begin(), end(), bind2nd_argval(

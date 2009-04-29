@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent.cc"
 	Method definitions for persistent class interface.  
-	$Id: persistent.cc,v 1.9 2008/11/23 17:55:00 fang Exp $
+	$Id: persistent.cc,v 1.10 2009/04/29 05:33:48 fang Exp $
  */
 
 #include <cstdlib>
@@ -36,14 +36,30 @@ persistent::hash_key::hash_key() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Wrapped char to int type-punning cast.
+	Effectively a reinterpret cast.
+ */
+static
+int
+cast_char4_to_int(const char* k) {
+#if 0
+	return *reinterpret_cast<int*>(k);
+#else
+	return (((((int(k[0]) << 8) | int(k[1])) << 8) |
+		int(k[2])) << 8) | int(k[3]);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param s must not have length > MAX_LEN;
  */
 persistent::hash_key::hash_key(const char* s) {
 	INVARIANT(strlen(s) <= MAX_LEN);
 	strncpy(key, s, MAX_LEN);	// will pad with '\0'
-	INVARIANT(sizeof(int) == 4);
-	const int& hi = * reinterpret_cast<int*>(&key[0]);
-	const int& lo = * reinterpret_cast<int*>(&key[4]);
+	INVARIANT(sizeof(int) == 4);	// should boost::static_assert
+	const int hi = cast_char4_to_int(key);
+	const int lo = cast_char4_to_int(&key[4]);
 	hash = hi ^ lo;
 }
 
@@ -73,9 +89,9 @@ persistent::hash_key::hash_key(const string& s) {
 	be externally observable.  
 	Only the key string is observable. 
 ***/
-	INVARIANT(sizeof(int) == 4);
-	const int& hi = * reinterpret_cast<int*>(&key[0]);
-	const int& lo = * reinterpret_cast<int*>(&key[4]);
+	INVARIANT(sizeof(int) == 4);	// boost::static_assert
+	const int hi = cast_char4_to_int(key);
+	const int lo = cast_char4_to_int(&key[4]);
 	hash = hi ^ lo;
 }
 

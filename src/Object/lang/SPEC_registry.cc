@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.19 2008/11/05 23:03:35 fang Exp $
+	$Id: SPEC_registry.cc,v 1.20 2009/04/29 05:33:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,6 +12,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <vector>
 #include <set>
+#include <map>
 #include "Object/lang/SPEC_registry.tcc"
 #include "Object/lang/SPEC_common.h"
 #include "Object/lang/directive_base.h"
@@ -20,13 +21,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_param_expr_list.h"
 #include "main/cflat_options.h"
 #include "common/TODO.h"
-#include "util/qmap.tcc"
 #include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
 namespace SPEC {
-using util::qmap;
 #include "util/using_ostream.h"
 
 // explicit template instantiation
@@ -62,20 +61,18 @@ size_t
 register_cflat_spec_class(void) {
 	typedef	cflat_spec_registry_type::iterator	iterator;
 	typedef	cflat_spec_registry_type::mapped_type	mapped_type;
-	const string k(T::name);
-	mapped_type& m(__cflat_spec_registry[k]);
-	if (m) {
-		cerr << "Error: spec directive by the name \'" << k <<
+	typedef	cflat_spec_registry_type::value_type	value_type;
+	const cflat_spec_definition_entry e(T::name, &T::main,
+		&T::check_num_params, &T::check_num_nodes,
+		&T::check_param_args, &T::check_node_args);
+	const value_type k(T::name, e);
+	const std::pair<iterator, bool>
+		m(__cflat_spec_registry.insert(k));
+	if (!m.second) {
+		cerr << "Error: spec directive by the name \'" << k.first <<
 			"\' has already been registered!" << endl;
 		THROW_EXIT;
 	}
-	m = cflat_spec_definition_entry(k, &T::main,
-		&T::check_num_params, &T::check_num_nodes,
-		&T::check_param_args, &T::check_node_args);
-	// oddly, this is needed to force instantiation of the [] const operator
-	const mapped_type& n
-		__ATTRIBUTE_UNUSED_CTOR__((cflat_spec_registry[k]));
-	INVARIANT(n);
 	return cflat_spec_registry.size();
 }
 

@@ -1,13 +1,19 @@
 /**
 	\file "util/copy_if.h"
-	This missing copy_if, and transform_ig algorithm 
+	This missing copy_if, and transform_if algorithm 
 	from the standard library.  
-	$Id: copy_if.h,v 1.3 2009/02/28 01:20:47 fang Exp $
+	$Id: copy_if.h,v 1.4 2009/04/29 05:33:46 fang Exp $
  */
 
 #ifndef	__UTIL_COPY_IF_H__
 #define	__UTIL_COPY_IF_H__
 
+#include "config.h"
+#ifdef	HAVE_STL_COPY_IF
+#include <algorithm>
+#define	USING_COPY_IF		using std::copy_if;
+#else
+#define	USING_COPY_IF		using util::copy_if;
 namespace util {
 //=============================================================================
 // declaration
@@ -70,5 +76,6 @@ transform_if(In first, In last, In2 first2, Out res, Pred p, Op op) {
 //=============================================================================
 }	// end namespace util
 
+#endif	// HAVE_STL_COPY_IF
 #endif	// __UTIL_COPY_IF_H__
 

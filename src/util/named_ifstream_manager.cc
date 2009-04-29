@@ -1,6 +1,6 @@
 /**
 	\file "lexer/ifstream_manager.cc"
-	$Id: named_ifstream_manager.cc,v 1.4 2008/11/23 17:54:56 fang Exp $
+	$Id: named_ifstream_manager.cc,v 1.5 2009/04/29 05:33:46 fang Exp $
  */
 
 #include <iostream>
@@ -43,7 +43,7 @@ named_ifstream_stack::push(const string& fp) {
 if ((fp != named_ifstream::dev_stdin)) {
 	const bool ret = _registry.push(fp);
 	const named_ifstream dummy;
-	_files.push_back(dummy);
+	_files.push_back(dummy);	// uses fake copy ctor
 	_files.back().open(fp);
 	INVARIANT(_files.back());
 	return ret;

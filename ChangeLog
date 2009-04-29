@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2009-04-29	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-17:
+	  Ported to g++-4.4.
+	  config/cxx_STL.m4: check for copy_if
+	  configure.ac: use it
+
+
 2009-03-08	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-06-merged-footprint-02-05:

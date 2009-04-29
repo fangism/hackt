@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.6 2009/02/01 07:21:34 fang Exp $
+	$Id: Trace.h,v 1.7 2009/04/29 05:33:39 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -38,7 +38,8 @@ struct state_trace_point : public state_trace_point_base {
 	typedef	typename extractor_policy::value_type	value_type;
 	value_type				raw_data;
 
-	state_trace_point() { }		// uninitialized
+	state_trace_point() : raw_data() { }
+		// can be uninitialized, don't care
 
 	state_trace_point(const value_type&, 
 		const trace_index_type, const size_t);

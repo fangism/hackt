@@ -1,6 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.90 2009/04/27 21:19:00 fang Exp $
+#	$Id: ChangeLog,v 1.91 2009/04/29 05:33:50 fang Exp $
 # ChangeLog for test directory.
+
+2009-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-17:
+	  Make.test-guile: fixed use of LTDL_LIBRARY_PATH to use 
+		$(LTDL_SHLIBPATH_VAR), which is DYLD_LIBRARY_PATH on Darwin.
+
 
 2009-04-27	David Fang		<fangism@users.sourceforge.net>
 

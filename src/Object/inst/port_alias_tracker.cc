@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.24 2009/01/22 21:01:42 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.25 2009/04/29 05:33:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -36,7 +36,7 @@ namespace entity {
 using util::read_value;
 using util::write_value;
 using util::auto_indent;
-using util::copy_if;
+USING_COPY_IF
 using std::for_each;
 using std::back_inserter;
 

@@ -2,7 +2,7 @@
 	\file "util/named_ifstream_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: named_ifstream_manager.h,v 1.4 2006/04/27 00:17:08 fang Exp $
+	$Id: named_ifstream_manager.h,v 1.5 2009/04/29 05:33:47 fang Exp $
  */
 
 #ifndef	__UTIL_NAMED_IFSTREAM_MANAGER_H__
@@ -15,8 +15,10 @@
 #include <stack>
 #include <utility>			// for std::pair
 #include "config.h"
+#if 0
 #include "util/STL/construct_fwd.h"
 #include "util/STL/allocator_fwd.h"
+#endif
 #include "util/unique_list.h"
 #include "util/macros.h"
 #include "util/attributes.h"
@@ -49,6 +51,7 @@ typedef	unique_list<string>		search_paths;
  */
 class named_ifstream : public std::ifstream {
 	typedef	std::ifstream			parent_type;
+	typedef	named_ifstream			this_type;
 public:
 	static const string			dev_stdin;
 private:
@@ -77,19 +80,22 @@ public:
 		return *this;
 	}
 
+#if 0
 private:
 	FRIEND_STD_CONSTRUCT2
 #if	defined(HAVE_EXT_NEW_ALLOCATOR_H)
 	template <typename>
 	friend class NEW_ALLOCATOR_NAMESPACE::new_allocator;
 #endif
-	typedef	named_ifstream		this_type;
+#endif
 
 	// non-copyable: note: doesn't actually copy
+	// needed to be able to extend list (push_back)
 	explicit
 	named_ifstream(const this_type&) :
 		std::ios(), std::ifstream(), _name() { }
 
+private:
 	// not assignable
 	this_type&
 	operator = (const this_type&);

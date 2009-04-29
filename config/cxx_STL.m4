@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.13 2008/11/25 21:52:40 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.14 2009/04/29 05:33:20 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -757,3 +757,51 @@ AC_DEFINE(HAVE_STL_TREE, [],
 	[True if STL <set> is based on std::_Rb_tree])
 fi
 ])
+
+dnl @synopsis FANG_CXX_STL_COPY_IF
+dnl
+dnl Defines HAVE_STL_COPY_IF if present.  
+dnl known to be present in gcc-4.4 c++0x mode.
+dnl
+dnl @category Cxx
+dnl @version 2009-04-25
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STL_COPY_IF],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[whether libstdc++ (STL) already contains copy_if algorithm],
+[fang_cv_cxx_stl_copy_if],
+[AC_LANG_PUSH(C++)
+dnl saved_CXXFLAGS=$CXXFLAGS
+dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <algorithm>
+		namespace std {
+		template <class In, class Out, class Pred>
+		Out
+		copy_if(In first, In last, Out res, Pred p) {
+			while (first != last) {
+				if (p(*first)) {
+					*res++ = *first;
+				}
+				++first;
+			}
+			return res;
+		}
+		}]], []
+	),
+	[fang_cv_cxx_stl_copy_if=no],
+	[fang_cv_cxx_stl_copy_if=yes]
+)
+dnl CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stl_copy_if" = "yes" ; then
+AC_DEFINE(HAVE_STL_COPY_IF, [],
+	[True if STL <algorithm> header defines copy_if algorithm])
+fi
+])dnl
+
