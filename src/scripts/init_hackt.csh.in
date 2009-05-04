@@ -1,6 +1,6 @@
 #!/bin/sh
 # "init_hackt.csh"
-#	$Id: init_hackt.csh.in,v 1.8 2009/04/29 22:05:41 fang Exp $
+#	$Id: init_hackt.csh.in,v 1.9 2009/05/04 20:38:00 fang Exp $
 #	vi: ft=csh
 # source this file to sets up environment variables
 # MAINTAINENCE: keep this consistent with its init_hackt.sh counterpart
@@ -37,7 +37,7 @@ set infodir=@infodir@
 # should be consistent with scm/Makefile.am's scmdir definition.
 set HACKT_GUILE_PATH=$pkgdatadir/scm
 if ( $?GUILE_LOAD_PATH ) then
-	append_path GUILE_LOAD_PATH ${HACKT_GUILE_PATH}
+	prepend_path GUILE_LOAD_PATH ${HACKT_GUILE_PATH}
 else
 	setenv GUILE_LOAD_PATH ${HACKT_GUILE_PATH}
 endif
@@ -45,7 +45,7 @@ endif
 
 # setup hackt module library path (plug-ins)
 if ( $?LTDL_LIBRARY_PATH ) then
-	append_path LTDL_LIBRARY_PATH ${pkglibdir}
+	prepend_path LTDL_LIBRARY_PATH ${pkglibdir}
 else
 	setenv LTDL_LIBRARY_PATH ${pkglibdir}
 endif
