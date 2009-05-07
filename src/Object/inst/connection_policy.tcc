@@ -1,12 +1,13 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.8 2008/10/24 01:08:58 fang Exp $
+	$Id: connection_policy.tcc,v 1.8.12.1 2009/05/07 23:12:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
 #define	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
 
 #include <iostream>
+#include <sstream>
 #include "Object/def/footprint.h"
 #include "Object/inst/connection_policy.h"
 #include "Object/inst/instance_collection.h"
@@ -50,12 +51,71 @@ bool_connect_policy::__update_flags(AliasType& a) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Static property checking, regarding drive/use.  
+	Static connectivity property checking, regarding drive/use.  
  */
 template <class AliasType>
 good_bool
 bool_connect_policy::__check_connection(const AliasType& a) {
 	// TODO: check must/must-not directions!
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+	STACKTRACE_VERBOSE;
+if (!a.is_port_alias()) {
+	// only check local non-port aliases
+	const bool any_fanout_dn = a.attributes & BOOL_ANY_FANOUT_PULL_DN;
+	const bool any_fanout_up = a.attributes & BOOL_ANY_FANOUT_PULL_UP;
+	const bool any_fanin_dn = a.attributes & BOOL_ANY_FANIN_PULL_DN;
+	const bool any_fanin_up = a.attributes & BOOL_ANY_FANIN_PULL_UP;
+	const bool any_fanout = any_fanout_dn || any_fanout_up;
+	const bool any_fanin = any_fanin_dn || any_fanin_up;
+//	const bool dead = !any_fanout && !any_fanin;
+	const bool floating = any_fanout && !any_fanin;
+	const bool asym_fanin = any_fanout && (any_fanin_dn ^ any_fanin_up);
+//	const bool asym_fanout = any_fanout_dn ^ any_fanout_up;
+//	const bool warn = dead || floating || asym_fanin;
+	const bool warn = floating || asym_fanin;
+if (warn) {
+	// don't evaluate name unless diagnostic is printed
+	std::ostringstream oss;
+	a.dump_hierarchical_name(oss);
+	const string& n(oss.str());
+#if 0
+	if (!any_fanout_dn)
+		cerr << "Warning: node " << n <<
+			" does not fan-out to any pull-down rules." << endl;
+	if (!any_fanout_up)
+		cerr << "Warning: node " << n <<
+			" does not fan-out to any pull-up rules." << endl;
+	if (!any_fanin_dn)
+		cerr << "Warning: node " << n <<
+			" has no pull-up fan-ins." << endl;
+	if (!any_fanin_up)
+		cerr << "Warning: node " << n <<
+			" has no pull-down fan-ins." << endl;
+#else
+#if 0
+	if (dead) {
+		cerr << "Warning: unused node " << n <<
+			" has neither PRS fanin nor fanout." << endl;
+	}
+#endif
+	if (floating) {
+		cerr << "Warning: node " << n <<
+			" has no pull-up nor pull-dn PRS fanin." << endl;
+	}
+	if (asym_fanin) {
+		if (any_fanin_dn) {
+			cerr << "Warning: node " << n <<
+				" has no PRS pull-up fanin." << endl;
+		} else {
+			cerr << "Warning: node " << n <<
+				" has no PRS pull-dn fanin." << endl;
+		}
+	}
+#endif
+	// never error out for now
+}
+}
+#endif
 	return good_bool(true);
 }
 
@@ -172,6 +232,11 @@ channel_connect_policy::synchronize_flags(
 		because they should 
 	NOTE: called by instance_alias_info::instantiate().
 	optimization: refactor code to avoid repeated calls to same container.
+	TODO: what if channel is a member of a port/struct, and direction
+		is only annotated locally, inside the definition body, e.g.
+		foo.mychan?;
+		Should the language allow this b/c it is inconveinent to
+		specify the direction of a port member?
  */
 template <class AliasType>
 void

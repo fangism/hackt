@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.33 2009/03/09 07:30:53 fang Exp $
+	$Id: PRS.cc,v 1.33.2.1 2009/05/07 23:12:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -21,6 +21,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/PRS_literal_unroller.h"
 #include "Object/unroll/meta_conditional.tcc"
 #include "Object/unroll/meta_loop.tcc"
+#include "Object/inst/connection_policy.h"
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_empty.h"
+#endif
 
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -490,6 +495,25 @@ if (output.is_internal()) {
 		return good_bool(false);
 	}
 	// check for auto-complement, and unroll it?
+	// TODO: update connectivity information, local node pool
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+{
+	entity::footprint& tfp(c.get_target_footprint());
+	state_instance<bool_tag>::pool_type&
+		bp(tfp.get_instance_pool<bool_tag>());
+	// kludge: get_back_ref only returns const ptr ...
+	const_cast<instance_alias_info<bool_tag>&>(
+		*bp[output_node_index].get_back_ref()).find()->prs_fanin(dir);
+	std::set<size_t> f;	// node_index_type
+	pfp.collect_literal_indices(f, guard_expr_index);
+	std::set<size_t>::const_iterator
+		i(f.begin()), e(f.end());
+	for ( ; i!=e; ++i) {
+		const_cast<instance_alias_info<bool_tag>&>(
+			*bp[*i].get_back_ref()).find()->prs_fanout(dir);
+	}
+}
+#endif
 	footprint_rule&
 		r(pfp.push_back_rule(guard_expr_index, output_node_index, dir));
 {

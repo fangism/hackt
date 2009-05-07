@@ -1,3 +1,12 @@
+Warning: node lut::ad[0].d[0] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut::ad[0].d[1] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut::ad[0].d[2] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut::ad[0].d[3] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut::ad[1].d[0] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut::ad[1].d[1] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut::ad[1].d[2] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut::ad[1].d[3] has no pull-up nor pull-dn PRS fanin.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size

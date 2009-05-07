@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.25 2009/04/29 05:33:25 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.25.2.1 2009/05/07 23:12:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,6 +13,7 @@
 #include "Object/inst/port_alias_tracker.tcc"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
+#include "Object/inst/connection_policy.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/common/dump_flags.h"
 #include "Object/def/footprint.h"
@@ -381,7 +382,7 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	This is only ever instantiated for channels.
+	This is only ever instantiated for channels and bools.
 	Walks over all unique channel instances in scope, 
 	and checks for dangling connections.  
  */
@@ -398,7 +399,7 @@ port_alias_tracker_base<Tag>::check_connections(void) const {
 			good = false;
 		}
 	}
-	return good_bool(false);
+	return good_bool(good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -561,6 +562,16 @@ if (has_internal_aliases) {
 	port_alias_tracker_base<bool_tag>::
 		__shorten_canonical_aliases(f.get_instance_pool<bool_tag>());
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+port_alias_tracker::check_bool_connections(void) const {
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+	return port_alias_tracker_base<bool_tag>::check_connections();
+#else
+	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

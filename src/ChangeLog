@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-05-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-17-connect-03-01:
+	  New branch for developing connectivity analysis and diagnostics, 
+		much of which is needed for eventual netlist generation.
+	  Added PRS-connectivity flags to bool_connect_policy -- these are
+		not user-settable, only computed based on PRS, and 
+		propagated up hierarchy.
+	  create phase now reports diagnostics for nodes with fanout,
+		but missing fanin (warning only).  Test cases updated. 
+
+
 2009-04-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-17:

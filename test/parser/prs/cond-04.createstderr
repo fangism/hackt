@@ -1,3 +1,25 @@
+Warning: node div::x[1] has no pull-up nor pull-dn PRS fanin.
+Warning: node div::x[2] has no pull-up nor pull-dn PRS fanin.
+Warning: node div::x[3] has no pull-up nor pull-dn PRS fanin.
+Warning: node div::x[4] has no pull-up nor pull-dn PRS fanin.
+Warning: node div::x[5] has no pull-up nor pull-dn PRS fanin.
+Warning: node div::x[6] has no pull-up nor pull-dn PRS fanin.
+Warning: node div::x[7] has no pull-up nor pull-dn PRS fanin.
+Warning: node div::y[1] has no PRS pull-up fanin.
+Warning: node div::y[2] has no PRS pull-up fanin.
+Warning: node div::y[3] has no PRS pull-up fanin.
+Warning: node div::y[4] has no PRS pull-up fanin.
+Warning: node div::y[5] has no PRS pull-up fanin.
+Warning: node div::y[6] has no PRS pull-up fanin.
+Warning: node div::y[7] has no PRS pull-up fanin.
+Warning: node div::y[8] has no PRS pull-up fanin.
+Warning: node div::y[9] has no PRS pull-up fanin.
+Warning: node div::y[10] has no PRS pull-up fanin.
+Warning: node div::y[11] has no PRS pull-up fanin.
+Warning: node div::y[12] has no PRS pull-up fanin.
+Warning: node div::y[13] has no PRS pull-up fanin.
+Warning: node div::y[14] has no PRS pull-up fanin.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size

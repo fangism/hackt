@@ -1,3 +1,6 @@
+Warning: node foo::x has no pull-up nor pull-dn PRS fanin.
+Warning: node foo::y has no pull-up nor pull-dn PRS fanin.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size

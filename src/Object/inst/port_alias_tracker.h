@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.17 2008/10/24 01:09:00 fang Exp $
+	$Id: port_alias_tracker.h,v 1.17.12.1 2009/05/07 23:12:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -288,6 +288,9 @@ public:
 
 	void
 	shorten_canonical_aliases(footprint&);
+
+	good_bool
+	check_bool_connections(void) const;
 
 	good_bool
 	check_channel_connections(void) const;

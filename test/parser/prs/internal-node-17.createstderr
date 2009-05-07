@@ -1,3 +1,11 @@
+Warning: node foo::a has no pull-up nor pull-dn PRS fanin.
+Warning: node foo::b has no pull-up nor pull-dn PRS fanin.
+Warning: node foo::e has no pull-up nor pull-dn PRS fanin.
+Warning: node foo::w[0] has no pull-up nor pull-dn PRS fanin.
+Warning: node foo::w[1] has no pull-up nor pull-dn PRS fanin.
+Warning: node foo::w[2] has no pull-up nor pull-dn PRS fanin.
+Warning: node foo::w[3] has no pull-up nor pull-dn PRS fanin.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size

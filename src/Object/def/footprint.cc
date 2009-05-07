@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.41 2009/03/14 01:46:19 fang Exp $
+	$Id: footprint.cc,v 1.41.2.1 2009/05/07 23:12:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -961,11 +961,14 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 	Q: Should we store diagnostic summaries as flags?  
 		Could be useful for hierarchy checking.  
 	\pre already passed over CHP for channel connectivity.  
+	\param top is true if this is top-level, skip bool-PRS checking
+		for the top-level footprint.
 	\return true to indicate acceptance.  
  */
 good_bool
-footprint::connection_diagnostics(void) const {
-	return scope_aliases.check_channel_connections();
+footprint::connection_diagnostics(const bool top) const {
+	return good_bool(scope_aliases.check_channel_connections().good &&
+		(top || scope_aliases.check_bool_connections().good));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
