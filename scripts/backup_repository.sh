@@ -1,5 +1,5 @@
 #!/bin/sh
-#	$Id: backup_repository.sh,v 1.3 2006/01/22 18:55:56 fang Exp $
+#	$Id: backup_repository.sh,v 1.4 2009/05/08 22:48:50 fang Exp $
 # Script is only useful to maintainer with local access to CVS repository.
 
 # current directory
@@ -12,7 +12,7 @@ module=art++
 base=$module-repository
 
 # path to CVS repository (one up from root)
-root=/ufs/repository/VLSI/tools
+root=/ufs/repository
 
 # date-time stamp suffix
 ymdt=`date -u "+%Y%m%d-%H%M%S"`
