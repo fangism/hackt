@@ -1,10 +1,10 @@
-Warning: node foo::a has no pull-up nor pull-dn PRS fanin.
-Warning: node foo::b has no pull-up nor pull-dn PRS fanin.
-Warning: node foo::e has no pull-up nor pull-dn PRS fanin.
-Warning: node foo::w[0] has no pull-up nor pull-dn PRS fanin.
-Warning: node foo::w[1] has no pull-up nor pull-dn PRS fanin.
-Warning: node foo::w[2] has no pull-up nor pull-dn PRS fanin.
-Warning: node foo::w[3] has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::a has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::b has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::e has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::w[0] has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::w[1] has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::w[2] has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::w[3] has no pull-up nor pull-dn PRS fanin.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -121,45 +121,45 @@ In namespace "", we have: {
         ~@l & e -> d-
         passn(x,x,y)
       footprint: {
-        a = bool^0 = foo::a (3) 
-        b = bool^0 = foo::b (4) 
-        c = bool^0 = foo::c (5) 
-        d = bool^0 = foo::d (6) 
-        e = bool^0 = foo::e (7) 
+        a = bool^0 = foo<>::a (3) 
+        b = bool^0 = foo<>::b (4) 
+        c = bool^0 = foo<>::c (5) 
+        d = bool^0 = foo<>::d (6) 
+        e = bool^0 = foo<>::e (7) 
         w = bool^1
           {
-            [0] = foo::w[0] (8) 
-            [1] = foo::w[1] (9) 
-            [2] = foo::w[2] (10) 
-            [3] = foo::w[3] (11) 
-            [4] = foo::w[4] (12) 
-            [5] = foo::w[5] (13) 
-            [6] = foo::w[6] (14) 
-            [7] = foo::w[7] (15) 
-            [8] = foo::w[8] (16) 
-            [9] = foo::w[9] (17) 
+            [0] = foo<>::w[0] (8) 
+            [1] = foo<>::w[1] (9) 
+            [2] = foo<>::w[2] (10) 
+            [3] = foo<>::w[3] (11) 
+            [4] = foo<>::w[4] (12) 
+            [5] = foo<>::w[5] (13) 
+            [6] = foo<>::w[6] (14) 
+            [7] = foo<>::w[7] (15) 
+            [8] = foo<>::w[8] (16) 
+            [9] = foo<>::w[9] (17) 
           }
-        x = bool^0 = foo::x (1) 
-        y = bool^0 = foo::y (2) 
+        x = bool^0 = foo<>::x (1) 
+        y = bool^0 = foo<>::y (2) 
         Created state:
         bool instance pool:
-        1	foo::x
-        2	foo::y
-        3	foo::a
-        4	foo::b
-        5	foo::c
-        6	foo::d
-        7	foo::e
-        8	foo::w[0]
-        9	foo::w[1]
-        10	foo::w[2]
-        11	foo::w[3]
-        12	foo::w[4]
-        13	foo::w[5]
-        14	foo::w[6]
-        15	foo::w[7]
-        16	foo::w[8]
-        17	foo::w[9]
+        1	foo<>::x
+        2	foo<>::y
+        3	foo<>::a
+        4	foo<>::b
+        5	foo<>::c
+        6	foo<>::d
+        7	foo<>::e
+        8	foo<>::w[0]
+        9	foo<>::w[1]
+        10	foo<>::w[2]
+        11	foo<>::w[3]
+        12	foo<>::w[4]
+        13	foo<>::w[5]
+        14	foo<>::w[6]
+        15	foo<>::w[7]
+        16	foo<>::w[8]
+        17	foo<>::w[9]
         resolved prs:
         w[0] -> x-
         w[0] -> x-

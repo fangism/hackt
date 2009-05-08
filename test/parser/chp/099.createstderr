@@ -106,17 +106,17 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        w = int<32>^0 = foo::w (2) 
-        x = bool^0 = foo::x (1) 
-        y = int<32>^0 = foo::y (1) 
-        z = bool^0 = foo::z (2) 
+        w = int<32>^0 = foo<>::w (2) 
+        x = bool^0 = foo<>::x (1) 
+        y = int<32>^0 = foo<>::y (1) 
+        z = bool^0 = foo<>::z (2) 
         Created state:
         int instance pool:
-        1	foo::y
-        2	foo::w
+        1	foo<>::y
+        2	foo<>::w
         bool instance pool:
-        1	foo::x
-        2	foo::z
+        1	foo<>::x
+        2	foo<>::z
         resolved concurrent actions:
           *[
             concurrent: {

@@ -124,23 +124,23 @@ In namespace "", we have: {
         e = f;
         e@[iscomb=]
       footprint: {
-        a = bool^0 = foo::b (3) @[ iscomb ] 
-        b = bool^0 = foo::b (3) @[ iscomb ] 
-        c = bool^0 = foo::d (4) @[ iscomb ] 
-        d = bool^0 = foo::d (4) @[ iscomb ] 
-        e = bool^0 = foo::f (5) @[ iscomb ] 
-        f = bool^0 = foo::f (5) @[ iscomb ] 
-        w = bool^0 = foo::x (1) @[ iscomb ] 
-        x = bool^0 = foo::x (1) @[ iscomb ] 
-        y = bool^0 = foo::z (2) @[ iscomb ] 
-        z = bool^0 = foo::z (2) @[ iscomb ] 
+        a = bool^0 = foo<>::b (3) @[ iscomb ] 
+        b = bool^0 = foo<>::b (3) @[ iscomb ] 
+        c = bool^0 = foo<>::d (4) @[ iscomb ] 
+        d = bool^0 = foo<>::d (4) @[ iscomb ] 
+        e = bool^0 = foo<>::f (5) @[ iscomb ] 
+        f = bool^0 = foo<>::f (5) @[ iscomb ] 
+        w = bool^0 = foo<>::x (1) @[ iscomb ] 
+        x = bool^0 = foo<>::x (1) @[ iscomb ] 
+        y = bool^0 = foo<>::z (2) @[ iscomb ] 
+        z = bool^0 = foo<>::z (2) @[ iscomb ] 
         Created state:
         bool instance pool:
-        1	foo::x @[ iscomb ]
-        2	foo::z @[ iscomb ]
-        3	foo::b @[ iscomb ]
-        4	foo::d @[ iscomb ]
-        5	foo::f @[ iscomb ]
+        1	foo<>::x @[ iscomb ]
+        2	foo<>::z @[ iscomb ]
+        3	foo<>::b @[ iscomb ]
+        4	foo<>::d @[ iscomb ]
+        5	foo<>::f @[ iscomb ]
       }
       }
 

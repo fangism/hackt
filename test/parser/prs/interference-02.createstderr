@@ -74,14 +74,14 @@ In namespace "", we have: {
         foo -> bar-
         ~foo -> bar+
       footprint: {
-        bar = bool^0 = yoyodyne::bar (2) @[ may_interfere ] 
-        bar2 = bool^0 = yoyodyne::bar (2) @[ may_interfere ] 
-        foo = bool^0 = yoyodyne::foo (1) @[ may_interfere ] 
-        foo2 = bool^0 = yoyodyne::foo (1) @[ may_interfere ] 
+        bar = bool^0 = yoyodyne<>::bar (2) @[ may_interfere ] 
+        bar2 = bool^0 = yoyodyne<>::bar (2) @[ may_interfere ] 
+        foo = bool^0 = yoyodyne<>::foo (1) @[ may_interfere ] 
+        foo2 = bool^0 = yoyodyne<>::foo (1) @[ may_interfere ] 
         Created state:
         bool instance pool:
-        1	yoyodyne::foo @[ may_interfere ]
-        2	yoyodyne::bar @[ may_interfere ]
+        1	yoyodyne<>::foo @[ may_interfere ]
+        2	yoyodyne<>::bar @[ may_interfere ]
         resolved prs:
         foo -> bar-
         ~foo -> bar+

@@ -241,14 +241,14 @@ In namespace "", we have: {
         a & b -> _o-
         ~a & ~b -> _o+
       footprint: {
-        _o = bool^0 = celem2inv::_o (3) 
-        a = bool^0 = celem2inv::a (1) 
-        b = bool^0 = celem2inv::b (2) 
+        _o = bool^0 = celem2inv<>::_o (3) 
+        a = bool^0 = celem2inv<>::a (1) 
+        b = bool^0 = celem2inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	celem2inv::a
-        2	celem2inv::b
-        3	celem2inv::_o
+        1	celem2inv<>::a
+        2	celem2inv<>::b
+        3	celem2inv<>::_o
         resolved prs:
         a & b -> _o-
         ~a & ~b -> _o+
@@ -269,15 +269,15 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            [0] = e1of2::d[0] (2) 
-            [1] = e1of2::d[1] (3) 
+            [0] = e1of2<>::d[0] (2) 
+            [1] = e1of2<>::d[1] (3) 
           }
-        e = bool^0 = e1of2::e (1) 
+        e = bool^0 = e1of2<>::e (1) 
         Created state:
         bool instance pool:
-        1	e1of2::e
-        2	e1of2::d[0]
-        3	e1of2::d[1]
+        1	e1of2<>::e
+        2	e1of2<>::d[0]
+        3	e1of2<>::d[1]
       }
       }
 
@@ -296,12 +296,12 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = inv::a (1) 
-        b = bool^0 = inv::b (2) 
+        a = bool^0 = inv<>::a (1) 
+        b = bool^0 = inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	inv::a
-        2	inv::b
+        1	inv<>::a
+        2	inv<>::b
         resolved prs:
         a -> b-
         ~a -> b+
@@ -326,14 +326,14 @@ In namespace "", we have: {
         a & b -> _o-
         ~a | ~b -> _o+
       footprint: {
-        _o = bool^0 = nand2::_o (3) 
-        a = bool^0 = nand2::a (1) 
-        b = bool^0 = nand2::b (2) 
+        _o = bool^0 = nand2<>::_o (3) 
+        a = bool^0 = nand2<>::a (1) 
+        b = bool^0 = nand2<>::b (2) 
         Created state:
         bool instance pool:
-        1	nand2::a
-        2	nand2::b
-        3	nand2::_o
+        1	nand2<>::a
+        2	nand2<>::b
+        3	nand2<>::_o
         resolved prs:
         a & b -> _o-
         ~a | ~b -> _o+
@@ -383,89 +383,89 @@ In namespace "", we have: {
         nand2<> __la__
         __la__ = la;
       footprint: {
-        L = process e1of2<>^0 = wchb_e1of2::L (1) (
+        L = process e1of2<>^0 = wchb_e1of2<>::L (1) (
           d = bool^1
             {
-              [0] = wchb_e1of2::L.d[0] (1) 
-              [1] = wchb_e1of2::L.d[1] (2) 
+              [0] = wchb_e1of2<>::L.d[0] (1) 
+              [1] = wchb_e1of2<>::L.d[1] (2) 
             }
-          e = bool^0 = wchb_e1of2::L.e (3) 
+          e = bool^0 = wchb_e1of2<>::L.e (3) 
         )
-        R = process e1of2<>^0 = wchb_e1of2::R (2) (
+        R = process e1of2<>^0 = wchb_e1of2<>::R (2) (
           d = bool^1
             {
-              [0] = wchb_e1of2::R.d[0] (4) 
-              [1] = wchb_e1of2::R.d[1] (5) 
+              [0] = wchb_e1of2<>::R.d[0] (4) 
+              [1] = wchb_e1of2<>::R.d[1] (5) 
             }
-          e = bool^0 = wchb_e1of2::R.e (6) 
+          e = bool^0 = wchb_e1of2<>::R.e (6) 
         )
-        __l1__ = process celem2inv<>^0 = wchb_e1of2::l1 (7) (
-          a = bool^0 = wchb_e1of2::L.d[1] (2) 
-          b = bool^0 = wchb_e1of2::R.e (6) 
-          _o = bool^0 = wchb_e1of2::_r[1] (8) 
+        __l1__ = process celem2inv<>^0 = wchb_e1of2<>::l1 (7) (
+          a = bool^0 = wchb_e1of2<>::L.d[1] (2) 
+          b = bool^0 = wchb_e1of2<>::R.e (6) 
+          _o = bool^0 = wchb_e1of2<>::_r[1] (8) 
         )
-        __la__ = process nand2<>^0 = wchb_e1of2::la (8) (
-          a = bool^0 = wchb_e1of2::_r[0] (7) 
-          b = bool^0 = wchb_e1of2::_r[1] (8) 
-          _o = bool^0 = wchb_e1of2::rv (9) 
+        __la__ = process nand2<>^0 = wchb_e1of2<>::la (8) (
+          a = bool^0 = wchb_e1of2<>::_r[0] (7) 
+          b = bool^0 = wchb_e1of2<>::_r[1] (8) 
+          _o = bool^0 = wchb_e1of2<>::rv (9) 
         )
-        __r0__ = process inv<>^0 = wchb_e1of2::r0 (3) (
-          a = bool^0 = wchb_e1of2::_r[0] (7) 
-          b = bool^0 = wchb_e1of2::R.d[0] (4) 
+        __r0__ = process inv<>^0 = wchb_e1of2<>::r0 (3) (
+          a = bool^0 = wchb_e1of2<>::_r[0] (7) 
+          b = bool^0 = wchb_e1of2<>::R.d[0] (4) 
         )
         _r = bool^1
           {
-            [0] = wchb_e1of2::_r[0] (7) 
-            [1] = wchb_e1of2::_r[1] (8) 
+            [0] = wchb_e1of2<>::_r[0] (7) 
+            [1] = wchb_e1of2<>::_r[1] (8) 
           }
-        l0 = process celem2inv<>^0 = wchb_e1of2::l0 (6) (
-          a = bool^0 = wchb_e1of2::L.d[0] (1) 
-          b = bool^0 = wchb_e1of2::R.e (6) 
-          _o = bool^0 = wchb_e1of2::_r[0] (7) 
+        l0 = process celem2inv<>^0 = wchb_e1of2<>::l0 (6) (
+          a = bool^0 = wchb_e1of2<>::L.d[0] (1) 
+          b = bool^0 = wchb_e1of2<>::R.e (6) 
+          _o = bool^0 = wchb_e1of2<>::_r[0] (7) 
         )
-        l1 = process celem2inv<>^0 = wchb_e1of2::l1 (7) (
-          a = bool^0 = wchb_e1of2::L.d[1] (2) 
-          b = bool^0 = wchb_e1of2::R.e (6) 
-          _o = bool^0 = wchb_e1of2::_r[1] (8) 
+        l1 = process celem2inv<>^0 = wchb_e1of2<>::l1 (7) (
+          a = bool^0 = wchb_e1of2<>::L.d[1] (2) 
+          b = bool^0 = wchb_e1of2<>::R.e (6) 
+          _o = bool^0 = wchb_e1of2<>::_r[1] (8) 
         )
-        la = process nand2<>^0 = wchb_e1of2::la (8) (
-          a = bool^0 = wchb_e1of2::_r[0] (7) 
-          b = bool^0 = wchb_e1of2::_r[1] (8) 
-          _o = bool^0 = wchb_e1of2::rv (9) 
+        la = process nand2<>^0 = wchb_e1of2<>::la (8) (
+          a = bool^0 = wchb_e1of2<>::_r[0] (7) 
+          b = bool^0 = wchb_e1of2<>::_r[1] (8) 
+          _o = bool^0 = wchb_e1of2<>::rv (9) 
         )
-        r0 = process inv<>^0 = wchb_e1of2::r0 (3) (
-          a = bool^0 = wchb_e1of2::_r[0] (7) 
-          b = bool^0 = wchb_e1of2::R.d[0] (4) 
+        r0 = process inv<>^0 = wchb_e1of2<>::r0 (3) (
+          a = bool^0 = wchb_e1of2<>::_r[0] (7) 
+          b = bool^0 = wchb_e1of2<>::R.d[0] (4) 
         )
-        r1 = process inv<>^0 = wchb_e1of2::r1 (4) (
-          a = bool^0 = wchb_e1of2::_r[1] (8) 
-          b = bool^0 = wchb_e1of2::R.d[1] (5) 
+        r1 = process inv<>^0 = wchb_e1of2<>::r1 (4) (
+          a = bool^0 = wchb_e1of2<>::_r[1] (8) 
+          b = bool^0 = wchb_e1of2<>::R.d[1] (5) 
         )
-        re = process inv<>^0 = wchb_e1of2::re (5) (
-          a = bool^0 = wchb_e1of2::rv (9) 
-          b = bool^0 = wchb_e1of2::L.e (3) 
+        re = process inv<>^0 = wchb_e1of2<>::re (5) (
+          a = bool^0 = wchb_e1of2<>::rv (9) 
+          b = bool^0 = wchb_e1of2<>::L.e (3) 
         )
-        rv = bool^0 = wchb_e1of2::rv (9) 
+        rv = bool^0 = wchb_e1of2<>::rv (9) 
         Created state:
         process instance pool:
-        1	wchb_e1of2::L
-        2	wchb_e1of2::R
-        3	wchb_e1of2::r0
-        4	wchb_e1of2::r1
-        5	wchb_e1of2::re
-        6	wchb_e1of2::l0
-        7	wchb_e1of2::l1
-        8	wchb_e1of2::la
+        1	wchb_e1of2<>::L
+        2	wchb_e1of2<>::R
+        3	wchb_e1of2<>::r0
+        4	wchb_e1of2<>::r1
+        5	wchb_e1of2<>::re
+        6	wchb_e1of2<>::l0
+        7	wchb_e1of2<>::l1
+        8	wchb_e1of2<>::la
         bool instance pool:
-        1	wchb_e1of2::L.d[0]
-        2	wchb_e1of2::L.d[1]
-        3	wchb_e1of2::L.e
-        4	wchb_e1of2::R.d[0]
-        5	wchb_e1of2::R.d[1]
-        6	wchb_e1of2::R.e
-        7	wchb_e1of2::_r[0]
-        8	wchb_e1of2::_r[1]
-        9	wchb_e1of2::rv
+        1	wchb_e1of2<>::L.d[0]
+        2	wchb_e1of2<>::L.d[1]
+        3	wchb_e1of2<>::L.e
+        4	wchb_e1of2<>::R.d[0]
+        5	wchb_e1of2<>::R.d[1]
+        6	wchb_e1of2<>::R.e
+        7	wchb_e1of2<>::_r[0]
+        8	wchb_e1of2<>::_r[1]
+        9	wchb_e1of2<>::rv
       }
       }
 

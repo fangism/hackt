@@ -1,4 +1,4 @@
-Warning: node wrap::j has no pull-up nor pull-dn PRS fanin.
+Warning: node wrap<>::j has no pull-up nor pull-dn PRS fanin.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -98,12 +98,12 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = inv::a (1) 
-        b = bool^0 = inv::b (2) 
+        a = bool^0 = inv<>::a (1) 
+        b = bool^0 = inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	inv::a
-        2	inv::b
+        1	inv<>::a
+        2	inv<>::b
         resolved prs:
         a -> b-
         ~a -> b+
@@ -146,38 +146,38 @@ In namespace "", we have: {
         R (k, l);
         l@[iscomb=]
       footprint: {
-        P = process inv<>^0 = wrap::P (1) (
-          a = bool^0 = wrap::w (1) 
-          b = bool^0 = wrap::x (2) 
+        P = process inv<>^0 = wrap<>::P (1) (
+          a = bool^0 = wrap<>::w (1) 
+          b = bool^0 = wrap<>::x (2) 
         )
-        Q = process inv<>^0 = wrap::Q (2) (
-          a = bool^0 = wrap::j (3) @[ iscomb ] 
-          b = bool^0 = wrap::k (4) @[ iscomb ] 
+        Q = process inv<>^0 = wrap<>::Q (2) (
+          a = bool^0 = wrap<>::j (3) @[ iscomb ] 
+          b = bool^0 = wrap<>::k (4) @[ iscomb ] 
         )
-        R = process inv<>^0 = wrap::R (3) (
-          a = bool^0 = wrap::k (4) @[ iscomb ] 
-          b = bool^0 = wrap::l (5) @[ iscomb ] 
+        R = process inv<>^0 = wrap<>::R (3) (
+          a = bool^0 = wrap<>::k (4) @[ iscomb ] 
+          b = bool^0 = wrap<>::l (5) @[ iscomb ] 
         )
-        j = bool^0 = wrap::j (3) @[ iscomb ] 
-        k = bool^0 = wrap::k (4) @[ iscomb ] 
-        l = bool^0 = wrap::l (5) @[ iscomb ] 
-        w = bool^0 = wrap::w (1) 
-        x = bool^0 = wrap::x (2) 
-        y = bool^0 = wrap::y (6) 
-        z = bool^0 = wrap::z (7) 
+        j = bool^0 = wrap<>::j (3) @[ iscomb ] 
+        k = bool^0 = wrap<>::k (4) @[ iscomb ] 
+        l = bool^0 = wrap<>::l (5) @[ iscomb ] 
+        w = bool^0 = wrap<>::w (1) 
+        x = bool^0 = wrap<>::x (2) 
+        y = bool^0 = wrap<>::y (6) 
+        z = bool^0 = wrap<>::z (7) 
         Created state:
         process instance pool:
-        1	wrap::P
-        2	wrap::Q
-        3	wrap::R
+        1	wrap<>::P
+        2	wrap<>::Q
+        3	wrap<>::R
         bool instance pool:
-        1	wrap::w
-        2	wrap::x
-        3	wrap::j @[ iscomb ]
-        4	wrap::k @[ iscomb ]
-        5	wrap::l @[ iscomb ]
-        6	wrap::y
-        7	wrap::z
+        1	wrap<>::w
+        2	wrap<>::x
+        3	wrap<>::j @[ iscomb ]
+        4	wrap<>::k @[ iscomb ]
+        5	wrap<>::l @[ iscomb ]
+        6	wrap<>::y
+        7	wrap<>::z
       }
       }
 

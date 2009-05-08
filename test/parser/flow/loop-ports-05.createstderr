@@ -1,11 +1,11 @@
-Warning: node lut::ad[0].d[0] has no pull-up nor pull-dn PRS fanin.
-Warning: node lut::ad[0].d[1] has no pull-up nor pull-dn PRS fanin.
-Warning: node lut::ad[0].d[2] has no pull-up nor pull-dn PRS fanin.
-Warning: node lut::ad[0].d[3] has no pull-up nor pull-dn PRS fanin.
-Warning: node lut::ad[1].d[0] has no pull-up nor pull-dn PRS fanin.
-Warning: node lut::ad[1].d[1] has no pull-up nor pull-dn PRS fanin.
-Warning: node lut::ad[1].d[2] has no pull-up nor pull-dn PRS fanin.
-Warning: node lut::ad[1].d[3] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut<>::ad[0].d[0] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut<>::ad[0].d[1] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut<>::ad[0].d[2] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut<>::ad[0].d[3] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut<>::ad[1].d[0] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut<>::ad[1].d[1] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut<>::ad[1].d[2] has no pull-up nor pull-dn PRS fanin.
+Warning: node lut<>::ad[1].d[3] has no pull-up nor pull-dn PRS fanin.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -132,17 +132,17 @@ In namespace "", we have: {
           N = pint^0 value: 4
           d = bool^1
             {
-              [0] = ch1of::d[0] (1) 
-              [1] = ch1of::d[1] (2) 
-              [2] = ch1of::d[2] (3) 
-              [3] = ch1of::d[3] (4) 
+              [0] = ch1of<4>::d[0] (1) 
+              [1] = ch1of<4>::d[1] (2) 
+              [2] = ch1of<4>::d[2] (3) 
+              [3] = ch1of<4>::d[3] (4) 
             }
           Created state:
           bool instance pool:
-          1	ch1of::d[0]
-          2	ch1of::d[1]
-          3	ch1of::d[2]
-          4	ch1of::d[3]
+          1	ch1of<4>::d[0]
+          2	ch1of<4>::d[1]
+          3	ch1of<4>::d[2]
+          4	ch1of<4>::d[3]
         }
       }
       }
@@ -170,16 +170,16 @@ In namespace "", we have: {
         _out -> out-
         ~_out -> out+
       footprint: {
-        _out = bool^0 = dcelm::_out (3) 
-        a = bool^0 = dcelm::a (1) 
-        b = bool^0 = dcelm::b (2) 
-        out = bool^0 = dcelm::out (4) 
+        _out = bool^0 = dcelm<>::_out (3) 
+        a = bool^0 = dcelm<>::a (1) 
+        b = bool^0 = dcelm<>::b (2) 
+        out = bool^0 = dcelm<>::out (4) 
         Created state:
         bool instance pool:
-        1	dcelm::a
-        2	dcelm::b
-        3	dcelm::_out
-        4	dcelm::out
+        1	dcelm<>::a
+        2	dcelm<>::b
+        3	dcelm<>::_out
+        4	dcelm<>::out
         resolved prs:
         a & b -> _out-
         ~a & ~b -> _out+
@@ -203,185 +203,185 @@ In namespace "", we have: {
       footprint: {
         ad = process ch1of<4>^1
           {
-            [0] = lut::ad[0] (1) (
+            [0] = lut<>::ad[0] (1) (
               d = bool^1
                 {
-                  [0] = lut::ad[0].d[0] (1) 
-                  [1] = lut::ad[0].d[1] (2) 
-                  [2] = lut::ad[0].d[2] (3) 
-                  [3] = lut::ad[0].d[3] (4) 
+                  [0] = lut<>::ad[0].d[0] (1) 
+                  [1] = lut<>::ad[0].d[1] (2) 
+                  [2] = lut<>::ad[0].d[2] (3) 
+                  [3] = lut<>::ad[0].d[3] (4) 
                 }
             )
-            [1] = lut::ad[1] (2) (
+            [1] = lut<>::ad[1] (2) (
               d = bool^1
                 {
-                  [0] = lut::ad[1].d[0] (5) 
-                  [1] = lut::ad[1].d[1] (6) 
-                  [2] = lut::ad[1].d[2] (7) 
-                  [3] = lut::ad[1].d[3] (8) 
+                  [0] = lut<>::ad[1].d[0] (5) 
+                  [1] = lut<>::ad[1].d[1] (6) 
+                  [2] = lut<>::ad[1].d[2] (7) 
+                  [3] = lut<>::ad[1].d[3] (8) 
                 }
             )
           }
         ce = process dcelm<>^1
           {
-            [0] = lut::ce[0] (3) (
-              a = bool^0 = lut::ad[1].d[0] (5) 
-              b = bool^0 = lut::ad[0].d[0] (1) 
-              _out = bool^0 = lut::ce[0]._out (9) 
-              out = bool^0 = lut::ce[0].out (10) 
+            [0] = lut<>::ce[0] (3) (
+              a = bool^0 = lut<>::ad[1].d[0] (5) 
+              b = bool^0 = lut<>::ad[0].d[0] (1) 
+              _out = bool^0 = lut<>::ce[0]._out (9) 
+              out = bool^0 = lut<>::ce[0].out (10) 
             )
-            [1] = lut::ce[1] (4) (
-              a = bool^0 = lut::ad[1].d[0] (5) 
-              b = bool^0 = lut::ad[0].d[1] (2) 
-              _out = bool^0 = lut::ce[1]._out (11) 
-              out = bool^0 = lut::ce[1].out (12) 
+            [1] = lut<>::ce[1] (4) (
+              a = bool^0 = lut<>::ad[1].d[0] (5) 
+              b = bool^0 = lut<>::ad[0].d[1] (2) 
+              _out = bool^0 = lut<>::ce[1]._out (11) 
+              out = bool^0 = lut<>::ce[1].out (12) 
             )
-            [2] = lut::ce[2] (5) (
-              a = bool^0 = lut::ad[1].d[0] (5) 
-              b = bool^0 = lut::ad[0].d[2] (3) 
-              _out = bool^0 = lut::ce[2]._out (13) 
-              out = bool^0 = lut::ce[2].out (14) 
+            [2] = lut<>::ce[2] (5) (
+              a = bool^0 = lut<>::ad[1].d[0] (5) 
+              b = bool^0 = lut<>::ad[0].d[2] (3) 
+              _out = bool^0 = lut<>::ce[2]._out (13) 
+              out = bool^0 = lut<>::ce[2].out (14) 
             )
-            [3] = lut::ce[3] (6) (
-              a = bool^0 = lut::ad[1].d[0] (5) 
-              b = bool^0 = lut::ad[0].d[3] (4) 
-              _out = bool^0 = lut::ce[3]._out (15) 
-              out = bool^0 = lut::ce[3].out (16) 
+            [3] = lut<>::ce[3] (6) (
+              a = bool^0 = lut<>::ad[1].d[0] (5) 
+              b = bool^0 = lut<>::ad[0].d[3] (4) 
+              _out = bool^0 = lut<>::ce[3]._out (15) 
+              out = bool^0 = lut<>::ce[3].out (16) 
             )
-            [4] = lut::ce[4] (7) (
-              a = bool^0 = lut::ad[1].d[1] (6) 
-              b = bool^0 = lut::ad[0].d[0] (1) 
-              _out = bool^0 = lut::ce[4]._out (17) 
-              out = bool^0 = lut::ce[4].out (18) 
+            [4] = lut<>::ce[4] (7) (
+              a = bool^0 = lut<>::ad[1].d[1] (6) 
+              b = bool^0 = lut<>::ad[0].d[0] (1) 
+              _out = bool^0 = lut<>::ce[4]._out (17) 
+              out = bool^0 = lut<>::ce[4].out (18) 
             )
-            [5] = lut::ce[5] (8) (
-              a = bool^0 = lut::ad[1].d[1] (6) 
-              b = bool^0 = lut::ad[0].d[1] (2) 
-              _out = bool^0 = lut::ce[5]._out (19) 
-              out = bool^0 = lut::ce[5].out (20) 
+            [5] = lut<>::ce[5] (8) (
+              a = bool^0 = lut<>::ad[1].d[1] (6) 
+              b = bool^0 = lut<>::ad[0].d[1] (2) 
+              _out = bool^0 = lut<>::ce[5]._out (19) 
+              out = bool^0 = lut<>::ce[5].out (20) 
             )
-            [6] = lut::ce[6] (9) (
-              a = bool^0 = lut::ad[1].d[1] (6) 
-              b = bool^0 = lut::ad[0].d[2] (3) 
-              _out = bool^0 = lut::ce[6]._out (21) 
-              out = bool^0 = lut::ce[6].out (22) 
+            [6] = lut<>::ce[6] (9) (
+              a = bool^0 = lut<>::ad[1].d[1] (6) 
+              b = bool^0 = lut<>::ad[0].d[2] (3) 
+              _out = bool^0 = lut<>::ce[6]._out (21) 
+              out = bool^0 = lut<>::ce[6].out (22) 
             )
-            [7] = lut::ce[7] (10) (
-              a = bool^0 = lut::ad[1].d[1] (6) 
-              b = bool^0 = lut::ad[0].d[3] (4) 
-              _out = bool^0 = lut::ce[7]._out (23) 
-              out = bool^0 = lut::ce[7].out (24) 
+            [7] = lut<>::ce[7] (10) (
+              a = bool^0 = lut<>::ad[1].d[1] (6) 
+              b = bool^0 = lut<>::ad[0].d[3] (4) 
+              _out = bool^0 = lut<>::ce[7]._out (23) 
+              out = bool^0 = lut<>::ce[7].out (24) 
             )
-            [8] = lut::ce[8] (11) (
-              a = bool^0 = lut::ad[1].d[2] (7) 
-              b = bool^0 = lut::ad[0].d[0] (1) 
-              _out = bool^0 = lut::ce[8]._out (25) 
-              out = bool^0 = lut::ce[8].out (26) 
+            [8] = lut<>::ce[8] (11) (
+              a = bool^0 = lut<>::ad[1].d[2] (7) 
+              b = bool^0 = lut<>::ad[0].d[0] (1) 
+              _out = bool^0 = lut<>::ce[8]._out (25) 
+              out = bool^0 = lut<>::ce[8].out (26) 
             )
-            [9] = lut::ce[9] (12) (
-              a = bool^0 = lut::ad[1].d[2] (7) 
-              b = bool^0 = lut::ad[0].d[1] (2) 
-              _out = bool^0 = lut::ce[9]._out (27) 
-              out = bool^0 = lut::ce[9].out (28) 
+            [9] = lut<>::ce[9] (12) (
+              a = bool^0 = lut<>::ad[1].d[2] (7) 
+              b = bool^0 = lut<>::ad[0].d[1] (2) 
+              _out = bool^0 = lut<>::ce[9]._out (27) 
+              out = bool^0 = lut<>::ce[9].out (28) 
             )
-            [10] = lut::ce[10] (13) (
-              a = bool^0 = lut::ad[1].d[2] (7) 
-              b = bool^0 = lut::ad[0].d[2] (3) 
-              _out = bool^0 = lut::ce[10]._out (29) 
-              out = bool^0 = lut::ce[10].out (30) 
+            [10] = lut<>::ce[10] (13) (
+              a = bool^0 = lut<>::ad[1].d[2] (7) 
+              b = bool^0 = lut<>::ad[0].d[2] (3) 
+              _out = bool^0 = lut<>::ce[10]._out (29) 
+              out = bool^0 = lut<>::ce[10].out (30) 
             )
-            [11] = lut::ce[11] (14) (
-              a = bool^0 = lut::ad[1].d[2] (7) 
-              b = bool^0 = lut::ad[0].d[3] (4) 
-              _out = bool^0 = lut::ce[11]._out (31) 
-              out = bool^0 = lut::ce[11].out (32) 
+            [11] = lut<>::ce[11] (14) (
+              a = bool^0 = lut<>::ad[1].d[2] (7) 
+              b = bool^0 = lut<>::ad[0].d[3] (4) 
+              _out = bool^0 = lut<>::ce[11]._out (31) 
+              out = bool^0 = lut<>::ce[11].out (32) 
             )
-            [12] = lut::ce[12] (15) (
-              a = bool^0 = lut::ad[1].d[3] (8) 
-              b = bool^0 = lut::ad[0].d[0] (1) 
-              _out = bool^0 = lut::ce[12]._out (33) 
-              out = bool^0 = lut::ce[12].out (34) 
+            [12] = lut<>::ce[12] (15) (
+              a = bool^0 = lut<>::ad[1].d[3] (8) 
+              b = bool^0 = lut<>::ad[0].d[0] (1) 
+              _out = bool^0 = lut<>::ce[12]._out (33) 
+              out = bool^0 = lut<>::ce[12].out (34) 
             )
-            [13] = lut::ce[13] (16) (
-              a = bool^0 = lut::ad[1].d[3] (8) 
-              b = bool^0 = lut::ad[0].d[1] (2) 
-              _out = bool^0 = lut::ce[13]._out (35) 
-              out = bool^0 = lut::ce[13].out (36) 
+            [13] = lut<>::ce[13] (16) (
+              a = bool^0 = lut<>::ad[1].d[3] (8) 
+              b = bool^0 = lut<>::ad[0].d[1] (2) 
+              _out = bool^0 = lut<>::ce[13]._out (35) 
+              out = bool^0 = lut<>::ce[13].out (36) 
             )
-            [14] = lut::ce[14] (17) (
-              a = bool^0 = lut::ad[1].d[3] (8) 
-              b = bool^0 = lut::ad[0].d[2] (3) 
-              _out = bool^0 = lut::ce[14]._out (37) 
-              out = bool^0 = lut::ce[14].out (38) 
+            [14] = lut<>::ce[14] (17) (
+              a = bool^0 = lut<>::ad[1].d[3] (8) 
+              b = bool^0 = lut<>::ad[0].d[2] (3) 
+              _out = bool^0 = lut<>::ce[14]._out (37) 
+              out = bool^0 = lut<>::ce[14].out (38) 
             )
-            [15] = lut::ce[15] (18) (
-              a = bool^0 = lut::ad[1].d[3] (8) 
-              b = bool^0 = lut::ad[0].d[3] (4) 
-              _out = bool^0 = lut::ce[15]._out (39) 
-              out = bool^0 = lut::ce[15].out (40) 
+            [15] = lut<>::ce[15] (18) (
+              a = bool^0 = lut<>::ad[1].d[3] (8) 
+              b = bool^0 = lut<>::ad[0].d[3] (4) 
+              _out = bool^0 = lut<>::ce[15]._out (39) 
+              out = bool^0 = lut<>::ce[15].out (40) 
             )
           }
         Created state:
         process instance pool:
-        1	lut::ad[0]
-        2	lut::ad[1]
-        3	lut::ce[0]
-        4	lut::ce[1]
-        5	lut::ce[2]
-        6	lut::ce[3]
-        7	lut::ce[4]
-        8	lut::ce[5]
-        9	lut::ce[6]
-        10	lut::ce[7]
-        11	lut::ce[8]
-        12	lut::ce[9]
-        13	lut::ce[10]
-        14	lut::ce[11]
-        15	lut::ce[12]
-        16	lut::ce[13]
-        17	lut::ce[14]
-        18	lut::ce[15]
+        1	lut<>::ad[0]
+        2	lut<>::ad[1]
+        3	lut<>::ce[0]
+        4	lut<>::ce[1]
+        5	lut<>::ce[2]
+        6	lut<>::ce[3]
+        7	lut<>::ce[4]
+        8	lut<>::ce[5]
+        9	lut<>::ce[6]
+        10	lut<>::ce[7]
+        11	lut<>::ce[8]
+        12	lut<>::ce[9]
+        13	lut<>::ce[10]
+        14	lut<>::ce[11]
+        15	lut<>::ce[12]
+        16	lut<>::ce[13]
+        17	lut<>::ce[14]
+        18	lut<>::ce[15]
         bool instance pool:
-        1	lut::ad[0].d[0]
-        2	lut::ad[0].d[1]
-        3	lut::ad[0].d[2]
-        4	lut::ad[0].d[3]
-        5	lut::ad[1].d[0]
-        6	lut::ad[1].d[1]
-        7	lut::ad[1].d[2]
-        8	lut::ad[1].d[3]
-        9	lut::ce[0]._out
-        10	lut::ce[0].out
-        11	lut::ce[1]._out
-        12	lut::ce[1].out
-        13	lut::ce[2]._out
-        14	lut::ce[2].out
-        15	lut::ce[3]._out
-        16	lut::ce[3].out
-        17	lut::ce[4]._out
-        18	lut::ce[4].out
-        19	lut::ce[5]._out
-        20	lut::ce[5].out
-        21	lut::ce[6]._out
-        22	lut::ce[6].out
-        23	lut::ce[7]._out
-        24	lut::ce[7].out
-        25	lut::ce[8]._out
-        26	lut::ce[8].out
-        27	lut::ce[9]._out
-        28	lut::ce[9].out
-        29	lut::ce[10]._out
-        30	lut::ce[10].out
-        31	lut::ce[11]._out
-        32	lut::ce[11].out
-        33	lut::ce[12]._out
-        34	lut::ce[12].out
-        35	lut::ce[13]._out
-        36	lut::ce[13].out
-        37	lut::ce[14]._out
-        38	lut::ce[14].out
-        39	lut::ce[15]._out
-        40	lut::ce[15].out
+        1	lut<>::ad[0].d[0]
+        2	lut<>::ad[0].d[1]
+        3	lut<>::ad[0].d[2]
+        4	lut<>::ad[0].d[3]
+        5	lut<>::ad[1].d[0]
+        6	lut<>::ad[1].d[1]
+        7	lut<>::ad[1].d[2]
+        8	lut<>::ad[1].d[3]
+        9	lut<>::ce[0]._out
+        10	lut<>::ce[0].out
+        11	lut<>::ce[1]._out
+        12	lut<>::ce[1].out
+        13	lut<>::ce[2]._out
+        14	lut<>::ce[2].out
+        15	lut<>::ce[3]._out
+        16	lut<>::ce[3].out
+        17	lut<>::ce[4]._out
+        18	lut<>::ce[4].out
+        19	lut<>::ce[5]._out
+        20	lut<>::ce[5].out
+        21	lut<>::ce[6]._out
+        22	lut<>::ce[6].out
+        23	lut<>::ce[7]._out
+        24	lut<>::ce[7].out
+        25	lut<>::ce[8]._out
+        26	lut<>::ce[8].out
+        27	lut<>::ce[9]._out
+        28	lut<>::ce[9].out
+        29	lut<>::ce[10]._out
+        30	lut<>::ce[10].out
+        31	lut<>::ce[11]._out
+        32	lut<>::ce[11].out
+        33	lut<>::ce[12]._out
+        34	lut<>::ce[12].out
+        35	lut<>::ce[13]._out
+        36	lut<>::ce[13].out
+        37	lut<>::ce[14]._out
+        38	lut<>::ce[14].out
+        39	lut<>::ce[15]._out
+        40	lut<>::ce[15].out
       }
       }
 

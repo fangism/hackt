@@ -249,10 +249,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 2
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<2, {0,1}, 0>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<2, {0,1}, 0>::b
           resolved concurrent actions:
             *[
               b := 0
@@ -269,10 +269,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 2
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<2, {0,1}, 1>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<2, {0,1}, 1>::b
           resolved concurrent actions:
             *[
               b := 1
@@ -290,10 +290,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 3
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<3, {4,9,16}, 0>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<3, {4,9,16}, 0>::b
           resolved concurrent actions:
             *[
               b := 4
@@ -311,10 +311,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 3
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<3, {4,9,16}, 1>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<3, {4,9,16}, 1>::b
           resolved concurrent actions:
             *[
               b := 9
@@ -332,10 +332,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 2
           N = pint^0 value: 3
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<3, {4,9,16}, 2>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<3, {4,9,16}, 2>::b
           resolved concurrent actions:
             *[
               b := 16
@@ -356,10 +356,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 6
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<6, {0,1,4,9,16,25}, 0>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<6, {0,1,4,9,16,25}, 0>::b
           resolved concurrent actions:
             *[
               b := 0
@@ -380,10 +380,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 6
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<6, {0,1,4,9,16,25}, 1>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<6, {0,1,4,9,16,25}, 1>::b
           resolved concurrent actions:
             *[
               b := 1
@@ -404,10 +404,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 2
           N = pint^0 value: 6
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<6, {0,1,4,9,16,25}, 2>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<6, {0,1,4,9,16,25}, 2>::b
           resolved concurrent actions:
             *[
               b := 4
@@ -428,10 +428,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 3
           N = pint^0 value: 6
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<6, {0,1,4,9,16,25}, 3>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<6, {0,1,4,9,16,25}, 3>::b
           resolved concurrent actions:
             *[
               b := 9
@@ -452,10 +452,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 4
           N = pint^0 value: 6
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<6, {0,1,4,9,16,25}, 4>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<6, {0,1,4,9,16,25}, 4>::b
           resolved concurrent actions:
             *[
               b := 16
@@ -476,10 +476,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 5
           N = pint^0 value: 6
-          b = int<16>^0 = compute_me::b (1) 
+          b = int<16>^0 = compute_me<6, {0,1,4,9,16,25}, 5>::b (1) 
           Created state:
           int instance pool:
-          1	compute_me::b
+          1	compute_me<6, {0,1,4,9,16,25}, 5>::b
           resolved concurrent actions:
             *[
               b := 25

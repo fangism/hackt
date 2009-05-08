@@ -1,4 +1,4 @@
-Warning: node weakness::c has no pull-up nor pull-dn PRS fanin.
+Warning: node weakness<>::c has no pull-up nor pull-dn PRS fanin.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -84,16 +84,16 @@ In namespace "", we have: {
         c -> d- [after=20; weak=1; ]
         ~c -> d+ [after=20; weak=1; ]
       footprint: {
-        a = bool^0 = weakness::a (1) 
-        b = bool^0 = weakness::b (2) 
-        c = bool^0 = weakness::c (3) 
-        d = bool^0 = weakness::d (4) 
+        a = bool^0 = weakness<>::a (1) 
+        b = bool^0 = weakness<>::b (2) 
+        c = bool^0 = weakness<>::c (3) 
+        d = bool^0 = weakness<>::d (4) 
         Created state:
         bool instance pool:
-        1	weakness::a
-        2	weakness::b
-        3	weakness::c
-        4	weakness::d
+        1	weakness<>::a
+        2	weakness<>::b
+        3	weakness<>::c
+        4	weakness<>::d
         resolved prs:
         a -> b- [weak=1; after=10; ]
         ~a -> b+ [weak=1; after=10; ]

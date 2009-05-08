@@ -54,15 +54,15 @@ In namespace "", we have: {
       spec:
         min_sep<15>({p,q},r)
       footprint: {
-        p = bool^0 = groupie::p (1) 
-        q = bool^0 = groupie::p (1) 
-        r = bool^0 = groupie::r (2) 
+        p = bool^0 = groupie<>::p (1) 
+        q = bool^0 = groupie<>::p (1) 
+        r = bool^0 = groupie<>::r (2) 
         Created state:
         bool instance pool:
-        1	groupie::p
-        2	groupie::r
+        1	groupie<>::p
+        2	groupie<>::r
         bool port aliases:
-        1: groupie::p = groupie::q
+        1: groupie<>::p = groupie<>::q
         resolved specs:
         min_sep<15>(p,r)
       }

@@ -74,12 +74,12 @@ In namespace "", we have: {
         ~a -> b+ [loadcap=1; comb=1; ]
         ~a -> b+ [loadcap=1; comb=1; ]
       footprint: {
-        a = bool^0 = inv::a (1) 
-        b = bool^0 = inv::b (2) 
+        a = bool^0 = inv<>::a (1) 
+        b = bool^0 = inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	inv::a
-        2	inv::b
+        1	inv<>::a
+        2	inv<>::b
         resolved prs:
         a -> b- [loadcap=2; comb=1; ]
         ~a -> b+ [loadcap=1; comb=1; ]

@@ -88,12 +88,12 @@ In namespace "", we have: {
           X = pint^0 value: 3
           Y = pint^0 value: 4
           Z = pint^0 value: 2
-          a = process foo<2>^0<3> = bar::a (1) 
-          b = process foo<2>^0<4> = bar::b (2) 
+          a = process foo<2>^0<3> = bar<2, 3, 4>::a (1) 
+          b = process foo<2>^0<4> = bar<2, 3, 4>::b (2) 
           Created state:
           process instance pool:
-          1	bar::a<3>
-          2	bar::b<4>
+          1	bar<2, 3, 4>::a<3>
+          2	bar<2, 3, 4>::b<4>
         }
       }
       }

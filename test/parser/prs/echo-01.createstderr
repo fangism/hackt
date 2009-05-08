@@ -91,18 +91,18 @@ In namespace "", we have: {
         (p & q) | (r & s) -> z-
         ~((p & q) | (r & s)) -> z+
       footprint: {
-        p = bool^0 = echo::p (1) 
-        q = bool^0 = echo::q (2) 
-        r = bool^0 = echo::r (3) 
-        s = bool^0 = echo::s (4) 
-        z = bool^0 = echo::z (5) 
+        p = bool^0 = echo<>::p (1) 
+        q = bool^0 = echo<>::q (2) 
+        r = bool^0 = echo<>::r (3) 
+        s = bool^0 = echo<>::s (4) 
+        z = bool^0 = echo<>::z (5) 
         Created state:
         bool instance pool:
-        1	echo::p
-        2	echo::q
-        3	echo::r
-        4	echo::s
-        5	echo::z
+        1	echo<>::p
+        2	echo<>::q
+        3	echo<>::r
+        4	echo<>::s
+        5	echo<>::z
         resolved prs:
         (p & q) | (r & s) -> z-
         ~((p & q) | (r & s)) -> z+

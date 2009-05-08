@@ -71,37 +71,37 @@ In namespace "", we have: {
       footprint: {
         p = process pbit<>^1
           {
-            [0] = lut::p[0] (1) (
-              t = bool^0 = lut::p[0].t (1) 
+            [0] = lut<>::p[0] (1) (
+              t = bool^0 = lut<>::p[0].t (1) 
             )
-            [1] = lut::p[1] (2) (
-              t = bool^0 = lut::p[1].t (2) 
+            [1] = lut<>::p[1] (2) (
+              t = bool^0 = lut<>::p[1].t (2) 
             )
           }
         pbint = process pbitint<>^1
           {
-            [0] = lut::pbint[0] (3) (
-              pb = process pbit<>^0 = lut::pbint[0].pb (4) (
-                t = bool^0 = lut::p[0].t (1) 
+            [0] = lut<>::pbint[0] (3) (
+              pb = process pbit<>^0 = lut<>::pbint[0].pb (4) (
+                t = bool^0 = lut<>::p[0].t (1) 
               )
             )
-            [1] = lut::pbint[1] (5) (
-              pb = process pbit<>^0 = lut::pbint[1].pb (6) (
-                t = bool^0 = lut::p[1].t (2) 
+            [1] = lut<>::pbint[1] (5) (
+              pb = process pbit<>^0 = lut<>::pbint[1].pb (6) (
+                t = bool^0 = lut<>::p[1].t (2) 
               )
             )
           }
         Created state:
         process instance pool:
-        1	lut::p[0]
-        2	lut::p[1]
-        3	lut::pbint[0]
-        4	lut::pbint[0].pb
-        5	lut::pbint[1]
-        6	lut::pbint[1].pb
+        1	lut<>::p[0]
+        2	lut<>::p[1]
+        3	lut<>::pbint[0]
+        4	lut<>::pbint[0].pb
+        5	lut<>::pbint[1]
+        6	lut<>::pbint[1].pb
         bool instance pool:
-        1	lut::p[0].t
-        2	lut::p[1].t
+        1	lut<>::p[0].t
+        2	lut<>::p[1].t
       }
       }
 
@@ -114,10 +114,10 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> t
       footprint: {
-        t = bool^0 = pbit::t (1) 
+        t = bool^0 = pbit<>::t (1) 
         Created state:
         bool instance pool:
-        1	pbit::t
+        1	pbit<>::t
       }
       }
 
@@ -130,14 +130,14 @@ In namespace "", we have: {
       unroll sequence: 
         pbit<> pb
       footprint: {
-        pb = process pbit<>^0 = pbitint::pb (1) (
-          t = bool^0 = pbitint::pb.t (1) 
+        pb = process pbit<>^0 = pbitint<>::pb (1) (
+          t = bool^0 = pbitint<>::pb.t (1) 
         )
         Created state:
         process instance pool:
-        1	pbitint::pb
+        1	pbitint<>::pb
         bool instance pool:
-        1	pbitint::pb.t
+        1	pbitint<>::pb.t
       }
       }
 

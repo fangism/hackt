@@ -1,7 +1,7 @@
-WARNING: channel boring::B lacks connection to a producer.
-WARNING: channel boring::B lacks connection to a consumer.
-WARNING: channel classroom::lecture.B lacks connection to a producer.
-WARNING: channel classroom::lecture.B lacks connection to a consumer.
+WARNING: channel boring<>::B lacks connection to a producer.
+WARNING: channel boring<>::B lacks connection to a consumer.
+WARNING: channel classroom<>::lecture.B lacks connection to a producer.
+WARNING: channel classroom<>::lecture.B lacks connection to a consumer.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -47,10 +47,10 @@ In namespace "", we have: {
       unroll sequence: 
         chan(bool<>) B
       footprint: {
-        B = channel chan(bool<>)^0 = boring::B (1) 
+        B = channel chan(bool<>)^0 = boring<>::B (1) 
         Created state:
         channel instance pool:
-        1	boring::B
+        1	boring<>::B
       }
       }
 
@@ -62,14 +62,14 @@ In namespace "", we have: {
       unroll sequence: 
         boring<> lecture
       footprint: {
-        lecture = process boring<>^0 = classroom::lecture (1) (
-          B = channel chan(bool<>)^0 = classroom::lecture.B (1) 
+        lecture = process boring<>^0 = classroom<>::lecture (1) (
+          B = channel chan(bool<>)^0 = classroom<>::lecture.B (1) 
         )
         Created state:
         process instance pool:
-        1	classroom::lecture
+        1	classroom<>::lecture
         channel instance pool:
-        1	classroom::lecture.B
+        1	classroom<>::lecture.B
       }
       }
 

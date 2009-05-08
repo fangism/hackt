@@ -51,12 +51,12 @@ In namespace "", we have: {
         exclhi(x,y)
         excllo(x,y)
       footprint: {
-        x = bool^0 = xcpl_inv::x (1) 
-        y = bool^0 = xcpl_inv::y (2) 
+        x = bool^0 = xcpl_inv<>::x (1) 
+        y = bool^0 = xcpl_inv<>::y (2) 
         Created state:
         bool instance pool:
-        1	xcpl_inv::x
-        2	xcpl_inv::y
+        1	xcpl_inv<>::x
+        2	xcpl_inv<>::y
         resolved specs:
         cross_coupled_inverters(x,y)
         exclhi(x,y)

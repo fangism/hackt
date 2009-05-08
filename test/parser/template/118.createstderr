@@ -86,13 +86,13 @@ In namespace "", we have: {
         bool<> y
         x = y;
       footprint: {
-        x = bool^0 = fa::x (1) 
-        y = bool^0 = fa::x (1) 
+        x = bool^0 = fa<>::x (1) 
+        y = bool^0 = fa<>::x (1) 
         Created state:
         bool instance pool:
-        1	fa::x
+        1	fa<>::x
         bool port aliases:
-        1: fa::x = fa::y
+        1: fa<>::x = fa<>::y
       }
       }
 
@@ -118,35 +118,35 @@ In namespace "", we have: {
       footprint collection: {
         <false> {
           C = pbool^0 value: 0
-          fa0 = process fa<>^0 = foo::fa0 (1) (
-            x = bool^0 = foo::x (1) 
-            y = bool^0 = foo::x (1) 
+          fa0 = process fa<>^0 = foo<false>::fa0 (1) (
+            x = bool^0 = foo<false>::x (1) 
+            y = bool^0 = foo<false>::x (1) 
           )
-          x = bool^0 = foo::x (1) 
-          y = bool^0 = foo::x (1) 
+          x = bool^0 = foo<false>::x (1) 
+          y = bool^0 = foo<false>::x (1) 
           Created state:
           process instance pool:
-          1	foo::fa0
+          1	foo<false>::fa0
           bool instance pool:
-          1	foo::x
+          1	foo<false>::x
           bool port aliases:
-          1: foo::x = foo::y
+          1: foo<false>::x = foo<false>::y
         }
         <true> {
           C = pbool^0 value: 1
-          fa0 = process fa<>^0 = foo::fa0 (1) (
-            x = bool^0 = foo::x (1) 
-            y = bool^0 = foo::x (1) 
+          fa0 = process fa<>^0 = foo<true>::fa0 (1) (
+            x = bool^0 = foo<true>::x (1) 
+            y = bool^0 = foo<true>::x (1) 
           )
-          x = bool^0 = foo::x (1) 
-          y = bool^0 = foo::x (1) 
+          x = bool^0 = foo<true>::x (1) 
+          y = bool^0 = foo<true>::x (1) 
           Created state:
           process instance pool:
-          1	foo::fa0
+          1	foo<true>::fa0
           bool instance pool:
-          1	foo::x
+          1	foo<true>::x
           bool port aliases:
-          1: foo::x = foo::y
+          1: foo<true>::x = foo<true>::y
         }
       }
       }

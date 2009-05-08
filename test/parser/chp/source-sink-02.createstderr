@@ -80,10 +80,10 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        S = channel chan?(bool<>)^0 = chp_bool_sink_alt::S (1) 
+        S = channel chan?(bool<>)^0 = chp_bool_sink_alt<>::S (1) 
         Created state:
         channel instance pool:
-        1	chp_bool_sink_alt::S
+        1	chp_bool_sink_alt<>::S
         resolved concurrent actions:
           *[
             S?
@@ -115,10 +115,10 @@ In namespace "", we have: {
       footprint collection: {
         <true> {
           B = pbool^0 value: 1
-          S = channel chan!(bool<>)^0 = chp_bool_source::S (1) 
+          S = channel chan!(bool<>)^0 = chp_bool_source<true>::S (1) 
           Created state:
           channel instance pool:
-          1	chp_bool_source::S
+          1	chp_bool_source<true>::S
           resolved concurrent actions:
             *[
               S!(true)

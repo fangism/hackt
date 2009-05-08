@@ -58,19 +58,19 @@ In namespace "", we have: {
         foo<> x
         foo<> y
       footprint: {
-        x = process foo<>^0 = bar::x (1) (
-          a = bool^0 = bar::x.a (1) 
+        x = process foo<>^0 = bar<>::x (1) (
+          a = bool^0 = bar<>::x.a (1) 
         )
-        y = process foo<>^0 = bar::y (2) (
-          a = bool^0 = bar::y.a (2) 
+        y = process foo<>^0 = bar<>::y (2) (
+          a = bool^0 = bar<>::y.a (2) 
         )
         Created state:
         process instance pool:
-        1	bar::x
-        2	bar::y
+        1	bar<>::x
+        2	bar<>::y
         bool instance pool:
-        1	bar::x.a
-        2	bar::y.a
+        1	bar<>::x.a
+        2	bar<>::y.a
       }
       }
 
@@ -85,12 +85,12 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = foo::a (1) 
-        b = bool^0 = foo::b (2) 
+        a = bool^0 = foo<>::a (1) 
+        b = bool^0 = foo<>::b (2) 
         Created state:
         bool instance pool:
-        1	foo::a
-        2	foo::b
+        1	foo<>::a
+        2	foo<>::b
       }
       }
 
@@ -105,25 +105,25 @@ In namespace "", we have: {
         bar<> p
         bar<> q
       footprint: {
-        p = process bar<>^0 = ick::p (1) (
-          x = process foo<>^0 = ick::p.x (2) (
-            a = bool^0 = ick::p.x.a (1) 
+        p = process bar<>^0 = ick<>::p (1) (
+          x = process foo<>^0 = ick<>::p.x (2) (
+            a = bool^0 = ick<>::p.x.a (1) 
           )
         )
-        q = process bar<>^0 = ick::q (3) (
-          x = process foo<>^0 = ick::q.x (4) (
-            a = bool^0 = ick::q.x.a (2) 
+        q = process bar<>^0 = ick<>::q (3) (
+          x = process foo<>^0 = ick<>::q.x (4) (
+            a = bool^0 = ick<>::q.x.a (2) 
           )
         )
         Created state:
         process instance pool:
-        1	ick::p
-        2	ick::p.x
-        3	ick::q
-        4	ick::q.x
+        1	ick<>::p
+        2	ick<>::p.x
+        3	ick<>::q
+        4	ick<>::q.x
         bool instance pool:
-        1	ick::p.x.a
-        2	ick::q.x.a
+        1	ick<>::p.x.a
+        2	ick<>::q.x.a
       }
       }
 

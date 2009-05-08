@@ -63,21 +63,21 @@ In namespace "", we have: {
           p.t = pbint.pb.t;
         )
       footprint: {
-        p = process pbit<>^0 = lut::p (3) (
-          t = bool^0 = lut::p.t (1) 
+        p = process pbit<>^0 = lut<>::p (3) (
+          t = bool^0 = lut<>::p.t (1) 
         )
-        pbint = process pbitint<>^0 = lut::pbint (1) (
-          pb = process pbit<>^0 = lut::pbint.pb (2) (
-            t = bool^0 = lut::p.t (1) 
+        pbint = process pbitint<>^0 = lut<>::pbint (1) (
+          pb = process pbit<>^0 = lut<>::pbint.pb (2) (
+            t = bool^0 = lut<>::p.t (1) 
           )
         )
         Created state:
         process instance pool:
-        1	lut::pbint
-        2	lut::pbint.pb
-        3	lut::p
+        1	lut<>::pbint
+        2	lut<>::pbint.pb
+        3	lut<>::p
         bool instance pool:
-        1	lut::p.t
+        1	lut<>::p.t
       }
       }
 
@@ -90,10 +90,10 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> t
       footprint: {
-        t = bool^0 = pbit::t (1) 
+        t = bool^0 = pbit<>::t (1) 
         Created state:
         bool instance pool:
-        1	pbit::t
+        1	pbit<>::t
       }
       }
 
@@ -106,14 +106,14 @@ In namespace "", we have: {
       unroll sequence: 
         pbit<> pb
       footprint: {
-        pb = process pbit<>^0 = pbitint::pb (1) (
-          t = bool^0 = pbitint::pb.t (1) 
+        pb = process pbit<>^0 = pbitint<>::pb (1) (
+          t = bool^0 = pbitint<>::pb.t (1) 
         )
         Created state:
         process instance pool:
-        1	pbitint::pb
+        1	pbitint<>::pb
         bool instance pool:
-        1	pbitint::pb.t
+        1	pbitint<>::pb.t
       }
       }
 

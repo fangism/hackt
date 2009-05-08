@@ -2,7 +2,7 @@ got: bad range: 1..0
 Error during resolution of indexed reference to:
 	collection state: bool^1
   {
-    [0] = e1of::d[0] (2) 
+    [0] = e1of<1>::d[0] (2) 
   }
 Error resolving literal node at position 2 of spec directive 'exclhi'.
 Error instantiating process footprint: 

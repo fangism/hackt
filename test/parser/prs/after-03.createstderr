@@ -64,12 +64,12 @@ In namespace "", we have: {
       footprint collection: {
         <31> {
           D = pint^0 value: 31
-          a = bool^0 = afterburn::a (1) 
-          b = bool^0 = afterburn::b (2) 
+          a = bool^0 = afterburn<31>::a (1) 
+          b = bool^0 = afterburn<31>::b (2) 
           Created state:
           bool instance pool:
-          1	afterburn::a
-          2	afterburn::b
+          1	afterburn<31>::a
+          2	afterburn<31>::b
           resolved prs:
           a -> b- [after=31; ]
           ~a -> b+ [after=31; ]

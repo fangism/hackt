@@ -139,20 +139,20 @@ In namespace "", we have: {
               1 = 0
               2 = 1
             }
-          myfoo = process foo<3, 3, {1,0,1}>^0 = ass::myfoo (1) (
-            r = bool^0 = ass::x (1) 
-            s = bool^0 = ass::y (2) 
+          myfoo = process foo<3, 3, {1,0,1}>^0 = ass<3, {1,0,1}>::myfoo (1) (
+            r = bool^0 = ass<3, {1,0,1}>::x (1) 
+            s = bool^0 = ass<3, {1,0,1}>::y (2) 
           )
-          x = bool^0 = ass::x (1) 
-          y = bool^0 = ass::y (2) 
-          z = bool^0 = ass::z (3) 
+          x = bool^0 = ass<3, {1,0,1}>::x (1) 
+          y = bool^0 = ass<3, {1,0,1}>::y (2) 
+          z = bool^0 = ass<3, {1,0,1}>::z (3) 
           Created state:
           process instance pool:
-          1	ass::myfoo
+          1	ass<3, {1,0,1}>::myfoo
           bool instance pool:
-          1	ass::x
-          2	ass::y
-          3	ass::z
+          1	ass<3, {1,0,1}>::x
+          2	ass<3, {1,0,1}>::y
+          3	ass<3, {1,0,1}>::z
         }
       }
       }
@@ -186,12 +186,12 @@ In namespace "", we have: {
               1 = 0
               2 = 1
             }
-          r = bool^0 = foo::r (1) 
-          s = bool^0 = foo::s (2) 
+          r = bool^0 = foo<3, 3, {1,0,1}>::r (1) 
+          s = bool^0 = foo<3, 3, {1,0,1}>::s (2) 
           Created state:
           bool instance pool:
-          1	foo::r
-          2	foo::s
+          1	foo<3, 3, {1,0,1}>::r
+          2	foo<3, 3, {1,0,1}>::s
         }
       }
       }

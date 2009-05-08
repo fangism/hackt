@@ -83,10 +83,10 @@ In namespace "", we have: {
               1 = 1
             }
           N = pint^0 value: 2
-          x = process foo<4, {0,1,0,1}>^0 = bar::x (1) 
+          x = process foo<4, {0,1,0,1}>^0 = bar<2, {0,1}>::x (1) 
           Created state:
           process instance pool:
-          1	bar::x
+          1	bar<2, {0,1}>::x
         }
       }
       }

@@ -91,10 +91,10 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> a
       footprint: {
-        a = bool^0 = bar::a (1) 
+        a = bool^0 = bar<>::a (1) 
         Created state:
         bool instance pool:
-        1	bar::a
+        1	bar<>::a
       }
       }
 
@@ -107,14 +107,14 @@ In namespace "", we have: {
       unroll sequence: 
         bar<> b
       footprint: {
-        b = process bar<>^0 = foo::b (1) (
-          a = bool^0 = foo::b.a (1) 
+        b = process bar<>^0 = foo<>::b (1) (
+          a = bool^0 = foo<>::b.a (1) 
         )
         Created state:
         process instance pool:
-        1	foo::b
+        1	foo<>::b
         bool instance pool:
-        1	foo::b.a
+        1	foo<>::b.a
       }
       }
 
@@ -127,17 +127,17 @@ In namespace "", we have: {
       unroll sequence: 
         foo<> x
       footprint: {
-        x = process foo<>^0 = ick::x (1) (
-          b = process bar<>^0 = ick::x.b (2) (
-            a = bool^0 = ick::x.b.a (1) 
+        x = process foo<>^0 = ick<>::x (1) (
+          b = process bar<>^0 = ick<>::x.b (2) (
+            a = bool^0 = ick<>::x.b.a (1) 
           )
         )
         Created state:
         process instance pool:
-        1	ick::x
-        2	ick::x.b
+        1	ick<>::x
+        2	ick<>::x.b
         bool instance pool:
-        1	ick::x.b.a
+        1	ick<>::x.b.a
       }
       }
 

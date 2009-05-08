@@ -70,12 +70,12 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = inv::a (1) 
-        b = bool^0 = inv::b (2) 
+        a = bool^0 = inv<>::a (1) 
+        b = bool^0 = inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	inv::a
-        2	inv::b
+        1	inv<>::a
+        2	inv<>::b
         resolved prs:
         a -> b-
         ~a -> b+

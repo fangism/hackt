@@ -67,12 +67,12 @@ In namespace "", we have: {
         <2, 3> {
           X = pint^0 value: 2
           Y = pint^0 value: 3
-          a = int<2>^0 = bar::a (1) 
-          b = int<3>^0 = bar::b (2) 
+          a = int<2>^0 = bar<2, 3>::a (1) 
+          b = int<3>^0 = bar<2, 3>::b (2) 
           Created state:
           int instance pool:
-          1	bar::a
-          2	bar::b
+          1	bar<2, 3>::a
+          2	bar<2, 3>::b
         }
       }
       }

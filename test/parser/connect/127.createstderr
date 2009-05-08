@@ -74,11 +74,11 @@ In namespace "", we have: {
         bool<> z
         y = z;
       footprint: {
-        y = bool^0 = ar::y (1) 
-        z = bool^0 = ar::y (1) 
+        y = bool^0 = ar<>::y (1) 
+        z = bool^0 = ar<>::y (1) 
         Created state:
         bool instance pool:
-        1	ar::y
+        1	ar<>::y
       }
       }
 
@@ -94,11 +94,11 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        composite = bool^0 = array::x (1) 
-        x = bool^0 = array::x (1) 
+        composite = bool^0 = array<>::x (1) 
+        x = bool^0 = array<>::x (1) 
         Created state:
         bool instance pool:
-        1	array::x
+        1	array<>::x
       }
       }
 
@@ -114,18 +114,18 @@ In namespace "", we have: {
         array<> k
         k (r.y);
       footprint: {
-        k = process array<>^0 = foo::k (2) (
-          x = bool^0 = foo::r.y (1) 
+        k = process array<>^0 = foo<>::k (2) (
+          x = bool^0 = foo<>::r.y (1) 
         )
-        r = process ar<>^0 = foo::r (1) (
-          y = bool^0 = foo::r.y (1) 
+        r = process ar<>^0 = foo<>::r (1) (
+          y = bool^0 = foo<>::r.y (1) 
         )
         Created state:
         process instance pool:
-        1	foo::r
-        2	foo::k
+        1	foo<>::r
+        2	foo<>::k
         bool instance pool:
-        1	foo::r.y
+        1	foo<>::r.y
       }
       }
 

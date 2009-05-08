@@ -56,18 +56,18 @@ In namespace "", we have: {
       footprint: {
         b = bool^1
           {
-            [0] = blah::b[0] (2) 
-            [1] = blah::b[1] (3) 
-            [2] = blah::b[2] (4) 
-            [3] = blah::zw (1) 
+            [0] = blah<>::b[0] (2) 
+            [1] = blah<>::b[1] (3) 
+            [2] = blah<>::b[2] (4) 
+            [3] = blah<>::zw (1) 
           }
-        zw = bool^0 = blah::zw (1) 
+        zw = bool^0 = blah<>::zw (1) 
         Created state:
         bool instance pool:
-        1	blah::zw
-        2	blah::b[0]
-        3	blah::b[1]
-        4	blah::b[2]
+        1	blah<>::zw
+        2	blah<>::b[0]
+        3	blah<>::b[1]
+        4	blah<>::b[2]
       }
       }
 

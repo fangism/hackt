@@ -97,10 +97,10 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> d
       footprint: {
-        d = bool^0 = e1of2::d (1) 
+        d = bool^0 = e1of2<>::d (1) 
         Created state:
         bool instance pool:
-        1	e1of2::d
+        1	e1of2<>::d
       }
       }
 
@@ -125,43 +125,43 @@ In namespace "", we have: {
         pand<> pnd
         pnd (g, pa0);
       footprint: {
-        a0copy = process pupcopy<>^0 = funit::a0copy (4) (
-          r = process e1of2<>^0 = funit::aa (2) (
-            d = bool^0 = funit::aa.d (1) 
+        a0copy = process pupcopy<>^0 = funit<>::a0copy (4) (
+          r = process e1of2<>^0 = funit<>::aa (2) (
+            d = bool^0 = funit<>::aa.d (1) 
           )
-          rp = process e1of2<>^0 = funit::pa0 (3) (
-            d = bool^0 = funit::aa.d (1) 
-          )
-        )
-        aa = process e1of2<>^0 = funit::aa (2) (
-          d = bool^0 = funit::aa.d (1) 
-        )
-        g = process globals<>^0 = funit::g (1) 
-        lt = process pand<>^0 = funit::lt (5) (
-          g = process globals<>^0 = funit::g (1) 
-          a = process e1of2<>^0 = funit::aa (2) (
-            d = bool^0 = funit::aa.d (1) 
+          rp = process e1of2<>^0 = funit<>::pa0 (3) (
+            d = bool^0 = funit<>::aa.d (1) 
           )
         )
-        pa0 = process e1of2<>^0 = funit::pa0 (3) (
-          d = bool^0 = funit::aa.d (1) 
+        aa = process e1of2<>^0 = funit<>::aa (2) (
+          d = bool^0 = funit<>::aa.d (1) 
         )
-        pnd = process pand<>^0 = funit::pnd (6) (
-          g = process globals<>^0 = funit::g (1) 
-          a = process e1of2<>^0 = funit::pa0 (3) (
-            d = bool^0 = funit::aa.d (1) 
+        g = process globals<>^0 = funit<>::g (1) 
+        lt = process pand<>^0 = funit<>::lt (5) (
+          g = process globals<>^0 = funit<>::g (1) 
+          a = process e1of2<>^0 = funit<>::aa (2) (
+            d = bool^0 = funit<>::aa.d (1) 
+          )
+        )
+        pa0 = process e1of2<>^0 = funit<>::pa0 (3) (
+          d = bool^0 = funit<>::aa.d (1) 
+        )
+        pnd = process pand<>^0 = funit<>::pnd (6) (
+          g = process globals<>^0 = funit<>::g (1) 
+          a = process e1of2<>^0 = funit<>::pa0 (3) (
+            d = bool^0 = funit<>::aa.d (1) 
           )
         )
         Created state:
         process instance pool:
-        1	funit::g
-        2	funit::aa
-        3	funit::pa0
-        4	funit::a0copy
-        5	funit::lt
-        6	funit::pnd
+        1	funit<>::g
+        2	funit<>::aa
+        3	funit<>::pa0
+        4	funit<>::a0copy
+        5	funit<>::lt
+        6	funit<>::pnd
         bool instance pool:
-        1	funit::aa.d
+        1	funit<>::aa.d
       }
       }
 
@@ -185,16 +185,16 @@ In namespace "", we have: {
         globals<> g
         e1of2<> a
       footprint: {
-        a = process e1of2<>^0 = pand::a (2) (
-          d = bool^0 = pand::a.d (1) 
+        a = process e1of2<>^0 = pand<>::a (2) (
+          d = bool^0 = pand<>::a.d (1) 
         )
-        g = process globals<>^0 = pand::g (1) 
+        g = process globals<>^0 = pand<>::g (1) 
         Created state:
         process instance pool:
-        1	pand::g
-        2	pand::a
+        1	pand<>::g
+        2	pand<>::a
         bool instance pool:
-        1	pand::a.d
+        1	pand<>::a.d
       }
       }
 
@@ -211,20 +211,20 @@ In namespace "", we have: {
         e1of2<> rp
         r.d = rp.d;
       footprint: {
-        r = process e1of2<>^0 = pupcopy::r (1) (
-          d = bool^0 = pupcopy::r.d (1) 
+        r = process e1of2<>^0 = pupcopy<>::r (1) (
+          d = bool^0 = pupcopy<>::r.d (1) 
         )
-        rp = process e1of2<>^0 = pupcopy::rp (2) (
-          d = bool^0 = pupcopy::r.d (1) 
+        rp = process e1of2<>^0 = pupcopy<>::rp (2) (
+          d = bool^0 = pupcopy<>::r.d (1) 
         )
         Created state:
         process instance pool:
-        1	pupcopy::r
-        2	pupcopy::rp
+        1	pupcopy<>::r
+        2	pupcopy<>::rp
         bool instance pool:
-        1	pupcopy::r.d
+        1	pupcopy<>::r.d
         bool port aliases:
-        1: pupcopy::r.d = pupcopy::rp.d
+        1: pupcopy<>::r.d = pupcopy<>::rp.d
       }
       }
 

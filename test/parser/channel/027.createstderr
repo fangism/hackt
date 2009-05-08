@@ -119,20 +119,20 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            [0] = e1of2::f (2) 
-            [1] = e1of2::t (1) 
+            [0] = e1of2<>::f (2) 
+            [1] = e1of2<>::t (1) 
           }
-        e = bool^0 = e1of2::e (3) 
-        f = bool^0 = e1of2::f (2) 
-        t = bool^0 = e1of2::t (1) 
+        e = bool^0 = e1of2<>::e (3) 
+        f = bool^0 = e1of2<>::f (2) 
+        t = bool^0 = e1of2<>::t (1) 
         Created state:
         bool instance pool:
-        1	e1of2::t
-        2	e1of2::f
-        3	e1of2::e
+        1	e1of2<>::t
+        2	e1of2<>::f
+        3	e1of2<>::e
         bool port aliases:
-        1: e1of2::t = e1of2::d[1]
-        2: e1of2::f = e1of2::d[0]
+        1: e1of2<>::t = e1of2<>::d[1]
+        2: e1of2<>::f = e1of2<>::d[0]
         resolved specs:
         exclhi(f,t)
       }
@@ -170,28 +170,28 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            [0] = e1of4::d0 (1) 
-            [1] = e1of4::d1 (2) 
-            [2] = e1of4::d2 (3) 
-            [3] = e1of4::d3 (4) 
+            [0] = e1of4<>::d0 (1) 
+            [1] = e1of4<>::d1 (2) 
+            [2] = e1of4<>::d2 (3) 
+            [3] = e1of4<>::d3 (4) 
           }
-        d0 = bool^0 = e1of4::d0 (1) 
-        d1 = bool^0 = e1of4::d1 (2) 
-        d2 = bool^0 = e1of4::d2 (3) 
-        d3 = bool^0 = e1of4::d3 (4) 
-        e = bool^0 = e1of4::e (5) 
+        d0 = bool^0 = e1of4<>::d0 (1) 
+        d1 = bool^0 = e1of4<>::d1 (2) 
+        d2 = bool^0 = e1of4<>::d2 (3) 
+        d3 = bool^0 = e1of4<>::d3 (4) 
+        e = bool^0 = e1of4<>::e (5) 
         Created state:
         bool instance pool:
-        1	e1of4::d0
-        2	e1of4::d1
-        3	e1of4::d2
-        4	e1of4::d3
-        5	e1of4::e
+        1	e1of4<>::d0
+        2	e1of4<>::d1
+        3	e1of4<>::d2
+        4	e1of4<>::d3
+        5	e1of4<>::e
         bool port aliases:
-        1: e1of4::d0 = e1of4::d[0]
-        2: e1of4::d1 = e1of4::d[1]
-        3: e1of4::d2 = e1of4::d[2]
-        4: e1of4::d3 = e1of4::d[3]
+        1: e1of4<>::d0 = e1of4<>::d[0]
+        2: e1of4<>::d1 = e1of4<>::d[1]
+        3: e1of4<>::d2 = e1of4<>::d[2]
+        4: e1of4<>::d3 = e1of4<>::d[3]
         resolved specs:
         exclhi(d0,d1,d2,d3)
       }

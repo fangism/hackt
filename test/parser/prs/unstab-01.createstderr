@@ -1,4 +1,4 @@
-Warning: node blah::a has no pull-up nor pull-dn PRS fanin.
+Warning: node blah<>::a has no pull-up nor pull-dn PRS fanin.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -47,12 +47,12 @@ In namespace "", we have: {
       prs:
         a -> b- [unstab=1; ]
       footprint: {
-        a = bool^0 = blah::a (1) 
-        b = bool^0 = blah::b (2) 
+        a = bool^0 = blah<>::a (1) 
+        b = bool^0 = blah<>::b (2) 
         Created state:
         bool instance pool:
-        1	blah::a
-        2	blah::b
+        1	blah<>::a
+        2	blah<>::b
         resolved prs:
         a -> b- [unstab=1; ]
       }

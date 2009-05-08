@@ -54,10 +54,10 @@ In namespace "", we have: {
           unroll sequence: 
             bar::ick<bar::Q> zoo
           footprint: {
-            zoo = process bar::ick<2>^0 = bar::foo::zoo (1) 
+            zoo = process bar::ick<2>^0 = bar::foo<>::zoo (1) 
             Created state:
             process instance pool:
-            1	bar::foo::zoo
+            1	bar::foo<>::zoo
           }
           }
 

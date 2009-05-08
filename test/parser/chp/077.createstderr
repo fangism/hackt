@@ -249,10 +249,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 2
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<2, {0,1}, 0>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<2, {0,1}, 0>::b
           resolved concurrent actions:
             *[
               b := false
@@ -269,10 +269,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 2
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<2, {0,1}, 1>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<2, {0,1}, 1>::b
           resolved concurrent actions:
             *[
               b := true
@@ -290,10 +290,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 3
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<3, {0,1,0}, 0>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<3, {0,1,0}, 0>::b
           resolved concurrent actions:
             *[
               b := false
@@ -311,10 +311,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 3
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<3, {0,1,0}, 1>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<3, {0,1,0}, 1>::b
           resolved concurrent actions:
             *[
               b := true
@@ -332,10 +332,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 2
           N = pint^0 value: 3
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<3, {0,1,0}, 2>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<3, {0,1,0}, 2>::b
           resolved concurrent actions:
             *[
               b := false
@@ -356,10 +356,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 6
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<6, {0,1,0,1,0,1}, 0>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<6, {0,1,0,1,0,1}, 0>::b
           resolved concurrent actions:
             *[
               b := false
@@ -380,10 +380,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 6
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<6, {0,1,0,1,0,1}, 1>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<6, {0,1,0,1,0,1}, 1>::b
           resolved concurrent actions:
             *[
               b := true
@@ -404,10 +404,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 2
           N = pint^0 value: 6
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<6, {0,1,0,1,0,1}, 2>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<6, {0,1,0,1,0,1}, 2>::b
           resolved concurrent actions:
             *[
               b := false
@@ -428,10 +428,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 3
           N = pint^0 value: 6
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<6, {0,1,0,1,0,1}, 3>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<6, {0,1,0,1,0,1}, 3>::b
           resolved concurrent actions:
             *[
               b := true
@@ -452,10 +452,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 4
           N = pint^0 value: 6
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<6, {0,1,0,1,0,1}, 4>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<6, {0,1,0,1,0,1}, 4>::b
           resolved concurrent actions:
             *[
               b := false
@@ -476,10 +476,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 5
           N = pint^0 value: 6
-          b = bool^0 = assign_me::b (1) 
+          b = bool^0 = assign_me<6, {0,1,0,1,0,1}, 5>::b (1) 
           Created state:
           bool instance pool:
-          1	assign_me::b
+          1	assign_me<6, {0,1,0,1,0,1}, 5>::b
           resolved concurrent actions:
             *[
               b := true

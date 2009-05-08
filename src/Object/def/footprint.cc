@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.41.2.1 2009/05/07 23:12:32 fang Exp $
+	$Id: footprint.cc,v 1.41.2.2 2009/05/08 22:46:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -463,10 +463,17 @@ footprint::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: distinguish strict from relaxed template parameters
+ */
 ostream&
-footprint::dump_type(ostream& o) const {
-	o << owner_def->get_key();
+footprint::dump_type(ostream& o) const {	// dump_flags
+	// cast as a scopespace? cross-cast definition_base to name_space?
+	// be careful if owner-def is a namespace, key will be file-name!
+	owner_def->dump_qualified_name(o, dump_flags::default_value);
+//	o << owner_def->get_key();
 	param_key.dump(o << '<', expr_dump_context::default_value) << '>';
+		// context doesn't matter, they are constants anyhow
 	return o;
 }
 

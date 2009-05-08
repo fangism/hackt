@@ -61,16 +61,16 @@ In namespace "", we have: {
           N = pint^0 value: 3
           a = bool^1
             {
-              [0] = foo::a[0] (1) 
-              [1] = foo::a[1] (2) 
-              [2] = foo::a[0] (1) 
+              [0] = foo<3>::a[0] (1) 
+              [1] = foo<3>::a[1] (2) 
+              [2] = foo<3>::a[0] (1) 
             }
           Created state:
           bool instance pool:
-          1	foo::a[0]
-          2	foo::a[1]
+          1	foo<3>::a[0]
+          2	foo<3>::a[1]
           bool port aliases:
-          1: foo::a[0] = foo::a[2]
+          1: foo<3>::a[0] = foo<3>::a[2]
         }
       }
       }

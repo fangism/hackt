@@ -62,34 +62,34 @@ In namespace "", we have: {
         foo<> b
         a = b;
       footprint: {
-        a = process foo<>^0 = bar::a (3) (
-          a = bool^0 = bar::a.a (5) 
-          b = bool^0 = bar::a.b (6) 
+        a = process foo<>^0 = bar<>::a (3) (
+          a = bool^0 = bar<>::a.a (5) 
+          b = bool^0 = bar<>::a.b (6) 
         )
-        b = process foo<>^0 = bar::a (3) (
-          a = bool^0 = bar::a.a (5) 
-          b = bool^0 = bar::a.b (6) 
+        b = process foo<>^0 = bar<>::a (3) (
+          a = bool^0 = bar<>::a.a (5) 
+          b = bool^0 = bar<>::a.b (6) 
         )
-        x = process foo<>^0 = bar::x (1) (
-          a = bool^0 = bar::x.a (1) 
-          b = bool^0 = bar::x.b (2) 
+        x = process foo<>^0 = bar<>::x (1) (
+          a = bool^0 = bar<>::x.a (1) 
+          b = bool^0 = bar<>::x.b (2) 
         )
-        y = process foo<>^0 = bar::y (2) (
-          a = bool^0 = bar::y.a (3) 
-          b = bool^0 = bar::y.b (4) 
+        y = process foo<>^0 = bar<>::y (2) (
+          a = bool^0 = bar<>::y.a (3) 
+          b = bool^0 = bar<>::y.b (4) 
         )
         Created state:
         process instance pool:
-        1	bar::x
-        2	bar::y
-        3	bar::a
+        1	bar<>::x
+        2	bar<>::y
+        3	bar<>::a
         bool instance pool:
-        1	bar::x.a
-        2	bar::x.b
-        3	bar::y.a
-        4	bar::y.b
-        5	bar::a.a
-        6	bar::a.b
+        1	bar<>::x.a
+        2	bar<>::x.b
+        3	bar<>::y.a
+        4	bar<>::y.b
+        5	bar<>::a.a
+        6	bar<>::a.b
       }
       }
 
@@ -105,12 +105,12 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = foo::a (1) 
-        b = bool^0 = foo::b (2) 
+        a = bool^0 = foo<>::a (1) 
+        b = bool^0 = foo<>::b (2) 
         Created state:
         bool instance pool:
-        1	foo::a
-        2	foo::b
+        1	foo<>::a
+        2	foo<>::b
       }
       }
 

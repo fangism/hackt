@@ -110,12 +110,12 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = inv::a (1) 
-        b = bool^0 = inv::b (2) 
+        a = bool^0 = inv<>::a (1) 
+        b = bool^0 = inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	inv::a
-        2	inv::b
+        1	inv<>::a
+        2	inv<>::b
         resolved prs:
         a -> b-
         ~a -> b+
@@ -149,46 +149,46 @@ In namespace "", we have: {
         x[1] = x[0];
         x[2] = x[3];
       footprint: {
-        p = bool^0 = multi_inv::y (1) @[ iscomb !autokeeper ] 
-        q = bool^0 = multi_inv::q (2) 
+        p = bool^0 = multi_inv<>::y (1) @[ iscomb !autokeeper ] 
+        q = bool^0 = multi_inv<>::q (2) 
         x = process inv<>^1
           {
-            [0] = multi_inv::x[0] (1) (
-              a = bool^0 = multi_inv::y (1) @[ iscomb !autokeeper ] 
-              b = bool^0 = multi_inv::q (2) 
+            [0] = multi_inv<>::x[0] (1) (
+              a = bool^0 = multi_inv<>::y (1) @[ iscomb !autokeeper ] 
+              b = bool^0 = multi_inv<>::q (2) 
             )
-            [1] = multi_inv::x[0] (1) (
-              a = bool^0 = multi_inv::y (1) @[ iscomb !autokeeper ] 
-              b = bool^0 = multi_inv::q (2) 
+            [1] = multi_inv<>::x[0] (1) (
+              a = bool^0 = multi_inv<>::y (1) @[ iscomb !autokeeper ] 
+              b = bool^0 = multi_inv<>::q (2) 
             )
-            [2] = multi_inv::x[2] (2) (
-              a = bool^0 = multi_inv::x[2].a (3) 
-              b = bool^0 = multi_inv::z (4) @[ !autokeeper ] 
+            [2] = multi_inv<>::x[2] (2) (
+              a = bool^0 = multi_inv<>::x[2].a (3) 
+              b = bool^0 = multi_inv<>::z (4) @[ !autokeeper ] 
             )
-            [3] = multi_inv::x[2] (2) (
-              a = bool^0 = multi_inv::x[2].a (3) 
-              b = bool^0 = multi_inv::z (4) @[ !autokeeper ] 
+            [3] = multi_inv<>::x[2] (2) (
+              a = bool^0 = multi_inv<>::x[2].a (3) 
+              b = bool^0 = multi_inv<>::z (4) @[ !autokeeper ] 
             )
           }
-        y = bool^0 = multi_inv::y (1) @[ iscomb !autokeeper ] 
-        z = bool^0 = multi_inv::z (4) @[ !autokeeper ] 
+        y = bool^0 = multi_inv<>::y (1) @[ iscomb !autokeeper ] 
+        z = bool^0 = multi_inv<>::z (4) @[ !autokeeper ] 
         Created state:
         process instance pool:
-        1	multi_inv::x[0]
-        2	multi_inv::x[2]
+        1	multi_inv<>::x[0]
+        2	multi_inv<>::x[2]
         bool instance pool:
-        1	multi_inv::y @[ iscomb !autokeeper ]
-        2	multi_inv::q
-        3	multi_inv::x[2].a
-        4	multi_inv::z @[ !autokeeper ]
+        1	multi_inv<>::y @[ iscomb !autokeeper ]
+        2	multi_inv<>::q
+        3	multi_inv<>::x[2].a
+        4	multi_inv<>::z @[ !autokeeper ]
         process port aliases:
-        1: multi_inv::x[0] = multi_inv::x[1]
-        2: multi_inv::x[2] = multi_inv::x[3]
+        1: multi_inv<>::x[0] = multi_inv<>::x[1]
+        2: multi_inv<>::x[2] = multi_inv<>::x[3]
         bool port aliases:
-        1: multi_inv::x[0].a = multi_inv::x[1].a = multi_inv::y @[ iscomb !autokeeper ]
-        2: multi_inv::x[0].b = multi_inv::x[1].b
-        3: multi_inv::x[2].a = multi_inv::x[3].a
-        4: multi_inv::x[2].b = multi_inv::x[3].b = multi_inv::z @[ !autokeeper ]
+        1: multi_inv<>::x[0].a = multi_inv<>::x[1].a = multi_inv<>::y @[ iscomb !autokeeper ]
+        2: multi_inv<>::x[0].b = multi_inv<>::x[1].b
+        3: multi_inv<>::x[2].a = multi_inv<>::x[3].a
+        4: multi_inv<>::x[2].b = multi_inv<>::x[3].b = multi_inv<>::z @[ !autokeeper ]
       }
       }
 

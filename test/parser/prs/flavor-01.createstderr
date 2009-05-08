@@ -88,14 +88,14 @@ In namespace "", we have: {
         a<10,lvt> & b<10,svt> -> c-
         ~a<5,2,svt> | ~b<10,svt> -> c+
       footprint: {
-        a = bool^0 = nand_type::a (1) 
-        b = bool^0 = nand_type::b (2) 
-        c = bool^0 = nand_type::c (3) 
+        a = bool^0 = nand_type<>::a (1) 
+        b = bool^0 = nand_type<>::b (2) 
+        c = bool^0 = nand_type<>::c (3) 
         Created state:
         bool instance pool:
-        1	nand_type::a
-        2	nand_type::b
-        3	nand_type::c
+        1	nand_type<>::a
+        2	nand_type<>::b
+        3	nand_type<>::c
         resolved prs:
         a<10,-2> & b<10,-1> -> c-
         ~a<5,2,-1> | ~b<10,-1> -> c+

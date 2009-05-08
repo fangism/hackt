@@ -76,12 +76,12 @@ In namespace "", we have: {
           }
         }
       footprint: {
-        in = channel chan?()^0 = boring::in (1) 
-        out = channel chan!()^0 = boring::out (2) 
+        in = channel chan?()^0 = boring<>::in (1) 
+        out = channel chan!()^0 = boring<>::out (2) 
         Created state:
         channel instance pool:
-        1	boring::in
-        2	boring::out
+        1	boring<>::in
+        2	boring<>::out
         resolved concurrent actions:
           concurrent: {
             *[

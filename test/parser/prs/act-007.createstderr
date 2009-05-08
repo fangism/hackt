@@ -1,4 +1,4 @@
-Warning: node foo::b.w[0] has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<3>::b.w[0] has no pull-up nor pull-dn PRS fanin.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -130,19 +130,19 @@ In namespace "", we have: {
           i = pint^0 value: 5
           w = bool^1
             {
-              [0] = bar::w[0] (1) 
-              [1] = bar::w[1] (2) 
-              [2] = bar::w[2] (3) 
-              [3] = bar::w[3] (4) 
-              [4] = bar::w[4] (5) 
+              [0] = bar<5>::w[0] (1) 
+              [1] = bar<5>::w[1] (2) 
+              [2] = bar<5>::w[2] (3) 
+              [3] = bar<5>::w[3] (4) 
+              [4] = bar<5>::w[4] (5) 
             }
           Created state:
           bool instance pool:
-          1	bar::w[0]
-          2	bar::w[1]
-          3	bar::w[2]
-          4	bar::w[3]
-          5	bar::w[4]
+          1	bar<5>::w[0]
+          2	bar<5>::w[1]
+          3	bar<5>::w[2]
+          4	bar<5>::w[3]
+          5	bar<5>::w[4]
           resolved prs:
           w[0] -> w[1]-
         }
@@ -176,55 +176,55 @@ In namespace "", we have: {
         )
       footprint collection: {
         <3> {
-          b = process bar<5>^0 = foo::b (1) (
+          b = process bar<5>^0 = foo<3>::b (1) (
             w = bool^1
               {
-                [0] = foo::b.w[0] (1) 
-                [1] = foo::b.w[1] (2) 
-                [2] = foo::b.w[2] (3) 
-                [3] = foo::b.w[3] (4) 
-                [4] = foo::b.w[4] (5) 
+                [0] = foo<3>::b.w[0] (1) 
+                [1] = foo<3>::b.w[1] (2) 
+                [2] = foo<3>::b.w[2] (3) 
+                [3] = foo<3>::b.w[3] (4) 
+                [4] = foo<3>::b.w[4] (5) 
               }
           )
           i = pint^0 value: 3
           x = bool^1
             {
-              [0] = foo::x[0] (6) 
-              [1] = foo::x[1] (7) 
-              [2] = foo::x[2] (8) 
+              [0] = foo<3>::x[0] (6) 
+              [1] = foo<3>::x[1] (7) 
+              [2] = foo<3>::x[2] (8) 
             }
           y = bool^1
             {
-              [0] = foo::y[0] (9) 
-              [1] = foo::y[1] (10) 
-              [2] = foo::y[2] (11) 
+              [0] = foo<3>::y[0] (9) 
+              [1] = foo<3>::y[1] (10) 
+              [2] = foo<3>::y[2] (11) 
             }
           z = bool^1
             {
-              [0] = foo::z[0] (12) 
-              [1] = foo::z[1] (13) 
-              [2] = foo::z[2] (14) 
-              [3] = foo::z[3] (15) 
+              [0] = foo<3>::z[0] (12) 
+              [1] = foo<3>::z[1] (13) 
+              [2] = foo<3>::z[2] (14) 
+              [3] = foo<3>::z[3] (15) 
             }
           Created state:
           process instance pool:
-          1	foo::b
+          1	foo<3>::b
           bool instance pool:
-          1	foo::b.w[0]
-          2	foo::b.w[1]
-          3	foo::b.w[2]
-          4	foo::b.w[3]
-          5	foo::b.w[4]
-          6	foo::x[0]
-          7	foo::x[1]
-          8	foo::x[2]
-          9	foo::y[0]
-          10	foo::y[1]
-          11	foo::y[2]
-          12	foo::z[0]
-          13	foo::z[1]
-          14	foo::z[2]
-          15	foo::z[3]
+          1	foo<3>::b.w[0]
+          2	foo<3>::b.w[1]
+          3	foo<3>::b.w[2]
+          4	foo<3>::b.w[3]
+          5	foo<3>::b.w[4]
+          6	foo<3>::x[0]
+          7	foo<3>::x[1]
+          8	foo<3>::x[2]
+          9	foo<3>::y[0]
+          10	foo<3>::y[1]
+          11	foo<3>::y[2]
+          12	foo<3>::z[0]
+          13	foo<3>::z[1]
+          14	foo<3>::z[2]
+          15	foo<3>::z[3]
           resolved prs:
           x[0] -> y[0]-
           ~x[0] -> y[0]+

@@ -139,13 +139,13 @@ In namespace "", we have: {
           R = pint^0 value: 1
           d = bool^1
             {
-              [0] = e1of::d[0] (2) 
+              [0] = e1of<1>::d[0] (2) 
             }
-          e = bool^0 = e1of::e (1) 
+          e = bool^0 = e1of<1>::e (1) 
           Created state:
           bool instance pool:
-          1	e1of::e
-          2	e1of::d[0]
+          1	e1of<1>::e
+          2	e1of<1>::d[0]
         }
       }
       }
@@ -174,25 +174,25 @@ In namespace "", we have: {
         <1, 1, {0}> {
           M = pint^0 value: 1
           N = pint^0 value: 1
-          _Reset = bool^0 = source_e::_Reset (3) 
+          _Reset = bool^0 = source_e<1, 1, {0}>::_Reset (3) 
           d = pint^1
             unrolled index-value pairs: {
               0 = 0
             }
-          rr = process e1of<1>^0 = source_e::rr (1) (
+          rr = process e1of<1>^0 = source_e<1, 1, {0}>::rr (1) (
             d = bool^1
               {
-                [0] = source_e::rr.d[0] (1) 
+                [0] = source_e<1, 1, {0}>::rr.d[0] (1) 
               }
-            e = bool^0 = source_e::rr.e (2) 
+            e = bool^0 = source_e<1, 1, {0}>::rr.e (2) 
           )
           Created state:
           process instance pool:
-          1	source_e::rr
+          1	source_e<1, 1, {0}>::rr
           bool instance pool:
-          1	source_e::rr.d[0]
-          2	source_e::rr.e
-          3	source_e::_Reset
+          1	source_e<1, 1, {0}>::rr.d[0]
+          2	source_e<1, 1, {0}>::rr.e
+          3	source_e<1, 1, {0}>::_Reset
         }
       }
       }

@@ -54,23 +54,23 @@ In namespace "", we have: {
         ick<> b
         a = b;
       footprint: {
-        a = process ick<>^0 = foo::a (1) (
-          m = process oof<>^0 = foo::a.m (2) 
-          n = process oof<>^0 = foo::a.n (3) 
+        a = process ick<>^0 = foo<>::a (1) (
+          m = process oof<>^0 = foo<>::a.m (2) 
+          n = process oof<>^0 = foo<>::a.n (3) 
         )
-        b = process ick<>^0 = foo::a (1) (
-          m = process oof<>^0 = foo::a.m (2) 
-          n = process oof<>^0 = foo::a.n (3) 
+        b = process ick<>^0 = foo<>::a (1) (
+          m = process oof<>^0 = foo<>::a.m (2) 
+          n = process oof<>^0 = foo<>::a.n (3) 
         )
         Created state:
         process instance pool:
-        1	foo::a
-        2	foo::a.m
-        3	foo::a.n
+        1	foo<>::a
+        2	foo<>::a.m
+        3	foo<>::a.n
         process port aliases:
-        1: foo::a = foo::b
-        2: foo::a.m = foo::b.m
-        3: foo::a.n = foo::b.n
+        1: foo<>::a = foo<>::b
+        2: foo<>::a.m = foo<>::b.m
+        3: foo<>::a.n = foo<>::b.n
       }
       }
 
@@ -86,12 +86,12 @@ In namespace "", we have: {
         oof<> m
         oof<> n
       footprint: {
-        m = process oof<>^0 = ick::m (1) 
-        n = process oof<>^0 = ick::n (2) 
+        m = process oof<>^0 = ick<>::m (1) 
+        n = process oof<>^0 = ick<>::n (2) 
         Created state:
         process instance pool:
-        1	ick::m
-        2	ick::n
+        1	ick<>::m
+        2	ick<>::n
       }
       }
 

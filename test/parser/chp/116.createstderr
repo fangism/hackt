@@ -217,51 +217,51 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        L = channel chan?(int<4>)^0 = metalooptest::L (1) 
-        R = channel chan!(bool<>)^0 = metalooptest::R (2) 
+        L = channel chan?(int<4>)^0 = metalooptest<>::L (1) 
+        R = channel chan!(bool<>)^0 = metalooptest<>::R (2) 
         b = bool^1
           {
-            [0] = metalooptest::b[0] (1) 
-            [1] = metalooptest::b[1] (2) 
-            [2] = metalooptest::b[2] (3) 
-            [3] = metalooptest::b[3] (4) 
-            [4] = metalooptest::b[4] (5) 
-            [5] = metalooptest::b[5] (6) 
-            [6] = metalooptest::b[6] (7) 
-            [7] = metalooptest::b[7] (8) 
-            [8] = metalooptest::b[8] (9) 
-            [9] = metalooptest::b[9] (10) 
-            [10] = metalooptest::b[10] (11) 
-            [11] = metalooptest::b[11] (12) 
-            [12] = metalooptest::b[12] (13) 
-            [13] = metalooptest::b[13] (14) 
-            [14] = metalooptest::b[14] (15) 
-            [15] = metalooptest::b[15] (16) 
+            [0] = metalooptest<>::b[0] (1) 
+            [1] = metalooptest<>::b[1] (2) 
+            [2] = metalooptest<>::b[2] (3) 
+            [3] = metalooptest<>::b[3] (4) 
+            [4] = metalooptest<>::b[4] (5) 
+            [5] = metalooptest<>::b[5] (6) 
+            [6] = metalooptest<>::b[6] (7) 
+            [7] = metalooptest<>::b[7] (8) 
+            [8] = metalooptest<>::b[8] (9) 
+            [9] = metalooptest<>::b[9] (10) 
+            [10] = metalooptest<>::b[10] (11) 
+            [11] = metalooptest<>::b[11] (12) 
+            [12] = metalooptest<>::b[12] (13) 
+            [13] = metalooptest<>::b[13] (14) 
+            [14] = metalooptest<>::b[14] (15) 
+            [15] = metalooptest<>::b[15] (16) 
           }
-        l = int<4>^0 = metalooptest::l (1) 
+        l = int<4>^0 = metalooptest<>::l (1) 
         Created state:
         channel instance pool:
-        1	metalooptest::L
-        2	metalooptest::R
+        1	metalooptest<>::L
+        2	metalooptest<>::R
         int instance pool:
-        1	metalooptest::l
+        1	metalooptest<>::l
         bool instance pool:
-        1	metalooptest::b[0]
-        2	metalooptest::b[1]
-        3	metalooptest::b[2]
-        4	metalooptest::b[3]
-        5	metalooptest::b[4]
-        6	metalooptest::b[5]
-        7	metalooptest::b[6]
-        8	metalooptest::b[7]
-        9	metalooptest::b[8]
-        10	metalooptest::b[9]
-        11	metalooptest::b[10]
-        12	metalooptest::b[11]
-        13	metalooptest::b[12]
-        14	metalooptest::b[13]
-        15	metalooptest::b[14]
-        16	metalooptest::b[15]
+        1	metalooptest<>::b[0]
+        2	metalooptest<>::b[1]
+        3	metalooptest<>::b[2]
+        4	metalooptest<>::b[3]
+        5	metalooptest<>::b[4]
+        6	metalooptest<>::b[5]
+        7	metalooptest<>::b[6]
+        8	metalooptest<>::b[7]
+        9	metalooptest<>::b[8]
+        10	metalooptest<>::b[9]
+        11	metalooptest<>::b[10]
+        12	metalooptest<>::b[11]
+        13	metalooptest<>::b[12]
+        14	metalooptest<>::b[13]
+        15	metalooptest<>::b[14]
+        16	metalooptest<>::b[15]
         resolved concurrent actions:
           *[
             sequential: {

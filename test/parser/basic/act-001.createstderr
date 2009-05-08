@@ -48,15 +48,15 @@ In namespace "", we have: {
         int<32> x
         int<32> xx
       footprint: {
-        b = bool^0 = foo::b (1) 
-        x = int<32>^0 = foo::x (1) 
-        xx = int<32>^0 = foo::xx (2) 
+        b = bool^0 = foo<>::b (1) 
+        x = int<32>^0 = foo<>::x (1) 
+        xx = int<32>^0 = foo<>::xx (2) 
         Created state:
         int instance pool:
-        1	foo::x
-        2	foo::xx
+        1	foo<>::x
+        2	foo<>::xx
         bool instance pool:
-        1	foo::b
+        1	foo<>::b
       }
       }
 

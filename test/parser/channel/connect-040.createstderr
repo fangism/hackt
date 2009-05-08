@@ -1,4 +1,4 @@
-WARNING: channel boring::B lacks connection to a consumer.
+WARNING: channel boring<>::B lacks connection to a consumer.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -68,10 +68,10 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        B = channel chan(bool<>)^0 = boring::B (1) 
+        B = channel chan(bool<>)^0 = boring<>::B (1) 
         Created state:
         channel instance pool:
-        1	boring::B
+        1	boring<>::B
         resolved concurrent actions:
           *[
             B!(false)

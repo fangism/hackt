@@ -62,14 +62,14 @@ In namespace "", we have: {
         a & b -> _o-
         ~a & ~b -> _o+
       footprint: {
-        _o = bool^0 = celem2inv::_o (3) 
-        a = bool^0 = celem2inv::a (1) 
-        b = bool^0 = celem2inv::b (2) 
+        _o = bool^0 = celem2inv<>::_o (3) 
+        a = bool^0 = celem2inv<>::a (1) 
+        b = bool^0 = celem2inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	celem2inv::a
-        2	celem2inv::b
-        3	celem2inv::_o
+        1	celem2inv<>::a
+        2	celem2inv<>::b
+        3	celem2inv<>::_o
         resolved prs:
         a & b -> _o-
         ~a & ~b -> _o+

@@ -1,5 +1,5 @@
-Warning: node testing::p has no pull-up nor pull-dn PRS fanin.
-Warning: node testing::q has no pull-up nor pull-dn PRS fanin.
+Warning: node testing<>::p has no pull-up nor pull-dn PRS fanin.
+Warning: node testing<>::q has no pull-up nor pull-dn PRS fanin.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -73,16 +73,16 @@ In namespace "", we have: {
         mk_exclhi(p,q,r)
         mk_exclhi(r,s)
       footprint: {
-        p = bool^0 = testing::p (1) 
-        q = bool^0 = testing::q (2) 
-        r = bool^0 = testing::r (3) 
-        s = bool^0 = testing::s (4) 
+        p = bool^0 = testing<>::p (1) 
+        q = bool^0 = testing<>::q (2) 
+        r = bool^0 = testing<>::r (3) 
+        s = bool^0 = testing<>::s (4) 
         Created state:
         bool instance pool:
-        1	testing::p
-        2	testing::q
-        3	testing::r
-        4	testing::s
+        1	testing<>::p
+        2	testing<>::q
+        3	testing<>::r
+        4	testing<>::s
         resolved prs:
         p & q -> s-
         ~p | ~q -> s+

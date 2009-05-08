@@ -48,11 +48,11 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        composite = bool^0 = array::x (1) 
-        x = bool^0 = array::x (1) 
+        composite = bool^0 = array<>::x (1) 
+        x = bool^0 = array<>::x (1) 
         Created state:
         bool instance pool:
-        1	array::x
+        1	array<>::x
       }
       }
 
@@ -64,14 +64,14 @@ In namespace "", we have: {
       unroll sequence: 
         array<> p
       footprint: {
-        p = process array<>^0 = foo::p (1) (
-          x = bool^0 = foo::p.x (1) 
+        p = process array<>^0 = foo<>::p (1) (
+          x = bool^0 = foo<>::p.x (1) 
         )
         Created state:
         process instance pool:
-        1	foo::p
+        1	foo<>::p
         bool instance pool:
-        1	foo::p.x
+        1	foo<>::p.x
       }
       }
 

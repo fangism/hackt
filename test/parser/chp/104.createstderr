@@ -149,27 +149,27 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        A = channel chan?(int<32>)^0 = foo::A (1) 
-        B = channel chan?(int<32>)^0 = foo::B (2) 
-        C = channel chan!(int<32>)^0 = foo::C (3) 
-        D = channel chan!(int<32>)^0 = foo::D (4) 
-        E = channel chan!(int<32>)^0 = foo::E (5) 
-        F = channel chan!(int<32>)^0 = foo::F (6) 
-        a = int<32>^0 = foo::a (1) 
-        b = int<32>^0 = foo::b (2) 
-        z = int<32>^0 = foo::z (3) 
+        A = channel chan?(int<32>)^0 = foo<>::A (1) 
+        B = channel chan?(int<32>)^0 = foo<>::B (2) 
+        C = channel chan!(int<32>)^0 = foo<>::C (3) 
+        D = channel chan!(int<32>)^0 = foo<>::D (4) 
+        E = channel chan!(int<32>)^0 = foo<>::E (5) 
+        F = channel chan!(int<32>)^0 = foo<>::F (6) 
+        a = int<32>^0 = foo<>::a (1) 
+        b = int<32>^0 = foo<>::b (2) 
+        z = int<32>^0 = foo<>::z (3) 
         Created state:
         channel instance pool:
-        1	foo::A
-        2	foo::B
-        3	foo::C
-        4	foo::D
-        5	foo::E
-        6	foo::F
+        1	foo<>::A
+        2	foo<>::B
+        3	foo<>::C
+        4	foo<>::D
+        5	foo<>::E
+        6	foo<>::F
         int instance pool:
-        1	foo::a
-        2	foo::b
-        3	foo::z
+        1	foo<>::a
+        2	foo<>::b
+        3	foo<>::z
         resolved concurrent actions:
           *[
             sequential: {

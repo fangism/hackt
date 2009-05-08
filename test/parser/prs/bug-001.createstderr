@@ -151,32 +151,32 @@ In namespace "", we have: {
       footprint collection: {
         <2> {
           N = pint^0 value: 2
-          c = process gcel<2, 2>^0 = cel::c (1) (
+          c = process gcel<2, 2>^0 = cel<2>::c (1) (
             id = bool^1
               {
-                [0] = cel::i[0] (1) 
-                [1] = cel::i[1] (2) 
+                [0] = cel<2>::i[0] (1) 
+                [1] = cel<2>::i[1] (2) 
               }
             iu = bool^1
               {
-                [0] = cel::i[0] (1) 
-                [1] = cel::i[1] (2) 
+                [0] = cel<2>::i[0] (1) 
+                [1] = cel<2>::i[1] (2) 
               }
-            o = bool^0 = cel::o (3) 
+            o = bool^0 = cel<2>::o (3) 
           )
           i = bool^1
             {
-              [0] = cel::i[0] (1) 
-              [1] = cel::i[1] (2) 
+              [0] = cel<2>::i[0] (1) 
+              [1] = cel<2>::i[1] (2) 
             }
-          o = bool^0 = cel::o (3) 
+          o = bool^0 = cel<2>::o (3) 
           Created state:
           process instance pool:
-          1	cel::c
+          1	cel<2>::c
           bool instance pool:
-          1	cel::i[0]
-          2	cel::i[1]
-          3	cel::o
+          1	cel<2>::i[0]
+          2	cel<2>::i[1]
+          3	cel<2>::o
         }
       }
       }
@@ -204,18 +204,18 @@ In namespace "", we have: {
       prs:
         Ld & Re & xe & x -> _rd-
       footprint: {
-        Ld = bool^0 = foo::Ld (1) 
-        Re = bool^0 = foo::Re (2) 
-        _rd = bool^0 = foo::_rd (4) 
-        x = bool^0 = foo::x (5) 
-        xe = bool^0 = foo::xe (3) 
+        Ld = bool^0 = foo<>::Ld (1) 
+        Re = bool^0 = foo<>::Re (2) 
+        _rd = bool^0 = foo<>::_rd (4) 
+        x = bool^0 = foo<>::x (5) 
+        xe = bool^0 = foo<>::xe (3) 
         Created state:
         bool instance pool:
-        1	foo::Ld
-        2	foo::Re
-        3	foo::xe
-        4	foo::_rd
-        5	foo::x
+        1	foo<>::Ld
+        2	foo<>::Re
+        3	foo<>::xe
+        4	foo<>::_rd
+        5	foo<>::x
         resolved prs:
         Ld & Re & xe & x -> _rd-
       }
@@ -250,22 +250,22 @@ In namespace "", we have: {
           U = pint^0 value: 2
           id = bool^1
             {
-              [0] = gcel::id[0] (2) 
-              [1] = gcel::id[1] (3) 
+              [0] = gcel<2, 2>::id[0] (2) 
+              [1] = gcel<2, 2>::id[1] (3) 
             }
           iu = bool^1
             {
-              [0] = gcel::iu[0] (4) 
-              [1] = gcel::iu[1] (5) 
+              [0] = gcel<2, 2>::iu[0] (4) 
+              [1] = gcel<2, 2>::iu[1] (5) 
             }
-          o = bool^0 = gcel::o (1) 
+          o = bool^0 = gcel<2, 2>::o (1) 
           Created state:
           bool instance pool:
-          1	gcel::o
-          2	gcel::id[0]
-          3	gcel::id[1]
-          4	gcel::iu[0]
-          5	gcel::iu[1]
+          1	gcel<2, 2>::o
+          2	gcel<2, 2>::id[0]
+          3	gcel<2, 2>::id[1]
+          4	gcel<2, 2>::iu[0]
+          5	gcel<2, 2>::iu[1]
           resolved prs:
           id[0] & id[1] -> o-
           ~iu[0] & ~iu[1] -> o+

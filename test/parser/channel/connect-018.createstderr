@@ -1,4 +1,4 @@
-WARNING: channel receivers::a lacks connection to a consumer.
+WARNING: channel receivers<>::a lacks connection to a consumer.
 WARNING: channel z.a lacks connection to a producer.
 WARNING: channel z.a lacks connection to a consumer.
 ---- END CREATE WARNINGS ---
@@ -44,10 +44,10 @@ In namespace "", we have: {
         chan?(bool<>) a
         a = a;
       footprint: {
-        a = channel chan?(bool<>)^0 = receivers::a (1) 
+        a = channel chan?(bool<>)^0 = receivers<>::a (1) 
         Created state:
         channel instance pool:
-        1	receivers::a
+        1	receivers<>::a
       }
       }
 

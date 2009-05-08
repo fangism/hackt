@@ -90,16 +90,16 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        w = int<32>^0 = foo::w (4) 
-        x = int<32>^0 = foo::x (1) 
-        y = int<32>^0 = foo::y (2) 
-        z = int<32>^0 = foo::z (3) 
+        w = int<32>^0 = foo<>::w (4) 
+        x = int<32>^0 = foo<>::x (1) 
+        y = int<32>^0 = foo<>::y (2) 
+        z = int<32>^0 = foo<>::z (3) 
         Created state:
         int instance pool:
-        1	foo::x
-        2	foo::y
-        3	foo::z
-        4	foo::w
+        1	foo<>::x
+        2	foo<>::y
+        3	foo<>::z
+        4	foo<>::w
         resolved concurrent actions:
           *[
             concurrent: {

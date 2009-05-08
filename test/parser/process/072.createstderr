@@ -63,19 +63,19 @@ In namespace "", we have: {
       footprint collection: {
         <8> {
           N = pint^0 value: 8
-          a = int<8>^0 = foo::a (1) 
-          b = int<8>^0 = foo::a (1) 
+          a = int<8>^0 = foo<8>::a (1) 
+          b = int<8>^0 = foo<8>::a (1) 
           Created state:
           int instance pool:
-          1	foo::a
+          1	foo<8>::a
         }
         <16> {
           N = pint^0 value: 16
-          a = int<16>^0 = foo::a (1) 
-          b = int<16>^0 = foo::a (1) 
+          a = int<16>^0 = foo<16>::a (1) 
+          b = int<16>^0 = foo<16>::a (1) 
           Created state:
           int instance pool:
-          1	foo::a
+          1	foo<16>::a
         }
       }
       }

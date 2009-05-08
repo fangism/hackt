@@ -68,33 +68,33 @@ In namespace "", we have: {
         x (z.a, , z.c);
         z (x.c, , z.a);
       footprint: {
-        x = process foo<>^0 = bar::x (2) (
-          a = bool^0 = bar::x.a (4) 
-          b = bool^0 = bar::x.b (5) 
-          c = bool^0 = bar::x.a (4) 
+        x = process foo<>^0 = bar<>::x (2) (
+          a = bool^0 = bar<>::x.a (4) 
+          b = bool^0 = bar<>::x.b (5) 
+          c = bool^0 = bar<>::x.a (4) 
         )
-        y = process foo<>^0 = bar::y (1) (
-          a = bool^0 = bar::y.a (1) 
-          b = bool^0 = bar::y.b (2) 
-          c = bool^0 = bar::y.c (3) 
+        y = process foo<>^0 = bar<>::y (1) (
+          a = bool^0 = bar<>::y.a (1) 
+          b = bool^0 = bar<>::y.b (2) 
+          c = bool^0 = bar<>::y.c (3) 
         )
-        z = process foo<>^0 = bar::z (3) (
-          a = bool^0 = bar::x.a (4) 
-          b = bool^0 = bar::z.b (6) 
-          c = bool^0 = bar::x.a (4) 
+        z = process foo<>^0 = bar<>::z (3) (
+          a = bool^0 = bar<>::x.a (4) 
+          b = bool^0 = bar<>::z.b (6) 
+          c = bool^0 = bar<>::x.a (4) 
         )
         Created state:
         process instance pool:
-        1	bar::y
-        2	bar::x
-        3	bar::z
+        1	bar<>::y
+        2	bar<>::x
+        3	bar<>::z
         bool instance pool:
-        1	bar::y.a
-        2	bar::y.b
-        3	bar::y.c
-        4	bar::x.a
-        5	bar::x.b
-        6	bar::z.b
+        1	bar<>::y.a
+        2	bar<>::y.b
+        3	bar<>::y.c
+        4	bar<>::x.a
+        5	bar<>::x.b
+        6	bar<>::z.b
       }
       }
 
@@ -113,14 +113,14 @@ In namespace "", we have: {
         bool<> b
         bool<> c
       footprint: {
-        a = bool^0 = foo::a (1) 
-        b = bool^0 = foo::b (2) 
-        c = bool^0 = foo::c (3) 
+        a = bool^0 = foo<>::a (1) 
+        b = bool^0 = foo<>::b (2) 
+        c = bool^0 = foo<>::c (3) 
         Created state:
         bool instance pool:
-        1	foo::a
-        2	foo::b
-        3	foo::c
+        1	foo<>::a
+        2	foo<>::b
+        3	foo<>::c
       }
       }
 

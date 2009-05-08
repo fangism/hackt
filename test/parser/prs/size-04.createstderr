@@ -74,12 +74,12 @@ In namespace "", we have: {
         a<30,3> -> b-
         ~a<30,3> -> b+
       footprint: {
-        a = bool^0 = sized_prs::a (1) 
-        b = bool^0 = sized_prs::b (2) 
+        a = bool^0 = sized_prs<>::a (1) 
+        b = bool^0 = sized_prs<>::b (2) 
         Created state:
         bool instance pool:
-        1	sized_prs::a
-        2	sized_prs::b
+        1	sized_prs<>::a
+        2	sized_prs<>::b
         resolved prs:
         a<10> -> b-
         ~a<15> -> b+

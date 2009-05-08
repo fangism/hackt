@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.22 2009/02/18 00:22:31 fang Exp $
+	$Id: scopespace.h,v 1.22.4.1 2009/05/08 22:46:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -243,6 +243,9 @@ virtual	string
 
 virtual	ostream&
 	dump_qualified_name(ostream&, const dump_flags&) const = 0;
+
+	bool
+	dump_include_parent(const dump_flags&) const;
 
 virtual never_ptr<const scopespace>
 	get_parent(void) const = 0;

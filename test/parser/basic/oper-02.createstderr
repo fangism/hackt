@@ -67,20 +67,20 @@ In namespace "", we have: {
       footprint collection: {
         <1> {
           N = pint^0 value: 1
-          a = bool^0 = ass::a (2) 
-          x = bool^0 = ass::x (1) 
+          a = bool^0 = ass<1>::a (2) 
+          x = bool^0 = ass<1>::x (1) 
           Created state:
           bool instance pool:
-          1	ass::x
-          2	ass::a
+          1	ass<1>::x
+          2	ass<1>::a
         }
         <2> {
           N = pint^0 value: 2
-          a = bool^0 = ass::x (1) 
-          x = bool^0 = ass::x (1) 
+          a = bool^0 = ass<2>::x (1) 
+          x = bool^0 = ass<2>::x (1) 
           Created state:
           bool instance pool:
-          1	ass::x
+          1	ass<2>::x
         }
       }
       }

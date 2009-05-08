@@ -42,11 +42,11 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        composite = bool^0 = array::x (1) 
-        x = bool^0 = array::x (1) 
+        composite = bool^0 = array<>::x (1) 
+        x = bool^0 = array<>::x (1) 
         Created state:
         bool instance pool:
-        1	array::x
+        1	array<>::x
       }
       }
 

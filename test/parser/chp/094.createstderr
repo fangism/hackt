@@ -1,15 +1,15 @@
-WARNING: channel send_indexed::out[0][1] lacks connection to a producer.
-WARNING: channel send_indexed::out[1][0] lacks connection to a producer.
-WARNING: channel send_indexed::out[1][1] lacks connection to a producer.
-WARNING: channel send_indexed::out[0][0] lacks connection to a producer.
-WARNING: channel send_indexed::out[1][0] lacks connection to a producer.
-WARNING: channel send_indexed::out[1][1] lacks connection to a producer.
-WARNING: channel send_indexed::out[0][0] lacks connection to a producer.
-WARNING: channel send_indexed::out[0][1] lacks connection to a producer.
-WARNING: channel send_indexed::out[1][1] lacks connection to a producer.
-WARNING: channel send_indexed::out[0][0] lacks connection to a producer.
-WARNING: channel send_indexed::out[0][1] lacks connection to a producer.
-WARNING: channel send_indexed::out[1][0] lacks connection to a producer.
+WARNING: channel send_indexed<0, 0>::out[0][1] lacks connection to a producer.
+WARNING: channel send_indexed<0, 0>::out[1][0] lacks connection to a producer.
+WARNING: channel send_indexed<0, 0>::out[1][1] lacks connection to a producer.
+WARNING: channel send_indexed<0, 1>::out[0][0] lacks connection to a producer.
+WARNING: channel send_indexed<0, 1>::out[1][0] lacks connection to a producer.
+WARNING: channel send_indexed<0, 1>::out[1][1] lacks connection to a producer.
+WARNING: channel send_indexed<1, 0>::out[0][0] lacks connection to a producer.
+WARNING: channel send_indexed<1, 0>::out[0][1] lacks connection to a producer.
+WARNING: channel send_indexed<1, 0>::out[1][1] lacks connection to a producer.
+WARNING: channel send_indexed<1, 1>::out[0][0] lacks connection to a producer.
+WARNING: channel send_indexed<1, 1>::out[0][1] lacks connection to a producer.
+WARNING: channel send_indexed<1, 1>::out[1][0] lacks connection to a producer.
 WARNING: channel foo.out[0][0] lacks connection to a consumer.
 WARNING: channel foo.out[0][1] lacks connection to a producer.
 WARNING: channel foo.out[0][1] lacks connection to a consumer.
@@ -169,17 +169,17 @@ In namespace "", we have: {
           J = pint^0 value: 0
           out = channel chan!(int<32>)^2
             {
-              [0][0] = send_indexed::out[0][0] (1) 
-              [0][1] = send_indexed::out[0][1] (2) 
-              [1][0] = send_indexed::out[1][0] (3) 
-              [1][1] = send_indexed::out[1][1] (4) 
+              [0][0] = send_indexed<0, 0>::out[0][0] (1) 
+              [0][1] = send_indexed<0, 0>::out[0][1] (2) 
+              [1][0] = send_indexed<0, 0>::out[1][0] (3) 
+              [1][1] = send_indexed<0, 0>::out[1][1] (4) 
             }
           Created state:
           channel instance pool:
-          1	send_indexed::out[0][0]
-          2	send_indexed::out[0][1]
-          3	send_indexed::out[1][0]
-          4	send_indexed::out[1][1]
+          1	send_indexed<0, 0>::out[0][0]
+          2	send_indexed<0, 0>::out[0][1]
+          3	send_indexed<0, 0>::out[1][0]
+          4	send_indexed<0, 0>::out[1][1]
           resolved concurrent actions:
             *[
               out[0][0]!(0)
@@ -193,17 +193,17 @@ In namespace "", we have: {
           J = pint^0 value: 1
           out = channel chan!(int<32>)^2
             {
-              [0][0] = send_indexed::out[0][0] (1) 
-              [0][1] = send_indexed::out[0][1] (2) 
-              [1][0] = send_indexed::out[1][0] (3) 
-              [1][1] = send_indexed::out[1][1] (4) 
+              [0][0] = send_indexed<0, 1>::out[0][0] (1) 
+              [0][1] = send_indexed<0, 1>::out[0][1] (2) 
+              [1][0] = send_indexed<0, 1>::out[1][0] (3) 
+              [1][1] = send_indexed<0, 1>::out[1][1] (4) 
             }
           Created state:
           channel instance pool:
-          1	send_indexed::out[0][0]
-          2	send_indexed::out[0][1]
-          3	send_indexed::out[1][0]
-          4	send_indexed::out[1][1]
+          1	send_indexed<0, 1>::out[0][0]
+          2	send_indexed<0, 1>::out[0][1]
+          3	send_indexed<0, 1>::out[1][0]
+          4	send_indexed<0, 1>::out[1][1]
           resolved concurrent actions:
             *[
               out[0][1]!(1)
@@ -217,17 +217,17 @@ In namespace "", we have: {
           J = pint^0 value: 0
           out = channel chan!(int<32>)^2
             {
-              [0][0] = send_indexed::out[0][0] (1) 
-              [0][1] = send_indexed::out[0][1] (2) 
-              [1][0] = send_indexed::out[1][0] (3) 
-              [1][1] = send_indexed::out[1][1] (4) 
+              [0][0] = send_indexed<1, 0>::out[0][0] (1) 
+              [0][1] = send_indexed<1, 0>::out[0][1] (2) 
+              [1][0] = send_indexed<1, 0>::out[1][0] (3) 
+              [1][1] = send_indexed<1, 0>::out[1][1] (4) 
             }
           Created state:
           channel instance pool:
-          1	send_indexed::out[0][0]
-          2	send_indexed::out[0][1]
-          3	send_indexed::out[1][0]
-          4	send_indexed::out[1][1]
+          1	send_indexed<1, 0>::out[0][0]
+          2	send_indexed<1, 0>::out[0][1]
+          3	send_indexed<1, 0>::out[1][0]
+          4	send_indexed<1, 0>::out[1][1]
           resolved concurrent actions:
             *[
               out[1][0]!(1)
@@ -241,17 +241,17 @@ In namespace "", we have: {
           J = pint^0 value: 1
           out = channel chan!(int<32>)^2
             {
-              [0][0] = send_indexed::out[0][0] (1) 
-              [0][1] = send_indexed::out[0][1] (2) 
-              [1][0] = send_indexed::out[1][0] (3) 
-              [1][1] = send_indexed::out[1][1] (4) 
+              [0][0] = send_indexed<1, 1>::out[0][0] (1) 
+              [0][1] = send_indexed<1, 1>::out[0][1] (2) 
+              [1][0] = send_indexed<1, 1>::out[1][0] (3) 
+              [1][1] = send_indexed<1, 1>::out[1][1] (4) 
             }
           Created state:
           channel instance pool:
-          1	send_indexed::out[0][0]
-          2	send_indexed::out[0][1]
-          3	send_indexed::out[1][0]
-          4	send_indexed::out[1][1]
+          1	send_indexed<1, 1>::out[0][0]
+          2	send_indexed<1, 1>::out[0][1]
+          3	send_indexed<1, 1>::out[1][0]
+          4	send_indexed<1, 1>::out[1][1]
           resolved concurrent actions:
             *[
               out[1][1]!(2)

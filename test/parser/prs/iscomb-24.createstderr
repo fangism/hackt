@@ -90,23 +90,23 @@ In namespace "", we have: {
         x.a@[autokeeper=0]
         y.b@[autokeeper=0]
       footprint: {
-        x = process inv<>^0 = deep::x (1) (
-          a = bool^0 = deep::x.a (1) @[ iscomb !autokeeper ] 
-          b = bool^0 = deep::x.b (2) 
+        x = process inv<>^0 = deep<>::x (1) (
+          a = bool^0 = deep<>::x.a (1) @[ iscomb !autokeeper ] 
+          b = bool^0 = deep<>::x.b (2) 
         )
-        y = process inv<>^0 = deep::y (2) (
-          a = bool^0 = deep::y.a (3) @[ iscomb ] 
-          b = bool^0 = deep::y.b (4) @[ !autokeeper ] 
+        y = process inv<>^0 = deep<>::y (2) (
+          a = bool^0 = deep<>::y.a (3) @[ iscomb ] 
+          b = bool^0 = deep<>::y.b (4) @[ !autokeeper ] 
         )
         Created state:
         process instance pool:
-        1	deep::x
-        2	deep::y
+        1	deep<>::x
+        2	deep<>::y
         bool instance pool:
-        1	deep::x.a @[ iscomb !autokeeper ]
-        2	deep::x.b
-        3	deep::y.a @[ iscomb ]
-        4	deep::y.b @[ !autokeeper ]
+        1	deep<>::x.a @[ iscomb !autokeeper ]
+        2	deep<>::x.b
+        3	deep<>::y.a @[ iscomb ]
+        4	deep<>::y.b @[ !autokeeper ]
       }
       }
 
@@ -125,40 +125,40 @@ In namespace "", we have: {
       footprint: {
         d = process deep<>^1
           {
-            [0] = deeper::d[0] (3) (
-              x = process inv<>^0 = deeper::d[0].x (4) (
-                a = bool^0 = deeper::d[0].x.a (3) @[ iscomb !autokeeper ] 
-                b = bool^0 = deeper::d[0].x.b (4) @[ iscomb ] 
+            [0] = deeper<>::d[0] (3) (
+              x = process inv<>^0 = deeper<>::d[0].x (4) (
+                a = bool^0 = deeper<>::d[0].x.a (3) @[ iscomb !autokeeper ] 
+                b = bool^0 = deeper<>::d[0].x.b (4) @[ iscomb ] 
               )
             )
-            [1] = deeper::d[1] (5) (
-              x = process inv<>^0 = deeper::d[1].x (6) (
-                a = bool^0 = deeper::d[1].x.a (5) @[ iscomb !autokeeper ] 
-                b = bool^0 = deeper::d[1].x.b (6) 
+            [1] = deeper<>::d[1] (5) (
+              x = process inv<>^0 = deeper<>::d[1].x (6) (
+                a = bool^0 = deeper<>::d[1].x.a (5) @[ iscomb !autokeeper ] 
+                b = bool^0 = deeper<>::d[1].x.b (6) 
               )
             )
           }
-        e = process deep<>^0 = deeper::e (1) (
-          x = process inv<>^0 = deeper::e.x (2) (
-            a = bool^0 = deeper::e.x.a (1) @[ iscomb !autokeeper ] 
-            b = bool^0 = deeper::e.x.b (2) 
+        e = process deep<>^0 = deeper<>::e (1) (
+          x = process inv<>^0 = deeper<>::e.x (2) (
+            a = bool^0 = deeper<>::e.x.a (1) @[ iscomb !autokeeper ] 
+            b = bool^0 = deeper<>::e.x.b (2) 
           )
         )
         Created state:
         process instance pool:
-        1	deeper::e
-        2	deeper::e.x
-        3	deeper::d[0]
-        4	deeper::d[0].x
-        5	deeper::d[1]
-        6	deeper::d[1].x
+        1	deeper<>::e
+        2	deeper<>::e.x
+        3	deeper<>::d[0]
+        4	deeper<>::d[0].x
+        5	deeper<>::d[1]
+        6	deeper<>::d[1].x
         bool instance pool:
-        1	deeper::e.x.a @[ iscomb !autokeeper ]
-        2	deeper::e.x.b
-        3	deeper::d[0].x.a @[ iscomb !autokeeper ]
-        4	deeper::d[0].x.b @[ iscomb ]
-        5	deeper::d[1].x.a @[ iscomb !autokeeper ]
-        6	deeper::d[1].x.b
+        1	deeper<>::e.x.a @[ iscomb !autokeeper ]
+        2	deeper<>::e.x.b
+        3	deeper<>::d[0].x.a @[ iscomb !autokeeper ]
+        4	deeper<>::d[0].x.b @[ iscomb ]
+        5	deeper<>::d[1].x.a @[ iscomb !autokeeper ]
+        6	deeper<>::d[1].x.b
       }
       }
 
@@ -171,35 +171,35 @@ In namespace "", we have: {
       unroll sequence: 
         deeper<> y
       footprint: {
-        y = process deeper<>^0 = deepest::y (1) (
+        y = process deeper<>^0 = deepest<>::y (1) (
           d = process deep<>^1
             {
-              [0] = deepest::y.d[0] (2) (
-                x = process inv<>^0 = deepest::y.d[0].x (3) (
-                  a = bool^0 = deepest::y.d[0].x.a (1) @[ iscomb !autokeeper ] 
-                  b = bool^0 = deepest::y.d[0].x.b (2) @[ iscomb ] 
+              [0] = deepest<>::y.d[0] (2) (
+                x = process inv<>^0 = deepest<>::y.d[0].x (3) (
+                  a = bool^0 = deepest<>::y.d[0].x.a (1) @[ iscomb !autokeeper ] 
+                  b = bool^0 = deepest<>::y.d[0].x.b (2) @[ iscomb ] 
                 )
               )
-              [1] = deepest::y.d[1] (4) (
-                x = process inv<>^0 = deepest::y.d[1].x (5) (
-                  a = bool^0 = deepest::y.d[1].x.a (3) @[ iscomb !autokeeper ] 
-                  b = bool^0 = deepest::y.d[1].x.b (4) 
+              [1] = deepest<>::y.d[1] (4) (
+                x = process inv<>^0 = deepest<>::y.d[1].x (5) (
+                  a = bool^0 = deepest<>::y.d[1].x.a (3) @[ iscomb !autokeeper ] 
+                  b = bool^0 = deepest<>::y.d[1].x.b (4) 
                 )
               )
             }
         )
         Created state:
         process instance pool:
-        1	deepest::y
-        2	deepest::y.d[0]
-        3	deepest::y.d[0].x
-        4	deepest::y.d[1]
-        5	deepest::y.d[1].x
+        1	deepest<>::y
+        2	deepest<>::y.d[0]
+        3	deepest<>::y.d[0].x
+        4	deepest<>::y.d[1]
+        5	deepest<>::y.d[1].x
         bool instance pool:
-        1	deepest::y.d[0].x.a @[ iscomb !autokeeper ]
-        2	deepest::y.d[0].x.b @[ iscomb ]
-        3	deepest::y.d[1].x.a @[ iscomb !autokeeper ]
-        4	deepest::y.d[1].x.b
+        1	deepest<>::y.d[0].x.a @[ iscomb !autokeeper ]
+        2	deepest<>::y.d[0].x.b @[ iscomb ]
+        3	deepest<>::y.d[1].x.a @[ iscomb !autokeeper ]
+        4	deepest<>::y.d[1].x.b
       }
       }
 
@@ -216,12 +216,12 @@ In namespace "", we have: {
         bool<> b
         a@[iscomb=]
       footprint: {
-        a = bool^0 = inv::a (1) @[ iscomb ] 
-        b = bool^0 = inv::b (2) 
+        a = bool^0 = inv<>::a (1) @[ iscomb ] 
+        b = bool^0 = inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	inv::a @[ iscomb ]
-        2	inv::b
+        1	inv<>::a @[ iscomb ]
+        2	inv<>::b
       }
       }
 

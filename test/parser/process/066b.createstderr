@@ -44,14 +44,14 @@ In namespace "", we have: {
       footprint: {
         a = bool^1
           {
-            [0] = foo::a[0] (1) 
-            [1] = foo::a[0] (1) 
+            [0] = foo<>::a[0] (1) 
+            [1] = foo<>::a[0] (1) 
           }
         Created state:
         bool instance pool:
-        1	foo::a[0]
+        1	foo<>::a[0]
         bool port aliases:
-        1: foo::a[0] = foo::a[1]
+        1: foo<>::a[0] = foo<>::a[1]
       }
       }
 

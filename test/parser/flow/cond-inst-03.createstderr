@@ -75,18 +75,18 @@ In namespace "", we have: {
         <2, 4> {
           M = pint^0 value: 4
           N = pint^0 value: 2
-          y = bool^0 = spec_test::y (1) 
+          y = bool^0 = spec_test<2, 4>::y (1) 
           z = bool^1
             {
-              [0] = spec_test::z[0] (2) 
-              [1] = spec_test::z[1] (3) 
-              [2] = spec_test::y (1) 
+              [0] = spec_test<2, 4>::z[0] (2) 
+              [1] = spec_test<2, 4>::z[1] (3) 
+              [2] = spec_test<2, 4>::y (1) 
             }
           Created state:
           bool instance pool:
-          1	spec_test::y
-          2	spec_test::z[0]
-          3	spec_test::z[1]
+          1	spec_test<2, 4>::y
+          2	spec_test<2, 4>::z[0]
+          3	spec_test<2, 4>::z[1]
         }
         <3, 1> {
           M = pint^0 value: 1

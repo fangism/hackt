@@ -91,21 +91,21 @@ In namespace "", we have: {
       footprint: {
         B = channel chan?(bool<>)^1
           {
-            [0] = merge::B[0] (2) 
-            [1] = merge::B[1] (3) 
+            [0] = merge<>::B[0] (2) 
+            [1] = merge<>::B[1] (3) 
           }
-        S = channel chan?(int<1>)^0 = merge::S (1) 
-        b = bool^0 = merge::b (1) 
-        s = int<1>^0 = merge::s (1) 
+        S = channel chan?(int<1>)^0 = merge<>::S (1) 
+        b = bool^0 = merge<>::b (1) 
+        s = int<1>^0 = merge<>::s (1) 
         Created state:
         channel instance pool:
-        1	merge::S
-        2	merge::B[0]
-        3	merge::B[1]
+        1	merge<>::S
+        2	merge<>::B[0]
+        3	merge<>::B[1]
         int instance pool:
-        1	merge::s
+        1	merge<>::s
         bool instance pool:
-        1	merge::b
+        1	merge<>::b
         resolved concurrent actions:
           *[
             sequential: {

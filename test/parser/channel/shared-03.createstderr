@@ -53,10 +53,10 @@ In namespace "", we have: {
           X?
         }
       footprint: {
-        X = channel chan??(bool<>)^0 = sink::X (1) 
+        X = channel chan??(bool<>)^0 = sink<>::X (1) 
         Created state:
         channel instance pool:
-        1	sink::X
+        1	sink<>::X
         resolved concurrent actions:
           X?
         chp events: {

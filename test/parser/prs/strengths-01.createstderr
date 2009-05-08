@@ -66,12 +66,12 @@ In namespace "", we have: {
       footprint collection: {
         <8> {
           P = pint^0 value: 8
-          a = bool^0 = size_test::a (1) 
-          b = bool^0 = size_test::b (2) 
+          a = bool^0 = size_test<8>::a (1) 
+          b = bool^0 = size_test<8>::b (2) 
           Created state:
           bool instance pool:
-          1	size_test::a
-          2	size_test::b
+          1	size_test<8>::a
+          2	size_test<8>::b
           resolved prs:
           a<8> -> b-
           ~a<16> -> b+

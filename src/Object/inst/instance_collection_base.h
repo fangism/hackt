@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.15 2006/11/07 06:34:46 fang Exp $
+	$Id: instance_collection_base.h,v 1.15.76.1 2009/05/08 22:46:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -172,7 +172,8 @@ virtual	const string&
 	ostream&
 	dump_hierarchical_name(ostream&) const;
 
-	ostream&
+	// overridden by instance_collection, which uses footprint/complete-type
+virtual	ostream&
 	dump_hierarchical_name(ostream&, const dump_flags&) const;
 
 	size_t

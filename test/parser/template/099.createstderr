@@ -72,12 +72,12 @@ In namespace "", we have: {
       footprint collection: {
         <2> {
           Z = pint^0 value: 2
-          a = process foo<2>^0<5> = bar::a (1) 
-          b = process foo<2>^0<6> = bar::b (2) 
+          a = process foo<2>^0<5> = bar<2>::a (1) 
+          b = process foo<2>^0<6> = bar<2>::b (2) 
           Created state:
           process instance pool:
-          1	bar::a<5>
-          2	bar::b<6>
+          1	bar<2>::a<5>
+          2	bar<2>::b<6>
         }
       }
       }

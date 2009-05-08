@@ -57,16 +57,16 @@ In namespace "", we have: {
         y@[iscomb=0]
         z@[iscomb=1]
       footprint: {
-        w = bool^0 = foo::w (1) 
-        x = bool^0 = foo::x (2) @[ iscomb ] 
-        y = bool^0 = foo::y (3) 
-        z = bool^0 = foo::z (4) @[ iscomb ] 
+        w = bool^0 = foo<>::w (1) 
+        x = bool^0 = foo<>::x (2) @[ iscomb ] 
+        y = bool^0 = foo<>::y (3) 
+        z = bool^0 = foo<>::z (4) @[ iscomb ] 
         Created state:
         bool instance pool:
-        1	foo::w
-        2	foo::x @[ iscomb ]
-        3	foo::y
-        4	foo::z @[ iscomb ]
+        1	foo<>::w
+        2	foo<>::x @[ iscomb ]
+        3	foo<>::y
+        4	foo<>::z @[ iscomb ]
       }
       }
 

@@ -103,15 +103,15 @@ In namespace "", we have: {
           N = pint^0 value: 2
           in = bool^1
             {
-              [0] = nand::in[0] (2) 
-              [1] = nand::in[1] (3) 
+              [0] = nand<2>::in[0] (2) 
+              [1] = nand<2>::in[1] (3) 
             }
-          out = bool^0 = nand::out (1) 
+          out = bool^0 = nand<2>::out (1) 
           Created state:
           bool instance pool:
-          1	nand::out
-          2	nand::in[0]
-          3	nand::in[1]
+          1	nand<2>::out
+          2	nand<2>::in[0]
+          3	nand<2>::in[1]
           resolved prs:
           in[0] & in[1] -> out-
           ~in[0] | ~in[1] -> out+
@@ -120,19 +120,19 @@ In namespace "", we have: {
           N = pint^0 value: 4
           in = bool^1
             {
-              [0] = nand::in[0] (2) 
-              [1] = nand::in[1] (3) 
-              [2] = nand::in[2] (4) 
-              [3] = nand::in[3] (5) 
+              [0] = nand<4>::in[0] (2) 
+              [1] = nand<4>::in[1] (3) 
+              [2] = nand<4>::in[2] (4) 
+              [3] = nand<4>::in[3] (5) 
             }
-          out = bool^0 = nand::out (1) 
+          out = bool^0 = nand<4>::out (1) 
           Created state:
           bool instance pool:
-          1	nand::out
-          2	nand::in[0]
-          3	nand::in[1]
-          4	nand::in[2]
-          5	nand::in[3]
+          1	nand<4>::out
+          2	nand<4>::in[0]
+          3	nand<4>::in[1]
+          4	nand<4>::in[2]
+          5	nand<4>::in[3]
           resolved prs:
           in[0] & in[1] & in[2] & in[3] -> out-
           ~in[0] | ~in[1] | ~in[2] | ~in[3] -> out+

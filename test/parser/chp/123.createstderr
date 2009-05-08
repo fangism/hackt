@@ -1,4 +1,4 @@
-WARNING: channel bar::X lacks connection to a producer.
+WARNING: channel bar<>::X lacks connection to a producer.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -71,18 +71,18 @@ In namespace "", we have: {
           X#(b)
         }
       footprint: {
-        F = process foo<>^0 = bar::F (1) (
-          B = channel chan?(bool<>)^0 = bar::X (1) 
+        F = process foo<>^0 = bar<>::F (1) (
+          B = channel chan?(bool<>)^0 = bar<>::X (1) 
         )
-        X = channel chan(bool<>)^0 = bar::X (1) 
-        b = bool^0 = bar::b (1) 
+        X = channel chan(bool<>)^0 = bar<>::X (1) 
+        b = bool^0 = bar<>::b (1) 
         Created state:
         process instance pool:
-        1	bar::F
+        1	bar<>::F
         channel instance pool:
-        1	bar::X
+        1	bar<>::X
         bool instance pool:
-        1	bar::b
+        1	bar<>::b
         resolved concurrent actions:
           X#(b)
         chp events: {
@@ -104,10 +104,10 @@ In namespace "", we have: {
           B?
         }
       footprint: {
-        B = channel chan?(bool<>)^0 = foo::B (1) 
+        B = channel chan?(bool<>)^0 = foo<>::B (1) 
         Created state:
         channel instance pool:
-        1	foo::B
+        1	foo<>::B
         resolved concurrent actions:
           B?
         chp events: {

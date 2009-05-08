@@ -71,14 +71,14 @@ In namespace "", we have: {
       unroll sequence: 
         e1of2<> a
       footprint: {
-        a = process e1of2<>^0 = alt_e1of2::a (1) (
-          e = bool^0 = alt_e1of2::a.e (1) 
+        a = process e1of2<>^0 = alt_e1of2<>::a (1) (
+          e = bool^0 = alt_e1of2<>::a.e (1) 
         )
         Created state:
         process instance pool:
-        1	alt_e1of2::a
+        1	alt_e1of2<>::a
         bool instance pool:
-        1	alt_e1of2::a.e
+        1	alt_e1of2<>::a.e
       }
       }
 
@@ -92,14 +92,14 @@ In namespace "", we have: {
         e1of2<> l
         l.e@[iscomb=1]
       footprint: {
-        l = process e1of2<>^0 = blah2::l (1) (
-          e = bool^0 = blah2::l.e (1) @[ iscomb ] 
+        l = process e1of2<>^0 = blah2<>::l (1) (
+          e = bool^0 = blah2<>::l.e (1) @[ iscomb ] 
         )
         Created state:
         process instance pool:
-        1	blah2::l
+        1	blah2<>::l
         bool instance pool:
-        1	blah2::l.e @[ iscomb ]
+        1	blah2<>::l.e @[ iscomb ]
       }
       }
 
@@ -118,26 +118,26 @@ In namespace "", we have: {
         blah2<> ma
         ma (in_a);
       footprint: {
-        in = process alt_e1of2<>^0 = blah3::in (1) (
-          a = process e1of2<>^0 = blah3::in_a (2) (
-            e = bool^0 = blah3::in_a.e (1) @[ iscomb ] 
+        in = process alt_e1of2<>^0 = blah3<>::in (1) (
+          a = process e1of2<>^0 = blah3<>::in_a (2) (
+            e = bool^0 = blah3<>::in_a.e (1) @[ iscomb ] 
           )
         )
-        in_a = process e1of2<>^0 = blah3::in_a (2) (
-          e = bool^0 = blah3::in_a.e (1) @[ iscomb ] 
+        in_a = process e1of2<>^0 = blah3<>::in_a (2) (
+          e = bool^0 = blah3<>::in_a.e (1) @[ iscomb ] 
         )
-        ma = process blah2<>^0 = blah3::ma (3) (
-          l = process e1of2<>^0 = blah3::in_a (2) (
-            e = bool^0 = blah3::in_a.e (1) @[ iscomb ] 
+        ma = process blah2<>^0 = blah3<>::ma (3) (
+          l = process e1of2<>^0 = blah3<>::in_a (2) (
+            e = bool^0 = blah3<>::in_a.e (1) @[ iscomb ] 
           )
         )
         Created state:
         process instance pool:
-        1	blah3::in
-        2	blah3::in_a
-        3	blah3::ma
+        1	blah3<>::in
+        2	blah3<>::in_a
+        3	blah3<>::ma
         bool instance pool:
-        1	blah3::in_a.e @[ iscomb ]
+        1	blah3<>::in_a.e @[ iscomb ]
       }
       }
 
@@ -150,10 +150,10 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> e
       footprint: {
-        e = bool^0 = e1of2::e (1) 
+        e = bool^0 = e1of2<>::e (1) 
         Created state:
         bool instance pool:
-        1	e1of2::e
+        1	e1of2<>::e
       }
       }
 

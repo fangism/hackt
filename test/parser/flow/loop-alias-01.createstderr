@@ -74,20 +74,20 @@ In namespace "", we have: {
       footprint: {
         p = process pb<>^1
           {
-            [0] = lt::p[0] (1) (
-              t = bool^0 = lt::x (1) 
+            [0] = lt<>::p[0] (1) (
+              t = bool^0 = lt<>::x (1) 
             )
-            [1] = lt::p[1] (2) (
-              t = bool^0 = lt::x (1) 
+            [1] = lt<>::p[1] (2) (
+              t = bool^0 = lt<>::x (1) 
             )
           }
-        x = bool^0 = lt::x (1) 
+        x = bool^0 = lt<>::x (1) 
         Created state:
         process instance pool:
-        1	lt::p[0]
-        2	lt::p[1]
+        1	lt<>::p[0]
+        2	lt<>::p[1]
         bool instance pool:
-        1	lt::x
+        1	lt<>::x
       }
       }
 
@@ -100,10 +100,10 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> t
       footprint: {
-        t = bool^0 = pb::t (1) 
+        t = bool^0 = pb<>::t (1) 
         Created state:
         bool instance pool:
-        1	pb::t
+        1	pb<>::t
       }
       }
 

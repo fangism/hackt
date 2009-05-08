@@ -1,7 +1,7 @@
-WARNING: channel boring::in lacks connection to a consumer.
-WARNING: channel boring::out lacks connection to a producer.
-WARNING: channel boring::peek lacks connection to a producer.
-WARNING: channel boring::peek lacks connection to a consumer.
+WARNING: channel boring<>::in lacks connection to a consumer.
+WARNING: channel boring<>::out lacks connection to a producer.
+WARNING: channel boring<>::peek lacks connection to a producer.
+WARNING: channel boring<>::peek lacks connection to a consumer.
 WARNING: channel work.in lacks connection to a producer.
 WARNING: channel work.in lacks connection to a consumer.
 WARNING: channel work.out lacks connection to a producer.
@@ -56,14 +56,14 @@ In namespace "", we have: {
         chan!() out
         chan() peek
       footprint: {
-        in = channel chan?()^0 = boring::in (1) 
-        out = channel chan!()^0 = boring::out (2) 
-        peek = channel chan()^0 = boring::peek (3) 
+        in = channel chan?()^0 = boring<>::in (1) 
+        out = channel chan!()^0 = boring<>::out (2) 
+        peek = channel chan()^0 = boring<>::peek (3) 
         Created state:
         channel instance pool:
-        1	boring::in
-        2	boring::out
-        3	boring::peek
+        1	boring<>::in
+        2	boring<>::out
+        3	boring<>::peek
       }
       }
 

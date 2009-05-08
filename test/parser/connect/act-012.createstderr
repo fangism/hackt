@@ -67,14 +67,14 @@ In namespace "", we have: {
       prs:
         a & b -> c-
       footprint: {
-        a = bool^0 = foo::a (1) 
-        b = bool^0 = foo::b (2) 
-        c = bool^0 = foo::c (3) 
+        a = bool^0 = foo<>::a (1) 
+        b = bool^0 = foo<>::b (2) 
+        c = bool^0 = foo<>::c (3) 
         Created state:
         bool instance pool:
-        1	foo::a
-        2	foo::b
-        3	foo::c
+        1	foo<>::a
+        2	foo<>::b
+        3	foo<>::c
         resolved prs:
         a & b -> c-
       }

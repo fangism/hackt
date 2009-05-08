@@ -122,21 +122,21 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        A = channel chan?(bool<>)^0 = split_bool_soup::A (1) 
-        B = channel chan?(bool<>)^0 = split_bool_soup::B (2) 
-        G = channel chan?(bool<>)^0 = split_bool_soup::G (3) 
-        Z = channel chan!(bool<>)^0 = split_bool_soup::Z (4) 
-        g = bool^0 = split_bool_soup::g (1) 
-        x = bool^0 = split_bool_soup::x (2) 
+        A = channel chan?(bool<>)^0 = split_bool_soup<>::A (1) 
+        B = channel chan?(bool<>)^0 = split_bool_soup<>::B (2) 
+        G = channel chan?(bool<>)^0 = split_bool_soup<>::G (3) 
+        Z = channel chan!(bool<>)^0 = split_bool_soup<>::Z (4) 
+        g = bool^0 = split_bool_soup<>::g (1) 
+        x = bool^0 = split_bool_soup<>::x (2) 
         Created state:
         channel instance pool:
-        1	split_bool_soup::A
-        2	split_bool_soup::B
-        3	split_bool_soup::G
-        4	split_bool_soup::Z
+        1	split_bool_soup<>::A
+        2	split_bool_soup<>::B
+        3	split_bool_soup<>::G
+        4	split_bool_soup<>::Z
         bool instance pool:
-        1	split_bool_soup::g
-        2	split_bool_soup::x
+        1	split_bool_soup<>::g
+        2	split_bool_soup<>::x
         resolved concurrent actions:
           *[
             sequential: {

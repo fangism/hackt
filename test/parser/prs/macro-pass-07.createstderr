@@ -51,14 +51,14 @@ In namespace "", we have: {
       prs:
         passn<10.6,2.5>(g,s,d)
       footprint: {
-        d = bool^0 = passn::d (3) 
-        g = bool^0 = passn::g (1) 
-        s = bool^0 = passn::s (2) 
+        d = bool^0 = passn<>::d (3) 
+        g = bool^0 = passn<>::g (1) 
+        s = bool^0 = passn<>::s (2) 
         Created state:
         bool instance pool:
-        1	passn::g
-        2	passn::s
-        3	passn::d
+        1	passn<>::g
+        2	passn<>::s
+        3	passn<>::d
         resolved macros:
         passn<10.6,2.5>(g,s,d)
       }

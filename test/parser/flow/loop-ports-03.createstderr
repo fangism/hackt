@@ -80,17 +80,17 @@ In namespace "", we have: {
           N = pint^0 value: 4
           d = bool^1
             {
-              [0] = ch1of::d[0] (1) 
-              [1] = ch1of::d[1] (2) 
-              [2] = ch1of::d[2] (3) 
-              [3] = ch1of::d[3] (4) 
+              [0] = ch1of<4>::d[0] (1) 
+              [1] = ch1of<4>::d[1] (2) 
+              [2] = ch1of<4>::d[2] (3) 
+              [3] = ch1of<4>::d[3] (4) 
             }
           Created state:
           bool instance pool:
-          1	ch1of::d[0]
-          2	ch1of::d[1]
-          3	ch1of::d[2]
-          4	ch1of::d[3]
+          1	ch1of<4>::d[0]
+          2	ch1of<4>::d[1]
+          3	ch1of<4>::d[2]
+          4	ch1of<4>::d[3]
         }
       }
       }
@@ -104,10 +104,10 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> a
       footprint: {
-        a = bool^0 = dcelm::a (1) 
+        a = bool^0 = dcelm<>::a (1) 
         Created state:
         bool instance pool:
-        1	dcelm::a
+        1	dcelm<>::a
       }
       }
 
@@ -124,30 +124,30 @@ In namespace "", we have: {
           ce[$b] (ad.d[$b/4]);
         )
       footprint: {
-        ad = process ch1of<4>^0 = lut::ad (1) (
+        ad = process ch1of<4>^0 = lut<>::ad (1) (
           d = bool^1
             {
-              [0] = lut::ad.d[0] (1) 
-              [1] = lut::ad.d[1] (2) 
-              [2] = lut::ad.d[2] (3) 
-              [3] = lut::ad.d[3] (4) 
+              [0] = lut<>::ad.d[0] (1) 
+              [1] = lut<>::ad.d[1] (2) 
+              [2] = lut<>::ad.d[2] (3) 
+              [3] = lut<>::ad.d[3] (4) 
             }
         )
         ce = process dcelm<>^1
           {
-            [0] = lut::ce[0] (2) (
-              a = bool^0 = lut::ad.d[0] (1) 
+            [0] = lut<>::ce[0] (2) (
+              a = bool^0 = lut<>::ad.d[0] (1) 
             )
           }
         Created state:
         process instance pool:
-        1	lut::ad
-        2	lut::ce[0]
+        1	lut<>::ad
+        2	lut<>::ce[0]
         bool instance pool:
-        1	lut::ad.d[0]
-        2	lut::ad.d[1]
-        3	lut::ad.d[2]
-        4	lut::ad.d[3]
+        1	lut<>::ad.d[0]
+        2	lut<>::ad.d[1]
+        3	lut<>::ad.d[2]
+        4	lut<>::ad.d[3]
       }
       }
 

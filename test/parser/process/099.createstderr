@@ -52,19 +52,19 @@ In namespace "", we have: {
         bool<> y
         x.a = y;
       footprint: {
-        x = process foo<>^0 = bar::x (1) (
-          a = bool^0 = bar::y (1) 
-          b = bool^0 = bar::x.b (2) 
+        x = process foo<>^0 = bar<>::x (1) (
+          a = bool^0 = bar<>::y (1) 
+          b = bool^0 = bar<>::x.b (2) 
         )
-        y = bool^0 = bar::y (1) 
+        y = bool^0 = bar<>::y (1) 
         Created state:
         process instance pool:
-        1	bar::x
+        1	bar<>::x
         bool instance pool:
-        1	bar::y
-        2	bar::x.b
+        1	bar<>::y
+        2	bar<>::x.b
         bool port aliases:
-        1: bar::x.a = bar::y
+        1: bar<>::x.a = bar<>::y
       }
       }
 
@@ -80,12 +80,12 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = foo::a (1) 
-        b = bool^0 = foo::b (2) 
+        a = bool^0 = foo<>::a (1) 
+        b = bool^0 = foo<>::b (2) 
         Created state:
         bool instance pool:
-        1	foo::a
-        2	foo::b
+        1	foo<>::a
+        2	foo<>::b
       }
       }
 

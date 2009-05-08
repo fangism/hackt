@@ -165,72 +165,72 @@ In namespace "", we have: {
       footprint collection: {
         <false> {
           D = pbool^0 value: 0
-          q = process foo<>^0<false> = bar::q (4) (
-            x = bool^0 = bar::q.x (5) 
-            y = bool^0 = bar::q.y (6) 
+          q = process foo<>^0<false> = bar<false>::q (4) (
+            x = bool^0 = bar<false>::q.x (5) 
+            y = bool^0 = bar<false>::q.y (6) 
           )
-          r = process foo<>^0<true> = bar::r (3) (
-            x = bool^0 = bar::r.x (4) 
-            y = bool^0 = bar::r.x (4) 
+          r = process foo<>^0<true> = bar<false>::r (3) (
+            x = bool^0 = bar<false>::r.x (4) 
+            y = bool^0 = bar<false>::r.x (4) 
           )
-          s = process foo<>^0<true> = bar::s (2) (
-            x = bool^0 = bar::s.x (3) 
-            y = bool^0 = bar::s.x (3) 
+          s = process foo<>^0<true> = bar<false>::s (2) (
+            x = bool^0 = bar<false>::s.x (3) 
+            y = bool^0 = bar<false>::s.x (3) 
           )
-          t = process foo<>^0<false> = bar::t (1) (
-            x = bool^0 = bar::t.x (1) 
-            y = bool^0 = bar::t.y (2) 
+          t = process foo<>^0<false> = bar<false>::t (1) (
+            x = bool^0 = bar<false>::t.x (1) 
+            y = bool^0 = bar<false>::t.y (2) 
           )
           Created state:
           process instance pool:
-          1	bar::t<false>
-          2	bar::s<true>
-          3	bar::r<true>
-          4	bar::q<false>
+          1	bar<false>::t<false>
+          2	bar<false>::s<true>
+          3	bar<false>::r<true>
+          4	bar<false>::q<false>
           bool instance pool:
-          1	bar::t.x
-          2	bar::t.y
-          3	bar::s.x
-          4	bar::r.x
-          5	bar::q.x
-          6	bar::q.y
+          1	bar<false>::t.x
+          2	bar<false>::t.y
+          3	bar<false>::s.x
+          4	bar<false>::r.x
+          5	bar<false>::q.x
+          6	bar<false>::q.y
           bool port aliases:
-          3: bar::s.x = bar::s.y
-          4: bar::r.x = bar::r.y
+          3: bar<false>::s.x = bar<false>::s.y
+          4: bar<false>::r.x = bar<false>::r.y
         }
         <true> {
           D = pbool^0 value: 1
-          q = process foo<>^0<false> = bar::r (2) (
-            x = bool^0 = bar::r.x (2) 
-            y = bool^0 = bar::r.y (3) 
+          q = process foo<>^0<false> = bar<true>::r (2) (
+            x = bool^0 = bar<true>::r.x (2) 
+            y = bool^0 = bar<true>::r.y (3) 
           )
-          r = process foo<>^0<false> = bar::r (2) (
-            x = bool^0 = bar::r.x (2) 
-            y = bool^0 = bar::r.y (3) 
+          r = process foo<>^0<false> = bar<true>::r (2) (
+            x = bool^0 = bar<true>::r.x (2) 
+            y = bool^0 = bar<true>::r.y (3) 
           )
-          s = process foo<>^0<true> = bar::t (1) (
-            x = bool^0 = bar::t.x (1) 
-            y = bool^0 = bar::t.x (1) 
+          s = process foo<>^0<true> = bar<true>::t (1) (
+            x = bool^0 = bar<true>::t.x (1) 
+            y = bool^0 = bar<true>::t.x (1) 
           )
-          t = process foo<>^0<true> = bar::t (1) (
-            x = bool^0 = bar::t.x (1) 
-            y = bool^0 = bar::t.x (1) 
+          t = process foo<>^0<true> = bar<true>::t (1) (
+            x = bool^0 = bar<true>::t.x (1) 
+            y = bool^0 = bar<true>::t.x (1) 
           )
           Created state:
           process instance pool:
-          1	bar::t<true>
-          2	bar::r<false>
+          1	bar<true>::t<true>
+          2	bar<true>::r<false>
           bool instance pool:
-          1	bar::t.x
-          2	bar::r.x
-          3	bar::r.y
+          1	bar<true>::t.x
+          2	bar<true>::r.x
+          3	bar<true>::r.y
           process port aliases:
-          1: bar::t = bar::s
-          2: bar::r = bar::q
+          1: bar<true>::t = bar<true>::s
+          2: bar<true>::r = bar<true>::q
           bool port aliases:
-          1: bar::t.x = bar::t.y = bar::s.x = bar::s.y
-          2: bar::r.x = bar::q.x
-          3: bar::r.y = bar::q.y
+          1: bar<true>::t.x = bar<true>::t.y = bar<true>::s.x = bar<true>::s.y
+          2: bar<true>::r.x = bar<true>::q.x
+          3: bar<true>::r.y = bar<true>::q.y
         }
       }
       }
@@ -256,22 +256,22 @@ In namespace "", we have: {
       footprint collection: {
         <false> {
           C = pbool^0 value: 0
-          x = bool^0 = fa::x (1) 
-          y = bool^0 = fa::y (2) 
+          x = bool^0 = fa<false>::x (1) 
+          y = bool^0 = fa<false>::y (2) 
           Created state:
           bool instance pool:
-          1	fa::x
-          2	fa::y
+          1	fa<false>::x
+          2	fa<false>::y
         }
         <true> {
           C = pbool^0 value: 1
-          x = bool^0 = fa::x (1) 
-          y = bool^0 = fa::x (1) 
+          x = bool^0 = fa<true>::x (1) 
+          y = bool^0 = fa<true>::x (1) 
           Created state:
           bool instance pool:
-          1	fa::x
+          1	fa<true>::x
           bool port aliases:
-          1: fa::x = fa::y
+          1: fa<true>::x = fa<true>::y
         }
       }
       }
@@ -298,34 +298,34 @@ In namespace "", we have: {
       footprint collection: {
         <false> {
           C = pbool^0 value: 0
-          fa0 = process fa<false>^0 = foo::fa0 (1) (
-            x = bool^0 = foo::x (1) 
-            y = bool^0 = foo::y (2) 
+          fa0 = process fa<false>^0 = foo<false>::fa0 (1) (
+            x = bool^0 = foo<false>::x (1) 
+            y = bool^0 = foo<false>::y (2) 
           )
-          x = bool^0 = foo::x (1) 
-          y = bool^0 = foo::y (2) 
+          x = bool^0 = foo<false>::x (1) 
+          y = bool^0 = foo<false>::y (2) 
           Created state:
           process instance pool:
-          1	foo::fa0
+          1	foo<false>::fa0
           bool instance pool:
-          1	foo::x
-          2	foo::y
+          1	foo<false>::x
+          2	foo<false>::y
         }
         <true> {
           C = pbool^0 value: 1
-          fa0 = process fa<true>^0 = foo::fa0 (1) (
-            x = bool^0 = foo::x (1) 
-            y = bool^0 = foo::x (1) 
+          fa0 = process fa<true>^0 = foo<true>::fa0 (1) (
+            x = bool^0 = foo<true>::x (1) 
+            y = bool^0 = foo<true>::x (1) 
           )
-          x = bool^0 = foo::x (1) 
-          y = bool^0 = foo::x (1) 
+          x = bool^0 = foo<true>::x (1) 
+          y = bool^0 = foo<true>::x (1) 
           Created state:
           process instance pool:
-          1	foo::fa0
+          1	foo<true>::fa0
           bool instance pool:
-          1	foo::x
+          1	foo<true>::x
           bool port aliases:
-          1: foo::x = foo::y
+          1: foo<true>::x = foo<true>::y
         }
       }
       }

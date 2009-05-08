@@ -72,17 +72,17 @@ In namespace "", we have: {
           N = pint^0 value: 3
           l = bool^1
             {
-              [0] = ass::l[0] (2) 
-              [1] = ass::l[1] (3) 
-              [2] = ass::l[2] (4) 
+              [0] = ass<3>::l[0] (2) 
+              [1] = ass<3>::l[1] (3) 
+              [2] = ass<3>::l[2] (4) 
             }
-          r = bool^0 = ass::r (1) 
+          r = bool^0 = ass<3>::r (1) 
           Created state:
           bool instance pool:
-          1	ass::r
-          2	ass::l[0]
-          3	ass::l[1]
-          4	ass::l[2]
+          1	ass<3>::r
+          2	ass<3>::l[0]
+          3	ass<3>::l[1]
+          4	ass<3>::l[2]
         }
       }
       }

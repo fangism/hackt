@@ -85,20 +85,20 @@ In namespace "", we have: {
         bool<> e
         bool<> f
       footprint: {
-        a = bool^0 = foo::a (1) 
-        b = bool^0 = foo::b (2) 
-        c = bool^0 = foo::c (3) 
-        d = bool^0 = foo::d (4) 
-        e = bool^0 = foo::e (5) 
-        f = bool^0 = foo::f (6) 
+        a = bool^0 = foo<>::a (1) 
+        b = bool^0 = foo<>::b (2) 
+        c = bool^0 = foo<>::c (3) 
+        d = bool^0 = foo<>::d (4) 
+        e = bool^0 = foo<>::e (5) 
+        f = bool^0 = foo<>::f (6) 
         Created state:
         bool instance pool:
-        1	foo::a
-        2	foo::b
-        3	foo::c
-        4	foo::d
-        5	foo::e
-        6	foo::f
+        1	foo<>::a
+        2	foo<>::b
+        3	foo<>::c
+        4	foo<>::d
+        5	foo<>::e
+        6	foo<>::f
       }
       }
 

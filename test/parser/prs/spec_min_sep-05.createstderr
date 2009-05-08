@@ -95,23 +95,23 @@ In namespace "", we have: {
         min_sep<30>(x[0],x[1..2])
         min_sep<40>({x[0],x[1]},x[2])
       footprint: {
-        p = bool^0 = groupie::p (1) 
-        q = bool^0 = groupie::q (2) 
-        r = bool^0 = groupie::r (3) 
+        p = bool^0 = groupie<>::p (1) 
+        q = bool^0 = groupie<>::q (2) 
+        r = bool^0 = groupie<>::r (3) 
         x = bool^1
           {
-            [0] = groupie::x[0] (4) 
-            [1] = groupie::x[1] (5) 
-            [2] = groupie::x[2] (6) 
+            [0] = groupie<>::x[0] (4) 
+            [1] = groupie<>::x[1] (5) 
+            [2] = groupie<>::x[2] (6) 
           }
         Created state:
         bool instance pool:
-        1	groupie::p
-        2	groupie::q
-        3	groupie::r
-        4	groupie::x[0]
-        5	groupie::x[1]
-        6	groupie::x[2]
+        1	groupie<>::p
+        2	groupie<>::q
+        3	groupie<>::r
+        4	groupie<>::x[0]
+        5	groupie<>::x[1]
+        6	groupie<>::x[2]
         resolved specs:
         min_sep<15>({x[0],x[1],x[2]},q)
         min_sep<10>(p,{x[0],x[1]})

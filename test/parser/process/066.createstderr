@@ -66,23 +66,23 @@ In namespace "", we have: {
         foo<> y
         x = y;
       footprint: {
-        x = process foo<>^0 = bar::x (1) (
-          a = bool^0 = bar::x.a (1) 
-          b = bool^0 = bar::x.a (1) 
+        x = process foo<>^0 = bar<>::x (1) (
+          a = bool^0 = bar<>::x.a (1) 
+          b = bool^0 = bar<>::x.a (1) 
         )
-        y = process foo<>^0 = bar::x (1) (
-          a = bool^0 = bar::x.a (1) 
-          b = bool^0 = bar::x.a (1) 
+        y = process foo<>^0 = bar<>::x (1) (
+          a = bool^0 = bar<>::x.a (1) 
+          b = bool^0 = bar<>::x.a (1) 
         )
         Created state:
         process instance pool:
-        1	bar::x
+        1	bar<>::x
         bool instance pool:
-        1	bar::x.a
+        1	bar<>::x.a
         process port aliases:
-        1: bar::x = bar::y
+        1: bar<>::x = bar<>::y
         bool port aliases:
-        1: bar::x.a = bar::x.b = bar::y.a = bar::y.b
+        1: bar<>::x.a = bar<>::x.b = bar<>::y.a = bar<>::y.b
       }
       }
 
@@ -99,13 +99,13 @@ In namespace "", we have: {
         bool<> b
         a = b;
       footprint: {
-        a = bool^0 = foo::a (1) 
-        b = bool^0 = foo::a (1) 
+        a = bool^0 = foo<>::a (1) 
+        b = bool^0 = foo<>::a (1) 
         Created state:
         bool instance pool:
-        1	foo::a
+        1	foo<>::a
         bool port aliases:
-        1: foo::a = foo::b
+        1: foo<>::a = foo<>::b
       }
       }
 
@@ -122,37 +122,37 @@ In namespace "", we have: {
         bar<> q
         p = q;
       footprint: {
-        p = process bar<>^0 = ick::p (1) (
-          x = process foo<>^0 = ick::p.x (2) (
-            a = bool^0 = ick::p.x.a (1) 
-            b = bool^0 = ick::p.x.a (1) 
+        p = process bar<>^0 = ick<>::p (1) (
+          x = process foo<>^0 = ick<>::p.x (2) (
+            a = bool^0 = ick<>::p.x.a (1) 
+            b = bool^0 = ick<>::p.x.a (1) 
           )
-          y = process foo<>^0 = ick::p.x (2) (
-            a = bool^0 = ick::p.x.a (1) 
-            b = bool^0 = ick::p.x.a (1) 
+          y = process foo<>^0 = ick<>::p.x (2) (
+            a = bool^0 = ick<>::p.x.a (1) 
+            b = bool^0 = ick<>::p.x.a (1) 
           )
         )
-        q = process bar<>^0 = ick::p (1) (
-          x = process foo<>^0 = ick::p.x (2) (
-            a = bool^0 = ick::p.x.a (1) 
-            b = bool^0 = ick::p.x.a (1) 
+        q = process bar<>^0 = ick<>::p (1) (
+          x = process foo<>^0 = ick<>::p.x (2) (
+            a = bool^0 = ick<>::p.x.a (1) 
+            b = bool^0 = ick<>::p.x.a (1) 
           )
-          y = process foo<>^0 = ick::p.x (2) (
-            a = bool^0 = ick::p.x.a (1) 
-            b = bool^0 = ick::p.x.a (1) 
+          y = process foo<>^0 = ick<>::p.x (2) (
+            a = bool^0 = ick<>::p.x.a (1) 
+            b = bool^0 = ick<>::p.x.a (1) 
           )
         )
         Created state:
         process instance pool:
-        1	ick::p
-        2	ick::p.x
+        1	ick<>::p
+        2	ick<>::p.x
         bool instance pool:
-        1	ick::p.x.a
+        1	ick<>::p.x.a
         process port aliases:
-        1: ick::p = ick::q
-        2: ick::p.x = ick::p.y = ick::q.x = ick::q.y
+        1: ick<>::p = ick<>::q
+        2: ick<>::p.x = ick<>::p.y = ick<>::q.x = ick<>::q.y
         bool port aliases:
-        1: ick::p.x.a = ick::p.x.b = ick::p.y.a = ick::p.y.b = ick::q.x.a = ick::q.x.b = ick::q.y.a = ick::q.y.b
+        1: ick<>::p.x.a = ick<>::p.x.b = ick<>::p.y.a = ick<>::p.y.b = ick<>::q.x.a = ick<>::q.x.b = ick<>::q.y.a = ick<>::q.y.b
       }
       }
 

@@ -47,10 +47,10 @@ In namespace "", we have: {
           X!(true)
         }
       footprint: {
-        X = channel chan!!(bool<>)^0 = source::X (1) 
+        X = channel chan!!(bool<>)^0 = source<>::X (1) 
         Created state:
         channel instance pool:
-        1	source::X
+        1	source<>::X
         resolved concurrent actions:
           X!(true)
         chp events: {

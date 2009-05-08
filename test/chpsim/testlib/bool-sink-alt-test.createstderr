@@ -103,10 +103,10 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        B = channel chan?(bool<>)^0 = bool_sink_alt::B (1) 
+        B = channel chan?(bool<>)^0 = bool_sink_alt<>::B (1) 
         Created state:
         channel instance pool:
-        1	bool_sink_alt::B
+        1	bool_sink_alt<>::B
         resolved concurrent actions:
           *[
             B?
@@ -137,11 +137,11 @@ In namespace "", we have: {
         }
       footprint collection: {
         <5> {
-          B = channel chan?(bool<>)^0 = bool_sink_alt_delay::B (1) 
+          B = channel chan?(bool<>)^0 = bool_sink_alt_delay<5>::B (1) 
           D = preal^0 value: 5
           Created state:
           channel instance pool:
-          1	bool_sink_alt_delay::B
+          1	bool_sink_alt_delay<5>::B
           resolved concurrent actions:
             *[
               [after=5] B?
@@ -173,11 +173,11 @@ In namespace "", we have: {
         }
       footprint collection: {
         <4> {
-          B = channel chan?(bool<>)^0 = bool_sink_alt_once::B (1) 
+          B = channel chan?(bool<>)^0 = bool_sink_alt_once<4>::B (1) 
           N = pint^0 value: 4
           Created state:
           channel instance pool:
-          1	bool_sink_alt_once::B
+          1	bool_sink_alt_once<4>::B
           resolved concurrent actions:
             sequential: {
               B?

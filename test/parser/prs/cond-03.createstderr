@@ -1,5 +1,5 @@
-Warning: node ass::x has no pull-up nor pull-dn PRS fanin.
-Warning: node ass::x has no pull-up nor pull-dn PRS fanin.
+Warning: node ass<1>::x has no pull-up nor pull-dn PRS fanin.
+Warning: node ass<2>::x has no pull-up nor pull-dn PRS fanin.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -78,23 +78,23 @@ In namespace "", we have: {
       footprint collection: {
         <1> {
           N = pint^0 value: 1
-          a = bool^0 = ass::a (2) 
-          x = bool^0 = ass::x (1) 
+          a = bool^0 = ass<1>::a (2) 
+          x = bool^0 = ass<1>::x (1) 
           Created state:
           bool instance pool:
-          1	ass::x
-          2	ass::a
+          1	ass<1>::x
+          2	ass<1>::a
           resolved prs:
           x -> a+
         }
         <2> {
           N = pint^0 value: 2
-          a = bool^0 = ass::a (2) 
-          x = bool^0 = ass::x (1) 
+          a = bool^0 = ass<2>::a (2) 
+          x = bool^0 = ass<2>::x (1) 
           Created state:
           bool instance pool:
-          1	ass::x
-          2	ass::a
+          1	ass<2>::x
+          2	ass<2>::a
           resolved prs:
           x -> a-
         }
