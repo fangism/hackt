@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.49 2009/03/09 03:22:19 cto3 Exp $
+#	$Id: Makefile.am,v 1.49.2.1 2009/05/11 22:54:41 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -43,6 +43,7 @@ HACKT_PARSE_TEST_PASSES = \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-05b macro-pass-07b \
 	macro-pass-05c macro-pass-07c \
+	macro-pass-08 macro-pass-09 \
 	after-02 after-03 \
 	spec-02 spec-04 spec-06 spec-07 \
 	size-01 size-03 size-04 size-05 \
@@ -113,6 +114,7 @@ HACKT_CREATE_TEST_PASSES = \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
+	macro-pass-08 macro-pass-09 \
 	after-02 after-03 \
 	spec-02 spec-04 spec-06 spec-07 \
 	size-01 size-03 size-04 size-05 \

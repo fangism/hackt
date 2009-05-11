@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.33.2.1 2009/05/07 23:12:36 fang Exp $
+	$Id: PRS.cc,v 1.33.2.2 2009/05/11 22:54:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -495,8 +495,8 @@ if (output.is_internal()) {
 		return good_bool(false);
 	}
 	// check for auto-complement, and unroll it?
-	// TODO: update connectivity information, local node pool
 #if BOOL_PRS_CONNECTIVITY_CHECKING
+	// doing this at unroll-time, but we could do it in a later pass...
 {
 	entity::footprint& tfp(c.get_target_footprint());
 	state_instance<bool_tag>::pool_type&
@@ -2062,6 +2062,26 @@ macro::unroll(const unroll_context& c, const node_pool_type& np,
 		// dump the literal?
 		return good_bool(false);
 	}
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+	// HACK-ish: need to treat special macros like rules
+	// for connectivity checking, namely passn/passp
+if (name == "passn" || name == "passp") {
+	entity::footprint& tfp(c.get_target_footprint());
+	state_instance<bool_tag>::pool_type&
+		bp(tfp.get_instance_pool<bool_tag>());
+	// see "Object/lang/PRS_macro_registry.cc" for node interpretation
+	const size_t g = *new_macro_call.nodes[0].begin();
+	const size_t s = *new_macro_call.nodes[1].begin();
+	const size_t d = *new_macro_call.nodes[2].begin();
+	const bool dir = (name == "passn") ? false : true;	// direction
+	const_cast<instance_alias_info<bool_tag>&>(
+		*bp[g].get_back_ref()).find()->prs_fanout(dir);
+	const_cast<instance_alias_info<bool_tag>&>(
+		*bp[s].get_back_ref()).find()->prs_fanout(dir);
+	const_cast<instance_alias_info<bool_tag>&>(
+		*bp[d].get_back_ref()).find()->prs_fanin(dir);
+}
+#endif
 	return good_bool(true);
 }
 

@@ -1,0 +1,265 @@
+Warning: node foo<>::_n_.g has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::_n_.s has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::_p_.g has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::_p_.s has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::_np_.g has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::_np_._g has no pull-up nor pull-dn PRS fanin.
+Warning: node foo<>::_np_.s has no pull-up nor pull-dn PRS fanin.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
+	27	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	procdefn	0	#HEAD#	#TAIL#	147
+	42	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	43	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	44	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	45	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	46	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	47	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	63	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	footprnt	0	#HEAD#	#TAIL#	548
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	footprnt	0	#HEAD#	#TAIL#	622
+	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
+	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  4 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+      )
+      In definition "foo", we have: {
+      Instances:
+        _n_ = passn<> foo::_n_
+        _np_ = passnp<> foo::_np_
+        _p_ = passp<> foo::_p_
+      unroll sequence: 
+        passn<> _n_
+        passp<> _p_
+        passnp<> _np_
+      footprint: {
+        _n_ = process passn<>^0 = foo<>::_n_ (1) (
+          g = bool^0 = foo<>::_n_.g (1) 
+          s = bool^0 = foo<>::_n_.s (2) 
+          d = bool^0 = foo<>::_n_.d (3) 
+        )
+        _np_ = process passnp<>^0 = foo<>::_np_ (3) (
+          g = bool^0 = foo<>::_np_.g (7) 
+          _g = bool^0 = foo<>::_np_._g (8) 
+          s = bool^0 = foo<>::_np_.s (9) 
+          d = bool^0 = foo<>::_np_.d (10) 
+        )
+        _p_ = process passp<>^0 = foo<>::_p_ (2) (
+          g = bool^0 = foo<>::_p_.g (4) 
+          s = bool^0 = foo<>::_p_.s (5) 
+          d = bool^0 = foo<>::_p_.d (6) 
+        )
+        Created state:
+        process instance pool:
+        1	foo<>::_n_
+        2	foo<>::_p_
+        3	foo<>::_np_
+        bool instance pool:
+        1	foo<>::_n_.g
+        2	foo<>::_n_.s
+        3	foo<>::_n_.d
+        4	foo<>::_p_.g
+        5	foo<>::_p_.s
+        6	foo<>::_p_.d
+        7	foo<>::_np_.g
+        8	foo<>::_np_._g
+        9	foo<>::_np_.s
+        10	foo<>::_np_.d
+      }
+      }
+
+    passn = process-definition (defined) passn(
+        bool<> g
+        bool<> s
+        bool<> d
+      )
+      In definition "passn", we have: {
+      Instances:
+        d = bool<> passn::d
+        g = bool<> passn::g
+        s = bool<> passn::s
+      unroll sequence: 
+        bool<> g
+        bool<> s
+        bool<> d
+      prs:
+        passn(g,s,d)
+      footprint: {
+        d = bool^0 = passn<>::d (3) 
+        g = bool^0 = passn<>::g (1) 
+        s = bool^0 = passn<>::s (2) 
+        Created state:
+        bool instance pool:
+        1	passn<>::g
+        2	passn<>::s
+        3	passn<>::d
+        resolved macros:
+        passn(g,s,d)
+      }
+      }
+
+    passnp = process-definition (defined) passnp(
+        bool<> g
+        bool<> _g
+        bool<> s
+        bool<> d
+      )
+      In definition "passnp", we have: {
+      Instances:
+        _g = bool<> passnp::_g
+        d = bool<> passnp::d
+        g = bool<> passnp::g
+        n = passn<> passnp::n
+        p = passp<> passnp::p
+        s = bool<> passnp::s
+      unroll sequence: 
+        bool<> g
+        bool<> _g
+        bool<> s
+        bool<> d
+        passn<> n
+        n (g, s, d);
+        passp<> p
+        p (_g, s, d);
+      footprint: {
+        _g = bool^0 = passnp<>::_g (4) 
+        d = bool^0 = passnp<>::d (3) 
+        g = bool^0 = passnp<>::g (1) 
+        n = process passn<>^0 = passnp<>::n (1) (
+          g = bool^0 = passnp<>::g (1) 
+          s = bool^0 = passnp<>::s (2) 
+          d = bool^0 = passnp<>::d (3) 
+        )
+        p = process passp<>^0 = passnp<>::p (2) (
+          g = bool^0 = passnp<>::_g (4) 
+          s = bool^0 = passnp<>::s (2) 
+          d = bool^0 = passnp<>::d (3) 
+        )
+        s = bool^0 = passnp<>::s (2) 
+        Created state:
+        process instance pool:
+        1	passnp<>::n
+        2	passnp<>::p
+        bool instance pool:
+        1	passnp<>::g
+        2	passnp<>::s
+        3	passnp<>::d
+        4	passnp<>::_g
+      }
+      }
+
+    passp = process-definition (defined) passp(
+        bool<> g
+        bool<> s
+        bool<> d
+      )
+      In definition "passp", we have: {
+      Instances:
+        d = bool<> passp::d
+        g = bool<> passp::g
+        s = bool<> passp::s
+      unroll sequence: 
+        bool<> g
+        bool<> s
+        bool<> d
+      prs:
+        passp(g,s,d)
+      footprint: {
+        d = bool^0 = passp<>::d (3) 
+        g = bool^0 = passp<>::g (1) 
+        s = bool^0 = passp<>::s (2) 
+        Created state:
+        bool instance pool:
+        1	passp<>::g
+        2	passp<>::s
+        3	passp<>::d
+        resolved macros:
+        passp(g,s,d)
+      }
+      }
+
+  Instances:
+    bar = foo<> bar
+}
+
+footprint: {
+  bar = process foo<>^0 = bar (1) 
+  Created state:
+  process instance pool:
+  1	bar
+}

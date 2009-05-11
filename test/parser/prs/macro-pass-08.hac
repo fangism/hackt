@@ -1,0 +1,12 @@
+// "macro-pass-08.hac"
+
+import "macro-pass-01.hac";
+
+defproc foo() {
+passn _n_;
+passp _p_;
+passnp _np_;
+}
+
+foo bar;
+
