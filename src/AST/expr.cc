@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.34 2008/11/12 02:59:53 fang Exp $
+	$Id: expr.cc,v 1.34.12.1 2009/05/12 21:51:21 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -24,6 +24,7 @@
 #include "AST/reference.h"
 #include "AST/range_list.h"
 #include "AST/node_list.tcc"
+#include "AST/PRS.h"			// for precharge
 #include "util/sublist.tcc"
 #include "AST/parse_context.h"
 
@@ -2322,6 +2323,7 @@ if (lb && rb) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Don't forget to check for cases of PRS loop expressions. 
+	TODO: handle precharge expressions!
  */
 prs_expr_return_type
 logical_expr::check_prs_expr(context& c) const {
@@ -2403,6 +2405,21 @@ logical_expr::check_prs_expr(context& c) const {
 		return prs_expr_return_type(NULL);
 	}
 }	// end method logical_expr::check_prs_expr
+
+//=============================================================================
+// class logical_attr_expr method definitions
+
+logical_attr_expr::logical_attr_expr(const expr* _l,
+		const char_punctuation_type* c,
+		const PRS::precharge* p,
+		const expr* _r) :
+		logical_expr(_l, c, _r),
+		pchg(p) {
+	// precharge is optional
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+logical_attr_expr::~logical_attr_expr() { }
 
 //=============================================================================
 // class loop_operation method definitions

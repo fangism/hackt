@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.47 2009/02/20 16:40:22 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.47.4.1 2009/05/12 21:51:22 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -390,6 +390,7 @@ extern const char* const yyrule[];
 	PRS::rule_list*		_prs_rule_list;
 	PRS::rule*		_prs_rule;
 	PRS::literal*		_prs_literal;
+	PRS::precharge*		_prs_precharge;
 	PRS::loop*		_prs_loop;
 	PRS::conditional*	_prs_conditional;
 	PRS::guarded_body*	_prs_guarded_body;
@@ -685,6 +686,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_prs_rule_list>	prs_body
 %type	<_prs_body_item>	prs_body_item
 %type	<_prs_rule>	single_prs
+%type	<_prs_precharge>	prs_operator_attribute
+%type	<_prs_precharge>	prs_operator_attribute_optional
 %type	<_prs_loop>	prs_loop
 %type	<_prs_conditional>	prs_conditional
 %type	<_prs_guarded_list>	prs_guarded_list prs_guarded_list_unmatched
@@ -2484,7 +2487,7 @@ prs_not
 /* only allow precharge notation on & operator -- Clint */
 prs_and
 	: prs_and '&' prs_operator_attribute_optional prs_not
-		{ $$ = new logical_expr($1, $2, $4); }
+		{ $$ = new logical_attr_expr($1, $2, $3, $4); }
 	| prs_not { $$ = $1; }
 	;
 
@@ -2498,14 +2501,15 @@ prs_or
 /* TODO: save away these precharge expressions */
 prs_operator_attribute
 	: '{' dir prs_expr '}'
-		{ DELETE_TOKEN($1); DELETE_TOKEN($2); 
-			DELETE_TOKEN($3); DELETE_TOKEN($4); }
+		{ DELETE_TOKEN($1);
+			$$ = new PRS::precharge($2, $3);
+			DELETE_TOKEN($4); }
 	;
 
 /* for now, no return type yet */
 prs_operator_attribute_optional
-	: prs_operator_attribute
-	|
+	: prs_operator_attribute { $$ = $1; }
+	| { $$ = NULL; }
 	;
 
 /* non-short-circuit AND */

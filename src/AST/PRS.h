@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.10 2008/03/20 00:03:14 fang Exp $
+	$Id: PRS.h,v 1.10.14.1 2009/05/12 21:51:20 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -148,6 +148,29 @@ public:
 	// CHECK_PRS_EXPR_PROTO
 
 };	// end class literal
+
+//=============================================================================
+/**
+	Store precharge expression.
+ */
+class precharge {
+	const excl_ptr<const node_position>	dir;
+	const excl_ptr<const expr>		pchg_expr;
+public:
+	precharge(const node_position*, const expr*);
+	~precharge();
+
+	ostream&
+	what(ostream&) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	// CHECK_PRS_EXPR_PROTO;
+};	// end class precharge
 
 //=============================================================================
 /**

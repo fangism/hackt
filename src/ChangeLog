@@ -5,6 +5,16 @@
 
 2009-05-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-17-connect-03-04-pre:
+	  Not tagged, will become -03-04 next.
+	  Added AST class logical_attr_expr to handle precharge expressions
+		in syntax tree, instead of just ignoring.
+		Updated grammar actions to return precharge expressions.
+	  TODO: add corresponding structures to IR in middle-end.
+
+
+2009-05-10	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-83-17-connect-03-03:
 	  Added support for passn/passp macros to count as fanin/fanout.
 		Added a few test cases to cover this in prs/.

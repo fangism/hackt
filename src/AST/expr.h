@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.10 2007/07/18 23:28:14 fang Exp $
+	$Id: expr.h,v 1.10.42.1 2009/05/12 21:51:21 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -15,6 +15,9 @@
 
 namespace HAC {
 namespace parser {
+namespace PRS {
+class precharge;
+}
 //=============================================================================
 // class expr defined in "AST/expr_base.h"
 
@@ -149,13 +152,28 @@ public:
 
 	~logical_expr();
 
-	ostream&
+virtual	ostream&
 	what(ostream& o) const;
 
 	CHECK_META_EXPR_PROTO;
 	CHECK_NONMETA_EXPR_PROTO;
-	CHECK_PRS_EXPR_PROTO;
+virtual	CHECK_PRS_EXPR_PROTO;
 };	// end class logical_expr
+
+//-----------------------------------------------------------------------------
+/**
+	Extension that includes an attribute hook, mianly for use of 
+	precharge expressions.
+ */
+class logical_attr_expr : public logical_expr {
+	const excl_ptr<const PRS::precharge>		pchg;
+public:
+	logical_attr_expr(const expr* left, const char_punctuation_type* o, 
+		const PRS::precharge*, const expr* right);
+
+	~logical_attr_expr();
+
+};	// end class logical_attr_expr
 
 //-----------------------------------------------------------------------------
 /**

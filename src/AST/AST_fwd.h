@@ -1,7 +1,7 @@
 /**
 	\file "AST/AST_fwd.h"
 	Forward declarations for classes in HAC::parser.
-	$Id: AST_fwd.h,v 1.8 2008/03/20 00:03:11 fang Exp $
+	$Id: AST_fwd.h,v 1.8.14.1 2009/05/12 21:51:19 fang Exp $
  */
 
 #ifndef	__HAC_AST_AST_FWD_H__
@@ -90,6 +90,7 @@ class binary_expr;
 class arith_expr;
 class relational_expr;
 class logical_expr;
+class logical_attr_expr;
 class loop_operation;
 class array_concatenation;
 class loop_concatenation;
