@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.16 2008/11/29 03:24:49 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.17 2009/05/13 00:53:26 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -288,8 +288,8 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 //-----------------------------------------------------------------------------
 /***
 @texinfo prs/attribute-iskeeper.texi
-@defmac iskeeper b
-If @var{b} is true (1), staticize (explicitly).
+@defmac iskeeper [b]
+If @var{b} is true (1), flag that this rule is part of a standard keeper.
 If unspeficied, default value is true.
 @end defmac
 @end texinfo
@@ -303,6 +303,7 @@ void
 IsKeeper::main(visitor_type& p, const values_type& v) {
 switch (p.cfopts.primary_tool) {
 case cflat_options::TOOL_PRSIM:
+	// fall-through
 case cflat_options::TOOL_LVS: {
 	pint_value_type b = 1;
 	if (v.size()) {
@@ -321,8 +322,44 @@ default: break;
 
 //-----------------------------------------------------------------------------
 /***
+@texinfo prs/attribute-isckeeper.texi
+@defmac isckeeper [b]
+If @var{b} is true (1), flag that this rule is part of a combinational
+feedback keeper.
+If unspeficied, default value is true.
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(IsCKeeper, "isckeeper")
+
+/**
+      Prints out "isckeeper" before a rule in cflat.  
+ */
+void
+IsCKeeper::main(visitor_type& p, const values_type& v) {
+switch (p.cfopts.primary_tool) {
+case cflat_options::TOOL_PRSIM:
+	// fall-through
+case cflat_options::TOOL_LVS: {
+	pint_value_type b = 1;
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		ostream& o(p.os);
+		o << "ckeeper\t";
+	}
+	break;
+}
+default: break;
+}
+}
+
+//-----------------------------------------------------------------------------
+/***
 @texinfo prs/attribute-output.texi
-@defmac keeper b
+@defmac output b
 If @var{b} is true (1), staticize (explicitly).
 Q: should this really be a rule-attribute? better off as node-attribute?
 @end defmac

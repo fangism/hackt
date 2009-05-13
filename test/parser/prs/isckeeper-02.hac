@@ -1,0 +1,13 @@
+// "isckeeper-02.hac"
+// testing combination feedback rule attribute
+
+bool a, b, _c, c;
+
+prs {
+	a & b		#> _c-
+	_c		=> c-
+	// can't use complement short-hand for these, oh well
+[isckeeper]	c & (a | b)	-> _c-
+[isckeeper]	~c & (~a | ~b)	-> _c+
+}
+

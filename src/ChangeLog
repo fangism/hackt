@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-05-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-18:
+	  Added new isckeeper PRS rule attribute which prints
+		'ckeeper' in hflattened output, and otherwise
+		treats like a *normal* rule in hacprsim.
+	  Added minimal test cases to parser/prs/ and prsim/.
+
+
 2009-04-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-17:

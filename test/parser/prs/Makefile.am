@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.49 2009/03/09 03:22:19 cto3 Exp $
+#	$Id: Makefile.am,v 1.50 2009/05/13 00:53:27 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -74,6 +74,7 @@ HACKT_PARSE_TEST_PASSES = \
 	iscomb-27-p iscomb-27-q \
 	keeper-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
+	isckeeper-01 isckeeper-02 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	isrvc-01 \
 	interference-01 interference-02 interference-03 \
@@ -140,6 +141,7 @@ HACKT_CREATE_TEST_PASSES = \
 	iscomb-27-p iscomb-27-q \
 	keeper-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
+	isckeeper-01 isckeeper-02 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	isrvc-01 \
 	interference-01 interference-02 interference-03 \
@@ -245,7 +247,8 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	iscomb-27-p iscomb-27-q \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	isrvc-01 \
-	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04
+	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
+	isckeeper-01 isckeeper-02
 
 HACKT_CFLAT_LVS_TEST_FAILURES = \
 	lvs-order-02

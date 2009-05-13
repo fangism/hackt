@@ -1,0 +1,28 @@
+[top-level]
+rules:
+[after 10]	a & b -> _c-
+[after 10]	~a & ~b -> _c+
+[after 10]	_c -> c-
+[after 10]	~_c -> c+
+[after 10]	c & (a | b) -> _c-
+[after 10]	~c & (~a | ~b) -> _c+
+	0	a : 0
+	0	b : 0
+	10	_c : 1	[by b:=0]
+	20	c : 0	[by _c:=1]
+	20	a : 1
+	20	b : 1
+	30	_c : 0	[by b:=1]
+	40	c : 1	[by _c:=0]
+	40	b : 0
+	40	a : 0
+	50	_c : 1	[by a:=0]
+	60	c : 0	[by _c:=1]
+[top-level]
+rules:
+[after 10]	a:0 & b:0<0><0> -> _c-:1
+[after 10]	~a:0 & ~b:0<1><1> -> _c+:1
+[after 10]	_c:1<1> -> c-:0
+[after 10]	~_c:1<0> -> c+:0
+[after 10]	c:0 & (a:0 | b:0)<0><0><0> -> _c-:1
+[after 10]	~c:0 & (~a:0 | ~b:0)<1><1><1> -> _c+:1

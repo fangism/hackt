@@ -1,0 +1,14 @@
+// "isckeeper-a.hac"
+// could just:
+// import "../parser/prs/isckepper-01.hac";
+
+bool a, b, _c, c;
+
+prs {
+	a & b		-> _c-
+	~a & ~b		-> _c+
+	_c		=> c-
+[isckeeper=1]	c & (a | b)	-> _c-
+[isckeeper=1]	~c & (~a | ~b)	-> _c+
+}
+

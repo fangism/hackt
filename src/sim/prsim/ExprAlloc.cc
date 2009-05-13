@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.37 2009/02/07 04:08:41 fang Exp $
+	$Id: ExprAlloc.cc,v 1.38 2009/05/13 00:53:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -1194,6 +1194,27 @@ IsKeeper::main(visitor_type& v, const values_type& a) {
 		v.suppress_keeper_rule = 
 			k.is_a<const pint_const>()->static_constant_value();
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(IsCKeeper, "isckeeper")
+
+/**
+	Combinational feedback rules should be simulated in prsim.
+ */
+void
+IsCKeeper::main(visitor_type& v, const values_type& a) {
+#if 0
+	if (a.empty()) {
+		// default when no value given
+		v.suppress_keeper_rule = true;
+	} else {
+		// honor the value given
+		const values_type::value_type& k(a.front());
+		v.suppress_keeper_rule = 
+			k.is_a<const pint_const>()->static_constant_value();
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

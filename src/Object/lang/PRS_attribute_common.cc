@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_common.cc"
-	$Id: PRS_attribute_common.cc,v 1.8 2008/11/29 03:24:48 fang Exp $
+	$Id: PRS_attribute_common.cc,v 1.9 2009/05/13 00:53:24 fang Exp $
  */
 
 #include <iostream>
@@ -81,6 +81,12 @@ Keeper::__check_vals(const char* name, const values_type& v) {
 //=============================================================================
 good_bool
 IsKeeper::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
+}
+
+//=============================================================================
+good_bool
+IsCKeeper::__check_vals(const char* name, const values_type& v) {
 	return check_optional_integer(name, v);
 }
 

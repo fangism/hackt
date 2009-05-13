@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.79 2009/04/11 01:44:21 fang Exp $
+#	$Id: Makefile.am,v 1.80 2009/05/13 00:53:29 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -51,6 +51,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	SRAM SRAM-a SRAM-b SRAM-c SRAM-d \
 	keeper-a \
 	iskeeper-a \
+	isckeeper-a \
 	channel-test-a channel-test-b channel-test-c channel-test-d \
 	channel-test-f channel-test-g \
 	channel-test-non-QDI-a \
@@ -174,6 +175,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	SRAM-d-01 SRAM-d-02 \
 	keeper-a-01 \
 	iskeeper-a-01 \
+	isckeeper-a-01 \
 	autosave-02 \
 	channel-test-a-01 channel-test-a-02 channel-test-a-03 \
 	channel-test-a-04 channel-test-a-05 channel-test-a-06 \
