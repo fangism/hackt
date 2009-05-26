@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.34.12.2 2009/05/26 15:20:22 fang Exp $
+	$Id: expr.cc,v 1.34.12.3 2009/05/26 15:35:33 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -2173,7 +2173,6 @@ logical_expr::logical_expr(const expr* _l,
 		const expr* _r) :
 		binary_expr(_l, c, _r), 
 		pchg(p) {
-	NEVER_NULL(pchg);
 }
 
 DESTRUCTOR_INLINE
