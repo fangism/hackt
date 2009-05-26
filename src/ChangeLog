@@ -7,7 +7,7 @@
 
 	* HACKT-00-01-04-main-00-83-17-connect-03-04-pre:
 	  Not tagged, will become -03-04 next.
-	  Added AST class logical_attr_expr to handle precharge expressions
+	  Extended AST class logical_expr to handle precharge expressions
 		in syntax tree, instead of just ignoring.
 		Updated grammar actions to return precharge expressions.
 	  TODO: add corresponding structures to IR in middle-end.

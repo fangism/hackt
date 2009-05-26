@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.34.12.1 2009/05/12 21:51:21 fang Exp $
+	$Id: expr.cc,v 1.34.12.2 2009/05/26 15:20:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -2163,7 +2163,17 @@ relational_expr::check_nonmeta_expr(const context& c) const {
 CONSTRUCTOR_INLINE
 logical_expr::logical_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
-		binary_expr(left, o, right) {
+		binary_expr(left, o, right), 
+		pchg(NULL) {
+}
+
+logical_expr::logical_expr(const expr* _l,
+		const char_punctuation_type* c,
+		const PRS::precharge* p,
+		const expr* _r) :
+		binary_expr(_l, c, _r), 
+		pchg(p) {
+	NEVER_NULL(pchg);
 }
 
 DESTRUCTOR_INLINE
@@ -2405,21 +2415,6 @@ logical_expr::check_prs_expr(context& c) const {
 		return prs_expr_return_type(NULL);
 	}
 }	// end method logical_expr::check_prs_expr
-
-//=============================================================================
-// class logical_attr_expr method definitions
-
-logical_attr_expr::logical_attr_expr(const expr* _l,
-		const char_punctuation_type* c,
-		const PRS::precharge* p,
-		const expr* _r) :
-		logical_expr(_l, c, _r),
-		pchg(p) {
-	// precharge is optional
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-logical_attr_expr::~logical_attr_expr() { }
 
 //=============================================================================
 // class loop_operation method definitions
