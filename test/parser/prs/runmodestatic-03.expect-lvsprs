@@ -1,0 +1,3 @@
+"bar.x" -> "bar.y"-
+~"bar.x" -> "bar.y"+
+runmodestatic("bar.x")

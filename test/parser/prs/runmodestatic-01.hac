@@ -1,0 +1,10 @@
+// "runmodestatic-01.hac"
+
+bool x, y;
+prs {
+	x	=> y-
+}
+spec {
+	runmodestatic(x)
+}
+

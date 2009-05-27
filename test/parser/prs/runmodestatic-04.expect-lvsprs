@@ -1,0 +1,10 @@
+"a" -> "b"-
+~"a" -> "b"+
+runmodestatic("a")
+"b" -> "c"-
+~"b" -> "c"+
+runmodestatic("b")
+connect "a" "bar.x"
+connect "b" "bar.y"
+connect "b" "bq.x"
+connect "c" "bq.y"

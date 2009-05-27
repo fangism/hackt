@@ -1,0 +1,13 @@
+// "runmodestatic-03.hac"
+
+defproc foo(bool x, y) {
+prs {
+	x	=> y-
+}
+spec {
+	runmodestatic(x)
+}
+}
+
+foo bar;
+

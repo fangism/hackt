@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.17 2008/11/28 22:07:01 fang Exp $
+#	$Id: Makefile.am,v 1.18 2009/05/27 19:36:10 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -153,7 +153,9 @@ XFIG_PNG = $(XFIG_FIGURES:.fig=.png)
 
 all-figs: $(BUILT_FIGS)
 
-EXTRA_DIST += $(XFIG_FIGURES) $(SOURCE_DOTS) $(XFIG_PNG)
+# distribute to remove burden from user to build dox
+EXTRA_DIST += $(XFIG_FIGURES) $(SOURCE_DOTS) $(XFIG_PNG) \
+	$(XFIG_EPS) $(XFIG_PDF)
 # PNGs and built .figs too because distributed .info depends on them
 # (don't want user to have to rebuild .info)
 

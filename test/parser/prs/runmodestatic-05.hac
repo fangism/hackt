@@ -1,0 +1,15 @@
+// "runmodestatic-05.hac"
+
+defproc foo(bool x, y) {
+prs {
+	x	=> y-
+}
+spec {
+	runmodestatic(x)
+}
+}
+
+bool a, b, c;
+foo bar(a, b), bq(a, c);
+// expect to see hflat output runmodestatic twice with current impl.
+

@@ -1,0 +1,3 @@
+The 'runmodestatic' directive requires exactly 1 arguments.
+	at [8:15..20]
+ERROR: at least one error in spec body.

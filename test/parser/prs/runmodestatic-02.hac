@@ -1,0 +1,10 @@
+// "runmodestatic-02.hac"
+
+bool x, y;
+prs {
+	x	=> y-
+}
+spec {
+	runmodestatic(x, y)	// wrong number of args
+}
+

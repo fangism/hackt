@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.38 2009/05/13 00:53:26 fang Exp $
+	$Id: ExprAlloc.cc,v 1.39 2009/05/27 19:36:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -1536,7 +1536,16 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(supply_x, "supply_x")
 void
 supply_x::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
-	// TODO: nothing?
+	// ignore
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(RunModeStatic, "runmodestatic")
+
+void
+RunModeStatic::main(visitor_type& v, const param_args_type& params, 
+		const node_args_type& nodes) {
+	// ignore
 }
 
 #undef	DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS

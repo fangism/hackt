@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.20 2009/04/29 05:33:27 fang Exp $
+	$Id: SPEC_registry.cc,v 1.21 2009/05/27 19:36:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -301,7 +301,7 @@ DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(Assert, "assert")
 void
 Assert::main(cflat_prs_printer& p, const param_args_type& a, 
 		const node_args_type& n) {
-	// does nothing
+	// does nothing for hflat
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -545,6 +545,37 @@ supply_x::main(cflat_prs_printer& p, const param_args_type& v,
 		const node_args_type& a) {
 	STACKTRACE_VERBOSE;
 	FINISH_ME(Fang);
+}
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo spec/runmodestatic.texi
+@deffn Directive runmodestatic node
+For @command{cflat lvs},
+mark this node as one that seldom or never changes value, 
+for the sake of netlist analysis.
+NOTE: eventually this directive will be deprecated in favor of
+applying a proper node attribute.
+The decision to implement this as a spec-directive is an unfortunate
+consequence of compatibility with another tool.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(RunModeStatic, "runmodestatic")
+
+void
+RunModeStatic::main(cflat_prs_printer& p, const param_args_type& v,
+		const node_args_type& a) {
+	STACKTRACE_VERBOSE;
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_PRSIM:
+		break;
+	case cflat_options::TOOL_LVS:
+		default_spec_output<this_type>(p, v, a) << endl;
+		break;
+	default:
+		break;
+	}
 }
 
 //-----------------------------------------------------------------------------

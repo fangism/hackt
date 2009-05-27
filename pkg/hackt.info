@@ -9,7 +9,7 @@ License: Restrictive/Distributable
 Description: Asynchronous Circuit Compiler
 BuildDepends: <<
   readline5	(>= 5.0-1),
-  bison		(>= 1.875-1),
+# bison		(>= 1.875-1),
   guile18-dev	(>= 1.8.1-1),
   graphviz	(>= 1.12-1),
   transfig,
@@ -21,7 +21,7 @@ Depends: <<
   readline5-shlibs,
   guile18-shlibs
 <<
-ConfigureParams: --prefix=%p --with-readline=%p --with-guile-config=guile-1.8-config -C
+ConfigureParams: --prefix=%p YACC=/usr/bin/yacc --with-readline=%p --with-guile-config=guile-1.8-config --with-guile=guile-1.8 -C
 CompileScript: <<
 #!/bin/sh -ev
 mkdir darwin-build

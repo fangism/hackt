@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_common.cc,v 1.7 2008/03/17 23:02:31 fang Exp $
+	$Id: SPEC_common.cc,v 1.8 2009/05/27 19:36:13 fang Exp $
  */
 
 #include <iostream>
@@ -412,9 +412,8 @@ layout_min_sep::__check_node_args(const char* name, const node_args_type& a) {
 }
 
 //-----------------------------------------------------------------------------
-/**
-	Namespace for layout directives.  
- */
+// sypply_x method definitions
+
 good_bool
 supply_x::__check_num_params(const char* name, const size_t s) {
 	return exact_num_params(name, 0, s);
@@ -432,6 +431,28 @@ DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(supply_x)
  */
 good_bool
 supply_x::__check_node_args(const char* name, const node_args_type& a) {
+	return good_bool(true);
+}
+
+//-----------------------------------------------------------------------------
+// RunModeState method definitions
+good_bool
+RunModeStatic::__check_num_params(const char* name, const size_t s) {
+	return exact_num_params(name, 0, s);
+}
+
+good_bool
+RunModeStatic::__check_num_nodes(const char* name, const size_t s) {
+	return exact_num_nodes(name, 1, s);
+}
+
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(RunModeStatic)
+
+/**
+	nothing to check
+ */
+good_bool
+RunModeStatic::__check_node_args(const char* name, const node_args_type& a) {
 	return good_bool(true);
 }
 

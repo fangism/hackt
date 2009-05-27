@@ -1,5 +1,5 @@
 @c "chapters/SPEC.texi"
-@c $Id: SPEC.texi,v 1.4 2008/11/05 23:03:11 fang Exp $
+@c $Id: SPEC.texi,v 1.5 2009/05/27 19:36:11 fang Exp $
 
 @node SPEC Directives
 @chapter SPEC Directives
@@ -37,6 +37,7 @@ The following documentation is extracted from source file
 @include spec/mk_exclhi.texi
 @include spec/mk_excllo.texi
 @include spec/min_sep.texi
+@include spec/runmodestatic.texi
 
 Another class of specification directives is @emph{invariants}.
 Invariants are conditions which should always hold true.
