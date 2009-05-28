@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.51 2009/05/27 19:36:14 fang Exp $
+#	$Id: Makefile.am,v 1.52 2009/05/28 15:25:55 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -92,6 +92,7 @@ HACKT_PARSE_TEST_PASSES = \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	flavor-01 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
+	reff-01 \
 	load_cap-01 
 # pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
 
@@ -158,6 +159,7 @@ HACKT_CREATE_TEST_PASSES = \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	flavor-01 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
+	reff-01 \
 	load_cap-01 
 
 # TODO: precharge-00 etc. to middle and back-end tests
@@ -228,6 +230,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	act-001 act-002 act-005 act-006 act-007 act-010 \
+	reff-01 \
 	flavor-01
 # pending: act-003 act-004
 

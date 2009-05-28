@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-05-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-20:
+	  Upon request, added N_reff and P_reff rule attributes, used by other
+		tools to override computed resistance.  This is a hack that 
+		should soon be deprecated.  The introduction of a fold()
+		macro expression should displace the use of such a hack.
+	  Documented, test cases added.
+
+
 2009-05-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-19:

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.39 2009/05/27 19:36:14 fang Exp $
+	$Id: ExprAlloc.cc,v 1.40 2009/05/28 15:25:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -1249,6 +1249,18 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(LoadCap, "loadcap")
 void
 LoadCap::main(visitor_type& v, const values_type& a) {
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(N_reff, "N_reff")
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(P_reff, "P_reff")
+
+/**
+	No effect in prsim.  
+ */
+void
+N_reff::main(visitor_type& v, const values_type& a) { }
+void
+P_reff::main(visitor_type& v, const values_type& a) { }
 
 #undef	DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS
 }	// end namespace prsim_rule_attributes

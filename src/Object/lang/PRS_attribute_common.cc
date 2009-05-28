@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_common.cc"
-	$Id: PRS_attribute_common.cc,v 1.9 2009/05/13 00:53:24 fang Exp $
+	$Id: PRS_attribute_common.cc,v 1.10 2009/05/28 15:25:53 fang Exp $
  */
 
 #include <iostream>
@@ -100,6 +100,17 @@ Output::__check_vals(const char* name, const values_type& v) {
 //=============================================================================
 good_bool
 LoadCap::__check_vals(const char* name, const values_type& v) {
+	return check_single_real(name, v);
+}
+
+//=============================================================================
+good_bool
+N_reff::__check_vals(const char* name, const values_type& v) {
+	return check_single_real(name, v);
+}
+
+good_bool
+P_reff::__check_vals(const char* name, const values_type& v) {
 	return check_single_real(name, v);
 }
 

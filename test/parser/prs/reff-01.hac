@@ -1,0 +1,11 @@
+// "reff-01.hac"
+// just ignore the P_reff and N_reff attributes
+
+bool x, y, z;
+prs {
+		x<10> | x<10>	-> y-
+[N_reff=0.05]	x<10> | x<10>	-> z-
+		~x<20> | ~x<20>	-> y+
+[P_reff=0.1]	~x<20> | ~x<20>	-> z+
+}
+

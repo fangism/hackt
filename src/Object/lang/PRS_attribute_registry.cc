@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.17 2009/05/13 00:53:26 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.18 2009/05/28 15:25:54 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -396,7 +396,7 @@ Use @var{C} as load capacitance instead of inferring from configuration.
 DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(LoadCap, "loadcap")
 
 /**
-      Prints out "comb" before a rule in cflat.  
+	Supposed to attach load to rule's output node?
  */
 void
 LoadCap::main(visitor_type& p, const values_type& v) {
@@ -413,6 +413,30 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 	FINISH_ME(Fang);
 #endif
 }
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-reff.texi
+@defmac N_reff R
+@defmacx P_reff R
+Use @var{R} as effective resistance to override the automatically computed
+value in other back-end tools.
+NOTE: This is a hack that should be replaced with a proper implementation
+of the "fold" expression macro.  
+Consider this attribute deprecated from the start.
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(N_reff, "N_reff")
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(P_reff, "P_reff")
+
+/**
+	Do nothing?
+ */
+void
+N_reff::main(visitor_type& p, const values_type& v) { }
+void
+P_reff::main(visitor_type& p, const values_type& v) { }
 
 
 #undef	DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS

@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2009-05-28	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-20:
+	  configure.ac: date bump
+
+
 2009-04-29	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-17:
@@ -31,7 +37,7 @@
 	* HACKT-00-01-04-main-00-83-01:
 	  config/rl_el.m4: also check for readline/readline.h for editline,
 		check for symbols rl_completion_matches and completion_matches.
-	  configure.ac: date dump
+	  configure.ac: date bump
 
 
 2009-01-31	David Fang	<fangism@users.sourceforge.net>

@@ -2,7 +2,7 @@
 	\file "Object/lang/PRS_attribute_common.h"
 	Contains base classes for all tool-independent implementations
 	of PRS rule attribute classes.  
-	$Id: PRS_attribute_common.h,v 1.10 2009/05/13 00:53:25 fang Exp $
+	$Id: PRS_attribute_common.h,v 1.11 2009/05/28 15:25:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_COMMON_H__
@@ -79,6 +79,10 @@ DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Output)
 
 /// specify load capacitance, overriding default assumptions
 DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(LoadCap)
+
+/// dirty hacks... should be deprecated in favor of expression macros (fold)
+DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(N_reff)
+DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(P_reff)
 
 //=============================================================================
 }	// end namespace attributes
