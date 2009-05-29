@@ -1,7 +1,8 @@
 # "dox/util/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2007/08/09 03:47:11 fang Exp $
+#	$Id: Makefile.am,v 1.9 2009/05/29 15:13:22 fang Exp $
 
 PDFS = fangutil.pdf
+DVIS = $(PDFS:.pdf=.dvi)
 PSS = $(PDFS:.pdf=.ps)
 
 .NOTPARALLEL: fangutil.pdf fangutil.dvi

@@ -1,9 +1,10 @@
 # "dox/cast2hac/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2007/11/26 08:27:17 fang Exp $
+#	$Id: Makefile.am,v 1.16 2009/05/29 15:13:17 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = cast2hac.pdf
+DVIS = $(PDFS:.pdf=.dvi)
 PSS = $(PDFS:.pdf=.ps)
 .NOTPARALLEL: cast2hac.dvi cast2hac.pdf
 

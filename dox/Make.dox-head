@@ -1,6 +1,6 @@
 # "dox/Make.dox-head"
-#	$Id: Make.dox-head,v 1.14 2007/08/28 04:53:42 fang Exp $
-#	vim: ft=automake
+#	$Id: Make.dox-head,v 1.15 2009/05/29 15:13:16 fang Exp $
+#	vi: ft=automake
 # To be included first by Makefiles in subdirectories
 # The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
 
@@ -48,8 +48,8 @@ ps-local: $(PSS)
 
 # The documents are only built by default if configure had docs enabled by
 # default and the right latex programs were found.  
-pdf_DATA = $(AUTOPDFS)
-ps_DATA = $(AUTOPSS)
+dist_pdf_DATA = $(AUTOPDFS)
+dist_ps_DATA = $(AUTOPSS)
 noinst_DATA =
 
 # Add html directories here to install directories properly
@@ -82,6 +82,8 @@ EXTRACT_TEXI_INCLUDES = $(GREP) "^@include" | $(CUT) -d\  -f2 | \
 AUTO_TEXINFO_DEPS =
 # used by clean-texi target
 TEXI_CLEANFILES =
+# distribute dvi files
+EXTRA_DIST += $(DVIS)
 # distribute generated texi files
 EXTRA_DIST += $(AUTO_TEXINFO_DEPS)
 # CVS ignore generated texi files

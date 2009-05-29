@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.16 2008/11/28 23:15:08 fang Exp $
+dnl	$Id: hackt.m4,v 1.17 2009/05/29 15:13:15 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -49,9 +49,10 @@ dnl Define an AM_CONDITIONAL AUTO_CVSIGNORE flag to build cvsignore
 dnl For example, don't bother generating .cvsignore.
 dnl Building cvsignores is enabled by default, but disabled if the
 dnl srcdir is not writeable, e.g. during a distcheck.  
+dnl If the srcdir doesn't contain CVS directories, don't bother.
 dnl
 dnl @category ProjectSpecific
-dnl @version 2006-11-11
+dnl @version 2008-05-28
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -69,7 +70,8 @@ else
   srcw="no"
 fi
 AM_CONDITIONAL(AUTO_CVSIGNORE, 
-	[test "$enable_auto_cvsignore" = yes && test "$srcw" = yes])
+	[test "$enable_auto_cvsignore" = yes && test "$srcw" = yes && test -d "$srcdir/CVS"])
+if test -d "$srcdir/CVS" ; then
 if test "$enable_auto_cvsignore" = yes ; then
 	if test "$srcw" = yes ; then
 		AC_MSG_RESULT([yes])
@@ -78,6 +80,9 @@ if test "$enable_auto_cvsignore" = yes ; then
 	fi
 else
 	AC_MSG_RESULT([no])
+fi
+else
+	AC_MSG_RESULT([no (no CVS/ directories found)])
 fi
 ])dnl
 

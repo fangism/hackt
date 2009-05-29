@@ -1,9 +1,10 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2009/05/27 19:36:10 fang Exp $
+#	$Id: Makefile.am,v 1.19 2009/05/29 15:13:18 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = hacchpsim.pdf
+DVIS = $(PDFS:.pdf=.dvi)
 PSS = $(PDFS:.pdf=.ps)
 .NOTPARALLEL: hacchpsim.dvi hacchpsim.pdf
 
@@ -155,7 +156,7 @@ all-figs: $(BUILT_FIGS)
 
 # distribute to remove burden from user to build dox
 EXTRA_DIST += $(XFIG_FIGURES) $(SOURCE_DOTS) $(XFIG_PNG) \
-	$(XFIG_EPS) $(XFIG_PDF)
+	$(XFIG_EPS) $(XFIG_PDFTEX)
 # PNGs and built .figs too because distributed .info depends on them
 # (don't want user to have to rebuild .info)
 

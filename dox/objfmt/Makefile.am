@@ -1,7 +1,8 @@
 # "dox/objfmt/Makefile.am"
-#	$Id: Makefile.am,v 1.10 2007/08/09 03:47:08 fang Exp $
+#	$Id: Makefile.am,v 1.11 2009/05/29 15:13:19 fang Exp $
 
 PDFS = objfmt.pdf
+DVIS = $(PDFS:.pdf=.dvi)
 PSS = $(PDFS:.pdf=.ps)
 
 .NOTPARALLEL: objfmt.pdf objfmt.dvi
