@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.34.12.3 2009/05/26 15:35:33 fang Exp $
+	$Id: expr.cc,v 1.34.12.4 2009/06/02 21:13:24 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -2332,7 +2332,6 @@ if (lb && rb) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Don't forget to check for cases of PRS loop expressions. 
-	TODO: handle precharge expressions!
  */
 prs_expr_return_type
 logical_expr::check_prs_expr(context& c) const {
@@ -2348,6 +2347,17 @@ logical_expr::check_prs_expr(context& c) const {
 		THROW_EXIT;		// for now
 		return prs_expr_return_type(NULL);
 	}
+	// TODO: process precharge
+	entity::PRS::precharge_expr precharge;	// default
+	if (pchg) {
+		precharge = pchg->check_prs_expr(c);
+		if (!precharge) {
+			cerr << "ERROR in precharge expression at " <<
+				where(*pchg) << endl;
+			THROW_EXIT;		// for now
+			return prs_expr_return_type(NULL);
+		}
+	}
 #if 0
 	lo->check();
 	ro->check();
@@ -2361,21 +2371,22 @@ logical_expr::check_prs_expr(context& c) const {
 		const count_ptr<entity::PRS::and_expr>
 			r_and(ro.is_a<entity::PRS::and_expr>());
 		if (l_and && !l_and.is_a<entity::PRS::and_expr_loop>()) {
+			// TODO: handle precharges in loops
 			if (r_and) {
 				copy(r_and->begin(), r_and->end(), 
 					back_inserter(*l_and));
 			} else {
-				l_and->push_back(ro);
+				l_and->push_back(ro, precharge);
 			}
 			return l_and;
 		} else if (r_and && !r_and.is_a<entity::PRS::and_expr_loop>()) {
-			r_and->push_front(lo);
+			r_and->push_front(lo, precharge);
 			return r_and;
 		} else {
 			const count_ptr<entity::PRS::and_expr>
-				ret(new entity::PRS::and_expr);
-			ret->push_back(lo);
-			ret->push_back(ro);
+				ret(new entity::PRS::and_expr(lo));
+			// ret->push_back(lo);
+			ret->push_back(ro, precharge);
 //			ret->check();	// paranoia
 			return ret;
 		}

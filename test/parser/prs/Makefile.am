@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.49.2.1 2009/05/11 22:54:41 fang Exp $
+#	$Id: Makefile.am,v 1.49.2.2 2009/06/02 21:13:28 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -128,6 +128,7 @@ HACKT_CREATE_TEST_PASSES = \
 	lvs-xcpl-inv-01 \
 	tree-02 tree-03 tree-04 \
 	subckt-01 subckt-03 subckt-05 subckt-06 \
+	precharge-00 \
 	unstab-01 unstab-02 \
 	comb-01 \
 	iscomb-01 iscomb-02 iscomb-03 iscomb-04 iscomb-05 iscomb-06 \
@@ -148,7 +149,7 @@ HACKT_CREATE_TEST_PASSES = \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
-	act-001 act-002 act-005 act-006 act-007 act-010 \
+	act-001 act-002 act-003 act-004 act-005 act-006 act-007 act-010 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
@@ -156,9 +157,6 @@ HACKT_CREATE_TEST_PASSES = \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	flavor-01 \
 	load_cap-01 
-
-# TODO: precharge-00 etc. to middle and back-end tests
-# pending: act-003 act-004 act-005
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
@@ -223,9 +221,8 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
-	act-001 act-002 act-005 act-006 act-007 act-010 \
+	act-001 act-002 act-003 act-004 act-005 act-006 act-007 act-010 \
 	flavor-01
-# pending: act-003 act-004
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \

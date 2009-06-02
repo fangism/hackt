@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.33.2.2 2009/05/11 22:54:39 fang Exp $
+	$Id: PRS.cc,v 1.33.2.3 2009/06/02 21:13:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -1096,9 +1096,50 @@ expr_loop_base::load_object_base(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// class precharge_expr method definitions
+
+precharge_expr::~precharge_expr() { }
+
+ostream&
+precharge_expr::dump(ostream& o, const expr_dump_context& c) const {
+if (expr) {
+	return expr->dump(o << '{' << (dir ? '+' : '-'), c) << '}';
+}
+	return o;
+}
+
+void
+precharge_expr::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	if (expr) {
+		expr->collect_transient_info(m);
+	}
+}
+
+void
+precharge_expr::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	m.write_pointer(o, expr);
+	write_value(o, dir);
+}
+
+void
+precharge_expr::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	m.read_pointer(i, expr);
+	read_value(i, dir);
+}
+
+//=============================================================================
 // class and_expr method definitions
 
 and_expr::and_expr() : prs_expr(), sequence_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+and_expr::and_expr(expr_sequence_type::const_reference l) : 
+	prs_expr(), sequence_type() {
+	sequence_type::push_back(l);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 and_expr::~and_expr() { }
@@ -1110,22 +1151,88 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(and_expr)
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: Dump precharge expressions!
+ */
 ostream&
 and_expr::dump(ostream& o, const expr_dump_context& c) const {
+	INVARIANT(this->size() == precharge_array.size() +1 || this->empty());
 	const bool paren = c.expr_stamp && (c.expr_stamp != print_stamp);
 	expr_dump_context cc(c);
 	cc.expr_stamp = print_stamp;
 	const_iterator i(begin());
 	const const_iterator e(end());
+	precharge_array_type::const_iterator j(precharge_array.begin());
 	NEVER_NULL(*i);
 	if (paren) o << '(';
 	(*i)->dump(o, cc);
-	for (i++; i!=e; i++) {
+	for (++i; i!=e; ++i, ++j) {
+		o << " &";
+		if (*j) {
+			j->dump(o, c);
+		}
 		NEVER_NULL(*i);
-		(*i)->dump(o << " & ", cc);
+		(*i)->dump(o << ' ', cc);
 	}
 	if (paren) o << ')';
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	More expensive push_front emulation, hopefully infrequent.
+ */
+void
+and_expr::push_front(const_reference e, const precharge_type& p) {
+{
+	sequence_type temp;
+	temp.push_back(e);
+	copy(begin(), end(), back_inserter(temp));
+	this->swap(temp);
+}{
+	precharge_array_type temp;
+	temp.push_back(p);
+	copy(precharge_array.begin(), precharge_array.end(),
+		back_inserter(temp));
+	precharge_array.swap(temp);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	More expensive push_front emulation, hopefully infrequent.
+ */
+void
+and_expr::push_front(const_reference e) {
+	// first expression can't have precharge
+	if (!sequence_type::empty()) {
+		precharge_array_type temp;
+		temp.push_back(precharge_type());	// NULL
+		copy(precharge_array.begin(), precharge_array.end(),
+			back_inserter(temp));
+		precharge_array.swap(temp);
+	}
+	sequence_type temp;
+	temp.push_back(e);
+	copy(begin(), end(), back_inserter(temp));
+	this->swap(temp);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr::push_back(const_reference e, const precharge_type& p) {
+	sequence_type::push_back(e);
+	precharge_array.push_back(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr::push_back(const_reference e) {
+	// first expression can't have precharge
+	if (!sequence_type::empty()) {
+		precharge_array.push_back(precharge_type());	// NULL
+	}
+	sequence_type::push_back(e);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1233,6 +1340,8 @@ and_expr::unroll_copy(const unroll_context& c,
 void
 and_expr::collect_transient_info_base(persistent_object_manager& m) const {
 	m.collect_pointer_list(*this);
+	for_each(precharge_array.begin(), precharge_array.end(), 
+		util::persistent_collector_ref(m));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1245,15 +1354,52 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+/**
+	saves memory on precharge array by writing a sparse map, 
+	which is the common case.
+ */
 void
 and_expr::write_object(const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer_list(o, *this);
+	// save precharge info sparsely
+	typedef	std::map<size_t, precharge_array_type::const_iterator>
+						precharge_map_type;
+	precharge_map_type temp;
+	size_t j = 0;
+	precharge_array_type::const_iterator
+		i(precharge_array.begin()), e(precharge_array.end());
+	for ( ; i!=e; ++i, ++j) {
+		if (*i) {
+			temp.insert(precharge_map_type::value_type(j, i));
+		}
+	}
+	write_value(o, temp.size());
+	precharge_map_type::const_iterator
+		mi(temp.begin()), me(temp.end());
+	for ( ; mi != me ; ++mi) {
+		write_value(o, mi->first);
+		mi->second->write_object_base(m, o);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Restore precharge list from sparse array.
+ */
 void
 and_expr::load_object(const persistent_object_manager& m, istream& i) {
 	m.read_pointer_list(i, *this);
+	size_t j, s;
+	INVARIANT(this->size());
+	precharge_array.resize(this->size() -1);
+	// default construct array first
+	read_value(i, s);
+	for (j=0; j<s; ++j) {
+		size_t ind;
+		read_value(i, ind);
+		precharge_array[ind].load_object_base(m, i);
+	}
 }
 
 //=============================================================================
@@ -1418,6 +1564,10 @@ or_expr::check(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Detail: or-expressions don't have precharges, so the negation
+	won't have any either.
+ */
 prs_expr_ptr_type
 or_expr::negate(void) const {
 	STACKTRACE("or_expr::negate()");

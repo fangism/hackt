@@ -49,7 +49,7 @@ Persistent Object Manager text dump:
 	43	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	45	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	46	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	28
 	47	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
 	48	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16

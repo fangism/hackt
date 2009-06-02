@@ -30,12 +30,12 @@ Persistent Object Manager text dump:
 	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	28	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -44,12 +44,12 @@ Persistent Object Manager text dump:
 	40	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	41	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	44	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	49	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16

@@ -100,7 +100,7 @@ Persistent Object Manager text dump:
 	96	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	97	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	98	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	99	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	28
+	99	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	32
 	100	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	101	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	102	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16

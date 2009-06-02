@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.32.8.1 2009/05/12 21:51:20 fang Exp $
+	$Id: PRS.cc,v 1.32.8.2 2009/06/02 21:13:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -359,6 +359,17 @@ precharge::leftmost(void) const {
 line_position
 precharge::rightmost(void) const {
 	return pchg_expr->rightmost();
+}
+
+entity::PRS::precharge_expr
+precharge::check_prs_expr(context& c) const {
+if (pchg_expr) {
+	const prs_expr_return_type e(pchg_expr->check_prs_expr(c));
+	if (e) {
+		return entity::PRS::precharge_expr(e, dir->text[0] == '+');
+	}
+}
+	return entity::PRS::precharge_expr();	// default
 }
 
 

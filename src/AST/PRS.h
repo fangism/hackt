@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.10.14.1 2009/05/12 21:51:20 fang Exp $
+	$Id: PRS.h,v 1.10.14.2 2009/06/02 21:13:23 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -25,6 +25,7 @@ namespace PRS {
 	class rule;
 	class attribute;
 	class rule_conditional;
+	class precharge_expr;
 }
 }
 namespace parser {
@@ -169,7 +170,10 @@ public:
 	line_position
 	rightmost(void) const;
 
+	entity::PRS::precharge_expr
+	check_prs_expr(context& c) const;
 	// CHECK_PRS_EXPR_PROTO;
+
 };	// end class precharge
 
 //=============================================================================

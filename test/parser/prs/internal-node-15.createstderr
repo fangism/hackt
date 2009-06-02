@@ -32,7 +32,7 @@ Persistent Object Manager text dump:
 	26	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	27	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
-	29	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
 	31	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -43,7 +43,7 @@ Persistent Object Manager text dump:
 	37	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	40	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	41	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
 	42	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
@@ -52,7 +52,7 @@ Persistent Object Manager text dump:
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	49	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	50	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
 	51	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16

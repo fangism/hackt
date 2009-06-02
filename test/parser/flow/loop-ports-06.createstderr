@@ -57,14 +57,14 @@ Persistent Object Manager text dump:
 	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	47	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	48	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	54	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	55	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	56	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16

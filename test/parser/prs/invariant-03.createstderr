@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	12
 	13	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
