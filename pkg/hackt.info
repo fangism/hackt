@@ -2,11 +2,11 @@ Package: hackt
 Version: 0.1.4-devel-20070604
 Revision: 1
 Maintainer: David Fang <fangism@users.sourceforge.net>
-Source: http://www.csl.cornell.edu/~fang/sw/%n-%v.tar.bz2
+Source: http://www.csl.cornell.edu/~fang/hackt/dists/%n-%v.tar.bz2
 Source-MD5: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Homepage: http://www.csl.cornell.edu/~fang/hackt/
-License: Restrictive/Distributable
-Description: Asynchronous Circuit Compiler
+License: GPL
+Description: Asynchronous circuit compiler and design tools
 BuildDepends: <<
   readline5	(>= 5.0-1),
 # bison		(>= 1.875-1),
@@ -28,6 +28,10 @@ mkdir darwin-build
 cd darwin-build
 ../configure %c
 make
+<<
+TestScript: <<
+#!/bin/sh -ev
+cd darwin-build
 make check.log
 <<
 InstallScript: <<
@@ -40,18 +44,15 @@ DescDetail: <<
 Describe me in detail.
 <<
 DescPackaging: <<
-Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-41.  
+Fink bundle package based on version tagged HACKT-00-01-04-main-00-83-17.  
 Maintainence: since build-deps are not recursive, keep this synchronized
 with the hackt-{dist,cvs}-deps.
-The MD5 sum should be edited by hand.  
 Also, guile-1.6 is actually sufficient.
 TODO: relocate environment setup scripts (init_hackt) to %p/etc/profile.d,
 decide how to install documentation files (soft-link?).  
+TODO: distribute documentation with source so user need not build
 SplitOffs of -shlibs, -dev.
+Shared libraries will be kept private for now.  
 Build and check are parallel-safe, recommend parallelizing using MAKEFLAGS
 set to as many processors as you got (accounting for memory).  
 <<
-DescPort: <<
-No additional effort was necessary to port.
-<<
-
