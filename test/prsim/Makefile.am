@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.80 2009/05/13 00:53:29 fang Exp $
+#	$Id: Makefile.am,v 1.81 2009/06/04 21:47:21 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -339,6 +339,16 @@ endif
 if RANDOM_TESTS
 else
 after_min_max-03.prsimtest: after_min_max-03.prsimrc
+	$(SKIP_TEST_SCRIPT)
+# has random source:
+channel-test-b-11.prsimtracetest: channel-test-b-11.prsimrc
+	$(SKIP_TEST_SCRIPT)
+# eval-order random
+precharge-c-01.prsimtracetest: precharge-c-01.prsimrc
+	$(SKIP_TEST_SCRIPT)
+precharge-d-01.prsimtracetest: precharge-d-01.prsimrc
+	$(SKIP_TEST_SCRIPT)
+precharge-f-01.prsimtracetest: precharge-f-01.prsimrc
 	$(SKIP_TEST_SCRIPT)
 endif
 
