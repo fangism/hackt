@@ -1,5 +1,5 @@
 #!/bin/sh
-#	$Id: backup_repository.sh,v 1.4 2009/05/08 22:48:50 fang Exp $
+#	$Id: backup_repository.sh,v 1.5 2009/06/05 16:28:02 fang Exp $
 # Script is only useful to maintainer with local access to CVS repository.
 
 # current directory
@@ -17,7 +17,7 @@ root=/ufs/repository
 # date-time stamp suffix
 ymdt=`date -u "+%Y%m%d-%H%M%S"`
 
-# lcal file name
+# local file name
 lfn=$base-$ymdt.tar.bz2
 
 # full path to tar ball

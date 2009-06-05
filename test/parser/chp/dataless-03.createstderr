@@ -65,10 +65,10 @@ In namespace "", we have: {
       footprint collection: {
         <3> {
           N = pint^0 value: 3
-          S = channel chan!()^0 = void_source_once::S (1) 
+          S = channel chan!()^0 = void_source_once<3>::S (1) 
           Created state:
           channel instance pool:
-          1	void_source_once::S
+          1	void_source_once<3>::S
           resolved concurrent actions:
             sequential: {
               S!

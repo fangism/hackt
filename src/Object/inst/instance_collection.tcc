@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.49 2008/11/12 03:00:03 fang Exp $
+	$Id: instance_collection.tcc,v 1.50 2009/06/05 16:28:10 fang Exp $
 	TODO: trim includes
  */
 
@@ -44,6 +44,7 @@
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/def/definition_base.h"
+#include "Object/common/namespace.h"
 #include "Object/type/canonical_type.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
@@ -150,6 +151,31 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 const INSTANCE_COLLECTION_CLASS&
 INSTANCE_COLLECTION_CLASS::get_canonical_collection(void) const {
 	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print qualified name using the footprint back-reference 
+	with complete type parameters.
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+ostream&
+INSTANCE_COLLECTION_CLASS::dump_hierarchical_name(ostream& o, 
+		const dump_flags& df) const {
+	// copied from instance_placeholder_base::dump_qualified_name()
+	const instance_placeholder_base::owner_ptr_type
+		owner(source_placeholder->get_owner());
+	const never_ptr<const name_space> n(owner.is_a<const name_space>());
+	if (n) {
+		if (!n->is_global_namespace()) {
+			n->dump_qualified_name(o, df) << "::";
+		}
+	} else if (owner->dump_include_parent(df)) {
+		footprint_ref->dump_type(o) << "::";
+		// if not owned by namespace!
+	}
+	o << source_placeholder->get_name();
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

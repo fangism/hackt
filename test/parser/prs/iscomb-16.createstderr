@@ -1,3 +1,5 @@
+Warning: node multi_inv<>::p has no pull-up nor pull-dn PRS fanin.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size
@@ -92,12 +94,12 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = inv::a (1) 
-        b = bool^0 = inv::b (2) 
+        a = bool^0 = inv<>::a (1) 
+        b = bool^0 = inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	inv::a
-        2	inv::b
+        1	inv<>::a
+        2	inv<>::b
         resolved prs:
         a -> b-
         ~a -> b+
@@ -120,42 +122,42 @@ In namespace "", we have: {
         x[0].a@[iscomb=]
         x[3].b@[iscomb=]
       footprint: {
-        p = bool^0 = multi_inv::p (1) @[ iscomb ] 
-        q = bool^0 = multi_inv::q (2) 
+        p = bool^0 = multi_inv<>::p (1) @[ iscomb ] 
+        q = bool^0 = multi_inv<>::q (2) 
         x = process inv<>^1
           {
-            [0] = multi_inv::x[0] (1) (
-              a = bool^0 = multi_inv::p (1) @[ iscomb ] 
-              b = bool^0 = multi_inv::q (2) 
+            [0] = multi_inv<>::x[0] (1) (
+              a = bool^0 = multi_inv<>::p (1) @[ iscomb ] 
+              b = bool^0 = multi_inv<>::q (2) 
             )
-            [1] = multi_inv::x[1] (2) (
-              a = bool^0 = multi_inv::x[1].a (3) 
-              b = bool^0 = multi_inv::x[1].b (4) 
+            [1] = multi_inv<>::x[1] (2) (
+              a = bool^0 = multi_inv<>::x[1].a (3) 
+              b = bool^0 = multi_inv<>::x[1].b (4) 
             )
-            [2] = multi_inv::x[2] (3) (
-              a = bool^0 = multi_inv::x[2].a (5) 
-              b = bool^0 = multi_inv::x[2].b (6) 
+            [2] = multi_inv<>::x[2] (3) (
+              a = bool^0 = multi_inv<>::x[2].a (5) 
+              b = bool^0 = multi_inv<>::x[2].b (6) 
             )
-            [3] = multi_inv::x[3] (4) (
-              a = bool^0 = multi_inv::x[3].a (7) 
-              b = bool^0 = multi_inv::x[3].b (8) @[ iscomb ] 
+            [3] = multi_inv<>::x[3] (4) (
+              a = bool^0 = multi_inv<>::x[3].a (7) 
+              b = bool^0 = multi_inv<>::x[3].b (8) @[ iscomb ] 
             )
           }
         Created state:
         process instance pool:
-        1	multi_inv::x[0]
-        2	multi_inv::x[1]
-        3	multi_inv::x[2]
-        4	multi_inv::x[3]
+        1	multi_inv<>::x[0]
+        2	multi_inv<>::x[1]
+        3	multi_inv<>::x[2]
+        4	multi_inv<>::x[3]
         bool instance pool:
-        1	multi_inv::p @[ iscomb ]
-        2	multi_inv::q
-        3	multi_inv::x[1].a
-        4	multi_inv::x[1].b
-        5	multi_inv::x[2].a
-        6	multi_inv::x[2].b
-        7	multi_inv::x[3].a
-        8	multi_inv::x[3].b @[ iscomb ]
+        1	multi_inv<>::p @[ iscomb ]
+        2	multi_inv<>::q
+        3	multi_inv<>::x[1].a
+        4	multi_inv<>::x[1].b
+        5	multi_inv<>::x[2].a
+        6	multi_inv<>::x[2].b
+        7	multi_inv<>::x[3].a
+        8	multi_inv<>::x[3].b @[ iscomb ]
       }
       }
 

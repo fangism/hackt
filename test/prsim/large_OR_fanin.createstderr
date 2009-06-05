@@ -57,12 +57,12 @@ In namespace "", we have: {
       prs:
         passn(V,G,G)
       footprint: {
-        G = bool^0 = foo::G (2) 
-        V = bool^0 = foo::V (1) 
+        G = bool^0 = foo<>::G (2) 
+        V = bool^0 = foo<>::V (1) 
         Created state:
         bool instance pool:
-        1	foo::V
-        2	foo::G
+        1	foo<>::V
+        2	foo<>::G
         resolved macros:
         passn(V,G,G)
       }

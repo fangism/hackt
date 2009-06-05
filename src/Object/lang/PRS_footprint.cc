@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.22 2009/03/09 07:30:54 fang Exp $
+	$Id: PRS_footprint.cc,v 1.23 2009/06/05 16:28:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -41,6 +41,7 @@
 namespace HAC {
 namespace entity {
 namespace PRS {
+using std::set;
 #include "util/using_ostream.h"
 using util::auto_indent;
 using util::write_value;
@@ -310,6 +311,29 @@ footprint::macro&
 footprint::push_back_macro(const string& s) {
 	macro_pool.push_back(macro(s));
 	return macro_pool.back();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Gather all node indices that appear in the expression's literals.
+	\param ret return set of unique indices
+	\param ei expression node index to visit.
+ */
+void
+footprint::collect_literal_indices(set<size_t>& ret,
+		const size_t ei) const {
+	const footprint_expr_node& e(expr_pool[ei]);
+	if (e.is_literal()) {
+		ret.insert(e.only());
+	} else if (e.is_internal_node()) {
+		// precharge nodes do not count as fanin/fanout
+	} else {
+		// is some normal expression (NOT, AND, OR)
+		size_t i;
+		for (i=1; i<=e.size(); ++i) {
+			collect_literal_indices(ret, e[i]);
+		}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -16,14 +16,14 @@ Persistent Object Manager text dump:
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
-	15	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	22	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
 	24	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -62,14 +62,14 @@ In namespace "", we have: {
         x & y -> @z-
         ~@z & w -> w-
       footprint: {
-        w = bool^0 = bogus::w (3) 
-        x = bool^0 = bogus::x (1) 
-        y = bool^0 = bogus::y (2) 
+        w = bool^0 = bogus<>::w (3) 
+        x = bool^0 = bogus<>::x (1) 
+        y = bool^0 = bogus<>::y (2) 
         Created state:
         bool instance pool:
-        1	bogus::x
-        2	bogus::y
-        3	bogus::w
+        1	bogus<>::x
+        2	bogus<>::y
+        3	bogus<>::w
         resolved prs:
         (x & y) & w -> w-
         internal node exprs: 

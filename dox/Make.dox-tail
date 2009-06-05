@@ -1,6 +1,6 @@
 # "dox/Make.dox-tail"
 # To be included last by Makefiles in subdirectories
-#	$Id: Make.dox-tail,v 1.16 2009/05/29 15:13:17 fang Exp $
+#	$Id: Make.dox-tail,v 1.17 2009/06/05 16:28:01 fang Exp $
 #	vim: ft=automake
 
 if AUTO_CVSIGNORE
@@ -18,12 +18,17 @@ noinst_DATA += $(HTML_HOOKS)
 # workaround: use install hooks
 EXTRA_DIST += $(HTML_HOOKS)
 
+# should use $(mkinstalldirs)?
 install-data-hook: $(HTML_HOOKS)
 	$(mkdir_p) $(DESTDIR)$(htmldir) && \
 	for d in '$^' ; do \
 	  test -z "$$d" || \
-	    $(CP) -r $$d $(DESTDIR)$(htmldir) ; \
+	    { $(CP) -r $$d $(DESTDIR)$(htmldir) && \
+	    base=`basename $$d` && \
+	    $(CHMOD) u+w $(DESTDIR)$(htmldir)/$$base ;} ; \
 	done
+# for distcheck, chmod to fix permissions copying from read-only dir
+# perhaps something like $(INSTALL_DATA) would be more correct?
 
 uninstall-hook:
 	for d in '$(HTML_HOOKS)' ; do \

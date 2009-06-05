@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.41 2009/03/14 01:46:19 fang Exp $
+	$Id: footprint.cc,v 1.42 2009/06/05 16:28:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -463,10 +463,17 @@ footprint::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: distinguish strict from relaxed template parameters
+ */
 ostream&
-footprint::dump_type(ostream& o) const {
-	o << owner_def->get_key();
+footprint::dump_type(ostream& o) const {	// dump_flags
+	// cast as a scopespace? cross-cast definition_base to name_space?
+	// be careful if owner-def is a namespace, key will be file-name!
+	owner_def->dump_qualified_name(o, dump_flags::default_value);
+//	o << owner_def->get_key();
 	param_key.dump(o << '<', expr_dump_context::default_value) << '>';
+		// context doesn't matter, they are constants anyhow
 	return o;
 }
 
@@ -961,11 +968,14 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 	Q: Should we store diagnostic summaries as flags?  
 		Could be useful for hierarchy checking.  
 	\pre already passed over CHP for channel connectivity.  
+	\param top is true if this is top-level, skip bool-PRS checking
+		for the top-level footprint.
 	\return true to indicate acceptance.  
  */
 good_bool
-footprint::connection_diagnostics(void) const {
-	return scope_aliases.check_channel_connections();
+footprint::connection_diagnostics(const bool top) const {
+	return good_bool(scope_aliases.check_channel_connections().good &&
+		(top || scope_aliases.check_bool_connections().good));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,4 +1,4 @@
-WARNING: channel hanging::x lacks connection to a producer.
+WARNING: channel hanging<>::x lacks connection to a producer.
 WARNING: channel folder.x lacks connection to a producer.
 WARNING: channel folder.x lacks connection to a consumer.
 ---- END CREATE WARNINGS ---
@@ -40,10 +40,10 @@ In namespace "", we have: {
       unroll sequence: 
         chan!(bool<>) x
       footprint: {
-        x = channel chan!(bool<>)^0 = hanging::x (1) 
+        x = channel chan!(bool<>)^0 = hanging<>::x (1) 
         Created state:
         channel instance pool:
-        1	hanging::x
+        1	hanging<>::x
       }
       }
 

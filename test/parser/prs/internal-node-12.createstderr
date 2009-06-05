@@ -1,3 +1,5 @@
+Warning: node bogus<3>::en has no pull-up nor pull-dn PRS fanin.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size
@@ -44,7 +46,7 @@ Persistent Object Manager text dump:
 	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	43	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	28
 	44	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
 	45	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -107,30 +109,30 @@ In namespace "", we have: {
       footprint collection: {
         <3> {
           N = pint^0 value: 3
-          en = bool^0 = bogus::en (2) 
-          w = bool^0 = bogus::w (1) 
+          en = bool^0 = bogus<3>::en (2) 
+          w = bool^0 = bogus<3>::w (1) 
           x = bool^1
             {
-              [0] = bogus::x[0] (3) 
-              [1] = bogus::x[1] (4) 
-              [2] = bogus::x[2] (5) 
+              [0] = bogus<3>::x[0] (3) 
+              [1] = bogus<3>::x[1] (4) 
+              [2] = bogus<3>::x[2] (5) 
             }
           y = bool^1
             {
-              [0] = bogus::y[0] (6) 
-              [1] = bogus::y[1] (7) 
-              [2] = bogus::y[2] (8) 
+              [0] = bogus<3>::y[0] (6) 
+              [1] = bogus<3>::y[1] (7) 
+              [2] = bogus<3>::y[2] (8) 
             }
           Created state:
           bool instance pool:
-          1	bogus::w
-          2	bogus::en
-          3	bogus::x[0]
-          4	bogus::x[1]
-          5	bogus::x[2]
-          6	bogus::y[0]
-          7	bogus::y[1]
-          8	bogus::y[2]
+          1	bogus<3>::w
+          2	bogus<3>::en
+          3	bogus<3>::x[0]
+          4	bogus<3>::x[1]
+          5	bogus<3>::x[2]
+          6	bogus<3>::y[0]
+          7	bogus<3>::y[1]
+          8	bogus<3>::y[2]
           resolved prs:
           en & x[0] & y[0] -> w-
           en & x[1] & y[1] -> w-

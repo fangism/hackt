@@ -52,12 +52,12 @@ In namespace "", we have: {
         int<32> a
         int<32> b
       footprint: {
-        a = int<32>^0 = bar::a (1) 
-        b = int<32>^0 = bar::b (2) 
+        a = int<32>^0 = bar<>::a (1) 
+        b = int<32>^0 = bar<>::b (2) 
         Created state:
         int instance pool:
-        1	bar::a
-        2	bar::b
+        1	bar<>::a
+        2	bar<>::b
       }
       }
 

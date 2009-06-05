@@ -66,16 +66,16 @@ In namespace "", we have: {
       spec:
         min_sep<blah>(a,b)
       footprint: {
-        a = bool^0 = ass::a (2) 
-        b = bool^0 = ass::b (3) 
-        c = bool^0 = ass::c (4) 
-        q = bool^0 = ass::q (1) 
+        a = bool^0 = ass<>::a (2) 
+        b = bool^0 = ass<>::b (3) 
+        c = bool^0 = ass<>::c (4) 
+        q = bool^0 = ass<>::q (1) 
         Created state:
         bool instance pool:
-        1	ass::q
-        2	ass::a
-        3	ass::b
-        4	ass::c
+        1	ass<>::q
+        2	ass<>::a
+        3	ass<>::b
+        4	ass<>::c
         resolved specs:
         min_sep<5>(a,b)
       }

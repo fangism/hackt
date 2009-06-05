@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.33 2009/03/09 07:30:53 fang Exp $
+	$Id: PRS.cc,v 1.34 2009/06/05 16:28:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -21,6 +21,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/PRS_literal_unroller.h"
 #include "Object/unroll/meta_conditional.tcc"
 #include "Object/unroll/meta_loop.tcc"
+#include "Object/inst/connection_policy.h"
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_empty.h"
+#endif
 
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -490,6 +495,25 @@ if (output.is_internal()) {
 		return good_bool(false);
 	}
 	// check for auto-complement, and unroll it?
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+	// doing this at unroll-time, but we could do it in a later pass...
+{
+	entity::footprint& tfp(c.get_target_footprint());
+	state_instance<bool_tag>::pool_type&
+		bp(tfp.get_instance_pool<bool_tag>());
+	// kludge: get_back_ref only returns const ptr ...
+	const_cast<instance_alias_info<bool_tag>&>(
+		*bp[output_node_index].get_back_ref()).find()->prs_fanin(dir);
+	std::set<size_t> f;	// node_index_type
+	pfp.collect_literal_indices(f, guard_expr_index);
+	std::set<size_t>::const_iterator
+		i(f.begin()), e(f.end());
+	for ( ; i!=e; ++i) {
+		const_cast<instance_alias_info<bool_tag>&>(
+			*bp[*i].get_back_ref()).find()->prs_fanout(dir);
+	}
+}
+#endif
 	footprint_rule&
 		r(pfp.push_back_rule(guard_expr_index, output_node_index, dir));
 {
@@ -1072,9 +1096,50 @@ expr_loop_base::load_object_base(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// class precharge_expr method definitions
+
+precharge_expr::~precharge_expr() { }
+
+ostream&
+precharge_expr::dump(ostream& o, const expr_dump_context& c) const {
+if (expr) {
+	return expr->dump(o << '{' << (dir ? '+' : '-'), c) << '}';
+}
+	return o;
+}
+
+void
+precharge_expr::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	if (expr) {
+		expr->collect_transient_info(m);
+	}
+}
+
+void
+precharge_expr::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	m.write_pointer(o, expr);
+	write_value(o, dir);
+}
+
+void
+precharge_expr::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	m.read_pointer(i, expr);
+	read_value(i, dir);
+}
+
+//=============================================================================
 // class and_expr method definitions
 
 and_expr::and_expr() : prs_expr(), sequence_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+and_expr::and_expr(expr_sequence_type::const_reference l) : 
+	prs_expr(), sequence_type() {
+	sequence_type::push_back(l);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 and_expr::~and_expr() { }
@@ -1086,22 +1151,88 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(and_expr)
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: Dump precharge expressions!
+ */
 ostream&
 and_expr::dump(ostream& o, const expr_dump_context& c) const {
+	INVARIANT(this->size() == precharge_array.size() +1 || this->empty());
 	const bool paren = c.expr_stamp && (c.expr_stamp != print_stamp);
 	expr_dump_context cc(c);
 	cc.expr_stamp = print_stamp;
 	const_iterator i(begin());
 	const const_iterator e(end());
+	precharge_array_type::const_iterator j(precharge_array.begin());
 	NEVER_NULL(*i);
 	if (paren) o << '(';
 	(*i)->dump(o, cc);
-	for (i++; i!=e; i++) {
+	for (++i; i!=e; ++i, ++j) {
+		o << " &";
+		if (*j) {
+			j->dump(o, c);
+		}
 		NEVER_NULL(*i);
-		(*i)->dump(o << " & ", cc);
+		(*i)->dump(o << ' ', cc);
 	}
 	if (paren) o << ')';
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	More expensive push_front emulation, hopefully infrequent.
+ */
+void
+and_expr::push_front(const_reference e, const precharge_type& p) {
+{
+	sequence_type temp;
+	temp.push_back(e);
+	copy(begin(), end(), back_inserter(temp));
+	this->swap(temp);
+}{
+	precharge_array_type temp;
+	temp.push_back(p);
+	copy(precharge_array.begin(), precharge_array.end(),
+		back_inserter(temp));
+	precharge_array.swap(temp);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	More expensive push_front emulation, hopefully infrequent.
+ */
+void
+and_expr::push_front(const_reference e) {
+	// first expression can't have precharge
+	if (!sequence_type::empty()) {
+		precharge_array_type temp;
+		temp.push_back(precharge_type());	// NULL
+		copy(precharge_array.begin(), precharge_array.end(),
+			back_inserter(temp));
+		precharge_array.swap(temp);
+	}
+	sequence_type temp;
+	temp.push_back(e);
+	copy(begin(), end(), back_inserter(temp));
+	this->swap(temp);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr::push_back(const_reference e, const precharge_type& p) {
+	sequence_type::push_back(e);
+	precharge_array.push_back(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr::push_back(const_reference e) {
+	// first expression can't have precharge
+	if (!sequence_type::empty()) {
+		precharge_array.push_back(precharge_type());	// NULL
+	}
+	sequence_type::push_back(e);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1209,6 +1340,8 @@ and_expr::unroll_copy(const unroll_context& c,
 void
 and_expr::collect_transient_info_base(persistent_object_manager& m) const {
 	m.collect_pointer_list(*this);
+	for_each(precharge_array.begin(), precharge_array.end(), 
+		util::persistent_collector_ref(m));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1221,15 +1354,52 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+/**
+	saves memory on precharge array by writing a sparse map, 
+	which is the common case.
+ */
 void
 and_expr::write_object(const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer_list(o, *this);
+	// save precharge info sparsely
+	typedef	std::map<size_t, precharge_array_type::const_iterator>
+						precharge_map_type;
+	precharge_map_type temp;
+	size_t j = 0;
+	precharge_array_type::const_iterator
+		i(precharge_array.begin()), e(precharge_array.end());
+	for ( ; i!=e; ++i, ++j) {
+		if (*i) {
+			temp.insert(precharge_map_type::value_type(j, i));
+		}
+	}
+	write_value(o, temp.size());
+	precharge_map_type::const_iterator
+		mi(temp.begin()), me(temp.end());
+	for ( ; mi != me ; ++mi) {
+		write_value(o, mi->first);
+		mi->second->write_object_base(m, o);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Restore precharge list from sparse array.
+ */
 void
 and_expr::load_object(const persistent_object_manager& m, istream& i) {
 	m.read_pointer_list(i, *this);
+	size_t j, s;
+	INVARIANT(this->size());
+	precharge_array.resize(this->size() -1);
+	// default construct array first
+	read_value(i, s);
+	for (j=0; j<s; ++j) {
+		size_t ind;
+		read_value(i, ind);
+		precharge_array[ind].load_object_base(m, i);
+	}
 }
 
 //=============================================================================
@@ -1394,6 +1564,10 @@ or_expr::check(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Detail: or-expressions don't have precharges, so the negation
+	won't have any either.
+ */
 prs_expr_ptr_type
 or_expr::negate(void) const {
 	STACKTRACE("or_expr::negate()");
@@ -2038,6 +2212,26 @@ macro::unroll(const unroll_context& c, const node_pool_type& np,
 		// dump the literal?
 		return good_bool(false);
 	}
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+	// HACK-ish: need to treat special macros like rules
+	// for connectivity checking, namely passn/passp
+if (name == "passn" || name == "passp") {
+	entity::footprint& tfp(c.get_target_footprint());
+	state_instance<bool_tag>::pool_type&
+		bp(tfp.get_instance_pool<bool_tag>());
+	// see "Object/lang/PRS_macro_registry.cc" for node interpretation
+	const size_t g = *new_macro_call.nodes[0].begin();
+	const size_t s = *new_macro_call.nodes[1].begin();
+	const size_t d = *new_macro_call.nodes[2].begin();
+	const bool dir = (name == "passn") ? false : true;	// direction
+	const_cast<instance_alias_info<bool_tag>&>(
+		*bp[g].get_back_ref()).find()->prs_fanout(dir);
+	const_cast<instance_alias_info<bool_tag>&>(
+		*bp[s].get_back_ref()).find()->prs_fanout(dir);
+	const_cast<instance_alias_info<bool_tag>&>(
+		*bp[d].get_back_ref()).find()->prs_fanin(dir);
+}
+#endif
 	return good_bool(true);
 }
 

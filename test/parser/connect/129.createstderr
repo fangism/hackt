@@ -196,20 +196,20 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            [0] = e1of2::f (2) 
-            [1] = e1of2::t (1) 
+            [0] = e1of2<>::f (2) 
+            [1] = e1of2<>::t (1) 
           }
-        e = bool^0 = e1of2::e (3) 
-        f = bool^0 = e1of2::f (2) 
-        t = bool^0 = e1of2::t (1) 
+        e = bool^0 = e1of2<>::e (3) 
+        f = bool^0 = e1of2<>::f (2) 
+        t = bool^0 = e1of2<>::t (1) 
         Created state:
         bool instance pool:
-        1	e1of2::t
-        2	e1of2::f
-        3	e1of2::e
+        1	e1of2<>::t
+        2	e1of2<>::f
+        3	e1of2<>::e
         bool port aliases:
-        1: e1of2::t = e1of2::d[1]
-        2: e1of2::f = e1of2::d[0]
+        1: e1of2<>::t = e1of2<>::d[1]
+        2: e1of2<>::f = e1of2<>::d[0]
       }
       }
 
@@ -242,76 +242,76 @@ In namespace "", we have: {
         e1of2<> c
         e1of2<> x
       footprint: {
-        a = process e1of2<>^0 = merge::a (2) (
+        a = process e1of2<>^0 = merge<>::a (2) (
           d = bool^1
             {
-              [0] = merge::a.d[0] (1) 
-              [1] = merge::a.d[1] (2) 
+              [0] = merge<>::a.d[0] (1) 
+              [1] = merge<>::a.d[1] (2) 
             }
-          t = bool^0 = merge::a.d[1] (2) 
-          f = bool^0 = merge::a.d[0] (1) 
-          e = bool^0 = merge::a.e (3) 
+          t = bool^0 = merge<>::a.d[1] (2) 
+          f = bool^0 = merge<>::a.d[0] (1) 
+          e = bool^0 = merge<>::a.e (3) 
         )
-        b = process e1of2<>^0 = merge::b (3) (
+        b = process e1of2<>^0 = merge<>::b (3) (
           d = bool^1
             {
-              [0] = merge::b.d[0] (4) 
-              [1] = merge::b.d[1] (5) 
+              [0] = merge<>::b.d[0] (4) 
+              [1] = merge<>::b.d[1] (5) 
             }
-          t = bool^0 = merge::b.d[1] (5) 
-          f = bool^0 = merge::b.d[0] (4) 
-          e = bool^0 = merge::b.e (6) 
+          t = bool^0 = merge<>::b.d[1] (5) 
+          f = bool^0 = merge<>::b.d[0] (4) 
+          e = bool^0 = merge<>::b.e (6) 
         )
-        c = process e1of2<>^0 = merge::c (4) (
+        c = process e1of2<>^0 = merge<>::c (4) (
           d = bool^1
             {
-              [0] = merge::c.d[0] (7) 
-              [1] = merge::c.d[1] (8) 
+              [0] = merge<>::c.d[0] (7) 
+              [1] = merge<>::c.d[1] (8) 
             }
-          t = bool^0 = merge::c.d[1] (8) 
-          f = bool^0 = merge::c.d[0] (7) 
-          e = bool^0 = merge::c.e (9) 
+          t = bool^0 = merge<>::c.d[1] (8) 
+          f = bool^0 = merge<>::c.d[0] (7) 
+          e = bool^0 = merge<>::c.e (9) 
         )
-        g = process globals<>^0 = merge::g (1) 
-        x = process e1of2<>^0 = merge::x (5) (
+        g = process globals<>^0 = merge<>::g (1) 
+        x = process e1of2<>^0 = merge<>::x (5) (
           d = bool^1
             {
-              [0] = merge::x.d[0] (10) 
-              [1] = merge::x.d[1] (11) 
+              [0] = merge<>::x.d[0] (10) 
+              [1] = merge<>::x.d[1] (11) 
             }
-          t = bool^0 = merge::x.d[1] (11) 
-          f = bool^0 = merge::x.d[0] (10) 
-          e = bool^0 = merge::x.e (12) 
+          t = bool^0 = merge<>::x.d[1] (11) 
+          f = bool^0 = merge<>::x.d[0] (10) 
+          e = bool^0 = merge<>::x.e (12) 
         )
         Created state:
         process instance pool:
-        1	merge::g
-        2	merge::a
-        3	merge::b
-        4	merge::c
-        5	merge::x
+        1	merge<>::g
+        2	merge<>::a
+        3	merge<>::b
+        4	merge<>::c
+        5	merge<>::x
         bool instance pool:
-        1	merge::a.d[0]
-        2	merge::a.d[1]
-        3	merge::a.e
-        4	merge::b.d[0]
-        5	merge::b.d[1]
-        6	merge::b.e
-        7	merge::c.d[0]
-        8	merge::c.d[1]
-        9	merge::c.e
-        10	merge::x.d[0]
-        11	merge::x.d[1]
-        12	merge::x.e
+        1	merge<>::a.d[0]
+        2	merge<>::a.d[1]
+        3	merge<>::a.e
+        4	merge<>::b.d[0]
+        5	merge<>::b.d[1]
+        6	merge<>::b.e
+        7	merge<>::c.d[0]
+        8	merge<>::c.d[1]
+        9	merge<>::c.e
+        10	merge<>::x.d[0]
+        11	merge<>::x.d[1]
+        12	merge<>::x.e
         bool port aliases:
-        1: merge::a.d[0] = merge::a.f
-        2: merge::a.d[1] = merge::a.t
-        4: merge::b.d[0] = merge::b.f
-        5: merge::b.d[1] = merge::b.t
-        7: merge::c.d[0] = merge::c.f
-        8: merge::c.d[1] = merge::c.t
-        10: merge::x.d[0] = merge::x.f
-        11: merge::x.d[1] = merge::x.t
+        1: merge<>::a.d[0] = merge<>::a.f
+        2: merge<>::a.d[1] = merge<>::a.t
+        4: merge<>::b.d[0] = merge<>::b.f
+        5: merge<>::b.d[1] = merge<>::b.t
+        7: merge<>::c.d[0] = merge<>::c.f
+        8: merge<>::c.d[1] = merge<>::c.t
+        10: merge<>::x.d[0] = merge<>::x.f
+        11: merge<>::x.d[1] = merge<>::x.t
       }
       }
 
@@ -327,28 +327,28 @@ In namespace "", we have: {
         globals<> g
         e1of2<> r
       footprint: {
-        g = process globals<>^0 = source_e1of2_1::g (1) 
-        r = process e1of2<>^0 = source_e1of2_1::r (2) (
+        g = process globals<>^0 = source_e1of2_1<>::g (1) 
+        r = process e1of2<>^0 = source_e1of2_1<>::r (2) (
           d = bool^1
             {
-              [0] = source_e1of2_1::r.d[0] (1) 
-              [1] = source_e1of2_1::r.d[1] (2) 
+              [0] = source_e1of2_1<>::r.d[0] (1) 
+              [1] = source_e1of2_1<>::r.d[1] (2) 
             }
-          t = bool^0 = source_e1of2_1::r.d[1] (2) 
-          f = bool^0 = source_e1of2_1::r.d[0] (1) 
-          e = bool^0 = source_e1of2_1::r.e (3) 
+          t = bool^0 = source_e1of2_1<>::r.d[1] (2) 
+          f = bool^0 = source_e1of2_1<>::r.d[0] (1) 
+          e = bool^0 = source_e1of2_1<>::r.e (3) 
         )
         Created state:
         process instance pool:
-        1	source_e1of2_1::g
-        2	source_e1of2_1::r
+        1	source_e1of2_1<>::g
+        2	source_e1of2_1<>::r
         bool instance pool:
-        1	source_e1of2_1::r.d[0]
-        2	source_e1of2_1::r.d[1]
-        3	source_e1of2_1::r.e
+        1	source_e1of2_1<>::r.d[0]
+        2	source_e1of2_1<>::r.d[1]
+        3	source_e1of2_1<>::r.e
         bool port aliases:
-        1: source_e1of2_1::r.d[0] = source_e1of2_1::r.f
-        2: source_e1of2_1::r.d[1] = source_e1of2_1::r.t
+        1: source_e1of2_1<>::r.d[0] = source_e1of2_1<>::r.f
+        2: source_e1of2_1<>::r.d[1] = source_e1of2_1<>::r.t
       }
       }
 
@@ -373,76 +373,76 @@ In namespace "", we have: {
         e1of2<> a
         e1of2<> b
       footprint: {
-        a = process e1of2<>^0 = split4::a (4) (
+        a = process e1of2<>^0 = split4<>::a (4) (
           d = bool^1
             {
-              [0] = split4::a.d[0] (7) 
-              [1] = split4::a.d[1] (8) 
+              [0] = split4<>::a.d[0] (7) 
+              [1] = split4<>::a.d[1] (8) 
             }
-          t = bool^0 = split4::a.d[1] (8) 
-          f = bool^0 = split4::a.d[0] (7) 
-          e = bool^0 = split4::a.e (9) 
+          t = bool^0 = split4<>::a.d[1] (8) 
+          f = bool^0 = split4<>::a.d[0] (7) 
+          e = bool^0 = split4<>::a.e (9) 
         )
-        b = process e1of2<>^0 = split4::b (5) (
+        b = process e1of2<>^0 = split4<>::b (5) (
           d = bool^1
             {
-              [0] = split4::b.d[0] (10) 
-              [1] = split4::b.d[1] (11) 
+              [0] = split4<>::b.d[0] (10) 
+              [1] = split4<>::b.d[1] (11) 
             }
-          t = bool^0 = split4::b.d[1] (11) 
-          f = bool^0 = split4::b.d[0] (10) 
-          e = bool^0 = split4::b.e (12) 
+          t = bool^0 = split4<>::b.d[1] (11) 
+          f = bool^0 = split4<>::b.d[0] (10) 
+          e = bool^0 = split4<>::b.e (12) 
         )
-        c = process e1of2<>^0 = split4::c (3) (
+        c = process e1of2<>^0 = split4<>::c (3) (
           d = bool^1
             {
-              [0] = split4::c.d[0] (4) 
-              [1] = split4::c.d[1] (5) 
+              [0] = split4<>::c.d[0] (4) 
+              [1] = split4<>::c.d[1] (5) 
             }
-          t = bool^0 = split4::c.d[1] (5) 
-          f = bool^0 = split4::c.d[0] (4) 
-          e = bool^0 = split4::c.e (6) 
+          t = bool^0 = split4<>::c.d[1] (5) 
+          f = bool^0 = split4<>::c.d[0] (4) 
+          e = bool^0 = split4<>::c.e (6) 
         )
-        g = process globals<>^0 = split4::g (1) 
-        l = process e1of2<>^0 = split4::l (2) (
+        g = process globals<>^0 = split4<>::g (1) 
+        l = process e1of2<>^0 = split4<>::l (2) (
           d = bool^1
             {
-              [0] = split4::l.d[0] (1) 
-              [1] = split4::l.d[1] (2) 
+              [0] = split4<>::l.d[0] (1) 
+              [1] = split4<>::l.d[1] (2) 
             }
-          t = bool^0 = split4::l.d[1] (2) 
-          f = bool^0 = split4::l.d[0] (1) 
-          e = bool^0 = split4::l.e (3) 
+          t = bool^0 = split4<>::l.d[1] (2) 
+          f = bool^0 = split4<>::l.d[0] (1) 
+          e = bool^0 = split4<>::l.e (3) 
         )
         Created state:
         process instance pool:
-        1	split4::g
-        2	split4::l
-        3	split4::c
-        4	split4::a
-        5	split4::b
+        1	split4<>::g
+        2	split4<>::l
+        3	split4<>::c
+        4	split4<>::a
+        5	split4<>::b
         bool instance pool:
-        1	split4::l.d[0]
-        2	split4::l.d[1]
-        3	split4::l.e
-        4	split4::c.d[0]
-        5	split4::c.d[1]
-        6	split4::c.e
-        7	split4::a.d[0]
-        8	split4::a.d[1]
-        9	split4::a.e
-        10	split4::b.d[0]
-        11	split4::b.d[1]
-        12	split4::b.e
+        1	split4<>::l.d[0]
+        2	split4<>::l.d[1]
+        3	split4<>::l.e
+        4	split4<>::c.d[0]
+        5	split4<>::c.d[1]
+        6	split4<>::c.e
+        7	split4<>::a.d[0]
+        8	split4<>::a.d[1]
+        9	split4<>::a.e
+        10	split4<>::b.d[0]
+        11	split4<>::b.d[1]
+        12	split4<>::b.e
         bool port aliases:
-        1: split4::l.d[0] = split4::l.f
-        2: split4::l.d[1] = split4::l.t
-        4: split4::c.d[0] = split4::c.f
-        5: split4::c.d[1] = split4::c.t
-        7: split4::a.d[0] = split4::a.f
-        8: split4::a.d[1] = split4::a.t
-        10: split4::b.d[0] = split4::b.f
-        11: split4::b.d[1] = split4::b.t
+        1: split4<>::l.d[0] = split4<>::l.f
+        2: split4<>::l.d[1] = split4<>::l.t
+        4: split4<>::c.d[0] = split4<>::c.f
+        5: split4<>::c.d[1] = split4<>::c.t
+        7: split4<>::a.d[0] = split4<>::a.f
+        8: split4<>::a.d[1] = split4<>::a.t
+        10: split4<>::b.d[0] = split4<>::b.f
+        11: split4<>::b.d[1] = split4<>::b.t
       }
       }
 
@@ -459,38 +459,38 @@ In namespace "", we have: {
         e1of2<> r
         l.d = r.d;
       footprint: {
-        l = process e1of2<>^0 = upcopy::l (1) (
+        l = process e1of2<>^0 = upcopy<>::l (1) (
           d = bool^1
             {
-              [0] = upcopy::l.d[0] (1) 
-              [1] = upcopy::l.d[1] (2) 
+              [0] = upcopy<>::l.d[0] (1) 
+              [1] = upcopy<>::l.d[1] (2) 
             }
-          t = bool^0 = upcopy::l.d[1] (2) 
-          f = bool^0 = upcopy::l.d[0] (1) 
-          e = bool^0 = upcopy::l.e (3) 
+          t = bool^0 = upcopy<>::l.d[1] (2) 
+          f = bool^0 = upcopy<>::l.d[0] (1) 
+          e = bool^0 = upcopy<>::l.e (3) 
         )
-        r = process e1of2<>^0 = upcopy::r (2) (
+        r = process e1of2<>^0 = upcopy<>::r (2) (
           d = bool^1
             {
-              [0] = upcopy::l.d[0] (1) 
-              [1] = upcopy::l.d[1] (2) 
+              [0] = upcopy<>::l.d[0] (1) 
+              [1] = upcopy<>::l.d[1] (2) 
             }
-          t = bool^0 = upcopy::l.d[1] (2) 
-          f = bool^0 = upcopy::l.d[0] (1) 
-          e = bool^0 = upcopy::r.e (4) 
+          t = bool^0 = upcopy<>::l.d[1] (2) 
+          f = bool^0 = upcopy<>::l.d[0] (1) 
+          e = bool^0 = upcopy<>::r.e (4) 
         )
         Created state:
         process instance pool:
-        1	upcopy::l
-        2	upcopy::r
+        1	upcopy<>::l
+        2	upcopy<>::r
         bool instance pool:
-        1	upcopy::l.d[0]
-        2	upcopy::l.d[1]
-        3	upcopy::l.e
-        4	upcopy::r.e
+        1	upcopy<>::l.d[0]
+        2	upcopy<>::l.d[1]
+        3	upcopy<>::l.e
+        4	upcopy<>::r.e
         bool port aliases:
-        1: upcopy::l.d[0] = upcopy::l.f = upcopy::r.d[0] = upcopy::r.f
-        2: upcopy::l.d[1] = upcopy::l.t = upcopy::r.d[1] = upcopy::r.t
+        1: upcopy<>::l.d[0] = upcopy<>::l.f = upcopy<>::r.d[0] = upcopy<>::r.f
+        2: upcopy<>::l.d[1] = upcopy<>::l.t = upcopy<>::r.d[1] = upcopy<>::r.t
       }
       }
 

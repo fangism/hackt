@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-06-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-12-merged-connect-03-04:
+	  Branch merge of connectivity work.
+
+
+2009-06-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-17-connect-03-04:
+	  Continued implementing precharge expressions through AST
+		and internal representation.
+	  Object file test cases added and updated.  
+	  Infrastructure work for precharges and connectivity is
+		complete for now, closing branch, merging...
+
+
 2009-05-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-21:
@@ -35,6 +51,47 @@
 		'ckeeper' in hflattened output, and otherwise
 		treats like a *normal* rule in hacprsim.
 	  Added minimal test cases to parser/prs/ and prsim/.
+
+
+2009-05-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-17-connect-03-04-pre:
+	  Not tagged, will become -03-04 next.
+	  Extended AST class logical_expr to handle precharge expressions
+		in syntax tree, instead of just ignoring.
+		Updated grammar actions to return precharge expressions.
+	  TODO: add corresponding structures to IR in middle-end.
+
+
+2009-05-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-17-connect-03-03:
+	  Added support for passn/passp macros to count as fanin/fanout.
+		Added a few test cases to cover this in prs/.
+	  Note weak and iskeeper rules currently count as fanin/fanout, 
+		next patch will address this.
+
+
+2009-05-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-17-connect-03-02:
+	  Improved diagnostic on definition-member-instances, reporting
+		the complete type (footprint) to which an instance
+		belongs for more accurate feedback.
+		Practically all create tests were updated accordingly.
+	  This patch could've gone into trunk directly.
+
+
+2009-05-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-17-connect-03-01:
+	  New branch for developing connectivity analysis and diagnostics, 
+		much of which is needed for eventual netlist generation.
+	  Added PRS-connectivity flags to bool_connect_policy -- these are
+		not user-settable, only computed based on PRS, and 
+		propagated up hierarchy.
+	  create phase now reports diagnostics for nodes with fanout,
+		but missing fanin (warning only).  Test cases updated. 
 
 
 2009-04-29	David Fang		<fangism@users.sourceforge.net>

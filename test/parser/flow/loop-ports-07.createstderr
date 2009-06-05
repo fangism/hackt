@@ -51,13 +51,13 @@ In namespace "", we have: {
       footprint: {
         q = bool^1
           {
-            [0] = ass::q[0] (1) 
-            [1] = ass::q[1] (2) 
+            [0] = ass<>::q[0] (1) 
+            [1] = ass<>::q[1] (2) 
           }
         Created state:
         bool instance pool:
-        1	ass::q[0]
-        2	ass::q[1]
+        1	ass<>::q[0]
+        2	ass<>::q[1]
       }
       }
 

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.45 2009/03/09 07:30:39 fang Exp $
+ 	$Id: definition.cc,v 1.46 2009/06/05 16:28:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3287,7 +3287,8 @@ process_definition::__create_complete_type(
 			return good_bool(false);
 		}
 		// check channel producer/consumer connectivity:
-		f.connection_diagnostics();	// returns good_bool
+		// however, skip some checks for top-level instantiations
+		f.connection_diagnostics(&top == &f);	// returns good_bool
 		// allocate local CHP event pool
 		f.allocate_chp_events();
 		// f.mark_created();	// ?

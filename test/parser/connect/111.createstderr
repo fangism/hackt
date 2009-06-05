@@ -49,12 +49,12 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = wrap::a (1) 
-        b = bool^0 = wrap::b (2) 
+        a = bool^0 = wrap<>::a (1) 
+        b = bool^0 = wrap<>::b (2) 
         Created state:
         bool instance pool:
-        1	wrap::a
-        2	wrap::b
+        1	wrap<>::a
+        2	wrap<>::b
       }
       }
 

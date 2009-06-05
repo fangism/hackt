@@ -1,6 +1,6 @@
 Error: cannot alias two non-sharing consumers of type channel.
-	got: senders::a
-	and: senders::b
+	got: senders<>::a
+	and: senders<>::b
 Instantiated from: senders<>
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

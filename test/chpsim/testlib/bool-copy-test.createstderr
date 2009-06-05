@@ -192,21 +192,21 @@ In namespace "", we have: {
         }
       footprint collection: {
         <2> {
-          A = channel chan?(bool<>)^0 = bool_copy::A (1) 
+          A = channel chan?(bool<>)^0 = bool_copy<2>::A (1) 
           N = pint^0 value: 2
           O = channel chan!(bool<>)^1
             {
-              [0] = bool_copy::O[0] (2) 
-              [1] = bool_copy::O[1] (3) 
+              [0] = bool_copy<2>::O[0] (2) 
+              [1] = bool_copy<2>::O[1] (3) 
             }
-          a = bool^0 = bool_copy::a (1) 
+          a = bool^0 = bool_copy<2>::a (1) 
           Created state:
           channel instance pool:
-          1	bool_copy::A
-          2	bool_copy::O[0]
-          3	bool_copy::O[1]
+          1	bool_copy<2>::A
+          2	bool_copy<2>::O[0]
+          3	bool_copy<2>::O[1]
           bool instance pool:
-          1	bool_copy::a
+          1	bool_copy<2>::a
           resolved concurrent actions:
             *[
               sequential: {

@@ -460,13 +460,13 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        B = channel chan?(bool<>)^0 = bool_sink::B (1) 
-        b = bool^0 = bool_sink::b (1) 
+        B = channel chan?(bool<>)^0 = bool_sink<>::B (1) 
+        b = bool^0 = bool_sink<>::b (1) 
         Created state:
         channel instance pool:
-        1	bool_sink::B
+        1	bool_sink<>::B
         bool instance pool:
-        1	bool_sink::b
+        1	bool_sink<>::b
         resolved concurrent actions:
           *[
             B?(b)
@@ -579,10 +579,10 @@ In namespace "", we have: {
               2 = 0
             }
           N = pint^0 value: 3
-          S = channel chan!(bool<>)^0 = bool_source::S (1) 
+          S = channel chan!(bool<>)^0 = bool_source<3, {0,1,0}>::S (1) 
           Created state:
           channel instance pool:
-          1	bool_source::S
+          1	bool_source<3, {0,1,0}>::S
           resolved concurrent actions:
             *[
               sequential: {
@@ -606,10 +606,10 @@ In namespace "", we have: {
               3 = 1
             }
           N = pint^0 value: 4
-          S = channel chan!(bool<>)^0 = bool_source::S (1) 
+          S = channel chan!(bool<>)^0 = bool_source<4, {0,0,0,1}>::S (1) 
           Created state:
           channel instance pool:
-          1	bool_source::S
+          1	bool_source<4, {0,0,0,1}>::S
           resolved concurrent actions:
             *[
               sequential: {
@@ -636,10 +636,10 @@ In namespace "", we have: {
               4 = 0
             }
           N = pint^0 value: 5
-          S = channel chan!(bool<>)^0 = bool_source::S (1) 
+          S = channel chan!(bool<>)^0 = bool_source<5, {0,1,0,0,0}>::S (1) 
           Created state:
           channel instance pool:
-          1	bool_source::S
+          1	bool_source<5, {0,1,0,0,0}>::S
           resolved concurrent actions:
             *[
               sequential: {
@@ -669,10 +669,10 @@ In namespace "", we have: {
               5 = 0
             }
           N = pint^0 value: 6
-          S = channel chan!(bool<>)^0 = bool_source::S (1) 
+          S = channel chan!(bool<>)^0 = bool_source<6, {1,0,0,0,0,0}>::S (1) 
           Created state:
           channel instance pool:
-          1	bool_source::S
+          1	bool_source<6, {1,0,0,0,0,0}>::S
           resolved concurrent actions:
             *[
               sequential: {
@@ -845,27 +845,27 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        A = channel chan?(bool<>)^0 = my_foo::A (1) 
-        B = channel chan?(bool<>)^0 = my_foo::B (2) 
-        C = channel chan?(bool<>)^0 = my_foo::C (3) 
-        D = channel chan?(bool<>)^0 = my_foo::D (4) 
-        G = channel chan!(bool<>)^0 = my_foo::G (5) 
-        a = bool^0 = my_foo::a (1) 
-        b = bool^0 = my_foo::b (2) 
-        c = bool^0 = my_foo::c (3) 
-        d = bool^0 = my_foo::d (4) 
+        A = channel chan?(bool<>)^0 = my_foo<>::A (1) 
+        B = channel chan?(bool<>)^0 = my_foo<>::B (2) 
+        C = channel chan?(bool<>)^0 = my_foo<>::C (3) 
+        D = channel chan?(bool<>)^0 = my_foo<>::D (4) 
+        G = channel chan!(bool<>)^0 = my_foo<>::G (5) 
+        a = bool^0 = my_foo<>::a (1) 
+        b = bool^0 = my_foo<>::b (2) 
+        c = bool^0 = my_foo<>::c (3) 
+        d = bool^0 = my_foo<>::d (4) 
         Created state:
         channel instance pool:
-        1	my_foo::A
-        2	my_foo::B
-        3	my_foo::C
-        4	my_foo::D
-        5	my_foo::G
+        1	my_foo<>::A
+        2	my_foo<>::B
+        3	my_foo<>::C
+        4	my_foo<>::D
+        5	my_foo<>::G
         bool instance pool:
-        1	my_foo::a
-        2	my_foo::b
-        3	my_foo::c
-        4	my_foo::d
+        1	my_foo<>::a
+        2	my_foo<>::b
+        3	my_foo<>::c
+        4	my_foo<>::d
         resolved concurrent actions:
           *[
             sequential: {

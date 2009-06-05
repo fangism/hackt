@@ -15,14 +15,14 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	14	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	21	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -62,14 +62,14 @@ In namespace "", we have: {
         a & b -> _o-
         ~a & ~b -> _o+
       footprint: {
-        _o = bool^0 = celem2inv::_o (3) 
-        a = bool^0 = celem2inv::a (1) 
-        b = bool^0 = celem2inv::b (2) 
+        _o = bool^0 = celem2inv<>::_o (3) 
+        a = bool^0 = celem2inv<>::a (1) 
+        b = bool^0 = celem2inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	celem2inv::a
-        2	celem2inv::b
-        3	celem2inv::_o
+        1	celem2inv<>::a
+        2	celem2inv<>::b
+        3	celem2inv<>::_o
         resolved prs:
         a & b -> _o-
         ~a & ~b -> _o+

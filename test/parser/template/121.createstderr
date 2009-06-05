@@ -1,4 +1,4 @@
-Error: instance alias `bar::s' has incomplete type: foo<>
+Error: instance alias `bar<false>::s' has incomplete type: foo<>
 Error creating process type: bar<false>
 Instantiated by: Y
 Error encountered during module::unroll.

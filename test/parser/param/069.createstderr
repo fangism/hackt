@@ -72,13 +72,13 @@ In namespace "", we have: {
           footprint: {
             zoo = process bar::ick<2>^1
               {
-                [0] = bar::foo::zoo[0] (1) 
-                [1] = bar::foo::zoo[1] (2) 
+                [0] = bar::foo<>::zoo[0] (1) 
+                [1] = bar::foo<>::zoo[1] (2) 
               }
             Created state:
             process instance pool:
-            1	bar::foo::zoo[0]
-            2	bar::foo::zoo[1]
+            1	bar::foo<>::zoo[0]
+            2	bar::foo<>::zoo[1]
           }
           }
 
@@ -98,13 +98,13 @@ In namespace "", we have: {
               X = pint^0 value: 2
               z = bool^1
                 {
-                  [0] = bar::ick::z[0] (1) 
-                  [1] = bar::ick::z[1] (2) 
+                  [0] = bar::ick<2>::z[0] (1) 
+                  [1] = bar::ick<2>::z[1] (2) 
                 }
               Created state:
               bool instance pool:
-              1	bar::ick::z[0]
-              2	bar::ick::z[1]
+              1	bar::ick<2>::z[0]
+              2	bar::ick<2>::z[1]
             }
           }
           }

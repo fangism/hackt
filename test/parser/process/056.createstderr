@@ -38,13 +38,13 @@ In namespace "", we have: {
       footprint: {
         x = process foo<>^1
           {
-            [0] = bar::x[0] (1) 
-            [1] = bar::x[1] (2) 
+            [0] = bar<>::x[0] (1) 
+            [1] = bar<>::x[1] (2) 
           }
         Created state:
         process instance pool:
-        1	bar::x[0]
-        2	bar::x[1]
+        1	bar<>::x[0]
+        2	bar<>::x[1]
       }
       }
 

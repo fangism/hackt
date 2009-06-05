@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.10 2009/02/11 02:35:10 fang Exp $
+	$Id: connection_policy.cc,v 1.11 2009/06/05 16:28:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -46,7 +46,19 @@ bool_connect_policy::attribute_names[] = {
 void
 bool_connect_policy::initialize_actual_direction(const this_type& t) {
 	STACKTRACE_VERBOSE;
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+	attributes = (t.attributes & BOOL_ATTRIBUTES_MASK);
+	if (t.attributes & BOOL_ANY_FANOUT_PULL_DN)
+		attributes |= BOOL_SUBSTRUCT_FANOUT_PULL_DN;
+	if (t.attributes & BOOL_ANY_FANOUT_PULL_UP)
+		attributes |= BOOL_SUBSTRUCT_FANOUT_PULL_UP;
+	if (t.attributes & BOOL_ANY_FANIN_PULL_DN)
+		attributes |= BOOL_SUBSTRUCT_FANIN_PULL_DN;
+	if (t.attributes & BOOL_ANY_FANIN_PULL_UP)
+		attributes |= BOOL_SUBSTRUCT_FANIN_PULL_UP;
+#else
 	attributes = t.attributes;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -57,19 +69,23 @@ good_bool
 bool_connect_policy::set_connection_flags(const connection_flags_type f) {
 	STACKTRACE_VERBOSE;
 	// no possible conflicts yet
-	attributes = f;
+	// maybe later with connectivity constraints
+	attributes |= f;
 	return good_bool(true);
 }
 
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: in future, not every field will be OR'd, use masks
+	to compute result.
+ */
 good_bool
 bool_connect_policy::synchronize_flags(this_type& l, this_type& r) {
 	STACKTRACE_VERBOSE;
 	l.attributes |= r.attributes;
 	r.attributes = l.attributes;
 	// TODO: handle direction checking!
-	STACKTRACE_INDENT_PRINT("flags = " << l.attributes << ", "
+	STACKTRACE_INDENT_PRINT("flags/connectivity = " << l.attributes << ", "
 		<< r.attributes << endl);
 	return good_bool(true);
 }
@@ -100,7 +116,8 @@ ostream&
 bool_connect_policy::dump_flat_attributes(ostream& o) const {
 	connection_flags_type temp = attributes;	// better be unsigned!
 	const char** p = attribute_names;
-while (temp) {
+while (temp && p < attribute_names +8) {
+	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << ' ' << *p;
 	}
@@ -118,7 +135,8 @@ ostream&
 bool_connect_policy::dump_split_attributes(ostream& o, const string& n) const {
 	connection_flags_type temp = attributes;	// better be unsigned!
 	const char** p = attribute_names;
-while (temp) {
+while (temp && p < attribute_names +8) {
+	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << "@ " << n << ' ' << *p << endl;
 	}

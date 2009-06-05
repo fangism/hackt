@@ -99,14 +99,14 @@ In namespace "", we have: {
       prs:
         passn(g,s,d)
       footprint: {
-        d = bool^0 = passn::d (3) 
-        g = bool^0 = passn::g (1) 
-        s = bool^0 = passn::s (2) 
+        d = bool^0 = passn<>::d (3) 
+        g = bool^0 = passn<>::g (1) 
+        s = bool^0 = passn<>::s (2) 
         Created state:
         bool instance pool:
-        1	passn::g
-        2	passn::s
-        3	passn::d
+        1	passn<>::g
+        2	passn<>::s
+        3	passn<>::d
         resolved macros:
         passn(g,s,d)
       }
@@ -136,29 +136,29 @@ In namespace "", we have: {
         passp<> p
         p (_g, s, d);
       footprint: {
-        _g = bool^0 = passnp::_g (4) 
-        d = bool^0 = passnp::d (3) 
-        g = bool^0 = passnp::g (1) 
-        n = process passn<>^0 = passnp::n (1) (
-          g = bool^0 = passnp::g (1) 
-          s = bool^0 = passnp::s (2) 
-          d = bool^0 = passnp::d (3) 
+        _g = bool^0 = passnp<>::_g (4) 
+        d = bool^0 = passnp<>::d (3) 
+        g = bool^0 = passnp<>::g (1) 
+        n = process passn<>^0 = passnp<>::n (1) (
+          g = bool^0 = passnp<>::g (1) 
+          s = bool^0 = passnp<>::s (2) 
+          d = bool^0 = passnp<>::d (3) 
         )
-        p = process passp<>^0 = passnp::p (2) (
-          g = bool^0 = passnp::_g (4) 
-          s = bool^0 = passnp::s (2) 
-          d = bool^0 = passnp::d (3) 
+        p = process passp<>^0 = passnp<>::p (2) (
+          g = bool^0 = passnp<>::_g (4) 
+          s = bool^0 = passnp<>::s (2) 
+          d = bool^0 = passnp<>::d (3) 
         )
-        s = bool^0 = passnp::s (2) 
+        s = bool^0 = passnp<>::s (2) 
         Created state:
         process instance pool:
-        1	passnp::n
-        2	passnp::p
+        1	passnp<>::n
+        2	passnp<>::p
         bool instance pool:
-        1	passnp::g
-        2	passnp::s
-        3	passnp::d
-        4	passnp::_g
+        1	passnp<>::g
+        2	passnp<>::s
+        3	passnp<>::d
+        4	passnp<>::_g
       }
       }
 
@@ -179,14 +179,14 @@ In namespace "", we have: {
       prs:
         passp(g,s,d)
       footprint: {
-        d = bool^0 = passp::d (3) 
-        g = bool^0 = passp::g (1) 
-        s = bool^0 = passp::s (2) 
+        d = bool^0 = passp<>::d (3) 
+        g = bool^0 = passp<>::g (1) 
+        s = bool^0 = passp<>::s (2) 
         Created state:
         bool instance pool:
-        1	passp::g
-        2	passp::s
-        3	passp::d
+        1	passp<>::g
+        2	passp<>::s
+        3	passp<>::d
         resolved macros:
         passp(g,s,d)
       }

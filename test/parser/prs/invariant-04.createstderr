@@ -22,7 +22,7 @@ Persistent Object Manager text dump:
 	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	12
 	20	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -94,12 +94,12 @@ In namespace "", we have: {
       spec:
         $(~(w & z))
       footprint: {
-        w = bool^0 = bar::w (1) 
-        z = bool^0 = bar::z (2) 
+        w = bool^0 = bar<>::w (1) 
+        z = bool^0 = bar<>::z (2) 
         Created state:
         bool instance pool:
-        1	bar::w
-        2	bar::z
+        1	bar<>::w
+        2	bar<>::z
         resolved prs:
         w -> z-
         ~w -> z+
@@ -125,12 +125,12 @@ In namespace "", we have: {
       spec:
         $(x | y)
       footprint: {
-        x = bool^0 = foo::x (1) 
-        y = bool^0 = foo::y (2) 
+        x = bool^0 = foo<>::x (1) 
+        y = bool^0 = foo<>::y (2) 
         Created state:
         bool instance pool:
-        1	foo::x
-        2	foo::y
+        1	foo<>::x
+        2	foo<>::y
         resolved prs:
         x -> y-
         ~x -> y+

@@ -26,12 +26,12 @@ Persistent Object Manager text dump:
 	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	24	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -40,12 +40,12 @@ Persistent Object Manager text dump:
 	36	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	37	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	38	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	40	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	45	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -91,18 +91,18 @@ In namespace "", we have: {
         (p & q) | (r & s) -> z-
         ~((p & q) | (r & s)) -> z+
       footprint: {
-        p = bool^0 = echo::p (1) 
-        q = bool^0 = echo::q (2) 
-        r = bool^0 = echo::r (3) 
-        s = bool^0 = echo::s (4) 
-        z = bool^0 = echo::z (5) 
+        p = bool^0 = echo<>::p (1) 
+        q = bool^0 = echo<>::q (2) 
+        r = bool^0 = echo<>::r (3) 
+        s = bool^0 = echo<>::s (4) 
+        z = bool^0 = echo<>::z (5) 
         Created state:
         bool instance pool:
-        1	echo::p
-        2	echo::q
-        3	echo::r
-        4	echo::s
-        5	echo::z
+        1	echo<>::p
+        2	echo<>::q
+        3	echo<>::r
+        4	echo<>::s
+        5	echo<>::z
         resolved prs:
         (p & q) | (r & s) -> z-
         ~((p & q) | (r & s)) -> z+

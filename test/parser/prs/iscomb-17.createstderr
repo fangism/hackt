@@ -47,12 +47,12 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = inv::a (1) 
-        b = bool^0 = inv::b (2) 
+        a = bool^0 = inv<>::a (1) 
+        b = bool^0 = inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	inv::a
-        2	inv::b
+        1	inv<>::a
+        2	inv<>::b
       }
       }
 
@@ -66,16 +66,16 @@ In namespace "", we have: {
         inv<> x
         x.a@[iscomb=]
       footprint: {
-        x = process inv<>^0 = multi_inv::x (1) (
-          a = bool^0 = multi_inv::x.a (1) @[ iscomb ] 
-          b = bool^0 = multi_inv::x.b (2) 
+        x = process inv<>^0 = multi_inv<>::x (1) (
+          a = bool^0 = multi_inv<>::x.a (1) @[ iscomb ] 
+          b = bool^0 = multi_inv<>::x.b (2) 
         )
         Created state:
         process instance pool:
-        1	multi_inv::x
+        1	multi_inv<>::x
         bool instance pool:
-        1	multi_inv::x.a @[ iscomb ]
-        2	multi_inv::x.b
+        1	multi_inv<>::x.a @[ iscomb ]
+        2	multi_inv<>::x.b
       }
       }
 

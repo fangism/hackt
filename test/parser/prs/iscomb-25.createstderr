@@ -118,28 +118,28 @@ In namespace "", we have: {
         l_e = l.e;
         l_e@[iscomb=1]
       footprint: {
-        l = process e1of2<>^0 = A::l (1) (
-          t = bool^0 = A::l.t (1) 
-          f = bool^0 = A::l.f (2) 
-          e = bool^0 = A::l_e (3) @[ iscomb ] 
+        l = process e1of2<>^0 = A<>::l (1) (
+          t = bool^0 = A<>::l.t (1) 
+          f = bool^0 = A<>::l.f (2) 
+          e = bool^0 = A<>::l_e (3) @[ iscomb ] 
         )
-        l_e = bool^0 = A::l_e (3) @[ iscomb ] 
-        r = process e1of2<>^0 = A::r (2) (
-          t = bool^0 = A::r.t (4) 
-          f = bool^0 = A::r.f (5) 
-          e = bool^0 = A::r.e (6) 
+        l_e = bool^0 = A<>::l_e (3) @[ iscomb ] 
+        r = process e1of2<>^0 = A<>::r (2) (
+          t = bool^0 = A<>::r.t (4) 
+          f = bool^0 = A<>::r.f (5) 
+          e = bool^0 = A<>::r.e (6) 
         )
         Created state:
         process instance pool:
-        1	A::l
-        2	A::r
+        1	A<>::l
+        2	A<>::r
         bool instance pool:
-        1	A::l.t
-        2	A::l.f
-        3	A::l_e @[ iscomb ]
-        4	A::r.t
-        5	A::r.f
-        6	A::r.e
+        1	A<>::l.t
+        2	A<>::l.f
+        3	A<>::l_e @[ iscomb ]
+        4	A<>::r.t
+        5	A<>::r.f
+        6	A<>::r.e
       }
       }
 
@@ -171,66 +171,66 @@ In namespace "", we have: {
           W = pint^0 value: 2
           l = process e1of2<>^1
             {
-              [0] = B::l[0] (3) (
-                t = bool^0 = B::l[0].t (4) 
-                f = bool^0 = B::l[0].f (5) 
-                e = bool^0 = B::l[0].e (6) @[ iscomb ] 
+              [0] = B<0, 2>::l[0] (3) (
+                t = bool^0 = B<0, 2>::l[0].t (4) 
+                f = bool^0 = B<0, 2>::l[0].f (5) 
+                e = bool^0 = B<0, 2>::l[0].e (6) @[ iscomb ] 
               )
-              [1] = B::l[1] (5) (
-                t = bool^0 = B::l[1].t (7) 
-                f = bool^0 = B::l[1].f (8) 
-                e = bool^0 = B::l[1].e (9) @[ iscomb ] 
+              [1] = B<0, 2>::l[1] (5) (
+                t = bool^0 = B<0, 2>::l[1].t (7) 
+                f = bool^0 = B<0, 2>::l[1].f (8) 
+                e = bool^0 = B<0, 2>::l[1].e (9) @[ iscomb ] 
               )
             }
           mb = process A<>^1
             {
-              [0] = B::mb[0] (2) (
-                l = process e1of2<>^0 = B::l[0] (3) (
-                  t = bool^0 = B::l[0].t (4) 
-                  f = bool^0 = B::l[0].f (5) 
-                  e = bool^0 = B::l[0].e (6) @[ iscomb ] 
+              [0] = B<0, 2>::mb[0] (2) (
+                l = process e1of2<>^0 = B<0, 2>::l[0] (3) (
+                  t = bool^0 = B<0, 2>::l[0].t (4) 
+                  f = bool^0 = B<0, 2>::l[0].f (5) 
+                  e = bool^0 = B<0, 2>::l[0].e (6) @[ iscomb ] 
                 )
-                r = process e1of2<>^0 = B::r (1) (
-                  t = bool^0 = B::r.t (1) 
-                  f = bool^0 = B::r.f (2) 
-                  e = bool^0 = B::r.e (3) 
+                r = process e1of2<>^0 = B<0, 2>::r (1) (
+                  t = bool^0 = B<0, 2>::r.t (1) 
+                  f = bool^0 = B<0, 2>::r.f (2) 
+                  e = bool^0 = B<0, 2>::r.e (3) 
                 )
               )
-              [1] = B::mb[1] (4) (
-                l = process e1of2<>^0 = B::l[1] (5) (
-                  t = bool^0 = B::l[1].t (7) 
-                  f = bool^0 = B::l[1].f (8) 
-                  e = bool^0 = B::l[1].e (9) @[ iscomb ] 
+              [1] = B<0, 2>::mb[1] (4) (
+                l = process e1of2<>^0 = B<0, 2>::l[1] (5) (
+                  t = bool^0 = B<0, 2>::l[1].t (7) 
+                  f = bool^0 = B<0, 2>::l[1].f (8) 
+                  e = bool^0 = B<0, 2>::l[1].e (9) @[ iscomb ] 
                 )
-                r = process e1of2<>^0 = B::r (1) (
-                  t = bool^0 = B::r.t (1) 
-                  f = bool^0 = B::r.f (2) 
-                  e = bool^0 = B::r.e (3) 
+                r = process e1of2<>^0 = B<0, 2>::r (1) (
+                  t = bool^0 = B<0, 2>::r.t (1) 
+                  f = bool^0 = B<0, 2>::r.f (2) 
+                  e = bool^0 = B<0, 2>::r.e (3) 
                 )
               )
             }
-          r = process e1of2<>^0 = B::r (1) (
-            t = bool^0 = B::r.t (1) 
-            f = bool^0 = B::r.f (2) 
-            e = bool^0 = B::r.e (3) 
+          r = process e1of2<>^0 = B<0, 2>::r (1) (
+            t = bool^0 = B<0, 2>::r.t (1) 
+            f = bool^0 = B<0, 2>::r.f (2) 
+            e = bool^0 = B<0, 2>::r.e (3) 
           )
           Created state:
           process instance pool:
-          1	B::r
-          2	B::mb[0]
-          3	B::l[0]
-          4	B::mb[1]
-          5	B::l[1]
+          1	B<0, 2>::r
+          2	B<0, 2>::mb[0]
+          3	B<0, 2>::l[0]
+          4	B<0, 2>::mb[1]
+          5	B<0, 2>::l[1]
           bool instance pool:
-          1	B::r.t
-          2	B::r.f
-          3	B::r.e
-          4	B::l[0].t
-          5	B::l[0].f
-          6	B::l[0].e @[ iscomb ]
-          7	B::l[1].t
-          8	B::l[1].f
-          9	B::l[1].e @[ iscomb ]
+          1	B<0, 2>::r.t
+          2	B<0, 2>::r.f
+          3	B<0, 2>::r.e
+          4	B<0, 2>::l[0].t
+          5	B<0, 2>::l[0].f
+          6	B<0, 2>::l[0].e @[ iscomb ]
+          7	B<0, 2>::l[1].t
+          8	B<0, 2>::l[1].f
+          9	B<0, 2>::l[1].e @[ iscomb ]
         }
       }
       }
@@ -243,42 +243,42 @@ In namespace "", we have: {
       unroll sequence: 
         B<0, 2> bar
       footprint: {
-        bar = process B<0, 2>^0 = C::bar (1) (
+        bar = process B<0, 2>^0 = C<>::bar (1) (
           l = process e1of2<>^1
             {
-              [0] = C::bar.l[0] (2) (
-                t = bool^0 = C::bar.l[0].t (1) 
-                f = bool^0 = C::bar.l[0].f (2) 
-                e = bool^0 = C::bar.l[0].e (3) @[ iscomb ] 
+              [0] = C<>::bar.l[0] (2) (
+                t = bool^0 = C<>::bar.l[0].t (1) 
+                f = bool^0 = C<>::bar.l[0].f (2) 
+                e = bool^0 = C<>::bar.l[0].e (3) @[ iscomb ] 
               )
-              [1] = C::bar.l[1] (3) (
-                t = bool^0 = C::bar.l[1].t (4) 
-                f = bool^0 = C::bar.l[1].f (5) 
-                e = bool^0 = C::bar.l[1].e (6) @[ iscomb ] 
+              [1] = C<>::bar.l[1] (3) (
+                t = bool^0 = C<>::bar.l[1].t (4) 
+                f = bool^0 = C<>::bar.l[1].f (5) 
+                e = bool^0 = C<>::bar.l[1].e (6) @[ iscomb ] 
               )
             }
-          r = process e1of2<>^0 = C::bar.r (4) (
-            t = bool^0 = C::bar.r.t (7) 
-            f = bool^0 = C::bar.r.f (8) 
-            e = bool^0 = C::bar.r.e (9) 
+          r = process e1of2<>^0 = C<>::bar.r (4) (
+            t = bool^0 = C<>::bar.r.t (7) 
+            f = bool^0 = C<>::bar.r.f (8) 
+            e = bool^0 = C<>::bar.r.e (9) 
           )
         )
         Created state:
         process instance pool:
-        1	C::bar
-        2	C::bar.l[0]
-        3	C::bar.l[1]
-        4	C::bar.r
+        1	C<>::bar
+        2	C<>::bar.l[0]
+        3	C<>::bar.l[1]
+        4	C<>::bar.r
         bool instance pool:
-        1	C::bar.l[0].t
-        2	C::bar.l[0].f
-        3	C::bar.l[0].e @[ iscomb ]
-        4	C::bar.l[1].t
-        5	C::bar.l[1].f
-        6	C::bar.l[1].e @[ iscomb ]
-        7	C::bar.r.t
-        8	C::bar.r.f
-        9	C::bar.r.e
+        1	C<>::bar.l[0].t
+        2	C<>::bar.l[0].f
+        3	C<>::bar.l[0].e @[ iscomb ]
+        4	C<>::bar.l[1].t
+        5	C<>::bar.l[1].f
+        6	C<>::bar.l[1].e @[ iscomb ]
+        7	C<>::bar.r.t
+        8	C<>::bar.r.f
+        9	C<>::bar.r.e
       }
       }
 
@@ -297,14 +297,14 @@ In namespace "", we have: {
         bool<> f
         bool<> e
       footprint: {
-        e = bool^0 = e1of2::e (3) 
-        f = bool^0 = e1of2::f (2) 
-        t = bool^0 = e1of2::t (1) 
+        e = bool^0 = e1of2<>::e (3) 
+        f = bool^0 = e1of2<>::f (2) 
+        t = bool^0 = e1of2<>::t (1) 
         Created state:
         bool instance pool:
-        1	e1of2::t
-        2	e1of2::f
-        3	e1of2::e
+        1	e1of2<>::t
+        2	e1of2<>::f
+        3	e1of2<>::e
       }
       }
 

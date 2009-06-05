@@ -59,14 +59,14 @@ In namespace "", we have: {
         min_sep<10>(p,r)
         min_sep<20>(q,r)
       footprint: {
-        p = bool^0 = groupie::p (1) 
-        q = bool^0 = groupie::q (2) 
-        r = bool^0 = groupie::r (3) 
+        p = bool^0 = groupie<>::p (1) 
+        q = bool^0 = groupie<>::q (2) 
+        r = bool^0 = groupie<>::r (3) 
         Created state:
         bool instance pool:
-        1	groupie::p
-        2	groupie::q
-        3	groupie::r
+        1	groupie<>::p
+        2	groupie<>::q
+        3	groupie<>::r
         resolved specs:
         min_sep<15>(p,q)
         min_sep<10>(p,r)

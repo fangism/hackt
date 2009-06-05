@@ -74,21 +74,21 @@ In namespace "", we have: {
       footprint collection: {
         <4> {
           N = pint^0 value: 4
-          _out = bool^0 = nandN::_out (1) 
+          _out = bool^0 = nandN<4>::_out (1) 
           in = bool^1
             {
-              [0] = nandN::in[0] (2) 
-              [1] = nandN::in[1] (3) 
-              [2] = nandN::in[2] (4) 
-              [3] = nandN::in[3] (5) 
+              [0] = nandN<4>::in[0] (2) 
+              [1] = nandN<4>::in[1] (3) 
+              [2] = nandN<4>::in[2] (4) 
+              [3] = nandN<4>::in[3] (5) 
             }
           Created state:
           bool instance pool:
-          1	nandN::_out
-          2	nandN::in[0]
-          3	nandN::in[1]
-          4	nandN::in[2]
-          5	nandN::in[3]
+          1	nandN<4>::_out
+          2	nandN<4>::in[0]
+          3	nandN<4>::in[1]
+          4	nandN<4>::in[2]
+          5	nandN<4>::in[3]
           resolved prs:
           ~in[0] | ~in[1] | ~in[2] | ~in[3] -> _out+
           in[0] & in[1] & in[2] & in[3] -> _out-

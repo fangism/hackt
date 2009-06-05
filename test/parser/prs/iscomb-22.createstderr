@@ -65,12 +65,12 @@ In namespace "", we have: {
         a@[iscomb=]
         b@[autokeeper=0]
       footprint: {
-        a = bool^0 = inv::a (1) @[ iscomb ] 
-        b = bool^0 = inv::b (2) @[ !autokeeper ] 
+        a = bool^0 = inv<>::a (1) @[ iscomb ] 
+        b = bool^0 = inv<>::b (2) @[ !autokeeper ] 
         Created state:
         bool instance pool:
-        1	inv::a @[ iscomb ]
-        2	inv::b @[ !autokeeper ]
+        1	inv<>::a @[ iscomb ]
+        2	inv<>::b @[ !autokeeper ]
       }
       }
 
@@ -86,25 +86,25 @@ In namespace "", we have: {
       footprint: {
         x = process inv<>^1
           {
-            [0] = multi_inv::x[0] (1) (
-              a = bool^0 = multi_inv::x[0].a (1) @[ iscomb !autokeeper ] 
-              b = bool^0 = multi_inv::x[0].b (2) @[ iscomb !autokeeper ] 
+            [0] = multi_inv<>::x[0] (1) (
+              a = bool^0 = multi_inv<>::x[0].a (1) @[ iscomb !autokeeper ] 
+              b = bool^0 = multi_inv<>::x[0].b (2) @[ iscomb !autokeeper ] 
             )
-            [1] = multi_inv::x[1] (2) (
-              a = bool^0 = multi_inv::x[0].b (2) @[ iscomb !autokeeper ] 
-              b = bool^0 = multi_inv::x[0].a (1) @[ iscomb !autokeeper ] 
+            [1] = multi_inv<>::x[1] (2) (
+              a = bool^0 = multi_inv<>::x[0].b (2) @[ iscomb !autokeeper ] 
+              b = bool^0 = multi_inv<>::x[0].a (1) @[ iscomb !autokeeper ] 
             )
           }
         Created state:
         process instance pool:
-        1	multi_inv::x[0]
-        2	multi_inv::x[1]
+        1	multi_inv<>::x[0]
+        2	multi_inv<>::x[1]
         bool instance pool:
-        1	multi_inv::x[0].a @[ iscomb !autokeeper ]
-        2	multi_inv::x[0].b @[ iscomb !autokeeper ]
+        1	multi_inv<>::x[0].a @[ iscomb !autokeeper ]
+        2	multi_inv<>::x[0].b @[ iscomb !autokeeper ]
         bool port aliases:
-        1: multi_inv::x[0].a = multi_inv::x[1].b @[ iscomb !autokeeper ]
-        2: multi_inv::x[0].b = multi_inv::x[1].a @[ iscomb !autokeeper ]
+        1: multi_inv<>::x[0].a = multi_inv<>::x[1].b @[ iscomb !autokeeper ]
+        2: multi_inv<>::x[0].b = multi_inv<>::x[1].a @[ iscomb !autokeeper ]
       }
       }
 

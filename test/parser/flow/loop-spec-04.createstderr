@@ -85,49 +85,49 @@ In namespace "", we have: {
           N = pint^0 value: 5
           x = bool^1
             {
-              [0] = spec_test::x[0] (1) 
-              [1] = spec_test::x[1] (2) 
-              [2] = spec_test::x[2] (3) 
-              [3] = spec_test::x[3] (4) 
-              [4] = spec_test::x[4] (5) 
-              [5] = spec_test::x[5] (6) 
-              [6] = spec_test::x[6] (7) 
-              [7] = spec_test::x[7] (8) 
-              [8] = spec_test::x[8] (9) 
-              [9] = spec_test::x[9] (10) 
-              [10] = spec_test::x[10] (11) 
-              [11] = spec_test::x[11] (12) 
-              [12] = spec_test::x[12] (13) 
-              [13] = spec_test::x[13] (14) 
-              [14] = spec_test::x[14] (15) 
-              [15] = spec_test::x[15] (16) 
-              [16] = spec_test::x[16] (17) 
-              [17] = spec_test::x[17] (18) 
-              [18] = spec_test::x[18] (19) 
-              [19] = spec_test::x[19] (20) 
+              [0] = spec_test<5, 5>::x[0] (1) 
+              [1] = spec_test<5, 5>::x[1] (2) 
+              [2] = spec_test<5, 5>::x[2] (3) 
+              [3] = spec_test<5, 5>::x[3] (4) 
+              [4] = spec_test<5, 5>::x[4] (5) 
+              [5] = spec_test<5, 5>::x[5] (6) 
+              [6] = spec_test<5, 5>::x[6] (7) 
+              [7] = spec_test<5, 5>::x[7] (8) 
+              [8] = spec_test<5, 5>::x[8] (9) 
+              [9] = spec_test<5, 5>::x[9] (10) 
+              [10] = spec_test<5, 5>::x[10] (11) 
+              [11] = spec_test<5, 5>::x[11] (12) 
+              [12] = spec_test<5, 5>::x[12] (13) 
+              [13] = spec_test<5, 5>::x[13] (14) 
+              [14] = spec_test<5, 5>::x[14] (15) 
+              [15] = spec_test<5, 5>::x[15] (16) 
+              [16] = spec_test<5, 5>::x[16] (17) 
+              [17] = spec_test<5, 5>::x[17] (18) 
+              [18] = spec_test<5, 5>::x[18] (19) 
+              [19] = spec_test<5, 5>::x[19] (20) 
             }
           Created state:
           bool instance pool:
-          1	spec_test::x[0]
-          2	spec_test::x[1]
-          3	spec_test::x[2]
-          4	spec_test::x[3]
-          5	spec_test::x[4]
-          6	spec_test::x[5]
-          7	spec_test::x[6]
-          8	spec_test::x[7]
-          9	spec_test::x[8]
-          10	spec_test::x[9]
-          11	spec_test::x[10]
-          12	spec_test::x[11]
-          13	spec_test::x[12]
-          14	spec_test::x[13]
-          15	spec_test::x[14]
-          16	spec_test::x[15]
-          17	spec_test::x[16]
-          18	spec_test::x[17]
-          19	spec_test::x[18]
-          20	spec_test::x[19]
+          1	spec_test<5, 5>::x[0]
+          2	spec_test<5, 5>::x[1]
+          3	spec_test<5, 5>::x[2]
+          4	spec_test<5, 5>::x[3]
+          5	spec_test<5, 5>::x[4]
+          6	spec_test<5, 5>::x[5]
+          7	spec_test<5, 5>::x[6]
+          8	spec_test<5, 5>::x[7]
+          9	spec_test<5, 5>::x[8]
+          10	spec_test<5, 5>::x[9]
+          11	spec_test<5, 5>::x[10]
+          12	spec_test<5, 5>::x[11]
+          13	spec_test<5, 5>::x[12]
+          14	spec_test<5, 5>::x[13]
+          15	spec_test<5, 5>::x[14]
+          16	spec_test<5, 5>::x[15]
+          17	spec_test<5, 5>::x[16]
+          18	spec_test<5, 5>::x[17]
+          19	spec_test<5, 5>::x[18]
+          20	spec_test<5, 5>::x[19]
           resolved specs:
           mk_exclhi(x[0],x[1])
           mk_exclhi(x[0],x[2])

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.31 2007/01/21 05:59:12 fang Exp $
+	$Id: instance_collection.h,v 1.32 2009/06/05 16:28:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -146,6 +146,10 @@ virtual	ostream&
 
 	const this_type&
 	get_canonical_collection(void) const;
+
+	// overrides instance_collection_base to use footprint back-ref
+	ostream&
+	dump_hierarchical_name(ostream&, const dump_flags&) const;
 
 virtual	ostream&
 	dump_element_key(ostream&, const size_t) const = 0;

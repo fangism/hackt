@@ -55,10 +55,10 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> d
       footprint: {
-        d = bool^0 = ch1of1::d (1) 
+        d = bool^0 = ch1of1<>::d (1) 
         Created state:
         bool instance pool:
-        1	ch1of1::d
+        1	ch1of1<>::d
       }
       }
 
@@ -71,10 +71,10 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> a
       footprint: {
-        a = bool^0 = dcelm::a (1) 
+        a = bool^0 = dcelm<>::a (1) 
         Created state:
         bool instance pool:
-        1	dcelm::a
+        1	dcelm<>::a
       }
       }
 
@@ -91,18 +91,18 @@ In namespace "", we have: {
           ce (ad.d);
         )
       footprint: {
-        ad = process ch1of1<>^0 = lut::ad (1) (
-          d = bool^0 = lut::ad.d (1) 
+        ad = process ch1of1<>^0 = lut<>::ad (1) (
+          d = bool^0 = lut<>::ad.d (1) 
         )
-        ce = process dcelm<>^0 = lut::ce (2) (
-          a = bool^0 = lut::ad.d (1) 
+        ce = process dcelm<>^0 = lut<>::ce (2) (
+          a = bool^0 = lut<>::ad.d (1) 
         )
         Created state:
         process instance pool:
-        1	lut::ad
-        2	lut::ce
+        1	lut<>::ad
+        2	lut<>::ce
         bool instance pool:
-        1	lut::ad.d
+        1	lut<>::ad.d
       }
       }
 

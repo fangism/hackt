@@ -134,7 +134,7 @@ In namespace "", we have: {
         <0, 0> {
           I = pint^0 value: 0
           J = pint^0 value: 0
-          out = channel chan!(int<32>)^0 = send_indexed::out (1) 
+          out = channel chan!(int<32>)^0 = send_indexed<0, 0>::out (1) 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -142,7 +142,7 @@ In namespace "", we have: {
             }
           Created state:
           channel instance pool:
-          1	send_indexed::out
+          1	send_indexed<0, 0>::out
           resolved concurrent actions:
             *[
               out!(0)
@@ -154,7 +154,7 @@ In namespace "", we have: {
         <0, 1> {
           I = pint^0 value: 0
           J = pint^0 value: 1
-          out = channel chan!(int<32>)^0 = send_indexed::out (1) 
+          out = channel chan!(int<32>)^0 = send_indexed<0, 1>::out (1) 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -162,7 +162,7 @@ In namespace "", we have: {
             }
           Created state:
           channel instance pool:
-          1	send_indexed::out
+          1	send_indexed<0, 1>::out
           resolved concurrent actions:
             *[
               out!(1)
@@ -174,7 +174,7 @@ In namespace "", we have: {
         <1, 0> {
           I = pint^0 value: 1
           J = pint^0 value: 0
-          out = channel chan!(int<32>)^0 = send_indexed::out (1) 
+          out = channel chan!(int<32>)^0 = send_indexed<1, 0>::out (1) 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -182,7 +182,7 @@ In namespace "", we have: {
             }
           Created state:
           channel instance pool:
-          1	send_indexed::out
+          1	send_indexed<1, 0>::out
           resolved concurrent actions:
             *[
               out!(1)
@@ -194,7 +194,7 @@ In namespace "", we have: {
         <1, 1> {
           I = pint^0 value: 1
           J = pint^0 value: 1
-          out = channel chan!(int<32>)^0 = send_indexed::out (1) 
+          out = channel chan!(int<32>)^0 = send_indexed<1, 1>::out (1) 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -202,7 +202,7 @@ In namespace "", we have: {
             }
           Created state:
           channel instance pool:
-          1	send_indexed::out
+          1	send_indexed<1, 1>::out
           resolved concurrent actions:
             *[
               out!(0)

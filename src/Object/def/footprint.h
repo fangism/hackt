@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.27 2009/03/14 01:46:19 fang Exp $
+	$Id: footprint.h,v 1.28 2009/06/05 16:28:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -428,7 +428,7 @@ public:
 
 	// eventually pass parameter for warning control 
 	good_bool
-	connection_diagnostics(void) const;
+	connection_diagnostics(bool) const;
 
 	void
 	allocate_chp_events(void);

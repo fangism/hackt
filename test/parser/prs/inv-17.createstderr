@@ -1,3 +1,5 @@
+Warning: node silly_inv<>::a has no pull-up nor pull-dn PRS fanin.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size
@@ -48,12 +50,12 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = silly_inv::a (1) 
-        b = bool^0 = silly_inv::b (2) 
+        a = bool^0 = silly_inv<>::a (1) 
+        b = bool^0 = silly_inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	silly_inv::a
-        2	silly_inv::b
+        1	silly_inv<>::a
+        2	silly_inv<>::b
         resolved prs:
         a -> b-
         ~a -> b+

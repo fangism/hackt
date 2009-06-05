@@ -63,13 +63,13 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        B = channel chan(bool<>)^0 = boring::B (1) 
-        x = bool^0 = boring::x (1) 
+        B = channel chan(bool<>)^0 = boring<>::B (1) 
+        x = bool^0 = boring<>::x (1) 
         Created state:
         channel instance pool:
-        1	boring::B
+        1	boring<>::B
         bool instance pool:
-        1	boring::x
+        1	boring<>::x
         resolved concurrent actions:
           *[
             B?(x)

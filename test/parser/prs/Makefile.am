@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.52 2009/05/28 15:25:55 fang Exp $
+#	$Id: Makefile.am,v 1.53 2009/06/05 16:29:44 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -44,6 +44,7 @@ HACKT_PARSE_TEST_PASSES = \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-05b macro-pass-07b \
 	macro-pass-05c macro-pass-07c \
+	macro-pass-08 macro-pass-09 \
 	after-02 after-03 \
 	spec-02 spec-04 spec-06 spec-07 \
 	size-01 size-03 size-04 size-05 \
@@ -117,6 +118,7 @@ HACKT_CREATE_TEST_PASSES = \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
+	macro-pass-08 macro-pass-09 \
 	after-02 after-03 \
 	spec-02 spec-04 spec-06 spec-07 \
 	size-01 size-03 size-04 size-05 \
@@ -130,6 +132,7 @@ HACKT_CREATE_TEST_PASSES = \
 	lvs-xcpl-inv-01 \
 	tree-02 tree-03 tree-04 \
 	subckt-01 subckt-03 subckt-05 subckt-06 \
+	precharge-00 \
 	unstab-01 unstab-02 \
 	comb-01 \
 	iscomb-01 iscomb-02 iscomb-03 iscomb-04 iscomb-05 iscomb-06 \
@@ -151,7 +154,7 @@ HACKT_CREATE_TEST_PASSES = \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
-	act-001 act-002 act-005 act-006 act-007 act-010 \
+	act-001 act-002 act-003 act-004 act-005 act-006 act-007 act-010 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
@@ -161,9 +164,6 @@ HACKT_CREATE_TEST_PASSES = \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	reff-01 \
 	load_cap-01 
-
-# TODO: precharge-00 etc. to middle and back-end tests
-# pending: act-003 act-004 act-005
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
@@ -229,10 +229,9 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
-	act-001 act-002 act-005 act-006 act-007 act-010 \
+	act-001 act-002 act-003 act-004 act-005 act-006 act-007 act-010 \
 	reff-01 \
 	flavor-01
-# pending: act-003 act-004
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \

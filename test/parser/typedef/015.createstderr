@@ -52,14 +52,14 @@ In namespace "", we have: {
         bool<> y
         bool<> z
       footprint: {
-        x = bool^0 = baz::x (1) 
-        y = bool^0 = baz::y (2) 
-        z = bool^0 = baz::z (3) 
+        x = bool^0 = baz<>::x (1) 
+        y = bool^0 = baz<>::y (2) 
+        z = bool^0 = baz<>::z (3) 
         Created state:
         bool instance pool:
-        1	baz::x
-        2	baz::y
-        3	baz::z
+        1	baz<>::x
+        2	baz<>::y
+        3	baz<>::z
       }
       }
 

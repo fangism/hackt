@@ -106,13 +106,13 @@ In namespace "", we have: {
         bar -> foo- [weak=1; ]
         ~bar -> foo+ [weak=1; ]
       footprint: {
-        bar = bool^0 = dyne::bar (2) @[ may_weak_interfere ] 
-        bar2 = bool^0 = dyne::bar (2) @[ may_weak_interfere ] 
-        foo = bool^0 = dyne::foo (1) 
+        bar = bool^0 = dyne<>::bar (2) @[ may_weak_interfere ] 
+        bar2 = bool^0 = dyne<>::bar (2) @[ may_weak_interfere ] 
+        foo = bool^0 = dyne<>::foo (1) 
         Created state:
         bool instance pool:
-        1	dyne::foo
-        2	dyne::bar @[ may_weak_interfere ]
+        1	dyne<>::foo
+        2	dyne<>::bar @[ may_weak_interfere ]
         resolved prs:
         bar -> foo- [weak=1; ]
         ~bar -> foo+ [weak=1; ]
@@ -138,13 +138,13 @@ In namespace "", we have: {
         foo -> bar-
         ~foo -> bar+
       footprint: {
-        bar = bool^0 = yoyo::bar (2) 
-        foo = bool^0 = yoyo::foo (1) @[ may_interfere ] 
-        foo2 = bool^0 = yoyo::foo (1) @[ may_interfere ] 
+        bar = bool^0 = yoyo<>::bar (2) 
+        foo = bool^0 = yoyo<>::foo (1) @[ may_interfere ] 
+        foo2 = bool^0 = yoyo<>::foo (1) @[ may_interfere ] 
         Created state:
         bool instance pool:
-        1	yoyo::foo @[ may_interfere ]
-        2	yoyo::bar
+        1	yoyo<>::foo @[ may_interfere ]
+        2	yoyo<>::bar
         resolved prs:
         foo -> bar-
         ~foo -> bar+

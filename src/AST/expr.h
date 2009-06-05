@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.10 2007/07/18 23:28:14 fang Exp $
+	$Id: expr.h,v 1.11 2009/06/05 16:28:05 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -15,6 +15,9 @@
 
 namespace HAC {
 namespace parser {
+namespace PRS {
+class precharge;
+}
 //=============================================================================
 // class expr defined in "AST/expr_base.h"
 
@@ -143,9 +146,13 @@ public:
 	Takes bools as arguments and returns a bool.  
  */
 class logical_expr : public binary_expr {
+	/// optional precharge attribute
+	const excl_ptr<const PRS::precharge>		pchg;
 public:
 	logical_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right);
+	logical_expr(const expr* left, const char_punctuation_type* o, 
+		const PRS::precharge*, const expr* right);
 
 	~logical_expr();
 

@@ -76,7 +76,7 @@ Persistent Object Manager text dump:
 	72	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	73	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	74	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	75	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	76	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	77	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	78	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
@@ -89,7 +89,7 @@ Persistent Object Manager text dump:
 	85	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	86	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	87	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	88	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	88	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	89	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	90	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	91	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
@@ -115,7 +115,7 @@ Persistent Object Manager text dump:
 	111	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	112	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	113	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	114	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	114	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	115	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	116	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	117	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
@@ -130,7 +130,7 @@ Persistent Object Manager text dump:
 	126	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	127	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	128	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	129	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	129	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	130	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	131	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	132	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
@@ -145,7 +145,7 @@ Persistent Object Manager text dump:
 	141	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	142	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	143	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	144	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	144	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	145	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	146	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	147	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
@@ -197,15 +197,15 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            [0] = e1of2::d[0] (2) 
-            [1] = e1of2::d[1] (3) 
+            [0] = e1of2<>::d[0] (2) 
+            [1] = e1of2<>::d[1] (3) 
           }
-        e = bool^0 = e1of2::e (1) 
+        e = bool^0 = e1of2<>::e (1) 
         Created state:
         bool instance pool:
-        1	e1of2::e
-        2	e1of2::d[0]
-        3	e1of2::d[1]
+        1	e1of2<>::e
+        2	e1of2<>::d[0]
+        3	e1of2<>::d[1]
       }
       }
 
@@ -224,12 +224,12 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = inv::a (1) 
-        b = bool^0 = inv::b (2) 
+        a = bool^0 = inv<>::a (1) 
+        b = bool^0 = inv<>::b (2) 
         Created state:
         bool instance pool:
-        1	inv::a
-        2	inv::b
+        1	inv<>::a
+        2	inv<>::b
         resolved prs:
         a -> b-
         ~a -> b+
@@ -268,57 +268,57 @@ In namespace "", we have: {
         ~L.d[1] & ~R.e -> _r[1]+
         _r[0] & _r[1] -> rv-
       footprint: {
-        L = process e1of2<>^0 = wchb_e1of2::L (1) (
+        L = process e1of2<>^0 = wchb_e1of2<>::L (1) (
           d = bool^1
             {
-              [0] = wchb_e1of2::L.d[0] (1) 
-              [1] = wchb_e1of2::L.d[1] (2) 
+              [0] = wchb_e1of2<>::L.d[0] (1) 
+              [1] = wchb_e1of2<>::L.d[1] (2) 
             }
-          e = bool^0 = wchb_e1of2::L.e (3) 
+          e = bool^0 = wchb_e1of2<>::L.e (3) 
         )
-        R = process e1of2<>^0 = wchb_e1of2::R (2) (
+        R = process e1of2<>^0 = wchb_e1of2<>::R (2) (
           d = bool^1
             {
-              [0] = wchb_e1of2::R.d[0] (4) 
-              [1] = wchb_e1of2::R.d[1] (5) 
+              [0] = wchb_e1of2<>::R.d[0] (4) 
+              [1] = wchb_e1of2<>::R.d[1] (5) 
             }
-          e = bool^0 = wchb_e1of2::R.e (6) 
+          e = bool^0 = wchb_e1of2<>::R.e (6) 
         )
         _r = bool^1
           {
-            [0] = wchb_e1of2::_r[0] (7) 
-            [1] = wchb_e1of2::_r[1] (8) 
+            [0] = wchb_e1of2<>::_r[0] (7) 
+            [1] = wchb_e1of2<>::_r[1] (8) 
           }
-        r0 = process inv<>^0 = wchb_e1of2::r0 (3) (
-          a = bool^0 = wchb_e1of2::_r[0] (7) 
-          b = bool^0 = wchb_e1of2::R.d[0] (4) 
+        r0 = process inv<>^0 = wchb_e1of2<>::r0 (3) (
+          a = bool^0 = wchb_e1of2<>::_r[0] (7) 
+          b = bool^0 = wchb_e1of2<>::R.d[0] (4) 
         )
-        r1 = process inv<>^0 = wchb_e1of2::r1 (4) (
-          a = bool^0 = wchb_e1of2::_r[1] (8) 
-          b = bool^0 = wchb_e1of2::R.d[1] (5) 
+        r1 = process inv<>^0 = wchb_e1of2<>::r1 (4) (
+          a = bool^0 = wchb_e1of2<>::_r[1] (8) 
+          b = bool^0 = wchb_e1of2<>::R.d[1] (5) 
         )
-        re = process inv<>^0 = wchb_e1of2::re (5) (
-          a = bool^0 = wchb_e1of2::rv (9) 
-          b = bool^0 = wchb_e1of2::L.e (3) 
+        re = process inv<>^0 = wchb_e1of2<>::re (5) (
+          a = bool^0 = wchb_e1of2<>::rv (9) 
+          b = bool^0 = wchb_e1of2<>::L.e (3) 
         )
-        rv = bool^0 = wchb_e1of2::rv (9) 
+        rv = bool^0 = wchb_e1of2<>::rv (9) 
         Created state:
         process instance pool:
-        1	wchb_e1of2::L
-        2	wchb_e1of2::R
-        3	wchb_e1of2::r0
-        4	wchb_e1of2::r1
-        5	wchb_e1of2::re
+        1	wchb_e1of2<>::L
+        2	wchb_e1of2<>::R
+        3	wchb_e1of2<>::r0
+        4	wchb_e1of2<>::r1
+        5	wchb_e1of2<>::re
         bool instance pool:
-        1	wchb_e1of2::L.d[0]
-        2	wchb_e1of2::L.d[1]
-        3	wchb_e1of2::L.e
-        4	wchb_e1of2::R.d[0]
-        5	wchb_e1of2::R.d[1]
-        6	wchb_e1of2::R.e
-        7	wchb_e1of2::_r[0]
-        8	wchb_e1of2::_r[1]
-        9	wchb_e1of2::rv
+        1	wchb_e1of2<>::L.d[0]
+        2	wchb_e1of2<>::L.d[1]
+        3	wchb_e1of2<>::L.e
+        4	wchb_e1of2<>::R.d[0]
+        5	wchb_e1of2<>::R.d[1]
+        6	wchb_e1of2<>::R.e
+        7	wchb_e1of2<>::_r[0]
+        8	wchb_e1of2<>::_r[1]
+        9	wchb_e1of2<>::rv
         resolved prs:
         L.d[0] & R.e -> _r[0]-
         L.d[1] & R.e -> _r[1]-

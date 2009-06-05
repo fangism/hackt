@@ -114,15 +114,15 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        L = channel chan?(bool<>)^0 = bool_peekbuf::L (1) 
-        R = channel chan!(bool<>)^0 = bool_peekbuf::R (2) 
-        x = bool^0 = bool_peekbuf::x (1) 
+        L = channel chan?(bool<>)^0 = bool_peekbuf<>::L (1) 
+        R = channel chan!(bool<>)^0 = bool_peekbuf<>::R (2) 
+        x = bool^0 = bool_peekbuf<>::x (1) 
         Created state:
         channel instance pool:
-        1	bool_peekbuf::L
-        2	bool_peekbuf::R
+        1	bool_peekbuf<>::L
+        2	bool_peekbuf<>::R
         bool instance pool:
-        1	bool_peekbuf::x
+        1	bool_peekbuf<>::x
         resolved concurrent actions:
           *[
             sequential: {
@@ -165,15 +165,15 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        L = channel chan?(bool<>)^0 = bool_peekbuf_fast::L (1) 
-        R = channel chan!(bool<>)^0 = bool_peekbuf_fast::R (2) 
-        x = bool^0 = bool_peekbuf_fast::x (1) 
+        L = channel chan?(bool<>)^0 = bool_peekbuf_fast<>::L (1) 
+        R = channel chan!(bool<>)^0 = bool_peekbuf_fast<>::R (2) 
+        x = bool^0 = bool_peekbuf_fast<>::x (1) 
         Created state:
         channel instance pool:
-        1	bool_peekbuf_fast::L
-        2	bool_peekbuf_fast::R
+        1	bool_peekbuf_fast<>::L
+        2	bool_peekbuf_fast<>::R
         bool instance pool:
-        1	bool_peekbuf_fast::x
+        1	bool_peekbuf_fast<>::x
         resolved concurrent actions:
           *[
             sequential: {

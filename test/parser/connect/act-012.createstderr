@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	14	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -67,14 +67,14 @@ In namespace "", we have: {
       prs:
         a & b -> c-
       footprint: {
-        a = bool^0 = foo::a (1) 
-        b = bool^0 = foo::b (2) 
-        c = bool^0 = foo::c (3) 
+        a = bool^0 = foo<>::a (1) 
+        b = bool^0 = foo<>::b (2) 
+        c = bool^0 = foo<>::c (3) 
         Created state:
         bool instance pool:
-        1	foo::a
-        2	foo::b
-        3	foo::c
+        1	foo<>::a
+        2	foo<>::b
+        3	foo<>::c
         resolved prs:
         a & b -> c-
       }

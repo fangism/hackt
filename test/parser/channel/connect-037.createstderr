@@ -1,7 +1,7 @@
-WARNING: channel boring::B lacks connection to a producer.
-WARNING: channel boring::B lacks connection to a consumer.
-WARNING: channel boring::I lacks connection to a producer.
-WARNING: channel boring::I lacks connection to a consumer.
+WARNING: channel boring<>::B lacks connection to a producer.
+WARNING: channel boring<>::B lacks connection to a consumer.
+WARNING: channel boring<>::I lacks connection to a producer.
+WARNING: channel boring<>::I lacks connection to a consumer.
 WARNING: channel lecture.B lacks connection to a producer.
 WARNING: channel lecture.B lacks connection to a consumer.
 WARNING: channel lecture.I lacks connection to a producer.
@@ -57,12 +57,12 @@ In namespace "", we have: {
         chan(bool<>) B
         chan(int<32>) I
       footprint: {
-        B = channel chan(bool<>)^0 = boring::B (1) 
-        I = channel chan(int<32>)^0 = boring::I (2) 
+        B = channel chan(bool<>)^0 = boring<>::B (1) 
+        I = channel chan(int<32>)^0 = boring<>::I (2) 
         Created state:
         channel instance pool:
-        1	boring::B
-        2	boring::I
+        1	boring<>::B
+        2	boring<>::I
       }
       }
 

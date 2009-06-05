@@ -553,14 +553,14 @@ In namespace "", we have: {
         }
       footprint collection: {
         <32> {
-          B = channel chan?(int<32>)^0 = int_sink::B (1) 
+          B = channel chan?(int<32>)^0 = int_sink<32>::B (1) 
           W = pint^0 value: 32
-          b = int<32>^0 = int_sink::b (1) 
+          b = int<32>^0 = int_sink<32>::b (1) 
           Created state:
           channel instance pool:
-          1	int_sink::B
+          1	int_sink<32>::B
           int instance pool:
-          1	int_sink::b
+          1	int_sink<32>::b
           resolved concurrent actions:
             *[
               B?(b)
@@ -630,11 +630,11 @@ In namespace "", we have: {
               2 = 30
             }
           N = pint^0 value: 3
-          S = channel chan!(int<32>)^0 = int_source::S (1) 
+          S = channel chan!(int<32>)^0 = int_source<32, 3, {15,24,30}>::S (1) 
           W = pint^0 value: 32
           Created state:
           channel instance pool:
-          1	int_source::S
+          1	int_source<32, 3, {15,24,30}>::S
           resolved concurrent actions:
             *[
               sequential: {
@@ -658,11 +658,11 @@ In namespace "", we have: {
               3 = 30
             }
           N = pint^0 value: 4
-          S = channel chan!(int<32>)^0 = int_source::S (1) 
+          S = channel chan!(int<32>)^0 = int_source<32, 4, {12,15,17,30}>::S (1) 
           W = pint^0 value: 32
           Created state:
           channel instance pool:
-          1	int_source::S
+          1	int_source<32, 4, {12,15,17,30}>::S
           resolved concurrent actions:
             *[
               sequential: {
@@ -689,11 +689,11 @@ In namespace "", we have: {
               4 = 34
             }
           N = pint^0 value: 5
-          S = channel chan!(int<32>)^0 = int_source::S (1) 
+          S = channel chan!(int<32>)^0 = int_source<32, 5, {9,13,22,27,34}>::S (1) 
           W = pint^0 value: 32
           Created state:
           channel instance pool:
-          1	int_source::S
+          1	int_source<32, 5, {9,13,22,27,34}>::S
           resolved concurrent actions:
             *[
               sequential: {
@@ -723,11 +723,11 @@ In namespace "", we have: {
               5 = 28
             }
           N = pint^0 value: 6
-          S = channel chan!(int<32>)^0 = int_source::S (1) 
+          S = channel chan!(int<32>)^0 = int_source<32, 6, {16,18,20,32,36,28}>::S (1) 
           W = pint^0 value: 32
           Created state:
           channel instance pool:
-          1	int_source::S
+          1	int_source<32, 6, {16,18,20,32,36,28}>::S
           resolved concurrent actions:
             *[
               sequential: {
@@ -879,27 +879,27 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        A = channel chan?(int<32>)^0 = my_gcd::A (1) 
-        B = channel chan?(int<32>)^0 = my_gcd::B (2) 
-        C = channel chan?(int<32>)^0 = my_gcd::C (3) 
-        D = channel chan?(int<32>)^0 = my_gcd::D (4) 
-        G = channel chan!(int<32>)^0 = my_gcd::G (5) 
-        a = int<32>^0 = my_gcd::a (1) 
-        b = int<32>^0 = my_gcd::b (2) 
-        c = int<32>^0 = my_gcd::c (3) 
-        d = int<32>^0 = my_gcd::d (4) 
+        A = channel chan?(int<32>)^0 = my_gcd<>::A (1) 
+        B = channel chan?(int<32>)^0 = my_gcd<>::B (2) 
+        C = channel chan?(int<32>)^0 = my_gcd<>::C (3) 
+        D = channel chan?(int<32>)^0 = my_gcd<>::D (4) 
+        G = channel chan!(int<32>)^0 = my_gcd<>::G (5) 
+        a = int<32>^0 = my_gcd<>::a (1) 
+        b = int<32>^0 = my_gcd<>::b (2) 
+        c = int<32>^0 = my_gcd<>::c (3) 
+        d = int<32>^0 = my_gcd<>::d (4) 
         Created state:
         channel instance pool:
-        1	my_gcd::A
-        2	my_gcd::B
-        3	my_gcd::C
-        4	my_gcd::D
-        5	my_gcd::G
+        1	my_gcd<>::A
+        2	my_gcd<>::B
+        3	my_gcd<>::C
+        4	my_gcd<>::D
+        5	my_gcd<>::G
         int instance pool:
-        1	my_gcd::a
-        2	my_gcd::b
-        3	my_gcd::c
-        4	my_gcd::d
+        1	my_gcd<>::a
+        2	my_gcd<>::b
+        3	my_gcd<>::c
+        4	my_gcd<>::d
         resolved concurrent actions:
           *[
             sequential: {

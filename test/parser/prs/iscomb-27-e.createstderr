@@ -170,27 +170,27 @@ In namespace "", we have: {
         e1of2<> r
         l.e@[iscomb=1]
       footprint: {
-        l = process e1of2<>^0 = blah1::l (1) (
-          t = bool^0 = blah1::l.t (1) 
-          f = bool^0 = blah1::l.f (2) 
-          e = bool^0 = blah1::l.e (3) @[ iscomb ] 
+        l = process e1of2<>^0 = blah1<>::l (1) (
+          t = bool^0 = blah1<>::l.t (1) 
+          f = bool^0 = blah1<>::l.f (2) 
+          e = bool^0 = blah1<>::l.e (3) @[ iscomb ] 
         )
-        r = process e1of2<>^0 = blah1::r (2) (
-          t = bool^0 = blah1::r.t (4) 
-          f = bool^0 = blah1::r.f (5) 
-          e = bool^0 = blah1::r.e (6) 
+        r = process e1of2<>^0 = blah1<>::r (2) (
+          t = bool^0 = blah1<>::r.t (4) 
+          f = bool^0 = blah1<>::r.f (5) 
+          e = bool^0 = blah1<>::r.e (6) 
         )
         Created state:
         process instance pool:
-        1	blah1::l
-        2	blah1::r
+        1	blah1<>::l
+        2	blah1<>::r
         bool instance pool:
-        1	blah1::l.t
-        2	blah1::l.f
-        3	blah1::l.e @[ iscomb ]
-        4	blah1::r.t
-        5	blah1::r.f
-        6	blah1::r.e
+        1	blah1<>::l.t
+        2	blah1<>::l.f
+        3	blah1<>::l.e @[ iscomb ]
+        4	blah1<>::r.t
+        5	blah1<>::r.f
+        6	blah1<>::r.e
       }
       }
 
@@ -213,41 +213,41 @@ In namespace "", we have: {
       footprint: {
         l = process e1of2<>^1
           {
-            [0] = blah2::l[0] (3) (
-              t = bool^0 = blah2::l[0].t (4) 
-              f = bool^0 = blah2::l[0].f (5) 
-              e = bool^0 = blah2::l[0].e (6) @[ iscomb ] 
+            [0] = blah2<>::l[0] (3) (
+              t = bool^0 = blah2<>::l[0].t (4) 
+              f = bool^0 = blah2<>::l[0].f (5) 
+              e = bool^0 = blah2<>::l[0].e (6) @[ iscomb ] 
             )
           }
-        r = process e1of2<>^0 = blah2::r (1) (
-          t = bool^0 = blah2::r.t (1) @[ iscomb ] 
-          f = bool^0 = blah2::r.f (2) @[ iscomb ] 
-          e = bool^0 = blah2::r.e (3) 
+        r = process e1of2<>^0 = blah2<>::r (1) (
+          t = bool^0 = blah2<>::r.t (1) @[ iscomb ] 
+          f = bool^0 = blah2<>::r.f (2) @[ iscomb ] 
+          e = bool^0 = blah2<>::r.e (3) 
         )
-        xx = process blah1<>^0 = blah2::xx (2) (
-          l = process e1of2<>^0 = blah2::l[0] (3) (
-            t = bool^0 = blah2::l[0].t (4) 
-            f = bool^0 = blah2::l[0].f (5) 
-            e = bool^0 = blah2::l[0].e (6) @[ iscomb ] 
+        xx = process blah1<>^0 = blah2<>::xx (2) (
+          l = process e1of2<>^0 = blah2<>::l[0] (3) (
+            t = bool^0 = blah2<>::l[0].t (4) 
+            f = bool^0 = blah2<>::l[0].f (5) 
+            e = bool^0 = blah2<>::l[0].e (6) @[ iscomb ] 
           )
-          r = process e1of2<>^0 = blah2::r (1) (
-            t = bool^0 = blah2::r.t (1) @[ iscomb ] 
-            f = bool^0 = blah2::r.f (2) @[ iscomb ] 
-            e = bool^0 = blah2::r.e (3) 
+          r = process e1of2<>^0 = blah2<>::r (1) (
+            t = bool^0 = blah2<>::r.t (1) @[ iscomb ] 
+            f = bool^0 = blah2<>::r.f (2) @[ iscomb ] 
+            e = bool^0 = blah2<>::r.e (3) 
           )
         )
         Created state:
         process instance pool:
-        1	blah2::r
-        2	blah2::xx
-        3	blah2::l[0]
+        1	blah2<>::r
+        2	blah2<>::xx
+        3	blah2<>::l[0]
         bool instance pool:
-        1	blah2::r.t @[ iscomb ]
-        2	blah2::r.f @[ iscomb ]
-        3	blah2::r.e
-        4	blah2::l[0].t
-        5	blah2::l[0].f
-        6	blah2::l[0].e @[ iscomb ]
+        1	blah2<>::r.t @[ iscomb ]
+        2	blah2<>::r.f @[ iscomb ]
+        3	blah2<>::r.e
+        4	blah2<>::l[0].t
+        5	blah2<>::l[0].f
+        6	blah2<>::l[0].e @[ iscomb ]
       }
       }
 
@@ -269,48 +269,48 @@ In namespace "", we have: {
         blah2<> ma
         ma ({ in_a }, out);
       footprint: {
-        in = process e1of2<>^0 = blah3::in (1) (
-          t = bool^0 = blah3::in.t (1) 
-          f = bool^0 = blah3::in.f (2) 
-          e = bool^0 = blah3::in.e (3) @[ iscomb ] 
+        in = process e1of2<>^0 = blah3<>::in (1) (
+          t = bool^0 = blah3<>::in.t (1) 
+          f = bool^0 = blah3<>::in.f (2) 
+          e = bool^0 = blah3<>::in.e (3) @[ iscomb ] 
         )
-        in_a = process e1of2<>^0 = blah3::in (1) (
-          t = bool^0 = blah3::in.t (1) 
-          f = bool^0 = blah3::in.f (2) 
-          e = bool^0 = blah3::in.e (3) @[ iscomb ] 
+        in_a = process e1of2<>^0 = blah3<>::in (1) (
+          t = bool^0 = blah3<>::in.t (1) 
+          f = bool^0 = blah3<>::in.f (2) 
+          e = bool^0 = blah3<>::in.e (3) @[ iscomb ] 
         )
-        ma = process blah2<>^0 = blah3::ma (3) (
+        ma = process blah2<>^0 = blah3<>::ma (3) (
           l = process e1of2<>^1
             {
-              [0] = blah3::in (1) (
-                t = bool^0 = blah3::in.t (1) 
-                f = bool^0 = blah3::in.f (2) 
-                e = bool^0 = blah3::in.e (3) @[ iscomb ] 
+              [0] = blah3<>::in (1) (
+                t = bool^0 = blah3<>::in.t (1) 
+                f = bool^0 = blah3<>::in.f (2) 
+                e = bool^0 = blah3<>::in.e (3) @[ iscomb ] 
               )
             }
-          r = process e1of2<>^0 = blah3::out (2) (
-            t = bool^0 = blah3::out.t (4) @[ iscomb ] 
-            f = bool^0 = blah3::out.f (5) @[ iscomb ] 
-            e = bool^0 = blah3::out.e (6) 
+          r = process e1of2<>^0 = blah3<>::out (2) (
+            t = bool^0 = blah3<>::out.t (4) @[ iscomb ] 
+            f = bool^0 = blah3<>::out.f (5) @[ iscomb ] 
+            e = bool^0 = blah3<>::out.e (6) 
           )
         )
-        out = process e1of2<>^0 = blah3::out (2) (
-          t = bool^0 = blah3::out.t (4) @[ iscomb ] 
-          f = bool^0 = blah3::out.f (5) @[ iscomb ] 
-          e = bool^0 = blah3::out.e (6) 
+        out = process e1of2<>^0 = blah3<>::out (2) (
+          t = bool^0 = blah3<>::out.t (4) @[ iscomb ] 
+          f = bool^0 = blah3<>::out.f (5) @[ iscomb ] 
+          e = bool^0 = blah3<>::out.e (6) 
         )
         Created state:
         process instance pool:
-        1	blah3::in
-        2	blah3::out
-        3	blah3::ma
+        1	blah3<>::in
+        2	blah3<>::out
+        3	blah3<>::ma
         bool instance pool:
-        1	blah3::in.t
-        2	blah3::in.f
-        3	blah3::in.e @[ iscomb ]
-        4	blah3::out.t @[ iscomb ]
-        5	blah3::out.f @[ iscomb ]
-        6	blah3::out.e
+        1	blah3<>::in.t
+        2	blah3<>::in.f
+        3	blah3<>::in.e @[ iscomb ]
+        4	blah3<>::out.t @[ iscomb ]
+        5	blah3<>::out.f @[ iscomb ]
+        6	blah3<>::out.e
       }
       }
 
@@ -339,14 +339,14 @@ In namespace "", we have: {
         bool<> f
         bool<> e
       footprint: {
-        e = bool^0 = e1of2::e (3) 
-        f = bool^0 = e1of2::f (2) 
-        t = bool^0 = e1of2::t (1) 
+        e = bool^0 = e1of2<>::e (3) 
+        f = bool^0 = e1of2<>::f (2) 
+        t = bool^0 = e1of2<>::t (1) 
         Created state:
         bool instance pool:
-        1	e1of2::t
-        2	e1of2::f
-        3	e1of2::e
+        1	e1of2<>::t
+        2	e1of2<>::f
+        3	e1of2<>::e
       }
       }
 
@@ -358,30 +358,30 @@ In namespace "", we have: {
       unroll sequence: 
         blah3<> bar
       footprint: {
-        bar = process blah3<>^0 = obox::bar (1) (
-          in = process e1of2<>^0 = obox::bar.in (2) (
-            t = bool^0 = obox::bar.in.t (1) 
-            f = bool^0 = obox::bar.in.f (2) 
-            e = bool^0 = obox::bar.in.e (3) @[ iscomb ] 
+        bar = process blah3<>^0 = obox<>::bar (1) (
+          in = process e1of2<>^0 = obox<>::bar.in (2) (
+            t = bool^0 = obox<>::bar.in.t (1) 
+            f = bool^0 = obox<>::bar.in.f (2) 
+            e = bool^0 = obox<>::bar.in.e (3) @[ iscomb ] 
           )
-          out = process e1of2<>^0 = obox::bar.out (3) (
-            t = bool^0 = obox::bar.out.t (4) @[ iscomb ] 
-            f = bool^0 = obox::bar.out.f (5) @[ iscomb ] 
-            e = bool^0 = obox::bar.out.e (6) 
+          out = process e1of2<>^0 = obox<>::bar.out (3) (
+            t = bool^0 = obox<>::bar.out.t (4) @[ iscomb ] 
+            f = bool^0 = obox<>::bar.out.f (5) @[ iscomb ] 
+            e = bool^0 = obox<>::bar.out.e (6) 
           )
         )
         Created state:
         process instance pool:
-        1	obox::bar
-        2	obox::bar.in
-        3	obox::bar.out
+        1	obox<>::bar
+        2	obox<>::bar.in
+        3	obox<>::bar.out
         bool instance pool:
-        1	obox::bar.in.t
-        2	obox::bar.in.f
-        3	obox::bar.in.e @[ iscomb ]
-        4	obox::bar.out.t @[ iscomb ]
-        5	obox::bar.out.f @[ iscomb ]
-        6	obox::bar.out.e
+        1	obox<>::bar.in.t
+        2	obox<>::bar.in.f
+        3	obox<>::bar.in.e @[ iscomb ]
+        4	obox<>::bar.out.t @[ iscomb ]
+        5	obox<>::bar.out.f @[ iscomb ]
+        6	obox<>::bar.out.e
       }
       }
 

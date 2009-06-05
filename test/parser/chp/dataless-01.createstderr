@@ -63,10 +63,10 @@ In namespace "", we have: {
           Y?
         }
       footprint: {
-        Y = channel chan?()^0 = clack::Y (1) 
+        Y = channel chan?()^0 = clack<>::Y (1) 
         Created state:
         channel instance pool:
-        1	clack::Y
+        1	clack<>::Y
         resolved concurrent actions:
           Y?
         chp events: {
@@ -88,10 +88,10 @@ In namespace "", we have: {
           X!
         }
       footprint: {
-        X = channel chan!()^0 = click::X (1) 
+        X = channel chan!()^0 = click<>::X (1) 
         Created state:
         channel instance pool:
-        1	click::X
+        1	click<>::X
         resolved concurrent actions:
           X!
         chp events: {

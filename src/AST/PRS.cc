@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.32 2008/11/26 01:57:44 fang Exp $
+	$Id: PRS.cc,v 1.33 2009/06/05 16:28:04 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -65,6 +65,7 @@
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::rule, "(prs-rule)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::literal, "(prs-literal)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::precharge, "(prs-precharge)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::loop, "(prs-loop)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::conditional, "(prs-conditional)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::body, "(prs-body)")
@@ -337,6 +338,40 @@ literal::check_nonmeta_reference(const context& c) const {
 	// return ref->check_nonmeta_reference(c);
 	return nonmeta_return_type(NULL);
 }
+
+//=============================================================================
+// class precharge method definitions
+precharge::precharge(const node_position* d, const expr* e) :
+		dir(d), pchg_expr(e) {
+	NEVER_NULL(d);
+	NEVER_NULL(pchg_expr);
+}
+
+precharge::~precharge() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(precharge)
+
+line_position
+precharge::leftmost(void) const {
+	return dir->leftmost();
+}
+
+line_position
+precharge::rightmost(void) const {
+	return pchg_expr->rightmost();
+}
+
+entity::PRS::precharge_expr
+precharge::check_prs_expr(context& c) const {
+if (pchg_expr) {
+	const prs_expr_return_type e(pchg_expr->check_prs_expr(c));
+	if (e) {
+		return entity::PRS::precharge_expr(e, dir->text[0] == '+');
+	}
+}
+	return entity::PRS::precharge_expr();	// default
+}
+
 
 //=============================================================================
 // class rule method definitions

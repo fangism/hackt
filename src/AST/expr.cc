@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.34 2008/11/12 02:59:53 fang Exp $
+	$Id: expr.cc,v 1.35 2009/06/05 16:28:05 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -24,6 +24,7 @@
 #include "AST/reference.h"
 #include "AST/range_list.h"
 #include "AST/node_list.tcc"
+#include "AST/PRS.h"			// for precharge
 #include "util/sublist.tcc"
 #include "AST/parse_context.h"
 
@@ -2162,7 +2163,16 @@ relational_expr::check_nonmeta_expr(const context& c) const {
 CONSTRUCTOR_INLINE
 logical_expr::logical_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
-		binary_expr(left, o, right) {
+		binary_expr(left, o, right), 
+		pchg(NULL) {
+}
+
+logical_expr::logical_expr(const expr* _l,
+		const char_punctuation_type* c,
+		const PRS::precharge* p,
+		const expr* _r) :
+		binary_expr(_l, c, _r), 
+		pchg(p) {
 }
 
 DESTRUCTOR_INLINE
@@ -2337,6 +2347,17 @@ logical_expr::check_prs_expr(context& c) const {
 		THROW_EXIT;		// for now
 		return prs_expr_return_type(NULL);
 	}
+	// TODO: process precharge
+	entity::PRS::precharge_expr precharge;	// default
+	if (pchg) {
+		precharge = pchg->check_prs_expr(c);
+		if (!precharge) {
+			cerr << "ERROR in precharge expression at " <<
+				where(*pchg) << endl;
+			THROW_EXIT;		// for now
+			return prs_expr_return_type(NULL);
+		}
+	}
 #if 0
 	lo->check();
 	ro->check();
@@ -2350,21 +2371,22 @@ logical_expr::check_prs_expr(context& c) const {
 		const count_ptr<entity::PRS::and_expr>
 			r_and(ro.is_a<entity::PRS::and_expr>());
 		if (l_and && !l_and.is_a<entity::PRS::and_expr_loop>()) {
+			// TODO: handle precharges in loops
 			if (r_and) {
 				copy(r_and->begin(), r_and->end(), 
 					back_inserter(*l_and));
 			} else {
-				l_and->push_back(ro);
+				l_and->push_back(ro, precharge);
 			}
 			return l_and;
 		} else if (r_and && !r_and.is_a<entity::PRS::and_expr_loop>()) {
-			r_and->push_front(lo);
+			r_and->push_front(lo, precharge);
 			return r_and;
 		} else {
 			const count_ptr<entity::PRS::and_expr>
-				ret(new entity::PRS::and_expr);
-			ret->push_back(lo);
-			ret->push_back(ro);
+				ret(new entity::PRS::and_expr(lo));
+			// ret->push_back(lo);
+			ret->push_back(ro, precharge);
 //			ret->check();	// paranoia
 			return ret;
 		}

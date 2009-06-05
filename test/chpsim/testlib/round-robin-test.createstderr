@@ -106,12 +106,12 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        Cin = channel chan?()^0 = round_robin_source::Cin (1) 
-        Cout = channel chan!()^0 = round_robin_source::Cout (2) 
+        Cin = channel chan?()^0 = round_robin_source<>::Cin (1) 
+        Cout = channel chan!()^0 = round_robin_source<>::Cout (2) 
         Created state:
         channel instance pool:
-        1	round_robin_source::Cin
-        2	round_robin_source::Cout
+        1	round_robin_source<>::Cin
+        2	round_robin_source<>::Cout
         resolved concurrent actions:
           *[
             sequential: {
@@ -153,13 +153,13 @@ In namespace "", we have: {
         }
       footprint collection: {
         <3> {
-          Cin = channel chan?()^0 = round_robin_source_finite::Cin (1) 
-          Cout = channel chan!()^0 = round_robin_source_finite::Cout (2) 
+          Cin = channel chan?()^0 = round_robin_source_finite<3>::Cin (1) 
+          Cout = channel chan!()^0 = round_robin_source_finite<3>::Cout (2) 
           N = pint^0 value: 3
           Created state:
           channel instance pool:
-          1	round_robin_source_finite::Cin
-          2	round_robin_source_finite::Cout
+          1	round_robin_source_finite<3>::Cin
+          2	round_robin_source_finite<3>::Cout
           resolved concurrent actions:
             sequential: {
               sequential: {

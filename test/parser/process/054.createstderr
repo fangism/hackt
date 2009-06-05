@@ -56,23 +56,23 @@ In namespace "", we have: {
         foo<> x
         foo<> y
       footprint: {
-        x = process foo<>^0 = bar::x (1) (
-          a = bool^0 = bar::x.a (1) 
-          b = bool^0 = bar::x.b (2) 
+        x = process foo<>^0 = bar<>::x (1) (
+          a = bool^0 = bar<>::x.a (1) 
+          b = bool^0 = bar<>::x.b (2) 
         )
-        y = process foo<>^0 = bar::y (2) (
-          a = bool^0 = bar::y.a (3) 
-          b = bool^0 = bar::y.b (4) 
+        y = process foo<>^0 = bar<>::y (2) (
+          a = bool^0 = bar<>::y.a (3) 
+          b = bool^0 = bar<>::y.b (4) 
         )
         Created state:
         process instance pool:
-        1	bar::x
-        2	bar::y
+        1	bar<>::x
+        2	bar<>::y
         bool instance pool:
-        1	bar::x.a
-        2	bar::x.b
-        3	bar::y.a
-        4	bar::y.b
+        1	bar<>::x.a
+        2	bar<>::x.b
+        3	bar<>::y.a
+        4	bar<>::y.b
       }
       }
 
@@ -88,12 +88,12 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = foo::a (1) 
-        b = bool^0 = foo::b (2) 
+        a = bool^0 = foo<>::a (1) 
+        b = bool^0 = foo<>::b (2) 
         Created state:
         bool instance pool:
-        1	foo::a
-        2	foo::b
+        1	foo<>::a
+        2	foo<>::b
       }
       }
 
@@ -109,43 +109,43 @@ In namespace "", we have: {
         bar<> p
         bar<> q
       footprint: {
-        p = process bar<>^0 = ick::p (1) (
-          x = process foo<>^0 = ick::p.x (2) (
-            a = bool^0 = ick::p.x.a (1) 
-            b = bool^0 = ick::p.x.b (2) 
+        p = process bar<>^0 = ick<>::p (1) (
+          x = process foo<>^0 = ick<>::p.x (2) (
+            a = bool^0 = ick<>::p.x.a (1) 
+            b = bool^0 = ick<>::p.x.b (2) 
           )
-          y = process foo<>^0 = ick::p.y (3) (
-            a = bool^0 = ick::p.y.a (3) 
-            b = bool^0 = ick::p.y.b (4) 
+          y = process foo<>^0 = ick<>::p.y (3) (
+            a = bool^0 = ick<>::p.y.a (3) 
+            b = bool^0 = ick<>::p.y.b (4) 
           )
         )
-        q = process bar<>^0 = ick::q (4) (
-          x = process foo<>^0 = ick::q.x (5) (
-            a = bool^0 = ick::q.x.a (5) 
-            b = bool^0 = ick::q.x.b (6) 
+        q = process bar<>^0 = ick<>::q (4) (
+          x = process foo<>^0 = ick<>::q.x (5) (
+            a = bool^0 = ick<>::q.x.a (5) 
+            b = bool^0 = ick<>::q.x.b (6) 
           )
-          y = process foo<>^0 = ick::q.y (6) (
-            a = bool^0 = ick::q.y.a (7) 
-            b = bool^0 = ick::q.y.b (8) 
+          y = process foo<>^0 = ick<>::q.y (6) (
+            a = bool^0 = ick<>::q.y.a (7) 
+            b = bool^0 = ick<>::q.y.b (8) 
           )
         )
         Created state:
         process instance pool:
-        1	ick::p
-        2	ick::p.x
-        3	ick::p.y
-        4	ick::q
-        5	ick::q.x
-        6	ick::q.y
+        1	ick<>::p
+        2	ick<>::p.x
+        3	ick<>::p.y
+        4	ick<>::q
+        5	ick<>::q.x
+        6	ick<>::q.y
         bool instance pool:
-        1	ick::p.x.a
-        2	ick::p.x.b
-        3	ick::p.y.a
-        4	ick::p.y.b
-        5	ick::q.x.a
-        6	ick::q.x.b
-        7	ick::q.y.a
-        8	ick::q.y.b
+        1	ick<>::p.x.a
+        2	ick<>::p.x.b
+        3	ick<>::p.y.a
+        4	ick<>::p.y.b
+        5	ick<>::q.x.a
+        6	ick<>::q.x.b
+        7	ick<>::q.y.a
+        8	ick<>::q.y.b
       }
       }
 

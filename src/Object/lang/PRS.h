@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.24 2008/11/23 17:53:53 fang Exp $
+	$Id: PRS.h,v 1.25 2009/06/05 16:28:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -460,15 +460,72 @@ protected:
 
 //=============================================================================
 /**
+	Boolean expression used to precharge internal node.
+	Pull is indicated by direction.
+ */
+class precharge_expr {
+	count_ptr<const prs_expr>		expr;
+	bool					dir;
+public:
+	// arbitrary default
+	precharge_expr() : expr(), dir(false) { }
+
+	precharge_expr(const count_ptr<const prs_expr>& e, const bool d) :
+		expr(e), dir(d) { }
+	// default copy-ctor
+	~precharge_expr();
+
+	operator bool () const { return expr; }
+
+	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
+
+	ostream&
+	dump(ostream&, const expr_dump_context&) const;
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
+};	// end class precharge_expr
+
+//=============================================================================
+typedef	precharge_expr				precharge_type;
+typedef	std::vector<precharge_type>		precharge_array_type;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Logical AND expression.  
+	Now requires precharge support...
+	Precharging can be sparse, so we have to use a map.
+	Q: should we allow optimization transformations in the presence
+		of precharge expressions???
  */
 class and_expr : public prs_expr, public prs_expr::expr_sequence_type {
 	typedef	and_expr			this_type;
 	typedef	prs_expr::expr_sequence_type	sequence_type;
 private:
 	enum { print_stamp = PRS_AND_EXPR_TYPE_ENUM };
+	precharge_array_type			precharge_array;
+private:
+	using expr_sequence_type::push_back;	// hide
+	using expr_sequence_type::push_front;	// hide
+
 public:
+	typedef	expr_sequence_type::const_reference	const_reference;
+	/**
+		This ctor *should* be reserved b/c of invariant
+		|precharge_array| +1 = |sequence|.
+	 */
 	and_expr();
+
+	explicit
+	and_expr(const_reference);
+
 	~and_expr();
 
 	ostream&
@@ -476,6 +533,18 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	void
+	push_front(const_reference, const precharge_type&);
+
+	void
+	push_front(const_reference);
+
+	void
+	push_back(const_reference, const precharge_type&);
+
+	void
+	push_back(const_reference);
 
 	void
 	check(void) const;

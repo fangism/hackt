@@ -64,14 +64,14 @@ In namespace "", we have: {
       unroll sequence: 
         egg<> egg_array
       footprint: {
-        egg_array = process egg<>^0 = basket::egg_array (1) (
-          yolk = int<32>^0 = basket::egg_array.yolk (1) 
+        egg_array = process egg<>^0 = basket<>::egg_array (1) (
+          yolk = int<32>^0 = basket<>::egg_array.yolk (1) 
         )
         Created state:
         process instance pool:
-        1	basket::egg_array
+        1	basket<>::egg_array
         int instance pool:
-        1	basket::egg_array.yolk
+        1	basket<>::egg_array.yolk
       }
       }
 
@@ -84,17 +84,17 @@ In namespace "", we have: {
       unroll sequence: 
         basket<> c
       footprint: {
-        c = process basket<>^0 = bundle::c (1) (
-          egg_array = process egg<>^0 = bundle::c.egg_array (2) (
-            yolk = int<32>^0 = bundle::c.egg_array.yolk (1) 
+        c = process basket<>^0 = bundle<>::c (1) (
+          egg_array = process egg<>^0 = bundle<>::c.egg_array (2) (
+            yolk = int<32>^0 = bundle<>::c.egg_array.yolk (1) 
           )
         )
         Created state:
         process instance pool:
-        1	bundle::c
-        2	bundle::c.egg_array
+        1	bundle<>::c
+        2	bundle<>::c.egg_array
         int instance pool:
-        1	bundle::c.egg_array.yolk
+        1	bundle<>::c.egg_array.yolk
       }
       }
 
@@ -107,10 +107,10 @@ In namespace "", we have: {
       unroll sequence: 
         int<32> yolk
       footprint: {
-        yolk = int<32>^0 = egg::yolk (1) 
+        yolk = int<32>^0 = egg<>::yolk (1) 
         Created state:
         int instance pool:
-        1	egg::yolk
+        1	egg<>::yolk
       }
       }
 

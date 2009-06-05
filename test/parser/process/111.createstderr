@@ -64,11 +64,11 @@ In namespace "", we have: {
         foo<> y
         x = y;
       footprint: {
-        x = process foo<>^0 = bar::x (1) 
-        y = process foo<>^0 = bar::x (1) 
+        x = process foo<>^0 = bar<>::x (1) 
+        y = process foo<>^0 = bar<>::x (1) 
         Created state:
         process instance pool:
-        1	bar::x
+        1	bar<>::x
       }
       }
 
@@ -83,11 +83,11 @@ In namespace "", we have: {
         bool<> b
         a = b;
       footprint: {
-        a = bool^0 = foo::a (1) 
-        b = bool^0 = foo::a (1) 
+        a = bool^0 = foo<>::a (1) 
+        b = bool^0 = foo<>::a (1) 
         Created state:
         bool instance pool:
-        1	foo::a
+        1	foo<>::a
       }
       }
 
@@ -102,11 +102,11 @@ In namespace "", we have: {
         bar<> q
         p = q;
       footprint: {
-        p = process bar<>^0 = ick::p (1) 
-        q = process bar<>^0 = ick::p (1) 
+        p = process bar<>^0 = ick<>::p (1) 
+        q = process bar<>^0 = ick<>::p (1) 
         Created state:
         process instance pool:
-        1	ick::p
+        1	ick<>::p
       }
       }
 

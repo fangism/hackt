@@ -93,13 +93,13 @@ In namespace "", we have: {
           N = pint^0 value: 2
           b = bool^1
             {
-              [0] = source_e::b[0] (1) 
-              [1] = source_e::b[1] (2) 
+              [0] = source_e<2, 2>::b[0] (1) 
+              [1] = source_e<2, 2>::b[1] (2) 
             }
           Created state:
           bool instance pool:
-          1	source_e::b[0]
-          2	source_e::b[1]
+          1	source_e<2, 2>::b[0]
+          2	source_e<2, 2>::b[1]
         }
       }
       }

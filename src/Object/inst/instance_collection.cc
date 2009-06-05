@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.28 2007/02/08 18:31:16 fang Exp $
+ 	$Id: instance_collection.cc,v 1.29 2009/06/05 16:28:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -488,12 +488,7 @@ if (owner) {
 		// nothing, just print the plain key
 		// maybe '$' to indicate variable?
 		o << '$';
-	} else if (owner.is_a<const definition_base>() &&
-			df.show_definition_owner) {
-		owner->dump_qualified_name(o, df) << "::";
-	} else if (owner.is_a<const name_space>() &&
-			(df.show_namespace_owner &&
-			!owner->is_global_namespace())) {
+	} else if (owner->dump_include_parent(df)) {
 		owner->dump_qualified_name(o, df) << "::";
 	}
 }

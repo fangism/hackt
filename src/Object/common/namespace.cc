@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.32 2009/04/20 20:35:26 fang Exp $
+ 	$Id: namespace.cc,v 1.33 2009/06/05 16:28:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -146,6 +146,16 @@ scopespace::~scopespace() {
 bool
 scopespace::is_global_namespace(void) const {
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+scopespace::dump_include_parent(const dump_flags& df) const {
+        return ((IS_A(const definition_base*, this) &&
+                        df.show_definition_owner) ||
+                (IS_A(const name_space*, this) &&
+                        df.show_namespace_owner &&
+                        !is_global_namespace()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

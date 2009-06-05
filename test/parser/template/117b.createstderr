@@ -69,19 +69,19 @@ In namespace "", we have: {
       footprint collection: {
         <true> {
           C = pbool^0 value: 1
-          fa0 = process fa<>^0 = cpa::fa0 (1) (
-            x = bool^0 = cpa::x (1) 
-            y = bool^0 = cpa::x (1) 
+          fa0 = process fa<>^0 = cpa<true>::fa0 (1) (
+            x = bool^0 = cpa<true>::x (1) 
+            y = bool^0 = cpa<true>::x (1) 
           )
-          x = bool^0 = cpa::x (1) 
-          y = bool^0 = cpa::x (1) 
+          x = bool^0 = cpa<true>::x (1) 
+          y = bool^0 = cpa<true>::x (1) 
           Created state:
           process instance pool:
-          1	cpa::fa0
+          1	cpa<true>::fa0
           bool instance pool:
-          1	cpa::x
+          1	cpa<true>::x
           bool port aliases:
-          1: cpa::x = cpa::y
+          1: cpa<true>::x = cpa<true>::y
         }
       }
       }
@@ -99,13 +99,13 @@ In namespace "", we have: {
         bool<> y
         x = y;
       footprint: {
-        x = bool^0 = fa::x (1) 
-        y = bool^0 = fa::x (1) 
+        x = bool^0 = fa<>::x (1) 
+        y = bool^0 = fa<>::x (1) 
         Created state:
         bool instance pool:
-        1	fa::x
+        1	fa<>::x
         bool port aliases:
-        1: fa::x = fa::y
+        1: fa<>::x = fa<>::y
       }
       }
 

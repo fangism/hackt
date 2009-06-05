@@ -107,18 +107,18 @@ In namespace "", we have: {
         }
       footprint collection: {
         <12> {
-          L = channel chan?(int<12>)^0 = adjacent_diff::L (1) 
-          R = channel chan!(int<12>)^0 = adjacent_diff::R (2) 
+          L = channel chan?(int<12>)^0 = adjacent_diff<12>::L (1) 
+          R = channel chan!(int<12>)^0 = adjacent_diff<12>::R (2) 
           W = pint^0 value: 12
-          x = int<12>^0 = adjacent_diff::x (1) 
-          z = int<12>^0 = adjacent_diff::z (2) 
+          x = int<12>^0 = adjacent_diff<12>::x (1) 
+          z = int<12>^0 = adjacent_diff<12>::z (2) 
           Created state:
           channel instance pool:
-          1	adjacent_diff::L
-          2	adjacent_diff::R
+          1	adjacent_diff<12>::L
+          2	adjacent_diff<12>::R
           int instance pool:
-          1	adjacent_diff::x
-          2	adjacent_diff::z
+          1	adjacent_diff<12>::x
+          2	adjacent_diff<12>::z
           resolved concurrent actions:
             sequential: {
               L?(x)

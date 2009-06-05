@@ -90,13 +90,13 @@ In namespace "", we have: {
           }
         }
       footprint: {
-        a = channel chan?(bool<>)^0 = inner::a (1) 
-        z = bool^0 = inner::z (1) 
+        a = channel chan?(bool<>)^0 = inner<>::a (1) 
+        z = bool^0 = inner<>::z (1) 
         Created state:
         channel instance pool:
-        1	inner::a
+        1	inner<>::a
         bool instance pool:
-        1	inner::z
+        1	inner<>::z
         resolved concurrent actions:
           sequential: {
             a?(z)
@@ -121,15 +121,15 @@ In namespace "", we have: {
         inner<> y
         y (b);
       footprint: {
-        b = channel chan?(bool<>)^0 = one_shot::b (1) 
-        y = process inner<>^0 = one_shot::y (1) (
-          a = channel chan?(bool<>)^0 = one_shot::b (1) 
+        b = channel chan?(bool<>)^0 = one_shot<>::b (1) 
+        y = process inner<>^0 = one_shot<>::y (1) (
+          a = channel chan?(bool<>)^0 = one_shot<>::b (1) 
         )
         Created state:
         process instance pool:
-        1	one_shot::y
+        1	one_shot<>::y
         channel instance pool:
-        1	one_shot::b
+        1	one_shot<>::b
       }
       }
 

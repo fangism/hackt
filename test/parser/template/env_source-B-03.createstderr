@@ -74,10 +74,10 @@ In namespace "", we have: {
         <2, 3> {
           M = pint^0 value: 2
           N = pint^0 value: 3
-          b = bool^0 = source_e::b (1) 
+          b = bool^0 = source_e<2, 3>::b (1) 
           Created state:
           bool instance pool:
-          1	source_e::b
+          1	source_e<2, 3>::b
         }
       }
       }

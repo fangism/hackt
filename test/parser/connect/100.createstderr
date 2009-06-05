@@ -62,12 +62,12 @@ In namespace "", we have: {
         foo<1> a
         foo<2> b
       footprint: {
-        a = process foo<1>^0 = bar::a (1) 
-        b = process foo<2>^0 = bar::b (2) 
+        a = process foo<1>^0 = bar<>::a (1) 
+        b = process foo<2>^0 = bar<>::b (2) 
         Created state:
         process instance pool:
-        1	bar::a
-        2	bar::b
+        1	bar<>::a
+        2	bar<>::b
       }
       }
 

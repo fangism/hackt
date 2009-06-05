@@ -1,3 +1,5 @@
+Warning: node null<3>::x has no pull-up nor pull-dn PRS fanin.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size
@@ -72,21 +74,21 @@ In namespace "", we have: {
       footprint collection: {
         <0> {
           N = pint^0 value: 0
-          x = bool^0 = null::x (1) 
-          y = bool^0 = null::y (2) 
+          x = bool^0 = null<0>::x (1) 
+          y = bool^0 = null<0>::y (2) 
           Created state:
           bool instance pool:
-          1	null::x
-          2	null::y
+          1	null<0>::x
+          2	null<0>::y
         }
         <3> {
           N = pint^0 value: 3
-          x = bool^0 = null::x (1) 
-          y = bool^0 = null::y (2) 
+          x = bool^0 = null<3>::x (1) 
+          y = bool^0 = null<3>::y (2) 
           Created state:
           bool instance pool:
-          1	null::x
-          2	null::y
+          1	null<3>::x
+          2	null<3>::y
           resolved prs:
           x -> y-
           ~x -> y+

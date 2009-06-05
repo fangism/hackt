@@ -1,0 +1,31 @@
+// "macro-pass-09.hac"
+
+defproc foo1(bool g, s, b) {
+bool a;
+prs {
+	passn(g, s, a)	// counts as pull down
+	a	=> b-
+}
+}
+
+defproc foo2(bool _g, s, b) {
+bool a;
+prs {
+	passp(_g, s, a)	// counts as pull up
+	a	=> b-
+}
+}
+
+defproc foo3(bool g, _g, s, b) {
+bool a;
+prs {
+	passn(g, s, a)	// counts as pull down
+	passp(_g, s, a)	// counts as pull up
+	a	=> b-
+}
+}
+
+foo1 bar1;
+foo2 bar2;
+foo3 bar3;
+

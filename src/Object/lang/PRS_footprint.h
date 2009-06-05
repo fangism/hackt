@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.12 2008/11/11 20:06:17 fang Exp $
+	$Id: PRS_footprint.h,v 1.13 2009/06/05 16:28:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -9,6 +9,7 @@
 #include <iosfwd>
 #include <vector>
 #include <map>
+#include <set>		// for collecting unique node indices
 #include <string>
 #include "Object/inst/instance_pool_fwd.h"
 #include "Object/lang/PRS_footprint_expr.h"
@@ -148,6 +149,10 @@ public:
 	current_expr_index(void) const {
 		return expr_pool.size();
 	}
+
+	void
+	collect_literal_indices(std::set<size_t>&, // node_index_type
+		const size_t) const;	// should be expr_index_type
 
 public:
 	void

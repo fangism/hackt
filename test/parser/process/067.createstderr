@@ -57,29 +57,29 @@ In namespace "", we have: {
         foo<> y
         x = y;
       footprint: {
-        x = process foo<>^0 = bar::x (1) (
+        x = process foo<>^0 = bar<>::x (1) (
           a = bool^1
             {
-              [0] = bar::x.a[0] (1) 
-              [1] = bar::x.a[0] (1) 
+              [0] = bar<>::x.a[0] (1) 
+              [1] = bar<>::x.a[0] (1) 
             }
         )
-        y = process foo<>^0 = bar::x (1) (
+        y = process foo<>^0 = bar<>::x (1) (
           a = bool^1
             {
-              [0] = bar::x.a[0] (1) 
-              [1] = bar::x.a[0] (1) 
+              [0] = bar<>::x.a[0] (1) 
+              [1] = bar<>::x.a[0] (1) 
             }
         )
         Created state:
         process instance pool:
-        1	bar::x
+        1	bar<>::x
         bool instance pool:
-        1	bar::x.a[0]
+        1	bar<>::x.a[0]
         process port aliases:
-        1: bar::x = bar::y
+        1: bar<>::x = bar<>::y
         bool port aliases:
-        1: bar::x.a[0] = bar::x.a[1] = bar::y.a[0] = bar::y.a[1]
+        1: bar<>::x.a[0] = bar<>::x.a[1] = bar<>::y.a[0] = bar<>::y.a[1]
       }
       }
 
@@ -95,14 +95,14 @@ In namespace "", we have: {
       footprint: {
         a = bool^1
           {
-            [0] = foo::a[0] (1) 
-            [1] = foo::a[0] (1) 
+            [0] = foo<>::a[0] (1) 
+            [1] = foo<>::a[0] (1) 
           }
         Created state:
         bool instance pool:
-        1	foo::a[0]
+        1	foo<>::a[0]
         bool port aliases:
-        1: foo::a[0] = foo::a[1]
+        1: foo<>::a[0] = foo<>::a[1]
       }
       }
 

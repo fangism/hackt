@@ -82,41 +82,41 @@ In namespace "", we have: {
       footprint collection: {
         <3> {
           N = pint^0 value: 3
-          x = bool^0 = baz::x (1) 
-          y = bool^0 = baz::y (2) 
+          x = bool^0 = baz<3>::x (1) 
+          y = bool^0 = baz<3>::y (2) 
           z = bool^1
             {
-              [0] = baz::z[0] (3) 
-              [1] = baz::z[1] (4) 
-              [2] = baz::z[2] (5) 
+              [0] = baz<3>::z[0] (3) 
+              [1] = baz<3>::z[1] (4) 
+              [2] = baz<3>::z[2] (5) 
             }
           Created state:
           bool instance pool:
-          1	baz::x
-          2	baz::y
-          3	baz::z[0]
-          4	baz::z[1]
-          5	baz::z[2]
+          1	baz<3>::x
+          2	baz<3>::y
+          3	baz<3>::z[0]
+          4	baz<3>::z[1]
+          5	baz<3>::z[2]
         }
         <4> {
           N = pint^0 value: 4
-          x = bool^0 = baz::x (1) 
-          y = bool^0 = baz::y (2) 
+          x = bool^0 = baz<4>::x (1) 
+          y = bool^0 = baz<4>::y (2) 
           z = bool^1
             {
-              [0] = baz::z[0] (3) 
-              [1] = baz::z[1] (4) 
-              [2] = baz::z[2] (5) 
-              [3] = baz::z[3] (6) 
+              [0] = baz<4>::z[0] (3) 
+              [1] = baz<4>::z[1] (4) 
+              [2] = baz<4>::z[2] (5) 
+              [3] = baz<4>::z[3] (6) 
             }
           Created state:
           bool instance pool:
-          1	baz::x
-          2	baz::y
-          3	baz::z[0]
-          4	baz::z[1]
-          5	baz::z[2]
-          6	baz::z[3]
+          1	baz<4>::x
+          2	baz<4>::y
+          3	baz<4>::z[0]
+          4	baz<4>::z[1]
+          5	baz<4>::z[2]
+          6	baz<4>::z[3]
         }
       }
       }

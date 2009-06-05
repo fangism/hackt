@@ -1,3 +1,5 @@
+Warning: node aftershave<>::a has no pull-up nor pull-dn PRS fanin.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size
@@ -50,12 +52,12 @@ In namespace "", we have: {
         a -> b- [after=12; ]
         ~a -> b+ [after=12; ]
       footprint: {
-        a = bool^0 = aftershave::a (1) 
-        b = bool^0 = aftershave::b (2) 
+        a = bool^0 = aftershave<>::a (1) 
+        b = bool^0 = aftershave<>::b (2) 
         Created state:
         bool instance pool:
-        1	aftershave::a
-        2	aftershave::b
+        1	aftershave<>::a
+        2	aftershave<>::b
         resolved prs:
         a -> b- [after=12; ]
         ~a -> b+ [after=12; ]

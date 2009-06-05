@@ -70,15 +70,15 @@ In namespace "", we have: {
           N = pint^0 value: 2
           z = bool^1
             {
-              [0] = spec_test::z[0] (1) 
-              [1] = spec_test::z[1] (2) 
-              [2] = spec_test::z[2] (3) 
+              [0] = spec_test<2, 4>::z[0] (1) 
+              [1] = spec_test<2, 4>::z[1] (2) 
+              [2] = spec_test<2, 4>::z[2] (3) 
             }
           Created state:
           bool instance pool:
-          1	spec_test::z[0]
-          2	spec_test::z[1]
-          3	spec_test::z[2]
+          1	spec_test<2, 4>::z[0]
+          2	spec_test<2, 4>::z[1]
+          3	spec_test<2, 4>::z[2]
           resolved specs:
           mk_exclhi({z[0],z[1],z[2]})
         }
@@ -87,15 +87,15 @@ In namespace "", we have: {
           N = pint^0 value: 3
           z = bool^1
             {
-              [0] = spec_test::z[0] (1) 
-              [1] = spec_test::z[1] (2) 
-              [2] = spec_test::z[2] (3) 
+              [0] = spec_test<3, 1>::z[0] (1) 
+              [1] = spec_test<3, 1>::z[1] (2) 
+              [2] = spec_test<3, 1>::z[2] (3) 
             }
           Created state:
           bool instance pool:
-          1	spec_test::z[0]
-          2	spec_test::z[1]
-          3	spec_test::z[2]
+          1	spec_test<3, 1>::z[0]
+          2	spec_test<3, 1>::z[1]
+          3	spec_test<3, 1>::z[2]
         }
       }
       }

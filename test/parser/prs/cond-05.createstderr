@@ -67,10 +67,10 @@ In namespace "", we have: {
         }
         <true> {
           N = pbool^0 value: 1
-          b = process bar<>^0 = foo::b (1) 
+          b = process bar<>^0 = foo<true>::b (1) 
           Created state:
           process instance pool:
-          1	foo::b
+          1	foo<true>::b
         }
       }
       }

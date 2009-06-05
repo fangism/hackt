@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.11 2009/02/11 02:35:10 fang Exp $
+	$Id: connection_policy.h,v 1.12 2009/06/05 16:28:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -11,6 +11,14 @@
 #include <iosfwd>
 #include "util/string_fwd.h"
 #include "util/boolean_types.h"
+
+/**
+	Define to 1 to add a field for checking PRS fanin/fanout, 
+	and direction checking.  
+	Goal: 1
+	Rationale: connectivity summary needed for netlist generation.
+ */
+#define	BOOL_PRS_CONNECTIVITY_CHECKING		1
 
 namespace HAC {
 namespace entity {
@@ -101,7 +109,7 @@ protected:
 		by bitwise OR, so values should be defined and chosen
 		so that set bits propagate when aliases are combined.  
 	 */
-	enum flags {
+	enum attribute_flags {
 	/**
 		Stipulates that the node should be treated as combinational
 		Number of bit fields is constrained by 
@@ -124,8 +132,95 @@ protected:
 	 */
 		BOOL_MAY_INTERFERE	= 0x0020,
 		BOOL_MAY_WEAK_INTERFERE	= 0x0040,
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+	/**
+		The first four flags are properties from participation
+		in production rules and propagated from subinstances.
+		Since these are local properties, they should be 
+		masked out and replaced with their substructure
+		counterparts.  
+		These are only computed, never set by user directly.
+	 */
+		BOOL_LOCAL_PRS_FANOUT_PULL_DN	= 0x0100,
+		BOOL_LOCAL_PRS_FANOUT_PULL_UP	= 0x0200,
+		BOOL_LOCAL_PRS_FANIN_PULL_DN	= 0x0400,
+		BOOL_LOCAL_PRS_FANIN_PULL_UP	= 0x0800,
+		/// derived flag: all local prs fields
+		BOOL_LOCAL_PRS_MASK =
+			BOOL_LOCAL_PRS_FANOUT_PULL_DN |
+			BOOL_LOCAL_PRS_FANOUT_PULL_UP |
+			BOOL_LOCAL_PRS_FANIN_PULL_DN |
+			BOOL_LOCAL_PRS_FANIN_PULL_UP,
+			
+	/**
+		Fanin/fanout inherited properties from substructures.  
+	 */
+		BOOL_SUBSTRUCT_FANOUT_PULL_DN	= 0x1000,
+		BOOL_SUBSTRUCT_FANOUT_PULL_UP	= 0x2000,
+		BOOL_SUBSTRUCT_FANIN_PULL_DN	= 0x4000,
+		BOOL_SUBSTRUCT_FANIN_PULL_UP	= 0x8000,
+		/// derived flag: all substructure field
+		BOOL_SUBSTRUCT_PRS_MASK =
+			BOOL_SUBSTRUCT_FANOUT_PULL_DN |
+			BOOL_SUBSTRUCT_FANOUT_PULL_UP |
+			BOOL_SUBSTRUCT_FANIN_PULL_DN |
+			BOOL_SUBSTRUCT_FANIN_PULL_UP,
+		// more derived flags:
+		BOOL_ANY_FANOUT_PULL_DN =
+			BOOL_LOCAL_PRS_FANOUT_PULL_DN |
+			BOOL_SUBSTRUCT_FANOUT_PULL_DN,
+		BOOL_ANY_FANOUT_PULL_UP =
+			BOOL_LOCAL_PRS_FANOUT_PULL_UP |
+			BOOL_SUBSTRUCT_FANOUT_PULL_UP,
+		BOOL_ANY_FANIN_PULL_DN =
+			BOOL_LOCAL_PRS_FANIN_PULL_DN |
+			BOOL_SUBSTRUCT_FANIN_PULL_DN,
+		BOOL_ANY_FANIN_PULL_UP =
+			BOOL_LOCAL_PRS_FANIN_PULL_UP |
+			BOOL_SUBSTRUCT_FANIN_PULL_UP,
+		BOOL_ANY_FANOUT =
+			BOOL_ANY_FANOUT_PULL_DN | BOOL_ANY_FANOUT_PULL_UP,
+		BOOL_ANY_FANIN =
+			BOOL_ANY_FANIN_PULL_DN | BOOL_ANY_FANIN_PULL_UP,
+#if 0
+		// The following are properties that are specified by
+		// the user in source.
+		/***
+			Some of these attributes should be masked out
+			before passing up the hierarchy.
+			These are useful for annotating ports.
+			Could these be useful for annotating
+			structured instances like user-defined channels
+			and datatypes?
+			A final check over local nodes should detect
+			conflict.  
+		 ***/
+		/// promise not to drive from this level or subinstances
+		BOOL_READ_ONLY		= 0x0100,
+		/// promise to drive from this level or subinstances
+		BOOL_MUST_WRITE		= 0x0200,
+		/**
+			indicates that fanins may come from more than one
+			level of hierarchy.  
+			Should this flag stick and be propagated up hierarchy?
+		 */
+		BOOL_MAY_SHARE_WRITE	= 0x0400
+#endif
+		/**
+			The set of flags that should be OR-combined
+			together when connecting aliases
+		 */
+		BOOL_CONNECTIVITY_OR_MASK	=
+			BOOL_LOCAL_PRS_MASK | BOOL_SUBSTRUCT_PRS_MASK,
+#endif	// BOOL_PRS_CONNECTIVITY_CHECKING
+	/// mask for attributes to distinguish from connectivity fields
+		BOOL_ATTRIBUTES_MASK	= 0x00FF,
 		BOOL_DEFAULT_ATTRIBUTES = 0x0000
 	};
+	/**
+		Contains both user-attached attributes and
+		locally inferred connectivity information.
+	 */
 	connection_flags_type			attributes;
 
 public:
@@ -148,7 +243,8 @@ public:
 
 	bool
 	has_nondefault_attributes(void) const {
-		return attributes;	// if any bits are set
+		return attributes & BOOL_ATTRIBUTES_MASK;
+		// if any attribute bits are set
 	}
 
 	void
@@ -195,6 +291,32 @@ public:
 	set_is_rvc3(void) {
 		attributes |= BOOL_IS_RVC3;
 	}
+
+#if BOOL_PRS_CONNECTIVITY_CHECKING
+	bool
+	has_any_fanin(void) const {
+		return attributes & BOOL_ANY_FANIN;
+	}
+
+	bool
+	has_any_fanout(void) const {
+		return attributes & BOOL_ANY_FANOUT;
+	}
+
+	void
+	prs_fanout(const bool dir) {
+		attributes |= dir ?
+			BOOL_LOCAL_PRS_FANOUT_PULL_UP :
+			BOOL_LOCAL_PRS_FANOUT_PULL_DN;
+	}
+
+	void
+	prs_fanin(const bool dir) {
+		attributes |= dir ?
+			BOOL_LOCAL_PRS_FANIN_PULL_UP :
+			BOOL_LOCAL_PRS_FANIN_PULL_DN;
+	}
+#endif
 
 protected:
 	template <class AliasType>

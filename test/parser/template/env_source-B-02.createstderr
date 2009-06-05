@@ -51,10 +51,10 @@ In namespace "", we have: {
       footprint collection: {
         <3> {
           R = pint^0 value: 3
-          e = bool^0 = e1of::e (1) 
+          e = bool^0 = e1of<3>::e (1) 
           Created state:
           bool instance pool:
-          1	e1of::e
+          1	e1of<3>::e
         }
       }
       }

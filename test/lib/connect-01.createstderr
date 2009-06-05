@@ -631,33 +631,33 @@ In namespace "", we have: {
               N = pint^0 value: 5
               i = bool^1
                 {
-                  [0] = std::reverse_bool_array::i[0] (1) 
-                  [1] = std::reverse_bool_array::i[1] (2) 
-                  [2] = std::reverse_bool_array::i[2] (3) 
-                  [3] = std::reverse_bool_array::i[3] (4) 
-                  [4] = std::reverse_bool_array::i[4] (5) 
+                  [0] = std::reverse_bool_array<5>::i[0] (1) 
+                  [1] = std::reverse_bool_array<5>::i[1] (2) 
+                  [2] = std::reverse_bool_array<5>::i[2] (3) 
+                  [3] = std::reverse_bool_array<5>::i[3] (4) 
+                  [4] = std::reverse_bool_array<5>::i[4] (5) 
                 }
               o = bool^1
                 {
-                  [0] = std::reverse_bool_array::i[4] (5) 
-                  [1] = std::reverse_bool_array::i[3] (4) 
-                  [2] = std::reverse_bool_array::i[2] (3) 
-                  [3] = std::reverse_bool_array::i[1] (2) 
-                  [4] = std::reverse_bool_array::i[0] (1) 
+                  [0] = std::reverse_bool_array<5>::i[4] (5) 
+                  [1] = std::reverse_bool_array<5>::i[3] (4) 
+                  [2] = std::reverse_bool_array<5>::i[2] (3) 
+                  [3] = std::reverse_bool_array<5>::i[1] (2) 
+                  [4] = std::reverse_bool_array<5>::i[0] (1) 
                 }
               Created state:
               bool instance pool:
-              1	std::reverse_bool_array::i[0]
-              2	std::reverse_bool_array::i[1]
-              3	std::reverse_bool_array::i[2]
-              4	std::reverse_bool_array::i[3]
-              5	std::reverse_bool_array::i[4]
+              1	std::reverse_bool_array<5>::i[0]
+              2	std::reverse_bool_array<5>::i[1]
+              3	std::reverse_bool_array<5>::i[2]
+              4	std::reverse_bool_array<5>::i[3]
+              5	std::reverse_bool_array<5>::i[4]
               bool port aliases:
-              1: std::reverse_bool_array::i[0] = std::reverse_bool_array::o[4]
-              2: std::reverse_bool_array::i[1] = std::reverse_bool_array::o[3]
-              3: std::reverse_bool_array::i[2] = std::reverse_bool_array::o[2]
-              4: std::reverse_bool_array::i[3] = std::reverse_bool_array::o[1]
-              5: std::reverse_bool_array::i[4] = std::reverse_bool_array::o[0]
+              1: std::reverse_bool_array<5>::i[0] = std::reverse_bool_array<5>::o[4]
+              2: std::reverse_bool_array<5>::i[1] = std::reverse_bool_array<5>::o[3]
+              3: std::reverse_bool_array<5>::i[2] = std::reverse_bool_array<5>::o[2]
+              4: std::reverse_bool_array<5>::i[3] = std::reverse_bool_array<5>::o[1]
+              5: std::reverse_bool_array<5>::i[4] = std::reverse_bool_array<5>::o[0]
             }
           }
           }
@@ -689,33 +689,33 @@ In namespace "", we have: {
               N = pint^0 value: 5
               i = bool^1
                 {
-                  [0] = std::rotate_bool_array::i[0] (1) 
-                  [1] = std::rotate_bool_array::i[1] (2) 
-                  [2] = std::rotate_bool_array::i[2] (3) 
-                  [3] = std::rotate_bool_array::i[3] (4) 
-                  [4] = std::rotate_bool_array::i[4] (5) 
+                  [0] = std::rotate_bool_array<5, 2>::i[0] (1) 
+                  [1] = std::rotate_bool_array<5, 2>::i[1] (2) 
+                  [2] = std::rotate_bool_array<5, 2>::i[2] (3) 
+                  [3] = std::rotate_bool_array<5, 2>::i[3] (4) 
+                  [4] = std::rotate_bool_array<5, 2>::i[4] (5) 
                 }
               o = bool^1
                 {
-                  [0] = std::rotate_bool_array::i[2] (3) 
-                  [1] = std::rotate_bool_array::i[3] (4) 
-                  [2] = std::rotate_bool_array::i[4] (5) 
-                  [3] = std::rotate_bool_array::i[0] (1) 
-                  [4] = std::rotate_bool_array::i[1] (2) 
+                  [0] = std::rotate_bool_array<5, 2>::i[2] (3) 
+                  [1] = std::rotate_bool_array<5, 2>::i[3] (4) 
+                  [2] = std::rotate_bool_array<5, 2>::i[4] (5) 
+                  [3] = std::rotate_bool_array<5, 2>::i[0] (1) 
+                  [4] = std::rotate_bool_array<5, 2>::i[1] (2) 
                 }
               Created state:
               bool instance pool:
-              1	std::rotate_bool_array::i[0]
-              2	std::rotate_bool_array::i[1]
-              3	std::rotate_bool_array::i[2]
-              4	std::rotate_bool_array::i[3]
-              5	std::rotate_bool_array::i[4]
+              1	std::rotate_bool_array<5, 2>::i[0]
+              2	std::rotate_bool_array<5, 2>::i[1]
+              3	std::rotate_bool_array<5, 2>::i[2]
+              4	std::rotate_bool_array<5, 2>::i[3]
+              5	std::rotate_bool_array<5, 2>::i[4]
               bool port aliases:
-              1: std::rotate_bool_array::i[0] = std::rotate_bool_array::o[3]
-              2: std::rotate_bool_array::i[1] = std::rotate_bool_array::o[4]
-              3: std::rotate_bool_array::i[2] = std::rotate_bool_array::o[0]
-              4: std::rotate_bool_array::i[3] = std::rotate_bool_array::o[1]
-              5: std::rotate_bool_array::i[4] = std::rotate_bool_array::o[2]
+              1: std::rotate_bool_array<5, 2>::i[0] = std::rotate_bool_array<5, 2>::o[3]
+              2: std::rotate_bool_array<5, 2>::i[1] = std::rotate_bool_array<5, 2>::o[4]
+              3: std::rotate_bool_array<5, 2>::i[2] = std::rotate_bool_array<5, 2>::o[0]
+              4: std::rotate_bool_array<5, 2>::i[3] = std::rotate_bool_array<5, 2>::o[1]
+              5: std::rotate_bool_array<5, 2>::i[4] = std::rotate_bool_array<5, 2>::o[2]
             }
           }
           }
@@ -748,37 +748,37 @@ In namespace "", we have: {
               N = pint^0 value: 2
               i = bool^2
                 {
-                  [0][0] = std::transpose_bool_array_2d::i[0][0] (1) 
-                  [0][1] = std::transpose_bool_array_2d::i[0][1] (2) 
-                  [0][2] = std::transpose_bool_array_2d::i[0][2] (3) 
-                  [1][0] = std::transpose_bool_array_2d::i[1][0] (4) 
-                  [1][1] = std::transpose_bool_array_2d::i[1][1] (5) 
-                  [1][2] = std::transpose_bool_array_2d::i[1][2] (6) 
+                  [0][0] = std::transpose_bool_array_2d<2, 3>::i[0][0] (1) 
+                  [0][1] = std::transpose_bool_array_2d<2, 3>::i[0][1] (2) 
+                  [0][2] = std::transpose_bool_array_2d<2, 3>::i[0][2] (3) 
+                  [1][0] = std::transpose_bool_array_2d<2, 3>::i[1][0] (4) 
+                  [1][1] = std::transpose_bool_array_2d<2, 3>::i[1][1] (5) 
+                  [1][2] = std::transpose_bool_array_2d<2, 3>::i[1][2] (6) 
                 }
               o = bool^2
                 {
-                  [0][0] = std::transpose_bool_array_2d::i[0][0] (1) 
-                  [0][1] = std::transpose_bool_array_2d::i[1][0] (4) 
-                  [1][0] = std::transpose_bool_array_2d::i[0][1] (2) 
-                  [1][1] = std::transpose_bool_array_2d::i[1][1] (5) 
-                  [2][0] = std::transpose_bool_array_2d::i[0][2] (3) 
-                  [2][1] = std::transpose_bool_array_2d::i[1][2] (6) 
+                  [0][0] = std::transpose_bool_array_2d<2, 3>::i[0][0] (1) 
+                  [0][1] = std::transpose_bool_array_2d<2, 3>::i[1][0] (4) 
+                  [1][0] = std::transpose_bool_array_2d<2, 3>::i[0][1] (2) 
+                  [1][1] = std::transpose_bool_array_2d<2, 3>::i[1][1] (5) 
+                  [2][0] = std::transpose_bool_array_2d<2, 3>::i[0][2] (3) 
+                  [2][1] = std::transpose_bool_array_2d<2, 3>::i[1][2] (6) 
                 }
               Created state:
               bool instance pool:
-              1	std::transpose_bool_array_2d::i[0][0]
-              2	std::transpose_bool_array_2d::i[0][1]
-              3	std::transpose_bool_array_2d::i[0][2]
-              4	std::transpose_bool_array_2d::i[1][0]
-              5	std::transpose_bool_array_2d::i[1][1]
-              6	std::transpose_bool_array_2d::i[1][2]
+              1	std::transpose_bool_array_2d<2, 3>::i[0][0]
+              2	std::transpose_bool_array_2d<2, 3>::i[0][1]
+              3	std::transpose_bool_array_2d<2, 3>::i[0][2]
+              4	std::transpose_bool_array_2d<2, 3>::i[1][0]
+              5	std::transpose_bool_array_2d<2, 3>::i[1][1]
+              6	std::transpose_bool_array_2d<2, 3>::i[1][2]
               bool port aliases:
-              1: std::transpose_bool_array_2d::i[0][0] = std::transpose_bool_array_2d::o[0][0]
-              2: std::transpose_bool_array_2d::i[0][1] = std::transpose_bool_array_2d::o[1][0]
-              3: std::transpose_bool_array_2d::i[0][2] = std::transpose_bool_array_2d::o[2][0]
-              4: std::transpose_bool_array_2d::i[1][0] = std::transpose_bool_array_2d::o[0][1]
-              5: std::transpose_bool_array_2d::i[1][1] = std::transpose_bool_array_2d::o[1][1]
-              6: std::transpose_bool_array_2d::i[1][2] = std::transpose_bool_array_2d::o[2][1]
+              1: std::transpose_bool_array_2d<2, 3>::i[0][0] = std::transpose_bool_array_2d<2, 3>::o[0][0]
+              2: std::transpose_bool_array_2d<2, 3>::i[0][1] = std::transpose_bool_array_2d<2, 3>::o[1][0]
+              3: std::transpose_bool_array_2d<2, 3>::i[0][2] = std::transpose_bool_array_2d<2, 3>::o[2][0]
+              4: std::transpose_bool_array_2d<2, 3>::i[1][0] = std::transpose_bool_array_2d<2, 3>::o[0][1]
+              5: std::transpose_bool_array_2d<2, 3>::i[1][1] = std::transpose_bool_array_2d<2, 3>::o[1][1]
+              6: std::transpose_bool_array_2d<2, 3>::i[1][2] = std::transpose_bool_array_2d<2, 3>::o[2][1]
             }
           }
           }
@@ -816,37 +816,37 @@ In namespace "", we have: {
               P = pint^0 value: 3
               i = bool^3
                 {
-                  [0][0][0] = std::transpose_bool_array_3d_ikj::i[0][0][0] (1) 
-                  [0][0][1] = std::transpose_bool_array_3d_ikj::i[0][0][1] (2) 
-                  [0][0][2] = std::transpose_bool_array_3d_ikj::i[0][0][2] (3) 
-                  [0][1][0] = std::transpose_bool_array_3d_ikj::i[0][1][0] (4) 
-                  [0][1][1] = std::transpose_bool_array_3d_ikj::i[0][1][1] (5) 
-                  [0][1][2] = std::transpose_bool_array_3d_ikj::i[0][1][2] (6) 
+                  [0][0][0] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][2] (3) 
+                  [0][1][0] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][0] (4) 
+                  [0][1][1] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][1] (5) 
+                  [0][1][2] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][2] (6) 
                 }
               o = bool^3
                 {
-                  [0][0][0] = std::transpose_bool_array_3d_ikj::i[0][0][0] (1) 
-                  [0][0][1] = std::transpose_bool_array_3d_ikj::i[0][1][0] (4) 
-                  [0][1][0] = std::transpose_bool_array_3d_ikj::i[0][0][1] (2) 
-                  [0][1][1] = std::transpose_bool_array_3d_ikj::i[0][1][1] (5) 
-                  [0][2][0] = std::transpose_bool_array_3d_ikj::i[0][0][2] (3) 
-                  [0][2][1] = std::transpose_bool_array_3d_ikj::i[0][1][2] (6) 
+                  [0][0][0] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][0] (4) 
+                  [0][1][0] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][1] (2) 
+                  [0][1][1] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][1] (5) 
+                  [0][2][0] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][2] (3) 
+                  [0][2][1] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][2] (6) 
                 }
               Created state:
               bool instance pool:
-              1	std::transpose_bool_array_3d_ikj::i[0][0][0]
-              2	std::transpose_bool_array_3d_ikj::i[0][0][1]
-              3	std::transpose_bool_array_3d_ikj::i[0][0][2]
-              4	std::transpose_bool_array_3d_ikj::i[0][1][0]
-              5	std::transpose_bool_array_3d_ikj::i[0][1][1]
-              6	std::transpose_bool_array_3d_ikj::i[0][1][2]
+              1	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][0]
+              2	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][1]
+              3	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][2]
+              4	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][0]
+              5	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][1]
+              6	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][2]
               bool port aliases:
-              1: std::transpose_bool_array_3d_ikj::i[0][0][0] = std::transpose_bool_array_3d_ikj::o[0][0][0]
-              2: std::transpose_bool_array_3d_ikj::i[0][0][1] = std::transpose_bool_array_3d_ikj::o[0][1][0]
-              3: std::transpose_bool_array_3d_ikj::i[0][0][2] = std::transpose_bool_array_3d_ikj::o[0][2][0]
-              4: std::transpose_bool_array_3d_ikj::i[0][1][0] = std::transpose_bool_array_3d_ikj::o[0][0][1]
-              5: std::transpose_bool_array_3d_ikj::i[0][1][1] = std::transpose_bool_array_3d_ikj::o[0][1][1]
-              6: std::transpose_bool_array_3d_ikj::i[0][1][2] = std::transpose_bool_array_3d_ikj::o[0][2][1]
+              1: std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][0] = std::transpose_bool_array_3d_ikj<1, 2, 3>::o[0][0][0]
+              2: std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][1] = std::transpose_bool_array_3d_ikj<1, 2, 3>::o[0][1][0]
+              3: std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][2] = std::transpose_bool_array_3d_ikj<1, 2, 3>::o[0][2][0]
+              4: std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][0] = std::transpose_bool_array_3d_ikj<1, 2, 3>::o[0][0][1]
+              5: std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][1] = std::transpose_bool_array_3d_ikj<1, 2, 3>::o[0][1][1]
+              6: std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][2] = std::transpose_bool_array_3d_ikj<1, 2, 3>::o[0][2][1]
             }
           }
           }
@@ -884,37 +884,37 @@ In namespace "", we have: {
               P = pint^0 value: 3
               i = bool^3
                 {
-                  [0][0][0] = std::transpose_bool_array_3d_jik::i[0][0][0] (1) 
-                  [0][0][1] = std::transpose_bool_array_3d_jik::i[0][0][1] (2) 
-                  [0][0][2] = std::transpose_bool_array_3d_jik::i[0][0][2] (3) 
-                  [0][1][0] = std::transpose_bool_array_3d_jik::i[0][1][0] (4) 
-                  [0][1][1] = std::transpose_bool_array_3d_jik::i[0][1][1] (5) 
-                  [0][1][2] = std::transpose_bool_array_3d_jik::i[0][1][2] (6) 
+                  [0][0][0] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][2] (3) 
+                  [0][1][0] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][0] (4) 
+                  [0][1][1] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][1] (5) 
+                  [0][1][2] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][2] (6) 
                 }
               o = bool^3
                 {
-                  [0][0][0] = std::transpose_bool_array_3d_jik::i[0][0][0] (1) 
-                  [0][0][1] = std::transpose_bool_array_3d_jik::i[0][0][1] (2) 
-                  [0][0][2] = std::transpose_bool_array_3d_jik::i[0][0][2] (3) 
-                  [1][0][0] = std::transpose_bool_array_3d_jik::i[0][1][0] (4) 
-                  [1][0][1] = std::transpose_bool_array_3d_jik::i[0][1][1] (5) 
-                  [1][0][2] = std::transpose_bool_array_3d_jik::i[0][1][2] (6) 
+                  [0][0][0] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][2] (3) 
+                  [1][0][0] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][0] (4) 
+                  [1][0][1] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][1] (5) 
+                  [1][0][2] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][2] (6) 
                 }
               Created state:
               bool instance pool:
-              1	std::transpose_bool_array_3d_jik::i[0][0][0]
-              2	std::transpose_bool_array_3d_jik::i[0][0][1]
-              3	std::transpose_bool_array_3d_jik::i[0][0][2]
-              4	std::transpose_bool_array_3d_jik::i[0][1][0]
-              5	std::transpose_bool_array_3d_jik::i[0][1][1]
-              6	std::transpose_bool_array_3d_jik::i[0][1][2]
+              1	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][0]
+              2	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][1]
+              3	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][2]
+              4	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][0]
+              5	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][1]
+              6	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][2]
               bool port aliases:
-              1: std::transpose_bool_array_3d_jik::i[0][0][0] = std::transpose_bool_array_3d_jik::o[0][0][0]
-              2: std::transpose_bool_array_3d_jik::i[0][0][1] = std::transpose_bool_array_3d_jik::o[0][0][1]
-              3: std::transpose_bool_array_3d_jik::i[0][0][2] = std::transpose_bool_array_3d_jik::o[0][0][2]
-              4: std::transpose_bool_array_3d_jik::i[0][1][0] = std::transpose_bool_array_3d_jik::o[1][0][0]
-              5: std::transpose_bool_array_3d_jik::i[0][1][1] = std::transpose_bool_array_3d_jik::o[1][0][1]
-              6: std::transpose_bool_array_3d_jik::i[0][1][2] = std::transpose_bool_array_3d_jik::o[1][0][2]
+              1: std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][0] = std::transpose_bool_array_3d_jik<1, 2, 3>::o[0][0][0]
+              2: std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][1] = std::transpose_bool_array_3d_jik<1, 2, 3>::o[0][0][1]
+              3: std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][2] = std::transpose_bool_array_3d_jik<1, 2, 3>::o[0][0][2]
+              4: std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][0] = std::transpose_bool_array_3d_jik<1, 2, 3>::o[1][0][0]
+              5: std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][1] = std::transpose_bool_array_3d_jik<1, 2, 3>::o[1][0][1]
+              6: std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][2] = std::transpose_bool_array_3d_jik<1, 2, 3>::o[1][0][2]
             }
           }
           }
@@ -952,37 +952,37 @@ In namespace "", we have: {
               P = pint^0 value: 3
               i = bool^3
                 {
-                  [0][0][0] = std::transpose_bool_array_3d_jki::i[0][0][0] (1) 
-                  [0][0][1] = std::transpose_bool_array_3d_jki::i[0][0][1] (2) 
-                  [0][0][2] = std::transpose_bool_array_3d_jki::i[0][0][2] (3) 
-                  [0][1][0] = std::transpose_bool_array_3d_jki::i[0][1][0] (4) 
-                  [0][1][1] = std::transpose_bool_array_3d_jki::i[0][1][1] (5) 
-                  [0][1][2] = std::transpose_bool_array_3d_jki::i[0][1][2] (6) 
+                  [0][0][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][2] (3) 
+                  [0][1][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][0] (4) 
+                  [0][1][1] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][1] (5) 
+                  [0][1][2] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][2] (6) 
                 }
               o = bool^3
                 {
-                  [0][0][0] = std::transpose_bool_array_3d_jki::i[0][0][0] (1) 
-                  [0][1][0] = std::transpose_bool_array_3d_jki::i[0][0][1] (2) 
-                  [0][2][0] = std::transpose_bool_array_3d_jki::i[0][0][2] (3) 
-                  [1][0][0] = std::transpose_bool_array_3d_jki::i[0][1][0] (4) 
-                  [1][1][0] = std::transpose_bool_array_3d_jki::i[0][1][1] (5) 
-                  [1][2][0] = std::transpose_bool_array_3d_jki::i[0][1][2] (6) 
+                  [0][0][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][0] (1) 
+                  [0][1][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][1] (2) 
+                  [0][2][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][2] (3) 
+                  [1][0][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][0] (4) 
+                  [1][1][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][1] (5) 
+                  [1][2][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][2] (6) 
                 }
               Created state:
               bool instance pool:
-              1	std::transpose_bool_array_3d_jki::i[0][0][0]
-              2	std::transpose_bool_array_3d_jki::i[0][0][1]
-              3	std::transpose_bool_array_3d_jki::i[0][0][2]
-              4	std::transpose_bool_array_3d_jki::i[0][1][0]
-              5	std::transpose_bool_array_3d_jki::i[0][1][1]
-              6	std::transpose_bool_array_3d_jki::i[0][1][2]
+              1	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][0]
+              2	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][1]
+              3	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][2]
+              4	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][0]
+              5	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][1]
+              6	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][2]
               bool port aliases:
-              1: std::transpose_bool_array_3d_jki::i[0][0][0] = std::transpose_bool_array_3d_jki::o[0][0][0]
-              2: std::transpose_bool_array_3d_jki::i[0][0][1] = std::transpose_bool_array_3d_jki::o[0][1][0]
-              3: std::transpose_bool_array_3d_jki::i[0][0][2] = std::transpose_bool_array_3d_jki::o[0][2][0]
-              4: std::transpose_bool_array_3d_jki::i[0][1][0] = std::transpose_bool_array_3d_jki::o[1][0][0]
-              5: std::transpose_bool_array_3d_jki::i[0][1][1] = std::transpose_bool_array_3d_jki::o[1][1][0]
-              6: std::transpose_bool_array_3d_jki::i[0][1][2] = std::transpose_bool_array_3d_jki::o[1][2][0]
+              1: std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::o[0][0][0]
+              2: std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][1] = std::transpose_bool_array_3d_jki<1, 2, 3>::o[0][1][0]
+              3: std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][2] = std::transpose_bool_array_3d_jki<1, 2, 3>::o[0][2][0]
+              4: std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::o[1][0][0]
+              5: std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][1] = std::transpose_bool_array_3d_jki<1, 2, 3>::o[1][1][0]
+              6: std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][2] = std::transpose_bool_array_3d_jki<1, 2, 3>::o[1][2][0]
             }
           }
           }
@@ -1020,37 +1020,37 @@ In namespace "", we have: {
               P = pint^0 value: 3
               i = bool^3
                 {
-                  [0][0][0] = std::transpose_bool_array_3d_kij::i[0][0][0] (1) 
-                  [0][0][1] = std::transpose_bool_array_3d_kij::i[0][0][1] (2) 
-                  [0][0][2] = std::transpose_bool_array_3d_kij::i[0][0][2] (3) 
-                  [0][1][0] = std::transpose_bool_array_3d_kij::i[0][1][0] (4) 
-                  [0][1][1] = std::transpose_bool_array_3d_kij::i[0][1][1] (5) 
-                  [0][1][2] = std::transpose_bool_array_3d_kij::i[0][1][2] (6) 
+                  [0][0][0] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][2] (3) 
+                  [0][1][0] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][0] (4) 
+                  [0][1][1] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][1] (5) 
+                  [0][1][2] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][2] (6) 
                 }
               o = bool^3
                 {
-                  [0][0][0] = std::transpose_bool_array_3d_kij::i[0][0][0] (1) 
-                  [0][0][1] = std::transpose_bool_array_3d_kij::i[0][1][0] (4) 
-                  [1][0][0] = std::transpose_bool_array_3d_kij::i[0][0][1] (2) 
-                  [1][0][1] = std::transpose_bool_array_3d_kij::i[0][1][1] (5) 
-                  [2][0][0] = std::transpose_bool_array_3d_kij::i[0][0][2] (3) 
-                  [2][0][1] = std::transpose_bool_array_3d_kij::i[0][1][2] (6) 
+                  [0][0][0] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][0] (4) 
+                  [1][0][0] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][1] (2) 
+                  [1][0][1] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][1] (5) 
+                  [2][0][0] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][2] (3) 
+                  [2][0][1] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][2] (6) 
                 }
               Created state:
               bool instance pool:
-              1	std::transpose_bool_array_3d_kij::i[0][0][0]
-              2	std::transpose_bool_array_3d_kij::i[0][0][1]
-              3	std::transpose_bool_array_3d_kij::i[0][0][2]
-              4	std::transpose_bool_array_3d_kij::i[0][1][0]
-              5	std::transpose_bool_array_3d_kij::i[0][1][1]
-              6	std::transpose_bool_array_3d_kij::i[0][1][2]
+              1	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][0]
+              2	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][1]
+              3	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][2]
+              4	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][0]
+              5	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][1]
+              6	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][2]
               bool port aliases:
-              1: std::transpose_bool_array_3d_kij::i[0][0][0] = std::transpose_bool_array_3d_kij::o[0][0][0]
-              2: std::transpose_bool_array_3d_kij::i[0][0][1] = std::transpose_bool_array_3d_kij::o[1][0][0]
-              3: std::transpose_bool_array_3d_kij::i[0][0][2] = std::transpose_bool_array_3d_kij::o[2][0][0]
-              4: std::transpose_bool_array_3d_kij::i[0][1][0] = std::transpose_bool_array_3d_kij::o[0][0][1]
-              5: std::transpose_bool_array_3d_kij::i[0][1][1] = std::transpose_bool_array_3d_kij::o[1][0][1]
-              6: std::transpose_bool_array_3d_kij::i[0][1][2] = std::transpose_bool_array_3d_kij::o[2][0][1]
+              1: std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][0] = std::transpose_bool_array_3d_kij<1, 2, 3>::o[0][0][0]
+              2: std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][1] = std::transpose_bool_array_3d_kij<1, 2, 3>::o[1][0][0]
+              3: std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][2] = std::transpose_bool_array_3d_kij<1, 2, 3>::o[2][0][0]
+              4: std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][0] = std::transpose_bool_array_3d_kij<1, 2, 3>::o[0][0][1]
+              5: std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][1] = std::transpose_bool_array_3d_kij<1, 2, 3>::o[1][0][1]
+              6: std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][2] = std::transpose_bool_array_3d_kij<1, 2, 3>::o[2][0][1]
             }
           }
           }
@@ -1088,37 +1088,37 @@ In namespace "", we have: {
               P = pint^0 value: 3
               i = bool^3
                 {
-                  [0][0][0] = std::transpose_bool_array_3d_kji::i[0][0][0] (1) 
-                  [0][0][1] = std::transpose_bool_array_3d_kji::i[0][0][1] (2) 
-                  [0][0][2] = std::transpose_bool_array_3d_kji::i[0][0][2] (3) 
-                  [0][1][0] = std::transpose_bool_array_3d_kji::i[0][1][0] (4) 
-                  [0][1][1] = std::transpose_bool_array_3d_kji::i[0][1][1] (5) 
-                  [0][1][2] = std::transpose_bool_array_3d_kji::i[0][1][2] (6) 
+                  [0][0][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][0] (1) 
+                  [0][0][1] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][1] (2) 
+                  [0][0][2] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][2] (3) 
+                  [0][1][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][0] (4) 
+                  [0][1][1] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][1] (5) 
+                  [0][1][2] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][2] (6) 
                 }
               o = bool^3
                 {
-                  [0][0][0] = std::transpose_bool_array_3d_kji::i[0][0][0] (1) 
-                  [0][1][0] = std::transpose_bool_array_3d_kji::i[0][1][0] (4) 
-                  [1][0][0] = std::transpose_bool_array_3d_kji::i[0][0][1] (2) 
-                  [1][1][0] = std::transpose_bool_array_3d_kji::i[0][1][1] (5) 
-                  [2][0][0] = std::transpose_bool_array_3d_kji::i[0][0][2] (3) 
-                  [2][1][0] = std::transpose_bool_array_3d_kji::i[0][1][2] (6) 
+                  [0][0][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][0] (1) 
+                  [0][1][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][0] (4) 
+                  [1][0][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][1] (2) 
+                  [1][1][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][1] (5) 
+                  [2][0][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][2] (3) 
+                  [2][1][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][2] (6) 
                 }
               Created state:
               bool instance pool:
-              1	std::transpose_bool_array_3d_kji::i[0][0][0]
-              2	std::transpose_bool_array_3d_kji::i[0][0][1]
-              3	std::transpose_bool_array_3d_kji::i[0][0][2]
-              4	std::transpose_bool_array_3d_kji::i[0][1][0]
-              5	std::transpose_bool_array_3d_kji::i[0][1][1]
-              6	std::transpose_bool_array_3d_kji::i[0][1][2]
+              1	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][0]
+              2	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][1]
+              3	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][2]
+              4	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][0]
+              5	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][1]
+              6	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][2]
               bool port aliases:
-              1: std::transpose_bool_array_3d_kji::i[0][0][0] = std::transpose_bool_array_3d_kji::o[0][0][0]
-              2: std::transpose_bool_array_3d_kji::i[0][0][1] = std::transpose_bool_array_3d_kji::o[1][0][0]
-              3: std::transpose_bool_array_3d_kji::i[0][0][2] = std::transpose_bool_array_3d_kji::o[2][0][0]
-              4: std::transpose_bool_array_3d_kji::i[0][1][0] = std::transpose_bool_array_3d_kji::o[0][1][0]
-              5: std::transpose_bool_array_3d_kji::i[0][1][1] = std::transpose_bool_array_3d_kji::o[1][1][0]
-              6: std::transpose_bool_array_3d_kji::i[0][1][2] = std::transpose_bool_array_3d_kji::o[2][1][0]
+              1: std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::o[0][0][0]
+              2: std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][1] = std::transpose_bool_array_3d_kji<1, 2, 3>::o[1][0][0]
+              3: std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][2] = std::transpose_bool_array_3d_kji<1, 2, 3>::o[2][0][0]
+              4: std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::o[0][1][0]
+              5: std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][1] = std::transpose_bool_array_3d_kji<1, 2, 3>::o[1][1][0]
+              6: std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][2] = std::transpose_bool_array_3d_kji<1, 2, 3>::o[2][1][0]
             }
           }
           }

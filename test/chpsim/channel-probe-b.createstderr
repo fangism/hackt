@@ -275,13 +275,13 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        B = channel chan?(bool<>)^0 = bool_sink::B (1) 
-        b = bool^0 = bool_sink::b (1) 
+        B = channel chan?(bool<>)^0 = bool_sink<>::B (1) 
+        b = bool^0 = bool_sink<>::b (1) 
         Created state:
         channel instance pool:
-        1	bool_sink::B
+        1	bool_sink<>::B
         bool instance pool:
-        1	bool_sink::b
+        1	bool_sink<>::b
         resolved concurrent actions:
           *[
             B?(b)

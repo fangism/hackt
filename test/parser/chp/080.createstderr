@@ -88,10 +88,10 @@ In namespace "", we have: {
       footprint collection: {
         <123> {
           B = pint^0 value: 123
-          b = channel chan!(int<32>)^0 = send_me::b (1) 
+          b = channel chan!(int<32>)^0 = send_me<123>::b (1) 
           Created state:
           channel instance pool:
-          1	send_me::b
+          1	send_me<123>::b
           resolved concurrent actions:
             *[
               b!(123)
@@ -102,10 +102,10 @@ In namespace "", we have: {
         }
         <456> {
           B = pint^0 value: 456
-          b = channel chan!(int<32>)^0 = send_me::b (1) 
+          b = channel chan!(int<32>)^0 = send_me<456>::b (1) 
           Created state:
           channel instance pool:
-          1	send_me::b
+          1	send_me<456>::b
           resolved concurrent actions:
             *[
               b!(456)
@@ -116,10 +116,10 @@ In namespace "", we have: {
         }
         <789> {
           B = pint^0 value: 789
-          b = channel chan!(int<32>)^0 = send_me::b (1) 
+          b = channel chan!(int<32>)^0 = send_me<789>::b (1) 
           Created state:
           channel instance pool:
-          1	send_me::b
+          1	send_me<789>::b
           resolved concurrent actions:
             *[
               b!(789)

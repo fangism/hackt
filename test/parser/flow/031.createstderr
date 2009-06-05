@@ -106,141 +106,141 @@ In namespace "", we have: {
       footprint collection: {
         <100> {
           P = pint^0 value: 100
-          composite = bool^0 = prime_array::composite (1) 
+          composite = bool^0 = prime_array<100>::composite (1) 
           x = bool^1
             {
-              [0] = prime_array::composite (1) 
-              [1] = prime_array::composite (1) 
-              [2] = prime_array::x[2] (2) 
-              [3] = prime_array::x[3] (3) 
-              [4] = prime_array::composite (1) 
-              [5] = prime_array::x[5] (4) 
-              [6] = prime_array::composite (1) 
-              [7] = prime_array::x[7] (5) 
-              [8] = prime_array::composite (1) 
-              [9] = prime_array::composite (1) 
-              [10] = prime_array::composite (1) 
-              [11] = prime_array::x[11] (6) 
-              [12] = prime_array::composite (1) 
-              [13] = prime_array::x[13] (7) 
-              [14] = prime_array::composite (1) 
-              [15] = prime_array::composite (1) 
-              [16] = prime_array::composite (1) 
-              [17] = prime_array::x[17] (8) 
-              [18] = prime_array::composite (1) 
-              [19] = prime_array::x[19] (9) 
-              [20] = prime_array::composite (1) 
-              [21] = prime_array::composite (1) 
-              [22] = prime_array::composite (1) 
-              [23] = prime_array::x[23] (10) 
-              [24] = prime_array::composite (1) 
-              [25] = prime_array::composite (1) 
-              [26] = prime_array::composite (1) 
-              [27] = prime_array::composite (1) 
-              [28] = prime_array::composite (1) 
-              [29] = prime_array::x[29] (11) 
-              [30] = prime_array::composite (1) 
-              [31] = prime_array::x[31] (12) 
-              [32] = prime_array::composite (1) 
-              [33] = prime_array::composite (1) 
-              [34] = prime_array::composite (1) 
-              [35] = prime_array::composite (1) 
-              [36] = prime_array::composite (1) 
-              [37] = prime_array::x[37] (13) 
-              [38] = prime_array::composite (1) 
-              [39] = prime_array::composite (1) 
-              [40] = prime_array::composite (1) 
-              [41] = prime_array::x[41] (14) 
-              [42] = prime_array::composite (1) 
-              [43] = prime_array::x[43] (15) 
-              [44] = prime_array::composite (1) 
-              [45] = prime_array::composite (1) 
-              [46] = prime_array::composite (1) 
-              [47] = prime_array::x[47] (16) 
-              [48] = prime_array::composite (1) 
-              [49] = prime_array::composite (1) 
-              [50] = prime_array::composite (1) 
-              [51] = prime_array::composite (1) 
-              [52] = prime_array::composite (1) 
-              [53] = prime_array::x[53] (17) 
-              [54] = prime_array::composite (1) 
-              [55] = prime_array::composite (1) 
-              [56] = prime_array::composite (1) 
-              [57] = prime_array::composite (1) 
-              [58] = prime_array::composite (1) 
-              [59] = prime_array::x[59] (18) 
-              [60] = prime_array::composite (1) 
-              [61] = prime_array::x[61] (19) 
-              [62] = prime_array::composite (1) 
-              [63] = prime_array::composite (1) 
-              [64] = prime_array::composite (1) 
-              [65] = prime_array::composite (1) 
-              [66] = prime_array::composite (1) 
-              [67] = prime_array::x[67] (20) 
-              [68] = prime_array::composite (1) 
-              [69] = prime_array::composite (1) 
-              [70] = prime_array::composite (1) 
-              [71] = prime_array::x[71] (21) 
-              [72] = prime_array::composite (1) 
-              [73] = prime_array::x[73] (22) 
-              [74] = prime_array::composite (1) 
-              [75] = prime_array::composite (1) 
-              [76] = prime_array::composite (1) 
-              [77] = prime_array::composite (1) 
-              [78] = prime_array::composite (1) 
-              [79] = prime_array::x[79] (23) 
-              [80] = prime_array::composite (1) 
-              [81] = prime_array::composite (1) 
-              [82] = prime_array::composite (1) 
-              [83] = prime_array::x[83] (24) 
-              [84] = prime_array::composite (1) 
-              [85] = prime_array::composite (1) 
-              [86] = prime_array::composite (1) 
-              [87] = prime_array::composite (1) 
-              [88] = prime_array::composite (1) 
-              [89] = prime_array::x[89] (25) 
-              [90] = prime_array::composite (1) 
-              [91] = prime_array::composite (1) 
-              [92] = prime_array::composite (1) 
-              [93] = prime_array::composite (1) 
-              [94] = prime_array::composite (1) 
-              [95] = prime_array::composite (1) 
-              [96] = prime_array::composite (1) 
-              [97] = prime_array::x[97] (26) 
-              [98] = prime_array::composite (1) 
-              [99] = prime_array::composite (1) 
-              [100] = prime_array::composite (1) 
+              [0] = prime_array<100>::composite (1) 
+              [1] = prime_array<100>::composite (1) 
+              [2] = prime_array<100>::x[2] (2) 
+              [3] = prime_array<100>::x[3] (3) 
+              [4] = prime_array<100>::composite (1) 
+              [5] = prime_array<100>::x[5] (4) 
+              [6] = prime_array<100>::composite (1) 
+              [7] = prime_array<100>::x[7] (5) 
+              [8] = prime_array<100>::composite (1) 
+              [9] = prime_array<100>::composite (1) 
+              [10] = prime_array<100>::composite (1) 
+              [11] = prime_array<100>::x[11] (6) 
+              [12] = prime_array<100>::composite (1) 
+              [13] = prime_array<100>::x[13] (7) 
+              [14] = prime_array<100>::composite (1) 
+              [15] = prime_array<100>::composite (1) 
+              [16] = prime_array<100>::composite (1) 
+              [17] = prime_array<100>::x[17] (8) 
+              [18] = prime_array<100>::composite (1) 
+              [19] = prime_array<100>::x[19] (9) 
+              [20] = prime_array<100>::composite (1) 
+              [21] = prime_array<100>::composite (1) 
+              [22] = prime_array<100>::composite (1) 
+              [23] = prime_array<100>::x[23] (10) 
+              [24] = prime_array<100>::composite (1) 
+              [25] = prime_array<100>::composite (1) 
+              [26] = prime_array<100>::composite (1) 
+              [27] = prime_array<100>::composite (1) 
+              [28] = prime_array<100>::composite (1) 
+              [29] = prime_array<100>::x[29] (11) 
+              [30] = prime_array<100>::composite (1) 
+              [31] = prime_array<100>::x[31] (12) 
+              [32] = prime_array<100>::composite (1) 
+              [33] = prime_array<100>::composite (1) 
+              [34] = prime_array<100>::composite (1) 
+              [35] = prime_array<100>::composite (1) 
+              [36] = prime_array<100>::composite (1) 
+              [37] = prime_array<100>::x[37] (13) 
+              [38] = prime_array<100>::composite (1) 
+              [39] = prime_array<100>::composite (1) 
+              [40] = prime_array<100>::composite (1) 
+              [41] = prime_array<100>::x[41] (14) 
+              [42] = prime_array<100>::composite (1) 
+              [43] = prime_array<100>::x[43] (15) 
+              [44] = prime_array<100>::composite (1) 
+              [45] = prime_array<100>::composite (1) 
+              [46] = prime_array<100>::composite (1) 
+              [47] = prime_array<100>::x[47] (16) 
+              [48] = prime_array<100>::composite (1) 
+              [49] = prime_array<100>::composite (1) 
+              [50] = prime_array<100>::composite (1) 
+              [51] = prime_array<100>::composite (1) 
+              [52] = prime_array<100>::composite (1) 
+              [53] = prime_array<100>::x[53] (17) 
+              [54] = prime_array<100>::composite (1) 
+              [55] = prime_array<100>::composite (1) 
+              [56] = prime_array<100>::composite (1) 
+              [57] = prime_array<100>::composite (1) 
+              [58] = prime_array<100>::composite (1) 
+              [59] = prime_array<100>::x[59] (18) 
+              [60] = prime_array<100>::composite (1) 
+              [61] = prime_array<100>::x[61] (19) 
+              [62] = prime_array<100>::composite (1) 
+              [63] = prime_array<100>::composite (1) 
+              [64] = prime_array<100>::composite (1) 
+              [65] = prime_array<100>::composite (1) 
+              [66] = prime_array<100>::composite (1) 
+              [67] = prime_array<100>::x[67] (20) 
+              [68] = prime_array<100>::composite (1) 
+              [69] = prime_array<100>::composite (1) 
+              [70] = prime_array<100>::composite (1) 
+              [71] = prime_array<100>::x[71] (21) 
+              [72] = prime_array<100>::composite (1) 
+              [73] = prime_array<100>::x[73] (22) 
+              [74] = prime_array<100>::composite (1) 
+              [75] = prime_array<100>::composite (1) 
+              [76] = prime_array<100>::composite (1) 
+              [77] = prime_array<100>::composite (1) 
+              [78] = prime_array<100>::composite (1) 
+              [79] = prime_array<100>::x[79] (23) 
+              [80] = prime_array<100>::composite (1) 
+              [81] = prime_array<100>::composite (1) 
+              [82] = prime_array<100>::composite (1) 
+              [83] = prime_array<100>::x[83] (24) 
+              [84] = prime_array<100>::composite (1) 
+              [85] = prime_array<100>::composite (1) 
+              [86] = prime_array<100>::composite (1) 
+              [87] = prime_array<100>::composite (1) 
+              [88] = prime_array<100>::composite (1) 
+              [89] = prime_array<100>::x[89] (25) 
+              [90] = prime_array<100>::composite (1) 
+              [91] = prime_array<100>::composite (1) 
+              [92] = prime_array<100>::composite (1) 
+              [93] = prime_array<100>::composite (1) 
+              [94] = prime_array<100>::composite (1) 
+              [95] = prime_array<100>::composite (1) 
+              [96] = prime_array<100>::composite (1) 
+              [97] = prime_array<100>::x[97] (26) 
+              [98] = prime_array<100>::composite (1) 
+              [99] = prime_array<100>::composite (1) 
+              [100] = prime_array<100>::composite (1) 
             }
           Created state:
           bool instance pool:
-          1	prime_array::composite
-          2	prime_array::x[2]
-          3	prime_array::x[3]
-          4	prime_array::x[5]
-          5	prime_array::x[7]
-          6	prime_array::x[11]
-          7	prime_array::x[13]
-          8	prime_array::x[17]
-          9	prime_array::x[19]
-          10	prime_array::x[23]
-          11	prime_array::x[29]
-          12	prime_array::x[31]
-          13	prime_array::x[37]
-          14	prime_array::x[41]
-          15	prime_array::x[43]
-          16	prime_array::x[47]
-          17	prime_array::x[53]
-          18	prime_array::x[59]
-          19	prime_array::x[61]
-          20	prime_array::x[67]
-          21	prime_array::x[71]
-          22	prime_array::x[73]
-          23	prime_array::x[79]
-          24	prime_array::x[83]
-          25	prime_array::x[89]
-          26	prime_array::x[97]
+          1	prime_array<100>::composite
+          2	prime_array<100>::x[2]
+          3	prime_array<100>::x[3]
+          4	prime_array<100>::x[5]
+          5	prime_array<100>::x[7]
+          6	prime_array<100>::x[11]
+          7	prime_array<100>::x[13]
+          8	prime_array<100>::x[17]
+          9	prime_array<100>::x[19]
+          10	prime_array<100>::x[23]
+          11	prime_array<100>::x[29]
+          12	prime_array<100>::x[31]
+          13	prime_array<100>::x[37]
+          14	prime_array<100>::x[41]
+          15	prime_array<100>::x[43]
+          16	prime_array<100>::x[47]
+          17	prime_array<100>::x[53]
+          18	prime_array<100>::x[59]
+          19	prime_array<100>::x[61]
+          20	prime_array<100>::x[67]
+          21	prime_array<100>::x[71]
+          22	prime_array<100>::x[73]
+          23	prime_array<100>::x[79]
+          24	prime_array<100>::x[83]
+          25	prime_array<100>::x[89]
+          26	prime_array<100>::x[97]
           bool port aliases:
-          1: prime_array::x[0] = prime_array::x[1] = prime_array::x[4] = prime_array::x[6] = prime_array::x[8] = prime_array::x[9] = prime_array::x[10] = prime_array::x[12] = prime_array::x[14] = prime_array::x[15] = prime_array::x[16] = prime_array::x[18] = prime_array::x[20] = prime_array::x[21] = prime_array::x[22] = prime_array::x[24] = prime_array::x[25] = prime_array::x[26] = prime_array::x[27] = prime_array::x[28] = prime_array::x[30] = prime_array::x[32] = prime_array::x[33] = prime_array::x[34] = prime_array::x[35] = prime_array::x[36] = prime_array::x[38] = prime_array::x[39] = prime_array::x[40] = prime_array::x[42] = prime_array::x[44] = prime_array::x[45] = prime_array::x[46] = prime_array::x[48] = prime_array::x[49] = prime_array::x[50] = prime_array::x[51] = prime_array::x[52] = prime_array::x[54] = prime_array::x[55] = prime_array::x[56] = prime_array::x[57] = prime_array::x[58] = prime_array::x[60] = prime_array::x[62] = prime_array::x[63] = prime_array::x[64] = prime_array::x[65] = prime_array::x[66] = prime_array::x[68] = prime_array::x[69] = prime_array::x[70] = prime_array::x[72] = prime_array::x[74] = prime_array::x[75] = prime_array::x[76] = prime_array::x[77] = prime_array::x[78] = prime_array::x[80] = prime_array::x[81] = prime_array::x[82] = prime_array::x[84] = prime_array::x[85] = prime_array::x[86] = prime_array::x[87] = prime_array::x[88] = prime_array::x[90] = prime_array::x[91] = prime_array::x[92] = prime_array::x[93] = prime_array::x[94] = prime_array::x[95] = prime_array::x[96] = prime_array::x[98] = prime_array::x[99] = prime_array::x[100]
+          1: prime_array<100>::x[0] = prime_array<100>::x[1] = prime_array<100>::x[4] = prime_array<100>::x[6] = prime_array<100>::x[8] = prime_array<100>::x[9] = prime_array<100>::x[10] = prime_array<100>::x[12] = prime_array<100>::x[14] = prime_array<100>::x[15] = prime_array<100>::x[16] = prime_array<100>::x[18] = prime_array<100>::x[20] = prime_array<100>::x[21] = prime_array<100>::x[22] = prime_array<100>::x[24] = prime_array<100>::x[25] = prime_array<100>::x[26] = prime_array<100>::x[27] = prime_array<100>::x[28] = prime_array<100>::x[30] = prime_array<100>::x[32] = prime_array<100>::x[33] = prime_array<100>::x[34] = prime_array<100>::x[35] = prime_array<100>::x[36] = prime_array<100>::x[38] = prime_array<100>::x[39] = prime_array<100>::x[40] = prime_array<100>::x[42] = prime_array<100>::x[44] = prime_array<100>::x[45] = prime_array<100>::x[46] = prime_array<100>::x[48] = prime_array<100>::x[49] = prime_array<100>::x[50] = prime_array<100>::x[51] = prime_array<100>::x[52] = prime_array<100>::x[54] = prime_array<100>::x[55] = prime_array<100>::x[56] = prime_array<100>::x[57] = prime_array<100>::x[58] = prime_array<100>::x[60] = prime_array<100>::x[62] = prime_array<100>::x[63] = prime_array<100>::x[64] = prime_array<100>::x[65] = prime_array<100>::x[66] = prime_array<100>::x[68] = prime_array<100>::x[69] = prime_array<100>::x[70] = prime_array<100>::x[72] = prime_array<100>::x[74] = prime_array<100>::x[75] = prime_array<100>::x[76] = prime_array<100>::x[77] = prime_array<100>::x[78] = prime_array<100>::x[80] = prime_array<100>::x[81] = prime_array<100>::x[82] = prime_array<100>::x[84] = prime_array<100>::x[85] = prime_array<100>::x[86] = prime_array<100>::x[87] = prime_array<100>::x[88] = prime_array<100>::x[90] = prime_array<100>::x[91] = prime_array<100>::x[92] = prime_array<100>::x[93] = prime_array<100>::x[94] = prime_array<100>::x[95] = prime_array<100>::x[96] = prime_array<100>::x[98] = prime_array<100>::x[99] = prime_array<100>::x[100]
         }
       }
       }

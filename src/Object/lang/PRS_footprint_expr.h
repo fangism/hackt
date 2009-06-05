@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint_expr.h,v 1.5 2008/11/05 23:03:34 fang Exp $
+	$Id: PRS_footprint_expr.h,v 1.6 2009/06/05 16:28:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
@@ -10,6 +10,7 @@
 #include <valarray>
 #include <vector>
 #include "util/macros.h"
+#include "Object/lang/PRS_enum.h"
 #include "Object/lang/SPEC_fwd.h"
 #include "Object/lang/cflat_visitee.h"
 #include "util/memory/count_ptr.h"
@@ -139,6 +140,21 @@ public:
 
 	void
 	set_type(const char t) { type = t; }
+
+	bool
+	is_literal(void) const {
+		return type == PRS_LITERAL_TYPE_ENUM;
+	}
+
+	bool
+	is_internal_node(void) const {
+		return type == PRS_NODE_TYPE_ENUM;
+	}
+
+	bool
+	is_negated(void) const {
+		return type == PRS_NOT_EXPR_TYPE_ENUM;
+	}
 
 	params_type&
 	get_params(void) { return params; }
