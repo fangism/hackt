@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.48 2009/04/17 21:14:36 fang Exp $
+	$Id: Command-prsim.cc,v 1.49 2009/06/18 23:45:38 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4688,7 +4688,7 @@ The @var{name} of the channel should match that of an instance
 		i.e. just write @t{:0}
 	If there is only one bundle (1x1ofN), use @var{size} 0 to 
 		indicate that named bundle is not an array.
-@item @var{rails} (@t{rname:radix}) is the name and size of each bundle's 
+@item @var{rails} (@t{[~]rname:radix}) is the name and size of each bundle's 
 	data rails, @var{rname} is the name of the data rail of the channel.
 	@var{radix} is the number of data rails per bundle (N in Mx1ofN).
 	Use @var{radix} 0 to indicate that rail is not an array (1of1).
