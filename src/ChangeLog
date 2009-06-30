@@ -3,9 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-06-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-23:
+	  CRITICAL LATENT BUG FIX (ACX-PR-3797):
+		unroll_context.cc: rvalue lookup ordering was incorrect, 
+		searching global before going up-scope.  (WTF)
+		Added new test case proving fix, regression tests passed.
+
+
 2009-06-04	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-83-12-merged-connect-03-04:
+	* HACKT-00-01-04-main-00-83-22-merged-connect-03-04:
 	  Branch merge of connectivity work.
 
 

@@ -1,0 +1,136 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	19	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	466
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  1 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    N = pint<> N
+  Definitions:
+    foo = process-definition (defined) foo<
+      pint<> N
+      >(
+        bool<> x[0..5]
+        bool<> y[0..1]
+      )
+      In definition "foo", we have: {
+      Parameters:
+        N = pint<> foo::N
+      Instances:
+        x = bool<> foo::x^1
+        y = bool<> foo::y^1
+      unroll sequence: 
+        bool<> x[0..5]
+        bool<> y[0..1]
+        (;i:[0..1]:
+          x[$i+N] = y[$i];
+        )
+      footprint collection: {
+        <2> {
+          N = pint^0 value: 2
+          x = bool^1
+            {
+              [0] = foo<2>::x[0] (1) 
+              [1] = foo<2>::x[1] (2) 
+              [2] = foo<2>::x[2] (3) 
+              [3] = foo<2>::x[3] (4) 
+              [4] = foo<2>::x[4] (5) 
+              [5] = foo<2>::x[5] (6) 
+            }
+          y = bool^1
+            {
+              [0] = foo<2>::x[2] (3) 
+              [1] = foo<2>::x[3] (4) 
+            }
+          Created state:
+          bool instance pool:
+          1	foo<2>::x[0]
+          2	foo<2>::x[1]
+          3	foo<2>::x[2]
+          4	foo<2>::x[3]
+          5	foo<2>::x[4]
+          6	foo<2>::x[5]
+          bool port aliases:
+          3: foo<2>::x[2] = foo<2>::y[0]
+          4: foo<2>::x[3] = foo<2>::y[1]
+        }
+      }
+      }
+
+  Instances:
+    bar = foo<2> bar
+}
+
+footprint: {
+  N = pint^0 value: 4
+  bar = process foo<2>^0 = bar (1) (
+    x = bool^1
+      {
+        [0] = bar.x[0] (1) 
+        [1] = bar.x[1] (2) 
+        [2] = bar.x[2] (3) 
+        [3] = bar.x[3] (4) 
+        [4] = bar.x[4] (5) 
+        [5] = bar.x[5] (6) 
+      }
+    y = bool^1
+      {
+        [0] = bar.x[2] (3) 
+        [1] = bar.x[3] (4) 
+      }
+  )
+  Created state:
+  process instance pool:
+  1	bar
+  bool instance pool:
+  1	bar.x[0]
+  2	bar.x[1]
+  3	bar.x[2]
+  4	bar.x[3]
+  5	bar.x[4]
+  6	bar.x[5]
+}

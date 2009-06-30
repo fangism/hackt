@@ -1,0 +1,17 @@
+// "033.hac"
+// reduced test case by Fang
+// WRONG RESULT BUG:
+// in-loop variable lookup accidentally finds global before template parameter
+// acx-bugzilla PR 3797
+
+pint N = 4;
+
+template <pint N>
+defproc foo(bool x[6], y[2]) {
+(;i:2:
+	x[i+N] = y[i];
+)
+}
+
+foo<2> bar;	// should result in x[2] = y[0], x[3] = y[1]
+

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.27 2007/07/18 23:29:06 fang Exp $
+	$Id: unroll_context.cc,v 1.28 2009/06/30 00:46:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -250,21 +250,20 @@ unroll_context::lookup_rvalue_collection
 			return ret;
 		}
 	}
-	// TODO: shouldn't top-footprint be checked last???
-	if (top_footprint && top_footprint != lookup_footprint) {
-		STACKTRACE_INDENT_PRINT("trying top_footprint..." << endl);
+	if (next) {
+		// this might be a loop or other local scope.  
 		const return_type
-			ret((*top_footprint)[key]
-				.is_a<param_value_collection>());
+			ret(next->lookup_rvalue_collection(p));
 		if (ret) {
 			STACKTRACE_INDENT_PRINT("found it." << endl);
 			return ret;
 		}
 	}
-	if (next) {
-		// this might be a loop or other local scope.  
+	if (top_footprint && top_footprint != lookup_footprint) {
+		STACKTRACE_INDENT_PRINT("trying top_footprint..." << endl);
 		const return_type
-			ret(next->lookup_rvalue_collection(p));
+			ret((*top_footprint)[key]
+				.is_a<param_value_collection>());
 		if (ret) {
 			STACKTRACE_INDENT_PRINT("found it." << endl);
 			return ret;
