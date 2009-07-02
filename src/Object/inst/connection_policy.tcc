@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.9 2009/06/05 16:28:09 fang Exp $
+	$Id: connection_policy.tcc,v 1.10 2009/07/02 23:22:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -12,7 +12,6 @@
 #include "Object/inst/connection_policy.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
-// #include "Object/inst/port_alias_tracker.h"
 #include "Object/type/channel_direction_enum.h"	// for direction enum
 #include "Object/unroll/unroll_context.h"
 #include "Object/type/canonical_type.h"
@@ -59,7 +58,9 @@ bool_connect_policy::__check_connection(const AliasType& a) {
 	// TODO: check must/must-not directions!
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	STACKTRACE_VERBOSE;
-if (!a.is_port_alias()) {
+// (!a.is_port_alias())	// wrong: misses aliases to direct ports
+if (!a.is_aliased_to_port())
+{
 	// only check local non-port aliases
 	const bool any_fanout_dn = a.attributes & BOOL_ANY_FANOUT_PULL_DN;
 	const bool any_fanout_up = a.attributes & BOOL_ANY_FANOUT_PULL_UP;

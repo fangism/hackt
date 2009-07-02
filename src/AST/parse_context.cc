@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.25 2008/11/12 02:59:54 fang Exp $
+ 	$Id: parse_context.cc,v 1.26 2009/07/02 23:22:43 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -33,6 +33,7 @@
 #include "Object/unroll/expression_assignment.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/loop_scope.h"
+#include "Object/unroll/port_scope.h"
 #include "Object/unroll/conditional_scope.h"
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
@@ -999,7 +1000,7 @@ context::add_port_formal(const token_identifier& id,
 	}
 #if 1 || SEQUENTIAL_SCOPE_INCLUDES_FORMALS
 	const never_ptr<sequential_scope>
-		seq_scope(current_prototype.is_a<sequential_scope>());
+		seq_scope(get_current_sequential_scope());
 	NEVER_NULL(seq_scope);
 	seq_scope->push_back(inst_stmt);
 #endif	// SEQUENTIAL_SCOPE_INCLUDES_FORMALS
@@ -1111,6 +1112,26 @@ context::fundamental_type_frame::~fundamental_type_frame() {
 }
 
 //=============================================================================
+// struct context::sequence_frame method definitions
+
+/**
+	Pushes it onto the sequential scope stack.  
+ */
+context::sequence_frame::sequence_frame(context& c, 
+		const never_ptr<sequential_scope>& l) : _context(c) {
+	NEVER_NULL(l);
+	_context.sequential_scope_stack.push(l);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sequential scope stack balancing destructor.  
+ */
+context::sequence_frame::~sequence_frame() {
+	_context.sequential_scope_stack.pop();
+}
+
+//=============================================================================
 // class context::enum_definition_frame method definitions
 
 context::enum_definition_frame::enum_definition_frame(context& c,
@@ -1138,6 +1159,33 @@ context::loop_var_frame::~loop_var_frame() {
 }
 
 //=============================================================================
+// struct context::port_scope_frame method definitions
+
+/**
+	Add the new loop scope to the current sequential scope, 
+	then pushes it onto the sequential scope stack.  
+ */
+context::port_scope_frame::port_scope_frame(context& c, 
+		const count_ptr<port_scope>& l) : _context(c) {
+	NEVER_NULL(l);
+	_context.get_current_sequential_scope()->push_back(l);
+	_context.sequential_scope_stack.push(never_ptr<sequential_scope>(&*l));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sequential scope stack balancing destructor.  
+ */
+context::port_scope_frame::~port_scope_frame() {
+	_context.sequential_scope_stack.pop();
+	const never_ptr<sequential_scope>
+		last(_context.get_current_sequential_scope());
+	const count_ptr<const port_scope>
+		ls(last->back().is_a<const port_scope>());
+	NEVER_NULL(ls);
+}
+
+//=============================================================================
 // struct context::loop_scope_frame method definitions
 
 /**
@@ -1145,8 +1193,7 @@ context::loop_var_frame::~loop_var_frame() {
 	then pushes it onto the sequential scope stack.  
  */
 context::loop_scope_frame::loop_scope_frame(context& c, 
-		const count_ptr<loop_scope>& l
-		) : _context(c) {
+		const count_ptr<loop_scope>& l) : _context(c) {
 	NEVER_NULL(l);
 	_context.get_current_sequential_scope()->push_back(l);
 	_context.sequential_scope_stack.push(never_ptr<sequential_scope>(&*l));

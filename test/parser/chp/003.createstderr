@@ -4,17 +4,18 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	90
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	86
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
+	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -33,8 +34,10 @@ In namespace "", we have: {
         L = chan?(bool<>) empty::L
         R = chan!(bool<>) empty::R
       unroll sequence: 
-        chan?(bool<>) L
-        chan!(bool<>) R
+        ports: (
+          chan?(bool<>) L
+          chan!(bool<>) R
+        )
       }
 
 }

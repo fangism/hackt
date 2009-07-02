@@ -1,13 +1,16 @@
 /**
 	\file "Object/inst/port_visitor.cc"
-	$Id: port_visitor.cc,v 1.1 2009/02/28 01:20:42 fang Exp $
+	$Id: port_visitor.cc,v 1.2 2009/07/02 23:22:49 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
 
 #include "Object/inst/port_visitor.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/traits/instance_traits.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
@@ -20,11 +23,14 @@ using std::vector;
 // terminal meta-type will do nothing by default
 
 #define	DEFINE_TERMINAL_VISIT(Tag)					\
-void port_visitor::visit(const instance_alias_info<Tag>& a) { }
+void port_visitor::visit(const instance_alias_info<Tag>& a) {		\
+	STACKTRACE_VERBOSE;						\
+}
 
 #define	DEFINE_NONTERMINAL_VISIT(Tag)					\
 void									\
 port_visitor::visit(const instance_alias_info<Tag>& a) {		\
+	STACKTRACE_VERBOSE;						\
 	const subinstance_manager& s(a);				\
 	s.accept(*this);						\
 }

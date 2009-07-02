@@ -1,0 +1,17 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	foo	wire_copy_e1of1<>
+	process: 2,3,4
+	bool: 1,2,3,4
+2	(top)	-	2	foo.I	e1of1<>
+	bool: 1,2
+3	(top)	-	3	foo.O	e1of1<>
+	bool: 1,3
+4	process	1	3	foo.c	buf<>
+	bool: 4,2,5
+[global bool entries]
+1	(top)	-	1	foo.I.d	
+2	(top)	-	2	foo.I.e	
+3	(top)	-	3	foo.O.e	
+4	process	1	4	foo.re	
+5	process	4	3	foo.c._o	

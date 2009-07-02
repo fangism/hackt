@@ -4,27 +4,29 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
-	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	306
-	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	416
-	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	452
-	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	306
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	416
+	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	452
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -43,8 +45,10 @@ In namespace "", we have: {
         x = foo<> bar::x
         y = foo<> bar::y
       unroll sequence: 
-        foo<> x
-        foo<> y
+        ports: (
+          foo<> x
+          foo<> y
+        )
       footprint: {
         x = process foo<>^0 = bar<>::x (1) (
           a = bool^1
@@ -79,7 +83,9 @@ In namespace "", we have: {
       Instances:
         a = bool<> foo::a^1
       unroll sequence: 
-        bool<> a[0..1]
+        ports: (
+          bool<> a[0..1]
+        )
       footprint: {
         a = bool^1
           {

@@ -1,0 +1,13 @@
+"foo.O[0].e" & "foo.O[1].e" -> "foo.c._o"-
+~"foo.O[0].e" & ~"foo.O[1].e" -> "foo.c._o"+
+"foo.c._o" -> "foo.I.e"-
+~"foo.c._o" -> "foo.I.e"+
+iskeeper	"foo.I.e" -> "foo.c._o"-
+iskeeper	~"foo.I.e" -> "foo.c._o"+
+= "foo.I.d" "foo.O[0].d"
+= "foo.I.d" "foo.O[1].d"
+= "foo.O[0].e" "foo.c.i[0]"
+= "foo.O[1].e" "foo.c.i[1]"
+= "foo.I.e" "foo.c.o"
+= "foo.O[0].e" "foo.re[0]"
+= "foo.O[1].e" "foo.re[1]"

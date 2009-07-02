@@ -1,0 +1,218 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	432
+	29	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
+	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
+	37	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	38	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
+	39	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	42	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	43	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	61	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	530
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	466
+	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    buf = process-definition (defined) buf(
+        bool<> i
+        bool<> o
+      )
+      In definition "buf", we have: {
+      Instances:
+        _o = bool<> buf::_o
+        i = bool<> buf::i
+        o = bool<> buf::o
+      unroll sequence: 
+        ports: (
+          bool<> i
+          bool<> o
+        )
+        bool<> _o
+      prs:
+        i -> _o-
+        ~i -> _o+
+        _o -> o-
+        ~_o -> o+
+      footprint: {
+        _o = bool^0 = buf<>::_o (3) 
+        i = bool^0 = buf<>::i (1) 
+        o = bool^0 = buf<>::o (2) 
+        Created state:
+        bool instance pool:
+        1	buf<>::i
+        2	buf<>::o
+        3	buf<>::_o
+        resolved prs:
+        i -> _o-
+        ~i -> _o+
+        _o -> o-
+        ~_o -> o+
+      }
+      }
+
+    e1of1 = process-definition (defined) e1of1(
+        bool<> d
+        bool<> e
+      )
+      In definition "e1of1", we have: {
+      Instances:
+        d = bool<> e1of1::d
+        e = bool<> e1of1::e
+      unroll sequence: 
+        ports: (
+          bool<> d
+          bool<> e
+        )
+      footprint: {
+        d = bool^0 = e1of1<>::d (1) 
+        e = bool^0 = e1of1<>::e (2) 
+        Created state:
+        bool instance pool:
+        1	e1of1<>::d
+        2	e1of1<>::e
+      }
+      }
+
+    wire_copy_e1of1 = process-definition (defined) wire_copy_e1of1(
+        e1of1<> I
+        e1of1<> O
+      )
+      In definition "wire_copy_e1of1", we have: {
+      Instances:
+        I = e1of1<> wire_copy_e1of1::I
+        O = e1of1<> wire_copy_e1of1::O
+        c = buf<> wire_copy_e1of1::c
+        re = bool<> wire_copy_e1of1::re
+      unroll sequence: 
+        ports: (
+          e1of1<> I
+          e1of1<> O
+        )
+        bool<> re
+        re = O.e;
+        O.d = I.d;
+        buf<> c
+        c (re, I.e);
+      footprint: {
+        I = process e1of1<>^0 = wire_copy_e1of1<>::I (1) (
+          d = bool^0 = wire_copy_e1of1<>::I.d (1) 
+          e = bool^0 = wire_copy_e1of1<>::I.e (2) 
+        )
+        O = process e1of1<>^0 = wire_copy_e1of1<>::O (2) (
+          d = bool^0 = wire_copy_e1of1<>::I.d (1) 
+          e = bool^0 = wire_copy_e1of1<>::re (3) 
+        )
+        c = process buf<>^0 = wire_copy_e1of1<>::c (3) (
+          i = bool^0 = wire_copy_e1of1<>::re (3) 
+          o = bool^0 = wire_copy_e1of1<>::I.e (2) 
+        )
+        re = bool^0 = wire_copy_e1of1<>::re (3) 
+        Created state:
+        process instance pool:
+        1	wire_copy_e1of1<>::I
+        2	wire_copy_e1of1<>::O
+        3	wire_copy_e1of1<>::c
+        bool instance pool:
+        1	wire_copy_e1of1<>::I.d
+        2	wire_copy_e1of1<>::I.e
+        3	wire_copy_e1of1<>::re
+        bool port aliases:
+        1: wire_copy_e1of1<>::I.d = wire_copy_e1of1<>::O.d
+      }
+      }
+
+  Instances:
+    foo = wire_copy_e1of1<> foo
+}
+
+footprint: {
+  foo = process wire_copy_e1of1<>^0 = foo (1) (
+    I = process e1of1<>^0 = foo.I (2) (
+      d = bool^0 = foo.I.d (1) 
+      e = bool^0 = foo.I.e (2) 
+    )
+    O = process e1of1<>^0 = foo.O (3) (
+      d = bool^0 = foo.I.d (1) 
+      e = bool^0 = foo.O.e (3) 
+    )
+  )
+  Created state:
+  process instance pool:
+  1	foo
+  2	foo.I
+  3	foo.O
+  bool instance pool:
+  1	foo.I.d
+  2	foo.I.e
+  3	foo.O.e
+}

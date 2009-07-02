@@ -4,46 +4,49 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
-	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
-	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	670
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	706
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	670
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	706
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -62,8 +65,10 @@ In namespace "", we have: {
         x = foo<> bar::x
         y = foo<> bar::y
       unroll sequence: 
-        foo<> x
-        foo<> y
+        ports: (
+          foo<> x
+          foo<> y
+        )
         x = y;
       footprint: {
         x = process foo<>^0 = bar<>::x (1) (
@@ -95,8 +100,10 @@ In namespace "", we have: {
         a = bool<> foo::a
         b = bool<> foo::b
       unroll sequence: 
-        bool<> a
-        bool<> b
+        ports: (
+          bool<> a
+          bool<> b
+        )
         a = b;
       footprint: {
         a = bool^0 = foo<>::a (1) 
@@ -118,8 +125,10 @@ In namespace "", we have: {
         p = bar<> ick::p
         q = bar<> ick::q
       unroll sequence: 
-        bar<> p
-        bar<> q
+        ports: (
+          bar<> p
+          bar<> q
+        )
         p = q;
       footprint: {
         p = process bar<>^0 = ick<>::p (1) (

@@ -12,7 +12,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
 	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -23,73 +23,74 @@ Persistent Object Manager text dump:
 	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	15	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	portscop	0	#HEAD#	#TAIL#	36
+	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	20	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	33	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	35	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	38	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
-	43	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	34	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
 	44	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
-	46	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	50	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	53	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	54	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	55	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
-	56	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
+	47	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	48	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	55	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
 	57	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	59	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
-	61	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
 	62	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	644
-	64	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	66	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	69	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	70	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	63	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	footprnt	0	#HEAD#	#TAIL#	644
+	65	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	70	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
 	71	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	72	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	73	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
-	74	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	72	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	73	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
 	75	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	76	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	77	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	78	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	79	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	80	##ADDR##	footprnt	0	#HEAD#	#TAIL#	454
-	81	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	78	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	79	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	footprnt	0	#HEAD#	#TAIL#	454
+	82	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -120,12 +121,14 @@ In namespace "", we have: {
         y = bool<> foo::y
         z = bool<> foo::z
       unroll sequence: 
-        chan?(bool<>) A
-        chan?(bool<>) B
-        chan!(bool<>) C
-        chan!(bool<>) D
-        chan!(bool<>) E
-        chan!(bool<>) F
+        ports: (
+          chan?(bool<>) A
+          chan?(bool<>) B
+          chan!(bool<>) C
+          chan!(bool<>) D
+          chan!(bool<>) E
+          chan!(bool<>) F
+        )
         bool<> a
         bool<> b
         bool<> y

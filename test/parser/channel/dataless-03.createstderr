@@ -15,23 +15,24 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	111
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	103
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	26
 	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
 	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	28
-	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	325
-	14	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	373
-	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	325
+	15	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	373
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -52,9 +53,11 @@ In namespace "", we have: {
         out = chan!() boring::out
         peek = chan() boring::peek
       unroll sequence: 
-        chan?() in
-        chan!() out
-        chan() peek
+        ports: (
+          chan?() in
+          chan!() out
+          chan() peek
+        )
       footprint: {
         in = channel chan?()^0 = boring<>::in (1) 
         out = channel chan!()^0 = boring<>::out (2) 

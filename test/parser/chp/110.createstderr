@@ -6,23 +6,25 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	81
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	9	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	11	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	83
-	13	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
+	5	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	83
+	14	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -39,7 +41,9 @@ In namespace "", we have: {
       Instances:
         S = chan(bool<>) sink::S
       unroll sequence: 
-        chan(bool<>) S
+        ports: (
+          chan(bool<>) S
+        )
       chp:
         concurrent: {
           *[
@@ -55,7 +59,9 @@ In namespace "", we have: {
       Instances:
         S = chan(bool<>) source::S
       unroll sequence: 
-        chan(bool<>) S
+        ports: (
+          chan(bool<>) S
+        )
       chp:
         concurrent: {
           *[

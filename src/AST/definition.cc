@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.9 2008/03/17 23:02:14 fang Exp $
+	$Id: definition.cc,v 1.10 2009/07/02 23:22:43 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -40,6 +40,7 @@
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
 #include "Object/common/namespace.h"
+#include "Object/unroll/port_scope.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -176,11 +177,18 @@ user_data_type_signature::check_signature(context& c) const {
 	} else {
 		ndd->attach_base_data_type(bdr);
 	}
+{
+	STACKTRACE_INDENT_PRINT("processing ports..." << endl);
+	const context::sequence_frame seqf(c, ndd);
+	// temporarily open the definition's sequential scope
+	const count_ptr<port_scope> ps(new port_scope);
+	const context::port_scope_frame _psf(c, ps);
 	if (!check_data_ports(*params, c).good) {
 		cerr << "ERROR: in data ports list at " <<
 			where(*params) << endl;
 		THROW_EXIT;
 	}
+}
 	const never_ptr<definition_base>
 		o(c.add_declaration(c.get_current_prototype()));
 	INVARIANT(!c.get_current_prototype());
@@ -494,11 +502,18 @@ user_chan_type_signature::check_signature(context& c) const {
 	} else {
 		ncd->attach_base_channel_type(bcr);
 	}
+{
+	STACKTRACE_INDENT_PRINT("processing ports..." << endl);
+	const context::sequence_frame seqf(c, ncd);
+	// temporarily open the definition's sequential scope
+	const count_ptr<port_scope> ps(new port_scope);
+	const context::port_scope_frame _psf(c, ps);
 	if (!check_chan_ports(*params, c).good) {
 		cerr << "ERROR: in channel ports list at " <<
 			where(*params) << endl;
 		THROW_EXIT;
 	}
+}
 	const never_ptr<definition_base>
 		o(c.add_declaration(c.get_current_prototype()));
 	INVARIANT(!c.get_current_prototype());
@@ -664,7 +679,9 @@ process_signature::check_signature(context& c) const {
 	STACKTRACE("process_signature::check_build()");
 	excl_ptr<definition_base>
 		ret(new process_definition(c.get_current_namespace(), *id));
+	const never_ptr<process_definition> seq(ret.is_a<process_definition>());
 	c.set_current_prototype(ret);
+	// transfered ownership
 	if (temp_spec) {
 		const never_ptr<const object> o(temp_spec->check_build(c));
 		if (!o) {
@@ -673,6 +690,11 @@ process_signature::check_signature(context& c) const {
 		}
 	}
 	if (ports && !ports->empty()) {
+		STACKTRACE_INDENT_PRINT("processing ports..." << endl);
+		const context::sequence_frame seqf(c, seq);
+		// temporarily open the definition's sequential scope
+		const count_ptr<port_scope> ps(new port_scope);
+		const context::port_scope_frame _psf(c, ps);
 		const never_ptr<const object> o(ports->check_build(c));
 		// return value NULL, useless
 		// would've exited already if there was error

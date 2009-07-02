@@ -6,54 +6,56 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	346
-	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
-	21	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
-	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	346
+	21	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
 	23	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	25	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	337
-	34	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
-	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	337
+	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
 	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	41	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	462
-	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	462
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -72,8 +74,10 @@ In namespace "", we have: {
         w = bool<> bar::w
         z = bool<> bar::z
       unroll sequence: 
-        bool<> w
-        bool<> z
+        ports: (
+          bool<> w
+          bool<> z
+        )
       spec:
         $(~(w & z))
       footprint: {
@@ -97,8 +101,10 @@ In namespace "", we have: {
         x = bool<> foo::x
         y = bool<> foo::y
       unroll sequence: 
-        bool<> x
-        bool<> y
+        ports: (
+          bool<> x
+          bool<> y
+        )
       spec:
         $(x | y)
       footprint: {

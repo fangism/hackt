@@ -5,39 +5,40 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	14	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	16	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	23	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	25	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	444
-	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	366
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	15	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	17	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	26	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	444
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	366
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -56,8 +57,10 @@ In namespace "", we have: {
         _o = bool<> celem2inv::_o
         a = bool<> celem2inv::a^1
       unroll sequence: 
-        bool<> a[0..1]
-        bool<> _o
+        ports: (
+          bool<> a[0..1]
+          bool<> _o
+        )
       prs:
         (&:i:[0..1]: a[$i]) -> _o-
         (&:i:[0..1]: ~a[$i]) -> _o+

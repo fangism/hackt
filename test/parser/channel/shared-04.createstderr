@@ -11,33 +11,34 @@ Persistent Object Manager text dump:
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	89
 	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	12	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	13	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
-	15	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	397
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	13	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	14	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
+	16	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	397
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -54,7 +55,9 @@ In namespace "", we have: {
       Instances:
         X = chan??(bool<>) sink::X
       unroll sequence: 
-        chan??(bool<>) X
+        ports: (
+          chan??(bool<>) X
+        )
       chp:
         concurrent: {
           X?

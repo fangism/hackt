@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.50 2009/06/05 16:28:10 fang Exp $
+	$Id: instance_collection.tcc,v 1.51 2009/07/02 23:22:49 fang Exp $
 	TODO: trim includes
  */
 
@@ -541,7 +541,7 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 		const instance_alias_info_type& p) {
-	NEVER_NULL(p.container);
+if (p.container) {
 	const size_t dim = p.container->get_dimensions();
 	if (dim)
 		p.dump_key(os << auto_indent);
@@ -557,6 +557,11 @@ INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 	p.dump_ports(os << ' ', df);
 	if (dim)
 		os << endl;
+} else {
+	// this is possible only if dumping in mid-construction
+	// should only ever happen while debuygging
+	os << "???";
+}
 	return os;
 }
 

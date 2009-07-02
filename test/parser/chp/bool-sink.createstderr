@@ -7,17 +7,18 @@ Persistent Object Manager text dump:
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	14	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
+	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -35,7 +36,9 @@ In namespace "", we have: {
         S = chan?(bool<>) chp_bool_sink::S
         x = bool<> chp_bool_sink::x
       unroll sequence: 
-        chan?(bool<>) S
+        ports: (
+          chan?(bool<>) S
+        )
         bool<> x
       chp:
         concurrent: {

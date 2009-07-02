@@ -6,28 +6,29 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	108
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	310
-	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	484
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	310
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	484
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -48,9 +49,11 @@ In namespace "", we have: {
         y = bool<> baz::y
         z = bool<> baz::z
       unroll sequence: 
-        bool<> x
-        bool<> y
-        bool<> z
+        ports: (
+          bool<> x
+          bool<> y
+          bool<> z
+        )
       footprint: {
         x = bool^0 = baz<>::x (1) 
         y = bool^0 = baz<>::y (2) 

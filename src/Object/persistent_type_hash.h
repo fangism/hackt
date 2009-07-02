@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.27 2008/10/31 02:11:41 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.28 2009/07/02 23:22:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -254,6 +254,7 @@
 #define	PROCESS_PORT_CONNECTION_TYPE_KEY			"prcprtcn"
 #define	CHANNEL_PORT_CONNECTION_TYPE_KEY			"chnprtcn"
 #define	STRUCT_PORT_CONNECTION_TYPE_KEY				"dstprtcn"
+#define	PORT_SCOPE_TYPE_KEY					"portscop"
 #define	LOOP_SCOPE_TYPE_KEY					"loopscop"
 #define	CONDITIONAL_SCOPE_TYPE_KEY				"condscop"
 

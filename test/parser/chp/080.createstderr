@@ -15,49 +15,50 @@ Persistent Object Manager text dump:
 	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	315
-	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	315
-	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	315
-	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	433
-	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	315
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	315
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	315
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	433
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -78,7 +79,9 @@ In namespace "", we have: {
       Instances:
         b = chan!(int<32>) send_me::b
       unroll sequence: 
-        chan!(int<32>) b
+        ports: (
+          chan!(int<32>) b
+        )
       chp:
         concurrent: {
           *[

@@ -1,0 +1,28 @@
+// "155.hac"
+// testing PRS connectivity checking
+
+defchan e1of1 <: chan(bool)(bool d, e) { send{} recv{}}
+
+template <pint N>
+defproc celem(bool i[N], o) {
+	bool _o;
+prs {
+	(&:j:N: i[j] )		-> _o-
+	(&:j:N: ~i[j] )		-> _o+
+	_o			=> o-
+[iskeeper=1]	o		=> _o-
+}
+}
+
+template <pint C>
+defproc wire_copy_e1of1(e1of1 I, O[C]) {
+bool re[C];
+// did not recognize re[] as aliased to port
+(;i:C:
+        re[i] = O[i].e;
+        O[i].d = I.d;
+)
+celem<C> c(re, I.e);
+}
+
+wire_copy_e1of1<2> foo;

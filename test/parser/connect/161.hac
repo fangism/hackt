@@ -1,0 +1,23 @@
+// "161.hac"
+// copy-reduced from "158.hac"
+// testing PRS connectivity checking
+
+defchan e1of1 <: chan(bool)(bool d, e) { send{} recv{}}
+
+defproc buf(bool i, o) {
+bool _o;
+prs {
+	i	=> _o-
+	_o	=> o-
+}
+}
+
+defproc wire_copy_e1of1(e1of1 I, O) {
+bool re;
+buf a(O.e, re);
+buf b(I.d, O.d);
+buf c(re, I.e);
+}
+
+wire_copy_e1of1 foo;
+

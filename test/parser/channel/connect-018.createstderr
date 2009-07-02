@@ -10,21 +10,22 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	9	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	283
-	13	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
-	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	283
+	14	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -41,7 +42,9 @@ In namespace "", we have: {
       Instances:
         a = chan?(bool<>) receivers::a
       unroll sequence: 
-        chan?(bool<>) a
+        ports: (
+          chan?(bool<>) a
+        )
         a = a;
       footprint: {
         a = channel chan?(bool<>)^0 = receivers<>::a (1) 

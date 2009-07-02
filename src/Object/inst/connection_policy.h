@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.12 2009/06/05 16:28:09 fang Exp $
+	$Id: connection_policy.h,v 1.13 2009/07/02 23:22:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -134,6 +134,15 @@ protected:
 		BOOL_MAY_WEAK_INTERFERE	= 0x0040,
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	/**
+		This is NOT an attribute, is an intrinsic property
+		automatically updated during connections.
+		This really should be a general instance property, 
+		not just specific to bools.  
+		This should be set immediately upon instantiating 
+		a port substructure.
+	 */
+		BOOL_IS_ALIASED_TO_PORT = 0x0080,
+	/**
 		The first four flags are properties from participation
 		in production rules and propagated from subinstances.
 		Since these are local properties, they should be 
@@ -214,7 +223,8 @@ protected:
 			BOOL_LOCAL_PRS_MASK | BOOL_SUBSTRUCT_PRS_MASK,
 #endif	// BOOL_PRS_CONNECTIVITY_CHECKING
 	/// mask for attributes to distinguish from connectivity fields
-		BOOL_ATTRIBUTES_MASK	= 0x00FF,
+		BOOL_ATTRIBUTES_MASK	= 0x007F,
+		BOOL_INIT_ATTRIBUTES_MASK	= 0x007F | BOOL_IS_ALIASED_TO_PORT,
 		BOOL_DEFAULT_ATTRIBUTES = 0x0000
 	};
 	/**
@@ -245,6 +255,16 @@ public:
 	has_nondefault_attributes(void) const {
 		return attributes & BOOL_ATTRIBUTES_MASK;
 		// if any attribute bits are set
+	}
+
+	void
+	flag_port(void) {
+		attributes |= BOOL_IS_ALIASED_TO_PORT;
+	}
+
+	bool
+	is_aliased_to_port(void) const {
+		return attributes & BOOL_IS_ALIASED_TO_PORT;
 	}
 
 	void
@@ -341,6 +361,9 @@ public:
 		void
 		operator () (AliasType&);
 	};	// end struct collection_connection_flag_setter
+
+	ostream&
+	dump_raw_attributes(ostream&) const;
 
 	ostream&
 	dump_attributes(ostream&) const;

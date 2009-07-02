@@ -10,27 +10,28 @@ Persistent Object Manager text dump:
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	89
 	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	11	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	12	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
-	14	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	18	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	340
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	13	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
+	15	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	340
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -47,7 +48,9 @@ In namespace "", we have: {
       Instances:
         X = chan??(bool<>) sink::X
       unroll sequence: 
-        chan??(bool<>) X
+        ports: (
+          chan??(bool<>) X
+        )
       chp:
         concurrent: {
           X?

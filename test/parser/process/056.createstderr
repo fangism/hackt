@@ -6,18 +6,19 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
-	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	326
-	11	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
-	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
+	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
+	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	326
+	12	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -34,7 +35,9 @@ In namespace "", we have: {
       Instances:
         x = foo<> bar::x^1
       unroll sequence: 
-        foo<> x[0..1]
+        ports: (
+          foo<> x[0..1]
+        )
       footprint: {
         x = process foo<>^1
           {

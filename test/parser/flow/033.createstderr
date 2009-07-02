@@ -7,39 +7,40 @@ Persistent Object Manager text dump:
 	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	108
 	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	19	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	20	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
-	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	466
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	466
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -64,8 +65,10 @@ In namespace "", we have: {
         x = bool<> foo::x^1
         y = bool<> foo::y^1
       unroll sequence: 
-        bool<> x[0..5]
-        bool<> y[0..1]
+        ports: (
+          bool<> x[0..5]
+          bool<> y[0..1]
+        )
         (;i:[0..1]:
           x[$i+N] = y[$i];
         )

@@ -11,76 +11,78 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	113
 	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	13	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	20	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	21	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	24	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	368
-	29	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	34	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	35	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	36	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
-	38	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	21	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	368
+	30	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	35	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	37	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
 	39	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	40	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	41	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	42	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	45	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	51	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	52	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	53	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	55	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	56	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	54	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
 	58	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	404
-	61	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	62	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	64	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	65	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	66	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	67	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	68	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	69	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	404
+	63	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	66	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	67	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	68	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	69	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	70	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	71	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
-	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	74	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
+	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	76	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -100,8 +102,10 @@ In namespace "", we have: {
         R = chan!(bool<>) bool_peekbuf::R
         x = bool<> bool_peekbuf::x
       unroll sequence: 
-        chan?(bool<>) L
-        chan!(bool<>) R
+        ports: (
+          chan?(bool<>) L
+          chan!(bool<>) R
+        )
         bool<> x
       chp:
         concurrent: {
@@ -149,8 +153,10 @@ In namespace "", we have: {
         R = chan!(bool<>) bool_peekbuf_fast::R
         x = bool<> bool_peekbuf_fast::x
       unroll sequence: 
-        chan?(bool<>) L
-        chan!(bool<>) R
+        ports: (
+          chan?(bool<>) L
+          chan!(bool<>) R
+        )
         bool<> x
       chp:
         concurrent: {

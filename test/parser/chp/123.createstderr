@@ -19,32 +19,33 @@ Persistent Object Manager text dump:
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
 	15	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	20	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
-	22	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	26	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	32	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	368
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
+	23	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	33	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	368
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -98,7 +99,9 @@ In namespace "", we have: {
       Instances:
         B = chan?(bool<>) foo::B
       unroll sequence: 
-        chan?(bool<>) B
+        ports: (
+          chan?(bool<>) B
+        )
       chp:
         concurrent: {
           B?

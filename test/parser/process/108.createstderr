@@ -7,40 +7,42 @@ Persistent Object Manager text dump:
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
-	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	322
-	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	322
 	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
-	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
 	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	25	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	388
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	424
-	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	388
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	424
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -58,7 +60,9 @@ In namespace "", we have: {
         x = foo<> bar::x
         y = foo<> bar::y
       unroll sequence: 
-        foo<> x
+        ports: (
+          foo<> x
+        )
         foo<> y
       footprint: {
         x = process foo<>^0 = bar<>::x (1) 
@@ -98,8 +102,10 @@ In namespace "", we have: {
         p = bar<> ick::p
         q = bar<> ick::q
       unroll sequence: 
-        bar<> p
-        bar<> q
+        ports: (
+          bar<> p
+          bar<> q
+        )
         p.x = q.x;
       footprint: {
         p = process bar<>^0 = ick<>::p (1) (

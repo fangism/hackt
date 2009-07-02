@@ -1,11 +1,12 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.11 2009/06/05 16:28:08 fang Exp $
+	$Id: connection_policy.cc,v 1.12 2009/07/02 23:22:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include "Object/inst/connection_policy.h"
 #include "Object/devel_switches.h"
@@ -42,12 +43,19 @@ bool_connect_policy::attribute_names[] = {
 /**
 	Attributes are simply copied up the instance hierarchy
 	through ports.  
+	\param t formal instance alias
  */
 void
 bool_connect_policy::initialize_actual_direction(const this_type& t) {
 	STACKTRACE_VERBOSE;
 #if BOOL_PRS_CONNECTIVITY_CHECKING
-	attributes = (t.attributes & BOOL_ATTRIBUTES_MASK);
+#if ENABLE_STACKTRACE
+	t.dump_raw_attributes(STACKTRACE_INDENT_PRINT("formal: ")) << endl;
+	dump_raw_attributes(STACKTRACE_INDENT_PRINT("init: ")) << endl;
+#endif
+	attributes = (t.attributes & BOOL_ATTRIBUTES_MASK)
+		| (attributes & BOOL_INIT_ATTRIBUTES_MASK);
+		// to preserve local port flag
 	if (t.attributes & BOOL_ANY_FANOUT_PULL_DN)
 		attributes |= BOOL_SUBSTRUCT_FANOUT_PULL_DN;
 	if (t.attributes & BOOL_ANY_FANOUT_PULL_UP)
@@ -56,9 +64,12 @@ bool_connect_policy::initialize_actual_direction(const this_type& t) {
 		attributes |= BOOL_SUBSTRUCT_FANIN_PULL_DN;
 	if (t.attributes & BOOL_ANY_FANIN_PULL_UP)
 		attributes |= BOOL_SUBSTRUCT_FANIN_PULL_UP;
-#else
-	attributes = t.attributes;
+#if ENABLE_STACKTRACE
+	dump_raw_attributes(STACKTRACE_INDENT_PRINT("after: ")) << endl;
 #endif
+#else	// BOOL_PRS_CONNECTIVITY_CHECKING
+	attributes = t.attributes;
+#endif	// BOOL_PRS_CONNECTIVITY_CHECKING
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -85,9 +96,18 @@ bool_connect_policy::synchronize_flags(this_type& l, this_type& r) {
 	l.attributes |= r.attributes;
 	r.attributes = l.attributes;
 	// TODO: handle direction checking!
-	STACKTRACE_INDENT_PRINT("flags/connectivity = " << l.attributes << ", "
-		<< r.attributes << endl);
+	STACKTRACE_INDENT_PRINT("flags/connectivity = 0x" << std::hex <<
+		l.attributes << ", 0x" << std::hex << r.attributes << endl);
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For debugging only.
+ */
+ostream&
+bool_connect_policy::dump_raw_attributes(ostream& o) const {
+	return o << "0x" << std::hex << attributes;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -116,7 +136,7 @@ ostream&
 bool_connect_policy::dump_flat_attributes(ostream& o) const {
 	connection_flags_type temp = attributes;	// better be unsigned!
 	const char** p = attribute_names;
-while (temp && p < attribute_names +8) {
+while (temp && p < attribute_names +7) {
 	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << ' ' << *p;
@@ -135,7 +155,7 @@ ostream&
 bool_connect_policy::dump_split_attributes(ostream& o, const string& n) const {
 	connection_flags_type temp = attributes;	// better be unsigned!
 	const char** p = attribute_names;
-while (temp && p < attribute_names +8) {
+while (temp && p < attribute_names +7) {
 	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << "@ " << n << ' ' << *p << endl;

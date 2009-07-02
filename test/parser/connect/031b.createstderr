@@ -6,46 +6,49 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	87
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	33
-	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
-	8	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	280
-	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	317
-	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	87
-	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
-	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	dintplch	0	#HEAD#	#TAIL#	29
-	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
-	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	456
-	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	9	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	280
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	317
+	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	87
+	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	29
+	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	456
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -62,7 +65,9 @@ In namespace "", we have: {
       Instances:
         egg_array = egg<> basket::egg_array
       unroll sequence: 
-        egg<> egg_array
+        ports: (
+          egg<> egg_array
+        )
       footprint: {
         egg_array = process egg<>^0 = basket<>::egg_array (1) (
           yolk = int<32>^0 = basket<>::egg_array.yolk (1) 
@@ -82,7 +87,9 @@ In namespace "", we have: {
       Instances:
         c = basket<> bundle::c
       unroll sequence: 
-        basket<> c
+        ports: (
+          basket<> c
+        )
       footprint: {
         c = process basket<>^0 = bundle<>::c (1) (
           egg_array = process egg<>^0 = bundle<>::c.egg_array (2) (
@@ -105,7 +112,9 @@ In namespace "", we have: {
       Instances:
         yolk = int<32> egg::yolk
       unroll sequence: 
-        int<32> yolk
+        ports: (
+          int<32> yolk
+        )
       footprint: {
         yolk = int<32>^0 = egg<>::yolk (1) 
         Created state:

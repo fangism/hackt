@@ -6,31 +6,32 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	374
-	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
-	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	20	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1506
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	374
+	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	21	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1506
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -47,7 +48,9 @@ In namespace "", we have: {
       Instances:
         q = bool<> ass::q^2
       unroll sequence: 
-        bool<> q[0..2][0..1]
+        ports: (
+          bool<> q[0..2][0..1]
+        )
       footprint: {
         q = bool^2
           {

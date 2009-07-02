@@ -9,21 +9,22 @@ Persistent Object Manager text dump:
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	89
 	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	11	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
-	13	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
-	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
+	14	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -40,7 +41,9 @@ In namespace "", we have: {
       Instances:
         X = chan??(bool<>) sink::X
       unroll sequence: 
-        chan??(bool<>) X
+        ports: (
+          chan??(bool<>) X
+        )
       chp:
         concurrent: {
           X?

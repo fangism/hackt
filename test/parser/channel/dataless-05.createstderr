@@ -4,46 +4,47 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	103
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	99
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	26
 	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	10	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	13	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	356
-	18	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	23	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	11	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	14	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	356
+	19	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -62,8 +63,10 @@ In namespace "", we have: {
         in = chan?() boring::in
         out = chan!() boring::out
       unroll sequence: 
-        chan?() in
-        chan!() out
+        ports: (
+          chan?() in
+          chan!() out
+        )
       chp:
         concurrent: {
           concurrent: {

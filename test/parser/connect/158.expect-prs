@@ -1,0 +1,8 @@
+"foo.O.e" -> "foo.c._o"-
+~"foo.O.e" -> "foo.c._o"+
+"foo.c._o" -> "foo.I.e"-
+~"foo.c._o" -> "foo.I.e"+
+= "foo.I.d" "foo.O.d"
+= "foo.O.e" "foo.c.i"
+= "foo.I.e" "foo.c.o"
+= "foo.O.e" "foo.re"

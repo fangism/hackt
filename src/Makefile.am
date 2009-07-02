@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.218 2009/04/04 01:10:36 fang Exp $
+#	$Id: Makefile.am,v 1.219 2009/07/02 23:22:42 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -631,6 +631,7 @@ OBJECT_CC_FILES = \
 	Object/unroll/meta_instance_reference_connection.cc \
 	Object/unroll/meta_conditional_base.cc \
 	Object/unroll/meta_loop_base.cc \
+	Object/unroll/port_scope.cc \
 	Object/unroll/unroll_context.cc \
 	Object/module.cc \
 	Object/global_entry.cc \

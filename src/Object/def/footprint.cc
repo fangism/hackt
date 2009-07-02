@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.42 2009/06/05 16:28:07 fang Exp $
+	$Id: footprint.cc,v 1.43 2009/07/02 23:22:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1035,6 +1035,7 @@ footprint::cflat_aliases(ostream& o, const state_manager& sm,
 /**
 	Visits all physical instances in instance_collection_map.  
 	e.g. this is used to cflat aliases in the instance hierarchy.  
+	NOTE: this only traverses from immediate subinstances.
 	TODO: iterate over pools.  Save this for last.  
  */
 void

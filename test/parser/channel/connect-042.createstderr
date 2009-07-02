@@ -11,24 +11,25 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	87
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	283
-	10	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	86
-	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
-	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
-	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	283
+	11	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	86
+	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
+	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -45,7 +46,9 @@ In namespace "", we have: {
       Instances:
         B = chan(bool<>) boring::B
       unroll sequence: 
-        chan(bool<>) B
+        ports: (
+          chan(bool<>) B
+        )
       footprint: {
         B = channel chan(bool<>)^0 = boring<>::B (1) 
         Created state:

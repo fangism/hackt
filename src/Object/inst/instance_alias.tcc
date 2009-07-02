@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.37 2009/01/22 21:01:42 fang Exp $
+	$Id: instance_alias.tcc,v 1.38 2009/07/02 23:22:49 fang Exp $
 	TODO: trim includes
  */
 
@@ -253,6 +253,10 @@ void
 INSTANCE_ALIAS_INFO_CLASS::import_properties(const this_type& f) {
 	STACKTRACE_VERBOSE;
 	actuals_parent_type::copy_actuals(f);
+#if ENABLE_STACKTRACE
+	f.dump_hierarchical_name(STACKTRACE_INDENT_PRINT("formal: ")) << endl;
+	this->dump_hierarchical_name(STACKTRACE_INDENT_PRINT("this: ")) << endl;
+#endif
 	direction_connection_policy::initialize_actual_direction(f);
 }
 
@@ -315,6 +319,8 @@ INSTANCE_ALIAS_INFO_CLASS::get_supermost_substructure(void) const {
 /**
 	\return true if this hierarchical alias is a port of the current
 		scope or is a subinstance of a port.  
+	This DOES NOT check other aliases in the set, 
+		that may belong to a port.  :(
 	NOTE: this is pretty much template independent.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
@@ -589,6 +595,7 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	General walker.  
+	To traverse subinstances, derive visitor from struct port_visitor!
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void

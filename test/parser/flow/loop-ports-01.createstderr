@@ -6,37 +6,39 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	87
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	278
-	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	86
-	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	278
-	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
-	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	17	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	5	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	278
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	86
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	278
+	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
+	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
 	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	24	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	26	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	376
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	376
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -53,7 +55,9 @@ In namespace "", we have: {
       Instances:
         d = bool<> ch1of1::d
       unroll sequence: 
-        bool<> d
+        ports: (
+          bool<> d
+        )
       footprint: {
         d = bool^0 = ch1of1<>::d (1) 
         Created state:
@@ -69,7 +73,9 @@ In namespace "", we have: {
       Instances:
         a = bool<> dcelm::a
       unroll sequence: 
-        bool<> a
+        ports: (
+          bool<> a
+        )
       footprint: {
         a = bool^0 = dcelm<>::a (1) 
         Created state:

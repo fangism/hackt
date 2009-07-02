@@ -11,17 +11,18 @@ Persistent Object Manager text dump:
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
 	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	283
-	11	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
-	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	283
+	12	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -38,7 +39,9 @@ In namespace "", we have: {
       Instances:
         x = chan?(bool<>) hanging::x
       unroll sequence: 
-        chan?(bool<>) x
+        ports: (
+          chan?(bool<>) x
+        )
       footprint: {
         x = channel chan?(bool<>)^0 = hanging<>::x (1) 
         Created state:

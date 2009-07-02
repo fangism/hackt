@@ -8,17 +8,18 @@ Persistent Object Manager text dump:
 	4	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
+	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -39,7 +40,9 @@ In namespace "", we have: {
       Instances:
         S = chan!(bool<>) chp_bool_source_delay::S
       unroll sequence: 
-        chan!(bool<>) S
+        ports: (
+          chan!(bool<>) S
+        )
       chp:
         concurrent: {
           *[

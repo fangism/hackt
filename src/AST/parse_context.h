@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.22 2008/11/23 17:53:30 fang Exp $
+	$Id: parse_context.h,v 1.23 2009/07/02 23:22:44 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -45,6 +45,7 @@ namespace entity {
 	class dynamic_param_expr_list;
 	class param_expression_assignment;
 	class loop_scope;
+	class port_scope;
 	class conditional_scope;
 	struct pint_tag;
 	struct node_tag;
@@ -90,6 +91,7 @@ using entity::param_expression_assignment;
 using entity::index_collection_item_ptr_type;
 using entity::pint_tag;
 using entity::loop_scope;
+using entity::port_scope;
 using entity::conditional_scope;
 using entity::node_tag;
 
@@ -503,6 +505,12 @@ private:
 	pop_loop_var(void);
 
 public:
+	struct sequence_frame {
+		context&			_context;
+		sequence_frame(context&, const never_ptr<sequential_scope>&);
+		~sequence_frame();
+	} __ATTRIBUTE_UNUSED__;
+
 	/**
 		Automatic loop-variable stack manager.  
 		Pushes onto stack during construction.  
@@ -516,6 +524,16 @@ public:
 		~loop_var_frame();
 	} __ATTRIBUTE_UNUSED__;	// end struct loop_var_frame
 
+
+	/**
+		Port scope frame.
+		Used for definition scopes.  
+	 */
+	struct port_scope_frame {
+		context&			_context;
+		port_scope_frame(context&, const count_ptr<port_scope>&);
+		~port_scope_frame();
+	} __ATTRIBUTE_UNUSED__;
 
 	/**
 		Loop scope frame for unroll-related instance management.

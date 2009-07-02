@@ -8,44 +8,47 @@ Persistent Object Manager text dump:
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
-	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
-	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	85
-	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	278
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
-	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
+	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	85
+	16	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	278
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	27	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	568
-	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	471
-	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	30	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	568
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	footprnt	0	#HEAD#	#TAIL#	471
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -63,7 +66,9 @@ In namespace "", we have: {
         p = pbit<> lut::p^1
         pbint = pbitint<> lut::pbint^1
       unroll sequence: 
-        pbitint<> pbint[0..1]
+        ports: (
+          pbitint<> pbint[0..1]
+        )
         pbit<> p[0..1]
         (;i:[0..1]:
           p[$i].t = pbint[$i].pb.t;
@@ -112,7 +117,9 @@ In namespace "", we have: {
       Instances:
         t = bool<> pbit::t
       unroll sequence: 
-        bool<> t
+        ports: (
+          bool<> t
+        )
       footprint: {
         t = bool^0 = pbit<>::t (1) 
         Created state:
@@ -128,7 +135,9 @@ In namespace "", we have: {
       Instances:
         pb = pbit<> pbitint::pb
       unroll sequence: 
-        pbit<> pb
+        ports: (
+          pbit<> pb
+        )
       footprint: {
         pb = process pbit<>^0 = pbitint<>::pb (1) (
           t = bool^0 = pbitint<>::pb.t (1) 

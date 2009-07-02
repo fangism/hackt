@@ -4,49 +4,50 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	113
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	28	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	32	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	CHPlopsl	0	#HEAD#	#TAIL#	25
-	34	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	35	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
-	38	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	41	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
+	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	CHPlopsl	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	36	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	39	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -67,8 +68,10 @@ In namespace "", we have: {
         b = bool<> metalooptest::b^1
         l = int<4> metalooptest::l
       unroll sequence: 
-        chan?(int<4>) L
-        chan!(bool<>) R
+        ports: (
+          chan?(int<4>) L
+          chan!(bool<>) R
+        )
         int<4> l
         bool<> b[0..15]
       chp:

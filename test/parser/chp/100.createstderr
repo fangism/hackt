@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	144
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -14,58 +14,59 @@ Persistent Object Manager text dump:
 	10	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	11	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	12	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	13	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	portscop	0	#HEAD#	#TAIL#	36
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	20	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	34	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	36	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	39	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
-	44	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	35	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	37	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	45	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
-	47	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	48	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	51	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	nnegatex	0	#HEAD#	#TAIL#	13
-	53	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	55	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
-	57	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
+	48	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	nnegatex	0	#HEAD#	#TAIL#	13
+	54	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	56	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	58	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	60	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
-	62	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	61	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	63	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	64	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
+	64	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -95,12 +96,14 @@ In namespace "", we have: {
         b = int<32> foo::b
         z = int<32> foo::z
       unroll sequence: 
-        chan?(int<32>) A
-        chan?(int<32>) B
-        chan!(int<32>) C
-        chan!(int<32>) D
-        chan!(int<32>) E
-        chan!(int<32>) F
+        ports: (
+          chan?(int<32>) A
+          chan?(int<32>) B
+          chan!(int<32>) C
+          chan!(int<32>) D
+          chan!(int<32>) E
+          chan!(int<32>) F
+        )
         int<32> a
         int<32> b
         int<32> z

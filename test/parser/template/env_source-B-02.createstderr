@@ -9,24 +9,26 @@ Persistent Object Manager text dump:
 	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
-	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
-	14	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	17	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
+	15	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -47,7 +49,9 @@ In namespace "", we have: {
       Instances:
         e = bool<> e1of::e
       unroll sequence: 
-        bool<> e
+        ports: (
+          bool<> e
+        )
       footprint collection: {
         <3> {
           R = pint^0 value: 3
@@ -73,7 +77,9 @@ In namespace "", we have: {
       Instances:
         b = bool<> source_e::b
       unroll sequence: 
-        bool<> b
+        ports: (
+          bool<> b
+        )
       }
 
   Instances:

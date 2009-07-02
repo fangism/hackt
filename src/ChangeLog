@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-07-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-24:
+	  BUG FIX (introduced by -connect branch merge):
+		PRS connectivity checking was erroneously emitting
+		false positive warnings because is_port_alias() only
+		checks for direct descendence from port.
+		Solved by introducing new bool connection flag, 
+		which is initially set after ports finished instantiating.
+		Key was to derive from port_visitor for recursive descent.
+		Tested, new test cases added in parser/connect.
+
+
 2009-06-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-23:
