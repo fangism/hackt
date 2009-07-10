@@ -1,5 +1,5 @@
-# "channel-test-a-10.prsimrc"
-# copy-modified from "channel-test-a-09.prsimrc"
+# "channel-test-a-10b.prsimrc"
+# copy-modified from "channel-test-a-10.prsimrc"
 # @haco@ channel-test-a.haco-a
 # @deps@ channel-test-a-values-X.txt
 # testing channel sink, expect-fail
@@ -29,31 +29,7 @@ assert X.e 1
 channel-show X
 
 echo ------------------------------------
-set X.d[0] 1
-cycle
-assert X.e 0
-channel-show X
-
-echo - - - - - - - - - - - - - - - - - -
-set X.d[0] 0
-cycle
-assert X.e 1
-channel-show X
-
-echo ------------------------------------
 set X.d[1] 1
-cycle
-assert X.e 0
-channel-show X
-
-echo - - - - - - - - - - - - - - - - - -
-set X.d[1] 0
-cycle
-assert X.e 1
-channel-show X
-
-echo ------------------------------------
-set X.d[0] 1
 echo expect to assert fail here:
 cycle
 assert X.e 0
@@ -62,7 +38,7 @@ channel-show X
 echo should not be reached
 
 echo - - - - - - - - - - - - - - - - - -
-set X.d[0] 0
+set X.d[1] 0
 cycle
 assert X.e 1
 channel-show X

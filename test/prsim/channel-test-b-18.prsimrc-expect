@@ -3,15 +3,15 @@ L : .e(init:0) 1x1of2 off
 R : .e(init:0) 1x1of2 off
 L : .e(init:0) 1x1of2 source, timing: global {0,1,1,0,} @0
 	count: 0, unknowns: 2
-R : .e(init:0) 1x1of2 sink,expect, timing: global {0,1,1,0,}* @0
+R : .e(init:0) 1x1of2 sink,expect, timing: global {0,1,1,0,}* @0 #0
 	count: 0, unknowns: 2
 L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,} @0
 	count: 0, unknowns: 2
-R : .e(init:0) 1x1of2 sink,expect,watch,stopped, timing: global {0,1,1,0,}* @0
+R : .e(init:0) 1x1of2 sink,expect,watch,stopped, timing: global {0,1,1,0,}* @0 #0
 	count: 0, unknowns: 2
 L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,} @0
 	count: 0, unknowns: 0
-R : .e(init:0) 1x1of2 sink,expect,watch,stopped, timing: global {0,1,1,0,}* @0
+R : .e(init:0) 1x1of2 sink,expect,watch,stopped, timing: global {0,1,1,0,}* @0 #0
 	count: 0, unknowns: 0
 event queue:
 	50	L.d[0] : 1
@@ -27,5 +27,5 @@ channel	R (.data) : 0
 no asserts failed, yay! 
 L : .e(init:0) 1x1of2 watch
 	count: 0, unknowns: 0
-R : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,}* @0
+R : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,}* @0 #1
 	count: 0, unknowns: 0

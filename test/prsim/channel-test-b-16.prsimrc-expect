@@ -1,15 +1,15 @@
 channels:
 L : .e(init:0) 1x1of2 off
 R : .e(init:0) 1x1of2 off
-L : .e(init:0) 1x1of2 source, timing: global {0,1,1,0,0,1,0,1,0,}* @0
+L : .e(init:0) 1x1of2 source, timing: global {0,1,1,0,0,1,0,1,0,}* @0 #0
 	count: 0, unknowns: 2
 R : .e(init:0) 1x1of2 sink, timing: global
 	count: 0, unknowns: 2
-L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,0,1,0,1,0,}* @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,0,1,0,1,0,}* @0 #0
 	count: 0, unknowns: 2
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 	count: 0, unknowns: 2
-L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,0,1,0,1,0,}* @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,0,1,0,1,0,}* @0 #0
 	count: 0, unknowns: 0
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 	count: 0, unknowns: 0

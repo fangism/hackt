@@ -1,6 +1,7 @@
 # "channel-test-a-12.prsimrc"
 # copy-modified from "channel-test-a-11.prsimrc"
 # @haco@ channel-test-a.haco-a
+# @deps@ channel-test-a-values-X.txt
 # testing channel sink with expect loop, expect to fail
 
 # register channels

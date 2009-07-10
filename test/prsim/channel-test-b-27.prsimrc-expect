@@ -9,6 +9,6 @@ channel	L (.data) : 0
 channel	R (.data) : 0
 channel	L (.data) : 0
 channel	R (.data) : 0
-ERROR: value assertion failed on channel `R'.
+ERROR: value assertion failed on channel `R' at index [3].
 	expected: 1, got: 0
 ... at line 17

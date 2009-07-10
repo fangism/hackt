@@ -9,7 +9,7 @@ All subnodes of 'X':
 X.d[0] : 0
 X.d[1] : 0
 X.e : 0
-X : .e(init:0) 1x1of2 source,sink,watch,stopped, timing: global {0,1,1,0,0,0,1,1,1,1,}* @0 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,sink,watch,stopped, timing: global {0,1,1,0,0,0,1,1,1,1,}* @0 #0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 releasing channel X (source) 
 source values on X will repeat 
@@ -116,5 +116,5 @@ channel	X (.data) : 1
 time: 810
 running a bit longer... 
 time: 124260
-X : .e(init:0) 1x1of2 source,sink, timing: global {0,1,1,0,0,0,1,1,1,1,}* @7 < channel-test-a-values-X.txt
+X : .e(init:0) 1x1of2 source,sink, timing: global {0,1,1,0,0,0,1,1,1,1,}* @7 #310 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0

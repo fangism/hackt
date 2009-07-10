@@ -1,15 +1,15 @@
 channels:
 L : .e(init:0) 1x1of2 off
 R : .e(init:0) 1x1of2 off
-L : .e(init:0) 1x1of2 source, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source, timing: global {X,}* @0 #0
 	count: 0, unknowns: 2
 R : .e(init:0) 1x1of2 sink, timing: global
 	count: 0, unknowns: 2
-L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0 #0
 	count: 0, unknowns: 2
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 	count: 0, unknowns: 2
-L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0 #0
 	count: 0, unknowns: 0
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 	count: 0, unknowns: 0
@@ -68,19 +68,19 @@ R.e:1
 .  | . ~. & L.d[1]:0
 .  | . ~. & . (channel L is stopped.)
 channels:
-L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0 #14
 R : .e(init:0) 1x1of2 sink,watch, timing: global
 --------------------------- 
 stop channel R 
 channels:
-L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0 #14
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 --------------------------- 
 resume channel L 
 channel	L (.data) : #VALUE#
 channel	R (.data) : #VALUE#
 channels:
-L : .e(init:0) 1x1of2 source,watch, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source,watch, timing: global {X,}* @0 #15
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 --------------------------- 
 resume channel R 
@@ -95,14 +95,14 @@ channel	R (.data) : #VALUE#
 channel	L (.data) : #VALUE#
 channel	R (.data) : #VALUE#
 channels:
-L : .e(init:0) 1x1of2 source,watch, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source,watch, timing: global {X,}* @0 #20
 R : .e(init:0) 1x1of2 sink,watch, timing: global
 --------------------------- 
 stop channel R 
 channel	L (.data) : #VALUE#
 channel	R (.data) : #VALUE#
 channels:
-L : .e(init:0) 1x1of2 source,watch, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source,watch, timing: global {X,}* @0 #21
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 --------------------------- 
 stop channel L 
@@ -111,12 +111,12 @@ R.e:1
 R.e:1
 . (channel R is stopped.)
 channels:
-L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0 #21
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 --------------------------- 
 resume channel R 
 channels:
-L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {X,}* @0 #21
 R : .e(init:0) 1x1of2 sink,watch, timing: global
 --------------------------- 
 resume channel L 
@@ -130,5 +130,5 @@ channel	L (.data) : #VALUE#
 channel	R (.data) : #VALUE#
 channel	L (.data) : #VALUE#
 channels:
-L : .e(init:0) 1x1of2 source,watch, timing: global {X,}* @0
+L : .e(init:0) 1x1of2 source,watch, timing: global {X,}* @0 #26
 R : .e(init:0) 1x1of2 sink,watch, timing: global

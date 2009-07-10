@@ -12,6 +12,8 @@ manually resetting data
 	10	X.e : 0
 releasing channel X 
 	20	X.e : 1
+X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 0
 	20	X.d[0] : 1
@@ -37,6 +39,6 @@ X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @
 ------------------------------------ 
 expect to assert fail here: 
 channel	X (.data) : 0
-ERROR: value assertion failed on channel `X'.
+ERROR: value assertion failed on channel `X' at index [2].
 	expected: 1, got: 0
-... at line 57
+... at line 58

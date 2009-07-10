@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.16 2009/03/10 18:01:43 fang Exp $
+	$Id: Channel-prsim.h,v 1.17 2009/07/10 20:39:44 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -130,15 +130,24 @@ typedef	std::pair<node_index_type, value_enum>	env_event_type;
 
 /**
 	When channel value mismatches expectation.
+	Need local copy of index and iteration because, the channel
+	may have already advanced by the time this exception is 
+	thrown and caught (missed snapshot).
  */
 struct channel_exception : public step_exception {
-	const string			name;
+	const channel*			chan;
+	size_t				index;
+	size_t				iteration;
 	int_value_type			expect;
 	int_value_type			got;
 
-	channel_exception(const string& n, 
+	channel_exception(
+		const channel* c,
+		const size_t in, const size_t it,
 		const int_value_type e, const int_value_type g) :
-		name(n), expect(e), got(g) { }
+		chan(c), 
+		index(in), iteration(it), 
+		expect(e), got(g) { }
 
 	error_policy_enum
 	inspect(const State&, ostream&) const;
@@ -355,6 +364,11 @@ private:
 		and expect on channels.
 	 */
 	size_t					value_index;
+	/**
+		For loops, this is the number of previous iterations
+		completed, or the 0-indexed ordinal number of repeat. 
+	 */
+	size_t					iteration;
 private:
 	// optional: reverse lookup map: node -> bundle, rail
 	typedef	std::map<node_index_type, data_rail_index_type>
@@ -374,15 +388,24 @@ public:
 	bool
 	have_value(void) const { return value_index < values.size(); }
 
+	const string&
+	get_name(void) const { return name; }
+
+	const size_t
+	current_iteration(void) const { return iteration; }
+
+	const size_t
+	current_index(void) const { return value_index; }
+
+	const array_value_type&
+	current_value(void) const { return values[value_index]; }
+
 private:
 	bool
 	alias_data_rails(const node_index_type) const;
 
 	void
 	current_data_rails(vector<node_index_type>&) const;
-
-	const array_value_type&
-	current_value(void) const { return values[value_index]; }
 
 	void
 	advance_value(void);

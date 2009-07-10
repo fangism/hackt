@@ -5,7 +5,7 @@ channel X has value 0, as expected.
 channel X has value 1, as expected.
 channel X has value 1, as expected.
 channel X has value 0, as expected.
-X : 1x1of2 expect {0,0,1,1,0,0,}* @5
+X : 1x1of2 expect {0,0,1,1,0,0,}* @5 #0
 	count: 1, unknowns: 0
-X : 1x1of2 expect {0,0,1,1,0,0,}* @5
+X : 1x1of2 expect {0,0,1,1,0,0,}* @5 #0
 	count: 0, unknowns: 0

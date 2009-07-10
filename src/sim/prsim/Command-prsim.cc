@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.49 2009/06/18 23:45:38 fang Exp $
+	$Id: Command-prsim.cc,v 1.50 2009/07/10 20:39:45 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4081,7 +4081,9 @@ break_descriptions[] =
 "\tignore: silently ignores violation\n"
 "\twarn: print warning without halting\n"
 "\tnotify: (same as warn)\n"
-"\tbreak: notify and halt";
+"\tbreak: notify and halt\n"
+"\tinteractive: halt and start an interactive sub-shell (exit resumes)\n"
+"\tfatal: immediately terminate simulator with nonzero exit status";
 
 #define	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(class_name, command_key, \
 		brief_str, usage_str, func_name) 			\

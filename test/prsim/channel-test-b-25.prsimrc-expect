@@ -28,5 +28,5 @@ channel	L (.data) : 1
 channel	R (.data) : 1
 channel	L (.data) : 1
 channel	R (.data) : 1
-R : .e(init:0) 1x1of2 sink,expect,watch, timing: global {1,}* @0
+R : .e(init:0) 1x1of2 sink,expect,watch, timing: global {1,}* @0 #7
 	count: 0, unknowns: 0

@@ -28,14 +28,14 @@ channel	Z (.data) : 0
 channel	Z (.data) : 1
 X : .e(init:0) 1x1of2 source,watch, timing: global {0,0,0,1,} @0
 	count: 0, unknowns: 0
-Y : .e(init:1) 1x1of4 source,watch, timing: global {0,2,0,1,}* @1
+Y : .e(init:1) 1x1of4 source,watch, timing: global {0,2,0,1,}* @1 #0
 	count: 1, unknowns: 0
 Z : .a(init:0) 1x1of3 sink,expect,watch, timing: global {0,1,2,} @2
 	count: 0, unknowns: 0
 initializing... 
 X : .e(init:0) 1x1of2 source,watch, timing: global {0,0,0,1,} @0
 	count: 0, unknowns: 2
-Y : .e(init:1) 1x1of4 source,watch, timing: global {0,2,0,1,}* @0
+Y : .e(init:1) 1x1of4 source,watch, timing: global {0,2,0,1,}* @0 #0
 	count: 0, unknowns: 4
 Z : .a(init:0) 1x1of3 sink,expect,watch, timing: global {0,1,2,} @0
 	count: 0, unknowns: 3

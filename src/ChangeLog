@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-07-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-25:
+	  hacprsim diagnostic improvement: on channel expect fail, 
+		print index and iteration to show position.
+		Test cases updated.
+	  Updated online help for diagnostic control commands
+		where the user can set the error-handling policies.
+
+
 2009-07-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-24:

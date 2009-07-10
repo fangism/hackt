@@ -11,7 +11,7 @@ Warning: channel acknowledge `L.e' has no fanin!
 # channel-reset-all 
 # channel-show-all 
 channels:
-L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,}* @0
+L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,}* @0 #0
 R : .e(init:1) 1x1of2 sink,watch,stopped, timing: global
 # breaks 
 breakpoints: L.d[0] L.d[1] R.e 
@@ -24,7 +24,7 @@ prsim: 	32	L.e : 1
 # channel-release-all 
 # channel-show-all 
 channels:
-L : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,}* @1
+L : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,}* @1 #0
 R : .e(init:1) 1x1of2 sink,watch, timing: global
 channel	L (.data) : 0
 prsim: 	5010	L.d[0] : 1

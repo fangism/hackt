@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.21 2009/04/29 05:33:40 fang Exp $
+	$Id: Channel-prsim.cc,v 1.22 2009/07/10 20:39:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -118,8 +118,15 @@ env_event_type::env_event_type(const node_index_type ni,
 
 error_policy_enum
 channel_exception::inspect(const State& s, ostream& o) const {
+	NEVER_NULL(chan);
 	o << "ERROR: value assertion failed on channel `" <<
-		name << "\'." << endl;
+		chan->get_name() << "\' at index [" << index;
+		// chan->current_index();	// may have already advanced
+	if (chan->is_looping()) {
+		o << "] of iteration [" << iteration;
+		// chan->current_iteration(); // may have already advanced
+	}
+	o << "]." << endl;
 	o << "\texpected: " << expect << ", got: " << got << endl;
 	return s.get_channel_expect_fail_policy();
 }
@@ -210,7 +217,8 @@ channel::channel() :
 		inject_expect_file(), 
 		dumplog(), 
 		values(), 
-		value_index(0) {
+		value_index(0), 
+		iteration(0) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -319,6 +327,7 @@ if (is_sinking() || is_sourcing()) {
 		o << '}';
 		if (is_looping()) o << '*';
 		o << " @" << value_index;
+		if (is_looping()) o << " #" << iteration;
 		if (inject_expect_file.length()) {
 			o << " < " << inject_expect_file;	// source/expect
 		}
@@ -401,6 +410,8 @@ read_values_from_file(const string& fn, vector<channel::array_value_type>& v) {
 	}
 	// honor '#' comments
 	string_list s;
+	size_t i = 1;
+	bool warned = false;
 while (1) {
 	string line;
 	getline(f, line);
@@ -409,7 +420,14 @@ while (1) {
 		util::string_list toks;
 		util::tokenize(line, toks);
 		s.push_back(toks.front());
+	if (toks.size() > 1 && !warned) {
+		cerr << "Warning: line " << i <<
+		" contains additional ignored tokens (suppressing further)."
+			<< endl;
+		warned = true;
 	}
+	}
+	++i;
 }
 	return read_values_from_list(s, v);
 }
@@ -911,6 +929,7 @@ if (is_random()) {
 	if (value_index >= values.size()) {
 		if (is_looping()) {
 			value_index = 0;
+			++iteration;
 		} else {
 			values.clear();
 			value_index = 0;
@@ -1708,14 +1727,19 @@ channel::process_data(const State& s) throw (channel_exception) {
 	if (is_expecting() && !ignored()) {
 	if (have_value()) {
 		const array_value_type& expect = current_value();
+		const size_t cur_index = current_index();	// save it
+		const size_t cur_iter = iteration;	// save it
 		if (!expect.second) {
 		const error_policy_enum e(s.get_channel_expect_fail_policy());
 		if (v) {
 		const value_type got = data_rails_value(s);
 		advance_value();
+		// want to advance after checking, 
+		// but need to guarantee progress in the event of exception
 		if (DATA_VALUE(expect) != got) {
 			const channel_exception
-				ex(name, DATA_VALUE(expect), got);
+				ex(this, cur_index, cur_iter,
+					DATA_VALUE(expect), got);
 			if (e == ERROR_WARN) {
 				ex.inspect(s, cout);
 			} else if (e > ERROR_WARN) {
@@ -1727,7 +1751,8 @@ channel::process_data(const State& s) throw (channel_exception) {
 		}
 		} else {	// cannot expect invalid value
 			const channel_exception
-				ex(name, DATA_VALUE(expect), 0xDEADBEEF);
+				ex(this, cur_index, cur_iter,
+					DATA_VALUE(expect), 0xDEADBEEF);
 			if (e == ERROR_WARN) {
 				ex.inspect(s, cout);
 			} else if (e > ERROR_WARN) {
@@ -1935,6 +1960,7 @@ channel::save_checkpoint(ostream& o) const {
 	write_value(o, radix());	// size_t
 	util::write_range(o, data.begin(), data.end());
 	write_value(o, value_index);
+	write_value(o, iteration);
 //	write_value(o, inject_expect_file);
 	if (dumplog.save_checkpoint(o)) return true;
 	util::write_sequence(o, values);
@@ -1962,6 +1988,7 @@ channel::load_checkpoint(istream& i) {
 	util::read_range(i, data.begin(), data.end());
 	read_value(i, value_index);
 //	read_value(i, inject_expect_file);
+	read_value(i, iteration);
 	// no need to re-open file, already have its values
 	if (dumplog.load_checkpoint(i)) return true;
 	util::read_sequence_resize(i, values);
