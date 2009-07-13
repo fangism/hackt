@@ -36,15 +36,18 @@ EXTRACT_VCS_FLAGS_PIPE = grep "@vcs-flags@" | sed 's/^.*@vcs-flags@[ ]*//g'
 	$(VPI_ENV) ./$< > $@ 2>&1
 
 all: inverters.vx inverters-delay.vx oscillator-fanout.vx \
-	shoelace.vx channel-source-sink.vx and_tree.vx
+	shoelace.vx channel-source-sink.vx and_tree.vx \
+	and_template_tree.vx
 
 # extra deps
 and_tree.vx: standard.v-wrap pli.tab
+and_template_tree.vx: standard.v-wrap pli.tab
 inverters.vx-log: inverters.haco-a
 inverters-delay.vx-log: inverters.haco-a
 shoelace.vx-log: inverters.haco-a
 channel-source-sink.vx-log: channel-source-sink.haco-a
 and_tree.vx-log: and_tree.haco-a
+and_template_tree.vx-log: and_template_tree.haco-a
 oscillator-fanout.vx-log: oscillator.haco-a
 
 pli.tab:
@@ -52,7 +55,8 @@ pli.tab:
 
 # .NOTPARALLEL: check
 check: inverters.vx-log inverters-delay.vx-log oscillator-fanout.vx-log \
-	shoelace.vx-log channel-source-sink.vx-log and_tree.vx-log
+	shoelace.vx-log channel-source-sink.vx-log and_tree.vx-log \
+	and_template_tree.vx-log
 	cat $^
 #	for f in $^ ; do cat $$f ; done
 

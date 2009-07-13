@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.17 2009/04/21 17:14:31 fang Exp $
+	$Id: vpi-prsim.cc,v 1.18 2009/07/13 23:28:21 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -28,6 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <set>
 #include <iostream>
 #include <sstream>
+#include <algorithm>			// for remove_copy_if
 #include "sim/prsim/State-prsim.h"
 #include "sim/prsim/Command-prsim-export.h"
 #include "sim/prsim/ExprAllocFlags.h"
@@ -695,6 +696,27 @@ static const bool set_force = true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This helps remove extraneous whitespace that may be the result
+	of padded string concatenation in verilog;
+	Helper function for stripping whitespaces anywhere in string, 
+	not just leading whitespace. 
+ */
+static
+string
+strip_spaces(const char* c) {
+#if 0
+	return string(eat_whitespace(c));
+#else
+	const string temp(c);
+	string ret;
+	std::remove_copy_if(temp.begin(), temp.end(), back_inserter(ret), 
+		isspace);
+	return ret;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
   Register a VCS-driven node with VCS and prsim
   TODO: what if node already has non-X value when this connection
@@ -719,12 +741,13 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
   
   require_prsim_state(__FUNCTION__);
 
-  vcs_name = eat_whitespace (vcs_name);
-  prsim_name = eat_whitespace (prsim_name);
+  const string VCS_name(strip_spaces(vcs_name));
+  const string PRSIM_name(strip_spaces(prsim_name));
+  string vcs_name_stripped, prsim_name_stripped;
 
   cb_data.reason = cbValueChange;
   cb_data.cb_rtn = prsim_callback;
-  const vpiHandle net = lookup_vcs_name(vcs_name);
+  const vpiHandle net = lookup_vcs_name(VCS_name.c_str());
   cb_data.obj = net;
 
 	// TODO: who frees these mallocs???
@@ -738,7 +761,7 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
 #if 0
   n = prs_node (P, prsim_name);
 #else
-  const node_index_type ni = lookup_prsim_name(prsim_name);
+  const node_index_type ni = lookup_prsim_name(PRSIM_name.c_str());
 #endif
   
   /* prsim net name */
@@ -768,12 +791,12 @@ void register_from_prsim (const char *vcs_name, const char *prsim_name)
   
   require_prsim_state(__FUNCTION__);
 
-  vcs_name = eat_whitespace (vcs_name);
-  prsim_name = eat_whitespace (prsim_name);
+  const string VCS_name(strip_spaces(vcs_name));
+  const string PRSIM_name(strip_spaces(prsim_name));
 
   /* this is the handle to the verilog net name */
-  const vpiHandle net = lookup_vcs_name(vcs_name);
-  const node_index_type ni = lookup_prsim_name(prsim_name);
+  const vpiHandle net = lookup_vcs_name(VCS_name.c_str());
+  const node_index_type ni = lookup_prsim_name(PRSIM_name.c_str());
   /* set a breakpoint! */
 #if 0
   prs_set_bp (P, n);

@@ -1,5 +1,15 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.54 2009/04/27 21:18:56 fang Exp $
+#	$Id: ChangeLog,v 1.55 2009/07/13 23:28:19 fang Exp $
+
+2009-07-13	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-26:
+	  verilog/wrap_verilog_modules_to_hacprsim.awk:
+		extended parser to handle parameterized module definitions, 
+		function blocks, parameter values, and for-loop
+		expanding to_prsim and from_prsim connections.
+	  Added verilog/vpp.sh: crude verilog preprocessor through cpp
+
 
 2009-04-26	David Fang	<fangism@users.sourceforge.net>
 
