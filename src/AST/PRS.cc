@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.33 2009/06/05 16:28:04 fang Exp $
+	$Id: PRS.cc,v 1.33.2.1 2009/07/17 01:10:48 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -34,6 +34,7 @@
 #include "Object/expr/param_expr.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/data_expr.h"
+#include "Object/expr/string_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_index_list.h"
 #include "Object/lang/PRS.h"
@@ -731,6 +732,79 @@ body::check_rule(context& c) const {
 		cerr << "ERROR: at least one error in PRS rule-nest.  "
 			<< where(*rules) << endl;
 		CHECK_RULE_THROW;
+	}
+}
+
+//=============================================================================
+// class subcircuit method definition
+
+subcircuit::subcircuit(const generic_keyword_type* k,
+		const expr_list* p, const rule_list* r) :
+		body(k, r), params(p) {
+	// params may be optional
+}
+
+subcircuit::~subcircuit() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(subcircuit)
+
+/**
+	For now make transparent.  
+ */
+never_ptr<const object>
+subcircuit::check_build(context& c) const {
+	return body::check_build(c);
+}
+
+body_item::return_type
+subcircuit::check_rule(context& c) const {
+	STACKTRACE_VERBOSE;
+	string name;
+if (params) {
+	static const char err_msg[] =
+	"ERROR: expecting at most one string-literal for subcircuit name.  ";
+	bool err = true;
+	expr_list::checked_meta_exprs_type e;
+	params->postorder_check_meta_exprs(e, c);
+	if (e.size() == 1) {
+		// e.front()->what(cout << "s = ") << endl;
+		const count_ptr<const entity::string_expr>
+			s(e.front().is_a<const entity::string_expr>());
+		if (s) {
+			name = s->static_constant_value();
+			err = false;
+		}
+	}
+	if (err) {
+		cerr << err_msg << where(*params) << endl;
+		THROW_EXIT;
+	}
+}
+	excl_ptr<entity::PRS::subcircuit>
+		ret(new entity::PRS::subcircuit(name));
+	NEVER_NULL(ret);
+
+	// copied from body::check_rule
+	// const never_ptr<definition_base> d(c.get_current_open_definition());
+	const never_ptr<entity::PRS::subcircuit> retc(ret);
+	c.get_current_prs_body().append_rule(ret);
+try {
+	const context::prs_body_frame prlf(c, retc);
+	rules->check_list_void(&body_item::check_rule, c);
+#if 0
+	if (!__check_rules(c)) {
+		cerr << "ERROR: at least one error in subckt rule-nest.  "
+			<< where(*rules) << endl;
+		CHECK_RULE_THROW;
+	}
+#endif
+} catch (...) {
+	cerr << "ERROR: at least one error in PRS subcircuit.  "
+		<< where(*rules) << endl;
+	throw;		// re-throw
+}
+	if (retc->empty()) {
+		c.get_current_prs_body().pop_back();
 	}
 }
 

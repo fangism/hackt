@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.48 2009/06/05 16:28:13 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.48.2.1 2009/07/17 01:10:52 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -2305,8 +2305,7 @@ prs_body_item
 		{ DELETE_TOKEN($2);
 		  WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $4); }
 	| SUBCKT_LANG optional_template_arguments_in_angles '{' prs_body_optional '}'
-		{ DELETE_TOKEN($2);
-		  WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $4); }
+		{ WRAP_LIST($3, $4, $5); $$ = new PRS::subcircuit($1, $2, $4); }
 	;
 
 /* looks like a function call */
