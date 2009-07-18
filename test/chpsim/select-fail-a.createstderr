@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	6	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
 	9	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16

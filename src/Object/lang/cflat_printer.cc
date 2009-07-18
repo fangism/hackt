@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.20 2009/04/29 05:33:30 fang Exp $
+	$Id: cflat_printer.cc,v 1.20.4.1 2009/07/18 00:38:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -61,7 +61,7 @@ cflat_prs_printer::visit(const PRS::footprint& p) {
 	typedef	PRS::footprint::invariant_pool_type::const_iterator
 						const_iterator;
 	const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
-	const PRS::footprint::invariant_pool_type& ip(p.invariant_pool);
+	const PRS::footprint::invariant_pool_type& ip(p.get_invariant_pool());
 	const PRS_footprint_expr_pool_type& ep(p.get_expr_pool());
 	const expr_pool_setter __p(*this, ep);
 	NEVER_NULL(expr_pool);

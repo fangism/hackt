@@ -19,7 +19,7 @@ Persistent Object Manager text dump:
 	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	41
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	388
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	392
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

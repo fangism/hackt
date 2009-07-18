@@ -67,10 +67,10 @@ Persistent Object Manager text dump:
 	63	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	64	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	65	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	422
+	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	426
 	67	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	68	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	69	##ADDR##	footprnt	0	#HEAD#	#TAIL#	427
+	69	##ADDR##	footprnt	0	#HEAD#	#TAIL#	431
 	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

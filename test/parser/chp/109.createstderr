@@ -59,7 +59,7 @@ Persistent Object Manager text dump:
 	55	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	56	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	57	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
+	58	##ADDR##	footprnt	0	#HEAD#	#TAIL#	266
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

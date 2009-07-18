@@ -29,10 +29,10 @@ Persistent Object Manager text dump:
 	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	423
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	427
 	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	373
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	377
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

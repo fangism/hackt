@@ -38,10 +38,10 @@ Persistent Object Manager text dump:
 	34	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	35	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	387
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	391
 	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	346
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

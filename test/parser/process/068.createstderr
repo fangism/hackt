@@ -25,7 +25,7 @@ Persistent Object Manager text dump:
 	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	346
 	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	26	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
@@ -36,12 +36,12 @@ Persistent Object Manager text dump:
 	32	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	690
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	694
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	711
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	715
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

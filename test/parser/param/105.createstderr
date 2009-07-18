@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	36	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	682
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	686
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
