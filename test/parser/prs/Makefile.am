@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.53.2.1 2009/07/17 01:10:52 fang Exp $
+#	$Id: Makefile.am,v 1.53.2.2 2009/07/20 22:03:19 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -61,6 +61,9 @@ HACKT_PARSE_TEST_PASSES = \
 	subckt-00 subckt-01 \
 	subckt-04 subckt-05 \
 	subckt-06 \
+	subckt-07 subckt-08 \
+	subckt-09 subckt-10 \
+	subckt-11 subckt-12 \
 	precharge-00 \
 	unstab-01 unstab-02 \
 	comb-01 \
@@ -132,6 +135,9 @@ HACKT_CREATE_TEST_PASSES = \
 	lvs-xcpl-inv-01 \
 	tree-02 tree-03 tree-04 \
 	subckt-01 subckt-05 subckt-06 \
+	subckt-07 subckt-08 \
+	subckt-09 subckt-10 \
+	subckt-11 subckt-12 \
 	precharge-00 \
 	unstab-01 unstab-02 \
 	comb-01 \

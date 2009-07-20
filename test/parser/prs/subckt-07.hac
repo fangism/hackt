@@ -1,0 +1,22 @@
+// "subckt-07.hac"
+
+bool x, y, z, w, p, q, r;
+prs {
+
+x -> y-
+
+subckt {
+	~y	-> z+
+}
+
+z	-> w-
+
+subckt {
+	~w	-> p+
+	p	=> q-
+}
+
+q	=> r-
+
+}
+
