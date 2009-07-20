@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.34 2009/06/05 16:28:11 fang Exp $
+	$Id: PRS.cc,v 1.35 2009/07/20 22:41:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -70,6 +70,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::rule_loop, PRS_RULE_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::nested_rules, PRS_NESTED_RULES_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::PRS::subcircuit, PRS_SUBCKT_RULES_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::rule_conditional, PRS_RULE_COND_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -908,6 +910,78 @@ rule_conditional::write_object(const persistent_object_manager& m,
 void
 rule_conditional::load_object(const persistent_object_manager& m, istream& i) {
 	meta_conditional_type::load_object(*this, m, i);
+}
+
+//=============================================================================
+// class subcircuit method definitions
+
+subcircuit::subcircuit() : nested_rules(), name() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+subcircuit::subcircuit(const string& n) : nested_rules(), name(n) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+subcircuit::~subcircuit() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(subcircuit)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+subcircuit::dump(ostream& o, const rule_dump_context& c) const {
+	o << "subckt <\"" << name << "\"> {" << endl;
+{
+	INDENT_SECTION(o);
+	nested_rules::dump(o, c);
+}
+	return o << auto_indent << '}';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls a set of loop-dependent production rules.  
+	TODO: add structure
+ */
+good_bool
+subcircuit::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+#if PRS_FOOTPRINT_SUBCKT
+	PRS::footprint::subcircuit_map_entry e;	// need name?
+	e.rules.first = pfp.get_rule_pool().size();
+	e.macros.first = pfp.get_macro_pool().size();
+	const good_bool ret(nested_rules::unroll(c, np, pfp));
+	e.rules.second = pfp.get_rule_pool().size();
+	e.macros.second = pfp.get_macro_pool().size();
+	pfp.push_back_subcircuit(e);
+	return ret;
+#else
+	return nested_rules::unroll(c, np, pfp);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subcircuit::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	nested_rules::collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subcircuit::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	write_value(o, name);
+	nested_rules::write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subcircuit::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	read_value(i, name);
+	nested_rules::load_object_base(m, i);
 }
 
 //=============================================================================

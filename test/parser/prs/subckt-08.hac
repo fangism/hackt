@@ -1,0 +1,22 @@
+// "subckt-08.hac"
+
+bool x, y, z, w, p, q, r;
+prs {
+
+passn(x, y, z)
+
+subckt {
+	~y	-> z+
+}
+
+z	-> w-
+
+subckt {
+	passp(z, w, q)
+	p	=> q-
+}
+
+passp(p, q, r)
+
+}
+

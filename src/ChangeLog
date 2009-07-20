@@ -3,6 +3,31 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-07-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-merged-subckt-01-02:
+	  Branch merge of subcircuit data structures.  
+		Added a few new test cases.
+
+
+2009-07-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-26-subckt-01-02:
+	  Added subcircuit tracking data structures to PRS::footprint.
+		Extended binary object format accordingly (growing
+		process footprint by at least one size_t).  
+	  All create test dump-expects updated.
+
+
+2009-07-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-26-subckt-01-01:
+	  New branch for adding subcircuit intermediate representation
+		to middle-end data structures.  Very preliminary.
+		Added new persistent object type, extends object format.
+	  Updated some prs test cases involving subckt.
+
+
 2009-07-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-26:

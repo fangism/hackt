@@ -1,0 +1,26 @@
+// "subckt-12.hac"
+// copy-modified from "subckt-11.hac"
+
+defproc foo(bool x, y, z, w, p, q, r) {
+prs {
+
+subckt {
+	~y	-> z+
+	p	=> q-
+}
+
+z	-> w-
+
+subckt {
+	passp(z, w, q)
+passp(p, q, r)
+}
+
+passn(x, y, z)
+
+
+}
+}
+
+foo bar;
+

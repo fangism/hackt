@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.11 2009/06/05 16:28:04 fang Exp $
+	$Id: PRS.h,v 1.12 2009/07/20 22:41:34 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -333,9 +333,9 @@ protected:
 	const excl_ptr<const rule_list>		rules;
 public:
 	body(const generic_keyword_type* t, const rule_list* r);
-	~body();
+virtual	~body();
 
-	ostream&
+virtual	ostream&
 	what(ostream& o) const;
 
 	line_position
@@ -344,10 +344,9 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
 	// needs the return-type of language-body
+// virtual?
 	ROOT_CHECK_PROTO;
-#endif
 	PRS_ITEM_CHECK_PROTO;
 
 protected:
@@ -355,6 +354,30 @@ protected:
 	__check_rules(context&) const;
 
 };	// end class body
+
+//=============================================================================
+/**
+	Structure for grouping rules into subcircuits.  
+ */
+class subcircuit : public body {
+	/// really, only use a name/string parameter for now
+	const excl_ptr<const expr_list>		params;
+public:
+	subcircuit(const generic_keyword_type*, 
+		const expr_list*, const rule_list*);
+	~subcircuit();
+
+	ostream&
+	what(ostream& o) const;
+
+	using body::leftmost;
+	using body::rightmost;
+
+	// needs the return-type of language-body
+	ROOT_CHECK_PROTO;
+	PRS_ITEM_CHECK_PROTO;
+
+};	// end class subcircuit
 
 //=============================================================================
 /**

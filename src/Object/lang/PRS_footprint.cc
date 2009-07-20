@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.23 2009/06/05 16:28:12 fang Exp $
+	$Id: PRS_footprint.cc,v 1.24 2009/07/20 22:41:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -37,6 +37,36 @@
 #else
 #define	STACKTRACE_DUMP_PRINT(x)
 #endif
+
+#if PRS_FOOTPRINT_SUBCKT
+namespace util {
+using HAC::entity::PRS::footprint;
+
+/**
+	Specializations for writing some structures.  
+ */
+template <>
+void
+write_value<footprint::subcircuit_map_entry>(ostream& o, 
+		const footprint::subcircuit_map_entry& e) {
+	write_value(o, e.rules.first);
+	write_value(o, e.rules.second);
+	write_value(o, e.macros.first);
+	write_value(o, e.macros.second);
+}
+
+template <>
+void
+read_value<footprint::subcircuit_map_entry>(istream& i, 
+		footprint::subcircuit_map_entry& e) {
+	read_value(i, e.rules.first);
+	read_value(i, e.rules.second);
+	read_value(i, e.macros.first);
+	read_value(i, e.macros.second);
+}
+
+}	// end namespace util
+#endif	// PRS_FOOTPRINT_SUBCKT
 
 namespace HAC {
 namespace entity {
@@ -94,7 +124,11 @@ footprint_rule_attribute::load_object(const persistent_object_manager& m,
 // class footprint method definitions
 
 footprint::footprint() : rule_pool(), expr_pool(), macro_pool(), 
-		internal_node_expr_map(), invariant_pool() {
+		internal_node_expr_map(), invariant_pool()
+#if PRS_FOOTPRINT_SUBCKT
+		, subcircuit_map()
+#endif
+	{
 	// used to set_chunk_size of list_vector_pools here
 }
 
@@ -277,6 +311,29 @@ if (invariant_pool.size()) {
 		o << ')' << endl;
 	}
 }
+#if PRS_FOOTPRINT_SUBCKT
+if (subcircuit_map.size()) {
+	size_t j = 1;		// 1-indexed
+	o << auto_indent << "subcircuit (rules, macros): " << endl;
+	typedef	subcircuit_map_type::const_iterator	const_iterator;
+	const_iterator i(subcircuit_map.begin()), e(subcircuit_map.end());
+	for ( ; i!=e; ++i) {
+		o << auto_indent << j << ": ";
+		if (i->rules.second != i->rules.first) {
+			o << i->rules.first << ".." << i->rules.second -1;
+		} else {
+			o << "none";
+		}
+		o << ' ';
+		if (i->macros.second != i->macros.first) {
+			o << i->macros.first << ".." << i->macros.second -1;
+		} else {
+			o << "none";
+		}
+		o << endl;
+	}
+}
+#endif
 	return o;
 }
 
@@ -425,7 +482,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	write_value(o, s);
 	const_iterator i(rule_pool.begin());
 	const const_iterator e(rule_pool.end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		i->write_object_base(m, o);
 	}
 }{
@@ -434,7 +491,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	write_value(o, s);
 	const_iterator i(expr_pool.begin());
 	const const_iterator e(expr_pool.end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		i->write_object_base(m, o);
 	}
 }{
@@ -443,7 +500,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	write_value(o, s);
 	const_iterator i(macro_pool.begin());
 	const const_iterator e(macro_pool.end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		i->write_object_base(m, o);
 	}
 }{
@@ -458,6 +515,9 @@ footprint::write_object_base(const persistent_object_manager& m,
 	}
 }{
 	util::write_sequence(o, invariant_pool);
+#if PRS_FOOTPRINT_SUBCKT
+	util::write_sequence(o, subcircuit_map);
+#endif
 }
 }
 
@@ -474,7 +534,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	read_value(i, s);
 	rule_pool.reserve(s);
 	size_t j = 0;
-	for ( ; j<s; j++) {
+	for ( ; j<s; ++j) {
 		rule_pool.push_back(rule());
 		rule_pool.back().load_object_base(m, i);
 	}
@@ -483,7 +543,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	read_value(i, s);
 	expr_pool.reserve(s);
 	size_t j = 0;
-	for ( ; j<s; j++) {
+	for ( ; j<s; ++j) {
 		expr_pool.push_back(expr_node());
 		expr_pool.back().load_object_base(m, i);
 	}
@@ -492,7 +552,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	read_value(i, s);
 	macro_pool.reserve(s);
 	size_t j = 0;
-	for ( ; j<s; j++) {
+	for ( ; j<s; ++j) {
 		macro_pool.push_back(macro());
 		macro_pool.back().load_object_base(m, i);
 	}
@@ -509,6 +569,9 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	}
 }{
 	util::read_sequence_resize(i, invariant_pool);
+#if PRS_FOOTPRINT_SUBCKT
+	util::read_sequence_resize(i, subcircuit_map);
+#endif
 }
 }
 

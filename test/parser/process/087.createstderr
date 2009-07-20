@@ -32,15 +32,15 @@ Persistent Object Manager text dump:
 	28	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	326
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	330
 	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	434
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	466
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	470
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.13 2009/06/05 16:28:12 fang Exp $
+	$Id: PRS_footprint.h,v 1.14 2009/07/20 22:41:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -21,6 +21,13 @@
 #include "util/offset_array.h"
 #include "util/persistent_fwd.h"
 
+/**
+	Define to 1 to include additional structures and members for
+	maintaining subcircuit hierarchy.  
+	For now subircuits are 1-level, and thus, cannot be nested. 
+	Goal: 1
+ */
+#define	PRS_FOOTPRINT_SUBCKT			1
 
 namespace HAC {
 struct cflat_options;
@@ -80,6 +87,32 @@ public:
 	typedef	map<string, node_expr_type>	internal_node_expr_map_type;
 	/// list of root expression indices
 	typedef	vector<invariant_type>		invariant_pool_type;
+#if PRS_FOOTPRINT_SUBCKT
+	/**
+		This structure keeps a map of which rules/macros (by index)
+		belong to which subcircuit.  
+		Each pair represents the set [i,j)
+		Indices not found in this set are presumed to be in
+		the outer-most level, designated index 0.  
+	 */
+	typedef	std::pair<size_t, size_t>	index_range;
+	/**
+		Each subcircuit may contain rules and macros, 
+		so we need to keep these sets coherent.
+	 */
+	struct subcircuit_map_entry {
+		index_range			rules;
+		index_range			macros;
+	};	// end struct subcircuit_map_entry
+	/**
+		This will resemble a discrete_interval_set except that
+		there can be blank entries, which are skipped.  
+		Algorithm: since this is maintained sorted, 
+			can use binary search algorithms, such as
+			lower_bound, upper_bound.  
+	 */
+	typedef	vector<subcircuit_map_entry>	subcircuit_map_type;
+#endif
 private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
@@ -92,8 +125,10 @@ private:
 	expr_pool_type				expr_pool;
 	macro_pool_type				macro_pool;
 	internal_node_expr_map_type		internal_node_expr_map;
-public:
 	invariant_pool_type			invariant_pool;
+#if PRS_FOOTPRINT_SUBCKT
+	subcircuit_map_type			subcircuit_map;
+#endif
 public:
 	footprint();
 	~footprint();
@@ -103,6 +138,12 @@ public:
 
 	const expr_pool_type&
 	get_expr_pool(void) const { return expr_pool; }
+
+	const rule_pool_type&
+	get_rule_pool(void) const { return rule_pool; }
+
+	const macro_pool_type&
+	get_macro_pool(void) const { return macro_pool; }
 
 	const invariant_pool_type&
 	get_invariant_pool(void) const { return invariant_pool; }
@@ -144,6 +185,13 @@ public:
 	push_back_invariant(const invariant_type t) {
 		invariant_pool.push_back(t);
 	}
+
+#if PRS_FOOTPRINT_SUBCKT
+	void
+	push_back_subcircuit(const subcircuit_map_entry& t) {
+		subcircuit_map.push_back(t);
+	}
+#endif
 
 	size_t
 	current_expr_index(void) const {

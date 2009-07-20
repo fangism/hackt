@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.40 2009/05/28 15:25:54 fang Exp $
+	$Id: ExprAlloc.cc,v 1.41 2009/07/20 22:41:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -249,7 +249,7 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	typedef footprint::invariant_pool_type::const_iterator
 						const_iterator;
 	// const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
-	const footprint::invariant_pool_type& ip(pfp.invariant_pool);
+	const footprint::invariant_pool_type& ip(pfp.get_invariant_pool());
 	const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
 	const expr_pool_setter __p(*this, ep);
 	NEVER_NULL(expr_pool);
@@ -327,7 +327,8 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 		typedef footprint::invariant_pool_type::const_iterator
 							const_iterator;
 		// const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
-		const footprint::invariant_pool_type& ip(pfp.invariant_pool);
+		const footprint::invariant_pool_type&
+			ip(pfp.get_invariant_pool());
 		const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
 		const expr_pool_setter __p(*this, ep);
 		NEVER_NULL(expr_pool);

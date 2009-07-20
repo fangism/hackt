@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.25 2009/06/05 16:28:11 fang Exp $
+	$Id: PRS.h,v 1.26 2009/07/20 22:41:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -323,6 +323,43 @@ public:
 //=============================================================================
 // This used to be its own class, just replaced with typedef...
 typedef	rule_set		nested_rules;
+
+//=============================================================================
+/**
+	Named, nested substructure for local production rules.
+	Mostly needed for convenient netlist generation.
+ */
+class subcircuit : public nested_rules {
+	typedef	subcircuit		this_type;
+	string				name;
+public:
+	subcircuit();
+
+	explicit
+	subcircuit(const string&);
+	~subcircuit();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const rule_dump_context&) const;
+
+	PRS_UNROLL_RULE_PROTO;
+
+	using nested_rules::check;
+	using nested_rules::expand_complement;
+	using nested_rules::append_rule;
+
+	void
+	collect_transient_info(persistent_object_manager&) const;
+
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const persistent_object_manager&, istream&);
+};	// end class subcircuit
 
 //=============================================================================
 /**

@@ -1,0 +1,3 @@
+ERROR: expecting at most one string-literal for subcircuit name.  [8:8..11]
+ERROR: at least one error in PRS body.
+From: "subckt-02.hac"
