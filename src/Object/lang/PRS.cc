@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.35 2009/07/20 22:41:37 fang Exp $
+	$Id: PRS.cc,v 1.35.2.1 2009/07/28 23:51:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -1352,6 +1352,7 @@ and_expr::negation_normalize(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Constructs expressions bottom-up.  
+	TODO: handle precharges!
 	\return index of newly created expression if successful (1-indexed), 
 		else return 0.
  */

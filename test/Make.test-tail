@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.93 2009/03/09 07:31:07 fang Exp $
+#	$Id: Make.test-tail,v 1.93.6.1 2009/07/28 23:51:39 fang Exp $
 
 # our collection of test programs/scripts/commands
 HACKT_EXE = $(top_builddir)/src/hackt
@@ -20,6 +20,7 @@ HACKT_CFLAT_SPRS_EXE = $(HACKT_CFLAT_PRSIM_EXE) -fsizes
 HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
 HACKT_PRSIM_EXE = $(top_builddir)/src/hacprsim
 HACKT_CHPSIM_EXE = $(top_builddir)/src/hacchpsim
+HACKNET_EXE = $(top_builddir)/src/hacknet
 
 # guile based tests will need a modified environment, see Make.test-guile
 # -q flag inhibits loading of user's ~/.guile init file
@@ -158,6 +159,7 @@ include $(top_srcdir)/test/Make.test-prsim
 include $(top_srcdir)/test/Make.test-vpi
 include $(top_srcdir)/test/Make.test-chpsim
 include $(top_srcdir)/test/Make.test-guile
+include $(top_srcdir)/test/Make.test-net
 
 BOGUS_TESTS +=
 

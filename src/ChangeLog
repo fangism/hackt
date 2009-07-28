@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-07-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-01:
+	  Branch for initial development of hacknet.
+	  Initial modules for hacknet -- spice netlist generator.
+		net/netgraph.{h,cc}, main/hacknet.{h,cc}.
+		Implementation is very skeletal.
+	  Next: need to support precharge expressions in PRS footprint
+		expressions. 
+	  test/: added initial test support Make.test-net
+
+
 2009-07-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-merged-subckt-01-02:

@@ -1,0 +1,9 @@
+// "inv-01.hac"
+// @hacknet-flags@ -t inv<>
+
+defproc inv(bool x, y) {
+prs {
+	x	=> y-
+}
+}
+
