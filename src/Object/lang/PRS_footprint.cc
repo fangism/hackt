@@ -1,9 +1,10 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.24 2009/07/20 22:41:37 fang Exp $
+	$Id: PRS_footprint.cc,v 1.24.2.1 2009/07/31 00:22:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_IOS			(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_DUMPS		(0 && ENABLE_STACKTRACE)
 
@@ -24,9 +25,8 @@
 #include "Object/traits/instance_traits.h"
 #include "Object/global_channel_entry.h"
 #include "main/cflat_options.h"
-#include "util/IO_utils.h"
 #include "util/indent.h"
-#include "util/persistent_object_manager.tcc"
+#include "util/persistent_object_manager.tcc"	// includes "IO_utils.tcc"
 #include "util/persistent_functor.tcc"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
@@ -72,12 +72,15 @@ namespace HAC {
 namespace entity {
 namespace PRS {
 using std::set;
+using std::make_pair;
 #include "util/using_ostream.h"
 using util::auto_indent;
 using util::write_value;
 using util::write_array;
+using util::write_sequence;
 using util::read_value;
 using util::read_sequence_prealloc;
+using util::read_sequence_resize;
 
 //=============================================================================
 // class footprint_rule_attribute method definitions
@@ -157,11 +160,6 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM:
 			STACKTRACE_DUMP_PRINT("Literal ");
-#if 0
-			if (one != 1) {
-				cerr << "size is " << one << endl;
-			}
-#endif
 			INVARIANT(one == 1);
 			np[e.only()].get_back_ref()
 				->dump_hierarchical_name(o,
@@ -181,14 +179,30 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			if (paren) o << '(';
 			if (e.size()) {
 				dump_expr(ep[e.only()], o, np, ep, type);
+				// also print precharges
+				const footprint_expr_node::precharge_map_type&
+					pm(e.get_precharges());
+				footprint_expr_node::precharge_map_type::const_iterator
+					pi(pm.begin()), pe(pm.end());
 				const char* const op = 
 					(type == PRS_AND_EXPR_TYPE_ENUM) ?
-						" & " : " | ";
-				int i = 2;
-				const int s = e.size();
-				for ( ; i<=s; i++) {
-					dump_expr(ep[e[i]],
-						o << op, np, ep, type);
+						" &" : " |";
+				size_t i = 2;
+				const size_t s = e.size();
+				for ( ; i<=s; ++i) {
+					o << op;
+					if (pi != pe && i-2 == pi->first) {
+						o << '{' <<
+						(pi->second.second ? '+' : '-');
+						dump_expr(ep[pi->second.first], 
+							o, np, ep, 
+							PRS_NODE_TYPE_ENUM);
+						// type doesn't really matter?
+						o << '}';
+						++pi;
+					}
+					dump_expr(ep[e[i]], o << ' ', 
+						np, ep, type);
 				}
 			}
 			if (paren) o << ')';
@@ -595,6 +609,13 @@ footprint_expr_node::footprint_expr_node(const char t, const size_t s) :
 		type(t), nodes(s), params() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_expr_node::push_back_precharge(const size_t i, 
+		const expr_index_type e, const bool d) {
+	precharge_map.push_back(make_pair(i, make_pair(e, d)));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return the index of the first zero entry, if any, 
 		indicating where an error occurred.  
@@ -635,6 +656,9 @@ footprint_expr_node::write_object_base(const persistent_object_manager& m,
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.write_pointer_list(o, params);
 	} else	INVARIANT(params.empty());
+	if (type == PRS_AND_EXPR_TYPE_ENUM) {
+		write_sequence(o, precharge_map);
+	} else	INVARIANT(precharge_map.empty());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -648,6 +672,9 @@ footprint_expr_node::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_PRINT("nodes size = " << nodes.size() << endl);
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.read_pointer_list(i, params);
+	}
+	if (type == PRS_AND_EXPR_TYPE_ENUM) {
+		read_sequence_resize(i, precharge_map);
 	}
 }
 

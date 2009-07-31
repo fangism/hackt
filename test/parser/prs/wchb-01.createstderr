@@ -160,7 +160,7 @@ Persistent Object Manager text dump:
 	156	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	157	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	158	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	159	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1087
+	159	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1107
 	160	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	161	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	162	##ADDR##	procinst	0	#HEAD#	#TAIL#	20

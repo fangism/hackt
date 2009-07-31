@@ -77,8 +77,9 @@ Persistent Object Manager text dump:
 	73	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	74	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	75	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	76	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1576
+	76	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1614
 	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -206,7 +207,7 @@ footprint: {
   x[2][2] -> y[2][2]-
   x[3][2] -> y[3][2]-
   x[4][2] -> y[4][2]-
-  en<4> & b & c -> d-
+  en<4> &{+pchg<2>} b & c -> d-
   en & a & c -> d-
   ~en & ~a -> d+
 }

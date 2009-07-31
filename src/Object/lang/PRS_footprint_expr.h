@@ -1,6 +1,6 @@
 /**
-	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint_expr.h,v 1.6 2009/06/05 16:28:12 fang Exp $
+	\file "Object/lang/PRS_footprint_expr.h"
+	$Id: PRS_footprint_expr.h,v 1.6.4.1 2009/07/31 00:22:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
@@ -29,6 +29,8 @@ using util::persistent_object_manager;
 #if PRSIM_UNIFY_GRAPH_STRUCTURES
 using SIM::expr_index_type;
 using SIM::expr_count_type;
+#else
+typedef	size_t	expr_index_type;
 #endif
 
 //=============================================================================
@@ -75,6 +77,20 @@ class footprint_expr_node : public cflat_visitee {
 #endif
 	typedef	std::valarray<node_value_type>	node_array_type;
 	typedef	directive_base_params_type	params_type;
+public:
+	/**
+		A resolved precharge expression is an expression
+		and a direction (bool).
+	 */
+	typedef	std::pair<expr_index_type, bool>	precharge_pull_type;
+	/**
+		index-precharge pair to form sparse-sorted list (0-indexed).
+		Key is index from original sparse list, 
+		value is expression index.  
+		\invariant list remains sorted.
+	 */
+	typedef	std::pair<size_t, precharge_pull_type>	precharge_ref_type;
+	typedef	std::vector<precharge_ref_type>		precharge_map_type;
 private:
 	/**
 		Whether or not this is AND or OR, NOT, literal....  
@@ -115,6 +131,10 @@ private:
 		This now has the role of SIM::PRSIM::ExprGraphNode::children.
 	 */
 	node_array_type			nodes;
+	/**
+		Precharge expressions only apply to ANDs.
+	 */
+	precharge_map_type		precharge_map;
 #if !PRSIM_UNIFY_GRAPH_STRUCTURES
 	/**
 		This field is only applicable to PRS_LITERALs.
@@ -162,11 +182,14 @@ public:
 	const params_type&
 	get_params(void) const { return params; }
 
+	const precharge_map_type&
+	get_precharges(void) const { return precharge_map; }
+
 	size_t
 	size(void) const { return nodes.size(); }
 
 	/**
-		Subtract one because indicies are intentionally 
+		Subtract one because indices are intentionally 
 		off by one.  
 	 */
 	node_value_type&
@@ -176,7 +199,7 @@ public:
 	}
 
 	/**
-		Subtract one because indicies are intentionally 
+		Subtract one because indices are intentionally 
 		off by one.  
 	 */
 	const node_value_type&
@@ -192,6 +215,9 @@ public:
 
 	void
 	resize(const size_t s) { nodes.resize(s); }
+
+	void
+	push_back_precharge(const size_t, const expr_index_type, const bool);
 
 	/// returns the 1-indexed position of first error, else 0
 	size_t

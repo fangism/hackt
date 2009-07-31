@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.21 2009/07/20 22:41:39 fang Exp $
+	$Id: cflat_printer.cc,v 1.21.2.1 2009/07/31 00:22:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -314,10 +314,28 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 #endif
 				const char* const op =
 					(type == PRS_AND_EXPR_TYPE_ENUM) ?
-						" & " : " | ";
+						" &" : " |";
+				// optionally print precharge here
+				const footprint_expr_node::precharge_map_type&
+					pm(e.get_precharges());
+				typedef footprint_expr_node::precharge_map_type::const_iterator
+						const_iterator;
+				const_iterator pi(pm.begin()), pe(pm.end());
+				// recall: precharges (map) are 0-indexed
 				size_t i = 2;
-				for ( ; i<=sz; i++) {
+				for ( ; i<=sz; ++i) {
 					os << op;
+					if (cfopts.show_precharges) {
+					if ((pi != pe) && (i-2 == pi->first)) {
+						os << '{' << 
+							(pi->second.second ?
+							'+' : '-');
+						(*expr_pool)[pi->second.first].accept(*this);
+						os << '}';
+						++pi;
+					}
+					}
+					os << ' ';
 					(*expr_pool)[e[i]].accept(*this);
 #if CFLAT_WITH_CONDUCTANCES
 					max_G.push_back(max_conductance);

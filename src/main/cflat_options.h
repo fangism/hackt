@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.17 2008/10/17 21:53:11 fang Exp $
+	$Id: cflat_options.h,v 1.17.16.1 2009/07/31 00:22:12 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -160,7 +160,10 @@ public:
 	 */
 	bool				compute_conductances;
 #endif
-
+	/**
+		Enable printing of precharge expressions.  
+	 */
+	bool				show_precharges;
 	/**
 		Ignore top-level instances and flatten one anonymous
 		instance of a named complete process type.  
@@ -201,6 +204,7 @@ public:
 #if CFLAT_WITH_CONDUCTANCES
 		compute_conductances(false),
 #endif
+		show_precharges(false), 
 		use_referenced_type_instead_of_top_level(false), 
 		named_process_type(), 
 		comp_opt() {

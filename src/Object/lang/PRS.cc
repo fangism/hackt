@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.35.2.1 2009/07/28 23:51:32 fang Exp $
+	$Id: PRS.cc,v 1.35.2.2 2009/07/31 00:22:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -1182,6 +1182,27 @@ if (expr) {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolve precharge expression in terms of indices.  
+	We pass in an expr-index because the previous reference may be stale.
+ */
+good_bool
+precharge_expr::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp, const size_t eid, 
+		const size_t ind) const {
+	STACKTRACE_VERBOSE;
+	NEVER_NULL(expr);
+	const size_t p = expr->unroll(c, np, pfp);
+if (p) {
+	pfp.get_expr_pool()[eid].push_back_precharge(ind, p, dir);
+	return good_bool(true);
+} else {
+	return good_bool(false);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 precharge_expr::collect_transient_info_base(
 		persistent_object_manager& m) const {
@@ -1190,6 +1211,7 @@ precharge_expr::collect_transient_info_base(
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 precharge_expr::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
@@ -1197,6 +1219,7 @@ precharge_expr::write_object_base(const persistent_object_manager& m,
 	write_value(o, dir);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 precharge_expr::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
@@ -1226,7 +1249,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: Dump precharge expressions!
+	Print expression, pre-unrolled.
  */
 ostream&
 and_expr::dump(ostream& o, const expr_dump_context& c) const {
@@ -1352,7 +1375,6 @@ and_expr::negation_normalize(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Constructs expressions bottom-up.  
-	TODO: handle precharges!
 	\return index of newly created expression if successful (1-indexed), 
 		else return 0.
  */
@@ -1366,27 +1388,40 @@ and_expr::unroll(const unroll_context& c, const node_pool_type& np,
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(
 			PRS_AND_EXPR_TYPE_ENUM, expr_indices.size()));
+	const size_t ret = pfp.current_expr_index();
 	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
 	// find index of first error (1-indexed)
 	const size_t err = new_expr.first_node_error();
 	if (err) {
 		cerr << "Error resolving production rule expression at:"
 			<< endl;
-#if 0
-		// WTF, not working?
-		const sequence_type::const_iterator
-			b(sequence_type::begin());
-		(b +err -1)->dump(cerr << '\t') << endl;
-#endif
 		return 0;
-	} else {
-		return pfp.current_expr_index();
 	}
+#if 1
+	// ALERT: new_expr reference may be invalidated during precharge
+	// unroll because of push_back() on the expression pool.
+	// process precharges
+	precharge_array_type::const_iterator
+		i(precharge_array.begin()), e(precharge_array.end());
+	size_t j = 0;	// 0-indexed precharges
+	// sorted sparse insert
+	for ( ; i!=e; ++i, ++j) {
+	if (*i) {
+		if (!i->unroll(c, np, pfp, ret, j).good) {
+			cerr << "Error resolving prechage expression at:"
+				<< endl;
+			return 0;
+		}
+	}
+	}
+#endif
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Resolves into an expression with resolved local references.  
+	TODO: handle precharges!
 	\return copy of self resolved (may be same)
  */
 prs_expr_ptr_type
@@ -1691,12 +1726,6 @@ or_expr::unroll(const unroll_context& c, const node_pool_type& np,
 	if (err) {
 		cerr << "Error resolving production rule expression at:"
 			<< endl;
-#if 0
-		// WTF, not working?
-		const sequence_type::const_iterator
-			b(sequence_type::begin());
-		(b +err -1)->dump(cerr << '\t') << endl;
-#endif
 		return 0;
 	} else {
 		return pfp.current_expr_index();

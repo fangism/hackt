@@ -1,0 +1,174 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	33
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	408
+	27	##ADDR##	procdefn	0	#HEAD#	#TAIL#	119
+	28	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	29	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	39	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	33
+	40	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	footprnt	0	#HEAD#	#TAIL#	417
+	49	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	footprnt	0	#HEAD#	#TAIL#	542
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    pchg_test = process-definition (defined) pchg_test(
+        bool<> a
+        bool<> b
+        bool<> c
+        bool<> en
+      )
+      In definition "pchg_test", we have: {
+      Instances:
+        a = bool<> pchg_test::a
+        b = bool<> pchg_test::b
+        c = bool<> pchg_test::c
+        en = bool<> pchg_test::en
+      unroll sequence: 
+        ports: (
+          bool<> a
+          bool<> b
+          bool<> c
+          bool<> en
+        )
+      prs:
+        a &{+en} b -> c-
+      footprint: {
+        a = bool^0 = pchg_test<>::a (1) 
+        b = bool^0 = pchg_test<>::b (2) 
+        c = bool^0 = pchg_test<>::c (3) 
+        en = bool^0 = pchg_test<>::en (4) 
+        Created state:
+        bool instance pool:
+        1	pchg_test<>::a
+        2	pchg_test<>::b
+        3	pchg_test<>::c
+        4	pchg_test<>::en
+        resolved prs:
+        a &{+en} b -> c-
+      }
+      }
+
+    pchg_test2 = process-definition (defined) pchg_test2(
+        bool<> a
+        bool<> b
+        bool<> c
+        bool<> _en
+      )
+      In definition "pchg_test2", we have: {
+      Instances:
+        _en = bool<> pchg_test2::_en
+        a = bool<> pchg_test2::a
+        b = bool<> pchg_test2::b
+        c = bool<> pchg_test2::c
+      unroll sequence: 
+        ports: (
+          bool<> a
+          bool<> b
+          bool<> c
+          bool<> _en
+        )
+      prs:
+        a &{+~_en} b -> c-
+      footprint: {
+        _en = bool^0 = pchg_test2<>::_en (4) 
+        a = bool^0 = pchg_test2<>::a (1) 
+        b = bool^0 = pchg_test2<>::b (2) 
+        c = bool^0 = pchg_test2<>::c (3) 
+        Created state:
+        bool instance pool:
+        1	pchg_test2<>::a
+        2	pchg_test2<>::b
+        3	pchg_test2<>::c
+        4	pchg_test2<>::_en
+        resolved prs:
+        a &{+~_en} b -> c-
+      }
+      }
+
+  Instances:
+    bar = pchg_test2<> bar
+    foo = pchg_test<> foo
+}
+
+footprint: {
+  bar = process pchg_test2<>^0 = bar (2) (
+    a = bool^0 = bar.a (5) 
+    b = bool^0 = bar.b (6) 
+    c = bool^0 = bar.c (7) 
+    _en = bool^0 = bar._en (8) 
+  )
+  foo = process pchg_test<>^0 = foo (1) (
+    a = bool^0 = foo.a (1) 
+    b = bool^0 = foo.b (2) 
+    c = bool^0 = foo.c (3) 
+    en = bool^0 = foo.en (4) 
+  )
+  Created state:
+  process instance pool:
+  1	foo
+  2	bar
+  bool instance pool:
+  1	foo.a
+  2	foo.b
+  3	foo.c
+  4	foo.en
+  5	bar.a
+  6	bar.b
+  7	bar.c
+  8	bar._en
+}

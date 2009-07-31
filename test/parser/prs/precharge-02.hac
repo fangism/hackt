@@ -1,0 +1,8 @@
+// "precharge-02.hac"
+// @hflat-flags@ -f precharges
+
+import "precharge-00.hac";
+
+pchg_test foo;
+pchg_test2 bar;
+

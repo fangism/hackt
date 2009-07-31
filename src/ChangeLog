@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-07-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-02:
+	  hflat (main/cflat, Object/lang/cflat_printer): 
+		added -f [no-]precharges option (default off) to 
+		print expanded precharge expressions in flattened output,
+		also useful for debugging.  Documented and tested.
+	  PRS::footprint added missing support for precharges as a separate
+		sub-array of footprint_expr_node, takes up some more
+		memory unfortunately, but object file is kept minimal.
+		Object file binary format updated, updated test suite.
+		expression unrolling now populates footprints' precharges.
+		Print/dumping now shows precharges.
+
+
 2009-07-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-01:

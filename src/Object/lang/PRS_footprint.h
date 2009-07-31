@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.14 2009/07/20 22:41:38 fang Exp $
+	$Id: PRS_footprint.h,v 1.14.2.1 2009/07/31 00:22:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -138,6 +138,9 @@ public:
 
 	const expr_pool_type&
 	get_expr_pool(void) const { return expr_pool; }
+
+	expr_pool_type&
+	get_expr_pool(void) { return expr_pool; }
 
 	const rule_pool_type&
 	get_rule_pool(void) const { return rule_pool; }
