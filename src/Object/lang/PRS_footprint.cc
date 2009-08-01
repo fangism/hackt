@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.24.2.1 2009/07/31 00:22:09 fang Exp $
+	$Id: PRS_footprint.cc,v 1.24.2.2 2009/08/01 00:13:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -121,6 +121,40 @@ footprint_rule_attribute::load_object(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_VERBOSE;
 	read_value(i, key);
 	m.read_pointer(i, values);
+}
+
+//=============================================================================
+// class footprint::subcircuit_map_entry method definitions
+
+const string&
+footprint::subcircuit_map_entry::get_name(void) const {
+	NEVER_NULL(back_ref);
+	return back_ref->get_name();
+}
+
+void
+footprint::subcircuit_map_entry::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	// technically don't need to collect as back-reference
+	// is guaranteed to be reached first
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::subcircuit_map_entry::write_object(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, back_ref);
+	write_value(o, rules);
+	write_value(o, macros);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::subcircuit_map_entry::load_object(
+		const persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, back_ref);
+	read_value(i, rules);
+	read_value(i, macros);
 }
 
 //=============================================================================
@@ -327,6 +361,7 @@ if (invariant_pool.size()) {
 }
 #if PRS_FOOTPRINT_SUBCKT
 if (subcircuit_map.size()) {
+	// print name of subcircuit?
 	size_t j = 1;		// 1-indexed
 	o << auto_indent << "subcircuit (rules, macros): " << endl;
 	typedef	subcircuit_map_type::const_iterator	const_iterator;
@@ -344,6 +379,7 @@ if (subcircuit_map.size()) {
 		} else {
 			o << "none";
 		}
+		o << ' ' << i->get_name();
 		o << endl;
 	}
 }
@@ -453,6 +489,7 @@ footprint::lookup_internal_node_expr(const string& k, const bool dir) const {
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+	util::persistent_sequence_collector_ref c(m);
 {
 	typedef	rule_pool_type::const_iterator	const_iterator;
 	const_iterator i(rule_pool.begin());
@@ -474,6 +511,10 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	for ( ; i!=e; ++i) {
 		i->collect_transient_info_base(m);
 	}
+}{
+#if PRS_FOOTPRINT_SUBCKT
+	c(subcircuit_map);
+#endif
 }
 	// the expr_pool doesn't need persistence management yet
 	// the internal_node_expr_map doesn't contain pointers
@@ -518,6 +559,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 		i->write_object_base(m, o);
 	}
 }{
+	// use util::write_map()
 	typedef internal_node_expr_map_type::const_iterator	const_iterator;
 	write_value(o, internal_node_expr_map.size());
 	const_iterator i(internal_node_expr_map.begin());
@@ -530,7 +572,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 }{
 	util::write_sequence(o, invariant_pool);
 #if PRS_FOOTPRINT_SUBCKT
-	util::write_sequence(o, subcircuit_map);
+	util::write_persistent_sequence(m, o, subcircuit_map);
 #endif
 }
 }
@@ -571,6 +613,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		macro_pool.back().load_object_base(m, i);
 	}
 }{
+	// use util::read_map()
 	size_t s;
 	read_value(i, s);
 	size_t j = 0;
@@ -584,7 +627,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 }{
 	util::read_sequence_resize(i, invariant_pool);
 #if PRS_FOOTPRINT_SUBCKT
-	util::read_sequence_resize(i, subcircuit_map);
+	util::read_persistent_sequence_resize(m, i, subcircuit_map);
 #endif
 }
 }

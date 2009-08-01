@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.35.2.2 2009/07/31 00:22:08 fang Exp $
+	$Id: PRS.cc,v 1.35.2.3 2009/08/01 00:13:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -946,7 +946,7 @@ good_bool
 subcircuit::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
 #if PRS_FOOTPRINT_SUBCKT
-	PRS::footprint::subcircuit_map_entry e;	// need name?
+	PRS::footprint::subcircuit_map_entry e(this);	// need name?
 	e.rules.first = pfp.get_rule_pool().size();
 	e.macros.first = pfp.get_macro_pool().size();
 	const good_bool ret(nested_rules::unroll(c, np, pfp));

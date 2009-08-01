@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-07-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-03:
+	  PRS::footprint::subcircuit_map_entry now has back-reference
+		pointer to originating subcircuit.
+		Extended a few objects (binary), updated test cases.
+	  Partially implemented netlist_generator::visit(PRS::footprint&)
+		traverses rules and macros using appropriate subcircuits.
+	  Next: internal node definitions in netlist graphs.
+
+
 2009-07-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-02:

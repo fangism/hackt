@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.26.2.1 2009/07/31 00:22:08 fang Exp $
+	$Id: PRS.h,v 1.26.2.2 2009/08/01 00:13:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -339,6 +339,9 @@ public:
 	explicit
 	subcircuit(const string&);
 	~subcircuit();
+
+	const string&
+	get_name(void) const { return name; }
 
 	ostream&
 	what(ostream&) const;

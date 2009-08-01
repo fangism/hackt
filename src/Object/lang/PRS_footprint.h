@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.14.2.1 2009/07/31 00:22:09 fang Exp $
+	$Id: PRS_footprint.h,v 1.14.2.2 2009/08/01 00:13:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -20,6 +20,7 @@
 #include "util/boolean_types.h"
 #include "util/offset_array.h"
 #include "util/persistent_fwd.h"
+#include "util/memory/excl_ptr.h"	// for never_ptr
 
 /**
 	Define to 1 to include additional structures and members for
@@ -44,12 +45,14 @@ template <class Tag>
 class footprint_frame_map;
 
 namespace PRS {
+class subcircuit;
 using std::ostream;
 using std::istream;
 using util::persistent_object_manager;
 using util::good_bool;
 using std::map;
 using std::string;
+using util::memory::never_ptr;
 
 //=============================================================================
 /**
@@ -101,8 +104,28 @@ public:
 		so we need to keep these sets coherent.
 	 */
 	struct subcircuit_map_entry {
+		/**
+			Back-reference to original subcircuit.
+			Saves from copying string name, or other info.
+			Ideally, this should be reconstructed without
+			having to save the pointer persistently.
+		 */
+		never_ptr<const subcircuit>	back_ref;
 		index_range			rules;
 		index_range			macros;
+		subcircuit_map_entry() { }
+		subcircuit_map_entry(const subcircuit* b) : back_ref(b) { }
+
+		const string&
+		get_name(void) const;
+
+		void
+		collect_transient_info_base(persistent_object_manager&) const;
+
+		void
+		write_object(const persistent_object_manager&, ostream&) const;
+		void
+		load_object(const persistent_object_manager&, istream&);
 	};	// end struct subcircuit_map_entry
 	/**
 		This will resemble a discrete_interval_set except that
@@ -113,7 +136,6 @@ public:
 	 */
 	typedef	vector<subcircuit_map_entry>	subcircuit_map_type;
 #endif
-private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
 						node_pool_type;
@@ -121,6 +143,7 @@ private:
 	typedef	PRS_footprint_expr_pool_type	expr_pool_type;
 	typedef	vector<macro>			macro_pool_type;
 
+private:
 	rule_pool_type				rule_pool;
 	expr_pool_type				expr_pool;
 	macro_pool_type				macro_pool;
@@ -190,6 +213,9 @@ public:
 	}
 
 #if PRS_FOOTPRINT_SUBCKT
+	const subcircuit_map_type&
+	get_subcircuit_map(void) const { return subcircuit_map; }
+
 	void
 	push_back_subcircuit(const subcircuit_map_entry& t) {
 		subcircuit_map.push_back(t);

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.1 2009/07/28 23:51:37 fang Exp $
+	$Id: netgraph.h,v 1.1.2.2 2009/08/01 00:13:26 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -17,6 +17,7 @@ namespace NET {
 using std::ostream;
 using std::vector;
 using std::string;
+using std::map;
 using entity::cflat_context_visitor;
 using entity::state_manager;
 using entity::footprint;
@@ -56,6 +57,10 @@ struct node {
 
 	bool
 	is_internal_node(void) const;
+
+	// true if ndoe is automatically generated
+	bool
+	is_auxiliary_node(void) const;
 
 };	// end struct node
 
@@ -127,6 +132,12 @@ struct instance {
 class netlist {
 	typedef	vector<node>		node_pool_type;
 	/**
+		Collection of internal nodes.  
+		key= name of internal node
+		value= index into node_pool for node
+	 */
+	typedef	map<string, index_type>	internal_node_map_type;
+	/**
 		TODO: group transistors in a way that reflects
 		original rule in PRS, if applicable.
 		For now, flat list.
@@ -190,6 +201,9 @@ private:
 	ostream& 			os;
 	const netlist_options&		opt;
 	netlist_map_type		netmap;
+	// need a place to hold netlits that belong to subcircuits
+	// which don't have associated footprints, for now might 
+	// only keep them around temporarily and locally
 	netlist*			current_netlist;
 public:
 	netlist_generator(const state_manager& _sm, 
@@ -211,6 +225,8 @@ public:
 	visit(const state_manager&);		// only visit processes
 	void
 	visit(const footprint&);
+	void
+	visit(const entity::PRS::footprint&);		// override
 	void
 	visit(const entity::PRS::footprint_rule&);
 	void
