@@ -73,7 +73,7 @@ In namespace "", we have: {
         x -> y-
         ~y -> z+
         subcircuit (rules, macros): 
-        1: 1..1 none
+        1: 1..1 none my_name_is
       }
       }
 
