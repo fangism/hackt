@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.24.2.2 2009/08/01 00:13:25 fang Exp $
+	$Id: PRS_footprint.cc,v 1.24.2.3 2009/08/08 01:34:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -690,6 +690,11 @@ footprint_expr_node::collect_transient_info_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: (optimization) instead of writing nodes unconditionally, 
+		write depending on the type, for singletons.  
+		params can likewise be reduced where they are irrelevant.
+ */
 void
 footprint_expr_node::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {

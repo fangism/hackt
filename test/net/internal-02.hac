@@ -1,0 +1,19 @@
+// "internal-02.hac"
+// copy-modified from "internal-01.hac"
+/**
+netgen rejects this:
+FATAL: @-expression with unknown label a
+**/
+
+defproc foo(bool en, x, _y) {
+_y @ [autokeeper=0];
+prs {
+	en	-> @a-
+subckt {
+	~@a & x	-> _y-
+}
+}
+}
+
+foo bar;
+

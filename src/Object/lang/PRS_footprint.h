@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.14.2.2 2009/08/01 00:13:25 fang Exp $
+	$Id: PRS_footprint.h,v 1.14.2.3 2009/08/08 01:34:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -76,6 +76,7 @@ public:
 	/**
 		Expression pull direction for internal node.
 		pull-up is true, pull-down if false.
+		first index value is expression index.
 	 */
 	typedef	std::pair<size_t, bool>		node_expr_type;
 	/**
@@ -84,7 +85,7 @@ public:
 		String should be of the form: x[...]+.
 		Each pull may only be defined once.  
 		value_type is index into expression pool.  
-		TODO: Is there a way to store refrence object instead
+		TODO: Is there a way to store reference object instead
 		of their string representations?  (yes, but not critical now)
 	 */
 	typedef	map<string, node_expr_type>	internal_node_expr_map_type;
@@ -111,6 +112,7 @@ public:
 			having to save the pointer persistently.
 		 */
 		never_ptr<const subcircuit>	back_ref;
+		// TODO: map which internal node (pooled) expressions this owns
 		index_range			rules;
 		index_range			macros;
 		subcircuit_map_entry() { }
@@ -196,6 +198,11 @@ public:
 
 	size_t
 	lookup_internal_node_expr(const string&, const bool) const;
+
+	const internal_node_expr_map_type&
+	get_internal_node_map(void) const {
+		return internal_node_expr_map;
+	}
 
 	// returns reference to new expression node
 	expr_node&

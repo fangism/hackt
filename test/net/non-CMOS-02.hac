@@ -1,0 +1,11 @@
+// "non-CMOS-02.hac"
+// expect-fail: non-CMOS implementable rules
+
+defproc foo(bool a, b) {
+prs {
+	a		=> b+
+}
+}
+
+foo bar;
+

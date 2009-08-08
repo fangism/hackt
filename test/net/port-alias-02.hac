@@ -1,0 +1,12 @@
+// "port-alias-02.hac"
+// what did netgen do with aliased ports?
+
+defproc foo(bool x, y, z) {
+y = z;
+prs {
+	x	=> y-
+}
+}
+
+foo bar;
+

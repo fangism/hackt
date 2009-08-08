@@ -1,0 +1,17 @@
+// "internal-04.hac"
+// copy-modified from "internal-03.hac"
+
+defproc foo(bool en, x, _y) {
+bool z;
+_y @ [autokeeper=0];
+prs {
+subckt {
+	en	-> @a-
+	~@a & x	-> _y-
+}
+	_y	=> z-
+}
+}
+
+foo bar;
+
