@@ -1,0 +1,6 @@
+.subckt type_name ...ports...
+M0_ GND x y GND nch W=5u L=2u
+M1_ Vdd x y Vdd pch W=5u L=2u
+.ends
+
+

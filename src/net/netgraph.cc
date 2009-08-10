@@ -1,9 +1,9 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.3 2009/08/08 01:34:08 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.4 2009/08/10 22:31:24 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include "net/netgraph.h"
@@ -11,10 +11,13 @@
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
 #include "Object/global_entry_context.h"
+#include "Object/common/dump_flags.h"
 #include "Object/def/footprint.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/inst/port_alias_tracker.h"
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_empty.h"
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -22,6 +25,7 @@ namespace NET {
 #include "util/using_ostream.h"
 using entity::port_alias_tracker;
 using entity::footprint_frame_map_type;
+using entity::dump_flags;
 using std::pair;
 using util::value_saver;
 using HAC::entity::PRS::PRS_LITERAL_TYPE_ENUM;
@@ -31,8 +35,82 @@ using HAC::entity::PRS::PRS_OR_EXPR_TYPE_ENUM;
 using HAC::entity::PRS::PRS_NODE_TYPE_ENUM;
 
 //=============================================================================
+// class netlist_options method definitions
+
+netlist_options::netlist_options() :
+		std_n_width(5.0),
+		std_p_width(5.0),
+		std_n_length(2.0),
+		std_p_length(2.0),
+		stat_n_width(3.0),
+		stat_p_width(3.0),
+		stat_n_length(20.0),
+		stat_p_length(10.0),
+		length_unit("u"),
+		lambda(1.0), 
+		nested_subcircuits(false)
+		{
+}
+
+//=============================================================================
 // class netlist_common method definitions
 // class local_netlist method definitions
+
+//=============================================================================
+// class node method definitions
+
+/**
+	How to format print each node's identity.  
+ */
+ostream&
+node::emit(ostream& o, const footprint& fp) const {
+switch (type) {
+case NODE_TYPE_LOGICAL:
+	fp.get_scope_alias_tracker().get_id_map<bool_tag>()
+		.find(index)->second.front()
+		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
+	// TODO: take options dump_flags for changing hierarchical separator
+	// TODO: possibly perform mangling
+	break;
+case NODE_TYPE_INTERNAL:
+	o << '@' << name;
+	break;
+case NODE_TYPE_AUXILIARY:
+	o << '#' << index;
+	break;
+case NODE_TYPE_SUPPLY:
+	o << name;	// prefix with any designator? '$'?
+	break;
+default:
+	DIE;
+}
+	return o;
+}
+
+//=============================================================================
+// class transistor method definitions
+
+template <class NP>
+ostream&
+transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
+		const netlist_options& nopt) const {
+	node_pool[source].emit(o, fp) << ' ';
+	node_pool[gate].emit(o, fp) << ' ';
+	node_pool[drain].emit(o, fp) << ' ';
+	node_pool[body].emit(o, fp) << ' ';
+	switch (type) {
+	case NFET_TYPE: o << "nch"; break;
+	case PFET_TYPE: o << "pch"; break;
+	// TODO: honor different vt types and flavors
+	default:
+		o << "<type?>";
+	}
+	// TODO: restrict lengths and widths
+	o << " W=" << width *nopt.lambda << nopt.length_unit <<
+		" L=" << length *nopt.lambda << nopt.length_unit;
+	// TODO: scale factor?
+	return o;
+}
 
 //=============================================================================
 // class netlist method definitions
@@ -162,7 +240,7 @@ netlist::register_named_node(const index_type _i) {
 	in .subckt/.ends with ports declared.
  */
 ostream&
-netlist::emit(ostream& o, const bool sub) const {
+netlist::emit(ostream& o, const bool sub, const netlist_options& nopt) const {
 if (sub) {
 	// FINISH_ME
 	o << ".subckt type_name ...ports..." << endl;;
@@ -170,6 +248,17 @@ if (sub) {
 }
 	// emit subinstances
 	// emit devices
+{
+	typedef	transistor_pool_type::const_iterator	const_iterator;
+	const_iterator i(transistor_pool.begin()), e(transistor_pool.end());
+	// TODO: print originating rule in comments
+	// TODO: use optional label designations
+	size_t j = 0;
+	for ( ; i!=e; ++i, ++j) {
+		o << 'M' << j << "_ ";
+		i->emit(o, node_pool, *fp, nopt) << endl;
+	}
+}
 if (sub) {
 	o << ".ends" << endl;
 }
@@ -277,7 +366,7 @@ if (first_time) {
 		// f->accept(ps);
 	}
 	// finally, emit this process
-	nl->emit(os, !top_level) << endl;
+	nl->emit(os, !top_level, opt) << endl;
 }
 	// if this is not top-level, wrap emit in .subckt/.ends
 }
@@ -444,8 +533,10 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.body = (fet_type == transistor::NFET_TYPE ? low_supply : high_supply);
 		// Vdd or GND
 	// TODO: extract length/width parameters
-	t.width = 10.0;
-	t.length = 2.0;
+	t.width = (fet_type == transistor::NFET_TYPE ?
+		opt.std_n_width : opt.std_p_width);
+	t.length = (fet_type == transistor::NFET_TYPE ?
+		opt.std_n_length : opt.std_p_length);
 	// TODO: import attributes from rule attributes?
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->transistor_pool.push_back(t);

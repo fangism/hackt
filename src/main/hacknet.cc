@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.1.2.1 2009/07/28 23:51:35 fang Exp $
+	$Id: hacknet.cc,v 1.1.2.2 2009/08/10 22:31:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -182,7 +182,7 @@ try {
 int
 hacknet::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+a:bcC:d:D:f:hiI:O:r:t:";
+	static const char optstring[] = "+ct:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -194,6 +194,28 @@ bleh...
 @end texinfo
 ***/
 		case 'c':
+			break;
+/***
+@texinfo opt/option-t.texi
+@defopt -t type
+Instead of using the top-level instances in the source file, 
+instantiate one instance of the named @var{type}, propagating its
+ports as top-level globals.  
+In other words, use the referenced type as the top-level scope, 
+ignoring the source's top-level instances.  
+Convenient takes palce of copy-propagating a single instance's ports.  
+@end defopt
+@end texinfo
+***/
+		case 't':
+			if (o.use_referenced_type_instead_of_top_level) {
+				cerr << "Cannot specify more than one type."
+					<< endl;
+				return 1;
+			} else {
+				o.use_referenced_type_instead_of_top_level = true;
+				o.named_process_type = optarg;        // strcpy
+			}
 			break;
 		case ':':
 			cerr << "Expected but missing option-argument." << endl;

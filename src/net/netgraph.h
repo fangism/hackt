@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.3 2009/08/08 01:34:09 fang Exp $
+	$Id: netgraph.h,v 1.1.2.4 2009/08/10 22:31:25 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -31,6 +31,7 @@ typedef	size_t		index_type;
 typedef	double		real_type;
 class netlist;
 class netlist_generator;
+struct netlist_options;
 
 // 0-indexed nodes or 1-indexed?
 // extern const index_type	base_index = 1;
@@ -97,14 +98,17 @@ struct node {
 
 
 	bool
-	is_node(void) const;
+	is_logical_node(void) const { return type == NODE_TYPE_LOGICAL; }
 
 	bool
-	is_internal_node(void) const;
+	is_internal_node(void) const { return type == NODE_TYPE_INTERNAL; }
 
 	// true if ndoe is automatically generated
 	bool
-	is_auxiliary_node(void) const;
+	is_auxiliary_node(void) const { return type == NODE_TYPE_AUXILIARY; }
+
+	ostream&
+	emit(ostream&, const footprint&) const;
 
 };	// end struct node
 
@@ -144,6 +148,11 @@ struct transistor {
 	// is_standard_keeper
 	// is_combination_feedback_keeper
 	char				attributes;
+
+	template <class NP>
+	ostream&
+	emit(ostream&, const NP&, const footprint&, 
+		const netlist_options&) const;
 
 };	// end struct transistor
 
@@ -329,12 +338,52 @@ public:
 	append_instance(const global_entry<process_tag>&);
 
 	ostream&
-	emit(ostream&, const bool s) const;
+	emit(ostream&, const bool s, const netlist_options&) const;
 
 };	// end class netlist
 
 //=============================================================================
+/**
+	Overrideable options (configure).
+	Many names borrowed from netgen for consistency and compatibility.
+ */
 struct netlist_options {
+// geneeration-time options:
+	/**
+		Dimensions of standard devices to use when unspecified.  
+		In absolute units instead of lambda.
+	 */
+	real_type			std_n_width;
+	real_type			std_p_width;
+	real_type			std_n_length;
+	real_type			std_p_length;
+	/**
+		Dimensions of feedback (staticizer, keeper) devices 
+		when unspecified.  
+		In absolute units instead of lambda.
+	 */
+	real_type			stat_n_width;
+	real_type			stat_p_width;
+	real_type			stat_n_length;
+	real_type			stat_p_length;
+
+// output-time options:
+	/**
+		Units to be appended, e.g. "u" (micron), "e-1u", 
+		"n" (nanometer).
+	 */
+	string				length_unit;
+	/**
+		lambda, or unit scale factor multiplier.
+	 */
+	real_type			lambda;
+	/**
+		Emit nested subcircuits.
+		Othewise, emit subcircuit definitions prior to use.  
+	 */
+	bool				nested_subcircuits;
+
+	netlist_options();
 };	// end struct netlist_options
 
 //=============================================================================

@@ -1,6 +1,6 @@
 # "Make.test-net"
 #	vi: ft=automake
-#	$Id: Make.test-net,v 1.1.2.1 2009/07/28 23:51:39 fang Exp $
+#	$Id: Make.test-net,v 1.1.2.2 2009/08/10 22:31:26 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -29,15 +29,19 @@ EXTRACT_HACKNET_FLAGS_PIPE = $(GREP) "@hacknet-flags@" | $(HEAD) -n1 | \
 # should really take some configure/test file for testing combinations
 # of object files and netlist configuration options.
 HACKNET_TEST_SCRIPT = \
-	$(HACKNET_EXE) $< > $@
+	src="$(srcdir)/"`$(ECHO) $< | $(SED) 's|\.haco-a|.hac|'` && \
+	hnflags=`$(CAT) $$src | $(EXTRACT_HACKNET_FLAGS_PIPE)` && \
+	cmd="$(HACKNET_EXE) $$hnflags $<" && \
+	$(ECHO) "$$cmd > $@" && \
+	$$cmd > $@
 
 HACKNET_FAIL_TEST_SCRIPT = $(HACKNET_TEST_SCRIPT)
 
 .haco-a.spice:
-	$(HACKNET_TEST_SCRIPT)
+	@$(HACKNET_TEST_SCRIPT)
 
 .haco-a.spice-fail:
-	-$(HACKNET_FAIL_TEST_SCRIPT) 2>&1
+	-@$(HACKNET_FAIL_TEST_SCRIPT) 2>&1
 
 # for now: use .hac -> .spice
 # TODO: worry about .hacknetconf files later...

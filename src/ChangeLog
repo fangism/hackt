@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-08-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-05:
+	  Emitted first transistor netlists (inverters)!
+	  main/hacknet.cc: handle -t type option
+	  netlist_options: defined some parameters and default values07
+	  Next: create and use port-summaries for instances.
+
+
 2009-08-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-04:
