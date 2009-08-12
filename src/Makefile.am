@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.219.4.1 2009/07/28 23:51:31 fang Exp $
+#	$Id: Makefile.am,v 1.219.4.2 2009/08/12 00:29:32 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -450,7 +450,6 @@ OBJECT_INST_CC_FILES = \
 	Object/inst/connection_policy.cc \
 	Object/inst/port_alias_tracker.cc \
 	Object/inst/port_visitor.cc \
-	Object/inst/bool_port_collector.cc \
 	Object/inst/alias_actuals.cc \
 	Object/inst/alias_matcher.cc \
 	Object/inst/alias_printer.cc \
@@ -474,6 +473,7 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/parameterless_collection_type_manager.tcc \
 	Object/inst/channel_collection_type_manager.tcc \
 	Object/inst/port_alias_tracker.tcc \
+	Object/inst/bool_port_collector.tcc \
 	Object/inst/subinstance_manager.tcc \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/alias_empty.tcc \

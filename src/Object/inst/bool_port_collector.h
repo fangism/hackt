@@ -1,20 +1,28 @@
 /**
 	\file "Object/inst/bool_port_collector.h"
-	$Id: bool_port_collector.h,v 1.1 2009/02/28 01:20:42 fang Exp $
+	$Id: bool_port_collector.h,v 1.1.8.1 2009/08/12 00:29:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_PORT_COLLECTOR_H__
 #define	__HAC_OBJECT_INST_BOOL_PORT_COLLECTOR_H__
 
 #include "Object/inst/port_visitor.h"
-#include <set>
 
 namespace HAC {
 namespace entity {
-using std::set;
 
+/**
+	Compatible container types: set::set, util::unique_list
+	anything that uses keyed value insertion.
+ */
+template <class Container>
 struct bool_port_collector : public port_visitor {
-	set<size_t>			bool_indices;
+	typedef	Container		container_type;
+	/**
+		Value type must be integral (bool indices)
+	 */
+	typedef	typename container_type::value_type	value_type;
+	container_type			bool_indices;
 
 	~bool_port_collector();
 

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.4 2009/08/10 22:31:25 fang Exp $
+	$Id: netgraph.h,v 1.1.2.5 2009/08/12 00:29:36 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -80,21 +80,27 @@ struct node {
 	// is_named -- if this was a named node in original source, 
 	//	otherwise is internal, auxiliary node.
 	char				type;
+	/**
+		set to true if node participates in any device 
+		(i.e. has any electrical connectivity whatsoever), 
+		so unused nodes (e.g. in ports) can be skipped.  
+	 */
+	bool				used;
 	// connectivity information needed? would be redundant with devices
 
 	node(const string& s, const __supply_node_tag&) : 
-		index(0), name(s), type(NODE_TYPE_SUPPLY) { }
+		index(0), name(s), type(NODE_TYPE_SUPPLY), used(false) { }
 	node(const index_type i, const __logical_node_tag&) : 
-		index(i), name(), type(NODE_TYPE_LOGICAL) { }
+		index(i), name(), type(NODE_TYPE_LOGICAL), used(false) { }
 	node(const string& s, const __internal_node_tag&) : 
-		index(0), name(s), type(NODE_TYPE_INTERNAL) { }
+		index(0), name(s), type(NODE_TYPE_INTERNAL), used(false) { }
 	node(const __auxiliary_node_tag&) : 
-		index(0), name(), type(NODE_TYPE_AUXILIARY) { }
+		index(0), name(), type(NODE_TYPE_AUXILIARY), used(false) { }
 	// only for VOID node
 	node(const char* s, const __auxiliary_node_tag&) : 
-		index(0), name(s), type(NODE_TYPE_AUXILIARY) { }
+		index(0), name(s), type(NODE_TYPE_AUXILIARY), used(false) { }
 	node(const index_type a, const __auxiliary_node_tag&) : 
-		index(a), name(), type(NODE_TYPE_AUXILIARY) { }
+		index(a), name(), type(NODE_TYPE_AUXILIARY), used(false) { }
 
 
 	bool
@@ -150,6 +156,10 @@ struct transistor {
 	char				attributes;
 
 	template <class NP>
+	void
+	mark_used_nodes(NP&) const;
+
+	template <class NP>
 	ostream&
 	emit(ostream&, const NP&, const footprint&, 
 		const netlist_options&) const;
@@ -187,9 +197,28 @@ struct instance {
 	 */
 	const netlist*			type;
 	/**
+		Local process index.
+	 */
+	index_type			pid;
+	/**
 		Port connections.
 	 */
 	typedef	vector<index_type>	actuals_list_type;
+
+	actuals_list_type		actuals;
+
+	explicit
+	instance(const netlist& t, const index_type p) :
+		type(&t), pid(p), actuals() { }
+
+	template <class NP>
+	ostream&
+	emit(ostream&, const NP&, const footprint&) const;
+
+	template <class NP>
+	void
+	mark_used_nodes(NP&) const;
+
 };	// end struct instance
 
 
@@ -209,6 +238,11 @@ struct netlist_common {
 	typedef	vector<passive_device>	passive_device_pool_type;
 	transistor_pool_type		transistor_pool;
 	passive_device_pool_type	passive_device_pool;
+
+	template <class NP>
+	void
+	mark_used_nodes(NP&) const;
+	
 };	// end class netlist_common
 
 //-----------------------------------------------------------------------------
@@ -253,7 +287,7 @@ class netlist : public netlist_common {
 	/**
 		Keep around footprint for node reference and printing.
 	 */
-	const entity::footprint*	fp;
+	const footprint*		fp;
 public:
 friend class netlist_generator;
 	/**
@@ -292,12 +326,13 @@ friend class netlist_generator;
 	 */
 	typedef	vector<index_type>	port_list_type;
 private:
-	named_node_map_type		named_node_map;
 	/**
 		Name can be inferred from the hierarchical name 
-		of the footprint.  
+		of the footprint.  Will have to be mangled 
+		so we save the result.  
 	 */
-	// string				name;
+	string				name;
+	named_node_map_type		named_node_map;
 	/**
 		All local nodes, including ports and internal nodes.
 		This is only stored in the primary netlist, 
@@ -309,7 +344,9 @@ private:
 	internal_node_map_type		internal_node_map;
 	local_subcircuit_list_type	local_subcircuits;
 	/**
+		List of local node indices.  
 		NOTE: there cannot be any aliases in the ports.  
+		Does not include GND and Vdd, which are handled separately.
 	 */
 	port_list_type			port_list;
 	/**
@@ -320,6 +357,12 @@ private:
 public:
 	netlist();
 	~netlist();
+
+	void
+	bind_footprint(const footprint&, const netlist_options&);
+
+	const string&
+	get_name(void) const { return name; }
 
 	index_type
 	create_auxiliary_node(void);
@@ -334,11 +377,22 @@ public:
 	index_type
 	register_named_node(const index_type);
 
+	bool
+	named_node_is_used(const index_type) const;
+
 	void
-	append_instance(const global_entry<process_tag>&);
+	append_instance(const global_entry<process_tag>&, const netlist&, 
+		const index_type);
+
+	void
+	summarize_ports(void);
 
 	ostream&
 	emit(ostream&, const bool s, const netlist_options&) const;
+
+private:
+	void
+	mark_used_nodes(void);
 
 };	// end class netlist
 
@@ -382,6 +436,11 @@ struct netlist_options {
 		Othewise, emit subcircuit definitions prior to use.  
 	 */
 	bool				nested_subcircuits;
+	/**
+		If true, emit top-level instances and rules, otherwise, 
+		emit only subcircuit definitions (library-only).
+	 */
+	bool				emit_top;
 
 	netlist_options();
 };	// end struct netlist_options
@@ -389,6 +448,10 @@ struct netlist_options {
 //=============================================================================
 /**
 	Visitor to do all the heavy-lifting and traversal.  
+	TODO: warn against instantiating port processes with production rules.
+	Would the rules belong to the caller or the callee?
+	Certainly should NOT be duplicated.
+	This is the reason for deftype, defchan, etc.
  */
 class netlist_generator : public cflat_context_visitor {
 	/**

@@ -1,0 +1,11 @@
+// "inv-04.hac"
+// testing wrapper connection
+
+import "inv-01.hac";
+
+defproc foo(bool p, q) {
+	inv i(p, q);
+}
+
+foo bar;
+

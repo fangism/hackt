@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.3 2009/08/10 22:31:28 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.4 2009/08/12 00:29:38 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -8,7 +8,7 @@ include $(top_srcdir)/test/Make.test-head
 
 # .hac inputs
 HACKNET_TEST_SCRIPTS_PASSES = \
-	inv-00 inv-01 inv-02 inv-03
+	inv-00 inv-01 inv-02 inv-03 inv-04
 # TODO: promote these to real tests
 EXTRA_DIST_HAC = \
 	subckt-01 subckt-02 \

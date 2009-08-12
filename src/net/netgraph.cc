@@ -1,11 +1,13 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.4 2009/08/10 22:31:24 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.5 2009/08/12 00:29:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <sstream>		// for ostringstream
+#include <iterator>		// for ostream_iterator
 #include "net/netgraph.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
@@ -18,6 +20,9 @@
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/inst/bool_port_collector.tcc"
+#include "util/unique_list.tcc"
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -25,14 +30,19 @@ namespace NET {
 #include "util/using_ostream.h"
 using entity::port_alias_tracker;
 using entity::footprint_frame_map_type;
+using entity::footprint_frame_transformer;
 using entity::dump_flags;
+using entity::bool_port_collector;
 using std::pair;
+using std::ostringstream;
+using std::ostream_iterator;
 using util::value_saver;
 using HAC::entity::PRS::PRS_LITERAL_TYPE_ENUM;
 using HAC::entity::PRS::PRS_NOT_EXPR_TYPE_ENUM;
 using HAC::entity::PRS::PRS_AND_EXPR_TYPE_ENUM;
 using HAC::entity::PRS::PRS_OR_EXPR_TYPE_ENUM;
 using HAC::entity::PRS::PRS_NODE_TYPE_ENUM;
+using util::unique_list;
 
 //=============================================================================
 // class netlist_options method definitions
@@ -48,12 +58,25 @@ netlist_options::netlist_options() :
 		stat_p_length(10.0),
 		length_unit("u"),
 		lambda(1.0), 
-		nested_subcircuits(false)
+		nested_subcircuits(false),
+		emit_top(true)
 		{
 }
 
 //=============================================================================
 // class netlist_common method definitions
+
+template <class NP>
+void
+netlist_common::mark_used_nodes(NP& node_pool) const {
+	transistor_pool_type::const_iterator
+		i(transistor_pool.begin()), e(transistor_pool.end());
+	for ( ; i!=e; ++i) {
+		i->mark_used_nodes(node_pool);
+	}
+}
+
+//=============================================================================
 // class local_netlist method definitions
 
 //=============================================================================
@@ -61,13 +84,14 @@ netlist_options::netlist_options() :
 
 /**
 	How to format print each node's identity.  
+	TODO: make special designators configurable.
  */
 ostream&
 node::emit(ostream& o, const footprint& fp) const {
 switch (type) {
 case NODE_TYPE_LOGICAL:
-	fp.get_scope_alias_tracker().get_id_map<bool_tag>()
-		.find(index)->second.front()
+	// does this guarantee canonical name?  seems to
+	fp.get_instance_pool<bool_tag>()[index].get_back_ref()
 		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
 	// TODO: take options dump_flags for changing hierarchical separator
 	// TODO: possibly perform mangling
@@ -79,7 +103,7 @@ case NODE_TYPE_AUXILIARY:
 	o << '#' << index;
 	break;
 case NODE_TYPE_SUPPLY:
-	o << name;	// prefix with any designator? '$'?
+	o << name;	// prefix with any designator? '$' or '!' ?
 	break;
 default:
 	DIE;
@@ -88,8 +112,50 @@ default:
 }
 
 //=============================================================================
+// class instance method definitions
+
+template <class NP>
+void
+instance::mark_used_nodes(NP& node_pool) const {
+	actuals_list_type::const_iterator
+		i(actuals.begin()), e(actuals.end());
+	for ( ; i!=e; ++i) {
+		node_pool[*i].used = true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class NP>
+ostream&
+instance::emit(ostream& o, const NP& node_pool, const footprint& fp) const {
+	o << 'x';
+	fp.get_instance_pool<process_tag>()[pid].get_back_ref()
+		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
+	actuals_list_type::const_iterator
+		i(actuals.begin()), e(actuals.end());
+	for ( ; i!=e; ++i) {
+		node_pool[*i].emit(o << ' ', fp);
+	}
+	return o << ' ' << type->get_name();	// endl
+}
+
+//=============================================================================
 // class transistor method definitions
 
+/**
+	In a separate pass mark all nodes participating on transistor.
+	Why?  Is possible that a supply node is not used.  
+ */
+template <class NP>
+void
+transistor::mark_used_nodes(NP& node_pool) const {
+	node_pool[source].used = true;
+	node_pool[gate].used = true;
+	node_pool[drain].used = true;
+	node_pool[body].used = true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class NP>
 ostream&
 transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
@@ -132,8 +198,11 @@ static const	index_type	void_index = 0;
 static const	index_type	GND_index = 1;
 static const	index_type	Vdd_index = 2;
 
+// static const string	dummy_type_name("<name>");	// temporary
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-netlist::netlist() : netlist_common(), named_node_map(), node_pool(),
+netlist::netlist() : netlist_common(), name(), 
+		named_node_map(), node_pool(),
 		instance_pool(), internal_node_map(), port_list(), 
 		aux_count(0) {
 	// copy supply nodes
@@ -148,9 +217,58 @@ netlist::netlist() : netlist_common(), named_node_map(), node_pool(),
 netlist::~netlist() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Like constructor, initializes footprint and related members.
+ */
 void
-netlist::append_instance(const global_entry<process_tag>& p) {
-	// FINISH_ME
+netlist::bind_footprint(const footprint& f, const netlist_options& nopt) {
+	fp = &f;
+	// TODO: format or mangle type name
+	ostringstream oss;
+	f.dump_type(oss);
+	name = oss.str();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param subp global process entry containing footprint frame
+		Should we use local footprint's instance instead?
+		Technically, we shouldn't need global allocation information.
+	\param subnet the netlist type that corresponds with instance.
+	\param lpid local process id from footprint.
+	\pre instance_pool is already pre-allocated to avoid 
+		invalidating references due to re-allocation.
+ */
+void
+netlist::append_instance(const global_entry<process_tag>& subp,
+		const netlist& subnet, const index_type lpid) {
+	STACKTRACE_VERBOSE;
+	const footprint* subfp = subp._frame._footprint;
+//	const netlist& subnet(netmap.find(subfp)->second);
+	INVARIANT(subfp == subnet.fp);
+	// subnet's port list may be shorter than formals list, due to aliases
+	// traverse formals list and lookup each actual to be passed
+	// recall: only used nodes will be in this port list
+	instance_pool.push_back(instance(subnet, lpid));
+	instance& np(instance_pool.back());
+	const footprint_frame_map_type&
+		abfm(subp._frame.get_frame_map<bool_tag>());
+	const footprint_frame_transformer fft(abfm);
+	netlist::port_list_type::const_iterator
+		fi(subnet.port_list.begin()), fe(subnet.port_list.end());
+	for ( ; fi!=fe; ++fi) {
+		const node& fn(subnet.node_pool[*fi]);
+		INVARIANT(fn.used);
+		// TODO: handle supply nodes
+		if (fn.is_logical_node()) {
+			const index_type actual_id = fft(fn.index);
+			const index_type actual_node =
+				register_named_node(actual_id);
+			np.actuals.push_back(actual_node);
+		}
+		// else skip for now
+	}
+	INVARIANT(np.actuals.size() == subnet.port_list.size());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -172,13 +290,13 @@ netlist::create_auxiliary_node(void) {
 /**
 	Allocates a new named internal node, incrementing counter.
 	\param ei is the prs_footprint subexpression index for named node.
-	\param name is the name of the defined internal node.
+	\param int_name is the name of the defined internal node.
 	\return index of new node, 1-indexed.
  */
 index_type
-netlist::create_internal_node(const index_type ei, const string& name) {
+netlist::create_internal_node(const index_type ei, const string& int_name) {
 	STACKTRACE_VERBOSE;
-	const node n(name, node::internal_node_tag);
+	const node n(int_name, node::internal_node_tag);
 	const index_type ret = node_pool.size();
 	// TODO: [opt] rewrite using single insertion with pair<iter, bool>
 	internal_node_map_type::const_iterator f(internal_node_map.find(ei));
@@ -228,25 +346,69 @@ netlist::register_named_node(const index_type _i) {
 		ret = node_pool.size();
 		INVARIANT(ret);
 		node_pool.push_back(new_named_node);
+		// mark new node as used here?
 	}	// else already mapped
 	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Note which nodes are actually used, to avoid emitting unused nodes.
+ */
+void
+netlist::mark_used_nodes(void) {
+	netlist_common::mark_used_nodes(node_pool);
+	instance_pool_type::iterator
+		i(instance_pool.begin()), e(instance_pool.end());
+	for ( ; i!=e; ++i) {
+		i->mark_used_nodes(node_pool);
+	}
+	// traverse subcircuits?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param ni is a footprint-local id for the referenced bool.
+ */
+bool
+netlist::named_node_is_used(const index_type ni) const {
+	// translate to netlist-local index
+	const index_type lni = named_node_map[ni];
+	// must be non-zero to count
+	return lni && node_pool[lni].used;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\pre all dependent subinstances have been processed.
 		This should really only be called from netlist_generator.
-	\param s is true if this is a subckt and should be wrapped
+	\param sub is true if this is a subckt and should be wrapped
 	in .subckt/.ends with ports declared.
  */
 ostream&
 netlist::emit(ostream& o, const bool sub, const netlist_options& nopt) const {
 if (sub) {
 	// FINISH_ME
-	o << ".subckt type_name ...ports..." << endl;;
-	// emit port-info comments
+	o << ".subckt " << name;
+	typedef	port_list_type::const_iterator		const_iterator;
+	const_iterator i(port_list.begin()), e(port_list.end());
+	for ( ; i!=e; ++i) {
+		node_pool[*i].emit(o << ' ', *fp);	// options?
+	}
+	o << endl;
+	// TODO: emit port-info comments
 }
+if (sub || nopt.emit_top) {
+	// option to suppress top-level instances and rules
+{
+	STACKTRACE_INDENT_PRINT("* instances:");
 	// emit subinstances
+	typedef	instance_pool_type::const_iterator	const_iterator;
+	const_iterator i(instance_pool.begin()), e(instance_pool.end());
+	for ( ; i!=e; ++i) {
+		i->emit(o, node_pool, *fp) << endl;	// options?
+	}
+}
 	// emit devices
 {
 	typedef	transistor_pool_type::const_iterator	const_iterator;
@@ -259,10 +421,63 @@ if (sub) {
 		i->emit(o, node_pool, *fp, nopt) << endl;
 	}
 }
+}
 if (sub) {
 	o << ".ends" << endl;
 }
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Create a port summary so that other processes may correctly
+	instantiate this.  
+	What to do about supplies?
+ */
+void
+netlist::summarize_ports(void) {
+	STACKTRACE_VERBOSE;
+	// could mark_used_nodes here instead...
+// const port_alias_tracker& pa(f->get_port_alias_tracker());
+	typedef	unique_list<index_type>	port_index_list_type;
+	bool_port_collector<port_index_list_type> V;
+	fp->accept(V);
+	// handle Vdd and GND separately
+	port_index_list_type::const_iterator
+		i(V.bool_indices.begin()), e(V.bool_indices.end());
+#if 0 && ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("named_node_map = ");
+	copy(named_node_map.begin(), named_node_map.end(),
+		ostream_iterator<index_type>(cerr, ","));
+	cerr << endl;
+	STACKTRACE_INDENT_PRINT("V.bool_indices = ");
+	copy(i, e, ostream_iterator<index_type>(cerr, ","));
+	cerr << endl;
+#endif
+	port_list.reserve(V.bool_indices.size());
+	for ( ; i!=e; ++i) {
+		// 1-indexed local id to 0-indexed named_node_map
+		INVARIANT(*i);
+		const index_type local_ind = *i -1;
+		const index_type ni = named_node_map[local_ind];
+		const node& n(node_pool[ni]);
+#if 0 && ENABLE_STACKTRACE
+		cerr << "local ind = " << local_ind << endl;
+		cerr << "ni = " << ni << endl;
+		n.emit(cerr << "node=", *fp) << endl;
+#endif
+	if (ni && n.used) {
+		INVARIANT(n.is_logical_node());
+		INVARIANT(n.index == *i);	// self-reference
+		port_list.push_back(ni);
+	}
+	}
+#if 0 && ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("port_list = ");
+	copy(port_list.begin(), port_list.end(),
+		ostream_iterator<index_type>(cerr, ","));
+	cerr << endl;
+#endif
 }
 
 //=============================================================================
@@ -316,6 +531,23 @@ netlist_generator::visit(const global_entry<bool_tag>& p) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Re-maps insert() member function into push_back().
+ */
+template <class Sequence>
+struct set_adaptor : public Sequence {
+	typedef	Sequence				sequence_type;
+	typedef	typename sequence_type::const_reference	const_reference;
+
+	// everything else inherited
+
+	void
+	insert(const_reference v) {
+		sequence_type::push_back(v);
+	}
+};	// end struct set_adaptor
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Visit all dependent subcircuits (processes) *first*.
 	Each unique type is only visited once.  
 	Remember that top-most level should not be wrapped in subcircuit.  
@@ -334,7 +566,7 @@ netlist_generator::visit(const global_entry<process_tag>& p) {
 	const bool top_level = !current_netlist;
 if (first_time) {
 	netlist* nl = &netmap[f];	// insert default constructed
-	nl->fp = f;
+	nl->bind_footprint(*f, opt);
 	// initialize netlist:
 	const footprint_frame_map_type&
 		bfm(p._frame.get_frame_map<bool_tag>());
@@ -346,24 +578,35 @@ if (first_time) {
 	// should not invalidate existing iterators
 	const footprint_frame_map_type&
 		pfm(p._frame.get_frame_map<process_tag>());
-	footprint_frame_map_type::const_iterator i(pfm.begin()), e(pfm.end());
-	for ( ; i!=e; ++i) {
+	STACKTRACE_INDENT_PRINT("pfm.size = " << pfm.size() << endl);
+	nl->instance_pool.reserve(pfm.size());	// prevent reallocation!!!
+	typedef	footprint_frame_map_type::const_iterator	const_iterator;
+	const_iterator i(pfm.begin()), e(pfm.end());
+	// skip first NULL slot?
+	// ALERT: top-level's process frame starts at 1, not 0!
+	index_type lpid = top_level ? 0 : 1;
+	for (; i!=e; ++i, ++lpid) {
+	if (*i) {
+		STACKTRACE_INDENT_PRINT("examining sub-process id " << *i <<
+			", local id " << lpid << endl);
+		// const index_type lpid = *i +1;
 		const global_entry<process_tag>&
 			subp(sm->get_pool<process_tag>()[*i]);
 		// no need to set footprint frames (global use only)
 		visit(subp);	// recursion
 		// guarantee that dependent type is processed with netlist
-		nl->append_instance(subp);	// call subcircuit
+		// find out how local nodes are passed to *local* instance
+		const footprint* subfp = subp._frame._footprint;
+		const netlist& subnet(netmap.find(subfp)->second);
+		nl->append_instance(subp, subnet, lpid);
+	}
 	}
 	// process local production rules and macros
 	f->get_prs_footprint().accept(*this);
 	// f->get_spec_footprint().accept(*this);	// ?
 	if (!top_level) {
 		// create_port_summary from footprint
-		// const port_alias_tracker& pa(f->get_port_alias_tracker());
-		// use an alias visitor?
-		// port_summarizer ps(nl, ...);
-		// f->accept(ps);
+		nl->summarize_ports();
 	}
 	// finally, emit this process
 	nl->emit(os, !top_level, opt) << endl;
@@ -481,6 +724,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	}	// end for
 }
 	// process all subcircuits first, then remaining local rules/macros
+	current_netlist->mark_used_nodes();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

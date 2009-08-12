@@ -1,6 +1,7 @@
-.subckt type_name ...ports...
+.subckt inv<> x y
 M0_ GND x y GND nch W=5u L=2u
 M1_ Vdd x y Vdd pch W=5u L=2u
 .ends
 
+xfoo foo.x foo.y inv<>
 

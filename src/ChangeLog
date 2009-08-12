@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-06:
+	  hacknet: create port summaries and use them in emitting
+		instances (x-card).  Tested first hierarchical instances!
+	  bool_port_collector: made container-generic, requires ::insert()
+	  node::emit(): use canonical alias, updated test case.
+	  Next: subcircuits, power supplies, macros.  
+
+
 2009-08-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-05:
