@@ -1,0 +1,9 @@
+// "nand-01.hac"
+// @hacknet-flags@ -t nand
+
+defproc nand(bool a, b, o) {
+prs {
+	a & b	=> o-
+}
+}
+

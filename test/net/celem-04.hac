@@ -1,0 +1,15 @@
+// "celem-04.hac"
+// @hacknet-flags@ -t ctree<3,2>
+
+import "celem-03.hac";
+
+template <pint N1, N2>
+defproc ctree(bool x[N2][N1], y) {
+bool q[N2];
+celem<N2> c2(q, y);
+celem<N1> c1[N2];
+(;i:N2:
+	c1[i](x[i], q[i]);
+)
+}
+

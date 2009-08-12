@@ -1,0 +1,10 @@
+// "nand-02.hac"
+// @hacknet-flags@ -t nand<4>
+
+template <pint N>
+defproc nand(bool a[N], o) {
+prs {
+	(&:i:N: a[i] )	=> o-
+}
+}
+

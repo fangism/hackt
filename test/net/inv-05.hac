@@ -1,0 +1,7 @@
+// "inv-05.hac"
+
+import "inv-01.hac";
+
+bool a, b, c;
+inv p(a, b), q(b, c);
+
