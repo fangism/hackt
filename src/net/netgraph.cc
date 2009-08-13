@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.5 2009/08/12 00:29:34 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.6 2009/08/13 17:16:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,6 +33,8 @@ using entity::footprint_frame_map_type;
 using entity::footprint_frame_transformer;
 using entity::dump_flags;
 using entity::bool_port_collector;
+using entity::instance_alias_info;
+using entity::bool_tag;
 using std::pair;
 using std::ostringstream;
 using std::ostream_iterator;
@@ -90,6 +92,7 @@ ostream&
 node::emit(ostream& o, const footprint& fp) const {
 switch (type) {
 case NODE_TYPE_LOGICAL:
+	// NEVER_NULL(fp.get_instance_pool<bool_tag>()[index].get_back_ref());
 	// does this guarantee canonical name?  seems to
 	fp.get_instance_pool<bool_tag>()[index].get_back_ref()
 		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
@@ -107,6 +110,31 @@ case NODE_TYPE_SUPPLY:
 	break;
 default:
 	DIE;
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For debugging interpretation.
+ */
+ostream&
+node::dump_raw(ostream& o) const {
+switch (type) {
+case NODE_TYPE_LOGICAL:
+	o << ":" << index;
+	break;
+case NODE_TYPE_INTERNAL:
+	o << '@' << name;
+	break;
+case NODE_TYPE_AUXILIARY:
+	o << '#' << index;
+	break;
+case NODE_TYPE_SUPPLY:
+	o << '!' << name;
+	break;
+default:
+	o << "???";
 }
 	return o;
 }
@@ -138,6 +166,16 @@ instance::emit(ostream& o, const NP& node_pool, const footprint& fp) const {
 	}
 	return o << ' ' << type->get_name();	// endl
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance::dump_raw(ostream& o) const {
+	o << '[' << pid << "]: " << type->get_name() << ": (";
+	copy(actuals.begin(), actuals.end(),
+		ostream_iterator<index_type>(o, ","));
+	return o << ')';
+}
+
 
 //=============================================================================
 // class transistor method definitions
@@ -175,6 +213,21 @@ transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 	o << " W=" << width *nopt.lambda << nopt.length_unit <<
 		" L=" << length *nopt.lambda << nopt.length_unit;
 	// TODO: scale factor?
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+transistor::dump_raw(ostream& o) const {
+	switch (type) {
+	case NFET_TYPE: o << "nch"; break;
+	case PFET_TYPE: o << "pch"; break;
+	// TODO: honor different vt types and flavors
+	default:
+		o << "<type?>";
+	}
+	o << ' ' << source << ' ' << gate << ' ' << drain << ' ' << body;
+	o << " # W=" << width << " L=" << length;
 	return o;
 }
 
@@ -388,7 +441,6 @@ netlist::named_node_is_used(const index_type ni) const {
 ostream&
 netlist::emit(ostream& o, const bool sub, const netlist_options& nopt) const {
 if (sub) {
-	// FINISH_ME
 	o << ".subckt " << name;
 	typedef	port_list_type::const_iterator		const_iterator;
 	const_iterator i(port_list.begin()), e(port_list.end());
@@ -401,16 +453,24 @@ if (sub) {
 if (sub || nopt.emit_top) {
 	// option to suppress top-level instances and rules
 {
-	STACKTRACE_INDENT_PRINT("* instances:");
 	// emit subinstances
+#if ENABLE_STACKTRACE
+	o << "* instances:" << endl;
+#endif
 	typedef	instance_pool_type::const_iterator	const_iterator;
+	size_t j = 0;	// DEBUG
 	const_iterator i(instance_pool.begin()), e(instance_pool.end());
-	for ( ; i!=e; ++i) {
+	for ( ; i!=e; ++i, ++j) {
+		STACKTRACE_INDENT_PRINT("j = " << j << endl);
 		i->emit(o, node_pool, *fp) << endl;	// options?
 	}
 }
-	// emit devices
+	// emit subcircuit instances
 {
+	// emit devices
+#if ENABLE_STACKTRACE
+	o << "* devices:" << endl;
+#endif
 	typedef	transistor_pool_type::const_iterator	const_iterator;
 	const_iterator i(transistor_pool.begin()), e(transistor_pool.end());
 	// TODO: print originating rule in comments
@@ -430,17 +490,95 @@ if (sub) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Debug-only mode for printing raw structure of netlist.
+ */
+ostream&
+netlist::dump_raw(ostream& o) const {
+	ostream_iterator<index_type> osi(o, ",");
+	o << "netlist {" << endl;
+	o << "type: " << name << endl;
+	o << "footprint @ " << fp << endl;
+	o << "node pool:" << endl;
+{
+	size_t j = 0;
+	for ( ; j<node_pool.size(); ++j) {
+		o << "  [" << j << "]: ";
+		const node& n(node_pool[j]);
+		n.dump_raw(o) << " = ";
+#if 1
+		n.emit(o, *fp);	// may have to comment out for debug
+#else
+		o << "...";
+#endif
+		o << endl;
+	}
+}{
+	o << "ports (node indices): ";
+	copy(port_list.begin(), port_list.end(), osi);
+	o << endl;
+}{
+	o << "named node map (footprint-index -> netlist-node-index):" << endl;
+	size_t j = 0;
+	for ( ; j<named_node_map.size(); ++j) {
+		o << "  :" << j+1 << " -> " << named_node_map[j] << endl;
+	}
+}{
+	o << "internal node map (fp-expr-index -> netlist-node-index):" << endl;
+	typedef	internal_node_map_type::const_iterator	const_iterator;
+	const_iterator i(internal_node_map.begin()), e(internal_node_map.end());
+	for ( ; i!=e; ++i) {
+		o << "  %" << i->first << " -> " << i->second << endl;
+	}
+}{
+	o << "instances:" << endl;
+	typedef	instance_pool_type::const_iterator	const_iterator;
+	const_iterator i(instance_pool.begin()), e(instance_pool.end());
+	for ( ; i!=e; ++i) {
+		i->dump_raw(o << "  ") << endl;
+	}
+}
+// TODO: subcircuits
+{
+	o << "transistors:" << endl;
+	typedef	transistor_pool_type::const_iterator	const_iterator;
+	const_iterator i(transistor_pool.begin()), e(transistor_pool.end());
+	size_t j = 0;
+	for ( ; i!=e; ++i, ++j) {
+		i->dump_raw(o << "  " << j << ": ") << endl;
+	}
+}
+	return o << '}' << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct bool_port_alias_collector :
+		public bool_port_collector<unique_list<index_type> > {
+	typedef	bool_port_collector<unique_list<index_type> >
+						parent_type;
+	VISIT_INSTANCE_ALIAS_INFO_PROTO(bool_tag);
+	using parent_type::visit;
+};
+
+void
+bool_port_alias_collector::visit(const instance_alias_info<bool_tag>& a) {
+	if (a.is_aliased_to_port()) {
+		parent_type::visit(a);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Create a port summary so that other processes may correctly
 	instantiate this.  
 	What to do about supplies?
+	FIXME: inadvertently adds non-ports to the port_list
  */
 void
 netlist::summarize_ports(void) {
 	STACKTRACE_VERBOSE;
-	// could mark_used_nodes here instead...
-// const port_alias_tracker& pa(f->get_port_alias_tracker());
+	// could mark_used_nodes here instead?
 	typedef	unique_list<index_type>	port_index_list_type;
-	bool_port_collector<port_index_list_type> V;
+	bool_port_alias_collector V;
 	fp->accept(V);
 	// handle Vdd and GND separately
 	port_index_list_type::const_iterator
@@ -605,10 +743,10 @@ if (first_time) {
 	f->get_prs_footprint().accept(*this);
 	// f->get_spec_footprint().accept(*this);	// ?
 	if (!top_level) {
-		// create_port_summary from footprint
 		nl->summarize_ports();
 	}
 	// finally, emit this process
+	// nl->dump_raw(cerr);	// DEBUG point
 	nl->emit(os, !top_level, opt) << endl;
 }
 	// if this is not top-level, wrap emit in .subckt/.ends
