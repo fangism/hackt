@@ -1,0 +1,14 @@
+// "unconnected-01.hac"
+// netgen also emits this definition with an unconnected local instance
+// though haccreate emits a suitable warning
+// leave it up to spice to catch unconnected node error
+
+defproc foo(bool z) {
+bool x;
+prs {
+	x	=> z-
+}
+}
+
+foo bar;
+

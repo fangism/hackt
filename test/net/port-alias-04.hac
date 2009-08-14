@@ -1,0 +1,14 @@
+// "port-alias-04.hac"
+// copy-modified from "port-alias-03.hac"
+
+defproc foo(bool y, z) {
+bool x;
+y = x;
+prs {
+	y	-> z-
+	~x	-> z+
+}
+}
+
+foo bar;
+

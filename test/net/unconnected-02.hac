@@ -1,0 +1,13 @@
+// "unconnected-02.hac"
+// copy-modified from "unconnected-01.hac"
+
+defproc foo(bool z) {
+bool x, y;
+prs {
+	y	=> z-
+}
+x = y;
+}
+
+foo bar;
+
