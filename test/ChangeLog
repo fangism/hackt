@@ -1,6 +1,15 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.91.6.1 2009/07/28 23:51:38 fang Exp $
+#	$Id: ChangeLog,v 1.91.6.2 2009/08/14 01:57:38 fang Exp $
 # ChangeLog for test directory.
+
+2009-08-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-08:
+	  Make.test-vpi: adjusted output filter for new version of
+		synopsys vcs, C-2009.06.  With new version, vcs may
+		fail to compile (generated Makefile) because of 
+		dependence on implicit suffix rules.  Oh well.
+
 
 2009-07-28	David Fang		<fangism@users.sourceforge.net>
 

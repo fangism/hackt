@@ -8,5 +8,10 @@ xp a b inv<>
 xq b c inv<>
 .ends
 
-xbar bar.a bar.c foo<>
+.subckt bar<> a c
+xp a b foo<>
+xq b c foo<>
+.ends
+
+xnone none.a none.c bar<>
 

@@ -1,0 +1,14 @@
+// "inv-12.hac"
+// copy-reduced from "inv-11.hac"
+
+// we have an unused node, c is not connected!
+// thus c should be omitted from port summary
+defproc bad_inv(bool a, c) {
+bool b;
+prs {
+	a	=> b-
+}
+}
+
+bad_inv bar;
+

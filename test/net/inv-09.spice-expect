@@ -4,9 +4,12 @@ M1_ Vdd x y Vdd pch W=5u L=2u
 .ends
 
 .subckt foo<> a c
-xp a b inv<>
-xq b c inv<>
+xp a c inv<>
 .ends
 
-xbar bar.a bar.c foo<>
+.subckt bar<> a c
+xp a c foo<>
+.ends
+
+xnone none.a none.c bar<>
 

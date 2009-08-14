@@ -5,6 +5,15 @@
 
 2009-08-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-27-netlist-01-08:
+	  hacknet bug fix: was mistakenly using globally assigned 
+		instance id to pass to port actuals, when really needed
+		local id's, obtained using footprint -> trace_alias.
+	  Test cases added, previous ones fixed.
+
+
+2009-08-13	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-83-27-netlist-01-07:
 	  hacknet bug fix: port collector was collecting non-port bools.
 		Test cases added to prove fix without regression.

@@ -1,0 +1,15 @@
+// "inv-09.hac"
+// copy-modified from "inv-09.hac" and "inv-04.hac"
+
+import "inv-01.hac";
+
+defproc foo(bool a, c) {
+inv p(a, c);
+}
+
+defproc bar(bool a, c) {
+foo p(a, c);
+}
+
+bar none;
+

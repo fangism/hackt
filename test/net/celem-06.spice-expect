@@ -6,9 +6,9 @@ M3_ #1 a[1] o Vdd pch W=5u L=2u
 .ends
 
 .subckt ctree<2, 2> x[0][0] x[0][1] x[1][0] x[1][1] y
-xc2 x[1][0] x[1][1] x[0][1] celem<2>
-xc1[0] q[0] q[1] x[1][0] celem<2>
-xc1[1] y x[0][0] x[1][1] celem<2>
+xc2 q[0] q[1] y celem<2>
+xc1[0] x[0][0] x[0][1] q[0] celem<2>
+xc1[1] x[1][0] x[1][1] q[1] celem<2>
 .ends
 
 xfoo foo.x[0][0] foo.x[0][1] foo.x[1][0] foo.x[1][1] foo.y ctree<2, 2>

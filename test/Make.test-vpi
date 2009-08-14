@@ -1,10 +1,14 @@
 # "Make.test-vpi"
 #	vi: ft=automake
-#	$Id: Make.test-vpi,v 1.8 2009/07/15 01:32:20 fang Exp $
+#	$Id: Make.test-vpi,v 1.8.4.1 2009/08/14 01:57:39 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
+
+# known VCS issues:
+# C-2009.06's vcs-generated Makefile does not properly
+#	declare SUFFIXES and relies on implicit rules (fails with make -r)
 
 HACKT_VPI_SUFFIXES = .v .vx .vxi .vx-out .vxi-out .vx-out-filter .vx-diff \
 	.v-wrap
@@ -33,7 +37,11 @@ AUTO_IGNORE += .vcsmx_rebuild
 DISTCLEANFILES += .vcsmx_rebuild
 
 VCS_OUTPUT_FILTER = \
-	$(SED) -n '/^[$$]start of simulation/,/^[$$]finish at simulation/p'
+	$(SED) -n '/^[$$]start of simulation/,/^[$$]finish at simulation/p' | \
+	$(GREP) -v "\$$finish called from file"
+# format may change slightly between versions
+# initial version tested was Y-2006.06
+# added grep for version C-2009-06
 
 # where vpihacprim.la is built
 VPI_LIB_PATH = $(top_builddir)/src

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.6 2009/08/13 17:16:28 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.7 2009/08/14 01:57:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -35,6 +35,7 @@ using entity::dump_flags;
 using entity::bool_port_collector;
 using entity::instance_alias_info;
 using entity::bool_tag;
+using entity::state_instance;
 using std::pair;
 using std::ostringstream;
 using std::ostream_iterator;
@@ -136,6 +137,7 @@ case NODE_TYPE_SUPPLY:
 default:
 	o << "???";
 }
+	if (!used) o << " (unconnected)";
 	return o;
 }
 
@@ -304,23 +306,41 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 	// recall: only used nodes will be in this port list
 	instance_pool.push_back(instance(subnet, lpid));
 	instance& np(instance_pool.back());
-	const footprint_frame_map_type&
-		abfm(subp._frame.get_frame_map<bool_tag>());
-	const footprint_frame_transformer fft(abfm);
+	// local process instance needed to find local port actual id
+	const instance_alias_info<process_tag>&
+		lp(*fp->get_instance_pool<process_tag>()[lpid].get_back_ref());
+	// ALERT: translates to global index, not what we want!
 	netlist::port_list_type::const_iterator
 		fi(subnet.port_list.begin()), fe(subnet.port_list.end());
 	for ( ; fi!=fe; ++fi) {
-		const node& fn(subnet.node_pool[*fi]);
+		STACKTRACE_INDENT_PRINT("formal node = " << *fi << endl);
+		const node& fn(subnet.node_pool[*fi]);	// formal node
 		INVARIANT(fn.used);
 		// TODO: handle supply nodes
 		if (fn.is_logical_node()) {
-			const index_type actual_id = fft(fn.index);
+			const index_type fid = fn.index;
+			STACKTRACE_INDENT_PRINT("formal id = " << fid << endl);
+
+			const instance_alias_info<bool_tag>&
+				fb(*subnet.fp->get_instance_pool<bool_tag>()[fid].get_back_ref());
+			INVARIANT(fb.is_aliased_to_port());
+			// ALERT: might pick a non-port alias!!!
+			// picking *any* port-alias should suffice because
+			// formal port-aliases have been replayed.
+			const instance_alias_info<bool_tag>&
+				ab(fb.trace_alias(lp));
+			const index_type actual_id = ab.instance_index;
+			STACKTRACE_INDENT_PRINT("LOCAL actual id = " << actual_id << endl);
 			const index_type actual_node =
 				register_named_node(actual_id);
+			STACKTRACE_INDENT_PRINT("actual node = " << actual_node << endl);
 			np.actuals.push_back(actual_node);
 		}
 		// else skip for now
 	}
+#if ENABLE_STACKTRACE
+	np.dump_raw(STACKTRACE_INDENT_PRINT("new instance: ")) << endl;
+#endif
 	INVARIANT(np.actuals.size() == subnet.port_list.size());
 }
 
@@ -389,6 +409,7 @@ netlist::lookup_internal_node(const index_type ei) const {
 index_type
 netlist::register_named_node(const index_type _i) {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("local id (+1) = " << _i << endl);
 	INVARIANT(_i);
 	const index_type i = _i -1;	// locally 0-indexed, no gap
 	INVARIANT(i < named_node_map.size());
@@ -399,6 +420,9 @@ netlist::register_named_node(const index_type _i) {
 		ret = node_pool.size();
 		INVARIANT(ret);
 		node_pool.push_back(new_named_node);
+#if ENABLE_STACKTRACE
+node_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new node: ")) << endl;
+#endif
 		// mark new node as used here?
 	}	// else already mapped
 	return ret;
@@ -498,6 +522,7 @@ netlist::dump_raw(ostream& o) const {
 	o << "netlist {" << endl;
 	o << "type: " << name << endl;
 	o << "footprint @ " << fp << endl;
+	fp->dump(o) << endl;
 	o << "node pool:" << endl;
 {
 	size_t j = 0;
@@ -703,6 +728,10 @@ netlist_generator::visit(const global_entry<process_tag>& p) {
 	const bool first_time = (mi == netmap.end());
 	const bool top_level = !current_netlist;
 if (first_time) {
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("processing unique type: ");
+	f->dump_type(STACKTRACE_STREAM) << endl;
+#endif
 	netlist* nl = &netmap[f];	// insert default constructed
 	nl->bind_footprint(*f, opt);
 	// initialize netlist:
@@ -710,6 +739,7 @@ if (first_time) {
 		bfm(p._frame.get_frame_map<bool_tag>());
 		// ALERT: top-footprint frame's size will be +1!
 	nl->named_node_map.resize(bfm.size(), void_index);	// 0-fill
+	STACKTRACE_INDENT_PRINT("bfm.size = " << bfm.size() << endl);
 	// set current netlist (duplicate for local):
 	const value_saver<netlist*> __tmp(current_netlist, nl);
 	const value_saver<netlist_common*> __tmp2(current_local_netlist, nl);
@@ -746,7 +776,9 @@ if (first_time) {
 		nl->summarize_ports();
 	}
 	// finally, emit this process
-	// nl->dump_raw(cerr);	// DEBUG point
+#if ENABLE_STACKTRACE
+	nl->dump_raw(cerr);	// DEBUG point
+#endif
 	nl->emit(os, !top_level, opt) << endl;
 }
 	// if this is not top-level, wrap emit in .subckt/.ends

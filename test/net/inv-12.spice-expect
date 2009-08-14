@@ -1,0 +1,7 @@
+.subckt bad_inv<> a
+M0_ GND a b GND nch W=5u L=2u
+M1_ Vdd a b Vdd pch W=5u L=2u
+.ends
+
+xbar bar.a bad_inv<>
+
