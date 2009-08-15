@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-09:
+	  hacknet: implemented internal node subnets, using on-demand
+		creation as each internal node expression is uesd.
+	  A few test cases added, including precharge shared-gate XOR.
+	  Minor updates to raw_dump for comprehensibility.
+	  Next: pruning empty processes, testing unused internal nodes.
+
+
 2009-08-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-08:

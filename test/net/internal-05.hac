@@ -1,0 +1,15 @@
+// "internal-05.hac"
+// more testing of internal nodes, this time sharing
+
+defproc share(bool en, x1, x2, _y1, _y2) {
+prs {
+	en		-> @p-
+	~@p & x1	-> _y1-
+	~@p & x2	-> _y2-
+	~en		-> _y1+
+	~en		-> _y2+
+}
+}
+
+share me;
+

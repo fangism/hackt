@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.7 2009/08/14 01:57:37 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.8 2009/08/15 01:03:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -79,6 +79,12 @@ netlist_common::mark_used_nodes(NP& node_pool) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+netlist_common::is_empty(void) const {
+	return transistor_pool.empty() && passive_device_pool.empty();
+}
+
 //=============================================================================
 // class local_netlist method definitions
 
@@ -104,7 +110,12 @@ case NODE_TYPE_INTERNAL:
 	o << '@' << name;
 	break;
 case NODE_TYPE_AUXILIARY:
-	o << '#' << index;
+	o << '#';
+	if (name.length()) {
+		o << name;
+	} else {
+		o << index;
+	}
 	break;
 case NODE_TYPE_SUPPLY:
 	o << name;	// prefix with any designator? '$' or '!' ?
@@ -129,7 +140,12 @@ case NODE_TYPE_INTERNAL:
 	o << '@' << name;
 	break;
 case NODE_TYPE_AUXILIARY:
-	o << '#' << index;
+	o << '#';
+	if (name.length()) {
+		o << name;
+	} else {
+		o << index;
+	}
 	break;
 case NODE_TYPE_SUPPLY:
 	o << '!' << name;
@@ -286,6 +302,16 @@ netlist::bind_footprint(const footprint& f, const netlist_options& nopt) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Only emit definitions and instances of non-empty subcircuits.  
+ */
+bool
+netlist::is_empty(void) const {
+	return netlist_common::is_empty() &&
+		instance_pool.empty() && local_subcircuits.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param subp global process entry containing footprint frame
 		Should we use local footprint's instance instead?
 		Technically, we shouldn't need global allocation information.
@@ -364,10 +390,11 @@ netlist::create_auxiliary_node(void) {
 	Allocates a new named internal node, incrementing counter.
 	\param ei is the prs_footprint subexpression index for named node.
 	\param int_name is the name of the defined internal node.
-	\return index of new node, 1-indexed.
+	\return index of new node, 1-indexed into this netlist.
  */
 index_type
-netlist::create_internal_node(const index_type ei, const string& int_name) {
+netlist::create_internal_node(const index_type ei, const string& int_name,
+		const bool dir) {
 	STACKTRACE_VERBOSE;
 	const node n(int_name, node::internal_node_tag);
 	const index_type ret = node_pool.size();
@@ -375,7 +402,7 @@ netlist::create_internal_node(const index_type ei, const string& int_name) {
 	internal_node_map_type::const_iterator f(internal_node_map.find(ei));
 	INVARIANT(f == internal_node_map.end());	// no duplicates
 	node_pool.push_back(n);
-	internal_node_map[ei] = ret;		// insert
+	internal_node_map[ei] = std::make_pair(ret, dir);	// insert
 	return ret;
 }
 
@@ -384,15 +411,18 @@ netlist::create_internal_node(const index_type ei, const string& int_name) {
 	Lookup a previously defined internal node, keyed by
 	PRS footprint's expr index.
 	\param ei local footprint's expr index
-	\return netlist's node pool index to internal node
+	\return netlist's node pool index to internal node, or 0 if not found.
  */
-index_type
+netlist::internal_node_entry_type
 netlist::lookup_internal_node(const index_type ei) const {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("expr-id: " << ei << endl);
 	const internal_node_map_type::const_iterator
 		f(internal_node_map.find(ei));
-	INVARIANT(f != internal_node_map.end());	// no duplicates
+	if (f != internal_node_map.end()) {
 	// ALERT: only true if we've processed all internal nodes in a priori
-	return f->second;
+		return f->second;
+	} else	return internal_node_entry_type(0, false);	// any dir
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -545,14 +575,15 @@ netlist::dump_raw(ostream& o) const {
 	o << "named node map (footprint-index -> netlist-node-index):" << endl;
 	size_t j = 0;
 	for ( ; j<named_node_map.size(); ++j) {
-		o << "  :" << j+1 << " -> " << named_node_map[j] << endl;
+		o << "  :" << j+1 << " -> [" << named_node_map[j] << ']' << endl;
 	}
 }{
 	o << "internal node map (fp-expr-index -> netlist-node-index):" << endl;
 	typedef	internal_node_map_type::const_iterator	const_iterator;
 	const_iterator i(internal_node_map.begin()), e(internal_node_map.end());
 	for ( ; i!=e; ++i) {
-		o << "  %" << i->first << " -> " << i->second << endl;
+		o << "  %" << i->first << " -> [" << i->second.first << ']' <<
+			(i->second.second ? '+' : '-') << endl;
 	}
 }{
 	o << "instances:" << endl;
@@ -804,12 +835,16 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	typedef	subckt_map_type::const_iterator		const_iterator;
 	// must be sorted ranges
 	const value_saver<const prs_footprint*> __prs(prs, &r);
+	// for now, default supplies
 	const value_saver<index_type> __s1(low_supply, GND_index);
 	const value_saver<index_type> __s2(high_supply, Vdd_index);
 {
-	// TODO: internal nodes (in progress)
-	// TODO: alternative, only visit internal nodes on-demand
-	//	to solve problem of unused dangling internal nodes
+	STACKTRACE_INDENT_PRINT("reserving internal nodes..." << endl);
+	// Internal node definitions may have a dependency ordering
+	// that is not reflected by the container, thus, we cannot simply
+	// iterate over the footprint's internal-node-map (string-keyed).
+	// Instead, only visit internal nodes on-demand
+	//	to solve problem of unused dangling internal nodes.
 	// PRS::footprint maps from string (name of internal node) to 
 	// a local internal node index, which is mapped to a subcircuit
 	// node index here (reverse map).
@@ -820,22 +855,17 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	for ( ; i!=e; ++i) {
 		// each entry is a node_expr_type
 		// where pair:first is expr-index and second is direction
-		const index_type expr = i->second.first;
+		const index_type& expr = i->second.first;
 		const bool dir = i->second.second;
-		const value_saver<index_type>
-			__t1(foot_node, (dir ? Vdd_index : GND_index)),
-			__t2(output_node, current_netlist->create_internal_node(
-				expr, i->first));
-		const value_saver<char>
-			__t3(fet_type,
-				(dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
-		// TODO: honor prs supply override directives
-		// internal nodes partial rules can belong to local subcircuits
-		// but are accessible to all sibling subcircuits
-		// within a process definition.
-		// set output node?
-		prs->get_expr_pool()[expr].accept(*this);
+		const index_type new_int =
+			current_netlist->create_internal_node(
+				expr, i->first, dir);
+		INVARIANT(new_int);
+		INVARIANT(current_netlist->lookup_internal_node(expr).first);
 	}
+#if 0 && ENABLE_STACKTRACE
+	current_netlist->dump_raw(STACKTRACE_STREAM) << endl;
+#endif
 }
 	// traverse subcircuits
 	// ALERT: if we ever want to perform other operations before emitting
@@ -843,6 +873,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	// because the instances of them would be dangling pointers...
 	const subckt_map_type& subc_map(prs->get_subcircuit_map());
 {
+	STACKTRACE_INDENT_PRINT("processing subcircuits..." << endl);
 	const_iterator si(subc_map.begin()), se(subc_map.end());
 	// rules
 	const prs_footprint::rule_pool_type& rpool(prs->get_rule_pool());
@@ -867,6 +898,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	}
 	}	// end for
 }{
+	STACKTRACE_INDENT_PRINT("processing macros..." << endl);
 	const_iterator si(subc_map.begin()), se(subc_map.end());
 	netlist::local_subcircuit_list_type::iterator
 		mi(current_netlist->local_subcircuits.begin());
@@ -919,7 +951,46 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// TODO: handle internal node definitions and precharges!
+// TODO: handle and precharges!
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursive, generate on-demand internal nodes as they are visited.
+	\pre all internal nodes have been allocated/mapped a priori, 
+		just not necessarily defined (node::used).
+	\param nex is the footprint-local expression index.
+	\return netlist-local node index representing the internal node.
+	\invariant no cyclic definitions of internal nodes possible.
+ */
+index_type
+netlist_generator::register_internal_node(const index_type nex) {
+	STACKTRACE_VERBOSE;
+	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
+	const index_type defexpr = ep[nex].only();
+	const netlist::internal_node_entry_type
+		ret(current_netlist->lookup_internal_node(defexpr));
+	const index_type& node_ind(ret.first);
+	INVARIANT(node_ind);
+	node& n(current_netlist->node_pool[node_ind]);
+if (!n.used) {
+	STACKTRACE_INDENT_PRINT("defining internal node..." << endl);
+	const bool dir = ret.second;
+	// else need to define internal node once only
+	// TODO: honor prs supply override directives
+	const value_saver<index_type>
+		__t1(foot_node, (dir ? Vdd_index : GND_index)),
+		__t2(output_node, node_ind);
+	const value_saver<char>
+		__t3(fet_type,
+			(dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
+	// internal nodes partial rules can belong to local subcircuits
+	// but are accessible to all sibling subcircuits
+	// within a process definition.
+	n.used = true;		// mark before recursion, not after!
+	ep[defexpr].accept(*this);
+}
+	return node_ind;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Walk expressions from left to right, emitting transistors.
@@ -974,7 +1045,16 @@ case PRS_OR_EXPR_TYPE_ENUM: {
 		const prs_footprint::precharge_map_type&
 			pc(prs->get_precharges());
 #endif
-		index_type prev = foot_node;
+		// special case: first branch is an internal node
+		index_type prev;
+		const entity::PRS::footprint_expr_node& left(ep[e[i]]);
+		if (left.get_type() == PRS_NODE_TYPE_ENUM) {
+			prev = register_internal_node(e[i]);
+			// TODO: confirm direction and sense of internal node
+			++i;
+		} else {
+			prev = foot_node;
+		}
 		// create intermediate nodes
 		for ( ; i<s; ++i) {		// all but last node
 			// setup foot and output, then recurse!
@@ -1003,8 +1083,9 @@ case PRS_OR_EXPR_TYPE_ENUM: {
 	break;
 }
 case PRS_NODE_TYPE_ENUM: {
-	// lookup internal node
-	foot_node = current_netlist->lookup_internal_node(e.only());
+	// ERROR: unexpected internal node out of position
+	cerr << "ERROR: found internal node in unexpected position." << endl;
+	THROW_EXIT;
 	break;
 }
 default:

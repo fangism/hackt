@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.6 2009/08/13 17:16:29 fang Exp $
+	$Id: netgraph.h,v 1.1.2.7 2009/08/15 01:03:20 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -248,6 +248,9 @@ struct netlist_common {
 	transistor_pool_type		transistor_pool;
 	passive_device_pool_type	passive_device_pool;
 
+	bool
+	is_empty(void) const;
+
 	template <class NP>
 	void
 	mark_used_nodes(NP&) const;
@@ -305,12 +308,18 @@ friend class netlist_generator;
 	 */
 	typedef	vector<node>		node_pool_type;
 	/**
+		(local-netlist-node-id, direction)
+	 */
+	typedef	std::pair<index_type, bool>	internal_node_entry_type;
+	/**
 		Collection of internal nodes.  
 		key= prs footprint's local expression index for internal node
-		value= index into node_pool for node
-		For now, internal nodes are scoped in flat namespace
+		value= index into node_pool for node, direction of pull.
+		For now, internal nodes are scoped in flat namespace.
+		Just a reverse-map from that found in PRS::footprint.
 	 */
-	typedef	map<index_type, index_type>	internal_node_map_type;
+	typedef	map<index_type, internal_node_entry_type>
+					internal_node_map_type;
 	/**
 		index= local footprint index of node
 		value= netlist index of node
@@ -373,14 +382,17 @@ public:
 	const string&
 	get_name(void) const { return name; }
 
+	bool
+	is_empty(void) const;
+
 	index_type
 	create_auxiliary_node(void);
 
 	// TODO: combine lookup and create!
 	index_type
-	create_internal_node(const index_type, const string&);
+	create_internal_node(const index_type, const string&, const bool);
 
-	index_type
+	internal_node_entry_type
 	lookup_internal_node(const index_type) const;
 
 	index_type
@@ -570,6 +582,10 @@ public:
 	visit(const entity::SPEC::footprint&);			// do nothing
 	void
 	visit(const entity::SPEC::footprint_directive&);	// do nothing
+
+private:
+	index_type
+	register_internal_node(const index_type);
 
 };	// end class netlist_generator
 
