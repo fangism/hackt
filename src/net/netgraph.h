@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.7 2009/08/15 01:03:20 fang Exp $
+	$Id: netgraph.h,v 1.1.2.8 2009/08/15 01:52:41 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -216,6 +216,10 @@ struct instance {
 	explicit
 	instance(const netlist& t, const index_type p) :
 		type(&t), pid(p), actuals() { }
+
+
+	bool
+	is_empty(void) const;
 
 	template <class NP>
 	ostream&

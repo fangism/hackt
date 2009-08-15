@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.8 2009/08/15 01:03:19 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.9 2009/08/15 01:52:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -168,6 +168,13 @@ instance::mark_used_nodes(NP& node_pool) const {
 	for ( ; i!=e; ++i) {
 		node_pool[*i].used = true;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+instance::is_empty(void) const {
+	NEVER_NULL(type);
+	return type->is_empty();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -491,6 +498,7 @@ netlist::named_node_is_used(const index_type ni) const {
 		This should really only be called from netlist_generator.
 	\param sub is true if this is a subckt and should be wrapped
 	in .subckt/.ends with ports declared.
+	TODO: option to emit dangling unused internal nodes?
  */
 ostream&
 netlist::emit(ostream& o, const bool sub, const netlist_options& nopt) const {
@@ -516,7 +524,9 @@ if (sub || nopt.emit_top) {
 	const_iterator i(instance_pool.begin()), e(instance_pool.end());
 	for ( ; i!=e; ++i, ++j) {
 		STACKTRACE_INDENT_PRINT("j = " << j << endl);
+	if (!i->is_empty()) {	// TODO: netlist_option for empty_instances?
 		i->emit(o, node_pool, *fp) << endl;	// options?
+	}
 	}
 }
 	// emit subcircuit instances
@@ -810,7 +820,11 @@ if (first_time) {
 #if ENABLE_STACKTRACE
 	nl->dump_raw(cerr);	// DEBUG point
 #endif
+if (!nl->is_empty()) {		// TODO: netlist_option show_empty_subcircuits
 	nl->emit(os, !top_level, opt) << endl;
+} else {
+	os << "* subcircuit " << nl->name << " is empty." << endl;
+}
 }
 	// if this is not top-level, wrap emit in .subckt/.ends
 }
@@ -985,7 +999,9 @@ if (!n.used) {
 	// internal nodes partial rules can belong to local subcircuits
 	// but are accessible to all sibling subcircuits
 	// within a process definition.
-	n.used = true;		// mark before recursion, not after!
+	n.used = true;		
+	// mark before recursion, not after!
+	// to prevent shared roots from being duplicated
 	ep[defexpr].accept(*this);
 }
 	return node_ind;

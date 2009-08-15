@@ -10,7 +10,8 @@
 		creation as each internal node expression is uesd.
 	  A few test cases added, including precharge shared-gate XOR.
 	  Minor updates to raw_dump for comprehensibility.
-	  Next: pruning empty processes, testing unused internal nodes.
+	  For now unused internal nodes nets are suppressed.
+	  Empty subcircuits are suppressed from output.  
 
 
 2009-08-13	David Fang		<fangism@users.sourceforge.net>
