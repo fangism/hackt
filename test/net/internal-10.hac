@@ -1,0 +1,12 @@
+// "internal-10.hac"
+// copy-reduced from "internal-09.hac"
+// @hacknet-flags@ -t foo
+
+defproc foo(bool en1, en2, a, b, _o) {
+prs {
+	en1 | en2 	-> @x-
+	~@x & a & b	-> _o-
+}
+}
+
+

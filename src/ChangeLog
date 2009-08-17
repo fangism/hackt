@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-08-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-10:
+	  hacknet: implemented precharge transistors
+		added some transistor attributes (keeper, ckeeper, pchg)
+		emit precharge transistors with ":pchg" suffix.
+	  Basic test cases added.  
+
+
 2009-08-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-09:

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.8 2009/08/15 01:52:41 fang Exp $
+	$Id: netgraph.h,v 1.1.2.9 2009/08/17 23:57:18 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -12,6 +12,7 @@
 #include <map>
 #include <set>
 #include "Object/lang/cflat_context_visitor.h"
+#include "Object/lang/PRS_footprint_expr.h"	// for precharge_ref_type
 
 namespace HAC {
 namespace NET {
@@ -26,6 +27,7 @@ using entity::footprint;
 using entity::global_entry;
 using entity::bool_tag;
 using entity::process_tag;
+using entity::PRS::footprint_expr_node;
 
 typedef	size_t		index_type;
 typedef	double		real_type;
@@ -126,7 +128,7 @@ struct node {
 	Standard 4-terminal device for transistor.
  */
 struct transistor {
-	enum {
+	enum fet_type {
 		NFET_TYPE,
 		PFET_TYPE
 	};
@@ -156,6 +158,12 @@ struct transistor {
 	// attributes:
 	// is_standard_keeper
 	// is_combination_feedback_keeper
+	enum flags {
+		DEFAULT_ATTRIBUTE = 0x0,
+		IS_PRECHARGE = 0x01,
+		IS_STANDARD_KEEPER = 0x02,
+		IS_COMB_FEEDBACK = 0x04
+	};
 	char				attributes;
 
 	template <class NP>
@@ -166,6 +174,9 @@ struct transistor {
 	ostream&
 	emit(ostream&, const NP&, const footprint&, 
 		const netlist_options&) const;
+
+	ostream&
+	emit_attribute_suffixes(ostream&) const;
 
 	ostream&
 	dump_raw(ostream&) const;
@@ -537,7 +548,12 @@ private:
 		Usually determined by direction of pull of rule, 
 		or pass-gate type.
 	 */
-	char				fet_type;
+	transistor::fet_type		fet_type;
+	/**
+		Current attributes to apply to generated FETs
+		See transistor::attributes.
+	 */
+	transistor::flags		fet_attr;
 	/**
 		In expression traversal, whether or not this level
 		of expression is negated.  
@@ -578,7 +594,7 @@ public:
 	void
 	visit(const entity::PRS::footprint_rule&);
 	void
-	visit(const entity::PRS::footprint_expr_node&);		// do nothing?
+	visit(const footprint_expr_node&);		// do nothing?
 	void
 	visit(const entity::PRS::footprint_macro&);
 
@@ -588,6 +604,9 @@ public:
 	visit(const entity::SPEC::footprint_directive&);	// do nothing
 
 private:
+	void
+	visit(const footprint_expr_node::precharge_pull_type&);
+
 	index_type
 	register_internal_node(const index_type);
 

@@ -1,0 +1,6 @@
+// "precharge-04.hac"
+
+import "precharge-01.hac";
+
+foo bar;
+

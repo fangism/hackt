@@ -1,0 +1,10 @@
+// "precharge-01.hac"
+// @hacknet-flags@ -t foo
+
+defproc foo(bool en, a, b, _o) {
+prs {
+	en &{+~en} a & b	-> _o-
+}
+}
+
+

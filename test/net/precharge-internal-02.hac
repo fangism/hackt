@@ -1,0 +1,16 @@
+// "precharge-internal-02.hac"
+// copy-modified from "precharge-internal-01.hac"
+// this results in duplicate precharges, consistent with netgen
+
+defproc foo(bool en, a, b, _o, _p) {
+_o @ [autokeeper=0];
+_p @ [autokeeper=0];
+prs {
+	en 			-> @i-
+	~@i &{+~en} a		-> _o-
+	~@i &{+~en} b		-> _p-
+}
+}
+
+foo bar;
+

@@ -1,0 +1,31 @@
+// "precharge-internal-03.hac"
+// copy-modified from "internal-06.hac"
+// added ~en precharges to every internal node (once)
+
+deftype c1of2 <: int<1> (bool d[2], t, f) {
+	f = d[0];
+	t = d[1];
+}
+
+// XOR3 (parity)
+defproc add(bool en; c1of2 a, b, c, s) {
+bool _s[2];
+_s[0] @ [autokeeper=0];
+_s[1] @ [autokeeper=0];
+prs {
+	en		-> @foot-
+	~@foot &{+~en} a.t	-> @odd_a-
+	~@foot & a.f	-> @even_a-
+	(~@odd_a &{+~en} b.t) | (~@even_a &{+~en} b.f)	-> @even_b-
+	(~@odd_a & b.f) | (~@even_a & b.t)	-> @odd_b-
+	(~@odd_b &{+~en} c.t) | (~@even_b &{+~en} c.f)	-> _s[0]-
+	(~@odd_b & c.f) | (~@even_b & c.t)	-> _s[1]-
+	~en			-> _s[0]+
+	~en			-> _s[1]+
+	_s[0]			=> s.f-
+	_s[1]			=> s.t-
+}
+}
+
+add up;
+

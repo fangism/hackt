@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.9 2009/08/15 01:52:40 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.10 2009/08/17 23:57:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -40,11 +40,11 @@ using std::pair;
 using std::ostringstream;
 using std::ostream_iterator;
 using util::value_saver;
-using HAC::entity::PRS::PRS_LITERAL_TYPE_ENUM;
-using HAC::entity::PRS::PRS_NOT_EXPR_TYPE_ENUM;
-using HAC::entity::PRS::PRS_AND_EXPR_TYPE_ENUM;
-using HAC::entity::PRS::PRS_OR_EXPR_TYPE_ENUM;
-using HAC::entity::PRS::PRS_NODE_TYPE_ENUM;
+using entity::PRS::PRS_LITERAL_TYPE_ENUM;
+using entity::PRS::PRS_NOT_EXPR_TYPE_ENUM;
+using entity::PRS::PRS_AND_EXPR_TYPE_ENUM;
+using entity::PRS::PRS_OR_EXPR_TYPE_ENUM;
+using entity::PRS::PRS_NODE_TYPE_ENUM;
 using util::unique_list;
 
 //=============================================================================
@@ -94,6 +94,7 @@ netlist_common::is_empty(void) const {
 /**
 	How to format print each node's identity.  
 	TODO: make special designators configurable.
+	TODO: configurable optional name-mangling?
  */
 ostream&
 node::emit(ostream& o, const footprint& fp) const {
@@ -234,10 +235,22 @@ transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 	default:
 		o << "<type?>";
 	}
-	// TODO: restrict lengths and widths
+	// TODO: restrict lengths and widths, from tech/conf file
 	o << " W=" << width *nopt.lambda << nopt.length_unit <<
 		" L=" << length *nopt.lambda << nopt.length_unit;
 	// TODO: scale factor?
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+transistor::emit_attribute_suffixes(ostream& o) const {
+	if (attributes & IS_PRECHARGE)
+		o << ":pchg";
+	if (attributes & IS_STANDARD_KEEPER)
+		o << ":keeper";
+	if (attributes & IS_COMB_FEEDBACK)
+		o << ":ckeeper";
 	return o;
 }
 
@@ -253,6 +266,7 @@ transistor::dump_raw(ostream& o) const {
 	}
 	o << ' ' << source << ' ' << gate << ' ' << drain << ' ' << body;
 	o << " # W=" << width << " L=" << length;
+	emit_attribute_suffixes(o << " ");
 	return o;
 }
 
@@ -301,7 +315,7 @@ netlist::~netlist() { }
 void
 netlist::bind_footprint(const footprint& f, const netlist_options& nopt) {
 	fp = &f;
-	// TODO: format or mangle type name
+	// TODO: format or mangle type name, e.g. eliminate space
 	ostringstream oss;
 	f.dump_type(oss);
 	name = oss.str();
@@ -541,7 +555,8 @@ if (sub || nopt.emit_top) {
 	// TODO: use optional label designations
 	size_t j = 0;
 	for ( ; i!=e; ++i, ++j) {
-		o << 'M' << j << "_ ";
+		o << 'M' << j << '_';
+		i->emit_attribute_suffixes(o) << ' ';
 		i->emit(o, node_pool, *fp, nopt) << endl;
 	}
 }
@@ -696,6 +711,7 @@ netlist_generator::netlist_generator(const state_manager& _sm,
 		current_local_netlist(NULL),
 		foot_node(void_index), output_node(void_index),
 		fet_type(transistor::NFET_TYPE), 	// don't care
+		fet_attr(transistor::DEFAULT_ATTRIBUTE),
 		negated(false),
 		// TODO: set these to technology defaults
 		last_width(0.0), 
@@ -755,6 +771,8 @@ struct set_adaptor : public Sequence {
 	Visit all dependent subcircuits (processes) *first*.
 	Each unique type is only visited once.  
 	Remember that top-most level should not be wrapped in subcircuit.  
+	Q: Is there a way to traverse the footprint without using the
+	footprint_frame?  This should be a non-global hierarchical traversal.
  */
 void
 netlist_generator::visit(const global_entry<process_tag>& p) {
@@ -956,7 +974,7 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 	const value_saver<index_type>
 		__t1(foot_node, (r.dir ? Vdd_index : GND_index)),
 		__t2(output_node, current_netlist->register_named_node(r.output_index));
-	const value_saver<char>
+	const value_saver<transistor::fet_type>
 		__t3(fet_type, (r.dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
 	// TODO: honor prs supply override directives
 	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
@@ -993,7 +1011,7 @@ if (!n.used) {
 	const value_saver<index_type>
 		__t1(foot_node, (dir ? Vdd_index : GND_index)),
 		__t2(output_node, node_ind);
-	const value_saver<char>
+	const value_saver<transistor::fet_type>
 		__t3(fet_type,
 			(dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
 	// internal nodes partial rules can belong to local subcircuits
@@ -1009,13 +1027,35 @@ if (!n.used) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Helper function for visiting precharge expressions.
+ */
+void
+netlist_generator::visit(const footprint_expr_node::precharge_pull_type& p) {
+	// recall: precharge is 0-indexed
+	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
+	const index_type& pchgex = p.first;
+	const bool dir = p.second;
+	const value_saver<index_type>
+		_t3(foot_node, dir ? high_supply : low_supply);
+	const value_saver<transistor::fet_type>
+		_t4(fet_type, dir ? transistor::PFET_TYPE
+			: transistor::NFET_TYPE);
+	const value_saver<transistor::flags>
+		_t5(fet_attr, transistor::flags(
+			fet_attr | transistor::IS_PRECHARGE));
+	// use the same output node
+	ep[pchgex].accept(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Walk expressions from left to right, emitting transistors.
 	\pre current_netlist is set
 	\pre foot_node and output_node are already set to existing nodes, 
 		e.g. Vdd, GND, or auxiliary node.
  */
 void
-netlist_generator::visit(const entity::PRS::footprint_expr_node& e) {
+netlist_generator::visit(const footprint_expr_node& e) {
 	STACKTRACE_VERBOSE;
 	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
 	// exception: if encountering an internal node on left-most 
@@ -1038,6 +1078,7 @@ case PRS_LITERAL_TYPE_ENUM: {
 		opt.std_n_width : opt.std_p_width);
 	t.length = (fet_type == transistor::NFET_TYPE ?
 		opt.std_n_length : opt.std_p_length);
+	t.attributes = fet_attr;
 	// TODO: import attributes from rule attributes?
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->transistor_pool.push_back(t);
@@ -1056,17 +1097,26 @@ case PRS_OR_EXPR_TYPE_ENUM: {
 	size_t i = 1;
 	const size_t s = e.size();
 	if (is_conjunctive) {
-#if 0
-		// TODO: handle precharges
-		const prs_footprint::precharge_map_type&
-			pc(prs->get_precharges());
-#endif
+		typedef footprint_expr_node::precharge_map_type
+				precharge_map_type;
+		const footprint_expr_node::precharge_map_type&
+			p(e.get_precharges());
+		precharge_map_type::const_iterator
+			pi(p.begin()), pe(p.end());
 		// special case: first branch is an internal node
 		index_type prev;
-		const entity::PRS::footprint_expr_node& left(ep[e[i]]);
+		const footprint_expr_node& left(ep[e[i]]);
 		if (left.get_type() == PRS_NODE_TYPE_ENUM) {
 			prev = register_internal_node(e[i]);
 			// TODO: confirm direction and sense of internal node
+			// hand precharge
+			if (pi != pe && pi->first == i-1) {
+				const value_saver<index_type>
+					_t1(output_node, prev);
+				// recall: precharge is 0-indexed
+				visit(pi->second);
+				++pi;
+			}
 			++i;
 		} else {
 			prev = foot_node;
@@ -1080,7 +1130,12 @@ case PRS_OR_EXPR_TYPE_ENUM: {
 					current_netlist->create_auxiliary_node());
 			ep[e[i]].accept(*this);
 			prev = output_node;
-			// TODO: precharge
+			// handle precharge
+			if (pi != pe && pi->first == i-1) {
+				// recall: precharge is 0-indexed
+				visit(pi->second);
+				++pi;
+			}
 		}
 		{
 		// last node connected to output

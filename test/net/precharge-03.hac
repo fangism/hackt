@@ -1,0 +1,14 @@
+// "precharge-03.hac"
+// copy-modified from "precharge-01.hac"
+// @hacknet-flags@ -t foo
+// c-element opposition does not have
+
+defproc foo(bool en, a, b, _o) {
+_o @ [autokeeper=0];
+prs {
+	en &{+~en} a & b	#> _o-
+}
+}
+
+// foo bar;
+
