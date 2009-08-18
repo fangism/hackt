@@ -1,0 +1,9 @@
+// "sizing-01.hac"
+// testing length parameter
+
+bool x, y;
+prs {
+	x<8,8>	-> y-
+	~x<12,12>	-> y+
+}
+

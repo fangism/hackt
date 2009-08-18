@@ -1,0 +1,14 @@
+// "sizing-03.hac"
+
+preal BETA = 2.0;
+
+template <pint N>
+defproc celem(bool a[N], _o) {
+prs {
+	(&:i:N: a[i]<5*N> )	-> _o-
+	(&:i:N: ~a[i]<5*N*BETA> )	-> _o+
+}
+}
+
+celem<4> foo;
+

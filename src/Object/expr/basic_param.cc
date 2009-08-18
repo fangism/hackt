@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.29 2007/11/26 20:11:09 fang Exp $
+ 	$Id: basic_param.cc,v 1.29.26.1 2009/08/18 18:05:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -145,9 +145,19 @@ const_param::dump(ostream& o) const {
 	return dump(o, expr_dump_context());
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_param::dump_nonmeta(ostream& o) const {
 	return dump(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return by default 0.0 unless overridden
+ */
+preal_value_type
+const_param::to_real_const(void) const {
+	return 0.0;
 }
 
 //-----------------------------------------------------------------------------
@@ -863,6 +873,15 @@ pint_const::operator < (const const_param& p) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Convert to param-real.
+ */
+preal_value_type
+pint_const::to_real_const(void) const {
+	return preal_value_type(val);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Does nothing, no pointers to visit.  
  */
 void
@@ -1209,6 +1228,15 @@ preal_const::operator < (const const_param& p) const {
 		INVARIANT(!pc.dimensions());	// must be scalar
 		return val < pc.front();
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convert to param-real.
+ */
+preal_value_type
+preal_const::to_real_const(void) const {
+	return val;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

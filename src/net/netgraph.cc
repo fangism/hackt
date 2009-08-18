@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.11 2009/08/18 01:18:36 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.12 2009/08/18 18:05:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,7 @@
 #include "Object/global_entry_context.h"
 #include "Object/common/dump_flags.h"
 #include "Object/def/footprint.h"
+#include "Object/expr/preal_const.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/inst/port_alias_tracker.h"
@@ -45,6 +46,8 @@ using entity::PRS::PRS_NOT_EXPR_TYPE_ENUM;
 using entity::PRS::PRS_AND_EXPR_TYPE_ENUM;
 using entity::PRS::PRS_OR_EXPR_TYPE_ENUM;
 using entity::PRS::PRS_NODE_TYPE_ENUM;
+using entity::directive_base_params_type;
+using entity::preal_value_type;
 using util::unique_list;
 
 //=============================================================================
@@ -1104,10 +1107,19 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.body = (fet_type == transistor::NFET_TYPE ? low_supply : high_supply);
 		// Vdd or GND
 	// TODO: extract length/width parameters
-	t.width = (fet_type == transistor::NFET_TYPE ?
-		opt.std_n_width : opt.std_p_width);
-	t.length = (fet_type == transistor::NFET_TYPE ?
-		opt.std_n_length : opt.std_p_length);
+	const directive_base_params_type& p(e.get_params());
+	if (p.size() > 0) {
+		t.width = p[0]->to_real_const();
+	} else {
+		t.width = (fet_type == transistor::NFET_TYPE ?
+			opt.std_n_width : opt.std_p_width);
+	}
+	if (p.size() > 1) {
+		t.length = p[1]->to_real_const();
+	} else {
+		t.length = (fet_type == transistor::NFET_TYPE ?
+			opt.std_n_length : opt.std_p_length);
+	}
 	t.attributes = fet_attr;
 	// TODO: import attributes from rule attributes?
 	NEVER_NULL(current_local_netlist);

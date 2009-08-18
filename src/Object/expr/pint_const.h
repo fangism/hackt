@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.19 2007/11/26 20:11:15 fang Exp $
+	$Id: pint_const.h,v 1.19.26.1 2009/08/18 18:05:57 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
@@ -141,6 +141,9 @@ public:
 	using pint_expr::substitute_default_positional_parameters;
 
 	LESS_OPERATOR_PROTO;
+
+	preal_value_type
+	to_real_const(void) const;
 
 private:
 	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO;
