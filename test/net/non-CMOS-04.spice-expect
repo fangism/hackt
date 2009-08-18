@@ -1,0 +1,5 @@
+ERROR: rule-literal is not CMOS-implementable.
+ERROR in production rule.
+ERROR producing netlist for foo<>
+ERROR producing netlist for <top-level>
+Caught exception during netlist generation.

@@ -1,0 +1,11 @@
+// "non-CMOS-05.hac"
+// copy-modified from "non-CMOS-04.hac"
+
+defproc foo(bool en, a, b, _o) {
+prs {
+	en &{-~en} a & b	-> _o-
+}
+}
+
+foo bar;
+

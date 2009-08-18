@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.9 2009/08/17 23:57:18 fang Exp $
+	$Id: netgraph.h,v 1.1.2.10 2009/08/18 01:18:37 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -393,6 +393,9 @@ public:
 
 	void
 	bind_footprint(const footprint&, const netlist_options&);
+
+	void
+	bind_footprint(const footprint&, const netlist_options&, const string&);
 
 	const string&
 	get_name(void) const { return name; }

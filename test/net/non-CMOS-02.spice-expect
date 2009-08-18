@@ -1,0 +1,11 @@
+.subckt foo<> a b c
+M0_ GND a #0 GND nch W=5u L=2u
+M1_ #0 b _c GND nch W=5u L=2u
+M2_ Vdd a #1 Vdd pch W=5u L=2u
+M3_ #1 b _c Vdd pch W=5u L=2u
+M4_ GND _c c GND nch W=5u L=2u
+M5_ Vdd _c c Vdd pch W=5u L=2u
+.ends
+
+xbar bar.a bar.b bar.c foo<>
+

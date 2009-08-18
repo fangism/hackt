@@ -1,0 +1,10 @@
+// "non-CMOS-00.hac"
+
+defproc foo(bool a, b) {
+prs {
+	a	=> b+
+}
+}
+
+foo bar;
+

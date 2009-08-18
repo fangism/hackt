@@ -1,15 +1,12 @@
 // "non-CMOS-03.hac"
-// copy-reduced from "non-CMOS-01.hac"
+// copy-modified from "non-CMOS-02.hac"
 // testing non-normalized rules
 
 // is a c-element
-defproc foo (bool a, b, c) {
-bool _c;
-_c @ [autokeeper=0];
+defproc foo (bool a, b, _c) {
 prs {
-	a & b		-> _c-
-	~(a | b)	-> _c+	// not negation normalized
-	_c		=> c-
+	~(a | b)	=> _c-	// not negation normalized
+//	_c		=> c-
 }
 }
 

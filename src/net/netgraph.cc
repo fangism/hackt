@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.10 2009/08/17 23:57:16 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.11 2009/08/18 01:18:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -319,6 +319,17 @@ netlist::bind_footprint(const footprint& f, const netlist_options& nopt) {
 	ostringstream oss;
 	f.dump_type(oss);
 	name = oss.str();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overload with overridden name, e.g. for top-level.
+ */
+void
+netlist::bind_footprint(const footprint& f, const netlist_options& nopt, 
+		const string& n) {
+	fp = &f;
+	name = n;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -792,7 +803,11 @@ if (first_time) {
 	f->dump_type(STACKTRACE_STREAM) << endl;
 #endif
 	netlist* nl = &netmap[f];	// insert default constructed
+if (f == topfp) {
+	nl->bind_footprint(*f, opt, "<top-level>");
+} else {
 	nl->bind_footprint(*f, opt);
+}
 	// initialize netlist:
 	const footprint_frame_map_type&
 		bfm(p._frame.get_frame_map<bool_tag>());
@@ -812,6 +827,7 @@ if (first_time) {
 	// skip first NULL slot?
 	// ALERT: top-level's process frame starts at 1, not 0!
 	index_type lpid = top_level ? 0 : 1;
+try {
 	for (; i!=e; ++i, ++lpid) {
 	if (*i) {
 		STACKTRACE_INDENT_PRINT("examining sub-process id " << *i <<
@@ -834,6 +850,10 @@ if (first_time) {
 	if (!top_level) {
 		nl->summarize_ports();
 	}
+} catch (...) {
+	cerr << "ERROR producing netlist for " << nl->name << endl;
+	throw;
+}
 	// finally, emit this process
 #if ENABLE_STACKTRACE
 	nl->dump_raw(cerr);	// DEBUG point
@@ -978,7 +998,13 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 		__t3(fet_type, (r.dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
 	// TODO: honor prs supply override directives
 	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
+try {
 	ep[r.expr_index].accept(*this);
+} catch (...) {
+	// TODO: better diagnostic tracing message
+	cerr << "ERROR in production rule." << endl;
+	throw;
+}
 	// TODO: process rule attributes, labels, names...
 }
 
@@ -1064,6 +1090,10 @@ const char type = e.get_type();
 switch (type) {
 case PRS_LITERAL_TYPE_ENUM: {
 	// TODO: check for negation normalization
+	if (negated ^ (fet_type == transistor::PFET_TYPE)) {
+		cerr << "ERROR: rule-literal is not CMOS-implementable." << endl;
+		THROW_EXIT;
+	}
 	transistor t;
 	t.type = fet_type;
 	// TODO: handle FET type override

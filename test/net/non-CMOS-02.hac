@@ -1,11 +1,19 @@
 // "non-CMOS-02.hac"
-// expect-fail: non-CMOS implementable rules
+// copy-reduced from "non-CMOS-01.hac"
+// testing non-normalized rules
 
-defproc foo(bool a, b) {
+// is a c-element
+defproc foo (bool a, b, c) {
+bool _c;
+_c @ [autokeeper=0];
 prs {
-	a		=> b+
+	a & b		-> _c-
+	~(a | b)	-> _c+	// not negation normalized
+	_c		=> c-
 }
 }
+
+// netgen seems to apply the same sizes to the equivalent normalized expr.
 
 foo bar;
 

@@ -5,6 +5,15 @@
 
 2009-08-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-27-netlist-01-11:
+	  Added check for CMOS-implementability in PRS literals, 
+		check also works in precharge expressions.  
+		Internal node uses are already direction-checked
+		at create-time.
+		diagnostic: override name of top-level footprint/netlist.
+	  Added some test cases to regression suite.
+
+
 	* HACKT-00-01-04-main-00-83-27-netlist-01-10:
 	  hacknet: implemented precharge transistors
 		added some transistor attributes (keeper, ckeeper, pchg)
