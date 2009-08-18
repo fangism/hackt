@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.12 2009/08/18 18:05:59 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.13 2009/08/18 21:18:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1211,10 +1211,42 @@ default:
 	Expand a macro into netlist.
 	Examples: passn and passp for pass-gates.
 	\pre current_netlist is set
+	TODO: eventually implement using a function table/map
  */
 void
 netlist_generator::visit(const entity::PRS::footprint_macro& e) {
 	STACKTRACE_VERBOSE;
+	const bool passn = (e.name == "passn");
+	const bool passp = (e.name == "passp");
+if (passn || passp) {
+	transistor t;
+	t.type = passp ? transistor::PFET_TYPE : transistor::NFET_TYPE;
+	// TODO: override with vt types
+	t.gate = current_netlist->register_named_node(*e.nodes[0].begin());
+	t.source = current_netlist->register_named_node(*e.nodes[1].begin());
+	t.drain = current_netlist->register_named_node(*e.nodes[2].begin());
+	t.body = passp ? high_supply : low_supply;
+	const directive_base_params_type& p(e.params);
+	if (p.size() > 0) {
+		t.width = p[0]->to_real_const();
+	} else {
+		t.width = (passn ? opt.std_n_width : opt.std_p_width);
+	}
+	if (p.size() > 1) {
+		t.length = p[1]->to_real_const();
+	} else {
+		t.length = (passn ? opt.std_n_length : opt.std_p_length);
+	}
+	t.attributes = fet_attr;
+	// TODO: import attributes
+	NEVER_NULL(current_local_netlist);
+	current_local_netlist->transistor_pool.push_back(t);
+} else if (e.name == "echo") {
+	// do nothing
+} else {
+	cerr << "WARNING: unknown PRS macro " << e.name
+		<< " ignored." << endl;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

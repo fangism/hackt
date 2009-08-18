@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.13 2009/08/18 18:06:00 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.14 2009/08/18 21:18:54 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -20,7 +20,8 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	precharge-01 precharge-02 precharge-03 precharge-04 precharge-05 \
 	precharge-internal-01 precharge-internal-02 precharge-internal-03 \
 	non-CMOS-01 non-CMOS-02 \
-	sizing-01 sizing-02 sizing-03
+	sizing-01 sizing-02 sizing-03 \
+	pass_gate-01 pass_gate-02 pass_gate-03 pass_gate-04
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05

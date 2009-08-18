@@ -5,6 +5,11 @@
 
 2009-08-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-27-netlist-01-13:
+	  hacknet: implemented pass-gate transistors, quick-and-dirty,
+		added basic test cases.
+
+
 	* HACKT-00-01-04-main-00-83-27-netlist-01-12:
 	  hacknet: transistors are now sized by literal params, 
 		still no discretization or value constraints yet.

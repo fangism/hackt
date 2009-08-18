@@ -1,0 +1,13 @@
+// "pass_gate-03.hac"
+// copy-modified from "pass_gate-02.hac"
+
+template <pint N>
+defproc full_pass(bool g, _g, s, d) {
+prs {
+	passn<N>(g, s, d)
+	passp<N>(_g, s, d)
+}
+}
+
+full_pass<10> foo;
+

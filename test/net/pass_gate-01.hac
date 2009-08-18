@@ -1,0 +1,10 @@
+// "pass_gate-01.hac"
+
+bool g, s, d;
+bool _g;
+
+prs {
+	passn(g, s, d)
+	passp(_g, s, d)
+}
+
