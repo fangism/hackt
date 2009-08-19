@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.1.2.2 2009/08/10 22:31:23 fang Exp $
+	$Id: hacknet.cc,v 1.1.2.3 2009/08/19 00:11:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -138,6 +138,8 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	}
 	top_module = count_ptr<module>(new module("<auxiliary>"));
 	NEVER_NULL(top_module);
+	// TODO: this should only require create-phase, not global alloc
+	// will save HUGE memory on full-hierarchy
 	if (!top_module->allocate_unique_process_type(*rpt, *the_module).good) {
 		cerr << alloc_errstr << endl;
 		return 1;

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.13 2009/08/18 21:18:53 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.14 2009/08/19 00:11:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,9 +15,12 @@
 #include "Object/global_entry_context.h"
 #include "Object/common/dump_flags.h"
 #include "Object/def/footprint.h"
+#include "Object/def/process_definition.h"
 #include "Object/expr/preal_const.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/inst/physical_instance_placeholder.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
@@ -31,12 +34,14 @@ namespace NET {
 #include "util/using_ostream.h"
 using entity::port_alias_tracker;
 using entity::footprint_frame_map_type;
-using entity::footprint_frame_transformer;
 using entity::dump_flags;
 using entity::bool_port_collector;
 using entity::instance_alias_info;
 using entity::bool_tag;
 using entity::state_instance;
+using entity::port_formals_manager;
+using entity::process_definition;
+using entity::physical_instance_collection;
 using std::pair;
 using std::ostringstream;
 using std::ostream_iterator;
@@ -667,26 +672,32 @@ bool_port_alias_collector::visit(const instance_alias_info<bool_tag>& a) {
 	instantiate this.  
 	What to do about supplies?
 	FIXME: inadvertently adds non-ports to the port_list
+	TODO: power supply ports
  */
 void
 netlist::summarize_ports(void) {
 	STACKTRACE_VERBOSE;
 	// could mark_used_nodes here instead?
+#if 1
 	typedef	unique_list<index_type>	port_index_list_type;
 	bool_port_alias_collector V;
+#if 0
+	// this node ordering is based on order of being seen/used
 	fp->accept(V);
+#else
+	// this ordering is based on port_formal_manager, declaration order
+	const port_formals_manager&
+		fm(fp->get_owner_def().is_a<const process_definition>()
+			->get_port_formals());
+	port_formals_manager::const_list_iterator pi(fm.begin()), pe(fm.end());
+	for ( ; pi!=pe; ++pi) {
+		(*fp)[(*pi)->get_name()]
+			.is_a<const physical_instance_collection>()->accept(V);
+	}
+#endif
 	// handle Vdd and GND separately
 	port_index_list_type::const_iterator
 		i(V.bool_indices.begin()), e(V.bool_indices.end());
-#if 0 && ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("named_node_map = ");
-	copy(named_node_map.begin(), named_node_map.end(),
-		ostream_iterator<index_type>(cerr, ","));
-	cerr << endl;
-	STACKTRACE_INDENT_PRINT("V.bool_indices = ");
-	copy(i, e, ostream_iterator<index_type>(cerr, ","));
-	cerr << endl;
-#endif
 	port_list.reserve(V.bool_indices.size());
 	for ( ; i!=e; ++i) {
 		// 1-indexed local id to 0-indexed named_node_map
@@ -694,22 +705,27 @@ netlist::summarize_ports(void) {
 		const index_type local_ind = *i -1;
 		const index_type ni = named_node_map[local_ind];
 		const node& n(node_pool[ni]);
-#if 0 && ENABLE_STACKTRACE
-		cerr << "local ind = " << local_ind << endl;
-		cerr << "ni = " << ni << endl;
-		n.emit(cerr << "node=", *fp) << endl;
-#endif
 	if (ni && n.used) {
 		INVARIANT(n.is_logical_node());
 		INVARIANT(n.index == *i);	// self-reference
 		port_list.push_back(ni);
+		// sorted_ports[local_ind] = ni;
 	}
 	}
-#if 0 && ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("port_list = ");
-	copy(port_list.begin(), port_list.end(),
-		ostream_iterator<index_type>(cerr, ","));
-	cerr << endl;
+#else
+	// this ordering is based on locally assigned indices, 
+	// not necessarily the order of declaration
+	const state_instance<bool_tag>::pool_type&
+		bp(fp->get_instance_pool<bool_tag>());
+	named_node_map_type::const_iterator
+		i(named_node_map.begin()), e(named_node_map.end());
+	size_t j = 1;	// 0-indexed -> 1-indexed
+	for ( ; i!=e; ++i, ++j) {
+	// NOTE: this visits only logical nodes
+	if (*i && bp[j].get_back_ref()->is_aliased_to_port()) {
+		port_list.push_back(*i);
+	}
+	}
 #endif
 }
 
@@ -796,7 +812,7 @@ netlist_generator::visit(const global_entry<process_tag>& p) {
 	// will need p._frame when emitting subinstances
 	const footprint* f(p._frame._footprint);
 	NEVER_NULL(f);
-	INVARIANT(f->is_created());
+	INVARIANT(f->is_created());	// don't need is_allocated()!!!
 	netlist_map_type::iterator mi(netmap.find(f));
 	const bool first_time = (mi == netmap.end());
 	const bool top_level = !current_netlist;
@@ -823,6 +839,9 @@ if (f == topfp) {
 	// should not invalidate existing iterators
 	const footprint_frame_map_type&
 		pfm(p._frame.get_frame_map<process_tag>());
+	// TODO: instead of relying on globally allocated footprint frame
+	// just traverse the footprint's instance_pool<process_tag>
+	// this way, don't require global allocation first, only create phase!
 	STACKTRACE_INDENT_PRINT("pfm.size = " << pfm.size() << endl);
 	nl->instance_pool.reserve(pfm.size());	// prevent reallocation!!!
 	typedef	footprint_frame_map_type::const_iterator	const_iterator;

@@ -1,7 +1,7 @@
-.subckt foo<> _y x
+.subckt foo<> x _y
 M0_ GND x _y GND nch W=5u L=2u
 M1_ Vdd x _y Vdd pch W=5u L=2u
 .ends
 
-xbar bar._y bar.x foo<>
+xbar bar.x bar._y foo<>
 
