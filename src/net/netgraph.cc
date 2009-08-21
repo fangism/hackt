@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.14 2009/08/19 00:11:32 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.15 2009/08/21 00:02:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -93,8 +93,95 @@ netlist_common::is_empty(void) const {
 	return transistor_pool.empty() && passive_device_pool.empty();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class NP>
+ostream&
+netlist_common::emit_devices(ostream& o, const NP& node_pool,
+		const footprint& fp, const netlist_options& nopt) const {
+	// emit devices
+#if ENABLE_STACKTRACE
+	o << "* devices:" << endl;
+#endif
+	typedef	transistor_pool_type::const_iterator	const_iterator;
+	const_iterator i(transistor_pool.begin()), e(transistor_pool.end());
+	// TODO: print originating rule in comments
+	// TODO: use optional label designations
+	size_t j = 0;
+	for ( ; i!=e; ++i, ++j) {
+		o << 'M' << j << '_';
+		i->emit_attribute_suffixes(o) << ' ';
+		i->emit(o, node_pool, fp, nopt) << endl;
+	}
+	return o;
+}
+
 //=============================================================================
 // class local_netlist method definitions
+
+/**
+	Summarizes subcircuit ports by looking at all used nodes.  
+	TODO: passive devices
+ */
+template <class NP>
+void
+local_netlist::mark_used_nodes(NP& node_pool) {
+	transistor_pool_type::const_iterator
+		i(transistor_pool.begin()), e(transistor_pool.end());
+	for ( ; i!=e; ++i) {
+		node_index_map.insert(i->gate);
+		node_pool[i->gate].used = true;
+		node_index_map.insert(i->source);
+		node_pool[i->source].used = true;
+		node_index_map.insert(i->drain);
+		node_pool[i->drain].used = true;
+		node_index_map.insert(i->body);
+		node_pool[i->body].used = true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+local_netlist::emit_definition(ostream& o, const netlist& n,
+		const netlist_options& nopt) const {
+	o << ".subckt ";
+if (!nopt.nested_subcircuits) {
+	// then use fully qualified type name
+	o << n.name << "::";
+}
+	o << name;
+	typedef	node_index_map_type::const_iterator	const_iterator;
+	const_iterator i(node_index_map.begin()), e(node_index_map.end());
+	for ( ; i!=e; ++i) {
+		n.node_pool[*i].emit(o << ' ', *n.fp);	// options?
+	}
+	o << endl;
+	// TODO: emit port-info comments
+	emit_devices(o, n.node_pool, *n.fp, nopt);
+	o << ".ends" << endl;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Instantiation uses the same names as the original ports.
+ */
+ostream&
+local_netlist::emit_instance(ostream& o, const netlist& n,
+		const netlist_options& nopt) const {
+	o << 'x' << name << ":inst";
+	typedef	node_index_map_type::const_iterator	const_iterator;
+	const_iterator i(node_index_map.begin()), e(node_index_map.end());
+	for ( ; i!=e; ++i) {
+		n.node_pool[*i].emit(o << ' ', *n.fp);	// options?
+	}
+	o << ' ';
+if (!nopt.nested_subcircuits) {
+	// then use fully qualified type name
+	o << n.name << "::";
+}
+	o << name << endl;
+	return o;
+}
 
 //=============================================================================
 // class node method definitions
@@ -304,7 +391,8 @@ static const	index_type	Vdd_index = 2;
 netlist::netlist() : netlist_common(), name(), 
 		named_node_map(), node_pool(),
 		instance_pool(), internal_node_map(), port_list(), 
-		aux_count(0) {
+		aux_count(0),
+		subs_count(0) {
 	// copy supply nodes
 	node_pool.reserve(8);	// reasonable pre-allocation
 	// following order should match above universal node indices
@@ -504,13 +592,22 @@ node_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new node: ")) << endl;
  */
 void
 netlist::mark_used_nodes(void) {
+	STACKTRACE_VERBOSE;
 	netlist_common::mark_used_nodes(node_pool);
+{
 	instance_pool_type::iterator
 		i(instance_pool.begin()), e(instance_pool.end());
 	for ( ; i!=e; ++i) {
 		i->mark_used_nodes(node_pool);
 	}
-	// traverse subcircuits?
+}{
+	// traverse subcircuits
+	local_subcircuit_list_type::iterator
+		i(local_subcircuits.begin()), e(local_subcircuits.end());
+	for ( ; i!=e; ++i) {
+		i->mark_used_nodes(node_pool);
+	}
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -535,6 +632,15 @@ netlist::named_node_is_used(const index_type ni) const {
  */
 ostream&
 netlist::emit(ostream& o, const bool sub, const netlist_options& nopt) const {
+if (!nopt.nested_subcircuits) {
+	// print definition
+	// print singleton instance
+	typedef	local_subcircuit_list_type::const_iterator	const_iterator;
+	const_iterator i(local_subcircuits.begin()), e(local_subcircuits.end());
+	for ( ; i!=e; ++i) {
+		i->emit_definition(o, *this, nopt);	// definition
+	}
+}
 if (sub) {
 	o << ".subckt " << name;
 	typedef	port_list_type::const_iterator		const_iterator;
@@ -561,24 +667,24 @@ if (sub || nopt.emit_top) {
 		i->emit(o, node_pool, *fp) << endl;	// options?
 	}
 	}
-}
-	// emit subcircuit instances
-{
-	// emit devices
+}{
 #if ENABLE_STACKTRACE
-	o << "* devices:" << endl;
+	// nested subcircuits?
+	o << "* local subcircuits:" << endl;
 #endif
-	typedef	transistor_pool_type::const_iterator	const_iterator;
-	const_iterator i(transistor_pool.begin()), e(transistor_pool.end());
-	// TODO: print originating rule in comments
-	// TODO: use optional label designations
-	size_t j = 0;
-	for ( ; i!=e; ++i, ++j) {
-		o << 'M' << j << '_';
-		i->emit_attribute_suffixes(o) << ' ';
-		i->emit(o, node_pool, *fp, nopt) << endl;
+	// print definition
+	// print singleton instance
+	typedef	local_subcircuit_list_type::const_iterator	const_iterator;
+	const_iterator i(local_subcircuits.begin()), e(local_subcircuits.end());
+	for ( ; i!=e; ++i) {
+	if (nopt.nested_subcircuits) {
+		i->emit_definition(o, *this, nopt);	// definition
 	}
+		i->emit_instance(o, *this, nopt);	// instance
+	}
+	// alternately, emit subcircuits outside, not nested
 }
+	emit_devices(o, node_pool, *fp, nopt);
 }
 if (sub) {
 	o << ".ends" << endl;
@@ -828,6 +934,8 @@ if (f == topfp) {
 	nl->bind_footprint(*f, opt);
 }
 	// initialize netlist:
+try {
+#if 1
 	const footprint_frame_map_type&
 		bfm(p._frame.get_frame_map<bool_tag>());
 		// ALERT: top-footprint frame's size will be +1!
@@ -849,7 +957,6 @@ if (f == topfp) {
 	// skip first NULL slot?
 	// ALERT: top-level's process frame starts at 1, not 0!
 	index_type lpid = top_level ? 0 : 1;
-try {
 	for (; i!=e; ++i, ++lpid) {
 	if (*i) {
 		STACKTRACE_INDENT_PRINT("examining sub-process id " << *i <<
@@ -866,6 +973,18 @@ try {
 		nl->append_instance(subp, subnet, lpid);
 	}
 	}
+#else
+	// this would be easier if there was a local state_manager per footprint
+	// TODO: do this after scalability re-work
+	typedef	state_instance<process_tag>::pool_type	process_pool_type;
+	const process_pool_type& pp(f->get_instance_pool<process_tag>());
+	process_pool_type::const_iterator i(pp.begin()), e(pp.end());
+	size_t j = ...;
+	for ( ; i!=e; ++i) {
+		...
+		// visit local subprocess or fake one
+	}
+#endif
 	// process local production rules and macros
 	f->get_prs_footprint().accept(*this);
 	// f->get_spec_footprint().accept(*this);	// ?
@@ -956,16 +1075,25 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	for ( ; i<s; ++i) {
 	if (si!=se && (i >= si->rules.first)) {
 		// start of a subcircuit range, can be empty
+		current_netlist->local_subcircuits.push_back(local_netlist());
+		local_netlist& n(current_netlist->local_subcircuits.back());
+		const string& nn(si->get_name());
+		if (nn.length()) {
+			n.name = nn;
+		} else {
+			ostringstream oss;
+			oss << "INTSUB:" << current_netlist->subs_count;
+			n.name = oss.str();
+			++current_netlist->subs_count;
+		}
 		do {
-			current_netlist->local_subcircuits.push_back(local_netlist());
-			local_netlist& n(current_netlist->local_subcircuits.back());
-			n.name = si->get_name();
 			const value_saver<netlist_common*>
 				__tmp(current_local_netlist, &n);
 			rpool[i].accept(*this);
 			++i;
 		} while (i < si->rules.second);
 			--i;	// back-adjust before continue
+			++si;
 	} else {
 		// rule is outside of subcircuits
 		rpool[i].accept(*this);
@@ -983,16 +1111,17 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	for ( ; i<s; ++i) {
 	if (si!=se && (i >= si->macros.first)) {
 		// start of a subcircuit range, can be empty
+		INVARIANT(mi != current_netlist->local_subcircuits.end());
+		local_netlist& n(*mi);
 		do {
-			INVARIANT(mi != current_netlist->local_subcircuits.end());
-			local_netlist& n(*mi);
 			const value_saver<netlist_common*>
 				__tmp(current_local_netlist, &n);
 			mpool[i].accept(*this);
-			++mi;
 			++i;
 		} while (i < si->macros.second);
 			--i;	// back-adjust before continue
+			++mi;
+			++si;
 	} else {
 		// macro is outside of subcircuits
 		mpool[i].accept(*this);
@@ -1015,7 +1144,7 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 	// set foot_node and output_node and fet_type
 	const value_saver<index_type>
 		__t1(foot_node, (r.dir ? Vdd_index : GND_index)),
-		__t2(output_node, current_netlist->register_named_node(r.output_index));
+		__t2(output_node, register_named_node(r.output_index));
 	const value_saver<transistor::fet_type>
 		__t3(fet_type, (r.dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
 	// TODO: honor prs supply override directives
@@ -1075,6 +1204,18 @@ if (!n.used) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Registers node for first time or just returns previously registered
+	index.  Also marks node as used.  
+ */
+index_type
+netlist_generator::register_named_node(const index_type n) {
+	NEVER_NULL(current_netlist);
+	const index_type ret = current_netlist->register_named_node(n);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Helper function for visiting precharge expressions.
  */
 void
@@ -1119,7 +1260,7 @@ case PRS_LITERAL_TYPE_ENUM: {
 	transistor t;
 	t.type = fet_type;
 	// TODO: handle FET type override
-	t.gate = current_netlist->register_named_node(e.only());
+	t.gate = register_named_node(e.only());
 	t.source = foot_node;
 	t.drain = output_node;
 	// TODO: honor supply overrides
@@ -1241,9 +1382,9 @@ if (passn || passp) {
 	transistor t;
 	t.type = passp ? transistor::PFET_TYPE : transistor::NFET_TYPE;
 	// TODO: override with vt types
-	t.gate = current_netlist->register_named_node(*e.nodes[0].begin());
-	t.source = current_netlist->register_named_node(*e.nodes[1].begin());
-	t.drain = current_netlist->register_named_node(*e.nodes[2].begin());
+	t.gate = register_named_node(*e.nodes[0].begin());
+	t.source = register_named_node(*e.nodes[1].begin());
+	t.drain = register_named_node(*e.nodes[2].begin());
 	t.body = passp ? high_supply : low_supply;
 	const directive_base_params_type& p(e.params);
 	if (p.size() > 0) {

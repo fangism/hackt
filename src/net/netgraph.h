@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.10 2009/08/18 01:18:37 fang Exp $
+	$Id: netgraph.h,v 1.1.2.11 2009/08/21 00:03:00 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -32,6 +32,7 @@ using entity::PRS::footprint_expr_node;
 typedef	size_t		index_type;
 typedef	double		real_type;
 class netlist;
+class local_netlist;
 class netlist_generator;
 struct netlist_options;
 
@@ -270,6 +271,11 @@ struct netlist_common {
 	void
 	mark_used_nodes(NP&) const;
 
+	template <class NP>
+	ostream&
+	emit_devices(ostream&, const NP&, const footprint&, 
+		const netlist_options&) const;
+
 };	// end class netlist_common
 
 //-----------------------------------------------------------------------------
@@ -295,10 +301,17 @@ struct local_netlist : public netlist_common {
 	node_index_map_type			node_index_map;
 
 	// does NOT have local subinstances, only devices
+	template <class NP>
+	void
+	mark_used_nodes(NP&);
 
 	// requires a parent netlist for reference
 	ostream&
-	emit(ostream&, const netlist& n) const;
+	emit_definition(ostream&, const netlist& n,
+		const netlist_options&) const;
+	ostream&
+	emit_instance(ostream&, const netlist& n,
+		const netlist_options&) const;
 };	// end class local_netlist
 
 //-----------------------------------------------------------------------------
@@ -316,6 +329,7 @@ class netlist : public netlist_common {
 	 */
 	const footprint*		fp;
 public:
+friend class local_netlist;
 friend class netlist_generator;
 	/**
 		Collection of physical nodes, can be from logical nodes, 
@@ -386,6 +400,10 @@ private:
 		Running count of generated auxiliary nodes.
 	 */
 	index_type			aux_count;
+	/**
+		Running count of unnamed subcircuits.
+	 */
+	index_type			subs_count;
 
 public:
 	netlist();
@@ -475,6 +493,9 @@ struct netlist_options {
 	real_type			lambda;
 	/**
 		Emit nested subcircuits.
+		If true, print internal subcircuits locally to
+		each super-subcircuit where used, else print
+		all subcircuit definitions in flat namespace.
 		Othewise, emit subcircuit definitions prior to use.  
 	 */
 	bool				nested_subcircuits;
@@ -483,7 +504,6 @@ struct netlist_options {
 		emit only subcircuit definitions (library-only).
 	 */
 	bool				emit_top;
-
 	netlist_options();
 };	// end struct netlist_options
 
@@ -612,6 +632,9 @@ private:
 
 	index_type
 	register_internal_node(const index_type);
+
+	index_type
+	register_named_node(const index_type);
 
 };	// end class netlist_generator
 

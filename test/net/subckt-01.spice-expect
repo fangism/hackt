@@ -1,0 +1,19 @@
+.subckt inv_c<>::first GND Vdd _x a x
+M0_ GND a _x GND nch W=5u L=2u
+M1_ Vdd a _x Vdd pch W=5u L=2u
+M2_ GND _x x GND nch W=5u L=2u
+M3_ Vdd _x x Vdd pch W=5u L=2u
+.ends
+.subckt inv_c<>::second GND Vdd x _y b
+M0_ GND x _y GND nch W=5u L=2u
+M1_ Vdd x _y Vdd pch W=5u L=2u
+M2_ GND _y b GND nch W=5u L=2u
+M3_ Vdd _y b Vdd pch W=5u L=2u
+.ends
+.subckt inv_c<> a b
+xfirst:inst GND Vdd _x a x inv_c<>::first
+xsecond:inst GND Vdd x _y b inv_c<>::second
+.ends
+
+xfoo foo.a foo.b inv_c<>
+

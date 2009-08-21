@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.14 2009/08/18 21:18:54 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.15 2009/08/21 00:03:01 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -15,20 +15,22 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	port-alias-01 port-alias-02 port-alias-03 port-alias-04 port-alias-05 \
 	unused-port-01 \
 	unconnected-01 unconnected-02 \
-	internal-00 internal-05 internal-06 internal-07 internal-08 \
+	internal-00 internal-03 \
+	internal-05 internal-06 internal-07 internal-08 \
 	internal-09 internal-10 \
 	precharge-01 precharge-02 precharge-03 precharge-04 precharge-05 \
 	precharge-internal-01 precharge-internal-02 precharge-internal-03 \
 	non-CMOS-01 non-CMOS-02 \
 	sizing-01 sizing-02 sizing-03 \
-	pass_gate-01 pass_gate-02 pass_gate-03 pass_gate-04
+	pass_gate-01 pass_gate-02 pass_gate-03 pass_gate-04 \
+	subckt-01
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05
 
 # TODO: promote these to real tests
 EXTRA_DIST_HAC = \
-	subckt-01 subckt-02 \
+	subckt-02 \
 	internal-01 internal-02 internal-03 internal-04 \
 	process-port-01 process-port-02
 # internal-01..04 need subcircuits first

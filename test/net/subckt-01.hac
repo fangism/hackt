@@ -1,6 +1,6 @@
 // "subckt-01.hac"
 // test for behavior of netgen w.r.t. subcircuits
-// @hacknet_flags@
+// @hacknet-flags@
 
 defproc inv_c(bool a, b) {
 bool _x, x, _y;

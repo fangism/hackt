@@ -1,7 +1,7 @@
 // "subckt-02.hac"
 // copy-modified from "subckt-01.hac"
 // test for behavior of netgen w.r.t. subcircuits
-// @hacknet_flags@ -p 'inv_c<>'
+// @netgen-flags@ -p 'inv_c<>'
 // expect fail: netgen only allows one-level of subckt
 
 defproc inv_c(bool a, b) {

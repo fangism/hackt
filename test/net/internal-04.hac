@@ -1,5 +1,6 @@
 // "internal-04.hac"
 // copy-modified from "internal-03.hac"
+// FIXME: emit proper ports for bar
 
 defproc foo(bool en, x, _y) {
 bool z;
