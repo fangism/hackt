@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-08-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-16:
+	  hacknet: added Vdd and GND ports to subcircuits, only where used.
+		stripped out spaces from template type names, e.g. "<3, 2>".
+		Updated test cases, added a few new ones.
+	  next: home scope of internal node definitions.
+
+
 2009-08-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-15:

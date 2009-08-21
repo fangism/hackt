@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.11 2009/08/21 00:03:00 fang Exp $
+	$Id: netgraph.h,v 1.1.2.12 2009/08/21 21:51:40 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -115,6 +115,9 @@ struct node {
 	// true if ndoe is automatically generated
 	bool
 	is_auxiliary_node(void) const { return type == NODE_TYPE_AUXILIARY; }
+
+	bool
+	is_supply_node(void) const { return type == NODE_TYPE_SUPPLY; }
 
 	ostream&
 	emit(ostream&, const footprint&) const;

@@ -1,4 +1,4 @@
-.subckt nand<4> a[0] a[1] a[2] a[3] o
+.subckt nand<4> GND Vdd a[0] a[1] a[2] a[3] o
 M0_ GND a[0] #0 GND nch W=5u L=2u
 M1_ #0 a[1] #1 GND nch W=5u L=2u
 M2_ #1 a[2] #2 GND nch W=5u L=2u
@@ -9,5 +9,5 @@ M6_ Vdd a[2] o Vdd pch W=5u L=2u
 M7_ Vdd a[3] o Vdd pch W=5u L=2u
 .ends
 
-xfoo foo.a[0] foo.a[1] foo.a[2] foo.a[3] foo.o nand<4>
+xfoo GND Vdd foo.a[0] foo.a[1] foo.a[2] foo.a[3] foo.o nand<4>
 

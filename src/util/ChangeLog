@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.104.6.1 2009/07/31 00:22:12 fang Exp $
+#	$Id: ChangeLog,v 1.104.6.2 2009/08/21 21:51:40 fang Exp $
+
+2009-08-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-16:
+	  Added util/string.cc: strgsub(), global string exact match
+		substitution function, convenient for name mangling.
+		Not usable for regular expressions.  
+	  Added util/test/string_test.cc.
+
 
 2009-07-30	David Fang		<fangism@users.sourceforge.net>
 

@@ -10,10 +10,10 @@ M1_ Vdd x _y Vdd pch W=5u L=2u
 M2_ GND _y b GND nch W=5u L=2u
 M3_ Vdd _y b Vdd pch W=5u L=2u
 .ends
-.subckt inv_c<> a b
+.subckt inv_c<> GND Vdd a b
 xfirst:inst GND Vdd _x a x inv_c<>::first
 xsecond:inst GND Vdd x _y b inv_c<>::second
 .ends
 
-xfoo foo.a foo.b inv_c<>
+xfoo GND Vdd foo.a foo.b inv_c<>
 

@@ -1,0 +1,11 @@
+.subckt pull_down<> GND a b
+M0_ GND a b GND nch W=5u L=2u
+.ends
+
+.subckt pull_up<> Vdd a b
+M0_ Vdd a b Vdd pch W=5u L=2u
+.ends
+
+xd GND a b pull_down<>
+xu Vdd a b pull_up<>
+

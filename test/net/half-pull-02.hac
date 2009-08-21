@@ -1,0 +1,6 @@
+// "half-pull-02.hac"
+
+import "half-pull-01.hac";
+
+inv foo;
+

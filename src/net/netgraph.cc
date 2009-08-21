@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.15 2009/08/21 00:02:59 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.16 2009/08/21 21:51:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -27,6 +27,7 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/bool_port_collector.tcc"
 #include "util/unique_list.tcc"
+#include "util/string.h"		// for strgsub
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -54,6 +55,7 @@ using entity::PRS::PRS_NODE_TYPE_ENUM;
 using entity::directive_base_params_type;
 using entity::preal_value_type;
 using util::unique_list;
+using util::strings::strgsub;
 
 //=============================================================================
 // class netlist_options method definitions
@@ -411,10 +413,11 @@ netlist::~netlist() { }
 void
 netlist::bind_footprint(const footprint& f, const netlist_options& nopt) {
 	fp = &f;
-	// TODO: format or mangle type name, e.g. eliminate space
+	// TODO: format or mangle type name, e.g. template brackets
 	ostringstream oss;
 	f.dump_type(oss);
 	name = oss.str();
+	strgsub(name, " ", "");		// remove spaces
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -471,7 +474,16 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 		const node& fn(subnet.node_pool[*fi]);	// formal node
 		INVARIANT(fn.used);
 		// TODO: handle supply nodes
-		if (fn.is_logical_node()) {
+		if (fn.is_supply_node()) {
+			if (*fi == GND_index) {
+				np.actuals.push_back(GND_index);
+			} else if (*fi == Vdd_index) {
+				np.actuals.push_back(Vdd_index);
+			} else {
+				cerr << "ERROR: unknown supply port." << endl;
+				THROW_EXIT;
+			}
+		} else if (fn.is_logical_node()) {
 			const index_type fid = fn.index;
 			STACKTRACE_INDENT_PRINT("formal id = " << fid << endl);
 
@@ -489,6 +501,10 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 				register_named_node(actual_id);
 			STACKTRACE_INDENT_PRINT("actual node = " << actual_node << endl);
 			np.actuals.push_back(actual_node);
+		} else {
+			cerr << "ERROR: unhandled instance port node type."
+				<< endl;
+			THROW_EXIT;
 		}
 		// else skip for now
 	}
@@ -776,14 +792,18 @@ bool_port_alias_collector::visit(const instance_alias_info<bool_tag>& a) {
 /**
 	Create a port summary so that other processes may correctly
 	instantiate this.  
-	What to do about supplies?
-	FIXME: inadvertently adds non-ports to the port_list
 	TODO: power supply ports
  */
 void
 netlist::summarize_ports(void) {
 	STACKTRACE_VERBOSE;
 	// could mark_used_nodes here instead?
+	if (node_pool[GND_index].used) {
+		port_list.push_back(GND_index);
+	}
+	if (node_pool[Vdd_index].used) {
+		port_list.push_back(Vdd_index);
+	}
 #if 1
 	typedef	unique_list<index_type>	port_index_list_type;
 	bool_port_alias_collector V;
@@ -801,10 +821,9 @@ netlist::summarize_ports(void) {
 			.is_a<const physical_instance_collection>()->accept(V);
 	}
 #endif
-	// handle Vdd and GND separately
 	port_index_list_type::const_iterator
 		i(V.bool_indices.begin()), e(V.bool_indices.end());
-	port_list.reserve(V.bool_indices.size());
+	port_list.reserve(V.bool_indices.size() +2);	// for supplies
 	for ( ; i!=e; ++i) {
 		// 1-indexed local id to 0-indexed named_node_map
 		INVARIANT(*i);

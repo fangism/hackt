@@ -2,7 +2,7 @@
 	\file "util/string.h"
 	Configure-detected string library header.  
 	For now, this is really reserved for C++.
-	$Id: string.h,v 1.4 2008/03/17 23:03:09 fang Exp $
+	$Id: string.h,v 1.4.18.1 2009/08/21 21:51:43 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_H__
@@ -35,6 +35,7 @@ END_C_DECLS
 namespace util {
 namespace strings {
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param C is the character pointer/iterator type, 
 	may be const, may be wchar_t.  
@@ -50,20 +51,28 @@ eat_whitespace(C& s) {
 	return s;
 }
 
-#if 0
-/**
-	Intentionally empty general definition.  
-	Valid definitions only appear in specializations.  
- */
-template <typename I>
-struct string_to_int_converter { };
-#endif
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// Return false if conversion-assignment to int is successful.  
 template <class I>
 bool
 string_to_num(const std::string&, I&);
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// regex-like functions
+// waiting for std::regex <c++0x>
+
+/**
+	String global substitution.
+	This is only based on exact-matching, not regular expressions!
+	\param t the target string (modified)
+	\param s the search pattern
+	\param r the replacement string
+	\return number of substitutions performed
+ */
+size_t
+strgsub(std::string& t, const std::string& s, const std::string& r);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace strings
 }	// end namespace util
 #endif	/* __cplusplus */

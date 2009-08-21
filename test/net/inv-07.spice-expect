@@ -1,12 +1,12 @@
-.subckt inv<> x y
+.subckt inv<> GND Vdd x y
 M0_ GND x y GND nch W=5u L=2u
 M1_ Vdd x y Vdd pch W=5u L=2u
 .ends
 
-.subckt foo<> a c
-xp a b inv<>
-xq b c inv<>
+.subckt foo<> GND Vdd a c
+xp GND Vdd a b inv<>
+xq GND Vdd b c inv<>
 .ends
 
-xbar bar.a bar.c foo<>
+xbar GND Vdd bar.a bar.c foo<>
 
