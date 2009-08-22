@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.35.2.3 2009/08/01 00:13:23 fang Exp $
+	$Id: PRS.cc,v 1.35.2.4 2009/08/22 01:54:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -940,18 +940,23 @@ subcircuit::dump(ostream& o, const rule_dump_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Unrolls a set of loop-dependent production rules.  
-	TODO: add structure
  */
 good_bool
 subcircuit::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 #if PRS_FOOTPRINT_SUBCKT
 	PRS::footprint::subcircuit_map_entry e(this);	// need name?
 	e.rules.first = pfp.get_rule_pool().size();
 	e.macros.first = pfp.get_macro_pool().size();
+	e.int_nodes.first = pfp.get_internal_node_pool().size();
 	const good_bool ret(nested_rules::unroll(c, np, pfp));
+	// this works by virtue of tracking changes to the overall
+	// footprint pools and recording the differences as a part
+	// of subcircuit tracking, kinda weird, no?
 	e.rules.second = pfp.get_rule_pool().size();
 	e.macros.second = pfp.get_macro_pool().size();
+	e.int_nodes.second = pfp.get_internal_node_pool().size();
 	pfp.push_back_subcircuit(e);
 	return ret;
 #else

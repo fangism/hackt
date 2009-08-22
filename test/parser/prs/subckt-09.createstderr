@@ -57,7 +57,7 @@ Persistent Object Manager text dump:
 	53	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	54	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	55	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	662
+	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	678
 	57	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	58	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	485
@@ -138,9 +138,9 @@ In namespace "", we have: {
         ~p -> q+
         q -> r-
         ~q -> r+
-        subcircuit (rules, macros): 
-        1: 1..1 none
-        1: 3..5 none
+        subcircuit (rules, macros, @nodes): 
+        1: 1..1 none none 
+        2: 3..5 none none 
       }
       }
 

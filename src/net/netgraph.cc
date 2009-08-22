@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.16 2009/08/21 21:51:39 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.17 2009/08/22 01:54:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1060,18 +1060,35 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	// PRS::footprint maps from string (name of internal node) to 
 	// a local internal node index, which is mapped to a subcircuit
 	// node index here (reverse map).
+#if PRS_INTERNAL_NODE_POOL
+	const prs_footprint::internal_node_pool_type&
+		inode_pool(prs->get_internal_node_pool());
+	prs_footprint::internal_node_pool_type::const_iterator
+		i(inode_pool.begin()), e(inode_pool.end());
+#else
 	const prs_footprint::internal_node_expr_map_type&
 		inode_map(prs->get_internal_node_map());
 	prs_footprint::internal_node_expr_map_type::const_iterator
 		i(inode_map.begin()), e(inode_map.end());
+#endif
 	for ( ; i!=e; ++i) {
 		// each entry is a node_expr_type
 		// where pair:first is expr-index and second is direction
+#if PRS_INTERNAL_NODE_POOL
+		// TODO: re-use footprint's internal_node_pool
+		// as basis for subcircuits internal_node_map
+		const index_type& expr = i->first;
+		const bool dir = i->second;
+		const index_type new_int =
+			current_netlist->create_internal_node(
+				expr, i->name, dir);
+#else
 		const index_type& expr = i->second.first;
 		const bool dir = i->second.second;
 		const index_type new_int =
 			current_netlist->create_internal_node(
 				expr, i->first, dir);
+#endif
 		INVARIANT(new_int);
 		INVARIANT(current_netlist->lookup_internal_node(expr).first);
 	}

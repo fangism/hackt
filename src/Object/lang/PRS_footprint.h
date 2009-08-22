@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.14.2.3 2009/08/08 01:34:07 fang Exp $
+	$Id: PRS_footprint.h,v 1.14.2.4 2009/08/22 01:54:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -27,8 +27,21 @@
 	maintaining subcircuit hierarchy.  
 	For now subircuits are 1-level, and thus, cannot be nested. 
 	Goal: 1
+	Status: done, tested
  */
 #define	PRS_FOOTPRINT_SUBCKT			1
+
+/**
+	Define to 1 to use a pooled storage for internal nodes, 
+	instead of map<string, internal_node> directly.  
+	Goal: 1
+	Rationale: allows for efficient lookup and reverse lookup
+		by name/index, indices are cheaper to store than strings, 
+		which is critical for subcircuit entries, and in turn, 
+		helpful for netlist generation structures.  
+	Status: basically tested
+ */
+#define	PRS_INTERNAL_NODE_POOL			1
 
 namespace HAC {
 struct cflat_options;
@@ -51,6 +64,7 @@ using std::istream;
 using util::persistent_object_manager;
 using util::good_bool;
 using std::map;
+using std::pair;
 using std::string;
 using util::memory::never_ptr;
 
@@ -78,7 +92,21 @@ public:
 		pull-up is true, pull-down if false.
 		first index value is expression index.
 	 */
-	typedef	std::pair<size_t, bool>		node_expr_type;
+#if PRS_INTERNAL_NODE_POOL
+	struct node_expr_type : public pair<size_t, bool> {
+		typedef	pair<size_t, bool>	parent_type;
+		// redundant, but relying on copy-on-write memory efficiency
+		string				name;
+
+		node_expr_type() { }	// uninitialized
+		node_expr_type(const size_t i, const bool d, const string& n) :
+			parent_type(i, d), name(n) { }
+
+	};	// end struct node_expr_type
+	typedef	vector<node_expr_type>		internal_node_pool_type;
+#else
+	typedef	pair<size_t, bool>		node_expr_type;
+#endif
 	/**
 		This map keeps track of internal nodes defined in 
 		terms of one-sided guard expressions.  
@@ -88,7 +116,13 @@ public:
 		TODO: Is there a way to store reference object instead
 		of their string representations?  (yes, but not critical now)
 	 */
+#if PRS_INTERNAL_NODE_POOL
+	// this is a redundant map, value is index into internal_node_pool
+	// key is same as node_expr_type::name
+	typedef	map<string, size_t>		internal_node_expr_map_type;
+#else
 	typedef	map<string, node_expr_type>	internal_node_expr_map_type;
+#endif
 	/// list of root expression indices
 	typedef	vector<invariant_type>		invariant_pool_type;
 #if PRS_FOOTPRINT_SUBCKT
@@ -112,9 +146,13 @@ public:
 			having to save the pointer persistently.
 		 */
 		never_ptr<const subcircuit>	back_ref;
-		// TODO: map which internal node (pooled) expressions this owns
 		index_range			rules;
 		index_range			macros;
+#if PRS_INTERNAL_NODE_POOL
+		index_range			int_nodes;
+#else
+		// TODO: map which internal node (pooled) expressions this owns
+#endif
 		subcircuit_map_entry() { }
 		subcircuit_map_entry(const subcircuit* b) : back_ref(b) { }
 
@@ -149,6 +187,9 @@ private:
 	rule_pool_type				rule_pool;
 	expr_pool_type				expr_pool;
 	macro_pool_type				macro_pool;
+#if PRS_INTERNAL_NODE_POOL
+	internal_node_pool_type			internal_node_pool;
+#endif
 	internal_node_expr_map_type		internal_node_expr_map;
 	invariant_pool_type			invariant_pool;
 #if PRS_FOOTPRINT_SUBCKT
@@ -199,10 +240,17 @@ public:
 	size_t
 	lookup_internal_node_expr(const string&, const bool) const;
 
+#if PRS_INTERNAL_NODE_POOL
+	const internal_node_pool_type&
+	get_internal_node_pool(void) const {
+		return internal_node_pool;
+	}
+#else
 	const internal_node_expr_map_type&
 	get_internal_node_map(void) const {
 		return internal_node_expr_map;
 	}
+#endif
 
 	// returns reference to new expression node
 	expr_node&

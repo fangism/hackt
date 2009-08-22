@@ -1,0 +1,14 @@
+// "subckt-13.hac"
+// testing ownership of internal nodes in subcircuits
+
+defproc foo(bool en, a, b) {
+prs {
+subckt {
+	en	-> @x-
+	~@x & a	-> b-
+}
+}
+}
+
+foo bar;
+

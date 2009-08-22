@@ -5,10 +5,19 @@
 
 2009-08-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-27-netlist-01-17:
+	  Added PRS::footprint support for tracking which subcircuits
+		'own' which internal nodes (definitions).  
+		Test cases (create) updated, new ones added.  
+	  next: hacknet to use this information to emit internal rule
+		subnets in the proper subcircuit.
+
+
 	* HACKT-00-01-04-main-00-83-27-netlist-01-16:
 	  hacknet: added Vdd and GND ports to subcircuits, only where used.
 		stripped out spaces from template type names, e.g. "<3, 2>".
 		Updated test cases, added a few new ones.
+	  see also util/ChangeLog for string.cc lib addition, strgsub().
 	  next: home scope of internal node definitions.
 
 

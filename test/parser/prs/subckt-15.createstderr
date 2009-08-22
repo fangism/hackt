@@ -1,0 +1,102 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	8	##ADDR##	nodeplch	0	#HEAD#	#TAIL#	21
+	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	417
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	377
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        bool<> en
+        bool<> a
+        bool<> b
+      )
+      In definition "foo", we have: {
+      Instances:
+        a = bool<> foo::a
+        b = bool<> foo::b
+        en = bool<> foo::en
+        x = -node-<> foo::x
+      unroll sequence: 
+        ports: (
+          bool<> en
+          bool<> a
+          bool<> b
+        )
+      prs:
+        en -> @x-
+        subckt <""> {
+          ~@x & a -> b-
+        }
+      footprint: {
+        a = bool^0 = foo<>::a (2) 
+        b = bool^0 = foo<>::b (3) 
+        en = bool^0 = foo<>::en (1) 
+        Created state:
+        bool instance pool:
+        1	foo<>::en
+        2	foo<>::a
+        3	foo<>::b
+        resolved prs:
+        en & a -> b-
+        internal node exprs: 
+        @x- <- en
+        subcircuit (rules, macros, @nodes): 
+        1: 0..0 none none 
+      }
+      }
+
+  Instances:
+    bar = foo<> bar
+}
+
+footprint: {
+  bar = process foo<>^0 = bar (1) (
+    en = bool^0 = bar.en (1) 
+    a = bool^0 = bar.a (2) 
+    b = bool^0 = bar.b (3) 
+  )
+  Created state:
+  process instance pool:
+  1	bar
+  bool instance pool:
+  1	bar.en
+  2	bar.a
+  3	bar.b
+}
