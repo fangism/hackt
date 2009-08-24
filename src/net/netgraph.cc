@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.17 2009/08/22 01:54:28 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.18 2009/08/24 16:48:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1079,16 +1079,14 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		// as basis for subcircuits internal_node_map
 		const index_type& expr = i->first;
 		const bool dir = i->second;
-		const index_type new_int =
-			current_netlist->create_internal_node(
-				expr, i->name, dir);
+		const string& n(i->name);
 #else
 		const index_type& expr = i->second.first;
 		const bool dir = i->second.second;
-		const index_type new_int =
-			current_netlist->create_internal_node(
-				expr, i->first, dir);
+		const string& n(i->first);
 #endif
+		const index_type new_int =
+			current_netlist->create_internal_node(expr, n, dir);
 		INVARIANT(new_int);
 		INVARIANT(current_netlist->lookup_internal_node(expr).first);
 	}

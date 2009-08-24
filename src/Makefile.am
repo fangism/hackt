@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.219.4.2 2009/08/12 00:29:32 fang Exp $
+#	$Id: Makefile.am,v 1.219.4.3 2009/08/24 16:48:49 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -498,6 +498,7 @@ OBJECT_INST_TCC_FILES = \
 OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/alias_visitee.h \
 	Object/inst/alias_visitor.h \
+	Object/inst/bool_port_collector.h \
 	Object/inst/collection_fwd.h \
 	Object/inst/connection_policy_fwd.h \
 	Object/inst/instance_fwd.h \

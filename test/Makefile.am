@@ -1,10 +1,10 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.48.10.1 2009/08/10 22:31:27 fang Exp $
+#	$Id: Makefile.am,v 1.48.10.2 2009/08/24 16:48:51 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 # this directory first, to clean the test-report
-SUBDIRS = . lexer parser prsim chpsim guile lib benchmarks quarantine
+SUBDIRS = . lexer parser prsim chpsim guile net lib benchmarks quarantine
 
 # bogus test
 TESTS +=
