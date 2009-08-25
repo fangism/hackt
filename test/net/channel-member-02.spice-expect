@@ -1,0 +1,11 @@
+* subcircuit e1of2<> is empty.
+.subckt res<6> GND in out
+M0_ in in out GND nch W=5u L=2u
+.ends
+
+.subckt connect_me<> GND i.e o.e
+xr GND i.e o.e res<6>
+.ends
+
+xplease GND please.i.e please.o.e connect_me<>
+

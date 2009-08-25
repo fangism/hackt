@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.19 2009/08/25 01:22:41 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.20 2009/08/25 23:00:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -43,6 +43,8 @@ using entity::state_instance;
 using entity::port_formals_manager;
 using entity::process_definition;
 using entity::physical_instance_collection;
+using entity::port_alias_tracker_base;
+using entity::alias_reference_set;
 using std::ostringstream;
 using std::ostream_iterator;
 using util::value_saver;
@@ -518,6 +520,7 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 		const netlist& subnet, const index_type lpid) {
 	STACKTRACE_VERBOSE;
 	const footprint* subfp = subp._frame._footprint;
+	// cannot use global allocated footprint_frame
 //	const netlist& subnet(netmap.find(subfp)->second);
 	INVARIANT(subfp == subnet.fp);
 	// subnet's port list may be shorter than formals list, due to aliases
@@ -551,12 +554,38 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 			const instance_alias_info<bool_tag>&
 				fb(*subnet.fp->get_instance_pool<bool_tag>()[fid].get_back_ref());
 			INVARIANT(fb.is_aliased_to_port());
-			// ALERT: might pick a non-port alias!!!
+			index_type actual_id = 0;
+			// ALERT: fb might pick a non-port alias!!!
 			// picking *any* port-alias should suffice because
 			// formal port-aliases have been replayed.
+		if (!fb.is_port_alias()) {
+			// HACK ALERT!
+			// well, damn it, FIND me a suitable alias!
+//			fb.dump_hierarchical_name(cerr << "ALIAS: ") << endl;
+			typedef port_alias_tracker_base<bool_tag>::map_type
+						alias_map_type;
+			const alias_map_type&
+				pat(subfp->get_scope_alias_tracker()
+					.get_id_map<bool_tag>());
+			alias_map_type::const_iterator
+				f(pat.find(fid)), e(pat.end());
+			INVARIANT(f != e);
+			const alias_reference_set<bool_tag>& rs(f->second);
+			alias_reference_set<bool_tag>::const_iterator
+				ai(rs.begin()), ae(rs.end());
+			for ( ; ai!=ae; ++ai) {
+			if ((*ai)->is_port_alias()) {
+				actual_id = (*ai)->trace_alias(lp).instance_index;
+				break;
+			}
+			}
+			INVARIANT(ai != ae);
+		} else {
 			const instance_alias_info<bool_tag>&
 				ab(fb.trace_alias(lp));
-			const index_type actual_id = ab.instance_index;
+			actual_id = ab.instance_index;
+		}
+			INVARIANT(actual_id);
 			STACKTRACE_INDENT_PRINT("LOCAL actual id = " << actual_id << endl);
 			const index_type actual_node =
 				register_named_node(actual_id);

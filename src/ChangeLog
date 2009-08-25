@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-19:
+	  hacknet: fixed bug looking up a port that wasn't a port alias.
+		Solution: search scope aliases for a port alias, b/c
+		at least one MUST be a direct port-alias (hackish).
+	  Added test cases for this fix.  
+	  Next: need recursive definition of 'empty' subcircuits, 
+		need to define a member flag.
+
+
 2009-08-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-18:
