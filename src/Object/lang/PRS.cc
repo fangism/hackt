@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.35.2.4 2009/08/22 01:54:26 fang Exp $
+	$Id: PRS.cc,v 1.35.2.5 2009/08/25 01:22:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -940,12 +940,16 @@ subcircuit::dump(ostream& o, const rule_dump_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Unrolls a set of loop-dependent production rules.  
+	Check for non-nestedness with function-local static variable.
  */
 good_bool
 subcircuit::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
 	STACKTRACE_VERBOSE;
 #if PRS_FOOTPRINT_SUBCKT
+	static bool __lock__ = false;
+if (!__lock__) {
+	const util::value_saver<bool> __tmp(__lock__, true);
 	PRS::footprint::subcircuit_map_entry e(this);	// need name?
 	e.rules.first = pfp.get_rule_pool().size();
 	e.macros.first = pfp.get_macro_pool().size();
@@ -959,6 +963,10 @@ subcircuit::unroll(const unroll_context& c, const node_pool_type& np,
 	e.int_nodes.second = pfp.get_internal_node_pool().size();
 	pfp.push_back_subcircuit(e);
 	return ret;
+} else {
+	cerr << "ERROR: nested subcircuits are not yet supported." << endl;
+	return good_bool(false);
+}
 #else
 	return nested_rules::unroll(c, np, pfp);
 #endif

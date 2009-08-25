@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.14.2.4 2009/08/22 01:54:27 fang Exp $
+	$Id: PRS_footprint.h,v 1.14.2.5 2009/08/25 01:22:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -93,6 +93,10 @@ public:
 		first index value is expression index.
 	 */
 #if PRS_INTERNAL_NODE_POOL
+	/**
+		first: expression index
+		second: direction
+	 */
 	struct node_expr_type : public pair<size_t, bool> {
 		typedef	pair<size_t, bool>	parent_type;
 		// redundant, but relying on copy-on-write memory efficiency
@@ -117,8 +121,9 @@ public:
 		of their string representations?  (yes, but not critical now)
 	 */
 #if PRS_INTERNAL_NODE_POOL
-	// this is a redundant map, value is index into internal_node_pool
+	// this is a redundant map, 
 	// key is same as node_expr_type::name
+	// value is index into internal_node_pool
 	typedef	map<string, size_t>		internal_node_expr_map_type;
 #else
 	typedef	map<string, node_expr_type>	internal_node_expr_map_type;
@@ -158,6 +163,17 @@ public:
 
 		const string&
 		get_name(void) const;
+
+		bool
+		rules_empty(void) const { return rules.first == rules.second; }
+
+		bool
+		macros_empty(void) const { return macros.first == macros.second; }
+
+		bool
+		nodes_empty(void) const {
+			return int_nodes.first == int_nodes.second;
+		}
 
 		void
 		collect_transient_info_base(persistent_object_manager&) const;
@@ -244,6 +260,12 @@ public:
 	const internal_node_pool_type&
 	get_internal_node_pool(void) const {
 		return internal_node_pool;
+	}
+
+	const node_expr_type&
+	get_internal_node(const size_t i) const {
+		INVARIANT(i < internal_node_pool.size());
+		return internal_node_pool[i];
 	}
 #else
 	const internal_node_expr_map_type&

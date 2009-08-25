@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.12 2009/08/21 21:51:40 fang Exp $
+	$Id: netgraph.h,v 1.1.2.13 2009/08/25 01:22:42 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -21,6 +21,7 @@ using std::vector;
 using std::string;
 using std::map;
 using std::set;
+using std::pair;
 using entity::cflat_context_visitor;
 using entity::state_manager;
 using entity::footprint;
@@ -56,6 +57,8 @@ struct node {
 	static const __auxiliary_node_tag	auxiliary_node_tag;
 	/**
 		Index may correspond to index in local bool instance pool.
+		For internal nodes, they correspond to the footprint's
+		local internal index (pooled).
 	 */
 	index_type			index;
 	/**
@@ -64,6 +67,8 @@ struct node {
 		in the original local definition, possibly mangled.  
 		Need disambioguous ways of naming internal and 
 		auxiliary nodes.
+		Internal nodes just (optionally) copy this over
+		from their footprint.  
 	 */
 	string				name;
 	/**
@@ -95,8 +100,8 @@ struct node {
 		index(0), name(s), type(NODE_TYPE_SUPPLY), used(false) { }
 	node(const index_type i, const __logical_node_tag&) : 
 		index(i), name(), type(NODE_TYPE_LOGICAL), used(false) { }
-	node(const string& s, const __internal_node_tag&) : 
-		index(0), name(s), type(NODE_TYPE_INTERNAL), used(false) { }
+	node(const index_type i, const __internal_node_tag&) : 
+		index(i), name(), type(NODE_TYPE_INTERNAL), used(false) { }
 	node(const __auxiliary_node_tag&) : 
 		index(0), name(), type(NODE_TYPE_AUXILIARY), used(false) { }
 	// only for VOID node
@@ -279,6 +284,9 @@ struct netlist_common {
 	emit_devices(ostream&, const NP&, const footprint&, 
 		const netlist_options&) const;
 
+	ostream&
+	dump_raw_devices(ostream&) const;
+
 };	// end class netlist_common
 
 //-----------------------------------------------------------------------------
@@ -315,6 +323,9 @@ struct local_netlist : public netlist_common {
 	ostream&
 	emit_instance(ostream&, const netlist& n,
 		const netlist_options&) const;
+
+	ostream&
+	dump_raw(ostream&, const netlist&) const;
 };	// end class local_netlist
 
 //-----------------------------------------------------------------------------
@@ -327,6 +338,7 @@ struct local_netlist : public netlist_common {
 	and iterators after tail-insertion, which may cause reallocation.  
  */
 class netlist : public netlist_common {
+	typedef	entity::PRS::footprint	prs_footprint;
 	/**
 		Keep around footprint for node reference and printing.
 	 */
@@ -340,18 +352,24 @@ friend class netlist_generator;
 	 */
 	typedef	vector<node>		node_pool_type;
 	/**
-		(local-netlist-node-id, direction)
+		first: local node index
+		second: owner subcircuit index (1-indexed)
 	 */
-	typedef	std::pair<index_type, bool>	internal_node_entry_type;
+	typedef	pair<index_type, index_type> internal_node_entry_type;
 	/**
-		Collection of internal nodes.  
-		key= prs footprint's local expression index for internal node
-		value= index into node_pool for node, direction of pull.
-		For now, internal nodes are scoped in flat namespace.
-		Just a reverse-map from that found in PRS::footprint.
+		Maps the local footprint's internal node to 
+		the netlist's generic node index.  
+		index: footprint's internal node index
 	 */
-	typedef	map<index_type, internal_node_entry_type>
+	typedef	vector<internal_node_entry_type>
 					internal_node_map_type;
+	/**
+		Reverse-map for looking up by expression id.  
+		key = prs footprint's local expression index
+		value = footprint-index of internal node
+	 */
+	typedef	map<index_type, index_type>
+					internal_expr_map_type;
 	/**
 		index= local footprint index of node
 		value= netlist index of node
@@ -392,6 +410,7 @@ private:
 	node_pool_type			node_pool;
 	instance_pool_type		instance_pool;
 	internal_node_map_type		internal_node_map;
+	internal_expr_map_type		internal_expr_map;
 	local_subcircuit_list_type	local_subcircuits;
 	/**
 		List of local node indices.  
@@ -416,7 +435,7 @@ public:
 	bind_footprint(const footprint&, const netlist_options&);
 
 	void
-	bind_footprint(const footprint&, const netlist_options&, const string&);
+	bind_footprint(const footprint&, const string&);
 
 	const string&
 	get_name(void) const { return name; }
@@ -427,12 +446,11 @@ public:
 	index_type
 	create_auxiliary_node(void);
 
-	// TODO: combine lookup and create!
 	index_type
-	create_internal_node(const index_type, const string&, const bool);
+	create_internal_node(const index_type ni, const index_type ei);
 
-	internal_node_entry_type
-	lookup_internal_node(const index_type) const;
+	index_type
+	lookup_internal_node(const index_type i) const;
 
 	index_type
 	register_named_node(const index_type);
@@ -456,6 +474,9 @@ public:
 private:
 	void
 	mark_used_nodes(void);
+
+	void
+	__bind_footprint(const footprint&);
 
 };	// end class netlist
 

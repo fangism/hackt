@@ -1,7 +1,6 @@
 // "internal-03.hac"
 // copy-modified from "internal-01.hac"
 // netgen accepts this
-// FIXME: emit proper ports for bar
 
 defproc foo(bool en, x, _y) {
 _y @ [autokeeper=0];

@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-08-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-18:
+	  lang/PRS.cc: added cerate-time check that subcircuits cannot
+		be nested (yet), though this would be better at compile-time.
+	  hacknet: internal node rules are now emitted in the subsubcircuit
+		in which they are defined, thereby allowing named
+		internal nodes to be passed around among local subcircuits.
+		Completely re-worked subcircuit traversal and 
+		internal node mapping data structures.  
+	  Test cases added.
+
+
 2009-08-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-17:

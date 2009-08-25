@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.18 2009/08/24 16:48:50 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.19 2009/08/25 01:22:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -43,7 +43,6 @@ using entity::state_instance;
 using entity::port_formals_manager;
 using entity::process_definition;
 using entity::physical_instance_collection;
-using std::pair;
 using std::ostringstream;
 using std::ostream_iterator;
 using util::value_saver;
@@ -117,6 +116,18 @@ netlist_common::emit_devices(ostream& o, const NP& node_pool,
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+netlist_common::dump_raw_devices(ostream& o) const {
+	typedef	transistor_pool_type::const_iterator	const_iterator;
+	const_iterator i(transistor_pool.begin()), e(transistor_pool.end());
+	size_t j = 0;
+	for ( ; i!=e; ++i, ++j) {
+		i->dump_raw(o << "  " << j << ": ") << endl;
+	}
+	return o;
+}
+
 //=============================================================================
 // class local_netlist method definitions
 
@@ -139,6 +150,21 @@ local_netlist::mark_used_nodes(NP& node_pool) {
 		node_index_map.insert(i->body);
 		node_pool[i->body].used = true;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+local_netlist::dump_raw(ostream& o, const netlist& n) const {
+	o << name;
+	typedef	node_index_map_type::const_iterator	const_iterator;
+	const_iterator i(node_index_map.begin()), e(node_index_map.end());
+	for ( ; i!=e; ++i) {
+		n.node_pool[*i].dump_raw(o << ' ');
+	}
+	o << endl;
+	o << "transistors:" << endl;
+	dump_raw_devices(o);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -192,6 +218,8 @@ if (!nopt.nested_subcircuits) {
 	How to format print each node's identity.  
 	TODO: make special designators configurable.
 	TODO: configurable optional name-mangling?
+	\param fp the context of this node index, 
+		used for named nodes and internal nodes.
  */
 ostream&
 node::emit(ostream& o, const footprint& fp) const {
@@ -205,7 +233,7 @@ case NODE_TYPE_LOGICAL:
 	// TODO: possibly perform mangling
 	break;
 case NODE_TYPE_INTERNAL:
-	o << '@' << name;
+	o << '@' << fp.get_prs_footprint().get_internal_node(index).name;
 	break;
 case NODE_TYPE_AUXILIARY:
 	o << '#';
@@ -232,10 +260,10 @@ ostream&
 node::dump_raw(ostream& o) const {
 switch (type) {
 case NODE_TYPE_LOGICAL:
-	o << ":" << index;
+	o << ':' << index;
 	break;
 case NODE_TYPE_INTERNAL:
-	o << '@' << name;
+	o << '@' << index;	// was name
 	break;
 case NODE_TYPE_AUXILIARY:
 	o << '#';
@@ -335,7 +363,6 @@ transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 	// TODO: restrict lengths and widths, from tech/conf file
 	o << " W=" << width *nopt.lambda << nopt.length_unit <<
 		" L=" << length *nopt.lambda << nopt.length_unit;
-	// TODO: scale factor?
 	return o;
 }
 
@@ -363,6 +390,7 @@ transistor::dump_raw(ostream& o) const {
 	}
 	o << ' ' << source << ' ' << gate << ' ' << drain << ' ' << body;
 	o << " # W=" << width << " L=" << length;
+	// unitless
 	emit_attribute_suffixes(o << " ");
 	return o;
 }
@@ -408,16 +436,51 @@ netlist::~netlist() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Common initialization routines based on footprint.  
+ */
+void
+netlist::__bind_footprint(const footprint& f) {
+	fp = &f;
+	// pre-allocate, using same indexing and mapping as original pool
+	// null index initially, and default owner is not subcircuit
+	const prs_footprint& pfp(f.get_prs_footprint());
+	internal_node_map.resize(pfp.get_internal_node_pool().size(),
+		internal_node_entry_type(0, 0));
+	const prs_footprint::subcircuit_map_type&
+		subs(pfp.get_subcircuit_map());
+	local_subcircuits.resize(subs.size());
+	// import/generate subcircuit names
+	prs_footprint::subcircuit_map_type::const_iterator
+		si(subs.begin()), se(subs.end());
+	local_subcircuit_list_type::iterator
+		li(local_subcircuits.begin());
+	for (; si!=se; ++si, ++li) {
+		const string& nn(si->get_name());
+		if (nn.length()) {
+			li->name = nn;
+		} else {
+			ostringstream oss;
+			oss << "INTSUB:" << subs_count;
+			li->name = oss.str();
+			++subs_count;
+		}
+	}
+	// TODO: pre-size instance_pool based on proceses
+	// TODO: pre-size named_node_map based on bools
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Like constructor, initializes footprint and related members.
  */
 void
 netlist::bind_footprint(const footprint& f, const netlist_options& nopt) {
-	fp = &f;
 	// TODO: format or mangle type name, e.g. template brackets
+	__bind_footprint(f);
 	ostringstream oss;
 	f.dump_type(oss);
 	name = oss.str();
-	strgsub(name, " ", "");		// remove spaces
+	strgsub(name, " ", "");		// remove spaces (template params)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -425,9 +488,8 @@ netlist::bind_footprint(const footprint& f, const netlist_options& nopt) {
 	Overload with overridden name, e.g. for top-level.
  */
 void
-netlist::bind_footprint(const footprint& f, const netlist_options& nopt, 
-		const string& n) {
-	fp = &f;
+netlist::bind_footprint(const footprint& f, const string& n) {
+	__bind_footprint(f);
 	name = n;
 }
 
@@ -473,7 +535,6 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 		STACKTRACE_INDENT_PRINT("formal node = " << *fi << endl);
 		const node& fn(subnet.node_pool[*fi]);	// formal node
 		INVARIANT(fn.used);
-		// TODO: handle supply nodes
 		if (fn.is_supply_node()) {
 			if (*fi == GND_index) {
 				np.actuals.push_back(GND_index);
@@ -532,21 +593,19 @@ netlist::create_auxiliary_node(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Allocates a new named internal node, incrementing counter.
-	\param ei is the prs_footprint subexpression index for named node.
-	\param int_name is the name of the defined internal node.
+	\param ni is the footprint-local index of the internal node (0-indexed).
 	\return index of new node, 1-indexed into this netlist.
  */
 index_type
-netlist::create_internal_node(const index_type ei, const string& int_name,
-		const bool dir) {
+netlist::create_internal_node(const index_type ni, const index_type ei) {
 	STACKTRACE_VERBOSE;
-	const node n(int_name, node::internal_node_tag);
+	const node n(ni, node::internal_node_tag);
 	const index_type ret = node_pool.size();
-	// TODO: [opt] rewrite using single insertion with pair<iter, bool>
-	internal_node_map_type::const_iterator f(internal_node_map.find(ei));
-	INVARIANT(f == internal_node_map.end());	// no duplicates
 	node_pool.push_back(n);
-	internal_node_map[ei] = std::make_pair(ret, dir);	// insert
+	INVARIANT(ni < internal_node_map.size());
+	internal_node_map[ni].first = ret;
+	internal_expr_map[ei] = ni;	// invariant: no duplicates
+	// set owner later!
 	return ret;
 }
 
@@ -554,19 +613,19 @@ netlist::create_internal_node(const index_type ei, const string& int_name,
 /**
 	Lookup a previously defined internal node, keyed by
 	PRS footprint's expr index.
-	\param ei local footprint's expr index
-	\return netlist's node pool index to internal node, or 0 if not found.
+	\param ei local footprint's expr index corresponding to
+		an internal node.
+	\return footprint's internal node index, which can be 0.  
  */
-netlist::internal_node_entry_type
+index_type
 netlist::lookup_internal_node(const index_type ei) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("expr-id: " << ei << endl);
-	const internal_node_map_type::const_iterator
-		f(internal_node_map.find(ei));
-	if (f != internal_node_map.end()) {
+	const internal_expr_map_type::const_iterator
+		f(internal_expr_map.find(ei));
+	INVARIANT(f != internal_expr_map.end());
 	// ALERT: only true if we've processed all internal nodes in a priori
-		return f->second;
-	} else	return internal_node_entry_type(0, false);	// any dir
+	return f->second;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -744,12 +803,19 @@ netlist::dump_raw(ostream& o) const {
 		o << "  :" << j+1 << " -> [" << named_node_map[j] << ']' << endl;
 	}
 }{
-	o << "internal node map (fp-expr-index -> netlist-node-index):" << endl;
+	o << "internal node map (footprint-index -> netlist-node-index):" << endl;
 	typedef	internal_node_map_type::const_iterator	const_iterator;
 	const_iterator i(internal_node_map.begin()), e(internal_node_map.end());
+	size_t j = 0;
 	for ( ; i!=e; ++i) {
-		o << "  %" << i->first << " -> [" << i->second.first << ']' <<
-			(i->second.second ? '+' : '-') << endl;
+		const prs_footprint::node_expr_type&
+			n(fp->get_prs_footprint().get_internal_node(j));
+		o << "  @" << j << " -> [" << i->first << ']' <<
+			(n.second ? '+' : '-');
+		if (i->second) {
+			o << " in subckt{" << i->second -1 << "}";
+		}
+		o << endl;
 	}
 }{
 	o << "instances:" << endl;
@@ -758,16 +824,20 @@ netlist::dump_raw(ostream& o) const {
 	for ( ; i!=e; ++i) {
 		i->dump_raw(o << "  ") << endl;
 	}
-}
-// TODO: subcircuits
-{
-	o << "transistors:" << endl;
-	typedef	transistor_pool_type::const_iterator	const_iterator;
-	const_iterator i(transistor_pool.begin()), e(transistor_pool.end());
-	size_t j = 0;
-	for ( ; i!=e; ++i, ++j) {
-		i->dump_raw(o << "  " << j << ": ") << endl;
+}{
+#if ENABLE_STACKTRACE
+	o << "subcircuits: {" << endl;
+#endif
+	// represents both definition and instance
+	typedef	local_subcircuit_list_type::const_iterator	const_iterator;
+	const_iterator i(local_subcircuits.begin()), e(local_subcircuits.end());
+	for ( ; i!=e; ++i) {
+		i->dump_raw(o, *this);
 	}
+	o << '}' << endl;
+}{
+	o << "transistors:" << endl;
+	dump_raw_devices(o);
 }
 	return o << '}' << endl;
 }
@@ -948,7 +1018,7 @@ if (first_time) {
 #endif
 	netlist* nl = &netmap[f];	// insert default constructed
 if (f == topfp) {
-	nl->bind_footprint(*f, opt, "<top-level>");
+	nl->bind_footprint(*f, "<top-level>");
 } else {
 	nl->bind_footprint(*f, opt);
 }
@@ -959,6 +1029,7 @@ try {
 		bfm(p._frame.get_frame_map<bool_tag>());
 		// ALERT: top-footprint frame's size will be +1!
 	nl->named_node_map.resize(bfm.size(), void_index);	// 0-fill
+	// resize(f->get_instance_pool<bool_tag>().size()) ???
 	STACKTRACE_INDENT_PRINT("bfm.size = " << bfm.size() << endl);
 	// set current netlist (duplicate for local):
 	const value_saver<netlist*> __tmp(current_netlist, nl);
@@ -1065,30 +1136,45 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		inode_pool(prs->get_internal_node_pool());
 	prs_footprint::internal_node_pool_type::const_iterator
 		i(inode_pool.begin()), e(inode_pool.end());
+	size_t j = 0;
 #else
 	const prs_footprint::internal_node_expr_map_type&
 		inode_map(prs->get_internal_node_map());
 	prs_footprint::internal_node_expr_map_type::const_iterator
 		i(inode_map.begin()), e(inode_map.end());
 #endif
-	for ( ; i!=e; ++i) {
+	for ( ; i!=e; ++i, ++j) {
 		// each entry is a node_expr_type
 		// where pair:first is expr-index and second is direction
 #if PRS_INTERNAL_NODE_POOL
-		// TODO: re-use footprint's internal_node_pool
+		// using footprint's internal_node_pool
 		// as basis for subcircuits internal_node_map
 		const index_type& expr = i->first;
-		const bool dir = i->second;
-		const string& n(i->name);
+		// direction and name can be looked up later
+		const index_type new_int =
+			current_netlist->create_internal_node(j, expr);
+		INVARIANT(new_int);
+		// asserts map entry exists:
+		current_netlist->lookup_internal_node(expr);
 #else
 		const index_type& expr = i->second.first;
 		const bool dir = i->second.second;
 		const string& n(i->first);
-#endif
 		const index_type new_int =
 			current_netlist->create_internal_node(expr, n, dir);
 		INVARIANT(new_int);
 		INVARIANT(current_netlist->lookup_internal_node(expr).first);
+#endif
+	}
+	// now walk subcircuit map to assign owner subcircuits
+	const subckt_map_type& subc_map(prs->get_subcircuit_map());
+	const_iterator si(subc_map.begin()), se(subc_map.end());
+	j = 1;	// owner 1-indexed, default upon ctor was 0
+	for ( ; si!=se; ++si, ++j) {
+		size_t k = si->int_nodes.first;
+		for ( ; k < si->int_nodes.second; ++k) {
+			current_netlist->internal_node_map[k].second = j;
+		}
 	}
 #if 0 && ENABLE_STACKTRACE
 	current_netlist->dump_raw(STACKTRACE_STREAM) << endl;
@@ -1100,34 +1186,26 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	// because the instances of them would be dangling pointers...
 	const subckt_map_type& subc_map(prs->get_subcircuit_map());
 {
-	STACKTRACE_INDENT_PRINT("processing subcircuits..." << endl);
+	STACKTRACE_INDENT_PRINT("processing subcircuits (rules) ..." << endl);
 	const_iterator si(subc_map.begin()), se(subc_map.end());
-	// rules
+	netlist::local_subcircuit_list_type::iterator
+		mi(current_netlist->local_subcircuits.begin());
+	while (si!=se && si->rules_empty()) { ++si; ++mi; }	// skip empty
 	const prs_footprint::rule_pool_type& rpool(prs->get_rule_pool());
 	const size_t s = rpool.size();
 	size_t i = 0;
 	for ( ; i<s; ++i) {
 	if (si!=se && (i >= si->rules.first)) {
-		// start of a subcircuit range, can be empty
-		current_netlist->local_subcircuits.push_back(local_netlist());
-		local_netlist& n(current_netlist->local_subcircuits.back());
-		const string& nn(si->get_name());
-		if (nn.length()) {
-			n.name = nn;
-		} else {
-			ostringstream oss;
-			oss << "INTSUB:" << current_netlist->subs_count;
-			n.name = oss.str();
-			++current_netlist->subs_count;
-		}
-		do {
-			const value_saver<netlist_common*>
-				__tmp(current_local_netlist, &n);
+		INVARIANT(mi != current_netlist->local_subcircuits.end());
+		local_netlist& n(*mi);
+		const value_saver<netlist_common*>
+			__tmp(current_local_netlist, &n);
+		for ( ; i < si->rules.second; ++i) {
 			rpool[i].accept(*this);
-			++i;
-		} while (i < si->rules.second);
+		}
 			--i;	// back-adjust before continue
-			++si;
+		// advance to next non-empty subcircuit
+		do { ++si; ++mi; } while (si!=se && si->rules_empty());
 	} else {
 		// rule is outside of subcircuits
 		rpool[i].accept(*this);
@@ -1138,7 +1216,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	const_iterator si(subc_map.begin()), se(subc_map.end());
 	netlist::local_subcircuit_list_type::iterator
 		mi(current_netlist->local_subcircuits.begin());
-	// macros
+	while (si!=se && si->macros_empty()) { ++si; ++mi; }	// skip empty
 	const prs_footprint::macro_pool_type& mpool(prs->get_macro_pool());
 	const size_t s = mpool.size();
 	size_t i = 0;
@@ -1147,15 +1225,14 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		// start of a subcircuit range, can be empty
 		INVARIANT(mi != current_netlist->local_subcircuits.end());
 		local_netlist& n(*mi);
-		do {
 			const value_saver<netlist_common*>
 				__tmp(current_local_netlist, &n);
+		for ( ; i < si->macros.second; ++i) {
 			mpool[i].accept(*this);
-			++i;
-		} while (i < si->macros.second);
+		}
 			--i;	// back-adjust before continue
-			++mi;
-			++si;
+		// advance to next non-empty subcircuit
+		do { ++si; ++mi; } while (si!=se && si->macros_empty());
 	} else {
 		// macro is outside of subcircuits
 		mpool[i].accept(*this);
@@ -1194,25 +1271,26 @@ try {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// TODO: handle and precharges!
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursive, generate on-demand internal nodes as they are visited.
 	\pre all internal nodes have been allocated/mapped a priori, 
 		just not necessarily defined (node::used).
-	\param nex is the footprint-local expression index.
+	\param nid is the footprint-local internal node index (0-indexed).
 	\return netlist-local node index representing the internal node.
 	\invariant no cyclic definitions of internal nodes possible.
  */
 index_type
-netlist_generator::register_internal_node(const index_type nex) {
+netlist_generator::register_internal_node(const index_type nid) {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("@id = " << nid << endl);
 	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
-	const index_type defexpr = ep[nex].only();
-	const netlist::internal_node_entry_type
-		ret(current_netlist->lookup_internal_node(defexpr));
-	const index_type& node_ind(ret.first);
-	INVARIANT(node_ind);
+	const prs_footprint::node_expr_type& ret(prs->get_internal_node(nid));
+	const index_type& defexpr = ret.first;
+	STACKTRACE_INDENT_PRINT("@expr = " << defexpr << endl);
+	const netlist::internal_node_entry_type&
+		r(current_netlist->internal_node_map[nid]);
+	const index_type& node_ind = r.first;
+	const index_type& node_own = r.second;	// home
 	node& n(current_netlist->node_pool[node_ind]);
 if (!n.used) {
 	STACKTRACE_INDENT_PRINT("defining internal node..." << endl);
@@ -1225,13 +1303,26 @@ if (!n.used) {
 	const value_saver<transistor::fet_type>
 		__t3(fet_type,
 			(dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
-	// internal nodes partial rules can belong to local subcircuits
-	// but are accessible to all sibling subcircuits
-	// within a process definition.
-	n.used = true;		
+	n.used = true;
 	// mark before recursion, not after!
 	// to prevent shared roots from being duplicated
-	ep[defexpr].accept(*this);
+	STACKTRACE_INDENT_PRINT("owner = " << node_own << endl);
+	if (node_own) {
+	// generate in correct owner subcircuit
+	// internal nodes' partial rules can belong to local subcircuits
+	// but are accessible to all sibling subcircuits
+	// within a process definition.
+		STACKTRACE("pointing to subcircuit");
+		const value_saver<netlist_common*>
+			__t4(current_local_netlist, 
+				&current_netlist->local_subcircuits[node_own -1]);
+		ep[defexpr].accept(*this);
+	} else {
+		// point back to main scope
+		const value_saver<netlist_common*>
+			__t4(current_local_netlist, current_netlist);
+		ep[defexpr].accept(*this);
+	}
 }
 	return node_ind;
 }
@@ -1286,6 +1377,7 @@ netlist_generator::visit(const footprint_expr_node& e) {
 const char type = e.get_type();
 switch (type) {
 case PRS_LITERAL_TYPE_ENUM: {
+	STACKTRACE_INDENT_PRINT("expr is leaf node" << endl);
 	// TODO: check for negation normalization
 	if (negated ^ (fet_type == transistor::PFET_TYPE)) {
 		cerr << "ERROR: rule-literal is not CMOS-implementable." << endl;
@@ -1321,6 +1413,7 @@ case PRS_LITERAL_TYPE_ENUM: {
 	break;
 }
 case PRS_NOT_EXPR_TYPE_ENUM: {
+	STACKTRACE_INDENT_PRINT("expr is negation" << endl);
 	// automatically negation normalize
 	// toggle negation of subexpressions
 	const value_saver<bool> __tmp(negated, !negated);
@@ -1333,6 +1426,7 @@ case PRS_OR_EXPR_TYPE_ENUM: {
 	size_t i = 1;
 	const size_t s = e.size();
 	if (is_conjunctive) {
+		STACKTRACE_INDENT_PRINT("expr is conjunctive" << endl);
 		typedef footprint_expr_node::precharge_map_type
 				precharge_map_type;
 		const footprint_expr_node::precharge_map_type&
@@ -1343,9 +1437,14 @@ case PRS_OR_EXPR_TYPE_ENUM: {
 		index_type prev;
 		const footprint_expr_node& left(ep[e[i]]);
 		if (left.get_type() == PRS_NODE_TYPE_ENUM) {
-			prev = register_internal_node(e[i]);
-			// TODO: confirm direction and sense of internal node
-			// hand precharge
+			// left.only() is still an expression index, 
+			// but we need internal-node-index.
+			prev = register_internal_node(
+				current_netlist->lookup_internal_node(
+					left.only()));
+			// confirm direction and sense of internal node
+			// already checked at create-phase.
+			// handle precharge
 			if (pi != pe && pi->first == i-1) {
 				const value_saver<index_type>
 					_t1(output_node, prev);
@@ -1380,6 +1479,7 @@ case PRS_OR_EXPR_TYPE_ENUM: {
 			ep[e[i]].accept(*this);
 		}
 	} else {
+		STACKTRACE_INDENT_PRINT("expr is disjunctive" << endl);
 		// take OR combination:
 		// don't need to add any auxiliary nodes,
 		// share the same foot and output nodes.
