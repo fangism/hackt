@@ -1,0 +1,13 @@
+// "empty-02.hac"
+
+import "empty-01.hac";
+
+defproc inv(bool a, b) {
+prs {
+	a	=> b-
+}
+	empty_3 foo(a, b);
+}
+
+inv bar;
+

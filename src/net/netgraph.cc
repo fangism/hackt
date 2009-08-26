@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.20 2009/08/25 23:00:59 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.21 2009/08/26 00:05:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -423,6 +423,7 @@ static const	index_type	Vdd_index = 2;
 netlist::netlist() : netlist_common(), name(), 
 		named_node_map(), node_pool(),
 		instance_pool(), internal_node_map(), port_list(), 
+		empty(false), 
 		aux_count(0),
 		subs_count(0) {
 	// copy supply nodes
@@ -493,16 +494,6 @@ void
 netlist::bind_footprint(const footprint& f, const string& n) {
 	__bind_footprint(f);
 	name = n;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Only emit definitions and instances of non-empty subcircuits.  
- */
-bool
-netlist::is_empty(void) const {
-	return netlist_common::is_empty() &&
-		instance_pool.empty() && local_subcircuits.empty();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -891,6 +882,7 @@ bool_port_alias_collector::visit(const instance_alias_info<bool_tag>& a) {
 /**
 	Create a port summary so that other processes may correctly
 	instantiate this.  
+	This also summarizes the 'empty' flag for this netlist.  
 	TODO: power supply ports
  */
 void
@@ -903,13 +895,9 @@ netlist::summarize_ports(void) {
 	if (node_pool[Vdd_index].used) {
 		port_list.push_back(Vdd_index);
 	}
-#if 1
+{
 	typedef	unique_list<index_type>	port_index_list_type;
 	bool_port_alias_collector V;
-#if 0
-	// this node ordering is based on order of being seen/used
-	fp->accept(V);
-#else
 	// this ordering is based on port_formal_manager, declaration order
 	const port_formals_manager&
 		fm(fp->get_owner_def().is_a<const process_definition>()
@@ -919,7 +907,6 @@ netlist::summarize_ports(void) {
 		(*fp)[(*pi)->get_name()]
 			.is_a<const physical_instance_collection>()->accept(V);
 	}
-#endif
 	port_index_list_type::const_iterator
 		i(V.bool_indices.begin()), e(V.bool_indices.end());
 	port_list.reserve(V.bool_indices.size() +2);	// for supplies
@@ -936,21 +923,30 @@ netlist::summarize_ports(void) {
 		// sorted_ports[local_ind] = ni;
 	}
 	}
-#else
-	// this ordering is based on locally assigned indices, 
-	// not necessarily the order of declaration
-	const state_instance<bool_tag>::pool_type&
-		bp(fp->get_instance_pool<bool_tag>());
-	named_node_map_type::const_iterator
-		i(named_node_map.begin()), e(named_node_map.end());
-	size_t j = 1;	// 0-indexed -> 1-indexed
-	for ( ; i!=e; ++i, ++j) {
-	// NOTE: this visits only logical nodes
-	if (*i && bp[j].get_back_ref()->is_aliased_to_port()) {
-		port_list.push_back(*i);
+}
+	// empty is initially false
+	bool MT = true;
+	MT = transistor_pool.empty() && passive_device_pool.empty();
+{
+	// check subcircuits
+	local_subcircuit_list_type::const_iterator
+		i(local_subcircuits.begin()), e(local_subcircuits.end());
+	for ( ; MT && i!=e; ++i) {
+	if (!i->is_empty()) {
+		MT = false;	// stop on non-empty subcircuit
 	}
 	}
-#endif
+}{
+	// check instances
+	instance_pool_type::const_iterator
+		i(instance_pool.begin()), e(instance_pool.end());
+	for ( ; MT && i!=e; ++i) {
+	if (!i->is_empty()) {
+		MT = false;	// stop on non-empty instance
+	}
+	}
+}
+	empty = MT;
 }
 
 //=============================================================================

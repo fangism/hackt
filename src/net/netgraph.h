@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.13 2009/08/25 01:22:42 fang Exp $
+	$Id: netgraph.h,v 1.1.2.14 2009/08/26 00:05:12 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -419,11 +419,20 @@ private:
 	 */
 	port_list_type			port_list;
 	/**
+		If this definition is empty, don't bother emitting it
+		or instances of it.  
+		This is also empty if all instances are also empty.  
+		This is set by summarize_ports(), which should be the
+		last method called during netlist processing.  
+	 */
+	bool				empty;
+	/**
 		Running count of generated auxiliary nodes.
 	 */
 	index_type			aux_count;
 	/**
 		Running count of unnamed subcircuits.
+		This is only used as a local variable, can toss it...
 	 */
 	index_type			subs_count;
 
@@ -441,7 +450,7 @@ public:
 	get_name(void) const { return name; }
 
 	bool
-	is_empty(void) const;
+	is_empty(void) const { return empty; }
 
 	index_type
 	create_auxiliary_node(void);

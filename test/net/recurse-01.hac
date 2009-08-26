@@ -1,0 +1,17 @@
+// "recurse-01.hac"
+// copy-modified from "empty-03.hac"
+
+template <pint N>
+defproc recurse(bool a, b) {
+[N == 0 ->
+	prs {
+		a	=> b-
+	}
+[] else ->
+	bool x;
+	recurse<N-1> j(a, x), k(x, b);
+]
+}
+
+recurse<8> hell;
+

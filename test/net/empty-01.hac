@@ -1,0 +1,31 @@
+// "empty-01.hac"
+// testing hierarchical emptiness
+
+defchan e1of2 <: chan(bool)(bool d[2]; bool t, f, e) {
+	d[0] = f;
+	d[1] = t;
+	spec { exclhi(f,t) }
+	send {}
+	recv{}
+}
+
+defproc empty_1(bool x, y, z) { }
+
+defproc empty_2(e1of2 A, B; empty_1 X, Y; bool P, Q) {
+	e1of2 j, k;
+	empty_1 r, s;
+	j.e = s.y;
+	k.t = r.z;
+}
+
+defproc empty_3(bool x, y) {
+	// create some aliases
+	empty_2 Q;
+	empty_1 K;
+	Q.P = x;
+	Q.Q = y;
+	Q.X = K;
+}
+
+empty_3 foo;
+

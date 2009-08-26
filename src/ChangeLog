@@ -5,6 +5,12 @@
 
 2009-08-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-27-netlist-01-20:
+	  hacknet: concept of emptiness of a subcircuit or instance is
+		now computed hierarhically and memoized in a netlist member.
+	  Added some recursive test cases.
+
+
 	* HACKT-00-01-04-main-00-83-27-netlist-01-19:
 	  hacknet: fixed bug looking up a port that wasn't a port alias.
 		Solution: search scope aliases for a port alias, b/c

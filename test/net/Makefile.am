@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.18 2009/08/25 23:01:02 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.19 2009/08/26 00:05:14 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -25,7 +25,10 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	half-pull-01 half-pull-02 \
 	pass_gate-01 pass_gate-02 pass_gate-03 pass_gate-04 \
 	subckt-01 \
-	channel-member-01 channel-member-02 channel-member-03
+	channel-member-01 channel-member-02 channel-member-03 \
+	array-01 \
+	empty-01 empty-02 empty-03 \
+	recurse-01
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05
