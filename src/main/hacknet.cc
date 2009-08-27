@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.1.2.4 2009/08/21 00:02:58 fang Exp $
+	$Id: hacknet.cc,v 1.1.2.5 2009/08/27 20:38:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,40 +11,53 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <fstream>
-#include <cstring>
+// #include <cstring>
 #include <list>
 
 #include "net/netgraph.h"		// for netlist_generator
 #include "main/hacknet.h"
 #include "main/program_registry.h"
-#include "util/stacktrace.h"
 #include "main/main_funcs.h"
+#if 0
 #include "main/options_modifier.tcc"
+#endif
 #include "main/simple_options.tcc"
 #include "main/global_options.h"
 #include "main/compile_options.h"
+#include "util/stacktrace.h"
 #include "util/getopt_mapped.h"
 #include "util/persistent_object_manager.h"
-// #include "util/string.tcc"	// for string_to_num
+#include "util/optparse.h"
 #include "install_paths.h"
 
 namespace HAC {
 using std::string;
 using util::persistent;
 using util::persistent_object_manager;
-// using util::strings::string_to_num;
-
+using util::optparse;
+using util::optparse_list;
+using util::optparse_file;
+using util::option_value_list;
 #include "util/using_ostream.h"
 
 //=============================================================================
+#if 0
 // explicit instantiation for proper initialization ordering
 // (options modifier registry map initialized before use)
 // accepted by g++-3.3, but not 4
 template class options_modifier_policy<hacknet_options>;
+#endif
 
 //=============================================================================
 class hacknet_options {
 public:
+	/**
+		Un-processed option values list from file/command-line.
+	 */
+	option_value_list	raw_opts;
+	/**
+		Set to true to just exit after command parsing.  
+	 */
 	bool			help_only;
 // many options copied from prsim.cc
 	/**
@@ -67,12 +80,18 @@ public:
 	NET::netlist_options	net_opt;
 
 	hacknet_options() :
+		raw_opts(), 
 		help_only(false),
 		use_referenced_type_instead_of_top_level(false),
 		named_process_type(),
 		comp_opt(),
 		net_opt()
 		{ }
+
+	bool
+	finalize(void) {
+		return net_opt.set(raw_opts);
+	}
 
 };	// end class hacknet_options
 
@@ -97,13 +116,17 @@ hacknet::hacknet() { }
 int
 hacknet::main(const int argc, char* argv[], const global_options&) {
 	options opt;
-	if (parse_command_options(argc, argv, opt)) {
+	int opterr = parse_command_options(argc, argv, opt);
+	if (opterr) {
 		cerr << "Error in command invocation." << endl;
-		usage();
-		return 1;
+		if (opterr == 1) {
+			usage();
+		}
+		// else is other error
+		return opterr;
 	}
+//	cerr << "options:\n" << opt.raw_opts << endl;	// DEBUG
 	if (opt.help_only) {
-		// TODO: print help
 		return 0;
 	}
 	if (optind+1 != argc) {
@@ -113,7 +136,6 @@ hacknet::main(const int argc, char* argv[], const global_options&) {
 		return 1;
 	}
 	const char* const ofn = argv[optind];
-	// cerr << "loading " << ofn << endl;
 	count_ptr<module> the_module;
 if (opt.comp_opt.compile_input) {
 	the_module = parse_and_check(ofn, opt.comp_opt);
@@ -124,6 +146,10 @@ if (opt.comp_opt.compile_input) {
 }
 	if (!the_module)
 		return 1;
+	// process netlist options and check for errors
+	if (opt.finalize()) {
+		return 1;
+	}
 
 	static const char alloc_errstr[] = 
 		"ERROR in allocating global state.  Aborting.";
@@ -186,18 +212,77 @@ try {
 int
 hacknet::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+ct:";
+	static const char optstring[] = "+c:f:hHt:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
 /***
 @texinfo opt/option-c.texi
-@defopt -c
-bleh...
+@defopt -c file
+Parse configuration options from @var{file}.
+Options are of the form @t{key=values} with 
+no space characters separating the @t{=}.
+Values may be singleton, comma-separated, or omitted.
+The same options can also be passed in through the command-line 
+via @option{-f}.   
+This option is repeatable and cumulative.
 @end defopt
 @end texinfo
 ***/
-		case 'c':
+		case 'c': {
+			std::ifstream f(optarg);
+			if (f) {
+				const option_value_list t(optparse_file(f));
+				o.raw_opts.insert(o.raw_opts.end(), 
+					t.begin(), t.end());
+				// any error handling here?
+			} else {
+				cerr << "Error opening options file \"" <<
+					optarg << "\" for reading." << endl;
+				return 2;
+			}
+			break;
+		}
+/***
+@texinfo opt/option-f.texi
+@defopt -f options...
+Parse configuration options from @var{options}.
+Options are of the same format as in the configuration
+file, see option @option{-c}.  
+Options are space-separated instead of newline-separated.  
+This option is repeatable and cumulative.
+@end defopt
+@end texinfo
+***/
+		case 'f': {
+			const option_value_list t(optparse_list(optarg));
+			o.raw_opts.insert(o.raw_opts.end(), 
+				t.begin(), t.end());
+			// any error handling here?
+			break;
+		}
+/***
+@texinfo opt/option-h.texi
+@defopt -h
+Help.  Print usage and exit.
+@end defopt
+@end texinfo
+***/
+// TODO: option-help
+		case 'h':
+			o.help_only = true;
+			usage();
+			break;
+/***
+@texinfo opt/option-H-upper.texi
+@defopt -H
+Help.  Print usage and exit.
+@end defopt
+@end texinfo
+***/
+		case 'H':
+			o.help_only = true;
+			cerr << "TODO: print netlist_options help" << endl;
 			break;
 /***
 @texinfo opt/option-t.texi
@@ -238,12 +323,22 @@ Convenient takes palce of copy-propagating a single instance's ports.
 void
 hacknet::usage(void) {
 	cerr << "usage: " << name << " [options] <hackt-objfile>" << endl;
-	cerr << "options:\n";
+	cerr << "options:\n"
+"\t-c file : process configuration options file (repeatable)\n"
+"\t-f \"option=value ...\" : set option values (repeatable)\n"
+"\t\tseparate multiple options with space\n"
+"\t-h : print this usage help\n"
+"\t-H : print options help\n"
+"\t-t \"type\" : generate netlist for the named type,\n"
+"\t\tignoring top-level instances (quotes recommended)."
+	<< endl;
+#if 0
         const size_t flags = options_modifier_map.size();
 	if (flags) {
 		cerr << "flags (" << flags << " total):" << endl;
 		dump_options_briefs(cerr);
 	}
+#endif
 	cerr << "Additional documentation is installed in:\n"
 	"\t`info hacknet' (finds " INFODIR "/hacknet.info)\n"
 	"\tPDF: " PDFDIR "/hacknet.pdf\n"

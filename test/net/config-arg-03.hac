@@ -1,0 +1,6 @@
+// "config-arg-03.hac"
+// testing very basic config options on command-line
+// @hacknet-flags@ -f length_unit=e-6
+
+import "inv-00.hac";
+

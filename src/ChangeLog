@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-08-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-21:
+	  hacknet: implemented config option parsing from both file
+		and command-line.  Added bunch of test cases to suite.
+	  Object/lang/PRS*: perm'd PRS_INTERNAL_NODE_POOL and
+		PRS_FOOTPRINT_SUBCKT switches, as they are now needed, tested.
+	  TODO: documenting each option for help and texinfo.
+
+
 2009-08-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-20:

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.14 2009/08/26 00:05:12 fang Exp $
+	$Id: netgraph.h,v 1.1.2.15 2009/08/27 20:38:46 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -13,6 +13,7 @@
 #include <set>
 #include "Object/lang/cflat_context_visitor.h"
 #include "Object/lang/PRS_footprint_expr.h"	// for precharge_ref_type
+#include "util/optparse.h"
 
 namespace HAC {
 namespace NET {
@@ -538,6 +539,17 @@ struct netlist_options {
 	 */
 	bool				emit_top;
 	netlist_options();
+
+	/**
+		Processes raw options.
+		\return true if there is an error.
+	 */
+	bool
+	set(const util::option_value_list&);
+
+	ostream&
+	dump(ostream&) const;
+
 };	// end struct netlist_options
 
 //=============================================================================

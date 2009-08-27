@@ -1,4 +1,5 @@
 	.hac .haco .depend .haco-c .haco-a \
+	.spice \
 	.prs .sprs .lvsprs .lvssprs \
 	.prsimexpr .prsimexpr-O1 .prs-dot .prs-dot-O1 \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
@@ -9,7 +10,7 @@
 # (above)
 # "mk/hackt-suffixes.mk"
 #	vi: ft=automake
-#	$Id: hackt-suffixes.mk,v 1.4 2009/04/27 21:18:57 fang Exp $
+#	$Id: hackt-suffixes.mk,v 1.4.6.1 2009/08/27 20:38:35 fang Exp $
 # The counterpart file is "mk/hackt-rules.am".
 # The organization of this file is intentional, see usage in Makefile.am.
 

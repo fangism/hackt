@@ -1,0 +1,7 @@
+// "config-arg-07.hac"
+// expect-fail
+// @hacknet-flags@ -f lambda=not_a_number
+
+import "inv-00.hac";
+
+

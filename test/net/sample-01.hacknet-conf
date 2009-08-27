@@ -1,0 +1,7 @@
+# "sample-01.hacknet-conf"
+# sample tech/configuration file
+
+lambda=0.1
+std_n_width=8
+std_p_width=6
+

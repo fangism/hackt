@@ -1,0 +1,9 @@
+// "config-arg-05.hac"
+// this works typing in manually, but doesn't work in make check test...
+// but no amount of quoting seems to work
+// must be something buggy with shell variable usage in Make.test-net
+// @hacknet-flags@ -f length_unit=nm lambda=10
+
+import "inv-00.hac";
+
+

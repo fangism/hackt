@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.1.2.21 2009/08/26 00:05:10 fang Exp $
+	$Id: netgraph.cc,v 1.1.2.22 2009/08/27 20:38:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>		// for ostringstream
 #include <iterator>		// for ostream_iterator
+#include <map>
 #include "net/netgraph.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
@@ -27,7 +28,7 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/bool_port_collector.tcc"
 #include "util/unique_list.tcc"
-#include "util/string.h"		// for strgsub
+#include "util/string.tcc"		// for strgsub, string_to_num
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -45,6 +46,7 @@ using entity::process_definition;
 using entity::physical_instance_collection;
 using entity::port_alias_tracker_base;
 using entity::alias_reference_set;
+using std::map;
 using std::ostringstream;
 using std::ostream_iterator;
 using util::value_saver;
@@ -57,6 +59,9 @@ using entity::directive_base_params_type;
 using entity::preal_value_type;
 using util::unique_list;
 using util::strings::strgsub;
+using util::option_value;
+using util::option_value_list;
+using util::strings::string_to_num;
 
 //=============================================================================
 // class netlist_options method definitions
@@ -75,6 +80,211 @@ netlist_options::netlist_options() :
 		nested_subcircuits(false),
 		emit_top(true)
 		{
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets a value of a structure member according to first value
+	associated with option.  
+	Such functions should be re-usable.  
+	\param T is value type, can be deduced from arguments!  
+	\param opt key=values option value association.  
+	\param mem is a pointer-to-member of type T.
+ */
+template <typename T>
+static
+bool
+__set_member_single_numeric_value(const option_value& opt, 
+		netlist_options& n_opt, 
+		T netlist_options::*mem) {
+	const size_t s = opt.values.size();
+	if (s >= 1) {
+		if (s > 1) {
+		cerr << "Warning: extra arguments passed to \'" << opt.key
+			<< "\' option ignored." << endl;
+		}
+		const string& arg(opt.values.front());
+		const bool ret = string_to_num(arg, n_opt.*mem);
+		if (ret) {
+			cerr << "Error: processing argument of \'" << opt.key
+				<< "\' option, expecting numeric value, "
+				"but got: " << arg << endl;
+		}
+		return ret;
+	} else {
+		cerr << "Warning: blank argument passed to \'" << opt.key
+			<< "\' option where one is expected.  Ignoring."
+			<< endl;
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+bool
+__set_member_single_string(const option_value& opt, 
+		netlist_options& n_opt, 
+		string netlist_options::*mem) {
+	const size_t s = opt.values.size();
+	if (s >= 1) {
+		if (s > 1) {
+		cerr << "Warning: extra arguments passed to \'" << opt.key
+			<< "\' option ignored." << endl;
+		}
+		n_opt.*mem = opt.values.front();
+	} else {
+		// if blank value, erase the string
+		(n_opt.*mem).clear();
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Leave undefined, specialize the rest.
+	Use single overloaded function to automatically dispatch.
+ */
+template <typename T>
+bool
+__set_member_default(const option_value& opt, 
+		netlist_options& n_opt, T netlist_options::*mem);
+
+// specialize for bool
+bool
+__set_member_default(const option_value& opt, 
+		netlist_options& n_opt, bool netlist_options::*mem) {
+	return __set_member_single_numeric_value(opt, n_opt, mem);
+}
+
+// specialize for real_type
+bool
+__set_member_default(const option_value& opt, 
+		netlist_options& n_opt, real_type netlist_options::*mem) {
+	return __set_member_single_numeric_value(opt, n_opt, mem);
+}
+
+// specialize for string
+bool
+__set_member_default(const option_value& opt, 
+		netlist_options& n_opt, string netlist_options::*mem) {
+	return __set_member_single_string(opt, n_opt, mem);
+}
+
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	bool (*opt_func)(const option_value&, netlist_options&);
+typedef	map<string, opt_func>		opt_map_type;
+static	opt_map_type			netlist_option_map;
+
+// define option functions
+#define	DEFINE_OPTION_DEFAULT(member)					\
+static									\
+bool									\
+__set_ ## member (const option_value& v, netlist_options& o) {		\
+	return __set_member_default(v, o, &netlist_options::member);	\
+}
+
+#if 0
+#define	DEFINE_NUMERIC_OPTION(member)					\
+static									\
+bool									\
+__set_ ## member (const option_value& v, netlist_options& o) {		\
+	return __set_member_single_numeric_value(v, o,			\
+		&netlist_options::member);				\
+}
+
+#define	DEFINE_STRING_OPTION(member)					\
+static									\
+bool									\
+__set_ ## member (const option_value& v, netlist_options& o) {		\
+	return __set_member_single_string(v, o,				\
+		&netlist_options::member);				\
+}
+#endif
+
+// could just fold string into here instead of initialization function below...
+// TODO: create help/documentation for every known option
+// TODO: produce usage help for console and texinfo documentation aside
+// TODO: make these declarations self-initializing/installing in the map
+DEFINE_OPTION_DEFAULT(lambda)
+DEFINE_OPTION_DEFAULT(length_unit)
+DEFINE_OPTION_DEFAULT(std_n_width)
+DEFINE_OPTION_DEFAULT(std_p_width)
+DEFINE_OPTION_DEFAULT(std_n_length)
+DEFINE_OPTION_DEFAULT(std_p_length)
+DEFINE_OPTION_DEFAULT(stat_n_width)
+DEFINE_OPTION_DEFAULT(stat_p_width)
+DEFINE_OPTION_DEFAULT(stat_n_length)
+DEFINE_OPTION_DEFAULT(stat_p_length)
+DEFINE_OPTION_DEFAULT(nested_subcircuits)
+DEFINE_OPTION_DEFAULT(emit_top)
+
+/**
+	static global initialization of option map.
+ */
+static
+int
+__init_netlist_option_map(void) {
+	netlist_option_map["lambda"] = &__set_lambda;
+	netlist_option_map["length_unit"] = &__set_length_unit;
+	netlist_option_map["std_n_width"] = &__set_std_n_width;
+	netlist_option_map["std_p_width"] = &__set_std_p_width;
+	netlist_option_map["std_n_length"] = &__set_std_n_length;
+	netlist_option_map["std_p_length"] = &__set_std_p_length;
+	netlist_option_map["stat_n_width"] = &__set_stat_n_width;
+	netlist_option_map["stat_p_width"] = &__set_stat_p_width;
+	netlist_option_map["stat_n_length"] = &__set_stat_n_length;
+	netlist_option_map["stat_p_length"] = &__set_stat_p_length;
+	netlist_option_map["nested_subcircuits"] = &__set_nested_subcircuits;
+	netlist_option_map["emit_top"] = &__set_emit_top;
+	return 1;
+}
+
+#undef	DEFINE_OPTION_DEFAULT
+#if 0
+#undef	DEFINE_NUMERIC_OPTION
+#undef	DEFINE_STRING_OPTION
+#endif
+
+/**
+	Receipt of initialization.  
+ */
+static
+const
+int
+__netlist_option_map_initialized__ = __init_netlist_option_map();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: this should be reusable boilerplate code...
+	\return true on error.
+ */
+bool
+netlist_options::set(const option_value_list& opts) {
+	STACKTRACE_VERBOSE;
+	size_t errs = 0;
+	typedef	opt_map_type::const_iterator	map_iterator;
+	const map_iterator me(netlist_option_map.end());
+	option_value_list::const_iterator i(opts.begin()), e(opts.end());
+	for ( ; i!=e; ++i) {
+	if (i->key.length()) {
+		map_iterator mf(netlist_option_map.find(i->key));
+		if (mf != me) {
+			if ((*mf->second)(*i, *this)) {
+				++errs;
+			}
+		} else {
+			cerr << "Warning: ignoring unknown netlist option \'"
+				<< i->key << "\'." << endl;
+		}
+	}
+	}
+	if (errs) {
+		cerr << "Error: " << errs <<
+			" error(s) found in option processing." << endl;
+	}
+	return errs;
 }
 
 //=============================================================================
@@ -1156,22 +1366,14 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	// PRS::footprint maps from string (name of internal node) to 
 	// a local internal node index, which is mapped to a subcircuit
 	// node index here (reverse map).
-#if PRS_INTERNAL_NODE_POOL
 	const prs_footprint::internal_node_pool_type&
 		inode_pool(prs->get_internal_node_pool());
 	prs_footprint::internal_node_pool_type::const_iterator
 		i(inode_pool.begin()), e(inode_pool.end());
 	size_t j = 0;
-#else
-	const prs_footprint::internal_node_expr_map_type&
-		inode_map(prs->get_internal_node_map());
-	prs_footprint::internal_node_expr_map_type::const_iterator
-		i(inode_map.begin()), e(inode_map.end());
-#endif
 	for ( ; i!=e; ++i, ++j) {
 		// each entry is a node_expr_type
 		// where pair:first is expr-index and second is direction
-#if PRS_INTERNAL_NODE_POOL
 		// using footprint's internal_node_pool
 		// as basis for subcircuits internal_node_map
 		const index_type& expr = i->first;
@@ -1181,15 +1383,6 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		INVARIANT(new_int);
 		// asserts map entry exists:
 		current_netlist->lookup_internal_node(expr);
-#else
-		const index_type& expr = i->second.first;
-		const bool dir = i->second.second;
-		const string& n(i->first);
-		const index_type new_int =
-			current_netlist->create_internal_node(expr, n, dir);
-		INVARIANT(new_int);
-		INVARIANT(current_netlist->lookup_internal_node(expr).first);
-#endif
 	}
 	// now walk subcircuit map to assign owner subcircuits
 	const subckt_map_type& subc_map(prs->get_subcircuit_map());

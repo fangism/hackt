@@ -1,0 +1,11 @@
+// "recurse-02.hac"
+// suppress generation of top-level instances
+// even though they are processed, this produces a spice library basically
+// @hacknet-flags@ -f emit_top=0
+
+import "recurse-01.hac";
+
+recurse<3> three;
+recurse<4> four;
+recurse<9> nine;
+

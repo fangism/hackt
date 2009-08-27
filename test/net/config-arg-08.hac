@@ -1,0 +1,8 @@
+// "config-arg-08.hac"
+// unknown options should issue warnings, not error out
+// unfortunately, warning message is not captured in expected output yet
+// @hacknet-flags@ -f bogus_option=666,123
+
+import "inv-00.hac";
+
+

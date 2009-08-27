@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.14.2.5 2009/08/25 01:22:39 fang Exp $
+	$Id: PRS_footprint.h,v 1.14.2.6 2009/08/27 20:38:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -27,9 +27,9 @@
 	maintaining subcircuit hierarchy.  
 	For now subircuits are 1-level, and thus, cannot be nested. 
 	Goal: 1
-	Status: done, tested
+	Status: done, tested, perm'd
  */
-#define	PRS_FOOTPRINT_SUBCKT			1
+// #define	PRS_FOOTPRINT_SUBCKT			1
 
 /**
 	Define to 1 to use a pooled storage for internal nodes, 
@@ -39,9 +39,9 @@
 		by name/index, indices are cheaper to store than strings, 
 		which is critical for subcircuit entries, and in turn, 
 		helpful for netlist generation structures.  
-	Status: basically tested
+	Status: basically tested, perm'd
  */
-#define	PRS_INTERNAL_NODE_POOL			1
+// #define	PRS_INTERNAL_NODE_POOL			1
 
 namespace HAC {
 struct cflat_options;
@@ -90,10 +90,6 @@ public:
 	/**
 		Expression pull direction for internal node.
 		pull-up is true, pull-down if false.
-		first index value is expression index.
-	 */
-#if PRS_INTERNAL_NODE_POOL
-	/**
 		first: expression index
 		second: direction
 	 */
@@ -108,9 +104,6 @@ public:
 
 	};	// end struct node_expr_type
 	typedef	vector<node_expr_type>		internal_node_pool_type;
-#else
-	typedef	pair<size_t, bool>		node_expr_type;
-#endif
 	/**
 		This map keeps track of internal nodes defined in 
 		terms of one-sided guard expressions.  
@@ -119,18 +112,14 @@ public:
 		value_type is index into expression pool.  
 		TODO: Is there a way to store reference object instead
 		of their string representations?  (yes, but not critical now)
+
+		this is a redundant map, 
+		key is same as node_expr_type::name
+		value is index into internal_node_pool
 	 */
-#if PRS_INTERNAL_NODE_POOL
-	// this is a redundant map, 
-	// key is same as node_expr_type::name
-	// value is index into internal_node_pool
 	typedef	map<string, size_t>		internal_node_expr_map_type;
-#else
-	typedef	map<string, node_expr_type>	internal_node_expr_map_type;
-#endif
 	/// list of root expression indices
 	typedef	vector<invariant_type>		invariant_pool_type;
-#if PRS_FOOTPRINT_SUBCKT
 	/**
 		This structure keeps a map of which rules/macros (by index)
 		belong to which subcircuit.  
@@ -153,11 +142,7 @@ public:
 		never_ptr<const subcircuit>	back_ref;
 		index_range			rules;
 		index_range			macros;
-#if PRS_INTERNAL_NODE_POOL
 		index_range			int_nodes;
-#else
-		// TODO: map which internal node (pooled) expressions this owns
-#endif
 		subcircuit_map_entry() { }
 		subcircuit_map_entry(const subcircuit* b) : back_ref(b) { }
 
@@ -191,7 +176,6 @@ public:
 			lower_bound, upper_bound.  
 	 */
 	typedef	vector<subcircuit_map_entry>	subcircuit_map_type;
-#endif
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
 						node_pool_type;
@@ -203,14 +187,10 @@ private:
 	rule_pool_type				rule_pool;
 	expr_pool_type				expr_pool;
 	macro_pool_type				macro_pool;
-#if PRS_INTERNAL_NODE_POOL
 	internal_node_pool_type			internal_node_pool;
-#endif
 	internal_node_expr_map_type		internal_node_expr_map;
 	invariant_pool_type			invariant_pool;
-#if PRS_FOOTPRINT_SUBCKT
 	subcircuit_map_type			subcircuit_map;
-#endif
 public:
 	footprint();
 	~footprint();
@@ -256,7 +236,6 @@ public:
 	size_t
 	lookup_internal_node_expr(const string&, const bool) const;
 
-#if PRS_INTERNAL_NODE_POOL
 	const internal_node_pool_type&
 	get_internal_node_pool(void) const {
 		return internal_node_pool;
@@ -267,12 +246,6 @@ public:
 		INVARIANT(i < internal_node_pool.size());
 		return internal_node_pool[i];
 	}
-#else
-	const internal_node_expr_map_type&
-	get_internal_node_map(void) const {
-		return internal_node_expr_map;
-	}
-#endif
 
 	// returns reference to new expression node
 	expr_node&
@@ -289,7 +262,6 @@ public:
 		invariant_pool.push_back(t);
 	}
 
-#if PRS_FOOTPRINT_SUBCKT
 	const subcircuit_map_type&
 	get_subcircuit_map(void) const { return subcircuit_map; }
 
@@ -297,7 +269,6 @@ public:
 	push_back_subcircuit(const subcircuit_map_entry& t) {
 		subcircuit_map.push_back(t);
 	}
-#endif
 
 	size_t
 	current_expr_index(void) const {

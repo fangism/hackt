@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.104.6.2 2009/08/21 21:51:40 fang Exp $
+#	$Id: ChangeLog,v 1.104.6.3 2009/08/27 20:38:47 fang Exp $
+
+2009-08-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-21:
+	  Added util/optparse.{h,cc} for generic option string parsing.
+
 
 2009-08-21	David Fang		<fangism@users.sourceforge.net>
 

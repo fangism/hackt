@@ -1,0 +1,7 @@
+// "subckt-03.hac"
+// testing nested definition option
+// @hacknet-flags@ -f nested_subcircuits=1
+
+import "subckt-01.hac";
+
+

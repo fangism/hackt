@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.35.2.5 2009/08/25 01:22:37 fang Exp $
+	$Id: PRS.cc,v 1.35.2.6 2009/08/27 20:38:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -946,7 +946,6 @@ good_bool
 subcircuit::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
 	STACKTRACE_VERBOSE;
-#if PRS_FOOTPRINT_SUBCKT
 	static bool __lock__ = false;
 if (!__lock__) {
 	const util::value_saver<bool> __tmp(__lock__, true);
@@ -967,9 +966,6 @@ if (!__lock__) {
 	cerr << "ERROR: nested subcircuits are not yet supported." << endl;
 	return good_bool(false);
 }
-#else
-	return nested_rules::unroll(c, np, pfp);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
