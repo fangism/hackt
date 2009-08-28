@@ -1,23 +1,21 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.16 2009/08/28 00:23:42 fang Exp $
+	$Id: netgraph.h,v 1.1.2.17 2009/08/28 01:23:01 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
 #define	__HAC_NET_NETGRAPH_H__
 
-#include <iosfwd>
 #include <vector>
 #include <string>
 #include <map>
 #include <set>
+#include "net/common.h"
 #include "Object/lang/cflat_context_visitor.h"
 #include "Object/lang/PRS_footprint_expr.h"	// for precharge_ref_type
-#include "util/optparse.h"
 
 namespace HAC {
 namespace NET {
-using std::ostream;
 using std::vector;
 using std::string;
 using std::map;
@@ -345,6 +343,16 @@ class netlist : public netlist_common {
 	 */
 	const footprint*		fp;
 public:
+// universal node indices to every subcircuit
+	static const node void_node;	// not a real node
+	static const node GND_node;
+	static const node Vdd_node;
+
+	// these should correspond with the order of insertion in netlist's ctor
+	static const	index_type	void_index;
+	static const	index_type	GND_index;
+	static const	index_type	Vdd_index;
+
 friend class local_netlist;
 friend class netlist_generator;
 	/**
@@ -489,203 +497,6 @@ private:
 	__bind_footprint(const footprint&);
 
 };	// end class netlist
-
-//=============================================================================
-/**
-	Overrideable options (configure).
-	Many names borrowed from netgen for consistency and compatibility.
- */
-struct netlist_options {
-// geneeration-time options:
-	/**
-		Dimensions of standard devices to use when unspecified.  
-		In absolute units instead of lambda.
-	 */
-	real_type			std_n_width;
-	real_type			std_p_width;
-	real_type			std_n_length;
-	real_type			std_p_length;
-	/**
-		Dimensions of feedback (staticizer, keeper) devices 
-		when unspecified.  
-		In absolute units instead of lambda.
-	 */
-	real_type			stat_n_width;
-	real_type			stat_p_width;
-	real_type			stat_n_length;
-	real_type			stat_p_length;
-
-// output-time options:
-	/**
-		Units to be appended, e.g. "u" (micron), "e-1u", 
-		"n" (nanometer).
-	 */
-	string				length_unit;
-	/**
-		lambda, or unit scale factor multiplier.
-	 */
-	real_type			lambda;
-	/**
-		Emit nested subcircuits.
-		If true, print internal subcircuits locally to
-		each super-subcircuit where used, else print
-		all subcircuit definitions in flat namespace.
-		Othewise, emit subcircuit definitions prior to use.  
-	 */
-	bool				nested_subcircuits;
-	/**
-		If true, emit top-level instances and rules, otherwise, 
-		emit only subcircuit definitions (library-only).
-	 */
-	bool				emit_top;
-	netlist_options();
-
-	/**
-		Processes raw options.
-		\return true if there is an error.
-	 */
-	bool
-	set(const util::option_value_list&);
-
-	static
-	ostream&
-	help(ostream&);
-
-	ostream&
-	dump(ostream&) const;
-
-};	// end struct netlist_options
-
-//=============================================================================
-/**
-	Visitor to do all the heavy-lifting and traversal.  
-	TODO: warn against instantiating port processes with production rules.
-	Would the rules belong to the caller or the callee?
-	Certainly should NOT be duplicated.
-	This is the reason for deftype, defchan, etc.
- */
-class netlist_generator : public cflat_context_visitor {
-	/**
-		Primary structure for maintaining prerequisite ordering
-		of emitting dependent subcircuits before they are used.
-		Don't actually know if spice requires subcircuits
-		to be defined before used, but this is safe.
-		This way, only circuits that are used are emitted.
-	 */
-	typedef	std::map<const footprint*, netlist>
-					netlist_map_type;
-	typedef	entity::PRS::footprint	prs_footprint;
-private:
-	ostream& 			os;
-	const netlist_options&		opt;
-	netlist_map_type		netmap;
-
-// local data used only during traversal:
-	/**
-		Need this for back-reference to expression pool.
-	 */
-	const prs_footprint*		prs;
-	// need a place to hold netlist that belong to subcircuits
-	// which don't have associated footprints, for now might 
-	// only keep them around temporarily and locally
-	netlist*			current_netlist;
-	/**
-		Where devices are to be added.  
-		Can point to either primary subcircuit
-		or local subcircuit.  
-	 */
-	netlist_common*			current_local_netlist;
-	/**
-		Usually GND, used for precharge, and local prs override.
-		Overridden by prs <Vdd, GND>
-	 */
-	index_type			low_supply;
-	/**
-		Usually Vdd, used for precharge, and local prs override.
-	 */
-	index_type			high_supply;
-	/**
-		The base node (initially, Vdd/GND) to connect to the source
-		terminal of the next device/expression.  
-		This is necessary to correctly connect OR'd expressions.  
-	 */
-	index_type			foot_node;
-	/**
-		The output node (initially NULL) produced by the 
-		last expression.  
-	 */
-	index_type			output_node;
-	/**
-		Default transistor is used unless overridden by directive.
-		Usually determined by direction of pull of rule, 
-		or pass-gate type.
-	 */
-	transistor::fet_type		fet_type;
-	/**
-		Current attributes to apply to generated FETs
-		See transistor::attributes.
-	 */
-	transistor::flags		fet_attr;
-	/**
-		In expression traversal, whether or not this level
-		of expression is negated.  
-		Use for automatic negation-normalization and
-		CMOS-implementability checking.  
-	 */
-	bool				negated;
-	/**
-		The last specified device width, for automatic propagation.  
-	 */
-	real_type			last_width;
-	/**
-		The last specified device length, for automatic propagation.  
-	 */
-	real_type			last_length;
-public:
-	netlist_generator(const state_manager& _sm, 
-		const footprint& _topfp, ostream& o, const netlist_options& p);
-	~netlist_generator();
-
-	// go!!!
-	void
-	operator () (void);
-
-	void
-	visit(const global_entry<process_tag>&);
-
-	using cflat_context_visitor::visit;
-
-	void
-	visit(const global_entry<bool_tag>&);		// do nothing?
-	void
-	visit(const state_manager&);		// only visit processes
-	void
-	visit(const footprint&);
-	void
-	visit(const entity::PRS::footprint&);		// override
-	void
-	visit(const entity::PRS::footprint_rule&);
-	void
-	visit(const footprint_expr_node&);		// do nothing?
-	void
-	visit(const entity::PRS::footprint_macro&);
-
-	void
-	visit(const entity::SPEC::footprint&);			// do nothing
-	void
-	visit(const entity::SPEC::footprint_directive&);	// do nothing
-
-private:
-	void
-	visit(const footprint_expr_node::precharge_pull_type&);
-
-	index_type
-	register_internal_node(const index_type);
-
-	index_type
-	register_named_node(const index_type);
-
-};	// end class netlist_generator
 
 //=============================================================================
 

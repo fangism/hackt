@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.219.4.3 2009/08/24 16:48:49 fang Exp $
+#	$Id: Makefile.am,v 1.219.4.4 2009/08/28 01:22:57 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -999,9 +999,14 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/chpsim/TraceIterators.h \
 	sim/chpsim/TraceStreamer.h
 
-NET_CC_FILES = net/netgraph.cc
+NET_CC_FILES = \
+	net/netgraph.cc \
+	net/netlist_generator.cc \
+	net/netlist_options.cc
 NET_TCC_FILES =
-NET_H_FILES = net/netgraph.h
+NET_H_FILES = \
+	$(NET_CC_FILES:.cc=.h) \
+	net/common.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \

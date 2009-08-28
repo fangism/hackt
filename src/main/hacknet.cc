@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.1.2.6 2009/08/28 00:23:39 fang Exp $
+	$Id: hacknet.cc,v 1.1.2.7 2009/08/28 01:22:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,16 +11,13 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <fstream>
-// #include <cstring>
 #include <list>
 
-#include "net/netgraph.h"		// for netlist_generator
+#include "net/netlist_options.h"
+#include "net/netlist_generator.h"
 #include "main/hacknet.h"
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
-#if 0
-#include "main/options_modifier.tcc"
-#endif
 #include "main/simple_options.tcc"
 #include "main/global_options.h"
 #include "main/compile_options.h"
@@ -40,14 +37,6 @@ using util::optparse_file;
 using util::option_value_list;
 using NET::netlist_options;
 #include "util/using_ostream.h"
-
-//=============================================================================
-#if 0
-// explicit instantiation for proper initialization ordering
-// (options modifier registry map initialized before use)
-// accepted by g++-3.3, but not 4
-template class options_modifier_policy<hacknet_options>;
-#endif
 
 //=============================================================================
 class hacknet_options {
@@ -335,13 +324,6 @@ hacknet::usage(void) {
 "\t-t \"type\" : generate netlist for the named type,\n"
 "\t\tignoring top-level instances (quotes recommended)."
 	<< endl;
-#if 0
-        const size_t flags = options_modifier_map.size();
-	if (flags) {
-		cerr << "flags (" << flags << " total):" << endl;
-		dump_options_briefs(cerr);
-	}
-#endif
 	cerr << "Additional documentation is installed in:\n"
 	"\t`info hacknet' (finds " INFODIR "/hacknet.info)\n"
 	"\tPDF: " PDFDIR "/hacknet.pdf\n"
