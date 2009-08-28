@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.23 2009/02/18 00:22:34 fang Exp $
+	$Id: prsim.cc,v 1.23.8.1 2009/08/28 00:23:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -450,7 +450,7 @@ instantiate one instance of the named @var{type}, propagating its
 ports as top-level globals.  
 In other words, use the referenced type as the top-level scope, 
 ignoring the source's top-level instances.  
-Convenient takes palce of copy-propagating a single instance's ports.  
+Convenient takes place of copy-propagating a single instance's ports.  
 @end defopt
 @end texinfo
 ***/

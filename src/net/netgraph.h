@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.1.2.15 2009/08/27 20:38:46 fang Exp $
+	$Id: netgraph.h,v 1.1.2.16 2009/08/28 00:23:42 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -546,6 +546,10 @@ struct netlist_options {
 	 */
 	bool
 	set(const util::option_value_list&);
+
+	static
+	ostream&
+	help(ostream&);
 
 	ostream&
 	dump(ostream&) const;

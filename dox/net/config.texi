@@ -1,0 +1,28 @@
+@c "config.texi"
+@c $Id: config.texi,v 1.1.2.1 2009/08/28 00:23:27 fang Exp $
+
+@c ****************************************************************************
+@node Configuration Options
+@section Configuration Options
+@cindex configuration
+
+There are two ways to pass configuration options to @command{hacknet}.
+One is through the @option{-f} option on the command-line, 
+the other way is to pass them in through a configuration file 
+with the @option{-c} option.  
+The option value specifications share the same syntax:
+@i{key=values} where @i{values} can be blank, a single value, 
+or a comma-separated list of values.  
+A key-value specifier is not permitted to have spaces
+in the string!
+
+In a configuration file, blank lines are ignored, 
+as well as lines that begin with @t{#} (pound).
+
+@include config/lambda.texi
+@include config/length_unit.texi
+@include config/std_widths.texi
+@include config/stat_widths.texi
+@include config/nested_subcircuits.texi
+@include config/emit_top.texi
+

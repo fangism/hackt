@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.199.4.1 2009/07/28 23:51:28 fang Exp $
+#	$Id: configure.ac,v 1.199.4.2 2009/08/28 00:23:21 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -571,6 +571,7 @@ AC_CONFIG_FILES([
 	dox/cast2hac/Makefile
 	dox/prsim/Makefile
 	dox/chpsim/Makefile
+	dox/net/Makefile
 	lib/Makefile
 	lib/mk/Makefile
 	hackt.doxygen.config

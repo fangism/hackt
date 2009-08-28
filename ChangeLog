@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2009-09-27	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-22:
+	  configure.ac: generate dox/net/Makefile,
+		earlier on branch, also added test/net/Makefile
+
+
 2009-07-13	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-26:

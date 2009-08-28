@@ -1,0 +1,82 @@
+\input texinfo	@c -*-texinfo-*-
+@c %**start of header
+@setfilename hacknet.info
+@settitle HACKT Netlist Generator Manual
+@c `on' is the default
+@setchapternewpage odd
+@c for two-sided book-style printing
+@c %**end of header
+
+@c "hacknet.texi"
+@c $Id: hacknet.texi,v 1.1.2.1 2009/08/28 00:23:28 fang Exp $
+
+@dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
+@direntry
+* HACKNET: (hacknet).    HAC Spice netlist generator.
+@end direntry
+
+@include hacmacros.texi
+
+@copying
+This manual describes the usage and operation of HACKT's @command{hacknet} 
+spice netlist generator.  
+
+This document can also be found online at @homepagesubref{hacknet}.
+
+The main project home page is @homepageref{}.
+
+Copyright @copyright{} 2009 Cornell University
+
+@quotation
+Published by ...
+ 
+Permission is hereby granted to ...
+@end quotation
+@end copying
+
+@c Title page and Copyright
+@titlepage
+@title HACKNET : SPICE Netlist Generator
+@subtitle A netlist generator manual
+@author David Fang
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c ****************************** contents ************************************
+@shortcontents
+@contents
+
+@c @iftex
+@c @node List of Figures
+@c @unnumbered List of Figures
+@c @listoffloats Figure
+@c @end iftex
+
+@c ****************************** Top *****************************************
+@ifnottex
+@node Top
+@top HACKNET Manual Outline
+@insertcopying
+@end ifnottex
+
+@c @copying is recommended here as well
+@menu
+* Introduction:: Introduction to CHPSIM.
+* Usage:: Command-line summary.
+* Concept Index:: Concepts and terms.
+@end menu
+
+@c ****************************** chapter *************************************
+@include intro.texi
+@include usage.texi
+
+@c ****************************** index ***************************************
+@node Concept Index
+@unnumbered Concept Index
+@printindex cp
+
+@c ****************************** finis ***************************************
+@bye
+

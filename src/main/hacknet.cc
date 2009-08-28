@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.1.2.5 2009/08/27 20:38:44 fang Exp $
+	$Id: hacknet.cc,v 1.1.2.6 2009/08/28 00:23:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -38,6 +38,7 @@ using util::optparse;
 using util::optparse_list;
 using util::optparse_file;
 using util::option_value_list;
+using NET::netlist_options;
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -77,7 +78,7 @@ public:
 	/// compiler-driver flags
 	compile_options		comp_opt;
 	/// options for the netlist generator
-	NET::netlist_options	net_opt;
+	netlist_options		net_opt;
 
 	hacknet_options() :
 		raw_opts(), 
@@ -206,8 +207,7 @@ try {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: more options!
-	TODO: use getopt_mapped(), see cflat for examples.  
+	Handle command-line options.
  */
 int
 hacknet::parse_command_options(const int argc, char* argv[], options& o) {
@@ -226,6 +226,7 @@ Values may be singleton, comma-separated, or omitted.
 The same options can also be passed in through the command-line 
 via @option{-f}.   
 This option is repeatable and cumulative.
+@xref{Configuration Options}.
 @end defopt
 @end texinfo
 ***/
@@ -247,10 +248,11 @@ This option is repeatable and cumulative.
 @texinfo opt/option-f.texi
 @defopt -f options...
 Parse configuration options from @var{options}.
-Options are of the same format as in the configuration
+Options are of the same key-value format as in the configuration
 file, see option @option{-c}.  
 Options are space-separated instead of newline-separated.  
 This option is repeatable and cumulative.
+@xref{Configuration Options}.
 @end defopt
 @end texinfo
 ***/
@@ -268,7 +270,6 @@ Help.  Print usage and exit.
 @end defopt
 @end texinfo
 ***/
-// TODO: option-help
 		case 'h':
 			o.help_only = true;
 			usage();
@@ -276,13 +277,15 @@ Help.  Print usage and exit.
 /***
 @texinfo opt/option-H-upper.texi
 @defopt -H
-Help.  Print usage and exit.
+Describe all configuration options.  
+@xref{Configuration Options}.
+See also the installed documentation for @file{hacknet.info,html,pdf}.
 @end defopt
 @end texinfo
 ***/
 		case 'H':
 			o.help_only = true;
-			cerr << "TODO: print netlist_options help" << endl;
+			netlist_options::help(cerr);
 			break;
 /***
 @texinfo opt/option-t.texi
@@ -292,7 +295,7 @@ instantiate one instance of the named @var{type}, propagating its
 ports as top-level globals.  
 In other words, use the referenced type as the top-level scope, 
 ignoring the source's top-level instances.  
-Convenient takes palce of copy-propagating a single instance's ports.  
+Convenient takes place of copy-propagating a single instance's ports.  
 @end defopt
 @end texinfo
 ***/
@@ -328,7 +331,7 @@ hacknet::usage(void) {
 "\t-f \"option=value ...\" : set option values (repeatable)\n"
 "\t\tseparate multiple options with space\n"
 "\t-h : print this usage help\n"
-"\t-H : print options help\n"
+"\t-H : print configuration options help\n"
 "\t-t \"type\" : generate netlist for the named type,\n"
 "\t\tignoring top-level instances (quotes recommended)."
 	<< endl;

@@ -5,6 +5,14 @@
 
 2009-08-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-27-netlist-01-22:
+	  Added hacknet texinfo documentation and usage help strings, 
+		which can be extracted for texinfo generation.
+	  scripts/init_hackt.csh: fixed hardcoded sed path.
+	  Next: some clean-up and organization of net/ sources, 
+		followed by closing branch, merge to trunk.
+
+
 	* HACKT-00-01-04-main-00-83-27-netlist-01-21:
 	  hacknet: implemented config option parsing from both file
 		and command-line.  Added bunch of test cases to suite.
