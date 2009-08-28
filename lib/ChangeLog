@@ -1,5 +1,13 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.55 2009/07/13 23:28:19 fang Exp $
+#	$Id: ChangeLog,v 1.56 2009/08/28 22:41:48 fang Exp $
+
+2009-08-28	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28+:
+	  Added some scripts to convert prsim dumps to evcd files, 
+		to export to other waveform viewers.  Not tested.
+		Use prsimlog_to_evcd.sh.
+
 
 2009-07-13	David Fang	<fangism@users.sourceforge.net>
 
