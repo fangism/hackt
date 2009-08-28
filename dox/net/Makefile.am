@@ -1,5 +1,5 @@
 # "dox/net/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.2 2009/08/28 17:36:43 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.3 2009/08/28 18:19:24 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -104,7 +104,7 @@ hacknet.dvi hacknet.pdf hacknet.html $(srcdir)/hacknet.info: \
 # XFIG_EPS = $(XFIG_FIGURES:.fig=.eps)
 # XFIG_PNG = $(XFIG_FIGURES:.fig=.png)
 
-all-figs: $(BUILT_FIGS)
+# all-figs: $(BUILT_FIGS)
 
 # distribute to remove burden from user to build dox
 EXTRA_DIST += $(XFIG_FIGURES) $(SOURCE_DOTS) $(XFIG_PNG) \

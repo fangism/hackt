@@ -1,5 +1,5 @@
 @c "usage.texi"
-@c $Id: usage.texi,v 1.1.2.1 2009/08/28 00:23:31 fang Exp $
+@c $Id: usage.texi,v 1.1.2.2 2009/08/28 18:19:25 fang Exp $
 
 @node Usage
 @chapter Usage
@@ -41,5 +41,8 @@ and the argument is optional.
 
 @c ****************************************************************************
 @c section
-@include config.texi
+
+    @include config.texi
+@c kludge: extra leading spaces here to prevent accidental dependence
+@c from extracting includes (Make.dox-head)
 
