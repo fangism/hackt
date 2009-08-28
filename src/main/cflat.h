@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.16 2008/10/17 21:52:55 fang Exp $
+	$Id: cflat.h,v 1.17 2009/08/28 20:45:00 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_H__
@@ -86,6 +86,7 @@ private:
 		_connect_none, _no_connect, _connect_equal,
 		_connect_connect, _connect_wire,
 		_include_prs, _exclude_prs, _no_include_prs, _no_exclude_prs,
+		_precharges, _no_precharges,
 		_self_aliases, _no_self_aliases,
 		_node_attributes, _no_node_attributes, 
 		_split_instance_attributes, _join_instance_attributes, 

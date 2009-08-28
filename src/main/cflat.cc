@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.23 2008/10/17 21:52:54 fang Exp $
+	$Id: cflat.cc,v 1.24 2009/08/28 20:44:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -121,6 +121,7 @@ __cflat_prsim(cflat::options& cf) {
 #if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
 #endif
+	cf.show_precharges = false;
 	cf.size_prs = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 }
@@ -145,6 +146,7 @@ __cflat_prlint(cflat::options& cf) {
 #if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
 #endif
+	cf.show_precharges = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 
@@ -170,6 +172,7 @@ __cflat_connect(cflat::options& cf) {
 #if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
 #endif
+	cf.show_precharges = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 
@@ -198,6 +201,7 @@ __cflat_lvs(cflat::options& cf) {
 #if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
 #endif
+	cf.show_precharges = false;	// maybe true?
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 
@@ -259,6 +263,7 @@ __cflat_ADspice(cflat::options& cf) {
 #if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
 #endif
+	cf.show_precharges = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 
@@ -535,6 +540,33 @@ __cflat_no_self_aliases(cflat::options& cf) {
 const cflat::register_options_modifier
 	cflat::_no_self_aliases("no-self-aliases", &__cflat_no_self_aliases,
 		"excludes aliases x = x");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-precharges.texi
+@defvr {@t{cflat -f} option} precharges
+@defvrx {@t{cflat -f} option} no-precharges
+Print or hide precharge expressions.
+@end defvr
+@end texinfo
+***/
+static
+void
+__cflat_precharges(cflat::options& cf) {
+	cf.show_precharges = true;
+}
+const cflat::register_options_modifier
+	cflat::_precharges("precharges", &__cflat_precharges, 
+		"show precharge expressions");
+
+static
+void
+__cflat_no_precharges(cflat::options& cf) {
+	cf.show_precharges = false;
+}
+const cflat::register_options_modifier
+	cflat::_no_precharges("no-precharges", &__cflat_no_precharges,
+		"hide precharge expressions");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

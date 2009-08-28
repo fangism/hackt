@@ -1,0 +1,48 @@
+@c "usage.texi"
+@c $Id: usage.texi,v 1.2 2009/08/28 20:44:41 fang Exp $
+
+@node Usage
+@chapter Usage
+@cindex usage
+@cindex options
+@cindex configuration
+@cindex command-line
+@cindex flags
+
+This chapter describes @command{hacknet}'s command-line options, 
+and configuration file options.  
+
+Usage:
+@samp{hacknet [@var{options}] @var{obj-file}}
+
+The resulting netlist is printed to @file{standard-out}, so it is common
+practice to redirect it to a file.
+Diagnostic messages will appear in @file{standard-error}.  
+
+@menu
+* Option Summary:: Description of command-line arguments.
+* Configuration Options:: Flag descriptions.
+@end menu
+
+@c ****************************************************************************
+@node Option Summary
+@section Option Summary
+@cindex options
+
+@c These might be better managed in the source file for ease of maintainence.
+For options that take an argument, the space between the flag
+and the argument is optional.  
+
+@include opt/option-c.texi
+@include opt/option-f.texi
+@include opt/option-h.texi
+@include opt/option-H-upper.texi
+@include opt/option-t.texi
+
+@c ****************************************************************************
+@c section
+
+    @include config.texi
+@c kludge: extra leading spaces here to prevent accidental dependence
+@c from extracting includes (Make.dox-head)
+

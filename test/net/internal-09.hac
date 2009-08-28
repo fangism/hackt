@@ -1,0 +1,12 @@
+// "internal-09.hac"
+// copy-modified from "precharge-06.hac"
+// @hacknet-flags@ -t foo
+
+defproc foo(bool en1, en2, a, b, _o) {
+prs {
+	en1 | en2 	-> @x-
+	~@x &{+~en1 & ~en2} a & b	-> _o-
+}
+}
+
+

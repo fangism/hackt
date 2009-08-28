@@ -1,0 +1,9 @@
+// "celem-01.hac"
+// @hacknet-flags@ -t celem
+
+defproc celem(bool a, b, o) {
+prs {
+	a & b	#>	o-
+}
+}
+

@@ -141,7 +141,7 @@ Persistent Object Manager text dump:
 	137	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
 	138	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	139	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
-	140	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1592
+	140	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1624
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

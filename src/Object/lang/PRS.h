@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.26 2009/07/20 22:41:37 fang Exp $
+	$Id: PRS.h,v 1.27 2009/08/28 20:44:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -29,6 +29,7 @@ struct pint_tag;
 template <class, size_t> class value_array;
 
 namespace PRS {
+class footprint_expr_node;
 using std::string;
 //=============================================================================
 // forward declarations
@@ -339,6 +340,9 @@ public:
 	subcircuit(const string&);
 	~subcircuit();
 
+	const string&
+	get_name(void) const { return name; }
+
 	ostream&
 	what(ostream&) const;
 
@@ -514,8 +518,14 @@ public:
 
 	operator bool () const { return expr; }
 
-	PRS_UNROLL_EXPR_PROTO;
-	PRS_UNROLL_COPY_PROTO;
+	good_bool
+	unroll(const unroll_context&, const node_pool_type&,
+		PRS::footprint&, const size_t, 
+		const size_t) const;
+
+
+//	PRS_UNROLL_EXPR_PROTO;
+//	PRS_UNROLL_COPY_PROTO;
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;

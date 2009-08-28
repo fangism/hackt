@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.219 2009/07/02 23:22:42 fang Exp $
+#	$Id: Makefile.am,v 1.220 2009/08/28 20:44:49 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -51,7 +51,7 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt haco haccreate hacalloc \
-	hacobjdump hflat hacpp hacprsim hacchpsim
+	hacobjdump hflat hacpp hacprsim hacchpsim hacknet
 
 bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh \
 	hacinstdump
@@ -89,6 +89,7 @@ EXTRA_LTLIBRARIES += \
 # should follow partial order of dependencies (independent first)
 # WIsh automake would automatically order these properly.
 pkglib_LTLIBRARIES = \
+	libhacknet.la \
 	libhacktlib.la \
 	libhacktsim.la \
 	libhacktast.la \
@@ -160,9 +161,15 @@ hacchpsim_LDADD = libhacktsim.la
 # hacchpsim_LDFLAGS = -export-dynamic 
 # (only if symbols in executable needed to resolve from modules)
 
+hacknet_SOURCES = main/hacknet.cc
+hacknet_CPPFLAGS = -DWITH_MAIN
+hacknet_LDADD = libhacknet.la
+
+
 main/hacchpsim-chpsim.o main/hacprsim-prsim.o: install_paths.h
 main/chpsim.lo main/chpsim.o: install_paths.h
 main/prsim.lo main/prsim.o: install_paths.h
+main/hacknet.lo main/hacknet.o: install_paths.h
 
 LIBHACKTGUILE_H_FILES = \
 	guile/libhackt-wrap.h \
@@ -191,7 +198,7 @@ LIBBOGUS2_LA = libbogus2_la
 LIBBOGUS3_LA = libbogus3_la
 LIBBOGUS4_LA = libbogus4_la
 
-libhacktexec_la_LIBADD = libhacktsim.la
+libhacktexec_la_LIBADD = libhacktsim.la libhacknet.la
 
 # pass in a C++ file to coerce --tag=CXX linkage
 libhacktlib_la_SOURCES = \
@@ -201,6 +208,8 @@ libhacktlib_la_SOURCES = \
 # want to split-off:  main/parse_funcs.cc
 libhacktlib_la_LIBADD = libhacktparsers.la
 # libhacktexec.la
+
+libhacknet_la_LIBADD = libhacktlib.la
 
 libhacktsim_la_LIBADD = libhacktlib.la
 
@@ -441,7 +450,6 @@ OBJECT_INST_CC_FILES = \
 	Object/inst/connection_policy.cc \
 	Object/inst/port_alias_tracker.cc \
 	Object/inst/port_visitor.cc \
-	Object/inst/bool_port_collector.cc \
 	Object/inst/alias_actuals.cc \
 	Object/inst/alias_matcher.cc \
 	Object/inst/alias_printer.cc \
@@ -465,6 +473,7 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/parameterless_collection_type_manager.tcc \
 	Object/inst/channel_collection_type_manager.tcc \
 	Object/inst/port_alias_tracker.tcc \
+	Object/inst/bool_port_collector.tcc \
 	Object/inst/subinstance_manager.tcc \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/alias_empty.tcc \
@@ -489,6 +498,7 @@ OBJECT_INST_TCC_FILES = \
 OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/alias_visitee.h \
 	Object/inst/alias_visitor.h \
+	Object/inst/bool_port_collector.h \
 	Object/inst/collection_fwd.h \
 	Object/inst/connection_policy_fwd.h \
 	Object/inst/instance_fwd.h \
@@ -989,6 +999,15 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/chpsim/TraceIterators.h \
 	sim/chpsim/TraceStreamer.h
 
+NET_CC_FILES = \
+	net/netgraph.cc \
+	net/netlist_generator.cc \
+	net/netlist_options.cc
+NET_TCC_FILES =
+NET_H_FILES = \
+	$(NET_CC_FILES:.cc=.h) \
+	net/common.h
+
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \
 	main/force_load.cc \
@@ -1005,7 +1024,8 @@ MAIN_EXEC_CC_FILES = \
 	main/objdump.cc \
 	main/shell.cc \
 	main/version.cc \
-	main/chpsim.cc
+	main/chpsim.cc \
+	main/hacknet.cc
 
 MAIN_EXEC_TCC_FILES = \
 	main/options_modifier.tcc \
@@ -1097,6 +1117,8 @@ libhacktexec_la_LIBADD += $(LIBMISCFUN)
 
 libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 
+libhacknet_la_SOURCES = $(NET_CC_FILES) $(NET_TCC_FILES) $(NET_H_FILES)
+
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
 # unfornately, it doesn't detect these dependenvies until AFTER first compile
@@ -1163,6 +1185,7 @@ ALL_HEADER_FILES += \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
 	$(SIM_H_FILES) \
+	$(NET_H_FILES) \
 	$(LIBHACKTGUILE_H_FILES) \
 	$(MAIN_EXEC_H_FILES)
 

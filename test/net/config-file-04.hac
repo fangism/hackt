@@ -1,0 +1,8 @@
+// "config-file-04.hac"
+// testing parameter override
+// expect-fail on nonexistent file
+// @hacknet-flags@ -c does_not_exist.hacknet-conf
+
+import "inv-00.hac";
+
+

@@ -1,0 +1,11 @@
+// "unused-port-01.hac"
+// what should netlist generator do about unused ports?
+
+defproc foo (bool x, y, z) {
+prs {
+	x	=> z-
+}
+}
+
+foo bar;
+

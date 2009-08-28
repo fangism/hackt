@@ -1,0 +1,6 @@
+// "celem-05.hac"
+
+import "celem-04.hac";
+
+ctree<3,2> foo;
+

@@ -1,0 +1,7 @@
+// "config-arg-06.hac"
+// latter value should override former
+// @hacknet-flags@ -f lambda=5 -f lambda=10
+
+import "inv-00.hac";
+
+

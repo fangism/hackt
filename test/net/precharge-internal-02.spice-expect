@@ -1,0 +1,10 @@
+.subckt foo<> GND Vdd en a b _o _p
+M0_ GND en @i GND nch W=5u L=2u
+M1_:pchg Vdd en @i Vdd pch W=5u L=2u
+M2_ @i a _o GND nch W=5u L=2u
+M3_:pchg Vdd en @i Vdd pch W=5u L=2u
+M4_ @i b _p GND nch W=5u L=2u
+.ends
+
+xbar GND Vdd bar.en bar.a bar.b bar._o bar._p foo<>
+

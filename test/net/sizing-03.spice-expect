@@ -1,0 +1,13 @@
+.subckt celem<4> GND Vdd a[0] a[1] a[2] a[3] _o
+M0_ GND a[0] #0 GND nch W=20u L=2u
+M1_ #0 a[1] #1 GND nch W=20u L=2u
+M2_ #1 a[2] #2 GND nch W=20u L=2u
+M3_ #2 a[3] _o GND nch W=20u L=2u
+M4_ Vdd a[0] #3 Vdd pch W=40u L=2u
+M5_ #3 a[1] #4 Vdd pch W=40u L=2u
+M6_ #4 a[2] #5 Vdd pch W=40u L=2u
+M7_ #5 a[3] _o Vdd pch W=40u L=2u
+.ends
+
+xfoo GND Vdd foo.a[0] foo.a[1] foo.a[2] foo.a[3] foo._o celem<4>
+

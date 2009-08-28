@@ -1,0 +1,14 @@
+// "subckt-15.hac"
+// copy-modified from "subckt-14.hac"
+
+defproc foo(bool en, a, b) {
+prs {
+	en	-> @x-
+subckt {
+	~@x & a	-> b-
+}
+}
+}
+
+foo bar;
+

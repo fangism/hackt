@@ -1,0 +1,9 @@
+Error: internal node `a' is used in the wrong sense.
+Error in sub-expression 0.
+Error resolving production rule expression at:
+Error unrolling production rule guard: 
+	@foo::a & foo::x -> foo::_y-
+Error instantiating process footprint: 
+From canonical type: foo<>
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

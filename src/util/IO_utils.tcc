@@ -2,11 +2,18 @@
 	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
 	Consider renaming this file to value_read/writer...
-	$Id: IO_utils.tcc,v 1.18 2008/03/17 23:03:08 fang Exp $
+	$Id: IO_utils.tcc,v 1.19 2009/08/28 20:45:22 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
 #define __UTIL_IO_UTILS_TCC__
+
+// optional predefine: STACKTRACE_IOS
+// to enable debugging for a particular translation unit
+
+#ifndef	STACKTRACE_IOS
+#define	STACKTRACE_IOS			0
+#endif
 
 #include "util/IO_utils.h"
 
@@ -21,10 +28,23 @@
 #include "util/STL/vector_fwd.h"	// for vector<bool>
 #include "util/macros.h"	// for INVARIANT
 
-// only needed for functional for_each where call_traits are needed.  
-// #include "util/binders.h"
+#if	STACKTRACE_IOS
+#include "util/stacktrace.h"
+	#define	STACKTRACE_IO(x)	STACKTRACE(x)
+	#define	STACKTRACE_IO_BRIEF	STACKTRACE_BRIEF
+	#define	STACKTRACE_IO_VERBOSE	STACKTRACE_VERBOSE
+	#define	STACKTRACE_IO_PRINT(x)	STACKTRACE_INDENT_PRINT(x)
+#else
+	#define	STACKTRACE_IO(x)
+	#define	STACKTRACE_IO_BRIEF
+	#define	STACKTRACE_IO_VERBOSE
+	#define	STACKTRACE_IO_PRINT(x)
+#endif
 
 namespace util {
+#if STACKTRACE_IOS
+#include "util/using_ostream.h"
+#endif
 using std::ostream;
 using std::istream;
 using std::vector;
@@ -73,6 +93,7 @@ template <class T>
 // inline
 void
 write_value(ostream& f, const T& v) {
+	STACKTRACE_IO_VERBOSE;
 	f.write(reinterpret_cast<const char*>(&v), sizeof(T));
 }
 
@@ -89,6 +110,7 @@ template <class T>
 // inline
 void
 read_value(istream& f, T& v) {
+	STACKTRACE_IO_VERBOSE;
 	f.read(reinterpret_cast<char*>(&v), sizeof(T));
 }
 
@@ -105,10 +127,13 @@ read_value(istream& f, T& v) {
 template <class S>
 void
 write_sequence(ostream& f, const S& l) {
+	STACKTRACE_IO_VERBOSE;
 	typedef S	sequence_type;
 	typedef	typename sequence_type::value_type	value_type;
 	typedef	typename sequence_type::const_iterator	const_iterator;
 	write_value(f, l.size());
+	STACKTRACE_IO_PRINT("sequence.tellp = " << f.tellp() << endl);
+	STACKTRACE_IO_PRINT("sequence.size = " << l.size() << endl);
 #if 0
 	for_each(l.begin(), l.end(), 
 		bind1st_argval(ptr_fun(write_value<T>), f)
@@ -159,6 +184,7 @@ write_range(ostream& f, Iter i, const Iter e) {
 template <class S>
 void
 write_array(ostream& f, const S& s) {
+	STACKTRACE_IO_VERBOSE;
 	typedef	S	array_type;
 	typedef	typename array_type::value_type	value_type;
 	write_value(f, s.size());
@@ -201,6 +227,7 @@ read_range(istream& f, Iter i, const Iter e) {
 template <class S>
 void
 read_sequence_in_place(istream& f, S& l) {
+	STACKTRACE_IO_VERBOSE;
 	typedef S	sequence_type;
 	typedef	typename sequence_type::iterator	iterator;
 	typedef	typename sequence_type::value_type	value_type;
@@ -241,6 +268,7 @@ read_sequence_in_place(istream& f, S& l) {
 template <class S>
 void
 read_sequence_prealloc(istream& f, S& l) {
+	STACKTRACE_IO_VERBOSE;
 	typedef S	sequence_type;
 	typedef	typename sequence_type::value_type	value_type;
 	typedef	value_type*				iterator;
@@ -304,10 +332,13 @@ namespace detail {
 template <class S>
 void
 read_sequence_resize(istream& f, S& l) {
+	STACKTRACE_IO_VERBOSE;
 	typedef	S		sequence_type;
 	typedef	typename sequence_type::value_type	value_type;
 	size_t size;
 	read_value(f, size);
+	STACKTRACE_IO_PRINT("sequence.tellg = " << f.tellg() << endl);
+	STACKTRACE_IO_PRINT("sequence.size = " << size << endl);
 	l.resize(size);
 	size_t j = 0;
 	value_reader<value_type> r(f);
@@ -336,6 +367,7 @@ read_sequence_resize(istream& f, S& l) {
 template <class S>
 void
 read_sequence_back_insert(istream& f, S& l) {
+	STACKTRACE_IO_VERBOSE;
 	typedef S		sequence_type;
 	typedef	typename sequence_type::value_type	value_type;
 	size_t size;
@@ -345,7 +377,6 @@ read_sequence_back_insert(istream& f, S& l) {
 	for ( ; i < size; i++) {
 		value_type t;
 		r(t);
-		// read_value(f, t);
 		l.push_back(t);
 	}
 	// any way to std::copy directly?
@@ -364,6 +395,7 @@ read_sequence_back_insert(istream& f, S& l) {
 template <class S>
 void
 read_sequence_set_insert(istream& f, S& l) {
+	STACKTRACE_IO_VERBOSE;
 	typedef S		sequence_type;
 	typedef	typename sequence_type::value_type	value_type;
 	size_t size;
@@ -373,7 +405,6 @@ read_sequence_set_insert(istream& f, S& l) {
 	for ( ; i < size; i++) {
 		value_type t;
 		r(t);
-		// read_value(f, t);
 		l.insert(t);
 	}
 	// any way to std::copy directly?
@@ -389,8 +420,10 @@ read_sequence_set_insert(istream& f, S& l) {
  */
 template <class K, class T>
 void
-write_key_value_pair(ostream& f, const pair<const K, T>& p) {
+write_pair(ostream& f, const pair<K, T>& p) {
+	STACKTRACE_IO_VERBOSE;
 	write_value(f, p.first);
+	STACKTRACE_IO_PRINT("pair.tellp = " << f.tellp() << endl);
 	write_value(f, p.second);
 }
 
@@ -398,14 +431,17 @@ write_key_value_pair(ostream& f, const pair<const K, T>& p) {
 /**
 	Generic helper function for writing key-value pairs from maps
 	to binary output stream.  
+	Const-ness of K?
 	\param K the key type.
 	\param T the value type.
 	\param p the pair referenced in a map.  
  */
 template <class K, class T>
 void
-read_key_value_pair(istream& f, pair<K, T>& p) {
+read_pair(istream& f, pair<K, T>& p) {
+	STACKTRACE_IO_VERBOSE;
 	read_value(f, p.first);
+	STACKTRACE_IO_PRINT("pair.tellg = " << f.tellg() << endl);
 	read_value(f, p.second);
 }
 
@@ -460,6 +496,7 @@ read_map(istream& f, M& m) {
 	typedef	typename map_type::mapped_type	mapped_type;
 	typedef	typename map_type::const_iterator	const_iterator;
 	typedef	pair<key_type, mapped_type>	pair_type;
+	// NOTE: pair_type removed const on key_type
 	INVARIANT(f.good());
 	// INVARIANT(m.empty()); // ?
 	size_t size;

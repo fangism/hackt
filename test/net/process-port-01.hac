@@ -1,0 +1,15 @@
+// "process-port-01.hac"
+// copy-modified from "unused-port-01.hac"
+// netgen rejects processes inside ports
+
+// should suppress empty processes
+defproc pair(bool a, b) { }
+
+defproc foo (pair p; bool z) {
+prs {
+	p.b	=> z-
+}
+}
+
+foo bar;
+

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.39 2009/03/14 01:46:23 fang Exp $
+#	$Id: Makefile.inc,v 1.40 2009/08/28 20:45:22 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -169,6 +169,7 @@ UTIL_HEADER_FILES = \
 	util/numeric/zerodiv_detect.h \
 	util/offset_array.h \
 	util/operators.h \
+	util/optparse.h \
 	util/packed_array_fwd.h \
 	util/persistent_fwd.h \
 	util/persistent.h \
@@ -221,11 +222,13 @@ UTIL_CC_FILES = \
 	util/getopt_mapped.cc \
 	util/libc.c \
 	util/named_ifstream_manager.cc \
+	util/optparse.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
 	util/readline_wrap.cc \
 	util/stacktrace.cc \
 	util/static_trace.cc \
+	util/string.cc \
 	util/tokenize.cc \
 	util/stream_ptr.cc \
 	util/uninitialized.cc \

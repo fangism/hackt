@@ -1,0 +1,8 @@
+// "config-file-01.hac"
+// testing very basic config options on command-line
+// @hacknet-flags@ -c $srcdir/sample-01.hacknet-conf
+// @deps@ sample-01.hacknet-conf
+
+import "inv-00.hac";
+
+

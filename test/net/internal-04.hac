@@ -1,0 +1,21 @@
+// "internal-04.hac"
+// copy-modified from "internal-03.hac"
+// netgen emits the subcircuit without the internal node as a port
+// but hacknet emits the subcircuit with @a as a port, 
+//	but not connected externally
+// could try to isolate as an optimization...
+
+defproc foo(bool en, x, _y) {
+bool z;
+_y @ [autokeeper=0];
+prs {
+subckt {
+	en	-> @a-
+	~@a & x	-> _y-
+}
+	_y	=> z-
+}
+}
+
+foo bar;
+

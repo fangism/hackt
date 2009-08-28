@@ -1,0 +1,2 @@
+"foo.a" &{+"foo.en"} "foo.b" -> "foo.c"-
+"bar.a" &{+~"bar._en"} "bar.b" -> "bar.c"-

@@ -1,0 +1,17 @@
+// "inv-10.hac"
+// copy-reduced from "inv-08.hac"
+
+import "inv-01.hac";
+
+defproc foo(bool a, c) {
+bool b;
+inv p(a, b);
+}
+
+defproc bar(bool a, c) {
+bool b;
+foo p(a, b);
+}
+
+bar none;
+

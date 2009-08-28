@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.16 2009/03/09 07:31:02 fang Exp $
+	$Id: instref.cc,v 1.17 2009/08/28 20:45:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -38,7 +38,7 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/instance_placeholder_base.h"
-#include "Object/inst/bool_port_collector.h"
+#include "Object/inst/bool_port_collector.tcc"
 #include "Object/ref/meta_reference_union.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/entry_collection.h"
@@ -509,7 +509,7 @@ parse_name_to_get_ports(const string& n, const module& m,
 	const entity::instance_alias_info<process_tag>&
 		pi(*p.get_back_ref());
 	// get subinstances, and their local indices
-	entity::bool_port_collector C;
+	entity::bool_port_collector<std::set<size_t> > C;
 	pi.accept(C);
 #if 0
 	pi.dump_ports(cout, entity::dump_flags::default_value) << endl;

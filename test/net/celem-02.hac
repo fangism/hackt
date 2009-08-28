@@ -1,0 +1,6 @@
+// "celem-02.hac"
+
+import "celem-01.hac";
+
+celem foo;
+

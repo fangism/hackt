@@ -1,0 +1,17 @@
+@c "chpsim/intro.texi"
+@c $Id: intro.texi,v 1.2 2009/08/28 20:44:40 fang Exp $
+
+@node Introduction
+@chapter Introduction
+@cindex introduction
+@pindex hacknet
+
+@command{hacknet} is a SPICE netlist generator for the @HACKT{} suite.  
+The input is a @HAC{} file containing production rules, usually
+connected through instance hierarchy.  
+The output is a hierarchical netlist with devices, subcircuits, 
+and instances.  
+The output should be suitable for SPICE-like circuit simulators.  
+
+How it works...
+

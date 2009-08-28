@@ -1,0 +1,13 @@
+// "precharge-02.hac"
+// copy-modified from "precharge-01.hac"
+// @hacknet-flags@ -t foo
+// complement rule should not have precharge, of course
+
+defproc foo(bool en, a, b, _o) {
+prs {
+	en &{+~en} a & b	=> _o-
+}
+}
+
+// foo bar;
+

@@ -1,0 +1,6 @@
+// "inv-00.hac"
+bool x, y;
+prs {
+	x	=> y-
+}
+

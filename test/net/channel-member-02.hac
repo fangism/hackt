@@ -1,0 +1,27 @@
+// "channel-member-02.hac"
+// copy-modified from "channel-member-02.hac"
+// reduced test case that works
+
+defchan e1of2 <: chan(bool)(bool d[2]; bool t, f, e) {
+	d[0] = f;
+	d[1] = t;
+	spec { exclhi(f,t) }
+	send {}
+	recv{}
+}
+
+template <pint X>
+defproc res(bool in, out) {
+prs {
+	passn(in, in, out)
+}
+}
+
+defproc connect_me (
+	e1of2 i;		// no longer array
+	e1of2 o			// no longer array
+	) {
+res<6> r(i.e, o.e);
+}
+
+connect_me please;

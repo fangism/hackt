@@ -1,0 +1,21 @@
+// "half-pull-01.hac"
+// testing supply nodes on one-sided pull definitions
+// @hacknet-flags@ -t inv
+
+defproc pull_down(bool a, b) {
+prs {
+	a	-> b-
+}
+}
+
+defproc pull_up(bool a, b) {
+prs {
+	~a	-> b+
+}
+}
+
+defproc inv(bool a, b) {
+pull_down d(a, b);
+pull_up u(a, b);
+}
+

@@ -1,0 +1,65 @@
+# "test/net/Makefile.am"
+#	$Id: Makefile.am,v 1.2 2009/08/28 20:45:42 fang Exp $
+# Test auto-Makefile for hacknet.  
+
+include $(top_srcdir)/test/Make.test-head
+
+# SUBDIRS =
+
+# .hac inputs
+HACKNET_TEST_SCRIPTS_PASSES = \
+	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-06 inv-07 \
+	inv-08 inv-09 inv-10 inv-11 inv-12 \
+	nand-01 nand-02 nand-03 \
+	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
+	port-alias-01 port-alias-02 port-alias-03 port-alias-04 port-alias-05 \
+	unused-port-01 \
+	unconnected-01 unconnected-02 \
+	internal-00 internal-01 internal-02 internal-03 internal-04 \
+	internal-05 internal-06 internal-07 internal-08 \
+	internal-09 internal-10 internal-11 \
+	precharge-01 precharge-02 precharge-03 precharge-04 precharge-05 \
+	precharge-internal-01 precharge-internal-02 precharge-internal-03 \
+	non-CMOS-01 non-CMOS-02 \
+	sizing-01 sizing-02 sizing-03 \
+	half-pull-01 half-pull-02 \
+	pass_gate-01 pass_gate-02 pass_gate-03 pass_gate-04 \
+	subckt-01 subckt-03 \
+	channel-member-01 channel-member-02 channel-member-03 \
+	array-01 \
+	process-port-01 process-port-02 \
+	empty-01 empty-02 empty-03 \
+	recurse-01 recurse-02 \
+	config-arg-01 config-arg-02 config-arg-03 config-arg-04 \
+	config-arg-06 config-arg-08 \
+	config-file-01 config-file-02 config-file-03
+
+HACKNET_TEST_SCRIPTS_FAILURES = \
+	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05 \
+	config-arg-07 config-file-04
+
+# TODO: promote these to real tests
+EXTRA_DIST_HAC = \
+	config-arg-05
+
+EXTRA_DIST += $(EXTRA_DIST_HAC:=.hac)
+
+srcdir_EXTRA_DIST += \
+	sample-01.hacknet-conf
+
+HACKT_PARSE_TEST_PASSES = \
+	non-CMOS-06 subckt-02
+
+HACKTNET_TEST_SCRIPTS_PASSES =
+
+CLEANFILES +=
+AUTO_IGNORE +=
+EXTRA_DIST +=
+
+HACKT_CREATE_TEST_PASSES =
+HACKT_CREATE_TEST_FAILURES = \
+	non-CMOS-06 subckt-02
+HACKT_CFLAT_TEST_SUBJECTS =
+
+include $(top_srcdir)/test/Make.test-tail
+

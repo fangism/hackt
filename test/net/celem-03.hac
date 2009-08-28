@@ -1,0 +1,11 @@
+// "celem-03.hac"
+// copy-modified from "celem-01.hac"
+// @hacknet-flags@ -t celem<4>
+
+template <pint N>
+defproc celem(bool a[N], o) {
+prs {
+	(&:i:N: a[i] )	#>	o-
+}
+}
+

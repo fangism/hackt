@@ -3,6 +3,224 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-08-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-merged-netlist-01-23:
+	  Branch merge of -netlist-01, the birth of hacknet, 
+		the spice-netlist generator, alpha release.
+
+
+2009-08-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-23:
+	  Mainly cosmetic re-organization of net/*.{h,cc} sources.  
+	  End of branch.  
+
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-22:
+	  Added hacknet texinfo documentation and usage help strings, 
+		which can be extracted for texinfo generation.
+	  scripts/init_hackt.csh: fixed hardcoded sed path.
+	  Next: some clean-up and organization of net/ sources, 
+		followed by closing branch, merge to trunk.
+
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-21:
+	  hacknet: implemented config option parsing from both file
+		and command-line.  Added bunch of test cases to suite.
+	  Object/lang/PRS*: perm'd PRS_INTERNAL_NODE_POOL and
+		PRS_FOOTPRINT_SUBCKT switches, as they are now needed, tested.
+	  TODO: documenting each option for help and texinfo.
+
+
+2009-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-20:
+	  hacknet: concept of emptiness of a subcircuit or instance is
+		now computed hierarhically and memoized in a netlist member.
+	  Added some recursive test cases.
+
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-19:
+	  hacknet: fixed bug looking up a port that wasn't a port alias.
+		Solution: search scope aliases for a port alias, b/c
+		at least one MUST be a direct port-alias (hackish).
+	  Added test cases for this fix.  
+	  Next: need recursive definition of 'empty' subcircuits, 
+		need to define a member flag.
+
+
+2009-08-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-18:
+	  lang/PRS.cc: added cerate-time check that subcircuits cannot
+		be nested (yet), though this would be better at compile-time.
+	  hacknet: internal node rules are now emitted in the subsubcircuit
+		in which they are defined, thereby allowing named
+		internal nodes to be passed around among local subcircuits.
+		Completely re-worked subcircuit traversal and 
+		internal node mapping data structures.  
+	  Test cases added.
+
+
+2009-08-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-17:
+	  Added PRS::footprint support for tracking which subcircuits
+		'own' which internal nodes (definitions).  
+		Test cases (create) updated, new ones added.  
+	  next: hacknet to use this information to emit internal rule
+		subnets in the proper subcircuit.
+
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-16:
+	  hacknet: added Vdd and GND ports to subcircuits, only where used.
+		stripped out spaces from template type names, e.g. "<3, 2>".
+		Updated test cases, added a few new ones.
+	  see also util/ChangeLog for string.cc lib addition, strgsub().
+	  next: home scope of internal node definitions.
+
+
+2009-08-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-15:
+	  hacknet: implemented subcircuit definitions and instance, 
+		with some known issues to fix:
+		internal node should be emitted in subcircuit
+		where declared.
+
+
+2009-08-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-14:
+	  hacknet: sorted ports summaries by order of port declaration
+		in the original definition for the sake of readability.
+		Affected test cases updated.
+
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-13:
+	  hacknet: implemented pass-gate transistors, quick-and-dirty,
+		added basic test cases.
+
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-12:
+	  hacknet: transistors are now sized by literal params, 
+		still no discretization or value constraints yet.
+	  Added some basic sizing tests. 
+
+
+2009-08-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-11:
+	  Added check for CMOS-implementability in PRS literals, 
+		check also works in precharge expressions.  
+		Internal node uses are already direction-checked
+		at create-time.
+		diagnostic: override name of top-level footprint/netlist.
+	  Added some test cases to regression suite.
+
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-10:
+	  hacknet: implemented precharge transistors
+		added some transistor attributes (keeper, ckeeper, pchg)
+		emit precharge transistors with ":pchg" suffix.
+	  Basic test cases added.  
+
+
+2009-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-09:
+	  hacknet: implemented internal node subnets, using on-demand
+		creation as each internal node expression is uesd.
+	  A few test cases added, including precharge shared-gate XOR.
+	  Minor updates to raw_dump for comprehensibility.
+	  For now unused internal nodes nets are suppressed.
+	  Empty subcircuits are suppressed from output.  
+
+
+2009-08-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-08:
+	  hacknet bug fix: was mistakenly using globally assigned 
+		instance id to pass to port actuals, when really needed
+		local id's, obtained using footprint -> trace_alias.
+	  Test cases added, previous ones fixed.
+
+
+2009-08-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-07:
+	  hacknet bug fix: port collector was collecting non-port bools.
+		Test cases added to prove fix without regression.
+	  Added raw-dump debug functions.
+
+
+2009-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-06:
+	  hacknet: create port summaries and use them in emitting
+		instances (x-card).  Tested first hierarchical instances!
+	  bool_port_collector: made container-generic, requires ::insert()
+	  node::emit(): use canonical alias, updated test case.
+	  Next: subcircuits, power supplies, macros.  
+
+
+2009-08-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-05:
+	  Emitted first transistor netlists (inverters)!
+	  main/hacknet.cc: handle -t type option
+	  netlist_options: defined some parameters and default values07
+	  Next: create and use port-summaries for instances.
+
+
+2009-08-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-04:
+	  Finished draft of recursive expression and rule traversal,
+		declared global supplies, creating and looking up
+		internal and auxiliary nodes.
+	  Next: start to emit output, and test.
+
+
+2009-07-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-03:
+	  PRS::footprint::subcircuit_map_entry now has back-reference
+		pointer to originating subcircuit.
+		Extended a few objects (binary), updated test cases.
+	  Partially implemented netlist_generator::visit(PRS::footprint&)
+		traverses rules and macros using appropriate subcircuits.
+	  Next: internal node definitions in netlist graphs.
+
+
+2009-07-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-02:
+	  hflat (main/cflat, Object/lang/cflat_printer): 
+		added -f [no-]precharges option (default off) to 
+		print expanded precharge expressions in flattened output,
+		also useful for debugging.  Documented and tested.
+	  PRS::footprint added missing support for precharges as a separate
+		sub-array of footprint_expr_node, takes up some more
+		memory unfortunately, but object file is kept minimal.
+		Object file binary format updated, updated test suite.
+		expression unrolling now populates footprints' precharges.
+		Print/dumping now shows precharges.
+
+
+2009-07-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-27-netlist-01-01:
+	  Branch for initial development of hacknet.
+	  Initial modules for hacknet -- spice netlist generator.
+		net/netgraph.{h,cc}, main/hacknet.{h,cc}.
+		Implementation is very skeletal.
+	  Next: need to support precharge expressions in PRS footprint
+		expressions. 
+	  test/: added initial test support Make.test-net
+
+
 2009-07-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-merged-subckt-01-02:

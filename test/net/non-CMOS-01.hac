@@ -1,0 +1,19 @@
+// "non-CMOS-01.hac"
+// testing non-normalized rules
+
+// is a c-element with combinational feedback
+defproc foo (bool a, b, c) {
+bool _c;
+prs {
+	a & b		-> _c-
+	~a & ~b		-> _c+
+	_c		=> c-
+	~c<5> & ~(a<5> & b<5>)	-> _c+
+	c<5> & ~(~a<5> & ~b<5>)	-> _c-
+}
+}
+
+// netgen seems to apply the same sizes to the equivalent normalized expr.
+
+foo bar;
+

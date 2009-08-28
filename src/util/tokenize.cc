@@ -1,65 +1,52 @@
 /**
 	\file "util/tokenize.cc"
-	$Id: tokenize.cc,v 1.4 2008/03/17 23:03:09 fang Exp $
+	$Id: tokenize.cc,v 1.5 2009/08/28 20:45:29 fang Exp $
  */
 
 #include "util/tokenize.h"
 #include <list>
 #include <string>
-#if 0
-#include <algorithm>
-#include <functional>
-#else
 #include <valarray>
-#endif
 #include "util/string.h"		// for eat_whitespace
 #include "util/macros.h"
-#if 0
-#include "util/compose.h"
-#endif
-// #include <iostream>
 
 namespace util {
 using std::string;
-#if 0
-using std::find;
-using std::find_if;
-using std::logical_not;
-using std::ptr_fun;
-using ADS::unary_compose;
-#else
 using std::valarray;
-#endif
+
+//=============================================================================
+/***
+from man 3 strsep:
+
+NOTES
+       The strsep() function was introduced as a  replacement  for  strtok(),
+       since  the  latter cannot handle empty fields.  However, strtok() con-
+       forms to ANSI-C and hence is more portable.
+
+BUGS
+       This function suffers from the same problems as strtok().  In particu-
+       lar, it modifies the original string. Avoid it.
+***/
+
 //=============================================================================
 /**
+	Default tokenize uses spaces.
+ */
+void
+tokenize(const string& s, string_list& l) {
+	static const char delim[] = " \t\n";
+	tokenize(s, l, delim);
+}
+
+/**
+	Hmm... still eats whitespace though.
 	\param s the string to tokenize.
 	\param l the result list in which to append tokens.  
  */
 void
-tokenize(const string& s, string_list& l) {
-#if 0
-	typedef	string::const_iterator		const_iterator;
-	const_iterator i(s.begin());
-	const const_iterator e(s.end());
-	do {
-		// find non-whitespace
-		i = find_if(i, e,
-			unary_compose(logical_not<int>(), ptr_fun(&isspace)));
-			// int should correspond to return type of isspace
-			// TODO: use TMP to deduce this.
-		if (i != e) {
-			// find whitespace
-			const const_iterator g(find_if(i, e, isspace));
-			if (i != g) {
-				l.push_back(string(i, g));
-			}
-			i = g;
-		}
-	} while (i != e);
-#else
-	static const char delim[] = " \t\n";
+tokenize(const string& s, string_list& l, const char* delim) {
 	// TODO: avoid allocating every time
-	// copy to scratch space
+	// copy to scratch space, or use stack-alloc (alloca)
 	valarray<char> tmp(s.c_str(), s.length() +1);
 	char* pp = &tmp[0];
 	char** stringp = &pp;
@@ -72,7 +59,6 @@ tokenize(const string& s, string_list& l) {
 			l.push_back(t);
 		}
 	}
-#endif
 }
 
 //=============================================================================

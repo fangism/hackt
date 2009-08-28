@@ -1,0 +1,7 @@
+// "config-arg-04.hac"
+// testing very basic config options on command-line
+// @hacknet-flags@ -f length_unit=nm -f lambda=10
+
+import "inv-00.hac";
+
+

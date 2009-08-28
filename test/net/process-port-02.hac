@@ -1,0 +1,16 @@
+// "process-port-01.hac"
+// copy-modified from "unused-port-01.hac"
+// netgen accepts deftypes inside ports
+
+// should suppress empty processes
+deftype pair <: int<1> (bool a, b) { }
+
+// netgen mangles p.b to something like p_4b?
+defproc foo (pair p; bool z) {
+prs {
+	p.b	=> z-
+}
+}
+
+foo bar;
+

@@ -82,7 +82,7 @@ Persistent Object Manager text dump:
 	69	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	70	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	71	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	513
+	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	521
 	73	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	74	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
 	75	##ADDR##	procplch	0	#HEAD#	#TAIL#	27

@@ -1,0 +1,12 @@
+// "pass_gate-02.hac"
+// copy-modified from "pass_gate-01.hac"
+
+defproc full_pass(bool g, _g, s, d) {
+prs {
+	passn(g, s, d)
+	passp(_g, s, d)
+}
+}
+
+full_pass foo;
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.14 2009/07/20 22:41:38 fang Exp $
+	$Id: PRS_footprint.h,v 1.15 2009/08/28 20:44:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -20,14 +20,28 @@
 #include "util/boolean_types.h"
 #include "util/offset_array.h"
 #include "util/persistent_fwd.h"
+#include "util/memory/excl_ptr.h"	// for never_ptr
 
 /**
 	Define to 1 to include additional structures and members for
 	maintaining subcircuit hierarchy.  
 	For now subircuits are 1-level, and thus, cannot be nested. 
 	Goal: 1
+	Status: done, tested, perm'd
  */
-#define	PRS_FOOTPRINT_SUBCKT			1
+// #define	PRS_FOOTPRINT_SUBCKT			1
+
+/**
+	Define to 1 to use a pooled storage for internal nodes, 
+	instead of map<string, internal_node> directly.  
+	Goal: 1
+	Rationale: allows for efficient lookup and reverse lookup
+		by name/index, indices are cheaper to store than strings, 
+		which is critical for subcircuit entries, and in turn, 
+		helpful for netlist generation structures.  
+	Status: basically tested, perm'd
+ */
+// #define	PRS_INTERNAL_NODE_POOL			1
 
 namespace HAC {
 struct cflat_options;
@@ -44,12 +58,15 @@ template <class Tag>
 class footprint_frame_map;
 
 namespace PRS {
+class subcircuit;
 using std::ostream;
 using std::istream;
 using util::persistent_object_manager;
 using util::good_bool;
 using std::map;
+using std::pair;
 using std::string;
+using util::memory::never_ptr;
 
 //=============================================================================
 /**
@@ -73,21 +90,36 @@ public:
 	/**
 		Expression pull direction for internal node.
 		pull-up is true, pull-down if false.
+		first: expression index
+		second: direction
 	 */
-	typedef	std::pair<size_t, bool>		node_expr_type;
+	struct node_expr_type : public pair<size_t, bool> {
+		typedef	pair<size_t, bool>	parent_type;
+		// redundant, but relying on copy-on-write memory efficiency
+		string				name;
+
+		node_expr_type() { }	// uninitialized
+		node_expr_type(const size_t i, const bool d, const string& n) :
+			parent_type(i, d), name(n) { }
+
+	};	// end struct node_expr_type
+	typedef	vector<node_expr_type>		internal_node_pool_type;
 	/**
 		This map keeps track of internal nodes defined in 
 		terms of one-sided guard expressions.  
 		String should be of the form: x[...]+.
 		Each pull may only be defined once.  
 		value_type is index into expression pool.  
-		TODO: Is there a way to store refrence object instead
+		TODO: Is there a way to store reference object instead
 		of their string representations?  (yes, but not critical now)
+
+		this is a redundant map, 
+		key is same as node_expr_type::name
+		value is index into internal_node_pool
 	 */
-	typedef	map<string, node_expr_type>	internal_node_expr_map_type;
+	typedef	map<string, size_t>		internal_node_expr_map_type;
 	/// list of root expression indices
 	typedef	vector<invariant_type>		invariant_pool_type;
-#if PRS_FOOTPRINT_SUBCKT
 	/**
 		This structure keeps a map of which rules/macros (by index)
 		belong to which subcircuit.  
@@ -101,8 +133,40 @@ public:
 		so we need to keep these sets coherent.
 	 */
 	struct subcircuit_map_entry {
+		/**
+			Back-reference to original subcircuit.
+			Saves from copying string name, or other info.
+			Ideally, this should be reconstructed without
+			having to save the pointer persistently.
+		 */
+		never_ptr<const subcircuit>	back_ref;
 		index_range			rules;
 		index_range			macros;
+		index_range			int_nodes;
+		subcircuit_map_entry() { }
+		subcircuit_map_entry(const subcircuit* b) : back_ref(b) { }
+
+		const string&
+		get_name(void) const;
+
+		bool
+		rules_empty(void) const { return rules.first == rules.second; }
+
+		bool
+		macros_empty(void) const { return macros.first == macros.second; }
+
+		bool
+		nodes_empty(void) const {
+			return int_nodes.first == int_nodes.second;
+		}
+
+		void
+		collect_transient_info_base(persistent_object_manager&) const;
+
+		void
+		write_object(const persistent_object_manager&, ostream&) const;
+		void
+		load_object(const persistent_object_manager&, istream&);
 	};	// end struct subcircuit_map_entry
 	/**
 		This will resemble a discrete_interval_set except that
@@ -112,8 +176,6 @@ public:
 			lower_bound, upper_bound.  
 	 */
 	typedef	vector<subcircuit_map_entry>	subcircuit_map_type;
-#endif
-private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
 						node_pool_type;
@@ -121,14 +183,14 @@ private:
 	typedef	PRS_footprint_expr_pool_type	expr_pool_type;
 	typedef	vector<macro>			macro_pool_type;
 
+private:
 	rule_pool_type				rule_pool;
 	expr_pool_type				expr_pool;
 	macro_pool_type				macro_pool;
+	internal_node_pool_type			internal_node_pool;
 	internal_node_expr_map_type		internal_node_expr_map;
 	invariant_pool_type			invariant_pool;
-#if PRS_FOOTPRINT_SUBCKT
 	subcircuit_map_type			subcircuit_map;
-#endif
 public:
 	footprint();
 	~footprint();
@@ -138,6 +200,9 @@ public:
 
 	const expr_pool_type&
 	get_expr_pool(void) const { return expr_pool; }
+
+	expr_pool_type&
+	get_expr_pool(void) { return expr_pool; }
 
 	const rule_pool_type&
 	get_rule_pool(void) const { return rule_pool; }
@@ -171,6 +236,17 @@ public:
 	size_t
 	lookup_internal_node_expr(const string&, const bool) const;
 
+	const internal_node_pool_type&
+	get_internal_node_pool(void) const {
+		return internal_node_pool;
+	}
+
+	const node_expr_type&
+	get_internal_node(const size_t i) const {
+		INVARIANT(i < internal_node_pool.size());
+		return internal_node_pool[i];
+	}
+
 	// returns reference to new expression node
 	expr_node&
 	push_back_expr(const char, const size_t);
@@ -186,12 +262,13 @@ public:
 		invariant_pool.push_back(t);
 	}
 
-#if PRS_FOOTPRINT_SUBCKT
+	const subcircuit_map_type&
+	get_subcircuit_map(void) const { return subcircuit_map; }
+
 	void
 	push_back_subcircuit(const subcircuit_map_entry& t) {
 		subcircuit_map.push_back(t);
 	}
-#endif
 
 	size_t
 	current_expr_index(void) const {

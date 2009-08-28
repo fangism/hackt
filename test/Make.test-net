@@ -1,0 +1,228 @@
+# "Make.test-net"
+#	vi: ft=automake
+#	$Id: Make.test-net,v 1.2 2009/08/28 20:45:39 fang Exp $
+# This is just a portion of the Make.test-tail template included by
+# Makefile.am's in the test/ directory subtree.  
+# This depends on variables defined in Make.test-tail, and thus, 
+# should not be included by itself.  
+
+HACKNET_SUFFIXES = .spice .spice-diff .spice-fail .spice-fail-diff
+
+HACKNET_TEST_SUFFIXES = .hacknettest .hacknetfailtest
+
+SUFFIXES += $(HACKNET_SUFFIXES) $(HACKNET_TEST_SUFFIXES)
+BOGUS_SUFFIX_TARGETS += $(HACKNET_SUFFIXES)
+
+HACKNET_CLEAN_IGNORE_PATTERNS = \
+	"*.spice" \
+	"*.spice-diff" \
+	"*.spice-fail" \
+	"*.spice-fail-diff" \
+	"*.hacknettest" \
+	"*.hacknetfailtest"
+
+AUTO_IGNORE += $(HACKNET_CLEAN_IGNORE_PATTERNS)
+
+# also substitute $srcdir
+EXTRACT_HACKNET_FLAGS_PIPE = $(GREP) "@hacknet-flags@" | $(HEAD) -n1 | \
+	$(SED) -e 's/^.*@hacknet-flags@[ ]*//g' -e 's|\$$srcdir|$(srcdir)|g'
+
+# should really take some configure/test file for testing combinations
+# of object files and netlist configuration options.
+HACKNET_TEST_SCRIPT = \
+	src="$(srcdir)/"`$(ECHO) $< | $(SED) 's|\.haco-a|.hac|'` && \
+	hnflags=`$(CAT) $$src | $(EXTRACT_HACKNET_FLAGS_PIPE)` && \
+	cmd="$(HACKNET_EXE) $$hnflags $<" && \
+	$(ECHO) "$$cmd > $@" && \
+	$$cmd > $@
+
+HACKNET_FAIL_TEST_SCRIPT = $(HACKNET_TEST_SCRIPT)
+
+.haco-a.spice:
+	@$(HACKNET_TEST_SCRIPT)
+
+.haco-a.spice-fail:
+	-@$(HACKNET_FAIL_TEST_SCRIPT) 2>&1
+
+# for now: use .hac -> .spice
+# TODO: worry about .hacknetconf files later...
+# eventually re-use single hac source with multiple configurations
+# and technology files.  
+# idea: map .hac to .spice using default options
+# and map .hacknetconf to .spice using non-default options
+# requiring specification of hac object file
+# for now, use only HACKNET_TEST_SCRIPTS_PASSES/FAILURES
+# later, use HACKNET_TEST_SUBJECTS for .hac -> .spice
+
+# this reuses the same dependency for checkpoints
+# beware of race between -O0 and -O1 tests that produce the same files!
+hacknet.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(RM) $@ ; \
+	{ list='$(HACKNET_TEST_SCRIPTS_BASES)' ; \
+	exts='spice spice-fail' ; \
+	test -z "$$list" || \
+	for d in $$list ; do \
+	  src=$(srcdir)/$$d.hac ; \
+	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
+	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
+	  for e in $$exts ; do \
+	    target=$$d.$$e ; \
+	    $(PRINTF) "$$target " ; \
+	  done ; \
+	  $(ECHO) ": $$obj $$deps" ; \
+	done ;} > $@ ; \
+	$(TOUCH) $@
+#	{ list='$(HACKNET_TEST_SCRIPTS_BASES)' ; \
+#	exts='spice spice-fail' ; \
+#	test -z "$$list" || \
+#	for d in $$list ; do \
+#	  src=$(srcdir)/$$d.hacknetconf ; \
+#	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
+#	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
+#	  for e in $$exts ; do \
+#	    target=$$d.$$e ; \
+#	    $(PRINTF) "$$target " ; \
+#	  done ; \
+#	  $(ECHO) ": $$obj $$deps" ; \
+#	done ;} > $@ ; \
+#	$(TOUCH) $@
+
+-include hacknet.autodepend
+
+HACKNET_TEST_DIFF = $(DIFF) -bu
+
+if VERBOSE_CHECK
+ECHO_HACKNET_DIFF_COMMAND = $(ECHO) "$(HACKNET_TEST_DIFF) $$expect $<"
+else
+ECHO_HACKNET_DIFF_COMMAND = :
+endif
+
+.spice.spice-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.spice-diff$$/.spice-expect/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_HACKNET_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.spice-fail.spice-fail-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.spice-fail-diff$$/.spice-expect/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_HACKNET_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.spice-diff.hacknettest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.spice-fail-diff.hacknetfailtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hacknettest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.hacknetfailtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+# for both passes and failures
+hacknettest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKNET_TEST_SCRIPTS_PASSES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".spice-diff: $$(srcdir)/" $$1 ".spice-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+hacknetfailtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKNET_TEST_SCRIPTS_FAILURES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".spice-fail-diff: $$(srcdir)/" $$1 ".spice-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include hacknettest.autodepend
+-include hacknetfailtest.autodepend
+
+AUTO_DEPENDS += \
+	hacknet.autodepend \
+	hacknettest.autodepend \
+	hacknetfailtest.autodepend
+
+
+BOGUS_TESTS += \
+	.hacknettest .hacknetfailtest
+
+CHECK_SUMMARIES += hacknetdiffs hacknetfaildiffs
+
+hacknetdiffs: force
+	-$(CAT) *.spice-diff > $@
+
+hacknetfaildiffs: force
+	-$(CAT) *.spice-fail-diff > $@
+
+HACKNET_TEST_SCRIPTS_BASES = \
+	$(HACKNET_TEST_SCRIPTS_PASSES) \
+	$(HACKNET_TEST_SCRIPTS_FAILURES)
+
+srcdir_EXTRA_DIST += \
+	$(HACKNET_TEST_SCRIPTS_BASES:=.hac) \
+	$(HACKNET_TEST_SCRIPTS_BASES:=.spice-expect)
+#	$(HACKNET_TEST_SUBJECTS:=.hac) \
+#	$(HACKNET_TEST_SUBJECTS:=.spice-expect)
+
+if CHECK_TESTS
+TESTS += \
+	$(HACKNET_TEST_SCRIPTS_PASSES:=.hacknettest) \
+	$(HACKNET_TEST_SCRIPTS_FAILURES:=.hacknetfailtest)
+endif
+
+HAC_COMPILE_OBJECT_TARGETS += $(HACKNET_TEST_SCRIPTS_BASES:=.haco)
+HAC_CREATE_OBJECT_TARGETS += $(HACKNET_TEST_SCRIPTS_BASES:=.haco-c)
+HAC_ALLOC_OBJECT_TARGETS += $(HACKNET_TEST_SCRIPTS_BASES:=.haco-a)
+
+HACKNET_PRODUCTS = \
+	$(HACKNET_TEST_SCRIPTS_PASSES:=.spice) \
+	$(HACKNET_TEST_SCRIPTS_FAILURES:=.spice-fail)
+
+$(HACKNET_PRODUCTS): $(HACKNET_EXE)
+
+build-check-local: \
+	$(HACKNET_TEST_SUBJECTS:=.haco-a) \
+	$(HACKNET_TEST_SCRIPTS_PASSES:=.spice) \
+	$(HACKNET_TEST_SCRIPTS_PASSES:=.spice-diff) \
+	$(HACKNET_TEST_SCRIPTS_FAILURES:=.spice-fail) \
+	$(HACKNET_TEST_SCRIPTS_FAILURES:=.spice-fail-diff)
+
+echo-hacknet-passes: force
+	@$(ECHO) $(HACKNET_TEST_SCRIPTS_PASSES)
+
+echo-hacknet-failures: force
+	@$(ECHO) $(HACKNET_TEST_SCRIPTS_FAILURES)
+
+echo-hacknet-tests: force
+	@$(ECHO) $(HACKNET_TEST_SCRIPTS_BASES)
+
+clean-hacknettests:
+	patternlist='$(HACKNET_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
+
+clean-local: clean-hacknettests
+
+.PHONY: clean-hacknettests
+

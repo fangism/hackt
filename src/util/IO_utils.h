@@ -1,7 +1,7 @@
 /**
 	\file "util/IO_utils.h"
 	General-purpose handy utilities.
-	$Id: IO_utils.h,v 1.9 2008/03/17 23:03:07 fang Exp $
+	$Id: IO_utils.h,v 1.10 2009/08/28 20:45:21 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_H__
@@ -120,10 +120,34 @@ void	read_sequence_set_insert(istream& f, S& s);
 
 
 template <class K, class T>
-void	write_key_value_pair(ostream& f, const pair<const K, T>& p);
+void	write_pair(ostream& f, const pair<K, T>& p);
 
 template <class K, class T>
-void	read_key_value_pair(istream& f, pair<K, T>& p);
+void	read_pair(ostream& f, pair<K, T>& p);
+
+template <class K, class T>
+void	write_key_value_pair(ostream& f, const pair<const K, T>& p) {
+	write_pair(f, p);
+}
+
+template <class K, class T>
+void	read_key_value_pair(istream& f, pair<K, T>& p) {
+	read_pair(f, p);
+}
+
+template <class K, class T>
+inline
+void	write_value(ostream& f, const pair<K, T>& p) {
+	write_pair(f, p);
+}
+
+template <class K, class T>
+inline
+void	read_value(istream& f, pair<K, T>& p) {
+	read_pair(f, p);
+}
+
+// TODO: support writing/reading of tuples for std: c++0x
 
 template <class M>
 void	write_map(ostream& f, const M& m);

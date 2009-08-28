@@ -1,0 +1,3 @@
+M0_ GND x y GND nch W=5nm L=2nm
+M1_ Vdd x y Vdd pch W=5nm L=2nm
+

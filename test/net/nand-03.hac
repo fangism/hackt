@@ -1,0 +1,6 @@
+// "nand-03.hac"
+
+import "nand-02.hac";
+
+nand<4> foo;
+

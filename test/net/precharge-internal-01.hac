@@ -1,0 +1,15 @@
+// "precharge-internal-01.hac"
+// copy-modified from "precharge-01.hac"
+
+defproc foo(bool en, a, b, _o, _p) {
+_o @ [autokeeper=0];
+_p @ [autokeeper=0];
+prs {
+	en 			-> @i-
+	~@i &{+~en} a		-> _o-
+	~@i & b			-> _p-
+}
+}
+
+foo bar;
+

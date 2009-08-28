@@ -1,0 +1,11 @@
+// "inv-06.hac"
+// copy-modified from "inv-05.hac"
+
+import "inv-01.hac";
+
+defproc foo(bool a, b, c) {
+inv p(a, b), q(b, c);
+}
+
+foo bar;
+

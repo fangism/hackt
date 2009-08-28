@@ -1,0 +1,16 @@
+// "non-CMOS-03.hac"
+// copy-modified from "non-CMOS-02.hac"
+// testing non-normalized rules
+
+// is a c-element
+defproc foo (bool a, b, _c) {
+prs {
+	~(a | b)	=> _c-	// not negation normalized
+//	_c		=> c-
+}
+}
+
+// netgen seems to apply the same sizes to the equivalent normalized expr.
+
+foo bar;
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.21 2009/07/20 22:41:39 fang Exp $
+	$Id: cflat_printer.cc,v 1.22 2009/08/28 20:44:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -225,25 +225,6 @@ cflat_prs_printer::__dump_resolved_literal_group(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CFLAT_WITH_CONDUCTANCES
-/// helper function for extracting sizing parameter
-static
-float
-extract_float_param(const count_ptr<const const_param>& p) {
-	const count_ptr<const pint_const> i(p.is_a<const pint_const>());
-	if (i) {
-		return float(i->static_constant_value());
-	} else {
-		const count_ptr<const preal_const>
-			r(p.is_a<const preal_const>());
-		if (r)
-			return r->static_constant_value();
-	}
-	return 0.0;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints out the expression. 
 	Adapted from footprint::cflat_expr().  
@@ -264,13 +245,14 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 				directive_base::dump_params(par, os);
 			}
 #if CFLAT_WITH_CONDUCTANCES
-			float width = 0.0;
-			float length = 0.0;
+			preal_value_type width = 0.0;
+			preal_value_type length = 0.0;
 			const size_t ps = par.size();
 			size_t i = 0;
 			// take first two non-negative values as W/L
 			for ( ; i<ps; ++i) {
-				float tmp = extract_float_param(par[i]);
+				const preal_value_type tmp =
+					par[i]->to_real_const();
 				if (tmp > 0.0) {
 				if (width <= 0.0) {
 					width = tmp;
@@ -301,7 +283,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			if (paren) os << '(';
 			if (sz) {
 #if CFLAT_WITH_CONDUCTANCES
-				vector<float> max_G, one_G, min_G;
+				vector<preal_value_type> max_G, one_G, min_G;
 				max_G.reserve(sz);
 				one_G.reserve(sz);
 				min_G.reserve(sz);
@@ -314,10 +296,28 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 #endif
 				const char* const op =
 					(type == PRS_AND_EXPR_TYPE_ENUM) ?
-						" & " : " | ";
+						" &" : " |";
+				// optionally print precharge here
+				const footprint_expr_node::precharge_map_type&
+					pm(e.get_precharges());
+				typedef footprint_expr_node::precharge_map_type::const_iterator
+						const_iterator;
+				const_iterator pi(pm.begin()), pe(pm.end());
+				// recall: precharges (map) are 0-indexed
 				size_t i = 2;
-				for ( ; i<=sz; i++) {
+				for ( ; i<=sz; ++i) {
 					os << op;
+					if (cfopts.show_precharges) {
+					if ((pi != pe) && (i-2 == pi->first)) {
+						os << '{' << 
+							(pi->second.second ?
+							'+' : '-');
+						(*expr_pool)[pi->second.first].accept(*this);
+						os << '}';
+						++pi;
+					}
+					}
+					os << ' ';
 					(*expr_pool)[e[i]].accept(*this);
 #if CFLAT_WITH_CONDUCTANCES
 					max_G.push_back(max_conductance);
@@ -330,18 +330,16 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 				if (type == PRS_AND_EXPR_TYPE_ENUM) {
 					// convert conductances to resistances
 					// overwrite in-place to aliases
-					vector<float>& max_R(min_G);
-					vector<float>& one_R(one_G);
-					vector<float>& min_R(max_G);
+					vector<preal_value_type>& max_R(min_G);
+					vector<preal_value_type>& one_R(one_G);
+					vector<preal_value_type>& min_R(max_G);
+					reciprocate<preal_value_type> recip;
 					transform(min_G.begin(), min_G.end(), 
-						max_R.begin(),
-						reciprocate<float>());
+						max_R.begin(), recip);
 					transform(one_G.begin(), one_G.end(), 
-						one_R.begin(),
-						reciprocate<float>());
+						one_R.begin(), recip);
 					transform(max_G.begin(), max_G.end(), 
-						min_R.begin(),
-						reciprocate<float>());
+						min_R.begin(), recip);
 					max_conductance = 1.0 /
 						accumulate(min_R.begin(),
 							min_R.end(), 0.0);

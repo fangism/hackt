@@ -1,0 +1,14 @@
+// "inv-11.hac"
+// copy-reduced from "inv-10.hac"
+
+import "inv-01.hac";
+
+// we have an unused node, c is not connected!
+// thus c should be omitted from port summary
+defproc foo(bool a, c) {
+bool b;
+inv p(a, b);
+}
+
+foo bar;
+

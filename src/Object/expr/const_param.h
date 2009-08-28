@@ -3,13 +3,14 @@
 	Classes related to constant parameter expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param.h,v 1.14 2007/08/28 04:54:00 fang Exp $
+	$Id: const_param.h,v 1.15 2009/08/28 20:44:51 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_H__
 #define __HAC_OBJECT_EXPR_CONST_PARAM_H__
 
 #include "Object/expr/param_expr.h"
+#include "Object/expr/types.h"		// for preal_value_type
 
 namespace HAC {
 namespace entity {
@@ -65,6 +66,9 @@ virtual	count_ptr<const const_param>
 
 	bool
 	is_unconditional(void) const { return true; }
+
+virtual	preal_value_type
+	to_real_const(void) const;
 
 #define	LESS_OPERATOR_PROTO						\
 	bool								\

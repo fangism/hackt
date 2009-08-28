@@ -3,7 +3,7 @@
 	Forces linker to load modules.  
 	Only needed for compilers that use lazy-linkage, 
 		e.g. darwin-gcc.  
-	$Id: force_load.cc,v 1.11 2007/09/13 01:14:14 fang Exp $
+	$Id: force_load.cc,v 1.12 2009/08/28 20:45:03 fang Exp $
  */
 
 #include "config.h"
@@ -23,6 +23,7 @@
 #include "main/shell.h"
 #include "main/version.h"
 #include "main/chpsim.h"
+#include "main/hacknet.h"
 
 #if	WANT_TO_HAVE_FUN
 #include "misc/sudoku-solver.h"
@@ -68,6 +69,7 @@ force_load(void) {
 	const version versionator;
 	const shell shell_shocker;
 	const chpsim chpsimulator;
+	const hacknet hacknetter;
 #if WANT_TO_HAVE_FUN
 	const sudoku::solver ss;
 #endif

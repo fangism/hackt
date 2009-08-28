@@ -1,9 +1,10 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.24 2009/07/20 22:41:37 fang Exp $
+	$Id: PRS_footprint.cc,v 1.25 2009/08/28 20:44:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_IOS			(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_DUMPS		(0 && ENABLE_STACKTRACE)
 
@@ -24,9 +25,8 @@
 #include "Object/traits/instance_traits.h"
 #include "Object/global_channel_entry.h"
 #include "main/cflat_options.h"
-#include "util/IO_utils.h"
 #include "util/indent.h"
-#include "util/persistent_object_manager.tcc"
+#include "util/persistent_object_manager.tcc"	// includes "IO_utils.tcc"
 #include "util/persistent_functor.tcc"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
@@ -38,46 +38,19 @@
 #define	STACKTRACE_DUMP_PRINT(x)
 #endif
 
-#if PRS_FOOTPRINT_SUBCKT
-namespace util {
-using HAC::entity::PRS::footprint;
-
-/**
-	Specializations for writing some structures.  
- */
-template <>
-void
-write_value<footprint::subcircuit_map_entry>(ostream& o, 
-		const footprint::subcircuit_map_entry& e) {
-	write_value(o, e.rules.first);
-	write_value(o, e.rules.second);
-	write_value(o, e.macros.first);
-	write_value(o, e.macros.second);
-}
-
-template <>
-void
-read_value<footprint::subcircuit_map_entry>(istream& i, 
-		footprint::subcircuit_map_entry& e) {
-	read_value(i, e.rules.first);
-	read_value(i, e.rules.second);
-	read_value(i, e.macros.first);
-	read_value(i, e.macros.second);
-}
-
-}	// end namespace util
-#endif	// PRS_FOOTPRINT_SUBCKT
-
 namespace HAC {
 namespace entity {
 namespace PRS {
 using std::set;
+using std::make_pair;
 #include "util/using_ostream.h"
 using util::auto_indent;
 using util::write_value;
 using util::write_array;
+using util::write_sequence;
 using util::read_value;
 using util::read_sequence_prealloc;
+using util::read_sequence_resize;
 
 //=============================================================================
 // class footprint_rule_attribute method definitions
@@ -121,13 +94,48 @@ footprint_rule_attribute::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// class footprint::subcircuit_map_entry method definitions
+
+const string&
+footprint::subcircuit_map_entry::get_name(void) const {
+	NEVER_NULL(back_ref);
+	return back_ref->get_name();
+}
+
+void
+footprint::subcircuit_map_entry::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	// technically don't need to collect as back-reference
+	// is guaranteed to be reached first
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::subcircuit_map_entry::write_object(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, back_ref);
+	write_value(o, rules);
+	write_value(o, macros);
+	write_value(o, int_nodes);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::subcircuit_map_entry::load_object(
+		const persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, back_ref);
+	read_value(i, rules);
+	read_value(i, macros);
+	read_value(i, int_nodes);
+}
+
+//=============================================================================
 // class footprint method definitions
 
 footprint::footprint() : rule_pool(), expr_pool(), macro_pool(), 
-		internal_node_expr_map(), invariant_pool()
-#if PRS_FOOTPRINT_SUBCKT
-		, subcircuit_map()
-#endif
+		internal_node_pool(), 
+		internal_node_expr_map(), invariant_pool(),
+		subcircuit_map()
 	{
 	// used to set_chunk_size of list_vector_pools here
 }
@@ -157,11 +165,6 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM:
 			STACKTRACE_DUMP_PRINT("Literal ");
-#if 0
-			if (one != 1) {
-				cerr << "size is " << one << endl;
-			}
-#endif
 			INVARIANT(one == 1);
 			np[e.only()].get_back_ref()
 				->dump_hierarchical_name(o,
@@ -181,14 +184,30 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			if (paren) o << '(';
 			if (e.size()) {
 				dump_expr(ep[e.only()], o, np, ep, type);
+				// also print precharges
+				const footprint_expr_node::precharge_map_type&
+					pm(e.get_precharges());
+				footprint_expr_node::precharge_map_type::const_iterator
+					pi(pm.begin()), pe(pm.end());
 				const char* const op = 
 					(type == PRS_AND_EXPR_TYPE_ENUM) ?
-						" & " : " | ";
-				int i = 2;
-				const int s = e.size();
-				for ( ; i<=s; i++) {
-					dump_expr(ep[e[i]],
-						o << op, np, ep, type);
+						" &" : " |";
+				size_t i = 2;
+				const size_t s = e.size();
+				for ( ; i<=s; ++i) {
+					o << op;
+					if (pi != pe && i-2 == pi->first) {
+						o << '{' <<
+						(pi->second.second ? '+' : '-');
+						dump_expr(ep[pi->second.first], 
+							o, np, ep, 
+							PRS_NODE_TYPE_ENUM);
+						// type doesn't really matter?
+						o << '}';
+						++pi;
+					}
+					dump_expr(ep[e[i]], o << ' ', 
+						np, ep, type);
 				}
 			}
 			if (paren) o << ')';
@@ -294,9 +313,14 @@ if (internal_node_expr_map.size()) {
 	const const_map_iterator e(internal_node_expr_map.end());
 	for ( ; i!=e; ++i) {
 		// is this dump format acceptable?
-		o << auto_indent << '@' << i->first;
-		o << (i->second.second ? '+' : '-') << " <- ";
-		dump_expr(expr_pool[i->second.first],
+		const string& name(i->first);
+		const size_t int_node_index = i->second;
+		const bool dir = internal_node_pool[int_node_index].second;
+		const expr_index_type ex =
+			internal_node_pool[int_node_index].first;
+		o << auto_indent << '@' << name;
+		o << (dir ? '+' : '-') << " <- ";
+		dump_expr(expr_pool[ex],
 			o, bpool, expr_pool, PRS_LITERAL_TYPE_ENUM) << endl;
 	}
 }
@@ -311,13 +335,13 @@ if (invariant_pool.size()) {
 		o << ')' << endl;
 	}
 }
-#if PRS_FOOTPRINT_SUBCKT
 if (subcircuit_map.size()) {
+	// print name of subcircuit?
 	size_t j = 1;		// 1-indexed
-	o << auto_indent << "subcircuit (rules, macros): " << endl;
+	o << auto_indent << "subcircuit (rules, macros, @nodes): " << endl;
 	typedef	subcircuit_map_type::const_iterator	const_iterator;
 	const_iterator i(subcircuit_map.begin()), e(subcircuit_map.end());
-	for ( ; i!=e; ++i) {
+	for ( ; i!=e; ++i, ++j) {
 		o << auto_indent << j << ": ";
 		if (i->rules.second != i->rules.first) {
 			o << i->rules.first << ".." << i->rules.second -1;
@@ -330,10 +354,17 @@ if (subcircuit_map.size()) {
 		} else {
 			o << "none";
 		}
+		o << ' ';
+		if (i->int_nodes.second != i->int_nodes.first) {
+			o << i->int_nodes.first << ".." <<
+				i->int_nodes.second -1;
+		} else {
+			o << "none";
+		}
+		o << ' ' << i->get_name();
 		o << endl;
 	}
 }
-#endif
 	return o;
 }
 
@@ -405,7 +436,9 @@ footprint::register_internal_node_expr(const string& k, const size_t eid,
 			"\' already registered." << endl;
 		return good_bool(false);
 	} else {
-		internal_node_expr_map[k] = std::make_pair(eid, dir);
+		const size_t i = internal_node_pool.size();
+		internal_node_pool.push_back(node_expr_type(eid, dir, k));
+		internal_node_expr_map[k] = i;
 		return good_bool(true);
 	}
 }
@@ -421,8 +454,10 @@ footprint::lookup_internal_node_expr(const string& k, const bool dir) const {
 						const_iterator;
 	const_iterator f(internal_node_expr_map.find(k));
 	if (f != internal_node_expr_map.end()) {
-		if (f->second.second == dir) {
-			return f->second.first;
+		const bool ndir = 
+			internal_node_pool[f->second].second;
+		if (ndir == dir) {
+			return internal_node_pool[f->second].first;
 		} else {
 			cerr << "Error: internal node `" << k <<
 				"\' is used in the wrong sense." << endl;
@@ -439,6 +474,7 @@ footprint::lookup_internal_node_expr(const string& k, const bool dir) const {
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+	util::persistent_sequence_collector_ref c(m);
 {
 	typedef	rule_pool_type::const_iterator	const_iterator;
 	const_iterator i(rule_pool.begin());
@@ -446,6 +482,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	for ( ; i!=e; ++i) {
 		i->collect_transient_info_base(m);
 	}
+	// c(rule_pool);
 }{
 	typedef	expr_pool_type::const_iterator	const_iterator;
 	const_iterator i(expr_pool.begin());
@@ -453,6 +490,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	for ( ; i!=e; ++i) {
 		i->collect_transient_info_base(m);
 	}
+	// c(expr_pool);
 }{
 	typedef	macro_pool_type::const_iterator	const_iterator;
 	const_iterator i(macro_pool.begin());
@@ -460,6 +498,9 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	for ( ; i!=e; ++i) {
 		i->collect_transient_info_base(m);
 	}
+	// c(macro_pool);
+}{
+	c(subcircuit_map);
 }
 	// the expr_pool doesn't need persistence management yet
 	// the internal_node_expr_map doesn't contain pointers
@@ -504,20 +545,20 @@ footprint::write_object_base(const persistent_object_manager& m,
 		i->write_object_base(m, o);
 	}
 }{
-	typedef internal_node_expr_map_type::const_iterator	const_iterator;
-	write_value(o, internal_node_expr_map.size());
-	const_iterator i(internal_node_expr_map.begin());
-	const const_iterator e(internal_node_expr_map.end());
+	// only save non-redundant information from pool
+	typedef internal_node_pool_type::const_iterator		const_iterator;
+	write_value(o, internal_node_pool.size());
+	const_iterator i(internal_node_pool.begin()),
+		e(internal_node_pool.end());
 	for ( ; i!=e; ++i) {
-		write_value(o, i->first);	// string
-		write_value(o, i->second.first);	// expr index
-		write_value(o, i->second.second);	// direction
+		write_value(o, i->name);
+		write_value(o, i->first);
+		write_value(o, i->second);
 	}
+	// ignore internal_node_expr_map, restore later...
 }{
 	util::write_sequence(o, invariant_pool);
-#if PRS_FOOTPRINT_SUBCKT
-	util::write_sequence(o, subcircuit_map);
-#endif
+	util::write_persistent_sequence(m, o, subcircuit_map);
 }
 }
 
@@ -560,18 +601,19 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	size_t s;
 	read_value(i, s);
 	size_t j = 0;
+	internal_node_pool.reserve(s);
 	for ( ; j<s; ++j) {
-		string k;
-		read_value(i, k);	// string
-		node_expr_type& n(internal_node_expr_map[k]);
-		read_value(i, n.first);		// expr index
-		read_value(i, n.second);	// direction
+		node_expr_type n;
+		read_value(i, n.name);
+		read_value(i, n.first);
+		read_value(i, n.second);
+		internal_node_pool.push_back(n);
+		internal_node_expr_map[n.name] = j;	// reverse-map
 	}
+	INVARIANT(internal_node_expr_map.size() == s);
 }{
 	util::read_sequence_resize(i, invariant_pool);
-#if PRS_FOOTPRINT_SUBCKT
-	util::read_sequence_resize(i, subcircuit_map);
-#endif
+	util::read_persistent_sequence_resize(m, i, subcircuit_map);
 }
 }
 
@@ -593,6 +635,13 @@ footprint_expr_node::footprint_expr_node(const char t) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint_expr_node::footprint_expr_node(const char t, const size_t s) :
 		type(t), nodes(s), params() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_expr_node::push_back_precharge(const size_t i, 
+		const expr_index_type e, const bool d) {
+	precharge_map.push_back(make_pair(i, make_pair(e, d)));
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -626,6 +675,11 @@ footprint_expr_node::collect_transient_info_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: (optimization) instead of writing nodes unconditionally, 
+		write depending on the type, for singletons.  
+		params can likewise be reduced where they are irrelevant.
+ */
 void
 footprint_expr_node::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
@@ -635,6 +689,9 @@ footprint_expr_node::write_object_base(const persistent_object_manager& m,
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.write_pointer_list(o, params);
 	} else	INVARIANT(params.empty());
+	if (type == PRS_AND_EXPR_TYPE_ENUM) {
+		write_sequence(o, precharge_map);
+	} else	INVARIANT(precharge_map.empty());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -648,6 +705,9 @@ footprint_expr_node::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_PRINT("nodes size = " << nodes.size() << endl);
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.read_pointer_list(i, params);
+	}
+	if (type == PRS_AND_EXPR_TYPE_ENUM) {
+		read_sequence_resize(i, precharge_map);
 	}
 }
 

@@ -1,0 +1,10 @@
+"abcabcabcabc" : ("xyz", "") -> "abcabcabcabc" : PASS
+"abcabcabcabc" : ("a", "") -> "bcbcbcbc" : PASS
+"abcabcabcabc" : ("a", "x") -> "xbcxbcxbcxbc" : PASS
+"abcabcabcabc" : ("a", "xy") -> "xybcxybcxybcxybc" : PASS
+"abcabcabcabc" : ("ab", "") -> "cccc" : PASS
+"abcabcabcabc" : ("ca", "") -> "abbbbc" : PASS
+"abcabcabcabc" : ("a", "a") -> "abcabcabcabc" : PASS
+"abcabcabcabc" : ("a", "aa") -> "aabcaabcaabcaabc" : PASS
+"abcabcabcabc" : ("a", "bc") -> "bcbcbcbcbcbcbcbc" : PASS
+"abcabcabcabc" : ("abcabc", "abc") -> "abcabc" : PASS

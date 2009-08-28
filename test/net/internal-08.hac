@@ -1,0 +1,15 @@
+// "internal-08.hac"
+// copy-modified from "internal-07.hac"
+// netgen does emit unused internal nodes
+// whereas hacknet does not b/c only visited when used
+// perhaps introduce option?
+
+defproc foo(bool en, x, _y) {
+prs {
+	x	=> _y-
+	en	-> @a-
+}
+}
+
+foo bar;
+
