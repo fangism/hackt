@@ -1,5 +1,5 @@
 # "dox/net/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.1 2009/08/28 00:23:26 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.2 2009/08/28 17:36:43 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -57,7 +57,7 @@ AUTO_TEXINFO_DEPS += options.mk config.mk
 # $(srcdir), however, they are distributed as part of $(srcdir).  
 $(HACKNET_OPTIONS_TEXI): $(top_srcdir)/src/main/hacknet.cc
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
-$(HACKNET_CONFIG_TEXI): $(top_srcdir)/src/net/netgraph.cc
+$(HACKNET_CONFIG_TEXI): $(top_srcdir)/src/net/netlist_options.cc
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
 
 
