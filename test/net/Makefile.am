@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.20 2009/08/27 20:38:54 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.21 2009/08/28 17:10:55 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -42,7 +42,9 @@ HACKNET_TEST_SCRIPTS_FAILURES = \
 EXTRA_DIST_HAC = \
 	config-arg-05
 
-EXTRA_DIST += $(EXTRA_DIST_HAC:=.hac) \
+EXTRA_DIST += $(EXTRA_DIST_HAC:=.hac)
+
+srcdir_EXTRA_DIST += \
 	sample-01.hacknet-conf
 
 HACKT_PARSE_TEST_PASSES = \
@@ -58,8 +60,6 @@ HACKT_CREATE_TEST_PASSES =
 HACKT_CREATE_TEST_FAILURES = \
 	non-CMOS-06 subckt-02
 HACKT_CFLAT_TEST_SUBJECTS =
-
-srcdir_EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 

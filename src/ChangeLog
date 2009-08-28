@@ -6,7 +6,7 @@
 2009-08-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-27-netlist-01-23:
-	  Mainly cosmetic re-organation of net/*.{h,cc} sources.  
+	  Mainly cosmetic re-organization of net/*.{h,cc} sources.  
 	  End of branch.  
 
 
