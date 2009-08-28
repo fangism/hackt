@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/sh -ev
 # NOTE: this script only works on the source directory
+#	$Id: wc-l,v 1.6.56.1 2009/08/28 17:12:32 fang Exp $
 
-wc -l {main,AST,util{,/memory,/STL,/numeric,/lang},Object{,/common,/def,/expr,/inst,/lang,/ref,/traits,/type,/unroll},sim{,/prsim,/chpsim},guile}/*.{cc,tcc,h} lexer/*.ll parser/*.{yy.in,awk} scm/*/*.scm
+wc -l {main,AST,util{,/memory,/STL,/numeric,/lang},Object{,/common,/def,/expr,/inst,/lang,/ref,/traits,/type,/unroll},sim{,/prsim,/chpsim},guile,net}/*.{cc,tcc,h} lexer/*.ll parser/*.{yy.in,awk} scm/*/*.scm
 
