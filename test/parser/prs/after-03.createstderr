@@ -62,8 +62,8 @@ In namespace "", we have: {
           bool<> b
         )
       prs:
-        a -> b- [after=D; ]
-        ~a -> b+ [after=D; ]
+        a -> b- [after=D]
+        ~a -> b+ [after=D]
       footprint collection: {
         <31> {
           D = pint^0 value: 31

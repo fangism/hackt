@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.49 2009/07/20 22:41:40 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.49.4.1 2009/09/01 01:54:54 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -335,6 +335,7 @@ extern const char* const yyrule[];
 	loop_operation*		_loop_operation;
 	expr_list*		_expr_list;
 	inst_ref_expr_list*	_inst_ref_expr_list;
+	expr_attr_list*		_expr_attr_list;
 	template_argument_list_pair*	_template_argument_list_pair;
 /** not used
 	template_argument_list*	_template_argument_list;
@@ -699,7 +700,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr> prs_not prs_and prs_or
 %type	<_expr> prs_and_loop prs_or_loop
 %type	<_expr> prs_literal_param
-%type	<_expr_list> prs_literal_params prs_literal_params_in_angles_optional
+%type	<_expr_attr_list> prs_literal_params prs_literal_params_optional
+%type	<_expr_attr_list> prs_literal_params_in_angles_optional
 %type	<_node_position>	prs_arrow
 %type	<_node_position>	dir
 %type	<_spec_body>		lang_spec
@@ -2331,7 +2333,7 @@ prs_macro
 			/* do parse-checking during next pass */
 			$$ = new PRS::macro(NULL, $1, $2);
 		}
-	/* optional, tentatively ignored */
+	/* optional, generic rule attributes tentatively ignored */
 	| generic_attribute_list_in_brackets
 	  prs_literal mandatory_member_index_expr_list_in_parens
 		{ $$ = new PRS::macro($1, $2, $3); }
@@ -2421,7 +2423,6 @@ prs_literal_base
 ***/
 	: relative_member_index_expr
 		{ $$ = new PRS::literal($1); }
-/* internal node annotation, just parsed and ignored for now */
 	| '@' ID optional_dense_range_list
 		{ if ($3) {
 			$$ = new PRS::literal(
@@ -2445,8 +2446,17 @@ prs_literal
 	;
 
 prs_literal_params_in_angles_optional
-	: '<' prs_literal_params '>'
+	: '<' prs_literal_params_optional ';' generic_attribute_list '>'
+		{ $$ = $2; WRAP_LIST($1, $2, $5); DELETE_TOKEN($3);
+			$2->attach_attributes($4); }
+	| '<' prs_literal_params '>'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	| { $$ = NULL; }
+	;
+
+prs_literal_params_optional
+	: prs_literal_params
+		{ $$ = $1; }
 	| { $$ = NULL; }
 	;
 
@@ -2454,13 +2464,11 @@ prs_literal_params
 	: prs_literal_params ',' prs_literal_param
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| prs_literal_param
-		{ $$ = new expr_list($1); }
+		{ $$ = new expr_attr_list($1); }
 	;
+
 prs_literal_param
 	: expr
-/* quick hack to support/ignore flavor parameters (ACT) */
-	| expr ':' INT
-		{ $$ = $1; DELETE_TOKEN($2); DELETE_TOKEN($3); }
 	;
 
 /***

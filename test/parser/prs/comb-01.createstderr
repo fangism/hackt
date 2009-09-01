@@ -45,8 +45,8 @@ In namespace "", we have: {
 }
 
 top-level prs:
-  x & y -> z- [comb=1; ]
-  ~x & ~y -> z+ [comb=1; ]
+  x & y -> z- [comb=1]
+  ~x & ~y -> z+ [comb=1]
 
 footprint: {
   x = bool^0 = x (1) 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/generic_attribute.cc"
 	Implementation of generic attributes.  
-	$Id: generic_attribute.cc,v 1.1 2008/10/05 23:00:16 fang Exp $
+	$Id: generic_attribute.cc,v 1.1.18.1 2009/09/01 01:54:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -115,14 +115,13 @@ ostream&
 generic_attribute_list_type::dump(ostream& o,
 		const expr_dump_context& c) const {
 	const_iterator i(begin()), e(end());
-	o << "@[";
 if (i!=e) {
 	i->dump(o, c);
 	for (++i; i!=e; ++i) {
 		i->dump(o << ';', c);
 	}
 }
-	return o << ']';
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -145,6 +144,47 @@ void
 generic_attribute_list_type::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	util::read_persistent_sequence_resize(m, i, *this);
+}
+
+//=============================================================================
+// class resolved_attribute method definitions
+
+resolved_attribute::resolved_attribute() : key(), values(NULL) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+resolved_attribute::resolved_attribute(const string& k, 
+		const values_type& v) : key(k), values(v) {
+	NEVER_NULL(values);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+resolved_attribute::~resolved_attribute() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+resolved_attribute::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	NEVER_NULL(values);
+	values->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+resolved_attribute::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	write_value(o, key);
+	m.write_pointer(o, values);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+resolved_attribute::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	read_value(i, key);
+	m.read_pointer(i, values);
 }
 
 //=============================================================================

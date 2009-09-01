@@ -50,8 +50,8 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       prs:
-        a -> b- [unstab=0; ]
-        a -> b+ [unstab=; ]
+        a -> b- [unstab=0]
+        a -> b+ [unstab=]
       footprint: {
         a = bool^0 = blah<>::a (1) 
         b = bool^0 = blah<>::b (2) 

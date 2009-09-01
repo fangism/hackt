@@ -107,8 +107,8 @@ In namespace "", we have: {
         bar2 = bar;
         bar@[ignore_weak_interference=]
       prs:
-        bar -> foo- [weak=1; ]
-        ~bar -> foo+ [weak=1; ]
+        bar -> foo- [weak=1]
+        ~bar -> foo+ [weak=1]
       footprint: {
         bar = bool^0 = dyne<>::bar (2) @[ may_weak_interfere ] 
         bar2 = bool^0 = dyne<>::bar (2) @[ may_weak_interfere ] 

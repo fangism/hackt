@@ -88,12 +88,12 @@ In namespace "", we have: {
           bool<> w
         )
       prs:
-        x & y -> z- [iskeeper=1; ]
-        ~x & ~y -> z+ [iskeeper=1; ]
-        y -> z- [iskeeper=; ]
-        ~y -> z+ [iskeeper=; ]
-        x -> z- [iskeeper=0; ]
-        ~x -> z+ [iskeeper=0; ]
+        x & y -> z- [iskeeper=1]
+        ~x & ~y -> z+ [iskeeper=1]
+        y -> z- [iskeeper=]
+        ~y -> z+ [iskeeper=]
+        x -> z- [iskeeper=0]
+        ~x -> z+ [iskeeper=0]
       footprint: {
         w = bool^0 = foo<>::w (4) 
         x = bool^0 = foo<>::x (1) 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC.h"
 	Common base class for spec-like directives, including PRS macros.  
-	$Id: directive_source.h,v 1.4 2007/10/08 01:21:25 fang Exp $
+	$Id: directive_source.h,v 1.4.34.1 2009/09/01 01:54:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_SOURCE_H__
@@ -77,6 +77,11 @@ public:
 
 	size_t
 	unroll_nodes(const unroll_context&, unrolled_nodes_type&) const;
+
+	static
+	ostream&
+	dump_params_bare(const params_type&, ostream&,
+		const expr_dump_context&);
 
 	static
 	ostream&

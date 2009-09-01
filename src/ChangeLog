@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-08-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-netlist-02-01:
+	  This branch for implementing FET type override
+		and power-supply override for hacknet.
+	  Eliminated use of qmap in PRS/SPEC lang registries.
+	  grammar: switching to new prs-literal attribute grammar,
+		using semi-colon ';' delimited key-value pairs.  
+		*** THIS BREAKS OLD GRAMMAR *** (incompatible).
+	  AST: extended prs-literals to take additional attribute-list.
+		TODO: finish check_literal_attribute, w/ registries.
+	  Refactored entity::generic_attribute code for much better
+		re-use, reduced duplicate waste.
+	  Object/lang: TODO: finish PRS_LITERAL_ATTRIBUTES
+	  One momentary createdump regression in prs/flavor-01.
+
+
 2009-08-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-28-merged-netlist-01-23:

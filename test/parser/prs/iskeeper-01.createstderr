@@ -68,12 +68,12 @@ In namespace "", we have: {
 }
 
 top-level prs:
-  x & y -> z- [iskeeper=1; ]
-  ~x & ~y -> z+ [iskeeper=1; ]
-  y -> z- [iskeeper=; ]
-  ~y -> z+ [iskeeper=; ]
-  x -> z- [iskeeper=0; ]
-  ~x -> z+ [iskeeper=0; ]
+  x & y -> z- [iskeeper=1]
+  ~x & ~y -> z+ [iskeeper=1]
+  y -> z- [iskeeper=]
+  ~y -> z+ [iskeeper=]
+  x -> z- [iskeeper=0]
+  ~x -> z+ [iskeeper=0]
 
 footprint: {
   w = bool^0 = w (4) 

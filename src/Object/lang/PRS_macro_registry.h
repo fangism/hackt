@@ -1,12 +1,12 @@
 /**
 	\file "Object/lang/PRS_macro_registry.h"
-	$Id: PRS_macro_registry.h,v 1.6 2006/04/23 07:37:22 fang Exp $
+	$Id: PRS_macro_registry.h,v 1.6.116.1 2009/09/01 01:54:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_H__
 #define	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_H__
 
-#include "util/qmap.h"
+#include "util/STL/map_fwd.h"
 #include "Object/lang/directive_definition.h"
 
 namespace HAC {
@@ -61,10 +61,10 @@ public:
 typedef	macro_visitor_entry<PRS::cflat_prs_printer>
 						cflat_macro_definition_entry;
 
-typedef	util::default_qmap<string, cflat_macro_definition_entry>::type
+typedef	std::default_map<string, cflat_macro_definition_entry>::type
 						cflat_macro_registry_type;
 
-extern const cflat_macro_registry_type		cflat_macro_registry;
+extern const cflat_macro_registry_type&		cflat_macro_registry;
 
 //=============================================================================
 /**

@@ -49,8 +49,8 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       prs:
-        a -> b- [after=12; ]
-        ~a -> b+ [after=12; ]
+        a -> b- [after=12]
+        ~a -> b+ [after=12]
       footprint: {
         a = bool^0 = aftershave<>::a (1) 
         b = bool^0 = aftershave<>::b (2) 

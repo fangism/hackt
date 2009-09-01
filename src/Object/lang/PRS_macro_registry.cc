@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.12 2008/10/12 00:21:38 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.12.18.1 2009/09/01 01:54:48 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -10,18 +10,17 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <vector>
 #include <set>
+#include <map>
 #include "Object/lang/PRS_macro_registry.tcc"
 #include "Object/lang/cflat_printer.h"
 #include "Object/lang/directive_base.h"
 #include "Object/lang/PRS_macro_common.h"
 #include "main/cflat_options.h"
-#include "util/qmap.tcc"
 #include "common/TODO.h"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
-using util::qmap;
 #include "util/using_ostream.h"
 
 // explicit template instantiations
@@ -29,20 +28,20 @@ template class macro_visitor_entry<cflat_prs_printer>;
 
 //=============================================================================
 /**
+	Local static modifiable reference to use with registration.  
+ */
+static
+cflat_macro_registry_type __cflat_macro_registry;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Global static initialization.
 	This must appear first before any registrations take place in this 
 	translation unit.
  */
-const cflat_macro_registry_type
-cflat_macro_registry;
+const cflat_macro_registry_type&
+cflat_macro_registry(__cflat_macro_registry);
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Local static modifiable reference to use with registration.  
- */
-static
-cflat_macro_registry_type& __cflat_macro_registry(
-	const_cast<cflat_macro_registry_type&>(cflat_macro_registry));
 
 //=============================================================================
 /**
@@ -66,7 +65,7 @@ register_cflat_macro_class(void) {
 		&T::check_param_args, &T::check_node_args);
 	// oddly, this is needed to force instantiation of the [] const operator
 	const mapped_type& n
-		__ATTRIBUTE_UNUSED_CTOR__((cflat_macro_registry[k]));
+		__ATTRIBUTE_UNUSED_CTOR__((cflat_macro_registry.find(k)->second));
 	INVARIANT(n);
 	return cflat_macro_registry.size();
 }

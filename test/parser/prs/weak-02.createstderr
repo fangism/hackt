@@ -82,10 +82,10 @@ In namespace "", we have: {
         bool<> c
         bool<> d
       prs:
-        a -> b- [weak=1; after=10; ]
-        ~a -> b+ [weak=1; after=10; ]
-        c -> d- [after=20; weak=1; ]
-        ~c -> d+ [after=20; weak=1; ]
+        a -> b- [weak=1;after=10]
+        ~a -> b+ [weak=1;after=10]
+        c -> d- [after=20;weak=1]
+        ~c -> d+ [after=20;weak=1]
       footprint: {
         a = bool^0 = weakness<>::a (1) 
         b = bool^0 = weakness<>::b (2) 

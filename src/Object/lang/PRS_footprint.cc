@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.25 2009/08/28 20:44:58 fang Exp $
+	$Id: PRS_footprint.cc,v 1.25.2.1 2009/09/01 01:54:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -51,47 +51,6 @@ using util::write_sequence;
 using util::read_value;
 using util::read_sequence_prealloc;
 using util::read_sequence_resize;
-
-//=============================================================================
-// class footprint_rule_attribute method definitions
-
-footprint_rule_attribute::footprint_rule_attribute() : key(), values(NULL) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-footprint_rule_attribute::footprint_rule_attribute(const string& k, 
-		const values_type& v) : key(k), values(v) {
-	NEVER_NULL(values);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-footprint_rule_attribute::~footprint_rule_attribute() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_rule_attribute::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	NEVER_NULL(values);
-	values->collect_transient_info(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_rule_attribute::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	write_value(o, key);
-	m.write_pointer(o, values);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_rule_attribute::load_object(const persistent_object_manager& m, 
-		istream& i) {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	read_value(i, key);
-	m.read_pointer(i, values);
-}
 
 //=============================================================================
 // class footprint::subcircuit_map_entry method definitions

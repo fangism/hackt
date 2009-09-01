@@ -1,6 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.h"
-	$Id: PRS_attribute_registry.h,v 1.7 2008/10/07 03:22:24 fang Exp $
+	Header file for PRS rule attributes.  
+	$Id: PRS_attribute_registry.h,v 1.7.18.1 2009/09/01 01:54:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_REGISTRY_H__
@@ -8,7 +9,7 @@
 
 #include "Object/lang/attribute_visitor_entry.h"
 #include "util/size_t.h"
-#include "util/qmap.h"
+#include "util/STL/map_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -20,18 +21,19 @@ using entity::attribute_visitor_entry;
 // TODO: factor these tool-dependent typedefs out to another header
 
 typedef	attribute_visitor_entry<cflat_prs_printer>
-					cflat_attribute_definition_entry;
+					cflat_rule_attribute_definition_entry;
 /**
 	The global map type for attributes.
  */
-typedef	util::default_qmap<string, cflat_attribute_definition_entry>::type
-						cflat_attribute_registry_type;
+typedef	std::default_map<string, cflat_rule_attribute_definition_entry>::type
+					cflat_rule_attribute_registry_type;
 
 /**
 	The global PRS attribute registry.  
 	This is globally/statically initialized in this corresponding .cc file. 
  */
-extern const cflat_attribute_registry_type	cflat_attribute_registry;
+extern const cflat_rule_attribute_registry_type&
+cflat_rule_attribute_registry;
 
 //=============================================================================
 /**

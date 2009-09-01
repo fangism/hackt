@@ -187,8 +187,8 @@ In namespace "", we have: {
         (&:j:[0..N-1]: ~i[$j]) -> _o+
         _o -> o-
         ~_o -> o+
-        o -> _o- [iskeeper=1; ]
-        ~o -> _o+ [iskeeper=1; ]
+        o -> _o- [iskeeper=1]
+        ~o -> _o+ [iskeeper=1]
       footprint collection: {
         <2> {
           N = pint^0 value: 2

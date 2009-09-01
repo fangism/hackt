@@ -58,8 +58,8 @@ In namespace "", we have: {
           bool<> y
         )
       prs:
-        x -> y- [after=S; ]
-        ~x -> y+ [after=S; ]
+        x -> y- [after=S]
+        ~x -> y+ [after=S]
       }
 
 }

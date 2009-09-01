@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.22 2009/08/28 20:44:59 fang Exp $
+	$Id: cflat_printer.cc,v 1.22.2.1 2009/09/01 01:54:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -31,7 +31,7 @@
 #include "util/stacktrace.h"
 #include "util/offset_array.h"
 #include "util/member_saver.h"
-#include "util/qmap.tcc"		// for const_assoc_query symbols??
+// #include "util/qmap.tcc"		// for const_assoc_query symbols??
 #if CFLAT_WITH_CONDUCTANCES
 #include "Object/expr/pint_const.h"
 #include "Object/expr/preal_const.h"
@@ -94,7 +94,9 @@ if (!cfopts.check_prs) {
 		const_iterator i(r.attributes.begin());
 		const const_iterator e(r.attributes.end());
 		for ( ; i!=e; ++i) {
-			cflat_attribute_registry[i->key].main(*this, *i->values);
+			// already checked registered
+			cflat_rule_attribute_registry.find(i->key)->second
+				.main(*this, *i->values);
 		}
 	}
 	(*expr_pool)[r.expr_index].accept(*this);
@@ -399,7 +401,10 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 void
 cflat_prs_printer::visit(const footprint_macro& m) {
 	STACKTRACE_VERBOSE;
-	const cflat_macro_definition_entry& d(cflat_macro_registry[m.name]);
+	const cflat_macro_registry_type::const_iterator
+		f(cflat_macro_registry.find(m.name));
+	INVARIANT(f != cflat_macro_registry.end());
+	const cflat_macro_definition_entry& d(f->second);
 	INVARIANT(d);		// was already checked during unroll
 	if (!d.check_param_args(m.params).good
 			|| !d.check_node_args(m.nodes).good) {

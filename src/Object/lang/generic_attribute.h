@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/generic_attribute.h"
 	Basic attribute tuple.  
-	$Id: generic_attribute.h,v 1.1 2008/10/05 23:00:17 fang Exp $
+	$Id: generic_attribute.h,v 1.1.18.1 2009/09/01 01:54:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_GENERIC_ATTRIBUTE_H__
@@ -20,6 +20,7 @@ class param_expr;
 class dynamic_param_expr_list;
 class const_param_expr_list;
 struct expr_dump_context;
+using std::vector;
 using std::ostream;
 using std::istream;
 using std::string;
@@ -28,7 +29,7 @@ using util::memory::count_ptr;
 
 //=============================================================================
 /**
-	Generic key-values pair.  
+	Generic key-values pair, where value is yet unresolved.  
 	Consideration: for efficient copy-constructing, 
 	use a count_ptr<vector<...> > instead of a vector.  
 	String are already efficiently copied internally.  
@@ -40,6 +41,7 @@ public:
 	typedef	const value_type&		const_reference;
 	typedef	value_type&			reference;
 private:
+	// TODO: replace string with symbol (shared memory!)
 	string					key;
 	count_ptr<values_type>			values;
 public:
@@ -81,7 +83,12 @@ public:
 	Just a list/vector of attributes.  
 	We define some convenient methods here.  
  */
-class generic_attribute_list_type : public std::vector<generic_attribute> {
+class generic_attribute_list_type : public vector<generic_attribute> {
+	typedef	vector<generic_attribute>		parent_type;
+public:
+	typedef	parent_type::value_type			value_type;
+	typedef	parent_type::const_reference		const_reference;
+	typedef	parent_type::const_iterator		const_iterator;
 public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
@@ -96,6 +103,37 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class generic_attribute_list_type
+
+//-----------------------------------------------------------------------------
+/**
+	Unroll-resolved attributes.  
+	Generated from PRS::attribute.
+	Probably should use a pointer yet to keep persistence easy.  
+ */
+struct resolved_attribute {
+	typedef	count_ptr<const const_param_expr_list>	values_type;
+	string					key;
+	values_type				values;
+
+	resolved_attribute();
+
+	resolved_attribute(const string&, const values_type&);
+
+	~resolved_attribute();
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const persistent_object_manager&, istream&);
+
+};	// end struct resolved_attribute
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	vector<resolved_attribute>	resolved_attribute_list_type;
 
 //=============================================================================
 }	// end namespace entity

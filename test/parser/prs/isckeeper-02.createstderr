@@ -80,8 +80,8 @@ top-level prs:
   ~a & ~b -> _c+
   _c -> c-
   ~_c -> c+
-  c & (a | b) -> _c- [isckeeper=; ]
-  ~c & (~a | ~b) -> _c+ [isckeeper=; ]
+  c & (a | b) -> _c- [isckeeper=]
+  ~c & (~a | ~b) -> _c+ [isckeeper=]
 
 footprint: {
   _c = bool^0 = _c (3) 

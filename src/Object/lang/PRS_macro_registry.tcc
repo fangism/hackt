@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_macro_registry.tcc"
-	$Id: PRS_macro_registry.tcc,v 1.2 2006/04/23 07:37:22 fang Exp $
+	$Id: PRS_macro_registry.tcc,v 1.2.116.1 2009/09/01 01:54:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_TCC__
@@ -8,6 +8,7 @@
 
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "util/macros.h"
 
 namespace HAC {
 namespace entity {

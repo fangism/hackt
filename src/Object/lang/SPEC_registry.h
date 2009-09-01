@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_registry.h"
-	$Id: SPEC_registry.h,v 1.6 2009/04/29 05:33:29 fang Exp $
+	$Id: SPEC_registry.h,v 1.6.8.1 2009/09/01 01:54:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_REGISTRY_H__
@@ -72,7 +72,7 @@ typedef	spec_visitor_entry<cflat_prs_printer>	cflat_spec_definition_entry;
 typedef	std::default_map<string, cflat_spec_definition_entry>::type
 						cflat_spec_registry_type;
 
-extern const cflat_spec_registry_type		cflat_spec_registry;
+extern const cflat_spec_registry_type&		cflat_spec_registry;
 
 //=============================================================================
 /**
