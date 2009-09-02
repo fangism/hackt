@@ -270,7 +270,7 @@ In namespace "", we have: {
           bool<> a
           bool<> b
         )
-        a@[iscomb=]
+        a@[iscomb]
       footprint: {
         a = bool^0 = inv<>::a (1) @[ iscomb ] 
         b = bool^0 = inv<>::b (2) 

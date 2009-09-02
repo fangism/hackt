@@ -53,7 +53,7 @@ In namespace "", we have: {
         bool<> x
         bool<> y
         bool<> z
-        x@[iscomb=]
+        x@[iscomb]
         y@[iscomb=0]
         z@[iscomb=1]
       footprint: {

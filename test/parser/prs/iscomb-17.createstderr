@@ -70,7 +70,7 @@ In namespace "", we have: {
         ports: (
           inv<> x
         )
-        x.a@[iscomb=]
+        x.a@[iscomb]
       footprint: {
         x = process inv<>^0 = multi_inv<>::x (1) (
           a = bool^0 = multi_inv<>::x.a (1) @[ iscomb ] 

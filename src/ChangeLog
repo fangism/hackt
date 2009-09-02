@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-netlist-02-02:
+	  Completed work on prs-literal attributes, propagating data
+		structures through middle-end and some back-ends.  
+		Binary objects have once again been extended slightly
+		to accommodate PRS literal attributes.  
+		Also minor re-formatting of attributes in object file dump.
+		Test suite has been updated to reflect this.
+	  Continued to refactor reusable code into generic_attributes.
+	  Eventually perm PRS_LITERAL_ATTRIBUTES switch.
+	  Next: update hacknet to use it.
+
+
 2009-08-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-netlist-02-01:

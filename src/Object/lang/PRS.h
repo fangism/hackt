@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.27.2.1 2009/09/01 01:54:45 fang Exp $
+	$Id: PRS.h,v 1.27.2.2 2009/09/02 00:22:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -81,7 +81,8 @@ public:
 	explicit
 	literal(const node_literal_ptr_type&);
 
-	literal(const bool_literal&, const params_type&);
+	literal(const bool_literal&, const params_type&, 
+		const generic_attribute_list_type&);
 
 	// default copy constructor (is copy-constructible)
 

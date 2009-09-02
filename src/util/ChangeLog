@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.105 2009/08/28 20:45:20 fang Exp $
+#	$Id: ChangeLog,v 1.105.2.1 2009/09/02 00:23:01 fang Exp $
+
+2009-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-02:
+	  util/peristent_functor.h: operators should be const
+
 
 2009-08-26	David Fang		<fangism@users.sourceforge.net>
 

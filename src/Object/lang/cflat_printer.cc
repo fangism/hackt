@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.22.2.1 2009/09/01 01:54:50 fang Exp $
+	$Id: cflat_printer.cc,v 1.22.2.2 2009/09/02 00:22:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -17,6 +17,7 @@
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/SPEC_registry.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
@@ -89,14 +90,18 @@ cflat_prs_printer::visit(const footprint_rule& r) {
 	const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
 if (!cfopts.check_prs) {
 	if (r.attributes.size()) {
-		typedef	footprint_rule::attributes_list_type::const_iterator
+		typedef	footprint_rule::attributes_list_type
+						attributes_list_type;
+		typedef	attributes_list_type::const_iterator
 						const_iterator;
 		const_iterator i(r.attributes.begin());
 		const const_iterator e(r.attributes.end());
+		resolved_attribute::values_type empty;
 		for ( ; i!=e; ++i) {
 			// already checked registered
 			cflat_rule_attribute_registry.find(i->key)->second
-				.main(*this, *i->values);
+				.main(*this, (i->values ? *i->values : empty));
+			// fake an empty list if necessary
 		}
 	}
 	(*expr_pool)[r.expr_index].accept(*this);
@@ -242,7 +247,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 		case PRS_LITERAL_TYPE_ENUM: {
 			INVARIANT(sz == 1);
 			__dump_canonical_literal(e.only());
-			const directive_base_params_type& par(e.get_params());
+			const directive_base_params_type& par(e.params);
 			if (cfopts.size_prs) {
 				directive_base::dump_params(par, os);
 			}

@@ -1,6 +1,6 @@
 /**
 	\file "util/persistent_functor.h"
-	$Id: persistent_functor.h,v 1.5 2006/11/07 06:35:40 fang Exp $
+	$Id: persistent_functor.h,v 1.5.82.1 2009/09/02 00:23:02 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_H__
@@ -44,7 +44,7 @@ struct persistent_collector_ref : public persistent_visitor_base {
 
 	template <class T>
 	void
-	operator () (const T& t) {
+	operator () (const T& t) const {
 		t.collect_transient_info_base(pom);
 	}
 };	// end struct persistent_collector_ref
@@ -63,7 +63,7 @@ struct persistent_sequence_collector_ref : public persistent_visitor_base {
 
 	template <class T>
 	void
-	operator () (const T& t) {
+	operator () (const T& t) const {
 		std::for_each(t.begin(), t.end(), 
 			persistent_collector_ref(pom)
 		);
@@ -85,7 +85,7 @@ struct persistent_collector : public persistent_visitor_base {
 			persistent_visitor_base(m), collector(f) { }
 
 	void
-	operator () (const T& t) {
+	operator () (const T& t) const {
 		t.*collector(this->pom);
 	}
 
@@ -105,7 +105,7 @@ struct persistent_collector_ptr : public persistent_visitor_base {
 
 	template <class T>
 	void
-	operator () (const T& t) {
+	operator () (const T& t) const {
 		if (t) t->collect_transient_info(pom);
 	}
 };	// end struct persistent_collector_ptr
@@ -123,7 +123,7 @@ struct persistent_sequence_collector_ptr : public persistent_visitor_base {
 
 	template <class T>
 	void
-	operator () (const T& t) {
+	operator () (const T& t) const {
 		std::for_each(t.begin(), t.end(), 
 			persistent_collector_ptr(pom)
 		);
@@ -155,7 +155,7 @@ struct persistent_writer : public persistent_writer_base {
 		: persistent_writer_base(m, o), writer(f) { }
 
 	void
-	operator () (const T& t) {
+	operator () (const T& t) const {
 		(t.*writer)(this->pom, this->os);
 	}
 };
@@ -169,7 +169,7 @@ struct persistent_writer_ref : public persistent_writer_base {
 
 	template <class T>
 	void
-	operator () (const T& t) {
+	operator () (const T& t) const {
 		t.write_object(this->pom, this->os);
 	}
 };
@@ -189,7 +189,7 @@ struct persistent_writer_ptr : public persistent_const_visitor_base {
 		: persistent_const_visitor_base(m), os(o) { }
 
 	void
-	operator () (const T& t) {
+	operator () (const T& t) const {
 		pom.write_pointer(os, t);
 	}
 };
@@ -220,7 +220,7 @@ struct persistent_loader : public persistent_loader_base {
 		: persistent_loader_base(m, i), loader(f) { }
 
 	void
-	operator () (T& t) {
+	operator () (T& t) const {
 		(t.*loader)(this->pom, this->is);
 	}
 };
@@ -234,7 +234,7 @@ struct persistent_loader_ref : public persistent_loader_base {
 
 	template <class T>
 	void
-	operator () (T& t) {
+	operator () (T& t) const {
 		t.load_object(this->pom, this->is);
 	}
 };
@@ -254,7 +254,7 @@ struct persistent_loader_ptr : public persistent_const_visitor_base {
 		: persistent_const_visitor_base(m), is(i) { }
 
 	void
-	operator () (T& t) {
+	operator () (T& t) const {
 		pom.read_pointer(is, t);
 	}
 };

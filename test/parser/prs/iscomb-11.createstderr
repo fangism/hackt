@@ -19,13 +19,13 @@ Persistent Object Manager text dump:
 	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	20	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	359
+	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	367
 	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
 	24	##ADDR##	procdefn	0	#HEAD#	#TAIL#	181
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -159,13 +159,13 @@ In namespace "", we have: {
         bool<> l
         inv<> P
         P (w, x);
-        x@[iscomb=]
+        x@[iscomb]
         inv<> Q
         Q (j, k);
-        y@[iscomb=]
+        y@[iscomb]
         inv<> R
         R (k, l);
-        l@[iscomb=]
+        l@[iscomb]
       footprint: {
         P = process inv<>^0 = wrap<>::P (1) (
           a = bool^0 = wrap<>::w (1) 

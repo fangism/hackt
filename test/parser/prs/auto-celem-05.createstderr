@@ -15,17 +15,17 @@ Persistent Object Manager text dump:
 	11	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	12	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	21	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	436
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	452
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

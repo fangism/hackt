@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.41 2009/07/20 22:41:41 fang Exp $
+	$Id: ExprAlloc.cc,v 1.41.4.1 2009/09/02 00:23:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -593,8 +593,10 @@ try {
 	typedef footprint_rule::attributes_list_type	attr_list_type;
 	typedef	attr_list_type::const_iterator		const_iterator;
 	const_iterator i(r.attributes.begin()), e(r.attributes.end());
+	entity::resolved_attribute::values_type empty;
 	for ( ; i!=e; ++i) {
-		ExprAlloc_attribute_registry[i->key].main(*this, *i->values);
+		ExprAlloc_attribute_registry[i->key].main(*this, 
+			(i->values ? *i->values : empty));
 	}
 }
 if (suppress_keeper_rule) {

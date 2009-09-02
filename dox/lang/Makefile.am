@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.34 2009/05/29 15:13:19 fang Exp $
+#	$Id: Makefile.am,v 1.34.6.1 2009/09/02 00:22:38 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -91,7 +91,8 @@ $(INSTANCE_ATTRIBUTES_TEXI): \
 
 $(PRS_MACROS_TEXI): \
 		$(top_srcdir)/src/Object/lang/PRS_macro_registry.cc \
-		$(top_srcdir)/src/Object/lang/PRS_attribute_registry.cc
+		$(top_srcdir)/src/Object/lang/PRS_attribute_registry.cc \
+		$(top_srcdir)/src/Object/lang/PRS_literal_attribute_registry.cc
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
 
 $(SPEC_DIRECTIVES_TEXI): $(top_srcdir)/src/Object/lang/SPEC_registry.cc

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.25.2.1 2009/09/01 01:54:47 fang Exp $
+	$Id: PRS_footprint.cc,v 1.25.2.2 2009/09/02 00:22:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -128,7 +128,20 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			np[e.only()].get_back_ref()
 				->dump_hierarchical_name(o,
 					dump_flags::no_definition_owner);
-			directive_base::dump_params(e.get_params(), o);
+			if (e.params.size()
+#if PRS_LITERAL_ATTRIBUTES
+				|| e.attributes.size()
+#endif
+				) {
+			o << '<';
+			directive_base::dump_params_bare(e.params, o);
+#if PRS_LITERAL_ATTRIBUTES
+			if (e.attributes.size()) {
+				e.attributes.dump(o << ';');
+			}
+#endif
+			o << '>';
+			}
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:
 			STACKTRACE_DUMP_PRINT("Not ");
@@ -202,17 +215,7 @@ footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np,
 		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
 	o << (r.dir ? '+' : '-');
 if (r.attributes.size()) {
-	o << " [";
-	typedef	rule::attributes_list_type::const_iterator	const_iterator;
-	const_iterator i(r.attributes.begin());
-	const const_iterator e(r.attributes.end());
-	for ( ; i!=e; ++i) {
-		o << i->key << '=';
-		NEVER_NULL(i->values);
-		i->values->dump(o, entity::expr_dump_context::default_value);
-		o << "; ";
-	}
-	o << ']';
+	r.attributes.dump(o << " [") << ']';
 }
 	return o;
 }
@@ -630,6 +633,9 @@ footprint_expr_node::collect_transient_info_base(
 	STACKTRACE_PERSISTENT_VERBOSE;
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.collect_pointer_list(params);
+#if PRS_LITERAL_ATTRIBUTES
+		attributes.collect_transient_info_base(m);
+#endif
 	} else	INVARIANT(params.empty());
 }
 
@@ -647,6 +653,9 @@ footprint_expr_node::write_object_base(const persistent_object_manager& m,
 	write_array(o, nodes);
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.write_pointer_list(o, params);
+#if PRS_LITERAL_ATTRIBUTES
+		attributes.write_object_base(m, o);
+#endif
 	} else	INVARIANT(params.empty());
 	if (type == PRS_AND_EXPR_TYPE_ENUM) {
 		write_sequence(o, precharge_map);
@@ -664,6 +673,9 @@ footprint_expr_node::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_PRINT("nodes size = " << nodes.size() << endl);
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.read_pointer_list(i, params);
+#if PRS_LITERAL_ATTRIBUTES
+		attributes.load_object_base(m, i);
+#endif
 	}
 	if (type == PRS_AND_EXPR_TYPE_ENUM) {
 		read_sequence_resize(i, precharge_map);

@@ -14,15 +14,15 @@ Persistent Object Manager text dump:
 	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	34
-	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	34
 	17	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	385
+	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	393
 	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
@@ -59,8 +59,8 @@ In namespace "", we have: {
         1	aftershave<>::a
         2	aftershave<>::b
         resolved prs:
-        a -> b- [after=12; ]
-        ~a -> b+ [after=12; ]
+        a -> b- [after=12]
+        ~a -> b+ [after=12]
       }
       }
 

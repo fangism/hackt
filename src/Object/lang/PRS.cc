@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.36.2.1 2009/09/01 01:54:45 fang Exp $
+	$Id: PRS.cc,v 1.36.2.2 2009/09/02 00:22:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -18,7 +18,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
+#include "Object/lang/PRS_literal_attribute_registry.h"
 #include "Object/lang/PRS_literal_unroller.h"
+#include "Object/lang/generic_attribute.tcc"
 #include "Object/unroll/meta_conditional.tcc"
 #include "Object/unroll/meta_loop.tcc"
 #include "Object/inst/connection_policy.h"
@@ -496,39 +498,11 @@ if (output.is_internal()) {
 #endif
 	footprint_rule&
 		r(pfp.push_back_rule(guard_expr_index, output_node_index, dir));
-{
-	typedef	rule_attribute_list_type::const_iterator	const_iterator;
-	const_iterator i(attributes.begin());
-	const const_iterator e(attributes.end());
-	for ( ; i!=e; ++i) {
-		const string& key(i->get_key());
-		// check whether or not named attribute is registered
-		// NOTE: every directive should at least be registered
-		// as a cflat directive, the master set of all directives.  
-		const cflat_rule_attribute_registry_type::const_iterator
-			f(cflat_rule_attribute_registry.find(key));
-		if (f == cflat_rule_attribute_registry.end()) {
-			cerr << "Error: unrecognized attribute \'" << key <<
-				"\'." << endl;
-			return good_bool(false);
-		}
-		const cflat_rule_attribute_definition_entry&
-			att(f->second);
-		const count_ptr<const const_param_expr_list>
-			att_vals(i->unroll_values(c));
-		if (!att_vals) {
-			// allow value-less attributes
-			const const_param_expr_list empty;
-			if (!att.check_values(empty).good)
-				return good_bool(false);
-		} else
-		if (!att.check_values(*att_vals).good) {
-			// already have error message
-			return good_bool(false);
-		}
-		r.push_back(footprint_rule_attribute(key, att_vals));
+	if (!unroll_check_attributes(attributes, r.attributes, c, 
+			cflat_rule_attribute_registry).good) {
+		// already have some error message
+		return good_bool(false);
 	}
-}
 }	// end if output.is_internal()
 	return good_bool(true);
 }
@@ -2040,10 +2014,11 @@ literal::literal() : prs_expr(), base_type(), params()
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-literal::literal(const bool_literal& l, const params_type& p) :
+literal::literal(const bool_literal& l, const params_type& p, 
+			const generic_attribute_list_type& a) :
 		prs_expr(), base_type(l), params(p)
 #if PRS_LITERAL_ATTRIBUTES
-		, attr()
+		, attr(a)
 #endif
 		{ }
 
@@ -2200,25 +2175,19 @@ if (is_internal()) {
 }	// end if int_node
 	// TODO: should attributes even apply to internal nodes?
 	const size_t perr = directive_source::unroll_params(params, c,
-			new_expr->get_params());
+			new_expr->params);
 	if (perr) {
 		cerr << "Error resolving rule literal parameter " << perr
 			<< " in rule." << endl;
 		return 0;
 	}
-	INVARIANT(new_expr->get_params().size() <= 3);
-	// NEW [ACT]: optional 3rd parameter is transistor type
-	// TODO: handle attributes here
-#if 0 && PRS_LITERAL_ATTRIBUTES
-	const size_t aerr = directive_source::unroll_params(params, c,
-			new_expr->get_params());
-	if (perr) {
-		cerr << "Error resolving rule literal parameter " << perr
-			<< " in rule." << endl;
+	INVARIANT(new_expr->params.size() <= 2);
+	if (!unroll_check_attributes(attr, new_expr->attributes, c, 
+			cflat_literal_attribute_registry).good) {
+		// already have some error message
+		cerr << "Error resolving literal attribute." << endl;
 		return 0;
 	}
-	INVARIANT(new_expr->get_params().size() <= 3);
-#endif
 	return pfp.current_expr_index();
 }
 
@@ -2243,11 +2212,19 @@ literal::unroll_copy(const unroll_context& c,
 		return prs_expr_ptr_type(NULL);
 	}
 	copy(crpar.begin(), crpar.end(), back_inserter(rpar));
+	resolved_attribute_list_type rat;
+	if (!unroll_check_attributes(attr, rat, c, 
+			cflat_literal_attribute_registry).good) {
+		// already have some error message
+		cerr << "Error resolving literal attribute." << endl;
+		return prs_expr_ptr_type(NULL);
+	}
 	if ((lref == *this) &&
-		std::equal(params.begin(), params.end(), rpar.begin())) {
+		std::equal(params.begin(), params.end(), rpar.begin()) && 
+		std::equal(attr.begin(), attr.end(), rat.begin())) {
 		return e;
 	} else {
-		return prs_expr_ptr_type(new literal(lref, rpar));
+		return prs_expr_ptr_type(new literal(lref, rpar, rat));
 	}
 }
 
@@ -2261,8 +2238,8 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
 	m.collect_pointer_list(params);
-#if 0 && PRS_LITERAL_ATTRIBUTES
-	m.collect_pointer_list(attr);
+#if PRS_LITERAL_ATTRIBUTES
+	attr.collect_transient_info_base(m);
 #endif
 }
 }
@@ -2273,8 +2250,8 @@ literal::write_object(const persistent_object_manager& m, ostream& o) const {
 //	m.write_pointer(o, var);
 	write_object_base(m, o);		// saves var
 	m.write_pointer_list(o, params);
-#if 0 && PRS_LITERAL_ATTRIBUTES
-	m.write_pointer_list(o, attr);
+#if PRS_LITERAL_ATTRIBUTES
+	attr.write_object_base(m, o);
 #endif
 }
 
@@ -2284,8 +2261,8 @@ literal::load_object(const persistent_object_manager& m, istream& i) {
 //	m.read_pointer(i, var);
 	load_object_base(m, i);			// restores var
 	m.read_pointer_list(i, params);
-#if 0 && PRS_LITERAL_ATTRIBUTES
-	m.read_pointer_list(i, attr);
+#if PRS_LITERAL_ATTRIBUTES
+	attr.load_object_base(m, i);
 #endif
 }
 

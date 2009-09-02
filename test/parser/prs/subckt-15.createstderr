@@ -17,18 +17,18 @@ Persistent Object Manager text dump:
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
-	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	21	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	25
 	23	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	417
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	425
 	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	377

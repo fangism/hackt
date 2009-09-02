@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.h"
-	$Id: directive_base.h,v 1.3 2006/04/12 08:53:16 fang Exp $
+	$Id: directive_base.h,v 1.3.118.1 2009/09/02 00:22:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_BASE_H__
@@ -55,6 +55,10 @@ public:
 	/// \return 1-indexed offset of the first error (if any), else 0
 	size_t
 	first_node_error(void) const;
+
+	static
+	ostream&
+	dump_params_bare(const params_type&, ostream&);
 
 	static
 	ostream&

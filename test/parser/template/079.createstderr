@@ -85,14 +85,14 @@ Persistent Object Manager text dump:
 	81	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	82	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	83	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	84	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	85	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	86	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	87	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	88	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	89	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	90	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	91	##ADDR##	footprnt	0	#HEAD#	#TAIL#	423
+	91	##ADDR##	footprnt	0	#HEAD#	#TAIL#	431
 	92	##ADDR##	procdefn	0	#HEAD#	#TAIL#	166
 	93	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	94	##ADDR##	procplch	0	#HEAD#	#TAIL#	25

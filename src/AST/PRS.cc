@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.34.4.1 2009/09/01 01:54:43 fang Exp $
+	$Id: PRS.cc,v 1.34.4.2 2009/09/02 00:22:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -39,6 +39,7 @@
 #include "Object/expr/meta_index_list.h"
 #include "Object/lang/PRS.h"
 #include "Object/lang/PRS_attribute_registry.h"
+#include "Object/lang/PRS_literal_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/traits/bool_traits.h"
@@ -184,14 +185,15 @@ literal::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::attribute_type
-literal::check_literal_attribute(const generic_attribute& a, context& c) {
+literal::check_literal_attribute(const generic_attribute& a, const context& c) {
 	typedef	attribute_type			return_type;
-#if 0
 	typedef	expr_list::checked_meta_exprs_type	vals_type;
 	typedef	vals_type::const_iterator	const_iterator;
 	typedef	vals_type::value_type		val_type;
 	// attributes must be registered with the master registry list
-	if (!entity::PRS::literal_attribute_registry[*a.key]) {
+	const entity::PRS::cflat_literal_attribute_registry_type::const_iterator
+		f(entity::PRS::cflat_literal_attribute_registry.find(*a.key));
+	if (f == entity::PRS::cflat_literal_attribute_registry.end()) {
 		// error handling: downgrade to warning?
 		cerr << "Error: unrecognized PRS literal attribute \"" <<
 			*a.key << "\" at " << where(*a.key) << endl;
@@ -209,11 +211,8 @@ literal::check_literal_attribute(const generic_attribute& a, context& c) {
 			<< (a.values ? where(*a.values) : where(a)) << endl;
 		return return_type();
 	}
-#endif
 	return_type ret(*a.key);
-#if 0
 	copy(i, e, back_inserter(ret));
-#endif
 	return ret;
 }
 
@@ -299,12 +298,10 @@ if (ret && params) {
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_params()));
-}
-#if 0 && PRS_LITERAL_ATTRIBUTES
-if (ret && params && params->attrs) {
+#if PRS_LITERAL_ATTRIBUTES
+if (params->attrs) {
 	// handle attributes
-	entity::PRS::generic_attribute_list_type&
-		atts(ret->get_attributes());
+	entity::generic_attribute_list_type& atts(ret->get_attributes());
 	params->attrs->check_list(atts, &check_literal_attribute, c);
 	if (find(atts.begin(), atts.end(), false) != atts.end()) {
 		cerr << "ERROR in literal attribute list.  " <<
@@ -313,6 +310,7 @@ if (ret && params && params->attrs) {
 	}
 }
 #endif
+}
 	return ret;
 }	// end literal::check_prs_literal
 

@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.cc"
-	$Id: netlist_generator.cc,v 1.2 2009/08/28 20:45:12 fang Exp $
+	$Id: netlist_generator.cc,v 1.2.2.1 2009/09/02 00:22:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -498,7 +498,7 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.body = (fet_type == transistor::NFET_TYPE ? low_supply : high_supply);
 		// Vdd or GND
 	// TODO: extract length/width parameters
-	const directive_base_params_type& p(e.get_params());
+	const directive_base_params_type& p(e.params);
 	if (p.size() > 0) {
 		t.width = p[0]->to_real_const();
 	} else {

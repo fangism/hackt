@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/generic_attribute.h"
 	Basic attribute tuple.  
-	$Id: generic_attribute.h,v 1.1.18.1 2009/09/01 01:54:53 fang Exp $
+	$Id: generic_attribute.h,v 1.1.18.2 2009/09/02 00:22:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_GENERIC_ATTRIBUTE_H__
@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include "Object/lang/generic_attribute_fwd.h"
+#include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
 
@@ -20,12 +21,16 @@ class param_expr;
 class dynamic_param_expr_list;
 class const_param_expr_list;
 struct expr_dump_context;
+struct resolved_attribute;
 using std::vector;
 using std::ostream;
 using std::istream;
 using std::string;
 using util::persistent_object_manager;
 using util::memory::count_ptr;
+using util::good_bool;
+typedef	vector<resolved_attribute>	resolved_attribute_list_base;
+struct resolved_attribute_list_type;
 
 //=============================================================================
 /**
@@ -50,9 +55,14 @@ public:
 	explicit
 	generic_attribute(const string&);
 
+	generic_attribute(const resolved_attribute&);
+
 	~generic_attribute();
 
 	operator bool () const;
+
+	bool
+	operator == (const generic_attribute&) const;
 
 	// arg is equiv to const_reference
 	void
@@ -60,6 +70,9 @@ public:
 
 	const string&
 	get_key(void) const { return key; }
+
+	count_ptr<const values_type>
+	get_values(void) const;
 
 	ostream&
 	dump(ostream&, const expr_dump_context& c) const;
@@ -90,6 +103,10 @@ public:
 	typedef	parent_type::const_reference		const_reference;
 	typedef	parent_type::const_iterator		const_iterator;
 public:
+	generic_attribute_list_type() : parent_type() { }
+
+	generic_attribute_list_type(const resolved_attribute_list_type&);
+
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
@@ -111,15 +128,21 @@ public:
 	Probably should use a pointer yet to keep persistence easy.  
  */
 struct resolved_attribute {
-	typedef	count_ptr<const const_param_expr_list>	values_type;
+	typedef	const_param_expr_list		values_type;
+	typedef	count_ptr<const values_type>	values_ptr_type;
 	string					key;
-	values_type				values;
+	values_ptr_type				values;
 
 	resolved_attribute();
 
-	resolved_attribute(const string&, const values_type&);
+	explicit
+	resolved_attribute(const string&);
+	resolved_attribute(const string&, const values_ptr_type&);
 
 	~resolved_attribute();
+
+	ostream&
+	dump(ostream&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -132,8 +155,38 @@ struct resolved_attribute {
 
 };	// end struct resolved_attribute
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	vector<resolved_attribute>	resolved_attribute_list_type;
+//-----------------------------------------------------------------------------
+class resolved_attribute_list_type : public resolved_attribute_list_base {
+	typedef	resolved_attribute_list_base		parent_type;
+public:
+	typedef	parent_type::value_type			value_type;
+	typedef	parent_type::const_reference		const_reference;
+	typedef	parent_type::const_iterator		const_iterator;
+
+	ostream&
+	dump(ostream&) const;
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+};	// end class resolved_attribute_list_type
+
+//-----------------------------------------------------------------------------
+
+/**
+	Resolves a set of generic attributes.
+ */
+template <class AttrMapType>
+good_bool
+unroll_check_attributes(const generic_attribute_list_type&,
+		resolved_attribute_list_type&, 
+		const unroll_context&, 
+		const AttrMapType&);
 
 //=============================================================================
 }	// end namespace entity

@@ -113,19 +113,19 @@ In namespace "", we have: {
         bool<> a
         bool<> c
         bool<> e
-        w@[iscomb=]
+        w@[iscomb]
         x@[iscomb=0]
         w = x;
         y = z;
-        z@[iscomb=]
+        z@[iscomb]
         a = b;
-        a@[iscomb=]
+        a@[iscomb]
         b@[iscomb=0]
-        c@[iscomb=]
+        c@[iscomb]
         c = d;
         d@[iscomb=0]
         e = f;
-        e@[iscomb=]
+        e@[iscomb]
       footprint: {
         a = bool^0 = foo<>::b (3) @[ iscomb ] 
         b = bool^0 = foo<>::b (3) @[ iscomb ] 

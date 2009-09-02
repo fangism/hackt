@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.220 2009/08/28 20:44:49 fang Exp $
+#	$Id: Makefile.am,v 1.220.2.1 2009/09/02 00:22:43 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -673,6 +673,8 @@ OBJECT_CC_FILES = \
 	Object/lang/PRS_footprint.cc \
 	Object/lang/PRS_attribute_common.cc \
 	Object/lang/PRS_attribute_registry.cc \
+	Object/lang/PRS_literal_attribute_common.cc \
+	Object/lang/PRS_literal_attribute_registry.cc \
 	Object/lang/PRS_macro_common.cc \
 	Object/lang/PRS_macro_registry.cc \
 	Object/lang/CHP.cc \
@@ -725,6 +727,7 @@ OBJECT_TCC_FILES = \
 	Object/unroll/template_type_completion.tcc \
 	Object/unroll/port_connection.tcc \
 	Object/unroll/unroll_context.tcc \
+	Object/lang/generic_attribute.tcc \
 	Object/lang/PRS_macro_registry.tcc \
 	Object/lang/SPEC_registry.tcc \
 	Object/module.tcc \
