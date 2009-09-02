@@ -1,0 +1,10 @@
+// "flavor-05.hac"
+// copy-modified from "flavor-04.hac"
+// testing FET attributes on prs macros
+
+bool g, s, d;
+
+prs {
+	passn<20,2;lvt>(g, s, d)
+}
+

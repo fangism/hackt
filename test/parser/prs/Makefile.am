@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.55 2009/08/28 20:48:03 fang Exp $
+#	$Id: Makefile.am,v 1.55.2.1 2009/09/02 22:10:04 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -20,7 +20,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	internal-node-01 internal-node-02 internal-node-03 internal-node-04 \
 	internal-node-05 internal-node-08 \
 	internal-node-11 internal-node-16 \
-	runmodestatic-02
+	runmodestatic-02 \
+	flavor-02
 
 HACKT_PARSE_TEST_WARNINGS = \
 	macro-attrib-01 macro-attrib-02
@@ -96,7 +97,7 @@ HACKT_PARSE_TEST_PASSES = \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
-	flavor-01 \
+	flavor-01 flavor-03 flavor-04 flavor-05 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	reff-01 \
 	load_cap-01 
@@ -105,7 +106,8 @@ HACKT_PARSE_TEST_PASSES = \
 srcdir_EXTRA_DIST += \
 	act-008.hac \
 	rule-type-01.hac rule-type-02.hac rule-type-03.hac rule-type-04.hac \
-	rule-type-05.hac rule-type-06.hac
+	rule-type-05.hac rule-type-06.hac \
+	internal-node-subckt-01.hac
 
 HACKT_CREATE_TEST_PASSES = \
 	inv-01 \
@@ -170,7 +172,7 @@ HACKT_CREATE_TEST_PASSES = \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
-	flavor-01 \
+	flavor-01 flavor-03 flavor-04 flavor-05 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	reff-01 \
 	load_cap-01 
@@ -242,7 +244,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	act-001 act-002 act-003 act-004 act-005 act-006 act-007 act-010 \
 	reff-01 \
-	flavor-01
+	flavor-01 flavor-03 flavor-04 flavor-05
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \
@@ -304,7 +306,8 @@ BISON_OUTPUTS += inv-01 inv-11 \
 	spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
 	top-level-03 \
 	precharge-01 \
-	internal-node-05
+	internal-node-05 \
+	flavor-02
 
 # includes other sources files used by test-cases (but aren't cases themselves)
 srcdir_EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac

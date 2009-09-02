@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.2 2009/08/28 20:45:11 fang Exp $
+	$Id: netgraph.h,v 1.2.2.1 2009/09/02 22:09:29 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -170,9 +170,28 @@ struct transistor {
 		DEFAULT_ATTRIBUTE = 0x0,
 		IS_PRECHARGE = 0x01,
 		IS_STANDARD_KEEPER = 0x02,
-		IS_COMB_FEEDBACK = 0x04
+		IS_COMB_FEEDBACK = 0x04,
+		IS_LOW_VT = 0x10,
+		IS_HIGH_VT = 0x20
 	};
 	char				attributes;
+
+	void
+	set_lvt(void) {
+		attributes |= IS_LOW_VT;
+		attributes &= ~IS_HIGH_VT;
+	}
+
+	void
+	set_hvt(void) {
+		attributes |= IS_HIGH_VT;
+		attributes &= ~IS_LOW_VT;
+	}
+
+	void
+	set_svt(void) {
+		attributes &= ~(IS_LOW_VT | IS_HIGH_VT);
+	}
 
 	template <class NP>
 	void

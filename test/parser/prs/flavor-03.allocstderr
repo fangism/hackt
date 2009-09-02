@@ -1,0 +1,8 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	X	nand_type<>
+	bool: 1,2,3
+[global bool entries]
+1	(top)	-	1	X.a	
+2	(top)	-	2	X.b	
+3	(top)	-	3	X.c	

@@ -1,0 +1,12 @@
+// "precharge-07.hac"
+// copy-modified from "precharge-01.hac"
+// @hacknet-flags@ -t foo
+// testing out fet-type override on precharges
+
+defproc foo(bool en, a, b, _o) {
+prs {
+	en &{+~en<;hvt>} a & b	-> _o-
+}
+}
+
+

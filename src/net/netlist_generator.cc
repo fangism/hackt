@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.cc"
-	$Id: netlist_generator.cc,v 1.2.2.1 2009/09/02 00:22:59 fang Exp $
+	$Id: netlist_generator.cc,v 1.2.2.2 2009/09/02 22:09:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -35,7 +35,8 @@ using entity::PRS::PRS_AND_EXPR_TYPE_ENUM;
 using entity::PRS::PRS_OR_EXPR_TYPE_ENUM;
 using entity::PRS::PRS_NODE_TYPE_ENUM;
 using entity::directive_base_params_type;
-// using entity::preal_value_type;
+using entity::resolved_attribute;
+using entity::resolved_attribute_list_type;
 
 //=============================================================================
 // helper globals
@@ -513,6 +514,27 @@ case PRS_LITERAL_TYPE_ENUM: {
 	}
 	t.attributes = fet_attr;
 	// TODO: import attributes from rule attributes?
+#if PRS_LITERAL_ATTRIBUTES
+{
+	const resolved_attribute_list_type& a(e.attributes);
+	resolved_attribute_list_type::const_iterator
+		ai(a.begin()), ae(a.end());
+	// TODO: write an actual attribute function map for altering transistor
+	for ( ; ai!=ae; ++ai) {
+		// this is just a quick hack for now
+		if (ai->key == "lvt")
+			t.set_lvt();
+		else if (ai->key == "svt")
+			t.set_svt();
+		else if (ai->key == "hvt")
+			t.set_hvt();
+		else {
+			cerr << "Warning: unknown literal attribute \'" <<
+				ai->key << "\' ignored." << endl;
+		}
+	}
+}
+#endif
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->transistor_pool.push_back(t);
 	break;
@@ -638,6 +660,27 @@ if (passn || passp) {
 	}
 	t.attributes = fet_attr;
 	// TODO: import attributes
+#if PRS_LITERAL_ATTRIBUTES
+{
+	const resolved_attribute_list_type& a(e.attributes);
+	resolved_attribute_list_type::const_iterator
+		ai(a.begin()), ae(a.end());
+	// TODO: write an actual attribute function map for altering transistor
+	for ( ; ai!=ae; ++ai) {
+		// this is just a quick hack for now
+		if (ai->key == "lvt")
+			t.set_lvt();
+		else if (ai->key == "svt")
+			t.set_svt();
+		else if (ai->key == "hvt")
+			t.set_hvt();
+		else {
+			cerr << "Warning: unknown literal attribute \'" <<
+				ai->key << "\' ignored." << endl;
+		}
+	}
+}
+#endif
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->transistor_pool.push_back(t);
 } else if (e.name == "echo") {

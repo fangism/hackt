@@ -1,0 +1,9 @@
+// "fet-type-07.hac"
+// copy-modified from "fet-type-01.hac"
+// testing that latter attribute overrides former
+
+bool x, y;
+prs {
+	x<;hvt;svt>	=> y-
+}
+

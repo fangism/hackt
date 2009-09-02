@@ -1,0 +1,22 @@
+// "internal-node-subckt-01.hac"
+// ACT vs. HAC test case
+// Does a subckt use a different scope for internal nodes than parent?
+// Yes, the following is legal.
+
+defproc foo(bool en, x, _y, _z) {
+_y @ [autokeeper=0];
+_z @ [autokeeper=0];
+prs {
+subckt {
+	en      -> @a-
+	~@a & x -> _y-
+}
+subckt {
+	en      -> @a-
+	~@a & x -> _z-
+}
+}
+}
+
+foo bar;
+

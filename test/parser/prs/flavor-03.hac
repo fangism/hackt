@@ -1,0 +1,12 @@
+// "flavor-03.hac"
+// test and ignore flavor
+
+defproc nand_type (bool a,b, c) {
+prs {
+	a<10;lvt> & b<10;svt=0> -> c-
+	~a<5,2;svt=1> |~b<10;svt> -> c+
+}
+}
+
+nand_type X;
+

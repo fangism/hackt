@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-netlist-02-03:
+	  hacknet: now honors FET types/flavors in prs-literals, 
+		macros (pass-gates), and in precharges.
+		Added handful of new test cases.
+	  Finished middle-end support for macro attributes, which are
+		simply borrowed from literal attributes for now.
+		Object file binary extended yet again.
+
+
 2009-09-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-netlist-02-02:

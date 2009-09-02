@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.34.4.2 2009/09/02 00:22:44 fang Exp $
+	$Id: PRS.cc,v 1.34.4.3 2009/09/02 22:09:20 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -295,7 +295,6 @@ if (ret && params) {
 			<< where(*params) << endl;
 		return prs_literal_ptr_type(NULL);
 	}
-	INVARIANT(temp.size());
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_params()));
 #if PRS_LITERAL_ATTRIBUTES
@@ -1023,9 +1022,22 @@ if (params) {
 			<< endl;
 		CHECK_RULE_THROW;
 	}
-	INVARIANT(temp.size());
+	// INVARIANT(temp.size());	// params may be empty
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_params()));
+#if PRS_LITERAL_ATTRIBUTES
+if (params->attrs) {
+	// handle attributes, treat as literal attributes for now...
+	entity::generic_attribute_list_type& atts(ret->get_attributes());
+	params->attrs->check_list(atts, &literal::check_literal_attribute,
+		AS_A(const context&, c));
+	if (find(atts.begin(), atts.end(), false) != atts.end()) {
+		cerr << "ERROR in macro attribute list.  " <<
+			where(*params->attrs) << endl;
+		THROW_EXIT;
+	}
+}
+#endif
 } else if (!mde.check_num_params(0).good) {
 	// no params given where required and already have error message
 	cerr << "\tat " << where(*this) << endl;

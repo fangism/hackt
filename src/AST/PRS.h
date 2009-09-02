@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.12.4.2 2009/09/02 00:22:45 fang Exp $
+	$Id: PRS.h,v 1.12.4.3 2009/09/02 22:09:21 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -152,6 +152,8 @@ public:
 protected:
 	typedef	entity::generic_attribute		attribute_type;
 
+public:
+	// so macro::check_prs_rule can use this
 	static
 	attribute_type
 	check_literal_attribute(const generic_attribute&, const context&);

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.27.2.2 2009/09/02 00:22:49 fang Exp $
+	$Id: PRS.h,v 1.27.2.3 2009/09/02 22:09:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -17,12 +17,6 @@
 #include <string>
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
-
-/**
-	Define to 1 to use PRS literal attributes, 
-	intended for transistor type overriding.  
- */
-#define	PRS_LITERAL_ATTRIBUTES		1
 
 namespace HAC {
 namespace entity {
@@ -798,6 +792,9 @@ public:
  */
 class macro : public rule, public directive_source {
 	typedef	macro				this_type;
+#if PRS_LITERAL_ATTRIBUTES
+	generic_attribute_list_type		attr;
+#endif
 public:
 	macro();
 
@@ -805,6 +802,14 @@ public:
 	macro(const string&);
 
 	~macro();
+
+#if PRS_LITERAL_ATTRIBUTES
+	generic_attribute_list_type&
+	get_attributes(void) { return attr; }
+
+	const generic_attribute_list_type&
+	get_attributes(void) const { return attr; }
+#endif
 
 	ostream&
 	what(ostream&) const;

@@ -1,0 +1,59 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	31
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	31
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	31
+	22	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	31
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	500
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    x = bool<> x
+    y = bool<> y
+    z = bool<> z
+}
+
+top-level prs:
+  x<;hvt> & y<;lvt> -> z-
+  ~x<;hvt> | ~y<;lvt> -> z+
+
+footprint: {
+  x = bool^0 = x (1) 
+  y = bool^0 = y (2) 
+  z = bool^0 = z (3) 
+  Created state:
+  bool instance pool:
+  1	x
+  2	y
+  3	z
+  resolved prs:
+  x<;hvt> & y<;lvt> -> z-
+  ~x<;hvt> | ~y<;lvt> -> z+
+}

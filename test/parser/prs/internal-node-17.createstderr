@@ -70,11 +70,11 @@ Persistent Object Manager text dump:
 	58	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	61	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	924
+	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	928
 	66	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	67	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350

@@ -1,0 +1,67 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	37
+	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	31
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	266
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        bool<> en
+        bool<> a
+        bool<> b
+        bool<> _o
+      )
+      In definition "foo", we have: {
+      Instances:
+        _o = bool<> foo::_o
+        a = bool<> foo::a
+        b = bool<> foo::b
+        en = bool<> foo::en
+      unroll sequence: 
+        ports: (
+          bool<> en
+          bool<> a
+          bool<> b
+          bool<> _o
+        )
+      prs:
+        en &{+~en<;hvt>} a & b -> _o-
+      }
+
+}
+
+footprint: {
+}

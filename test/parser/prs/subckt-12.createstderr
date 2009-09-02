@@ -41,19 +41,19 @@ Persistent Object Manager text dump:
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	40	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	44	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	48	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	695
+	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	707
 	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	485

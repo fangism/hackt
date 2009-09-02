@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.2 2009/08/28 20:45:42 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.1 2009/09/02 22:09:30 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -19,11 +19,13 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	internal-05 internal-06 internal-07 internal-08 \
 	internal-09 internal-10 internal-11 \
 	precharge-01 precharge-02 precharge-03 precharge-04 precharge-05 \
+	precharge-06 precharge-07 precharge-08 \
 	precharge-internal-01 precharge-internal-02 precharge-internal-03 \
 	non-CMOS-01 non-CMOS-02 \
 	sizing-01 sizing-02 sizing-03 \
 	half-pull-01 half-pull-02 \
 	pass_gate-01 pass_gate-02 pass_gate-03 pass_gate-04 \
+	pass_gate-05 pass_gate-06 \
 	subckt-01 subckt-03 \
 	channel-member-01 channel-member-02 channel-member-03 \
 	array-01 \
@@ -32,7 +34,9 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	recurse-01 recurse-02 \
 	config-arg-01 config-arg-02 config-arg-03 config-arg-04 \
 	config-arg-06 config-arg-08 \
-	config-file-01 config-file-02 config-file-03
+	config-file-01 config-file-02 config-file-03 \
+	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
+	fet-type-05 fet-type-06 fet-type-07 fet-type-08
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05 \
@@ -48,7 +52,11 @@ srcdir_EXTRA_DIST += \
 	sample-01.hacknet-conf
 
 HACKT_PARSE_TEST_PASSES = \
-	non-CMOS-06 subckt-02
+	non-CMOS-06 subckt-02 \
+	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
+	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
+	pass_gate-05 pass_gate-06 \
+	precharge-07 precharge-08
 
 HACKTNET_TEST_SCRIPTS_PASSES =
 
@@ -56,7 +64,11 @@ CLEANFILES +=
 AUTO_IGNORE +=
 EXTRA_DIST +=
 
-HACKT_CREATE_TEST_PASSES =
+HACKT_CREATE_TEST_PASSES = \
+	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
+	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
+	pass_gate-05 pass_gate-06 \
+	precharge-07 precharge-08
 HACKT_CREATE_TEST_FAILURES = \
 	non-CMOS-06 subckt-02
 HACKT_CFLAT_TEST_SUBJECTS =

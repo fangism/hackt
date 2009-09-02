@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.35.6.1 2009/09/01 01:54:44 fang Exp $
+	$Id: expr.cc,v 1.35.6.2 2009/09/02 22:09:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -811,6 +811,8 @@ template_argument_list_pair::check_template_args(const context& c) const {
 
 //=============================================================================
 // class expr_attr_list methd definitions
+
+expr_attr_list::expr_attr_list() : expr_list(), attrs() { }
 
 expr_attr_list::expr_attr_list(const expr* e) : expr_list(e), attrs() { }
 

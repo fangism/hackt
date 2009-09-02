@@ -1,0 +1,8 @@
+// "fet-type-04.hac"
+// copy-modified from "fet-type-03.hac"
+
+bool x, y, z;
+prs {
+	x<;hvt> & y	#> z-
+}
+

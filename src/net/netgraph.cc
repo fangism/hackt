@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.2 2009/08/28 20:45:11 fang Exp $
+	$Id: netgraph.cc,v 1.2.2.1 2009/09/02 22:09:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -336,6 +336,11 @@ transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 	default:
 		o << "<type?>";
 	}
+	if (attributes & IS_LOW_VT)
+		o << "_lvt";
+	else if (attributes & IS_HIGH_VT)
+		o << "_hvt";
+	// else leave svt unmarked
 	// TODO: restrict lengths and widths, from tech/conf file
 	o << " W=" << width *nopt.lambda << nopt.length_unit <<
 		" L=" << length *nopt.lambda << nopt.length_unit;

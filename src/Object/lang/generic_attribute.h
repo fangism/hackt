@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/generic_attribute.h"
 	Basic attribute tuple.  
-	$Id: generic_attribute.h,v 1.1.18.2 2009/09/02 00:22:58 fang Exp $
+	$Id: generic_attribute.h,v 1.1.18.3 2009/09/02 22:09:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_GENERIC_ATTRIBUTE_H__
@@ -13,6 +13,14 @@
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
+
+/**
+	Define to 1 to use PRS literal attributes, 
+	intended for transistor type overriding.  
+	Goal: 1
+ */
+#define	PRS_LITERAL_ATTRIBUTES		1
+
 
 namespace HAC {
 namespace entity {

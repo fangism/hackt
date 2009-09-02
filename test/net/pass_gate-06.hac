@@ -1,0 +1,12 @@
+// "pass_gate-06.hac"
+// copy-modified from "pass_gate-05.hac"
+// testing macro FET type overrides
+
+bool g, s, d;
+bool _g;
+
+prs {
+	passn<5,2;hvt>(g, s, d)
+	passp<10,2;lvt>(_g, s, d)
+}
+

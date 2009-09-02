@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.6.48.1 2009/09/01 01:54:44 fang Exp $
+	$Id: expr_list.h,v 1.6.48.2 2009/09/02 22:09:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -201,6 +201,8 @@ public:
  */
 struct expr_attr_list : public expr_list {
 	excl_ptr<const generic_attribute_list>	attrs;
+
+	expr_attr_list();
 
 	explicit
 	expr_attr_list(const expr*);

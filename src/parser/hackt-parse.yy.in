@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.49.4.1 2009/09/01 01:54:54 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.49.4.2 2009/09/02 22:09:30 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -2447,7 +2447,9 @@ prs_literal
 
 prs_literal_params_in_angles_optional
 	: '<' prs_literal_params_optional ';' generic_attribute_list '>'
-		{ $$ = $2; WRAP_LIST($1, $2, $5); DELETE_TOKEN($3);
+		{ if (!$2) { $2 = new expr_attr_list(); }
+			$$ = $2;
+			WRAP_LIST($1, $2, $5); DELETE_TOKEN($3);
 			$2->attach_attributes($4); }
 	| '<' prs_literal_params '>'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }

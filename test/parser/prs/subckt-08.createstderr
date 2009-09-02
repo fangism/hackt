@@ -20,7 +20,7 @@ Persistent Object Manager text dump:
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	19	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -35,7 +35,7 @@ Persistent Object Manager text dump:
 	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	28
-	34	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	34	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -46,11 +46,11 @@ Persistent Object Manager text dump:
 	42	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	43	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	45	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	695
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	707
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

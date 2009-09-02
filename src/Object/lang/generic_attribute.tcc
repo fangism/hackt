@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/generic_attribute.tcc"
-	$Id: generic_attribute.tcc,v 1.1.2.1 2009/09/02 00:22:59 fang Exp $
+	$Id: generic_attribute.tcc,v 1.1.2.2 2009/09/02 22:09:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_GENERIC_ATTRIBUTE_TCC__
@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Object/lang/generic_attribute.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
@@ -29,6 +30,7 @@ unroll_check_attributes(const generic_attribute_list_type& attributes,
 		resolved_attribute_list_type& r, 
 		const unroll_context& c, 
 		const AttrMapType& m) {
+	STACKTRACE_VERBOSE;
 	typedef	generic_attribute_list_type::const_iterator	const_iterator;
 	const_iterator i(attributes.begin());
 	const const_iterator e(attributes.end());
@@ -37,8 +39,7 @@ unroll_check_attributes(const generic_attribute_list_type& attributes,
 		// check whether or not named attribute is registered
 		// NOTE: every directive should at least be registered
 		// as a cflat directive, the master set of all directives.  
-		const typename AttrMapType::const_iterator
-			f(m.find(key));
+		const typename AttrMapType::const_iterator f(m.find(key));
 		if (f == m.end()) {
 			cerr << "Error: unrecognized attribute \'" << key <<
 				"\'." << endl;

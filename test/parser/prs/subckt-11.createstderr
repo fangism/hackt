@@ -38,19 +38,19 @@ Persistent Object Manager text dump:
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	37	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	41	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	45	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	695
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	707
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
