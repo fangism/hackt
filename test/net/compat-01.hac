@@ -1,0 +1,7 @@
+// "compat-01.hac"
+// netgen compatibility test
+// @hacknet-flags@ -C $srcdir/tsmc65.netgen-conf -f emit_parasitics=1
+// @deps@ tsmc65.netgen-conf
+
+import "inv-02.hac";
+

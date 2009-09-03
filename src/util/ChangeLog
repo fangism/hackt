@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.105.2.1 2009/09/02 00:23:01 fang Exp $
+#	$Id: ChangeLog,v 1.105.2.2 2009/09/03 22:12:34 fang Exp $
+
+2009-09-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-04:
+	  util/optparse.{h,cc}: added _compat functions for
+		backward compatibility with an older config format.
+
 
 2009-09-01	David Fang		<fangism@users.sourceforge.net>
 

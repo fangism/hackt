@@ -1,5 +1,5 @@
 @c "usage.texi"
-@c $Id: usage.texi,v 1.2 2009/08/28 20:44:41 fang Exp $
+@c $Id: usage.texi,v 1.2.2.1 2009/09/03 22:12:29 fang Exp $
 
 @node Usage
 @chapter Usage
@@ -34,7 +34,10 @@ For options that take an argument, the space between the flag
 and the argument is optional.  
 
 @include opt/option-c.texi
+@include opt/option-C-upper.texi
+@include opt/option-d.texi
 @include opt/option-f.texi
+@include opt/option-F-upper.texi
 @include opt/option-h.texi
 @include opt/option-H-upper.texi
 @include opt/option-t.texi

@@ -1,0 +1,6 @@
+// "config-dump-01.hac"
+// prints default values
+// doesn't actually care about contents of HAC file
+// @hacknet-flags@ -d
+// output isn't really a spice file
+

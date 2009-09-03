@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.2 2009/08/28 20:45:15 fang Exp $
+	$Id: netlist_options.h,v 1.2.2.1 2009/09/03 22:12:34 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -20,7 +20,8 @@ using std::string;
 	Many names borrowed from netgen for consistency and compatibility.
  */
 struct netlist_options {
-// geneeration-time options:
+	static	const	netlist_options	default_value;
+// generation-time options:
 	/**
 		Dimensions of standard devices to use when unspecified.  
 		In absolute units instead of lambda.
@@ -46,9 +47,41 @@ struct netlist_options {
 	 */
 	string				length_unit;
 	/**
+		Units to be appended, e.g. "p" (pico) in area units.
+		Use needs to keep this consistent with length unit!
+	 */
+	string				area_unit;
+	/**
+		String to emit between levels of instance hierarchy, 
+		usually '.' or '/'.
+	 */
+	string				instance_member_separator;
+	/**
+		String to emit before newline of a continued line.
+	 */
+	string				pre_line_continue;
+	/**
+		String to emit after newline of a continued line.
+	 */
+	string				post_line_continue;
+	/**
 		lambda, or unit scale factor multiplier.
 	 */
 	real_type			lambda;
+	/**
+		End transistor overhang length in lambda.
+		Only relevant with emit_parasitic=1.
+	 */
+	real_type			fet_diff_overhang;
+	/**
+		FET to FET spacing in diffusion.
+		Only relevant with emit_parasitic=1.
+	 */
+	real_type			fet_spacing_diffonly;
+	/**
+		If true, emit area/perimeter of source/drain diffusions.
+	 */
+	bool				emit_parasitics;
 	/**
 		Emit nested subcircuits.
 		If true, print internal subcircuits locally to
@@ -62,6 +95,8 @@ struct netlist_options {
 		emit only subcircuit definitions (library-only).
 	 */
 	bool				emit_top;
+
+
 	netlist_options();
 
 	/**
@@ -70,6 +105,9 @@ struct netlist_options {
 	 */
 	bool
 	set(const util::option_value_list&);
+
+	ostream&
+	line_continue(ostream&) const;
 
 	static
 	ostream&

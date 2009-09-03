@@ -1,5 +1,5 @@
 @c "config.texi"
-@c $Id: config.texi,v 1.2 2009/08/28 20:44:38 fang Exp $
+@c $Id: config.texi,v 1.2.2.1 2009/09/03 22:12:28 fang Exp $
 
 @c ****************************************************************************
 @node Configuration Options
@@ -15,14 +15,30 @@ The option value specifications share the same syntax:
 or a comma-separated list of values.  
 A key-value specifier is not permitted to have spaces
 in the string!
+The values themselves cannot contain comma characters.  
 
 In a configuration file, blank lines are ignored, 
 as well as lines that begin with @t{#} (pound).
+Where boolean values are expected, pass 0 for @var{false}, or 1 for @var{true}.  
 
 @include config/lambda.texi
 @include config/length_unit.texi
+@include config/area_unit.texi
 @include config/std_widths.texi
 @include config/stat_widths.texi
-@include config/nested_subcircuits.texi
 @include config/emit_top.texi
+
+The following options are related to transistor parasitics.  
+
+@include config/emit_parasitics.texi
+@include config/fet_diff_overhang.texi
+@include config/fet_spacing_diffonly.texi
+
+@command{hacknet} provides several options for formatting the
+emitted output (because not all SPICEs are created alike).
+
+@include config/nested_subcircuits.texi
+@include config/instance_member_separator.texi
+@include config/pre_line_continue.texi
+@include config/post_line_continue.texi
 

@@ -4,7 +4,7 @@
 	Simply tokenizes into string sets, which is then handed off
 	elsewhere for processing.
 	Options can come from file or command-line argv.
-	$Id: optparse.h,v 1.2 2009/08/28 20:45:25 fang Exp $
+	$Id: optparse.h,v 1.2.2.1 2009/09/03 22:12:35 fang Exp $
  */
 
 #ifndef	__UTIL_OPTPARSE_H__
@@ -58,6 +58,10 @@ extern
 option_value
 optparse(const string&);
 
+extern
+option_value
+optparse_compat(const string&);
+
 /**
 	This variant does not attempt to tokenize values into a list.
  */
@@ -84,6 +88,11 @@ optparse_list(const string&);
 extern
 option_value_list
 optparse_file(istream&);
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// for backward compatibility, yuck
+extern
+option_value_list
+optparse_file_compat(istream&);
 
 //=============================================================================
 }	// end namespace util

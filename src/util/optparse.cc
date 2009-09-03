@@ -1,7 +1,7 @@
 /**
 	\file "util/optparse.cc"
 	Implementation of rudimentary option parsing.
-	$Id: optparse.cc,v 1.2 2009/08/28 20:45:23 fang Exp $
+	$Id: optparse.cc,v 1.2.2.1 2009/09/03 22:12:35 fang Exp $
  */
 
 #include <iostream>
@@ -10,9 +10,11 @@
 #include "util/size_t.h"
 #include "util/optparse.h"
 #include "util/tokenize.h"
+#include "util/string.h"	// for strgsub
 
 namespace util {
 using std::transform;
+using strings::strgsub;
 #include "util/using_ostream.h"
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -54,6 +56,38 @@ optparse(const string& s, const char c) {
 option_value
 optparse(const string& s) {
 	return optparse(s, ',');
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Backwards compatibility option parsing.
+	Expects format: type name value
+	TODO: value cannot contain any spaces... yet
+	We ignore type for now.
+	TODO: type check later
+ */
+option_value
+optparse_compat(const string& s) {
+	option_value ret;
+	list<string> opts;
+	tokenize(s, opts);
+	if (opts.size() != 3) {
+		cerr << "Warning: malformed old-style option string: "
+			<< s << endl;
+	} else {
+		const string& k(*++opts.begin());
+		ret.key = k;
+		string v(opts.back());
+		if (opts.front() == "string") {
+			// strip quotes
+			const size_t subs = strgsub(v, "\"", "");
+			if (subs != 2) {
+cerr << "Warning: possibly misquoted string value for parameter " << k << endl;
+			}
+		}
+		ret.values.push_back(v);
+	}
+	return ret;		// NULL option
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -139,24 +173,56 @@ optparse_list(const string& s, const char c) {
 	Ignores blank lines and '#' comments.
 	TODO: error handling here?
  */
+static
 option_value_list
-optparse_file(istream& i) {
+optparse_file_generic(istream& i, option_value (*parse)(const string&)) {
 	option_value_list ret;
 	size_t lineno = 1;
 	string line;
 while (std::getline(i, line)) {
 	// TODO: allow leading whitespace before '#'
 	// TODO: eat whitespaces
-	if (line[0] != '#') {
+	if (line.length() && line[0] != '#') {
 		list<string> toks;
 		tokenize(line, toks);
 		const size_t s = toks.size();
 		if (s >= 1) {
 			if (s > 1) {
-	cerr << "Warning: ignoring extra tokens after whitespace." << endl;
+	cerr << "Warning: ignoring extra tokens after whitespace on line "
+		<< lineno << "." << endl;
 			}
-			ret.push_back(optparse(toks.front()));
+			ret.push_back((*parse)(toks.front()));
 		}
+		// else ignore blank
+	}
+	++lineno;
+}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+option_value_list
+optparse_file(istream& i) {
+	return optparse_file_generic(i, &optparse);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Backwards compatibility mode.
+	Parses options from a stream/file.
+	Ignores blank lines and '#' comments.
+	TODO: error handling here?
+ */
+option_value_list
+optparse_file_compat(istream& i) {
+	option_value_list ret;
+	size_t lineno = 1;
+	string line;
+while (std::getline(i, line)) {
+	// TODO: allow leading whitespace before '#'
+	// TODO: eat whitespaces
+	if (line.length() && line[0] != '#') {
+		ret.push_back(optparse_compat(line));
 		// else ignore blank
 	}
 	++lineno;

@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-netlist-02-04:
+	  hacknet: added option to dump configuration values to file,
+		added backward compatibility support for netgen-style
+		configuration files, both in file and command-line.
+		see also util/ChangeLog for util/optparse additions.
+	  hacknet: implemented emit_parasitics option that emits
+		source/drain area/perimiter parameters.
+	  net/netlist_options.cc: improved help string with default values,
+		added new parasitic-related options:
+		fet_diff_overhang, fet_spacing_diffonly.
+		for line-continuation: pre_line_continue, post_line_continue,
+		area_unit [p].
+		Updated texinfo documetation.
+	  Added bunch of test cases for the above features.
+
+
 2009-09-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-netlist-02-03:

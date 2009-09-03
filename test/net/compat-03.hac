@@ -1,0 +1,8 @@
+// "compat-03.hac"
+// netgen compatibility test
+// this also demonstrates the use of emit_parasitics with auxiliary nodes
+// @hacknet-flags@ -C $srcdir/tsmc65-equiv.netgen-conf -f emit_parasitics=1
+// @deps@ tsmc65-equiv.netgen-conf
+
+import "celem-02.hac";
+

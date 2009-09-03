@@ -1,0 +1,5 @@
+// "tsmc65.hac"
+// dump back out netgen configuration
+// @hacknet-flags@ -C $srcdir/tsmc65.netgen-conf -d
+// @deps@ tsmc65.netgen-conf
+

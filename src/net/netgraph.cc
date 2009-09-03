@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.2.2.1 2009/09/02 22:09:28 fang Exp $
+	$Id: netgraph.cc,v 1.2.2.2 2009/09/03 22:12:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -325,10 +325,14 @@ template <class NP>
 ostream&
 transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 		const netlist_options& nopt) const {
-	node_pool[source].emit(o, fp) << ' ';
-	node_pool[gate].emit(o, fp) << ' ';
-	node_pool[drain].emit(o, fp) << ' ';
-	node_pool[body].emit(o, fp) << ' ';
+	const node& s(node_pool[source]);
+	const node& g(node_pool[gate]);
+	const node& d(node_pool[drain]);
+	const node& b(node_pool[body]);
+	s.emit(o, fp) << ' ';
+	g.emit(o, fp) << ' ';
+	d.emit(o, fp) << ' ';
+	b.emit(o, fp) << ' ';
 	switch (type) {
 	case NFET_TYPE: o << "nch"; break;
 	case PFET_TYPE: o << "pch"; break;
@@ -344,6 +348,19 @@ transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 	// TODO: restrict lengths and widths, from tech/conf file
 	o << " W=" << width *nopt.lambda << nopt.length_unit <<
 		" L=" << length *nopt.lambda << nopt.length_unit;
+	if (nopt.emit_parasitics) {
+		const real_type lsq = nopt.lambda * nopt.lambda;
+		const real_type l2 = nopt.lambda * 2.0;
+		const real_type& sl(s.is_logical_node() || s.is_supply_node() ?
+			nopt.fet_diff_overhang : nopt.fet_spacing_diffonly);
+		const real_type& dl(d.is_logical_node() || d.is_supply_node() ?
+			nopt.fet_diff_overhang : nopt.fet_spacing_diffonly);
+		nopt.line_continue(o);
+		o <<	" AS=" << width * sl * lsq << nopt.area_unit <<
+			" PS=" << (width + sl) *l2 << nopt.length_unit <<
+			" AD=" << width * dl * lsq << nopt.area_unit <<
+			" PD=" << (width + dl) *l2 << nopt.length_unit;
+	}
 	return o;
 }
 
