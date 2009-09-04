@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.2.2.1 2009/09/03 22:12:34 fang Exp $
+	$Id: netlist_options.h,v 1.2.2.2 2009/09/04 22:21:50 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -69,6 +69,13 @@ struct netlist_options {
 	 */
 	real_type			lambda;
 	/**
+		Transistor size limits, all in lambda.
+	 */
+	real_type			min_width;
+	real_type			min_length;
+	real_type			max_p_width;
+	real_type			max_n_width;
+	/**
 		End transistor overhang length in lambda.
 		Only relevant with emit_parasitic=1.
 	 */
@@ -105,6 +112,13 @@ struct netlist_options {
 	 */
 	bool
 	set(const util::option_value_list&);
+
+	real_type
+	get_default_width(const bool d, const bool k) const;
+
+	real_type
+	get_default_length(const bool d, const bool k) const;
+
 
 	ostream&
 	line_continue(ostream&) const;

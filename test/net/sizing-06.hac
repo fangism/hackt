@@ -1,0 +1,11 @@
+// "sizing-06.hac"
+// testing effect of parameter
+// @hacknet-flags@ -f min_width=10
+
+bool a, b, c, x, y, z;
+prs {
+	a & b		-> x-
+	b & c<15>	-> z-
+	a<4> & c	-> y-
+}
+

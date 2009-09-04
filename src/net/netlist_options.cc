@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.2.2.1 2009/09/03 22:12:33 fang Exp $
+	$Id: netlist_options.cc,v 1.2.2.2 2009/09/04 22:21:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -39,6 +39,10 @@ netlist_options::netlist_options() :
 		pre_line_continue(),
 		post_line_continue("+"),	// spice-style
 		lambda(1.0), 
+		min_width(4.0),			// in lambda
+		min_length(2.0),		// in lambda
+		max_p_width(0.0),		// in lambda
+		max_n_width(0.0),		// in lambda
 		fet_diff_overhang(6.0),
 		fet_spacing_diffonly(4.0),
 		emit_parasitics(false),
@@ -304,6 +308,38 @@ Default: +
 DEFINE_OPTION_DEFAULT(post_line_continue, "post_line_continue",
 	"line-continuation suffix")
 
+/***
+@texinfo config/min_width.texi
+@defopt min_width (real)
+Minimum transistor width in lambda.
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(min_width, "min_width", "minimum transistor width")
+/***
+@texinfo config/min_length.texi
+@defopt min_length (real)
+Minimum transistor length in lambda.
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(min_length, "min_length", "minimum transistor length")
+/***
+@texinfo config/max_p_width.texi
+@defopt max_p_width (real)
+Maximum PFET width.
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(max_p_width, "max_p_width", "maximum PFET width")
+/***
+@texinfo config/max_n_width.texi
+@defopt max_n_width (real)
+Maximum NFET width.
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(max_n_width, "max_n_width", "maximum NFET width")
 
 /***
 @texinfo config/std_widths.texi
@@ -494,6 +530,27 @@ netlist_options::help(ostream& o) {
 		(*s.printer)(o, default_value) << ']' << endl;
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param d is true if pull-up/PFET, else false for pull-dn/NFET.
+	\param k is true if is a standard keeper (not combinational).
+	\return the default width.
+ */
+real_type
+netlist_options::get_default_width(const bool d, const bool k) const {
+	return (d ? 
+		(k ? stat_p_width : std_p_width) :
+		(k ? stat_n_width : std_n_width));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+real_type
+netlist_options::get_default_length(const bool d, const bool k) const {
+	return (d ? 
+		(k ? stat_p_length : std_p_length) :
+		(k ? stat_n_length : std_n_length));
 }
 
 //=============================================================================

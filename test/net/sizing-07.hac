@@ -1,0 +1,11 @@
+// "sizing-07.hac"
+// testing effect of parameter
+// @hacknet-flags@ -f min_length=3
+
+bool a, b, c, x, y, z;
+prs {
+	a & b		-> x-
+	b & c<15,4>	-> z-
+	a<4,2> & c	-> y-
+}
+

@@ -1,0 +1,16 @@
+// "sizing-08.hac"
+// testing parameter effect
+// @hacknet-flags@ -f max_p_width=30 -f max_n_width=20
+
+template <pint W>
+defproc foo(bool a, b, y) {
+prs {
+	a<W> & b<W>	#> y-
+}
+}
+
+foo<15> bar1;
+foo<25> bar2;
+foo<50> bar3;
+
+

@@ -1,5 +1,5 @@
 @c "config.texi"
-@c $Id: config.texi,v 1.2.2.1 2009/09/03 22:12:28 fang Exp $
+@c $Id: config.texi,v 1.2.2.2 2009/09/04 22:21:43 fang Exp $
 
 @c ****************************************************************************
 @node Configuration Options
@@ -26,7 +26,10 @@ Where boolean values are expected, pass 0 for @var{false}, or 1 for @var{true}.
 @include config/area_unit.texi
 @include config/std_widths.texi
 @include config/stat_widths.texi
-@include config/emit_top.texi
+@include config/min_width.texi
+@include config/min_length.texi
+@include config/max_p_width.texi
+@include config/max_n_width.texi
 
 The following options are related to transistor parasitics.  
 
@@ -37,6 +40,7 @@ The following options are related to transistor parasitics.
 @command{hacknet} provides several options for formatting the
 emitted output (because not all SPICEs are created alike).
 
+@include config/emit_top.texi
 @include config/nested_subcircuits.texi
 @include config/instance_member_separator.texi
 @include config/pre_line_continue.texi

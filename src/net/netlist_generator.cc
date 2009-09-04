@@ -1,6 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
-	$Id: netlist_generator.cc,v 1.2.2.3 2009/09/04 00:05:57 fang Exp $
+	Implementation of hierarchical netlist generation.
+	$Id: netlist_generator.cc,v 1.2.2.4 2009/09/04 22:21:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -57,6 +58,8 @@ netlist_generator::netlist_generator(const state_manager& _sm,
 		current_local_netlist(NULL),
 		foot_node(netlist::void_index),
 		output_node(netlist::void_index),
+		current_width(0.0),
+		current_length(0.0),
 		fet_type(transistor::NFET_TYPE), 	// don't care
 		fet_attr(transistor::DEFAULT_ATTRIBUTE),
 		negated(false),
@@ -372,7 +375,7 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 	rule::attributes_list_type::const_iterator
 		i(rats.begin()), e(rats.end());
 for ( ; i!=e; ++i) {
-	// TODO: write a proper attribute map implementation
+	// TODO: write a proper rule attribute map implementation
 	const bool k = i->key == "iskeeper";
 	const bool ck = i->key == "isckeeper";
 	if (k) {
@@ -398,9 +401,13 @@ for ( ; i!=e; ++i) {
 	}
 	// ignore unknown attributes silently
 }
+	const value_saver<real_type> __t5(current_width), __t6(current_length);
+	const bool is_keeper = fet_attr & transistor::IS_STANDARD_KEEPER;
+	set_current_width(opt.get_default_width(r.dir, is_keeper));
+	set_current_length(opt.get_default_length(r.dir, is_keeper));
 	// TODO: honor prs supply override directives
-	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
 try {
+	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
 	ep[r.expr_index].accept(*this);
 } catch (...) {
 	// TODO: better diagnostic tracing message
@@ -408,6 +415,28 @@ try {
 	throw;
 }
 	// TODO: process rule attributes, labels, names...
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Uses fet_type and fet_attr to determine whether this
+	is NFET or PFET and whether is part of a keeper or not.
+ */
+void
+netlist_generator::set_current_width(const real_type w) {
+	const bool dir = (fet_type == transistor::PFET_TYPE);
+//	const bool is_keeper = fet_attr & transistor::IS_STANDARD_KEEPER;
+	real_type max_width = (dir ? opt.max_p_width : opt.max_n_width);
+	real_type new_width = std::max(opt.min_width, w);
+	if (max_width > 0.0)	// ignore max when 0.0
+		new_width = std::min(max_width, new_width);
+	current_width = new_width;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+netlist_generator::set_current_length(const real_type l) {
+	current_length = std::max(opt.min_length, l);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -444,6 +473,11 @@ if (!n.used) {
 	const value_saver<transistor::fet_type>
 		__t3(fet_type,
 			(dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
+	const value_saver<real_type> __t4(current_width), __t5(current_length);
+	// Q: can internal nodes definitions be applied to keepers?
+	// if so, then we need attributes for internal node definitions (rules)
+	set_current_width(opt.get_default_width(dir, false));
+	set_current_length(opt.get_default_length(dir, false));
 	n.used = true;
 	// mark before recursion, not after!
 	// to prevent shared roots from being duplicated
@@ -455,13 +489,13 @@ if (!n.used) {
 	// within a process definition.
 		STACKTRACE("pointing to subcircuit");
 		const value_saver<netlist_common*>
-			__t4(current_local_netlist, 
+			__t6(current_local_netlist, 
 				&current_netlist->local_subcircuits[node_own -1]);
 		ep[defexpr].accept(*this);
 	} else {
 		// point back to main scope
 		const value_saver<netlist_common*>
-			__t4(current_local_netlist, current_netlist);
+			__t6(current_local_netlist, current_netlist);
 		ep[defexpr].accept(*this);
 	}
 }
@@ -497,6 +531,9 @@ netlist_generator::visit(const footprint_expr_node::precharge_pull_type& p) {
 			: transistor::NFET_TYPE);
 	const value_saver<char>
 		_t5(fet_attr, fet_attr | transistor::IS_PRECHARGE);
+	const value_saver<real_type> __t6(current_width), __t7(current_length);
+	set_current_width(opt.get_default_width(dir, false));
+	set_current_length(opt.get_default_length(dir, false));
 	// use the same output node
 	ep[pchgex].accept(*this);
 }
@@ -534,23 +571,19 @@ case PRS_LITERAL_TYPE_ENUM: {
 		// Vdd or GND
 	// TODO: extract length/width parameters
 	const directive_base_params_type& p(e.params);
-	const bool is_n = fet_type == transistor::NFET_TYPE;
-	const bool is_k = fet_attr & transistor::IS_STANDARD_KEEPER;
+//	const bool is_n = fet_type == transistor::NFET_TYPE;
+//	const bool is_k = fet_attr & transistor::IS_STANDARD_KEEPER;
 		// excludes combinational feedback keepers
 	if (p.size() > 0) {
-		t.width = p[0]->to_real_const();
-	} else {
-		t.width = (is_n ?
-			(is_k ? opt.stat_n_width : opt.std_n_width) :
-			(is_k ? opt.stat_p_width : opt.std_p_width));
+		set_current_width(p[0]->to_real_const());
 	}
+	t.width = current_width;
+	// TODO: constrain width
 	if (p.size() > 1) {
-		t.length = p[1]->to_real_const();
-	} else {
-		t.length = (is_n ?
-			(is_k ? opt.stat_n_length : opt.std_n_length) :
-			(is_k ? opt.stat_p_length : opt.std_p_length));
+		set_current_length(p[1]->to_real_const());
 	}
+	t.length = current_length;
+	// TODO: constrain length
 	t.attributes = fet_attr;
 	// TODO: import attributes from rule attributes?
 #if PRS_LITERAL_ATTRIBUTES

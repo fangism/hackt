@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-06:
+	  hacknet: implemented new parameters min_length, min_width, 
+		max_p_width, min_p_width
+		sizes are now sticky, and propagate from left-to-right
+		per rule, and locally resets for precharges and
+		internal node definitions.  
+	  Added new sizing test cases.  
+
+
 2009-09-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-28-netlist-02-05:
