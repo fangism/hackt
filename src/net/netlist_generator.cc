@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.cc"
-	$Id: netlist_generator.cc,v 1.2.2.2 2009/09/02 22:09:29 fang Exp $
+	$Id: netlist_generator.cc,v 1.2.2.3 2009/09/04 00:05:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,7 +15,7 @@
 #include "Object/global_channel_entry.h"
 #include "Object/global_entry_context.h"
 #include "Object/def/footprint.h"
-#include "Object/expr/const_param.h"
+#include "Object/expr/pint_const.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
 #include "util/stacktrace.h"
@@ -26,6 +26,8 @@ namespace NET {
 using entity::footprint_frame_map_type;
 using entity::bool_tag;
 using entity::state_instance;
+using entity::pint_value_type;
+using entity::pint_const;
 using std::ostringstream;
 using std::ostream_iterator;
 using util::value_saver;
@@ -356,6 +358,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 void
 netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 	STACKTRACE_VERBOSE;
+	typedef	entity::PRS::footprint_rule		rule;
 	// set foot_node and output_node and fet_type
 	const value_saver<index_type>
 		__t1(foot_node,
@@ -363,6 +366,38 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 		__t2(output_node, register_named_node(r.output_index));
 	const value_saver<transistor::fet_type>
 		__t3(fet_type, (r.dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
+	const value_saver<char> __t4(fet_attr);
+	// apply rule attributes: iskeeper, etc...
+	const rule::attributes_list_type& rats(r.attributes);
+	rule::attributes_list_type::const_iterator
+		i(rats.begin()), e(rats.end());
+for ( ; i!=e; ++i) {
+	// TODO: write a proper attribute map implementation
+	const bool k = i->key == "iskeeper";
+	const bool ck = i->key == "isckeeper";
+	if (k) {
+		pint_value_type b = 1;
+		if (i->values && i->values->size()) {
+			const pint_const&
+				pi(*(*i->values)[0].is_a<const pint_const>());
+			b = pi.static_constant_value();
+		}
+		if (b) {
+			fet_attr |= transistor::IS_STANDARD_KEEPER;
+		}
+	} else if (ck) {
+		pint_value_type b = 1;
+		if (i->values && i->values->size()) {
+			const pint_const&
+				pi(*(*i->values)[0].is_a<const pint_const>());
+			b = pi.static_constant_value();
+		}
+		if (b) {
+			fet_attr |= transistor::IS_COMB_FEEDBACK;
+		}
+	}
+	// ignore unknown attributes silently
+}
 	// TODO: honor prs supply override directives
 	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
 try {
@@ -460,9 +495,8 @@ netlist_generator::visit(const footprint_expr_node::precharge_pull_type& p) {
 	const value_saver<transistor::fet_type>
 		_t4(fet_type, dir ? transistor::PFET_TYPE
 			: transistor::NFET_TYPE);
-	const value_saver<transistor::flags>
-		_t5(fet_attr, transistor::flags(
-			fet_attr | transistor::IS_PRECHARGE));
+	const value_saver<char>
+		_t5(fet_attr, fet_attr | transistor::IS_PRECHARGE);
 	// use the same output node
 	ep[pchgex].accept(*this);
 }
@@ -500,17 +534,22 @@ case PRS_LITERAL_TYPE_ENUM: {
 		// Vdd or GND
 	// TODO: extract length/width parameters
 	const directive_base_params_type& p(e.params);
+	const bool is_n = fet_type == transistor::NFET_TYPE;
+	const bool is_k = fet_attr & transistor::IS_STANDARD_KEEPER;
+		// excludes combinational feedback keepers
 	if (p.size() > 0) {
 		t.width = p[0]->to_real_const();
 	} else {
-		t.width = (fet_type == transistor::NFET_TYPE ?
-			opt.std_n_width : opt.std_p_width);
+		t.width = (is_n ?
+			(is_k ? opt.stat_n_width : opt.std_n_width) :
+			(is_k ? opt.stat_p_width : opt.std_p_width));
 	}
 	if (p.size() > 1) {
 		t.length = p[1]->to_real_const();
 	} else {
-		t.length = (fet_type == transistor::NFET_TYPE ?
-			opt.std_n_length : opt.std_p_length);
+		t.length = (is_n ?
+			(is_k ? opt.stat_n_length : opt.std_n_length) :
+			(is_k ? opt.stat_p_length : opt.std_p_length));
 	}
 	t.attributes = fet_attr;
 	// TODO: import attributes from rule attributes?

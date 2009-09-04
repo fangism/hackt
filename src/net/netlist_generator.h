@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.2 2009/08/28 20:45:13 fang Exp $
+	$Id: netlist_generator.h,v 1.2.2.1 2009/09/04 00:05:58 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -95,7 +95,8 @@ private:
 		Current attributes to apply to generated FETs
 		See transistor::attributes.
 	 */
-	transistor::flags		fet_attr;
+	// transistor::flags		fet_attr;
+	char				fet_attr;
 	/**
 		In expression traversal, whether or not this level
 		of expression is negated.  

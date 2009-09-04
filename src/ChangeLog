@@ -5,7 +5,14 @@
 
 2009-09-03	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-83-29-netlist-02-04:
+	* HACKT-00-01-04-main-00-83-28-netlist-02-05:
+	  hacknet: implemented iskeeper suffix flag for rules marked 
+		iskeeper, and also use stat_* sizing as default
+		where unspecified.
+		Added new spice test cases.
+
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-04:
 	  hacknet: added option to dump configuration values to file,
 		added backward compatibility support for netgen-style
 		configuration files, both in file and command-line.
@@ -23,7 +30,7 @@
 
 2009-09-02	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-83-29-netlist-02-03:
+	* HACKT-00-01-04-main-00-83-28-netlist-02-03:
 	  hacknet: now honors FET types/flavors in prs-literals, 
 		macros (pass-gates), and in precharges.
 		Added handful of new test cases.
@@ -34,7 +41,7 @@
 
 2009-09-01	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-83-29-netlist-02-02:
+	* HACKT-00-01-04-main-00-83-28-netlist-02-02:
 	  Completed work on prs-literal attributes, propagating data
 		structures through middle-end and some back-ends.  
 		Binary objects have once again been extended slightly
@@ -48,7 +55,7 @@
 
 2009-08-31	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-83-29-netlist-02-01:
+	* HACKT-00-01-04-main-00-83-28-netlist-02-01:
 	  This branch for implementing FET type override
 		and power-supply override for hacknet.
 	  Eliminated use of qmap in PRS/SPEC lang registries.
