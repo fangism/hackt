@@ -1,0 +1,7 @@
+.subckt foo_TEMPLATE_ GND en x ____y
+M0_ GND en _AT_a GND nch W=5u L=2u
+M1_ _AT_a x ____y GND nch W=5u L=2u
+.ends
+
+xbar GND bar_DOT_en bar_DOT_x bar_DOT_____y foo_TEMPLATE_
+

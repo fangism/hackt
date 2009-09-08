@@ -1,5 +1,5 @@
 @c "config.texi"
-@c $Id: config.texi,v 1.2.2.2 2009/09/04 22:21:43 fang Exp $
+@c $Id: config.texi,v 1.2.2.3 2009/09/08 22:28:51 fang Exp $
 
 @c ****************************************************************************
 @node Configuration Options
@@ -19,7 +19,8 @@ The values themselves cannot contain comma characters.
 
 In a configuration file, blank lines are ignored, 
 as well as lines that begin with @t{#} (pound).
-Where boolean values are expected, pass 0 for @var{false}, or 1 for @var{true}.  
+Where boolean values are expected, pass 0 for @var{false}, 
+or 1 for @var{true}.  
 
 @include config/lambda.texi
 @include config/length_unit.texi
@@ -32,6 +33,7 @@ Where boolean values are expected, pass 0 for @var{false}, or 1 for @var{true}.
 @include config/max_n_width.texi
 
 The following options are related to transistor parasitics.  
+@cindex parasitics
 
 @include config/emit_parasitics.texi
 @include config/fet_diff_overhang.texi
@@ -39,10 +41,19 @@ The following options are related to transistor parasitics.
 
 @command{hacknet} provides several options for formatting the
 emitted output (because not all SPICEs are created alike).
+@cindex formatting
+@cindex SPICE-formatting
 
 @include config/emit_top.texi
 @include config/nested_subcircuits.texi
-@include config/instance_member_separator.texi
 @include config/pre_line_continue.texi
 @include config/post_line_continue.texi
+
+The following options are used for name mangling
+type-names and instance-names.
+By default, no mangling is done to keep the output (more) human-readable.
+
+@cindex mangling
+@cindex name-mangling
+@include config/mangle.texi
 

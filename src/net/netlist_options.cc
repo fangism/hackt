@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.2.2.2 2009/09/04 22:21:49 fang Exp $
+	$Id: netlist_options.cc,v 1.2.2.3 2009/09/08 22:28:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -20,6 +20,7 @@ using std::pair;
 using util::option_value;
 using util::option_value_list;
 using util::strings::string_to_num;
+using util::strings::strgsub;
 
 //=============================================================================
 // class netlist_options method definitions
@@ -35,9 +36,24 @@ netlist_options::netlist_options() :
 		stat_p_length(10.0),
 		length_unit("u"),
 		area_unit("p"),
-		instance_member_separator("."),
+	// mangle options
+		mangle_instance_member_separator(),
+		mangle_underscore(),
+		mangle_array_index_open(),
+		mangle_array_index_close(),
+		mangle_template_open(),
+		mangle_template_close(),
+		mangle_parameter_separator(),
+		mangle_parameter_group_open(),
+		mangle_parameter_group_close(),
+		mangle_scope(),
+		mangle_colon(),
+		mangle_internal_at(),
+		mangle_auxiliary_pound(),
+	// format options
 		pre_line_continue(),
 		post_line_continue("+"),	// spice-style
+
 		lambda(1.0), 
 		min_width(4.0),			// in lambda
 		min_length(2.0),		// in lambda
@@ -55,6 +71,65 @@ netlist_options::netlist_options() :
 // a default copy for reference
 // so the help can print default values
 const netlist_options	netlist_options::default_value;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Considered C++-style name mangling?
+	Deleting character sequence for mangling is not acceptable, 
+	thus we use the length of the substitution string to 
+	determine whether or not to attempt substitution.  
+ */
+string&
+netlist_options::mangle_name(string& n) const {
+	// must mangle underscore first, because other strings are likely
+	// to use underscores in substitutions.
+	if (mangle_underscore.length())
+		strgsub(n, "_", mangle_underscore);
+	if (mangle_instance_member_separator.length())
+		strgsub(n, ".", mangle_instance_member_separator);
+	if (mangle_array_index_open.length())
+		strgsub(n, "[", mangle_array_index_open);
+	if (mangle_array_index_close.length())
+		strgsub(n, "]", mangle_array_index_close);
+	if (mangle_template_open.length())
+		strgsub(n, "<", mangle_template_open);
+	if (mangle_template_close.length())
+		strgsub(n, ">", mangle_template_close);
+	if (mangle_parameter_separator.length())
+		strgsub(n, ",", mangle_parameter_separator);
+	if (mangle_parameter_group_open.length())
+		strgsub(n, "{", mangle_parameter_group_open);
+	if (mangle_parameter_group_close.length())
+		strgsub(n, "}", mangle_parameter_group_close);
+	if (mangle_scope.length())
+		strgsub(n, "::", mangle_scope);
+	// colon must be mangled *after* scope "::"
+	if (mangle_colon.length())
+		strgsub(n, ":", mangle_colon);
+	if (mangle_internal_at.length())
+		strgsub(n, "@", mangle_internal_at);
+	if (mangle_auxiliary_pound.length())
+		strgsub(n, "#", mangle_auxiliary_pound);
+	return n;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const string&
+netlist_options::emit_scope(void) const {
+	static const string scope("::");
+	if (mangle_scope.length())
+		return mangle_scope;
+	else	return scope;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const string&
+netlist_options::emit_colon(void) const {
+	static const string colon(":");
+	if (mangle_colon.length())
+		return mangle_colon;
+	else	return colon;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -239,6 +314,7 @@ __ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[key] =			\
 // TODO: make these declarations self-initializing/installing in the map
 /***
 @texinfo config/lambda.texi
+@cindex lambda
 @defopt lambda (real)
 Technology-dependent scaling factor for device lengths and widths, 
 the multiplier factor applied to lengths and widths specified in PRS.
@@ -266,7 +342,7 @@ DEFINE_OPTION_DEFAULT(length_unit, "length_unit",
 @defopt area_unit (string)
 Suffix-string to append to emitted area valiues.  
 Can be a unit such as "p" (for pico), or exponent such as "e-6" or "e-12".
-@strong{NOTE:} this must be set consistently with respect to @var{length_unit}.
+@strong{Alert:} this must be set consistently with respect to @var{length_unit}.
 Default: p (pico, micron-squared)
 @end defopt
 @end texinfo
@@ -275,16 +351,85 @@ DEFINE_OPTION_DEFAULT(area_unit, "area_unit",
 	"suffix appended to areas values")
 
 /***
-@texinfo config/instance_member_separator.texi
-@defopt instance_member_separator (string)
+@texinfo config/mangle.texi
+@defopt mangle_underscore (string)
+Substitute the `@t{_}' (underscore) character with another string, 
+which may contain more underscores.  
+@strong{Alert:} It is essential to set this appropriately if underscores 
+are to be used in other mangling replacement strings.  
+@end defopt
+
+@defopt mangle_instance_member_separator (string)
 Text used to separate members of instance hierarchy.
-e.g., the '.' in 'a.b' usually denotes that b is a member of typeof(a).
+e.g., the `@t{.}' in `a.b' usually denotes that b is a member of typeof(a).
 Default: .
+@end defopt
+
+@defopt mangle_array_index_open (string)
+Mangle the `@t{[}' character with a replacement string.
+@end defopt
+@defopt mangle_array_index_close (string)
+Mangle the `@t{]}' character with a replacement string.
+@end defopt
+
+@defopt mangle_template_open (string)
+Mangle the `@t{<}' character with a replacement string.
+@end defopt
+@defopt mangle_template_close (string)
+Mangle the `@t{>}' character with a replacement string.
+@end defopt
+
+@defopt mangle_parameter_separator (string)
+Mangle the `@t{,}' character with a replacement string.
+@end defopt
+
+@defopt mangle_parameter_group_open (string)
+Mangle the `@t{@{}' character with a replacement string.
+@end defopt
+@defopt mangle_parameter_group_close (string)
+Mangle the `@t{@}}' character with a replacement string.
+@end defopt
+
+@defopt mangle_scope (string)
+Mangle the `@t{::}' sequence with a replacement string.
+@end defopt
+@defopt mangle_colon (string)
+Mangle the `@t{:}' character with a replacement string.
+@end defopt
+@defopt mangle_internal_at (string)
+Mangle the `@t{@@}' character with a replacement string.
+@end defopt
+@defopt mangle_auxiliary_pound (string)
+Mangle the `@t{#}' character with a replacement string.
 @end defopt
 @end texinfo
 ***/
-DEFINE_OPTION_DEFAULT(instance_member_separator, "instance_member_separator",
-	"instance hierarchy separator")
+DEFINE_OPTION_DEFAULT(mangle_underscore,
+	"mangle_underscore", "mangle: _ replacement")
+DEFINE_OPTION_DEFAULT(mangle_instance_member_separator,
+	"mangle_instance_member_separator", "mangle: . replacement")
+DEFINE_OPTION_DEFAULT(mangle_array_index_open,
+	"mangle_array_index_open", "mangle: [ replacement")
+DEFINE_OPTION_DEFAULT(mangle_array_index_close,
+	"mangle_array_index_close", "mangle: ] replacement")
+DEFINE_OPTION_DEFAULT(mangle_template_open,
+	"mangle_template_open", "mangle: < replacement")
+DEFINE_OPTION_DEFAULT(mangle_template_close,
+	"mangle_template_close", "mangle: > replacement")
+DEFINE_OPTION_DEFAULT(mangle_parameter_separator,
+	"mangle_parameter_separator", "mangle: , replacement")
+DEFINE_OPTION_DEFAULT(mangle_parameter_group_open,
+	"mangle_parameter_group_open", "mangle: { replacement")
+DEFINE_OPTION_DEFAULT(mangle_parameter_group_close,
+	"mangle_parameter_group_close", "mangle: } replacement")
+DEFINE_OPTION_DEFAULT(mangle_colon,
+	"mangle_colon", "mangle: : replacement")
+DEFINE_OPTION_DEFAULT(mangle_scope,
+	"mangle_scope", "mangle: :: replacement")
+DEFINE_OPTION_DEFAULT(mangle_internal_at,
+	"mangle_internal_at", "mangle: @ replacement")
+DEFINE_OPTION_DEFAULT(mangle_auxiliary_pound,
+	"mangle_auxiliary_pound", "mangle: # replacement")
 
 /***
 @texinfo config/pre_line_continue.texi
@@ -464,6 +609,7 @@ Default: 4.0
 DEFINE_OPTION_DEFAULT(fet_spacing_diffonly, "fet_spacing_diffonly",
 	"diffusion spacing between gates in lambda")
 
+#undef	DEFINE_OPTION_DEFAULT
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: this should be reusable boilerplate code...

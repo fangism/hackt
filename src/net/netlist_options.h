@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.2.2.2 2009/09/04 22:21:50 fang Exp $
+	$Id: netlist_options.h,v 1.2.2.3 2009/09/08 22:28:56 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -54,8 +54,22 @@ struct netlist_options {
 	/**
 		String to emit between levels of instance hierarchy, 
 		usually '.' or '/'.
+		These mangle substitutions apply to type and instance names.
 	 */
-	string				instance_member_separator;
+	string				mangle_instance_member_separator;
+	string				mangle_underscore;
+	string				mangle_array_index_open;
+	string				mangle_array_index_close;
+	string				mangle_template_open;
+	string				mangle_template_close;
+	string				mangle_parameter_separator;
+	string				mangle_parameter_group_open;
+	string				mangle_parameter_group_close;
+	string				mangle_scope;
+	string				mangle_colon;
+	string				mangle_internal_at;
+	string				mangle_auxiliary_pound;
+
 	/**
 		String to emit before newline of a continued line.
 	 */
@@ -119,6 +133,14 @@ struct netlist_options {
 	real_type
 	get_default_length(const bool d, const bool k) const;
 
+	string&
+	mangle_name(string&) const;
+
+	const string&
+	emit_scope(void) const;
+
+	const string&
+	emit_colon(void) const;
 
 	ostream&
 	line_continue(ostream&) const;

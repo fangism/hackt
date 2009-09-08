@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.2.2.1 2009/09/02 22:09:29 fang Exp $
+	$Id: netgraph.h,v 1.2.2.2 2009/09/08 22:28:56 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -203,7 +203,7 @@ struct transistor {
 		const netlist_options&) const;
 
 	ostream&
-	emit_attribute_suffixes(ostream&) const;
+	emit_attribute_suffixes(ostream&, const netlist_options&) const;
 
 	ostream&
 	dump_raw(ostream&) const;
@@ -261,7 +261,8 @@ struct instance {
 
 	template <class NP>
 	ostream&
-	emit(ostream&, const NP&, const footprint&) const;
+	emit(ostream&, const NP&, const footprint&, 
+		const netlist_options&) const;
 
 	template <class NP>
 	void
@@ -513,7 +514,7 @@ private:
 	mark_used_nodes(void);
 
 	void
-	__bind_footprint(const footprint&);
+	__bind_footprint(const footprint&, const netlist_options&);
 
 };	// end class netlist
 

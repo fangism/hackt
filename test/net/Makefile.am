@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.2.2.4 2009/09/04 22:21:51 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.5 2009/09/08 22:28:59 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -43,7 +43,8 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	tsmc65 tsmc65-equiv \
 	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
-	parasitics-01
+	parasitics-01 \
+	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05 \
@@ -58,6 +59,7 @@ EXTRA_DIST += $(EXTRA_DIST_HAC:=.hac)
 srcdir_EXTRA_DIST += \
 	sample-01.hacknet-conf \
 	netgen-defaults.hacknet-conf \
+	mangle-example-01.hacknet-conf \
 	tsmc65.netgen-conf \
 	tsmc65-equiv.netgen-conf
 
@@ -66,7 +68,8 @@ HACKT_PARSE_TEST_PASSES = \
 	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
 	pass_gate-05 pass_gate-06 \
-	precharge-07 precharge-08
+	precharge-07 precharge-08 \
+	mangle-04
 
 HACKTNET_TEST_SCRIPTS_PASSES =
 
@@ -78,7 +81,8 @@ HACKT_CREATE_TEST_PASSES = \
 	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
 	pass_gate-05 pass_gate-06 \
-	precharge-07 precharge-08
+	precharge-07 precharge-08 \
+	mangle-04
 HACKT_CREATE_TEST_FAILURES = \
 	non-CMOS-06 subckt-02
 HACKT_CFLAT_TEST_SUBJECTS =

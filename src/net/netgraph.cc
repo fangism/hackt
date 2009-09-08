@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.2.2.2 2009/09/03 22:12:32 fang Exp $
+	$Id: netgraph.cc,v 1.2.2.3 2009/09/08 22:28:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -86,7 +86,7 @@ netlist_common::emit_devices(ostream& o, const NP& node_pool,
 	size_t j = 0;
 	for ( ; i!=e; ++i, ++j) {
 		o << 'M' << j << '_';
-		i->emit_attribute_suffixes(o) << ' ';
+		i->emit_attribute_suffixes(o, nopt) << ' ';
 		i->emit(o, node_pool, fp, nopt) << endl;
 	}
 	return o;
@@ -150,15 +150,20 @@ local_netlist::emit_definition(ostream& o, const netlist& n,
 	o << ".subckt ";
 if (!nopt.nested_subcircuits) {
 	// then use fully qualified type name
-	o << n.name << "::";
+	o << n.name << nopt.emit_scope();;
 }
 	o << name;
+{
+	ostringstream oss;
 	typedef	node_index_map_type::const_iterator	const_iterator;
 	const_iterator i(node_index_map.begin()), e(node_index_map.end());
 	for ( ; i!=e; ++i) {
-		n.node_pool[*i].emit(o << ' ', *n.fp);	// options?
+		n.node_pool[*i].emit(oss << ' ', *n.fp);	// options?
 	}
-	o << endl;
+	string formals(oss.str());
+	nopt.mangle_name(formals);
+	o << formals << endl;
+}
 	// TODO: emit port-info comments
 	emit_devices(o, n.node_pool, *n.fp, nopt);
 	o << ".ends" << endl;
@@ -172,19 +177,27 @@ if (!nopt.nested_subcircuits) {
 ostream&
 local_netlist::emit_instance(ostream& o, const netlist& n,
 		const netlist_options& nopt) const {
-	o << 'x' << name << ":inst";
+	o << 'x';
+	o << name << nopt.emit_colon() << "inst";
+{
+	ostringstream oss;
 	typedef	node_index_map_type::const_iterator	const_iterator;
 	const_iterator i(node_index_map.begin()), e(node_index_map.end());
 	for ( ; i!=e; ++i) {
-		n.node_pool[*i].emit(o << ' ', *n.fp);	// options?
+		n.node_pool[*i].emit(oss << ' ', *n.fp);	// options?
 	}
-	o << ' ';
+	oss << ' ';
+	string line(oss.str());
+	nopt.mangle_name(line);
+	// type name is already mangled
+	o << line;
+}
 if (!nopt.nested_subcircuits) {
 	// then use fully qualified type name
-	o << n.name << "::";
+	o << n.name << nopt.emit_scope();
 }
-	o << name << endl;
-	return o;
+	o << name;
+	return o << endl;
 }
 
 //=============================================================================
@@ -192,8 +205,8 @@ if (!nopt.nested_subcircuits) {
 
 /**
 	How to format print each node's identity.  
-	TODO: make special designators configurable.
-	TODO: configurable optional name-mangling?
+	Name mangling is done outside of this procedure, 
+	including special designators.
 	\param fp the context of this node index, 
 		used for named nodes and internal nodes.
  */
@@ -205,8 +218,6 @@ case NODE_TYPE_LOGICAL:
 	// does this guarantee canonical name?  seems to
 	fp.get_instance_pool<bool_tag>()[index].get_back_ref()
 		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
-	// TODO: take options dump_flags for changing hierarchical separator
-	// TODO: possibly perform mangling
 	break;
 case NODE_TYPE_INTERNAL:
 	o << '@' << fp.get_prs_footprint().get_internal_node(index).name;
@@ -282,16 +293,25 @@ instance::is_empty(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class NP>
 ostream&
-instance::emit(ostream& o, const NP& node_pool, const footprint& fp) const {
+instance::emit(ostream& o, const NP& node_pool, const footprint& fp, 
+		const netlist_options& nopt) const {
 	o << 'x';
+{
+	ostringstream oss;
 	fp.get_instance_pool<process_tag>()[pid].get_back_ref()
-		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
+		->dump_hierarchical_name(oss, dump_flags::no_definition_owner);
 	actuals_list_type::const_iterator
 		i(actuals.begin()), e(actuals.end());
 	for ( ; i!=e; ++i) {
-		node_pool[*i].emit(o << ' ', fp);
+		node_pool[*i].emit(oss << ' ', fp);
 	}
-	return o << ' ' << type->get_name();	// endl
+	string line(oss.str());
+	nopt.mangle_name(line);
+	o << line;
+}
+	// type name is already mangled
+	o << ' ' << type->get_name();	// endl
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -329,10 +349,17 @@ transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 	const node& g(node_pool[gate]);
 	const node& d(node_pool[drain]);
 	const node& b(node_pool[body]);
-	s.emit(o, fp) << ' ';
-	g.emit(o, fp) << ' ';
-	d.emit(o, fp) << ' ';
-	b.emit(o, fp) << ' ';
+{
+	// perform name-mangling
+	ostringstream oss;
+	s.emit(oss, fp) << ' ';
+	g.emit(oss, fp) << ' ';
+	d.emit(oss, fp) << ' ';
+	b.emit(oss, fp) << ' ';
+	string nodes(oss.str());
+	nopt.mangle_name(nodes);
+	o << nodes;
+}
 	switch (type) {
 	case NFET_TYPE: o << "nch"; break;
 	case PFET_TYPE: o << "pch"; break;
@@ -366,13 +393,14 @@ transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-transistor::emit_attribute_suffixes(ostream& o) const {
+transistor::emit_attribute_suffixes(ostream& o, 
+		const netlist_options& nopt) const {
 	if (attributes & IS_PRECHARGE)
-		o << ":pchg";
+		o << nopt.emit_colon() << "pchg";
 	if (attributes & IS_STANDARD_KEEPER)
-		o << ":keeper";
+		o << nopt.emit_colon() << "keeper";
 	if (attributes & IS_COMB_FEEDBACK)
-		o << ":ckeeper";
+		o << nopt.emit_colon() << "ckeeper";
 	return o;
 }
 
@@ -389,7 +417,7 @@ transistor::dump_raw(ostream& o) const {
 	o << ' ' << source << ' ' << gate << ' ' << drain << ' ' << body;
 	o << " # W=" << width << " L=" << length;
 	// unitless
-	emit_attribute_suffixes(o << " ");
+	emit_attribute_suffixes(o << " ", netlist_options::default_value);
 	return o;
 }
 
@@ -438,7 +466,7 @@ netlist::~netlist() { }
 	Common initialization routines based on footprint.  
  */
 void
-netlist::__bind_footprint(const footprint& f) {
+netlist::__bind_footprint(const footprint& f, const netlist_options& nopt) {
 	fp = &f;
 	// pre-allocate, using same indexing and mapping as original pool
 	// null index initially, and default owner is not subcircuit
@@ -457,9 +485,11 @@ netlist::__bind_footprint(const footprint& f) {
 		const string& nn(si->get_name());
 		if (nn.length()) {
 			li->name = nn;
+			// mangle here?
 		} else {
 			ostringstream oss;
-			oss << "INTSUB:" << subs_count;
+			// TODO: mangle colon
+			oss << "INTSUB" << nopt.emit_colon() << subs_count;
 			li->name = oss.str();
 			++subs_count;
 		}
@@ -474,12 +504,12 @@ netlist::__bind_footprint(const footprint& f) {
  */
 void
 netlist::bind_footprint(const footprint& f, const netlist_options& nopt) {
-	// TODO: format or mangle type name, e.g. template brackets
-	__bind_footprint(f);
+	__bind_footprint(f, nopt);
 	ostringstream oss;
 	f.dump_type(oss);
 	name = oss.str();
 	strgsub(name, " ", "");		// remove spaces (template params)
+	nopt.mangle_name(name);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -488,7 +518,8 @@ netlist::bind_footprint(const footprint& f, const netlist_options& nopt) {
  */
 void
 netlist::bind_footprint(const footprint& f, const string& n) {
-	__bind_footprint(f);
+	__bind_footprint(f, netlist_options::default_value);
+	// NOTE: this circumvents mangling options
 	name = n;
 }
 
@@ -736,10 +767,13 @@ if (sub) {
 	o << ".subckt " << name;
 	typedef	port_list_type::const_iterator		const_iterator;
 	const_iterator i(port_list.begin()), e(port_list.end());
+	ostringstream oss;		// stage for name mangling
 	for ( ; i!=e; ++i) {
-		node_pool[*i].emit(o << ' ', *fp);	// options?
+		node_pool[*i].emit(oss << ' ', *fp);	// options?
 	}
-	o << endl;
+	string formals(oss.str());
+	nopt.mangle_name(formals);
+	o << formals << endl;
 	// TODO: emit port-info comments
 }
 if (sub || nopt.emit_top) {
@@ -754,8 +788,8 @@ if (sub || nopt.emit_top) {
 	const_iterator i(instance_pool.begin()), e(instance_pool.end());
 	for ( ; i!=e; ++i, ++j) {
 		STACKTRACE_INDENT_PRINT("j = " << j << endl);
-	if (!i->is_empty()) {	// TODO: netlist_option for empty_instances?
-		i->emit(o, node_pool, *fp) << endl;	// options?
+	if (!i->is_empty()) {
+		i->emit(o, node_pool, *fp, nopt) << endl;
 	}
 	}
 }{

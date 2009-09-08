@@ -1,0 +1,18 @@
+# "mangle-example-01.hacknet-conf"
+#	$Id: mangle-example-01.hacknet-conf,v 1.1.2.1 2009/09/08 22:29:10 fang Exp $
+# name-mangling configuration example
+
+mangle_underscore=____
+mangle_instance_member_separator=_DOT_
+mangle_array_index_open=_IND
+mangle_array_index_close=EX_
+mangle_template_open=_TEMP
+mangle_template_close=LATE_
+mangle_parameter_separator=_COM_
+mangle_parameter_group_open=_LBR
+mangle_parameter_group_close=RBR_
+mangle_scope=_SCP_
+mangle_internal_at=_AT_
+mangle_auxiliary_pound=_PND_
+mangle_colon=_COL_
+

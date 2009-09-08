@@ -1,0 +1,20 @@
+// "mangle-03.hac"
+// testing name-mangling
+// @hacknet-flags@ -c $srcdir/mangle-example-01.hacknet-conf -t ctree<{2,3}>
+// @deps@ mangle-example-01.hacknet-conf
+
+import "mangle-02.hac";
+
+template <pint N[2]>
+defproc ctree(e1of2 in, out[N[0]][N[1]]) {
+	foo::wire_copy<N[0]> c0;
+	foo::wire_copy<N[1]> c1[N[0]];
+	c0.in = in;
+(;i:N[0]:
+	c0.o[i] = c1[i].in;
+(;j:N[1]:
+	c1[i].o[j] = out[i][j];
+)
+)
+}
+

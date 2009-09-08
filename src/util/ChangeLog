@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.105.2.2 2009/09/03 22:12:34 fang Exp $
+#	$Id: ChangeLog,v 1.105.2.3 2009/09/08 22:28:57 fang Exp $
+
+2009-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-07:
+	  util/string.cc:strgsub(): don't bother doing anything if
+		search string is empty, for efficiency.
+
 
 2009-09-03	David Fang		<fangism@users.sourceforge.net>
 
