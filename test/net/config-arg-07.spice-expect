@@ -1,2 +1,3 @@
 Error: processing argument of 'lambda' option, expecting numeric value, but got: not_a_number
 Error: 1 error(s) found in option processing.
+Error in command invocation.

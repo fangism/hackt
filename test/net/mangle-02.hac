@@ -1,6 +1,6 @@
 // "mangle-02.hac"
 // testing name-mangling
-// @hacknet-flags@ -c $srcdir/mangle-example-01.hacknet-conf -t foo::wire_copy<2>
+// @hacknet-flags@ -c mangle-example-01.hacknet-conf -t foo::wire_copy<2>
 // @deps@ mangle-example-01.hacknet-conf
 
 import "mangle-01.hac";

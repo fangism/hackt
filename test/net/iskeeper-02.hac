@@ -1,6 +1,6 @@
 // "iskeeper-02.hac"
 // testing with default config
-// @hacknet-flags@ -C $srcdir/tsmc65-equiv.netgen-conf -f emit_parasitics=1
+// @hacknet-flags@ -C tsmc65-equiv.netgen-conf -f emit_parasitics=1
 // @deps@ tsmc65-equiv.netgen-conf
 
 import "iskeeper-01.hac";

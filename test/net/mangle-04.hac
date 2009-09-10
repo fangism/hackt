@@ -1,6 +1,6 @@
 // "mangle-04.hac"
 // testing name-mangling
-// @hacknet-flags@ -c $srcdir/mangle-example-01.hacknet-conf
+// @hacknet-flags@ -c mangle-example-01.hacknet-conf
 // @deps@ mangle-example-01.hacknet-conf
 
 import "mangle-03.hac";

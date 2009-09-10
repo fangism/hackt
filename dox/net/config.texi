@@ -1,5 +1,5 @@
 @c "config.texi"
-@c $Id: config.texi,v 1.2.2.3 2009/09/08 22:28:51 fang Exp $
+@c $Id: config.texi,v 1.2.2.4 2009/09/10 18:38:28 fang Exp $
 
 @c ****************************************************************************
 @node Configuration Options
@@ -21,6 +21,14 @@ In a configuration file, blank lines are ignored,
 as well as lines that begin with @t{#} (pound).
 Where boolean values are expected, pass 0 for @var{false}, 
 or 1 for @var{true}.  
+
+The following parameters are used to manage distributed configuration files.
+This allows one to create incrementally different configurations.  
+
+@include config/config_path.texi
+@include config/config_file.texi
+
+The following parameters affect emitted device sizes and units.
 
 @include config/lambda.texi
 @include config/length_unit.texi

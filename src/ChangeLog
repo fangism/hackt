@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-08:
+	  hacknet: support new options to import other config files
+		from config files, for hierarchical/incremental importing.
+	  Test cases added, features documented.
+
+
 2009-09-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-28-netlist-02-07:

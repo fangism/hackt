@@ -1,2 +1,2 @@
-Error opening options file "does_not_exist.hacknet-conf" for reading.
+Error: unable to find/open/read config file "does_not_exist.hacknet-conf".
 Error in command invocation.

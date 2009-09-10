@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.2.2.3 2009/09/08 22:28:56 fang Exp $
+	$Id: netlist_options.h,v 1.2.2.4 2009/09/10 18:38:33 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -9,10 +9,15 @@
 #include <string>
 #include "net/common.h"
 #include "util/optparse.h"
+#include "util/named_ifstream_manager.h"
 
 namespace HAC {
 namespace NET {
 using std::string;
+using std::istream;
+using util::option_value;
+using util::option_value_list;
+using util::ifstream_manager;
 
 //=============================================================================
 /**
@@ -20,7 +25,10 @@ using std::string;
 	Many names borrowed from netgen for consistency and compatibility.
  */
 struct netlist_options {
+	typedef	netlist_options		this_type;
 	static	const	netlist_options	default_value;
+	typedef	bool (this_type::*option_memfun_type)(const option_value&);
+	ifstream_manager		file_manager;
 // generation-time options:
 	/**
 		Dimensions of standard devices to use when unspecified.  
@@ -125,13 +133,28 @@ struct netlist_options {
 		\return true if there is an error.
 	 */
 	bool
-	set(const util::option_value_list&);
+	set(const option_value&);
+
+	bool
+	set(const option_value_list&);
 
 	real_type
 	get_default_width(const bool d, const bool k) const;
 
 	real_type
 	get_default_length(const bool d, const bool k) const;
+
+	bool
+	no_mangling(const option_value&);
+
+	bool
+	open_config_file(const option_value&);
+
+	bool
+	open_config_file_compat(const option_value&);
+
+	bool
+	add_config_path(const option_value&);
 
 	string&
 	mangle_name(string&) const;
@@ -151,6 +174,15 @@ struct netlist_options {
 
 	ostream&
 	dump(ostream&) const;
+
+private:
+	// not copy-able
+	netlist_options(const netlist_options&);
+
+	bool
+	__open_config_file(const option_value&, 
+		option_value_list (*)(istream&));
+
 
 };	// end struct netlist_options
 

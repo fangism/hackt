@@ -1,5 +1,5 @@
 // "mangle-05.hac"
-// @hacknet-flags@ -c $srcdir/mangle-example-01.hacknet-conf
+// @hacknet-flags@ -c mangle-example-01.hacknet-conf
 // @deps@ mangle-example-01.hacknet-conf
 
 import "internal-00.hac";

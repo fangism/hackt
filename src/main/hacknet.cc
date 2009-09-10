@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.2.2.1 2009/09/03 22:12:31 fang Exp $
+	$Id: hacknet.cc,v 1.2.2.2 2009/09/10 18:38:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -31,21 +31,13 @@ namespace HAC {
 using std::string;
 using util::persistent;
 using util::persistent_object_manager;
-using util::optparse;
-using util::optparse_list;
-using util::optparse_file;
-using util::option_value_list;
+using util::option_value;
 using NET::netlist_options;
 #include "util/using_ostream.h"
 
 //=============================================================================
 class hacknet_options {
 public:
-	/**
-		Un-processed option values list from file/command-line.
-		These will be processed into netlist_options.
-	 */
-	option_value_list	raw_opts;
 	/**
 		Set to true to just exit after command parsing.  
 	 */
@@ -75,7 +67,6 @@ public:
 	netlist_options		net_opt;
 
 	hacknet_options() :
-		raw_opts(), 
 		help_only(false),
 		dump_config(false),
 		use_referenced_type_instead_of_top_level(false),
@@ -83,11 +74,6 @@ public:
 		comp_opt(),
 		net_opt()
 		{ }
-
-	bool
-	finalize(void) {
-		return net_opt.set(raw_opts);
-	}
 
 };	// end class hacknet_options
 
@@ -120,11 +106,6 @@ hacknet::main(const int argc, char* argv[], const global_options&) {
 		}
 		// else is other error
 		return opterr;
-	}
-//	cerr << "options:\n" << opt.raw_opts << endl;	// DEBUG
-	// process netlist options and check for errors
-	if (opt.finalize()) {
-		return 1;
 	}
 	if (opt.dump_config) {
 		opt.net_opt.dump(cout);
@@ -211,7 +192,7 @@ try {
 int
 hacknet::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+c:C:df:hHt:";
+	static const char optstring[] = "+c:C:df:hHI:t:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -230,15 +211,11 @@ This option is repeatable and cumulative.
 @end texinfo
 ***/
 		case 'c': {
-			std::ifstream f(optarg);
-			if (f) {
-				const option_value_list t(optparse_file(f));
-				o.raw_opts.insert(o.raw_opts.end(), 
-					t.begin(), t.end());
-				// any error handling here?
-			} else {
-				cerr << "Error opening options file \"" <<
-					optarg << "\" for reading." << endl;
+			option_value v;
+			v.key = "config_file";	// doesn't really matter
+			v.values.push_back(optarg);
+			if (o.net_opt.open_config_file(v)) {
+				// already have error message
 				return 2;
 			}
 			break;
@@ -259,16 +236,11 @@ This option is repeatable and cumulative.
 @end texinfo
 ***/
 		case 'C': {
-			std::ifstream f(optarg);
-			if (f) {
-				const option_value_list
-					t(util::optparse_file_compat(f));
-				o.raw_opts.insert(o.raw_opts.end(), 
-					t.begin(), t.end());
-				// any error handling here?
-			} else {
-				cerr << "Error opening options file \"" <<
-					optarg << "\" for reading." << endl;
+			option_value v;
+			v.key = "config_file_compat";	// doesn't really matter
+			v.values.push_back(optarg);
+			if (o.net_opt.open_config_file_compat(v)) {
+				// already have error message
 				return 2;
 			}
 			break;
@@ -296,10 +268,8 @@ This option is repeatable and cumulative.
 @end texinfo
 ***/
 		case 'f': {
-			const option_value_list t(optparse_list(optarg));
-			o.raw_opts.insert(o.raw_opts.end(), 
-				t.begin(), t.end());
-			// any error handling here?
+			if (o.net_opt.set(util::optparse_list(optarg)))
+				return 2;
 			break;
 		}
 /***
@@ -316,8 +286,8 @@ This option is repeatable and cumulative.
 @end texinfo
 ***/
 		case 'F': {
-			o.raw_opts.push_back(util::optparse_compat(optarg));
-			// any error handling here?
+			if (o.net_opt.set(util::optparse_compat(optarg)))
+				return 2;
 			break;
 		}
 /***
@@ -343,6 +313,18 @@ See also the installed documentation for @file{hacknet.info,html,pdf}.
 		case 'H':
 			o.help_only = true;
 			netlist_options::help(cerr);
+			break;
+/***
+@texinfo opt/option-I-upper.texi
+@defopt -I path
+Append @var{path} to the list of paths to search for including
+and referencing other config files.  
+See also the @option{config_path} configuration option.
+@end defopt
+@end texinfo
+***/
+		case 'I':
+			o.net_opt.file_manager.add_path(optarg);
 			break;
 /***
 @texinfo opt/option-t.texi
@@ -388,12 +370,15 @@ hacknet::usage(void) {
 "\t-c file : process configuration options file (repeatable)\n"
 "\t-C file : process configuration options file, old-style (repeatable)\n"
 "\t-d : print configuration values and exit\n"
-"\t-f \"option=value ...\" : set option values (repeatable)\n"
-"\t\tseparate multiple options with space\n"
+"\t-f \"option=value(s) ...\" : set option values (repeatable)\n"
+"\t\tmultiple values may be comma-separated\n"
+"\t\tmultiple options may be space-separated\n"
 "\t-F \"type option value\" : set option value, old-style (repeatable)\n"
 "\t\ttype is [int|real|string], and string values are \"quoted\"\n"
+"\t\tonly one option at a time (per -F flag)\n"
 "\t-h : print this usage help and exit\n"
 "\t-H : print configuration options help and exit\n"
+"\t-I path : append search path for configuration files\n"
 "\t-t \"type\" : generate netlist for the named type,\n"
 "\t\tignoring top-level instances (quotes recommended)."
 	<< endl;
@@ -403,12 +388,6 @@ hacknet::usage(void) {
 	"\tPS: " PSDIR "/hacknet.ps\n"
 	"\tHTML: " HTMLDIR "/hacknet.html/index.html" << endl;
 }
-
-//-----------------------------------------------------------------------------
-// hacknet_option modifier functions and their flag registrations
-#if 0
-static void __hacknet_default(hacknet_options& o) { o = hacknet_options(); }
-#endif
 
 //=============================================================================
 }	// end namespace HAC

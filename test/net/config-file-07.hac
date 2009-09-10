@@ -1,0 +1,8 @@
+// "config-file-07.hac"
+// alternate way of specifying config file
+// @hacknet-flags@ -f config_file=sample-01.hacknet-conf
+// @deps@ sample-01.hacknet-conf
+
+import "inv-00.hac";
+
+

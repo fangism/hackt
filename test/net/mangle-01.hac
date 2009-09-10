@@ -1,6 +1,6 @@
 // "mangle-01.hac"
 // testing name-mangling
-// @hacknet-flags@ -c $srcdir/mangle-example-01.hacknet-conf -t std::logic::celem<2,20>
+// @hacknet-flags@ -c mangle-example-01.hacknet-conf -t std::logic::celem<2,20>
 // @deps@ mangle-example-01.hacknet-conf
 
 namespace std {

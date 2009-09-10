@@ -1,0 +1,37 @@
+* subcircuit e1of<2> is empty.
+.subckt std::logic::celem<2,10> GND Vdd in[0] in[1] o
+M0_ GND in[0] #0 GND nch W=5u L=2u
+M1_ #0 in[1] _o GND nch W=5u L=2u
+M2_ Vdd in[0] #1 Vdd pch W=5u L=2u
+M3_ #1 in[1] _o Vdd pch W=5u L=2u
+M4_ GND _o o GND nch W=10u L=2u
+M5_ Vdd _o o Vdd pch W=10u L=2u
+.ends
+
+.subckt foo::wire_copy<2> GND Vdd in.e oe[0] oe[1]
+xcomp GND Vdd oe[0] oe[1] in.e std::logic::celem<2,10>
+.ends
+
+.subckt std::logic::celem<3,10> GND Vdd in[0] in[1] in[2] o
+M0_ GND in[0] #0 GND nch W=5u L=2u
+M1_ #0 in[1] #1 GND nch W=5u L=2u
+M2_ #1 in[2] _o GND nch W=5u L=2u
+M3_ Vdd in[0] #2 Vdd pch W=5u L=2u
+M4_ #2 in[1] #3 Vdd pch W=5u L=2u
+M5_ #3 in[2] _o Vdd pch W=5u L=2u
+M6_ GND _o o GND nch W=10u L=2u
+M7_ Vdd _o o Vdd pch W=10u L=2u
+.ends
+
+.subckt foo::wire_copy<3> GND Vdd in.e oe[0] oe[1] oe[2]
+xcomp GND Vdd oe[0] oe[1] oe[2] in.e std::logic::celem<3,10>
+.ends
+
+.subckt ctree<{2,3}> GND Vdd in.e out[0][0].e out[0][1].e out[0][2].e out[1][0].e out[1][1].e out[1][2].e
+xc0 GND Vdd in.e c0.o[0].e c0.o[1].e foo::wire_copy<2>
+xc1[0] GND Vdd c0.o[0].e out[0][0].e out[0][1].e out[0][2].e foo::wire_copy<3>
+xc1[1] GND Vdd c0.o[1].e out[1][0].e out[1][1].e out[1][2].e foo::wire_copy<3>
+.ends
+
+xbar GND Vdd bar.in.e bar.out[0][0].e bar.out[0][1].e bar.out[0][2].e bar.out[1][0].e bar.out[1][1].e bar.out[1][2].e ctree<{2,3}>
+

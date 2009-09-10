@@ -2,7 +2,7 @@
 	\file "util/named_ifstream_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: named_ifstream_manager.h,v 1.5 2009/04/29 05:33:47 fang Exp $
+	$Id: named_ifstream_manager.h,v 1.5.8.1 2009/09/10 18:38:33 fang Exp $
  */
 
 #ifndef	__UTIL_NAMED_IFSTREAM_MANAGER_H__
@@ -208,6 +208,9 @@ public:
 		placeholder(ifstream_manager&, const string&);
 
 		~placeholder();
+
+		return_type
+		status(void) const { return _status; }
 
 		bool
 		good(void) const;

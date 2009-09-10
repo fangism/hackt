@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.2.2.5 2009/09/08 22:28:59 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.6 2009/09/10 18:38:36 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -39,12 +39,14 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	config-arg-01 config-arg-02 config-arg-03 config-arg-04 \
 	config-arg-06 config-arg-08 \
 	config-file-01 config-file-02 config-file-03 \
+	config-file-05 config-file-06 config-file-07 config-file-08 \
 	compat-01 compat-02 compat-03 \
 	tsmc65 tsmc65-equiv \
 	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
 	parasitics-01 \
-	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05
+	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \
+	mangle-06
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05 \
@@ -58,6 +60,9 @@ EXTRA_DIST += $(EXTRA_DIST_HAC:=.hac)
 
 srcdir_EXTRA_DIST += \
 	sample-01.hacknet-conf \
+	sample-02.hacknet-conf \
+	sample-03.hacknet-conf \
+	sample-04.hacknet-conf \
 	netgen-defaults.hacknet-conf \
 	mangle-example-01.hacknet-conf \
 	tsmc65.netgen-conf \

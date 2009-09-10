@@ -1,6 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.92 2009/08/28 20:45:37 fang Exp $
+#	$Id: ChangeLog,v 1.92.2.1 2009/09/10 18:38:34 fang Exp $
 # ChangeLog for test directory.
+
+2009-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-07:
+	  Make.test-net: added AM_HACKNET_FLAGS = -I$(srcdir)
+		analogously with AM_HACPRSIM_FLAGS, and AM_HACCHPSIM_FLAGS
+
 
 2009-08-13	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,12 +1,15 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.2.2.3 2009/09/08 22:28:56 fang Exp $
+	$Id: netlist_options.cc,v 1.2.2.4 2009/09/10 18:38:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <functional>
+#include <fstream>
 #include <map>
+#include <list>
 #include "net/netlist_options.h"
 #include "util/string.tcc"		// for strgsub, string_to_num
 #include "util/stacktrace.h"
@@ -17,15 +20,19 @@ namespace NET {
 #include "util/using_ostream.h"
 using std::map;
 using std::pair;
+using std::list;
 using util::option_value;
 using util::option_value_list;
 using util::strings::string_to_num;
 using util::strings::strgsub;
+using util::file_status;
+using util::named_ifstream;
 
 //=============================================================================
 // class netlist_options method definitions
 
 netlist_options::netlist_options() :
+		file_manager(), 
 		std_n_width(5.0),
 		std_p_width(5.0),
 		std_n_length(2.0),
@@ -74,6 +81,29 @@ const netlist_options	netlist_options::default_value;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Useful for quickly un-mangling, and disabling mangling configurations
+	to restored the default (for human readability).  
+ */
+bool
+netlist_options::no_mangling(const option_value&) {
+	mangle_instance_member_separator.clear();
+	mangle_underscore.clear();
+	mangle_array_index_open.clear();
+	mangle_array_index_close.clear();
+	mangle_template_open.clear();
+	mangle_template_close.clear();
+	mangle_parameter_separator.clear();
+	mangle_parameter_group_open.clear();
+	mangle_parameter_group_close.clear();
+	mangle_scope.clear();
+	mangle_colon.clear();
+	mangle_internal_at.clear();
+	mangle_auxiliary_pound.clear();
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Considered C++-style name mangling?
 	Deleting character sequence for mangling is not acceptable, 
 	thus we use the length of the substitution string to 
@@ -85,12 +115,14 @@ netlist_options::mangle_name(string& n) const {
 	// to use underscores in substitutions.
 	if (mangle_underscore.length())
 		strgsub(n, "_", mangle_underscore);
+	// TODO: not all dots should be mangled!
 	if (mangle_instance_member_separator.length())
 		strgsub(n, ".", mangle_instance_member_separator);
 	if (mangle_array_index_open.length())
 		strgsub(n, "[", mangle_array_index_open);
 	if (mangle_array_index_close.length())
 		strgsub(n, "]", mangle_array_index_close);
+	// TODO: mangle empty template parameters "<>"
 	if (mangle_template_open.length())
 		strgsub(n, "<", mangle_template_open);
 	if (mangle_template_close.length())
@@ -111,6 +143,75 @@ netlist_options::mangle_name(string& n) const {
 	if (mangle_auxiliary_pound.length())
 		strgsub(n, "#", mangle_auxiliary_pound);
 	return n;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+netlist_options::__open_config_file(const option_value& v, 
+		option_value_list (*parse)(istream&)) {
+	list<string>::const_iterator
+		i(v.values.begin()), e(v.values.end());
+for ( ; i!=e; ++i) {
+	ifstream_manager::placeholder
+		fh(file_manager, *i);
+	switch (fh.status().second) {
+	case file_status::NOT_FOUND:
+		cerr << "Error: unable to find/open/read config file \""
+			<< *i << "\"." << endl;
+		return true;
+	case file_status::CYCLE:
+		cerr << "Error: config inclusion cycle detected on "
+			"file \"" << fh.status().first->name()
+			<< "\"." << endl;
+		return true;
+	case file_status::SEEN_FILE:
+		cerr << "Warning: already seen configuration file \""
+			<< fh.status().first->name()
+			<< "\", but processing again anyway." << endl;
+		// fall-through
+	case file_status::NEW_FILE: {
+		const option_value_list
+			opts((*parse)(fh.get_stream()));
+		if (set(opts)) {
+		cerr << "Error processing options in file \"" <<
+			fh.status().first->name() << "\"." << endl;
+			return true;
+		}
+		break;
+	}
+	default: DIE;
+	}
+}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+netlist_options::open_config_file(const option_value& v) {
+	return __open_config_file(v, &util::optparse_file);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+netlist_options::open_config_file_compat(const option_value& v) {
+	return __open_config_file(v, &util::optparse_file_compat);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+netlist_options::add_config_path(const option_value& v) {
+#if 0
+	for_each(v.values.begin(), v.values.end(), 
+		bind1st(mem_fun_ref(&ifstream_manager::add_path), 
+			file_manager));	// damn it, reference-to-reference...
+#else
+	list<string>::const_iterator
+		i(v.values.begin()), e(v.values.end());
+	for ( ; i!=e; ++i) {
+		file_manager.add_path(*i);
+	}
+#endif
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -281,33 +382,65 @@ struct opt_entry {
 	string				help;
 	opt_entry() : type(NULL) { }
 	opt_entry(const opt_func f, const print_func p, 
-		const string& t, const string& h) :
-		func(f), printer(p), type(&t), help(h) { }
+		const string* const t, const string& h) :
+		func(f), printer(p), type(t), help(h) { }
 };
 typedef	map<string, opt_entry>		opt_map_type;
 static	opt_map_type			netlist_option_map;
 
-// define option functions
-#define	DEFINE_OPTION_DEFAULT(member, key, help)			\
+
+#define	DEFINE_SET_MEMBER(member)					\
 static									\
 bool									\
 __set_ ## member (const option_value& v, netlist_options& o) {		\
 	return __set_member_default(v, o, &netlist_options::member);	\
-}									\
+}
+
+#define	DEFINE_CALL_MEMBER_FUNCTION(memfun)				\
+static									\
+bool									\
+__set_ ## memfun (const option_value& v, netlist_options& o) {		\
+	o.memfun(v);							\
+	return false;							\
+}
+
+#define	DEFINE_PRINT_MEMBER(member)					\
 static									\
 ostream&								\
 __print_ ## member (ostream& o, const netlist_options& n) {		\
 	return __print_member_default(o, n, &netlist_options::member);	\
-}									\
+}
+
+#define	DEFINE_TYPE_MEMBER(member)					\
 static									\
 const string&								\
 __type_ ## member (void) {						\
 	return __string_type_of(&netlist_options::member);		\
-}									\
+}
+
+#define	REGISTER_OPTION_DEFAULT(member, key, help)			\
 static const opt_entry& __receipt ## member				\
 __ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[key] =			\
 	opt_entry(& __set_ ## member, &__print_ ## member, 		\
-	__type_ ## member(), help)));
+	&__type_ ## member(), help)));
+
+
+#define	REGISTER_PSEUDO_OPTION(memfun, key, help)			\
+static const opt_entry& __receipt ## memfun				\
+__ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[key] =			\
+	opt_entry(& __set_ ## memfun, NULL, NULL, help)));
+
+
+// define option functions
+#define	DEFINE_OPTION_DEFAULT(member, key, help)			\
+	DEFINE_SET_MEMBER(member)					\
+	DEFINE_PRINT_MEMBER(member)					\
+	DEFINE_TYPE_MEMBER(member)					\
+	REGISTER_OPTION_DEFAULT(member, key, help)
+
+#define	DEFINE_OPTION_MEMFUN(memfun, key, help)				\
+	DEFINE_CALL_MEMBER_FUNCTION(memfun)				\
+	REGISTER_PSEUDO_OPTION(memfun, key, help)
 
 // could just fold string into here instead of initialization function below...
 // TODO: produce usage help for console and texinfo documentation aside
@@ -403,6 +536,15 @@ Mangle the `@t{@@}' character with a replacement string.
 Mangle the `@t{#}' character with a replacement string.
 @end defopt
 @end texinfo
+
+@defopt no_mangling
+Pseudo-option (no argument).
+If this option is present, regardless of argument value, 
+then suppress all name mangling by reverting their substitution
+strings to empty.
+This is useful for quickly disabling name mangling for
+human-readability and diagnostics.  
+@end defopt
 ***/
 DEFINE_OPTION_DEFAULT(mangle_underscore,
 	"mangle_underscore", "mangle: _ replacement")
@@ -430,6 +572,8 @@ DEFINE_OPTION_DEFAULT(mangle_internal_at,
 	"mangle_internal_at", "mangle: @ replacement")
 DEFINE_OPTION_DEFAULT(mangle_auxiliary_pound,
 	"mangle_auxiliary_pound", "mangle: # replacement")
+DEFINE_OPTION_MEMFUN(no_mangling,
+	"no_mangling", "disable name-mangling")
 
 /***
 @texinfo config/pre_line_continue.texi
@@ -609,7 +753,55 @@ Default: 4.0
 DEFINE_OPTION_DEFAULT(fet_spacing_diffonly, "fet_spacing_diffonly",
 	"diffusion spacing between gates in lambda")
 
+/***
+@texinfo config/config_file.texi
+@defopt config_file files
+@defoptx config_file_compat files
+Import other configuration file(s).
+File are searched using the configuration search path.
+The @option{_compat} variation processes old-style configuration files.
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_MEMFUN(open_config_file,
+	"config_file", "import referenced configuration file")
+DEFINE_OPTION_MEMFUN(open_config_file_compat,
+	"config_file_compat", "import referenced configuration file")
+/***
+@texinfo config/config_path.texi
+@defopt config_path paths
+Append to list of paths for searching for configuration files.
+Reminder: paths are comma-separated.
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_MEMFUN(add_config_path,
+	"config_path", "append search path for config files (cumulative)")
+
 #undef	DEFINE_OPTION_DEFAULT
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Handle a single keyed option.
+ */
+bool
+netlist_options::set(const option_value& opt) {
+if (opt.key.length()) {
+	typedef	opt_map_type::const_iterator	map_iterator;
+	const map_iterator me(netlist_option_map.end());
+	const map_iterator mf(netlist_option_map.find(opt.key));
+	if (mf != me) {
+		if ((*mf->second.func)(opt, *this)) {
+			return true;
+		}
+	} else {
+		cerr << "Warning: ignoring unknown netlist option \'"
+			<< opt.key << "\'." << endl;
+	}
+}
+	return false;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: this should be reusable boilerplate code...
@@ -619,21 +811,10 @@ bool
 netlist_options::set(const option_value_list& opts) {
 	STACKTRACE_VERBOSE;
 	size_t errs = 0;
-	typedef	opt_map_type::const_iterator	map_iterator;
-	const map_iterator me(netlist_option_map.end());
 	option_value_list::const_iterator i(opts.begin()), e(opts.end());
 	for ( ; i!=e; ++i) {
-	if (i->key.length()) {
-		const map_iterator mf(netlist_option_map.find(i->key));
-		if (mf != me) {
-			if ((*mf->second.func)(*i, *this)) {
-				++errs;
-			}
-		} else {
-			cerr << "Warning: ignoring unknown netlist option \'"
-				<< i->key << "\'." << endl;
-		}
-	}
+		if (set(*i))
+			++errs;
 	}
 	if (errs) {
 		cerr << "Error: " << errs <<
@@ -652,8 +833,10 @@ netlist_options::dump(ostream& o) const {
 	const map_iterator e(netlist_option_map.end());
 	for ( ; i!=e; ++i) {
 		const opt_entry& s(i->second);
+	if (s.printer) {
 		o << i->first << '=';
 		(*s.printer)(o, *this) << endl;
+	}	// else is a meta option
 	}
 	return o;
 }
@@ -671,9 +854,17 @@ netlist_options::help(ostream& o) {
 	const map_iterator e(netlist_option_map.end());
 	for ( ; i!=e; ++i) {
 		const opt_entry& s(i->second);
-		o << i->first << " (" << *s.type << "): "
-		<< s.help << " [";
-		(*s.printer)(o, default_value) << ']' << endl;
+		o << i->first << " (";
+		if (s.type)
+			o << *s.type;
+		o << "): "
+		<< s.help;
+		if (s.printer) {
+			o << " [";
+			(*s.printer)(o, default_value);
+			o << ']';
+		} else o << " <pseudo-option>";
+		o << endl;
 	}
 	return o;
 }
