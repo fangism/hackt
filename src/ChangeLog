@@ -5,6 +5,23 @@
 
 2009-09-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-28-netlist-02-13:
+	  entity::dump_flags, instance_collection_base: 
+		now support customizing hierarchy delimiters with
+		different strings, and can now distinguish between
+		process and struct parent.
+		Updated parse/AST structures to propagate meta-type 
+		information (which used to be lost) through middle end.
+		Object binary for process_definition has been extended, 
+		create test-cases updated to reflect this.
+	  parser/hackt-parse.yy.in: updated syntactic actions to
+		pass meta-type tag to new process_def/proto.
+	  hacknet: old option mangle_instance_member_separator is now split
+		into mangle_process_member_separator and 
+		mangle_struct_member_separator (for channel and data-types).
+	  Added bunch of new tests, documented.  
+
+
 	* HACKT-00-01-04-main-00-83-28-netlist-02-12:
 	  hacknet option: unused_ports, if true, then treat unconnected
 		ports as used and include them in the subcircuits'

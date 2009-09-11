@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
 	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
 	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
@@ -22,7 +22,7 @@ Persistent Object Manager text dump:
 	18	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	21	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
+	21	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
 	22	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	23	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25

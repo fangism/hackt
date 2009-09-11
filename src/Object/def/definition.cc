@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.46.6.1 2009/09/11 00:05:29 fang Exp $
+ 	$Id: definition.cc,v 1.46.6.2 2009/09/11 23:53:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2834,11 +2834,6 @@ process_definition_base::process_definition_base() :
 process_definition_base::~process_definition_base() { }
 #endif
 
-meta_type_tag_enum
-process_definition_base::get_meta_type(void) const {
-	return META_TYPE_PROCESS;
-}
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<definition_base>
 process_definition_base::make_typedef(never_ptr<const scopespace> s, 
@@ -2861,6 +2856,7 @@ process_definition::process_definition() :
 		sequential_scope(), 
 		key(), 
 		parent(), 
+		meta_type(META_TYPE_PROCESS),	// don't care
 		port_formals(), 
 		prs(), chp(), 
 		footprint_map() {
@@ -2879,6 +2875,7 @@ process_definition::process_definition(const string& s) :
 		sequential_scope(), 
 		key(s), 
 		parent(), 
+		meta_type(META_TYPE_PROCESS),	// top-type is a process
 		port_formals(), 
 		prs(), chp(), 
 		footprint_map(0, *this) {
@@ -2892,13 +2889,15 @@ process_definition::process_definition(const string& s) :
  */
 process_definition::process_definition(
 		const never_ptr<const name_space> o, 
-		const string& s) :
+		const string& s, 
+		const meta_type_tag_enum t) :
 		definition_base(), 
 		process_definition_base(),
 		scopespace(),
 		sequential_scope(), 
 		key(s), 
 		parent(o), 
+		meta_type(t), 
 		port_formals(), 
 		prs(), chp(), 
 		footprint_map() {
@@ -2913,6 +2912,18 @@ process_definition::~process_definition() { }
 ostream&
 process_definition::what(ostream& o) const {
 	return o << "process-definition";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+meta_type_tag_enum
+process_definition::get_meta_type(void) const {
+#if 0
+	// not true because process definitions now mask as
+	// channel and datastruct definitions
+	return META_TYPE_PROCESS;
+#else
+	return meta_type;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3394,13 +3405,16 @@ process_definition::write_object_base(
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
+	write_value(f, meta_type);
 	port_formals.write_object_base(m, f);
 	scopespace::write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
+// if (meta_type == META_TYPE_PROCESS) {
 	// PRS
 	prs.write_object_base(m, f);
 	chp.write_object_base(m, f);
+// }
 	spec.write_object_base(m, f);
 	footprint_map.write_object_base(m, f);
 }
@@ -3420,13 +3434,16 @@ process_definition::load_object_base(
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
+	read_value(f, meta_type);
 	port_formals.load_object_base(m, f);
 	scopespace::load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
+// if (meta_type == META_TYPE_PROCESS) {
 	// PRS
 	prs.load_object_base(m, f);
 	chp.load_object_base(m, f);
+// }
 	spec.load_object_base(m, f);
 	footprint_map.load_object_base(m, f, *this);
 }
@@ -3503,6 +3520,12 @@ process_definition_alias::get_parent(void) const {
 never_ptr<const scopespace>
 process_definition_alias::get_scopespace(void) const {
 	return base->get_base_proc_def()->get_scopespace();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+meta_type_tag_enum
+process_definition_alias::get_meta_type(void) const {
+	return base->get_base_proc_def()->get_meta_type();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

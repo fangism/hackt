@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.2.2.8 2009/09/11 18:19:21 fang Exp $
+	$Id: netlist_options.h,v 1.2.2.9 2009/09/11 23:53:44 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -10,6 +10,7 @@
 #include "net/common.h"
 #include "util/optparse.h"
 #include "util/named_ifstream_manager.h"
+#include "Object/common/dump_flags.h"
 
 namespace HAC {
 namespace NET {
@@ -18,6 +19,7 @@ using std::istream;
 using util::option_value;
 using util::option_value_list;
 using util::ifstream_manager;
+using entity::dump_flags;
 
 //=============================================================================
 /**
@@ -29,6 +31,7 @@ struct netlist_options {
 	static	const	netlist_options	default_value;
 	typedef	bool (this_type::*option_memfun_type)(const option_value&);
 	ifstream_manager		file_manager;
+	dump_flags			__dump_flags;
 // generation-time options:
 	/**
 		Dimensions of standard devices to use when unspecified.  
@@ -64,7 +67,8 @@ struct netlist_options {
 		usually '.' or '/'.
 		These mangle substitutions apply to type and instance names.
 	 */
-	string				mangle_instance_member_separator;
+	string				mangle_process_member_separator;
+	string				mangle_struct_member_separator;
 	string				mangle_underscore;
 	string				mangle_array_index_open;
 	string				mangle_array_index_close;
@@ -203,6 +207,9 @@ struct netlist_options {
 	ostream&
 	dump(ostream&) const;
 
+	void
+	commit(void);
+
 private:
 	// not copy-able
 	netlist_options(const netlist_options&);
@@ -210,9 +217,6 @@ private:
 	bool
 	__open_config_file(const option_value&, 
 		option_value_list (*)(istream&));
-
-	string&
-	mangle_name(string&) const;
 
 };	// end struct netlist_options
 

@@ -7,11 +7,11 @@ Persistent Object Manager text dump:
 	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	35
 	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
 	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
 	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25

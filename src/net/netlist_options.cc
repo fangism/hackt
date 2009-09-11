@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.2.2.8 2009/09/11 18:19:21 fang Exp $
+	$Id: netlist_options.cc,v 1.2.2.9 2009/09/11 23:53:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,6 +33,7 @@ using util::named_ifstream;
 
 netlist_options::netlist_options() :
 		file_manager(), 
+		__dump_flags(dump_flags::no_definition_owner), 
 		std_n_width(5.0),
 		std_p_width(5.0),
 		std_n_length(2.0),
@@ -44,7 +45,8 @@ netlist_options::netlist_options() :
 		length_unit("u"),
 		area_unit("p"),
 	// mangle options
-		mangle_instance_member_separator("."),
+		mangle_process_member_separator("."),
+		mangle_struct_member_separator("."),
 		mangle_underscore("_"),
 		mangle_array_index_open("["),
 		mangle_array_index_close("]"),
@@ -77,6 +79,11 @@ netlist_options::netlist_options() :
 		top_type_ports(false), 
 		emit_top(true)
 		{
+	// delayed mangling
+	// to prevent double-mangling, we have to postpone
+	// all mangling to the ::mangle_* functions
+	// This distinguishes process from struct members
+	__dump_flags.struct_member_separator = "$";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,7 +99,8 @@ const netlist_options	netlist_options::default_value;
 bool
 netlist_options::no_mangling(const option_value&) {
 	const this_type& d(default_value);
-	mangle_instance_member_separator = d.mangle_instance_member_separator;
+	mangle_process_member_separator = d.mangle_process_member_separator;
+	mangle_struct_member_separator = d.mangle_struct_member_separator;
 	mangle_underscore = d.mangle_underscore;
 	mangle_array_index_open = d.mangle_array_index_open;
 	mangle_array_index_close = d.mangle_array_index_close;
@@ -123,8 +131,8 @@ netlist_options::mangle_instance(string& n) const {
 	// must mangle underscore first, because other strings are likely
 	// to use underscores in substitutions.
 	strgsub(n, "_", mangle_underscore);
-	// TODO: not all dots should be mangled!
-	strgsub(n, ".", mangle_instance_member_separator);
+	strgsub(n, ".", mangle_process_member_separator);
+	strgsub(n, "$", mangle_struct_member_separator);
 	strgsub(n, "[", mangle_array_index_open);
 	strgsub(n, "]", mangle_array_index_close);
 //	strgsub(n, "::", mangle_scope);
@@ -157,37 +165,6 @@ netlist_options::mangle_type(string& n) const {
 	strgsub(n, "::", mangle_scope);
 	// colon must be mangled *after* scope "::"
 //	strgsub(n, ":", mangle_colon);
-	return n;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	All-inclusive name mangling.  
- */
-string&
-netlist_options::mangle_name(string& n) const {
-	// must mangle underscore first, because other strings are likely
-	// to use underscores in substitutions.
-	strgsub(n, "_", mangle_underscore);
-	// TODO: not all dots should be mangled!
-	strgsub(n, ".", mangle_instance_member_separator);
-	strgsub(n, "[", mangle_array_index_open);
-	strgsub(n, "]", mangle_array_index_close);
-	strgsub(n, "<>", mangle_template_empty);
-	strgsub(n, "<", mangle_template_open);
-	strgsub(n, ">", mangle_template_close);
-	strgsub(n, ",", mangle_parameter_separator);
-	strgsub(n, "{", mangle_parameter_group_open);
-	strgsub(n, "}", mangle_parameter_group_close);
-	strgsub(n, "::", mangle_scope);
-	// colon must be mangled *after* scope "::"
-	strgsub(n, ":", mangle_colon);
-#if CACHE_LOGICAL_NODE_NAMES
-	// mangling happens in node::emit instead
-#else
-	strgsub(n, "@", mangle_internal_at);
-	strgsub(n, "#", mangle_auxiliary_pound);
-#endif
 	return n;
 }
 
@@ -258,6 +235,17 @@ netlist_options::add_config_path(const option_value& v) {
 	}
 #endif
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Post-process some options, finalize.
+	This is necessary because some data structure members are
+	linked/aliased, and this keeps them coherent.  
+ */
+void
+netlist_options::commit(void) {
+	// doesn't need to do anything right now, jsut a reminder
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -544,9 +532,13 @@ which may contain more underscores.
 are to be used in other mangling replacement strings.  
 @end defopt
 
-@defopt mangle_instance_member_separator (string)
-Text used to separate members of instance hierarchy.
+@defopt mangle_process_member_separator (char)
+String used to separate members of process instances.
 e.g., the `@t{.}' in `a.b' usually denotes that b is a member of typeof(a).
+Default: .
+@end defopt
+@defopt mangle_struct_member_separator (char)
+String used to separate members of datatype and channel instances.
 Default: .
 @end defopt
 
@@ -605,8 +597,10 @@ human-readability and diagnostics.
 ***/
 DEFINE_OPTION_DEFAULT(mangle_underscore,
 	"mangle_underscore", "mangle: _ replacement")
-DEFINE_OPTION_DEFAULT(mangle_instance_member_separator,
-	"mangle_instance_member_separator", "mangle: . replacement")
+DEFINE_OPTION_DEFAULT(mangle_process_member_separator,
+	"mangle_process_member_separator", "mangle: . replacement (process)")
+DEFINE_OPTION_DEFAULT(mangle_struct_member_separator,
+	"mangle_struct_member_separator", "mangle: . replacement (structs)")
 DEFINE_OPTION_DEFAULT(mangle_array_index_open,
 	"mangle_array_index_open", "mangle: [ replacement")
 DEFINE_OPTION_DEFAULT(mangle_array_index_close,

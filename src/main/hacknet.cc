@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.2.2.2 2009/09/10 18:38:32 fang Exp $
+	$Id: hacknet.cc,v 1.2.2.3 2009/09/11 23:53:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -170,6 +170,7 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	top_module->populate_top_footprint_frame();
 	// the simulator state object, initialized with the module
 try {
+	opt.net_opt.commit();		// commit options
 	const module& top_module_c(AS_A(const module&, *top_module));
 	const entity::footprint& topfp(top_module_c.get_footprint());
 	NET::netlist_generator n(top_module->get_state_manager(), topfp, 

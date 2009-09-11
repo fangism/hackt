@@ -1,0 +1,19 @@
+* subcircuit pfoo is empty.
+* subcircuit pbar is empty.
+* subcircuit pick is empty.
+.subckt invert__it GND Vdd x y
+M0_ GND p/b/b/b x GND nch W=5u L=2u
+M1_ Vdd p/b/b/b x Vdd pch W=5u L=2u
+M2_ GND y q/a/a/a GND nch W=5u L=2u
+M3_ Vdd y q/a/a/a Vdd pch W=5u L=2u
+M4_ GND q/a/a/a p/b/b/b GND nch W=5u L=2u
+M5_ Vdd q/a/a/a p/b/b/b Vdd pch W=5u L=2u
+.ends
+
+.subckt invert__them GND Vdd p q
+xdee GND Vdd p z invert__it
+xdum GND Vdd z q invert__it
+.ends
+
+xnow GND Vdd now.p now.q invert__them
+

@@ -1,0 +1,12 @@
+.subckt pair a b
+.ends
+
+.subckt foo GND Vdd p/a p/b z
+xp p/a p/b pair
+M0_ GND p/b z GND nch W=5u L=2u
+M1_ Vdd p/b z Vdd pch W=5u L=2u
+.ends
+
+xbar GND Vdd bar.p/a bar.p/b bar.z foo
+xbar.p bar.p/a bar.p/b pair
+

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.2.2.7 2009/09/11 18:19:19 fang Exp $
+	$Id: netgraph.cc,v 1.2.2.8 2009/09/11 23:53:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,7 +14,6 @@
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
 #include "Object/global_entry_context.h"
-#include "Object/common/dump_flags.h"
 #include "Object/def/footprint.h"
 #include "Object/def/process_definition.h"
 #include "Object/traits/instance_traits.h"
@@ -34,7 +33,6 @@ namespace HAC {
 namespace NET {
 #include "util/using_ostream.h"
 using entity::footprint_frame_map_type;
-using entity::dump_flags;
 using entity::bool_port_collector;
 using entity::instance_alias_info;
 using entity::bool_tag;
@@ -230,7 +228,7 @@ case NODE_TYPE_LOGICAL:
 	// NEVER_NULL(fp.get_instance_pool<bool_tag>()[index].get_back_ref());
 	// does this guarantee canonical name?  seems to
 	fp.get_instance_pool<bool_tag>()[index].get_back_ref()
-		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
+		->dump_hierarchical_name(o, n.__dump_flags);
 #endif
 	break;
 case NODE_TYPE_INTERNAL:
@@ -317,7 +315,7 @@ instance::emit(ostream& o, const NP& node_pool, const footprint& fp,
 	// process instance name
 	ostringstream oss;
 	fp.get_instance_pool<process_tag>()[pid].get_back_ref()
-		->dump_hierarchical_name(oss, dump_flags::no_definition_owner);
+		->dump_hierarchical_name(oss, nopt.__dump_flags);
 	string pname(oss.str());
 	nopt.mangle_instance(pname);
 	o << pname;
@@ -744,8 +742,7 @@ netlist::register_named_node(const index_type _i
 #if CACHE_LOGICAL_NODE_NAMES
 		ostringstream oss;
 		fp->get_instance_pool<bool_tag>()[_i].get_back_ref()
-			->dump_hierarchical_name(oss,
-				dump_flags::no_definition_owner);
+			->dump_hierarchical_name(oss, opt.__dump_flags);
 		new_named_node.name = oss.str();
 		opt.mangle_instance(new_named_node.name);
 #endif

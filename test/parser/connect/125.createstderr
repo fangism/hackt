@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	33
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
@@ -17,7 +17,7 @@ Persistent Object Manager text dump:
 	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
-	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
 	17	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	19	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
