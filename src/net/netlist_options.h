@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.2.2.7 2009/09/11 02:46:06 fang Exp $
+	$Id: netlist_options.h,v 1.2.2.8 2009/09/11 18:19:21 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -125,6 +125,11 @@ struct netlist_options {
 		no transistors, for the sake of name aliases.  
 	 */
 	bool				empty_subcircuits;
+	/**
+		If true, emit ports that are unused.
+		Useful with empty_subcircuits.
+	 */
+	bool				unused_ports;
 	/**
 		If true, wrap the top-level instances in its respective
 		subcircuit, with ports listed.

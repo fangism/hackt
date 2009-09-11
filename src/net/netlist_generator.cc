@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.2.2.7 2009/09/11 02:46:05 fang Exp $
+	$Id: netlist_generator.cc,v 1.2.2.8 2009/09/11 18:19:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -209,7 +209,7 @@ try {
 	f->get_prs_footprint().accept(*this);
 	// f->get_spec_footprint().accept(*this);	// ?
 	if (!top_level || opt.top_type_ports) {
-		nl->summarize_ports();
+		nl->summarize_ports(opt);
 	}
 } catch (...) {
 	cerr << "ERROR producing netlist for " << nl->name << endl;

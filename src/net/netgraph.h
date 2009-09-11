@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.2.2.3 2009/09/11 00:05:35 fang Exp $
+	$Id: netgraph.h,v 1.2.2.4 2009/09/11 18:19:20 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -509,7 +509,7 @@ public:
 		);
 
 	void
-	summarize_ports(void);
+	summarize_ports(const netlist_options&);
 
 	ostream&
 	emit(ostream&, const bool s, const netlist_options&) const;

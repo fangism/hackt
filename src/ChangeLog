@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-12:
+	  hacknet option: unused_ports, if true, then treat unconnected
+		ports as used and include them in the subcircuits'
+		port lists.  Documented, tested.
+
+
 2009-09-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-28-netlist-02-11:

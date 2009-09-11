@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.2.2.6 2009/09/11 02:46:04 fang Exp $
+	$Id: netgraph.cc,v 1.2.2.7 2009/09/11 18:19:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -971,9 +971,10 @@ bool_port_alias_collector::visit(const instance_alias_info<bool_tag>& a) {
 	instantiate this.  
 	This also summarizes the 'empty' flag for this netlist.  
 	TODO: power supply ports
+	\param opt for netlist generation configuration
  */
 void
-netlist::summarize_ports(void) {
+netlist::summarize_ports(const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
 	// could mark_used_nodes here instead?
 	if (node_pool[GND_index].used) {
@@ -1001,7 +1002,12 @@ netlist::summarize_ports(void) {
 		// 1-indexed local id to 0-indexed named_node_map
 		INVARIANT(*i);
 		const index_type local_ind = *i -1;
-		const index_type ni = named_node_map[local_ind];
+		index_type ni = named_node_map[local_ind];
+	if (!ni && opt.unused_ports) {
+		// the consider all ports used, even if unconnected
+		ni = register_named_node(*i, opt);
+		node_pool[ni].used = true;
+	}
 		const node& n(node_pool[ni]);
 	if (ni && n.used) {
 		INVARIANT(n.is_logical_node());
@@ -1009,7 +1015,7 @@ netlist::summarize_ports(void) {
 		port_list.push_back(ni);
 		// sorted_ports[local_ind] = ni;
 	}
-	}
+	}	// end for
 }
 	// empty is initially false
 	bool MT = true;

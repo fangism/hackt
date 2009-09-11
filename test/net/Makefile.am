@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.2.2.8 2009/09/11 02:46:08 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.9 2009/09/11 18:19:22 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -34,6 +34,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	iskeeper-01 iskeeper-02 \
 	process-port-01 process-port-02 \
 	process-port-03 process-port-04 \
+	process-port-05 process-port-06 \
 	empty-01 empty-02 empty-03 \
 	recurse-01 recurse-02 \
 	config-dump-01 \
