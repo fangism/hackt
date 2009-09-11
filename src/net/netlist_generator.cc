@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.2.2.4 2009/09/04 22:21:47 fang Exp $
+	$Id: netlist_generator.cc,v 1.2.2.5 2009/09/11 00:05:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -186,7 +186,11 @@ try {
 		// find out how local nodes are passed to *local* instance
 		const footprint* subfp = subp._frame._footprint;
 		const netlist& subnet(netmap.find(subfp)->second);
-		nl->append_instance(subp, subnet, lpid);
+		nl->append_instance(subp, subnet, lpid
+#if CACHE_LOGICAL_NODE_NAMES
+			, opt
+#endif
+			);
 	}
 	}
 #else
@@ -510,7 +514,11 @@ if (!n.used) {
 index_type
 netlist_generator::register_named_node(const index_type n) {
 	NEVER_NULL(current_netlist);
-	const index_type ret = current_netlist->register_named_node(n);
+	const index_type ret = current_netlist->register_named_node(n
+#if CACHE_LOGICAL_NODE_NAMES
+		, opt
+#endif
+		);
 	return ret;
 }
 

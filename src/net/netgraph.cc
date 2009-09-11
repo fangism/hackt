@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.2.2.3 2009/09/08 22:28:55 fang Exp $
+	$Id: netgraph.cc,v 1.2.2.4 2009/09/11 00:05:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -154,14 +154,19 @@ if (!nopt.nested_subcircuits) {
 }
 	o << name;
 {
+	// ports, formals
 	ostringstream oss;
 	typedef	node_index_map_type::const_iterator	const_iterator;
 	const_iterator i(node_index_map.begin()), e(node_index_map.end());
 	for ( ; i!=e; ++i) {
-		n.node_pool[*i].emit(oss << ' ', *n.fp);	// options?
+		n.node_pool[*i].emit(oss << ' ', *n.fp, nopt);
 	}
 	string formals(oss.str());
+#if CACHE_LOGICAL_NODE_NAMES
+	// already mangled
+#else
 	nopt.mangle_name(formals);
+#endif
 	o << formals << endl;
 }
 	// TODO: emit port-info comments
@@ -180,15 +185,20 @@ local_netlist::emit_instance(ostream& o, const netlist& n,
 	o << 'x';
 	o << name << nopt.emit_colon() << "inst";
 {
+	// actuals
 	ostringstream oss;
 	typedef	node_index_map_type::const_iterator	const_iterator;
 	const_iterator i(node_index_map.begin()), e(node_index_map.end());
 	for ( ; i!=e; ++i) {
-		n.node_pool[*i].emit(oss << ' ', *n.fp);	// options?
+		n.node_pool[*i].emit(oss << ' ', *n.fp, nopt);
 	}
 	oss << ' ';
 	string line(oss.str());
+#if CACHE_LOGICAL_NODE_NAMES
+	// already mangled
+#else
 	nopt.mangle_name(line);
+#endif
 	// type name is already mangled
 	o << line;
 }
@@ -211,19 +221,26 @@ if (!nopt.nested_subcircuits) {
 		used for named nodes and internal nodes.
  */
 ostream&
-node::emit(ostream& o, const footprint& fp) const {
+node::emit(ostream& o, const footprint& fp, const netlist_options& n) const {
 switch (type) {
 case NODE_TYPE_LOGICAL:
+#if CACHE_LOGICAL_NODE_NAMES
+	o << name;
+#else
 	// NEVER_NULL(fp.get_instance_pool<bool_tag>()[index].get_back_ref());
 	// does this guarantee canonical name?  seems to
 	fp.get_instance_pool<bool_tag>()[index].get_back_ref()
 		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
+#endif
 	break;
 case NODE_TYPE_INTERNAL:
-	o << '@' << fp.get_prs_footprint().get_internal_node(index).name;
+	// Q: do internal node names ever need to be mangled?
+	// A: don't think so because they are only simple identifiers
+	o << n.emit_internal_at() <<
+		fp.get_prs_footprint().get_internal_node(index).name;
 	break;
 case NODE_TYPE_AUXILIARY:
-	o << '#';
+	o << n.emit_auxiliary_pound();
 	if (name.length()) {
 		o << name;
 	} else {
@@ -297,16 +314,27 @@ instance::emit(ostream& o, const NP& node_pool, const footprint& fp,
 		const netlist_options& nopt) const {
 	o << 'x';
 {
+	// process instance name
 	ostringstream oss;
 	fp.get_instance_pool<process_tag>()[pid].get_back_ref()
 		->dump_hierarchical_name(oss, dump_flags::no_definition_owner);
+	string pname(oss.str());
+	nopt.mangle_name(pname);
+	o << pname;
+}{
+	// actuals
+	ostringstream oss;
 	actuals_list_type::const_iterator
 		i(actuals.begin()), e(actuals.end());
 	for ( ; i!=e; ++i) {
-		node_pool[*i].emit(oss << ' ', fp);
+		node_pool[*i].emit(oss << ' ', fp, nopt);
 	}
 	string line(oss.str());
+#if CACHE_LOGICAL_NODE_NAMES
+	// already mangled
+#else
 	nopt.mangle_name(line);
+#endif
 	o << line;
 }
 	// type name is already mangled
@@ -352,12 +380,16 @@ transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 {
 	// perform name-mangling
 	ostringstream oss;
-	s.emit(oss, fp) << ' ';
-	g.emit(oss, fp) << ' ';
-	d.emit(oss, fp) << ' ';
-	b.emit(oss, fp) << ' ';
+	s.emit(oss, fp, nopt) << ' ';
+	g.emit(oss, fp, nopt) << ' ';
+	d.emit(oss, fp, nopt) << ' ';
+	b.emit(oss, fp, nopt) << ' ';
 	string nodes(oss.str());
+#if CACHE_LOGICAL_NODE_NAMES
+	// all nodes already mangled
+#else
 	nopt.mangle_name(nodes);
+#endif
 	o << nodes;
 }
 	switch (type) {
@@ -535,7 +567,11 @@ netlist::bind_footprint(const footprint& f, const string& n) {
  */
 void
 netlist::append_instance(const global_entry<process_tag>& subp,
-		const netlist& subnet, const index_type lpid) {
+		const netlist& subnet, const index_type lpid
+#if CACHE_LOGICAL_NODE_NAMES
+		, const netlist_options& opt
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	const footprint* subfp = subp._frame._footprint;
 	// cannot use global allocated footprint_frame
@@ -606,7 +642,11 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 			INVARIANT(actual_id);
 			STACKTRACE_INDENT_PRINT("LOCAL actual id = " << actual_id << endl);
 			const index_type actual_node =
-				register_named_node(actual_id);
+				register_named_node(actual_id
+#if CACHE_LOGICAL_NODE_NAMES
+				, opt
+#endif
+				);
 			STACKTRACE_INDENT_PRINT("actual node = " << actual_node << endl);
 			np.actuals.push_back(actual_node);
 		} else {
@@ -687,7 +727,11 @@ netlist::lookup_internal_node(const index_type ei) const {
 	\return 1-indexed local netlist's generic node index, never 0.
  */
 index_type
-netlist::register_named_node(const index_type _i) {
+netlist::register_named_node(const index_type _i
+#if CACHE_LOGICAL_NODE_NAMES
+		, const netlist_options& opt
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("local id (+1) = " << _i << endl);
 	INVARIANT(_i);
@@ -696,8 +740,16 @@ netlist::register_named_node(const index_type _i) {
 	index_type& ret(named_node_map[i]);
 	if (!ret) {
 		// reserve a new slot and update it for subsequent visits
-		const node new_named_node(_i, node::logical_node_tag);
+		node new_named_node(_i, node::logical_node_tag);
 		ret = node_pool.size();
+#if CACHE_LOGICAL_NODE_NAMES
+		ostringstream oss;
+		fp->get_instance_pool<bool_tag>()[_i].get_back_ref()
+			->dump_hierarchical_name(oss,
+				dump_flags::no_definition_owner);
+		new_named_node.name = oss.str();
+		opt.mangle_name(new_named_node.name);
+#endif
 		INVARIANT(ret);
 		node_pool.push_back(new_named_node);
 #if ENABLE_STACKTRACE
@@ -769,10 +821,14 @@ if (sub) {
 	const_iterator i(port_list.begin()), e(port_list.end());
 	ostringstream oss;		// stage for name mangling
 	for ( ; i!=e; ++i) {
-		node_pool[*i].emit(oss << ' ', *fp);	// options?
+		node_pool[*i].emit(oss << ' ', *fp, nopt);
 	}
 	string formals(oss.str());
+#if CACHE_LOGICAL_NODE_NAMES
+	// already mangled
+#else
 	nopt.mangle_name(formals);
+#endif
 	o << formals << endl;
 	// TODO: emit port-info comments
 }
@@ -836,7 +892,8 @@ netlist::dump_raw(ostream& o) const {
 		const node& n(node_pool[j]);
 		n.dump_raw(o) << " = ";
 #if 1
-		n.emit(o, *fp);	// may have to comment out for debug
+		n.emit(o, *fp, netlist_options::default_value);
+		// may have to comment out for debug
 #else
 		o << "...";
 #endif

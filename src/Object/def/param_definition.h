@@ -2,7 +2,7 @@
 	\file "Object/def/param_definition.h"
 	Definition-related HAC object classes.  
 	This file used to be "Object/art_object_definition.h".
-	$Id: param_definition.h,v 1.6 2006/06/02 20:15:19 fang Exp $
+	$Id: param_definition.h,v 1.6.106.1 2009/09/11 00:05:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PARAM_DEFINITION_H__
@@ -52,6 +52,9 @@ public:
 
 	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
+
+	meta_type_tag_enum
+	get_meta_type(void) const;
 
 	const string&
 	get_key(void) const;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.28 2009/06/05 16:28:08 fang Exp $
+	$Id: footprint.h,v 1.28.6.1 2009/09/11 00:05:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -285,6 +285,9 @@ public:
 
 	never_ptr<const definition_base>
 	get_owner_def(void) const { return owner_def; }
+
+	meta_type_tag_enum
+	get_meta_type(void) const;
 
 	size_t
 	map_size(void) const { return instance_collection_map.size(); }

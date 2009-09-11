@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.2.2.4 2009/09/10 18:38:32 fang Exp $
+	$Id: netlist_options.cc,v 1.2.2.5 2009/09/11 00:05:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -138,10 +138,14 @@ netlist_options::mangle_name(string& n) const {
 	// colon must be mangled *after* scope "::"
 	if (mangle_colon.length())
 		strgsub(n, ":", mangle_colon);
+#if CACHE_LOGICAL_NODE_NAMES
+	// mangling happens in node::emit instead
+#else
 	if (mangle_internal_at.length())
 		strgsub(n, "@", mangle_internal_at);
 	if (mangle_auxiliary_pound.length())
 		strgsub(n, "#", mangle_auxiliary_pound);
+#endif
 	return n;
 }
 
@@ -230,6 +234,30 @@ netlist_options::emit_colon(void) const {
 	if (mangle_colon.length())
 		return mangle_colon;
 	else	return colon;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const string&
+netlist_options::emit_internal_at(void) const {
+	static const string at("@");
+#if CACHE_LOGICAL_NODE_NAMES
+	if (mangle_internal_at.length())
+		return mangle_internal_at;
+	else
+#endif
+		return at;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const string&
+netlist_options::emit_auxiliary_pound(void) const {
+	static const string pound("#");
+#if CACHE_LOGICAL_NODE_NAMES
+	if (mangle_auxiliary_pound.length())
+		return mangle_auxiliary_pound;
+	else
+#endif
+		return pound;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

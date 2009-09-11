@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.46 2009/06/05 16:28:06 fang Exp $
+ 	$Id: definition.cc,v 1.46.6.1 2009/09/11 00:05:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -55,6 +55,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/common/dump_flags.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
+#include "Object/traits/preal_traits.h"
 #include "Object/traits/bool_traits.h"	// for built_in_definition
 #include "Object/traits/int_traits.h"	// for built_in_definition
 #include "Object/traits/enum_traits.h"	// for type_tag_enum_value
@@ -726,8 +727,8 @@ datatype_definition_base::make_typedef(never_ptr<const scopespace> s,
 bool
 datatype_definition_base::less_ordering(
 		const datatype_definition_base& r) const {
-	const unsigned char le = get_meta_type_enum();
-	const unsigned char re = r.get_meta_type_enum();
+	const unsigned char le = get_meta_type();
+	const unsigned char re = r.get_meta_type();
 	return (le < re) || ((le == re) && (this < &r));
 }
 
@@ -765,6 +766,12 @@ channel_definition_base::channel_definition_base() :
 channel_definition_base::~channel_definition_base() {
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+meta_type_tag_enum
+channel_definition_base::get_meta_type(void) const {
+	return META_TYPE_CHANNEL;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<definition_base>
@@ -1515,15 +1522,17 @@ built_in_datatype_def::create_complete_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-unsigned char
-built_in_datatype_def::get_meta_type_enum(void) const {
+meta_type_tag_enum
+built_in_datatype_def::get_meta_type(void) const {
 	typedef	class_traits<bool_tag>		bool_traits;
 	typedef	class_traits<int_tag>		int_traits;
 	if (this == &bool_traits::built_in_definition) {
-		return bool_traits::type_tag_enum_value;
+		// return bool_traits::type_tag_enum_value;
+		return META_TYPE_BOOL;
 	}
 	else if (this == &int_traits::built_in_definition) {
-		return int_traits::type_tag_enum_value;
+		// return int_traits::type_tag_enum_value;
+		return META_TYPE_INT;
 	} else {
 		// no other built-in definitions at this time
 		THROW_EXIT;
@@ -1662,6 +1671,18 @@ built_in_param_def::~built_in_param_def() {
 ostream&
 built_in_param_def::what(ostream& o) const {
 	return o << "built-in-param-def";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+meta_type_tag_enum
+built_in_param_def::get_meta_type(void) const {
+	if (this == &pbool_traits::built_in_definition)
+		return META_TYPE_PBOOL;
+	if (this == &pint_traits::built_in_definition)
+		return META_TYPE_PINT;
+	if (this == &preal_traits::built_in_definition)
+		return META_TYPE_PREAL;
+	else	return META_TYPE_NONE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1950,9 +1971,10 @@ enum_datatype_def::create_complete_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-unsigned char
-enum_datatype_def::get_meta_type_enum(void) const {
-	return class_traits<enum_tag>::type_tag_enum_value;
+meta_type_tag_enum
+enum_datatype_def::get_meta_type(void) const {
+//	return class_traits<enum_tag>::type_tag_enum_value;
+	return META_TYPE_ENUM;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2425,10 +2447,14 @@ if (defined) {
 	No user-defined data types allowed in built-in channel specifications
 	... yet.
  */
-unsigned char
-user_def_datatype::get_meta_type_enum(void) const {
+meta_type_tag_enum
+user_def_datatype::get_meta_type(void) const {
+#if 0
 	ICE_NEVER_CALL(cerr);
 	return META_TYPE_NONE;
+#else
+	return META_TYPE_STRUCT;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2704,10 +2730,11 @@ datatype_definition_alias::create_complete_type(
 	Should never be called, as canonical type are supposed to
 	resolve typedef aliases.  
  */
-unsigned char
-datatype_definition_alias::get_meta_type_enum(void) const {
+meta_type_tag_enum
+datatype_definition_alias::get_meta_type(void) const {
 	ICE_NEVER_CALL(cerr);
-	return META_TYPE_NONE;
+//	return META_TYPE_NONE;
+	return base->get_base_datatype_def()->get_meta_type();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2807,6 +2834,12 @@ process_definition_base::process_definition_base() :
 process_definition_base::~process_definition_base() { }
 #endif
 
+meta_type_tag_enum
+process_definition_base::get_meta_type(void) const {
+	return META_TYPE_PROCESS;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<definition_base>
 process_definition_base::make_typedef(never_ptr<const scopespace> s, 
 		const token_identifier& id) const {

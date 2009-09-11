@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.2.2.2 2009/09/08 22:28:56 fang Exp $
+	$Id: netgraph.h,v 1.2.2.3 2009/09/11 00:05:35 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -124,7 +124,7 @@ struct node {
 	is_supply_node(void) const { return type == NODE_TYPE_SUPPLY; }
 
 	ostream&
-	emit(ostream&, const footprint&) const;
+	emit(ostream&, const footprint&, const netlist_options&) const;
 
 	ostream&
 	dump_raw(ostream&) const;
@@ -491,14 +491,22 @@ public:
 	lookup_internal_node(const index_type i) const;
 
 	index_type
-	register_named_node(const index_type);
+	register_named_node(const index_type
+#if CACHE_LOGICAL_NODE_NAMES
+		, const netlist_options&
+#endif
+		);
 
 	bool
 	named_node_is_used(const index_type) const;
 
 	void
 	append_instance(const global_entry<process_tag>&, const netlist&, 
-		const index_type);
+		const index_type
+#if CACHE_LOGICAL_NODE_NAMES
+		, const netlist_options&
+#endif
+		);
 
 	void
 	summarize_ports(void);

@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.2.2.4 2009/09/10 18:38:33 fang Exp $
+	$Id: netlist_options.h,v 1.2.2.5 2009/09/11 00:05:38 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -164,6 +164,12 @@ struct netlist_options {
 
 	const string&
 	emit_colon(void) const;
+
+	const string&
+	emit_internal_at(void) const;
+
+	const string&
+	emit_auxiliary_pound(void) const;
 
 	ostream&
 	line_continue(ostream&) const;

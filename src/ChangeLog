@@ -5,6 +5,21 @@
 
 2009-09-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-28-netlist-02-09:
+	  hacknet: re-wrote node-name mangling to perform mangling
+		one-time only and cache node::name for logical nodes.
+		Switch: net/common.h: CACHE_LOGICAL_NODE_NAMES
+			also applies to internal and auxiliary nodes.  
+	  entity::definition_base:
+		virtual get_meta_type() so that footprint can quickly
+		deduce the meta type of its referenced owner definition.
+		Will need this to determine whether or not a footprint
+		corresponds to a process, channel, or datatype.
+	  No new tests, no regressions.
+	  Coming soon: selective '.' instance hierarchy mangling.
+		only datatype/channel members should be mangled.
+
+
 	* HACKT-00-01-04-main-00-83-28-netlist-02-08:
 	  hacknet: support new options to import other config files
 		from config files, for hierarchical/incremental importing.
