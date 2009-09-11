@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.2.2.5 2009/09/11 00:05:36 fang Exp $
+	$Id: netlist_options.cc,v 1.2.2.6 2009/09/11 01:30:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -70,6 +70,7 @@ netlist_options::netlist_options() :
 		fet_spacing_diffonly(4.0),
 		emit_parasitics(false),
 		nested_subcircuits(false),
+		empty_subcircuits(false),
 		emit_top(true)
 		{
 }
@@ -730,6 +731,20 @@ Default: 0
 ***/
 DEFINE_OPTION_DEFAULT(nested_subcircuits, "nested_subcircuits",
 	"emit local subcircuits as nested definitions")
+
+/***
+@texinfo config/empty_subcircuits.texi
+@defopt empty_subcircuits (bool)
+If this option is set to 1, then emit empty subcircuits, 
+i.e. subcircuits with no devices.
+Probably want to force unused port nodes to be emitted in
+empty subcircuit definitions, option @option{unused_port_nodes}.
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(empty_subcircuits, "empty_subcircuits",
+	"emit empty subcircuit definitions and instances")
 
 /***
 @texinfo config/emit_top.texi

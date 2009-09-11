@@ -5,6 +5,11 @@
 
 2009-09-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-28-netlist-02-10:
+	  hacknet option: empty_subcircuits, if true, emit definitions
+		and instances of empty subcircuits.  Tested, documented.
+
+
 	* HACKT-00-01-04-main-00-83-28-netlist-02-09:
 	  hacknet: re-wrote node-name mangling to perform mangling
 		one-time only and cache node::name for logical nodes.

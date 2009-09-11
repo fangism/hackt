@@ -1,0 +1,7 @@
+// "process-port-04.hac"
+// copy-modified from "process-port-03.hac"
+// @hacknet-flags@ -f empty_subcircuits=1
+// testing emitting of empty subcircuits
+
+import "process-port-02.hac";
+

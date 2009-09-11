@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.2.2.5 2009/09/11 00:05:38 fang Exp $
+	$Id: netlist_options.h,v 1.2.2.6 2009/09/11 01:30:32 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -119,6 +119,11 @@ struct netlist_options {
 		Othewise, emit subcircuit definitions prior to use.  
 	 */
 	bool				nested_subcircuits;
+	/**
+		If true, also emit empty subcircuits, i.e. those with
+		no transistors, for the sake of name aliases.  
+	 */
+	bool				empty_subcircuits;
 	/**
 		If true, emit top-level instances and rules, otherwise, 
 		emit only subcircuit definitions (library-only).

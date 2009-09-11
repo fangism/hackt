@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.2.2.5 2009/09/11 00:05:35 fang Exp $
+	$Id: netlist_generator.cc,v 1.2.2.6 2009/09/11 01:30:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -219,7 +219,7 @@ try {
 #if ENABLE_STACKTRACE
 	nl->dump_raw(cerr);	// DEBUG point
 #endif
-if (!nl->is_empty()) {		// TODO: netlist_option show_empty_subcircuits
+if (opt.empty_subcircuits || !nl->is_empty()) {
 	nl->emit(os, !top_level, opt) << endl;
 } else {
 	os << "* subcircuit " << nl->name << " is empty." << endl;

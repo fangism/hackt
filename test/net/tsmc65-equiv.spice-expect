@@ -2,6 +2,7 @@
 area_unit=P
 emit_parasitics=0
 emit_top=1
+empty_subcircuits=0
 fet_diff_overhang=10
 fet_spacing_diffonly=8
 lambda=0.03

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.2.2.4 2009/09/11 00:05:35 fang Exp $
+	$Id: netgraph.cc,v 1.2.2.5 2009/09/11 01:30:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -741,7 +741,6 @@ netlist::register_named_node(const index_type _i
 	if (!ret) {
 		// reserve a new slot and update it for subsequent visits
 		node new_named_node(_i, node::logical_node_tag);
-		ret = node_pool.size();
 #if CACHE_LOGICAL_NODE_NAMES
 		ostringstream oss;
 		fp->get_instance_pool<bool_tag>()[_i].get_back_ref()
@@ -750,6 +749,7 @@ netlist::register_named_node(const index_type _i
 		new_named_node.name = oss.str();
 		opt.mangle_name(new_named_node.name);
 #endif
+		ret = node_pool.size();
 		INVARIANT(ret);
 		node_pool.push_back(new_named_node);
 #if ENABLE_STACKTRACE
@@ -844,7 +844,7 @@ if (sub || nopt.emit_top) {
 	const_iterator i(instance_pool.begin()), e(instance_pool.end());
 	for ( ; i!=e; ++i, ++j) {
 		STACKTRACE_INDENT_PRINT("j = " << j << endl);
-	if (!i->is_empty()) {
+	if (nopt.empty_subcircuits || !i->is_empty()) {
 		i->emit(o, node_pool, *fp, nopt) << endl;
 	}
 	}
