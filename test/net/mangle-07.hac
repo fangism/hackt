@@ -1,0 +1,6 @@
+// "mangle-07.hac"
+// @hacknet-flags@ -f mangle_template_empty=
+// testing substitution of empty string (deletion)
+
+import "inv-02.hac";
+

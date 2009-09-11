@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.2.2.5 2009/09/11 01:30:29 fang Exp $
+	$Id: netgraph.cc,v 1.2.2.6 2009/09/11 02:46:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -165,7 +165,7 @@ if (!nopt.nested_subcircuits) {
 #if CACHE_LOGICAL_NODE_NAMES
 	// already mangled
 #else
-	nopt.mangle_name(formals);
+	nopt.mangle_instance(formals);
 #endif
 	o << formals << endl;
 }
@@ -197,7 +197,7 @@ local_netlist::emit_instance(ostream& o, const netlist& n,
 #if CACHE_LOGICAL_NODE_NAMES
 	// already mangled
 #else
-	nopt.mangle_name(line);
+	nopt.mangle_instance(line);
 #endif
 	// type name is already mangled
 	o << line;
@@ -319,7 +319,7 @@ instance::emit(ostream& o, const NP& node_pool, const footprint& fp,
 	fp.get_instance_pool<process_tag>()[pid].get_back_ref()
 		->dump_hierarchical_name(oss, dump_flags::no_definition_owner);
 	string pname(oss.str());
-	nopt.mangle_name(pname);
+	nopt.mangle_instance(pname);
 	o << pname;
 }{
 	// actuals
@@ -333,7 +333,7 @@ instance::emit(ostream& o, const NP& node_pool, const footprint& fp,
 #if CACHE_LOGICAL_NODE_NAMES
 	// already mangled
 #else
-	nopt.mangle_name(line);
+	nopt.mangle_instance(line);
 #endif
 	o << line;
 }
@@ -388,7 +388,7 @@ transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 #if CACHE_LOGICAL_NODE_NAMES
 	// all nodes already mangled
 #else
-	nopt.mangle_name(nodes);
+	nopt.mangle_instance(nodes);
 #endif
 	o << nodes;
 }
@@ -541,7 +541,7 @@ netlist::bind_footprint(const footprint& f, const netlist_options& nopt) {
 	f.dump_type(oss);
 	name = oss.str();
 	strgsub(name, " ", "");		// remove spaces (template params)
-	nopt.mangle_name(name);
+	nopt.mangle_type(name);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -747,7 +747,7 @@ netlist::register_named_node(const index_type _i
 			->dump_hierarchical_name(oss,
 				dump_flags::no_definition_owner);
 		new_named_node.name = oss.str();
-		opt.mangle_name(new_named_node.name);
+		opt.mangle_instance(new_named_node.name);
 #endif
 		ret = node_pool.size();
 		INVARIANT(ret);
@@ -827,7 +827,7 @@ if (sub) {
 #if CACHE_LOGICAL_NODE_NAMES
 	// already mangled
 #else
-	nopt.mangle_name(formals);
+	nopt.mangle_instance(formals);
 #endif
 	o << formals << endl;
 	// TODO: emit port-info comments

@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.2.2.7 2009/09/11 01:30:33 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.8 2009/09/11 02:46:08 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -47,7 +47,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
 	parasitics-01 \
 	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \
-	mangle-06
+	mangle-06 mangle-07 mangle-08 mangle-09
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05 \
@@ -55,7 +55,8 @@ HACKNET_TEST_SCRIPTS_FAILURES = \
 
 # TODO: promote these to real tests
 EXTRA_DIST_HAC = \
-	config-arg-05
+	config-arg-05 \
+	top-type-ports-01
 
 EXTRA_DIST += $(EXTRA_DIST_HAC:=.hac)
 

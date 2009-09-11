@@ -5,6 +5,19 @@
 
 2009-09-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-28-netlist-02-11:
+	  hacknet mangling: can now pass empty strings to delete patterns
+		as a option for mangling, restored default values.
+		Added new pattern match option "mangle_template_empty"
+			for <> empty template parameters.
+		Refined netlist_option::mangle_name() into
+			mangle_type and mangle_instance, to reduce the
+			set of patterns to search and apply.
+		Experimental top_type_ports option doesn't work yet because
+			top-footprint still points to the global top fp.
+	  New mangling test cases added, option documented.
+
+
 	* HACKT-00-01-04-main-00-83-28-netlist-02-10:
 	  hacknet option: empty_subcircuits, if true, emit definitions
 		and instances of empty subcircuits.  Tested, documented.

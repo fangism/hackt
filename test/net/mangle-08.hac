@@ -1,0 +1,6 @@
+// "mangle-08.hac"
+// @hacknet-flags@ -f mangle_template_empty=_EMPTY_ -f mangle_template_open=- -f mangle_template_close= -f mangle_parameter_separator=_
+// testing substitution of empty string (deletion)
+
+import "celem-05.hac";
+

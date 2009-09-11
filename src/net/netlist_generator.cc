@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.2.2.6 2009/09/11 01:30:31 fang Exp $
+	$Id: netlist_generator.cc,v 1.2.2.7 2009/09/11 02:46:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -208,7 +208,7 @@ try {
 	// process local production rules and macros
 	f->get_prs_footprint().accept(*this);
 	// f->get_spec_footprint().accept(*this);	// ?
-	if (!top_level) {
+	if (!top_level || opt.top_type_ports) {
 		nl->summarize_ports();
 	}
 } catch (...) {
@@ -220,7 +220,7 @@ try {
 	nl->dump_raw(cerr);	// DEBUG point
 #endif
 if (opt.empty_subcircuits || !nl->is_empty()) {
-	nl->emit(os, !top_level, opt) << endl;
+	nl->emit(os, !top_level || opt.top_type_ports, opt) << endl;
 } else {
 	os << "* subcircuit " << nl->name << " is empty." << endl;
 }

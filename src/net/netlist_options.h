@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.2.2.6 2009/09/11 01:30:32 fang Exp $
+	$Id: netlist_options.h,v 1.2.2.7 2009/09/11 02:46:06 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -68,6 +68,7 @@ struct netlist_options {
 	string				mangle_underscore;
 	string				mangle_array_index_open;
 	string				mangle_array_index_close;
+	string				mangle_template_empty;
 	string				mangle_template_open;
 	string				mangle_template_close;
 	string				mangle_parameter_separator;
@@ -125,11 +126,19 @@ struct netlist_options {
 	 */
 	bool				empty_subcircuits;
 	/**
+		If true, wrap the top-level instances in its respective
+		subcircuit, with ports listed.
+		Useful when using a chosen type as the top-level.
+		TODO: finish me
+		Problem: need topfp to be overridden with chosen type's 
+		footprint.
+	 */
+	bool				top_type_ports;
+	/**
 		If true, emit top-level instances and rules, otherwise, 
 		emit only subcircuit definitions (library-only).
 	 */
 	bool				emit_top;
-
 
 	netlist_options();
 
@@ -162,7 +171,10 @@ struct netlist_options {
 	add_config_path(const option_value&);
 
 	string&
-	mangle_name(string&) const;
+	mangle_instance(string&) const;
+
+	string&
+	mangle_type(string&) const;
 
 	const string&
 	emit_scope(void) const;
@@ -194,6 +206,8 @@ private:
 	__open_config_file(const option_value&, 
 		option_value_list (*)(istream&));
 
+	string&
+	mangle_name(string&) const;
 
 };	// end struct netlist_options
 

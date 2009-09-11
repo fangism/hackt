@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.2.2.6 2009/09/11 01:30:31 fang Exp $
+	$Id: netlist_options.cc,v 1.2.2.7 2009/09/11 02:46:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -44,19 +44,21 @@ netlist_options::netlist_options() :
 		length_unit("u"),
 		area_unit("p"),
 	// mangle options
-		mangle_instance_member_separator(),
-		mangle_underscore(),
-		mangle_array_index_open(),
-		mangle_array_index_close(),
-		mangle_template_open(),
-		mangle_template_close(),
-		mangle_parameter_separator(),
-		mangle_parameter_group_open(),
-		mangle_parameter_group_close(),
-		mangle_scope(),
-		mangle_colon(),
-		mangle_internal_at(),
-		mangle_auxiliary_pound(),
+		mangle_instance_member_separator("."),
+		mangle_underscore("_"),
+		mangle_array_index_open("["),
+		mangle_array_index_close("]"),
+		mangle_template_empty("<>"),
+		mangle_template_open("<"),
+		mangle_template_close(">"),
+		// Hmmmm, we don't have a way to escape the comma, do we?
+		mangle_parameter_separator(","),
+		mangle_parameter_group_open("{"),
+		mangle_parameter_group_close("}"),
+		mangle_scope("::"),
+		mangle_colon(":"),
+		mangle_internal_at("@"),
+		mangle_auxiliary_pound("#"),
 	// format options
 		pre_line_continue(),
 		post_line_continue("+"),	// spice-style
@@ -71,6 +73,7 @@ netlist_options::netlist_options() :
 		emit_parasitics(false),
 		nested_subcircuits(false),
 		empty_subcircuits(false),
+		top_type_ports(false), 
 		emit_top(true)
 		{
 }
@@ -87,65 +90,102 @@ const netlist_options	netlist_options::default_value;
  */
 bool
 netlist_options::no_mangling(const option_value&) {
-	mangle_instance_member_separator.clear();
-	mangle_underscore.clear();
-	mangle_array_index_open.clear();
-	mangle_array_index_close.clear();
-	mangle_template_open.clear();
-	mangle_template_close.clear();
-	mangle_parameter_separator.clear();
-	mangle_parameter_group_open.clear();
-	mangle_parameter_group_close.clear();
-	mangle_scope.clear();
-	mangle_colon.clear();
-	mangle_internal_at.clear();
-	mangle_auxiliary_pound.clear();
+	const this_type& d(default_value);
+	mangle_instance_member_separator = d.mangle_instance_member_separator;
+	mangle_underscore = d.mangle_underscore;
+	mangle_array_index_open = d.mangle_array_index_open;
+	mangle_array_index_close = d.mangle_array_index_close;
+	mangle_template_empty = d.mangle_template_empty;
+	mangle_template_open = d.mangle_template_open;
+	mangle_template_close = d.mangle_template_close;
+	mangle_parameter_separator = d.mangle_parameter_separator;
+	mangle_parameter_group_open = d.mangle_parameter_group_open;
+	mangle_parameter_group_close = d.mangle_parameter_group_close;
+	mangle_scope = d.mangle_scope;
+	mangle_colon = d.mangle_colon;
+	mangle_internal_at = d.mangle_internal_at;
+	mangle_auxiliary_pound = d.mangle_auxiliary_pound;
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Mangle instance and node names, and transistor names. 
+	For efficiency, apply manglings that are possible.
 	Considered C++-style name mangling?
 	Deleting character sequence for mangling is not acceptable, 
 	thus we use the length of the substitution string to 
 	determine whether or not to attempt substitution.  
  */
 string&
-netlist_options::mangle_name(string& n) const {
+netlist_options::mangle_instance(string& n) const {
 	// must mangle underscore first, because other strings are likely
 	// to use underscores in substitutions.
-	if (mangle_underscore.length())
-		strgsub(n, "_", mangle_underscore);
+	strgsub(n, "_", mangle_underscore);
 	// TODO: not all dots should be mangled!
-	if (mangle_instance_member_separator.length())
-		strgsub(n, ".", mangle_instance_member_separator);
-	if (mangle_array_index_open.length())
-		strgsub(n, "[", mangle_array_index_open);
-	if (mangle_array_index_close.length())
-		strgsub(n, "]", mangle_array_index_close);
-	// TODO: mangle empty template parameters "<>"
-	if (mangle_template_open.length())
-		strgsub(n, "<", mangle_template_open);
-	if (mangle_template_close.length())
-		strgsub(n, ">", mangle_template_close);
-	if (mangle_parameter_separator.length())
-		strgsub(n, ",", mangle_parameter_separator);
-	if (mangle_parameter_group_open.length())
-		strgsub(n, "{", mangle_parameter_group_open);
-	if (mangle_parameter_group_close.length())
-		strgsub(n, "}", mangle_parameter_group_close);
-	if (mangle_scope.length())
-		strgsub(n, "::", mangle_scope);
+	strgsub(n, ".", mangle_instance_member_separator);
+	strgsub(n, "[", mangle_array_index_open);
+	strgsub(n, "]", mangle_array_index_close);
+//	strgsub(n, "::", mangle_scope);
 	// colon must be mangled *after* scope "::"
-	if (mangle_colon.length())
-		strgsub(n, ":", mangle_colon);
+	strgsub(n, ":", mangle_colon);	// appears in transistor names
 #if CACHE_LOGICAL_NODE_NAMES
 	// mangling happens in node::emit instead
 #else
-	if (mangle_internal_at.length())
-		strgsub(n, "@", mangle_internal_at);
-	if (mangle_auxiliary_pound.length())
-		strgsub(n, "#", mangle_auxiliary_pound);
+	strgsub(n, "@", mangle_internal_at);
+	strgsub(n, "#", mangle_auxiliary_pound);
+#endif
+	return n;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For efficiency, apply manglings that are possible.
+ */
+string&
+netlist_options::mangle_type(string& n) const {
+	// must mangle underscore first, because other strings are likely
+	// to use underscores in substitutions.
+	strgsub(n, "_", mangle_underscore);
+	strgsub(n, "<>", mangle_template_empty);
+	strgsub(n, "<", mangle_template_open);
+	strgsub(n, ">", mangle_template_close);
+	strgsub(n, ",", mangle_parameter_separator);
+	strgsub(n, "{", mangle_parameter_group_open);
+	strgsub(n, "}", mangle_parameter_group_close);
+	strgsub(n, "::", mangle_scope);
+	// colon must be mangled *after* scope "::"
+//	strgsub(n, ":", mangle_colon);
+	return n;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	All-inclusive name mangling.  
+ */
+string&
+netlist_options::mangle_name(string& n) const {
+	// must mangle underscore first, because other strings are likely
+	// to use underscores in substitutions.
+	strgsub(n, "_", mangle_underscore);
+	// TODO: not all dots should be mangled!
+	strgsub(n, ".", mangle_instance_member_separator);
+	strgsub(n, "[", mangle_array_index_open);
+	strgsub(n, "]", mangle_array_index_close);
+	strgsub(n, "<>", mangle_template_empty);
+	strgsub(n, "<", mangle_template_open);
+	strgsub(n, ">", mangle_template_close);
+	strgsub(n, ",", mangle_parameter_separator);
+	strgsub(n, "{", mangle_parameter_group_open);
+	strgsub(n, "}", mangle_parameter_group_close);
+	strgsub(n, "::", mangle_scope);
+	// colon must be mangled *after* scope "::"
+	strgsub(n, ":", mangle_colon);
+#if CACHE_LOGICAL_NODE_NAMES
+	// mangling happens in node::emit instead
+#else
+	strgsub(n, "@", mangle_internal_at);
+	strgsub(n, "#", mangle_auxiliary_pound);
 #endif
 	return n;
 }
@@ -222,43 +262,25 @@ netlist_options::add_config_path(const option_value& v) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 netlist_options::emit_scope(void) const {
-	static const string scope("::");
-	if (mangle_scope.length())
-		return mangle_scope;
-	else	return scope;
+	return mangle_scope;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 netlist_options::emit_colon(void) const {
-	static const string colon(":");
-	if (mangle_colon.length())
-		return mangle_colon;
-	else	return colon;
+	return mangle_colon;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 netlist_options::emit_internal_at(void) const {
-	static const string at("@");
-#if CACHE_LOGICAL_NODE_NAMES
-	if (mangle_internal_at.length())
-		return mangle_internal_at;
-	else
-#endif
-		return at;
+	return mangle_internal_at;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 netlist_options::emit_auxiliary_pound(void) const {
-	static const string pound("#");
-#if CACHE_LOGICAL_NODE_NAMES
-	if (mangle_auxiliary_pound.length())
-		return mangle_auxiliary_pound;
-	else
-#endif
-		return pound;
+	return mangle_auxiliary_pound;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -540,6 +562,10 @@ Mangle the `@t{<}' character with a replacement string.
 @defopt mangle_template_close (string)
 Mangle the `@t{>}' character with a replacement string.
 @end defopt
+@defopt mangle_template_empty (string)
+Mangle the `@t{<>}' sequence with a replacement string.
+This is applied @emph{before} @t{<} and @t{>} are mangled.
+@end defopt
 
 @defopt mangle_parameter_separator (string)
 Mangle the `@t{,}' character with a replacement string.
@@ -554,6 +580,7 @@ Mangle the `@t{@}}' character with a replacement string.
 
 @defopt mangle_scope (string)
 Mangle the `@t{::}' sequence with a replacement string.
+This is applied @emph{before} @t{:} is mangled.
 @end defopt
 @defopt mangle_colon (string)
 Mangle the `@t{:}' character with a replacement string.
@@ -583,6 +610,8 @@ DEFINE_OPTION_DEFAULT(mangle_array_index_open,
 	"mangle_array_index_open", "mangle: [ replacement")
 DEFINE_OPTION_DEFAULT(mangle_array_index_close,
 	"mangle_array_index_close", "mangle: ] replacement")
+DEFINE_OPTION_DEFAULT(mangle_template_empty,
+	"mangle_template_empty", "mangle: <> replacement")
 DEFINE_OPTION_DEFAULT(mangle_template_open,
 	"mangle_template_open", "mangle: < replacement")
 DEFINE_OPTION_DEFAULT(mangle_template_close,
@@ -759,6 +788,22 @@ Default: 1
 ***/
 DEFINE_OPTION_DEFAULT(emit_top, "emit_top",
 	"if true, emit top-level instances in output")
+
+#if 0
+/***
+@texinfo config/top_type_ports.texi
+@defopt top_type_ports (bool)
+@strong{This option is not yet implemented.}
+If set to 1, wrap the top-level instances inside a subcircuit.
+This option is useful when a type was chosen as the top level, 
+using the @option{-t} option.
+Default: 1
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(top_type_ports, "top_type_ports",
+	"if true, emit top-level instances in subcircuit")
+#endif
 
 /***
 @texinfo config/emit_parasitics.texi
