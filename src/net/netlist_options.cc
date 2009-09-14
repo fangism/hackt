@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.2.2.9 2009/09/11 23:53:43 fang Exp $
+	$Id: netlist_options.cc,v 1.2.2.10 2009/09/14 18:33:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -854,7 +854,8 @@ DEFINE_OPTION_DEFAULT(fet_spacing_diffonly, "fet_spacing_diffonly",
 @texinfo config/config_file.texi
 @defopt config_file files
 @defoptx config_file_compat files
-Import other configuration file(s).
+Import other configuration file(s), exactly like the @option{-c} 
+and @option{-C} command-line options.
 File are searched using the configuration search path.
 The @option{_compat} variation processes old-style configuration files.
 @end defopt
@@ -867,7 +868,8 @@ DEFINE_OPTION_MEMFUN(open_config_file_compat,
 /***
 @texinfo config/config_path.texi
 @defopt config_path paths
-Append to list of paths for searching for configuration files.
+Append to list of paths for searching for configuration files, 
+exactly like the @option{-I} command-line option.
 Reminder: paths are comma-separated.
 @end defopt
 @end texinfo
