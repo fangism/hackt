@@ -1,14 +1,14 @@
 // "flavor-01.hac"
 // test and ignore flavor
 
-// still have to fake fet types
+// don't need to fake fet types
 pint svt=-1;
 pint lvt=-2;
 
 defproc nand_type (bool a,b, c) {
 prs {
-	a<10,lvt> & b<10,svt:0> -> c-
-	~a<5,2,svt:1> |~b<10,svt> -> c+
+	a<10;lvt> & b<10;svt=0> -> c-
+	~a<5,2;svt=1> |~b<10;svt> -> c+
 }
 }
 

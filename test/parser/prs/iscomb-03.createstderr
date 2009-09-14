@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -53,7 +53,7 @@ In namespace "", we have: {
         bool<> x
         bool<> y
         bool<> z
-        x@[iscomb=]
+        x@[iscomb]
         y@[iscomb=0]
         z@[iscomb=1]
       footprint: {

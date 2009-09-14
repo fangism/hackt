@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	129
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	133
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -20,7 +20,7 @@ Persistent Object Manager text dump:
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	46
-	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -29,9 +29,9 @@ Persistent Object Manager text dump:
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	46
 	25	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	46
-	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -40,8 +40,8 @@ Persistent Object Manager text dump:
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	46
 	36	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	552
+	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	568
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
@@ -82,10 +82,10 @@ In namespace "", we have: {
         bool<> c
         bool<> d
       prs:
-        a -> b- [weak=1; after=10; ]
-        ~a -> b+ [weak=1; after=10; ]
-        c -> d- [after=20; weak=1; ]
-        ~c -> d+ [after=20; weak=1; ]
+        a -> b- [weak=1;after=10]
+        ~a -> b+ [weak=1;after=10]
+        c -> d- [after=20;weak=1]
+        ~c -> d+ [after=20;weak=1]
       footprint: {
         a = bool^0 = weakness<>::a (1) 
         b = bool^0 = weakness<>::b (2) 
@@ -98,10 +98,10 @@ In namespace "", we have: {
         3	weakness<>::c
         4	weakness<>::d
         resolved prs:
-        a -> b- [weak=1; after=10; ]
-        ~a -> b+ [weak=1; after=10; ]
-        c -> d- [after=20; weak=1; ]
-        ~c -> d+ [after=20; weak=1; ]
+        a -> b- [weak=1;after=10]
+        ~a -> b+ [weak=1;after=10]
+        c -> d- [after=20;weak=1]
+        ~c -> d+ [after=20;weak=1]
       }
       }
 

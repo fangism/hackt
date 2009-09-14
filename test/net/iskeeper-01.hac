@@ -1,0 +1,14 @@
+// "iskeeper-01.hac"
+// copy-modified from "precharge-01.hac"
+// @hacknet-flags@ -t foo
+
+defproc foo(bool en, a, b, o) {
+bool _o;
+prs {
+	en &{+~en} a & b	-> _o-
+	~en			-> _o+
+	_o			=> o-
+[iskeeper=1]	o<5,20>			=> _o-
+}
+}
+

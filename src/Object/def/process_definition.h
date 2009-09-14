@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.14 2007/11/26 08:27:34 fang Exp $
+	$Id: process_definition.h,v 1.15 2009/09/14 21:16:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -38,6 +38,7 @@ protected:
 	const string		key;		// inherited
 //	used_id_map_type	used_id_map;	// inherited
 	const never_ptr<const name_space>	parent;
+	meta_type_tag_enum			meta_type;
 	port_formals_manager			port_formals;
 	// list language bodies
 	PRS::rule_set				prs;
@@ -52,7 +53,8 @@ protected:
 	process_definition(const string& s); 
 public:
 	process_definition(const never_ptr<const name_space> o,
-		const string& s); 
+		const string& s, 
+		const meta_type_tag_enum t = META_TYPE_PROCESS); 
 	~process_definition();
 
 	ostream&
@@ -60,6 +62,9 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
+
+	meta_type_tag_enum
+	get_meta_type(void) const;
 
 	const string&
 	get_key(void) const;

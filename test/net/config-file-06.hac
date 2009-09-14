@@ -1,0 +1,9 @@
+// "config-file-05.hac"
+// copy-modified from "config-file-05.hac"
+// testing inclusion of other config files
+// @hacknet-flags@ -c sample-03.hacknet-conf
+// @deps@ sample-01.hacknet-conf sample-03.hacknet-conf
+
+import "inv-00.hac";
+
+

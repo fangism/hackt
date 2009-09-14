@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.28 2007/08/28 04:54:11 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.29 2009/09/14 21:16:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -98,6 +98,12 @@ const_param_expr_list::~const_param_expr_list() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_param_expr_list)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+const_param_expr_list::dump(ostream& o) const {
+	return dump(o, expr_dump_context::default_value);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -589,6 +595,14 @@ dynamic_param_expr_list::dynamic_param_expr_list(const value_type& p) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+dynamic_param_expr_list::dynamic_param_expr_list(
+		const const_param_expr_list& p) :
+		param_expr_list(), parent_type() {
+	reserve(p.size());
+	copy(p.begin(), p.end(), back_inserter(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::dynamic_param_expr_list(const size_t s) :
 		param_expr_list(), parent_type() {
 	util::reserve(AS_A(parent_type&, *this), s);
@@ -597,17 +611,6 @@ dynamic_param_expr_list::dynamic_param_expr_list(const size_t s) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::~dynamic_param_expr_list() {
 	STACKTRACE_DTOR("~dynamic_param_expr_list()");
-#if 0
-	cerr << "list contains " << size() << " pointers." << endl;
-	dump(cerr) << endl;
-	cerr << "reference counts in list:" << endl;
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		cerr << "\t" << i->refs() << " @ " << 
-			((*i) ? &**i : NULL) << endl;
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

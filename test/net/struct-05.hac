@@ -1,0 +1,27 @@
+// "struct-02.hac"
+// testing deeply nested deftypes and mangling
+
+deftype pfoo <: int<1> (bool a, b) { }
+deftype pbar <: int<2> (pfoo a, b) { }
+defproc pick (pbar a, b) { }
+
+defproc invert_it (pick p, q) {
+	bool x, y;
+prs {
+	p.b.b.b		=> x-
+	x		=> y-
+	x		=> q.b.a.b-
+	y		=> q.a.a.a-
+	p.b.b.b		=> q.a.b.a-
+}
+}
+
+defproc invert_them(bool p, q) {
+pick j, k, l;
+j.b.b.b = p;
+k.a.a.a = q;
+invert_it dee(j, l), dum(l, k);
+}
+
+invert_them now;
+

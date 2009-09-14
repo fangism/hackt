@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.12 2009/07/20 22:41:34 fang Exp $
+	$Id: PRS.h,v 1.13 2009/09/14 21:16:45 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -21,15 +21,16 @@
 namespace HAC {
 namespace entity {
 // be careful of namespaces...
+	class generic_attribute;
 namespace PRS {
 	class rule;
-	class attribute;
 	class rule_conditional;
 	class precharge_expr;
 }
 }
 namespace parser {
 class inst_ref_expr_list;
+class expr_attr_list;
 /**
 	This is the namespace for the PRS sub-language.  
  */
@@ -84,7 +85,7 @@ class literal : public inst_ref_expr {
 	/// not const, b/c we may wish to transfer it to macro
 	excl_ptr<inst_ref_expr>				ref;
 	/// not const, b/c we may wish to transfer it to macro
-	excl_ptr<const expr_list>			params;
+	excl_ptr<const expr_attr_list>			params;
 	/**
 		If true this refers to an internal node, 
 		and should use a different lookup.  
@@ -97,7 +98,7 @@ public:
 	explicit
 	literal(excl_ptr<inst_ref_expr>&);
 
-	literal(inst_ref_expr*, const expr_list*);
+	literal(inst_ref_expr*, const expr_attr_list*);
 
 	~literal();
 
@@ -111,11 +112,11 @@ public:
 	excl_ptr<const token_identifier>
 	extract_identifier(void);
 
-	excl_ptr<const expr_list>
+	excl_ptr<const expr_attr_list>
 	extract_parameters(void);
 
 	void
-	attach_parameters(const expr_list*);
+	attach_parameters(const expr_attr_list*);
 
 	void
 	mark_internal(void) { internal = true; }
@@ -147,6 +148,15 @@ public:
 	// CHECK_NONMETA_EXPR_PROTO
 	// CHECK_GENERIC_PROTO
 	// CHECK_PRS_EXPR_PROTO
+
+protected:
+	typedef	entity::generic_attribute		attribute_type;
+
+public:
+	// so macro::check_prs_rule can use this
+	static
+	attribute_type
+	check_literal_attribute(const generic_attribute&, const context&);
 
 };	// end class literal
 
@@ -182,7 +192,7 @@ public:
  */
 class rule : public body_item {
 public:
-	typedef	entity::PRS::attribute		attribute_type;
+	typedef	entity::generic_attribute		attribute_type;
 protected:
 	const excl_ptr<const generic_attribute_list>		attribs;
 	const excl_ptr<const expr>		guard;
@@ -302,9 +312,11 @@ public:
 	The programmer can design these to do whatever.  
  */
 class macro : public body_item {
+	// these are rule-style attributes, we currently ignore
 	const excl_ptr<const generic_attribute_list>		attribs;
 	excl_ptr<const token_identifier>		name;
-	excl_ptr<const expr_list>			params;
+	// attributes also go here
+	excl_ptr<const expr_attr_list>			params;
 	const excl_ptr<const inst_ref_expr_list>	args;
 public:
 	macro(const generic_attribute_list*, literal*, 

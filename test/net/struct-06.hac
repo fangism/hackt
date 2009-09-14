@@ -1,0 +1,6 @@
+// "struct-06.hac"
+// @hacknet-flags@ -c mangle-example-02.hacknet-conf
+// @deps@ mangle-example-02.hacknet-conf
+
+import "struct-05.hac";
+

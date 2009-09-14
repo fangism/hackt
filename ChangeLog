@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2009-09-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-merged-netlist-02-13:
+	  Branch merge of hacknet features, batch 2.
+	  configure.ac: date bump
+
+
 2009-08-28	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-28-merged-netlist-01-23:

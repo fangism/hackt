@@ -1,0 +1,10 @@
+# "mangle-example-01.hacknet-conf"
+#	$Id: mangle-example-02.hacknet-conf,v 1.2 2009/09/14 21:18:15 fang Exp $
+# name-mangling configuration example
+
+mangle_underscore=__
+mangle_struct_member_separator=/
+mangle_template_empty=
+mangle_internal_at=_INT_
+mangle_auxiliary_pound=_AUX_
+

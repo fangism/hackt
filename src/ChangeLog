@@ -3,6 +3,175 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-merged-netlist-02-13:
+	  Branch merge of hacknet features, batch 2.
+	  Summary:
+		hvt/lvt overriding syntax updated, using ';'.
+		general support for prs-literal attributes.
+		added numerous configurable options: transistor sizing, 
+		parasitic parameters, formatting, backward compatibility
+		for old-style configuration files.
+		Nesting/including config files, name-mangling, 
+		instance hierarchy distinction between process and 
+		non-process members, output formatting, empty subcircuits, 
+		unused ports.
+	  All advertised features documented and tested.
+
+
+2009-09-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-13:
+	  entity::dump_flags, instance_collection_base: 
+		now support customizing hierarchy delimiters with
+		different strings, and can now distinguish between
+		process and struct parent.
+		Updated parse/AST structures to propagate meta-type 
+		information (which used to be lost) through middle end.
+		Object binary for process_definition has been extended, 
+		create test-cases updated to reflect this.
+	  parser/hackt-parse.yy.in: updated syntactic actions to
+		pass meta-type tag to new process_def/proto.
+	  hacknet: old option mangle_instance_member_separator is now split
+		into mangle_process_member_separator and 
+		mangle_struct_member_separator (for channel and data-types).
+	  Added bunch of new tests, documented.  
+
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-12:
+	  hacknet option: unused_ports, if true, then treat unconnected
+		ports as used and include them in the subcircuits'
+		port lists.  Documented, tested.
+
+
+2009-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-11:
+	  hacknet mangling: can now pass empty strings to delete patterns
+		as a option for mangling, restored default values.
+		Added new pattern match option "mangle_template_empty"
+			for <> empty template parameters.
+		Refined netlist_option::mangle_name() into
+			mangle_type and mangle_instance, to reduce the
+			set of patterns to search and apply.
+		Experimental top_type_ports option doesn't work yet because
+			top-footprint still points to the global top fp.
+	  New mangling test cases added, option documented.
+
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-10:
+	  hacknet option: empty_subcircuits, if true, emit definitions
+		and instances of empty subcircuits.  Tested, documented.
+
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-09:
+	  hacknet: re-wrote node-name mangling to perform mangling
+		one-time only and cache node::name for logical nodes.
+		Switch: net/common.h: CACHE_LOGICAL_NODE_NAMES
+			also applies to internal and auxiliary nodes.  
+	  entity::definition_base:
+		virtual get_meta_type() so that footprint can quickly
+		deduce the meta type of its referenced owner definition.
+		Will need this to determine whether or not a footprint
+		corresponds to a process, channel, or datatype.
+	  No new tests, no regressions.
+	  Coming soon: selective '.' instance hierarchy mangling.
+		only datatype/channel members should be mangled.
+
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-08:
+	  hacknet: support new options to import other config files
+		from config files, for hierarchical/incremental importing.
+	  Test cases added, features documented.
+
+
+2009-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-07:
+	  hacknet: added name mangling options to configuration.
+		Default behavior is no-mangle.
+		New mangling options are documented and tested.
+
+
+2009-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-06:
+	  hacknet: implemented new parameters min_length, min_width, 
+		max_p_width, min_p_width
+		sizes are now sticky, and propagate from left-to-right
+		per rule, and locally resets for precharges and
+		internal node definitions.  
+	  Added new sizing test cases.  
+
+
+2009-09-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-05:
+	  hacknet: implemented iskeeper suffix flag for rules marked 
+		iskeeper, and also use stat_* sizing as default
+		where unspecified.
+		Added new spice test cases.
+
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-04:
+	  hacknet: added option to dump configuration values to file,
+		added backward compatibility support for netgen-style
+		configuration files, both in file and command-line.
+		see also util/ChangeLog for util/optparse additions.
+	  hacknet: implemented emit_parasitics option that emits
+		source/drain area/perimiter parameters.
+	  net/netlist_options.cc: improved help string with default values,
+		added new parasitic-related options:
+		fet_diff_overhang, fet_spacing_diffonly.
+		for line-continuation: pre_line_continue, post_line_continue,
+		area_unit [p].
+		Updated texinfo documetation.
+	  Added bunch of test cases for the above features.
+
+
+2009-09-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-03:
+	  hacknet: now honors FET types/flavors in prs-literals, 
+		macros (pass-gates), and in precharges.
+		Added handful of new test cases.
+	  Finished middle-end support for macro attributes, which are
+		simply borrowed from literal attributes for now.
+		Object file binary extended yet again.
+
+
+2009-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-02:
+	  Completed work on prs-literal attributes, propagating data
+		structures through middle-end and some back-ends.  
+		Binary objects have once again been extended slightly
+		to accommodate PRS literal attributes.  
+		Also minor re-formatting of attributes in object file dump.
+		Test suite has been updated to reflect this.
+	  Continued to refactor reusable code into generic_attributes.
+	  Eventually perm PRS_LITERAL_ATTRIBUTES switch.
+	  Next: update hacknet to use it.
+
+
+2009-08-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-01:
+	  This branch for implementing FET type override
+		and power-supply override for hacknet.
+	  Eliminated use of qmap in PRS/SPEC lang registries.
+	  grammar: switching to new prs-literal attribute grammar,
+		using semi-colon ';' delimited key-value pairs.  
+		*** THIS BREAKS OLD GRAMMAR *** (incompatible).
+	  AST: extended prs-literals to take additional attribute-list.
+		TODO: finish check_literal_attribute, w/ registries.
+	  Refactored entity::generic_attribute code for much better
+		re-use, reduced duplicate waste.
+	  Object/lang: TODO: finish PRS_LITERAL_ATTRIBUTES
+	  One momentary createdump regression in prs/flavor-01.
+
+
 2009-08-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-28-merged-netlist-01-23:

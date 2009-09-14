@@ -1,0 +1,18 @@
+// "flavor-02.hac"
+// a backup version of old "flavor-01.hac"
+// whose syntax is now rejected
+// test and ignore flavor
+
+// still have to fake fet types
+pint svt=-1;
+pint lvt=-2;
+
+defproc nand_type (bool a,b, c) {
+prs {
+	a<10,lvt> & b<10,svt:0> -> c-
+	~a<5,2,svt:1> |~b<10,svt> -> c+
+}
+}
+
+nand_type X;
+

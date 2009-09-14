@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	89
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	93
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
 	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20

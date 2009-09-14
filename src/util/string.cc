@@ -1,6 +1,6 @@
 /**
 	\file "util/string.cc"
-	$Id: string.cc,v 1.2 2009/08/28 20:45:27 fang Exp $
+	$Id: string.cc,v 1.3 2009/09/14 21:17:18 fang Exp $
 	Additional string utilities.
  */
 
@@ -20,6 +20,7 @@ size_t
 strgsub(string& t, const string& s, const string& r) {
 	// substitution is done by copying pieces of strings
 	size_t subs = 0;
+if (s.length() && (s != r)) {
 	string ret;	// temporary
 	const size_t slen = s.length();
 	INVARIANT(slen);
@@ -35,6 +36,7 @@ strgsub(string& t, const string& s, const string& r) {
 	}
 	ret.append(t.begin()+tpos, t.end());	// remainder
 	t = ret;
+}
 	return subs;
 }
 

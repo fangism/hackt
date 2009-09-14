@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.2 2009/08/28 20:45:05 fang Exp $
+	$Id: hacknet.cc,v 1.3 2009/09/14 21:17:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -31,10 +31,7 @@ namespace HAC {
 using std::string;
 using util::persistent;
 using util::persistent_object_manager;
-using util::optparse;
-using util::optparse_list;
-using util::optparse_file;
-using util::option_value_list;
+using util::option_value;
 using NET::netlist_options;
 #include "util/using_ostream.h"
 
@@ -42,13 +39,13 @@ using NET::netlist_options;
 class hacknet_options {
 public:
 	/**
-		Un-processed option values list from file/command-line.
-	 */
-	option_value_list	raw_opts;
-	/**
 		Set to true to just exit after command parsing.  
 	 */
 	bool			help_only;
+	/**
+		If true, print values of options.  
+	 */
+	bool			dump_config;
 // many options copied from prsim.cc
 	/**
 		Copied from cflat_options.
@@ -70,18 +67,13 @@ public:
 	netlist_options		net_opt;
 
 	hacknet_options() :
-		raw_opts(), 
 		help_only(false),
+		dump_config(false),
 		use_referenced_type_instead_of_top_level(false),
 		named_process_type(),
 		comp_opt(),
 		net_opt()
 		{ }
-
-	bool
-	finalize(void) {
-		return net_opt.set(raw_opts);
-	}
 
 };	// end class hacknet_options
 
@@ -115,7 +107,10 @@ hacknet::main(const int argc, char* argv[], const global_options&) {
 		// else is other error
 		return opterr;
 	}
-//	cerr << "options:\n" << opt.raw_opts << endl;	// DEBUG
+	if (opt.dump_config) {
+		opt.net_opt.dump(cout);
+		return 0;
+	}
 	if (opt.help_only) {
 		return 0;
 	}
@@ -136,10 +131,6 @@ if (opt.comp_opt.compile_input) {
 }
 	if (!the_module)
 		return 1;
-	// process netlist options and check for errors
-	if (opt.finalize()) {
-		return 1;
-	}
 
 	static const char alloc_errstr[] = 
 		"ERROR in allocating global state.  Aborting.";
@@ -179,6 +170,7 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	top_module->populate_top_footprint_frame();
 	// the simulator state object, initialized with the module
 try {
+	opt.net_opt.commit();		// commit options
 	const module& top_module_c(AS_A(const module&, *top_module));
 	const entity::footprint& topfp(top_module_c.get_footprint());
 	NET::netlist_generator n(top_module->get_state_manager(), topfp, 
@@ -201,7 +193,7 @@ try {
 int
 hacknet::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+c:f:hHt:";
+	static const char optstring[] = "+c:C:df:hHI:t:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -220,19 +212,50 @@ This option is repeatable and cumulative.
 @end texinfo
 ***/
 		case 'c': {
-			std::ifstream f(optarg);
-			if (f) {
-				const option_value_list t(optparse_file(f));
-				o.raw_opts.insert(o.raw_opts.end(), 
-					t.begin(), t.end());
-				// any error handling here?
-			} else {
-				cerr << "Error opening options file \"" <<
-					optarg << "\" for reading." << endl;
+			option_value v;
+			v.key = "config_file";	// doesn't really matter
+			v.values.push_back(optarg);
+			if (o.net_opt.open_config_file(v)) {
+				// already have error message
 				return 2;
 			}
 			break;
 		}
+/***
+@texinfo opt/option-C-upper.texi
+@defopt -C file
+Backwards compatibility option.
+Parse configuration options from @var{file}.
+Options are of the form @t{type key value}.
+@var{type} may be @option{int}, @option{real}, or @option{string}.
+Values are only singleton.  
+The same options can also be passed in through the command-line 
+via @option{-F}.   
+This option is repeatable and cumulative.
+@xref{Configuration Options}.
+@end defopt
+@end texinfo
+***/
+		case 'C': {
+			option_value v;
+			v.key = "config_file_compat";	// doesn't really matter
+			v.values.push_back(optarg);
+			if (o.net_opt.open_config_file_compat(v)) {
+				// already have error message
+				return 2;
+			}
+			break;
+		}
+/***
+@texinfo opt/option-d.texi
+@defopt -d
+Print the values of all configuration values to @file{stdout} and exits.
+@end defopt
+@end texinfo
+***/
+		case 'd':
+			o.dump_config = true;
+			break;
 /***
 @texinfo opt/option-f.texi
 @defopt -f options...
@@ -246,10 +269,26 @@ This option is repeatable and cumulative.
 @end texinfo
 ***/
 		case 'f': {
-			const option_value_list t(optparse_list(optarg));
-			o.raw_opts.insert(o.raw_opts.end(), 
-				t.begin(), t.end());
-			// any error handling here?
+			if (o.net_opt.set(util::optparse_list(optarg)))
+				return 2;
+			break;
+		}
+/***
+@texinfo opt/option-F-upper.texi
+@defopt -F option
+Backwards compatibility option.
+Parse configuration options from @var{options}.
+Options are of the same key-value format as in the configuration
+file, see option @option{-C}.  
+Unlike @option{-f} option, only one parameter can be specified at a time.
+This option is repeatable and cumulative.
+@xref{Configuration Options}.
+@end defopt
+@end texinfo
+***/
+		case 'F': {
+			if (o.net_opt.set(util::optparse_compat(optarg)))
+				return 2;
 			break;
 		}
 /***
@@ -266,7 +305,7 @@ Help.  Print usage and exit.
 /***
 @texinfo opt/option-H-upper.texi
 @defopt -H
-Describe all configuration options.  
+Describe all configuration options with default values and exit.  
 @xref{Configuration Options}.
 See also the installed documentation for @file{hacknet.info,html,pdf}.
 @end defopt
@@ -275,6 +314,18 @@ See also the installed documentation for @file{hacknet.info,html,pdf}.
 		case 'H':
 			o.help_only = true;
 			netlist_options::help(cerr);
+			break;
+/***
+@texinfo opt/option-I-upper.texi
+@defopt -I path
+Append @var{path} to the list of paths to search for including
+and referencing other config files.  
+See also the @option{config_path} configuration option.
+@end defopt
+@end texinfo
+***/
+		case 'I':
+			o.net_opt.file_manager.add_path(optarg);
 			break;
 /***
 @texinfo opt/option-t.texi
@@ -314,28 +365,30 @@ Convenient takes place of copy-propagating a single instance's ports.
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 hacknet::usage(void) {
-	cerr << "usage: " << name << " [options] <hackt-objfile>" << endl;
-	cerr << "options:\n"
+	ostream& o(cerr);
+	o << "usage: " << name << " [options] <hackt-objfile>" << endl;
+	o << "options:\n"
 "\t-c file : process configuration options file (repeatable)\n"
-"\t-f \"option=value ...\" : set option values (repeatable)\n"
-"\t\tseparate multiple options with space\n"
-"\t-h : print this usage help\n"
-"\t-H : print configuration options help\n"
+"\t-C file : process configuration options file, old-style (repeatable)\n"
+"\t-d : print configuration values and exit\n"
+"\t-f \"option=value(s) ...\" : set option values (repeatable)\n"
+"\t\tmultiple values may be comma-separated\n"
+"\t\tmultiple options may be space-separated\n"
+"\t-F \"type option value\" : set option value, old-style (repeatable)\n"
+"\t\ttype is [int|real|string], and string values are \"quoted\"\n"
+"\t\tonly one option at a time (per -F flag)\n"
+"\t-h : print this usage help and exit\n"
+"\t-H : print configuration options help and exit\n"
+"\t-I path : append search path for configuration files\n"
 "\t-t \"type\" : generate netlist for the named type,\n"
 "\t\tignoring top-level instances (quotes recommended)."
 	<< endl;
-	cerr << "Additional documentation is installed in:\n"
+	o << "Additional documentation is installed in:\n"
 	"\t`info hacknet' (finds " INFODIR "/hacknet.info)\n"
 	"\tPDF: " PDFDIR "/hacknet.pdf\n"
 	"\tPS: " PSDIR "/hacknet.ps\n"
 	"\tHTML: " HTMLDIR "/hacknet.html/index.html" << endl;
 }
-
-//-----------------------------------------------------------------------------
-// hacknet_option modifier functions and their flag registrations
-#if 0
-static void __hacknet_default(hacknet_options& o) { o = hacknet_options(); }
-#endif
 
 //=============================================================================
 }	// end namespace HAC

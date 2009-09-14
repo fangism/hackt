@@ -14,9 +14,9 @@ Persistent Object Manager text dump:
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	51
 	12	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -26,10 +26,10 @@ Persistent Object Manager text dump:
 	22	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	51
 	23	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	24	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	504
+	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	520
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
@@ -49,8 +49,8 @@ In namespace "", we have: {
 }
 
 top-level prs:
-  x & y -> z- [iskeeper=1; keeper=0; ]
-  ~x & ~y -> z+ [iskeeper=1; keeper=0; ]
+  x & y -> z- [iskeeper=1;keeper=0]
+  ~x & ~y -> z+ [iskeeper=1;keeper=0]
 
 footprint: {
   x = bool^0 = x (1) 
@@ -62,6 +62,6 @@ footprint: {
   2	y
   3	z
   resolved prs:
-  x & y -> z- [iskeeper=1; keeper=0; ]
-  ~x & ~y -> z+ [iskeeper=1; keeper=0; ]
+  x & y -> z- [iskeeper=1;keeper=0]
+  ~x & ~y -> z+ [iskeeper=1;keeper=0]
 }

@@ -1,0 +1,6 @@
+# "sample-03.hacknet-conf"
+# reference another config file, overriding earlier parameters
+
+lambda=0.2
+config_file=sample-01.hacknet-conf
+

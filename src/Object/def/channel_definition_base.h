@@ -2,7 +2,7 @@
 	\file "Object/def/channel_definition_base.h"
 	Channel definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h".
-	$Id: channel_definition_base.h,v 1.6 2006/10/18 01:19:07 fang Exp $
+	$Id: channel_definition_base.h,v 1.7 2009/09/14 21:16:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
@@ -28,6 +28,9 @@ protected:
 	channel_definition_base() : parent_type() { }
 public:
 virtual	~channel_definition_base() { }
+
+	meta_type_tag_enum
+	get_meta_type(void) const;
 
 	excl_ptr<definition_base>
 	make_typedef(never_ptr<const scopespace> s, 

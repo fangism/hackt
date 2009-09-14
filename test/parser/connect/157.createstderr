@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	142
 	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -31,7 +31,7 @@ Persistent Object Manager text dump:
 	27	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
@@ -45,32 +45,32 @@ Persistent Object Manager text dump:
 	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	50	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	54	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	55	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	56	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	37
-	57	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	62	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	37
 	63	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	64	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	642
+	64	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	674
 	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	69	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
+	69	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
 	70	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	71	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	72	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -79,7 +79,7 @@ Persistent Object Manager text dump:
 	75	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	76	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
 	77	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	78	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
+	78	##ADDR##	procdefn	0	#HEAD#	#TAIL#	144
 	79	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	80	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	81	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -178,8 +178,8 @@ In namespace "", we have: {
         (&:j:[0..N-1]: ~i[$j]) -> _o+
         _o -> o-
         ~_o -> o+
-        o -> _o- [iskeeper=1; ]
-        ~o -> _o+ [iskeeper=1; ]
+        o -> _o- [iskeeper=1]
+        ~o -> _o+ [iskeeper=1]
       footprint collection: {
         <2> {
           N = pint^0 value: 2
@@ -201,8 +201,8 @@ In namespace "", we have: {
           ~i[0] & ~i[1] -> _o+
           _o -> o-
           ~_o -> o+
-          o -> _o- [iskeeper=1; ]
-          ~o -> _o+ [iskeeper=1; ]
+          o -> _o- [iskeeper=1]
+          ~o -> _o+ [iskeeper=1]
         }
       }
       }

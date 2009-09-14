@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.25 2009/08/28 20:44:58 fang Exp $
+	$Id: PRS_footprint.cc,v 1.26 2009/09/14 21:16:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -51,47 +51,6 @@ using util::write_sequence;
 using util::read_value;
 using util::read_sequence_prealloc;
 using util::read_sequence_resize;
-
-//=============================================================================
-// class footprint_rule_attribute method definitions
-
-footprint_rule_attribute::footprint_rule_attribute() : key(), values(NULL) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-footprint_rule_attribute::footprint_rule_attribute(const string& k, 
-		const values_type& v) : key(k), values(v) {
-	NEVER_NULL(values);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-footprint_rule_attribute::~footprint_rule_attribute() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_rule_attribute::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	NEVER_NULL(values);
-	values->collect_transient_info(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_rule_attribute::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	write_value(o, key);
-	m.write_pointer(o, values);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_rule_attribute::load_object(const persistent_object_manager& m, 
-		istream& i) {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	read_value(i, key);
-	m.read_pointer(i, values);
-}
 
 //=============================================================================
 // class footprint::subcircuit_map_entry method definitions
@@ -169,7 +128,20 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			np[e.only()].get_back_ref()
 				->dump_hierarchical_name(o,
 					dump_flags::no_definition_owner);
-			directive_base::dump_params(e.get_params(), o);
+			if (e.params.size()
+#if PRS_LITERAL_ATTRIBUTES
+				|| e.attributes.size()
+#endif
+				) {
+			o << '<';
+			directive_base::dump_params_bare(e.params, o);
+#if PRS_LITERAL_ATTRIBUTES
+			if (e.attributes.size()) {
+				e.attributes.dump(o << ';');
+			}
+#endif
+			o << '>';
+			}
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:
 			STACKTRACE_DUMP_PRINT("Not ");
@@ -243,17 +215,7 @@ footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np,
 		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
 	o << (r.dir ? '+' : '-');
 if (r.attributes.size()) {
-	o << " [";
-	typedef	rule::attributes_list_type::const_iterator	const_iterator;
-	const_iterator i(r.attributes.begin());
-	const const_iterator e(r.attributes.end());
-	for ( ; i!=e; ++i) {
-		o << i->key << '=';
-		NEVER_NULL(i->values);
-		i->values->dump(o, entity::expr_dump_context::default_value);
-		o << "; ";
-	}
-	o << ']';
+	r.attributes.dump(o << " [") << ']';
 }
 	return o;
 }
@@ -266,7 +228,17 @@ if (r.attributes.size()) {
 ostream&
 footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
 	o << m.name;
-	directive_base::dump_params(m.params, o);
+if (m.params.size() || m.attributes.size()) {
+	o << '<';
+	directive_base::dump_params_bare(m.params, o);
+#if PRS_LITERAL_ATTRIBUTES
+//	o << '[' << m.attributes.size() << ']';
+	if (m.attributes.size()) {
+		m.attributes.dump(o << ';');
+	}
+#endif
+	o << '>';
+}
 	o << '(';
 	typedef	macro::nodes_type::const_iterator const_iterator;
 	const_iterator i(m.nodes.begin());
@@ -474,31 +446,40 @@ footprint::lookup_internal_node_expr(const string& k, const bool dir) const {
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	util::persistent_sequence_collector_ref c(m);
+	const util::persistent_sequence_collector_ref c(m);
 {
+#if 0
 	typedef	rule_pool_type::const_iterator	const_iterator;
 	const_iterator i(rule_pool.begin());
 	const const_iterator e(rule_pool.end());
 	for ( ; i!=e; ++i) {
 		i->collect_transient_info_base(m);
 	}
-	// c(rule_pool);
+#else
+	c(rule_pool);
+#endif
 }{
+#if 0
 	typedef	expr_pool_type::const_iterator	const_iterator;
 	const_iterator i(expr_pool.begin());
 	const const_iterator e(expr_pool.end());
 	for ( ; i!=e; ++i) {
 		i->collect_transient_info_base(m);
 	}
-	// c(expr_pool);
+#else
+	c(expr_pool);
+#endif
 }{
+#if 0
 	typedef	macro_pool_type::const_iterator	const_iterator;
 	const_iterator i(macro_pool.begin());
 	const const_iterator e(macro_pool.end());
 	for ( ; i!=e; ++i) {
 		i->collect_transient_info_base(m);
 	}
-	// c(macro_pool);
+#else
+	c(macro_pool);
+#endif
 }{
 	c(subcircuit_map);
 }
@@ -671,6 +652,9 @@ footprint_expr_node::collect_transient_info_base(
 	STACKTRACE_PERSISTENT_VERBOSE;
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.collect_pointer_list(params);
+#if PRS_LITERAL_ATTRIBUTES
+		attributes.collect_transient_info_base(m);
+#endif
 	} else	INVARIANT(params.empty());
 }
 
@@ -688,6 +672,9 @@ footprint_expr_node::write_object_base(const persistent_object_manager& m,
 	write_array(o, nodes);
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.write_pointer_list(o, params);
+#if PRS_LITERAL_ATTRIBUTES
+		attributes.write_object_base(m, o);
+#endif
 	} else	INVARIANT(params.empty());
 	if (type == PRS_AND_EXPR_TYPE_ENUM) {
 		write_sequence(o, precharge_map);
@@ -705,6 +692,9 @@ footprint_expr_node::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_PRINT("nodes size = " << nodes.size() << endl);
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.read_pointer_list(i, params);
+#if PRS_LITERAL_ATTRIBUTES
+		attributes.load_object_base(m, i);
+#endif
 	}
 	if (type == PRS_AND_EXPR_TYPE_ENUM) {
 		read_sequence_resize(i, precharge_map);
@@ -770,6 +760,32 @@ void
 footprint_macro::accept(cflat_visitor& v) const {
 	v.visit(*this);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRS_LITERAL_ATTRIBUTES
+void
+footprint_macro::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	directive_base::collect_transient_info_base(m);
+	attributes.collect_transient_info_base(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_macro::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	directive_base::write_object_base(m, o);
+	attributes.write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_macro::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	directive_base::load_object_base(m, i);
+	attributes.load_object_base(m, i);
+}
+#endif
 
 //=============================================================================
 }	// end namespace PRS

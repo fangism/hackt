@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.27 2009/08/28 20:44:57 fang Exp $
+	$Id: PRS.h,v 1.28 2009/09/14 21:16:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -41,6 +41,9 @@ typedef	bool_literal_base_ptr_type		literal_base_ptr_type;
 typedef	directive_source_params_type		literal_params_type;
 
 //=============================================================================
+typedef	generic_attribute_list_type	rule_attribute_list_type;
+
+//=============================================================================
 /**
 	Literal expression, which can appear on LHS or RHS of any rule.  
 	Re: internal nodes: we've decided to add support here instead of
@@ -60,6 +63,9 @@ private:
 		not the RHS of a rule.  
 	 */
 	params_type				params;
+#if PRS_LITERAL_ATTRIBUTES
+	generic_attribute_list_type		attr;
+#endif
 public:
 	literal();
 
@@ -69,7 +75,8 @@ public:
 	explicit
 	literal(const node_literal_ptr_type&);
 
-	literal(const bool_literal&, const params_type&);
+	literal(const bool_literal&, const params_type&, 
+		const generic_attribute_list_type&);
 
 	// default copy constructor (is copy-constructible)
 
@@ -89,6 +96,14 @@ public:
 
 	const params_type&
 	get_params(void) const { return params; }
+
+#if PRS_LITERAL_ATTRIBUTES
+	generic_attribute_list_type&
+	get_attributes(void) { return attr; }
+
+	const generic_attribute_list_type&
+	get_attributes(void) const { return attr; }
+#endif
 
 	void
 	check(void) const;
@@ -115,28 +130,6 @@ public:
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class literal
-
-//=============================================================================
-/**
-	Inherits mostly from generic_attribute, but gives PRS-specific
-	interface.  
- */
-class attribute : public generic_attribute {
-public:
-	attribute();
-
-	explicit
-	attribute(const string&);
-
-	~attribute();
-
-	ostream&
-	dump(ostream&, const rule_dump_context& c) const;
-
-};	// end class generic_attribute
-
-//-----------------------------------------------------------------------------
-typedef	std::vector<attribute>		rule_attribute_list_type;
 
 //=============================================================================
 class pull_base : public rule {
@@ -799,6 +792,9 @@ public:
  */
 class macro : public rule, public directive_source {
 	typedef	macro				this_type;
+#if PRS_LITERAL_ATTRIBUTES
+	generic_attribute_list_type		attr;
+#endif
 public:
 	macro();
 
@@ -806,6 +802,14 @@ public:
 	macro(const string&);
 
 	~macro();
+
+#if PRS_LITERAL_ATTRIBUTES
+	generic_attribute_list_type&
+	get_attributes(void) { return attr; }
+
+	const generic_attribute_list_type&
+	get_attributes(void) const { return attr; }
+#endif
 
 	ostream&
 	what(ostream&) const;

@@ -1,0 +1,7 @@
+// "mangle-09.hac"
+// copy-modified from "mangle-07.hac"
+// @hacknet-flags@ -f mangle_template_empty= -f mangle_template_open=OPEN -f mangle_template_close=CLOSE
+// testing substitution of empty string (deletion)
+
+import "inv-02.hac";
+

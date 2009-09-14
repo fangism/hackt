@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	108
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -15,22 +15,22 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	18	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	22	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	415
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	431
 	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
-	29	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	29	##ADDR##	procdefn	0	#HEAD#	#TAIL#	108
 	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	32	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -38,19 +38,19 @@ Persistent Object Manager text dump:
 	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	41	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	43	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	402
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	418
 	50	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
 	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.29 2009/06/05 16:28:10 fang Exp $
+ 	$Id: instance_collection.cc,v 1.30 2009/09/14 21:16:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -147,15 +147,7 @@ instance_collection_base::get_footprint_key(void) const {
 ostream&
 instance_collection_base::dump_hierarchical_name(ostream& o) const {
 	STACKTRACE_VERBOSE;
-	if (super_instance) {
-		return super_instance->dump_hierarchical_name(o,
-			dump_flags::default_value) << '.' << get_name();
-	} else {
-		const never_ptr<const instance_placeholder_base>
-			p(__get_placeholder_base());
-		NEVER_NULL(p);
-		return p->dump_qualified_name(o, dump_flags::default_value);
-	}
+	return this->dump_hierarchical_name(o, dump_flags::default_value);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -164,8 +156,21 @@ instance_collection_base::dump_hierarchical_name(ostream& o,
 		const dump_flags& df) const {
 	STACKTRACE_VERBOSE;
 	if (super_instance) {
+		// distinguish between process parent and
+		// channel or datastruct parent
+		const never_ptr<const physical_instance_placeholder>
+			p(super_instance->get_container_base()
+				->get_placeholder_base());
+		NEVER_NULL(p);
+		const meta_type_tag_enum
+			pt(p->get_unresolved_type_ref()->get_base_def()
+				->get_meta_type());
+		// yikes! a lot of virtual function calls!
+		const string& sep((pt == META_TYPE_PROCESS)
+			? df.process_member_separator
+			: df.struct_member_separator);
 		return super_instance->dump_hierarchical_name(o, df)
-			<< '.' << get_name();
+			<< sep << get_name();
 	} else {
 		const never_ptr<const instance_placeholder_base>
 			p(__get_placeholder_base());

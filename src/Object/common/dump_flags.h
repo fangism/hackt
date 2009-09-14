@@ -1,14 +1,18 @@
 /**
 	\file "Object/common/dump_flags.h"
 	Dump attributes class.  
-	$Id: dump_flags.h,v 1.6 2006/01/30 07:41:59 fang Exp $
+	$Id: dump_flags.h,v 1.7 2009/09/14 21:16:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_DUMP_FLAGS_H__
 #define	__HAC_OBJECT_COMMON_DUMP_FLAGS_H__
 
+// #include "util/string_fwd.h"
+#include <string>
+
 namespace HAC {
 namespace entity {
+using std::string;
 
 /**
 	Common dump flags used to tweak output formatting and style.  
@@ -34,7 +38,20 @@ struct dump_flags {
 		This is typically off for cflat/PRS outputs.  
 	 */
 	bool	show_leading_scope;
+	/**
+		The character to use to separate process instance members, 
+		default is '.'.
+		Used in instance_collection_base::dump_hierarchical_name.
+	 */
+	string	process_member_separator;
+	/**
+		The character to use to separate channel or datatype members, 
+		default is '.'.
+		Used in instance_collection_base::dump_hierarchical_name.
+	 */
+	string	struct_member_separator;
 
+	/// default constructor
 	dump_flags();
 private:
 	explicit

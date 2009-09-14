@@ -1,0 +1,30 @@
+// "mangle-02.hac"
+// testing name-mangling
+// @hacknet-flags@ -c mangle-example-01.hacknet-conf -t foo::wire_copy<2>
+// @deps@ mangle-example-01.hacknet-conf
+
+import "mangle-01.hac";
+
+export
+template <pint N>
+defproc e1of (bool d[N], e) { }
+
+typedef	e1of<2>	e1of2;
+
+namespace foo {
+
+export
+template <pint N>
+defproc wire_copy(e1of2 in, o[N]) {
+bool oe[N];
+(;i:N:
+	o[i].d[0] = in.d[0];
+	o[i].d[1] = in.d[1];
+	o[i].e = oe[i];
+)
+::std::logic::celem<N, 10> comp(oe, in.e);
+}
+
+}	// end namespace foo
+
+

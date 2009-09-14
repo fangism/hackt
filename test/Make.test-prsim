@@ -1,10 +1,12 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.18 2009/02/01 18:21:05 fang Exp $
+#	$Id: Make.test-prsim,v 1.19 2009/09/14 21:17:21 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
+
+AM_HACPRSIM_FLAGS = -I$(srcdir)
 
 HACKT_PRSIM_SUFFIXES = \
 	.prsimrc .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
@@ -154,7 +156,7 @@ PRSIMRC_TEST_SCRIPT = \
 	autotrace=1 ; \
 	$(PRSIMRC_AUTOTRACE_DISABLE_HOOK) \
 	if test "$$autotrace" = 1 ; then traceflag="-r $$trace" ; fi ; \
-	cmd="$(HACKT_PRSIM_EXE) -b -a $$ckpt $$traceflag -I$(srcdir) $$flags $$obj" ; \
+	cmd="$(HACKT_PRSIM_EXE) -b -a $$ckpt $$traceflag $(AM_HACPRSIM_FLAGS) $$flags $$obj" ; \
 	$(ECHO) "ckpt: $$cmd < $<" ; \
 	$(SED) -e 's|SOURCE|$<|g' $(PRSIMCKPT_TEMPLATE_SCRIPT) | \
 	  $$cmd > $@ 2>&1 ; \
@@ -168,7 +170,7 @@ PRSIMRC_TEST_SCRIPT = \
 PRSIMRC_FAIL_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	flags=`$(CAT) $< | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
-	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$flags $$obj" ; \
+	cmd="$(HACKT_PRSIM_EXE) -b $(AM_HACPRSIM_FLAGS) $$flags $$obj" ; \
 	$(ECHO) "$$cmd < $<" ; \
 	$$cmd < $< > $@ 2>&1
 
@@ -418,7 +420,7 @@ PRSIM_CHECKPOINT_DUMP_SCRIPT = $(HACKT_PRSIM_EXE) -d $< > $@
 	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)` ; \
 	flags=`$(CAT) "$$rc" | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-indump$$/-dupe/g'` ; \
-	cmd="$(HACKT_PRSIM_EXE) -b -I$(srcdir) $$flags $$obj" ; \
+	cmd="$(HACKT_PRSIM_EXE) -b $(AM_HACPRSIM_FLAGS) $$flags $$obj" ; \
 	$(ECHO) "load: $$cmd" ; \
 	$(CAT) $(PRSIMCKPT_LOAD_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|LOAD|$<|g' -e 's|SAVE|'"$$ckpt"'|g' | \
@@ -484,7 +486,7 @@ PRSIMOPT_FLAG = -O1
 	$(PRSIMRC_AUTOTRACE_DISABLE_HOOK) \
 	if test "$$autotrace" = 1 ; then traceflag="-r $$trace" ; fi ; \
 	flags=`$(CAT) $< | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
-	cmd="$(HACKT_PRSIM_EXE) -b -a $$ckpt $$traceflag -I$(srcdir) $$flags $(PRSIMOPT_FLAG) $$obj" ; \
+	cmd="$(HACKT_PRSIM_EXE) -b -a $$ckpt $$traceflag $(AM_HACPRSIM_FLAGS) $$flags $(PRSIMOPT_FLAG) $$obj" ; \
 	$(ECHO) "ckpt: $$cmd" ; \
 	$$cmd < $< > $@ 2>&1 ; \
 	test -f $$ckpt || $(ECHO) "Warning: $$ckpt not produced." ; \

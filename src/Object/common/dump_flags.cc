@@ -1,7 +1,7 @@
 /**
 	\file "Object/common/dump_flags.cc"
 	Global static initializer for default.  
-	$Id: dump_flags.cc,v 1.5 2006/01/30 07:41:59 fang Exp $
+	$Id: dump_flags.cc,v 1.6 2009/09/14 21:16:47 fang Exp $
  */
 
 #include "Object/common/dump_flags.h"
@@ -36,7 +36,9 @@ dump_flags::verbose = dump_flags(true, true, true);
 dump_flags::dump_flags() :
 		show_definition_owner(true),
 		show_namespace_owner(true),
-		show_leading_scope(true)
+		show_leading_scope(true),
+		process_member_separator("."),
+		struct_member_separator(".")
 { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -45,7 +47,9 @@ dump_flags::dump_flags(const bool _show_def_owner,
 		const bool _show_leading_scope) :
 		show_definition_owner(_show_def_owner),
 		show_namespace_owner(_show_ns_owner),
-		show_leading_scope(_show_leading_scope)
+		show_leading_scope(_show_leading_scope),
+		process_member_separator("."),
+		struct_member_separator(".")
 { }
 
 //=============================================================================

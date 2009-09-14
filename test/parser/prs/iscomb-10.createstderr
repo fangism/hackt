@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -15,15 +15,15 @@ Persistent Object Manager text dump:
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	12	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	16	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	359
+	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	367
 	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	181
+	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	185
 	21	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -144,13 +144,13 @@ In namespace "", we have: {
         bool<> l
         inv<> P
         P (w, x);
-        j@[iscomb=]
+        j@[iscomb]
         inv<> Q
         Q (j, k);
-        k@[iscomb=]
+        k@[iscomb]
         inv<> R
         R (k, l);
-        l@[iscomb=]
+        l@[iscomb]
       footprint: {
         P = process inv<>^0 = wrap<>::P (1) (
           a = bool^0 = wrap<>::w (1) 

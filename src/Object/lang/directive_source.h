@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC.h"
 	Common base class for spec-like directives, including PRS macros.  
-	$Id: directive_source.h,v 1.4 2007/10/08 01:21:25 fang Exp $
+	$Id: directive_source.h,v 1.5 2009/09/14 21:17:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_SOURCE_H__
@@ -80,7 +80,15 @@ public:
 
 	static
 	ostream&
+	dump_params_bare(const params_type&, ostream&,
+		const expr_dump_context&);
+
+	static
+	ostream&
 	dump_params(const params_type&, ostream&, const expr_dump_context&);
+
+	ostream&
+	dump_nodes(ostream&, const PRS::rule_dump_context&) const;
 
 	static
 	ostream&

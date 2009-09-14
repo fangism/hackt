@@ -1,5 +1,32 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.105 2009/08/28 20:45:20 fang Exp $
+#	$Id: ChangeLog,v 1.106 2009/09/14 21:17:15 fang Exp $
+
+2009-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-11:
+	  util/string.cc:strgsub() checks for s == r before attempting
+		any substitution, to save work.
+
+
+2009-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-07:
+	  util/string.cc:strgsub(): don't bother doing anything if
+		search string is empty, for efficiency.
+
+
+2009-09-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-04:
+	  util/optparse.{h,cc}: added _compat functions for
+		backward compatibility with an older config format.
+
+
+2009-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-28-netlist-02-02:
+	  util/peristent_functor.h: operators should be const
+
 
 2009-08-26	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,0 +1,5 @@
+// "top-type-ports-01.hac"
+// @hacknet-flags@ -t inv -f top_type_ports=1
+
+import "inv-01.hac";
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.22 2009/08/28 20:44:59 fang Exp $
+	$Id: cflat_printer.cc,v 1.23 2009/09/14 21:17:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -17,6 +17,7 @@
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/SPEC_registry.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
@@ -31,7 +32,7 @@
 #include "util/stacktrace.h"
 #include "util/offset_array.h"
 #include "util/member_saver.h"
-#include "util/qmap.tcc"		// for const_assoc_query symbols??
+// #include "util/qmap.tcc"		// for const_assoc_query symbols??
 #if CFLAT_WITH_CONDUCTANCES
 #include "Object/expr/pint_const.h"
 #include "Object/expr/preal_const.h"
@@ -89,12 +90,18 @@ cflat_prs_printer::visit(const footprint_rule& r) {
 	const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
 if (!cfopts.check_prs) {
 	if (r.attributes.size()) {
-		typedef	footprint_rule::attributes_list_type::const_iterator
+		typedef	footprint_rule::attributes_list_type
+						attributes_list_type;
+		typedef	attributes_list_type::const_iterator
 						const_iterator;
 		const_iterator i(r.attributes.begin());
 		const const_iterator e(r.attributes.end());
+		resolved_attribute::values_type empty;
 		for ( ; i!=e; ++i) {
-			cflat_attribute_registry[i->key].main(*this, *i->values);
+			// already checked registered
+			cflat_rule_attribute_registry.find(i->key)->second
+				.main(*this, (i->values ? *i->values : empty));
+			// fake an empty list if necessary
 		}
 	}
 	(*expr_pool)[r.expr_index].accept(*this);
@@ -240,7 +247,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 		case PRS_LITERAL_TYPE_ENUM: {
 			INVARIANT(sz == 1);
 			__dump_canonical_literal(e.only());
-			const directive_base_params_type& par(e.get_params());
+			const directive_base_params_type& par(e.params);
 			if (cfopts.size_prs) {
 				directive_base::dump_params(par, os);
 			}
@@ -399,7 +406,10 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 void
 cflat_prs_printer::visit(const footprint_macro& m) {
 	STACKTRACE_VERBOSE;
-	const cflat_macro_definition_entry& d(cflat_macro_registry[m.name]);
+	const cflat_macro_registry_type::const_iterator
+		f(cflat_macro_registry.find(m.name));
+	INVARIANT(f != cflat_macro_registry.end());
+	const cflat_macro_definition_entry& d(f->second);
 	INVARIANT(d);		// was already checked during unroll
 	if (!d.check_param_args(m.params).good
 			|| !d.check_node_args(m.nodes).good) {

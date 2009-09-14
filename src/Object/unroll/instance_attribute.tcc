@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/instance_attribute.tcc"
 	Implementation of generic attribute statements.  
-	$Id: instance_attribute.tcc,v 1.3 2008/10/11 22:49:11 fang Exp $
+	$Id: instance_attribute.tcc,v 1.4 2009/09/14 21:17:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_ATTRIBUTE_TCC__
@@ -59,7 +59,7 @@ INSTANCE_ATTRIBUTE_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ATTRIBUTE_CLASS::dump(ostream& o, const expr_dump_context& c) const {
 	ref->dump(o, c);
-	return attrs.dump(o, c);
+	return attrs.dump(o << "@[", c) << ']';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

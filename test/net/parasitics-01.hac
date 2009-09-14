@@ -1,0 +1,6 @@
+// "parasitics-01.hac"
+// this demonstrates the use of emit_parasitics with auxiliary nodes
+// @hacknet-flags@ -f emit_parasitics=1
+
+import "celem-02.hac";
+

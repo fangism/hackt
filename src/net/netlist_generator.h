@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.2 2009/08/28 20:45:13 fang Exp $
+	$Id: netlist_generator.h,v 1.3 2009/09/14 21:17:12 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -86,6 +86,17 @@ private:
 	 */
 	index_type			output_node;
 	/**
+		For transistor sizing, let sizes be sticky, and
+		propagate to latter unspecified series transistors.
+		Q: do these really need to be separated by NFET/PFET?
+		Perhaps, for different min/max?
+		With exception of precharge and internal node, 
+		expressions types can be walked one at a time.
+		Can easily reset defaults each time.
+	 */
+	real_type			current_width;
+	real_type			current_length;
+	/**
 		Default transistor is used unless overridden by directive.
 		Usually determined by direction of pull of rule, 
 		or pass-gate type.
@@ -95,7 +106,8 @@ private:
 		Current attributes to apply to generated FETs
 		See transistor::attributes.
 	 */
-	transistor::flags		fet_attr;
+	// transistor::flags		fet_attr;
+	char				fet_attr;
 	/**
 		In expression traversal, whether or not this level
 		of expression is negated.  
@@ -120,6 +132,7 @@ public:
 	void
 	operator () (void);
 
+private:
 	void
 	visit(const global_entry<process_tag>&);
 
@@ -148,6 +161,12 @@ public:
 private:
 	void
 	visit(const footprint_expr_node::precharge_pull_type&);
+
+	void
+	set_current_width(const real_type);
+
+	void
+	set_current_length(const real_type);
 
 	index_type
 	register_internal_node(const index_type);

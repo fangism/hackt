@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	35
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	121
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
@@ -23,20 +23,20 @@ Persistent Object Manager text dump:
 	19	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	48
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	33
-	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	33
 	28	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
+	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	407
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	34	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	35	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	35	##ADDR##	procdefn	0	#HEAD#	#TAIL#	121
 	36	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
 	37	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
 	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -52,13 +52,13 @@ Persistent Object Manager text dump:
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	51	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	55	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	footprnt	0	#HEAD#	#TAIL#	375
+	56	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	footprnt	0	#HEAD#	#TAIL#	383
 	58	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	59	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	60	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
@@ -105,10 +105,10 @@ In namespace "", we have: {
         )
         bool<> bar2
         bar2 = bar;
-        bar@[ignore_weak_interference=]
+        bar@[ignore_weak_interference]
       prs:
-        bar -> foo- [weak=1; ]
-        ~bar -> foo+ [weak=1; ]
+        bar -> foo- [weak=1]
+        ~bar -> foo+ [weak=1]
       footprint: {
         bar = bool^0 = dyne<>::bar (2) @[ may_weak_interfere ] 
         bar2 = bool^0 = dyne<>::bar (2) @[ may_weak_interfere ] 
@@ -118,8 +118,8 @@ In namespace "", we have: {
         1	dyne<>::foo
         2	dyne<>::bar @[ may_weak_interfere ]
         resolved prs:
-        bar -> foo- [weak=1; ]
-        ~bar -> foo+ [weak=1; ]
+        bar -> foo- [weak=1]
+        ~bar -> foo+ [weak=1]
       }
       }
 
@@ -137,7 +137,7 @@ In namespace "", we have: {
           bool<> foo
           bool<> bar
         )
-        foo@[ignore_interference=]
+        foo@[ignore_interference]
         bool<> foo2
         foo2 = foo;
       prs:

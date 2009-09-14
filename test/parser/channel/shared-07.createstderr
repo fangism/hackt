@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	95
 	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20

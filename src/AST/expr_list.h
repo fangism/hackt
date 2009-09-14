@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.6 2007/07/31 23:23:02 fang Exp $
+	$Id: expr_list.h,v 1.7 2009/09/14 21:16:47 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -11,6 +11,7 @@
 
 #include "AST/expr_base.h"
 #include "AST/node_list.h"
+#include "AST/AST_fwd.h"	// for generic_attribute_list
 #include "util/STL/vector_fwd.h"
 
 namespace HAC {
@@ -193,6 +194,25 @@ public:
 	check_template_args(const context& c) const;
 
 };	// end class template_argument_list_pair
+
+//=============================================================================
+/**
+	An expression list paired with an attribute list.
+ */
+struct expr_attr_list : public expr_list {
+	excl_ptr<const generic_attribute_list>	attrs;
+
+	expr_attr_list();
+
+	explicit
+	expr_attr_list(const expr*);
+
+	~expr_attr_list();
+
+	void
+	attach_attributes(const generic_attribute_list*);
+
+};	// end class expr_attr_list
 
 //=============================================================================
 }	// end namespace parser

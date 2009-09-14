@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint_expr.h"
-	$Id: PRS_footprint_expr.h,v 1.7 2009/08/28 20:44:58 fang Exp $
+	$Id: PRS_footprint_expr.h,v 1.8 2009/09/14 21:16:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
@@ -13,6 +13,7 @@
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/SPEC_fwd.h"
 #include "Object/lang/cflat_visitee.h"
+#include "Object/lang/generic_attribute.h"
 #include "util/memory/count_ptr.h"
 
 #include "sim/prsim/devel_switches.h"
@@ -50,7 +51,10 @@ class footprint_literal_node : public cflat_visitee {
 		We need to pay the extra storage cost here.  :(
 	 */
 	params_type			params;
-
+	/**
+		Literal attributes.
+	 */
+	resolved_attribute_list_type	attributes;
 };	// end class footprint_literal_node
 #endif	// PRSIM_UNIFY_GRAPH_STRUCTURES
 
@@ -136,6 +140,7 @@ private:
 	 */
 	precharge_map_type		precharge_map;
 #if !PRSIM_UNIFY_GRAPH_STRUCTURES
+public:
 	/**
 		This field is only applicable to PRS_LITERALs.
 		Technically, non-leaf expression nodes never 
@@ -145,8 +150,11 @@ private:
 		We need to pay the extra storage cost here.  :(
 	 */
 	params_type			params;
+	/**
+		For nodes only, literal attributes, such as FET type.  
+	 */
+	resolved_attribute_list_type	attributes;
 #endif
-
 public:
 	footprint_expr_node();
 
@@ -175,12 +183,6 @@ public:
 	is_negated(void) const {
 		return type == PRS_NOT_EXPR_TYPE_ENUM;
 	}
-
-	params_type&
-	get_params(void) { return params; }
-
-	const params_type&
-	get_params(void) const { return params; }
 
 	const precharge_map_type&
 	get_precharges(void) const { return precharge_map; }

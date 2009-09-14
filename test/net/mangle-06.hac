@@ -1,0 +1,7 @@
+// "mangle-06.hac"
+// testing disabling override of name-mangling "-f no_mangling"
+// @hacknet-flags@ -c mangle-example-01.hacknet-conf -f no_mangling
+// @deps@ mangle-example-01.hacknet-conf
+
+import "mangle-04.hac";
+

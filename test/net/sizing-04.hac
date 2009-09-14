@@ -1,0 +1,13 @@
+// "sizing-04.hac"
+// testing size propagation
+
+defproc foo(bool a, b, c, d, e, x, y, z) {
+x @ [autokeeper=0];
+prs {
+	b<8> & d			#> z-
+	a & b<10> & c & d<20,3> & e	#> x-
+	a & c & e			=> y-	// back to default sizes
+}
+}
+
+foo bar;

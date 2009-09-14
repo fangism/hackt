@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.2 2009/08/28 20:45:11 fang Exp $
+	$Id: netgraph.h,v 1.3 2009/09/14 21:17:11 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -124,7 +124,7 @@ struct node {
 	is_supply_node(void) const { return type == NODE_TYPE_SUPPLY; }
 
 	ostream&
-	emit(ostream&, const footprint&) const;
+	emit(ostream&, const footprint&, const netlist_options&) const;
 
 	ostream&
 	dump_raw(ostream&) const;
@@ -170,9 +170,28 @@ struct transistor {
 		DEFAULT_ATTRIBUTE = 0x0,
 		IS_PRECHARGE = 0x01,
 		IS_STANDARD_KEEPER = 0x02,
-		IS_COMB_FEEDBACK = 0x04
+		IS_COMB_FEEDBACK = 0x04,
+		IS_LOW_VT = 0x10,
+		IS_HIGH_VT = 0x20
 	};
 	char				attributes;
+
+	void
+	set_lvt(void) {
+		attributes |= IS_LOW_VT;
+		attributes &= ~IS_HIGH_VT;
+	}
+
+	void
+	set_hvt(void) {
+		attributes |= IS_HIGH_VT;
+		attributes &= ~IS_LOW_VT;
+	}
+
+	void
+	set_svt(void) {
+		attributes &= ~(IS_LOW_VT | IS_HIGH_VT);
+	}
 
 	template <class NP>
 	void
@@ -184,7 +203,7 @@ struct transistor {
 		const netlist_options&) const;
 
 	ostream&
-	emit_attribute_suffixes(ostream&) const;
+	emit_attribute_suffixes(ostream&, const netlist_options&) const;
 
 	ostream&
 	dump_raw(ostream&) const;
@@ -242,7 +261,8 @@ struct instance {
 
 	template <class NP>
 	ostream&
-	emit(ostream&, const NP&, const footprint&) const;
+	emit(ostream&, const NP&, const footprint&, 
+		const netlist_options&) const;
 
 	template <class NP>
 	void
@@ -471,17 +491,25 @@ public:
 	lookup_internal_node(const index_type i) const;
 
 	index_type
-	register_named_node(const index_type);
+	register_named_node(const index_type
+#if CACHE_LOGICAL_NODE_NAMES
+		, const netlist_options&
+#endif
+		);
 
 	bool
 	named_node_is_used(const index_type) const;
 
 	void
 	append_instance(const global_entry<process_tag>&, const netlist&, 
-		const index_type);
+		const index_type
+#if CACHE_LOGICAL_NODE_NAMES
+		, const netlist_options&
+#endif
+		);
 
 	void
-	summarize_ports(void);
+	summarize_ports(const netlist_options&);
 
 	ostream&
 	emit(ostream&, const bool s, const netlist_options&) const;
@@ -494,7 +522,7 @@ private:
 	mark_used_nodes(void);
 
 	void
-	__bind_footprint(const footprint&);
+	__bind_footprint(const footprint&, const netlist_options&);
 
 };	// end class netlist
 

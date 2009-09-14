@@ -1,0 +1,14 @@
+// "sizing-05.hac"
+// copy-modified from "sizing-04.hac"
+// testing size propagation, with precharges
+
+defproc foo(bool a, b, c, d, e, x, y, z) {
+x @ [autokeeper=0];
+prs {
+	b<8> &{+~b} d			#> z-
+	a & b<10> &{+~a} c & d<20,3> &{+~a} e	#> x-
+	a &{+~a<11>} c &{+~a} e		=> y-	// back to default sizes
+}
+}
+
+foo bar;

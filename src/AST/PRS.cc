@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.34 2009/07/20 22:41:33 fang Exp $
+	$Id: PRS.cc,v 1.35 2009/09/14 21:16:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -39,6 +39,7 @@
 #include "Object/expr/meta_index_list.h"
 #include "Object/lang/PRS.h"
 #include "Object/lang/PRS_attribute_registry.h"
+#include "Object/lang/PRS_literal_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/traits/bool_traits.h"
@@ -56,7 +57,7 @@
 
 #include "util/what.h"
 #include "util/stacktrace.h"
-#include "util/qmap.tcc"
+// #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 
 #define	CONSTRUCTOR_INLINE
@@ -110,7 +111,7 @@ body_item::~body_item() { }
 //=============================================================================
 // class literal method definitions
 
-literal::literal(inst_ref_expr* r, const expr_list* p) :
+literal::literal(inst_ref_expr* r, const expr_attr_list* p) :
 		ref(r), params(p), internal(false) {
 	NEVER_NULL(ref);
 	// params are optional
@@ -155,7 +156,7 @@ literal::extract_identifier(void) {
 /**
 	Releases the parameters list to the caller.  
  */
-excl_ptr<const expr_list>
+excl_ptr<const expr_attr_list>
 literal::extract_parameters(void) {
 	return params;
 }
@@ -165,8 +166,8 @@ literal::extract_parameters(void) {
 	\param e is exclusivel owned (or freshly allocated).
  */
 void
-literal::attach_parameters(const expr_list* e) {
-	params = excl_ptr<const expr_list>(e);
+literal::attach_parameters(const expr_attr_list* e) {
+	params = excl_ptr<const expr_attr_list>(e);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -180,6 +181,39 @@ literal::rightmost(void) const {
 	if (params)
 		return params->rightmost();
 	else	return ref->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+literal::attribute_type
+literal::check_literal_attribute(const generic_attribute& a, const context& c) {
+	typedef	attribute_type			return_type;
+	typedef	expr_list::checked_meta_exprs_type	vals_type;
+	typedef	vals_type::const_iterator	const_iterator;
+	typedef	vals_type::value_type		val_type;
+	// attributes must be registered with the master registry list
+	const entity::PRS::cflat_literal_attribute_registry_type::const_iterator
+		f(entity::PRS::cflat_literal_attribute_registry.find(*a.key));
+	if (f == entity::PRS::cflat_literal_attribute_registry.end()) {
+		// error handling: downgrade to warning?
+		cerr << "Error: unrecognized PRS literal attribute \"" <<
+			*a.key << "\" at " << where(*a.key) << endl;
+		return return_type();
+	}
+	vals_type vals;
+	if (a.values) {
+		a.values->postorder_check_meta_exprs(vals, c);
+	}
+	const const_iterator i(vals.begin()), e(vals.end());
+	if (find(i, e, val_type(NULL)) != e) {
+		// one of the param expressions failed checking
+		// blank will signal error
+		cerr << "Error in checking attribute value expressions in "
+			<< (a.values ? where(*a.values) : where(a)) << endl;
+		return return_type();
+	}
+	return_type ret(*a.key);
+	copy(i, e, back_inserter(ret));
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -261,9 +295,20 @@ if (ret && params) {
 			<< where(*params) << endl;
 		return prs_literal_ptr_type(NULL);
 	}
-	INVARIANT(temp.size());
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_params()));
+#if PRS_LITERAL_ATTRIBUTES
+if (params->attrs) {
+	// handle attributes
+	entity::generic_attribute_list_type& atts(ret->get_attributes());
+	params->attrs->check_list(atts, &check_literal_attribute, c);
+	if (find(atts.begin(), atts.end(), false) != atts.end()) {
+		cerr << "ERROR in literal attribute list.  " <<
+			where(*params->attrs) << endl;
+		THROW_EXIT;
+	}
+}
+#endif
 }
 	return ret;
 }	// end literal::check_prs_literal
@@ -950,14 +995,14 @@ macro::check_rule(context& c) const {
 		cerr << "Expected: prs_macro : ID . [ \'<\' shift_exprs \'>\' ] \'(\' inst_ref_exprs \')\'" << endl;
 		CHECK_RULE_THROW;
 	}
-	const entity::PRS::cflat_macro_definition_entry
-		mde(entity::PRS::cflat_macro_registry[*name]);
-	if (!mde) {
+	const entity::PRS::cflat_macro_registry_type::const_iterator
+		f(entity::PRS::cflat_macro_registry.find(*name));
+	if (f == entity::PRS::cflat_macro_registry.end()) {
 		cerr << "Error: unrecognized PRS macro \"" << *name << "\" at "
 			<< where(*name) << endl;
 		CHECK_RULE_THROW;
 	}
-
+	const entity::PRS::cflat_macro_definition_entry& mde(f->second);
 	excl_ptr<entity::PRS::macro>
 		ret(new entity::PRS::macro(*name));
 if (params) {
@@ -977,9 +1022,22 @@ if (params) {
 			<< endl;
 		CHECK_RULE_THROW;
 	}
-	INVARIANT(temp.size());
+	// INVARIANT(temp.size());	// params may be empty
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_params()));
+#if PRS_LITERAL_ATTRIBUTES
+if (params->attrs) {
+	// handle attributes, treat as literal attributes for now...
+	entity::generic_attribute_list_type& atts(ret->get_attributes());
+	params->attrs->check_list(atts, &literal::check_literal_attribute,
+		AS_A(const context&, c));
+	if (find(atts.begin(), atts.end(), false) != atts.end()) {
+		cerr << "ERROR in macro attribute list.  " <<
+			where(*params->attrs) << endl;
+		THROW_EXIT;
+	}
+}
+#endif
 } else if (!mde.check_num_params(0).good) {
 	// no params given where required and already have error message
 	cerr << "\tat " << where(*this) << endl;
@@ -1027,7 +1085,9 @@ rule::check_prs_attribute(const generic_attribute& a, context& c) {
 	typedef	vals_type::const_iterator	const_iterator;
 	typedef	vals_type::value_type		val_type;
 	// all macros must be registered with the master registry list (cflat)
-	if (!entity::PRS::cflat_attribute_registry[*a.key]) {
+	const entity::PRS::cflat_rule_attribute_registry_type::const_iterator
+		f(entity::PRS::cflat_rule_attribute_registry.find(*a.key));
+	if (f == entity::PRS::cflat_rule_attribute_registry.end()) {
 		cerr << "Error: unrecognized PRS rule attribute \"" << *a.key <<
 			"\" at " << where(*a.key) << endl;
 		return return_type();

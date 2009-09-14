@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_base.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_base.h,v 1.7 2007/01/21 05:58:37 fang Exp $
+	$Id: datatype_definition_base.h,v 1.8 2009/09/14 21:16:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DATATYPE_DEFINITION_BASE_H__
@@ -85,9 +85,8 @@ virtual	void
 
 virtual	DUMP_CHANNEL_FIELD_ITERATE_PROTO = 0;
 
-protected:
-virtual	unsigned char
-	get_meta_type_enum(void) const = 0;
+virtual	meta_type_tag_enum
+	get_meta_type(void) const = 0;
 
 public:
 	bool

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.21 2009/05/27 19:36:13 fang Exp $
+	$Id: SPEC_registry.cc,v 1.22 2009/09/14 21:17:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -32,21 +32,21 @@ namespace SPEC {
 template class spec_visitor_entry<cflat_prs_printer>;
 
 //=============================================================================
+
+/**
+	Local static modifiable reference to use with registration.  
+ */
+static
+cflat_spec_registry_type __cflat_spec_registry;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Global static initialization.
 	This must appear first before any registrations take place in this 
 	translation unit.
  */
-const cflat_spec_registry_type
-cflat_spec_registry;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Local static modifiable reference to use with registration.  
- */
-static
-cflat_spec_registry_type& __cflat_spec_registry(
-	const_cast<cflat_spec_registry_type&>(cflat_spec_registry));
+const cflat_spec_registry_type&
+cflat_spec_registry(__cflat_spec_registry);
 
 //=============================================================================
 // class cflat_spec_definition_entry method definitions

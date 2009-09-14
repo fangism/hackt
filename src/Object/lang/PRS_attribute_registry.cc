@@ -1,13 +1,14 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.18 2009/05/28 15:25:54 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.19 2009/09/14 21:16:56 fang Exp $
  */
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
+#include <map>
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/cflat_printer.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -16,7 +17,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/PRS_attribute_common.h"
 #include "main/cflat_options.h"
 #include "common/TODO.h"
-#include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 
 namespace HAC {
@@ -27,13 +27,18 @@ namespace PRS {
 //-----------------------------------------------------------------------------
 // global initializers
 
-const cflat_attribute_registry_type
-cflat_attribute_registry;
-
+/**
+	Locally modifiable to this unit only.
+ */
 static
-cflat_attribute_registry_type&
-__cflat_attribute_registry(
-	const_cast<cflat_attribute_registry_type&>(cflat_attribute_registry));
+cflat_rule_attribute_registry_type
+__cflat_rule_attribute_registry;
+
+/**
+	Public immutable reference
+ */
+const cflat_rule_attribute_registry_type&
+cflat_rule_attribute_registry(__cflat_rule_attribute_registry);
 
 //=============================================================================
 // class attribute_definition_entry method definitions
@@ -45,22 +50,22 @@ __cflat_attribute_registry(
 template <class T>
 static
 size_t
-register_cflat_attribute_class(void) {
-//	typedef	cflat_attribute_registry_type::iterator		iterator;
-	typedef	cflat_attribute_registry_type::mapped_type	mapped_type;
+register_cflat_rule_attribute_class(void) {
+//	typedef	cflat_rule_attribute_registry_type::iterator		iterator;
+	typedef	cflat_rule_attribute_registry_type::mapped_type	mapped_type;
 	const string k(T::name);
-	mapped_type& m(__cflat_attribute_registry[k]);
+	mapped_type& m(__cflat_rule_attribute_registry[k]);
 	if (m) {
 		cerr << "Error: PRS attribute by the name \'" << k <<
 			"\' has already been registered!" << endl;
 		THROW_EXIT;
 	}
-	m = cflat_attribute_definition_entry(k, &T::main, &T::check_vals);
+	m = cflat_rule_attribute_definition_entry(k, &T::main, &T::check_vals);
 	// oddly, this is needed to force instantiation of the [] const operator
 	const mapped_type& n
-		__ATTRIBUTE_UNUSED_CTOR__((cflat_attribute_registry[k]));
+		__ATTRIBUTE_UNUSED_CTOR__((cflat_rule_attribute_registry.find(k)->second));
 	INVARIANT(n);
-	return cflat_attribute_registry.size();
+	return cflat_rule_attribute_registry.size();
 }
 
 //=============================================================================
@@ -80,7 +85,7 @@ namespace cflat_rule_attributes {
 #define	DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(class_name, att_name) \
 	DECLARE_PRS_RULE_ATTRIBUTE_CLASS(class_name, cflat_prs_printer)	\
 	DEFINE_PRS_RULE_ATTRIBUTE_CLASS(class_name, att_name,		\
-		register_cflat_attribute_class)
+		register_cflat_rule_attribute_class)
 
 //-----------------------------------------------------------------------------
 /***

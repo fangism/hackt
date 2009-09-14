@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	48
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	121
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -12,13 +12,13 @@ Persistent Object Manager text dump:
 	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
+	11	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
 	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
 	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	20	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -32,7 +32,7 @@ Persistent Object Manager text dump:
 	28	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
+	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	101
 	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	34	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -51,7 +51,7 @@ Persistent Object Manager text dump:
 	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	49	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	50	##ADDR##	procdefn	0	#HEAD#	#TAIL#	103
+	50	##ADDR##	procdefn	0	#HEAD#	#TAIL#	107
 	51	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	52	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	53	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -84,7 +84,7 @@ Persistent Object Manager text dump:
 	80	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	81	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	82	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	83	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
+	83	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
 	84	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	85	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	86	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -270,7 +270,7 @@ In namespace "", we have: {
           bool<> a
           bool<> b
         )
-        a@[iscomb=]
+        a@[iscomb]
       footprint: {
         a = bool^0 = inv<>::a (1) @[ iscomb ] 
         b = bool^0 = inv<>::b (2) 

@@ -11,7 +11,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
 	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
@@ -27,7 +27,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
 	23	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	24	##ADDR##	prealplh	0	#HEAD#	#TAIL#	29
 	25	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
@@ -45,7 +45,7 @@ Persistent Object Manager text dump:
 	37	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
 	39	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	procdefn	0	#HEAD#	#TAIL#	115
+	40	##ADDR##	procdefn	0	#HEAD#	#TAIL#	119
 	41	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	42	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	43	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16

@@ -1,10 +1,16 @@
 # "Make.test-net"
 #	vi: ft=automake
-#	$Id: Make.test-net,v 1.2 2009/08/28 20:45:39 fang Exp $
+#	$Id: Make.test-net,v 1.3 2009/09/14 21:17:21 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
+
+# optional variables:
+# AM_HACKNET_FLAGS += applied to all hacknet invocations
+#	e.g. -I $(srcdir)
+AM_HACKNET_FLAGS = -I$(srcdir)
+# to search for config files in source directory
 
 HACKNET_SUFFIXES = .spice .spice-diff .spice-fail .spice-fail-diff
 
@@ -25,14 +31,17 @@ AUTO_IGNORE += $(HACKNET_CLEAN_IGNORE_PATTERNS)
 
 # also substitute $srcdir
 EXTRACT_HACKNET_FLAGS_PIPE = $(GREP) "@hacknet-flags@" | $(HEAD) -n1 | \
-	$(SED) -e 's/^.*@hacknet-flags@[ ]*//g' -e 's|\$$srcdir|$(srcdir)|g'
+	$(SED) -e 's/^.*@hacknet-flags@[ ]*//g'
+#	-e 's|\$$srcdir|$(srcdir)|g'
+# This last substitution was used to substitute "$srcdir" in flag variables, 
+# but is no longer needed thanks to AM_HACKNET_FLAGS
 
 # should really take some configure/test file for testing combinations
 # of object files and netlist configuration options.
 HACKNET_TEST_SCRIPT = \
 	src="$(srcdir)/"`$(ECHO) $< | $(SED) 's|\.haco-a|.hac|'` && \
 	hnflags=`$(CAT) $$src | $(EXTRACT_HACKNET_FLAGS_PIPE)` && \
-	cmd="$(HACKNET_EXE) $$hnflags $<" && \
+	cmd="$(HACKNET_EXE) $(AM_HACKNET_FLAGS) $$hnflags $<" && \
 	$(ECHO) "$$cmd > $@" && \
 	$$cmd > $@
 
@@ -73,20 +82,6 @@ hacknet.autodepend: Makefile
 	  $(ECHO) ": $$obj $$deps" ; \
 	done ;} > $@ ; \
 	$(TOUCH) $@
-#	{ list='$(HACKNET_TEST_SCRIPTS_BASES)' ; \
-#	exts='spice spice-fail' ; \
-#	test -z "$$list" || \
-#	for d in $$list ; do \
-#	  src=$(srcdir)/$$d.hacknetconf ; \
-#	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
-#	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
-#	  for e in $$exts ; do \
-#	    target=$$d.$$e ; \
-#	    $(PRINTF) "$$target " ; \
-#	  done ; \
-#	  $(ECHO) ": $$obj $$deps" ; \
-#	done ;} > $@ ; \
-#	$(TOUCH) $@
 
 -include hacknet.autodepend
 

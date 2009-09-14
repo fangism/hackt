@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.43 2009/07/02 23:22:46 fang Exp $
+	$Id: footprint.cc,v 1.44 2009/09/14 21:16:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -454,6 +454,12 @@ footprint::footprint(const footprint& t) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint::~footprint() {
 	STACKTRACE_DTOR_VERBOSE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+meta_type_tag_enum
+footprint::get_meta_type(void) const {
+	return owner_def->get_meta_type();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

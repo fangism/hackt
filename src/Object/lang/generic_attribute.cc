@@ -1,12 +1,14 @@
 /**
 	\file "Object/lang/generic_attribute.cc"
 	Implementation of generic attributes.  
-	$Id: generic_attribute.cc,v 1.1 2008/10/05 23:00:16 fang Exp $
+	$Id: generic_attribute.cc,v 1.2 2009/09/14 21:17:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <iterator>
+#include <algorithm>
 #include "Object/expr/param_expr.h"
 #include "Object/lang/generic_attribute.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -37,11 +39,35 @@ generic_attribute::generic_attribute() : key(), values() { }
 generic_attribute::generic_attribute(const string& k) : key(k), values() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+generic_attribute::generic_attribute(const resolved_attribute& r) :
+	key(r.key), values(new values_type(*r.values)) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 generic_attribute::~generic_attribute() { }
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const generic_attribute::values_type>
+generic_attribute::get_values(void) const {
+	return values;		// cast to const
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 generic_attribute::operator bool () const {
 	return key.length();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Determining whether or not attribute values are equivalent.  
+ */
+bool
+generic_attribute::operator == (const generic_attribute& a) const {
+	if (key != a.key)	return false;
+	if (!values && !a.values)	return true;
+	if (values ^ a.values)		return false;
+	if (values->size() != a.values->size())	return false;
+	return std::equal(values->begin(), values->end(), a.values->begin());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -57,9 +83,9 @@ generic_attribute::push_back(const value_type& e) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 generic_attribute::dump(ostream& o, const expr_dump_context& c) const {
-	o << key << '=';
+	o << key;
 	if (values) {
-		values->dump(o, c);
+		values->dump(o << '=', c);
 	}
 	return o;
 }
@@ -111,18 +137,24 @@ generic_attribute::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class generic_attribute_list_type method definitions
 
+generic_attribute_list_type::generic_attribute_list_type(
+		const resolved_attribute_list_type& a) : parent_type() {
+	reserve(a.size());
+	copy(a.begin(), a.end(), back_inserter(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 generic_attribute_list_type::dump(ostream& o,
 		const expr_dump_context& c) const {
 	const_iterator i(begin()), e(end());
-	o << "@[";
 if (i!=e) {
 	i->dump(o, c);
 	for (++i; i!=e; ++i) {
 		i->dump(o << ';', c);
 	}
 }
-	return o << ']';
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -146,6 +178,99 @@ generic_attribute_list_type::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	util::read_persistent_sequence_resize(m, i, *this);
 }
+
+//=============================================================================
+// class resolved_attribute method definitions
+
+resolved_attribute::resolved_attribute() : key(), values(NULL) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+resolved_attribute::resolved_attribute(const string& k) : key(k), values() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+resolved_attribute::resolved_attribute(const string& k, 
+		const values_ptr_type& v) : key(k), values(v) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+resolved_attribute::~resolved_attribute() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+resolved_attribute::dump(ostream& o) const {
+	o << key;
+	if (values) {
+		values->dump(o << '=');
+	}
+	return o;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+resolved_attribute::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	if (values) {
+		values->collect_transient_info(m);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+resolved_attribute::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	write_value(o, key);
+	m.write_pointer(o, values);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+resolved_attribute::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	read_value(i, key);
+	m.read_pointer(i, values);
+}
+
+//=============================================================================
+// class resolved_attribute_list_type method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+resolved_attribute_list_type::dump(ostream& o) const {
+	const_iterator i(begin()), e(end());
+if (i!=e) {
+	i->dump(o);
+	for (++i; i!=e; ++i) {
+		i->dump(o << ';');
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+resolved_attribute_list_type::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	for_each(begin(), end(), util::persistent_collector_ref(m));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+resolved_attribute_list_type::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	util::write_persistent_sequence(m, o, *this);
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+resolved_attribute_list_type::load_object_base(
+		const persistent_object_manager& m, istream& i) {
+	util::read_persistent_sequence_resize(m, i, *this);
+}
+
 
 //=============================================================================
 }	// end namespace entity

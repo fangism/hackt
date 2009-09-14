@@ -1,6 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
-	$Id: netlist_generator.cc,v 1.2 2009/08/28 20:45:12 fang Exp $
+	Implementation of hierarchical netlist generation.
+	$Id: netlist_generator.cc,v 1.3 2009/09/14 21:17:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,7 +16,7 @@
 #include "Object/global_channel_entry.h"
 #include "Object/global_entry_context.h"
 #include "Object/def/footprint.h"
-#include "Object/expr/const_param.h"
+#include "Object/expr/pint_const.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
 #include "util/stacktrace.h"
@@ -26,6 +27,8 @@ namespace NET {
 using entity::footprint_frame_map_type;
 using entity::bool_tag;
 using entity::state_instance;
+using entity::pint_value_type;
+using entity::pint_const;
 using std::ostringstream;
 using std::ostream_iterator;
 using util::value_saver;
@@ -35,7 +38,8 @@ using entity::PRS::PRS_AND_EXPR_TYPE_ENUM;
 using entity::PRS::PRS_OR_EXPR_TYPE_ENUM;
 using entity::PRS::PRS_NODE_TYPE_ENUM;
 using entity::directive_base_params_type;
-// using entity::preal_value_type;
+using entity::resolved_attribute;
+using entity::resolved_attribute_list_type;
 
 //=============================================================================
 // helper globals
@@ -54,6 +58,8 @@ netlist_generator::netlist_generator(const state_manager& _sm,
 		current_local_netlist(NULL),
 		foot_node(netlist::void_index),
 		output_node(netlist::void_index),
+		current_width(0.0),
+		current_length(0.0),
 		fet_type(transistor::NFET_TYPE), 	// don't care
 		fet_attr(transistor::DEFAULT_ATTRIBUTE),
 		negated(false),
@@ -180,7 +186,11 @@ try {
 		// find out how local nodes are passed to *local* instance
 		const footprint* subfp = subp._frame._footprint;
 		const netlist& subnet(netmap.find(subfp)->second);
-		nl->append_instance(subp, subnet, lpid);
+		nl->append_instance(subp, subnet, lpid
+#if CACHE_LOGICAL_NODE_NAMES
+			, opt
+#endif
+			);
 	}
 	}
 #else
@@ -198,8 +208,8 @@ try {
 	// process local production rules and macros
 	f->get_prs_footprint().accept(*this);
 	// f->get_spec_footprint().accept(*this);	// ?
-	if (!top_level) {
-		nl->summarize_ports();
+	if (!top_level || opt.top_type_ports) {
+		nl->summarize_ports(opt);
 	}
 } catch (...) {
 	cerr << "ERROR producing netlist for " << nl->name << endl;
@@ -209,8 +219,8 @@ try {
 #if ENABLE_STACKTRACE
 	nl->dump_raw(cerr);	// DEBUG point
 #endif
-if (!nl->is_empty()) {		// TODO: netlist_option show_empty_subcircuits
-	nl->emit(os, !top_level, opt) << endl;
+if (opt.empty_subcircuits || !nl->is_empty()) {
+	nl->emit(os, !top_level || opt.top_type_ports, opt) << endl;
 } else {
 	os << "* subcircuit " << nl->name << " is empty." << endl;
 }
@@ -355,6 +365,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 void
 netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 	STACKTRACE_VERBOSE;
+	typedef	entity::PRS::footprint_rule		rule;
 	// set foot_node and output_node and fet_type
 	const value_saver<index_type>
 		__t1(foot_node,
@@ -362,9 +373,45 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 		__t2(output_node, register_named_node(r.output_index));
 	const value_saver<transistor::fet_type>
 		__t3(fet_type, (r.dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
+	const value_saver<char> __t4(fet_attr);
+	// apply rule attributes: iskeeper, etc...
+	const rule::attributes_list_type& rats(r.attributes);
+	rule::attributes_list_type::const_iterator
+		i(rats.begin()), e(rats.end());
+for ( ; i!=e; ++i) {
+	// TODO: write a proper rule attribute map implementation
+	const bool k = i->key == "iskeeper";
+	const bool ck = i->key == "isckeeper";
+	if (k) {
+		pint_value_type b = 1;
+		if (i->values && i->values->size()) {
+			const pint_const&
+				pi(*(*i->values)[0].is_a<const pint_const>());
+			b = pi.static_constant_value();
+		}
+		if (b) {
+			fet_attr |= transistor::IS_STANDARD_KEEPER;
+		}
+	} else if (ck) {
+		pint_value_type b = 1;
+		if (i->values && i->values->size()) {
+			const pint_const&
+				pi(*(*i->values)[0].is_a<const pint_const>());
+			b = pi.static_constant_value();
+		}
+		if (b) {
+			fet_attr |= transistor::IS_COMB_FEEDBACK;
+		}
+	}
+	// ignore unknown attributes silently
+}
+	const value_saver<real_type> __t5(current_width), __t6(current_length);
+	const bool is_keeper = fet_attr & transistor::IS_STANDARD_KEEPER;
+	set_current_width(opt.get_default_width(r.dir, is_keeper));
+	set_current_length(opt.get_default_length(r.dir, is_keeper));
 	// TODO: honor prs supply override directives
-	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
 try {
+	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
 	ep[r.expr_index].accept(*this);
 } catch (...) {
 	// TODO: better diagnostic tracing message
@@ -372,6 +419,28 @@ try {
 	throw;
 }
 	// TODO: process rule attributes, labels, names...
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Uses fet_type and fet_attr to determine whether this
+	is NFET or PFET and whether is part of a keeper or not.
+ */
+void
+netlist_generator::set_current_width(const real_type w) {
+	const bool dir = (fet_type == transistor::PFET_TYPE);
+//	const bool is_keeper = fet_attr & transistor::IS_STANDARD_KEEPER;
+	real_type max_width = (dir ? opt.max_p_width : opt.max_n_width);
+	real_type new_width = std::max(opt.min_width, w);
+	if (max_width > 0.0)	// ignore max when 0.0
+		new_width = std::min(max_width, new_width);
+	current_width = new_width;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+netlist_generator::set_current_length(const real_type l) {
+	current_length = std::max(opt.min_length, l);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -408,6 +477,11 @@ if (!n.used) {
 	const value_saver<transistor::fet_type>
 		__t3(fet_type,
 			(dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
+	const value_saver<real_type> __t4(current_width), __t5(current_length);
+	// Q: can internal nodes definitions be applied to keepers?
+	// if so, then we need attributes for internal node definitions (rules)
+	set_current_width(opt.get_default_width(dir, false));
+	set_current_length(opt.get_default_length(dir, false));
 	n.used = true;
 	// mark before recursion, not after!
 	// to prevent shared roots from being duplicated
@@ -419,13 +493,13 @@ if (!n.used) {
 	// within a process definition.
 		STACKTRACE("pointing to subcircuit");
 		const value_saver<netlist_common*>
-			__t4(current_local_netlist, 
+			__t6(current_local_netlist, 
 				&current_netlist->local_subcircuits[node_own -1]);
 		ep[defexpr].accept(*this);
 	} else {
 		// point back to main scope
 		const value_saver<netlist_common*>
-			__t4(current_local_netlist, current_netlist);
+			__t6(current_local_netlist, current_netlist);
 		ep[defexpr].accept(*this);
 	}
 }
@@ -440,7 +514,11 @@ if (!n.used) {
 index_type
 netlist_generator::register_named_node(const index_type n) {
 	NEVER_NULL(current_netlist);
-	const index_type ret = current_netlist->register_named_node(n);
+	const index_type ret = current_netlist->register_named_node(n
+#if CACHE_LOGICAL_NODE_NAMES
+		, opt
+#endif
+		);
 	return ret;
 }
 
@@ -459,9 +537,11 @@ netlist_generator::visit(const footprint_expr_node::precharge_pull_type& p) {
 	const value_saver<transistor::fet_type>
 		_t4(fet_type, dir ? transistor::PFET_TYPE
 			: transistor::NFET_TYPE);
-	const value_saver<transistor::flags>
-		_t5(fet_attr, transistor::flags(
-			fet_attr | transistor::IS_PRECHARGE));
+	const value_saver<char>
+		_t5(fet_attr, fet_attr | transistor::IS_PRECHARGE);
+	const value_saver<real_type> __t6(current_width), __t7(current_length);
+	set_current_width(opt.get_default_width(dir, false));
+	set_current_length(opt.get_default_length(dir, false));
 	// use the same output node
 	ep[pchgex].accept(*this);
 }
@@ -498,21 +578,43 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.body = (fet_type == transistor::NFET_TYPE ? low_supply : high_supply);
 		// Vdd or GND
 	// TODO: extract length/width parameters
-	const directive_base_params_type& p(e.get_params());
+	const directive_base_params_type& p(e.params);
+//	const bool is_n = fet_type == transistor::NFET_TYPE;
+//	const bool is_k = fet_attr & transistor::IS_STANDARD_KEEPER;
+		// excludes combinational feedback keepers
 	if (p.size() > 0) {
-		t.width = p[0]->to_real_const();
-	} else {
-		t.width = (fet_type == transistor::NFET_TYPE ?
-			opt.std_n_width : opt.std_p_width);
+		set_current_width(p[0]->to_real_const());
 	}
+	t.width = current_width;
+	// TODO: constrain width
 	if (p.size() > 1) {
-		t.length = p[1]->to_real_const();
-	} else {
-		t.length = (fet_type == transistor::NFET_TYPE ?
-			opt.std_n_length : opt.std_p_length);
+		set_current_length(p[1]->to_real_const());
 	}
+	t.length = current_length;
+	// TODO: constrain length
 	t.attributes = fet_attr;
 	// TODO: import attributes from rule attributes?
+#if PRS_LITERAL_ATTRIBUTES
+{
+	const resolved_attribute_list_type& a(e.attributes);
+	resolved_attribute_list_type::const_iterator
+		ai(a.begin()), ae(a.end());
+	// TODO: write an actual attribute function map for altering transistor
+	for ( ; ai!=ae; ++ai) {
+		// this is just a quick hack for now
+		if (ai->key == "lvt")
+			t.set_lvt();
+		else if (ai->key == "svt")
+			t.set_svt();
+		else if (ai->key == "hvt")
+			t.set_hvt();
+		else {
+			cerr << "Warning: unknown literal attribute \'" <<
+				ai->key << "\' ignored." << endl;
+		}
+	}
+}
+#endif
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->transistor_pool.push_back(t);
 	break;
@@ -638,6 +740,27 @@ if (passn || passp) {
 	}
 	t.attributes = fet_attr;
 	// TODO: import attributes
+#if PRS_LITERAL_ATTRIBUTES
+{
+	const resolved_attribute_list_type& a(e.attributes);
+	resolved_attribute_list_type::const_iterator
+		ai(a.begin()), ae(a.end());
+	// TODO: write an actual attribute function map for altering transistor
+	for ( ; ai!=ae; ++ai) {
+		// this is just a quick hack for now
+		if (ai->key == "lvt")
+			t.set_lvt();
+		else if (ai->key == "svt")
+			t.set_svt();
+		else if (ai->key == "hvt")
+			t.set_hvt();
+		else {
+			cerr << "Warning: unknown literal attribute \'" <<
+				ai->key << "\' ignored." << endl;
+		}
+	}
+}
+#endif
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->transistor_pool.push_back(t);
 } else if (e.name == "echo") {

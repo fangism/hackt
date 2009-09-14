@@ -1,0 +1,15 @@
+// "celem-07.hac"
+// copy-modified from "celem-01.hac"
+// testing isckeeper attribute
+// @hacknet-flags@ -t celem
+
+defproc celem(bool a, b, o) {
+bool _o;
+prs {
+	a & b	#>	_o-
+	_o	=>	o-
+[isckeeper=1]	(a | b) & o	-> _o-
+[isckeeper=1]	(~a | ~b) & ~o	-> _o+
+}
+}
+

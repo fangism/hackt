@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.36 2009/08/28 20:44:55 fang Exp $
+	$Id: PRS.cc,v 1.37 2009/09/14 21:16:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -18,7 +18,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
+#include "Object/lang/PRS_literal_attribute_registry.h"
 #include "Object/lang/PRS_literal_unroller.h"
+#include "Object/lang/generic_attribute.tcc"
 #include "Object/unroll/meta_conditional.tcc"
 #include "Object/unroll/meta_loop.tcc"
 #include "Object/inst/connection_policy.h"
@@ -43,7 +45,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/IO_utils.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
-#include "util/qmap.tcc"	// for const_assoc_query::operator[]
+// #include "util/qmap.tcc"	// for const_assoc_query::operator[]
 #include "util/packed_array.h"	// for bool_alias_collection_type
 #include "util/likely.h"
 #include "util/stacktrace.h"
@@ -362,23 +364,6 @@ rule_set::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
-// class attribute method definitions
-
-attribute::attribute() : generic_attribute() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-attribute::attribute(const string& k) : generic_attribute(k) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-attribute::~attribute() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-attribute::dump(ostream& o, const rule_dump_context& c) const {
-	return generic_attribute::dump(o, entity::expr_dump_context(c));
-}
-
-//=============================================================================
 // class pull_base method definitions
 
 pull_base::pull_base() : rule(), guard(), output(), 
@@ -408,9 +393,9 @@ pull_base::~pull_base() { }
 ostream&
 pull_base::dump_base(ostream& o, const rule_dump_context& c, 
 		const char dir) const {
-	static const char* const norm_arrow = " -> ";
-	static const char* const comp_arrow = " => ";
-	static const char* const flip_arrow = " #> ";
+	static const char norm_arrow[] = " -> ";
+	static const char comp_arrow[] = " => ";
+	static const char flip_arrow[] = " #> ";
 	guard->dump(o, c);
 	switch (arrow_type) {
 	case ARROW_NORMAL: o << norm_arrow; break;
@@ -422,13 +407,8 @@ pull_base::dump_base(ostream& o, const rule_dump_context& c,
 	o << dir;
 	if (!attributes.empty()) {
 		o << " [";
-		typedef	rule_attribute_list_type::const_iterator
-							const_iterator;
-		const_iterator i(attributes.begin());
-		const const_iterator e(attributes.end());
-		for ( ; i!=e; ++i) {
-			i->dump(o, c) << "; ";
-		}
+		const expr_dump_context edc(c);
+		attributes.dump(o, edc);
 		o << ']';
 	}
 	return o;
@@ -518,37 +498,11 @@ if (output.is_internal()) {
 #endif
 	footprint_rule&
 		r(pfp.push_back_rule(guard_expr_index, output_node_index, dir));
-{
-	typedef	rule_attribute_list_type::const_iterator	const_iterator;
-	const_iterator i(attributes.begin());
-	const const_iterator e(attributes.end());
-	for ( ; i!=e; ++i) {
-		const string& key(i->get_key());
-		// check whether or not named attribute is registered
-		// NOTE: every directive should at least be registered
-		// as a cflat directive, the master set of all directives.  
-		const cflat_attribute_definition_entry
-			att(cflat_attribute_registry[key]);
-		if (!att) {
-			cerr << "Error: unrecognized attribute \'" << key <<
-				"\'." << endl;
-			return good_bool(false);
-		}
-		const count_ptr<const const_param_expr_list>
-			att_vals(i->unroll_values(c));
-		if (!att_vals) {
-			// allow value-less attributes
-			const const_param_expr_list empty;
-			if (!att.check_values(empty).good)
-				return good_bool(false);
-		} else
-		if (!att.check_values(*att_vals).good) {
-			// already have error message
-			return good_bool(false);
-		}
-		r.push_back(footprint_rule_attribute(key, att_vals));
+	if (!unroll_check_attributes(attributes, r.attributes, c, 
+			cflat_rule_attribute_registry).good) {
+		// already have some error message
+		return good_bool(false);
 	}
-}
 }	// end if output.is_internal()
 	return good_bool(true);
 }
@@ -2053,21 +2007,36 @@ not_expr::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class literal method definitions
 
-literal::literal() : prs_expr(), base_type(), params() { }
+literal::literal() : prs_expr(), base_type(), params()
+#if PRS_LITERAL_ATTRIBUTES
+		, attr()
+#endif
+		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-literal::literal(const bool_literal& l, const params_type& p) :
+literal::literal(const bool_literal& l, const params_type& p, 
+			const generic_attribute_list_type& a) :
 		prs_expr(), base_type(l), params(p)
+#if PRS_LITERAL_ATTRIBUTES
+		, attr(a)
+#endif
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::literal(const literal_base_ptr_type& l) :
 		prs_expr(), base_type(l), params()
+#if PRS_LITERAL_ATTRIBUTES
+		, attr()
+#endif
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::literal(const node_literal_ptr_type& l) :
-		prs_expr(), base_type(l), params() { }
+		prs_expr(), base_type(l), params()
+#if PRS_LITERAL_ATTRIBUTES
+		, attr()
+#endif
+		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::~literal() { }
@@ -2086,7 +2055,16 @@ ostream&
 literal::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
 	base_type::dump(o, c);
-	directive_source::dump_params(params, o, c);
+if (!params.empty() || !attr.empty()) {
+	o << '<';
+	directive_source::dump_params_bare(params, o, c);
+#if PRS_LITERAL_ATTRIBUTES
+	if (!attr.empty()) {
+		attr.dump(o << ';', c);
+	}
+#endif
+	o << '>';
+}
 	return o;
 }
 
@@ -2195,16 +2173,23 @@ if (is_internal()) {
 	new_expr = &(pfp.push_back_expr(PRS_LITERAL_TYPE_ENUM, 1));
 	(*new_expr)[1] = node_index;
 }	// end if int_node
-	// should attributes even apply to internal nodes?
+	// TODO: should attributes even apply to internal nodes?
 	const size_t perr = directive_source::unroll_params(params, c,
-			new_expr->get_params());
+			new_expr->params);
 	if (perr) {
 		cerr << "Error resolving rule literal parameter " << perr
 			<< " in rule." << endl;
 		return 0;
 	}
-	INVARIANT(new_expr->get_params().size() <= 3);
-	// NEW [ACT]: optional 3rd parameter is transistor type
+	INVARIANT(new_expr->params.size() <= 2);
+#if PRS_LITERAL_ATTRIBUTES
+	if (!unroll_check_attributes(attr, new_expr->attributes, c, 
+			cflat_literal_attribute_registry).good) {
+		// already have some error message
+		cerr << "Error resolving literal attribute." << endl;
+		return 0;
+	}
+#endif
 	return pfp.current_expr_index();
 }
 
@@ -2229,11 +2214,21 @@ literal::unroll_copy(const unroll_context& c,
 		return prs_expr_ptr_type(NULL);
 	}
 	copy(crpar.begin(), crpar.end(), back_inserter(rpar));
+#if PRS_LITERAL_ATTRIBUTES
+	resolved_attribute_list_type rat;
+	if (!unroll_check_attributes(attr, rat, c, 
+			cflat_literal_attribute_registry).good) {
+		// already have some error message
+		cerr << "Error resolving literal attribute." << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+#endif
 	if ((lref == *this) &&
-		std::equal(params.begin(), params.end(), rpar.begin())) {
+		std::equal(params.begin(), params.end(), rpar.begin()) && 
+		std::equal(attr.begin(), attr.end(), rat.begin())) {
 		return e;
 	} else {
-		return prs_expr_ptr_type(new literal(lref, rpar));
+		return prs_expr_ptr_type(new literal(lref, rpar, rat));
 	}
 }
 
@@ -2247,6 +2242,9 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
 	m.collect_pointer_list(params);
+#if PRS_LITERAL_ATTRIBUTES
+	attr.collect_transient_info_base(m);
+#endif
 }
 }
 
@@ -2256,6 +2254,9 @@ literal::write_object(const persistent_object_manager& m, ostream& o) const {
 //	m.write_pointer(o, var);
 	write_object_base(m, o);		// saves var
 	m.write_pointer_list(o, params);
+#if PRS_LITERAL_ATTRIBUTES
+	attr.write_object_base(m, o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2264,15 +2265,26 @@ literal::load_object(const persistent_object_manager& m, istream& i) {
 //	m.read_pointer(i, var);
 	load_object_base(m, i);			// restores var
 	m.read_pointer_list(i, params);
+#if PRS_LITERAL_ATTRIBUTES
+	attr.load_object_base(m, i);
+#endif
 }
 
 //=============================================================================
 // class macro method definitions
 
-macro::macro() : rule(), directive_source() { }
+macro::macro() : rule(), directive_source()
+#if PRS_LITERAL_ATTRIBUTES
+	, attr()
+#endif
+	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-macro::macro(const string& n) : rule(), directive_source(n) { }
+macro::macro(const string& n) : rule(), directive_source(n)
+#if PRS_LITERAL_ATTRIBUTES
+	, attr()
+#endif
+	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 macro::~macro() { }
@@ -2283,7 +2295,24 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(macro)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 macro::dump(ostream& o, const rule_dump_context& c) const {
-	return directive_source::dump(o, c);
+	o << name;
+if (!params.empty()
+#if PRS_LITERAL_ATTRIBUTES
+		|| !attr.empty()
+#endif
+		) {
+	o << '<';
+	const expr_dump_context edc(c);
+	directive_source::dump_params_bare(params, o, edc);
+#if PRS_LITERAL_ATTRIBUTES
+	if (!attr.empty()) {
+		attr.dump(o << ';', edc);
+	}
+#endif
+	o << '>';
+}
+	dump_nodes(o, c);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2318,6 +2347,17 @@ macro::unroll(const unroll_context& c, const node_pool_type& np,
 		// dump the literal?
 		return good_bool(false);
 	}
+#if PRS_LITERAL_ATTRIBUTES
+	// TODO: for now, we share the same attributes as literals
+	// but eventually, each macro could conceivably subscribe to
+	// its own set of attributes.  
+	if (!unroll_check_attributes(attr, new_macro_call.attributes, c, 
+			cflat_literal_attribute_registry).good) {
+		// already have some error message
+		cerr << "Error resolving literal attribute." << endl;
+		return good_bool(false);
+	}
+#endif
 	const size_t nerr = unroll_nodes(c, new_macro_call.nodes);
 	if (nerr) {
 		cerr << "Error resolving literal node at position " << nerr
@@ -2361,18 +2401,23 @@ macro::check(void) const {
 	assert(name.length());
 	assert(nodes.size());
 	// probe existence of macro
-	const cflat_macro_definition_entry m(cflat_macro_registry[name]);
+	const cflat_macro_registry_type::const_iterator
+		f(cflat_macro_registry.find(name));
 	// should've already been checked in the parser
-	if (!m) {
+	if (f == cflat_macro_registry.end()) {
 		cerr << "Error: unknown PRS macro \'" << name << "\'." << endl;
 		THROW_EXIT;
 	}
+	const cflat_macro_definition_entry& m(f->second);
 	if (!m.check_num_params(params.size()).good) {
 		// make sure passed in correct number of arguments
 		// custom-defined, may be variable
 		// already have error message
 		THROW_EXIT;
 	}
+#if PRS_LITERAL_ATTRIBUTES
+	// TODO: check attributes?
+#endif
 	if (!m.check_num_nodes(nodes.size()).good) {
 		// make sure passed in correct number of arguments
 		// custom-defined, may be variable
@@ -2387,6 +2432,9 @@ macro::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
+#if PRS_LITERAL_ATTRIBUTES
+	attr.collect_transient_info_base(m);
+#endif
 }
 }
 
@@ -2394,12 +2442,18 @@ if (!m.register_transient_object(this,
 void
 macro::write_object(const persistent_object_manager& m, ostream& o) const {
 	write_object_base(m, o);
+#if PRS_LITERAL_ATTRIBUTES
+	attr.write_object_base(m, o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 macro::load_object(const persistent_object_manager& m, istream& i) {
 	load_object_base(m, i);
+#if PRS_LITERAL_ATTRIBUTES
+	attr.load_object_base(m, i);
+#endif
 }
 
 //=============================================================================

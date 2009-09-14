@@ -1,0 +1,7 @@
+// "internal-12.hac"
+// @hacknet-flags@ -c mangle-example-02.hacknet-conf
+// @deps@ mangle-example-02.hacknet-conf
+// testing mangling
+
+import "internal-06.hac";
+

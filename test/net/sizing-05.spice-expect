@@ -1,0 +1,30 @@
+.subckt foo<> GND Vdd a b c d e x y z
+M0_ GND b #0 GND nch W=8u L=2u
+M1_:pchg Vdd b #0 Vdd pch W=5u L=2u
+M2_ #0 d z GND nch W=8u L=2u
+M3_ Vdd b #1 Vdd pch W=8u L=2u
+M4_ #1 d z Vdd pch W=8u L=2u
+M5_ GND a #2 GND nch W=5u L=2u
+M6_ #2 b #3 GND nch W=10u L=2u
+M7_:pchg Vdd a #3 Vdd pch W=5u L=2u
+M8_ #3 c #4 GND nch W=10u L=2u
+M9_ #4 d #5 GND nch W=20u L=3u
+M10_:pchg Vdd a #5 Vdd pch W=5u L=2u
+M11_ #5 e x GND nch W=20u L=3u
+M12_ Vdd a #6 Vdd pch W=5u L=2u
+M13_ #6 b #7 Vdd pch W=10u L=2u
+M14_ #7 c #8 Vdd pch W=10u L=2u
+M15_ #8 d #9 Vdd pch W=20u L=3u
+M16_ #9 e x Vdd pch W=20u L=3u
+M17_ GND a #10 GND nch W=5u L=2u
+M18_:pchg Vdd a #10 Vdd pch W=11u L=2u
+M19_ #10 c #11 GND nch W=5u L=2u
+M20_:pchg Vdd a #11 Vdd pch W=5u L=2u
+M21_ #11 e y GND nch W=5u L=2u
+M22_ Vdd a y Vdd pch W=5u L=2u
+M23_ Vdd c y Vdd pch W=5u L=2u
+M24_ Vdd e y Vdd pch W=5u L=2u
+.ends
+
+xbar GND Vdd bar.a bar.b bar.c bar.d bar.e bar.x bar.y bar.z foo<>
+

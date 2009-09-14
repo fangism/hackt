@@ -1,0 +1,21 @@
+// "mangle-01.hac"
+// testing name-mangling
+// @hacknet-flags@ -c mangle-example-01.hacknet-conf -t std::logic::celem<2,20>
+// @deps@ mangle-example-01.hacknet-conf
+
+namespace std {
+namespace logic {
+
+export
+template <pint N, W>
+defproc celem(bool in[N], o) {
+bool _o;
+prs {
+	(&:i:N: in[i])	#> _o-
+	_o<W>		=> o-
+}
+}
+
+}	// end namespace logic
+}	// end namespace std
+

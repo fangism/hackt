@@ -4,13 +4,13 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -29,7 +29,7 @@ Persistent Object Manager text dump:
 	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	434
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	28	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
 	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	30	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	31	##ADDR##	portscop	0	#HEAD#	#TAIL#	20

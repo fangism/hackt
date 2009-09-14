@@ -1,0 +1,10 @@
+// "process-port-05.hac"
+// copy-modified from "process-port-03.hac"
+// @hacknet-flags@ -f empty_subcircuits=1 -f unused_ports=1
+// testing emitting of empty subcircuits
+
+import "process-port-01.hac";
+
+// watch out: processes in ports will be emitted duplicately, 
+// as if ports were not aliased!
+

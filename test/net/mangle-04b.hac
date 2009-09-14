@@ -1,0 +1,5 @@
+// "mangle-04b.hac"
+// base names for comparison
+
+import "mangle-04.hac";
+

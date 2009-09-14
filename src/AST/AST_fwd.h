@@ -1,7 +1,7 @@
 /**
 	\file "AST/AST_fwd.h"
 	Forward declarations for classes in HAC::parser.
-	$Id: AST_fwd.h,v 1.9 2009/06/05 16:28:04 fang Exp $
+	$Id: AST_fwd.h,v 1.10 2009/09/14 21:16:45 fang Exp $
  */
 
 #ifndef	__HAC_AST_AST_FWD_H__
@@ -28,6 +28,7 @@ class node_list;			// defined in "AST/node_list.h"
 
 class expr_list;
 class inst_ref_expr_list;
+class expr_attr_list;
 class template_argument_list_pair;
 class root_item;
 class root_body;

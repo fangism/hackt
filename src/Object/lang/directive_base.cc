@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.3 2006/04/12 08:53:16 fang Exp $
+	$Id: directive_base.cc,v 1.4 2009/09/14 21:17:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -93,18 +93,27 @@ directive_base::first_node_error(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-directive_base::dump_params(const params_type& p, ostream& o) {
+directive_base::dump_params_bare(const params_type& p, ostream& o) {
 if (p.size()) {
 	typedef	params_type::const_iterator	const_iterator;
 	const_iterator i(p.begin());
 	const const_iterator e(p.end());
-	o << '<';
 	NEVER_NULL(*i);
 	(*i)->dump(o);
 	for (++i; i!=e; ++i) {
 		NEVER_NULL(*i);
 		(*i)->dump(o << ',');
 	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+directive_base::dump_params(const params_type& p, ostream& o) {
+if (p.size()) {
+	o << '<';
+	dump_params_bare(p, o);
 	o << '>';
 }
 	return o;

@@ -1,0 +1,7 @@
+M0_ GND in_IND0EX_ _PND_0 GND nch W=5u L=2u
+M1_ _PND_0 in_IND1EX_ ____o GND nch W=5u L=2u
+M2_ Vdd in_IND0EX_ _PND_1 Vdd pch W=5u L=2u
+M3_ _PND_1 in_IND1EX_ ____o Vdd pch W=5u L=2u
+M4_ GND ____o o GND nch W=20u L=2u
+M5_ Vdd ____o o Vdd pch W=20u L=2u
+

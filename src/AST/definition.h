@@ -1,7 +1,7 @@
 /**
 	\file "AST/definition.h"
 	Definition-related parser classes for HAC.  
-	$Id: definition.h,v 1.5 2007/10/08 01:20:57 fang Exp $
+	$Id: definition.h,v 1.6 2009/09/14 21:16:46 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.h,v 1.17.40.1 2005/12/11 00:45:04 fang Exp
  */
@@ -85,11 +85,7 @@ virtual	~signature_base();
  */
 class process_signature : public signature_base {
 public:
-#if 0
-	typedef	never_ptr<const entity::process_definition>	return_type;
-#else
 	typedef	never_ptr<const object>			return_type;
-#endif
 protected:
 	excl_ptr<const generic_keyword_type>	exp;	///< export keyword
 	excl_ptr<const generic_keyword_type>	def;	///< definition keyword
@@ -99,6 +95,11 @@ protected:
 		Never NULL, but may be empty.  
 	 */
 	excl_ptr<const port_formal_decl_list>	ports;
+	/**
+		This is now needed because process-definitions are overloaded
+		for use with datatype/struct and channel types.  
+	 */
+	unsigned char				meta_type;
 
 	/// transferring copy-ctor
 	explicit
@@ -108,7 +109,8 @@ public:
 		const generic_keyword_type* e, 
 		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
-		const port_formal_decl_list* p);
+		const port_formal_decl_list* p, 
+		const unsigned char m);
 
 	// need not be virtual since never use pointers of this type...
 virtual	~process_signature();
@@ -125,7 +127,8 @@ public:
 		const generic_keyword_type* e, 
 		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
-		const port_formal_decl_list* p);
+		const port_formal_decl_list* p, 
+		const unsigned char);
 
 	~process_prototype();
 
@@ -153,15 +156,8 @@ protected:
 //	const excl_ptr<const port_formal_decl_list>	ports;	//  inherited
 	const excl_ptr<const definition_body>		body;	///< definition body
 public:
-#if 0
-	process_def(
-		const generic_keyword_type* e, 
-		const template_formal_decl_list_pair*, 
-		const generic_keyword_type* d, const token_identifier* i, 
-		const port_formal_decl_list* p, const definition_body* b);
-#else
-	process_def(process_signature& s, const definition_body* b);
-#endif
+	process_def(process_signature& s, const definition_body* b, 
+		const unsigned char);
 
 	~process_def();
 

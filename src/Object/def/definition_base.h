@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.14 2007/10/10 06:04:33 fang Exp $
+	$Id: definition_base.h,v 1.15 2009/09/14 21:16:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -19,6 +19,7 @@
 #include "util/memory/count_ptr.h"
 
 #include "Object/def/template_formals_manager.h"
+#include "Object/traits/type_tag_enum.h"
 #include "Object/devel_switches.h"
 
 namespace HAC {
@@ -128,6 +129,9 @@ virtual	ostream&
 
 	ostream&
 	pair_dump(ostream& o) const;
+
+virtual	meta_type_tag_enum
+	get_meta_type(void) const = 0;
 
 virtual	const string&
 	get_key(void) const = 0;

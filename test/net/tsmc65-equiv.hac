@@ -1,0 +1,5 @@
+// "tsmc65-equiv.hac"
+// dump back out netgen configuration
+// @hacknet-flags@ -C tsmc65-equiv.netgen-conf -d
+// @deps@ tsmc65-equiv.netgen-conf
+

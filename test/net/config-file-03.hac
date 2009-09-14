@@ -1,6 +1,6 @@
 // "config-file-03.hac"
 // testing parameter override
-// @hacknet-flags@ -f lambda=0.5 -c $srcdir/sample-01.hacknet-conf
+// @hacknet-flags@ -f lambda=0.5 -c sample-01.hacknet-conf
 // @deps@ sample-01.hacknet-conf
 
 import "inv-00.hac";
