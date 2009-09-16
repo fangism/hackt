@@ -1,5 +1,13 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.56 2009/08/28 22:41:48 fang Exp $
+#	$Id: ChangeLog,v 1.57 2009/09/16 20:00:00 fang Exp $
+
+2009-09-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29+:
+	  Added scripts/spice-wrap.awk: post-processor to automatically
+		wrap long lines of spice files with customizable
+		line continuation string.
+
 
 2009-08-28	David Fang	<fangism@users.sourceforge.net>
 
