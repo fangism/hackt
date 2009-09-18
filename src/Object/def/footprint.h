@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.29 2009/09/14 21:16:51 fang Exp $
+	$Id: footprint.h,v 1.29.2.1 2009/09/18 18:12:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -387,6 +387,11 @@ public:
 
 	good_bool
 	create_dependent_types(const footprint&);
+
+#if IMPLICIT_SUPPLY_PORTS
+	good_bool
+	connect_implicit_ports(const unroll_context&);
+#endif
 
 	void
 	evaluate_scope_aliases(void);

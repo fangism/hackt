@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.12 2008/10/05 23:00:07 fang Exp $
+	$Id: instance.h,v 1.12.20.1 2009/09/18 18:12:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -83,10 +83,16 @@ private:
  */
 class actuals_base {
 protected:
-	const excl_ptr<const expr_list>		actuals;
+#if 0
+	typedef	expr_list				actuals_type;
+#else
+	// includes optional implicit globals
+	typedef	extended_connection_actuals		actuals_type;
+#endif
+	const excl_ptr<const actuals_type>	actuals;
 
 	explicit
-	actuals_base(const expr_list* l);
+	actuals_base(const actuals_type* l);
 
 	~actuals_base();
 
@@ -119,7 +125,11 @@ protected:
 	 */
 	const excl_ptr<const expr_list>			relaxed_args;
 public:
-	instance_base(const token_identifier*, const expr_list*);
+	explicit
+	instance_base(const count_ptr<const token_identifier>&,
+		const expr_list* t = NULL);
+	explicit
+	instance_base(const token_identifier*, const expr_list* t = NULL);
 
 virtual	~instance_base();
 
@@ -165,12 +175,14 @@ protected:
 	/**
 		The base type of the instantiations in this collection.  
 	 */
-	const excl_ptr<const concrete_type_ref>		type;
+	const count_ptr<const concrete_type_ref>		type;
 	/**
 		List of instance_base.  
 	 */
 	const excl_ptr<const instance_id_list>		ids;
 public:
+	instance_declaration(const count_ptr<const concrete_type_ref>& t, 
+		const instance_id_list* i);
 	instance_declaration(const concrete_type_ref* t, 
 		const instance_id_list* i);
 
@@ -200,7 +212,7 @@ protected:
 //	const excl_ptr<const expr_list>		actuals;	// inherited
 public:
 	instance_connection(const token_identifier* i, 
-		const expr_list* ta, const expr_list* pa);
+		const expr_list* ta, const actuals_type* pa);
 
 	~instance_connection();
 
@@ -229,14 +241,14 @@ public:
 	typedef	entity::port_connection_base		result_type;
 	typedef	entity::meta_instance_reference_base	inst_ref_arg_type;
 protected:
-//	const excl_ptr<const expr_list>		actuals;	// inherited
+//	const excl_ptr<const actuals_type>	actuals;	// inherited
 	/**
 		Instance reference to connect, may be indexed,
 		but must be scalar.  
 	 */
 	const excl_ptr<const inst_ref_expr>		lvalue;
 public:
-	connection_statement(const inst_ref_expr* l, const expr_list* a);
+	connection_statement(const inst_ref_expr* l, const actuals_type* a);
 
 	~connection_statement();
 
@@ -414,7 +426,7 @@ class type_completion_connection_statement :
 		public type_completion_statement, public actuals_base {
 public:
 	type_completion_connection_statement(const inst_ref_expr*,
-		const expr_list*, const expr_list*);
+		const expr_list*, const actuals_type*);
 	~type_completion_connection_statement();
 
 	ostream&

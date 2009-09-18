@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.26 2009/08/28 20:44:55 fang Exp $
+	$Id: subinstance_manager.cc,v 1.26.4.1 2009/09/18 18:12:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -99,21 +99,21 @@ subinstance_manager::value_type
 subinstance_manager::lookup_port_instance(
 		const lookup_arg_type& i) const {
 	STACKTRACE_VERBOSE;
+	const size_t s = subinstance_array.size();
 	const size_t index = i.is_port_formal();
-	if (!index || (index > subinstance_array.size())) {
+	if (!index || (index > s)) {
 	ICE(cerr, 
 		cerr << "got port index of " << index
-			<< " when limit is " << subinstance_array.size()
-			<< endl;
+			<< " when limit is " << s << endl;
 		i.dump(cerr << "\twhile looking up: ", 
 			dump_flags::verbose) << endl;
 //		cerr << "Here\'s the complete dump of this subinstance set: "
 //			"at " << this << endl;
-//		dump(cerr) << endl;
+//		dump_ports(cerr) << endl;
 	)
 	}
 	INVARIANT(index);
-	INVARIANT(index <= subinstance_array.size());
+	INVARIANT(index <= s);
 	return subinstance_array[index-1];
 }
 

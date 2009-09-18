@@ -3,7 +3,7 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.12 2008/11/23 17:53:40 fang Exp $
+	$Id: port_formals_manager.h,v 1.12.16.1 2009/09/18 18:12:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
@@ -12,13 +12,14 @@
 #include <iosfwd>
 #include <vector>
 #include <string>
+#include <map>
 
 #include "util/macros.h"
 #include "Object/common/util_types.h"	// for checked_refs_type
+#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
-#include "util/STL/hash_map.h"
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
@@ -63,10 +64,13 @@ public:
 		either base-types or user-defined types.  
 		Needs to be ordered for argument checking, 
 		and have fast lookup, thus hashlist.  
-		Implemented as a hash_qmap and list.  
+		Implemented as a map and list.  
+		The list and map contain both normally declared ports
+		AND now implicitly declared global ports.  
+		Need to be careful to distinguish between the two.
 	**/
 	typedef vector<port_formals_value_type>	port_formals_list_type;
-	typedef HASH_MAP_NAMESPACE::hash_map<string, port_formals_value_type>
+	typedef std::map<string, port_formals_value_type>
 						port_formals_map_type;
 	typedef	port_formals_list_type::const_iterator
 						const_list_iterator;
@@ -82,6 +86,13 @@ public:
 protected:
 	port_formals_list_type			port_formals_list;
 	port_formals_map_type			port_formals_map;
+#if IMPLICIT_SUPPLY_PORTS
+private:
+	// cached counts of number of implicit ports (globals)
+	size_t					__implicit_ports;
+	// cached counts of number of explicit ports
+	size_t					__explicit_ports;
+#endif
 public:
 	port_formals_manager();
 	~port_formals_manager();
@@ -92,9 +103,20 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
+private:
+	// counts both implicit and explicit ports
 	size_t
 	size(void) const { return port_formals_list.size(); }
 
+public:
+#if IMPLICIT_SUPPLY_PORTS
+	size_t
+	implicit_ports(void) const { return __implicit_ports; }
+	size_t
+	explicit_ports(void) const { return __explicit_ports; }
+#endif
+
+	// note: these iterate over ALL ports, implicit and explicit
 	const_list_iterator
 	begin(void) const { return port_formals_list.begin(); }
 

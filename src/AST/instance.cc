@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.31 2008/11/12 02:59:54 fang Exp $
+	$Id: instance.cc,v 1.31.20.1 2009/09/18 18:12:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -60,6 +60,7 @@
 #include "util/dereference.h"
 #include "util/compose.h"
 #include "util/binders.h"
+#include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -98,6 +99,7 @@ using namespace HAC::parser;
 template class count_ptr<const guarded_instance_management>;
 template class count_ptr<const instance_management>;
 template class count_ptr<const instance_base>;
+template class count_ptr<const instance_declaration>;
 
 }	// end namespace memory
 }	// end namespace util
@@ -397,7 +399,7 @@ if (size() > 0) {		// non-empty
 // class actuals_base method definitions
 
 CONSTRUCTOR_INLINE
-actuals_base::actuals_base(const expr_list* a) : 
+actuals_base::actuals_base(const actuals_type* a) : 
 //		instance_management(), 
 		actuals(a) {
 	NEVER_NULL(actuals);
@@ -427,13 +429,14 @@ good_bool
 actuals_base::check_actuals(expr_list::checked_meta_refs_type& ret,
 		context& c) const {
 	STACKTRACE("actuals_base::check_actuals()");
+	// TODO: check/resolve optional implicit global ports
 	expr_list::checked_meta_generic_type temp;
-	actuals->postorder_check_meta_generic(temp, c);
+	actuals->actual_ports->postorder_check_meta_generic(temp, c);
 	expr_list::select_checked_meta_refs(temp, ret);
 	expr_list::checked_meta_generic_type::const_iterator
 		c_iter(temp.begin());
-	expr_list::const_iterator e_iter(actuals->begin());
-	const expr_list::const_iterator e_end(actuals->end());
+	expr_list::const_iterator e_iter(actuals->actual_ports->begin());
+	const expr_list::const_iterator e_end(actuals->actual_ports->end());
 	for ( ; e_iter != e_end; e_iter++, c_iter++) {
 		if (*e_iter) {
 			if (!c_iter->first && !c_iter->second)
@@ -451,6 +454,13 @@ actuals_base::check_actuals(expr_list::checked_meta_refs_type& ret,
 
 CONSTRUCTOR_INLINE
 instance_base::instance_base(const token_identifier* i, const expr_list* a) :
+		instance_management(), id(i), relaxed_args(a) {
+	NEVER_NULL(id);
+}
+
+CONSTRUCTOR_INLINE
+instance_base::instance_base(const count_ptr<const token_identifier>& i,
+		const expr_list* a) :
 		instance_management(), id(i), relaxed_args(a) {
 	NEVER_NULL(id);
 }
@@ -659,6 +669,15 @@ instance_declaration::instance_declaration(const concrete_type_ref* t,
 	NEVER_NULL(type);
 }
 
+CONSTRUCTOR_INLINE
+instance_declaration::instance_declaration(
+		const count_ptr<const concrete_type_ref>& t, 
+		const instance_id_list* i) :
+		instance_management(),
+		type(t), ids(i) {
+	NEVER_NULL(type);
+}
+
 DESTRUCTOR_INLINE
 instance_declaration::~instance_declaration() { }
 
@@ -708,7 +727,7 @@ instance_declaration::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 instance_connection::instance_connection(const token_identifier* i, 
-		const expr_list* ta, const expr_list* pa) :
+		const expr_list* ta, const actuals_type* pa) :
 		instance_base(i, ta), actuals_base(pa) {
 }
 
@@ -785,7 +804,8 @@ instance_connection::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 connection_statement::connection_statement(
-		const inst_ref_expr* l, const expr_list* a) :
+		const inst_ref_expr* l, 
+		const actuals_type* a) :
 		actuals_base(a), lvalue(l) {
 	NEVER_NULL(lvalue);
 }
@@ -1339,7 +1359,7 @@ type_completion_statement::create_type_completion(
 
 type_completion_connection_statement::type_completion_connection_statement(
 		const inst_ref_expr* ir, const expr_list* ta, 
-		const expr_list* p) :
+		const actuals_type* p) :
 		type_completion_statement(ir, ta), 
 		actuals_base(p) {
 }

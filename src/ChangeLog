@@ -3,6 +3,32 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-01:
+	  Initial implementation of implicit process supply ports.
+	  AST/globals.cc: new shared pieces of syntax tree
+	  AST,parser: new extended_connection_actuals includes 
+		optional implicit global connection overrides, not yet
+		handled in middle-end.
+	  hackt-parse.yy.in: extended connection-statement syntax to
+		allow optional implicit overrides $(...).
+		TODO: let explicit ports be optional if implicit overrides
+			are present.  
+	  process_definition::__unroll(): after sequential scope, 
+		automatically connect unconnected globals to parents,
+		via footprint::connect_implicit_ports().
+	  port_formals_manager: now distinguish between implicit and
+		explicit ports, partitioned list of ports.
+	  port_connection::ctor(): if referenced instance is a process, 
+		prepend instance connection list with NULL pointers
+		for each implicit global port (delayed auto-connect).
+	  main_funcs.cc:parse_and_check(): top-level of syntax tree, 
+		prepend implicit global declarations for !Vdd, !GND.
+	  Object files have grown with new implicit port declarations.
+	  Test cases have NOT YET been updated.  
+
+
 2009-09-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-merged-netlist-02-13:

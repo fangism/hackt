@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.23 2009/02/20 20:39:41 fang Exp $
+	$Id: main_funcs.cc,v 1.23.12.1 2009/09/18 18:12:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -36,6 +36,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/getopt_mapped.h"
 #include "util/value_saver.h"
 #include "util/persistent_object_manager.h"
+#if IMPLICIT_SUPPLY_PORTS
+#include "AST/globals.h"
+#include "AST/instance.h"
+#endif
 
 #if KEEP_PARSE_FUNCS
 // forward declarations needed for YSTYPE
@@ -163,12 +167,14 @@ check_file_writeable(const char* fname) {
 /**
 	Parses a file as an independent module, resulting in a root body.
 	No error handling here.  
+	This is called by the lexer upon import-directive (recursive).
 	\param yyin is an already opened file.
 	\return NULL on failure.
  */
 count_ptr<root_body>
 parse_to_AST(FILE* yyin) {
 	typedef	count_ptr<root_body>		return_type;
+	STACKTRACE_VERBOSE;
 	YYSTYPE lval;			// root token (was yyval)
 	NEVER_NULL(yyin);
 	try {
@@ -309,6 +315,7 @@ flatten_source(const char* name) {
 //=============================================================================
 /**
 	Parses a file and checks it.  
+	Only called by top-level programs, and hence, not recursive/reentrant.
 	\param name the name of the top-level source file, 
 		if NULL, then will use stdin.  
 	\param opt compiler options.  
@@ -334,9 +341,12 @@ parse_and_check(const char* name, const compile_options& opt) {
 	const count_ptr<root_body> AST(parse_to_AST(name, opt));
 	if (!AST) return return_type(NULL);
 	// error message would be nice
+#if IMPLICIT_SUPPLY_PORTS
+	AST->push_front(get_implicit_globals());
+#endif
 	return check_AST(*AST, name ? name : dflt, opt.parse_opts);
 }
-#endif
+#endif	// KEEP_PARSE_FUNCS
 
 //=============================================================================
 /**

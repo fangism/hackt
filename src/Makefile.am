@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.221 2009/09/14 21:16:44 fang Exp $
+#	$Id: Makefile.am,v 1.221.2.1 2009/09/18 18:12:09 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -405,6 +405,7 @@ AST_CC_FILES = \
 	AST/definition_item.cc \
 	AST/instance.cc \
 	AST/formal.cc \
+	AST/globals.cc \
 	AST/CHP.cc \
 	AST/HSE.cc \
 	AST/PRS.cc \
@@ -420,7 +421,8 @@ AST_TCC_FILES = \
 	AST/node_list.tcc \
 	AST/parse_context.tcc
 
-AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
+AST_H_FILES = \
+	$(AST_CC_FILES:.cc=.h) \
 	$(AST_TCC_FILES:.tcc=.h) \
 	AST/AST_fwd.h \
 	AST/CHP_fwd.h \

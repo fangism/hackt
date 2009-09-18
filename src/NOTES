@@ -1,7 +1,57 @@
 # "NOTES"
-#	$Id: NOTES,v 1.20 2008/11/05 23:03:18 fang Exp $
+#	$Id: NOTES,v 1.20.20.1 2009/09/18 18:12:09 fang Exp $
 
 Developer's Notes (transcripts of fangism muttering to himself...)
+
+//=============================================================================
+2009-09-14:
+	implementing implicit supply nodes that are overrideable
+	(figure out semantics first before worrying about syntax)
+	all defproc will have implicit unnamed supply nodes representing
+		the primary Vdd and GND.  Unless specified otherwise, 
+		these are use to supply the prs { } devices.  
+		I think the easiest way to do this is to automatically
+		declare implicit bool Vdd! and GND! (! here means automatic)
+		so that they cannot possible be referenced by normal means, 
+		nor accidentally aliased.  Declared secondary supply
+		ports, however may require further checks.  
+	Footprint/connections/allocation:
+		Should uses be allowed to reference these implicit nodes
+			for instance connections?  (inclined to say no.)
+			Don't want to be able to connect it to other
+			aliases arbitrarily.  
+		Should these be treated as bool (meta-type)?
+			If so, then restrictions are needed.
+			Also, secondary supplies can be passed in as 
+			regular bools, but connections to those are yet
+			unrestricted.  
+		prs <> arguments should be restricted to supply bools only.
+			those with attribute Vdd, and attribute GND.
+		Perhaps restrictions can be added with attributes?  
+			But we want to make aliases to them when convenient.
+		Allocation: best to leave this automatic by virtue
+			of existing infrastructure.
+	Need to anticipate future scalability restructuring work.
+	Syntax and annotation:
+		node @ [supply], or for new attribute
+	Q: should top-module definition also get Vdd/GND ports?
+	Implicit supply connections:
+		each process instance needs to automatically connect
+		is supply ports to some other nodes in the parent process, 
+		usually the parent's implicit supplies.  
+		The difficulty, deciding when to do this automatically:
+		*after* sequential scope unrolling (which will have
+		processed supply override directives).
+		But must be *before* assigning local footprint IDs.
+		Automatic conditional connections.  
+		algo:
+			for each local process instance p (not subinstances)
+			if p.Vdd->next() == p.Vdd (unconnected)
+				then alias p.Vdd -> Vdd
+				(direction matters because of union-find)
+			[same for GND, or any other implicit globals]
+	grammar supply override directives: should only be allowed to
+		refer to non-member process instances.
 
 //=============================================================================
 2008-08-01:

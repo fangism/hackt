@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/port_connection.tcc"
- 	$Id: port_connection.tcc,v 1.3 2006/04/24 00:28:08 fang Exp $
+ 	$Id: port_connection.tcc,v 1.3.118.1 2009/09/18 18:12:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PORT_CONNECTION_TCC__
@@ -13,6 +13,9 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/inst/substructure_alias_base.h"
+#if IMPLICIT_SUPPLY_PORTS
+#include "Object/def/process_definition.h"
+#endif
 
 #include "util/what.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -45,6 +48,21 @@ PORT_CONNECTION_TEMPLATE_SIGNATURE
 PORT_CONNECTION_CLASS::port_connection(const ported_inst_ptr_type& i) :
 		parent_type(), ported_inst(i) {
 	NEVER_NULL(ported_inst);
+#if IMPLICIT_SUPPLY_PORTS
+	// prepend inst_list with a NULL pointer for each global port
+	// could do this based on meta-type only...
+	// or more slowly, but robustly, lookup the definition's port formals
+	// should write this with a template specialization on process_tag...
+	const never_ptr<const process_definition>
+		d(ported_inst->get_base_def()
+			.template is_a<const process_definition>());
+	if (d) {
+		const size_t imp = d->get_port_formals().implicit_ports();
+	if (imp) {
+		this->inst_list.resize(imp);	// fill with NULL pointers
+	}
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

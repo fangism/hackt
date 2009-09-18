@@ -1,7 +1,7 @@
 /**
 	\file "AST/formal.h"
 	Definition-formal-related parser classes for HAC.  
-	$Id: formal.h,v 1.3 2006/07/17 02:53:34 fang Exp $
+	$Id: formal.h,v 1.3.104.1 2009/09/18 18:12:13 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_formal.h,v 1.14.40.1 2005/12/11 00:45:07 fang Exp
  */
@@ -89,10 +89,15 @@ check_data_ports(const data_param_decl_list&, context&);
  */
 class port_formal_id {
 protected:
-	const excl_ptr<const token_identifier>	name;	///< formal name
+	const count_ptr<const token_identifier>	name;	///< formal name
 	const excl_ptr<const dense_range_list>	dim;	///< optional dimensions
 public:
-	port_formal_id(const token_identifier* n, const dense_range_list* d);
+	explicit
+	port_formal_id(const token_identifier* n,
+		const dense_range_list* d = NULL);
+	explicit
+	port_formal_id(const count_ptr<const token_identifier>& n,
+		const dense_range_list* d = NULL);
 	~port_formal_id();
 
 	ostream&
@@ -114,10 +119,12 @@ public:
  */
 class port_formal_decl {
 protected:
-	const excl_ptr<const concrete_type_ref>		type;	///< formal base type
+	const count_ptr<const concrete_type_ref>		type;	///< formal base type
 	const excl_ptr<const port_formal_id_list>	ids;	///< identifier list
 public:
 	port_formal_decl(const concrete_type_ref* t, 
+		const port_formal_id_list* i);
+	port_formal_decl(const count_ptr<const concrete_type_ref>& t, 
 		const port_formal_id_list* i);
 
 	~port_formal_decl();

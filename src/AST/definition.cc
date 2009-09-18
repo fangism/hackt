@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.11 2009/09/14 21:16:46 fang Exp $
+	$Id: definition.cc,v 1.11.2.1 2009/09/18 18:12:12 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -684,6 +684,7 @@ process_signature::check_signature(context& c) const {
 		ret(new process_definition(c.get_current_namespace(), *id, 
 			entity::meta_type_tag_enum(meta_type)));
 	const never_ptr<process_definition> seq(ret.is_a<process_definition>());
+	NEVER_NULL(seq);
 	c.set_current_prototype(ret);
 	// transfered ownership
 	if (temp_spec) {

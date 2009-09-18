@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.47 2009/09/14 21:16:50 fang Exp $
+ 	$Id: definition.cc,v 1.47.2.1 2009/09/18 18:12:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3230,6 +3230,15 @@ try {
 			// NOTE: nothing can be done with production rules
 			// until nodes have been assigned local ID numbers
 			// in the create phase, in create_complete_type, below.
+#if IMPLICIT_SUPPLY_PORTS
+			// Automatically collect implicit supply ports
+			if (!f.connect_implicit_ports(c).good) {
+				// TODO: error message
+				return good_bool(false);
+			}
+			// This must be done after unrolling, but before
+			// and IDs are assigned by creating
+#endif
 			f.mark_unrolled();
 		} else {
 			// already have partial error message

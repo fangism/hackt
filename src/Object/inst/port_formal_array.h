@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.8 2008/11/12 03:00:06 fang Exp $
+	$Id: port_formal_array.h,v 1.8.20.1 2009/09/18 18:12:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -83,13 +83,6 @@ public:
 public:
 	port_formal_array(const footprint&, 
 		const instance_placeholder_ptr_type);
-
-#if 0
-	port_formal_array(const instance_placeholder_ptr_type, const key_type&,
-		const instance_collection_parameter_type&, 
-		const count_ptr<const const_param_expr_list>&, 
-		const unroll_context&);
-#endif
 
 	~port_formal_array();
 

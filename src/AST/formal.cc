@@ -1,7 +1,7 @@
 /**
 	\file "AST/formal.cc"
 	Class method definitions for HAC::parser for formal-related classes.
-	$Id: formal.cc,v 1.7 2007/03/11 16:34:15 fang Exp $
+	$Id: formal.cc,v 1.7.64.1 2009/09/18 18:12:13 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_formal.cc,v 1.27.10.1 2005/12/11 00:45:06 fang Exp
  */
@@ -228,6 +228,13 @@ port_formal_id::port_formal_id(const token_identifier* n,
 	// dim may be NULL
 }
 
+CONSTRUCTOR_INLINE
+port_formal_id::port_formal_id(const count_ptr<const token_identifier>& n,
+		const dense_range_list* d) : name(n), dim(d) {
+	NEVER_NULL(name);
+	// dim may be NULL
+}
+
 DESTRUCTOR_INLINE
 port_formal_id::~port_formal_id() {
 }
@@ -305,6 +312,12 @@ port_formal_id::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 port_formal_decl::port_formal_decl(const concrete_type_ref* t, 
+		const port_formal_id_list* i) : type(t), ids(i) {
+	NEVER_NULL(type); NEVER_NULL(ids);
+}
+
+CONSTRUCTOR_INLINE
+port_formal_decl::port_formal_decl(const count_ptr<const concrete_type_ref>& t, 
 		const port_formal_id_list* i) : type(t), ids(i) {
 	NEVER_NULL(type); NEVER_NULL(ids);
 }
