@@ -1,6 +1,8 @@
 x refers to process-inst-ref inv<>{1-dim}
 x[0] refers to process-inst-ref inv<>
 All subnodes of 'x[3]':
+!GND : 0
+!Vdd : 1
 z[3] : X
 z[4] : X
 o:X, pull up/dn are both X

@@ -1,7 +1,11 @@
 All subnodes of 'I':
+!GND : 0
+!Vdd : 1
 a : 0
 b : 1
 All subnodes of 'J':
+!GND : 0
+!Vdd : 1
 b : 1
 c : 0
 All subnodes of 'a':
@@ -19,9 +23,13 @@ b : 1
 All subnodes of 'J.b':
 c : 0
 All subnodes of 'I':
+!GND : 0
+!Vdd : 1
 a : 1
 b : 0
 All subnodes of 'J':
+!GND : 0
+!Vdd : 1
 b : 0
 c : 1
 All subnodes of 'a':

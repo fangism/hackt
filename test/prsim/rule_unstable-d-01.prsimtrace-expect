@@ -5,26 +5,26 @@ Trace file contents: 3 epochs.
 	1	0	0	#SIZE#	#SIZE#
 	2	17	0	#SIZE#	#SIZE#
 Epoch 0: (initial values)
-X X X 
+X 0 1 X X 
 Epoch 1:
 	event		event	cause	node	node
 	index	time	node	index	index	value	rule/node
 	0	0	0	0	0	X	(null)
-	1	0	0	0	1	1	(a:1)
-	2	10	2	1	2	0	[after 10, unstable]	a -> c-
-	3	10	0	0	1	0	(a:0)
-	4	10	0	0	1	1	(a:1)
-	5	10	0	0	1	X	(a:X)
-	6	20	1	5	2	X	[after 10, unstable]	~a -> c+
-	7	20	0	0	1	1	(a:1)
-	8	20	0	0	1	0	(a:0)
-	9	30	0	8	2	1	(c:1)
-	10	30	0	0	1	X	(a:X)
-	11	40	2	10	2	X	[after 10, unstable]	a -> c-
-	12	40	0	0	1	0	(a:0)
-	13	50	1	12	2	1	[after 10, unstable]	~a -> c+
-	14	50	0	0	1	1	(a:1)
-	15	50	0	0	1	X	(a:X)
-	16	60	2	14	2	X	[after 10, unstable]	a -> c-
+	1	0	0	0	3	1	(a:1)
+	2	10	2	1	4	0	[after 10, unstable]	a -> c-
+	3	10	0	0	3	0	(a:0)
+	4	10	0	0	3	1	(a:1)
+	5	10	0	0	3	X	(a:X)
+	6	20	1	5	4	X	[after 10, unstable]	~a -> c+
+	7	20	0	0	3	1	(a:1)
+	8	20	0	0	3	0	(a:0)
+	9	30	0	8	4	1	(c:1)
+	10	30	0	0	3	X	(a:X)
+	11	40	2	10	4	X	[after 10, unstable]	a -> c-
+	12	40	0	0	3	0	(a:0)
+	13	50	1	12	4	1	[after 10, unstable]	~a -> c+
+	14	50	0	0	3	1	(a:1)
+	15	50	0	0	3	X	(a:X)
+	16	60	2	14	4	X	[after 10, unstable]	a -> c-
 Epoch 2: (final values)
-X X X 
+X 0 1 X X 

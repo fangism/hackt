@@ -1,71 +1,71 @@
 0 nodes:
-
+!GND 
 1 nodes:
-
+!Vdd 
 X nodes:
 a b c 
 setting a+ 
 0 nodes:
-
+!GND 
 1 nodes:
-a 
+!Vdd a 
 X nodes:
 b c 
 setting b- 
 0 nodes:
-b 
+!GND b 
 1 nodes:
-a 
+!Vdd a 
 X nodes:
 c 
 setting a- 
 0 nodes:
-a b 
+!GND a b 
 1 nodes:
-c 
+!Vdd c 
 X nodes:
 
 setting b+ 
 0 nodes:
-a 
+!GND a 
 1 nodes:
-b c 
+!Vdd b c 
 X nodes:
 
 setting a+ 
 0 nodes:
-c 
+!GND c 
 1 nodes:
-a b 
+!Vdd a b 
 X nodes:
 
 setting a- 
 0 nodes:
-a c 
+!GND a c 
 1 nodes:
-b 
+!Vdd b 
 X nodes:
 
 setting b- 
 0 nodes:
-a b 
+!GND a b 
 1 nodes:
-c 
+!Vdd c 
 X nodes:
 
 setting b -> X 
 0 nodes:
-a 
+!GND a 
 1 nodes:
-c 
+!Vdd c 
 X nodes:
 b 
 setting a -> X 
 WARNING: weak-interference `c'
 >> cause: `a' (val: X)
 0 nodes:
-
+!GND 
 1 nodes:
-
+!Vdd 
 X nodes:
 a b c 

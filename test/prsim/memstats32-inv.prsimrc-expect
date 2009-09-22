@@ -1,16 +1,16 @@
 global-state-manager:
 	process-entry-pool: (3 * 76 B/inst) = 228 B
-		sum(frame-map): (14 * 4 B/entry) = 56 B
+		sum(frame-map): (20 * 4 B/entry) = 80 B
 	channel-entry-pool: (1 * 20 B/inst) = 20 B
 	enum-entry-pool: (1 * 12 B/inst) = 12 B
 	int-entry-pool: (1 * 12 B/inst) = 12 B
-	bool-entry-pool: (4 * 12 B/inst) = 48 B
-node-state: (4 * 128 B/node) = 512 B
+	bool-entry-pool: (6 * 12 B/inst) = 72 B
+node-state: (6 * 128 B/node) = 768 B
 node::fanout: (4 * 4 B/FO) = 16 B
 unique-process: (2 * 68 B/type) = 136 B
 	exprs+graph_nodes: (2 *(16+16) B/expr) = 64 B
 	rules+map_nodes: (2 *(28+12) B/rule) = 80 B
-	local_nodes: (6 * 60 B/node) = 360 B
+	local_nodes: (10 * 60 B/node) = 600 B
 	fanin/outs: (4 * 4 B/fan) = 16 B
 process-instances: (3 * 24 B/proc) = 72 B
 	expr-state: (4 * 4 B/expr) = 16 B

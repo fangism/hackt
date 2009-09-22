@@ -1,4 +1,6 @@
 All subnodes of 'x':
+!GND : 0
+!Vdd : 1
 x.f : X
 x.t : X
 enqueued:	0	g.Vdd : 1
@@ -14,5 +16,7 @@ WARNING: unstable `x.f'-
 yikes! instability on pull-down, not from rule! 
 event queue:
 All subnodes of 'x':
+!GND : 0
+!Vdd : 1
 x.f : X
 x.t : 0

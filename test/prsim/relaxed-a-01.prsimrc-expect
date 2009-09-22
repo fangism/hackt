@@ -1,5 +1,7 @@
 top-level instances: 
 Instances:
+  !GND = bool<> !GND
+  !Vdd = bool<> !Vdd
   falsch = binary<> falsch
   troo = binary<> troo
 troo refers to process-inst-ref binary<true>
@@ -8,17 +10,25 @@ troo (type: binary<true>) has members:
 Parameters:
   TF = pbool
 Instances:
+  !GND = bool
+  !Vdd = bool
   x = bool
   y = bool
 falsch (type: binary<false>) has members: 
 Parameters:
   TF = pbool
 Instances:
+  !GND = bool
+  !Vdd = bool
   x = bool
   z = bool
 All subnodes of 'troo':
+!GND : 0
+!Vdd : 1
 troo.x : X
 troo.y : X
 All subnodes of 'falsch':
+!GND : 0
+!Vdd : 1
 falsch.x : X
 falsch.z : X

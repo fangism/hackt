@@ -1,5 +1,7 @@
 Ports subnodes of '.':
 Public subnodes of '.':
+!GND : 0
+!Vdd : 1
 riddle.ikki.fee.yyy : X
 riddle.ikki.fee.yyx : X
 riddle.ikki.fi.yyy : X
@@ -52,6 +54,8 @@ cheezburger : X
 bukkit : X
 testing top-level instance... 
 All subnodes of 'toil':
+!GND : 0
+!Vdd : 1
 toil.fee.yyy : X
 toil.fee.yyx : X
 toil.fi.yyy : X
@@ -91,6 +95,8 @@ toil.fee.xxy : X
 toil.fi.xxx : X
 toil.fi.xxy : X
 Public subnodes of 'toil':
+!GND : 0
+!Vdd : 1
 toil.fee.yyy : X
 toil.fee.yyx : X
 toil.fi.yyy : X
@@ -112,6 +118,8 @@ toil.boo.yyy : X
 toil.boo.yyx : X
 toil.twiddle_dum : X
 Ports subnodes of 'toil':
+!GND : 0
+!Vdd : 1
 toil.fee.yyy : X
 toil.fee.yyx : X
 toil.fi.yyy : X
@@ -119,6 +127,8 @@ toil.fi.yyx : X
 toil.twiddle_dee : X
 testing top-level public port... 
 All subnodes of 'fiddle.ikki':
+!GND : 0
+!Vdd : 1
 fiddle.ikki.fee.yyy : X
 fiddle.ikki.fee.yyx : X
 fiddle.ikki.fi.yyy : X
@@ -158,12 +168,16 @@ fiddle.ikki.fee.xxy : X
 fiddle.ikki.fi.xxx : X
 fiddle.ikki.fi.xxy : X
 Ports subnodes of 'fiddle.ikki':
+!GND : 0
+!Vdd : 1
 fiddle.ikki.fee.yyy : X
 fiddle.ikki.fee.yyx : X
 fiddle.ikki.fi.yyy : X
 fiddle.ikki.fi.yyx : X
 fiddle.ikki.twiddle_dee : X
 Public subnodes of 'fiddle.ikki':
+!GND : 0
+!Vdd : 1
 fiddle.ikki.fee.yyy : X
 fiddle.ikki.fee.yyx : X
 fiddle.ikki.fi.yyy : X
@@ -186,6 +200,8 @@ fiddle.ikki.boo.yyx : X
 fiddle.ikki.twiddle_dum : X
 testing private port... 
 All subnodes of 'razzle.zoom':
+!GND : 0
+!Vdd : 1
 razzle.zoom.fee.yyy : X
 razzle.zoom.fee.yyx : X
 razzle.zoom.fi.yyy : X
@@ -225,12 +241,16 @@ razzle.zoom.fee.xxy : X
 razzle.zoom.fi.xxx : X
 razzle.zoom.fi.xxy : X
 Ports subnodes of 'razzle.zoom':
+!GND : 0
+!Vdd : 1
 razzle.zoom.fee.yyy : X
 razzle.zoom.fee.yyx : X
 razzle.zoom.fi.yyy : X
 razzle.zoom.fi.yyx : X
 razzle.zoom.twiddle_dee : X
 Public subnodes of 'razzle.zoom':
+!GND : 0
+!Vdd : 1
 razzle.zoom.fee.yyy : X
 razzle.zoom.fee.yyx : X
 razzle.zoom.fi.yyy : X
@@ -253,14 +273,20 @@ razzle.zoom.boo.yyx : X
 razzle.zoom.twiddle_dum : X
 testing another private port... 
 All subnodes of 'razzle.zoom.bah':
+!GND : 0
+!Vdd : 1
 razzle.zoom.bah.yyy : X
 razzle.zoom.bah.yyx : X
 razzle.zoom.bah.xxx : X
 razzle.zoom.bah.xxy : X
 Ports subnodes of 'razzle.zoom.bah':
+!GND : 0
+!Vdd : 1
 razzle.zoom.bah.yyy : X
 razzle.zoom.bah.yyx : X
 Public subnodes of 'razzle.zoom.bah':
+!GND : 0
+!Vdd : 1
 razzle.zoom.bah.yyy : X
 razzle.zoom.bah.yyx : X
 razzle.zoom.bah.xxx : X

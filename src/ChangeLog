@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-03:
+	  lexer/instref-lex.ll: allow '!' at the beginning of an identifier
+		to allow for references to implicit globals !Vdd, !GND.
+	  prsim: __initialize(): now set !Vdd:1 and !GND:0 always.
+		Test cases updated.
+	  next: hacknet to use implicit ports
+
+
 2009-09-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-supply-01-02:

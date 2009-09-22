@@ -7,9 +7,9 @@ time: 10
 X nodes:
 
 0 nodes:
-e d 
+!GND e d 
 1 nodes:
-a b c 
+!Vdd a b c 
 Fanouts of node `a':
 (to C):
 [after 10]	a:1 & b:1<1><1> -> e-:0

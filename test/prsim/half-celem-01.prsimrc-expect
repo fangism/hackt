@@ -25,8 +25,8 @@ end queue
 X nodes:
 c 
 0 nodes:
-a b 
+!GND a b 
 1 nodes:
-
+!Vdd 
 event queue:
 in a state where c should be 1, but remains X while pull-up guard true! 

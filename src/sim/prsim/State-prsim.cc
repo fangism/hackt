@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.56 2009/04/17 21:14:37 fang Exp $
+	$Id: State-prsim.cc,v 1.56.10.1 2009/09/22 21:42:58 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -40,6 +40,9 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/traits/proc_traits.h"	// for diagnostic
 #include "Object/global_entry.h"
+#if IMPLICIT_SUPPLY_PORTS
+#include "parser/instref.h"
+#endif
 #include "sim/ISE.h"
 #include "common/TODO.h"
 #include "util/attributes.h"
@@ -134,6 +137,9 @@ using entity::bool_tag;
 using entity::process_tag;
 using entity::footprint_frame_map_type;
 #include "util/using_ostream.h"
+#if IMPLICIT_SUPPLY_PORTS
+using parser::parse_node_to_index;
+#endif
 
 //=============================================================================
 /**
@@ -326,9 +332,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		assert_fail_policy(E(ASSERT_FAIL)),
 		channel_expect_fail_policy(E(CHANNEL_EXPECT_FAIL)),
 		excl_check_fail_policy(E(EXCL_CHECK_FAIL)),
+#undef	E
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
-#undef	E
 		__shuffle_indices(0) {
 	const state_manager& sm(mod.get_state_manager());
 	const global_entry_pool<bool_tag>&
@@ -392,6 +398,7 @@ try {
 		mod.get_footprint(), sm) << endl;
 	THROW_EXIT;
 }
+	// recommend caller to invoke ::initialize() immediately after ctor
 }	// end State::State(const module&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -467,6 +474,19 @@ State::__initialize(void) {
 	close_trace();	// close trace, else trace will be incoherent
 	// alternative is to record fact that every node went to X
 	_channel_manager.initialize();
+#if IMPLICIT_SUPPLY_PORTS
+	const node_index_type gi = parse_node_to_index("!GND", mod);
+	const node_index_type vi = parse_node_to_index("!Vdd", mod);
+	INVARIANT(gi);
+	INVARIANT(vi);
+	// Q: should this be done with set_node(), in case setting globals
+	// triggers events to be enqueued?
+	// for now, the implciit globals cannot be referenced directly
+	// in the source language, so we'll punt.
+	const event_cause_type null;
+	node_pool[gi].set_value_and_cause(LOGIC_LOW, null);
+	node_pool[vi].set_value_and_cause(LOGIC_HIGH, null);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
