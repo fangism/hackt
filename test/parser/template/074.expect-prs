@@ -1,3 +1,5 @@
+= "!GND" "myass.!GND"
+= "!Vdd" "myass.!Vdd"
 = "a" "myass.x"
 = "b" "myass.y"
 = "c" "myass.z"

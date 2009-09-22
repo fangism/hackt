@@ -1,20 +1,22 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	_nand	nand<4>
-	bool: 5,1,2,3,4
+	bool: 1,2,7,3,4,5,6
 2	(top)	-	2	_nor	nor<4>
-	bool: 5,6,7,8,9
+	bool: 1,2,7,8,9,10,11
 3	(top)	-	3	_c	celem<2>
-	bool: 5,10,11
+	bool: 1,2,7,12,13
 [global bool entries]
-1	(top)	-	1	_nand.in[0]	
-2	(top)	-	2	_nand.in[1]	
-3	(top)	-	3	_nand.in[2]	
-4	(top)	-	4	_nand.in[3]	
-5	(top)	-	5	z	
-6	(top)	-	6	_nor.in[0]	
-7	(top)	-	7	_nor.in[1]	
-8	(top)	-	8	_nor.in[2]	
-9	(top)	-	9	_nor.in[3]	
-10	(top)	-	10	_c.in[0]	
-11	(top)	-	11	_c.in[1]	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	_nand.in[0]	
+4	(top)	-	4	_nand.in[1]	
+5	(top)	-	5	_nand.in[2]	
+6	(top)	-	6	_nand.in[3]	
+7	(top)	-	7	z	
+8	(top)	-	8	_nor.in[0]	
+9	(top)	-	9	_nor.in[1]	
+10	(top)	-	10	_nor.in[2]	
+11	(top)	-	11	_nor.in[3]	
+12	(top)	-	12	_c.in[0]	
+13	(top)	-	13	_c.in[1]	

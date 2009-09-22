@@ -16,26 +16,36 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	32
-	4	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	5	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	6	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	7	##ADDR##	footprnt	0	#HEAD#	#TAIL#	423
-	8	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	32
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	455
+	14	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     dataless = chan() dataless^2
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   dataless = channel chan()^2
     {
       [0][0] = dataless[0][0] (1) 
@@ -53,4 +63,7 @@ footprint: {
   4	dataless[1][0]
   5	dataless[1][1]
   6	dataless[1][2]
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

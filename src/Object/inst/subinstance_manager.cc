@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.26.4.1 2009/09/18 18:12:21 fang Exp $
+	$Id: subinstance_manager.cc,v 1.26.4.2 2009/09/22 01:42:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -146,6 +146,9 @@ subinstance_manager::__connect_ports(
 	STACKTRACE_VERBOSE;
 	typedef	connection_references_type::const_iterator
 						const_ref_iterator;
+	STACKTRACE_INDENT_PRINT("subinst_array.size() = " <<
+		subinstance_array.size() << endl);
+	STACKTRACE_INDENT_PRINT("cr.size() = " << cr.size() << endl);
 	INVARIANT(subinstance_array.size() == cr.size());
 	iterator pi(subinstance_array.begin());	// instance_collection_type
 	const iterator pe(subinstance_array.end());

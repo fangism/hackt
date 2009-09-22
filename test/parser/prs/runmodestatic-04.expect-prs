@@ -2,7 +2,11 @@
 ~"a" -> "b"+
 "b" -> "c"-
 ~"b" -> "c"+
+= "!GND" "bar.!GND"
+= "!Vdd" "bar.!Vdd"
 = "a" "bar.x"
 = "b" "bar.y"
+= "!GND" "bq.!GND"
+= "!Vdd" "bq.!Vdd"
 = "b" "bq.x"
 = "c" "bq.y"

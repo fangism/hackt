@@ -24,3 +24,6 @@ globID	super		localID	canonical	footprint-frame
 22	(top)	-	22	bar[3][1][0]	
 23	(top)	-	23	bar[3][1][1]	
 24	(top)	-	24	bar[3][1][2]	
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	

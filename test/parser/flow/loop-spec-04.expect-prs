@@ -8,3 +8,5 @@ mk_exclhi("X.x[1]", "X.x[4]")
 mk_exclhi("X.x[2]", "X.x[3]")
 mk_exclhi("X.x[2]", "X.x[4]")
 mk_exclhi("X.x[3]", "X.x[4]")
+= "!GND" "X.!GND"
+= "!Vdd" "X.!Vdd"

@@ -1,3 +1,7 @@
+= "!GND" "j.!GND"
+= "!Vdd" "j.!Vdd"
 = "j.a[0]" "j.a[1]"
+= "!GND" "k.!GND"
+= "!Vdd" "k.!Vdd"
 = "j.a[0]" "k.a[0]"
 = "j.a[0]" "k.a[1]"

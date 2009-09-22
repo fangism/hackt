@@ -3,87 +3,94 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	14	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	17	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	28
-	18	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	36
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	19	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	22	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	25	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	28	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	31	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	34	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	38	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	41	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
+	22	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	28
+	23	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	36
+	24	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	27	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	30	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	33	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	36	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	39	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	43	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	44	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	50	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	53	##ADDR##	footprnt	0	#HEAD#	#TAIL#	598
-	54	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	56	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	57	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	58	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	28
-	60	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	36
-	61	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	46	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	47	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
+	49	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	55	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	58	##ADDR##	footprnt	0	#HEAD#	#TAIL#	630
+	59	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	61	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
 	62	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	63	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	65	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	66	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	64	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	28
+	65	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	36
+	66	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	67	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	68	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	69	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	70	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	69	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
 	72	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	73	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	75	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	77	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	78	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     a = bool<> a
     b = bool<> b
 }
@@ -118,12 +125,16 @@ top-level chp:
     }
   }
 footprint: {
-  a = bool^0 = a (1) 
-  b = bool^0 = b (2) 
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  a = bool^0 = a (3) 
+  b = bool^0 = b (4) 
   Created state:
   bool instance pool:
-  1	a
-  2	b
+  1	!GND
+  2	!Vdd
+  3	a
+  4	b
   resolved concurrent actions:
     sequential: {
       concurrent: {

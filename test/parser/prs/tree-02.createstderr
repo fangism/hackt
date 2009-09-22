@@ -3,53 +3,69 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	32
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	19	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	383
-	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	377
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	415
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	463
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     bogus = process-definition (defined) bogus(
+        bool<> !GND
+        bool<> !Vdd
         bool<> x
         bool<> y
         bool<> z
       )
       In definition "bogus", we have: {
       Instances:
+        !GND = bool<> bogus::!GND
+        !Vdd = bool<> bogus::!Vdd
         x = bool<> bogus::x
         y = bool<> bogus::y
         z = bool<> bogus::z
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> x
           bool<> y
           bool<> z
@@ -58,14 +74,18 @@ In namespace "", we have: {
         x -> y-
         ~y -> z+
       footprint: {
-        x = bool^0 = bogus<>::x (1) 
-        y = bool^0 = bogus<>::y (2) 
-        z = bool^0 = bogus<>::z (3) 
+        !GND = bool^0 = bogus<>::!GND (1) 
+        !Vdd = bool^0 = bogus<>::!Vdd (2) 
+        x = bool^0 = bogus<>::x (3) 
+        y = bool^0 = bogus<>::y (4) 
+        z = bool^0 = bogus<>::z (5) 
         Created state:
         bool instance pool:
-        1	bogus<>::x
-        2	bogus<>::y
-        3	bogus<>::z
+        1	bogus<>::!GND
+        2	bogus<>::!Vdd
+        3	bogus<>::x
+        4	bogus<>::y
+        5	bogus<>::z
         resolved prs:
         x -> y-
         ~y -> z+
@@ -73,20 +93,28 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     Q = bogus<> Q
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   Q = process bogus<>^0 = Q (1) (
-    x = bool^0 = Q.x (1) 
-    y = bool^0 = Q.y (2) 
-    z = bool^0 = Q.z (3) 
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    x = bool^0 = Q.x (3) 
+    y = bool^0 = Q.y (4) 
+    z = bool^0 = Q.z (5) 
   )
   Created state:
   process instance pool:
   1	Q
   bool instance pool:
-  1	Q.x
-  2	Q.y
-  3	Q.z
+  1	!GND
+  2	!Vdd
+  3	Q.x
+  4	Q.y
+  5	Q.z
 }

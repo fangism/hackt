@@ -3,63 +3,80 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
-	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	29
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	29
 	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	26	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
-	27	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	31	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
-	35	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	34	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
+	35	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	266
+	37	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	39	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	43	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  0 instantiation-collections
+  2 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     adjacent_diff = process-definition (defined) adjacent_diff(
+        bool<> !GND
+        bool<> !Vdd
         chan?(int<32>, int<32>) L
         chan!(int<32>) R
       )
       In definition "adjacent_diff", we have: {
       Instances:
+        !GND = bool<> adjacent_diff::!GND
+        !Vdd = bool<> adjacent_diff::!Vdd
         L = chan?(int<32>, int<32>) adjacent_diff::L
         R = chan!(int<32>) adjacent_diff::R
         x = int<32> adjacent_diff::x
         z = int<32> adjacent_diff::z
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?(int<32>, int<32>) L
           chan!(int<32>) R
         )
@@ -75,7 +92,16 @@ In namespace "", we have: {
         }
       }
 
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  Created state:
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

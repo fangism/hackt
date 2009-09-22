@@ -3,45 +3,55 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
-	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	19	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	391
-	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	423
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	436
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
@@ -49,6 +59,8 @@ In namespace "", we have: {
     size_test = process-definition (defined) size_test<
       pint<> P
       >(
+        bool<> !GND
+        bool<> !Vdd
         bool<> a
         bool<> b
       )
@@ -56,10 +68,14 @@ In namespace "", we have: {
       Parameters:
         P = pint<> size_test::P
       Instances:
+        !GND = bool<> size_test::!GND
+        !Vdd = bool<> size_test::!Vdd
         a = bool<> size_test::a
         b = bool<> size_test::b
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> a
           bool<> b
         )
@@ -68,13 +84,17 @@ In namespace "", we have: {
         ~a<2*P> -> b+
       footprint collection: {
         <8> {
+          !GND = bool^0 = size_test<8>::!GND (1) 
+          !Vdd = bool^0 = size_test<8>::!Vdd (2) 
           P = pint^0 value: 8
-          a = bool^0 = size_test<8>::a (1) 
-          b = bool^0 = size_test<8>::b (2) 
+          a = bool^0 = size_test<8>::a (3) 
+          b = bool^0 = size_test<8>::b (4) 
           Created state:
           bool instance pool:
-          1	size_test<8>::a
-          2	size_test<8>::b
+          1	size_test<8>::!GND
+          2	size_test<8>::!Vdd
+          3	size_test<8>::a
+          4	size_test<8>::b
           resolved prs:
           a<8> -> b-
           ~a<16> -> b+
@@ -83,18 +103,26 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     x = size_test<8> x
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   x = process size_test<8>^0 = x (1) (
-    a = bool^0 = x.a (1) 
-    b = bool^0 = x.b (2) 
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    a = bool^0 = x.a (3) 
+    b = bool^0 = x.b (4) 
   )
   Created state:
   process instance pool:
   1	x
   bool instance pool:
-  1	x.a
-  2	x.b
+  1	!GND
+  2	!Vdd
+  3	x.a
+  4	x.b
 }

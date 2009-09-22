@@ -3,3 +3,5 @@
 ~"foo.in[1]" -> "foo._out"+
 ~"foo.in[2]" -> "foo._out"+
 ~"foo.in[3]" -> "foo._out"+
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"

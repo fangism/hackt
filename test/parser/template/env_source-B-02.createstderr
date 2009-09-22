@@ -3,37 +3,52 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	101
-	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	101
-	15	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	20	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	323
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	330
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	23	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	24	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	25	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	27	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	409
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   2 definitions
   0 typedefs
@@ -41,24 +56,34 @@ In namespace "", we have: {
     e1of = process-definition (defined) e1of<
       pint<> R
       >(
+        bool<> !GND
+        bool<> !Vdd
         bool<> e
       )
       In definition "e1of", we have: {
       Parameters:
         R = pint<> e1of::R
       Instances:
+        !GND = bool<> e1of::!GND
+        !Vdd = bool<> e1of::!Vdd
         e = bool<> e1of::e
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> e
         )
       footprint collection: {
         <3> {
+          !GND = bool^0 = e1of<3>::!GND (1) 
+          !Vdd = bool^0 = e1of<3>::!Vdd (2) 
           R = pint^0 value: 3
-          e = bool^0 = e1of<3>::e (1) 
+          e = bool^0 = e1of<3>::e (3) 
           Created state:
           bool instance pool:
-          1	e1of<3>::e
+          1	e1of<3>::!GND
+          2	e1of<3>::!Vdd
+          3	e1of<3>::e
         }
       }
       }
@@ -68,6 +93,8 @@ In namespace "", we have: {
       ><
       pint<> N
       >(
+        bool<> !GND
+        bool<> !Vdd
         bool<> b
       )
       In definition "source_e", we have: {
@@ -75,24 +102,36 @@ In namespace "", we have: {
         M = pint<> source_e::M
         N = pint<> source_e::N
       Instances:
+        !GND = bool<> source_e::!GND
+        !Vdd = bool<> source_e::!Vdd
         b = bool<> source_e::b
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> b
         )
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     X = e1of<3> X
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   X = process e1of<3>^0 = X (1) (
-    e = bool^0 = X.e (1) 
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    e = bool^0 = X.e (3) 
   )
   Created state:
   process instance pool:
   1	X
   bool instance pool:
-  1	X.e
+  1	!GND
+  2	!Vdd
+  3	X.e
 }

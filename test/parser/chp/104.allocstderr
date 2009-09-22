@@ -3,6 +3,7 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	bar	foo<>
 	channel: 1,2,3,4,5,6
 	int: 1,2,3
+	bool: 1,2
 [global channel entries]
 1	(top)	-	1	bar.A	chan(int<32>)
 2	(top)	-	2	bar.B	chan(int<32>)
@@ -14,3 +15,6 @@ globID	super		localID	canonical	footprint-frame
 1	process	1	1	bar.a	
 2	process	1	2	bar.b	
 3	process	1	3	bar.z	
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	

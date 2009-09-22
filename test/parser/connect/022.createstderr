@@ -3,83 +3,204 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	77
-	5	##ADDR##	footprnt	0	#HEAD#	#TAIL#	266
-	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	13	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1178
-	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
+	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	25	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2830
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     barf = process-definition (defined) barf(
+        bool<> !GND
+        bool<> !Vdd
       )
       In definition "barf", we have: {
+      Instances:
+        !GND = bool<> barf::!GND
+        !Vdd = bool<> barf::!Vdd
       unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+        )
       footprint: {
+        !GND = bool^0 = barf<>::!GND (1) 
+        !Vdd = bool^0 = barf<>::!Vdd (2) 
+        Created state:
+        bool instance pool:
+        1	barf<>::!GND
+        2	barf<>::!Vdd
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     bag = barf<> bag^1
     sack = barf<> sack^2
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   bag = process barf<>^1
     {
-      [0] = bag[0] (1) 
-      [1] = bag[1] (2) 
-      [2] = bag[2] (3) 
-      [3] = bag[3] (4) 
-      [4] = bag[4] (5) 
+      [0] = bag[0] (1) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [1] = bag[1] (2) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [2] = bag[2] (3) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [3] = bag[3] (4) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [4] = bag[4] (5) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
     }
   sack = process barf<>^2
     {
-      [0][0] = sack[0][0] (6) 
-      [0][1] = sack[0][1] (7) 
-      [0][2] = sack[0][2] (8) 
-      [0][3] = sack[0][3] (9) 
-      [0][4] = sack[0][4] (10) 
-      [1][0] = sack[1][0] (11) 
-      [1][1] = sack[1][1] (12) 
-      [1][2] = sack[1][2] (13) 
-      [1][3] = sack[1][3] (14) 
-      [1][4] = sack[1][4] (15) 
-      [2][0] = sack[2][0] (16) 
-      [2][1] = sack[2][1] (17) 
-      [2][2] = sack[2][2] (18) 
-      [2][3] = sack[2][3] (19) 
-      [2][4] = sack[2][4] (20) 
-      [3][0] = sack[3][0] (21) 
-      [3][1] = sack[3][1] (22) 
-      [3][2] = sack[3][2] (23) 
-      [3][3] = sack[3][3] (24) 
-      [3][4] = sack[3][4] (25) 
-      [4][0] = bag[0] (1) 
-      [4][1] = bag[1] (2) 
-      [4][2] = bag[2] (3) 
-      [4][3] = bag[3] (4) 
-      [4][4] = bag[4] (5) 
+      [0][0] = sack[0][0] (6) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [0][1] = sack[0][1] (7) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [0][2] = sack[0][2] (8) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [0][3] = sack[0][3] (9) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [0][4] = sack[0][4] (10) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [1][0] = sack[1][0] (11) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [1][1] = sack[1][1] (12) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [1][2] = sack[1][2] (13) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [1][3] = sack[1][3] (14) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [1][4] = sack[1][4] (15) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [2][0] = sack[2][0] (16) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [2][1] = sack[2][1] (17) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [2][2] = sack[2][2] (18) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [2][3] = sack[2][3] (19) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [2][4] = sack[2][4] (20) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [3][0] = sack[3][0] (21) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [3][1] = sack[3][1] (22) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [3][2] = sack[3][2] (23) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [3][3] = sack[3][3] (24) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [3][4] = sack[3][4] (25) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [4][0] = bag[0] (1) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [4][1] = bag[1] (2) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [4][2] = bag[2] (3) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [4][3] = bag[3] (4) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
+      [4][4] = bag[4] (5) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+      )
     }
   Created state:
   process instance pool:
@@ -108,4 +229,7 @@ footprint: {
   23	sack[3][2]
   24	sack[3][3]
   25	sack[3][4]
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

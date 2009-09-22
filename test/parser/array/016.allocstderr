@@ -31,3 +31,6 @@ globID	super		localID	canonical	footprint-frame
 29	(top)	-	29	foo[40]	
 30	(top)	-	30	foo[41]	
 31	(top)	-	31	foo[42]	
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	

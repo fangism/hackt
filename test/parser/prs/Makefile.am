@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.56 2009/09/14 21:21:03 fang Exp $
+#	$Id: Makefile.am,v 1.56.2.1 2009/09/22 01:54:28 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -296,8 +296,7 @@ HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 
 # expecting empty .prs
 EMPTY_CFLAT_PRS_TESTS += \
-	null-00 loop-00 \
-	cond-05 cond-08 cond-10 cond-11 cond-15 \
+	cond-08 cond-10 cond-11 cond-15 \
 	macro-pass-01
 
 # more output expectation files for when bison is used

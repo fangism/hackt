@@ -5,50 +5,61 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	121
-	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
-	15	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	16	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	26	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
-	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	521
-	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	326
-	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	141
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
+	23	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	24	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	346
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	553
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	466
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
@@ -56,14 +67,22 @@ In namespace "", we have: {
     null = process-definition (defined) null<
       pint<> N
       >(
+        bool<> !GND
+        bool<> !Vdd
       )
       In definition "null", we have: {
       Parameters:
         N = pint<> null::N
       Instances:
+        !GND = bool<> null::!GND
+        !Vdd = bool<> null::!Vdd
         x = bool<> null::x
         y = bool<> null::y
       unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+        )
         bool<> x
         bool<> y
       prs:
@@ -73,22 +92,30 @@ In namespace "", we have: {
         )
       footprint collection: {
         <0> {
+          !GND = bool^0 = null<0>::!GND (1) 
+          !Vdd = bool^0 = null<0>::!Vdd (2) 
           N = pint^0 value: 0
-          x = bool^0 = null<0>::x (1) 
-          y = bool^0 = null<0>::y (2) 
+          x = bool^0 = null<0>::x (3) 
+          y = bool^0 = null<0>::y (4) 
           Created state:
           bool instance pool:
-          1	null<0>::x
-          2	null<0>::y
+          1	null<0>::!GND
+          2	null<0>::!Vdd
+          3	null<0>::x
+          4	null<0>::y
         }
         <3> {
+          !GND = bool^0 = null<3>::!GND (1) 
+          !Vdd = bool^0 = null<3>::!Vdd (2) 
           N = pint^0 value: 3
-          x = bool^0 = null<3>::x (1) 
-          y = bool^0 = null<3>::y (2) 
+          x = bool^0 = null<3>::x (3) 
+          y = bool^0 = null<3>::y (4) 
           Created state:
           bool instance pool:
-          1	null<3>::x
-          2	null<3>::y
+          1	null<3>::!GND
+          2	null<3>::!Vdd
+          3	null<3>::x
+          4	null<3>::y
           resolved prs:
           x -> y-
           ~x -> y+
@@ -101,15 +128,28 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     foo = null<3> foo
     none = null<0> none
 }
 
 footprint: {
-  foo = process null<3>^0 = foo (2) 
-  none = process null<0>^0 = none (1) 
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  foo = process null<3>^0 = foo (2) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+  )
+  none = process null<0>^0 = none (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+  )
   Created state:
   process instance pool:
   1	none
   2	foo
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

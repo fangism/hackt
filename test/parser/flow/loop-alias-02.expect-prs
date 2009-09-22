@@ -1,2 +1,4 @@
+= "!GND" "l.!GND"
+= "!Vdd" "l.!Vdd"
 = "l.x" "l.p[0]"
 = "l.x" "l.p[1]"

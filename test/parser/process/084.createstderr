@@ -3,86 +3,114 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	344
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	343
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	376
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	429
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     foo = process-definition (defined) foo(
+        bool<> !GND
+        bool<> !Vdd
         bool<> r[0..1]
       )
       In definition "foo", we have: {
       Instances:
+        !GND = bool<> foo::!GND
+        !Vdd = bool<> foo::!Vdd
         r = bool<> foo::r^1
         x = int<32> foo::x
         y = bool<> foo::y
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> r[0..1]
         )
         int<32> x
         bool<> y
       footprint: {
+        !GND = bool^0 = foo<>::!GND (1) 
+        !Vdd = bool^0 = foo<>::!Vdd (2) 
         r = bool^1
           {
-            [0] = foo<>::r[0] (2) 
-            [1] = foo<>::r[1] (3) 
+            [0] = foo<>::r[0] (4) 
+            [1] = foo<>::r[1] (5) 
           }
         x = int<32>^0 = foo<>::x (1) 
-        y = bool^0 = foo<>::y (1) 
+        y = bool^0 = foo<>::y (3) 
         Created state:
         int instance pool:
         1	foo<>::x
         bool instance pool:
-        1	foo<>::y
-        2	foo<>::r[0]
-        3	foo<>::r[1]
+        1	foo<>::!GND
+        2	foo<>::!Vdd
+        3	foo<>::y
+        4	foo<>::r[0]
+        5	foo<>::r[1]
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     burp = foo<> burp
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   burp = process foo<>^0 = burp (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     r = bool^1
       {
-        [0] = burp.r[0] (1) 
-        [1] = burp.r[1] (2) 
+        [0] = burp.r[0] (3) 
+        [1] = burp.r[1] (4) 
       }
   )
   Created state:
   process instance pool:
   1	burp
   bool instance pool:
-  1	burp.r[0]
-  2	burp.r[1]
+  1	!GND
+  2	!Vdd
+  3	burp.r[0]
+  4	burp.r[1]
 }

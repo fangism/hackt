@@ -1,3 +1,7 @@
 @ "foo.in.a.e" iscomb
+connect "!GND" "foo.!GND"
+connect "!Vdd" "foo.!Vdd"
 connect "foo.in.a.e" "foo.in_a.e"
+connect "!GND" "foo.ma.!GND"
+connect "!Vdd" "foo.ma.!Vdd"
 connect "foo.in.a.e" "foo.ma.l.e"

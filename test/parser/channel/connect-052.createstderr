@@ -7,54 +7,61 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	24	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	390
-	32	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	39	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	40	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	422
+	37	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	45	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  3 instantiation-collections
+  5 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     B = chan(bool<>) B^1
     S = chan(int<1>) S
     s = int<1> s
@@ -70,6 +77,8 @@ top-level chp:
     ]
   }
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   B = channel chan(bool<>)^1
     {
       [0] = B[0] (2) 
@@ -84,6 +93,9 @@ footprint: {
   3	B[1]
   int instance pool:
   1	s
+  bool instance pool:
+  1	!GND
+  2	!Vdd
   resolved concurrent actions:
     *[
       sequential: {

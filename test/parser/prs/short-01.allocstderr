@@ -1,10 +1,12 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	A	inv<>
-	bool: 1,2
+	bool: 1,2,3,4
 2	(top)	-	2	B	inv<>
-	bool: 3,2
+	bool: 1,2,5,4
 [global bool entries]
-1	(top)	-	1	A.a	
-2	(top)	-	2	z	
-3	(top)	-	3	B.a	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	A.a	
+4	(top)	-	4	z	
+5	(top)	-	5	B.a	

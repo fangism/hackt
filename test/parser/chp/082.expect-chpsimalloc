@@ -1,4 +1,6 @@
 Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
 chan[1]: "y2_0.b" 
 chan[2]: "y2_1.b" 
 chan[3]: "y3_0.b" 

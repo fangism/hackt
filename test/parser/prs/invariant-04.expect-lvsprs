@@ -4,7 +4,11 @@ invariant "a" | "b"
 "b" -> "a"-
 ~"b" -> "a"+
 invariant ~("b" & "a")
+connect "!GND" "barfu.!GND"
+connect "!Vdd" "barfu.!Vdd"
 connect "b" "barfu.w"
 connect "a" "barfu.z"
+connect "!GND" "fubar.!GND"
+connect "!Vdd" "fubar.!Vdd"
 connect "a" "fubar.x"
 connect "b" "fubar.y"

@@ -3,78 +3,90 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	156
-	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	36
-	15	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	portscop	0	#HEAD#	#TAIL#	44
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	33	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	35	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	38	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
+	24	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	40	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	42	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
-	46	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	45	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	48	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	50	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
+	50	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
 	53	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	54	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	55	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
-	56	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	59	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
-	61	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	266
+	55	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	61	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
+	63	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	66	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
+	68	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  0 instantiation-collections
+  2 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     foo = process-definition (defined) foo(
+        bool<> !GND
+        bool<> !Vdd
         chan?(bool<>) A
         chan?(bool<>) B
         chan!(bool<>) C
@@ -84,6 +96,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
+        !GND = bool<> foo::!GND
+        !Vdd = bool<> foo::!Vdd
         A = chan?(bool<>) foo::A
         B = chan?(bool<>) foo::B
         C = chan!(bool<>) foo::C
@@ -96,6 +110,8 @@ In namespace "", we have: {
         z = bool<> foo::z
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?(bool<>) A
           chan?(bool<>) B
           chan!(bool<>) C
@@ -127,7 +143,16 @@ In namespace "", we have: {
         }
       }
 
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  Created state:
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

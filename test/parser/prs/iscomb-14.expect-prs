@@ -1,5 +1,7 @@
 "p" -> "q"-
 ~"p" -> "q"+
 @ "p" iscomb
+= "!GND" "x.!GND"
+= "!Vdd" "x.!Vdd"
 = "p" "x.a"
 = "q" "x.b"

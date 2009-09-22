@@ -1,4 +1,6 @@
 Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
 int[1]: "p" 
 
 Event graph: 

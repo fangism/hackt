@@ -1,5 +1,7 @@
 Variables: 
-bool[1]: "GS.b" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "GS.b" 
 int[1]: "X.a" 
 int[2]: "X.b" 
 int[3]: "X.c" 

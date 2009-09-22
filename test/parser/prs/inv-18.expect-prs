@@ -1,2 +1,4 @@
 "erse.a" -> "erse.b"-
 ~"erse.a" -> "erse.b"+
+= "!GND" "erse.!GND"
+= "!Vdd" "erse.!Vdd"

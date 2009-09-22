@@ -1,2 +1,4 @@
 min_sep<5>("myass.a"; "myass.b")
+= "!GND" "myass.!GND"
+= "!Vdd" "myass.!Vdd"
 = "x" "myass.q"

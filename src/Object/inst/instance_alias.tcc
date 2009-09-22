@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.38 2009/07/02 23:22:49 fang Exp $
+	$Id: instance_alias.tcc,v 1.38.8.1 2009/09/22 01:42:23 fang Exp $
 	TODO: trim includes
  */
 
@@ -753,6 +753,16 @@ INSTANCE_ALIAS_INFO_CLASS::finalize_find(const unroll_context& c) {
 	// flatten, attach actuals, instantiate, and connect as necessary
 	this->find(c);
 	actuals_parent_type::__finalize_find(*this, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\throw exception if this alias has incomplete type.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::assert_complete_type(void) const {
+	actuals_parent_type::__assert_complete_type(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3,31 +3,45 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
-	4	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	condscop	0	#HEAD#	#TAIL#	32
-	8	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	9	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
-	10	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	291
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	condscop	0	#HEAD#	#TAIL#	32
+	14	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	15	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
+	16	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	323
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   2 parameter-collections
-  0 instantiation-collections
+  2 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Parameters:
     b = pbool<> b
     i = pint<> i
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   b = pbool^0 value: ?
   i = pint^0 value: ?
   Created state:
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

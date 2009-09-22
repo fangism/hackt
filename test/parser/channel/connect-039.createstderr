@@ -5,64 +5,80 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	103
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	119
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
-	19	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	25	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	360
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
+	26	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	41	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	446
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     boring = process-definition (defined) boring(
+        bool<> !GND
+        bool<> !Vdd
         chan(bool<>) B
       )
       In definition "boring", we have: {
       Instances:
+        !GND = bool<> boring::!GND
+        !Vdd = bool<> boring::!Vdd
         B = chan(bool<>) boring::B
         x = bool<> boring::x
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan(bool<>) B
         )
         bool<> x
@@ -73,13 +89,17 @@ In namespace "", we have: {
           ]
         }
       footprint: {
+        !GND = bool^0 = boring<>::!GND (1) 
+        !Vdd = bool^0 = boring<>::!Vdd (2) 
         B = channel chan(bool<>)^0 = boring<>::B (1) 
-        x = bool^0 = boring<>::x (1) 
+        x = bool^0 = boring<>::x (3) 
         Created state:
         channel instance pool:
         1	boring<>::B
         bool instance pool:
-        1	boring<>::x
+        1	boring<>::!GND
+        2	boring<>::!Vdd
+        3	boring<>::x
         resolved concurrent actions:
           *[
             B?(x)
@@ -91,6 +111,8 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     Q = chan(bool<>) Q
     lecture = boring<> lecture
 }
@@ -102,8 +124,12 @@ top-level chp:
     ]
   }
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   Q = channel chan(bool<>)^0 = Q (1) 
   lecture = process boring<>^0 = lecture (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     B = channel chan(bool<>)^0 = Q (1) 
   )
   Created state:
@@ -111,6 +137,9 @@ footprint: {
   1	lecture
   channel instance pool:
   1	Q
+  bool instance pool:
+  1	!GND
+  2	!Vdd
   resolved concurrent actions:
     *[
       Q!(false)

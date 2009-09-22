@@ -1,1 +1,3 @@
+= "!GND" "poo.!GND"
+= "!Vdd" "poo.!Vdd"
 = "poo.a[0]" "poo.a[1]"

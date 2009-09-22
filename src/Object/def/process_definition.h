@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.15 2009/09/14 21:16:52 fang Exp $
+	$Id: process_definition.h,v 1.15.2.1 2009/09/22 01:42:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -62,6 +62,9 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
+
+	const process_definition&
+	get_canonical_proc_def(void) const;
 
 	meta_type_tag_enum
 	get_meta_type(void) const;

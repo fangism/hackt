@@ -1,1 +1,3 @@
 mk_exclhi("t.p", "t.q", "t.r", "t.s")
+= "!GND" "t.!GND"
+= "!Vdd" "t.!Vdd"

@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/port_connection.tcc"
- 	$Id: port_connection.tcc,v 1.3.118.1 2009/09/18 18:12:22 fang Exp $
+ 	$Id: port_connection.tcc,v 1.3.118.2 2009/09/22 01:42:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PORT_CONNECTION_TCC__
@@ -53,15 +53,17 @@ PORT_CONNECTION_CLASS::port_connection(const ported_inst_ptr_type& i) :
 	// could do this based on meta-type only...
 	// or more slowly, but robustly, lookup the definition's port formals
 	// should write this with a template specialization on process_tag...
-	const never_ptr<const process_definition>
+	const never_ptr<const process_definition_base>
 		d(ported_inst->get_base_def()
-			.template is_a<const process_definition>());
-	if (d) {
-		const size_t imp = d->get_port_formals().implicit_ports();
+			.template is_a<const process_definition_base>());
+if (d) {
+	// must handle typedefs as well
+	const process_definition& pd(d->get_canonical_proc_def());
+	const size_t imp = pd.get_port_formals().implicit_ports();
 	if (imp) {
 		this->inst_list.resize(imp);	// fill with NULL pointers
 	}
-	}
+}
 #endif
 }
 

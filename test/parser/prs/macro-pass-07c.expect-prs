@@ -1,1 +1,3 @@
 passn<10.6,2.5>("x.g", "x.s", "x.d")
+= "!GND" "x.!GND"
+= "!Vdd" "x.!Vdd"

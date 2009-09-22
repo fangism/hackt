@@ -7,59 +7,86 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
-	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	287
-	14	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	323
-	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
+	21	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	409
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     receivers = process-definition (defined) receivers(
+        bool<> !GND
+        bool<> !Vdd
         chan?(bool<>) a
       )
       In definition "receivers", we have: {
       Instances:
+        !GND = bool<> receivers::!GND
+        !Vdd = bool<> receivers::!Vdd
         a = chan?(bool<>) receivers::a
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?(bool<>) a
         )
         a = a;
       footprint: {
+        !GND = bool^0 = receivers<>::!GND (1) 
+        !Vdd = bool^0 = receivers<>::!Vdd (2) 
         a = channel chan?(bool<>)^0 = receivers<>::a (1) 
         Created state:
         channel instance pool:
         1	receivers<>::a
+        bool instance pool:
+        1	receivers<>::!GND
+        2	receivers<>::!Vdd
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     z = receivers<> z
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   z = process receivers<>^0 = z (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     a = channel chan?(bool<>)^0 = z.a (1) 
   )
   Created state:
@@ -67,4 +94,7 @@ footprint: {
   1	z
   channel instance pool:
   1	z.a
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

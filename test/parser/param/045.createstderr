@@ -3,43 +3,55 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
-	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	318
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	296
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
@@ -47,17 +59,28 @@ In namespace "", we have: {
     bogus = process-definition (defined) bogus<
       pint<> E
       >(
+        bool<> !GND
+        bool<> !Vdd
       )
       In definition "bogus", we have: {
       Parameters:
         E = pint<> bogus::E
         M = pint<> bogus::M^1
+      Instances:
+        !GND = bool<> bogus::!GND
+        !Vdd = bool<> bogus::!Vdd
       unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+        )
         pint<> M[0..E-1]
         M[0] = 3;
         M[E-1] = 5;
       footprint collection: {
         <2> {
+          !GND = bool^0 = bogus<2>::!GND (1) 
+          !Vdd = bool^0 = bogus<2>::!Vdd (2) 
           E = pint^0 value: 2
           M = pint^1
             unrolled index-value pairs: {
@@ -65,17 +88,30 @@ In namespace "", we have: {
               1 = 5
             }
           Created state:
+          bool instance pool:
+          1	bogus<2>::!GND
+          2	bogus<2>::!Vdd
         }
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     x = bogus<2> x
 }
 
 footprint: {
-  x = process bogus<2>^0 = x (1) 
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  x = process bogus<2>^0 = x (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+  )
   Created state:
   process instance pool:
   1	x
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

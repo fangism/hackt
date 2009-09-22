@@ -1,5 +1,7 @@
 Variables: 
-bool[1]: "lanes.b" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "lanes.b" 
 int[1]: "lanes.s" 
 int[2]: "hairs.s" 
 chan[1]: "b[0]" 

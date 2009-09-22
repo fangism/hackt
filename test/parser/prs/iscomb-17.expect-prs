@@ -1,1 +1,5 @@
 @ "foo.x.a" iscomb
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"
+= "!GND" "foo.x.!GND"
+= "!Vdd" "foo.x.!Vdd"

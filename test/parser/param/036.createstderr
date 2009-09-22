@@ -3,50 +3,61 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	32
-	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	8	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	32
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	326
+	25	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	358
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   1 parameter-collections
-  0 instantiation-collections
+  2 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Parameters:
     milk = pint<> milk^1
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   milk = pint^1
     unrolled index-value pairs: {
       0 = 1
@@ -55,4 +66,7 @@ footprint: {
       3 = 3
     }
   Created state:
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

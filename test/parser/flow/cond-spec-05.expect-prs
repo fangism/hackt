@@ -1,1 +1,5 @@
 mk_exclhi("A.z[0]", "A.z[1]", "A.z[2]")
+= "!GND" "A.!GND"
+= "!Vdd" "A.!Vdd"
+= "!GND" "B.!GND"
+= "!Vdd" "B.!Vdd"

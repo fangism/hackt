@@ -1,3 +1,9 @@
 @ "foo.bar.in.a.e" iscomb
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"
+= "!GND" "foo.bar.!GND"
+= "!Vdd" "foo.bar.!Vdd"
 = "foo.bar.in.a.e" "foo.bar.in_a"
+= "!GND" "foo.bar.ma.!GND"
+= "!Vdd" "foo.bar.ma.!Vdd"
 = "foo.bar.in.a.e" "foo.bar.ma.l"

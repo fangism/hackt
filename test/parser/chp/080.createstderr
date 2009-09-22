@@ -7,63 +7,74 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
-	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	148
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
+	31	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	437
-	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	footprnt	0	#HEAD#	#TAIL#	631
+	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  3 instantiation-collections
+  5 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
@@ -71,15 +82,21 @@ In namespace "", we have: {
     send_me = process-definition (defined) send_me<
       pint<> B
       >(
+        bool<> !GND
+        bool<> !Vdd
         chan!(int<32>) b
       )
       In definition "send_me", we have: {
       Parameters:
         B = pint<> send_me::B
       Instances:
+        !GND = bool<> send_me::!GND
+        !Vdd = bool<> send_me::!Vdd
         b = chan!(int<32>) send_me::b
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan!(int<32>) b
         )
       chp:
@@ -90,11 +107,16 @@ In namespace "", we have: {
         }
       footprint collection: {
         <123> {
+          !GND = bool^0 = send_me<123>::!GND (1) 
+          !Vdd = bool^0 = send_me<123>::!Vdd (2) 
           B = pint^0 value: 123
           b = channel chan!(int<32>)^0 = send_me<123>::b (1) 
           Created state:
           channel instance pool:
           1	send_me<123>::b
+          bool instance pool:
+          1	send_me<123>::!GND
+          2	send_me<123>::!Vdd
           resolved concurrent actions:
             *[
               b!(123)
@@ -104,11 +126,16 @@ In namespace "", we have: {
           }
         }
         <456> {
+          !GND = bool^0 = send_me<456>::!GND (1) 
+          !Vdd = bool^0 = send_me<456>::!Vdd (2) 
           B = pint^0 value: 456
           b = channel chan!(int<32>)^0 = send_me<456>::b (1) 
           Created state:
           channel instance pool:
           1	send_me<456>::b
+          bool instance pool:
+          1	send_me<456>::!GND
+          2	send_me<456>::!Vdd
           resolved concurrent actions:
             *[
               b!(456)
@@ -118,11 +145,16 @@ In namespace "", we have: {
           }
         }
         <789> {
+          !GND = bool^0 = send_me<789>::!GND (1) 
+          !Vdd = bool^0 = send_me<789>::!Vdd (2) 
           B = pint^0 value: 789
           b = channel chan!(int<32>)^0 = send_me<789>::b (1) 
           Created state:
           channel instance pool:
           1	send_me<789>::b
+          bool instance pool:
+          1	send_me<789>::!GND
+          2	send_me<789>::!Vdd
           resolved concurrent actions:
             *[
               b!(789)
@@ -135,19 +167,29 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     X = send_me<123> X
     Y = send_me<456> Y
     Z = send_me<789> Z
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   X = process send_me<123>^0 = X (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     b = channel chan!(int<32>)^0 = X.b (1) 
   )
   Y = process send_me<456>^0 = Y (2) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     b = channel chan!(int<32>)^0 = Y.b (2) 
   )
   Z = process send_me<789>^0 = Z (3) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     b = channel chan!(int<32>)^0 = Z.b (3) 
   )
   Created state:
@@ -159,4 +201,7 @@ footprint: {
   1	X.b
   2	Y.b
   3	Z.b
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

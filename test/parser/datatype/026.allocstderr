@@ -1,3 +1,6 @@
 globID	super		localID	canonical	footprint-frame
 [global enum entries]
 1	(top)	-	1	bar	
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	

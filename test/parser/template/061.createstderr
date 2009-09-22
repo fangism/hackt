@@ -1,3 +1,3 @@
 Error: instance alias `dar[0]' has incomplete type: foo<5>
-Error during create_unique.
+Error encountered during module::unroll.
 ERROR in creating.  Aborting.

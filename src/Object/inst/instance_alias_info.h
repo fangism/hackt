@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.26 2008/11/12 03:00:02 fang Exp $
+	$Id: instance_alias_info.h,v 1.26.20.1 2009/09/22 01:42:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -274,6 +274,9 @@ public:
 	using actuals_parent_type::attach_actuals;
 	using actuals_parent_type::compare_actuals;
 	using actuals_parent_type::create_dependent_types;
+
+	void
+	assert_complete_type(void) const;
 
 private:
 	using actuals_parent_type::__initialize_assign_footprint_frame;

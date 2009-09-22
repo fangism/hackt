@@ -1,4 +1,6 @@
 Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
 chan[1]: "lecture.B" 
 chan[2]: "lecture.I" 
 

@@ -1,6 +1,8 @@
 Variables: 
-bool[1]: "a" 
-bool[2]: "snk.b" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "a" 
+bool[4]: "snk.b" 
 chan[1]: "B" 
 chan[2]: "A" 
 

@@ -3,39 +3,51 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	108
-	6	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
-	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	299
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	25
-	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	20	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	17
-	27	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	312
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	11	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	331
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	25
+	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	17
+	39	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	398
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   1 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
@@ -46,32 +58,56 @@ In namespace "", we have: {
       pint<> N
       pbool<> B[0..N-1]
       >(
+        bool<> !GND
+        bool<> !Vdd
       )
       In definition "bool_source", we have: {
       Parameters:
         B = pbool<> bool_source::B^1
         N = pint<> bool_source::N
+      Instances:
+        !GND = bool<> bool_source::!GND
+        !Vdd = bool<> bool_source::!Vdd
       unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+        )
       footprint collection: {
         <1, {1}> {
+          !GND = bool^0 = bool_source<1, {1}>::!GND (1) 
+          !Vdd = bool^0 = bool_source<1, {1}>::!Vdd (2) 
           B = pbool^1
             unrolled index-value pairs: {
               0 = 1
             }
           N = pint^0 value: 1
           Created state:
+          bool instance pool:
+          1	bool_source<1, {1}>::!GND
+          2	bool_source<1, {1}>::!Vdd
         }
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     src = bool_source<1, { true }> src
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   N = pint^0 value: 3
-  src = process bool_source<1, {1}>^0 = src (1) 
+  src = process bool_source<1, {1}>^0 = src (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+  )
   Created state:
   process instance pool:
   1	src
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

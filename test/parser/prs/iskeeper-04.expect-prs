@@ -4,3 +4,5 @@ iskeeper	"f.y" -> "f.z"-
 iskeeper	~"f.y" -> "f.z"+
 "f.x" -> "f.z"-
 ~"f.x" -> "f.z"+
+= "!GND" "f.!GND"
+= "!Vdd" "f.!Vdd"

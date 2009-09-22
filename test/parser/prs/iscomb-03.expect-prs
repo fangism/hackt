@@ -1,2 +1,4 @@
 @ "bar.x" iscomb
 @ "bar.z" iscomb
+= "!GND" "bar.!GND"
+= "!Vdd" "bar.!Vdd"

@@ -3,65 +3,75 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
-	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	32
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	17	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	35
-	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	35
-	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	35
 	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	28	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	39
-	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	35
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	35	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	35
+	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	39
 	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	520
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
-	45	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	48	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	51	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	409
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	35
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	footprnt	0	#HEAD#	#TAIL#	552
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
+	52	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	footprnt	0	#HEAD#	#TAIL#	495
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   2 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
@@ -70,17 +80,23 @@ In namespace "", we have: {
     svt = pint<> svt
   Definitions:
     nand_type = process-definition (defined) nand_type(
+        bool<> !GND
+        bool<> !Vdd
         bool<> a
         bool<> b
         bool<> c
       )
       In definition "nand_type", we have: {
       Instances:
+        !GND = bool<> nand_type::!GND
+        !Vdd = bool<> nand_type::!Vdd
         a = bool<> nand_type::a
         b = bool<> nand_type::b
         c = bool<> nand_type::c
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> a
           bool<> b
           bool<> c
@@ -89,14 +105,18 @@ In namespace "", we have: {
         a<10;lvt> & b<10;svt=0> -> c-
         ~a<5,2;svt=1> | ~b<10;svt> -> c+
       footprint: {
-        a = bool^0 = nand_type<>::a (1) 
-        b = bool^0 = nand_type<>::b (2) 
-        c = bool^0 = nand_type<>::c (3) 
+        !GND = bool^0 = nand_type<>::!GND (1) 
+        !Vdd = bool^0 = nand_type<>::!Vdd (2) 
+        a = bool^0 = nand_type<>::a (3) 
+        b = bool^0 = nand_type<>::b (4) 
+        c = bool^0 = nand_type<>::c (5) 
         Created state:
         bool instance pool:
-        1	nand_type<>::a
-        2	nand_type<>::b
-        3	nand_type<>::c
+        1	nand_type<>::!GND
+        2	nand_type<>::!Vdd
+        3	nand_type<>::a
+        4	nand_type<>::b
+        5	nand_type<>::c
         resolved prs:
         a<10;lvt> & b<10;svt=0> -> c-
         ~a<5,2;svt=1> | ~b<10;svt> -> c+
@@ -104,14 +124,20 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     X = nand_type<> X
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   X = process nand_type<>^0 = X (1) (
-    a = bool^0 = X.a (1) 
-    b = bool^0 = X.b (2) 
-    c = bool^0 = X.c (3) 
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    a = bool^0 = X.a (3) 
+    b = bool^0 = X.b (4) 
+    c = bool^0 = X.c (5) 
   )
   lvt = pint^0 value: -2
   svt = pint^0 value: -1
@@ -119,7 +145,9 @@ footprint: {
   process instance pool:
   1	X
   bool instance pool:
-  1	X.a
-  2	X.b
-  3	X.c
+  1	!GND
+  2	!Vdd
+  3	X.a
+  4	X.b
+  5	X.c
 }

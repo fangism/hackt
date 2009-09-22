@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.47.2.1 2009/09/18 18:12:17 fang Exp $
+ 	$Id: definition.cc,v 1.47.2.2 2009/09/22 01:42:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2927,6 +2927,12 @@ process_definition::get_meta_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const process_definition&
+process_definition::get_canonical_proc_def(void) const {
+	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Spill contents of the used_id_map.
 	\param o the output stream.
@@ -3231,6 +3237,7 @@ try {
 			// until nodes have been assigned local ID numbers
 			// in the create phase, in create_complete_type, below.
 #if IMPLICIT_SUPPLY_PORTS
+		if (meta_type == META_TYPE_PROCESS) {
 			// Automatically collect implicit supply ports
 			if (!f.connect_implicit_ports(c).good) {
 				// TODO: error message
@@ -3238,6 +3245,7 @@ try {
 			}
 			// This must be done after unrolling, but before
 			// and IDs are assigned by creating
+		}
 #endif
 			f.mark_unrolled();
 		} else {
@@ -3511,6 +3519,16 @@ process_definition_alias::~process_definition_alias() { }
 ostream&
 process_definition_alias::what(ostream& o) const {
 	return o << "process-definition-alias";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: replace many of the below functions with a base class call
+	to this method instead.
+ */
+const process_definition&
+process_definition_alias::get_canonical_proc_def(void) const {
+	return base->get_base_proc_def()->get_canonical_proc_def();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

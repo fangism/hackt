@@ -4,10 +4,14 @@
 ~"foo.c._o" -> "foo.I.e"+
 iskeeper	"foo.I.e" -> "foo.c._o"-
 iskeeper	~"foo.I.e" -> "foo.c._o"+
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"
 = "foo.I.d" "foo.O[0].d"
 = "foo.re[0]" "foo.O[0].e"
 = "foo.I.d" "foo.O[1].d"
 = "foo.re[1]" "foo.O[1].e"
+= "!GND" "foo.c.!GND"
+= "!Vdd" "foo.c.!Vdd"
 = "foo.re[0]" "foo.c.i[0]"
 = "foo.re[1]" "foo.c.i[1]"
 = "foo.I.e" "foo.c.o"

@@ -5,57 +5,80 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	12	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	16	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	367
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	296
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     silly_inv = process-definition (defined) silly_inv(
+        bool<> !GND
+        bool<> !Vdd
       )
       In definition "silly_inv", we have: {
       Instances:
+        !GND = bool<> silly_inv::!GND
+        !Vdd = bool<> silly_inv::!Vdd
         a = bool<> silly_inv::a
         b = bool<> silly_inv::b
       unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+        )
         bool<> a
         bool<> b
       prs:
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = silly_inv<>::a (1) 
-        b = bool^0 = silly_inv<>::b (2) 
+        !GND = bool^0 = silly_inv<>::!GND (1) 
+        !Vdd = bool^0 = silly_inv<>::!Vdd (2) 
+        a = bool^0 = silly_inv<>::a (3) 
+        b = bool^0 = silly_inv<>::b (4) 
         Created state:
         bool instance pool:
-        1	silly_inv<>::a
-        2	silly_inv<>::b
+        1	silly_inv<>::!GND
+        2	silly_inv<>::!Vdd
+        3	silly_inv<>::a
+        4	silly_inv<>::b
         resolved prs:
         a -> b-
         ~a -> b+
@@ -63,12 +86,22 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     __inv__ = silly_inv<> __inv__
 }
 
 footprint: {
-  __inv__ = process silly_inv<>^0 = __inv__ (1) 
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  __inv__ = process silly_inv<>^0 = __inv__ (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+  )
   Created state:
   process instance pool:
   1	__inv__
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

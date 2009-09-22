@@ -1,6 +1,8 @@
 Variables: 
-bool[1]: "f.x" 
-bool[2]: "f.z" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "f.x" 
+bool[4]: "f.z" 
 int[1]: "f.y" 
 int[2]: "f.w" 
 

@@ -4,8 +4,14 @@
 ~"trash.foo.c._o" -> "trash.foo.I.e"+
 iskeeper	"trash.foo.I.e" -> "trash.foo.c._o"-
 iskeeper	~"trash.foo.I.e" -> "trash.foo.c._o"+
+= "!GND" "trash.!GND"
+= "!Vdd" "trash.!Vdd"
+= "!GND" "trash.foo.!GND"
+= "!Vdd" "trash.foo.!Vdd"
 = "trash.foo.I.d" "trash.foo.O[0].d"
 = "trash.foo.I.d" "trash.foo.O[1].d"
+= "!GND" "trash.foo.c.!GND"
+= "!Vdd" "trash.foo.c.!Vdd"
 = "trash.foo.O[0].e" "trash.foo.c.i[0]"
 = "trash.foo.O[1].e" "trash.foo.c.i[1]"
 = "trash.foo.I.e" "trash.foo.c.o"

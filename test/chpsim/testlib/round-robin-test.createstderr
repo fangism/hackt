@@ -8,95 +8,117 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	115
-	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
-	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	28
-	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	13	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	18	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	340
-	20	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
+	11	##ADDR##	chanplch	0	#HEAD#	#TAIL#	28
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	26	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
-	27	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
-	28	##ADDR##	chanplch	0	#HEAD#	#TAIL#	28
-	29	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	30	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	34	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	36	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	25
-	37	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	38	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	44	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	47	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	footprnt	0	#HEAD#	#TAIL#	416
-	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	50	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	52	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	53	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	55	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	56	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
-	57	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	58	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	59	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	61	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	62	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	65	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
-	66	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	434
-	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	372
+	28	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	procdefn	0	#HEAD#	#TAIL#	150
+	35	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	36	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	37	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
+	38	##ADDR##	chanplch	0	#HEAD#	#TAIL#	28
+	39	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	40	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	47	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	49	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	25
+	50	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	51	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	54	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	60	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	footprnt	0	#HEAD#	#TAIL#	448
+	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	65	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	66	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	68	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	69	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	71	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	72	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	74	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	78	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	footprnt	0	#HEAD#	#TAIL#	574
+	85	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	86	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   2 definitions
   0 typedefs
   Definitions:
     round_robin_source = process-definition (defined) round_robin_source(
+        bool<> !GND
+        bool<> !Vdd
         chan?() Cin
         chan!() Cout
       )
       In definition "round_robin_source", we have: {
       Instances:
+        !GND = bool<> round_robin_source::!GND
+        !Vdd = bool<> round_robin_source::!Vdd
         Cin = chan?() round_robin_source::Cin
         Cout = chan!() round_robin_source::Cout
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?() Cin
           chan!() Cout
         )
@@ -110,12 +132,17 @@ In namespace "", we have: {
           ]
         }
       footprint: {
+        !GND = bool^0 = round_robin_source<>::!GND (1) 
+        !Vdd = bool^0 = round_robin_source<>::!Vdd (2) 
         Cin = channel chan?()^0 = round_robin_source<>::Cin (1) 
         Cout = channel chan!()^0 = round_robin_source<>::Cout (2) 
         Created state:
         channel instance pool:
         1	round_robin_source<>::Cin
         2	round_robin_source<>::Cout
+        bool instance pool:
+        1	round_robin_source<>::!GND
+        2	round_robin_source<>::!Vdd
         resolved concurrent actions:
           *[
             sequential: {
@@ -134,6 +161,8 @@ In namespace "", we have: {
 <
       pint<> N
       >(
+        bool<> !GND
+        bool<> !Vdd
         chan?() Cin
         chan!() Cout
       )
@@ -141,10 +170,14 @@ In namespace "", we have: {
       Parameters:
         N = pint<> round_robin_source_finite::N
       Instances:
+        !GND = bool<> round_robin_source_finite::!GND
+        !Vdd = bool<> round_robin_source_finite::!Vdd
         Cin = chan?() round_robin_source_finite::Cin
         Cout = chan!() round_robin_source_finite::Cout
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?() Cin
           chan!() Cout
         )
@@ -159,6 +192,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <3> {
+          !GND = bool^0 = round_robin_source_finite<3>::!GND (1) 
+          !Vdd = bool^0 = round_robin_source_finite<3>::!Vdd (2) 
           Cin = channel chan?()^0 = round_robin_source_finite<3>::Cin (1) 
           Cout = channel chan!()^0 = round_robin_source_finite<3>::Cout (2) 
           N = pint^0 value: 3
@@ -166,6 +201,9 @@ In namespace "", we have: {
           channel instance pool:
           1	round_robin_source_finite<3>::Cin
           2	round_robin_source_finite<3>::Cout
+          bool instance pool:
+          1	round_robin_source_finite<3>::!GND
+          2	round_robin_source_finite<3>::!Vdd
           resolved concurrent actions:
             sequential: {
               sequential: {
@@ -194,16 +232,24 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     RR1 = round_robin_source<> RR1
     RR2 = round_robin_source_finite<> RR2
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   RR1 = process round_robin_source<>^0 = RR1 (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     Cin = channel chan?()^0 = RR1.Cin (1) 
     Cout = channel chan!()^0 = RR1.Cout (2) 
   )
   RR2 = process round_robin_source_finite<>^0<3> = RR2 (2) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     Cin = channel chan?()^0 = RR2.Cin (3) 
     Cout = channel chan!()^0 = RR2.Cout (4) 
   )
@@ -216,4 +262,7 @@ footprint: {
   2	RR1.Cout
   3	RR2.Cin
   4	RR2.Cout
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

@@ -1,4 +1,6 @@
 Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
 int[1]: "s" 
 chan[1]: "S" 
 chan[2]: "B[0]" 

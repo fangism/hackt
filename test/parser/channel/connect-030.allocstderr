@@ -3,9 +3,13 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	pea_soup	split<>
 	channel: 3,1,2
 	int: 1
+	bool: 1,2
 [global channel entries]
 1	(top)	-	1	pea_soup.B[0]	chan(bool<>)
 2	(top)	-	2	pea_soup.B[1]	chan(bool<>)
 3	(top)	-	3	pea_soup.S	chan(int<1>)
 [global int entries]
 1	process	1	1	pea_soup.s	
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	

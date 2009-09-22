@@ -1,7 +1,9 @@
 Variables: 
-bool[1]: "B.lc" 
-bool[2]: "B.ld" 
-bool[3]: "B.dir" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "B.lc" 
+bool[4]: "B.ld" 
+bool[5]: "B.dir" 
 int[1]: "B.d" 
 chan[1]: "B.L[0]" 
 chan[2]: "B.L[1]" 

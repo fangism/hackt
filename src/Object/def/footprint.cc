@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.44.2.1 2009/09/18 18:12:18 fang Exp $
+	$Id: footprint.cc,v 1.44.2.2 2009/09/22 01:42:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -51,8 +51,8 @@
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/process_definition.h"
 #if IMPLICIT_SUPPLY_PORTS
-#include "Object/type/fundamental_type_reference.h"
 #include "Object/inst/bool_instance_collection.h"	// for bool_scalar
+#include "Object/type/process_type_reference.h"
 #endif
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/inst/parameterless_collection_type_manager.h"
@@ -511,6 +511,7 @@ footprint::dump(ostream& o) const {
 ostream&
 footprint::dump_with_collections(ostream& o, const dump_flags& df, 
 		const expr_dump_context& dc) const {
+	// TODO: process may have no instances, but still have CHP events!
 	if (!instance_collection_map.empty()) {
 		const_instance_map_iterator
 			i(instance_collection_map.begin());
@@ -903,18 +904,21 @@ if (f == visited.end()) {
 	// not found, first time
 	visited.insert(&cp);
 #endif
+	cp.assert_complete_type();	// throws if fails
 #if 0
 	cp.dump_hierarchical_name(cerr << "implicit ports: ") << endl;
 #endif
 	// yes, we intend to modify!
 	// lookup Vdd port and GND port
 	// need type information of _p to get port placeholders
-	const never_ptr<const process_definition>
+	const process_definition&
 		pd(cp.container->get_canonical_collection()
 			.get_placeholder()->get_unresolved_type_ref()
-			->get_base_def().is_a<const process_definition>());
-	NEVER_NULL(pd);
-	const port_formals_manager& pfm(pd->get_port_formals());
+			.is_a<const process_type_reference>()
+			// ->make_canonical_process_type_reference()
+			->get_base_proc_def()->get_canonical_proc_def());
+	// must canonicalize to take care of typedefs
+	const port_formals_manager& pfm(pd.get_port_formals());
 	const size_t imp = pfm.implicit_ports();
 	if (imp) {
 		INVARIANT(imp == 2);		// Vdd, GND for now
@@ -951,6 +955,7 @@ implicit_supply_connector::__auto_connect_port(const alias_type& cp,
 	INVARIANT(bs->collection_size() == 1);	// is scalar
 	node_type& lg(*bs->begin()->find());	// must link from canonical
 	if (lg.peek() == &lg) {
+		// TODO: FIXME: this will ALWAYS be true for canonical nodes!
 #if 0
 		lg.dump_hierarchical_name(cerr << "auto-connecting: ") << endl;
 #endif

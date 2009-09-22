@@ -10,5 +10,15 @@
 @ "foo.x[1].b" !autokeeper
 @ "foo.x[2].a" !autokeeper
 @ "foo.x[3].b" iscomb
+connect "!GND" "foo.!GND"
+connect "!Vdd" "foo.!Vdd"
 connect "foo.x[0].a" "foo.p"
 connect "foo.x[0].b" "foo.q"
+connect "!GND" "foo.x[0].!GND"
+connect "!Vdd" "foo.x[0].!Vdd"
+connect "!GND" "foo.x[1].!GND"
+connect "!Vdd" "foo.x[1].!Vdd"
+connect "!GND" "foo.x[2].!GND"
+connect "!Vdd" "foo.x[2].!Vdd"
+connect "!GND" "foo.x[3].!GND"
+connect "!Vdd" "foo.x[3].!Vdd"

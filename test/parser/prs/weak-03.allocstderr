@@ -1,10 +1,12 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	xyz	weakness<>
-	bool: 1,2,3,4,5
+	bool: 1,2,3,4,5,6,7
 [global bool entries]
-1	(top)	-	1	xyz.a	
-2	(top)	-	2	xyz.b	
-3	process	1	3	xyz.c	
-4	process	1	4	xyz.d	
-5	process	1	5	xyz.e	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	xyz.a	
+4	(top)	-	4	xyz.b	
+5	process	1	5	xyz.c	
+6	process	1	6	xyz.d	
+7	process	1	7	xyz.e	

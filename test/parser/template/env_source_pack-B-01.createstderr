@@ -1,6 +1,4 @@
 Error: instance alias `source_pack_test<>::Src[1]' has incomplete type: source_e<2>
-Error creating process type: source_pack_test<>
-Error instantiating process footprint: 
-From canonical type: source_pack_test<>
+Error unrolling type: source_pack_test<>
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

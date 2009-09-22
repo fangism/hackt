@@ -1,5 +1,11 @@
 @ "foo.bar.l[0].e" iscomb
 @ "foo.bar.l[1].e" iscomb
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"
+= "!GND" "foo.bar.!GND"
+= "!Vdd" "foo.bar.!Vdd"
+= "!GND" "foo.bar.mb[0].!GND"
+= "!Vdd" "foo.bar.mb[0].!Vdd"
 = "foo.bar.l[0].e" "foo.bar.mb[0].l.e"
 = "foo.bar.l[0].f" "foo.bar.mb[0].l.f"
 = "foo.bar.l[0].t" "foo.bar.mb[0].l.t"
@@ -7,6 +13,8 @@
 = "foo.bar.r.e" "foo.bar.mb[0].r.e"
 = "foo.bar.r.f" "foo.bar.mb[0].r.f"
 = "foo.bar.r.t" "foo.bar.mb[0].r.t"
+= "!GND" "foo.bar.mb[1].!GND"
+= "!Vdd" "foo.bar.mb[1].!Vdd"
 = "foo.bar.l[1].e" "foo.bar.mb[1].l.e"
 = "foo.bar.l[1].f" "foo.bar.mb[1].l.f"
 = "foo.bar.l[1].t" "foo.bar.mb[1].l.t"

@@ -1,4 +1,8 @@
 min_sep<15>("b"; "g.r")
 min_sep<15>("h.p","h.q"; "h.r")
+= "!GND" "g.!GND"
+= "!Vdd" "g.!Vdd"
 = "b" "g.p"
 = "b" "g.q"
+= "!GND" "h.!GND"
+= "!Vdd" "h.!Vdd"

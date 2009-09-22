@@ -3,204 +3,279 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	90
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
-	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	93
-	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	15	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1407
-	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	26	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2805
-	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	326
+	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	109
+	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	24	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2573
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	41	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	5159
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   2 definitions
   0 typedefs
   Definitions:
     e1of1 = process-definition (defined) e1of1(
+        bool<> !GND
+        bool<> !Vdd
         bool<> d[0..0]
       )
       In definition "e1of1", we have: {
       Instances:
+        !GND = bool<> e1of1::!GND
+        !Vdd = bool<> e1of1::!Vdd
         d = bool<> e1of1::d^1
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> d[0..0]
         )
       footprint: {
+        !GND = bool^0 = e1of1<>::!GND (1) 
+        !Vdd = bool^0 = e1of1<>::!Vdd (2) 
         d = bool^1
           {
-            [0] = e1of1<>::d[0] (1) 
+            [0] = e1of1<>::d[0] (3) 
           }
         Created state:
         bool instance pool:
-        1	e1of1<>::d[0]
+        1	e1of1<>::!GND
+        2	e1of1<>::!Vdd
+        3	e1of1<>::d[0]
       }
       }
 
     top_type = process-definition (defined) top_type(
+        bool<> !GND
+        bool<> !Vdd
         e1of1<> co[0..0][0..6][0..2]
       )
       In definition "top_type", we have: {
       Instances:
+        !GND = bool<> top_type::!GND
+        !Vdd = bool<> top_type::!Vdd
         co = e1of1<> top_type::co^3
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           e1of1<> co[0..0][0..6][0..2]
         )
       footprint: {
+        !GND = bool^0 = top_type<>::!GND (1) 
+        !Vdd = bool^0 = top_type<>::!Vdd (2) 
         co = process e1of1<>^3
           {
             [0][0][0] = top_type<>::co[0][0][0] (1) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][0][0].d[0] (1) 
+                  [0] = top_type<>::co[0][0][0].d[0] (3) 
                 }
             )
             [0][0][1] = top_type<>::co[0][0][1] (2) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][0][1].d[0] (2) 
+                  [0] = top_type<>::co[0][0][1].d[0] (4) 
                 }
             )
             [0][0][2] = top_type<>::co[0][0][2] (3) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][0][2].d[0] (3) 
+                  [0] = top_type<>::co[0][0][2].d[0] (5) 
                 }
             )
             [0][1][0] = top_type<>::co[0][1][0] (4) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][1][0].d[0] (4) 
+                  [0] = top_type<>::co[0][1][0].d[0] (6) 
                 }
             )
             [0][1][1] = top_type<>::co[0][1][1] (5) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][1][1].d[0] (5) 
+                  [0] = top_type<>::co[0][1][1].d[0] (7) 
                 }
             )
             [0][1][2] = top_type<>::co[0][1][2] (6) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][1][2].d[0] (6) 
+                  [0] = top_type<>::co[0][1][2].d[0] (8) 
                 }
             )
             [0][2][0] = top_type<>::co[0][2][0] (7) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][2][0].d[0] (7) 
+                  [0] = top_type<>::co[0][2][0].d[0] (9) 
                 }
             )
             [0][2][1] = top_type<>::co[0][2][1] (8) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][2][1].d[0] (8) 
+                  [0] = top_type<>::co[0][2][1].d[0] (10) 
                 }
             )
             [0][2][2] = top_type<>::co[0][2][2] (9) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][2][2].d[0] (9) 
+                  [0] = top_type<>::co[0][2][2].d[0] (11) 
                 }
             )
             [0][3][0] = top_type<>::co[0][3][0] (10) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][3][0].d[0] (10) 
+                  [0] = top_type<>::co[0][3][0].d[0] (12) 
                 }
             )
             [0][3][1] = top_type<>::co[0][3][1] (11) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][3][1].d[0] (11) 
+                  [0] = top_type<>::co[0][3][1].d[0] (13) 
                 }
             )
             [0][3][2] = top_type<>::co[0][3][2] (12) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][3][2].d[0] (12) 
+                  [0] = top_type<>::co[0][3][2].d[0] (14) 
                 }
             )
             [0][4][0] = top_type<>::co[0][4][0] (13) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][4][0].d[0] (13) 
+                  [0] = top_type<>::co[0][4][0].d[0] (15) 
                 }
             )
             [0][4][1] = top_type<>::co[0][4][1] (14) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][4][1].d[0] (14) 
+                  [0] = top_type<>::co[0][4][1].d[0] (16) 
                 }
             )
             [0][4][2] = top_type<>::co[0][4][2] (15) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][4][2].d[0] (15) 
+                  [0] = top_type<>::co[0][4][2].d[0] (17) 
                 }
             )
             [0][5][0] = top_type<>::co[0][5][0] (16) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][5][0].d[0] (16) 
+                  [0] = top_type<>::co[0][5][0].d[0] (18) 
                 }
             )
             [0][5][1] = top_type<>::co[0][5][1] (17) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][5][1].d[0] (17) 
+                  [0] = top_type<>::co[0][5][1].d[0] (19) 
                 }
             )
             [0][5][2] = top_type<>::co[0][5][2] (18) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][5][2].d[0] (18) 
+                  [0] = top_type<>::co[0][5][2].d[0] (20) 
                 }
             )
             [0][6][0] = top_type<>::co[0][6][0] (19) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][6][0].d[0] (19) 
+                  [0] = top_type<>::co[0][6][0].d[0] (21) 
                 }
             )
             [0][6][1] = top_type<>::co[0][6][1] (20) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][6][1].d[0] (20) 
+                  [0] = top_type<>::co[0][6][1].d[0] (22) 
                 }
             )
             [0][6][2] = top_type<>::co[0][6][2] (21) (
+              !GND = bool^0 = top_type<>::!GND (1) 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][6][2].d[0] (21) 
+                  [0] = top_type<>::co[0][6][2].d[0] (23) 
                 }
             )
           }
@@ -228,292 +303,387 @@ In namespace "", we have: {
         20	top_type<>::co[0][6][1]
         21	top_type<>::co[0][6][2]
         bool instance pool:
-        1	top_type<>::co[0][0][0].d[0]
-        2	top_type<>::co[0][0][1].d[0]
-        3	top_type<>::co[0][0][2].d[0]
-        4	top_type<>::co[0][1][0].d[0]
-        5	top_type<>::co[0][1][1].d[0]
-        6	top_type<>::co[0][1][2].d[0]
-        7	top_type<>::co[0][2][0].d[0]
-        8	top_type<>::co[0][2][1].d[0]
-        9	top_type<>::co[0][2][2].d[0]
-        10	top_type<>::co[0][3][0].d[0]
-        11	top_type<>::co[0][3][1].d[0]
-        12	top_type<>::co[0][3][2].d[0]
-        13	top_type<>::co[0][4][0].d[0]
-        14	top_type<>::co[0][4][1].d[0]
-        15	top_type<>::co[0][4][2].d[0]
-        16	top_type<>::co[0][5][0].d[0]
-        17	top_type<>::co[0][5][1].d[0]
-        18	top_type<>::co[0][5][2].d[0]
-        19	top_type<>::co[0][6][0].d[0]
-        20	top_type<>::co[0][6][1].d[0]
-        21	top_type<>::co[0][6][2].d[0]
+        1	top_type<>::!GND
+        2	top_type<>::!Vdd
+        3	top_type<>::co[0][0][0].d[0]
+        4	top_type<>::co[0][0][1].d[0]
+        5	top_type<>::co[0][0][2].d[0]
+        6	top_type<>::co[0][1][0].d[0]
+        7	top_type<>::co[0][1][1].d[0]
+        8	top_type<>::co[0][1][2].d[0]
+        9	top_type<>::co[0][2][0].d[0]
+        10	top_type<>::co[0][2][1].d[0]
+        11	top_type<>::co[0][2][2].d[0]
+        12	top_type<>::co[0][3][0].d[0]
+        13	top_type<>::co[0][3][1].d[0]
+        14	top_type<>::co[0][3][2].d[0]
+        15	top_type<>::co[0][4][0].d[0]
+        16	top_type<>::co[0][4][1].d[0]
+        17	top_type<>::co[0][4][2].d[0]
+        18	top_type<>::co[0][5][0].d[0]
+        19	top_type<>::co[0][5][1].d[0]
+        20	top_type<>::co[0][5][2].d[0]
+        21	top_type<>::co[0][6][0].d[0]
+        22	top_type<>::co[0][6][1].d[0]
+        23	top_type<>::co[0][6][2].d[0]
+        bool port aliases:
+        1: top_type<>::co[0][0][0].!GND = top_type<>::co[0][0][1].!GND = top_type<>::co[0][0][2].!GND = top_type<>::co[0][1][0].!GND = top_type<>::co[0][1][1].!GND = top_type<>::co[0][1][2].!GND = top_type<>::co[0][2][0].!GND = top_type<>::co[0][2][1].!GND = top_type<>::co[0][2][2].!GND = top_type<>::co[0][3][0].!GND = top_type<>::co[0][3][1].!GND = top_type<>::co[0][3][2].!GND = top_type<>::co[0][4][0].!GND = top_type<>::co[0][4][1].!GND = top_type<>::co[0][4][2].!GND = top_type<>::co[0][5][0].!GND = top_type<>::co[0][5][1].!GND = top_type<>::co[0][5][2].!GND = top_type<>::co[0][6][0].!GND = top_type<>::co[0][6][1].!GND = top_type<>::co[0][6][2].!GND = top_type<>::!GND
+        2: top_type<>::co[0][0][0].!Vdd = top_type<>::co[0][0][1].!Vdd = top_type<>::co[0][0][2].!Vdd = top_type<>::co[0][1][0].!Vdd = top_type<>::co[0][1][1].!Vdd = top_type<>::co[0][1][2].!Vdd = top_type<>::co[0][2][0].!Vdd = top_type<>::co[0][2][1].!Vdd = top_type<>::co[0][2][2].!Vdd = top_type<>::co[0][3][0].!Vdd = top_type<>::co[0][3][1].!Vdd = top_type<>::co[0][3][2].!Vdd = top_type<>::co[0][4][0].!Vdd = top_type<>::co[0][4][1].!Vdd = top_type<>::co[0][4][2].!Vdd = top_type<>::co[0][5][0].!Vdd = top_type<>::co[0][5][1].!Vdd = top_type<>::co[0][5][2].!Vdd = top_type<>::co[0][6][0].!Vdd = top_type<>::co[0][6][1].!Vdd = top_type<>::co[0][6][2].!Vdd = top_type<>::!Vdd
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     co = e1of1<> co^3
     top = top_type<> top
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   co = process e1of1<>^3
     {
       [0][0][0] = co[0][0][0] (2) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][0][0].d[0] (1) 
+            [0] = co[0][0][0].d[0] (3) 
           }
       )
       [0][0][1] = co[0][0][1] (3) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][0][1].d[0] (2) 
+            [0] = co[0][0][1].d[0] (4) 
           }
       )
       [0][0][2] = co[0][0][2] (4) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][0][2].d[0] (3) 
+            [0] = co[0][0][2].d[0] (5) 
           }
       )
       [0][1][0] = co[0][1][0] (5) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][1][0].d[0] (4) 
+            [0] = co[0][1][0].d[0] (6) 
           }
       )
       [0][1][1] = co[0][1][1] (6) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][1][1].d[0] (5) 
+            [0] = co[0][1][1].d[0] (7) 
           }
       )
       [0][1][2] = co[0][1][2] (7) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][1][2].d[0] (6) 
+            [0] = co[0][1][2].d[0] (8) 
           }
       )
       [0][2][0] = co[0][2][0] (8) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][2][0].d[0] (7) 
+            [0] = co[0][2][0].d[0] (9) 
           }
       )
       [0][2][1] = co[0][2][1] (9) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][2][1].d[0] (8) 
+            [0] = co[0][2][1].d[0] (10) 
           }
       )
       [0][2][2] = co[0][2][2] (10) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][2][2].d[0] (9) 
+            [0] = co[0][2][2].d[0] (11) 
           }
       )
       [0][3][0] = co[0][3][0] (11) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][3][0].d[0] (10) 
+            [0] = co[0][3][0].d[0] (12) 
           }
       )
       [0][3][1] = co[0][3][1] (12) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][3][1].d[0] (11) 
+            [0] = co[0][3][1].d[0] (13) 
           }
       )
       [0][3][2] = co[0][3][2] (13) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][3][2].d[0] (12) 
+            [0] = co[0][3][2].d[0] (14) 
           }
       )
       [0][4][0] = co[0][4][0] (14) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][4][0].d[0] (13) 
+            [0] = co[0][4][0].d[0] (15) 
           }
       )
       [0][4][1] = co[0][4][1] (15) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][4][1].d[0] (14) 
+            [0] = co[0][4][1].d[0] (16) 
           }
       )
       [0][4][2] = co[0][4][2] (16) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][4][2].d[0] (15) 
+            [0] = co[0][4][2].d[0] (17) 
           }
       )
       [0][5][0] = co[0][5][0] (17) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][5][0].d[0] (16) 
+            [0] = co[0][5][0].d[0] (18) 
           }
       )
       [0][5][1] = co[0][5][1] (18) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][5][1].d[0] (17) 
+            [0] = co[0][5][1].d[0] (19) 
           }
       )
       [0][5][2] = co[0][5][2] (19) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][5][2].d[0] (18) 
+            [0] = co[0][5][2].d[0] (20) 
           }
       )
       [0][6][0] = co[0][6][0] (20) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][6][0].d[0] (19) 
+            [0] = co[0][6][0].d[0] (21) 
           }
       )
       [0][6][1] = co[0][6][1] (21) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][6][1].d[0] (20) 
+            [0] = co[0][6][1].d[0] (22) 
           }
       )
       [0][6][2] = co[0][6][2] (22) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         d = bool^1
           {
-            [0] = co[0][6][2].d[0] (21) 
+            [0] = co[0][6][2].d[0] (23) 
           }
       )
     }
   top = process top_type<>^0 = top (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     co = process e1of1<>^3
       {
         [0][0][0] = co[0][0][0] (2) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][0][0].d[0] (1) 
+              [0] = co[0][0][0].d[0] (3) 
             }
         )
         [0][0][1] = co[0][0][1] (3) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][0][1].d[0] (2) 
+              [0] = co[0][0][1].d[0] (4) 
             }
         )
         [0][0][2] = co[0][0][2] (4) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][0][2].d[0] (3) 
+              [0] = co[0][0][2].d[0] (5) 
             }
         )
         [0][1][0] = co[0][1][0] (5) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][1][0].d[0] (4) 
+              [0] = co[0][1][0].d[0] (6) 
             }
         )
         [0][1][1] = co[0][1][1] (6) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][1][1].d[0] (5) 
+              [0] = co[0][1][1].d[0] (7) 
             }
         )
         [0][1][2] = co[0][1][2] (7) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][1][2].d[0] (6) 
+              [0] = co[0][1][2].d[0] (8) 
             }
         )
         [0][2][0] = co[0][2][0] (8) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][2][0].d[0] (7) 
+              [0] = co[0][2][0].d[0] (9) 
             }
         )
         [0][2][1] = co[0][2][1] (9) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][2][1].d[0] (8) 
+              [0] = co[0][2][1].d[0] (10) 
             }
         )
         [0][2][2] = co[0][2][2] (10) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][2][2].d[0] (9) 
+              [0] = co[0][2][2].d[0] (11) 
             }
         )
         [0][3][0] = co[0][3][0] (11) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][3][0].d[0] (10) 
+              [0] = co[0][3][0].d[0] (12) 
             }
         )
         [0][3][1] = co[0][3][1] (12) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][3][1].d[0] (11) 
+              [0] = co[0][3][1].d[0] (13) 
             }
         )
         [0][3][2] = co[0][3][2] (13) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][3][2].d[0] (12) 
+              [0] = co[0][3][2].d[0] (14) 
             }
         )
         [0][4][0] = co[0][4][0] (14) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][4][0].d[0] (13) 
+              [0] = co[0][4][0].d[0] (15) 
             }
         )
         [0][4][1] = co[0][4][1] (15) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][4][1].d[0] (14) 
+              [0] = co[0][4][1].d[0] (16) 
             }
         )
         [0][4][2] = co[0][4][2] (16) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][4][2].d[0] (15) 
+              [0] = co[0][4][2].d[0] (17) 
             }
         )
         [0][5][0] = co[0][5][0] (17) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][5][0].d[0] (16) 
+              [0] = co[0][5][0].d[0] (18) 
             }
         )
         [0][5][1] = co[0][5][1] (18) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][5][1].d[0] (17) 
+              [0] = co[0][5][1].d[0] (19) 
             }
         )
         [0][5][2] = co[0][5][2] (19) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][5][2].d[0] (18) 
+              [0] = co[0][5][2].d[0] (20) 
             }
         )
         [0][6][0] = co[0][6][0] (20) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][6][0].d[0] (19) 
+              [0] = co[0][6][0].d[0] (21) 
             }
         )
         [0][6][1] = co[0][6][1] (21) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][6][1].d[0] (20) 
+              [0] = co[0][6][1].d[0] (22) 
             }
         )
         [0][6][2] = co[0][6][2] (22) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = co[0][6][2].d[0] (21) 
+              [0] = co[0][6][2].d[0] (23) 
             }
         )
       }
@@ -543,25 +713,27 @@ footprint: {
   21	co[0][6][1]
   22	co[0][6][2]
   bool instance pool:
-  1	co[0][0][0].d[0]
-  2	co[0][0][1].d[0]
-  3	co[0][0][2].d[0]
-  4	co[0][1][0].d[0]
-  5	co[0][1][1].d[0]
-  6	co[0][1][2].d[0]
-  7	co[0][2][0].d[0]
-  8	co[0][2][1].d[0]
-  9	co[0][2][2].d[0]
-  10	co[0][3][0].d[0]
-  11	co[0][3][1].d[0]
-  12	co[0][3][2].d[0]
-  13	co[0][4][0].d[0]
-  14	co[0][4][1].d[0]
-  15	co[0][4][2].d[0]
-  16	co[0][5][0].d[0]
-  17	co[0][5][1].d[0]
-  18	co[0][5][2].d[0]
-  19	co[0][6][0].d[0]
-  20	co[0][6][1].d[0]
-  21	co[0][6][2].d[0]
+  1	!GND
+  2	!Vdd
+  3	co[0][0][0].d[0]
+  4	co[0][0][1].d[0]
+  5	co[0][0][2].d[0]
+  6	co[0][1][0].d[0]
+  7	co[0][1][1].d[0]
+  8	co[0][1][2].d[0]
+  9	co[0][2][0].d[0]
+  10	co[0][2][1].d[0]
+  11	co[0][2][2].d[0]
+  12	co[0][3][0].d[0]
+  13	co[0][3][1].d[0]
+  14	co[0][3][2].d[0]
+  15	co[0][4][0].d[0]
+  16	co[0][4][1].d[0]
+  17	co[0][4][2].d[0]
+  18	co[0][5][0].d[0]
+  19	co[0][5][1].d[0]
+  20	co[0][5][2].d[0]
+  21	co[0][6][0].d[0]
+  22	co[0][6][1].d[0]
+  23	co[0][6][2].d[0]
 }

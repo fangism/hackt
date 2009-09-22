@@ -1,4 +1,6 @@
 Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
 int[1]: "pea_soup.s" 
 chan[1]: "pea_soup.B[0]" 
 chan[2]: "pea_soup.B[1]" 

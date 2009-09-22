@@ -1,25 +1,35 @@
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  3 instantiation-collections
+  5 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     blah = int<32> blah
     copier = int<32> copier
     sneeze = int<32> sneeze
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   blah = int<32>^0 = blah (1) 
   copier = int<32>^0 = blah (1) 
   sneeze = int<32>^0 = blah (1) 
   Created state:
   int instance pool:
   1	blah
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }
 Globally allocated state:
 globID	super		localID	canonical	footprint-frame
 [global int entries]
 1	(top)	-	1	blah	
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	

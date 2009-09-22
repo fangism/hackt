@@ -1,38 +1,134 @@
 ERROR: detected negative array indices: [-4]
 	with collection: process dualrail<>^1
   {
-    [0] = rotate_right_N_fb<32, 4>::out[0] 
-    [1] = rotate_right_N_fb<32, 4>::out[1] 
-    [2] = rotate_right_N_fb<32, 4>::out[2] 
-    [3] = rotate_right_N_fb<32, 4>::out[3] 
-    [4] = rotate_right_N_fb<32, 4>::out[4] 
-    [5] = rotate_right_N_fb<32, 4>::out[5] 
-    [6] = rotate_right_N_fb<32, 4>::out[6] 
-    [7] = rotate_right_N_fb<32, 4>::out[7] 
-    [8] = rotate_right_N_fb<32, 4>::out[8] 
-    [9] = rotate_right_N_fb<32, 4>::out[9] 
-    [10] = rotate_right_N_fb<32, 4>::out[10] 
-    [11] = rotate_right_N_fb<32, 4>::out[11] 
-    [12] = rotate_right_N_fb<32, 4>::out[12] 
-    [13] = rotate_right_N_fb<32, 4>::out[13] 
-    [14] = rotate_right_N_fb<32, 4>::out[14] 
-    [15] = rotate_right_N_fb<32, 4>::out[15] 
-    [16] = rotate_right_N_fb<32, 4>::out[16] 
-    [17] = rotate_right_N_fb<32, 4>::out[17] 
-    [18] = rotate_right_N_fb<32, 4>::out[18] 
-    [19] = rotate_right_N_fb<32, 4>::out[19] 
-    [20] = rotate_right_N_fb<32, 4>::out[20] 
-    [21] = rotate_right_N_fb<32, 4>::out[21] 
-    [22] = rotate_right_N_fb<32, 4>::out[22] 
-    [23] = rotate_right_N_fb<32, 4>::out[23] 
-    [24] = rotate_right_N_fb<32, 4>::out[24] 
-    [25] = rotate_right_N_fb<32, 4>::out[25] 
-    [26] = rotate_right_N_fb<32, 4>::out[26] 
-    [27] = rotate_right_N_fb<32, 4>::out[27] 
-    [28] = rotate_right_N_fb<32, 4>::out[28] 
-    [29] = rotate_right_N_fb<32, 4>::out[29] 
-    [30] = rotate_right_N_fb<32, 4>::out[30] 
-    [31] = rotate_right_N_fb<32, 4>::out[31] 
+    [0] = rotate_right_N_fb<32, 4>::out[0] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[0].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[0].!Vdd 
+    )
+    [1] = rotate_right_N_fb<32, 4>::out[1] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[1].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[1].!Vdd 
+    )
+    [2] = rotate_right_N_fb<32, 4>::out[2] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[2].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[2].!Vdd 
+    )
+    [3] = rotate_right_N_fb<32, 4>::out[3] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[3].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[3].!Vdd 
+    )
+    [4] = rotate_right_N_fb<32, 4>::out[4] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[4].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[4].!Vdd 
+    )
+    [5] = rotate_right_N_fb<32, 4>::out[5] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[5].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[5].!Vdd 
+    )
+    [6] = rotate_right_N_fb<32, 4>::out[6] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[6].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[6].!Vdd 
+    )
+    [7] = rotate_right_N_fb<32, 4>::out[7] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[7].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[7].!Vdd 
+    )
+    [8] = rotate_right_N_fb<32, 4>::out[8] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[8].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[8].!Vdd 
+    )
+    [9] = rotate_right_N_fb<32, 4>::out[9] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[9].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[9].!Vdd 
+    )
+    [10] = rotate_right_N_fb<32, 4>::out[10] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[10].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[10].!Vdd 
+    )
+    [11] = rotate_right_N_fb<32, 4>::out[11] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[11].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[11].!Vdd 
+    )
+    [12] = rotate_right_N_fb<32, 4>::out[12] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[12].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[12].!Vdd 
+    )
+    [13] = rotate_right_N_fb<32, 4>::out[13] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[13].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[13].!Vdd 
+    )
+    [14] = rotate_right_N_fb<32, 4>::out[14] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[14].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[14].!Vdd 
+    )
+    [15] = rotate_right_N_fb<32, 4>::out[15] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[15].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[15].!Vdd 
+    )
+    [16] = rotate_right_N_fb<32, 4>::out[16] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[16].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[16].!Vdd 
+    )
+    [17] = rotate_right_N_fb<32, 4>::out[17] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[17].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[17].!Vdd 
+    )
+    [18] = rotate_right_N_fb<32, 4>::out[18] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[18].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[18].!Vdd 
+    )
+    [19] = rotate_right_N_fb<32, 4>::out[19] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[19].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[19].!Vdd 
+    )
+    [20] = rotate_right_N_fb<32, 4>::out[20] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[20].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[20].!Vdd 
+    )
+    [21] = rotate_right_N_fb<32, 4>::out[21] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[21].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[21].!Vdd 
+    )
+    [22] = rotate_right_N_fb<32, 4>::out[22] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[22].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[22].!Vdd 
+    )
+    [23] = rotate_right_N_fb<32, 4>::out[23] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[23].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[23].!Vdd 
+    )
+    [24] = rotate_right_N_fb<32, 4>::out[24] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[24].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[24].!Vdd 
+    )
+    [25] = rotate_right_N_fb<32, 4>::out[25] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[25].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[25].!Vdd 
+    )
+    [26] = rotate_right_N_fb<32, 4>::out[26] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[26].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[26].!Vdd 
+    )
+    [27] = rotate_right_N_fb<32, 4>::out[27] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[27].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[27].!Vdd 
+    )
+    [28] = rotate_right_N_fb<32, 4>::out[28] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[28].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[28].!Vdd 
+    )
+    [29] = rotate_right_N_fb<32, 4>::out[29] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[29].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[29].!Vdd 
+    )
+    [30] = rotate_right_N_fb<32, 4>::out[30] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[30].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[30].!Vdd 
+    )
+    [31] = rotate_right_N_fb<32, 4>::out[31] (
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[31].!GND 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[31].!Vdd 
+    )
   }
 ERROR: unrolling instance references in process_connection::unroll().
 Error resolving loop-body during iteration: $i = 0

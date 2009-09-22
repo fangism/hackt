@@ -3,49 +3,65 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	113
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	59
-	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	42
-	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	42
-	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	129
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	59
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	417
-	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	42
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	42
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	449
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	436
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     xcpl_inv = process-definition (defined) xcpl_inv(
+        bool<> !GND
+        bool<> !Vdd
         bool<> x
         bool<> y
       )
       In definition "xcpl_inv", we have: {
       Instances:
+        !GND = bool<> xcpl_inv::!GND
+        !Vdd = bool<> xcpl_inv::!Vdd
         x = bool<> xcpl_inv::x
         y = bool<> xcpl_inv::y
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> x
           bool<> y
         )
@@ -54,12 +70,16 @@ In namespace "", we have: {
         exclhi(x,y)
         excllo(x,y)
       footprint: {
-        x = bool^0 = xcpl_inv<>::x (1) 
-        y = bool^0 = xcpl_inv<>::y (2) 
+        !GND = bool^0 = xcpl_inv<>::!GND (1) 
+        !Vdd = bool^0 = xcpl_inv<>::!Vdd (2) 
+        x = bool^0 = xcpl_inv<>::x (3) 
+        y = bool^0 = xcpl_inv<>::y (4) 
         Created state:
         bool instance pool:
-        1	xcpl_inv<>::x
-        2	xcpl_inv<>::y
+        1	xcpl_inv<>::!GND
+        2	xcpl_inv<>::!Vdd
+        3	xcpl_inv<>::x
+        4	xcpl_inv<>::y
         resolved specs:
         cross_coupled_inverters(x,y)
         exclhi(x,y)
@@ -68,18 +88,26 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     Z = xcpl_inv<> Z
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   Z = process xcpl_inv<>^0 = Z (1) (
-    x = bool^0 = Z.x (1) 
-    y = bool^0 = Z.y (2) 
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    x = bool^0 = Z.x (3) 
+    y = bool^0 = Z.y (4) 
   )
   Created state:
   process instance pool:
   1	Z
   bool instance pool:
-  1	Z.x
-  2	Z.y
+  1	!GND
+  2	!Vdd
+  3	Z.x
+  4	Z.y
 }

@@ -10,9 +10,17 @@
 ~"foo.re" -> "foo.c._o"+
 "foo.c._o" -> "foo.I.e"-
 ~"foo.c._o" -> "foo.I.e"+
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"
+= "!GND" "foo.a.!GND"
+= "!Vdd" "foo.a.!Vdd"
 = "foo.O.e" "foo.a.i"
 = "foo.re" "foo.a.o"
+= "!GND" "foo.b.!GND"
+= "!Vdd" "foo.b.!Vdd"
 = "foo.I.d" "foo.b.i"
 = "foo.O.d" "foo.b.o"
+= "!GND" "foo.c.!GND"
+= "!Vdd" "foo.c.!Vdd"
 = "foo.re" "foo.c.i"
 = "foo.I.e" "foo.c.o"

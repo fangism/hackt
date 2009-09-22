@@ -1,12 +1,16 @@
 Nodes: 
-node[1]: "__inv__.a" fanin-processes:  fanout: 1, 2, 
-node[2]: "__inv__.b" fanin-processes: 1,  fanout: 
+node[1]: "!GND" fanin-processes:  fanout: 
+node[2]: "!Vdd" fanin-processes:  fanout: 
+node[3]: "__inv__.a" fanin-processes:  fanout: 1, 2, 
+node[4]: "__inv__.b" fanin-processes: 1,  fanout: 
 Unique processes: {
 type[0]: {
 Local nodes: 
 node[0]: up: - < - , dn: - < -  fanout: 
 node[1]: up: - < - , dn: - < -  fanout: 
 node[2]: up: - < - , dn: - < -  fanout: 
+node[3]: up: - < - , dn: - < -  fanout: 
+node[4]: up: - < - , dn: - < -  fanout: 
 Local expressions: 
 Local expression -> rule map:
 
@@ -14,13 +18,15 @@ Local rules:
 }
 type[1]: {
 Local nodes: 
-node[0]: up: - < - , dn: - < -  fanout: 0 1 
-node[1]: up: 1 < - , dn: 0 < -  fanout: 
+node[0]: up: - < - , dn: - < -  fanout: 
+node[1]: up: - < - , dn: - < -  fanout: 
+node[2]: up: - < - , dn: - < -  fanout: 0 1 
+node[3]: up: 1 < - , dn: 0 < -  fanout: 
 Local expressions: 
-expr[0]: type: or<1> (pull-dn: 1)
-	children: #0, offset: 0
-expr[1]: type: nor<1> (pull-up: 1)
-	children: #0, offset: 0
+expr[0]: type: or<1> (pull-dn: 3)
+	children: #2, offset: 0
+expr[1]: type: nor<1> (pull-up: 3)
+	children: #2, offset: 0
 Local expression -> rule map:
 (0,0) (1,1) 
 Local rules:

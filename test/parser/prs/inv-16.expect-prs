@@ -4,7 +4,13 @@
 ~"p" -> "i2.b"+
 "i3.a" -> "q"-
 ~"i3.a" -> "q"+
+= "!GND" "i1.!GND"
+= "!Vdd" "i1.!Vdd"
 = "x" "i1.a"
 = "y" "i1.b"
+= "!GND" "i2.!GND"
+= "!Vdd" "i2.!Vdd"
 = "p" "i2.a"
+= "!GND" "i3.!GND"
+= "!Vdd" "i3.!Vdd"
 = "q" "i3.b"

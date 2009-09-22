@@ -6,70 +6,70 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	125
-	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	141
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
 	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	29	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	30	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	34	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	CHPlopsl	0	#HEAD#	#TAIL#	25
-	36	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	37	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
-	40	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	43	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1070
-	48	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	55	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	56	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	57	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	58	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	80
-	59	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
-	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	62	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	63	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	64	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	37	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	41	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	CHPlopsl	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	44	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	47	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	50	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1102
+	55	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	62	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	63	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	64	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	65	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	80
 	66	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 	67	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
 	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -175,31 +175,47 @@ Persistent Object Manager text dump:
 	168	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	169	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	170	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	171	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	172	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	173	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
-	174	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	171	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	172	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	173	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	174	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	175	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	176	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	177	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	178	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	179	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	180	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	181	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	182	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	183	##ADDR##	footprnt	0	#HEAD#	#TAIL#	436
+	184	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     metalooptest = process-definition (defined) metalooptest(
+        bool<> !GND
+        bool<> !Vdd
         chan?(int<4>) L
         chan!(bool<>) R
       )
       In definition "metalooptest", we have: {
       Instances:
+        !GND = bool<> metalooptest::!GND
+        !Vdd = bool<> metalooptest::!Vdd
         L = chan?(int<4>) metalooptest::L
         R = chan!(bool<>) metalooptest::R
         b = bool<> metalooptest::b^1
         l = int<4> metalooptest::l
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?(int<4>) L
           chan!(bool<>) R
         )
@@ -220,26 +236,28 @@ In namespace "", we have: {
           ]
         }
       footprint: {
+        !GND = bool^0 = metalooptest<>::!GND (1) 
+        !Vdd = bool^0 = metalooptest<>::!Vdd (2) 
         L = channel chan?(int<4>)^0 = metalooptest<>::L (1) 
         R = channel chan!(bool<>)^0 = metalooptest<>::R (2) 
         b = bool^1
           {
-            [0] = metalooptest<>::b[0] (1) 
-            [1] = metalooptest<>::b[1] (2) 
-            [2] = metalooptest<>::b[2] (3) 
-            [3] = metalooptest<>::b[3] (4) 
-            [4] = metalooptest<>::b[4] (5) 
-            [5] = metalooptest<>::b[5] (6) 
-            [6] = metalooptest<>::b[6] (7) 
-            [7] = metalooptest<>::b[7] (8) 
-            [8] = metalooptest<>::b[8] (9) 
-            [9] = metalooptest<>::b[9] (10) 
-            [10] = metalooptest<>::b[10] (11) 
-            [11] = metalooptest<>::b[11] (12) 
-            [12] = metalooptest<>::b[12] (13) 
-            [13] = metalooptest<>::b[13] (14) 
-            [14] = metalooptest<>::b[14] (15) 
-            [15] = metalooptest<>::b[15] (16) 
+            [0] = metalooptest<>::b[0] (3) 
+            [1] = metalooptest<>::b[1] (4) 
+            [2] = metalooptest<>::b[2] (5) 
+            [3] = metalooptest<>::b[3] (6) 
+            [4] = metalooptest<>::b[4] (7) 
+            [5] = metalooptest<>::b[5] (8) 
+            [6] = metalooptest<>::b[6] (9) 
+            [7] = metalooptest<>::b[7] (10) 
+            [8] = metalooptest<>::b[8] (11) 
+            [9] = metalooptest<>::b[9] (12) 
+            [10] = metalooptest<>::b[10] (13) 
+            [11] = metalooptest<>::b[11] (14) 
+            [12] = metalooptest<>::b[12] (15) 
+            [13] = metalooptest<>::b[13] (16) 
+            [14] = metalooptest<>::b[14] (17) 
+            [15] = metalooptest<>::b[15] (18) 
           }
         l = int<4>^0 = metalooptest<>::l (1) 
         Created state:
@@ -249,22 +267,24 @@ In namespace "", we have: {
         int instance pool:
         1	metalooptest<>::l
         bool instance pool:
-        1	metalooptest<>::b[0]
-        2	metalooptest<>::b[1]
-        3	metalooptest<>::b[2]
-        4	metalooptest<>::b[3]
-        5	metalooptest<>::b[4]
-        6	metalooptest<>::b[5]
-        7	metalooptest<>::b[6]
-        8	metalooptest<>::b[7]
-        9	metalooptest<>::b[8]
-        10	metalooptest<>::b[9]
-        11	metalooptest<>::b[10]
-        12	metalooptest<>::b[11]
-        13	metalooptest<>::b[12]
-        14	metalooptest<>::b[13]
-        15	metalooptest<>::b[14]
-        16	metalooptest<>::b[15]
+        1	metalooptest<>::!GND
+        2	metalooptest<>::!Vdd
+        3	metalooptest<>::b[0]
+        4	metalooptest<>::b[1]
+        5	metalooptest<>::b[2]
+        6	metalooptest<>::b[3]
+        7	metalooptest<>::b[4]
+        8	metalooptest<>::b[5]
+        9	metalooptest<>::b[6]
+        10	metalooptest<>::b[7]
+        11	metalooptest<>::b[8]
+        12	metalooptest<>::b[9]
+        13	metalooptest<>::b[10]
+        14	metalooptest<>::b[11]
+        15	metalooptest<>::b[12]
+        16	metalooptest<>::b[13]
+        17	metalooptest<>::b[14]
+        18	metalooptest<>::b[15]
         resolved concurrent actions:
           *[
             sequential: {
@@ -320,11 +340,17 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     M = metalooptest<> M
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   M = process metalooptest<>^0 = M (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     L = channel chan?(int<4>)^0 = M.L (1) 
     R = channel chan!(bool<>)^0 = M.R (2) 
   )
@@ -334,4 +360,7 @@ footprint: {
   channel instance pool:
   1	M.L
   2	M.R
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

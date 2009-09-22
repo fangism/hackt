@@ -1,4 +1,8 @@
+= "!GND" "A.!GND"
+= "!Vdd" "A.!Vdd"
 = "d" "A.composite"
 = "d" "A.x"
+= "!GND" "B.!GND"
+= "!Vdd" "B.!Vdd"
 = "d" "B.y"
 = "d" "B.z"

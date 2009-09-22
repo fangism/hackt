@@ -1,6 +1,4 @@
 Error: instance alias `bar<2>::a' has incomplete type: foo<2>
-Error creating process type: bar<2>
-Error instantiating process footprint: 
-From canonical type: bar<2>
+Error unrolling type: bar<2>
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

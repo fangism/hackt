@@ -1,5 +1,7 @@
 Variables: 
-bool[1]: "BQ.b" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "BQ.b" 
 chan[1]: "BQ.X" 
 
 Event graph: 

@@ -1,4 +1,10 @@
 @ "foo.x[0].a" iscomb !autokeeper
 @ "foo.x[0].b" iscomb !autokeeper
+connect "!GND" "foo.!GND"
+connect "!Vdd" "foo.!Vdd"
+connect "!GND" "foo.x[0].!GND"
+connect "!Vdd" "foo.x[0].!Vdd"
+connect "!GND" "foo.x[1].!GND"
+connect "!Vdd" "foo.x[1].!Vdd"
 connect "foo.x[0].b" "foo.x[1].a"
 connect "foo.x[0].a" "foo.x[1].b"

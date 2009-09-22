@@ -6,37 +6,49 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	308
-	14	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	340
+	19	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     X = chan(bool<>) X
     Y = chan(bool<>) Y
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   X = channel chan(bool<>)^0 = X (1) 
   Y = channel chan(bool<>)^0 = X (1) 
   Created state:
   channel instance pool:
   1	X
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

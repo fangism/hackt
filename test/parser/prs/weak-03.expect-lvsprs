@@ -4,3 +4,5 @@
 ~"xyz.a" -> "xyz.e"+
 "xyz.c" -> "xyz.d"-
 ~"xyz.c" -> "xyz.d"+
+connect "!GND" "xyz.!GND"
+connect "!Vdd" "xyz.!Vdd"

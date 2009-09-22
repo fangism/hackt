@@ -1,5 +1,4 @@
-Error: instance alias `bar<false>::s' has incomplete type: foo<>
-Error creating process type: bar<false>
-Instantiated by: Y
+Error: instance alias `bar<false>::q' has incomplete type: foo<>
+Error unrolling type: bar<false>
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

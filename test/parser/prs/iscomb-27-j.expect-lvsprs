@@ -1,9 +1,15 @@
 @ "foo.bar.in.a.e" iscomb
 @ "foo.bar.out.a.t" iscomb
+connect "!GND" "foo.!GND"
+connect "!Vdd" "foo.!Vdd"
+connect "!GND" "foo.bar.!GND"
+connect "!Vdd" "foo.bar.!Vdd"
 connect "foo.bar.in.a.e" "foo.bar.in.e.a"
 connect "foo.bar.in.a.t" "foo.bar.in.t.a"
 connect "foo.bar.in.a.e" "foo.bar.in_a.e"
 connect "foo.bar.in.a.t" "foo.bar.in_a.t"
+connect "!GND" "foo.bar.ma.!GND"
+connect "!Vdd" "foo.bar.ma.!Vdd"
 connect "foo.bar.in.a.e" "foo.bar.ma.l.e"
 connect "foo.bar.in.a.t" "foo.bar.ma.l.t"
 connect "foo.bar.out.a.e" "foo.bar.ma.r.e"

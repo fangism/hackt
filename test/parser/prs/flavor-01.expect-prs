@@ -1,2 +1,4 @@
 "X.a" & "X.b" -> "X.c"-
 ~"X.a" | ~"X.b" -> "X.c"+
+= "!GND" "X.!GND"
+= "!Vdd" "X.!Vdd"

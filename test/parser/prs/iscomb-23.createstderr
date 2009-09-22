@@ -3,222 +3,297 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	48
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	121
-	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
-	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
-	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	20	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
-	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
-	28	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	101
-	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	137
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
+	20	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
+	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	34	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	34
-	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
-	43	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	610
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	50	##ADDR##	procdefn	0	#HEAD#	#TAIL#	107
-	51	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	52	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	53	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	56	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	57	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	58	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	62	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	65	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	66	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	434
-	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	71	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	72	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	73	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	74	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	76	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	77	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	78	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	80	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	330
+	45	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	49	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	50	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	51	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	52	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	53	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	34
+	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	footprnt	0	#HEAD#	#TAIL#	330
+	65	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	858
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	procdefn	0	#HEAD#	#TAIL#	123
+	73	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	74	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	75	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	76	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	77	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	78	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	81	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	82	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	83	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
-	84	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	85	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	86	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	87	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	88	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	89	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	90	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	91	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	92	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	93	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	94	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	95	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	96	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	97	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	98	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	99	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	100	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	101	##ADDR##	footprnt	0	#HEAD#	#TAIL#	434
-	102	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	103	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	104	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	105	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	106	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	107	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	108	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	109	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	110	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	111	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	112	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	113	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	114	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1418
-	115	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	116	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	117	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	118	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	119	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	120	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	121	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	122	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1030
-	123	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	83	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	85	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	87	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	90	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	92	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	93	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	footprnt	0	#HEAD#	#TAIL#	574
+	96	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	97	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	98	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	99	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	100	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	102	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	103	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	104	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	105	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	106	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	107	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	108	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	109	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	110	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
+	111	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	112	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	113	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	114	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	115	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	116	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	117	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	118	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	119	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	120	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	121	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	122	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	123	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	124	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	125	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	126	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	127	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	128	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	129	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	130	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	131	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	132	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	133	##ADDR##	footprnt	0	#HEAD#	#TAIL#	574
+	134	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	135	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	136	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	137	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	138	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	139	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	140	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	141	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	142	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	143	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	144	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	145	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	146	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2314
+	147	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	148	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	149	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	150	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	151	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	152	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	153	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	154	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	155	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	156	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	157	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1656
+	158	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   6 definitions
   0 typedefs
   Definitions:
     deep = process-definition (defined) deep(
+        bool<> !GND
+        bool<> !Vdd
         multi_inv<> x
         multi_inv<> y
       )
       In definition "deep", we have: {
       Instances:
+        !GND = bool<> deep::!GND
+        !Vdd = bool<> deep::!Vdd
         P = smoosh<> deep::P
         Q = twist<> deep::Q
         x = multi_inv<> deep::x
         y = multi_inv<> deep::y
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           multi_inv<> x
           multi_inv<> y
         )
         smoosh<> P
-        P (x.s[0], x.t[0]);
+        P ( , , x.s[0], x.t[0]);
         twist<> Q
-        Q (x.s[1], x.t[1]);
+        Q ( , , x.s[1], x.t[1]);
       footprint: {
+        !GND = bool^0 = deep<>::!GND (1) 
+        !Vdd = bool^0 = deep<>::!Vdd (2) 
         P = process smoosh<>^0 = deep<>::P (11) (
+          !GND = bool^0 = deep<>::!GND (1) 
+          !Vdd = bool^0 = deep<>::!Vdd (2) 
           j = process inv<>^0 = deep<>::x.s[0] (2) (
-            a = bool^0 = deep<>::x.s[0].a (1) @[ iscomb ] 
-            b = bool^0 = deep<>::x.s[0].b (2) @[ !autokeeper ] 
+            !GND = bool^0 = deep<>::!GND (1) 
+            !Vdd = bool^0 = deep<>::!Vdd (2) 
+            a = bool^0 = deep<>::x.s[0].a (3) @[ iscomb ] 
+            b = bool^0 = deep<>::x.s[0].b (4) @[ !autokeeper ] 
           )
           k = process inv2<>^0 = deep<>::x.t[0] (4) (
-            a = bool^0 = deep<>::x.s[0].a (1) @[ iscomb ] 
-            b = bool^0 = deep<>::x.s[0].b (2) @[ !autokeeper ] 
+            !GND = bool^0 = deep<>::!GND (1) 
+            !Vdd = bool^0 = deep<>::!Vdd (2) 
+            a = bool^0 = deep<>::x.s[0].a (3) @[ iscomb ] 
+            b = bool^0 = deep<>::x.s[0].b (4) @[ !autokeeper ] 
           )
         )
         Q = process twist<>^0 = deep<>::Q (12) (
+          !GND = bool^0 = deep<>::!GND (1) 
+          !Vdd = bool^0 = deep<>::!Vdd (2) 
           f = process inv<>^0 = deep<>::x.s[1] (3) (
-            a = bool^0 = deep<>::x.s[1].a (3) @[ iscomb !autokeeper ] 
-            b = bool^0 = deep<>::x.s[1].b (4) 
+            !GND = bool^0 = deep<>::!GND (1) 
+            !Vdd = bool^0 = deep<>::!Vdd (2) 
+            a = bool^0 = deep<>::x.s[1].a (5) @[ iscomb !autokeeper ] 
+            b = bool^0 = deep<>::x.s[1].b (6) 
           )
           g = process inv2<>^0 = deep<>::x.t[1] (5) (
-            a = bool^0 = deep<>::x.s[1].b (4) 
-            b = bool^0 = deep<>::x.s[1].a (3) @[ iscomb !autokeeper ] 
+            !GND = bool^0 = deep<>::!GND (1) 
+            !Vdd = bool^0 = deep<>::!Vdd (2) 
+            a = bool^0 = deep<>::x.s[1].b (6) 
+            b = bool^0 = deep<>::x.s[1].a (5) @[ iscomb !autokeeper ] 
           )
         )
         x = process multi_inv<>^0 = deep<>::x (1) (
+          !GND = bool^0 = deep<>::!GND (1) 
+          !Vdd = bool^0 = deep<>::!Vdd (2) 
           s = process inv<>^1
             {
               [0] = deep<>::x.s[0] (2) (
-                a = bool^0 = deep<>::x.s[0].a (1) @[ iscomb ] 
-                b = bool^0 = deep<>::x.s[0].b (2) @[ !autokeeper ] 
+                !GND = bool^0 = deep<>::!GND (1) 
+                !Vdd = bool^0 = deep<>::!Vdd (2) 
+                a = bool^0 = deep<>::x.s[0].a (3) @[ iscomb ] 
+                b = bool^0 = deep<>::x.s[0].b (4) @[ !autokeeper ] 
               )
               [1] = deep<>::x.s[1] (3) (
-                a = bool^0 = deep<>::x.s[1].a (3) @[ iscomb !autokeeper ] 
-                b = bool^0 = deep<>::x.s[1].b (4) 
+                !GND = bool^0 = deep<>::!GND (1) 
+                !Vdd = bool^0 = deep<>::!Vdd (2) 
+                a = bool^0 = deep<>::x.s[1].a (5) @[ iscomb !autokeeper ] 
+                b = bool^0 = deep<>::x.s[1].b (6) 
               )
             }
           t = process inv2<>^1
             {
               [0] = deep<>::x.t[0] (4) (
-                a = bool^0 = deep<>::x.s[0].a (1) @[ iscomb ] 
-                b = bool^0 = deep<>::x.s[0].b (2) @[ !autokeeper ] 
+                !GND = bool^0 = deep<>::!GND (1) 
+                !Vdd = bool^0 = deep<>::!Vdd (2) 
+                a = bool^0 = deep<>::x.s[0].a (3) @[ iscomb ] 
+                b = bool^0 = deep<>::x.s[0].b (4) @[ !autokeeper ] 
               )
               [1] = deep<>::x.t[1] (5) (
-                a = bool^0 = deep<>::x.s[1].b (4) 
-                b = bool^0 = deep<>::x.s[1].a (3) @[ iscomb !autokeeper ] 
+                !GND = bool^0 = deep<>::!GND (1) 
+                !Vdd = bool^0 = deep<>::!Vdd (2) 
+                a = bool^0 = deep<>::x.s[1].b (6) 
+                b = bool^0 = deep<>::x.s[1].a (5) @[ iscomb !autokeeper ] 
               )
             }
         )
         y = process multi_inv<>^0 = deep<>::y (6) (
+          !GND = bool^0 = deep<>::!GND (1) 
+          !Vdd = bool^0 = deep<>::!Vdd (2) 
           s = process inv<>^1
             {
               [0] = deep<>::y.s[0] (7) (
-                a = bool^0 = deep<>::y.s[0].a (5) @[ iscomb ] 
-                b = bool^0 = deep<>::y.s[0].b (6) 
+                !GND = bool^0 = deep<>::!GND (1) 
+                !Vdd = bool^0 = deep<>::!Vdd (2) 
+                a = bool^0 = deep<>::y.s[0].a (7) @[ iscomb ] 
+                b = bool^0 = deep<>::y.s[0].b (8) 
               )
               [1] = deep<>::y.s[1] (8) (
-                a = bool^0 = deep<>::y.s[1].a (7) @[ iscomb ] 
-                b = bool^0 = deep<>::y.s[1].b (8) 
+                !GND = bool^0 = deep<>::!GND (1) 
+                !Vdd = bool^0 = deep<>::!Vdd (2) 
+                a = bool^0 = deep<>::y.s[1].a (9) @[ iscomb ] 
+                b = bool^0 = deep<>::y.s[1].b (10) 
               )
             }
           t = process inv2<>^1
             {
               [0] = deep<>::y.t[0] (9) (
-                a = bool^0 = deep<>::y.t[0].a (9) 
-                b = bool^0 = deep<>::y.t[0].b (10) @[ !autokeeper ] 
+                !GND = bool^0 = deep<>::!GND (1) 
+                !Vdd = bool^0 = deep<>::!Vdd (2) 
+                a = bool^0 = deep<>::y.t[0].a (11) 
+                b = bool^0 = deep<>::y.t[0].b (12) @[ !autokeeper ] 
               )
               [1] = deep<>::y.t[1] (10) (
-                a = bool^0 = deep<>::y.t[1].a (11) 
-                b = bool^0 = deep<>::y.t[1].b (12) @[ !autokeeper ] 
+                !GND = bool^0 = deep<>::!GND (1) 
+                !Vdd = bool^0 = deep<>::!Vdd (2) 
+                a = bool^0 = deep<>::y.t[1].a (13) 
+                b = bool^0 = deep<>::y.t[1].b (14) @[ !autokeeper ] 
               )
             }
         )
@@ -237,108 +312,148 @@ In namespace "", we have: {
         11	deep<>::P
         12	deep<>::Q
         bool instance pool:
-        1	deep<>::x.s[0].a @[ iscomb ]
-        2	deep<>::x.s[0].b @[ !autokeeper ]
-        3	deep<>::x.s[1].a @[ iscomb !autokeeper ]
-        4	deep<>::x.s[1].b
-        5	deep<>::y.s[0].a @[ iscomb ]
-        6	deep<>::y.s[0].b
-        7	deep<>::y.s[1].a @[ iscomb ]
-        8	deep<>::y.s[1].b
-        9	deep<>::y.t[0].a
-        10	deep<>::y.t[0].b @[ !autokeeper ]
-        11	deep<>::y.t[1].a
-        12	deep<>::y.t[1].b @[ !autokeeper ]
+        1	deep<>::!GND
+        2	deep<>::!Vdd
+        3	deep<>::x.s[0].a @[ iscomb ]
+        4	deep<>::x.s[0].b @[ !autokeeper ]
+        5	deep<>::x.s[1].a @[ iscomb !autokeeper ]
+        6	deep<>::x.s[1].b
+        7	deep<>::y.s[0].a @[ iscomb ]
+        8	deep<>::y.s[0].b
+        9	deep<>::y.s[1].a @[ iscomb ]
+        10	deep<>::y.s[1].b
+        11	deep<>::y.t[0].a
+        12	deep<>::y.t[0].b @[ !autokeeper ]
+        13	deep<>::y.t[1].a
+        14	deep<>::y.t[1].b @[ !autokeeper ]
         bool port aliases:
-        1: deep<>::x.s[0].a = deep<>::x.t[0].a @[ iscomb ]
-        2: deep<>::x.s[0].b = deep<>::x.t[0].b @[ !autokeeper ]
-        3: deep<>::x.s[1].a = deep<>::x.t[1].b @[ iscomb !autokeeper ]
-        4: deep<>::x.s[1].b = deep<>::x.t[1].a
+        1: deep<>::x.!GND = deep<>::x.s[0].!GND = deep<>::x.s[1].!GND = deep<>::x.t[0].!GND = deep<>::x.t[1].!GND = deep<>::y.!GND = deep<>::y.s[0].!GND = deep<>::y.s[1].!GND = deep<>::y.t[0].!GND = deep<>::y.t[1].!GND = deep<>::!GND
+        2: deep<>::x.!Vdd = deep<>::x.s[0].!Vdd = deep<>::x.s[1].!Vdd = deep<>::x.t[0].!Vdd = deep<>::x.t[1].!Vdd = deep<>::y.!Vdd = deep<>::y.s[0].!Vdd = deep<>::y.s[1].!Vdd = deep<>::y.t[0].!Vdd = deep<>::y.t[1].!Vdd = deep<>::!Vdd
+        3: deep<>::x.s[0].a = deep<>::x.t[0].a @[ iscomb ]
+        4: deep<>::x.s[0].b = deep<>::x.t[0].b @[ !autokeeper ]
+        5: deep<>::x.s[1].a = deep<>::x.t[1].b @[ iscomb !autokeeper ]
+        6: deep<>::x.s[1].b = deep<>::x.t[1].a
       }
       }
 
     inv = process-definition (defined) inv(
+        bool<> !GND
+        bool<> !Vdd
         bool<> a
         bool<> b
       )
       In definition "inv", we have: {
       Instances:
+        !GND = bool<> inv::!GND
+        !Vdd = bool<> inv::!Vdd
         a = bool<> inv::a
         b = bool<> inv::b
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> a
           bool<> b
         )
         a@[iscomb]
       footprint: {
-        a = bool^0 = inv<>::a (1) @[ iscomb ] 
-        b = bool^0 = inv<>::b (2) 
+        !GND = bool^0 = inv<>::!GND (1) 
+        !Vdd = bool^0 = inv<>::!Vdd (2) 
+        a = bool^0 = inv<>::a (3) @[ iscomb ] 
+        b = bool^0 = inv<>::b (4) 
         Created state:
         bool instance pool:
-        1	inv<>::a @[ iscomb ]
-        2	inv<>::b
+        1	inv<>::!GND
+        2	inv<>::!Vdd
+        3	inv<>::a @[ iscomb ]
+        4	inv<>::b
       }
       }
 
     inv2 = process-definition (defined) inv2(
+        bool<> !GND
+        bool<> !Vdd
         bool<> a
         bool<> b
       )
       In definition "inv2", we have: {
       Instances:
+        !GND = bool<> inv2::!GND
+        !Vdd = bool<> inv2::!Vdd
         a = bool<> inv2::a
         b = bool<> inv2::b
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> a
           bool<> b
         )
         b@[autokeeper=0]
       footprint: {
-        a = bool^0 = inv2<>::a (1) 
-        b = bool^0 = inv2<>::b (2) @[ !autokeeper ] 
+        !GND = bool^0 = inv2<>::!GND (1) 
+        !Vdd = bool^0 = inv2<>::!Vdd (2) 
+        a = bool^0 = inv2<>::a (3) 
+        b = bool^0 = inv2<>::b (4) @[ !autokeeper ] 
         Created state:
         bool instance pool:
-        1	inv2<>::a
-        2	inv2<>::b @[ !autokeeper ]
+        1	inv2<>::!GND
+        2	inv2<>::!Vdd
+        3	inv2<>::a
+        4	inv2<>::b @[ !autokeeper ]
       }
       }
 
     multi_inv = process-definition (defined) multi_inv(
+        bool<> !GND
+        bool<> !Vdd
         inv<> s[0..1]
         inv2<> t[0..1]
       )
       In definition "multi_inv", we have: {
       Instances:
+        !GND = bool<> multi_inv::!GND
+        !Vdd = bool<> multi_inv::!Vdd
         s = inv<> multi_inv::s^1
         t = inv2<> multi_inv::t^1
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           inv<> s[0..1]
           inv2<> t[0..1]
         )
       footprint: {
+        !GND = bool^0 = multi_inv<>::!GND (1) 
+        !Vdd = bool^0 = multi_inv<>::!Vdd (2) 
         s = process inv<>^1
           {
             [0] = multi_inv<>::s[0] (1) (
-              a = bool^0 = multi_inv<>::s[0].a (1) @[ iscomb ] 
-              b = bool^0 = multi_inv<>::s[0].b (2) 
+              !GND = bool^0 = multi_inv<>::!GND (1) 
+              !Vdd = bool^0 = multi_inv<>::!Vdd (2) 
+              a = bool^0 = multi_inv<>::s[0].a (3) @[ iscomb ] 
+              b = bool^0 = multi_inv<>::s[0].b (4) 
             )
             [1] = multi_inv<>::s[1] (2) (
-              a = bool^0 = multi_inv<>::s[1].a (3) @[ iscomb ] 
-              b = bool^0 = multi_inv<>::s[1].b (4) 
+              !GND = bool^0 = multi_inv<>::!GND (1) 
+              !Vdd = bool^0 = multi_inv<>::!Vdd (2) 
+              a = bool^0 = multi_inv<>::s[1].a (5) @[ iscomb ] 
+              b = bool^0 = multi_inv<>::s[1].b (6) 
             )
           }
         t = process inv2<>^1
           {
             [0] = multi_inv<>::t[0] (3) (
-              a = bool^0 = multi_inv<>::t[0].a (5) 
-              b = bool^0 = multi_inv<>::t[0].b (6) @[ !autokeeper ] 
+              !GND = bool^0 = multi_inv<>::!GND (1) 
+              !Vdd = bool^0 = multi_inv<>::!Vdd (2) 
+              a = bool^0 = multi_inv<>::t[0].a (7) 
+              b = bool^0 = multi_inv<>::t[0].b (8) @[ !autokeeper ] 
             )
             [1] = multi_inv<>::t[1] (4) (
-              a = bool^0 = multi_inv<>::t[1].a (7) 
-              b = bool^0 = multi_inv<>::t[1].b (8) @[ !autokeeper ] 
+              !GND = bool^0 = multi_inv<>::!GND (1) 
+              !Vdd = bool^0 = multi_inv<>::!Vdd (2) 
+              a = bool^0 = multi_inv<>::t[1].a (9) 
+              b = bool^0 = multi_inv<>::t[1].b (10) @[ !autokeeper ] 
             )
           }
         Created state:
@@ -348,142 +463,205 @@ In namespace "", we have: {
         3	multi_inv<>::t[0]
         4	multi_inv<>::t[1]
         bool instance pool:
-        1	multi_inv<>::s[0].a @[ iscomb ]
-        2	multi_inv<>::s[0].b
-        3	multi_inv<>::s[1].a @[ iscomb ]
-        4	multi_inv<>::s[1].b
-        5	multi_inv<>::t[0].a
-        6	multi_inv<>::t[0].b @[ !autokeeper ]
-        7	multi_inv<>::t[1].a
-        8	multi_inv<>::t[1].b @[ !autokeeper ]
+        1	multi_inv<>::!GND
+        2	multi_inv<>::!Vdd
+        3	multi_inv<>::s[0].a @[ iscomb ]
+        4	multi_inv<>::s[0].b
+        5	multi_inv<>::s[1].a @[ iscomb ]
+        6	multi_inv<>::s[1].b
+        7	multi_inv<>::t[0].a
+        8	multi_inv<>::t[0].b @[ !autokeeper ]
+        9	multi_inv<>::t[1].a
+        10	multi_inv<>::t[1].b @[ !autokeeper ]
+        bool port aliases:
+        1: multi_inv<>::s[0].!GND = multi_inv<>::s[1].!GND = multi_inv<>::t[0].!GND = multi_inv<>::t[1].!GND = multi_inv<>::!GND
+        2: multi_inv<>::s[0].!Vdd = multi_inv<>::s[1].!Vdd = multi_inv<>::t[0].!Vdd = multi_inv<>::t[1].!Vdd = multi_inv<>::!Vdd
       }
       }
 
     smoosh = process-definition (defined) smoosh(
+        bool<> !GND
+        bool<> !Vdd
         inv<> j
         inv2<> k
       )
       In definition "smoosh", we have: {
       Instances:
+        !GND = bool<> smoosh::!GND
+        !Vdd = bool<> smoosh::!Vdd
         j = inv<> smoosh::j
         k = inv2<> smoosh::k
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           inv<> j
           inv2<> k
         )
         j.a = k.a;
         j.b = k.b;
       footprint: {
+        !GND = bool^0 = smoosh<>::!GND (1) 
+        !Vdd = bool^0 = smoosh<>::!Vdd (2) 
         j = process inv<>^0 = smoosh<>::j (1) (
-          a = bool^0 = smoosh<>::j.a (1) @[ iscomb ] 
-          b = bool^0 = smoosh<>::j.b (2) @[ !autokeeper ] 
+          !GND = bool^0 = smoosh<>::!GND (1) 
+          !Vdd = bool^0 = smoosh<>::!Vdd (2) 
+          a = bool^0 = smoosh<>::j.a (3) @[ iscomb ] 
+          b = bool^0 = smoosh<>::j.b (4) @[ !autokeeper ] 
         )
         k = process inv2<>^0 = smoosh<>::k (2) (
-          a = bool^0 = smoosh<>::j.a (1) @[ iscomb ] 
-          b = bool^0 = smoosh<>::j.b (2) @[ !autokeeper ] 
+          !GND = bool^0 = smoosh<>::!GND (1) 
+          !Vdd = bool^0 = smoosh<>::!Vdd (2) 
+          a = bool^0 = smoosh<>::j.a (3) @[ iscomb ] 
+          b = bool^0 = smoosh<>::j.b (4) @[ !autokeeper ] 
         )
         Created state:
         process instance pool:
         1	smoosh<>::j
         2	smoosh<>::k
         bool instance pool:
-        1	smoosh<>::j.a @[ iscomb ]
-        2	smoosh<>::j.b @[ !autokeeper ]
+        1	smoosh<>::!GND
+        2	smoosh<>::!Vdd
+        3	smoosh<>::j.a @[ iscomb ]
+        4	smoosh<>::j.b @[ !autokeeper ]
         bool port aliases:
-        1: smoosh<>::j.a = smoosh<>::k.a @[ iscomb ]
-        2: smoosh<>::j.b = smoosh<>::k.b @[ !autokeeper ]
+        1: smoosh<>::j.!GND = smoosh<>::k.!GND = smoosh<>::!GND
+        2: smoosh<>::j.!Vdd = smoosh<>::k.!Vdd = smoosh<>::!Vdd
+        3: smoosh<>::j.a = smoosh<>::k.a @[ iscomb ]
+        4: smoosh<>::j.b = smoosh<>::k.b @[ !autokeeper ]
       }
       }
 
     twist = process-definition (defined) twist(
+        bool<> !GND
+        bool<> !Vdd
         inv<> f
         inv2<> g
       )
       In definition "twist", we have: {
       Instances:
+        !GND = bool<> twist::!GND
+        !Vdd = bool<> twist::!Vdd
         f = inv<> twist::f
         g = inv2<> twist::g
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           inv<> f
           inv2<> g
         )
         f.a = g.b;
         f.b = g.a;
       footprint: {
+        !GND = bool^0 = twist<>::!GND (1) 
+        !Vdd = bool^0 = twist<>::!Vdd (2) 
         f = process inv<>^0 = twist<>::f (1) (
-          a = bool^0 = twist<>::f.a (1) @[ iscomb !autokeeper ] 
-          b = bool^0 = twist<>::f.b (2) 
+          !GND = bool^0 = twist<>::!GND (1) 
+          !Vdd = bool^0 = twist<>::!Vdd (2) 
+          a = bool^0 = twist<>::f.a (3) @[ iscomb !autokeeper ] 
+          b = bool^0 = twist<>::f.b (4) 
         )
         g = process inv2<>^0 = twist<>::g (2) (
-          a = bool^0 = twist<>::f.b (2) 
-          b = bool^0 = twist<>::f.a (1) @[ iscomb !autokeeper ] 
+          !GND = bool^0 = twist<>::!GND (1) 
+          !Vdd = bool^0 = twist<>::!Vdd (2) 
+          a = bool^0 = twist<>::f.b (4) 
+          b = bool^0 = twist<>::f.a (3) @[ iscomb !autokeeper ] 
         )
         Created state:
         process instance pool:
         1	twist<>::f
         2	twist<>::g
         bool instance pool:
-        1	twist<>::f.a @[ iscomb !autokeeper ]
-        2	twist<>::f.b
+        1	twist<>::!GND
+        2	twist<>::!Vdd
+        3	twist<>::f.a @[ iscomb !autokeeper ]
+        4	twist<>::f.b
         bool port aliases:
-        1: twist<>::f.a = twist<>::g.b @[ iscomb !autokeeper ]
-        2: twist<>::f.b = twist<>::g.a
+        1: twist<>::f.!GND = twist<>::g.!GND = twist<>::!GND
+        2: twist<>::f.!Vdd = twist<>::g.!Vdd = twist<>::!Vdd
+        3: twist<>::f.a = twist<>::g.b @[ iscomb !autokeeper ]
+        4: twist<>::f.b = twist<>::g.a
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     sh1t = deep<> sh1t
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   sh1t = process deep<>^0 = sh1t (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     x = process multi_inv<>^0 = sh1t.x (2) (
+      !GND = bool^0 = !GND (1) 
+      !Vdd = bool^0 = !Vdd (2) 
       s = process inv<>^1
         {
           [0] = sh1t.x.s[0] (3) (
-            a = bool^0 = sh1t.x.s[0].a (1) @[ iscomb ] 
-            b = bool^0 = sh1t.x.s[0].b (2) @[ !autokeeper ] 
+            !GND = bool^0 = !GND (1) 
+            !Vdd = bool^0 = !Vdd (2) 
+            a = bool^0 = sh1t.x.s[0].a (3) @[ iscomb ] 
+            b = bool^0 = sh1t.x.s[0].b (4) @[ !autokeeper ] 
           )
           [1] = sh1t.x.s[1] (4) (
-            a = bool^0 = sh1t.x.s[1].a (3) @[ iscomb !autokeeper ] 
-            b = bool^0 = sh1t.x.s[1].b (4) 
+            !GND = bool^0 = !GND (1) 
+            !Vdd = bool^0 = !Vdd (2) 
+            a = bool^0 = sh1t.x.s[1].a (5) @[ iscomb !autokeeper ] 
+            b = bool^0 = sh1t.x.s[1].b (6) 
           )
         }
       t = process inv2<>^1
         {
           [0] = sh1t.x.t[0] (5) (
-            a = bool^0 = sh1t.x.s[0].a (1) @[ iscomb ] 
-            b = bool^0 = sh1t.x.s[0].b (2) @[ !autokeeper ] 
+            !GND = bool^0 = !GND (1) 
+            !Vdd = bool^0 = !Vdd (2) 
+            a = bool^0 = sh1t.x.s[0].a (3) @[ iscomb ] 
+            b = bool^0 = sh1t.x.s[0].b (4) @[ !autokeeper ] 
           )
           [1] = sh1t.x.t[1] (6) (
-            a = bool^0 = sh1t.x.s[1].b (4) 
-            b = bool^0 = sh1t.x.s[1].a (3) @[ iscomb !autokeeper ] 
+            !GND = bool^0 = !GND (1) 
+            !Vdd = bool^0 = !Vdd (2) 
+            a = bool^0 = sh1t.x.s[1].b (6) 
+            b = bool^0 = sh1t.x.s[1].a (5) @[ iscomb !autokeeper ] 
           )
         }
     )
     y = process multi_inv<>^0 = sh1t.y (7) (
+      !GND = bool^0 = !GND (1) 
+      !Vdd = bool^0 = !Vdd (2) 
       s = process inv<>^1
         {
           [0] = sh1t.y.s[0] (8) (
-            a = bool^0 = sh1t.y.s[0].a (5) @[ iscomb ] 
-            b = bool^0 = sh1t.y.s[0].b (6) 
+            !GND = bool^0 = !GND (1) 
+            !Vdd = bool^0 = !Vdd (2) 
+            a = bool^0 = sh1t.y.s[0].a (7) @[ iscomb ] 
+            b = bool^0 = sh1t.y.s[0].b (8) 
           )
           [1] = sh1t.y.s[1] (9) (
-            a = bool^0 = sh1t.y.s[1].a (7) @[ iscomb ] 
-            b = bool^0 = sh1t.y.s[1].b (8) 
+            !GND = bool^0 = !GND (1) 
+            !Vdd = bool^0 = !Vdd (2) 
+            a = bool^0 = sh1t.y.s[1].a (9) @[ iscomb ] 
+            b = bool^0 = sh1t.y.s[1].b (10) 
           )
         }
       t = process inv2<>^1
         {
           [0] = sh1t.y.t[0] (10) (
-            a = bool^0 = sh1t.y.t[0].a (9) 
-            b = bool^0 = sh1t.y.t[0].b (10) @[ !autokeeper ] 
+            !GND = bool^0 = !GND (1) 
+            !Vdd = bool^0 = !Vdd (2) 
+            a = bool^0 = sh1t.y.t[0].a (11) 
+            b = bool^0 = sh1t.y.t[0].b (12) @[ !autokeeper ] 
           )
           [1] = sh1t.y.t[1] (11) (
-            a = bool^0 = sh1t.y.t[1].a (11) 
-            b = bool^0 = sh1t.y.t[1].b (12) @[ !autokeeper ] 
+            !GND = bool^0 = !GND (1) 
+            !Vdd = bool^0 = !Vdd (2) 
+            a = bool^0 = sh1t.y.t[1].a (13) 
+            b = bool^0 = sh1t.y.t[1].b (14) @[ !autokeeper ] 
           )
         }
     )
@@ -502,16 +680,18 @@ footprint: {
   10	sh1t.y.t[0]
   11	sh1t.y.t[1]
   bool instance pool:
-  1	sh1t.x.s[0].a @[ iscomb ]
-  2	sh1t.x.s[0].b @[ !autokeeper ]
-  3	sh1t.x.s[1].a @[ iscomb !autokeeper ]
-  4	sh1t.x.s[1].b
-  5	sh1t.y.s[0].a @[ iscomb ]
-  6	sh1t.y.s[0].b
-  7	sh1t.y.s[1].a @[ iscomb ]
-  8	sh1t.y.s[1].b
-  9	sh1t.y.t[0].a
-  10	sh1t.y.t[0].b @[ !autokeeper ]
-  11	sh1t.y.t[1].a
-  12	sh1t.y.t[1].b @[ !autokeeper ]
+  1	!GND
+  2	!Vdd
+  3	sh1t.x.s[0].a @[ iscomb ]
+  4	sh1t.x.s[0].b @[ !autokeeper ]
+  5	sh1t.x.s[1].a @[ iscomb !autokeeper ]
+  6	sh1t.x.s[1].b
+  7	sh1t.y.s[0].a @[ iscomb ]
+  8	sh1t.y.s[0].b
+  9	sh1t.y.s[1].a @[ iscomb ]
+  10	sh1t.y.s[1].b
+  11	sh1t.y.t[0].a
+  12	sh1t.y.t[0].b @[ !autokeeper ]
+  13	sh1t.y.t[1].a
+  14	sh1t.y.t[1].b @[ !autokeeper ]
 }

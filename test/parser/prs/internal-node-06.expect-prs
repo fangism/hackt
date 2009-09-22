@@ -1,1 +1,3 @@
 ("A.x" & "A.y") & "A.w" -> "A.w"-
+= "!GND" "A.!GND"
+= "!Vdd" "A.!Vdd"

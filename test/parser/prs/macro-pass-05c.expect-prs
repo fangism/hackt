@@ -1,1 +1,3 @@
 passn<44,3>("x.g", "x.s", "x.d")
+= "!GND" "x.!GND"
+= "!Vdd" "x.!Vdd"

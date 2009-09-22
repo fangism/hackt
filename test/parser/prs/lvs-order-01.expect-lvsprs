@@ -1,1 +1,3 @@
 order("foo.f", "foo.e", "foo.d", "foo.c", "foo.b", "foo.a")
+connect "!GND" "foo.!GND"
+connect "!Vdd" "foo.!Vdd"

@@ -2,41 +2,43 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	sh1t	deepest<>
 	process: 2,3,4,5,6
-	bool: 1,2,3,4
+	bool: 1,2,3,4,5,6
 2	(top)	-	2	sh1t.y	deeper<>
 	process: 7,8,3,4,5,6
-	bool: 5,6,1,2,3,4
+	bool: 1,2,7,8,3,4,5,6
 3	(top)	-	3	sh1t.y.d[0]	deep<>
 	process: 4,10
-	bool: 1,2,9,10
+	bool: 1,2,3,4,11,12
 4	(top)	-	4	sh1t.y.d[0].x	inv<>
-	bool: 1,2
+	bool: 1,2,3,4
 5	(top)	-	5	sh1t.y.d[1]	deep<>
 	process: 6,11
-	bool: 3,4,11,12
+	bool: 1,2,5,6,13,14
 6	(top)	-	6	sh1t.y.d[1].x	inv<>
-	bool: 3,4
+	bool: 1,2,5,6
 7	process	2	1	sh1t.y.e	deep<>
 	process: 8,9
-	bool: 5,6,7,8
+	bool: 1,2,7,8,9,10
 8	process	2	2	sh1t.y.e.x	inv<>
-	bool: 5,6
+	bool: 1,2,7,8
 9	process	7	2	sh1t.y.e.y	inv<>
-	bool: 7,8
+	bool: 1,2,9,10
 10	process	3	2	sh1t.y.d[0].y	inv<>
-	bool: 9,10
+	bool: 1,2,11,12
 11	process	5	2	sh1t.y.d[1].y	inv<>
-	bool: 11,12
+	bool: 1,2,13,14
 [global bool entries]
-1	(top)	-	1	sh1t.y.d[0].x.a	 @[ iscomb !autokeeper ]
-2	(top)	-	2	sh1t.y.d[0].x.b	 @[ iscomb ]
-3	(top)	-	3	sh1t.y.d[1].x.a	 @[ iscomb !autokeeper ]
-4	(top)	-	4	sh1t.y.d[1].x.b	
-5	process	2	1	sh1t.y.e.x.a	 @[ iscomb !autokeeper ]
-6	process	2	2	sh1t.y.e.x.b	
-7	process	7	3	sh1t.y.e.y.a	 @[ iscomb ]
-8	process	7	4	sh1t.y.e.y.b	 @[ !autokeeper ]
-9	process	3	3	sh1t.y.d[0].y.a	 @[ iscomb ]
-10	process	3	4	sh1t.y.d[0].y.b	 @[ !autokeeper ]
-11	process	5	3	sh1t.y.d[1].y.a	 @[ iscomb ]
-12	process	5	4	sh1t.y.d[1].y.b	 @[ !autokeeper ]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	sh1t.y.d[0].x.a	 @[ iscomb !autokeeper ]
+4	(top)	-	4	sh1t.y.d[0].x.b	 @[ iscomb ]
+5	(top)	-	5	sh1t.y.d[1].x.a	 @[ iscomb !autokeeper ]
+6	(top)	-	6	sh1t.y.d[1].x.b	
+7	process	2	3	sh1t.y.e.x.a	 @[ iscomb !autokeeper ]
+8	process	2	4	sh1t.y.e.x.b	
+9	process	7	5	sh1t.y.e.y.a	 @[ iscomb ]
+10	process	7	6	sh1t.y.e.y.b	 @[ !autokeeper ]
+11	process	3	5	sh1t.y.d[0].y.a	 @[ iscomb ]
+12	process	3	6	sh1t.y.d[0].y.b	 @[ !autokeeper ]
+13	process	5	5	sh1t.y.d[1].y.a	 @[ iscomb ]
+14	process	5	6	sh1t.y.d[1].y.b	 @[ !autokeeper ]

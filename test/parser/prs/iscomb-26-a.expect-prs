@@ -1,4 +1,10 @@
 @ "foo.bar.l.e" iscomb
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"
+= "!GND" "foo.bar.!GND"
+= "!Vdd" "foo.bar.!Vdd"
+= "!GND" "foo.bar.m.!GND"
+= "!Vdd" "foo.bar.m.!Vdd"
 = "foo.bar.l.e" "foo.bar.m.l.e"
 = "foo.bar.l.f" "foo.bar.m.l.f"
 = "foo.bar.l.t" "foo.bar.m.l.t"

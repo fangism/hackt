@@ -1,7 +1,9 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	X	source_e<2><2>
-	bool: 1,2
+	bool: 1,2,3,4
 [global bool entries]
-1	(top)	-	1	X.b[0]	
-2	(top)	-	2	X.b[1]	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	X.b[0]	
+4	(top)	-	4	X.b[1]	

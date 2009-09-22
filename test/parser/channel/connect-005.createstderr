@@ -7,55 +7,82 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
-	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	287
-	12	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	323
-	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	108
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	319
+	19	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	409
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     hanging = process-definition (defined) hanging(
+        bool<> !GND
+        bool<> !Vdd
         chan?(bool<>) x
       )
       In definition "hanging", we have: {
       Instances:
+        !GND = bool<> hanging::!GND
+        !Vdd = bool<> hanging::!Vdd
         x = chan?(bool<>) hanging::x
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?(bool<>) x
         )
       footprint: {
+        !GND = bool^0 = hanging<>::!GND (1) 
+        !Vdd = bool^0 = hanging<>::!Vdd (2) 
         x = channel chan?(bool<>)^0 = hanging<>::x (1) 
         Created state:
         channel instance pool:
         1	hanging<>::x
+        bool instance pool:
+        1	hanging<>::!GND
+        2	hanging<>::!Vdd
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     folder = hanging<> folder
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   folder = process hanging<>^0 = folder (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     x = channel chan?(bool<>)^0 = folder.x (1) 
   )
   Created state:
@@ -63,4 +90,7 @@ footprint: {
   1	folder
   channel instance pool:
   1	folder.x
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

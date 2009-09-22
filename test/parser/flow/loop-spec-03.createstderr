@@ -3,50 +3,60 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
-	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	12	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	SPCdloop	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	22	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	37
-	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	493
-	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	407
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	SPCdloop	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	32	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	37
+	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	525
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	493
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
@@ -54,15 +64,21 @@ In namespace "", we have: {
     spec_test = process-definition (defined) spec_test<
       pint<> N
       >(
+        bool<> !GND
+        bool<> !Vdd
         bool<> x[0..N-1][0..2-1]
       )
       In definition "spec_test", we have: {
       Parameters:
         N = pint<> spec_test::N
       Instances:
+        !GND = bool<> spec_test::!GND
+        !Vdd = bool<> spec_test::!Vdd
         x = bool<> spec_test::x^2
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> x[0..N-1][0..2-1]
         )
       spec:
@@ -71,24 +87,28 @@ In namespace "", we have: {
         )
       footprint collection: {
         <3> {
+          !GND = bool^0 = spec_test<3>::!GND (1) 
+          !Vdd = bool^0 = spec_test<3>::!Vdd (2) 
           N = pint^0 value: 3
           x = bool^2
             {
-              [0][0] = spec_test<3>::x[0][0] (1) 
-              [0][1] = spec_test<3>::x[0][1] (2) 
-              [1][0] = spec_test<3>::x[1][0] (3) 
-              [1][1] = spec_test<3>::x[1][1] (4) 
-              [2][0] = spec_test<3>::x[2][0] (5) 
-              [2][1] = spec_test<3>::x[2][1] (6) 
+              [0][0] = spec_test<3>::x[0][0] (3) 
+              [0][1] = spec_test<3>::x[0][1] (4) 
+              [1][0] = spec_test<3>::x[1][0] (5) 
+              [1][1] = spec_test<3>::x[1][1] (6) 
+              [2][0] = spec_test<3>::x[2][0] (7) 
+              [2][1] = spec_test<3>::x[2][1] (8) 
             }
           Created state:
           bool instance pool:
-          1	spec_test<3>::x[0][0]
-          2	spec_test<3>::x[0][1]
-          3	spec_test<3>::x[1][0]
-          4	spec_test<3>::x[1][1]
-          5	spec_test<3>::x[2][0]
-          6	spec_test<3>::x[2][1]
+          1	spec_test<3>::!GND
+          2	spec_test<3>::!Vdd
+          3	spec_test<3>::x[0][0]
+          4	spec_test<3>::x[0][1]
+          5	spec_test<3>::x[1][0]
+          6	spec_test<3>::x[1][1]
+          7	spec_test<3>::x[2][0]
+          8	spec_test<3>::x[2][1]
           resolved specs:
           mk_exclhi({x[0][0],x[0][1]})
           mk_exclhi({x[1][0],x[1][1]})
@@ -98,29 +118,37 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     X = spec_test<3> X
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   X = process spec_test<3>^0 = X (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     x = bool^2
       {
-        [0][0] = X.x[0][0] (1) 
-        [0][1] = X.x[0][1] (2) 
-        [1][0] = X.x[1][0] (3) 
-        [1][1] = X.x[1][1] (4) 
-        [2][0] = X.x[2][0] (5) 
-        [2][1] = X.x[2][1] (6) 
+        [0][0] = X.x[0][0] (3) 
+        [0][1] = X.x[0][1] (4) 
+        [1][0] = X.x[1][0] (5) 
+        [1][1] = X.x[1][1] (6) 
+        [2][0] = X.x[2][0] (7) 
+        [2][1] = X.x[2][1] (8) 
       }
   )
   Created state:
   process instance pool:
   1	X
   bool instance pool:
-  1	X.x[0][0]
-  2	X.x[0][1]
-  3	X.x[1][0]
-  4	X.x[1][1]
-  5	X.x[2][0]
-  6	X.x[2][1]
+  1	!GND
+  2	!Vdd
+  3	X.x[0][0]
+  4	X.x[0][1]
+  5	X.x[1][0]
+  6	X.x[1][1]
+  7	X.x[2][0]
+  8	X.x[2][1]
 }

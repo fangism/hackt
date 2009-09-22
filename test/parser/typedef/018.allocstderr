@@ -1,17 +1,19 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	P	baz<4>
-	bool: 1,2,3,4,5,6
+	bool: 1,2,3,4,5,6,7,8
 2	(top)	-	2	Q	baz<3>
-	bool: 7,1,8,9,10
+	bool: 1,2,9,3,10,11,12
 [global bool entries]
-1	(top)	-	1	P.x	
-2	(top)	-	2	P.y	
-3	(top)	-	3	P.z[0]	
-4	(top)	-	4	P.z[1]	
-5	(top)	-	5	P.z[2]	
-6	(top)	-	6	P.z[3]	
-7	(top)	-	7	Q.x	
-8	(top)	-	8	Q.z[0]	
-9	(top)	-	9	Q.z[1]	
-10	(top)	-	10	Q.z[2]	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	P.x	
+4	(top)	-	4	P.y	
+5	(top)	-	5	P.z[0]	
+6	(top)	-	6	P.z[1]	
+7	(top)	-	7	P.z[2]	
+8	(top)	-	8	P.z[3]	
+9	(top)	-	9	Q.x	
+10	(top)	-	10	Q.z[0]	
+11	(top)	-	11	Q.z[1]	
+12	(top)	-	12	Q.z[2]	

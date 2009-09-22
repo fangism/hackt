@@ -3,67 +3,83 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	141
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	157
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	43
-	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	43
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	43
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	35	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
-	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	43
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	431
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	436
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     yoyodyne = process-definition (defined) yoyodyne(
+        bool<> !GND
+        bool<> !Vdd
         bool<> foo
         bool<> bar
       )
       In definition "yoyodyne", we have: {
       Instances:
+        !GND = bool<> yoyodyne::!GND
+        !Vdd = bool<> yoyodyne::!Vdd
         bar = bool<> yoyodyne::bar
         bar2 = bool<> yoyodyne::bar2
         foo = bool<> yoyodyne::foo
         foo2 = bool<> yoyodyne::foo2
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> foo
           bool<> bar
         )
@@ -77,14 +93,18 @@ In namespace "", we have: {
         foo -> bar-
         ~foo -> bar+
       footprint: {
-        bar = bool^0 = yoyodyne<>::bar (2) @[ may_interfere ] 
-        bar2 = bool^0 = yoyodyne<>::bar (2) @[ may_interfere ] 
-        foo = bool^0 = yoyodyne<>::foo (1) @[ may_interfere ] 
-        foo2 = bool^0 = yoyodyne<>::foo (1) @[ may_interfere ] 
+        !GND = bool^0 = yoyodyne<>::!GND (1) 
+        !Vdd = bool^0 = yoyodyne<>::!Vdd (2) 
+        bar = bool^0 = yoyodyne<>::bar (4) @[ may_interfere ] 
+        bar2 = bool^0 = yoyodyne<>::bar (4) @[ may_interfere ] 
+        foo = bool^0 = yoyodyne<>::foo (3) @[ may_interfere ] 
+        foo2 = bool^0 = yoyodyne<>::foo (3) @[ may_interfere ] 
         Created state:
         bool instance pool:
-        1	yoyodyne<>::foo @[ may_interfere ]
-        2	yoyodyne<>::bar @[ may_interfere ]
+        1	yoyodyne<>::!GND
+        2	yoyodyne<>::!Vdd
+        3	yoyodyne<>::foo @[ may_interfere ]
+        4	yoyodyne<>::bar @[ may_interfere ]
         resolved prs:
         foo -> bar-
         ~foo -> bar+
@@ -92,18 +112,26 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     wee = yoyodyne<> wee
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   wee = process yoyodyne<>^0 = wee (1) (
-    foo = bool^0 = wee.foo (1) @[ may_interfere ] 
-    bar = bool^0 = wee.bar (2) @[ may_interfere ] 
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    foo = bool^0 = wee.foo (3) @[ may_interfere ] 
+    bar = bool^0 = wee.bar (4) @[ may_interfere ] 
   )
   Created state:
   process instance pool:
   1	wee
   bool instance pool:
-  1	wee.foo @[ may_interfere ]
-  2	wee.bar @[ may_interfere ]
+  1	!GND
+  2	!Vdd
+  3	wee.foo @[ may_interfere ]
+  4	wee.bar @[ may_interfere ]
 }

@@ -5,82 +5,94 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	150
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
-	7	##ADDR##	nodeplch	0	#HEAD#	#TAIL#	21
-	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	166
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
 	11	##ADDR##	nodeplch	0	#HEAD#	#TAIL#	21
-	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
-	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	nodeplch	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	portscop	0	#HEAD#	#TAIL#	36
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
-	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	28	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
-	30	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	41	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	25
-	43	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	50	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
-	51	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	25
-	52	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	53	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	55	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	56	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	59	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	60	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	664
-	64	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	65	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	424
-	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	35	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
+	37	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	48	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	25
+	50	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	57	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
+	58	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	25
+	59	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	66	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	footprnt	0	#HEAD#	#TAIL#	696
+	71	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	footprnt	0	#HEAD#	#TAIL#	510
+	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     bogus = process-definition (defined) bogus(
+        bool<> !GND
+        bool<> !Vdd
         bool<> x
         bool<> y
         bool<> e[0..1]
@@ -88,6 +100,8 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Instances:
+        !GND = bool<> bogus::!GND
+        !Vdd = bool<> bogus::!Vdd
         e = bool<> bogus::e^1
         en = bool<> bogus::en
         q = -node-<> bogus::q^1
@@ -97,6 +111,8 @@ In namespace "", we have: {
         z = -node-<> bogus::z
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> x
           bool<> y
           bool<> e[0..1]
@@ -112,23 +128,27 @@ In namespace "", we have: {
         ~@q[1] & y -> w-
         ~en -> w+
       footprint: {
+        !GND = bool^0 = bogus<>::!GND (1) 
+        !Vdd = bool^0 = bogus<>::!Vdd (2) 
         e = bool^1
           {
-            [0] = bogus<>::e[0] (5) 
-            [1] = bogus<>::e[1] (6) 
+            [0] = bogus<>::e[0] (7) 
+            [1] = bogus<>::e[1] (8) 
           }
-        en = bool^0 = bogus<>::en (4) 
-        w = bool^0 = bogus<>::w (3) 
-        x = bool^0 = bogus<>::x (1) 
-        y = bool^0 = bogus<>::y (2) 
+        en = bool^0 = bogus<>::en (6) 
+        w = bool^0 = bogus<>::w (5) 
+        x = bool^0 = bogus<>::x (3) 
+        y = bool^0 = bogus<>::y (4) 
         Created state:
         bool instance pool:
-        1	bogus<>::x
-        2	bogus<>::y
-        3	bogus<>::w
-        4	bogus<>::en
-        5	bogus<>::e[0]
-        6	bogus<>::e[1]
+        1	bogus<>::!GND
+        2	bogus<>::!Vdd
+        3	bogus<>::x
+        4	bogus<>::y
+        5	bogus<>::w
+        6	bogus<>::en
+        7	bogus<>::e[0]
+        8	bogus<>::e[1]
         resolved prs:
         (en & e[0]) & x -> w-
         (en & e[1]) & y -> w-
@@ -141,27 +161,35 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     A = bogus<> A
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   A = process bogus<>^0 = A (1) (
-    x = bool^0 = A.x (1) 
-    y = bool^0 = A.y (2) 
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    x = bool^0 = A.x (3) 
+    y = bool^0 = A.y (4) 
     e = bool^1
       {
-        [0] = A.e[0] (3) 
-        [1] = A.e[1] (4) 
+        [0] = A.e[0] (5) 
+        [1] = A.e[1] (6) 
       }
-    w = bool^0 = A.w (5) 
+    w = bool^0 = A.w (7) 
   )
   Created state:
   process instance pool:
   1	A
   bool instance pool:
-  1	A.x
-  2	A.y
-  3	A.e[0]
-  4	A.e[1]
-  5	A.w
+  1	!GND
+  2	!Vdd
+  3	A.x
+  4	A.y
+  5	A.e[0]
+  6	A.e[1]
+  7	A.w
 }

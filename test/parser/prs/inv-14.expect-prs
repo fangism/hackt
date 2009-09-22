@@ -1,2 +1,4 @@
 "__inv__.a" -> "__inv__.b"-
 ~"__inv__.a" -> "__inv__.b"+
+= "!GND" "__inv__.!GND"
+= "!Vdd" "__inv__.!Vdd"

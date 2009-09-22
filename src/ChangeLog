@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-02:
+	  A few bug fixes from previous revision:
+		Resolve canonical process types before handling
+		automatic implicit connections, 
+		check meta-type process first, 
+		check for type-completeness before instantiating.
+	  Updated *vast* majority of regression test expects.  
+	  Most of remaining differences are in prsim tests, which
+		now have two new top-level nodes !Vdd and !GND that are X.
+		These will be resolved next.
+
+
 2009-09-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-supply-01-01:

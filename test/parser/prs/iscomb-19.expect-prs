@@ -11,7 +11,17 @@
 @ "foo.x[2].a" iscomb
 @ "foo.z" !autokeeper
 @ "foo.x[3].a" iscomb
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"
 = "foo.x[0].a" "foo.p"
 = "foo.x[0].b" "foo.q"
+= "!GND" "foo.x[0].!GND"
+= "!Vdd" "foo.x[0].!Vdd"
+= "!GND" "foo.x[1].!GND"
+= "!Vdd" "foo.x[1].!Vdd"
 = "foo.y" "foo.x[1].a"
+= "!GND" "foo.x[2].!GND"
+= "!Vdd" "foo.x[2].!Vdd"
 = "foo.z" "foo.x[2].b"
+= "!GND" "foo.x[3].!GND"
+= "!Vdd" "foo.x[3].!Vdd"

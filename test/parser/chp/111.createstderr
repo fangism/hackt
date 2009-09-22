@@ -3,53 +3,69 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	103
-	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	119
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	20	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	27	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	266
+	28	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  0 instantiation-collections
+  2 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     buffer = process-definition (defined) buffer(
+        bool<> !GND
+        bool<> !Vdd
         chan?(bool<>) S
         chan!(bool<>) T
       )
       In definition "buffer", we have: {
       Instances:
+        !GND = bool<> buffer::!GND
+        !Vdd = bool<> buffer::!Vdd
         S = chan?(bool<>) buffer::S
         T = chan!(bool<>) buffer::T
         b = bool<> buffer::b
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?(bool<>) S
           chan!(bool<>) T
         )
@@ -68,7 +84,16 @@ In namespace "", we have: {
         }
       }
 
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  Created state:
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

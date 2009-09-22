@@ -1,7 +1,9 @@
 Variables: 
-bool[1]: "a" 
-bool[2]: "b" 
-bool[3]: "c" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "a" 
+bool[4]: "b" 
+bool[5]: "c" 
 
 Event graph: 
 event[0]: fork: null, #pred: 0, succ: 1 
@@ -15,7 +17,7 @@ event[5]: assign: c := false, pid: 0, #pred: 1, succ: 4
 event[6]: assign: b := true, pid: 0, #pred: 1, succ: 5 
 event[7]: assign: b := false, pid: 0, #pred: 1, succ: 4 
 event[8]: select: [ a -> ... [] ~a -> ... ], pid: 0, #pred: 1, succ: 6 7 
-bool deps: 1 
+bool deps: 3 
 event[9]: assign: a := true, pid: 0, #pred: 1, succ: 8 
 event[10]: join: , pid: 0, #pred: 3, succ: 9 
 event[11]: assign: a := false, pid: 0, #pred: 1, succ: 10 

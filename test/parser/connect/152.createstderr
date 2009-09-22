@@ -3,84 +3,112 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	93
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
-	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
-	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	407
-	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	109
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	414
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	493
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     top_type = process-definition (defined) top_type(
+        bool<> !GND
+        bool<> !Vdd
         bool<> co[0..2][0..0][0..1]
       )
       In definition "top_type", we have: {
       Instances:
+        !GND = bool<> top_type::!GND
+        !Vdd = bool<> top_type::!Vdd
         co = bool<> top_type::co^3
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> co[0..2][0..0][0..1]
         )
       footprint: {
+        !GND = bool^0 = top_type<>::!GND (1) 
+        !Vdd = bool^0 = top_type<>::!Vdd (2) 
         co = bool^3
           {
-            [0][0][0] = top_type<>::co[0][0][0] (1) 
-            [0][0][1] = top_type<>::co[0][0][1] (2) 
-            [1][0][0] = top_type<>::co[1][0][0] (3) 
-            [1][0][1] = top_type<>::co[1][0][1] (4) 
-            [2][0][0] = top_type<>::co[2][0][0] (5) 
-            [2][0][1] = top_type<>::co[2][0][1] (6) 
+            [0][0][0] = top_type<>::co[0][0][0] (3) 
+            [0][0][1] = top_type<>::co[0][0][1] (4) 
+            [1][0][0] = top_type<>::co[1][0][0] (5) 
+            [1][0][1] = top_type<>::co[1][0][1] (6) 
+            [2][0][0] = top_type<>::co[2][0][0] (7) 
+            [2][0][1] = top_type<>::co[2][0][1] (8) 
           }
         Created state:
         bool instance pool:
-        1	top_type<>::co[0][0][0]
-        2	top_type<>::co[0][0][1]
-        3	top_type<>::co[1][0][0]
-        4	top_type<>::co[1][0][1]
-        5	top_type<>::co[2][0][0]
-        6	top_type<>::co[2][0][1]
+        1	top_type<>::!GND
+        2	top_type<>::!Vdd
+        3	top_type<>::co[0][0][0]
+        4	top_type<>::co[0][0][1]
+        5	top_type<>::co[1][0][0]
+        6	top_type<>::co[1][0][1]
+        7	top_type<>::co[2][0][0]
+        8	top_type<>::co[2][0][1]
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     top = top_type<> top
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   top = process top_type<>^0 = top (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     co = bool^3
       {
-        [0][0][0] = top.co[0][0][0] (1) 
-        [0][0][1] = top.co[0][0][1] (2) 
-        [1][0][0] = top.co[1][0][0] (3) 
-        [1][0][1] = top.co[1][0][1] (4) 
-        [2][0][0] = top.co[2][0][0] (5) 
-        [2][0][1] = top.co[2][0][1] (6) 
+        [0][0][0] = top.co[0][0][0] (3) 
+        [0][0][1] = top.co[0][0][1] (4) 
+        [1][0][0] = top.co[1][0][0] (5) 
+        [1][0][1] = top.co[1][0][1] (6) 
+        [2][0][0] = top.co[2][0][0] (7) 
+        [2][0][1] = top.co[2][0][1] (8) 
       }
   )
   Created state:
   process instance pool:
   1	top
   bool instance pool:
-  1	top.co[0][0][0]
-  2	top.co[0][0][1]
-  3	top.co[1][0][0]
-  4	top.co[1][0][1]
-  5	top.co[2][0][0]
-  6	top.co[2][0][1]
+  1	!GND
+  2	!Vdd
+  3	top.co[0][0][0]
+  4	top.co[0][0][1]
+  5	top.co[1][0][0]
+  6	top.co[1][0][1]
+  7	top.co[2][0][0]
+  8	top.co[2][0][1]
 }

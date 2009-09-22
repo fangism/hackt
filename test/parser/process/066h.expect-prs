@@ -1,0 +1,8 @@
+= "!GND" "poo.!GND"
+= "!Vdd" "poo.!Vdd"
+= "!GND" "poo.x.!GND"
+= "!Vdd" "poo.x.!Vdd"
+= "!GND" "poo.x.a.!GND"
+= "!Vdd" "poo.x.a.!Vdd"
+= "!GND" "poo.x.b.!GND"
+= "!Vdd" "poo.x.b.!Vdd"

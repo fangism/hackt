@@ -1,5 +1,7 @@
 Variables: 
-bool[1]: "hall.lecture.x" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "hall.lecture.x" 
 chan[1]: "hall.lecture.B" 
 
 Event graph: 

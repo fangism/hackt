@@ -5,111 +5,132 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	48
-	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	20	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	367
-	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	24	##ADDR##	procdefn	0	#HEAD#	#TAIL#	185
-	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	28	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	29	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	35	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
-	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	48	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
-	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
-	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	62	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	66	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
-	68	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	69	##ADDR##	footprnt	0	#HEAD#	#TAIL#	630
-	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	73	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	74	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	75	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	76	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	77	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	78	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	79	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	80	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
-	81	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	82	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	83	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	84	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	85	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	86	##ADDR##	footprnt	0	#HEAD#	#TAIL#	468
-	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
+	30	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	201
+	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	34	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	37	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	42	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	44	##ADDR##	portscop	0	#HEAD#	#TAIL#	36
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	60	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	68	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	72	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	76	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	80	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	footprnt	0	#HEAD#	#TAIL#	824
+	82	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	83	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	85	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	87	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	88	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	90	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	92	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	93	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	95	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	40
+	96	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	98	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	99	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	100	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	101	##ADDR##	footprnt	0	#HEAD#	#TAIL#	554
+	102	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  5 instantiation-collections
+  7 instantiation-collections
   0 sub-namespaces
   2 definitions
   0 typedefs
   Definitions:
     inv = process-definition (defined) inv(
+        bool<> !GND
+        bool<> !Vdd
         bool<> a
         bool<> b
       )
       In definition "inv", we have: {
       Instances:
+        !GND = bool<> inv::!GND
+        !Vdd = bool<> inv::!Vdd
         a = bool<> inv::a
         b = bool<> inv::b
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> a
           bool<> b
         )
@@ -117,12 +138,16 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = inv<>::a (1) 
-        b = bool^0 = inv<>::b (2) 
+        !GND = bool^0 = inv<>::!GND (1) 
+        !Vdd = bool^0 = inv<>::!Vdd (2) 
+        a = bool^0 = inv<>::a (3) 
+        b = bool^0 = inv<>::b (4) 
         Created state:
         bool instance pool:
-        1	inv<>::a
-        2	inv<>::b
+        1	inv<>::!GND
+        2	inv<>::!Vdd
+        3	inv<>::a
+        4	inv<>::b
         resolved prs:
         a -> b-
         ~a -> b+
@@ -130,6 +155,8 @@ In namespace "", we have: {
       }
 
     wrap = process-definition (defined) wrap(
+        bool<> !GND
+        bool<> !Vdd
         bool<> w
         bool<> x
         bool<> y
@@ -137,6 +164,8 @@ In namespace "", we have: {
       )
       In definition "wrap", we have: {
       Instances:
+        !GND = bool<> wrap::!GND
+        !Vdd = bool<> wrap::!Vdd
         P = inv<> wrap::P
         Q = inv<> wrap::Q
         R = inv<> wrap::R
@@ -149,6 +178,8 @@ In namespace "", we have: {
         z = bool<> wrap::z
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> w
           bool<> x
           bool<> y
@@ -158,51 +189,63 @@ In namespace "", we have: {
         bool<> k
         bool<> l
         inv<> P
-        P (w, x);
+        P ( , , w, x);
         x@[iscomb]
         inv<> Q
-        Q (j, k);
+        Q ( , , j, k);
         y@[iscomb]
         inv<> R
-        R (k, l);
+        R ( , , k, l);
         l@[iscomb]
       footprint: {
+        !GND = bool^0 = wrap<>::!GND (1) 
+        !Vdd = bool^0 = wrap<>::!Vdd (2) 
         P = process inv<>^0 = wrap<>::P (1) (
-          a = bool^0 = wrap<>::w (1) 
-          b = bool^0 = wrap<>::x (2) @[ iscomb ] 
+          !GND = bool^0 = wrap<>::!GND (1) 
+          !Vdd = bool^0 = wrap<>::!Vdd (2) 
+          a = bool^0 = wrap<>::w (3) 
+          b = bool^0 = wrap<>::x (4) @[ iscomb ] 
         )
         Q = process inv<>^0 = wrap<>::Q (2) (
-          a = bool^0 = wrap<>::j (3) 
-          b = bool^0 = wrap<>::k (4) 
+          !GND = bool^0 = wrap<>::!GND (1) 
+          !Vdd = bool^0 = wrap<>::!Vdd (2) 
+          a = bool^0 = wrap<>::j (5) 
+          b = bool^0 = wrap<>::k (6) 
         )
         R = process inv<>^0 = wrap<>::R (3) (
-          a = bool^0 = wrap<>::k (4) 
-          b = bool^0 = wrap<>::l (5) @[ iscomb ] 
+          !GND = bool^0 = wrap<>::!GND (1) 
+          !Vdd = bool^0 = wrap<>::!Vdd (2) 
+          a = bool^0 = wrap<>::k (6) 
+          b = bool^0 = wrap<>::l (7) @[ iscomb ] 
         )
-        j = bool^0 = wrap<>::j (3) 
-        k = bool^0 = wrap<>::k (4) 
-        l = bool^0 = wrap<>::l (5) @[ iscomb ] 
-        w = bool^0 = wrap<>::w (1) 
-        x = bool^0 = wrap<>::x (2) @[ iscomb ] 
-        y = bool^0 = wrap<>::y (6) @[ iscomb ] 
-        z = bool^0 = wrap<>::z (7) 
+        j = bool^0 = wrap<>::j (5) 
+        k = bool^0 = wrap<>::k (6) 
+        l = bool^0 = wrap<>::l (7) @[ iscomb ] 
+        w = bool^0 = wrap<>::w (3) 
+        x = bool^0 = wrap<>::x (4) @[ iscomb ] 
+        y = bool^0 = wrap<>::y (8) @[ iscomb ] 
+        z = bool^0 = wrap<>::z (9) 
         Created state:
         process instance pool:
         1	wrap<>::P
         2	wrap<>::Q
         3	wrap<>::R
         bool instance pool:
-        1	wrap<>::w
-        2	wrap<>::x @[ iscomb ]
-        3	wrap<>::j
-        4	wrap<>::k
-        5	wrap<>::l @[ iscomb ]
-        6	wrap<>::y @[ iscomb ]
-        7	wrap<>::z
+        1	wrap<>::!GND
+        2	wrap<>::!Vdd
+        3	wrap<>::w
+        4	wrap<>::x @[ iscomb ]
+        5	wrap<>::j
+        6	wrap<>::k
+        7	wrap<>::l @[ iscomb ]
+        8	wrap<>::y @[ iscomb ]
+        9	wrap<>::z
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     a = bool<> a
     b = bool<> b
     c = bool<> c
@@ -211,22 +254,28 @@ In namespace "", we have: {
 }
 
 footprint: {
-  a = bool^0 = a (1) 
-  b = bool^0 = b (2) @[ iscomb ] 
-  c = bool^0 = c (3) @[ iscomb ] 
-  d = bool^0 = d (4) 
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  a = bool^0 = a (3) 
+  b = bool^0 = b (4) @[ iscomb ] 
+  c = bool^0 = c (5) @[ iscomb ] 
+  d = bool^0 = d (6) 
   present = process wrap<>^0 = present (1) (
-    w = bool^0 = a (1) 
-    x = bool^0 = b (2) @[ iscomb ] 
-    y = bool^0 = c (3) @[ iscomb ] 
-    z = bool^0 = d (4) 
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    w = bool^0 = a (3) 
+    x = bool^0 = b (4) @[ iscomb ] 
+    y = bool^0 = c (5) @[ iscomb ] 
+    z = bool^0 = d (6) 
   )
   Created state:
   process instance pool:
   1	present
   bool instance pool:
-  1	a
-  2	b @[ iscomb ]
-  3	c @[ iscomb ]
-  4	d
+  1	!GND
+  2	!Vdd
+  3	a
+  4	b @[ iscomb ]
+  5	c @[ iscomb ]
+  6	d
 }

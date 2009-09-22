@@ -1,4 +1,9 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	bar	foo<1><1>
+	bool: 1,2
 2	(top)	-	2	poo	foo<1><2>
+	bool: 1,2
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	

@@ -3,69 +3,85 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
-	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	12	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	17	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	28
-	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	29	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	142
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	28
-	31	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	28
-	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	38	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	36	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	28
+	38	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	39	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	28
-	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	545
-	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	45	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	28
+	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	577
+	48	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	436
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     sized_prs = process-definition (defined) sized_prs(
+        bool<> !GND
+        bool<> !Vdd
         bool<> a
         bool<> b
       )
       In definition "sized_prs", we have: {
       Instances:
+        !GND = bool<> sized_prs::!GND
+        !Vdd = bool<> sized_prs::!Vdd
         a = bool<> sized_prs::a
         b = bool<> sized_prs::b
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> a
           bool<> b
         )
@@ -77,12 +93,16 @@ In namespace "", we have: {
         a<30,3> -> b-
         ~a<30,3> -> b+
       footprint: {
-        a = bool^0 = sized_prs<>::a (1) 
-        b = bool^0 = sized_prs<>::b (2) 
+        !GND = bool^0 = sized_prs<>::!GND (1) 
+        !Vdd = bool^0 = sized_prs<>::!Vdd (2) 
+        a = bool^0 = sized_prs<>::a (3) 
+        b = bool^0 = sized_prs<>::b (4) 
         Created state:
         bool instance pool:
-        1	sized_prs<>::a
-        2	sized_prs<>::b
+        1	sized_prs<>::!GND
+        2	sized_prs<>::!Vdd
+        3	sized_prs<>::a
+        4	sized_prs<>::b
         resolved prs:
         a<10> -> b-
         ~a<15> -> b+
@@ -94,18 +114,26 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     z = sized_prs<> z
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   z = process sized_prs<>^0 = z (1) (
-    a = bool^0 = z.a (1) 
-    b = bool^0 = z.b (2) 
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    a = bool^0 = z.a (3) 
+    b = bool^0 = z.b (4) 
   )
   Created state:
   process instance pool:
   1	z
   bool instance pool:
-  1	z.a
-  2	z.b
+  1	!GND
+  2	!Vdd
+  3	z.a
+  4	z.b
 }
