@@ -13,7 +13,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	139
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	10	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	31	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
 	32	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	34	##ADDR##	procdefn	0	#HEAD#	#TAIL#	150
+	34	##ADDR##	procdefn	0	#HEAD#	#TAIL#	158
 	35	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	36	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	37	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27

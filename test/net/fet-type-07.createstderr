@@ -15,14 +15,15 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	42
-	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
+	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	42
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	19	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	42
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	443
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	42
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	443
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -39,8 +40,10 @@ In namespace "", we have: {
 }
 
 top-level prs:
+  {
   x<;hvt;svt> -> y-
   ~x<;hvt;svt> -> y+
+  }
 
 footprint: {
   !GND = bool^0 = !GND (1) 

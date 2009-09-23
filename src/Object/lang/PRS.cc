@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.37 2009/09/14 21:16:55 fang Exp $
+	$Id: PRS.cc,v 1.37.2.1 2009/09/23 06:20:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -239,8 +239,30 @@ rule_set::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-rule_set::dump(ostream& o, const rule_dump_context& c) const {
+rule_set::dump_rules(ostream& o, const rule_dump_context& c) const {
 	for_each(begin(), end(), rule::dumper(o, c));
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Includes optional supply overrides.  
+ */
+ostream&
+rule_set::dump(ostream& o, const rule_dump_context& c) const {
+#if PRS_SUPPLY_OVERRIDES
+	if (GND || Vdd) {
+		expr_dump_context edc(c);
+		o << '<';
+		if (Vdd)	Vdd->dump(o << "!Vdd=", edc);
+		o << ',';
+		if (GND)	GND->dump(o << "!GND=", edc);
+		o << "> ";
+	}
+#endif
+	o << '{' << endl;
+	dump_rules(o, c);
+	o << auto_indent << '}';
 	return o;
 }
 
@@ -324,6 +346,12 @@ rule_set::unroll(const unroll_context& c, const node_pool_type& np,
 void
 rule_set::collect_transient_info_base(persistent_object_manager& m) const {
 	m.collect_pointer_list(*this);
+#if PRS_SUPPLY_OVERRIDES
+	if (GND)
+		GND->collect_transient_info(m);
+	if (Vdd)
+		Vdd->collect_transient_info(m);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -339,6 +367,10 @@ if (!m.register_transient_object(this,
 void
 rule_set::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
+#if PRS_SUPPLY_OVERRIDES
+	m.write_pointer(o, GND);
+	m.write_pointer(o, Vdd);
+#endif
 	m.write_pointer_list(o, *this);
 }
 
@@ -353,6 +385,10 @@ rule_set::write_object(const persistent_object_manager& m,
 void
 rule_set::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
+#if PRS_SUPPLY_OVERRIDES
+	m.read_pointer(i, GND);
+	m.read_pointer(i, Vdd);
+#endif
 	m.read_pointer_list(i, AS_A(parent_type&, *this));
 }
 
@@ -807,7 +843,7 @@ rule_conditional::empty(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
-	return meta_conditional_type::dump(*this, o, c);
+	return meta_conditional_type::dump(*this, o, c, &rule_set::dump_rules);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -886,7 +922,7 @@ subcircuit::dump(ostream& o, const rule_dump_context& c) const {
 	o << "subckt <\"" << name << "\"> {" << endl;
 {
 	INDENT_SECTION(o);
-	nested_rules::dump(o, c);
+	nested_rules::dump_rules(o, c);
 }
 	return o << auto_indent << '}';
 }
@@ -967,7 +1003,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(rule_loop)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_loop::dump(ostream& o, const rule_dump_context& c) const {
-	return meta_loop_type::dump(*this, o, c, ':');
+	return meta_loop_type::dump(*this, o, c, ':', &rule_set::dump_rules);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

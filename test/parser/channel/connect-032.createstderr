@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
 	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
-	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	142
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	12	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -59,7 +59,7 @@ Persistent Object Manager text dump:
 	55	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
 	56	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	57	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	58	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
+	58	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
 	59	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	60	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	61	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25

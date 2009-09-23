@@ -25,41 +25,42 @@ Persistent Object Manager text dump:
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	44
+	25	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	30	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	28
+	30	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	31	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	35	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	36	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	28
-	39	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	40	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	36
+	40	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	41	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	45	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	46	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	49	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	50	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	52	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	50	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	53	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	55	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	56	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	57	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	58	##ADDR##	footprnt	0	#HEAD#	#TAIL#	742
+	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	57	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	742
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -81,6 +82,7 @@ In namespace "", we have: {
 }
 
 top-level prs:
+  {
   x -> y-
   subckt <""> {
     ~y -> z+
@@ -93,6 +95,7 @@ top-level prs:
   }
   q -> r-
   ~q -> r+
+  }
 
 footprint: {
   !GND = bool^0 = !GND (1) 

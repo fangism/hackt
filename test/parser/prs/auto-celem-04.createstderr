@@ -17,20 +17,21 @@ Persistent Object Manager text dump:
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	17	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
+	17	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	26	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	492
+	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	492
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -48,8 +49,10 @@ In namespace "", we have: {
 }
 
 top-level prs:
+  {
   ~x & ~y -> z+
   x & y -> z-
+  }
 
 footprint: {
   !GND = bool^0 = !GND (1) 

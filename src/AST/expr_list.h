@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.7.2.1 2009/09/18 18:12:13 fang Exp $
+	$Id: expr_list.h,v 1.7.2.2 2009/09/23 06:20:47 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -131,6 +131,10 @@ public:
 //	check_meta_references...
 	void
 	postorder_check_bool_refs(checked_bool_refs_type&, 
+		const context&) const;
+
+	bool
+	postorder_check_bool_refs_optional(checked_bool_refs_type&, 
 		const context&) const;
 
 	// results in a collection of groups

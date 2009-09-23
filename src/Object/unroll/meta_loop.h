@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop.h"
-	$Id: meta_loop.h,v 1.2 2008/03/17 23:02:38 fang Exp $
+	$Id: meta_loop.h,v 1.2.22.1 2009/09/23 06:20:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_H__
@@ -29,7 +29,9 @@ struct meta_loop {
 	template <class C>
 	static
 	ostream&
-	dump(const T&, ostream&, const C&, const char);
+	dump(const T&, ostream&, const C&, const char, 
+		ostream& (T::implementation_type::*)(ostream&, const C&) const
+			= &T::implementation_type::dump);
 
 	template <class F>
 	static

@@ -15,18 +15,19 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	28
+	14	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	36
 	15	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	16	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	32
-	17	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	18	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	40
+	18	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	19	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	23	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -44,10 +45,12 @@ In namespace "", we have: {
 
 top-level prs:
   [ true ->
+    {
     [ true ->
       d -> z-
       ~d -> z+
     ]
+    }
   ]
 
 footprint: {

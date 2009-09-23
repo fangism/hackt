@@ -5,6 +5,26 @@
 
 2009-09-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-29-supply-01-04:
+	  Initial support for prs supply overrides through front-end
+		and part of middle-end (missing post-unroll).
+		Using Object/devel_switches.h: PRS_SUPPLY_OVERRIDES.
+	  parser/hackt-parse.yy.in: grammar and actions updated to
+		accommodate prs <...> arguments for real (were deleted).
+	  PRS::rule_set: amended with GND and Vdd optional override
+		bool-references (not used for several derived classes)
+	  AST/PRS.cc: nested groups of rule (rule_set) one level deeper
+		to be able to distinguish overrides per prs-block.
+	  meta_loop, meta_conditional: generalized dump template
+		member function to accept non-default value_type::dump 
+		member function.  
+	  Test cases updated for mostly create-dumps
+		(mostly trivial formatting).
+	  Next: continue unrolling prs into prs-footprint.
+
+
+2009-09-22	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-83-29-supply-01-03:
 	  lexer/instref-lex.ll: allow '!' at the beginning of an identifier
 		to allow for references to implicit globals !Vdd, !GND.

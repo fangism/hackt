@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.47.2.2 2009/09/22 01:42:15 fang Exp $
+ 	$Id: definition.cc,v 1.47.2.3 2009/09/23 06:20:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2962,7 +2962,7 @@ process_definition::dump(ostream& o) const {
 				o << auto_indent << "prs:" << endl;
 				INDENT_SECTION(o);
 				const PRS::rule_dump_context rdc(*this);
-				prs.dump(o, rdc);	// << endl;
+				prs.dump_rules(o, rdc);	// << endl;
 			}
 			// CHP
 			if (!chp.empty()) {

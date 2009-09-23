@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.39 2009/03/09 07:30:38 fang Exp $
+ 	$Id: module.cc,v 1.39.10.1 2009/09/23 06:20:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -165,6 +165,9 @@ module::dump_instance_map(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Copy-modified from process_definition::dump().
+ */
 ostream&
 module::dump_definitions(ostream& o) const {
 	o << "In module created from: " << key;
@@ -185,7 +188,7 @@ module::dump_definitions(ostream& o) const {
 		o << auto_indent << "top-level prs:" << endl;
 		INDENT_SECTION(o);
 		const PRS::rule_dump_context rdc(*global_namespace);
-		prs.dump(o, rdc) << endl;
+		prs.dump_rules(o, rdc) << endl;
 	}
 	// CHP
 	if (!chp.empty()) {

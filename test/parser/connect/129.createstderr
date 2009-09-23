@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	146
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -38,7 +38,7 @@ Persistent Object Manager text dump:
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
 	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
+	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	108
 	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	40	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -49,7 +49,7 @@ Persistent Object Manager text dump:
 	45	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
 	46	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
 	47	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	48	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	48	##ADDR##	procdefn	0	#HEAD#	#TAIL#	146
 	49	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	50	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	51	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -75,7 +75,7 @@ Persistent Object Manager text dump:
 	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	73	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	74	##ADDR##	procdefn	0	#HEAD#	#TAIL#	123
+	74	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
 	75	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	76	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	77	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -91,7 +91,7 @@ Persistent Object Manager text dump:
 	87	##ADDR##	footprnt	0	#HEAD#	#TAIL#	602
 	88	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	89	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	90	##ADDR##	procdefn	0	#HEAD#	#TAIL#	139
+	90	##ADDR##	procdefn	0	#HEAD#	#TAIL#	147
 	91	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	92	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	93	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -118,7 +118,7 @@ Persistent Object Manager text dump:
 	114	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	115	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	116	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	117	##ADDR##	procdefn	0	#HEAD#	#TAIL#	119
+	117	##ADDR##	procdefn	0	#HEAD#	#TAIL#	127
 	118	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	119	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	120	##ADDR##	procplch	0	#HEAD#	#TAIL#	25

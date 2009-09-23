@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop.tcc"
-	$Id: meta_loop.tcc,v 1.3 2009/03/09 07:31:00 fang Exp $
+	$Id: meta_loop.tcc,v 1.3.10.1 2009/09/23 06:20:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_TCC__
@@ -41,14 +41,15 @@ using util::write_value;
 template <class T>
 template <class C>
 ostream&
-meta_loop<T>::dump(const T& mc, ostream& o, const C& c, const char op) {
+meta_loop<T>::dump(const T& mc, ostream& o, const C& c, const char op, 
+	ostream& (T::implementation_type::*dumper)(ostream&, const C&) const) {
 	NEVER_NULL(mc.ind_var);
 	NEVER_NULL(mc.range);
 	o << '(' << op << mc.ind_var->get_name() << ':';
 	mc.range->dump(o, entity::expr_dump_context(c)) << ':' << endl;
 	{
 		INDENT_SECTION(o);
-		mc.implementation_type::dump(o, c);
+		(mc.*dumper)(o, c);
 	}
 	return o << auto_indent << ')';
 }

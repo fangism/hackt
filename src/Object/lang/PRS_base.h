@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.10 2007/11/26 08:27:42 fang Exp $
+	$Id: PRS_base.h,v 1.10.30.1 2009/09/23 06:20:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -13,6 +13,10 @@
 #include "util/persistent.h"
 #include "util/boolean_types.h"
 #include "Object/inst/instance_pool_fwd.h"
+#include "Object/devel_switches.h"	// for PRS_SUPPLY_OVERRIDES
+#if PRS_SUPPLY_OVERRIDES
+#include "Object/ref/references_fwd.h"
+#endif
 
 /**
 	Define to 1 to support internal nodes.
@@ -143,6 +147,17 @@ protected:
 	typedef	list<sticky_ptr<rule> >		parent_type;
 public:
 	typedef	parent_type::value_type		value_type;
+#if PRS_SUPPLY_OVERRIDES
+	// is bool_literal_base_ptr_type from "Object/lang/bool_literal.h"
+	typedef	count_ptr<const simple_bool_meta_instance_reference>
+					supply_node_ref_type;
+	// kind of wastes a little memory for derived classes that
+	// don't need overrides... oh well.
+	/// optional: GND override
+	supply_node_ref_type			GND;
+	/// optional: Vdd override
+	supply_node_ref_type			Vdd;
+#endif
 public:
 	rule_set();
 	~rule_set();
@@ -157,6 +172,10 @@ private:
 public:
 	ostream&
 	what(ostream&) const;
+
+	ostream&
+	dump_rules(ostream&, 
+		const rule_dump_context& = rule_dump_context()) const;
 
 	ostream&
 	dump(ostream&, const rule_dump_context& = rule_dump_context()) const;

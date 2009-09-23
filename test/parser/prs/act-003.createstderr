@@ -33,31 +33,33 @@ Persistent Object Manager text dump:
 	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	34	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	36	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	32
+	34	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	35	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
 	44	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	46	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	37
-	47	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	47	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	48	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	37
 	49	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1511
+	55	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1511
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -81,10 +83,14 @@ In namespace "", we have: {
 }
 
 top-level prs:
+  {
   (:i:[0..4]:
     x[$i][j] -> y[$i][j]-
   )
+  }
+  {
   a &{+pchg} b & c -> d-
+  }
 
 footprint: {
   !GND = bool^0 = !GND (1) 

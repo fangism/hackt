@@ -17,11 +17,12 @@ Persistent Object Manager text dump:
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	64
-	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	64
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	402
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	402
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -39,7 +40,9 @@ In namespace "", we have: {
 }
 
 top-level prs:
+  {
   passn<;lvt>(g,s,d)
+  }
 
 footprint: {
   !GND = bool^0 = !GND (1) 
