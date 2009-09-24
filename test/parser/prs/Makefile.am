@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.56.2.1 2009/09/22 01:54:28 fang Exp $
+#	$Id: Makefile.am,v 1.56.2.2 2009/09/24 22:01:12 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -98,6 +98,7 @@ HACKT_PARSE_TEST_PASSES = \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	flavor-01 flavor-03 flavor-04 flavor-05 \
+	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	reff-01 \
 	load_cap-01 
@@ -173,6 +174,7 @@ HACKT_CREATE_TEST_PASSES = \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	flavor-01 flavor-03 flavor-04 flavor-05 \
+	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	reff-01 \
 	load_cap-01 
@@ -245,6 +247,9 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	act-001 act-002 act-003 act-004 act-005 act-006 act-007 act-010 \
 	reff-01 \
 	flavor-01 flavor-03 flavor-04 flavor-05
+
+# TODO: after implementing supply annotation in hflat
+#	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \

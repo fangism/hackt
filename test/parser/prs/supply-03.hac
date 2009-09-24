@@ -1,0 +1,13 @@
+// "supply-03.hac"
+// copy-modified from "supply-02.hac"
+// just testing formatting of intermediate representation dump
+
+bool myVdd;
+bool x, y, z;
+prs {
+	x	=> y-
+}
+prs <myVdd> {
+	y	=> z-
+}
+
