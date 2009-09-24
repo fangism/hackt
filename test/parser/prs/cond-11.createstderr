@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	52
+	14	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	36
 	15	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	16	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
 	17	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
@@ -25,7 +25,7 @@ Persistent Object Manager text dump:
 	21	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	22	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	330
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	334
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

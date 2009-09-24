@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	166
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	158
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -72,7 +72,7 @@ Persistent Object Manager text dump:
 	68	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	69	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	28
-	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	619
+	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	639
 	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	74	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -87,7 +87,7 @@ Persistent Object Manager text dump:
 	83	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	84	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	85	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	86	##ADDR##	footprnt	0	#HEAD#	#TAIL#	436
+	86	##ADDR##	footprnt	0	#HEAD#	#TAIL#	440
 	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -157,6 +157,8 @@ In namespace "", we have: {
         ~a<20,2> -> b+
         a<30,3> -> b-
         ~a<30,3> -> b+
+        rule supply map: [rules, Vdd, GND]
+        0..5: 2, 1
       }
       }
 

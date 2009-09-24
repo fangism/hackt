@@ -12,7 +12,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -33,9 +33,9 @@ Persistent Object Manager text dump:
 	27	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	28	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	419
 	31	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	32	##ADDR##	procdefn	0	#HEAD#	#TAIL#	209
+	32	##ADDR##	procdefn	0	#HEAD#	#TAIL#	201
 	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -91,7 +91,7 @@ Persistent Object Manager text dump:
 	85	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	86	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	88	##ADDR##	footprnt	0	#HEAD#	#TAIL#	824
+	88	##ADDR##	footprnt	0	#HEAD#	#TAIL#	828
 	89	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	91	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -121,7 +121,7 @@ Persistent Object Manager text dump:
 	115	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	116	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	117	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	118	##ADDR##	footprnt	0	#HEAD#	#TAIL#	554
+	118	##ADDR##	footprnt	0	#HEAD#	#TAIL#	558
 	119	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -170,6 +170,8 @@ In namespace "", we have: {
         resolved prs:
         a -> b-
         ~a -> b+
+        rule supply map: [rules, Vdd, GND]
+        0..1: 2, 1
       }
       }
 

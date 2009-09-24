@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.15 2009/08/28 20:44:58 fang Exp $
+	$Id: PRS_footprint.h,v 1.15.4.1 2009/09/24 21:28:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -16,6 +16,7 @@
 #include "Object/lang/PRS_footprint_rule.h"
 #include "Object/lang/PRS_footprint_macro.h"
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/macros.h"
 #include "util/boolean_types.h"
 #include "util/offset_array.h"
@@ -176,6 +177,30 @@ public:
 			lower_bound, upper_bound.  
 	 */
 	typedef	vector<subcircuit_map_entry>	subcircuit_map_type;
+#if PRS_SUPPLY_OVERRIDES
+	/**
+		Structure for tracking which supplies drive which rules.  
+	 */
+	struct supply_override_entry {
+		// never_ptr<const rule_set>		back_ref;
+		index_range			rules;
+		size_t				Vdd;
+		size_t				GND;
+
+		/**
+			For binary searchability.
+		 */
+		bool
+		operator < (const supply_override_entry& r) {
+			return rules.first < r.rules.first;
+		}
+	};	// end struct supply_override_entry
+	/**
+		More space-efficient to keep supply information aside
+		instead of per rule because this is usually coarse-grained.  
+	 */
+	typedef	vector<supply_override_entry>	supply_map_type;
+#endif
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
 						node_pool_type;
@@ -191,6 +216,16 @@ private:
 	internal_node_expr_map_type		internal_node_expr_map;
 	invariant_pool_type			invariant_pool;
 	subcircuit_map_type			subcircuit_map;
+#if PRS_SUPPLY_OVERRIDES
+	supply_map_type				supply_map;
+public:
+	/**
+		HACK: these members are only used during unroll construction, 
+		and need not persist.
+	 */
+	size_t					current_Vdd;
+	size_t					current_GND;
+#endif
 public:
 	footprint();
 	~footprint();
@@ -274,6 +309,11 @@ public:
 	current_expr_index(void) const {
 		return expr_pool.size();
 	}
+
+#if PRS_SUPPLY_OVERRIDES
+	supply_map_type&
+	get_supply_map(void) { return supply_map; }
+#endif
 
 	void
 	collect_literal_indices(std::set<size_t>&, // node_index_type

@@ -33,7 +33,7 @@ Persistent Object Manager text dump:
 	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	516
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	536
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
@@ -74,4 +74,6 @@ footprint: {
   resolved prs:
   x & y -> z- [comb=1]
   ~x & ~y -> z+ [comb=1]
+  rule supply map: [rules, Vdd, GND]
+  0..1: 2, 1
 }

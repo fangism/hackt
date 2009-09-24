@@ -34,7 +34,7 @@ Persistent Object Manager text dump:
 	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	366
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

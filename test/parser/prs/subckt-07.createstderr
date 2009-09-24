@@ -30,7 +30,7 @@ Persistent Object Manager text dump:
 	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	28
+	29	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	31	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	36	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	36
+	39	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	28
 	40	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	41	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
@@ -60,7 +60,7 @@ Persistent Object Manager text dump:
 	56	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	57	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	58	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	742
+	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	762
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -130,4 +130,6 @@ footprint: {
   subcircuit (rules, macros, @nodes): 
   1: 1..1 none none 
   2: 3..5 none none 
+  rule supply map: [rules, Vdd, GND]
+  0..7: 2, 1
 }

@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -39,17 +39,17 @@ Persistent Object Manager text dump:
 	33	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	34	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	484
-	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	504
+	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
 	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	40	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	302
 	45	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	46	##ADDR##	procdefn	0	#HEAD#	#TAIL#	156
+	46	##ADDR##	procdefn	0	#HEAD#	#TAIL#	148
 	47	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	48	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	49	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -77,7 +77,7 @@ Persistent Object Manager text dump:
 	71	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	72	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	73	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	74	##ADDR##	footprnt	0	#HEAD#	#TAIL#	620
+	74	##ADDR##	footprnt	0	#HEAD#	#TAIL#	624
 	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	76	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -86,7 +86,7 @@ Persistent Object Manager text dump:
 	80	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	81	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	82	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	83	##ADDR##	footprnt	0	#HEAD#	#TAIL#	556
+	83	##ADDR##	footprnt	0	#HEAD#	#TAIL#	560
 	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -143,6 +143,8 @@ In namespace "", we have: {
         ~i -> _o+
         _o -> o-
         ~_o -> o+
+        rule supply map: [rules, Vdd, GND]
+        0..3: 2, 1
       }
       }
 

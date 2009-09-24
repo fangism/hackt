@@ -25,7 +25,7 @@ Persistent Object Manager text dump:
 	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	41
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	432
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	452
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -63,6 +63,8 @@ footprint: {
   resolved prs:
   x -> y-
   ~x -> y+
+  rule supply map: [rules, Vdd, GND]
+  0..1: 2, 1
   resolved specs:
   runmodestatic(x)
 }

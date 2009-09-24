@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.23 2009/07/02 23:22:44 fang Exp $
+	$Id: parse_context.h,v 1.23.8.1 2009/09/24 21:28:43 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -51,7 +51,7 @@ namespace entity {
 	struct node_tag;
 	template <class> class dummy_placeholder;
 namespace PRS {
-	class rule_set;
+	class rule_set_base;
 }
 namespace SPEC {
 	class directives_set;
@@ -222,7 +222,7 @@ private:
 		The current scope of the production rules to add, 
 		which can be top-level, or in conditional or loop. 
 	 */
-	never_ptr<entity::PRS::rule_set>	current_prs_body;
+	never_ptr<entity::PRS::rule_set_base>	current_prs_body;
 	/**
 		The current scope of spec directives to add, 
 		may be top-level, in definition, conditional, or loop.  
@@ -559,7 +559,8 @@ public:
 		Pushes PRS list onto stack.  
 	 */
 	typedef	util::member_saver<context, 
-		never_ptr<entity::PRS::rule_set>, &context::current_prs_body>
+		never_ptr<entity::PRS::rule_set_base>, 
+			&context::current_prs_body>
 						prs_body_frame;
 
 	typedef	util::member_saver<context, 
@@ -577,7 +578,7 @@ public:
 		return !loop_var_stack.empty();
 	}
 
-	entity::PRS::rule_set&
+	entity::PRS::rule_set_base&
 	get_current_prs_body(void) const {
 		// NEVER_NULL(current_prs_body);
 		return *current_prs_body;

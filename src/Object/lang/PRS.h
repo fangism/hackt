@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.28 2009/09/14 21:16:56 fang Exp $
+	$Id: PRS.h,v 1.28.2.1 2009/09/24 21:28:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -14,6 +14,7 @@
 #include "Object/lang/directive_source.h"
 #include "Object/unroll/meta_loop_base.h"
 #include "Object/unroll/meta_conditional_base.h"
+#include "Object/devel_switches.h"
 #include <string>
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
@@ -315,15 +316,52 @@ public:
 };	// and class pass
 
 //=============================================================================
-// This used to be its own class, just replaced with typedef...
-typedef	rule_set		nested_rules;
+class rule_set : public rule, public nested_rules {
+	typedef	rule_set			this_type;
+public:
+#if PRS_SUPPLY_OVERRIDES
+	// is bool_literal_base_ptr_type from "Object/lang/bool_literal.h"
+	typedef	bool_literal_base_ptr_type	supply_node_ref_type;
+	// kind of wastes a little memory for derived classes that
+	// don't need overrides... oh well.
+	/// optional: GND override
+	supply_node_ref_type			GND;
+	/// optional: Vdd override
+	supply_node_ref_type			Vdd;
+#endif
+
+public:
+	rule_set();
+	~rule_set();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const rule_dump_context& = rule_dump_context()) const;
+
+	PRS_UNROLL_RULE_PROTO;
+	PRS_CHECK_RULE_PROTO;
+	PRS_EXPAND_COMPLEMENT_PROTO;
+	using nested_rules::append_rule;
+
+	void
+	collect_transient_info(persistent_object_manager&) const;
+
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const persistent_object_manager&, istream&);
+
+};	// end class rule_set
 
 //=============================================================================
 /**
 	Named, nested substructure for local production rules.
 	Mostly needed for convenient netlist generation.
  */
-class subcircuit : public nested_rules {
+class subcircuit : public rule, public nested_rules {
 	typedef	subcircuit		this_type;
 	string				name;
 public:
@@ -343,9 +381,8 @@ public:
 	dump(ostream&, const rule_dump_context&) const;
 
 	PRS_UNROLL_RULE_PROTO;
-
-	using nested_rules::check;
-	using nested_rules::expand_complement;
+	PRS_CHECK_RULE_PROTO;
+	PRS_EXPAND_COMPLEMENT_PROTO;
 	using nested_rules::append_rule;
 
 	void
@@ -363,9 +400,9 @@ public:
 	A set of rules to be repeatedly unrolled in a loop.  
 	Could derive privately from nested_rules...
  */
-class rule_loop : public nested_rules, private meta_loop_base {
+class rule_loop : public rule, public nested_rules, private meta_loop_base {
 	typedef	rule_loop			this_type;
-	typedef	rule_set::value_type		value_type;
+	typedef	nested_rules::value_type		value_type;
 	typedef	nested_rules			implementation_type;
 	friend struct meta_loop<this_type>;
 	typedef	meta_loop<this_type>		meta_loop_type;
@@ -381,9 +418,8 @@ public:
 	dump(ostream&, const rule_dump_context&) const;
 
 	PRS_UNROLL_RULE_PROTO;
-
-	using nested_rules::check;
-	using nested_rules::expand_complement;
+	PRS_CHECK_RULE_PROTO;
+	PRS_EXPAND_COMPLEMENT_PROTO;
 	using nested_rules::append_rule;
 
 	void
@@ -402,7 +438,7 @@ public:
  */
 class rule_conditional : public rule, private meta_conditional_base {
 	typedef	rule_conditional		this_type;
-	typedef	rule_set::value_type		value_type;
+	typedef	nested_rules::value_type		value_type;
 	friend struct meta_conditional<this_type>;
 	typedef	meta_conditional<this_type>	meta_conditional_type;
 private:
@@ -410,7 +446,7 @@ private:
 		DO NOT use vector unless size is pre-reserved, 
 		because of underlying list of sticky_ptrs.
 	 */
-	typedef	std::list<rule_set>		clause_list_type;
+	typedef	std::list<nested_rules>	clause_list_type;
 	clause_list_type			clauses;
 public:
 	rule_conditional();
@@ -437,7 +473,7 @@ public:
 	void
 	append_guarded_clause(const guard_ptr_type&);
 
-	rule_set&
+	nested_rules&
 	get_last_clause(void) { return clauses.back(); }
 
 	void

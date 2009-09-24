@@ -29,7 +29,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	156
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	148
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -67,21 +67,21 @@ Persistent Object Manager text dump:
 	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
-	44	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	32
+	44	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
 	45	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	46	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	48	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	49	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	51	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	32
+	51	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
 	52	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	53	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	55	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	56	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	58	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	56
+	58	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	40
 	59	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
 	60	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	61	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
@@ -103,7 +103,7 @@ Persistent Object Manager text dump:
 	77	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	78	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	79	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	80	##ADDR##	footprnt	0	#HEAD#	#TAIL#	3854
+	80	##ADDR##	footprnt	0	#HEAD#	#TAIL#	3874
 	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	82	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	83	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -112,7 +112,7 @@ Persistent Object Manager text dump:
 	86	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	87	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	88	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	89	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
+	89	##ADDR##	footprnt	0	#HEAD#	#TAIL#	386
 	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
@@ -334,6 +334,8 @@ In namespace "", we have: {
           y[14] -> z[5]+
           y[14] -> z[6]+
           x[7] -> y[14]-
+          rule supply map: [rules, Vdd, GND]
+          0..97: 2, 1
         }
       }
       }

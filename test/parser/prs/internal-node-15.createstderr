@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	158
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	150
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -37,7 +37,7 @@ Persistent Object Manager text dump:
 	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	32
+	34	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	36	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
@@ -74,13 +74,13 @@ Persistent Object Manager text dump:
 	68	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	70	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	696
+	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	716
 	72	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	73	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	74	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	75	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	76	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	510
+	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	514
 	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -160,6 +160,8 @@ In namespace "", we have: {
         @q[0]- <- en & e[0]
         @q[1]- <- en & e[1]
         @z- <- en
+        rule supply map: [rules, Vdd, GND]
+        0..2: 2, 1
       }
       }
 

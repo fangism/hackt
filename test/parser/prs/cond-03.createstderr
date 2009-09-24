@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	148
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -25,7 +25,7 @@ Persistent Object Manager text dump:
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	56
+	21	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	40
 	22	##ADDR##	pblgcexp	0	#HEAD#	#TAIL#	22
 	23	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
 	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
@@ -41,9 +41,9 @@ Persistent Object Manager text dump:
 	34	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	376
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	396
 	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	376
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	396
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	42	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -56,7 +56,7 @@ Persistent Object Manager text dump:
 	49	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	51	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	466
+	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	470
 	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
@@ -112,6 +112,8 @@ In namespace "", we have: {
           4	ass<1>::a
           resolved prs:
           x -> a+
+          rule supply map: [rules, Vdd, GND]
+          0..0: 2, 1
         }
         <2> {
           !GND = bool^0 = ass<2>::!GND (1) 
@@ -127,6 +129,8 @@ In namespace "", we have: {
           4	ass<2>::a
           resolved prs:
           x -> a-
+          rule supply map: [rules, Vdd, GND]
+          0..0: 2, 1
         }
       }
       }

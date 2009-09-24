@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	136
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -24,12 +24,12 @@ Persistent Object Manager text dump:
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
-	23	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	28
+	23	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
 	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	28
+	28	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	30	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	25
@@ -37,13 +37,13 @@ Persistent Object Manager text dump:
 	33	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	485
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	505
 	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	463
+	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	467
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -106,6 +106,8 @@ In namespace "", we have: {
         subcircuit (rules, macros, @nodes): 
         1: none none 0..0 
         2: 0..0 none none 
+        rule supply map: [rules, Vdd, GND]
+        0..0: 2, 1
       }
       }
 

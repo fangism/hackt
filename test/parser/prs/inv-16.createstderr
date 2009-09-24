@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
 	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
 	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -32,7 +32,7 @@ Persistent Object Manager text dump:
 	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	419
 	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -61,7 +61,7 @@ Persistent Object Manager text dump:
 	57	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
 	58	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	776
+	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	780
 	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -112,6 +112,8 @@ In namespace "", we have: {
         resolved prs:
         a -> b-
         ~a -> b+
+        rule supply map: [rules, Vdd, GND]
+        0..1: 2, 1
       }
       }
 

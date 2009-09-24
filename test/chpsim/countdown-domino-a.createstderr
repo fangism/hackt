@@ -61,7 +61,7 @@ Persistent Object Manager text dump:
 	57	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	58	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	548
+	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	552
 	61	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
 	62	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
 	63	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20

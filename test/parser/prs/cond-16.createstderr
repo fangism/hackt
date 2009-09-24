@@ -26,7 +26,7 @@ Persistent Object Manager text dump:
 	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
-	25	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	96
+	25	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	64
 	26	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
 	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -53,7 +53,7 @@ Persistent Object Manager text dump:
 	49	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	392
+	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	412
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -100,4 +100,6 @@ footprint: {
   4	y
   resolved prs:
   y -> x+
+  rule supply map: [rules, Vdd, GND]
+  0..0: 2, 1
 }

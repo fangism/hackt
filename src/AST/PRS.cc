@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.35.2.1 2009/09/23 06:20:42 fang Exp $
+	$Id: PRS.cc,v 1.35.2.2 2009/09/24 21:28:41 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -641,7 +641,7 @@ guarded_body::check_clause(context& c) const {
 	NEVER_NULL(rs);
 	rs->append_guarded_clause(bg);
 	const context::prs_body_frame _pbf(c, 
-		never_ptr<entity::PRS::rule_set>(&rs->get_last_clause()));
+		never_ptr<entity::PRS::rule_set_base>(&rs->get_last_clause()));
 	STACKTRACE_INDENT_PRINT("current rule set: " <<
 		&rs->get_last_clause() << endl);
 	// code below mostly ripped from loop::check_rule()
@@ -747,7 +747,9 @@ if (rules) {
 				<< where(*supplies) << endl;
 			return false;
 		}
-		entity::PRS::rule_set& r(c.get_current_prs_body());
+		entity::PRS::rule_set& r(IS_A(entity::PRS::rule_set&,
+			c.get_current_prs_body()));
+		// throw bad_case if cast fails
 		if (temp[0])
 			r.Vdd = temp[0]->get_bool_var();
 		if (s > 1 && temp[1])
@@ -791,11 +793,11 @@ if (rules) {
 	// need to open a separate body because we only want supply overrides
 	// to apply to its own group of nodes
 	// copied from body::check_rule
-	typedef	entity::PRS::nested_rules		nested_rules;
-	excl_ptr<nested_rules> ret(new nested_rules());
+	typedef	entity::PRS::rule_set		rule_set;
+	excl_ptr<rule_set> ret(new rule_set());
 	NEVER_NULL(ret);
-	const never_ptr<nested_rules> retc(ret);
-	entity::PRS::rule_set& rb(c.get_current_prs_body());
+	const never_ptr<rule_set> retc(ret);
+	entity::PRS::rule_set_base& rb(c.get_current_prs_body());
 	rb.append_rule(ret);
 	const context::prs_body_frame prf(c, retc);
 #endif
@@ -884,7 +886,7 @@ if (params) {
 	// copied from body::check_rule
 	// const never_ptr<definition_base> d(c.get_current_open_definition());
 	const never_ptr<entity::PRS::subcircuit> retc(ret);
-	entity::PRS::rule_set& rb(c.get_current_prs_body());
+	entity::PRS::rule_set_base& rb(c.get_current_prs_body());
 	rb.append_rule(ret);
 try {
 	const context::prs_body_frame prlf(c, retc);

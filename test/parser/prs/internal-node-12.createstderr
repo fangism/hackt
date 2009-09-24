@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	158
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	150
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -47,7 +47,7 @@ Persistent Object Manager text dump:
 	41	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	32
+	44	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
 	45	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	46	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -72,7 +72,7 @@ Persistent Object Manager text dump:
 	66	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	67	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	68	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	69	##ADDR##	footprnt	0	#HEAD#	#TAIL#	763
+	69	##ADDR##	footprnt	0	#HEAD#	#TAIL#	783
 	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	71	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	72	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -80,7 +80,7 @@ Persistent Object Manager text dump:
 	74	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	75	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	76	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	535
+	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	539
 	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
@@ -166,6 +166,8 @@ In namespace "", we have: {
           ~en -> w+
           internal node exprs: 
           @z- <- en
+          rule supply map: [rules, Vdd, GND]
+          0..3: 2, 1
         }
       }
       }

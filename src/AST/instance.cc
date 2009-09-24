@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.31.20.1 2009/09/18 18:12:15 fang Exp $
+	$Id: instance.cc,v 1.31.20.2 2009/09/24 21:28:43 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -1146,7 +1146,7 @@ if (guard && !guard.is_a<const token_else>()) {
 if (body) {
 	const context::conditional_scope_frame _csf(c);
 	const context::prs_body_frame _pbf(c, 
-		never_ptr<entity::PRS::rule_set>(&rs->get_last_clause()));
+		never_ptr<entity::PRS::rule_set_base>(&rs->get_last_clause()));
 	const context::spec_body_frame _sbf(c, 
 		never_ptr<entity::SPEC::directives_set>(
 			&css.get_last_clause()));

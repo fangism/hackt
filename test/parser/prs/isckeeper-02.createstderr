@@ -63,7 +63,7 @@ Persistent Object Manager text dump:
 	59	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	826
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	846
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -113,4 +113,6 @@ footprint: {
   ~_c -> c+
   c & (a | b) -> _c- [isckeeper]
   ~c & (~a | ~b) -> _c+ [isckeeper]
+  rule supply map: [rules, Vdd, GND]
+  0..5: 2, 1
 }

@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
 	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	35
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	141
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	133
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
@@ -39,12 +39,12 @@ Persistent Object Manager text dump:
 	35	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	33
 	36	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	439
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	459
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	42	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	43	##ADDR##	procdefn	0	#HEAD#	#TAIL#	141
+	43	##ADDR##	procdefn	0	#HEAD#	#TAIL#	133
 	44	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	45	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	46	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
@@ -72,7 +72,7 @@ Persistent Object Manager text dump:
 	68	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	69	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	415
+	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	435
 	72	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	73	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	74	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -92,7 +92,7 @@ Persistent Object Manager text dump:
 	88	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	89	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	90	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	91	##ADDR##	footprnt	0	#HEAD#	#TAIL#	850
+	91	##ADDR##	footprnt	0	#HEAD#	#TAIL#	854
 	92	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	93	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	94	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -149,6 +149,8 @@ In namespace "", we have: {
         resolved prs:
         bar -> foo- [weak=1]
         ~bar -> foo+ [weak=1]
+        rule supply map: [rules, Vdd, GND]
+        0..1: 2, 1
       }
       }
 
@@ -195,6 +197,8 @@ In namespace "", we have: {
         resolved prs:
         foo -> bar-
         ~foo -> bar+
+        rule supply map: [rules, Vdd, GND]
+        0..1: 2, 1
       }
       }
 

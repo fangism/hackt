@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	133
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	125
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -50,13 +50,13 @@ Persistent Object Manager text dump:
 	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1530
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1550
 	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	51	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	680
+	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	684
 	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -138,6 +138,8 @@ In namespace "", we have: {
         resolved prs:
         (in[0][0] & in[0][1] & in[0][2] & in[0][3]) | (in[1][0] & in[1][1] & in[1][2] & in[1][3]) | (in[2][0] & in[2][1] & in[2][2] & in[2][3]) | (in[3][0] & in[3][1] & in[3][2] & in[3][3]) -> _o-
         (~in[0][0] | ~in[0][1] | ~in[0][2] | ~in[0][3]) & (~in[1][0] | ~in[1][1] | ~in[1][2] | ~in[1][3]) & (~in[2][0] | ~in[2][1] | ~in[2][2] | ~in[2][3]) & (~in[3][0] | ~in[3][1] | ~in[3][2] | ~in[3][3]) -> _o+
+        rule supply map: [rules, Vdd, GND]
+        0..1: 2, 1
       }
       }
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.10.30.1 2009/09/23 06:20:53 fang Exp $
+	$Id: PRS_base.h,v 1.10.30.2 2009/09/24 21:28:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -13,10 +13,6 @@
 #include "util/persistent.h"
 #include "util/boolean_types.h"
 #include "Object/inst/instance_pool_fwd.h"
-#include "Object/devel_switches.h"	// for PRS_SUPPLY_OVERRIDES
-#if PRS_SUPPLY_OVERRIDES
-#include "Object/ref/references_fwd.h"
-#endif
 
 /**
 	Define to 1 to support internal nodes.
@@ -116,8 +112,10 @@ virtual	~rule() { }
 virtual	ostream&
 	dump(ostream&, const rule_dump_context&) const = 0;
 
-virtual	excl_ptr<rule>
-	expand_complement(void) = 0;
+#define	PRS_EXPAND_COMPLEMENT_PROTO					\
+	excl_ptr<rule>							\
+	expand_complement(void)
+virtual	PRS_EXPAND_COMPLEMENT_PROTO = 0;
 
 /**
 	Prototype for unroll visiting.  
@@ -129,8 +127,10 @@ virtual	excl_ptr<rule>
 
 virtual	PRS_UNROLL_RULE_PROTO = 0;
 
-virtual	void
-	check(void) const = 0;
+#define	PRS_CHECK_RULE_PROTO						\
+	void check(void) const
+
+virtual	PRS_CHECK_RULE_PROTO = 0;
 
 	struct checker;
 	struct dumper;
@@ -139,52 +139,30 @@ virtual	void
 //=============================================================================
 /**
 	A collection or production rules.  
+	This class wants to be pure-virtual, except that it is 
+	instantiated non-dynamically by process_definition.
  */
-class rule_set : public rule, 
-		public list<sticky_ptr<rule> > {
-	typedef	rule_set			this_type;
+class rule_set_base : public list<sticky_ptr<rule> > {
 protected:
 	typedef	list<sticky_ptr<rule> >		parent_type;
 public:
 	typedef	parent_type::value_type		value_type;
-#if PRS_SUPPLY_OVERRIDES
-	// is bool_literal_base_ptr_type from "Object/lang/bool_literal.h"
-	typedef	count_ptr<const simple_bool_meta_instance_reference>
-					supply_node_ref_type;
-	// kind of wastes a little memory for derived classes that
-	// don't need overrides... oh well.
-	/// optional: GND override
-	supply_node_ref_type			GND;
-	/// optional: Vdd override
-	supply_node_ref_type			Vdd;
-#endif
 public:
-	rule_set();
-	~rule_set();
+	rule_set_base();
+	// dtor needs to be polymorphic to dynamic_cast to rule_set
+virtual	~rule_set_base();
 
 #if 0
 private:
 	// not copy-constructible, or should be restricted with run-time check
 	explicit
-	rule_set(const rule_set&);
+	rule_set(_baseconst this_type&);
 #endif
 
 public:
-	ostream&
-	what(ostream&) const;
-
-	ostream&
-	dump_rules(ostream&, 
-		const rule_dump_context& = rule_dump_context()) const;
 
 	ostream&
 	dump(ostream&, const rule_dump_context& = rule_dump_context()) const;
-
-	void
-	check(void) const;
-
-	excl_ptr<rule>
-	expand_complement(void);
 
 	void
 	expand_complements(void);
@@ -202,7 +180,10 @@ public:
 		this->append_rule(tr);
 	}
 
+	// supply these for derived classes
 	PRS_UNROLL_RULE_PROTO;
+	PRS_CHECK_RULE_PROTO;
+	PRS_EXPAND_COMPLEMENT_PROTO;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -217,17 +198,9 @@ private:
 	// hide this from user
 	using parent_type::push_back;
 
-protected:
-	void
-	collect_transient_info(persistent_object_manager&) const;
+};	// end class rule_set_base
 
-	void
-	write_object(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object(const persistent_object_manager&, istream&);
-
-};	// end class rule_set
+typedef	rule_set_base		nested_rules;
 
 //=============================================================================
 /**

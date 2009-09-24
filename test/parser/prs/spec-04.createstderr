@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	152
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	144
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -48,13 +48,13 @@ Persistent Object Manager text dump:
 	41	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	45
 	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	586
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	606
 	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	49	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	386
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -112,6 +112,8 @@ In namespace "", we have: {
         resolved prs:
         p & q -> s-
         ~p | ~q -> s+
+        rule supply map: [rules, Vdd, GND]
+        0..1: 2, 1
         resolved specs:
         mk_exclhi(p,q,r)
         mk_exclhi(r,s)

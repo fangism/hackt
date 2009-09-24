@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-05:
+	  re-worked PRS::rule_set and rule_set_base class hierarchy
+		to make more sense, only rule_set contains
+		Vdd and GND supply override members.
+	  unrolling now handles supply override information in the
+		PRS::footprint's supply_map side structure.
+	  Test cases updated (createstderr binary dumps).
+
+
 2009-09-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-supply-01-04:

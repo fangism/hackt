@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	154
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	146
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -32,7 +32,7 @@ Persistent Object Manager text dump:
 	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	133
+	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	125
 	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	34	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -52,14 +52,14 @@ Persistent Object Manager text dump:
 	48	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	footprnt	0	#HEAD#	#TAIL#	390
+	51	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
 	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	53	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	56	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	57	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	58	##ADDR##	procdefn	0	#HEAD#	#TAIL#	201
+	58	##ADDR##	procdefn	0	#HEAD#	#TAIL#	193
 	59	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	60	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	61	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -86,22 +86,22 @@ Persistent Object Manager text dump:
 	82	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	83	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	84	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	85	##ADDR##	footprnt	0	#HEAD#	#TAIL#	544
+	85	##ADDR##	footprnt	0	#HEAD#	#TAIL#	548
 	86	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	88	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
 	89	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	90	##ADDR##	footprnt	0	#HEAD#	#TAIL#	544
+	90	##ADDR##	footprnt	0	#HEAD#	#TAIL#	548
 	91	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	92	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
 	93	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	94	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	95	##ADDR##	footprnt	0	#HEAD#	#TAIL#	544
+	95	##ADDR##	footprnt	0	#HEAD#	#TAIL#	548
 	96	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	97	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
 	98	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	99	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	100	##ADDR##	procdefn	0	#HEAD#	#TAIL#	218
+	100	##ADDR##	procdefn	0	#HEAD#	#TAIL#	210
 	101	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	102	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	103	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -171,13 +171,13 @@ Persistent Object Manager text dump:
 	167	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	168	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	169	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	170	##ADDR##	footprnt	0	#HEAD#	#TAIL#	654
+	170	##ADDR##	footprnt	0	#HEAD#	#TAIL#	658
 	171	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	172	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	173	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
 	174	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	175	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	176	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1325
+	176	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1329
 	177	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	178	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	179	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
@@ -185,7 +185,7 @@ Persistent Object Manager text dump:
 	181	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	182	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	183	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	184	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1897
+	184	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1901
 	185	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	186	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	187	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
@@ -206,7 +206,7 @@ Persistent Object Manager text dump:
 	202	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	203	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	204	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	205	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1237
+	205	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1241
 	206	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	207	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 

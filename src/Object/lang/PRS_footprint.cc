@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.26 2009/09/14 21:16:58 fang Exp $
+	$Id: PRS_footprint.cc,v 1.26.2.1 2009/09/24 21:28:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -95,6 +95,11 @@ footprint::footprint() : rule_pool(), expr_pool(), macro_pool(),
 		internal_node_pool(), 
 		internal_node_expr_map(), invariant_pool(),
 		subcircuit_map()
+#if PRS_SUPPLY_OVERRIDES
+		, supply_map()
+		, current_Vdd(0)	// INVALID_NODE_INDEX
+		, current_GND(0)	// INVALID_NODE_INDEX
+#endif
 	{
 	// used to set_chunk_size of list_vector_pools here
 }
@@ -337,6 +342,18 @@ if (subcircuit_map.size()) {
 		o << endl;
 	}
 }
+#if PRS_SUPPLY_OVERRIDES
+if (supply_map.size()) {
+	o << auto_indent << "rule supply map: [rules, Vdd, GND]" << endl;
+	typedef	supply_map_type::const_iterator	const_iterator;
+	const_iterator i(supply_map.begin()), e(supply_map.end());
+	for ( ; i!=e; ++i) {
+		INVARIANT(i->rules.first != i->rules.second);
+		o << auto_indent << i->rules.first << ".." << i->rules.second -1
+			<< ": " << i->Vdd << ", " << i->GND << endl;
+	}
+}
+#endif
 	return o;
 }
 
@@ -447,45 +464,14 @@ void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	const util::persistent_sequence_collector_ref c(m);
-{
-#if 0
-	typedef	rule_pool_type::const_iterator	const_iterator;
-	const_iterator i(rule_pool.begin());
-	const const_iterator e(rule_pool.end());
-	for ( ; i!=e; ++i) {
-		i->collect_transient_info_base(m);
-	}
-#else
 	c(rule_pool);
-#endif
-}{
-#if 0
-	typedef	expr_pool_type::const_iterator	const_iterator;
-	const_iterator i(expr_pool.begin());
-	const const_iterator e(expr_pool.end());
-	for ( ; i!=e; ++i) {
-		i->collect_transient_info_base(m);
-	}
-#else
 	c(expr_pool);
-#endif
-}{
-#if 0
-	typedef	macro_pool_type::const_iterator	const_iterator;
-	const_iterator i(macro_pool.begin());
-	const const_iterator e(macro_pool.end());
-	for ( ; i!=e; ++i) {
-		i->collect_transient_info_base(m);
-	}
-#else
 	c(macro_pool);
-#endif
-}{
 	c(subcircuit_map);
-}
 	// the expr_pool doesn't need persistence management yet
 	// the internal_node_expr_map doesn't contain pointers
 	// invariant_pool contains no pointers
+	// supply_map contains no pointers
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -540,6 +526,20 @@ footprint::write_object_base(const persistent_object_manager& m,
 }{
 	util::write_sequence(o, invariant_pool);
 	util::write_persistent_sequence(m, o, subcircuit_map);
+#if PRS_SUPPLY_OVERRIDES
+{
+	// only save non-redundant information from pool
+	typedef supply_map_type::const_iterator		const_iterator;
+	write_value(o, supply_map.size());
+	const_iterator i(supply_map.begin()), e(supply_map.end());
+	for ( ; i!=e; ++i) {
+		write_value(o, i->rules);
+		write_value(o, i->Vdd);
+		write_value(o, i->GND);
+	}
+	// ignore internal_node_expr_map, restore later...
+}
+#endif
 }
 }
 
@@ -595,6 +595,22 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 }{
 	util::read_sequence_resize(i, invariant_pool);
 	util::read_persistent_sequence_resize(m, i, subcircuit_map);
+#if PRS_SUPPLY_OVERRIDES
+{
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	supply_map.reserve(s);
+	for ( ; j<s; ++j) {
+		supply_override_entry n;
+		read_value(i, n.rules);
+		read_value(i, n.Vdd);
+		read_value(i, n.GND);
+		supply_map.push_back(n);
+	}
+	INVARIANT(supply_map.size() == s);
+}
+#endif
 }
 }
 

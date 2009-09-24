@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -42,13 +42,13 @@ Persistent Object Manager text dump:
 	38	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	504
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	524
 	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	456
+	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	460
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -102,6 +102,8 @@ In namespace "", we have: {
         resolved prs:
         a[0] & a[1] -> _o-
         ~a[0] & ~a[1] -> _o+
+        rule supply map: [rules, Vdd, GND]
+        0..1: 2, 1
       }
       }
 

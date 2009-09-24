@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	20	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	42
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	443
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	463
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -59,4 +59,6 @@ footprint: {
   resolved prs:
   x<;svt;lvt> -> y-
   ~x<;svt;lvt> -> y+
+  rule supply map: [rules, Vdd, GND]
+  0..1: 2, 1
 }

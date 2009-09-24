@@ -26,7 +26,7 @@ Persistent Object Manager text dump:
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
-	25	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	36
+	25	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	28
 	26	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	27	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
@@ -43,7 +43,7 @@ Persistent Object Manager text dump:
 	39	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	32
+	42	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	24
 	43	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -56,7 +56,7 @@ Persistent Object Manager text dump:
 	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	739
+	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	759
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -125,4 +125,6 @@ footprint: {
   subcircuit (rules, macros, @nodes): 
   1: 0..2 none none 
   2: none 0..1 none 
+  rule supply map: [rules, Vdd, GND]
+  0..3: 2, 1
 }

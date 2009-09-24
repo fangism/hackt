@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	10	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -58,7 +58,7 @@ Persistent Object Manager text dump:
 	54	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	56	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	footprnt	0	#HEAD#	#TAIL#	520
+	57	##ADDR##	footprnt	0	#HEAD#	#TAIL#	540
 	58	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	59	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	60	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -76,7 +76,7 @@ Persistent Object Manager text dump:
 	72	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
 	73	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	74	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	footprnt	0	#HEAD#	#TAIL#	630
+	75	##ADDR##	footprnt	0	#HEAD#	#TAIL#	634
 	76	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
@@ -137,6 +137,8 @@ In namespace "", we have: {
           resolved prs:
           in[0] & in[1] -> out-
           ~in[0] & ~in[1] -> out+
+          rule supply map: [rules, Vdd, GND]
+          0..1: 2, 1
         }
       }
       }

@@ -15,14 +15,14 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	36
+	14	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	28
 	15	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	16	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
 	17	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	360
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	380
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -58,4 +58,6 @@ footprint: {
   4	y
   resolved prs:
   y -> x-
+  rule supply map: [rules, Vdd, GND]
+  0..0: 2, 1
 }

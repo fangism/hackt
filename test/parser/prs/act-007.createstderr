@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -36,9 +36,9 @@ Persistent Object Manager text dump:
 	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	436
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	456
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	procdefn	0	#HEAD#	#TAIL#	152
+	35	##ADDR##	procdefn	0	#HEAD#	#TAIL#	144
 	36	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	37	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	38	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -86,7 +86,7 @@ Persistent Object Manager text dump:
 	80	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	81	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	82	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
-	83	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	36
+	83	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
 	84	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	85	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	86	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -104,7 +104,7 @@ Persistent Object Manager text dump:
 	98	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	99	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	100	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	101	##ADDR##	footprnt	0	#HEAD#	#TAIL#	896
+	101	##ADDR##	footprnt	0	#HEAD#	#TAIL#	916
 	102	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	103	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	104	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -117,7 +117,7 @@ Persistent Object Manager text dump:
 	111	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	112	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	113	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	114	##ADDR##	footprnt	0	#HEAD#	#TAIL#	603
+	114	##ADDR##	footprnt	0	#HEAD#	#TAIL#	607
 	115	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
@@ -178,6 +178,8 @@ In namespace "", we have: {
           7	bar<5>::w[4]
           resolved prs:
           w[0] -> w[1]-
+          rule supply map: [rules, Vdd, GND]
+          0..0: 2, 1
         }
       }
       }
@@ -281,6 +283,8 @@ In namespace "", we have: {
           ~x[1] -> y[1]+
           x[2] -> y[2]-
           ~x[2] -> y[2]+
+          rule supply map: [rules, Vdd, GND]
+          0..5: 2, 1
         }
       }
       }

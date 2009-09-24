@@ -1,16 +1,18 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.37.2.1 2009/09/23 06:20:52 fang Exp $
+	$Id: PRS.cc,v 1.37.2.2 2009/09/24 21:28:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
 #define	__HAC_OBJECT_LANG_PRS_CC__
 
+#define	ENABLE_STATIC_TRACE		0
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 #include <sstream>
 #include <limits>
@@ -42,6 +44,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 
 #include "common/TODO.h"
+#include "common/ICE.h"
 #include "util/IO_utils.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
@@ -55,6 +58,7 @@ namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::pull_up, "PRS-up")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::pull_dn, "PRS-dn")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::nested_rules, "PRS-nested")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::rule_set, "PRS-set")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::rule_loop, "PRS-loop")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::rule_conditional, "PRS-cond")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::and_expr, "PRS-and")
@@ -71,7 +75,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::rule_loop, PRS_RULE_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::PRS::nested_rules, PRS_NESTED_RULES_TYPE_KEY, 0)
+	HAC::entity::PRS::rule_set, PRS_NESTED_RULES_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::subcircuit, PRS_SUBCKT_RULES_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -103,6 +107,7 @@ using util::auto_indent;
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+using util::value_saver;
 
 //=============================================================================
 // class rule method definitions
@@ -224,13 +229,30 @@ struct prs_expr::unroll_copier {
 };	// end struct unroller
 
 //=============================================================================
-// class rule_set method definitions
+// class rule_set_base method definitions
 
-rule_set::rule_set() : rule(), parent_type() { }
+rule_set_base::rule_set_base() : parent_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+rule_set_base::~rule_set_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+rule_set::rule_set() : rule_set_base()
+#if PRS_SUPPLY_OVERRIDES
+	, GND(), Vdd()
+#endif
+	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 rule_set::~rule_set() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+ostream&
+rule_set_base::what(ostream& o) const {
+	return o << "PRS::rule_set_base";
+}
+#endif
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_set::what(ostream& o) const {
@@ -239,7 +261,7 @@ rule_set::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-rule_set::dump_rules(ostream& o, const rule_dump_context& c) const {
+rule_set_base::dump(ostream& o, const rule_dump_context& c) const {
 	for_each(begin(), end(), rule::dumper(o, c));
 	return o;
 }
@@ -261,10 +283,27 @@ rule_set::dump(ostream& o, const rule_dump_context& c) const {
 	}
 #endif
 	o << '{' << endl;
-	dump_rules(o, c);
+	rule_set_base::dump(o, c);
 	o << auto_indent << '}';
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#define	DEFINE_CHECK_MEMFUN_DEFAULT(class_name)				\
+void									\
+class_name::check(void) const {						\
+	rule_set_base::check();						\
+}
+
+#define	DEFINE_EXPAND_COMPLEMENT_MEMFUN_DEFAULT(class_name)		\
+excl_ptr<rule>								\
+class_name::expand_complement(void) {					\
+	return rule_set_base::expand_complement();			\
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DEFINE_CHECK_MEMFUN_DEFAULT(rule_set)
+DEFINE_EXPAND_COMPLEMENT_MEMFUN_DEFAULT(rule_set)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -272,7 +311,7 @@ rule_set::dump(ostream& o, const rule_dump_context& c) const {
 	also auto-expanding complements.  
  */
 void
-rule_set::append_rule(excl_ptr<rule>& r) {
+rule_set_base::append_rule(excl_ptr<rule>& r) {
 	NEVER_NULL(r);
 	r->check();             // paranoia
 	excl_ptr<rule> cmpl = r->expand_complement();
@@ -288,19 +327,19 @@ rule_set::append_rule(excl_ptr<rule>& r) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-rule_set::compact_references(void) {
-	cerr << "Fang, write PRS::rule_set::compact_references()!" << endl;
+rule_set_base::compact_references(void) {
+	FINISH_ME(Fang);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-rule_set::check(void) const {
+rule_set_base::check(void) const {
 	for_each(begin(), end(), rule::checker());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<rule>
-rule_set::expand_complement(void) {
+rule_set_base::expand_complement(void) {
 	expand_complements();
 	return excl_ptr<rule>(NULL);
 }
@@ -312,7 +351,7 @@ rule_set::expand_complement(void) {
 	will then unset its complement flag.  
  */
 void
-rule_set::expand_complements(void) {
+rule_set_base::expand_complements(void) {
 	iterator i(begin());
 	const iterator e(end());
 	for ( ; i!=e; i++) {
@@ -325,12 +364,21 @@ rule_set::expand_complements(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRS_SUPPLY_OVERRIDES
 /**
-	Unrolls the collection of un-resolved production rules
-	into production rule footprint.  
+	For looking up default supplies.  
  */
+static
+size_t
+__lookup_implicit_bool_port(const unroll_context& c, const char* n) {
+	const entity::footprint& f(c.get_target_footprint());
+	return f.lookup_implicit_bool_port(n);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-rule_set::unroll(const unroll_context& c, const node_pool_type& np, 
+rule_set_base::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
 	STACKTRACE_VERBOSE;
 	const_iterator i(begin());
@@ -343,9 +391,91 @@ rule_set::unroll(const unroll_context& c, const node_pool_type& np,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls the collection of un-resolved production rules
+	into production rule footprint.  
+ */
+good_bool
+rule_set::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
+#if PRS_SUPPLY_OVERRIDES
+	PRS::footprint::supply_map_type& m(pfp.get_supply_map());
+	// flush out previous range, if applicable
+{
+	const size_t lr = pfp.get_rule_pool().size();
+	const size_t pr = m.size() ? m.back().rules.second : 0;
+	INVARIANT(lr == pr);
+}
+//	c.get_target_footprint().dump(cerr) << endl;	// DEBUG
+	const value_saver<size_t>	// save on stack
+		__t1(pfp.current_Vdd), __t2(pfp.current_GND);
+	// since rule_sets are not nested (not self recursive)
+	// we can simplify the checking for Vdd, GND
+	INVARIANT(!pfp.current_Vdd);
+	INVARIANT(!pfp.current_GND);
+	if (Vdd) {
+		const bool_literal l(Vdd);
+		const size_t i = l.unroll_base(c);
+		if (!i) { return good_bool(false); }
+		else	pfp.current_Vdd = i;
+		STACKTRACE_INDENT_PRINT("overriding !Vdd" << endl);
+	} else {
+		STACKTRACE_INDENT_PRINT("defaulting to !Vdd" << endl);
+		// set to default implicit !Vdd
+		pfp.current_Vdd = __lookup_implicit_bool_port(c, "!Vdd");
+	}	// else keep same Vdd
+	if (GND) {
+		const bool_literal l(GND);
+		const size_t i = l.unroll_base(c);
+		if (!i) { return good_bool(false); }
+		else	pfp.current_GND = i;
+		STACKTRACE_INDENT_PRINT("overriding !GND" << endl);
+	} else {
+		// set to default implicit !GND
+		STACKTRACE_INDENT_PRINT("defaulting to !GND" << endl);
+		pfp.current_GND = __lookup_implicit_bool_port(c, "!GND");
+	}	// else keep same GND
+	INVARIANT(pfp.current_Vdd);
+	INVARIANT(pfp.current_GND);
+#endif	// PRS_SUPPLY_OVERRIDES
+	if (!rule_set_base::unroll(c, np, pfp).good) {
+		return good_bool(false);
+	}
+#if PRS_SUPPLY_OVERRIDES
+{
+	// flush out previous range, if applicable
+	const size_t lr = pfp.get_rule_pool().size();
+	const size_t pr = m.size() ? m.back().rules.second : 0;
+	if (pr != lr) {
+		PRS::footprint::supply_override_entry e;
+		e.rules.first = pr;
+		e.rules.second = lr;
+		e.Vdd = pfp.current_Vdd;
+		e.GND = pfp.current_GND;
+		INVARIANT(e.Vdd);
+		INVARIANT(e.GND);
+		m.push_back(e);
+	}
+}
+#endif
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-rule_set::collect_transient_info_base(persistent_object_manager& m) const {
+rule_set_base::collect_transient_info_base(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.collect_pointer_list(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_set::collect_transient_info(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	collect_transient_info_base(m);
 #if PRS_SUPPLY_OVERRIDES
 	if (GND)
 		GND->collect_transient_info(m);
@@ -353,24 +483,13 @@ rule_set::collect_transient_info_base(persistent_object_manager& m) const {
 		Vdd->collect_transient_info(m);
 #endif
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-rule_set::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	collect_transient_info_base(m);
-}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-rule_set::write_object_base(const persistent_object_manager& m, 
+rule_set_base::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-#if PRS_SUPPLY_OVERRIDES
-	m.write_pointer(o, GND);
-	m.write_pointer(o, Vdd);
-#endif
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer_list(o, *this);
 }
 
@@ -378,17 +497,19 @@ rule_set::write_object_base(const persistent_object_manager& m,
 void
 rule_set::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_object_base(m, o);
+#if PRS_SUPPLY_OVERRIDES
+	m.write_pointer(o, GND);
+	m.write_pointer(o, Vdd);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-rule_set::load_object_base(const persistent_object_manager& m, 
+rule_set_base::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
-#if PRS_SUPPLY_OVERRIDES
-	m.read_pointer(i, GND);
-	m.read_pointer(i, Vdd);
-#endif
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer_list(i, AS_A(parent_type&, *this));
 }
 
@@ -396,7 +517,12 @@ rule_set::load_object_base(const persistent_object_manager& m,
 void
 rule_set::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	load_object_base(m, i);
+#if PRS_SUPPLY_OVERRIDES
+	m.read_pointer(i, GND);
+	m.read_pointer(i, Vdd);
+#endif
 }
 
 //=============================================================================
@@ -843,7 +969,7 @@ rule_conditional::empty(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
-	return meta_conditional_type::dump(*this, o, c, &rule_set::dump_rules);
+	return meta_conditional_type::dump(*this, o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -905,7 +1031,7 @@ rule_conditional::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class subcircuit method definitions
 
-subcircuit::subcircuit() : nested_rules(), name() { }
+subcircuit::subcircuit() : rule(), nested_rules(), name() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 subcircuit::subcircuit(const string& n) : nested_rules(), name(n) { }
@@ -922,7 +1048,7 @@ subcircuit::dump(ostream& o, const rule_dump_context& c) const {
 	o << "subckt <\"" << name << "\"> {" << endl;
 {
 	INDENT_SECTION(o);
-	nested_rules::dump_rules(o, c);
+	nested_rules::dump(o, c);
 }
 	return o << auto_indent << '}';
 }
@@ -938,7 +1064,7 @@ subcircuit::unroll(const unroll_context& c, const node_pool_type& np,
 	STACKTRACE_VERBOSE;
 	static bool __lock__ = false;
 if (!__lock__) {
-	const util::value_saver<bool> __tmp(__lock__, true);
+	const value_saver<bool> __tmp(__lock__, true);
 	PRS::footprint::subcircuit_map_entry e(this);	// need name?
 	e.rules.first = pfp.get_rule_pool().size();
 	e.macros.first = pfp.get_macro_pool().size();
@@ -958,6 +1084,9 @@ if (!__lock__) {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DEFINE_CHECK_MEMFUN_DEFAULT(subcircuit)
+DEFINE_EXPAND_COMPLEMENT_MEMFUN_DEFAULT(subcircuit)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 subcircuit::collect_transient_info(persistent_object_manager& m) const {
@@ -986,7 +1115,7 @@ subcircuit::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class rule_loop method definitions
 
-rule_loop::rule_loop() : nested_rules(), meta_loop_base() { }
+rule_loop::rule_loop() : rule(), nested_rules(), meta_loop_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 rule_loop::rule_loop(const ind_var_ptr_type& i, 
@@ -1003,7 +1132,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(rule_loop)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_loop::dump(ostream& o, const rule_dump_context& c) const {
-	return meta_loop_type::dump(*this, o, c, ':', &rule_set::dump_rules);
+	return meta_loop_type::dump(*this, o, c, ':');
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1016,6 +1145,9 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	return meta_loop_type::unroll(*this, c, np, pfp, "production rule");
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DEFINE_CHECK_MEMFUN_DEFAULT(rule_loop)
+DEFINE_EXPAND_COMPLEMENT_MEMFUN_DEFAULT(rule_loop)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_loop::collect_transient_info(persistent_object_manager& m) const {

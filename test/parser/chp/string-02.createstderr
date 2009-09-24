@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	nexplist	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	stringex	0	#HEAD#	#TAIL#	19
 	14	##ADDR##	stringex	0	#HEAD#	#TAIL#	18
-	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	318
 	16	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	CHPfcall	0	#HEAD#	#TAIL#	12

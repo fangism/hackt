@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.44.2.2 2009/09/22 01:42:16 fang Exp $
+	$Id: footprint.cc,v 1.44.2.3 2009/09/24 21:28:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -971,6 +971,31 @@ implicit_supply_connector::__auto_connect_port(const alias_type& cp,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Will crash-fail.
+ */
+template <class Tag>
+instance_alias_info<Tag>&
+footprint::__lookup_scalar_port_alias(const string& s) const {
+	const const_instance_map_iterator
+		f(instance_collection_map.find(s)),
+		e(instance_collection_map.end());
+	INVARIANT(f != e);
+	return ((*this)[f->second].is_a<instance_array<Tag, 0> >()
+		->get_the_instance());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intended for use with implicit supply ports.  
+	\param s must pass in a known-good port name!
+ */
+size_t
+footprint::lookup_implicit_bool_port(const string& s) const {
+	return __lookup_scalar_port_alias<bool_tag>(s).instance_index;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	For all top-level process instances in this scope, 
 	automatically connect implicit supply ports Vdd and GND, 
 	if they are not already connected.  
@@ -981,18 +1006,12 @@ footprint::connect_implicit_ports(const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	// find local Vdd and GND ports first
 	const_instance_map_iterator
-		mg(instance_collection_map.find("!GND")),
-		mv(instance_collection_map.find("!Vdd")),
 		mi(instance_collection_map.begin()), 
 		me(instance_collection_map.end());
-	INVARIANT(mg != me);
-	INVARIANT(mv != me);
 	implicit_supply_connector::node_type&
-		gp((*this)[mg->second].is_a<instance_array<bool_tag, 0> >()
-			->get_the_instance());
+		gp(__lookup_scalar_port_alias<bool_tag>("!GND"));
 	implicit_supply_connector::node_type&
-		vp((*this)[mv->second].is_a<instance_array<bool_tag, 0> >()
-			->get_the_instance());
+		vp(__lookup_scalar_port_alias<bool_tag>("!Vdd"));
 	implicit_supply_connector spc(c, gp, vp);
 	// lookup the lone bool
 for ( ; mi!=me; ++mi) {

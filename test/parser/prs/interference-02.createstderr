@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	161
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	153
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
@@ -46,13 +46,13 @@ Persistent Object Manager text dump:
 	42	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	43	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	431
+	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	451
 	46	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	49	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	footprnt	0	#HEAD#	#TAIL#	436
+	51	##ADDR##	footprnt	0	#HEAD#	#TAIL#	440
 	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -111,6 +111,8 @@ In namespace "", we have: {
         resolved prs:
         foo -> bar-
         ~foo -> bar+
+        rule supply map: [rules, Vdd, GND]
+        0..1: 2, 1
       }
       }
 

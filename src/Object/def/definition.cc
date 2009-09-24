@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.47.2.3 2009/09/23 06:20:50 fang Exp $
+ 	$Id: definition.cc,v 1.47.2.4 2009/09/24 21:28:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2962,7 +2962,7 @@ process_definition::dump(ostream& o) const {
 				o << auto_indent << "prs:" << endl;
 				INDENT_SECTION(o);
 				const PRS::rule_dump_context rdc(*this);
-				prs.dump_rules(o, rdc);	// << endl;
+				prs.dump(o, rdc);	// << endl;
 			}
 			// CHP
 			if (!chp.empty()) {
@@ -3332,7 +3332,8 @@ process_definition::__create_complete_type(
 		}
 		// after all aliases have been successfully assigned local IDs
 		// then process the PRS and CHP bodies
-		if (!prs.unroll(c, f.get_instance_pool<bool_tag>(), 
+		if ((meta_type == META_TYPE_PROCESS) &&
+			!prs.unroll(c, f.get_instance_pool<bool_tag>(), 
 				f.get_prs_footprint()).good) {
 			// already have error message
 			return good_bool(false);
@@ -3343,7 +3344,8 @@ process_definition::__create_complete_type(
 			return good_bool(false);
 		}
 		// CHP unrolling also checks channel connectivity now
-		if (!chp.unroll(c, f).good) {
+		if ((meta_type == META_TYPE_PROCESS) &&
+			!chp.unroll(c, f).good) {
 			// already have error message
 			return good_bool(false);
 		}

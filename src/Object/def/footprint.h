@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.29.2.1 2009/09/18 18:12:19 fang Exp $
+	$Id: footprint.h,v 1.29.2.2 2009/09/24 21:28:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -391,6 +391,14 @@ public:
 #if IMPLICIT_SUPPLY_PORTS
 	good_bool
 	connect_implicit_ports(const unroll_context&);
+
+private:
+	template <class Tag>
+	instance_alias_info<Tag>&
+	__lookup_scalar_port_alias(const string&) const;
+public:
+	size_t
+	lookup_implicit_bool_port(const string&) const;
 #endif
 
 	void

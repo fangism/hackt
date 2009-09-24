@@ -59,7 +59,7 @@ Persistent Object Manager text dump:
 	49	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	535
+	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	539
 	53	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	55	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20

@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.11.2.1 2009/09/18 18:12:12 fang Exp $
+	$Id: definition.cc,v 1.11.2.2 2009/09/24 21:28:42 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -823,7 +823,7 @@ process_def::check_build(context& c) const {
 	const context::definition_frame<process_definition> _cdf(c, *id);
 	// set up the current PRS body
 	const context::prs_body_frame
-		_pb(c, never_ptr<entity::PRS::rule_set>(
+		_pb(c, never_ptr<entity::PRS::rule_set_base>(
 			&c.get_current_definition<process_definition>()
 			->get_prs()));
 	const context::spec_body_frame

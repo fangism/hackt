@@ -30,7 +30,7 @@ Persistent Object Manager text dump:
 	26	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	27	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	380
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	384
 	30	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
 	32	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
