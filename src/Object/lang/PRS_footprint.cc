@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.26.2.1 2009/09/24 21:28:51 fang Exp $
+	$Id: PRS_footprint.cc,v 1.26.2.2 2009/09/25 01:21:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -312,6 +312,7 @@ if (invariant_pool.size()) {
 		o << ')' << endl;
 	}
 }
+	static const char none[] = "none";
 if (subcircuit_map.size()) {
 	// print name of subcircuit?
 	size_t j = 1;		// 1-indexed
@@ -323,20 +324,20 @@ if (subcircuit_map.size()) {
 		if (i->rules.second != i->rules.first) {
 			o << i->rules.first << ".." << i->rules.second -1;
 		} else {
-			o << "none";
+			o << none;
 		}
 		o << ' ';
 		if (i->macros.second != i->macros.first) {
 			o << i->macros.first << ".." << i->macros.second -1;
 		} else {
-			o << "none";
+			o << none;
 		}
 		o << ' ';
 		if (i->int_nodes.second != i->int_nodes.first) {
 			o << i->int_nodes.first << ".." <<
 				i->int_nodes.second -1;
 		} else {
-			o << "none";
+			o << none;
 		}
 		o << ' ' << i->get_name();
 		o << endl;
@@ -344,13 +345,23 @@ if (subcircuit_map.size()) {
 }
 #if PRS_SUPPLY_OVERRIDES
 if (supply_map.size()) {
-	o << auto_indent << "rule supply map: [rules, Vdd, GND]" << endl;
+	o << auto_indent << "rule supply map: (rules, macros, Vdd, GND)" << endl;
 	typedef	supply_map_type::const_iterator	const_iterator;
 	const_iterator i(supply_map.begin()), e(supply_map.end());
 	for ( ; i!=e; ++i) {
-		INVARIANT(i->rules.first != i->rules.second);
-		o << auto_indent << i->rules.first << ".." << i->rules.second -1
-			<< ": " << i->Vdd << ", " << i->GND << endl;
+		o << auto_indent;
+		if (i->rules.second != i->rules.first) {
+			o << i->rules.first << ".." << i->rules.second -1;
+		} else {
+			o << none;
+		}
+		o << ' ';
+		if (i->macros.second != i->macros.first) {
+			o << i->macros.first << ".." << i->macros.second -1;
+		} else {
+			o << none;
+		}
+		o << " : " << i->Vdd << ", " << i->GND << endl;
 	}
 }
 #endif
@@ -534,6 +545,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	const_iterator i(supply_map.begin()), e(supply_map.end());
 	for ( ; i!=e; ++i) {
 		write_value(o, i->rules);
+		write_value(o, i->macros);
 		write_value(o, i->Vdd);
 		write_value(o, i->GND);
 	}
@@ -604,6 +616,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	for ( ; j<s; ++j) {
 		supply_override_entry n;
 		read_value(i, n.rules);
+		read_value(i, n.macros);
 		read_value(i, n.Vdd);
 		read_value(i, n.GND);
 		supply_map.push_back(n);

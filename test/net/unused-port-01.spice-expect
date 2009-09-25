@@ -1,7 +1,7 @@
-.subckt foo<> GND Vdd x z
-M0_ GND x z GND nch W=5u L=2u
-M1_ Vdd x z Vdd pch W=5u L=2u
+.subckt foo<> !GND !Vdd x z
+M0_ !GND x z !GND nch W=5u L=2u
+M1_ !Vdd x z !Vdd pch W=5u L=2u
 .ends
 
-xbar GND Vdd bar.x bar.z foo<>
+xbar !GND !Vdd bar.x bar.z foo<>
 

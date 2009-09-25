@@ -68,7 +68,7 @@ Persistent Object Manager text dump:
 	64	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	66	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	footprnt	0	#HEAD#	#TAIL#	778
+	67	##ADDR##	footprnt	0	#HEAD#	#TAIL#	786
 	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	69	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	70	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -146,8 +146,8 @@ In namespace "", we have: {
           ~in[0] -> _out+
           ~in[0] & ~in[1] -> _out+
           ~in[0] & ~in[1] & ~in[2] -> _out+
-          rule supply map: [rules, Vdd, GND]
-          0..3: 2, 1
+          rule supply map: (rules, macros, Vdd, GND)
+          0..3 none : 2, 1
         }
       }
       }

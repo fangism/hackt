@@ -1,0 +1,25 @@
+// "supply-subckt-02.hac"
+// copy-modified from "supply-subckt-01.hac"
+
+defproc foo(
+bool myVdd, myGND;
+bool x, w) {
+bool y, z;
+prs <myVdd, myGND> {
+	x	=> y-
+	y	=> z-
+	z	=> w-
+}
+}
+
+foo bar;
+// does not use primary implicit supplies
+
+/**
+defproc nested() {
+	foo bar[2];
+}
+
+nested thing;
+**/
+

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.53.10.1 2009/09/18 18:12:16 fang Exp $
+	$Id: devel_switches.h,v 1.53.10.2 2009/09/25 01:21:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -208,11 +208,12 @@
 // features targeted for branch HACKT-00-01-04-main-00-83-29-supply-01
 /**
 	Define to 1 to have every process definition implicitly
-	declare local Vdd and GND ports.  
+	declare local !Vdd and !GND ports.  
 	This will require some special handling in port_formals_manager
 	so the implicit ports are hidden from the list substructure, 
 	and only appear in the map.  
 	Goal: 1
+	Status: done, tested
  */
 #define	IMPLICIT_SUPPLY_PORTS			1
 
@@ -220,6 +221,7 @@
 	Define to 1 to allow prs bodies to override Vdd and GND.
 	Note: should allow declared internal nodes, not just regular nodes.
 	Goal: 1
+	Status: in progress, adding hacknet support
  */
 #define	PRS_SUPPLY_OVERRIDES			(1 && IMPLICIT_SUPPLY_PORTS)
 
@@ -228,6 +230,7 @@
 	per-instance.  
 	Will require syntax extension.  
 	Goal: 1
+	Status: not begun, other than syntax
  */
 #define	INSTANCE_SUPPLY_OVERRIDES		(1 && IMPLICIT_SUPPLY_PORTS)
 

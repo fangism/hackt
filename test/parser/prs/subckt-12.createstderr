@@ -61,7 +61,7 @@ Persistent Object Manager text dump:
 	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	759
+	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	767
 	61	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	62	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	63	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -159,8 +159,8 @@ In namespace "", we have: {
         subcircuit (rules, macros, @nodes): 
         1: 0..2 none none 
         2: none 0..1 none 
-        rule supply map: [rules, Vdd, GND]
-        0..3: 2, 1
+        rule supply map: (rules, macros, Vdd, GND)
+        0..3 0..2 : 2, 1
       }
       }
 

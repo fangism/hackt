@@ -1,7 +1,7 @@
-M0_ GND en1 #0 GND nch W=5u L=2u
-M1_ GND en2 #0 GND nch W=5u L=2u
-M2_:pchg Vdd en1 #1 Vdd pch W=5u L=2u
-M3_:pchg #1 en2 #0 Vdd pch W=5u L=2u
-M4_ #0 a #2 GND nch W=5u L=2u
-M5_ #2 b _o GND nch W=5u L=2u
+M0_ !GND en1 #0 !GND nch W=5u L=2u
+M1_ !GND en2 #0 !GND nch W=5u L=2u
+M2_:pchg !Vdd en1 #1 !Vdd pch W=5u L=2u
+M3_:pchg #1 en2 #0 !Vdd pch W=5u L=2u
+M4_ #0 a #2 !GND nch W=5u L=2u
+M5_ #2 b _o !GND nch W=5u L=2u
 

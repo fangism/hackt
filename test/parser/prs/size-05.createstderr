@@ -72,7 +72,7 @@ Persistent Object Manager text dump:
 	68	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	69	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	28
-	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	639
+	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	647
 	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	74	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -157,8 +157,8 @@ In namespace "", we have: {
         ~a<20,2> -> b+
         a<30,3> -> b-
         ~a<30,3> -> b+
-        rule supply map: [rules, Vdd, GND]
-        0..5: 2, 1
+        rule supply map: (rules, macros, Vdd, GND)
+        0..5 none : 2, 1
       }
       }
 

@@ -62,7 +62,7 @@ Persistent Object Manager text dump:
 	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	61	##ADDR##	footprnt	0	#HEAD#	#TAIL#	702
+	61	##ADDR##	footprnt	0	#HEAD#	#TAIL#	710
 	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
@@ -107,6 +107,6 @@ footprint: {
   x<10> | x<10> -> z- [N_reff=0.05]
   ~x<20> | ~x<20> -> y+
   ~x<20> | ~x<20> -> z+ [P_reff=0.1]
-  rule supply map: [rules, Vdd, GND]
-  0..3: 2, 1
+  rule supply map: (rules, macros, Vdd, GND)
+  0..3 none : 2, 1
 }

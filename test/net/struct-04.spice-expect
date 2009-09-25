@@ -1,23 +1,23 @@
 * subcircuit pfoo is empty.
 * subcircuit pbar is empty.
 * subcircuit pick is empty.
-.subckt invert__it GND Vdd p/b/b/b q/a/a/a q/a/b/a q/b/a/b
-M0_ GND p/b/b/b x GND nch W=5u L=2u
-M1_ Vdd p/b/b/b x Vdd pch W=5u L=2u
-M2_ GND x y GND nch W=5u L=2u
-M3_ Vdd x y Vdd pch W=5u L=2u
-M4_ GND x q/b/a/b GND nch W=5u L=2u
-M5_ Vdd x q/b/a/b Vdd pch W=5u L=2u
-M6_ GND y q/a/a/a GND nch W=5u L=2u
-M7_ Vdd y q/a/a/a Vdd pch W=5u L=2u
-M8_ GND p/b/b/b q/a/b/a GND nch W=5u L=2u
-M9_ Vdd p/b/b/b q/a/b/a Vdd pch W=5u L=2u
+.subckt invert__it !GND !Vdd p/b/b/b q/a/a/a q/a/b/a q/b/a/b
+M0_ !GND p/b/b/b x !GND nch W=5u L=2u
+M1_ !Vdd p/b/b/b x !Vdd pch W=5u L=2u
+M2_ !GND x y !GND nch W=5u L=2u
+M3_ !Vdd x y !Vdd pch W=5u L=2u
+M4_ !GND x q/b/a/b !GND nch W=5u L=2u
+M5_ !Vdd x q/b/a/b !Vdd pch W=5u L=2u
+M6_ !GND y q/a/a/a !GND nch W=5u L=2u
+M7_ !Vdd y q/a/a/a !Vdd pch W=5u L=2u
+M8_ !GND p/b/b/b q/a/b/a !GND nch W=5u L=2u
+M9_ !Vdd p/b/b/b q/a/b/a !Vdd pch W=5u L=2u
 .ends
 
-.subckt invert__them GND Vdd p q
-xdee GND Vdd p l/a/a/a l/a/b/a l/b/a/b invert__it
-xdum GND Vdd l/b/b/b q k/a/b/a k/b/a/b invert__it
+.subckt invert__them !GND !Vdd p q
+xdee !GND !Vdd p l/a/a/a l/a/b/a l/b/a/b invert__it
+xdum !GND !Vdd l/b/b/b q k/a/b/a k/b/a/b invert__it
 .ends
 
-xnow GND Vdd now.p now.q invert__them
+xnow !GND !Vdd now.p now.q invert__them
 

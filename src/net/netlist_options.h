@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.3 2009/09/14 21:17:13 fang Exp $
+	$Id: netlist_options.h,v 1.3.2.1 2009/09/25 01:21:42 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -82,6 +82,7 @@ struct netlist_options {
 	string				mangle_colon;
 	string				mangle_internal_at;
 	string				mangle_auxiliary_pound;
+	string				mangle_implicit_bang;
 
 	/**
 		String to emit before newline of a continued line.

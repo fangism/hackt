@@ -64,7 +64,7 @@ Persistent Object Manager text dump:
 	60	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	751
+	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	759
 	64	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	66	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -139,8 +139,8 @@ In namespace "", we have: {
         resolved macros:
         echo<3,2,1>(p,q)
         echo<99.99>(r,s)
-        rule supply map: [rules, Vdd, GND]
-        0..1: 2, 1
+        rule supply map: (rules, macros, Vdd, GND)
+        0..1 0..1 : 2, 1
       }
       }
 

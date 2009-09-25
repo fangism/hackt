@@ -100,7 +100,7 @@ Persistent Object Manager text dump:
 	87	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	88	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	89	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	90	##ADDR##	footprnt	0	#HEAD#	#TAIL#	597
+	90	##ADDR##	footprnt	0	#HEAD#	#TAIL#	605
 	91	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	92	##ADDR##	procdefn	0	#HEAD#	#TAIL#	136
 	93	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -415,8 +415,8 @@ In namespace "", we have: {
         ~a & ~b -> _out+
         _out -> out-
         ~_out -> out+
-        rule supply map: [rules, Vdd, GND]
-        0..3: 2, 1
+        rule supply map: (rules, macros, Vdd, GND)
+        0..3 none : 2, 1
       }
       }
 

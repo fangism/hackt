@@ -1,51 +1,51 @@
-.subckt recurse<0> GND Vdd a b
-M0_ GND a b GND nch W=5u L=2u
-M1_ Vdd a b Vdd pch W=5u L=2u
+.subckt recurse<0> !GND !Vdd a b
+M0_ !GND a b !GND nch W=5u L=2u
+M1_ !Vdd a b !Vdd pch W=5u L=2u
 .ends
 
-.subckt recurse<1> GND Vdd a b
-xj GND Vdd a x recurse<0>
-xk GND Vdd x b recurse<0>
+.subckt recurse<1> !GND !Vdd a b
+xj !GND !Vdd a x recurse<0>
+xk !GND !Vdd x b recurse<0>
 .ends
 
-.subckt recurse<2> GND Vdd a b
-xj GND Vdd a x recurse<1>
-xk GND Vdd x b recurse<1>
+.subckt recurse<2> !GND !Vdd a b
+xj !GND !Vdd a x recurse<1>
+xk !GND !Vdd x b recurse<1>
 .ends
 
-.subckt recurse<3> GND Vdd a b
-xj GND Vdd a x recurse<2>
-xk GND Vdd x b recurse<2>
+.subckt recurse<3> !GND !Vdd a b
+xj !GND !Vdd a x recurse<2>
+xk !GND !Vdd x b recurse<2>
 .ends
 
-.subckt recurse<4> GND Vdd a b
-xj GND Vdd a x recurse<3>
-xk GND Vdd x b recurse<3>
+.subckt recurse<4> !GND !Vdd a b
+xj !GND !Vdd a x recurse<3>
+xk !GND !Vdd x b recurse<3>
 .ends
 
-.subckt recurse<5> GND Vdd a b
-xj GND Vdd a x recurse<4>
-xk GND Vdd x b recurse<4>
+.subckt recurse<5> !GND !Vdd a b
+xj !GND !Vdd a x recurse<4>
+xk !GND !Vdd x b recurse<4>
 .ends
 
-.subckt recurse<6> GND Vdd a b
-xj GND Vdd a x recurse<5>
-xk GND Vdd x b recurse<5>
+.subckt recurse<6> !GND !Vdd a b
+xj !GND !Vdd a x recurse<5>
+xk !GND !Vdd x b recurse<5>
 .ends
 
-.subckt recurse<7> GND Vdd a b
-xj GND Vdd a x recurse<6>
-xk GND Vdd x b recurse<6>
+.subckt recurse<7> !GND !Vdd a b
+xj !GND !Vdd a x recurse<6>
+xk !GND !Vdd x b recurse<6>
 .ends
 
-.subckt recurse<8> GND Vdd a b
-xj GND Vdd a x recurse<7>
-xk GND Vdd x b recurse<7>
+.subckt recurse<8> !GND !Vdd a b
+xj !GND !Vdd a x recurse<7>
+xk !GND !Vdd x b recurse<7>
 .ends
 
-.subckt recurse<9> GND Vdd a b
-xj GND Vdd a x recurse<8>
-xk GND Vdd x b recurse<8>
+.subckt recurse<9> !GND !Vdd a b
+xj !GND !Vdd a x recurse<8>
+xk !GND !Vdd x b recurse<8>
 .ends
 
 

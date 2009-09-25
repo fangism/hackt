@@ -49,7 +49,7 @@ Persistent Object Manager text dump:
 	45	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	footprnt	0	#HEAD#	#TAIL#	412
+	48	##ADDR##	footprnt	0	#HEAD#	#TAIL#	420
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -94,6 +94,6 @@ footprint: {
   4	y
   resolved prs:
   y -> x-
-  rule supply map: [rules, Vdd, GND]
-  0..0: 2, 1
+  rule supply map: (rules, macros, Vdd, GND)
+  0..0 none : 2, 1
 }

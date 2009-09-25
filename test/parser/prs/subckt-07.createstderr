@@ -60,7 +60,7 @@ Persistent Object Manager text dump:
 	56	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	57	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	58	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	762
+	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	770
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -130,6 +130,6 @@ footprint: {
   subcircuit (rules, macros, @nodes): 
   1: 1..1 none none 
   2: 3..5 none none 
-  rule supply map: [rules, Vdd, GND]
-  0..7: 2, 1
+  rule supply map: (rules, macros, Vdd, GND)
+  0..7 none : 2, 1
 }

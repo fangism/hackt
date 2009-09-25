@@ -1,24 +1,24 @@
-.subckt celem<2> GND Vdd a[0] a[1] o
-M0_ GND a[0] #0 GND nch W=5u L=2u
-M1_ #0 a[1] o GND nch W=5u L=2u
-M2_ Vdd a[0] #1 Vdd pch W=5u L=2u
-M3_ #1 a[1] o Vdd pch W=5u L=2u
+.subckt celem<2> !GND !Vdd a[0] a[1] o
+M0_ !GND a[0] #0 !GND nch W=5u L=2u
+M1_ #0 a[1] o !GND nch W=5u L=2u
+M2_ !Vdd a[0] #1 !Vdd pch W=5u L=2u
+M3_ #1 a[1] o !Vdd pch W=5u L=2u
 .ends
 
-.subckt celem<3> GND Vdd a[0] a[1] a[2] o
-M0_ GND a[0] #0 GND nch W=5u L=2u
-M1_ #0 a[1] #1 GND nch W=5u L=2u
-M2_ #1 a[2] o GND nch W=5u L=2u
-M3_ Vdd a[0] #2 Vdd pch W=5u L=2u
-M4_ #2 a[1] #3 Vdd pch W=5u L=2u
-M5_ #3 a[2] o Vdd pch W=5u L=2u
+.subckt celem<3> !GND !Vdd a[0] a[1] a[2] o
+M0_ !GND a[0] #0 !GND nch W=5u L=2u
+M1_ #0 a[1] #1 !GND nch W=5u L=2u
+M2_ #1 a[2] o !GND nch W=5u L=2u
+M3_ !Vdd a[0] #2 !Vdd pch W=5u L=2u
+M4_ #2 a[1] #3 !Vdd pch W=5u L=2u
+M5_ #3 a[2] o !Vdd pch W=5u L=2u
 .ends
 
-.subckt ctree<3,2> GND Vdd x[0][0] x[0][1] x[0][2] x[1][0] x[1][1] x[1][2] y
-xc2 GND Vdd q[0] q[1] y celem<2>
-xc1[0] GND Vdd x[0][0] x[0][1] x[0][2] q[0] celem<3>
-xc1[1] GND Vdd x[1][0] x[1][1] x[1][2] q[1] celem<3>
+.subckt ctree<3,2> !GND !Vdd x[0][0] x[0][1] x[0][2] x[1][0] x[1][1] x[1][2] y
+xc2 !GND !Vdd q[0] q[1] y celem<2>
+xc1[0] !GND !Vdd x[0][0] x[0][1] x[0][2] q[0] celem<3>
+xc1[1] !GND !Vdd x[1][0] x[1][1] x[1][2] q[1] celem<3>
 .ends
 
-xfoo GND Vdd foo.x[0][0] foo.x[0][1] foo.x[0][2] foo.x[1][0] foo.x[1][1] foo.x[1][2] foo.y ctree<3,2>
+xfoo !GND !Vdd foo.x[0][0] foo.x[0][1] foo.x[0][2] foo.x[1][0] foo.x[1][1] foo.x[1][2] foo.y ctree<3,2>
 

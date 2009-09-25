@@ -11,6 +11,7 @@ mangle_array_index_close=]
 mangle_array_index_open=[
 mangle_auxiliary_pound=#
 mangle_colon=:
+mangle_implicit_bang=!
 mangle_internal_at=@
 mangle_parameter_group_close=}
 mangle_parameter_group_open={

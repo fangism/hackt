@@ -88,7 +88,7 @@ Persistent Object Manager text dump:
 	84	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	85	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	86	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	87	##ADDR##	footprnt	0	#HEAD#	#TAIL#	600
+	87	##ADDR##	footprnt	0	#HEAD#	#TAIL#	608
 	88	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	90	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
@@ -132,7 +132,7 @@ Persistent Object Manager text dump:
 	128	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	129	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	130	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	131	##ADDR##	footprnt	0	#HEAD#	#TAIL#	504
+	131	##ADDR##	footprnt	0	#HEAD#	#TAIL#	512
 	132	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	133	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	134	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -271,8 +271,8 @@ In namespace "", we have: {
         7	foo<>::x
         resolved prs:
         Ld & Re & xe & x -> _rd-
-        rule supply map: [rules, Vdd, GND]
-        0..0: 2, 1
+        rule supply map: (rules, macros, Vdd, GND)
+        0..0 none : 2, 1
       }
       }
 
@@ -338,8 +338,8 @@ In namespace "", we have: {
           resolved prs:
           id[0] & id[1] -> o-
           ~iu[0] & ~iu[1] -> o+
-          rule supply map: [rules, Vdd, GND]
-          0..1: 2, 1
+          rule supply map: (rules, macros, Vdd, GND)
+          0..1 none : 2, 1
         }
       }
       }

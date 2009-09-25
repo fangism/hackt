@@ -1,33 +1,33 @@
 * subcircuit e1of_TEMP2LATE_ is empty.
-.subckt std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_ GND Vdd in_IND0EX_ in_IND1EX_ o
-M0_ GND in_IND0EX_ _PND_0 GND nch W=5u L=2u
-M1_ _PND_0 in_IND1EX_ ____o GND nch W=5u L=2u
-M2_ Vdd in_IND0EX_ _PND_1 Vdd pch W=5u L=2u
-M3_ _PND_1 in_IND1EX_ ____o Vdd pch W=5u L=2u
-M4_ GND ____o o GND nch W=10u L=2u
-M5_ Vdd ____o o Vdd pch W=10u L=2u
+.subckt std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_ _BANG_GND _BANG_Vdd in_IND0EX_ in_IND1EX_ o
+M0_ _BANG_GND in_IND0EX_ _PND_0 _BANG_GND nch W=5u L=2u
+M1_ _PND_0 in_IND1EX_ ____o _BANG_GND nch W=5u L=2u
+M2_ _BANG_Vdd in_IND0EX_ _PND_1 _BANG_Vdd pch W=5u L=2u
+M3_ _PND_1 in_IND1EX_ ____o _BANG_Vdd pch W=5u L=2u
+M4_ _BANG_GND ____o o _BANG_GND nch W=10u L=2u
+M5_ _BANG_Vdd ____o o _BANG_Vdd pch W=10u L=2u
 .ends
 
-.subckt foo_SCP_wire____copy_TEMP2LATE_ GND Vdd in_DOT_e oe_IND0EX_ oe_IND1EX_
-xcomp GND Vdd oe_IND0EX_ oe_IND1EX_ in_DOT_e std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_
+.subckt foo_SCP_wire____copy_TEMP2LATE_ _BANG_GND _BANG_Vdd in_DOT_e oe_IND0EX_ oe_IND1EX_
+xcomp _BANG_GND _BANG_Vdd oe_IND0EX_ oe_IND1EX_ in_DOT_e std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_
 .ends
 
-.subckt std_SCP_logic_SCP_celem_TEMP3_COM_10LATE_ GND Vdd in_IND0EX_ in_IND1EX_ in_IND2EX_ o
-M0_ GND in_IND0EX_ _PND_0 GND nch W=5u L=2u
-M1_ _PND_0 in_IND1EX_ _PND_1 GND nch W=5u L=2u
-M2_ _PND_1 in_IND2EX_ ____o GND nch W=5u L=2u
-M3_ Vdd in_IND0EX_ _PND_2 Vdd pch W=5u L=2u
-M4_ _PND_2 in_IND1EX_ _PND_3 Vdd pch W=5u L=2u
-M5_ _PND_3 in_IND2EX_ ____o Vdd pch W=5u L=2u
-M6_ GND ____o o GND nch W=10u L=2u
-M7_ Vdd ____o o Vdd pch W=10u L=2u
+.subckt std_SCP_logic_SCP_celem_TEMP3_COM_10LATE_ _BANG_GND _BANG_Vdd in_IND0EX_ in_IND1EX_ in_IND2EX_ o
+M0_ _BANG_GND in_IND0EX_ _PND_0 _BANG_GND nch W=5u L=2u
+M1_ _PND_0 in_IND1EX_ _PND_1 _BANG_GND nch W=5u L=2u
+M2_ _PND_1 in_IND2EX_ ____o _BANG_GND nch W=5u L=2u
+M3_ _BANG_Vdd in_IND0EX_ _PND_2 _BANG_Vdd pch W=5u L=2u
+M4_ _PND_2 in_IND1EX_ _PND_3 _BANG_Vdd pch W=5u L=2u
+M5_ _PND_3 in_IND2EX_ ____o _BANG_Vdd pch W=5u L=2u
+M6_ _BANG_GND ____o o _BANG_GND nch W=10u L=2u
+M7_ _BANG_Vdd ____o o _BANG_Vdd pch W=10u L=2u
 .ends
 
-.subckt foo_SCP_wire____copy_TEMP3LATE_ GND Vdd in_DOT_e oe_IND0EX_ oe_IND1EX_ oe_IND2EX_
-xcomp GND Vdd oe_IND0EX_ oe_IND1EX_ oe_IND2EX_ in_DOT_e std_SCP_logic_SCP_celem_TEMP3_COM_10LATE_
+.subckt foo_SCP_wire____copy_TEMP3LATE_ _BANG_GND _BANG_Vdd in_DOT_e oe_IND0EX_ oe_IND1EX_ oe_IND2EX_
+xcomp _BANG_GND _BANG_Vdd oe_IND0EX_ oe_IND1EX_ oe_IND2EX_ in_DOT_e std_SCP_logic_SCP_celem_TEMP3_COM_10LATE_
 .ends
 
-xc0 GND Vdd in_DOT_e c0_DOT_o_IND0EX__DOT_e c0_DOT_o_IND1EX__DOT_e foo_SCP_wire____copy_TEMP2LATE_
-xc1_IND0EX_ GND Vdd c0_DOT_o_IND0EX__DOT_e out_IND0EX__IND0EX__DOT_e out_IND0EX__IND1EX__DOT_e out_IND0EX__IND2EX__DOT_e foo_SCP_wire____copy_TEMP3LATE_
-xc1_IND1EX_ GND Vdd c0_DOT_o_IND1EX__DOT_e out_IND1EX__IND0EX__DOT_e out_IND1EX__IND1EX__DOT_e out_IND1EX__IND2EX__DOT_e foo_SCP_wire____copy_TEMP3LATE_
+xc0 _BANG_GND _BANG_Vdd in_DOT_e c0_DOT_o_IND0EX__DOT_e c0_DOT_o_IND1EX__DOT_e foo_SCP_wire____copy_TEMP2LATE_
+xc1_IND0EX_ _BANG_GND _BANG_Vdd c0_DOT_o_IND0EX__DOT_e out_IND0EX__IND0EX__DOT_e out_IND0EX__IND1EX__DOT_e out_IND0EX__IND2EX__DOT_e foo_SCP_wire____copy_TEMP3LATE_
+xc1_IND1EX_ _BANG_GND _BANG_Vdd c0_DOT_o_IND1EX__DOT_e out_IND1EX__IND0EX__DOT_e out_IND1EX__IND1EX__DOT_e out_IND1EX__IND2EX__DOT_e foo_SCP_wire____copy_TEMP3LATE_
 

@@ -22,7 +22,7 @@ Persistent Object Manager text dump:
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	406
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -59,4 +59,6 @@ footprint: {
   5	d
   resolved macros:
   passn<;lvt>(g,s,d)
+  rule supply map: (rules, macros, Vdd, GND)
+  none 0..0 : 2, 1
 }

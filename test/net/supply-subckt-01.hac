@@ -1,0 +1,20 @@
+// "supply-subckt-01.hac"
+// copy-modified from"supply-06.hac"
+
+defproc foo(
+bool myVdd, myGND;
+bool x, w) {
+bool y, z;
+prs <myVdd> {
+	x	=> y-
+}
+prs <myVdd, myGND> {
+	y	=> z-
+}
+prs {
+	z	=> w-
+}
+}
+
+foo bar;
+

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.3 2009/09/14 21:17:10 fang Exp $
+	$Id: netgraph.cc,v 1.3.2.1 2009/09/25 01:21:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -245,9 +245,11 @@ case NODE_TYPE_AUXILIARY:
 		o << index;
 	}
 	break;
+#if !PRS_SUPPLY_OVERRIDES
 case NODE_TYPE_SUPPLY:
 	o << name;	// prefix with any designator? '$' or '!' ?
 	break;
+#endif
 default:
 	DIE;
 }
@@ -275,9 +277,11 @@ case NODE_TYPE_AUXILIARY:
 		o << index;
 	}
 	break;
+#if !PRS_SUPPLY_OVERRIDES
 case NODE_TYPE_SUPPLY:
 	o << '!' << name;
 	break;
+#endif
 default:
 	o << "???";
 }
@@ -456,22 +460,30 @@ transistor::dump_raw(ostream& o) const {
 
 // tag objects for convenience
 const node::__logical_node_tag	node::logical_node_tag = __logical_node_tag();
+#if !PRS_SUPPLY_OVERRIDES
 const node::__supply_node_tag	node::supply_node_tag = __supply_node_tag();
+#endif
 const node::__internal_node_tag	node::internal_node_tag = __internal_node_tag();
 const node::__auxiliary_node_tag	node::auxiliary_node_tag = __auxiliary_node_tag();
 
 // case sensitive?
 const node
-netlist::void_node("__VOID__", node::auxiliary_node_tag),
-netlist::GND_node("GND", node::supply_node_tag),
-netlist::Vdd_node("Vdd", node::supply_node_tag);
+netlist::void_node("__VOID__", node::auxiliary_node_tag)
+#if !PRS_SUPPLY_OVERRIDES
+, netlist::GND_node("GND", node::supply_node_tag)
+, netlist::Vdd_node("Vdd", node::supply_node_tag)
+#endif
+;
 
 // universal node indices to every subcircuit
 // these should correspond with the order of insertion in netlist's ctor
 const	index_type
-netlist::void_index = 0,
-netlist::GND_index = 1,
-netlist::Vdd_index = 2;
+netlist::void_index = 0
+#if !PRS_SUPPLY_OVERRIDES
+, netlist::GND_index = 1
+, netlist::Vdd_index = 2
+#endif
+;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 netlist::netlist() : netlist_common(), name(), 
@@ -484,8 +496,10 @@ netlist::netlist() : netlist_common(), name(),
 	node_pool.reserve(8);	// reasonable pre-allocation
 	// following order should match above universal node indices
 	node_pool.push_back(void_node);
+#if !PRS_SUPPLY_OVERRIDES
 	node_pool.push_back(GND_node);
 	node_pool.push_back(Vdd_node);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -590,6 +604,7 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 		STACKTRACE_INDENT_PRINT("formal node = " << *fi << endl);
 		const node& fn(subnet.node_pool[*fi]);	// formal node
 		INVARIANT(fn.used);
+#if !PRS_SUPPLY_OVERRIDES
 		if (fn.is_supply_node()) {
 			if (*fi == GND_index) {
 				np.actuals.push_back(GND_index);
@@ -599,7 +614,9 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 				cerr << "ERROR: unknown supply port." << endl;
 				THROW_EXIT;
 			}
-		} else if (fn.is_logical_node()) {
+		} else
+#endif
+		if (fn.is_logical_node()) {
 			const index_type fid = fn.index;
 			STACKTRACE_INDENT_PRINT("formal id = " << fid << endl);
 
@@ -974,12 +991,14 @@ void
 netlist::summarize_ports(const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
 	// could mark_used_nodes here instead?
+#if !PRS_SUPPLY_OVERRIDES
 	if (node_pool[GND_index].used) {
 		port_list.push_back(GND_index);
 	}
 	if (node_pool[Vdd_index].used) {
 		port_list.push_back(Vdd_index);
 	}
+#endif
 {
 	typedef	unique_list<index_type>	port_index_list_type;
 	bool_port_alias_collector V;

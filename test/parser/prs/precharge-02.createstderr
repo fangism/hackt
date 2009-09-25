@@ -35,7 +35,7 @@ Persistent Object Manager text dump:
 	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	472
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	480
 	35	##ADDR##	procdefn	0	#HEAD#	#TAIL#	139
 	36	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	37	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -63,7 +63,7 @@ Persistent Object Manager text dump:
 	59	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	481
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	489
 	63	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	64	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -129,8 +129,8 @@ In namespace "", we have: {
         6	pchg_test<>::en
         resolved prs:
         a &{+en} b -> c-
-        rule supply map: [rules, Vdd, GND]
-        0..0: 2, 1
+        rule supply map: (rules, macros, Vdd, GND)
+        0..0 none : 2, 1
       }
       }
 
@@ -180,8 +180,8 @@ In namespace "", we have: {
         6	pchg_test2<>::_en
         resolved prs:
         a &{+~_en} b -> c-
-        rule supply map: [rules, Vdd, GND]
-        0..0: 2, 1
+        rule supply map: (rules, macros, Vdd, GND)
+        0..0 none : 2, 1
       }
       }
 

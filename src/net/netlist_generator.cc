@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.3 2009/09/14 21:17:12 fang Exp $
+	$Id: netlist_generator.cc,v 1.3.2.1 2009/09/25 01:21:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sstream>		// for ostringstream
 #include <iterator>		// for ostream_iterator
+#include <algorithm>
 #include "net/netlist_generator.h"
 #include "net/netlist_options.h"
 #include "Object/state_manager.h"
@@ -31,6 +32,7 @@ using entity::pint_value_type;
 using entity::pint_const;
 using std::ostringstream;
 using std::ostream_iterator;
+using std::upper_bound;
 using util::value_saver;
 using entity::PRS::PRS_LITERAL_TYPE_ENUM;
 using entity::PRS::PRS_NOT_EXPR_TYPE_ENUM;
@@ -248,9 +250,12 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	typedef	subckt_map_type::const_iterator		const_iterator;
 	// must be sorted ranges
 	const value_saver<const prs_footprint*> __prs(prs, &r);
+#if !PRS_SUPPLY_OVERRIDES
 	// for now, default supplies
-	const value_saver<index_type> __s1(low_supply, netlist::GND_index);
-	const value_saver<index_type> __s2(high_supply, netlist::Vdd_index);
+	const value_saver<index_type>
+		__s1(low_supply, netlist::GND_index),
+		__s2(high_supply, netlist::Vdd_index);
+#endif
 {
 	STACKTRACE_INDENT_PRINT("reserving internal nodes..." << endl);
 	// Internal node definitions may have a dependency ordering
@@ -314,14 +319,14 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		const value_saver<netlist_common*>
 			__tmp(current_local_netlist, &n);
 		for ( ; i < si->rules.second; ++i) {
-			rpool[i].accept(*this);
+			visit_rule(rpool, i);
 		}
 			--i;	// back-adjust before continue
 		// advance to next non-empty subcircuit
 		do { ++si; ++mi; } while (si!=se && si->rules_empty());
 	} else {
 		// rule is outside of subcircuits
-		rpool[i].accept(*this);
+		visit_rule(rpool, i);
 	}
 	}	// end for
 }{
@@ -341,19 +346,75 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 			const value_saver<netlist_common*>
 				__tmp(current_local_netlist, &n);
 		for ( ; i < si->macros.second; ++i) {
-			mpool[i].accept(*this);
+			visit_macro(mpool, i);
 		}
 			--i;	// back-adjust before continue
 		// advance to next non-empty subcircuit
 		do { ++si; ++mi; } while (si!=se && si->macros_empty());
 	} else {
 		// macro is outside of subcircuits
-		mpool[i].accept(*this);
+		visit_macro(mpool, i);
 	}
 	}	// end for
 }
 	// process all subcircuits first, then remaining local rules/macros
 	current_netlist->mark_used_nodes();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRS_SUPPLY_OVERRIDES
+// for use with std::upper_bound
+static
+bool
+rule_supply_map_compare(const index_type v, 
+		const entity::PRS::footprint::supply_map_type::value_type& i) {
+	return v < i.rules.first;
+}
+
+static
+bool
+macro_supply_map_compare(const index_type v,
+		const entity::PRS::footprint::supply_map_type::value_type& i) {
+	return v < i.macros.first;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class RP>
+void
+netlist_generator::visit_rule(const RP& rpool, const index_type i) {
+#if PRS_SUPPLY_OVERRIDES
+	const prs_footprint::supply_map_type& m(prs->get_supply_map());
+	typedef	prs_footprint::supply_map_type::const_iterator	const_iterator;
+	const_iterator f(upper_bound(m.begin(), m.end(), i, 
+		&rule_supply_map_compare));
+	INVARIANT(f != m.begin());
+	--f;
+	// lookup supply in map
+	const value_saver<index_type>
+		__s1(low_supply, register_named_node(f->GND)),
+		__s2(high_supply, register_named_node(f->Vdd));
+#endif
+	rpool[i].accept(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class MP>
+void
+netlist_generator::visit_macro(const MP& mpool, const index_type i) {
+#if PRS_SUPPLY_OVERRIDES
+	const prs_footprint::supply_map_type& m(prs->get_supply_map());
+	typedef	prs_footprint::supply_map_type::const_iterator	const_iterator;
+	const_iterator f(upper_bound(m.begin(), m.end(), i, 
+		&macro_supply_map_compare));
+	INVARIANT(f != m.begin());
+	--f;
+	// lookup supply in map
+	const value_saver<index_type>
+		__s1(low_supply, register_named_node(f->GND)),
+		__s2(high_supply, register_named_node(f->Vdd));
+#endif
+	mpool[i].accept(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -368,8 +429,7 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 	typedef	entity::PRS::footprint_rule		rule;
 	// set foot_node and output_node and fet_type
 	const value_saver<index_type>
-		__t1(foot_node,
-			(r.dir ? netlist::Vdd_index : netlist::GND_index)),
+		__t1(foot_node, (r.dir ? high_supply : low_supply)),
 		__t2(output_node, register_named_node(r.output_index));
 	const value_saver<transistor::fet_type>
 		__t3(fet_type, (r.dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
@@ -471,8 +531,7 @@ if (!n.used) {
 	// else need to define internal node once only
 	// TODO: honor prs supply override directives
 	const value_saver<index_type>
-		__t1(foot_node,
-			(dir ? netlist::Vdd_index : netlist::GND_index)),
+		__t1(foot_node, (dir ? high_supply : low_supply)),
 		__t2(output_node, node_ind);
 	const value_saver<transistor::fet_type>
 		__t3(fet_type,
@@ -510,6 +569,7 @@ if (!n.used) {
 /**
 	Registers node for first time or just returns previously registered
 	index.  Also marks node as used.  
+	Also applicable to implicit supply nodes !GND and !Vdd.
  */
 index_type
 netlist_generator::register_named_node(const index_type n) {
@@ -722,7 +782,6 @@ netlist_generator::visit(const entity::PRS::footprint_macro& e) {
 if (passn || passp) {
 	transistor t;
 	t.type = passp ? transistor::PFET_TYPE : transistor::NFET_TYPE;
-	// TODO: override with vt types
 	t.gate = register_named_node(*e.nodes[0].begin());
 	t.source = register_named_node(*e.nodes[1].begin());
 	t.drain = register_named_node(*e.nodes[2].begin());

@@ -1,25 +1,25 @@
-.subckt foo<15> GND Vdd a b y
-M0_ GND a #0 GND nch W=15u L=2u
-M1_ #0 b y GND nch W=15u L=2u
-M2_ Vdd a #1 Vdd pch W=15u L=2u
-M3_ #1 b y Vdd pch W=15u L=2u
+.subckt foo<15> !GND !Vdd a b y
+M0_ !GND a #0 !GND nch W=15u L=2u
+M1_ #0 b y !GND nch W=15u L=2u
+M2_ !Vdd a #1 !Vdd pch W=15u L=2u
+M3_ #1 b y !Vdd pch W=15u L=2u
 .ends
 
-.subckt foo<25> GND Vdd a b y
-M0_ GND a #0 GND nch W=20u L=2u
-M1_ #0 b y GND nch W=20u L=2u
-M2_ Vdd a #1 Vdd pch W=25u L=2u
-M3_ #1 b y Vdd pch W=25u L=2u
+.subckt foo<25> !GND !Vdd a b y
+M0_ !GND a #0 !GND nch W=20u L=2u
+M1_ #0 b y !GND nch W=20u L=2u
+M2_ !Vdd a #1 !Vdd pch W=25u L=2u
+M3_ #1 b y !Vdd pch W=25u L=2u
 .ends
 
-.subckt foo<50> GND Vdd a b y
-M0_ GND a #0 GND nch W=20u L=2u
-M1_ #0 b y GND nch W=20u L=2u
-M2_ Vdd a #1 Vdd pch W=30u L=2u
-M3_ #1 b y Vdd pch W=30u L=2u
+.subckt foo<50> !GND !Vdd a b y
+M0_ !GND a #0 !GND nch W=20u L=2u
+M1_ #0 b y !GND nch W=20u L=2u
+M2_ !Vdd a #1 !Vdd pch W=30u L=2u
+M3_ #1 b y !Vdd pch W=30u L=2u
 .ends
 
-xbar1 GND Vdd bar1.a bar1.b bar1.y foo<15>
-xbar2 GND Vdd bar2.a bar2.b bar2.y foo<25>
-xbar3 GND Vdd bar3.a bar3.b bar3.y foo<50>
+xbar1 !GND !Vdd bar1.a bar1.b bar1.y foo<15>
+xbar2 !GND !Vdd bar2.a bar2.b bar2.y foo<25>
+xbar3 !GND !Vdd bar3.a bar3.b bar3.y foo<50>
 

@@ -5,6 +5,23 @@
 
 2009-09-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-29-supply-01-06:
+	  supply-override-entry amended with macro indices, analogously
+		to subcircuit map's entry.  
+		Updated createdump-expect test cases accordingly.
+	  hacknet: removed NODE_SUPPLY subtype, now that implicit supplies
+		are actual process ports (automatic).  
+		Removed hacks with old GND and Vdd subcircuit ports, 
+		now rules and macros lookup supplies and set them.
+		Q: what about internal nodes!?
+		Added mangle option to handle '!' from implicit ports.
+		Added some basic test cases, with top-level and single
+			level of hierarchy.
+	  coming soon: instance supply overrides, internal nodes.
+
+
+2009-09-24	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-83-29-supply-01-05:
 	  re-worked PRS::rule_set and rule_set_base class hierarchy
 		to make more sense, only rule_set contains

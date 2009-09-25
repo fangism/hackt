@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.15.4.1 2009/09/24 21:28:51 fang Exp $
+	$Id: PRS_footprint.h,v 1.15.4.2 2009/09/25 01:21:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -184,6 +184,7 @@ public:
 	struct supply_override_entry {
 		// never_ptr<const rule_set>		back_ref;
 		index_range			rules;
+		index_range			macros;
 		size_t				Vdd;
 		size_t				GND;
 
@@ -311,6 +312,9 @@ public:
 	}
 
 #if PRS_SUPPLY_OVERRIDES
+	const supply_map_type&
+	get_supply_map(void) const { return supply_map; }
+
 	supply_map_type&
 	get_supply_map(void) { return supply_map; }
 #endif

@@ -1,23 +1,23 @@
 * subcircuit c1of2 is empty.
-.subckt add GND Vdd en a/d[0] a/d[1] b/d[0] b/d[1] c/d[0] c/d[1] s/d[0] s/d[1]
-M0_ GND en _INT_foot GND nch W=5u L=2u
-M1_ _INT_foot a/d[1] _INT_odd_a GND nch W=5u L=2u
-M2_ _INT_odd_a b/d[0] _INT_odd_b GND nch W=5u L=2u
-M3_ _INT_foot a/d[0] _INT_even_a GND nch W=5u L=2u
-M4_ _INT_even_a b/d[1] _INT_odd_b GND nch W=5u L=2u
-M5_ _INT_odd_b c/d[1] __s[0] GND nch W=5u L=2u
-M6_ _INT_odd_a b/d[1] _INT_even_b GND nch W=5u L=2u
-M7_ _INT_even_a b/d[0] _INT_even_b GND nch W=5u L=2u
-M8_ _INT_even_b c/d[0] __s[0] GND nch W=5u L=2u
-M9_ _INT_odd_b c/d[0] __s[1] GND nch W=5u L=2u
-M10_ _INT_even_b c/d[1] __s[1] GND nch W=5u L=2u
-M11_ Vdd en __s[0] Vdd pch W=5u L=2u
-M12_ Vdd en __s[1] Vdd pch W=5u L=2u
-M13_ GND __s[0] s/d[0] GND nch W=5u L=2u
-M14_ Vdd __s[0] s/d[0] Vdd pch W=5u L=2u
-M15_ GND __s[1] s/d[1] GND nch W=5u L=2u
-M16_ Vdd __s[1] s/d[1] Vdd pch W=5u L=2u
+.subckt add !GND !Vdd en a/d[0] a/d[1] b/d[0] b/d[1] c/d[0] c/d[1] s/d[0] s/d[1]
+M0_ !GND en _INT_foot !GND nch W=5u L=2u
+M1_ _INT_foot a/d[1] _INT_odd_a !GND nch W=5u L=2u
+M2_ _INT_odd_a b/d[0] _INT_odd_b !GND nch W=5u L=2u
+M3_ _INT_foot a/d[0] _INT_even_a !GND nch W=5u L=2u
+M4_ _INT_even_a b/d[1] _INT_odd_b !GND nch W=5u L=2u
+M5_ _INT_odd_b c/d[1] __s[0] !GND nch W=5u L=2u
+M6_ _INT_odd_a b/d[1] _INT_even_b !GND nch W=5u L=2u
+M7_ _INT_even_a b/d[0] _INT_even_b !GND nch W=5u L=2u
+M8_ _INT_even_b c/d[0] __s[0] !GND nch W=5u L=2u
+M9_ _INT_odd_b c/d[0] __s[1] !GND nch W=5u L=2u
+M10_ _INT_even_b c/d[1] __s[1] !GND nch W=5u L=2u
+M11_ !Vdd en __s[0] !Vdd pch W=5u L=2u
+M12_ !Vdd en __s[1] !Vdd pch W=5u L=2u
+M13_ !GND __s[0] s/d[0] !GND nch W=5u L=2u
+M14_ !Vdd __s[0] s/d[0] !Vdd pch W=5u L=2u
+M15_ !GND __s[1] s/d[1] !GND nch W=5u L=2u
+M16_ !Vdd __s[1] s/d[1] !Vdd pch W=5u L=2u
 .ends
 
-xup GND Vdd up.en up.a/d[0] up.a/d[1] up.b/d[0] up.b/d[1] up.c/d[0] up.c/d[1] up.s/d[0] up.s/d[1] add
+xup !GND !Vdd up.en up.a/d[0] up.a/d[1] up.b/d[0] up.b/d[1] up.c/d[0] up.c/d[1] up.s/d[0] up.s/d[1] add
 

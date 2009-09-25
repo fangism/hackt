@@ -48,7 +48,7 @@ Persistent Object Manager text dump:
 	41	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	45
 	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	606
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	614
 	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -112,8 +112,8 @@ In namespace "", we have: {
         resolved prs:
         p & q -> s-
         ~p | ~q -> s+
-        rule supply map: [rules, Vdd, GND]
-        0..1: 2, 1
+        rule supply map: (rules, macros, Vdd, GND)
+        0..1 none : 2, 1
         resolved specs:
         mk_exclhi(p,q,r)
         mk_exclhi(r,s)

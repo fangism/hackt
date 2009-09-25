@@ -1,5 +1,5 @@
-M0_ GND a #0 GND nch W=5u L=2u
-M1_ #0 b o GND nch W=5u L=2u
-M2_ Vdd a #1 Vdd pch W=5u L=2u
-M3_ #1 b o Vdd pch W=5u L=2u
+M0_ !GND a #0 !GND nch W=5u L=2u
+M1_ #0 b o !GND nch W=5u L=2u
+M2_ !Vdd a #1 !Vdd pch W=5u L=2u
+M3_ #1 b o !Vdd pch W=5u L=2u
 

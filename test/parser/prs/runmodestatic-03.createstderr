@@ -30,7 +30,7 @@ Persistent Object Manager text dump:
 	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	41
 	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	452
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	460
 	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -87,8 +87,8 @@ In namespace "", we have: {
         resolved prs:
         x -> y-
         ~x -> y+
-        rule supply map: [rules, Vdd, GND]
-        0..1: 2, 1
+        rule supply map: (rules, macros, Vdd, GND)
+        0..1 none : 2, 1
         resolved specs:
         runmodestatic(x)
       }

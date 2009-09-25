@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.37.2.2 2009/09/24 21:28:49 fang Exp $
+	$Id: PRS.cc,v 1.37.2.3 2009/09/25 01:21:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -401,19 +401,21 @@ rule_set::unroll(const unroll_context& c, const node_pool_type& np,
 	STACKTRACE_VERBOSE;
 #if PRS_SUPPLY_OVERRIDES
 	PRS::footprint::supply_map_type& m(pfp.get_supply_map());
-	// flush out previous range, if applicable
 {
+	// checks to make make sure we don't nest rule_sets
+	INVARIANT(!pfp.current_Vdd);
+	INVARIANT(!pfp.current_GND);
 	const size_t lr = pfp.get_rule_pool().size();
 	const size_t pr = m.size() ? m.back().rules.second : 0;
 	INVARIANT(lr == pr);
+	const size_t lm = pfp.get_macro_pool().size();
+	const size_t pm = m.size() ? m.back().macros.second : 0;
+	INVARIANT(lm == pm);
 }
-//	c.get_target_footprint().dump(cerr) << endl;	// DEBUG
 	const value_saver<size_t>	// save on stack
 		__t1(pfp.current_Vdd), __t2(pfp.current_GND);
 	// since rule_sets are not nested (not self recursive)
 	// we can simplify the checking for Vdd, GND
-	INVARIANT(!pfp.current_Vdd);
-	INVARIANT(!pfp.current_GND);
 	if (Vdd) {
 		const bool_literal l(Vdd);
 		const size_t i = l.unroll_base(c);
@@ -424,7 +426,7 @@ rule_set::unroll(const unroll_context& c, const node_pool_type& np,
 		STACKTRACE_INDENT_PRINT("defaulting to !Vdd" << endl);
 		// set to default implicit !Vdd
 		pfp.current_Vdd = __lookup_implicit_bool_port(c, "!Vdd");
-	}	// else keep same Vdd
+	}
 	if (GND) {
 		const bool_literal l(GND);
 		const size_t i = l.unroll_base(c);
@@ -435,7 +437,7 @@ rule_set::unroll(const unroll_context& c, const node_pool_type& np,
 		// set to default implicit !GND
 		STACKTRACE_INDENT_PRINT("defaulting to !GND" << endl);
 		pfp.current_GND = __lookup_implicit_bool_port(c, "!GND");
-	}	// else keep same GND
+	}
 	INVARIANT(pfp.current_Vdd);
 	INVARIANT(pfp.current_GND);
 #endif	// PRS_SUPPLY_OVERRIDES
@@ -447,10 +449,14 @@ rule_set::unroll(const unroll_context& c, const node_pool_type& np,
 	// flush out previous range, if applicable
 	const size_t lr = pfp.get_rule_pool().size();
 	const size_t pr = m.size() ? m.back().rules.second : 0;
-	if (pr != lr) {
+	const size_t lm = pfp.get_macro_pool().size();
+	const size_t pm = m.size() ? m.back().macros.second : 0;
+	if (pr != lr || lm != pm) {
 		PRS::footprint::supply_override_entry e;
 		e.rules.first = pr;
 		e.rules.second = lr;
+		e.macros.first = pm;
+		e.macros.second = lm;
 		e.Vdd = pfp.current_Vdd;
 		e.GND = pfp.current_GND;
 		INVARIANT(e.Vdd);

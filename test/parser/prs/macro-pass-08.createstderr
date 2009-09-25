@@ -47,7 +47,7 @@ Persistent Object Manager text dump:
 	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	395
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	419
 	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
@@ -69,7 +69,7 @@ Persistent Object Manager text dump:
 	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	395
+	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	419
 	61	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	62	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	63	##ADDR##	procdefn	0	#HEAD#	#TAIL#	155
@@ -233,6 +233,8 @@ In namespace "", we have: {
         5	passn<>::d
         resolved macros:
         passn(g,s,d)
+        rule supply map: (rules, macros, Vdd, GND)
+        none 0..0 : 2, 1
       }
       }
 
@@ -343,6 +345,8 @@ In namespace "", we have: {
         5	passp<>::d
         resolved macros:
         passp(g,s,d)
+        rule supply map: (rules, macros, Vdd, GND)
+        none 0..0 : 2, 1
       }
       }
 

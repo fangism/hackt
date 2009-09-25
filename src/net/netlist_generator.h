@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.3 2009/09/14 21:17:12 fang Exp $
+	$Id: netlist_generator.h,v 1.3.2.1 2009/09/25 01:21:42 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -145,7 +145,7 @@ private:
 	void
 	visit(const footprint&);
 	void
-	visit(const entity::PRS::footprint&);		// override
+	visit(const prs_footprint&);		// override
 	void
 	visit(const entity::PRS::footprint_rule&);
 	void
@@ -161,6 +161,14 @@ private:
 private:
 	void
 	visit(const footprint_expr_node::precharge_pull_type&);
+
+	template <class RP>
+	void
+	visit_rule(const RP&, const index_type);
+
+	template <class MP>
+	void
+	visit_macro(const MP&, const index_type);
 
 	void
 	set_current_width(const real_type);

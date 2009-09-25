@@ -1,19 +1,19 @@
-.subckt inv_c<> GND Vdd a b
-.subckt first GND Vdd _x a x
-M0_ GND a _x GND nch W=5u L=2u
-M1_ Vdd a _x Vdd pch W=5u L=2u
-M2_ GND _x x GND nch W=5u L=2u
-M3_ Vdd _x x Vdd pch W=5u L=2u
+.subckt inv_c<> !GND !Vdd a b
+.subckt first !GND !Vdd _x a x
+M0_ !GND a _x !GND nch W=5u L=2u
+M1_ !Vdd a _x !Vdd pch W=5u L=2u
+M2_ !GND _x x !GND nch W=5u L=2u
+M3_ !Vdd _x x !Vdd pch W=5u L=2u
 .ends
-xfirst:inst GND Vdd _x a x first
-.subckt second GND Vdd x _y b
-M0_ GND x _y GND nch W=5u L=2u
-M1_ Vdd x _y Vdd pch W=5u L=2u
-M2_ GND _y b GND nch W=5u L=2u
-M3_ Vdd _y b Vdd pch W=5u L=2u
+xfirst:inst !GND !Vdd _x a x first
+.subckt second !GND !Vdd x _y b
+M0_ !GND x _y !GND nch W=5u L=2u
+M1_ !Vdd x _y !Vdd pch W=5u L=2u
+M2_ !GND _y b !GND nch W=5u L=2u
+M3_ !Vdd _y b !Vdd pch W=5u L=2u
 .ends
-xsecond:inst GND Vdd x _y b second
+xsecond:inst !GND !Vdd x _y b second
 .ends
 
-xfoo GND Vdd foo.a foo.b inv_c<>
+xfoo !GND !Vdd foo.a foo.b inv_c<>
 

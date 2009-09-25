@@ -1,7 +1,7 @@
-.subckt full_pass<10> GND Vdd g _g s d
-M0_ s g d GND nch W=10u L=2u
-M1_ s _g d Vdd pch W=10u L=2u
+.subckt full_pass<10> !GND !Vdd g _g s d
+M0_ s g d !GND nch W=10u L=2u
+M1_ s _g d !Vdd pch W=10u L=2u
 .ends
 
-xfoo GND Vdd foo.g foo._g foo.s foo.d full_pass<10>
+xfoo !GND !Vdd foo.g foo._g foo.s foo.d full_pass<10>
 

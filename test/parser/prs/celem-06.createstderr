@@ -65,7 +65,7 @@ Persistent Object Manager text dump:
 	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	62	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	64	##ADDR##	footprnt	0	#HEAD#	#TAIL#	674
+	64	##ADDR##	footprnt	0	#HEAD#	#TAIL#	682
 	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	66	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	67	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -137,8 +137,8 @@ In namespace "", we have: {
           resolved prs:
           a[1] & a[2] & a[3] & a[0] -> _o-
           ~a[1] & ~a[2] & ~a[3] & ~a[0] -> _o+
-          rule supply map: [rules, Vdd, GND]
-          0..1: 2, 1
+          rule supply map: (rules, macros, Vdd, GND)
+          0..1 none : 2, 1
         }
       }
       }

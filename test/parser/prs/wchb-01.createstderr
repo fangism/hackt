@@ -173,7 +173,7 @@ Persistent Object Manager text dump:
 	169	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	170	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	171	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	172	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1339
+	172	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1347
 	173	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	174	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	175	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -338,8 +338,8 @@ In namespace "", we have: {
         _r[1] -> R.d[1]-
         _r[0] & _r[1] -> rv-
         ~rv -> L.e+
-        rule supply map: [rules, Vdd, GND]
-        0..11: 2, 1
+        rule supply map: (rules, macros, Vdd, GND)
+        0..11 none : 2, 1
       }
       }
 

@@ -1,25 +1,25 @@
 * subcircuit delay<0> is empty.
-.subckt inv<> GND Vdd x y
-M0_ GND x y GND nch W=5u L=2u
-M1_ Vdd x y Vdd pch W=5u L=2u
+.subckt inv<> !GND !Vdd x y
+M0_ !GND x y !GND nch W=5u L=2u
+M1_ !Vdd x y !Vdd pch W=5u L=2u
 .ends
 
-.subckt delay<1> GND Vdd i o
-xk[0] GND Vdd i o inv<>
+.subckt delay<1> !GND !Vdd i o
+xk[0] !GND !Vdd i o inv<>
 .ends
 
-.subckt delay<2> GND Vdd i o
-xk[0] GND Vdd i x[1] inv<>
-xk[1] GND Vdd x[1] o inv<>
+.subckt delay<2> !GND !Vdd i o
+xk[0] !GND !Vdd i x[1] inv<>
+xk[1] !GND !Vdd x[1] o inv<>
 .ends
 
-.subckt delay<3> GND Vdd i o
-xk[0] GND Vdd i x[1] inv<>
-xk[1] GND Vdd x[1] x[2] inv<>
-xk[2] GND Vdd x[2] o inv<>
+.subckt delay<3> !GND !Vdd i o
+xk[0] !GND !Vdd i x[1] inv<>
+xk[1] !GND !Vdd x[1] x[2] inv<>
+xk[2] !GND !Vdd x[2] o inv<>
 .ends
 
-xz1 GND Vdd z1.i z1.o delay<1>
-xz2 GND Vdd z2.i z2.o delay<2>
-xz3 GND Vdd z3.i z3.o delay<3>
+xz1 !GND !Vdd z1.i z1.o delay<1>
+xz2 !GND !Vdd z2.i z2.o delay<2>
+xz3 !GND !Vdd z3.i z3.o delay<3>
 

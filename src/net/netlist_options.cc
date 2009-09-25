@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.3 2009/09/14 21:17:12 fang Exp $
+	$Id: netlist_options.cc,v 1.3.2.1 2009/09/25 01:21:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -61,6 +61,7 @@ netlist_options::netlist_options() :
 		mangle_colon(":"),
 		mangle_internal_at("@"),
 		mangle_auxiliary_pound("#"),
+		mangle_implicit_bang("!"),
 	// format options
 		pre_line_continue(),
 		post_line_continue("+"),	// spice-style
@@ -114,6 +115,7 @@ netlist_options::no_mangling(const option_value&) {
 	mangle_colon = d.mangle_colon;
 	mangle_internal_at = d.mangle_internal_at;
 	mangle_auxiliary_pound = d.mangle_auxiliary_pound;
+	mangle_implicit_bang = d.mangle_implicit_bang;
 	return false;
 }
 
@@ -144,6 +146,7 @@ netlist_options::mangle_instance(string& n) const {
 	strgsub(n, "@", mangle_internal_at);
 	strgsub(n, "#", mangle_auxiliary_pound);
 #endif
+	strgsub(n, "!", mangle_implicit_bang);
 	return n;
 }
 
@@ -579,10 +582,16 @@ This is applied @emph{before} @t{:} is mangled.
 Mangle the `@t{:}' character with a replacement string.
 @end defopt
 @defopt mangle_internal_at (string)
-Mangle the `@t{@@}' character with a replacement string.
+Mangle the `@t{@@}' character (designating named internal node)
+with a replacement string.
 @end defopt
 @defopt mangle_auxiliary_pound (string)
-Mangle the `@t{#}' character with a replacement string.
+Mangle the `@t{#}' character (designating auxiliary node) 
+with a replacement string.
+@end defopt
+@defopt mangle_implicit_bang (string)
+Mangle the `@t{!}' character (designating implicit supply node) 
+with a replacement string.
 @end defopt
 @end texinfo
 
@@ -625,6 +634,8 @@ DEFINE_OPTION_DEFAULT(mangle_internal_at,
 	"mangle_internal_at", "mangle: @ replacement")
 DEFINE_OPTION_DEFAULT(mangle_auxiliary_pound,
 	"mangle_auxiliary_pound", "mangle: # replacement")
+DEFINE_OPTION_DEFAULT(mangle_implicit_bang,
+	"mangle_implicit_bang", "mangle: ! replacement")
 DEFINE_OPTION_MEMFUN(no_mangling,
 	"no_mangling", "disable name-mangling")
 
