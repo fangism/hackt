@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.3.2.2 2009/09/26 00:10:18 fang Exp $
+#	$Id: Makefile.am,v 1.3.2.3 2009/09/26 00:34:42 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -53,7 +53,10 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	struct-01 struct-02 struct-03 struct-04 struct-05 struct-06 \
 	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
 	supply-subckt-01 supply-subckt-02 supply-subckt-03 \
-	supply-internal-01 supply-internal-02 supply-internal-03
+	supply-subckt-04 supply-subckt-05 \
+	supply-internal-01 supply-internal-02 supply-internal-03 \
+	supply-precharge-01 supply-precharge-02 supply-precharge-03 \
+	supply-precharge-04
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05 \

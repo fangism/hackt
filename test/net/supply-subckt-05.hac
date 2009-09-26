@@ -1,0 +1,15 @@
+// "supply-subckt-05.hac"
+// copy-modified from "supply-subckt-04.hac"
+
+import "globals.hac";
+
+defproc foo(globals g; bool x, w) {
+bool y, z;
+prs < , g.GND_2> {
+	x	=> y-
+	y	=> z-
+	z	=> w-
+}
+}
+
+foo bar;

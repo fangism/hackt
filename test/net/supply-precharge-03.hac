@@ -1,0 +1,15 @@
+// "supply-precharge-03.hac"
+// copy-modified from "supply-precharge-01.hac"
+// testing supply overrides on precharges
+
+bool myVdd, myGND;
+bool en, x, y;
+
+prs <myVdd, myGND> {
+	en			-> @_int-
+	~en			-> y+
+}
+prs {
+	~@_int &{+~en} x	-> y-
+}
+

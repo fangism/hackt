@@ -1,0 +1,18 @@
+// "supply-precharge-04.hac"
+// copy-modified from "supply-precharge-03.hac"
+// testing supply overrides on precharges
+// doesn't yet catch the fact that precharge is on different domain than
+// opposing pull-up...
+// filed as ACX-PR-4309
+
+bool myVdd, myGND;
+bool en, x, y;
+
+prs <myVdd, myGND> {
+	en			-> @_int-
+	~@_int &{+~en} x	-> y-
+}
+prs {
+	~en			-> y+
+}
+
