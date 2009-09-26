@@ -83,7 +83,7 @@ Persistent Object Manager text dump:
 	71	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	72	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	73	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	74	##ADDR##	footprnt	0	#HEAD#	#TAIL#	988
+	74	##ADDR##	footprnt	0	#HEAD#	#TAIL#	996
 	75	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	76	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	77	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -199,8 +199,8 @@ In namespace "", we have: {
         passn(x,x,y)
         internal node exprs: 
         @l- <- d
-        rule supply map: (rules, macros, Vdd, GND)
-        0..6 0..0 : 3, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..6 0..0 0..0 : 3, 1
       }
       }
 

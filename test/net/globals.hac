@@ -1,0 +1,5 @@
+// "globals.hac"
+// for supply override testing
+
+deftype globals <: int<4> (bool Vdd_1, GND_1, Vdd_2, GND_2) { }
+

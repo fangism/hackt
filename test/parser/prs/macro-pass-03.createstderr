@@ -27,7 +27,7 @@ Persistent Object Manager text dump:
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	423
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	431
 	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -86,8 +86,8 @@ In namespace "", we have: {
         5	passn<>::d
         resolved macros:
         passn<44>(g,s,d)
-        rule supply map: (rules, macros, Vdd, GND)
-        none 0..0 : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        none 0..0 none : 2, 1
       }
       }
 

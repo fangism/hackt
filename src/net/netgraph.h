@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.3.2.1 2009/09/25 01:21:41 fang Exp $
+	$Id: netgraph.h,v 1.3.2.2 2009/09/26 00:10:12 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -506,7 +506,11 @@ public:
 	create_auxiliary_node(void);
 
 	index_type
-	create_internal_node(const index_type ni, const index_type ei);
+	create_internal_node(const index_type ni, const index_type ei
+#if CACHE_LOGICAL_NODE_NAMES
+		, const netlist_options& opt
+#endif
+		);
 
 	index_type
 	lookup_internal_node(const index_type i) const;

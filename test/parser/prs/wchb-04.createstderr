@@ -42,7 +42,7 @@ Persistent Object Manager text dump:
 	38	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	520
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	528
 	42	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
 	43	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	44	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -79,7 +79,7 @@ Persistent Object Manager text dump:
 	75	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	76	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	77	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	78	##ADDR##	footprnt	0	#HEAD#	#TAIL#	427
+	78	##ADDR##	footprnt	0	#HEAD#	#TAIL#	435
 	79	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
 	80	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	81	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -111,7 +111,7 @@ Persistent Object Manager text dump:
 	107	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	108	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	109	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	110	##ADDR##	footprnt	0	#HEAD#	#TAIL#	516
+	110	##ADDR##	footprnt	0	#HEAD#	#TAIL#	524
 	111	##ADDR##	procdefn	0	#HEAD#	#TAIL#	243
 	112	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	113	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -304,8 +304,8 @@ In namespace "", we have: {
         resolved prs:
         a & b -> _o-
         ~a & ~b -> _o+
-        rule supply map: (rules, macros, Vdd, GND)
-        0..1 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1
       }
       }
 
@@ -385,8 +385,8 @@ In namespace "", we have: {
         resolved prs:
         a -> b-
         ~a -> b+
-        rule supply map: (rules, macros, Vdd, GND)
-        0..1 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1
       }
       }
 
@@ -433,8 +433,8 @@ In namespace "", we have: {
         resolved prs:
         a & b -> _o-
         ~a | ~b -> _o+
-        rule supply map: (rules, macros, Vdd, GND)
-        0..1 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1
       }
       }
 

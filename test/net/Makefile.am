@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.3.2.1 2009/09/25 01:21:43 fang Exp $
+#	$Id: Makefile.am,v 1.3.2.2 2009/09/26 00:10:18 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -40,7 +40,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	recurse-01 recurse-02 \
 	config-dump-01 \
 	config-arg-01 config-arg-02 config-arg-03 config-arg-04 \
-	config-arg-06 config-arg-08 \
+	config-arg-06 config-arg-08 config-arg-09 \
 	config-file-01 config-file-02 config-file-03 \
 	config-file-05 config-file-06 config-file-07 config-file-08 \
 	compat-01 compat-02 compat-03 \
@@ -51,15 +51,18 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \
 	mangle-06 mangle-07 mangle-08 mangle-09 \
 	struct-01 struct-02 struct-03 struct-04 struct-05 struct-06 \
-	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06
-	supply-subckt-01 supply-subckt-02 supply-subckt-03
+	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
+	supply-subckt-01 supply-subckt-02 supply-subckt-03 \
+	supply-internal-01 supply-internal-02 supply-internal-03
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05 \
-	config-arg-07 config-file-04
+	config-arg-07 config-arg-10 config-file-04 \
+	supply-internal-04
 
 # TODO: promote these to real tests
 EXTRA_DIST_HAC = \
+	globals \
 	config-arg-05 \
 	top-type-ports-01
 

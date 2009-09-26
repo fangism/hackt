@@ -59,7 +59,7 @@ Persistent Object Manager text dump:
 	55	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	56	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1563
+	58	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1579
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -193,7 +193,7 @@ footprint: {
   x[3][2] -> y[3][2]-
   x[4][2] -> y[4][2]-
   a &{+pchg} b & c -> d-
-  rule supply map: (rules, macros, Vdd, GND)
-  0..4 none : 2, 1
-  5..5 none : 2, 1
+  rule supply map: (rules, macros, @nodes : Vdd, GND)
+  0..4 none none : 2, 1
+  5..5 none none : 2, 1
 }

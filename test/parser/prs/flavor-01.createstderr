@@ -50,7 +50,7 @@ Persistent Object Manager text dump:
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	580
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	588
 	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
@@ -123,8 +123,8 @@ In namespace "", we have: {
         resolved prs:
         a<10;lvt> & b<10;svt=0> -> c-
         ~a<5,2;svt=1> | ~b<10;svt> -> c+
-        rule supply map: (rules, macros, Vdd, GND)
-        0..1 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1
       }
       }
 

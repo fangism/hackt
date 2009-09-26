@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.3.2.1 2009/09/25 01:21:42 fang Exp $
+	$Id: netlist_options.h,v 1.3.2.2 2009/09/26 00:10:15 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -21,6 +21,13 @@ using util::option_value_list;
 using util::ifstream_manager;
 using entity::dump_flags;
 
+// for error-handling
+enum option_error_policy {
+	OPTION_IGNORE = 0,
+	OPTION_WARN = 1,
+	OPTION_ERROR = 2
+};
+
 //=============================================================================
 /**
 	Overrideable options (configure).
@@ -32,6 +39,8 @@ struct netlist_options {
 	typedef	bool (this_type::*option_memfun_type)(const option_value&);
 	ifstream_manager		file_manager;
 	dump_flags			__dump_flags;
+	option_error_policy		unknown_option_policy;
+	option_error_policy		internal_node_supply_mismatch_policy;
 // generation-time options:
 	/**
 		Dimensions of standard devices to use when unspecified.  

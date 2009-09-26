@@ -39,7 +39,7 @@ Persistent Object Manager text dump:
 	35	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	520
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	528
 	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -99,8 +99,8 @@ In namespace "", we have: {
         resolved prs:
         a & b -> _o-
         ~a & ~b -> _o+
-        rule supply map: (rules, macros, Vdd, GND)
-        0..1 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1
       }
       }
 

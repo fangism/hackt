@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.3.2.1 2009/09/25 01:21:42 fang Exp $
+	$Id: netlist_options.cc,v 1.3.2.2 2009/09/26 00:10:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -34,6 +34,8 @@ using util::named_ifstream;
 netlist_options::netlist_options() :
 		file_manager(), 
 		__dump_flags(dump_flags::no_definition_owner), 
+		unknown_option_policy(OPTION_WARN), 
+		internal_node_supply_mismatch_policy(OPTION_WARN),
 		std_n_width(5.0),
 		std_p_width(5.0),
 		std_n_length(2.0),
@@ -343,6 +345,35 @@ __set_member_single_string(const option_value& opt,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// translate a policy string into an enumeration
+static
+bool
+__set_policy_member(const option_value& opt, 
+		netlist_options& n_opt, 
+		option_error_policy netlist_options::*mem) {
+	const size_t s = opt.values.size();
+	if (s >= 1) {
+		if (s > 1) {
+		cerr << "Warning: extra arguments passed to \'" << opt.key
+			<< "\' option ignored." << endl;
+		}
+		const string& p(opt.values.front());
+		if (p == "ignore") {
+			n_opt.*mem = OPTION_IGNORE;
+		} else if (p == "warn") {
+			n_opt.*mem = OPTION_WARN;
+		} else if (p == "error") {
+			n_opt.*mem = OPTION_ERROR;
+		} else {
+			cerr << "Error: error policy values for option " <<
+				opt.key << " are [ignore|warn|error]." << endl;
+			return true;
+		}
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Leave undefined, specialize the rest.
 	Use single overloaded function to automatically dispatch.
@@ -373,6 +404,13 @@ __set_member_default(const option_value& opt,
 	return __set_member_single_string(opt, n_opt, mem);
 }
 
+bool
+__set_member_default(const option_value& opt, 
+		netlist_options& n_opt,
+		option_error_policy netlist_options::*mem) {
+	return __set_policy_member(opt, n_opt, mem);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 const
@@ -394,6 +432,8 @@ const string&
 __string_type_of(real_type netlist_options::*) { return __real_type__; }
 const string&
 __string_type_of(string netlist_options::*) { return __str_type__; }
+const string&
+__string_type_of(option_error_policy netlist_options::*) { return __str_type__; }
 
 #if 0
 const string&
@@ -412,6 +452,20 @@ ostream&
 __print_member_default(ostream& o, const netlist_options& n_opt,
 		T netlist_options::*mem) {
 	return o << n_opt.*mem;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+ostream&
+__print_member_default(ostream& o, const netlist_options& n_opt,
+		option_error_policy netlist_options::*mem) {
+switch (n_opt.*mem) {
+	case OPTION_IGNORE:	o << "ignore"; break;
+	case OPTION_WARN:	o << "warn"; break;
+	case OPTION_ERROR:	o << "error"; break;
+	default:		o << "???";
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -447,12 +501,18 @@ __set_ ## memfun (const option_value& v, netlist_options& o) {		\
 	return false;							\
 }
 
+#define	DEFINE_SET_POLICY_MEMBER(member)				\
+	DEFINE_SET_MEMBER(member ## _policy)
+
 #define	DEFINE_PRINT_MEMBER(member)					\
 static									\
 ostream&								\
 __print_ ## member (ostream& o, const netlist_options& n) {		\
 	return __print_member_default(o, n, &netlist_options::member);	\
 }
+
+#define	DEFINE_PRINT_POLICY_MEMBER(member)				\
+	DEFINE_PRINT_MEMBER(member ## _policy)
 
 #define	DEFINE_TYPE_MEMBER(member)					\
 static									\
@@ -461,12 +521,17 @@ __type_ ## member (void) {						\
 	return __string_type_of(&netlist_options::member);		\
 }
 
+#define	DEFINE_TYPE_POLICY_MEMBER(member)				\
+	DEFINE_TYPE_MEMBER(member ## _policy)
+
 #define	REGISTER_OPTION_DEFAULT(member, key, help)			\
 static const opt_entry& __receipt ## member				\
 __ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[key] =			\
 	opt_entry(& __set_ ## member, &__print_ ## member, 		\
 	&__type_ ## member(), help)));
 
+#define	REGISTER_OPTION_POLICY(member, key, help)			\
+	REGISTER_OPTION_DEFAULT(member ## _policy, key, help)
 
 #define	REGISTER_PSEUDO_OPTION(memfun, key, help)			\
 static const opt_entry& __receipt ## memfun				\
@@ -481,9 +546,41 @@ __ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[key] =			\
 	DEFINE_TYPE_MEMBER(member)					\
 	REGISTER_OPTION_DEFAULT(member, key, help)
 
+// for member function calls
 #define	DEFINE_OPTION_MEMFUN(memfun, key, help)				\
 	DEFINE_CALL_MEMBER_FUNCTION(memfun)				\
 	REGISTER_PSEUDO_OPTION(memfun, key, help)
+
+// for policy members
+#define	DEFINE_OPTION_POLICY(member, key, help)				\
+	DEFINE_SET_POLICY_MEMBER(member)				\
+	DEFINE_PRINT_POLICY_MEMBER(member)				\
+	DEFINE_TYPE_POLICY_MEMBER(member)				\
+	REGISTER_OPTION_POLICY(member, key, help)
+
+/***
+@texinfo config/diagnostic_policies.texi
+
+Option policies control the behavior of certain diagnostics.
+Policy options accept the values "ignore", "warn", or "error".
+
+@defopt unknown_option (string)
+Set error-handling policy when encountering unknown configuration options.
+Default: warn
+@end defopt
+
+@defopt internal_node_supply_mismatch (string)
+Set error-handling policy when an internal node is used in a different
+supply domain than the one it was defined in.  
+Default: warn
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_POLICY(unknown_option, "unknown_option",
+	"EH for unknown options")
+DEFINE_OPTION_POLICY(internal_node_supply_mismatch,
+	"internal_node_supply_mismatch", 
+	"EH for internal node supply mismatch btw. def/use")
 
 // could just fold string into here instead of initialization function below...
 // TODO: produce usage help for console and texinfo documentation aside
@@ -905,8 +1002,16 @@ if (opt.key.length()) {
 			return true;
 		}
 	} else {
+	switch (unknown_option_policy) {
+	case OPTION_ERROR:
+		cerr << "Error: unknown netlist option \'"
+			<< opt.key << "\'." << endl;
+		return true;
+	case OPTION_WARN:
 		cerr << "Warning: ignoring unknown netlist option \'"
 			<< opt.key << "\'." << endl;
+	default: break;
+	}
 	}
 }
 	return false;

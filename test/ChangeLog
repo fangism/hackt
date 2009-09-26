@@ -1,6 +1,14 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.93 2009/09/14 21:17:19 fang Exp $
+#	$Id: ChangeLog,v 1.93.2.1 2009/09/26 00:10:17 fang Exp $
 # ChangeLog for test directory.
+
+2009-09-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-07:
+	  Make.test-net: .spice script now saves error/warning messages
+		to .spice-err, and concatenates to .spice output
+		to be compared against expected reference results.
+
 
 2009-09-10	David Fang		<fangism@users.sourceforge.net>
 

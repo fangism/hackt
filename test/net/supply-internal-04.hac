@@ -1,0 +1,8 @@
+// "supply-internal-04.hac"
+// testing supply overrides on internal nodes
+// expect warning/error that @_int supply is different between
+// its definition and use.
+// @hacknet-flags@ -f internal_node_supply_mismatch=error
+
+import "supply-internal-03.hac";
+

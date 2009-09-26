@@ -1,0 +1,12 @@
+// "supply-internal-01.hac"
+// testing supply overrides on internal nodes
+
+bool myVdd, myGND;
+bool en, x, y;
+
+prs <myVdd, myGND> {
+	en		-> @_int-
+	~@_int & x	-> y-
+	~en		-> y+
+}
+

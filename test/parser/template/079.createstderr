@@ -115,7 +115,7 @@ Persistent Object Manager text dump:
 	111	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	112	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	113	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	114	##ADDR##	footprnt	0	#HEAD#	#TAIL#	491
+	114	##ADDR##	footprnt	0	#HEAD#	#TAIL#	499
 	115	##ADDR##	procdefn	0	#HEAD#	#TAIL#	186
 	116	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	117	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -438,8 +438,8 @@ In namespace "", we have: {
         resolved prs:
         ~_pReset -> Vdd+
         Vdd -> GND-
-        rule supply map: (rules, macros, Vdd, GND)
-        0..1 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1
       }
       }
 

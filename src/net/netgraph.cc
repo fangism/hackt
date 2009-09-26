@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.3.2.1 2009/09/25 01:21:40 fang Exp $
+	$Id: netgraph.cc,v 1.3.2.2 2009/09/26 00:10:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -232,10 +232,14 @@ case NODE_TYPE_LOGICAL:
 #endif
 	break;
 case NODE_TYPE_INTERNAL:
+#if CACHE_INTERNAL_NODE_NAMES
+	o << n.emit_internal_at() << name;
+#else
 	// Q: do internal node names ever need to be mangled?
 	// A: don't think so because they are only simple identifiers
 	o << n.emit_internal_at() <<
 		fp.get_prs_footprint().get_internal_node(index).name;
+#endif
 	break;
 case NODE_TYPE_AUXILIARY:
 	o << n.emit_auxiliary_pound();
@@ -699,9 +703,18 @@ netlist::create_auxiliary_node(void) {
 	\return index of new node, 1-indexed into this netlist.
  */
 index_type
-netlist::create_internal_node(const index_type ni, const index_type ei) {
+netlist::create_internal_node(const index_type ni, const index_type ei
+#if CACHE_INTERNAL_NODE_NAMES
+		, const netlist_options& opt
+#endif
+		) {
 	STACKTRACE_VERBOSE;
-	const node n(ni, node::internal_node_tag);
+	node n(ni, node::internal_node_tag);
+#if CACHE_INTERNAL_NODE_NAMES
+	n.name = fp->get_prs_footprint().get_internal_node(ni).name;
+	opt.mangle_instance(n.name);
+	// @node names are simple identifiers, but may contain underscores
+#endif
 	const index_type ret = node_pool.size();
 	node_pool.push_back(n);
 	INVARIANT(ni < internal_node_map.size());

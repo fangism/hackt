@@ -41,9 +41,9 @@ Persistent Object Manager text dump:
 	34	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	404
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	412
 	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	404
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	412
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	42	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -112,8 +112,8 @@ In namespace "", we have: {
           4	ass<1>::a
           resolved prs:
           x -> a+
-          rule supply map: (rules, macros, Vdd, GND)
-          0..0 none : 2, 1
+          rule supply map: (rules, macros, @nodes : Vdd, GND)
+          0..0 none none : 2, 1
         }
         <2> {
           !GND = bool^0 = ass<2>::!GND (1) 
@@ -129,8 +129,8 @@ In namespace "", we have: {
           4	ass<2>::a
           resolved prs:
           x -> a-
-          rule supply map: (rules, macros, Vdd, GND)
-          0..0 none : 2, 1
+          rule supply map: (rules, macros, @nodes : Vdd, GND)
+          0..0 none none : 2, 1
         }
       }
       }

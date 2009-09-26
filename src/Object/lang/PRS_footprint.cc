@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.26.2.2 2009/09/25 01:21:39 fang Exp $
+	$Id: PRS_footprint.cc,v 1.26.2.3 2009/09/26 00:10:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -38,6 +38,32 @@
 #define	STACKTRACE_DUMP_PRINT(x)
 #endif
 
+//=============================================================================
+// i/o specializations
+namespace util {
+using namespace HAC::entity::PRS;
+using std::ostream;
+using std::istream;
+
+template <>
+void
+write_value(ostream& os, const footprint::resource_map_entry& r) {
+	write_value(os, r.rules);
+	write_value(os, r.macros);
+	write_value(os, r.int_nodes);
+}
+
+template <>
+void
+read_value(istream& is, footprint::resource_map_entry& r) {
+	read_value(is, r.rules);
+	read_value(is, r.macros);
+	read_value(is, r.int_nodes);
+}
+
+}	// end namespace util
+
+//=============================================================================
 namespace HAC {
 namespace entity {
 namespace PRS {
@@ -73,9 +99,7 @@ void
 footprint::subcircuit_map_entry::write_object(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, back_ref);
-	write_value(o, rules);
-	write_value(o, macros);
-	write_value(o, int_nodes);
+	write_value<resource_map_entry>(o, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -83,9 +107,7 @@ void
 footprint::subcircuit_map_entry::load_object(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, back_ref);
-	read_value(i, rules);
-	read_value(i, macros);
-	read_value(i, int_nodes);
+	read_value<resource_map_entry>(i, *this);
 }
 
 //=============================================================================
@@ -258,6 +280,30 @@ if (m.params.size() || m.attributes.size()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Convenience printer.
+ */
+ostream&
+footprint::print_range(ostream& o, const index_range& r) {
+	INVARIANT(r.first <= r.second);
+	if (r.first != r.second) {
+		o << r.first << ".." << r.second -1;
+	} else {
+		o << "none";
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+footprint::resource_map_entry::dump(ostream& o) const {
+	print_range(o, rules) << ' ';
+	print_range(o, macros) << ' ';
+	print_range(o, int_nodes);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Need the footprint, which contains the node pool information.  
  */
 ostream&
@@ -312,7 +358,6 @@ if (invariant_pool.size()) {
 		o << ')' << endl;
 	}
 }
-	static const char none[] = "none";
 if (subcircuit_map.size()) {
 	// print name of subcircuit?
 	size_t j = 1;		// 1-indexed
@@ -321,47 +366,18 @@ if (subcircuit_map.size()) {
 	const_iterator i(subcircuit_map.begin()), e(subcircuit_map.end());
 	for ( ; i!=e; ++i, ++j) {
 		o << auto_indent << j << ": ";
-		if (i->rules.second != i->rules.first) {
-			o << i->rules.first << ".." << i->rules.second -1;
-		} else {
-			o << none;
-		}
-		o << ' ';
-		if (i->macros.second != i->macros.first) {
-			o << i->macros.first << ".." << i->macros.second -1;
-		} else {
-			o << none;
-		}
-		o << ' ';
-		if (i->int_nodes.second != i->int_nodes.first) {
-			o << i->int_nodes.first << ".." <<
-				i->int_nodes.second -1;
-		} else {
-			o << none;
-		}
-		o << ' ' << i->get_name();
-		o << endl;
+		i->dump(o) << ' ' << i->get_name() << endl;
 	}
 }
 #if PRS_SUPPLY_OVERRIDES
 if (supply_map.size()) {
-	o << auto_indent << "rule supply map: (rules, macros, Vdd, GND)" << endl;
+	o << auto_indent << "rule supply map: (rules, macros, @nodes : Vdd, GND)" << endl;
 	typedef	supply_map_type::const_iterator	const_iterator;
 	const_iterator i(supply_map.begin()), e(supply_map.end());
 	for ( ; i!=e; ++i) {
 		o << auto_indent;
-		if (i->rules.second != i->rules.first) {
-			o << i->rules.first << ".." << i->rules.second -1;
-		} else {
-			o << none;
-		}
-		o << ' ';
-		if (i->macros.second != i->macros.first) {
-			o << i->macros.first << ".." << i->macros.second -1;
-		} else {
-			o << none;
-		}
-		o << " : " << i->Vdd << ", " << i->GND << endl;
+		i->dump(o) << " : ";
+		o << i->Vdd << ", " << i->GND << endl;
 	}
 }
 #endif
@@ -486,6 +502,23 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::supply_override_entry::write_object(
+		const persistent_object_manager&, ostream& o) const {
+	write_value<resource_map_entry>(o, *this);
+	write_value(o, Vdd);
+	write_value(o, GND);
+}
+
+void
+footprint::supply_override_entry::load_object(
+		const persistent_object_manager&, istream& i) {
+	read_value<resource_map_entry>(i, *this);
+	read_value(i, Vdd);
+	read_value(i, GND);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Saves unrolled expressions and production rules to binary stream.  
 	TODO: consider using value_writer and value_reader template classes
@@ -538,20 +571,9 @@ footprint::write_object_base(const persistent_object_manager& m,
 	util::write_sequence(o, invariant_pool);
 	util::write_persistent_sequence(m, o, subcircuit_map);
 #if PRS_SUPPLY_OVERRIDES
-{
-	// only save non-redundant information from pool
-	typedef supply_map_type::const_iterator		const_iterator;
-	write_value(o, supply_map.size());
-	const_iterator i(supply_map.begin()), e(supply_map.end());
-	for ( ; i!=e; ++i) {
-		write_value(o, i->rules);
-		write_value(o, i->macros);
-		write_value(o, i->Vdd);
-		write_value(o, i->GND);
-	}
-	// ignore internal_node_expr_map, restore later...
-}
+	util::write_persistent_sequence(m, o, supply_map);
 #endif
+	// ignore internal_node_expr_map, restore later...
 }
 }
 
@@ -608,21 +630,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	util::read_sequence_resize(i, invariant_pool);
 	util::read_persistent_sequence_resize(m, i, subcircuit_map);
 #if PRS_SUPPLY_OVERRIDES
-{
-	size_t s;
-	read_value(i, s);
-	size_t j = 0;
-	supply_map.reserve(s);
-	for ( ; j<s; ++j) {
-		supply_override_entry n;
-		read_value(i, n.rules);
-		read_value(i, n.macros);
-		read_value(i, n.Vdd);
-		read_value(i, n.GND);
-		supply_map.push_back(n);
-	}
-	INVARIANT(supply_map.size() == s);
-}
+	util::read_persistent_sequence_resize(m, i, supply_map);
 #endif
 }
 }

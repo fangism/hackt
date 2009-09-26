@@ -1,0 +1,7 @@
+M0_ myGND en @_int myGND nch W=5u L=2u
+M1_ @_int x y !GND nch W=5u L=2u
+M2_ !Vdd en y !Vdd pch W=5u L=2u
+
+* --- WARNINGS ---
+* Warning: in subcircuit <top-level>:
+* GND supply of internal node differs between definition and use: @_int

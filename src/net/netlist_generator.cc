@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.3.2.1 2009/09/25 01:21:41 fang Exp $
+	$Id: netlist_generator.cc,v 1.3.2.2 2009/09/26 00:10:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -279,7 +279,11 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		const index_type& expr = i->first;
 		// direction and name can be looked up later
 		const index_type new_int =
-			current_netlist->create_internal_node(j, expr);
+			current_netlist->create_internal_node(j, expr
+#if CACHE_INTERNAL_NODE_NAMES
+				, opt
+#endif
+				);
 		INVARIANT(new_int);
 		// asserts map entry exists:
 		current_netlist->lookup_internal_node(expr);
@@ -376,6 +380,13 @@ bool
 macro_supply_map_compare(const index_type v,
 		const entity::PRS::footprint::supply_map_type::value_type& i) {
 	return v < i.macros.first;
+}
+
+static
+bool
+internal_node_supply_map_compare(const index_type v,
+		const entity::PRS::footprint::supply_map_type::value_type& i) {
+	return v < i.int_nodes.first;
 }
 #endif
 
@@ -504,6 +515,29 @@ netlist_generator::set_current_length(const real_type l) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRS_SUPPLY_OVERRIDES
+/**
+	Errors out by throwing exception.
+ */
+static
+void
+__diagnose_supply_mismatch(ostream& o, const netlist_options& opt, 
+		const string& subc_name, const char* supply_name, 
+		const string& node_name) {
+if (opt.internal_node_supply_mismatch_policy != OPTION_IGNORE) {
+const bool err = opt.internal_node_supply_mismatch_policy == OPTION_ERROR;
+	o << (err ? "Error:" : "* Warning:");
+	o << " in subcircuit " << subc_name << ':' << endl <<
+		"* " << supply_name <<
+		" supply of internal node differs between definition and use: @"
+		<< node_name << endl;
+	if (err) {
+		THROW_EXIT;
+	}
+}
+}
+#endif
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursive, generate on-demand internal nodes as they are visited.
 	\pre all internal nodes have been allocated/mapped a priori, 
@@ -529,7 +563,28 @@ if (!n.used) {
 	STACKTRACE_INDENT_PRINT("defining internal node..." << endl);
 	const bool dir = ret.second;
 	// else need to define internal node once only
-	// TODO: honor prs supply override directives
+#if PRS_SUPPLY_OVERRIDES
+	// lookup supply associated with internal node's definition
+	const prs_footprint::supply_map_type& m(prs->get_supply_map());
+	typedef	prs_footprint::supply_map_type::const_iterator	const_iterator;
+	const_iterator f(upper_bound(m.begin(), m.end(), nid, 
+		&internal_node_supply_map_compare));
+	INVARIANT(f != m.begin());
+	--f;
+	const index_type gi = register_named_node(f->GND);
+	const index_type vi = register_named_node(f->Vdd);
+	// diagnostic: if supply differs from definition and use domains
+	if (!dir && (low_supply != gi)) {
+		__diagnose_supply_mismatch(cerr, opt,
+			current_netlist->get_name(), "GND", n.name);
+	}
+	if (dir && (high_supply != vi)) {
+		__diagnose_supply_mismatch(cerr, opt,
+			current_netlist->get_name(), "Vdd", n.name);
+	}
+	const value_saver<index_type>
+		__s1(low_supply, gi), __s2(high_supply, vi);
+#endif
 	const value_saver<index_type>
 		__t1(foot_node, (dir ? high_supply : low_supply)),
 		__t2(output_node, node_ind);

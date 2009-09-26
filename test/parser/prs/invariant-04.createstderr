@@ -36,7 +36,7 @@ Persistent Object Manager text dump:
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	491
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	499
 	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
 	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
 	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -64,7 +64,7 @@ Persistent Object Manager text dump:
 	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	478
+	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	486
 	64	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
 	65	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	66	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -138,8 +138,8 @@ In namespace "", we have: {
         ~w -> z+
         invariant exprs: 
         $(~(w & z))
-        rule supply map: (rules, macros, Vdd, GND)
-        0..1 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1
       }
       }
 
@@ -185,8 +185,8 @@ In namespace "", we have: {
         ~x -> y+
         invariant exprs: 
         $(x | y)
-        rule supply map: (rules, macros, Vdd, GND)
-        0..1 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1
       }
       }
 

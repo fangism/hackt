@@ -1,0 +1,8 @@
+// "config-arg-10.hac"
+// copy-modified from "config-arg-09.hac"
+// @hacknet-flags@ -f unknown_option=error -f bogus_option=666,123
+// expect-fail
+
+import "inv-00.hac";
+
+

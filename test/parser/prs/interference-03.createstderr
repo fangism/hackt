@@ -39,7 +39,7 @@ Persistent Object Manager text dump:
 	35	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	33
 	36	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	467
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	475
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
@@ -72,7 +72,7 @@ Persistent Object Manager text dump:
 	68	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	69	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	443
+	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	451
 	72	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	73	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	74	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -149,8 +149,8 @@ In namespace "", we have: {
         resolved prs:
         bar -> foo- [weak=1]
         ~bar -> foo+ [weak=1]
-        rule supply map: (rules, macros, Vdd, GND)
-        0..1 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1
       }
       }
 
@@ -197,8 +197,8 @@ In namespace "", we have: {
         resolved prs:
         foo -> bar-
         ~foo -> bar+
-        rule supply map: (rules, macros, Vdd, GND)
-        0..1 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1
       }
       }
 

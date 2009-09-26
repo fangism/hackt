@@ -74,7 +74,7 @@ Persistent Object Manager text dump:
 	68	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	70	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	724
+	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	732
 	72	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	73	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	74	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -160,8 +160,8 @@ In namespace "", we have: {
         @q[0]- <- en & e[0]
         @q[1]- <- en & e[1]
         @z- <- en
-        rule supply map: (rules, macros, Vdd, GND)
-        0..2 none : 2, 1
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..2 none 0..2 : 2, 1
       }
       }
 

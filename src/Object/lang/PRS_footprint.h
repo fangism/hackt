@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.15.4.2 2009/09/25 01:21:40 fang Exp $
+	$Id: PRS_footprint.h,v 1.15.4.3 2009/09/26 00:10:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -129,11 +129,49 @@ public:
 		the outer-most level, designated index 0.  
 	 */
 	typedef	std::pair<size_t, size_t>	index_range;
+
+	static
+	ostream&
+	print_range(ostream&, const index_range&);
+
+	static
+	bool
+	range_empty(const index_range& r) {
+		return r.first == r.second;
+	}
+
+	/**
+		Information common to all mappings of side structures.  
+	 */
+	struct resource_map_entry {
+		index_range			rules;
+		index_range			macros;
+		index_range			int_nodes;
+
+		bool
+		rules_empty(void) const {
+			return rules.first == rules.second;
+		}
+
+		bool
+		macros_empty(void) const {
+			return macros.first == macros.second;
+		}
+
+		bool
+		nodes_empty(void) const {
+			return int_nodes.first == int_nodes.second;
+		}
+
+		ostream&
+		dump(ostream&) const;
+
+	};
 	/**
 		Each subcircuit may contain rules and macros, 
 		so we need to keep these sets coherent.
 	 */
-	struct subcircuit_map_entry {
+	struct subcircuit_map_entry : public resource_map_entry {
 		/**
 			Back-reference to original subcircuit.
 			Saves from copying string name, or other info.
@@ -141,25 +179,11 @@ public:
 			having to save the pointer persistently.
 		 */
 		never_ptr<const subcircuit>	back_ref;
-		index_range			rules;
-		index_range			macros;
-		index_range			int_nodes;
 		subcircuit_map_entry() { }
 		subcircuit_map_entry(const subcircuit* b) : back_ref(b) { }
 
 		const string&
 		get_name(void) const;
-
-		bool
-		rules_empty(void) const { return rules.first == rules.second; }
-
-		bool
-		macros_empty(void) const { return macros.first == macros.second; }
-
-		bool
-		nodes_empty(void) const {
-			return int_nodes.first == int_nodes.second;
-		}
 
 		void
 		collect_transient_info_base(persistent_object_manager&) const;
@@ -181,20 +205,15 @@ public:
 	/**
 		Structure for tracking which supplies drive which rules.  
 	 */
-	struct supply_override_entry {
+	struct supply_override_entry : public resource_map_entry {
 		// never_ptr<const rule_set>		back_ref;
-		index_range			rules;
-		index_range			macros;
 		size_t				Vdd;
 		size_t				GND;
 
-		/**
-			For binary searchability.
-		 */
-		bool
-		operator < (const supply_override_entry& r) {
-			return rules.first < r.rules.first;
-		}
+		void
+		write_object(const persistent_object_manager&, ostream&) const;
+		void
+		load_object(const persistent_object_manager&, istream&);
 	};	// end struct supply_override_entry
 	/**
 		More space-efficient to keep supply information aside

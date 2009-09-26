@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-07:
+	  hacknet, PRS: now tracks power supplies for internal node
+		definitions, and diagnoses mismatches between
+		definition and use supply domains.  
+	  PRS::footprint: refactored some shared code for
+		mapped side structures (subcircuit, supply map)
+	  hacknet: new error-handling options [ignore|warn|error]
+		unknown_option, internal_node_supply_mismatch.
+		Now cache internal node names, so that underscores
+		can be mangled (was bug).
+	  Added new test hacknet cases, updated a few old ones.  
+		Documented new options.
+
+
 2009-09-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-supply-01-06:
