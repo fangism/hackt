@@ -1,11 +1,8 @@
 --- Makefile	Fri Jun 30 17:57:41 2006
 +++ Makefile.new	Fri Jun 30 17:57:14 2006
-@@ -144,7 +144,7 @@
+@@ -144,4 +144,4 @@
  am__remove_distdir = \
    { test ! -d $(distdir) \
      || { find $(distdir) -type d ! -perm -200 -exec chmod u+w {} ';' \
 -         && rm -fr $(distdir); }; }
 +         && { until rm -fr $(distdir); do :; done; }; }; }
- DIST_ARCHIVES = $(distdir).tar.gz $(distdir).tar.bz2
- GZIP_ENV = --best
- distuninstallcheck_listfiles = find . -type f -print

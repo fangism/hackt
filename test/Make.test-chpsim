@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.25 2009/09/14 21:17:20 fang Exp $
+#	$Id: Make.test-chpsim,v 1.26 2009/09/28 06:56:58 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -8,8 +8,8 @@
 
 AM_HACCHPSIM_FLAGS = -I$(srcdir)
 
-CHPSIM_ALLOC_DUMP = $(HACKT_CHPSIM_EXE) -fno-run -fdump-graph-alloc
-CHPSIM_GRAPH_DOT = $(HACKT_CHPSIM_EXE) -fno-run -fdump-dot-struct -fcluster-processes -fshow-channels
+CHPSIM_ALLOC_DUMP = $(HACKT_CHPSIM_RAW_EXE) -fno-run -fdump-graph-alloc
+CHPSIM_GRAPH_DOT = $(HACKT_CHPSIM_RAW_EXE) -fno-run -fdump-dot-struct -fcluster-processes -fshow-channels
 
 CHPSIMCKPT_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/chpsimckpt-template.chpsimrc
 CHPSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/chpsimckpt-load-template.chpsimrc
@@ -123,19 +123,6 @@ AUTO_DEPENDS += chpsimalloctest.autodepend
 
 # no additional dependencies for chpsimdottest needed
 
-# for Darwin: need some help finding shared libraries that are dependencies
-# of dlopened modules.  
-# search for dependent module libraries, set CHPSIM_LIB_PATH
-# CHPSIM_LIB_PATH = .
-# should really iterate over paths in CHPSIM_LIB_PATH in loop
-
-CHPSIM_TEST_ENV = \
-	test -z "$(CHPSIM_LIB_PATH)" || \
-	  $(LTDL_SHLIBPATH_VAR)=$(CHPSIM_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR) && \
-	  export $(LTDL_SHLIBPATH_VAR)
-
-SHOW_CHPSIM_TEST_ENV = $(LTDL_SHLIBPATH_VAR)=$(CHPSIM_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$"$(LTDL_SHLIBPATH_VAR)"
-
 # NOTE: EXTRACT_HACO_PIPE is defined in "Make.test-prsim"
 # TODO: extract additional command-line flags from the source script
 #	maybe using @chpsim-flags@ as a match pattern
@@ -151,9 +138,8 @@ CHPSIMRC_TEST_SCRIPT = \
 	autotrace=1 ; \
 	$(CHPSIMRC_AUTOTRACE_DISABLE_HOOK) \
 	if test "$$autotrace" = 1 ; then traceflag="-r $$trace" ; fi ; \
-	$(CHPSIM_TEST_ENV) ; \
 	cmd="$(HACKT_CHPSIM_EXE) -b $(AM_HACCHPSIM_FLAGS) -a $$ckpt $$traceflag $$flags $$mods $$obj" ; \
-	$(ECHO) "ckpt: $(SHOW_CHPSIM_TEST_ENV) $$cmd < $<" ; \
+	$(ECHO) "ckpt: $$cmd < $<" ; \
 	$(SED) 's|SOURCE|$<|g' $(CHPSIMCKPT_TEMPLATE_SCRIPT) | \
 	  $$cmd > $@ 2>&1 && \
 	test -f $$ckpt || $(ECHO) "Warning: $$ckpt not produced." ; \
@@ -166,9 +152,8 @@ CHPSIMRC_FAIL_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	mods=`$(CAT) $< | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
 	flags=`$(CAT) $< | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` ; \
-	$(CHPSIM_TEST_ENV) ; \
 	cmd="$(HACKT_CHPSIM_EXE) -b $(AM_HACCHPSIM_FLAGS) $$flags $$mods $$obj" ; \
-	$(ECHO) "$(SHOW_CHPSIM_TEST_ENV) $$cmd < $<" ; \
+	$(ECHO) "$$cmd < $<" ; \
 	$$cmd < $< > $@ 2>&1
 
 # without generating checkpoint
@@ -369,9 +354,8 @@ AUTO_DEPENDS += chpsimrcfailtest.autodepend
 	mods=`$(CAT) "$$rc" | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
 	flags=`$(CAT) "$$rc" | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-indump$$/-dupe/g'` ; \
-	$(CHPSIM_TEST_ENV) ; \
 	cmd="$(HACKT_CHPSIM_EXE) -b $(AM_HACCHPSIM_FLAGS) $$flags $$mods $$obj" ; \
-	$(ECHO) "load: $(SHOW_CHPSIM_TEST_ENV) $$cmd" ; \
+	$(ECHO) "load: $$cmd" ; \
 	$(CAT) $(CHPSIMCKPT_LOAD_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|LOAD|$<|g' -e 's|SAVE|'"$$ckpt"'|g' | \
 	  $$cmd > $@ 2>&1
@@ -386,9 +370,8 @@ AUTO_DEPENDS += chpsimrcfailtest.autodepend
 	@rc=$(srcdir)/`$(ECHO) $< | $(SED) 's/\.chpsimckpt-dupe$$/.chpsimrc/g'` ; \
 	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)` ; \
 	flags=`$(CAT) "$$rc" | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` ; \
-	$(CHPSIM_TEST_ENV) ; \
 	{ $(ECHO) "load $<" ; $(ECHO) "dump-state" ;} | \
-	  $(HACKT_CHPSIM_EXE) -b $$flags $< > $@
+	  $(HACKT_CHPSIM_RAW_EXE) -b $$flags $< > $@
 
 
 if VERBOSE_CHECK
@@ -538,10 +521,10 @@ ALL_CHPSIMRC_OUT = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-out) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimrcfail-out)
 ALL_CHPSIM_CKPT = $(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpt)
 
-$(ALL_CHPSIM_ALLOC): $(HACKT_CHPSIM_EXE)
-$(ALL_CHPSIM_DOT): $(HACKT_CHPSIM_EXE)
-$(ALL_CHPSIMRC_OUT): $(HACKT_CHPSIM_EXE)
-$(ALL_CHPSIM_CKPT): $(HACKT_CHPSIM_EXE)
+$(ALL_CHPSIM_ALLOC): $(HACKT_CHPSIM_RAW_EXE)
+$(ALL_CHPSIM_DOT): $(HACKT_CHPSIM_RAW_EXE)
+$(ALL_CHPSIMRC_OUT): $(HACKT_CHPSIM_RAW_EXE)
+$(ALL_CHPSIM_CKPT): $(HACKT_CHPSIM_RAW_EXE)
 
 all-chpsim-alloc: $(ALL_CHPSIM_ALLOC)
 

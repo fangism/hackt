@@ -1,6 +1,27 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.93 2009/09/14 21:17:19 fang Exp $
+#	$Id: ChangeLog,v 1.94 2009/09/28 06:56:57 fang Exp $
 # ChangeLog for test directory.
+
+2009-09-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-30:
+	  Basically discovered the libtool --mode=execute -dlopen magic
+		wrapping to properly load built, pre-installed dependent
+		libraries (was accidentally picking up old installed libs).  
+	  Make.test-tail: now distinguish between a libtool-wrapped and 
+		non-wrapped execution of chpsim.
+		HACKT_GUILE_EXE and HACKT_CHPSIM_GUILE_EXE now wrapped
+		with libtool --mode=execute -dlopen plug_in.la
+		GUILE_LOAD_FLAGS can be appended to add more paths.
+	  Make.test-guile: replaced use of GUILE_LOAD_PATH with
+		passing -L scm_path to guile invocation, just like
+		src/hacguile.in, hacchpsimguile.in (post-install)
+		No longer need any guile environment modification at test time.
+	  Make.test-chpsim: always wrap chpsimrc tests, no longer use 
+		CHPSIM_LIB_PATH variable.
+		No longer hack LTDL_SHLIBPATH_VAR to run plug-in dependent
+		tests, remove CHPSIM_TEST_ENV, SHOW_CHPSIM_TEST_ENV.
+
 
 2009-09-10	David Fang		<fangism@users.sourceforge.net>
 

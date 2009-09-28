@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-30:
+	  No source revision.
+	  Top-level build system maintainence, and testing on
+		i686-apple-darwin10.  Found numerous prsim regressions
+		related to a failed cast during bool instance lookup.
+		Seems to be latent on trunk, needs investigation.
+		Haven't tested on gcc-4.x in a long time...
+	  hacguile.in, hacchpsimguile.in: now automatically pass 
+		-L scm_path to guile instead of depending on GUILE_LOAD_PATH.
+	  scripts/init_hackt.{sh,csh}: no longer set GUILE_LOAD_PATH.
+
+
 2009-09-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-merged-netlist-02-13:

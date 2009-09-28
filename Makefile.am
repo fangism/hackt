@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.47 2007/08/19 04:00:34 fang Exp $
+#	$Id: Makefile.am,v 1.48 2009/09/28 06:56:50 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 include $(top_srcdir)/installdirs.mk
@@ -23,6 +23,7 @@ libtool: $(LIBTOOL_DEPS)
 
 # don't need $(srcdir) because cd $(top_srcdir) is prior to exec. aclocal
 ACLOCAL_AMFLAGS = -I config @ACLOCAL_FLAGS@
+# in future, may need -I libltdl/m4
 
 # see configure.in for adding libtool flags
 

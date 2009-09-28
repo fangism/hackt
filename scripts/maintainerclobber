@@ -1,58 +1,80 @@
 #! /bin/sh
-#	$Id: maintainerclobber,v 1.4 2007/07/31 23:22:43 fang Exp $
+#	$Id: maintainerclobber,v 1.5 2009/09/28 06:56:52 fang Exp $
 
 # emulates a "make maintainerclean" and more
 # run this script from the top_srcdir (root)
 # "maintainer-clean" should invoke "make distclean"
 # Any .tar.* distribution tarballs will not be deleted by this script.  
 
-if test ! -f configure.ac
+usage () {
+cat << EOF
+$0: script to remove all files not in CVS, like a maintainerclean.
+usage: maintainerclean [options]
+options:
+	-h : print usage and exit
+	-k : keep .cvsignore files, even if they are generated
+	-v : verbose mode
+EOF
+}
+
+args=`getopt "hkv" $*`
+test $? = 0 || { usage; exit 2; }
+set -- $args
+
+keep_cvsignore=0
+verbose=0
+
+for i
+do
+case "$i"
+in
+	-h) usage; exit ;;
+	-k) keep_cvsignore=1 ; shift ;;
+	-v) verbose=1 ; shift ;;
+	--) shift; break ;;
+esac
+done
+
+# Nah, allow this script to be run from anywhere
+# test -f configure.ac || { echo "You must run this script from the top source directory." ; exit 1 ;}
+
+if test $keep_cvsignore = 1
 then
-	echo "You must run this script from the top source directory."
-	exit 1
+	filt_cvsignore="grep -v ^\.cvsignore"
+else
+	filt_cvsignore=cat
 fi
 
-if test -f Makefile
-then
-	make clean-cvsignore maintainer-clean
-fi
+# read the .cvsignore to determine what to delete
+cvs_clobber () {
+# traverse flat list if subdirs
+cvsdirs=`find . -type d -name CVS`
+for d in $cvsdirs
+do
+	p=`echo $d | sed 's|/CVS$||'`
+	echo "-------- clobbering $p"
+	pushd $p > /dev/null 2>&1
+	if test -f .cvsignore
+	then
+		# only remove things that belong to this directory
+		clean=`grep . .cvsignore | sed 's|^\./||' | grep -v '/' | $filt_cvsignore`
+		# in case command line is too long
+		for f in $clean
+		do
+			test "$verbose" != 1 || echo "rm -rf $f"
+			rm -rf $f
+		done
+	fi
+	popd > /dev/null 2>&1
+done
+echo "-------- done clobbering `pwd`"
+test $keep_cvsignore != 1 || echo "All .cvsignore files were kept."
+}
 
-rm -f *~
-rm -f aclocal.m4
-rm -rf autom4te.cache
-rm -f autoscan.log
-rm -f configure.scan
-rm -f config.status
-rm -f configure
-(mkdir preserve && cd libltdl && \
-	mv CVS README.CVS .cvsignore ../preserve && \
-	cd .. && \
-	rm -rf libltdl && \
-	mv preserve libltdl )
-(cd config && \
-	rm -f install-sh \
-	missing \
-	ylwrap \
-	mkinstalldirs \
-	config.guess \
-	config.sub \
-	compile \
-	depcomp \
-	ltmain.sh )
-rm -f src/__config__.h.in
-rm -f src/headers_deps.make
-rm -f libtool
-#  what if there are Makefiles we wish to keep? address later...
-rm -rf `find . -name .libs`
-rm -rf `find . -name .deps`
-rm -f `find . -name "stamp-h*"`
-rm -f `find . -name Makefile`
-rm -f `find . -name Makefile.in`
-rm -f `find . -name dummy.cc`
-# rm -f `find . -name .cvsignore | grep -v config`
+cvs_clobber
 
 # to see what's left:
-ls -R
+# ls -R
 
 echo "Run \"bootstrap\" to regenerate maintainer files."
 

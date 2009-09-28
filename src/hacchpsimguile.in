@@ -8,9 +8,10 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 . @bindir@/init_hackt.sh
 pkgdatadir=@datadir@/@PACKAGE_NAME@
+scm_path=$pkgdatadir/scm
 # guile=@GUILE@
 guile=@GUILE_PATH@
-exec $guile -l $pkgdatadir/scm/hacchpsimguile.scm -- "$@"
+exec $guile -L $scm_path -l $scm_path/hacchpsimguile.scm -- "$@"
 
 # I think it'll be safer in the long run to use the absolute path...
 

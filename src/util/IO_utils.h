@@ -1,7 +1,7 @@
 /**
 	\file "util/IO_utils.h"
 	General-purpose handy utilities.
-	$Id: IO_utils.h,v 1.10 2009/08/28 20:45:21 fang Exp $
+	$Id: IO_utils.h,v 1.11 2009/09/28 06:56:56 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_H__
@@ -123,7 +123,7 @@ template <class K, class T>
 void	write_pair(ostream& f, const pair<K, T>& p);
 
 template <class K, class T>
-void	read_pair(ostream& f, pair<K, T>& p);
+void	read_pair(istream& f, pair<K, T>& p);
 
 template <class K, class T>
 void	write_key_value_pair(ostream& f, const pair<const K, T>& p) {

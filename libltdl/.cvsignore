@@ -8,9 +8,13 @@ config-h.in
 config.*
 configure*
 install-sh
-ltdl.c
-ltdl.h
+*.c
+*.h
+*.in
 ltmain.sh
 missing
 removed
 config
+m4
+libltdl
+loaders

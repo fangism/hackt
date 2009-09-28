@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.106 2009/09/14 21:17:15 fang Exp $
+#	$Id: ChangeLog,v 1.107 2009/09/28 06:56:55 fang Exp $
+
+2009-09-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-30:
+	  util/IO_utils.h: fixed minor typo on read_pair() template.
+
 
 2009-09-10	David Fang		<fangism@users.sourceforge.net>
 

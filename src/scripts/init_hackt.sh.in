@@ -1,6 +1,6 @@
 #!/bin/sh
 # "init_hackt.sh"
-#	$Id: init_hackt.sh.in,v 1.8 2009/05/04 20:38:00 fang Exp $
+#	$Id: init_hackt.sh.in,v 1.9 2009/09/28 06:56:55 fang Exp $
 #	vi: ft=sh
 # source this file to sets up environment variables
 # MAINTAINENCE: keep this consistent with its init_hackt.csh counterpart
@@ -38,12 +38,13 @@ infodir=@infodir@
 # TODO: possibly push this into extension
 # should be consistent with scm/Makefile.am's scmdir definition.
 HACKT_GUILE_PATH=${pkgdatadir}/scm
-if test -z "$GUILE_LOAD_PATH" ; then
-	GUILE_LOAD_PATH=$HACKT_GUILE_PATH
-else
-	prepend_path GUILE_LOAD_PATH $HACKT_GUILE_PATH
-fi
-export GUILE_LOAD_PATH
+# should no longer need this now that paths are amended in wrapper scripts
+# if test -z "$GUILE_LOAD_PATH" ; then
+#	GUILE_LOAD_PATH=$HACKT_GUILE_PATH
+# else
+#	prepend_path GUILE_LOAD_PATH $HACKT_GUILE_PATH
+# fi
+# export GUILE_LOAD_PATH
 
 # setup hackt module library path (plug-ins)
 if test -z "$LTDL_LIBRARY_PATH" ; then

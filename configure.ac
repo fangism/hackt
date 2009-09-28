@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.201 2009/09/14 21:16:39 fang Exp $
+#	$Id: configure.ac,v 1.202 2009/09/28 06:56:50 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -136,21 +136,39 @@ dnl AM_CONDITIONAL(HAVE_SWIG, test -n "$SWIG" )
 
 # This takes care of many standard C[++] compiler configuration checks.  
 AC_PROG_RANLIB
-dnl libtool dlopen features
-AC_LIBLTDL_CONVENIENCE
+
+dnl -------------------------- LIBTOOL SECTION --------------------------------
+dnl MAINTAINER INSTRUCTIONS: 
+dnl uncomment the macros in either the 1.5.x section or the 2.x section
+dnl need ltdl: dlopen-ing plug-ins and module shared objects/libraries
+
+dnl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+dnl libtool-1.5.x setup
+
+dnl AC_LIBLTDL_CONVENIENCE
+dnl AC_LIB_LTDL
+dnl AC_LIBTOOL_DLOPEN
+dnl AC_DISABLE_STATIC
+dnl AC_PROG_LIBTOOL
+dnl AC_CONFIG_SUBDIRS(libltdl)
+
+dnl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+dnl libtool-2.x setup
+
+dnl AC_CONFIG_MACRO_DIR([libltdl/m4])	dnl had trouble with this
+AC_CONFIG_MACRO_DIR([config])
+LT_INIT
+AC_DISABLE_STATIC
+LTDL_INIT
+
+dnl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+dnl common libtool setup
+HACKT_ARG_VAR_LIBTOOL_FLAGS
+dnl e.g. --silent
 AC_SUBST(LTDLINCL)
 AC_SUBST(LIBLTDL)
-AC_LIB_LTDL
-AC_LIBTOOL_DLOPEN
-dnl to support dlopen plug-ins and module shared objects/libraries
-AC_DISABLE_STATIC	dnl default to not building static libraries
-AC_PROG_LIBTOOL
-AC_CONFIG_SUBDIRS(libltdl)
-dnl now, always use verbose libtool script, instead of --silent
-dnl HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 # Automatically update if libtool script is outdated.  
 # Adds corresponding dependencies to "Makefile.in".  
-HACKT_ARG_VAR_LIBTOOL_FLAGS
 AC_SUBST(LIBTOOL_DEPS)
 dnl need these variables to augment test environment
 LTDL_SHLIBPATH_VAR=$libltdl_cv_shlibpath_var
@@ -158,10 +176,13 @@ AC_SUBST(LTDL_SHLIBPATH_VAR)
 LTDL_OBJDIR=$libltdl_cv_objdir
 AC_SUBST(LTDL_OBJDIR)
 
-case $build_os in
-darwin*)	AM_CONDITIONAL(BUILD_DARWIN, true) ;;
-*)		AM_CONDITIONAL(BUILD_DARWIN, false) ;;
-esac
+dnl ----------------------- end LIBTOOL SECTION -------------------------------
+
+dnl AM_CONDITIONAL(NEED_SHLIBPATH_VAR, test -n "$LTDL_SHLIBPATH_VAR")
+dnl case $build_os in
+dnl darwin*)	AM_CONDITIONAL(BUILD_DARWIN, true) ;;
+dnl *)		AM_CONDITIONAL(BUILD_DARWIN, false) ;;
+dnl esac
 
 if test "$enable_shared" = "no" ; then
   AC_MSG_WARN([You requested disabling shared libraries, however some features of this package require shared libraries, so certain tests will fail!])
@@ -518,10 +539,12 @@ ACEOF
 
 # additional patch to Makefile to work around automake shortcoming
 # recursive rm may fail if too many files in particular subdir.
+#	Makefile patch is currently disabled
 # sed substitution forces POSIX-mode of tar to not be limited to 99 chars
 # in full path names of files
 AC_CONFIG_FILES([Makefile], 
-	[patch -p0 < $srcdir/config/am__remove_distdir.diff
+	[
+	dnl patch -p0 < $srcdir/config/am__remove_distdir.diff
 	sed '/^am__tar/s/chof/chf/' Makefile > Makefile.tmp
 	mv Makefile.tmp Makefile
 	])

@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.19 2009/04/29 22:05:40 fang Exp $
+#	$Id: Make.test-guile,v 1.20 2009/09/28 06:56:58 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -49,21 +49,9 @@ HACSCM_OUTPUT_FILTER = \
 HACSCM_EXPECT_FILTER = \
 	$(SED) -e '/^In standard input:/,/^$$/d' -e '/^Backtrace:/d'
 
-# append to this to add paths
-HACKT_GUILE_LOAD_PATH=$(top_srcdir)/src/scm$(PATH_SEPARATOR)$(srcdir)
-
-# strip spaces that result from appending the Makefile variable
-# point search paths to pre-installed libraries
-HACSCM_TEST_ENVIRONMENT = \
-	GUILE_LOAD_PATH=`$(ECHO) $(HACKT_GUILE_LOAD_PATH) | $(SED) 's/ //g'` \
-	LTDL_LIBRARY_PATH=$(PRE_INST_LDPATH)
-
-if BUILD_DARWIN
-HACSCM_TEST_ENVIRONMENT += $(LTDL_SHLIBPATH_VAR)=$(PRE_INST_LDPATH)
-endif
-
-HACKT_GUILE_ENV_EXE = \
-	$(HACSCM_TEST_ENVIRONMENT) $(HACKT_GUILE_EXE)
+# no need for further environment modification
+# HACSCM_TEST_ENVIRONMENT =
+HACKT_GUILE_ENV_EXE = $(HACSCM_TEST_ENVIRONMENT) $(HACKT_GUILE_EXE)
 
 HACSCM_TEST_SCRIPT =
 if HAVE_LIBGUILE
@@ -221,8 +209,7 @@ AUTO_DEPENDS += hacscmfailtest.autodepend
 
 # TESTS_ENVIRONMENT doesn't really apply here because these tests are run
 # separately as prerequisites of the actual check loop script.
-# Thus we must apply environment variables manually.
-# Point the GUILE_LOAD_PATH to the home of scheme modules in the source tree.
+# No further need to modify env. since we're wrapping libtool --mode=execute
 HACCHPSIMSCM_TEST_ENVIRONMENT = $(HACSCM_TEST_ENVIRONMENT)
 
 HACKT_CHPSIM_GUILE_ENV_EXE = \

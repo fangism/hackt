@@ -1,5 +1,5 @@
 # "test/chpsim/bingcd/Makefile.am"
-#	$Id: Makefile.am,v 1.2 2008/05/06 17:43:35 fang Exp $
+#	$Id: Makefile.am,v 1.3 2009/09/28 06:56:59 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -9,7 +9,6 @@ include $(top_srcdir)/test/Make.test-head
 # SUBDIRS = .
 
 HACO_FLAGS += -I$(srcdir)/../testlib -I$(srcdir)/..
-CHPSIM_LIB_PATH = ../../../lib
 
 # list tests here only if they are also intended for create/alloc tests
 HACKT_PARSE_TEST_PASSES =
@@ -94,5 +93,5 @@ HACKT_GUILE_CLEAN_IGNORE_PATTERNS += \
 	"*.hacchpsimscm-out.tmp"
 
 # additionsl search path for scheme scripts
-HACKT_GUILE_LOAD_PATH +=$(PATH_SEPARATOR)$(srcdir)/..
+GUILE_LOAD_FLAGS += -L $(srcdir)/..
 

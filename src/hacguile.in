@@ -8,9 +8,12 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 . @bindir@/init_hackt.sh
 pkgdatadir=@datadir@/@PACKAGE_NAME@
+# scm_path is where hackt's scheme files are installed
+scm_path=$pkgdatadir/scm
+# bind executable to absolute path
 # guile=@GUILE@
 guile=@GUILE_PATH@
-exec $guile -l $pkgdatadir/scm/hacguile.scm -- "$@"
+exec $guile -L $scm_path -l $scm_path/hacguile.scm -- "$@"
 
 # I think it'll be safer in the long run to use the absolute path...
 

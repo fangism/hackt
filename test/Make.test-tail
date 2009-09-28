@@ -3,7 +3,11 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.94 2009/08/28 20:45:40 fang Exp $
+#	$Id: Make.test-tail,v 1.95 2009/09/28 06:56:58 fang Exp $
+
+# for test that depend on pre-install plug-ins
+# don't forget to pass -dlopen to assist searching for pre-install dependencies
+LIBTOOL_EXEC = $(LIBTOOL) --mode=execute
 
 # our collection of test programs/scripts/commands
 HACKT_EXE = $(top_builddir)/src/hackt
@@ -19,14 +23,19 @@ HACKT_CFLAT_PRSIM_SEU_EXE = $(HACKT_CFLAT_PRSIM_EXE) -f SEU
 HACKT_CFLAT_SPRS_EXE = $(HACKT_CFLAT_PRSIM_EXE) -fsizes
 HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
 HACKT_PRSIM_EXE = $(top_builddir)/src/hacprsim
-HACKT_CHPSIM_EXE = $(top_builddir)/src/hacchpsim
+HACKT_CHPSIM_RAW_EXE = $(top_builddir)/src/hacchpsim
+HACKT_CHPSIM_EXE = $(LIBTOOL_EXEC) -dlopen $(top_builddir)/lib/stdchpfn.la $(HACKT_CHPSIM_RAW_EXE)
+# because chpsim loads plug-ins for function libraries
 HACKNET_EXE = $(top_builddir)/src/hacknet
 
-# guile based tests will need a modified environment, see Make.test-guile
+# guile-based and plug-in tests will need a modified environment, 
+# see Make.test-guile
 # -q flag inhibits loading of user's ~/.guile init file
 SCM_SRCDIR = $(top_srcdir)/src/scm
-HACKT_GUILE_EXE = $(GUILE) -q -l $(SCM_SRCDIR)/hacguile.scm --
-HACKT_CHPSIM_GUILE_EXE = $(GUILE) -q -l $(SCM_SRCDIR)/hacchpsimguile.scm --
+# for make check, set the load path to srcdir, see also src/hacguile.in
+GUILE_LOAD_FLAGS = -L $(top_srcdir)/src/scm -L $(srcdir)
+HACKT_GUILE_EXE = $(LIBTOOL_EXEC) -dlopen $(top_builddir)/src/hackt-guile.la $(GUILE) -q $(GUILE_LOAD_FLAGS) -l $(SCM_SRCDIR)/hacguile.scm --
+HACKT_CHPSIM_GUILE_EXE = $(LIBTOOL_EXEC) -dlopen $(top_builddir)/src/hackt-chpsim-guile.la $(GUILE) -q $(GUILE_LOAD_FLAGS) -l $(SCM_SRCDIR)/hacchpsimguile.scm --
 
 # install-time only test scripts and executables
 INSTALLED_HACGUILE = hacguile
@@ -34,10 +43,6 @@ INSTALLED_HACCHPSIMGUILE = hacchpsimguile
 
 # explicitly prepend path to force subshell to find installed executables first
 INSTALL_PATH_OVERRIDE = $(bindir)$(PATH_SEPARATOR)"$$PATH"
-
-
-# library path for running/linking/loading pre-installed libraries and modules
-PRE_INST_LDPATH = $(top_builddir)/src$(PATH_SEPARATOR)$(top_builddir)/src/$(LTDL_OBJDIR)
 
 # NOTE: these scripts are configure-generated from their .hac files.  
 TEST_SRCDIR = $(top_srcdir)/test
