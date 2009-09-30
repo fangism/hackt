@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.3.2.3 2009/09/26 00:34:42 fang Exp $
+#	$Id: Makefile.am,v 1.3.2.4 2009/09/30 01:04:38 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -56,7 +56,11 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	supply-subckt-04 supply-subckt-05 \
 	supply-internal-01 supply-internal-02 supply-internal-03 \
 	supply-precharge-01 supply-precharge-02 supply-precharge-03 \
-	supply-precharge-04
+	supply-precharge-04 \
+	supply-instance-01 supply-instance-02 supply-instance-03 \
+	supply-instance-04 supply-instance-05 supply-instance-06 \
+	supply-instance-07 supply-instance-08 supply-instance-09 \
+	supply-instance-10 supply-instance-11 supply-instance-12
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05 \
@@ -101,9 +105,21 @@ HACKT_CREATE_TEST_PASSES = \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
-	mangle-04
+	mangle-04 \
+	supply-instance-01 supply-instance-02 supply-instance-03 \
+	supply-instance-04 supply-instance-05 supply-instance-06 \
+	supply-instance-07 supply-instance-08 supply-instance-09 \
+	supply-instance-10 supply-instance-11 supply-instance-12
+
 HACKT_CREATE_TEST_FAILURES = \
 	non-CMOS-06 subckt-02
+
+HACKT_ALLOC_TEST_PASSES = \
+	supply-instance-01 supply-instance-02 supply-instance-03 \
+	supply-instance-04 supply-instance-05 supply-instance-06 \
+	supply-instance-07 supply-instance-08 supply-instance-09 \
+	supply-instance-10 supply-instance-11 supply-instance-12
+
 HACKT_CFLAT_TEST_SUBJECTS =
 
 include $(top_srcdir)/test/Make.test-tail

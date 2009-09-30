@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.53.10.2 2009/09/25 01:21:36 fang Exp $
+	$Id: devel_switches.h,v 1.53.10.3 2009/09/30 01:04:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -221,7 +221,7 @@
 	Define to 1 to allow prs bodies to override Vdd and GND.
 	Note: should allow declared internal nodes, not just regular nodes.
 	Goal: 1
-	Status: in progress, adding hacknet support
+	Status: done, tested
  */
 #define	PRS_SUPPLY_OVERRIDES			(1 && IMPLICIT_SUPPLY_PORTS)
 
@@ -230,9 +230,17 @@
 	per-instance.  
 	Will require syntax extension.  
 	Goal: 1
-	Status: not begun, other than syntax
+	Status: in progress, developing middle-end
  */
 #define	INSTANCE_SUPPLY_OVERRIDES		(1 && IMPLICIT_SUPPLY_PORTS)
+
+/**
+	Define to 1 to allow implicit supplies to be unconnected by
+	passing empty arguments.  
+	Goal: probably do not want (0)
+	Status: experimental
+ */
+#define	INSTANCE_SUPPLY_DISCONNECT		(0 && INSTANCE_SUPPLY_OVERRIDES)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

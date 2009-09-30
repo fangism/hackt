@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.50.2.2 2009/09/23 06:20:57 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.50.2.3 2009/09/30 01:04:37 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -1637,6 +1637,8 @@ connection_statement
 extended_connection_actuals_list
 	: optional_implicit_global_connections connection_actuals_list
 		{ $$ = new extended_connection_actuals($1, $2); }
+	| implicit_global_connections
+		{ $$ = new extended_connection_actuals($1, NULL); }
 	;
 
 optional_implicit_global_connections

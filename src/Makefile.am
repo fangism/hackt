@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.221.2.1 2009/09/18 18:12:09 fang Exp $
+#	$Id: Makefile.am,v 1.221.2.2 2009/09/30 01:04:23 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -637,6 +637,7 @@ OBJECT_CC_FILES = \
 	Object/traits/class_traits.cc \
 	Object/unroll/conditional_scope.cc \
 	Object/unroll/expression_assignment.cc \
+	Object/unroll/implicit_port_override.cc \
 	Object/unroll/instance_management_base.cc \
 	Object/unroll/instantiation_statement.cc \
 	Object/unroll/loop_scope.cc \

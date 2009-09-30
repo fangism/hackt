@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.13.20.1 2009/09/22 01:42:20 fang Exp $
+	$Id: alias_actuals.h,v 1.13.20.2 2009/09/30 01:04:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
@@ -113,6 +113,11 @@ protected:
 	static
 	void
 	__finalize_find(AliasType&, const unroll_context&);
+
+	template <class AliasType>
+	static
+	bool
+	__has_complete_type(const AliasType&);
 
 	template <class AliasType>
 	static

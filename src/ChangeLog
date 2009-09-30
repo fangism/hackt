@@ -3,6 +3,33 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-08:
+	  implemented per-instance supply overriding
+		syntax: inst-ref $([yourGND [, yourVdd]]) (...);
+		semantics: implicit supply port is connected to
+			user-specfied bool/node.
+		no way of disconnecting back to default primary supply
+			experimental switch INSTANCE_SUPPLY_DISCONNECT (off)
+		Class implemented "Object/unroll/implicit_port_override.{h,cc}
+		Updated AST: parser::actuals_base implementation, 
+			refactored some code between derived/related clases.
+		Haven't added compile-fail tests yet.
+		footprint: now visit all process aliases, even non-canonical, 
+			and also skip incomplete types, 
+			fix auto-connect predicate for implicit supplies, 
+			don't start with canonical bool alias, 
+			bugfix: traversal now recurses through process ports
+			of processes.
+		Tests updated: create-stderr diagnostic messages updated.
+	  parser/hackt-parse.yy.in: allow extended_connection_actuals_list
+		to just contain implicit-supply-overrides without
+		normal port connections.
+	  hacknet: automatically just works with implicit port overrides, 
+		handful of test cases added.  
+
+
 2009-09-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-supply-01-07:

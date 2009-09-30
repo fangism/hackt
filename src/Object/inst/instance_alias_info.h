@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.26.20.2 2009/09/24 21:28:47 fang Exp $
+	$Id: instance_alias_info.h,v 1.26.20.3 2009/09/30 01:04:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -271,8 +271,14 @@ public:
 	using actuals_parent_type::compare_actuals;
 	using actuals_parent_type::create_dependent_types;
 
+	bool
+	has_complete_type(void) const;
+
 	void
 	assert_complete_type(void) const;
+
+	pseudo_const_iterator
+	find_complete_type_alias(void) const;
 
 private:
 	using actuals_parent_type::__initialize_assign_footprint_frame;
@@ -381,6 +387,16 @@ public:
 	static
 	good_bool
 	checked_connect_port(this_type&, this_type&, const unroll_context&);
+
+#if INSTANCE_SUPPLY_OVERRIDES
+	void
+	connect_implicit_port(this_type&);
+
+#if INSTANCE_SUPPLY_DISCONNECT
+	void
+	disconnect_implicit_port(void);
+#endif
+#endif
 
 	// punting relaxed actuals checking until after unroll phase
 	static

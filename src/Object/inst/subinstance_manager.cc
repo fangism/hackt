@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.26.4.2 2009/09/22 01:42:25 fang Exp $
+	$Id: subinstance_manager.cc,v 1.26.4.3 2009/09/30 01:04:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,12 @@
 #include "Object/port_context.h"
 #include "Object/common/dump_flags.h"
 #include "Object/inst/physical_instance_placeholder.h"
+#if INSTANCE_SUPPLY_OVERRIDES
+#include "Object/inst/port_actual_collection.h"
+#include "Object/inst/bool_instance_collection.h"
+#include "Object/ref/simple_meta_instance_reference.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
+#endif
 #include "common/ICE.h"
 #include "Object/def/footprint.h"
 #include "util/IO_utils.h"
@@ -154,18 +160,67 @@ subinstance_manager::__connect_ports(
 	const iterator pe(subinstance_array.end());
 	const_ref_iterator ri(cr.begin());
 	// const const_ref_iterator re(cr.end());
-	for ( ; pi!=pe; pi++, ri++) {
+	for ( ; pi!=pe; ++pi, ++ri) {
 	// references may be NULL (no-connect)
-		if (*ri) {
-			if ((*ri)->connect_port(**pi, c).bad) {
-				// already have error message
-				return good_bool(false);
-			}	// else good to continue
-		}
+		if (*ri && (*ri)->connect_port(**pi, c).bad) {
+			// already have error message
+			return good_bool(false);
+		}	// else good to continue
 	}
 	// all connections good
 	return good_bool(true);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_SUPPLY_OVERRIDES
+good_bool
+subinstance_manager::connect_implicit_ports(
+		const connection_references_type& cr, 
+		const unroll_context& c) {
+	STACKTRACE_VERBOSE;
+	typedef	connection_references_type::const_iterator
+						const_ref_iterator;
+	STACKTRACE_INDENT_PRINT("subinst_array.size() = " <<
+		subinstance_array.size() << endl);
+	STACKTRACE_INDENT_PRINT("cr.size() = " << cr.size() << endl);
+	INVARIANT(subinstance_array.size() >= cr.size());
+	iterator pi(subinstance_array.begin());	// instance_collection_type
+	const_ref_iterator ri(cr.begin()), re(cr.end());
+for ( ; ri!=re; ++pi, ++ri) {
+// references may be NULL (no-connect)
+	// see meta_instance_reference<Tag>::connect_port()
+if (*ri) {
+	STACKTRACE_INDENT_PRINT("overriding implicit port" << endl);
+	const count_ptr<const simple_bool_meta_instance_reference>
+		pr(ri->is_a<const simple_bool_meta_instance_reference>());
+	NEVER_NULL(pr);
+	// NOTE: this is not the standard symmetric connect, this only
+	// updates the next-pointer of pr, and does not update flags.
+	if (pr->connect_implicit_port(**pi, c).bad) {
+		// already have error message
+		return good_bool(false);
+	}	// else good to continue
+} else {
+#if INSTANCE_SUPPLY_DISCONNECT
+	STACKTRACE_INDENT_PRINT("disconnecting implicit port" << endl);
+	// *disconnect* implicit port, if port is blank!
+	// INVARIANT: such implicit ports are always at the leaves
+	// of a connection union-find, and NEVER pointed-to, 
+	// hence it is safe to "undo" such a connection.
+	typedef	port_actual_collection<bool_tag>	bool_port;
+	bool_port& bpr(IS_A(bool_port&, **pi));
+	STACKTRACE_INDENT_PRINT("cast was good!" << endl);
+	// assert-cast, for now, no need to handle other collection types
+	bpr.only_element().disconnect_implicit_port();
+#else
+	STACKTRACE_INDENT_PRINT("not touching implicit port" << endl);
+#endif
+}
+}
+	// all connections good
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

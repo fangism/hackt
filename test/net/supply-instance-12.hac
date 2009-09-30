@@ -1,0 +1,22 @@
+// "supply-instance-12.hac"
+// copy-modified from "supply-instance-11.hac"
+// supplies not actually connected!
+// should be a diagnostic at least...
+
+import "inv-01.hac";
+import "globals.hac";
+
+defproc foo(globals g; bool in, out) {
+inv a $(g.GND_1,g.Vdd_1) (in, out);
+}
+
+defproc bar(bool myVdd, myGND; bool a, b) {
+// supplies are disconnected! and implicit supplies not used
+globals g;
+g.Vdd_2 = myVdd;
+g.GND_2 = myGND;
+foo f(g, a, b);
+}
+
+bar bq;
+

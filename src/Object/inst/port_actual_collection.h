@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.5 2006/12/01 23:28:51 fang Exp $
+	$Id: port_actual_collection.h,v 1.5.78.1 2009/09/30 01:04:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -135,6 +135,12 @@ public:
 	instance_alias_info_type&
 	get_corresponding_element(const collection_interface_type&, 
 		const instance_alias_info_type&);
+
+	instance_alias_info_type&
+	only_element(void) {
+		INVARIANT(this->value_array.size() == 1);
+		return this->value_array[0];
+	}
 
 	bool
 	is_partially_unrolled(void) const;	// true

@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.27 2008/12/18 00:25:52 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.27.16.1 2009/09/30 01:04:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -371,43 +371,32 @@ META_INSTANCE_REFERENCE_CLASS::create_instance_attribute(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Expand both the port and the instance reference (this) into
-		alias_collection_types, populated by resolved aliases, 
-		and then connect them all if dimensions match.  
-	NOTE: this need not be virtual because it already calls
-		this->unroll_reference, which is virtual, and will give
-		the desired result.  
-	\param cl is a port member, a reference to a collection.
-		Since c is a port, it must be densely packed if it's an array.
-		NOTE: this is already resolved because it was passed in
-		from subinstance_manager::connect_ports(), 
-		which iterates over the direct ports lists.
-		No lookup should be necssary.  
-	\param c the unroll context.
+	Prepares arguments for connection as alias sets.
  */
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-META_INSTANCE_REFERENCE_CLASS::connect_port(
+META_INSTANCE_REFERENCE_CLASS::__expand_connection_aliases(
 		physical_instance_collection& cl, 
-		const unroll_context& c) const {
+		const unroll_context& c, 
+		const char* type_str, 
+		alias_collection_type& this_aliases,
+		alias_collection_type& port_aliases) const {
 	STACKTRACE_VERBOSE;
 	// assert checked-cast, will throw bad_cast upon error
 	collection_interface_type&
 		coll(IS_A(collection_interface_type&, cl));
 
-	alias_collection_type this_aliases;
 	const bad_bool unroll_err(this->unroll_references_packed(c, this_aliases));
 		// calls unroll_reference virtually, thus
 		// automatically handling member instance references.   
 		// will automatically size the array
 	if (unroll_err.bad) {
-		cerr << "ERROR unrolling port actual reference "
-			"during port connection: ";
+		cerr << "ERROR unrolling port actual reference during " <<
+			type_str << ": ";
 		this->dump(cerr, expr_dump_context::default_value) << endl;
 		return bad_bool(true);
 	}
 
-	alias_collection_type port_aliases;
 	// bug fixed here: 20060124 (fangism)
 	// see comment: we can just use simplified helper function
 	const bad_bool port_err(unroll_references_packed_helper_no_lookup(
@@ -415,8 +404,8 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 		count_ptr<const index_list_type>(NULL), 
 		port_aliases));
 	if (port_err.bad) {
-		cerr << "ERROR unrolling member instance reference "
-			"during port connection: ";
+		cerr << "ERROR unrolling member instance reference during " <<
+			type_str << ": ";
 		coll.dump(cerr, dump_flags::verbose) << endl;
 		return bad_bool(true);
 	}
@@ -424,7 +413,7 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 	const key_type t_size(this_aliases.size());
 	const key_type p_size(port_aliases.size());
 	if (t_size != p_size) {
-		cerr << "ERROR sizes mismatch in port connection: " << endl;
+		cerr << "ERROR sizes mismatch in " << type_str << ": " << endl;
 		cerr << "\texpected: " << p_size << endl;
 		cerr << "\tgot: " << t_size << endl;
 		typedef typename alias_collection_type::const_iterator
@@ -445,6 +434,36 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 		cerr << endl;
 		return bad_bool(true);
 	}
+	return bad_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expand both the port and the instance reference (this) into
+		alias_collection_types, populated by resolved aliases, 
+		and then connect them all if dimensions match.  
+	NOTE: this need not be virtual because it already calls
+		this->unroll_reference, which is virtual, and will give
+		the desired result.  
+	\param cl is a port member, a reference to a collection.
+		Since c is a port, it must be densely packed if it's an array.
+		NOTE: this is already resolved because it was passed in
+		from subinstance_manager::connect_ports(), 
+		which iterates over the direct ports lists.
+		No lookup should be necssary.  
+	\param c the unroll context.
+ */
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+META_INSTANCE_REFERENCE_CLASS::connect_port(
+		physical_instance_collection& cl, 
+		const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
+	alias_collection_type this_aliases, port_aliases;
+	if (this->__expand_connection_aliases(cl, c, "port connection",
+			this_aliases, port_aliases).bad) {
+		return bad_bool(true);
+	}
 	// else attempt to make connections, type-checking along the way
 	typedef typename alias_collection_type::iterator        alias_iterator;
 	alias_iterator li(this_aliases.begin());
@@ -452,8 +471,7 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 	alias_iterator ri(port_aliases.begin());
 	// the following copied from alias_connection::unroll's do-loop
 	for ( ; li!=le; li++, ri++) {
-		const never_ptr<instance_alias_info_type> lp(*li);
-		const never_ptr<instance_alias_info_type> rp(*ri);
+		const never_ptr<instance_alias_info_type> lp(*li), rp(*ri);
 		NEVER_NULL(lp);
 		NEVER_NULL(rp);
 		if (!instance_alias_info_type::checked_connect_port(
@@ -465,6 +483,38 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 	INVARIANT(ri == port_aliases.end());
 	return bad_bool(false);
 }	// end method connect_port
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_SUPPLY_OVERRIDES
+/**
+	This variant is to be used only for connecting implicit ports
+	which have different connection semantics than normal aliases.  
+ */
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+META_INSTANCE_REFERENCE_CLASS::connect_implicit_port(
+		physical_instance_collection& cl, 
+		const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
+	alias_collection_type this_aliases, port_aliases;
+	if (this->__expand_connection_aliases(cl, c, "implicit port override",
+			this_aliases, port_aliases).bad) {
+		return bad_bool(true);
+	}
+	// restriction for now: only scalar to scalar (only bool)
+	typedef typename alias_collection_type::key_type        key_type;
+	const key_type t_size(this_aliases.size());
+	const key_type p_size(port_aliases.size());
+	INVARIANT(t_size.dimensions() == 0);
+	INVARIANT(p_size.dimensions() == 0);
+	const never_ptr<instance_alias_info_type>
+		lp(this_aliases.front()), rp(port_aliases.front());
+	NEVER_NULL(lp);
+	NEVER_NULL(rp);
+	rp->connect_implicit_port(*lp);
+	return bad_bool(false);
+}	// end method connect_implicit_port
+#endif	// INSTANCE_SUPPLY_OVERRIDES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

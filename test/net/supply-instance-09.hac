@@ -1,0 +1,17 @@
+// "supply-instance-09.hac"
+// copy-modified from "supply-instance-08.hac"
+// Ideally there should be a diagnostic message for this case...
+
+import "inv-01.hac";
+
+defproc foo(bool myVdd, myGND; bool in, out) {
+inv a $(myGND,myVdd) (in, out);
+}
+
+defproc bar(bool a, b) {
+// supplies are disconnected! and implicit supplies not used
+foo f( , , a, b);
+}
+
+bar bq;
+

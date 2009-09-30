@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.31.20.2 2009/09/24 21:28:43 fang Exp $
+	$Id: instance.cc,v 1.31.20.3 2009/09/30 01:04:25 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -33,7 +33,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/channel_type_reference_base.h"	// reject directions
-#include "Object/ref/simple_meta_indexed_reference_base.h"
+#include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_value_reference_base.h"
 #include "Object/lang/PRS.h"
 #include "Object/lang/SPEC.h"
@@ -47,6 +47,10 @@
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/conditional_scope.h"
 #include "Object/unroll/template_type_completion.h"
+#if INSTANCE_SUPPLY_OVERRIDES
+#include "Object/unroll/implicit_port_override.h"
+#include "Object/traits/bool_traits.h"
+#endif
 #include "Object/traits/proc_traits.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/meta_instance_reference_base.h"
@@ -135,6 +139,9 @@ using entity::pbool_expr;
 using entity::pbool_const;
 using entity::process_tag;
 using entity::template_type_completion;
+#if INSTANCE_SUPPLY_OVERRIDES
+using entity::implicit_port_override;
+#endif
 
 //=============================================================================
 // class instance_management method definitions
@@ -426,10 +433,32 @@ actuals_base::rightmost(void) const {
 		if no expression was passed in its position.  
  */
 good_bool
-actuals_base::check_actuals(expr_list::checked_meta_refs_type& ret,
+actuals_base::check_actuals(
+#if INSTANCE_SUPPLY_OVERRIDES
+		implicit_ports_type& impret,
+#endif
+		explicit_ports_type& ret,
 		context& c) const {
-	STACKTRACE("actuals_base::check_actuals()");
+	STACKTRACE_VERBOSE;
 	// TODO: check/resolve optional implicit global ports
+#if INSTANCE_SUPPLY_OVERRIDES
+if (actuals->implicit_ports) {
+	actuals->implicit_ports->postorder_check_bool_refs_optional(impret, c);
+	inst_ref_expr_list::checked_bool_refs_type::const_iterator
+		c_iter(impret.begin());
+	inst_ref_expr_list::const_iterator
+		e_iter(actuals->implicit_ports->begin()),
+		e_end(actuals->implicit_ports->end());
+	for ( ; e_iter != e_end; ++e_iter, ++c_iter) {
+		if (*e_iter && !*c_iter) {
+			cerr << "Error in implicit port overrides.  " <<
+				where(*actuals->implicit_ports) << endl;
+			return good_bool(false);
+		}
+	}
+}
+#endif
+if (actuals->actual_ports) {
 	expr_list::checked_meta_generic_type temp;
 	actuals->actual_ports->postorder_check_meta_generic(temp, c);
 	expr_list::select_checked_meta_refs(temp, ret);
@@ -437,15 +466,81 @@ actuals_base::check_actuals(expr_list::checked_meta_refs_type& ret,
 		c_iter(temp.begin());
 	expr_list::const_iterator e_iter(actuals->actual_ports->begin());
 	const expr_list::const_iterator e_end(actuals->actual_ports->end());
-	for ( ; e_iter != e_end; e_iter++, c_iter++) {
+	for ( ; e_iter != e_end; ++e_iter, ++c_iter) {
 		if (*e_iter) {
 			if (!c_iter->first && !c_iter->second)
 				return good_bool(false);
-			// both results are NULL => check falied
+			// both results are NULL => check failed
 		}
 		// else expression is null; skip it
 	}
+}
 	// all relevant checks passed
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true of any members of list are not NULL.
+ */
+bool
+actuals_base::has_implicit_overrides(const implicit_ports_type& p) {
+	implicit_ports_type::const_iterator
+		i(p.begin()), e(p.end());
+	for ( ; i!=e; ++i) {
+		if (*i) return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+actuals_base::add_instance_port_connections(
+		const count_ptr<
+			const connection_statement::inst_ref_arg_type>& iref, 
+		context& c) const {
+#if INSTANCE_SUPPLY_OVERRIDES
+	implicit_ports_type itemp;
+#endif
+	explicit_ports_type temp;
+	if (!check_actuals(
+#if INSTANCE_SUPPLY_OVERRIDES
+		itemp, 
+#endif
+		temp, c).good) {
+		cerr << "ERROR in object_list produced at "
+			<< where(*actuals) << endl;
+		return good_bool(false);
+	}
+
+#if INSTANCE_SUPPLY_OVERRIDES
+	// TODO: create implicit port connections
+if (has_implicit_overrides(itemp)) {
+	const count_ptr<const connection_statement::result_type>
+		ovr(connection_statement::make_implicit_port_override(
+			itemp, iref));
+	if (!ovr) {
+		cerr << "HALT: error in implicit port override list.  "
+			<< where(*actuals->implicit_ports) << endl;
+		return good_bool(false);
+	} else {
+		c.add_connection(ovr);
+	}
+}
+	// else don't bother will null connection
+#endif
+if (actuals->actual_ports) {
+	const count_ptr<const connection_statement::result_type>
+		port_con(connection_statement::make_port_connection(
+			temp, iref));
+	if (!port_con) {
+		cerr << "HALT: at least one error in port connection list.  "
+			<< where(*actuals->actual_ports) << endl;
+		return good_bool(false);
+	} else {
+		c.add_connection(port_con);
+	}
+}
 	return good_bool(true);
 }
 
@@ -778,22 +873,7 @@ instance_connection::check_build(context& c) const {
 		THROW_EXIT;
 	}
 
-	expr_list::checked_meta_refs_type temp;
-	if (actuals_base::check_actuals(temp, c).good) {
-
-	const count_ptr<const connection_statement::result_type>
-		port_con(connection_statement::make_port_connection(
-			temp, inst_ref));
-	if (!port_con) {
-		cerr << "HALT: at least one error in port connection list.  "
-			<< where(*this) << endl;
-		THROW_EXIT;
-	} else {
-		c.add_connection(port_con);
-	}
-	} else {
-		cerr << "ERROR in object_list produced at "
-			<< where(*actuals) << endl;
+	if (!actuals_base::add_instance_port_connections(inst_ref, c).good) {
 		THROW_EXIT;
 	}
 	return return_type(NULL);
@@ -837,11 +917,11 @@ connection_statement::rightmost(void) const {
  */
 count_ptr<const connection_statement::result_type>
 connection_statement::make_port_connection(
-		const expr_list::checked_meta_refs_type& _temp,
+		const explicit_ports_type& _temp,
 		const count_ptr<const inst_ref_arg_type>& ir) {
 	typedef	count_ptr<const result_type>	const_return_type;
 	typedef	count_ptr<result_type>		return_type;
-	typedef	expr_list::checked_meta_refs_type		ref_list_type;
+	typedef	explicit_ports_type		ref_list_type;
 	return_type ret(meta_instance_reference_base::make_port_connection(ir));
 	NEVER_NULL(ret);
 	never_ptr<const definition_base>
@@ -874,6 +954,39 @@ connection_statement::make_port_connection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_SUPPLY_OVERRIDES
+count_ptr<const connection_statement::result_type>
+connection_statement::make_implicit_port_override(
+		const implicit_ports_type& iports, 
+		const count_ptr<const inst_ref_arg_type>& ir) {
+	typedef	count_ptr<const result_type>	const_return_type;
+	typedef	count_ptr<result_type>		return_type;
+	typedef	implicit_ports_type		ref_list_type;
+	implicit_port_override::instance_ptr_type
+		pr(ir.is_a<const implicit_port_override::instance_type>());
+	if (!pr) {
+		cerr <<
+"Error: only process instances can take implicit port overrides." << endl;
+		return return_type(NULL);
+	}
+	if (iports.size() > 2) {
+		cerr <<
+"Error: implicit port overrides take at most two ports, Vdd, GND." << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<implicit_port_override>
+		ret(new implicit_port_override(pr));
+	typedef	implicit_ports_type::const_iterator	const_iterator;
+	const_iterator i(iports.begin()), e(iports.end());
+	for ( ; i!=e; ++i) {
+		ret->append_bool_port(*i ? (*i)->get_bool_var() :
+			implicit_port_override::port_ptr_type());
+	}
+	return ret;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Compare this with instance_connection::check_build().
 	\return NULL always, rather useless.  
@@ -896,21 +1009,7 @@ connection_statement::check_build(context& c) const {
 			"connection statement.  " << where(*lvalue) << endl;
 	}
 
-	expr_list::checked_meta_refs_type temp;
-	if (actuals_base::check_actuals(temp, c).good) {
-	// useless return value, expect an object_list on object_stack
-	const count_ptr<const result_type>
-		port_con(make_port_connection(temp, inst_ref));
-	if (!port_con) {
-		cerr << "HALT: at least one error in port connection list.  "
-			<< where(*this) << endl;
-		THROW_EXIT;
-	} else {
-		c.add_connection(port_con);
-	}
-	} else {
-		cerr << "ERROR in object_list produced at "
-			<< where(*actuals) << endl;
+	if (!actuals_base::add_instance_port_connections(inst_ref, c).good) {
 		THROW_EXIT;
 	}
 	return never_ptr<const object>(NULL);
@@ -1398,22 +1497,7 @@ type_completion_connection_statement::check_build(context& c) const {
 	const count_ptr<const connection_statement::inst_ref_arg_type>
 		iref(ref.inst_ref());
 
-	expr_list::checked_meta_refs_type temp;
-	if (actuals_base::check_actuals(temp, c).good) {
-
-	const count_ptr<const connection_statement::result_type>
-		port_con(connection_statement::make_port_connection(
-			temp, iref));
-	if (!port_con) {
-		cerr << "HALT: at least one error in port connection list.  "
-			<< where(*this) << endl;
-		THROW_EXIT;
-	} else {
-		c.add_connection(port_con);
-	}
-	} else {
-		cerr << "ERROR in object_list produced at "
-			<< where(*actuals) << endl;
+	if (!actuals_base::add_instance_port_connections(iref, c).good) {
 		THROW_EXIT;
 	}
 	return c.top_namespace();

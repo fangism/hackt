@@ -1,0 +1,17 @@
+// "supply-instance-05.hac"
+// copy-modified from "supply-instance-01.hac"
+
+import "inv-01.hac";
+
+bool myVdd, myGND;
+bool x;
+
+inv a(x, );
+inv b$()(x, );
+inv c$(,)(x, );
+inv d$(myGND)(x, );
+inv d2$(myGND)(x, );
+inv e$(myGND,)(x, );
+inv f$(,myVdd)(x, );
+inv g$(myGND,myVdd)(x, );
+

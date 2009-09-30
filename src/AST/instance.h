@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.12.20.1 2009/09/18 18:12:15 fang Exp $
+	$Id: instance.h,v 1.12.20.2 2009/09/30 01:04:25 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -12,6 +12,7 @@
 #include "AST/common.h"
 #include "AST/expr_list.h"
 #include "AST/instance_base.h"
+#include "Object/devel_switches.h"	// for INSTANCE_SUPPLY_OVERRIDES
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
 #include "util/memory/count_ptr.h"
@@ -83,6 +84,9 @@ private:
  */
 class actuals_base {
 protected:
+	typedef	expr_list::checked_meta_refs_type	explicit_ports_type;
+	typedef	inst_ref_expr_list::checked_bool_refs_type
+							implicit_ports_type;
 #if 0
 	typedef	expr_list				actuals_type;
 #else
@@ -103,7 +107,21 @@ protected:
 	rightmost(void) const;
 
 	good_bool
-	check_actuals(expr_list::checked_meta_refs_type&, context& c) const;
+	check_actuals(
+#if INSTANCE_SUPPLY_OVERRIDES
+		implicit_ports_type&,
+#endif
+		explicit_ports_type&, context& c) const;
+
+	static
+	bool
+	has_implicit_overrides(const implicit_ports_type&);
+
+	good_bool
+	add_instance_port_connections(
+		const count_ptr<const entity::meta_instance_reference_base>&,
+		context&) const;
+
 };	// end class actuals_base
 
 //=============================================================================
@@ -265,8 +283,15 @@ public:
 
 	static
 	count_ptr<const result_type>
-	make_port_connection(const expr_list::checked_meta_refs_type&, 
+	make_port_connection(const explicit_ports_type&, 
                 const count_ptr<const inst_ref_arg_type>&);
+
+#if INSTANCE_SUPPLY_OVERRIDES
+	static
+	count_ptr<const result_type>
+	make_implicit_port_override(const implicit_ports_type&, 
+                const count_ptr<const inst_ref_arg_type>&);
+#endif
 
 };	// end class connection_statement
 

@@ -2,7 +2,7 @@
 	\file "Object/unroll/port_connection_base.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: port_connection_base.h,v 1.2 2006/02/21 04:48:45 fang Exp $
+	$Id: port_connection_base.h,v 1.2.132.1 2009/09/30 01:04:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PORT_CONNECTION_BASE_H__
@@ -37,13 +37,6 @@ protected:
 public:
 virtual	~port_connection_base();
 
-#if 0
-	ostream&
-	what(ostream& o) const;
-
-	ostream&
-	dump(ostream&, const expr_dump_context&) const;
-#endif
 protected:
 	ostream&
 	dump_ports(ostream&, const expr_dump_context&) const;
@@ -54,13 +47,6 @@ public:
 
 	void
 	append_meta_instance_reference(const generic_inst_ptr_type&);
-
-#if 0
-	good_bool
-	unroll(const unroll_context& ) const;
-
-	UNROLL_META_CONNECT_PROTO;
-#endif
 
 protected:
 	void

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.36.2.2 2009/09/23 06:20:45 fang Exp $
+	$Id: expr.cc,v 1.36.2.3 2009/09/30 01:04:24 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -860,6 +860,8 @@ extended_connection_actuals::extended_connection_actuals(
 		const expr_list* b) :
 		implicit_ports(a),
 		actual_ports(b) {
+	// either set of ports are optional (may be NULL)
+	INVARIANT(implicit_ports || actual_ports);
 }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(extended_connection_actuals)
@@ -873,7 +875,9 @@ extended_connection_actuals::leftmost(void) const {
 
 line_position
 extended_connection_actuals::rightmost(void) const {
-	return actual_ports->rightmost();
+	if (actual_ports)
+		return actual_ports->rightmost();
+	return implicit_ports->rightmost();
 }
 
 //=============================================================================
