@@ -1,5 +1,12 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.39 2009/08/28 20:44:35 fang Exp $
+#	$Id: ChangeLog,v 1.39.4.1 2009/10/01 17:48:24 fang Exp $
+
+2009-09-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-09:
+	  Documented language extensions for overriding PRS supplies
+		and per-instance implicit supplies.  
+
 
 2009-08-27	David Fang		<fangism@users.sourceforge.net>
 

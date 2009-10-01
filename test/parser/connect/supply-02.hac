@@ -1,0 +1,13 @@
+// "supply-02.hac"
+// invalid attempt to access !Vdd port
+
+defproc inv(bool x, y) {
+prs {
+	x	=> y-
+}
+}
+
+bool V;
+inv foo;
+foo.!Vdd = V;
+

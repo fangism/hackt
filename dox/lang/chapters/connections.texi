@@ -1,5 +1,5 @@
 @c "chapters/connections.texi"
-@c $Id: connections.texi,v 1.1 2007/08/20 00:02:46 fang Exp $
+@c $Id: connections.texi,v 1.1.46.1 2009/10/01 17:48:27 fang Exp $
 
 @node Connections
 @chapter Connections
@@ -9,12 +9,43 @@ Connections are a relation between @emph{instance references}.
 (Connections are established in the meta-language processing 
 of compilation; they are determined at compile-time only.)
 
+@menu
+* Aliases:: merging objects
+* Port Connections:: equivalent connections
+* Implicit Ports:: automatic supply ports
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Aliases
+@section Aliases
+
 Instance references refer to specific entities at unroll-time.  
 Instance references fall into two categories: implicit and explicit.  
 @xref{Arrays}.  
+Implicit references infer sizes of the entire array or partial array, 
+whereas explicit references fully specify the dimensions.
 
-What does @samp{a = b} mean in the namespace or definition context?
+@cindex aliases
+Connections between instance references create @emph{aliases}.  
+Before making any connections, all instances in the same scope constitute 
+a hierarchy of referenceable objects.  
+@c What does @samp{a = b} mean in the namespace or definition context?
+As connections (aliases) are made, these object unify, i.e., 
+after @samp{a = b}, both @samp{a} and @samp{b} refer to the same object.
+Aliasing hierarchical references also unifies them into the same object, 
+e.g. @samp{a.x = b.y} result in one object, until further aliased.  
+(The number of unique objects shrinks as connections are made.)
+Aliasing is sticky; once a connection has been made, there is no 
+way to disconnect or undo the connection.  
 
+Publicly accessible references 
+(allowing hierarchical access to public ports of structures) 
+in any given scope are represented by the set of all legal @emph{names}.  
+The size of the names set doesn't change with connections, 
+only the number of unique objects that are eventually created.  
+
+
+@ignore
 @itemize
 @item Parameters: the value of b is assigned to a.
 	This is only valid if @samp{b} is instantiated and initialized, 
@@ -23,6 +54,7 @@ What does @samp{a = b} mean in the namespace or definition context?
 	@samp{a} and @samp{b} refer to the same instance, in other words, 
 	they are @emph{aliases}.
 @end itemize
+@end ignore
 
 If the types are user-defined, then aliasing is recursive.  
 For example, if the type of @samp{a} and @samp{b} has 
@@ -35,8 +67,9 @@ to the same instance, saving the trouble of recursive aliasing,
 and generating the combinations of names, 
 not that that is ever a problem.)
 
-Since connections and aliases are unrolled, the actual instance objects 
+Since connections and aliases are unrolled, the actual unique instance objects 
 are not created until all connections have been processed.  
+
 
 Compiler options (proposed to support):
 @itemize
@@ -49,5 +82,82 @@ Compiler options (proposed to support):
 	(multiple senders or multiple receivers)
 @end itemize
 
-Support for non-alias connections?
+@c Support for non-alias connections?
+
+@c ----------------------------------------------------------------------------
+@node Port Connections
+@section Port Connections
+@cindex port connections
+
+Another way of specifying connections is with @emph{port connections}.
+A process instance @samp{p}, whose type contains @i{N} ports can be connected:
+@samp{p(...)} with @i{N} comma-separated optional references.  
+@example
+p(x, y, , z, );
+is equivalent to writing:
+p.port1 = x;
+p.port2 = y;
+p.port4 = z;
+@end example
+
+@noindent
+A port connection must be written with the exact number of slots as
+ports in the process definition, where references may be omitted.  
+
+@c ----------------------------------------------------------------------------
+@node Implicit Ports
+@section Implicit Ports
+@cindex implicit ports
+@cindex supply ports
+@cindex implicit supply
+@cindex power supply
+
+Processes contain a set of hidden implicit ports for the power supply nodes.
+Every process definition effectively declares these supply nodes
+as the first two ports, @t{!GND} and @t{!Vdd}, the @emph{primary supplies}.  
+@cindex primary supply
+(The top-level module definition is treated as a process for this purpose, 
+and thus also contains these nodes.)
+These ports have slightly different connection semantics than
+ordinary referenceable objects.  
+First, these ports are specially named so that they cannot be accidentally
+referenced directly; @samp{foo.!Vdd} is syntactically illegal.  
+Second, these ports do not belong into the same set of explicit ports
+that the user defines; they are not counted in the number of standard ports, 
+for the purpose of writing port connections.  
+
+@cindex automatic connections
+@cindex supply domain
+Left unspecified, the default semantics is to @emph{automatically} connect these
+supply ports to the respective supply ports belonging to the parent process.
+Production rules, alike, also connect to these supply ports by default.  
+@xref{PRS Supply Overrides}.
+This behavior is intended for subcircuits that fall under a 
+single supply domain.
+
+To override the supply ports, one writes:
+@itemize
+@item @i{supply-override} : @i{proc-inst-ref} @t{$(} @i{GND-node} @t{,} @i{Vdd-node} @t{);}
+@item @i{supply-override} : @i{proc-inst-ref} @t{$(} @i{GND-node} @t{);}
+@item @i{supply-override} : @i{proc-inst-ref} @t{$(} @t{,} @i{Vdd-node} @t{);}
+@end itemize
+
+@noindent
+This effectively connects @samp{proc.!Vdd} to @i{Vdd-node}, 
+and @samp{proc.!GND} to @i{GND-node}.
+Unlike normal aliases, these connections can be replaced; 
+subsequent supply override statements will break former connections
+to form new ones.  
+
+@example
+proc $(, myVdd1);
+proc $(, myVdd2);
+@end example
+@noindent
+results in only @samp{proc.!Vdd = myVdd2}, while @samp{myVdd1} remains
+disconnected from both.  
+
+Normal port connections may follow supply overrides, 
+for example, @samp{proc $(myGND, myVdd) (x, y, z);}.
+
 

@@ -1,0 +1,12 @@
+// "supply-01.hac"
+
+defproc inv(bool x, y) {
+prs {
+	x	=> y-
+}
+}
+
+bool V;
+inv foo $(,,,,,);	// ignored
+foo $(,V,);	// too many
+

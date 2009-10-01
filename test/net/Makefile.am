@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.3.2.4 2009/09/30 01:04:38 fang Exp $
+#	$Id: Makefile.am,v 1.3.2.5 2009/10/01 17:48:34 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -52,15 +52,19 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	mangle-06 mangle-07 mangle-08 mangle-09 \
 	struct-01 struct-02 struct-03 struct-04 struct-05 struct-06 \
 	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
+	supply-07 supply-08 \
 	supply-subckt-01 supply-subckt-02 supply-subckt-03 \
 	supply-subckt-04 supply-subckt-05 \
 	supply-internal-01 supply-internal-02 supply-internal-03 \
 	supply-precharge-01 supply-precharge-02 supply-precharge-03 \
 	supply-precharge-04 \
+	supply-pass-gate-01 supply-pass-gate-02 \
 	supply-instance-01 supply-instance-02 supply-instance-03 \
 	supply-instance-04 supply-instance-05 supply-instance-06 \
 	supply-instance-07 supply-instance-08 supply-instance-09 \
-	supply-instance-10 supply-instance-11 supply-instance-12
+	supply-instance-10 supply-instance-11 supply-instance-12 \
+	supply-instance-13 supply-instance-14 supply-instance-15 \
+	supply-instance-16 supply-instance-17 supply-instance-18
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05 \
@@ -106,10 +110,13 @@ HACKT_CREATE_TEST_PASSES = \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
 	mangle-04 \
+	supply-pass-gate-01 supply-pass-gate-02 \
 	supply-instance-01 supply-instance-02 supply-instance-03 \
 	supply-instance-04 supply-instance-05 supply-instance-06 \
 	supply-instance-07 supply-instance-08 supply-instance-09 \
-	supply-instance-10 supply-instance-11 supply-instance-12
+	supply-instance-10 supply-instance-11 supply-instance-12 \
+	supply-instance-13 supply-instance-14 supply-instance-15 \
+	supply-instance-16 supply-instance-17 supply-instance-18
 
 HACKT_CREATE_TEST_FAILURES = \
 	non-CMOS-06 subckt-02
@@ -118,7 +125,9 @@ HACKT_ALLOC_TEST_PASSES = \
 	supply-instance-01 supply-instance-02 supply-instance-03 \
 	supply-instance-04 supply-instance-05 supply-instance-06 \
 	supply-instance-07 supply-instance-08 supply-instance-09 \
-	supply-instance-10 supply-instance-11 supply-instance-12
+	supply-instance-10 supply-instance-11 supply-instance-12 \
+	supply-instance-13 supply-instance-14 supply-instance-15 \
+	supply-instance-16 supply-instance-17 supply-instance-18
 
 HACKT_CFLAT_TEST_SUBJECTS =
 

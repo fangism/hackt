@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-09-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-09:
+	  Documentation and adding more test cases, no source revision.
+		Checked and updated parse-fail tests against bison.
+	  End of branch, ready to merge to trunk.  
+
+
 2009-09-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-29-supply-01-08:

@@ -1,0 +1,10 @@
+// "supply-instance-15.hac"
+// copy-modified from "supply-instance-14.hac"
+
+import "inv-01.hac";
+
+bool myVdd, myGND;
+inv foo;
+foo $(myGND, );
+foo $(, myVdd);
+

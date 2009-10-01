@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.35 2009/07/02 23:23:33 fang Exp $
+#	$Id: Makefile.am,v 1.35.8.1 2009/10/01 17:49:14 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -17,6 +17,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	138 \
 	globals-01 globals-02 globals-03 globals-04 globals-05 globals-06 \
 	globals-07 globals-08 globals-11 globals-12 \
+	supply-01 supply-02 \
 	act-006 act-007 act-009 act-010 act-011
 
 # pending: member_nonmeta_instance_references: globals-09 globals-10
@@ -137,6 +138,7 @@ HACKT_GUILE_TEST_SCRIPTS_FAILURES = \
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 032 076 077 \
+	supply-02 \
 	act-007
 
 # pending test cases
