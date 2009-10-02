@@ -2,3 +2,5 @@ weak	"xyz.a" -> "xyz.b"-
 weak	~"xyz.a" -> "xyz.b"+
 "xyz.c" -> "xyz.d"-
 ~"xyz.c" -> "xyz.d"+
+= "!GND" "xyz.!GND"
+= "!Vdd" "xyz.!Vdd"

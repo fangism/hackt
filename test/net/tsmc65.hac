@@ -1,5 +1,5 @@
 // "tsmc65.hac"
 // dump back out netgen configuration
-// @hacknet-flags@ -C tsmc65.netgen-conf -d
+// @hacknet-flags@ -f unknown_option=ignore -C tsmc65.netgen-conf -d
 // @deps@ tsmc65.netgen-conf
 

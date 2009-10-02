@@ -18,3 +18,5 @@ globID	super		localID	canonical	footprint-frame
 9	(top)	-	9	a4.d[2]	
 10	(top)	-	10	a4.d[3]	
 11	(top)	-	11	a4.e	
+12	(top)	-	12	!GND	
+13	(top)	-	13	!Vdd	

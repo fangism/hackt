@@ -1,0 +1,12 @@
+@c "algo.h"
+@c $Id: algo.texi,v 1.2 2009/10/02 01:56:10 fang Exp $
+
+@node Algorithms
+@chapter Algorithms
+@cindex algorithms
+
+This chapter describes some of the internal algorithms
+for netlist generation by @command{hacknet}.  
+Hackers may find this informative for extending the functionality
+of netlist generation.  
+

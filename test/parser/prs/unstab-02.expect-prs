@@ -1,2 +1,4 @@
 "X.a" -> "X.b"-
 unstab	"X.a" -> "X.b"+
+= "!GND" "X.!GND"
+= "!Vdd" "X.!Vdd"

@@ -1,0 +1,5 @@
+M0_ myGND en @_int myGND nch W=5u L=2u
+M1_:pchg myVdd en @_int myVdd pch W=5u L=2u
+M2_ @_int x y myGND nch W=5u L=2u
+M3_ !Vdd en y !Vdd pch W=5u L=2u
+

@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.22 2007/10/18 05:33:05 fang Exp $
+#	$Id: Makefile.am,v 1.23 2009/10/02 02:12:11 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -90,13 +90,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	100 101 102 103 104 105 106 107 108 109 \
 	110 111 112 113 115 117 118
 
-EMPTY_CFLAT_PRS_TESTS += \
-	054 055 057 058 059 \
-	060 061 062 064 065 \
-	066f 066g 066h \
-	084 \
-	100 101 102 103 104 105 \
-	110 113
+# EMPTY_CFLAT_PRS_TESTS +=
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 002 003 004 005 006 007 008 009 010 \

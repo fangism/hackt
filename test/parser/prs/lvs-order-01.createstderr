@@ -3,53 +3,67 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	154
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	11	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	portscop	0	#HEAD#	#TAIL#	32
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	73
-	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	427
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	377
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	73
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	463
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	467
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     lvs_order = process-definition (defined) lvs_order(
+        bool<> !GND
+        bool<> !Vdd
         bool<> a
         bool<> b
         bool<> c
       )
       In definition "lvs_order", we have: {
       Instances:
+        !GND = bool<> lvs_order::!GND
+        !Vdd = bool<> lvs_order::!Vdd
         a = bool<> lvs_order::a
         b = bool<> lvs_order::b
         c = bool<> lvs_order::c
@@ -58,6 +72,8 @@ In namespace "", we have: {
         f = bool<> lvs_order::f
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> a
           bool<> b
           bool<> c
@@ -68,40 +84,52 @@ In namespace "", we have: {
       spec:
         order(f,e,d,c,b,a)
       footprint: {
-        a = bool^0 = lvs_order<>::a (1) 
-        b = bool^0 = lvs_order<>::b (2) 
-        c = bool^0 = lvs_order<>::c (3) 
-        d = bool^0 = lvs_order<>::d (4) 
-        e = bool^0 = lvs_order<>::e (5) 
-        f = bool^0 = lvs_order<>::f (6) 
+        !GND = bool^0 = lvs_order<>::!GND (1) 
+        !Vdd = bool^0 = lvs_order<>::!Vdd (2) 
+        a = bool^0 = lvs_order<>::a (3) 
+        b = bool^0 = lvs_order<>::b (4) 
+        c = bool^0 = lvs_order<>::c (5) 
+        d = bool^0 = lvs_order<>::d (6) 
+        e = bool^0 = lvs_order<>::e (7) 
+        f = bool^0 = lvs_order<>::f (8) 
         Created state:
         bool instance pool:
-        1	lvs_order<>::a
-        2	lvs_order<>::b
-        3	lvs_order<>::c
-        4	lvs_order<>::d
-        5	lvs_order<>::e
-        6	lvs_order<>::f
+        1	lvs_order<>::!GND
+        2	lvs_order<>::!Vdd
+        3	lvs_order<>::a
+        4	lvs_order<>::b
+        5	lvs_order<>::c
+        6	lvs_order<>::d
+        7	lvs_order<>::e
+        8	lvs_order<>::f
         resolved specs:
         order(f,e,d,c,b,a)
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     foo = lvs_order<> foo
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   foo = process lvs_order<>^0 = foo (1) (
-    a = bool^0 = foo.a (1) 
-    b = bool^0 = foo.b (2) 
-    c = bool^0 = foo.c (3) 
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    a = bool^0 = foo.a (3) 
+    b = bool^0 = foo.b (4) 
+    c = bool^0 = foo.c (5) 
   )
   Created state:
   process instance pool:
   1	foo
   bool instance pool:
-  1	foo.a
-  2	foo.b
-  3	foo.c
+  1	!GND
+  2	!Vdd
+  3	foo.a
+  4	foo.b
+  5	foo.c
 }

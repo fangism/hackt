@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.56 2009/09/14 21:21:03 fang Exp $
+#	$Id: Makefile.am,v 1.57 2009/10/02 02:12:13 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -21,7 +21,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	internal-node-05 internal-node-08 \
 	internal-node-11 internal-node-16 \
 	runmodestatic-02 \
-	flavor-02
+	flavor-02 \
+	supply-07 supply-08 supply-09 supply-10 supply-11 supply-12
 
 HACKT_PARSE_TEST_WARNINGS = \
 	macro-attrib-01 macro-attrib-02
@@ -98,6 +99,7 @@ HACKT_PARSE_TEST_PASSES = \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	flavor-01 flavor-03 flavor-04 flavor-05 \
+	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	reff-01 \
 	load_cap-01 
@@ -173,6 +175,7 @@ HACKT_CREATE_TEST_PASSES = \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	flavor-01 flavor-03 flavor-04 flavor-05 \
+	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	reff-01 \
 	load_cap-01 
@@ -246,6 +249,9 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	reff-01 \
 	flavor-01 flavor-03 flavor-04 flavor-05
 
+# TODO: after implementing supply annotation in hflat
+#	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06
+
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \
 	lvs-order-01 lvs-order-03 \
@@ -296,8 +302,7 @@ HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 
 # expecting empty .prs
 EMPTY_CFLAT_PRS_TESTS += \
-	null-00 loop-00 \
-	cond-05 cond-08 cond-10 cond-11 cond-15 \
+	cond-08 cond-10 cond-11 cond-15 \
 	macro-pass-01
 
 # more output expectation files for when bison is used
@@ -307,7 +312,8 @@ BISON_OUTPUTS += inv-01 inv-11 \
 	top-level-03 \
 	precharge-01 \
 	internal-node-05 \
-	flavor-02
+	flavor-02 \
+	supply-11 supply-12
 
 # includes other sources files used by test-cases (but aren't cases themselves)
 srcdir_EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac

@@ -6,50 +6,60 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
-	6	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
-	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	14	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	16	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	312
-	19	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	20	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	25	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	312
-	27	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	28	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	380
-	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	136
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	11	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	348
+	26	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	27	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	348
+	34	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	35	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	footprnt	0	#HEAD#	#TAIL#	524
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
@@ -57,15 +67,21 @@ In namespace "", we have: {
     send_me = process-definition (defined) send_me<
       pbool<> B
       >(
+        bool<> !GND
+        bool<> !Vdd
         chan!(bool<>) b
       )
       In definition "send_me", we have: {
       Parameters:
         B = pbool<> send_me::B
       Instances:
+        !GND = bool<> send_me::!GND
+        !Vdd = bool<> send_me::!Vdd
         b = chan!(bool<>) send_me::b
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan!(bool<>) b
         )
       chp:
@@ -76,11 +92,16 @@ In namespace "", we have: {
         }
       footprint collection: {
         <false> {
+          !GND = bool^0 = send_me<false>::!GND (1) 
+          !Vdd = bool^0 = send_me<false>::!Vdd (2) 
           B = pbool^0 value: 0
           b = channel chan!(bool<>)^0 = send_me<false>::b (1) 
           Created state:
           channel instance pool:
           1	send_me<false>::b
+          bool instance pool:
+          1	send_me<false>::!GND
+          2	send_me<false>::!Vdd
           resolved concurrent actions:
             *[
               b!(false)
@@ -90,11 +111,16 @@ In namespace "", we have: {
           }
         }
         <true> {
+          !GND = bool^0 = send_me<true>::!GND (1) 
+          !Vdd = bool^0 = send_me<true>::!Vdd (2) 
           B = pbool^0 value: 1
           b = channel chan!(bool<>)^0 = send_me<true>::b (1) 
           Created state:
           channel instance pool:
           1	send_me<true>::b
+          bool instance pool:
+          1	send_me<true>::!GND
+          2	send_me<true>::!Vdd
           resolved concurrent actions:
             *[
               b!(true)
@@ -107,15 +133,23 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     X = send_me<true> X
     Y = send_me<false> Y
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   X = process send_me<true>^0 = X (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     b = channel chan!(bool<>)^0 = X.b (1) 
   )
   Y = process send_me<false>^0 = Y (2) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     b = channel chan!(bool<>)^0 = Y.b (2) 
   )
   Created state:
@@ -125,4 +159,7 @@ footprint: {
   channel instance pool:
   1	X.b
   2	Y.b
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

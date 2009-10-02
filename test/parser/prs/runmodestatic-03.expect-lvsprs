@@ -1,3 +1,5 @@
 "bar.x" -> "bar.y"-
 ~"bar.x" -> "bar.y"+
 runmodestatic("bar.x")
+connect "!GND" "bar.!GND"
+connect "!Vdd" "bar.!Vdd"

@@ -1,0 +1,8 @@
+// "supply-instance-13.hac"
+
+import "inv-01.hac";
+
+bool myVdd, myGND;
+inv foo;
+foo $(myGND, );
+

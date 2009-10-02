@@ -1,0 +1,15 @@
+* subcircuit globals<> is empty.
+.subckt inv<> !GND !Vdd x y
+M0_ !GND x y !GND nch W=5u L=2u
+M1_ !Vdd x y !Vdd pch W=5u L=2u
+.ends
+
+xa !GND !Vdd a.x a.y inv<>
+xb !GND !Vdd b.x b.y inv<>
+xc !GND !Vdd c.x c.y inv<>
+xd g.GND_1 !Vdd d.x d.y inv<>
+xd2 g.GND_2 !Vdd d2.x d2.y inv<>
+xe g.GND_1 !Vdd e.x e.y inv<>
+xf !GND g.Vdd_1 f.x f.y inv<>
+xh g.GND_2 g.Vdd_2 h.x h.y inv<>
+

@@ -1,0 +1,20 @@
+// "supply-instance-11.hac"
+// copy-modified from "supply-instance-10.hac"
+
+import "inv-01.hac";
+import "globals.hac";
+
+defproc foo(globals g; bool in, out) {
+inv a $(g.GND_2,g.Vdd_2) (in, out);
+}
+
+defproc bar(bool myVdd, myGND; bool a, b) {
+// supplies are disconnected! and implicit supplies not used
+globals g;
+g.Vdd_2 = myVdd;
+g.GND_2 = myGND;
+foo f(g, a, b);
+}
+
+bar bq;
+

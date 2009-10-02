@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint_rule.h,v 1.5 2009/09/14 21:16:59 fang Exp $
+	$Id: PRS_footprint_rule.h,v 1.6 2009/10/02 01:57:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_RULE_H__
@@ -56,7 +56,6 @@ struct footprint_rule : public cflat_visitee {
 		Could use the sign of output index...
 	 */
 	bool				dir;
-
 	/**
 		List of resolved attributes.
 	 */

@@ -1,6 +1,12 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.94 2009/09/28 06:56:57 fang Exp $
+#	$Id: ChangeLog,v 1.95 2009/10/02 01:57:47 fang Exp $
 # ChangeLog for test directory.
+
+2009-10-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-31-merged-supply-01-09:
+	  Branch merge.
+
 
 2009-09-27	David Fang		<fangism@users.sourceforge.net>
 
@@ -21,6 +27,14 @@
 		CHPSIM_LIB_PATH variable.
 		No longer hack LTDL_SHLIBPATH_VAR to run plug-in dependent
 		tests, remove CHPSIM_TEST_ENV, SHOW_CHPSIM_TEST_ENV.
+
+
+2009-09-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-07:
+	  Make.test-net: .spice script now saves error/warning messages
+		to .spice-err, and concatenates to .spice output
+		to be compared against expected reference results.
 
 
 2009-09-10	David Fang		<fangism@users.sourceforge.net>

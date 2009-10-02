@@ -3,63 +3,71 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	48
-	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	28
-	20	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	21	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	30	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	33	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	25	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	28
+	26	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
-	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	36	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	39	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
-	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	PRSrsubc	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	707
+	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
+	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	775
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  7 instantiation-collections
+  9 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     p = bool<> p
     q = bool<> q
     r = bool<> r
@@ -70,6 +78,7 @@ In namespace "", we have: {
 }
 
 top-level prs:
+  {
   subckt <""> {
     ~y -> z+
     p -> q-
@@ -81,24 +90,29 @@ top-level prs:
     passp(p,q,r)
   }
   passn(x,y,z)
+  }
 
 footprint: {
-  p = bool^0 = p (5) 
-  q = bool^0 = q (6) 
-  r = bool^0 = r (7) 
-  w = bool^0 = w (4) 
-  x = bool^0 = x (1) 
-  y = bool^0 = y (2) 
-  z = bool^0 = z (3) 
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  p = bool^0 = p (7) 
+  q = bool^0 = q (8) 
+  r = bool^0 = r (9) 
+  w = bool^0 = w (6) 
+  x = bool^0 = x (3) 
+  y = bool^0 = y (4) 
+  z = bool^0 = z (5) 
   Created state:
   bool instance pool:
-  1	x
-  2	y
-  3	z
-  4	w
-  5	p
-  6	q
-  7	r
+  1	!GND
+  2	!Vdd
+  3	x
+  4	y
+  5	z
+  6	w
+  7	p
+  8	q
+  9	r
   resolved prs:
   ~y -> z+
   p -> q-
@@ -111,4 +125,6 @@ footprint: {
   subcircuit (rules, macros, @nodes): 
   1: 0..2 none none 
   2: none 0..1 none 
+  rule supply map: (rules, macros, @nodes : Vdd, GND)
+  0..3 0..2 none : 2, 1
 }

@@ -1,6 +1,8 @@
 Variables: 
-bool[1]: "Z.g" 
-bool[2]: "Z.x" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "Z.g" 
+bool[4]: "Z.x" 
 chan[1]: "Z.A" 
 chan[2]: "Z.B" 
 chan[3]: "Z.G" 
@@ -23,6 +25,6 @@ channel deps: 1
 event[7]: receive: Z.B?(Z.x), pid: 1, #pred: 1, succ: 5 
 channel deps: 2 
 event[8]: select: [ Z.g -> ... [] ~Z.g -> ... ], pid: 1, #pred: 1, succ: 6 7 
-bool deps: 1 
+bool deps: 3 
 event[9]: fork: , pid: 1, #pred: 1, succ: 3 8 
 

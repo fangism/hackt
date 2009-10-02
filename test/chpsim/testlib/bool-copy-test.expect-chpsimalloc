@@ -1,5 +1,7 @@
 Variables: 
-bool[1]: "HAHA.a" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "HAHA.a" 
 chan[1]: "HAHA.A" 
 chan[2]: "HAHA.O[0]" 
 chan[3]: "HAHA.O[1]" 

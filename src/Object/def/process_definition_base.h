@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition_base.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_base.h,v 1.7 2009/09/14 21:16:53 fang Exp $
+	$Id: process_definition_base.h,v 1.8 2009/10/02 01:56:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
@@ -14,6 +14,8 @@
 namespace HAC {
 namespace entity {
 class process_type_reference;
+class process_definition;
+
 //=============================================================================
 /**
 	Process definition base class.  From this, there will arise: true
@@ -34,6 +36,9 @@ virtual	~process_definition_base() { }
 
 virtual	meta_type_tag_enum
 	get_meta_type(void) const = 0;
+
+virtual	const process_definition&
+	get_canonical_proc_def(void) const = 0;
 
 	excl_ptr<definition_base>
 	make_typedef(never_ptr<const scopespace> s, 

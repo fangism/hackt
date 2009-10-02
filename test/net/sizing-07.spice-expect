@@ -1,7 +1,7 @@
-M0_ GND a #0 GND nch W=5u L=3u
-M1_ #0 b x GND nch W=5u L=3u
-M2_ GND b #1 GND nch W=5u L=3u
-M3_ #1 c z GND nch W=15u L=4u
-M4_ GND a #2 GND nch W=4u L=3u
-M5_ #2 c y GND nch W=4u L=3u
+M0_ !GND a #0 !GND nch W=5u L=3u
+M1_ #0 b x !GND nch W=5u L=3u
+M2_ !GND b #1 !GND nch W=5u L=3u
+M3_ #1 c z !GND nch W=15u L=4u
+M4_ !GND a #2 !GND nch W=4u L=3u
+M5_ #2 c y !GND nch W=4u L=3u
 

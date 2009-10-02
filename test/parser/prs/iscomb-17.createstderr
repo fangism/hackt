@@ -3,97 +3,145 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	298
-	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
-	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	15	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
-	19	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
-	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	383
-	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	334
+	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
+	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	31	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	440
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	527
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   2 definitions
   0 typedefs
   Definitions:
     inv = process-definition (defined) inv(
+        bool<> !GND
+        bool<> !Vdd
         bool<> a
         bool<> b
       )
       In definition "inv", we have: {
       Instances:
+        !GND = bool<> inv::!GND
+        !Vdd = bool<> inv::!Vdd
         a = bool<> inv::a
         b = bool<> inv::b
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> a
           bool<> b
         )
       footprint: {
-        a = bool^0 = inv<>::a (1) 
-        b = bool^0 = inv<>::b (2) 
+        !GND = bool^0 = inv<>::!GND (1) 
+        !Vdd = bool^0 = inv<>::!Vdd (2) 
+        a = bool^0 = inv<>::a (3) 
+        b = bool^0 = inv<>::b (4) 
         Created state:
         bool instance pool:
-        1	inv<>::a
-        2	inv<>::b
+        1	inv<>::!GND
+        2	inv<>::!Vdd
+        3	inv<>::a
+        4	inv<>::b
       }
       }
 
     multi_inv = process-definition (defined) multi_inv(
+        bool<> !GND
+        bool<> !Vdd
         inv<> x
       )
       In definition "multi_inv", we have: {
       Instances:
+        !GND = bool<> multi_inv::!GND
+        !Vdd = bool<> multi_inv::!Vdd
         x = inv<> multi_inv::x
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           inv<> x
         )
         x.a@[iscomb]
       footprint: {
+        !GND = bool^0 = multi_inv<>::!GND (1) 
+        !Vdd = bool^0 = multi_inv<>::!Vdd (2) 
         x = process inv<>^0 = multi_inv<>::x (1) (
-          a = bool^0 = multi_inv<>::x.a (1) @[ iscomb ] 
-          b = bool^0 = multi_inv<>::x.b (2) 
+          !GND = bool^0 = multi_inv<>::!GND (1) 
+          !Vdd = bool^0 = multi_inv<>::!Vdd (2) 
+          a = bool^0 = multi_inv<>::x.a (3) @[ iscomb ] 
+          b = bool^0 = multi_inv<>::x.b (4) 
         )
         Created state:
         process instance pool:
         1	multi_inv<>::x
         bool instance pool:
-        1	multi_inv<>::x.a @[ iscomb ]
-        2	multi_inv<>::x.b
+        1	multi_inv<>::!GND
+        2	multi_inv<>::!Vdd
+        3	multi_inv<>::x.a @[ iscomb ]
+        4	multi_inv<>::x.b
+        bool port aliases:
+        1: multi_inv<>::x.!GND = multi_inv<>::!GND
+        2: multi_inv<>::x.!Vdd = multi_inv<>::!Vdd
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     foo = multi_inv<> foo
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   foo = process multi_inv<>^0 = foo (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     x = process inv<>^0 = foo.x (2) (
-      a = bool^0 = foo.x.a (1) @[ iscomb ] 
-      b = bool^0 = foo.x.b (2) 
+      !GND = bool^0 = !GND (1) 
+      !Vdd = bool^0 = !Vdd (2) 
+      a = bool^0 = foo.x.a (3) @[ iscomb ] 
+      b = bool^0 = foo.x.b (4) 
     )
   )
   Created state:
@@ -101,6 +149,8 @@ footprint: {
   1	foo
   2	foo.x
   bool instance pool:
-  1	foo.x.a @[ iscomb ]
-  2	foo.x.b
+  1	!GND
+  2	!Vdd
+  3	foo.x.a @[ iscomb ]
+  4	foo.x.b
 }

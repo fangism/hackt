@@ -10,9 +10,19 @@
 "b._r[1]" -> "R.d[1]"-
 "b._r[0]" & "b._r[1]" -> "b.rv"-
 ~"b.rv" -> "L.e"+
+= "!GND" "L.!GND"
+= "!Vdd" "L.!Vdd"
+= "!GND" "R.!GND"
+= "!Vdd" "R.!Vdd"
+= "!GND" "b.!GND"
+= "!Vdd" "b.!Vdd"
+= "!GND" "b.L.!GND"
+= "!Vdd" "b.L.!Vdd"
 = "L.d[0]" "b.L.d[0]"
 = "L.d[1]" "b.L.d[1]"
 = "L.e" "b.L.e"
+= "!GND" "b.R.!GND"
+= "!Vdd" "b.R.!Vdd"
 = "R.d[0]" "b.R.d[0]"
 = "R.d[1]" "b.R.d[1]"
 = "R.e" "b.R.e"

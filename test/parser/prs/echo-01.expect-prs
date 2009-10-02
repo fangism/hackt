@@ -2,3 +2,5 @@
 ~(("E.p" & "E.q") | ("E.r" & "E.s")) -> "E.z"+
 echo("E.p", "E.q")
 echo("E.r", "E.s")
+= "!GND" "E.!GND"
+= "!Vdd" "E.!Vdd"

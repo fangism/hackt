@@ -1,7 +1,9 @@
 Nodes: 
-node[1]: "c.a" fanin-processes:  fanout: 2, 5, 
-node[2]: "c.b" fanin-processes:  fanout: 3, 6, 
-node[3]: "c._o" fanin-processes: 1,  fanout: 
+node[1]: "!GND" fanin-processes:  fanout: 
+node[2]: "!Vdd" fanin-processes:  fanout: 
+node[3]: "c.a" fanin-processes:  fanout: 2, 5, 
+node[4]: "c.b" fanin-processes:  fanout: 3, 6, 
+node[5]: "c._o" fanin-processes: 1,  fanout: 
 Unique processes: {
 type[0]: {
 Local nodes: 
@@ -9,6 +11,8 @@ node[0]: up: - < - , dn: - < -  fanout:
 node[1]: up: - < - , dn: - < -  fanout: 
 node[2]: up: - < - , dn: - < -  fanout: 
 node[3]: up: - < - , dn: - < -  fanout: 
+node[4]: up: - < - , dn: - < -  fanout: 
+node[5]: up: - < - , dn: - < -  fanout: 
 Local expressions: 
 Local expression -> rule map:
 
@@ -16,22 +20,24 @@ Local rules:
 }
 type[1]: {
 Local nodes: 
-node[0]: up: - < - , dn: - < -  fanout: 1 4 
-node[1]: up: - < - , dn: - < -  fanout: 2 5 
-node[2]: up: 3 < - , dn: 0 < -  fanout: 
+node[0]: up: - < - , dn: - < -  fanout: 
+node[1]: up: - < - , dn: - < -  fanout: 
+node[2]: up: - < - , dn: - < -  fanout: 1 4 
+node[3]: up: - < - , dn: - < -  fanout: 2 5 
+node[4]: up: 3 < - , dn: 0 < -  fanout: 
 Local expressions: 
-expr[0]: type: and<2> (pull-dn: 2)
+expr[0]: type: and<2> (pull-dn: 4)
 	children: 1, 2, offset: 0
 expr[1]: type: or<1> (parent: 0)
-	children: #0, offset: 0
+	children: #2, offset: 0
 expr[2]: type: or<1> (parent: 0)
-	children: #1, offset: 1
-expr[3]: type: and<2> (pull-up: 2)
+	children: #3, offset: 1
+expr[3]: type: and<2> (pull-up: 4)
 	children: 4, 5, offset: 0
 expr[4]: type: nor<1> (parent: 3)
-	children: #0, offset: 0
+	children: #2, offset: 0
 expr[5]: type: nor<1> (parent: 3)
-	children: #1, offset: 1
+	children: #3, offset: 1
 Local expression -> rule map:
 (0,0) (3,1) 
 Local rules:

@@ -3,57 +3,77 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
-	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	406
-	26	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	29	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	296
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	442
+	35	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	386
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     foo = process-definition (defined) foo(
+        bool<> !GND
+        bool<> !Vdd
       )
       In definition "foo", we have: {
       Instances:
+        !GND = bool<> foo::!GND
+        !Vdd = bool<> foo::!Vdd
         w = int<32> foo::w
         x = int<32> foo::x
         y = int<32> foo::y
         z = int<32> foo::z
       unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+        )
         int<32> x
         int<32> y
         int<32> z
@@ -68,6 +88,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
+        !GND = bool^0 = foo<>::!GND (1) 
+        !Vdd = bool^0 = foo<>::!Vdd (2) 
         w = int<32>^0 = foo<>::w (4) 
         x = int<32>^0 = foo<>::x (1) 
         y = int<32>^0 = foo<>::y (2) 
@@ -78,6 +100,9 @@ In namespace "", we have: {
         2	foo<>::y
         3	foo<>::z
         4	foo<>::w
+        bool instance pool:
+        1	foo<>::!GND
+        2	foo<>::!Vdd
         resolved concurrent actions:
           *[
             concurrent: {
@@ -95,12 +120,22 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     f = foo<> f
 }
 
 footprint: {
-  f = process foo<>^0 = f (1) 
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  f = process foo<>^0 = f (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+  )
   Created state:
   process instance pool:
   1	f
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

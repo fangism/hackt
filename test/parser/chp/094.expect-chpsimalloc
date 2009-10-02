@@ -1,4 +1,6 @@
 Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
 chan[1]: "foo.out[0][0]" 
 chan[2]: "foo.out[0][1]" 
 chan[3]: "foo.out[1][0]" 

@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.18 2008/11/12 02:59:59 fang Exp $
+	$Id: alias_actuals.tcc,v 1.19 2009/10/02 01:56:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -187,11 +187,30 @@ instance_alias_info_actuals::finalize_actuals_and_substructure_aliases(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Throws exception upon error.
+	TODO: no longer need unroll_context parameter? for debugging?
  */
 template <class AliasType>
 void
 instance_alias_info_actuals::__finalize_find(
-		AliasType& _this, const unroll_context& c) {
+		AliasType& _this, const unroll_context&) {
+	__assert_complete_type(_this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+bool
+instance_alias_info_actuals::__has_complete_type(const AliasType& _this) {
+	typedef	typename AliasType::canonical_container_type	container_type;
+	STACKTRACE_VERBOSE;
+	const container_type& cont(_this.container->get_canonical_collection());
+	return (!cont.has_relaxed_type() || _this.get_relaxed_actuals());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+void
+instance_alias_info_actuals::__assert_complete_type(
+		const AliasType& _this) {
 	typedef	typename AliasType::canonical_container_type	container_type;
 	STACKTRACE_VERBOSE;
 	const container_type& cont(_this.container->get_canonical_collection());

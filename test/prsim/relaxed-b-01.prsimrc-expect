@@ -2,6 +2,8 @@ S refers to process-inst-ref snarf<>{1-dim}
 S[1] refers to process-inst-ref snarf<>
 S[1] (type: snarf<>) has members: 
 Instances:
+  !GND = bool
+  !Vdd = bool
   bar = process foo<2>^1
   baz = process foo<3>^1
 S[0].bar refers to process-member-inst-ref foo<2>{1-dim}
@@ -11,6 +13,8 @@ Parameters:
   K = pint
   L = pint
 Instances:
+  !GND = bool
+  !Vdd = bool
   falsch = process binary<>^1
   troo = process binary<>^1
 S[0].bar[0].troo refers to process-member-inst-ref binary<>{1-dim}
@@ -19,6 +23,8 @@ S[0].bar[0].troo[0] (type: binary<true>) has members:
 Parameters:
   TF = pbool
 Instances:
+  !GND = bool
+  !Vdd = bool
   x = bool
   y = bool
 S[0].bar[1].falsch refers to process-member-inst-ref binary<>{1-dim}
@@ -27,5 +33,7 @@ S[0].bar[1].falsch[1] (type: binary<false>) has members:
 Parameters:
   TF = pbool
 Instances:
+  !GND = bool
+  !Vdd = bool
   x = bool
   z = bool

@@ -3,31 +3,31 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
-	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	12	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	15	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	18	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	19	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	14	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	17	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	20	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	21	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	23	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	25	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	29	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
@@ -46,12 +46,18 @@ Persistent Object Manager text dump:
 	42	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	43	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1682
+	45	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	47	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	49	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	51	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1718
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   6 parameter-collections
-  0 instantiation-collections
+  2 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
@@ -62,9 +68,14 @@ In namespace "", we have: {
     e = pint<> e^2
     f = pint<> f^2
     g = pint<> g^2
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   b = pint^2
     unrolled index-value pairs: {
       [0][0] = ?
@@ -168,4 +179,7 @@ footprint: {
       [2][8] = ?
     }
   Created state:
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

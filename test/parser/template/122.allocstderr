@@ -2,47 +2,49 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	X	bar<><true>
 	process: 2,3
-	bool: 1,2,3
+	bool: 1,2,3,4,5
 2	(top)	-	2	X.t	foo<><true>
 	process: 9
-	bool: 1
+	bool: 1,2,3
 3	(top)	-	3	X.r	foo<><false>
 	process: 10
-	bool: 2,3
+	bool: 1,2,4,5
 4	(top)	-	4	Y	bar<><false>
 	process: 5,6,7,8
-	bool: 4,5,6,7,8,9
+	bool: 1,2,6,7,8,9,10,11
 5	(top)	-	5	Y.t	foo<><false>
 	process: 11
-	bool: 4,5
+	bool: 1,2,6,7
 6	(top)	-	6	Y.s	foo<><true>
 	process: 12
-	bool: 6
+	bool: 1,2,8
 7	(top)	-	7	Y.r	foo<><true>
 	process: 13
-	bool: 7
+	bool: 1,2,9
 8	(top)	-	8	Y.q	foo<><false>
 	process: 14
-	bool: 8,9
+	bool: 1,2,10,11
 9	process	2	1	X.t.fa0	fa<true>
-	bool: 1
+	bool: 1,2,3
 10	process	3	1	X.r.fa0	fa<false>
-	bool: 2,3
+	bool: 1,2,4,5
 11	process	5	1	Y.t.fa0	fa<false>
-	bool: 4,5
+	bool: 1,2,6,7
 12	process	6	1	Y.s.fa0	fa<true>
-	bool: 6
+	bool: 1,2,8
 13	process	7	1	Y.r.fa0	fa<true>
-	bool: 7
+	bool: 1,2,9
 14	process	8	1	Y.q.fa0	fa<false>
-	bool: 8,9
+	bool: 1,2,10,11
 [global bool entries]
-1	(top)	-	1	X.t.x	
-2	(top)	-	2	X.r.x	
-3	(top)	-	3	X.r.y	
-4	(top)	-	4	Y.t.x	
-5	(top)	-	5	Y.t.y	
-6	(top)	-	6	Y.s.x	
-7	(top)	-	7	Y.r.x	
-8	(top)	-	8	Y.q.x	
-9	(top)	-	9	Y.q.y	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	X.t.x	
+4	(top)	-	4	X.r.x	
+5	(top)	-	5	X.r.y	
+6	(top)	-	6	Y.t.x	
+7	(top)	-	7	Y.t.y	
+8	(top)	-	8	Y.s.x	
+9	(top)	-	9	Y.r.x	
+10	(top)	-	10	Y.q.x	
+11	(top)	-	11	Y.q.y	

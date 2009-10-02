@@ -1,3 +1,5 @@
 cross_coupled_inverters("Z.x", "Z.y")
 exclhi("Z.x", "Z.y")
 excllo("Z.x", "Z.y")
+connect "!GND" "Z.!GND"
+connect "!Vdd" "Z.!Vdd"

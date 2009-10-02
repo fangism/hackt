@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.36 2009/09/14 21:16:46 fang Exp $
+	$Id: expr.cc,v 1.37 2009/10/02 01:56:30 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -98,6 +98,8 @@
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::expr, "(expr)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::inst_ref_expr, "(inst-ref-expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::extended_connection_actuals,
+	"(ext-connection-actuals)")
 // SPECIALIZE_UTIL_WHAT(HAC::parser::expr_list, "(expr-list)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::qualified_id, "(qualified-id)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::id_expr, "(id-expr)")
@@ -562,13 +564,40 @@ inst_ref_expr_list::~inst_ref_expr_list() { }
 void
 inst_ref_expr_list::postorder_check_bool_refs(
 		checked_bool_refs_type& temp, const context& c) const {
-	STACKTRACE("inst_ref_expr_list::postorder_check_bool_refs()");
+	STACKTRACE_VERBOSE;
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
 		temp.push_back((*i)->check_prs_literal(c));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variant allows for optional arguments.  
+	\return true on error.
+ */
+bool
+inst_ref_expr_list::postorder_check_bool_refs_optional(
+		checked_bool_refs_type& temp, const context& c) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(temp.empty());
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		if (*i) {
+			temp.push_back((*i)->check_prs_literal(c));
+			if (!temp.back()) {
+				// TODO: error message
+				return true;
+			}
+		} else {
+			temp.push_back(prs_literal_ptr_type(NULL));
+		}
+	}
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -581,7 +610,7 @@ inst_ref_expr_list::postorder_check_bool_refs(
 bool
 inst_ref_expr_list::postorder_check_grouped_bool_refs(
 		checked_bool_groups_type& temp, const context& c) const {
-	STACKTRACE("inst_ref_expr_list::postorder_check_grouped_bool_refs()");
+	STACKTRACE_VERBOSE;
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
 	const const_iterator e(end());
@@ -609,7 +638,7 @@ inst_ref_expr_list::postorder_check_grouped_bool_refs(
 bool
 inst_ref_expr_list::postorder_check_grouped_bool_refs(
 		checked_bool_group_type& temp, const context& c) const {
-	STACKTRACE("inst_ref_expr_list::postorder_check_grouped_bool_refs()");
+	STACKTRACE_VERBOSE;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
@@ -628,7 +657,7 @@ inst_ref_expr_list::postorder_check_grouped_bool_refs(
 void
 inst_ref_expr_list::postorder_check_meta_refs(
 		checked_meta_refs_type& temp, const context& c) const {
-	STACKTRACE("inst_ref_expr_list::postorder_check_meta_refs()");
+	STACKTRACE_VERBOSE;
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
 	const const_iterator e(end());
@@ -646,7 +675,7 @@ inst_ref_expr_list::postorder_check_meta_refs(
 void
 inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 		checked_nonmeta_data_refs_type& temp, const context& c) const {
-	STACKTRACE("inst_ref_expr_list::postorder_check_nonmeta_data_refs()");
+	STACKTRACE_VERBOSE;
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
 	const const_iterator e(end());
@@ -821,6 +850,34 @@ expr_attr_list::~expr_attr_list() { }
 void
 expr_attr_list::attach_attributes(const generic_attribute_list* a) {
 	attrs = excl_ptr<const generic_attribute_list>(a);
+}
+
+//=============================================================================
+// class extended_connection_actuals method definitions
+
+extended_connection_actuals::extended_connection_actuals(
+		const inst_ref_expr_list* a, 
+		const expr_list* b) :
+		implicit_ports(a),
+		actual_ports(b) {
+	// either set of ports are optional (may be NULL)
+	INVARIANT(implicit_ports || actual_ports);
+}
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(extended_connection_actuals)
+
+line_position
+extended_connection_actuals::leftmost(void) const {
+	if (implicit_ports)
+		return implicit_ports->leftmost();
+	return actual_ports->leftmost();
+}
+
+line_position
+extended_connection_actuals::rightmost(void) const {
+	if (actual_ports)
+		return actual_ports->rightmost();
+	return implicit_ports->rightmost();
 }
 
 //=============================================================================

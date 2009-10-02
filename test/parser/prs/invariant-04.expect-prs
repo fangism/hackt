@@ -4,7 +4,11 @@ invariant "a" | "b"
 "b" -> "a"-
 ~"b" -> "a"+
 invariant ~("b" & "a")
+= "!GND" "barfu.!GND"
+= "!Vdd" "barfu.!Vdd"
 = "b" "barfu.w"
 = "a" "barfu.z"
+= "!GND" "fubar.!GND"
+= "!Vdd" "fubar.!Vdd"
 = "a" "fubar.x"
 = "b" "fubar.y"

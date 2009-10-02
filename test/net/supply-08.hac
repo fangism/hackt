@@ -1,0 +1,16 @@
+// "supply-08.hac"
+// copy-modified from "supply-07.hac"
+// just combinational inverses
+
+bool myVdd, myGND;
+bool x, y, p, q, r;
+prs <myVdd> {
+	x & y	=> p-
+}
+prs <myVdd, myGND> {
+	x | y	=> q-
+}
+prs {
+	x | y	=> r-
+}
+

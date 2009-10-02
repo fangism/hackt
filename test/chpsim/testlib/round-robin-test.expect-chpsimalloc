@@ -1,4 +1,6 @@
 Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
 chan[1]: "RR1.Cin" 
 chan[2]: "RR1.Cout" 
 chan[3]: "RR2.Cin" 

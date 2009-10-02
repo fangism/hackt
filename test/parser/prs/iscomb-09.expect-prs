@@ -3,6 +3,8 @@
 @ "bar.b" iscomb
 @ "bar.d" iscomb
 @ "bar.f" iscomb
+= "!GND" "bar.!GND"
+= "!Vdd" "bar.!Vdd"
 = "bar.b" "bar.a"
 = "bar.d" "bar.c"
 = "bar.f" "bar.e"

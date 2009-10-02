@@ -32,10 +32,10 @@ Epoch 0:
 bool state trace:
 	event	global	raw
 	index	index	value
-	4	1	1
-	9	2	1
-	14	1	1
-	19	3	1
+	4	3	1
+	9	4	1
+	14	3	1
+	19	5	1
 int state trace:
 	event	global	raw
 	index	index	value
@@ -83,10 +83,10 @@ Epoch 1:
 bool state trace:
 	event	global	raw
 	index	index	value
-	24	1	1
-	29	4	1
-	34	1	1
-	39	5	1
+	24	3	1
+	29	6	1
+	34	3	1
+	39	7	1
 int state trace:
 	event	global	raw
 	index	index	value
@@ -134,10 +134,10 @@ Epoch 2:
 bool state trace:
 	event	global	raw
 	index	index	value
-	44	1	1
-	49	2	1
-	54	1	1
-	59	3	1
+	44	3	1
+	49	4	1
+	54	3	1
+	59	5	1
 int state trace:
 	event	global	raw
 	index	index	value
@@ -185,10 +185,10 @@ Epoch 3:
 bool state trace:
 	event	global	raw
 	index	index	value
-	64	1	1
-	69	4	1
-	74	1	1
-	79	5	1
+	64	3	1
+	69	6	1
+	74	3	1
+	79	7	1
 int state trace:
 	event	global	raw
 	index	index	value
@@ -221,7 +221,7 @@ Epoch 4:
 bool state trace:
 	event	global	raw
 	index	index	value
-	84	1	1
+	84	3	1
 int state trace:
 	event	global	raw
 	index	index	value

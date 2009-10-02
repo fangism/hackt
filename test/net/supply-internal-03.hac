@@ -1,0 +1,17 @@
+// "supply-internal-03.hac"
+// copy-modified from "supply-internal-02.hac"
+// testing supply overrides on internal nodes
+// expect warning/error that @_int supply is different between
+// its definition and use.
+
+bool myVdd, myGND;
+bool en, x, y;
+
+prs {
+	en		-> @_int-
+}
+prs <myVdd, myGND> {
+	~@_int & x	-> y-
+	~en		-> y+
+}
+

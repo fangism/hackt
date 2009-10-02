@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.15 2009/08/28 20:44:58 fang Exp $
+	$Id: PRS_footprint.h,v 1.16 2009/10/02 01:57:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -16,6 +16,7 @@
 #include "Object/lang/PRS_footprint_rule.h"
 #include "Object/lang/PRS_footprint_macro.h"
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/macros.h"
 #include "util/boolean_types.h"
 #include "util/offset_array.h"
@@ -128,11 +129,49 @@ public:
 		the outer-most level, designated index 0.  
 	 */
 	typedef	std::pair<size_t, size_t>	index_range;
+
+	static
+	ostream&
+	print_range(ostream&, const index_range&);
+
+	static
+	bool
+	range_empty(const index_range& r) {
+		return r.first == r.second;
+	}
+
+	/**
+		Information common to all mappings of side structures.  
+	 */
+	struct resource_map_entry {
+		index_range			rules;
+		index_range			macros;
+		index_range			int_nodes;
+
+		bool
+		rules_empty(void) const {
+			return rules.first == rules.second;
+		}
+
+		bool
+		macros_empty(void) const {
+			return macros.first == macros.second;
+		}
+
+		bool
+		nodes_empty(void) const {
+			return int_nodes.first == int_nodes.second;
+		}
+
+		ostream&
+		dump(ostream&) const;
+
+	};
 	/**
 		Each subcircuit may contain rules and macros, 
 		so we need to keep these sets coherent.
 	 */
-	struct subcircuit_map_entry {
+	struct subcircuit_map_entry : public resource_map_entry {
 		/**
 			Back-reference to original subcircuit.
 			Saves from copying string name, or other info.
@@ -140,25 +179,11 @@ public:
 			having to save the pointer persistently.
 		 */
 		never_ptr<const subcircuit>	back_ref;
-		index_range			rules;
-		index_range			macros;
-		index_range			int_nodes;
 		subcircuit_map_entry() { }
 		subcircuit_map_entry(const subcircuit* b) : back_ref(b) { }
 
 		const string&
 		get_name(void) const;
-
-		bool
-		rules_empty(void) const { return rules.first == rules.second; }
-
-		bool
-		macros_empty(void) const { return macros.first == macros.second; }
-
-		bool
-		nodes_empty(void) const {
-			return int_nodes.first == int_nodes.second;
-		}
 
 		void
 		collect_transient_info_base(persistent_object_manager&) const;
@@ -176,6 +201,26 @@ public:
 			lower_bound, upper_bound.  
 	 */
 	typedef	vector<subcircuit_map_entry>	subcircuit_map_type;
+#if PRS_SUPPLY_OVERRIDES
+	/**
+		Structure for tracking which supplies drive which rules.  
+	 */
+	struct supply_override_entry : public resource_map_entry {
+		// never_ptr<const rule_set>		back_ref;
+		size_t				Vdd;
+		size_t				GND;
+
+		void
+		write_object(const persistent_object_manager&, ostream&) const;
+		void
+		load_object(const persistent_object_manager&, istream&);
+	};	// end struct supply_override_entry
+	/**
+		More space-efficient to keep supply information aside
+		instead of per rule because this is usually coarse-grained.  
+	 */
+	typedef	vector<supply_override_entry>	supply_map_type;
+#endif
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
 						node_pool_type;
@@ -191,6 +236,16 @@ private:
 	internal_node_expr_map_type		internal_node_expr_map;
 	invariant_pool_type			invariant_pool;
 	subcircuit_map_type			subcircuit_map;
+#if PRS_SUPPLY_OVERRIDES
+	supply_map_type				supply_map;
+public:
+	/**
+		HACK: these members are only used during unroll construction, 
+		and need not persist.
+	 */
+	size_t					current_Vdd;
+	size_t					current_GND;
+#endif
 public:
 	footprint();
 	~footprint();
@@ -274,6 +329,14 @@ public:
 	current_expr_index(void) const {
 		return expr_pool.size();
 	}
+
+#if PRS_SUPPLY_OVERRIDES
+	const supply_map_type&
+	get_supply_map(void) const { return supply_map; }
+
+	supply_map_type&
+	get_supply_map(void) { return supply_map; }
+#endif
 
 	void
 	collect_literal_indices(std::set<size_t>&, // node_index_type

@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.50 2009/09/14 21:17:13 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.51 2009/10/02 01:57:38 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -34,6 +34,9 @@
 #include "lexer/file_manager.h"
 #include "Object/devel_switches.h"	// for DEFCHAN_LIKE_PROCESS
 #include "Object/traits/type_tag_enum.h"	// for META_TYPE_*
+#if IMPLICIT_SUPPLY_PORTS
+#include "AST/globals.h"
+#endif
 #include "util/convert.h"
 
 #define	ENABLE_STACKTRACE		0
@@ -336,6 +339,7 @@ extern const char* const yyrule[];
 	loop_operation*		_loop_operation;
 	expr_list*		_expr_list;
 	inst_ref_expr_list*	_inst_ref_expr_list;
+	extended_connection_actuals*	_extended_connection_actuals;
 	expr_attr_list*		_expr_attr_list;
 	template_argument_list_pair*	_template_argument_list_pair;
 /** not used
@@ -432,6 +436,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 		const YYSTYPE* yyvs, const YYSTYPE* yyvsp, 
 		const YYSTYPE yylval, const int yychar,
 		const flex::lexer_state& _lexer_state);
+
 %}
 
 /*
@@ -626,6 +631,11 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* %type	<_instance_alias>	instance_alias	*/
 %type	<_alias_list>	alias_list nonempty_alias_list
 %type	<_expr_list>	connection_actuals_list
+/***
+// why not? because same syntax is used for function call arguments
+%type	<_inst_ref_expr_list>	connection_actuals_list
+***/
+%type	<_extended_connection_actuals>	extended_connection_actuals_list
 %type	<_guarded_instance_management_list>	guarded_instance_management_list
 %type	<_guarded_instance_management_list>	guarded_instance_management_list_unmatched
 %type	<_guarded_instance_management>	guarded_instance_management
@@ -718,8 +728,12 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_inst_ref_expr_list>	member_index_expr_list
 %type	<_inst_ref_expr_list>	member_index_expr_list_in_parens
 %type	<_inst_ref_expr_list>	member_index_expr_list_in_parens_optional
+%type	<_inst_ref_expr_list>	member_index_expr_list_in_angles
+%type	<_inst_ref_expr_list>	member_index_expr_list_in_angles_optional
 %type	<_inst_ref_expr_list>	mandatory_member_index_expr_list
 %type	<_inst_ref_expr_list>	mandatory_member_index_expr_list_in_parens
+%type	<_inst_ref_expr_list>	implicit_global_connections
+%type	<_inst_ref_expr_list>	optional_implicit_global_connections
 %type	<_inst_ref_expr_list>	grouped_reference_list
 %type	<_inst_ref_expr_list>	grouped_reference_list_in_parens
 /* %type	<_expr_list>	complex_expr_list complex_expr_list_in_angles */
@@ -985,19 +999,19 @@ def_or_proc
 	;
 
 declare_proc_proto
+	/* C++ style template declaration */
 	: optional_export
 	  optional_template_specification def_or_proc ID
 	  optional_port_formal_decl_list_in_parens
-		{ $$ = new process_prototype($1, $2, $3, $4, $5,
+		{
+#if IMPLICIT_SUPPLY_PORTS
+			$5->push_front(get_implicit_ports());
+#endif
+			$$ = new process_prototype($1, $2, $3, $4, $5,
 			HAC::entity::META_TYPE_PROCESS); }
 	;
 
 defproc
-	/* C++ style template declaration */
-/**
-	: optional_template_specification def_or_proc ID
-	  optional_port_formal_decl_list_in_parens
-**/
 	: declare_proc_proto
 	  '{' optional_definition_body '}'
 	/* optional_definition_body will always be valid, sometimes empty */
@@ -1552,13 +1566,6 @@ instance_item_extended
 instance_item
 	: type_instance_declaration { $$ = $1; }	/* single or array */
 	| connection_body_item_base { $$ = $1; }
-/***
-	| connection_statement { $$ = $1; }
-	| instance_type_completion_statement { $$ = $1; }
-	| instance_type_completion_connection_statement { $$ = $1; }
-	| nonempty_alias_list ';'
-		{ $$ = $1; DELETE_TOKEN($2); }
-***/
 	| loop_instantiation { $$ = $1; }
 	| conditional_instantiation { $$ = $1; }
 	;
@@ -1609,7 +1616,8 @@ instance_id_item
 	| ID optional_template_arguments_in_angles
 		{ $$ = new instance_base($1, $2); }
 	/* single instance declaration with connection */
-	| ID optional_template_arguments_in_angles connection_actuals_list
+	| ID optional_template_arguments_in_angles
+			extended_connection_actuals_list
 		{ $$ = new instance_connection($1, $2, $3); }
 	/* instance alias or parameter assignment */
 	| ID optional_template_arguments_in_angles '=' alias_list
@@ -1620,10 +1628,29 @@ instance_id_item
 connection_statement
 /* taking a declared array or single instance and connecting ports
 	are brackets part of the array/membership chain? */
-	: member_index_expr connection_actuals_list ';'
+	: member_index_expr extended_connection_actuals_list ';'
 		/* can this first id be scoped and/or membered? */
 		{ $$ = new connection_statement($1, $2);
 		  DELETE_TOKEN($3); }
+	;
+
+extended_connection_actuals_list
+	: optional_implicit_global_connections connection_actuals_list
+		{ $$ = new extended_connection_actuals($1, $2); }
+	| implicit_global_connections
+		{ $$ = new extended_connection_actuals($1, NULL); }
+	;
+
+optional_implicit_global_connections
+	: implicit_global_connections { $$ = $1; }
+	| { $$ = NULL; }
+	;
+
+// currently only two implicit globals, respectively, !GND, !Vdd
+implicit_global_connections
+	: '$' member_index_expr_list_in_parens
+		/* list elements are optional */
+		{ DELETE_TOKEN($1); $$ = $2; }
 	;
 
 // key-value pair
@@ -1678,11 +1705,11 @@ instance_attribute_statement
  */
 instance_type_completion_connection_statement
 	: index_expr complex_expr_optional_list_in_angles
-		connection_actuals_list ';'
+		extended_connection_actuals_list ';'
 		{ $$ = new type_completion_connection_statement($1, $2, $3);
 		  DELETE_TOKEN($4); }
 	| generic_id complex_expr_optional_list_in_angles
-		connection_actuals_list ';'
+		extended_connection_actuals_list ';'
 		{ $$ = new type_completion_connection_statement(
 			new id_expr($1), $2, $3);
 			DELETE_TOKEN($4); }
@@ -1783,10 +1810,9 @@ language_body
 		{ WRAP_LIST($2, $3, $4); $$ = new CHP::body($1, $3); }
 	| HSE_LANG '{' hse_body_optional '}'
 		{ WRAP_LIST($2, $3, $4); $$ = new HSE::body($1, $3); }
-	| PRS_LANG optional_template_arguments_in_angles 
+	| PRS_LANG member_index_expr_list_in_angles_optional 
 		'{' prs_body_optional '}'
-		{ WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $4); 
-		  DELETE_TOKEN($2); }
+		{ WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $2, $4); }
 	/**
 		TODO: optional parameters are Vdd and GND replacements.
 		They won't be conventional template parameters, since
@@ -1795,6 +1821,7 @@ language_body
 	| lang_spec { $$ = $1; }
 	;
 
+/* also accepted in datatype definitions */
 lang_spec
 	: SPEC_LANG '{' spec_body_optional '}'
 		{ WRAP_LIST($2, $3, $4); $$ = new SPEC::body($1, $3); }
@@ -2285,7 +2312,7 @@ prs_body_item
 	/* actions here are provisional dummy actions, not real impl. */
 	| TREE_LANG optional_template_arguments_in_angles '{' prs_body_optional '}'
 		{ DELETE_TOKEN($2);
-		  WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $4); }
+		  WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, NULL, $4); }
 	| SUBCKT_LANG optional_template_arguments_in_angles '{' prs_body_optional '}'
 		{ WRAP_LIST($3, $4, $5); $$ = new PRS::subcircuit($1, $2, $4); }
 	;
@@ -2719,7 +2746,7 @@ unary_expr
 	;
 
 function_call_expr
-	/* prefix dismbiguator */
+	/* prefix dismbiguator? */
 /**
 	: '$' id_expr expr_list_in_parens
 		{ $$ = new CHP::function_call_expr($2, $3);
@@ -2732,10 +2759,14 @@ function_call_expr
 	/* function_call is grammatic subset of connection_statement
 	 * copied from connection_statement to disambiguate 
 	 * let type checking further restrict the member_index_expr to id_expr
+	 * Likewise, implicit_global_connections do not apply, should be NULL.
 	 * This construction may throw.  
 	 */
-	: member_index_expr connection_actuals_list
-		{ $$ = new CHP::function_call_expr($1, $2); }
+	: member_index_expr optional_implicit_global_connections
+		connection_actuals_list
+		{ $$ = new CHP::function_call_expr($1, $3); 
+			// TODO: should really error out if ($2)
+			DELETE_TOKEN($2); }
 	;
 
 multiplicative_expr
@@ -3005,6 +3036,16 @@ member_index_expr_list_in_parens_optional
 
 member_index_expr_list_in_parens
 	: '(' member_index_expr_list ')'
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
+member_index_expr_list_in_angles_optional
+	: member_index_expr_list_in_angles { $$ = $1; }
+	| { $$ = NULL; }
+	;
+
+member_index_expr_list_in_angles
+	: '<' member_index_expr_list '>'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 

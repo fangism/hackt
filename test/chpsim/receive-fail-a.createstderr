@@ -3,51 +3,58 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	15	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	391
-	28	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	28
-	31	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	33	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	35	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	427
+	33	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	28
+	36	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	38	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  3 instantiation-collections
+  5 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     X = chan(bool<>) X
     x = bool<> x
     y = bool<> y
@@ -66,15 +73,19 @@ top-level chp:
     ]
   }
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   X = channel chan(bool<>)^0 = X (1) 
-  x = bool^0 = x (1) 
-  y = bool^0 = y (2) 
+  x = bool^0 = x (3) 
+  y = bool^0 = y (4) 
   Created state:
   channel instance pool:
   1	X
   bool instance pool:
-  1	x
-  2	y
+  1	!GND
+  2	!Vdd
+  3	x
+  4	y
   resolved concurrent actions:
     *[
       X?(x)

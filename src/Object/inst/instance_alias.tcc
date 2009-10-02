@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.38 2009/07/02 23:22:49 fang Exp $
+	$Id: instance_alias.tcc,v 1.39 2009/10/02 01:56:56 fang Exp $
 	TODO: trim includes
  */
 
@@ -489,6 +489,38 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_SUPPLY_OVERRIDES
+/**
+	Special connection for implicit ports.  
+	Can be disconnected!
+	USE WITH CAUTION.
+	Note: this does NOT synchronize alias attributes!
+	Rationale: because connection is undo-able, we do not want
+		the effects of an invalidated connection to persist.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::connect_implicit_port(this_type& r) {
+	// this clobbers any former connection in the union find structure!
+	this->next = &r;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_SUPPLY_DISCONNECT
+/**
+	Disconnects implicit ports.  
+	USE WITH CAUTION.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::disconnect_implicit_port(void) {
+	// this clobbers any former connection in the union find structure!
+	this->next = this;
+}
+#endif
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wrapper around checked_connect_port, shouldn't require a real
 	unroll_context because is only replaying internal alias.  
@@ -672,6 +704,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Need to check for pointer equality?  Same result either way.
+	asymmetric union-find connection: 'this' connects (->) to r
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
@@ -753,6 +786,47 @@ INSTANCE_ALIAS_INFO_CLASS::finalize_find(const unroll_context& c) {
 	// flatten, attach actuals, instantiate, and connect as necessary
 	this->find(c);
 	actuals_parent_type::__finalize_find(*this, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if type is complete.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+bool
+INSTANCE_ALIAS_INFO_CLASS::has_complete_type(void) const {
+	return actuals_parent_type::__has_complete_type(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\throw exception if this alias has incomplete type.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::assert_complete_type(void) const {
+	actuals_parent_type::__assert_complete_type(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return first alias in union-find path with complete type, if any.
+	\throw exception if not found
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::pseudo_const_iterator
+INSTANCE_ALIAS_INFO_CLASS::find_complete_type_alias(void) const {
+	if (this->has_complete_type()) {
+		return pseudo_const_iterator(this);
+	} else if (this->next != this) {
+		return next->find_complete_type_alias();
+	} else {
+		// rare path
+		// FAIL: just re-use error message for consistency
+		this->assert_complete_type();
+		// throws to exit
+	}
+	return pseudo_const_iterator(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

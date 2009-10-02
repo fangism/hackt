@@ -2,7 +2,11 @@
 ~"foo.O.e" -> "foo.c._o"+
 "foo.c._o" -> "foo.I.e"-
 ~"foo.c._o" -> "foo.I.e"+
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"
 = "foo.I.d" "foo.O.d"
+= "!GND" "foo.c.!GND"
+= "!Vdd" "foo.c.!Vdd"
 = "foo.O.e" "foo.c.i"
 = "foo.I.e" "foo.c.o"
 = "foo.O.e" "foo.re"

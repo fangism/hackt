@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.29 2009/02/20 20:39:40 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.30 2009/10/02 01:57:24 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -61,7 +61,12 @@
 %{
 /* scanner-specific header */
 
+#define	ENABLE_STATIC_TRACE		0
 #define	ENABLE_STACKTRACE		(0 && !defined(LIBBOGUS))
+
+#include "util/static_trace.h"
+
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <iomanip>
@@ -1072,4 +1077,6 @@ hackt_lex_expect(YYSTYPE& temp, lexer_state& foo,
 //=============================================================================
 }	/* end namespace lexer */
 }	/* end namespace HAC */
+
+DEFAULT_STATIC_TRACE_END
 

@@ -2,10 +2,10 @@
 * subcircuit empty_1<> is empty.
 * subcircuit empty_2<> is empty.
 * subcircuit empty_3<> is empty.
-.subckt inv<> GND Vdd a b
-M0_ GND a b GND nch W=5u L=2u
-M1_ Vdd a b Vdd pch W=5u L=2u
+.subckt inv<> !GND !Vdd a b
+M0_ !GND a b !GND nch W=5u L=2u
+M1_ !Vdd a b !Vdd pch W=5u L=2u
 .ends
 
-xbar GND Vdd bar.a bar.b inv<>
+xbar !GND !Vdd bar.a bar.b inv<>
 

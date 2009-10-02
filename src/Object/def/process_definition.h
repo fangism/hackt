@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.15 2009/09/14 21:16:52 fang Exp $
+	$Id: process_definition.h,v 1.16 2009/10/02 01:56:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -41,7 +41,11 @@ protected:
 	meta_type_tag_enum			meta_type;
 	port_formals_manager			port_formals;
 	// list language bodies
-	PRS::rule_set				prs;
+/**
+	Really, only needs to be a list/array of rule_set, but is currently
+	list of rule_set_base (polymorphic).  Meh.
+ */
+	PRS::rule_set_base			prs;
 	CHP::concurrent_actions			chp;
 	SPEC::directives_set			spec;
 	mutable footprint_manager		footprint_map;
@@ -62,6 +66,9 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
+
+	const process_definition&
+	get_canonical_proc_def(void) const;
 
 	meta_type_tag_enum
 	get_meta_type(void) const;
@@ -107,7 +114,7 @@ public:
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
-	PRS::rule_set&
+	PRS::rule_set_base&
 	get_prs(void) { return prs; }
 
 	void

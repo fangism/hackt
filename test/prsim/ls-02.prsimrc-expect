@@ -1,24 +1,36 @@
 top-level instances: 
 Instances:
+  !GND = bool<> !GND
+  !Vdd = bool<> !Vdd
   poo = ick<> poo
 poo (type: ick<>) has members: 
 Instances:
+  !GND = bool
+  !Vdd = bool
   p = process bar<>
   q = process bar<>
 poo.p (type: bar<>) has members: 
 Instances:
+  !GND = bool
+  !Vdd = bool
   x = process foo<>
   y = process foo<>
 poo.q (type: bar<>) has members: 
 Instances:
+  !GND = bool
+  !Vdd = bool
   x = process foo<>
   y = process foo<>
 poo.q.x (type: foo<>) has members: 
 Instances:
+  !GND = bool
+  !Vdd = bool
   a = bool
   b = bool
 poo.q.y (type: foo<>) has members: 
 Instances:
+  !GND = bool
+  !Vdd = bool
   a = bool
   b = bool
 poo.q.y.a (type: bool<>) has members: 

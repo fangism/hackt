@@ -2,9 +2,19 @@ after 0	"_n_.g" & ~"_n_.s" -> "_n_.d"-
 after 0	~"_p_.g" & "_p_.s" -> "_p_.d"+
 after 0	"_np_.g" & ~"_np_.s" -> "_np_.d"-
 after 0	~"_np_._g" & "_np_.s" -> "_np_.d"+
+= "!GND" "_n_.!GND"
+= "!Vdd" "_n_.!Vdd"
+= "!GND" "_np_.!GND"
+= "!Vdd" "_np_.!Vdd"
+= "!GND" "_np_.n.!GND"
+= "!Vdd" "_np_.n.!Vdd"
 = "_np_.d" "_np_.n.d"
 = "_np_.g" "_np_.n.g"
 = "_np_.s" "_np_.n.s"
+= "!GND" "_np_.p.!GND"
+= "!Vdd" "_np_.p.!Vdd"
 = "_np_.d" "_np_.p.d"
 = "_np_._g" "_np_.p.g"
 = "_np_.s" "_np_.p.s"
+= "!GND" "_p_.!GND"
+= "!Vdd" "_p_.!Vdd"

@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.13 2009/09/14 21:16:45 fang Exp $
+	$Id: PRS.h,v 1.14 2009/10/02 01:56:28 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -17,6 +17,7 @@
 #include "util/STL/vector_fwd.h"
 #include "util/STL/pair_fwd.h"
 #include "util/memory/count_ptr.h"
+#include "Object/devel_switches.h"	// for PRS_SUPPLY_OVERRIDES
 
 namespace HAC {
 namespace entity {
@@ -342,9 +343,16 @@ public:
  */
 class body : public language_body, public body_item {
 protected:
+#if PRS_SUPPLY_OVERRIDES
+	const excl_ptr<const inst_ref_expr_list>	supplies;
+#endif
 	const excl_ptr<const rule_list>		rules;
 public:
-	body(const generic_keyword_type* t, const rule_list* r);
+	body(const generic_keyword_type* t, 
+#if PRS_SUPPLY_OVERRIDES
+		const inst_ref_expr_list*, 
+#endif
+		const rule_list* r);
 virtual	~body();
 
 virtual	ostream&

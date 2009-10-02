@@ -1,5 +1,7 @@
 Variables: 
-bool[1]: "b" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "b" 
 int[1]: "i" 
 chan[1]: "Y" 
 chan[2]: "Z" 

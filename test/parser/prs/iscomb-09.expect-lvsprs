@@ -3,6 +3,8 @@
 @ "bar.b" iscomb
 @ "bar.d" iscomb
 @ "bar.f" iscomb
+connect "!GND" "bar.!GND"
+connect "!Vdd" "bar.!Vdd"
 connect "bar.b" "bar.a"
 connect "bar.d" "bar.c"
 connect "bar.f" "bar.e"

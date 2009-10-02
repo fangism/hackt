@@ -1,3 +1,5 @@
+= "!GND" "p.!GND"
+= "!Vdd" "p.!Vdd"
 = "p.x[0]" "p.composite"
 = "p.x[0]" "p.x[1]"
 = "p.x[0]" "p.x[4]"

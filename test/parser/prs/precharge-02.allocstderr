@@ -1,15 +1,17 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	foo	pchg_test<>
-	bool: 1,2,3,4
+	bool: 1,2,3,4,5,6
 2	(top)	-	2	bar	pchg_test2<>
-	bool: 5,6,7,8
+	bool: 1,2,7,8,9,10
 [global bool entries]
-1	(top)	-	1	foo.a	
-2	(top)	-	2	foo.b	
-3	(top)	-	3	foo.c	
-4	(top)	-	4	foo.en	
-5	(top)	-	5	bar.a	
-6	(top)	-	6	bar.b	
-7	(top)	-	7	bar.c	
-8	(top)	-	8	bar._en	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	foo.a	
+4	(top)	-	4	foo.b	
+5	(top)	-	5	foo.c	
+6	(top)	-	6	foo.en	
+7	(top)	-	7	bar.a	
+8	(top)	-	8	bar.b	
+9	(top)	-	9	bar.c	
+10	(top)	-	10	bar._en	

@@ -1,3 +1,3 @@
 Number of port actuals (5) doesn't match the number of port formals (4).  ERROR!  
 At least one error in port connection.  
-HALT: at least one error in port connection list.  [11:2..17]
+HALT: at least one error in port connection list.  [11:3..17]

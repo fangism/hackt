@@ -1,2 +1,4 @@
 ("foo.in[0][0]" & "foo.in[0][1]" & "foo.in[0][2]" & "foo.in[0][3]") | ("foo.in[0][0]" & "foo.in[0][1]" & "foo.in[0][2]" & "foo.in[0][3]") | ("foo.in[0][0]" & "foo.in[0][1]" & "foo.in[0][2]" & "foo.in[0][3]") | ("foo.in[0][0]" & "foo.in[0][1]" & "foo.in[0][2]" & "foo.in[0][3]") -> "foo._o"-
 (~"foo.in[0][0]" | ~"foo.in[0][1]" | ~"foo.in[0][2]" | ~"foo.in[0][3]") & (~"foo.in[0][0]" | ~"foo.in[0][1]" | ~"foo.in[0][2]" | ~"foo.in[0][3]") & (~"foo.in[0][0]" | ~"foo.in[0][1]" | ~"foo.in[0][2]" | ~"foo.in[0][3]") & (~"foo.in[0][0]" | ~"foo.in[0][1]" | ~"foo.in[0][2]" | ~"foo.in[0][3]") -> "foo._o"+
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"

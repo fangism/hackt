@@ -1,0 +1,17 @@
+// "supply-instance-03.hac"
+// copy-modified from "supply-instance-01.hac"
+
+import "inv-01.hac";
+
+defproc foo(bool myVdd, myGND) {
+inv a;
+inv b$();
+inv c$(,);
+inv d$(myGND);
+inv d2$(myGND);
+inv e$(myGND,);
+inv f$(,myVdd);
+inv g$(myGND,myVdd);
+}
+
+foo bar;

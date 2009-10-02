@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.35 2009/09/14 21:16:45 fang Exp $
+	$Id: PRS.cc,v 1.36 2009/10/02 01:56:28 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -641,7 +641,7 @@ guarded_body::check_clause(context& c) const {
 	NEVER_NULL(rs);
 	rs->append_guarded_clause(bg);
 	const context::prs_body_frame _pbf(c, 
-		never_ptr<entity::PRS::rule_set>(&rs->get_last_clause()));
+		never_ptr<entity::PRS::rule_set_base>(&rs->get_last_clause()));
 	STACKTRACE_INDENT_PRINT("current rule set: " <<
 		&rs->get_last_clause() << endl);
 	// code below mostly ripped from loop::check_rule()
@@ -697,8 +697,16 @@ conditional::check_rule(context& c) const {
 // class body method definitions
 
 CONSTRUCTOR_INLINE
-body::body(const generic_keyword_type* t, const rule_list* r) :
-		language_body(t), rules(r) {
+body::body(const generic_keyword_type* t, 
+#if PRS_SUPPLY_OVERRIDES
+		const inst_ref_expr_list* s,
+#endif
+		const rule_list* r) :
+		language_body(t), 
+#if PRS_SUPPLY_OVERRIDES
+		supplies(s), 
+#endif
+		rules(r) {
 	if (r) NEVER_NULL(rules);
 }
 
@@ -724,6 +732,30 @@ body::rightmost(void) const {
 bool
 body::__check_rules(context& c) const {
 if (rules) {
+#if PRS_SUPPLY_OVERRIDES
+	// TODO: set current supplies
+	if (supplies) {
+		inst_ref_expr_list::checked_bool_refs_type temp;
+		if (supplies->postorder_check_bool_refs_optional(temp, c)) {
+			cerr << "Error in PRS supply overrides.  " <<
+				where(*supplies) << endl;
+			return false;
+		}
+		const size_t s = temp.size();
+		if (s > 2 || s < 1) {
+	cerr << "Error: PRS supply overrides are of the form: <Vdd [,GND]>.  "
+				<< where(*supplies) << endl;
+			return false;
+		}
+		entity::PRS::rule_set& r(IS_A(entity::PRS::rule_set&,
+			c.get_current_prs_body()));
+		// throw bad_case if cast fails
+		if (temp[0])
+			r.Vdd = temp[0]->get_bool_var();
+		if (s > 1 && temp[1])
+			r.GND = temp[1]->get_bool_var();
+	}
+#endif
 	try {
 		rules->check_list_void(&body_item::check_rule, c);
 	} catch (...) {
@@ -756,11 +788,29 @@ if (rules) {
 	const never_ptr<definition_base> d(c.get_current_open_definition());
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
 	// if !pd, then prs is in a top-level scope (outside definition)
+
+#if PRS_SUPPLY_OVERRIDES
+	// need to open a separate body because we only want supply overrides
+	// to apply to its own group of nodes
+	// copied from body::check_rule
+	typedef	entity::PRS::rule_set		rule_set;
+	excl_ptr<rule_set> ret(new rule_set());
+	NEVER_NULL(ret);
+	const never_ptr<rule_set> retc(ret);
+	entity::PRS::rule_set_base& rb(c.get_current_prs_body());
+	rb.append_rule(ret);
+	const context::prs_body_frame prf(c, retc);
+#endif
 	if (!__check_rules(c)) {
 		cerr << "ERROR: at least one error in PRS body."
 			<< endl;
 		THROW_EXIT;
 	}
+#if PRS_SUPPLY_OVERRIDES
+	if (retc->empty()) {
+		rb.pop_back();
+	}
+#endif
 }
 	// else empty, no PRS to add
 	return never_ptr<const object>(NULL);
@@ -785,7 +835,11 @@ body::check_rule(context& c) const {
 
 subcircuit::subcircuit(const generic_keyword_type* k,
 		const expr_list* p, const rule_list* r) :
-		body(k, r), params(p) {
+		body(k, 
+#if PRS_SUPPLY_OVERRIDES
+		NULL, 	// no subcircuit supply overriding, use parent's
+#endif
+			r), params(p) {
 	// params may be optional
 }
 
@@ -832,7 +886,8 @@ if (params) {
 	// copied from body::check_rule
 	// const never_ptr<definition_base> d(c.get_current_open_definition());
 	const never_ptr<entity::PRS::subcircuit> retc(ret);
-	c.get_current_prs_body().append_rule(ret);
+	entity::PRS::rule_set_base& rb(c.get_current_prs_body());
+	rb.append_rule(ret);
 try {
 	const context::prs_body_frame prlf(c, retc);
 	rules->check_list_void(&body_item::check_rule, c);
@@ -849,7 +904,7 @@ try {
 	throw;		// re-throw
 }
 	if (retc->empty()) {
-		c.get_current_prs_body().pop_back();
+		rb.pop_back();
 	}
 }
 

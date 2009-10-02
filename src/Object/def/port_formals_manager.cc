@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.15 2007/04/15 05:52:13 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.16 2009/10/02 01:56:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -57,7 +57,11 @@ using std::distance;
 	Private empty constructor.
  */
 port_formals_manager::port_formals_manager() :
-		port_formals_list(), port_formals_map() {
+		port_formals_list(), port_formals_map()
+#if IMPLICIT_SUPPLY_PORTS
+		, __implicit_ports(0), __explicit_ports(0)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -133,9 +137,13 @@ port_formals_manager::lookup_port_formal_position(const string& id) const {
 good_bool
 port_formals_manager::certify_port_actuals(const checked_refs_type& ol) const {
 	typedef	checked_refs_type	refs_list_type;
+#if IMPLICIT_SUPPLY_PORTS
+	const size_t num_formals = __explicit_ports;
+#else
 	const size_t num_formals = port_formals_list.size();
+#endif
 	const size_t num_actuals = ol.size();
-	if (port_formals_list.size() != ol.size()) {
+	if (num_formals != ol.size()) {
 		cerr << "Number of port actuals (" << num_actuals <<
 			") doesn\'t match the number of port formals (" <<
 			num_formals << ").  ERROR!  " << endl;
@@ -147,6 +155,13 @@ port_formals_manager::certify_port_actuals(const checked_refs_type& ol) const {
 		f_iter(port_formals_list.begin());
 	const port_formals_list_type::const_iterator
 		f_end(port_formals_list.end());
+#if IMPLICIT_SUPPLY_PORTS
+	// skip implicit ports, as they are never passed in ol
+	while ((f_iter != f_end) &&
+		(*f_iter)->get_name().find('!') != string::npos) {
+		++f_iter;
+	}
+#endif
 	size_t i = 1;
 	for ( ; f_iter!=f_end; f_iter++, a_iter++, i++) {
 		const count_ptr<const meta_instance_reference_base> a_iref(*a_iter);
@@ -176,13 +191,26 @@ port_formals_manager::certify_port_actuals(const checked_refs_type& ol) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds a port formal instance to this process definition.  
+	This applies to both implicit ports (named with '!') and
+	normal ports.  
+	invariant: all global ports must appear together at the front 
+		of the list!
  */
 void
 port_formals_manager::add_port_formal(const port_formals_value_type pf) {
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the port_formals_list!
+	const string& s(pf->get_name());
+#if IMPLICIT_SUPPLY_PORTS
+	if (s.find('!') == string::npos) {
+		++__explicit_ports;
+	} else {
+		++__implicit_ports;
+		INVARIANT(!__explicit_ports);
+	}
+#endif
 	port_formals_list.push_back(pf);
-	port_formals_map[pf->get_name()] = pf;
+	port_formals_map[s] = pf;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -195,6 +223,7 @@ port_formals_manager::equivalent_port_formals(
 		const port_formals_manager& p) const {
 	// shortcut reference
 	const port_formals_list_type& pports(p.port_formals_list);
+	// NOTE: this counts total parameters, not just the explicit ones (OK)
 	if (port_formals_list.size() != pports.size()) {
 		cerr << "ERROR: number of port formal parameters "
 			"doesn\'t match!" << endl;
@@ -230,6 +259,7 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 	STACKTRACE_VERBOSE;
 	INVARIANT(sub.empty());
 	sub.reserve(size());		// pre-allocate
+	// applies to both explicit and implicit ports
 	port_formals_list_type::const_iterator i(port_formals_list.begin());
 	const port_formals_list_type::const_iterator e(port_formals_list.end());
 	for ( ; i!=e; i++) {
@@ -270,35 +300,40 @@ port_formals_manager::collect_transient_info_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Port formals will need to be in list order.
-	Just write out the list, the hash_qmap is redundant.  
+	Just write out the list, the map is redundant.  
  */
 void
 port_formals_manager::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
+	INVARIANT(port_formals_list.size() == port_formals_map.size());
 	m.write_pointer_list(f, port_formals_list);
+	// the map is redundant
+	// port counts are cached and regenerated
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Port formals are loaded in list order.
-	Remember that the redundant hash_map also needs to be reconstructed.  
+	Remember that the redundant map also needs to be reconstructed.  
 	Another method will add the entries to the corresponding
 	used_id_map where appropriate.  
  */
 void
 port_formals_manager::load_object_base(
 		const persistent_object_manager& m, istream& f) {
-	m.read_pointer_list(f, port_formals_list);
+	port_formals_list_type temp;
+	m.read_pointer_list(f, temp);
 	port_formals_list_type::const_iterator
-		i(port_formals_list.begin());
+		i(temp.begin());
 	const port_formals_list_type::const_iterator
-		e(port_formals_list.end());
-	for ( ; i!=e; i++) {
+		e(temp.end());
+	for ( ; i!=e; ++i) {
 		const port_formals_value_type inst_ptr(*i);
 		NEVER_NULL(inst_ptr);
 		m.load_object_once(const_cast<instance_placeholder_type*>(
 			&*inst_ptr));
-		port_formals_map[inst_ptr->get_name()] = inst_ptr;
+		add_port_formal(inst_ptr);	// updates cached port counts
+		// port_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
 }
 

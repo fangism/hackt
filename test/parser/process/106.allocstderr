@@ -1,20 +1,22 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	blinky	foo<3>
-	bool: 1,2
+	bool: 1,2,3,4
 2	(top)	-	2	inky	foo<4>
-	bool: 3,10,4,5
+	bool: 1,2,5,12,6,7
 3	(top)	-	3	clyde	foo<5>
-	bool: 6,11,7,8,9
+	bool: 1,2,8,13,9,10,11
 [global bool entries]
-1	(top)	-	1	blinky.a[0]	
-2	(top)	-	2	blinky.a[2]	
-3	(top)	-	3	inky.a[0]	
-4	(top)	-	4	inky.a[1]	
-5	(top)	-	5	inky.a[3]	
-6	(top)	-	6	clyde.a[0]	
-7	(top)	-	7	clyde.a[1]	
-8	(top)	-	8	clyde.a[3]	
-9	(top)	-	9	clyde.a[4]	
-10	process	2	2	inky.q[1]	
-11	process	3	2	clyde.q[1]	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	blinky.a[0]	
+4	(top)	-	4	blinky.a[2]	
+5	(top)	-	5	inky.a[0]	
+6	(top)	-	6	inky.a[1]	
+7	(top)	-	7	inky.a[3]	
+8	(top)	-	8	clyde.a[0]	
+9	(top)	-	9	clyde.a[1]	
+10	(top)	-	10	clyde.a[3]	
+11	(top)	-	11	clyde.a[4]	
+12	process	2	4	inky.q[1]	
+13	process	3	4	clyde.q[1]	

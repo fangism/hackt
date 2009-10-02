@@ -2,7 +2,7 @@
  *	\file "lexer/instref-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: instref-lex.ll,v 1.6 2008/03/21 00:20:19 fang Exp $
+ *	$Id: instref-lex.ll,v 1.7 2009/10/02 01:57:25 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -120,7 +120,11 @@ HEX		0x{HEXDIGIT}+
 	A sign in the exponent of a floating-point number is acceptable.  
 */
 
-ID		{IDHEAD}{IDBODY}*
+IDENTIFIER	{IDHEAD}{IDBODY}*
+/***
+	extended ID allows references to designated globals, prefixed with '!'
+***/
+ID		[!]?{IDENTIFIER}
 BADID		({INT}{ID})|({FLOAT}{ID})
 BADHEX		{HEX}{ID}
 WHITESPACE	[ \t]+
@@ -140,8 +144,6 @@ RANGE		".."
 %option never-interactive
 %option nomain
 %option nostack
-/** I wish! **/
-/** 	%option reentrant	**/
 
 /****** rules ****************************************************************/
 %%

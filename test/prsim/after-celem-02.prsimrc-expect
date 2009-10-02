@@ -27,18 +27,26 @@ Fanins of node `c':
 	100	c : 0	[by a[3]:=1]
 time: 100
 All subnodes of 'w':
+!GND : 0
+!Vdd : 1
 a[0] : 0
 b[0] : 1
 c : 0
 All subnodes of 'x':
+!GND : 0
+!Vdd : 1
 c : 0
 a[1] : 0
 b[1] : 1
 All subnodes of 'y':
+!GND : 0
+!Vdd : 1
 c : 0
 a[2] : 0
 b[2] : 1
 All subnodes of 'z':
+!GND : 0
+!Vdd : 1
 c : 0
 a[3] : 1
 b[3] : 1

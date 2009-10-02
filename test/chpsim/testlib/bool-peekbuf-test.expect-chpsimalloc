@@ -1,6 +1,8 @@
 Variables: 
-bool[1]: "A.x" 
-bool[2]: "B.x" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "A.x" 
+bool[4]: "B.x" 
 chan[1]: "A.L" 
 chan[2]: "A.R" 
 chan[3]: "B.L" 

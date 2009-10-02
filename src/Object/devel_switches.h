@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.53 2009/03/09 07:30:37 fang Exp $
+	$Id: devel_switches.h,v 1.54 2009/10/02 01:56:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -136,6 +136,8 @@
 	Currently footprint is generic union of needed features, bloated.  
 	Rationale: memory reduction and stronger static typing.  
 	Goal: ?
+	Status: there is information from footprints pointing back to
+	their original definitions, and hence meta-type.
 	Priority: low
  */
 #define	SUBTYPE_FOOTPRINTS			0
@@ -197,10 +199,48 @@
 	of production rules, currently only available in hflat.
 	Rationale: strength checking vs. post-extraction load
 	Goal: 1?
-	Status: done, basically tested
+	Status: done, basically tested, can perm this non-invasive feature
 	Priority: high
  */
 #define	CFLAT_WITH_CONDUCTANCES			1
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// features targeted for branch HACKT-00-01-04-main-00-83-29-supply-01
+/**
+	Define to 1 to have every process definition implicitly
+	declare local !Vdd and !GND ports.  
+	This will require some special handling in port_formals_manager
+	so the implicit ports are hidden from the list substructure, 
+	and only appear in the map.  
+	Goal: 1
+	Status: done, tested
+ */
+#define	IMPLICIT_SUPPLY_PORTS			1
+
+/**
+	Define to 1 to allow prs bodies to override Vdd and GND.
+	Note: should allow declared internal nodes, not just regular nodes.
+	Goal: 1
+	Status: done, tested
+ */
+#define	PRS_SUPPLY_OVERRIDES			(1 && IMPLICIT_SUPPLY_PORTS)
+
+/**
+	Define to 1 enable means of overriding the implicit primary supplies
+	per-instance.  
+	Will require syntax extension.  
+	Goal: 1
+	Status: in progress, developing middle-end
+ */
+#define	INSTANCE_SUPPLY_OVERRIDES		(1 && IMPLICIT_SUPPLY_PORTS)
+
+/**
+	Define to 1 to allow implicit supplies to be unconnected by
+	passing empty arguments.  
+	Goal: probably do not want (0)
+	Status: experimental
+ */
+#define	INSTANCE_SUPPLY_DISCONNECT		(0 && INSTANCE_SUPPLY_OVERRIDES)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -234,6 +274,8 @@
 		and type-checking is unchanged.  
 	Status: done, tested minimally
 	Afterthought: this feels really really dirty...
+	Feedback: Having a unified footprint greatly simplifies the
+		middle-end and back-end tools.  
  */
 #define	DEFCHAN_LIKE_PROCESS			1
 

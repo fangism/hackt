@@ -1,6 +1,8 @@
 Variables: 
-bool[1]: "a" 
-bool[2]: "b" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "a" 
+bool[4]: "b" 
 
 Event graph: 
 event[0]: fork: null, #pred: 0, succ: 1 

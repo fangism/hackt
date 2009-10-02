@@ -1,9 +1,9 @@
-M0_ GND a[0] #0 GND nch W=5u L=2u
-M1_ #0 a[1] #1 GND nch W=5u L=2u
-M2_ #1 a[2] #2 GND nch W=5u L=2u
-M3_ #2 a[3] o GND nch W=5u L=2u
-M4_ Vdd a[0] o Vdd pch W=5u L=2u
-M5_ Vdd a[1] o Vdd pch W=5u L=2u
-M6_ Vdd a[2] o Vdd pch W=5u L=2u
-M7_ Vdd a[3] o Vdd pch W=5u L=2u
+M0_ !GND a[0] #0 !GND nch W=5u L=2u
+M1_ #0 a[1] #1 !GND nch W=5u L=2u
+M2_ #1 a[2] #2 !GND nch W=5u L=2u
+M3_ #2 a[3] o !GND nch W=5u L=2u
+M4_ !Vdd a[0] o !Vdd pch W=5u L=2u
+M5_ !Vdd a[1] o !Vdd pch W=5u L=2u
+M6_ !Vdd a[2] o !Vdd pch W=5u L=2u
+M7_ !Vdd a[3] o !Vdd pch W=5u L=2u
 

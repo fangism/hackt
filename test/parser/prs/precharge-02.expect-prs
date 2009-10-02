@@ -1,2 +1,6 @@
 "foo.a" &{+"foo.en"} "foo.b" -> "foo.c"-
 "bar.a" &{+~"bar._en"} "bar.b" -> "bar.c"-
+= "!GND" "bar.!GND"
+= "!Vdd" "bar.!Vdd"
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"

@@ -3,6 +3,49 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-10-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-31-merged-supply-01-09:
+	  Branch merge of the supply-01 branch, which introduced the 
+		ability to override prs and process-instance power supplies
+		for netlist generation.
+
+
+2009-09-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-09:
+	  Documentation and adding more test cases, no source revision.
+		Checked and updated parse-fail tests against bison.
+	  End of branch, ready to merge to trunk.  
+
+
+2009-09-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-08:
+	  implemented per-instance supply overriding
+		syntax: inst-ref $([yourGND [, yourVdd]]) (...);
+		semantics: implicit supply port is connected to
+			user-specfied bool/node.
+		no way of disconnecting back to default primary supply
+			experimental switch INSTANCE_SUPPLY_DISCONNECT (off)
+		Class implemented "Object/unroll/implicit_port_override.{h,cc}
+		Updated AST: parser::actuals_base implementation, 
+			refactored some code between derived/related clases.
+		Haven't added compile-fail tests yet.
+		footprint: now visit all process aliases, even non-canonical, 
+			and also skip incomplete types, 
+			fix auto-connect predicate for implicit supplies, 
+			don't start with canonical bool alias, 
+			bugfix: traversal now recurses through process ports
+			of processes.
+		Tests updated: create-stderr diagnostic messages updated.
+	  parser/hackt-parse.yy.in: allow extended_connection_actuals_list
+		to just contain implicit-supply-overrides without
+		normal port connections.
+	  hacknet: automatically just works with implicit port overrides, 
+		handful of test cases added.  
+
+
 2009-09-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-30:
@@ -15,6 +58,120 @@
 	  hacguile.in, hacchpsimguile.in: now automatically pass 
 		-L scm_path to guile instead of depending on GUILE_LOAD_PATH.
 	  scripts/init_hackt.{sh,csh}: no longer set GUILE_LOAD_PATH.
+
+
+2009-09-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-07:
+	  hacknet, PRS: now tracks power supplies for internal node
+		definitions, and diagnoses mismatches between
+		definition and use supply domains.  
+	  PRS::footprint: refactored some shared code for
+		mapped side structures (subcircuit, supply map)
+	  hacknet: new error-handling options [ignore|warn|error]
+		unknown_option, internal_node_supply_mismatch.
+		Now cache internal node names, so that underscores
+		can be mangled (was bug).
+	  Added new test hacknet cases, updated a few old ones.  
+		Documented new options.
+
+
+2009-09-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-06:
+	  supply-override-entry amended with macro indices, analogously
+		to subcircuit map's entry.  
+		Updated createdump-expect test cases accordingly.
+	  hacknet: removed NODE_SUPPLY subtype, now that implicit supplies
+		are actual process ports (automatic).  
+		Removed hacks with old GND and Vdd subcircuit ports, 
+		now rules and macros lookup supplies and set them.
+		Q: what about internal nodes!?
+		Added mangle option to handle '!' from implicit ports.
+		Added some basic test cases, with top-level and single
+			level of hierarchy.
+	  coming soon: instance supply overrides, internal nodes.
+
+
+2009-09-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-05:
+	  re-worked PRS::rule_set and rule_set_base class hierarchy
+		to make more sense, only rule_set contains
+		Vdd and GND supply override members.
+	  unrolling now handles supply override information in the
+		PRS::footprint's supply_map side structure.
+	  Test cases updated (createstderr binary dumps).
+
+
+2009-09-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-04:
+	  Initial support for prs supply overrides through front-end
+		and part of middle-end (missing post-unroll).
+		Using Object/devel_switches.h: PRS_SUPPLY_OVERRIDES.
+	  parser/hackt-parse.yy.in: grammar and actions updated to
+		accommodate prs <...> arguments for real (were deleted).
+	  PRS::rule_set: amended with GND and Vdd optional override
+		bool-references (not used for several derived classes)
+	  AST/PRS.cc: nested groups of rule (rule_set) one level deeper
+		to be able to distinguish overrides per prs-block.
+	  meta_loop, meta_conditional: generalized dump template
+		member function to accept non-default value_type::dump 
+		member function.  
+	  Test cases updated for mostly create-dumps
+		(mostly trivial formatting).
+	  Next: continue unrolling prs into prs-footprint.
+
+
+2009-09-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-03:
+	  lexer/instref-lex.ll: allow '!' at the beginning of an identifier
+		to allow for references to implicit globals !Vdd, !GND.
+	  prsim: __initialize(): now set !Vdd:1 and !GND:0 always.
+		Test cases updated.
+	  next: hacknet to use implicit ports
+
+
+2009-09-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-02:
+	  A few bug fixes from previous revision:
+		Resolve canonical process types before handling
+		automatic implicit connections, 
+		check meta-type process first, 
+		check for type-completeness before instantiating.
+	  Updated *vast* majority of regression test expects.  
+	  Most of remaining differences are in prsim tests, which
+		now have two new top-level nodes !Vdd and !GND that are X.
+		These will be resolved next.
+
+
+2009-09-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-29-supply-01-01:
+	  Initial implementation of implicit process supply ports.
+	  AST/globals.cc: new shared pieces of syntax tree
+	  AST,parser: new extended_connection_actuals includes 
+		optional implicit global connection overrides, not yet
+		handled in middle-end.
+	  hackt-parse.yy.in: extended connection-statement syntax to
+		allow optional implicit overrides $(...).
+		TODO: let explicit ports be optional if implicit overrides
+			are present.  
+	  process_definition::__unroll(): after sequential scope, 
+		automatically connect unconnected globals to parents,
+		via footprint::connect_implicit_ports().
+	  port_formals_manager: now distinguish between implicit and
+		explicit ports, partitioned list of ports.
+	  port_connection::ctor(): if referenced instance is a process, 
+		prepend instance connection list with NULL pointers
+		for each implicit global port (delayed auto-connect).
+	  main_funcs.cc:parse_and_check(): top-level of syntax tree, 
+		prepend implicit global declarations for !Vdd, !GND.
+	  Object files have grown with new implicit port declarations.
+	  Test cases have NOT YET been updated.  
 
 
 2009-09-14	David Fang		<fangism@users.sourceforge.net>

@@ -1,0 +1,21 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	bq	bar<>
+	process: 2,3
+	bool: 3,4,5,6,1,2,7,8
+2	(top)	-	2	bq.g	globals<>
+	bool: 3,4,5,6
+3	process	1	2	bq.f	foo<>
+	process: 4
+	bool: 4,3,7,8,1,2
+4	process	3	1	bq.f.a	inv<>
+	bool: 4,3,7,8
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	bq.g.Vdd_1	
+4	(top)	-	4	bq.g.GND_1	
+5	(top)	-	5	bq.g.Vdd_2	
+6	(top)	-	6	bq.g.GND_2	
+7	(top)	-	7	bq.a	
+8	(top)	-	8	bq.b	

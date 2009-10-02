@@ -1,4 +1,6 @@
 All subnodes of 'bubble':
+!GND : 0
+!Vdd : 1
 bubble.fee.yyy : X
 bubble.fee.yyx : X
 bubble.fi.yyy : X
@@ -38,6 +40,8 @@ bubble.fee.xxy : X
 bubble.fi.xxx : X
 bubble.fi.xxy : X
 Public subnodes of 'bubble':
+!GND : 0
+!Vdd : 1
 bubble.fee.yyy : X
 bubble.fee.yyx : X
 bubble.fi.yyy : X

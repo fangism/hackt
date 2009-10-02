@@ -3,47 +3,54 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	13	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	16	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	19	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	371
-	25	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	30	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	24	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	407
+	30	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     B = chan(bool<>) B
     x = bool<> x
 }
@@ -61,13 +68,17 @@ top-level chp:
     }
   }
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   B = channel chan(bool<>)^0 = B (1) 
-  x = bool^0 = x (1) 
+  x = bool^0 = x (3) 
   Created state:
   channel instance pool:
   1	B
   bool instance pool:
-  1	x
+  1	!GND
+  2	!Vdd
+  3	x
   resolved concurrent actions:
     *[
       B?(x)

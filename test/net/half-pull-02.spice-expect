@@ -1,15 +1,15 @@
-.subckt pull_down<> GND a b
-M0_ GND a b GND nch W=5u L=2u
+.subckt pull_down<> !GND a b
+M0_ !GND a b !GND nch W=5u L=2u
 .ends
 
-.subckt pull_up<> Vdd a b
-M0_ Vdd a b Vdd pch W=5u L=2u
+.subckt pull_up<> !Vdd a b
+M0_ !Vdd a b !Vdd pch W=5u L=2u
 .ends
 
-.subckt inv<> GND Vdd a b
-xd GND a b pull_down<>
-xu Vdd a b pull_up<>
+.subckt inv<> !GND !Vdd a b
+xd !GND a b pull_down<>
+xu !Vdd a b pull_up<>
 .ends
 
-xfoo GND Vdd foo.a foo.b inv<>
+xfoo !GND !Vdd foo.a foo.b inv<>
 

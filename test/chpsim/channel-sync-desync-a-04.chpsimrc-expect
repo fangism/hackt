@@ -29,8 +29,8 @@ Epoch 0:
 bool state trace:
 	event	global	raw
 	index	index	value
-	2	1	1
-	8	2	1
+	2	3	1
+	8	4	1
 int state trace:
 	event	global	raw
 	index	index	value

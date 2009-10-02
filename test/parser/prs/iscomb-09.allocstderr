@@ -1,10 +1,12 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	bar	foo<>
-	bool: 1,2,3,4,5
+	bool: 1,2,3,4,5,6,7
 [global bool entries]
-1	(top)	-	1	bar.x	 @[ iscomb ]
-2	(top)	-	2	bar.z	 @[ iscomb ]
-3	(top)	-	3	bar.b	 @[ iscomb ]
-4	(top)	-	4	bar.d	 @[ iscomb ]
-5	(top)	-	5	bar.f	 @[ iscomb ]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	bar.x	 @[ iscomb ]
+4	(top)	-	4	bar.z	 @[ iscomb ]
+5	(top)	-	5	bar.b	 @[ iscomb ]
+6	(top)	-	6	bar.d	 @[ iscomb ]
+7	(top)	-	7	bar.f	 @[ iscomb ]

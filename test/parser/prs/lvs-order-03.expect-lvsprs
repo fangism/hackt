@@ -1,2 +1,4 @@
 order("foo.a[0]", "foo.a[2]")
 order("foo.b[0]", "foo.b[2]")
+connect "!GND" "foo.!GND"
+connect "!Vdd" "foo.!Vdd"

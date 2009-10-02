@@ -1,6 +1,6 @@
 /**
 	\file "util/string.cc"
-	$Id: string.cc,v 1.3 2009/09/14 21:17:18 fang Exp $
+	$Id: string.cc,v 1.4 2009/10/02 01:57:46 fang Exp $
 	Additional string utilities.
  */
 
@@ -35,7 +35,9 @@ if (s.length() && (s != r)) {
 		mpos = t.find(s, tpos);
 	}
 	ret.append(t.begin()+tpos, t.end());	// remainder
-	t = ret;
+	if (t != ret)
+		t = ret;
+	// otherwise, just leave alone
 }
 	return subs;
 }

@@ -3,275 +3,301 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
-	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
-	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	109
-	18	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	19	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	22	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	26	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
-	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	150
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	16	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	procdefn	0	#HEAD#	#TAIL#	125
+	26	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	27	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	28	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	29	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	42	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	378
 	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	48	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	procdefn	0	#HEAD#	#TAIL#	150
-	55	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	56	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	58	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	59	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	60	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
-	61	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	62	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	53	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	60	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	64	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	65	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	66	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	68	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	69	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	71	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	72	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	73	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	74	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	76	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	77	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	79	##ADDR##	loopscop	0	#HEAD#	#TAIL#	32
-	80	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	81	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	82	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	83	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	84	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	86	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	87	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	88	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	90	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	91	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	92	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	93	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	94	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	procdefn	0	#HEAD#	#TAIL#	166
+	67	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	68	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	69	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	70	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	72	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	73	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	74	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	75	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	76	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	78	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	85	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	86	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	88	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	90	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	91	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	92	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	93	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	94	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	95	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	96	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	97	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	98	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	99	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	100	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	101	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	102	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	103	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	96	##ADDR##	loopscop	0	#HEAD#	#TAIL#	32
+	97	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	98	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	99	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	100	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	101	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	102	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	103	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	104	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	105	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	106	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	107	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	108	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	109	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	110	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	111	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	112	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	113	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	114	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	115	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	116	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	117	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	118	##ADDR##	procdefn	0	#HEAD#	#TAIL#	162
-	119	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	120	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	121	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	122	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	123	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
-	124	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
-	125	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	126	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	127	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	128	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	129	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	130	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	131	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	132	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	133	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	134	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	135	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	136	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	137	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	138	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	139	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	108	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	109	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	110	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	111	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	112	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	113	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	114	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	115	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	116	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	117	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	118	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	119	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	120	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	121	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	122	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	123	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	124	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	125	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	126	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	127	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	128	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	129	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	130	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	131	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	132	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	133	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	134	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	135	##ADDR##	procdefn	0	#HEAD#	#TAIL#	166
+	136	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	137	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	138	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	139	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	140	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	141	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	142	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	143	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	144	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	145	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	146	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	147	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	148	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	149	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	150	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	151	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	152	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	153	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	154	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	155	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	156	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
-	157	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	158	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	159	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	160	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	161	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	162	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
-	163	##ADDR##	footprnt	0	#HEAD#	#TAIL#	597
-	164	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	141	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	142	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	143	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	144	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	145	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	146	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	147	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	148	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	149	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	150	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	151	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	152	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	153	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	154	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	155	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	156	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	157	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	158	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	159	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	160	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	161	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	162	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	163	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	164	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	165	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	166	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	167	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	168	##ADDR##	footprnt	0	#HEAD#	#TAIL#	664
-	169	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	170	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	171	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	172	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	173	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	174	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	175	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	176	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	177	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	178	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	179	##ADDR##	footprnt	0	#HEAD#	#TAIL#	758
-	180	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24
-	181	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	182	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	183	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	184	##ADDR##	footprnt	0	#HEAD#	#TAIL#	894
-	185	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24
-	186	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	187	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	188	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	189	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	190	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	191	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	166	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	167	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	168	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	169	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	170	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	171	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	172	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	173	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	174	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	175	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	176	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	177	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	178	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	179	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	180	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	181	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	182	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	183	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	184	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	185	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	186	##ADDR##	footprnt	0	#HEAD#	#TAIL#	665
+	187	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	188	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	189	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	190	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	191	##ADDR##	footprnt	0	#HEAD#	#TAIL#	732
 	192	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	193	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	194	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	195	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	193	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	194	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	195	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	196	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	197	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	198	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	199	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	200	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	201	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	202	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	203	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	204	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	205	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	206	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	207	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	208	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	209	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	210	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	211	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
-	212	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	213	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	214	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	215	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	216	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	217	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	218	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	219	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	220	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	221	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	222	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	223	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	224	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	225	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	226	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	227	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	228	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	229	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	230	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	231	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	232	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	233	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	234	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	235	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	236	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	197	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	198	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	199	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	200	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	201	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	202	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1010
+	203	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24
+	204	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	205	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	206	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	207	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1200
+	208	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24
+	209	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	210	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	211	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	212	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	213	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	214	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	215	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	216	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	217	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	218	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	219	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	220	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	221	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	222	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	223	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	224	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	225	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	226	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	227	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	228	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	229	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	230	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	231	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	232	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	233	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	234	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
+	235	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	236	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	237	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	238	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	239	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	240	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	241	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	242	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	243	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	244	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	245	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	246	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
-	247	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	248	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	249	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2246
-	250	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
-	251	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	252	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	253	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	254	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	255	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
-	256	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
-	257	##ADDR##	namespc_	0	#HEAD#	#TAIL#	29
-	258	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	259	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	260	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	261	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	262	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	263	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	264	##ADDR##	footprnt	0	#HEAD#	#TAIL#	994
-	265	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	238	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	239	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	240	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	241	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	242	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	243	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	244	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	245	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	246	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	247	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	248	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	249	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	250	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	251	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	252	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	253	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	254	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	255	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	256	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	257	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	258	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	259	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	260	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	261	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	262	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	263	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	264	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	265	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	266	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	267	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	268	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	269	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
+	270	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	271	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	272	##ADDR##	footprnt	0	#HEAD#	#TAIL#	3416
+	273	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
+	274	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	275	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	276	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	277	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	278	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	279	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	280	##ADDR##	namespc_	0	#HEAD#	#TAIL#	29
+	281	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	282	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	283	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	284	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	285	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	286	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	287	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	288	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	289	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	290	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1462
+	291	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   2 sub-namespaces
   2 definitions
   1 typedefs
@@ -286,6 +312,8 @@ In namespace "", we have: {
         wire_copy = process-definition (defined) wire_copy<
           pint<> N
           >(
+            bool<> !GND
+            bool<> !Vdd
             e1of2<> in
             e1of2<> o[0..N-1]
           )
@@ -293,12 +321,16 @@ In namespace "", we have: {
           Parameters:
             N = pint<> foo::wire_copy::N
           Instances:
+            !GND = bool<> foo::wire_copy::!GND
+            !Vdd = bool<> foo::wire_copy::!Vdd
             comp = std::logic::celem<foo::wire_copy::N, 10> foo::wire_copy::comp
             in = e1of2<> foo::wire_copy::in
             o = e1of2<> foo::wire_copy::o^1
             oe = bool<> foo::wire_copy::oe^1
           unroll sequence: 
             ports: (
+              bool<> !GND
+              bool<> !Vdd
               e1of2<> in
               e1of2<> o[0..N-1]
             )
@@ -309,49 +341,59 @@ In namespace "", we have: {
               o[$i].e = oe[$i];
             )
             std::logic::celem<foo::wire_copy::N, 10> comp
-            comp (oe, in.e);
+            comp ( , , oe, in.e);
           footprint collection: {
             <2> {
+              !GND = bool^0 = foo::wire_copy<2>::!GND (1) 
+              !Vdd = bool^0 = foo::wire_copy<2>::!Vdd (2) 
               N = pint^0 value: 2
               comp = process std::logic::celem<2, 10>^0 = foo::wire_copy<2>::comp (2) (
+                !GND = bool^0 = foo::wire_copy<2>::!GND (1) 
+                !Vdd = bool^0 = foo::wire_copy<2>::!Vdd (2) 
                 in = bool^1
                   {
-                    [0] = foo::wire_copy<2>::oe[0] (4) 
-                    [1] = foo::wire_copy<2>::oe[1] (5) 
+                    [0] = foo::wire_copy<2>::oe[0] (6) 
+                    [1] = foo::wire_copy<2>::oe[1] (7) 
                   }
-                o = bool^0 = foo::wire_copy<2>::in.e (3) 
+                o = bool^0 = foo::wire_copy<2>::in.e (5) 
               )
               in = process e1of<2>^0 = foo::wire_copy<2>::in (1) (
+                !GND = bool^0 = foo::wire_copy<2>::!GND (1) 
+                !Vdd = bool^0 = foo::wire_copy<2>::!Vdd (2) 
                 d = bool^1
                   {
-                    [0] = foo::wire_copy<2>::in.d[0] (1) 
-                    [1] = foo::wire_copy<2>::in.d[1] (2) 
+                    [0] = foo::wire_copy<2>::in.d[0] (3) 
+                    [1] = foo::wire_copy<2>::in.d[1] (4) 
                   }
-                e = bool^0 = foo::wire_copy<2>::in.e (3) 
+                e = bool^0 = foo::wire_copy<2>::in.e (5) 
               )
               o = process e1of<2>^1
                 {
                   [0] = foo::wire_copy<2>::o[0] (3) (
+                    !GND = bool^0 = foo::wire_copy<2>::!GND (1) 
+                    !Vdd = bool^0 = foo::wire_copy<2>::!Vdd (2) 
                     d = bool^1
                       {
-                        [0] = foo::wire_copy<2>::in.d[0] (1) 
-                        [1] = foo::wire_copy<2>::in.d[1] (2) 
+                        [0] = foo::wire_copy<2>::in.d[0] (3) 
+                        [1] = foo::wire_copy<2>::in.d[1] (4) 
                       }
-                    e = bool^0 = foo::wire_copy<2>::oe[0] (4) 
+                    e = bool^0 = foo::wire_copy<2>::oe[0] (6) 
                   )
                   [1] = foo::wire_copy<2>::o[1] (4) (
+                    !GND = bool^0 = foo::wire_copy<2>::!GND (1) 
+                    !Vdd = bool^0 = foo::wire_copy<2>::!Vdd (2) 
                     d = bool^1
                       {
-                        [0] = foo::wire_copy<2>::in.d[0] (1) 
-                        [1] = foo::wire_copy<2>::in.d[1] (2) 
+                        [0] = foo::wire_copy<2>::in.d[0] (3) 
+                        [1] = foo::wire_copy<2>::in.d[1] (4) 
                       }
-                    e = bool^0 = foo::wire_copy<2>::oe[1] (5) 
+                    e = bool^0 = foo::wire_copy<2>::oe[1] (7) 
                   )
                 }
               oe = bool^1
                 {
-                  [0] = foo::wire_copy<2>::oe[0] (4) 
-                  [1] = foo::wire_copy<2>::oe[1] (5) 
+                  [0] = foo::wire_copy<2>::oe[0] (6) 
+                  [1] = foo::wire_copy<2>::oe[1] (7) 
                 }
               Created state:
               process instance pool:
@@ -360,66 +402,82 @@ In namespace "", we have: {
               3	foo::wire_copy<2>::o[0]
               4	foo::wire_copy<2>::o[1]
               bool instance pool:
-              1	foo::wire_copy<2>::in.d[0]
-              2	foo::wire_copy<2>::in.d[1]
-              3	foo::wire_copy<2>::in.e
-              4	foo::wire_copy<2>::oe[0]
-              5	foo::wire_copy<2>::oe[1]
+              1	foo::wire_copy<2>::!GND
+              2	foo::wire_copy<2>::!Vdd
+              3	foo::wire_copy<2>::in.d[0]
+              4	foo::wire_copy<2>::in.d[1]
+              5	foo::wire_copy<2>::in.e
+              6	foo::wire_copy<2>::oe[0]
+              7	foo::wire_copy<2>::oe[1]
               bool port aliases:
-              1: foo::wire_copy<2>::in.d[0] = foo::wire_copy<2>::o[0].d[0] = foo::wire_copy<2>::o[1].d[0]
-              2: foo::wire_copy<2>::in.d[1] = foo::wire_copy<2>::o[0].d[1] = foo::wire_copy<2>::o[1].d[1]
+              1: foo::wire_copy<2>::in.!GND = foo::wire_copy<2>::o[0].!GND = foo::wire_copy<2>::o[1].!GND = foo::wire_copy<2>::!GND
+              2: foo::wire_copy<2>::in.!Vdd = foo::wire_copy<2>::o[0].!Vdd = foo::wire_copy<2>::o[1].!Vdd = foo::wire_copy<2>::!Vdd
+              3: foo::wire_copy<2>::in.d[0] = foo::wire_copy<2>::o[0].d[0] = foo::wire_copy<2>::o[1].d[0]
+              4: foo::wire_copy<2>::in.d[1] = foo::wire_copy<2>::o[0].d[1] = foo::wire_copy<2>::o[1].d[1]
             }
             <3> {
+              !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
+              !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
               N = pint^0 value: 3
               comp = process std::logic::celem<3, 10>^0 = foo::wire_copy<3>::comp (2) (
+                !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
+                !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
                 in = bool^1
                   {
-                    [0] = foo::wire_copy<3>::oe[0] (4) 
-                    [1] = foo::wire_copy<3>::oe[1] (5) 
-                    [2] = foo::wire_copy<3>::oe[2] (6) 
+                    [0] = foo::wire_copy<3>::oe[0] (6) 
+                    [1] = foo::wire_copy<3>::oe[1] (7) 
+                    [2] = foo::wire_copy<3>::oe[2] (8) 
                   }
-                o = bool^0 = foo::wire_copy<3>::in.e (3) 
+                o = bool^0 = foo::wire_copy<3>::in.e (5) 
               )
               in = process e1of<2>^0 = foo::wire_copy<3>::in (1) (
+                !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
+                !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
                 d = bool^1
                   {
-                    [0] = foo::wire_copy<3>::in.d[0] (1) 
-                    [1] = foo::wire_copy<3>::in.d[1] (2) 
+                    [0] = foo::wire_copy<3>::in.d[0] (3) 
+                    [1] = foo::wire_copy<3>::in.d[1] (4) 
                   }
-                e = bool^0 = foo::wire_copy<3>::in.e (3) 
+                e = bool^0 = foo::wire_copy<3>::in.e (5) 
               )
               o = process e1of<2>^1
                 {
                   [0] = foo::wire_copy<3>::o[0] (3) (
+                    !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
+                    !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
                     d = bool^1
                       {
-                        [0] = foo::wire_copy<3>::in.d[0] (1) 
-                        [1] = foo::wire_copy<3>::in.d[1] (2) 
+                        [0] = foo::wire_copy<3>::in.d[0] (3) 
+                        [1] = foo::wire_copy<3>::in.d[1] (4) 
                       }
-                    e = bool^0 = foo::wire_copy<3>::oe[0] (4) 
+                    e = bool^0 = foo::wire_copy<3>::oe[0] (6) 
                   )
                   [1] = foo::wire_copy<3>::o[1] (4) (
+                    !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
+                    !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
                     d = bool^1
                       {
-                        [0] = foo::wire_copy<3>::in.d[0] (1) 
-                        [1] = foo::wire_copy<3>::in.d[1] (2) 
+                        [0] = foo::wire_copy<3>::in.d[0] (3) 
+                        [1] = foo::wire_copy<3>::in.d[1] (4) 
                       }
-                    e = bool^0 = foo::wire_copy<3>::oe[1] (5) 
+                    e = bool^0 = foo::wire_copy<3>::oe[1] (7) 
                   )
                   [2] = foo::wire_copy<3>::o[2] (5) (
+                    !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
+                    !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
                     d = bool^1
                       {
-                        [0] = foo::wire_copy<3>::in.d[0] (1) 
-                        [1] = foo::wire_copy<3>::in.d[1] (2) 
+                        [0] = foo::wire_copy<3>::in.d[0] (3) 
+                        [1] = foo::wire_copy<3>::in.d[1] (4) 
                       }
-                    e = bool^0 = foo::wire_copy<3>::oe[2] (6) 
+                    e = bool^0 = foo::wire_copy<3>::oe[2] (8) 
                   )
                 }
               oe = bool^1
                 {
-                  [0] = foo::wire_copy<3>::oe[0] (4) 
-                  [1] = foo::wire_copy<3>::oe[1] (5) 
-                  [2] = foo::wire_copy<3>::oe[2] (6) 
+                  [0] = foo::wire_copy<3>::oe[0] (6) 
+                  [1] = foo::wire_copy<3>::oe[1] (7) 
+                  [2] = foo::wire_copy<3>::oe[2] (8) 
                 }
               Created state:
               process instance pool:
@@ -429,15 +487,19 @@ In namespace "", we have: {
               4	foo::wire_copy<3>::o[1]
               5	foo::wire_copy<3>::o[2]
               bool instance pool:
-              1	foo::wire_copy<3>::in.d[0]
-              2	foo::wire_copy<3>::in.d[1]
-              3	foo::wire_copy<3>::in.e
-              4	foo::wire_copy<3>::oe[0]
-              5	foo::wire_copy<3>::oe[1]
-              6	foo::wire_copy<3>::oe[2]
+              1	foo::wire_copy<3>::!GND
+              2	foo::wire_copy<3>::!Vdd
+              3	foo::wire_copy<3>::in.d[0]
+              4	foo::wire_copy<3>::in.d[1]
+              5	foo::wire_copy<3>::in.e
+              6	foo::wire_copy<3>::oe[0]
+              7	foo::wire_copy<3>::oe[1]
+              8	foo::wire_copy<3>::oe[2]
               bool port aliases:
-              1: foo::wire_copy<3>::in.d[0] = foo::wire_copy<3>::o[0].d[0] = foo::wire_copy<3>::o[1].d[0] = foo::wire_copy<3>::o[2].d[0]
-              2: foo::wire_copy<3>::in.d[1] = foo::wire_copy<3>::o[0].d[1] = foo::wire_copy<3>::o[1].d[1] = foo::wire_copy<3>::o[2].d[1]
+              1: foo::wire_copy<3>::in.!GND = foo::wire_copy<3>::o[0].!GND = foo::wire_copy<3>::o[1].!GND = foo::wire_copy<3>::o[2].!GND = foo::wire_copy<3>::!GND
+              2: foo::wire_copy<3>::in.!Vdd = foo::wire_copy<3>::o[0].!Vdd = foo::wire_copy<3>::o[1].!Vdd = foo::wire_copy<3>::o[2].!Vdd = foo::wire_copy<3>::!Vdd
+              3: foo::wire_copy<3>::in.d[0] = foo::wire_copy<3>::o[0].d[0] = foo::wire_copy<3>::o[1].d[0] = foo::wire_copy<3>::o[2].d[0]
+              4: foo::wire_copy<3>::in.d[1] = foo::wire_copy<3>::o[0].d[1] = foo::wire_copy<3>::o[1].d[1] = foo::wire_copy<3>::o[2].d[1]
             }
           }
           }
@@ -461,6 +523,8 @@ In namespace "", we have: {
               pint<> N
               pint<> W
               >(
+                bool<> !GND
+                bool<> !Vdd
                 bool<> in[0..N-1]
                 bool<> o
               )
@@ -469,66 +533,84 @@ In namespace "", we have: {
                 N = pint<> std::logic::celem::N
                 W = pint<> std::logic::celem::W
               Instances:
+                !GND = bool<> std::logic::celem::!GND
+                !Vdd = bool<> std::logic::celem::!Vdd
                 _o = bool<> std::logic::celem::_o
                 in = bool<> std::logic::celem::in^1
                 o = bool<> std::logic::celem::o
               unroll sequence: 
                 ports: (
+                  bool<> !GND
+                  bool<> !Vdd
                   bool<> in[0..N-1]
                   bool<> o
                 )
                 bool<> _o
               prs:
+                {
                 (&:i:[0..N-1]: in[$i]) -> _o-
                 (&:i:[0..N-1]: ~in[$i]) -> _o+
                 _o<W> -> o-
                 ~_o<W> -> o+
+                }
               footprint collection: {
                 <2, 10> {
+                  !GND = bool^0 = std::logic::celem<2, 10>::!GND (1) 
+                  !Vdd = bool^0 = std::logic::celem<2, 10>::!Vdd (2) 
                   N = pint^0 value: 2
                   W = pint^0 value: 10
-                  _o = bool^0 = std::logic::celem<2, 10>::_o (2) 
+                  _o = bool^0 = std::logic::celem<2, 10>::_o (4) 
                   in = bool^1
                     {
-                      [0] = std::logic::celem<2, 10>::in[0] (3) 
-                      [1] = std::logic::celem<2, 10>::in[1] (4) 
+                      [0] = std::logic::celem<2, 10>::in[0] (5) 
+                      [1] = std::logic::celem<2, 10>::in[1] (6) 
                     }
-                  o = bool^0 = std::logic::celem<2, 10>::o (1) 
+                  o = bool^0 = std::logic::celem<2, 10>::o (3) 
                   Created state:
                   bool instance pool:
-                  1	std::logic::celem<2, 10>::o
-                  2	std::logic::celem<2, 10>::_o
-                  3	std::logic::celem<2, 10>::in[0]
-                  4	std::logic::celem<2, 10>::in[1]
+                  1	std::logic::celem<2, 10>::!GND
+                  2	std::logic::celem<2, 10>::!Vdd
+                  3	std::logic::celem<2, 10>::o
+                  4	std::logic::celem<2, 10>::_o
+                  5	std::logic::celem<2, 10>::in[0]
+                  6	std::logic::celem<2, 10>::in[1]
                   resolved prs:
                   in[0] & in[1] -> _o-
                   ~in[0] & ~in[1] -> _o+
                   _o<10> -> o-
                   ~_o<10> -> o+
+                  rule supply map: (rules, macros, @nodes : Vdd, GND)
+                  0..3 none none : 2, 1
                 }
                 <3, 10> {
+                  !GND = bool^0 = std::logic::celem<3, 10>::!GND (1) 
+                  !Vdd = bool^0 = std::logic::celem<3, 10>::!Vdd (2) 
                   N = pint^0 value: 3
                   W = pint^0 value: 10
-                  _o = bool^0 = std::logic::celem<3, 10>::_o (2) 
+                  _o = bool^0 = std::logic::celem<3, 10>::_o (4) 
                   in = bool^1
                     {
-                      [0] = std::logic::celem<3, 10>::in[0] (3) 
-                      [1] = std::logic::celem<3, 10>::in[1] (4) 
-                      [2] = std::logic::celem<3, 10>::in[2] (5) 
+                      [0] = std::logic::celem<3, 10>::in[0] (5) 
+                      [1] = std::logic::celem<3, 10>::in[1] (6) 
+                      [2] = std::logic::celem<3, 10>::in[2] (7) 
                     }
-                  o = bool^0 = std::logic::celem<3, 10>::o (1) 
+                  o = bool^0 = std::logic::celem<3, 10>::o (3) 
                   Created state:
                   bool instance pool:
-                  1	std::logic::celem<3, 10>::o
-                  2	std::logic::celem<3, 10>::_o
-                  3	std::logic::celem<3, 10>::in[0]
-                  4	std::logic::celem<3, 10>::in[1]
-                  5	std::logic::celem<3, 10>::in[2]
+                  1	std::logic::celem<3, 10>::!GND
+                  2	std::logic::celem<3, 10>::!Vdd
+                  3	std::logic::celem<3, 10>::o
+                  4	std::logic::celem<3, 10>::_o
+                  5	std::logic::celem<3, 10>::in[0]
+                  6	std::logic::celem<3, 10>::in[1]
+                  7	std::logic::celem<3, 10>::in[2]
                   resolved prs:
                   in[0] & in[1] & in[2] -> _o-
                   ~in[0] & ~in[1] & ~in[2] -> _o+
                   _o<10> -> o-
                   ~_o<10> -> o+
+                  rule supply map: (rules, macros, @nodes : Vdd, GND)
+                  0..3 none none : 2, 1
                 }
               }
               }
@@ -539,6 +621,8 @@ In namespace "", we have: {
     ctree = process-definition (defined) ctree<
       pint<> N[0..1]
       >(
+        bool<> !GND
+        bool<> !Vdd
         e1of2<> in
         e1of2<> out[0..N[0]-1][0..N[1]-1]
       )
@@ -546,12 +630,16 @@ In namespace "", we have: {
       Parameters:
         N = pint<> ctree::N^1
       Instances:
+        !GND = bool<> ctree::!GND
+        !Vdd = bool<> ctree::!Vdd
         c0 = foo::wire_copy<ctree::N[0]> ctree::c0
         c1 = foo::wire_copy<ctree::N[1]> ctree::c1^1
         in = e1of2<> ctree::in
         out = e1of2<> ctree::out^2
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           e1of2<> in
           e1of2<> out[0..N[0]-1][0..N[1]-1]
         )
@@ -566,174 +654,218 @@ In namespace "", we have: {
         )
       footprint collection: {
         <{2,3}> {
+          !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+          !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
           N = pint^1
             unrolled index-value pairs: {
               0 = 2
               1 = 3
             }
           c0 = process foo::wire_copy<2>^0 = ctree<{2,3}>::c0 (2) (
+            !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+            !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
             in = process e1of<2>^0 = ctree<{2,3}>::in (1) (
+              !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+              !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
               d = bool^1
                 {
-                  [0] = ctree<{2,3}>::in.d[0] (1) 
-                  [1] = ctree<{2,3}>::in.d[1] (2) 
+                  [0] = ctree<{2,3}>::in.d[0] (3) 
+                  [1] = ctree<{2,3}>::in.d[1] (4) 
                 }
-              e = bool^0 = ctree<{2,3}>::in.e (3) 
+              e = bool^0 = ctree<{2,3}>::in.e (5) 
             )
             o = process e1of<2>^1
               {
                 [0] = ctree<{2,3}>::c0.o[0] (3) (
+                  !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                  !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                   d = bool^1
                     {
-                      [0] = ctree<{2,3}>::in.d[0] (1) 
-                      [1] = ctree<{2,3}>::in.d[1] (2) 
+                      [0] = ctree<{2,3}>::in.d[0] (3) 
+                      [1] = ctree<{2,3}>::in.d[1] (4) 
                     }
-                  e = bool^0 = ctree<{2,3}>::c0.o[0].e (4) 
+                  e = bool^0 = ctree<{2,3}>::c0.o[0].e (6) 
                 )
                 [1] = ctree<{2,3}>::c0.o[1] (4) (
+                  !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                  !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                   d = bool^1
                     {
-                      [0] = ctree<{2,3}>::in.d[0] (1) 
-                      [1] = ctree<{2,3}>::in.d[1] (2) 
+                      [0] = ctree<{2,3}>::in.d[0] (3) 
+                      [1] = ctree<{2,3}>::in.d[1] (4) 
                     }
-                  e = bool^0 = ctree<{2,3}>::c0.o[1].e (5) 
+                  e = bool^0 = ctree<{2,3}>::c0.o[1].e (7) 
                 )
               }
           )
           c1 = process foo::wire_copy<3>^1
             {
               [0] = ctree<{2,3}>::c1[0] (5) (
+                !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 in = process e1of<2>^0 = ctree<{2,3}>::c0.o[0] (3) (
+                  !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                  !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                   d = bool^1
                     {
-                      [0] = ctree<{2,3}>::in.d[0] (1) 
-                      [1] = ctree<{2,3}>::in.d[1] (2) 
+                      [0] = ctree<{2,3}>::in.d[0] (3) 
+                      [1] = ctree<{2,3}>::in.d[1] (4) 
                     }
-                  e = bool^0 = ctree<{2,3}>::c0.o[0].e (4) 
+                  e = bool^0 = ctree<{2,3}>::c0.o[0].e (6) 
                 )
                 o = process e1of<2>^1
                   {
                     [0] = ctree<{2,3}>::out[0][0] (6) (
+                      !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                      !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
                         {
-                          [0] = ctree<{2,3}>::in.d[0] (1) 
-                          [1] = ctree<{2,3}>::in.d[1] (2) 
+                          [0] = ctree<{2,3}>::in.d[0] (3) 
+                          [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[0][0].e (6) 
+                      e = bool^0 = ctree<{2,3}>::out[0][0].e (8) 
                     )
                     [1] = ctree<{2,3}>::out[0][1] (7) (
+                      !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                      !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
                         {
-                          [0] = ctree<{2,3}>::in.d[0] (1) 
-                          [1] = ctree<{2,3}>::in.d[1] (2) 
+                          [0] = ctree<{2,3}>::in.d[0] (3) 
+                          [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[0][1].e (7) 
+                      e = bool^0 = ctree<{2,3}>::out[0][1].e (9) 
                     )
                     [2] = ctree<{2,3}>::out[0][2] (8) (
+                      !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                      !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
                         {
-                          [0] = ctree<{2,3}>::in.d[0] (1) 
-                          [1] = ctree<{2,3}>::in.d[1] (2) 
+                          [0] = ctree<{2,3}>::in.d[0] (3) 
+                          [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[0][2].e (8) 
+                      e = bool^0 = ctree<{2,3}>::out[0][2].e (10) 
                     )
                   }
               )
               [1] = ctree<{2,3}>::c1[1] (9) (
+                !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 in = process e1of<2>^0 = ctree<{2,3}>::c0.o[1] (4) (
+                  !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                  !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                   d = bool^1
                     {
-                      [0] = ctree<{2,3}>::in.d[0] (1) 
-                      [1] = ctree<{2,3}>::in.d[1] (2) 
+                      [0] = ctree<{2,3}>::in.d[0] (3) 
+                      [1] = ctree<{2,3}>::in.d[1] (4) 
                     }
-                  e = bool^0 = ctree<{2,3}>::c0.o[1].e (5) 
+                  e = bool^0 = ctree<{2,3}>::c0.o[1].e (7) 
                 )
                 o = process e1of<2>^1
                   {
                     [0] = ctree<{2,3}>::out[1][0] (10) (
+                      !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                      !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
                         {
-                          [0] = ctree<{2,3}>::in.d[0] (1) 
-                          [1] = ctree<{2,3}>::in.d[1] (2) 
+                          [0] = ctree<{2,3}>::in.d[0] (3) 
+                          [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[1][0].e (9) 
+                      e = bool^0 = ctree<{2,3}>::out[1][0].e (11) 
                     )
                     [1] = ctree<{2,3}>::out[1][1] (11) (
+                      !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                      !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
                         {
-                          [0] = ctree<{2,3}>::in.d[0] (1) 
-                          [1] = ctree<{2,3}>::in.d[1] (2) 
+                          [0] = ctree<{2,3}>::in.d[0] (3) 
+                          [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[1][1].e (10) 
+                      e = bool^0 = ctree<{2,3}>::out[1][1].e (12) 
                     )
                     [2] = ctree<{2,3}>::out[1][2] (12) (
+                      !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                      !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
                         {
-                          [0] = ctree<{2,3}>::in.d[0] (1) 
-                          [1] = ctree<{2,3}>::in.d[1] (2) 
+                          [0] = ctree<{2,3}>::in.d[0] (3) 
+                          [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[1][2].e (11) 
+                      e = bool^0 = ctree<{2,3}>::out[1][2].e (13) 
                     )
                   }
               )
             }
           in = process e1of<2>^0 = ctree<{2,3}>::in (1) (
+            !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+            !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
             d = bool^1
               {
-                [0] = ctree<{2,3}>::in.d[0] (1) 
-                [1] = ctree<{2,3}>::in.d[1] (2) 
+                [0] = ctree<{2,3}>::in.d[0] (3) 
+                [1] = ctree<{2,3}>::in.d[1] (4) 
               }
-            e = bool^0 = ctree<{2,3}>::in.e (3) 
+            e = bool^0 = ctree<{2,3}>::in.e (5) 
           )
           out = process e1of<2>^2
             {
               [0][0] = ctree<{2,3}>::out[0][0] (6) (
+                !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
                   {
-                    [0] = ctree<{2,3}>::in.d[0] (1) 
-                    [1] = ctree<{2,3}>::in.d[1] (2) 
+                    [0] = ctree<{2,3}>::in.d[0] (3) 
+                    [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[0][0].e (6) 
+                e = bool^0 = ctree<{2,3}>::out[0][0].e (8) 
               )
               [0][1] = ctree<{2,3}>::out[0][1] (7) (
+                !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
                   {
-                    [0] = ctree<{2,3}>::in.d[0] (1) 
-                    [1] = ctree<{2,3}>::in.d[1] (2) 
+                    [0] = ctree<{2,3}>::in.d[0] (3) 
+                    [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[0][1].e (7) 
+                e = bool^0 = ctree<{2,3}>::out[0][1].e (9) 
               )
               [0][2] = ctree<{2,3}>::out[0][2] (8) (
+                !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
                   {
-                    [0] = ctree<{2,3}>::in.d[0] (1) 
-                    [1] = ctree<{2,3}>::in.d[1] (2) 
+                    [0] = ctree<{2,3}>::in.d[0] (3) 
+                    [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[0][2].e (8) 
+                e = bool^0 = ctree<{2,3}>::out[0][2].e (10) 
               )
               [1][0] = ctree<{2,3}>::out[1][0] (10) (
+                !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
                   {
-                    [0] = ctree<{2,3}>::in.d[0] (1) 
-                    [1] = ctree<{2,3}>::in.d[1] (2) 
+                    [0] = ctree<{2,3}>::in.d[0] (3) 
+                    [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[1][0].e (9) 
+                e = bool^0 = ctree<{2,3}>::out[1][0].e (11) 
               )
               [1][1] = ctree<{2,3}>::out[1][1] (11) (
+                !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
                   {
-                    [0] = ctree<{2,3}>::in.d[0] (1) 
-                    [1] = ctree<{2,3}>::in.d[1] (2) 
+                    [0] = ctree<{2,3}>::in.d[0] (3) 
+                    [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[1][1].e (10) 
+                e = bool^0 = ctree<{2,3}>::out[1][1].e (12) 
               )
               [1][2] = ctree<{2,3}>::out[1][2] (12) (
+                !GND = bool^0 = ctree<{2,3}>::!GND (1) 
+                !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
                   {
-                    [0] = ctree<{2,3}>::in.d[0] (1) 
-                    [1] = ctree<{2,3}>::in.d[1] (2) 
+                    [0] = ctree<{2,3}>::in.d[0] (3) 
+                    [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[1][2].e (11) 
+                e = bool^0 = ctree<{2,3}>::out[1][2].e (13) 
               )
             }
           Created state:
@@ -751,20 +883,24 @@ In namespace "", we have: {
           11	ctree<{2,3}>::out[1][1]
           12	ctree<{2,3}>::out[1][2]
           bool instance pool:
-          1	ctree<{2,3}>::in.d[0]
-          2	ctree<{2,3}>::in.d[1]
-          3	ctree<{2,3}>::in.e
-          4	ctree<{2,3}>::c0.o[0].e
-          5	ctree<{2,3}>::c0.o[1].e
-          6	ctree<{2,3}>::out[0][0].e
-          7	ctree<{2,3}>::out[0][1].e
-          8	ctree<{2,3}>::out[0][2].e
-          9	ctree<{2,3}>::out[1][0].e
-          10	ctree<{2,3}>::out[1][1].e
-          11	ctree<{2,3}>::out[1][2].e
+          1	ctree<{2,3}>::!GND
+          2	ctree<{2,3}>::!Vdd
+          3	ctree<{2,3}>::in.d[0]
+          4	ctree<{2,3}>::in.d[1]
+          5	ctree<{2,3}>::in.e
+          6	ctree<{2,3}>::c0.o[0].e
+          7	ctree<{2,3}>::c0.o[1].e
+          8	ctree<{2,3}>::out[0][0].e
+          9	ctree<{2,3}>::out[0][1].e
+          10	ctree<{2,3}>::out[0][2].e
+          11	ctree<{2,3}>::out[1][0].e
+          12	ctree<{2,3}>::out[1][1].e
+          13	ctree<{2,3}>::out[1][2].e
           bool port aliases:
-          1: ctree<{2,3}>::in.d[0] = ctree<{2,3}>::out[0][0].d[0] = ctree<{2,3}>::out[0][1].d[0] = ctree<{2,3}>::out[0][2].d[0] = ctree<{2,3}>::out[1][0].d[0] = ctree<{2,3}>::out[1][1].d[0] = ctree<{2,3}>::out[1][2].d[0]
-          2: ctree<{2,3}>::in.d[1] = ctree<{2,3}>::out[0][0].d[1] = ctree<{2,3}>::out[0][1].d[1] = ctree<{2,3}>::out[0][2].d[1] = ctree<{2,3}>::out[1][0].d[1] = ctree<{2,3}>::out[1][1].d[1] = ctree<{2,3}>::out[1][2].d[1]
+          1: ctree<{2,3}>::in.!GND = ctree<{2,3}>::out[0][0].!GND = ctree<{2,3}>::out[0][1].!GND = ctree<{2,3}>::out[0][2].!GND = ctree<{2,3}>::out[1][0].!GND = ctree<{2,3}>::out[1][1].!GND = ctree<{2,3}>::out[1][2].!GND = ctree<{2,3}>::!GND
+          2: ctree<{2,3}>::in.!Vdd = ctree<{2,3}>::out[0][0].!Vdd = ctree<{2,3}>::out[0][1].!Vdd = ctree<{2,3}>::out[0][2].!Vdd = ctree<{2,3}>::out[1][0].!Vdd = ctree<{2,3}>::out[1][1].!Vdd = ctree<{2,3}>::out[1][2].!Vdd = ctree<{2,3}>::!Vdd
+          3: ctree<{2,3}>::in.d[0] = ctree<{2,3}>::out[0][0].d[0] = ctree<{2,3}>::out[0][1].d[0] = ctree<{2,3}>::out[0][2].d[0] = ctree<{2,3}>::out[1][0].d[0] = ctree<{2,3}>::out[1][1].d[0] = ctree<{2,3}>::out[1][2].d[0]
+          4: ctree<{2,3}>::in.d[1] = ctree<{2,3}>::out[0][0].d[1] = ctree<{2,3}>::out[0][1].d[1] = ctree<{2,3}>::out[0][2].d[1] = ctree<{2,3}>::out[1][0].d[1] = ctree<{2,3}>::out[1][1].d[1] = ctree<{2,3}>::out[1][2].d[1]
         }
       }
       }
@@ -772,6 +908,8 @@ In namespace "", we have: {
     e1of = process-definition (defined) e1of<
       pint<> N
       >(
+        bool<> !GND
+        bool<> !Vdd
         bool<> d[0..N-1]
         bool<> e
       )
@@ -779,27 +917,35 @@ In namespace "", we have: {
       Parameters:
         N = pint<> e1of::N
       Instances:
+        !GND = bool<> e1of::!GND
+        !Vdd = bool<> e1of::!Vdd
         d = bool<> e1of::d^1
         e = bool<> e1of::e
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> d[0..N-1]
           bool<> e
         )
       footprint collection: {
         <2> {
+          !GND = bool^0 = e1of<2>::!GND (1) 
+          !Vdd = bool^0 = e1of<2>::!Vdd (2) 
           N = pint^0 value: 2
           d = bool^1
             {
-              [0] = e1of<2>::d[0] (2) 
-              [1] = e1of<2>::d[1] (3) 
+              [0] = e1of<2>::d[0] (4) 
+              [1] = e1of<2>::d[1] (5) 
             }
-          e = bool^0 = e1of<2>::e (1) 
+          e = bool^0 = e1of<2>::e (3) 
           Created state:
           bool instance pool:
-          1	e1of<2>::e
-          2	e1of<2>::d[0]
-          3	e1of<2>::d[1]
+          1	e1of<2>::!GND
+          2	e1of<2>::!Vdd
+          3	e1of<2>::e
+          4	e1of<2>::d[0]
+          5	e1of<2>::d[1]
         }
       }
       }
@@ -808,68 +954,88 @@ In namespace "", we have: {
     e1of2 = process-definition-alias: e1of2
       = e1of<2>
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     bar = ctree<{ 2, 3 }> bar
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   bar = process ctree<{2,3}>^0 = bar (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     in = process e1of<2>^0 = bar.in (2) (
+      !GND = bool^0 = !GND (1) 
+      !Vdd = bool^0 = !Vdd (2) 
       d = bool^1
         {
-          [0] = bar.in.d[0] (1) 
-          [1] = bar.in.d[1] (2) 
+          [0] = bar.in.d[0] (3) 
+          [1] = bar.in.d[1] (4) 
         }
-      e = bool^0 = bar.in.e (3) 
+      e = bool^0 = bar.in.e (5) 
     )
     out = process e1of<2>^2
       {
         [0][0] = bar.out[0][0] (3) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = bar.in.d[0] (1) 
-              [1] = bar.in.d[1] (2) 
+              [0] = bar.in.d[0] (3) 
+              [1] = bar.in.d[1] (4) 
             }
-          e = bool^0 = bar.out[0][0].e (4) 
+          e = bool^0 = bar.out[0][0].e (6) 
         )
         [0][1] = bar.out[0][1] (4) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = bar.in.d[0] (1) 
-              [1] = bar.in.d[1] (2) 
+              [0] = bar.in.d[0] (3) 
+              [1] = bar.in.d[1] (4) 
             }
-          e = bool^0 = bar.out[0][1].e (5) 
+          e = bool^0 = bar.out[0][1].e (7) 
         )
         [0][2] = bar.out[0][2] (5) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = bar.in.d[0] (1) 
-              [1] = bar.in.d[1] (2) 
+              [0] = bar.in.d[0] (3) 
+              [1] = bar.in.d[1] (4) 
             }
-          e = bool^0 = bar.out[0][2].e (6) 
+          e = bool^0 = bar.out[0][2].e (8) 
         )
         [1][0] = bar.out[1][0] (6) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = bar.in.d[0] (1) 
-              [1] = bar.in.d[1] (2) 
+              [0] = bar.in.d[0] (3) 
+              [1] = bar.in.d[1] (4) 
             }
-          e = bool^0 = bar.out[1][0].e (7) 
+          e = bool^0 = bar.out[1][0].e (9) 
         )
         [1][1] = bar.out[1][1] (7) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = bar.in.d[0] (1) 
-              [1] = bar.in.d[1] (2) 
+              [0] = bar.in.d[0] (3) 
+              [1] = bar.in.d[1] (4) 
             }
-          e = bool^0 = bar.out[1][1].e (8) 
+          e = bool^0 = bar.out[1][1].e (10) 
         )
         [1][2] = bar.out[1][2] (8) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           d = bool^1
             {
-              [0] = bar.in.d[0] (1) 
-              [1] = bar.in.d[1] (2) 
+              [0] = bar.in.d[0] (3) 
+              [1] = bar.in.d[1] (4) 
             }
-          e = bool^0 = bar.out[1][2].e (9) 
+          e = bool^0 = bar.out[1][2].e (11) 
         )
       }
   )
@@ -884,13 +1050,15 @@ footprint: {
   7	bar.out[1][1]
   8	bar.out[1][2]
   bool instance pool:
-  1	bar.in.d[0]
-  2	bar.in.d[1]
-  3	bar.in.e
-  4	bar.out[0][0].e
-  5	bar.out[0][1].e
-  6	bar.out[0][2].e
-  7	bar.out[1][0].e
-  8	bar.out[1][1].e
-  9	bar.out[1][2].e
+  1	!GND
+  2	!Vdd
+  3	bar.in.d[0]
+  4	bar.in.d[1]
+  5	bar.in.e
+  6	bar.out[0][0].e
+  7	bar.out[0][1].e
+  8	bar.out[0][2].e
+  9	bar.out[1][0].e
+  10	bar.out[1][1].e
+  11	bar.out[1][2].e
 }

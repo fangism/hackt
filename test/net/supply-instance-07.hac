@@ -1,0 +1,20 @@
+// "supply-instance-07.hac"
+// copy-modified from "supply-instance-03.hac"
+
+import "inv-01.hac";
+import "globals.hac";
+
+defproc foo(bool myVdd, myGND, in) {
+inv a(in, );
+inv b$()(in, );
+inv c$(,)(in, );
+inv d$(myGND)(in, );
+inv d2$(myGND)(in, );
+inv e$(myGND,)(in, );
+inv f$(,myVdd)(in, );
+inv g$(myGND,myVdd)(in, );
+}
+
+globals gg;
+bool x;
+foo bar(gg.Vdd_1, gg.GND_1, x);

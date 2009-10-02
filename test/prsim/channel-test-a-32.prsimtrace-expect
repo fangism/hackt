@@ -5,7 +5,7 @@ Trace file contents: 3 epochs.
 	1	0	0	#SIZE#	#SIZE#
 	2	22	0	#SIZE#	#SIZE#
 Epoch 0: (initial values)
-X X X X X X X X X X X X X 
+X X X X X X X X X X X X X 0 1 
 Epoch 1:
 	event		event	cause	node	node
 	index	time	node	index	index	value	rule/node
@@ -32,4 +32,4 @@ Epoch 1:
 	20	160	0	19	6	0	(Y.d[2]:0)
 	21	170	0	20	8	1	(Y.e:1)
 Epoch 2: (final values)
-X X X X 0 0 0 0 1 X X X X 
+X X X X 0 0 0 0 1 X X X X 0 1 

@@ -3,73 +3,104 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
-	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	33
-	5	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
-	9	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
-	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	321
-	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
-	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	21	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	354
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	29
-	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
-	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	460
-	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	107
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	33
+	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	17	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	19	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	20	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	320
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	411
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	procdefn	0	#HEAD#	#TAIL#	107
+	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	498
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	dintplch	0	#HEAD#	#TAIL#	29
+	45	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	46	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	712
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  3 instantiation-collections
+  5 instantiation-collections
   0 sub-namespaces
   3 definitions
   0 typedefs
   Definitions:
     basket = process-definition (defined) basket(
+        bool<> !GND
+        bool<> !Vdd
         egg<> egg_array
       )
       In definition "basket", we have: {
       Instances:
+        !GND = bool<> basket::!GND
+        !Vdd = bool<> basket::!Vdd
         egg_array = egg<> basket::egg_array
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           egg<> egg_array
         )
       footprint: {
+        !GND = bool^0 = basket<>::!GND (1) 
+        !Vdd = bool^0 = basket<>::!Vdd (2) 
         egg_array = process egg<>^0 = basket<>::egg_array (1) (
+          !GND = bool^0 = basket<>::!GND (1) 
+          !Vdd = bool^0 = basket<>::!Vdd (2) 
           yolk = int<32>^0 = basket<>::egg_array.yolk (1) 
         )
         Created state:
@@ -77,22 +108,40 @@ In namespace "", we have: {
         1	basket<>::egg_array
         int instance pool:
         1	basket<>::egg_array.yolk
+        bool instance pool:
+        1	basket<>::!GND
+        2	basket<>::!Vdd
+        bool port aliases:
+        1: basket<>::egg_array.!GND = basket<>::!GND
+        2: basket<>::egg_array.!Vdd = basket<>::!Vdd
       }
       }
 
     bundle = process-definition (defined) bundle(
+        bool<> !GND
+        bool<> !Vdd
         basket<> c
       )
       In definition "bundle", we have: {
       Instances:
+        !GND = bool<> bundle::!GND
+        !Vdd = bool<> bundle::!Vdd
         c = basket<> bundle::c
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           basket<> c
         )
       footprint: {
+        !GND = bool^0 = bundle<>::!GND (1) 
+        !Vdd = bool^0 = bundle<>::!Vdd (2) 
         c = process basket<>^0 = bundle<>::c (1) (
+          !GND = bool^0 = bundle<>::!GND (1) 
+          !Vdd = bool^0 = bundle<>::!Vdd (2) 
           egg_array = process egg<>^0 = bundle<>::c.egg_array (2) (
+            !GND = bool^0 = bundle<>::!GND (1) 
+            !Vdd = bool^0 = bundle<>::!Vdd (2) 
             yolk = int<32>^0 = bundle<>::c.egg_array.yolk (1) 
           )
         )
@@ -102,41 +151,70 @@ In namespace "", we have: {
         2	bundle<>::c.egg_array
         int instance pool:
         1	bundle<>::c.egg_array.yolk
+        bool instance pool:
+        1	bundle<>::!GND
+        2	bundle<>::!Vdd
+        bool port aliases:
+        1: bundle<>::c.!GND = bundle<>::c.egg_array.!GND = bundle<>::!GND
+        2: bundle<>::c.!Vdd = bundle<>::c.egg_array.!Vdd = bundle<>::!Vdd
       }
       }
 
     egg = process-definition (defined) egg(
+        bool<> !GND
+        bool<> !Vdd
         int<32> yolk
       )
       In definition "egg", we have: {
       Instances:
+        !GND = bool<> egg::!GND
+        !Vdd = bool<> egg::!Vdd
         yolk = int<32> egg::yolk
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           int<32> yolk
         )
       footprint: {
+        !GND = bool^0 = egg<>::!GND (1) 
+        !Vdd = bool^0 = egg<>::!Vdd (2) 
         yolk = int<32>^0 = egg<>::yolk (1) 
         Created state:
         int instance pool:
         1	egg<>::yolk
+        bool instance pool:
+        1	egg<>::!GND
+        2	egg<>::!Vdd
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     count = int<32> count
     golden = egg<> golden
     load = bundle<> load
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   count = int<32>^0 = count (1) 
   golden = process egg<>^0 = golden (3) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     yolk = int<32>^0 = count (1) 
   )
   load = process bundle<>^0 = load (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     c = process basket<>^0 = load.c (2) (
+      !GND = bool^0 = !GND (1) 
+      !Vdd = bool^0 = !Vdd (2) 
       egg_array = process egg<>^0 = golden (3) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
         yolk = int<32>^0 = count (1) 
       )
     )
@@ -148,4 +226,7 @@ footprint: {
   3	golden
   int instance pool:
   1	count
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

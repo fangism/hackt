@@ -3,7 +3,7 @@
 	Helper functions for repetitive conditional constructs.  
 	All functions are static members of a wrapper class
 	for convenient friendship.  
-	$Id: meta_conditional.h,v 1.2 2008/03/17 23:02:37 fang Exp $
+	$Id: meta_conditional.h,v 1.3 2009/10/02 01:57:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_CONDITIONAL_H__
@@ -45,7 +45,9 @@ empty(const T&);
 template <class C>
 static
 ostream&
-dump(const T&, ostream&, const C&);
+dump(const T&, ostream&, const C&,
+	ostream& (T::clause_list_type::value_type::*dumper)(ostream&, const C&) const
+		= &T::clause_list_type::value_type::dump);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class F>

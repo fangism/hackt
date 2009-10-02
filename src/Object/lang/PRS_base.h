@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.10 2007/11/26 08:27:42 fang Exp $
+	$Id: PRS_base.h,v 1.11 2009/10/02 01:57:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -112,8 +112,10 @@ virtual	~rule() { }
 virtual	ostream&
 	dump(ostream&, const rule_dump_context&) const = 0;
 
-virtual	excl_ptr<rule>
-	expand_complement(void) = 0;
+#define	PRS_EXPAND_COMPLEMENT_PROTO					\
+	excl_ptr<rule>							\
+	expand_complement(void)
+virtual	PRS_EXPAND_COMPLEMENT_PROTO = 0;
 
 /**
 	Prototype for unroll visiting.  
@@ -125,8 +127,10 @@ virtual	excl_ptr<rule>
 
 virtual	PRS_UNROLL_RULE_PROTO = 0;
 
-virtual	void
-	check(void) const = 0;
+#define	PRS_CHECK_RULE_PROTO						\
+	void check(void) const
+
+virtual	PRS_CHECK_RULE_PROTO = 0;
 
 	struct checker;
 	struct dumper;
@@ -135,37 +139,30 @@ virtual	void
 //=============================================================================
 /**
 	A collection or production rules.  
+	This class wants to be pure-virtual, except that it is 
+	instantiated non-dynamically by process_definition.
  */
-class rule_set : public rule, 
-		public list<sticky_ptr<rule> > {
-	typedef	rule_set			this_type;
+class rule_set_base : public list<sticky_ptr<rule> > {
 protected:
 	typedef	list<sticky_ptr<rule> >		parent_type;
 public:
 	typedef	parent_type::value_type		value_type;
 public:
-	rule_set();
-	~rule_set();
+	rule_set_base();
+	// dtor needs to be polymorphic to dynamic_cast to rule_set
+virtual	~rule_set_base();
 
 #if 0
 private:
 	// not copy-constructible, or should be restricted with run-time check
 	explicit
-	rule_set(const rule_set&);
+	rule_set(_baseconst this_type&);
 #endif
 
 public:
-	ostream&
-	what(ostream&) const;
 
 	ostream&
 	dump(ostream&, const rule_dump_context& = rule_dump_context()) const;
-
-	void
-	check(void) const;
-
-	excl_ptr<rule>
-	expand_complement(void);
 
 	void
 	expand_complements(void);
@@ -183,7 +180,10 @@ public:
 		this->append_rule(tr);
 	}
 
+	// supply these for derived classes
 	PRS_UNROLL_RULE_PROTO;
+	PRS_CHECK_RULE_PROTO;
+	PRS_EXPAND_COMPLEMENT_PROTO;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -198,17 +198,9 @@ private:
 	// hide this from user
 	using parent_type::push_back;
 
-protected:
-	void
-	collect_transient_info(persistent_object_manager&) const;
+};	// end class rule_set_base
 
-	void
-	write_object(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object(const persistent_object_manager&, istream&);
-
-};	// end class rule_set
+typedef	rule_set_base		nested_rules;
 
 //=============================================================================
 /**

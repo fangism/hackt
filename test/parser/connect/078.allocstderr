@@ -2,13 +2,13 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	p	portaproc<>
 	int: 1,2,3
-	bool: 1,2,3,4,5
+	bool: 1,2,3,4,5,6,7
 2	(top)	-	2	s	portaproc<>
 	int: 4,5,6
-	bool: 6,7,8,9,10
+	bool: 1,2,8,9,10,11,12
 3	(top)	-	3	t	portaproc<>
 	int: 7,8,9
-	bool: 11,12,13,14,15
+	bool: 1,2,13,14,15,16,17
 [global int entries]
 1	(top)	-	1	q	
 2	(top)	-	2	r[0]	
@@ -20,18 +20,20 @@ globID	super		localID	canonical	footprint-frame
 8	(top)	-	8	t.j[0]	
 9	(top)	-	9	t.j[1]	
 [global bool entries]
-1	(top)	-	1	a	
-2	(top)	-	2	x[0]	
-3	(top)	-	3	x[1]	
-4	(top)	-	4	x[2]	
-5	(top)	-	5	x[3]	
-6	(top)	-	6	s.b	
-7	(top)	-	7	s.c[0]	
-8	(top)	-	8	s.c[1]	
-9	(top)	-	9	s.c[2]	
-10	(top)	-	10	s.c[3]	
-11	(top)	-	11	t.b	
-12	(top)	-	12	t.c[0]	
-13	(top)	-	13	t.c[1]	
-14	(top)	-	14	t.c[2]	
-15	(top)	-	15	t.c[3]	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	a	
+4	(top)	-	4	x[0]	
+5	(top)	-	5	x[1]	
+6	(top)	-	6	x[2]	
+7	(top)	-	7	x[3]	
+8	(top)	-	8	s.b	
+9	(top)	-	9	s.c[0]	
+10	(top)	-	10	s.c[1]	
+11	(top)	-	11	s.c[2]	
+12	(top)	-	12	s.c[3]	
+13	(top)	-	13	t.b	
+14	(top)	-	14	t.c[0]	
+15	(top)	-	15	t.c[1]	
+16	(top)	-	16	t.c[2]	
+17	(top)	-	17	t.c[3]	

@@ -2,21 +2,23 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	foo	multi_inv<>
 	process: 2,3,4,5
-	bool: 1,2,3,4,5,6,7,8
+	bool: 1,2,3,4,5,6,7,8,9,10
 2	(top)	-	2	foo.x[0]	inv<>
-	bool: 1,2
+	bool: 1,2,3,4
 3	(top)	-	3	foo.x[1]	inv<>
-	bool: 3,4
+	bool: 1,2,5,6
 4	(top)	-	4	foo.x[2]	inv<>
-	bool: 5,6
+	bool: 1,2,7,8
 5	(top)	-	5	foo.x[3]	inv<>
-	bool: 7,8
+	bool: 1,2,9,10
 [global bool entries]
-1	(top)	-	1	foo.x[0].a	 @[ iscomb ]
-2	(top)	-	2	foo.x[0].b	
-3	(top)	-	3	foo.y	 @[ iscomb !autokeeper ]
-4	(top)	-	4	foo.x[1].b	
-5	(top)	-	5	foo.x[2].a	 @[ iscomb ]
-6	(top)	-	6	foo.z	 @[ !autokeeper ]
-7	(top)	-	7	foo.x[3].a	 @[ iscomb ]
-8	(top)	-	8	foo.x[3].b	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	foo.x[0].a	 @[ iscomb ]
+4	(top)	-	4	foo.x[0].b	
+5	(top)	-	5	foo.y	 @[ iscomb !autokeeper ]
+6	(top)	-	6	foo.x[1].b	
+7	(top)	-	7	foo.x[2].a	 @[ iscomb ]
+8	(top)	-	8	foo.z	 @[ !autokeeper ]
+9	(top)	-	9	foo.x[3].a	 @[ iscomb ]
+10	(top)	-	10	foo.x[3].b	

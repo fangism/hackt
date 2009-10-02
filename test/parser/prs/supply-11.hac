@@ -1,0 +1,9 @@
+// "supply-11.hac"
+// expect-fail
+
+defproc foo(bool x, y) {
+prs <!Vdd> {
+	x => y-
+}
+}
+

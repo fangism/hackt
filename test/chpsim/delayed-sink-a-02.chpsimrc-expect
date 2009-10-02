@@ -81,10 +81,10 @@ Epoch 0:
 bool state trace:
 	event	global	raw
 	index	index	value
-	1	1	1
-	3	1	0
-	5	1	1
-	7	1	0
+	1	3	1
+	3	3	0
+	5	3	1
+	7	3	0
 int state trace:
 enum state trace:
 channel state trace:

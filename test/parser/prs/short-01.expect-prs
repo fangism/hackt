@@ -2,5 +2,9 @@
 ~"A.a" -> "z"+
 "B.a" -> "z"-
 ~"B.a" -> "z"+
+= "!GND" "A.!GND"
+= "!Vdd" "A.!Vdd"
 = "z" "A.b"
+= "!GND" "B.!GND"
+= "!Vdd" "B.!Vdd"
 = "z" "B.b"

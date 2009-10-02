@@ -1,0 +1,2 @@
+Error: implicit port overrides take at most two ports, Vdd, GND.
+HALT: error in implicit port override list.  [11:6..10]

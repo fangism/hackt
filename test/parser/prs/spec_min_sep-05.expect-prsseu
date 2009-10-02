@@ -4,3 +4,5 @@ min_sep<20>("g.x[0]","g.x[1]","g.x[2]"; "g.r")
 min_sep<25>("g.q"; "g.x[0]","g.x[1]")
 min_sep<30>("g.x[0]"; "g.x[1]","g.x[2]")
 min_sep<40>("g.x[0]","g.x[1]"; "g.x[2]")
+= "!GND" "g.!GND"
+= "!Vdd" "g.!Vdd"

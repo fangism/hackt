@@ -10,9 +10,17 @@ weak	~"cheezburger.bar" -> "cheezburger.foo"+
 @ "cheezburger.foo" may_interfere
 @ "cheezburger.bar" may_weak_interfere
 @ "wha.bar" may_weak_interfere
+= "!GND" "bukkit.!GND"
+= "!Vdd" "bukkit.!Vdd"
 = "cheezburger.bar" "bukkit.bar"
 = "cheezburger.bar" "bukkit.bar2"
 = "cheezburger.foo" "bukkit.foo"
+= "!GND" "cheezburger.!GND"
+= "!Vdd" "cheezburger.!Vdd"
 = "cheezburger.foo" "cheezburger.foo2"
+= "!GND" "wee.!GND"
+= "!Vdd" "wee.!Vdd"
 = "wee.foo" "wee.foo2"
+= "!GND" "wha.!GND"
+= "!Vdd" "wha.!Vdd"
 = "wha.bar" "wha.bar2"

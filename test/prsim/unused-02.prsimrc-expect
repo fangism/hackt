@@ -1,5 +1,7 @@
 unused nodes 
 Nodes with no fanin, no fanout:
+!GND
+!Vdd
 d
 e
 f
@@ -17,6 +19,8 @@ f
 should be not more unknown inputs 
 unused nodes 
 Nodes with no fanin, no fanout:
+!GND
+!Vdd
 d
 e
 f

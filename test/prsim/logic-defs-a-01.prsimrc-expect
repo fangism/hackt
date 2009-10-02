@@ -2,14 +2,20 @@ p refers to process-inst-ref nand<>
 q refers to process-inst-ref nand<>
 t refers to process-inst-ref nor<>
 All subnodes of 'p':
+!GND : 0
+!Vdd : 1
 a : X
 b : X
 r : X
 All subnodes of 'q':
+!GND : 0
+!Vdd : 1
 c : X
 d : X
 s : X
 All subnodes of 't':
+!GND : 0
+!Vdd : 1
 r : X
 s : X
 o : X

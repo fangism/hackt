@@ -3,177 +3,205 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
-	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	93
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
-	7	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	622
-	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	109
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	11	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	18	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1243
-	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	658
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	28	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1333
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     top_type = process-definition (defined) top_type(
+        bool<> !GND
+        bool<> !Vdd
         bool<> co[0..0][0..6][0..2]
       )
       In definition "top_type", we have: {
       Instances:
+        !GND = bool<> top_type::!GND
+        !Vdd = bool<> top_type::!Vdd
         co = bool<> top_type::co^3
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> co[0..0][0..6][0..2]
         )
       footprint: {
+        !GND = bool^0 = top_type<>::!GND (1) 
+        !Vdd = bool^0 = top_type<>::!Vdd (2) 
         co = bool^3
           {
-            [0][0][0] = top_type<>::co[0][0][0] (1) 
-            [0][0][1] = top_type<>::co[0][0][1] (2) 
-            [0][0][2] = top_type<>::co[0][0][2] (3) 
-            [0][1][0] = top_type<>::co[0][1][0] (4) 
-            [0][1][1] = top_type<>::co[0][1][1] (5) 
-            [0][1][2] = top_type<>::co[0][1][2] (6) 
-            [0][2][0] = top_type<>::co[0][2][0] (7) 
-            [0][2][1] = top_type<>::co[0][2][1] (8) 
-            [0][2][2] = top_type<>::co[0][2][2] (9) 
-            [0][3][0] = top_type<>::co[0][3][0] (10) 
-            [0][3][1] = top_type<>::co[0][3][1] (11) 
-            [0][3][2] = top_type<>::co[0][3][2] (12) 
-            [0][4][0] = top_type<>::co[0][4][0] (13) 
-            [0][4][1] = top_type<>::co[0][4][1] (14) 
-            [0][4][2] = top_type<>::co[0][4][2] (15) 
-            [0][5][0] = top_type<>::co[0][5][0] (16) 
-            [0][5][1] = top_type<>::co[0][5][1] (17) 
-            [0][5][2] = top_type<>::co[0][5][2] (18) 
-            [0][6][0] = top_type<>::co[0][6][0] (19) 
-            [0][6][1] = top_type<>::co[0][6][1] (20) 
-            [0][6][2] = top_type<>::co[0][6][2] (21) 
+            [0][0][0] = top_type<>::co[0][0][0] (3) 
+            [0][0][1] = top_type<>::co[0][0][1] (4) 
+            [0][0][2] = top_type<>::co[0][0][2] (5) 
+            [0][1][0] = top_type<>::co[0][1][0] (6) 
+            [0][1][1] = top_type<>::co[0][1][1] (7) 
+            [0][1][2] = top_type<>::co[0][1][2] (8) 
+            [0][2][0] = top_type<>::co[0][2][0] (9) 
+            [0][2][1] = top_type<>::co[0][2][1] (10) 
+            [0][2][2] = top_type<>::co[0][2][2] (11) 
+            [0][3][0] = top_type<>::co[0][3][0] (12) 
+            [0][3][1] = top_type<>::co[0][3][1] (13) 
+            [0][3][2] = top_type<>::co[0][3][2] (14) 
+            [0][4][0] = top_type<>::co[0][4][0] (15) 
+            [0][4][1] = top_type<>::co[0][4][1] (16) 
+            [0][4][2] = top_type<>::co[0][4][2] (17) 
+            [0][5][0] = top_type<>::co[0][5][0] (18) 
+            [0][5][1] = top_type<>::co[0][5][1] (19) 
+            [0][5][2] = top_type<>::co[0][5][2] (20) 
+            [0][6][0] = top_type<>::co[0][6][0] (21) 
+            [0][6][1] = top_type<>::co[0][6][1] (22) 
+            [0][6][2] = top_type<>::co[0][6][2] (23) 
           }
         Created state:
         bool instance pool:
-        1	top_type<>::co[0][0][0]
-        2	top_type<>::co[0][0][1]
-        3	top_type<>::co[0][0][2]
-        4	top_type<>::co[0][1][0]
-        5	top_type<>::co[0][1][1]
-        6	top_type<>::co[0][1][2]
-        7	top_type<>::co[0][2][0]
-        8	top_type<>::co[0][2][1]
-        9	top_type<>::co[0][2][2]
-        10	top_type<>::co[0][3][0]
-        11	top_type<>::co[0][3][1]
-        12	top_type<>::co[0][3][2]
-        13	top_type<>::co[0][4][0]
-        14	top_type<>::co[0][4][1]
-        15	top_type<>::co[0][4][2]
-        16	top_type<>::co[0][5][0]
-        17	top_type<>::co[0][5][1]
-        18	top_type<>::co[0][5][2]
-        19	top_type<>::co[0][6][0]
-        20	top_type<>::co[0][6][1]
-        21	top_type<>::co[0][6][2]
+        1	top_type<>::!GND
+        2	top_type<>::!Vdd
+        3	top_type<>::co[0][0][0]
+        4	top_type<>::co[0][0][1]
+        5	top_type<>::co[0][0][2]
+        6	top_type<>::co[0][1][0]
+        7	top_type<>::co[0][1][1]
+        8	top_type<>::co[0][1][2]
+        9	top_type<>::co[0][2][0]
+        10	top_type<>::co[0][2][1]
+        11	top_type<>::co[0][2][2]
+        12	top_type<>::co[0][3][0]
+        13	top_type<>::co[0][3][1]
+        14	top_type<>::co[0][3][2]
+        15	top_type<>::co[0][4][0]
+        16	top_type<>::co[0][4][1]
+        17	top_type<>::co[0][4][2]
+        18	top_type<>::co[0][5][0]
+        19	top_type<>::co[0][5][1]
+        20	top_type<>::co[0][5][2]
+        21	top_type<>::co[0][6][0]
+        22	top_type<>::co[0][6][1]
+        23	top_type<>::co[0][6][2]
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     co = bool<> co^3
     top = top_type<> top
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   co = bool^3
     {
-      [0][0][0] = co[0][0][0] (1) 
-      [0][0][1] = co[0][0][1] (2) 
-      [0][0][2] = co[0][0][2] (3) 
-      [0][1][0] = co[0][1][0] (4) 
-      [0][1][1] = co[0][1][1] (5) 
-      [0][1][2] = co[0][1][2] (6) 
-      [0][2][0] = co[0][2][0] (7) 
-      [0][2][1] = co[0][2][1] (8) 
-      [0][2][2] = co[0][2][2] (9) 
-      [0][3][0] = co[0][3][0] (10) 
-      [0][3][1] = co[0][3][1] (11) 
-      [0][3][2] = co[0][3][2] (12) 
-      [0][4][0] = co[0][4][0] (13) 
-      [0][4][1] = co[0][4][1] (14) 
-      [0][4][2] = co[0][4][2] (15) 
-      [0][5][0] = co[0][5][0] (16) 
-      [0][5][1] = co[0][5][1] (17) 
-      [0][5][2] = co[0][5][2] (18) 
-      [0][6][0] = co[0][6][0] (19) 
-      [0][6][1] = co[0][6][1] (20) 
-      [0][6][2] = co[0][6][2] (21) 
+      [0][0][0] = co[0][0][0] (3) 
+      [0][0][1] = co[0][0][1] (4) 
+      [0][0][2] = co[0][0][2] (5) 
+      [0][1][0] = co[0][1][0] (6) 
+      [0][1][1] = co[0][1][1] (7) 
+      [0][1][2] = co[0][1][2] (8) 
+      [0][2][0] = co[0][2][0] (9) 
+      [0][2][1] = co[0][2][1] (10) 
+      [0][2][2] = co[0][2][2] (11) 
+      [0][3][0] = co[0][3][0] (12) 
+      [0][3][1] = co[0][3][1] (13) 
+      [0][3][2] = co[0][3][2] (14) 
+      [0][4][0] = co[0][4][0] (15) 
+      [0][4][1] = co[0][4][1] (16) 
+      [0][4][2] = co[0][4][2] (17) 
+      [0][5][0] = co[0][5][0] (18) 
+      [0][5][1] = co[0][5][1] (19) 
+      [0][5][2] = co[0][5][2] (20) 
+      [0][6][0] = co[0][6][0] (21) 
+      [0][6][1] = co[0][6][1] (22) 
+      [0][6][2] = co[0][6][2] (23) 
     }
   top = process top_type<>^0 = top (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     co = bool^3
       {
-        [0][0][0] = co[0][0][0] (1) 
-        [0][0][1] = co[0][0][1] (2) 
-        [0][0][2] = co[0][0][2] (3) 
-        [0][1][0] = co[0][1][0] (4) 
-        [0][1][1] = co[0][1][1] (5) 
-        [0][1][2] = co[0][1][2] (6) 
-        [0][2][0] = co[0][2][0] (7) 
-        [0][2][1] = co[0][2][1] (8) 
-        [0][2][2] = co[0][2][2] (9) 
-        [0][3][0] = co[0][3][0] (10) 
-        [0][3][1] = co[0][3][1] (11) 
-        [0][3][2] = co[0][3][2] (12) 
-        [0][4][0] = co[0][4][0] (13) 
-        [0][4][1] = co[0][4][1] (14) 
-        [0][4][2] = co[0][4][2] (15) 
-        [0][5][0] = co[0][5][0] (16) 
-        [0][5][1] = co[0][5][1] (17) 
-        [0][5][2] = co[0][5][2] (18) 
-        [0][6][0] = co[0][6][0] (19) 
-        [0][6][1] = co[0][6][1] (20) 
-        [0][6][2] = co[0][6][2] (21) 
+        [0][0][0] = co[0][0][0] (3) 
+        [0][0][1] = co[0][0][1] (4) 
+        [0][0][2] = co[0][0][2] (5) 
+        [0][1][0] = co[0][1][0] (6) 
+        [0][1][1] = co[0][1][1] (7) 
+        [0][1][2] = co[0][1][2] (8) 
+        [0][2][0] = co[0][2][0] (9) 
+        [0][2][1] = co[0][2][1] (10) 
+        [0][2][2] = co[0][2][2] (11) 
+        [0][3][0] = co[0][3][0] (12) 
+        [0][3][1] = co[0][3][1] (13) 
+        [0][3][2] = co[0][3][2] (14) 
+        [0][4][0] = co[0][4][0] (15) 
+        [0][4][1] = co[0][4][1] (16) 
+        [0][4][2] = co[0][4][2] (17) 
+        [0][5][0] = co[0][5][0] (18) 
+        [0][5][1] = co[0][5][1] (19) 
+        [0][5][2] = co[0][5][2] (20) 
+        [0][6][0] = co[0][6][0] (21) 
+        [0][6][1] = co[0][6][1] (22) 
+        [0][6][2] = co[0][6][2] (23) 
       }
   )
   Created state:
   process instance pool:
   1	top
   bool instance pool:
-  1	co[0][0][0]
-  2	co[0][0][1]
-  3	co[0][0][2]
-  4	co[0][1][0]
-  5	co[0][1][1]
-  6	co[0][1][2]
-  7	co[0][2][0]
-  8	co[0][2][1]
-  9	co[0][2][2]
-  10	co[0][3][0]
-  11	co[0][3][1]
-  12	co[0][3][2]
-  13	co[0][4][0]
-  14	co[0][4][1]
-  15	co[0][4][2]
-  16	co[0][5][0]
-  17	co[0][5][1]
-  18	co[0][5][2]
-  19	co[0][6][0]
-  20	co[0][6][1]
-  21	co[0][6][2]
+  1	!GND
+  2	!Vdd
+  3	co[0][0][0]
+  4	co[0][0][1]
+  5	co[0][0][2]
+  6	co[0][1][0]
+  7	co[0][1][1]
+  8	co[0][1][2]
+  9	co[0][2][0]
+  10	co[0][2][1]
+  11	co[0][2][2]
+  12	co[0][3][0]
+  13	co[0][3][1]
+  14	co[0][3][2]
+  15	co[0][4][0]
+  16	co[0][4][1]
+  17	co[0][4][2]
+  18	co[0][5][0]
+  19	co[0][5][1]
+  20	co[0][5][2]
+  21	co[0][6][0]
+  22	co[0][6][1]
+  23	co[0][6][2]
 }

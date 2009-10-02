@@ -1,0 +1,16 @@
+// "supply-06.hac"
+// copy-modified from "supply-05.hac"
+// just testing formatting of intermediate representation dump
+
+bool myVdd, myGND;
+bool x, y, z, w;
+prs <myVdd> {
+	x	=> y-
+}
+prs <myVdd, myGND> {
+	y	=> z-
+}
+prs {
+	z	=> w-
+}
+

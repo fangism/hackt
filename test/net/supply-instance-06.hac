@@ -1,0 +1,21 @@
+// "supply-instance-06.hac"
+// copy-modified from "supply-instance-04.hac"
+
+import "inv-01.hac";
+import "globals.hac";	// from $srcdir
+
+defproc foo(globals g; bool in) {
+inv a(in, );
+inv b$()(in, );
+inv c$(,)(in, );
+inv d$(g.GND_1)(in, );
+inv d2$(g.GND_2)(in, );
+inv e$(g.GND_1,)(in, );
+inv f$(,g.Vdd_1)(in, );
+inv h$(g.GND_2,g.Vdd_2)(in, );
+}
+
+globals g;
+bool Z;
+foo bar(g, Z);
+

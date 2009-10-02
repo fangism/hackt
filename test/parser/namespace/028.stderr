@@ -1,15 +1,33 @@
 Error: multiple matches found for 'bar'.
 Candidates are: 
 process-definition (defined) bar(
+    bool<> !GND
+    bool<> !Vdd
   )
   In definition "bar", we have: {
+  Instances:
+    !GND = bool<> foo::bar::!GND
+    !Vdd = bool<> foo::bar::!Vdd
   unroll sequence: 
+    ports: (
+      bool<> !GND
+      bool<> !Vdd
+    )
   }
 
 process-definition (defined) bar(
+    bool<> !GND
+    bool<> !Vdd
   )
   In definition "bar", we have: {
+  Instances:
+    !GND = bool<> ick::bar::!GND
+    !Vdd = bool<> ick::bar::!Vdd
   unroll sequence: 
+    ports: (
+      bool<> !GND
+      bool<> !Vdd
+    )
   }
 
 concrete_type_ref: bad definition reference "bar"!  ERROR! [16:1..3]

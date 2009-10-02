@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.11 2007/10/12 22:43:48 fang Exp $
+	$Id: type.cc,v 1.12 2009/10/02 01:56:39 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -30,6 +30,7 @@
 #include "util/indent.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -49,7 +50,9 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::generic_type_ref, "(type-ref)")
 namespace memory {
 // explicit template instantiations
 using HAC::parser::concrete_type_ref;
+using HAC::parser::generic_type_ref;
 template class count_ptr<const concrete_type_ref>;
+template class count_ptr<const generic_type_ref>;
 }	// end namespace memory
 }	// end namespace util
 

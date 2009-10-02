@@ -1,5 +1,7 @@
 "p" -> "q"-
 ~"p" -> "q"+
 @ "p" iscomb
+connect "!GND" "x.!GND"
+connect "!Vdd" "x.!Vdd"
 connect "p" "x.a"
 connect "q" "x.b"

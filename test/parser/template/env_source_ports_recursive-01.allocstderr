@@ -2,41 +2,43 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	Z	source_pack_port_test<3, 3><{0,1,2}>
 	process: 8,4,5,6,7,2,3
-	bool: 6,7,8,9,10,11,12,13,14,15,1,2,3,4,5
+	bool: 1,2,8,9,10,11,12,13,14,15,16,17,3,4,5,6,7
 2	(top)	-	2	Z.Src[0]	source_e<3><1, {0}>
 	process: 3
-	bool: 1,2,3,4,5
+	bool: 1,2,3,4,5,6,7
 3	(top)	-	3	Z.Src[0].rr	e1of<3>
-	bool: 4,1,2,3
+	bool: 1,2,6,3,4,5
 4	(top)	-	4	Z.Src[1]	source_e<3><1, {1}>
 	process: 5
-	bool: 6,7,8,9,10
+	bool: 1,2,8,9,10,11,12
 5	(top)	-	5	Z.Src[1].rr	e1of<3>
-	bool: 9,6,7,8
+	bool: 1,2,11,8,9,10
 6	(top)	-	6	Z.Src[2]	source_e<3><1, {2}>
 	process: 7
-	bool: 11,12,13,14,15
+	bool: 1,2,13,14,15,16,17
 7	(top)	-	7	Z.Src[2].rr	e1of<3>
-	bool: 14,11,12,13
+	bool: 1,2,16,13,14,15
 8	process	1	1	Z.rec	source_pack_port_test<3, 2><{1,2}>
 	process: 9,6,7,4,5
-	bool: 11,12,13,14,15,6,7,8,9,10
+	bool: 1,2,13,14,15,16,17,8,9,10,11,12
 9	process	8	1	Z.rec.rec	source_pack_port_test<3, 1><{2}>
 	process: 6,7
-	bool: 11,12,13,14,15
+	bool: 1,2,13,14,15,16,17
 [global bool entries]
-1	(top)	-	1	Z.Src[0].rr.d[0]	
-2	(top)	-	2	Z.Src[0].rr.d[1]	
-3	(top)	-	3	Z.Src[0].rr.d[2]	
-4	(top)	-	4	Z.Src[0].rr.e	
-5	(top)	-	5	Z.Src[0]._Reset	
-6	(top)	-	6	Z.Src[1].rr.d[0]	
-7	(top)	-	7	Z.Src[1].rr.d[1]	
-8	(top)	-	8	Z.Src[1].rr.d[2]	
-9	(top)	-	9	Z.Src[1].rr.e	
-10	(top)	-	10	Z.Src[1]._Reset	
-11	(top)	-	11	Z.Src[2].rr.d[0]	
-12	(top)	-	12	Z.Src[2].rr.d[1]	
-13	(top)	-	13	Z.Src[2].rr.d[2]	
-14	(top)	-	14	Z.Src[2].rr.e	
-15	(top)	-	15	Z.Src[2]._Reset	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	Z.Src[0].rr.d[0]	
+4	(top)	-	4	Z.Src[0].rr.d[1]	
+5	(top)	-	5	Z.Src[0].rr.d[2]	
+6	(top)	-	6	Z.Src[0].rr.e	
+7	(top)	-	7	Z.Src[0]._Reset	
+8	(top)	-	8	Z.Src[1].rr.d[0]	
+9	(top)	-	9	Z.Src[1].rr.d[1]	
+10	(top)	-	10	Z.Src[1].rr.d[2]	
+11	(top)	-	11	Z.Src[1].rr.e	
+12	(top)	-	12	Z.Src[1]._Reset	
+13	(top)	-	13	Z.Src[2].rr.d[0]	
+14	(top)	-	14	Z.Src[2].rr.d[1]	
+15	(top)	-	15	Z.Src[2].rr.d[2]	
+16	(top)	-	16	Z.Src[2].rr.e	
+17	(top)	-	17	Z.Src[2]._Reset	

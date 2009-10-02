@@ -3,9 +3,9 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	60
-	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	68
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -14,60 +14,67 @@ Persistent Object Manager text dump:
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	29	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	29
-	32	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
-	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
-	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	34	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	29
+	37	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
+	40	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
+	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
-	47	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	29
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
 	52	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	29
 	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	56	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	footprnt	0	#HEAD#	#TAIL#	730
+	57	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	29
+	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	766
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  10 instantiation-collections
+  12 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     a = bool<> a
     b = bool<> b
     c = bool<> c
@@ -81,44 +88,48 @@ In namespace "", we have: {
 }
 
 footprint: {
-  a = bool^0 = a (1) 
-  b = bool^0 = b (2) 
-  c = bool^0 = c (3) 
-  d = bool^0 = d (4) 
-  e = bool^0 = e (5) 
-  f = bool^0 = f (6) 
-  g = bool^0 = g (7) 
-  h = bool^0 = h (8) 
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  a = bool^0 = a (3) 
+  b = bool^0 = b (4) 
+  c = bool^0 = c (5) 
+  d = bool^0 = d (6) 
+  e = bool^0 = e (7) 
+  f = bool^0 = f (8) 
+  g = bool^0 = g (9) 
+  h = bool^0 = h (10) 
   x = bool^2
     {
-      [0][0] = a (1) 
-      [0][1] = b (2) 
-      [1][0] = c (3) 
-      [1][1] = d (4) 
-      [2][0] = e (5) 
-      [2][1] = f (6) 
-      [3][0] = g (7) 
-      [3][1] = h (8) 
+      [0][0] = a (3) 
+      [0][1] = b (4) 
+      [1][0] = c (5) 
+      [1][1] = d (6) 
+      [2][0] = e (7) 
+      [2][1] = f (8) 
+      [3][0] = g (9) 
+      [3][1] = h (10) 
     }
   y = bool^2
     {
-      [0][0] = a (1) 
-      [0][1] = b (2) 
-      [0][2] = c (3) 
-      [0][3] = d (4) 
-      [1][0] = e (5) 
-      [1][1] = f (6) 
-      [1][2] = g (7) 
-      [1][3] = h (8) 
+      [0][0] = a (3) 
+      [0][1] = b (4) 
+      [0][2] = c (5) 
+      [0][3] = d (6) 
+      [1][0] = e (7) 
+      [1][1] = f (8) 
+      [1][2] = g (9) 
+      [1][3] = h (10) 
     }
   Created state:
   bool instance pool:
-  1	a
-  2	b
-  3	c
-  4	d
-  5	e
-  6	f
-  7	g
-  8	h
+  1	!GND
+  2	!Vdd
+  3	a
+  4	b
+  5	c
+  6	d
+  7	e
+  8	f
+  9	g
+  10	h
 }

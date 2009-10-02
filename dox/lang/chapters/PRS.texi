@@ -1,5 +1,5 @@
 @c "chapters/PRS.texi"
-@c $Id: PRS.texi,v 1.10 2009/09/14 21:16:41 fang Exp $
+@c $Id: PRS.texi,v 1.11 2009/10/02 01:55:55 fang Exp $
 
 @node PRS
 @chapter Production Rule Set (PRS)
@@ -254,9 +254,24 @@ Some existing attributes:
 @subsection Literal attributes
 @cindex literal attributes, PRS
 @cindex sizing of PRS
+@cindex transistor type override
 
 The literals of the rule expressions may have attributes.  
 Literal attribute are mostly for back-end tool-specific use.
+Literal attributes are written like other attributes
+@samp{key} or @samp{key=value}.  
+
+@itemize
+@item @i{literal} : @i{bool-ref}
+@item @i{literal} : @i{bool-ref} @t{<} @i{W} @t{>}
+@item @i{literal} : @i{bool-ref} @t{<} @i{W} @t{,} @i{L} @t{>}
+@item @i{literal} : @i{bool-ref} @t{<} @i{W} @t{,} @i{L} @t{;} @i{literal-attrib} @t{;} ... @t{>}
+@item @i{literal} : @i{bool-ref} @t{<} @i{W} @t{;} @i{literal-attrib} @t{;} ... @t{>}
+@item @i{literal} : @i{bool-ref} @t{<} @t{;} @i{literal-attrib} @t{;} ... @t{>}
+@end itemize
+
+@noindent
+The width @i{W} and length @i{L} and literal attributes are all optional.
 
 @include prs/literal-vt.texi
 
@@ -264,9 +279,11 @@ Ideas:
 
 Instance-specific attributes?
 
-Procedural layout?
-
-Automatic sizing
+Applications:
+@itemize
+@item Procedural layout
+@item Automatic sizing
+@end itemize
 
 @c ----------------------------------------------------------------------------
 @node PRS Operator attributes
@@ -346,6 +363,7 @@ This section describes some of the recent extensions to the PRS language.
 @menu
 * PRS Macros::
 * Pass-gates::
+* PRS Supply Overrides::
 @end menu
 
 @c ----------------------------------------------------------------------------
@@ -400,6 +418,9 @@ Below are a list of macros documented in the source file
 @include prs/macro-passp.texi
 @include prs/macro-echo.texi
 
+@strong{New:} Pass-gate parameters may now take optional transistor type
+overrides (@samp{lvt, hvt}).  
+
 @c ----------------------------------------------------------------------------
 @node Pass-gates
 @subsection Pass-gates
@@ -447,6 +468,32 @@ gate width.
 Technically, one may use pass-gate to construct arbitrary transistor
 topologies.  
 
+Writing a production rule in terms of equivalent pass-gates
+will not produce sane digital behavior in simulation because
+of the unidirectional nature of the generated equivalent rule.  
+(They should, however, result in the same netlist in backends.)
+Hence, all standard logic should be writte as rules, not pass-gates.  
+
+@c ----------------------------------------------------------------------------
+@node PRS Supply Overrides
+@subsection PRS Supply Overrides
+@cindex supply overrides
+@cindex power supply
+
+Production rules assume that a pull-up rule is implicitly connected to
+some high power supply (often @t{Vdd}) and pull-down rules are rooted
+at some low supply (often @t{GND}).  
+The simulated interpretation of rules is agnostic to the actual supply used.  
+When left unspeciifed, rules by default connect to the implicit supplies
+for each process, @t{!Vdd} and @t{!GND}.  @xref{Implicit Ports}.
+For netlist back-ends, however, the way to override the supply nodes
+for a block of production rules is to pass in replacement supplies:
+
+@itemize
+@item @t{prs} @t{<} @i{Vdd} @t{>} @t{@{...@}}
+@item @t{prs} @t{<} @i{Vdd} @t{,} @i{GND} @t{>} @t{@{...@}}
+@end itemize
+
 @c ----------------------------------------------------------------------------
 @node PRS Options
 @section Options
@@ -454,6 +501,7 @@ topologies.
 Compiler warnings:
 
 CMOS-implementability (exceptions allowed for attribute).  
+(This happens to be implemented as an error condition in @command{hacknet}.)
 
 Staticizers?
 

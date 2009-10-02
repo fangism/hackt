@@ -1,7 +1,7 @@
 // "compat-02.hac"
 // copy-modified from "compat-01.hac"
 // netgen compatibility test
-// @hacknet-flags@ -C tsmc65-equiv.netgen-conf -f emit_parasitics=1
+// @hacknet-flags@ -f unknown_option=ignore -C tsmc65-equiv.netgen-conf -f emit_parasitics=1
 // @deps@ tsmc65-equiv.netgen-conf
 
 import "inv-02.hac";

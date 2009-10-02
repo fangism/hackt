@@ -1,13 +1,13 @@
-.subckt celem<> GND Vdd a b o
-M0_ GND a #0 GND nch W=0.15U L=0.06U
+.subckt celem<> !GND !Vdd a b o
+M0_ !GND a #0 !GND nch W=0.15U L=0.06U
 + AS=0.045P PS=0.9U AD=0.036P PD=0.78U
-M1_ #0 b o GND nch W=0.15U L=0.06U
+M1_ #0 b o !GND nch W=0.15U L=0.06U
 + AS=0.036P PS=0.78U AD=0.045P PD=0.9U
-M2_ Vdd a #1 Vdd pch W=0.3U L=0.06U
+M2_ !Vdd a #1 !Vdd pch W=0.3U L=0.06U
 + AS=0.09P PS=1.2U AD=0.072P PD=1.08U
-M3_ #1 b o Vdd pch W=0.3U L=0.06U
+M3_ #1 b o !Vdd pch W=0.3U L=0.06U
 + AS=0.072P PS=1.08U AD=0.09P PD=1.2U
 .ends
 
-xfoo GND Vdd foo.a foo.b foo.o celem<>
+xfoo !GND !Vdd foo.a foo.b foo.o celem<>
 

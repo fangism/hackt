@@ -1,0 +1,11 @@
+// "supply-instance-16.hac"
+// copy-modified from "supply-instance-15.hac"
+
+import "inv-01.hac";
+import "globals.hac";
+
+globals g;
+inv foo;
+foo $(g.GND_1, );
+foo $(g.GND_2, );
+

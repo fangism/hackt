@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition_alias.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_alias.h,v 1.9 2009/09/14 21:16:53 fang Exp $
+	$Id: process_definition_alias.h,v 1.10 2009/10/02 01:56:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_ALIAS_H__
@@ -53,6 +53,9 @@ public:
 
 	never_ptr<const scopespace>
 	get_scopespace(void) const;
+
+	const process_definition&
+	get_canonical_proc_def(void) const;
 
 	never_ptr<const fundamental_type_reference>
 	get_base_type_ref(void) const;

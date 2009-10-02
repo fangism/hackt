@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.16 2009/04/17 21:14:37 fang Exp $
+	$Id: Node.cc,v 1.17 2009/10/02 01:57:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,6 +17,7 @@
 #include "util/STL/valarray_iterator.h"
 #include "sim/prsim/process_graph.h"	// for faninout_struct_type
 #include "Object/inst/connection_policy.h"	// for bool_connect_policy
+#include "Object/devel_switches.h"	// for IMPLICIT_SUPPLY_PORTS
 
 namespace HAC {
 namespace SIM {
@@ -335,7 +336,11 @@ NodeState::save_state(ostream& o) const {
  */
 void
 NodeState::load_state(istream& i) {
+#if IMPLICIT_SUPPLY_PORTS
+	// no longer true with global !GND and !Vdd
+#else
 	INVARIANT(value == LOGIC_OTHER);
+#endif
 #if NODE_ALIGN_MARKERS
 	char dd;
 	read_value(i, dd);

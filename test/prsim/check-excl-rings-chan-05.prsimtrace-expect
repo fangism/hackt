@@ -5,16 +5,16 @@ Trace file contents: 3 epochs.
 	1	0	0	#SIZE#	#SIZE#
 	2	7	0	#SIZE#	#SIZE#
 Epoch 0: (initial values)
-X X X X X 
+X 0 1 X X X X 
 Epoch 1:
 	event		event	cause	node	node
 	index	time	node	index	index	value	rule/node
 	0	0	0	0	0	X	(null)
-	1	0	0	0	1	1	(a:1)
-	2	0	0	0	2	1	(b:1)
-	3	10	1	1	3	0	[after 10]	a -> x-
-	4	10	3	2	4	0	[after 10]	b -> y-
-	5	10	0	0	1	0	(a:0)
-	6	20	2	5	3	1	[after 10]	~a -> x+
+	1	0	0	0	3	1	(a:1)
+	2	0	0	0	4	1	(b:1)
+	3	10	1	1	5	0	[after 10]	a -> x-
+	4	10	3	2	6	0	[after 10]	b -> y-
+	5	10	0	0	3	0	(a:0)
+	6	20	2	5	5	1	[after 10]	~a -> x+
 Epoch 2: (final values)
-X X X X X 
+X X X X X X X 

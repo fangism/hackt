@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.14 2008/11/12 03:00:00 fang Exp $
+	$Id: alias_empty.h,v 1.15 2009/10/02 01:56:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -128,6 +128,14 @@ protected:
 	static
 	void
 	__finalize_find(const this_type&, const unroll_context&) { }
+
+	static
+	bool
+	__has_complete_type(const this_type&) { return true; }
+
+	static
+	void
+	__assert_complete_type(const this_type&) { }
 
 public:
 	static

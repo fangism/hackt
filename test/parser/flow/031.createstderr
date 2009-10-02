@@ -3,79 +3,89 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
-	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	33
-	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	13	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	17	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	33
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	24	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	32	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	33	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	36	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
-	39	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
-	40	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	40	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	43	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	45	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	46	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
+	46	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
+	47	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	48	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	50	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	51	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	54	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	53	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	55	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	60	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	58	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	61	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1622
-	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	65	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	66	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1927
-	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	67	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1658
+	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2017
+	79	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
@@ -83,16 +93,22 @@ In namespace "", we have: {
     prime_array = process-definition (defined) prime_array<
       pint<> P
       >(
+        bool<> !GND
+        bool<> !Vdd
         bool<> x[0..P+1-1]
       )
       In definition "prime_array", we have: {
       Parameters:
         P = pint<> prime_array::P
       Instances:
+        !GND = bool<> prime_array::!GND
+        !Vdd = bool<> prime_array::!Vdd
         composite = bool<> prime_array::composite
         x = bool<> prime_array::x^1
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> x[0..P+1-1]
         )
         bool<> composite
@@ -108,285 +124,297 @@ In namespace "", we have: {
         )
       footprint collection: {
         <100> {
+          !GND = bool^0 = prime_array<100>::!GND (1) 
+          !Vdd = bool^0 = prime_array<100>::!Vdd (2) 
           P = pint^0 value: 100
-          composite = bool^0 = prime_array<100>::composite (1) 
+          composite = bool^0 = prime_array<100>::composite (3) 
           x = bool^1
             {
-              [0] = prime_array<100>::composite (1) 
-              [1] = prime_array<100>::composite (1) 
-              [2] = prime_array<100>::x[2] (2) 
-              [3] = prime_array<100>::x[3] (3) 
-              [4] = prime_array<100>::composite (1) 
-              [5] = prime_array<100>::x[5] (4) 
-              [6] = prime_array<100>::composite (1) 
-              [7] = prime_array<100>::x[7] (5) 
-              [8] = prime_array<100>::composite (1) 
-              [9] = prime_array<100>::composite (1) 
-              [10] = prime_array<100>::composite (1) 
-              [11] = prime_array<100>::x[11] (6) 
-              [12] = prime_array<100>::composite (1) 
-              [13] = prime_array<100>::x[13] (7) 
-              [14] = prime_array<100>::composite (1) 
-              [15] = prime_array<100>::composite (1) 
-              [16] = prime_array<100>::composite (1) 
-              [17] = prime_array<100>::x[17] (8) 
-              [18] = prime_array<100>::composite (1) 
-              [19] = prime_array<100>::x[19] (9) 
-              [20] = prime_array<100>::composite (1) 
-              [21] = prime_array<100>::composite (1) 
-              [22] = prime_array<100>::composite (1) 
-              [23] = prime_array<100>::x[23] (10) 
-              [24] = prime_array<100>::composite (1) 
-              [25] = prime_array<100>::composite (1) 
-              [26] = prime_array<100>::composite (1) 
-              [27] = prime_array<100>::composite (1) 
-              [28] = prime_array<100>::composite (1) 
-              [29] = prime_array<100>::x[29] (11) 
-              [30] = prime_array<100>::composite (1) 
-              [31] = prime_array<100>::x[31] (12) 
-              [32] = prime_array<100>::composite (1) 
-              [33] = prime_array<100>::composite (1) 
-              [34] = prime_array<100>::composite (1) 
-              [35] = prime_array<100>::composite (1) 
-              [36] = prime_array<100>::composite (1) 
-              [37] = prime_array<100>::x[37] (13) 
-              [38] = prime_array<100>::composite (1) 
-              [39] = prime_array<100>::composite (1) 
-              [40] = prime_array<100>::composite (1) 
-              [41] = prime_array<100>::x[41] (14) 
-              [42] = prime_array<100>::composite (1) 
-              [43] = prime_array<100>::x[43] (15) 
-              [44] = prime_array<100>::composite (1) 
-              [45] = prime_array<100>::composite (1) 
-              [46] = prime_array<100>::composite (1) 
-              [47] = prime_array<100>::x[47] (16) 
-              [48] = prime_array<100>::composite (1) 
-              [49] = prime_array<100>::composite (1) 
-              [50] = prime_array<100>::composite (1) 
-              [51] = prime_array<100>::composite (1) 
-              [52] = prime_array<100>::composite (1) 
-              [53] = prime_array<100>::x[53] (17) 
-              [54] = prime_array<100>::composite (1) 
-              [55] = prime_array<100>::composite (1) 
-              [56] = prime_array<100>::composite (1) 
-              [57] = prime_array<100>::composite (1) 
-              [58] = prime_array<100>::composite (1) 
-              [59] = prime_array<100>::x[59] (18) 
-              [60] = prime_array<100>::composite (1) 
-              [61] = prime_array<100>::x[61] (19) 
-              [62] = prime_array<100>::composite (1) 
-              [63] = prime_array<100>::composite (1) 
-              [64] = prime_array<100>::composite (1) 
-              [65] = prime_array<100>::composite (1) 
-              [66] = prime_array<100>::composite (1) 
-              [67] = prime_array<100>::x[67] (20) 
-              [68] = prime_array<100>::composite (1) 
-              [69] = prime_array<100>::composite (1) 
-              [70] = prime_array<100>::composite (1) 
-              [71] = prime_array<100>::x[71] (21) 
-              [72] = prime_array<100>::composite (1) 
-              [73] = prime_array<100>::x[73] (22) 
-              [74] = prime_array<100>::composite (1) 
-              [75] = prime_array<100>::composite (1) 
-              [76] = prime_array<100>::composite (1) 
-              [77] = prime_array<100>::composite (1) 
-              [78] = prime_array<100>::composite (1) 
-              [79] = prime_array<100>::x[79] (23) 
-              [80] = prime_array<100>::composite (1) 
-              [81] = prime_array<100>::composite (1) 
-              [82] = prime_array<100>::composite (1) 
-              [83] = prime_array<100>::x[83] (24) 
-              [84] = prime_array<100>::composite (1) 
-              [85] = prime_array<100>::composite (1) 
-              [86] = prime_array<100>::composite (1) 
-              [87] = prime_array<100>::composite (1) 
-              [88] = prime_array<100>::composite (1) 
-              [89] = prime_array<100>::x[89] (25) 
-              [90] = prime_array<100>::composite (1) 
-              [91] = prime_array<100>::composite (1) 
-              [92] = prime_array<100>::composite (1) 
-              [93] = prime_array<100>::composite (1) 
-              [94] = prime_array<100>::composite (1) 
-              [95] = prime_array<100>::composite (1) 
-              [96] = prime_array<100>::composite (1) 
-              [97] = prime_array<100>::x[97] (26) 
-              [98] = prime_array<100>::composite (1) 
-              [99] = prime_array<100>::composite (1) 
-              [100] = prime_array<100>::composite (1) 
+              [0] = prime_array<100>::composite (3) 
+              [1] = prime_array<100>::composite (3) 
+              [2] = prime_array<100>::x[2] (4) 
+              [3] = prime_array<100>::x[3] (5) 
+              [4] = prime_array<100>::composite (3) 
+              [5] = prime_array<100>::x[5] (6) 
+              [6] = prime_array<100>::composite (3) 
+              [7] = prime_array<100>::x[7] (7) 
+              [8] = prime_array<100>::composite (3) 
+              [9] = prime_array<100>::composite (3) 
+              [10] = prime_array<100>::composite (3) 
+              [11] = prime_array<100>::x[11] (8) 
+              [12] = prime_array<100>::composite (3) 
+              [13] = prime_array<100>::x[13] (9) 
+              [14] = prime_array<100>::composite (3) 
+              [15] = prime_array<100>::composite (3) 
+              [16] = prime_array<100>::composite (3) 
+              [17] = prime_array<100>::x[17] (10) 
+              [18] = prime_array<100>::composite (3) 
+              [19] = prime_array<100>::x[19] (11) 
+              [20] = prime_array<100>::composite (3) 
+              [21] = prime_array<100>::composite (3) 
+              [22] = prime_array<100>::composite (3) 
+              [23] = prime_array<100>::x[23] (12) 
+              [24] = prime_array<100>::composite (3) 
+              [25] = prime_array<100>::composite (3) 
+              [26] = prime_array<100>::composite (3) 
+              [27] = prime_array<100>::composite (3) 
+              [28] = prime_array<100>::composite (3) 
+              [29] = prime_array<100>::x[29] (13) 
+              [30] = prime_array<100>::composite (3) 
+              [31] = prime_array<100>::x[31] (14) 
+              [32] = prime_array<100>::composite (3) 
+              [33] = prime_array<100>::composite (3) 
+              [34] = prime_array<100>::composite (3) 
+              [35] = prime_array<100>::composite (3) 
+              [36] = prime_array<100>::composite (3) 
+              [37] = prime_array<100>::x[37] (15) 
+              [38] = prime_array<100>::composite (3) 
+              [39] = prime_array<100>::composite (3) 
+              [40] = prime_array<100>::composite (3) 
+              [41] = prime_array<100>::x[41] (16) 
+              [42] = prime_array<100>::composite (3) 
+              [43] = prime_array<100>::x[43] (17) 
+              [44] = prime_array<100>::composite (3) 
+              [45] = prime_array<100>::composite (3) 
+              [46] = prime_array<100>::composite (3) 
+              [47] = prime_array<100>::x[47] (18) 
+              [48] = prime_array<100>::composite (3) 
+              [49] = prime_array<100>::composite (3) 
+              [50] = prime_array<100>::composite (3) 
+              [51] = prime_array<100>::composite (3) 
+              [52] = prime_array<100>::composite (3) 
+              [53] = prime_array<100>::x[53] (19) 
+              [54] = prime_array<100>::composite (3) 
+              [55] = prime_array<100>::composite (3) 
+              [56] = prime_array<100>::composite (3) 
+              [57] = prime_array<100>::composite (3) 
+              [58] = prime_array<100>::composite (3) 
+              [59] = prime_array<100>::x[59] (20) 
+              [60] = prime_array<100>::composite (3) 
+              [61] = prime_array<100>::x[61] (21) 
+              [62] = prime_array<100>::composite (3) 
+              [63] = prime_array<100>::composite (3) 
+              [64] = prime_array<100>::composite (3) 
+              [65] = prime_array<100>::composite (3) 
+              [66] = prime_array<100>::composite (3) 
+              [67] = prime_array<100>::x[67] (22) 
+              [68] = prime_array<100>::composite (3) 
+              [69] = prime_array<100>::composite (3) 
+              [70] = prime_array<100>::composite (3) 
+              [71] = prime_array<100>::x[71] (23) 
+              [72] = prime_array<100>::composite (3) 
+              [73] = prime_array<100>::x[73] (24) 
+              [74] = prime_array<100>::composite (3) 
+              [75] = prime_array<100>::composite (3) 
+              [76] = prime_array<100>::composite (3) 
+              [77] = prime_array<100>::composite (3) 
+              [78] = prime_array<100>::composite (3) 
+              [79] = prime_array<100>::x[79] (25) 
+              [80] = prime_array<100>::composite (3) 
+              [81] = prime_array<100>::composite (3) 
+              [82] = prime_array<100>::composite (3) 
+              [83] = prime_array<100>::x[83] (26) 
+              [84] = prime_array<100>::composite (3) 
+              [85] = prime_array<100>::composite (3) 
+              [86] = prime_array<100>::composite (3) 
+              [87] = prime_array<100>::composite (3) 
+              [88] = prime_array<100>::composite (3) 
+              [89] = prime_array<100>::x[89] (27) 
+              [90] = prime_array<100>::composite (3) 
+              [91] = prime_array<100>::composite (3) 
+              [92] = prime_array<100>::composite (3) 
+              [93] = prime_array<100>::composite (3) 
+              [94] = prime_array<100>::composite (3) 
+              [95] = prime_array<100>::composite (3) 
+              [96] = prime_array<100>::composite (3) 
+              [97] = prime_array<100>::x[97] (28) 
+              [98] = prime_array<100>::composite (3) 
+              [99] = prime_array<100>::composite (3) 
+              [100] = prime_array<100>::composite (3) 
             }
           Created state:
           bool instance pool:
-          1	prime_array<100>::composite
-          2	prime_array<100>::x[2]
-          3	prime_array<100>::x[3]
-          4	prime_array<100>::x[5]
-          5	prime_array<100>::x[7]
-          6	prime_array<100>::x[11]
-          7	prime_array<100>::x[13]
-          8	prime_array<100>::x[17]
-          9	prime_array<100>::x[19]
-          10	prime_array<100>::x[23]
-          11	prime_array<100>::x[29]
-          12	prime_array<100>::x[31]
-          13	prime_array<100>::x[37]
-          14	prime_array<100>::x[41]
-          15	prime_array<100>::x[43]
-          16	prime_array<100>::x[47]
-          17	prime_array<100>::x[53]
-          18	prime_array<100>::x[59]
-          19	prime_array<100>::x[61]
-          20	prime_array<100>::x[67]
-          21	prime_array<100>::x[71]
-          22	prime_array<100>::x[73]
-          23	prime_array<100>::x[79]
-          24	prime_array<100>::x[83]
-          25	prime_array<100>::x[89]
-          26	prime_array<100>::x[97]
+          1	prime_array<100>::!GND
+          2	prime_array<100>::!Vdd
+          3	prime_array<100>::composite
+          4	prime_array<100>::x[2]
+          5	prime_array<100>::x[3]
+          6	prime_array<100>::x[5]
+          7	prime_array<100>::x[7]
+          8	prime_array<100>::x[11]
+          9	prime_array<100>::x[13]
+          10	prime_array<100>::x[17]
+          11	prime_array<100>::x[19]
+          12	prime_array<100>::x[23]
+          13	prime_array<100>::x[29]
+          14	prime_array<100>::x[31]
+          15	prime_array<100>::x[37]
+          16	prime_array<100>::x[41]
+          17	prime_array<100>::x[43]
+          18	prime_array<100>::x[47]
+          19	prime_array<100>::x[53]
+          20	prime_array<100>::x[59]
+          21	prime_array<100>::x[61]
+          22	prime_array<100>::x[67]
+          23	prime_array<100>::x[71]
+          24	prime_array<100>::x[73]
+          25	prime_array<100>::x[79]
+          26	prime_array<100>::x[83]
+          27	prime_array<100>::x[89]
+          28	prime_array<100>::x[97]
           bool port aliases:
-          1: prime_array<100>::x[0] = prime_array<100>::x[1] = prime_array<100>::x[4] = prime_array<100>::x[6] = prime_array<100>::x[8] = prime_array<100>::x[9] = prime_array<100>::x[10] = prime_array<100>::x[12] = prime_array<100>::x[14] = prime_array<100>::x[15] = prime_array<100>::x[16] = prime_array<100>::x[18] = prime_array<100>::x[20] = prime_array<100>::x[21] = prime_array<100>::x[22] = prime_array<100>::x[24] = prime_array<100>::x[25] = prime_array<100>::x[26] = prime_array<100>::x[27] = prime_array<100>::x[28] = prime_array<100>::x[30] = prime_array<100>::x[32] = prime_array<100>::x[33] = prime_array<100>::x[34] = prime_array<100>::x[35] = prime_array<100>::x[36] = prime_array<100>::x[38] = prime_array<100>::x[39] = prime_array<100>::x[40] = prime_array<100>::x[42] = prime_array<100>::x[44] = prime_array<100>::x[45] = prime_array<100>::x[46] = prime_array<100>::x[48] = prime_array<100>::x[49] = prime_array<100>::x[50] = prime_array<100>::x[51] = prime_array<100>::x[52] = prime_array<100>::x[54] = prime_array<100>::x[55] = prime_array<100>::x[56] = prime_array<100>::x[57] = prime_array<100>::x[58] = prime_array<100>::x[60] = prime_array<100>::x[62] = prime_array<100>::x[63] = prime_array<100>::x[64] = prime_array<100>::x[65] = prime_array<100>::x[66] = prime_array<100>::x[68] = prime_array<100>::x[69] = prime_array<100>::x[70] = prime_array<100>::x[72] = prime_array<100>::x[74] = prime_array<100>::x[75] = prime_array<100>::x[76] = prime_array<100>::x[77] = prime_array<100>::x[78] = prime_array<100>::x[80] = prime_array<100>::x[81] = prime_array<100>::x[82] = prime_array<100>::x[84] = prime_array<100>::x[85] = prime_array<100>::x[86] = prime_array<100>::x[87] = prime_array<100>::x[88] = prime_array<100>::x[90] = prime_array<100>::x[91] = prime_array<100>::x[92] = prime_array<100>::x[93] = prime_array<100>::x[94] = prime_array<100>::x[95] = prime_array<100>::x[96] = prime_array<100>::x[98] = prime_array<100>::x[99] = prime_array<100>::x[100]
+          3: prime_array<100>::x[0] = prime_array<100>::x[1] = prime_array<100>::x[4] = prime_array<100>::x[6] = prime_array<100>::x[8] = prime_array<100>::x[9] = prime_array<100>::x[10] = prime_array<100>::x[12] = prime_array<100>::x[14] = prime_array<100>::x[15] = prime_array<100>::x[16] = prime_array<100>::x[18] = prime_array<100>::x[20] = prime_array<100>::x[21] = prime_array<100>::x[22] = prime_array<100>::x[24] = prime_array<100>::x[25] = prime_array<100>::x[26] = prime_array<100>::x[27] = prime_array<100>::x[28] = prime_array<100>::x[30] = prime_array<100>::x[32] = prime_array<100>::x[33] = prime_array<100>::x[34] = prime_array<100>::x[35] = prime_array<100>::x[36] = prime_array<100>::x[38] = prime_array<100>::x[39] = prime_array<100>::x[40] = prime_array<100>::x[42] = prime_array<100>::x[44] = prime_array<100>::x[45] = prime_array<100>::x[46] = prime_array<100>::x[48] = prime_array<100>::x[49] = prime_array<100>::x[50] = prime_array<100>::x[51] = prime_array<100>::x[52] = prime_array<100>::x[54] = prime_array<100>::x[55] = prime_array<100>::x[56] = prime_array<100>::x[57] = prime_array<100>::x[58] = prime_array<100>::x[60] = prime_array<100>::x[62] = prime_array<100>::x[63] = prime_array<100>::x[64] = prime_array<100>::x[65] = prime_array<100>::x[66] = prime_array<100>::x[68] = prime_array<100>::x[69] = prime_array<100>::x[70] = prime_array<100>::x[72] = prime_array<100>::x[74] = prime_array<100>::x[75] = prime_array<100>::x[76] = prime_array<100>::x[77] = prime_array<100>::x[78] = prime_array<100>::x[80] = prime_array<100>::x[81] = prime_array<100>::x[82] = prime_array<100>::x[84] = prime_array<100>::x[85] = prime_array<100>::x[86] = prime_array<100>::x[87] = prime_array<100>::x[88] = prime_array<100>::x[90] = prime_array<100>::x[91] = prime_array<100>::x[92] = prime_array<100>::x[93] = prime_array<100>::x[94] = prime_array<100>::x[95] = prime_array<100>::x[96] = prime_array<100>::x[98] = prime_array<100>::x[99] = prime_array<100>::x[100]
         }
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     p = prime_array<100> p
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   p = process prime_array<100>^0 = p (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     x = bool^1
       {
-        [0] = p.x[0] (1) 
-        [1] = p.x[0] (1) 
-        [2] = p.x[2] (2) 
-        [3] = p.x[3] (3) 
-        [4] = p.x[0] (1) 
-        [5] = p.x[5] (4) 
-        [6] = p.x[0] (1) 
-        [7] = p.x[7] (5) 
-        [8] = p.x[0] (1) 
-        [9] = p.x[0] (1) 
-        [10] = p.x[0] (1) 
-        [11] = p.x[11] (6) 
-        [12] = p.x[0] (1) 
-        [13] = p.x[13] (7) 
-        [14] = p.x[0] (1) 
-        [15] = p.x[0] (1) 
-        [16] = p.x[0] (1) 
-        [17] = p.x[17] (8) 
-        [18] = p.x[0] (1) 
-        [19] = p.x[19] (9) 
-        [20] = p.x[0] (1) 
-        [21] = p.x[0] (1) 
-        [22] = p.x[0] (1) 
-        [23] = p.x[23] (10) 
-        [24] = p.x[0] (1) 
-        [25] = p.x[0] (1) 
-        [26] = p.x[0] (1) 
-        [27] = p.x[0] (1) 
-        [28] = p.x[0] (1) 
-        [29] = p.x[29] (11) 
-        [30] = p.x[0] (1) 
-        [31] = p.x[31] (12) 
-        [32] = p.x[0] (1) 
-        [33] = p.x[0] (1) 
-        [34] = p.x[0] (1) 
-        [35] = p.x[0] (1) 
-        [36] = p.x[0] (1) 
-        [37] = p.x[37] (13) 
-        [38] = p.x[0] (1) 
-        [39] = p.x[0] (1) 
-        [40] = p.x[0] (1) 
-        [41] = p.x[41] (14) 
-        [42] = p.x[0] (1) 
-        [43] = p.x[43] (15) 
-        [44] = p.x[0] (1) 
-        [45] = p.x[0] (1) 
-        [46] = p.x[0] (1) 
-        [47] = p.x[47] (16) 
-        [48] = p.x[0] (1) 
-        [49] = p.x[0] (1) 
-        [50] = p.x[0] (1) 
-        [51] = p.x[0] (1) 
-        [52] = p.x[0] (1) 
-        [53] = p.x[53] (17) 
-        [54] = p.x[0] (1) 
-        [55] = p.x[0] (1) 
-        [56] = p.x[0] (1) 
-        [57] = p.x[0] (1) 
-        [58] = p.x[0] (1) 
-        [59] = p.x[59] (18) 
-        [60] = p.x[0] (1) 
-        [61] = p.x[61] (19) 
-        [62] = p.x[0] (1) 
-        [63] = p.x[0] (1) 
-        [64] = p.x[0] (1) 
-        [65] = p.x[0] (1) 
-        [66] = p.x[0] (1) 
-        [67] = p.x[67] (20) 
-        [68] = p.x[0] (1) 
-        [69] = p.x[0] (1) 
-        [70] = p.x[0] (1) 
-        [71] = p.x[71] (21) 
-        [72] = p.x[0] (1) 
-        [73] = p.x[73] (22) 
-        [74] = p.x[0] (1) 
-        [75] = p.x[0] (1) 
-        [76] = p.x[0] (1) 
-        [77] = p.x[0] (1) 
-        [78] = p.x[0] (1) 
-        [79] = p.x[79] (23) 
-        [80] = p.x[0] (1) 
-        [81] = p.x[0] (1) 
-        [82] = p.x[0] (1) 
-        [83] = p.x[83] (24) 
-        [84] = p.x[0] (1) 
-        [85] = p.x[0] (1) 
-        [86] = p.x[0] (1) 
-        [87] = p.x[0] (1) 
-        [88] = p.x[0] (1) 
-        [89] = p.x[89] (25) 
-        [90] = p.x[0] (1) 
-        [91] = p.x[0] (1) 
-        [92] = p.x[0] (1) 
-        [93] = p.x[0] (1) 
-        [94] = p.x[0] (1) 
-        [95] = p.x[0] (1) 
-        [96] = p.x[0] (1) 
-        [97] = p.x[97] (26) 
-        [98] = p.x[0] (1) 
-        [99] = p.x[0] (1) 
-        [100] = p.x[0] (1) 
+        [0] = p.x[0] (3) 
+        [1] = p.x[0] (3) 
+        [2] = p.x[2] (4) 
+        [3] = p.x[3] (5) 
+        [4] = p.x[0] (3) 
+        [5] = p.x[5] (6) 
+        [6] = p.x[0] (3) 
+        [7] = p.x[7] (7) 
+        [8] = p.x[0] (3) 
+        [9] = p.x[0] (3) 
+        [10] = p.x[0] (3) 
+        [11] = p.x[11] (8) 
+        [12] = p.x[0] (3) 
+        [13] = p.x[13] (9) 
+        [14] = p.x[0] (3) 
+        [15] = p.x[0] (3) 
+        [16] = p.x[0] (3) 
+        [17] = p.x[17] (10) 
+        [18] = p.x[0] (3) 
+        [19] = p.x[19] (11) 
+        [20] = p.x[0] (3) 
+        [21] = p.x[0] (3) 
+        [22] = p.x[0] (3) 
+        [23] = p.x[23] (12) 
+        [24] = p.x[0] (3) 
+        [25] = p.x[0] (3) 
+        [26] = p.x[0] (3) 
+        [27] = p.x[0] (3) 
+        [28] = p.x[0] (3) 
+        [29] = p.x[29] (13) 
+        [30] = p.x[0] (3) 
+        [31] = p.x[31] (14) 
+        [32] = p.x[0] (3) 
+        [33] = p.x[0] (3) 
+        [34] = p.x[0] (3) 
+        [35] = p.x[0] (3) 
+        [36] = p.x[0] (3) 
+        [37] = p.x[37] (15) 
+        [38] = p.x[0] (3) 
+        [39] = p.x[0] (3) 
+        [40] = p.x[0] (3) 
+        [41] = p.x[41] (16) 
+        [42] = p.x[0] (3) 
+        [43] = p.x[43] (17) 
+        [44] = p.x[0] (3) 
+        [45] = p.x[0] (3) 
+        [46] = p.x[0] (3) 
+        [47] = p.x[47] (18) 
+        [48] = p.x[0] (3) 
+        [49] = p.x[0] (3) 
+        [50] = p.x[0] (3) 
+        [51] = p.x[0] (3) 
+        [52] = p.x[0] (3) 
+        [53] = p.x[53] (19) 
+        [54] = p.x[0] (3) 
+        [55] = p.x[0] (3) 
+        [56] = p.x[0] (3) 
+        [57] = p.x[0] (3) 
+        [58] = p.x[0] (3) 
+        [59] = p.x[59] (20) 
+        [60] = p.x[0] (3) 
+        [61] = p.x[61] (21) 
+        [62] = p.x[0] (3) 
+        [63] = p.x[0] (3) 
+        [64] = p.x[0] (3) 
+        [65] = p.x[0] (3) 
+        [66] = p.x[0] (3) 
+        [67] = p.x[67] (22) 
+        [68] = p.x[0] (3) 
+        [69] = p.x[0] (3) 
+        [70] = p.x[0] (3) 
+        [71] = p.x[71] (23) 
+        [72] = p.x[0] (3) 
+        [73] = p.x[73] (24) 
+        [74] = p.x[0] (3) 
+        [75] = p.x[0] (3) 
+        [76] = p.x[0] (3) 
+        [77] = p.x[0] (3) 
+        [78] = p.x[0] (3) 
+        [79] = p.x[79] (25) 
+        [80] = p.x[0] (3) 
+        [81] = p.x[0] (3) 
+        [82] = p.x[0] (3) 
+        [83] = p.x[83] (26) 
+        [84] = p.x[0] (3) 
+        [85] = p.x[0] (3) 
+        [86] = p.x[0] (3) 
+        [87] = p.x[0] (3) 
+        [88] = p.x[0] (3) 
+        [89] = p.x[89] (27) 
+        [90] = p.x[0] (3) 
+        [91] = p.x[0] (3) 
+        [92] = p.x[0] (3) 
+        [93] = p.x[0] (3) 
+        [94] = p.x[0] (3) 
+        [95] = p.x[0] (3) 
+        [96] = p.x[0] (3) 
+        [97] = p.x[97] (28) 
+        [98] = p.x[0] (3) 
+        [99] = p.x[0] (3) 
+        [100] = p.x[0] (3) 
       }
   )
   Created state:
   process instance pool:
   1	p
   bool instance pool:
-  1	p.x[0]
-  2	p.x[2]
-  3	p.x[3]
-  4	p.x[5]
-  5	p.x[7]
-  6	p.x[11]
-  7	p.x[13]
-  8	p.x[17]
-  9	p.x[19]
-  10	p.x[23]
-  11	p.x[29]
-  12	p.x[31]
-  13	p.x[37]
-  14	p.x[41]
-  15	p.x[43]
-  16	p.x[47]
-  17	p.x[53]
-  18	p.x[59]
-  19	p.x[61]
-  20	p.x[67]
-  21	p.x[71]
-  22	p.x[73]
-  23	p.x[79]
-  24	p.x[83]
-  25	p.x[89]
-  26	p.x[97]
+  1	!GND
+  2	!Vdd
+  3	p.x[0]
+  4	p.x[2]
+  5	p.x[3]
+  6	p.x[5]
+  7	p.x[7]
+  8	p.x[11]
+  9	p.x[13]
+  10	p.x[17]
+  11	p.x[19]
+  12	p.x[23]
+  13	p.x[29]
+  14	p.x[31]
+  15	p.x[37]
+  16	p.x[41]
+  17	p.x[43]
+  18	p.x[47]
+  19	p.x[53]
+  20	p.x[59]
+  21	p.x[61]
+  22	p.x[67]
+  23	p.x[71]
+  24	p.x[73]
+  25	p.x[79]
+  26	p.x[83]
+  27	p.x[89]
+  28	p.x[97]
 }

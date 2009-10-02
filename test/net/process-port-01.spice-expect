@@ -1,8 +1,8 @@
 * subcircuit pair<> is empty.
-.subckt foo<> GND Vdd p.b z
-M0_ GND p.b z GND nch W=5u L=2u
-M1_ Vdd p.b z Vdd pch W=5u L=2u
+.subckt foo<> !GND !Vdd p.b z
+M0_ !GND p.b z !GND nch W=5u L=2u
+M1_ !Vdd p.b z !Vdd pch W=5u L=2u
 .ends
 
-xbar GND Vdd bar.p.b bar.z foo<>
+xbar !GND !Vdd bar.p.b bar.z foo<>
 

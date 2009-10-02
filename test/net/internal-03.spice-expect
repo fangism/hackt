@@ -1,10 +1,10 @@
-.subckt foo<>::INTSUB:0 GND @a _y en x
-M0_ GND en @a GND nch W=5u L=2u
-M1_ @a x _y GND nch W=5u L=2u
+.subckt foo<>::INTSUB:0 @a !GND _y en x
+M0_ !GND en @a !GND nch W=5u L=2u
+M1_ @a x _y !GND nch W=5u L=2u
 .ends
-.subckt foo<> GND en x _y
-xINTSUB:0:inst GND @a _y en x foo<>::INTSUB:0
+.subckt foo<> !GND en x _y
+xINTSUB:0:inst @a !GND _y en x foo<>::INTSUB:0
 .ends
 
-xbar GND bar.en bar.x bar._y foo<>
+xbar !GND bar.en bar.x bar._y foo<>
 

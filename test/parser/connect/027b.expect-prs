@@ -1,2 +1,4 @@
+= "!GND" "none.!GND"
+= "!Vdd" "none.!Vdd"
 = "foo" "none.a"
 = "foo" "none.b[0]"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.44 2009/09/14 21:16:50 fang Exp $
+	$Id: footprint.cc,v 1.45 2009/10/02 01:56:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -50,6 +50,10 @@
 #include "Object/expr/preal_const.h"
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/process_definition.h"
+#if IMPLICIT_SUPPLY_PORTS
+#include "Object/inst/bool_instance_collection.h"	// for bool_scalar
+#include "Object/type/process_type_reference.h"
+#endif
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/inst/parameterless_collection_type_manager.h"
 #include "Object/inst/int_collection_type_manager.h"
@@ -507,6 +511,7 @@ footprint::dump(ostream& o) const {
 ostream&
 footprint::dump_with_collections(ostream& o, const dump_flags& df, 
 		const expr_dump_context& dc) const {
+	// TODO: process may have no instances, but still have CHP events!
 	if (!instance_collection_map.empty()) {
 		const_instance_map_iterator
 			i(instance_collection_map.begin());
@@ -825,6 +830,263 @@ for ( ; i!=e; ++i) {
 	}	// end if
 }	// end for
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if IMPLICIT_SUPPLY_PORTS
+/**
+	Define to 1 to check for unique canonical visits to 
+	process port aliases. 
+	Goal: 0 because of they way automatic connections are determined.
+	This doesn't work anymore because of the way we check 
+	bool aliases before automatically connecting to !GND/!Vdd.
+	But now we need to beware that not all aliases in the same union-find
+	set will have complete type in the case of relaxed templates.  
+ */
+#define	VISIT_UNIQUE_PROCESS_ALIAS			0
+
+// temporary debugging flag
+#define	DEBUG_IMPLICIT_SUPPLY				0
+
+/**
+	Collect all top-level process instances in this scope.
+	Intend to automatically connect implicit supply ports. 
+	Note: this does NOT yet support internal node types!
+ */
+struct implicit_supply_connector : public alias_visitor {
+	typedef	instance_alias_info<process_tag>	alias_type;
+	typedef	instance_alias_info<bool_tag>		node_type;
+	const unroll_context&				c;
+#if VISIT_UNIQUE_PROCESS_ALIAS
+	std::set<const alias_type*>			visited;
+#endif
+	/**
+		
+	 */
+	node_type&					GND;
+	node_type&					Vdd;
+	bool						err;
+	// default GND
+	// default Vdd
+	implicit_supply_connector(const unroll_context& _c, 
+		node_type& g, node_type& v) : 
+		c(_c), 
+#if VISIT_UNIQUE_PROCESS_ALIAS
+		visited(), 
+#endif
+		GND(g), Vdd(v), err(false) { }
+
+VISIT_INSTANCE_ALIAS_INFO_PROTOS()
+
+private:
+	static
+	bool
+	__auto_connect_port(const alias_type&, const unroll_context&, 
+		const physical_instance_placeholder&, node_type&);
+};	// end struct implicit_supply_connector
+
+#define	DEFINE_SCOPE_PROCESS_VISIT_NULL(Tag)				\
+void									\
+implicit_supply_connector::visit(const instance_alias_info<Tag>&) { }
+
+DEFINE_SCOPE_PROCESS_VISIT_NULL(bool_tag)
+DEFINE_SCOPE_PROCESS_VISIT_NULL(enum_tag)
+DEFINE_SCOPE_PROCESS_VISIT_NULL(int_tag)
+DEFINE_SCOPE_PROCESS_VISIT_NULL(channel_tag)
+
+#undef	DEFINE_SCOPE_PROCESS_VISIT_NULL
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not recursive, just meant for top-level processes 
+	instance collections, local to this scope.  
+	In case of process aliases, just visit the canonical process once.
+	TODO: visit process port members of processes (recursive!)
+ */
+void
+implicit_supply_connector::visit(const instance_alias_info<process_tag>& _p) {
+	STACKTRACE_VERBOSE;
+#if VISIT_UNIQUE_PROCESS_ALIAS
+#if 1
+	const alias_type::pseudo_const_iterator cpi(_p.find());
+	if (!cpi->has_complete_type()) {
+		return;
+	}
+#else
+	// problem: breaks union-find connectivity if is not canonical
+	const alias_type::pseudo_const_iterator
+		cpi(_p.find_complete_type_alias());
+#endif
+	const alias_type& cp(*cpi);
+#else
+	// visit all processes, even if not canonical!
+	// but may not necessarily have complete type, 
+	// but should we still be able to connect its ports?
+	const alias_type& cp(_p);
+#endif
+#if VISIT_UNIQUE_PROCESS_ALIAS
+	const std::set<const alias_type*>::const_iterator
+		f(visited.find(&cp));	// canonical
+if (f == visited.end()) {
+	// not found, first time
+	visited.insert(&cp);
+#endif
+#if DEBUG_IMPLICIT_SUPPLY
+	cp.dump_hierarchical_name(cerr << "implicit ports: ") << endl;
+#endif
+#if !VISIT_UNIQUE_PROCESS_ALIAS
+if (cp.has_complete_type()) {
+#if DEBUG_IMPLICIT_SUPPLY
+	cerr << "has complete type." << endl;
+#endif
+	// recurse into process ports of processes
+	cp.subinstance_manager::accept(*this);
+#endif
+	// yes, we intend to modify!
+	// lookup Vdd port and GND port
+	// need type information of _p to get port placeholders
+	const process_definition&
+		pd(cp.container->get_canonical_collection()
+			.get_placeholder()->get_unresolved_type_ref()
+			.is_a<const process_type_reference>()
+			// ->make_canonical_process_type_reference()
+			->get_base_proc_def()->get_canonical_proc_def());
+	// must canonicalize to take care of typedefs
+	const port_formals_manager& pfm(pd.get_port_formals());
+	const size_t imp = pfm.implicit_ports();
+	if (imp) {
+		INVARIANT(imp == 2);		// Vdd, GND for now
+		port_formals_manager::const_list_iterator fi(pfm.begin());
+		// first, GND
+		if (__auto_connect_port(cp, c, **fi, GND))
+			err = true;
+		++fi;
+		if (__auto_connect_port(cp, c, **fi, Vdd))
+			err = true;
+		// then, Vdd
+	}
+#if !VISIT_UNIQUE_PROCESS_ALIAS
+} else {
+	// else skip aliases with incomplete type
+#if DEBUG_IMPLICIT_SUPPLY
+	cerr << "has incomplete type." << endl;
+#endif
+#if 0
+	INVARIANT(cp.peek() != &cp);
+	// assert: this is not canonical
+#endif
+}
+#endif
+// else is already connected to a non-default supply node (override)
+#if VISIT_UNIQUE_PROCESS_ALIAS
+}	// else already visited this process alias
+#endif
+}	// end implicit_supply_connector::visit
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true on error.
+ */
+bool
+implicit_supply_connector::__auto_connect_port(const alias_type& cp,
+		const unroll_context& c, 
+		const physical_instance_placeholder& a, node_type& n) {
+	typedef	port_actual_collection<bool_tag>	bool_port;
+	STACKTRACE_VERBOSE;
+	// problem: if alias is not canonical, 
+	// not guaranteed to have complete type
+	const subinstance_manager::entry_value_type
+		bc(cp.lookup_port_instance(a));
+	NEVER_NULL(bc);
+	const never_ptr<bool_port> bs(bc.is_a<bool_port>());
+	NEVER_NULL(bs);
+	INVARIANT(bs->collection_size() == 1);	// is scalar
+#if 0
+	node_type& lg(*bs->begin()->find());	// must link from canonical
+	// FIXME: peek-check will ALWAYS be true for canonical nodes!
+#else
+	node_type& lg(*bs->begin());	// don't follow canonical yet!
+#endif
+#if DEBUG_IMPLICIT_SUPPLY
+	lg.dump_hierarchical_name(cerr) << " -> ";
+	lg.peek()->dump_hierarchical_name(cerr) << endl;
+#endif
+	if (lg.peek() == &lg) {
+#if DEBUG_IMPLICIT_SUPPLY
+		lg.dump_hierarchical_name(cerr << "auto-connecting: ") << endl;
+#endif
+		if (!bool_instance_alias_info::checked_connect_alias(
+			lg, n, c).good) {
+			return true;
+			// should never happen
+		}
+		INVARIANT(lg.peek() == &n);
+	}	// else is already connected to something else
+#if DEBUG_IMPLICIT_SUPPLY
+	else lg.dump_hierarchical_name(cerr << "not connecting: ") << endl;
+#endif
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Will crash-fail.
+ */
+template <class Tag>
+instance_alias_info<Tag>&
+footprint::__lookup_scalar_port_alias(const string& s) const {
+	const const_instance_map_iterator
+		f(instance_collection_map.find(s)),
+		e(instance_collection_map.end());
+	INVARIANT(f != e);
+	return ((*this)[f->second].is_a<instance_array<Tag, 0> >()
+		->get_the_instance());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intended for use with implicit supply ports.  
+	\param s must pass in a known-good port name!
+ */
+size_t
+footprint::lookup_implicit_bool_port(const string& s) const {
+	return __lookup_scalar_port_alias<bool_tag>(s).instance_index;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For all top-level process instances in this scope, 
+	automatically connect implicit supply ports Vdd and GND, 
+	if they are not already connected.  
+	Only applicable to footprints of processes. 
+ */
+good_bool
+footprint::connect_implicit_ports(const unroll_context& c) {
+	STACKTRACE_VERBOSE;
+	// find local Vdd and GND ports first
+	const_instance_map_iterator
+		mi(instance_collection_map.begin()), 
+		me(instance_collection_map.end());
+	implicit_supply_connector::node_type&
+		gp(__lookup_scalar_port_alias<bool_tag>("!GND"));
+	implicit_supply_connector::node_type&
+		vp(__lookup_scalar_port_alias<bool_tag>("!Vdd"));
+	implicit_supply_connector spc(c, gp, vp);
+	// lookup the lone bool
+for ( ; mi!=me; ++mi) {
+	const never_ptr<instance_collection_base> b((*this)[mi->second]);
+	const never_ptr<process_instance_collection>
+		p(b.is_a<process_instance_collection>());
+	// includes dense formals and sparse local collections
+if (p) {
+	// can be scalar or array, need to collect them all
+	p->accept(spc);
+	// p->get_all_aliases(vector&);
+}
+}	// end for process collections
+	return good_bool(true);
+}
+#undef	VISIT_UNIQUE_PROCESS_ALIAS
+#endif	// IMPLICIT_SUPPLY_PORTS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,15 +1,17 @@
 Variables: 
-bool[1]: "y2_0.b" 
-bool[2]: "y2_1.b" 
-bool[3]: "y3_0.b" 
-bool[4]: "y3_1.b" 
-bool[5]: "y3_2.b" 
-bool[6]: "y6_0.b" 
-bool[7]: "y6_1.b" 
-bool[8]: "y6_2.b" 
-bool[9]: "y6_3.b" 
-bool[10]: "y6_4.b" 
-bool[11]: "y6_5.b" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "y2_0.b" 
+bool[4]: "y2_1.b" 
+bool[5]: "y3_0.b" 
+bool[6]: "y3_1.b" 
+bool[7]: "y3_2.b" 
+bool[8]: "y6_0.b" 
+bool[9]: "y6_1.b" 
+bool[10]: "y6_2.b" 
+bool[11]: "y6_3.b" 
+bool[12]: "y6_4.b" 
+bool[13]: "y6_5.b" 
 
 Event graph: 
 event[0]: fork: null, #pred: 0, succ: 1 2 3 4 5 6 7 8 9 10 11 

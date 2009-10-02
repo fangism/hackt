@@ -1,2 +1,4 @@
 "Z.x" -> "Z.y"-
 ~"Z.y" -> "Z.z"+
+= "!GND" "Z.!GND"
+= "!Vdd" "Z.!Vdd"

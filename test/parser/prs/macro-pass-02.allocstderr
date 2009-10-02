@@ -1,24 +1,26 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	_n_	passn<>
-	bool: 1,2,3
+	bool: 1,2,3,4,5
 2	(top)	-	2	_p_	passp<>
-	bool: 4,5,6
+	bool: 1,2,6,7,8
 3	(top)	-	3	_np_	passnp<>
 	process: 4,5
-	bool: 7,9,10,8
+	bool: 1,2,9,11,12,10
 4	process	3	1	_np_.n	passn<>
-	bool: 7,9,10
+	bool: 1,2,9,11,12
 5	process	3	2	_np_.p	passp<>
-	bool: 8,9,10
+	bool: 1,2,10,11,12
 [global bool entries]
-1	(top)	-	1	_n_.g	
-2	(top)	-	2	_n_.s	
-3	(top)	-	3	_n_.d	
-4	(top)	-	4	_p_.g	
-5	(top)	-	5	_p_.s	
-6	(top)	-	6	_p_.d	
-7	(top)	-	7	_np_.g	
-8	(top)	-	8	_np_._g	
-9	(top)	-	9	_np_.s	
-10	(top)	-	10	_np_.d	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	_n_.g	
+4	(top)	-	4	_n_.s	
+5	(top)	-	5	_n_.d	
+6	(top)	-	6	_p_.g	
+7	(top)	-	7	_p_.s	
+8	(top)	-	8	_p_.d	
+9	(top)	-	9	_np_.g	
+10	(top)	-	10	_np_._g	
+11	(top)	-	11	_np_.s	
+12	(top)	-	12	_np_.d	

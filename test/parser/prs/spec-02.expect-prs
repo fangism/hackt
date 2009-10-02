@@ -1,2 +1,4 @@
 mk_exclhi("tester.p", "tester.q", "tester.r")
 mk_exclhi("tester.r", "tester.s")
+= "!GND" "tester.!GND"
+= "!Vdd" "tester.!Vdd"

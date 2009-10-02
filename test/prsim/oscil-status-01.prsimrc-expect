@@ -15,8 +15,10 @@ R.x[12]
 _Reset
 
 0 nodes:
+!GND
 
 1 nodes:
+!Vdd
 
 Nodes with interference:
 Nodes with weak-interference:
@@ -91,6 +93,7 @@ R.x[12]
 X nodes:
 
 0 nodes:
+!GND
 R.x[2]
 R.x[4]
 R.x[6]
@@ -99,6 +102,7 @@ R.x[10]
 R.x[12]
 
 1 nodes:
+!Vdd
 R.x[0]
 R.x[1]
 R.x[3]

@@ -1,5 +1,7 @@
 Variables: 
-bool[1]: "traffic.b" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "traffic.b" 
 int[1]: "traffic.s" 
 chan[1]: "traffic.B[0]" 
 chan[2]: "traffic.B[1]" 

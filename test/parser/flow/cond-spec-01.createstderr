@@ -3,26 +3,33 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	SPCdcond	0	#HEAD#	#TAIL#	28
-	9	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	10	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	37
-	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	371
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	SPCdcond	0	#HEAD#	#TAIL#	28
+	14	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	15	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	37
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	407
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     z = bool<> z^1
 }
 
@@ -31,17 +38,21 @@ top-level spec:
     mk_exclhi(z)
   ]
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   z = bool^1
     {
-      [0] = z[0] (1) 
-      [1] = z[1] (2) 
-      [2] = z[2] (3) 
+      [0] = z[0] (3) 
+      [1] = z[1] (4) 
+      [2] = z[2] (5) 
     }
   Created state:
   bool instance pool:
-  1	z[0]
-  2	z[1]
-  3	z[2]
+  1	!GND
+  2	!Vdd
+  3	z[0]
+  4	z[1]
+  5	z[2]
   resolved specs:
   mk_exclhi({z[0],z[1],z[2]})
 }

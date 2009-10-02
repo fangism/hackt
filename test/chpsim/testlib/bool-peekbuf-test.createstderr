@@ -8,101 +8,122 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
-	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	133
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	21	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	22	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	25	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	372
-	30	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	35	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	36	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	37	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
-	39	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	40	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	41	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	42	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	45	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	50	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	53	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	54	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	55	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	57	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	58	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	60	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	408
-	63	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	66	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	67	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	68	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	69	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	70	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	71	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	72	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	73	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	74	##ADDR##	footprnt	0	#HEAD#	#TAIL#	434
-	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	76	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	28	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	408
+	37	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	42	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	46	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	47	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	48	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	49	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	50	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	51	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	57	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	60	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	65	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	66	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	69	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	70	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	72	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	footprnt	0	#HEAD#	#TAIL#	444
+	75	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	78	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	79	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	80	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	81	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	82	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	85	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	87	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	88	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	footprnt	0	#HEAD#	#TAIL#	578
+	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	91	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   2 definitions
   0 typedefs
   Definitions:
     bool_peekbuf = process-definition (defined) bool_peekbuf(
+        bool<> !GND
+        bool<> !Vdd
         chan?(bool<>) L
         chan!(bool<>) R
       )
       In definition "bool_peekbuf", we have: {
       Instances:
+        !GND = bool<> bool_peekbuf::!GND
+        !Vdd = bool<> bool_peekbuf::!Vdd
         L = chan?(bool<>) bool_peekbuf::L
         R = chan!(bool<>) bool_peekbuf::R
         x = bool<> bool_peekbuf::x
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?(bool<>) L
           chan!(bool<>) R
         )
@@ -118,15 +139,19 @@ In namespace "", we have: {
           ]
         }
       footprint: {
+        !GND = bool^0 = bool_peekbuf<>::!GND (1) 
+        !Vdd = bool^0 = bool_peekbuf<>::!Vdd (2) 
         L = channel chan?(bool<>)^0 = bool_peekbuf<>::L (1) 
         R = channel chan!(bool<>)^0 = bool_peekbuf<>::R (2) 
-        x = bool^0 = bool_peekbuf<>::x (1) 
+        x = bool^0 = bool_peekbuf<>::x (3) 
         Created state:
         channel instance pool:
         1	bool_peekbuf<>::L
         2	bool_peekbuf<>::R
         bool instance pool:
-        1	bool_peekbuf<>::x
+        1	bool_peekbuf<>::!GND
+        2	bool_peekbuf<>::!Vdd
+        3	bool_peekbuf<>::x
         resolved concurrent actions:
           *[
             sequential: {
@@ -144,16 +169,22 @@ In namespace "", we have: {
       }
 
     bool_peekbuf_fast = process-definition (defined) bool_peekbuf_fast(
+        bool<> !GND
+        bool<> !Vdd
         chan?(bool<>) L
         chan!(bool<>) R
       )
       In definition "bool_peekbuf_fast", we have: {
       Instances:
+        !GND = bool<> bool_peekbuf_fast::!GND
+        !Vdd = bool<> bool_peekbuf_fast::!Vdd
         L = chan?(bool<>) bool_peekbuf_fast::L
         R = chan!(bool<>) bool_peekbuf_fast::R
         x = bool<> bool_peekbuf_fast::x
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?(bool<>) L
           chan!(bool<>) R
         )
@@ -171,15 +202,19 @@ In namespace "", we have: {
           ]
         }
       footprint: {
+        !GND = bool^0 = bool_peekbuf_fast<>::!GND (1) 
+        !Vdd = bool^0 = bool_peekbuf_fast<>::!Vdd (2) 
         L = channel chan?(bool<>)^0 = bool_peekbuf_fast<>::L (1) 
         R = channel chan!(bool<>)^0 = bool_peekbuf_fast<>::R (2) 
-        x = bool^0 = bool_peekbuf_fast<>::x (1) 
+        x = bool^0 = bool_peekbuf_fast<>::x (3) 
         Created state:
         channel instance pool:
         1	bool_peekbuf_fast<>::L
         2	bool_peekbuf_fast<>::R
         bool instance pool:
-        1	bool_peekbuf_fast<>::x
+        1	bool_peekbuf_fast<>::!GND
+        2	bool_peekbuf_fast<>::!Vdd
+        3	bool_peekbuf_fast<>::x
         resolved concurrent actions:
           *[
             sequential: {
@@ -201,16 +236,24 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     A = bool_peekbuf<> A
     B = bool_peekbuf_fast<> B
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   A = process bool_peekbuf<>^0 = A (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     L = channel chan?(bool<>)^0 = A.L (1) 
     R = channel chan!(bool<>)^0 = A.R (2) 
   )
   B = process bool_peekbuf_fast<>^0 = B (2) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     L = channel chan?(bool<>)^0 = B.L (3) 
     R = channel chan!(bool<>)^0 = B.R (4) 
   )
@@ -223,4 +266,7 @@ footprint: {
   2	A.R
   3	B.L
   4	B.R
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

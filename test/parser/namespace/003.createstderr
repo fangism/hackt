@@ -3,29 +3,35 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
-	5	##ADDR##	namespc_	0	#HEAD#	#TAIL#	31
-	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
-	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	namespc_	0	#HEAD#	#TAIL#	31
+	8	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
+	9	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	320
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	356
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  0 instantiation-collections
+  2 instantiation-collections
   2 sub-namespaces
   0 definitions
   0 typedefs
@@ -49,9 +55,14 @@ In namespace "", we have: {
         moo = int<32> dog::moo
         woof = int<32> dog::woof
     }
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   cat::meow = int<32>^0 = cat::meow (2) 
   dog::moo = int<32>^0 = dog::moo (3) 
   dog::woof = int<32>^0 = dog::woof (1) 
@@ -60,4 +71,7 @@ footprint: {
   1	dog::woof
   2	cat::meow
   3	dog::moo
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

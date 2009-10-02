@@ -42,6 +42,8 @@ Fanins of node `_bl':
 (from c[1]):
 [after 10, weak]	c[1].r.d[0]:X & wl[1]:0<0><0> -> _bl-:1
 All subnodes of 'w':
+!GND : 0
+!Vdd : 1
 we : 0
 wv : 0
 bl : 1

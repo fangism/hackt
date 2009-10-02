@@ -1,1 +1,5 @@
+= "!GND" "x.!GND"
+= "!Vdd" "x.!Vdd"
+= "!GND" "x.p.!GND"
+= "!Vdd" "x.p.!Vdd"
 = "x.p.x" "x.p.composite"

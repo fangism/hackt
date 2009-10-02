@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/meta_conditional.tcc"
 	Helper functions for repetitive conditional constructs.  
-	$Id: meta_conditional.tcc,v 1.2 2008/03/17 23:02:37 fang Exp $
+	$Id: meta_conditional.tcc,v 1.3 2009/10/02 01:57:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_CONDITIONAL_TCC__
@@ -53,7 +53,8 @@ meta_conditional<T>::empty(const T& mc) {
 template <class T>
 template <class C>
 ostream&
-meta_conditional<T>::dump(const T& mc, ostream& o, const C& c) {
+meta_conditional<T>::dump(const T& mc, ostream& o, const C& c, 
+		ostream& (T::clause_list_type::value_type::*dumper)(ostream&, const C&) const) {
 	INVARIANT(mc.guards.size());
 	INVARIANT(mc.guards.size() == mc.clauses.size());
 	clause_iterator ci(mc.clauses.begin()), ce(mc.clauses.end());
@@ -63,7 +64,7 @@ meta_conditional<T>::dump(const T& mc, ostream& o, const C& c) {
 	(*gi)->dump(o << "[ ", edc) << " ->" << endl;
 	{
 		INDENT_SECTION(o);
-		ci->dump(o, c);
+		(*ci.*dumper)(o, c);
 	}
 	for (++gi, ++ci; ci!=ce; ++gi, ++ci) {
 		o << auto_indent << "[] ";
@@ -74,7 +75,7 @@ meta_conditional<T>::dump(const T& mc, ostream& o, const C& c) {
 		}
 		o << " ->" << endl;
 		INDENT_SECTION(o);
-		ci->dump(o, c);
+		(*ci.*dumper)(o, c);
 	}
 	return o << auto_indent << ']';
 }

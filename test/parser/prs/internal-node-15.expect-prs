@@ -1,3 +1,5 @@
 ("A.en" & "A.e[0]") & "A.x" -> "A.w"-
 ("A.en" & "A.e[1]") & "A.y" -> "A.w"-
 ~"A.en" -> "A.w"+
+= "!GND" "A.!GND"
+= "!Vdd" "A.!Vdd"

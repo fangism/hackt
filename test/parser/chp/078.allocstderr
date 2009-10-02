@@ -2,26 +2,37 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	y2_0	compute_me<2, {0,1}, 0>
 	int: 1
+	bool: 1,2
 2	(top)	-	2	y2_1	compute_me<2, {0,1}, 1>
 	int: 2
+	bool: 1,2
 3	(top)	-	3	y3_0	compute_me<3, {4,9,16}, 0>
 	int: 3
+	bool: 1,2
 4	(top)	-	4	y3_1	compute_me<3, {4,9,16}, 1>
 	int: 4
+	bool: 1,2
 5	(top)	-	5	y3_2	compute_me<3, {4,9,16}, 2>
 	int: 5
+	bool: 1,2
 6	(top)	-	6	y6_0	compute_me<6, {0,1,4,9,16,25}, 0>
 	int: 6
+	bool: 1,2
 7	(top)	-	7	y6_1	compute_me<6, {0,1,4,9,16,25}, 1>
 	int: 7
+	bool: 1,2
 8	(top)	-	8	y6_2	compute_me<6, {0,1,4,9,16,25}, 2>
 	int: 8
+	bool: 1,2
 9	(top)	-	9	y6_3	compute_me<6, {0,1,4,9,16,25}, 3>
 	int: 9
+	bool: 1,2
 10	(top)	-	10	y6_4	compute_me<6, {0,1,4,9,16,25}, 4>
 	int: 10
+	bool: 1,2
 11	(top)	-	11	y6_5	compute_me<6, {0,1,4,9,16,25}, 5>
 	int: 11
+	bool: 1,2
 [global int entries]
 1	(top)	-	1	y2_0.b	
 2	(top)	-	2	y2_1.b	
@@ -34,3 +45,6 @@ globID	super		localID	canonical	footprint-frame
 9	(top)	-	9	y6_3.b	
 10	(top)	-	10	y6_4.b	
 11	(top)	-	11	y6_5.b	
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	

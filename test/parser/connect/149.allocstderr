@@ -1,11 +1,13 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	top	top_type<>
-	bool: 1,2,3,4,5,6
+	bool: 1,2,3,4,5,6,7,8
 [global bool entries]
-1	(top)	-	1	co[0][0][0]	
-2	(top)	-	2	co[0][1][0]	
-3	(top)	-	3	co[1][0][0]	
-4	(top)	-	4	co[1][1][0]	
-5	(top)	-	5	co[2][0][0]	
-6	(top)	-	6	co[2][1][0]	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	co[0][0][0]	
+4	(top)	-	4	co[0][1][0]	
+5	(top)	-	5	co[1][0][0]	
+6	(top)	-	6	co[1][1][0]	
+7	(top)	-	7	co[2][0][0]	
+8	(top)	-	8	co[2][1][0]	

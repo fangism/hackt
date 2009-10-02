@@ -1,0 +1,8 @@
+// "supply-07.hac"
+// expect-fail
+
+bool x, y;
+prs <what> {
+	x => y-
+}
+

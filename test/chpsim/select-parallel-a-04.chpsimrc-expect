@@ -34,8 +34,8 @@ All event subscriptions:
 All event subscriptions:
 	90	3	0	c := true
 All event subscriptions:
-bool[3]: "c" : 12 
-bool[4]: "d" : 12 
+bool[5]: "c" : 12 
+bool[6]: "d" : 12 
 	90	6	0	d := true
 All event subscriptions:
 	90	12	0	[c&&d]

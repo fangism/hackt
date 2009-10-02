@@ -3,46 +3,62 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	10	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	31
-	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	14	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	31
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	389
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
+	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	31
+	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	31
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	457
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  2 instantiation-collections
+  4 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     x = bool<> x
     y = bool<> y
 }
 
 top-level prs:
+  {
   x<;hvt> -> y-
   ~x<;hvt> -> y+
+  }
 
 footprint: {
-  x = bool^0 = x (1) 
-  y = bool^0 = y (2) 
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  x = bool^0 = x (3) 
+  y = bool^0 = y (4) 
   Created state:
   bool instance pool:
-  1	x
-  2	y
+  1	!GND
+  2	!Vdd
+  3	x
+  4	y
   resolved prs:
   x<;hvt> -> y-
   ~x<;hvt> -> y+
+  rule supply map: (rules, macros, @nodes : Vdd, GND)
+  0..1 none none : 2, 1
 }

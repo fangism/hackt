@@ -1,6 +1,8 @@
 Variables: 
-bool[1]: "x" 
-bool[2]: "y" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "x" 
+bool[4]: "y" 
 chan[1]: "X" 
 
 Event graph: 

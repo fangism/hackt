@@ -1,1 +1,5 @@
+= "!GND" "A.!GND"
+= "!Vdd" "A.!Vdd"
 = "A.y" "A.z[2]"
+= "!GND" "B.!GND"
+= "!Vdd" "B.!Vdd"

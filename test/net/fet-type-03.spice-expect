@@ -1,5 +1,5 @@
-M0_ GND x #0 GND nch_hvt W=5u L=2u
-M1_ #0 y z GND nch_lvt W=5u L=2u
-M2_ Vdd x z Vdd pch_hvt W=5u L=2u
-M3_ Vdd y z Vdd pch_lvt W=5u L=2u
+M0_ !GND x #0 !GND nch_hvt W=5u L=2u
+M1_ #0 y z !GND nch_lvt W=5u L=2u
+M2_ !Vdd x z !Vdd pch_hvt W=5u L=2u
+M3_ !Vdd y z !Vdd pch_lvt W=5u L=2u
 

@@ -1,4 +1,10 @@
 @ "foo.x[0].a" iscomb !autokeeper
 @ "foo.x[0].b" iscomb !autokeeper
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"
+= "!GND" "foo.x[0].!GND"
+= "!Vdd" "foo.x[0].!Vdd"
+= "!GND" "foo.x[1].!GND"
+= "!Vdd" "foo.x[1].!Vdd"
 = "foo.x[0].b" "foo.x[1].a"
 = "foo.x[0].a" "foo.x[1].b"

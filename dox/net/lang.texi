@@ -1,0 +1,98 @@
+@c "lang.texi"
+@c $Id: lang.texi,v 1.2 2009/10/02 01:56:14 fang Exp $
+
+@node Language Features
+@chapter Language Features
+@cindex language features
+
+Some features of the @HAC{} language were added specifically
+for the sake of netlist generation.  
+We briefly describe them here, but the reader is referred to
+the full @HAC{} language documentation, specifically
+chapters "Connections" and "PRS".
+
+Recall that every process definition has two implicit ports for the 
+power supply, @t{!GND} and @t{!Vdd}.
+When unspecified, the default behavior automatically connects
+transistors and subcircuits to these @emph{primary supplies}, 
+hierarchically and recursively.  
+There are two places where we can override these supplies.  
+
+@c manu cross-reference to hac.info?
+
+@menu
+* PRS Supply Override:: specifying device supplies
+* Instance Supply Override:: specifying supplies for process instances
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node PRS Supply Override
+@section PRS Supply Override
+@cindex supply override
+
+To override the supplies use to drive production rules 
+(pull-up and pull-down) and pass-gates, we can write:
+
+@example
+prs <myVdd> @{
+... @i{// These rules use myVdd to pull-up, and !GND for pull-down}
+@}
+prs <myVdd, myGND> @{
+... @i{// Use myVdd to pull-up, myGND to pull-down}
+@}
+prs < , myGND> @{
+... @i{// Use !Vdd to pull-up, myGND to pull-down}
+@}
+@end example
+
+Rules that balong to a supply domain will use the specified supply node
+for the drain of the foot transistor(s), and for the substrate (body)
+terminal.  
+
+@example
+prs <myVdd,myGND> @{
+  x & y -> z-
+@}
+// begets:
+M0 myGND x #0 myGND nch W=5u L=2u
+M1 #0 y z myGND nch W=5u L=2u
+@end example
+
+Normally, single-supply domain circuits need not be written
+with explicit production rule supply overrides.
+Instead, they can be connected externally to different supplies
+when instantiated, which is described in the next section.
+
+@c ----------------------------------------------------------------------------
+@node Instance Supply Override
+@section Instance Supply Override
+@cindex instance supply override
+@cindex process supply override
+
+All processes have implicit primary supply ports @t{!Vdd} and @t{!GND}, 
+that are accessed differently than normal ports.  
+By default, a process instance will connect its primary supply ports
+to those of its immediate parent process.
+To specify a different supply, one can write:
+
+@example
+bool myVdd, myGND, x, y;
+inverter foo;
+foo $(myGND, myVdd);
+foo (x, y);
+
+inverter yoyo(x, y);
+yoyo $(myGND, myVdd);
+
+inverter bar $(myGND, myVdd);
+bar (x, y);
+
+inverter bq $(myGND, myVdd) (x, y);
+@end example
+
+@noindent
+Either supply port may be ommitted to use the corresponding 
+default primary supply.  
+@strong{Alert:} note that the supply ordering for instances is @t{GND, Vdd},
+whereas for production rules, it is @t{Vdd, GND}.
+

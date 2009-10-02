@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.9 2007/08/15 01:08:17 fang Exp $
+	$Id: file_manager.h,v 1.10 2009/10/02 01:57:24 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -209,11 +209,13 @@ public:
 	 */
 	token_position&
 	current_position(void) {
+		INVARIANT(_fstack.size());
 		return _fstack.top().pos;
 	}
 
 	const token_position&
 	current_position(void) const {
+		INVARIANT(_fstack.size());
 		return _fstack.top().pos;
 	}
 

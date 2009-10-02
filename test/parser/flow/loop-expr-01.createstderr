@@ -3,45 +3,50 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	9	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	apimvref	0	#HEAD#	#TAIL#	37
-	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	piarthlp	0	#HEAD#	#TAIL#	21
-	20	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	21	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	29	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	794
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	apimvref	0	#HEAD#	#TAIL#	37
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	piarthlp	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	27	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	830
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   2 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
@@ -49,10 +54,14 @@ In namespace "", we have: {
     W = pint<> W^1
     Z = pint<> Z
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     x = bool<> x^1
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   W = pint^1
     unrolled index-value pairs: {
       0 = 1
@@ -65,49 +74,51 @@ footprint: {
   Z = pint^0 value: 21
   x = bool^1
     {
-      [0] = x[0] (1) 
-      [1] = x[1] (2) 
-      [2] = x[2] (3) 
-      [3] = x[3] (4) 
-      [4] = x[4] (5) 
-      [5] = x[5] (6) 
-      [6] = x[6] (7) 
-      [7] = x[7] (8) 
-      [8] = x[8] (9) 
-      [9] = x[9] (10) 
-      [10] = x[10] (11) 
-      [11] = x[11] (12) 
-      [12] = x[12] (13) 
-      [13] = x[13] (14) 
-      [14] = x[14] (15) 
-      [15] = x[15] (16) 
-      [16] = x[16] (17) 
-      [17] = x[17] (18) 
-      [18] = x[18] (19) 
-      [19] = x[19] (20) 
-      [20] = x[20] (21) 
+      [0] = x[0] (3) 
+      [1] = x[1] (4) 
+      [2] = x[2] (5) 
+      [3] = x[3] (6) 
+      [4] = x[4] (7) 
+      [5] = x[5] (8) 
+      [6] = x[6] (9) 
+      [7] = x[7] (10) 
+      [8] = x[8] (11) 
+      [9] = x[9] (12) 
+      [10] = x[10] (13) 
+      [11] = x[11] (14) 
+      [12] = x[12] (15) 
+      [13] = x[13] (16) 
+      [14] = x[14] (17) 
+      [15] = x[15] (18) 
+      [16] = x[16] (19) 
+      [17] = x[17] (20) 
+      [18] = x[18] (21) 
+      [19] = x[19] (22) 
+      [20] = x[20] (23) 
     }
   Created state:
   bool instance pool:
-  1	x[0]
-  2	x[1]
-  3	x[2]
-  4	x[3]
-  5	x[4]
-  6	x[5]
-  7	x[6]
-  8	x[7]
-  9	x[8]
-  10	x[9]
-  11	x[10]
-  12	x[11]
-  13	x[12]
-  14	x[13]
-  15	x[14]
-  16	x[15]
-  17	x[16]
-  18	x[17]
-  19	x[18]
-  20	x[19]
-  21	x[20]
+  1	!GND
+  2	!Vdd
+  3	x[0]
+  4	x[1]
+  5	x[2]
+  6	x[3]
+  7	x[4]
+  8	x[5]
+  9	x[6]
+  10	x[7]
+  11	x[8]
+  12	x[9]
+  13	x[10]
+  14	x[11]
+  15	x[12]
+  16	x[13]
+  17	x[14]
+  18	x[15]
+  19	x[16]
+  20	x[17]
+  21	x[18]
+  22	x[19]
+  23	x[20]
 }

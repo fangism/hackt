@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.7 2009/09/14 21:16:47 fang Exp $
+	$Id: expr_list.h,v 1.8 2009/10/02 01:56:31 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -133,6 +133,10 @@ public:
 	postorder_check_bool_refs(checked_bool_refs_type&, 
 		const context&) const;
 
+	bool
+	postorder_check_bool_refs_optional(checked_bool_refs_type&, 
+		const context&) const;
+
 	// results in a collection of groups
 	bool
 	postorder_check_grouped_bool_refs(checked_bool_groups_type&, 
@@ -213,6 +217,28 @@ struct expr_attr_list : public expr_list {
 	attach_attributes(const generic_attribute_list*);
 
 };	// end class expr_attr_list
+
+
+//=============================================================================
+struct extended_connection_actuals {
+	// optional: implicit global connections
+	excl_ptr<const inst_ref_expr_list>		implicit_ports;
+	// standard port actual connections
+	excl_ptr<const expr_list>			actual_ports;
+
+	extended_connection_actuals(const inst_ref_expr_list*, 
+		const expr_list*);
+
+	ostream&
+	what(ostream&) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+};	// end struct extended_connection_actuals
 
 //=============================================================================
 }	// end namespace parser

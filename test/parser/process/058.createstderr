@@ -3,84 +3,115 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
-	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
-	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	346
-	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	694
-	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	715
-	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	17	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
+	28	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	946
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1021
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   2 definitions
   0 typedefs
   Definitions:
     bar = process-definition (defined) bar(
+        bool<> !GND
+        bool<> !Vdd
         foo<> x[0..1][0..1]
       )
       In definition "bar", we have: {
       Instances:
+        !GND = bool<> bar::!GND
+        !Vdd = bool<> bar::!Vdd
         x = foo<> bar::x^2
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           foo<> x[0..1][0..1]
         )
       footprint: {
+        !GND = bool^0 = bar<>::!GND (1) 
+        !Vdd = bool^0 = bar<>::!Vdd (2) 
         x = process foo<>^2
           {
             [0][0] = bar<>::x[0][0] (1) (
+              !GND = bool^0 = bar<>::!GND (1) 
+              !Vdd = bool^0 = bar<>::!Vdd (2) 
               a = bool^2
                 {
-                  [0][0] = bar<>::x[0][0].a[0][0] (1) 
-                  [0][1] = bar<>::x[0][0].a[0][1] (2) 
-                  [1][0] = bar<>::x[0][0].a[1][0] (3) 
-                  [1][1] = bar<>::x[0][0].a[1][1] (4) 
+                  [0][0] = bar<>::x[0][0].a[0][0] (3) 
+                  [0][1] = bar<>::x[0][0].a[0][1] (4) 
+                  [1][0] = bar<>::x[0][0].a[1][0] (5) 
+                  [1][1] = bar<>::x[0][0].a[1][1] (6) 
                 }
             )
             [0][1] = bar<>::x[0][1] (2) (
+              !GND = bool^0 = bar<>::!GND (1) 
+              !Vdd = bool^0 = bar<>::!Vdd (2) 
               a = bool^2
                 {
-                  [0][0] = bar<>::x[0][1].a[0][0] (5) 
-                  [0][1] = bar<>::x[0][1].a[0][1] (6) 
-                  [1][0] = bar<>::x[0][1].a[1][0] (7) 
-                  [1][1] = bar<>::x[0][1].a[1][1] (8) 
+                  [0][0] = bar<>::x[0][1].a[0][0] (7) 
+                  [0][1] = bar<>::x[0][1].a[0][1] (8) 
+                  [1][0] = bar<>::x[0][1].a[1][0] (9) 
+                  [1][1] = bar<>::x[0][1].a[1][1] (10) 
                 }
             )
             [1][0] = bar<>::x[1][0] (3) (
+              !GND = bool^0 = bar<>::!GND (1) 
+              !Vdd = bool^0 = bar<>::!Vdd (2) 
               a = bool^2
                 {
-                  [0][0] = bar<>::x[1][0].a[0][0] (9) 
-                  [0][1] = bar<>::x[1][0].a[0][1] (10) 
-                  [1][0] = bar<>::x[1][0].a[1][0] (11) 
-                  [1][1] = bar<>::x[1][0].a[1][1] (12) 
+                  [0][0] = bar<>::x[1][0].a[0][0] (11) 
+                  [0][1] = bar<>::x[1][0].a[0][1] (12) 
+                  [1][0] = bar<>::x[1][0].a[1][0] (13) 
+                  [1][1] = bar<>::x[1][0].a[1][1] (14) 
                 }
             )
             [1][1] = bar<>::x[1][1] (4) (
+              !GND = bool^0 = bar<>::!GND (1) 
+              !Vdd = bool^0 = bar<>::!Vdd (2) 
               a = bool^2
                 {
-                  [0][0] = bar<>::x[1][1].a[0][0] (13) 
-                  [0][1] = bar<>::x[1][1].a[0][1] (14) 
-                  [1][0] = bar<>::x[1][1].a[1][0] (15) 
-                  [1][1] = bar<>::x[1][1].a[1][1] (16) 
+                  [0][0] = bar<>::x[1][1].a[0][0] (15) 
+                  [0][1] = bar<>::x[1][1].a[0][1] (16) 
+                  [1][0] = bar<>::x[1][1].a[1][0] (17) 
+                  [1][1] = bar<>::x[1][1].a[1][1] (18) 
                 }
             )
           }
@@ -91,94 +122,123 @@ In namespace "", we have: {
         3	bar<>::x[1][0]
         4	bar<>::x[1][1]
         bool instance pool:
-        1	bar<>::x[0][0].a[0][0]
-        2	bar<>::x[0][0].a[0][1]
-        3	bar<>::x[0][0].a[1][0]
-        4	bar<>::x[0][0].a[1][1]
-        5	bar<>::x[0][1].a[0][0]
-        6	bar<>::x[0][1].a[0][1]
-        7	bar<>::x[0][1].a[1][0]
-        8	bar<>::x[0][1].a[1][1]
-        9	bar<>::x[1][0].a[0][0]
-        10	bar<>::x[1][0].a[0][1]
-        11	bar<>::x[1][0].a[1][0]
-        12	bar<>::x[1][0].a[1][1]
-        13	bar<>::x[1][1].a[0][0]
-        14	bar<>::x[1][1].a[0][1]
-        15	bar<>::x[1][1].a[1][0]
-        16	bar<>::x[1][1].a[1][1]
+        1	bar<>::!GND
+        2	bar<>::!Vdd
+        3	bar<>::x[0][0].a[0][0]
+        4	bar<>::x[0][0].a[0][1]
+        5	bar<>::x[0][0].a[1][0]
+        6	bar<>::x[0][0].a[1][1]
+        7	bar<>::x[0][1].a[0][0]
+        8	bar<>::x[0][1].a[0][1]
+        9	bar<>::x[0][1].a[1][0]
+        10	bar<>::x[0][1].a[1][1]
+        11	bar<>::x[1][0].a[0][0]
+        12	bar<>::x[1][0].a[0][1]
+        13	bar<>::x[1][0].a[1][0]
+        14	bar<>::x[1][0].a[1][1]
+        15	bar<>::x[1][1].a[0][0]
+        16	bar<>::x[1][1].a[0][1]
+        17	bar<>::x[1][1].a[1][0]
+        18	bar<>::x[1][1].a[1][1]
+        bool port aliases:
+        1: bar<>::x[0][0].!GND = bar<>::x[0][1].!GND = bar<>::x[1][0].!GND = bar<>::x[1][1].!GND = bar<>::!GND
+        2: bar<>::x[0][0].!Vdd = bar<>::x[0][1].!Vdd = bar<>::x[1][0].!Vdd = bar<>::x[1][1].!Vdd = bar<>::!Vdd
       }
       }
 
     foo = process-definition (defined) foo(
+        bool<> !GND
+        bool<> !Vdd
         bool<> a[0..1][0..1]
       )
       In definition "foo", we have: {
       Instances:
+        !GND = bool<> foo::!GND
+        !Vdd = bool<> foo::!Vdd
         a = bool<> foo::a^2
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> a[0..1][0..1]
         )
       footprint: {
+        !GND = bool^0 = foo<>::!GND (1) 
+        !Vdd = bool^0 = foo<>::!Vdd (2) 
         a = bool^2
           {
-            [0][0] = foo<>::a[0][0] (1) 
-            [0][1] = foo<>::a[0][1] (2) 
-            [1][0] = foo<>::a[1][0] (3) 
-            [1][1] = foo<>::a[1][1] (4) 
+            [0][0] = foo<>::a[0][0] (3) 
+            [0][1] = foo<>::a[0][1] (4) 
+            [1][0] = foo<>::a[1][0] (5) 
+            [1][1] = foo<>::a[1][1] (6) 
           }
         Created state:
         bool instance pool:
-        1	foo<>::a[0][0]
-        2	foo<>::a[0][1]
-        3	foo<>::a[1][0]
-        4	foo<>::a[1][1]
+        1	foo<>::!GND
+        2	foo<>::!Vdd
+        3	foo<>::a[0][0]
+        4	foo<>::a[0][1]
+        5	foo<>::a[1][0]
+        6	foo<>::a[1][1]
       }
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     poo = bar<> poo
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   poo = process bar<>^0 = poo (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     x = process foo<>^2
       {
         [0][0] = poo.x[0][0] (2) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           a = bool^2
             {
-              [0][0] = poo.x[0][0].a[0][0] (1) 
-              [0][1] = poo.x[0][0].a[0][1] (2) 
-              [1][0] = poo.x[0][0].a[1][0] (3) 
-              [1][1] = poo.x[0][0].a[1][1] (4) 
+              [0][0] = poo.x[0][0].a[0][0] (3) 
+              [0][1] = poo.x[0][0].a[0][1] (4) 
+              [1][0] = poo.x[0][0].a[1][0] (5) 
+              [1][1] = poo.x[0][0].a[1][1] (6) 
             }
         )
         [0][1] = poo.x[0][1] (3) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           a = bool^2
             {
-              [0][0] = poo.x[0][1].a[0][0] (5) 
-              [0][1] = poo.x[0][1].a[0][1] (6) 
-              [1][0] = poo.x[0][1].a[1][0] (7) 
-              [1][1] = poo.x[0][1].a[1][1] (8) 
+              [0][0] = poo.x[0][1].a[0][0] (7) 
+              [0][1] = poo.x[0][1].a[0][1] (8) 
+              [1][0] = poo.x[0][1].a[1][0] (9) 
+              [1][1] = poo.x[0][1].a[1][1] (10) 
             }
         )
         [1][0] = poo.x[1][0] (4) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           a = bool^2
             {
-              [0][0] = poo.x[1][0].a[0][0] (9) 
-              [0][1] = poo.x[1][0].a[0][1] (10) 
-              [1][0] = poo.x[1][0].a[1][0] (11) 
-              [1][1] = poo.x[1][0].a[1][1] (12) 
+              [0][0] = poo.x[1][0].a[0][0] (11) 
+              [0][1] = poo.x[1][0].a[0][1] (12) 
+              [1][0] = poo.x[1][0].a[1][0] (13) 
+              [1][1] = poo.x[1][0].a[1][1] (14) 
             }
         )
         [1][1] = poo.x[1][1] (5) (
+          !GND = bool^0 = !GND (1) 
+          !Vdd = bool^0 = !Vdd (2) 
           a = bool^2
             {
-              [0][0] = poo.x[1][1].a[0][0] (13) 
-              [0][1] = poo.x[1][1].a[0][1] (14) 
-              [1][0] = poo.x[1][1].a[1][0] (15) 
-              [1][1] = poo.x[1][1].a[1][1] (16) 
+              [0][0] = poo.x[1][1].a[0][0] (15) 
+              [0][1] = poo.x[1][1].a[0][1] (16) 
+              [1][0] = poo.x[1][1].a[1][0] (17) 
+              [1][1] = poo.x[1][1].a[1][1] (18) 
             }
         )
       }
@@ -191,20 +251,22 @@ footprint: {
   4	poo.x[1][0]
   5	poo.x[1][1]
   bool instance pool:
-  1	poo.x[0][0].a[0][0]
-  2	poo.x[0][0].a[0][1]
-  3	poo.x[0][0].a[1][0]
-  4	poo.x[0][0].a[1][1]
-  5	poo.x[0][1].a[0][0]
-  6	poo.x[0][1].a[0][1]
-  7	poo.x[0][1].a[1][0]
-  8	poo.x[0][1].a[1][1]
-  9	poo.x[1][0].a[0][0]
-  10	poo.x[1][0].a[0][1]
-  11	poo.x[1][0].a[1][0]
-  12	poo.x[1][0].a[1][1]
-  13	poo.x[1][1].a[0][0]
-  14	poo.x[1][1].a[0][1]
-  15	poo.x[1][1].a[1][0]
-  16	poo.x[1][1].a[1][1]
+  1	!GND
+  2	!Vdd
+  3	poo.x[0][0].a[0][0]
+  4	poo.x[0][0].a[0][1]
+  5	poo.x[0][0].a[1][0]
+  6	poo.x[0][0].a[1][1]
+  7	poo.x[0][1].a[0][0]
+  8	poo.x[0][1].a[0][1]
+  9	poo.x[0][1].a[1][0]
+  10	poo.x[0][1].a[1][1]
+  11	poo.x[1][0].a[0][0]
+  12	poo.x[1][0].a[0][1]
+  13	poo.x[1][0].a[1][0]
+  14	poo.x[1][0].a[1][1]
+  15	poo.x[1][1].a[0][0]
+  16	poo.x[1][1].a[0][1]
+  17	poo.x[1][1].a[1][0]
+  18	poo.x[1][1].a[1][1]
 }

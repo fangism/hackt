@@ -1,5 +1,7 @@
 Variables: 
-bool[1]: "a.y.z" 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "a.y.z" 
 chan[1]: "x" 
 
 Event graph: 

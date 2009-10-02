@@ -1,4 +1,10 @@
 @ "foo.bar.l.e" iscomb
+connect "!GND" "foo.!GND"
+connect "!Vdd" "foo.!Vdd"
+connect "!GND" "foo.bar.!GND"
+connect "!Vdd" "foo.bar.!Vdd"
+connect "!GND" "foo.bar.m.!GND"
+connect "!Vdd" "foo.bar.m.!Vdd"
 connect "foo.bar.l.e" "foo.bar.m.l.e"
 connect "foo.bar.l.f" "foo.bar.m.l.f"
 connect "foo.bar.l.t" "foo.bar.m.l.t"

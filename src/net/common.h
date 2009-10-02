@@ -1,7 +1,7 @@
 /**
 	\file "net/common.h"
 	For useful declarations and typedefs.  
-	$Id: common.h,v 1.3 2009/09/14 21:17:09 fang Exp $
+	$Id: common.h,v 1.4 2009/10/02 01:57:28 fang Exp $
  */
 
 #ifndef	__HAC_NET_COMMON_H__
@@ -18,6 +18,7 @@
 	Status: Both values of switches tested.
  */
 #define	CACHE_LOGICAL_NODE_NAMES		1
+#define	CACHE_INTERNAL_NODE_NAMES		1
 
 namespace HAC {
 namespace NET {

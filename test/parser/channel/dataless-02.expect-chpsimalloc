@@ -1,4 +1,6 @@
 Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
 chan[1]: "dataless[0][0]" 
 chan[2]: "dataless[0][1]" 
 chan[3]: "dataless[0][2]" 

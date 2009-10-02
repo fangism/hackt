@@ -1,0 +1,17 @@
+// "supply-instance-02.hac"
+// copy-modified from "supply-instance-01.hac"
+
+import "inv-01.hac";
+import "globals.hac";	// from $srcdir
+
+globals g;
+
+inv a;
+inv b$();
+inv c$(,);
+inv d$(g.GND_1);
+inv d2$(g.GND_2);
+inv e$(g.GND_1,);
+inv f$(,g.Vdd_1);
+inv h$(g.GND_2,g.Vdd_2);
+

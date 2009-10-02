@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.14 2009/04/29 05:33:24 fang Exp $
+	$Id: token.cc,v 1.15 2009/10/02 01:56:39 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -10,7 +10,8 @@
 #define	__HAC_AST_TOKEN_CC__
 
 #define	ENABLE_STACKTRACE		0
-
+#define	ENABLE_STATIC_TRACE		0
+// b/c this module has memory pools to initialize
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 

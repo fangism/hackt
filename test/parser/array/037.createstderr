@@ -3,58 +3,68 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2974
+	33	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	3010
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  3 instantiation-collections
+  5 instantiation-collections
   0 sub-namespaces
   0 definitions
   0 typedefs
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     bar = int<32> bar^3
     blah = int<32> blah^1
     foo = int<32> foo^3
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   bar = int<32>^3
     {
       [0][0][0] = blah[0] (1) 
@@ -250,4 +260,7 @@ footprint: {
   78	bar[3][2][1]
   79	bar[3][3][1]
   80	bar[3][4][1]
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

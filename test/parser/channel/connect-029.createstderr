@@ -7,76 +7,92 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
-	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	29	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	32	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	402
-	37	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	44	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	45	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	46	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	370
-	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	438
+	44	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	52	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	53	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	460
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
   Definitions:
     merge = process-definition (defined) merge(
+        bool<> !GND
+        bool<> !Vdd
         chan?(bool<>) B[0..1]
         chan?(int<1>) S
       )
       In definition "merge", we have: {
       Instances:
+        !GND = bool<> merge::!GND
+        !Vdd = bool<> merge::!Vdd
         B = chan?(bool<>) merge::B^1
         S = chan?(int<1>) merge::S
         b = bool<> merge::b
         s = int<1> merge::s
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           chan?(bool<>) B[0..1]
           chan?(int<1>) S
         )
@@ -92,13 +108,15 @@ In namespace "", we have: {
           ]
         }
       footprint: {
+        !GND = bool^0 = merge<>::!GND (1) 
+        !Vdd = bool^0 = merge<>::!Vdd (2) 
         B = channel chan?(bool<>)^1
           {
             [0] = merge<>::B[0] (2) 
             [1] = merge<>::B[1] (3) 
           }
         S = channel chan?(int<1>)^0 = merge<>::S (1) 
-        b = bool^0 = merge<>::b (1) 
+        b = bool^0 = merge<>::b (3) 
         s = int<1>^0 = merge<>::s (1) 
         Created state:
         channel instance pool:
@@ -108,7 +126,9 @@ In namespace "", we have: {
         int instance pool:
         1	merge<>::s
         bool instance pool:
-        1	merge<>::b
+        1	merge<>::!GND
+        2	merge<>::!Vdd
+        3	merge<>::b
         resolved concurrent actions:
           *[
             sequential: {
@@ -124,11 +144,17 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     traffic = merge<> traffic
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   traffic = process merge<>^0 = traffic (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     B = channel chan?(bool<>)^1
       {
         [0] = traffic.B[0] (1) 
@@ -143,4 +169,7 @@ footprint: {
   1	traffic.B[0]
   2	traffic.B[1]
   3	traffic.S
+  bool instance pool:
+  1	!GND
+  2	!Vdd
 }

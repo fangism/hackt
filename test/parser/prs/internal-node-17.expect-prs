@@ -6,3 +6,5 @@
 "bar.a" & "bar.b" -> "bar.c"-
 "bar.d" & "bar.e" -> "bar.d"-
 after 0	"bar.x" & ~"bar.x" -> "bar.y"-
+= "!GND" "bar.!GND"
+= "!Vdd" "bar.!Vdd"

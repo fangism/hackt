@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.23 2008/11/23 17:53:48 fang Exp $
+	$Id: subinstance_manager.h,v 1.24 2009/10/02 01:57:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -130,6 +130,12 @@ public:
 	good_bool
 	__connect_ports(const connection_references_type&,
 		const unroll_context&);
+
+#if INSTANCE_SUPPLY_OVERRIDES
+	good_bool
+	connect_implicit_ports(const connection_references_type&,
+		const unroll_context&);
+#endif
 
 	good_bool
 	connect_port_aliases_recursive(this_type&, const unroll_context&);

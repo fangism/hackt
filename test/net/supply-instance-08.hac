@@ -1,0 +1,11 @@
+// "supply-instance-08.hac"
+// there should be no GND! and Vdd! ports in foo
+
+import "inv-01.hac";
+
+defproc foo(bool myVdd, myGND; bool in, out) {
+inv a $(myGND,myVdd) (in, out);
+}
+
+foo bar;
+

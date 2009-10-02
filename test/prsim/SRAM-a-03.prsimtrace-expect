@@ -5,29 +5,29 @@ Trace file contents: 3 epochs.
 	1	0	0	#SIZE#	#SIZE#
 	2	20	0	#SIZE#	#SIZE#
 Epoch 0: (initial values)
-X X X X X X X X X X X X X X X X 
+X 0 1 X X X X X X X X X X X X X X X 
 Epoch 1:
 	event		event	cause	node	node
 	index	time	node	index	index	value	rule/node
 	0	0	0	0	0	X	(null)
-	1	0	0	0	5	0	(_pchg:0)
-	2	0	0	0	7	0	(wl[1]:0)
-	3	0	0	0	2	0	(wv:0)
-	4	0	0	0	6	0	(wl[0]:0)
-	5	0	0	0	1	0	(we:0)
-	6	10	4	3	9	1	[after 10]	~wv -> w.wv_+
-	7	10	11	3	4	1	[after 10]	we & wv -> _bl-
-	8	10	2	5	8	1	[after 10]	~we -> w.we_+
-	9	10	5	5	3	1	[after 10]	we & w.wv_ -> bl-
-	10	20	21	7	11	0	[after 10]	_bl -> p._bls-
-	11	20	19	9	10	0	[after 10]	bl -> p.bls-
-	12	20	0	0	5	1	(_pchg:1)
-	13	20	0	0	1	1	(we:1)
-	14	20	0	0	6	1	(wl[0]:1)
-	15	30	1	13	8	0	[after 10]	we -> w.we_-
-	16	30	5	13	3	0	[after 10]	we & w.wv_ -> bl-
-	17	40	20	16	10	1	[after 10]	~bl -> p.bls+
-	18	40	32	16	12	0	[after 10]	wl[0] & ~bl -> c[0].r.d[0]-
-	19	50	27	18	13	1	[after 10, weak]	~c[0].r.d[0] -> c[0].r.d[1]+
+	1	0	0	0	7	0	(_pchg:0)
+	2	0	0	0	9	0	(wl[1]:0)
+	3	0	0	0	4	0	(wv:0)
+	4	0	0	0	8	0	(wl[0]:0)
+	5	0	0	0	3	0	(we:0)
+	6	10	4	3	11	1	[after 10]	~wv -> w.wv_+
+	7	10	11	3	6	1	[after 10]	we & wv -> _bl-
+	8	10	2	5	10	1	[after 10]	~we -> w.we_+
+	9	10	5	5	5	1	[after 10]	we & w.wv_ -> bl-
+	10	20	21	7	13	0	[after 10]	_bl -> p._bls-
+	11	20	19	9	12	0	[after 10]	bl -> p.bls-
+	12	20	0	0	7	1	(_pchg:1)
+	13	20	0	0	3	1	(we:1)
+	14	20	0	0	8	1	(wl[0]:1)
+	15	30	1	13	10	0	[after 10]	we -> w.we_-
+	16	30	5	13	5	0	[after 10]	we & w.wv_ -> bl-
+	17	40	20	16	12	1	[after 10]	~bl -> p.bls+
+	18	40	32	16	14	0	[after 10]	wl[0] & ~bl -> c[0].r.d[0]-
+	19	50	27	18	15	1	[after 10, weak]	~c[0].r.d[0] -> c[0].r.d[1]+
 Epoch 2: (final values)
-X 1 0 0 1 1 1 0 0 1 1 0 0 1 X X 
+X 0 1 1 0 0 1 1 1 0 0 1 1 0 0 1 X X 

@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.14 2008/10/05 23:00:20 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.15 2009/10/02 01:57:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -82,6 +82,11 @@ virtual bad_bool
 
 	CONNECT_PORT_PROTO;
 
+	// really only used for process implicit supply overrides
+	bad_bool
+	connect_implicit_port(physical_instance_collection&, 
+		const unroll_context&) const;
+
 virtual	void
 	accept(nonmeta_expr_visitor&) const = 0;
 
@@ -117,6 +122,11 @@ private:
 
 	count_ptr<aggregate_meta_instance_reference_base>
 	make_aggregate_meta_instance_reference_private(void) const;
+
+	bad_bool
+	__expand_connection_aliases(physical_instance_collection&, 
+		const unroll_context&, const char*, 
+		alias_collection_type&, alias_collection_type&) const;
 
 };	// end class meta_instance_reference
 

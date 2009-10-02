@@ -2,14 +2,16 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	bs	bool_source<><2, {1,0}>
 	channel: 1
+	bool: 1,2
 2	(top)	-	2	xs	bool_source<><2, {1,0}>
 	channel: 2
+	bool: 1,2
 3	(top)	-	3	snk0	bool_sink<>
 	channel: 3
-	bool: 4
+	bool: 1,2,6
 4	(top)	-	4	sink1	bool_sink<>
 	channel: 4
-	bool: 5
+	bool: 1,2,7
 [global channel entries]
 1	(top)	-	1	A	chan(bool<>)
 2	(top)	-	2	X	chan(bool<>)
@@ -17,8 +19,10 @@ globID	super		localID	canonical	footprint-frame
 4	(top)	-	4	Z	chan(bool<>)
 5	(top)	-	5	Y	chan(bool<>)
 [global bool entries]
-1	(top)	-	1	a	
-2	(top)	-	2	x	
-3	(top)	-	3	z	
-4	process	3	1	snk0.b	
-5	process	4	1	sink1.b	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	a	
+4	(top)	-	4	x	
+5	(top)	-	5	z	
+6	process	3	3	snk0.b	
+7	process	4	3	sink1.b	

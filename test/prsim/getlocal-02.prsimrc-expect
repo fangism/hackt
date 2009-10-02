@@ -1,8 +1,12 @@
 All subnodes of '.':
+!GND : 0
+!Vdd : 1
 a : X
 b : X
 c : X
 Public subnodes of '.':
+!GND : 0
+!Vdd : 1
 a : X
 b : X
 c : X

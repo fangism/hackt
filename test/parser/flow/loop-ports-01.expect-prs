@@ -1,1 +1,7 @@
+= "!GND" "l.!GND"
+= "!Vdd" "l.!Vdd"
+= "!GND" "l.ad.!GND"
+= "!Vdd" "l.ad.!Vdd"
+= "!GND" "l.ce.!GND"
+= "!Vdd" "l.ce.!Vdd"
 = "l.ad.d" "l.ce.a"

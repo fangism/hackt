@@ -1,4 +1,6 @@
 Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
 int[1]: "foo.y" 
 int[2]: "foo.z[0]" 
 int[3]: "foo.z[1]" 

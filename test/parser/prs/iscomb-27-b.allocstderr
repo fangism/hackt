@@ -2,42 +2,44 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	foo	obox<>
 	process: 2,3,4,5,6,7,8,9,10,11,12
-	bool: 1,2,3,4,5,6
+	bool: 1,2,3,4,5,6,7,8
 2	process	1	1	foo.bar	blah3<>
 	process: 8,9,10,11,12,4,13,3,5,6,7
-	bool: 4,5,6,1,2,3
+	bool: 6,7,8,3,4,5,1,2
 3	process	1	2	foo.bar.in[0]	alt_e1of2<>
 	process: 4,5,6,7
-	bool: 1,2,3
+	bool: 3,4,5
 4	process	1	3	foo.bar.in[0].a	e1of2<>
-	bool: 1,2,3
+	bool: 3,4,5
 5	process	1	4	foo.bar.in[0].t	bp<>
-	bool: 1
-6	process	1	5	foo.bar.in[0].f	bp<>
-	bool: 2
-7	process	1	6	foo.bar.in[0].e	bp<>
 	bool: 3
+6	process	1	5	foo.bar.in[0].f	bp<>
+	bool: 4
+7	process	1	6	foo.bar.in[0].e	bp<>
+	bool: 5
 8	process	1	7	foo.bar.out	alt_e1of2<>
 	process: 9,10,11,12
-	bool: 4,5,6
+	bool: 6,7,8
 9	process	1	8	foo.bar.out.a	e1of2<>
-	bool: 4,5,6
+	bool: 6,7,8
 10	process	1	9	foo.bar.out.t	bp<>
-	bool: 4
-11	process	1	10	foo.bar.out.f	bp<>
-	bool: 5
-12	process	1	11	foo.bar.out.e	bp<>
 	bool: 6
+11	process	1	10	foo.bar.out.f	bp<>
+	bool: 7
+12	process	1	11	foo.bar.out.e	bp<>
+	bool: 8
 13	process	2	7	foo.bar.ma	blah2<>
 	process: 9,14,4
-	bool: 4,5,6,1,2,3
+	bool: 6,7,8,1,2,3,4,5
 14	process	13	2	foo.bar.ma.xx	blah1<>
 	process: 4,9
-	bool: 1,2,3,4,5,6
+	bool: 3,4,5,6,7,8,1,2
 [global bool entries]
-1	process	1	1	foo.bar.in[0].a.t	
-2	process	1	2	foo.bar.in[0].a.f	
-3	process	1	3	foo.bar.in[0].a.e	 @[ iscomb ]
-4	process	1	4	foo.bar.out.a.t	 @[ iscomb ]
-5	process	1	5	foo.bar.out.a.f	 @[ iscomb ]
-6	process	1	6	foo.bar.out.a.e	
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	process	1	3	foo.bar.in[0].a.t	
+4	process	1	4	foo.bar.in[0].a.f	
+5	process	1	5	foo.bar.in[0].a.e	 @[ iscomb ]
+6	process	1	6	foo.bar.out.a.t	 @[ iscomb ]
+7	process	1	7	foo.bar.out.a.f	 @[ iscomb ]
+8	process	1	8	foo.bar.out.a.e	

@@ -3,26 +3,26 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
-	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	SPCdloop	0	#HEAD#	#TAIL#	24
-	16	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	17	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	SPCdloop	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	24	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
@@ -30,30 +30,40 @@ Persistent Object Manager text dump:
 	26	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	SPCdcond	0	#HEAD#	#TAIL#	28
-	30	##ADDR##	pireltex	0	#HEAD#	#TAIL#	21
-	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	45
-	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	SPCdloop	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	31	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	SPCdcond	0	#HEAD#	#TAIL#	28
+	37	##ADDR##	pireltex	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1000
-	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	footprnt	0	#HEAD#	#TAIL#	631
-	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	45
+	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1036
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	721
+	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
-  1 instantiation-collections
+  3 instantiation-collections
   0 sub-namespaces
   1 definitions
   0 typedefs
@@ -62,6 +72,8 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
+        bool<> !GND
+        bool<> !Vdd
         bool<> x[0..19]
       )
       In definition "spec_test", we have: {
@@ -69,9 +81,13 @@ In namespace "", we have: {
         M = pint<> spec_test::M
         N = pint<> spec_test::N
       Instances:
+        !GND = bool<> spec_test::!GND
+        !Vdd = bool<> spec_test::!Vdd
         x = bool<> spec_test::x^1
       unroll sequence: 
         ports: (
+          bool<> !GND
+          bool<> !Vdd
           bool<> x[0..19]
         )
       spec:
@@ -84,53 +100,57 @@ In namespace "", we have: {
         )
       footprint collection: {
         <5, 5> {
+          !GND = bool^0 = spec_test<5, 5>::!GND (1) 
+          !Vdd = bool^0 = spec_test<5, 5>::!Vdd (2) 
           M = pint^0 value: 5
           N = pint^0 value: 5
           x = bool^1
             {
-              [0] = spec_test<5, 5>::x[0] (1) 
-              [1] = spec_test<5, 5>::x[1] (2) 
-              [2] = spec_test<5, 5>::x[2] (3) 
-              [3] = spec_test<5, 5>::x[3] (4) 
-              [4] = spec_test<5, 5>::x[4] (5) 
-              [5] = spec_test<5, 5>::x[5] (6) 
-              [6] = spec_test<5, 5>::x[6] (7) 
-              [7] = spec_test<5, 5>::x[7] (8) 
-              [8] = spec_test<5, 5>::x[8] (9) 
-              [9] = spec_test<5, 5>::x[9] (10) 
-              [10] = spec_test<5, 5>::x[10] (11) 
-              [11] = spec_test<5, 5>::x[11] (12) 
-              [12] = spec_test<5, 5>::x[12] (13) 
-              [13] = spec_test<5, 5>::x[13] (14) 
-              [14] = spec_test<5, 5>::x[14] (15) 
-              [15] = spec_test<5, 5>::x[15] (16) 
-              [16] = spec_test<5, 5>::x[16] (17) 
-              [17] = spec_test<5, 5>::x[17] (18) 
-              [18] = spec_test<5, 5>::x[18] (19) 
-              [19] = spec_test<5, 5>::x[19] (20) 
+              [0] = spec_test<5, 5>::x[0] (3) 
+              [1] = spec_test<5, 5>::x[1] (4) 
+              [2] = spec_test<5, 5>::x[2] (5) 
+              [3] = spec_test<5, 5>::x[3] (6) 
+              [4] = spec_test<5, 5>::x[4] (7) 
+              [5] = spec_test<5, 5>::x[5] (8) 
+              [6] = spec_test<5, 5>::x[6] (9) 
+              [7] = spec_test<5, 5>::x[7] (10) 
+              [8] = spec_test<5, 5>::x[8] (11) 
+              [9] = spec_test<5, 5>::x[9] (12) 
+              [10] = spec_test<5, 5>::x[10] (13) 
+              [11] = spec_test<5, 5>::x[11] (14) 
+              [12] = spec_test<5, 5>::x[12] (15) 
+              [13] = spec_test<5, 5>::x[13] (16) 
+              [14] = spec_test<5, 5>::x[14] (17) 
+              [15] = spec_test<5, 5>::x[15] (18) 
+              [16] = spec_test<5, 5>::x[16] (19) 
+              [17] = spec_test<5, 5>::x[17] (20) 
+              [18] = spec_test<5, 5>::x[18] (21) 
+              [19] = spec_test<5, 5>::x[19] (22) 
             }
           Created state:
           bool instance pool:
-          1	spec_test<5, 5>::x[0]
-          2	spec_test<5, 5>::x[1]
-          3	spec_test<5, 5>::x[2]
-          4	spec_test<5, 5>::x[3]
-          5	spec_test<5, 5>::x[4]
-          6	spec_test<5, 5>::x[5]
-          7	spec_test<5, 5>::x[6]
-          8	spec_test<5, 5>::x[7]
-          9	spec_test<5, 5>::x[8]
-          10	spec_test<5, 5>::x[9]
-          11	spec_test<5, 5>::x[10]
-          12	spec_test<5, 5>::x[11]
-          13	spec_test<5, 5>::x[12]
-          14	spec_test<5, 5>::x[13]
-          15	spec_test<5, 5>::x[14]
-          16	spec_test<5, 5>::x[15]
-          17	spec_test<5, 5>::x[16]
-          18	spec_test<5, 5>::x[17]
-          19	spec_test<5, 5>::x[18]
-          20	spec_test<5, 5>::x[19]
+          1	spec_test<5, 5>::!GND
+          2	spec_test<5, 5>::!Vdd
+          3	spec_test<5, 5>::x[0]
+          4	spec_test<5, 5>::x[1]
+          5	spec_test<5, 5>::x[2]
+          6	spec_test<5, 5>::x[3]
+          7	spec_test<5, 5>::x[4]
+          8	spec_test<5, 5>::x[5]
+          9	spec_test<5, 5>::x[6]
+          10	spec_test<5, 5>::x[7]
+          11	spec_test<5, 5>::x[8]
+          12	spec_test<5, 5>::x[9]
+          13	spec_test<5, 5>::x[10]
+          14	spec_test<5, 5>::x[11]
+          15	spec_test<5, 5>::x[12]
+          16	spec_test<5, 5>::x[13]
+          17	spec_test<5, 5>::x[14]
+          18	spec_test<5, 5>::x[15]
+          19	spec_test<5, 5>::x[16]
+          20	spec_test<5, 5>::x[17]
+          21	spec_test<5, 5>::x[18]
+          22	spec_test<5, 5>::x[19]
           resolved specs:
           mk_exclhi(x[0],x[1])
           mk_exclhi(x[0],x[2])
@@ -147,57 +167,65 @@ In namespace "", we have: {
       }
 
   Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
     X = spec_test<5, 5> X
 }
 
 footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
   X = process spec_test<5, 5>^0 = X (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
     x = bool^1
       {
-        [0] = X.x[0] (1) 
-        [1] = X.x[1] (2) 
-        [2] = X.x[2] (3) 
-        [3] = X.x[3] (4) 
-        [4] = X.x[4] (5) 
-        [5] = X.x[5] (6) 
-        [6] = X.x[6] (7) 
-        [7] = X.x[7] (8) 
-        [8] = X.x[8] (9) 
-        [9] = X.x[9] (10) 
-        [10] = X.x[10] (11) 
-        [11] = X.x[11] (12) 
-        [12] = X.x[12] (13) 
-        [13] = X.x[13] (14) 
-        [14] = X.x[14] (15) 
-        [15] = X.x[15] (16) 
-        [16] = X.x[16] (17) 
-        [17] = X.x[17] (18) 
-        [18] = X.x[18] (19) 
-        [19] = X.x[19] (20) 
+        [0] = X.x[0] (3) 
+        [1] = X.x[1] (4) 
+        [2] = X.x[2] (5) 
+        [3] = X.x[3] (6) 
+        [4] = X.x[4] (7) 
+        [5] = X.x[5] (8) 
+        [6] = X.x[6] (9) 
+        [7] = X.x[7] (10) 
+        [8] = X.x[8] (11) 
+        [9] = X.x[9] (12) 
+        [10] = X.x[10] (13) 
+        [11] = X.x[11] (14) 
+        [12] = X.x[12] (15) 
+        [13] = X.x[13] (16) 
+        [14] = X.x[14] (17) 
+        [15] = X.x[15] (18) 
+        [16] = X.x[16] (19) 
+        [17] = X.x[17] (20) 
+        [18] = X.x[18] (21) 
+        [19] = X.x[19] (22) 
       }
   )
   Created state:
   process instance pool:
   1	X
   bool instance pool:
-  1	X.x[0]
-  2	X.x[1]
-  3	X.x[2]
-  4	X.x[3]
-  5	X.x[4]
-  6	X.x[5]
-  7	X.x[6]
-  8	X.x[7]
-  9	X.x[8]
-  10	X.x[9]
-  11	X.x[10]
-  12	X.x[11]
-  13	X.x[12]
-  14	X.x[13]
-  15	X.x[14]
-  16	X.x[15]
-  17	X.x[16]
-  18	X.x[17]
-  19	X.x[18]
-  20	X.x[19]
+  1	!GND
+  2	!Vdd
+  3	X.x[0]
+  4	X.x[1]
+  5	X.x[2]
+  6	X.x[3]
+  7	X.x[4]
+  8	X.x[5]
+  9	X.x[6]
+  10	X.x[7]
+  11	X.x[8]
+  12	X.x[9]
+  13	X.x[10]
+  14	X.x[11]
+  15	X.x[12]
+  16	X.x[13]
+  17	X.x[14]
+  18	X.x[15]
+  19	X.x[16]
+  20	X.x[17]
+  21	X.x[18]
+  22	X.x[19]
 }

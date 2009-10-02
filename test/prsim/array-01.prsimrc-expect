@@ -1,4 +1,6 @@
 All subnodes of 'X':
+!GND : 0
+!Vdd : 1
 X[0].w[0].x[0][0] : X
 X[0].w[0].x[0][1] : X
 X[0].w[0].x[1][0] : X
@@ -72,6 +74,8 @@ X[1].w[2].y[1][1] : X
 X[1].w[3].y[1][0] : X
 X[1].w[3].y[1][1] : X
 All subnodes of 'X[0]':
+!GND : 0
+!Vdd : 1
 X[0].w[0].x[0][0] : X
 X[0].w[0].x[0][1] : X
 X[0].w[0].x[1][0] : X
@@ -110,6 +114,8 @@ X[0].w[3].y[1][0] : X
 X[0].w[3].y[1][1] : X
 expect some duplicates 
 All subnodes of 'X[0].w':
+!GND : 0
+!Vdd : 1
 X[0].w[0].x[0][0] : X
 X[0].w[0].x[0][1] : X
 X[0].w[0].x[1][0] : X
@@ -135,6 +141,8 @@ X[0].w[2].y[1][1] : X
 X[0].w[3].y[1][0] : X
 X[0].w[3].y[1][1] : X
 All subnodes of 'X[0].w[1]':
+!GND : 0
+!Vdd : 1
 X[0].w[1].x[0][0] : X
 X[0].w[1].x[0][1] : X
 X[0].w[1].x[1][0] : X

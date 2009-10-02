@@ -1,12 +1,12 @@
 .subckt pair<>
 .ends
 
-.subckt foo<> GND Vdd p.b z
+.subckt foo<> !GND !Vdd p.b z
 xp pair<>
-M0_ GND p.b z GND nch W=5u L=2u
-M1_ Vdd p.b z Vdd pch W=5u L=2u
+M0_ !GND p.b z !GND nch W=5u L=2u
+M1_ !Vdd p.b z !Vdd pch W=5u L=2u
 .ends
 
-xbar GND Vdd bar.p.b bar.z foo<>
+xbar !GND !Vdd bar.p.b bar.z foo<>
 xbar.p pair<>
 

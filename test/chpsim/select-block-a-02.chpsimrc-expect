@@ -25,7 +25,7 @@ c : bool c = 0
 e : bool e = 0
 time: 11
 event[25]: wait: [e], pid: 0, #pred: 1, succ: 24 
-bool deps: 4 
+bool deps: 6 
 source: [e]
 status: (currently not subscribed to its dependencies)
 in queue: no
@@ -34,7 +34,7 @@ All event subscriptions:
 step 1 
 	12	2	0	
 event[25]: wait: [e], pid: 0, #pred: 1, succ: 24 
-bool deps: 4 
+bool deps: 6 
 source: [e]
 status: (currently not subscribed to its dependencies)
 in queue: no
@@ -59,13 +59,13 @@ check queue:
 	time	eid	pid	event
 	33	13	0	e := true
 event[25]: wait: [e], pid: 0, #pred: 1, succ: 24 
-bool deps: 4 
+bool deps: 6 
 source: [e]
 status: (blocked and subscribed to its dependencies)
 in queue: no
 in check queue: no
 All event subscriptions:
-bool[4]: "e" : 25 
+bool[6]: "e" : 25 
 	33	13	0	e := true
 should wake up event 25, now in queue 
 event queue:
@@ -74,7 +74,7 @@ event queue:
 check queue:
 	43	12	0	a := false
 event[25]: wait: [e], pid: 0, #pred: 1, succ: 24 
-bool deps: 4 
+bool deps: 6 
 source: [e]
 status: (currently not subscribed to its dependencies)
 in queue: yes
@@ -82,7 +82,7 @@ in check queue: no
 All event subscriptions:
 should have no more subscriptions 
 event[24]: select: [ a -> ... [] b -> ... ], pid: 0, #pred: 1, succ: 22 23 
-bool deps: 1 2 
+bool deps: 3 4 
 source: deterministic: {
   a -> c := c
   b -> c := c
@@ -101,7 +101,7 @@ check queue:
 	73	9	0	b := false
 event 24 should be subscribed to `a' and `b' 
 event[24]: select: [ a -> ... [] b -> ... ], pid: 0, #pred: 1, succ: 22 23 
-bool deps: 1 2 
+bool deps: 3 4 
 source: deterministic: {
   a -> c := c
   b -> c := c
@@ -110,8 +110,8 @@ status: (blocked and subscribed to its dependencies)
 in queue: no
 in check queue: no
 All event subscriptions:
-bool[1]: "a" : 24 
-bool[2]: "b" : 24 
+bool[3]: "a" : 24 
+bool[4]: "b" : 24 
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
@@ -125,7 +125,7 @@ check queue:
 	time	eid	pid	event
 	84	7	0	b := false
 event[24]: select: [ a -> ... [] b -> ... ], pid: 0, #pred: 1, succ: 22 23 
-bool deps: 1 2 
+bool deps: 3 4 
 source: deterministic: {
   a -> c := c
   b -> c := c
@@ -134,8 +134,8 @@ status: (blocked and subscribed to its dependencies)
 in queue: no
 in check queue: no
 All event subscriptions:
-bool[1]: "a" : 24 
-bool[2]: "b" : 24 
+bool[3]: "a" : 24 
+bool[4]: "b" : 24 
 	84	7	0	b := false
 now a+ should release event 24 
 	94	6	0	a := true
@@ -145,7 +145,7 @@ event queue:
 check queue:
 	94	3	0	null
 event[24]: select: [ a -> ... [] b -> ... ], pid: 0, #pred: 1, succ: 22 23 
-bool deps: 1 2 
+bool deps: 3 4 
 source: deterministic: {
   a -> c := c
   b -> c := c
@@ -170,13 +170,13 @@ check queue:
 	114	20	0	c := ~c
 event 18 should now be blocked on `e' 
 event[18]: wait: [~e], pid: 0, #pred: 1, succ: 17 
-bool deps: 4 
+bool deps: 6 
 source: [~e]
 status: (blocked and subscribed to its dependencies)
 in queue: no
 in check queue: no
 All event subscriptions:
-bool[4]: "e" : 18 
+bool[6]: "e" : 18 
 step 2 
 	114	20	0	c := ~c
 	124	19	0	e := false
@@ -188,7 +188,7 @@ event queue:
 check queue:
 	124	25	0	[e]
 event[18]: wait: [~e], pid: 0, #pred: 1, succ: 17 
-bool deps: 4 
+bool deps: 6 
 source: [~e]
 status: (currently not subscribed to its dependencies)
 in queue: yes
@@ -197,7 +197,7 @@ step 2
 	124	18	0	[~e]
 	125	17	0	
 All event subscriptions:
-bool[4]: "e" : 25 
+bool[6]: "e" : 25 
 now event 25 is waiting for handshake on `e' 
 step 3 
 	135	15	0	a := false

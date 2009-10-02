@@ -4,3 +4,5 @@
 ~"foo.x" -> "foo.y"+
 "foo.x" -> "foo.y"-
 ~"foo.x" -> "foo.y"+
+= "!GND" "foo.!GND"
+= "!Vdd" "foo.!Vdd"

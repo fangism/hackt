@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.10 2008/11/12 03:00:07 fang Exp $
+	$Id: port_formal_array.tcc,v 1.11 2009/10/02 01:56:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -61,37 +61,6 @@ PORT_FORMAL_ARRAY_CLASS::port_formal_array(const footprint& f,
 		parent_type(f, p),
 		value_array() {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	All-in-one constructor.  
-	Recursively instantiates ports.  
-	\param p instance placeholder pointer.
-	\param k the dimensions of the array to instantiate.
-	\param t the collection type information.
-	\param r relaxed actuals to attach to all elements, if applicable.
-	\param c unroll-context for recursive port instantiation.  
- */
-PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
-PORT_FORMAL_ARRAY_CLASS::port_formal_array(
-		const instance_placeholder_ptr_type p,
-		const key_type& k, 
-		const instance_collection_parameter_type& t, 
-		const count_ptr<const const_param_expr_list>& r, 
-		const unroll_context& c) :
-		parent_type(p, t),
-		value_array(k) {
-	// should instantiate all members without relaxed actuals
-	// TODO: instantiate!
-	// and complete type at the same time?
-	iterator i(this->begin()), e(this->end());
-	for ( ; i!=e; ++i) {
-		i->attach_actuals(r);
-		i->instantiate(never_ptr<const this_type>(this), c);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE

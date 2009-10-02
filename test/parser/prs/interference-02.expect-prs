@@ -2,5 +2,7 @@
 ~"wee.foo" -> "wee.bar"+
 @ "wee.foo" may_interfere
 @ "wee.bar" may_interfere
+= "!GND" "wee.!GND"
+= "!Vdd" "wee.!Vdd"
 = "wee.bar" "wee.bar2"
 = "wee.foo" "wee.foo2"

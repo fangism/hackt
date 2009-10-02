@@ -80,3 +80,6 @@ globID	super		localID	canonical	footprint-frame
 78	(top)	-	78	bar[3][2][1]	
 79	(top)	-	79	bar[3][3][1]	
 80	(top)	-	80	bar[3][4][1]	
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	

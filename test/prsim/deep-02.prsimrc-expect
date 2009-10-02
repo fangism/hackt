@@ -1,17 +1,31 @@
 there's only one unique bool in whole test case 
 All subnodes of 'poo':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : X
 All subnodes of 'poo.p':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : X
 All subnodes of 'poo.q':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : X
 All subnodes of 'poo.p.x':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : X
 All subnodes of 'poo.p.y':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : X
 All subnodes of 'poo.q.x':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : X
 All subnodes of 'poo.q.y':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : X
 All subnodes of 'poo.p.x.a':
 poo.p.x.a : X
@@ -30,18 +44,32 @@ poo.p.x.a : X
 All subnodes of 'poo.q.y.b':
 poo.p.x.a : X
 All subnodes of 'poo':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : 0
 All subnodes of 'poo.p':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : 0
 All subnodes of 'poo.q':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : 0
 All subnodes of 'poo.p.x':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : 0
 All subnodes of 'poo.p.y':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : 0
 All subnodes of 'poo.q.x':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : 0
 All subnodes of 'poo.q.y':
+!GND : 0
+!Vdd : 1
 poo.p.x.a : 0
 All subnodes of 'poo.p.x.a':
 poo.p.x.a : 0

@@ -1,9 +1,9 @@
-.subckt inv<> GND Vdd x y
-M0_ GND x y GND nch W=0.15U L=0.06U
+.subckt inv<> !GND !Vdd x y
+M0_ !GND x y !GND nch W=0.15U L=0.06U
 + AS=0.045P PS=0.9U AD=0.045P PD=0.9U
-M1_ Vdd x y Vdd pch W=0.3U L=0.06U
+M1_ !Vdd x y !Vdd pch W=0.3U L=0.06U
 + AS=0.09P PS=1.2U AD=0.09P PD=1.2U
 .ends
 
-xfoo GND Vdd foo.x foo.y inv<>
+xfoo !GND !Vdd foo.x foo.y inv<>
 
