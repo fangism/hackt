@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2009-10-02	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-32:
+	  Fixed test/Make.test-guile, use LTDL_LIBRARY_PATH.
+	  configure.ac: date bump
+
+
 2009-10-01	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-31-merged-supply-01-09:

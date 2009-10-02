@@ -1,6 +1,15 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.95 2009/10/02 01:57:47 fang Exp $
+#	$Id: ChangeLog,v 1.96 2009/10/02 17:36:28 fang Exp $
 # ChangeLog for test directory.
+
+2009-10-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-32:
+	  Make.test-guile: still need to set LTDL_LIBRARY_PATH so that
+		guile:load-extension will find built-but-pre-installed
+		plug-ins in $(top_builddir)/src/.libs instead of
+		ones installed in user's path.  
+
 
 2009-10-01	David Fang		<fangism@users.sourceforge.net>
 
