@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.17 2009/07/10 20:39:44 fang Exp $
+	$Id: Channel-prsim.h,v 1.18 2009/10/03 09:34:56 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -391,10 +391,10 @@ public:
 	const string&
 	get_name(void) const { return name; }
 
-	const size_t
+	const size_t&
 	current_iteration(void) const { return iteration; }
 
-	const size_t
+	const size_t&
 	current_index(void) const { return value_index; }
 
 	const array_value_type&

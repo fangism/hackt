@@ -1,6 +1,6 @@
 /**
 	\file "util/value_saver.h"
-	$Id: value_saver.h,v 1.4 2009/10/03 01:12:28 fang Exp $
+	$Id: value_saver.h,v 1.5 2009/10/03 09:34:58 fang Exp $
  */
 
 #ifndef	__UTIL_VALUE_SAVER_H__
@@ -100,6 +100,7 @@ public:
 		MUST_BE_NULL(r.pointer);
 		this->pointer = r.pointer;
 		this->saved_value = r.saved_value;
+		return *this;
 	}
 
 } __ATTRIBUTE_UNUSED__ ;	// end class ptr_value_saver
