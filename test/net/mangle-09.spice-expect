@@ -1,6 +1,6 @@
 .subckt inv !GND !Vdd x y
-M0_ !GND x y !GND nch W=5u L=2u
-M1_ !Vdd x y !Vdd pch W=5u L=2u
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
 .ends
 
 xfoo !GND !Vdd foo.x foo.y inv

@@ -1,0 +1,17 @@
+Mp:dn:0 !GND a #0 !GND nch W=5u L=2u
+Mp:dn:1 #0 b p !GND nch W=5u L=2u
+Mp:dn:2 !GND c #1 !GND nch W=5u L=2u
+Mp:dn:3 #1 d p !GND nch W=5u L=2u
+Mp:up:0 !Vdd a #2 !Vdd pch W=5u L=2u
+Mp:up:1 !Vdd b #2 !Vdd pch W=5u L=2u
+Mp:up:2 #2 c p !Vdd pch W=5u L=2u
+Mp:up:3 #2 d p !Vdd pch W=5u L=2u
+Mq:dn:0 !GND d #3 !GND nch W=5u L=2u
+Mq:dn:1 !GND a #3 !GND nch W=5u L=2u
+Mq:dn:2 #3 b q !GND nch W=5u L=2u
+Mq:dn:3 #3 c q !GND nch W=5u L=2u
+Mq:up:0 !Vdd d #4 !Vdd pch W=5u L=2u
+Mq:up:1 #4 a q !Vdd pch W=5u L=2u
+Mq:up:2 !Vdd b #5 !Vdd pch W=5u L=2u
+Mq:up:3 #5 c q !Vdd pch W=5u L=2u
+

@@ -2,16 +2,16 @@
 * subcircuit pbar is empty.
 * subcircuit pick is empty.
 .subckt invert__it !GND !Vdd p/b/b/b q/a/a/a q/a/b/a q/b/a/b
-M0_ !GND p/b/b/b x !GND nch W=5u L=2u
-M1_ !Vdd p/b/b/b x !Vdd pch W=5u L=2u
-M2_ !GND x y !GND nch W=5u L=2u
-M3_ !Vdd x y !Vdd pch W=5u L=2u
-M4_ !GND x q/b/a/b !GND nch W=5u L=2u
-M5_ !Vdd x q/b/a/b !Vdd pch W=5u L=2u
-M6_ !GND y q/a/a/a !GND nch W=5u L=2u
-M7_ !Vdd y q/a/a/a !Vdd pch W=5u L=2u
-M8_ !GND p/b/b/b q/a/b/a !GND nch W=5u L=2u
-M9_ !Vdd p/b/b/b q/a/b/a !Vdd pch W=5u L=2u
+Mx:dn:0 !GND p/b/b/b x !GND nch W=5u L=2u
+Mx:up:0 !Vdd p/b/b/b x !Vdd pch W=5u L=2u
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+Mq/b/a/b:dn:0 !GND x q/b/a/b !GND nch W=5u L=2u
+Mq/b/a/b:up:0 !Vdd x q/b/a/b !Vdd pch W=5u L=2u
+Mq/a/a/a:dn:0 !GND y q/a/a/a !GND nch W=5u L=2u
+Mq/a/a/a:up:0 !Vdd y q/a/a/a !Vdd pch W=5u L=2u
+Mq/a/b/a:dn:0 !GND p/b/b/b q/a/b/a !GND nch W=5u L=2u
+Mq/a/b/a:up:0 !Vdd p/b/b/b q/a/b/a !Vdd pch W=5u L=2u
 .ends
 
 .subckt invert__them !GND !Vdd p q

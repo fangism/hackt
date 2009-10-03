@@ -1,17 +1,17 @@
 .subckt celem<2> !GND !Vdd a[0] a[1] o
-M0_ !GND a[0] #0 !GND nch W=5u L=2u
-M1_ #0 a[1] o !GND nch W=5u L=2u
-M2_ !Vdd a[0] #1 !Vdd pch W=5u L=2u
-M3_ #1 a[1] o !Vdd pch W=5u L=2u
+Mo:dn:0 !GND a[0] #0 !GND nch W=5u L=2u
+Mo:dn:1 #0 a[1] o !GND nch W=5u L=2u
+Mo:up:0 !Vdd a[0] #1 !Vdd pch W=5u L=2u
+Mo:up:1 #1 a[1] o !Vdd pch W=5u L=2u
 .ends
 
 .subckt celem<3> !GND !Vdd a[0] a[1] a[2] o
-M0_ !GND a[0] #0 !GND nch W=5u L=2u
-M1_ #0 a[1] #1 !GND nch W=5u L=2u
-M2_ #1 a[2] o !GND nch W=5u L=2u
-M3_ !Vdd a[0] #2 !Vdd pch W=5u L=2u
-M4_ #2 a[1] #3 !Vdd pch W=5u L=2u
-M5_ #3 a[2] o !Vdd pch W=5u L=2u
+Mo:dn:0 !GND a[0] #0 !GND nch W=5u L=2u
+Mo:dn:1 #0 a[1] #1 !GND nch W=5u L=2u
+Mo:dn:2 #1 a[2] o !GND nch W=5u L=2u
+Mo:up:0 !Vdd a[0] #2 !Vdd pch W=5u L=2u
+Mo:up:1 #2 a[1] #3 !Vdd pch W=5u L=2u
+Mo:up:2 #3 a[2] o !Vdd pch W=5u L=2u
 .ends
 
 xc2 !GND !Vdd q[0] q[1] y celem<2>

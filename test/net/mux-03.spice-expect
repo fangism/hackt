@@ -1,0 +1,17 @@
+Mout:dn:0 !GND in[0] #0 !GND nch W=5u L=2u
+Mout:dn:1 #0 sel[0] out !GND nch W=5u L=2u
+Mout:up:0 !Vdd in[0] #1 !Vdd pch W=5u L=2u
+Mout:up:1 #1 _sel[0] out !Vdd pch W=5u L=2u
+Mout:dn:2 !GND in[1] #2 !GND nch W=5u L=2u
+Mout:dn:3 #2 sel[1] out !GND nch W=5u L=2u
+Mout:up:2 !Vdd in[1] #3 !Vdd pch W=5u L=2u
+Mout:up:3 #3 _sel[1] out !Vdd pch W=5u L=2u
+Mout:dn:4 !GND in[2] #4 !GND nch W=5u L=2u
+Mout:dn:5 #4 sel[2] out !GND nch W=5u L=2u
+Mout:up:4 !Vdd in[2] #5 !Vdd pch W=5u L=2u
+Mout:up:5 #5 _sel[2] out !Vdd pch W=5u L=2u
+Mout:dn:6 !GND in[3] #6 !GND nch W=5u L=2u
+Mout:dn:7 #6 sel[3] out !GND nch W=5u L=2u
+Mout:up:6 !Vdd in[3] #7 !Vdd pch W=5u L=2u
+Mout:up:7 #7 _sel[3] out !Vdd pch W=5u L=2u
+

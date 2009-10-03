@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.4 2009/10/02 01:57:32 fang Exp $
+	$Id: netlist_generator.h,v 1.5 2009/10/03 01:12:28 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -78,13 +78,18 @@ private:
 		The base node (initially, Vdd/GND) to connect to the source
 		terminal of the next device/expression.  
 		This is necessary to correctly connect OR'd expressions.  
+		Paired with output_node member.
 	 */
 	index_type			foot_node;
 	/**
 		The output node (initially NULL) produced by the 
-		last expression.  
+		last expression, paired against foot_node.  
 	 */
 	index_type			output_node;
+#if NETLIST_GROUPED_TRANSISTORS
+	index_type			current_assoc_node;
+	bool				current_assoc_dir;
+#endif
 	/**
 		For transistor sizing, let sizes be sticky, and
 		propagate to latter unspecified series transistors.

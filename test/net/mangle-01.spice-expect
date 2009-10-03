@@ -1,7 +1,7 @@
-M0_ _BANG_GND in_IND0EX_ _PND_0 _BANG_GND nch W=5u L=2u
-M1_ _PND_0 in_IND1EX_ ____o _BANG_GND nch W=5u L=2u
-M2_ _BANG_Vdd in_IND0EX_ _PND_1 _BANG_Vdd pch W=5u L=2u
-M3_ _PND_1 in_IND1EX_ ____o _BANG_Vdd pch W=5u L=2u
-M4_ _BANG_GND ____o o _BANG_GND nch W=20u L=2u
-M5_ _BANG_Vdd ____o o _BANG_Vdd pch W=20u L=2u
+M____o_COL_dn_COL_0 _BANG_GND in_IND0EX_ _PND_0 _BANG_GND nch W=5u L=2u
+M____o_COL_dn_COL_1 _PND_0 in_IND1EX_ ____o _BANG_GND nch W=5u L=2u
+M____o_COL_up_COL_0 _BANG_Vdd in_IND0EX_ _PND_1 _BANG_Vdd pch W=5u L=2u
+M____o_COL_up_COL_1 _PND_1 in_IND1EX_ ____o _BANG_Vdd pch W=5u L=2u
+Mo_COL_dn_COL_0 _BANG_GND ____o o _BANG_GND nch W=20u L=2u
+Mo_COL_up_COL_0 _BANG_Vdd ____o o _BANG_Vdd pch W=20u L=2u
 

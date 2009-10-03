@@ -1,22 +1,22 @@
 .subckt foo<15> !GND !Vdd a b y
-M0_ !GND a #0 !GND nch W=15u L=2u
-M1_ #0 b y !GND nch W=15u L=2u
-M2_ !Vdd a #1 !Vdd pch W=15u L=2u
-M3_ #1 b y !Vdd pch W=15u L=2u
+My:dn:0 !GND a #0 !GND nch W=15u L=2u
+My:dn:1 #0 b y !GND nch W=15u L=2u
+My:up:0 !Vdd a #1 !Vdd pch W=15u L=2u
+My:up:1 #1 b y !Vdd pch W=15u L=2u
 .ends
 
 .subckt foo<25> !GND !Vdd a b y
-M0_ !GND a #0 !GND nch W=20u L=2u
-M1_ #0 b y !GND nch W=20u L=2u
-M2_ !Vdd a #1 !Vdd pch W=25u L=2u
-M3_ #1 b y !Vdd pch W=25u L=2u
+My:dn:0 !GND a #0 !GND nch W=20u L=2u
+My:dn:1 #0 b y !GND nch W=20u L=2u
+My:up:0 !Vdd a #1 !Vdd pch W=25u L=2u
+My:up:1 #1 b y !Vdd pch W=25u L=2u
 .ends
 
 .subckt foo<50> !GND !Vdd a b y
-M0_ !GND a #0 !GND nch W=20u L=2u
-M1_ #0 b y !GND nch W=20u L=2u
-M2_ !Vdd a #1 !Vdd pch W=30u L=2u
-M3_ #1 b y !Vdd pch W=30u L=2u
+My:dn:0 !GND a #0 !GND nch W=20u L=2u
+My:dn:1 #0 b y !GND nch W=20u L=2u
+My:up:0 !Vdd a #1 !Vdd pch W=30u L=2u
+My:up:1 #1 b y !Vdd pch W=30u L=2u
 .ends
 
 xbar1 !GND !Vdd bar1.a bar1.b bar1.y foo<15>

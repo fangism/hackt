@@ -1,0 +1,11 @@
+// "mux-01.hac"
+// @hacknet-flags@ -t mux<4>
+
+template <pint N>
+defproc mux (bool in[N], sel[N], _sel[N], out) {
+prs {
+(|:i:N:	in[i] & sel[i] )	-> out-
+(|:i:N:	~in[i] & ~_sel[i] )	-> out+
+}
+}
+

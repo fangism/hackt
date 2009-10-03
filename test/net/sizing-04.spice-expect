@@ -1,24 +1,24 @@
 .subckt foo<> !GND !Vdd a b c d e x y z
-M0_ !GND b #0 !GND nch W=8u L=2u
-M1_ #0 d z !GND nch W=8u L=2u
-M2_ !Vdd b #1 !Vdd pch W=8u L=2u
-M3_ #1 d z !Vdd pch W=8u L=2u
-M4_ !GND a #2 !GND nch W=5u L=2u
-M5_ #2 b #3 !GND nch W=10u L=2u
-M6_ #3 c #4 !GND nch W=10u L=2u
-M7_ #4 d #5 !GND nch W=20u L=3u
-M8_ #5 e x !GND nch W=20u L=3u
-M9_ !Vdd a #6 !Vdd pch W=5u L=2u
-M10_ #6 b #7 !Vdd pch W=10u L=2u
-M11_ #7 c #8 !Vdd pch W=10u L=2u
-M12_ #8 d #9 !Vdd pch W=20u L=3u
-M13_ #9 e x !Vdd pch W=20u L=3u
-M14_ !GND a #10 !GND nch W=5u L=2u
-M15_ #10 c #11 !GND nch W=5u L=2u
-M16_ #11 e y !GND nch W=5u L=2u
-M17_ !Vdd a y !Vdd pch W=5u L=2u
-M18_ !Vdd c y !Vdd pch W=5u L=2u
-M19_ !Vdd e y !Vdd pch W=5u L=2u
+Mz:dn:0 !GND b #0 !GND nch W=8u L=2u
+Mz:dn:1 #0 d z !GND nch W=8u L=2u
+Mz:up:0 !Vdd b #1 !Vdd pch W=8u L=2u
+Mz:up:1 #1 d z !Vdd pch W=8u L=2u
+Mx:dn:0 !GND a #2 !GND nch W=5u L=2u
+Mx:dn:1 #2 b #3 !GND nch W=10u L=2u
+Mx:dn:2 #3 c #4 !GND nch W=10u L=2u
+Mx:dn:3 #4 d #5 !GND nch W=20u L=3u
+Mx:dn:4 #5 e x !GND nch W=20u L=3u
+Mx:up:0 !Vdd a #6 !Vdd pch W=5u L=2u
+Mx:up:1 #6 b #7 !Vdd pch W=10u L=2u
+Mx:up:2 #7 c #8 !Vdd pch W=10u L=2u
+Mx:up:3 #8 d #9 !Vdd pch W=20u L=3u
+Mx:up:4 #9 e x !Vdd pch W=20u L=3u
+My:dn:0 !GND a #10 !GND nch W=5u L=2u
+My:dn:1 #10 c #11 !GND nch W=5u L=2u
+My:dn:2 #11 e y !GND nch W=5u L=2u
+My:up:0 !Vdd a y !Vdd pch W=5u L=2u
+My:up:1 !Vdd c y !Vdd pch W=5u L=2u
+My:up:2 !Vdd e y !Vdd pch W=5u L=2u
 .ends
 
 xbar !GND !Vdd bar.a bar.b bar.c bar.d bar.e bar.x bar.y bar.z foo<>

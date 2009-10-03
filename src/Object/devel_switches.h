@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.54 2009/10/02 01:56:42 fang Exp $
+	$Id: devel_switches.h,v 1.55 2009/10/03 01:12:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -230,7 +230,7 @@
 	per-instance.  
 	Will require syntax extension.  
 	Goal: 1
-	Status: in progress, developing middle-end
+	Status: done, tested
  */
 #define	INSTANCE_SUPPLY_OVERRIDES		(1 && IMPLICIT_SUPPLY_PORTS)
 

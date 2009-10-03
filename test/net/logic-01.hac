@@ -1,0 +1,10 @@
+// "logic-01.hac"
+// testing complements
+
+bool a, b, c, p, q;
+
+prs {
+	(a & b) | c		=> p-
+	a & (b | c)		=> q-
+}
+

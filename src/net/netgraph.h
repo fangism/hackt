@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.4 2009/10/02 01:57:30 fang Exp $
+	$Id: netgraph.h,v 1.5 2009/10/03 01:12:27 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -14,6 +14,15 @@
 #include "Object/lang/cflat_context_visitor.h"
 #include "Object/lang/PRS_footprint_expr.h"	// for precharge_ref_type
 #include "Object/devel_switches.h"
+
+/**
+	Define to 1 to organize transistors by group, so that they
+	may be associated with their output nodes or named internal nodes.
+	Goal: 1
+	Rationale: more consistent device naming across revisions (ECOs).
+	Status: starting...
+ */
+#define	NETLIST_GROUPED_TRANSISTORS		1
 
 namespace HAC {
 namespace NET {
@@ -32,19 +41,164 @@ using entity::PRS::footprint_expr_node;
 
 typedef	size_t		index_type;
 typedef	double		real_type;
+class node;
 class netlist;
 class local_netlist;
 class netlist_generator;
 struct netlist_options;
+/**
+	Collection of physical nodes, can be from logical nodes, 
+	internal nodes, or auxiliary nodes, or supply nodes.  
+ */
+typedef	vector<node>			node_pool_type;
 
 // 0-indexed nodes or 1-indexed?
 // extern const index_type	base_index = 1;
 
 //=============================================================================
 /**
+	Standard 4-terminal device for transistor.
+ */
+struct transistor {
+	enum fet_type {
+		NFET_TYPE,
+		PFET_TYPE
+	};
+	/**
+		Devices are somehow named after the rules from which
+		they are derived.  
+		TODO: need auto-enumeration
+	 */
+	string				name;
+	index_type			source;
+	index_type			gate;
+	index_type			drain;
+	/**
+		Substrate contact.
+	 */
+	index_type			body;
+#if NETLIST_GROUPED_TRANSISTORS
+	/**
+		The index of the node with which this device is
+		associated, for the purposes of grouping.  
+	 */
+	index_type			assoc_node;
+	/**
+		Whether we are associated with a pull-up or pull-dn
+		group of devices.  
+		Precharges are associated with the direction
+		of the primary rule.  
+		Internal nodes...
+	 */
+	bool				assoc_dir;
+#endif
+	/// device width parameter
+	real_type			width;
+	/// device length parameter
+	real_type			length;
+	/// device type: nfet, pfet
+	char				type;
+	// TODO: support overriding of device type
+	// e.g. hvt, lvt, svt...
+
+	// allow a conf/tech file to define/enumerate additional types
+	// attributes:
+	// is_standard_keeper
+	// is_combination_feedback_keeper
+	enum flags {
+		DEFAULT_ATTRIBUTE = 0x0,
+		IS_PRECHARGE = 0x01,
+		IS_STANDARD_KEEPER = 0x02,
+		IS_COMB_FEEDBACK = 0x04,
+		IS_LOW_VT = 0x10,
+		IS_HIGH_VT = 0x20
+	};
+	char				attributes;
+
+	void
+	set_lvt(void) {
+		attributes |= IS_LOW_VT;
+		attributes &= ~IS_HIGH_VT;
+	}
+
+	void
+	set_hvt(void) {
+		attributes |= IS_HIGH_VT;
+		attributes &= ~IS_LOW_VT;
+	}
+
+	void
+	set_svt(void) {
+		attributes &= ~(IS_LOW_VT | IS_HIGH_VT);
+	}
+
+	void
+	mark_used_nodes(node_pool_type&) const;
+
+	ostream&
+	emit(ostream&, const index_type, const node_pool_type&, 
+		const footprint&, const netlist_options&) const;
+
+	ostream&
+	emit_attribute_suffixes(ostream&, const netlist_options&) const;
+
+	ostream&
+	dump_raw(ostream&) const;
+
+};	// end struct transistor
+
+//-----------------------------------------------------------------------------
+/**
+	Group of transistors.
+	TODO: indices of originating rule and/or internal node definition?
+ */
+struct device_group {
+	typedef	vector<transistor>	transistor_pool_type;
+#if 0
+	/**
+		This is the index of the rule or internal node 
+		associated with this group.
+	 */
+	index_type			assoc_node_index;
+#else
+	// infer index from position in node pool
+#endif
+	/**
+		Set of transistors that participate in driving
+		this node, be it logical or named internal.  
+		The associated node need not be a direct terminal of
+		every transistor.  
+	 */
+	transistor_pool_type		transistor_pool;
+
+	bool
+	is_empty(void) const;
+
+#if 0
+	ostream&
+	emit_devices(ostream&, const index_type, const node_pool_type&, 
+		const footprint&, const netlist_options&) const;
+#endif
+
+	void
+	mark_used_nodes(node_pool_type&) const;
+
+	ostream&
+	dump_raw_devices(ostream&) const;
+
+};	// end struct device_group
+
+//-----------------------------------------------------------------------------
+/**
 	Extension of (local) node information.  
 	Corresponds to an electrical node in the netlist. 
 	Bother with redundant connectivity list?
+	Re: device grouping by output node:
+	Decided not to derive/contain device group because 
+	rules associated with a single node may come from different 
+	subcircuit, thus making it difficult to group by node.  
+	Thus, we resort to tagging every device with a node index, 
+	and maintaining an auxiliary mutable counter.  
  */
 struct node {
 	struct __logical_node_tag { };
@@ -103,23 +257,48 @@ struct node {
 	 */
 	bool				used;
 	// connectivity information needed? would be redundant with devices
+#if NETLIST_GROUPED_TRANSISTORS
+	/**
+		Auxiliary counter used when printing transistors and
+		enumerating devices per associated node.  
+		When recursing into subcircuits, save and clear the 
+		counter value, and upon returning, restore former value.  
+		Like class util::value_saver.
+		Pull-up rule and pull-down rules are associated with
+		separate counters.  
+	 */
+	mutable
+	index_type			device_count[2];
+#endif
+
+#if NETLIST_GROUPED_TRANSISTORS
+#define	INIT_DEVICE_COUNT	device_count[0] = 0; device_count[1] = 0;
+#else
+#define	INIT_DEVICE_COUNT
+#endif
 
 #if !PRS_SUPPLY_OVERRIDES
 	node(const string& s, const __supply_node_tag&) : 
-		index(0), name(s), type(NODE_TYPE_SUPPLY), used(false) { }
+		index(0), name(s), type(NODE_TYPE_SUPPLY), used(false) 
+		{ INIT_DEVICE_COUNT }
 #endif
 	node(const index_type i, const __logical_node_tag&) : 
-		index(i), name(), type(NODE_TYPE_LOGICAL), used(false) { }
+		index(i), name(), type(NODE_TYPE_LOGICAL), used(false)
+		{ INIT_DEVICE_COUNT }
 	node(const index_type i, const __internal_node_tag&) : 
-		index(i), name(), type(NODE_TYPE_INTERNAL), used(false) { }
+		index(i), name(), type(NODE_TYPE_INTERNAL), used(false)
+		{ INIT_DEVICE_COUNT }
 	node(const __auxiliary_node_tag&) : 
-		index(0), name(), type(NODE_TYPE_AUXILIARY), used(false) { }
+		index(0), name(), type(NODE_TYPE_AUXILIARY), used(false)
+		{ INIT_DEVICE_COUNT }
 	// only for VOID node
 	node(const char* s, const __auxiliary_node_tag&) : 
-		index(0), name(s), type(NODE_TYPE_AUXILIARY), used(false) { }
+		index(0), name(s), type(NODE_TYPE_AUXILIARY), used(false)
+		{ INIT_DEVICE_COUNT }
 	node(const index_type a, const __auxiliary_node_tag&) : 
-		index(a), name(), type(NODE_TYPE_AUXILIARY), used(false) { }
-
+		index(a), name(), type(NODE_TYPE_AUXILIARY), used(false)
+		{ INIT_DEVICE_COUNT }
+#undef	INIT_DEVICE_COUNT
 
 	bool
 	is_logical_node(void) const { return type == NODE_TYPE_LOGICAL; }
@@ -141,7 +320,11 @@ struct node {
 	}
 
 	ostream&
-	emit(ostream&, const footprint&, const netlist_options&) const;
+	emit(ostream&, 
+#if !CACHE_ALL_NODE_NAMES
+		const footprint&, 
+#endif
+		const netlist_options&) const;
 
 	ostream&
 	dump_raw(ostream&) const;
@@ -149,85 +332,6 @@ struct node {
 };	// end struct node
 
 //-----------------------------------------------------------------------------
-/**
-	Standard 4-terminal device for transistor.
- */
-struct transistor {
-	enum fet_type {
-		NFET_TYPE,
-		PFET_TYPE
-	};
-	/**
-		Devices are somehow named after the rules from which
-		they are derived.  
-		TODO: need auto-enumeration
-	 */
-	string				name;
-	index_type			source;
-	index_type			gate;
-	index_type			drain;
-	/**
-		Substrate contact.
-	 */
-	index_type			body;
-	/// device width parameter
-	real_type			width;
-	/// device length parameter
-	real_type			length;
-	/// device type: nfet, pfet
-	char				type;
-	// TODO: support overriding of device type
-	// e.g. hvt, lvt, svt...
-
-	// allow a conf/tech file to define/enumerate additional types
-	// attributes:
-	// is_standard_keeper
-	// is_combination_feedback_keeper
-	enum flags {
-		DEFAULT_ATTRIBUTE = 0x0,
-		IS_PRECHARGE = 0x01,
-		IS_STANDARD_KEEPER = 0x02,
-		IS_COMB_FEEDBACK = 0x04,
-		IS_LOW_VT = 0x10,
-		IS_HIGH_VT = 0x20
-	};
-	char				attributes;
-
-	void
-	set_lvt(void) {
-		attributes |= IS_LOW_VT;
-		attributes &= ~IS_HIGH_VT;
-	}
-
-	void
-	set_hvt(void) {
-		attributes |= IS_HIGH_VT;
-		attributes &= ~IS_LOW_VT;
-	}
-
-	void
-	set_svt(void) {
-		attributes &= ~(IS_LOW_VT | IS_HIGH_VT);
-	}
-
-	template <class NP>
-	void
-	mark_used_nodes(NP&) const;
-
-	template <class NP>
-	ostream&
-	emit(ostream&, const NP&, const footprint&, 
-		const netlist_options&) const;
-
-	ostream&
-	emit_attribute_suffixes(ostream&, const netlist_options&) const;
-
-	ostream&
-	dump_raw(ostream&) const;
-
-};	// end struct transistor
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Generic 2-terminal device.
 	Capacitor, resistor, or inductor.
@@ -276,52 +380,36 @@ struct instance {
 	bool
 	is_empty(void) const;
 
-	template <class NP>
 	ostream&
-	emit(ostream&, const NP&, const footprint&, 
+	emit(ostream&, const node_pool_type&, const footprint&, 
 		const netlist_options&) const;
 
-	template <class NP>
 	void
-	mark_used_nodes(NP&) const;
+	mark_used_nodes(node_pool_type&) const;
 
 	ostream&
 	dump_raw(ostream&) const;
 
 };	// end struct instance
 
-
 //-----------------------------------------------------------------------------
 /**
 	Structures common to all netlists.  
  */
-struct netlist_common {
+struct netlist_common : public device_group {
 	/**
-		TODO: group transistors in a way that reflects
-		original rule in PRS, if applicable.
-		For now, flat list.
 		TODO: print comment with origin rule before each
 		group of transistors.
 	 */
-	typedef	vector<transistor>	transistor_pool_type;
 	typedef	vector<passive_device>	passive_device_pool_type;
-	transistor_pool_type		transistor_pool;
 	passive_device_pool_type	passive_device_pool;
 
 	bool
 	is_empty(void) const;
 
-	template <class NP>
-	void
-	mark_used_nodes(NP&) const;
-
-	template <class NP>
 	ostream&
-	emit_devices(ostream&, const NP&, const footprint&, 
+	emit_devices(ostream&, const node_pool_type&, const footprint&, 
 		const netlist_options&) const;
-
-	ostream&
-	dump_raw_devices(ostream&) const;
 
 };	// end class netlist_common
 
@@ -348,9 +436,8 @@ struct local_netlist : public netlist_common {
 	node_index_map_type			node_index_map;
 
 	// does NOT have local subinstances, only devices
-	template <class NP>
 	void
-	mark_used_nodes(NP&);
+	mark_used_nodes(node_pool_type&);
 
 	// requires a parent netlist for reference
 	ostream&
@@ -396,11 +483,6 @@ public:
 
 friend class local_netlist;
 friend class netlist_generator;
-	/**
-		Collection of physical nodes, can be from logical nodes, 
-		internal nodes, or auxiliary nodes, or supply nodes.  
-	 */
-	typedef	vector<node>		node_pool_type;
 	/**
 		first: local node index
 		second: owner subcircuit index (1-indexed)

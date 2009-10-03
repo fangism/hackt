@@ -1,0 +1,13 @@
+// "mux-02.hac"
+// copy-modified from "mux-01.hac"
+// written using parallel OR combination
+// @hacknet-flags@ -t mux<4>
+
+template <pint N>
+defproc mux (bool in[N], sel[N], _sel[N], out) {
+prs {
+(:i:N:	in[i] & sel[i]		-> out-	)
+(:i:N:	~in[i] & ~_sel[i]	-> out+	)
+}
+}
+

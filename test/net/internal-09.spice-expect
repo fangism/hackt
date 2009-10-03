@@ -1,7 +1,7 @@
-M0_ !GND en1 @x !GND nch W=5u L=2u
-M1_ !GND en2 @x !GND nch W=5u L=2u
-M2_:pchg !Vdd en1 #0 !Vdd pch W=5u L=2u
-M3_:pchg #0 en2 @x !Vdd pch W=5u L=2u
-M4_ @x a #1 !GND nch W=5u L=2u
-M5_ #1 b _o !GND nch W=5u L=2u
+M@x:dn:0 !GND en1 @x !GND nch W=5u L=2u
+M@x:dn:1 !GND en2 @x !GND nch W=5u L=2u
+M_o:dn:0:pchg !Vdd en1 #0 !Vdd pch W=5u L=2u
+M_o:dn:1:pchg #0 en2 @x !Vdd pch W=5u L=2u
+M_o:dn:2 @x a #1 !GND nch W=5u L=2u
+M_o:dn:3 #1 b _o !GND nch W=5u L=2u
 

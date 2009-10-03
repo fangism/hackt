@@ -1,13 +1,13 @@
-M0_ !GND a #0 !GND nch W=5u L=2u
-M1_ #0 b _o !GND nch W=5u L=2u
-M2_ !Vdd a #1 !Vdd pch W=5u L=2u
-M3_ #1 b _o !Vdd pch W=5u L=2u
-M4_ !GND _o o !GND nch W=5u L=2u
-M5_ !Vdd _o o !Vdd pch W=5u L=2u
-M6_:ckeeper !GND a #2 !GND nch W=5u L=2u
-M7_:ckeeper !GND b #2 !GND nch W=5u L=2u
-M8_:ckeeper #2 o _o !GND nch W=5u L=2u
-M9_:ckeeper !Vdd a #3 !Vdd pch W=5u L=2u
-M10_:ckeeper !Vdd b #3 !Vdd pch W=5u L=2u
-M11_:ckeeper #3 o _o !Vdd pch W=5u L=2u
+M_o:dn:0 !GND a #0 !GND nch W=5u L=2u
+M_o:dn:1 #0 b _o !GND nch W=5u L=2u
+M_o:up:0 !Vdd a #1 !Vdd pch W=5u L=2u
+M_o:up:1 #1 b _o !Vdd pch W=5u L=2u
+Mo:dn:0 !GND _o o !GND nch W=5u L=2u
+Mo:up:0 !Vdd _o o !Vdd pch W=5u L=2u
+M_o:dn:2:ckeeper !GND a #2 !GND nch W=5u L=2u
+M_o:dn:3:ckeeper !GND b #2 !GND nch W=5u L=2u
+M_o:dn:4:ckeeper #2 o _o !GND nch W=5u L=2u
+M_o:up:2:ckeeper !Vdd a #3 !Vdd pch W=5u L=2u
+M_o:up:3:ckeeper !Vdd b #3 !Vdd pch W=5u L=2u
+M_o:up:4:ckeeper #3 o _o !Vdd pch W=5u L=2u
 

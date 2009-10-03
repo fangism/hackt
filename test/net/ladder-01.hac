@@ -1,0 +1,12 @@
+// "ladder-01.hac"
+// copy-modified from "logic-02.hac"
+// testing loop-expansions
+// @hacknet-flags@ -t ladder<4>
+
+template <pint N>
+defproc ladder(bool in[N][2], out) {
+prs {
+	(&:i:N: (in[i][0] | in[i][1]))	=> out-
+}
+}
+

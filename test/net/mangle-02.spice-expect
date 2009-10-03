@@ -1,11 +1,11 @@
 * subcircuit e1of_TEMP2LATE_ is empty.
 .subckt std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_ _BANG_GND _BANG_Vdd in_IND0EX_ in_IND1EX_ o
-M0_ _BANG_GND in_IND0EX_ _PND_0 _BANG_GND nch W=5u L=2u
-M1_ _PND_0 in_IND1EX_ ____o _BANG_GND nch W=5u L=2u
-M2_ _BANG_Vdd in_IND0EX_ _PND_1 _BANG_Vdd pch W=5u L=2u
-M3_ _PND_1 in_IND1EX_ ____o _BANG_Vdd pch W=5u L=2u
-M4_ _BANG_GND ____o o _BANG_GND nch W=10u L=2u
-M5_ _BANG_Vdd ____o o _BANG_Vdd pch W=10u L=2u
+M____o_COL_dn_COL_0 _BANG_GND in_IND0EX_ _PND_0 _BANG_GND nch W=5u L=2u
+M____o_COL_dn_COL_1 _PND_0 in_IND1EX_ ____o _BANG_GND nch W=5u L=2u
+M____o_COL_up_COL_0 _BANG_Vdd in_IND0EX_ _PND_1 _BANG_Vdd pch W=5u L=2u
+M____o_COL_up_COL_1 _PND_1 in_IND1EX_ ____o _BANG_Vdd pch W=5u L=2u
+Mo_COL_dn_COL_0 _BANG_GND ____o o _BANG_GND nch W=10u L=2u
+Mo_COL_up_COL_0 _BANG_Vdd ____o o _BANG_Vdd pch W=10u L=2u
 .ends
 
 xcomp _BANG_GND _BANG_Vdd oe_IND0EX_ oe_IND1EX_ in_DOT_e std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_

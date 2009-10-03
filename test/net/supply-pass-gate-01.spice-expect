@@ -1,5 +1,5 @@
-M0_ s[0] _g[0] d[0] myVdd pch W=5u L=2u
-M1_ s[0] g[0] d[0] !GND nch W=5u L=2u
-M2_ s[1] _g[1] d[1] !Vdd pch W=5u L=2u
-M3_ s[1] g[1] d[1] myGND nch W=5u L=2u
+Md[0]:up:0 s[0] _g[0] d[0] myVdd pch W=5u L=2u
+Md[0]:dn:0 s[0] g[0] d[0] !GND nch W=5u L=2u
+Md[1]:up:0 s[1] _g[1] d[1] !Vdd pch W=5u L=2u
+Md[1]:dn:0 s[1] g[1] d[1] myGND nch W=5u L=2u
 

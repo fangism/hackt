@@ -1,11 +1,11 @@
 .subckt foo<>::INTSUB:0 @a !GND _y en x
-M0_ !GND en @a !GND nch W=5u L=2u
-M1_ @a x _y !GND nch W=5u L=2u
+M@a:dn:0 !GND en @a !GND nch W=5u L=2u
+M_y:dn:0 @a x _y !GND nch W=5u L=2u
 .ends
 .subckt foo<> !GND !Vdd en x _y
 xINTSUB:0:inst @a !GND _y en x foo<>::INTSUB:0
-M0_ !GND _y z !GND nch W=5u L=2u
-M1_ !Vdd _y z !Vdd pch W=5u L=2u
+Mz:dn:0 !GND _y z !GND nch W=5u L=2u
+Mz:up:0 !Vdd _y z !Vdd pch W=5u L=2u
 .ends
 
 xbar !GND !Vdd bar.en bar.x bar._y foo<>

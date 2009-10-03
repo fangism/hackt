@@ -1,5 +1,5 @@
-M0_ !GND x y !GND nch W=5u L=2u
-M1_ !Vdd x y !Vdd pch W=5u L=2u
-M2_ !GND y z !GND nch W=5u L=2u
-M3_ myVdd y z myVdd pch W=5u L=2u
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+Mz:dn:0 !GND y z !GND nch W=5u L=2u
+Mz:up:0 myVdd y z myVdd pch W=5u L=2u
 

@@ -1,5 +1,5 @@
-M0_ !GND x #0 !GND nch_hvt W=20u L=4u
-M1_ #0 y z !GND nch W=20u L=4u
-M2_ !Vdd x #1 !Vdd pch_hvt W=20u L=4u
-M3_ #1 y z !Vdd pch W=20u L=4u
+Mz:dn:0 !GND x #0 !GND nch_hvt W=20u L=4u
+Mz:dn:1 #0 y z !GND nch W=20u L=4u
+Mz:up:0 !Vdd x #1 !Vdd pch_hvt W=20u L=4u
+Mz:up:1 #1 y z !Vdd pch W=20u L=4u
 

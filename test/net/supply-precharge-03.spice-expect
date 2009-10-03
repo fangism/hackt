@@ -1,7 +1,7 @@
-M0_ myVdd en y myVdd pch W=5u L=2u
-M1_ myGND en @_int myGND nch W=5u L=2u
-M2_:pchg !Vdd en @_int !Vdd pch W=5u L=2u
-M3_ @_int x y !GND nch W=5u L=2u
+My:up:0 myVdd en y myVdd pch W=5u L=2u
+M@_int:dn:0 myGND en @_int myGND nch W=5u L=2u
+My:dn:0:pchg !Vdd en @_int !Vdd pch W=5u L=2u
+My:dn:1 @_int x y !GND nch W=5u L=2u
 
 * --- WARNINGS ---
 * Warning: in subcircuit <top-level>:

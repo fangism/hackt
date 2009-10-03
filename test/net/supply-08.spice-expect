@@ -1,13 +1,13 @@
-M0_ !GND x #0 !GND nch W=5u L=2u
-M1_ #0 y p !GND nch W=5u L=2u
-M2_ myVdd x p myVdd pch W=5u L=2u
-M3_ myVdd y p myVdd pch W=5u L=2u
-M4_ myGND x q myGND nch W=5u L=2u
-M5_ myGND y q myGND nch W=5u L=2u
-M6_ myVdd x #1 myVdd pch W=5u L=2u
-M7_ #1 y q myVdd pch W=5u L=2u
-M8_ !GND x r !GND nch W=5u L=2u
-M9_ !GND y r !GND nch W=5u L=2u
-M10_ !Vdd x #2 !Vdd pch W=5u L=2u
-M11_ #2 y r !Vdd pch W=5u L=2u
+Mp:dn:0 !GND x #0 !GND nch W=5u L=2u
+Mp:dn:1 #0 y p !GND nch W=5u L=2u
+Mp:up:0 myVdd x p myVdd pch W=5u L=2u
+Mp:up:1 myVdd y p myVdd pch W=5u L=2u
+Mq:dn:0 myGND x q myGND nch W=5u L=2u
+Mq:dn:1 myGND y q myGND nch W=5u L=2u
+Mq:up:0 myVdd x #1 myVdd pch W=5u L=2u
+Mq:up:1 #1 y q myVdd pch W=5u L=2u
+Mr:dn:0 !GND x r !GND nch W=5u L=2u
+Mr:dn:1 !GND y r !GND nch W=5u L=2u
+Mr:up:0 !Vdd x #2 !Vdd pch W=5u L=2u
+Mr:up:1 #2 y r !Vdd pch W=5u L=2u
 

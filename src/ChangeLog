@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-10-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-33:
+	  hacknet: transistors are now associated with output nodes
+		of the rules from which they came, or internal node 
+		definitions.  Pass-gates are associated with drain terminals.
+		This now reduces the number of changes to device names
+		in the netlist with incremental changes to the prs.  
+		This behavior is enabled permanantly.
+	  Test cases updated, a few new ones added.
+
+
 2009-10-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-32:

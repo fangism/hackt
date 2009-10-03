@@ -1,6 +1,6 @@
 .subckt foo_TEMPLATE_ _BANG_GND en x ____y
-M0_ _BANG_GND en _AT_a _BANG_GND nch W=5u L=2u
-M1_ _AT_a x ____y _BANG_GND nch W=5u L=2u
+M_AT_a_COL_dn_COL_0 _BANG_GND en _AT_a _BANG_GND nch W=5u L=2u
+M____y_COL_dn_COL_0 _AT_a x ____y _BANG_GND nch W=5u L=2u
 .ends
 
 xbar _BANG_GND bar_DOT_en bar_DOT_x bar_DOT_____y foo_TEMPLATE_

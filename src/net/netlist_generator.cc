@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.4 2009/10/02 01:57:31 fang Exp $
+	$Id: netlist_generator.cc,v 1.5 2009/10/03 01:12:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -60,6 +60,10 @@ netlist_generator::netlist_generator(const state_manager& _sm,
 		current_local_netlist(NULL),
 		foot_node(netlist::void_index),
 		output_node(netlist::void_index),
+#if NETLIST_GROUPED_TRANSISTORS
+		current_assoc_node(netlist::void_index), 
+		current_assoc_dir(false),		// don't care
+#endif
 		current_width(0.0),
 		current_length(0.0),
 		fet_type(transistor::NFET_TYPE), 	// don't care
@@ -445,6 +449,10 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 	const value_saver<transistor::fet_type>
 		__t3(fet_type, (r.dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
 	const value_saver<char> __t4(fet_attr);
+#if NETLIST_GROUPED_TRANSISTORS
+	const value_saver<index_type> __ta1(current_assoc_node, output_node);
+	const value_saver<bool> __ta2(current_assoc_dir, r.dir);
+#endif
 	// apply rule attributes: iskeeper, etc...
 	const rule::attributes_list_type& rats(r.attributes);
 	rule::attributes_list_type::const_iterator
@@ -592,6 +600,10 @@ if (!n.used) {
 		__t3(fet_type,
 			(dir ? transistor::PFET_TYPE : transistor::NFET_TYPE));
 	const value_saver<real_type> __t4(current_width), __t5(current_length);
+#if NETLIST_GROUPED_TRANSISTORS
+	const value_saver<index_type> __ta1(current_assoc_node, output_node);
+	const value_saver<bool> __ta2(current_assoc_dir, dir);
+#endif
 	// Q: can internal nodes definitions be applied to keepers?
 	// if so, then we need attributes for internal node definitions (rules)
 	set_current_width(opt.get_default_width(dir, false));
@@ -616,7 +628,7 @@ if (!n.used) {
 			__t6(current_local_netlist, current_netlist);
 		ep[defexpr].accept(*this);
 	}
-}
+}	// end if !n.used
 	return node_ind;
 }
 
@@ -678,21 +690,21 @@ const char type = e.get_type();
 switch (type) {
 case PRS_LITERAL_TYPE_ENUM: {
 	STACKTRACE_INDENT_PRINT("expr is leaf node" << endl);
-	// TODO: check for negation normalization
 	if (negated ^ (fet_type == transistor::PFET_TYPE)) {
 		cerr << "ERROR: rule-literal is not CMOS-implementable." << endl;
 		THROW_EXIT;
 	}
 	transistor t;
 	t.type = fet_type;
-	// TODO: handle FET type override
 	t.gate = register_named_node(e.only());
 	t.source = foot_node;
 	t.drain = output_node;
-	// TODO: honor supply overrides
 	t.body = (fet_type == transistor::NFET_TYPE ? low_supply : high_supply);
 		// Vdd or GND
-	// TODO: extract length/width parameters
+#if NETLIST_GROUPED_TRANSISTORS
+	t.assoc_node = current_assoc_node;
+	t.assoc_dir = current_assoc_dir;
+#endif
 	const directive_base_params_type& p(e.params);
 //	const bool is_n = fet_type == transistor::NFET_TYPE;
 //	const bool is_k = fet_attr & transistor::IS_STANDARD_KEEPER;
@@ -841,6 +853,10 @@ if (passn || passp) {
 	t.source = register_named_node(*e.nodes[1].begin());
 	t.drain = register_named_node(*e.nodes[2].begin());
 	t.body = passp ? high_supply : low_supply;
+#if NETLIST_GROUPED_TRANSISTORS
+	t.assoc_node = t.drain;
+	t.assoc_dir = passp;
+#endif
 	const directive_base_params_type& p(e.params);
 	if (p.size() > 0) {
 		t.width = p[0]->to_real_const();

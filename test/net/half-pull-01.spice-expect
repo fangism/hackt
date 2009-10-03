@@ -1,9 +1,9 @@
 .subckt pull_down<> !GND a b
-M0_ !GND a b !GND nch W=5u L=2u
+Mb:dn:0 !GND a b !GND nch W=5u L=2u
 .ends
 
 .subckt pull_up<> !Vdd a b
-M0_ !Vdd a b !Vdd pch W=5u L=2u
+Mb:up:0 !Vdd a b !Vdd pch W=5u L=2u
 .ends
 
 xd !GND a b pull_down<>

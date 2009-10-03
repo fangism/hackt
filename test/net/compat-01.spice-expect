@@ -1,7 +1,7 @@
 .subckt inv<> !GND !Vdd x y
-M0_ !GND x y !GND nch W=1.5e-07 L=6e-08
+My:dn:0 !GND x y !GND nch W=1.5e-07 L=6e-08
 + AS=4.5e-14 PS=9e-07 AD=4.5e-14 PD=9e-07
-M1_ !Vdd x y !Vdd pch W=3e-07 L=6e-08
+My:up:0 !Vdd x y !Vdd pch W=3e-07 L=6e-08
 + AS=9e-14 PS=1.2e-06 AD=9e-14 PD=1.2e-06
 .ends
 

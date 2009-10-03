@@ -1,8 +1,8 @@
 .subckt celem<2> !GND !Vdd a[0] a[1] o
-M0_ !GND a[0] #0 !GND nch W=5u L=2u
-M1_ #0 a[1] o !GND nch W=5u L=2u
-M2_ !Vdd a[0] #1 !Vdd pch W=5u L=2u
-M3_ #1 a[1] o !Vdd pch W=5u L=2u
+Mo:dn:0 !GND a[0] #0 !GND nch W=5u L=2u
+Mo:dn:1 #0 a[1] o !GND nch W=5u L=2u
+Mo:up:0 !Vdd a[0] #1 !Vdd pch W=5u L=2u
+Mo:up:1 #1 a[1] o !Vdd pch W=5u L=2u
 .ends
 
 .subckt ctree<2,2> !GND !Vdd x[0][0] x[0][1] x[1][0] x[1][1] y

@@ -1,16 +1,16 @@
 .subckt foo<> !GND !Vdd a b c
-M0_ !GND a #0 !GND nch W=5u L=2u
-M1_ #0 b _c !GND nch W=5u L=2u
-M2_ !Vdd a #1 !Vdd pch W=5u L=2u
-M3_ #1 b _c !Vdd pch W=5u L=2u
-M4_ !GND _c c !GND nch W=5u L=2u
-M5_ !Vdd _c c !Vdd pch W=5u L=2u
-M6_ !Vdd c #2 !Vdd pch W=5u L=2u
-M7_ #2 a _c !Vdd pch W=5u L=2u
-M8_ #2 b _c !Vdd pch W=5u L=2u
-M9_ !GND c #3 !GND nch W=5u L=2u
-M10_ #3 a _c !GND nch W=5u L=2u
-M11_ #3 b _c !GND nch W=5u L=2u
+M_c:dn:0 !GND a #0 !GND nch W=5u L=2u
+M_c:dn:1 #0 b _c !GND nch W=5u L=2u
+M_c:up:0 !Vdd a #1 !Vdd pch W=5u L=2u
+M_c:up:1 #1 b _c !Vdd pch W=5u L=2u
+Mc:dn:0 !GND _c c !GND nch W=5u L=2u
+Mc:up:0 !Vdd _c c !Vdd pch W=5u L=2u
+M_c:up:2 !Vdd c #2 !Vdd pch W=5u L=2u
+M_c:up:3 #2 a _c !Vdd pch W=5u L=2u
+M_c:up:4 #2 b _c !Vdd pch W=5u L=2u
+M_c:dn:2 !GND c #3 !GND nch W=5u L=2u
+M_c:dn:3 #3 a _c !GND nch W=5u L=2u
+M_c:dn:4 #3 b _c !GND nch W=5u L=2u
 .ends
 
 xbar !GND !Vdd bar.a bar.b bar.c foo<>

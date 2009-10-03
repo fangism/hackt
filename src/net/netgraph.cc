@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.4 2009/10/02 01:57:29 fang Exp $
+	$Id: netgraph.cc,v 1.5 2009/10/03 01:12:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -50,11 +50,15 @@ using util::unique_list;
 using util::strings::strgsub;
 
 //=============================================================================
+bool
+device_group::is_empty(void) const {
+	return transistor_pool.empty();
+}
+//=============================================================================
 // class netlist_common method definitions
 
-template <class NP>
 void
-netlist_common::mark_used_nodes(NP& node_pool) const {
+device_group::mark_used_nodes(node_pool_type& node_pool) const {
 	transistor_pool_type::const_iterator
 		i(transistor_pool.begin()), e(transistor_pool.end());
 	for ( ; i!=e; ++i) {
@@ -65,17 +69,38 @@ netlist_common::mark_used_nodes(NP& node_pool) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 netlist_common::is_empty(void) const {
-	return transistor_pool.empty() && passive_device_pool.empty();
+	return device_group::is_empty() && passive_device_pool.empty();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class NP>
+/**
+	Since these devices don't belong to a particular group, 
+	don't use device_group::emit_devices.  
+ */
 ostream&
-netlist_common::emit_devices(ostream& o, const NP& node_pool,
+netlist_common::emit_devices(ostream& o, const node_pool_type& node_pool,
 		const footprint& fp, const netlist_options& nopt) const {
 	// emit devices
 #if ENABLE_STACKTRACE
 	o << "* devices:" << endl;
+#endif
+#if NETLIST_GROUPED_TRANSISTORS
+	// preserve per-node device counters, just save the whole node pool
+	typedef util::ptr_value_saver<index_type>	save_type;
+	typedef	vector<pair<save_type, save_type> >	saves_type;
+	saves_type __s;		// will auto-restore at end-of-scope
+{
+	__s.resize(node_pool.size());
+	node_pool_type::const_iterator ni(node_pool.begin());
+	saves_type::iterator i(__s.begin()), e(__s.end());
+	for ( ; i!=e; ++i, ++ni) {
+		index_type& c0(ni->device_count[0]);
+		index_type& c1(ni->device_count[1]);
+		i->first.bind(c0);
+		i->second.bind(c1);
+		c0 = 0; c1 = 0;		// locally reset counter
+	}
+}
 #endif
 	typedef	transistor_pool_type::const_iterator	const_iterator;
 	const_iterator i(transistor_pool.begin()), e(transistor_pool.end());
@@ -83,16 +108,15 @@ netlist_common::emit_devices(ostream& o, const NP& node_pool,
 	// TODO: use optional label designations
 	size_t j = 0;
 	for ( ; i!=e; ++i, ++j) {
-		o << 'M' << j << '_';
-		i->emit_attribute_suffixes(o, nopt) << ' ';
-		i->emit(o, node_pool, fp, nopt) << endl;
+		i->emit(o, j, node_pool, fp, nopt) << endl;
 	}
+	// TODO: emit passive devices
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-netlist_common::dump_raw_devices(ostream& o) const {
+device_group::dump_raw_devices(ostream& o) const {
 	typedef	transistor_pool_type::const_iterator	const_iterator;
 	const_iterator i(transistor_pool.begin()), e(transistor_pool.end());
 	size_t j = 0;
@@ -109,9 +133,8 @@ netlist_common::dump_raw_devices(ostream& o) const {
 	Summarizes subcircuit ports by looking at all used nodes.  
 	TODO: passive devices
  */
-template <class NP>
 void
-local_netlist::mark_used_nodes(NP& node_pool) {
+local_netlist::mark_used_nodes(node_pool_type& node_pool) {
 	transistor_pool_type::const_iterator
 		i(transistor_pool.begin()), e(transistor_pool.end());
 	for ( ; i!=e; ++i) {
@@ -157,7 +180,11 @@ if (!nopt.nested_subcircuits) {
 	typedef	node_index_map_type::const_iterator	const_iterator;
 	const_iterator i(node_index_map.begin()), e(node_index_map.end());
 	for ( ; i!=e; ++i) {
-		n.node_pool[*i].emit(oss << ' ', *n.fp, nopt);
+		n.node_pool[*i].emit(oss << ' ', 
+#if !CACHE_ALL_NODE_NAMES
+			*n.fp, 
+#endif
+			nopt);
 	}
 	string formals(oss.str());
 #if CACHE_LOGICAL_NODE_NAMES
@@ -188,7 +215,11 @@ local_netlist::emit_instance(ostream& o, const netlist& n,
 	typedef	node_index_map_type::const_iterator	const_iterator;
 	const_iterator i(node_index_map.begin()), e(node_index_map.end());
 	for ( ; i!=e; ++i) {
-		n.node_pool[*i].emit(oss << ' ', *n.fp, nopt);
+		n.node_pool[*i].emit(oss << ' ', 
+#if !CACHE_ALL_NODE_NAMES
+			*n.fp, 
+#endif
+			nopt);
 	}
 	oss << ' ';
 	string line(oss.str());
@@ -219,7 +250,11 @@ if (!nopt.nested_subcircuits) {
 		used for named nodes and internal nodes.
  */
 ostream&
-node::emit(ostream& o, const footprint& fp, const netlist_options& n) const {
+node::emit(ostream& o,
+#if !CACHE_ALL_NODE_NAMES
+		const footprint& fp,
+#endif
+		const netlist_options& n) const {
 switch (type) {
 case NODE_TYPE_LOGICAL:
 #if CACHE_LOGICAL_NODE_NAMES
@@ -296,9 +331,8 @@ default:
 //=============================================================================
 // class instance method definitions
 
-template <class NP>
 void
-instance::mark_used_nodes(NP& node_pool) const {
+instance::mark_used_nodes(node_pool_type& node_pool) const {
 	actuals_list_type::const_iterator
 		i(actuals.begin()), e(actuals.end());
 	for ( ; i!=e; ++i) {
@@ -314,10 +348,9 @@ instance::is_empty(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class NP>
 ostream&
-instance::emit(ostream& o, const NP& node_pool, const footprint& fp, 
-		const netlist_options& nopt) const {
+instance::emit(ostream& o, const node_pool_type& node_pool, 
+		const footprint& fp, const netlist_options& nopt) const {
 	o << 'x';
 {
 	// process instance name
@@ -333,7 +366,11 @@ instance::emit(ostream& o, const NP& node_pool, const footprint& fp,
 	actuals_list_type::const_iterator
 		i(actuals.begin()), e(actuals.end());
 	for ( ; i!=e; ++i) {
-		node_pool[*i].emit(oss << ' ', fp, nopt);
+		node_pool[*i].emit(oss << ' ', 
+#if !CACHE_ALL_NODE_NAMES
+			fp, 
+#endif
+			nopt);
 	}
 	string line(oss.str());
 #if CACHE_LOGICAL_NODE_NAMES
@@ -365,9 +402,8 @@ instance::dump_raw(ostream& o) const {
 	In a separate pass mark all nodes participating on transistor.
 	Why?  Is possible that a supply node is not used.  
  */
-template <class NP>
 void
-transistor::mark_used_nodes(NP& node_pool) const {
+transistor::mark_used_nodes(node_pool_type& node_pool) const {
 	node_pool[source].used = true;
 	node_pool[gate].used = true;
 	node_pool[drain].used = true;
@@ -375,10 +411,27 @@ transistor::mark_used_nodes(NP& node_pool) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class NP>
+/**
+	\param di the device index, incrementing.
+ */
 ostream&
-transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
-		const netlist_options& nopt) const {
+transistor::emit(ostream& o, const index_type di, 
+		const node_pool_type& node_pool,
+		const footprint& fp, const netlist_options& nopt) const {
+#if NETLIST_GROUPED_TRANSISTORS
+	// don't use ordinal index di
+	const node& n(node_pool[assoc_node]);
+	INVARIANT(!n.is_auxiliary_node());	// is logical or internal
+	index_type& c(n.device_count[size_t(assoc_dir)]);
+	o << 'M';
+	n.emit(o, nopt) << nopt.emit_colon() <<
+		(assoc_dir ? "up" : "dn") << nopt.emit_colon() << c;
+	++c;
+#else
+	o << 'M' << di << '_';
+#endif
+	emit_attribute_suffixes(o, nopt) << ' ';
+
 	const node& s(node_pool[source]);
 	const node& g(node_pool[gate]);
 	const node& d(node_pool[drain]);
@@ -386,10 +439,17 @@ transistor::emit(ostream& o, const NP& node_pool, const footprint& fp,
 {
 	// perform name-mangling
 	ostringstream oss;
+#if CACHE_ALL_NODE_NAMES
+	s.emit(oss, nopt) << ' ';
+	g.emit(oss, nopt) << ' ';
+	d.emit(oss, nopt) << ' ';
+	b.emit(oss, nopt) << ' ';
+#else
 	s.emit(oss, fp, nopt) << ' ';
 	g.emit(oss, fp, nopt) << ' ';
 	d.emit(oss, fp, nopt) << ' ';
 	b.emit(oss, fp, nopt) << ' ';
+#endif
 	string nodes(oss.str());
 #if CACHE_LOGICAL_NODE_NAMES
 	// all nodes already mangled
@@ -848,7 +908,11 @@ if (sub) {
 	const_iterator i(port_list.begin()), e(port_list.end());
 	ostringstream oss;		// stage for name mangling
 	for ( ; i!=e; ++i) {
-		node_pool[*i].emit(oss << ' ', *fp, nopt);
+		node_pool[*i].emit(oss << ' ', 
+#if !CACHE_ALL_NODE_NAMES
+			*fp, 
+#endif
+			nopt);
 	}
 	string formals(oss.str());
 #if CACHE_LOGICAL_NODE_NAMES
@@ -919,7 +983,11 @@ netlist::dump_raw(ostream& o) const {
 		const node& n(node_pool[j]);
 		n.dump_raw(o) << " = ";
 #if 1
-		n.emit(o, *fp, netlist_options::default_value);
+		n.emit(o, 
+#if !CACHE_ALL_NODE_NAMES
+			*fp, 
+#endif
+			netlist_options::default_value);
 		// may have to comment out for debug
 #else
 		o << "...";

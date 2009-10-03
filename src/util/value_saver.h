@@ -1,6 +1,6 @@
 /**
 	\file "util/value_saver.h"
-	$Id: value_saver.h,v 1.3 2007/02/27 05:37:44 fang Exp $
+	$Id: value_saver.h,v 1.4 2009/10/03 01:12:28 fang Exp $
  */
 
 #ifndef	__UTIL_VALUE_SAVER_H__
@@ -8,6 +8,7 @@
 
 #include "util/value_saver_fwd.h"
 #include "util/attributes.h"
+#include "util/macros.h"
 
 namespace util {
 //=============================================================================
@@ -44,6 +45,64 @@ private:
 	operator = (const value_saver<T>&);
 
 } __ATTRIBUTE_UNUSED__ ;	// end class value_saver
+
+//=============================================================================
+/**
+	More versatile version that uses an underlying pointer, 
+	and is more container-friendly.  
+ */
+template <class T>
+class ptr_value_saver {
+public:
+	typedef	T		value_type;
+private:
+	value_type*		pointer;
+	value_type		saved_value;
+public:
+	ptr_value_saver() : pointer(NULL) { }
+
+	explicit
+	ptr_value_saver(value_type& t) : pointer(&t), saved_value(t) { }
+
+	ptr_value_saver(value_type& t, const value_type& v) :
+		pointer(&t), saved_value(*pointer) {
+		*this->pointer = v;
+	}
+
+	~ptr_value_saver() {
+	if (this->pointer) {
+		*this->pointer = this->saved_value;
+	}
+	}
+
+	/**
+		Once bound, cannot be re-bound, as safety measure.
+	 */
+	void
+	bind(value_type& v) {
+		MUST_BE_NULL(this->pointer);
+		this->pointer = &v;
+		saved_value = v;
+	}
+
+	bool
+	is_bound(void) const { return this->pointer; }
+
+	// restricted copy-constructing, like a move constructor
+	ptr_value_saver(const ptr_value_saver& r) : 
+		pointer(r.pointer), saved_value(r.saved_value) {
+		MUST_BE_NULL(r.pointer);
+	}
+
+	// limited assignment
+	ptr_value_saver<T>&
+	operator = (const ptr_value_saver<T>& r) {
+		MUST_BE_NULL(r.pointer);
+		this->pointer = r.pointer;
+		this->saved_value = r.saved_value;
+	}
+
+} __ATTRIBUTE_UNUSED__ ;	// end class ptr_value_saver
 
 //=============================================================================
 }	// end namepace util

@@ -1,11 +1,11 @@
 * subcircuit e1of<2> is empty.
 .subckt std::logic::celem<2,10> !GND !Vdd in[0] in[1] o
-M0_ !GND in[0] #0 !GND nch W=5u L=2u
-M1_ #0 in[1] _o !GND nch W=5u L=2u
-M2_ !Vdd in[0] #1 !Vdd pch W=5u L=2u
-M3_ #1 in[1] _o !Vdd pch W=5u L=2u
-M4_ !GND _o o !GND nch W=10u L=2u
-M5_ !Vdd _o o !Vdd pch W=10u L=2u
+M_o:dn:0 !GND in[0] #0 !GND nch W=5u L=2u
+M_o:dn:1 #0 in[1] _o !GND nch W=5u L=2u
+M_o:up:0 !Vdd in[0] #1 !Vdd pch W=5u L=2u
+M_o:up:1 #1 in[1] _o !Vdd pch W=5u L=2u
+Mo:dn:0 !GND _o o !GND nch W=10u L=2u
+Mo:up:0 !Vdd _o o !Vdd pch W=10u L=2u
 .ends
 
 .subckt foo::wire_copy<2> !GND !Vdd in.e oe[0] oe[1]
@@ -13,14 +13,14 @@ xcomp !GND !Vdd oe[0] oe[1] in.e std::logic::celem<2,10>
 .ends
 
 .subckt std::logic::celem<3,10> !GND !Vdd in[0] in[1] in[2] o
-M0_ !GND in[0] #0 !GND nch W=5u L=2u
-M1_ #0 in[1] #1 !GND nch W=5u L=2u
-M2_ #1 in[2] _o !GND nch W=5u L=2u
-M3_ !Vdd in[0] #2 !Vdd pch W=5u L=2u
-M4_ #2 in[1] #3 !Vdd pch W=5u L=2u
-M5_ #3 in[2] _o !Vdd pch W=5u L=2u
-M6_ !GND _o o !GND nch W=10u L=2u
-M7_ !Vdd _o o !Vdd pch W=10u L=2u
+M_o:dn:0 !GND in[0] #0 !GND nch W=5u L=2u
+M_o:dn:1 #0 in[1] #1 !GND nch W=5u L=2u
+M_o:dn:2 #1 in[2] _o !GND nch W=5u L=2u
+M_o:up:0 !Vdd in[0] #2 !Vdd pch W=5u L=2u
+M_o:up:1 #2 in[1] #3 !Vdd pch W=5u L=2u
+M_o:up:2 #3 in[2] _o !Vdd pch W=5u L=2u
+Mo:dn:0 !GND _o o !GND nch W=10u L=2u
+Mo:up:0 !Vdd _o o !Vdd pch W=10u L=2u
 .ends
 
 .subckt foo::wire_copy<3> !GND !Vdd in.e oe[0] oe[1] oe[2]
