@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.117 2008/11/29 19:00:57 fang Exp $
+	$Id: BUILDS,v 1.118 2009/10/04 17:47:21 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -139,10 +139,10 @@ readline: GNU readline 5.0
 
 
 (Fang)
-Version: hackt 0.1.4-devel-20081126
-CVS Tag: HACKT-00-01-04-main-00-82-66
-Configured with: '--enable-random-tests' '--prefix=/usr/local/cad' '--enable-fun' '--with-editline' '--with-guile-config=guile-1.8-config' '-C' '--enable-ltdl-convenience'
-build-triplet: powerpc-apple-darwin8.11.0
+Version: hackt 0.1.4-devel-20091002
+CVS Tag: HACKT-00-01-04-main-00-83-33
+Configured with: '--enable-random-tests' '--prefix=/usr/local/cad' '--enable-fun' '--with-editline' '--with-guile-config=guile-1.8-config' '--with-guile=guile-1.8' '-C' '--enable-ltdl-convenience'
+build-triplet: powerpc-apple-darwin8.9.0
 c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5370)
 AM_CPPFLAGS: -I../../../src    
 AM_CXXFLAGS: -pipe -ansi -pedantic-errors -Wold-style-cast -Woverloaded-virtual -W -Wextra -Wall -Wundef -Wshadow -Wno-unused-parameter -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
@@ -154,7 +154,7 @@ config-LIBS: -ledit  -lncurses
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 2.3
 readline: BSD EditLine (histedit interface) ver. 2.9
-guile: guile-1.8-config - Guile version 1.8.3
+guile: guile-1.8-config - Guile version 1.8.6
 
 
 (Fang)
