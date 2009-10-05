@@ -1,0 +1,9 @@
+M_z:dn:0 !GND x #0 !GND nch W=5u L=2u
+M:OHAI #0 y _z !GND nch W=5u L=2u
+M_z:up:0 !Vdd x #1 !Vdd pch W=5u L=2u
+M:OHAI #1 y _z !Vdd pch W=5u L=2u
+M:drat !GND x #2 !GND nch W=5u L=2u
+M_w:dn:1 #2 y _w !GND nch W=5u L=2u
+M:drat !Vdd x _w !Vdd pch W=5u L=2u
+M_w:up:1 !Vdd y _w !Vdd pch W=5u L=2u
+

@@ -1,0 +1,3 @@
+Error: internal node references should not take parameters or attributes.  [9:5..8]
+ERROR resolving PRS-expr at [9:4..8].
+ERROR: at least one error in PRS body.

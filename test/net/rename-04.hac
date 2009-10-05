@@ -1,0 +1,12 @@
+// "rename-04.hac"
+// copy-modified from "rename-01.hac"
+// TROUBLE: haven't handled labels inside loops yet...
+// consider something like ${i} expansions... inside the label string
+
+bool x, y, _z[2];
+(;i:2:
+prs {
+	x & y<;"OHAI">		-> _z[i]-
+	~x<;"uh-oh"> & ~y	-> _z[i]+
+}
+)

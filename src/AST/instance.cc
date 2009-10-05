@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.32 2009/10/02 01:56:37 fang Exp $
+	$Id: instance.cc,v 1.33 2009/10/05 23:09:24 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -1409,6 +1409,11 @@ type_completion_statement::check_generic_attribute(
 	typedef	vals_type::const_iterator	const_iterator;
 	typedef	vals_type::value_type		val_type;
 	// macros are defined per meta-type, check elsewhere
+	if (!a.key) {
+		cerr << "Error: implicit instance labels not yet supported.  "
+			<< where(a) << endl;
+		return return_type();
+	}
 	vals_type vals;
 	if (a.values) {
 		a.values->postorder_check_meta_exprs(vals, c);

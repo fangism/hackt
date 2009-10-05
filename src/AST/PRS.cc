@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.36 2009/10/02 01:56:28 fang Exp $
+	$Id: PRS.cc,v 1.37 2009/10/05 23:09:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -191,6 +191,8 @@ literal::check_literal_attribute(const generic_attribute& a, const context& c) {
 	typedef	vals_type::const_iterator	const_iterator;
 	typedef	vals_type::value_type		val_type;
 	// attributes must be registered with the master registry list
+	string key;
+if (a.key) {
 	const entity::PRS::cflat_literal_attribute_registry_type::const_iterator
 		f(entity::PRS::cflat_literal_attribute_registry.find(*a.key));
 	if (f == entity::PRS::cflat_literal_attribute_registry.end()) {
@@ -199,6 +201,11 @@ literal::check_literal_attribute(const generic_attribute& a, const context& c) {
 			*a.key << "\" at " << where(*a.key) << endl;
 		return return_type();
 	}
+	key = *a.key;
+} else {
+	// implicit label= key when a plain string is provided
+	key = "label";
+}
 	vals_type vals;
 	if (a.values) {
 		a.values->postorder_check_meta_exprs(vals, c);
@@ -211,7 +218,7 @@ literal::check_literal_attribute(const generic_attribute& a, const context& c) {
 			<< (a.values ? where(*a.values) : where(a)) << endl;
 		return return_type();
 	}
-	return_type ret(*a.key);
+	return_type ret(key);
 	copy(i, e, back_inserter(ret));
 	return ret;
 }
@@ -269,6 +276,12 @@ if (internal) {
 		}
 		nref->attach_indices(checked_indices);
 	}
+	if (params) {
+		cerr <<
+"Error: internal node references should not take parameters or attributes.  "
+			<< where(*params) << endl;
+		return prs_literal_ptr_type(NULL);
+	}
 	ret = prs_literal_ptr_type(new entity::PRS::literal(
 		nref.as_a<const entity::simple_node_meta_instance_reference>()));
 	NEVER_NULL(ret);
@@ -277,6 +290,7 @@ if (internal) {
 }
 if (ret && params) {
 	// NOTE: parameters are not applicable to RHS or rules
+	// TODO: update this check for new HAC syntax! (<2)
 	if (params->size() > 3) {
 		// third optional parameter is transistor type [ACT]
 		cerr << "Error: rule literals can take a maximum of 3 "

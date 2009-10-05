@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.24 2008/03/20 00:03:11 fang Exp $
+	$Id: CHP.cc,v 1.25 2009/10/05 23:09:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -1468,10 +1468,16 @@ do_until::__check_action(context& c) const {
 statement::attribute_type
 statement::check_chp_attribute(const generic_attribute& a, context& c) {
 	// ignore values after the first for now
+	if (!a.key) {
+	cerr << "Error: implicit CHP statement labels not yet supported.  "
+		<< where(a) << endl;
+		THROW_EXIT;
+	}
 	const expr::meta_return_type v(a.values->front()->check_meta_expr(c));
 	if (!v) {
 		cerr << "Error in CHP attribute value expression. "
 			<< where(*a.values) << endl;
+		THROW_EXIT;
 	}
 	return attribute_type(*a.key, v);
 }

@@ -1,0 +1,9 @@
+// "rename-06.hac"
+// copy-modified from "rename-02.hac"
+
+bool a, b, c, x, out;
+prs {
+  [iskeeper=1]  out<;"FOO"> & a -> x-
+  [isckeeper=1]  b & a<;"BAR"> & c -> x-
+}
+

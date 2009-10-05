@@ -2,7 +2,7 @@
 	\file "Object/lang/PRS_literal_attribute_common.h"
 	Contains base classes for all tool-independent implementations
 	of PRS rule attribute classes.  
-	$Id: PRS_literal_attribute_common.h,v 1.2 2009/09/14 21:17:00 fang Exp $
+	$Id: PRS_literal_attribute_common.h,v 1.3 2009/10/05 23:09:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_LITERAL_ATTRIBUTE_COMMON_H__
@@ -36,6 +36,8 @@ struct class_name {							\
 };	// end struct class_name
 
 //=============================================================================
+// transistor name overrides
+DECLARE_PRS_LITERAL_ATTRIBUTE_COMMON_STRUCT(Label)
 /**
 	Transistor types.
  */

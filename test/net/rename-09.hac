@@ -1,0 +1,10 @@
+// "rename-09.hac"
+// copy-modified from "rename-01.hac"
+// testing renaming of transistors
+
+bool x, y, _z;
+prs {
+	x & y<;label="OHAI">		-> _z-
+	~x<;label="KTHX"> & ~y		-> _z+
+}
+

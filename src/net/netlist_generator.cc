@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.5 2009/10/03 01:12:28 fang Exp $
+	$Id: netlist_generator.cc,v 1.6 2009/10/05 23:09:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,6 +18,7 @@
 #include "Object/global_entry_context.h"
 #include "Object/def/footprint.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/string_expr.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
 #include "util/stacktrace.h"
@@ -34,6 +35,7 @@ using std::ostringstream;
 using std::ostream_iterator;
 using std::upper_bound;
 using util::value_saver;
+using entity::string_expr;
 using entity::PRS::PRS_LITERAL_TYPE_ENUM;
 using entity::PRS::PRS_NOT_EXPR_TYPE_ENUM;
 using entity::PRS::PRS_AND_EXPR_TYPE_ENUM;
@@ -729,7 +731,10 @@ case PRS_LITERAL_TYPE_ENUM: {
 	// TODO: write an actual attribute function map for altering transistor
 	for ( ; ai!=ae; ++ai) {
 		// this is just a quick hack for now
-		if (ai->key == "lvt")
+		if (ai->key == "label")
+			t.name = ai->values->front().is_a<const string_expr>()
+				->static_constant_value();
+		else if (ai->key == "lvt")
 			t.set_lvt();
 		else if (ai->key == "svt")
 			t.set_svt();

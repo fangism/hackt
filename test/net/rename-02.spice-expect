@@ -1,0 +1,5 @@
+Mx:dn:0 !GND a #0 !GND nch W=5u L=2u
+M:ME #0 b #1 !GND nch W=5u L=2u
+Mx:dn:2 #1 c x !GND nch W=5u L=2u
+M:FOO:keeper !GND out x !GND nch W=4u L=20u
+

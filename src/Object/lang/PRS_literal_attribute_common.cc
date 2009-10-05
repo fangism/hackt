@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_literal_attribute_common.cc"
-	$Id: PRS_literal_attribute_common.cc,v 1.2 2009/09/14 21:17:00 fang Exp $
+	$Id: PRS_literal_attribute_common.cc,v 1.3 2009/10/05 23:09:25 fang Exp $
  */
 
 #include <iostream>
@@ -17,6 +17,12 @@ namespace literal_attributes {
 using namespace entity::attributes;
 
 //=============================================================================
+good_bool
+Label::__check_vals(const char* name, const values_type& v) {
+        return check_single_string(name, v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Optional single integer (boolean) value.
  */

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.5 2009/10/03 01:12:27 fang Exp $
+	$Id: netgraph.h,v 1.6 2009/10/05 23:09:29 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -58,6 +58,9 @@ typedef	vector<node>			node_pool_type;
 //=============================================================================
 /**
 	Standard 4-terminal device for transistor.
+	Consider for attributes: pointing to original unrolled literal
+		to reference attributes and parameters instead of copying
+		to save memory at the expense of run-time.
  */
 struct transistor {
 	enum fet_type {
@@ -69,7 +72,9 @@ struct transistor {
 		they are derived.  
 		TODO: need auto-enumeration
 	 */
+#if PRS_LITERAL_ATTRIBUTES
 	string				name;
+#endif
 	index_type			source;
 	index_type			gate;
 	index_type			drain;
@@ -98,8 +103,6 @@ struct transistor {
 	real_type			length;
 	/// device type: nfet, pfet
 	char				type;
-	// TODO: support overriding of device type
-	// e.g. hvt, lvt, svt...
 
 	// allow a conf/tech file to define/enumerate additional types
 	// attributes:

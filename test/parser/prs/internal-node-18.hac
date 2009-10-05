@@ -1,0 +1,14 @@
+// "internal-node-18.hac"
+// expect fail
+// internal node should NOT have any parameters or attributes
+
+defproc foo(bool en, x, _y) {
+_y @ [autokeeper=0];
+prs {
+	en		-> @a-
+	~@a<20> & x	-> _y-
+}
+}
+
+foo bar;
+

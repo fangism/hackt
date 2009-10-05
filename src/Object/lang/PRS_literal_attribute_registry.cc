@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_literal_attribute_registry.cc"
 	This defines the literal attribute actions for the cflat visitor.  
-	$Id: PRS_literal_attribute_registry.cc,v 1.2 2009/09/14 21:17:00 fang Exp $
+	$Id: PRS_literal_attribute_registry.cc,v 1.3 2009/10/05 23:09:26 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -13,6 +13,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/cflat_printer.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/string_expr.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/PRS_literal_attribute_common.h"
 #include "main/cflat_options.h"
@@ -86,6 +87,32 @@ namespace cflat_literal_attributes {
 	DECLARE_PRS_LITERAL_ATTRIBUTE_CLASS(class_name, cflat_prs_printer) \
 	DEFINE_PRS_LITERAL_ATTRIBUTE_CLASS(class_name, att_name,	\
 		register_cflat_literal_attribute_class)
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo prs/literal-label.texi
+@defmac label (string)
+Labels the transistor represented by a PRS literal with a user-supplied name.
+This is mostly useful during netlist generation.  
+A shorthand notation for labels is just to pass the "@var{string}" value
+without writing @samp{label="string"}.  
+@example
+prs @{
+  x & y<;"this_one"> & z<;label="this_works_too"> -> _o-
+@}
+@end example
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Label, "label")
+void
+Label::main(visitor_type& p, const values_type& v) {
+if (p.cfopts.primary_tool == cflat_options::TOOL_LVS) {
+	ostream& o(p.os);
+	o << ";label=";
+	v.front()->dump(o, entity::expr_dump_context::default_value);
+}
+}
 
 //-----------------------------------------------------------------------------
 /***

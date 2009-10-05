@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.5 2009/10/03 01:12:27 fang Exp $
+	$Id: netgraph.cc,v 1.6 2009/10/05 23:09:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -421,15 +421,25 @@ transistor::emit(ostream& o, const index_type di,
 #if NETLIST_GROUPED_TRANSISTORS
 	// don't use ordinal index di
 	const node& n(node_pool[assoc_node]);
-	INVARIANT(!n.is_auxiliary_node());	// is logical or internal
+	INVARIANT(!n.is_auxiliary_node());
 	index_type& c(n.device_count[size_t(assoc_dir)]);
-	o << 'M';
-	n.emit(o, nopt) << nopt.emit_colon() <<
-		(assoc_dir ? "up" : "dn") << nopt.emit_colon() << c;
-	++c;
+	o << 'M';	// spice card
+	if (name.length()) {
+		o << nopt.emit_colon() << name;
+		// override name of device, entire basename
+		// does NOT mangle the name, so give it a good string!
+		// extra leading colon helps avoid conflict with 
+		// default rule-named devices
+	} else {
+		// is logical or internal
+		n.emit(o, nopt) << nopt.emit_colon() <<
+			(assoc_dir ? "up" : "dn") << nopt.emit_colon() << c;
+	}
+	++c;	// unconditionally
 #else
 	o << 'M' << di << '_';
 #endif
+	// attribute suffixes cannot be overridden
 	emit_attribute_suffixes(o, nopt) << ' ';
 
 	const node& s(node_pool[source]);
@@ -461,7 +471,7 @@ transistor::emit(ostream& o, const index_type di,
 	switch (type) {
 	case NFET_TYPE: o << "nch"; break;
 	case PFET_TYPE: o << "pch"; break;
-	// TODO: honor different vt types and flavors
+	// TODO: honor device type name overrides, including vt
 	default:
 		o << "<type?>";
 	}

@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-10-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-34:
+	  parser/hackt-parse.yy.in: general attribute now allows
+		just "string", whose interpretation in PRS literals
+		is an implicit "label" key.  
+		AST: check/allow for cases where key is NULL (implicit label).
+	  hacknet: use PRS-literal string labels to override
+		transistor names in output netlist.
+		Test cases added, documented.
+	  hflat lvs also preserves the label (untested).
+
+
 2009-10-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-33:

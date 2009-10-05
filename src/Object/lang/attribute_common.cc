@@ -1,12 +1,13 @@
 /**
 	\file "Object/lang/attribute_common.cc"
-	$Id: attribute_common.cc,v 1.3 2009/03/06 20:44:14 cto3 Exp $
+	$Id: attribute_common.cc,v 1.4 2009/10/05 23:09:27 fang Exp $
  */
 
 #include <iostream>
 #include "Object/lang/attribute_common.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/string_expr.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/memory/count_ptr.h"
 
@@ -81,6 +82,16 @@ check_delay_value(const char* name, const attribute_values_type& v) {
 			return good_bool(true);
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+check_single_string(const char* name, const attribute_values_type& v) {
+	if (v.size() != 1 || !v[0].is_a<const string_expr>()) {
+		cerr << "The \'" << name << "\' attribute requires exactly "
+			"one string expression argument." << endl;
+		return good_bool(false);
+	} else  return good_bool(true);
 }
 
 //=============================================================================

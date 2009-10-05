@@ -1,0 +1,11 @@
+// "rename-10.hac"
+// copy-modified from "rename-09.hac"
+// testing renaming of transistors
+// blank strings should be silently ignored
+
+bool x, y, _z;
+prs {
+	x & y<;label="">	-> _z-
+	~x<;""> & ~y		-> _z+
+}
+

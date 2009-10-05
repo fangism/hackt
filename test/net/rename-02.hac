@@ -1,0 +1,9 @@
+// "rename-02.hac"
+// test case contributed by Anwar Kashem
+
+bool a, b, c, x, out;
+prs {
+  a & b<;"ME"> & c  -> x-
+  [iskeeper=1]  out<;"FOO"> -> x-
+}
+
