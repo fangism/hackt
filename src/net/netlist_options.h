@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.4 2009/10/02 01:57:35 fang Exp $
+	$Id: netlist_options.h,v 1.5 2009/10/06 21:44:29 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -144,6 +144,12 @@ struct netlist_options {
 		Useful with empty_subcircuits.
 	 */
 	bool				unused_ports;
+	/**
+		Prefer any port name for an alias or unique node
+		over the shortest-canonical name.
+		Can make netlists more readable.
+	 */
+	bool				prefer_port_aliases;
 	/**
 		If true, wrap the top-level instances in its respective
 		subcircuit, with ports listed.

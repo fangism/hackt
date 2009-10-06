@@ -5,6 +5,13 @@
 
 2009-10-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-36:
+	  hacknet: added option prefer_port_aliases to override the 
+		default shortest canonical name with port alias names,
+		if applicable.  Documented, added few test cases.
+		Default is off, use old canonical short names.
+
+
 	* HACKT-00-01-04-main-00-83-35:
 	  hacknet: added -T type option to emit subcircuit library
 		of the named type.  Later: propagate to other back-ends, 

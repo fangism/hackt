@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.4 2009/10/02 01:57:33 fang Exp $
+	$Id: netlist_options.cc,v 1.5 2009/10/06 21:44:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -79,6 +79,7 @@ netlist_options::netlist_options() :
 		nested_subcircuits(false),
 		empty_subcircuits(false),
 		unused_ports(false),
+		prefer_port_aliases(false),
 		top_type_ports(false), 
 		emit_top(true)
 		{
@@ -434,17 +435,6 @@ const string&
 __string_type_of(string netlist_options::*) { return __str_type__; }
 const string&
 __string_type_of(option_error_policy netlist_options::*) { return __str_type__; }
-
-#if 0
-const string&
-__string_type_of(bool) { return __bool__; }
-const string&
-__string_type_of(size_t) { return __int__; }
-const string&
-__string_type_of(real_type) { return __real__; }
-const string&
-__string_type_of(string) { return __str__; }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <typename T>
@@ -891,6 +881,19 @@ Default: 0
 ***/
 DEFINE_OPTION_DEFAULT(unused_ports, "unused_ports",
 	"include unused ports in subcircuit definitions")
+
+/***
+@texinfo config/prefer_port_aliases.texi
+@defopt prefer_port_aliases (bool)
+Instead of using default heuristic for choosing shallowest or shortest
+canonical name, prefer any equivalent port name, if applicable.  
+This can make netlists and simulation results easier to grok.
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(prefer_port_aliases, "prefer_port_aliases",
+	"use port name for aliases (if available) as canonical name")
 
 /***
 @texinfo config/emit_top.texi

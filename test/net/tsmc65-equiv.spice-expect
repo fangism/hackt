@@ -31,6 +31,7 @@ min_width=4
 nested_subcircuits=0
 post_line_continue=+
 pre_line_continue=
+prefer_port_aliases=0
 stat_n_length=2
 stat_n_width=5
 stat_p_length=2

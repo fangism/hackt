@@ -1,5 +1,5 @@
 @c "config.texi"
-@c $Id: config.texi,v 1.4 2009/10/02 01:56:11 fang Exp $
+@c $Id: config.texi,v 1.5 2009/10/06 21:44:24 fang Exp $
 
 @c ****************************************************************************
 @node Configuration Options
@@ -56,6 +56,7 @@ emitted output (because not all SPICEs are created alike).
 @include config/nested_subcircuits.texi
 @include config/empty_subcircuits.texi
 @include config/unused_ports.texi
+@include config/prefer_port_aliases.texi
 @c @include config/top_type_ports.texi
 @include config/pre_line_continue.texi
 @include config/post_line_continue.texi

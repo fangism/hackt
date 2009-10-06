@@ -1,0 +1,22 @@
+// "channel-port-01.hac"
+// copy-modified from "channel-member-01.hac"
+// testing preferred port names
+
+import "inv-01.hac";
+
+defchan e1of2 <: chan(bool)(bool d[2]; bool t, f, e) {
+	d[0] = f;
+	d[1] = t;
+	spec { exclhi(f,t) }
+	send {}
+	recv{}
+}
+
+defproc connect_me (e1of2 i, o) {
+bool x = i.t;		// want to prefer i.t in ports list
+bool y = o.e;
+inv a(i.t, o.t), b(i.f, o.f), c(o.e, i.e);
+}
+
+connect_me please;
+

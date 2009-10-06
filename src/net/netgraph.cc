@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.7 2009/10/06 17:05:36 fang Exp $
+	$Id: netgraph.cc,v 1.8 2009/10/06 21:44:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -840,12 +840,35 @@ netlist::register_named_node(const index_type _i
 		// reserve a new slot and update it for subsequent visits
 		node new_named_node(_i, node::logical_node_tag);
 #if CACHE_LOGICAL_NODE_NAMES
+	if (opt.prefer_port_aliases) {
+		typedef port_alias_tracker_base<bool_tag>::map_type map_type;
+		const map_type&
+			pa(fp->get_scope_alias_tracker()
+				.get_id_map<bool_tag>());
+		const map_type::const_iterator
+			asi(pa.find(_i)), ase(pa.end());
+	if (asi != ase) {
+		const alias_reference_set<bool_tag>& s(asi->second);
+		typedef alias_reference_set<bool_tag>::const_iterator
+						const_iterator;
+		const_iterator ai(s.begin()), ae(s.end());
+		for ( ; ai != ae; ++ai) {
+		// just take the first one, arbitrary
+		if ((*ai)->is_port_alias()) {
+			ostringstream oss;
+			(*ai)->dump_hierarchical_name(oss, opt.__dump_flags);
+			new_named_node.name = oss.str();
+			break;
+		}
+		}
+	}	// else has no other aliases
+	}
+	if (!new_named_node.name.length()) {
 		ostringstream oss;
-		// TODO: choose any port name over short canonical name
-		// check alias_tracker's reference sets...
 		fp->get_instance_pool<bool_tag>()[_i].get_back_ref()
 			->dump_hierarchical_name(oss, opt.__dump_flags);
 		new_named_node.name = oss.str();
+	}
 		opt.mangle_instance(new_named_node.name);
 #endif
 		ret = node_pool.size();

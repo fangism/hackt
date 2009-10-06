@@ -1,0 +1,6 @@
+// "channel-port-02.hac"
+// @hacknet-flags@ -f prefer_port_aliases=1
+// testing port name override
+
+import "channel-port-01.hac";
+
