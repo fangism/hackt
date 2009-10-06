@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2009/10/05 23:09:33 fang Exp $
+#	$Id: Makefile.am,v 1.7 2009/10/06 17:05:38 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -10,12 +10,13 @@ include $(top_srcdir)/test/Make.test-head
 HACKNET_TEST_SCRIPTS_PASSES = \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-06 inv-07 \
 	inv-08 inv-09 inv-10 inv-11 inv-12 \
+	inv-13 inv-14 inv-15 inv-16 \
 	nand-01 nand-02 nand-03 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	celem-07 celem-08 \
 	logic-01 logic-02 \
 	ladder-01 ladder-02 \
-	mux-01 mux-02 mux-03 mux-04 \
+	mux-01 mux-02 mux-03 mux-04 mux-05 mux-06 \
 	port-alias-01 port-alias-02 port-alias-03 port-alias-04 port-alias-05 \
 	unused-port-01 \
 	unconnected-01 unconnected-02 \
@@ -40,7 +41,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	process-port-05 process-port-06 \
 	process-port-07 process-port-08 \
 	empty-01 empty-02 empty-03 \
-	recurse-01 recurse-02 \
+	recurse-01 recurse-02 recurse-03 recurse-04 \
 	config-dump-01 \
 	config-arg-01 config-arg-02 config-arg-03 config-arg-04 \
 	config-arg-06 config-arg-08 config-arg-09 \

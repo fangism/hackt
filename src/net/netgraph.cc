@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.6 2009/10/05 23:09:28 fang Exp $
+	$Id: netgraph.cc,v 1.7 2009/10/06 17:05:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -841,6 +841,8 @@ netlist::register_named_node(const index_type _i
 		node new_named_node(_i, node::logical_node_tag);
 #if CACHE_LOGICAL_NODE_NAMES
 		ostringstream oss;
+		// TODO: choose any port name over short canonical name
+		// check alias_tracker's reference sets...
 		fp->get_instance_pool<bool_tag>()[_i].get_back_ref()
 			->dump_hierarchical_name(oss, opt.__dump_flags);
 		new_named_node.name = oss.str();

@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.17 2009/04/29 05:33:25 fang Exp $
+	$Id: state_manager.h,v 1.18 2009/10/06 17:05:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
@@ -71,6 +71,7 @@ public:
 	using pool_type::begin;
 	using pool_type::end;
 	using pool_type::allocate;
+	using pool_type::clear;
 
 protected:
 	ostream&
@@ -203,6 +204,10 @@ public:
 
 	void
 	optimize_pools(void);
+
+	void
+	clear(void);
+
 private:
 	explicit
 	state_manager(const this_type&);

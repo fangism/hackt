@@ -1,0 +1,7 @@
+// "mux-05.hac"
+// @hacknet-flags@ -T mux<4>
+// testing -T option
+
+import "mux-01.hac";	// definitions only
+
+

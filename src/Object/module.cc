@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.40 2009/10/02 01:56:44 fang Exp $
+ 	$Id: module.cc,v 1.41 2009/10/06 17:05:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -34,6 +34,7 @@
 #include "Object/def/process_definition.h"
 #include "Object/global_entry.h"
 #include "Object/traits/proc_traits.h"
+#include "AST/token_string.h"		// blech, cyclic library dep?
 
 #if ENABLE_STACKTRACE
 #include "Object/common/dump_flags.h"
@@ -360,6 +361,8 @@ module::populate_top_footprint_frame(void) {
 	only with parameter values, not physical instances, 
 	nor other language bodies.  
 	Implementation here is hideous...
+	FIXME: will this miss conditionals and loops?
+		perhaps a recursive visitor-idiom would be more appropriate?
  */
 static
 bool
@@ -433,6 +436,63 @@ module::allocate_unique_process_type(const process_type_reference& pt,
 #endif
 		return __allocate_unique();
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Takes process type and instantiate one at the top-level, 
+		erasing all other physical instances.  
+		Top-instance cannot possible alias to anything else, 
+		so it *should* be safe to allocate-assign it.  
+		Should we assert that nothing else was instantiated
+		at the top-level? or at least warn?
+		This just appends an instance...
+	\param top_module the true top-level module is used to 
+		unroll parameter values and their assignments, for the 
+		purposes of global parameter lookup.  
+ */
+good_bool
+module::allocate_single_process(
+		const count_ptr<const process_type_reference>& pt) {
+	STACKTRACE_VERBOSE;
+	NEVER_NULL(pt);
+	const count_ptr<instantiation_statement_base>
+		pi(fundamental_type_reference::make_instantiation_statement(
+			pt, index_collection_item_ptr_type(NULL)));
+	// follows parser::parse_context::add_instance
+	if (!pi) {
+		cerr << "Error instantiating process type ";
+		pt->dump(cerr) << endl;
+		return good_bool(false);
+	}
+	const never_ptr<const instance_placeholder_base>
+		pp(scopespace::add_instance(pi, 
+			token_identifier("***RUMPELSTILTSKIN***"), false));
+	NEVER_NULL(pp);
+	footprint& _footprint(get_footprint());
+	// _footprint.clear_nonglobal_physical_collections();	// ?
+	// keep !Vdd and !GND
+	// need to unroll all global value parameters first
+	// what to do about overshadowed parameters?
+	const unroll_context c(&_footprint, &_footprint);
+	pi->unroll(c);
+	_footprint.create_dependent_types(_footprint);
+	// force to reallocate new instance (fragile!)
+	// since there are no new connections, no new aliases are formed
+	allocated = false;
+	return __allocate_unique();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This effectively wipes the work done by allocation, reverting back to
+	a pre-allocated state.  
+ */
+void
+module::reset(void) {
+	STACKTRACE_VERBOSE;
+	global_state.clear();
+	allocated = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

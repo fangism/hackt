@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-10-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-35:
+	  hacknet: added -T type option to emit subcircuit library
+		of the named type.  Later: propagate to other back-ends, 
+		and maybe allow repetition for multiple types.
+		Documented and tested.
+
+
 2009-10-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-34:

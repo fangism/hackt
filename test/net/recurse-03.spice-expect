@@ -1,0 +1,26 @@
+.subckt recurse<0> !GND !Vdd a b
+Mb:dn:0 !GND a b !GND nch W=5u L=2u
+Mb:up:0 !Vdd a b !Vdd pch W=5u L=2u
+.ends
+
+.subckt recurse<1> !GND !Vdd a b
+xj !GND !Vdd a x recurse<0>
+xk !GND !Vdd x b recurse<0>
+.ends
+
+.subckt recurse<2> !GND !Vdd a b
+xj !GND !Vdd a x recurse<1>
+xk !GND !Vdd x b recurse<1>
+.ends
+
+.subckt recurse<3> !GND !Vdd a b
+xj !GND !Vdd a x recurse<2>
+xk !GND !Vdd x b recurse<2>
+.ends
+
+.subckt recurse<4> !GND !Vdd a b
+xj !GND !Vdd a x recurse<3>
+xk !GND !Vdd x b recurse<3>
+.ends
+
+

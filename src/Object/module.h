@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.19 2009/02/16 01:38:28 fang Exp $
+	$Id: module.h,v 1.20 2009/10/06 17:05:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -116,6 +116,10 @@ public:
 
 	const footprint&
 	get_footprint(void) const;
+
+	void
+	reset(void);
+
 private:
 	footprint&
 	get_footprint(void);
@@ -168,6 +172,10 @@ public:
 	good_bool
 	allocate_unique_process_type(const process_type_reference&, 
 		const module&);
+
+	good_bool
+	allocate_single_process(const count_ptr<const process_type_reference>&);
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

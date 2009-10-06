@@ -1,0 +1,6 @@
+// "recurse-04.hac"
+// testing -T option
+// @hacknet-flags@ -T recurse<10>
+
+import "recurse-01.hac";
+

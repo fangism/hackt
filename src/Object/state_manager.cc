@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.22 2008/11/12 21:43:07 fang Exp $
+	$Id: state_manager.cc,v 1.23 2009/10/06 17:05:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -352,6 +352,22 @@ state_manager::dump_memory_usage(ostream& o) const {
 	global_entry_pool<int_tag>::__dump_memory_usage(o);
 	global_entry_pool<bool_tag>::__dump_memory_usage(o);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Completely wipes allocated state.
+ */
+void
+state_manager::clear(void) {
+	global_entry_pool<process_tag>::clear();
+#if ENABLE_DATASTRUCTS
+	global_entry_pool<datastruct_tag>::clear();
+#endif
+	global_entry_pool<channel_tag>::clear();
+	global_entry_pool<enum_tag>::clear();
+	global_entry_pool<int_tag>::clear();
+	global_entry_pool<bool_tag>::clear();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

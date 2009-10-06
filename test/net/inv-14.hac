@@ -1,0 +1,6 @@
+// "inv-14.hac"
+// testing -T option, with other top-level instances!?
+// @hacknet-flags@ -T inv
+
+import "inv-03.hac";
+

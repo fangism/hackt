@@ -1,0 +1,6 @@
+// "inv-15.hac"
+// testing -T option
+// @hacknet-flags@ -T inv
+
+import "inv-04.hac";
+

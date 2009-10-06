@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.3 2009/09/14 21:17:09 fang Exp $
+	$Id: hacknet.cc,v 1.4 2009/10/06 17:05:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -57,6 +57,13 @@ public:
 	 */
 	bool			use_referenced_type_instead_of_top_level;
 	/**
+		Use the named type, but instantiate the process, 
+		not its contents into the top-level.  
+		This option should be mutually exclusive with the previous.
+		This also implies net_opt.emit_top=0.
+	 */
+	bool			instantiate_one_of_referenced_type;
+	/**
 		The string of the complete process type to process
 		in lieu of the top-level instance hierarchy.  
 	 */
@@ -70,6 +77,7 @@ public:
 		help_only(false),
 		dump_config(false),
 		use_referenced_type_instead_of_top_level(false),
+		instantiate_one_of_referenced_type(false),
 		named_process_type(),
 		comp_opt(),
 		net_opt()
@@ -136,7 +144,8 @@ if (opt.comp_opt.compile_input) {
 		"ERROR in allocating global state.  Aborting.";
 	// inspired by hflat flag
 	count_ptr<module> top_module;
-if (opt.use_referenced_type_instead_of_top_level) {
+if (opt.use_referenced_type_instead_of_top_level ||
+	opt.instantiate_one_of_referenced_type) {
 	const count_ptr<const process_type_reference>
 		rpt(parse_and_create_complete_process_type(
 			opt.named_process_type.c_str(), *the_module));
@@ -149,10 +158,17 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	// will save HUGE memory on full-hierarchy
 	// this can only be done after folding state_manager locally
 	// into footprint.
+if (opt.use_referenced_type_instead_of_top_level) {
 	if (!top_module->allocate_unique_process_type(*rpt, *the_module).good) {
 		cerr << alloc_errstr << endl;
 		return 1;
 	}
+} else { 	// (opt.instantiate_one_of_referenced_type)
+	if (!top_module->allocate_single_process(rpt).good) {
+		cerr << alloc_errstr << endl;
+		return 1;
+	}
+}
 } else {
 //	the_module->dump(cerr);
 	if (the_module->is_allocated()) {
@@ -193,7 +209,7 @@ try {
 int
 hacknet::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+c:C:df:hHI:t:";
+	static const char optstring[] = "+c:C:df:hHI:t:T:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -336,11 +352,12 @@ ports as top-level globals.
 In other words, use the referenced type as the top-level scope, 
 ignoring the source's top-level instances.  
 Convenient takes place of copy-propagating a single instance's ports.  
+See also the @option{-T} option.  
 @end defopt
 @end texinfo
 ***/
 		case 't':
-			if (o.use_referenced_type_instead_of_top_level) {
+			if (o.named_process_type.length()) {
 				cerr << "Cannot specify more than one type."
 					<< endl;
 				return 1;
@@ -349,6 +366,33 @@ Convenient takes place of copy-propagating a single instance's ports.
 				o.named_process_type = optarg;        // strcpy
 			}
 			break;
+/***
+@texinfo opt/option-T-upper.texi
+@defopt -T type
+Instead of using the top-level instances in the source file, 
+instantiate one lone instance of the named @var{type}, 
+at the top-level, ignoring the source's top-level instances.  
+Unlike the @option{-t} option, the contents of named type @var{type}
+do not get unrolled directly into the top-level scope.
+This instance's ports will be unconnected, 
+and the instance's name is unspecified (because you shouldn't care!).
+This option also implies @option{emit_top=0}.  
+Current limitation: can only specify one type for now.
+@end defopt
+@end texinfo
+***/
+		case 'T':
+			if (o.named_process_type.length()) {
+				cerr << "Cannot specify more than one type."
+					<< endl;
+				return 1;
+			} else {
+				o.instantiate_one_of_referenced_type = true;
+				o.named_process_type = optarg;        // strcpy
+			}
+			o.net_opt.emit_top = false;
+			break;
+
 		case ':':
 			cerr << "Expected but missing option-argument." << endl;
 			return 1;
@@ -380,7 +424,9 @@ hacknet::usage(void) {
 "\t-h : print this usage help and exit\n"
 "\t-H : print configuration options help and exit\n"
 "\t-I path : append search path for configuration files\n"
-"\t-t \"type\" : generate netlist for the named type,\n"
+"\t-t \"type\" : generate netlist using the contents of the named type,\n"
+"\t\tignoring top-level instances (quotes recommended)."
+"\t-T \"type\" : make subcircuit definition library for the named type,\n"
 "\t\tignoring top-level instances (quotes recommended)."
 	<< endl;
 	o << "Additional documentation is installed in:\n"

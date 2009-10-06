@@ -1,0 +1,10 @@
+.subckt inv<> !GND !Vdd x y
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+.ends
+
+.subckt foo<> !GND !Vdd p q
+xi !GND !Vdd p q inv<>
+.ends
+
+
