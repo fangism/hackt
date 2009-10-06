@@ -1,5 +1,5 @@
 @c "usage.texi"
-@c $Id: usage.texi,v 1.4 2009/10/06 17:05:26 fang Exp $
+@c $Id: usage.texi,v 1.5 2009/10/06 17:08:44 fang Exp $
 
 @node Usage
 @chapter Usage
@@ -42,7 +42,7 @@ and the argument is optional.
 @include opt/option-H-upper.texi
 @include opt/option-I-upper.texi
 @include opt/option-t.texi
-@include opt/option-T.texi
+@include opt/option-T-upper.texi
 
 @c ****************************************************************************
 @c section
