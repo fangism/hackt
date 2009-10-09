@@ -1,0 +1,12 @@
+// "rename-12.hac"
+// copy-modified from "rename-11.hac"
+// testing renaming of pass-gates
+
+bool g, _g, s, d1, d2;
+prs {
+	passn<20;"THIS_ONE">(g, s, d1)
+	passn<20>(g, s, d2)
+	passp<40,2>(_g, s, d1)
+	passp<40,2;"THIS_TWO">(_g, s, d2)
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.6 2009/10/05 23:09:30 fang Exp $
+	$Id: netlist_generator.cc,v 1.7 2009/10/09 01:00:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -676,6 +676,34 @@ netlist_generator::visit(const footprint_expr_node::precharge_pull_type& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+void
+process_transistor_attributes(transistor& t, 
+		const resolved_attribute_list_type& a) {
+#if PRS_LITERAL_ATTRIBUTES
+	resolved_attribute_list_type::const_iterator
+		ai(a.begin()), ae(a.end());
+	// TODO: write an actual attribute function map for altering transistor
+	for ( ; ai!=ae; ++ai) {
+		// this is just a quick hack for now
+		if (ai->key == "label")
+			t.name = ai->values->front().is_a<const string_expr>()
+				->static_constant_value();
+		else if (ai->key == "lvt")
+			t.set_lvt();
+		else if (ai->key == "svt")
+			t.set_svt();
+		else if (ai->key == "hvt")
+			t.set_hvt();
+		else {
+			cerr << "Warning: unknown literal attribute \'" <<
+				ai->key << "\' ignored." << endl;
+		}
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Walk expressions from left to right, emitting transistors.
 	\pre current_netlist is set
@@ -722,31 +750,8 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.length = current_length;
 	// TODO: constrain length
 	t.attributes = fet_attr;
-	// TODO: import attributes from rule attributes?
-#if PRS_LITERAL_ATTRIBUTES
-{
-	const resolved_attribute_list_type& a(e.attributes);
-	resolved_attribute_list_type::const_iterator
-		ai(a.begin()), ae(a.end());
-	// TODO: write an actual attribute function map for altering transistor
-	for ( ; ai!=ae; ++ai) {
-		// this is just a quick hack for now
-		if (ai->key == "label")
-			t.name = ai->values->front().is_a<const string_expr>()
-				->static_constant_value();
-		else if (ai->key == "lvt")
-			t.set_lvt();
-		else if (ai->key == "svt")
-			t.set_svt();
-		else if (ai->key == "hvt")
-			t.set_hvt();
-		else {
-			cerr << "Warning: unknown literal attribute \'" <<
-				ai->key << "\' ignored." << endl;
-		}
-	}
-}
-#endif
+	// transistor attributes
+	process_transistor_attributes(t, e.attributes);
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->transistor_pool.push_back(t);
 	break;
@@ -874,28 +879,8 @@ if (passn || passp) {
 		t.length = (passn ? opt.std_n_length : opt.std_p_length);
 	}
 	t.attributes = fet_attr;
-	// TODO: import attributes
-#if PRS_LITERAL_ATTRIBUTES
-{
-	const resolved_attribute_list_type& a(e.attributes);
-	resolved_attribute_list_type::const_iterator
-		ai(a.begin()), ae(a.end());
-	// TODO: write an actual attribute function map for altering transistor
-	for ( ; ai!=ae; ++ai) {
-		// this is just a quick hack for now
-		if (ai->key == "lvt")
-			t.set_lvt();
-		else if (ai->key == "svt")
-			t.set_svt();
-		else if (ai->key == "hvt")
-			t.set_hvt();
-		else {
-			cerr << "Warning: unknown literal attribute \'" <<
-				ai->key << "\' ignored." << endl;
-		}
-	}
-}
-#endif
+	// transistor attributes
+	process_transistor_attributes(t, e.attributes);
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->transistor_pool.push_back(t);
 } else if (e.name == "echo") {

@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2009/10/06 21:44:30 fang Exp $
+#	$Id: Makefile.am,v 1.9 2009/10/09 01:00:02 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -71,7 +71,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	supply-instance-13 supply-instance-14 supply-instance-15 \
 	supply-instance-16 supply-instance-17 supply-instance-18 \
 	rename-01 rename-02 rename-03 rename-04 rename-05 rename-06 \
-	rename-07 rename-08 rename-09 rename-10
+	rename-07 rename-08 rename-09 rename-10 rename-11 rename-12
 
 # TODO: fix expanded strings for rename-04,05
 
