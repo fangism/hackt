@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.37 2009/10/05 23:09:23 fang Exp $
+	$Id: PRS.cc,v 1.38 2009/10/14 17:33:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -208,6 +208,13 @@ if (a.key) {
 }
 	vals_type vals;
 	if (a.values) {
+#if PRS_LITERAL_ATTRIBUTES
+	if (a.values->size() > 2) {
+		cerr << "Error: PRS literal takes at most 2 parameters.  "
+			<< (a.values ? where(*a.values) : where(a)) << endl;
+		return return_type();
+	}
+#endif
 		a.values->postorder_check_meta_exprs(vals, c);
 	}
 	const const_iterator i(vals.begin()), e(vals.end());
