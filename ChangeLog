@@ -1,40 +1,9 @@
 "ChangeLog"
 
-2009-10-02	David Fang	<fangism@users.sourceforge.net>
+2009-10-15	David Fang	<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-83-32:
-	  Fixed test/Make.test-guile, use LTDL_LIBRARY_PATH.
-	  configure.ac: date bump
-
-
-2009-10-01	David Fang	<fangism@users.sourceforge.net>
-
-	* HACKT-00-01-04-main-00-83-31-merged-supply-01-09:
-	  Branch merge of the supply-01 branch.
-
-
-2009-09-27	David Fang	<fangism@users.sourceforge.net>
-
-	* HACKT-00-01-04-main-00-83-30:
-	  Build system maintainence, testing on i686-apple-darwin10.
-	  bootstrap: re-wrote portions to order calls around libtool
-	  configure.ac: bootstrap with libtool-2.x! old macros commented out.
-		May need to switch back and forth... :S
-		removed BUILD_DARWIN test, no longer patch Makefile[.in]'s
-		am__remove_distdir script.
-	  scripts/maintainerclobber: re-wrote to wipe files in each
-		directory based on .cvsignore files.  (easier!)
-	  test/Make.test-...: see test/ChangeLog, basically fixed all 
-		plug-in dependent tests to use libtool --mode=execute wrapper.
-		Much cleaned up use of Makefile variables.
-	  Not regression test clean on i686-apple-darwin10!
-
-
-2009-09-14	David Fang	<fangism@users.sourceforge.net>
-
-	* HACKT-00-01-04-main-00-83-29-merged-netlist-02-13:
-	  Branch merge of hacknet features, batch 2.
-	  configure.ac: date bump
+	* HACKT-00-01-04-main-00-83-28-stable-01:
+	  Fix-only release branch, only for backporting.
 
 
 2009-08-28	David Fang	<fangism@users.sourceforge.net>

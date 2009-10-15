@@ -1,7 +1,7 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.11 2009/10/15 01:05:11 fang Exp $
+	$Id: main_funcs.h,v 1.10.44.1 2009/10/15 22:12:12 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_MAIN_FUNCS_H__
