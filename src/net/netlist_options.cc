@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.5 2009/10/06 21:44:28 fang Exp $
+	$Id: netlist_options.cc,v 1.6 2009/10/15 17:51:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -36,6 +36,7 @@ netlist_options::netlist_options() :
 		__dump_flags(dump_flags::no_definition_owner), 
 		unknown_option_policy(OPTION_WARN), 
 		internal_node_supply_mismatch_policy(OPTION_WARN),
+		undriven_node_policy(OPTION_WARN),
 		std_n_width(5.0),
 		std_p_width(5.0),
 		std_n_length(2.0),
@@ -564,6 +565,14 @@ Set error-handling policy when an internal node is used in a different
 supply domain than the one it was defined in.  
 Default: warn
 @end defopt
+
+@defopt undriven_node (string)
+Set error handling policy for subcircuits that find nodes that are
+neither used (connected to source, gate terminals) but not driven
+(connected to drain terminal) nor coming from subcircuit port.
+This check is always skipped for top-level circuits.
+Default: warn
+@end defopt
 @end texinfo
 ***/
 DEFINE_OPTION_POLICY(unknown_option, "unknown_option",
@@ -571,6 +580,8 @@ DEFINE_OPTION_POLICY(unknown_option, "unknown_option",
 DEFINE_OPTION_POLICY(internal_node_supply_mismatch,
 	"internal_node_supply_mismatch", 
 	"EH for internal node supply mismatch btw. def/use")
+DEFINE_OPTION_POLICY(undriven_node, "undriven_node",
+	"EH for used but undriven nodes")
 
 // could just fold string into here instead of initialization function below...
 // TODO: produce usage help for console and texinfo documentation aside

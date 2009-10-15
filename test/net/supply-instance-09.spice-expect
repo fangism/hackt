@@ -13,3 +13,7 @@ xf f.myVdd f.myGND a b foo<>
 
 xbq bq.a bq.b bar<>
 
+* --- WARNINGS ---
+Warning: node f.myVdd is used but not driven!
+Warning: node f.myGND is used but not driven!
+... in subcircuit bar<>

@@ -5,3 +5,6 @@ Mz:up:0 !Vdd x z !Vdd pch W=5u L=2u
 
 xbar !GND !Vdd bar.z foo<>
 
+* --- WARNINGS ---
+Warning: node x is used but not driven!
+... in subcircuit foo<>

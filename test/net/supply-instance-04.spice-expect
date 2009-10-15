@@ -17,3 +17,13 @@ xh g.GND_2 g.Vdd_2 h.x h.y inv<>
 
 xbar !GND !Vdd bar.g.Vdd_1 bar.g.GND_1 bar.g.Vdd_2 bar.g.GND_2 foo<>
 
+* --- WARNINGS ---
+Warning: node a.x is used but not driven!
+Warning: node b.x is used but not driven!
+Warning: node c.x is used but not driven!
+Warning: node d.x is used but not driven!
+Warning: node d2.x is used but not driven!
+Warning: node e.x is used but not driven!
+Warning: node f.x is used but not driven!
+Warning: node h.x is used but not driven!
+... in subcircuit foo<>

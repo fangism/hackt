@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.7 2009/10/09 01:00:00 fang Exp $
+	$Id: netlist_generator.cc,v 1.8 2009/10/15 17:51:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -218,6 +218,12 @@ try {
 	// f->get_spec_footprint().accept(*this);	// ?
 	if (!top_level || opt.top_type_ports) {
 		nl->summarize_ports(opt);
+#if NETLIST_CHECK_CONNECTIVITY
+		// don't bother checking top-level
+		if (nl->check_node_connectivity(opt) == STATUS_ERROR) {
+			THROW_EXIT;
+		}
+#endif
 	}
 } catch (...) {
 	cerr << "ERROR producing netlist for " << nl->name << endl;
@@ -569,7 +575,12 @@ netlist_generator::register_internal_node(const index_type nid) {
 	const index_type& node_ind = r.first;
 	const index_type& node_own = r.second;	// home
 	node& n(current_netlist->node_pool[node_ind]);
-if (!n.used) {
+#if NETLIST_CHECK_CONNECTIVITY
+if (!n.driven)	// define-once
+#else
+if (!n.used)
+#endif
+{
 	STACKTRACE_INDENT_PRINT("defining internal node..." << endl);
 	const bool dir = ret.second;
 	// else need to define internal node once only
@@ -610,6 +621,9 @@ if (!n.used) {
 	// if so, then we need attributes for internal node definitions (rules)
 	set_current_width(opt.get_default_width(dir, false));
 	set_current_length(opt.get_default_length(dir, false));
+#if NETLIST_CHECK_CONNECTIVITY
+	n.driven = true;
+#endif
 	n.used = true;
 	// mark before recursion, not after!
 	// to prevent shared roots from being duplicated
@@ -630,7 +644,7 @@ if (!n.used) {
 			__t6(current_local_netlist, current_netlist);
 		ep[defexpr].accept(*this);
 	}
-}	// end if !n.used
+}	// end if !n.driven
 	return node_ind;
 }
 

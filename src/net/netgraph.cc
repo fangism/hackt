@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.8 2009/10/06 21:44:27 fang Exp $
+	$Id: netgraph.cc,v 1.9 2009/10/15 17:51:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -25,6 +25,7 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/bool_port_collector.tcc"
+#include "util/iterator_more.h"		// for set_inserter
 #include "util/unique_list.tcc"
 #include "util/string.h"		// for strgsub
 #include "util/stacktrace.h"
@@ -139,13 +140,10 @@ local_netlist::mark_used_nodes(node_pool_type& node_pool) {
 		i(transistor_pool.begin()), e(transistor_pool.end());
 	for ( ; i!=e; ++i) {
 		node_index_map.insert(i->gate);
-		node_pool[i->gate].used = true;
 		node_index_map.insert(i->source);
-		node_pool[i->source].used = true;
 		node_index_map.insert(i->drain);
-		node_pool[i->drain].used = true;
 		node_index_map.insert(i->body);
-		node_pool[i->body].used = true;
+		i->mark_used_nodes(node_pool);
 	}
 }
 
@@ -324,20 +322,46 @@ case NODE_TYPE_SUPPLY:
 default:
 	o << "???";
 }
-	if (!used) o << " (unconnected)";
+	if (!used) o << " (unused)";
+#if NETLIST_CHECK_CONNECTIVITY
+	if (!driven) o << " (undriven)";
+#endif
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_CHECK_CONNECTIVITY
+error_status
+node::check_connectivity(const netlist_options& opt) const {
+	// check should apply to non-ports
+	if (used && !driven) {
+	// depend on opt
+		cerr << (opt.undriven_node_policy == OPTION_ERROR ?
+			"Error:" : "Warning:") << " node ";
+		// do not mangle
+		emit(cerr, netlist_options::default_value) <<
+			" is used but not driven!" << endl;
+		return opt.undriven_node_policy;
+	}
+	return STATUS_NORMAL;
+}
+#endif
 
 //=============================================================================
 // class instance method definitions
 
+/**
+	Mark all instance actuals as used automatically?
+ */
 void
 instance::mark_used_nodes(node_pool_type& node_pool) const {
+#if !NETLIST_CHECK_CONNECTIVITY
 	actuals_list_type::const_iterator
 		i(actuals.begin()), e(actuals.end());
 	for ( ; i!=e; ++i) {
 		node_pool[*i].used = true;
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -406,7 +430,11 @@ void
 transistor::mark_used_nodes(node_pool_type& node_pool) const {
 	node_pool[source].used = true;
 	node_pool[gate].used = true;
+#if NETLIST_CHECK_CONNECTIVITY
+	node_pool[drain].driven = true;
+#else
 	node_pool[drain].used = true;
+#endif
 	node_pool[body].used = true;
 }
 
@@ -677,7 +705,11 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 	for ( ; fi!=fe; ++fi) {
 		STACKTRACE_INDENT_PRINT("formal node = " << *fi << endl);
 		const node& fn(subnet.node_pool[*fi]);	// formal node
+#if NETLIST_CHECK_CONNECTIVITY
+		INVARIANT(fn.used || fn.driven);
+#else
 		INVARIANT(fn.used);
+#endif
 #if !PRS_SUPPLY_OVERRIDES
 		if (fn.is_supply_node()) {
 			if (*fi == GND_index) {
@@ -704,7 +736,6 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 		if (!fb.is_port_alias()) {
 			// HACK ALERT!
 			// well, damn it, FIND me a suitable alias!
-//			fb.dump_hierarchical_name(cerr << "ALIAS: ") << endl;
 			typedef port_alias_tracker_base<bool_tag>::map_type
 						alias_map_type;
 			const alias_map_type&
@@ -738,6 +769,13 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 				);
 			STACKTRACE_INDENT_PRINT("actual node = " << actual_node << endl);
 			np.actuals.push_back(actual_node);
+#if NETLIST_CHECK_CONNECTIVITY
+			// inherit used/drive properties from formals to actuals
+			if (fn.used)
+				node_pool[actual_node].used = true;
+			if (fn.driven)
+				node_pool[actual_node].driven = true;
+#endif
 		} else {
 			cerr << "ERROR: unhandled instance port node type."
 				<< endl;
@@ -907,6 +945,7 @@ netlist::mark_used_nodes(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	\param ni is a footprint-local id for the referenced bool.
  */
@@ -917,6 +956,7 @@ netlist::named_node_is_used(const index_type ni) const {
 	// must be non-zero to count
 	return lni && node_pool[lni].used;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1141,7 +1181,12 @@ netlist::summarize_ports(const netlist_options& opt) {
 		node_pool[ni].used = true;
 	}
 		const node& n(node_pool[ni]);
-	if (ni && n.used) {
+#if NETLIST_CHECK_CONNECTIVITY
+	if (ni && (n.used || n.driven))
+#else
+	if (ni && n.used)
+#endif
+	{
 		INVARIANT(n.is_logical_node());
 		INVARIANT(n.index == *i);	// self-reference
 		port_list.push_back(ni);
@@ -1173,6 +1218,40 @@ netlist::summarize_ports(const netlist_options& opt) {
 }
 	empty = MT;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_CHECK_CONNECTIVITY
+/**
+	\return true if we are to error out due to connectivity
+ */
+error_status
+netlist::check_node_connectivity(const netlist_options& opt) const {
+	error_status ret = STATUS_NORMAL;
+if (opt.undriven_node_policy != OPTION_IGNORE) {
+	// set to test for port membership
+	typedef	set<index_type>	port_set_type;
+	port_set_type port_set;
+	copy(port_list.begin(), port_list.end(), util::set_inserter(port_set));
+	const port_set_type::const_iterator pe(port_set.end());
+	typedef	node_pool_type::const_iterator	const_iterator;
+	const_iterator i(node_pool.begin()), e(node_pool.end());
+	index_type j = 1;
+	for (++i; i!=e; ++i, ++j) {
+	if (port_set.find(j) == pe) {
+		const error_status r = i->check_connectivity(opt);
+		if (r > ret)
+			ret = r;
+	}
+	}
+	if (ret != STATUS_NORMAL) {
+		// .name is mangled, so we print the unmangled type name
+		cerr << "... in subcircuit ";
+		fp->dump_type(cerr) << endl;
+	}
+}
+	return ret;
+}
+#endif
 
 //=============================================================================
 }	// end namespace NET

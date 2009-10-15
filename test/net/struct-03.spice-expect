@@ -21,3 +21,6 @@ xdum !GND !Vdd l.b.b.b q k.a.b.a k.b.a.b invert_it<>
 
 xnow !GND !Vdd now.p now.q invert_them<>
 
+* --- WARNINGS ---
+Warning: node l.b.b.b is used but not driven!
+... in subcircuit invert_them<>

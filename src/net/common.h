@@ -1,7 +1,7 @@
 /**
 	\file "net/common.h"
 	For useful declarations and typedefs.  
-	$Id: common.h,v 1.5 2009/10/03 01:12:27 fang Exp $
+	$Id: common.h,v 1.6 2009/10/15 17:51:55 fang Exp $
  */
 
 #ifndef	__HAC_NET_COMMON_H__
@@ -28,6 +28,18 @@ using std::ostream;
 //=============================================================================
 typedef	size_t		index_type;
 typedef	double		real_type;
+
+/**
+	Used for both setting error-handling policy and returning error value.
+ */
+enum error_status {
+	STATUS_NORMAL = 0,
+	OPTION_IGNORE = STATUS_NORMAL,
+	STATUS_WARNING = 1,
+	OPTION_WARN = STATUS_WARNING,
+	STATUS_ERROR = 2,
+	OPTION_ERROR = STATUS_ERROR
+};
 
 //=============================================================================
 

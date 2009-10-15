@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.5 2009/10/06 21:44:29 fang Exp $
+	$Id: netlist_options.h,v 1.6 2009/10/15 17:51:58 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -22,11 +22,8 @@ using util::ifstream_manager;
 using entity::dump_flags;
 
 // for error-handling
-enum option_error_policy {
-	OPTION_IGNORE = 0,
-	OPTION_WARN = 1,
-	OPTION_ERROR = 2
-};
+// just use the same enum
+typedef	error_status	option_error_policy;
 
 //=============================================================================
 /**
@@ -41,6 +38,7 @@ struct netlist_options {
 	dump_flags			__dump_flags;
 	option_error_policy		unknown_option_policy;
 	option_error_policy		internal_node_supply_mismatch_policy;
+	option_error_policy		undriven_node_policy;
 // generation-time options:
 	/**
 		Dimensions of standard devices to use when unspecified.  

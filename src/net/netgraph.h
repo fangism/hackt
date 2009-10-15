@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.6 2009/10/05 23:09:29 fang Exp $
+	$Id: netgraph.h,v 1.7 2009/10/15 17:51:57 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -20,9 +20,21 @@
 	may be associated with their output nodes or named internal nodes.
 	Goal: 1
 	Rationale: more consistent device naming across revisions (ECOs).
-	Status: starting...
+	Status: done, tested.
  */
 #define	NETLIST_GROUPED_TRANSISTORS		1
+
+/**
+	Define to 1 to enable static connectivity checking for
+	floating nodes.  Semi-redundant checking with PRS checking, 
+	but is more detailed at the transistor level.
+	Remember to 'inherit' the driven property hierarchically 
+	from subcircuits to supercircuits.
+	Don't bother checking multiply driven nodes.  
+	Goal: 1
+	Status: done, tested.
+ */
+#define	NETLIST_CHECK_CONNECTIVITY		1
 
 namespace HAC {
 namespace NET {
@@ -257,8 +269,20 @@ struct node {
 		set to true if node participates in any device 
 		(i.e. has any electrical connectivity whatsoever), 
 		so unused nodes (e.g. in ports) can be skipped.  
+		Q: should only source and gate and body terminals count?
 	 */
 	bool				used;
+#if NETLIST_CHECK_CONNECTIVITY
+	/**
+		set to true if node is connected to the drain
+		of any transistors, i.e. is driven.
+		Ports are allowed to be undriven inside a subcircuit.
+	 */
+	bool				driven;
+#define	INIT_DRIVEN			, driven(false)
+#else
+#define	INIT_DRIVEN
+#endif
 	// connectivity information needed? would be redundant with devices
 #if NETLIST_GROUPED_TRANSISTORS
 	/**
@@ -283,25 +307,32 @@ struct node {
 #if !PRS_SUPPLY_OVERRIDES
 	node(const string& s, const __supply_node_tag&) : 
 		index(0), name(s), type(NODE_TYPE_SUPPLY), used(false) 
+		INIT_DRIVEN	// shouldn't supplies be considered driven?
 		{ INIT_DEVICE_COUNT }
 #endif
 	node(const index_type i, const __logical_node_tag&) : 
 		index(i), name(), type(NODE_TYPE_LOGICAL), used(false)
+		INIT_DRIVEN
 		{ INIT_DEVICE_COUNT }
 	node(const index_type i, const __internal_node_tag&) : 
 		index(i), name(), type(NODE_TYPE_INTERNAL), used(false)
+		INIT_DRIVEN
 		{ INIT_DEVICE_COUNT }
 	node(const __auxiliary_node_tag&) : 
 		index(0), name(), type(NODE_TYPE_AUXILIARY), used(false)
+		INIT_DRIVEN
 		{ INIT_DEVICE_COUNT }
 	// only for VOID node
 	node(const char* s, const __auxiliary_node_tag&) : 
 		index(0), name(s), type(NODE_TYPE_AUXILIARY), used(false)
+		INIT_DRIVEN
 		{ INIT_DEVICE_COUNT }
 	node(const index_type a, const __auxiliary_node_tag&) : 
 		index(a), name(), type(NODE_TYPE_AUXILIARY), used(false)
+		INIT_DRIVEN
 		{ INIT_DEVICE_COUNT }
 #undef	INIT_DEVICE_COUNT
+#undef	INIT_DRIVEN
 
 	bool
 	is_logical_node(void) const { return type == NODE_TYPE_LOGICAL; }
@@ -321,6 +352,11 @@ struct node {
 		return type == NODE_TYPE_SUPPLY;
 #endif
 	}
+
+#if NETLIST_CHECK_CONNECTIVITY
+	error_status
+	check_connectivity(const netlist_options&) const;
+#endif
 
 	ostream&
 	emit(ostream&, 
@@ -607,8 +643,10 @@ public:
 #endif
 		);
 
+#if 0
 	bool
 	named_node_is_used(const index_type) const;
+#endif
 
 	void
 	append_instance(const global_entry<process_tag>&, const netlist&, 
@@ -620,6 +658,11 @@ public:
 
 	void
 	summarize_ports(const netlist_options&);
+
+#if NETLIST_CHECK_CONNECTIVITY
+	error_status
+	check_node_connectivity(const netlist_options&) const;
+#endif
 
 	ostream&
 	emit(ostream&, const bool s, const netlist_options&) const;
