@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.24 2009/10/02 01:57:27 fang Exp $
+	$Id: main_funcs.cc,v 1.25 2009/10/15 01:05:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -188,6 +188,27 @@ parse_to_AST(FILE* yyin) {
 
 //=============================================================================
 /**
+	Emit dependency file, based on seen and included files.
+	\return true on error.
+ */
+static
+bool
+make_include_depends(const char* md, const string& target_object, 
+		const string& source_file) {
+	if (check_file_writeable(md).good) {
+		ofstream mtf(md);
+		mtf << target_object << ": " << source_file;
+		// list all seen files' full paths
+		hackt_parse_file_manager.make_depend(mtf, source_file);
+		return false;
+	} else {
+		// already have error message
+		return true;
+	}
+}
+
+//=============================================================================
+/**
 	Side-effect: sets the yyin FILE* before parsing, and closes it
 		before returning.  
 	\param c the name associated with this file, may be NULL for stdin.  
@@ -220,17 +241,10 @@ parse_to_AST(const char* c, const compile_options& opt) {
 	} else {
 		return return_type(NULL);
 	}
-	if (opt.make_depend) {
-		const char* const md = opt.make_depend_target.c_str();
-	if (check_file_writeable(md).good) {
-		ofstream mtf(md);
-		mtf << opt.target_object << ": " << opt.source_file;
-		// list all seen files' full paths
-		hackt_parse_file_manager.make_depend(mtf, opt.source_file);
-	} else {
-		// already have error message
+	if (opt.make_depend &&
+			make_include_depends(opt.make_depend_target.c_str(), 
+			opt.target_object, opt.source_file)) {
 		return return_type(NULL);
-	}
 	}
 }
 	if (need_to_clean_up_file_manager) {
@@ -281,27 +295,19 @@ check_AST(const root_body& r, const char* name, const parse_options& po) {
 		false to use path to file as is.  
  */
 good_bool
-flatten_source(const char* name) {
+flatten_source(const char* name, const compile_options& opt) {
 	STACKTRACE_VERBOSE;
 	const yyin_manager ym(hackt_parse_file_manager, name, false);
 	FILE* yyin = ym.get_file();
 	if (yyin) {
 		const bool need_to_clean_up_file_manager =
 			!lexer::__flatten_source(yyin).good;
-#if 0
-		if (opt.make_depend) {
-			const char* const md = opt.make_depend_target.c_str();
-		if (check_file_writeable(md).good) {
-			ofstream mtf(md);
-			mtf << opt.target_object << ": " << opt.source_file;
-			// list all seen files' full paths
-			hackt_parse_file_manager.make_depend(mtf, opt.source_file);
-		} else {
-			// already have error message
-			return return_type(NULL);
+		if (opt.make_depend &&
+				make_include_depends(
+				opt.make_depend_target.c_str(), 
+				opt.target_object, opt.source_file)) {
+			return good_bool(false);
 		}
-		}
-#endif
 		if (need_to_clean_up_file_manager) {
 			// hackt_parse_file_manager.reset();
 			return good_bool(false);

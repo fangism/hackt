@@ -8,6 +8,8 @@
 	* HACKT-00-01-04-main-00-83-37+:
 	  AST/PRS.cc: make comilpation fail earlier when old syntax 
 		is used for PRS-literal Vt overrides.
+	  main/main_funcs.cc, flatten.cc: hacpp now produces dependency
+		files as promised with -M option.
 
 
 2009-10-08	David Fang		<fangism@users.sourceforge.net>

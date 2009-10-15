@@ -1,7 +1,7 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.10 2007/09/13 01:14:17 fang Exp $
+	$Id: main_funcs.h,v 1.11 2009/10/15 01:05:11 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_MAIN_FUNCS_H__
@@ -38,7 +38,7 @@ check_file_writeable(const char*);
 
 extern
 good_bool
-flatten_source(const char*);
+flatten_source(const char*, const compile_options&);
 
 extern
 count_ptr<module>

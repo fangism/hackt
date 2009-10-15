@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.38 2009/10/02 01:57:02 fang Exp $
+	$Id: PRS.cc,v 1.39 2009/10/15 01:05:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -2362,8 +2362,9 @@ if (is_internal()) {
 			<< " in rule." << endl;
 		return 0;
 	}
-	INVARIANT(new_expr->params.size() <= 2);
 #if PRS_LITERAL_ATTRIBUTES
+	INVARIANT(params.size() <= 2);
+	INVARIANT(new_expr->params.size() <= 2);
 	if (!unroll_check_attributes(attr, new_expr->attributes, c, 
 			cflat_literal_attribute_registry).good) {
 		// already have some error message

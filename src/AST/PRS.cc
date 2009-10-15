@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.38 2009/10/14 17:33:15 fang Exp $
+	$Id: PRS.cc,v 1.39 2009/10/15 01:04:43 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -208,13 +208,6 @@ if (a.key) {
 }
 	vals_type vals;
 	if (a.values) {
-#if PRS_LITERAL_ATTRIBUTES
-	if (a.values->size() > 2) {
-		cerr << "Error: PRS literal takes at most 2 parameters.  "
-			<< (a.values ? where(*a.values) : where(a)) << endl;
-		return return_type();
-	}
-#endif
 		a.values->postorder_check_meta_exprs(vals, c);
 	}
 	const const_iterator i(vals.begin()), e(vals.end());
@@ -298,6 +291,14 @@ if (internal) {
 if (ret && params) {
 	// NOTE: parameters are not applicable to RHS or rules
 	// TODO: update this check for new HAC syntax! (<2)
+#if PRS_LITERAL_ATTRIBUTES
+	if (params->size() > 2) {
+		cerr << "Error: rule literals can take a maximum of 2 "
+			"(width, length) parameters.  " << where(*params)
+			<< endl;
+		return prs_literal_ptr_type(NULL);
+	}
+#else
 	if (params->size() > 3) {
 		// third optional parameter is transistor type [ACT]
 		cerr << "Error: rule literals can take a maximum of 3 "
@@ -305,6 +306,7 @@ if (ret && params) {
 			<< endl;
 		return prs_literal_ptr_type(NULL);
 	}
+#endif
 	typedef expr_list::checked_meta_exprs_type	checked_exprs_type;
 	typedef checked_exprs_type::const_iterator	const_iterator;
 	typedef checked_exprs_type::value_type		value_type;

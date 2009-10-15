@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: flatten.cc,v 1.10 2008/10/22 22:17:00 fang Exp $
+	$Id: flatten.cc,v 1.11 2009/10/15 01:05:10 fang Exp $
  */
 
 #include <iostream>
@@ -207,7 +207,7 @@ if (argc == 1) {
 
 	// flatten it
 	return flatten_source(
-		(argc == 0) ? NULL : opt.source_file.c_str()).good ? 0 : 1;
+		(argc == 0) ? NULL : opt.source_file.c_str(), opt).good ? 0 : 1;
 }
 
 //-----------------------------------------------------------------------------
