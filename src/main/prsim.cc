@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.24 2009/08/28 20:45:08 fang Exp $
+	$Id: prsim.cc,v 1.25 2009/10/16 20:38:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,6 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/simple_options.tcc"
 #include "main/global_options.h"
 #include "main/compile_options.h"
+#include "common/config.h"
 #include "util/getopt_mapped.h"
 #include "util/persistent_object_manager.h"
 #include "sim/prsim/State-prsim.h"
@@ -255,7 +256,7 @@ try {
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+a:bcC:d:D:f:hiI:O:r:t:";
+	static const char optstring[] = "+a:bcC:d:D:f:hiI:O:r:t:v";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -464,6 +465,18 @@ Convenient takes place of copy-propagating a single instance's ports.
 				o.named_process_type = optarg;        // strcpy
 			}
 			break;
+/***
+@texinfo opt/option-v.texi
+@defopt -v
+Print version and exit.
+@end defopt
+@end texinfo
+***/
+		case 'v':
+			config::dump_all(cout);
+			exit(0);
+			break;
+
 		case ':':
 			cerr << "Expected but missing option-argument." << endl;
 			return 1;

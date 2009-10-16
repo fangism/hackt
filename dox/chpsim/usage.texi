@@ -1,5 +1,5 @@
 @c "usage.texi"
-@c $Id: usage.texi,v 1.7 2009/02/01 07:21:10 fang Exp $
+@c $Id: usage.texi,v 1.8 2009/10/16 20:38:39 fang Exp $
 
 @node Usage
 @chapter Usage
@@ -60,6 +60,7 @@ much like what is summarized below.
 @include options/option-r.texi
 @include options/option-t.texi
 @include options/option-T-upper.texi
+@include options/option-v.texi
 
 @c ****************************************************************************
 @node General Flags

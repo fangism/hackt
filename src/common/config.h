@@ -1,7 +1,7 @@
 /**
 	\file "common/config.h"
 	Interface header for version module.  
-	$Id: config.h,v 1.3 2007/05/03 06:38:50 fang Exp $
+	$Id: config.h,v 1.4 2009/10/16 20:38:45 fang Exp $
  */
 
 #ifndef	__HAC_COMMON_CONFIG_H__
@@ -78,6 +78,10 @@ struct config {
 	static
 	ostream&
 	guile(ostream&);
+
+	static
+	ostream&
+	dump_all(ostream&);
 
 };	// end class config
 

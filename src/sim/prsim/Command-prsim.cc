@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.50 2009/07/10 20:39:45 fang Exp $
+	$Id: Command-prsim.cc,v 1.51 2009/10/16 20:38:49 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1758,6 +1758,7 @@ if (a.size() != 2) {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
 	nodes_id_list_type nodes;
+try {	// temporary measure until bug ACX-PR-1456 is fixed
 	if (parse_name_to_get_subnodes(objname, s.get_module(), nodes)) {
 		// already got error message?
 		return Command::BADARG;
@@ -1770,6 +1771,12 @@ if (a.size() != 2) {
 		}
 		return Command::NORMAL;
 	}
+} catch (...) {
+	cerr << "... Saved from destruction!!!" << endl;
+	cerr << "You have probably triggered known bug ACX-PR-1456." << endl;
+	cerr << "Please nag Fang about fixing this.  You may resume." << endl;
+	return Command::BADARG;
+}
 }
 }
 

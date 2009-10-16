@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.20 2008/07/30 05:26:46 fang Exp $
+	$Id: compile.cc,v 1.21 2009/10/16 20:38:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,6 +12,7 @@
 #include <list>
 #include <string>
 #include <map>
+#include "common/config.h"
 #include "main/compile.h"
 #include "main/main_funcs.h"
 #include "main/compile_options.h"
@@ -345,7 +346,7 @@ compile::main(const int argc, char* argv[], const global_options&) {
 int
 compile::parse_command_options(const int argc, char* argv[], options& opt) {
 	STACKTRACE_VERBOSE;
-	static const char* optstring = "+df:hI:M:o:p";
+	static const char* optstring = "+df:hI:M:o:pv";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -375,7 +376,7 @@ general compile flags (repeatable) where @var{optname} is one of the following:
         suppress persistent object header dump
 @end itemize
 
-Dialect flags (for ACT-compatbility):
+Dialect flags (for ACT-compatibility):
 @itemize
 @item @option{export-all}:
 	Treat all definitions as exported, i.e. no export checking.
@@ -409,12 +410,15 @@ Dialect flags (for ACT-compatbility):
 /***
 @texinfo compile/option-h.texi
 @defopt -h
-Show usage.
+Show usage and exit.
 @end defopt
 @end texinfo
 ***/
 	case 'h':
-		return 1;
+		// return 1;
+		usage();
+		exit(0);
+		break;
 /***
 @texinfo compile/option-I-upper.texi
 @defopt -I path
@@ -463,6 +467,17 @@ of the output object file.
 	case 'p':
 		opt.use_stdin = true;
 		break;
+/***
+@texinfo compile/option-v.texi
+@defopt -v
+Show version and build information and exit.
+@end defopt
+@end texinfo
+***/
+	case 'v':
+		config::dump_all(cout);
+		exit(0);
+		break;
 	case ':':
 		cerr << "Expected but missing non-option argument." << endl;
 		return 1;
@@ -497,23 +512,24 @@ compile::usage(void) {
 	cerr << "usage: compile [options] <hackt-source-file> [hackt-obj-file]"
 		<< endl;
 	cerr << "options:" << endl;
-	cerr << "\t-d: produces text dump of compiled module" << endl <<
-		"\t-f <opt> : general compile flags (repeatable)" << endl;
+	cerr << "  -d: produces text dump of compiled module" << endl <<
+		"  -f <opt> : general compile flags (repeatable)" << endl;
 {
 	typedef	options_modifier_map_type::const_iterator	const_iterator;
 	const_iterator i(options_modifier_map.begin());
 	const const_iterator e(options_modifier_map.end());
 	for ( ; i!=e; ++i) {
-		cerr << "\t    " << i->first << ": " <<
+		cerr << "    " << i->first << ": " <<
 			i->second.brief << endl;
 	}
 }
-	cerr << "\t-h: gives this usage messsage" << endl <<
-		"\t-I <path> : adds include path (repeatable)" << endl;
-	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
-	cerr << "\t-o <objfile> : option to name output object file" << endl;
-	cerr << "\t-p : pipe in source from stdin" << endl;
-	cerr << "\tIf no output object file is given, compiled module will not be saved."
+	cerr << "  -h: gives this usage messsage and exits" << endl <<
+		"  -I <path> : adds include path (repeatable)" << endl;
+	cerr << "  -M <dependfile> : produces make dependency to file" << endl;
+	cerr << "  -o <objfile> : option to name output object file" << endl;
+	cerr << "  -p : pipe in source from stdin" << endl;
+	cerr << "  -v : print version information and exit" << endl;
+	cerr << "If no output object file is given, compiled module will not be saved."
 		<< endl;
 }
 

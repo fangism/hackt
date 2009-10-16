@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.24 2009/08/28 20:44:59 fang Exp $
+	$Id: cflat.cc,v 1.25 2009/10/16 20:38:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -20,6 +20,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/main_funcs.h"
 #include "main/options_modifier.tcc"
 #include "main/global_options.h"
+#include "common/config.h"
 
 #include "Object/type/process_type_reference.h"
 #include "common/TODO.h"
@@ -1022,7 +1023,7 @@ __cflat_getopt_c(cflat_options& opt) {
 /***
 @texinfo cflat/opt-C-upper.texi
 @defopt -C opts
-When compiling input source, forward options @var{opt} to the compiler driver.
+When compiling input source, forward options @var{opts} to the compiler driver.
 @end defopt
 @end texinfo
 ***/
@@ -1033,14 +1034,46 @@ __cflat_getopt_compile_flags(cflat_options& opt, const char* optarg) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-h.texi
+@defopt -h
+Print command-line help and exit.
+@end defopt
+@end texinfo
+***/
+static
+void
+__cflat_help(cflat_options& opt) {
+	cflat::usage();
+	exit(0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-v.texi
+@defopt -v
+Print version and build information and exit.
+@end defopt
+@end texinfo
+***/
+static
+void
+__cflat_version(cflat_options& opt) {
+	config::dump_all(cout);
+	exit(0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 cflat::initialize_master_options_map(void) {
 	master_options.add_option('c', &__cflat_getopt_c);
 	master_options.add_option('C', &__cflat_getopt_compile_flags);
+	master_options.add_option('h', &__cflat_help);
 	master_options.add_option('f', &getopt_f_options);
 	master_options.add_option('t', &getopt_cflat_type_only);
 //	master_options.add_option('p', &getopt_cflat_type_only);
 //	*someone* else uses '-p' instead...
+	master_options.add_option('v', &__cflat_version);
 	return 1;
 }
 
@@ -1055,8 +1088,10 @@ cflat::usage(void) {
 	cerr << "options: " << endl;
 	cerr << "\t-c : input file is a source, to be compiled\n";
 	cerr << "\t-C <opts> : flags to forward to compiler\n";
+	cerr << "\t-h : print this command-line help and exit\n";
 	cerr << "\t-t \"type\" : perform flattening on an instance of the named type,\n"
 		"\t\tignoring top-level instances (quotes recommended)." << endl;
+	cerr << "\t-v : print version and build information and exit\n";
 	cerr << "\t-f <mode> : applies mode-preset or individual flag modifier"
 		" (repeatable)" << endl;
 	// list modes

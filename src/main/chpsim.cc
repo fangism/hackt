@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.21 2009/02/18 00:22:32 fang Exp $
+	$Id: chpsim.cc,v 1.22 2009/10/16 20:38:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/main_funcs.h"		// for save/load_module()
 #include "main/options_modifier.tcc"
 #include "main/global_options.h"
+#include "common/config.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/def/footprint.h"
@@ -236,7 +237,7 @@ try {
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+a:bcC:d:f:hiI:l:L:r:t:T:";
+	static const char optstring[] = "+a:bcC:d:f:hiI:l:L:r:t:T:v";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
@@ -460,6 +461,17 @@ out of a collection of test structure definitions.
 		o.instantiate_type_recursively = true;
 		o.complete_type_name = optarg;
 		break;
+/***
+@texinfo options/option-v.texi
+@defopt -v
+Print version information and exit.
+@end defopt
+@end texinfo
+***/
+	case 'v':
+		config::dump_all(cout);
+		exit(0);
+		break;
 	case ':':
 		cerr << "Expected but missing option-argument." << endl;
 		return 1;
@@ -490,6 +502,7 @@ chpsim::usage(void) {
 "\t-r <file> : record a trace of all events to file at startup\n"
 "\t-t \"type\" : expand type non-recursively as top-level (recommend quotes)\n"
 "\t-T \"type\" : expand type recursively as top-level (recommend quotes)"
+"\t-v : print version and exit\n"
 	<< endl;
 //	cerr << "\t-O <0..1> : expression optimization level" << endl;
         const size_t flags = options_modifier_map.size();

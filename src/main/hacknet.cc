@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.4 2009/10/06 17:05:35 fang Exp $
+	$Id: hacknet.cc,v 1.5 2009/10/16 20:38:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "net/netlist_options.h"
 #include "net/netlist_generator.h"
+#include "common/config.h"
 #include "main/hacknet.h"
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
@@ -209,7 +210,7 @@ try {
 int
 hacknet::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+c:C:df:hHI:t:T:";
+	static const char optstring[] = "+c:C:df:hHI:t:T:v";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -392,7 +393,17 @@ Current limitation: can only specify one type for now.
 			}
 			o.net_opt.emit_top = false;
 			break;
-
+/***
+@texinfo opt/option-v.texi
+@defopt -v
+Print version and build information and exit.
+@end defopt
+@end texinfo
+***/
+		case 'v':
+			config::dump_all(cout);
+			exit(0);
+			break;
 		case ':':
 			cerr << "Expected but missing option-argument." << endl;
 			return 1;

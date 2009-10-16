@@ -1,5 +1,5 @@
 @c "hackt/compiler.texi"
-@c $Id: compiler.texi,v 1.4 2008/12/13 00:27:48 fang Exp $
+@c $Id: compiler.texi,v 1.5 2009/10/16 20:38:42 fang Exp $
 
 @node Compiler
 @chapter Compiler
@@ -43,6 +43,7 @@ Options:
 @include compile/option-M-upper.texi
 @include compile/option-o.texi
 @include compile/option-p.texi
+@include compile/option-v.texi
 
 @t{haco} is provided as a single-command alias to 
 @t{hackt compile}@footnote{Thus named because we use @t{.haco} 

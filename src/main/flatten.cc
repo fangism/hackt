@@ -3,13 +3,14 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: flatten.cc,v 1.11 2009/10/15 01:05:10 fang Exp $
+	$Id: flatten.cc,v 1.12 2009/10/16 20:38:46 fang Exp $
  */
 
 #include <iostream>
 #include <list>
 #include <string>
 #include <map>
+#include "common/config.h"
 #include "main/program_registry.h"
 #include "main/flatten.h"
 #include "main/main_funcs.h"
@@ -219,7 +220,7 @@ if (argc == 1) {
  */
 int
 flatten::parse_command_options(const int argc, char* argv[], options& opt) {
-	static const char* optstring = "+hI:M:P";
+	static const char* optstring = "+hI:M:Pv";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -233,15 +234,13 @@ flatten::parse_command_options(const int argc, char* argv[], options& opt) {
 		opt.make_depend = true;
 		opt.make_depend_target = optarg;
 		break;
-#if 0
-	// implicitly detected by number of arguments
-	case 'p':
-		opt.use_stdin = true;
-		break;
-#endif
 	case 'P':
 		// doesn't have complement or undo...
 		lexer::flatten_with_wrappers(false);
+		break;
+	case 'v':
+		config::dump_all(cout);
+		exit(0);
 		break;
 	case ':':
 		cerr << "Expected but missing non-option argument." << endl;
@@ -285,6 +284,7 @@ flatten::usage(void) {
 	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
 //	cerr << "\t-p : pipe in source from stdin" << endl;
 	cerr << "\t-P : suppress #FILE hierarchical wrappers in output" << endl;
+	cerr << "\t-v : print version and exit" << endl;
 }
 
 //=============================================================================

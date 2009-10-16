@@ -2,7 +2,7 @@
 	\file "common/config.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: config.cc,v 1.5 2008/11/23 17:54:03 fang Exp $
+	$Id: config.cc,v 1.6 2009/10/16 20:38:44 fang Exp $
  */
 
 #include <iostream>
@@ -139,6 +139,24 @@ config::readline(ostream& o) {
 ostream&
 config::guile(ostream& o) {
 	return o << "guile: " << guile_version;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+config::dump_all(ostream& o) {
+	package(o) << endl;
+	cvs(o) << endl;
+	configure_params(o) << endl;
+	buildhost(o) << endl;
+	cxx(o) << endl;
+	cxxflags(o) << endl;
+	lex(o) << endl;
+	yacc(o) << endl;
+	readline(o) << endl;
+	guile(o) << endl;
+	builddate(o) << endl;
+	// influential environment variables
+	return o;
 }
 
 //=============================================================================

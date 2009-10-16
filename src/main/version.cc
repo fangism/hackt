@@ -2,7 +2,7 @@
 	\file "main/version.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: version.cc,v 1.10 2007/05/03 06:38:53 fang Exp $
+	$Id: version.cc,v 1.11 2009/10/16 20:38:47 fang Exp $
  */
 
 #include <iostream>
@@ -50,19 +50,7 @@ version::main(const int argc, char*[], const global_options&) {
 		usage();
 		// don't bother returning
 	}
-	ostream& o(cout);
-	config::package(o) << endl;
-	config::cvs(o) << endl;
-	config::configure_params(o) << endl;
-	config::buildhost(o) << endl;
-	config::cxx(o) << endl;
-	config::cxxflags(o) << endl;
-	config::lex(o) << endl;
-	config::yacc(o) << endl;
-	config::readline(o) << endl;
-	config::guile(o) << endl;
-	config::builddate(o) << endl;
-	// influential environment variables
+	config::dump_all(cout);
 	return 0;
 }
 

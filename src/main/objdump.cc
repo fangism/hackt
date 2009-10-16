@@ -4,10 +4,11 @@
 	Useful for testing object file integrity.  
 	This file came from "artobjdump.cc" in a previous life.  
 
-	$Id: objdump.cc,v 1.9 2009/04/04 01:10:36 fang Exp $
+	$Id: objdump.cc,v 1.10 2009/10/16 20:38:47 fang Exp $
  */
 
 #include <iostream>
+#include "common/config.h"
 #include "main/objdump.h"
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
@@ -98,7 +99,7 @@ if (opt.show_global_allocate_table) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 objdump::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+aAcCdDgGhmM";
+	static const char optstring[] = "+aAcCdDgGhmMv";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -139,6 +140,10 @@ objdump::parse_command_options(const int argc, char* argv[], options& o) {
 	case 'M':
 		o.auto_allocate = true;
 		break;
+	case 'v':
+		config::dump_all(cout);
+		exit(0);
+		break;
 	case ':':
 		cerr << "Expected but missing option-argument." << endl;
 		return 1;
@@ -166,9 +171,10 @@ objdump::usage(void) {
 "\t-D : show hierarchical definitions\n"
 "\t-g : hide global allocation tables\n"
 "\t-G : show global allocation tables\n"
-"\t-h : help on usage\n"
+"\t-h : help on usage and exit\n"
 "\t-m : suppress automatic global instance allocation\n"
 "\t-M : enable automatic global instance allocation"
+"\t-v : print version and exit\n"
 	<< endl;
 }
 

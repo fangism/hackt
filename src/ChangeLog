@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-10-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-39:
+	  All hackt programs are given -h (help) and -v (version) options.
+	  ACX-PR-1456: temporary workaround to save from crashing
+		by catching known bug-exception and resuming.  
+
+
 2009-10-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-38:
