@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.25 2009/10/15 01:05:11 fang Exp $
+	$Id: main_funcs.cc,v 1.26 2009/10/16 21:46:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -31,6 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/compile_options.h"
 #include "main/compile.h"
 #include "main/create.h"
+#include "common/config.h"
 #include "Object/type/process_type_reference.h"
 #include "util/getopt_portable.h"
 #include "util/getopt_mapped.h"
@@ -556,7 +557,7 @@ in the shell.
 int
 create::parse_command_options(const int argc, char* argv[], options& opt) {
 	STACKTRACE_VERBOSE;
-	static const char* optstring = "+hcC:";
+	static const char* optstring = "+hcC:v";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -567,7 +568,10 @@ create::parse_command_options(const int argc, char* argv[], options& opt) {
 	}
 		break;
 	case 'h':
-		create_usage(argv[0], cerr);
+		create_usage(argv[0], cout);
+		return 0;
+	case 'v':
+		config::dump_all(cout);
 		return 0;
 	case ':':
 		cerr << "Expected but missing non-option argument." << endl;
@@ -592,6 +596,7 @@ create_usage(const char* name, ostream& o) {
         o << "\t-c : input file is a source (compile it), not object\n"
                 "\t-C <opts> : forward options to compiler (driver)\n"
                 "\t-h : print this help"
+                "\t-v : print version"
                 << endl;
 }
 

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.222 2009/10/02 01:56:22 fang Exp $
+#	$Id: Makefile.am,v 1.223 2009/10/16 21:46:19 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1810,8 +1810,8 @@ installcheck-local:
 			fi ; \
 			$(ECHO) "======== running: $$run -h =============" ; \
 			$$run -h || : ; \
-			$(ECHO) "======== running: $$run version ========" ; \
-			$$run version || : ; \
+			$(ECHO) "======== running: $$run -v ========" ; \
+			$$run -v || : ; \
 		else : ; \
 		fi; \
 	done ; \
