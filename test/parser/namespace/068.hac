@@ -1,0 +1,26 @@
+// "068.hac"
+// why does this fail?
+// only searching namespaces from foo and below
+// fails ACT also for same reason
+
+namespace std {
+namespace logic {
+
+export
+template <pint N, W>
+defproc celem(bool in[N], o) { }
+
+}       // end namespace logic
+}       // end namespace std
+
+namespace foo {
+
+export
+template <pint N>
+defproc wire_copy(bool x) {
+std::logic::celem<N, 10> comp;
+}
+
+}
+
+

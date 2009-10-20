@@ -1,0 +1,2 @@
+Error: definition `e1of2' is not exported from its home namespace.
+concrete_type_ref: bad definition reference "e1of2"!  ERROR! [13:19..23]

@@ -1,0 +1,142 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	113
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
+	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	34	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	35	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	37	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	38	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	49	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	302
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  1 sub-namespaces
+  1 definitions
+  1 typedefs
+  Namespaces:
+    foo =     In namespace "foo", we have: {
+      0 parameter-collections
+      0 instantiation-collections
+      0 sub-namespaces
+      1 definitions
+      0 typedefs
+      Definitions:
+        wire_copy = process-definition (defined) wire_copy<
+          pint<> N
+          >(
+            bool<> !GND
+            bool<> !Vdd
+            e1of2<> in
+            e1of2<> o[0..N-1]
+          )
+          In definition "wire_copy", we have: {
+          Parameters:
+            N = pint<> foo::wire_copy::N
+          Instances:
+            !GND = bool<> foo::wire_copy::!GND
+            !Vdd = bool<> foo::wire_copy::!Vdd
+            in = e1of2<> foo::wire_copy::in
+            o = e1of2<> foo::wire_copy::o^1
+          unroll sequence: 
+            ports: (
+              bool<> !GND
+              bool<> !Vdd
+              e1of2<> in
+              e1of2<> o[0..N-1]
+            )
+          }
+
+    }
+  Definitions:
+    e1of = process-definition (defined) e1of<
+      pint<> N
+      >(
+        bool<> !GND
+        bool<> !Vdd
+        bool<> d[0..N-1]
+        bool<> e
+      )
+      In definition "e1of", we have: {
+      Parameters:
+        N = pint<> e1of::N
+      Instances:
+        !GND = bool<> e1of::!GND
+        !Vdd = bool<> e1of::!Vdd
+        d = bool<> e1of::d^1
+        e = bool<> e1of::e
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<> d[0..N-1]
+          bool<> e
+        )
+      }
+
+  Typedefs:
+    e1of2 = process-definition-alias: e1of2
+      = e1of<2>
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  Created state:
+  bool instance pool:
+  1	!GND
+  2	!Vdd
+}

@@ -1,5 +1,5 @@
 # "test/parser/namespace/Makefile.am"
-#	$Id: Makefile.am,v 1.17 2009/04/20 20:35:30 fang Exp $
+#	$Id: Makefile.am,v 1.18 2009/10/20 22:01:07 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -9,7 +9,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	021 023 024 026 028 \
 	030 031 032 034 035 036 \
 	045 046 047 \
-	067 \
+	067 068 \
 	050-act 051-act 052-act 053-act 054-act \
 	055-act 056-act 057-act 058-act 059-act \
 	act-002 act-003 act-004
@@ -21,7 +21,7 @@ HACKT_PARSE_TEST_PASSES = \
 	020 022 025 027 029 \
 	033 037 038 039 \
 	050 051 052 053 054 055 056 057 058 059 \
-	060 061 062 063 065 \
+	060 061 062 063 065 069 \
 	act-001
 # pending cflat clarifications: 040 041 042 043 044
 

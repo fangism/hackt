@@ -1,0 +1,2 @@
+Error: definition `e1of' is not exported from its home namespace.
+typedef_alias: bad definition reference!  ERROR!  [11:9..12]

@@ -1,0 +1,19 @@
+// "023.hac"
+// copy-modified from "021.hac"
+// rejected because original template definition is not exported
+
+// export
+template <pint N>
+defproc e1of (bool d[N], e) { }
+
+// has no effect
+export
+typedef e1of<2> e1of2;
+
+namespace foo {
+
+template <pint N>
+defproc wire_copy(e1of2 in, o[N]) { }
+
+}
+

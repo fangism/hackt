@@ -1,0 +1,25 @@
+// "069.hac"
+// copy-modified from "068.hac"
+// this passes, using absolute namespace scope
+
+namespace std {
+namespace logic {
+
+export
+template <pint N, W>
+defproc celem(bool in[N], o) { }
+
+}       // end namespace logic
+}       // end namespace std
+
+namespace foo {
+
+export
+template <pint N>
+defproc wire_copy(bool x) {
+::std::logic::celem<N, 10> comp;
+}
+
+}
+
+

@@ -1,0 +1,3 @@
+Warning: 'export' has no effect on typedefs; the canonical definition is respected.
+Error: definition `e1of2' is not exported from its home namespace.
+concrete_type_ref: bad definition reference "e1of2"!  ERROR! [16:19..23]
