@@ -1,6 +1,6 @@
 # "Make.test-vpi"
 #	vi: ft=automake
-#	$Id: Make.test-vpi,v 1.9 2009/08/28 20:45:40 fang Exp $
+#	$Id: Make.test-vpi,v 1.10 2009/10/21 00:04:39 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -104,17 +104,19 @@ endif
 
 # setup run-time link path for build testing
 VPI_TEST_ENV = \
-	$(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR)
+	$(LIBTOOL_EXEC) -dlopen $(VPI_LIB_PATH)/vpihacprsim.la
+#	$(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR)
 
 # installcheck environment
 VPI_INSTALLCHECK_ENV = \
 	$(LTDL_SHLIBPATH_VAR)=$(INSTALLCHECK_VPI_LIB_PATH)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR)
+#	$(LIBTOOL_EXEC) -dlopen $(INSTALLCHECK_VPI_LIB_PATH)/vpihacprsim.la
 
 # SHOW_VPI_TEST_ENV = $(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$"$(LTDL_SHLIBPATH_VAR)"
 
 .vx.vx-out:
 if HAVE_VPI
-	$(VPI_TEST_ENV) ./$< > $@ 2>&1
+	-$(VPI_TEST_ENV) ./$< > $@ 2>&1
 else
 	@$(ECHO) "VCS/VPI was not explicitly configured, so skipping." > $@
 endif

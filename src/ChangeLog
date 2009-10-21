@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-10-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-40:
+	  vpi-hacprsim.cc: now nicely abort by calling vpi_control(vpiFinish)
+		instead of throwing an uncaught exception.
+		This allows the host simulator to perform cleanups
+		such as closing files and finishing traces.  
+	  Actually added a test case for this.
+
+
 2009-10-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-39:

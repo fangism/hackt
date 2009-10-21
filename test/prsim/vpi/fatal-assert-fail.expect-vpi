@@ -1,0 +1,16 @@
+$start of simulation 
+prsim:	0	in0 : 0
+at time   0.000, observed in 0
+prsim:	10	out0 : 1	[by in0:=0]
+prsim:	10	in1 : 1
+prsim:	20	out1 : 0	[by in1:=1]
+prsim:	20	in2 : 0
+prsim:	30	out2 : 1	[by in2:=0]
+prsim:	30	in3 : 1
+prsim:	40	out3 : 0	[by in3:=1]
+prsim:	40	in4 : 0
+prsim:	50	out4 : 1	[by in4:=0]
+at time   0.050, observed out = 1
+assert failed: expecting node `out4' at X, but got 1.
+Terminating simulation early due to hacprsim fatal error.
+$finish at simulation time (hacprsim) 50

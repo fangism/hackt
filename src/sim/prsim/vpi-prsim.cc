@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.18 2009/07/13 23:28:21 fang Exp $
+	$Id: vpi-prsim.cc,v 1.19 2009/10/21 00:04:38 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -65,6 +65,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #else
 #define	SHOW_VCS_TIME(x)
 #endif
+
+/**
+	Define to 1 to call $finish instead of throwing an uncaught exception.
+ */
+#define	NICE_FINISH		1
 
 //=============================================================================
 namespace HAC {
@@ -491,6 +496,18 @@ reregister_next_callback(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NICE_FINISH
+static
+PLI_INT32
+_vpi_finish(void) {
+	// print this finish timestamp out of convention
+	cerr << "$finish at simulation time (hacprsim) " <<
+		prsim_state->time() << endl;
+	return vpi_control(vpiFinish, 1);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Runs prsim until a max time or first reached breakpoint, 
 	and reschedules callback when done (if there are events remaining).
@@ -509,12 +526,22 @@ try {
 	exex.inspect(*prsim_state, cerr);	// ignore return code?
 	// no need to translate error_policy_to_status
 	__destroy_globals();
+#if NICE_FINISH
+	cerr << "Terminating simulation early due to hacprsim exception."
+		<< endl;
+	_vpi_finish();
+#else
 	THROW_EXIT;	// re-throw
+#endif
 } catch (...) {
 	// catch all remaining exceptions here, destroy globals and rethrow
-	cerr << "hacprsim (VPI) encountered error, terminating..." << endl;
 	__destroy_globals();
+	cerr << "hacprsim (VPI) encountered error, terminating..." << endl;
+#if NICE_FINISH
+	_vpi_finish();
+#else
 	throw;		// re-throw
+#endif
 }
 #if 0
 	if (!prsim_state->pending_events()) {
@@ -637,6 +664,7 @@ PLI_INT32 prsim_callback (s_cb_data *p)
 #else
   cout << "signal " << prsim_state->get_node_canonical_name(n) <<
 	" changed @ time " << p->time->low << ", val = " <<
+	// what about p->time->high?
 	p->value->value.scalar << endl;
 #endif
 #endif
@@ -1004,7 +1032,13 @@ require_prsim_state(__FUNCTION__);
 	prsim_sync(NULL);
   switch (CommandRegistry::interpret_line (*prsim_state, arg.value.str)) {
   case command_error_codes::FATAL:
+#if NICE_FINISH
+	cerr << "Terminating simulation early due to hacprsim fatal error."
+		<< endl;
+	_vpi_finish();
+#else
 	THROW_EXIT;	// abort
+#endif
   case command_error_codes::NORMAL:
   case command_error_codes::END:
 	// conservatively, any command might alter event queue
