@@ -1,5 +1,5 @@
 // "standard.v"
-//	$Id: standard.v,v 1.4 2009/07/13 23:28:23 fang Exp $
+//	$Id: standard.v,v 1.5 2009/10/22 22:30:36 fang Exp $
 // original verilog definitions (e.g. from vendor's standard cell library)
 
 // two-input and-gate
@@ -60,6 +60,16 @@ begin
 	G <= C;
 	H <= D;
 end
+endmodule
+`endcelldefine
+
+`celldefine
+// testing ignore extra wire keyword
+module wire_port_test(
+input wire  in_a,
+input wire  [3:0] in_b,
+output wire  [3:0]  out_x);
+
 endmodule
 `endcelldefine
 

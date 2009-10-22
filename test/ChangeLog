@@ -1,6 +1,14 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.97 2009/10/21 00:04:38 fang Exp $
+#	$Id: ChangeLog,v 1.98 2009/10/22 22:30:33 fang Exp $
 # ChangeLog for test directory.
+
+2009-10-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-41:
+	  Make.test-vpi: added verilog-wrap test for wrapper generator.
+		added verilog include dependency support by scanning
+		the compile log of VCS compiles.
+
 
 2009-10-20	David Fang		<fangism@users.sourceforge.net>
 

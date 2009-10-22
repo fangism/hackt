@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.37 2009/09/16 20:00:00 fang Exp $
+#	$Id: Makefile.am,v 1.38 2009/10/22 22:30:27 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -58,6 +58,7 @@ dist_bin_SCRIPTS = \
 	scripts/prsimlog_to_evcd.sh \
 	scripts/spice-wrap.awk \
 	verilog/vpp.sh \
+	verilog/vcs_scandepend.sh \
 	verilog/wrap_verilog_modules_to_hacprsim.awk
 
 EXTRA_DIST += README \

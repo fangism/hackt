@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2009-10-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-41:
+	  configure.ac: generate src/scripts/hackt-env
+
+
 2009-10-02	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-32:

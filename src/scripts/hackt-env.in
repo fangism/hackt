@@ -1,0 +1,16 @@
+#!/bin/sh
+# "hackt-env.in"
+#	$Id: hackt-env.in,v 1.1 2009/10/22 22:30:33 fang Exp $
+#	vi: ft=sh
+# Prefix commands with this wrapper to setup environment variables
+# for individual commands.
+# Use this for only post-installed programs, not for pre-installations.
+# This is only needed by programs that load scripts/plug-ins.
+# This file script does not need a csh counterpart.
+# This script allows the user to elect not to source the init_hackt.sh
+# startup scripts that permanently modify the environment.
+
+# use the init_hackt.sh script that is in the current PATH
+. init_hackt.sh
+exec "$@"
+

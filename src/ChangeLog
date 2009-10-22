@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-10-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-41:
+	  No source revision.
+	  Added script hackt-env for single-command environment modification.
+	  Enhanced verilog tests in testsuite.
+	  see also lib/ChangeLog, test/ChangeLog
+
+
 2009-10-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-40:

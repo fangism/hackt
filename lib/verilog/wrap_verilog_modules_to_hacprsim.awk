@@ -131,6 +131,9 @@ function set_port_dir(tok, dir,
 	in_port) {
 if (tok == "[") {
 	parse_push("expect-range-first");
+} else if (tok == "wire") {
+	# just ignore
+	return;
 } else {
 	in_port = parse_stack[parse_stack_ptr -1] == "ports-list";
 	if (tok != ";") {

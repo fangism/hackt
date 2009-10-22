@@ -1,6 +1,6 @@
 # "Make.test-vpi"
 #	vi: ft=automake
-#	$Id: Make.test-vpi,v 1.10 2009/10/21 00:04:39 fang Exp $
+#	$Id: Make.test-vpi,v 1.11 2009/10/22 22:30:34 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -11,26 +11,30 @@
 #	declare SUFFIXES and relies on implicit rules (fails with make -r)
 
 HACKT_VPI_SUFFIXES = .v .vx .vxi .vx-out .vxi-out .vx-out-filter .vx-diff \
-	.v-wrap
+	.v-wrap .v-wrap-diff
 
-HACKT_VPI_TEST_SUFFIXES = .vpitest 
+HACKT_VPI_TEST_SUFFIXES = .vpitest .vwraptest
 SUFFIXES += $(HACKT_VPI_SUFFIXES) $(HACKT_VPI_TEST_SUFFIXES)
 BOGUS_SUFFIX_TARGETS += $(HACKT_VPI_SUFFIXES)
 
 HACKT_VPI_CLEAN_IGNORE_PATTERNS = \
 	"*.vx" \
+	"*.vx-compile-log" \
 	"*.v-wrap" \
+	"*.v-wrap-diff" \
 	"*.vxi" \
 	"*.vx-out" \
 	"*.vxi-out" \
 	"*.vx-out-filter" \
 	"*.vx-diff" \
 	"*.vpitest" \
+	"*.vwraptest" \
 	"*.csrc" \
 	"*.daidir"
 
 VPI_PRSIM_MODULE = $(top_builddir)/src/vpihacprsim.la
 AUTO_WRAP_VERILOG_AWK = $(AWK) -f $(top_srcdir)/lib/verilog/wrap_verilog_modules_to_hacprsim.awk
+VCS_SCANDEPEND = $(top_srcdir)/lib/verilog/vcs_scandepend.sh
 
 AUTO_IGNORE += $(HACKT_VPI_CLEAN_IGNORE_PATTERNS)
 AUTO_IGNORE += .vcsmx_rebuild
@@ -51,9 +55,10 @@ INSTALLCHECK_VPI_LIB_PATH = $(pkglibdir)
 COMMON_VCS_FLAGS = +cli+3 -Mupdate +v2k +vcsace+diff+ok
 # wait for license if none available, damn commercial tools
 COMMON_VCS_FLAGS += +vcs+lic+wait
+# log compiles, and scan for dependencies
+COMMON_VCS_FLAGS += -l $@-compile-log
 # requires env. LM_LICENSE_FILE
 if ABI_ILP64
-# COMMON_VCS_FLAGS += -comp64
 COMMON_VCS_FLAGS += -full64
 endif
 
@@ -84,14 +89,80 @@ if HAVE_VPI
 	+vflags=`cat $< | $(EXTRACT_VCS_FLAGS_PIPE)` && \
 	$(VCS_ENV) $(VCS) $(AM_VCS_FLAGS) $(AM_VCS_VPI_FLAGS) $(AM_PLI_FLAGS) \
 		$$vflags -o $@ $< && \
+	{ $(PRINTF) "$@ : " ; \
+		$(VCS_SCANDEPEND) < $@-compile-log ;} > $@-depend && \
 	$(TOUCH) $@
 else
 	@$(ECHO) "VPI not explicitly enabled during configure."
 endif
 
+verilog.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+        $(ECHO) "$(ALL_VERILOG_TARGETS)" | $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+                $(AWK) '/.+/ {print "-include " $$1 "-depend"; }' > $@ ; \
+        $(TOUCH) $@
+
+-include verilog.autodepend
+AUTO_DEPENDS += verilog.autodepend
+distclean-depend-local: distclean-depend-verilog
+distclean-depend-verilog:
+	-$(RM_PATTERN) "*.vx-depend"
+
+.PHONY: distclean-depend-verilog
+
+EXTRACT_VERILOG_WRAP_FLAGS_PIPE = { $(GREP) "@verilog-wrap-flags@" | \
+        $(SED) 's/^.*@verilog-wrap-flags@[ ]*//g' ;}
+
 .v.v-wrap:
-	{ $(ECHO) "\`include \"$<\"" ; $(ECHO) "" ; \
-		$(AUTO_WRAP_VERILOG_AWK) $< ;} > $@
+	@vwflags=`$(EXTRACT_VERILOG_WRAP_FLAGS_PIPE) < $<` && \
+	$(SED_srcdir_strip_setup) && \
+	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` && \
+	cmd="$(AUTO_WRAP_VERILOG_AWK) $$vwflags $<" && \
+	$(ECHO) "$$cmd > $@" && \
+	{ $(ECHO) "\`include \"$$src\"" ; $(ECHO) "" ; \
+		$$cmd ;} > $@
+
+.v-wrap.v-wrap-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.v-wrap-diff$$/.v-wrap-expect/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+# not bothering with .v-wrap diff dependencies...
+.v-wrap-diff.vwraptest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+vwraptest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(RM) $@ ; \
+	{ list='$(HACKT_VWRAP_TEST_SCRIPTS_PASSES)' ; \
+	exts='v-wrap' ; \
+	test -z "$$list" || \
+	for d in $$list ; do \
+	  src=$(srcdir)/$$d.v ; \
+	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
+	  for e in $$exts ; do \
+	    target=$$d.$$e ; \
+	    $(PRINTF) "$$target " ; \
+	  done ; \
+	  $(ECHO) ": $$deps" ; \
+	done ; \
+	$(ECHO) "$(HACKT_VWRAP_TEST_SCRIPTS_PASSES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".v-wrap-diff: $$(srcdir)/" $$1 ".v-wrap-expect"; }'; \
+	} > $@ ; \
+	$(TOUCH) $@
+
+-include vwraptest.autodepend
+
+AUTO_DEPENDS += vwraptest.autodepend
 
 # post-install tests!
 .v.vxi:
@@ -173,7 +244,7 @@ vpitest.autodepend: Makefile
 	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
-	    $(ECHO) -n "$$target " ; \
+	    $(PRINTF) "$$target " ; \
 	  done ; \
 	  $(ECHO) ": $$obj $$deps" ; \
 	done ; \
@@ -187,7 +258,7 @@ vpitest.autodepend: Makefile
 
 AUTO_DEPENDS += vpitest.autodepend
 
-BOGUS_TESTS += .vpitest
+BOGUS_TESTS += .vpitest .vwraptest
 
 CHECK_SUMMARIES += vpidiffs
 
@@ -201,16 +272,20 @@ HACKT_VPI_TEST_SCRIPTS_BASES = \
 	$(HACKT_VPI_TEST_SCRIPTS_FAILURES)
 
 srcdir_EXTRA_DIST += \
+	$(HACKT_VWRAP_TEST_SCRIPTS_PASSES:=.v) \
 	$(HACKT_VPI_TEST_SCRIPTS_BASES:=.v) \
 	$(HACKT_VPI_TEST_SCRIPTS_BASES:=.expect-vpi)
 
+
 if CHECK_TESTS
-TESTS += $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vpitest)
+TESTS += $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vpitest) \
+	$(HACKT_VWRAP_TEST_SCRIPTS_PASSES:=.vwraptest)
 endif
 
 VPI_SIM_EXECUTABLES = $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx)
+ALL_VERILOG_TARGETS = $(VPI_SIM_EXECUTABLES)
 if HAVE_VPI
-# exeuctables depend on the plugin module
+# executables depend on the plugin module
 $(VPI_SIM_EXECUTABLES): $(VPI_PRSIM_MODULE)
 endif
 
@@ -222,7 +297,9 @@ VPI_TARGETS += \
 	$(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx-diff)
 endif
 
-build-check-local: $(VPI_TARGETS)
+VWRAP_TARGETS = $(HACKT_VWRAP_TEST_SCRIPTS_PASSES:=.v-wrap-diff)
+
+build-check-local: $(VPI_TARGETS) $(VWRAP_TARGETS)
 
 echo-vpi-tests: force
 	@$(ECHO) $(HACKT_VPI_TEST_SCRIPTS_BASES)

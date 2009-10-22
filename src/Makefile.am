@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.223 2009/10/16 21:46:19 fang Exp $
+#	$Id: Makefile.am,v 1.224 2009/10/22 22:30:31 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -54,7 +54,7 @@ bin_PROGRAMS = hackt haco haccreate hacalloc \
 	hacobjdump hflat hacpp hacprsim hacchpsim hacknet
 
 bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh \
-	hacinstdump
+	scripts/hackt-env hacinstdump
 if HAVE_LIBGUILE
 bin_SCRIPTS += hacguile hacchpsimguile
 endif
@@ -70,6 +70,9 @@ scripts/init_hackt.sh: scripts/init_hackt.sh.in $(top_builddir)/config.status
 	$(RECONFIGURE)
 
 scripts/init_hackt.csh: scripts/init_hackt.csh.in $(top_builddir)/config.status
+	$(RECONFIGURE)
+
+scripts/hackt-env: scripts/hackt-env.in $(top_builddir)/config.status
 	$(RECONFIGURE)
 
 noinst_PROGRAMS = getopt_test lexyacc_test $(UTILPROGRAMS) $(FUNPROGRAMS)
@@ -1753,6 +1756,7 @@ EXTRA_DIST += local.cvsignore \
 	scripts/deps_to_dot.awk.in \
 	scripts/init_hackt.sh.in \
 	scripts/init_hackt.csh.in \
+	scripts/hackt-env.in \
 	scripts/toggle_stacktrace.sh \
 	AST/README \
 	Object/README \
