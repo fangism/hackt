@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.34 2009/10/27 18:21:51 fang Exp $
+#	$Id: Makefile.am,v 1.35 2009/10/27 20:14:28 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -8,7 +8,7 @@ include $(top_srcdir)/installdirs.mk
 
 SUBDIRS = testlib . router bingcd
 
-HACPP_FLAGS += -I$(srcdir)/testlib
+HACPP_FLAGS += -I$(srcdir) -I$(srcdir)/testlib
 HACO_FLAGS += $(HACPP_FLAGS) -f case-collision=ignore
 
 # list tests here only if they are also intended for create/alloc tests
