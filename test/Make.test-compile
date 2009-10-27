@@ -1,6 +1,6 @@
 # "Make.test-compile"
 #	vi: ft=automake
-#	$Id: Make.test-compile,v 1.22 2008/07/30 05:26:55 fang Exp $
+#	$Id: Make.test-compile,v 1.23 2009/10/27 18:21:50 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -81,8 +81,8 @@ HACKT_COMPILE_TEST_STDIN_SCRIPT = \
 	@$(HACKT_COMPILE_TEST_DEFAULT_SCRIPT)
 
 # -MD generates dependencies as a side-effect of preprocessing
-# HACKT_CPP_FLAGS = $(HACO_FLAGS) -MP -MD -MF $@depend -MT $@
-HACKT_CPP_FLAGS = $(HACO_FLAGS)
+# HACKT_CPP_FLAGS = $(HACPP_FLAGS) -MP -MD -MF $@depend -MT $@
+HACKT_CPP_FLAGS = $(HACPP_FLAGS)
 HACKT_CPP_MKDEP_FLAGS = -M -MP
 # NOTE: workaround Apple's cpp bugs: -MF and -MT cause cpp to hang
 # NOTE: behavior with -MD is different between apple gcc-3.3 and gcc-4.0!
@@ -150,7 +150,7 @@ endif
 
 # or just filter out all text before the persistence header
 .outdump.outdump-filter:
-	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) | $(GREP) -v "^WARNING" > $@ ; \
+	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) | $(GREP) -v -i "^WARNING" > $@ ; \
 	$(ECHO_FILTERED)
 
 .indump.indump-filter:

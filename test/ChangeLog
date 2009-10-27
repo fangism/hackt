@@ -1,6 +1,14 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.98 2009/10/22 22:30:33 fang Exp $
+#	$Id: ChangeLog,v 1.99 2009/10/27 18:21:50 fang Exp $
 # ChangeLog for test directory.
+
+2009-10-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-42:
+	  Make.test-head,compile: separated out Makefile variable for
+		HACPP_FLAGS for preprocessor-only options, 
+		while keeping HACO_FLAGS for compiler options.
+
 
 2009-10-22	David Fang		<fangism@users.sourceforge.net>
 

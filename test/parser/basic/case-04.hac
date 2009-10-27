@@ -1,0 +1,8 @@
+// "case-04.hac"
+
+bool Bar;
+bool baR;
+defproc inv() { }
+inv foo;
+pint FOO;
+

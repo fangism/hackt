@@ -1,5 +1,6 @@
 // "016.hac"
 // copy-modified from "015.hac"
+// @haco-flags@ -f case-collision=ignore
 // should pass
 // diagonal style aliases, ending with GCD unique bools.
 

@@ -1,0 +1,3 @@
+Warning: case-insensitive collision between symbols `baR' and `Bar'.
+Warning: case-insensitive collision between symbols `foo' and `FOO'.
+Warnings found in top-level namespace [5:14--7:8]

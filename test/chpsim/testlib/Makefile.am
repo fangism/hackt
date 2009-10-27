@@ -1,8 +1,10 @@
 # "test/chpsim/testlib/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2008/06/03 18:47:25 fang Exp $
+#	$Id: Makefile.am,v 1.14 2009/10/27 18:21:52 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
+
+HACO_FLAGS += -f case-collision=ignore
 
 HACKT_PARSE_TEST_PASSES = \
 	bool-and bool-or bool-xor \

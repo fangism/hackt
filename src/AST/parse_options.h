@@ -1,12 +1,13 @@
 /**
 	\file "AST/parse_options.h"
-	$Id: parse_options.h,v 1.2 2007/10/08 01:21:03 fang Exp $
+	$Id: parse_options.h,v 1.3 2009/10/27 18:21:44 fang Exp $
  */
 
 #ifndef	__HAC_AST_PARSE_OPTIONS_H__
 #define	__HAC_AST_PARSE_OPTIONS_H__
 
 #include "Object/devel_switches.h"
+#include "common/status.h"
 
 namespace HAC {
 namespace parser {
@@ -34,6 +35,12 @@ struct parse_options {
 		Default true  (ACT-mode: false).
 	 */
 	bool		array_internal_nodes;
+	/**
+		Whether or not to check for case collisions in scopes, 
+		and whether or not to signal an error.
+		Default: warn
+	 */
+	error_policy	case_collision_policy;
 
 	parse_options() : 
 #if REQUIRE_DEFINITION_EXPORT
@@ -42,7 +49,8 @@ struct parse_options {
 		export_all(true),
 #endif
 		namespace_instances(true), 
-		array_internal_nodes(true)
+		array_internal_nodes(true),
+		case_collision_policy(OPTION_WARN)
 		{ }
 
 };	// end class parse_options

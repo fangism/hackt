@@ -50,3 +50,5 @@ wchb_e1of2 b(L, R);
 wchb_e1of2 B;
 b = B;					// redundant alias
 
+// @haco-flags@ -f case-collision=ignore
+

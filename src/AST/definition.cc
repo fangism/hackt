@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.12 2009/10/02 01:56:29 fang Exp $
+	$Id: definition.cc,v 1.13 2009/10/27 18:21:42 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -305,6 +305,20 @@ user_data_type_def::check_build(context& c) const {
 	if (!getb->check_datatype_CHP(c, false).good) {
 		THROW_EXIT;
 	}
+	const error_policy p(c.parse_opts.case_collision_policy);
+	// check for case collisions at the end instead of on-the-fly
+if (p != OPTION_IGNORE) {
+	const bool e =
+		c.get_current_named_scope()->check_case_collisions(cerr);
+	if (e) {
+		cerr << "Warnings found in datatype definition `" <<
+			*id << "\' in " << where(*body) << endl;
+	if (p == OPTION_ERROR) {
+		cerr << "Promoting warning to error." << endl;
+		THROW_EXIT;
+	}
+	}
+}
 	return c.top_namespace();
 }
 
@@ -628,6 +642,20 @@ user_chan_type_def::check_build(context& c) const {
 	if (!recvb->check_channel_CHP(c, false).good) {
 		THROW_EXIT;
 	}
+	const error_policy p(c.parse_opts.case_collision_policy);
+	// check for case collisions at the end instead of on-the-fly
+if (p != OPTION_IGNORE) {
+	const bool e =
+		c.get_current_named_scope()->check_case_collisions(cerr);
+	if (e) {
+		cerr << "Warnings found in channel definition `" <<
+			*id << "\' in " << where(*body) << endl;
+	if (p == OPTION_ERROR) {
+		cerr << "Promoting warning to error." << endl;
+		THROW_EXIT;
+	}
+	}
+}
 	// nothing better to do
 	return c.top_namespace();
 }
@@ -832,7 +860,20 @@ process_def::check_build(context& c) const {
 			->get_spec_directives_set()));
 	body->check_build(c);
 	// useless return value, would've exited upon error already
-
+	const error_policy p(c.parse_opts.case_collision_policy);
+	// check for case collisions at the end instead of on-the-fly
+if (p != OPTION_IGNORE) {
+	const bool e =
+		c.get_current_named_scope()->check_case_collisions(cerr);
+	if (e) {
+		cerr << "Warnings found in process definition `" <<
+			*id << "\' in " << where(*body) << endl;
+	if (p == OPTION_ERROR) {
+		cerr << "Promoting warning to error." << endl;
+		THROW_EXIT;
+	}
+	}
+}
 	// nothing better to do
 	return c.top_namespace();
 }

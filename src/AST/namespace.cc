@@ -1,7 +1,7 @@
 /**
 	\file "AST/namespace.cc"
 	Class method definitions for namespace and other root item classes.
-	$Id: namespace.cc,v 1.5 2007/03/16 07:07:16 fang Exp $
+	$Id: namespace.cc,v 1.6 2009/10/27 18:21:43 fang Exp $
  */
 
 #ifndef	__HAC_AST_NAMESPACE_CC__
@@ -65,6 +65,27 @@ root_body::root_body(const root_item* r) : parent(r) { }
 
 root_body::~root_body() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const object>
+root_body::check_build(context& c) const {
+	const never_ptr<const object> ret(parent::check_build(c));
+	const error_policy p(c.parse_opts.case_collision_policy);
+	// check for case collisions at the end instead of on-the-fly
+if (p != OPTION_IGNORE) {
+	const bool e =
+		c.get_current_named_scope()->check_case_collisions(cerr);
+	if (e) {
+		cerr << "Warnings found in top-level namespace "
+			<< where(*this) << endl;
+	if (p == OPTION_ERROR) {
+		cerr << "Promoting warning to error." << endl;
+		THROW_EXIT;
+	}
+	}
+}
+	return ret;
+}
+
 //=============================================================================
 // class namespace_body method definitions
 
@@ -124,6 +145,20 @@ namespace_body::check_build(context& c) const {
 	// if there was error, would've exited...
 	if (body)			// may be NULL, which means empty
 		body->check_build(c);
+	const error_policy p(c.parse_opts.case_collision_policy);
+	// check for case collisions at the end instead of on-the-fly
+if (p != OPTION_IGNORE) {
+	const bool e =
+		c.get_current_named_scope()->check_case_collisions(cerr);
+	if (e) {
+		cerr << "Warnings found in namespace `" <<
+			*name << "\' in " << where(*body) << endl;
+	if (p == OPTION_ERROR) {
+		cerr << "Promoting warning to error." << endl;
+		THROW_EXIT;
+	}
+	}
+}
 }
 	// if no errors, return pointer to the namespace just processed
 	return c.top_namespace();

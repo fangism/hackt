@@ -1,6 +1,6 @@
 /***
 	\file "mem-01.hac"
-	$Id: mem-01.hac,v 1.8 2006/11/27 23:19:50 fang Exp $
+	$Id: mem-01.hac,v 1.9 2009/10/27 18:22:08 fang Exp $
 REMARKS:
 For large arrays, unrolling dies running out of memory, need to investigate...
 Known to choke on 40 x 40
@@ -9,8 +9,9 @@ DIAGNOSIS:
 	Too much copied instance collection information.
 
 Priority: HIGH
-
 Solution (proposed): use instance placeholders, and refactor out base info.
+Status: fixed
+@haco-flags@ -f case-collision=ignore
 ***/
 
 defproc globals (

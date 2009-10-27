@@ -1,13 +1,14 @@
 /**
 	\file "net/common.h"
 	For useful declarations and typedefs.  
-	$Id: common.h,v 1.6 2009/10/15 17:51:55 fang Exp $
+	$Id: common.h,v 1.7 2009/10/27 18:21:49 fang Exp $
  */
 
 #ifndef	__HAC_NET_COMMON_H__
 #define	__HAC_NET_COMMON_H__
 
 #include <iosfwd>
+#include "common/status.h"
 
 /**
 	If set to 1, cache logical nodes' names in the node::name field, 
@@ -28,18 +29,6 @@ using std::ostream;
 //=============================================================================
 typedef	size_t		index_type;
 typedef	double		real_type;
-
-/**
-	Used for both setting error-handling policy and returning error value.
- */
-enum error_status {
-	STATUS_NORMAL = 0,
-	OPTION_IGNORE = STATUS_NORMAL,
-	STATUS_WARNING = 1,
-	OPTION_WARN = STATUS_WARNING,
-	STATUS_ERROR = 2,
-	OPTION_ERROR = STATUS_ERROR
-};
 
 //=============================================================================
 

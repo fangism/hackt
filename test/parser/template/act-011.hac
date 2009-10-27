@@ -1,5 +1,6 @@
 // "act-011.hac"
 // stolen from "act/tests/types/9.act"
+// @haco-flags@ -f case-collision=ignore
 
 pint X = 3;
 

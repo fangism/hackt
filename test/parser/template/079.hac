@@ -3,6 +3,7 @@
 // should pass
 // fixed bug where definition-local parameter collections were not 
 // correctly looking up collection dimensions.  (20060212)
+// @haco-flags@ -f case-collision=ignore
 
 defproc globals (bool Vdd, GND, vdd, gnd, _pReset, _sReset) {
 	vdd=Vdd;

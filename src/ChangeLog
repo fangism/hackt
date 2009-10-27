@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-10-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-42:
+	  Added case-collision checking into front-end which issues a
+		warning by default, and can be configured to ignore or error
+		out with -f case-collision=[ignore|warn|error].
+	  Added new test cases, and updated old ones, added ignore flag
+		where we don't care.  
+
+
 2009-10-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-41:

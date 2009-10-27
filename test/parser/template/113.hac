@@ -9,3 +9,4 @@ defproc foo(chan?() Cin; chan!() Cout; chan!(int) R) { }
 foo A;
 A<2>;
 
+// @haco-flags@ -f case-collision=ignore

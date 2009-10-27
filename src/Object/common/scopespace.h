@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.23 2009/06/05 16:28:06 fang Exp $
+	$Id: scopespace.h,v 1.24 2009/10/27 18:21:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -318,6 +318,9 @@ virtual	bool
 	exclude_object_val(const used_id_map_type::value_type i) const;
 
 // helper functions for object IO
+	bool
+	check_case_collisions(ostream&) const;
+
 private:
 	// for used_id_map
 	void

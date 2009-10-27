@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.21 2009/10/16 20:38:46 fang Exp $
+	$Id: compile.cc,v 1.22 2009/10/27 18:21:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -231,6 +231,39 @@ __compile_om_no_array_internal_nodes("no-array-internal-nodes",
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 good_bool
+__compile_case_collision_ignore(compile::options& o) {
+	o.parse_opts.case_collision_policy = OPTION_IGNORE;
+	return good_bool(true);
+}
+
+static
+good_bool
+__compile_case_collision_warn(compile::options& o) {
+	o.parse_opts.case_collision_policy = OPTION_WARN;
+	return good_bool(true);
+}
+
+static
+good_bool
+__compile_case_collision_error(compile::options& o) {
+	o.parse_opts.case_collision_policy = OPTION_ERROR;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_case_collision_ignore("case-collision=ignore", 
+	&__compile_case_collision_ignore, 
+	"ignore case-insensitive collisions"),
+__compile_om_case_collision_warn("case-collision=warn", 
+	&__compile_case_collision_warn, 
+	"warn about case-insensitive collisions (default)"),
+__compile_om_case_collision_error("case-collision=error", 
+	&__compile_case_collision_error, 
+	"reject case-insensitive collisions");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+good_bool
 __compile_ACT(compile::options& o) {
 	__compile_export_strict(o);
 	__compile_no_namespace_instances(o);
@@ -374,6 +407,13 @@ general compile flags (repeatable) where @var{optname} is one of the following:
         suppress feedback of @option{-I} include paths
 @item @option{no-dump-object-header}:
         suppress persistent object header dump
+@item @option{case-collision=[ignore|warn|error]}:
+	Set the error handling policy for case-insensitive collisions.
+	@itemize
+	@item @option{ignore} skips the check altogether
+	@item @option{warn} issues a warning but continues
+	@item @option{error} rejects and aborts compiling
+	@end itemize
 @end itemize
 
 Dialect flags (for ACT-compatibility):

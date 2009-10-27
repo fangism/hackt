@@ -1,7 +1,7 @@
 /**
 	\file "AST/root.h"
 	Base set of classes for the HAC parser.  
-	$Id: root.h,v 1.2 2005/12/13 04:15:12 fang Exp $
+	$Id: root.h,v 1.3 2009/10/27 18:21:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_root.h,v 1.8.48.1 2005/12/11 00:45:10 fang Exp
  */
@@ -54,6 +54,10 @@ public:
 	root_body(const root_item* r);
 
 	~root_body();
+
+	// override parent's
+	never_ptr<const object>
+	check_build(context&) const;
 };	// end class root_body
 
 //=============================================================================

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.224 2009/10/22 22:30:31 fang Exp $
+#	$Id: Makefile.am,v 1.225 2009/10/27 18:21:41 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -620,6 +620,7 @@ OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 	Object/common/frame_map.h \
 	Object/common/multikey_index.h \
 	Object/common/util_types.h \
+	common/status.h \
 	common/devel_switches.h
 
 OBJECT_CC_FILES = \

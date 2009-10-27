@@ -1,0 +1,2 @@
+Warning: case-insensitive collision between symbols `bar' and `BAR'.
+Warnings found in process definition `foo' in [3:43..45]

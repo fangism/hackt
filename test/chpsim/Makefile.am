@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.33 2009/09/28 06:56:58 fang Exp $
+#	$Id: Makefile.am,v 1.34 2009/10/27 18:21:51 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -8,7 +8,8 @@ include $(top_srcdir)/installdirs.mk
 
 SUBDIRS = testlib . router bingcd
 
-HACO_FLAGS += -I$(srcdir)/testlib
+HACPP_FLAGS += -I$(srcdir)/testlib
+HACO_FLAGS += $(HACPP_FLAGS) -f case-collision=ignore
 
 # list tests here only if they are also intended for create/alloc tests
 HACKT_PARSE_TEST_PASSES = \
@@ -535,7 +536,7 @@ chpsimlib_DATA = \
 
 # flatten source so it doesn't depend on testlib imports after installed
 lib-zcond-flat.hac: lib-zcond-test-a.hac
-	$(HACKT_FLATTEN_EXE) $(HACO_FLAGS) $< > $@
+	$(HACKT_FLATTEN_EXE) $(HACPP_FLAGS) $< > $@
 
 CLEANFILES += lib-zcond-flat.hac
 

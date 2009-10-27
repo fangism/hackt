@@ -1,11 +1,11 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.34 2009/02/01 07:25:04 fang Exp $
-# Test auto-Makefile for prsim.  
+#	$Id: Makefile.am,v 1.35 2009/10/27 18:21:53 fang Exp $
+# Test auto-Makefile for prsim library.  
 
 include $(top_srcdir)/test/Make.test-head
 
 # tests in this directory will involve the lib directory files
-HACO_FLAGS += -I$(top_srcdir)/lib
+HACO_FLAGS += -I$(top_srcdir)/lib -f case-collision=ignore
 
 # We do not want to trace prsim tests in this directory (HUGE)
 # so we override the default.

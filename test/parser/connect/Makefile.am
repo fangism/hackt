@@ -1,7 +1,9 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.36 2009/10/02 02:07:40 fang Exp $
+#	$Id: Makefile.am,v 1.37 2009/10/27 18:22:01 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
+
+HACO_FLAGS += -f case-collision=ignore
 
 HACKT_PARSE_TEST_FAILURES = \
 	002 003 004 005 008 009 \

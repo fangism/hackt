@@ -1,0 +1,5 @@
+Warning: case-insensitive collision between symbols `baR' and `Bar'.
+Warning: case-insensitive collision between symbols `bar' and `Bar'.
+Warnings found in process definition `foo' in [3:23--6:1]
+Promoting warning to error.
+From: "case-01.hac"

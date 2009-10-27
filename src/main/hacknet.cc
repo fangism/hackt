@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.5 2009/10/16 20:38:46 fang Exp $
+	$Id: hacknet.cc,v 1.6 2009/10/27 18:21:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -436,11 +436,10 @@ hacknet::usage(void) {
 "\t-H : print configuration options help and exit\n"
 "\t-I path : append search path for configuration files\n"
 "\t-t \"type\" : generate netlist using the contents of the named type,\n"
-"\t\tignoring top-level instances (quotes recommended)."
+"\t\tignoring top-level instances (quotes recommended).\n"
 "\t-T \"type\" : make subcircuit definition library for the named type,\n"
-"\t\tignoring top-level instances (quotes recommended)."
-	<< endl;
-	o << "Additional documentation is installed in:\n"
+"\t\tignoring top-level instances (quotes recommended).\n"
+	"Additional documentation is installed in:\n"
 	"\t`info hacknet' (finds " INFODIR "/hacknet.info)\n"
 	"\tPDF: " PDFDIR "/hacknet.pdf\n"
 	"\tPS: " PSDIR "/hacknet.ps\n"

@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.33 2009/06/05 16:28:05 fang Exp $
+ 	$Id: namespace.cc,v 1.34 2009/10/27 18:21:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -661,6 +661,34 @@ scopespace::exclude_population(void) const {
 	return count_if(used_id_map.begin(), used_id_map.end(), 
 		bind1st(mem_fun(&scopespace::exclude_object_val), this)
 	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if there is at least one name collision.
+ */
+bool
+scopespace::check_case_collisions(ostream& o) const {
+	// first: lower-cased name, case-preserved
+	typedef	map<string, string>	case_set_type;
+	bool ret = false;
+	case_set_type H;
+	used_id_map_type::const_iterator mi(used_id_map.begin());
+	const used_id_map_type::const_iterator me(used_id_map.end());
+	for ( ; mi!=me; ++mi) {
+		string l;
+		transform(mi->first.begin(), mi->first.end(), 
+			back_inserter(l), &tolower);
+		const case_set_type::value_type t(l, mi->first);
+		const pair<case_set_type::iterator, bool> p(H.insert(t));
+		if (!p.second) {
+			ret = true;
+		o << "Warning: case-insensitive collision between symbols `"
+			<< mi->first << "\' and `" << p.first->second
+			<< "\'." << endl;
+		}
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

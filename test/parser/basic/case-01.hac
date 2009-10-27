@@ -1,0 +1,7 @@
+// "case-01.hac"
+
+defproc foo(bool bar) {
+bool Bar;
+bool baR;
+}
+

@@ -1,0 +1,5 @@
+// "case-02.hac"
+// @haco-flags@ -f case-collision=ignore
+
+import "case-01.hac";
+

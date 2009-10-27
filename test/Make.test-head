@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.36 2007/08/19 04:00:41 fang Exp $
+#	$Id: Make.test-head,v 1.37 2009/10/27 18:21:51 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -28,7 +28,10 @@ $(BOGUS_SUFFIX_TARGETS):
 CLEANFILES += $(BOGUS_SUFFIX_TARGETS)
 
 # for compile include paths
+HACPP_FLAGS =
 HACO_FLAGS =
+# usually:
+# HACO_FLAGS += $(HACPP_FLAGS)
 
 # the {in,out,create,alloc}dump suffixes are just for testing convenience.  
 # They follow the procedures in the test scripts.  

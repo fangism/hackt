@@ -8,3 +8,4 @@ defproc foo(chan?() Cin; chan!() Cout; chan!(int) R) { }
 // error: wrong number of relaxed parameters
 foo<><2,7> A;
 
+// @haco-flags@ -f case-collision=ignore

@@ -1,5 +1,6 @@
 // "018.hac"
 // copy-modified from "017.hac"
+// @haco-flags@ -f case-collision=ignore
 // should pass
 // checkers style aliases
 
