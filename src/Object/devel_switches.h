@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.55 2009/10/03 01:12:26 fang Exp $
+	$Id: devel_switches.h,v 1.56 2009/10/29 23:00:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -194,15 +194,8 @@
  */
 #define	USE_TOP_DATA_TYPE			1
 
-/**
-	New experimental hack to print worst-case, best-case conductances
-	of production rules, currently only available in hflat.
-	Rationale: strength checking vs. post-extraction load
-	Goal: 1?
-	Status: done, basically tested, can perm this non-invasive feature
-	Priority: high
- */
-#define	CFLAT_WITH_CONDUCTANCES			1
+// Perm'd
+// #define	CFLAT_WITH_CONDUCTANCES			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // features targeted for branch HACKT-00-01-04-main-00-83-29-supply-01

@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.18 2009/08/28 20:45:02 fang Exp $
+	$Id: cflat_options.h,v 1.19 2009/10/29 23:00:29 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -8,7 +8,6 @@
 
 #include <string>
 #include "main/compile_options.h"
-#include "Object/devel_switches.h"	// for CFLAT_PATH_CONDUCTANCE
 
 namespace HAC {
 
@@ -154,12 +153,10 @@ public:
 		Whether or not PRS literal sizes are included in output.
 	 */
 	bool				size_prs;
-#if CFLAT_WITH_CONDUCTANCES
 	/**
 		Enable conductance computation and reporting.  
 	 */
 	bool				compute_conductances;
-#endif
 	/**
 		Enable printing of precharge expressions.  
 	 */
@@ -201,9 +198,7 @@ public:
 		check_prs(false), wire_mode(false), 
 		csim_style_prs(false), dsim_prs(false), 
 		size_prs(false), 
-#if CFLAT_WITH_CONDUCTANCES
 		compute_conductances(false),
-#endif
 		show_precharges(false), 
 		use_referenced_type_instead_of_top_level(false), 
 		named_process_type(), 

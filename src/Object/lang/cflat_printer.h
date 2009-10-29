@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.13 2008/10/31 02:11:44 fang Exp $
+	$Id: cflat_printer.h,v 1.14 2009/10/29 23:00:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -10,7 +10,6 @@
 #include "Object/lang/cflat_context_visitor.h"
 #include "util/member_saver_fwd.h"
 #include "Object/lang/SPEC_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -37,7 +36,6 @@ protected:
 	typedef	util::member_saver<cflat_prs_printer, char,
 			&cflat_prs_printer::parent_expr_type>
 						expr_type_setter;
-#if CFLAT_WITH_CONDUCTANCES
 	/**
 		Compute and propagate up the best and worst case
 		path conductances through rules.
@@ -49,7 +47,6 @@ protected:
 	float					min_conductance;
 	/// strongest single path
 	float					one_conductance;
-#endif
 
 public:
 	cflat_prs_printer(ostream& _os, const cflat_options& _cfo) :

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_common.cc"
 	Definition of tool-independent parts of PRS macro classes.  
-	$Id: PRS_macro_common.cc,v 1.4 2008/03/17 23:02:29 fang Exp $
+	$Id: PRS_macro_common.cc,v 1.5 2009/10/29 23:00:26 fang Exp $
  */
 
 #include <iostream>
@@ -12,7 +12,6 @@
 #include "util/attributes.h"
 #include "Object/expr/preal_const.h"
 #include "Object/expr/pint_const.h"
-#include "Object/devel_switches.h"	// for CFLAT_WITH_CONDUCTANCES
 
 namespace HAC {
 namespace entity {
@@ -101,7 +100,7 @@ __takes_no_parameters(const char* m, const param_args_type& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CFLAT_WITH_CONDUCTANCES
+#if 0
 /**
 	\ret 'good' if value is > 0
 	\param v pointer to value to check.
@@ -161,7 +160,7 @@ __optional_width_length_must_be_positive(
 	}
 	return good_bool(true);
 }
-#endif	// CFLAT_WITH_CONDUCTANCES
+#endif
 
 //=============================================================================
 /**     
@@ -224,20 +223,12 @@ PassP::__check_num_params(const char* name, const size_t n) {
 
 good_bool
 PassN::__check_param_args(const char* name, const param_args_type& p) {
-#if CFLAT_WITH_CONDUCTANCES
 	return good_bool(true);
-#else
-	return __optional_width_length_must_be_positive(name, p);
-#endif
 }
 
 good_bool
 PassP::__check_param_args(const char* name, const param_args_type& p) {
-#if CFLAT_WITH_CONDUCTANCES
 	return good_bool(true);
-#else
-	return __optional_width_length_must_be_positive(name, p);
-#endif
 
 }
 

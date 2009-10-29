@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.25 2009/10/16 20:38:45 fang Exp $
+	$Id: cflat.cc,v 1.26 2009/10/29 23:00:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -119,9 +119,7 @@ __cflat_prsim(cflat::options& cf) {
 	cf.wire_mode = false;
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
-#if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
-#endif
 	cf.show_precharges = false;
 	cf.size_prs = false;
 	cf.use_referenced_type_instead_of_top_level = false;
@@ -144,9 +142,7 @@ __cflat_prlint(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
-#if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
-#endif
 	cf.show_precharges = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 }
@@ -170,9 +166,7 @@ __cflat_connect(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
-#if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
-#endif
 	cf.show_precharges = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 }
@@ -199,9 +193,7 @@ __cflat_lvs(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
-#if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
-#endif
 	cf.show_precharges = false;	// maybe true?
 	cf.use_referenced_type_instead_of_top_level = false;
 }
@@ -238,9 +230,7 @@ __cflat_wire(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
-#if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
-#endif
 	cf.use_referenced_type_instead_of_top_level = false;
 }
 
@@ -261,9 +251,7 @@ __cflat_ADspice(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = true;
 	cf.size_prs = false;
-#if CFLAT_WITH_CONDUCTANCES
 	cf.compute_conductances = false;
-#endif
 	cf.show_precharges = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 }
@@ -835,7 +823,6 @@ const cflat::register_options_modifier
 		"not (size-prs)");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CFLAT_WITH_CONDUCTANCES
 /***
 @texinfo cflat/opt-strengths.texi
 @defvr {@t{cflat -f} option} strengths
@@ -870,7 +857,6 @@ __cflat_no_strengths(cflat::options& cf) {
 const cflat::register_options_modifier
 	cflat::_no_strengths("no-strengths", &__cflat_no_strengths, 
 		"suppresses min/max strengths for each rule");
-#endif	// CFLAT WITH_CONDUCTANCES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	cf.csim_style_prs = false;
