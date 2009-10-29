@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.8 2009/10/15 17:51:57 fang Exp $
+	$Id: netlist_generator.cc,v 1.9 2009/10/29 17:45:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -194,11 +194,7 @@ try {
 		// find out how local nodes are passed to *local* instance
 		const footprint* subfp = subp._frame._footprint;
 		const netlist& subnet(netmap.find(subfp)->second);
-		nl->append_instance(subp, subnet, lpid
-#if CACHE_LOGICAL_NODE_NAMES
-			, opt
-#endif
-			);
+		nl->append_instance(subp, subnet, lpid, opt);
 	}
 	}
 #else
@@ -291,11 +287,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		const index_type& expr = i->first;
 		// direction and name can be looked up later
 		const index_type new_int =
-			current_netlist->create_internal_node(j, expr
-#if CACHE_INTERNAL_NODE_NAMES
-				, opt
-#endif
-				);
+			current_netlist->create_internal_node(j, expr, opt);
 		INVARIANT(new_int);
 		// asserts map entry exists:
 		current_netlist->lookup_internal_node(expr);
@@ -657,11 +649,7 @@ if (!n.used)
 index_type
 netlist_generator::register_named_node(const index_type n) {
 	NEVER_NULL(current_netlist);
-	const index_type ret = current_netlist->register_named_node(n
-#if CACHE_LOGICAL_NODE_NAMES
-		, opt
-#endif
-		);
+	const index_type ret = current_netlist->register_named_node(n, opt);
 	return ret;
 }
 

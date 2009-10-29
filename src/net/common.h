@@ -1,7 +1,7 @@
 /**
 	\file "net/common.h"
 	For useful declarations and typedefs.  
-	$Id: common.h,v 1.7 2009/10/27 18:21:49 fang Exp $
+	$Id: common.h,v 1.8 2009/10/29 17:45:48 fang Exp $
  */
 
 #ifndef	__HAC_NET_COMMON_H__
@@ -10,17 +10,10 @@
 #include <iosfwd>
 #include "common/status.h"
 
-/**
-	If set to 1, cache logical nodes' names in the node::name field, 
-	instead of re-evaluating each time.  
-	Tradeoff: use more string memory, but never have to re-evaluate
-	(or re-mangle) the same name more than once.  
-	Goal: 1 (I think)
-	Status: Both values of switches tested.
- */
-#define	CACHE_LOGICAL_NODE_NAMES		1
-#define	CACHE_INTERNAL_NODE_NAMES		1
-#define	CACHE_ALL_NODE_NAMES	(CACHE_LOGICAL_NODE_NAMES || CACHE_INTERNAL_NODE_NAMES)
+// Old perm'd flags:
+// #define	CACHE_LOGICAL_NODE_NAMES		1
+// #define	CACHE_INTERNAL_NODE_NAMES		1
+// #define	CACHE_ALL_NODE_NAMES	(CACHE_LOGICAL_NODE_NAMES || CACHE_INTERNAL_NODE_NAMES)
 
 namespace HAC {
 namespace NET {

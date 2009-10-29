@@ -5,6 +5,12 @@
 
 2009-10-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-43-b:
+	  Clean-up only (no tag): perm'd hcaknet's caching of node names.
+
+
+2009-10-28	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-83-43:
 	  hacknet: added cae-sensitivity checking (on by default)
 		with option case_collision=[ignore|warn|error].

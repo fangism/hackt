@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.8 2009/10/29 00:20:17 fang Exp $
+	$Id: netgraph.h,v 1.9 2009/10/29 17:45:50 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -370,11 +370,7 @@ struct node {
 #endif
 
 	ostream&
-	emit(ostream&, 
-#if !CACHE_ALL_NODE_NAMES
-		const footprint&, 
-#endif
-		const netlist_options&) const;
+	emit(ostream&, const netlist_options&) const;
 
 	ostream&
 	dump_raw(ostream&) const;
@@ -653,21 +649,14 @@ public:
 	create_auxiliary_node(void);
 
 	index_type
-	create_internal_node(const index_type ni, const index_type ei
-#if CACHE_LOGICAL_NODE_NAMES
-		, const netlist_options& opt
-#endif
-		);
+	create_internal_node(const index_type ni, const index_type ei, 
+		const netlist_options& opt);
 
 	index_type
 	lookup_internal_node(const index_type i) const;
 
 	index_type
-	register_named_node(const index_type
-#if CACHE_LOGICAL_NODE_NAMES
-		, const netlist_options&
-#endif
-		);
+	register_named_node(const index_type, const netlist_options&);
 
 #if 0
 	bool
@@ -676,11 +665,7 @@ public:
 
 	void
 	append_instance(const global_entry<process_tag>&, const netlist&, 
-		const index_type
-#if CACHE_LOGICAL_NODE_NAMES
-		, const netlist_options&
-#endif
-		);
+		const index_type, const netlist_options&);
 
 	void
 	summarize_ports(const netlist_options&);

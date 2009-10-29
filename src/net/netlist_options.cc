@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.7 2009/10/29 00:20:17 fang Exp $
+	$Id: netlist_options.cc,v 1.8 2009/10/29 17:45:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -148,12 +148,7 @@ netlist_options::mangle_instance(string& n) const {
 //	strgsub(n, "::", mangle_scope);
 	// colon must be mangled *after* scope "::"
 	strgsub(n, ":", mangle_colon);	// appears in transistor names
-#if CACHE_LOGICAL_NODE_NAMES
-	// mangling happens in node::emit instead
-#else
-	strgsub(n, "@", mangle_internal_at);
-	strgsub(n, "#", mangle_auxiliary_pound);
-#endif
+	// @,# mangling happens in node::emit instead
 	strgsub(n, "!", mangle_implicit_bang);
 	return n;
 }
