@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.6 2009/10/15 17:51:58 fang Exp $
+	$Id: netlist_options.cc,v 1.7 2009/10/29 00:20:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,7 @@
 #include "util/string.tcc"		// for strgsub, string_to_num
 #include "util/stacktrace.h"
 #include "util/attributes.h"
+#include "util/iterator_more.h"
 
 namespace HAC {
 namespace NET {
@@ -27,6 +28,7 @@ using util::strings::string_to_num;
 using util::strings::strgsub;
 using util::file_status;
 using util::named_ifstream;
+using util::set_inserter;
 
 //=============================================================================
 // class netlist_options method definitions
@@ -37,6 +39,7 @@ netlist_options::netlist_options() :
 		unknown_option_policy(OPTION_WARN), 
 		internal_node_supply_mismatch_policy(OPTION_WARN),
 		undriven_node_policy(OPTION_WARN),
+		case_collision_policy(OPTION_WARN),
 		std_n_width(5.0),
 		std_p_width(5.0),
 		std_n_length(2.0),
@@ -76,6 +79,7 @@ netlist_options::netlist_options() :
 		max_n_width(0.0),		// in lambda
 		fet_diff_overhang(6.0),
 		fet_spacing_diffonly(4.0),
+		reserved_names(), 
 		emit_parasitics(false),
 		nested_subcircuits(false),
 		empty_subcircuits(false),
@@ -347,6 +351,37 @@ __set_member_single_string(const option_value& opt,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this conditionally applies lower-casing transformation
+	depending on case_collision.
+	Blank values are filtered out.
+	If remaining set is empty, then clear the set member variable.
+	TODO: apply name mangling with n_opt.mangle_instance()?
+ */
+static
+bool
+__set_member_string_set(const option_value& opt, 
+		netlist_options& n_opt, 
+		set<string> netlist_options::*mem) {
+	// remove blanks
+	std::list<string> s;
+	std::remove_copy(opt.values.begin(), opt.values.end(), 
+		back_inserter(s), string());
+if (s.size()) {
+	if (n_opt.case_collision_policy == OPTION_IGNORE) {
+		copy(s.begin(), s.end(), set_inserter(n_opt.*mem));
+	} else {
+		transform(s.begin(), s.end(), set_inserter(n_opt.*mem), 
+			&util::strings::string_tolower);
+	}
+} else {
+	// if argument is blank, then clear the set
+	(n_opt.*mem).clear();
+}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // translate a policy string into an enumeration
 static
 bool
@@ -413,6 +448,13 @@ __set_member_default(const option_value& opt,
 	return __set_policy_member(opt, n_opt, mem);
 }
 
+bool
+__set_member_default(const option_value& opt, 
+		netlist_options& n_opt,
+		set<string> netlist_options::*mem) {
+	return __set_member_string_set(opt, n_opt, mem);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 const
@@ -420,7 +462,8 @@ string
 __bool_type__("bool"),
 __int_type__("int"),
 __real_type__("real"),
-__str_type__("string");
+__str_type__("string"),
+__strs_type__("strings");
 
 template <typename T>
 const string&
@@ -436,6 +479,8 @@ const string&
 __string_type_of(string netlist_options::*) { return __str_type__; }
 const string&
 __string_type_of(option_error_policy netlist_options::*) { return __str_type__; }
+const string&
+__string_type_of(set<string> netlist_options::*) { return __strs_type__; }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <typename T>
@@ -443,6 +488,22 @@ ostream&
 __print_member_default(ostream& o, const netlist_options& n_opt,
 		T netlist_options::*mem) {
 	return o << n_opt.*mem;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <typename T>
+ostream&
+__print_member_sequence(ostream& o, const netlist_options& n_opt,
+		T netlist_options::*mem) {
+	const T& s(n_opt.*mem);
+	if (!s.empty()) {
+		typedef	typename T::const_iterator	const_iterator;
+		typedef	typename T::value_type	value_type;
+		const_iterator i(s.begin()), l(--s.end());
+		copy(i, l, std::ostream_iterator<value_type>(o, ","));
+		o << *l;
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -502,6 +563,13 @@ __print_ ## member (ostream& o, const netlist_options& n) {		\
 	return __print_member_default(o, n, &netlist_options::member);	\
 }
 
+#define	DEFINE_PRINT_MEMBER_SEQUENCE(member)				\
+static									\
+ostream&								\
+__print_ ## member (ostream& o, const netlist_options& n) {		\
+	return __print_member_sequence(o, n, &netlist_options::member);	\
+}
+
 #define	DEFINE_PRINT_POLICY_MEMBER(member)				\
 	DEFINE_PRINT_MEMBER(member ## _policy)
 
@@ -536,6 +604,14 @@ __ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[key] =			\
 	DEFINE_PRINT_MEMBER(member)					\
 	DEFINE_TYPE_MEMBER(member)					\
 	REGISTER_OPTION_DEFAULT(member, key, help)
+
+#define	DEFINE_OPTION_SEQUENCE(member, key, help)			\
+	DEFINE_SET_MEMBER(member)					\
+	DEFINE_PRINT_MEMBER_SEQUENCE(member)				\
+	DEFINE_TYPE_MEMBER(member)					\
+	REGISTER_OPTION_DEFAULT(member, key, help)
+
+// for member function calls
 
 // for member function calls
 #define	DEFINE_OPTION_MEMFUN(memfun, key, help)				\
@@ -573,6 +649,16 @@ neither used (connected to source, gate terminals) but not driven
 This check is always skipped for top-level circuits.
 Default: warn
 @end defopt
+
+@defopt case_collision (string)
+Set error handling policy for names that collide when case
+is ignored (insensitive).  
+For this policy warnings are promoted to errors; 
+use ignore to completely disable.  
+If the value is anything but @t{ignore}, then the set of reserved
+names will also be transformed when detecting collisions.  
+Default: warn
+@end defopt
 @end texinfo
 ***/
 DEFINE_OPTION_POLICY(unknown_option, "unknown_option",
@@ -582,6 +668,8 @@ DEFINE_OPTION_POLICY(internal_node_supply_mismatch,
 	"EH for internal node supply mismatch btw. def/use")
 DEFINE_OPTION_POLICY(undriven_node, "undriven_node",
 	"EH for used but undriven nodes")
+DEFINE_OPTION_POLICY(case_collision, "case_collision",
+	"EH for case-insensitive name collisions")
 
 // could just fold string into here instead of initialization function below...
 // TODO: produce usage help for console and texinfo documentation aside
@@ -999,7 +1087,24 @@ Reminder: paths are comma-separated.
 DEFINE_OPTION_MEMFUN(add_config_path,
 	"config_path", "append search path for config files (cumulative)")
 
+/***
+@texinfo config/reserved_names.texi
+@defopt reserved_names (strings)
+Amend the set of names that should be rejected from normal use
+in the netlist because they have special meaning to other back-ends.  
+Issuing a blank value will clear out all previous values.  
+Comparison is done using the @emph{post-mangled} names.  
+Default: (blank)
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_SEQUENCE(reserved_names, "reserved_names",
+	"set of reserved names to avoid")
+
 #undef	DEFINE_OPTION_DEFAULT
+#undef	DEFINE_OPTION_MEMFUN
+#undef	DEFINE_OPTION_POLICY
+#undef	DEFINE_OPTION_SEQUENCE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1117,6 +1222,13 @@ netlist_options::get_default_length(const bool d, const bool k) const {
 	return (d ? 
 		(k ? stat_p_length : std_p_length) :
 		(k ? stat_n_length : std_n_length));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+netlist_options::collides_reserved_name(const string& n) const {
+	const std::set<string>::const_iterator f(reserved_names.find(n));
+	return f != reserved_names.end();
 }
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.7 2009/10/15 17:51:57 fang Exp $
+	$Id: netgraph.h,v 1.8 2009/10/29 00:20:17 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -35,6 +35,17 @@
 	Status: done, tested.
  */
 #define	NETLIST_CHECK_CONNECTIVITY		1
+
+/**
+	Define to 1 to check for name collisions, due to mangling
+	or case-insensitivity, or reserved names.
+	TODO: name collision checking should eventually include
+	instance names, transistor names, subcircuit names, etc...
+	For now, just checks node names.
+	Goal: 1
+	Status: starting
+ */
+#define	NETLIST_CHECK_NAME_COLLISIONS		1
 
 namespace HAC {
 namespace NET {
@@ -549,6 +560,16 @@ friend class netlist_generator;
 		0-value means node has not been used yet.  
 	 */
 	typedef	vector<index_type>	named_node_map_type;
+#if NETLIST_CHECK_NAME_COLLISIONS
+	/**
+		Reverse map from mangled name to node index.  
+		key: mangled string name that would be emitted
+		value: node index
+		Eventually need to extend to check names of 
+		other entities, instance names, etc...
+	 */
+	typedef	map<string, index_type>	name_collision_map_type;
+#endif
 	/**
 		For local subcircuits only.  
 		Such local circuits are not shared outside of this definition
@@ -582,6 +603,11 @@ private:
 	instance_pool_type		instance_pool;
 	internal_node_map_type		internal_node_map;
 	internal_expr_map_type		internal_expr_map;
+#if NETLIST_CHECK_NAME_COLLISIONS
+	// map for node names
+	name_collision_map_type		name_collision_map;
+	// separate map for instance names?
+#endif
 	local_subcircuit_list_type	local_subcircuits;
 	/**
 		List of local node indices.  
@@ -676,6 +702,12 @@ private:
 
 	void
 	__bind_footprint(const footprint&, const netlist_options&);
+
+#if NETLIST_CHECK_NAME_COLLISIONS
+	void
+	check_name_collisions(const string&, const index_type, 
+		const netlist_options&);
+#endif
 
 };	// end class netlist
 

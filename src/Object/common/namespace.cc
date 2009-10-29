@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.34 2009/10/27 18:21:45 fang Exp $
+ 	$Id: namespace.cc,v 1.35 2009/10/29 00:20:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -59,6 +59,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/indent.h"
+#include "util/string.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 
@@ -676,9 +677,7 @@ scopespace::check_case_collisions(ostream& o) const {
 	used_id_map_type::const_iterator mi(used_id_map.begin());
 	const used_id_map_type::const_iterator me(used_id_map.end());
 	for ( ; mi!=me; ++mi) {
-		string l;
-		transform(mi->first.begin(), mi->first.end(), 
-			back_inserter(l), &tolower);
+		const string l(util::strings::string_tolower(mi->first));
 		const case_set_type::value_type t(l, mi->first);
 		const pair<case_set_type::iterator, bool> p(H.insert(t));
 		if (!p.second) {

@@ -1,0 +1,3 @@
+Error: Post-mangled node name `GND' collides with another node `GND'.
+ERROR producing netlist for <top-level>
+Caught exception during netlist generation.

@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-10-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-43:
+	  hacknet: added cae-sensitivity checking (on by default)
+		with option case_collision=[ignore|warn|error].
+		added reserved_name configuration option that accumulates
+		reserved names of nodes to check against during 
+		generation, comparing against post-case-converted, 
+		and post-mangled names.  
+		Now checks for post-mangling name collisions.
+	  Test cases added, trivial ones updated.  Documented.
+
+
 2009-10-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-42:

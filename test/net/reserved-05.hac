@@ -1,0 +1,7 @@
+// "reserved-05.hac"
+// @hacknet-flags@ -f reserved_names=!Vdd,!GND
+// expect fail: intentionally declare implicit Vdd,GND as reserved
+// will enforce that their use is forbidden.
+
+import "inv-02.hac";
+

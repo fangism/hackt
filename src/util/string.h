@@ -2,7 +2,7 @@
 	\file "util/string.h"
 	Configure-detected string library header.  
 	For now, this is really reserved for C++.
-	$Id: string.h,v 1.5 2009/08/28 20:45:28 fang Exp $
+	$Id: string.h,v 1.6 2009/10/29 00:20:20 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_H__
@@ -71,6 +71,17 @@ string_to_num(const std::string&, I&);
  */
 size_t
 strgsub(std::string& t, const std::string& s, const std::string& r);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <typename Trans>
+std::string
+transform_string(const std::string&, Trans);
+
+std::string
+string_tolower(const std::string&);
+
+std::string
+string_toupper(const std::string&);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace strings

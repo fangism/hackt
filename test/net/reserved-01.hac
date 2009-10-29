@@ -1,0 +1,5 @@
+// "reserved-01.hac"
+// dump back out configuration
+// @hacknet-flags@ -f reserved_names=foo -d
+
+

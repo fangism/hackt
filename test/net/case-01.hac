@@ -1,0 +1,10 @@
+// "case-01.hac"
+// @hacknet-flags@ -f case_collision=error
+
+bool a, b, A, B;
+
+prs {
+	a	=> b-
+	A	=> B-
+}
+

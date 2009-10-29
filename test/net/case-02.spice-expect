@@ -1,0 +1,5 @@
+Error: Post-mangled node name `oops' collides with another node `Oops'.
+ERROR in production rule.
+ERROR producing netlist for foo<>
+ERROR producing netlist for <top-level>
+Caught exception during netlist generation.

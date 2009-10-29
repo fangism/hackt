@@ -1,12 +1,13 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.6 2009/10/15 17:51:58 fang Exp $
+	$Id: netlist_options.h,v 1.7 2009/10/29 00:20:18 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
 #define	__HAC_NET_NETLIST_OPTIONS_H__
 
 #include <string>
+#include <set>
 #include "net/common.h"
 #include "util/optparse.h"
 #include "util/named_ifstream_manager.h"
@@ -14,6 +15,7 @@
 
 namespace HAC {
 namespace NET {
+using std::set;
 using std::string;
 using std::istream;
 using util::option_value;
@@ -39,6 +41,7 @@ struct netlist_options {
 	option_error_policy		unknown_option_policy;
 	option_error_policy		internal_node_supply_mismatch_policy;
 	option_error_policy		undriven_node_policy;
+	option_error_policy		case_collision_policy;
 // generation-time options:
 	/**
 		Dimensions of standard devices to use when unspecified.  
@@ -120,6 +123,11 @@ struct netlist_options {
 		Only relevant with emit_parasitic=1.
 	 */
 	real_type			fet_spacing_diffonly;
+	/**
+		Set of reserved names with special meanings to other 
+		back-end tools.
+	 */
+	set<string>			reserved_names;
 	/**
 		If true, emit area/perimeter of source/drain diffusions.
 	 */
@@ -213,6 +221,9 @@ struct netlist_options {
 
 	ostream&
 	line_continue(ostream&) const;
+
+	bool
+	collides_reserved_name(const string&) const;
 
 	static
 	ostream&

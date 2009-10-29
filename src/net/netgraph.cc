@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.9 2009/10/15 17:51:55 fang Exp $
+	$Id: netgraph.cc,v 1.10 2009/10/29 00:20:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -590,8 +590,14 @@ netlist::void_index = 0
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 netlist::netlist() : netlist_common(), name(), 
 		named_node_map(), node_pool(),
-		instance_pool(), internal_node_map(), port_list(), 
-		empty(false), 
+		instance_pool(), internal_node_map(), 
+		internal_expr_map(), 
+#if NETLIST_CHECK_NAME_COLLISIONS
+		name_collision_map(), 
+#endif
+		local_subcircuits(), 
+		port_list(), 
+		empty(false), 	// is cached
 		aux_count(0),
 		subs_count(0) {
 	// copy supply nodes
@@ -678,6 +684,7 @@ netlist::bind_footprint(const footprint& f, const string& n) {
 	\param lpid local process id from footprint.
 	\pre instance_pool is already pre-allocated to avoid 
 		invalidating references due to re-allocation.
+	TODO: possible check for name collisions?
  */
 void
 netlist::append_instance(const global_entry<process_tag>& subp,
@@ -804,6 +811,40 @@ netlist::create_auxiliary_node(void) {
 	return ret;
 }
 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_CHECK_NAME_COLLISIONS
+/**
+	Registers against node name map.  
+	\param n is a post-mangled name of a node (not case-slammed).
+	\param ni index of this node
+	\param opt case-collision error policy
+	Post-mangling name collisions always result in error.
+	For now, conflict with reserved names will always result in error.
+ */
+void
+netlist::check_name_collisions(const string& n, const index_type ni, 
+		const netlist_options& opt) {
+	const string key((opt.case_collision_policy != OPTION_IGNORE) ?
+		util::strings::string_tolower(n) : n);
+	typedef name_collision_map_type::iterator	iterator;
+	typedef name_collision_map_type::value_type	pair_type;
+	const pair<iterator, bool>
+		p(name_collision_map.insert(pair_type(key, ni)));
+	if (!p.second) {
+		cerr << "Error: Post-mangled node name `" << n <<
+			"\' collides with another node `" <<
+		node_pool[p.first->second].name << "\'." << endl;
+		THROW_EXIT;
+	}
+	if (opt.collides_reserved_name(key)) {
+		cerr << "Error: Post-mangled node name `" << n <<
+			"\' collides with a reserved node name." << endl;
+		THROW_EXIT;
+	}
+}
+#endif
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Allocates a new named internal node, incrementing counter.
@@ -829,6 +870,9 @@ netlist::create_internal_node(const index_type ni, const index_type ei
 	internal_node_map[ni].first = ret;
 	internal_expr_map[ei] = ni;	// invariant: no duplicates
 	// set owner later!
+#if NETLIST_CHECK_NAME_COLLISIONS
+	check_name_collisions(n.name, ret, opt);
+#endif
 	return ret;
 }
 
@@ -900,7 +944,7 @@ netlist::register_named_node(const index_type _i
 		}
 		}
 	}	// else has no other aliases
-	}
+	}	// end if prefer_port_aliases
 	if (!new_named_node.name.length()) {
 		ostringstream oss;
 		fp->get_instance_pool<bool_tag>()[_i].get_back_ref()
@@ -911,6 +955,9 @@ netlist::register_named_node(const index_type _i
 #endif
 		ret = node_pool.size();
 		INVARIANT(ret);
+#if NETLIST_CHECK_NAME_COLLISIONS
+		check_name_collisions(new_named_node.name, ret, opt);
+#endif
 		node_pool.push_back(new_named_node);
 #if ENABLE_STACKTRACE
 node_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new node: ")) << endl;

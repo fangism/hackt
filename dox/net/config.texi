@@ -1,5 +1,5 @@
 @c "config.texi"
-@c $Id: config.texi,v 1.5 2009/10/06 21:44:24 fang Exp $
+@c $Id: config.texi,v 1.6 2009/10/29 00:20:11 fang Exp $
 
 @c ****************************************************************************
 @node Configuration Options
@@ -68,6 +68,7 @@ By default, no mangling is done to keep the output (more) human-readable.
 @cindex mangling
 @cindex name-mangling
 @include config/mangle.texi
+@include config/reserved_names.texi
 
 @include config/diagnostic_policies.texi
 

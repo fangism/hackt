@@ -1,11 +1,12 @@
 /**
 	\file "util/string.cc"
-	$Id: string.cc,v 1.4 2009/10/02 01:57:46 fang Exp $
+	$Id: string.cc,v 1.5 2009/10/29 00:20:18 fang Exp $
 	Additional string utilities.
  */
 
 #include <string>
-#include "util/string.h"
+#include <cctype>
+#include "util/string.tcc"
 #include "util/macros.h"
 
 namespace util {
@@ -40,6 +41,18 @@ if (s.length() && (s != r)) {
 	// otherwise, just leave alone
 }
 	return subs;
+}
+
+//=============================================================================
+string
+string_tolower(const string& s) {
+	return transform_string(s, &tolower);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+string
+string_toupper(const string& s) {
+	return transform_string(s, &toupper);
 }
 
 //=============================================================================

@@ -1,0 +1,16 @@
+// "reserved-06.hac"
+// @hacknet-flags@ -f mangle_implicit_bang=
+// expect fail: intentionally declare implicit Vdd,GND as reserved
+// will enforce that their use is forbidden.
+
+bool Vdd, GND;
+bool a, b, c, d;
+
+prs {
+	a	=> b-
+}
+
+prs <Vdd, GND> {
+	c	=> d-
+}
+

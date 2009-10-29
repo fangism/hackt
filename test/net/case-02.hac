@@ -1,0 +1,9 @@
+// "case-02.hac"
+// @hacknet-flags@ -f case_collision=error -T foo
+
+defproc foo(bool oops, Oops) {
+prs {
+	oops	=> Oops-
+}
+}
+
