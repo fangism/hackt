@@ -5,6 +5,10 @@
 
 2009-10-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-43-c:
+	  Clean-up only (no tag): perm'd PRS_LITERAL_ATTRIBUTES:1.
+
+
 	* HACKT-00-01-04-main-00-83-43-b:
 	  Clean-up only (no tag): perm'd hcaknet's caching of node names.
 

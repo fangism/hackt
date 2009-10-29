@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.9 2009/10/29 17:45:50 fang Exp $
+	$Id: netgraph.h,v 1.10 2009/10/29 18:05:24 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -95,9 +95,7 @@ struct transistor {
 		they are derived.  
 		TODO: need auto-enumeration
 	 */
-#if PRS_LITERAL_ATTRIBUTES
 	string				name;
-#endif
 	index_type			source;
 	index_type			gate;
 	index_type			drain;

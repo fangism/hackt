@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.29 2009/10/02 01:57:05 fang Exp $
+	$Id: PRS.h,v 1.30 2009/10/29 18:05:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -64,9 +64,7 @@ private:
 		not the RHS of a rule.  
 	 */
 	params_type				params;
-#if PRS_LITERAL_ATTRIBUTES
 	generic_attribute_list_type		attr;
-#endif
 public:
 	literal();
 
@@ -98,13 +96,11 @@ public:
 	const params_type&
 	get_params(void) const { return params; }
 
-#if PRS_LITERAL_ATTRIBUTES
 	generic_attribute_list_type&
 	get_attributes(void) { return attr; }
 
 	const generic_attribute_list_type&
 	get_attributes(void) const { return attr; }
-#endif
 
 	void
 	check(void) const;
@@ -828,9 +824,7 @@ public:
  */
 class macro : public rule, public directive_source {
 	typedef	macro				this_type;
-#if PRS_LITERAL_ATTRIBUTES
 	generic_attribute_list_type		attr;
-#endif
 public:
 	macro();
 
@@ -839,13 +833,11 @@ public:
 
 	~macro();
 
-#if PRS_LITERAL_ATTRIBUTES
 	generic_attribute_list_type&
 	get_attributes(void) { return attr; }
 
 	const generic_attribute_list_type&
 	get_attributes(void) const { return attr; }
-#endif
 
 	ostream&
 	what(ostream&) const;

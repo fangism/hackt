@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.39 2009/10/15 01:04:43 fang Exp $
+	$Id: PRS.cc,v 1.40 2009/10/29 18:05:19 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -290,23 +290,12 @@ if (internal) {
 }
 if (ret && params) {
 	// NOTE: parameters are not applicable to RHS or rules
-	// TODO: update this check for new HAC syntax! (<2)
-#if PRS_LITERAL_ATTRIBUTES
 	if (params->size() > 2) {
 		cerr << "Error: rule literals can take a maximum of 2 "
 			"(width, length) parameters.  " << where(*params)
 			<< endl;
 		return prs_literal_ptr_type(NULL);
 	}
-#else
-	if (params->size() > 3) {
-		// third optional parameter is transistor type [ACT]
-		cerr << "Error: rule literals can take a maximum of 3 "
-			"(width, length, type) parameters.  " << where(*params)
-			<< endl;
-		return prs_literal_ptr_type(NULL);
-	}
-#endif
 	typedef expr_list::checked_meta_exprs_type	checked_exprs_type;
 	typedef checked_exprs_type::const_iterator	const_iterator;
 	typedef checked_exprs_type::value_type		value_type;
@@ -320,7 +309,6 @@ if (ret && params) {
 	}
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_params()));
-#if PRS_LITERAL_ATTRIBUTES
 if (params->attrs) {
 	// handle attributes
 	entity::generic_attribute_list_type& atts(ret->get_attributes());
@@ -331,7 +319,6 @@ if (params->attrs) {
 		THROW_EXIT;
 	}
 }
-#endif
 }
 	return ret;
 }	// end literal::check_prs_literal
@@ -1103,7 +1090,6 @@ if (params) {
 	// INVARIANT(temp.size());	// params may be empty
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_params()));
-#if PRS_LITERAL_ATTRIBUTES
 if (params->attrs) {
 	// handle attributes, treat as literal attributes for now...
 	entity::generic_attribute_list_type& atts(ret->get_attributes());
@@ -1115,7 +1101,6 @@ if (params->attrs) {
 		THROW_EXIT;
 	}
 }
-#endif
 } else if (!mde.check_num_params(0).good) {
 	// no params given where required and already have error message
 	cerr << "\tat " << where(*this) << endl;

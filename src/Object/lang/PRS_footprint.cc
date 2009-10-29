@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.27 2009/10/02 01:57:09 fang Exp $
+	$Id: PRS_footprint.cc,v 1.28 2009/10/29 18:05:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -155,18 +155,13 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			np[e.only()].get_back_ref()
 				->dump_hierarchical_name(o,
 					dump_flags::no_definition_owner);
-			if (e.params.size()
-#if PRS_LITERAL_ATTRIBUTES
-				|| e.attributes.size()
-#endif
+			if (e.params.size() || e.attributes.size()
 				) {
 			o << '<';
 			directive_base::dump_params_bare(e.params, o);
-#if PRS_LITERAL_ATTRIBUTES
 			if (e.attributes.size()) {
 				e.attributes.dump(o << ';');
 			}
-#endif
 			o << '>';
 			}
 			break;
@@ -258,12 +253,9 @@ footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
 if (m.params.size() || m.attributes.size()) {
 	o << '<';
 	directive_base::dump_params_bare(m.params, o);
-#if PRS_LITERAL_ATTRIBUTES
-//	o << '[' << m.attributes.size() << ']';
 	if (m.attributes.size()) {
 		m.attributes.dump(o << ';');
 	}
-#endif
 	o << '>';
 }
 	o << '(';
@@ -689,9 +681,7 @@ footprint_expr_node::collect_transient_info_base(
 	STACKTRACE_PERSISTENT_VERBOSE;
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.collect_pointer_list(params);
-#if PRS_LITERAL_ATTRIBUTES
 		attributes.collect_transient_info_base(m);
-#endif
 	} else	INVARIANT(params.empty());
 }
 
@@ -709,9 +699,7 @@ footprint_expr_node::write_object_base(const persistent_object_manager& m,
 	write_array(o, nodes);
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.write_pointer_list(o, params);
-#if PRS_LITERAL_ATTRIBUTES
 		attributes.write_object_base(m, o);
-#endif
 	} else	INVARIANT(params.empty());
 	if (type == PRS_AND_EXPR_TYPE_ENUM) {
 		write_sequence(o, precharge_map);
@@ -729,9 +717,7 @@ footprint_expr_node::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_PRINT("nodes size = " << nodes.size() << endl);
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.read_pointer_list(i, params);
-#if PRS_LITERAL_ATTRIBUTES
 		attributes.load_object_base(m, i);
-#endif
 	}
 	if (type == PRS_AND_EXPR_TYPE_ENUM) {
 		read_sequence_resize(i, precharge_map);
@@ -799,7 +785,6 @@ footprint_macro::accept(cflat_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_LITERAL_ATTRIBUTES
 void
 footprint_macro::collect_transient_info_base(
 		persistent_object_manager& m) const {
@@ -822,7 +807,6 @@ footprint_macro::load_object_base(const persistent_object_manager& m,
 	directive_base::load_object_base(m, i);
 	attributes.load_object_base(m, i);
 }
-#endif
 
 //=============================================================================
 }	// end namespace PRS

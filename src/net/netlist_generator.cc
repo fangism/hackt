@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.9 2009/10/29 17:45:50 fang Exp $
+	$Id: netlist_generator.cc,v 1.10 2009/10/29 18:05:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -682,7 +682,6 @@ static
 void
 process_transistor_attributes(transistor& t, 
 		const resolved_attribute_list_type& a) {
-#if PRS_LITERAL_ATTRIBUTES
 	resolved_attribute_list_type::const_iterator
 		ai(a.begin()), ae(a.end());
 	// TODO: write an actual attribute function map for altering transistor
@@ -702,7 +701,6 @@ process_transistor_attributes(transistor& t,
 				ai->key << "\' ignored." << endl;
 		}
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

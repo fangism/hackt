@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.39 2009/10/15 01:05:07 fang Exp $
+	$Id: PRS.cc,v 1.40 2009/10/29 18:05:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -2188,36 +2188,20 @@ not_expr::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class literal method definitions
 
-literal::literal() : prs_expr(), base_type(), params()
-#if PRS_LITERAL_ATTRIBUTES
-		, attr()
-#endif
-		{ }
+literal::literal() : prs_expr(), base_type(), params(), attr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::literal(const bool_literal& l, const params_type& p, 
 			const generic_attribute_list_type& a) :
-		prs_expr(), base_type(l), params(p)
-#if PRS_LITERAL_ATTRIBUTES
-		, attr(a)
-#endif
-		{ }
+		prs_expr(), base_type(l), params(p), attr(a) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::literal(const literal_base_ptr_type& l) :
-		prs_expr(), base_type(l), params()
-#if PRS_LITERAL_ATTRIBUTES
-		, attr()
-#endif
-		{ }
+		prs_expr(), base_type(l), params(), attr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::literal(const node_literal_ptr_type& l) :
-		prs_expr(), base_type(l), params()
-#if PRS_LITERAL_ATTRIBUTES
-		, attr()
-#endif
-		{ }
+		prs_expr(), base_type(l), params(), attr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::~literal() { }
@@ -2239,11 +2223,9 @@ literal::dump(ostream& o, const expr_dump_context& c) const {
 if (!params.empty() || !attr.empty()) {
 	o << '<';
 	directive_source::dump_params_bare(params, o, c);
-#if PRS_LITERAL_ATTRIBUTES
 	if (!attr.empty()) {
 		attr.dump(o << ';', c);
 	}
-#endif
 	o << '>';
 }
 	return o;
@@ -2362,7 +2344,6 @@ if (is_internal()) {
 			<< " in rule." << endl;
 		return 0;
 	}
-#if PRS_LITERAL_ATTRIBUTES
 	INVARIANT(params.size() <= 2);
 	INVARIANT(new_expr->params.size() <= 2);
 	if (!unroll_check_attributes(attr, new_expr->attributes, c, 
@@ -2371,7 +2352,6 @@ if (is_internal()) {
 		cerr << "Error resolving literal attribute." << endl;
 		return 0;
 	}
-#endif
 	return pfp.current_expr_index();
 }
 
@@ -2396,7 +2376,6 @@ literal::unroll_copy(const unroll_context& c,
 		return prs_expr_ptr_type(NULL);
 	}
 	copy(crpar.begin(), crpar.end(), back_inserter(rpar));
-#if PRS_LITERAL_ATTRIBUTES
 	resolved_attribute_list_type rat;
 	if (!unroll_check_attributes(attr, rat, c, 
 			cflat_literal_attribute_registry).good) {
@@ -2404,7 +2383,6 @@ literal::unroll_copy(const unroll_context& c,
 		cerr << "Error resolving literal attribute." << endl;
 		return prs_expr_ptr_type(NULL);
 	}
-#endif
 	if ((lref == *this) &&
 		std::equal(params.begin(), params.end(), rpar.begin()) && 
 		std::equal(attr.begin(), attr.end(), rat.begin())) {
@@ -2424,9 +2402,7 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
 	m.collect_pointer_list(params);
-#if PRS_LITERAL_ATTRIBUTES
 	attr.collect_transient_info_base(m);
-#endif
 }
 }
 
@@ -2436,9 +2412,7 @@ literal::write_object(const persistent_object_manager& m, ostream& o) const {
 //	m.write_pointer(o, var);
 	write_object_base(m, o);		// saves var
 	m.write_pointer_list(o, params);
-#if PRS_LITERAL_ATTRIBUTES
 	attr.write_object_base(m, o);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2447,26 +2421,16 @@ literal::load_object(const persistent_object_manager& m, istream& i) {
 //	m.read_pointer(i, var);
 	load_object_base(m, i);			// restores var
 	m.read_pointer_list(i, params);
-#if PRS_LITERAL_ATTRIBUTES
 	attr.load_object_base(m, i);
-#endif
 }
 
 //=============================================================================
 // class macro method definitions
 
-macro::macro() : rule(), directive_source()
-#if PRS_LITERAL_ATTRIBUTES
-	, attr()
-#endif
-	{ }
+macro::macro() : rule(), directive_source(), attr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-macro::macro(const string& n) : rule(), directive_source(n)
-#if PRS_LITERAL_ATTRIBUTES
-	, attr()
-#endif
-	{ }
+macro::macro(const string& n) : rule(), directive_source(n), attr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 macro::~macro() { }
@@ -2478,19 +2442,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(macro)
 ostream&
 macro::dump(ostream& o, const rule_dump_context& c) const {
 	o << name;
-if (!params.empty()
-#if PRS_LITERAL_ATTRIBUTES
-		|| !attr.empty()
-#endif
+if (!params.empty() || !attr.empty()
 		) {
 	o << '<';
 	const expr_dump_context edc(c);
 	directive_source::dump_params_bare(params, o, edc);
-#if PRS_LITERAL_ATTRIBUTES
 	if (!attr.empty()) {
 		attr.dump(o << ';', edc);
 	}
-#endif
 	o << '>';
 }
 	dump_nodes(o, c);
@@ -2529,7 +2488,6 @@ macro::unroll(const unroll_context& c, const node_pool_type& np,
 		// dump the literal?
 		return good_bool(false);
 	}
-#if PRS_LITERAL_ATTRIBUTES
 	// TODO: for now, we share the same attributes as literals
 	// but eventually, each macro could conceivably subscribe to
 	// its own set of attributes.  
@@ -2539,7 +2497,6 @@ macro::unroll(const unroll_context& c, const node_pool_type& np,
 		cerr << "Error resolving literal attribute." << endl;
 		return good_bool(false);
 	}
-#endif
 	const size_t nerr = unroll_nodes(c, new_macro_call.nodes);
 	if (nerr) {
 		cerr << "Error resolving literal node at position " << nerr
@@ -2597,9 +2554,7 @@ macro::check(void) const {
 		// already have error message
 		THROW_EXIT;
 	}
-#if PRS_LITERAL_ATTRIBUTES
 	// TODO: check attributes?
-#endif
 	if (!m.check_num_nodes(nodes.size()).good) {
 		// make sure passed in correct number of arguments
 		// custom-defined, may be variable
@@ -2614,9 +2569,7 @@ macro::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
-#if PRS_LITERAL_ATTRIBUTES
 	attr.collect_transient_info_base(m);
-#endif
 }
 }
 
@@ -2624,18 +2577,14 @@ if (!m.register_transient_object(this,
 void
 macro::write_object(const persistent_object_manager& m, ostream& o) const {
 	write_object_base(m, o);
-#if PRS_LITERAL_ATTRIBUTES
 	attr.write_object_base(m, o);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 macro::load_object(const persistent_object_manager& m, istream& i) {
 	load_object_base(m, i);
-#if PRS_LITERAL_ATTRIBUTES
 	attr.load_object_base(m, i);
-#endif
 }
 
 //=============================================================================
