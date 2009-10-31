@@ -88,6 +88,7 @@ initial begin
 #0	// happens *after* initial
 	if (prsim_name != "") begin
 	$sformat(verilog_name, "%m");
+	$to_prsim({verilog_name, ".CLK"}, {prsim_name, ".CLK"});
 	$to_prsim({verilog_name, ".A"}, {prsim_name, ".A"});
 	for (i=0; i<=3; i=i+1) begin
 		$sformat(tmp, ".B[%d]", i);
@@ -106,7 +107,6 @@ initial begin
 		$sformat(tmp, ".F[%d]", i);
 		$from_prsim({prsim_name, tmp}, {verilog_name, tmp});
 	end // end for
-	$to_prsim({verilog_name, ".CLK"}, {prsim_name, ".CLK"});
 	for (i=0; i<=7; i=i+1) begin
 		$sformat(tmp, ".G[%d]", i);
 		$from_prsim({prsim_name, tmp}, {verilog_name, tmp});
