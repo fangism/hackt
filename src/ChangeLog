@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-10-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-44:
+	  No source revision, only updated 
+		lib/verilog/wrap_verilog_modules_to_hacprsim.awk
+		and added some associated co-simulation tests.
+
+
 2009-10-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-43-d:

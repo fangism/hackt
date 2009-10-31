@@ -414,7 +414,9 @@ if (!reverse) {
 	print "\tif (prsim_name != \"\") begin";
 	print "\t$sformat(verilog_name, \"%m\");"
 # this order does not matter
-for (p in ports) {
+# but we preserve original order to avoid hash nondeterminism for testing
+for (i=0; i<port_index; ++i) {
+	p = ordered_ports[i];
 	type = ports[p];
 	u = upper[p];
 	l = lower[p];
