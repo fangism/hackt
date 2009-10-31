@@ -1,0 +1,20 @@
+// "and_tree_reverse.hac"
+// in this example, the verilog is empty, and the HAC source
+// defines the implementation of leaf cells.
+
+// these definitions are called by verilog
+defproc AND2(bool A1, A2, Z) {
+bool _o;
+prs {
+	A1 & A2		=> _o-
+	_o		=> Z-
+}
+}
+
+// floating instantiations, connected in verilog by name
+// this should really be automated by analyzing the 
+// verilog hierarchy
+AND2 __and_0;
+AND2 __and_1;
+AND2 __and_2;
+

@@ -1,0 +1,46 @@
+$start of simulation 
+prsim:	10	__and_0.A[1] : 0
+prsim:	10	__and_0.A[0] : 0
+prsim:	10	__and_1.A[1] : 0
+prsim:	10	__and_1.A[0] : 0
+prsim:	20	__and_0._o : 1	[by __and_0.A[1]:=0]
+prsim:	20	__and_1._o : 1	[by __and_1.A[1]:=0]
+prsim:	30	__and_0.Z : 0	[by __and_0._o:=1]
+prsim:	30	__and_1.Z : 0	[by __and_1._o:=1]
+prsim:	30	__and_2.A[1] : 0
+prsim:	30	__and_2.A[0] : 0
+prsim:	40	__and_2._o : 1	[by __and_2.A[1]:=0]
+prsim:	50	__and_2.Z : 0	[by __and_2._o:=1]
+prsim:	110	__and_0.A[1] : 1
+prsim:	110	__and_0.A[0] : 1
+prsim:	110	__and_1.A[1] : 1
+prsim:	110	__and_1.A[0] : 1
+prsim:	120	__and_0._o : 0	[by __and_0.A[0]:=1]
+prsim:	120	__and_1._o : 0	[by __and_1.A[0]:=1]
+prsim:	130	__and_0.Z : 1	[by __and_0._o:=0]
+prsim:	130	__and_1.Z : 1	[by __and_1._o:=0]
+prsim:	130	__and_2.A[1] : 1
+prsim:	130	__and_2.A[0] : 1
+prsim:	140	__and_2._o : 0	[by __and_2.A[0]:=1]
+prsim:	150	__and_2.Z : 1	[by __and_2._o:=0]
+prsim:	210	__and_0.A[1] : 0
+prsim:	220	__and_0._o : 1	[by __and_0.A[1]:=0]
+prsim:	230	__and_0.Z : 0	[by __and_0._o:=1]
+prsim:	230	__and_2.A[1] : 0
+prsim:	240	__and_2._o : 1	[by __and_2.A[1]:=0]
+prsim:	250	__and_2.Z : 0	[by __and_2._o:=1]
+prsim:	310	__and_1.A[0] : 0
+prsim:	320	__and_1._o : 1	[by __and_1.A[0]:=0]
+prsim:	330	__and_1.Z : 0	[by __and_1._o:=1]
+prsim:	330	__and_2.A[0] : 0
+prsim:	410	__and_0.A[1] : 1
+prsim:	420	__and_0._o : 0	[by __and_0.A[1]:=1]
+prsim:	430	__and_0.Z : 1	[by __and_0._o:=0]
+prsim:	430	__and_2.A[1] : 1
+prsim:	510	__and_1.A[0] : 1
+prsim:	520	__and_1._o : 0	[by __and_1.A[0]:=1]
+prsim:	530	__and_1.Z : 1	[by __and_1._o:=0]
+prsim:	530	__and_2.A[0] : 1
+prsim:	540	__and_2._o : 0	[by __and_2.A[0]:=1]
+prsim:	550	__and_2.Z : 1	[by __and_2._o:=0]
+$finish at simulation time    0.6 ns

@@ -359,15 +359,21 @@ function emit_to_prsim(name) {
 # emit wrapper function
 # no parameters, variables are only local
 function write_out_wrapper(tmp, u, l, n, type, dim, endl) {
-	print "module " wrapper_prefix "_" type_name (wrapper_ports ? " (" : ";");
-	print "// need not be reg with acc: wn:*";
+	print "module " wrapper_prefix "_" type_name (wrapper_ports ? " #(" : ";");
 	# might as well preserve original port order
 	for (i=0; i<param_index; ++i) {
 		p = ordered_params[i];
 		tmp = param_default_values[p];
-		print "\tparameter " p (length(tmp) ? " = " tmp : "") ";";
+		print "\tparameter " p (length(tmp) ? " = " tmp : "") (wrapper_ports ? "," : ";");
 		# preserve RHS values and expressions
 	}
+	printf("\tparameter prsim_name=\"\"");	# always have name parameter
+	if (wrapper_ports) {
+		print "\n) (";	# end of parameters, start of ports list
+	} else {
+		print ";";
+	}
+	print "// need not be reg with acc: wn:*";
 	for (i=0; i<port_index; ++i) {
 		p = ordered_ports[i];
 		type = (wrapper_ports ? ports[p] "put" : "wire");
@@ -379,7 +385,7 @@ function write_out_wrapper(tmp, u, l, n, type, dim, endl) {
 	if (wrapper_ports) {
 		print ");";	# end of ports list
 	}
-	print "\tparameter prsim_name=\"\";";
+#	print "\tparameter prsim_name=\"\";";
 	print "\tinteger i;";
 	print "\treg [" max_strlen "*8:1] verilog_name, tmp;";
 	# tmp is just local var for string manip

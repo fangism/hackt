@@ -1,11 +1,20 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.58 2009/10/22 22:30:26 fang Exp $
+#	$Id: ChangeLog,v 1.59 2009/10/31 02:22:13 fang Exp $
+
+2009-10-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-44:
+	  verilog/wrap_verilog_modules_to_hacprsim.awk:
+		now emit parameters port-style using #(...)
+		and preserves ordering, appending prsim_name="".
+	  Tested.
+
 
 2009-10-22	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-41:
 	  verilog/wrap_verilog_modules_to_hacprsim.awk:
-		noe handles optional "wire" keyword in port declarations.
+		now handles optional "wire" keyword in port declarations.
 	  verilog/vcs_scandepend.sh: script to scan compile logs
 		for list of included source files, for dependency generation.
 

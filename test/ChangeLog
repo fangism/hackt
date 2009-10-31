@@ -1,6 +1,14 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.99 2009/10/27 18:21:50 fang Exp $
+#	$Id: ChangeLog,v 1.100 2009/10/31 02:22:15 fang Exp $
 # ChangeLog for test directory.
+
+2009-10-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-44:
+	  prsim/vpi: added more tests for wrap_verilog_modules_to_hacprsim.awk,
+		covering reverse-mode, and parameter preservation, 
+		added demo examples of reverse-mode.
+
 
 2009-10-26	David Fang		<fangism@users.sourceforge.net>
 
