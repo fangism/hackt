@@ -1,6 +1,6 @@
 # "Make.test-vpi"
 #	vi: ft=automake
-#	$Id: Make.test-vpi,v 1.12 2009/10/31 02:22:16 fang Exp $
+#	$Id: Make.test-vpi,v 1.13 2009/10/31 02:36:31 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -33,7 +33,8 @@ HACKT_VPI_CLEAN_IGNORE_PATTERNS = \
 	"*.daidir"
 
 VPI_PRSIM_MODULE = $(top_builddir)/src/vpihacprsim.la
-AUTO_WRAP_VERILOG_AWK = $(AWK) -f $(top_srcdir)/lib/verilog/wrap_verilog_modules_to_hacprsim.awk
+WRAP_VERILOG_AWK_SCRIPT = $(top_srcdir)/lib/verilog/wrap_verilog_modules_to_hacprsim.awk
+AUTO_WRAP_VERILOG_AWK = $(AWK) -f $(WRAP_VERILOG_AWK_SCRIPT)
 VCS_SCANDEPEND = $(top_srcdir)/lib/verilog/vcs_scandepend.sh
 
 AUTO_IGNORE += $(HACKT_VPI_CLEAN_IGNORE_PATTERNS)
@@ -283,6 +284,9 @@ if CHECK_TESTS
 TESTS += $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vpitest) \
 	$(HACKT_VWRAP_TEST_SCRIPTS_PASSES:=.vwraptest)
 endif
+
+VWRAP_OUTPUTS = $(HACKT_VWRAP_TEST_SCRIPTS_PASSES:=.v-wrap)
+$(VWRAP_OUTPUTS): $(WRAP_VERILOG_AWK_SCRIPT)
 
 VPI_SIM_EXECUTABLES = $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx)
 ALL_VERILOG_TARGETS = $(VPI_SIM_EXECUTABLES)
