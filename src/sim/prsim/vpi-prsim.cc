@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.19 2009/10/21 00:04:38 fang Exp $
+	$Id: vpi-prsim.cc,v 1.20 2009/11/02 23:58:07 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -503,6 +503,7 @@ _vpi_finish(void) {
 	// print this finish timestamp out of convention
 	cerr << "$finish at simulation time (hacprsim) " <<
 		prsim_state->time() << endl;
+	__destroy_globals();
 	return vpi_control(vpiFinish, 1);
 }
 #endif
@@ -525,21 +526,21 @@ try {
 } catch (const step_exception& exex) {
 	exex.inspect(*prsim_state, cerr);	// ignore return code?
 	// no need to translate error_policy_to_status
-	__destroy_globals();
 #if NICE_FINISH
 	cerr << "Terminating simulation early due to hacprsim exception."
 		<< endl;
 	_vpi_finish();
 #else
+	__destroy_globals();
 	THROW_EXIT;	// re-throw
 #endif
 } catch (...) {
 	// catch all remaining exceptions here, destroy globals and rethrow
-	__destroy_globals();
 	cerr << "hacprsim (VPI) encountered error, terminating..." << endl;
 #if NICE_FINISH
 	_vpi_finish();
 #else
+	__destroy_globals();
 	throw;		// re-throw
 #endif
 }
@@ -1037,6 +1038,7 @@ require_prsim_state(__FUNCTION__);
 		<< endl;
 	_vpi_finish();
 #else
+	__destroy_globals();
 	THROW_EXIT;	// abort
 #endif
   case command_error_codes::NORMAL:
