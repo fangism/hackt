@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.56 2009/10/29 23:00:24 fang Exp $
+	$Id: devel_switches.h,v 1.57 2009/11/04 00:16:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -234,6 +234,18 @@
 	Status: experimental
  */
 #define	INSTANCE_SUPPLY_DISCONNECT		(0 && INSTANCE_SUPPLY_OVERRIDES)
+
+/**
+	Define to 1 to allow the implicit ports to be declared 
+	!GND before !Vdd, but override connections to use the ordering
+	consistent with prs-overrides: !Vdd, !GND.
+	Goal: 1
+	Rationale: this lets netlists produce GND-first convention subcircuits
+		while allowing the common case of overriding only !Vdd
+		to be consistent between prs and instance overrides.
+	Status: tested
+ */
+#define	REVERSE_INSTANCE_SUPPLY_OVERRIDES	(1 && INSTANCE_SUPPLY_OVERRIDES)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

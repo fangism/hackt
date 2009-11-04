@@ -9,9 +9,10 @@ bool x;
 inv a(x, );
 inv b$()(x, );
 inv c$(,)(x, );
-inv d$(myGND)(x, );
-inv d2$(myGND)(x, );
-inv e$(myGND,)(x, );
-inv f$(,myVdd)(x, );
-inv g$(myGND,myVdd)(x, );
+inv d$(, myGND)(x, );
+inv d2$(, myGND)(x, );
+inv e$(, myGND)(x, );
+inv f$(myVdd)(x, );
+inv f2$(myVdd, )(x, );
+inv g$(myVdd,myGND)(x, );
 

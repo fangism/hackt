@@ -6,6 +6,6 @@ import "globals.hac";
 
 globals g;
 inv foo;
-foo $(g.GND_1, );
-foo $(g.GND_2, );
+foo $(, g.GND_1);
+foo $(, g.GND_2);
 

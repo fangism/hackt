@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.45 2009/10/02 01:56:47 fang Exp $
+	$Id: footprint.cc,v 1.46 2009/11/04 00:16:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -956,6 +956,8 @@ if (cp.has_complete_type()) {
 	if (imp) {
 		INVARIANT(imp == 2);		// Vdd, GND for now
 		port_formals_manager::const_list_iterator fi(pfm.begin());
+		// NOTE: keep this consistent with order in
+		// "AST/globals.cc" and "net/netgraph.cc" and "AST/instance.cc"
 		// first, GND
 		if (__auto_connect_port(cp, c, **fi, GND))
 			err = true;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.27 2009/10/02 01:57:00 fang Exp $
+	$Id: subinstance_manager.cc,v 1.28 2009/11/04 00:16:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -173,19 +173,34 @@ subinstance_manager::__connect_ports(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if INSTANCE_SUPPLY_OVERRIDES
+/**
+	Here, we reverse the order so that the earliest implicit ports
+	are trailing defaults.  
+	Compare the ordering in "AST/globals.cc" vs.
+	"net/netgraph.cc".
+	Rationale: keep !GND first
+ */
 good_bool
 subinstance_manager::connect_implicit_ports(
 		const connection_references_type& cr, 
 		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
-	typedef	connection_references_type::const_iterator
-						const_ref_iterator;
 	STACKTRACE_INDENT_PRINT("subinst_array.size() = " <<
 		subinstance_array.size() << endl);
 	STACKTRACE_INDENT_PRINT("cr.size() = " << cr.size() << endl);
-	INVARIANT(subinstance_array.size() >= cr.size());
 	iterator pi(subinstance_array.begin());	// instance_collection_type
+#if REVERSE_INSTANCE_SUPPLY_OVERRIDES
+	// added fill-ins
+	INVARIANT(subinstance_array.size() == cr.size());
+	typedef	connection_references_type::const_reverse_iterator
+						const_ref_iterator;
+	const_ref_iterator ri(cr.rbegin()), re(cr.rend());
+#else
+	INVARIANT(subinstance_array.size() >= cr.size());
+	typedef	connection_references_type::const_iterator
+						const_ref_iterator;
 	const_ref_iterator ri(cr.begin()), re(cr.end());
+#endif
 for ( ; ri!=re; ++pi, ++ri) {
 // references may be NULL (no-connect)
 	// see meta_instance_reference<Tag>::connect_port()

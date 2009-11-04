@@ -3,8 +3,8 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	gg	globals<>
 	bool: 1,2,3,4
 2	(top)	-	2	bar	foo<>
-	process: 3,4,5,6,7,8,9,10
-	bool: 5,6,7,8,9,10,2,11,12,13,1,14,15
+	process: 3,4,5,6,7,8,9,10,11
+	bool: 5,6,7,8,9,10,2,11,12,13,1,14,15,16
 3	process	2	1	bar.a	inv<>
 	bool: 5,6,7,8
 4	process	2	2	bar.b	inv<>
@@ -19,8 +19,10 @@ globID	super		localID	canonical	footprint-frame
 	bool: 2,6,7,13
 9	process	2	7	bar.f	inv<>
 	bool: 5,1,7,14
-10	process	2	8	bar.g	inv<>
-	bool: 2,1,7,15
+10	process	2	8	bar.f2	inv<>
+	bool: 5,1,7,15
+11	process	2	9	bar.g	inv<>
+	bool: 2,1,7,16
 [global bool entries]
 1	(top)	-	1	gg.Vdd_1	
 2	(top)	-	2	gg.GND_1	
@@ -36,4 +38,5 @@ globID	super		localID	canonical	footprint-frame
 12	process	2	9	bar.d2.y	
 13	process	2	10	bar.e.y	
 14	process	2	12	bar.f.y	
-15	process	2	13	bar.g.y	
+15	process	2	13	bar.f2.y	
+16	process	2	14	bar.g.y	

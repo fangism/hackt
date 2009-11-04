@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.11 2009/10/29 17:45:49 fang Exp $
+	$Id: netgraph.cc,v 1.12 2009/11/04 00:16:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -529,6 +529,8 @@ netlist::void_node("__VOID__", node::auxiliary_node_tag)
 const	index_type
 netlist::void_index = 0
 #if !PRS_SUPPLY_OVERRIDES
+// this must be kept consistent with ordering in "AST/globals.cc"
+// and auto-connections in "Object/def/footprint.cc"
 , netlist::GND_index = 1
 , netlist::Vdd_index = 2
 #endif

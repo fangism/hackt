@@ -223,7 +223,7 @@ In namespace "", we have: {
           bool<> out
         )
         inv<> a
-        a $(g.GND_1, g.Vdd_1);
+        a $(g.Vdd_1, g.GND_1);
         a ( , , in, out);
       footprint: {
         !GND = bool^0 = foo<>::!GND (7) 

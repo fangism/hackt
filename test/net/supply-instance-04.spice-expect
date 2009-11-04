@@ -12,6 +12,7 @@ xd g.GND_1 !Vdd d.x d.y inv<>
 xd2 g.GND_2 !Vdd d2.x d2.y inv<>
 xe g.GND_1 !Vdd e.x e.y inv<>
 xf !GND g.Vdd_1 f.x f.y inv<>
+xf2 !GND g.Vdd_1 f2.x f2.y inv<>
 xh g.GND_2 g.Vdd_2 h.x h.y inv<>
 .ends
 
@@ -25,5 +26,6 @@ Warning: node d.x is used but not driven!
 Warning: node d2.x is used but not driven!
 Warning: node e.x is used but not driven!
 Warning: node f.x is used but not driven!
+Warning: node f2.x is used but not driven!
 Warning: node h.x is used but not driven!
 ... in subcircuit foo<>

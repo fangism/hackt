@@ -6,6 +6,6 @@ import "globals.hac";
 
 globals g;
 inv foo;
-foo $(g.GND_1, g.Vdd_1);	// cancelled out
-foo $(g.GND_2, g.Vdd_2);
+foo $(g.Vdd_1, g.GND_1);	// cancelled out
+foo $(g.Vdd_2, g.GND_2);
 

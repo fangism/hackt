@@ -1,7 +1,7 @@
 /**
 	\file "AST/globals.cc"
 	Shared AST objects.  
-	$Id: globals.cc,v 1.2 2009/10/02 01:56:34 fang Exp $
+	$Id: globals.cc,v 1.3 2009/11/04 00:15:59 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE			0
@@ -58,6 +58,8 @@ __bool_scalar(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wish I could just insert a scheme/lisp structure...
+	Ordering must be kept consistent with GND_index and Vdd_index 
+	in "net/netgraph.cc", and auto-connection in "Object/def/footprint.cc".
  */
 const count_ptr<const port_formal_decl>&
 get_implicit_ports(void) {
@@ -79,6 +81,8 @@ if (!__implicit_ports) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Implicit global declarations for top-level module, global scope.
+	Ordering must be kept consistent with GND_index and Vdd_index 
+	in "net/netgraph.cc", and auto-connection in "Object/def/footprint.cc".
  */
 const count_ptr<const instance_declaration>&
 get_implicit_globals(void) {

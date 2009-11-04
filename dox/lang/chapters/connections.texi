@@ -1,5 +1,5 @@
 @c "chapters/connections.texi"
-@c $Id: connections.texi,v 1.2 2009/10/02 01:55:55 fang Exp $
+@c $Id: connections.texi,v 1.3 2009/11/04 00:15:56 fang Exp $
 
 @node Connections
 @chapter Connections
@@ -114,7 +114,7 @@ ports in the process definition, where references may be omitted.
 
 Processes contain a set of hidden implicit ports for the power supply nodes.
 Every process definition effectively declares these supply nodes
-as the first two ports, @t{!GND} and @t{!Vdd}, the @emph{primary supplies}.  
+as the first two ports, @t{!Vdd} and @t{!GND}, the @emph{primary supplies}.  
 @cindex primary supply
 (The top-level module definition is treated as a process for this purpose, 
 and thus also contains these nodes.)
@@ -150,14 +150,14 @@ subsequent supply override statements will break former connections
 to form new ones.  
 
 @example
-proc $(, myVdd1);
-proc $(, myVdd2);
+proc $(myVdd1);
+proc $(myVdd2);
 @end example
 @noindent
 results in only @samp{proc.!Vdd = myVdd2}, while @samp{myVdd1} remains
 disconnected from both.  
 
 Normal port connections may follow supply overrides, 
-for example, @samp{proc $(myGND, myVdd) (x, y, z);}.
+for example, @samp{proc_inst $(myVdd, myGND) (x, y, z);}.
 
 

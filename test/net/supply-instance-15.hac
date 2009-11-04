@@ -5,6 +5,6 @@ import "inv-01.hac";
 
 bool myVdd, myGND;
 inv foo;
-foo $(myGND, );
-foo $(, myVdd);
+foo $(, myGND);
+foo $(myVdd, );
 

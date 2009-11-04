@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.33 2009/10/05 23:09:24 fang Exp $
+	$Id: instance.cc,v 1.34 2009/11/04 00:15:59 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -976,12 +976,21 @@ connection_statement::make_implicit_port_override(
 	}
 	const count_ptr<implicit_port_override>
 		ret(new implicit_port_override(pr));
+	// NOTE: this order must be consistent with 
+	// "Object/def/footprint.cc" auto-connection
+	implicit_port_override::port_ptr_type null;
 	typedef	implicit_ports_type::const_iterator	const_iterator;
 	const_iterator i(iports.begin()), e(iports.end());
 	for ( ; i!=e; ++i) {
-		ret->append_bool_port(*i ? (*i)->get_bool_var() :
-			implicit_port_override::port_ptr_type());
+		ret->append_bool_port(*i ? (*i)->get_bool_var() : null);
 	}
+#if REVERSE_INSTANCE_SUPPLY_OVERRIDES
+	// fill-in remaining spots $() -> $(,)
+	size_t j = iports.size();
+	for ( ; j<2; ++j) {
+		ret->append_bool_port(null);
+	}
+#endif
 	return ret;
 }
 #endif

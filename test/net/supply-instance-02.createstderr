@@ -62,13 +62,13 @@ Persistent Object Manager text dump:
 	58	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	59	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	60	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	iprtovrd	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	iprtovrd	0	#HEAD#	#TAIL#	24
 	62	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	66	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	iprtovrd	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	iprtovrd	0	#HEAD#	#TAIL#	24
 	68	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	69	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	70	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16

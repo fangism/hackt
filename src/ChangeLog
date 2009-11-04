@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-11-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-45:
+	  instance-supply-overrides: changed override ordering (now: 
+		Vdd [, GND]) to be reverse of the implicit port 
+		declarations (GND, Vdd), for the sake of consistency.
+		Since the true formal ordering is unchanged, the resulting
+		netlists still follow the GND-first convention.
+		Best of both worlds, at the cost of a sneaky
+		reverse-ordering implementation.
+	  Documentation updated, test cases updated -- only 
+		inputs to hacknet were re-written with new order!
+
+
 2009-10-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-44:

@@ -12,6 +12,7 @@ xd g.GND_1 !Vdd in d.y inv<>
 xd2 g.GND_2 !Vdd in d2.y inv<>
 xe g.GND_1 !Vdd in e.y inv<>
 xf !GND g.Vdd_1 in f.y inv<>
+xf2 !GND g.Vdd_1 in f2.y inv<>
 xh g.GND_2 g.Vdd_2 in h.y inv<>
 .ends
 

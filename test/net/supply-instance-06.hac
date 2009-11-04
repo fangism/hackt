@@ -8,11 +8,12 @@ defproc foo(globals g; bool in) {
 inv a(in, );
 inv b$()(in, );
 inv c$(,)(in, );
-inv d$(g.GND_1)(in, );
-inv d2$(g.GND_2)(in, );
-inv e$(g.GND_1,)(in, );
-inv f$(,g.Vdd_1)(in, );
-inv h$(g.GND_2,g.Vdd_2)(in, );
+inv d$(, g.GND_1)(in, );
+inv d2$(, g.GND_2)(in, );
+inv e$(, g.GND_1)(in, );
+inv f$(g.Vdd_1, )(in, );
+inv f2$(g.Vdd_1)(in, );
+inv h$(g.Vdd_2,g.GND_2)(in, );
 }
 
 globals g;

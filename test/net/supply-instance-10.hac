@@ -6,7 +6,7 @@ import "inv-01.hac";
 import "globals.hac";
 
 defproc foo(bool myVdd, myGND; bool in, out) {
-inv a $(myGND,myVdd) (in, out);
+inv a $(myVdd,myGND) (in, out);
 }
 
 defproc bar(globals g; bool a, b) {

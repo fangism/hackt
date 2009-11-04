@@ -10,5 +10,6 @@ xd myGND !Vdd x d.y inv<>
 xd2 myGND !Vdd x d2.y inv<>
 xe myGND !Vdd x e.y inv<>
 xf !GND myVdd x f.y inv<>
+xf2 !GND myVdd x f2.y inv<>
 xg myGND myVdd x g.y inv<>
 

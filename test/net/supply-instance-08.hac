@@ -4,7 +4,7 @@
 import "inv-01.hac";
 
 defproc foo(bool myVdd, myGND; bool in, out) {
-inv a $(myGND,myVdd) (in, out);
+inv a $(myVdd,myGND) (in, out);
 }
 
 foo bar;

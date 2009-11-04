@@ -8,11 +8,12 @@ defproc foo(bool myVdd, myGND, in) {
 inv a(in, );
 inv b$()(in, );
 inv c$(,)(in, );
-inv d$(myGND)(in, );
-inv d2$(myGND)(in, );
-inv e$(myGND,)(in, );
-inv f$(,myVdd)(in, );
-inv g$(myGND,myVdd)(in, );
+inv d$(, myGND)(in, );
+inv d2$(, myGND)(in, );
+inv e$(, myGND)(in, );
+inv f$(myVdd, )(in, );
+inv f2$(myVdd)(in, );
+inv g$(myVdd,myGND)(in, );
 }
 
 globals gg;
