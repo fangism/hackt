@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.10 2009/10/29 18:05:24 fang Exp $
+	$Id: netgraph.h,v 1.11 2009/11/06 01:32:06 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -640,6 +640,9 @@ public:
 	const string&
 	get_name(void) const { return name; }
 
+	string
+	get_unmangled_name(void) const;
+
 	bool
 	is_empty(void) const { return empty; }
 
@@ -679,12 +682,18 @@ public:
 	ostream&
 	dump_raw(ostream&) const;
 
+	ostream&
+	emit_mangle_map(ostream&, const netlist_options&) const;
+
 private:
 	void
 	mark_used_nodes(void);
 
 	void
 	__bind_footprint(const footprint&, const netlist_options&);
+
+	string
+	get_original_node_name(const size_t, const netlist_options&) const;
 
 #if NETLIST_CHECK_NAME_COLLISIONS
 	void

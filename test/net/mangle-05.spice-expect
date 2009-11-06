@@ -1,7 +1,22 @@
+* typename_mangle("foo<>") = foo_TEMPLATE_
 .subckt foo_TEMPLATE_ _BANG_GND en x ____y
+* BEGIN node name mangle map
+* 	_BANG_GND : !GND
+* 	_BANG_Vdd : !Vdd
+* 	____y : _y
+* 	en : en
+* 	x : x
+* END node name mangle map
 M_AT_a_COL_dn_COL_0 _BANG_GND en _AT_a _BANG_GND nch W=5u L=2u
 M____y_COL_dn_COL_0 _AT_a x ____y _BANG_GND nch W=5u L=2u
 .ends
 
+* BEGIN node name mangle map
+* 	_BANG_GND : !GND
+* 	bar_DOT_en : bar.en
+* 	bar_DOT_x : bar.x
+* 	bar_DOT_____y : bar._y
+* END node name mangle map
+* instance: foo<> bar
 xbar _BANG_GND bar_DOT_en bar_DOT_x bar_DOT_____y foo_TEMPLATE_
 

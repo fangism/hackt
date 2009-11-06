@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.8 2009/10/29 17:45:51 fang Exp $
+	$Id: netlist_options.cc,v 1.9 2009/11/06 01:32:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -71,6 +71,7 @@ netlist_options::netlist_options() :
 	// format options
 		pre_line_continue(),
 		post_line_continue("+"),	// spice-style
+		comment_prefix("* "),
 
 		lambda(1.0), 
 		min_width(4.0),			// in lambda
@@ -86,7 +87,8 @@ netlist_options::netlist_options() :
 		unused_ports(false),
 		prefer_port_aliases(false),
 		top_type_ports(false), 
-		emit_top(true)
+		emit_top(true), 
+		emit_mangle_map(false)
 		{
 	// delayed mangling
 	// to prevent double-mangling, we have to postpone
@@ -843,6 +845,17 @@ DEFINE_OPTION_DEFAULT(post_line_continue, "post_line_continue",
 	"line-continuation suffix")
 
 /***
+@texinfo config/comment_prefix.texi
+@defopt comment_prefix (string)
+String to print before whole-line comments.
+Default: "* "
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(comment_prefix, "comment_prefix",
+	"whole-line comment string")
+
+/***
 @texinfo config/min_width.texi
 @defopt min_width (real)
 Minimum transistor width in lambda.
@@ -1002,6 +1015,17 @@ Default: 1
 ***/
 DEFINE_OPTION_DEFAULT(emit_top, "emit_top",
 	"if true, emit top-level instances in output")
+
+/***
+@texinfo config/emit_mangle_map.texi
+@defopt emit_mangle_map (bool)
+If set to 1, print a list of manglings in comments.  
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(emit_mangle_map, "emit_mangle_map",
+	"if true, emit mangled node name map in subcircuit comments")
 
 #if 0
 /***

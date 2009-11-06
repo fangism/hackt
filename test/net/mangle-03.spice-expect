@@ -1,5 +1,15 @@
 * subcircuit e1of_TEMP2LATE_ is empty.
+
+* typename_mangle("std::logic::celem<2, 10>") = std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_
 .subckt std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_ _BANG_GND _BANG_Vdd in_IND0EX_ in_IND1EX_ o
+* BEGIN node name mangle map
+* 	_BANG_GND : !GND
+* 	_BANG_Vdd : !Vdd
+* 	____o : _o
+* 	in_IND0EX_ : in[0]
+* 	in_IND1EX_ : in[1]
+* 	o : o
+* END node name mangle map
 M____o_COL_dn_COL_0 _BANG_GND in_IND0EX_ _PND_0 _BANG_GND nch W=5u L=2u
 M____o_COL_dn_COL_1 _PND_0 in_IND1EX_ ____o _BANG_GND nch W=5u L=2u
 M____o_COL_up_COL_0 _BANG_Vdd in_IND0EX_ _PND_1 _BANG_Vdd pch W=5u L=2u
@@ -8,11 +18,30 @@ Mo_COL_dn_COL_0 _BANG_GND ____o o _BANG_GND nch W=10u L=2u
 Mo_COL_up_COL_0 _BANG_Vdd ____o o _BANG_Vdd pch W=10u L=2u
 .ends
 
+* typename_mangle("foo::wire_copy<2>") = foo_SCP_wire____copy_TEMP2LATE_
 .subckt foo_SCP_wire____copy_TEMP2LATE_ _BANG_GND _BANG_Vdd in_DOT_e oe_IND0EX_ oe_IND1EX_
+* BEGIN node name mangle map
+* 	_BANG_GND : !GND
+* 	_BANG_Vdd : !Vdd
+* 	oe_IND0EX_ : oe[0]
+* 	oe_IND1EX_ : oe[1]
+* 	in_DOT_e : in.e
+* END node name mangle map
+* instance: std::logic::celem<2, 10> comp
 xcomp _BANG_GND _BANG_Vdd oe_IND0EX_ oe_IND1EX_ in_DOT_e std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_
 .ends
 
+* typename_mangle("std::logic::celem<3, 10>") = std_SCP_logic_SCP_celem_TEMP3_COM_10LATE_
 .subckt std_SCP_logic_SCP_celem_TEMP3_COM_10LATE_ _BANG_GND _BANG_Vdd in_IND0EX_ in_IND1EX_ in_IND2EX_ o
+* BEGIN node name mangle map
+* 	_BANG_GND : !GND
+* 	_BANG_Vdd : !Vdd
+* 	____o : _o
+* 	in_IND0EX_ : in[0]
+* 	in_IND1EX_ : in[1]
+* 	in_IND2EX_ : in[2]
+* 	o : o
+* END node name mangle map
 M____o_COL_dn_COL_0 _BANG_GND in_IND0EX_ _PND_0 _BANG_GND nch W=5u L=2u
 M____o_COL_dn_COL_1 _PND_0 in_IND1EX_ _PND_1 _BANG_GND nch W=5u L=2u
 M____o_COL_dn_COL_2 _PND_1 in_IND2EX_ ____o _BANG_GND nch W=5u L=2u
@@ -23,11 +52,37 @@ Mo_COL_dn_COL_0 _BANG_GND ____o o _BANG_GND nch W=10u L=2u
 Mo_COL_up_COL_0 _BANG_Vdd ____o o _BANG_Vdd pch W=10u L=2u
 .ends
 
+* typename_mangle("foo::wire_copy<3>") = foo_SCP_wire____copy_TEMP3LATE_
 .subckt foo_SCP_wire____copy_TEMP3LATE_ _BANG_GND _BANG_Vdd in_DOT_e oe_IND0EX_ oe_IND1EX_ oe_IND2EX_
+* BEGIN node name mangle map
+* 	_BANG_GND : !GND
+* 	_BANG_Vdd : !Vdd
+* 	oe_IND0EX_ : oe[0]
+* 	oe_IND1EX_ : oe[1]
+* 	oe_IND2EX_ : oe[2]
+* 	in_DOT_e : in.e
+* END node name mangle map
+* instance: std::logic::celem<3, 10> comp
 xcomp _BANG_GND _BANG_Vdd oe_IND0EX_ oe_IND1EX_ oe_IND2EX_ in_DOT_e std_SCP_logic_SCP_celem_TEMP3_COM_10LATE_
 .ends
 
+* BEGIN node name mangle map
+* 	_BANG_GND : !GND
+* 	_BANG_Vdd : !Vdd
+* 	in_DOT_e : in.e
+* 	c0_DOT_o_IND0EX__DOT_e : c0.o[0].e
+* 	c0_DOT_o_IND1EX__DOT_e : c0.o[1].e
+* 	out_IND0EX__IND0EX__DOT_e : out[0][0].e
+* 	out_IND0EX__IND1EX__DOT_e : out[0][1].e
+* 	out_IND0EX__IND2EX__DOT_e : out[0][2].e
+* 	out_IND1EX__IND0EX__DOT_e : out[1][0].e
+* 	out_IND1EX__IND1EX__DOT_e : out[1][1].e
+* 	out_IND1EX__IND2EX__DOT_e : out[1][2].e
+* END node name mangle map
+* instance: foo::wire_copy<2> c0
 xc0 _BANG_GND _BANG_Vdd in_DOT_e c0_DOT_o_IND0EX__DOT_e c0_DOT_o_IND1EX__DOT_e foo_SCP_wire____copy_TEMP2LATE_
+* instance: foo::wire_copy<3> c1[0]
 xc1_IND0EX_ _BANG_GND _BANG_Vdd c0_DOT_o_IND0EX__DOT_e out_IND0EX__IND0EX__DOT_e out_IND0EX__IND1EX__DOT_e out_IND0EX__IND2EX__DOT_e foo_SCP_wire____copy_TEMP3LATE_
+* instance: foo::wire_copy<3> c1[1]
 xc1_IND1EX_ _BANG_GND _BANG_Vdd c0_DOT_o_IND1EX__DOT_e out_IND1EX__IND0EX__DOT_e out_IND1EX__IND1EX__DOT_e out_IND1EX__IND2EX__DOT_e foo_SCP_wire____copy_TEMP3LATE_
 

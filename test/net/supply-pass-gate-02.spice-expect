@@ -1,4 +1,5 @@
 * subcircuit globals<> is empty.
+
 Md[0]:up:0 s[0] _g[0] d[0] gl.Vdd_1 pch W=5u L=2u
 Md[0]:dn:0 s[0] g[0] d[0] !GND nch W=5u L=2u
 Md[1]:up:0 s[1] _g[1] d[1] gl.Vdd_2 pch W=5u L=2u

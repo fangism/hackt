@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.12 2009/11/04 00:16:02 fang Exp $
+	$Id: netgraph.cc,v 1.13 2009/11/06 01:32:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -83,7 +83,7 @@ netlist_common::emit_devices(ostream& o, const node_pool_type& node_pool,
 		const footprint& fp, const netlist_options& nopt) const {
 	// emit devices
 #if ENABLE_STACKTRACE
-	o << "* devices:" << endl;
+	o << nopt.comment_prefix << "devices:" << endl;
 #endif
 #if NETLIST_GROUPED_TRANSISTORS
 	// preserve per-node device counters, just save the whole node pool
@@ -168,8 +168,8 @@ local_netlist::emit_definition(ostream& o, const netlist& n,
 		const netlist_options& nopt) const {
 	o << ".subckt ";
 if (!nopt.nested_subcircuits) {
-	// then use fully qualified type name
-	o << n.name << nopt.emit_scope();;
+	// then use fully qualified type name, mangled
+	o << n.get_name() << nopt.emit_scope();;
 }
 	o << name;
 {
@@ -184,6 +184,7 @@ if (!nopt.nested_subcircuits) {
 	// already mangled during name caching
 	o << formals << endl;
 }
+	// TODO: emit mangle map? only if not nested format?
 	// TODO: emit port-info comments
 	emit_devices(o, n.node_pool, *n.fp, nopt);
 	o << ".ends" << endl;
@@ -341,16 +342,22 @@ instance::is_empty(void) const {
 ostream&
 instance::emit(ostream& o, const node_pool_type& node_pool, 
 		const footprint& fp, const netlist_options& nopt) const {
-	o << 'x';
+	string pname;
 {
 	// process instance name
 	ostringstream oss;
 	fp.get_instance_pool<process_tag>()[pid].get_back_ref()
 		->dump_hierarchical_name(oss, nopt.__dump_flags);
-	string pname(oss.str());
+	pname = oss.str();
+}
+if (nopt.emit_mangle_map) {
+	o << nopt.comment_prefix << "instance: " << type->get_unmangled_name()
+		<< ' ' << pname << endl;
+}
+	o << 'x';
 	nopt.mangle_instance(pname);
 	o << pname;
-}{
+{
 	// actuals
 	ostringstream oss;
 	actuals_list_type::const_iterator
@@ -625,6 +632,14 @@ netlist::bind_footprint(const footprint& f, const string& n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+string
+netlist::get_unmangled_name(void) const {
+	ostringstream oss;
+	fp->dump_type(oss);
+	return oss.str();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param subp global process entry containing footprint frame
 		Should we use local footprint's instance instead?
@@ -834,6 +849,41 @@ netlist::lookup_internal_node(const index_type ei) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param _i is the footprint's local node index, never 0.
+ */
+string
+netlist::get_original_node_name(const size_t _i, 
+		const netlist_options& opt) const {
+if (opt.prefer_port_aliases) {
+	typedef port_alias_tracker_base<bool_tag>::map_type map_type;
+	const map_type&
+		pa(fp->get_scope_alias_tracker()
+			.get_id_map<bool_tag>());
+	const map_type::const_iterator
+		asi(pa.find(_i)), ase(pa.end());
+if (asi != ase) {
+	const alias_reference_set<bool_tag>& s(asi->second);
+	typedef alias_reference_set<bool_tag>::const_iterator
+					const_iterator;
+	const_iterator ai(s.begin()), ae(s.end());
+	for ( ; ai != ae; ++ai) {
+	// just take the first one, arbitrary
+	if ((*ai)->is_port_alias()) {
+		ostringstream oss;
+		(*ai)->dump_hierarchical_name(oss, opt.__dump_flags);
+		return oss.str();
+	}
+	}
+}	// else has no other aliases
+}	// end if prefer_port_aliases
+	ostringstream oss;
+	fp->get_instance_pool<bool_tag>()[_i].get_back_ref()
+		->dump_hierarchical_name(oss, opt.__dump_flags);
+	return oss.str();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	As each named logical node is visited for the first time, 
 	register it with the map of named nodes, where the value
 	is the corresponding index of the *subcircuit* node.
@@ -854,35 +904,7 @@ netlist::register_named_node(const index_type _i, const netlist_options& opt) {
 	if (!ret) {
 		// reserve a new slot and update it for subsequent visits
 		node new_named_node(_i, node::logical_node_tag);
-	if (opt.prefer_port_aliases) {
-		typedef port_alias_tracker_base<bool_tag>::map_type map_type;
-		const map_type&
-			pa(fp->get_scope_alias_tracker()
-				.get_id_map<bool_tag>());
-		const map_type::const_iterator
-			asi(pa.find(_i)), ase(pa.end());
-	if (asi != ase) {
-		const alias_reference_set<bool_tag>& s(asi->second);
-		typedef alias_reference_set<bool_tag>::const_iterator
-						const_iterator;
-		const_iterator ai(s.begin()), ae(s.end());
-		for ( ; ai != ae; ++ai) {
-		// just take the first one, arbitrary
-		if ((*ai)->is_port_alias()) {
-			ostringstream oss;
-			(*ai)->dump_hierarchical_name(oss, opt.__dump_flags);
-			new_named_node.name = oss.str();
-			break;
-		}
-		}
-	}	// else has no other aliases
-	}	// end if prefer_port_aliases
-	if (!new_named_node.name.length()) {
-		ostringstream oss;
-		fp->get_instance_pool<bool_tag>()[_i].get_back_ref()
-			->dump_hierarchical_name(oss, opt.__dump_flags);
-		new_named_node.name = oss.str();
-	}
+		new_named_node.name = get_original_node_name(_i, opt);
 		opt.mangle_instance(new_named_node.name);
 		ret = node_pool.size();
 		INVARIANT(ret);
@@ -937,6 +959,22 @@ netlist::named_node_is_used(const index_type ni) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+netlist::emit_mangle_map(ostream& o, const netlist_options& nopt) const {
+	o << nopt.comment_prefix << "BEGIN node name mangle map" << endl;
+	typedef	node_pool_type::const_iterator	const_iterator;
+	const_iterator i(node_pool.begin()), e(node_pool.end());
+	for ( ; i!=e; ++i) {
+	if (i->is_logical_node()) {	// includes implicit supply nodes
+		const size_t nid = i->index;
+		const string oname = get_original_node_name(nid, nopt);
+		o << nopt.comment_prefix << "\t" << i->name << " : " << oname << endl;
+	}
+	}
+	return o << nopt.comment_prefix << "END node name mangle map" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre all dependent subinstances have been processed.
 		This should really only be called from netlist_generator.
@@ -956,6 +994,10 @@ if (!nopt.nested_subcircuits) {
 	}
 }
 if (sub) {
+if (nopt.emit_mangle_map) {
+	o << nopt.comment_prefix << "typename_mangle(\"";
+	fp->dump_type(o) << "\") = " << name << endl;
+}
 	o << ".subckt " << name;
 	typedef	port_list_type::const_iterator		const_iterator;
 	const_iterator i(port_list.begin()), e(port_list.end());
@@ -968,12 +1010,14 @@ if (sub) {
 	o << formals << endl;
 	// TODO: emit port-info comments
 }
+if (nopt.emit_mangle_map)
+	emit_mangle_map(o, nopt);
 if (sub || nopt.emit_top) {
 	// option to suppress top-level instances and rules
 {
 	// emit subinstances
 #if ENABLE_STACKTRACE
-	o << "* instances:" << endl;
+	o << nopt.comment_prefix << "instances:" << endl;
 #endif
 	typedef	instance_pool_type::const_iterator	const_iterator;
 	size_t j = 0;	// DEBUG
@@ -987,7 +1031,7 @@ if (sub || nopt.emit_top) {
 }{
 #if ENABLE_STACKTRACE
 	// nested subcircuits?
-	o << "* local subcircuits:" << endl;
+	o << nopt.comment_prefix << "local subcircuits:" << endl;
 #endif
 	// print definition
 	// print singleton instance

@@ -1,4 +1,5 @@
 * subcircuit globals<> is empty.
+
 .subckt foo<> !Vdd g.GND_2 x w
 My:dn:0 g.GND_2 x y g.GND_2 nch W=5u L=2u
 My:up:0 !Vdd x y !Vdd pch W=5u L=2u

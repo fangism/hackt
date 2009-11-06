@@ -1,7 +1,11 @@
 * subcircuit e1of2<> is empty.
+
 * subcircuit empty_1<> is empty.
+
 * subcircuit empty_2<> is empty.
+
 * subcircuit empty_3<> is empty.
+
 .subckt inv<> !GND !Vdd a b
 Mb:dn:0 !GND a b !GND nch W=5u L=2u
 Mb:up:0 !Vdd a b !Vdd pch W=5u L=2u

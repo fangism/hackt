@@ -3,6 +3,7 @@ Mout:dn:0 in in out !GND nch W=5u L=2u
 .ends
 
 * subcircuit e1of2<> is empty.
+
 .subckt connect_me<> !GND r.in r.out
 xr !GND r.in r.out res<6>
 .ends

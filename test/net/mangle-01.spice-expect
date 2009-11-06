@@ -1,3 +1,11 @@
+* BEGIN node name mangle map
+* 	_BANG_GND : !GND
+* 	_BANG_Vdd : !Vdd
+* 	____o : _o
+* 	in_IND0EX_ : in[0]
+* 	in_IND1EX_ : in[1]
+* 	o : o
+* END node name mangle map
 M____o_COL_dn_COL_0 _BANG_GND in_IND0EX_ _PND_0 _BANG_GND nch W=5u L=2u
 M____o_COL_dn_COL_1 _PND_0 in_IND1EX_ ____o _BANG_GND nch W=5u L=2u
 M____o_COL_up_COL_0 _BANG_Vdd in_IND0EX_ _PND_1 _BANG_Vdd pch W=5u L=2u

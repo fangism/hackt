@@ -1,6 +1,8 @@
 # netlist generation configuration values:
 area_unit=
 case_collision=warn
+comment_prefix=* 
+emit_mangle_map=0
 emit_parasitics=0
 emit_top=1
 empty_subcircuits=0

@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.10 2009/10/29 18:05:25 fang Exp $
+	$Id: netlist_generator.cc,v 1.11 2009/11/06 01:32:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -232,7 +232,8 @@ try {
 if (opt.empty_subcircuits || !nl->is_empty()) {
 	nl->emit(os, !top_level || opt.top_type_ports, opt) << endl;
 } else {
-	os << "* subcircuit " << nl->name << " is empty." << endl;
+	os << opt.comment_prefix << "subcircuit "
+		<< nl->name << " is empty.\n" << endl;
 }
 }
 	// if this is not top-level, wrap emit in .subckt/.ends
@@ -534,9 +535,11 @@ __diagnose_supply_mismatch(ostream& o, const netlist_options& opt,
 		const string& node_name) {
 if (opt.internal_node_supply_mismatch_policy != OPTION_IGNORE) {
 const bool err = opt.internal_node_supply_mismatch_policy == OPTION_ERROR;
-	o << (err ? "Error:" : "* Warning:");
+	if (err)
+		o << "Error:";
+	else	o <<  opt.comment_prefix << "Warning:";
 	o << " in subcircuit " << subc_name << ':' << endl <<
-		"* " << supply_name <<
+		opt.comment_prefix << supply_name <<
 		" supply of internal node differs between definition and use: @"
 		<< node_name << endl;
 	if (err) {

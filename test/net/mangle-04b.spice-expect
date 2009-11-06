@@ -1,4 +1,5 @@
 * subcircuit e1of<2> is empty.
+
 .subckt std::logic::celem<2,10> !GND !Vdd in[0] in[1] o
 M_o:dn:0 !GND in[0] #0 !GND nch W=5u L=2u
 M_o:dn:1 #0 in[1] _o !GND nch W=5u L=2u

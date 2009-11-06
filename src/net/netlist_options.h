@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.7 2009/10/29 00:20:18 fang Exp $
+	$Id: netlist_options.h,v 1.8 2009/11/06 01:32:07 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -103,6 +103,10 @@ struct netlist_options {
 	 */
 	string				post_line_continue;
 	/**
+		String to emit for comments.  Default "* ".
+	 */
+	string				comment_prefix;
+	/**
 		lambda, or unit scale factor multiplier.
 	 */
 	real_type			lambda;
@@ -170,6 +174,11 @@ struct netlist_options {
 		emit only subcircuit definitions (library-only).
 	 */
 	bool				emit_top;
+	/**
+		If true, emit mapping between mangled and unmangled names
+		in comments.
+	 */
+	bool				emit_mangle_map;
 
 	netlist_options();
 

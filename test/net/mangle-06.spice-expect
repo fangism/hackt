@@ -1,5 +1,15 @@
 * subcircuit e1of<2> is empty.
+
+* typename_mangle("std::logic::celem<2, 10>") = std::logic::celem<2,10>
 .subckt std::logic::celem<2,10> !GND !Vdd in[0] in[1] o
+* BEGIN node name mangle map
+* 	!GND : !GND
+* 	!Vdd : !Vdd
+* 	_o : _o
+* 	in[0] : in[0]
+* 	in[1] : in[1]
+* 	o : o
+* END node name mangle map
 M_o:dn:0 !GND in[0] #0 !GND nch W=5u L=2u
 M_o:dn:1 #0 in[1] _o !GND nch W=5u L=2u
 M_o:up:0 !Vdd in[0] #1 !Vdd pch W=5u L=2u
@@ -8,11 +18,30 @@ Mo:dn:0 !GND _o o !GND nch W=10u L=2u
 Mo:up:0 !Vdd _o o !Vdd pch W=10u L=2u
 .ends
 
+* typename_mangle("foo::wire_copy<2>") = foo::wire_copy<2>
 .subckt foo::wire_copy<2> !GND !Vdd in.e oe[0] oe[1]
+* BEGIN node name mangle map
+* 	!GND : !GND
+* 	!Vdd : !Vdd
+* 	oe[0] : oe[0]
+* 	oe[1] : oe[1]
+* 	in.e : in.e
+* END node name mangle map
+* instance: std::logic::celem<2, 10> comp
 xcomp !GND !Vdd oe[0] oe[1] in.e std::logic::celem<2,10>
 .ends
 
+* typename_mangle("std::logic::celem<3, 10>") = std::logic::celem<3,10>
 .subckt std::logic::celem<3,10> !GND !Vdd in[0] in[1] in[2] o
+* BEGIN node name mangle map
+* 	!GND : !GND
+* 	!Vdd : !Vdd
+* 	_o : _o
+* 	in[0] : in[0]
+* 	in[1] : in[1]
+* 	in[2] : in[2]
+* 	o : o
+* END node name mangle map
 M_o:dn:0 !GND in[0] #0 !GND nch W=5u L=2u
 M_o:dn:1 #0 in[1] #1 !GND nch W=5u L=2u
 M_o:dn:2 #1 in[2] _o !GND nch W=5u L=2u
@@ -23,15 +52,54 @@ Mo:dn:0 !GND _o o !GND nch W=10u L=2u
 Mo:up:0 !Vdd _o o !Vdd pch W=10u L=2u
 .ends
 
+* typename_mangle("foo::wire_copy<3>") = foo::wire_copy<3>
 .subckt foo::wire_copy<3> !GND !Vdd in.e oe[0] oe[1] oe[2]
+* BEGIN node name mangle map
+* 	!GND : !GND
+* 	!Vdd : !Vdd
+* 	oe[0] : oe[0]
+* 	oe[1] : oe[1]
+* 	oe[2] : oe[2]
+* 	in.e : in.e
+* END node name mangle map
+* instance: std::logic::celem<3, 10> comp
 xcomp !GND !Vdd oe[0] oe[1] oe[2] in.e std::logic::celem<3,10>
 .ends
 
+* typename_mangle("ctree<{2,3}>") = ctree<{2,3}>
 .subckt ctree<{2,3}> !GND !Vdd in.e out[0][0].e out[0][1].e out[0][2].e out[1][0].e out[1][1].e out[1][2].e
+* BEGIN node name mangle map
+* 	!GND : !GND
+* 	!Vdd : !Vdd
+* 	in.e : in.e
+* 	c0.o[0].e : c0.o[0].e
+* 	c0.o[1].e : c0.o[1].e
+* 	out[0][0].e : out[0][0].e
+* 	out[0][1].e : out[0][1].e
+* 	out[0][2].e : out[0][2].e
+* 	out[1][0].e : out[1][0].e
+* 	out[1][1].e : out[1][1].e
+* 	out[1][2].e : out[1][2].e
+* END node name mangle map
+* instance: foo::wire_copy<2> c0
 xc0 !GND !Vdd in.e c0.o[0].e c0.o[1].e foo::wire_copy<2>
+* instance: foo::wire_copy<3> c1[0]
 xc1[0] !GND !Vdd c0.o[0].e out[0][0].e out[0][1].e out[0][2].e foo::wire_copy<3>
+* instance: foo::wire_copy<3> c1[1]
 xc1[1] !GND !Vdd c0.o[1].e out[1][0].e out[1][1].e out[1][2].e foo::wire_copy<3>
 .ends
 
+* BEGIN node name mangle map
+* 	!GND : !GND
+* 	!Vdd : !Vdd
+* 	bar.in.e : bar.in.e
+* 	bar.out[0][0].e : bar.out[0][0].e
+* 	bar.out[0][1].e : bar.out[0][1].e
+* 	bar.out[0][2].e : bar.out[0][2].e
+* 	bar.out[1][0].e : bar.out[1][0].e
+* 	bar.out[1][1].e : bar.out[1][1].e
+* 	bar.out[1][2].e : bar.out[1][2].e
+* END node name mangle map
+* instance: ctree<{2,3}> bar
 xbar !GND !Vdd bar.in.e bar.out[0][0].e bar.out[0][1].e bar.out[0][2].e bar.out[1][0].e bar.out[1][1].e bar.out[1][2].e ctree<{2,3}>
 
