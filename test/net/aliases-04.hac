@@ -1,0 +1,11 @@
+// "aliases-04.hac"
+// @hacknet-flags@ -T inv -f emit_node_aliases=1
+
+defproc inv(bool x, y, j, k) {
+j = x;
+k = y;
+prs {
+	x	=> y-
+}
+}
+

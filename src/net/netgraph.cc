@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.13 2009/11/06 01:32:05 fang Exp $
+	$Id: netgraph.cc,v 1.14 2009/11/06 02:57:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -29,6 +29,7 @@
 #include "util/unique_list.tcc"
 #include "util/string.h"		// for strgsub
 #include "util/stacktrace.h"
+#include "util/indent.h"
 
 namespace HAC {
 namespace NET {
@@ -1010,10 +1011,16 @@ if (nopt.emit_mangle_map) {
 	o << formals << endl;
 	// TODO: emit port-info comments
 }
-if (nopt.emit_mangle_map)
-	emit_mangle_map(o, nopt);
 if (sub || nopt.emit_top) {
 	// option to suppress top-level instances and rules
+if (nopt.emit_mangle_map)
+	emit_mangle_map(o, nopt);
+if (nopt.emit_node_aliases) {
+	const util::indent _temp_(o, nopt.comment_prefix + "\t");
+	o << nopt.comment_prefix << "BEGIN node aliases" << endl;
+	fp->get_scope_alias_tracker().dump_local_bool_aliases(o);
+	o << nopt.comment_prefix << "END node aliases" << endl;
+}
 {
 	// emit subinstances
 #if ENABLE_STACKTRACE

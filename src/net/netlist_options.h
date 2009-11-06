@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.8 2009/11/06 01:32:07 fang Exp $
+	$Id: netlist_options.h,v 1.9 2009/11/06 02:57:56 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -174,6 +174,11 @@ struct netlist_options {
 		emit only subcircuit definitions (library-only).
 	 */
 	bool				emit_top;
+	/**
+		Emit sets of nodes aliased.
+		Should these names be mangled?
+	 */
+	bool				emit_node_aliases;
 	/**
 		If true, emit mapping between mangled and unmangled names
 		in comments.

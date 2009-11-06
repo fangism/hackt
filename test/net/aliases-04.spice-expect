@@ -1,0 +1,13 @@
+.subckt inv<> !GND !Vdd x y
+* BEGIN node aliases
+* 	bool port aliases:
+* 	1: !GND
+* 	2: !Vdd
+* 	3: x = j
+* 	4: y = k
+* END node aliases
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+.ends
+
+

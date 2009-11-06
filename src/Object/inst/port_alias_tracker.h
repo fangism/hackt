@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.18 2009/06/05 16:28:11 fang Exp $
+	$Id: port_alias_tracker.h,v 1.19 2009/11/06 02:57:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -33,6 +33,7 @@
 
 namespace HAC {
 namespace entity {
+struct dump_flags;
 class footprint;
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 using std::istream;
@@ -111,7 +112,7 @@ public:
 	push_back(const alias_ptr_type);
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const dump_flags&) const;
 
 	bool
 	is_unique(void) const { return alias_array.size() <= 1; }
@@ -188,7 +189,7 @@ protected:
 	~port_alias_tracker_base();
 
 	ostream&
-	dump_map(ostream&) const;
+	dump_map(ostream&, const dump_flags&) const;
 
 	good_bool
 	__replay_aliases(substructure_alias&) const;
@@ -269,6 +270,9 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	ostream&
+	dump_local_bool_aliases(ostream&) const;
 
 	template <class Tag>
 	typename port_alias_tracker_base<Tag>::map_type&

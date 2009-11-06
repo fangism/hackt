@@ -5,6 +5,12 @@
 
 2009-11-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-47:
+	  hacknet: added option emit_node_aliases to print out alias
+		sets (unmangled names) in comments, local to each subcircuit.
+	  Tested, documented.  Test cases added.
+
+
 	* HACKT-00-01-04-main-00-83-46:
 	  hacknet: added option to emit demangling information in comments.
 		Also added comment_prefix configuration option.

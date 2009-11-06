@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.26 2009/06/05 16:28:10 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.27 2009/11/06 02:57:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -62,7 +62,7 @@ struct alias_reference_set<Tag>::alias_to_string_transformer :
 	operator () (const typename parent_type::argument_type a) const {
 		INVARIANT(a);
 		std::ostringstream o;
-		a->dump_hierarchical_name(o, dump_flags::no_owner);
+		a->dump_hierarchical_name(o, dump_flags::no_owners);
 		return o.str();
 	}
 };      // end struct alias_to_string_transformer
@@ -90,24 +90,24 @@ alias_reference_set<Tag>::refresh_string_cache(void) const {
  */
 template <class Tag>
 ostream&
-alias_reference_set<Tag>::dump(ostream& o) const {
+alias_reference_set<Tag>::dump(ostream& o, const dump_flags& df) const {
 	if (alias_array.size() > 1) {
 		const_iterator i(alias_array.begin());
 		const const_iterator e(alias_array.end());
 		NEVER_NULL(*i);
-		(*i)->dump_hierarchical_name(o);
+		(*i)->dump_hierarchical_name(o, df);
 #if VERBOSE_ALIAS_ATTRIBUTES
 		(*i)->dump_attributes(o);	// check consistency
 #endif
 		for (++i; i!=e; ++i) {
 			NEVER_NULL(*i);
-			(*i)->dump_hierarchical_name(o << " = ");
+			(*i)->dump_hierarchical_name(o << " = ", df);
 #if VERBOSE_ALIAS_ATTRIBUTES
 			(*i)->dump_attributes(o);	// check consistency
 #endif
 		}
 	} else if (!alias_array.empty()) {
-		alias_array.front()->dump_hierarchical_name(o);
+		alias_array.front()->dump_hierarchical_name(o, df);
 #if VERBOSE_ALIAS_ATTRIBUTES
 		alias_array.front()->dump_attributes(o);
 #endif
@@ -314,14 +314,15 @@ alias_reference_set<Tag>::load_object_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 ostream&
-port_alias_tracker_base<Tag>::dump_map(ostream& o) const {
+port_alias_tracker_base<Tag>::dump_map(ostream& o, const dump_flags& df) const {
 if (!_ids.empty()) {
 	o << auto_indent << class_traits<Tag>::tag_name
 		<< " port aliases:" << endl;
 	const_iterator i(_ids.begin());
 	const const_iterator e(_ids.end());
 	for ( ; i!=e; ++i) {
-		i->second.dump(o << auto_indent << i->first << ": ") << endl;
+		i->second.dump(o << auto_indent << i->first << ": ", df)
+			<< endl;
 	}
 }
 	return o;
@@ -617,16 +618,24 @@ port_alias_tracker::import_port_aliases(const this_type& t) {
 ostream&
 port_alias_tracker::dump(ostream& o) const {
 if (has_internal_aliases) {
-	port_alias_tracker_base<process_tag>::dump_map(o);
-	port_alias_tracker_base<channel_tag>::dump_map(o);
+	const dump_flags& df(dump_flags::default_value);
+	port_alias_tracker_base<process_tag>::dump_map(o, df);
+	port_alias_tracker_base<channel_tag>::dump_map(o, df);
 #if ENABLE_DATASTRUCTS
-	port_alias_tracker_base<datastruct_tag>::dump_map(o);
+	port_alias_tracker_base<datastruct_tag>::dump_map(o, df);
 #endif
-	port_alias_tracker_base<enum_tag>::dump_map(o);
-	port_alias_tracker_base<int_tag>::dump_map(o);
-	port_alias_tracker_base<bool_tag>::dump_map(o);
+	port_alias_tracker_base<enum_tag>::dump_map(o, df);
+	port_alias_tracker_base<int_tag>::dump_map(o, df);
+	port_alias_tracker_base<bool_tag>::dump_map(o, df);
 }
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+port_alias_tracker::dump_local_bool_aliases(ostream& o) const {
+	return port_alias_tracker_base<bool_tag>::dump_map(o,
+		dump_flags::no_owners);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

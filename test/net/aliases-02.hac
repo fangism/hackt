@@ -1,0 +1,10 @@
+// "aliases-02.hac"
+// @hacknet-flags@ -f emit_node_aliases=1
+
+import "inv-01.hac";
+
+bool a, b, c, d;
+inv x(a, b);
+a = c;
+d = b;
+

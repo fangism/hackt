@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.9 2009/11/06 01:32:07 fang Exp $
+	$Id: netlist_options.cc,v 1.10 2009/11/06 02:57:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -88,6 +88,7 @@ netlist_options::netlist_options() :
 		prefer_port_aliases(false),
 		top_type_ports(false), 
 		emit_top(true), 
+		emit_node_aliases(false),
 		emit_mangle_map(false)
 		{
 	// delayed mangling
@@ -1015,6 +1016,17 @@ Default: 1
 ***/
 DEFINE_OPTION_DEFAULT(emit_top, "emit_top",
 	"if true, emit top-level instances in output")
+
+/***
+@texinfo config/emit_node_aliases.texi
+@defopt emit_node_aliases (bool)
+If set to 1, print a sets of node aliases (equivalent names).
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(emit_node_aliases, "emit_node_aliases",
+	"if true, emit node alias sets in subcircuit comments")
 
 /***
 @texinfo config/emit_mangle_map.texi
