@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-11-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-48:
+	  hacprsim, hacchpsim: implemented directory command/state interface
+		to interpreters: cd, pwd, pushd, popd, dirs.
+		All unadorned references are now relative to the
+		current working 'directory' (instance-hierarchy-wise), 
+		unless prefixed with "::" (absolute).
+		Documented and test cases added, no regressions.
+	  main/prsim.cc, chpsim.cc: separate -h (usage) from -H in-program
+		command help.  Documentation updated.
+
+
 2009-11-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-47:

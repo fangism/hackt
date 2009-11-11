@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.16 2009/03/18 00:22:54 fang Exp $
+	$Id: command_registry.tcc,v 1.17 2009/11/11 00:34:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -62,6 +62,13 @@ command_registry<Command>::category_map;
 template <class Command>
 typename command_registry<Command>::aliases_map_type
 command_registry<Command>::aliases;
+
+/**
+	Directory stack.
+ */
+template <class Command>
+directory_stack
+command_registry<Command>::dir_stack;
 
 /**
 	For block style comments. 
@@ -257,6 +264,57 @@ template <class Command>
 int
 command_registry<Command>::expand_aliases(string_list& c) {
 	return command_aliases_base::expand_aliases(aliases, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// directory commands
+
+template <class Command>
+bool
+command_registry<Command>::change_dir(const string& d) {
+	return dir_stack.change_directory(d);
+}
+
+template <class Command>
+bool
+command_registry<Command>::change_dir_abs(const string& d) {
+	return dir_stack.change_directory(dir_stack.absolute_prefix +d);
+}
+
+template <class Command>
+bool
+command_registry<Command>::push_dir(const string& d) {
+	return dir_stack.push_directory(d);
+}
+
+template <class Command>
+bool
+command_registry<Command>::pop_dir(void) {
+	return dir_stack.pop_directory();
+}
+
+template <class Command>
+const string&
+command_registry<Command>::working_dir(void) {
+	return dir_stack.current_working_directory();
+}
+
+template <class Command>
+string
+command_registry<Command>::prepend_working_dir(const string& s) {
+	return dir_stack.transform(s);
+}
+
+template <class Command>
+ostream&
+command_registry<Command>::show_working_dir(ostream& o) {
+	return dir_stack.dump_working_directory(o);
+}
+
+template <class Command>
+ostream&
+command_registry<Command>::show_dirs(ostream& o) {
+	return dir_stack.dump_stack(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -641,7 +699,6 @@ command_registry<Command>::completion(const char* text, int start, int end) {
 			cerr << "\nNo such command: " << key << endl;
 			return NULL;
 		}
-//		cout << "TODO: completion for \'" << key << "\'!" << endl;
 		const command_completer gen(f->second.completer());
 		if (gen) {
 			// TODO: be able to override readline hooks here

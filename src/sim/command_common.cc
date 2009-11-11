@@ -2,7 +2,7 @@
 	\file "sim/command_common.cc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.cc,v 1.1 2009/02/19 02:58:33 fang Exp $
+	$Id: command_common.cc,v 1.2 2009/11/11 00:34:02 fang Exp $
  */
 
 #include <iostream>
@@ -16,13 +16,16 @@
 #include "sim/command_common.h"
 #include "sim/command_error_codes.h"
 #include "sim/command_base.h"
-#include "parser/instref.h"
 #include "Object/expr/dlfunction.h"
 #include "common/TODO.h"
 #include "common/ltdl-wrap.h"
+#include "util/memory/excl_ptr.h"
 #include "util/compose.h"
 #include "util/string.tcc"
 #include "util/utypes.h"
+
+// NOTE: all instance-reference parsing calls should be wrapped through
+// the directory interface to use the current working directory.
 
 namespace HAC {
 namespace SIM {
@@ -34,9 +37,6 @@ using std::mem_fun_ref;
 // using util::strings::string_to_num;
 using entity::module;
 #include "util/using_ostream.h"
-using parser::parse_name_to_what;
-using parser::parse_name_to_members;
-using parser::parse_name_to_aliases;
 USING_UTIL_COMPOSE
 
 //=============================================================================
@@ -119,105 +119,6 @@ void
 Abort::usage(ostream& o) {
 	o << "abort" << endl;
 	o << "abort: exits simulator with fatal status" << endl;
-}
-
-//=============================================================================
-DESCRIBE_COMMON_COMMAND_CLASS(LS, "ls",
-	"list subinstances of the referenced instance")
-
-int
-LS::main(const module& m, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return command_error_codes::SYNTAX;
-} else {
-	if (parse_name_to_members(cout, a.back(), m))
-		return command_error_codes::BADARG;
-	else	return command_error_codes::NORMAL;
-}
-}
-
-void
-LS::usage(ostream& o) {
-	o << "ls <name>" << endl;
-	o << "prints list of subinstances of the referenced instance" << endl;
-	o << "\"ls .\" lists top-level instances" << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DESCRIBE_COMMON_COMMAND_CLASS(What, "what",
-	"print type information of named entity")
-
-int
-What::main(const module& m, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return command_error_codes::SYNTAX;
-} else {
-	if (parse_name_to_what(cout, a.back(), m))
-		return command_error_codes::BADARG;
-	else	return command_error_codes::NORMAL;
-}
-}
-
-void
-What::usage(ostream& o) {
-	o << "what <name>" << endl;
-	o << "prints the type/size of the referenced instance(s)" << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DESCRIBE_COMMON_COMMAND_CLASS(Who, "who",
-	"print aliases of node or structure")
-
-int
-Who::main(const module& m, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return command_error_codes::SYNTAX;
-} else {
-	cout << "aliases of \"" << a.back() << "\":" << endl;
-	if (parse_name_to_aliases(cout, a.back(), m, " ")) {
-		return command_error_codes::BADARG;
-	} else {
-		cout << endl;
-		return command_error_codes::NORMAL;
-	}
-}
-}
-
-void
-Who::usage(ostream& o) {
-	o << "who <name>" << endl;
-	o << "prints all aliases (equivalent names) of the referenced instance"
-		<< endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DESCRIBE_COMMON_COMMAND_CLASS(WhoNewline, "who-newline",
-	"print aliases of node or structure, newline separated")
-
-int
-WhoNewline::main(const module& m, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return command_error_codes::SYNTAX;
-} else {
-	cout << "aliases of \"" << a.back() << "\":" << endl;
-	if (parse_name_to_aliases(cout, a.back(), m, "\n")) {
-		return command_error_codes::BADARG;
-	} else {
-		cout << endl;
-		return command_error_codes::NORMAL;
-	}
-}
-}
-
-void
-WhoNewline::usage(ostream& o) {
-	o << "who-newline <name>" << endl;
-	o << "prints all aliases (equivalent names) of the referenced instance"
-		<< endl;
 }
 
 //=============================================================================

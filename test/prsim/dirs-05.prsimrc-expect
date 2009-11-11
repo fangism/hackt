@@ -1,0 +1,18 @@
+poo.p
+poo.p ~ 
+poo.q
+poo.q ~ 
+poo.q.x
+poo.q.x poo.q ~ 
+poo
+poo poo.q ~ 
+~
+~ poo.q ~ 
+poo.p.x
+poo.p.x poo.q ~ 
+~
+~ poo.p.x poo.q ~ 
+poo.p.x
+poo.p.x poo.q ~ 
+~
+~ poo.q ~ 

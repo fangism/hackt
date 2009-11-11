@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.22 2009/02/19 02:58:35 fang Exp $
+	$Id: Command.cc,v 1.23 2009/11/11 00:34:04 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -54,10 +54,20 @@ using std::front_inserter;
 using util::excl_malloc_ptr;
 using util::strings::string_to_num;
 using entity::global_indexed_reference;
+
+// copied from sim/prsim/Command-prsim.cc
+#define	AUTO_PREPEND_WORKING_DIR	1
+
+#if AUTO_PREPEND_WORKING_DIR
+static
+entity::global_indexed_reference
+parse_global_reference(const string& s, const entity::module& m) {
+	return parser::parse_global_reference(
+		CommandRegistry::prepend_working_dir(s), m);
+}
+#else
 using parser::parse_global_reference;
-using parser::parse_name_to_what;
-using parser::parse_name_to_aliases;
-using parser::parse_name_to_get_subnodes;
+#endif
 
 //=============================================================================
 // local static CommandCategories
@@ -1340,13 +1350,61 @@ DumpState::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/directories.texi
+The following commands emulate a directory like interface for 
+navigating the instance hierarchy, reminiscent of shells.  
+By default, @emph{all instance references are relative to the current
+working directory}, just like in a shell.
+Prefix with @samp{::} to use absolute (from-the-top) reference.
+Go up levels of hierarchy with @samp{../} prefix.
+The hierarchy separator is @samp{.} (dot).
+
+@deffn Command cd dir
+Changes current working level of hierarchy.
+@end deffn
+
+@deffn Command pushd dir
+Pushes new directory onto directory stack.
+@end deffn
+
+@deffn Command popd
+Removes last entry on directory stack.
+@end deffn
+
+@deffn Command pwd
+Prints current working directory.
+@end deffn
+
+@deffn Command dirs
+Prints entire directory stack.
+@end deffn
+@end texinfo
+***/
+typedef	ChangeDir<State>			ChangeDir;
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(ChangeDir, builtin)
+
+typedef	PushDir<State>				PushDir;
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(PushDir, builtin)
+
+typedef	PopDir<State>				PopDir;
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(PopDir, builtin)
+
+typedef	WorkingDir<State>			WorkingDir;
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WorkingDir, builtin)
+
+typedef	Dirs<State>				Dirs;
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Dirs, builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/ls.texi
 @deffn Command ls name
 List immediate subinstances of the instance named @var{name}.  
 @end deffn
 @end texinfo
 ***/
-CHPSIM_INSTANTIATE_MODULE_COMMAND_CLASS(LS, info)
+typedef	LS<State>				LS;
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(LS, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1357,7 +1415,8 @@ along with its canonical name.
 @end deffn
 @end texinfo
 ***/
-CHPSIM_INSTANTIATE_MODULE_COMMAND_CLASS(What, info)
+typedef	What<State>				What;
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(What, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1371,8 +1430,10 @@ for improved readability.
 @end deffn
 @end texinfo
 ***/
-CHPSIM_INSTANTIATE_MODULE_COMMAND_CLASS(Who, info)
-CHPSIM_INSTANTIATE_MODULE_COMMAND_CLASS(WhoNewline, info)
+typedef	Who<State>				Who;
+typedef	WhoNewline<State>			WhoNewline;
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Who, info)
+CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WhoNewline, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.82 2009/07/10 20:39:45 fang Exp $
+#	$Id: Makefile.am,v 1.83 2009/11/11 00:34:07 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -249,6 +249,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	check-excl-fail-01 check-excl-fail-02 check-excl-fail-03 \
 	check-excl-fail-04 \
 	after_min_max-01 after_min_max-02 after_min_max-03 \
+	dirs-02 dirs-03 dirs-04 dirs-05 dirs-06 \
 	memstats32-inv memstats64-inv
 
 # subset of prsimrc test that we wish to compare traces against regressions
@@ -459,7 +460,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	after_min_max-bad-01 \
 	reschedule-01 reschedule-02 reschedule-03 reschedule-04 reschedule-05 \
 	reschedule-06 reschedule-18 \
-	oscil-trace-01 oscil-trace-02
+	oscil-trace-01 oscil-trace-02 \
+	dirs-01
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

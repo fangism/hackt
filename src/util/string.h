@@ -2,7 +2,7 @@
 	\file "util/string.h"
 	Configure-detected string library header.  
 	For now, this is really reserved for C++.
-	$Id: string.h,v 1.6 2009/10/29 00:20:20 fang Exp $
+	$Id: string.h,v 1.7 2009/11/11 00:34:07 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_H__
@@ -71,6 +71,15 @@ string_to_num(const std::string&, I&);
  */
 size_t
 strgsub(std::string& t, const std::string& s, const std::string& r);
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+strip_prefix(std::string& t, const std::string& s);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+string_begins_with(const std::string&, const std::string&);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <typename Trans>

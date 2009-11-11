@@ -1,0 +1,19 @@
+# "dirs-03.prsimrc"
+# @haco@ inv.haco-a
+
+cd I
+pwd
+dirs
+pushd ../
+pwd
+dirs
+pushd J
+pwd
+dirs
+pushd ../I
+pwd
+dirs
+cd ../J
+pwd
+dirs
+

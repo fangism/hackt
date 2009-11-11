@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.24 2009/06/18 23:45:36 fang Exp $
+@c $Id: commands.texi,v 1.25 2009/11/11 00:33:56 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -47,6 +47,9 @@ The following commands pertain to command aliases.
 @include cmd/unalias.texi
 @include cmd/unaliasall.texi
 @include cmd/aliases.texi
+
+@c directoy commands
+@include cmd/directories.texi
 
 Shell commands may be executed by prefixing a line with '!'.  
 For example, @samp{!whoami}.  

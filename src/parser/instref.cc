@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.17 2009/08/28 20:45:17 fang Exp $
+	$Id: instref.cc,v 1.18 2009/11/11 00:34:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -216,6 +216,7 @@ parse_node_to_index(const string& n, const module& m) {
 /**
 	\return globally allocated index of a named process, 
 		which can be 0 to reference the top-level process.
+		-1 signals an error.
  */
 size_t
 parse_process_to_index(const string& n, const module& m) {
@@ -225,7 +226,6 @@ if (n == ".") {
 	// refers to the top-level process
 	return 0;
 } else {
-#define	INVALID_PROCESS_INDEX			size_t(-1)
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	if (!r) {
 		return INVALID_PROCESS_INDEX;
@@ -537,7 +537,6 @@ parse_name_to_get_ports(const string& n, const module& m,
 #endif
 	return 0;
 }
-#undef	INVALID_PROCESS_INDEX
 
 //=============================================================================
 /**

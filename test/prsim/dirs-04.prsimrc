@@ -1,0 +1,29 @@
+# "dirs-04.prsimrc"
+# @haco@ inv.haco-a
+
+# trying extra slashes
+cd J/
+pwd
+dirs
+pushd ..
+pwd
+dirs
+pushd I
+pwd
+dirs
+pushd ../J/../J
+pwd
+dirs
+cd ../I/
+pwd
+dirs
+popd
+pwd
+dirs
+popd
+pwd
+dirs
+popd
+pwd
+dirs
+

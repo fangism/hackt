@@ -1,0 +1,67 @@
+poo.p
+poo.p ~ 
+x.b : X
+this actually works!? 
+y/a : X
+poo.q
+poo.q ~ 
+poo.q.x
+poo.q.x poo.q ~ 
+poo.q.x (type: foo<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  a = bool
+  b = bool
+poo
+poo poo.q ~ 
+poo (type: ick<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  p = process bar<>
+  q = process bar<>
+top-level instances: 
+Instances:
+  !GND = bool<> !GND
+  !Vdd = bool<> !Vdd
+  poo = ick<> poo
+~
+~ poo.q ~ 
+poo.p.x
+poo.p.x poo.q ~ 
+aliases of "poo.p.x.b":
+poo.p.x.a
+poo.p.x.b
+poo.p.y.a
+poo.p.y.b
+poo.q.x.a
+poo.q.x.b
+poo.q.y.a
+poo.q.y.b
+
+~
+~ poo.p.x poo.q ~ 
+poo.q (type: bar<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  x = process foo<>
+  y = process foo<>
+this works too!? 
+poo.q (type: bar<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  x = process foo<>
+  y = process foo<>
+poo.p.x
+poo.p.x poo.q ~ 
+~
+~ poo.q ~ 
+poo (type: ick<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  p = process bar<>
+  q = process bar<>

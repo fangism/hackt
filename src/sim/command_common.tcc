@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.17 2009/02/19 02:58:34 fang Exp $
+	$Id: command_common.tcc,v 1.18 2009/11/11 00:34:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -37,9 +37,6 @@ using std::ptr_fun;
 using std::mem_fun_ref;
 using util::strings::string_to_num;
 #include "util/using_ostream.h"
-using parser::parse_name_to_what;
-using parser::parse_name_to_members;
-using parser::parse_name_to_aliases;
 USING_UTIL_COMPOSE
 
 //=============================================================================
@@ -404,7 +401,282 @@ Paths<State>::usage(ostream& o) {
 	o << "show current list of source search paths" << endl;
 }
 
+//-----------------------------------------------------------------------------
+// directory commands
+
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(ChangeDir, "cd",
+	"change current working instance/directory")
+
+template <class State>
+int
+ChangeDir<State>::main(state_type& s, const string_list& a) {
+if (a.size() > 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	typedef	string_list::const_iterator	const_iterator;
+	string_list ac(a);
+	ac.pop_front();		// drop the command
+	// verify that directory is valid, else undo cd
+	const string save(command_registry_type::working_dir());
+	if (a.size() == 2) {
+		command_registry_type::change_dir(ac.back());
+		const string newdir(command_registry_type::working_dir());
+		// optional: confirm and print new working dir
+		if (newdir != "" && 
+			parser::parse_process_to_index(newdir, s.get_module()) == INVALID_PROCESS_INDEX) {
+			cerr << "Invalid process/directory: " << newdir << endl;
+			command_registry_type::change_dir_abs(save);
+			return command_type::BADARG;
+		}
+	} else {
+		// go back to root
+		command_registry_type::change_dir("");
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+ChangeDir<State>::usage(ostream& o) {
+	o << "cd [name]" << endl;
+	o <<
+"Change current working scope (process hierarchy), with which all relative "
+"references are prefixed.  With no arguments, changes to the root/top level.\n"
+"Each ../ returns up a level of hierarchy.  Standard separator is . (dot)."
+	<< endl;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(PushDir, "pushd",
+	"pushes new working instance/directory onto stack")
+
+template <class State>
+int
+PushDir<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	typedef	string_list::const_iterator	const_iterator;
+	string_list ac(a);
+	ac.pop_front();		// drop the command
+	// verify that directory is valid, else undo cd
+	const string save(command_registry_type::working_dir());
+	command_registry_type::push_dir(ac.back());
+	const string newdir(command_registry_type::working_dir());
+	if (newdir != "" && 
+		parser::parse_process_to_index(newdir, s.get_module()) == INVALID_PROCESS_INDEX) {
+		cerr << "Invalid process/directory: " << newdir << endl;
+		command_registry_type::pop_dir();
+		return command_type::BADARG;
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+PushDir<State>::usage(ostream& o) {
+	o << "pushd <name>" << endl;
+	o <<
+"Pushes working scope (process hierarchy), onto directory stack.\n"
+"See also help for \'cd\'."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(PopDir, "popd",
+	"pops last working instance/directory off stack")
+
+template <class State>
+int
+PopDir<State>::main(state_type&, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	// check for underflow
+	if (command_registry_type::pop_dir())
+		return command_type::BADARG;
+	else	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+PopDir<State>::usage(ostream& o) {
+	o << "popd" << endl;
+	o << "Pops working scope (process hierarchy) off of directory stack."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(WorkingDir, "pwd",
+	"show current working instance/directory/scope")
+
+template <class State>
+int
+WorkingDir<State>::main(state_type&, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	command_registry_type::show_working_dir(cout) << endl;
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+WorkingDir<State>::usage(ostream& o) {
+	o << "pwd" << endl;
+	o << "Print current working scope (process hierarchy)." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Dirs, "dirs",
+	"print entire instance/directory stack")
+
+template <class State>
+int
+Dirs<State>::main(state_type&, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	// check for underflow
+	command_registry_type::show_dirs(cout) << endl;
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+Dirs<State>::usage(ostream& o) {
+	o << "dirs" << endl;
+	o << "Prints entire directory stack." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(LS, "ls",
+	"list subinstances of the referenced instance")
+
+template <class State>
+int
+LS<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	string t(command_registry_type::prepend_working_dir(a.back()));
+	if (t.empty()) {
+		t = ".";
+	}
+	if (parser::parse_name_to_members(cout, t, s.get_module()))
+		return command_type::BADARG;
+	else	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+LS<State>::usage(ostream& o) {
+	o << "ls <name>" << endl;
+	o << "prints list of subinstances of the referenced instance" << endl;
+	o << "\"ls .\" lists top-level instances" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(What, "what",
+	"print type information of named entity")
+
+template <class State>
+int
+What<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (parser::parse_name_to_what(cout,
+			command_registry_type::prepend_working_dir(a.back()),
+			s.get_module()))
+		return command_type::BADARG;
+	else	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+What<State>::usage(ostream& o) {
+	o << "what <name>" << endl;
+	o << "prints the type/size of the referenced instance(s)" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Who, "who",
+	"print aliases of node or structure")
+
+template <class State>
+int
+Who<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	const string r(command_registry_type::prepend_working_dir(a.back()));
+	cout << "aliases of \"" << r << "\":" << endl;
+	if (parser::parse_name_to_aliases(cout, r, s.get_module(), " ")) {
+		return command_type::BADARG;
+	} else {
+		cout << endl;
+		return command_type::NORMAL;
+	}
+}
+}
+
+template <class State>
+void
+Who<State>::usage(ostream& o) {
+	o << "who <name>" << endl;
+	o << "prints all aliases (equivalent names) of the referenced instance"
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(WhoNewline, "who-newline",
+	"print aliases of node or structure, newline separated")
+
+template <class State>
+int
+WhoNewline<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	const string r(command_registry_type::prepend_working_dir(a.back()));
+	cout << "aliases of \"" << r << "\":" << endl;
+	if (parser::parse_name_to_aliases(cout, r, s.get_module(), "\n")) {
+		return command_type::BADARG;
+	} else {
+		cout << endl;
+		return command_type::NORMAL;
+	}
+}
+}
+
+template <class State>
+void
+WhoNewline<State>::usage(ostream& o) {
+	o << "who-newline <name>" << endl;
+	o << "prints all aliases (equivalent names) of the referenced instance"
+		<< endl;
+}
+
+//-----------------------------------------------------------------------------
+// state initialization commands
+
 DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Initialize, "initialize",
 	"resets simulator state and event queue, preserving modes")
 

@@ -1,2 +1,3 @@
 expect fail: bad reference 
-parse error: syntax error
+object "foo" not found, ERROR!  [1:1..3]
+... at line 6

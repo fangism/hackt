@@ -1,6 +1,6 @@
 /**
 	\file "util/string.cc"
-	$Id: string.cc,v 1.5 2009/10/29 00:20:18 fang Exp $
+	$Id: string.cc,v 1.6 2009/11/11 00:34:06 fang Exp $
 	Additional string utilities.
  */
 
@@ -12,6 +12,12 @@
 namespace util {
 namespace strings {
 using std::string;
+
+//=============================================================================
+bool
+string_begins_with(const string& s, const string& pre) {
+	return s.find(pre) == 0;
+}
 
 //=============================================================================
 /**
@@ -40,6 +46,21 @@ if (s.length() && (s != r)) {
 		t = ret;
 	// otherwise, just leave alone
 }
+	return subs;
+}
+
+//=============================================================================
+/**
+	Repeatedly removes prefix of string.
+	\return the number of occurrences removed.  
+ */
+size_t
+strip_prefix(string& t, const string& s) {
+	size_t subs = 0;
+	while (string_begins_with(t, s)) {
+		t = t.substr(s.length());
+		++subs;
+	}
 	return subs;
 }
 

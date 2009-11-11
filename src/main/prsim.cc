@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.25 2009/10/16 20:38:47 fang Exp $
+	$Id: prsim.cc,v 1.26 2009/11/11 00:34:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -58,6 +58,8 @@ public:
 	// none
 	/// just print help and exit
 	bool			help_only;
+	/// just print command help and exit
+	bool			command_help_only;
 	/// interactive (default true) vs. batch mode
 	bool			interactive;
 	/// whether or not to show result of expression allocation
@@ -98,7 +100,9 @@ public:
 	/// include search paths for sources
 	source_paths_type	source_paths;
 
-	prsim_options() : help_only(false), interactive(true), 
+	prsim_options() : 
+		help_only(false), command_help_only(false),
+		interactive(true), 
 		dump_expr_alloc(false), run(true),
 		check_structure(true), dump_dot_struct(false), 
 		dump_checkpoint(false),
@@ -144,7 +148,13 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 		// dump of checkpoint only
 		return 0;
 	}
+	// TODO: -h should be for command-line usage
+	// -H should be for in-program command help
 	if (opt.help_only) {
+		usage();
+		return 0;
+	}
+	if (opt.command_help_only) {
 		util::string_list args;
 		args.push_back("help");
 		args.push_back("all");
@@ -256,7 +266,7 @@ try {
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+a:bcC:d:D:f:hiI:O:r:t:v";
+	static const char optstring[] = "+a:bcC:d:D:f:hHiI:O:r:t:v";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -371,12 +381,23 @@ Override the default delay value applied to unspecified rules.
 /***
 @texinfo opt/option-h.texi
 @defopt -h
-Help.  Print list of all interpreter commands and exit.  
+Print command-line options help and exit.
 @end defopt
 @end texinfo
 ***/
 		case 'h':
 			o.help_only = true;
+			// return 0
+			break;
+/***
+@texinfo opt/option-H-upper.texi
+@defopt -H
+Print list of all interpreter commands and exit.  
+@end defopt
+@end texinfo
+***/
+		case 'H':
+			o.command_help_only = true;
 			// return 0
 			break;
 /***
@@ -501,7 +522,8 @@ prsim::usage(void) {
 "\t-C <opts> : forward options to compile driver\n"
 "\t-d <checkpoint>: textual dump of checkpoint only\n"
 "\t-f <flag> : general options modifiers (listed below)\n"
-"\t-h : print commands help and exit (objfile optional)\n"
+"\t-h : print usage help and exit (objfile optional)\n"
+"\t-H : print in-program command help and exit (objfile optional)\n"
 "\t-i : interactive (default)\n"
 "\t-I <path> : include path for scripts (repeatable)\n"
 "\t-O <0..1> : expression optimization level\n"

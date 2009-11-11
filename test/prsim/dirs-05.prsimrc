@@ -1,0 +1,32 @@
+# "dirs-05.prsimrc"
+# @haco@ deep.haco-a
+
+pushd poo.p
+pwd
+dirs
+cd ::poo.q
+pwd
+dirs
+pushd x
+pwd
+dirs
+cd ../..
+pwd
+dirs
+cd
+pwd
+dirs
+cd poo/p/x
+pwd
+dirs
+pushd ::
+pwd
+dirs
+popd
+pwd
+dirs
+cd
+pwd
+dirs
+popd
+

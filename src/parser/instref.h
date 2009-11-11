@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.7 2009/02/28 01:20:44 fang Exp $
+	$Id: instref.h,v 1.8 2009/11/11 00:34:01 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -15,6 +15,8 @@
 #include "util/string_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/STL/vector_fwd.h"
+
+#define	INVALID_PROCESS_INDEX			size_t(-1)
 
 namespace HAC {
 namespace entity {

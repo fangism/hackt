@@ -1,0 +1,43 @@
+# "dirs-06.prsimrc"
+# @haco@ deep.haco-a
+
+pushd poo.p
+pwd
+dirs
+get x.b
+echo this actually works!?
+get y/a
+cd ::poo.q
+pwd
+dirs
+pushd x
+pwd
+dirs
+ls .
+cd ../..
+pwd
+dirs
+ls .
+ls ::
+cd
+pwd
+dirs
+cd poo.p/x
+pwd
+dirs
+who-newline b
+pushd ::
+pwd
+dirs
+ls poo.q
+echo this works too!?
+ls poo/q
+popd
+pwd
+dirs
+cd
+pwd
+dirs
+ls poo/
+popd
+

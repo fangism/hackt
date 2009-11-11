@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim_options.h"
 	Main module for new CHPSIM.
-	$Id: chpsim_options.h,v 1.5 2009/02/01 07:21:22 fang Exp $
+	$Id: chpsim_options.h,v 1.6 2009/11/11 00:34:00 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CHPSIM_OPTIONS_H__
@@ -21,6 +21,8 @@ class chpsim_options {
 public:
 	/// just print help and exit
 	bool				help_only;
+	/// just print command help and exit
+	bool				command_help_only;
 	/// interactive vs. batch mode
 	bool				interactive;
 	/// whether or not to run, or just run some other diagnostics
@@ -51,7 +53,9 @@ public:
 	/// compiler-driver flags
 	compile_options			comp_opt;
 
-	chpsim_options() : help_only(false), interactive(true), 
+	chpsim_options() :
+		help_only(false), command_help_only(false), 
+		interactive(true), 
 		run(true), dump_graph_alloc(false), check_structure(true),
 		dump_dot_struct(false), dump_checkpoint(false), 
 		autosave(false),

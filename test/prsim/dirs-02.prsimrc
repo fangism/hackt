@@ -1,0 +1,22 @@
+# "dirs-02.prsimrc"
+# @haco@ inv.haco-a
+
+# echo-commands on
+pwd
+dirs
+cd I
+pwd
+dirs
+cd
+pwd
+dirs
+echo there's no place like home
+
+pushd I
+pwd
+dirs
+popd
+pwd
+dirs
+echo the stack is back!
+

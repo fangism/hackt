@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.22 2009/10/16 20:38:46 fang Exp $
+	$Id: chpsim.cc,v 1.23 2009/11/11 00:34:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -94,6 +94,10 @@ chpsim::main(int argc, char* argv[], const global_options&) {
 		return 0;
 	}
 	if (opt.help_only) {
+		usage();
+		return 0;
+	}
+	if (opt.command_help_only) {
 		util::string_list args;
 		args.push_back("help");
 		args.push_back("all");
@@ -237,7 +241,7 @@ try {
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+a:bcC:d:f:hiI:l:L:r:t:T:v";
+	static const char optstring[] = "+a:bcC:d:f:hHiI:l:L:r:t:T:v";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
@@ -336,12 +340,22 @@ Exits without running the simulator.
 /***
 @texinfo options/option-h.texi
 @defopt -h
-Help.  Print list of all interpreter commands and exit.  
+Help.  Print command-line help and exit.  
 @end defopt
 @end texinfo
 ***/
 	case 'h':
 		o.help_only = true;
+		break;
+/***
+@texinfo options/option-H-upper.texi
+@defopt -h
+Help.  Print list of all interpreter commands and exit.  
+@end defopt
+@end texinfo
+***/
+	case 'H':
+		o.command_help_only = true;
 		break;
 /***
 @texinfo options/option-i.texi
@@ -494,7 +508,8 @@ chpsim::usage(void) {
 "\t-b : batch-mode, non-interactive (promptless)\n"
 "\t-d <checkpoint>: textual dump of checkpoint only\n"
 "\t-f <flag> : general options modifiers (listed below)\n"
-"\t-h : print commands help and exit (objfile optional)\n"
+"\t-h : print usage and exit (objfile optional)\n"
+"\t-H : print in-program command help and exit (objfile optional)\n"
 "\t-i : interactive (default)\n"
 "\t-I <path> : include path for scripts (repeatable)\n"
 "\t-L <path> : append load path for dlopening modules (repeatable)\n"

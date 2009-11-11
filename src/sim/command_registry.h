@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.10 2009/02/24 00:35:46 fang Exp $
+	$Id: command_registry.h,v 1.11 2009/11/11 00:34:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -13,6 +13,7 @@
 #include "util/tokenize_fwd.h"
 #include "util/attributes.h"
 #include "util/value_saver.h"
+#include "sim/directory.h"
 
 namespace HAC {
 namespace entity {
@@ -122,6 +123,10 @@ private:
 	 */
 	static aliases_map_type		aliases;
 	/**
+		Directory stack state.
+	 */
+	static directory_stack		dir_stack;
+	/**
 		For nested comment blocks, pseudo C-style.
 	 */
 	static int			comment_level;
@@ -228,6 +233,38 @@ public:
 	static
 	void
 	list_aliases(ostream&);
+
+	static
+	bool
+	change_dir(const string&);
+
+	static
+	bool
+	change_dir_abs(const string&);
+
+	static
+	bool
+	push_dir(const string&);
+
+	static
+	bool
+	pop_dir(void);
+
+	static
+	const string&
+	working_dir(void);
+
+	static
+	string
+	prepend_working_dir(const string&);
+
+	static
+	ostream&
+	show_working_dir(ostream&);
+
+	static
+	ostream&
+	show_dirs(ostream&);
 
 	// for readline tab-completion
 	static

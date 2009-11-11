@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.51 2009/10/16 20:38:49 fang Exp $
+	$Id: Command-prsim.cc,v 1.52 2009/11/11 00:34:05 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -70,14 +70,94 @@ using entity::global_indexed_reference;
 using entity::META_TYPE_PROCESS;
 using entity::META_TYPE_BOOL;
 using entity::META_TYPE_NONE;
+
+//=============================================================================
+// directory features
+
+/**
+	Define to 1 to use directory scope features.
+	TODO: these functions could be shared, in sim/directory.{h,cc}
+ */
+#define	AUTO_PREPEND_WORKING_DIR	1
+
+#if AUTO_PREPEND_WORKING_DIR
+// wrap around definitions in "parser/instref.h"
+static
+size_t
+parse_node_to_index(const string& s, const entity::module& m) {
+	// automatically prepend working directory
+	return parser::parse_node_to_index(
+		CommandRegistry::prepend_working_dir(s), m);
+}
+
+static
+size_t
+parse_process_to_index(const string& s, const entity::module& m) {
+	// automatically prepend working directory
+	string t(CommandRegistry::prepend_working_dir(s));
+	if (t.empty()) {
+		t = ".";
+	}
+	return parser::parse_process_to_index(t, m);
+}
+
+static
+int
+parse_name_to_what(ostream& o, const string& s, const entity::module& m) {
+	return parser::parse_name_to_what(o, 
+		CommandRegistry::prepend_working_dir(s), m);
+}
+
+static
+entity::global_indexed_reference
+parse_global_reference(const string& s, const entity::module& m) {
+	return parser::parse_global_reference(
+		CommandRegistry::prepend_working_dir(s), m);
+}
+
+static
+int
+parse_name_to_get_subnodes(const string& s, const entity::module& m,
+		vector<size_t>& v) {
+	string t(CommandRegistry::prepend_working_dir(s));
+	if (t.empty()) {
+		t = ".";
+	}
+	return parser::parse_name_to_get_subnodes(t, m, v);
+}
+
+static
+int
+parse_name_to_get_subnodes_local(const string& s, const entity::module& m,
+		vector<size_t>& v) {
+	string t(CommandRegistry::prepend_working_dir(s));
+	if (t.empty()) {
+		t = ".";
+	}
+	return parser::parse_name_to_get_subnodes_local(t, m, v);
+}
+
+static
+int
+parse_name_to_get_ports(const string& s, const entity::module& m,
+		vector<size_t>& v) {
+	string t(CommandRegistry::prepend_working_dir(s));
+	if (t.empty()) {
+		t = ".";
+	}
+	return parser::parse_name_to_get_ports(t, m, v);
+}
+
+#else
+// just use original functions
 using parser::parse_node_to_index;
 using parser::parse_process_to_index;
 using parser::parse_global_reference;
 using parser::parse_name_to_what;
-using parser::parse_name_to_aliases;
 using parser::parse_name_to_get_subnodes;
 using parser::parse_name_to_get_subnodes_local;
 using parser::parse_name_to_get_ports;
+#endif
 
 //=============================================================================
 // local static CommandCategories
@@ -109,6 +189,9 @@ OVERRIDE_DEFAULT_COMPLETER(PRSIM, _class, _func)
  */
 #define	PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(_class, _func)		\
 class _class;								\
+PRSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)
+
+#define	PRSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(_class, _func)		\
 PRSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)
 
 //=============================================================================
@@ -259,6 +342,53 @@ Print a list of all known aliases registered with the interpreter.
 ***/
 typedef	Aliases<State>				Aliases;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Aliases, builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/directories.texi
+The following commands emulate a directory like interface for 
+navigating the instance hierarchy, reminiscent of shells.  
+By default, @emph{all instance references are relative to the current
+working directory}, just like in a shell.
+Prefix with @samp{::} to use absolute (from-the-top) reference.
+Go up levels of hierarchy with @samp{../} prefix.
+The hierarchy separator is @samp{.} (dot).
+
+@deffn Command cd dir
+Changes current working level of hierarchy.
+@end deffn
+
+@deffn Command pushd dir
+Pushes new directory onto directory stack.
+@end deffn
+
+@deffn Command popd
+Removes last entry on directory stack.
+@end deffn
+
+@deffn Command pwd
+Prints current working directory.
+@end deffn
+
+@deffn Command dirs
+Prints entire directory stack.
+@end deffn
+@end texinfo
+***/
+typedef	ChangeDir<State>			ChangeDir;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(ChangeDir, builtin)
+
+typedef	PushDir<State>				PushDir;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(PushDir, builtin)
+
+typedef	PopDir<State>				PopDir;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(PopDir, builtin)
+
+typedef	WorkingDir<State>			WorkingDir;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WorkingDir, builtin)
+
+typedef	Dirs<State>				Dirs;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Dirs, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1435,7 +1565,9 @@ List immediate subinstances of the instance named @var{name}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_INSTANTIATE_MODULE_COMMAND_CLASS(LS, info, instance_completer)
+typedef	LS<State>				LS;
+PRSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(LS, instance_completer)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(LS, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1445,7 +1577,9 @@ Print the type of the instance named @var{name}.
 @end deffn
 @end texinfo
 ***/
-PRSIM_INSTANTIATE_MODULE_COMMAND_CLASS(What, info, instance_completer)
+typedef	What<State>				What;
+PRSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(What, instance_completer)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(What, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1458,8 +1592,12 @@ for improved readability.
 @end deffn
 @end texinfo
 ***/
-PRSIM_INSTANTIATE_MODULE_COMMAND_CLASS(Who, info, instance_completer)
-PRSIM_INSTANTIATE_MODULE_COMMAND_CLASS(WhoNewline, info, instance_completer)
+typedef	Who<State>				Who;
+typedef	WhoNewline<State>			WhoNewline;
+PRSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(Who, instance_completer)
+PRSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(WhoNewline, instance_completer)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Who, info)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WhoNewline, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -4833,6 +4971,7 @@ Channel::usage(ostream& o) {
 		"\t\ti.e. just write \":0\"\n"
 	"\tUse size 0 to indicate that bundle name is not an array.\n"
 "\'rail\' is the name of the data rail of the channel.\n"
+	"\tPrefix the data rail name with ~ to make it active-low.\n"
 "\'radix\' is the number of data rails per bundle (N in Mx1ofN).\n"
 	"\tUse radix 0 to indicate that rails are not an array (1of1).\n"
 "For example, \"channel e:0 :0 d:4\", is a conventional e1of4 channel with\n"
