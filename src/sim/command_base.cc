@@ -1,13 +1,16 @@
 /**
 	\file "sim/command_base.cc"
-	$Id: command_base.cc,v 1.4 2009/02/19 02:58:29 fang Exp $
+	$Id: command_base.cc,v 1.5 2009/11/12 02:58:18 fang Exp $
  */
 
 #include <iostream>
 #include <iterator>
+#include <functional>
 #include <string>
 #include <cstring>			// for strdup
 #include "sim/command_base.h"
+#include "sim/directory.h"		// for directory_stack
+#include "util/string.h"
 #include "util/NULL.h"
 
 // stuff needed for instance completion
@@ -122,26 +125,60 @@ null_completer(const char*, const int) {
 	Recommand using util::value_saver for automatic restoration.
  */
 const entity::module* instance_completion_module = NULL;
+const directory_stack* instance_completion_dirs = NULL;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// wants to pass by reference, but forms reference-to-reference
+static
+string
+truncate_working_dir(string s, const string pre) {
+	util::strings::strip_prefix(s, pre);
+	return s;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Function is not re-entrant.
+	\param _text is the partial text to complete
 	\return newly allocated copy of matching strings, or NULL to signal end.
  */
 char*
 instance_completer(const char* _text, const int state) {
 	typedef vector<string>::const_iterator	const_iterator;
-//	cout << "instance_completer(" << _text << ',' << state << ")";
+	NEVER_NULL(instance_completion_module);
+	NEVER_NULL(instance_completion_dirs);
+#if 0
+	cout << "\ninstance_completer(" << _text << ',' << state << ")";
+#endif
 	NEVER_NULL(_text);
 	static const_iterator i, e;
 	if (!state) {
 		static vector<string> matches;
 		matches.clear();
-		NEVER_NULL(instance_completion_module);
-		parser::complete_instance_names(_text, 
+		// automatically prepend working directory for context
+		string abs(instance_completion_dirs->current_working_directory());
+		if (abs.length())
+			abs += instance_completion_dirs->get_separator();
+		abs += _text;
+#if 0
+		instance_completion_dirs->dump_working_directory(
+			cout << "[wd:") << "]";
+		cout << "expanded:{" << abs << "}";
+#endif
+		parser::complete_instance_names(abs.c_str(), // _text
 			*instance_completion_module, matches);
 		i = matches.begin();
 		e = matches.end();
+		// prune current working directory from matches
+		transform(i, e, matches.begin(), 
+			bind2nd(ptr_fun(&truncate_working_dir),
+			instance_completion_dirs->current_working_directory()
+			+instance_completion_dirs->get_separator())
+//			std::bind2nd(std::mem_fun_ref(&string::substr),
+//			instance_completion_dirs->common_prefix_length())
+// cannot bind mem_fun with 2 arguments (default parameters)
+		);
 #if 0
+		cout << "MATCHES: ";
 		copy(i, e, std::ostream_iterator<string>(cout, ", "));
 			cout << endl;
 #endif

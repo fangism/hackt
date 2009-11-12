@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.52 2009/11/11 00:34:05 fang Exp $
+	$Id: Command-prsim.cc,v 1.53 2009/11/12 02:58:21 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -80,6 +80,24 @@ using entity::META_TYPE_NONE;
  */
 #define	AUTO_PREPEND_WORKING_DIR	1
 
+static
+#if AUTO_PREPEND_WORKING_DIR
+string
+#else
+const string&
+#endif
+nonempty_abs_dir(const string& s) {
+#if AUTO_PREPEND_WORKING_DIR
+	string t(CommandRegistry::prepend_working_dir(s));
+	if (t.empty()) {
+		t = ".";
+	}
+	return t;
+#else
+	return s;
+#endif
+}
+
 #if AUTO_PREPEND_WORKING_DIR
 // wrap around definitions in "parser/instref.h"
 static
@@ -94,10 +112,7 @@ static
 size_t
 parse_process_to_index(const string& s, const entity::module& m) {
 	// automatically prepend working directory
-	string t(CommandRegistry::prepend_working_dir(s));
-	if (t.empty()) {
-		t = ".";
-	}
+	const string t(nonempty_abs_dir(s));
 	return parser::parse_process_to_index(t, m);
 }
 
@@ -119,10 +134,7 @@ static
 int
 parse_name_to_get_subnodes(const string& s, const entity::module& m,
 		vector<size_t>& v) {
-	string t(CommandRegistry::prepend_working_dir(s));
-	if (t.empty()) {
-		t = ".";
-	}
+	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_subnodes(t, m, v);
 }
 
@@ -130,10 +142,7 @@ static
 int
 parse_name_to_get_subnodes_local(const string& s, const entity::module& m,
 		vector<size_t>& v) {
-	string t(CommandRegistry::prepend_working_dir(s));
-	if (t.empty()) {
-		t = ".";
-	}
+	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_subnodes_local(t, m, v);
 }
 
@@ -141,10 +150,7 @@ static
 int
 parse_name_to_get_ports(const string& s, const entity::module& m,
 		vector<size_t>& v) {
-	string t(CommandRegistry::prepend_working_dir(s));
-	if (t.empty()) {
-		t = ".";
-	}
+	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_ports(t, m, v);
 }
 
@@ -376,9 +382,11 @@ Prints entire directory stack.
 @end texinfo
 ***/
 typedef	ChangeDir<State>			ChangeDir;
+PRSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(ChangeDir, instance_completer)
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(ChangeDir, builtin)
 
 typedef	PushDir<State>				PushDir;
+PRSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(PushDir, instance_completer)
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(PushDir, builtin)
 
 typedef	PopDir<State>				PopDir;
@@ -1222,7 +1230,7 @@ if (ni) {
 	}
 	return Command::NORMAL;
 } else {
-	cerr << "No such node found: " << objname << endl;
+	cerr << "No such node found: " << nonempty_abs_dir(objname) << endl;
 	return Command::BADARG;
 }
 }
@@ -1243,7 +1251,7 @@ if (ni) {
 	}
 	return Command::NORMAL;
 } else {
-	cerr << "No such node found: " << objname << endl;
+	cerr << "No such node found: " << nonempty_abs_dir(objname) << endl;
 	return Command::BADARG;
 }
 }
@@ -1321,7 +1329,7 @@ if (ni) {
 	// StepEvent::main
 	return step_event_main(s, 1);
 } else {
-	cerr << "No such node found: " << objname << endl;
+	cerr << "No such node found: " << nonempty_abs_dir(objname) << endl;
 	return Command::BADARG;
 }
 }
@@ -1365,7 +1373,8 @@ if (a.size() < 2) {
 		if (ni) {
 			s.set_node_breakpoint(ni);
 		} else {
-			cerr << "No such node found: " << objname << endl;
+			cerr << "No such node found: " <<
+				nonempty_abs_dir(objname) << endl;
 			badarg = true;
 		}
 	}
@@ -1410,7 +1419,8 @@ if (a.size() < 2) {
 		if (ni) {
 			s.clear_node_breakpoint(ni);
 		} else {
-			cerr << "No such node found: " << objname << endl;
+			cerr << "No such node found: " <<
+				nonempty_abs_dir(objname) << endl;
 			badarg = true;
 		}
 	}
@@ -1628,7 +1638,8 @@ if (a.size() != 2) {
 		s.dump_node_pending(cout, ni, false);
 		return Command::NORMAL;
 	} else {
-		cerr << "No such node found." << endl;
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
 }
@@ -1657,7 +1668,8 @@ if (a.size() != 2) {
 		s.dump_node_pending(cout, ni, true);
 		return Command::NORMAL;
 	} else {
-		cerr << "No such node found." << endl;
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
 }
@@ -1768,7 +1780,8 @@ if (a.size() != 2) {
 		print_watched_node(cout, s, ni, objname);
 		return Command::NORMAL;
 	} else {
-		cerr << "No such node found." << endl;
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
 }
@@ -1810,7 +1823,8 @@ if (a.size() != 2) {
 		return Command::BADARG;
 	} else {
 		typedef	nodes_id_list_type::const_iterator	const_iterator;
-		cout << "Ports subnodes of \'" << objname << "\':" << endl;
+		cout << "Ports subnodes of \'" << 
+			nonempty_abs_dir(objname) << "\':" << endl;
 		const_iterator i(nodes.begin()), e(nodes.end());
 		for ( ; i!=e; ++i) {
 			s.dump_node_value(cout, *i) << endl;
@@ -1856,7 +1870,8 @@ if (a.size() != 2) {
 		return Command::BADARG;
 	} else {
 		typedef	nodes_id_list_type::const_iterator	const_iterator;
-		cout << "Public subnodes of \'" << objname << "\':" << endl;
+		cout << "Public subnodes of \'" << 
+			nonempty_abs_dir(objname) << "\':" << endl;
 		const_iterator i(nodes.begin()), e(nodes.end());
 		for ( ; i!=e; ++i) {
 			s.dump_node_value(cout, *i) << endl;
@@ -1902,7 +1917,8 @@ try {	// temporary measure until bug ACX-PR-1456 is fixed
 		return Command::BADARG;
 	} else {
 		typedef	nodes_id_list_type::const_iterator	const_iterator;
-		cout << "All subnodes of \'" << objname << "\':" << endl;
+		cout << "All subnodes of \'" << 
+			nonempty_abs_dir(objname) << "\':" << endl;
 		const_iterator i(nodes.begin()), e(nodes.end());
 		for ( ; i!=e; ++i) {
 			s.dump_node_value(cout, *i) << endl;
@@ -2264,7 +2280,8 @@ if (a.size() != 2) {
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
 		// const State::node_type& n(s.get_node(ni));
-		cout << "Fanins of node `" << objname << "\':" << endl;
+		cout << "Fanins of node `" << 
+			nonempty_abs_dir(objname) << "\':" << endl;
 		s.dump_node_fanin(cout, ni, false);
 		return Command::NORMAL;
 	} else {
@@ -2305,7 +2322,8 @@ if (a.size() != 2) {
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
 		// const State::node_type& n(s.get_node(ni));
-		cout << "Fanins of node `" << objname << "\':" << endl;
+		cout << "Fanins of node `" <<
+			nonempty_abs_dir(objname) << "\':" << endl;
 		s.dump_node_fanin(cout, ni, true);
 		return Command::NORMAL;
 	} else {
@@ -2347,7 +2365,8 @@ if (a.size() != 2) {
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
 		// const State::node_type& n(s.get_node(ni));
-		cout << "Fanouts of node `" << objname << "\':" << endl;
+		cout << "Fanouts of node `" << 
+			nonempty_abs_dir(objname) << "\':" << endl;
 		s.dump_node_fanout(cout, ni, true, false, false);
 		return Command::NORMAL;
 	} else {
@@ -2387,7 +2406,8 @@ if (a.size() != 2) {
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
 		// const State::node_type& n(s.get_node(ni));
-		cout << "Fanouts of node `" << objname << "\':" << endl;
+		cout << "Fanouts of node `" << 
+			nonempty_abs_dir(objname) << "\':" << endl;
 		s.dump_node_fanout(cout, ni, true, false, true);
 		return Command::NORMAL;
 	} else {
@@ -2496,7 +2516,8 @@ if (a.size() != 2) {
 		s.dump_node_check_excl_rings(cout, ni);
 		return Command::NORMAL;
 	} else {
-		cerr << "No such node found." << endl;
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
 }
@@ -2572,7 +2593,8 @@ if (a.size() != 2) {
 		s.get_node(ni).dump_attributes(cout) << endl;
 		return Command::NORMAL;
 	} else {
-		cerr << "No such node found." << endl;
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
 }
@@ -2626,7 +2648,8 @@ if (a.size() != 3) {
 		if (actual != val) {
 			const error_policy_enum e(s.get_assert_fail_policy());
 			if (e != ERROR_IGNORE) {
-			cout << "assert failed: expecting node `" << objname <<
+			cout << "assert failed: expecting node `" << 
+				nonempty_abs_dir(objname) <<
 				"\' at " <<
 				node_type::value_to_char[size_t(val)] <<
 				", but got ";
@@ -2634,13 +2657,15 @@ if (a.size() != 3) {
 			}	// yes, actually allow suppression
 			return error_policy_to_status(e);
 		} else if (s.confirm_asserts()) {
-			cout << "node `" << objname << "\' is " <<
+			cout << "node `" << nonempty_abs_dir(objname)
+				<< "\' is " <<
 				node_type::value_to_char[size_t(val)] <<
 				", as expected." << endl;
 		}
 		return Command::NORMAL;
 	} else {
-		cerr << "No such node found." << endl;
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
 }
@@ -2693,7 +2718,8 @@ if (a.size() != 3) {
 		if (actual == val) {
 			const error_policy_enum e(s.get_assert_fail_policy());
 			if (e != ERROR_IGNORE) {
-			cout << "assert failed: expecting node `" << objname <<
+			cout << "assert failed: expecting node `" << 
+				nonempty_abs_dir(objname) <<
 				"\' not at " <<
 				node_type::value_to_char[size_t(val)] <<
 				", but got ";
@@ -2701,13 +2727,15 @@ if (a.size() != 3) {
 			}
 			return error_policy_to_status(e);
 		} else if (s.confirm_asserts()) {
-			cout << "node `" << objname << "\' is not " <<
+			cout << "node `" << nonempty_abs_dir(objname)
+				<< "\' is not " <<
 				node_type::value_to_char[size_t(val)] <<
 				", as expected." << endl;
 		}
 		return Command::NORMAL;
 	} else {
-		cerr << "No such node found." << endl;
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
 }
@@ -2751,16 +2779,18 @@ if (a.size() != 2) {
 			if (e != ERROR_IGNORE) {
 			cout <<
 			"assert failed: expecting pending event on node `"
-				<< objname << "\', but none found." << endl;
+				<< nonempty_abs_dir(objname)
+				<< "\', but none found." << endl;
 			}
 			return error_policy_to_status(e);
 		} else if (s.confirm_asserts()) {
-			cout << "node `" << objname <<
+			cout << "node `" << nonempty_abs_dir(objname) <<
 				"\' has a pending event, as expected." << endl;
 		}
 		return Command::NORMAL;
 	} else {
-		cerr << "No such node found." << endl;
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
 }
@@ -2802,16 +2832,18 @@ if (a.size() != 2) {
 			if (e != ERROR_IGNORE) {
 			cout <<
 			"assert failed: expecting no pending event on node `"
-				<< objname << "\', but found one." << endl;
+				<< nonempty_abs_dir(objname)
+				<< "\', but found one." << endl;
 			}
 			return error_policy_to_status(e);
 		} else if (s.confirm_asserts()) {
-			cout << "node `" << objname <<
+			cout << "node `" << nonempty_abs_dir(objname) <<
 				"\' has no pending event, as expected." << endl;
 		}
 		return Command::NORMAL;
 	} else {
-		cerr << "No such node found." << endl;
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
 }
@@ -3507,7 +3539,8 @@ if (a.size() < 2) {
 		if (ni) {
 			s.watch_node(ni);
 		} else {
-			cerr << "No such node found: " << objname << endl;
+			cerr << "No such node found: " << 
+				nonempty_abs_dir(objname) << endl;
 			badarg = true;
 		}
 	}
@@ -3553,7 +3586,8 @@ if (a.size() < 2) {
 		if (ni) {
 			s.unwatch_node(ni);
 		} else {
-			cerr << "No such node found: " << objname << endl;
+			cerr << "No such node found: " << 
+				nonempty_abs_dir(objname) << endl;
 			badarg = true;
 		}
 	}

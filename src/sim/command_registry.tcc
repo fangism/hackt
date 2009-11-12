@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.17 2009/11/11 00:34:03 fang Exp $
+	$Id: command_registry.tcc,v 1.18 2009/11/12 02:58:19 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -737,7 +737,11 @@ command_registry<Command>::readline_init::readline_init(const module& m) :
 			__dummy_completion, 
 #endif
 			completion), 
-		_mod(instance_completion_module, &m)
+		_mod(instance_completion_module, &m),
+		// this may conflict if we ever instantiate
+		// multiple simulators' directory stacks simultanously 
+		// (conflict)
+		_dirs(instance_completion_dirs, &dir_stack)
 {
 #if 0
 	// doesn't do what I want...

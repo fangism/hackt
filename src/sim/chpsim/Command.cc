@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.23 2009/11/11 00:34:04 fang Exp $
+	$Id: Command.cc,v 1.24 2009/11/12 02:58:21 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -88,6 +88,7 @@ static CommandCategory
 
 /**
 	Tell each command to override default completer.  
+	TODO: actually call these, like in hacprsim
  */
 #define	CHPSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)		\
 	OVERRIDE_DEFAULT_COMPLETER(CHPSIM, _class, _func)

@@ -1,6 +1,6 @@
 /**
 	\file "sim/directory.h"
-	$Id: directory.h,v 1.1 2009/11/11 00:34:04 fang Exp $
+	$Id: directory.h,v 1.2 2009/11/12 02:58:20 fang Exp $
 	Directory-like command-interface extensions for simulator
 	command interpreters.  
 	This could be useful enough to go into the util library.
@@ -82,6 +82,9 @@ public:
 	void
 	set_separator(const char);
 
+	const string&
+	get_separator(void) const { return separator; }
+
 	bool
 	change_directory(const string&);
 
@@ -99,6 +102,9 @@ public:
 
 	string
 	transform(string) const;
+
+	size_t
+	common_prefix_length(void) const;
 
 	ostream&
 	dump_working_directory(ostream&) const;

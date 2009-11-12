@@ -1,6 +1,6 @@
 /**
 	\file "sim/directory.cc"
-	$Id: directory.cc,v 1.1 2009/11/11 00:34:03 fang Exp $
+	$Id: directory.cc,v 1.2 2009/11/12 02:58:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -51,6 +51,20 @@ const string&
 directory_stack::current_working_directory(void) const {
 	INVARIANT(!dir_stack.empty());
 	return dir_stack.back();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the length of the string that would be prefixed
+		using the current working directory, including the length
+		of the delimiter.
+ */
+size_t
+directory_stack::common_prefix_length(void) const {
+	const string& wd(current_working_directory());
+	if (wd.length()) {
+		return wd.length() + separator.length();
+	} else	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

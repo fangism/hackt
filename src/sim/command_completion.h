@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_completion.h"
-	$Id: command_completion.h,v 1.2 2009/02/19 02:58:34 fang Exp $
+	$Id: command_completion.h,v 1.3 2009/11/12 02:58:19 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMPLETION_H__
@@ -13,6 +13,7 @@ namespace entity {
 class module;
 }
 namespace SIM {
+class directory_stack;	// from "sim/directory.h"
 
 //=============================================================================
 // for custom command/argument completion
@@ -27,9 +28,15 @@ extern
 char*
 instance_completer(const char*, const int);
 
+// defined in "sim/command_base.cc"
 // global variable needed by the instance_completer
 extern
 const entity::module* instance_completion_module;
+
+// global variable needed by the instance_completer
+extern
+const directory_stack*
+instance_completion_dirs;
 
 /**
 	Overrideable template defaults to some completion function.
