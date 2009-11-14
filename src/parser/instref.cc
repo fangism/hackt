@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.18 2009/11/11 00:34:01 fang Exp $
+	$Id: instref.cc,v 1.19 2009/11/14 03:12:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -44,6 +44,8 @@
 #include "Object/entry_collection.h"
 #include "common/TODO.h"
 #include "util/tokenize_fwd.h"		// for string_list
+#include "util/value_saver.h"
+#include "util/directory.h"
 #include "util/memory/excl_ptr.h"
 #include "util/packed_array.h"		// for alias_collection_type
 #include "util/member_select.h"
@@ -77,15 +79,29 @@ using std::copy;
 using std::string;
 using std::ostream_iterator;
 using std::bind1st;
+using util::value_saver;
 using util::string_list;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
+using util::directory_stack;
 #include "util/using_ostream.h"
+//=============================================================================
+#if 0
+/**
+	Global variable used by parse_reference.
+	When set, preprocess the reference string using the directory stack
+	before parsing.
+ */
+const directory_stack* dir_stack = NULL;
+#endif
+
 //=============================================================================
 /**
 	Parses an instance-reference string, and returns an AST slice.
 	\throw general exception if unable to write temporary file.  
 	\return AST of reference, else NULL upon error.  
+	TODO: let this handle directory-like references, for the sake of
+		directory tab-completion.
  */
 excl_ptr<parser::inst_ref_expr>
 parse_reference(const char* s) {
@@ -570,35 +586,72 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 }
 
 //=============================================================================
+#define	DEBUG_COMPLETION		0
+static
+size_t
+last_separator(const string& orig) {
+	const size_t ld = orig.find_last_of('.');
+	const size_t ls = orig.find_last_of('/');
+	size_t cut;	// position of last separator
+	if (ld == string::npos) {
+		cut = ls;
+	} else if (ls != string::npos) {
+		cut = std::max(ld, ls);
+	} else {
+		cut = ld;
+	}
+#if DEBUG_COMPLETION
+	cout << "<ld:" << ld << ",ls:" << ls << ",cut:" << cut << '>';
+#endif
+	return cut;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param _text is the partial token of text to be completed,
+		this text should be preserved on the line in the 
+		returned strings.
 	\param matches is the return array, should start empty, but need not be
 	\returns an array of candidate strings for instances.
 	Now returns only names of instances that were instantiated!
  */
 void
 complete_instance_names(const char* _text, const module& m, 
+		const directory_stack* d, 
 		vector<string>& matches) {
-	STACKTRACE_VERBOSE;
-	const string text(_text);
 	typedef	scopespace::const_map_iterator	const_iterator;
-	string parent, child;
+	STACKTRACE_VERBOSE;
+	// to alter parse_reference
+	const string orig(_text);	// unaltered text
+	const size_t cut = last_separator(orig);
+	string root, child;
+	if (cut != string::npos) {
+		root = orig.substr(0, cut +1);	// text to preserve
+		child = orig.substr(cut +1);
+	} else {	// else leave blank
+		child = orig;
+	}
+#if DEBUG_COMPLETION
+	cout << "<root:" << root << ",child:" << child << '>';
+#endif
+	// equivalent logical canonical path, after directory transformation
+	const string text(d ? d->transform(orig) : orig);
+#if DEBUG_COMPLETION
+	cout << "<orig:" << orig << ",equiv:" << text << '>';
+#endif
 	const footprint* f = NULL;
+	// extract parent from text
 	// if text is blank, return items from "ls ." (top-level)
-if (!_text[0]) {
-	f = &m.get_footprint();
-} else {
-// does string contain a '.'?  If so, cut text into two parts.
+	const string parent(d ? d->transform(root) : root);
+#if DEBUG_COMPLETION
+	cout << "<parent:" << parent << '>';
+#endif
+// does canonical string contain a '.'?  If so, cut text into two parts.
 // else need to do partial parsing for context
-// if text ends with '.' return list of members of the parent reference
-	size_t dot = text.find_last_of('.');
-	if (dot == string::npos) {	// not found
+	if (!parent.length()) {
 		f = &m.get_footprint();
-		child = text;
 	} else {			// split up string
 		typedef	inst_ref_expr::meta_return_type	checked_ref_type;
-		parent = string(text, 0, dot);
-		child = string(text, dot +1);
-//		cout << "parent=\"" << parent "\", child=\"" << child "\"";
 		// parse the parent to get context
 		const checked_ref_type
 			r(parse_and_check_reference(parent.c_str(), m));
@@ -614,13 +667,13 @@ if (!_text[0]) {
 		// until non-process types have subinstances...
 		f = get_process_footprint(gref.second, m);
 	}
-}
 	vector<string> temp;
 	f->export_instance_names(temp);
 	// filter out with child string
 	// TODO: handle array indices
 	// may need to prepend parent '.' to matched names...
-	const string root(parent.size() ? parent + '.' : "");
+	
+//	const string root(parent.size() ? parent + '.' : "");
 	// caller function will take care of custom display
 	// function to omit the common prefix in the match display.
 	if (child.size()) {
@@ -639,6 +692,12 @@ if (!_text[0]) {
 		transform(temp.begin(), temp.end(), back_inserter(matches), 
 			bind1st(std::plus<string>(), root));
 	}
+#if DEBUG_COMPLETION
+	cout << "<MATCHES:";
+	copy(matches.begin(), matches.end(),
+		std::ostream_iterator<string>(cout, "|"));
+	cout << '>';
+#endif
 }
 
 //=============================================================================

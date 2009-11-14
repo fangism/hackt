@@ -1,9 +1,11 @@
 help what: 
 what <name>
 prints the type/size of the referenced instance(s)
+By default, references are relative to current working directory.
 help who: 
 who <name>
 prints all aliases (equivalent names) of the referenced instance
+By default, references are relative to current working directory.
 I refers to process-inst-ref inv<>
 aliases of "I":
 I 

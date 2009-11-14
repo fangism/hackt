@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.12 2009/11/12 02:58:19 fang Exp $
+	$Id: command_registry.h,v 1.13 2009/11/14 03:12:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -13,7 +13,7 @@
 #include "util/tokenize_fwd.h"
 #include "util/attributes.h"
 #include "util/value_saver.h"
-#include "sim/directory.h"
+#include "util/directory.h"
 
 namespace HAC {
 namespace entity {
@@ -24,6 +24,7 @@ using std::string;
 using util::default_qmap;
 using util::string_list;
 using util::value_saver;
+using util::directory_stack;
 using std::string;
 using std::ostream;
 using std::istream;

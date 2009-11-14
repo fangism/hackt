@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.18 2009/11/11 00:34:03 fang Exp $
+	$Id: command_common.tcc,v 1.19 2009/11/14 03:12:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -566,9 +566,16 @@ DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(LS, "ls",
 template <class State>
 int
 LS<State>::main(state_type& s, const string_list& a) {
-if (a.size() != 2) {
+if (a.size() > 2) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
+} else if (a.size() == 1) {
+	string t(command_registry_type::working_dir());
+	if (t.empty()) {
+		t = ".";
+	}
+	parser::parse_name_to_members(cout, t, s.get_module());
+	return command_type::NORMAL;
 } else {
 	string t(command_registry_type::prepend_working_dir(a.back()));
 	if (t.empty()) {
@@ -583,9 +590,11 @@ if (a.size() != 2) {
 template <class State>
 void
 LS<State>::usage(ostream& o) {
-	o << "ls <name>" << endl;
-	o << "prints list of subinstances of the referenced instance" << endl;
-	o << "\"ls .\" lists top-level instances" << endl;
+	o << "ls [name]" << endl;
+o << "prints list of subinstances of the referenced instance\n"
+"The name argument is interpreted as relative to the current directory.\n"
+"\"ls .\" or just \"ls\" lists instances in the current working directory"
+<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -612,6 +621,7 @@ void
 What<State>::usage(ostream& o) {
 	o << "what <name>" << endl;
 	o << "prints the type/size of the referenced instance(s)" << endl;
+	o << "By default, references are relative to current working directory." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -642,6 +652,7 @@ Who<State>::usage(ostream& o) {
 	o << "who <name>" << endl;
 	o << "prints all aliases (equivalent names) of the referenced instance"
 		<< endl;
+	o << "By default, references are relative to current working directory." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -672,6 +683,7 @@ WhoNewline<State>::usage(ostream& o) {
 	o << "who-newline <name>" << endl;
 	o << "prints all aliases (equivalent names) of the referenced instance"
 		<< endl;
+	o << "By default, references are relative to current working directory." << endl;
 }
 
 //-----------------------------------------------------------------------------

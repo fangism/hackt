@@ -1,6 +1,6 @@
 /**
-	\file "sim/directory.cc"
-	$Id: directory.cc,v 1.2 2009/11/12 02:58:19 fang Exp $
+	\file "util/directory.cc"
+	$Id: directory.cc,v 1.1 2009/11/14 03:12:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,19 +9,16 @@
 #include <iterator>
 #include <algorithm>
 #include <list>
-#include "sim/directory.h"
+#include "util/directory.h"
 #include "util/tokenize.h"
 #include "util/string.h"
 #include "util/macros.h"
 #include "util/stacktrace.h"
 
-namespace HAC {
-namespace SIM {
+namespace util {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
-using util::string_list;
-using util::tokenize;
-using util::strings::strip_prefix;
+using strings::strip_prefix;
 
 //=============================================================================
 // class directory_stack method definitions
@@ -79,8 +76,10 @@ directory_stack::__change_directory(string& cur, string rel) const {
 	STACKTRACE_INDENT_PRINT("current: " << cur << ", rel: " << rel << endl);
 	INVARIANT(!dir_stack.empty());
 if (!rel.length()) {
-	// empty string, go home
+#if 0
+	// empty string, do nothing (could go home to ::, but require explicit)
 	cur.clear();
+#endif
 } else if (strip_prefix(rel, absolute_prefix)) {
 	// have absolute path, just replace it (stripping absolute-prefix)
 	cur = rel;
@@ -103,8 +102,14 @@ if (!rel.length()) {
 	} else if (*i != this_dir_string) {
 		string_list t;
 		tokenize(*i, t, separator.c_str());
+#if 1
+		// for tab-completion, want to keep trailing '.'
+		// so don't remove empty strings
+		copy(t.begin(), t.end(), back_inserter(toks));
+#else
 		remove_copy_if(t.begin(), t.end(), back_inserter(toks), 
 			mem_fun_ref(&string::empty));
+#endif
 	}
 	// else ignore this_dir_string
 	}
@@ -194,6 +199,5 @@ directory_stack::dump_stack(ostream& o) const {
 }
 
 //=============================================================================
-}	// end namespace SIM
-}	// end namespace HAC
+}	// end namespace util
 

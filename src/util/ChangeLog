@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.107 2009/09/28 06:56:55 fang Exp $
+#	$Id: ChangeLog,v 1.108 2009/11/14 03:12:13 fang Exp $
+
+2009-11-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-50:
+	  Moved directory.{h,cc} to new home in util.
+		Directory stack facilities.
+
 
 2009-09-27	David Fang		<fangism@users.sourceforge.net>
 

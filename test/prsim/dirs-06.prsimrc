@@ -19,7 +19,7 @@ pwd
 dirs
 ls .
 ls ::
-cd
+cd ::
 pwd
 dirs
 cd poo.p/x
@@ -35,7 +35,7 @@ ls poo/q
 popd
 pwd
 dirs
-cd
+cd ::
 pwd
 dirs
 ls poo/

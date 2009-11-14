@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_completion.h"
-	$Id: command_completion.h,v 1.3 2009/11/12 02:58:19 fang Exp $
+	$Id: command_completion.h,v 1.4 2009/11/14 03:12:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMPLETION_H__
@@ -8,12 +8,16 @@
 
 // #include "util/tokenize_fwd.h"
 
+namespace util {
+class directory_stack;
+}
+
 namespace HAC {
 namespace entity {
 class module;
 }
 namespace SIM {
-class directory_stack;	// from "sim/directory.h"
+using util::directory_stack;	// from "util/directory.h"
 
 //=============================================================================
 // for custom command/argument completion

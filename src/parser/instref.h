@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.8 2009/11/11 00:34:01 fang Exp $
+	$Id: instref.h,v 1.9 2009/11/14 03:12:10 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -17,6 +17,10 @@
 #include "util/STL/vector_fwd.h"
 
 #define	INVALID_PROCESS_INDEX			size_t(-1)
+
+namespace util {
+class directory_stack;
+}	// end namespace util
 
 namespace HAC {
 namespace entity {
@@ -90,7 +94,7 @@ parse_name_to_aliases(std::ostream&, const std::string&,
 extern
 void
 complete_instance_names(const char*, const entity::module&, 
-	std::vector<std::string>&);
+	const util::directory_stack*, std::vector<std::string>&);
 
 }	// end namespace parser
 }	// end namespace HAC

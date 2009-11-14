@@ -1,13 +1,13 @@
 /**
-	\file "sim/directory.h"
-	$Id: directory.h,v 1.2 2009/11/12 02:58:20 fang Exp $
+	\file "util/directory.h"
+	$Id: directory.h,v 1.1 2009/11/14 03:12:14 fang Exp $
 	Directory-like command-interface extensions for simulator
 	command interpreters.  
 	This could be useful enough to go into the util library.
  */
 
-#ifndef	__HAC_SIM_DIRECTORY_H__
-#define	__HAC_SIM_DIRECTORY_H__
+#ifndef	__HAC_UTIL_DIRECTORY_H__
+#define	__HAC_UTIL_DIRECTORY_H__
 
 #include <iosfwd>
 #include <string>
@@ -23,8 +23,7 @@
 #include "util/tokenize_fwd.h"
 #endif
 
-namespace HAC {
-namespace SIM {
+namespace util {
 using std::ostream;
 using std::string;
 
@@ -134,8 +133,7 @@ private:
 
 };	// end class directory_stack
 
-}	// end namespace SIM
-}	// end namespace HAC
+}	// end namespace util
 
-#endif	// __HAC_SIM_DIRECTORY_H__
+#endif	// __HAC_UTIL_DIRECTORY_H__
 

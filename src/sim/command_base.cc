@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_base.cc"
-	$Id: command_base.cc,v 1.5 2009/11/12 02:58:18 fang Exp $
+	$Id: command_base.cc,v 1.6 2009/11/14 03:12:10 fang Exp $
  */
 
 #include <iostream>
@@ -9,7 +9,7 @@
 #include <string>
 #include <cstring>			// for strdup
 #include "sim/command_base.h"
-#include "sim/directory.h"		// for directory_stack
+#include "util/directory.h"		// for directory_stack
 #include "util/string.h"
 #include "util/NULL.h"
 
@@ -146,55 +146,28 @@ instance_completer(const char* _text, const int state) {
 	typedef vector<string>::const_iterator	const_iterator;
 	NEVER_NULL(instance_completion_module);
 	NEVER_NULL(instance_completion_dirs);
-#if 0
-	cout << "\ninstance_completer(" << _text << ',' << state << ")";
-#endif
 	NEVER_NULL(_text);
 	static const_iterator i, e;
 	if (!state) {
 		static vector<string> matches;
 		matches.clear();
 		// automatically prepend working directory for context
-		string abs(instance_completion_dirs->current_working_directory());
-		if (abs.length())
-			abs += instance_completion_dirs->get_separator();
-		abs += _text;
-#if 0
-		instance_completion_dirs->dump_working_directory(
-			cout << "[wd:") << "]";
-		cout << "expanded:{" << abs << "}";
-#endif
-		parser::complete_instance_names(abs.c_str(), // _text
-			*instance_completion_module, matches);
+		parser::complete_instance_names(_text,
+			*instance_completion_module, 
+			instance_completion_dirs, matches);
 		i = matches.begin();
 		e = matches.end();
 		// prune current working directory from matches
 		transform(i, e, matches.begin(), 
 			bind2nd(ptr_fun(&truncate_working_dir),
 			instance_completion_dirs->current_working_directory()
-			+instance_completion_dirs->get_separator())
-//			std::bind2nd(std::mem_fun_ref(&string::substr),
-//			instance_completion_dirs->common_prefix_length())
-// cannot bind mem_fun with 2 arguments (default parameters)
-		);
-#if 0
-		cout << "MATCHES: ";
-		copy(i, e, std::ostream_iterator<string>(cout, ", "));
-			cout << endl;
-#endif
+			+instance_completion_dirs->get_separator()));
 	}
 	if (i != e) {
 		const char* n = i->c_str();
 		NEVER_NULL(n);
-#if 0
-		cout << "strdup(" << n << ")...";
-#endif
 		++i;
 		char* ret = strdup(n);
-#if 0
-		NEVER_NULL(ret);
-		cout << " success." << endl;
-#endif
 		return ret;
 	}
 	return NULL;

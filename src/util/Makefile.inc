@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.40 2009/08/28 20:45:22 fang Exp $
+#	$Id: Makefile.inc,v 1.41 2009/11/14 03:12:13 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -97,6 +97,7 @@ UTIL_HEADER_FILES = \
 	util/convert.h \
 	util/ctype.h \
 	util/dereference.h \
+	util/directory.h \
 	util/dirent.h \
 	util/discrete_interval_set_fwd.h \
 	util/finite_vector.h \
@@ -216,6 +217,7 @@ UTIL_HEADER_FILES = \
 UTIL_CC_FILES = \
 	util/IO_utils.cc \
 	util/bitset.cc \
+	util/directory.cc \
 	util/dirent.cc \
 	util/format_IO.cc \
 	util/indent.cc \
