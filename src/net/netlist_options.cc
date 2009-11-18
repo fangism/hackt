@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.10 2009/11/06 02:57:56 fang Exp $
+	$Id: netlist_options.cc,v 1.11 2009/11/18 01:03:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,7 @@
 #include "util/stacktrace.h"
 #include "util/attributes.h"
 #include "util/iterator_more.h"
+#include "util/cppcat.h"
 
 namespace HAC {
 namespace NET {
@@ -36,6 +37,7 @@ using util::set_inserter;
 netlist_options::netlist_options() :
 		file_manager(), 
 		__dump_flags(dump_flags::no_definition_owner), 
+		misc_options_map(), 
 		unknown_option_policy(OPTION_WARN), 
 		internal_node_supply_mismatch_policy(OPTION_WARN),
 		undriven_node_policy(OPTION_WARN),
@@ -96,6 +98,13 @@ netlist_options::netlist_options() :
 	// all mangling to the ::mangle_* functions
 	// This distinguishes process from struct members
 	__dump_flags.struct_member_separator = "$";
+	// default device names
+	misc_options_map["nfet_svt"].push_back("nch");
+	misc_options_map["nfet_lvt"].push_back("nch_lvt");
+	misc_options_map["nfet_hvt"].push_back("nch_hvt");
+	misc_options_map["pfet_svt"].push_back("pch");
+	misc_options_map["pfet_lvt"].push_back("pch_lvt");
+	misc_options_map["pfet_hvt"].push_back("pch_hvt");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -453,6 +462,16 @@ __set_member_default(const option_value& opt,
 	return __set_member_string_set(opt, n_opt, mem);
 }
 
+/**
+	Take option list, convert to option set.  
+ */
+bool
+__set_misc_option(const option_value& opt, 
+		netlist_options& n_opt) {
+	n_opt.misc_options_map[opt.key] = opt.values;	// override
+	return false;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 const
@@ -501,6 +520,22 @@ __print_member_sequence(ostream& o, const netlist_options& n_opt,
 		copy(i, l, std::ostream_iterator<value_type>(o, ","));
 		o << *l;
 	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+__print_misc_option(ostream& o, const netlist_options& n_opt, 
+		const string& k) {
+	const netlist_options::misc_options_map_type::const_iterator
+		f(n_opt.misc_options_map.find(k));
+	if (f != n_opt.misc_options_map.end()) {
+		list<string>::const_iterator
+			i(f->second.begin()), l(--f->second.end());
+		copy(i, l, std::ostream_iterator<string>(o, ","));
+		o << *l;
+	}
+	// else print nothing
 	return o;
 }
 
@@ -571,6 +606,14 @@ __print_ ## member (ostream& o, const netlist_options& n) {		\
 #define	DEFINE_PRINT_POLICY_MEMBER(member)				\
 	DEFINE_PRINT_MEMBER(member ## _policy)
 
+#define	DEFINE_PRINT_MISC_OPTION(key)					\
+static									\
+ostream&								\
+__print_ ## key (ostream& o, const netlist_options& n) {		\
+	static const string k(STRINGIFY(key));				\
+	return __print_misc_option(o, n, k);				\
+}
+
 #define	DEFINE_TYPE_MEMBER(member)					\
 static									\
 const string&								\
@@ -594,6 +637,12 @@ __ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[key] =			\
 static const opt_entry& __receipt ## memfun				\
 __ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[key] =			\
 	opt_entry(& __set_ ## memfun, NULL, NULL, help)));
+
+#define	REGISTER_MISC_OPTION(key, help)					\
+static const opt_entry& __receipt ## key				\
+__ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[STRINGIFY(key)] =		\
+	opt_entry(&__set_misc_option, &__print_ ## key,	 		\
+	&__str_type__, help)));
 
 
 // define option functions
@@ -622,6 +671,10 @@ __ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[key] =			\
 	DEFINE_PRINT_POLICY_MEMBER(member)				\
 	DEFINE_TYPE_POLICY_MEMBER(member)				\
 	REGISTER_OPTION_POLICY(member, key, help)
+
+#define	DEFINE_MISC_OPTION(key, help)					\
+	DEFINE_PRINT_MISC_OPTION(key)					\
+	REGISTER_MISC_OPTION(key, help)
 
 /***
 @texinfo config/diagnostic_policies.texi
@@ -948,6 +1001,27 @@ DEFINE_OPTION_DEFAULT(stat_n_length, "stat_n_length",
 	"default length of keeper/staticizer NFET (in lambda)")
 DEFINE_OPTION_DEFAULT(stat_p_length, "stat_p_length",
 	"default length of keeper/staticizer PFET (in lambda)")
+
+
+/***
+@texinfo fet_type_overrides.texi
+@defopt nfet_svt (string)
+@defoptx nfet_lvt (string)
+@defoptx nfet_hvt (string)
+@defoptx pfet_svt (string)
+@defoptx pfet_lvt (string)
+@defoptx pfet_hvt (string)
+Override the default device type names for NFETs and PFETS
+along with their non-standard threshold voltage variants.  
+@end defopt
+@end texinfo
+***/
+DEFINE_MISC_OPTION(nfet_svt, "overriding model name for nfet_svt")
+DEFINE_MISC_OPTION(nfet_lvt, "overriding model name for nfet_lvt")
+DEFINE_MISC_OPTION(nfet_hvt, "overriding model name for nfet_hvt")
+DEFINE_MISC_OPTION(pfet_svt, "overriding model name for pfet_svt")
+DEFINE_MISC_OPTION(pfet_lvt, "overriding model name for pfet_lvt")
+DEFINE_MISC_OPTION(pfet_hvt, "overriding model name for pfet_hvt")
 
 /***
 @texinfo config/nested_subcircuits.texi

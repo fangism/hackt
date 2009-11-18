@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.14 2009/11/06 02:57:55 fang Exp $
+	$Id: netgraph.cc,v 1.15 2009/11/18 01:03:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -451,18 +451,29 @@ transistor::emit(ostream& o, const index_type di,
 	// all nodes already mangled
 	o << nodes;
 }
+	string ftype("");
 	switch (type) {
-	case NFET_TYPE: o << "nch"; break;
-	case PFET_TYPE: o << "pch"; break;
+	case NFET_TYPE: ftype += "nfet"; break;
+	case PFET_TYPE: ftype += "pfet"; break;
 	// TODO: honor device type name overrides, including vt
 	default:
-		o << "<type?>";
+		ftype += "<type?>";
 	}
 	if (attributes & IS_LOW_VT)
-		o << "_lvt";
+		ftype += "_lvt";
 	else if (attributes & IS_HIGH_VT)
-		o << "_hvt";
+		ftype += "_hvt";
+	else	ftype += "_svt";
 	// else leave svt unmarked
+	// TODO: query nopt.misc_options.find()
+	netlist_options::misc_options_map_type::const_iterator
+		f(nopt.misc_options_map.find(ftype));
+	if (f != nopt.misc_options_map.end()) {
+		o << f->second.front();
+	} else {
+		o << ftype;
+	}
+
 	// TODO: restrict lengths and widths, from tech/conf file
 	o << " W=" << width *nopt.lambda << nopt.length_unit <<
 		" L=" << length *nopt.lambda << nopt.length_unit;

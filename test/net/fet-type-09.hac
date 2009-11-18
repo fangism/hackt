@@ -1,0 +1,5 @@
+// "fet-type-09.hac"
+// @hacknet-flags@ -f pfet_hvt=PFETHIGH -f nfet_hvt=NFETHIGH
+
+import "fet-type-01.hac";
+

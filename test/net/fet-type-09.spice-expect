@@ -1,0 +1,3 @@
+My:dn:0 !GND x y !GND NFETHIGH W=5u L=2u
+My:up:0 !Vdd x y !Vdd PFETHIGH W=5u L=2u
+

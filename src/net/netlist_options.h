@@ -1,13 +1,15 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.9 2009/11/06 02:57:56 fang Exp $
+	$Id: netlist_options.h,v 1.10 2009/11/18 01:03:29 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
 #define	__HAC_NET_NETLIST_OPTIONS_H__
 
 #include <string>
+#include <list>
 #include <set>
+#include <map>
 #include "net/common.h"
 #include "util/optparse.h"
 #include "util/named_ifstream_manager.h"
@@ -15,8 +17,10 @@
 
 namespace HAC {
 namespace NET {
+using std::map;
 using std::set;
 using std::string;
+using std::list;
 using std::istream;
 using util::option_value;
 using util::option_value_list;
@@ -36,8 +40,16 @@ struct netlist_options {
 	typedef	netlist_options		this_type;
 	static	const	netlist_options	default_value;
 	typedef	bool (this_type::*option_memfun_type)(const option_value&);
+	/**
+		Sorted set of option strings, that don't belong anywhere else.
+		This map can be queried for existence of options, 
+		and their values.  
+	 */
+	typedef	map<string, list<string> >	misc_options_map_type;
+	typedef	misc_options_map_type::value_type	misc_option;
 	ifstream_manager		file_manager;
 	dump_flags			__dump_flags;
+	misc_options_map_type		misc_options_map;
 	option_error_policy		unknown_option_policy;
 	option_error_policy		internal_node_supply_mismatch_policy;
 	option_error_policy		undriven_node_policy;

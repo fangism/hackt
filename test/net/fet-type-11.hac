@@ -1,0 +1,5 @@
+// "fet-type-11.hac"
+// @hacknet-flags@ -f pfet_svt=pfet_svt -f nfet_svt=nfet_svt
+
+import "fet-type-05.hac";
+

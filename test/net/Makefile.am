@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2009/11/06 02:57:57 fang Exp $
+#	$Id: Makefile.am,v 1.12 2009/11/18 01:03:29 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -52,6 +52,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	tsmc65 tsmc65-equiv \
 	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
+	fet-type-09 fet-type-10 fet-type-11 \
 	parasitics-01 \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \

@@ -1,0 +1,5 @@
+Mz:dn:0 !GND x #0 !GND nch_hvt W=5u L=2u
+Mz:dn:1 #0 y z !GND nfet_svt W=5u L=2u
+Mz:up:0 !Vdd x #1 !Vdd pch_hvt W=5u L=2u
+Mz:up:1 #1 y z !Vdd pfet_svt W=5u L=2u
+
