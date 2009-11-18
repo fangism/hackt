@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2009/11/18 01:03:29 fang Exp $
+#	$Id: Makefile.am,v 1.13 2009/11/18 18:26:53 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -32,7 +32,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	half-pull-01 half-pull-02 \
 	pass_gate-01 pass_gate-02 pass_gate-03 pass_gate-04 \
 	pass_gate-05 pass_gate-06 \
-	subckt-01 subckt-03 \
+	subckt-01 subckt-03 subckt-04 subckt-05 \
 	channel-member-01 channel-member-02 channel-member-03 \
 	array-01 \
 	iskeeper-01 iskeeper-02 \

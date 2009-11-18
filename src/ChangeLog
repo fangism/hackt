@@ -5,6 +5,15 @@
 
 2009-11-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-52:
+	  hacknet: suppress stack nodes (auxiliary) from subcircuits'
+		port list in definitions and instances.  
+		Named internal nodes are still preserved.  
+	  Added few new test cases.
+
+
+2009-11-17	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-83-51:
 	  hacknet: added options to override fet type names: [np]fet_[lhs]vt
 		Default names are still {nch,pch}{,_lvt,_hvt}.

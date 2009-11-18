@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.15 2009/11/18 01:03:28 fang Exp $
+	$Id: netgraph.cc,v 1.16 2009/11/18 18:26:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -179,7 +179,11 @@ if (!nopt.nested_subcircuits) {
 	typedef	node_index_map_type::const_iterator	const_iterator;
 	const_iterator i(node_index_map.begin()), e(node_index_map.end());
 	for ( ; i!=e; ++i) {
-		n.node_pool[*i].emit(oss << ' ', nopt);
+		const node& nd(n.node_pool[*i]);
+		// stack-node are local-only
+		if (!nd.is_auxiliary_node()) {
+			nd.emit(oss << ' ', nopt);
+		}
 	}
 	string formals(oss.str());
 	// already mangled during name caching
@@ -207,7 +211,11 @@ local_netlist::emit_instance(ostream& o, const netlist& n,
 	typedef	node_index_map_type::const_iterator	const_iterator;
 	const_iterator i(node_index_map.begin()), e(node_index_map.end());
 	for ( ; i!=e; ++i) {
-		n.node_pool[*i].emit(oss << ' ', nopt);
+		const node& nd(n.node_pool[*i]);
+		// stack-node are local-only
+		if (!nd.is_auxiliary_node()) {
+			nd.emit(oss << ' ', nopt);
+		}
 	}
 	oss << ' ';
 	string line(oss.str());

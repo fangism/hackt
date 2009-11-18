@@ -1,0 +1,13 @@
+// "subckt-05.hac"
+// @hacknet-flags@ -T foo
+// make sure stack nodes are omitted from ports list
+
+defproc foo(bool a[3], b, c) {
+prs {
+subckt {
+	a[0] & a[1] & a[2]	#> b-
+}
+	a[0] & a[1] & a[2]	#> c-
+}
+}
+
