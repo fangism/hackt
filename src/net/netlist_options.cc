@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.11 2009/11/18 01:03:29 fang Exp $
+	$Id: netlist_options.cc,v 1.12 2009/11/18 01:09:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1004,7 +1004,7 @@ DEFINE_OPTION_DEFAULT(stat_p_length, "stat_p_length",
 
 
 /***
-@texinfo fet_type_overrides.texi
+@texinfo config/fet_type_overrides.texi
 @defopt nfet_svt (string)
 @defoptx nfet_lvt (string)
 @defoptx nfet_hvt (string)
