@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.35 2009/10/27 20:14:28 fang Exp $
+#	$Id: Makefile.am,v 1.36 2009/11/19 23:29:14 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -13,6 +13,7 @@ HACO_FLAGS += $(HACPP_FLAGS) -f case-collision=ignore
 
 # list tests here only if they are also intended for create/alloc tests
 HACKT_PARSE_TEST_PASSES = \
+	tutorial-01 \
 	do-while-countdown \
 	countdown-successor \
 	countdown-loop-a countdown-loop-b \
@@ -54,6 +55,7 @@ HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_PASSES)
 # TODO: eventually generate object test cases for all of these:
 HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	defaults \
+	tutorial-01 \
 	assign-once \
 	assign-once-parallel-a assign-once-parallel-b \
 	assign-once-parallel-c assign-once-parallel-d \
@@ -305,6 +307,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 
 # quarantined test cases:
 srcdir_EXTRA_DIST += \
+	tutorial-lib.hac \
 	gcd-func-a-02.chpsimrc \
 	lib-assert-test-b-01.chpsimrc
 

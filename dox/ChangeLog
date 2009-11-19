@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.40 2009/10/02 01:55:36 fang Exp $
+#	$Id: ChangeLog,v 1.41 2009/11/19 23:29:08 fang Exp $
+
+2009-11-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53:
+	  chpsim: added quick tutorial chapter for getting started
+
 
 2009-09-30	David Fang		<fangism@users.sourceforge.net>
 

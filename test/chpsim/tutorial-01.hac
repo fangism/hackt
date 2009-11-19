@@ -1,0 +1,9 @@
+// "tutorial-01.hac"
+
+import "tutorial-lib.hac";
+
+chan(bool) L, R;
+bool_source SRC<4,{false,false,true,true}>(L);
+bool_buf B(L, R);
+bool_sink SNK(R);
+

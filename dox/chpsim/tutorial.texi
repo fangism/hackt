@@ -1,0 +1,217 @@
+@c "tutorial.texi"
+@c $Id: tutorial.texi,v 1.1 2009/11/19 23:29:09 fang Exp $
+
+@node Tutorial
+@chapter Tutorial
+@cindex tutorial
+
+This chapter contains some small examples for quickly getting started
+and verifying that the simulator is working properly.  
+
+The examples in this chapter are taken out of the 
+test suite and its testing library.  
+
+Enter the following definitions into a HAC file @file{bool-lib.hac}:
+@example
+defproc bool_buf (chan?(bool) L; chan!(bool) R) @{
+bool x;
+chp @{ *[L?(x); R!(x)] @}
+@}
+
+template <pbool B>
+defproc bool_buf_init (chan?(bool) L; chan!(bool) R) @{
+bool x;
+chp @{ x:=B; *[R!(x); L?(x)] @}
+@}
+
+template <><pint N; pbool B[N]>
+defproc bool_source_once(chan!(bool) S) @{
+chp @{
+@{;i:N: S!(B[i]) @}
+@}
+@}
+
+template <><pint N; pbool B[N]>
+defproc bool_source(chan!(bool) S) @{
+chp @{
+*[
+  @{;i:N: S!(B[i]) @}
+]
+@}
+@}
+
+defproc bool_sink(chan?(bool) B) @{
+bool b;
+chp @{
+*[ B?(b) ]
+@}
+@}
+@end example
+
+@noindent
+We will be reusing this file in many examples.  
+Instantiate some of these types in another file @file{bool-test-1.hac}.
+@example
+import "bool-lib.hac";
+
+chan(bool) L, R;
+bool_source SRC<4,@{false,false,true,true@}>(L);
+bool_buf B(L, R);
+bool_sink SNK(R);
+@end example
+
+Compile the file using @command{haco} (or one of the template Makefiles):
+
+@example
+$ haco bool-test-1.hac bool-test-1.haco
+$ haccreate bool-test-1.haco bool-test-1.haco-c
+@end example
+
+@noindent
+and run @command{hacchpsim}:
+
+@example
+$ hacchpsim bool-test-1.haco-c
+@end example
+
+The @command{hacchpsim} simulator is interactive.
+You should see the following prompt:
+@example
+chpsim>
+@end example
+
+The following session is an example of stepping through the simulator
+while watching data values on channels:
+
+@example
+chpsim> @kbd{get L}
+L : chan(bool<>) L = (0) [empty]
+chpsim> @kbd{get R}
+R : chan(bool<>) R = (0) [empty]
+@end example
+
+@noindent
+@command{get} queries the current state of a channel or data variable.  
+All channels are initially empty (current values are meaningless), 
+which is indicated by @t{[empty]}.
+Executed events are printed in a table format, 
+whose headings are given by @command{print-event-header}.
+@enumerate
+@item @t{time} is the time of the event 
+@item @t{eid} is the (global) static event ID number
+	(corresponding to a node in the event graph)
+@item @t{pid} is the index of the process in which the event occurred
+@item @t{event} is text for the CHP statement that executed
+@item @t{cause} shows the critical predecessor event's @emph{static} ID
+@end enumerate
+For the critical predecessor to be printed we need to turn it on:
+
+@example
+chpsim> @kbd{cause}
+chpsim> @kbd{watchall-events}
+chpsim> @kbd{print-event-header}
+        time    eid     pid     event   cause
+chpsim> @kbd{step 20}
+        0       0       4       null
+        10      5       2       B.L?(B.x)
+        10      1       1       SRC.S!(false)   [by:5]
+        20      6       2       B.R!(B.x)       [by:5]
+        20      7       3       SNK.B?(SNK.b)   [by:6]
+        30      5       2       B.L?(B.x)       [by:6]
+        30      4       1       SRC.S!(false)   [by:5]
+        40      6       2       B.R!(B.x)       [by:5]
+        40      7       3       SNK.B?(SNK.b)   [by:6]
+        50      5       2       B.L?(B.x)       [by:6]
+        50      3       1       SRC.S!(true)    [by:5]
+        60      6       2       B.R!(B.x)       [by:5]
+        60      7       3       SNK.B?(SNK.b)   [by:6]
+        70      5       2       B.L?(B.x)       [by:6]
+        70      2       1       SRC.S!(true)    [by:5]
+        80      6       2       B.R!(B.x)       [by:5]
+        80      7       3       SNK.B?(SNK.b)   [by:6]
+        90      5       2       B.L?(B.x)       [by:6]
+        90      1       1       SRC.S!(false)   [by:5]
+        100     6       2       B.R!(B.x)       [by:5]
+@end example
+
+Above, the simulator displays a trace of 20 events as they are executed.
+The first event is always the @i{null} event, which starts all processes.
+The source repeated sends values to the buffer, and the buffer
+sends values to the receiver.  
+Send and receive actions execute atomically in pairs.  
+(@t{B.L} and @t{SRC.S} both refer to channel @t{L}.)
+This trace does not actually show what values were sent over the channels.
+We restart this example, watching the channel data values this time:
+
+@example
+chpsim> @kbd{initialize}
+chpsim> @kbd{unwatchall-events}
+chpsim> @kbd{watch-value L R}
+chpsim> @kbd{step 20}
+updated channel(s): 
+chan(bool<>) L = (0) [recvd]
+watch:  10      5       2       B.L?(B.x)
+updated channel(s): 
+chan(bool<>) L = (0) [empty]
+watch:  10      1       1       SRC.S!(false)   [by:5]
+updated channel(s): 
+chan(bool<>) R = (0) [sent]
+watch:  20      6       2       B.R!(B.x)       [by:5]
+updated channel(s): 
+chan(bool<>) R = (0) [empty]
+watch:  20      7       3       SNK.B?(SNK.b)   [by:6]
+updated channel(s): 
+chan(bool<>) L = (0) [recvd]
+watch:  30      5       2       B.L?(B.x)       [by:6]
+updated channel(s): 
+chan(bool<>) L = (0) [empty]
+watch:  30      4       1       SRC.S!(false)   [by:5]
+updated channel(s): 
+chan(bool<>) R = (0) [sent]
+watch:  40      6       2       B.R!(B.x)       [by:5]
+updated channel(s): 
+chan(bool<>) R = (0) [empty]
+watch:  40      7       3       SNK.B?(SNK.b)   [by:6]
+updated channel(s): 
+chan(bool<>) L = (1) [recvd]
+watch:  50      5       2       B.L?(B.x)       [by:6]
+updated channel(s): 
+chan(bool<>) L = (1) [empty]
+watch:  50      3       1       SRC.S!(true)    [by:5]
+updated channel(s): 
+chan(bool<>) R = (1) [sent]
+watch:  60      6       2       B.R!(B.x)       [by:5]
+updated channel(s): 
+chan(bool<>) R = (1) [empty]
+watch:  60      7       3       SNK.B?(SNK.b)   [by:6]
+updated channel(s): 
+chan(bool<>) L = (1) [recvd]
+watch:  70      5       2       B.L?(B.x)       [by:6]
+updated channel(s): 
+chan(bool<>) L = (1) [empty]
+watch:  70      2       1       SRC.S!(true)    [by:5]
+updated channel(s): 
+chan(bool<>) R = (1) [sent]
+watch:  80      6       2       B.R!(B.x)       [by:5]
+updated channel(s): 
+chan(bool<>) R = (1) [empty]
+watch:  80      7       3       SNK.B?(SNK.b)   [by:6]
+updated channel(s): 
+chan(bool<>) L = (0) [recvd]
+watch:  90      5       2       B.L?(B.x)       [by:6]
+updated channel(s): 
+chan(bool<>) L = (0) [empty]
+watch:  90      1       1       SRC.S!(false)   [by:5]
+updated channel(s): 
+chan(bool<>) R = (0) [sent]
+watch:  100     6       2       B.R!(B.x)       [by:5]
+@end example
+
+A list of all commands with brief descriptions is printed with @samp{help all}.
+Please refer to @ref{Commands} for a comprehensive description
+of all @command{hacchpsim} commands.  
+
+Exercises.
+
+Tracing.
+

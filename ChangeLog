@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2009-11-19	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53:
+	  configure.ac: date bump, release checked, distchecked
+
+
 2009-10-22	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-41:

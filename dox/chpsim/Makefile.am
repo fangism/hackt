@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2009/05/29 15:13:18 fang Exp $
+#	$Id: Makefile.am,v 1.20 2009/11/19 23:29:08 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -27,6 +27,7 @@ hacchpsim_INCLUDES = \
 	hacmacros.texi \
 	intro.texi \
 	usage.texi \
+	tutorial.texi \
 	commands.texi \
 	extending.texi \
 	execution.texi \

@@ -1,0 +1,36 @@
+// "tutorial-lib.hac"
+
+defproc bool_buf (chan?(bool) L; chan!(bool) R) {
+bool x;
+chp { *[L?(x); R!(x)] }
+}
+
+template <pbool B>
+defproc bool_buf_init (chan?(bool) L; chan!(bool) R) {
+bool x;
+chp { x:=B; *[R!(x); L?(x)] }
+}
+
+template <><pint N; pbool B[N]>
+defproc bool_source_once(chan!(bool) S) {
+chp {
+{;i:N: S!(B[i]) }
+}
+}
+
+template <><pint N; pbool B[N]>
+defproc bool_source(chan!(bool) S) {
+chp {
+*[
+  {;i:N: S!(B[i]) }
+]
+}
+}
+
+defproc bool_sink(chan?(bool) B) {
+bool b;
+chp {
+*[ B?(b) ]
+}
+}
+

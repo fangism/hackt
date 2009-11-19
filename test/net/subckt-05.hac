@@ -11,3 +11,5 @@ subckt {
 }
 }
 
+// foo inv;
+

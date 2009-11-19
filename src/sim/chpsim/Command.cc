@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.24 2009/11/12 02:58:21 fang Exp $
+	$Id: Command.cc,v 1.25 2009/11/19 23:29:11 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -93,6 +93,16 @@ static CommandCategory
 #define	CHPSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)		\
 	OVERRIDE_DEFAULT_COMPLETER(CHPSIM, _class, _func)
 
+/**
+	Same thing, but with forward declaration of class.  
+ */
+#define CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(_class, _func)		\
+class _class;								\
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)
+
+#define CHPSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(_class, _func)		\
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)
+
 //=============================================================================
 // command re-use macros
 
@@ -103,9 +113,11 @@ INSTANTIATE_TRIVIAL_COMMAND_CLASS(CHPSIM, _class, _cat)
 typedef	stateless_command_wrapper<_class, State>	_class;		\
 INSTANTIATE_COMMON_COMMAND_CLASS(CHPSIM, stateless_command_wrapper, _class, _cat)
 
+#if 0
 #define	CHPSIM_INSTANTIATE_MODULE_COMMAND_CLASS(_class, _cat)		\
 typedef	module_command_wrapper<_class, State>		_class;		\
 INSTANTIATE_COMMON_COMMAND_CLASS(CHPSIM, module_command_wrapper, _class, _cat)
+#endif
 
 //=============================================================================
 // local Command classes
@@ -712,6 +724,7 @@ CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Queue, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Set, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation,
 	"set node immediately, or after delay")
 
@@ -1382,9 +1395,11 @@ Prints entire directory stack.
 @end texinfo
 ***/
 typedef	ChangeDir<State>			ChangeDir;
+CHPSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(ChangeDir, instance_completer)
 CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(ChangeDir, builtin)
 
 typedef	PushDir<State>				PushDir;
+CHPSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(PushDir, instance_completer)
 CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(PushDir, builtin)
 
 typedef	PopDir<State>				PopDir;
@@ -1405,6 +1420,7 @@ List immediate subinstances of the instance named @var{name}.
 @end texinfo
 ***/
 typedef	LS<State>				LS;
+CHPSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(LS, instance_completer)
 CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(LS, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1417,6 +1433,7 @@ along with its canonical name.
 @end texinfo
 ***/
 typedef	What<State>				What;
+CHPSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(What, instance_completer)
 CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(What, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1433,6 +1450,8 @@ for improved readability.
 ***/
 typedef	Who<State>				Who;
 typedef	WhoNewline<State>			WhoNewline;
+CHPSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(Who, instance_completer)
+CHPSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(WhoNewline, instance_completer)
 CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Who, info)
 CHPSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WhoNewline, info)
 
@@ -1447,6 +1466,7 @@ Information includes current run-time value, if applicable.
 @end deffn
 @end texinfo
 ***/
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Get, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,
 	"print value of instance")
 
@@ -1733,6 +1753,7 @@ DumpAllEventSource::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Status, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Status, "status", info, 
 	"show all nodes matching a state value")
 
@@ -1769,6 +1790,7 @@ Status::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Assert, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Assert, "assert", info, 
 	"error if node is NOT expected value")
 
@@ -1949,7 +1971,7 @@ if (a.size() < 2) {
 
 void
 WatchEvent::usage(ostream& o) {
-	o << name << "<event-id ...>";
+	o << name << "<event-id ...>" << endl;
 	o << 
 "Added events to the watch list, which are printed upon execution." << endl;
 }
@@ -1991,7 +2013,7 @@ if (a.size() < 2) {
 
 void
 UnWatchEvent::usage(ostream& o) {
-	o << name << "<event-id ...>";
+	o << name << "<event-id ...>" << endl;
 	o << 
 "Removes events from the watch list, which are printed upon execution.\n"
 "However, events listed as breakpoints are NOT removed." << endl;
@@ -2027,6 +2049,7 @@ Print events that write to @var{inst} as they execute.
 @end deffn
 @end texinfo
 ***/
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(WatchValue, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchValue, "watch-value", view, 
 	"print activity on selected variables")
 
@@ -2072,6 +2095,7 @@ Stop watching @var{inst}.
 @end deffn
 @end texinfo
 ***/
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(UnWatchValue, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchValue, "unwatch-value", view, 
 	"silence activity reporting on selected variables")
 

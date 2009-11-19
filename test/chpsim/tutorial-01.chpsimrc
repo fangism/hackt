@@ -1,0 +1,19 @@
+# "tutorial-01.chpsimrc"
+# @haco@ tutorial-01.haco-a
+
+echo watching all events
+watchall-events
+get L
+get R
+get B.x
+cause
+print-event-header
+step 20
+
+echo initialzing...
+echo watching data
+initialize
+unwatchall-events
+watch-value L R
+step 20
+

@@ -1,0 +1,85 @@
+watching all events 
+L : chan(bool<>) L = (0) [empty]
+R : chan(bool<>) R = (0) [empty]
+B.x : bool B.x = 0
+	time	eid	pid	event	cause
+	0	0	4	null
+	10	5	2	B.L?(B.x)
+	10	1	1	SRC.S!(false)	[by:5]
+	20	6	2	B.R!(B.x)	[by:5]
+	20	7	3	SNK.B?(SNK.b)	[by:6]
+	30	5	2	B.L?(B.x)	[by:6]
+	30	4	1	SRC.S!(false)	[by:5]
+	40	6	2	B.R!(B.x)	[by:5]
+	40	7	3	SNK.B?(SNK.b)	[by:6]
+	50	5	2	B.L?(B.x)	[by:6]
+	50	3	1	SRC.S!(true)	[by:5]
+	60	6	2	B.R!(B.x)	[by:5]
+	60	7	3	SNK.B?(SNK.b)	[by:6]
+	70	5	2	B.L?(B.x)	[by:6]
+	70	2	1	SRC.S!(true)	[by:5]
+	80	6	2	B.R!(B.x)	[by:5]
+	80	7	3	SNK.B?(SNK.b)	[by:6]
+	90	5	2	B.L?(B.x)	[by:6]
+	90	1	1	SRC.S!(false)	[by:5]
+	100	6	2	B.R!(B.x)	[by:5]
+initialzing... 
+watching data 
+	0	0	4	null
+updated channel(s): 
+chan(bool<>) L = (0) [recvd]
+watch:	10	5	2	B.L?(B.x)
+updated channel(s): 
+chan(bool<>) L = (0) [empty]
+watch:	10	1	1	SRC.S!(false)	[by:5]
+updated channel(s): 
+chan(bool<>) R = (0) [sent]
+watch:	20	6	2	B.R!(B.x)	[by:5]
+updated channel(s): 
+chan(bool<>) R = (0) [empty]
+watch:	20	7	3	SNK.B?(SNK.b)	[by:6]
+updated channel(s): 
+chan(bool<>) L = (0) [recvd]
+watch:	30	5	2	B.L?(B.x)	[by:6]
+updated channel(s): 
+chan(bool<>) L = (0) [empty]
+watch:	30	4	1	SRC.S!(false)	[by:5]
+updated channel(s): 
+chan(bool<>) R = (0) [sent]
+watch:	40	6	2	B.R!(B.x)	[by:5]
+updated channel(s): 
+chan(bool<>) R = (0) [empty]
+watch:	40	7	3	SNK.B?(SNK.b)	[by:6]
+updated channel(s): 
+chan(bool<>) L = (1) [recvd]
+watch:	50	5	2	B.L?(B.x)	[by:6]
+updated channel(s): 
+chan(bool<>) L = (1) [empty]
+watch:	50	3	1	SRC.S!(true)	[by:5]
+updated channel(s): 
+chan(bool<>) R = (1) [sent]
+watch:	60	6	2	B.R!(B.x)	[by:5]
+updated channel(s): 
+chan(bool<>) R = (1) [empty]
+watch:	60	7	3	SNK.B?(SNK.b)	[by:6]
+updated channel(s): 
+chan(bool<>) L = (1) [recvd]
+watch:	70	5	2	B.L?(B.x)	[by:6]
+updated channel(s): 
+chan(bool<>) L = (1) [empty]
+watch:	70	2	1	SRC.S!(true)	[by:5]
+updated channel(s): 
+chan(bool<>) R = (1) [sent]
+watch:	80	6	2	B.R!(B.x)	[by:5]
+updated channel(s): 
+chan(bool<>) R = (1) [empty]
+watch:	80	7	3	SNK.B?(SNK.b)	[by:6]
+updated channel(s): 
+chan(bool<>) L = (0) [recvd]
+watch:	90	5	2	B.L?(B.x)	[by:6]
+updated channel(s): 
+chan(bool<>) L = (0) [empty]
+watch:	90	1	1	SRC.S!(false)	[by:5]
+updated channel(s): 
+chan(bool<>) R = (0) [sent]
+watch:	100	6	2	B.R!(B.x)	[by:5]

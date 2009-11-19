@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.53 2009/11/12 02:58:21 fang Exp $
+	$Id: Command-prsim.cc,v 1.54 2009/11/19 23:29:12 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -210,6 +210,7 @@ INSTANTIATE_TRIVIAL_COMMAND_CLASS(PRSIM, _class, _cat)
 typedef	stateless_command_wrapper<_class, State>	_class;		\
 INSTANTIATE_COMMON_COMMAND_CLASS(PRSIM, stateless_command_wrapper, _class, _cat)
 
+#if 0
 /**
 	\param _compl is the overriding tab-completer function.
  */
@@ -217,6 +218,7 @@ INSTANTIATE_COMMON_COMMAND_CLASS(PRSIM, stateless_command_wrapper, _class, _cat)
 typedef	module_command_wrapper<_class, State>		_class;		\
 PRSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _compl)			\
 INSTANTIATE_COMMON_COMMAND_CLASS(PRSIM, module_command_wrapper, _class, _cat)
+#endif
 
 //=============================================================================
 // local Command classes
