@@ -1,10 +1,7 @@
 /**
 	\file "parser/verilogf-parse.yy.in"
-	Quick little parser for parsing instance-references.  
-	This will be used in prsim and other simulators, for example.  
-	The grammar in here is an extremely small snippet
-	of the hackt language grammar.  
-	$Id: verilog-parse.yy.in,v 1.1 2009/11/21 01:11:55 fang Exp $
+	Verilog grammar, implemented based on verilog-2001 standard.
+	$Id: verilog-parse.yy.in,v 1.2 2009/11/21 02:10:15 fang Exp $
  */
 
 %{
@@ -519,8 +516,11 @@ port_reference
 	;
 
 port_dimensions_opt
-	: '[' constant_expression ']'
-	| '[' range_expression ']'
+	: '[' range_expression ']'
+/**
+	range_expression : expression : constant_expression
+	| '[' constant_expression ']'
+**/
 	|
 	;
 
@@ -2132,14 +2132,14 @@ list_of_path_outputs
  */
 specify_input_terminal_descriptor
 	: input_identifier
-	| input_identifier '[' constant_expression ']'
 	| input_identifier '[' range_expression ']'
+/*	| input_identifier '[' constant_expression ']' 	*/
 	;
 
 specify_output_terminal_descriptor
 	: output_identifier
-	| output_identifier '[' constant_expression ']'
 	| output_identifier '[' range_expression ']'
+/*	| output_identifier '[' constant_expression ']'	*/
 	;
 
 input_identifier
@@ -2688,9 +2688,7 @@ range_expression
 	| constant_base_expression '-' ':' width_constant_expression
 	;
 
-dimension_constant_expression
-	: constant_expression
-	;
+dimension_constant_expression : constant_expression ;
 
 expression
 	: primary
@@ -2701,13 +2699,8 @@ expression
 	| string
 	;
 
-lsb_constant_expression
-	: constant_expression
-	;
-
-msb_constant_expression
-	: constant_expression
-	;
+lsb_constant_expression : constant_expression ;
+msb_constant_expression : constant_expression ;
 
 module_path_conditional_expression
 	: module_path_expression '?' attribute_instances_opt
@@ -2727,9 +2720,7 @@ module_path_mintypmax_expression
 		':' module_path_expression
 	;
 
-width_constant_expression
-	: constant_expression
-	;
+width_constant_expression : constant_expression ;
 
 /**
 	A.8.4	Primaries
