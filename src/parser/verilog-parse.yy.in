@@ -1,7 +1,7 @@
 /**
 	\file "parser/verilogf-parse.yy.in"
 	Verilog grammar, implemented based on verilog-2001 standard.
-	$Id: verilog-parse.yy.in,v 1.6 2009/11/21 03:42:36 fang Exp $
+	$Id: verilog-parse.yy.in,v 1.7 2009/11/21 03:58:44 fang Exp $
  */
 
 %{
@@ -1003,7 +1003,10 @@ limit_value
 dimension
 	: '[' dimension_constant_expression ':'
 		dimension_constant_expression ']'
+/**
+	(syntactically the same:)
 	| '[' msb_constant_expression ':' lsb_constant_expression ']'
+**/
 	;
 
 /**
@@ -2667,6 +2670,7 @@ constant_expression
 		constant_expression
 	| constant_expression '?' attribute_instances_opt constant_expression
 		':' constant_expression
+/*	(should be covered by constant_primary:) */
 	| string
 	;
 
@@ -2703,6 +2707,7 @@ expression
 	/* TODO: operator precedence and associativity */
 	| expression binary_operator attribute_instances_opt expression
 	| conditional_expression
+/** (covered by primary:) */
 	| string
 	;
 
@@ -2732,6 +2737,13 @@ width_constant_expression : constant_expression ;
 /**
 	A.8.4	Primaries
  */
+/**
+primary_value
+	: string
+	| number
+	;
+**/
+
 constant_primary
 	: constant_concatenation
 	| constant_function_call
@@ -2739,12 +2751,14 @@ constant_primary
 	| constant_multiple_concatenation
 	| number
 /*	| hierarchical_identifier */
-	| identifier /* generic_identifier */
+	| generic_identifier
+/*	| identifier	*/
 /**
 	| genvar_identifier
 	| parameter_identifier
 	| specparam_identifier
 **/
+	/* | string */
 	;
 
 module_path_primary
@@ -2774,6 +2788,7 @@ primary
 **/
 	| system_function_call
 	| '(' mintypmax_expression ')'
+	/* | string */
 	;
 
 /**
