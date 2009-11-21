@@ -1,7 +1,7 @@
 /**
 	\file "parser/verilogf-parse.yy.in"
 	Verilog grammar, implemented based on verilog-2001 standard.
-	$Id: verilog-parse.yy.in,v 1.5 2009/11/21 03:41:05 fang Exp $
+	$Id: verilog-parse.yy.in,v 1.6 2009/11/21 03:42:36 fang Exp $
  */
 
 %{
@@ -2683,8 +2683,8 @@ mintypmax_expression
 constant_range_expression
 	: constant_expression
 	| msb_constant_expression ':' lsb_constant_expression
-	| base_expression '+' ':' width_constant_expression
-	| base_expression '-' ':' width_constant_expression
+	| constant_base_expression '+' ':' width_constant_expression
+	| constant_base_expression '-' ':' width_constant_expression
 	;
 
 range_expression
