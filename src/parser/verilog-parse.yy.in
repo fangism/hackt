@@ -1,7 +1,7 @@
 /**
 	\file "parser/verilogf-parse.yy.in"
 	Verilog grammar, implemented based on verilog-2001 standard.
-	$Id: verilog-parse.yy.in,v 1.3 2009/11/21 02:41:21 fang Exp $
+	$Id: verilog-parse.yy.in,v 1.4 2009/11/21 03:20:36 fang Exp $
  */
 
 %{
@@ -871,13 +871,14 @@ delay3
 	;
 
 delay_value
-	: unsigned_number
-	| generic_identifier
+	: mintypmax_expression
 /**
+	(covers the following: expression : primary : hierarchical_identifier : generic_identifier )
+	| unsigned_number
+	| generic_identifier
 	| parameter_identifier
 	| specparam_identifier
 **/
-	| mintypmax_expression
 	;
 
 /**
@@ -1879,7 +1880,10 @@ function_statement
  */
 delay_control
 	: '#' delay_value
+/**
+	(equivalent to:)
 	| '#' '(' mintypmax_expression ')'
+**/
 	;
 
 delay_or_event_control
@@ -2279,7 +2283,8 @@ system_timing_check
 	;
 
 generic_timing_check
-	: '$' identifier '(' timing_check_args ')' ';'
+	: '$' generic_identifier /* identifier */
+		'(' timing_check_args ')' ';'
 	;
 
 timing_check_args
@@ -2620,11 +2625,12 @@ variable_concatenation_value
 	A.8.2	Function calls
  */
 constant_function_call
-	: generic_identifier /* function_identifier */ attribute_instances_opt
-		'(' constant_expression_list ')'
+	: generic_identifier /* function_identifier */
+		attribute_instances_opt '(' constant_expression_list ')'
 	;
 
 function_call
+	/* covers constant_function_call */
 	: generic_hierarchical_identifier /* hierarchical_function_identifier */
 		 attribute_instances_opt '(' constant_expression_list ')'
 	;
@@ -2731,7 +2737,7 @@ constant_primary
 	| '(' constant_mintypmax_expression ')'
 	| constant_multiple_concatenation
 	| number
-	| generic_identifier
+	| identifier /* generic_identifier */
 /**
 	| genvar_identifier
 	| parameter_identifier
@@ -2741,23 +2747,30 @@ constant_primary
 
 module_path_primary
 	: number
-	| identifier
+	| generic_identifier /* identifier */
 	| module_path_concatenation
 	| module_path_multiple_concatenation
 	| function_call
-	| system_function_call
+/**
+	(covers:)
 	| constant_function_call
+**/
+	| system_function_call
 	| '(' module_path_mintypmax_expression ')'
 	;
 
 primary
 	: number
 	| hierarchical_identifier index_expressions_opt index_range_opt
+		/* covers: identifier */
 	| concatenation
 	| multiple_concatenation
 	| function_call
-	| system_function_call
+/**
+	(covers:)
 	| constant_function_call
+**/
+	| system_function_call
 	| '(' mintypmax_expression ')'
 	;
 
@@ -2911,7 +2924,7 @@ list_of_generic_identifiers
 	;
 
 arrayed_identifier
-	: identifier range_opt
+	: generic_identifier range_opt
 /**
 	: simple_arrayed_identifier
 	| escaped_arrayed_identifier
@@ -3044,7 +3057,7 @@ generic_hierarchical_branch
 	;
 
 generic_index_member
-	: identifier index_unsigned_opt
+	: generic_identifier index_unsigned_opt
 	;
 
 /**
