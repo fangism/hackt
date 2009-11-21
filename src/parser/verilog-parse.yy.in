@@ -1,7 +1,7 @@
 /**
 	\file "parser/verilogf-parse.yy.in"
 	Verilog grammar, implemented based on verilog-2001 standard.
-	$Id: verilog-parse.yy.in,v 1.2 2009/11/21 02:10:15 fang Exp $
+	$Id: verilog-parse.yy.in,v 1.3 2009/11/21 02:41:21 fang Exp $
  */
 
 %{
@@ -2911,8 +2911,11 @@ list_of_generic_identifiers
 	;
 
 arrayed_identifier
+	: identifier range_opt
+/**
 	: simple_arrayed_identifier
 	| escaped_arrayed_identifier
+**/
 	;
 
 /**
@@ -2921,10 +2924,13 @@ cell_identifier : identifier ;
 config_identifier : identifier ;
 **/
 
+/**
 escaped_arrayed_identifier
 	: escaped_identifier range_opt
 	;
+**/
 
+/**
 escaped_hierarchical_identifier
 	: escaped_hierarchical_branch hierarchical_branches_opt
 	;
@@ -2943,6 +2949,7 @@ hierarchical_branch
 	: '.' simple_hierarchical_branch
 	| '.' escaped_hierarchical_branch
 	;
+**/
 
 /* lexer: '\\' followed by any non-whitespace, ended with a whitespace */
 /* escaped_identifier */
@@ -2967,8 +2974,11 @@ hierarchical_variable_identifier : hierarchical_identifier ;
 hierarchical_task_identifier : hierarchical_identifier ;
 **/
 hierarchical_identifier
+	: generic_hierarchical_branch
+/**
 	: simple_hierarchical_identifier
 	| escaped_hierarchical_identifier
+**/
 	;
 
 identifier
@@ -2993,11 +3003,19 @@ port_identifier : identifier ;
 real_identifier : identifier ;
 **/
 
-simple_arrayed_identifier : simple_identifier range_opt
+/**
+simple_arrayed_identifier
+	: simple_identifier range_opt
+	;
+**/
+
+/* can end with one escaped identifier */
+/**
 simple_hierarchical_identifier
 	: simple_hierarchical_branch '.' escaped_identifier
 	| simple_hierarchical_branch
 	;
+**/
 
 /* simple_identifier : <token> */
 
@@ -3019,6 +3037,17 @@ variable_identifier : identifier ;
 /**
 	A.9.4	Identifier branches
  */
+/* more permissive, and simpler */
+generic_hierarchical_branch
+	: generic_hierarchical_branch '.' generic_index_member
+	| generic_index_member
+	;
+
+generic_index_member
+	: identifier index_unsigned_opt
+	;
+
+/**
 simple_hierarchical_branch
 	: simple_hierarchical_branch '.' simple_index_member
 	| simple_index_member
@@ -3027,12 +3056,14 @@ simple_hierarchical_branch
 simple_index_member
 	: simple_identifier index_unsigned_opt
 	;
+**/
 
 index_unsigned_opt
 	: '[' unsigned_number ']'
 	|
 	;
 
+/**
 escaped_hierarchical_branch
 	: escaped_hierarchical_branch '.' escaped_index_member
 	| escaped_index_member
@@ -3041,6 +3072,7 @@ escaped_hierarchical_branch
 escaped_index_member
 	: escaped_identifier index_unsigned_opt
 	;
+**/
 
 /**
 	A.9.5	White space
