@@ -1,0 +1,3091 @@
+/**
+	\file "parser/verilogf-parse.yy.in"
+	Quick little parser for parsing instance-references.  
+	This will be used in prsim and other simulators, for example.  
+	The grammar in here is an extremely small snippet
+	of the hackt language grammar.  
+	$Id: verilog-parse.yy.in,v 1.1 2009/11/21 01:11:55 fang Exp $
+ */
+
+%{
+#define	ENABLE_STACKTRACE		0
+
+#include <iostream>
+
+#include "config.h"
+#include "AST/AST.h"
+#include "parser/verilog-prefix.h"
+#include "util/using_ostream.h"
+#include "parser/verilog-union.h"
+#include "parser/verilog-parse-options.h"
+#include "parser/verilog-parse.output.h"
+#include "lexer/verilog-lex-options.h"
+#include "util/stacktrace.h"
+
+/** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
+#if defined (__GNUC__) && (3 <= __GNUC__)
+#define __attribute__(arglist)			/* empty */
+#endif
+
+#ifndef	YYBISON
+#define	YYBISON		0
+#endif
+
+#include "lexer/flex_lexer_state.h"
+
+#if YYBISON
+#if defined(USING_BISON) && !USING_BISON
+#error	Inconsistency in configuration: YYBISON && !USING_BISON
+#endif
+
+#elif defined(YYBYACC) && YYBYACC
+
+#if defined(USING_BYACC) && !USING_BYACC && !USING_YACC
+// on many systems, yacc == byacc
+#error	Inconsistency in configuration: YYBYACC && !USING_BYACC && !USING_YACC
+#endif
+#else   // !YYBISON && !YYBYACC
+
+#if defined(USING_YACC) && !USING_YACC
+#error	Inconsistency in configuration: !YYBISON && !YYBYACC && !USING_YACC
+#endif
+
+#endif  // YYBISON
+
+// extern FILE* yyin;
+
+#ifdef	LIBBOGUS
+static flex::lexer_state	_lexer_state;
+#endif
+
+
+#define	WRAP_LIST(left, list, right)	list->wrap(left, right)
+
+#define	DELETE_TOKEN(tok)		delete tok
+
+#define APPEND_LIST(list, delim, item)					\
+	DELETE_TOKEN(delim); list->push_back(item)
+
+%}
+
+%union {
+	/* SCM */
+	char*		_char;
+}
+
+%{
+extern	YY_DECL;
+
+static void yyerror(const char* msg);
+
+extern	ostream& yy_union_resolve_dump(const YYSTYPE&, const short, const short, ostream&);
+extern	void yy_union_resolve_delete(const YYSTYPE&, const short, const short);
+extern	ostream& yy_union_lookup_dump(const YYSTYPE&, const int, ostream&);
+extern	void yy_union_lookup_delete(const YYSTYPE&, const int);
+
+// worry about yy_union business later
+
+static
+void
+yyfreestacks(const short* yyss, const short* yyssp,
+		const YYSTYPE* yyvs, const YYSTYPE* yyvsp,
+		const YYSTYPE yylval, const int yychar,
+		const flex::lexer_state& _lexer_state);
+%}
+
+// %token	<_type> ...
+// %type <_SCM>	/* *everything* as lisp objects */
+%token	LIBRARY
+%token	INCDIR	/* -incdir */
+%token	file_path	/* system-specific, with wildcards */
+%token	INCLUDE
+%token	CONFIG ENDCONFIG
+%token	DESIGN
+%token	DEFAULT
+%token	INSTANCE
+%token	CELL
+%token	LIBLIST
+%token	USE
+%token	MODULE ENDMODULE
+%token	MACROMODULE
+%token	DEFPARAM
+%token	LOCALPARAM
+%token	INTEGER
+%token	REAL
+%token	REALTIME
+%token	TIME
+%token	SIGNED
+%token	range
+%token	PARAMETER
+%token	SPECPARAM
+%token	INOUT
+%token	INPUT
+%token	OUTPUT
+%token	REG
+%token	EVENT
+%token	GENVAR
+%token	TRIREG
+%token	VECTORED
+%token	SCALARED
+%token	SUPPLY0
+%token	SUPPLY1
+%token	TRI
+%token	TRIAND
+%token	TRIOR
+%token	TRI0
+%token	TRI1
+%token	WIRE
+%token	WAND
+%token	WOR
+%token	HIGHZ1
+%token	HIGHZ0
+%token	STRONG0
+%token	PULL0
+%token	WEAK0
+%token	STRONG1
+%token	PULL1
+%token	WEAK1
+%token	SMALL MEDIUM LARGE
+%token	NMOS PMOS RNMOS RPMOS
+%token	unsigned_number
+%token	PATHPULSE
+%token	FUNCTION ENDFUNCTION
+%token	AUTOMATIC
+%token	TASK ENDTASK
+%token	PULLDOWN PULLUP
+%token	CMOS RCMOS
+%token	BUFIF0 BUFIF1
+%token	NOTIF0 NOTIF1
+%token	AND
+%token	NAND
+%token	OR
+%token	NOR
+%token	XOR
+%token	XNOR
+%token	BUF
+%token	NOT
+%token	TRANIF0
+%token	TRANIF1
+%token	RTRANIF0
+%token	RTRANIF1
+%token	TRAN
+%token	RTRAN
+%token	GENERATE ENDGENERATE
+%token	IF
+%token	ELSE
+%token	CASE ENDCASE
+%token	FOR
+%token	BEGIN END
+%token	PRIMITIVE ENDPRIMITIVE
+%token	TABLE ENDTABLE
+%token	output_symbol
+%token	INITIAL
+%token	boolean_constant
+%token	level_symbol
+%token	edge_symbol
+%token	ASSIGN
+%token	ALWAYS
+%token	LEQ
+%token	DEASSIGN
+%token	FORCE
+%token	RELEASE
+%token	FORK
+%token	JOIN
+%token	REPEAT
+%token	DISABLE
+%token	RARROW
+%token	POSEDGE
+%token	NEGEDGE
+%token	WAIT
+%token	CASEZ
+%token	CASEX
+%token	FOREVER
+%token	WHILE
+%token	BEGIN_ATTR END_ATTR
+%token	system_task_identifier
+%token	SPECIFY ENDSPECIFY
+%token	PULSESTYLE_ONEVENT
+%token	PULSESTYLE_ONDETECT
+%token	SHOWCANCELLED
+%token	NOSHOWCANCELLED
+%token	IMPLIES
+%token	STARARROW
+%token	IFNONE
+%token	AND3
+%token	EDGE
+%token	ZEROONE
+%token	ONEZERO
+%token	CHAR
+%token	EQUALS
+%token	EQUAL3
+%token	NEQ
+%token	NEQ3
+%token	system_function_identifier
+%token	string
+%token	LOGICAL_AND
+%token	LOGICAL_OR
+%token	POWER
+%token	GEQ
+%token	DECIMAL_NUMBER
+%token	OCTAL_NUMBER
+%token	BINARY_NUMBER
+%token	HEX_NUMBER
+%token	REAL_NUMBER
+%token	escaped_identifier
+%token	simple_identifier
+%token	BOGUS_SEP	/* temporary bogus section separator */
+
+%start	verilog
+
+/* YACC_PURE_PARSER: conditionally substituted by configure */
+@YACC_PURE_PARSER@
+
+%%
+
+
+/**
+	From Appendix A of IEEE Verilog 2001 spec.
+	A.1	Source text
+
+	Top level symbols:
+	* library_text
+	* source_text
+	* genvar_function_call
+	* comment (lexer)
+	* comment_text (lexer)
+	* memory_identifier
+	* text_macro_identifier (lexer)
+	* white_space
+ */
+verilog
+	: library_text BOGUS_SEP
+		source_text BOGUS_SEP
+		genvar_function_call
+		BOGUS_SEP generic_identifier /* memory_identifier */
+	;
+
+
+/**
+	A.1.1	Library source text
+ */
+library_text
+	: library_descriptions	/* should be optional */
+	|
+	;
+
+library_descriptions
+	: library_descriptions library_description
+	| library_description
+	;
+
+library_description
+	: library_declaration
+	| include_statement
+	| config_declaration
+	;
+
+library_declaration
+	: LIBRARY generic_identifier /* library_identifier */
+		file_path_specs incdir_specs_opt ';'
+	;
+
+file_path_specs
+	: file_path_specs ',' file_path_spec
+	| file_path_spec
+	;
+
+incdir_specs_opt
+	: INCDIR file_path_specs
+	|
+	;
+
+file_path_spec
+	: file_path
+	;
+
+include_statement
+	: INCLUDE '<' file_path_spec '>' ';'
+	;
+
+/**
+	A.1.2	Configuration source text
+ */
+config_declaration
+	: CONFIG generic_identifier /* config_identifier */
+		';' design_statement
+		config_rule_statements_opt ENDCONFIG
+	;
+
+design_statement
+	: DESIGN libcell_identifiers_opt ';'
+	;
+
+libcell_identifiers_opt
+	: libcell_identifiers
+	|
+	;
+
+libcell_identifiers
+	: libcell_identifiers libcell_identifier
+	| libcell_identifier
+	;
+
+libcell_identifier
+	: generic_identifier /* library_identifier */
+		'.' generic_identifier /* cell_identifier */
+	| generic_identifier /* cell_identifier */
+	;
+
+config_rule_statements_opt
+	: config_rule_statements
+	|
+	;
+
+config_rule_statements
+	: config_rule_statements config_rule_statement
+	| config_rule_statement
+	;
+
+config_rule_statement
+	: default_clause liblist_clause
+	| inst_clause liblist_clause
+	| inst_clause use_clause
+	| cell_clause liblist_clause
+	| cell_clause use_clause
+	;
+
+default_clause
+	: DEFAULT
+	;
+
+inst_clause
+	: INSTANCE inst_name
+	;
+
+inst_name
+	: generic_identifier /* topmodule_identifier */
+		'.' generic_identifier /* instance_identifier */
+	| generic_identifier /* topmodule_identifier */
+	;
+
+cell_clause
+	: CELL libcell_identifier
+	;
+
+liblist_clause
+	: LIBLIST generic_identifiers_opt /* library_identifiers_opt */
+	;
+
+/**
+library_identifiers_opt
+	: library_identifiers
+	|
+	;
+
+library_identifiers
+	: library_identifiers library_identifier
+	| library_identifier
+	;
+**/
+
+use_clause
+	: USE libcell_identifier CONFIG_opt
+	;
+
+CONFIG_opt
+	: ':' CONFIG
+	;
+
+/**
+	A.1.3	Module and primitive source text
+ */
+
+source_text
+	: descriptions	/* should be optional */
+	|
+	;
+
+descriptions
+	: descriptions description
+	| description
+	;
+
+description
+	: module_declaration
+	| udp_declaration
+	;
+
+module_declaration
+	: attribute_instances_opt module_keyword
+		generic_identifier /* module_identifier */
+		module_parameter_port_list_opt
+		list_of_ports_opt ';' module_items
+		ENDMODULE
+	| attribute_instances_opt module_keyword
+		generic_identifier /* module_identifier */
+		module_parameter_port_list_opt
+		list_of_port_declarations ';' non_port_module_items_opt
+		ENDMODULE
+	;
+
+attribute_instances
+	: attribute_instances attribute_instance
+	| attribute_instance
+	;
+
+attribute_instances_opt
+	: attribute_instances
+	|
+	;
+
+module_keyword
+	: MODULE
+	| MACROMODULE
+	;
+
+/**
+	A.1.4	Module parameters and ports
+ */
+
+module_parameter_port_list_opt
+	: module_parameter_port_list
+	|
+	;
+
+module_parameter_port_list
+	: '#' '(' parameter_declarations ')'
+	;
+
+parameter_declarations
+	: parameter_declarations ',' parameter_declaration
+	| parameter_declaration
+	;
+
+list_of_ports_opt
+	: list_of_ports
+	|
+	;
+
+list_of_ports
+	: '(' ports ')'
+
+ports
+	: ports ',' port
+	| port
+	;
+
+list_of_port_declarations
+	: '(' port_declarations_opt ')'
+	;
+
+port_declarations_opt
+	: port_declarations
+	|
+	;
+
+port_declarations
+	: port_declarations ',' port_declaration
+	| port_declaration
+	;
+
+port
+	: port_expression_opt
+	| '.' generic_identifier /* port_identifier */
+		'(' port_expression_opt ')'
+	;
+
+port_expression_opt
+	: port_expression
+	|
+	;
+
+port_expression
+	: port_reference
+	| port_references_list
+	;
+
+port_references_list
+	: port_references_list port_references
+	| port_references
+	;
+
+port_references
+	: port_references ',' port_reference
+	| port_reference
+	;
+	
+port_reference
+	: generic_identifier /* port_identifier */ port_dimensions_opt
+	;
+
+port_dimensions_opt
+	: '[' constant_expression ']'
+	| '[' range_expression ']'
+	|
+	;
+
+port_declaration
+	: attribute_instances_opt direction_declaration
+	;
+
+direction_declaration
+	: inout_declaration
+	| input_declaration
+	| output_declaration
+	;
+
+/**
+	A.1.5	Module items
+ */
+
+module_items
+	: module_items module_item
+	| module_item
+	;
+
+module_item
+	: module_or_generate_item
+	| port_declaration ';'
+	| attribute_instances_opt module_item_base
+	;
+
+module_item_base
+	: generated_instantiation
+	| local_parameter_declaration
+	| parameter_declaration
+	| specify_block
+	| specparam_declaration
+	;
+
+module_or_generate_item
+	: attribute_instances_opt module_or_generate_item_base
+	;
+
+module_or_generate_item_base
+	: module_or_generate_item_declaration
+	| parameter_override
+	| continuous_assign
+	| gate_instantiation
+	| udp_instantiation
+	| module_instantiation
+	| initial_construct
+	| always_construct
+	;
+
+module_or_generate_item_declaration
+	: net_declaration
+	| reg_declaration
+	| integer_declaration
+	| real_declaration
+	| time_declaration
+	| realtime_declaration
+	| event_declaration
+	| genvar_declaration
+	| task_declaration
+	| function_declaration
+	;
+
+non_port_module_items_opt
+	: non_port_module_items
+	|
+	;
+
+non_port_module_items
+	: non_port_module_items non_port_module_item
+	| non_port_module_item
+	;
+
+non_port_module_item
+	: attribute_instances_opt non_port_module_item_base
+	;
+
+non_port_module_item_base
+	: generated_instantiation
+	| local_parameter_declaration
+	| module_or_generate_item
+	| parameter_declaration
+	| specify_block
+	| specparam_declaration
+	;
+
+parameter_override
+	: DEFPARAM list_of_param_assignments ';'
+	;
+
+/**
+	A.2	Declarations
+	A.2.1	Declaration types
+	A.2.1.1	Module parameter declarations
+ */
+local_parameter_declaration
+	: local_parameter_decl_type list_of_param_assignments ';'
+	;
+
+local_parameter_decl_type
+	: LOCALPARAM SIGNED_opt range_opt
+	| LOCALPARAM INTEGER
+	| LOCALPARAM REAL
+	| LOCALPARAM REALTIME
+	| LOCALPARAM TIME
+	;
+
+SIGNED_opt
+	: SIGNED
+	|
+	;
+
+range_opt
+	: range
+	|
+	;
+
+parameter_declaration
+	: parameter_decl_type list_of_param_assignments ';'
+	;
+
+parameter_decl_type
+	: PARAMETER SIGNED_opt range_opt
+	| PARAMETER INTEGER
+	| PARAMETER REAL
+	| PARAMETER REALTIME
+	| PARAMETER TIME
+	;
+
+specparam_declaration
+	: SPECPARAM range_opt list_of_specparam_assignments
+	;
+
+/**
+	A.2.1.2	Port declarations
+ */
+inout_declaration
+	: INOUT net_type_opt SIGNED_opt range_opt
+		list_of_generic_identifiers /* list_of_port_identifiers */
+	;
+
+net_type_opt
+	: net_type
+	|
+	;
+
+net_type_or_REG_opt
+	: net_type_opt
+	| REG
+	;
+
+input_declaration
+	: INPUT net_type_opt SIGNED_opt range_opt
+		list_of_generic_identifiers /* list_of_port_identifiers */
+	;
+
+/* serval shift/reduce conflicts here b/c of redundancy */
+output_declaration
+	: OUTPUT net_type_or_REG_opt SIGNED_opt range_opt
+		list_of_generic_identifiers /* list_of_port_identifiers */
+	| OUTPUT REG SIGNED_opt range_opt list_of_variable_port_identifiers
+	| OUTPUT output_variable_type_opt
+		list_of_generic_identifiers /* list_of_port_identifiers */
+	| OUTPUT output_variable_type list_of_variable_port_identifiers
+	;
+
+REG_opt
+	: REG
+	|
+	;
+
+/**
+	A.2.1.3	Type declarations
+ */
+event_declaration
+	: EVENT list_of_event_identifiers ';'
+	;
+
+genvar_declaration
+	: GENVAR list_of_genvar_identifiers ';'
+	;
+
+integer_declaration
+	: INTEGER list_of_variable_identifiers ';'
+	;
+
+/* serval shift/reduce conflicts here b/c of redundancy */
+net_declaration
+	: net_type SIGNED_opt delay3_opt list_of_net_identifiers ';'
+	| net_type drive_strength_opt SIGNED_opt delay3_opt
+		list_of_net_decl_assignments ';'
+	| net_type vectored_or_scalared_opt SIGNED_opt range delay3_opt
+		list_of_net_identifiers ';'
+	| net_type drive_strength_opt vectored_or_scalared_opt SIGNED_opt
+		range delay3_opt list_of_net_decl_assignments ';'
+	| TRIREG charge_strength_opt SIGNED_opt delay3_opt
+		list_of_net_identifiers ';'
+	| TRIREG drive_strength_opt SIGNED_opt delay3_opt
+		list_of_net_decl_assignments ';'
+	| TRIREG charge_strength_opt vectored_or_scalared_opt SIGNED_opt
+		range delay3_opt list_of_net_identifiers ';'
+	| TRIREG drive_strength_opt vectored_or_scalared_opt SIGNED_opt
+		range delay3_opt list_of_net_decl_assignments ';'
+	;
+
+vectored_or_scalared_opt
+	: VECTORED
+	| SCALARED
+	|
+	;
+
+drive_strength_opt
+	: drive_strength
+	|
+	;
+
+charge_strength_opt
+	: charge_strength
+	|
+	;
+
+real_declaration
+	: REAL list_of_real_identifiers ';'
+	;
+
+realtime_declaration
+	: REALTIME list_of_real_identifiers ';'
+	;
+
+reg_declaration
+	: REG SIGNED_opt range_opt list_of_variable_identifiers ';'
+	;
+
+time_declaration
+	: TIME list_of_variable_identifiers ';'
+	;
+
+
+/**
+	A.2.2	Declaration data types
+	A.2.2.1	Net and variable types
+ */
+net_type
+	: SUPPLY0
+	| SUPPLY1
+	| TRI
+	| TRIAND
+	| TRIOR
+	| TRI0
+	| TRI1
+	| WIRE
+	| WAND
+	| WOR
+	;
+
+output_variable_type_opt
+	: output_variable_type
+	|
+	;
+
+output_variable_type
+	: INTEGER
+	| TIME
+	;
+
+real_type
+	: generic_identifier /* real_identifier */ '=' constant_expression
+	| generic_identifier /* real_identifier */
+	| generic_identifier /* real_identifier */ dimensions
+	;
+
+dimensions
+	: dimensions dimension
+	| dimension
+	;
+
+variable_type
+	: generic_identifier /* variable_identifier */ '=' constant_expression
+	| generic_identifier /* variable_identifier */
+	| generic_identifier /* variable_identifier */ dimensions
+	;
+
+/**
+	A.2.2.2	Strengths
+ */
+drive_strength
+	: '(' strength0 ',' strength1 ')'
+	| '(' strength1 ',' strength0 ')'
+	| '(' strength0 ',' HIGHZ1 ')'
+	| '(' strength1 ',' HIGHZ0 ')'
+	| '(' HIGHZ0 ',' strength1 ')'
+	| '(' HIGHZ1 ',' strength0 ')'
+	;
+
+strength0
+	: SUPPLY0
+	| STRONG0
+	| PULL0
+	| WEAK0
+	;
+
+strength1
+	: SUPPLY1
+	| STRONG1
+	| PULL1
+	| WEAK1
+	;
+
+charge_strength
+	: '(' SMALL ')'
+	| '(' MEDIUM ')'
+	| '(' LARGE ')'
+	;
+
+/**
+	A.2.3	Delays
+ */
+delay3_exact
+	: '#' '(' delay_value ',' delay_value ',' delay_value ')'
+	;
+delay2_exact
+	: '#' '(' delay_value ',' delay_value ')'
+	;
+delay1_exact
+	: '#' '(' delay_value ')'
+	;
+
+delay2_opt
+	: delay2
+	|
+	;
+
+delay2
+	: '#' delay_value
+	| delay2_exact
+	| delay1_exact
+	;
+
+delay3_opt
+	: delay3
+	|
+	;
+
+delay3
+	: delay2
+	| delay3_exact
+	;
+
+delay_value
+	: unsigned_number
+	| generic_identifier
+/**
+	| parameter_identifier
+	| specparam_identifier
+**/
+	| mintypmax_expression
+	;
+
+/**
+	A.2.3	Declaration lists
+ */
+list_of_event_identifiers
+	: list_of_event_identifiers ',' event_identifier_opt_dimensioned
+	| event_identifier_opt_dimensioned
+	;
+
+event_identifier_opt_dimensioned
+	: generic_identifier /* event_identifier */ dimensions_opt
+	;
+
+dimensions_opt
+	: dimensions
+	|
+	;
+
+list_of_genvar_identifiers
+	: list_of_genvar_identifiers ','
+		generic_identifier /* genvar_identifier */
+	| generic_identifier /* genvar_identifier */
+	;
+
+list_of_net_decl_assignments
+	: list_of_net_decl_assignments ',' net_decl_assignment
+	| net_decl_assignment
+	;
+
+list_of_net_identifiers
+	: list_of_net_identifiers ',' net_identifier_opt_dimensioned
+	| net_identifier_opt_dimensioned
+	;
+
+net_identifier_opt_dimensioned
+	: generic_identifier /* net_identifier */ dimensions_opt
+	;
+
+list_of_param_assignments
+	: list_of_param_assignments ',' param_assignment
+	| param_assignment
+	;
+
+/**
+list_of_port_identifiers
+	: list_of_port_identifiers ',' port_identifier
+	| port_identifier
+	;
+**/
+
+list_of_real_identifiers
+	: list_of_real_identifiers ',' real_type
+	| real_type
+	;
+
+list_of_specparam_assignments
+	: list_of_specparam_assignments ',' specparam_assignment
+	| specparam_assignment
+	;
+
+list_of_variable_identifiers
+	: list_of_variable_identifiers ',' variable_type
+	| variable_type
+	;
+
+list_of_variable_port_identifiers
+	: list_of_variable_port_identifiers ',' variable_port_identifier
+	| variable_port_identifier
+	;
+
+variable_port_identifier
+	: generic_identifier /* port_identifier */ '=' constant_expression
+	| generic_identifier /* port_identifier */
+	;
+
+/**
+	A.2.4	Declaration assignments
+ */
+net_decl_assignment
+	: generic_identifier /* net_identifier */ '=' expression
+	;
+
+param_assignment
+	: generic_identifier /* parameter_identifier */ '=' constant_expression
+	;
+
+specparam_assignment
+	: generic_identifier /* specparam_identifier */
+		'=' constant_mintypmax_expression
+	| pulse_control_specparam
+	;
+
+// PATHPULSE = "pathpulse$"
+pulse_control_specparam
+	: PATHPULSE '=' reject_limit_value_opt_error ';'
+	| PATHPULSE specify_input_terminal_descriptor '$'
+		specify_output_terminal_descriptor '='
+		reject_limit_value_opt_error ';'
+	;
+
+reject_limit_value_opt_error
+	: '(' reject_limit_value ',' error_limit_value ')'
+	| '(' reject_limit_value ')'
+	;
+
+error_limit_value
+	: limit_value
+	;
+
+reject_limit_value
+	: limit_value
+	;
+
+limit_value
+	: constant_mintypmax_expression
+	;
+
+/**
+	A.2.5	Declaration ranges
+ */
+dimension
+	: '[' dimension_constant_expression ':'
+		dimension_constant_expression ']'
+	| '[' msb_constant_expression ':' lsb_constant_expression ']'
+	;
+
+/**
+	A.2.6	Function declarations
+ */
+function_declaration
+	: FUNCTION AUTOMATIC_opt SIGNED_opt range_or_type_opt
+		generic_identifier /* function_identifier */ ';'
+		function_item_declarations
+		function_statement
+		ENDFUNCTION
+	| FUNCTION AUTOMATIC_opt SIGNED_opt range_or_type_opt
+		generic_identifier /* function_identifier */
+		'(' function_port_list ')' ';'
+		block_item_declarations
+		function_statement
+		ENDFUNCTION
+	;
+
+function_item_declarations
+	: function_item_declarations function_item_declaration
+	| function_item_declaration
+	;
+
+function_item_declaration
+	: block_item_declaration
+	| tf_declaration /* tf_input_declaration */ ';'
+	;
+
+function_port_list
+	: function_port_list ',' function_port
+	| function_port
+	;
+
+function_port
+	: attribute_instances_opt tf_declaration /* tf_input_declaration */
+	;
+
+AUTOMATIC_opt
+	: AUTOMATIC
+	|
+	;
+
+range_or_type_opt
+	: range_or_type
+	|
+	;
+
+range_or_type
+	: range
+	| INTEGER
+	| REAL
+	| REALTIME
+	| TIME
+	;
+
+/**
+	A.2.7	Task declarations
+ */
+task_declaration
+	: TASK AUTOMATIC_opt generic_identifier /* task_identifier */ ';'
+		task_item_declarations statement ENDTASK
+	| TASK AUTOMATIC_opt generic_identifier /* task_identifier */
+		'(' task_port_list ')' ';'
+		block_item_declarations statement ENDTASK
+	;
+
+task_item_declarations
+	: task_item_declarations task_item_declaration
+	| task_item_declaration
+	;
+
+task_item_declaration
+	: block_item_declaration
+	| attribute_instances_opt tf_declaration ';'
+	;
+
+tf_declaration
+	: inout_keyword REG_opt SIGNED_opt range_opt 
+		list_of_generic_identifiers /* list_of_port_identifiers */
+	| inout_keyword task_port_type
+		list_of_generic_identifiers /* list_of_port_identifiers */
+/*	| inout_keyword task_port_type_opt list_of_generic_identifiers */
+/**
+	: tf_input_declaration
+	| tf_output_declaration
+	| tf_inout_declaration
+**/
+	;
+
+inout_keyword
+	: INPUT
+	| INOUT
+	| OUTPUT
+	;
+
+task_port_list
+	: task_port_list ',' task_port_item
+	| task_port_item
+	;
+
+task_port_item
+	: tf_declaration
+	;
+
+/**
+(replaced with generic declaration)
+tf_input_declaration
+	: INPUT REG_opt SIGNED_opt range_opt list_of_port_identifiers
+	| INPUT task_port_type_opt list_of_port_identifiers
+	;
+
+tf_output_declaration
+	: OUTPUT REG_opt SIGNED_opt range_opt list_of_port_identifiers
+	| OUTPUT task_port_type_opt list_of_port_identifiers
+	;
+
+tf_inout_declaration
+	: INOUT REG_opt SIGNED_opt range_opt list_of_port_identifiers
+	| INOUT task_port_type_opt list_of_port_identifiers
+	;
+
+task_port_type_opt
+	: task_port_type
+	|
+	;
+**/
+
+task_port_type
+	: TIME
+	| REAL
+	| REALTIME
+	| INTEGER
+	;
+
+/**
+	A.2.8	Block item declarations
+ */
+block_item_declarations
+	: block_item_declarations block_item_declaration
+	| block_item_declaration
+	;
+
+block_item_declaration
+	: attribute_instances_opt block_item_decl_base
+	;
+
+block_item_decl_base
+	: block_reg_declaration
+	| event_declaration
+	| integer_declaration
+	| local_parameter_declaration
+	| parameter_declaration
+	| real_declaration
+	| realtime_declaration
+	| time_declaration
+	;
+
+block_reg_declaration
+	: REG SIGNED_opt range_opt list_of_block_variable_identifiers ';'
+	;
+
+list_of_block_variable_identifiers
+	: list_of_block_variable_identifiers ',' block_variable_type
+	| block_variable_type
+	;
+
+block_variable_type
+	: generic_identifier /* variable_identifier */ dimensions_opt
+	;
+
+/**
+	A.3	Primitive instances
+	A.3.1	Primitive instantiation and instances
+ */
+gate_instantiation
+	: cmos_switchtype delay3_opt cmos_switch_instances ';'
+	| enable_gatetype drive_strength_opt delay3_opt
+		enable_gate_instances ';'
+	| mos_switchtype delay3_opt mos_switch_instances ';'
+	| n_input_gatetype drive_strength_opt delay2_opt
+		n_input_gate_instances ';'
+	| n_output_gatetype drive_strength_opt delay2_opt
+		n_output_gate_instances ';'
+	| pass_en_switchtype delay2_opt pass_enable_switch_instances ';'
+	| pass_switchtype pass_switch_instances ';'
+	| PULLDOWN pulldown_strength_opt pull_gate_instances ';'
+	| PULLUP pullup_strength_opt pull_gate_instances ';'
+	;
+
+cmos_switch_instances
+	: cmos_switch_instances ',' cmos_switch_instance
+	| cmos_switch_instance
+	;
+
+enable_gate_instances
+	: enable_gate_instances ',' enable_gate_instance
+	| enable_gate_instance
+	;
+
+mos_switch_instances
+	: mos_switch_instances ',' mos_switch_instance
+	| mos_switch_instance
+	;
+
+n_input_gate_instances
+	: n_input_gate_instances ',' n_input_gate_instance
+	| n_input_gate_instance
+	;
+
+n_output_gate_instances
+	: n_output_gate_instances ',' n_output_gate_instance
+	| n_output_gate_instance
+	;
+
+pass_enable_switch_instances
+	: pass_enable_switch_instances ',' pass_enable_switch_instance
+	| pass_enable_switch_instance
+	;
+
+pass_switch_instances
+	: pass_switch_instances ',' pass_switch_instance
+	| pass_switch_instance
+	;
+
+pull_gate_instances
+	: pull_gate_instances ',' pull_gate_instance
+	| pull_gate_instance
+	;
+
+cmos_switch_instance
+	: name_of_gate_instance_opt '(' output_terminal ',' input_terminal
+		',' ncontrol_terminal ',' pcontrol_terminal ')'
+	;
+
+enable_gate_instance
+	: name_of_gate_instance_opt '(' output_terminal ','
+		input_terminal ',' enable_terminal ')'
+	;
+
+mos_switch_instance
+	: name_of_gate_instance_opt '(' output_terminal ','
+		input_terminal ',' enable_terminal ')'
+	;
+
+n_input_gate_instance
+	: name_of_gate_instance_opt '(' output_terminal ',' input_terminals ')'
+	;
+
+n_output_gate_instance
+	: name_of_gate_instance_opt '(' output_terminals ',' input_terminal ')'
+	;
+
+pass_switch_instance
+	: name_of_gate_instance_opt '(' inout_terminal ',' inout_terminal ')'
+	;
+
+pass_enable_switch_instance
+	: name_of_gate_instance_opt '(' inout_terminal ',' inout_terminal ','
+		enable_terminal ')'
+	;
+
+pull_gate_instance
+	: name_of_gate_instance_opt '(' output_terminal ')'
+	;
+
+input_terminals
+	: input_terminals ',' input_terminal
+	| input_terminal
+	;
+
+output_terminals
+	: output_terminals ',' output_terminal
+	| output_terminal
+	;
+
+
+name_of_gate_instance_opt
+	: name_of_gate_instance
+	|
+	;
+
+name_of_gate_instance
+	: gate_instance_identifier range_opt
+	;
+
+/**
+	A.3.2	Primitive strengths
+ */
+pulldown_strength_opt
+	: pulldown_strength
+	|
+	;
+
+pulldown_strength
+	: '(' strength0 ',' strength1 ')'
+	| '(' strength1 ',' strength0 ')'
+	| '(' strength0 ')'
+	;
+
+pullup_strength_opt
+	: pullup_strength
+	|
+	;
+
+pullup_strength
+	: '(' strength0 ',' strength1 ')'
+	| '(' strength1 ',' strength0 ')'
+	| '(' strength1 ')'
+	;
+
+/**
+	A.3.3	Primitive terminals
+ */
+enable_terminal
+	: expression
+	;
+
+inout_terminal
+	: net_lvalue
+	;
+
+input_terminal
+	: expression
+	;
+
+ncontrol_terminal
+	: expression
+	;
+
+output_terminal
+	: net_lvalue
+	;
+
+pcontrol_terminal
+	: expression
+	;
+
+/**
+	A.3.4	Primitive gate and switch types
+ */
+cmos_switchtype
+	: CMOS
+	| RCMOS
+	;
+
+enable_gatetype
+	: BUFIF0
+	| BUFIF1
+	| NOTIF0
+	| NOTIF1
+	;
+
+mos_switchtype
+	: NMOS
+	| PMOS
+	| RNMOS
+	| RPMOS
+	;
+
+n_input_gatetype
+	: AND
+	| NAND
+	| OR
+	| NOR
+	| XOR
+	| XNOR
+	;
+
+n_output_gatetype
+	: BUF
+	| NOT
+	;
+
+pass_en_switchtype
+	: TRANIF0
+	| TRANIF1
+	| RTRANIF0
+	| RTRANIF1
+	;
+
+pass_switchtype
+	: TRAN
+	| RTRAN
+	;
+
+/**
+	A.4	Module and generated instantiation
+	A.4.1	Module instantiation
+ */
+module_instantiation
+	: generic_identifier /* module_identifier */
+		parameter_value_assignment_opt
+		module_instances ';'
+	;
+
+module_instances
+	: module_instances ',' module_instance
+	| module_instance
+	;
+
+parameter_value_assignment_opt
+	: parameter_value_assignment
+	|
+	;
+
+parameter_value_assignment
+	: '#' '(' list_of_parameter_assignments ')'
+	;
+
+list_of_parameter_assignments
+	: ordered_parameter_assignments
+	| named_parameter_assignments
+	;
+
+ordered_parameter_assignments
+	: ordered_parameter_assignments ',' ordered_parameter_assignment
+	| ordered_parameter_assignment
+	;
+
+named_parameter_assignments
+	: named_parameter_assignments ',' named_parameter_assignment
+	| named_parameter_assignment
+	;
+
+ordered_parameter_assignment
+	: expression
+	;
+
+named_parameter_assignment
+	: '.' generic_identifier /* parameter_identifier */
+		'(' expression_opt ')'
+	;
+
+expression_opt
+	: expression
+	|
+	;
+
+module_instance
+	: name_of_instance '(' list_of_port_connections_opt ')'
+	;
+
+name_of_instance
+	: module_instance_identifier range_opt
+	;
+
+list_of_port_connections_opt
+	: list_of_port_connections
+	|
+	;
+
+list_of_port_connections
+	: ordered_port_connections
+	| named_port_connections
+	;
+
+ordered_port_connections
+	: ordered_port_connections ',' ordered_port_connection
+	| ordered_port_connection
+	;
+
+named_port_connections
+	: named_port_connections ',' named_port_connection
+	| named_port_connection
+	;
+
+ordered_port_connection
+	: attribute_instances_opt expression_opt
+	;
+
+named_port_connection
+	: attribute_instances_opt '.' generic_identifier /* port_identifier */
+		'(' expression_opt ')'
+	;
+
+/**
+	A.4.2	Generated instantiation
+ */
+generated_instantiation
+	: GENERATE generate_items ENDGENERATE
+	;
+
+generate_items
+	: generate_items generate_item
+	| generate_item
+	;
+
+generate_item_opt
+	: generate_item
+	| ';'
+	;
+
+generate_item
+	: generate_conditional_statement
+	| generate_case_statement
+	| generate_loop_statement
+	| generate_block
+	| module_or_generate_item
+	;
+
+generate_conditional_statement
+	: IF '(' constant_expression ')' generate_item_opt
+		generate_else_clause_opt
+	;
+
+generate_else_clause_opt
+	: ELSE generate_item_opt
+	;
+
+generate_case_statement
+	: CASE '(' constant_expression ')' genvar_case_items ENDCASE
+	;
+
+genvar_case_items
+	: genvar_case_items genvar_case_item
+	| genvar_case_item
+	;
+
+genvar_case_item
+	: constant_expressions ':' generate_item_opt
+	| DEFAULT COLON_opt generate_item_opt
+	;
+
+COLON_opt
+	: ':'
+	|
+	;
+
+constant_expressions
+	: constant_expressions constant_expression
+	| constant_expression
+	;
+
+generate_loop_statement
+	: FOR '(' genvar_assignment ';' constant_expression ';'
+		genvar_assignment ')' BEGIN ':' 
+		generic_identifier /* generate_block_identifier */
+		generate_items END
+	;
+
+genvar_assignment
+	: generic_identifier /* genvar_identifier */ '=' constant_expression
+	;
+
+generate_block
+	: BEGIN
+		generic_identifier_opt /* generate_block_identifier_opt */
+		generate_items END
+	;
+
+/**
+generate_block_identifier_opt
+	: ':' generate_block_identifier
+	|
+	;
+*/
+
+/**
+	A.5	UDP declaration and instantiation
+	A.5.1	UDP declaration
+ */
+udp_declaration
+	: attribute_instances_opt PRIMITIVE
+		generic_identifier /* udp_identifier */
+		'(' udp_port_list ')' ';'
+		udp_port_declarations udp_body ENDPRIMITIVE
+	| attribute_instances_opt PRIMITIVE
+		generic_identifier /* udp_identifier */
+		'(' udp_declaration_port_list ')' ';' udp_body ENDPRIMITIVE
+	;
+
+/**
+	A.5.2	UDP ports
+ */
+udp_port_list
+	: list_of_generic_identifiers
+/**
+	: output_port_identifier ',' input_port_identifiers
+**/
+	;
+
+/**
+input_port_identifiers
+	: input_port_identifiers ',' input_port_identifier
+	| input_port_identifier
+	;
+**/
+
+udp_declaration_port_list
+	: udp_output_declaration ',' udp_input_declarations
+	;
+
+udp_input_declarations
+	: udp_input_declarations ',' udp_input_declaration
+	| udp_input_declaration
+	;
+
+udp_port_declarations
+	: udp_port_declarations udp_port_declaration
+	| udp_port_declaration
+	;
+
+udp_port_declaration
+	: udp_output_declaration ';'
+	| udp_input_declaration ';'
+	| udp_reg_declaration ';'
+	;
+
+udp_output_declaration
+	: attribute_instances_opt OUTPUT
+		generic_identifier /* port_identifier */
+	| attribute_instances_opt OUTPUT REG
+		generic_identifier /* port_identifier */
+	| attribute_instances_opt OUTPUT REG
+		generic_identifier /* port_identifier */
+		'=' constant_expression
+	;
+
+udp_input_declaration
+	: attribute_instances_opt INPUT
+		list_of_generic_identifiers /* list_of_port_identifiers */
+	;
+
+udp_reg_declaration
+	: attribute_instances_opt REG
+		generic_identifier /* variable_identifier */
+	;
+
+/**
+	A.5.3	UDP body
+ */
+udp_body
+	: combinational_body
+	| sequential_body
+	;
+
+combinational_body
+	: TABLE combinational_entries ENDTABLE
+	;
+
+combinational_entries
+	: combinational_entries combinational_entry
+	| combinational_entry
+	;
+
+combinational_entry
+	: level_input_list ':' output_symbol ';'
+	;
+
+sequential_body
+	: udp_initial_statement_opt TABLE sequential_entries ENDTABLE
+	;
+
+sequential_entries
+	: sequential_entries sequential_entry
+	| sequential_entry
+	;
+
+udp_initial_statement_opt
+	: udp_initial_statement
+	|
+	;
+
+udp_initial_statement
+	: INITIAL generic_identifier /* output_port_identifier */
+		'-' init_val ';'
+	;
+
+init_val
+	: boolean_constant
+	;
+
+/* boolean_constant : 1'b0 1'b1 1'bx 1'bX 1'B0 1'B1 1'Bx 1'BX 1 0 */
+
+sequential_entry
+	: seq_input_list ':' current_state ':' next_state ';'
+	;
+
+seq_input_list
+	: level_input_list
+	| edge_input_list
+	;
+
+level_input_list
+	: level_input_list level_symbol
+	| level_symbol
+	;
+
+edge_input_list
+	: level_symbols edge_indicator level_symbols
+	;
+
+level_symbols
+	: level_symbols level_symbol
+	| level_symbol
+	;
+
+edge_indicator
+	: '(' level_symbol level_symbol ')'
+	| edge_symbol
+	;
+
+current_state
+	: level_symbol
+	;
+
+next_state
+	: output_symbol
+	| '-'
+	;
+
+/* output_symbol: 0 1 x X */
+/* level_symbol: 0 1 x X ? b B */
+/* edge_symbol: r R f F p P n N * */
+
+/**
+	A.5.4	UDP instantiation
+ */
+udp_instantiation
+	: generic_identifier /* udp_identifier */
+		drive_strength_opt delay2_opt udp_instances ';'
+	;
+
+udp_instances
+	: udp_instances ',' udp_instance
+	| udp_instance
+	;
+
+udp_instance
+	: name_of_udp_instance_opt '(' output_terminal ',' input_terminals ')'
+	;
+
+name_of_udp_instance_opt
+	: name_of_udp_instance
+	|
+	;
+
+name_of_udp_instance
+	: generic_identifier /* udp_instance_identifier */ range_opt
+	;
+
+/**
+	A.6	Behavioral statements
+	A.6.1	Continuous assignment statements
+ */
+continuous_assign
+	: ASSIGN drive_strength_opt delay3_opt list_of_net_assignments ';'
+	;
+
+list_of_net_assignments
+	: list_of_net_assignments ',' net_assignment
+	| net_assignment
+	;
+
+net_assignment
+	: net_lvalue '=' expression
+	;
+
+/**
+	A.6.2	Procedural blocks and assignments
+ */
+initial_construct
+	: INITIAL statement
+	;
+
+always_construct
+	: ALWAYS statement
+	;
+
+blocking_assignment
+	: variable_lvalue '=' delay_or_event_control_opt expression
+	;
+
+delay_or_event_control_opt
+	: delay_or_event_control
+	|
+	;
+
+nonblocking_assignment
+	: variable_lvalue LEQ delay_or_event_control_opt expression
+	;
+
+procedural_continuous_assignments
+	: ASSIGN variable_assignment
+	| DEASSIGN variable_lvalue
+	| FORCE variable_assignment
+	| FORCE net_assignment
+	| RELEASE variable_lvalue
+	| RELEASE net_lvalue
+	;
+
+function_blocking_assignment
+	: variable_lvalue '=' expression
+	;
+
+function_statement_or_null
+	: function_statement
+	| attribute_instances_opt ';'
+	;
+
+/**
+	A.6.3	Parallel and sequential blocks
+ */
+function_seq_block
+	: BEGIN ':' generic_identifier /* block_identifier */
+		block_item_declarations function_statements END
+	| BEGIN function_statements END
+	;
+
+function_statements
+	: function_statements function_statement
+	| function_statement
+	;
+
+variable_assignment
+	: variable_lvalue '=' expression
+	;
+
+par_block
+	: FORK ':' generic_identifier /* block_identifier */
+		block_item_declarations statements JOIN
+	| FORK statements JOIN
+	;
+
+seq_block
+	: BEGIN ':' generic_identifier /* block_identifier */
+		block_item_declarations statements END
+	| BEGIN statements END
+	;
+
+/**
+	A.6.4	Statements
+ */
+statements
+	: statements statement
+	| statement
+	;
+
+statement
+	: attribute_instances_opt blocking_assignment ';'
+	| attribute_instances_opt case_statement
+	| attribute_instances_opt conditional_statement
+	| attribute_instances_opt disable_statement
+	| attribute_instances_opt event_trigger
+	| attribute_instances_opt loop_statement
+	| attribute_instances_opt nonblocking_assignment ';'
+	| attribute_instances_opt par_block
+	| attribute_instances_opt procedural_continuous_assignments ';'
+	| attribute_instances_opt procedural_timing_control_statement
+	| attribute_instances_opt seq_block
+	| attribute_instances_opt system_task_enable
+	| attribute_instances_opt task_enable
+	| attribute_instances_opt wait_statement
+	;
+
+statement_or_null
+	: statement
+	| attribute_instances_opt ';'
+	;
+
+function_statement
+	: attribute_instances_opt function_blocking_assignment ';'
+	| attribute_instances_opt function_case_statement
+	| attribute_instances_opt function_conditional_statement
+	| attribute_instances_opt function_loop_statement
+	| attribute_instances_opt function_seq_block
+	| attribute_instances_opt disable_statement
+	| attribute_instances_opt system_task_enable
+	;
+
+/**
+	A.6.5	Timing control statement
+ */
+delay_control
+	: '#' delay_value
+	| '#' '(' mintypmax_expression ')'
+	;
+
+delay_or_event_control
+	: delay_control
+	| event_control
+	| REPEAT '(' expression ')' event_control
+	;
+
+disable_statement
+	: DISABLE generic_hierarchical_identifier ';'
+/**
+	: DISABLE hierarchical_task_identifier ';'
+	| DISABLE hierarchical_block_identifier ';'
+**/
+	;
+
+event_control
+	: '@' generic_identifier /* event_identifier */
+	| '@' '(' event_expression ')'
+	| '@' '*'
+	| '@' '(' '*' ')'
+	;
+
+event_trigger
+	: RARROW generic_hierarchical_identifier
+		/* hierarchical_event_identifier */ ';'
+	;
+
+event_expression
+	: expression
+	| hierarchical_identifier
+	| POSEDGE expression
+	| NEGEDGE expression
+	| event_expression OR event_expression
+	| event_expression ',' event_expression
+	;
+
+procedural_timing_control_statement
+	: delay_or_event_control statement_or_null
+	;
+
+wait_statement
+	: WAIT '(' expression ')' statement_or_null
+	;
+
+/**
+	A.6.6	Conditional statements
+ */
+conditional_statement
+	: IF '(' expression ')' statement_or_null
+		else_if_clauses_opt else_clause_opt
+	;
+
+else_if_clauses_opt
+	: else_if_clauses
+	|
+	;
+
+else_if_clauses
+	: else_if_clauses else_if_clause
+	| else_if_clause
+	;
+
+else_if_clause
+	: ELSE IF '(' expression ')' statement_or_null
+	;
+
+
+else_clause_opt
+	: else_clause
+	|
+	;
+
+else_clause
+	: ELSE statement_or_null
+	;
+
+function_conditional_statement
+	: IF '(' expression ')' function_statement_or_null
+		function_else_if_clauses_opt function_else_clause_opt
+	;
+
+function_else_if_clauses_opt
+	: function_else_if_clauses
+	|
+	;
+
+function_else_if_clauses
+	: function_else_if_clauses function_else_if_clause
+	| function_else_if_clause
+	;
+
+function_else_if_clause
+	: ELSE IF '(' expression ')' function_statement_or_null
+	;
+
+
+function_else_clause_opt
+	: function_else_clause
+	|
+	;
+
+function_else_clause
+	: ELSE function_statement_or_null
+	;
+
+/**
+	A.6.7	Case statements
+ */
+case_statement
+	: CASE '(' expression ')' case_items ENDCASE
+	| CASEZ '(' expression ')' case_items ENDCASE
+	| CASEX '(' expression ')' case_items ENDCASE
+	;
+
+case_items
+	: case_items case_item
+	| case_item
+	;
+
+case_item
+	: expressions ':' statement_or_null
+	| DEFAULT COLON_opt statement_or_null
+	;
+
+expressions
+	: expressions expression
+	| expression
+	;
+
+function_case_statement
+	: CASE '(' expression ')' function_case_items ENDCASE
+	| CASEZ '(' expression ')' function_case_items ENDCASE
+	| CASEX '(' expression ')' function_case_items ENDCASE
+	;
+
+function_case_items
+	: function_case_items function_case_item
+	| function_case_item
+	;
+
+function_case_item
+	: expressions ':' function_statement_or_null
+	| DEFAULT COLON_opt function_statement_or_null
+	;
+
+/**
+	A.6.8	Looping statements
+ */
+function_loop_statement
+	: FOREVER function_statement
+	| REPEAT '(' expression ')' function_statement
+	| WHILE '(' expression ')' function_statement
+	| FOR '(' variable_assignment ';' expression ';'
+		variable_assignment ')' function_statement
+	;
+
+loop_statement
+	: FOREVER statement
+	| REPEAT '(' expression ')' statement
+	| WHILE '(' expression ')' statement
+	| FOR '(' variable_assignment ';' expression ';'
+		variable_assignment ')' statement
+	;
+
+/**
+	A.6.9	Task enable statements
+ */
+system_task_enable
+	: system_task_identifier expression_args_opt ';'
+	;
+
+task_enable
+	: generic_hierarchical_identifier /* hierarchical_task_identifier */
+		expression_args_opt ';'
+	;
+
+expression_args_opt
+	: '(' expression_list ')'
+	|
+	;
+
+/**
+	A.7	Specify section
+	A.7.1	Specify block declaration
+ */
+specify_block
+	: SPECIFY specify_items ENDSPECIFY
+	;
+
+specify_items
+	: specify_items specify_item
+	| specify_item
+	;
+
+specify_item
+	: specparam_declaration
+	| pulsestyle_declaration
+	| showcancelled_declaration
+	| path_declaration
+	| system_timing_check
+	;
+
+pulsestyle_declaration
+	: PULSESTYLE_ONEVENT list_of_path_outputs ';'
+	| PULSESTYLE_ONDETECT list_of_path_outputs ';'
+	;
+
+showcancelled_declaration
+	: SHOWCANCELLED list_of_path_outputs ';'
+	| NOSHOWCANCELLED list_of_path_outputs ';'
+	;
+
+/**
+	A.7.2	Specify path declarations
+ */
+path_declaration
+	: simple_path_declaration ';'
+	| edge_sensitive_path_declaration ';'
+	| state_dependent_path_declaration ';'
+	;
+
+simple_path_declaration
+	: parallel_path_description '=' path_delay_value
+	| full_path_description '=' path_delay_value
+	;
+
+parallel_path_description
+	: '(' specify_input_terminal_descriptor polarity_operator_opt
+		IMPLIES specify_output_terminal_descriptor ')'
+	;
+
+full_path_description
+	: '(' list_of_path_inputs polarity_operator_opt STARARROW
+		list_of_path_outputs ')'
+	;
+
+list_of_path_inputs
+	: list_of_path_inputs ',' specify_input_terminal_descriptor
+	| specify_input_terminal_descriptor
+	;
+
+list_of_path_outputs
+	: list_of_path_outputs ',' specify_output_terminal_descriptor
+	| specify_output_terminal_descriptor
+	;
+
+/**
+	A.7.3	Specify block terminals
+ */
+specify_input_terminal_descriptor
+	: input_identifier
+	| input_identifier '[' constant_expression ']'
+	| input_identifier '[' range_expression ']'
+	;
+
+specify_output_terminal_descriptor
+	: output_identifier
+	| output_identifier '[' constant_expression ']'
+	| output_identifier '[' range_expression ']'
+	;
+
+input_identifier
+	: generic_identifier
+/**
+	: input_port_identifier
+	| inout_port_identifier
+**/
+	;
+
+output_identifier
+	: generic_identifier
+/**
+	: output_port_identifier
+	| inout_port_identifier
+**/
+	;
+
+/**
+	A.7.4	Specify path delays
+ */
+path_delay_value
+	: list_of_path_delay_expressions
+	| '(' list_of_path_delay_expressions ')'
+	;
+
+/**
+list_of_path_delay_expressions
+	: t_path_delay_expression
+	| trise_path_delay_expression ',' tfall_path_delay_expression
+	| trise_path_delay_expression ',' tfall_path_delay_expression ','
+		tz_path_delay_expression
+	| t01_path_delay_expression ',' t10_path_delay_expression ','
+		t0z_path_delay_expression ',' tz1_path_delay_expression ','
+		t1z_path_delay_expression ',' tz0_path_delay_expression
+	| t01_path_delay_expression ',' t10_path_delay_expression ','
+		t0z_path_delay_expression ',' tz1_path_delay_expression ','
+		t1z_path_delay_expression ',' tz0_path_delay_expression
+		t0x_path_delay_expression ',' tx1_path_delay_expression ','
+		t1x_path_delay_expression ',' tx0_path_delay_expression ','
+		txz_path_delay_expression ',' tzx_path_delay_expression
+	;
+**/
+
+list_of_path_delay_expressions
+	: path_delay_expression /* 1 */
+	| path_delay_expression ',' path_delay_expression /* 2 */
+	| path_delay_expression ',' path_delay_expression ','
+		path_delay_expression /* 3 */
+	| path_delay_expression ',' path_delay_expression ','
+		path_delay_expression ',' path_delay_expression ','
+		path_delay_expression ',' path_delay_expression /* 6 */
+	| path_delay_expression ',' path_delay_expression ','
+		path_delay_expression ',' path_delay_expression ','
+		path_delay_expression ',' path_delay_expression
+		path_delay_expression ',' path_delay_expression ','
+		path_delay_expression ',' path_delay_expression ','
+		path_delay_expression ',' path_delay_expression /* 12 */
+	;
+
+/**
+t_path_delay_expression : path_delay_expression ;
+trise_path_delay_expression : path_delay_expression ;
+tfall_path_delay_expression : path_delay_expression ;
+tz_path_delay_expression : path_delay_expression ;
+t01_path_delay_expression : path_delay_expression ;
+t10_path_delay_expression : path_delay_expression ;
+t0z_path_delay_expression : path_delay_expression ;
+tz0_path_delay_expression : path_delay_expression ;
+t1z_path_delay_expression : path_delay_expression ;
+tz1_path_delay_expression : path_delay_expression ;
+t0x_path_delay_expression : path_delay_expression ;
+tx0_path_delay_expression : path_delay_expression ;
+t1x_path_delay_expression : path_delay_expression ;
+tx1_path_delay_expression : path_delay_expression ;
+txz_path_delay_expression : path_delay_expression ;
+tzx_path_delay_expression : path_delay_expression ;
+**/
+
+path_delay_expression
+	: constant_mintypmax_expression
+	;
+
+edge_sensitive_path_declaration
+	: parallel_edge_sensitive_path_description '=' path_delay_value
+	| full_edge_sensitive_path_description '=' path_delay_value
+	;
+
+parallel_edge_sensitive_path_description
+	: '(' edge_identifier_opt specify_input_terminal_descriptor
+		IMPLIES specify_output_terminal_descriptor
+		polarity_operator_opt ':' data_source_expression ')'
+	;
+
+full_edge_sensitive_path_description
+	: '(' edge_identifier_opt list_of_path_inputs STARARROW
+		list_of_path_outputs polarity_operator_opt
+		':' data_source_expression ')'
+	;
+data_source_expression
+	: expression
+	;
+
+edge_identifier_opt
+	: edge_identifier
+	|
+	;
+
+edge_identifier
+	: POSEDGE
+	| NEGEDGE
+	;
+
+state_dependent_path_declaration
+	: IF '(' module_path_expression ')' simple_path_declaration
+	| IF '(' module_path_expression ')' edge_sensitive_path_declaration
+	| IFNONE simple_path_declaration
+	;
+
+polarity_operator_opt
+	: polarity_operator
+	|
+	;
+
+polarity_operator
+	: '+'
+	| '-'
+	;
+
+/**
+	A.7.5	System timing checks
+	A.7.5.1	System timing check commands
+ */
+system_timing_check
+	/* for now, don't bother with function-sensitive checking */
+	: generic_timing_check
+	;
+
+generic_timing_check
+	: '$' identifier '(' timing_check_args ')' ';'
+	;
+
+timing_check_args
+	: timing_check_args ',' timing_check_arg
+	| timing_check_arg
+	;
+
+timing_check_arg
+	: timing_check_event /* covers data_or_reference_event */
+/**
+	(covers the following:)
+	| controlled_reference_event
+**/
+	| mintypmax_expression
+/**
+	(covers the following:)
+	| checktime_condition
+	| stamptime_condition
+	| end_edge_offset
+	| start_edge_offset
+	(and constant_mintypmax_expression)
+	| remain_active_flag
+**/
+	| expression
+/**
+	(covers the following:)
+	| timing_check_limit
+	(and constant_expression)
+	| threshold
+	| event_based_flag
+**/
+/**
+	| generic_identifier
+	| variable_identifier
+	| notify_reg
+**/
+/**
+	| data_or_reference_event
+	| data_event
+	| reference_event
+**/
+	| delayed_data_or_reference
+/**
+	| delayed_data
+	| delayed_reference
+**/
+	;
+
+/**
+	: setup_timing_check
+	| hold_timing_check
+	| setuphold_timing_check
+	| recovery_timing_check
+	| removal_timing_check
+	| recrem_timing_check
+	| skew_timing_check
+	| timeskew_timing_check
+	| fullskew_timing_check
+	| period_timing_check
+	| width_timing_check
+	| nochange_timinig_check
+	;
+
+setup_timing_check
+	: '$' SETUP '(' data_event ',' reference_event ',' 
+		timing_check_limit ')' ';'
+	| '$' SETUP '(' data_event ',' reference_event ',' 
+		timing_check_limit ',' notify_reg ')' ';'
+	;
+
+hold_timing_check
+	: '$' HOLD '(' data_event ',' reference_event ',' 
+		timing_check_limit ')' ';'
+	| '$' SETUP '(' data_event ',' reference_event ',' 
+		timing_check_limit ',' notify_reg ')' ';'
+	;
+
+... omitted ...
+**/
+
+/**
+	A.7.5.2	System timing check command arguments
+ */
+/**
+checktime_condition
+	: mintypmax_expression
+	;
+**/
+
+/**
+controlled_reference_event
+	: controlled_timing_check_event
+	;
+**/
+
+/**
+data_or_reference_event : timing_check_event ;
+data_event : timing_check_event ;
+reference_event : timing_check_event ;
+**/
+
+
+delayed_data_or_reference
+	: generic_identifier /* terminal_identifier */
+	| generic_identifier /* terminal_identifier */
+		'[' constant_mintypmax_expression ']'
+	;
+
+/**
+delayed_data
+	: terminal_identifier
+	| terminal_identifier '[' constant_mintypmax_expression ']'
+	;
+
+delayed_reference
+	: terminal_identifier
+	| terminal_identifier '[' constant_mintypmax_expression ']'
+	;
+
+end_edge_offset
+	: mintypmax_expression
+	;
+
+event_based_flag
+	: constant_expression
+	;
+
+notify_reg
+	: generic_identifier // variable_identifier
+	;
+
+remain_active_flag
+	: constant_mintypmax_expression
+	;
+
+stamptime_condition
+	: mintypmax_expression
+	;
+
+start_edge_offset
+	: mintypmax_expression
+	;
+
+threshold
+	: constant_expression
+	;
+
+timing_check_limit
+	: expression
+	;
+**/
+
+/**
+	A.7.5.3	System timing check event definitions
+ */
+timing_check_event
+	/* also covers controlled_timing_check_event */
+	: timing_check_event_control_opt specify_terminal_descriptor
+	| timing_check_event_control_opt specify_terminal_descriptor
+		'[' AND3 timing_check_condition ']'
+	;
+
+/**
+controlled_timing_check_event
+	: timing_check_event_control specify_terminal_descriptor
+	| timing_check_event_control specify_terminal_descriptor
+		'[' AND3 timing_check_condition ']'
+	;
+**/
+
+timing_check_event_control_opt
+	: timing_check_event_control
+	|
+	;
+
+timing_check_event_control
+	: POSEDGE
+	| NEGEDGE
+	| edge_control_specifier
+	;
+
+specify_terminal_descriptor
+	: specify_input_terminal_descriptor
+	| specify_output_terminal_descriptor
+	;
+
+edge_control_specifier
+	: EDGE
+	| EDGE edge_descriptor
+	| EDGE edge_descriptor ',' edge_descriptor
+	;
+
+/** context-sensitive lexing? **/
+edge_descriptor
+	: ZEROONE
+	| ONEZERO
+	| orzx or01
+	| or01 orzx
+	;
+
+or01
+	: INTEGER
+	;
+orzx
+	: CHAR
+	;
+
+timing_check_condition
+	: scalar_timing_check_condition
+	| '(' scalar_timing_check_condition ')'
+	;
+
+scalar_timing_check_condition
+	: expression
+	| '~' expression
+	| expression EQUALS scalar_constant
+	| expression EQUAL3 scalar_constant
+	| expression NEQ scalar_constant
+	| expression NEQ3 scalar_constant
+	;
+
+scalar_constant
+	: boolean_constant
+	;
+
+/**
+	A.8	Expressions
+	A.8.1	Concatenations
+ */
+concatenation
+	: '{' expression_list '}'
+	;
+
+expression_list
+	: expression_list ',' expression
+	| expression
+	;
+
+constant_concatenation
+	: '{' constant_expression_list '}'
+	;
+
+constant_expression_list
+	: constant_expression_list ',' constant_expression
+	| constant_expression
+	;
+
+constant_multiple_concatenation
+	: '{' constant_expression constant_concatenation '}'
+	;
+
+module_path_concatenation
+	: '{' module_path_expression_list '}'
+	;
+
+module_path_expression_list
+	: module_path_expression_list ',' module_path_expression
+	| module_path_expression
+	;
+
+module_path_multiple_concatenation
+	: '{' constant_expression module_path_concatenation '}'
+	;
+
+multiple_concatenation
+	: '{' constant_expression concatenation '}'
+	;
+
+net_concatenation
+	: '{' net_concatenation_value_list '}'
+	;
+
+net_concatenation_value_list
+	: net_concatenation_value_list ',' net_concatenation_value
+	| net_concatenation_value
+	;
+
+net_concatenation_value
+	: net_concatenation
+	| generic_hierarchical_identifier /* hierarchical_net_identifier */
+		index_expressions_opt index_range_opt
+	;
+
+index_expressions_opt
+	: index_expressions
+	|
+	;
+
+index_expressions
+	: index_expressions index_expression
+	| index_expression
+	;
+
+index_expression
+	: '[' expression ']'
+	;
+
+index_range_opt
+	: '[' range_expression ']'
+	|
+	;
+
+constant_index_expressions_opt
+	: constant_index_expressions
+	|
+	;
+
+constant_index_expressions
+	: constant_index_expressions constant_index_expression
+	| constant_index_expression
+	;
+
+constant_index_expression
+	: '[' constant_expression ']'
+	;
+
+constant_index_range_opt
+	: '[' constant_range_expression ']'
+	|
+	;
+
+variable_concatenation
+	: '{' variable_concatenation_value_list '}'
+	;
+
+variable_concatenation_value_list
+	: variable_concatenation_value_list ',' variable_concatenation_value
+	| variable_concatenation_value
+	;
+
+variable_concatenation_value
+	: variable_concatenation
+	| generic_hierarchical_identifier /* hierarchical_variable_identifier */
+		index_expressions_opt index_range_opt
+	;
+
+/**
+	A.8.2	Function calls
+ */
+constant_function_call
+	: generic_identifier /* function_identifier */ attribute_instances_opt
+		'(' constant_expression_list ')'
+	;
+
+function_call
+	: generic_hierarchical_identifier /* hierarchical_function_identifier */
+		 attribute_instances_opt '(' constant_expression_list ')'
+	;
+
+genvar_function_call
+	: generic_identifier /* genvar_function_identifier */
+		attribute_instances_opt '(' constant_expression_list ')'
+	;
+
+system_function_call
+	: system_function_identifier attribute_instances_opt
+		expression_args_opt
+	;
+
+/**
+	A.8.3	Expressions
+ */
+base_expression
+	: expression
+	;
+
+conditional_expression
+	: expression '?' attribute_instances_opt expression ':' expression
+	;
+
+constant_base_expression
+	: constant_expression
+	;
+
+constant_expression
+	: constant_primary
+	| unary_operator attribute_instances_opt constant_primary
+	| constant_expression binary_operator attribute_instances_opt
+		constant_expression
+	| constant_expression '?' attribute_instances_opt constant_expression
+		':' constant_expression
+	| string
+	;
+
+constant_mintypmax_expression
+	: constant_expression
+	| constant_expression ':' constant_expression ':' constant_expression
+	;
+
+mintypmax_expression
+	: expression
+	| expression ':' expression ':' expression
+	;
+
+constant_range_expression
+	: constant_expression
+	| msb_constant_expression ':' lsb_constant_expression
+	| base_expression '+' ':' width_constant_expression
+	| base_expression '-' ':' width_constant_expression
+	;
+
+range_expression
+	: expression
+	| msb_constant_expression ':' lsb_constant_expression
+	| constant_base_expression '+' ':' width_constant_expression
+	| constant_base_expression '-' ':' width_constant_expression
+	;
+
+dimension_constant_expression
+	: constant_expression
+	;
+
+expression
+	: primary
+	| unary_operator attribute_instances_opt primary
+	/* TODO: operator precedence */
+	| expression binary_operator attribute_instances_opt expression
+	| conditional_expression
+	| string
+	;
+
+lsb_constant_expression
+	: constant_expression
+	;
+
+msb_constant_expression
+	: constant_expression
+	;
+
+module_path_conditional_expression
+	: module_path_expression '?' attribute_instances_opt
+		module_path_expression ':' module_path_expression
+	;
+module_path_expression
+	: module_path_primary
+	| unary_module_path_operator attribute_instances_opt module_path_primary
+	| module_path_expression binary_module_path_operator
+		attribute_instances_opt module_path_expression
+	| module_path_conditional_expression
+	;
+
+module_path_mintypmax_expression
+	: module_path_expression
+	| module_path_expression ':' module_path_expression
+		':' module_path_expression
+	;
+
+width_constant_expression
+	: constant_expression
+	;
+
+/**
+	A.8.4	Primaries
+ */
+constant_primary
+	: constant_concatenation
+	| constant_function_call
+	| '(' constant_mintypmax_expression ')'
+	| constant_multiple_concatenation
+	| number
+	| generic_identifier
+/**
+	| genvar_identifier
+	| parameter_identifier
+	| specparam_identifier
+**/
+	;
+
+module_path_primary
+	: number
+	| identifier
+	| module_path_concatenation
+	| module_path_multiple_concatenation
+	| function_call
+	| system_function_call
+	| constant_function_call
+	| '(' module_path_mintypmax_expression ')'
+	;
+
+primary
+	: number
+	| hierarchical_identifier index_expressions_opt index_range_opt
+	| concatenation
+	| multiple_concatenation
+	| function_call
+	| system_function_call
+	| constant_function_call
+	| '(' mintypmax_expression ')'
+	;
+
+/**
+	A.8.5	Expression left-side values (lvalues)
+ */
+net_lvalue
+	: generic_hierarchical_identifier /* hierarchical_net_identifier */
+		constant_index_expressions_opt constant_index_range_opt
+	| net_concatenation
+	;
+
+variable_lvalue
+	: generic_hierarchical_identifier /* hierarchical_variable_identifier */
+		index_expressions_opt index_range_opt
+	| variable_concatenation
+	;
+
+/**
+	A.8.6	Operators
+	TODO: operator precedence!
+ */
+unary_operator
+	: '+'
+	| '-'
+	| '!'
+	| '&'
+	| '~' '&'
+	| '|'
+	| '~' '|'
+	| '^'
+	| '~' '^'
+	| '^' '~'
+	;
+
+binary_operator
+	: '+'
+	| '-'
+	| '*'
+	| '/'
+	| '%'
+	| EQUALS
+	| EQUAL3
+	| NEQ
+	| NEQ3
+	| LOGICAL_AND
+	| LOGICAL_OR
+	| POWER /* ** */
+	| '<'
+	| LEQ
+	| '>'
+	| GEQ
+	| '&'
+	| '|'
+	| '^'
+	| '~' '^'
+	| '^' '~'
+	;
+
+unary_module_path_operator
+	: '!'
+	| '&'
+	| '~' '&'
+	| '|'
+	| '~' '|'
+	| '^'
+	| '~' '^'
+	| '^' '~'
+	;
+
+binary_module_path_operator
+	: EQUALS
+	| NEQ
+	| LOGICAL_AND
+	| LOGICAL_OR
+	| '&'
+	| '|'
+	| '^'
+	| '~' '^'
+	| '^' '~'
+	;
+
+/**
+	A.8.7	Numbers
+	These will be implemented in the lexer.
+ */
+number
+	: DECIMAL_NUMBER
+	| OCTAL_NUMBER
+	| BINARY_NUMBER
+	| HEX_NUMBER
+	| REAL_NUMBER
+	;
+
+/**
+	A.8.8	Strings
+	In lexer.
+ */
+
+/**
+	A.9	General
+	A.9.1	Attributes
+ */
+attribute_instance
+/*	: '(' '*' attr_specs '*' ')'	*/
+	: BEGIN_ATTR attr_specs END_ATTR
+	;
+
+attr_specs
+	: attr_specs ',' attr_spec
+	| attr_spec
+	;
+
+attr_spec
+	: attr_name '=' constant_expression
+	| attr_name
+	;
+
+attr_name
+	: generic_identifier /* identifier */
+	;
+
+/**
+	A.9.2	Comments
+	C and C++ style comments in lexer.
+ */
+/**
+	A.9.3	Identifiers
+ */
+/* We introduce a catch-all identifier, to eliminate reduce/reduce conflicts */
+generic_identifier_opt
+	: generic_identifier
+	|
+	;
+
+generic_identifier : identifier ;
+
+generic_identifiers_opt
+	: generic_identifiers
+	|
+	;
+
+generic_identifiers
+	: generic_identifiers generic_identifier
+	| generic_identifier
+	;
+
+list_of_generic_identifiers
+	: list_of_generic_identifiers ',' generic_identifier
+	| generic_identifier
+	;
+
+arrayed_identifier
+	: simple_arrayed_identifier
+	| escaped_arrayed_identifier
+	;
+
+/**
+block_identifier : identifier ;
+cell_identifier : identifier ;
+config_identifier : identifier ;
+**/
+
+escaped_arrayed_identifier
+	: escaped_identifier range_opt
+	;
+
+escaped_hierarchical_identifier
+	: escaped_hierarchical_branch hierarchical_branches_opt
+	;
+
+hierarchical_branches_opt
+	: hierarchical_branches
+	|
+	;
+
+hierarchical_branches
+	: hierarchical_branches hierarchical_branch
+	| hierarchical_branch
+	;
+
+hierarchical_branch
+	: '.' simple_hierarchical_branch
+	| '.' escaped_hierarchical_branch
+	;
+
+/* lexer: '\\' followed by any non-whitespace, ended with a whitespace */
+/* escaped_identifier */
+
+/**
+event_identifier : identifier ;
+function_identifier : identifier ;
+**/
+gate_instance_identifier : arrayed_identifier ;
+/* generate_block_identifier : identifier ; */
+/* genvar_function_identifier : identifier ; */
+/* hierarchy disallowed */
+/* genvar_identifier : identifier ; */
+
+generic_hierarchical_identifier : hierarchical_identifier ;
+/**
+hierarchical_block_identifier : hierarchical_identifier ;
+hierarchical_event_identifier : hierarchical_identifier ;
+hierarchical_function_identifier : hierarchical_identifier ;
+hierarchical_net_identifier : hierarchical_identifier ;
+hierarchical_variable_identifier : hierarchical_identifier ;
+hierarchical_task_identifier : hierarchical_identifier ;
+**/
+hierarchical_identifier
+	: simple_hierarchical_identifier
+	| escaped_hierarchical_identifier
+	;
+
+identifier
+	: simple_identifier
+	| escaped_identifier
+	;
+
+/**
+inout_port_identifier : identifier ;
+input_port_identifier : identifier ;
+instance_identifier : identifier ;
+library_identifier : identifier ;
+memory_identifier : identifier ;
+module_identifier : identifier ;
+**/
+module_instance_identifier : arrayed_identifier ;
+/**
+net_identifier : identifier ;
+output_port_identifier : identifier ;
+parameter_identifier : identifier ;
+port_identifier : identifier ;
+real_identifier : identifier ;
+**/
+
+simple_arrayed_identifier : simple_identifier range_opt
+simple_hierarchical_identifier
+	: simple_hierarchical_branch '.' escaped_identifier
+	| simple_hierarchical_branch
+	;
+
+/* simple_identifier : <token> */
+
+/* specparam_identifier : identifier ; */
+/* system_function_identifier : <token> */
+/* system_task_identifier : <token> */
+/**
+task_identifier : identifier ;
+terminal_identifier : identifier ;
+**/
+/* text_macro_identifier : simple_identifier ; */
+/**
+topmodule_identifier : identifier ;
+udp_identifier : identifier ;
+udp_instance_identifier : arrayed_identifier ;
+variable_identifier : identifier ;
+**/
+
+/**
+	A.9.4	Identifier branches
+ */
+simple_hierarchical_branch
+	: simple_hierarchical_branch '.' simple_index_member
+	| simple_index_member
+	;
+
+simple_index_member
+	: simple_identifier index_unsigned_opt
+	;
+
+index_unsigned_opt
+	: '[' unsigned_number ']'
+	|
+	;
+
+escaped_hierarchical_branch
+	: escaped_hierarchical_branch '.' escaped_index_member
+	| escaped_index_member
+	;
+
+escaped_index_member
+	: escaped_identifier index_unsigned_opt
+	;
+
+/**
+	A.9.5	White space
+	white_space : <space> | <tab> | <newline> | <EOF> (6)
+ */
+
+/**
+	19	Text macros
+	(to be implemented in lexer only, not parser)
+ */
+
+/**
+	Notes:
+	(1) embedded spaces are illegal
+	(2) simple_identifier or arrayed_identifier shall start with
+		alpha or _ character, have at least 1 char, no spaces.
+	(3) The period '.' in simple_hierarchical_identifier and
+		simple_hierarchical_branch shall not be preceded nor
+		followed by white space.
+	(4) The period '.' in escaped_hierarchical_identifier/branch
+		shall not be preceded nor followed by white space.
+	(5) The '$' character in system_function_identifier or
+		system_task_identifier shall not be followed by white space,
+		nor be escaped.
+	(6) EOF == end-of-file.
+ */
+
+%%
+
+#include "parser/yyfreestacks.cc"		// we've moved!
+#include "parser/yyerror.cc"			// we've moved!
+
+static
+void yyerror(const char* msg) {
+	STACKTRACE_VERBOSE;
+	__yyerror(msg);		// standard implementation
+	THROW_EXIT;
+}
+
