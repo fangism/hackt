@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.227 2009/11/14 03:12:08 fang Exp $
+#	$Id: Makefile.am,v 1.228 2009/12/03 23:15:34 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -86,7 +86,7 @@ noinst_LTLIBRARIES = libhackt.la \
 
 # don't actually want to build these, but have the rules for them
 EXTRA_LTLIBRARIES += \
-	libbogus.la libbogus2.la libbogus3.la libbogus4.la
+	libbogus.la libbogus2.la libbogus3.la libbogus4.la libbogus5.la
 
 # NOTE: the order matters for proper library installation!!!
 # should follow partial order of dependencies (independent first)
@@ -200,6 +200,7 @@ LIBBOGUS_LA = libbogus_la
 LIBBOGUS2_LA = libbogus2_la
 LIBBOGUS3_LA = libbogus3_la
 LIBBOGUS4_LA = libbogus4_la
+LIBBOGUS5_LA = libbogus5_la
 
 libhacktexec_la_LIBADD = libhacktsim.la libhacknet.la
 
@@ -373,6 +374,8 @@ INSTREF_PARSE_ROOT = instref-parse
 INSTREF_LEX_ROOT = instref-lex
 TYPE_PARSE_ROOT = type-parse
 TYPE_LEX_ROOT = type-lex
+VERILOG_PARSE_ROOT = verilog-parse
+VERILOG_LEX_ROOT = verilog-lex
 
 # libbogus.la is not actually used, hence the name.
 # force use of lex/yacc suffix rules to generate the .c and .cc files
@@ -392,6 +395,9 @@ libbogus3_la_SOURCES = \
 
 libbogus4_la_SOURCES = \
 	lexer/hacflat-lex.ll
+
+libbogus5_la_SOURCES = \
+	parser/verilog-parse.yy
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	lexer/$(HACKT_LEX_ROOT).ll \
@@ -1225,6 +1231,9 @@ parser/$(INSTREF_PARSE_ROOT).yy: \
 	$(RECONFIGURE)
 parser/$(TYPE_PARSE_ROOT).yy: \
 		parser/$(TYPE_PARSE_ROOT).yy.in $(top_builddir)/config.status
+	$(RECONFIGURE)
+parser/$(VERILOG_PARSE_ROOT).yy: \
+		parser/$(VERILOG_PARSE_ROOT).yy.in $(top_builddir)/config.status
 	$(RECONFIGURE)
 
 # these should be distcleaned, because they are configure-generated

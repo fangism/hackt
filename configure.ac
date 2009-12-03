@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.206 2009/11/19 23:29:07 fang Exp $
+#	$Id: configure.ac,v 1.207 2009/12/03 23:15:32 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -638,6 +638,7 @@ AC_CONFIG_FILES([src/lexer/lex_version.h src/parser/yacc_version.h])
 AC_CONFIG_FILES([src/parser/hackt-parse.yy])
 AC_CONFIG_FILES([src/parser/instref-parse.yy])
 AC_CONFIG_FILES([src/parser/type-parse.yy])
+AC_CONFIG_FILES([src/parser/verilog-parse.yy])
 AC_CONFIG_FILES([src/guile/config_version.h])
 AC_CONFIG_FILES([src/util/lang/CX/cx-parse.yy])
 AC_CONFIG_FILES([src/scripts/init_hackt.sh],
