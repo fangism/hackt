@@ -1,5 +1,5 @@
 #!/bin/sh
-#	$Id: vpp.sh,v 1.1 2009/07/13 23:28:20 fang Exp $
+#	$Id: vpp.sh,v 1.1.12.1 2009/12/04 19:27:52 fang Exp $
 # crude verilog preprocessor, by Fang
 # purpose is to crank a verilog file through a C-preprocessor
 # by mapping verilog directives to C preprocessor directives.
@@ -22,13 +22,16 @@
 # interrupt the pipe chain with a 'tee <file>' command to 
 # examine the stream at any stage in the pipe sequence.
 
+# protect single quote (doesn't work inside "string")
+# sed -e "s/[']/\"\\\\'\"/g"
+
 grep -v \
 	-e '`timescale' \
 	-e '`resetall' \
 	-e '`celldefine' \
 	-e '`endcell' \
 	$1 | \
-sed -e "s/[']/\"\\\\'\"/g" \
+sed -e "s/[']/QUOTE/g" \
 	-e 's/#/VPPPound/g' | \
 sed -e 's/`define/#define/' \
 	-e 's/`if/#if/' \
@@ -37,8 +40,11 @@ sed -e 's/`define/#define/' \
 	-e 's/`False/VPPFalse/g' | \
 sed 's/`\([a-zA-Z_][a-zA-Z_0-9]*\)/\1/g' | \
 cpp -P | \
-sed -e "s/\\\"\\\\'\\\"/'/g" \
+sed -e "s/QUOTE/'/g" \
 	-e 's/VPPTrue/`True/g' \
 	-e 's/VPPFalse/`False/g' \
 	-e 's/VPPPound/#/g'
+
+# restore single quote (doesn't work inside "string")
+# sed -e "s/\\\"\\\\'\\\"/'/g"
 

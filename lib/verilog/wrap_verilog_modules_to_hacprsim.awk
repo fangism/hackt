@@ -78,10 +78,10 @@ function parse_expect(st, tok) {
 	}
 }
 
-function assert_token(tok, str) {
-	if (tok != str) {
-		parse_error("expected token \"" tok "\" but got \"" str "\"" \
-			"at [:" NR "].");
+function assert_token(tok, expect) {
+	if (tok != expect) {
+		parse_error("expected token \"" expect "\" but got \"" \
+			tok "\" at [:" NR "].");
 	}
 }
 
@@ -125,12 +125,18 @@ function reset_globals() {
 	}
 }
 
+function begin_parse_range() {
+	range_first = "";
+	range_second = "";
+	parse_push("expect-range-first");
+}
+
 # param in_port declaration is local to ports-list (true) or module-body (false)
 function set_port_dir(tok, dir, 
 	# local vars
 	in_port) {
 if (tok == "[") {
-	parse_push("expect-range-first");
+	begin_parse_range();
 } else if (tok == "wire") {
 	# just ignore
 	return;
@@ -164,7 +170,7 @@ if (tok == "[") {
 # parse: parameter foo = ..., bar = ..., ... ;
 function keep_parameter(tok) {
 if (tok == "[") {
-	parse_push("expect-range-first");
+	begin_parse_range();
 } else {
 	if (tok != ";") {
 	if (tok != ",") {
@@ -269,17 +275,17 @@ if (state == "top") {
 		parse_expect("top", tok);
 	}
 } else if (state == "expect-range-first") {
-	range_first = tok;
-	parse_replace("expect-range-colon");
+	if (tok == ":") {
+		parse_replace("expect-range-second");
+	} else {
+		range_first = range_first tok;
+	}
 } else if (state == "expect-range-second") {
-	range_second = tok;
-	parse_replace("expect-range-end");
-} else if (state == "expect-range-colon") {
-	assert_token(tok, ":");
-	parse_replace("expect-range-second");
-} else if (state == "expect-range-end") {
-	assert_token(tok, "]");
-	parse_pop();
+	if (tok == "]") {
+		parse_pop();
+	} else {
+		range_second = range_second tok;
+	}
 } else if (state == "input-list") {
 	set_port_dir(tok, "in");
 } else if (state == "output-list") {
