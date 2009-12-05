@@ -1,5 +1,5 @@
 # "dox/net/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2009/10/02 01:56:08 fang Exp $
+#	$Id: Makefile.am,v 1.3.2.1 2009/12/05 00:26:06 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -26,6 +26,7 @@ HTML_HOOKS += hacknet.html
 hacknet_INCLUDES = \
 	hacmacros.texi \
 	intro.texi \
+	tutorial.texi \
 	lang.texi \
 	usage.texi \
 	algo.texi \
