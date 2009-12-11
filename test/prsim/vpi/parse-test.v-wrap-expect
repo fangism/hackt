@@ -19,7 +19,7 @@ module HAC_T_001;
 	wire z_d0;
 	wire z_d1;
 	wire z_ack;
-	integer i;
+	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 	T_001 #(mode, i_k_polarity, i_k_dl, dmn, data_is_reset, e_dls, ig_z_ack)
 	dummy (

@@ -9,7 +9,7 @@ module HAC_AND_N;
 // need not be reg with acc: wn:*
 	wire [input_size-1:0] A;
 	wire Z;
-	integer i;
+	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 	AND_N #(input_size)
 	dummy (
@@ -20,8 +20,8 @@ initial begin
 #0	// happens *after* initial
 	if (prsim_name != "") begin
 	$sformat(verilog_name, "%m");
-	for (i=0; i<=input_size-1; i=i+1) begin
-		$sformat(tmp, ".A[%d]", i);
+	for (_i_=0; _i_<=input_size-1; _i_=_i_+1) begin
+		$sformat(tmp, ".A[%d]", _i_);
 		$from_prsim({prsim_name, tmp}, {verilog_name, tmp});
 	end // end for
 	$to_prsim({verilog_name, ".Z"}, {prsim_name, ".Z"});
