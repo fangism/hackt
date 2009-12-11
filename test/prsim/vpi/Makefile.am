@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.13.2.1 2009/12/04 19:27:55 fang Exp $
+#	$Id: Makefile.am,v 1.13.2.2 2009/12/11 19:12:38 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -28,7 +28,7 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 
 HACKT_VWRAP_TEST_SCRIPTS_PASSES = \
 	standard standard-ports standard-reverse \
-	param
+	param parse-test
 
 EXAMPLE_NAME = vpiprsim-inverters
 CLEANDIRS += $(EXAMPLE_NAME)

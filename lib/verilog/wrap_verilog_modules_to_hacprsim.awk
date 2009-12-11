@@ -95,6 +95,7 @@ function parse_debug(i) {
 }
 
 # pad syntactic sugar (tokens) with spaces for easy splitting
+# TODO: handle strings properly
 function tokenize(str) {
 	gsub("[][(,:;'#)]", " & ", str);	# pad with spaces
 	return str;
@@ -491,15 +492,34 @@ for (i=0; i<port_index; ++i) {
 
 # for every line
 {
+	# special handling of strings
+	in_string = 0;
 	# lex_it
 	ntoks = split(tokenize($0), toks);
 	for (i=1; i<= ntoks; ++i) {
 	if (length(toks[i])) {
+		next_tok = toks[i];
+		start_str = match(next_tok, "^\"");
+		if (start_str) {
+			in_string = 1;	# open string
+			str = next_tok;
+		}
+		if (in_string && !start_str) {
+			str = str " " next_tok;
+		}
+		if (match(next_tok, "[^\\\\]\"$")) {
+			in_string = 0;	# close string
+			next_tok = str;
+		}
+		if (in_string) {
+			continue;
+		} else {
 		if (debug) {
 			parse_debug();
-			print "token[:" NR "]: " toks[i];
+			print "token[:" NR "]: " next_tok;
 		}
-		parse_it(toks[i]);
+		parse_it(next_tok);
+		}
 	}
 	}
 }
