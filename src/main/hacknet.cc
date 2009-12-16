@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.6 2009/10/27 18:21:49 fang Exp $
+	$Id: hacknet.cc,v 1.7 2009/12/16 23:29:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -286,7 +286,7 @@ This option is repeatable and cumulative.
 @end texinfo
 ***/
 		case 'f': {
-			if (o.net_opt.set(util::optparse_list(optarg)))
+			if (o.net_opt.set_options(util::optparse_list(optarg)))
 				return 2;
 			break;
 		}
@@ -304,7 +304,7 @@ This option is repeatable and cumulative.
 @end texinfo
 ***/
 		case 'F': {
-			if (o.net_opt.set(util::optparse_compat(optarg)))
+			if (o.net_opt.set_option(util::optparse_compat(optarg)))
 				return 2;
 			break;
 		}

@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.12 2009/11/18 01:09:21 fang Exp $
+	$Id: netlist_options.cc,v 1.13 2009/12/16 23:29:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -213,7 +213,7 @@ for ( ; i!=e; ++i) {
 	case file_status::NEW_FILE: {
 		const option_value_list
 			opts((*parse)(fh.get_stream()));
-		if (set(opts)) {
+		if (set_options(opts)) {
 		cerr << "Error processing options in file \"" <<
 			fh.status().first->name() << "\"." << endl;
 			return true;
@@ -1216,7 +1216,7 @@ DEFINE_OPTION_SEQUENCE(reserved_names, "reserved_names",
 	Handle a single keyed option.
  */
 bool
-netlist_options::set(const option_value& opt) {
+netlist_options::set_option(const option_value& opt) {
 if (opt.key.length()) {
 	typedef	opt_map_type::const_iterator	map_iterator;
 	const map_iterator me(netlist_option_map.end());
@@ -1247,12 +1247,12 @@ if (opt.key.length()) {
 	\return true on error.
  */
 bool
-netlist_options::set(const option_value_list& opts) {
+netlist_options::set_options(const option_value_list& opts) {
 	STACKTRACE_VERBOSE;
 	size_t errs = 0;
 	option_value_list::const_iterator i(opts.begin()), e(opts.end());
 	for ( ; i!=e; ++i) {
-		if (set(*i))
+		if (set_option(*i))
 			++errs;
 	}
 	if (errs) {

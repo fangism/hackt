@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.10 2009/11/18 01:03:29 fang Exp $
+	$Id: netlist_options.h,v 1.11 2009/12/16 23:29:32 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -204,10 +204,10 @@ struct netlist_options {
 		\return true if there is an error.
 	 */
 	bool
-	set(const option_value&);
+	set_option(const option_value&);
 
 	bool
-	set(const option_value_list&);
+	set_options(const option_value_list&);
 
 	real_type
 	get_default_width(const bool d, const bool k) const;
