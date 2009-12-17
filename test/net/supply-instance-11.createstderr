@@ -159,43 +159,43 @@ In namespace "", we have: {
         foo<> f
         f ( , , g, a, b);
       footprint: {
-        !GND = bool^0 = bar<>::!GND (5) 
-        !Vdd = bool^0 = bar<>::!Vdd (6) 
-        a = bool^0 = bar<>::a (7) 
-        b = bool^0 = bar<>::b (8) 
+        !GND = bool^0 = bar<>::!GND (3) 
+        !Vdd = bool^0 = bar<>::!Vdd (4) 
+        a = bool^0 = bar<>::a (5) 
+        b = bool^0 = bar<>::b (6) 
         f = process foo<>^0 = bar<>::f (2) (
-          !GND = bool^0 = bar<>::!GND (5) 
-          !Vdd = bool^0 = bar<>::!Vdd (6) 
+          !GND = bool^0 = bar<>::!GND (3) 
+          !Vdd = bool^0 = bar<>::!Vdd (4) 
           g = process globals<>^0 = bar<>::g (1) (
-            Vdd_1 = bool^0 = bar<>::g.Vdd_1 (1) 
-            GND_1 = bool^0 = bar<>::g.GND_1 (2) 
-            Vdd_2 = bool^0 = bar<>::myVdd (3) 
-            GND_2 = bool^0 = bar<>::myGND (4) 
+            Vdd_1 = bool^0 = bar<>::g.Vdd_1 (7) 
+            GND_1 = bool^0 = bar<>::g.GND_1 (8) 
+            Vdd_2 = bool^0 = bar<>::myVdd (1) 
+            GND_2 = bool^0 = bar<>::myGND (2) 
           )
-          in = bool^0 = bar<>::a (7) 
-          out = bool^0 = bar<>::b (8) 
+          in = bool^0 = bar<>::a (5) 
+          out = bool^0 = bar<>::b (6) 
         )
         g = process globals<>^0 = bar<>::g (1) (
-          Vdd_1 = bool^0 = bar<>::g.Vdd_1 (1) 
-          GND_1 = bool^0 = bar<>::g.GND_1 (2) 
-          Vdd_2 = bool^0 = bar<>::myVdd (3) 
-          GND_2 = bool^0 = bar<>::myGND (4) 
+          Vdd_1 = bool^0 = bar<>::g.Vdd_1 (7) 
+          GND_1 = bool^0 = bar<>::g.GND_1 (8) 
+          Vdd_2 = bool^0 = bar<>::myVdd (1) 
+          GND_2 = bool^0 = bar<>::myGND (2) 
         )
-        myGND = bool^0 = bar<>::myGND (4) 
-        myVdd = bool^0 = bar<>::myVdd (3) 
+        myGND = bool^0 = bar<>::myGND (2) 
+        myVdd = bool^0 = bar<>::myVdd (1) 
         Created state:
         process instance pool:
         1	bar<>::g
         2	bar<>::f
         bool instance pool:
-        1	bar<>::g.Vdd_1
-        2	bar<>::g.GND_1
-        3	bar<>::myVdd
-        4	bar<>::myGND
-        5	bar<>::!GND
-        6	bar<>::!Vdd
-        7	bar<>::a
-        8	bar<>::b
+        1	bar<>::myVdd
+        2	bar<>::myGND
+        3	bar<>::!GND
+        4	bar<>::!Vdd
+        5	bar<>::a
+        6	bar<>::b
+        7	bar<>::g.Vdd_1
+        8	bar<>::g.GND_1
       }
       }
 

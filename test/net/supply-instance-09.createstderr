@@ -120,15 +120,15 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bar<>::!GND (1) 
         !Vdd = bool^0 = bar<>::!Vdd (2) 
-        a = bool^0 = bar<>::a (5) 
-        b = bool^0 = bar<>::b (6) 
+        a = bool^0 = bar<>::a (3) 
+        b = bool^0 = bar<>::b (4) 
         f = process foo<>^0 = bar<>::f (1) (
           !GND = bool^0 = bar<>::!GND (1) 
           !Vdd = bool^0 = bar<>::!Vdd (2) 
-          myVdd = bool^0 = bar<>::f.myVdd (3) 
-          myGND = bool^0 = bar<>::f.myGND (4) 
-          in = bool^0 = bar<>::a (5) 
-          out = bool^0 = bar<>::b (6) 
+          myVdd = bool^0 = bar<>::f.myVdd (5) 
+          myGND = bool^0 = bar<>::f.myGND (6) 
+          in = bool^0 = bar<>::a (3) 
+          out = bool^0 = bar<>::b (4) 
         )
         Created state:
         process instance pool:
@@ -136,10 +136,10 @@ In namespace "", we have: {
         bool instance pool:
         1	bar<>::!GND
         2	bar<>::!Vdd
-        3	bar<>::f.myVdd
-        4	bar<>::f.myGND
-        5	bar<>::a
-        6	bar<>::b
+        3	bar<>::a
+        4	bar<>::b
+        5	bar<>::f.myVdd
+        6	bar<>::f.myGND
       }
       }
 

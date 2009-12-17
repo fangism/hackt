@@ -1,11 +1,12 @@
 /**
 	\file "sim/command_base.cc"
-	$Id: command_base.cc,v 1.6 2009/11/14 03:12:10 fang Exp $
+	$Id: command_base.cc,v 1.6.2.1 2009/12/17 02:07:38 fang Exp $
  */
 
 #include <iostream>
 #include <iterator>
 #include <functional>
+#include <algorithm>
 #include <string>
 #include <cstring>			// for strdup
 #include "sim/command_base.h"
@@ -158,7 +159,7 @@ instance_completer(const char* _text, const int state) {
 		i = matches.begin();
 		e = matches.end();
 		// prune current working directory from matches
-		transform(i, e, matches.begin(), 
+		std::transform(i, e, matches.begin(), 
 			bind2nd(ptr_fun(&truncate_working_dir),
 			instance_completion_dirs->current_working_directory()
 			+instance_completion_dirs->get_separator()));

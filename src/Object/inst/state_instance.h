@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.11 2006/11/07 06:35:00 fang Exp $
+	$Id: state_instance.h,v 1.11.88.1 2009/12/17 02:07:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -12,6 +12,10 @@
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
 #include "Object/inst/instance_pool_fwd.h"
+#include "Object/devel_switches.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_entry.h"
+#endif
 
 namespace util {
 	class persistent_object_manager;
@@ -42,7 +46,11 @@ typedef	count_ptr<const const_param_expr_list>
 	\param Tag the meta-class tag.  
  */
 STATE_INSTANCE_TEMPLATE_SIGNATURE
-class state_instance {
+class state_instance 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	: public global_entry<Tag>
+#endif
+{
 	typedef	STATE_INSTANCE_CLASS		this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;

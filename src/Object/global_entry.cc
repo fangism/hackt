@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13 2008/11/05 23:03:19 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.1 2009/12/17 02:07:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -75,23 +75,53 @@ footprint_frame_map<Tag>::__initialize_top_frame(const footprint& f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	After assigning of public reachable instances in the hierarchy
+	there may be private instance remaining, which can be identified
+	has having index 0 in the id_map.
+
+	For global-allocation (deprecating):
+	Allocate a slot for each (private) instance, initialize parent ref.
+
+	For memory-mapped global-allocation, I think this just translates
+	to incrementing the private-count by 1, we no longer need to 
+	recursively descend into private subinstances.  
+
 	See also footprint_base<Tag>::__allocate_global_state.
 	TODO: see if we can replace the other call with this
 		to reduce code duplication.  
  */
 template <class Tag>
 void
-footprint_frame_map<Tag>::__allocate_remaining_sub(const footprint& /* fp */, 
+footprint_frame_map<Tag>::__allocate_remaining_sub(
 		state_manager& sm, const parent_tag_enum pt, const size_t pid) {
+	STACKTRACE_VERBOSE;
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	footprint_frame_map_type::iterator	iterator;
 	// placeholder pool in the footprint
 	global_entry_pool<Tag>& _pool(sm.template get_pool<Tag>());
 	const iterator b(id_map.begin());
 	const iterator e(id_map.end());
+#if 1 || MEMORY_MAPPED_GLOBAL_ALLOCATION
+	static const size_t uninit = -1;
+	size_t last_private = uninit;
+#endif
 	iterator i(std::find(b, e, size_t(0)));
+	// TODO: with new sifted-ports invariant algorithm can just
+	// find() the first non-port and assume the rest are non-ports
 	for ( ; i!=e; i = std::find(++i, e, size_t(0))) {
 		const size_t ind = std::distance(b, i);
+#if 1 || MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// invariant: private instances all follow public ports
+	// i.e. they have higher ID number (here, offset)
+	if (last_private != uninit) {
+		if (last_private +1 != ind) {
+			STACKTRACE_INDENT_PRINT("last_private = " <<
+				last_private << ", ind = " << ind << endl);
+		}
+		INVARIANT(last_private +1 == ind);
+	}
+		last_private = ind;
+#endif
 		*i = _pool.allocate();
 		global_entry<Tag>& g(_pool[*i]);
 		g.parent_tag_value = pt;
@@ -304,6 +334,8 @@ footprint_frame::initialize_top_frame(const footprint& f) {
 void
 footprint_frame::allocate_remaining_subinstances(const footprint& fp, 
 		state_manager& sm, const parent_tag_enum pt, const size_t pid) {
+	STACKTRACE_VERBOSE;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const size_t process_offset = sm.get_pool<process_tag>().size();
 #if !BUILTIN_CHANNEL_FOOTPRINTS
 	const size_t channel_offset = sm.get_pool<channel_tag>().size();
@@ -311,21 +343,23 @@ footprint_frame::allocate_remaining_subinstances(const footprint& fp,
 #if ENABLE_DATASTRUCTS
 	const size_t struct_offset = sm.get_pool<datastruct_tag>().size();
 #endif
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// First just allocate the entries.
 	footprint_frame_map<process_tag>::
-		__allocate_remaining_sub(fp, sm, pt, pid);
+		__allocate_remaining_sub(sm, pt, pid);
 	footprint_frame_map<channel_tag>::
-		__allocate_remaining_sub(fp, sm, pt, pid);
+		__allocate_remaining_sub(sm, pt, pid);
 #if ENABLE_DATASTRUCTS
 	footprint_frame_map<datastruct_tag>::
-		__allocate_remaining_sub(fp, sm, pt, pid);
+		__allocate_remaining_sub(sm, pt, pid);
 #endif
 	footprint_frame_map<enum_tag>::
-		__allocate_remaining_sub(fp, sm, pt, pid);
+		__allocate_remaining_sub(sm, pt, pid);
 	footprint_frame_map<int_tag>::
-		__allocate_remaining_sub(fp, sm, pt, pid);
+		__allocate_remaining_sub(sm, pt, pid);
 	footprint_frame_map<bool_tag>::
-		__allocate_remaining_sub(fp, sm, pt, pid);
+		__allocate_remaining_sub(sm, pt, pid);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// Now this footprint_frame should be good to pass down to subinstances
 	// end expand subinstances...
 	const size_t process_end = sm.get_pool<process_tag>().size();
@@ -345,6 +379,7 @@ footprint_frame::allocate_remaining_subinstances(const footprint& fp,
 	footprint_frame_map<datastruct_tag>::
 		__expand_subinstances(fp, sm, struct_offset, struct_end);
 #endif
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

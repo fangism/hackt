@@ -4,7 +4,7 @@ globID	super		localID	canonical	footprint-frame
 	process: 2,3,4,5
 	bool: 1,2,3,4,5,6
 2	process	1	1	trash.foo	wire_copy_e1of1<2>
-	process: 3,6,4,5
+	process: 3,4,5,6
 	bool: 3,4,1,2,5,6
 3	process	1	2	trash.foo.I	e1of1<>
 	bool: 3,4
@@ -12,8 +12,8 @@ globID	super		localID	canonical	footprint-frame
 	bool: 3,5
 5	process	1	4	trash.foo.O[1]	e1of1<>
 	bool: 3,6
-6	process	2	2	trash.foo.c	celem<2>
-	bool: 1,2,4,7,5,6
+6	process	2	4	trash.foo.c	celem<2>
+	bool: 1,2,4,5,6,7
 [global bool entries]
 1	(top)	-	1	!GND	
 2	(top)	-	2	!Vdd	
@@ -21,4 +21,4 @@ globID	super		localID	canonical	footprint-frame
 4	process	1	4	trash.foo.I.e	
 5	process	1	5	trash.foo.O[0].e	
 6	process	1	6	trash.foo.O[1].e	
-7	process	6	4	trash.foo.c._o	
+7	process	6	6	trash.foo.c._o	

@@ -199,22 +199,22 @@ In namespace "", we have: {
         Q = process inv<>^0 = wrap<>::Q (2) (
           !GND = bool^0 = wrap<>::!GND (1) 
           !Vdd = bool^0 = wrap<>::!Vdd (2) 
-          a = bool^0 = wrap<>::j (5) @[ iscomb ] 
-          b = bool^0 = wrap<>::k (6) @[ iscomb ] 
+          a = bool^0 = wrap<>::j (7) @[ iscomb ] 
+          b = bool^0 = wrap<>::k (8) @[ iscomb ] 
         )
         R = process inv<>^0 = wrap<>::R (3) (
           !GND = bool^0 = wrap<>::!GND (1) 
           !Vdd = bool^0 = wrap<>::!Vdd (2) 
-          a = bool^0 = wrap<>::k (6) @[ iscomb ] 
-          b = bool^0 = wrap<>::l (7) @[ iscomb ] 
+          a = bool^0 = wrap<>::k (8) @[ iscomb ] 
+          b = bool^0 = wrap<>::l (9) @[ iscomb ] 
         )
-        j = bool^0 = wrap<>::j (5) @[ iscomb ] 
-        k = bool^0 = wrap<>::k (6) @[ iscomb ] 
-        l = bool^0 = wrap<>::l (7) @[ iscomb ] 
+        j = bool^0 = wrap<>::j (7) @[ iscomb ] 
+        k = bool^0 = wrap<>::k (8) @[ iscomb ] 
+        l = bool^0 = wrap<>::l (9) @[ iscomb ] 
         w = bool^0 = wrap<>::w (3) 
         x = bool^0 = wrap<>::x (4) 
-        y = bool^0 = wrap<>::y (8) 
-        z = bool^0 = wrap<>::z (9) 
+        y = bool^0 = wrap<>::y (5) 
+        z = bool^0 = wrap<>::z (6) 
         Created state:
         process instance pool:
         1	wrap<>::P
@@ -225,11 +225,11 @@ In namespace "", we have: {
         2	wrap<>::!Vdd
         3	wrap<>::w
         4	wrap<>::x
-        5	wrap<>::j @[ iscomb ]
-        6	wrap<>::k @[ iscomb ]
-        7	wrap<>::l @[ iscomb ]
-        8	wrap<>::y
-        9	wrap<>::z
+        5	wrap<>::y
+        6	wrap<>::z
+        7	wrap<>::j @[ iscomb ]
+        8	wrap<>::k @[ iscomb ]
+        9	wrap<>::l @[ iscomb ]
       }
       }
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.20 2009/10/06 17:05:31 fang Exp $
+	$Id: module.h,v 1.20.2.1 2009/12/17 02:07:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -53,6 +53,7 @@ protected:
 		for definitions, and nested namespaces.  
 	 */
 	excl_ptr<name_space>			global_namespace;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	/**
 		Whether or not the global instances have been allocated
 		in the state_manager.  
@@ -62,7 +63,7 @@ protected:
 		Global unique instance manager.  
 	 */
 	state_manager				global_state;
-
+#endif
 private:
 	module();
 
@@ -111,8 +112,10 @@ public:
 		return allocated;
 	}
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const state_manager&
 	get_state_manager(void) const { return global_state; }
+#endif
 
 	const footprint&
 	get_footprint(void) const;

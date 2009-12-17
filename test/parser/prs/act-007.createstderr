@@ -228,32 +228,32 @@ In namespace "", we have: {
             !Vdd = bool^0 = foo<3>::!Vdd (2) 
             w = bool^1
               {
-                [0] = foo<3>::b.w[0] (3) 
-                [1] = foo<3>::b.w[1] (4) 
-                [2] = foo<3>::b.w[2] (5) 
-                [3] = foo<3>::b.w[3] (6) 
-                [4] = foo<3>::b.w[4] (7) 
+                [0] = foo<3>::b.w[0] (13) 
+                [1] = foo<3>::b.w[1] (14) 
+                [2] = foo<3>::b.w[2] (15) 
+                [3] = foo<3>::b.w[3] (16) 
+                [4] = foo<3>::b.w[4] (17) 
               }
           )
           i = pint^0 value: 3
           x = bool^1
             {
-              [0] = foo<3>::x[0] (8) 
-              [1] = foo<3>::x[1] (9) 
-              [2] = foo<3>::x[2] (10) 
+              [0] = foo<3>::x[0] (3) 
+              [1] = foo<3>::x[1] (4) 
+              [2] = foo<3>::x[2] (5) 
             }
           y = bool^1
             {
-              [0] = foo<3>::y[0] (11) 
-              [1] = foo<3>::y[1] (12) 
-              [2] = foo<3>::y[2] (13) 
+              [0] = foo<3>::y[0] (6) 
+              [1] = foo<3>::y[1] (7) 
+              [2] = foo<3>::y[2] (8) 
             }
           z = bool^1
             {
-              [0] = foo<3>::z[0] (14) 
-              [1] = foo<3>::z[1] (15) 
-              [2] = foo<3>::z[2] (16) 
-              [3] = foo<3>::z[3] (17) 
+              [0] = foo<3>::z[0] (9) 
+              [1] = foo<3>::z[1] (10) 
+              [2] = foo<3>::z[2] (11) 
+              [3] = foo<3>::z[3] (12) 
             }
           Created state:
           process instance pool:
@@ -261,21 +261,21 @@ In namespace "", we have: {
           bool instance pool:
           1	foo<3>::!GND
           2	foo<3>::!Vdd
-          3	foo<3>::b.w[0]
-          4	foo<3>::b.w[1]
-          5	foo<3>::b.w[2]
-          6	foo<3>::b.w[3]
-          7	foo<3>::b.w[4]
-          8	foo<3>::x[0]
-          9	foo<3>::x[1]
-          10	foo<3>::x[2]
-          11	foo<3>::y[0]
-          12	foo<3>::y[1]
-          13	foo<3>::y[2]
-          14	foo<3>::z[0]
-          15	foo<3>::z[1]
-          16	foo<3>::z[2]
-          17	foo<3>::z[3]
+          3	foo<3>::x[0]
+          4	foo<3>::x[1]
+          5	foo<3>::x[2]
+          6	foo<3>::y[0]
+          7	foo<3>::y[1]
+          8	foo<3>::y[2]
+          9	foo<3>::z[0]
+          10	foo<3>::z[1]
+          11	foo<3>::z[2]
+          12	foo<3>::z[3]
+          13	foo<3>::b.w[0]
+          14	foo<3>::b.w[1]
+          15	foo<3>::b.w[2]
+          16	foo<3>::b.w[3]
+          17	foo<3>::b.w[4]
           resolved prs:
           x[0] -> y[0]-
           ~x[0] -> y[0]+

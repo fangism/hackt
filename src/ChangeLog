@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2009-12-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-02:
+	  First major revision on branch:
+		Started flagging potential code changes with
+		macro MEMORY_MAPPED_GLOBAL_ALLOCATION (now off).
+		Goals: call allocation on local footprint's only
+		and map private subinstances, who's allocation can be
+		represented by reserving intervals in the index space.
+	  local footprints instance_indices are now 'sifted' such that
+		indices of public ports are less than those of
+		private instances, via stable partition.
+		This partitioning is the first step toward memory
+		mapping allocation.
+	  Test cases (create, alloc) updated, some back-ends print
+		output in slightly different order, and global
+		indices of instance may be permuted.
+
+
 2009-12-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-01:

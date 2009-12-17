@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.19 2009/11/06 02:57:55 fang Exp $
+	$Id: port_alias_tracker.h,v 1.19.2.1 2009/12/17 02:07:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -126,6 +126,18 @@ public:
 	typename alias_array_type::const_reference
 	front(void) const { return alias_array.front(); }
 
+	bool
+	is_aliased_to_port(void) const;
+
+	void
+	swap(this_type&);
+
+	void
+	bare_swap(this_type&);
+
+	void
+	override_id(const size_t);
+
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
 
@@ -160,7 +172,6 @@ public:
 	void
 	load_object_base(const collection_pool_bundle_type&, istream&);
 #endif
-
 };	// end class alias_reference_set
 
 //=============================================================================
@@ -196,6 +207,11 @@ protected:
 
 	void
 	__export_alias_properties(substructure_alias&) const;
+
+	void
+	__sift_ports(void);
+
+	struct port_alias_predicate;
 
 	void
 	__shorten_canonical_aliases(
@@ -286,6 +302,9 @@ public:
 
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
+
+	void
+	sift_ports(void);
 
 	void
 	export_alias_properties(substructure_alias&) const;

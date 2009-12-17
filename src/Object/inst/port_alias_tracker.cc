@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.27 2009/11/06 02:57:54 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.27.2.1 2009/12/17 02:07:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -26,6 +26,7 @@
 
 #include "util/persistent_object_manager.h"
 #include "util/copy_if.h"
+#include "util/STL/functional.h"	// for _Select2nd
 #include "util/IO_utils.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
@@ -40,6 +41,7 @@ using util::auto_indent;
 USING_COPY_IF
 using std::for_each;
 using std::back_inserter;
+using std::not1;
 
 //=============================================================================
 #if 0
@@ -119,6 +121,68 @@ alias_reference_set<Tag>::dump(ostream& o, const dump_flags& df) const {
 }
 
 #undef VERBOSE_ALIAS_ATTRIBUTES
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if ANY alias in this set is a direct port alias, 
+		or member thereof.  
+	reminder: instance_alias_info::is_port_alias doesn't check
+		equivalent aliases in the same union-find.  
+ */
+template <class Tag>
+bool
+alias_reference_set<Tag>::is_aliased_to_port(void) const {
+	const_iterator i(alias_array.begin());
+	const const_iterator e(alias_array.end());
+	for ( ; i!=e; ++i) {
+		if ((*i)->is_port_alias())
+			return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overrides allocation-assigned ID with new value for all aliases
+	in this set.
+ */
+template <class Tag>
+void
+alias_reference_set<Tag>::override_id(const size_t id) {
+	iterator i(alias_array.begin());
+	const iterator e(alias_array.end());
+if ((*i)->instance_index != id) {
+	// all-or-none: invariant: all instance IDs are the same
+	for ( ; i!=e; ++i) {
+		(*i)->instance_index = id;
+	}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Swaps the alias arrays *without* updating their respective
+	instance_index-s!  Use with caution!
+ */
+template <class Tag>
+void
+alias_reference_set<Tag>::bare_swap(this_type& t) {
+	alias_array.swap(t.alias_array);
+}
+
+/**
+	Swaps alias sets AND their aliases' ID numbers (locally allocated
+	unique IDs)!
+ */
+template <class Tag>
+void
+alias_reference_set<Tag>::swap(this_type& t) {
+	const size_t lid = alias_array.front()->instance_index;
+	const size_t rid = t.alias_array.front()->instance_index;
+	bare_swap(t);
+	this->override_id(lid);
+	t.override_id(rid);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -357,6 +421,113 @@ port_alias_tracker_base<Tag>::__export_alias_properties(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true if alias is aliased to any public port (reachable).
+ */
+template <class Tag>
+struct port_alias_tracker_base<Tag>::port_alias_predicate {
+#if 1
+	typedef	typename map_type::mapped_type	mapped_type;
+	typedef	mapped_type		argument_type;
+	bool
+	operator () (const mapped_type& a) const {
+		return a.is_aliased_to_port();
+	}
+#else
+	typedef	typename map_type::value_type	value_type;
+	typedef	value_type		argument_type;
+	bool
+	operator () (const value_type& a) const {
+		return a.second.is_aliased_to_port();
+	}
+#endif
+};
+
+/**
+	Want to use the std::stable_partition algorithm, except that we need to
+	actually modify the key (instance ID index).
+ */
+template <class Tag>
+void
+port_alias_tracker_base<Tag>::__sift_ports(void) {
+	STACKTRACE_VERBOSE;
+	typedef typename map_type::mapped_type	mapped_type;
+	typedef	typename vector<mapped_type>::iterator	temp_iterator;
+	const iterator fb(_ids.begin()), fe(_ids.end());
+	iterator fi(fb);
+#if 0
+	// slow-but-stable partitioning, relative order preserved
+	vector<mapped_type> tmp;
+//	STACKTRACE_INDENT_PRINT("_ids.size() = " << _ids.size() << endl);
+#if 0
+	tmp.reserve(_ids.size());	// pre-allocate
+	transform(fi, fe, back_inserter(tmp), std::_Select2nd<value_type>());
+	const temp_iterator tb(tmp.begin()), te(tmp.end());
+#else
+	// must avoid expensive copy to save memory
+	tmp.resize(_ids.size());	// default construct
+	const temp_iterator tb(tmp.begin()), te(tmp.end());
+	temp_iterator ti(tb);
+	for ( ; fi!=fe; ++fi, ++ti) {
+		// swap instead of copy to conserve memory
+		fi->second.bare_swap(*ti);
+	}
+#endif
+	std::stable_partition(tb, te, port_alias_predicate());
+	// throws std::bad_alloc for sufficiently large arrays
+	// or use std::mem_fun_ref(&mapped_type::is_aliased_to_port)
+	for (fi = fb, ti = tb; fi!=fe; ++fi, ++ti) {
+		fi->second.bare_swap(*ti);
+		fi->second.override_id(fi->first);
+	}
+	cerr << "after array-swap" << endl;
+#elif 1
+	// manual stable-partition, less elegant, but memory efficient
+	vector<mapped_type> p, np;
+	// don't reserve, don't know breakdown a priori
+	for ( ; fi!=fe; ++fi) {
+		// move instead of copy
+		if (fi->second.is_aliased_to_port()) {
+			p.push_back(mapped_type());
+			fi->second.bare_swap(p.back());
+		} else {
+			np.push_back(mapped_type());
+			fi->second.bare_swap(np.back());
+		}
+	}
+	_ids.clear();	// wipe and reconstruct
+	size_t j = 1;
+	temp_iterator ti(p.begin()), te(p.end());
+	for ( ; ti!=te; ++ti, ++j) {
+		mapped_type& m(_ids[j]);
+		m.bare_swap(*ti);	// move instead of copy
+		m.override_id(j);
+	}
+	ti = np.begin();
+	te = np.end();
+	for ( ; ti!=te; ++ti, ++j) {
+		mapped_type& m(_ids[j]);
+		m.bare_swap(*ti);	// move instead of copy
+		m.override_id(j);
+	}
+#else
+	// fast-but-unstable partitioning, relative order not preserved
+	// this does not preserve relative order, hence 'unstable'
+	typedef	typename map_type::reverse_iterator	reverse_iterator;
+	reverse_iterator ri(_ids.rbegin());
+	const reverse_iterator re(_ids.rend());
+	fi = find_if(fi, fe, not1(port_alias_predicate()));	// forward seek
+	ri = find_if(ri, re, port_alias_predicate());		// reverse seek
+	while (fi != fe && ri != re && fi->first < ri->first) {
+		// swap-eroo
+		fi->second.swap(ri->second);
+		fi = find_if(++fi, fe, not1(port_alias_predicate()));
+		ri = find_if(++ri, re, port_alias_predicate());
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Re-sets the back references of the unique aliases to
 	be the 'shortest; for canonicalization.  
 	TODO: in addition to setting the back-reference, 
@@ -527,6 +698,26 @@ if (has_internal_aliases) {
 } else {
 	return good_bool(true);
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Re-enumerates the alias indices so that aliases that are
+	public ports have lower indices than those that are locally private.
+	This is needed for efficient memory mapping.  
+ */
+void
+port_alias_tracker::sift_ports(void) {
+	STACKTRACE_VERBOSE;
+	port_alias_tracker_base<process_tag>::__sift_ports();
+	port_alias_tracker_base<channel_tag>::__sift_ports();
+#if ENABLE_DATASTRUCTS
+	port_alias_tracker_base<datastruct_tag>::__sift_ports();
+#endif
+	port_alias_tracker_base<enum_tag>::__sift_ports();
+	port_alias_tracker_base<int_tag>::__sift_ports();
+	port_alias_tracker_base<bool_tag>::__sift_ports();
+	// watch for std::bad_alloc, especially when calling stable_partition
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

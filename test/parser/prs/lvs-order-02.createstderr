@@ -88,26 +88,26 @@ In namespace "", we have: {
           N = pint^0 value: 3
           a = bool^1
             {
-              [0] = lvs_order<3>::a[0] (6) 
-              [1] = lvs_order<3>::a[1] (7) 
-              [2] = lvs_order<3>::a[2] (8) 
+              [0] = lvs_order<3>::a[0] (3) 
+              [1] = lvs_order<3>::a[1] (4) 
+              [2] = lvs_order<3>::a[2] (5) 
             }
           b = bool^1
             {
-              [0] = lvs_order<3>::b[0] (3) 
-              [1] = lvs_order<3>::b[1] (4) 
-              [2] = lvs_order<3>::b[2] (5) 
+              [0] = lvs_order<3>::b[0] (6) 
+              [1] = lvs_order<3>::b[1] (7) 
+              [2] = lvs_order<3>::b[2] (8) 
             }
           Created state:
           bool instance pool:
           1	lvs_order<3>::!GND
           2	lvs_order<3>::!Vdd
-          3	lvs_order<3>::b[0]
-          4	lvs_order<3>::b[1]
-          5	lvs_order<3>::b[2]
-          6	lvs_order<3>::a[0]
-          7	lvs_order<3>::a[1]
-          8	lvs_order<3>::a[2]
+          3	lvs_order<3>::a[0]
+          4	lvs_order<3>::a[1]
+          5	lvs_order<3>::a[2]
+          6	lvs_order<3>::b[0]
+          7	lvs_order<3>::b[1]
+          8	lvs_order<3>::b[2]
           resolved specs:
           order({b[0],b[1],b[2]},{a[0],a[1],a[2]})
         }

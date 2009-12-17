@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.57 2009/11/04 00:16:00 fang Exp $
+	$Id: devel_switches.h,v 1.57.2.1 2009/12/17 02:07:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -99,6 +99,16 @@
 	Status: complete, tested, perm'd
 #define	FOOTPRINT_OWNER_DEF			1
  */
+
+/**
+	Define to 1 for final scalability rework, where each footprint
+	keeps a hierarchically mapped state-manager for all
+	subinstances.
+	Rationale: to eliminate expensive global allocation
+	Goal: 1
+	Status: just starting
+ */
+#define	MEMORY_MAPPED_GLOBAL_ALLOCATION		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

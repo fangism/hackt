@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.41 2009/10/06 17:05:30 fang Exp $
+ 	$Id: module.cc,v 1.41.2.1 2009/12/17 02:07:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -85,15 +85,21 @@ const count_ptr<const const_param_expr_list> null_module_params(NULL);
  */
 module::module() :
 		process_definition(), 
-		global_namespace(NULL),
-		allocated(false), global_state() {
+		global_namespace(NULL)
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, allocated(false), global_state()
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::module(const string& s) :
 		process_definition(s), 
-		global_namespace(new name_space("")),
-		allocated(false), global_state() {
+		global_namespace(new name_space(""))
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, allocated(false), global_state()
+#endif
+		{
 	NEVER_NULL(global_namespace);
 }
 

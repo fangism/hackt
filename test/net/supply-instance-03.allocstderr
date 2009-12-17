@@ -2,7 +2,7 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	bar	foo<>
 	process: 2,3,4,5,6,7,8,9,10
-	bool: 1,2,5,6,7,8,9,10,4,11,12,13,14,15,16,3,17,18,19,20,21,22
+	bool: 1,2,4,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
 2	process	1	1	bar.a	inv<>
 	bool: 1,2,5,6
 3	process	1	2	bar.b	inv<>
@@ -26,18 +26,18 @@ globID	super		localID	canonical	footprint-frame
 2	(top)	-	2	!Vdd	
 3	(top)	-	3	bar.myVdd	
 4	(top)	-	4	bar.myGND	
-5	process	1	3	bar.a.x	
-6	process	1	4	bar.a.y	
-7	process	1	5	bar.b.x	
-8	process	1	6	bar.b.y	
-9	process	1	7	bar.c.x	
-10	process	1	8	bar.c.y	
-11	process	1	10	bar.d.x	
-12	process	1	11	bar.d.y	
-13	process	1	12	bar.d2.x	
-14	process	1	13	bar.d2.y	
-15	process	1	14	bar.e.x	
-16	process	1	15	bar.e.y	
+5	process	1	5	bar.a.x	
+6	process	1	6	bar.a.y	
+7	process	1	7	bar.b.x	
+8	process	1	8	bar.b.y	
+9	process	1	9	bar.c.x	
+10	process	1	10	bar.c.y	
+11	process	1	11	bar.d.x	
+12	process	1	12	bar.d.y	
+13	process	1	13	bar.d2.x	
+14	process	1	14	bar.d2.y	
+15	process	1	15	bar.e.x	
+16	process	1	16	bar.e.y	
 17	process	1	17	bar.f.x	
 18	process	1	18	bar.f.y	
 19	process	1	19	bar.f2.x	

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18 2008/11/23 17:53:34 fang Exp $
+	$Id: global_entry.h,v 1.18.20.1 2009/12/17 02:07:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -91,7 +91,7 @@ protected:
 
 
 	void
-	__allocate_remaining_sub(const footprint&, state_manager&, 
+	__allocate_remaining_sub(state_manager&, 
 		const parent_tag_enum, const size_t);
 
 	void
@@ -344,8 +344,10 @@ public:
 //=============================================================================
 /**
 	Data common to all global entries (uniquely allocated objects).  
+	TODO: is this still useful with MEMORY_MAPPED_GLOBAL_ALLOCATION?
  */
 struct global_entry_common {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	/**
 		Uses parent_tag_enum.
 	 */
@@ -369,6 +371,7 @@ struct global_entry_common {
 
 	global_entry_common() : parent_tag_value(META_TYPE_NONE), parent_id(0),
 			local_offset(0) { }
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 };	// end struct global_entry_common
 
 //=============================================================================

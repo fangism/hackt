@@ -136,23 +136,23 @@ In namespace "", we have: {
           a = bool^1
             {
               [0] = foo<4>::q[0] (3) 
-              [1] = foo<4>::a[1] (5) 
+              [1] = foo<4>::a[1] (4) 
               [2] = foo<4>::q[0] (3) 
-              [3] = foo<4>::a[3] (6) 
+              [3] = foo<4>::a[3] (5) 
             }
           q = bool^1
             {
               [0] = foo<4>::q[0] (3) 
-              [1] = foo<4>::q[1] (4) 
+              [1] = foo<4>::q[1] (6) 
             }
           Created state:
           bool instance pool:
           1	foo<4>::!GND
           2	foo<4>::!Vdd
           3	foo<4>::q[0]
-          4	foo<4>::q[1]
-          5	foo<4>::a[1]
-          6	foo<4>::a[3]
+          4	foo<4>::a[1]
+          5	foo<4>::a[3]
+          6	foo<4>::q[1]
           bool port aliases:
           3: foo<4>::a[0] = foo<4>::a[2]
         }
@@ -163,25 +163,25 @@ In namespace "", we have: {
           a = bool^1
             {
               [0] = foo<5>::q[0] (3) 
-              [1] = foo<5>::a[1] (5) 
+              [1] = foo<5>::a[1] (4) 
               [2] = foo<5>::q[0] (3) 
-              [3] = foo<5>::a[3] (6) 
-              [4] = foo<5>::a[4] (7) 
+              [3] = foo<5>::a[3] (5) 
+              [4] = foo<5>::a[4] (6) 
             }
           q = bool^1
             {
               [0] = foo<5>::q[0] (3) 
-              [1] = foo<5>::q[1] (4) 
+              [1] = foo<5>::q[1] (7) 
             }
           Created state:
           bool instance pool:
           1	foo<5>::!GND
           2	foo<5>::!Vdd
           3	foo<5>::q[0]
-          4	foo<5>::q[1]
-          5	foo<5>::a[1]
-          6	foo<5>::a[3]
-          7	foo<5>::a[4]
+          4	foo<5>::a[1]
+          5	foo<5>::a[3]
+          6	foo<5>::a[4]
+          7	foo<5>::q[1]
           bool port aliases:
           3: foo<5>::a[0] = foo<5>::a[2]
         }

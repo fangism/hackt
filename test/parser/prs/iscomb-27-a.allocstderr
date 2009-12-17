@@ -29,9 +29,9 @@ globID	super		localID	canonical	footprint-frame
 12	process	1	11	foo.bar.out.e	bp<>
 	bool: 8
 13	process	2	11	foo.bar.ma	blah2<>
-	process: 9,14,4
+	process: 9,4,14
 	bool: 6,7,8,1,2,3,4,5
-14	process	13	2	foo.bar.ma.xx	blah1<>
+14	process	13	3	foo.bar.ma.xx	blah1<>
 	process: 4,9
 	bool: 3,4,5,6,7,8,1,2
 [global bool entries]

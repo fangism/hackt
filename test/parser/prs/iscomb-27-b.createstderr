@@ -310,7 +310,7 @@ In namespace "", we have: {
         !Vdd = bool^0 = blah2<>::!Vdd (5) 
         l = process e1of2<>^1
           {
-            [0] = blah2<>::l[0] (3) (
+            [0] = blah2<>::l[0] (2) (
               t = bool^0 = blah2<>::l[0].t (6) 
               f = bool^0 = blah2<>::l[0].f (7) 
               e = bool^0 = blah2<>::l[0].e (8) @[ iscomb ] 
@@ -321,10 +321,10 @@ In namespace "", we have: {
           f = bool^0 = blah2<>::r.f (2) @[ iscomb ] 
           e = bool^0 = blah2<>::r.e (3) 
         )
-        xx = process blah1<>^0 = blah2<>::xx (2) (
+        xx = process blah1<>^0 = blah2<>::xx (3) (
           !GND = bool^0 = blah2<>::!GND (4) 
           !Vdd = bool^0 = blah2<>::!Vdd (5) 
-          l = process e1of2<>^0 = blah2<>::l[0] (3) (
+          l = process e1of2<>^0 = blah2<>::l[0] (2) (
             t = bool^0 = blah2<>::l[0].t (6) 
             f = bool^0 = blah2<>::l[0].f (7) 
             e = bool^0 = blah2<>::l[0].e (8) @[ iscomb ] 
@@ -338,8 +338,8 @@ In namespace "", we have: {
         Created state:
         process instance pool:
         1	blah2<>::r
-        2	blah2<>::xx
-        3	blah2<>::l[0]
+        2	blah2<>::l[0]
+        3	blah2<>::xx
         bool instance pool:
         1	blah2<>::r.t @[ iscomb ]
         2	blah2<>::r.f @[ iscomb ]
@@ -382,19 +382,19 @@ In namespace "", we have: {
         !Vdd = bool^0 = blah3<>::!Vdd (8) 
         in = process alt_e1of2<>^1
           {
-            [0] = blah3<>::in[0] (8) (
+            [0] = blah3<>::in[0] (7) (
               a = process e1of2<>^0 = blah3<>::in_a (6) (
                 t = bool^0 = blah3<>::in_a.t (4) 
                 f = bool^0 = blah3<>::in_a.f (5) 
                 e = bool^0 = blah3<>::in_a.e (6) @[ iscomb ] 
               )
-              t = process bp<>^0 = blah3<>::in[0].t (9) (
+              t = process bp<>^0 = blah3<>::in[0].t (8) (
                 a = bool^0 = blah3<>::in_a.t (4) 
               )
-              f = process bp<>^0 = blah3<>::in[0].f (10) (
+              f = process bp<>^0 = blah3<>::in[0].f (9) (
                 a = bool^0 = blah3<>::in_a.f (5) 
               )
-              e = process bp<>^0 = blah3<>::in[0].e (11) (
+              e = process bp<>^0 = blah3<>::in[0].e (10) (
                 a = bool^0 = blah3<>::in_a.e (6) @[ iscomb ] 
               )
             )
@@ -404,7 +404,7 @@ In namespace "", we have: {
           f = bool^0 = blah3<>::in_a.f (5) 
           e = bool^0 = blah3<>::in_a.e (6) @[ iscomb ] 
         )
-        ma = process blah2<>^0 = blah3<>::ma (7) (
+        ma = process blah2<>^0 = blah3<>::ma (11) (
           !GND = bool^0 = blah3<>::!GND (7) 
           !Vdd = bool^0 = blah3<>::!Vdd (8) 
           l = process e1of2<>^1
@@ -445,11 +445,11 @@ In namespace "", we have: {
         4	blah3<>::out.f
         5	blah3<>::out.e
         6	blah3<>::in_a
-        7	blah3<>::ma
-        8	blah3<>::in[0]
-        9	blah3<>::in[0].t
-        10	blah3<>::in[0].f
-        11	blah3<>::in[0].e
+        7	blah3<>::in[0]
+        8	blah3<>::in[0].t
+        9	blah3<>::in[0].f
+        10	blah3<>::in[0].e
+        11	blah3<>::ma
         bool instance pool:
         1	blah3<>::out.a.t @[ iscomb ]
         2	blah3<>::out.a.f @[ iscomb ]

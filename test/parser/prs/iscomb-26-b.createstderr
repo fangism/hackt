@@ -179,16 +179,16 @@ In namespace "", we have: {
         !Vdd = bool^0 = B<>::!Vdd (5) 
         l = process e1of2<>^1
           {
-            [0] = B<>::l[0] (3) (
+            [0] = B<>::l[0] (2) (
               t = bool^0 = B<>::l[0].t (6) 
               f = bool^0 = B<>::l[0].f (7) 
               e = bool^0 = B<>::l[0].e (8) @[ iscomb ] 
             )
           }
-        m = process A<>^0 = B<>::m (2) (
+        m = process A<>^0 = B<>::m (3) (
           !GND = bool^0 = B<>::!GND (4) 
           !Vdd = bool^0 = B<>::!Vdd (5) 
-          l = process e1of2<>^0 = B<>::l[0] (3) (
+          l = process e1of2<>^0 = B<>::l[0] (2) (
             t = bool^0 = B<>::l[0].t (6) 
             f = bool^0 = B<>::l[0].f (7) 
             e = bool^0 = B<>::l[0].e (8) @[ iscomb ] 
@@ -207,8 +207,8 @@ In namespace "", we have: {
         Created state:
         process instance pool:
         1	B<>::r
-        2	B<>::m
-        3	B<>::l[0]
+        2	B<>::l[0]
+        3	B<>::m
         bool instance pool:
         1	B<>::r.t
         2	B<>::r.f

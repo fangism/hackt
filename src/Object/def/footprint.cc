@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46 2009/11/04 00:16:01 fang Exp $
+	$Id: footprint.cc,v 1.46.2.1 2009/12/17 02:07:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -103,6 +103,7 @@ using std::copy;
 //=============================================================================
 // class footprint_base method definitions
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Top-level global state allocation (not for use with subinstances).  
 	Parent tag and id are all zero.  
@@ -132,6 +133,7 @@ footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 	}
 	return good_bool(true);
 }
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -712,6 +714,18 @@ footprint::get_chp_footprint(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	Visitor that constructs this footprint's private entry maps.
+ */
+struct footprint_allocator : public alias_visitor {
+	footprint&			fp;
+	VISIT_INSTANCE_ALIAS_INFO_PROTOS()
+};
+
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For all instance collections, expand their canonical types.  
 	This does not unroll/create PRS footprints, that's done separately.  
@@ -721,6 +735,7 @@ footprint::get_chp_footprint(void) {
 		This applies to both recursive-creation and 
 		local-ID-assignment.
 		Benefit: eliminates some virtual calls.  
+	\param top top-level footprint for looking up global parameters?
  */
 good_bool
 footprint::create_dependent_types(const footprint& top) {
@@ -785,8 +800,17 @@ try {
 		return g;
 	}
 }
-	evaluate_scope_aliases();
+	evaluate_scope_aliases(true);
 	// should this be postponed until connection_diagnostics()?
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// for all structures with private subinstances (processes)
+	//	publicly reachable local processes that are aliased to a port
+	expand_unique_subinstances();	// populate footprint frames
+//	footprint_allocator fa(*this);
+//	fa.accept();
+	// build private entry map
+	// aggregate number of private entries
+#endif
 	mark_created();
 	return good_bool(true);
 } catch (...) {
@@ -1096,9 +1120,16 @@ if (p) {
 	of port aliases for the sake of replaying internal aliases.  
 	\pre the sequential scope was already played for creation.  
 	NOTE: this can also called during load-reconstruction.
+	\param sift if true, then re-enumerate the local instance IDs
+		such that publicly reachable ports aliases have lower ID
+		than local non-port aliases.  This makes a clean
+		partitioning for memory mapping.  
+		Sifting only needs to be done once, can be skipped
+		during persistent object reconstruction, because
+		already ordered.
  */
 void
-footprint::evaluate_scope_aliases(void) {
+footprint::evaluate_scope_aliases(const bool sift) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("got " << instance_collection_map.size()
 		<< " entries." << endl);
@@ -1116,6 +1147,15 @@ footprint::evaluate_scope_aliases(void) {
 		.collect_scope_aliases(scope_aliases);
 	get_instance_collection_pool_bundle<bool_tag>()
 		.collect_scope_aliases(scope_aliases);
+#if 1 || MEMORY_MAPPED_GLOBAL_ALLOCATION
+if (sift) {
+	// sift: make sure all public ports reachable instances have 
+	// *lower* ID than private non-port instances
+	// for now, implement as a check, and if needed, actually swap IDs
+	// this must happen *before* calling evaluate_scope_aliases
+	scope_aliases.sift_ports();
+}
+#endif
 	// just copy-filter them over
 	port_aliases.import_port_aliases(scope_aliases);
 	// don't filter for scope, want to keep around unique entries
@@ -1127,11 +1167,64 @@ footprint::evaluate_scope_aliases(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	This expands unique subinstances in each pool, 
+	called for each footprint.  
+	Expand everything in this footprint at this level first
+	before recursing into public subinstances' ports.  
+ */
+good_bool
+footprint::expand_unique_subinstances(void) {
+	STACKTRACE_VERBOSE;
+	// only processes, channels, and data structures need to be expanded
+	// nothing else has substructure.  
+	const size_t process_offset = get_instance_pool<process_tag>().size();
+#if !BUILTIN_CHANNEL_FOOTPRINTS
+	const size_t channel_offset = get_instance_pool<channel_tag>().size();
+#endif
+#if ENABLE_DATASTRUCTS
+	const size_t struct_offset = get_instance_pool<datastruct_tag>().size();
+#endif
+	// no need to __allocate_local_state
+	// this is empty, needs to be assigned before passing down...
+	// construct frame using offset?
+// if (a.good) {
+	const good_bool b(
+		footprint_base<process_tag>::
+			__expand_unique_subinstances(
+				ff, sm, process_offset).good
+#if !BUILTIN_CHANNEL_FOOTPRINTS
+		&& footprint_base<channel_tag>::
+			__expand_unique_subinstances(
+				ff, sm, channel_offset).good
+#endif
+#if ENABLE_DATASTRUCTS
+		&& footprint_base<datastruct_tag>::
+			__expand_unique_subinstances(
+				ff, sm, struct_offset).good
+#endif
+	);
+#if BUILTIN_CHANNEL_FOOTPRINTS
+	if (!b.good)	return b;
+	// assign channel footprints after global allocation is complete
+	return footprint_base<channel_tag>::
+		__set_channel_footprints(sm);
+#else
+	return b;
+#endif	// BUILTIN_CHANNEL_FOOTPRINTS
+// } else {
+//	// error
+//	return a;
+// }
+}	// end method expand_unique_subinstances
+#else	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Called by the top-level module.  
 	This expands unique subinstances in each pool.  
 	Expand everything in this footprint at this level first
 	before recursing into subinstances' ports.  
+	TODO: rewrite this to apply to memory-mapped allocation model.
  */
 good_bool
 footprint::expand_unique_subinstances(state_manager& sm) const {
@@ -1201,6 +1294,7 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 		return a;
 	}
 }	// end method expand_unique_subinstances
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1497,7 +1591,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 #if AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 	// instead of writing redundant information, reconstruct it!
 	if (created) {
-		evaluate_scope_aliases();
+		evaluate_scope_aliases(false);
 	}
 #else
 	port_aliases.load_object_base(*this, i);

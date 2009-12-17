@@ -4,7 +4,7 @@ globID	super		localID	canonical	footprint-frame
 	process: 2,3,4,5,6,7,8,9,10,11,12
 	bool: 1,2,3,4,5,6,7,8
 2	process	1	1	foo.bar	blah3<>
-	process: 8,9,10,11,12,13,4,3,5,6,7
+	process: 8,9,10,11,12,4,3,5,6,7,13
 	bool: 6,7,8,1,2,3,4,5
 3	process	1	2	foo.bar.in[0]	alt_e1of2<>
 	process: 4,5,6,7
@@ -28,10 +28,10 @@ globID	super		localID	canonical	footprint-frame
 	bool: 7
 12	process	1	11	foo.bar.out.e	bp<>
 	bool: 8
-13	process	2	6	foo.bar.ma	blah2<>
-	process: 9,14,4
+13	process	2	11	foo.bar.ma	blah2<>
+	process: 9,4,14
 	bool: 6,7,8,1,2,3,4,5
-14	process	13	2	foo.bar.ma.xx	blah1<>
+14	process	13	3	foo.bar.ma.xx	blah1<>
 	process: 4,9
 	bool: 3,4,5,6,7,8,1,2
 [global bool entries]

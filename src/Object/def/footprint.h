@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30 2009/10/02 01:56:47 fang Exp $
+	$Id: footprint.h,v 1.30.2.1 2009/12/17 02:07:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -401,9 +401,11 @@ public:
 	lookup_implicit_bool_port(const string&) const;
 #endif
 
+private:
 	void
-	evaluate_scope_aliases(void);
+	evaluate_scope_aliases(const bool sift);
 
+public:
 	PRS::footprint&
 	get_prs_footprint(void) { return *prs_footprint; }
 
@@ -431,8 +433,16 @@ public:
 	const SPEC::footprint&
 	get_spec_footprint(void) const { return *spec_footprint; }
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+private:
+	good_bool
+	expand_unique_subinstances(void);
+
+public:
+#else
 	good_bool
 	expand_unique_subinstances(state_manager&) const;
+#endif
 
 	void
 	assign_footprint_frame(footprint_frame&, 

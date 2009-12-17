@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.39 2009/10/02 01:56:56 fang Exp $
+	$Id: instance_alias.tcc,v 1.39.2.1 2009/12/17 02:07:36 fang Exp $
 	TODO: trim includes
  */
 
@@ -410,6 +410,12 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 		i->instance_index = the_pool.allocate(instance_type(*i));
 		// also need to recursively allocate subinstances ids
 		i->allocate_subinstances(f);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		// OR... do this work in second pass after local allocations
+		// get the footprint for this type
+		// figure out how many private instances to allocate
+		// append private map entry to the owning footprint
+#endif
 	}
 	// by here, the canonical alias in this set has been processed
 	if (&*i != this) {
@@ -418,6 +424,9 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 		this->instance_index = i->instance_index;
 		// also need to recursively allocate subinstances ids
 		this->allocate_subinstances(f);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		// need to do anything here?
+#endif
 	}
 #if ENABLE_STACKTRACE
 	this->dump_hierarchical_name(STACKTRACE_INDENT)

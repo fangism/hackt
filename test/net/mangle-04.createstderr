@@ -347,7 +347,7 @@ In namespace "", we have: {
               !GND = bool^0 = foo::wire_copy<2>::!GND (1) 
               !Vdd = bool^0 = foo::wire_copy<2>::!Vdd (2) 
               N = pint^0 value: 2
-              comp = process std::logic::celem<2, 10>^0 = foo::wire_copy<2>::comp (2) (
+              comp = process std::logic::celem<2, 10>^0 = foo::wire_copy<2>::comp (4) (
                 !GND = bool^0 = foo::wire_copy<2>::!GND (1) 
                 !Vdd = bool^0 = foo::wire_copy<2>::!Vdd (2) 
                 in = bool^1
@@ -369,7 +369,7 @@ In namespace "", we have: {
               )
               o = process e1of<2>^1
                 {
-                  [0] = foo::wire_copy<2>::o[0] (3) (
+                  [0] = foo::wire_copy<2>::o[0] (2) (
                     !GND = bool^0 = foo::wire_copy<2>::!GND (1) 
                     !Vdd = bool^0 = foo::wire_copy<2>::!Vdd (2) 
                     d = bool^1
@@ -379,7 +379,7 @@ In namespace "", we have: {
                       }
                     e = bool^0 = foo::wire_copy<2>::oe[0] (6) 
                   )
-                  [1] = foo::wire_copy<2>::o[1] (4) (
+                  [1] = foo::wire_copy<2>::o[1] (3) (
                     !GND = bool^0 = foo::wire_copy<2>::!GND (1) 
                     !Vdd = bool^0 = foo::wire_copy<2>::!Vdd (2) 
                     d = bool^1
@@ -398,9 +398,9 @@ In namespace "", we have: {
               Created state:
               process instance pool:
               1	foo::wire_copy<2>::in
-              2	foo::wire_copy<2>::comp
-              3	foo::wire_copy<2>::o[0]
-              4	foo::wire_copy<2>::o[1]
+              2	foo::wire_copy<2>::o[0]
+              3	foo::wire_copy<2>::o[1]
+              4	foo::wire_copy<2>::comp
               bool instance pool:
               1	foo::wire_copy<2>::!GND
               2	foo::wire_copy<2>::!Vdd
@@ -419,7 +419,7 @@ In namespace "", we have: {
               !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
               !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
               N = pint^0 value: 3
-              comp = process std::logic::celem<3, 10>^0 = foo::wire_copy<3>::comp (2) (
+              comp = process std::logic::celem<3, 10>^0 = foo::wire_copy<3>::comp (5) (
                 !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
                 !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
                 in = bool^1
@@ -442,7 +442,7 @@ In namespace "", we have: {
               )
               o = process e1of<2>^1
                 {
-                  [0] = foo::wire_copy<3>::o[0] (3) (
+                  [0] = foo::wire_copy<3>::o[0] (2) (
                     !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
                     !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
                     d = bool^1
@@ -452,7 +452,7 @@ In namespace "", we have: {
                       }
                     e = bool^0 = foo::wire_copy<3>::oe[0] (6) 
                   )
-                  [1] = foo::wire_copy<3>::o[1] (4) (
+                  [1] = foo::wire_copy<3>::o[1] (3) (
                     !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
                     !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
                     d = bool^1
@@ -462,7 +462,7 @@ In namespace "", we have: {
                       }
                     e = bool^0 = foo::wire_copy<3>::oe[1] (7) 
                   )
-                  [2] = foo::wire_copy<3>::o[2] (5) (
+                  [2] = foo::wire_copy<3>::o[2] (4) (
                     !GND = bool^0 = foo::wire_copy<3>::!GND (1) 
                     !Vdd = bool^0 = foo::wire_copy<3>::!Vdd (2) 
                     d = bool^1
@@ -482,10 +482,10 @@ In namespace "", we have: {
               Created state:
               process instance pool:
               1	foo::wire_copy<3>::in
-              2	foo::wire_copy<3>::comp
-              3	foo::wire_copy<3>::o[0]
-              4	foo::wire_copy<3>::o[1]
-              5	foo::wire_copy<3>::o[2]
+              2	foo::wire_copy<3>::o[0]
+              3	foo::wire_copy<3>::o[1]
+              4	foo::wire_copy<3>::o[2]
+              5	foo::wire_copy<3>::comp
               bool instance pool:
               1	foo::wire_copy<3>::!GND
               2	foo::wire_copy<3>::!Vdd
@@ -559,11 +559,11 @@ In namespace "", we have: {
                   !Vdd = bool^0 = std::logic::celem<2, 10>::!Vdd (2) 
                   N = pint^0 value: 2
                   W = pint^0 value: 10
-                  _o = bool^0 = std::logic::celem<2, 10>::_o (4) 
+                  _o = bool^0 = std::logic::celem<2, 10>::_o (6) 
                   in = bool^1
                     {
-                      [0] = std::logic::celem<2, 10>::in[0] (5) 
-                      [1] = std::logic::celem<2, 10>::in[1] (6) 
+                      [0] = std::logic::celem<2, 10>::in[0] (4) 
+                      [1] = std::logic::celem<2, 10>::in[1] (5) 
                     }
                   o = bool^0 = std::logic::celem<2, 10>::o (3) 
                   Created state:
@@ -571,9 +571,9 @@ In namespace "", we have: {
                   1	std::logic::celem<2, 10>::!GND
                   2	std::logic::celem<2, 10>::!Vdd
                   3	std::logic::celem<2, 10>::o
-                  4	std::logic::celem<2, 10>::_o
-                  5	std::logic::celem<2, 10>::in[0]
-                  6	std::logic::celem<2, 10>::in[1]
+                  4	std::logic::celem<2, 10>::in[0]
+                  5	std::logic::celem<2, 10>::in[1]
+                  6	std::logic::celem<2, 10>::_o
                   resolved prs:
                   in[0] & in[1] -> _o-
                   ~in[0] & ~in[1] -> _o+
@@ -587,12 +587,12 @@ In namespace "", we have: {
                   !Vdd = bool^0 = std::logic::celem<3, 10>::!Vdd (2) 
                   N = pint^0 value: 3
                   W = pint^0 value: 10
-                  _o = bool^0 = std::logic::celem<3, 10>::_o (4) 
+                  _o = bool^0 = std::logic::celem<3, 10>::_o (7) 
                   in = bool^1
                     {
-                      [0] = std::logic::celem<3, 10>::in[0] (5) 
-                      [1] = std::logic::celem<3, 10>::in[1] (6) 
-                      [2] = std::logic::celem<3, 10>::in[2] (7) 
+                      [0] = std::logic::celem<3, 10>::in[0] (4) 
+                      [1] = std::logic::celem<3, 10>::in[1] (5) 
+                      [2] = std::logic::celem<3, 10>::in[2] (6) 
                     }
                   o = bool^0 = std::logic::celem<3, 10>::o (3) 
                   Created state:
@@ -600,10 +600,10 @@ In namespace "", we have: {
                   1	std::logic::celem<3, 10>::!GND
                   2	std::logic::celem<3, 10>::!Vdd
                   3	std::logic::celem<3, 10>::o
-                  4	std::logic::celem<3, 10>::_o
-                  5	std::logic::celem<3, 10>::in[0]
-                  6	std::logic::celem<3, 10>::in[1]
-                  7	std::logic::celem<3, 10>::in[2]
+                  4	std::logic::celem<3, 10>::in[0]
+                  5	std::logic::celem<3, 10>::in[1]
+                  6	std::logic::celem<3, 10>::in[2]
+                  7	std::logic::celem<3, 10>::_o
                   resolved prs:
                   in[0] & in[1] & in[2] -> _o-
                   ~in[0] & ~in[1] & ~in[2] -> _o+
@@ -661,7 +661,7 @@ In namespace "", we have: {
               0 = 2
               1 = 3
             }
-          c0 = process foo::wire_copy<2>^0 = ctree<{2,3}>::c0 (2) (
+          c0 = process foo::wire_copy<2>^0 = ctree<{2,3}>::c0 (8) (
             !GND = bool^0 = ctree<{2,3}>::!GND (1) 
             !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
             in = process e1of<2>^0 = ctree<{2,3}>::in (1) (
@@ -676,7 +676,7 @@ In namespace "", we have: {
             )
             o = process e1of<2>^1
               {
-                [0] = ctree<{2,3}>::c0.o[0] (3) (
+                [0] = ctree<{2,3}>::c0.o[0] (9) (
                   !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                   !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                   d = bool^1
@@ -684,9 +684,9 @@ In namespace "", we have: {
                       [0] = ctree<{2,3}>::in.d[0] (3) 
                       [1] = ctree<{2,3}>::in.d[1] (4) 
                     }
-                  e = bool^0 = ctree<{2,3}>::c0.o[0].e (6) 
+                  e = bool^0 = ctree<{2,3}>::c0.o[0].e (12) 
                 )
-                [1] = ctree<{2,3}>::c0.o[1] (4) (
+                [1] = ctree<{2,3}>::c0.o[1] (10) (
                   !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                   !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                   d = bool^1
@@ -694,16 +694,16 @@ In namespace "", we have: {
                       [0] = ctree<{2,3}>::in.d[0] (3) 
                       [1] = ctree<{2,3}>::in.d[1] (4) 
                     }
-                  e = bool^0 = ctree<{2,3}>::c0.o[1].e (7) 
+                  e = bool^0 = ctree<{2,3}>::c0.o[1].e (13) 
                 )
               }
           )
           c1 = process foo::wire_copy<3>^1
             {
-              [0] = ctree<{2,3}>::c1[0] (5) (
+              [0] = ctree<{2,3}>::c1[0] (11) (
                 !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                 !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
-                in = process e1of<2>^0 = ctree<{2,3}>::c0.o[0] (3) (
+                in = process e1of<2>^0 = ctree<{2,3}>::c0.o[0] (9) (
                   !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                   !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                   d = bool^1
@@ -711,11 +711,11 @@ In namespace "", we have: {
                       [0] = ctree<{2,3}>::in.d[0] (3) 
                       [1] = ctree<{2,3}>::in.d[1] (4) 
                     }
-                  e = bool^0 = ctree<{2,3}>::c0.o[0].e (6) 
+                  e = bool^0 = ctree<{2,3}>::c0.o[0].e (12) 
                 )
                 o = process e1of<2>^1
                   {
-                    [0] = ctree<{2,3}>::out[0][0] (6) (
+                    [0] = ctree<{2,3}>::out[0][0] (2) (
                       !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                       !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
@@ -723,9 +723,9 @@ In namespace "", we have: {
                           [0] = ctree<{2,3}>::in.d[0] (3) 
                           [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[0][0].e (8) 
+                      e = bool^0 = ctree<{2,3}>::out[0][0].e (6) 
                     )
-                    [1] = ctree<{2,3}>::out[0][1] (7) (
+                    [1] = ctree<{2,3}>::out[0][1] (3) (
                       !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                       !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
@@ -733,9 +733,9 @@ In namespace "", we have: {
                           [0] = ctree<{2,3}>::in.d[0] (3) 
                           [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[0][1].e (9) 
+                      e = bool^0 = ctree<{2,3}>::out[0][1].e (7) 
                     )
-                    [2] = ctree<{2,3}>::out[0][2] (8) (
+                    [2] = ctree<{2,3}>::out[0][2] (4) (
                       !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                       !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
@@ -743,14 +743,14 @@ In namespace "", we have: {
                           [0] = ctree<{2,3}>::in.d[0] (3) 
                           [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[0][2].e (10) 
+                      e = bool^0 = ctree<{2,3}>::out[0][2].e (8) 
                     )
                   }
               )
-              [1] = ctree<{2,3}>::c1[1] (9) (
+              [1] = ctree<{2,3}>::c1[1] (12) (
                 !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                 !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
-                in = process e1of<2>^0 = ctree<{2,3}>::c0.o[1] (4) (
+                in = process e1of<2>^0 = ctree<{2,3}>::c0.o[1] (10) (
                   !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                   !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                   d = bool^1
@@ -758,11 +758,11 @@ In namespace "", we have: {
                       [0] = ctree<{2,3}>::in.d[0] (3) 
                       [1] = ctree<{2,3}>::in.d[1] (4) 
                     }
-                  e = bool^0 = ctree<{2,3}>::c0.o[1].e (7) 
+                  e = bool^0 = ctree<{2,3}>::c0.o[1].e (13) 
                 )
                 o = process e1of<2>^1
                   {
-                    [0] = ctree<{2,3}>::out[1][0] (10) (
+                    [0] = ctree<{2,3}>::out[1][0] (5) (
                       !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                       !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
@@ -770,9 +770,9 @@ In namespace "", we have: {
                           [0] = ctree<{2,3}>::in.d[0] (3) 
                           [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[1][0].e (11) 
+                      e = bool^0 = ctree<{2,3}>::out[1][0].e (9) 
                     )
-                    [1] = ctree<{2,3}>::out[1][1] (11) (
+                    [1] = ctree<{2,3}>::out[1][1] (6) (
                       !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                       !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
@@ -780,9 +780,9 @@ In namespace "", we have: {
                           [0] = ctree<{2,3}>::in.d[0] (3) 
                           [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[1][1].e (12) 
+                      e = bool^0 = ctree<{2,3}>::out[1][1].e (10) 
                     )
-                    [2] = ctree<{2,3}>::out[1][2] (12) (
+                    [2] = ctree<{2,3}>::out[1][2] (7) (
                       !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                       !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                       d = bool^1
@@ -790,7 +790,7 @@ In namespace "", we have: {
                           [0] = ctree<{2,3}>::in.d[0] (3) 
                           [1] = ctree<{2,3}>::in.d[1] (4) 
                         }
-                      e = bool^0 = ctree<{2,3}>::out[1][2].e (13) 
+                      e = bool^0 = ctree<{2,3}>::out[1][2].e (11) 
                     )
                   }
               )
@@ -807,7 +807,7 @@ In namespace "", we have: {
           )
           out = process e1of<2>^2
             {
-              [0][0] = ctree<{2,3}>::out[0][0] (6) (
+              [0][0] = ctree<{2,3}>::out[0][0] (2) (
                 !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                 !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
@@ -815,9 +815,9 @@ In namespace "", we have: {
                     [0] = ctree<{2,3}>::in.d[0] (3) 
                     [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[0][0].e (8) 
+                e = bool^0 = ctree<{2,3}>::out[0][0].e (6) 
               )
-              [0][1] = ctree<{2,3}>::out[0][1] (7) (
+              [0][1] = ctree<{2,3}>::out[0][1] (3) (
                 !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                 !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
@@ -825,9 +825,9 @@ In namespace "", we have: {
                     [0] = ctree<{2,3}>::in.d[0] (3) 
                     [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[0][1].e (9) 
+                e = bool^0 = ctree<{2,3}>::out[0][1].e (7) 
               )
-              [0][2] = ctree<{2,3}>::out[0][2] (8) (
+              [0][2] = ctree<{2,3}>::out[0][2] (4) (
                 !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                 !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
@@ -835,9 +835,9 @@ In namespace "", we have: {
                     [0] = ctree<{2,3}>::in.d[0] (3) 
                     [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[0][2].e (10) 
+                e = bool^0 = ctree<{2,3}>::out[0][2].e (8) 
               )
-              [1][0] = ctree<{2,3}>::out[1][0] (10) (
+              [1][0] = ctree<{2,3}>::out[1][0] (5) (
                 !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                 !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
@@ -845,9 +845,9 @@ In namespace "", we have: {
                     [0] = ctree<{2,3}>::in.d[0] (3) 
                     [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[1][0].e (11) 
+                e = bool^0 = ctree<{2,3}>::out[1][0].e (9) 
               )
-              [1][1] = ctree<{2,3}>::out[1][1] (11) (
+              [1][1] = ctree<{2,3}>::out[1][1] (6) (
                 !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                 !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
@@ -855,9 +855,9 @@ In namespace "", we have: {
                     [0] = ctree<{2,3}>::in.d[0] (3) 
                     [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[1][1].e (12) 
+                e = bool^0 = ctree<{2,3}>::out[1][1].e (10) 
               )
-              [1][2] = ctree<{2,3}>::out[1][2] (12) (
+              [1][2] = ctree<{2,3}>::out[1][2] (7) (
                 !GND = bool^0 = ctree<{2,3}>::!GND (1) 
                 !Vdd = bool^0 = ctree<{2,3}>::!Vdd (2) 
                 d = bool^1
@@ -865,37 +865,37 @@ In namespace "", we have: {
                     [0] = ctree<{2,3}>::in.d[0] (3) 
                     [1] = ctree<{2,3}>::in.d[1] (4) 
                   }
-                e = bool^0 = ctree<{2,3}>::out[1][2].e (13) 
+                e = bool^0 = ctree<{2,3}>::out[1][2].e (11) 
               )
             }
           Created state:
           process instance pool:
           1	ctree<{2,3}>::in
-          2	ctree<{2,3}>::c0
-          3	ctree<{2,3}>::c0.o[0]
-          4	ctree<{2,3}>::c0.o[1]
-          5	ctree<{2,3}>::c1[0]
-          6	ctree<{2,3}>::out[0][0]
-          7	ctree<{2,3}>::out[0][1]
-          8	ctree<{2,3}>::out[0][2]
-          9	ctree<{2,3}>::c1[1]
-          10	ctree<{2,3}>::out[1][0]
-          11	ctree<{2,3}>::out[1][1]
-          12	ctree<{2,3}>::out[1][2]
+          2	ctree<{2,3}>::out[0][0]
+          3	ctree<{2,3}>::out[0][1]
+          4	ctree<{2,3}>::out[0][2]
+          5	ctree<{2,3}>::out[1][0]
+          6	ctree<{2,3}>::out[1][1]
+          7	ctree<{2,3}>::out[1][2]
+          8	ctree<{2,3}>::c0
+          9	ctree<{2,3}>::c0.o[0]
+          10	ctree<{2,3}>::c0.o[1]
+          11	ctree<{2,3}>::c1[0]
+          12	ctree<{2,3}>::c1[1]
           bool instance pool:
           1	ctree<{2,3}>::!GND
           2	ctree<{2,3}>::!Vdd
           3	ctree<{2,3}>::in.d[0]
           4	ctree<{2,3}>::in.d[1]
           5	ctree<{2,3}>::in.e
-          6	ctree<{2,3}>::c0.o[0].e
-          7	ctree<{2,3}>::c0.o[1].e
-          8	ctree<{2,3}>::out[0][0].e
-          9	ctree<{2,3}>::out[0][1].e
-          10	ctree<{2,3}>::out[0][2].e
-          11	ctree<{2,3}>::out[1][0].e
-          12	ctree<{2,3}>::out[1][1].e
-          13	ctree<{2,3}>::out[1][2].e
+          6	ctree<{2,3}>::out[0][0].e
+          7	ctree<{2,3}>::out[0][1].e
+          8	ctree<{2,3}>::out[0][2].e
+          9	ctree<{2,3}>::out[1][0].e
+          10	ctree<{2,3}>::out[1][1].e
+          11	ctree<{2,3}>::out[1][2].e
+          12	ctree<{2,3}>::c0.o[0].e
+          13	ctree<{2,3}>::c0.o[1].e
           bool port aliases:
           1: ctree<{2,3}>::in.!GND = ctree<{2,3}>::out[0][0].!GND = ctree<{2,3}>::out[0][1].!GND = ctree<{2,3}>::out[0][2].!GND = ctree<{2,3}>::out[1][0].!GND = ctree<{2,3}>::out[1][1].!GND = ctree<{2,3}>::out[1][2].!GND = ctree<{2,3}>::!GND
           2: ctree<{2,3}>::in.!Vdd = ctree<{2,3}>::out[0][0].!Vdd = ctree<{2,3}>::out[0][1].!Vdd = ctree<{2,3}>::out[0][2].!Vdd = ctree<{2,3}>::out[1][0].!Vdd = ctree<{2,3}>::out[1][1].!Vdd = ctree<{2,3}>::out[1][2].!Vdd = ctree<{2,3}>::!Vdd

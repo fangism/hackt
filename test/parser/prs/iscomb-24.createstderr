@@ -183,54 +183,54 @@ In namespace "", we have: {
         !Vdd = bool^0 = deeper<>::!Vdd (2) 
         d = process deep<>^1
           {
-            [0] = deeper<>::d[0] (3) (
+            [0] = deeper<>::d[0] (1) (
               !GND = bool^0 = deeper<>::!GND (1) 
               !Vdd = bool^0 = deeper<>::!Vdd (2) 
-              x = process inv<>^0 = deeper<>::d[0].x (4) (
+              x = process inv<>^0 = deeper<>::d[0].x (2) (
                 !GND = bool^0 = deeper<>::!GND (1) 
                 !Vdd = bool^0 = deeper<>::!Vdd (2) 
-                a = bool^0 = deeper<>::d[0].x.a (5) @[ iscomb !autokeeper ] 
-                b = bool^0 = deeper<>::d[0].x.b (6) @[ iscomb ] 
+                a = bool^0 = deeper<>::d[0].x.a (3) @[ iscomb !autokeeper ] 
+                b = bool^0 = deeper<>::d[0].x.b (4) @[ iscomb ] 
               )
             )
-            [1] = deeper<>::d[1] (5) (
+            [1] = deeper<>::d[1] (3) (
               !GND = bool^0 = deeper<>::!GND (1) 
               !Vdd = bool^0 = deeper<>::!Vdd (2) 
-              x = process inv<>^0 = deeper<>::d[1].x (6) (
+              x = process inv<>^0 = deeper<>::d[1].x (4) (
                 !GND = bool^0 = deeper<>::!GND (1) 
                 !Vdd = bool^0 = deeper<>::!Vdd (2) 
-                a = bool^0 = deeper<>::d[1].x.a (7) @[ iscomb !autokeeper ] 
-                b = bool^0 = deeper<>::d[1].x.b (8) 
+                a = bool^0 = deeper<>::d[1].x.a (5) @[ iscomb !autokeeper ] 
+                b = bool^0 = deeper<>::d[1].x.b (6) 
               )
             )
           }
-        e = process deep<>^0 = deeper<>::e (1) (
+        e = process deep<>^0 = deeper<>::e (5) (
           !GND = bool^0 = deeper<>::!GND (1) 
           !Vdd = bool^0 = deeper<>::!Vdd (2) 
-          x = process inv<>^0 = deeper<>::e.x (2) (
+          x = process inv<>^0 = deeper<>::e.x (6) (
             !GND = bool^0 = deeper<>::!GND (1) 
             !Vdd = bool^0 = deeper<>::!Vdd (2) 
-            a = bool^0 = deeper<>::e.x.a (3) @[ iscomb !autokeeper ] 
-            b = bool^0 = deeper<>::e.x.b (4) 
+            a = bool^0 = deeper<>::e.x.a (7) @[ iscomb !autokeeper ] 
+            b = bool^0 = deeper<>::e.x.b (8) 
           )
         )
         Created state:
         process instance pool:
-        1	deeper<>::e
-        2	deeper<>::e.x
-        3	deeper<>::d[0]
-        4	deeper<>::d[0].x
-        5	deeper<>::d[1]
-        6	deeper<>::d[1].x
+        1	deeper<>::d[0]
+        2	deeper<>::d[0].x
+        3	deeper<>::d[1]
+        4	deeper<>::d[1].x
+        5	deeper<>::e
+        6	deeper<>::e.x
         bool instance pool:
         1	deeper<>::!GND
         2	deeper<>::!Vdd
-        3	deeper<>::e.x.a @[ iscomb !autokeeper ]
-        4	deeper<>::e.x.b
-        5	deeper<>::d[0].x.a @[ iscomb !autokeeper ]
-        6	deeper<>::d[0].x.b @[ iscomb ]
-        7	deeper<>::d[1].x.a @[ iscomb !autokeeper ]
-        8	deeper<>::d[1].x.b
+        3	deeper<>::d[0].x.a @[ iscomb !autokeeper ]
+        4	deeper<>::d[0].x.b @[ iscomb ]
+        5	deeper<>::d[1].x.a @[ iscomb !autokeeper ]
+        6	deeper<>::d[1].x.b
+        7	deeper<>::e.x.a @[ iscomb !autokeeper ]
+        8	deeper<>::e.x.b
         bool port aliases:
         1: deeper<>::d[0].!GND = deeper<>::d[0].x.!GND = deeper<>::d[1].!GND = deeper<>::d[1].x.!GND = deeper<>::!GND
         2: deeper<>::d[0].!Vdd = deeper<>::d[0].x.!Vdd = deeper<>::d[1].!Vdd = deeper<>::d[1].x.!Vdd = deeper<>::!Vdd
