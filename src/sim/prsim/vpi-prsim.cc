@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.20 2009/11/02 23:58:07 fang Exp $
+	$Id: vpi-prsim.cc,v 1.21 2009/12/18 23:25:03 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -220,7 +220,9 @@ lookup_prsim_name(const string& s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param vcs_name should really just be a const char*.
+	\param vcs_name hierarchical verilog name of object.
+	\return handle to the referenced object
+	\throw exception if object not found
  */
 static
 vpiHandle
@@ -748,8 +750,6 @@ strip_spaces(const char* c) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
   Register a VCS-driven node with VCS and prsim
-  TODO: what if node already has non-X value when this connection
-	is established?  Should we register a set-node event?
 
 @texinfo vpi/to_prsim.texi
 @deffn Function $to_prsim vname pname
@@ -796,6 +796,33 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
   /* prsim net name */
   cb_data.user_data = reinterpret_cast<PLI_BYTE8*>(ni);	// YUCK, void*
   vpi_register_cb (&cb_data);
+
+  /* propagate the current value of the node to prsim */
+  s_vpi_value v;
+  v.format = vpiScalarVal;
+  vpi_get_value(net, &v);
+  value_enum n;
+  switch(v.value.scalar) {
+	case vpi0:
+	case vpiL:
+		n = LOGIC_LOW;
+		break;
+	case vpi1:
+	case vpiH:
+		n = LOGIC_HIGH;
+		break;
+	default:	// vpiX, vpiZ
+		n = LOGIC_OTHER;
+		break;
+  }
+  // cout << "VALUE of " << prsim_name << " is " << size_t(n) << endl;
+  s_vpi_time current_time;
+  current_time.type = vpiSimTime;
+  vpi_get_time(NULL, &current_time);
+  Time_t t;
+  vcs_to_prstime(&current_time, &t);
+  prsim_state->set_node_time(ni, n, t, false);	// force?
+  prsim_sync(NULL);		// flush events
 }
 
 
@@ -912,6 +939,10 @@ void register_prsim_watchpoint (const char *prsim_name)
 //=============================================================================
 // exported commands to VPI
 
+/**
+	This just processes the function arguments and passes them
+	on to the underlying function.  
+ */
 static PLI_INT32 to_prsim (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;

@@ -1,0 +1,26 @@
+$start of simulation 
+prsim:	0	in0 : 1
+prsim:	10	out0 : 0	[by in0:=1]
+prsim:	10	in1 : 0
+prsim:	20	out1 : 1	[by in1:=0]
+prsim:	20	in2 : 1
+prsim:	30	out2 : 0	[by in2:=1]
+prsim:	30	in3 : 0
+prsim:	40	out3 : 1	[by in3:=0]
+prsim:	40	in4 : 1
+prsim:	50	out4 : 0	[by in4:=1]
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+in0 : 1
+out0 : 0
+in1 : 0
+out1 : 1
+in2 : 1
+out2 : 0
+in3 : 0
+out3 : 1
+in4 : 1
+out4 : 0
+event queue:
+$finish at simulation time    0.1 ns
