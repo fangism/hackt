@@ -1,7 +1,7 @@
 /**
 	\file "parser/verilogf-parse.yy.in"
 	Verilog grammar, implemented based on verilog-2001 standard.
-	$Id: verilog-parse.yy.in,v 1.7 2009/11/21 03:58:44 fang Exp $
+	$Id: verilog-parse.yy.in,v 1.8 2009/12/19 00:31:35 fang Exp $
  */
 
 %{
@@ -1934,63 +1934,39 @@ wait_statement
 
 /**
 	A.6.6	Conditional statements
+	expanded to matched and unmatched if clauses to resolve conflicts
+	using standard transformation
  */
 conditional_statement
-	: IF '(' expression ')' statement_or_null
-		else_if_clauses_opt else_clause_opt
+	: conditional_statement_matched
+	| conditional_statement_unmatched
 	;
 
-else_if_clauses_opt
-	: else_if_clauses
-	|
+conditional_statement_unmatched
+	: IF '(' expression ')' conditional_statement_matched
+		ELSE conditional_statement_unmatched
+	| IF '(' expression ')' statement_or_null
 	;
 
-else_if_clauses
-	: else_if_clauses else_if_clause
-	| else_if_clause
-	;
-
-else_if_clause
-	: ELSE IF '(' expression ')' statement_or_null
-	;
-
-
-else_clause_opt
-	: else_clause
-	|
-	;
-
-else_clause
-	: ELSE statement_or_null
+conditional_statement_matched
+	: IF '(' expression ')' conditional_statement_matched
+		ELSE conditional_statement_matched
 	;
 
 function_conditional_statement
-	: IF '(' expression ')' function_statement_or_null
-		function_else_if_clauses_opt function_else_clause_opt
+	: function_conditional_statement_matched
+	| function_conditional_statement_unmatched
 	;
 
-function_else_if_clauses_opt
-	: function_else_if_clauses
-	|
+function_conditional_statement_unmatched
+	: IF '(' expression ')' function_conditional_statement_matched
+		ELSE function_conditional_statement_unmatched
+	| IF '(' expression ')' function_statement_or_null
 	;
 
-function_else_if_clauses
-	: function_else_if_clauses function_else_if_clause
-	| function_else_if_clause
-	;
-
-function_else_if_clause
-	: ELSE IF '(' expression ')' function_statement_or_null
-	;
-
-
-function_else_clause_opt
-	: function_else_clause
-	|
-	;
-
-function_else_clause
-	: ELSE function_statement_or_null
+function_conditional_statement_matched
+	: IF '(' expression ')' function_conditional_statement_matched
+		ELSE function_conditional_statement_matched
 	;
 
 /**
