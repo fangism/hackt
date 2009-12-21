@@ -1,7 +1,7 @@
 /**
 	\file "parser/verilogf-parse.yy.in"
 	Verilog grammar, implemented based on verilog-2001 standard.
-	$Id: verilog-parse.yy.in,v 1.8 2009/12/19 00:31:35 fang Exp $
+	$Id: verilog-parse.yy.in,v 1.9 2009/12/21 18:55:38 fang Exp $
  */
 
 %{
@@ -425,15 +425,21 @@ module_declaration
 		ENDMODULE
 	;
 
+attribute_instances_opt
+	:
+/** PUNT!!!
+	: attribute_instances
+	|
+**/
+	;
+
+
+/** PUNT
 attribute_instances
 	: attribute_instances attribute_instance
 	| attribute_instance
 	;
-
-attribute_instances_opt
-	: attribute_instances
-	|
-	;
+**/
 
 module_keyword
 	: MODULE
@@ -1847,20 +1853,24 @@ statements
 	;
 
 statement
-	: attribute_instances_opt blocking_assignment ';'
-	| attribute_instances_opt case_statement
-	| attribute_instances_opt conditional_statement
-	| attribute_instances_opt disable_statement
-	| attribute_instances_opt event_trigger
-	| attribute_instances_opt loop_statement
-	| attribute_instances_opt nonblocking_assignment ';'
-	| attribute_instances_opt par_block
-	| attribute_instances_opt procedural_continuous_assignments ';'
-	| attribute_instances_opt procedural_timing_control_statement
-	| attribute_instances_opt seq_block
-	| attribute_instances_opt system_task_enable
-	| attribute_instances_opt task_enable
-	| attribute_instances_opt wait_statement
+	: attribute_instances_opt statement_bare
+	;
+
+statement_bare
+	: blocking_assignment ';'
+	| case_statement
+	| conditional_statement
+	| disable_statement
+	| event_trigger
+	| loop_statement
+	| nonblocking_assignment ';'
+	| par_block
+	| procedural_continuous_assignments ';'
+	| procedural_timing_control_statement
+	| seq_block
+	| system_task_enable
+	| task_enable
+	| wait_statement
 	;
 
 statement_or_null
@@ -1869,13 +1879,17 @@ statement_or_null
 	;
 
 function_statement
-	: attribute_instances_opt function_blocking_assignment ';'
-	| attribute_instances_opt function_case_statement
-	| attribute_instances_opt function_conditional_statement
-	| attribute_instances_opt function_loop_statement
-	| attribute_instances_opt function_seq_block
-	| attribute_instances_opt disable_statement
-	| attribute_instances_opt system_task_enable
+	: attribute_instances_opt function_statement_bare
+ 	;
+
+function_statement_bare
+	: function_blocking_assignment ';'
+	| function_case_statement
+	| function_conditional_statement
+	| function_loop_statement
+	| function_seq_block
+	| disable_statement
+	| system_task_enable
 	;
 
 /**
@@ -2866,9 +2880,10 @@ number
 /**
 	A.9	General
 	A.9.1	Attributes
+	looks like: '(' '*' attr_specs '*' ')'
  */
+/** PUNT
 attribute_instance
-/*	: '(' '*' attr_specs '*' ')'	*/
 	: BEGIN_ATTR attr_specs END_ATTR
 	;
 
@@ -2883,8 +2898,9 @@ attr_spec
 	;
 
 attr_name
-	: generic_identifier /* identifier */
+	: generic_identifier // identifier
 	;
+**/
 
 /**
 	A.9.2	Comments
