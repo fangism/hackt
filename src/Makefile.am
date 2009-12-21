@@ -1,10 +1,10 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.228 2009/12/03 23:15:34 fang Exp $
+#	$Id: Makefile.am,v 1.229 2009/12/21 22:44:52 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
-SUFFIXES = .yy .ll .ii .test .i .hii. .hhii .tccii .gesnarfed
+SUFFIXES = .yy .ll .ii .test .i .hii. .hhii .tccii .gesnarfed .output .dot .pdf
 
 # standard definitions and macro initializers
 # appends to SUFFIXES
@@ -41,10 +41,12 @@ endif
 if HAVE_BYACC
 YACC_UNION_SCRIPT = $(srcdir)/parser/yacc-union-type.awk
 YACC_OUTPUT_H_SCRIPT = $(srcdir)/parser/yacc-output-to-C.awk
+YACC_OUTPUT_DOT_SCRIPT = $(srcdir)/parser/yacc-output-to-dot.awk
 endif
 if HAVE_YACC
 YACC_UNION_SCRIPT = $(srcdir)/parser/yacc-union-type.awk
 YACC_OUTPUT_H_SCRIPT = $(srcdir)/parser/yacc-output-to-C.awk
+YACC_OUTPUT_DOT_SCRIPT = $(srcdir)/parser/yacc-output-to-dot.awk
 endif
 # Automatically generated sources can just check for YYBISON definition.
 
@@ -398,6 +400,12 @@ libbogus4_la_SOURCES = \
 
 libbogus5_la_SOURCES = \
 	parser/verilog-parse.yy
+
+# for debugging
+.output.dot:
+	$(YACC_OUTPUT_DOT_SCRIPT) $< > $@
+.dot.pdf:
+	$(DOT) -Tpdf $< -o $@
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	lexer/$(HACKT_LEX_ROOT).ll \
@@ -1740,6 +1748,7 @@ EXTRA_DIST += local.cvsignore \
 	parser/bison-output-to-C.awk \
 	parser/common-output-to-C.awk \
 	parser/yacc-output-to-C.awk \
+	parser/yacc-output-to-dot.awk \
 	parser/common-union-type.awk \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
