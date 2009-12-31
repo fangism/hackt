@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.54 2009/11/19 23:29:12 fang Exp $
+	$Id: Command-prsim.cc,v 1.55 2009/12/31 00:19:23 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3802,11 +3802,47 @@ NoCause::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/tcount.texi
+@deffn Command tcount node
+@command{tcount} shows the number of non-X transitions that have
+ever occurred on @var{node}.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(TCount, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TCount, "tcount", info, 
+	"show transition count on node")
+
+int
+TCount::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni =
+		parse_node_to_index(objname, s.get_module());
+	cout << s.get_node_canonical_name(ni) << " : [" <<
+		s.get_node(ni).tcount << " T]" << endl;
+	return Command::NORMAL;
+}
+}
+
+void
+TCount::usage(ostream& o) {
+	o << name << endl;
+	o << "report transition counts of node" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/tcounts.texi
 @deffn Command tcounts
 @deffnx Command notcounts
 @command{tcounts} displays transition counts on nodes as they change value.  
 @command{notcounts} hides transition count information.  
+Only transitions to 0 or 1 are counted; transitions to X are not counted.
+Transitions are always counted, just not always displayed.
 @end deffn
 @end texinfo
 ***/

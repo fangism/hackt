@@ -1,0 +1,63 @@
+a : [0 T]
+b : [0 T]
+c : [0 T]
+	0	a : 0
+	10	b : 1	[by a:=0]
+	20	c : 0	[by b:=1]
+a : [1 T]
+b : [1 T]
+c : [1 T]
+	20	a : 1
+	30	b : 0	[by a:=1]
+	40	c : 1	[by b:=0]
+a : [2 T]
+b : [2 T]
+c : [2 T]
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+	40	a : X
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	50	b : X	[by a:=X]
+	60	c : X	[by b:=X]
+a : [2 T]
+b : [2 T]
+c : [2 T]
+	60	a : 0
+	70	b : 1	[by a:=0]
+	80	c : 0	[by b:=1]
+a : [3 T]
+b : [3 T]
+c : [3 T]
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+	80	a : X
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	90	b : X	[by a:=X]
+	100	c : X	[by b:=X]
+a : [3 T]
+b : [3 T]
+c : [3 T]
+	100	a : 1
+	110	b : 0	[by a:=1]
+	120	c : 1	[by b:=0]
+a : [4 T]
+b : [4 T]
+c : [4 T]
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+	120	a : X
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	130	b : X	[by a:=X]
+	140	c : X	[by b:=X]
+a : [4 T]
+b : [4 T]
+c : [4 T]
+	140	a : 1
+	150	b : 0	[by a:=1]
+	160	c : 1	[by b:=0]
+a : [5 T]
+b : [5 T]
+c : [5 T]

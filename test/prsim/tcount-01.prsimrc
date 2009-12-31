@@ -1,0 +1,56 @@
+# "tcount-01.prsimrc"
+# @haco@ inv.haco-a
+
+watchall
+tcount a
+tcount b
+tcount c
+
+set a 0
+cycle
+tcount a
+tcount b
+tcount c
+
+set a 1
+cycle
+tcount a
+tcount b
+tcount c
+
+set a X
+cycle
+tcount a
+tcount b
+tcount c
+
+set a 0
+cycle
+tcount a
+tcount b
+tcount c
+
+set a X
+cycle
+tcount a
+tcount b
+tcount c
+
+set a 1
+cycle
+tcount a
+tcount b
+tcount c
+
+set a X
+cycle
+tcount a
+tcount b
+tcount c
+
+set a 1
+cycle
+tcount a
+tcount b
+tcount c
+
