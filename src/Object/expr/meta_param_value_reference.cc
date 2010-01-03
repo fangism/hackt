@@ -3,7 +3,7 @@
 	Template instantiations of meta value references.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_value_reference.cc,v 1.11 2007/01/21 05:58:54 fang Exp $
+ 	$Id: meta_param_value_reference.cc,v 1.12 2010/01/03 01:34:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
@@ -83,6 +83,11 @@ namespace memory {
 //=============================================================================
 namespace HAC {
 namespace entity {
+//=============================================================================
+// non-inline dtors
+meta_value_reference_base::~meta_value_reference_base() { }
+aggregate_meta_value_reference_base::~aggregate_meta_value_reference_base() { }
+
 //=============================================================================
 // explicit template instantiations
 

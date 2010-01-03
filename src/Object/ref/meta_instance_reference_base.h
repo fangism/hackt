@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.18 2008/12/18 00:25:51 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.19 2010/01/03 01:34:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -68,7 +68,7 @@ public:
 public:
 	meta_instance_reference_base() : persistent() { }
 
-virtual	~meta_instance_reference_base() { }
+virtual	~meta_instance_reference_base();
 
 virtual	ostream&
 	what(ostream& o) const = 0;

@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.108 2009/11/14 03:12:13 fang Exp $
+#	$Id: ChangeLog,v 1.109 2010/01/03 01:34:47 fang Exp $
+
+2010-01-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-56:
+	  chunk_map_pool.*: updated declaration and definition macros
+		to workaround passing empty arguments for C99 preprocessing.
+
 
 2009-11-13	David Fang		<fangism@users.sourceforge.net>
 

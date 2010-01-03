@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.229 2009/12/21 22:44:52 fang Exp $
+#	$Id: Makefile.am,v 1.230 2010/01/03 01:34:37 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -79,6 +79,18 @@ scripts/hackt-env: scripts/hackt-env.in $(top_builddir)/config.status
 
 noinst_PROGRAMS = getopt_test lexyacc_test $(UTILPROGRAMS) $(FUNPROGRAMS)
 noinst_SCRIPTS = hackt_persistent_table.sh
+
+noinst_PROGRAMS += cast_test_static
+privatedir = $(bindir)/private
+private_PROGRAMS = cast_test
+
+cast_test_SOURCES = test/cast_test.cc 
+cast_test_CXXFLAGS = -Wno-long-long
+cast_test_LDADD = libhacktsim.la
+
+cast_test_static_SOURCES = $(cast_test_SOURCES)
+cast_test_static_CXXFLAGS = $(cast_test_CXXFLAGS)
+cast_test_static_LDADD = $(cast_test_LDADD)
 
 # convenience libraries
 # want to install libhackt.la next... but causes undefined symbols...
@@ -1802,7 +1814,8 @@ EXTRA_DIST += local.cvsignore \
 	sim/chpsim/TODO
 
 if CHECK_TESTS
-TESTS += hackt_persistent_table.sh test/getopt_test.test
+TESTS += hackt_persistent_table.sh test/getopt_test.test \
+	cast_test cast_test_static
 endif
 
 # to force libraries to be installed BEFORE executables to squelch link warnings

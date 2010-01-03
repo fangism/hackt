@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference_base.h"
-	$Id: aggregate_meta_value_reference_base.h,v 1.3 2006/07/04 07:26:13 fang Exp $
+	$Id: aggregate_meta_value_reference_base.h,v 1.4 2010/01/03 01:34:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_BASE_H__
@@ -24,7 +24,7 @@ class aggregate_meta_value_reference_base :
 protected:
 	aggregate_meta_value_reference_base() { }
 public:
-virtual	~aggregate_meta_value_reference_base() { }
+virtual	~aggregate_meta_value_reference_base();
 
 virtual	good_bool
 	append_meta_value_reference(const count_ptr<const param_expr>&) = 0;

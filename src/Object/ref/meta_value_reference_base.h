@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_value_reference_base.h"
-	$Id: meta_value_reference_base.h,v 1.5 2006/10/18 20:58:15 fang Exp $
+	$Id: meta_value_reference_base.h,v 1.6 2010/01/03 01:34:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_VALUE_REFERENCE_BASE_H__
@@ -27,7 +27,7 @@ class meta_value_reference_base {
 protected:
 	meta_value_reference_base() { }
 public:
-virtual ~meta_value_reference_base() { }
+virtual ~meta_value_reference_base();
 
 virtual	size_t
 	dimensions(void) const = 0;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.28 2009/10/02 01:57:16 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.29 2010/01/03 01:34:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -37,6 +37,10 @@ using util::string_list;
 //=============================================================================
 // class meta_instance_reference method definitions
 
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+META_INSTANCE_REFERENCE_CLASS::~meta_instance_reference() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Implementation copied-modified from 
 	simple_meta_indexed_reference_base::may_be_type_equivalent().

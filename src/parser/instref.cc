@@ -1,8 +1,9 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19 2009/11/14 03:12:09 fang Exp $
+	$Id: instref.cc,v 1.20 2010/01/03 01:34:44 fang Exp $
  */
 
+#define	DEBUGGING_SHIT			0
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
@@ -38,6 +39,11 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/instance_placeholder_base.h"
+#if DEBUGGING_SHIT
+#include "Object/inst/datatype_instance_placeholder.h" // DEBUG ONLY
+#include "Object/inst/instance_placeholder.h" // DEBUG ONLY
+#include "util/memory/count_ptr.tcc"
+#endif
 #include "Object/inst/bool_port_collector.tcc"
 #include "Object/ref/meta_reference_union.h"
 #include "Object/traits/type_tag_enum.h"
@@ -206,9 +212,38 @@ parse_node_to_index(const string& n, const module& m) {
 		return INVALID_NODE_INDEX;
 	}
 	typedef	simple_bool_meta_instance_reference	bool_ref_type;
+	const count_ptr<const entity::meta_instance_reference_base>
+		rr(r.inst_ref());
 	const count_ptr<const bool_ref_type>
-		b(r.inst_ref().is_a<const bool_ref_type>());
+		b(rr.is_a<const bool_ref_type>());
 	if (!b) {
+#if DEBUGGING_SHIT
+		const name_space ss("blank");
+		const bool_ref_type::instance_placeholder_type ph(ss, "fake", 0);
+		const bool_ref_type::instance_placeholder_ptr_type php(&ph);
+		const count_ptr<const entity::meta_instance_reference_base>
+			dp(new bool_ref_type(php));
+		rr->what(cerr << "rr->what(): ") << endl;
+		cerr << "dp @ " << &*dp << endl;
+		dp->what(cerr << "dp->what(): ") << endl;
+{
+		const bool_ref_type* rcdp = AS_A(const bool_ref_type*, &*dp);
+		cerr << "rcdp(static) = " << rcdp << endl;
+}
+		const bool_ref_type* rcdp = IS_A(const bool_ref_type*, &*dp);
+		cerr << "rcdp(dynamic) = " << rcdp << endl;
+		const count_ptr<const bool_ref_type>
+			cdp(dp.is_a<const bool_ref_type>());
+		cerr << "cdp(dynamic) = " << &*cdp << endl;
+		if (cdp) {
+			cdp->what(cerr << "cdp->what(): ") << endl;
+		}
+#if 0
+		rr->what(cerr << "rr->what(): ") << endl;
+		r.inst_ref()->what(cerr << "r.inst_ref()->what(): ") << endl;
+#endif
+		DIE;
+#endif
 		// later: write another procedure
 		// to print *collections* of bools
 		// by prefix matching.

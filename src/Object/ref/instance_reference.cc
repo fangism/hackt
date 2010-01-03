@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.22 2007/10/08 01:21:27 fang Exp $
+ 	$Id: instance_reference.cc,v 1.23 2010/01/03 01:34:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -125,6 +125,9 @@ using util::persistent_traits;
 //=============================================================================
 // class meta_instance_reference_base method definitions
 
+meta_instance_reference_base::~meta_instance_reference_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wrapped interface to constructing type-specific alias connections.  
  */
@@ -287,6 +290,11 @@ simple_meta_indexed_reference_base::load_object_base(
 }
 
 //=============================================================================
+// class nonmeta_instance_reference_base method definitions
+
+nonmeta_instance_reference_base::~nonmeta_instance_reference_base() { }
+
+//=============================================================================
 // class simple_nonmeta_instance_reference_base method definitions
 
 simple_nonmeta_instance_reference_base::simple_nonmeta_instance_reference_base(
@@ -355,7 +363,7 @@ simple_nonmeta_instance_reference_base::load_object_base(
 }
 
 //=============================================================================
-// class aggregate_meta_instance_reference_base method definitions
+// class aggregate_reference_collection_base method definitions
 
 /**
 	For subarray sizes to be concatenable, the trailing dimensions
@@ -416,6 +424,12 @@ aggregate_reference_collection_base::check_subarray_sizes(
 	return _is_concatenation ? check_concatenable_subarray_sizes(s) :
 		check_constructible_subarray_sizes(s);
 }
+
+//-----------------------------------------------------------------------------
+// class aggregate_meta_instance_reference_base method definitions
+aggregate_meta_instance_reference_base::
+	~aggregate_meta_instance_reference_base() { }
+
 
 //=============================================================================
 // class process_meta_instance_reference method definitions

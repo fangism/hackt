@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-56:
+	  Added cast_test program to try to isolate issue plaguing
+		i686-apple-darwin10, unexpected dynamic_cast failure.
+	  for g++-4.4: fixed empty cpp macro argument issues
+	  de-inlined many destructors, in effort to isolate 
+		dynamic_cast failure, does not happen on any other platforms.
+
+
 2009-12-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-55:

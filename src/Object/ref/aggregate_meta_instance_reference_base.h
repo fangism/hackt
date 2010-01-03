@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference_base.h"
-	$Id: aggregate_meta_instance_reference_base.h,v 1.3 2006/07/04 07:26:12 fang Exp $
+	$Id: aggregate_meta_instance_reference_base.h,v 1.4 2010/01/03 01:34:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_BASE_H__
@@ -30,7 +30,7 @@ protected:
 		aggregate_reference_collection_base(b) { }
 
 public:
-virtual	~aggregate_meta_instance_reference_base() { }
+virtual	~aggregate_meta_instance_reference_base();
 
 virtual	good_bool
 	append_meta_instance_reference(

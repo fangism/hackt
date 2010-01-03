@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.207 2009/12/03 23:15:32 fang Exp $
+#	$Id: configure.ac,v 1.208 2010/01/03 01:34:35 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -145,21 +145,21 @@ dnl need ltdl: dlopen-ing plug-ins and module shared objects/libraries
 dnl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dnl libtool-1.5.x setup
 
-AC_LIBLTDL_CONVENIENCE
-AC_LIB_LTDL
-AC_LIBTOOL_DLOPEN
-AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
-AC_CONFIG_SUBDIRS(libltdl)
+dnl AC_LIBLTDL_CONVENIENCE
+dnl AC_LIB_LTDL
+dnl AC_LIBTOOL_DLOPEN
+dnl AC_DISABLE_STATIC
+dnl AC_PROG_LIBTOOL
+dnl AC_CONFIG_SUBDIRS(libltdl)
 
 dnl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dnl libtool-2.x setup
 
-dnl AC_CONFIG_MACRO_DIR([libltdl/m4])	dnl had trouble with this
-dnl AC_CONFIG_MACRO_DIR([config])
-dnl LT_INIT
-dnl AC_DISABLE_STATIC
-dnl LTDL_INIT
+AC_CONFIG_MACRO_DIR([libltdl/m4])	dnl had trouble with this
+AC_CONFIG_MACRO_DIR([config])
+LT_INIT
+AC_DISABLE_STATIC
+LTDL_INIT
 
 dnl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dnl common libtool setup

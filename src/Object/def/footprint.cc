@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46 2009/11/04 00:16:01 fang Exp $
+	$Id: footprint.cc,v 1.47 2010/01/03 01:34:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -875,7 +875,7 @@ struct implicit_supply_connector : public alias_visitor {
 #endif
 		GND(g), Vdd(v), err(false) { }
 
-VISIT_INSTANCE_ALIAS_INFO_PROTOS()
+VISIT_INSTANCE_ALIAS_INFO_PROTOS(CPP_EMPTY)
 
 private:
 	static

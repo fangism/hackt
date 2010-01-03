@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.15 2007/03/11 16:34:25 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.16 2010/01/03 01:34:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -368,6 +368,9 @@ struct nonmeta_reference_type_check_policy<int_tag> {
 //=============================================================================
 // class data_nonmeta_instance_reference method definitions
 
+data_nonmeta_instance_reference::~data_nonmeta_instance_reference() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Using cross-casting: cross-over and cross-back.  
 	Leveraging lvalue < rvalue fact.

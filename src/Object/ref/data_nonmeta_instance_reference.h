@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/data_nonmeta_instance_reference.h"
-	$Id: data_nonmeta_instance_reference.h,v 1.8 2007/03/11 16:34:24 fang Exp $
+	$Id: data_nonmeta_instance_reference.h,v 1.9 2010/01/03 01:34:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_DATA_NONMETA_INSTANCE_REFERENCE_H__
@@ -34,7 +34,7 @@ public:
 	typedef	global_references_set	 		assign_update_arg_type;
 	data_nonmeta_instance_reference() : parent_type() { }
 
-virtual	~data_nonmeta_instance_reference() { }
+virtual	~data_nonmeta_instance_reference();
 
 virtual	count_ptr<const data_type_reference>
 	get_unresolved_data_type_ref(void) const = 0;

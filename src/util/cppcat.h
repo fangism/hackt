@@ -3,7 +3,7 @@
 	Tricks for concatenating strings with the C-preprocessor.  
 	I learned this trick from:
 		http://www.slack.net/~ant/cpp/unqiue_name.html
-	$Id: cppcat.h,v 1.4 2009/02/20 20:39:42 fang Exp $
+	$Id: cppcat.h,v 1.5 2010/01/03 01:34:47 fang Exp $
  */
 
 #ifndef	__UTIL_CPPCAT_H__
@@ -48,6 +48,12 @@
 	requiring extra parentheses.  
  */
 #define	CPPWRAP(x)		x
+
+/**
+	Because ISO C90 and ISO C++98 state that empty macro arguments
+	result in undefined expansions.
+ */
+#define	CPP_EMPTY
 
 
 #endif	// __UTIL_CPPCAT_H__

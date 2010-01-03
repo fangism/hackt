@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.15 2009/10/02 01:57:14 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.16 2010/01/03 01:34:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -61,7 +61,7 @@ public:
 protected:
 	meta_instance_reference() : meta_instance_reference_base() { }
 public:
-virtual	~meta_instance_reference() { }
+virtual	~meta_instance_reference();
 
 virtual	size_t
 	dimensions(void) const = 0;
