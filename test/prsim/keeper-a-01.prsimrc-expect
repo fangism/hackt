@@ -1,3 +1,5 @@
+default after min: 0
+default after max: +INF
 X nodes:
 
 X nodes:

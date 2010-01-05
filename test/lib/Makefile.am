@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.35 2009/10/27 18:21:53 fang Exp $
+#	$Id: Makefile.am,v 1.36 2010/01/05 00:09:49 fang Exp $
 # Test auto-Makefile for prsim library.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -212,4 +212,7 @@ srcdir_EXTRA_DIST += README \
 # srcdir_EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
+
+# additional filtering out
+PRSIMRC_FILTER_AWK += | $(GREP) -v "^default after"
 

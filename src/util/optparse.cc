@@ -1,7 +1,7 @@
 /**
 	\file "util/optparse.cc"
 	Implementation of rudimentary option parsing.
-	$Id: optparse.cc,v 1.3 2009/09/14 21:17:16 fang Exp $
+	$Id: optparse.cc,v 1.4 2010/01/05 00:09:47 fang Exp $
  */
 
 #include <iostream>
@@ -129,15 +129,7 @@ optparse(const string& s, const char e, const char c) {
 if (c) {
 if (f != end) {
 	++f;
-	size_t a = s.find(c, f);
-	while (a != end) {
-		ret.values.push_back(s.substr(f, a-f));
-		f = a+1;
-		a = s.find(c, f);
-	}
-	if (f != end) {
-		ret.values.push_back(s.substr(f));
-	}
+	tokenize_char(s.substr(f), ret.values, c);
 }
 } else {
 	// treat remaining string as a single value, can be processed later

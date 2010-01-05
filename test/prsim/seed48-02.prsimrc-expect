@@ -1,5 +1,7 @@
 initial seed should be 0s 
 seed48 = 0 0 0
+default after min: 0
+default after max: +INF
 step a few events in random timing 
 make sure reset actually resets the seed 
 seed48 = 0 0 0

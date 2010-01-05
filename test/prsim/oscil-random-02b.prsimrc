@@ -1,10 +1,11 @@
 # "oscil-random-02.prsimrc"
-#	$Id: oscil-random-02b.prsimrc,v 1.2 2008/03/17 23:09:54 fang Exp $
+#	$Id: oscil-random-02b.prsimrc,v 1.3 2010/01/05 00:09:54 fang Exp $
 # @haco@ oscillator.haco-a
 # @deps@ oscil-random-02.prsimckpt
 # Testing random seeding
 
 load oscil-random-02.prsimckpt
 watchall
+timing random
 step 40
 

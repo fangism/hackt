@@ -1,10 +1,13 @@
 timing [mode [args]]
 if no mode is given, just reports the current mode.
 available timing modes:
-	random
+	random [[min]:[max]]
 	uniform [delay]
 	after
 Random mode uses a heavy-tailed distribution random-variable for delay, *except* where a delay is marked with [after=0].
+Default min and max delay bounds can be set with an additional MIN:MAX
+argument.  A blank value will clear the bound to 0.
+A max value of 0 is interpreted as being unbounded.
 Uniform mode ignores all after-delay annotations and uses a fixed delay for all events, which can be used to count transitions.
 After mode uses fixed after-annotated delays for timing, and assumes default delays where none are given.
 Use 'seed48' to set a random number seed.
@@ -13,6 +16,8 @@ timing: uniform (10)
 	10	b : 0	[by a:=1]
 	20	c : 1	[by b:=0]
 timing random 
+default after min: 0
+default after max: +INF
 timing: random
 timing after 
 timing: after
@@ -30,4 +35,6 @@ timing: uniform (30)
 	90	b : 1	[by a:=0]
 	120	c : 0	[by b:=1]
 timing random 
+default after min: 0
+default after max: +INF
 timing: random

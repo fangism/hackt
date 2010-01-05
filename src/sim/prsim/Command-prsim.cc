@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.55 2009/12/31 00:19:23 fang Exp $
+	$Id: Command-prsim.cc,v 1.56 2010/01/05 00:09:45 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4101,7 +4101,7 @@ WeakRules::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/timing.texi
-@deffn Command timing [mode] ...
+@deffn Command timing [mode] [args]
 Modes:
 @samp{uniform} @var{delay} applies the same delay to @emph{all} rules.  
 @t{uniform} is useful for getting quick transition counts.  
@@ -4119,6 +4119,18 @@ exponential variate; when an upper bound is specified, a delay
 is generated with uniform distribution between the bounds.  
 If only a lower bound is specified, its value is added to the 
 exponentially distribtued random delay.  
+
+TIming random also takes additional optional arguments for 
+default min and max delays for @emph{unspecified rules};
+user-written values from the source will always take precedence.
+A max delay value of 0 is interpreted as being unbounded.
+@itemize
+@item @samp{timing random} preserves the default min/max delays
+@item @samp{timing random :} will clear the default min/max delays
+@item @samp{timing random X:} sets the default min delay
+@item @samp{timing random :Y} sets the default max delay
+@item @samp{timing random X:Y} sets the default min and max delays
+@end itemize
 
 In the future, we may consider distributions that favor the bounds, 
 (e.g. 50% chance of min or max) to stress the limits of the specified delays

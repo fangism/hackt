@@ -3,7 +3,7 @@
 	Useful time typedefs and structures.  
 	Also contains some time macros and inline functions.  
 	TODO: use mpz_t for really long integers.  
-	$Id: time.h,v 1.4 2006/04/23 07:37:25 fang Exp $
+	$Id: time.h,v 1.5 2010/01/05 00:09:44 fang Exp $
  */
 
 #ifndef	__HAC_SIM_TIME_H__
@@ -69,5 +69,5 @@ struct delay_policy<discrete_time> {
 }	// end namespace HAC
 
 
-#endif	// __SIM_TIME_H__
+#endif	// __HAC_SIM_TIME_H__
 

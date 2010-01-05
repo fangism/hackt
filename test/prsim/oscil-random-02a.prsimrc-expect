@@ -1,3 +1,5 @@
+default after min: 0
+default after max: +INF
 	#TIME#	R.x[1] : 0	[by R.x[0]:=1]
 	#TIME#	R.x[2] : 1	[by R.x[1]:=0]
 	#TIME#	R.x[3] : 0	[by R.x[2]:=1]

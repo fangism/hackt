@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.32 2009/04/17 21:14:38 fang Exp $
+	$Id: State-prsim.h,v 1.33 2010/01/05 00:09:46 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -499,6 +499,12 @@ private:
 	// current time, etc...
 	time_type				current_time;
 	time_type				uniform_delay;
+public:	// too lazy to write accessors
+	// for random timing only, default lower bound of delay
+	time_type				default_after_min;
+	// for random timing only, default upper bound of delay
+	time_type				default_after_max;
+private:
 	// watched nodes
 	watch_list_type				watch_list;
 	// vectors

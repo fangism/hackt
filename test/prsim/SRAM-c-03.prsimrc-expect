@@ -1,292 +1,390 @@
 repeating test with different random seeds 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
 event queue:
 queue should be empty after unsetall 
+default after min: 0
+default after max: +INF
 WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'

@@ -1,0 +1,22 @@
+testing new timing random default delay bounds 
+default: 
+default after min: 0
+default after max: +INF
+clear: 
+default after min: 0
+default after max: +INF
+min-only: 
+default after min: 20
+default after max: +INF
+max-only: 
+default after min: 0
+default after max: 1000
+min-only: 
+default after min: 10
+default after max: +INF
+min/max: 
+default after min: 25
+default after max: 500
+clear 
+default after min: 0
+default after max: +INF

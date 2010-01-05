@@ -1,0 +1,25 @@
+# "default-after-01.prsimrc"
+# @haco@ inv.haco-a
+
+echo testing new timing random default delay bounds
+echo default:
+timing random
+echo clear:
+timing random :
+timing random
+echo min-only:
+timing random 20:
+timing random
+echo max-only:
+timing random :1000
+timing random
+echo min-only:
+timing random 10:
+timing random
+echo min/max:
+timing random 25:500
+timing random
+echo clear
+timing random :
+timing random
+

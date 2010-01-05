@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.85 2009/12/31 00:19:23 fang Exp $
+#	$Id: Makefile.am,v 1.86 2010/01/05 00:09:50 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -75,6 +75,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	comment-01 comment-02 comment-04 comment-06 comment-08 \
 	repeat-01 \
 	default-mode \
+	default-after-01 default-after-02 default-after-03 default-after-04 \
 	relaxed-a-01 \
 	relaxed-b-01 \
 	getlocal-01 getlocal-02 getlocal-03 \
@@ -352,6 +353,12 @@ precharge-d-01.prsimtracetest: precharge-d-01.prsimrc
 	$(SKIP_TEST_SCRIPT)
 precharge-f-01.prsimtracetest: precharge-f-01.prsimrc
 	$(SKIP_TEST_SCRIPT)
+default-after-02.prsimtest: default-after-02.prsimrc
+	$(SKIP_TEST_SCRIPT)
+default-after-03.prsimtest: default-after-03.prsimrc
+	$(SKIP_TEST_SCRIPT)
+default-after-04.prsimtest: default-after-04.prsimrc
+	$(SKIP_TEST_SCRIPT)
 endif
 
 # positive different test:
@@ -360,7 +367,7 @@ endif
 # different custom test: just compare two existing output dumps (unfiltered!)
 oscil-random-02c.prsimrc-diff: \
 		oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out
-	$(DIFF) oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out \
+	$(DIFF) -u oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out \
 		> $@ ; \
 	$(TOUCH) $@
 

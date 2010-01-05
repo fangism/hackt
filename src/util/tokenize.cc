@@ -1,6 +1,6 @@
 /**
 	\file "util/tokenize.cc"
-	$Id: tokenize.cc,v 1.5 2009/08/28 20:45:29 fang Exp $
+	$Id: tokenize.cc,v 1.6 2010/01/05 00:09:47 fang Exp $
  */
 
 #include "util/tokenize.h"
@@ -58,6 +58,26 @@ tokenize(const string& s, string_list& l, const char* delim) {
 			// std::cout << "\"" << t << "\"" << std::endl;
 			l.push_back(t);
 		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Simpler tokenizer with a single character separator.
+	Appends to l the values delimited by c.
+ */
+void
+tokenize_char(const string& s, string_list& l, const char c) {
+	static const size_t end = string::npos;
+	size_t f = 0;
+	size_t a = s.find(c, f);
+	while (a != end) {
+		l.push_back(s.substr(f, a-f));
+		f = a+1;
+		a = s.find(c, f);
+	}
+	if (f != end) {
+		l.push_back(s.substr(f));
 	}
 }
 

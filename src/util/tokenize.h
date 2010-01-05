@@ -4,7 +4,7 @@
 	A poor-man's command-line lexer.  
 	TODO: add support for quotation protection, escape sequences within...
 	TODO: consider passing stateful predicate functors...
-	$Id: tokenize.h,v 1.3 2009/08/28 20:45:31 fang Exp $
+	$Id: tokenize.h,v 1.4 2010/01/05 00:09:47 fang Exp $
  */
 
 #ifndef	__UTIL_TOKENIZE_H__
@@ -23,6 +23,10 @@ tokenize(const std::string&, string_list&);
  */
 extern void
 tokenize(const std::string&, string_list&, const char*);
+
+extern
+void
+tokenize_char(const std::string&, string_list&, const char);
 
 }	// end namespace util
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.57 2009/10/02 01:57:43 fang Exp $
+	$Id: State-prsim.cc,v 1.58 2010/01/05 00:09:46 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -57,6 +57,7 @@
 #include "util/binders.h"
 #include "util/utypes.h"
 #include "util/indent.h"
+#include "util/tokenize.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -131,6 +132,7 @@ using util::bind2nd_argval;
 using util::bind2nd_argval_void;
 using util::auto_indent;
 using util::indent;
+using util::tokenize_char;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -315,6 +317,8 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		check_exhi(), check_exlo(), 
 		current_time(0), 
 		uniform_delay(time_traits::default_delay), 
+		default_after_min(time_traits::zero), 
+		default_after_max(time_traits::zero), 
 		watch_list(), 
 		_channel_manager(), 
 #if PRSIM_TRACE_GENERATION
@@ -1652,10 +1656,52 @@ State::set_timing(const string& m, const string_list& a) {
 	if (m == __random) {
 		timing_mode = TIMING_RANDOM;
 		switch (a.size()) {
-		case 0:	return false;
-		case 1:	cerr << "use \'seed48' to set random number seed"
-			<< endl;
+		case 0:
+			cout << "default after min: " << default_after_min
+				<< endl;
+			cout << "default after max: ";
+			if (time_traits::is_zero(default_after_max))
+				cout << "+INF" << endl;
+			else	cout << default_after_max << endl;
 			return false;
+		case 1: {
+			// parse default min:max bounds
+			time_type new_min = default_after_min;
+			time_type new_max = default_after_max;
+			string_list mm;
+			tokenize_char(a.back(), mm, ':');
+			if (mm.size() != 2)
+				return true;
+			if (mm.front().length()) {
+				if (string_to_num(mm.front(), new_min))
+					return true;
+				else if (new_min < time_traits::zero) {
+					cerr << "min delay must be >= 0" << endl;
+					return true;
+				}
+			} else {
+				new_min = time_traits::zero;
+			}
+			if (mm.back().length()) {
+				if (string_to_num(mm.back(), new_max))
+					return true;
+				else if (new_max < time_traits::zero) {
+					cerr << "max delay must be >= 0" << endl;
+					return true;
+				}
+			} else {
+				new_max = time_traits::zero;
+			}
+			if (time_traits::is_zero(new_max) || 
+					new_max > new_min) {
+				default_after_min = new_min;
+				default_after_max = new_max;
+				return false;
+			} else {
+				cerr << "if (max>0) min <= max" << endl;
+				return true;
+			}
+		}
 		default:	return true;
 		}
 	} else if (m == __uniform) {
@@ -1680,12 +1726,15 @@ State::set_timing(const string& m, const string_list& a) {
 ostream&
 State::help_timing(ostream& o) {
 	o << "available timing modes:" << endl;
-	o << "\trandom" << endl;
+	o << "\trandom [[min]:[max]]" << endl;
 	o << "\tuniform [delay]" << endl;
 	o << "\tafter" << endl;
 	o <<
 "Random mode uses a heavy-tailed distribution random-variable for delay, "
 "*except* where a delay is marked with [after=0].\n"
+"Default min and max delay bounds can be set with an additional MIN:MAX\n"
+"argument.  A blank value will clear the bound to 0.\n"
+"A max value of 0 is interpreted as being unbounded.\n"
 "Uniform mode ignores all after-delay annotations and uses a fixed delay "
 "for all events, which can be used to count transitions.\n"
 "After mode uses fixed after-annotated delays for timing, and assumes "
@@ -1712,6 +1761,18 @@ State::uniform_random_delay(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return override value o if it is not zero, else return default def.
+ */
+inline
+static
+const State::time_type&
+__get_delay(const State::rule_type* r, State::time_type State::rule_type::* m,
+		const State::time_type& def) {
+	return (r && !State::time_traits::is_zero(r->*m)) ? r->*m : def;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\return absolute time of scheduled pull-up event.
 	NOTE: possible reasons for null e.cause_rule:
 		due to exclhi/exclo ring enforcement?
@@ -1733,15 +1794,19 @@ if (e.cause_rule) {
 			(r && r->is_always_random())) {
 		const bool after_zero = r && time_traits::is_zero(r->after);
 #if PRSIM_AFTER_RANGE
-		const bool have_min = r && !time_traits::is_zero(r->after_min);
-		const bool have_max = r && !time_traits::is_zero(r->after_max);
+		const time_type min_val =
+			__get_delay(r, &rule_type::after_min, default_after_min);
+		const time_type max_val =
+			__get_delay(r, &rule_type::after_max, default_after_max);
+		const bool have_min = r && !time_traits::is_zero(min_val);
+		const bool have_max = r && !time_traits::is_zero(max_val);
 		if (have_max) {
 			if (have_min) {
-				delta = r->after_min +
-					(r->after_max -r->after_min)
+				delta = min_val +
+					(max_val -min_val)
 					* uniform_random_delay();
 			} else {
-				delta = r->after_max * uniform_random_delay();
+				delta = max_val * uniform_random_delay();
 			}
 		} else {
 #endif
@@ -1749,7 +1814,7 @@ if (e.cause_rule) {
 			time_traits::zero : 
 			((0x01 << 11) * exponential_random_delay());
 #if PRSIM_AFTER_RANGE
-			if (have_min) delta += r->after_min;
+			if (have_min) delta += min_val;
 		}
 #endif
 	} else {
@@ -5992,6 +6057,8 @@ State::save_checkpoint(ostream& o) const {
 	ISE_INVARIANT(pending_queue.empty());
 	write_value(o, current_time);
 	write_value(o, uniform_delay);
+	write_value(o, default_after_min);
+	write_value(o, default_after_max);
 	WRITE_ALIGN_MARKER
 {
 	// watch_list? yes, because needs to be kept consistent with nodes
@@ -6164,6 +6231,8 @@ try {
 	ISE_INVARIANT(pending_queue.empty());
 	read_value(i, current_time);
 	read_value(i, uniform_delay);
+	read_value(i, default_after_min);
+	read_value(i, default_after_max);
 	READ_ALIGN_MARKER
 {
 	// watch_list? yes, because needs to be kept consistent with nodes
@@ -6300,11 +6369,16 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	}
 }
 	READ_ALIGN_MARKER		// sanity alignment check
-	time_type current_time, uniform_delay;
+	time_type current_time, uniform_delay,
+		default_after_min, default_after_max;
 	read_value(i, current_time);
 	read_value(i, uniform_delay);
+	read_value(i, default_after_min);
+	read_value(i, default_after_max);
 	o << "current time: " << current_time << endl;
 	o << "uniform delay: " << uniform_delay << endl;
+	o << "default after min: " << default_after_min << endl;
+	o << "default after max: " << default_after_max << endl;
 	READ_ALIGN_MARKER
 {
 	// watch_list? yes, because needs to be kept consistent with nodes

@@ -1,0 +1,41 @@
+# "default-after-04.prsimrc"
+# @haco@ inv.haco-a
+
+watchall
+
+echo min/max:
+timing random 10:20
+timing random
+set a 0
+cycle
+set a 1
+cycle
+set a 0
+cycle
+set a 1
+cycle
+
+echo min-only:
+timing random 200000:
+timing random
+set a 0
+cycle
+set a 1
+cycle
+set a 0
+cycle
+set a 1
+cycle
+
+echo max-only:
+timing random :100
+timing random
+set a 0
+cycle
+set a 1
+cycle
+set a 0
+cycle
+set a 1
+cycle
+
