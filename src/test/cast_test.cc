@@ -9,7 +9,7 @@
 #include "Object/inst/datatype_instance_placeholder.h" // DEBUG ONLY
 #include "Object/inst/instance_placeholder.h" // DEBUG ONLY
 #include "Object/ref/meta_reference_union.h"
-#include "util/memory/count_ptr.tcc"
+// #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 // #include "ctest.h"
 
@@ -58,24 +58,41 @@ static
 void
 expanded_test(ostream& o) {
 	STACKTRACE_VERBOSE;
+#define	USE_COUNT_PTR		0
+#define CONST	const
 	const name_space ss("blank");
 	const bool_ref_type::instance_placeholder_type ph(ss, "fake", 0);
 	const bool_ref_type::instance_placeholder_ptr_type php(&ph);
-	const count_ptr<const meta_instance_reference_base>
+#if USE_COUNT_PTR
+	const count_ptr<CONST meta_instance_reference_base>
+#else
+	CONST meta_instance_reference_base* const
+#endif
 		dp(new bool_ref_type(php));
 	o << "dp @ " << &*dp << endl;
 	dp->what(o << "dp->what(): ") << endl;
-	const bool_ref_type* rcdp = IS_A(const bool_ref_type*, &*dp);
+	CONST bool_ref_type* const rcdp = IS_A(CONST bool_ref_type*, &*dp);
 	o << "rcdp = " << rcdp << endl;
-	const count_ptr<const bool_ref_type>
-		cdp(dp.is_a<const bool_ref_type>());
+#if USE_COUNT_PTR
+	const count_ptr<CONST bool_ref_type>
+		cdp(dp.is_a<CONST bool_ref_type>());
 	o << "cdp = " << &*cdp << endl;
+#endif
+	if (rcdp) {
+		rcdp->what(o << "cdp->what(): ") << endl;
+	}
+#if USE_COUNT_PTR
 	if (cdp) {
 		cdp->what(o << "cdp->what(): ") << endl;
 	}
+#endif
 	o << endl;
 	INVARIANT(rcdp);
+#if USE_COUNT_PTR
 	INVARIANT(cdp);
+#endif
+#undef	CONST
+#undef	USE_COUNT_PTR
 }
 
 #if 0
