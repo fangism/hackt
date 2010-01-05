@@ -1,3 +1,10 @@
+/**
+	A reduced test case showing a failure only on 10.6, 
+	with all compilers apple-gcc-4.0, 4.2, and FSF's gcc-4.4.
+	Linker issue was discovered when Peter O'Gorman (pogma)
+	suggested adding LDFLAGS=-Wl,-no_compact_linkedit
+	after which the test started passing.
+ */
 #define	ENABLE_STACKTRACE		1
 
 #include <iostream>
@@ -58,7 +65,9 @@ static
 void
 expanded_test(ostream& o) {
 	STACKTRACE_VERBOSE;
+// bug is sufficiently demonstrated with bare pointers
 #define	USE_COUNT_PTR		0
+// de-const-ifying makes no difference
 #define CONST	const
 	const name_space ss("blank");
 	const bool_ref_type::instance_placeholder_type ph(ss, "fake", 0);
