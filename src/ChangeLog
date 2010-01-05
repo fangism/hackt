@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-58:
+	  No source revision.
+	  Makefile.am: corrected some lexer/parser deps.
+	  Updated test scripts for chpsim, to help with dlopen.
+	  Validated on i686-apple-darwin10 with 
+		LDFLAGS="-Wl,-no_compact_linkedit"
+		to workaround a linker bug, reporting to Apple.
+
+
 2010-01-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-57:

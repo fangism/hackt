@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.26 2009/09/28 06:56:58 fang Exp $
+#	$Id: Make.test-chpsim,v 1.27 2010/01/05 22:52:32 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -128,13 +128,17 @@ AUTO_DEPENDS += chpsimalloctest.autodepend
 #	maybe using @chpsim-flags@ as a match pattern
 # We privide a hook to disable automatic tracing:
 #	CHPSIMRC_AUTOTRACE_DISABLE_HOOK = autotrace=0;
+# for extracting libs to pre-dlopen, use @deps@ instead of @modules@
+# because @deps@ references by path.  seems to be needed on darwin10
 CHPSIMRC_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	mods=`$(CAT) $< | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
+	deps=`$(CAT) $< | $(EXTRACT_DEPS_PIPE)` ; \
 	flags=`$(CAT) $< | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/\.chpsim.*$$/.chpsimckpt/g'` ; \
 	trace=`$(ECHO) $@ | $(SED) 's/\.chpsim.*$$/.chpsimtrace/g'` ; \
 	$(RM) $$ckpt $$trace ; \
+	$(EXTRACT_DLOPEN_EXTRA_SCRIPT) ; \
 	autotrace=1 ; \
 	$(CHPSIMRC_AUTOTRACE_DISABLE_HOOK) \
 	if test "$$autotrace" = 1 ; then traceflag="-r $$trace" ; fi ; \
@@ -151,7 +155,9 @@ CHPSIMRC_TEST_SCRIPT = \
 CHPSIMRC_FAIL_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	mods=`$(CAT) $< | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
+	deps=`$(CAT) $< | $(EXTRACT_DEPS_PIPE)` ; \
 	flags=`$(CAT) $< | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` ; \
+	$(EXTRACT_DLOPEN_EXTRA_SCRIPT) ; \
 	cmd="$(HACKT_CHPSIM_EXE) -b $(AM_HACCHPSIM_FLAGS) $$flags $$mods $$obj" ; \
 	$(ECHO) "$$cmd < $<" ; \
 	$$cmd < $< > $@ 2>&1
@@ -352,8 +358,10 @@ AUTO_DEPENDS += chpsimrcfailtest.autodepend
 	@rc=$(srcdir)/`$(ECHO) $< | $(SED) 's/\.chpsimckpt$$/.chpsimrc/g'` ; \
 	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)` ; \
 	mods=`$(CAT) "$$rc" | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
+	deps=`$(CAT) "$$rc" | $(EXTRACT_DEPS_PIPE)` ; \
 	flags=`$(CAT) "$$rc" | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-indump$$/-dupe/g'` ; \
+	$(EXTRACT_DLOPEN_EXTRA_SCRIPT) ; \
 	cmd="$(HACKT_CHPSIM_EXE) -b $(AM_HACCHPSIM_FLAGS) $$flags $$mods $$obj" ; \
 	$(ECHO) "load: $$cmd" ; \
 	$(CAT) $(CHPSIMCKPT_LOAD_TEMPLATE_SCRIPT) | \

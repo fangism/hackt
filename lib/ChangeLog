@@ -1,5 +1,12 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.59 2009/10/31 02:22:13 fang Exp $
+#	$Id: ChangeLog,v 1.60 2010/01/05 22:52:28 fang Exp $
+
+2010-01-05	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-44:
+	  verilog/wrap_verilog_modules_to_hacprsim.awk:
+		replace strtonum calls with equivalent "+= 0" (POSIX).
+
 
 2009-10-30	David Fang	<fangism@users.sourceforge.net>
 

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.230 2010/01/03 01:34:37 fang Exp $
+#	$Id: Makefile.am,v 1.231 2010/01/05 22:52:30 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1436,6 +1436,7 @@ lexer/$(TYPE_LEX_ROOT)-real.cc: lexer/$(TYPE_LEX_ROOT).cc \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc \
+		parser/hacflat-prefix.h \
 		$(FLEX_COMMON_PATCH)
 	basename="hacflat" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
@@ -1466,9 +1467,9 @@ lexer/flex_buffer_state.h: lexer/$(HACKT_LEX_ROOT)-real.cc
 	$(ECHO) "#endif	// __LEXER_FLEX_BUFFER_STATE_H__" ; } > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
-$(srcdir)/lexer/instref.cc: parser/$(INSTREF_PARSE_ROOT)-real.h
+$(srcdir)/parser/instref.cc: parser/$(INSTREF_PARSE_ROOT)-real.h
 
-$(srcdir)/lexer/type.cc: parser/$(TYPE_PARSE_ROOT)-real.h
+$(srcdir)/parser/type.cc: parser/$(TYPE_PARSE_ROOT)-real.h
 
 # can't depend on the .output alone, not a known dependence with .y[y]
 HACKT_PARSE_OUTPUT = parser/$(HACKT_PARSE_ROOT).output

@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.95 2009/09/28 06:56:58 fang Exp $
+#	$Id: Make.test-tail,v 1.96 2010/01/05 22:52:32 fang Exp $
 
 # for test that depend on pre-install plug-ins
 # don't forget to pass -dlopen to assist searching for pre-install dependencies
@@ -24,7 +24,7 @@ HACKT_CFLAT_SPRS_EXE = $(HACKT_CFLAT_PRSIM_EXE) -fsizes
 HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
 HACKT_PRSIM_EXE = $(top_builddir)/src/hacprsim
 HACKT_CHPSIM_RAW_EXE = $(top_builddir)/src/hacchpsim
-HACKT_CHPSIM_EXE = $(LIBTOOL_EXEC) -dlopen $(top_builddir)/lib/stdchpfn.la $(HACKT_CHPSIM_RAW_EXE)
+HACKT_CHPSIM_EXE = $(LIBTOOL_EXEC) -dlopen $(top_builddir)/lib/stdchpfn.la $$dlopen_extra $(HACKT_CHPSIM_RAW_EXE)
 # because chpsim loads plug-ins for function libraries
 HACKNET_EXE = $(top_builddir)/src/hacknet
 
@@ -36,6 +36,20 @@ SCM_SRCDIR = $(top_srcdir)/src/scm
 GUILE_LOAD_FLAGS = -L $(top_srcdir)/src/scm -L $(srcdir)
 HACKT_GUILE_EXE = $(LIBTOOL_EXEC) -dlopen $(top_builddir)/src/hackt-guile.la $(GUILE) -q $(GUILE_LOAD_FLAGS) -l $(SCM_SRCDIR)/hacguile.scm --
 HACKT_CHPSIM_GUILE_EXE = $(LIBTOOL_EXEC) -dlopen $(top_builddir)/src/hackt-chpsim-guile.la $(GUILE) -q $(GUILE_LOAD_FLAGS) -l $(SCM_SRCDIR)/hacchpsimguile.scm --
+
+# handy script to add extra dlopen arguments based on .la dependencies
+# usually preceded by:
+#	deps=`$(CAT) $< | $(EXTRACT_DEPS_PIPE)`
+EXTRACT_DLOPEN_EXTRA_SCRIPT = \
+	for d in $$deps ; do \
+	  if { $(ECHO) $$d | $(GREP) -q "\.la" ;} ; then \
+	    dlopen_extra="$$dlopen_extra -dlopen $$d" ; \
+	  fi ; \
+	  dlopen_extra=`$(ECHO) "$$dlopen_extra" | $(SED) \
+	    -e 's|\$$(top_builddir)|$(top_builddir)|g' \
+	    -e 's|\$$(builddir)|$(builddir)|g'` ; \
+	done
+# also substitutes a few $(variables)
 
 # install-time only test scripts and executables
 INSTALLED_HACGUILE = hacguile

@@ -1,6 +1,14 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.100 2009/10/31 02:22:15 fang Exp $
+#	$Id: ChangeLog,v 1.101 2010/01/05 22:52:31 fang Exp $
 # ChangeLog for test directory.
+
+2010-01-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-58:
+	  Make.test-tail, Make.test-chpsim: for darwin(10?), pass chpsim
+		library-plug-ins to the libtool wrapper's -dlopen option
+		to aid in finding libraries at runtime and test time.
+
 
 2009-10-30	David Fang		<fangism@users.sourceforge.net>
 
