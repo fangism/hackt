@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2010-01-05	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-58:
+	  configure.ac: bootstrap with libtool-2.x,
+		enable use of installed libltdl,
+		date bump
+
+
 2009-11-19	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53:
