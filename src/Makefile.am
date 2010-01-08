@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.231 2010/01/05 22:52:30 fang Exp $
+#	$Id: Makefile.am,v 1.232 2010/01/08 04:20:31 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1338,7 +1338,7 @@ EXTRA_DIST += $(FLEX_COMMON_PATCH)
 
 # keep only common symbols, give them external linkage
 EXTRACT_FLEX_COMMON_PIPE = \
-	$(SED) -n '/KEEP_FLEX_COMMON/,/KEEP_FLEX_COMMON/p' | \
+	$(AWK) -f $(srcdir)/lexer/grab-cpp-if.awk -v marker=KEEP_FLEX_COMMON | \
 	$(SED) -e '/^[ ]*static/s/^[ ]*static[ ]*//' | \
 	$(GREP) -v '^\#include.*prefix\.h'
 #	  -e '/for.*max_size/s/max_size/size_t(max_size)/'
@@ -1449,6 +1449,8 @@ lexer/flex_lexer_common.cc: lexer/$(HACKT_LEX_ROOT)-real.cc
 	cmd="$(CAT) $< | $(EXTRACT_FLEX_COMMON_PIPE)" ; \
 	$(ECHO) "// produced by: $$cmd" ; \
 	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
+	$(ECHO) "#include \"lexer/flex_buffer_state.h\"" ; \
+	$(ECHO) "#define FLEX_STRUCT_BUFFER_STATE" ; \
 	$(ECHO) "#define KEEP_FLEX_COMMON	1" ; \
 	$(ECHO) "#define YY_ALWAYS_INTERACTIVE	0" ; \
 	$(CAT) $< | $(EXTRACT_FLEX_COMMON_PIPE) ; } > $@
@@ -1463,7 +1465,7 @@ lexer/flex_buffer_state.h: lexer/$(HACKT_LEX_ROOT)-real.cc
 	$(ECHO) "#define	__LEXER_FLEX_BUFFER_STATE_H__" ; \
 	$(ECHO) "#include \"util/FILE_fwd.h\"" ; \
 	$(ECHO) "#include \"util/size_t.h\"" ; \
-	$(SED) -n '/STRUCT_BUFFER_STATE/,/STRUCT_BUFFER_STATE/p' $< ; \
+	$(AWK) -f $(srcdir)/lexer/grab-cpp-if.awk -v marker=STRUCT_BUFFER_STATE $< ; \
 	$(ECHO) "#endif	// __LEXER_FLEX_BUFFER_STATE_H__" ; } > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
@@ -1778,6 +1780,7 @@ EXTRA_DIST += local.cvsignore \
 	parser/NOTES \
 	parser/hackt-parse.yy.in \
 	lexer/local.cvsignore \
+	lexer/grab-cpp-if.awk \
 	lexer/purify_flex.awk \
 	test/local.cvsignore \
 	test/header_test.cc \

@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-59:
+	  lexer/grab-cpp-if.awk: help extract desired snippets of code
+	  lexer/purify_flex.awk: added yy_size_t declarations
+	  Makefile.am: updated generation of lexer/flex_lexer_common.cc,
+		validated against flex 2.5.4
+		compiles against 2.5.35 (but still dies at runtime)
+
+
 2010-01-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-58:

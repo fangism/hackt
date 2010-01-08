@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.12 2008/12/15 03:16:02 fang Exp $
+#	$Id: purify_flex.awk,v 1.13 2010/01/08 04:20:32 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -101,7 +101,9 @@ function append_call_args(str, arg) {
 	# NOTE: be careful to avoid the member members of yy_buffer_state.
 	# typically, those are found indented, so we only match 
 	# members that start at the beginning-of-line.  
-	if (match($0, "^extern int yyleng;")) {
+	if (match($0, "^extern int yyleng;") ||
+		match($0, "^extern yy_size_t yyleng;")) {
+		# global variable declaration
 		# members[extract_yy_identifier($0)] = "";
 		members["yyleng"] = "";
 		comment_out($0);
@@ -134,11 +136,14 @@ function append_call_args(str, arg) {
 		# members[extract_yy_identifier($0)] = "";
 		# members["yy_n_chars"] = "";
 		comment_out($0);
-	} else if (match($0, "int yy_n_chars;")) {
+	} else if (match($0, "int yy_n_chars;") ||
+		match($0, "yy_size_t yy_n_chars;")) {
 		# not the static declaration, but the struct member declaration
 		gsub("yy_n_chars", "YY_N_CHARS", $0);
 		print;
-	} else if (match($0, "^int yyleng;")) {
+	} else if (match($0, "^int yyleng;") ||
+		match($0, "^yy_size_t yyleng;")) {
+		# global variable definition
 		# members[extract_yy_identifier($0)] = "";
 		members["yyleng"] = "";
 		comment_out($0);
@@ -385,8 +390,10 @@ function append_call_args(str, arg) {
 	} else if (match($0, "yyget_lineno(.*)")) {
 		# (2.5.31 only)
 		$0 = replace_call_args($0, name);
-	} else if (match($0, "int yyget_leng(.*)")) {
+	} else if (match($0, "int yyget_leng(.*)") ||
+		match($0, "yy_size_t yyget_leng(.*)")) {
 		# (2.5.31 only)
+		# (2.5.35 only)
 		$0 = replace_proto_params($0, state_decl);
 	} else if (match($0, "yyget_leng(.*)")) {
 		# (2.5.31 only)
