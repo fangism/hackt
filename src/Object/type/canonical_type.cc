@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.18 2009/03/09 07:30:55 fang Exp $
+	$Id: canonical_type.cc,v 1.18.14.1 2010/01/09 03:30:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -164,6 +164,7 @@ struct unroll_port_instances_policy<process_definition> {
 	\param ind the globally assigned index of this instance.  
 	\pre ff is not yet initialized or assigned.  
  */
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 good_bool
 canonical_type_footprint_frame_policy<process_definition>::
 		initialize_and_assign(const canonical_process_type& cpt,
@@ -181,6 +182,7 @@ canonical_type_footprint_frame_policy<process_definition>::
 		ind);
 	return good_bool(true);
 }
+#endif
 
 //=============================================================================
 /**
@@ -200,6 +202,7 @@ check_footprint_policy<process_definition>::operator () (
 }
 
 //=============================================================================
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Copy-modified from process_definition's specialization above.  
 	First, this recursively assigns the subinstances inherited from
@@ -226,6 +229,7 @@ canonical_type_footprint_frame_policy<user_def_datatype>::
 		ind);
 	return good_bool(true);
 }
+#endif
 
 //=============================================================================
 /**

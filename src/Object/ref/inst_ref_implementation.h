@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.22 2008/10/11 06:35:14 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.22.24.1 2010/01/09 03:30:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -104,6 +104,7 @@ simple_unroll_generic_scalar_substructure_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Appropriate for substructured types only.  
 	Do NOT call this from member_instance_references, because
@@ -155,6 +156,7 @@ member_lookup_footprint_frame(
 	}
 	return &sm.template get_pool<Tag>()[id]._frame;
 }
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>

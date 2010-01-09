@@ -1,6 +1,6 @@
 /**
 	\file "Object/state_manager.tcc"
-	$Id: state_manager.tcc,v 1.2 2008/11/05 23:03:29 fang Exp $
+	$Id: state_manager.tcc,v 1.2.24.1 2010/01/09 03:30:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_TCC__
@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "Object/state_manager.h"
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/global_entry.h"
 #include "Object/entry_collection.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -107,5 +108,6 @@ state_manager::collect_subentries(entry_collection& e, const size_t i) const {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 #endif	// __HAC_OBJECT_STATE_MANAGER_TCC__

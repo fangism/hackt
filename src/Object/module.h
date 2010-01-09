@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.20.2.1 2009/12/17 02:07:34 fang Exp $
+	$Id: module.h,v 1.20.2.2 2010/01/09 03:29:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -109,7 +109,11 @@ public:
 
 	bool
 	is_allocated(void) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		return is_created();
+#else
 		return allocated;
+#endif
 	}
 
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION

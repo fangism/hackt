@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.tcc"
-	$Id: global_entry_context.tcc,v 1.4 2008/12/07 00:27:05 fang Exp $
+	$Id: global_entry_context.tcc,v 1.4.20.1 2010/01/09 03:29:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
@@ -11,6 +11,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/unroll_context.h"
+#include "common/TODO.h"
 
 namespace HAC {
 namespace entity {
@@ -47,6 +48,10 @@ template <class Tag>
 size_t
 global_entry_context::lookup_meta_reference_global_index(
 		const simple_meta_instance_reference<Tag>& r) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+	return 0;
+#else
 	NEVER_NULL(sm);
 	NEVER_NULL(topfp);
 	if (fpf) {
@@ -59,6 +64,7 @@ global_entry_context::lookup_meta_reference_global_index(
 	} else {
 		return r.lookup_globally_allocated_index(*sm, *topfp);
 	}
+#endif
 }
 
 //=============================================================================

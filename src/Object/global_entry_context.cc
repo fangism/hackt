@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4 2007/09/11 06:52:36 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.1 2010/01/09 03:29:57 fang Exp $
  */
 
 #include "Object/global_entry_context.h"
@@ -19,7 +19,9 @@ namespace entity {
 global_entry_context_base::module_setter::module_setter(
 		global_entry_context_base& _ccb, 
 		const module& m) :
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		manager_saver_type(_ccb, &m.get_state_manager()),
+#endif
 		footprint_saver_type(_ccb, &m.get_footprint()) {
 }
 
@@ -38,6 +40,7 @@ global_entry_context::footprint_frame_setter::footprint_frame_setter(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	\param pid a global process index, corresponding to the 
 		processes, whose footprint-frame should be referenced.
@@ -49,6 +52,7 @@ global_entry_context::footprint_frame_setter::footprint_frame_setter(
 				get_pool<process_tag>()[pid]._frame
 			: NULL) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_entry_context::footprint_frame_setter::~footprint_frame_setter() { }

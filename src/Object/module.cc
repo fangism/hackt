@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.41.2.1 2009/12/17 02:07:34 fang Exp $
+ 	$Id: module.cc,v 1.41.2.2 2010/01/09 03:29:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -165,8 +165,10 @@ ostream&
 module::dump_instance_map(ostream& o) const {
 	if (is_allocated()) {
 		o << "Globally allocated state:" << endl;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const footprint& _footprint(get_footprint());
 		global_state.dump(o, _footprint);
+#endif
 	}
 	return o;
 }
@@ -313,6 +315,7 @@ module::create_unique(void) {
  */
 good_bool
 module::__allocate_unique(void) {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	if (!is_allocated()) {
 		STACKTRACE("not already allocated, allocating...");
 		// we've established uniqueness among public ports
@@ -330,6 +333,7 @@ module::__allocate_unique(void) {
 #endif
 		allocated = true;
 	}
+#endif
 	return good_bool(true);
 }
 
@@ -351,6 +355,7 @@ module::allocate_unique(void) {
 	we provide a function to automatically load proces[0]'s frame.
 	Consider moving this automatically into the allocate() methods...
  */
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 void
 module::populate_top_footprint_frame(void) {
 	global_entry<process_tag>&
@@ -360,6 +365,7 @@ module::populate_top_footprint_frame(void) {
 	ptop.initialize_top_frame(get_footprint());
 //	ptop.dump_frame_only(cerr << "after:") << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -485,7 +491,9 @@ module::allocate_single_process(
 	_footprint.create_dependent_types(_footprint);
 	// force to reallocate new instance (fragile!)
 	// since there are no new connections, no new aliases are formed
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	allocated = false;
+#endif
 	return __allocate_unique();
 }
 
@@ -497,8 +505,10 @@ module::allocate_single_process(
 void
 module::reset(void) {
 	STACKTRACE_VERBOSE;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	global_state.clear();
 	allocated = false;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -511,7 +521,9 @@ module::__cflat_rules(ostream& o, const cflat_options& cf) const {
 		STACKTRACE("cflatting production rules.");
 		if (cf.dsim_prs)	o << "dsim {" << endl;
 		try {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			global_state.accept(cfp);	// print!
+#endif
 			// support for top-level prs!
 			// const top_level_footprint_importer foo(*this);
 			const footprint& _footprint(get_footprint());
@@ -540,7 +552,11 @@ module::__cflat_aliases(ostream& o, const cflat_options& cf) const {
 	if (cf.connect_style) {
 		STACKTRACE("cflatting aliases.");
 		const footprint& _footprint(get_footprint());
-		_footprint.cflat_aliases(o, global_state, cf);
+		_footprint.cflat_aliases(o,
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			global_state,
+#endif
+			cf);
 	}
 	return good_bool(true);
 }
@@ -606,8 +622,10 @@ if (!m.register_transient_object(this,
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
 	parent_type::collect_transient_info_base(m);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint& _footprint(get_footprint());
 	global_state.collect_transient_info_base(m, _footprint);
+#endif
 }
 // else already visited
 }
@@ -618,9 +636,11 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer(f, global_namespace);
 	parent_type::write_object_base(m, f);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint& _footprint(get_footprint());
 	write_value(f, allocated);
 	global_state.write_object_base(m, f, _footprint);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -630,14 +650,17 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, global_namespace);
 //	global_namespace->load_object(m);	// not necessary
 	parent_type::load_object_base(m, f);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint& _footprint(get_footprint());
 	read_value(f, allocated);
 	global_state.load_object_base(m, f, _footprint);
+#endif
 }
 
 //=============================================================================
 // explicit template instantiations
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template
 void
 module::match_aliases<bool_tag>(string_list&, const size_t) const;
@@ -657,6 +680,7 @@ module::match_aliases<channel_tag>(string_list&, const size_t) const;
 template
 void
 module::match_aliases<process_tag>(string_list&, const size_t) const;
+#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_visitor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: CHP_visitor.h,v 1.6 2008/10/11 06:35:12 fang Exp $
+	$Id: CHP_visitor.h,v 1.6.24.1 2010/01/09 03:30:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_VISITOR_H__
@@ -46,8 +46,17 @@ class chp_visitor : public cflat_context_visitor {
 public:
 	chp_visitor() : cflat_context_visitor() { }
 
-	chp_visitor(const state_manager& _sm, const entity::footprint& _topfp) :
-		cflat_context_visitor(_sm, _topfp) { }
+	explicit
+	chp_visitor(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& _sm,
+#endif
+		const entity::footprint& _topfp) :
+		cflat_context_visitor(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			_sm,
+#endif
+			_topfp) { }
 
 #if 0
 // no catch-all necessary
@@ -101,8 +110,10 @@ protected:
 	using cflat_context_visitor::visit;
 
 	// overrides
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	void
 	visit(const state_manager&);
+#endif
 
 virtual	void
 	visit(const global_entry<process_tag>&);

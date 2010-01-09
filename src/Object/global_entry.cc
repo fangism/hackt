@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.1 2009/12/17 02:07:33 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.2 2010/01/09 03:29:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -90,6 +90,7 @@ footprint_frame_map<Tag>::__initialize_top_frame(const footprint& f) {
 	TODO: see if we can replace the other call with this
 		to reduce code duplication.  
  */
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class Tag>
 void
 footprint_frame_map<Tag>::__allocate_remaining_sub(
@@ -124,13 +125,16 @@ footprint_frame_map<Tag>::__allocate_remaining_sub(
 #endif
 		*i = _pool.allocate();
 		global_entry<Tag>& g(_pool[*i]);
+		// these are no longer members of global_entry_common
 		g.parent_tag_value = pt;
 		g.parent_id = pid;
 		g.local_offset = ind+1;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	See also footprint_base<Tag>::__expand_unique_subinstances().
 	TODO: see if we can replace the other call with this
@@ -168,8 +172,10 @@ footprint_frame_map<Tag>::__expand_subinstances(const footprint& fp,
 		}
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class Tag>
 void
 footprint_frame_map<Tag>::__collect_subentries(entry_collection& e, 
@@ -180,6 +186,7 @@ footprint_frame_map<Tag>::__collect_subentries(entry_collection& e,
 		sm.template collect_subentries<Tag>(e, *mi);
 	}
 }
+#endif
 
 //=============================================================================
 // class footprint_frame method definitions
@@ -324,6 +331,7 @@ footprint_frame::initialize_top_frame(const footprint& f) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	See also footprint::expand_unique_subinstances.  
 	\param fp the footprint that corresponds to this frame.  
@@ -335,7 +343,6 @@ void
 footprint_frame::allocate_remaining_subinstances(const footprint& fp, 
 		state_manager& sm, const parent_tag_enum pt, const size_t pid) {
 	STACKTRACE_VERBOSE;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const size_t process_offset = sm.get_pool<process_tag>().size();
 #if !BUILTIN_CHANNEL_FOOTPRINTS
 	const size_t channel_offset = sm.get_pool<channel_tag>().size();
@@ -343,7 +350,6 @@ footprint_frame::allocate_remaining_subinstances(const footprint& fp,
 #if ENABLE_DATASTRUCTS
 	const size_t struct_offset = sm.get_pool<datastruct_tag>().size();
 #endif
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// First just allocate the entries.
 	footprint_frame_map<process_tag>::
 		__allocate_remaining_sub(sm, pt, pid);
@@ -359,7 +365,6 @@ footprint_frame::allocate_remaining_subinstances(const footprint& fp,
 		__allocate_remaining_sub(sm, pt, pid);
 	footprint_frame_map<bool_tag>::
 		__allocate_remaining_sub(sm, pt, pid);
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// Now this footprint_frame should be good to pass down to subinstances
 	// end expand subinstances...
 	const size_t process_end = sm.get_pool<process_tag>().size();
@@ -379,10 +384,11 @@ footprint_frame::allocate_remaining_subinstances(const footprint& fp,
 	footprint_frame_map<datastruct_tag>::
 		__expand_subinstances(fp, sm, struct_offset, struct_end);
 #endif
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 }
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Visits each frame map and collects all reachable subinstances'
 	ID numbers into the entry collection.  
@@ -399,6 +405,7 @@ footprint_frame::collect_subentries(entry_collection& e,
 	footprint_frame_map<int_tag>::__collect_subentries(e, sm);
 	footprint_frame_map<bool_tag>::__collect_subentries(e, sm);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -497,9 +504,7 @@ footprint_frame::get_frame_map_test(void) const {
  */
 void
 global_entry_substructure_base<true>::collect_transient_info_base(
-		persistent_object_manager& m, 
-		const size_t ind, const footprint& topfp, 
-		const state_manager& sm) const {
+		persistent_object_manager& m) const {
 	_frame.collect_transient_info_base(m);
 }
 
@@ -513,9 +518,7 @@ global_entry_substructure_base<true>::collect_transient_info_base(
  */
 void
 global_entry_substructure_base<true>::write_object_base(
-		const persistent_object_manager& m,
-		ostream& o, const size_t ind, const footprint& topfp,
-		const state_manager& sm) const {
+		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	_frame.write_object_base(m, o);
 }
@@ -531,9 +534,7 @@ global_entry_substructure_base<true>::write_object_base(
  */
 void
 global_entry_substructure_base<true>::load_object_base(
-		const persistent_object_manager& m,
-		istream& i, const size_t ind, const footprint& topfp,
-		const state_manager& sm) {
+		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	_frame.load_object_base(m, i);
 }

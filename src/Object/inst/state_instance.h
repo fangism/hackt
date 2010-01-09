@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.11.88.1 2009/12/17 02:07:37 fang Exp $
+	$Id: state_instance.h,v 1.11.88.2 2010/01/09 03:30:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -53,6 +53,9 @@ class state_instance
 {
 	typedef	STATE_INSTANCE_CLASS		this_type;
 public:
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	typedef	global_entry<Tag>		entry_type;
+#endif
 	typedef	class_traits<Tag>		traits_type;
 private:
 	typedef	instance_alias_info<Tag>	alias_info_type;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.12 2008/12/07 00:27:05 fang Exp $
+	$Id: cflat_visitor.cc,v 1.12.20.1 2010/01/09 03:30:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -104,6 +104,7 @@ cflat_visitor::visit(const global_entry<process_tag>& e) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Default state_manager traversal. 
  */
@@ -120,6 +121,7 @@ cflat_visitor::visit(const state_manager& sm) {
 	sm.__accept<int_tag>(v);
 	sm.__accept<bool_tag>(v);
 }
+#endif
 
 //=============================================================================
 /**

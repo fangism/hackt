@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.27.2.1 2009/12/17 02:07:37 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.27.2.2 2010/01/09 03:30:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,6 +13,9 @@
 #include "Object/inst/port_alias_tracker.tcc"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_channel_entry.h"
+#endif
 #include "Object/inst/connection_policy.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/common/dump_flags.h"
@@ -525,6 +528,27 @@ port_alias_tracker_base<Tag>::__sift_ports(void) {
 	}
 #endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	For the complete set of scope aliases, this returns the index offset 
+	of the first non-port alias.
+ */
+template <class Tag>
+size_t
+port_alias_tracker_base<Tag>::__port_offset(void) const {
+	const const_iterator b(_ids.begin()), e(_ids.end());
+	// faster than find_first
+	const const_iterator p(lower_bound(b, e,
+		not1(port_alias_predicate())));
+	if (p != e) {
+		return p->second;
+	} else {
+		return _ids.size();
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

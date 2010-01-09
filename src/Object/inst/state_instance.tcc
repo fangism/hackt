@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.8 2008/10/11 06:35:10 fang Exp $
+	$Id: state_instance.tcc,v 1.8.24.1 2010/01/09 03:30:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_TCC__
@@ -70,6 +70,10 @@ STATE_INSTANCE_CLASS::write_object_base(const collection_pool_bundle_type& m,
 		ostream& o) const {
 	NEVER_NULL(back_ref);
 	back_ref->write_next_connection(m, o);
+#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// can this information be reconstructed?
+	entry_type::write_oject_base(m, o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -82,6 +86,10 @@ STATE_INSTANCE_CLASS::load_object_base(const collection_pool_bundle_type& m,
 		istream& i) {
 	this->back_ref = never_ptr<const alias_info_type>(
 		&alias_info_type::load_alias_reference(m, i));
+#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// can this information be reconstructed?
+	entry_type::load_oject_base(m, i);
+#endif
 }
 
 //=============================================================================

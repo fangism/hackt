@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.1 2009/12/17 02:07:35 fang Exp $
+	$Id: footprint.h,v 1.30.2.2 2010/01/09 03:30:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -203,6 +203,10 @@ private:
 	port_alias_tracker			scope_aliases;
 	/**
 		This keeps track which port members are internally aliased.
+		This is somewhat redundant with scope_aliases, 
+		which is now sifted so that port aliases are 
+		partition before non-port aliases.  
+		May eventually be able to eliminate this structure.
 	 */
 	port_alias_tracker			port_aliases;
 
@@ -434,10 +438,28 @@ public:
 	get_spec_footprint(void) const { return *spec_footprint; }
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	template <class Tag>
+	size_t
+	port_frame_size(void) const {
+		return port_aliases.port_frame_size<Tag>();
+	}
 private:
+#if 0
 	good_bool
 	expand_unique_subinstances(void);
+#endif
 
+	void
+	partition_local_instance_pool(void);
+
+	void
+	construct_private_entry_map(void);
+
+	void
+	append_private_map_entry(const footprint&, const size_t);
+
+	void
+	finish_instance_pools(const size_t);
 public:
 #else
 	good_bool
@@ -449,7 +471,10 @@ public:
 		const port_member_context&) const;
 
 	void
-	cflat_aliases(ostream&, const state_manager&,
+	cflat_aliases(ostream&,
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&,
+#endif
 		const cflat_options&) const;
 
 	// eventually pass parameter for warning control 

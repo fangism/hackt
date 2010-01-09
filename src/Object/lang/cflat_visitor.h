@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.9 2008/10/31 02:11:45 fang Exp $
+	$Id: cflat_visitor.h,v 1.9.24.1 2010/01/09 03:30:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -10,6 +10,7 @@
 #include "util/size_t.h"
 #include "Object/traits/classification_tags_fwd.h"
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -81,8 +82,10 @@ virtual	void
 	visit(const global_entry<int_tag>&);
 virtual	void
 	visit(const global_entry<bool_tag>&);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	void
 	visit(const state_manager&);
+#endif
 virtual	void
 	visit(const footprint&);
 virtual	void

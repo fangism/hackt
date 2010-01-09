@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_base.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint_base.h,v 1.5.14.1 2009/12/17 02:07:36 fang Exp $
+	$Id: footprint_base.h,v 1.5.14.2 2010/01/09 03:30:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_H__
@@ -10,7 +10,6 @@
 #include <iosfwd>
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/state_instance.h"
-#include "Object/devel_switches.h"
 
 #include "util/persistent_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -46,73 +45,41 @@ template <class Tag>
 class footprint_base {
 	typedef	footprint_base<Tag>			this_type;
 protected:
+#if 0
 	typedef	typename state_instance<Tag>::pool_type	instance_pool_type;
+#else
+	typedef	instance_pool<state_instance<Tag> >	instance_pool_type;
+#endif
 	typedef	instance_collection_pool_bundle<Tag>
 					collection_pool_bundle_type;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 private:
 	typedef	typename instance_pool_type::const_iterator	const_iterator;
+#endif
 protected:
 	const excl_ptr<collection_pool_bundle_type>	collection_pool_bundle;
 	/**
 		This is where final unique instances are allocated.
 	 */
 	const excl_ptr<instance_pool_type>		_instance_pool;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-public:	// out of sheer laziness for now...
-	// use state_instance and instance_pool instead of global_entry_pool!
-	// see "Object/inst/state_instance.h"
-	/**
-		Allocation time: the number of private instances of this
-		meta-type that are not locally reachable, but are deeper
-		in the hierarchy.  (computed by accumulation)
-		This is how we create a properly sized and spaced 
-		memory map.
-		Only for processes' footprints can these values be non-zero, 
-		because other structs only have public ports.  
-		This can be post-computed after the last private map
-		entry has been added.  
-	 */
-	size_t						_private_entries;
-	/**
-		Map entry (remains sorted) is amended each time a local
-		structure is allocated.  key,value increase monotonically
-		with each new entry, hence invariantly ordered.
-	 */
-	typedef	pair<size_t, size_t>			private_map_entry_type;
-	/**
-		Do a binary search on this sorted map to find the
-		index of the local instance to descend into.
-		key: lower bound of index (subtract this offset)
-		value: index local instance to which it belongs.
-		The intervals between entries of this map should correspond
-		to the _private_entries sizes of the referenced local 
-		instance' footprint.  
-	 */
-	vector<private_map_entry_type>			private_entry_map;
-protected:
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 	footprint_base();
 
 	// inline, uninitialized!
 	explicit
-	footprint_base(const util::uninitialized_tag_type&)
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		: _private_entries(0)
-#endif
-		{ }
+	footprint_base(const util::uninitialized_tag_type&) { }
 
 	~footprint_base();
 
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	good_bool
 	__allocate_global_state(state_manager&) const;
-#endif
 
 	// for process_tag ONLY!
 	good_bool
 	__expand_unique_subinstances(const footprint_frame&,
 		state_manager&, const size_t) const;
+#endif
 
 	// for process_tag ONLY!
 	good_bool
@@ -120,8 +87,16 @@ protected:
 		state_manager&) const;
 
 	// for channel_tag ONLY!
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	__append_private_map_entry(const this_type&, const size_t);
+
+	good_bool
+	__set_channel_footprints(void);
+#else
 	good_bool
 	__set_channel_footprints(state_manager&) const;
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

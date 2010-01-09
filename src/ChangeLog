@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-03:
+	  Round of surgical marks for ripping out everything to do with
+		the global state_manager structure.
+		MEMORY_MAPPED_GLOBAL_ALLOCATION still off.
+	  Moved private_entry_map and information from footprint_base
+		to instance_pool.
+	  Removed unused arguments from global_entry object
+		persistence functions.
+
+
 2009-12-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-02:

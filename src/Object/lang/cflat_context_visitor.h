@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_context_visitor.h"
-	$Id: cflat_context_visitor.h,v 1.4 2007/06/16 23:05:05 fang Exp $
+	$Id: cflat_context_visitor.h,v 1.4.58.1 2010/01/09 03:30:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
@@ -27,9 +27,16 @@ class cflat_context_visitor : public cflat_visitor, public cflat_context {
 public:
 	cflat_context_visitor() : cflat_visitor(), cflat_context() { }
 
-	cflat_context_visitor(const state_manager& _sm, 
+	cflat_context_visitor(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& _sm, 
+#endif
 		const footprint& _topfp) :
-		cflat_visitor(), cflat_context(_sm, _topfp) { }
+		cflat_visitor(), cflat_context(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			_sm,
+#endif
+			_topfp) { }
 
 	~cflat_context_visitor() { }
 

@@ -2,7 +2,7 @@
 	\file "Object/sizes-entity.cc"
 	Just dumps the sizeof for most HAC::entity classes.
 	This file came from "art_persistent_table.cc".
-	$Id: sizes-entity.cc,v 1.1 2007/02/27 02:27:55 fang Exp $
+	$Id: sizes-entity.cc,v 1.1.70.1 2010/01/09 03:30:00 fang Exp $
  */
 
 #include <iostream>
@@ -172,7 +172,9 @@ dump_class_sizes(ostream& o) {
 
 	o << "HAC::entity general classes:" << endl;
 	__dump_class_size<module>(o);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	__dump_class_size<state_manager>(o);
+#endif
 	__dump_class_size<port_member_context>(o);
 	__dump_class_size<port_collection_context>(o);
 

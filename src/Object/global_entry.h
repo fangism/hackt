@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.1 2009/12/17 02:07:34 fang Exp $
+	$Id: global_entry.h,v 1.18.20.2 2010/01/09 03:29:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -89,7 +89,7 @@ protected:
 	void
 	__initialize_top_frame(const footprint&);
 
-
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	__allocate_remaining_sub(state_manager&, 
 		const parent_tag_enum, const size_t);
@@ -97,6 +97,7 @@ protected:
 	void
 	__expand_subinstances(const footprint&, state_manager&,
 		const size_t, const size_t);
+#endif
 
 	void
 	__collect_subentries(entry_collection&, const state_manager&) const;
@@ -176,9 +177,11 @@ struct footprint_frame :
 	ostream&
 	dump_footprint(global_entry_dumper&) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	allocate_remaining_subinstances(const footprint&, state_manager&, 
 		const parent_tag_enum, const size_t);
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -275,16 +278,13 @@ struct global_entry_substructure_base<false> {
 	collect_subentries(entry_collection&, const state_manager&) const { }
 
 	void
-	collect_transient_info_base(const persistent_object_manager&, 
-		const size_t, const footprint&, const state_manager&) const { }
+	collect_transient_info_base(const persistent_object_manager&) const { }
 
 	void
-	write_object_base(const persistent_object_manager&, const ostream&, 
-		const size_t, const footprint&, const state_manager&) const { }
+	write_object_base(const persistent_object_manager&, const ostream&) const { }
 
 	void
-	load_object_base(const persistent_object_manager&, const istream&,
-		const size_t, const footprint&, const state_manager&) { }
+	load_object_base(const persistent_object_manager&, const istream&) { }
 
 };	// end struct global_entry_substructure_base
 
@@ -325,20 +325,17 @@ public:
 
 	// some footprint (in frame) may contain relaxed template arguments.  
 	void
-	collect_transient_info_base(persistent_object_manager&, 
-		const size_t, const footprint&, const state_manager&) const;
+	collect_transient_info_base(persistent_object_manager&) const;
 
 	// dumper could be reused for write_object_base!
 	void
-	write_object_base(const persistent_object_manager&, ostream&, 
-		const size_t, const footprint&, const state_manager&) const;
+	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	/**
 		Consider bundling arguments together...
 	 */
 	void
-	load_object_base(const persistent_object_manager&, istream&,
-		const size_t, const footprint&, const state_manager&);
+	load_object_base(const persistent_object_manager&, istream&);
 };	// end struct global_entry_substructure_base
 
 //=============================================================================
@@ -437,11 +434,19 @@ public:
 
 	ostream&
 	dump_canonical_name(ostream&,
-		const footprint&, const state_manager&) const;
+		const footprint&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const state_manager&
+#endif
+		) const;
 
 	ostream&
 	__dump_canonical_name(ostream&, const dump_flags&,
-		const footprint&, const state_manager&) const;
+		const footprint&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const state_manager&
+#endif
+		) const;
 
 	const state_instance<Tag>&
 	get_canonical_instance(const global_entry_context_base&) const;
@@ -453,12 +458,10 @@ public:
 	using parent_type::collect_transient_info_base;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&, 
-		const size_t, const footprint&, const state_manager&) const;
+	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&, 
-		const size_t, const footprint&, const state_manager&);
+	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end struct global_entry
 

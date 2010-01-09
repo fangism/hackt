@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_visitor.cc"
-	$Id: CHP_visitor.cc,v 1.4 2008/10/11 06:35:12 fang Exp $
+	$Id: CHP_visitor.cc,v 1.4.24.1 2010/01/09 03:30:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -16,6 +16,7 @@ namespace entity {
 namespace CHP {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	No-op.
  */
@@ -23,6 +24,7 @@ void
 chp_visitor::visit(const entity::state_manager&) {
 	// should be overridden
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

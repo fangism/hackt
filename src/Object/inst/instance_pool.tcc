@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.13 2006/11/07 06:34:51 fang Exp $
+	$Id: instance_pool.tcc,v 1.13.88.1 2010/01/09 03:30:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -33,12 +33,20 @@ using util::auto_indent;
 	so the first index returned by allocator is nonzero.  
  */
 template <class T>
-instance_pool<T>::instance_pool(const size_type s) : parent_type() {
+instance_pool<T>::instance_pool(const size_type s) : parent_type()
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, _port_entries(0), private_entry_map()
+#endif
+		{
 	STACKTRACE_CTOR_VERBOSE;
 	STACKTRACE_CTOR_PRINT("at: " << this << endl);
 	this->set_chunk_size(s);
 	allocate();
 	INVARIANT(this->size());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// start with a dummy sentinel entry
+	private_entry_map.push_back(std::make_pair(0, 0));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -46,20 +54,19 @@ instance_pool<T>::instance_pool(const size_type s) : parent_type() {
 	Default constructor, when we don't care about chunk size.  
  */
 template <class T>
-instance_pool<T>::instance_pool() : parent_type() {
+instance_pool<T>::instance_pool() : parent_type()
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, _port_entries(0), private_entry_map()
+#endif
+		{
 	STACKTRACE_CTOR_VERBOSE;
 	STACKTRACE_CTOR_PRINT("at: " << this << endl);
 	this->set_chunk_size(default_chunk_size);
 	allocate();
 	INVARIANT(this->size());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class T>
-instance_pool<T>::instance_pool(const this_type& t) : parent_type(t) {
-	STACKTRACE_CTOR_VERBOSE;
-	STACKTRACE_CTOR_PRINT("at: " << this << endl);
-	INVARIANT(this->size());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	private_entry_map.push_back(std::make_pair(0, 0));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -127,6 +134,11 @@ instance_pool<T>::write_object_base(const collection_pool_bundle_type& m,
 	for ( ; i!=e; i++, j++) {
 		i->write_object_base(m, o);
 	}
+#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// technically, this information can be reconstructed
+	write_value(o, _port_entries);
+	write_sequence(o, private_entry_map);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -151,6 +163,11 @@ instance_pool<T>::load_object_base(const collection_pool_bundle_type& m,
 		this->allocate(temp);
 		// works because this_type is copy-constructible
 	}
+#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// technically, this information can be reconstructed
+	read_value(i, _port_entries);
+	read_sequence_resize(i, private_entry_map);
+#endif
 }
 
 //=============================================================================

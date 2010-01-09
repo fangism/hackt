@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.24 2009/10/29 23:00:27 fang Exp $
+	$Id: cflat_printer.cc,v 1.24.2.1 2010/01/09 03:30:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -79,6 +79,7 @@ cflat_prs_printer::visit(const PRS::footprint& p) {
 	Q2: why is the conditional checked here? (more efficient in parent)
 	TODO: support attributes (or use a visitor?)
  */
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 void
 cflat_prs_printer::visit(const footprint_rule& r) {
 	STACKTRACE_VERBOSE;
@@ -131,6 +132,7 @@ cflat_prs_printer::print_node_name(ostream& o,
 	if (cfopts.enquote_names) o << '\"';
 	return o;
 }
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

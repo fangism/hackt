@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.4 2008/11/05 23:03:25 fang Exp $
+	$Id: nonmeta_state.cc,v 1.4.24.1 2010/01/09 03:30:00 fang Exp $
  */
 
 #include <iostream>
@@ -16,6 +16,7 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/enum_traits.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
+#include "common/TODO.h"
 #include "util/binders.h"
 #include "util/IO_utils.h"
 
@@ -35,6 +36,7 @@ template <class Tag>
 nonmeta_state_base<Tag>::nonmeta_state_base() : pool() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class Tag>
 nonmeta_state_base<Tag>::nonmeta_state_base(const state_manager& sm) :
 		pool() {
@@ -42,6 +44,7 @@ nonmeta_state_base<Tag>::nonmeta_state_base(const state_manager& sm) :
 	const size_t s = p.size();
 	this->pool.resize(s);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -58,8 +61,14 @@ nonmeta_state_base<Tag>::reset() {
 template <class Tag>
 ostream&
 nonmeta_state_base<Tag>::__dump_all_subscriptions(ostream& o, 
-		const state_manager& sm, const footprint& topfp) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm,
+#endif
+		const footprint& topfp) const {
 	typedef	class_traits<Tag>		traits_type;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	o << "FINISH __dump_all_subscriptions()" << endl;
+#else
 	const global_entry_pool<Tag>& ip(sm.template get_pool<Tag>());
 	const size_t s = this->pool.size();
 	size_t i = FIRST_VALID_GLOBAL_NODE;
@@ -73,6 +82,7 @@ nonmeta_state_base<Tag>::__dump_all_subscriptions(ostream& o,
 			nsi.dump_subscribers(o) << endl;
 		}
 	}
+#endif
 	return o;
 }
 
@@ -140,7 +150,13 @@ nonmeta_state_manager::nonmeta_state_manager() :
 	corresponding channel types.  
 	\pre must have already refreshed the channel type footprint summaries.
  */
-nonmeta_state_manager::nonmeta_state_manager(const state_manager& sm) :
+nonmeta_state_manager::nonmeta_state_manager(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			const footprint& sm
+#else
+			const state_manager& sm
+#endif
+			) :
 		bool_base_type(sm), 
 		int_base_type(sm), 
 		enum_base_type(sm), 
@@ -148,6 +164,9 @@ nonmeta_state_manager::nonmeta_state_manager(const state_manager& sm) :
 	typedef	global_entry_pool<channel_tag>	channel_entry_pool_type;
 	typedef	channel_base_type::pool_type	channel_state_pool_type;
 	typedef	channel_state_pool_type::iterator	channel_state_iterator;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+#else
 	const channel_entry_pool_type&
 		cep(sm.get_pool<channel_tag>());
 	const size_t s = cep.size();
@@ -159,6 +178,7 @@ nonmeta_state_manager::nonmeta_state_manager(const state_manager& sm) :
 		const global_entry<channel_tag>& ce(cep[j]);
 		i->resize(ce.channel_type->footprint_size());
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -194,11 +214,15 @@ nonmeta_state_manager::dump_state(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Formatted printing of names of all instances.  
  */
 ostream&
-nonmeta_state_manager::dump_struct(ostream& o, const state_manager& sm, 
+nonmeta_state_manager::dump_struct(ostream& o,
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm, 
+#endif
 		const footprint& topfp) const {
 	{
 		const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
@@ -252,6 +276,7 @@ nonmeta_state_manager::dump_struct(ostream& o, const state_manager& sm,
 	}
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -259,11 +284,21 @@ nonmeta_state_manager::dump_struct(ostream& o, const state_manager& sm,
  */
 ostream&
 nonmeta_state_manager::dump_all_subscriptions(ostream& o, 
-		const state_manager& sm, const footprint& topfp) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm,
+#endif
+		const footprint& topfp) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	nonmeta_state_base<bool_tag>::__dump_all_subscriptions(o, topfp);
+	nonmeta_state_base<int_tag>::__dump_all_subscriptions(o, topfp);
+	nonmeta_state_base<enum_tag>::__dump_all_subscriptions(o, topfp);
+	nonmeta_state_base<channel_tag>::__dump_all_subscriptions(o, topfp);
+#else
 	nonmeta_state_base<bool_tag>::__dump_all_subscriptions(o, sm, topfp);
 	nonmeta_state_base<int_tag>::__dump_all_subscriptions(o, sm, topfp);
 	nonmeta_state_base<enum_tag>::__dump_all_subscriptions(o, sm, topfp);
 	nonmeta_state_base<channel_tag>::__dump_all_subscriptions(o, sm, topfp);
+#endif
 	return o;
 }
 

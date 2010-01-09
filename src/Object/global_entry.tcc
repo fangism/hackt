@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.22 2008/11/23 17:53:34 fang Exp $
+	$Id: global_entry.tcc,v 1.22.20.1 2010/01/09 03:29:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -68,6 +68,7 @@ template <class Tag>
 footprint_frame_map<Tag>::~footprint_frame_map() { }
 
 //=============================================================================
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	\param sm the global state allocator.  
 	\param gec the referencing entry with parent_id, and local_offset.
@@ -106,10 +107,12 @@ extract_parent_formal_instance_alias(const state_manager& sm,
 		_inst(local_placeholder_pool[gec.local_offset]);
 	return *_inst.get_back_ref();
 }
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //=============================================================================
 // class footprint_frame method definitions
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Prints the canonical type associated with this footprint_frame's
 	reference footprint.  
@@ -167,6 +170,7 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 	}
 	return o;
 }
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //=============================================================================
 // class global_entry_substructure_base method definitions
@@ -226,6 +230,7 @@ footprint_frame::get_frame_map(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Recursively prints canonical name.  
  */
@@ -287,6 +292,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 	const instance_alias_info<Tag>& _alias(*_inst->get_back_ref());
 	return _alias.dump_hierarchical_name(o, df);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -308,6 +314,7 @@ global_entry<Tag>::dump_canonical_name(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	NOTE: currently, only processes are ever super instances.  
  */
@@ -338,6 +345,7 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 	parent_type::template dump<Tag>(ged);
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -348,6 +356,7 @@ global_entry<Tag>::dump_attributes(global_entry_dumper& ged) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	This returns a unique leaf instance in the hierarchy that contains the
 	instance and alias information.  
@@ -386,6 +395,7 @@ global_entry<Tag>::get_canonical_instance(
 	NEVER_NULL(_inst);
 	return *_inst;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -402,16 +412,17 @@ global_entry<Tag>::accept(PRS::cflat_visitor& v) const {
 template <class Tag>
 void
 global_entry<Tag>::write_object_base(const persistent_object_manager& m, 
-		ostream& o, const size_t ind, const footprint& f, 
-		const state_manager& sm) const {
+		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	write_value(o, parent_tag_value);
 	STACKTRACE_PERSISTENT_PRINT("parent_tag = " << size_t(parent_tag_value) << endl);
 	write_value(o, parent_id);
 	STACKTRACE_PERSISTENT_PRINT("parent_id = " << parent_id << endl);
 	write_value(o, local_offset);
 	STACKTRACE_PERSISTENT_PRINT("local_offset = " << local_offset << endl);
-	parent_type::write_object_base(m, o, ind, f, sm);
+#endif
+	parent_type::write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -423,16 +434,17 @@ global_entry<Tag>::write_object_base(const persistent_object_manager& m,
 template <class Tag>
 void
 global_entry<Tag>::load_object_base(const persistent_object_manager& m, 
-		istream& i, const size_t ind, const footprint& f, 
-		const state_manager& sm) {
+		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	read_value(i, parent_tag_value);
 	STACKTRACE_PERSISTENT_PRINT("parent_tag = " << size_t(parent_tag_value) << endl);
 	read_value(i, parent_id);
 	STACKTRACE_PERSISTENT_PRINT("parent_id = " << parent_id << endl);
 	read_value(i, local_offset);
 	STACKTRACE_PERSISTENT_PRINT("local_offset = " << local_offset << endl);
-	parent_type::load_object_base(m, i, ind, f, sm);
+#endif
+	parent_type::load_object_base(m, i);
 }
 
 //=============================================================================

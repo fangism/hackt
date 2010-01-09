@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/nonmeta_ref_implementation.tcc"
 	Policy-based implementations of some nonmeta reference functions.  
- 	$Id: nonmeta_ref_implementation.tcc,v 1.4 2007/04/15 05:52:24 fang Exp $
+ 	$Id: nonmeta_ref_implementation.tcc,v 1.4.64.1 2010/01/09 03:30:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_REF_IMPLEMENTATION_TCC__
@@ -140,7 +140,9 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 		const meta_reference_type cr(r.get_inst_base_subtype(), mil);
 		// the call only results in local indices!
 		if (cr.lookup_globally_allocated_indices(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 				*c.get_state_manager(), 
+#endif
 				*local_fp, indices).good) {
 			if (ff) {
 				// apply transformation if not top-level

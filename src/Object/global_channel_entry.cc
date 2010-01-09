@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_channel_entry.cc"
-	$Id: global_channel_entry.cc,v 1.2 2007/01/21 05:58:18 fang Exp $
+	$Id: global_channel_entry.cc,v 1.2.76.1 2010/01/09 03:29:54 fang Exp $
  */
 
 #include "Object/global_channel_entry.h"
@@ -35,9 +35,8 @@ global_entry_base<channel_tag>::dump(global_entry_dumper& ged) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 global_entry_base<channel_tag>::collect_transient_info_base(
-		persistent_object_manager& m, const size_t ind, 
-		const footprint& f, const state_manager& sm) const {
-	substructure_policy::collect_transient_info_base(m, ind, f, sm);
+		persistent_object_manager& m) const {
+	substructure_policy::collect_transient_info_base(m);
 	// only the top-level's 0th entry should be NULL
 	if (channel_type)
 		channel_type->collect_transient_info(m);
@@ -46,20 +45,16 @@ global_entry_base<channel_tag>::collect_transient_info_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 global_entry_base<channel_tag>::write_object_base(
-		const persistent_object_manager& m, ostream& o, 
-		const size_t ind,
-		const footprint& f, const state_manager& sm) const {
-	substructure_policy::write_object_base(m, o, ind, f, sm);
+		const persistent_object_manager& m, ostream& o) const {
+	substructure_policy::write_object_base(m, o);
 	chan_type_impl::write_pointer(m, o, channel_type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 global_entry_base<channel_tag>::load_object_base(
-		const persistent_object_manager& m, istream& i, 
-		const size_t ind,
-		const footprint& f, const state_manager& sm) {
-	substructure_policy::load_object_base(m, i, ind, f, sm);
+		const persistent_object_manager& m, istream& i) {
+	substructure_policy::load_object_base(m, i);
 	channel_type = chan_type_impl::read_pointer(m, i);
 }
 

@@ -1,17 +1,20 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.18 2009/10/06 17:05:34 fang Exp $
+	$Id: state_manager.h,v 1.18.2.1 2010/01/09 03:30:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
 #define	__HAC_OBJECT_STATE_MANAGER_H__
 
+#include "Object/devel_switches.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+// #error OBSOLETE!!!
+#else
 #include <iosfwd>
 #include "util/persistent_fwd.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/common/frame_map.h"
-#include "Object/devel_switches.h"
 #include "util/list_vector.h"
 #include "util/memory/index_pool.h"
 #include "util/boolean_types.h"
@@ -84,16 +87,13 @@ protected:
 	accept(PRS::cflat_visitor&) const;
 
 	void
-	collect_transient_info_base(persistent_object_manager&, 
-		const footprint&) const;
+	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&, 
-		const footprint&) const;
+	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&, 
-		const footprint&);
+	load_object_base(const persistent_object_manager&, istream&);
 
 	ostream&
 	__dump_memory_usage(ostream&) const;
@@ -229,6 +229,7 @@ private:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 #endif	// __HAC_OBJECT_STATE_MANAGER_H__
 

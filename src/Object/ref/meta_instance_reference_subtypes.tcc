@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.28 2009/10/02 01:57:16 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.28.2.1 2010/01/09 03:30:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -99,6 +99,8 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 	\pre this must be a scalar, simple_meta_instance_reference type, 
 		member-references are acceptable.  
  */
+// TODO: redo
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
 META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod, 
@@ -111,6 +113,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 	INVARIANT(index);	// because we already checked reference?
 	mod.template match_aliases<Tag>(aliases, index);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -119,6 +122,8 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 	else if this is aggregate (e.g. array slice) then visit
 	all instances in range.  
  */
+// TODO: redo
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod, 
@@ -152,6 +157,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 	}
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

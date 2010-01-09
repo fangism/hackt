@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.6 2007/09/11 06:52:36 fang Exp $
+	$Id: global_entry_context.h,v 1.6.46.1 2010/01/09 03:29:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -12,6 +12,7 @@
 #include "util/NULL.h"
 #include "util/size_t.h"
 #include "util/member_saver.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -34,10 +35,14 @@ using util::member_saver;
 class global_entry_context_base {
 	typedef	global_entry_context_base	this_type;
 protected:
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// need some replacement
+#else
 	/**
 		Top-level state manager.
 	 */
 	const state_manager*			sm;
+#endif
 	/**
 		Top-level footprint for global lookups.  
 	 */
@@ -49,13 +54,17 @@ public:
 		global_entry_context_base for the duration of the scope.  
 	 */
 	class module_setter :
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		public member_saver<this_type, 
 			const state_manager*, &global_entry_context_base::sm>,
+#endif
 		public member_saver<this_type, 
 			const footprint*, &global_entry_context_base::topfp> {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		typedef	member_saver<this_type, 
 			const state_manager*, &global_entry_context_base::sm>
 				manager_saver_type;
+#endif
 		typedef member_saver<this_type, 
 			const footprint*, &global_entry_context_base::topfp>
 				footprint_saver_type;
@@ -65,13 +74,27 @@ public:
 	} __ATTRIBUTE_UNUSED__ ;	// end class module setter
 
 public:
-	global_entry_context_base() : sm(NULL), topfp(NULL) { }
-	global_entry_context_base(const state_manager& _sm, 
-		const footprint& _fp) : sm(&_sm), topfp(&_fp) { }
+	global_entry_context_base() :
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		sm(NULL),
+#endif
+		topfp(NULL) { }
+	explicit
+	global_entry_context_base(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& _sm, 
+#endif
+		const footprint& _fp) :
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		sm(&_sm),
+#endif
+		topfp(&_fp) { }
 	// default destructor
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const state_manager*
 	get_state_manager(void) const { return sm; }
+#endif
 
 	const footprint*
 	get_top_footprint_ptr(void) const { return topfp; }
@@ -106,17 +129,27 @@ public:
 	public:
 		footprint_frame_setter(global_entry_context&,
 			const footprint_frame&);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		footprint_frame_setter(global_entry_context&,
 			const size_t pid);
+#endif
 		~footprint_frame_setter();
 	} __ATTRIBUTE_UNUSED__ ;	// end class footprint_frame_setter
 
 public:
 	global_entry_context() : global_entry_context_base(), fpf(NULL) { }
 
-	global_entry_context(const state_manager& s, const footprint& _fp, 
+	global_entry_context(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& s,
+#endif
+		const footprint& _fp, 
 		const footprint_frame* const ff = NULL) : 
-		global_entry_context_base(s, _fp), fpf(ff) { }
+		global_entry_context_base(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			s,
+#endif
+			_fp), fpf(ff) { }
 
 	const footprint_frame*
 	get_footprint_frame(void) const { return fpf; }
@@ -146,15 +179,24 @@ public:
  */
 struct global_entry_dumper : public global_entry_context_base {
 public:
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using global_entry_context_base::sm;
+#endif
 	using global_entry_context_base::topfp;
 
 	ostream&				os;
 	size_t					index;
 
-	global_entry_dumper(ostream& _o, const state_manager& _sm, 
+	global_entry_dumper(ostream& _o,
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& _sm, 
+#endif
 		const footprint& _fp) :
-		global_entry_context_base(_sm, _fp), os(_o), index(0) { }
+		global_entry_context_base(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			_sm,
+#endif
+			_fp), os(_o), index(0) { }
 
 };	// end struct global_entry_dumper
 
