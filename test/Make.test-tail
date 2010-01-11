@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.96 2010/01/05 22:52:32 fang Exp $
+#	$Id: Make.test-tail,v 1.97 2010/01/11 21:25:20 fang Exp $
 
 # for test that depend on pre-install plug-ins
 # don't forget to pass -dlopen to assist searching for pre-install dependencies
@@ -312,10 +312,6 @@ clean-summaries-local:
 
 MORE_CLEAN_RECURSIVE_TARGETS += clean-summaries-recursive
 
-MORE_CLEAN_RECURSIVE_TARGETS += distclean-depend-recursive
-
-distclean-depend: distclean-depend-recursive distclean-depend-local
-
 distclean-depend-local:
 	-$(RM_PATTERN) "*.autodepend"
 	-$(RM_PATTERN) "*.depend"
@@ -345,13 +341,12 @@ cleaner: cleaner-recursive cleaner-am
 
 cleaner-am: cleaner-local clean-am
 
-distclean-local: cleaner-local distclean-depend-local
+distclean-local: cleaner-local
 
 MORE_CLEAN_RECURSIVE_TARGETS += cleaner-recursive
 
 .PHONY: cleaner cleaner-am cleaner-local check-summaries check-summaries-am \
-	clean-tests help-test clean-summaries clean-summaries-local \
-	distclean-depend distclean-depend-local
+	clean-tests help-test clean-summaries clean-summaries-local
 
 help-local: help-test
 

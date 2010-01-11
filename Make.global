@@ -7,7 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.33 2008/12/23 04:42:20 fang Exp $
+#	$Id: Make.global,v 1.34 2010/01/11 21:25:19 fang Exp $
 
 # automatically runs autotools (and recursively in subdirectories)
 reconf: force
@@ -141,10 +141,13 @@ cleandirs:
 clean-local: cleandirs
 
 # $distdir is assumed passed in as Makefile variable
+MORE_CLEAN_RECURSIVE_TARGETS += distclean-depend-recursive
+distclean-depend: distclean-depend-recursive distclean-depend-am
+distclean-depend-am: distclean-depend-local
 distcleandirs:
 	test -z "$(DISTCLEANDIRS)" || $(RM) -r $(DISTCLEANDIRS)
 
-distclean-local: distcleandirs
+distclean-local: distcleandirs distclean-depend-local
 
 # $distdir is assumed passed in as Makefile variable
 dist-hook-autoclean:
@@ -408,5 +411,6 @@ force:
 .PHONY: force $(PHONY_CVSIGNORE) \
 	$(MORE_RECURSIVE_TARGETS) $(MORE_CLEAN_RECURSIVE_TARGETS) \
 	help help-local help-global dist-hook dist-hook-autoclean \
-	srcdir-distfiles build-check build-check-am build-check-local
+	srcdir-distfiles build-check build-check-am build-check-local \
+	distclean-depend distclean-depend-am distclean-depend-local
 

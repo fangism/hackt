@@ -1,6 +1,12 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.101 2010/01/05 22:52:31 fang Exp $
+#	$Id: ChangeLog,v 1.102 2010/01/11 21:25:19 fang Exp $
 # ChangeLog for test directory.
+
+2010-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-58+:
+	  Make.test-tail: standardized distclean-depend target to Make.global
+
 
 2010-01-05	David Fang		<fangism@users.sourceforge.net>
 
