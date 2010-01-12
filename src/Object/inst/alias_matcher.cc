@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.5 2007/01/21 05:59:08 fang Exp $
+	$Id: alias_matcher.cc,v 1.5.76.1 2010/01/12 02:48:47 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
@@ -22,6 +22,7 @@
 #include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
 #include "Object/devel_switches.h"
+#include "common/TODO.h"
 #include "util/macros.h"
 #include "util/sstream.h"
 #include "util/stacktrace.h"
@@ -90,6 +91,9 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<false> {
 		STACKTRACE_VERBOSE;
 		ostringstream os;
 		a.dump_hierarchical_name(os, dump_flags::no_leading_scope);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		FINISH_ME_EXIT(Fang);
+#else
 		const string& local_name(os.str());
 		// construct new prefix from os
 		const typename MatcherType::save_prefix save(v);
@@ -112,6 +116,7 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<false> {
 	alias_matcher_recursion_policy<traits_type::has_substructure>
 		::accept(v, e);
 	// recursion or termination
+#endif
 	}	// end method accept
 };	// end struct match_aliases_implementation_policy
 
@@ -140,9 +145,13 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 		STACKTRACE_VERBOSE;
 		ostringstream os;
 		a.dump_hierarchical_name(os, dump_flags::no_leading_scope);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		FINISH_ME_EXIT(Fang);
+#else
 		const string& local_name(os.str());
 		// construct new prefix from os
 		const typename MatcherType::save_prefix save(v);
+		// THIS LOOKS COPIED FROM alias_printer.cc ... refactor?
 		const global_entry_pool<Tag>& gp(v.sm.template get_pool<Tag>());
 		size_t gindex;
 	if (v.fpf) {
@@ -170,6 +179,7 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 			::accept(v, e);
 		// recursion or termination
 	}
+#endif
 	}	// end method accept
 };	// end struct match_aliases_implementation_policy
 

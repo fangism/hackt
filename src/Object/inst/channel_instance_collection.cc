@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.16 2007/01/21 05:59:10 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.16.76.1 2010/01/12 02:48:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -43,6 +43,9 @@
 #include "Object/inst/state_instance.tcc"
 #include "Object/def/datatype_definition_base.h"
 #include "Object/inst/alias_empty.h"	// why is this needed?
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_channel_entry.h"
+#endif
 #if BUILTIN_CHANNEL_FOOTPRINTS
 #include "Object/unroll/channel_instantiation_type_ref_base.h"
 #else

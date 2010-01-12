@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.h"
-	$Id: alias_printer.h,v 1.3 2009/02/28 01:20:40 fang Exp $
+	$Id: alias_printer.h,v 1.3.16.1 2010/01/12 02:48:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_PRINTER_H__
@@ -17,13 +17,20 @@ namespace entity {
  */
 struct alias_printer : public alias_visitor, public cflat_aliases_arg_type {
 
-	alias_printer(ostream& _o, const state_manager& _sm,
+	alias_printer(ostream& _o, 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			const state_manager& _sm,
+#endif
 			const footprint& _f,
 			const footprint_frame* const _fpf,
 			const cflat_options& _cf,
 			wire_alias_set& _w,
 			const string& _p = string()) :
-			cflat_aliases_arg_type(_o, _sm, _f, _fpf, _cf, _w, _p) {
+			cflat_aliases_arg_type(_o, 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				_sm, 
+#endif
+				_f, _fpf, _cf, _w, _p) {
 	}
 
 	// default dtor

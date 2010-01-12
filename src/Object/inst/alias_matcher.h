@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.h"
-	$Id: alias_matcher.h,v 1.3 2009/02/28 01:20:40 fang Exp $
+	$Id: alias_matcher.h,v 1.3.16.1 2010/01/12 02:48:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_MATCHER_H__
@@ -26,12 +26,20 @@ struct alias_matcher_base : public alias_visitor, public cflat_args_base {
 	string					prefix;
 
 protected:
-	alias_matcher_base(const state_manager& _sm, const footprint& _f, 
+	alias_matcher_base(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& _sm, 
+#endif
+		const footprint& _f, 
 		const footprint_frame* const _fpf, 
 		util::string_list& _al, 
 		const size_t _i, 
 		const string& _p = string()) : alias_visitor(), 
-		cflat_args_base(_sm, _f, _fpf), aliases(_al), 
+		cflat_args_base(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			_sm, 
+#endif
+			_f, _fpf), aliases(_al), 
 		index(_i), prefix(_p) {
 	}
 
@@ -52,12 +60,20 @@ public:
 template <class Tag>
 struct alias_matcher : public alias_matcher_base {
 
-	alias_matcher(const state_manager& _sm, const footprint& _f, 
+	alias_matcher(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& _sm,
+#endif
+		const footprint& _f, 
 		const footprint_frame* const _fpf, 
 		util::string_list& _al, 
 		const size_t _i, 
 		const string& _p = string()) :
-		alias_matcher_base(_sm, _f, _fpf, _al, _i, _p) {
+		alias_matcher_base(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			_sm,
+#endif
+			_f, _fpf, _al, _i, _p) {
 	}
 
 	// default dtor

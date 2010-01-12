@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.6 2007/09/11 06:53:15 fang Exp $
+	$Id: nonmeta_context.h,v 1.6.46.1 2010/01/12 02:49:05 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -94,7 +94,11 @@ public:
 			event_setter_base(const_cast<this_type&>(t), e) { }
 	};
 public:
-	nonmeta_context(const state_manager&, const footprint&, 
+	nonmeta_context(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&, 
+#endif
+		const footprint&, 
 		State&);
 
 	~nonmeta_context();

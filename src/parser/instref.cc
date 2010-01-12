@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19 2009/11/14 03:12:09 fang Exp $
+	$Id: instref.cc,v 1.19.2.1 2010/01/12 02:49:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -219,9 +219,13 @@ parse_node_to_index(const string& n, const module& m) {
 	// reminder: this is a packed_array_generic
 	// this code uses the allocation information from the 
 	// alloc phase to find the canonical ID number.  
-	const state_manager& sm(m.get_state_manager());
 	const footprint& top(m.get_footprint());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const size_t ret = b->lookup_globally_allocated_index(top);
+#else
+	const state_manager& sm(m.get_state_manager());
 	const size_t ret = b->lookup_globally_allocated_index(sm, top);
+#endif
 #if 0
 	cerr << "index = " << ret << endl;
 #endif
@@ -257,9 +261,13 @@ if (n == ".") {
 	// reminder: this is a packed_array_generic
 	// this code uses the allocation information from the 
 	// alloc phase to find the canonical ID number.  
-	const state_manager& sm(m.get_state_manager());
 	const footprint& top(m.get_footprint());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const size_t ret = b->lookup_globally_allocated_index(top);
+#else
+	const state_manager& sm(m.get_state_manager());
 	const size_t ret = b->lookup_globally_allocated_index(sm, top);
+#endif
 	return ret;
 }
 }
@@ -279,10 +287,14 @@ parse_global_reference(const string& n, const module& m) {
 		return global_indexed_reference(META_TYPE_NONE, 
 			INVALID_NODE_INDEX);
 	}
-	const state_manager& sm(m.get_state_manager());
 	const footprint& top(m.get_footprint());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return r.inst_ref()->lookup_top_level_reference(top);
+#else
+	const state_manager& sm(m.get_state_manager());
 	// r.inst_ref() is a meta_instance_reference_base
 	return r.inst_ref()->lookup_top_level_reference(sm, top);
+#endif
 }
 
 //=============================================================================
@@ -293,6 +305,11 @@ parse_global_reference(const string& n, const module& m) {
 static
 const footprint*
 get_process_footprint(const size_t pid, const module& m) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+	// this should be easy to implement with hierarchy!
+	return NULL;
+#else
 	const state_manager& sm(m.get_state_manager());
 	const global_entry_pool<process_tag>&
 		proc_pool(sm.get_pool<process_tag>());
@@ -301,6 +318,7 @@ get_process_footprint(const size_t pid, const module& m) {
 	const footprint* f = pe._frame._footprint;
 	NEVER_NULL(f);
 	return f;
+#endif
 }
 
 //=============================================================================
@@ -382,7 +400,10 @@ if (n == ".") {
 		// check for valid reference first
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(
-				m.get_state_manager(), m.get_footprint()));
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				m.get_state_manager(), 
+#endif
+				m.get_footprint()));
 		if (!gref.second) {
 			o << "Error resolving instance reference: "
 				<< n << endl;
@@ -429,7 +450,12 @@ parse_name_to_get_subnodes(const string& n, const module& m,
 	STACKTRACE_VERBOSE;
 if (n == ".") {
 	// no lookup necessary, just copy all integers!
-	const size_t bmax = m.get_state_manager().get_pool<bool_tag>().size();
+	const size_t bmax =
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		m.get_footprint().get_instance_pool<bool_tag>().total_entries();
+#else
+		m.get_state_manager().get_pool<bool_tag>().size();
+#endif
 	size_t i = INVALID_NODE_INDEX +1;
 	v.reserve(bmax -1);
 	for ( ; i<bmax; ++i) {
@@ -472,6 +498,10 @@ parse_name_to_get_subnodes_local(const string& n, const module& m,
 		vector<size_t>& v) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+	return 1;
+#else
 	const size_t pid = parse_process_to_index(n, m);
 	if (pid == INVALID_PROCESS_INDEX) {
 		return 1;
@@ -489,6 +519,7 @@ parse_name_to_get_subnodes_local(const string& n, const module& m,
 	}
 	copy(s.begin(), s.end(), back_inserter(v));
 	return 0;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -513,6 +544,10 @@ parse_name_to_get_ports(const string& n, const module& m,
 		// top-level process has no ports!
 		return 0;
 	}
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+	return 1;
+#else
 	const state_manager& sm(m.get_state_manager());
 	const footprint& topfp(m.get_footprint());
 	const entity::global_entry_context_base gec(sm, topfp);
@@ -550,6 +585,7 @@ parse_name_to_get_ports(const string& n, const module& m,
 #if 0
 	copy(v.begin(), v.end(), ostream_iterator<size_t>(cout, ","));
 	cout << endl;
+#endif
 #endif
 	return 0;
 }
@@ -661,7 +697,10 @@ complete_instance_names(const char* _text, const module& m,
 			// no error message
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(
-				m.get_state_manager(), m.get_footprint()));
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				m.get_state_manager(), 
+#endif
+				m.get_footprint()));
 		if (!gref.second) { return; }
 		if (gref.first != entity::META_TYPE_PROCESS) { return; }
 		// until non-process types have subinstances...

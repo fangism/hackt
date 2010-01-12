@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.30 2009/03/09 07:30:51 fang Exp $
+	$Id: CHP.cc,v 1.30.14.1 2010/01/12 02:48:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -45,6 +45,9 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/preal_const.h"
 #include "Object/def/template_formals_manager.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_channel_entry.h"
+#endif
 #if CHP_ACTION_PARENT_LINK
 #include <functional>
 #include "util/binders.h"

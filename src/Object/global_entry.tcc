@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.22.20.1 2010/01/09 03:29:56 fang Exp $
+	$Id: global_entry.tcc,v 1.22.20.2 2010/01/12 02:48:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -303,14 +303,19 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 template <class Tag>
 ostream&
 global_entry<Tag>::dump_canonical_name(ostream& o,
-		const footprint& topfp, const state_manager& sm) const {
-#if 1
-	return __dump_canonical_name(o, dump_flags::no_definition_owner,
-		topfp, sm);
-#else
-	return __dump_canonical_name(o, dump_flags::no_leading_scope,
-		topfp, sm);
+		const footprint& topfp
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const state_manager& sm
 #endif
+		) const {
+	return __dump_canonical_name(o,
+		dump_flags::no_definition_owner,
+		// dump_flags::no_leading_scope,
+		topfp
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, sm
+#endif
+		);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

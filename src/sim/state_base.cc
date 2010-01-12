@@ -1,6 +1,6 @@
 /**
 	\file "sim/state_base.cc"
-	$Id: state_base.cc,v 1.3 2008/11/05 23:03:39 fang Exp $
+	$Id: state_base.cc,v 1.3.24.1 2010/01/12 02:49:01 fang Exp $
  */
 
 #include <iostream>
@@ -33,7 +33,11 @@ state_base::dump_source_paths(ostream& o) const {
 ostream&
 state_base::dump_memory_usage(ostream& o) const {
 	// TODO: report definitions' footprints' memory usage
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return o << "FINISH ME: sim::state_base::dump_memory_usage" << endl;
+#else
 	return mod.get_state_manager().dump_memory_usage(o);
+#endif
 }
 
 //=============================================================================

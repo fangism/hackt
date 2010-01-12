@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.7 2009/02/23 09:11:16 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.7.16.1 2010/01/12 02:48:58 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -45,7 +45,9 @@ using std::string;
 using std::transform;
 using std::ostringstream;
 using entity::module;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 using entity::state_manager;
+#endif
 using entity::footprint;
 using util::memory::excl_malloc_ptr;
 using entity::global_indexed_reference;
@@ -309,7 +311,9 @@ HAC_GUILE_DEFINE(wrap_canonical_reference_to_string, FUNC_NAME, 1, 0, 0,
 	size_t type;
 	EXTRACT_TYPE_ENUM(rpair, type);		// already error-handled
 	const module& mod(*obj_module);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const state_manager& sm(mod.get_state_manager());
+#endif
 	const footprint& topfp(mod.get_footprint());
 	if (!index) {
 		scm_misc_error(FUNC_NAME, "Error: invalid index.", SCM_EOL);
@@ -318,11 +322,18 @@ HAC_GUILE_DEFINE(wrap_canonical_reference_to_string, FUNC_NAME, 1, 0, 0,
 	}
 	ostringstream oss;
 	switch (type) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#define	CASE_TYPE(Tag)							\
+	case class_traits<Tag>::type_tag_enum_value:			\
+		topfp.dump_canonical_name<Tag>(oss, index);		\
+		break;
+#else
 #define	CASE_TYPE(Tag)							\
 	case class_traits<Tag>::type_tag_enum_value:			\
 		sm.get_pool<Tag>()[index]				\
 			.dump_canonical_name(oss, topfp, sm);		\
 		break;
+#endif
 	CASE_TYPE(bool_tag)
 	CASE_TYPE(int_tag)
 	CASE_TYPE(enum_tag)
@@ -345,7 +356,12 @@ static
 size_t
 __get_pool_size(void) {
 	NEVER_NULL(obj_module);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return AS_A(const module&, *obj_module).get_footprint()
+		.template get_instance_pool<Tag>().total_entries();
+#else
 	return obj_module->get_state_manager().template get_pool<Tag>().size();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

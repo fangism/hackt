@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.8 2008/11/05 23:03:32 fang Exp $
+	$Id: alias_printer.cc,v 1.8.24.1 2010/01/12 02:48:48 fang Exp $
  */
 
 #include "Object/inst/alias_printer.h"
@@ -59,7 +59,11 @@ struct alias_printer_recursion_policy<false> {
 		STACKTRACE_VERBOSE;
 	if (traits_type::print_cflat_leaf) {
 		ostringstream os;
-		e.dump_canonical_name(os, c.topfp, c.sm);
+		e.dump_canonical_name(os, c.topfp
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, c.sm
+#endif
+			);
 		const string& canonical(os.str());
 	if (!c.cf.check_prs) {
 		if (!c.cf.wire_mode) {
@@ -111,6 +115,9 @@ alias_printer::__visit(const instance_alias_info<Tag>& a) {
 if (a.valid()) {
 	ostringstream os;
 	a.dump_hierarchical_name(os, dump_flags::no_leading_scope);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+#else
 	const string& local_name(os.str());
 	// construct new prefix from os
 	const alias_printer::save_prefix save(*this);
@@ -119,16 +126,8 @@ if (a.valid()) {
 if (this->fpf) {
 	this->prefix += ".";
 	// this is not a top-level instance (from recursion)
-#if 0
-	const size_t local_offset = a.instance_index -1;
-	const footprint_frame_map_type&
-		fm(this->fpf->template get_frame_map<Tag>());
-	// footprint_frame yields the global offset
-	gindex = fm[local_offset];
-#else
 	const footprint_frame_transformer ft(*this->fpf, Tag());
 	gindex = ft(a.instance_index);
-#endif
 } else {
 	// footprint_frame is null, this is a top-level instance
 	// the instance_index can be used directly as the offset into
@@ -141,6 +140,7 @@ if (this->fpf) {
 	alias_printer_recursion_policy<traits_type::has_substructure>::accept(
 		*this, e, gindex);
 	// recursion or termination
+#endif
 }	// end if a.valid()
 }
 

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.6 2007/09/11 06:53:15 fang Exp $
+	$Id: nonmeta_context.cc,v 1.6.46.1 2010/01/12 02:49:05 fang Exp $
  */
 
 #include <vector>
@@ -12,6 +12,7 @@
 #include "Object/traits/proc_traits.h"
 #include "Object/lang/CHP_event.h"
 #include "util/iterator_more.h"
+#include "common/TODO.h"
 
 namespace HAC {
 namespace SIM {
@@ -25,10 +26,17 @@ using entity::process_tag;
 	Constructor without event type argument.  
 	A delegating constructor would be nice...
  */
-nonmeta_context::nonmeta_context(const state_manager& s, 
+nonmeta_context::nonmeta_context(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& s, 
+#endif
 		const footprint& f, 
 		State& r) :
-		nonmeta_context_base(s, f, NULL, r.instances),
+		nonmeta_context_base(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			s, 
+#endif
+			f, NULL, r.instances),
 		event(NULL), 
 		global_event_offset(0), 	// any invalid value
 		process_index(0),
@@ -49,7 +57,11 @@ nonmeta_context::set_event(event_type& e,
 	event = &e;
 	global_event_offset = offset;
 	process_index = pid;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+#else
 	fpf = (pid ? &sm->get_pool<process_tag>()[pid]._frame : NULL);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

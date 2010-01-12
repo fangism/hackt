@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.tcc"
-	$Id: global_entry_context.tcc,v 1.4.20.1 2010/01/09 03:29:58 fang Exp $
+	$Id: global_entry_context.tcc,v 1.4.20.2 2010/01/12 02:48:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
@@ -48,23 +48,28 @@ template <class Tag>
 size_t
 global_entry_context::lookup_meta_reference_global_index(
 		const simple_meta_instance_reference<Tag>& r) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME_EXIT(Fang);
-	return 0;
-#else
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	NEVER_NULL(sm);
+#endif
 	NEVER_NULL(topfp);
 	if (fpf) {
 		const unroll_context c(fpf->_footprint, topfp);
 		const size_t local_index =
-			r.lookup_locally_allocated_index(*sm, c);
+			r.lookup_locally_allocated_index(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				*sm,
+#endif
+				c);
 		if (!local_index)
 			return 0;
 		return footprint_frame_transformer(*fpf, Tag())(local_index);
 	} else {
-		return r.lookup_globally_allocated_index(*sm, *topfp);
-	}
+		return r.lookup_globally_allocated_index(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				*sm,
 #endif
+				*topfp);
+	}
 }
 
 //=============================================================================

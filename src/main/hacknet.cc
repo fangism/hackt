@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.6 2009/10/27 18:21:49 fang Exp $
+	$Id: hacknet.cc,v 1.6.2.1 2010/01/12 02:48:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -190,7 +190,11 @@ try {
 	opt.net_opt.commit();		// commit options
 	const module& top_module_c(AS_A(const module&, *top_module));
 	const entity::footprint& topfp(top_module_c.get_footprint());
-	NET::netlist_generator n(top_module->get_state_manager(), topfp, 
+	NET::netlist_generator n(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		top_module->get_state_manager(), 
+#endif
+		topfp, 
 		cout, opt.net_opt);
 	// process global-scope instances and rules
 	n();

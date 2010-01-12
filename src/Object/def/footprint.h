@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.2 2010/01/09 03:30:03 fang Exp $
+	$Id: footprint.h,v 1.30.2.3 2010/01/12 02:48:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -343,6 +343,17 @@ public:
 	get_scope_alias_tracker(void) const {
 		return scope_aliases;
 	}
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	template <class Tag>
+	ostream&
+	dump_canonical_name(ostream&, const size_t) const;
+
+	// perform hierarchical lookup to find uniquely typed instance
+	template <class Tag>
+	const state_instance<Tag>&
+	get_instance(const size_t) const;
+#endif
 
 	template <class Tag>
 	typename state_instance<Tag>::pool_type&

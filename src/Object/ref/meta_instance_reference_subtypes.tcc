@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.28.2.1 2010/01/09 03:30:12 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.28.2.2 2010/01/12 02:48:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -100,7 +100,6 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 		member-references are acceptable.  
  */
 // TODO: redo
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
 META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod, 
@@ -109,11 +108,13 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 	const simple_reference_type&
 		_this(IS_A(const simple_reference_type&, *this));
 	const size_t index = _this.lookup_globally_allocated_index(
-		mod.get_state_manager(), mod.get_footprint());
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		mod.get_state_manager(), 
+#endif
+		mod.get_footprint());
 	INVARIANT(index);	// because we already checked reference?
 	mod.template match_aliases<Tag>(aliases, index);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -327,7 +328,10 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
-		const state_manager& /* sm */, const footprint& top, 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& /* sm */, 
+#endif
+		const footprint& top, 
 		vector<size_t>& indices) const {
 	typedef	vector<size_t>				indices_type;
 	typedef	typename alias_collection_type::const_iterator	const_iterator;

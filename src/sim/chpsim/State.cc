@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.21 2009/04/29 05:33:35 fang Exp $
+	$Id: State.cc,v 1.21.14.1 2010/01/12 02:49:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -167,7 +167,10 @@ struct State::recheck_transformer {
 	recheck_transformer(this_type& s,
 		const event_index_type cei, const size_t cti) : 
 		state(s), 
-		context(state.mod.get_state_manager(), 
+		context(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			state.mod.get_state_manager(), 
+#endif
 			state.mod.get_footprint(),
 			state),
 			cause_event_id(cei), cause_trace_id(cti)
@@ -289,7 +292,13 @@ State::dump_event_table_header(ostream& o) {
  */
 State::State(const module& m) : 
 		state_base(m, "chpsim> "), 
-		instances(m.get_state_manager()), 
+		instances(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			m.get_footprint()
+#else
+			m.get_state_manager()
+#endif
+			), 
 		event_pool(), 
 		global_root_event(NULL, entity::CHP::EVENT_CONCURRENT_FORK),
 		global_event_to_pid(),
@@ -319,8 +328,11 @@ State::State(const module& m) :
 	// perform initializations here
 	event_pool.reserve(256);	// pre-allocate some
 	event_pool.resize(1);		// 0th entry is a global-spawn event
-	event_type& init(event_pool[0]);
 {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+#else
+	event_type& init(event_pool[0]);
 	const footprint& topfp(mod.get_footprint());
 	const state_manager& sm(mod.get_state_manager());
 
@@ -352,6 +364,7 @@ State::State(const module& m) :
 		global_root_event.successor_events.push_back(j->first);
 	}
 }
+#endif
 }
 }
 
@@ -565,7 +578,11 @@ State::step(void) {
 	STACKTRACE_VERBOSE;
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
-	nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), *this);
+	nonmeta_context c(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		mod.get_state_manager(),
+#endif
+		mod.get_footprint(), *this);
 	std::pair<bool, bool>	status(false, false);
 do {
 	// TODO: check immediate event FIFO first
@@ -1272,12 +1289,17 @@ entity::expr_dump_context
 State::make_process_dump_context(const node_index_type pid) const {
 	// -1 because we allocated one more pid slot for the
 	// global spawn event.
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+	return expr_dump_context::default_value;
+#else
 	if (pid && valid_process_id(pid)) {
 		return mod.get_state_manager().make_process_dump_context(
 			mod.get_footprint(), pid);
 	} else {
 		return expr_dump_context::default_value;
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1489,11 +1511,17 @@ State::dump_check_event_queue(ostream& o) const {
  */
 ostream&
 State::dump_struct(ostream& o) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const state_manager& sm(mod.get_state_manager());
+#endif
 	const entity::footprint& topfp(mod.get_footprint());
 {
 	o << "Variables: " << endl;
-	instances.dump_struct(o, sm, topfp);
+	instances.dump_struct(o, 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		sm, 
+#endif
+		topfp);
 	o << endl;
 }
 // CHP graph structures (non-hierarchical)
@@ -1542,10 +1570,13 @@ State::dump_struct(ostream& o) const {
 ostream&
 State::dump_struct_dot(ostream& o, const graph_options& g) const {
 	// should be event_type::local_event_type
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	static const char* node_prefix = local_event::node_prefix;
+#endif
 
 	o << "digraph G {" << endl;
 	// consider using global_entry_context_base instead...
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const state_manager& sm(mod.get_state_manager());
 	const footprint& topfp(mod.get_footprint());
 {
@@ -1659,6 +1690,7 @@ if (g.show_channels) {
 	}	// end for all channels
 }	// end if show_channels
 }
+#endif
 	o << "}" << endl;
 	return o;
 }	// end dump_struct_dot
@@ -1705,6 +1737,9 @@ State::dump_recheck_events(ostream& o) const {
 ostream&
 State::print_instance_name_value(ostream& o,
 		const global_indexed_reference& g) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
 	switch (g.first) {
@@ -1751,6 +1786,7 @@ State::print_instance_name_value(ostream& o,
 	default:
 		o << "(unsupported)";
 	}
+#endif
 	return o;
 }
 
@@ -1760,6 +1796,9 @@ State::print_instance_name_value(ostream& o,
 ostream&
 State::print_instance_name_subscribers(ostream& o,
 		const global_indexed_reference& g) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
 	switch (g.first) {
@@ -1804,6 +1843,7 @@ State::print_instance_name_subscribers(ostream& o,
 	default:
 		o << "(unsupported)";
 	}
+#endif
 	return o << endl;
 }
 
@@ -1815,8 +1855,13 @@ State::print_instance_name_subscribers(ostream& o,
  */
 ostream&
 State::print_all_subscriptions(ostream& o) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+	return o;
+#else
 	return instances.dump_all_subscriptions(o, 
 		mod.get_state_manager(), mod.get_footprint());
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1927,7 +1972,11 @@ State::load_checkpoint(istream& i) {
 	size_t s;
 	read_value(i, s);
 	const nonmeta_context
-		c(mod.get_state_manager(), mod.get_footprint(), *this);
+		c(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			mod.get_state_manager(), 
+#endif
+			mod.get_footprint(), *this);
 	immediate_event_fifo.clear();
 	check_event_queue.clear();
 	for ( ; j<s; ++j) {

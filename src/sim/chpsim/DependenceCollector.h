@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.8 2007/09/11 06:53:06 fang Exp $
+	$Id: DependenceCollector.h,v 1.8.46.1 2010/01/12 02:49:02 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -147,7 +147,11 @@ public:
 	explicit
 	DependenceSetCollector(const StateConstructor&);
 
-	DependenceSetCollector(const state_manager&, const footprint&);
+	DependenceSetCollector(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&,
+#endif
+		const footprint&);
 
 	~DependenceSetCollector();
 

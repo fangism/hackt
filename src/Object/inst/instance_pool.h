@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.12.88.1 2010/01/09 03:30:04 fang Exp $
+	$Id: instance_pool.h,v 1.12.88.2 2010/01/12 02:48:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -147,6 +147,16 @@ public:
 	total_private_entries(void) const {
 		return this->non_local_private_entries()
 			+this->local_private_entries();
+	}
+
+	/**
+		\return the total number of unique instances, 
+			counting public, port, and non-local private
+			subinstances accumulated.
+	 */
+	size_t
+	total_entries(void) const {
+		return this->size() +this->non_local_private_entries();
 	}
 #endif
 

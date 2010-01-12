@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.42 2009/09/14 21:17:14 fang Exp $
+	$Id: ExprAlloc.cc,v 1.42.4.1 2010/01/12 02:49:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -218,7 +218,9 @@ ExprAlloc::visit(const state_manager& _sm) {
 	proc_entry_pool[0].accept(*this);	// b/c state_manager skips [0]
 #endif
 	STACKTRACE_INDENT_PRINT("instantiated processes ..." << endl);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	parent_type::visit(_sm);
+#endif
 	state.finish_process_type_map();	// finalize indices to pointers
 #if ENABLE_STACKTRACE
 	state.dump_struct(cerr << "Final global struct:" << endl) << endl;
@@ -271,6 +273,8 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// needs to be re-written without use of global state_manager
 /**
 	Lookup this PRS_footprint in the address map.
 	If this is the first time this type is visited, then allocate
@@ -447,6 +451,7 @@ if (pxs) {
 	// assume that processes are visited in sequence
 	++current_process_index;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #define	DEBUG_CLEANUP		(0 && ENABLE_STACKTRACE)

@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.11 2009/11/06 01:32:07 fang Exp $
+	$Id: netlist_generator.cc,v 1.11.2.1 2010/01/12 02:48:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -21,6 +21,7 @@
 #include "Object/expr/string_expr.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
+#include "common/TODO.h"
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -53,10 +54,17 @@ using entity::resolved_attribute_list_type;
 //=============================================================================
 // class netlist_generator method definitions
 
-netlist_generator::netlist_generator(const state_manager& _sm,
+netlist_generator::netlist_generator(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& _sm,
+#endif
 		const footprint& _topfp, ostream& o, 
 		const netlist_options& p) :
-		cflat_context_visitor(_sm, _topfp), os(o), opt(p), netmap(),
+		cflat_context_visitor(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			_sm,
+#endif
+			_topfp), os(o), opt(p), netmap(),
 		prs(NULL), 
 		current_netlist(NULL), 
 		current_local_netlist(NULL),
@@ -92,9 +100,13 @@ netlist_generator::~netlist_generator() { }
 void
 netlist_generator::operator () (void) {
 	STACKTRACE_VERBOSE;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	NEVER_NULL(sm);
 	const global_entry<process_tag>& ptop(sm->get_pool<process_tag>()[0]);
 	visit(ptop);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -157,7 +169,7 @@ if (f == topfp) {
 }
 	// initialize netlist:
 try {
-#if 1
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint_frame_map_type&
 		bfm(p._frame.get_frame_map<bool_tag>());
 		// ALERT: top-footprint frame's size will be +1!
@@ -203,11 +215,15 @@ try {
 	typedef	state_instance<process_tag>::pool_type	process_pool_type;
 	const process_pool_type& pp(f->get_instance_pool<process_tag>());
 	process_pool_type::const_iterator i(pp.begin()), e(pp.end());
+#if 0
 	size_t j = ...;
 	for ( ; i!=e; ++i) {
 		...
 		// visit local subprocess or fake one
 	}
+#else
+	FINISH_ME_EXIT(Fang);
+#endif
 #endif
 	// process local production rules and macros
 	f->get_prs_footprint().accept(*this);
@@ -240,11 +256,13 @@ if (opt.empty_subcircuits || !nl->is_empty()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 void
 netlist_generator::visit(const state_manager& s) {
 	STACKTRACE_VERBOSE;
 	// never called, do nothing
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

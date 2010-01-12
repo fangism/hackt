@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.33 2007/10/08 01:21:39 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.1 2010/01/12 02:48:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -218,20 +218,34 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const state_manager& sm, const footprint& top) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm, 
+#endif
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	const unroll_context uc(&top, &top);
 	// should not be virtual call (one hopes)
-	return this->lookup_locally_allocated_index(sm, uc);
+	return this->lookup_locally_allocated_index(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		sm, 
+#endif
+		uc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 global_indexed_reference
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
-		const state_manager& sm, const footprint& top) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm, 
+#endif
+		const footprint& top) const {
 	return global_indexed_reference(traits_type::type_tag_enum_value, 
-		this->lookup_globally_allocated_index(sm, top));
+		this->lookup_globally_allocated_index(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			sm, 
+#endif
+			top));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -244,7 +258,10 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
-		const state_manager&, const unroll_context& uc) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&, 
+#endif
+		const unroll_context& uc) const {
 	STACKTRACE_VERBOSE;
 	const instance_alias_info_ptr_type
 		alias(__unroll_generic_scalar_reference(
@@ -272,12 +289,18 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager& sm, const footprint& top) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm,
+#endif
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template simple_lookup_footprint_frame<Tag>(
 			*this->inst_collection_ref, this->array_indices, 
-				sm, top);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				sm,
+#endif
+				top);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

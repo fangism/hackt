@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.57.2.2 2010/01/09 03:29:53 fang Exp $
+	$Id: devel_switches.h,v 1.57.2.3 2010/01/12 02:48:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -106,8 +106,9 @@
 	subinstances.
 	Rationale: to eliminate expensive global allocation
 	Goal: 1
-	Status: just starting
 	Phase 1: sifting of locally allocated indices public:private [done]
+	Phase 2: replacing all use of global state_manager [in progress]
+	Status: marking code for destruction
  */
 #define	MEMORY_MAPPED_GLOBAL_ALLOCATION		0
 

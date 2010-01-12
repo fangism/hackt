@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.13 2007/10/08 01:21:27 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.13.40.1 2010/01/12 02:48:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -151,7 +151,10 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager&, const footprint&) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&, 
+#endif
+		const footprint&) const {
 	ICE_NEVER_CALL(cerr);
 	return NULL;
 }
@@ -163,7 +166,10 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 global_indexed_reference
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
-		const state_manager&, const footprint&) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&, 
+#endif
+		const footprint&) const {
 	ICE_NEVER_CALL(cerr);
 	return global_indexed_reference(META_TYPE_NONE, 0);
 }

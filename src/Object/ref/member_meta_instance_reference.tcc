@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.28 2008/11/12 03:00:13 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.28.24.1 2010/01/12 02:48:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -168,10 +168,17 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const state_manager& sm, const footprint& top) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm,
+#endif
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	const unroll_context uc(&top, &top);
-	return this->lookup_locally_allocated_index(sm, uc);
+	return this->lookup_locally_allocated_index(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		sm, 
+#endif
+		uc);
 }	// end method lookup_globally_allocated_index
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -182,7 +189,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
-		const state_manager& sm, const unroll_context& uc) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm, 
+#endif
+		const unroll_context& uc) const {
 	const footprint& top(*uc.get_top_footprint());
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
 	if (_parent_inst_ref.dimensions()) {
@@ -195,7 +205,11 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 		return 0;
 	}
 	const footprint_frame* const fpf =
-		_parent_inst_ref.lookup_footprint_frame(sm, top);
+		_parent_inst_ref.lookup_footprint_frame(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			sm, 
+#endif
+			top);
 	if (!fpf) {
 		// TODO: better error message
 		cerr << "Failure resolving parent instance reference" << endl;
@@ -388,10 +402,17 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager& sm, const footprint& top) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm,
+#endif
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	return parent_type::substructure_implementation_policy::
-		template member_lookup_footprint_frame<Tag>(*this, sm, top);
+		template member_lookup_footprint_frame<Tag>(*this,
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			sm,
+#endif
+			top);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.57 2009/10/02 01:57:43 fang Exp $
+	$Id: State-prsim.cc,v 1.57.2.1 2010/01/12 02:49:07 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -336,6 +336,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
 		__shuffle_indices(0) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+#else
 	const state_manager& sm(mod.get_state_manager());
 	const global_entry_pool<bool_tag>&
 		bool_pool(sm.get_pool<bool_tag>());
@@ -355,6 +358,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 			b(j->get_canonical_instance(gec));
 		i->import_attributes(*b.get_back_ref());
 	}
+#endif
 
 	// not expect expression-trees deeper than 8, but is growable
 	__shuffle_indices.reserve(32);
@@ -368,7 +372,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// are done constructing this State's members at this point.  
 	ExprAlloc v(*this, f);
 	// pre-allocate array of process states
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	process_state_array.reserve(sm.get_pool<process_tag>().size() +2);
+#endif
 	// unique_process_pool.reserve() ?
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	// first valid global expression ID is 1, 0 is reserved as NULL
@@ -387,6 +393,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// fold into state_manager's visit
 #endif
 	// this may throw an exception!
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+#else
 try {
 	STACKTRACE_INDENT_PRINT("instantiated processes ..." << endl);
 	sm.accept(v);
@@ -398,6 +407,7 @@ try {
 		mod.get_footprint(), sm) << endl;
 	THROW_EXIT;
 }
+#endif
 	// recommend caller to invoke ::initialize() immediately after ctor
 }	// end State::State(const module&)
 
@@ -832,6 +842,7 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /** 
 	Returns the local-to-global node translation map for process pid.
 	This *really* should be inlined...
@@ -840,6 +851,7 @@ const footprint_frame_map_type&
 State::get_footprint_frame_map(const process_index_type pid) const {
 	return get_module().get_state_manager().get_bool_frame_map(pid);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -4179,6 +4191,7 @@ State::check_structure(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	\param i global node index.  
 	\return string of the canonical node name.  
@@ -4192,6 +4205,7 @@ State::dump_node_canonical_name(ostream& o, const node_index_type i) const {
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
 	return bp[i].dump_canonical_name(o, topfp, sm);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -4206,6 +4220,7 @@ State::get_node_canonical_name(const node_index_type i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 ostream&
 State::dump_process_canonical_name(ostream& o, 
 		const process_index_type i) const {
@@ -4219,6 +4234,7 @@ if (i) {
 	return o << "[top-level]";
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -4246,6 +4262,7 @@ ostream&
 State::dump_struct(ostream& o) const {
 {
 	o << "Nodes: " << endl;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
@@ -4256,6 +4273,7 @@ State::dump_struct(ostream& o) const {
 		bp[i].dump_canonical_name(o, topfp, sm);
 		node_pool[i].dump_struct(o << "\" ") << endl;
 	}
+#endif
 }
 {
 	o << "Unique processes: {" << endl;
@@ -4287,10 +4305,11 @@ State::dump_struct_dot(ostream& o) const {
 	STACKTRACE_VERBOSE;
 	o << "digraph G {" << endl;
 {
+	o << "# nodes: " << endl;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
-	o << "# nodes: " << endl;
 	// box or plaintext
 	o << "node [shape=box, fillcolor=white];" << endl;
 	const node_index_type nodes = node_pool.size();
@@ -4304,6 +4323,7 @@ State::dump_struct_dot(ostream& o) const {
 			<< "\"];" << endl;
 		node_pool[i].dump_fanout_dot(o, s) << endl;
 	}
+#endif
 }
 {
 	o << "# Processes: " << endl;
