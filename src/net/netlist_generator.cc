@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.11 2009/11/06 01:32:07 fang Exp $
+	$Id: netlist_generator.cc,v 1.12 2010/01/12 19:26:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -494,12 +494,11 @@ try {
 	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
 	ep[r.expr_index].accept(*this);
 } catch (...) {
-	// TODO: better diagnostic tracing message
 	cerr << "ERROR in production rule." << endl;
-	throw;
+	current_netlist->fp->dump_rule(cerr << '\t', r) << endl;
+	throw;	// re-throw
 }
-	// TODO: process rule attributes, labels, names...
-}
+}	// end method visit(rule)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

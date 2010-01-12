@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-60:
+	  hacknet: improved diagnostics, print out relevant PRS rules
+		in error messages, where applicable.
+		Test cases updated.  
+
+
 2010-01-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-59:

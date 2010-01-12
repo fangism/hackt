@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.47 2010/01/03 01:34:37 fang Exp $
+	$Id: footprint.cc,v 1.48 2010/01/12 19:26:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -601,6 +601,17 @@ if (instance_list.size()) {
 	}
 }
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param r the rule which must belong to the member PRS footprint.
+ */
+ostream&
+footprint::dump_rule(ostream& o, const PRS::footprint_rule& r) const {
+	NEVER_NULL(prs_footprint);
+	return PRS::footprint::dump_rule(r, o, 
+		get_instance_pool<bool_tag>(), prs_footprint->get_expr_pool());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

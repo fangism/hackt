@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30 2009/10/02 01:56:47 fang Exp $
+	$Id: footprint.h,v 1.31 2010/01/12 19:26:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -29,6 +29,7 @@ class cflat_options;
 namespace entity {
 namespace PRS {
 	class footprint;
+	class footprint_rule;
 }
 namespace SPEC {
 	class footprint;
@@ -326,6 +327,9 @@ public:
 
 	ostream&
 	dump_member_list(ostream&) const;
+
+	ostream&
+	dump_rule(ostream&, const PRS::footprint_rule&) const;
 
 	void
 	export_instance_names(vector<string>&) const;

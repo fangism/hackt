@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.16 2009/10/02 01:57:11 fang Exp $
+	$Id: PRS_footprint.h,v 1.17 2010/01/12 19:26:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -268,7 +268,8 @@ public:
 	const invariant_pool_type&
 	get_invariant_pool(void) const { return invariant_pool; }
 
-private:
+// private:
+public:
 	static
 	ostream&
 	dump_expr(const expr_node&, ostream&, const node_pool_type&,
