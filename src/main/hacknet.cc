@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.6.2.1 2010/01/12 02:48:58 fang Exp $
+	$Id: hacknet.cc,v 1.6.2.2 2010/01/13 17:43:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -184,7 +184,9 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	top_module = the_module;
 }
 	// is this needed? yes, we traverse top-down
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	top_module->populate_top_footprint_frame();
+#endif
 	// the simulator state object, initialized with the module
 try {
 	opt.net_opt.commit();		// commit options

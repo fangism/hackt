@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.1 2010/01/12 02:49:00 fang Exp $
+	$Id: instref.cc,v 1.19.2.2 2010/01/13 17:43:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -475,9 +475,21 @@ if (n == ".") {
 	// TODO: allow non-scalar collections, sloppy arrays, etc...
 	} else {
 		entry_collection e;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		// much easier with continuous ranges in memory mapping
+		const global_indexed_reference
+			gref(parse_global_reference(n, m));
+		if (!gref.first) {
+			return 1;
+		}
+		if (!m.get_footprint().collect_subentries(gref, e).good) {
+			return 1;
+		}
+#else
 		if (!r.inst_ref()->collect_subentries(m, e).good) {
 			return 1;
 		}
+#endif
 		const index_set_type& b(e.get_index_set<bool_tag>());
 		v.resize(b.size());
 		copy(b.begin(), b.end(), v.begin());

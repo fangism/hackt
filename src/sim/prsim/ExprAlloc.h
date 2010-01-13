@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.15 2009/02/07 04:08:41 fang Exp $
+	$Id: ExprAlloc.h,v 1.15.18.1 2010/01/13 17:43:44 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -110,6 +110,7 @@ protected:
 public:
 
 	ExprAlloc(state_type&, const ExprAllocFlags&);
+	~ExprAlloc();
 
 	// default empty destructor
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.14 2009/10/29 23:00:28 fang Exp $
+	$Id: cflat_printer.h,v 1.14.2.1 2010/01/13 17:43:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -52,9 +52,15 @@ public:
 	cflat_prs_printer(ostream& _os, const cflat_options& _cfo) :
 			cflat_context_visitor(), 
 			os(_os), cfopts(_cfo) { }
+	~cflat_prs_printer();
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	ostream&
+	print_node_name(ostream&, const size_t) const;
+#else
 	ostream&
 	print_node_name(ostream&, const global_entry<bool_tag>&) const;
+#endif
 
 	void
 	__dump_canonical_literal(const size_t) const;

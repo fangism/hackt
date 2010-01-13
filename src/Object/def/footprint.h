@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.3 2010/01/12 02:48:44 fang Exp $
+	$Id: footprint.h,v 1.30.2.4 2010/01/13 17:43:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -15,6 +15,10 @@
 #include "Object/inst/collection_index_entry.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/lang/CHP_footprint.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/ref/reference_enum.h"
+#include "util/tokenize_fwd.h"		// for string_list
+#endif
 
 #include "util/boolean_types.h"
 #include "util/string_fwd.h"
@@ -41,6 +45,7 @@ class port_formals_manager;
 class scopespace;
 class port_member_context;
 class footprint_manager;
+struct entry_collection;
 struct alias_visitor;
 struct dump_flags;
 struct expr_dump_context;
@@ -353,6 +358,14 @@ public:
 	template <class Tag>
 	const state_instance<Tag>&
 	get_instance(const size_t) const;
+
+	template <class Tag>
+	void
+	match_aliases(util::string_list&, const size_t) const;
+
+	good_bool
+	collect_subentries(const global_indexed_reference&,
+		entry_collection&) const;
 #endif
 
 	template <class Tag>

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.39.2.1 2009/12/17 02:07:36 fang Exp $
+	$Id: instance_alias.tcc,v 1.39.2.2 2010/01/13 17:43:35 fang Exp $
 	TODO: trim includes
  */
 
@@ -590,14 +590,21 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
-		footprint_frame& ff, state_manager& sm,
+		footprint_frame& ff, 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		state_manager& sm,
+#endif
 		const port_member_context& pmc, const size_t ind) const {
 	STACKTRACE_VERBOSE;
 	// this recursively fills up the footprint frame with indices
 	// assigned from the external context, mapped onto this
 	// instance's public ports.  
 	if (!actuals_parent_type::__initialize_assign_footprint_frame(
-			*this, ff, sm, pmc, ind).good) {
+			*this, ff, 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				sm, 
+#endif
+				pmc, ind).good) {
 		cerr << "Error alloc_assign_subinstance_footprint_frame."
 			<< endl;
 		return good_bool(false);

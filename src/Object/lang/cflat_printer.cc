@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.24.2.1 2010/01/09 03:30:08 fang Exp $
+	$Id: cflat_printer.cc,v 1.24.2.2 2010/01/13 17:43:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -24,7 +24,11 @@
 #include "Object/inst/connection_policy.h"
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/def/footprint.h"
+#else
 #include "Object/state_manager.h"
+#endif
 #include "Object/traits/bool_traits.h"
 #include "main/cflat_options.h"
 #include "common/ICE.h"
@@ -47,6 +51,9 @@ using util::numeric::reciprocate;
 //=============================================================================
 // class cflat_prs_printer method definitions
 
+cflat_prs_printer::~cflat_prs_printer() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat_prs_printer::visit(const PRS::footprint& p) {
 	STACKTRACE_VERBOSE;
@@ -79,7 +86,6 @@ cflat_prs_printer::visit(const PRS::footprint& p) {
 	Q2: why is the conditional checked here? (more efficient in parent)
 	TODO: support attributes (or use a visitor?)
  */
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 void
 cflat_prs_printer::visit(const footprint_rule& r) {
 	STACKTRACE_VERBOSE;
@@ -108,7 +114,11 @@ if (!cfopts.check_prs) {
 	// const size_t j = bfm[r.output_index-1];
 	const size_t global_bool_index =
 		parent_type::__lookup_global_bool_id(r.output_index);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	print_node_name(os, global_bool_index);
+#else
 	print_node_name(os, sm->get_pool<bool_tag>()[global_bool_index]);
+#endif
 	os << (r.dir ? '+' : '-');
 	if (cfopts.compute_conductances) {
 		// min/mxa_conductance was evaluated from expression
@@ -126,13 +136,21 @@ if (!cfopts.check_prs) {
  */
 ostream&
 cflat_prs_printer::print_node_name(ostream& o, 
-		const global_entry<bool_tag>& b) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const size_t bi
+#else
+		const global_entry<bool_tag>& b
+#endif
+		) const {
 	if (cfopts.enquote_names) o << '\"';
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	topfp->dump_canonical_name<bool_tag>(o, bi);
+#else
 	b.dump_canonical_name(o, *topfp, *sm);
+#endif
 	if (cfopts.enquote_names) o << '\"';
 	return o;
 }
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -424,6 +442,8 @@ cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// need to replace with indexed argument
 /**
 	Print attributes for nodes with non-default attribute values.  
  */
@@ -445,6 +465,7 @@ if (a.has_nondefault_attributes()) {
 }
 }
 }
+#endif
 
 //=============================================================================
 }	// end namespace PRS

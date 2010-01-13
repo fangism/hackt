@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.26 2009/11/11 00:34:00 fang Exp $
+	$Id: prsim.cc,v 1.26.2.1 2010/01/13 17:43:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -210,7 +210,9 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	}
 	top_module = the_module;
 }
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	top_module->populate_top_footprint_frame();
+#endif
 	// the simulator state object, initialized with the module
 try {
 	State sim_state(*top_module, opt.expr_alloc_flags);	// may throw

@@ -1,12 +1,16 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.4.24.1 2010/01/09 03:30:00 fang Exp $
+	$Id: nonmeta_state.cc,v 1.4.24.2 2010/01/13 17:43:30 fang Exp $
  */
 
 #include <iostream>
 #include <functional>
 #include "Object/nonmeta_state.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/def/footprint.h"
+#else
 #include "Object/state_manager.h"
+#endif
 #include "Object/global_entry.h"
 #if BUILTIN_CHANNEL_FOOTPRINTS
 #include "Object/global_channel_entry.h"
@@ -36,15 +40,24 @@ template <class Tag>
 nonmeta_state_base<Tag>::nonmeta_state_base() : pool() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class Tag>
-nonmeta_state_base<Tag>::nonmeta_state_base(const state_manager& sm) :
+nonmeta_state_base<Tag>::nonmeta_state_base(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint& topfp
+#else
+		const state_manager& sm
+#endif
+		) :
 		pool() {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const size_t s =
+		topfp.template get_instance_pool<Tag>().total_entries();
+#else
 	const global_entry_pool<Tag>& p(sm.template get_pool<Tag>());
 	const size_t s = p.size();
+#endif
 	this->pool.resize(s);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.2 2010/01/09 03:29:55 fang Exp $
+	$Id: global_entry.h,v 1.18.20.3 2010/01/13 17:43:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -97,10 +97,10 @@ protected:
 	void
 	__expand_subinstances(const footprint&, state_manager&,
 		const size_t, const size_t);
-#endif
 
 	void
 	__collect_subentries(entry_collection&, const state_manager&) const;
+#endif
 
 };	// end struct footprint_frame_map
 
@@ -181,6 +181,9 @@ struct footprint_frame :
 	void
 	allocate_remaining_subinstances(const footprint&, state_manager&, 
 		const parent_tag_enum, const size_t);
+
+	void
+	collect_subentries(entry_collection&, const state_manager&) const;
 #endif
 
 	void
@@ -191,9 +194,6 @@ struct footprint_frame :
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
-
-	void
-	collect_subentries(entry_collection&, const state_manager&) const;
 
 private:
 	static
@@ -274,8 +274,10 @@ struct global_entry_substructure_base<false> {
 		return s;
 	}
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	collect_subentries(entry_collection&, const state_manager&) const { }
+#endif
 
 	void
 	collect_transient_info_base(const persistent_object_manager&) const { }
@@ -313,6 +315,7 @@ public:
 	size_t
 	count_frame_size(const size_t s, const this_type&);
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	initialize_top_frame(const footprint& f) {
 		_frame.initialize_top_frame(f);
@@ -322,6 +325,7 @@ public:
 	collect_subentries(entry_collection& e, const state_manager& sm) const {
 		_frame.collect_subentries(e, sm);
 	}
+#endif
 
 	// some footprint (in frame) may contain relaxed template arguments.  
 	void
@@ -380,7 +384,9 @@ struct global_entry_base :
 	public global_entry_substructure_base<false> {
 	typedef	global_entry_substructure_base<false>	substructure_policy;
 	using substructure_policy::dump;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using substructure_policy::collect_subentries;
+#endif
 	using substructure_policy::collect_transient_info_base;
 	using substructure_policy::write_object_base;
 	using substructure_policy::load_object_base;
@@ -396,7 +402,9 @@ struct global_entry_base<process_tag> :
 	typedef	global_entry_substructure_base<true>	substructure_policy;
 
 	using substructure_policy::dump;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using substructure_policy::collect_subentries;
+#endif
 	using substructure_policy::collect_transient_info_base;
 	using substructure_policy::write_object_base;
 	using substructure_policy::load_object_base;
@@ -429,9 +437,16 @@ public:
 	ostream&
 	dump(global_entry_dumper&) const;
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// use footprint::get_instance<>().get_back_ref()->dump_attributes()
+#else
 	ostream&
 	dump_attributes(global_entry_dumper&) const;
+#endif
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// use footprint::dump_canonical_name() now
+#else
 	ostream&
 	dump_canonical_name(ostream&,
 		const footprint&
@@ -447,14 +462,21 @@ public:
 		, const state_manager&
 #endif
 		) const;
+#endif
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// use footprint::get_instance()
+#else
 	const state_instance<Tag>&
 	get_canonical_instance(const global_entry_context_base&) const;
+#endif
 
 	void
 	accept(PRS::cflat_visitor&) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using parent_type::collect_subentries;
+#endif
 	using parent_type::collect_transient_info_base;
 
 	void

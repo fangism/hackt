@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.27.2.2 2010/01/09 03:30:05 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.27.2.3 2010/01/13 17:43:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -428,21 +428,19 @@ port_alias_tracker_base<Tag>::__export_alias_properties(
  */
 template <class Tag>
 struct port_alias_tracker_base<Tag>::port_alias_predicate {
-#if 1
 	typedef	typename map_type::mapped_type	mapped_type;
 	typedef	mapped_type		argument_type;
 	bool
 	operator () (const mapped_type& a) const {
 		return a.is_aliased_to_port();
 	}
-#else
+
 	typedef	typename map_type::value_type	value_type;
 	typedef	value_type		argument_type;
 	bool
 	operator () (const value_type& a) const {
 		return a.second.is_aliased_to_port();
 	}
-#endif
 };
 
 /**
@@ -539,6 +537,7 @@ template <class Tag>
 size_t
 port_alias_tracker_base<Tag>::__port_offset(void) const {
 	const const_iterator b(_ids.begin()), e(_ids.end());
+#if 0
 	// faster than find_first
 	const const_iterator p(lower_bound(b, e,
 		not1(port_alias_predicate())));
@@ -547,6 +546,9 @@ port_alias_tracker_base<Tag>::__port_offset(void) const {
 	} else {
 		return _ids.size();
 	}
+#else
+	return std::count_if(b, e, port_alias_predicate());
+#endif
 }
 #endif
 
@@ -909,6 +911,7 @@ if (has_internal_aliases) {
 //=============================================================================
 // explicit template instantiations
 
+#if 0
 #define	INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(Tag)			\
 template void alias_reference_set<Tag>::push_back(			\
 		never_ptr<instance_alias_info<Tag> >);
@@ -921,6 +924,22 @@ INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(datastruct_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(enum_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(int_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(bool_tag)
+#else
+template class alias_reference_set<process_tag>;
+template class port_alias_tracker_base<process_tag>;
+template class alias_reference_set<channel_tag>;
+template class port_alias_tracker_base<channel_tag>;
+#if ENABLE_DATASTRUCTS
+template class alias_reference_set<datastruct_tag>;
+template class port_alias_tracker_base<datastruct_tag>;
+#endif
+template class alias_reference_set<enum_tag>;
+template class port_alias_tracker_base<enum_tag>;
+template class alias_reference_set<int_tag>;
+template class port_alias_tracker_base<int_tag>;
+template class alias_reference_set<bool_tag>;
+template class port_alias_tracker_base<bool_tag>;
+#endif
 
 #if USE_ALIAS_STRING_CACHE
 template void alias_reference_set<process_tag>::refresh_string_cache() const;

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.42.4.1 2010/01/12 02:49:06 fang Exp $
+	$Id: ExprAlloc.cc,v 1.42.4.2 2010/01/13 17:43:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -203,6 +203,9 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ExprAlloc::~ExprAlloc() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Top-level visitor.  
 	Use default traversal, but then conditionally do some cleanup.  
@@ -214,7 +217,9 @@ ExprAlloc::visit(const state_manager& _sm) {
 	STACKTRACE_INDENT_PRINT("top-level process ..." << endl);
 	const entity::global_entry_pool<entity::process_tag>&
 		proc_entry_pool(_sm.get_pool<entity::process_tag>());
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// relies on module::populate_top_footprint_frame()
+#endif
 	proc_entry_pool[0].accept(*this);	// b/c state_manager skips [0]
 #endif
 	STACKTRACE_INDENT_PRINT("instantiated processes ..." << endl);

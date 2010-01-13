@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.10 2006/11/07 06:34:34 fang Exp $
+	$Id: alias_empty.tcc,v 1.10.88.1 2010/01/13 17:43:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -32,7 +32,10 @@ static
 good_bool
 __initialize_assign_footprint_frame(
 		const AliasType& _alias, footprint_frame& ff,
-		state_manager& sm, const port_member_context& pmc,
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		state_manager& sm,
+#endif
+		const port_member_context& pmc,
 		const size_t ind) {
 	typedef	typename AliasType::container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
@@ -44,7 +47,11 @@ __initialize_assign_footprint_frame(
 		_type(_alias.complete_type_actuals(*_alias.container));
 	INVARIANT(_type);
 	return canonical_type_footprint_frame_policy<canonical_definition_type>
-		::initialize_and_assign(_type, ff, sm, pmc, ind);
+		::initialize_and_assign(_type, ff, 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			sm, 
+#endif
+			pmc, ind);
 }
 
 };	// end struct instance_alias_info_empty_helper<true>
@@ -57,7 +64,10 @@ template <class AliasType>
 static
 good_bool
 __initialize_assign_footprint_frame(const AliasType&, const footprint_frame&,
-	const state_manager&, const port_member_context&, const size_t) {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const state_manager&, 
+#endif
+	const port_member_context&, const size_t) {
 	return good_bool(true);
 }
 
@@ -164,12 +174,19 @@ template <class AliasType>
 good_bool
 instance_alias_info_empty::__initialize_assign_footprint_frame(
 		const AliasType& _alias, footprint_frame& ff,
-		state_manager& sm, const port_member_context& pmc,
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		state_manager& sm,
+#endif
+		const port_member_context& pmc,
 		const size_t ind) {
 	typedef	typename AliasType::traits_type		traits_type;
 	return instance_alias_info_empty_helper<traits_type::has_substructure>
 		::template __initialize_assign_footprint_frame<AliasType>(
-			_alias, ff, sm, pmc, ind);
+			_alias, ff, 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				sm, 
+#endif
+				pmc, ind);
 }
 
 //=============================================================================

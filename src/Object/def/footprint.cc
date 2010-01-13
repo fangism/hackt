@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.2 2010/01/09 03:30:02 fang Exp $
+	$Id: footprint.cc,v 1.46.2.3 2010/01/13 17:43:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1515,6 +1515,8 @@ footprint::cflat_aliases(ostream& o,
 	STACKTRACE_VERBOSE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	FINISH_ME(Fang);
+	// iterate of all indices encompassed by this footprint
+	// including ports, local, and private sub-processes
 #else
 	wire_alias_set wires;
 	const global_entry_pool<bool_tag>& gbp(sm.get_pool<bool_tag>());

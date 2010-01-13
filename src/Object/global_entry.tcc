@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.22.20.2 2010/01/12 02:48:42 fang Exp $
+	$Id: global_entry.tcc,v 1.22.20.3 2010/01/13 17:43:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -295,6 +295,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Wrapped call that formats properly.  
 	\param topfp should be the top-level footprint belonging to the module.
@@ -317,6 +318,7 @@ global_entry<Tag>::dump_canonical_name(ostream& o,
 #endif
 		);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -353,12 +355,14 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class Tag>
 ostream&
 global_entry<Tag>::dump_attributes(global_entry_dumper& ged) const {
 	return get_canonical_instance(ged)
 		.get_back_ref()->dump_attributes(ged.os);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
