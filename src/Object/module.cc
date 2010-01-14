@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.41 2009/10/06 17:05:30 fang Exp $
+ 	$Id: module.cc,v 1.42 2010/01/14 23:51:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -405,9 +405,6 @@ module::allocate_unique_process_type(const process_type_reference& pt,
 	// need to import definition's local symbols (deep copy) into
 	// this temporary module's global namespace and footprint.  
 #if 0
-	// HIJACK!!! copy-overwrite module's global namespace
-	AS_A(scopespace&, *global_namespace) = *pd;
-#else
 	// need to unroll all global value parameters first
 	// what to do about overshadowed parameters?
 	const unroll_context c(&_footprint, &_footprint);
@@ -420,6 +417,10 @@ module::allocate_unique_process_type(const process_type_reference& pt,
 	// visible to the process-type within its scope anyways...
 	_footprint.remove_shadowed_collections(*pd);
 	// non-shadowed values remain intact for lookup during next create phase
+#else
+	if (!__import_global_parameters(top_module, *pd).good) {
+		return good_bool(false);
+	}
 #endif
 #if ENABLE_STACKTRACE
 	pd->dump(cerr << "process definition: ") << endl;
@@ -453,9 +454,15 @@ module::allocate_unique_process_type(const process_type_reference& pt,
  */
 good_bool
 module::allocate_single_process(
-		const count_ptr<const process_type_reference>& pt) {
+		const count_ptr<const process_type_reference>& pt,
+		const module& top_module) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(pt);
+	// grab global parameters
+	if (!__import_global_parameters(top_module,
+		*pt->get_base_def().is_a<const process_definition>()).good) {
+		return good_bool(false);
+	}
 	const count_ptr<instantiation_statement_base>
 		pi(fundamental_type_reference::make_instantiation_statement(
 			pt, index_collection_item_ptr_type(NULL)));
@@ -475,12 +482,14 @@ module::allocate_single_process(
 	// need to unroll all global value parameters first
 	// what to do about overshadowed parameters?
 	const unroll_context c(&_footprint, &_footprint);
-	pi->unroll(c);
-	_footprint.create_dependent_types(_footprint);
-	// force to reallocate new instance (fragile!)
-	// since there are no new connections, no new aliases are formed
-	allocated = false;
-	return __allocate_unique();
+	if (pi->unroll(c).good) {
+		_footprint.create_dependent_types(_footprint);
+		// force to reallocate new instance (fragile!)
+		// since there are no new connections, no new aliases are formed
+		allocated = false;
+		return __allocate_unique();
+	}
+	else return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -493,6 +502,30 @@ module::reset(void) {
 	STACKTRACE_VERBOSE;
 	global_state.clear();
 	allocated = false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+module::__import_global_parameters(const module& m,
+		const process_definition& pd) {
+	footprint& _footprint(get_footprint());
+#if 0
+	_footprint.import_global_parameters(m.get_footprint());
+#else
+	// need to unroll all global value parameters first
+	// what to do about overshadowed parameters?
+	const unroll_context c(&_footprint, &_footprint);
+	if (!m.unroll_if(c, &instance_management_of_values).good) {
+		cerr << "Error unrolling top-level parameter values." << endl;
+		return good_bool(false);
+	}
+	global_namespace->import_physical_instances(pd);
+	// need to remove shadowed value collection, since they won't be
+	// visible to the process-type within its scope anyways...
+	_footprint.remove_shadowed_collections(pd);
+	// non-shadowed values remain intact for lookup during next create phase
+#endif
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

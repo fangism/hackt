@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-61:
+	  hacknet: fixed -T type mode which was failing on global
+		parameters.  solution: re-import global parameters.
+	  Test cases added.
+
+
 2010-01-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-60:
