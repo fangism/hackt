@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.15.18.2 2010/01/15 04:13:18 fang Exp $
+	$Id: ExprAlloc.h,v 1.15.18.3 2010/01/15 18:42:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -17,7 +17,11 @@
 	Define to 1 to try to use simple allocation traversal
 	without peeling out top-level process separately.  
  */
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#define	PRSIM_SIMPLE_ALLOC			1
+#else
 #define	PRSIM_SIMPLE_ALLOC			0
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -25,7 +29,7 @@ namespace PRSIM {
 class State;
 class unique_process_subgraph;
 using std::map;
-using entity::global_entry;
+using entity::GLOBAL_ENTRY;
 using entity::process_tag;
 using entity::state_manager;
 using entity::PRS::footprint_rule;
@@ -139,7 +143,7 @@ protected:
 
 #if PRSIM_SIMPLE_ALLOC
 	void
-	visit(const global_entry<process_tag>&);
+	visit(const GLOBAL_ENTRY<process_tag>&);
 #endif
 
 	void
@@ -182,6 +186,7 @@ public:
 		// works without catching pid=0 (top-level)
 		// b/c we populated its frame map with identity indices
 #if PRSIM_SIMPLE_ALLOC
+	// CAUTION!!! TODO, FIXME, XXX, ACHTUNG!
 	if (current_process_index) {
 		return __lookup_global_bool_id(ni);
 	} else {

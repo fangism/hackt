@@ -3,7 +3,7 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2010-01-12	David Fang		<fangism@users.sourceforge.net>
+2010-01-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-06:
 	  And more markup for alteration.
@@ -11,6 +11,8 @@
 		traverse state_instance instead.
 		Procedures that depend on footprint_frame probably
 		need to apply offset transformations.
+	  Turned on MEMORY_MAPPED_GLOBAL_ALLOCATION!
+	  Finally links, though many placeholder functions are empty.
 
 
 2010-01-12	David Fang		<fangism@users.sourceforge.net>

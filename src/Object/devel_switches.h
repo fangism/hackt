@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.57.2.3 2010/01/12 02:48:40 fang Exp $
+	$Id: devel_switches.h,v 1.57.2.4 2010/01/15 18:42:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -110,7 +110,7 @@
 	Phase 2: replacing all use of global state_manager [in progress]
 	Status: marking code for destruction
  */
-#define	MEMORY_MAPPED_GLOBAL_ALLOCATION		0
+#define	MEMORY_MAPPED_GLOBAL_ALLOCATION		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

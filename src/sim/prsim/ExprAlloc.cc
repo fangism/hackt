@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.42.4.3 2010/01/15 04:13:17 fang Exp $
+	$Id: ExprAlloc.cc,v 1.42.4.4 2010/01/15 18:42:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -190,6 +190,7 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 		state(_s),
 		g(NULL), 
 #if PRSIM_SIMPLE_ALLOC
+		// TODO: not sure
 		current_process_index(size_t(-1)), 
 #else
 		current_process_index(0), 
@@ -222,7 +223,7 @@ ExprAlloc::visit(const state_manager& _sm) {
 	STACKTRACE_VERBOSE;
 #if PRSIM_SIMPLE_ALLOC
 	STACKTRACE_INDENT_PRINT("top-level process ..." << endl);
-	const entity::global_entry_pool<entity::process_tag>&
+	const entity::GLOBAL_ENTRY_pool<entity::process_tag>&
 		proc_entry_pool(_sm.get_pool<entity::process_tag>());
 	// relies on module::populate_top_footprint_frame()
 	proc_entry_pool[0].accept(*this);	// b/c state_manager skips [0]
@@ -281,7 +282,6 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 // needs to be re-written without use of global state_manager
 /**
 	Lookup this PRS_footprint in the address map.
@@ -296,7 +296,7 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
  */
 void
 #if PRSIM_SIMPLE_ALLOC
-ExprAlloc::visit(const global_entry<process_tag>& gp)
+ExprAlloc::visit(const GLOBAL_ENTRY<process_tag>& gp)
 #else
 ExprAlloc::visit(const entity::PRS::footprint& pfp)
 #endif
@@ -309,13 +309,17 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 	const entity::footprint* const fp(gp._frame._footprint);
 #else
 	const entity::PRS::footprint* const fp(&pfp);
-#endif
 	const module& m(state.get_module());
+#endif
 	// this now works for pid=0, top-level
 	const entity::footprint_frame_map_type&
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		bmap(gp._frame.get_frame_map<bool_tag>());
+#else
 		bmap(m.get_state_manager()
 			.get_pool<process_tag>()[current_process_index]
 			._frame.get_frame_map<bool_tag>());
+#endif
 	const node_index_type node_pool_size = bmap.size();
 	STACKTRACE_INDENT_PRINT("node_pool_size = " << node_pool_size << endl);
 	size_t type_index;	// unique process type index
@@ -459,7 +463,6 @@ if (pxs) {
 	// assume that processes are visited in sequence
 	++current_process_index;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #define	DEBUG_CLEANUP		(0 && ENABLE_STACKTRACE)
@@ -619,7 +622,7 @@ if (suppress_keeper_rule) {
 	const size_t top_ex_index = ret_ex_index;
 	// r.output_index gives the local unique ID,
 	// which needs to be translated to global ID.
-	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
+	// bfm[...] refers to a GLOBAL_ENTRY<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
 	const size_t ni = lookup_local_bool_id(r.output_index);
 

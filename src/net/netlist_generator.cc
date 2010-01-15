@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.11.2.2 2010/01/15 04:13:15 fang Exp $
+	$Id: netlist_generator.cc,v 1.11.2.3 2010/01/15 18:42:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -256,7 +256,13 @@ if (opt.empty_subcircuits || !nl->is_empty()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+void
+netlist_generator::visit(const entity::footprint& f) {
+	STACKTRACE_VERBOSE;
+	FINISH_ME(Fang);
+}
+#else
 void
 netlist_generator::visit(const state_manager& s) {
 	STACKTRACE_VERBOSE;
