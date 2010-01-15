@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.9.24.1 2010/01/09 03:30:10 fang Exp $
+	$Id: cflat_visitor.h,v 1.9.24.2 2010/01/15 04:13:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -14,8 +14,14 @@
 
 namespace HAC {
 namespace entity {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#define	GLOBAL_ENTRY		state_instance
+class footprint;
+#else
+#define	GLOBAL_ENTRY		global_entry
 class state_manager;
-template <class Tag> class global_entry;
+#endif
+template <class Tag> class GLOBAL_ENTRY;
 namespace SPEC {
 	class footprint;
 	class footprint_directive;
@@ -73,16 +79,19 @@ public:
 virtual	~cflat_visitor() { }
 
 virtual	void
-	visit(const global_entry<process_tag>&);
+	visit(const GLOBAL_ENTRY<process_tag>&);
 virtual	void
-	visit(const global_entry<channel_tag>&);
+	visit(const GLOBAL_ENTRY<channel_tag>&);
 virtual	void
-	visit(const global_entry<enum_tag>&);
+	visit(const GLOBAL_ENTRY<enum_tag>&);
 virtual	void
-	visit(const global_entry<int_tag>&);
+	visit(const GLOBAL_ENTRY<int_tag>&);
 virtual	void
-	visit(const global_entry<bool_tag>&);
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+	visit(const GLOBAL_ENTRY<bool_tag>&);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+virtual	void
+	visit(const entity::footprint&);
+#else
 virtual	void
 	visit(const state_manager&);
 #endif
@@ -101,7 +110,7 @@ virtual	void
 
 private:
 	template <class Tag>
-	void __default_visit(const global_entry<Tag>&);
+	void __default_visit(const GLOBAL_ENTRY<Tag>&);
 
 };	// end struct cflat_visitor
 

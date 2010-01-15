@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.5.2.1 2010/01/12 02:49:00 fang Exp $
+	$Id: netlist_generator.h,v 1.5.2.2 2010/01/15 04:13:15 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -23,7 +23,7 @@ using entity::cflat_context_visitor;
 using entity::state_manager;
 #endif
 using entity::footprint;
-using entity::global_entry;
+using entity::GLOBAL_ENTRY;
 using entity::bool_tag;
 using entity::process_tag;
 using entity::PRS::footprint_expr_node;
@@ -144,12 +144,12 @@ public:
 
 private:
 	void
-	visit(const global_entry<process_tag>&);
+	visit(const GLOBAL_ENTRY<process_tag>&);
 
 	using cflat_context_visitor::visit;
 
 	void
-	visit(const global_entry<bool_tag>&);		// do nothing?
+	visit(const GLOBAL_ENTRY<bool_tag>&);		// do nothing?
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	visit(const state_manager&);		// only visit processes

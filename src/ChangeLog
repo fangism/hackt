@@ -5,6 +5,16 @@
 
 2010-01-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-53-scalable-01-06:
+	  And more markup for alteration.
+		visitors that traversed global_entry now need to 
+		traverse state_instance instead.
+		Procedures that depend on footprint_frame probably
+		need to apply offset transformations.
+
+
+2010-01-12	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-83-53-scalable-01-05:
 	  Continued markup for alteration/destruction.
 

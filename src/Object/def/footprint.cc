@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.3 2010/01/13 17:43:31 fang Exp $
+	$Id: footprint.cc,v 1.46.2.4 2010/01/15 04:13:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -73,6 +73,9 @@
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/CHP.h"
 #include "Object/lang/CHP_event_alloc.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/lang/cflat_visitor.h"
+#endif
 #include "Object/persistent_type_hash.h"
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
@@ -883,6 +886,61 @@ try {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+
+/**
+	Print canonical name.
+ */
+ostream&
+footprint::dump_canonical_name(ostream& o,
+		const global_indexed_reference& r) const {
+	switch (r.first) {
+	case META_TYPE_PROCESS:
+		return dump_canonical_name<process_tag>(o, r.second);
+	case META_TYPE_CHANNEL:
+		return dump_canonical_name<channel_tag>(o, r.second);
+#if ENABLE_DATASTRUCTS
+	case META_TYPE_STRUCT:
+		return dump_canonical_name<datastruct_tag>(o, r.second);
+#endif
+	case META_TYPE_BOOL:
+		return dump_canonical_name<bool_tag>(o, r.second);
+	case META_TYPE_INT:
+		return dump_canonical_name<int_tag>(o, r.second);
+	case META_TYPE_ENUM:
+		return dump_canonical_name<enum_tag>(o, r.second);
+	default:	o << "<Unhandled-TAG>";
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not used, written for the sake of instantiating
+	the template functions.
+ */
+void
+footprint::__dummy_get_instance(void) const {
+	get_instance<process_tag>(0);
+	get_instance<channel_tag>(0);
+#if ENABLE_DATASTRUCTS
+	get_instance<datastruct_tag>(0);
+#endif
+	get_instance<enum_tag>(0);
+	get_instance<int_tag>(0);
+	get_instance<bool_tag>(0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+footprint::collect_subentries(const global_indexed_reference& gref,
+		entry_collection& e) const {
+	FINISH_ME(Fang);
+	// use the footprint frame of the referenced process instance
+	// and all private local subinstance indices (range)
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Sets the public/private boundary index in the meta-type pools.
 	TODO: set the instance_pools' private_entry_map
@@ -1577,6 +1635,14 @@ footprint::accept(alias_visitor& v) const {
 		// skip parameters
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+void
+footprint::accept(PRS::cflat_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

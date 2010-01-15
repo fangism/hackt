@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.13.88.1 2010/01/09 03:30:04 fang Exp $
+	$Id: instance_pool.tcc,v 1.13.88.2 2010/01/15 04:13:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -9,6 +9,9 @@
 
 #include <iostream>
 #include "Object/inst/instance_pool.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include <algorithm>
+#endif
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/def/footprint.h"
 #include "util/persistent_object_manager.tcc"	// for STACKTRACE macros
@@ -75,6 +78,32 @@ instance_pool<T>::~instance_pool() {
 	STACKTRACE_DTOR_VERBOSE;
 	STACKTRACE_DTOR_PRINT("at: " << this << endl);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+inline
+static
+bool
+offset_less(const size_t l, const pool_private_map_entry_type& r) {
+	return l < r.second;
+}
+
+/**
+	Search for the entry that corresponds to the private local
+	substructure process.  
+ */
+template <class T>
+const pool_private_map_entry_type&
+instance_pool<T>::locate_private_entry(const size_t li) const {
+	pool_private_entry_map_type::const_iterator
+		f(std::upper_bound(private_entry_map.begin(),
+			private_entry_map.end(), 
+			li, &offset_less));
+	INVARIANT(f != private_entry_map.begin());
+	--f;
+	return *f;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 /**

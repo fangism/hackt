@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.11 2009/11/06 01:32:06 fang Exp $
+	$Id: netgraph.h,v 1.11.2.1 2010/01/15 04:13:14 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -57,7 +57,7 @@ using std::pair;
 using entity::cflat_context_visitor;
 using entity::state_manager;
 using entity::footprint;
-using entity::global_entry;
+using entity::GLOBAL_ENTRY;
 using entity::bool_tag;
 using entity::process_tag;
 using entity::PRS::footprint_expr_node;
@@ -665,7 +665,7 @@ public:
 #endif
 
 	void
-	append_instance(const global_entry<process_tag>&, const netlist&, 
+	append_instance(const GLOBAL_ENTRY<process_tag>&, const netlist&, 
 		const index_type, const netlist_options&);
 
 	void

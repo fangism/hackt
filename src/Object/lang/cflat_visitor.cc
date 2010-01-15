@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.12.20.1 2010/01/09 03:30:09 fang Exp $
+	$Id: cflat_visitor.cc,v 1.12.20.2 2010/01/15 04:13:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -15,6 +15,7 @@
 #include "Object/global_entry.tcc"
 #include "Object/global_channel_entry.h"
 #include "Object/traits/instance_traits.h"
+#include "common/TODO.h"
 #include "util/visitor_functor.h"
 #include "util/index_functor.h"
 #include "util/compose.h"
@@ -59,13 +60,13 @@ cflat_visitor::expr_pool_setter::~expr_pool_setter() {
 //=============================================================================
 template <class Tag>
 void
-cflat_visitor::__default_visit(const global_entry<Tag>& e) {
+cflat_visitor::__default_visit(const GLOBAL_ENTRY<Tag>& e) {
 //	e.accept(*this);
 }
 
 #define	DEFINE_VISIT_GLOBAL_ENTRY(Tag)					\
 void									\
-cflat_visitor::visit(const global_entry<Tag>& e) {			\
+cflat_visitor::visit(const GLOBAL_ENTRY<Tag>& e) {			\
 	STACKTRACE_VERBOSE;						\
 	__default_visit(e);						\
 }
@@ -85,7 +86,7 @@ DEFINE_VISIT_GLOBAL_ENTRY(bool_tag)
 	is not derived from cflat_context... should it be?
  */
 void
-cflat_visitor::visit(const global_entry<process_tag>& e) {
+cflat_visitor::visit(const GLOBAL_ENTRY<process_tag>& e) {
 	STACKTRACE_VERBOSE;
 	cflat_visitor& v(*this);
 	const entity::footprint* const f(e._frame._footprint);
@@ -104,7 +105,13 @@ cflat_visitor::visit(const global_entry<process_tag>& e) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+void
+cflat_visitor::visit(const entity::footprint& f) {
+	STACKTRACE_VERBOSE;
+	FINISH_ME_EXIT(Fang);
+}
+#else
 /**
 	Default state_manager traversal. 
  */

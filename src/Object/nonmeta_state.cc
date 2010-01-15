@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.4.24.2 2010/01/13 17:43:30 fang Exp $
+	$Id: nonmeta_state.cc,v 1.4.24.3 2010/01/15 04:13:07 fang Exp $
  */
 
 #include <iostream>
@@ -227,7 +227,6 @@ nonmeta_state_manager::dump_state(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Formatted printing of names of all instances.  
  */
@@ -237,6 +236,9 @@ nonmeta_state_manager::dump_struct(ostream& o,
 		const state_manager& sm, 
 #endif
 		const footprint& topfp) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	{
 		const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
 		const size_t bools = bool_base_type::pool.size();
@@ -287,9 +289,9 @@ nonmeta_state_manager::dump_struct(ostream& o,
 			o << endl;
 		}
 	}
+#endif
 	return o;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

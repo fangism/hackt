@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.24.2.2 2010/01/13 17:43:36 fang Exp $
+	$Id: cflat_printer.cc,v 1.24.2.3 2010/01/15 04:13:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -110,7 +110,7 @@ if (!cfopts.check_prs) {
 	os << " -> ";
 	// r.output_index gives the local unique ID,
 	// which needs to be translated to global ID.
-	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
+	// bfm[...] refers to a GLOBAL_ENTRY<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
 	const size_t global_bool_index =
 		parent_type::__lookup_global_bool_id(r.output_index);
@@ -139,7 +139,7 @@ cflat_prs_printer::print_node_name(ostream& o,
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const size_t bi
 #else
-		const global_entry<bool_tag>& b
+		const GLOBAL_ENTRY<bool_tag>& b
 #endif
 		) const {
 	if (cfopts.enquote_names) o << '\"';
@@ -442,19 +442,26 @@ cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-// need to replace with indexed argument
 /**
 	Print attributes for nodes with non-default attribute values.  
  */
 void
-cflat_prs_printer::visit(const global_entry<bool_tag>& b) {
+cflat_prs_printer::visit(const GLOBAL_ENTRY<bool_tag>& b) {
 if (cfopts.node_attributes) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const state_instance<bool_tag>& i(b);
+#else
 	const state_instance<bool_tag>& i(b.get_canonical_instance(*this));
+#endif
 	const instance_alias_info<bool_tag>& a(*i.get_back_ref());
 if (a.has_nondefault_attributes()) {
 	std::ostringstream oss;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	print_node_name(oss,
+		i.get_back_ref()->instance_index +global_bool_offset);
+#else
 	print_node_name(oss, b);	// auto-quote
+#endif
 	const string& n(oss.str());
 	if (cfopts.split_instance_attributes) {
 		a.dump_split_attributes(os, n);
@@ -465,7 +472,6 @@ if (a.has_nondefault_attributes()) {
 }
 }
 }
-#endif
 
 //=============================================================================
 }	// end namespace PRS

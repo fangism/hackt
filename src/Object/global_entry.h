@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.3 2010/01/13 17:43:28 fang Exp $
+	$Id: global_entry.h,v 1.18.20.4 2010/01/15 04:13:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -471,8 +471,11 @@ public:
 	get_canonical_instance(const global_entry_context_base&) const;
 #endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// relocated to state_instance<Tag>::accept
 	void
 	accept(PRS::cflat_visitor&) const;
+#endif
 
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using parent_type::collect_subentries;

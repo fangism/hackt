@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_visitor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: CHP_visitor.h,v 1.6.24.1 2010/01/09 03:30:07 fang Exp $
+	$Id: CHP_visitor.h,v 1.6.24.2 2010/01/15 04:13:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_VISITOR_H__
@@ -116,7 +116,7 @@ virtual	void
 #endif
 
 virtual	void
-	visit(const global_entry<process_tag>&);
+	visit(const GLOBAL_ENTRY<process_tag>&);
 
 	// overrides
 virtual	void

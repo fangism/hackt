@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.14.2.1 2010/01/13 17:43:37 fang Exp $
+	$Id: cflat_printer.h,v 1.14.2.2 2010/01/15 04:13:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -28,6 +28,9 @@ public:
 	ostream&				os;
 	const cflat_options&			cfopts;
 protected:
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	size_t					global_bool_offset;
+#endif
 	/**
 		Parental context information for optimal parenthesization. 
 	 */
@@ -51,7 +54,11 @@ protected:
 public:
 	cflat_prs_printer(ostream& _os, const cflat_options& _cfo) :
 			cflat_context_visitor(), 
-			os(_os), cfopts(_cfo) { }
+			os(_os), cfopts(_cfo)
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, global_bool_offset(0)
+#endif
+			{ }
 	~cflat_prs_printer();
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -59,7 +66,7 @@ public:
 	print_node_name(ostream&, const size_t) const;
 #else
 	ostream&
-	print_node_name(ostream&, const global_entry<bool_tag>&) const;
+	print_node_name(ostream&, const GLOBAL_ENTRY<bool_tag>&) const;
 #endif
 
 	void
@@ -87,7 +94,7 @@ protected:
 
 	// override
 	void
-	visit(const global_entry<bool_tag>&);
+	visit(const GLOBAL_ENTRY<bool_tag>&);
 
 	void
 	visit(const footprint_rule&);

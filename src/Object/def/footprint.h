@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.4 2010/01/13 17:43:32 fang Exp $
+	$Id: footprint.h,v 1.30.2.5 2010/01/15 04:13:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -33,6 +33,9 @@ class cflat_options;
 namespace entity {
 namespace PRS {
 	class footprint;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	class cflat_visitor;
+#endif
 }
 namespace SPEC {
 	class footprint;
@@ -354,14 +357,13 @@ public:
 	ostream&
 	dump_canonical_name(ostream&, const size_t) const;
 
+	ostream&
+	dump_canonical_name(ostream&, const global_indexed_reference&) const;
+
 	// perform hierarchical lookup to find uniquely typed instance
 	template <class Tag>
 	const state_instance<Tag>&
 	get_instance(const size_t) const;
-
-	template <class Tag>
-	void
-	match_aliases(util::string_list&, const size_t) const;
 
 	good_bool
 	collect_subentries(const global_indexed_reference&,
@@ -484,6 +486,9 @@ private:
 
 	void
 	finish_instance_pools(const size_t);
+
+	void
+	__dummy_get_instance(void) const;
 public:
 #else
 	good_bool
@@ -510,6 +515,11 @@ public:
 
 	void
 	accept(alias_visitor&) const;
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	accept(PRS::cflat_visitor&) const;
+#endif
 
 public:
 	instance_collection_ptr_type

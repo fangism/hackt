@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.15.18.1 2010/01/13 17:43:44 fang Exp $
+	$Id: ExprAlloc.h,v 1.15.18.2 2010/01/15 04:13:18 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -129,8 +129,13 @@ public:
 protected:
 	using cflat_visitor::visit;
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	visit(const footprint&);
+#else
 	void
 	visit(const state_manager&);
+#endif
 
 #if PRSIM_SIMPLE_ALLOC
 	void

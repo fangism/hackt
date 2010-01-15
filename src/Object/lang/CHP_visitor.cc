@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_visitor.cc"
-	$Id: CHP_visitor.cc,v 1.4.24.1 2010/01/09 03:30:06 fang Exp $
+	$Id: CHP_visitor.cc,v 1.4.24.2 2010/01/15 04:13:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -28,7 +28,7 @@ chp_visitor::visit(const entity::state_manager&) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-chp_visitor::visit(const global_entry<process_tag>& p) {
+chp_visitor::visit(const GLOBAL_ENTRY<process_tag>& p) {
 //	cflat_context_visitor::visit(p);	// optional: PRS, SPEC
 // TODO: will need this once CHP interacts with SPEC directives
 	chp_visitor& v(*this);

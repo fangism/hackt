@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.16 2009/11/18 18:26:52 fang Exp $
+	$Id: netgraph.cc,v 1.16.2.1 2010/01/15 04:13:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -671,7 +671,7 @@ netlist::get_unmangled_name(void) const {
 	TODO: possible check for name collisions?
  */
 void
-netlist::append_instance(const global_entry<process_tag>& subp,
+netlist::append_instance(const GLOBAL_ENTRY<process_tag>& subp,
 		const netlist& subnet, const index_type lpid,
 		const netlist_options& opt) {
 	STACKTRACE_VERBOSE;

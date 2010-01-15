@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.12.88.2 2010/01/12 02:48:50 fang Exp $
+	$Id: instance_pool.h,v 1.12.88.3 2010/01/15 04:13:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -25,6 +25,19 @@ using util::good_bool;
 using util::persistent_object_manager;
 using util::memory::index_pool;
 template <class> class instance_collection_pool_bundle;
+
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	Map entry (remains sorted) is amended each time a local
+	structure is allocated.  key,value increase monotonically
+	with each new entry, hence invariantly ordered.
+	Is sparse entry, so can skip indices for substructures
+	with no private entries.  
+ */
+typedef	std::pair<size_t, size_t>		pool_private_map_entry_type;
+typedef	vector<pool_private_map_entry_type>	pool_private_entry_map_type;
+#endif
 
 //=============================================================================
 /**
@@ -83,15 +96,8 @@ public:	// out of sheer laziness for now...
 #else
 	// can be deduced, use total_private_entries()
 #endif
-	/**
-		Map entry (remains sorted) is amended each time a local
-		structure is allocated.  key,value increase monotonically
-		with each new entry, hence invariantly ordered.
-		Is sparse entry, so can skip indices for substructures
-		with no private entries.  
-	 */
-	typedef	std::pair<size_t, size_t>		private_map_entry_type;
-	typedef	vector<private_map_entry_type>		private_entry_map_type;
+	typedef	pool_private_map_entry_type	private_map_entry_type;
+	typedef	pool_private_entry_map_type	private_entry_map_type;
 	/**
 		Do a binary search on this sorted map to find the
 		index of the local instance to descend into.
@@ -127,6 +133,15 @@ public:
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	/**
+		\return number of _port_entries
+		Use this value to size footprint_frames.
+	 */
+	size_t
+	port_entries(void) const {
+		return this->_port_entries;
+	}
+
+	/**
 		\return the number of instances that are local 
 		but not aliased to public ports.  
 	 */
@@ -136,7 +151,15 @@ public:
 	}
 
 	/**
-		The 
+		
+	 */
+	size_t
+	local_entries(void) const {
+		return this->size();
+	}
+
+	/**
+		The number of local entries, port and non-port.
 	 */
 	size_t
 	non_local_private_entries(void) const {
@@ -158,6 +181,9 @@ public:
 	total_entries(void) const {
 		return this->size() +this->non_local_private_entries();
 	}
+
+	const private_map_entry_type&
+	locate_private_entry(const size_t) const;
 #endif
 
 	ostream&

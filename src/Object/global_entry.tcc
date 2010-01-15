@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.22.20.3 2010/01/13 17:43:29 fang Exp $
+	$Id: global_entry.tcc,v 1.22.20.4 2010/01/15 04:13:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -407,12 +407,14 @@ global_entry<Tag>::get_canonical_instance(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class Tag>
 void
 global_entry<Tag>::accept(PRS::cflat_visitor& v) const {
 	STACKTRACE_VERBOSE;
 	v.visit(*this);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

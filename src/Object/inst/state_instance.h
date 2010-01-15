@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.11.88.2 2010/01/09 03:30:06 fang Exp $
+	$Id: state_instance.h,v 1.11.88.3 2010/01/15 04:13:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -82,6 +82,11 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	accept(PRS::cflat_visitor&) const;
+#endif
 
 #define	STATE_INSTANCE_PERSISTENCE_PROTOS				\
 	void								\

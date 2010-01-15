@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.11.2.1 2010/01/12 02:48:59 fang Exp $
+	$Id: netlist_generator.cc,v 1.11.2.2 2010/01/15 04:13:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -104,7 +104,7 @@ netlist_generator::operator () (void) {
 	FINISH_ME(Fang);
 #else
 	NEVER_NULL(sm);
-	const global_entry<process_tag>& ptop(sm->get_pool<process_tag>()[0]);
+	const GLOBAL_ENTRY<process_tag>& ptop(sm->get_pool<process_tag>()[0]);
 	visit(ptop);
 #endif
 }
@@ -115,7 +115,7 @@ netlist_generator::operator () (void) {
 	Perhaps apply attributes to corresponding mapped local netlist nodes.  
  */
 void
-netlist_generator::visit(const global_entry<bool_tag>& p) {
+netlist_generator::visit(const GLOBAL_ENTRY<bool_tag>& p) {
 	STACKTRACE_VERBOSE;
 }
 
@@ -145,7 +145,7 @@ struct set_adaptor : public Sequence {
 	footprint_frame?  This should be a non-global hierarchical traversal.
  */
 void
-netlist_generator::visit(const global_entry<process_tag>& p) {
+netlist_generator::visit(const GLOBAL_ENTRY<process_tag>& p) {
 	STACKTRACE_VERBOSE;
 	// don't need to temporarily set the footprint_frame
 	// because algorithm is completely hierarchical, no flattening
@@ -198,7 +198,7 @@ try {
 		STACKTRACE_INDENT_PRINT("examining sub-process id " << *i <<
 			", local id " << lpid << endl);
 		// const index_type lpid = *i +1;
-		const global_entry<process_tag>&
+		const GLOBAL_ENTRY<process_tag>&
 			subp(sm->get_pool<process_tag>()[*i]);
 		// no need to set footprint frames (global use only)
 		visit(subp);	// recursion
