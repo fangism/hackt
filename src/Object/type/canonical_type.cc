@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.18.14.2 2010/01/13 17:43:39 fang Exp $
+	$Id: canonical_type.cc,v 1.18.14.3 2010/01/18 23:43:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -171,7 +171,11 @@ canonical_type_footprint_frame_policy<process_definition>::
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_manager& sm, 
 #endif
-		const port_member_context& pmc, const size_t ind) {
+		const port_member_context& pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t ind
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	const footprint&
 		f(cpt.get_base_def()->get_footprint(
@@ -220,7 +224,11 @@ canonical_type_footprint_frame_policy<user_def_datatype>::
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_manager& sm, 
 #endif
-		const port_member_context& pmc, const size_t ind) {
+		const port_member_context& pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t ind
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	const footprint&
 		f(cpt.get_base_def()->get_footprint(

@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.7.16.1 2010/01/12 02:48:58 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.7.16.2 2010/01/18 23:43:44 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -15,6 +15,8 @@
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
 #include "Object/traits/instance_traits.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.h"
 #include "parser/instref.h"
 #include "guile/devel_switches.h"
 #include "guile/libhackt-wrap.h"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.4 2010/01/15 04:13:08 fang Exp $
+	$Id: footprint.cc,v 1.46.2.5 2010/01/18 23:43:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -140,7 +140,6 @@ footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 #endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Iterate over local footprint of structured entries.  
 	This is only applicable to process_tag!  
@@ -153,17 +152,42 @@ footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 template <class Tag>
 good_bool
 footprint_base<Tag>::__expand_unique_subinstances(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const port_alias_tracker& st, 
+		const footprint_frame& gframe
+#else
 		const footprint_frame& gframe,
-		state_manager& sm, const size_t o) const {
-	typedef	global_entry_pool<Tag>		global_pool_type;
+		state_manager& sm, const size_t o
+#endif
+		) 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const
+#endif
+		{
 	STACKTRACE_VERBOSE;
-	size_t j = o;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	typedef	typename instance_pool_type::iterator	iterator;
+	_instance_pool->resize(st.template local_pool_size<Tag>());
+	iterator i(_instance_pool->begin());	// first entry valid?
+	const iterator e(_instance_pool->end());
+#else
+	typedef	global_entry_pool<Tag>		global_pool_type;
 	global_pool_type& gpool(sm.template get_pool<Tag>());
 	// remember to skip the NULL entry
 	const_iterator i(++_instance_pool->begin());
 	const const_iterator e(_instance_pool->end());
-	for ( ; i!=e; i++, j++) {
+	size_t j = o;
+#endif
+	for ( ; i!=e; ++i
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, ++j
+#endif
+			) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		state_instance<Tag>& ref(*i);
+#else
 		global_entry<Tag>& ref(gpool[j]);
+#endif
 		/***
 			The footprint frame has not yet been initialized, 
 			it is just empty.  allocate_subinstance_footprint()
@@ -185,7 +209,6 @@ footprint_base<Tag>::__expand_unique_subinstances(
 			__construct_port_context projects the context
 			global actual IDs into this unique instance's
 			ports.  (Passing top-down).
-			NOTE: this shouldn't require the state_manager.
 		***/
 		formal_alias.__construct_port_context(pmc, gframe);
 #if ENABLE_STACKTRACE
@@ -196,7 +219,15 @@ footprint_base<Tag>::__expand_unique_subinstances(
 		// initialize (allocate) frame and assign at the same time.  
 		// recursively create private remaining internal state
 		if (!formal_alias.allocate_assign_subinstance_footprint_frame(
-				frame, sm, pmc, j).good) {
+				frame, 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				sm, 
+#endif
+				pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				, j
+#endif
+				).good) {
 			return good_bool(false);
 		}
 #if ENABLE_STACKTRACE
@@ -206,7 +237,6 @@ footprint_base<Tag>::__expand_unique_subinstances(
 	}
 	return good_bool(true);
 }
-#endif	// MEMORY_MAPPED_GLOBAL_ALLLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -866,14 +896,12 @@ try {
 	//	all publicly reachable indices are before private ones,
 	//	now we can set the number of private entries
 	partition_local_instance_pool();
+	STACKTRACE_INDENT_PRINT("after partition" << endl);
+	expand_unique_subinstances();
+	STACKTRACE_INDENT_PRINT("after expand" << endl);
 	construct_private_entry_map();
 	// for all structures with private subinstances (processes)
 	//	publicly reachable local processes that are aliased to a port
-//	expand_unique_subinstances();	// populate footprint frames
-//	footprint_allocator fa(*this);
-//	fa.accept();
-	// build private entry map
-	// aggregate number of private entries
 #endif
 	mark_created();
 	return good_bool(true);
@@ -886,7 +914,6 @@ try {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-
 /**
 	Print canonical name.
  */
@@ -920,6 +947,7 @@ footprint::dump_canonical_name(ostream& o,
  */
 void
 footprint::__dummy_get_instance(void) const {
+	ICE_NEVER_CALL(cerr);
 	get_instance<process_tag>(0);
 	get_instance<channel_tag>(0);
 #if ENABLE_DATASTRUCTS
@@ -941,27 +969,31 @@ footprint::collect_subentries(const global_indexed_reference& gref,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+footprint_base<Tag>::__partition_local_instance_pool(
+		const port_alias_tracker& st) {
+	this->_instance_pool->resize(st.template local_pool_size<Tag>());
+	this->_instance_pool->_port_entries =
+		st.template port_frame_size<Tag>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Sets the public/private boundary index in the meta-type pools.
-	TODO: set the instance_pools' private_entry_map
+	Also resizes the local pools, based on number of unique aliases.
  */
 void
 footprint::partition_local_instance_pool(void) {
 	STACKTRACE_VERBOSE;
-	get_instance_pool<process_tag>()._port_entries = 
-		scope_aliases.port_frame_size<process_tag>();
-	get_instance_pool<channel_tag>()._port_entries = 
-		scope_aliases.port_frame_size<channel_tag>();
+	footprint_base<process_tag>::__partition_local_instance_pool(scope_aliases);
+	footprint_base<channel_tag>::__partition_local_instance_pool(scope_aliases);
 #if ENABLE_DATASTRUCTS
-	get_instance_pool<datastruct_tag>()._port_entries = 
-		scope_aliases.port_frame_size<datastruct_tag>();
+	footprint_base<datastruct_tag>::__partition_local_instance_pool(scope_aliases);
 #endif
-	get_instance_pool<enum_tag>()._port_entries = 
-		scope_aliases.port_frame_size<enum_tag>();
-	get_instance_pool<int_tag>()._port_entries = 
-		scope_aliases.port_frame_size<int_tag>();
-	get_instance_pool<bool_tag>()._port_entries = 
-		scope_aliases.port_frame_size<bool_tag>();
+	footprint_base<enum_tag>::__partition_local_instance_pool(scope_aliases);
+	footprint_base<int_tag>::__partition_local_instance_pool(scope_aliases);
+	footprint_base<bool_tag>::__partition_local_instance_pool(scope_aliases);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -976,6 +1008,7 @@ footprint::partition_local_instance_pool(void) {
  */
 void
 footprint::construct_private_entry_map(void) {
+	STACKTRACE_VERBOSE;
 	// traverse all process instancess
 	// add entry of pairs to map for every non-empty process
 	// needs to be accumulated to set _private_entries
@@ -999,6 +1032,7 @@ footprint::construct_private_entry_map(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::finish_instance_pools(const size_t index) {
+	STACKTRACE_VERBOSE;
 	get_instance_pool<process_tag>().private_entry_map.back().first = index;
 	get_instance_pool<channel_tag>().private_entry_map.back().first = index;
 #if ENABLE_DATASTRUCTS
@@ -1012,6 +1046,7 @@ footprint::finish_instance_pools(const size_t index) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::append_private_map_entry(const footprint& sf, const size_t i) {
+	STACKTRACE_VERBOSE;
 	footprint_base<process_tag>::__append_private_map_entry(sf, i);
 	footprint_base<channel_tag>::__append_private_map_entry(sf, i);
 #if ENABLE_DATASTRUCTS
@@ -1359,6 +1394,10 @@ if (sift) {
 	scope_aliases.sift_ports();
 }
 #endif
+	// TODO:
+	// at this point, indices are stable/frozen
+	// iterate over unique substructures to populate footprint frames
+
 	// just copy-filter them over
 	port_aliases.import_port_aliases(scope_aliases);
 	// don't filter for scope, want to keep around unique entries
@@ -1371,8 +1410,9 @@ if (sift) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-#if 0
 /**
+	Perform local allocation of unique resources.
+	\pre instance indices and pool sizes (from scope_aliases) frozen.
 	This expands unique subinstances in each pool, 
 	called for each footprint.  
 	Expand everything in this footprint at this level first
@@ -1383,32 +1423,27 @@ footprint::expand_unique_subinstances(void) {
 	STACKTRACE_VERBOSE;
 	// only processes, channels, and data structures need to be expanded
 	// nothing else has substructure.  
-	const size_t process_offset = get_instance_pool<process_tag>().size();
-#if !BUILTIN_CHANNEL_FOOTPRINTS
-	const size_t channel_offset = get_instance_pool<channel_tag>().size();
-#endif
-#if ENABLE_DATASTRUCTS
-	const size_t struct_offset = get_instance_pool<datastruct_tag>().size();
-#endif
-	// no need to __allocate_local_state
+	// no need for offsets, as allocation is done locally
+	// no need to __allocate_local_state?
 	// this is empty, needs to be assigned before passing down...
 	// construct frame using offset?
-// if (a.good) {
+	footprint_frame ff(*this);
+	ff.init_top_level();		// not sure if this is correct
+	// is this needed? does this just create the identity map?
+	STACKTRACE_INDENT_PRINT("before __expand_unique_subinstances()" << endl);
 	const good_bool b(
 		footprint_base<process_tag>::
-			__expand_unique_subinstances(
-				ff, process_offset).good
+			__expand_unique_subinstances(scope_aliases, ff).good
 #if !BUILTIN_CHANNEL_FOOTPRINTS
 		&& footprint_base<channel_tag>::
-			__expand_unique_subinstances(
-				ff, channel_offset).good
+			__expand_unique_subinstances(scope_aliases, ff).good
 #endif
 #if ENABLE_DATASTRUCTS
 		&& footprint_base<datastruct_tag>::
-			__expand_unique_subinstances(
-				ff, struct_offset).good
+			__expand_unique_subinstances(scope_aliases, ff).good
 #endif
 	);
+	STACKTRACE_INDENT_PRINT("after __expand_unique_subinstances()" << endl);
 #if BUILTIN_CHANNEL_FOOTPRINTS
 	if (!b.good)	return b;
 	// assign channel footprints after global allocation is complete
@@ -1416,12 +1451,7 @@ footprint::expand_unique_subinstances(void) {
 #else
 	return b;
 #endif	// BUILTIN_CHANNEL_FOOTPRINTS
-// } else {
-//	// error
-//	return a;
-// }
 }	// end method expand_unique_subinstances
-#endif
 #else	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Called by the top-level module.  
@@ -1815,6 +1845,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		evaluate_scope_aliases(false);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		partition_local_instance_pool();
+		expand_unique_subinstances();
 		construct_private_entry_map();
 #endif
 	}

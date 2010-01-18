@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.2 2010/01/13 17:43:42 fang Exp $
+	$Id: instref.cc,v 1.19.2.3 2010/01/18 23:43:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -39,6 +39,8 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/instance_placeholder_base.h"
 #include "Object/inst/bool_port_collector.tcc"
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_pool.h"
 #include "Object/ref/meta_reference_union.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/entry_collection.h"

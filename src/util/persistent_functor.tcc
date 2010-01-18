@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_functor.tcc"
 	This is a terrible name for a file...
-	$Id: persistent_functor.tcc,v 1.6 2008/10/05 23:00:38 fang Exp $
+	$Id: persistent_functor.tcc,v 1.6.24.1 2010/01/18 23:43:51 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_TCC__
@@ -21,30 +21,29 @@ using std::istream;
 using std::for_each;
 
 //=============================================================================
-template <class T>
+template <class P, class T>
 void
-write_persistent_sequence(const persistent_object_manager& m, 
-		ostream& o, const T& t) {
+write_persistent_sequence(const P& m, ostream& o, const T& t) {
 	typedef	typename T::value_type		value_type;
 	const size_t s = t.size();
 	write_value(o, s);
-	for_each(t.begin(), t.end(), persistent_writer_ref(m, o));
+	for_each(t.begin(), t.end(), foreign_persistent_writer_ref<P>(m, o));
 }
 
 //-----------------------------------------------------------------------------
 /**
 	Suitable for containers that lack begin/end interface, like valarray.
  */
-template <class T>
+template <class P, class T>
 void
-write_persistent_array(const persistent_object_manager& m, 
-		ostream& o, const T& t) {
+write_persistent_array(const P& m, ostream& o, const T& t) {
 	typedef	typename T::value_type		value_type;
 	const size_t s = t.size();
 	write_value(o, s);
 	size_t i = 0;
+	const foreign_persistent_writer_ref<P> w(m, o);
 	for ( ; i<s; ++i) {
-		persistent_writer_ref(m, o)(t[i]);
+		w(t[i]);
 	}
 }
 
@@ -54,10 +53,9 @@ write_persistent_array(const persistent_object_manager& m,
 	already allocated positions.  
 	\pre there are at least as many positions as needed.
  */
-template <class T>
+template <class P, class T>
 void
-read_persistent_sequence_in_place(const persistent_object_manager& m, 
-		istream& i, T& t) {
+read_persistent_sequence_in_place(const P& m, istream& i, T& t) {
 	size_t s = 0;
 	read_value(i, s);
 	INVARIANT(t.size() >= s);
@@ -65,8 +63,9 @@ read_persistent_sequence_in_place(const persistent_object_manager& m,
 	typedef	typename T::iterator		iterator;
 	iterator j(t.begin());
 	size_t k = 0;
+	const foreign_persistent_loader_ref<P> l(m, i);
 	for ( ; k < s; ++k, ++j) {
-		persistent_loader_ref(m, i)(*j);
+		l(*j);
 	}
 }
 
@@ -87,8 +86,9 @@ read_persistent_sequence_prealloc(const persistent_object_manager& m,
 	typedef	value_type*			iterator;
 	iterator j(&t[0]);
 	size_t k = 0;
+	const persistent_loader_ref l(m, i);
 	for ( ; k < s; ++k, ++j) {
-		persistent_loader_ref(m, i)(*j);
+		l(*j);
 	}
 }
 #endif
@@ -100,17 +100,17 @@ read_persistent_sequence_prealloc(const persistent_object_manager& m,
 	already allocated positions.  
 	\pre there are at least as many positions as needed.
  */
-template <class T>
+template <class P, class T>
 void
-read_persistent_sequence_resize(const persistent_object_manager& m, 
-		istream& i, T& t) {
+read_persistent_sequence_resize(const P& m, istream& i, T& t) {
 	typedef	typename T::value_type		value_type;
 	size_t s;
 	read_value(i, s);
 	t.resize(s);
 	size_t k = 0;
+	const foreign_persistent_loader_ref<P> l(m, i);
 	for ( ; k < s; ++k) {
-		persistent_loader_ref(m, i)(t[k]);
+		l(t[k]);
 	}
 }
 
@@ -118,18 +118,18 @@ read_persistent_sequence_resize(const persistent_object_manager& m,
 /**
 	Creates a default element at the back, and then loads object in place.  
  */
-template <class T>
+template <class P, class T>
 void
-read_persistent_sequence_back_insert(const persistent_object_manager& m, 
-		istream& i, T& t) {
+read_persistent_sequence_back_insert(const P& m, istream& i, T& t) {
 	typedef	typename T::value_type		value_type;
 	size_t s;
 	read_value(i, s);
 	size_t k = 0;
+	const foreign_persistent_loader_ref<P> l(m, i);
 	for ( ; k < s; ++k) {
 		value_type v;
 		t.push_back(v);
-		persistent_loader_ref(m, i)(t.back());
+		l(t.back());
 	}
 }
 
@@ -137,17 +137,17 @@ read_persistent_sequence_back_insert(const persistent_object_manager& m,
 /**
 	Inserts elements into a set.  
  */
-template <class T>
+template <class P, class T>
 void
-read_persistent_set_insert(const persistent_object_manager& m, 
-		istream& i, T& t) {
+read_persistent_set_insert(const P& m, istream& i, T& t) {
 	typedef	typename T::value_type		value_type;
 	size_t s;
 	read_value(i, s);
 	size_t k = 0;
+	const foreign_persistent_loader_ref<P> l(m, i);
 	for ( ; k < s; ++k) {
 		value_type v;
-		persistent_loader_ref(m, i)(v);
+		l(v);
 		t.insert(v);
 	}
 }

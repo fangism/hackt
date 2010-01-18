@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_base.tcc"
 	Implementation of footprint class. 
-	$Id: footprint_base.tcc,v 1.2 2006/11/07 06:34:22 fang Exp $
+	$Id: footprint_base.tcc,v 1.2.88.1 2010/01/18 23:43:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_TCC__
@@ -14,6 +14,8 @@
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/instance_collection_pool_bundle.h"
 #include "Object/inst/value_collection_pool_bundle.h"
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_pool.h"
 
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.h"
@@ -33,7 +35,10 @@ template <class Tag>
 footprint_base<Tag>::footprint_base() :
 	collection_pool_bundle(new collection_pool_bundle_type), 
 	_instance_pool(new instance_pool_type(
-		class_traits<Tag>::instance_pool_chunk_size >> 1)) {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		class_traits<Tag>::instance_pool_chunk_size >> 1
+#endif
+		)) {
 	NEVER_NULL(collection_pool_bundle);
 	NEVER_NULL(_instance_pool);
 }

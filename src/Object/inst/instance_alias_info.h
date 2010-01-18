@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.27.2.1 2010/01/13 17:43:36 fang Exp $
+	$Id: instance_alias_info.h,v 1.27.2.2 2010/01/18 23:43:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -365,8 +365,11 @@ public:
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_manager&, 
 #endif
-		const port_member_context&, 
-		const size_t) const;
+		const port_member_context&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t
+#endif
+		) const;
 
 	/// called recursively
 	void

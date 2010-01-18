@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.32 2009/06/05 16:28:10 fang Exp $
+	$Id: instance_collection.h,v 1.32.12.1 2010/01/18 23:43:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -324,7 +324,8 @@ public:
 		element_loader(const footprint& f, 
 			const persistent_object_manager& m,
 			istream& i, const never_ptr<const parent_type> b) : 
-			persistent_loader_base(m, i), back_ref(b), fp(f) { }
+			util::persistent_loader_base(m, i),
+			back_ref(b), fp(f) { }
 
 		void
 		operator () (instance_alias_info_type&);	// const?

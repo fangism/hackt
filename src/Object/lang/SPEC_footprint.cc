@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.5.88.1 2010/01/12 02:48:51 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.5.88.2 2010/01/18 23:43:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,8 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/global_channel_entry.h"
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_pool.h"
 #include "Object/common/dump_flags.h"
 
 #include "util/indent.h"

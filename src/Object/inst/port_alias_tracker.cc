@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.27.2.3 2010/01/13 17:43:36 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.27.2.4 2010/01/18 23:43:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,6 +18,8 @@
 #endif
 #include "Object/inst/connection_policy.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.h"
 #include "Object/common/dump_flags.h"
 #include "Object/def/footprint.h"
 #include "Object/traits/proc_traits.h"
@@ -564,7 +566,7 @@ void
 port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 		instance_pool<state_instance<Tag> >& p) {
 	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("p.size() = " << p.size() << endl);
+//	STACKTRACE_INDENT_PRINT("p.size() = " << p.size() << endl);
 	iterator i(_ids.begin());
 	const iterator e(_ids.end());
 	for ( ; i!=e; ++i) {
@@ -573,8 +575,14 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 		const const_alias_ptr_type al(i->second.shortest_alias());
 		INVARIANT(i->first);	// non-zero
 		STACKTRACE_INDENT_PRINT("i->first = " << i->first << endl);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		BOUNDS_CHECK(i->first <= p.local_entries());
+		p[i->first -1].set_back_ref(al);
+		// 1-based to 0-based index, no dummy instance anymore
+#else
 		BOUNDS_CHECK(i->first < p.size());
 		p[i->first].set_back_ref(al);
+#endif
 	}
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.11.2.3 2010/01/15 18:42:33 fang Exp $
+	$Id: netlist_generator.cc,v 1.11.2.4 2010/01/18 23:43:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -19,6 +19,8 @@
 #include "Object/def/footprint.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/string_expr.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
 #include "common/TODO.h"

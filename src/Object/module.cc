@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.41.2.2 2010/01/09 03:29:58 fang Exp $
+ 	$Id: module.cc,v 1.41.2.3 2010/01/18 23:43:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -164,8 +164,8 @@ module::what(ostream& o) const {
 ostream&
 module::dump_instance_map(ostream& o) const {
 	if (is_allocated()) {
-		o << "Globally allocated state:" << endl;
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		o << "Globally allocated state:" << endl;
 		const footprint& _footprint(get_footprint());
 		global_state.dump(o, _footprint);
 #endif

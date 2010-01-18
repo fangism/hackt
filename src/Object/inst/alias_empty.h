@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.15.2.1 2010/01/13 17:43:33 fang Exp $
+	$Id: alias_empty.h,v 1.15.2.2 2010/01/18 23:43:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -94,7 +94,6 @@ protected:
 		NOT TRUE ANYMORE! channels and datatypes now cannot
 		have relaxed types.  
 	 */
-#if 1
 	template <class AliasType>
 	static
 	good_bool
@@ -103,21 +102,11 @@ protected:
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			state_manager&,
 #endif
-			const port_member_context&, const size_t);
-#else
-	template <class AliasType>
-	static
-	good_bool
-	__initialize_assign_footprint_frame(const AliasType&,
-			const footprint_frame&, 
+			const port_member_context&
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			const state_manager&,
+			, const size_t
 #endif
-			const port_member_context&, const size_t) {
-		// no-op.
-		return good_bool(true);
-	}
-#endif
+			);
 
 	static
 	good_bool

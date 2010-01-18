@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.108 2009/11/14 03:12:13 fang Exp $
+#	$Id: ChangeLog,v 1.108.2.1 2010/01/18 23:43:49 fang Exp $
+
+2010-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-07:
+	  util/persistent_functor.{h,tcc}: abstracted away 
+		persistent object manager type as generic template parameter.
+
 
 2009-11-13	David Fang		<fangism@users.sourceforge.net>
 

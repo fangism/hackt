@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.11.88.3 2010/01/15 04:13:10 fang Exp $
+	$Id: state_instance.h,v 1.11.88.4 2010/01/18 23:43:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -97,6 +97,15 @@ public:
 	load_object_base(const collection_pool_bundle_type&, istream&);
 
 	STATE_INSTANCE_PERSISTENCE_PROTOS
+
+	void
+	write_object(const collection_pool_bundle_type& m, ostream& o) const {
+		write_object_base(m, o);
+	}
+	void
+	load_object(const collection_pool_bundle_type& m, istream& i) {
+		load_object_base(m, i);
+	}
 
 public:
 	typedef	instance_pool<this_type>	pool_type;

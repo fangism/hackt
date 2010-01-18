@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.42.4.4 2010/01/15 18:42:33 fang Exp $
+	$Id: ExprAlloc.cc,v 1.42.4.5 2010/01/18 23:43:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -25,6 +25,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/SPEC_common.h"
 #include "Object/lang/SPEC_registry.tcc"
 #include "Object/lang/SPEC_footprint.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.h"
 #if 0
 #include "Object/lang/cflat_printer.h"		// for diagnostics
 #include "main/cflat_options.h"			// for diagnostics

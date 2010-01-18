@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.4.24.3 2010/01/15 04:13:07 fang Exp $
+	$Id: nonmeta_state.cc,v 1.4.24.4 2010/01/18 23:43:32 fang Exp $
  */
 
 #include <iostream>
@@ -19,6 +19,8 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/enum_traits.h"
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_pool.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "common/TODO.h"
 #include "util/binders.h"

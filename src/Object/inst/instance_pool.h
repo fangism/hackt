@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.12.88.3 2010/01/15 04:13:09 fang Exp $
+	$Id: instance_pool.h,v 1.12.88.4 2010/01/18 23:43:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -9,11 +9,15 @@
 
 #include <iosfwd>
 #include "Object/inst/instance_pool_fwd.h"
-#include "util/list_vector.h"
+#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include <vector>
+#else
+#include "util/list_vector.h"
 #include "util/memory/index_pool.h"
-#include "Object/devel_switches.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -23,7 +27,9 @@ using std::ostream;
 using std::vector;
 using util::good_bool;
 using util::persistent_object_manager;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 using util::memory::index_pool;
+#endif
 template <class> class instance_collection_pool_bundle;
 
 
@@ -49,8 +55,18 @@ typedef	vector<pool_private_map_entry_type>	pool_private_entry_map_type;
 		port_alias_tracker footprint::scope_aliases.
  */
 template <class T>
-class instance_pool : private index_pool<util::list_vector<T> > {
+class instance_pool :
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		private vector<T>
+#else
+		private index_pool<util::list_vector<T> >
+#endif
+{
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	typedef	vector<T>				parent_type;
+#else
 	typedef	index_pool<util::list_vector<T> >	parent_type;
+#endif
 	typedef	instance_pool<T>		this_type;
 	typedef	typename T::tag_type		tag_type;
 public:
@@ -114,8 +130,10 @@ public:
 	// custom default constructor
 	instance_pool();
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	explicit
 	instance_pool(const size_type);
+#endif
 
 private:
 	// copy-construction policy
@@ -123,11 +141,20 @@ private:
 public:
 	~instance_pool();
 
-	using parent_type::size;
 	using parent_type::begin;
 	using parent_type::end;
 	using parent_type::operator[];
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	using parent_type::resize;
+	size_t
+	allocate(const value_type& t) {
+		this->push_back(t);
+		return this->size() -1;
+	}
+#else
+	using parent_type::size;
 	using parent_type::allocate;
+#endif
 
 	// there is no deallocate
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.13.88.2 2010/01/15 04:13:10 fang Exp $
+	$Id: instance_pool.tcc,v 1.13.88.3 2010/01/18 23:43:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -15,6 +15,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/def/footprint.h"
 #include "util/persistent_object_manager.tcc"	// for STACKTRACE macros
+#include "util/persistent_functor.tcc"
 #include "util/list_vector.tcc"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
@@ -31,6 +32,7 @@ using util::auto_indent;
 //=============================================================================
 // class instance_pool method definitions
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Note: this constructor initializes with one element pre-allocated, 
 	so the first index returned by allocator is nonzero.  
@@ -51,10 +53,13 @@ instance_pool<T>::instance_pool(const size_type s) : parent_type()
 	private_entry_map.push_back(std::make_pair(0, 0));
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Default constructor, when we don't care about chunk size.  
+	Note: this constructor initializes with one element pre-allocated, 
+	so the first index returned by allocator is nonzero.  
  */
 template <class T>
 instance_pool<T>::instance_pool() : parent_type()
@@ -64,9 +69,11 @@ instance_pool<T>::instance_pool() : parent_type()
 		{
 	STACKTRACE_CTOR_VERBOSE;
 	STACKTRACE_CTOR_PRINT("at: " << this << endl);
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	this->set_chunk_size(default_chunk_size);
 	allocate();
 	INVARIANT(this->size());
+#endif
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	private_entry_map.push_back(std::make_pair(0, 0));
 #endif
@@ -116,9 +123,19 @@ instance_pool<T>::locate_private_entry(const size_t li) const {
 template <class T>
 ostream&
 instance_pool<T>::dump(ostream& o) const {
-if (this->size() > 1) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+// no-sentinel or dummy instance
+if (this->size())
+#else
+if (this->size() > 1)
+#endif
+{
 	o << auto_indent << traits_type::tag_name << " instance pool:" << endl;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const_iterator i(this->begin());
+#else
 	const_iterator i(++this->begin());
+#endif
 	const const_iterator e(this->end());
 	size_t j = 1;
 	for ( ; i!=e; i++, j++) {
@@ -139,12 +156,16 @@ instance_pool<T>::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	STACKTRACE_PERSISTENT_PRINT("at: " << this << endl);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	for_each(this->begin(), this->end(), util::persistent_collector_ref(m));
+#else
 	INVARIANT(this->size());
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++) {
 		i->collect_transient_info_base(m);
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -153,16 +174,19 @@ void
 instance_pool<T>::write_object_base(const collection_pool_bundle_type& m, 
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	util::write_persistent_sequence(m, o, AS_A(const parent_type&, *this));
+#else
 	const_iterator i(++this->begin());	// skip first element (NULL)
 	const const_iterator e(this->end());
 	const size_t s = this->size();
-	INVARIANT(s);
 	STACKTRACE_PERSISTENT_PRINT("size = " << s << endl);
+	INVARIANT(s);
 	write_value(o, s-1);
-	size_t j = 1;
-	for ( ; i!=e; i++, j++) {
+	for ( ; i!=e; ++i) {
 		i->write_object_base(m, o);
 	}
+#endif
 #if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// technically, this information can be reconstructed
 	write_value(o, _port_entries);
@@ -182,6 +206,9 @@ void
 instance_pool<T>::load_object_base(const collection_pool_bundle_type& m, 
 		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	util::read_persistent_sequence_resize(m, i, AS_A(parent_type&, *this));
+#else
 	size_t s;
 	read_value(i, s);
 	STACKTRACE_PERSISTENT_PRINT("size = " << s << endl);
@@ -192,6 +219,7 @@ instance_pool<T>::load_object_base(const collection_pool_bundle_type& m,
 		this->allocate(temp);
 		// works because this_type is copy-constructible
 	}
+#endif
 #if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// technically, this information can be reconstructed
 	read_value(i, _port_entries);

@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.10.82.1 2010/01/13 17:43:40 fang Exp $
+	$Id: canonical_type.h,v 1.10.82.2 2010/01/18 23:43:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -190,7 +190,11 @@ struct canonical_type_footprint_frame_policy {
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			const state_manager&, 
 #endif
-			const port_member_context&, const size_t) {
+			const port_member_context&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, const size_t
+#endif
+			) {
 		return good_bool(true);
 	}
 };      // end struct initialize_footprint_frame_policy
@@ -205,7 +209,11 @@ struct canonical_type_footprint_frame_policy<process_definition> {
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_manager&,
 #endif
-		const port_member_context&, const size_t);
+		const port_member_context&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t
+#endif
+		);
 };      // end struct initialize_footprint_frame_policy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -219,7 +227,11 @@ struct canonical_type_footprint_frame_policy<user_def_datatype> {
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_manager&,
 #endif
-		const port_member_context&, const size_t);
+		const port_member_context&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t
+#endif
+		);
 };      // end struct initialize_footprint_frame_policy
 
 //-----------------------------------------------------------------------------

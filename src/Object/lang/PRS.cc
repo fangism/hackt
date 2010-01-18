@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.40 2009/10/29 18:05:21 fang Exp $
+	$Id: PRS.cc,v 1.40.2.1 2010/01/18 23:43:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -30,6 +30,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
 #endif
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_pool.h"
 
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"

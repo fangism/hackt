@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.10.88.1 2010/01/13 17:43:34 fang Exp $
+	$Id: alias_empty.tcc,v 1.10.88.2 2010/01/18 23:43:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -35,8 +35,11 @@ __initialize_assign_footprint_frame(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_manager& sm,
 #endif
-		const port_member_context& pmc,
-		const size_t ind) {
+		const port_member_context& pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t ind
+#endif
+		) {
 	typedef	typename AliasType::container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
@@ -51,7 +54,11 @@ __initialize_assign_footprint_frame(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			sm, 
 #endif
-			pmc, ind);
+			pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, ind
+#endif
+			);
 }
 
 };	// end struct instance_alias_info_empty_helper<true>
@@ -65,9 +72,13 @@ static
 good_bool
 __initialize_assign_footprint_frame(const AliasType&, const footprint_frame&,
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const state_manager&, 
+		const state_manager&, 
 #endif
-	const port_member_context&, const size_t) {
+		const port_member_context&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t
+#endif
+		) {
 	return good_bool(true);
 }
 
@@ -177,8 +188,11 @@ instance_alias_info_empty::__initialize_assign_footprint_frame(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_manager& sm,
 #endif
-		const port_member_context& pmc,
-		const size_t ind) {
+		const port_member_context& pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t ind
+#endif
+		) {
 	typedef	typename AliasType::traits_type		traits_type;
 	return instance_alias_info_empty_helper<traits_type::has_substructure>
 		::template __initialize_assign_footprint_frame<AliasType>(
@@ -186,7 +200,11 @@ instance_alias_info_empty::__initialize_assign_footprint_frame(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 				sm, 
 #endif
-				pmc, ind);
+				pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				, ind
+#endif
+				);
 }
 
 //=============================================================================

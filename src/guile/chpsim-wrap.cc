@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.8.16.1 2010/01/12 02:48:57 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.8.16.2 2010/01/18 23:43:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,6 +18,8 @@
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/def/built_in_datatype_def.h"
 #include "Object/def/enum_datatype_def.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.h"
 #include "util/stacktrace.h"
 #include "util/libguile.h"
 #include "util/guile_STL.h"

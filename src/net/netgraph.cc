@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.16.2.1 2010/01/15 04:13:13 fang Exp $
+	$Id: netgraph.cc,v 1.16.2.2 2010/01/18 23:43:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -25,6 +25,8 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/bool_port_collector.tcc"
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_pool.h"
 #include "util/iterator_more.h"		// for set_inserter
 #include "util/unique_list.tcc"
 #include "util/string.h"		// for strgsub

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.22.20.4 2010/01/15 04:13:06 fang Exp $
+	$Id: global_entry.tcc,v 1.22.20.5 2010/01/18 23:43:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -32,6 +32,8 @@
 #include "Object/inst/alias_actuals.tcc"	// for dump_complete_type
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/port_alias_tracker.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/common/dump_flags.h"
 #include "Object/cflat_context.h"
@@ -334,6 +336,7 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 	case PARENT_TYPE_NONE:
 		o << "(top)\t-\t";
 		break;
+	// should take strings from "Object/traits/class_traits.cc"
 	case PARENT_TYPE_PROCESS:
 		o << "process\t" << parent_id << '\t';
 		break;

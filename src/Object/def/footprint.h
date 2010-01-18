@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.5 2010/01/15 04:13:08 fang Exp $
+	$Id: footprint.h,v 1.30.2.6 2010/01/18 23:43:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -43,6 +43,7 @@ namespace SPEC {
 namespace CHP {
 	class concurrent_actions;
 }
+class definition_base;
 class instance_collection_base;
 class port_formals_manager;
 class scopespace;
@@ -54,9 +55,8 @@ struct dump_flags;
 struct expr_dump_context;
 
 using std::string;
-using util::good_bool;
 using util::memory::count_ptr;
-using util::memory::excl_ptr;
+using util::memory::never_ptr;
 
 // use this explicity to construct a default temporary footprint
 struct temp_footprint_tag_type { };
@@ -470,10 +470,8 @@ public:
 		return port_aliases.port_frame_size<Tag>();
 	}
 private:
-#if 0
 	good_bool
 	expand_unique_subinstances(void);
-#endif
 
 	void
 	partition_local_instance_pool(void);

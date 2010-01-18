@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.19.2.1 2010/01/13 17:43:33 fang Exp $
+	$Id: alias_actuals.tcc,v 1.19.2.2 2010/01/18 23:43:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -245,8 +245,11 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_manager& sm,
 #endif
-		const port_member_context& pmc, 
-		const size_t ind) {
+		const port_member_context& pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t ind
+#endif
+		) {
 	typedef	typename AliasType::canonical_container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
@@ -271,7 +274,11 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			sm,
 #endif
-			pmc, ind);
+			pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, ind
+#endif
+			);
 }
 
 //=============================================================================

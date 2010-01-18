@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-07:
+	  footprint: re-instated expand_unique_subinstances, 
+		implemented frame sizing, local allocation.
+	  Re-write instance_alias index-allocation methods.  
+	  instance_pool is now 0-based indices!
+	  Most basic create tests are working (not dying).
+	  util/ChangeLog: made persistent functors more generic.
+
+
 2010-01-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-06:

@@ -1,16 +1,18 @@
 /**
 	\file "Object/def/footprint_base.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint_base.h,v 1.5.14.2 2010/01/09 03:30:03 fang Exp $
+	$Id: footprint_base.h,v 1.5.14.3 2010/01/18 23:43:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_BASE_H__
 
 #include <iosfwd>
-#include "Object/inst/instance_pool.h"
-#include "Object/inst/state_instance.h"
+#include "Object/devel_switches.h"
+// #include "Object/inst/instance_pool.h"
+// #include "Object/inst/state_instance.h"
 
+#include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/uninitialized.h"
@@ -19,11 +21,16 @@ namespace HAC {
 namespace entity {
 class state_manager;
 class footprint_frame;
+template <class> class state_instance;
+template <class> class instance_pool;
 template <class> class instance_collection_pool_bundle;
 template <class> class value_collection_pool_bundle;
-
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+class port_alias_tracker;
+#endif
 using std::istream;
 using std::ostream;
+using util::good_bool;
 using util::memory::excl_ptr;
 using util::persistent_object_manager;
 
@@ -71,7 +78,15 @@ protected:
 
 	~footprint_base();
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// for process_tag ONLY!
+	good_bool
+	__expand_unique_subinstances(const port_alias_tracker&, 
+		const footprint_frame&);
+
+	void
+	__partition_local_instance_pool(const port_alias_tracker&);
+#else
 	good_bool
 	__allocate_global_state(state_manager&) const;
 

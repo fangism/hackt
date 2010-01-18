@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_visitor.cc"
-	$Id: CHP_visitor.cc,v 1.4.24.2 2010/01/15 04:13:11 fang Exp $
+	$Id: CHP_visitor.cc,v 1.4.24.3 2010/01/18 23:43:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -9,6 +9,7 @@
 #include "Object/def/footprint.h"
 #include "Object/lang/CHP.h"
 #include "Object/global_entry.h"
+#include "Object/inst/state_instance.h"
 #include "common/ICE.h"
 
 namespace HAC {

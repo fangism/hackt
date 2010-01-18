@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.14.2.1 2010/01/13 17:43:32 fang Exp $
+	$Id: alias_actuals.h,v 1.14.2.2 2010/01/18 23:43:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
@@ -100,7 +100,11 @@ protected:
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_manager&, 
 #endif
-		const port_member_context&, const size_t);
+		const port_member_context&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t
+#endif
+		);
 
 	template <class AliasType>
 	static

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.39.2.2 2010/01/13 17:43:35 fang Exp $
+	$Id: instance_alias.tcc,v 1.39.2.3 2010/01/18 23:43:37 fang Exp $
 	TODO: trim includes
  */
 
@@ -408,6 +408,12 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 		typename instance_type::pool_type&
 			the_pool(f.template get_instance_pool<Tag>());
 		i->instance_index = the_pool.allocate(instance_type(*i));
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		++i->instance_index;	// returned index is now 0-based
+		// but instance_id is 1-based
+#else
+		INVARIANT(this->instance_index);
+#endif
 		// also need to recursively allocate subinstances ids
 		i->allocate_subinstances(f);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -594,7 +600,11 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_manager& sm,
 #endif
-		const port_member_context& pmc, const size_t ind) const {
+		const port_member_context& pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const size_t ind
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
 	// this recursively fills up the footprint frame with indices
 	// assigned from the external context, mapped onto this
@@ -604,7 +614,11 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 				sm, 
 #endif
-				pmc, ind).good) {
+				pmc
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+				, ind
+#endif
+				).good) {
 		cerr << "Error alloc_assign_subinstance_footprint_frame."
 			<< endl;
 		return good_bool(false);
@@ -956,7 +970,8 @@ INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias& a) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
-		port_collection_context& pcc, const footprint_frame& ff,
+		port_collection_context& pcc,
+		const footprint_frame& ff,
 		const size_t ind) const {
 	STACKTRACE_VERBOSE;
 #if 0
