@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.5 2010/01/18 23:43:30 fang Exp $
+	$Id: global_entry.h,v 1.18.20.6 2010/01/19 00:27:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -86,10 +86,10 @@ protected:
 	void
 	__init_top_level(void);
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	__initialize_top_frame(const footprint&);
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	__allocate_remaining_sub(state_manager&, 
 		const parent_tag_enum, const size_t);

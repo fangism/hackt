@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.3 2010/01/18 23:43:29 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.4 2010/01/19 00:27:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -38,8 +38,8 @@ footprint_frame_map<Tag>::footprint_frame_map() : id_map() { }
 template <class Tag>
 footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		id_map(f.template get_instance_pool<Tag>().local_entries())
-		// id_map(f.template get_instance_pool<Tag>().port_entries())
+		// id_map(f.template get_instance_pool<Tag>().local_entries())
+		id_map(f.template get_instance_pool<Tag>().port_entries())
 #else
 		id_map(f.template get_instance_pool<Tag>().size() -1)
 #endif
@@ -64,17 +64,14 @@ footprint_frame_map<Tag>::__init_top_level(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Reserved for top-level process footprint frame.
  */
 template <class Tag>
 void
 footprint_frame_map<Tag>::__initialize_top_frame(const footprint& f) {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	id_map.resize(f.template get_instance_pool<Tag>().local_entries());
-#else
 	id_map.resize(f.template get_instance_pool<Tag>().size());
-#endif
 //	this->__init_top_level();
 	const size_t s = id_map.size();
 	size_t i = 0;
@@ -82,6 +79,7 @@ footprint_frame_map<Tag>::__initialize_top_frame(const footprint& f) {
 		id_map[i] = i;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -258,7 +256,7 @@ footprint_frame::load_id_map(footprint_frame_map_type& m, istream& i) {
  */
 ostream&
 global_entry_substructure_base<true>::dump_frame_only(ostream& o) const {
-	return _frame.dump_frame(o << endl);
+	return _frame.dump_frame(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -333,6 +331,7 @@ footprint_frame::init_top_level(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Reserved for process[0], the top-level process.
 	Creates identity mapping to allocated indices.
@@ -350,6 +349,7 @@ footprint_frame::initialize_top_frame(const footprint& f) {
 	footprint_frame_map<int_tag>::__initialize_top_frame(f);
 	footprint_frame_map<bool_tag>::__initialize_top_frame(f);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
