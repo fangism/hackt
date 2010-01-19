@@ -1,5 +1,5 @@
 Package: hackt-cvs-deps
-Version: 20070311
+Version: 20100105
 Revision: 1
 Description: Build-deps for HACKT (CVS)
 Type: bundle
@@ -9,7 +9,7 @@ BuildDependsOnly: true
 BuildDepends: <<
   automake1.9,
   autoconf	(>= 2.59-1),
-  libtool14	(>= 1.5.6-1),
+  libtool2	(>= 2.2.6-1),
   readline5	(>= 5.0-1),
   bison		(>= 1.875-1),
   guile18-dev	(>= 1.8.1-1),

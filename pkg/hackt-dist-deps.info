@@ -8,6 +8,7 @@ Maintainer: David Fang <fangism@users.sourceforge.net>
 BuildDependsOnly: true
 BuildDepends: <<
   readline5	(>= 5.0-1),
+  flex,
   bison		(>= 1.875-1),
   guile18-dev	(>= 1.8.1-1),
   graphviz	(>= 1.12-1),
