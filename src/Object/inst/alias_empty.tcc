@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.10.88.2 2010/01/18 23:43:36 fang Exp $
+	$Id: alias_empty.tcc,v 1.10.88.3 2010/01/20 02:18:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -31,12 +31,10 @@ template <class AliasType>
 static
 good_bool
 __initialize_assign_footprint_frame(
-		const AliasType& _alias, footprint_frame& ff,
+		const AliasType& _alias, footprint_frame& ff
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		state_manager& sm,
-#endif
+		, state_manager& sm,
 		const port_member_context& pmc
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, const size_t ind
 #endif
 		) {
@@ -50,13 +48,9 @@ __initialize_assign_footprint_frame(
 		_type(_alias.complete_type_actuals(*_alias.container));
 	INVARIANT(_type);
 	return canonical_type_footprint_frame_policy<canonical_definition_type>
-		::initialize_and_assign(_type, ff, 
+		::initialize_and_assign(_type, ff
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			sm, 
-#endif
-			pmc
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			, ind
+			, sm, pmc, ind
 #endif
 			);
 }
@@ -70,12 +64,10 @@ struct instance_alias_info_empty_helper<false> {
 template <class AliasType>
 static
 good_bool
-__initialize_assign_footprint_frame(const AliasType&, const footprint_frame&,
+__initialize_assign_footprint_frame(const AliasType&, const footprint_frame&
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager&, 
-#endif
+		, const state_manager&, 
 		const port_member_context&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, const size_t
 #endif
 		) {
@@ -184,25 +176,19 @@ instance_alias_info_empty::dump_complete_type(const AliasType& _alias,
 template <class AliasType>
 good_bool
 instance_alias_info_empty::__initialize_assign_footprint_frame(
-		const AliasType& _alias, footprint_frame& ff,
+		const AliasType& _alias, footprint_frame& ff
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		state_manager& sm,
-#endif
+		, state_manager& sm,
 		const port_member_context& pmc
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, const size_t ind
 #endif
 		) {
 	typedef	typename AliasType::traits_type		traits_type;
 	return instance_alias_info_empty_helper<traits_type::has_substructure>
 		::template __initialize_assign_footprint_frame<AliasType>(
-			_alias, ff, 
+			_alias, ff
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				sm, 
-#endif
-				pmc
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				, ind
+				, sm, pmc, ind
 #endif
 				);
 }

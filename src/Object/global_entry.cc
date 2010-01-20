@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.4 2010/01/19 00:27:50 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.5 2010/01/20 02:18:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -40,6 +40,7 @@ footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		// id_map(f.template get_instance_pool<Tag>().local_entries())
 		id_map(f.template get_instance_pool<Tag>().port_entries())
+		// bother initializing to 0?
 #else
 		id_map(f.template get_instance_pool<Tag>().size() -1)
 #endif
@@ -223,6 +224,14 @@ footprint_frame::~footprint_frame() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+footprint_frame::dump_type(ostream& o) const {
+	if (_footprint) {
+		return _footprint->dump_type(o);
+	} else	return o << "type?";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
 footprint_frame::dump_id_map(const footprint_frame_map_type& m, ostream& o, 
 		const char* const str) {
 	typedef	footprint_frame_map_type::const_iterator	const_iterator;
@@ -248,6 +257,12 @@ footprint_frame::write_id_map(const footprint_frame_map_type& m, ostream& o) {
 void
 footprint_frame::load_id_map(footprint_frame_map_type& m, istream& i) {
 	util::read_sequence_resize(i, m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+global_entry_substructure_base<true>::dump_type(ostream& o) const {
+	return _frame.dump_type(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

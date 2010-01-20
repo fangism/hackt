@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.29 2009/11/04 00:46:37 fang Exp $
+	$Id: subinstance_manager.cc,v 1.29.2.1 2010/01/20 02:18:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -286,7 +286,7 @@ subinstance_manager::relink_super_instance_alias(
  */
 void
 subinstance_manager::allocate_subinstances(footprint& f) {
-	STACKTRACE("subinstance_manager::allocate()");
+	STACKTRACE_VERBOSE;
 	iterator i(subinstance_array.begin());
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
@@ -316,6 +316,7 @@ subinstance_manager::__construct_port_context(port_member_context& pmc,
 void
 subinstance_manager::__assign_footprint_frame(footprint_frame& ff, 
 		const port_member_context& pmc) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(pmc.size() == subinstance_array.size());
 	size_t j = 0;
 	const_iterator i(subinstance_array.begin());

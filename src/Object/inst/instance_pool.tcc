@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.13.88.3 2010/01/18 23:43:38 fang Exp $
+	$Id: instance_pool.tcc,v 1.13.88.4 2010/01/20 02:18:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -130,7 +130,11 @@ if (this->size())
 if (this->size() > 1)
 #endif
 {
-	o << auto_indent << traits_type::tag_name << " instance pool:" << endl;
+	o << auto_indent << traits_type::tag_name << " instance pool:";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	o << " (" << this->port_entries() << " ports)";
+#endif
+	o << endl;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const_iterator i(this->begin());
 #else
@@ -143,6 +147,31 @@ if (this->size() > 1)
 	}
 }
 	// else pool is empty
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	pool_private_entry_map_type::const_iterator
+		i(private_entry_map.begin()), e(private_entry_map.end());
+	INVARIANT(i != e);
+if (private_entry_map.size() > 1) {
+	o << auto_indent << "private sub-" << traits_type::tag_name
+		<< " index map:" << endl;
+	INDENT_SECTION(o);
+	for ( ; i!=e; ++i) {
+		// first: process index, second: subordinate index lower bound
+		o << auto_indent << '(' << i->first << " -> " << i->second
+			<< ")" << endl;
+	}
+	// last entry reveals the total number of non-local private entries
+} else {
+#if 0
+	o << auto_indent << "private sub-" << traits_type::tag_name
+		<< " index map:";
+	o << " empty (" << i->first << " -> " << i->second
+		<< ")" << endl;
+#else
+	// silence empty sub maps
+#endif
+}
+#endif
 	return o;
 }
 

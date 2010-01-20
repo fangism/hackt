@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.18.14.3 2010/01/18 23:43:43 fang Exp $
+	$Id: canonical_type.cc,v 1.18.14.4 2010/01/20 02:18:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -167,12 +167,10 @@ struct unroll_port_instances_policy<process_definition> {
 good_bool
 canonical_type_footprint_frame_policy<process_definition>::
 		initialize_and_assign(const canonical_process_type& cpt,
-		footprint_frame& ff,
+		footprint_frame& ff
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		state_manager& sm, 
-#endif
+		, state_manager& sm, 
 		const port_member_context& pmc
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, const size_t ind
 #endif
 		) {
@@ -181,8 +179,8 @@ canonical_type_footprint_frame_policy<process_definition>::
 		f(cpt.get_base_def()->get_footprint(
 			cpt.get_raw_template_params()));
 	new (&ff) footprint_frame(f);	// placement construct
-	f.assign_footprint_frame(ff, pmc);
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+	f.assign_footprint_frame(ff, pmc);
 	// allocate the rest with the state_manager
 	ff.allocate_remaining_subinstances(f, sm,
 		parent_tag_enum(class_traits<process_tag>::type_tag_enum_value),
@@ -220,12 +218,10 @@ check_footprint_policy<process_definition>::operator () (
 good_bool
 canonical_type_footprint_frame_policy<user_def_datatype>::
 		initialize_and_assign(const canonical_user_def_data_type& cpt,
-		footprint_frame& ff,
+		footprint_frame& ff
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		state_manager& sm, 
-#endif
+		, state_manager& sm, 
 		const port_member_context& pmc
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, const size_t ind
 #endif
 		) {
@@ -234,8 +230,8 @@ canonical_type_footprint_frame_policy<user_def_datatype>::
 		f(cpt.get_base_def()->get_footprint(
 			cpt.get_raw_template_params()));
 	new (&ff) footprint_frame(f);	// placement construct
-	f.assign_footprint_frame(ff, pmc);
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+	f.assign_footprint_frame(ff, pmc);
 	// allocate the rest with the state_manager
 	ff.allocate_remaining_subinstances(f, sm,
 		parent_tag_enum(

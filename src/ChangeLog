@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-08:
+	  Huge progress!
+	  Finished assigning footprint-local footprint-frames, 
+		early create tests look promising, though not 
+		thoroughly hand-re-verified yet.
+	  Cleanup: block out all traces of "port_member_context"
+	  Testing: TODO: re-verify everything
+
+
 2010-01-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-07:

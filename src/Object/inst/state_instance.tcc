@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.8.24.3 2010/01/18 23:43:39 fang Exp $
+	$Id: state_instance.tcc,v 1.8.24.4 2010/01/20 02:18:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_TCC__
@@ -51,6 +51,7 @@ STATE_INSTANCE_CLASS::dump(ostream& o) const {
 	back_ref->dump_actuals(o);
 	back_ref->dump_attributes(o);	// new: print non-default attributes
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	entry_type::dump_type(o << '\t');
 	entry_type::dump_frame_only(o);
 #endif
 	return o;

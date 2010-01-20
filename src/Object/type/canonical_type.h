@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.10.82.2 2010/01/18 23:43:43 fang Exp $
+	$Id: canonical_type.h,v 1.10.82.3 2010/01/20 02:18:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -186,12 +186,10 @@ struct canonical_type_footprint_frame_policy {
 	static
 	good_bool
 	initialize_and_assign(const canonical_type<DefType>&,
-			const footprint_frame&,
+			const footprint_frame&
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			const state_manager&, 
-#endif
+			, const state_manager&, 
 			const port_member_context&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			, const size_t
 #endif
 			) {
@@ -205,12 +203,10 @@ struct canonical_type_footprint_frame_policy<process_definition> {
 
 	static
 	good_bool
-	initialize_and_assign(const canonical_process_type&, footprint_frame&, 
+	initialize_and_assign(const canonical_process_type&, footprint_frame&
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		state_manager&,
-#endif
+		, state_manager&,
 		const port_member_context&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, const size_t
 #endif
 		);
@@ -223,12 +219,10 @@ struct canonical_type_footprint_frame_policy<user_def_datatype> {
 	static
 	good_bool
 	initialize_and_assign(const canonical_user_def_data_type&,
-		footprint_frame&,
+		footprint_frame&
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		state_manager&,
-#endif
+		, state_manager&,
 		const port_member_context&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, const size_t
 #endif
 		);

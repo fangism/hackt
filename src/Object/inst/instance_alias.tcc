@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.39.2.3 2010/01/18 23:43:37 fang Exp $
+	$Id: instance_alias.tcc,v 1.39.2.4 2010/01/20 02:18:18 fang Exp $
 	TODO: trim includes
  */
 
@@ -596,12 +596,10 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
-		footprint_frame& ff, 
+		footprint_frame& ff
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		state_manager& sm,
-#endif
+		, state_manager& sm,
 		const port_member_context& pmc
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, const size_t ind
 #endif
 		) const {
@@ -610,13 +608,9 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
 	// assigned from the external context, mapped onto this
 	// instance's public ports.  
 	if (!actuals_parent_type::__initialize_assign_footprint_frame(
-			*this, ff, 
+			*this, ff
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				sm, 
-#endif
-				pmc
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				, ind
+				, sm, pmc, ind
 #endif
 				).good) {
 		cerr << "Error alloc_assign_subinstance_footprint_frame."
@@ -984,6 +978,8 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 #else
 	const footprint_frame_transformer ft(ff, Tag());
 	pcc.id_map[ind] = ft(this->instance_index);
+	STACKTRACE_INDENT_PRINT("pcc.id_map[" << ind << "] = " <<
+		pcc.id_map[ind] << endl);
 #endif
 	this->__construct_port_context(pcc.substructure_array[ind], ff);
 }

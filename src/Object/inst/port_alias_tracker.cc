@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.27.2.4 2010/01/18 23:43:38 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.27.2.5 2010/01/20 02:18:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -552,6 +552,34 @@ port_alias_tracker_base<Tag>::__port_offset(void) const {
 	return std::count_if(b, e, port_alias_predicate());
 #endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param a is an alias of an enclosing substructure (process)
+		representing the actual instance (context).  
+ */
+template <class Tag>
+void
+port_alias_tracker_base<Tag>::__assign_frame(
+		const substructure_alias& p, 
+		footprint_frame& ff) const {
+	footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
+	const_iterator i(_ids.begin()), e(_ids.end());
+	for ( ; i!=e; ++i) {
+	if (i->second.is_aliased_to_port()) {
+		const size_t formal_index = i->first;
+		INVARIANT(formal_index);
+		const instance_alias_info<Tag>& f(*i->second.front());
+		const instance_alias_info<Tag>& a(f.trace_alias(p));
+		// assign actual index from context to 
+		// corresponding slot in frame
+		const size_t actual_index = a.instance_index;
+		INVARIANT(actual_index);
+		INVARIANT(formal_index <= fm.size());
+		fm[formal_index -1] = actual_index;
+	}
+	}
+}
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -862,6 +890,22 @@ port_alias_tracker::dump_local_bool_aliases(ostream& o) const {
 	return port_alias_tracker_base<bool_tag>::dump_map(o,
 		dump_flags::no_owners);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+void
+port_alias_tracker::assign_alias_frame(const substructure_alias& a, 
+		footprint_frame& ff) const {
+	port_alias_tracker_base<process_tag>::__assign_frame(a, ff);
+	port_alias_tracker_base<channel_tag>::__assign_frame(a, ff);
+#if ENABLE_DATASTRUCTS
+	port_alias_tracker_base<datastruct_tag>::__assign_frame(a, ff);
+#endif
+	port_alias_tracker_base<enum_tag>::__assign_frame(a, ff);
+	port_alias_tracker_base<int_tag>::__assign_frame(a, ff);
+	port_alias_tracker_base<bool_tag>::__assign_frame(a, ff);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES

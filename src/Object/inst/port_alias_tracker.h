@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.19.2.3 2010/01/18 23:43:39 fang Exp $
+	$Id: port_alias_tracker.h,v 1.19.2.4 2010/01/20 02:18:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -35,6 +35,7 @@ namespace HAC {
 namespace entity {
 struct dump_flags;
 class footprint;
+struct footprint_frame;
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 using std::istream;
 #endif
@@ -178,6 +179,9 @@ public:
 /**
 	Meta-class specific base class for tracking collections of aliases.  
 	Contains a map from index to instance alias set.  
+	TODO: now that port aliases are sifted, their indices will always
+		be contiguous starting from 1, so we can replace the
+		sparse map structure with a vector!
  */
 template <class Tag>
 class port_alias_tracker_base {
@@ -229,6 +233,9 @@ protected:
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	size_t
 	__port_offset(void) const;
+
+	void
+	__assign_frame(const substructure_alias&, footprint_frame&) const;
 #endif
 
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
@@ -317,6 +324,10 @@ public:
 	local_pool_size(void) const {
 		return get_id_map<Tag>().size();
 	}
+
+	// only port_aliases as this, with Tag=process_tag
+	void
+	assign_alias_frame(const substructure_alias&, footprint_frame&) const;
 #endif
 public:
 

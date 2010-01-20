@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.5 2010/01/18 23:43:33 fang Exp $
+	$Id: footprint.cc,v 1.46.2.6 2010/01/20 02:18:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -153,8 +153,9 @@ template <class Tag>
 good_bool
 footprint_base<Tag>::__expand_unique_subinstances(
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const port_alias_tracker& st, 
-		const footprint_frame& gframe
+//		const port_alias_tracker& st, 
+//		const footprint_frame& gframe
+		void
 #else
 		const footprint_frame& gframe,
 		state_manager& sm, const size_t o
@@ -167,7 +168,10 @@ footprint_base<Tag>::__expand_unique_subinstances(
 	STACKTRACE_VERBOSE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	typedef	typename instance_pool_type::iterator	iterator;
-	_instance_pool->resize(st.template local_pool_size<Tag>());
+//	const footprint& _footprint(AS_A(const footprint&, *this));
+	// already sized in partition_local...
+//	const port_alias_tracker& st(_footprint.get_port_alias_tracker());
+//	_instance_pool->resize(st.template local_pool_size<Tag>());
 	iterator i(_instance_pool->begin());	// first entry valid?
 	const iterator e(_instance_pool->end());
 #else
@@ -185,9 +189,28 @@ footprint_base<Tag>::__expand_unique_subinstances(
 			) {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_instance<Tag>& ref(*i);
-#else
-		global_entry<Tag>& ref(gpool[j]);
+		footprint_frame& target_frame(ref._frame);
+		// TODO: set the frame's footprint!
+		// done by canonical_type
+		const instance_alias_info<Tag>&
+			actual_alias(*ref.get_back_ref());
+		if (!actual_alias.allocate_assign_subinstance_footprint_frame(
+				target_frame).good) {
+			ICE_EXIT(cerr);
+		}
+		const footprint* formal_fp(target_frame._footprint);
+		NEVER_NULL(formal_fp);
+		// for each meta-type
+		const port_alias_tracker&
+			formal_ports(formal_fp->get_scope_alias_tracker());
+		formal_ports.assign_alias_frame(actual_alias, target_frame);
+#if ENABLE_STACKTRACE
+		const footprint_frame& frame(target_frame);
 #endif
+#else	// MEMORY_MAPPED_GLOBAL_ALLOCATION
+		global_entry<Tag>& ref(gpool[j]);
+		// TODO: don't get formal/actual mixed up!
+		// TODO: cache formal footprint_frames, they don't change!
 		/***
 			The footprint frame has not yet been initialized, 
 			it is just empty.  allocate_subinstance_footprint()
@@ -219,22 +242,20 @@ footprint_base<Tag>::__expand_unique_subinstances(
 		// initialize (allocate) frame and assign at the same time.  
 		// recursively create private remaining internal state
 		if (!formal_alias.allocate_assign_subinstance_footprint_frame(
-				frame, 
+				frame
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				sm, 
-#endif
-				pmc
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				, j
+				, sm, pmc, j
 #endif
 				).good) {
 			return good_bool(false);
 		}
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 #if ENABLE_STACKTRACE
+		frame.dump_type(STACKTRACE_INDENT << "frame type: ") << endl;
 		frame.dump_frame(STACKTRACE_INDENT << "filled frame: ") << endl;
 #endif
 		// the allocate private subinstances
-	}
+	}	// end for
 	return good_bool(true);
 }
 
@@ -829,6 +850,9 @@ struct footprint_allocator : public alias_visitor {
 good_bool
 footprint::create_dependent_types(const footprint& top) {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	dump_type(STACKTRACE_STREAM << "*** CREATING TYPE: ") << endl;
+#endif
 try {
 	create_lock LOCK(*this);	// will catch recursion errors
 {
@@ -896,14 +920,15 @@ try {
 	//	all publicly reachable indices are before private ones,
 	//	now we can set the number of private entries
 	partition_local_instance_pool();
-	STACKTRACE_INDENT_PRINT("after partition" << endl);
 	expand_unique_subinstances();
-	STACKTRACE_INDENT_PRINT("after expand" << endl);
 	construct_private_entry_map();
 	// for all structures with private subinstances (processes)
 	//	publicly reachable local processes that are aliased to a port
 #endif
 	mark_created();
+#if ENABLE_STACKTRACE
+	dump_type(STACKTRACE_STREAM << "*** DONE CREATING: ") << endl;
+#endif
 	return good_bool(true);
 } catch (...) {
 	// expect recursion errors to trigger this
@@ -1427,23 +1452,37 @@ footprint::expand_unique_subinstances(void) {
 	// no need to __allocate_local_state?
 	// this is empty, needs to be assigned before passing down...
 	// construct frame using offset?
+#if 0
 	footprint_frame ff(*this);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("FRAME ctor:" << endl);
+	ff.dump_frame(cerr) << endl;
+#endif
 	ff.init_top_level();		// not sure if this is correct
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("FRAME: init" << endl);
+	ff.dump_frame(cerr) << endl;
+#endif
+#endif
 	// is this needed? does this just create the identity map?
-	STACKTRACE_INDENT_PRINT("before __expand_unique_subinstances()" << endl);
 	const good_bool b(
 		footprint_base<process_tag>::
-			__expand_unique_subinstances(scope_aliases, ff).good
+			__expand_unique_subinstances(
+				// scope_aliases, ff
+				).good
 #if !BUILTIN_CHANNEL_FOOTPRINTS
 		&& footprint_base<channel_tag>::
-			__expand_unique_subinstances(scope_aliases, ff).good
+			__expand_unique_subinstances(
+				// scope_aliases, ff
+				).good
 #endif
 #if ENABLE_DATASTRUCTS
 		&& footprint_base<datastruct_tag>::
-			__expand_unique_subinstances(scope_aliases, ff).good
+			__expand_unique_subinstances(
+				// scope_aliases, ff
+				).good
 #endif
 	);
-	STACKTRACE_INDENT_PRINT("after __expand_unique_subinstances()" << endl);
 #if BUILTIN_CHANNEL_FOOTPRINTS
 	if (!b.good)	return b;
 	// assign channel footprints after global allocation is complete

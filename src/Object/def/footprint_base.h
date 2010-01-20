@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_base.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint_base.h,v 1.5.14.3 2010/01/18 23:43:34 fang Exp $
+	$Id: footprint_base.h,v 1.5.14.4 2010/01/20 02:18:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_H__
@@ -81,8 +81,10 @@ protected:
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// for process_tag ONLY!
 	good_bool
-	__expand_unique_subinstances(const port_alias_tracker&, 
-		const footprint_frame&);
+	__expand_unique_subinstances(
+		void
+		// const port_alias_tracker&, const footprint_frame&
+		);
 
 	void
 	__partition_local_instance_pool(const port_alias_tracker&);

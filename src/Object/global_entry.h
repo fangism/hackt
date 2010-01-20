@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.6 2010/01/19 00:27:50 fang Exp $
+	$Id: global_entry.h,v 1.18.20.7 2010/01/20 02:18:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -171,6 +171,9 @@ struct footprint_frame :
 	initialize_top_frame(const footprint&);
 
 	ostream&
+	dump_type(ostream&) const;
+
+	ostream&
 	dump_frame(ostream&) const;
 
 	template <class Tag>
@@ -269,6 +272,11 @@ struct global_entry_substructure_base<false> {
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	ostream&
+	dump_type(ostream& o) const {
+		return o;
+	}
+
+	ostream&
 	dump_frame_only(ostream& o) const {
 		return o;
 	}
@@ -311,6 +319,9 @@ public:
 	template <class Tag>
 	ostream&
 	dump(global_entry_dumper&) const;
+
+	ostream&
+	dump_type(ostream& o) const;
 
 	ostream&
 	dump_frame_only(ostream& o) const;
