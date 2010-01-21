@@ -1,5 +1,5 @@
 @c "extending.texi"
-@c $Id: extending.texi,v 1.5 2007/08/28 04:53:42 fang Exp $
+@c $Id: extending.texi,v 1.6 2010/01/21 08:02:16 fang Exp $
 
 @node Extending simulation
 @chapter Extending the simulator
@@ -206,7 +206,7 @@ Defined in @file{Object/expr/dlfunction_fwd.h}.
 @deftp {Data type} chp_function_argument_list_type
 This is the argument list type passed to all registered CHP functions.
 From this list-type, arguments are automatically extracted and passed
-to native C++ functions by @t{CHP_LDLFUNCTION_LOAD_DEFAULT}.
+to native C++ functions by @t{CHP_DLFUNCTION_LOAD_DEFAULT}.
 This is typically a list of memory-managed
 pointers to abstract expression types.  
 Defined in @file{Object/expr/dlfunction_fwd.h}.
