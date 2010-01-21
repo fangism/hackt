@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.16 2009/11/18 18:26:52 fang Exp $
+	$Id: netgraph.cc,v 1.17 2010/01/21 19:50:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -505,6 +505,8 @@ transistor::emit(ostream& o, const index_type di,
 ostream&
 transistor::emit_attribute_suffixes(ostream& o, 
 		const netlist_options& nopt) const {
+	if (attributes & IS_PASS)
+		o << nopt.emit_colon() << "pass";
 	if (attributes & IS_PRECHARGE)
 		o << nopt.emit_colon() << "pchg";
 	if (attributes & IS_STANDARD_KEEPER)

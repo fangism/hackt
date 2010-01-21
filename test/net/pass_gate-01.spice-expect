@@ -1,3 +1,3 @@
-Md:dn:0 s g d !GND nch W=5u L=2u
-Md:up:0 s _g d !Vdd pch W=5u L=2u
+Md:dn:0:pass s g d !GND nch W=5u L=2u
+Md:up:0:pass s _g d !Vdd pch W=5u L=2u
 

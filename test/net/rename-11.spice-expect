@@ -1,5 +1,5 @@
-M:THIS_ONE s g d1 !GND nch W=5u L=2u
-Md2:dn:0 s g d2 !GND nch W=5u L=2u
-Md1:up:0 s _g d1 !Vdd pch W=5u L=2u
-M:THIS_TWO s _g d2 !Vdd pch W=5u L=2u
+M:THIS_ONE:pass s g d1 !GND nch W=5u L=2u
+Md2:dn:0:pass s g d2 !GND nch W=5u L=2u
+Md1:up:0:pass s _g d1 !Vdd pch W=5u L=2u
+M:THIS_TWO:pass s _g d2 !Vdd pch W=5u L=2u
 

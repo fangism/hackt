@@ -1,5 +1,5 @@
 "README.CVS"
-	$Id: README.CVS,v 1.14 2008/11/23 17:53:11 fang Exp $
+	$Id: README.CVS,v 1.15 2010/01/21 19:49:56 fang Exp $
 
 -------------------------------------------------------------------------------
 You've just checked out HACKT from CVS, what do you need to need to work?
@@ -19,7 +19,7 @@ GNUmake-3.79+ is recommended
 automake-1.9+ (OK: 1.10)
 autoconf-2.59+ (OK: 2.60, 2.61)
 libtool-1.5.22+ (1.5.18 has known libltdl(ltdl.c) bug that affects dlopen)
-libtool-2.2 (TODO: not yet migrated/tested)
+libtool-2.2+ (also works, recommended)
 
 These may be obtained from gnu.org.  
 TODO: provide a download script for the truly lazy...

@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-62:
+	  hacknet: emit 'pass' in transistor names that come from
+		PRS passn/passp macros, as if it were an attribute.  
+	  Test cases updated.
+
+
 2010-01-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-61:

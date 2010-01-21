@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.12 2010/01/12 19:26:42 fang Exp $
+	$Id: netlist_generator.cc,v 1.13 2010/01/21 19:50:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -883,6 +883,7 @@ if (passn || passp) {
 	t.attributes = fet_attr;
 	// transistor attributes
 	process_transistor_attributes(t, e.attributes);
+	t.set_pass();		// indicate is pass gate
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->transistor_pool.push_back(t);
 } else if (e.name == "echo") {
