@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.13 2010/01/21 19:50:04 fang Exp $
+	$Id: netlist_generator.cc,v 1.14 2010/01/22 02:01:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -722,24 +722,44 @@ const char type = e.get_type();
 switch (type) {
 case PRS_LITERAL_TYPE_ENUM: {
 	STACKTRACE_INDENT_PRINT("expr is leaf node" << endl);
+	bool override_fet_type = false;
 	if (negated ^ (fet_type == transistor::PFET_TYPE)) {
+	if (fet_attr & transistor::IS_PRECHARGE) {
+		// special handling for precharges based on policy
+		static const char msg[] = "precharge is not fully-restoring.";
+		override_fet_type = true;
+	switch (opt.non_CMOS_precharge_policy) {
+	case OPTION_WARN:
+		cerr << opt.comment_prefix << "Warning : " << msg << endl;
+		break;
+	case OPTION_ERROR:
+		cerr << "ERROR: " << msg << endl;
+		THROW_EXIT;
+	default:	// OPTION_IGNORE
+		break;
+	}
+	} else {
+		// is standard rule, expected to be CMOS and restoring
 		cerr << "ERROR: rule-literal is not CMOS-implementable." << endl;
 		THROW_EXIT;
 	}
+	}
 	transistor t;
-	t.type = fet_type;
+	t.type = override_fet_type ?
+		(negated ? transistor::PFET_TYPE : transistor::NFET_TYPE)
+		: fet_type;
 	t.gate = register_named_node(e.only());
 	t.source = foot_node;
 	t.drain = output_node;
-	t.body = (fet_type == transistor::NFET_TYPE ? low_supply : high_supply);
+	t.body = (t.type == transistor::NFET_TYPE ? low_supply : high_supply);
 		// Vdd or GND
 #if NETLIST_GROUPED_TRANSISTORS
 	t.assoc_node = current_assoc_node;
 	t.assoc_dir = current_assoc_dir;
 #endif
 	const directive_base_params_type& p(e.params);
-//	const bool is_n = fet_type == transistor::NFET_TYPE;
-//	const bool is_k = fet_attr & transistor::IS_STANDARD_KEEPER;
+//	const bool is_n = (t.type == transistor::NFET_TYPE);
+//	const bool is_k = (fet_attr & transistor::IS_STANDARD_KEEPER);
 		// excludes combinational feedback keepers
 	if (p.size() > 0) {
 		set_current_width(p[0]->to_real_const());

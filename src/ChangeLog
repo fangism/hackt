@@ -5,6 +5,14 @@
 
 2010-01-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-63:
+	  hacknet: new option to allow non-CMOS precharges, for when you
+		you really know what you're doing with -Vt.
+		option: non_CMOS_precharge=(warn|ignore|error)
+		default is warn.
+	  Documented, test cases added.
+
+
 	* HACKT-00-01-04-main-00-83-62:
 	  hacknet: emit 'pass' in transistor names that come from
 		PRS passn/passp macros, as if it were an attribute.  

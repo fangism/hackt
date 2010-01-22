@@ -1,5 +1,5 @@
 @c "extending.texi"
-@c $Id: extending.texi,v 1.6 2010/01/21 08:02:16 fang Exp $
+@c $Id: extending.texi,v 1.7 2010/01/22 02:01:53 fang Exp $
 
 @node Extending simulation
 @chapter Extending the simulator
@@ -24,7 +24,7 @@ include @i{prefix}/share/hackt/mk/hackt-lt.mk
 
 @noindent
 where @t{prefix} refers to the base installation path of the tools.  
-This Makefile simplifies compilation and linking tremendously, 
+This Makefile template simplifies compilation and linking tremendously, 
 and also provide suffix compilation rules for @acronym{HAC} object files.  
 We will refer to some definitions found in @file{hackt-lt.mk}
 throughout this section.  
@@ -267,12 +267,14 @@ Fortunately, with the aid of conveniently installed template Makefiles,
 the complexities are hidden@footnote{Such complexities include additional 
 compiler flags for shared-library objects, 
 such as @acronym{PIC, position-independent-code}.}.  
+@file{hackt-lt.mk} provides a suffix rule for compiling C++ files ending
+with @file{.cc} to Libtool-wrapped object files @file{.lo}.
 
 @cindex Libtool
 For every C++ source file (@file{.cc}) that is to be linked into the 
-chpsim module, its corresponding object file should be referenced with
+@command{chpsim} module, its corresponding object file should be referenced with
 the @file{.lo} extension (for Libtool object).  
-The next section describes how to correctly link a chpsim module.  
+The next section describes how to correctly link a @command{chpsim} module.  
 
 @node Linking module libraries
 @subsection Linking module libraries
@@ -287,7 +289,7 @@ The @file{.la} extension replaces what would normally be @file{.so},
 Libtool provides a platform-independent abstraction of shared libraries, 
 so the user need not worry about these details.  
 The target library name need not be prefixed with @samp{lib}, 
-since it is being dlopened as a module.  
+since it is being dlopened as a module (plug-in).  
 Suppose the above source file was named @file{foo.cc}, 
 and our target library is @file{bar.la}, 
 one might write in the Makefile:
@@ -361,7 +363,7 @@ no additional libraries are needed.
 
 @defvr {Makefile variable} CPPFLAGS
 @defvrx {Makefile variable} CHPSIM_OBJECT_CPPFLAGS
-Expands to flags needed to compile chpsim module source files.  
+Expands to flags needed to compile @command{chpsim} module source files.  
 Gratuitously appled to all libtoolized compilations.  
 @var{CPPFLAGS} may be appended by the user, 
 but @var{CHPSIM_OBJECT_CPPFLAGS} may not.  
@@ -372,7 +374,7 @@ Intially empty, may be appended by the user for tuning compilation.
 @end defvr
 
 Summary: defining @var{CXX} suffices to successfully build
-chpsim module @file{bar.la} in the above example.  
+@command{chpsim} module @file{bar.la} in the above example.  
 One word of caution: the @file{.la} file is merely a placeholder
 that tells libtool where to find the actual built archives, 
 which are actually built in the @file{.libs} subdirectory.  

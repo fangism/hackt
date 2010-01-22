@@ -1,5 +1,6 @@
 // "non-CMOS-04.hac"
 // copy-modified from "precharge-01.hac"
+// @hacknet-flags@ -f non_CMOS_precharge=error
 
 defproc foo(bool en, a, b, _o) {
 prs {

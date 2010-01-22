@@ -1,0 +1,12 @@
+.subckt foo<> !GND !Vdd en a b _o
+M_o:dn:0 !GND en #0 !GND nch W=5u L=2u
+M_o:dn:1:pchg !Vdd en #1 !GND nch W=5u L=2u
+M_o:dn:2:pchg #1 a #0 !Vdd pch W=5u L=2u
+M_o:dn:3 #0 a #2 !GND nch W=5u L=2u
+M_o:dn:4 #2 b _o !GND nch W=5u L=2u
+.ends
+
+xbar !GND !Vdd bar.en bar.a bar.b bar._o foo<>
+
+* --- WARNINGS ---
+* Warning : precharge is not fully-restoring.

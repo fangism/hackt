@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.12 2010/01/21 19:50:03 fang Exp $
+	$Id: netgraph.h,v 1.13 2010/01/22 02:01:54 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -138,7 +138,8 @@ struct transistor {
 		IS_LOW_VT = 0x10,
 		IS_HIGH_VT = 0x20
 	};
-	char				attributes;
+	typedef	char			attributes_type;
+	attributes_type			attributes;
 
 	void
 	set_lvt(void) {
@@ -179,6 +180,12 @@ struct transistor {
 
 	ostream&
 	dump_raw(ostream&) const;
+
+	static
+	char
+	opposite_FET_type(const char f) {
+		return (f == NFET_TYPE) ? PFET_TYPE : NFET_TYPE;
+	}
 
 };	// end struct transistor
 

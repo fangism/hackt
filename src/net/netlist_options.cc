@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.13 2009/12/16 23:29:32 fang Exp $
+	$Id: netlist_options.cc,v 1.14 2010/01/22 02:01:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -42,6 +42,7 @@ netlist_options::netlist_options() :
 		internal_node_supply_mismatch_policy(OPTION_WARN),
 		undriven_node_policy(OPTION_WARN),
 		case_collision_policy(OPTION_WARN),
+		non_CMOS_precharge_policy(OPTION_WARN),
 		std_n_width(5.0),
 		std_p_width(5.0),
 		std_n_length(2.0),
@@ -710,6 +711,17 @@ If the value is anything but @t{ignore}, then the set of reserved
 names will also be transformed when detecting collisions.  
 Default: warn
 @end defopt
+
+@defopt non_CMOS_precharge (string)
+Set the error handling policy for precharge expressions that 
+are written non-CMOS, i.e. not fully-restoring.
+(for example, using an NMOS expression to pull-up an internal node
+in an NMOS stack)
+Such nets will only charge or precharge to 1 Vt from the supply rail.  
+Be very careful with this option, it allows you to write nonsense like
+@samp{a &@{+x & ~y@} b & c -> o-}.
+Default: warn
+@end defopt
 @end texinfo
 ***/
 DEFINE_OPTION_POLICY(unknown_option, "unknown_option",
@@ -721,6 +733,8 @@ DEFINE_OPTION_POLICY(undriven_node, "undriven_node",
 	"EH for used but undriven nodes")
 DEFINE_OPTION_POLICY(case_collision, "case_collision",
 	"EH for case-insensitive name collisions")
+DEFINE_OPTION_POLICY(non_CMOS_precharge, "non_CMOS_precharge",
+	"EH for not fully-restoring precharges")
 
 // could just fold string into here instead of initialization function below...
 // TODO: produce usage help for console and texinfo documentation aside

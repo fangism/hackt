@@ -36,6 +36,7 @@ nested_subcircuits=0
 nfet_hvt=nch_hvt
 nfet_lvt=nch_lvt
 nfet_svt=nch
+non_CMOS_precharge=warn
 pfet_hvt=pch_hvt
 pfet_lvt=pch_lvt
 pfet_svt=pch

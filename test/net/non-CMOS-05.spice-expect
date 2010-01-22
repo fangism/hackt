@@ -1,4 +1,4 @@
-ERROR: rule-literal is not CMOS-implementable.
+ERROR: precharge is not fully-restoring.
 ERROR in production rule.
 	en &{-~en} a & b -> _o-
 ERROR producing netlist for foo<>

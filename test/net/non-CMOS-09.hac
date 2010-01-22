@@ -1,10 +1,10 @@
-// "non-CMOS-05.hac"
+// "non-CMOS-09.hac"
 // copy-modified from "non-CMOS-04.hac"
-// @hacknet-flags@ -f non_CMOS_precharge=error
+// @hacknet-flags@ -f non_CMOS_precharge=warn
 
 defproc foo(bool en, a, b, _o) {
 prs {
-	en &{-~en} a & b	-> _o-
+	en &{+en & a} a & b	-> _o-
 }
 }
 

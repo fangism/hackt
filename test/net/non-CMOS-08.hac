@@ -1,0 +1,6 @@
+// "non-CMOS-08.hac"
+// testing diagnostic on non-CMOS precharges
+// @hacknet-flags@ -f non_CMOS_precharge=warn
+
+import "non-CMOS-05.hac";
+

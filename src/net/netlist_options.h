@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.11 2009/12/16 23:29:32 fang Exp $
+	$Id: netlist_options.h,v 1.12 2010/01/22 02:01:56 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -54,6 +54,7 @@ struct netlist_options {
 	option_error_policy		internal_node_supply_mismatch_policy;
 	option_error_policy		undriven_node_policy;
 	option_error_policy		case_collision_policy;
+	option_error_policy		non_CMOS_precharge_policy;
 // generation-time options:
 	/**
 		Dimensions of standard devices to use when unspecified.  
