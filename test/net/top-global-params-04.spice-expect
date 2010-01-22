@@ -1,0 +1,7 @@
+.subckt inv<> !GND !Vdd x y
+My:dn:0 !GND x y !GND nch W=13u L=2u
+My:up:0 !Vdd x y !Vdd pch W=13u L=2u
+.ends
+
+xfoo !GND !Vdd foo.x foo.y inv<>
+

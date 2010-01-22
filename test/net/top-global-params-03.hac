@@ -1,0 +1,5 @@
+// "top-global-params-03.hac"
+// @hacknet-flags@ -T inv
+
+import "top-global-params-02.hac";
+

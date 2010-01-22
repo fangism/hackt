@@ -1,0 +1,14 @@
+.subckt inv<> !GND !Vdd x y
+My:dn:0 !GND x y !GND nch W=13u L=2u
+My:up:0 !Vdd x y !Vdd pch W=13u L=2u
+.ends
+
+.subckt top<> !GND !Vdd
+xfoo !GND !Vdd foo.x foo.y inv<>
+.ends
+
+
+* --- WARNINGS ---
+Warning: node top<>::foo.x has no pull-up nor pull-dn PRS fanin.
+Warning: node foo.x is used but not driven!
+... in subcircuit top<>

@@ -1,0 +1,15 @@
+// "top-global-params-01.hac"
+// @hacknet-flags@ -T top
+
+pint GLOBAL = 13;
+
+defproc inv(bool x, y) {
+prs {
+	x<GLOBAL>	=> y-
+}
+}
+
+defproc top() {
+	inv foo;
+}
+
