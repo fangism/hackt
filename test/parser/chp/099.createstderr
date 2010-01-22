@@ -132,14 +132,14 @@ In namespace "", we have: {
         y = int<32>^0 = foo<>::y (1) 
         z = bool^0 = foo<>::z (4) 
         Created state:
-        int instance pool:
-        1	foo<>::y
-        2	foo<>::w
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::x
-        4	foo<>::z
+        int instance pool: (0 ports)
+        1	foo<>::y	
+        2	foo<>::w	
+        bool instance pool: (2 ports)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::x	
+        4	foo<>::z	
         resolved concurrent actions:
           *[
             concurrent: {
@@ -182,9 +182,16 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	f
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	f	foo<>
+    bool: 1,2
+  private sub-int index map:
+    (1 -> 0)
+    (2 -> 2)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 2)
 }

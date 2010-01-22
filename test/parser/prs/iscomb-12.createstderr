@@ -156,11 +156,11 @@ In namespace "", we have: {
         a = bool^0 = inv<>::a (3) 
         b = bool^0 = inv<>::b (4) 
         Created state:
-        bool instance pool:
-        1	inv<>::!GND
-        2	inv<>::!Vdd
-        3	inv<>::a
-        4	inv<>::b
+        bool instance pool: (4 ports)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::a	
+        4	inv<>::b	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -241,20 +241,23 @@ In namespace "", we have: {
         y = bool^0 = wrap<>::y (5) @[ iscomb ] 
         z = bool^0 = wrap<>::z (6) 
         Created state:
-        process instance pool:
-        1	wrap<>::P
-        2	wrap<>::Q
-        3	wrap<>::R
-        bool instance pool:
-        1	wrap<>::!GND
-        2	wrap<>::!Vdd
-        3	wrap<>::w
-        4	wrap<>::x @[ iscomb ]
-        5	wrap<>::y @[ iscomb ]
-        6	wrap<>::z
-        7	wrap<>::j
-        8	wrap<>::k
-        9	wrap<>::l @[ iscomb ]
+        process instance pool: (0 ports)
+        1	wrap<>::P	inv<>
+          bool: 1,2,3,4
+        2	wrap<>::Q	inv<>
+          bool: 1,2,7,8
+        3	wrap<>::R	inv<>
+          bool: 1,2,8,9
+        bool instance pool: (6 ports)
+        1	wrap<>::!GND	
+        2	wrap<>::!Vdd	
+        3	wrap<>::w	
+        4	wrap<>::x @[ iscomb ]	
+        5	wrap<>::y @[ iscomb ]	
+        6	wrap<>::z	
+        7	wrap<>::j	
+        8	wrap<>::k	
+        9	wrap<>::l @[ iscomb ]	
       }
       }
 
@@ -284,13 +287,20 @@ footprint: {
     z = bool^0 = a (6) 
   )
   Created state:
-  process instance pool:
-  1	present
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	d
-  4	c @[ iscomb ]
-  5	b @[ iscomb ]
-  6	a
+  process instance pool: (0 ports)
+  1	present	wrap<>
+    bool: 1,2,3,4,5,6
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 3)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	d	
+  4	c @[ iscomb ]	
+  5	b @[ iscomb ]	
+  6	a	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 3)
 }

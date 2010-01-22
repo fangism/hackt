@@ -83,13 +83,13 @@ In namespace "", we have: {
         y = bool^0 = foo<>::y (5) 
         z = bool^0 = foo<>::z (6) @[ iscomb ] 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::w
-        4	foo<>::x @[ iscomb ]
-        5	foo<>::y
-        6	foo<>::z @[ iscomb ]
+        bool instance pool: (2 ports)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::w	
+        4	foo<>::x @[ iscomb ]	
+        5	foo<>::y	
+        6	foo<>::z @[ iscomb ]	
       }
       }
 
@@ -107,9 +107,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	bar
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	bar	foo<>
+    bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 4)
 }

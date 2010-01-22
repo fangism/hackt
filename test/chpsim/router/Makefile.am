@@ -1,5 +1,5 @@
 # "test/chpsim/router/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2009/09/28 06:57:00 fang Exp $
+#	$Id: Makefile.am,v 1.7.2.1 2010/01/22 23:42:04 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -231,12 +231,16 @@ include $(top_srcdir)/test/Make.test-tail
 
 # extend the default test script
 if HAVE_LIBGUILE
-HACCHPSIMSCM_TEST_SCRIPT += && \
+# temporary:
+# HACCHPSIMSCM_TEST_SCRIPT += &&
+HACCHPSIMSCM_TEST_SCRIPT = && \
 	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
 endif
 
 # clean up side-effect files from bitrouter tests
-HACKT_GUILE_CLEAN_IGNORE_PATTERNS += \
+# temporary:
+# HACKT_GUILE_CLEAN_IGNORE_PATTERNS +=
+HACKT_GUILE_CLEAN_IGNORE_PATTERNS = \
 	"*.hacchpsimscm-out.tmp"
 
 # additional search path for scheme scripts

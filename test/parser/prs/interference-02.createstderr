@@ -103,11 +103,11 @@ In namespace "", we have: {
         foo = bool^0 = yoyodyne<>::foo (3) @[ may_interfere ] 
         foo2 = bool^0 = yoyodyne<>::foo (3) @[ may_interfere ] 
         Created state:
-        bool instance pool:
-        1	yoyodyne<>::!GND
-        2	yoyodyne<>::!Vdd
-        3	yoyodyne<>::foo @[ may_interfere ]
-        4	yoyodyne<>::bar @[ may_interfere ]
+        bool instance pool: (4 ports)
+        1	yoyodyne<>::!GND	
+        2	yoyodyne<>::!Vdd	
+        3	yoyodyne<>::foo @[ may_interfere ]	
+        4	yoyodyne<>::bar @[ may_interfere ]	
         resolved prs:
         foo -> bar-
         ~foo -> bar+
@@ -132,11 +132,12 @@ footprint: {
     bar = bool^0 = wee.bar (4) @[ may_interfere ] 
   )
   Created state:
-  process instance pool:
-  1	wee
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	wee.foo @[ may_interfere ]
-  4	wee.bar @[ may_interfere ]
+  process instance pool: (0 ports)
+  1	wee	yoyodyne<>
+    bool: 1,2,3,4
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	wee.foo @[ may_interfere ]	
+  4	wee.bar @[ may_interfere ]	
 }

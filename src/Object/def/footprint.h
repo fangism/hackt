@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.6 2010/01/18 23:43:33 fang Exp $
+	$Id: footprint.h,v 1.30.2.7 2010/01/22 23:41:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -47,7 +47,9 @@ class definition_base;
 class instance_collection_base;
 class port_formals_manager;
 class scopespace;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 class port_member_context;
+#endif
 class footprint_manager;
 struct entry_collection;
 struct alias_visitor;
@@ -491,11 +493,11 @@ public:
 #else
 	good_bool
 	expand_unique_subinstances(state_manager&) const;
-#endif
 
 	void
 	assign_footprint_frame(footprint_frame&, 
 		const port_member_context&) const;
+#endif
 
 	void
 	cflat_aliases(ostream&,

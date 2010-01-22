@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.32.12.1 2010/01/18 23:43:37 fang Exp $
+	$Id: instance_collection.h,v 1.32.12.2 2010/01/22 23:41:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -244,9 +244,11 @@ virtual	UNROLL_ALIASES_PROTO = 0;
 
 virtual	COLLECT_PORT_ALIASES_PROTO = 0;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
 
 virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
+#endif
 
 virtual	void
 	accept(alias_visitor&) const = 0;

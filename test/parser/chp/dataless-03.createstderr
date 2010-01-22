@@ -89,11 +89,11 @@ In namespace "", we have: {
           N = pint^0 value: 3
           S = channel chan!()^0 = void_source_once<3>::S (1) 
           Created state:
-          channel instance pool:
-          1	void_source_once<3>::S
-          bool instance pool:
-          1	void_source_once<3>::!GND
-          2	void_source_once<3>::!Vdd
+          channel instance pool: (1 ports)
+          1	void_source_once<3>::S	
+          bool instance pool: (2 ports)
+          1	void_source_once<3>::!GND	
+          2	void_source_once<3>::!Vdd	
           resolved concurrent actions:
             sequential: {
               S!
@@ -124,11 +124,13 @@ footprint: {
     S = channel chan!()^0 = Z.S (1) 
   )
   Created state:
-  process instance pool:
-  1	Z
-  channel instance pool:
-  1	Z.S
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	Z	void_source_once<3>
+    channel: 1
+    bool: 1,2
+  channel instance pool: (0 ports)
+  1	Z.S	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

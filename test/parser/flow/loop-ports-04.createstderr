@@ -132,13 +132,13 @@ In namespace "", we have: {
               [3] = ch1of<4>::d[3] (6) 
             }
           Created state:
-          bool instance pool:
-          1	ch1of<4>::!GND
-          2	ch1of<4>::!Vdd
-          3	ch1of<4>::d[0]
-          4	ch1of<4>::d[1]
-          5	ch1of<4>::d[2]
-          6	ch1of<4>::d[3]
+          bool instance pool: (6 ports)
+          1	ch1of<4>::!GND	
+          2	ch1of<4>::!Vdd	
+          3	ch1of<4>::d[0]	
+          4	ch1of<4>::d[1]	
+          5	ch1of<4>::d[2]	
+          6	ch1of<4>::d[3]	
         }
       }
       }
@@ -172,12 +172,12 @@ In namespace "", we have: {
         b = bool^0 = dcelm<>::b (4) 
         c = bool^0 = dcelm<>::c (5) 
         Created state:
-        bool instance pool:
-        1	dcelm<>::!GND
-        2	dcelm<>::!Vdd
-        3	dcelm<>::a
-        4	dcelm<>::b
-        5	dcelm<>::c
+        bool instance pool: (5 ports)
+        1	dcelm<>::!GND	
+        2	dcelm<>::!Vdd	
+        3	dcelm<>::a	
+        4	dcelm<>::b	
+        5	dcelm<>::c	
       }
       }
 
@@ -331,47 +331,64 @@ In namespace "", we have: {
             )
           }
         Created state:
-        process instance pool:
-        1	lut<>::ad
-        2	lut<>::ce[0]
-        3	lut<>::ce[1]
-        4	lut<>::ce[2]
-        5	lut<>::ce[3]
-        6	lut<>::ce[4]
-        7	lut<>::ce[5]
-        8	lut<>::ce[6]
-        9	lut<>::ce[7]
-        10	lut<>::ce[8]
-        11	lut<>::ce[9]
-        12	lut<>::ce[10]
-        13	lut<>::ce[11]
-        14	lut<>::ce[12]
-        15	lut<>::ce[13]
-        16	lut<>::ce[14]
-        17	lut<>::ce[15]
-        bool instance pool:
-        1	lut<>::!GND
-        2	lut<>::!Vdd
-        3	lut<>::ad.d[0]
-        4	lut<>::ad.d[1]
-        5	lut<>::ad.d[2]
-        6	lut<>::ad.d[3]
-        7	lut<>::ce[0].c
-        8	lut<>::ce[1].c
-        9	lut<>::ce[2].c
-        10	lut<>::ce[3].c
-        11	lut<>::ce[4].c
-        12	lut<>::ce[5].c
-        13	lut<>::ce[6].c
-        14	lut<>::ce[7].c
-        15	lut<>::ce[8].c
-        16	lut<>::ce[9].c
-        17	lut<>::ce[10].c
-        18	lut<>::ce[11].c
-        19	lut<>::ce[12].c
-        20	lut<>::ce[13].c
-        21	lut<>::ce[14].c
-        22	lut<>::ce[15].c
+        process instance pool: (0 ports)
+        1	lut<>::ad	ch1of<4>
+          bool: 1,2,3,4,5,6
+        2	lut<>::ce[0]	dcelm<>
+          bool: 1,2,3,3,7
+        3	lut<>::ce[1]	dcelm<>
+          bool: 1,2,3,4,8
+        4	lut<>::ce[2]	dcelm<>
+          bool: 1,2,3,5,9
+        5	lut<>::ce[3]	dcelm<>
+          bool: 1,2,3,6,10
+        6	lut<>::ce[4]	dcelm<>
+          bool: 1,2,4,3,11
+        7	lut<>::ce[5]	dcelm<>
+          bool: 1,2,4,4,12
+        8	lut<>::ce[6]	dcelm<>
+          bool: 1,2,4,5,13
+        9	lut<>::ce[7]	dcelm<>
+          bool: 1,2,4,6,14
+        10	lut<>::ce[8]	dcelm<>
+          bool: 1,2,5,3,15
+        11	lut<>::ce[9]	dcelm<>
+          bool: 1,2,5,4,16
+        12	lut<>::ce[10]	dcelm<>
+          bool: 1,2,5,5,17
+        13	lut<>::ce[11]	dcelm<>
+          bool: 1,2,5,6,18
+        14	lut<>::ce[12]	dcelm<>
+          bool: 1,2,6,3,19
+        15	lut<>::ce[13]	dcelm<>
+          bool: 1,2,6,4,20
+        16	lut<>::ce[14]	dcelm<>
+          bool: 1,2,6,5,21
+        17	lut<>::ce[15]	dcelm<>
+          bool: 1,2,6,6,22
+        bool instance pool: (2 ports)
+        1	lut<>::!GND	
+        2	lut<>::!Vdd	
+        3	lut<>::ad.d[0]	
+        4	lut<>::ad.d[1]	
+        5	lut<>::ad.d[2]	
+        6	lut<>::ad.d[3]	
+        7	lut<>::ce[0].c	
+        8	lut<>::ce[1].c	
+        9	lut<>::ce[2].c	
+        10	lut<>::ce[3].c	
+        11	lut<>::ce[4].c	
+        12	lut<>::ce[5].c	
+        13	lut<>::ce[6].c	
+        14	lut<>::ce[7].c	
+        15	lut<>::ce[8].c	
+        16	lut<>::ce[9].c	
+        17	lut<>::ce[10].c	
+        18	lut<>::ce[11].c	
+        19	lut<>::ce[12].c	
+        20	lut<>::ce[13].c	
+        21	lut<>::ce[14].c	
+        22	lut<>::ce[15].c	
       }
       }
 
@@ -389,9 +406,16 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	l
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	l	lut<>
+    bool: 1,2
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 17)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 20)
 }

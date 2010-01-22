@@ -84,11 +84,11 @@ In namespace "", we have: {
         G = bool^0 = foo<>::G (4) 
         V = bool^0 = foo<>::V (3) 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::V
-        4	foo<>::G
+        bool instance pool: (4 ports)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::V	
+        4	foo<>::G	
         resolved macros:
         passn(V,G,G)
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -1653,523 +1653,780 @@ footprint: {
       )
     }
   Created state:
-  process instance pool:
-  1	bar[0]
-  2	bar[1]
-  3	bar[2]
-  4	bar[3]
-  5	bar[4]
-  6	bar[5]
-  7	bar[6]
-  8	bar[7]
-  9	bar[8]
-  10	bar[9]
-  11	bar[10]
-  12	bar[11]
-  13	bar[12]
-  14	bar[13]
-  15	bar[14]
-  16	bar[15]
-  17	bar[16]
-  18	bar[17]
-  19	bar[18]
-  20	bar[19]
-  21	bar[20]
-  22	bar[21]
-  23	bar[22]
-  24	bar[23]
-  25	bar[24]
-  26	bar[25]
-  27	bar[26]
-  28	bar[27]
-  29	bar[28]
-  30	bar[29]
-  31	bar[30]
-  32	bar[31]
-  33	bar[32]
-  34	bar[33]
-  35	bar[34]
-  36	bar[35]
-  37	bar[36]
-  38	bar[37]
-  39	bar[38]
-  40	bar[39]
-  41	bar[40]
-  42	bar[41]
-  43	bar[42]
-  44	bar[43]
-  45	bar[44]
-  46	bar[45]
-  47	bar[46]
-  48	bar[47]
-  49	bar[48]
-  50	bar[49]
-  51	bar[50]
-  52	bar[51]
-  53	bar[52]
-  54	bar[53]
-  55	bar[54]
-  56	bar[55]
-  57	bar[56]
-  58	bar[57]
-  59	bar[58]
-  60	bar[59]
-  61	bar[60]
-  62	bar[61]
-  63	bar[62]
-  64	bar[63]
-  65	bar[64]
-  66	bar[65]
-  67	bar[66]
-  68	bar[67]
-  69	bar[68]
-  70	bar[69]
-  71	bar[70]
-  72	bar[71]
-  73	bar[72]
-  74	bar[73]
-  75	bar[74]
-  76	bar[75]
-  77	bar[76]
-  78	bar[77]
-  79	bar[78]
-  80	bar[79]
-  81	bar[80]
-  82	bar[81]
-  83	bar[82]
-  84	bar[83]
-  85	bar[84]
-  86	bar[85]
-  87	bar[86]
-  88	bar[87]
-  89	bar[88]
-  90	bar[89]
-  91	bar[90]
-  92	bar[91]
-  93	bar[92]
-  94	bar[93]
-  95	bar[94]
-  96	bar[95]
-  97	bar[96]
-  98	bar[97]
-  99	bar[98]
-  100	bar[99]
-  101	bar[100]
-  102	bar[101]
-  103	bar[102]
-  104	bar[103]
-  105	bar[104]
-  106	bar[105]
-  107	bar[106]
-  108	bar[107]
-  109	bar[108]
-  110	bar[109]
-  111	bar[110]
-  112	bar[111]
-  113	bar[112]
-  114	bar[113]
-  115	bar[114]
-  116	bar[115]
-  117	bar[116]
-  118	bar[117]
-  119	bar[118]
-  120	bar[119]
-  121	bar[120]
-  122	bar[121]
-  123	bar[122]
-  124	bar[123]
-  125	bar[124]
-  126	bar[125]
-  127	bar[126]
-  128	bar[127]
-  129	bar[128]
-  130	bar[129]
-  131	bar[130]
-  132	bar[131]
-  133	bar[132]
-  134	bar[133]
-  135	bar[134]
-  136	bar[135]
-  137	bar[136]
-  138	bar[137]
-  139	bar[138]
-  140	bar[139]
-  141	bar[140]
-  142	bar[141]
-  143	bar[142]
-  144	bar[143]
-  145	bar[144]
-  146	bar[145]
-  147	bar[146]
-  148	bar[147]
-  149	bar[148]
-  150	bar[149]
-  151	bar[150]
-  152	bar[151]
-  153	bar[152]
-  154	bar[153]
-  155	bar[154]
-  156	bar[155]
-  157	bar[156]
-  158	bar[157]
-  159	bar[158]
-  160	bar[159]
-  161	bar[160]
-  162	bar[161]
-  163	bar[162]
-  164	bar[163]
-  165	bar[164]
-  166	bar[165]
-  167	bar[166]
-  168	bar[167]
-  169	bar[168]
-  170	bar[169]
-  171	bar[170]
-  172	bar[171]
-  173	bar[172]
-  174	bar[173]
-  175	bar[174]
-  176	bar[175]
-  177	bar[176]
-  178	bar[177]
-  179	bar[178]
-  180	bar[179]
-  181	bar[180]
-  182	bar[181]
-  183	bar[182]
-  184	bar[183]
-  185	bar[184]
-  186	bar[185]
-  187	bar[186]
-  188	bar[187]
-  189	bar[188]
-  190	bar[189]
-  191	bar[190]
-  192	bar[191]
-  193	bar[192]
-  194	bar[193]
-  195	bar[194]
-  196	bar[195]
-  197	bar[196]
-  198	bar[197]
-  199	bar[198]
-  200	bar[199]
-  201	bar[200]
-  202	bar[201]
-  203	bar[202]
-  204	bar[203]
-  205	bar[204]
-  206	bar[205]
-  207	bar[206]
-  208	bar[207]
-  209	bar[208]
-  210	bar[209]
-  211	bar[210]
-  212	bar[211]
-  213	bar[212]
-  214	bar[213]
-  215	bar[214]
-  216	bar[215]
-  217	bar[216]
-  218	bar[217]
-  219	bar[218]
-  220	bar[219]
-  221	bar[220]
-  222	bar[221]
-  223	bar[222]
-  224	bar[223]
-  225	bar[224]
-  226	bar[225]
-  227	bar[226]
-  228	bar[227]
-  229	bar[228]
-  230	bar[229]
-  231	bar[230]
-  232	bar[231]
-  233	bar[232]
-  234	bar[233]
-  235	bar[234]
-  236	bar[235]
-  237	bar[236]
-  238	bar[237]
-  239	bar[238]
-  240	bar[239]
-  241	bar[240]
-  242	bar[241]
-  243	bar[242]
-  244	bar[243]
-  245	bar[244]
-  246	bar[245]
-  247	bar[246]
-  248	bar[247]
-  249	bar[248]
-  250	bar[249]
-  251	bar[250]
-  252	bar[251]
-  253	bar[252]
-  254	bar[253]
-  255	bar[254]
-  256	bar[255]
-  257	bar[256]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	bar[0].V
-  4	G
-  5	bar[1].V
-  6	bar[2].V
-  7	bar[3].V
-  8	bar[4].V
-  9	bar[5].V
-  10	bar[6].V
-  11	bar[7].V
-  12	bar[8].V
-  13	bar[9].V
-  14	bar[10].V
-  15	bar[11].V
-  16	bar[12].V
-  17	bar[13].V
-  18	bar[14].V
-  19	bar[15].V
-  20	bar[16].V
-  21	bar[17].V
-  22	bar[18].V
-  23	bar[19].V
-  24	bar[20].V
-  25	bar[21].V
-  26	bar[22].V
-  27	bar[23].V
-  28	bar[24].V
-  29	bar[25].V
-  30	bar[26].V
-  31	bar[27].V
-  32	bar[28].V
-  33	bar[29].V
-  34	bar[30].V
-  35	bar[31].V
-  36	bar[32].V
-  37	bar[33].V
-  38	bar[34].V
-  39	bar[35].V
-  40	bar[36].V
-  41	bar[37].V
-  42	bar[38].V
-  43	bar[39].V
-  44	bar[40].V
-  45	bar[41].V
-  46	bar[42].V
-  47	bar[43].V
-  48	bar[44].V
-  49	bar[45].V
-  50	bar[46].V
-  51	bar[47].V
-  52	bar[48].V
-  53	bar[49].V
-  54	bar[50].V
-  55	bar[51].V
-  56	bar[52].V
-  57	bar[53].V
-  58	bar[54].V
-  59	bar[55].V
-  60	bar[56].V
-  61	bar[57].V
-  62	bar[58].V
-  63	bar[59].V
-  64	bar[60].V
-  65	bar[61].V
-  66	bar[62].V
-  67	bar[63].V
-  68	bar[64].V
-  69	bar[65].V
-  70	bar[66].V
-  71	bar[67].V
-  72	bar[68].V
-  73	bar[69].V
-  74	bar[70].V
-  75	bar[71].V
-  76	bar[72].V
-  77	bar[73].V
-  78	bar[74].V
-  79	bar[75].V
-  80	bar[76].V
-  81	bar[77].V
-  82	bar[78].V
-  83	bar[79].V
-  84	bar[80].V
-  85	bar[81].V
-  86	bar[82].V
-  87	bar[83].V
-  88	bar[84].V
-  89	bar[85].V
-  90	bar[86].V
-  91	bar[87].V
-  92	bar[88].V
-  93	bar[89].V
-  94	bar[90].V
-  95	bar[91].V
-  96	bar[92].V
-  97	bar[93].V
-  98	bar[94].V
-  99	bar[95].V
-  100	bar[96].V
-  101	bar[97].V
-  102	bar[98].V
-  103	bar[99].V
-  104	bar[100].V
-  105	bar[101].V
-  106	bar[102].V
-  107	bar[103].V
-  108	bar[104].V
-  109	bar[105].V
-  110	bar[106].V
-  111	bar[107].V
-  112	bar[108].V
-  113	bar[109].V
-  114	bar[110].V
-  115	bar[111].V
-  116	bar[112].V
-  117	bar[113].V
-  118	bar[114].V
-  119	bar[115].V
-  120	bar[116].V
-  121	bar[117].V
-  122	bar[118].V
-  123	bar[119].V
-  124	bar[120].V
-  125	bar[121].V
-  126	bar[122].V
-  127	bar[123].V
-  128	bar[124].V
-  129	bar[125].V
-  130	bar[126].V
-  131	bar[127].V
-  132	bar[128].V
-  133	bar[129].V
-  134	bar[130].V
-  135	bar[131].V
-  136	bar[132].V
-  137	bar[133].V
-  138	bar[134].V
-  139	bar[135].V
-  140	bar[136].V
-  141	bar[137].V
-  142	bar[138].V
-  143	bar[139].V
-  144	bar[140].V
-  145	bar[141].V
-  146	bar[142].V
-  147	bar[143].V
-  148	bar[144].V
-  149	bar[145].V
-  150	bar[146].V
-  151	bar[147].V
-  152	bar[148].V
-  153	bar[149].V
-  154	bar[150].V
-  155	bar[151].V
-  156	bar[152].V
-  157	bar[153].V
-  158	bar[154].V
-  159	bar[155].V
-  160	bar[156].V
-  161	bar[157].V
-  162	bar[158].V
-  163	bar[159].V
-  164	bar[160].V
-  165	bar[161].V
-  166	bar[162].V
-  167	bar[163].V
-  168	bar[164].V
-  169	bar[165].V
-  170	bar[166].V
-  171	bar[167].V
-  172	bar[168].V
-  173	bar[169].V
-  174	bar[170].V
-  175	bar[171].V
-  176	bar[172].V
-  177	bar[173].V
-  178	bar[174].V
-  179	bar[175].V
-  180	bar[176].V
-  181	bar[177].V
-  182	bar[178].V
-  183	bar[179].V
-  184	bar[180].V
-  185	bar[181].V
-  186	bar[182].V
-  187	bar[183].V
-  188	bar[184].V
-  189	bar[185].V
-  190	bar[186].V
-  191	bar[187].V
-  192	bar[188].V
-  193	bar[189].V
-  194	bar[190].V
-  195	bar[191].V
-  196	bar[192].V
-  197	bar[193].V
-  198	bar[194].V
-  199	bar[195].V
-  200	bar[196].V
-  201	bar[197].V
-  202	bar[198].V
-  203	bar[199].V
-  204	bar[200].V
-  205	bar[201].V
-  206	bar[202].V
-  207	bar[203].V
-  208	bar[204].V
-  209	bar[205].V
-  210	bar[206].V
-  211	bar[207].V
-  212	bar[208].V
-  213	bar[209].V
-  214	bar[210].V
-  215	bar[211].V
-  216	bar[212].V
-  217	bar[213].V
-  218	bar[214].V
-  219	bar[215].V
-  220	bar[216].V
-  221	bar[217].V
-  222	bar[218].V
-  223	bar[219].V
-  224	bar[220].V
-  225	bar[221].V
-  226	bar[222].V
-  227	bar[223].V
-  228	bar[224].V
-  229	bar[225].V
-  230	bar[226].V
-  231	bar[227].V
-  232	bar[228].V
-  233	bar[229].V
-  234	bar[230].V
-  235	bar[231].V
-  236	bar[232].V
-  237	bar[233].V
-  238	bar[234].V
-  239	bar[235].V
-  240	bar[236].V
-  241	bar[237].V
-  242	bar[238].V
-  243	bar[239].V
-  244	bar[240].V
-  245	bar[241].V
-  246	bar[242].V
-  247	bar[243].V
-  248	bar[244].V
-  249	bar[245].V
-  250	bar[246].V
-  251	bar[247].V
-  252	bar[248].V
-  253	bar[249].V
-  254	bar[250].V
-  255	bar[251].V
-  256	bar[252].V
-  257	bar[253].V
-  258	bar[254].V
-  259	bar[255].V
-  260	bar[256].V
+  process instance pool: (0 ports)
+  1	bar[0]	foo<>
+    bool: 1,2,3,4
+  2	bar[1]	foo<>
+    bool: 1,2,5,4
+  3	bar[2]	foo<>
+    bool: 1,2,6,4
+  4	bar[3]	foo<>
+    bool: 1,2,7,4
+  5	bar[4]	foo<>
+    bool: 1,2,8,4
+  6	bar[5]	foo<>
+    bool: 1,2,9,4
+  7	bar[6]	foo<>
+    bool: 1,2,10,4
+  8	bar[7]	foo<>
+    bool: 1,2,11,4
+  9	bar[8]	foo<>
+    bool: 1,2,12,4
+  10	bar[9]	foo<>
+    bool: 1,2,13,4
+  11	bar[10]	foo<>
+    bool: 1,2,14,4
+  12	bar[11]	foo<>
+    bool: 1,2,15,4
+  13	bar[12]	foo<>
+    bool: 1,2,16,4
+  14	bar[13]	foo<>
+    bool: 1,2,17,4
+  15	bar[14]	foo<>
+    bool: 1,2,18,4
+  16	bar[15]	foo<>
+    bool: 1,2,19,4
+  17	bar[16]	foo<>
+    bool: 1,2,20,4
+  18	bar[17]	foo<>
+    bool: 1,2,21,4
+  19	bar[18]	foo<>
+    bool: 1,2,22,4
+  20	bar[19]	foo<>
+    bool: 1,2,23,4
+  21	bar[20]	foo<>
+    bool: 1,2,24,4
+  22	bar[21]	foo<>
+    bool: 1,2,25,4
+  23	bar[22]	foo<>
+    bool: 1,2,26,4
+  24	bar[23]	foo<>
+    bool: 1,2,27,4
+  25	bar[24]	foo<>
+    bool: 1,2,28,4
+  26	bar[25]	foo<>
+    bool: 1,2,29,4
+  27	bar[26]	foo<>
+    bool: 1,2,30,4
+  28	bar[27]	foo<>
+    bool: 1,2,31,4
+  29	bar[28]	foo<>
+    bool: 1,2,32,4
+  30	bar[29]	foo<>
+    bool: 1,2,33,4
+  31	bar[30]	foo<>
+    bool: 1,2,34,4
+  32	bar[31]	foo<>
+    bool: 1,2,35,4
+  33	bar[32]	foo<>
+    bool: 1,2,36,4
+  34	bar[33]	foo<>
+    bool: 1,2,37,4
+  35	bar[34]	foo<>
+    bool: 1,2,38,4
+  36	bar[35]	foo<>
+    bool: 1,2,39,4
+  37	bar[36]	foo<>
+    bool: 1,2,40,4
+  38	bar[37]	foo<>
+    bool: 1,2,41,4
+  39	bar[38]	foo<>
+    bool: 1,2,42,4
+  40	bar[39]	foo<>
+    bool: 1,2,43,4
+  41	bar[40]	foo<>
+    bool: 1,2,44,4
+  42	bar[41]	foo<>
+    bool: 1,2,45,4
+  43	bar[42]	foo<>
+    bool: 1,2,46,4
+  44	bar[43]	foo<>
+    bool: 1,2,47,4
+  45	bar[44]	foo<>
+    bool: 1,2,48,4
+  46	bar[45]	foo<>
+    bool: 1,2,49,4
+  47	bar[46]	foo<>
+    bool: 1,2,50,4
+  48	bar[47]	foo<>
+    bool: 1,2,51,4
+  49	bar[48]	foo<>
+    bool: 1,2,52,4
+  50	bar[49]	foo<>
+    bool: 1,2,53,4
+  51	bar[50]	foo<>
+    bool: 1,2,54,4
+  52	bar[51]	foo<>
+    bool: 1,2,55,4
+  53	bar[52]	foo<>
+    bool: 1,2,56,4
+  54	bar[53]	foo<>
+    bool: 1,2,57,4
+  55	bar[54]	foo<>
+    bool: 1,2,58,4
+  56	bar[55]	foo<>
+    bool: 1,2,59,4
+  57	bar[56]	foo<>
+    bool: 1,2,60,4
+  58	bar[57]	foo<>
+    bool: 1,2,61,4
+  59	bar[58]	foo<>
+    bool: 1,2,62,4
+  60	bar[59]	foo<>
+    bool: 1,2,63,4
+  61	bar[60]	foo<>
+    bool: 1,2,64,4
+  62	bar[61]	foo<>
+    bool: 1,2,65,4
+  63	bar[62]	foo<>
+    bool: 1,2,66,4
+  64	bar[63]	foo<>
+    bool: 1,2,67,4
+  65	bar[64]	foo<>
+    bool: 1,2,68,4
+  66	bar[65]	foo<>
+    bool: 1,2,69,4
+  67	bar[66]	foo<>
+    bool: 1,2,70,4
+  68	bar[67]	foo<>
+    bool: 1,2,71,4
+  69	bar[68]	foo<>
+    bool: 1,2,72,4
+  70	bar[69]	foo<>
+    bool: 1,2,73,4
+  71	bar[70]	foo<>
+    bool: 1,2,74,4
+  72	bar[71]	foo<>
+    bool: 1,2,75,4
+  73	bar[72]	foo<>
+    bool: 1,2,76,4
+  74	bar[73]	foo<>
+    bool: 1,2,77,4
+  75	bar[74]	foo<>
+    bool: 1,2,78,4
+  76	bar[75]	foo<>
+    bool: 1,2,79,4
+  77	bar[76]	foo<>
+    bool: 1,2,80,4
+  78	bar[77]	foo<>
+    bool: 1,2,81,4
+  79	bar[78]	foo<>
+    bool: 1,2,82,4
+  80	bar[79]	foo<>
+    bool: 1,2,83,4
+  81	bar[80]	foo<>
+    bool: 1,2,84,4
+  82	bar[81]	foo<>
+    bool: 1,2,85,4
+  83	bar[82]	foo<>
+    bool: 1,2,86,4
+  84	bar[83]	foo<>
+    bool: 1,2,87,4
+  85	bar[84]	foo<>
+    bool: 1,2,88,4
+  86	bar[85]	foo<>
+    bool: 1,2,89,4
+  87	bar[86]	foo<>
+    bool: 1,2,90,4
+  88	bar[87]	foo<>
+    bool: 1,2,91,4
+  89	bar[88]	foo<>
+    bool: 1,2,92,4
+  90	bar[89]	foo<>
+    bool: 1,2,93,4
+  91	bar[90]	foo<>
+    bool: 1,2,94,4
+  92	bar[91]	foo<>
+    bool: 1,2,95,4
+  93	bar[92]	foo<>
+    bool: 1,2,96,4
+  94	bar[93]	foo<>
+    bool: 1,2,97,4
+  95	bar[94]	foo<>
+    bool: 1,2,98,4
+  96	bar[95]	foo<>
+    bool: 1,2,99,4
+  97	bar[96]	foo<>
+    bool: 1,2,100,4
+  98	bar[97]	foo<>
+    bool: 1,2,101,4
+  99	bar[98]	foo<>
+    bool: 1,2,102,4
+  100	bar[99]	foo<>
+    bool: 1,2,103,4
+  101	bar[100]	foo<>
+    bool: 1,2,104,4
+  102	bar[101]	foo<>
+    bool: 1,2,105,4
+  103	bar[102]	foo<>
+    bool: 1,2,106,4
+  104	bar[103]	foo<>
+    bool: 1,2,107,4
+  105	bar[104]	foo<>
+    bool: 1,2,108,4
+  106	bar[105]	foo<>
+    bool: 1,2,109,4
+  107	bar[106]	foo<>
+    bool: 1,2,110,4
+  108	bar[107]	foo<>
+    bool: 1,2,111,4
+  109	bar[108]	foo<>
+    bool: 1,2,112,4
+  110	bar[109]	foo<>
+    bool: 1,2,113,4
+  111	bar[110]	foo<>
+    bool: 1,2,114,4
+  112	bar[111]	foo<>
+    bool: 1,2,115,4
+  113	bar[112]	foo<>
+    bool: 1,2,116,4
+  114	bar[113]	foo<>
+    bool: 1,2,117,4
+  115	bar[114]	foo<>
+    bool: 1,2,118,4
+  116	bar[115]	foo<>
+    bool: 1,2,119,4
+  117	bar[116]	foo<>
+    bool: 1,2,120,4
+  118	bar[117]	foo<>
+    bool: 1,2,121,4
+  119	bar[118]	foo<>
+    bool: 1,2,122,4
+  120	bar[119]	foo<>
+    bool: 1,2,123,4
+  121	bar[120]	foo<>
+    bool: 1,2,124,4
+  122	bar[121]	foo<>
+    bool: 1,2,125,4
+  123	bar[122]	foo<>
+    bool: 1,2,126,4
+  124	bar[123]	foo<>
+    bool: 1,2,127,4
+  125	bar[124]	foo<>
+    bool: 1,2,128,4
+  126	bar[125]	foo<>
+    bool: 1,2,129,4
+  127	bar[126]	foo<>
+    bool: 1,2,130,4
+  128	bar[127]	foo<>
+    bool: 1,2,131,4
+  129	bar[128]	foo<>
+    bool: 1,2,132,4
+  130	bar[129]	foo<>
+    bool: 1,2,133,4
+  131	bar[130]	foo<>
+    bool: 1,2,134,4
+  132	bar[131]	foo<>
+    bool: 1,2,135,4
+  133	bar[132]	foo<>
+    bool: 1,2,136,4
+  134	bar[133]	foo<>
+    bool: 1,2,137,4
+  135	bar[134]	foo<>
+    bool: 1,2,138,4
+  136	bar[135]	foo<>
+    bool: 1,2,139,4
+  137	bar[136]	foo<>
+    bool: 1,2,140,4
+  138	bar[137]	foo<>
+    bool: 1,2,141,4
+  139	bar[138]	foo<>
+    bool: 1,2,142,4
+  140	bar[139]	foo<>
+    bool: 1,2,143,4
+  141	bar[140]	foo<>
+    bool: 1,2,144,4
+  142	bar[141]	foo<>
+    bool: 1,2,145,4
+  143	bar[142]	foo<>
+    bool: 1,2,146,4
+  144	bar[143]	foo<>
+    bool: 1,2,147,4
+  145	bar[144]	foo<>
+    bool: 1,2,148,4
+  146	bar[145]	foo<>
+    bool: 1,2,149,4
+  147	bar[146]	foo<>
+    bool: 1,2,150,4
+  148	bar[147]	foo<>
+    bool: 1,2,151,4
+  149	bar[148]	foo<>
+    bool: 1,2,152,4
+  150	bar[149]	foo<>
+    bool: 1,2,153,4
+  151	bar[150]	foo<>
+    bool: 1,2,154,4
+  152	bar[151]	foo<>
+    bool: 1,2,155,4
+  153	bar[152]	foo<>
+    bool: 1,2,156,4
+  154	bar[153]	foo<>
+    bool: 1,2,157,4
+  155	bar[154]	foo<>
+    bool: 1,2,158,4
+  156	bar[155]	foo<>
+    bool: 1,2,159,4
+  157	bar[156]	foo<>
+    bool: 1,2,160,4
+  158	bar[157]	foo<>
+    bool: 1,2,161,4
+  159	bar[158]	foo<>
+    bool: 1,2,162,4
+  160	bar[159]	foo<>
+    bool: 1,2,163,4
+  161	bar[160]	foo<>
+    bool: 1,2,164,4
+  162	bar[161]	foo<>
+    bool: 1,2,165,4
+  163	bar[162]	foo<>
+    bool: 1,2,166,4
+  164	bar[163]	foo<>
+    bool: 1,2,167,4
+  165	bar[164]	foo<>
+    bool: 1,2,168,4
+  166	bar[165]	foo<>
+    bool: 1,2,169,4
+  167	bar[166]	foo<>
+    bool: 1,2,170,4
+  168	bar[167]	foo<>
+    bool: 1,2,171,4
+  169	bar[168]	foo<>
+    bool: 1,2,172,4
+  170	bar[169]	foo<>
+    bool: 1,2,173,4
+  171	bar[170]	foo<>
+    bool: 1,2,174,4
+  172	bar[171]	foo<>
+    bool: 1,2,175,4
+  173	bar[172]	foo<>
+    bool: 1,2,176,4
+  174	bar[173]	foo<>
+    bool: 1,2,177,4
+  175	bar[174]	foo<>
+    bool: 1,2,178,4
+  176	bar[175]	foo<>
+    bool: 1,2,179,4
+  177	bar[176]	foo<>
+    bool: 1,2,180,4
+  178	bar[177]	foo<>
+    bool: 1,2,181,4
+  179	bar[178]	foo<>
+    bool: 1,2,182,4
+  180	bar[179]	foo<>
+    bool: 1,2,183,4
+  181	bar[180]	foo<>
+    bool: 1,2,184,4
+  182	bar[181]	foo<>
+    bool: 1,2,185,4
+  183	bar[182]	foo<>
+    bool: 1,2,186,4
+  184	bar[183]	foo<>
+    bool: 1,2,187,4
+  185	bar[184]	foo<>
+    bool: 1,2,188,4
+  186	bar[185]	foo<>
+    bool: 1,2,189,4
+  187	bar[186]	foo<>
+    bool: 1,2,190,4
+  188	bar[187]	foo<>
+    bool: 1,2,191,4
+  189	bar[188]	foo<>
+    bool: 1,2,192,4
+  190	bar[189]	foo<>
+    bool: 1,2,193,4
+  191	bar[190]	foo<>
+    bool: 1,2,194,4
+  192	bar[191]	foo<>
+    bool: 1,2,195,4
+  193	bar[192]	foo<>
+    bool: 1,2,196,4
+  194	bar[193]	foo<>
+    bool: 1,2,197,4
+  195	bar[194]	foo<>
+    bool: 1,2,198,4
+  196	bar[195]	foo<>
+    bool: 1,2,199,4
+  197	bar[196]	foo<>
+    bool: 1,2,200,4
+  198	bar[197]	foo<>
+    bool: 1,2,201,4
+  199	bar[198]	foo<>
+    bool: 1,2,202,4
+  200	bar[199]	foo<>
+    bool: 1,2,203,4
+  201	bar[200]	foo<>
+    bool: 1,2,204,4
+  202	bar[201]	foo<>
+    bool: 1,2,205,4
+  203	bar[202]	foo<>
+    bool: 1,2,206,4
+  204	bar[203]	foo<>
+    bool: 1,2,207,4
+  205	bar[204]	foo<>
+    bool: 1,2,208,4
+  206	bar[205]	foo<>
+    bool: 1,2,209,4
+  207	bar[206]	foo<>
+    bool: 1,2,210,4
+  208	bar[207]	foo<>
+    bool: 1,2,211,4
+  209	bar[208]	foo<>
+    bool: 1,2,212,4
+  210	bar[209]	foo<>
+    bool: 1,2,213,4
+  211	bar[210]	foo<>
+    bool: 1,2,214,4
+  212	bar[211]	foo<>
+    bool: 1,2,215,4
+  213	bar[212]	foo<>
+    bool: 1,2,216,4
+  214	bar[213]	foo<>
+    bool: 1,2,217,4
+  215	bar[214]	foo<>
+    bool: 1,2,218,4
+  216	bar[215]	foo<>
+    bool: 1,2,219,4
+  217	bar[216]	foo<>
+    bool: 1,2,220,4
+  218	bar[217]	foo<>
+    bool: 1,2,221,4
+  219	bar[218]	foo<>
+    bool: 1,2,222,4
+  220	bar[219]	foo<>
+    bool: 1,2,223,4
+  221	bar[220]	foo<>
+    bool: 1,2,224,4
+  222	bar[221]	foo<>
+    bool: 1,2,225,4
+  223	bar[222]	foo<>
+    bool: 1,2,226,4
+  224	bar[223]	foo<>
+    bool: 1,2,227,4
+  225	bar[224]	foo<>
+    bool: 1,2,228,4
+  226	bar[225]	foo<>
+    bool: 1,2,229,4
+  227	bar[226]	foo<>
+    bool: 1,2,230,4
+  228	bar[227]	foo<>
+    bool: 1,2,231,4
+  229	bar[228]	foo<>
+    bool: 1,2,232,4
+  230	bar[229]	foo<>
+    bool: 1,2,233,4
+  231	bar[230]	foo<>
+    bool: 1,2,234,4
+  232	bar[231]	foo<>
+    bool: 1,2,235,4
+  233	bar[232]	foo<>
+    bool: 1,2,236,4
+  234	bar[233]	foo<>
+    bool: 1,2,237,4
+  235	bar[234]	foo<>
+    bool: 1,2,238,4
+  236	bar[235]	foo<>
+    bool: 1,2,239,4
+  237	bar[236]	foo<>
+    bool: 1,2,240,4
+  238	bar[237]	foo<>
+    bool: 1,2,241,4
+  239	bar[238]	foo<>
+    bool: 1,2,242,4
+  240	bar[239]	foo<>
+    bool: 1,2,243,4
+  241	bar[240]	foo<>
+    bool: 1,2,244,4
+  242	bar[241]	foo<>
+    bool: 1,2,245,4
+  243	bar[242]	foo<>
+    bool: 1,2,246,4
+  244	bar[243]	foo<>
+    bool: 1,2,247,4
+  245	bar[244]	foo<>
+    bool: 1,2,248,4
+  246	bar[245]	foo<>
+    bool: 1,2,249,4
+  247	bar[246]	foo<>
+    bool: 1,2,250,4
+  248	bar[247]	foo<>
+    bool: 1,2,251,4
+  249	bar[248]	foo<>
+    bool: 1,2,252,4
+  250	bar[249]	foo<>
+    bool: 1,2,253,4
+  251	bar[250]	foo<>
+    bool: 1,2,254,4
+  252	bar[251]	foo<>
+    bool: 1,2,255,4
+  253	bar[252]	foo<>
+    bool: 1,2,256,4
+  254	bar[253]	foo<>
+    bool: 1,2,257,4
+  255	bar[254]	foo<>
+    bool: 1,2,258,4
+  256	bar[255]	foo<>
+    bool: 1,2,259,4
+  257	bar[256]	foo<>
+    bool: 1,2,260,4
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	bar[0].V	
+  4	G	
+  5	bar[1].V	
+  6	bar[2].V	
+  7	bar[3].V	
+  8	bar[4].V	
+  9	bar[5].V	
+  10	bar[6].V	
+  11	bar[7].V	
+  12	bar[8].V	
+  13	bar[9].V	
+  14	bar[10].V	
+  15	bar[11].V	
+  16	bar[12].V	
+  17	bar[13].V	
+  18	bar[14].V	
+  19	bar[15].V	
+  20	bar[16].V	
+  21	bar[17].V	
+  22	bar[18].V	
+  23	bar[19].V	
+  24	bar[20].V	
+  25	bar[21].V	
+  26	bar[22].V	
+  27	bar[23].V	
+  28	bar[24].V	
+  29	bar[25].V	
+  30	bar[26].V	
+  31	bar[27].V	
+  32	bar[28].V	
+  33	bar[29].V	
+  34	bar[30].V	
+  35	bar[31].V	
+  36	bar[32].V	
+  37	bar[33].V	
+  38	bar[34].V	
+  39	bar[35].V	
+  40	bar[36].V	
+  41	bar[37].V	
+  42	bar[38].V	
+  43	bar[39].V	
+  44	bar[40].V	
+  45	bar[41].V	
+  46	bar[42].V	
+  47	bar[43].V	
+  48	bar[44].V	
+  49	bar[45].V	
+  50	bar[46].V	
+  51	bar[47].V	
+  52	bar[48].V	
+  53	bar[49].V	
+  54	bar[50].V	
+  55	bar[51].V	
+  56	bar[52].V	
+  57	bar[53].V	
+  58	bar[54].V	
+  59	bar[55].V	
+  60	bar[56].V	
+  61	bar[57].V	
+  62	bar[58].V	
+  63	bar[59].V	
+  64	bar[60].V	
+  65	bar[61].V	
+  66	bar[62].V	
+  67	bar[63].V	
+  68	bar[64].V	
+  69	bar[65].V	
+  70	bar[66].V	
+  71	bar[67].V	
+  72	bar[68].V	
+  73	bar[69].V	
+  74	bar[70].V	
+  75	bar[71].V	
+  76	bar[72].V	
+  77	bar[73].V	
+  78	bar[74].V	
+  79	bar[75].V	
+  80	bar[76].V	
+  81	bar[77].V	
+  82	bar[78].V	
+  83	bar[79].V	
+  84	bar[80].V	
+  85	bar[81].V	
+  86	bar[82].V	
+  87	bar[83].V	
+  88	bar[84].V	
+  89	bar[85].V	
+  90	bar[86].V	
+  91	bar[87].V	
+  92	bar[88].V	
+  93	bar[89].V	
+  94	bar[90].V	
+  95	bar[91].V	
+  96	bar[92].V	
+  97	bar[93].V	
+  98	bar[94].V	
+  99	bar[95].V	
+  100	bar[96].V	
+  101	bar[97].V	
+  102	bar[98].V	
+  103	bar[99].V	
+  104	bar[100].V	
+  105	bar[101].V	
+  106	bar[102].V	
+  107	bar[103].V	
+  108	bar[104].V	
+  109	bar[105].V	
+  110	bar[106].V	
+  111	bar[107].V	
+  112	bar[108].V	
+  113	bar[109].V	
+  114	bar[110].V	
+  115	bar[111].V	
+  116	bar[112].V	
+  117	bar[113].V	
+  118	bar[114].V	
+  119	bar[115].V	
+  120	bar[116].V	
+  121	bar[117].V	
+  122	bar[118].V	
+  123	bar[119].V	
+  124	bar[120].V	
+  125	bar[121].V	
+  126	bar[122].V	
+  127	bar[123].V	
+  128	bar[124].V	
+  129	bar[125].V	
+  130	bar[126].V	
+  131	bar[127].V	
+  132	bar[128].V	
+  133	bar[129].V	
+  134	bar[130].V	
+  135	bar[131].V	
+  136	bar[132].V	
+  137	bar[133].V	
+  138	bar[134].V	
+  139	bar[135].V	
+  140	bar[136].V	
+  141	bar[137].V	
+  142	bar[138].V	
+  143	bar[139].V	
+  144	bar[140].V	
+  145	bar[141].V	
+  146	bar[142].V	
+  147	bar[143].V	
+  148	bar[144].V	
+  149	bar[145].V	
+  150	bar[146].V	
+  151	bar[147].V	
+  152	bar[148].V	
+  153	bar[149].V	
+  154	bar[150].V	
+  155	bar[151].V	
+  156	bar[152].V	
+  157	bar[153].V	
+  158	bar[154].V	
+  159	bar[155].V	
+  160	bar[156].V	
+  161	bar[157].V	
+  162	bar[158].V	
+  163	bar[159].V	
+  164	bar[160].V	
+  165	bar[161].V	
+  166	bar[162].V	
+  167	bar[163].V	
+  168	bar[164].V	
+  169	bar[165].V	
+  170	bar[166].V	
+  171	bar[167].V	
+  172	bar[168].V	
+  173	bar[169].V	
+  174	bar[170].V	
+  175	bar[171].V	
+  176	bar[172].V	
+  177	bar[173].V	
+  178	bar[174].V	
+  179	bar[175].V	
+  180	bar[176].V	
+  181	bar[177].V	
+  182	bar[178].V	
+  183	bar[179].V	
+  184	bar[180].V	
+  185	bar[181].V	
+  186	bar[182].V	
+  187	bar[183].V	
+  188	bar[184].V	
+  189	bar[185].V	
+  190	bar[186].V	
+  191	bar[187].V	
+  192	bar[188].V	
+  193	bar[189].V	
+  194	bar[190].V	
+  195	bar[191].V	
+  196	bar[192].V	
+  197	bar[193].V	
+  198	bar[194].V	
+  199	bar[195].V	
+  200	bar[196].V	
+  201	bar[197].V	
+  202	bar[198].V	
+  203	bar[199].V	
+  204	bar[200].V	
+  205	bar[201].V	
+  206	bar[202].V	
+  207	bar[203].V	
+  208	bar[204].V	
+  209	bar[205].V	
+  210	bar[206].V	
+  211	bar[207].V	
+  212	bar[208].V	
+  213	bar[209].V	
+  214	bar[210].V	
+  215	bar[211].V	
+  216	bar[212].V	
+  217	bar[213].V	
+  218	bar[214].V	
+  219	bar[215].V	
+  220	bar[216].V	
+  221	bar[217].V	
+  222	bar[218].V	
+  223	bar[219].V	
+  224	bar[220].V	
+  225	bar[221].V	
+  226	bar[222].V	
+  227	bar[223].V	
+  228	bar[224].V	
+  229	bar[225].V	
+  230	bar[226].V	
+  231	bar[227].V	
+  232	bar[228].V	
+  233	bar[229].V	
+  234	bar[230].V	
+  235	bar[231].V	
+  236	bar[232].V	
+  237	bar[233].V	
+  238	bar[234].V	
+  239	bar[235].V	
+  240	bar[236].V	
+  241	bar[237].V	
+  242	bar[238].V	
+  243	bar[239].V	
+  244	bar[240].V	
+  245	bar[241].V	
+  246	bar[242].V	
+  247	bar[243].V	
+  248	bar[244].V	
+  249	bar[245].V	
+  250	bar[246].V	
+  251	bar[247].V	
+  252	bar[248].V	
+  253	bar[249].V	
+  254	bar[250].V	
+  255	bar[251].V	
+  256	bar[252].V	
+  257	bar[253].V	
+  258	bar[254].V	
+  259	bar[255].V	
+  260	bar[256].V	
 }

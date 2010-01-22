@@ -167,26 +167,26 @@ In namespace "", we have: {
         x = bool^0 = foo<>::x (3) 
         y = bool^0 = foo<>::y (4) 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::x
-        4	foo<>::y
-        5	foo<>::a
-        6	foo<>::b
-        7	foo<>::c
-        8	foo<>::d
-        9	foo<>::e
-        10	foo<>::w[0]
-        11	foo<>::w[1]
-        12	foo<>::w[2]
-        13	foo<>::w[3]
-        14	foo<>::w[4]
-        15	foo<>::w[5]
-        16	foo<>::w[6]
-        17	foo<>::w[7]
-        18	foo<>::w[8]
-        19	foo<>::w[9]
+        bool instance pool: (4 ports)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::x	
+        4	foo<>::y	
+        5	foo<>::a	
+        6	foo<>::b	
+        7	foo<>::c	
+        8	foo<>::d	
+        9	foo<>::e	
+        10	foo<>::w[0]	
+        11	foo<>::w[1]	
+        12	foo<>::w[2]	
+        13	foo<>::w[3]	
+        14	foo<>::w[4]	
+        15	foo<>::w[5]	
+        16	foo<>::w[6]	
+        17	foo<>::w[7]	
+        18	foo<>::w[8]	
+        19	foo<>::w[9]	
         resolved prs:
         w[0] -> x-
         w[0] -> x-
@@ -220,11 +220,15 @@ footprint: {
     y = bool^0 = bar.y (4) 
   )
   Created state:
-  process instance pool:
-  1	bar
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	bar.x
-  4	bar.y
+  process instance pool: (0 ports)
+  1	bar	foo<>
+    bool: 1,2,3,4
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	bar.x	
+  4	bar.y	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 15)
 }

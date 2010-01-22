@@ -3,6 +3,27 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-09:
+	  Completely eliminated use of port_member_context and
+		port_collection_context, and all functions that use them.
+		Marked a lot of code for obsolescence and deletion.
+	  footprint::sift scope/port aliases on loading of object
+		during reconstruction (no reason to be conditional).
+	  bug fix: alias_actuals.tcc: now need to load-one actuals,
+		not just pointer, to guarantee that it can be used
+		during footprint (instance_pool) reconstruction.
+	  bug fix: port_alias_tracker_base::__assign_frame, do not 
+		assume that first alias in reference set is direct
+		port alias; search for the first one (any one).
+	  bug fixes: various indexes into instance_pools now need to
+		be adjusted to 0-indexed instead of old 1-indexed
+		b/c no longer have a pool sentinel at index 0.
+	  Disabled all back end tests, keeping only create tests.
+		Re-validated ALL create tests!  Looking good!
+
+
 2010-01-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-08:

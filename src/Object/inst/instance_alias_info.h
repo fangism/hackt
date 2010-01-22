@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.27.2.3 2010/01/20 02:18:18 fang Exp $
+	$Id: instance_alias_info.h,v 1.27.2.4 2010/01/22 23:41:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -23,8 +23,10 @@ namespace HAC {
 namespace entity {
 struct dump_flags;
 class footprint;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 class port_collection_context;
 class port_member_context;
+#endif
 class instance_alias_info_actuals;
 struct alias_visitor;
 struct alias_printer;
@@ -369,6 +371,7 @@ public:
 #endif
 		) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	/// called recursively
 	void
 	assign_footprint_frame(footprint_frame&,
@@ -377,11 +380,14 @@ public:
 	void
 	construct_port_context(port_collection_context&, 
 		const footprint_frame&, const size_t) const;
+#endif
 
 private:
 	using substructure_parent_type::__allocate_subinstance_footprint;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 public:
 	using substructure_parent_type::__construct_port_context;
+#endif
 
 public:
 	static

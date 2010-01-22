@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.5 2010/01/20 02:18:13 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.6 2010/01/22 23:41:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,10 +18,12 @@
 #include "Object/traits/int_traits.h"
 #include "Object/traits/enum_traits.h"
 #include "util/IO_utils.tcc"
+#include "util/indent.h"
 #include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
+using util::auto_indent;
 
 //=============================================================================
 // class footprint_frame_map method definitions
@@ -236,7 +238,11 @@ footprint_frame::dump_id_map(const footprint_frame_map_type& m, ostream& o,
 		const char* const str) {
 	typedef	footprint_frame_map_type::const_iterator	const_iterator;
 if (!m.empty()) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	o << endl << auto_indent << str << ": ";
+#else
 	o << endl << '\t' << str << ": ";
+#endif
 	const_iterator i(m.begin());
 	const const_iterator e(m.end());
 	o << *i;

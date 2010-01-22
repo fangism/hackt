@@ -133,12 +133,14 @@ In namespace "", we have: {
           a = bool^0 = alt_e1of2<>::a.e (2) 
         )
         Created state:
-        process instance pool:
-        1	alt_e1of2<>::a
-        2	alt_e1of2<>::e
-        bool instance pool:
-        1	alt_e1of2<>::a.t
-        2	alt_e1of2<>::a.e
+        process instance pool: (2 ports)
+        1	alt_e1of2<>::a	e1of2<>
+          bool: 1,2
+        2	alt_e1of2<>::e	bp<>
+          bool: 2
+        bool instance pool: (2 ports)
+        1	alt_e1of2<>::a.t	
+        2	alt_e1of2<>::a.e	
         bool port aliases:
         2: alt_e1of2<>::a.e = alt_e1of2<>::e.a
       }
@@ -169,13 +171,14 @@ In namespace "", we have: {
           e = bool^0 = blah2<>::l.e (2) @[ iscomb ] 
         )
         Created state:
-        process instance pool:
-        1	blah2<>::l
-        bool instance pool:
-        1	blah2<>::l.t
-        2	blah2<>::l.e @[ iscomb ]
-        3	blah2<>::!GND
-        4	blah2<>::!Vdd
+        process instance pool: (1 ports)
+        1	blah2<>::l	e1of2<>
+          bool: 1,2
+        bool instance pool: (4 ports)
+        1	blah2<>::l.t	
+        2	blah2<>::l.e @[ iscomb ]	
+        3	blah2<>::!GND	
+        4	blah2<>::!Vdd	
       }
       }
 
@@ -226,16 +229,22 @@ In namespace "", we have: {
           )
         )
         Created state:
-        process instance pool:
-        1	blah3<>::in
-        2	blah3<>::in_a
-        3	blah3<>::in.e
-        4	blah3<>::ma
-        bool instance pool:
-        1	blah3<>::in_a.t
-        2	blah3<>::in_a.e @[ iscomb ]
-        3	blah3<>::!GND
-        4	blah3<>::!Vdd
+        process instance pool: (3 ports)
+        1	blah3<>::in	alt_e1of2<>
+          process: 2,3
+          bool: 1,2
+        2	blah3<>::in_a	e1of2<>
+          bool: 1,2
+        3	blah3<>::in.e	bp<>
+          bool: 2
+        4	blah3<>::ma	blah2<>
+          process: 2
+          bool: 1,2,3,4
+        bool instance pool: (4 ports)
+        1	blah3<>::in_a.t	
+        2	blah3<>::in_a.e @[ iscomb ]	
+        3	blah3<>::!GND	
+        4	blah3<>::!Vdd	
         bool port aliases:
         2: blah3<>::in.a.e = blah3<>::in.e.a @[ iscomb ]
       }
@@ -254,8 +263,8 @@ In namespace "", we have: {
       footprint: {
         a = bool^0 = bp<>::a (1) 
         Created state:
-        bool instance pool:
-        1	bp<>::a
+        bool instance pool: (1 ports)
+        1	bp<>::a	
       }
       }
 
@@ -276,9 +285,9 @@ In namespace "", we have: {
         e = bool^0 = e1of2<>::e (2) 
         t = bool^0 = e1of2<>::t (1) 
         Created state:
-        bool instance pool:
-        1	e1of2<>::t
-        2	e1of2<>::e
+        bool instance pool: (2 ports)
+        1	e1of2<>::t	
+        2	e1of2<>::e	
       }
       }
 
@@ -314,16 +323,25 @@ In namespace "", we have: {
           )
         )
         Created state:
-        process instance pool:
-        1	obox<>::bar
-        2	obox<>::bar.in
-        3	obox<>::bar.in.a
-        4	obox<>::bar.in.e
-        bool instance pool:
-        1	obox<>::!GND
-        2	obox<>::!Vdd
-        3	obox<>::bar.in.a.t
-        4	obox<>::bar.in.a.e @[ iscomb ]
+        process instance pool: (0 ports)
+        1	obox<>::bar	blah3<>
+          process: 2,3,4
+          bool: 3,4,1,2
+        2	obox<>::bar.in	alt_e1of2<>
+          process: 3,4
+          bool: 3,4
+        3	obox<>::bar.in.a	e1of2<>
+          bool: 3,4
+        4	obox<>::bar.in.e	bp<>
+          bool: 4
+        private sub-process index map:
+          (1 -> 0)
+          (5 -> 1)
+        bool instance pool: (2 ports)
+        1	obox<>::!GND	
+        2	obox<>::!Vdd	
+        3	obox<>::bar.in.a.t	
+        4	obox<>::bar.in.a.e @[ iscomb ]	
       }
       }
 
@@ -341,9 +359,16 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	foo
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	foo	obox<>
+    bool: 1,2
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 5)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 2)
 }

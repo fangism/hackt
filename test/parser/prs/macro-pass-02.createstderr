@@ -140,12 +140,12 @@ In namespace "", we have: {
         g = bool^0 = passn<>::g (3) 
         s = bool^0 = passn<>::s (4) 
         Created state:
-        bool instance pool:
-        1	passn<>::!GND
-        2	passn<>::!Vdd
-        3	passn<>::g
-        4	passn<>::s
-        5	passn<>::d
+        bool instance pool: (5 ports)
+        1	passn<>::!GND	
+        2	passn<>::!Vdd	
+        3	passn<>::g	
+        4	passn<>::s	
+        5	passn<>::d	
         resolved macros:
         passn(g,s,d)
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -206,16 +206,18 @@ In namespace "", we have: {
         )
         s = bool^0 = passnp<>::s (4) 
         Created state:
-        process instance pool:
-        1	passnp<>::n
-        2	passnp<>::p
-        bool instance pool:
-        1	passnp<>::!GND
-        2	passnp<>::!Vdd
-        3	passnp<>::g
-        4	passnp<>::s
-        5	passnp<>::d
-        6	passnp<>::_g
+        process instance pool: (0 ports)
+        1	passnp<>::n	passn<>
+          bool: 1,2,3,4,5
+        2	passnp<>::p	passp<>
+          bool: 1,2,6,4,5
+        bool instance pool: (6 ports)
+        1	passnp<>::!GND	
+        2	passnp<>::!Vdd	
+        3	passnp<>::g	
+        4	passnp<>::s	
+        5	passnp<>::d	
+        6	passnp<>::_g	
       }
       }
 
@@ -252,12 +254,12 @@ In namespace "", we have: {
         g = bool^0 = passp<>::g (3) 
         s = bool^0 = passp<>::s (4) 
         Created state:
-        bool instance pool:
-        1	passp<>::!GND
-        2	passp<>::!Vdd
-        3	passp<>::g
-        4	passp<>::s
-        5	passp<>::d
+        bool instance pool: (5 ports)
+        1	passp<>::!GND	
+        2	passp<>::!Vdd	
+        3	passp<>::g	
+        4	passp<>::s	
+        5	passp<>::d	
         resolved macros:
         passp(g,s,d)
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -299,21 +301,27 @@ footprint: {
     d = bool^0 = _p_.d (8) 
   )
   Created state:
-  process instance pool:
-  1	_n_
-  2	_p_
-  3	_np_
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	_n_.g
-  4	_n_.s
-  5	_n_.d
-  6	_p_.g
-  7	_p_.s
-  8	_p_.d
-  9	_np_.g
-  10	_np_._g
-  11	_np_.s
-  12	_np_.d
+  process instance pool: (0 ports)
+  1	_n_	passn<>
+    bool: 1,2,3,4,5
+  2	_p_	passp<>
+    bool: 1,2,6,7,8
+  3	_np_	passnp<>
+    bool: 1,2,9,11,12,10
+  private sub-process index map:
+    (3 -> 0)
+    (4 -> 2)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	_n_.g	
+  4	_n_.s	
+  5	_n_.d	
+  6	_p_.g	
+  7	_p_.s	
+  8	_p_.d	
+  9	_np_.g	
+  10	_np_._g	
+  11	_np_.s	
+  12	_np_.d	
 }

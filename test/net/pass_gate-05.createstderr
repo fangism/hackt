@@ -61,13 +61,13 @@ footprint: {
   g = bool^0 = g (3) 
   s = bool^0 = s (4) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	g
-  4	s
-  5	d
-  6	_g
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	g	
+  4	s	
+  5	d	
+  6	_g	
   resolved macros:
   passn<;hvt>(g,s,d)
   passp<;lvt>(_g,s,d)

@@ -138,11 +138,11 @@ In namespace "", we have: {
         !Vdd = bool^0 = bool_sink_alt<>::!Vdd (2) 
         B = channel chan?(bool<>)^0 = bool_sink_alt<>::B (1) 
         Created state:
-        channel instance pool:
-        1	bool_sink_alt<>::B
-        bool instance pool:
-        1	bool_sink_alt<>::!GND
-        2	bool_sink_alt<>::!Vdd
+        channel instance pool: (1 ports)
+        1	bool_sink_alt<>::B	
+        bool instance pool: (2 ports)
+        1	bool_sink_alt<>::!GND	
+        2	bool_sink_alt<>::!Vdd	
         resolved concurrent actions:
           *[
             B?
@@ -186,11 +186,11 @@ In namespace "", we have: {
           B = channel chan?(bool<>)^0 = bool_sink_alt_delay<5>::B (1) 
           D = preal^0 value: 5
           Created state:
-          channel instance pool:
-          1	bool_sink_alt_delay<5>::B
-          bool instance pool:
-          1	bool_sink_alt_delay<5>::!GND
-          2	bool_sink_alt_delay<5>::!Vdd
+          channel instance pool: (1 ports)
+          1	bool_sink_alt_delay<5>::B	
+          bool instance pool: (2 ports)
+          1	bool_sink_alt_delay<5>::!GND	
+          2	bool_sink_alt_delay<5>::!Vdd	
           resolved concurrent actions:
             *[
               [after=5] B?
@@ -235,11 +235,11 @@ In namespace "", we have: {
           B = channel chan?(bool<>)^0 = bool_sink_alt_once<4>::B (1) 
           N = pint^0 value: 4
           Created state:
-          channel instance pool:
-          1	bool_sink_alt_once<4>::B
-          bool instance pool:
-          1	bool_sink_alt_once<4>::!GND
-          2	bool_sink_alt_once<4>::!Vdd
+          channel instance pool: (1 ports)
+          1	bool_sink_alt_once<4>::B	
+          bool instance pool: (2 ports)
+          1	bool_sink_alt_once<4>::!GND	
+          2	bool_sink_alt_once<4>::!Vdd	
           resolved concurrent actions:
             sequential: {
               B?
@@ -284,15 +284,21 @@ footprint: {
     B = channel chan?(bool<>)^0 = C.B (3) 
   )
   Created state:
-  process instance pool:
-  1	A
-  2	B
-  3	C
-  channel instance pool:
-  1	A.B
-  2	B.B
-  3	C.B
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	A	bool_sink_alt<>
+    channel: 1
+    bool: 1,2
+  2	B	bool_sink_alt_delay<5>
+    channel: 2
+    bool: 1,2
+  3	C	bool_sink_alt_once<4>
+    channel: 3
+    bool: 1,2
+  channel instance pool: (0 ports)
+  1	A.B	
+  2	B.B	
+  3	C.B	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

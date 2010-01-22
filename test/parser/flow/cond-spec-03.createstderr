@@ -65,10 +65,10 @@ footprint: {
       [2] = z[2] (5) 
     }
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	z[0]
-  4	z[1]
-  5	z[2]
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	z[0]	
+  4	z[1]	
+  5	z[2]	
 }

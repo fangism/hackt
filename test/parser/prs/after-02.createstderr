@@ -79,11 +79,11 @@ In namespace "", we have: {
         a = bool^0 = aftershave<>::a (3) 
         b = bool^0 = aftershave<>::b (4) 
         Created state:
-        bool instance pool:
-        1	aftershave<>::!GND
-        2	aftershave<>::!Vdd
-        3	aftershave<>::a
-        4	aftershave<>::b
+        bool instance pool: (2 ports)
+        1	aftershave<>::!GND	
+        2	aftershave<>::!Vdd	
+        3	aftershave<>::a	
+        4	aftershave<>::b	
         resolved prs:
         a -> b- [after=12]
         ~a -> b+ [after=12]
@@ -106,9 +106,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	xyz
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	xyz	aftershave<>
+    bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 2)
 }

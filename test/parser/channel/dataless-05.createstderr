@@ -101,12 +101,12 @@ In namespace "", we have: {
         in = channel chan?()^0 = boring<>::in (1) 
         out = channel chan!()^0 = boring<>::out (2) 
         Created state:
-        channel instance pool:
-        1	boring<>::in
-        2	boring<>::out
-        bool instance pool:
-        1	boring<>::!GND
-        2	boring<>::!Vdd
+        channel instance pool: (2 ports)
+        1	boring<>::in	
+        2	boring<>::out	
+        bool instance pool: (2 ports)
+        1	boring<>::!GND	
+        2	boring<>::!Vdd	
         resolved concurrent actions:
           concurrent: {
             *[
@@ -147,13 +147,17 @@ footprint: {
     out = channel chan!()^0 = work.out (2) 
   )
   Created state:
-  process instance pool:
-  1	work
-  2	play
-  channel instance pool:
-  1	work.in
-  2	work.out
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	work	boring<>
+    channel: 1,2
+    bool: 1,2
+  2	play	boring<>
+    channel: 2,1
+    bool: 1,2
+  channel instance pool: (0 ports)
+  1	work.in	
+  2	work.out	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

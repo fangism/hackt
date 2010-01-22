@@ -143,15 +143,15 @@ In namespace "", we have: {
         x = bool^0 = bogus<>::x (3) 
         y = bool^0 = bogus<>::y (4) 
         Created state:
-        bool instance pool:
-        1	bogus<>::!GND
-        2	bogus<>::!Vdd
-        3	bogus<>::x
-        4	bogus<>::y
-        5	bogus<>::w
-        6	bogus<>::e[0]
-        7	bogus<>::e[1]
-        8	bogus<>::en
+        bool instance pool: (7 ports)
+        1	bogus<>::!GND	
+        2	bogus<>::!Vdd	
+        3	bogus<>::x	
+        4	bogus<>::y	
+        5	bogus<>::w	
+        6	bogus<>::e[0]	
+        7	bogus<>::e[1]	
+        8	bogus<>::en	
         resolved prs:
         (en & e[0]) & x -> w-
         (en & e[1]) & y -> w-
@@ -187,14 +187,18 @@ footprint: {
     w = bool^0 = A.w (7) 
   )
   Created state:
-  process instance pool:
-  1	A
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	A.x
-  4	A.y
-  5	A.e[0]
-  6	A.e[1]
-  7	A.w
+  process instance pool: (0 ports)
+  1	A	bogus<>
+    bool: 1,2,3,4,7,5,6
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	A.x	
+  4	A.y	
+  5	A.e[0]	
+  6	A.e[1]	
+  7	A.w	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 1)
 }

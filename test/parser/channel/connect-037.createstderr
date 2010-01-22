@@ -81,12 +81,12 @@ In namespace "", we have: {
         B = channel chan(bool<>)^0 = boring<>::B (1) 
         I = channel chan(int<32>)^0 = boring<>::I (2) 
         Created state:
-        channel instance pool:
-        1	boring<>::B
-        2	boring<>::I
-        bool instance pool:
-        1	boring<>::!GND
-        2	boring<>::!Vdd
+        channel instance pool: (2 ports)
+        1	boring<>::B	
+        2	boring<>::I	
+        bool instance pool: (2 ports)
+        1	boring<>::!GND	
+        2	boring<>::!Vdd	
       }
       }
 
@@ -106,12 +106,14 @@ footprint: {
     I = channel chan(int<32>)^0 = lecture.I (2) 
   )
   Created state:
-  process instance pool:
-  1	lecture
-  channel instance pool:
-  1	lecture.B
-  2	lecture.I
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	lecture	boring<>
+    channel: 1,2
+    bool: 1,2
+  channel instance pool: (0 ports)
+  1	lecture.B	
+  2	lecture.I	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

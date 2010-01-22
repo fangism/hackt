@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.6 2008/11/12 03:00:03 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.6.24.1 2010/01/22 23:41:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
@@ -9,6 +9,7 @@
 #include <iosfwd>
 #include "Object/inst/collection_pool.h"
 #include "Object/inst/collection_index_entry.h"
+#include "Object/devel_switches.h"	// for MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "util/boolean_types.h"
 #include "util/size_t.h"
 #include "util/persistent_fwd.h"
@@ -23,7 +24,9 @@ class unroll_context;
 class footprint;
 class footprint_frame;
 class port_alias_tracker;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 class port_member_context;
+#endif
 template <class> class instance_placeholder;
 template <class> class collection_interface;
 template <class> class instance_collection;
@@ -69,9 +72,11 @@ protected:
 	void
 	collect_scope_aliases(port_alias_tracker&) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	assign_footprint_frame(footprint_frame&, 
 		const port_member_context&) const;
+#endif
 
 	good_bool
 	finalize_substructure_aliases(const unroll_context&);
@@ -202,9 +207,11 @@ struct instance_collection_pool_bundle :
 	good_bool
 	finalize_substructure_aliases(const unroll_context&);
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	assign_footprint_frame(footprint_frame&, 
 		const port_member_context&) const;
+#endif
 
 // serialization routines
 	void

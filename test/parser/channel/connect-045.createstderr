@@ -110,19 +110,19 @@ footprint: {
   b = bool^0 = b (3) 
   i = int<2>^0 = i (1) 
   Created state:
-  channel instance pool:
-  1	Y
-  2	Z
-  3	X[0]
-  4	X[1]
-  5	X[2]
-  6	X[3]
-  int instance pool:
-  1	i
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	b
+  channel instance pool: (0 ports)
+  1	Y	
+  2	Z	
+  3	X[0]	
+  4	X[1]	
+  5	X[2]	
+  6	X[3]	
+  int instance pool: (0 ports)
+  1	i	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	b	
   resolved concurrent actions:
     *[
       Y?(b)

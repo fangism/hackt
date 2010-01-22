@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.51 2009/07/02 23:22:49 fang Exp $
+	$Id: instance_collection.tcc,v 1.51.12.1 2010/01/22 23:41:35 fang Exp $
 	TODO: trim includes
  */
 
@@ -1112,6 +1112,7 @@ INSTANCE_COLLECTION_CLASS::connection_loader::operator() (
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Translates port formal placeholders to actual global IDs.  
 	\pre footprint_frame has already been constructed.  
@@ -1141,6 +1142,7 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame&,
 	// only called and managed by the footprint's pools
 	ICE_NEVER_CALL(cerr);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -1703,6 +1705,7 @@ INSTANCE_SCALAR_CLASS::load_reference(istream&) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Translates port formal placeholders to actual global IDs.  
 	\pre footprint_frame has already been constructed.  
@@ -1725,6 +1728,7 @@ INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
 	INVARIANT(pcc.size() == 1);
 	this->the_instance.assign_footprint_frame(ff, pcc, 0);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

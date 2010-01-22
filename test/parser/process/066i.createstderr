@@ -105,15 +105,17 @@ In namespace "", we have: {
           b = bool^0 = bar<>::x.a (3) 
         )
         Created state:
-        process instance pool:
-        1	bar<>::x
-        2	bar<>::y
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
-        3	bar<>::x.a
-        4	bar<>::x.b
-        5	bar<>::y.a
+        process instance pool: (2 ports)
+        1	bar<>::x	foo<>
+          bool: 1,2,3,4
+        2	bar<>::y	foo<>
+          bool: 1,2,5,3
+        bool instance pool: (5 ports)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
+        3	bar<>::x.a	
+        4	bar<>::x.b	
+        5	bar<>::y.a	
         bool port aliases:
         1: bar<>::x.!GND = bar<>::y.!GND = bar<>::!GND
         2: bar<>::x.!Vdd = bar<>::y.!Vdd = bar<>::!Vdd
@@ -146,11 +148,11 @@ In namespace "", we have: {
         a = bool^0 = foo<>::a (3) 
         b = bool^0 = foo<>::b (4) 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::a
-        4	foo<>::b
+        bool instance pool: (4 ports)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::a	
+        4	foo<>::b	
       }
       }
 
@@ -190,16 +192,20 @@ In namespace "", we have: {
           )
         )
         Created state:
-        process instance pool:
-        1	ick<>::q
-        2	ick<>::q.x
-        3	ick<>::q.y
-        bool instance pool:
-        1	ick<>::!GND
-        2	ick<>::!Vdd
-        3	ick<>::q.x.a
-        4	ick<>::q.x.b
-        5	ick<>::q.y.a
+        process instance pool: (3 ports)
+        1	ick<>::q	bar<>
+          process: 2,3
+          bool: 1,2,3,4,5
+        2	ick<>::q.x	foo<>
+          bool: 1,2,3,4
+        3	ick<>::q.y	foo<>
+          bool: 1,2,5,3
+        bool instance pool: (5 ports)
+        1	ick<>::!GND	
+        2	ick<>::!Vdd	
+        3	ick<>::q.x.a	
+        4	ick<>::q.x.b	
+        5	ick<>::q.y.a	
         bool port aliases:
         1: ick<>::q.!GND = ick<>::q.x.!GND = ick<>::q.y.!GND = ick<>::!GND
         2: ick<>::q.!Vdd = ick<>::q.x.!Vdd = ick<>::q.y.!Vdd = ick<>::!Vdd
@@ -237,15 +243,21 @@ footprint: {
     )
   )
   Created state:
-  process instance pool:
-  1	poo
-  2	poo.q
-  3	poo.q.x
-  4	poo.q.y
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	poo.q.x.a
-  4	poo.q.x.b
-  5	poo.q.y.a
+  process instance pool: (0 ports)
+  1	poo	ick<>
+    process: 2,3,4
+    bool: 1,2,3,4,5
+  2	poo.q	bar<>
+    process: 3,4
+    bool: 1,2,3,4,5
+  3	poo.q.x	foo<>
+    bool: 1,2,3,4
+  4	poo.q.y	foo<>
+    bool: 1,2,5,3
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	poo.q.x.a	
+  4	poo.q.x.b	
+  5	poo.q.y.a	
 }

@@ -116,14 +116,14 @@ In namespace "", we have: {
               [2] = foo<{2,3}>::b[2] (7) 
             }
           Created state:
-          bool instance pool:
-          1	foo<{2,3}>::!GND
-          2	foo<{2,3}>::!Vdd
-          3	foo<{2,3}>::a[0]
-          4	foo<{2,3}>::a[1]
-          5	foo<{2,3}>::b[0]
-          6	foo<{2,3}>::b[1]
-          7	foo<{2,3}>::b[2]
+          bool instance pool: (2 ports)
+          1	foo<{2,3}>::!GND	
+          2	foo<{2,3}>::!Vdd	
+          3	foo<{2,3}>::a[0]	
+          4	foo<{2,3}>::a[1]	
+          5	foo<{2,3}>::b[0]	
+          6	foo<{2,3}>::b[1]	
+          7	foo<{2,3}>::b[2]	
         }
       }
       }
@@ -147,9 +147,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	poo
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	poo	foo<{2,3}>
+    bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 5)
 }

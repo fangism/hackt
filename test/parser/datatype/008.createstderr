@@ -61,10 +61,10 @@ footprint: {
   A::foo = int<32>^0 = A::foo (1) 
   B::foo = int<32>^0 = B::foo (2) 
   Created state:
-  int instance pool:
-  1	A::foo
-  2	B::foo
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  int instance pool: (0 ports)
+  1	A::foo	
+  2	B::foo	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

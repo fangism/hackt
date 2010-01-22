@@ -72,15 +72,15 @@ In namespace "", we have: {
             [2][1][0] = top_type<>::co[2][1][0] (8) 
           }
         Created state:
-        bool instance pool:
-        1	top_type<>::!GND
-        2	top_type<>::!Vdd
-        3	top_type<>::co[0][0][0]
-        4	top_type<>::co[0][1][0]
-        5	top_type<>::co[1][0][0]
-        6	top_type<>::co[1][1][0]
-        7	top_type<>::co[2][0][0]
-        8	top_type<>::co[2][1][0]
+        bool instance pool: (8 ports)
+        1	top_type<>::!GND	
+        2	top_type<>::!Vdd	
+        3	top_type<>::co[0][0][0]	
+        4	top_type<>::co[0][1][0]	
+        5	top_type<>::co[1][0][0]	
+        6	top_type<>::co[1][1][0]	
+        7	top_type<>::co[2][0][0]	
+        8	top_type<>::co[2][1][0]	
       }
       }
 
@@ -117,15 +117,16 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	top
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	co[0][0][0]
-  4	co[0][1][0]
-  5	co[1][0][0]
-  6	co[1][1][0]
-  7	co[2][0][0]
-  8	co[2][1][0]
+  process instance pool: (0 ports)
+  1	top	top_type<>
+    bool: 1,2,3,4,5,6,7,8
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	co[0][0][0]	
+  4	co[0][1][0]	
+  5	co[1][0][0]	
+  6	co[1][1][0]	
+  7	co[2][0][0]	
+  8	co[2][1][0]	
 }

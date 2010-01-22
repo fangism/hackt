@@ -116,30 +116,34 @@ In namespace "", we have: {
             )
           }
         Created state:
-        process instance pool:
-        1	bar<>::x[0][0]
-        2	bar<>::x[0][1]
-        3	bar<>::x[1][0]
-        4	bar<>::x[1][1]
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
-        3	bar<>::x[0][0].a[0][0]
-        4	bar<>::x[0][0].a[0][1]
-        5	bar<>::x[0][0].a[1][0]
-        6	bar<>::x[0][0].a[1][1]
-        7	bar<>::x[0][1].a[0][0]
-        8	bar<>::x[0][1].a[0][1]
-        9	bar<>::x[0][1].a[1][0]
-        10	bar<>::x[0][1].a[1][1]
-        11	bar<>::x[1][0].a[0][0]
-        12	bar<>::x[1][0].a[0][1]
-        13	bar<>::x[1][0].a[1][0]
-        14	bar<>::x[1][0].a[1][1]
-        15	bar<>::x[1][1].a[0][0]
-        16	bar<>::x[1][1].a[0][1]
-        17	bar<>::x[1][1].a[1][0]
-        18	bar<>::x[1][1].a[1][1]
+        process instance pool: (4 ports)
+        1	bar<>::x[0][0]	foo<>
+          bool: 1,2,3,4,5,6
+        2	bar<>::x[0][1]	foo<>
+          bool: 1,2,7,8,9,10
+        3	bar<>::x[1][0]	foo<>
+          bool: 1,2,11,12,13,14
+        4	bar<>::x[1][1]	foo<>
+          bool: 1,2,15,16,17,18
+        bool instance pool: (18 ports)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
+        3	bar<>::x[0][0].a[0][0]	
+        4	bar<>::x[0][0].a[0][1]	
+        5	bar<>::x[0][0].a[1][0]	
+        6	bar<>::x[0][0].a[1][1]	
+        7	bar<>::x[0][1].a[0][0]	
+        8	bar<>::x[0][1].a[0][1]	
+        9	bar<>::x[0][1].a[1][0]	
+        10	bar<>::x[0][1].a[1][1]	
+        11	bar<>::x[1][0].a[0][0]	
+        12	bar<>::x[1][0].a[0][1]	
+        13	bar<>::x[1][0].a[1][0]	
+        14	bar<>::x[1][0].a[1][1]	
+        15	bar<>::x[1][1].a[0][0]	
+        16	bar<>::x[1][1].a[0][1]	
+        17	bar<>::x[1][1].a[1][0]	
+        18	bar<>::x[1][1].a[1][1]	
         bool port aliases:
         1: bar<>::x[0][0].!GND = bar<>::x[0][1].!GND = bar<>::x[1][0].!GND = bar<>::x[1][1].!GND = bar<>::!GND
         2: bar<>::x[0][0].!Vdd = bar<>::x[0][1].!Vdd = bar<>::x[1][0].!Vdd = bar<>::x[1][1].!Vdd = bar<>::!Vdd
@@ -173,13 +177,13 @@ In namespace "", we have: {
             [1][1] = foo<>::a[1][1] (6) 
           }
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::a[0][0]
-        4	foo<>::a[0][1]
-        5	foo<>::a[1][0]
-        6	foo<>::a[1][1]
+        bool instance pool: (6 ports)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::a[0][0]	
+        4	foo<>::a[0][1]	
+        5	foo<>::a[1][0]	
+        6	foo<>::a[1][1]	
       }
       }
 
@@ -244,29 +248,35 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	poo
-  2	poo.x[0][0]
-  3	poo.x[0][1]
-  4	poo.x[1][0]
-  5	poo.x[1][1]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	poo.x[0][0].a[0][0]
-  4	poo.x[0][0].a[0][1]
-  5	poo.x[0][0].a[1][0]
-  6	poo.x[0][0].a[1][1]
-  7	poo.x[0][1].a[0][0]
-  8	poo.x[0][1].a[0][1]
-  9	poo.x[0][1].a[1][0]
-  10	poo.x[0][1].a[1][1]
-  11	poo.x[1][0].a[0][0]
-  12	poo.x[1][0].a[0][1]
-  13	poo.x[1][0].a[1][0]
-  14	poo.x[1][0].a[1][1]
-  15	poo.x[1][1].a[0][0]
-  16	poo.x[1][1].a[0][1]
-  17	poo.x[1][1].a[1][0]
-  18	poo.x[1][1].a[1][1]
+  process instance pool: (0 ports)
+  1	poo	bar<>
+    process: 2,3,4,5
+    bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+  2	poo.x[0][0]	foo<>
+    bool: 1,2,3,4,5,6
+  3	poo.x[0][1]	foo<>
+    bool: 1,2,7,8,9,10
+  4	poo.x[1][0]	foo<>
+    bool: 1,2,11,12,13,14
+  5	poo.x[1][1]	foo<>
+    bool: 1,2,15,16,17,18
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	poo.x[0][0].a[0][0]	
+  4	poo.x[0][0].a[0][1]	
+  5	poo.x[0][0].a[1][0]	
+  6	poo.x[0][0].a[1][1]	
+  7	poo.x[0][1].a[0][0]	
+  8	poo.x[0][1].a[0][1]	
+  9	poo.x[0][1].a[1][0]	
+  10	poo.x[0][1].a[1][1]	
+  11	poo.x[1][0].a[0][0]	
+  12	poo.x[1][0].a[0][1]	
+  13	poo.x[1][0].a[1][0]	
+  14	poo.x[1][0].a[1][1]	
+  15	poo.x[1][1].a[0][0]	
+  16	poo.x[1][1].a[0][1]	
+  17	poo.x[1][1].a[1][0]	
+  18	poo.x[1][1].a[1][1]	
 }

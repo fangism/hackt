@@ -77,11 +77,11 @@ In namespace "", we have: {
         a = bool^0 = silly_inv<>::a (3) 
         b = bool^0 = silly_inv<>::b (4) 
         Created state:
-        bool instance pool:
-        1	silly_inv<>::!GND
-        2	silly_inv<>::!Vdd
-        3	silly_inv<>::a
-        4	silly_inv<>::b
+        bool instance pool: (2 ports)
+        1	silly_inv<>::!GND	
+        2	silly_inv<>::!Vdd	
+        3	silly_inv<>::a	
+        4	silly_inv<>::b	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -104,9 +104,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	__inv__
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	__inv__	silly_inv<>
+    bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 2)
 }

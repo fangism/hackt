@@ -106,14 +106,16 @@ In namespace "", we have: {
         X = channel chan(bool<>)^0 = bar<>::X (1) 
         b = bool^0 = bar<>::b (3) 
         Created state:
-        process instance pool:
-        1	bar<>::F
-        channel instance pool:
-        1	bar<>::X
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
-        3	bar<>::b
+        process instance pool: (0 ports)
+        1	bar<>::F	foo<>
+          channel: 1
+          bool: 1,2
+        channel instance pool: (0 ports)
+        1	bar<>::X	
+        bool instance pool: (2 ports)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
+        3	bar<>::b	
         resolved concurrent actions:
           X#(b)
         chp events: {
@@ -147,11 +149,11 @@ In namespace "", we have: {
         !Vdd = bool^0 = foo<>::!Vdd (2) 
         B = channel chan?(bool<>)^0 = foo<>::B (1) 
         Created state:
-        channel instance pool:
-        1	foo<>::B
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
+        channel instance pool: (1 ports)
+        1	foo<>::B	
+        bool instance pool: (2 ports)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
         resolved concurrent actions:
           B?
         chp events: {
@@ -174,9 +176,19 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	BQ
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	BQ	bar<>
+    bool: 1,2
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 1)
+  private sub-channel index map:
+    (1 -> 0)
+    (2 -> 1)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 1)
 }

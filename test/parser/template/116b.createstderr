@@ -353,30 +353,37 @@ In namespace "", we have: {
             e = bool^0 = doh<true>::x.e (3) 
           )
           Created state:
-          process instance pool:
-          1	doh<true>::g
-          2	doh<true>::x
-          3	doh<true>::y
-          4	doh<true>::z
-          5	doh<true>::co
-          6	doh<true>::so
-          7	doh<true>::fa0
-          bool instance pool:
-          1	doh<true>::x.d[0]
-          2	doh<true>::x.d[1]
-          3	doh<true>::x.e
-          4	doh<true>::y.d[0]
-          5	doh<true>::y.d[1]
-          6	doh<true>::z.d[0]
-          7	doh<true>::z.d[1]
-          8	doh<true>::co.d[0]
-          9	doh<true>::co.d[1]
-          10	doh<true>::co.e
-          11	doh<true>::so.d[0]
-          12	doh<true>::so.d[1]
-          13	doh<true>::so.e
-          14	doh<true>::!GND
-          15	doh<true>::!Vdd
+          process instance pool: (6 ports)
+          1	doh<true>::g	globals<>
+          2	doh<true>::x	e1of<2>
+            bool: 3,1,2
+          3	doh<true>::y	e1of<2>
+            bool: 3,4,5
+          4	doh<true>::z	e1of<2>
+            bool: 3,6,7
+          5	doh<true>::co	e1of<2>
+            bool: 10,8,9
+          6	doh<true>::so	e1of<2>
+            bool: 13,11,12
+          7	doh<true>::fa0	foo<>
+            process: 1,2,3,4,5,6
+            bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+          bool instance pool: (15 ports)
+          1	doh<true>::x.d[0]	
+          2	doh<true>::x.d[1]	
+          3	doh<true>::x.e	
+          4	doh<true>::y.d[0]	
+          5	doh<true>::y.d[1]	
+          6	doh<true>::z.d[0]	
+          7	doh<true>::z.d[1]	
+          8	doh<true>::co.d[0]	
+          9	doh<true>::co.d[1]	
+          10	doh<true>::co.e	
+          11	doh<true>::so.d[0]	
+          12	doh<true>::so.d[1]	
+          13	doh<true>::so.e	
+          14	doh<true>::!GND	
+          15	doh<true>::!Vdd	
           bool port aliases:
           3: doh<true>::x.e = doh<true>::y.e = doh<true>::z.e
         }
@@ -412,10 +419,10 @@ In namespace "", we have: {
             }
           e = bool^0 = e1of<2>::e (1) 
           Created state:
-          bool instance pool:
-          1	e1of<2>::e
-          2	e1of<2>::d[0]
-          3	e1of<2>::d[1]
+          bool instance pool: (3 ports)
+          1	e1of<2>::e	
+          2	e1of<2>::d[0]	
+          3	e1of<2>::d[1]	
           resolved specs:
           exclhi({d[0],d[1]})
         }
@@ -502,29 +509,34 @@ In namespace "", we have: {
           e = bool^0 = foo<>::ie (3) 
         )
         Created state:
-        process instance pool:
-        1	foo<>::g
-        2	foo<>::x
-        3	foo<>::y
-        4	foo<>::z
-        5	foo<>::co
-        6	foo<>::so
-        bool instance pool:
-        1	foo<>::x.d[0]
-        2	foo<>::x.d[1]
-        3	foo<>::ie
-        4	foo<>::y.d[0]
-        5	foo<>::y.d[1]
-        6	foo<>::z.d[0]
-        7	foo<>::z.d[1]
-        8	foo<>::co.d[0]
-        9	foo<>::co.d[1]
-        10	foo<>::co.e
-        11	foo<>::so.d[0]
-        12	foo<>::so.d[1]
-        13	foo<>::so.e
-        14	foo<>::!GND
-        15	foo<>::!Vdd
+        process instance pool: (6 ports)
+        1	foo<>::g	globals<>
+        2	foo<>::x	e1of<2>
+          bool: 3,1,2
+        3	foo<>::y	e1of<2>
+          bool: 3,4,5
+        4	foo<>::z	e1of<2>
+          bool: 3,6,7
+        5	foo<>::co	e1of<2>
+          bool: 10,8,9
+        6	foo<>::so	e1of<2>
+          bool: 13,11,12
+        bool instance pool: (15 ports)
+        1	foo<>::x.d[0]	
+        2	foo<>::x.d[1]	
+        3	foo<>::ie	
+        4	foo<>::y.d[0]	
+        5	foo<>::y.d[1]	
+        6	foo<>::z.d[0]	
+        7	foo<>::z.d[1]	
+        8	foo<>::co.d[0]	
+        9	foo<>::co.d[1]	
+        10	foo<>::co.e	
+        11	foo<>::so.d[0]	
+        12	foo<>::so.d[1]	
+        13	foo<>::so.e	
+        14	foo<>::!GND	
+        15	foo<>::!Vdd	
         bool port aliases:
         3: foo<>::x.e = foo<>::y.e = foo<>::z.e
       }
@@ -662,30 +674,37 @@ In namespace "", we have: {
           e = bool^0 = top_type<>::x.e (3) 
         )
         Created state:
-        process instance pool:
-        1	top_type<>::g
-        2	top_type<>::x
-        3	top_type<>::y
-        4	top_type<>::z
-        5	top_type<>::co
-        6	top_type<>::so
-        7	top_type<>::top_fa
-        bool instance pool:
-        1	top_type<>::x.d[0]
-        2	top_type<>::x.d[1]
-        3	top_type<>::x.e
-        4	top_type<>::y.d[0]
-        5	top_type<>::y.d[1]
-        6	top_type<>::z.d[0]
-        7	top_type<>::z.d[1]
-        8	top_type<>::co.d[0]
-        9	top_type<>::co.d[1]
-        10	top_type<>::co.e
-        11	top_type<>::so.d[0]
-        12	top_type<>::so.d[1]
-        13	top_type<>::so.e
-        14	top_type<>::!GND
-        15	top_type<>::!Vdd
+        process instance pool: (6 ports)
+        1	top_type<>::g	globals<>
+        2	top_type<>::x	e1of<2>
+          bool: 3,1,2
+        3	top_type<>::y	e1of<2>
+          bool: 3,4,5
+        4	top_type<>::z	e1of<2>
+          bool: 3,6,7
+        5	top_type<>::co	e1of<2>
+          bool: 10,8,9
+        6	top_type<>::so	e1of<2>
+          bool: 13,11,12
+        7	top_type<>::top_fa	foo<>
+          process: 1,2,3,4,5,6
+          bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+        bool instance pool: (15 ports)
+        1	top_type<>::x.d[0]	
+        2	top_type<>::x.d[1]	
+        3	top_type<>::x.e	
+        4	top_type<>::y.d[0]	
+        5	top_type<>::y.d[1]	
+        6	top_type<>::z.d[0]	
+        7	top_type<>::z.d[1]	
+        8	top_type<>::co.d[0]	
+        9	top_type<>::co.d[1]	
+        10	top_type<>::co.e	
+        11	top_type<>::so.d[0]	
+        12	top_type<>::so.d[1]	
+        13	top_type<>::so.e	
+        14	top_type<>::!GND	
+        15	top_type<>::!Vdd	
         bool port aliases:
         3: top_type<>::x.e = top_type<>::y.e = top_type<>::z.e
       }
@@ -816,30 +835,40 @@ In namespace "", we have: {
           e = bool^0 = top_type2<>::x.e (3) 
         )
         Created state:
-        process instance pool:
-        1	top_type2<>::g
-        2	top_type2<>::x
-        3	top_type2<>::y
-        4	top_type2<>::z
-        5	top_type2<>::co
-        6	top_type2<>::so
-        7	top_type2<>::top_cpa<true>
-        bool instance pool:
-        1	top_type2<>::x.d[0]
-        2	top_type2<>::x.d[1]
-        3	top_type2<>::x.e
-        4	top_type2<>::y.d[0]
-        5	top_type2<>::y.d[1]
-        6	top_type2<>::z.d[0]
-        7	top_type2<>::z.d[1]
-        8	top_type2<>::co.d[0]
-        9	top_type2<>::co.d[1]
-        10	top_type2<>::co.e
-        11	top_type2<>::so.d[0]
-        12	top_type2<>::so.d[1]
-        13	top_type2<>::so.e
-        14	top_type2<>::!GND
-        15	top_type2<>::!Vdd
+        process instance pool: (6 ports)
+        1	top_type2<>::g	globals<>
+        2	top_type2<>::x	e1of<2>
+          bool: 3,1,2
+        3	top_type2<>::y	e1of<2>
+          bool: 3,4,5
+        4	top_type2<>::z	e1of<2>
+          bool: 3,6,7
+        5	top_type2<>::co	e1of<2>
+          bool: 10,8,9
+        6	top_type2<>::so	e1of<2>
+          bool: 13,11,12
+        7	top_type2<>::top_cpa<true>	doh<true>
+          process: 1,2,3,4,5,6
+          bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+        private sub-process index map:
+          (7 -> 0)
+          (8 -> 1)
+        bool instance pool: (15 ports)
+        1	top_type2<>::x.d[0]	
+        2	top_type2<>::x.d[1]	
+        3	top_type2<>::x.e	
+        4	top_type2<>::y.d[0]	
+        5	top_type2<>::y.d[1]	
+        6	top_type2<>::z.d[0]	
+        7	top_type2<>::z.d[1]	
+        8	top_type2<>::co.d[0]	
+        9	top_type2<>::co.d[1]	
+        10	top_type2<>::co.e	
+        11	top_type2<>::so.d[0]	
+        12	top_type2<>::so.d[1]	
+        13	top_type2<>::so.e	
+        14	top_type2<>::!GND	
+        15	top_type2<>::!Vdd	
         bool port aliases:
         3: top_type2<>::x.e = top_type2<>::y.e = top_type2<>::z.e
       }
@@ -949,48 +978,66 @@ footprint: {
     )
   )
   Created state:
-  process instance pool:
-  1	top
-  2	top.g
-  3	top.x
-  4	top.y
-  5	top.z
-  6	top.co
-  7	top.so
-  8	top2
-  9	top2.g
-  10	top2.x
-  11	top2.y
-  12	top2.z
-  13	top2.co
-  14	top2.so
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	top.x.d[0]
-  4	top.x.d[1]
-  5	top.x.e
-  6	top.y.d[0]
-  7	top.y.d[1]
-  8	top.z.d[0]
-  9	top.z.d[1]
-  10	top.co.d[0]
-  11	top.co.d[1]
-  12	top.co.e
-  13	top.so.d[0]
-  14	top.so.d[1]
-  15	top.so.e
-  16	top2.x.d[0]
-  17	top2.x.d[1]
-  18	top2.x.e
-  19	top2.y.d[0]
-  20	top2.y.d[1]
-  21	top2.z.d[0]
-  22	top2.z.d[1]
-  23	top2.co.d[0]
-  24	top2.co.d[1]
-  25	top2.co.e
-  26	top2.so.d[0]
-  27	top2.so.d[1]
-  28	top2.so.e
+  process instance pool: (0 ports)
+  1	top	top_type<>
+    process: 2,3,4,5,6,7
+    bool: 3,4,5,6,7,8,9,10,11,12,13,14,15,1,2
+  2	top.g	globals<>
+  3	top.x	e1of<2>
+    bool: 5,3,4
+  4	top.y	e1of<2>
+    bool: 5,6,7
+  5	top.z	e1of<2>
+    bool: 5,8,9
+  6	top.co	e1of<2>
+    bool: 12,10,11
+  7	top.so	e1of<2>
+    bool: 15,13,14
+  8	top2	top_type2<>
+    process: 9,10,11,12,13,14
+    bool: 16,17,18,19,20,21,22,23,24,25,26,27,28,1,2
+  9	top2.g	globals<>
+  10	top2.x	e1of<2>
+    bool: 18,16,17
+  11	top2.y	e1of<2>
+    bool: 18,19,20
+  12	top2.z	e1of<2>
+    bool: 18,21,22
+  13	top2.co	e1of<2>
+    bool: 25,23,24
+  14	top2.so	e1of<2>
+    bool: 28,26,27
+  private sub-process index map:
+    (1 -> 0)
+    (8 -> 1)
+    (15 -> 3)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	top.x.d[0]	
+  4	top.x.d[1]	
+  5	top.x.e	
+  6	top.y.d[0]	
+  7	top.y.d[1]	
+  8	top.z.d[0]	
+  9	top.z.d[1]	
+  10	top.co.d[0]	
+  11	top.co.d[1]	
+  12	top.co.e	
+  13	top.so.d[0]	
+  14	top.so.d[1]	
+  15	top.so.e	
+  16	top2.x.d[0]	
+  17	top2.x.d[1]	
+  18	top2.x.e	
+  19	top2.y.d[0]	
+  20	top2.y.d[1]	
+  21	top2.z.d[0]	
+  22	top2.z.d[1]	
+  23	top2.co.d[0]	
+  24	top2.co.d[1]	
+  25	top2.co.e	
+  26	top2.so.d[0]	
+  27	top2.so.d[1]	
+  28	top2.so.e	
 }

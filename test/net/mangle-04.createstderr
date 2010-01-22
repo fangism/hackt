@@ -396,19 +396,26 @@ In namespace "", we have: {
                   [1] = foo::wire_copy<2>::oe[1] (7) 
                 }
               Created state:
-              process instance pool:
-              1	foo::wire_copy<2>::in
-              2	foo::wire_copy<2>::o[0]
-              3	foo::wire_copy<2>::o[1]
-              4	foo::wire_copy<2>::comp
-              bool instance pool:
-              1	foo::wire_copy<2>::!GND
-              2	foo::wire_copy<2>::!Vdd
-              3	foo::wire_copy<2>::in.d[0]
-              4	foo::wire_copy<2>::in.d[1]
-              5	foo::wire_copy<2>::in.e
-              6	foo::wire_copy<2>::oe[0]
-              7	foo::wire_copy<2>::oe[1]
+              process instance pool: (3 ports)
+              1	foo::wire_copy<2>::in	e1of<2>
+                bool: 1,2,5,3,4
+              2	foo::wire_copy<2>::o[0]	e1of<2>
+                bool: 1,2,6,3,4
+              3	foo::wire_copy<2>::o[1]	e1of<2>
+                bool: 1,2,7,3,4
+              4	foo::wire_copy<2>::comp	std::logic::celem<2, 10>
+                bool: 1,2,5,6,7
+              bool instance pool: (7 ports)
+              1	foo::wire_copy<2>::!GND	
+              2	foo::wire_copy<2>::!Vdd	
+              3	foo::wire_copy<2>::in.d[0]	
+              4	foo::wire_copy<2>::in.d[1]	
+              5	foo::wire_copy<2>::in.e	
+              6	foo::wire_copy<2>::oe[0]	
+              7	foo::wire_copy<2>::oe[1]	
+              private sub-bool index map:
+                (4 -> 0)
+                (5 -> 1)
               bool port aliases:
               1: foo::wire_copy<2>::in.!GND = foo::wire_copy<2>::o[0].!GND = foo::wire_copy<2>::o[1].!GND = foo::wire_copy<2>::!GND
               2: foo::wire_copy<2>::in.!Vdd = foo::wire_copy<2>::o[0].!Vdd = foo::wire_copy<2>::o[1].!Vdd = foo::wire_copy<2>::!Vdd
@@ -480,21 +487,29 @@ In namespace "", we have: {
                   [2] = foo::wire_copy<3>::oe[2] (8) 
                 }
               Created state:
-              process instance pool:
-              1	foo::wire_copy<3>::in
-              2	foo::wire_copy<3>::o[0]
-              3	foo::wire_copy<3>::o[1]
-              4	foo::wire_copy<3>::o[2]
-              5	foo::wire_copy<3>::comp
-              bool instance pool:
-              1	foo::wire_copy<3>::!GND
-              2	foo::wire_copy<3>::!Vdd
-              3	foo::wire_copy<3>::in.d[0]
-              4	foo::wire_copy<3>::in.d[1]
-              5	foo::wire_copy<3>::in.e
-              6	foo::wire_copy<3>::oe[0]
-              7	foo::wire_copy<3>::oe[1]
-              8	foo::wire_copy<3>::oe[2]
+              process instance pool: (4 ports)
+              1	foo::wire_copy<3>::in	e1of<2>
+                bool: 1,2,5,3,4
+              2	foo::wire_copy<3>::o[0]	e1of<2>
+                bool: 1,2,6,3,4
+              3	foo::wire_copy<3>::o[1]	e1of<2>
+                bool: 1,2,7,3,4
+              4	foo::wire_copy<3>::o[2]	e1of<2>
+                bool: 1,2,8,3,4
+              5	foo::wire_copy<3>::comp	std::logic::celem<3, 10>
+                bool: 1,2,5,6,7,8
+              bool instance pool: (8 ports)
+              1	foo::wire_copy<3>::!GND	
+              2	foo::wire_copy<3>::!Vdd	
+              3	foo::wire_copy<3>::in.d[0]	
+              4	foo::wire_copy<3>::in.d[1]	
+              5	foo::wire_copy<3>::in.e	
+              6	foo::wire_copy<3>::oe[0]	
+              7	foo::wire_copy<3>::oe[1]	
+              8	foo::wire_copy<3>::oe[2]	
+              private sub-bool index map:
+                (5 -> 0)
+                (6 -> 1)
               bool port aliases:
               1: foo::wire_copy<3>::in.!GND = foo::wire_copy<3>::o[0].!GND = foo::wire_copy<3>::o[1].!GND = foo::wire_copy<3>::o[2].!GND = foo::wire_copy<3>::!GND
               2: foo::wire_copy<3>::in.!Vdd = foo::wire_copy<3>::o[0].!Vdd = foo::wire_copy<3>::o[1].!Vdd = foo::wire_copy<3>::o[2].!Vdd = foo::wire_copy<3>::!Vdd
@@ -567,13 +582,13 @@ In namespace "", we have: {
                     }
                   o = bool^0 = std::logic::celem<2, 10>::o (3) 
                   Created state:
-                  bool instance pool:
-                  1	std::logic::celem<2, 10>::!GND
-                  2	std::logic::celem<2, 10>::!Vdd
-                  3	std::logic::celem<2, 10>::o
-                  4	std::logic::celem<2, 10>::in[0]
-                  5	std::logic::celem<2, 10>::in[1]
-                  6	std::logic::celem<2, 10>::_o
+                  bool instance pool: (5 ports)
+                  1	std::logic::celem<2, 10>::!GND	
+                  2	std::logic::celem<2, 10>::!Vdd	
+                  3	std::logic::celem<2, 10>::o	
+                  4	std::logic::celem<2, 10>::in[0]	
+                  5	std::logic::celem<2, 10>::in[1]	
+                  6	std::logic::celem<2, 10>::_o	
                   resolved prs:
                   in[0] & in[1] -> _o-
                   ~in[0] & ~in[1] -> _o+
@@ -596,14 +611,14 @@ In namespace "", we have: {
                     }
                   o = bool^0 = std::logic::celem<3, 10>::o (3) 
                   Created state:
-                  bool instance pool:
-                  1	std::logic::celem<3, 10>::!GND
-                  2	std::logic::celem<3, 10>::!Vdd
-                  3	std::logic::celem<3, 10>::o
-                  4	std::logic::celem<3, 10>::in[0]
-                  5	std::logic::celem<3, 10>::in[1]
-                  6	std::logic::celem<3, 10>::in[2]
-                  7	std::logic::celem<3, 10>::_o
+                  bool instance pool: (6 ports)
+                  1	std::logic::celem<3, 10>::!GND	
+                  2	std::logic::celem<3, 10>::!Vdd	
+                  3	std::logic::celem<3, 10>::o	
+                  4	std::logic::celem<3, 10>::in[0]	
+                  5	std::logic::celem<3, 10>::in[1]	
+                  6	std::logic::celem<3, 10>::in[2]	
+                  7	std::logic::celem<3, 10>::_o	
                   resolved prs:
                   in[0] & in[1] & in[2] -> _o-
                   ~in[0] & ~in[1] & ~in[2] -> _o+
@@ -869,33 +884,58 @@ In namespace "", we have: {
               )
             }
           Created state:
-          process instance pool:
-          1	ctree<{2,3}>::in
-          2	ctree<{2,3}>::out[0][0]
-          3	ctree<{2,3}>::out[0][1]
-          4	ctree<{2,3}>::out[0][2]
-          5	ctree<{2,3}>::out[1][0]
-          6	ctree<{2,3}>::out[1][1]
-          7	ctree<{2,3}>::out[1][2]
-          8	ctree<{2,3}>::c0
-          9	ctree<{2,3}>::c0.o[0]
-          10	ctree<{2,3}>::c0.o[1]
-          11	ctree<{2,3}>::c1[0]
-          12	ctree<{2,3}>::c1[1]
-          bool instance pool:
-          1	ctree<{2,3}>::!GND
-          2	ctree<{2,3}>::!Vdd
-          3	ctree<{2,3}>::in.d[0]
-          4	ctree<{2,3}>::in.d[1]
-          5	ctree<{2,3}>::in.e
-          6	ctree<{2,3}>::out[0][0].e
-          7	ctree<{2,3}>::out[0][1].e
-          8	ctree<{2,3}>::out[0][2].e
-          9	ctree<{2,3}>::out[1][0].e
-          10	ctree<{2,3}>::out[1][1].e
-          11	ctree<{2,3}>::out[1][2].e
-          12	ctree<{2,3}>::c0.o[0].e
-          13	ctree<{2,3}>::c0.o[1].e
+          process instance pool: (7 ports)
+          1	ctree<{2,3}>::in	e1of<2>
+            bool: 1,2,5,3,4
+          2	ctree<{2,3}>::out[0][0]	e1of<2>
+            bool: 1,2,6,3,4
+          3	ctree<{2,3}>::out[0][1]	e1of<2>
+            bool: 1,2,7,3,4
+          4	ctree<{2,3}>::out[0][2]	e1of<2>
+            bool: 1,2,8,3,4
+          5	ctree<{2,3}>::out[1][0]	e1of<2>
+            bool: 1,2,9,3,4
+          6	ctree<{2,3}>::out[1][1]	e1of<2>
+            bool: 1,2,10,3,4
+          7	ctree<{2,3}>::out[1][2]	e1of<2>
+            bool: 1,2,11,3,4
+          8	ctree<{2,3}>::c0	foo::wire_copy<2>
+            process: 1,9,10
+            bool: 1,2,3,4,5,12,13
+          9	ctree<{2,3}>::c0.o[0]	e1of<2>
+            bool: 1,2,12,3,4
+          10	ctree<{2,3}>::c0.o[1]	e1of<2>
+            bool: 1,2,13,3,4
+          11	ctree<{2,3}>::c1[0]	foo::wire_copy<3>
+            process: 9,2,3,4
+            bool: 1,2,3,4,12,6,7,8
+          12	ctree<{2,3}>::c1[1]	foo::wire_copy<3>
+            process: 10,5,6,7
+            bool: 1,2,3,4,13,9,10,11
+          private sub-process index map:
+            (8 -> 0)
+            (11 -> 1)
+            (12 -> 2)
+            (13 -> 3)
+          bool instance pool: (11 ports)
+          1	ctree<{2,3}>::!GND	
+          2	ctree<{2,3}>::!Vdd	
+          3	ctree<{2,3}>::in.d[0]	
+          4	ctree<{2,3}>::in.d[1]	
+          5	ctree<{2,3}>::in.e	
+          6	ctree<{2,3}>::out[0][0].e	
+          7	ctree<{2,3}>::out[0][1].e	
+          8	ctree<{2,3}>::out[0][2].e	
+          9	ctree<{2,3}>::out[1][0].e	
+          10	ctree<{2,3}>::out[1][1].e	
+          11	ctree<{2,3}>::out[1][2].e	
+          12	ctree<{2,3}>::c0.o[0].e	
+          13	ctree<{2,3}>::c0.o[1].e	
+          private sub-bool index map:
+            (8 -> 0)
+            (11 -> 1)
+            (12 -> 2)
+            (13 -> 3)
           bool port aliases:
           1: ctree<{2,3}>::in.!GND = ctree<{2,3}>::out[0][0].!GND = ctree<{2,3}>::out[0][1].!GND = ctree<{2,3}>::out[0][2].!GND = ctree<{2,3}>::out[1][0].!GND = ctree<{2,3}>::out[1][1].!GND = ctree<{2,3}>::out[1][2].!GND = ctree<{2,3}>::!GND
           2: ctree<{2,3}>::in.!Vdd = ctree<{2,3}>::out[0][0].!Vdd = ctree<{2,3}>::out[0][1].!Vdd = ctree<{2,3}>::out[0][2].!Vdd = ctree<{2,3}>::out[1][0].!Vdd = ctree<{2,3}>::out[1][1].!Vdd = ctree<{2,3}>::out[1][2].!Vdd = ctree<{2,3}>::!Vdd
@@ -940,12 +980,12 @@ In namespace "", we have: {
             }
           e = bool^0 = e1of<2>::e (3) 
           Created state:
-          bool instance pool:
-          1	e1of<2>::!GND
-          2	e1of<2>::!Vdd
-          3	e1of<2>::e
-          4	e1of<2>::d[0]
-          5	e1of<2>::d[1]
+          bool instance pool: (5 ports)
+          1	e1of<2>::!GND	
+          2	e1of<2>::!Vdd	
+          3	e1of<2>::e	
+          4	e1of<2>::d[0]	
+          5	e1of<2>::d[1]	
         }
       }
       }
@@ -1040,25 +1080,40 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	bar
-  2	bar.in
-  3	bar.out[0][0]
-  4	bar.out[0][1]
-  5	bar.out[0][2]
-  6	bar.out[1][0]
-  7	bar.out[1][1]
-  8	bar.out[1][2]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	bar.in.d[0]
-  4	bar.in.d[1]
-  5	bar.in.e
-  6	bar.out[0][0].e
-  7	bar.out[0][1].e
-  8	bar.out[0][2].e
-  9	bar.out[1][0].e
-  10	bar.out[1][1].e
-  11	bar.out[1][2].e
+  process instance pool: (0 ports)
+  1	bar	ctree<{2,3}>
+    process: 2,3,4,5,6,7,8
+    bool: 1,2,3,4,5,6,7,8,9,10,11
+  2	bar.in	e1of<2>
+    bool: 1,2,5,3,4
+  3	bar.out[0][0]	e1of<2>
+    bool: 1,2,6,3,4
+  4	bar.out[0][1]	e1of<2>
+    bool: 1,2,7,3,4
+  5	bar.out[0][2]	e1of<2>
+    bool: 1,2,8,3,4
+  6	bar.out[1][0]	e1of<2>
+    bool: 1,2,9,3,4
+  7	bar.out[1][1]	e1of<2>
+    bool: 1,2,10,3,4
+  8	bar.out[1][2]	e1of<2>
+    bool: 1,2,11,3,4
+  private sub-process index map:
+    (1 -> 0)
+    (9 -> 8)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	bar.in.d[0]	
+  4	bar.in.d[1]	
+  5	bar.in.e	
+  6	bar.out[0][0].e	
+  7	bar.out[0][1].e	
+  8	bar.out[0][2].e	
+  9	bar.out[1][0].e	
+  10	bar.out[1][1].e	
+  11	bar.out[1][2].e	
+  private sub-bool index map:
+    (1 -> 0)
+    (9 -> 5)
 }

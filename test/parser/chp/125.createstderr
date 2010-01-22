@@ -68,11 +68,11 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) 
   p = int<32>^0 = p (1) 
   Created state:
-  int instance pool:
-  1	p
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  int instance pool: (0 ports)
+  1	p	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
   resolved concurrent actions:
     sequential: {
       p := 13

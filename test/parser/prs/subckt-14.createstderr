@@ -90,12 +90,12 @@ In namespace "", we have: {
         b = bool^0 = foo<>::b (5) 
         en = bool^0 = foo<>::en (3) 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::en
-        4	foo<>::a
-        5	foo<>::b
+        bool instance pool: (5 ports)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::en	
+        4	foo<>::a	
+        5	foo<>::b	
         resolved prs:
         en & a -> b-
         internal node exprs: 
@@ -124,12 +124,13 @@ footprint: {
     b = bool^0 = bar.b (5) 
   )
   Created state:
-  process instance pool:
-  1	bar
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	bar.en
-  4	bar.a
-  5	bar.b
+  process instance pool: (0 ports)
+  1	bar	foo<>
+    bool: 1,2,3,4,5
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	bar.en	
+  4	bar.a	
+  5	bar.b	
 }

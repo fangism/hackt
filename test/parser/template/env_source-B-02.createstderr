@@ -80,10 +80,10 @@ In namespace "", we have: {
           R = pint^0 value: 3
           e = bool^0 = e1of<3>::e (3) 
           Created state:
-          bool instance pool:
-          1	e1of<3>::!GND
-          2	e1of<3>::!Vdd
-          3	e1of<3>::e
+          bool instance pool: (3 ports)
+          1	e1of<3>::!GND	
+          2	e1of<3>::!Vdd	
+          3	e1of<3>::e	
         }
       }
       }
@@ -128,10 +128,11 @@ footprint: {
     e = bool^0 = X.e (3) 
   )
   Created state:
-  process instance pool:
-  1	X
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	X.e
+  process instance pool: (0 ports)
+  1	X	e1of<3>
+    bool: 1,2,3
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	X.e	
 }

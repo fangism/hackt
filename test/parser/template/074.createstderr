@@ -128,12 +128,12 @@ In namespace "", we have: {
           y = bool^0 = ass<3, {1,0,1}>::y (4) 
           z = bool^0 = ass<3, {1,0,1}>::z (5) 
           Created state:
-          bool instance pool:
-          1	ass<3, {1,0,1}>::!GND
-          2	ass<3, {1,0,1}>::!Vdd
-          3	ass<3, {1,0,1}>::x
-          4	ass<3, {1,0,1}>::y
-          5	ass<3, {1,0,1}>::z
+          bool instance pool: (5 ports)
+          1	ass<3, {1,0,1}>::!GND	
+          2	ass<3, {1,0,1}>::!Vdd	
+          3	ass<3, {1,0,1}>::x	
+          4	ass<3, {1,0,1}>::y	
+          5	ass<3, {1,0,1}>::z	
         }
       }
       }
@@ -167,12 +167,13 @@ footprint: {
       2 = 1
     }
   Created state:
-  process instance pool:
-  1	myass
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	a
-  4	b
-  5	c
+  process instance pool: (0 ports)
+  1	myass	ass<3, {1,0,1}>
+    bool: 1,2,3,4,5
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	a	
+  4	b	
+  5	c	
 }

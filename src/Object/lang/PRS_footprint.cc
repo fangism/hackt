@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.28.2.1 2010/01/18 23:43:41 fang Exp $
+	$Id: PRS_footprint.cc,v 1.28.2.2 2010/01/22 23:41:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -135,7 +135,7 @@ footprint::~footprint() { }
 /**
 	\param e the expression node to print.
 	\param o the output stream.
-	\param np the scope's node pool.
+	\param np the scope's node pool, now 0-indexed.
 	\param ep the scope's expression pool.
 	\param ps the print_stamp corresponding to callee, 
 		should be compared with e.type.  
@@ -154,7 +154,18 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 		case PRS_LITERAL_TYPE_ENUM:
 			STACKTRACE_DUMP_PRINT("Literal ");
 			INVARIANT(one == 1);
-			np[e.only()].get_back_ref()
+			const size_t only = e.only();
+			INVARIANT(only);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			INVARIANT(only <= np.local_entries());
+#else
+			INVARIANT(only <= np.size());
+#endif
+			np[only
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+				-1
+#endif
+				].get_back_ref()
 				->dump_hierarchical_name(o,
 					dump_flags::no_definition_owner);
 			if (e.params.size() || e.attributes.size()
@@ -235,7 +246,12 @@ footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np,
 #endif
 	dump_expr(ep[r.expr_index],
 		o, np, ep, PRS_LITERAL_TYPE_ENUM) << " -> ";
-	np[r.output_index].get_back_ref()
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const size_t ni = r.output_index -1;	// 0-indexed node_pool
+#else
+	const size_t ni = r.output_index;	// 1-indexed node_pool
+#endif
+	np[ni].get_back_ref()
 		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
 	o << (r.dir ? '+' : '-');
 if (r.attributes.size()) {

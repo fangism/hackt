@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.9 2009/10/02 01:56:59 fang Exp $
+	$Id: port_formal_array.h,v 1.9.2.1 2010/01/22 23:41:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -143,8 +143,10 @@ public:
 	UNROLL_ALIASES_PROTO;
 	CREATE_DEPENDENT_TYPES_PROTO;
 	COLLECT_PORT_ALIASES_PROTO;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	CONSTRUCT_PORT_CONTEXT_PROTO;
 	ASSIGN_FOOTPRINT_FRAME_PROTO;
+#endif
 	FINALIZE_SUBSTRUCTURE_ALIASES_PROTO;
 
 	void

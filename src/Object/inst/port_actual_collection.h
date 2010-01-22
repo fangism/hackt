@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.6 2009/10/02 01:56:58 fang Exp $
+	$Id: port_actual_collection.h,v 1.6.2.1 2010/01/22 23:41:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -170,8 +170,10 @@ public:
 	UNROLL_ALIASES_PROTO;
 	CREATE_DEPENDENT_TYPES_PROTO;
 	COLLECT_PORT_ALIASES_PROTO;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	CONSTRUCT_PORT_CONTEXT_PROTO;
 	ASSIGN_FOOTPRINT_FRAME_PROTO;
+#endif
 
 	void
 	accept(alias_visitor&) const;

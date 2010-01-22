@@ -60,9 +60,9 @@ In namespace "", we have: {
         !GND = bool^0 = barf<>::!GND (1) 
         !Vdd = bool^0 = barf<>::!Vdd (2) 
         Created state:
-        bool instance pool:
-        1	barf<>::!GND
-        2	barf<>::!Vdd
+        bool instance pool: (2 ports)
+        1	barf<>::!GND	
+        2	barf<>::!Vdd	
       }
       }
 
@@ -203,33 +203,58 @@ footprint: {
       )
     }
   Created state:
-  process instance pool:
-  1	bag[0]
-  2	bag[1]
-  3	bag[2]
-  4	bag[3]
-  5	bag[4]
-  6	sack[0][0]
-  7	sack[0][1]
-  8	sack[0][2]
-  9	sack[0][3]
-  10	sack[0][4]
-  11	sack[1][0]
-  12	sack[1][1]
-  13	sack[1][2]
-  14	sack[1][3]
-  15	sack[1][4]
-  16	sack[2][0]
-  17	sack[2][1]
-  18	sack[2][2]
-  19	sack[2][3]
-  20	sack[2][4]
-  21	sack[3][0]
-  22	sack[3][1]
-  23	sack[3][2]
-  24	sack[3][3]
-  25	sack[3][4]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	bag[0]	barf<>
+    bool: 1,2
+  2	bag[1]	barf<>
+    bool: 1,2
+  3	bag[2]	barf<>
+    bool: 1,2
+  4	bag[3]	barf<>
+    bool: 1,2
+  5	bag[4]	barf<>
+    bool: 1,2
+  6	sack[0][0]	barf<>
+    bool: 1,2
+  7	sack[0][1]	barf<>
+    bool: 1,2
+  8	sack[0][2]	barf<>
+    bool: 1,2
+  9	sack[0][3]	barf<>
+    bool: 1,2
+  10	sack[0][4]	barf<>
+    bool: 1,2
+  11	sack[1][0]	barf<>
+    bool: 1,2
+  12	sack[1][1]	barf<>
+    bool: 1,2
+  13	sack[1][2]	barf<>
+    bool: 1,2
+  14	sack[1][3]	barf<>
+    bool: 1,2
+  15	sack[1][4]	barf<>
+    bool: 1,2
+  16	sack[2][0]	barf<>
+    bool: 1,2
+  17	sack[2][1]	barf<>
+    bool: 1,2
+  18	sack[2][2]	barf<>
+    bool: 1,2
+  19	sack[2][3]	barf<>
+    bool: 1,2
+  20	sack[2][4]	barf<>
+    bool: 1,2
+  21	sack[3][0]	barf<>
+    bool: 1,2
+  22	sack[3][1]	barf<>
+    bool: 1,2
+  23	sack[3][2]	barf<>
+    bool: 1,2
+  24	sack[3][3]	barf<>
+    bool: 1,2
+  25	sack[3][4]	barf<>
+    bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

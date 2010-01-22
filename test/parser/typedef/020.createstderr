@@ -112,14 +112,14 @@ In namespace "", we have: {
               [2] = baz<3>::z[2] (7) 
             }
           Created state:
-          bool instance pool:
-          1	baz<3>::!GND
-          2	baz<3>::!Vdd
-          3	baz<3>::x
-          4	baz<3>::y
-          5	baz<3>::z[0]
-          6	baz<3>::z[1]
-          7	baz<3>::z[2]
+          bool instance pool: (7 ports)
+          1	baz<3>::!GND	
+          2	baz<3>::!Vdd	
+          3	baz<3>::x	
+          4	baz<3>::y	
+          5	baz<3>::z[0]	
+          6	baz<3>::z[1]	
+          7	baz<3>::z[2]	
         }
         <4> {
           !GND = bool^0 = baz<4>::!GND (1) 
@@ -135,15 +135,15 @@ In namespace "", we have: {
               [3] = baz<4>::z[3] (8) 
             }
           Created state:
-          bool instance pool:
-          1	baz<4>::!GND
-          2	baz<4>::!Vdd
-          3	baz<4>::x
-          4	baz<4>::y
-          5	baz<4>::z[0]
-          6	baz<4>::z[1]
-          7	baz<4>::z[2]
-          8	baz<4>::z[3]
+          bool instance pool: (8 ports)
+          1	baz<4>::!GND	
+          2	baz<4>::!Vdd	
+          3	baz<4>::x	
+          4	baz<4>::y	
+          5	baz<4>::z[0]	
+          6	baz<4>::z[1]	
+          7	baz<4>::z[2]	
+          8	baz<4>::z[3]	
         }
       }
       }
@@ -189,20 +189,22 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	P
-  2	Q
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	P.x
-  4	P.y
-  5	P.z[0]
-  6	P.z[1]
-  7	P.z[2]
-  8	P.z[3]
-  9	Q.x
-  10	Q.y
-  11	Q.z[0]
-  12	Q.z[1]
+  process instance pool: (0 ports)
+  1	P	baz<4>
+    bool: 1,2,3,4,5,6,7,8
+  2	Q	baz<3>
+    bool: 1,2,9,10,11,12,8
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	P.x	
+  4	P.y	
+  5	P.z[0]	
+  6	P.z[1]	
+  7	P.z[2]	
+  8	P.z[3]	
+  9	Q.x	
+  10	Q.y	
+  11	Q.z[0]	
+  12	Q.z[1]	
 }

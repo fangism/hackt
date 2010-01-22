@@ -132,12 +132,12 @@ In namespace "", we have: {
             }
           out = bool^0 = nor<2>::out (3) 
           Created state:
-          bool instance pool:
-          1	nor<2>::!GND
-          2	nor<2>::!Vdd
-          3	nor<2>::out
-          4	nor<2>::in[0]
-          5	nor<2>::in[1]
+          bool instance pool: (5 ports)
+          1	nor<2>::!GND	
+          2	nor<2>::!Vdd	
+          3	nor<2>::out	
+          4	nor<2>::in[0]	
+          5	nor<2>::in[1]	
           resolved prs:
           in[0] | in[1] -> out-
           ~in[0] & ~in[1] -> out+
@@ -157,14 +157,14 @@ In namespace "", we have: {
             }
           out = bool^0 = nor<4>::out (3) 
           Created state:
-          bool instance pool:
-          1	nor<4>::!GND
-          2	nor<4>::!Vdd
-          3	nor<4>::out
-          4	nor<4>::in[0]
-          5	nor<4>::in[1]
-          6	nor<4>::in[2]
-          7	nor<4>::in[3]
+          bool instance pool: (7 ports)
+          1	nor<4>::!GND	
+          2	nor<4>::!Vdd	
+          3	nor<4>::out	
+          4	nor<4>::in[0]	
+          5	nor<4>::in[1]	
+          6	nor<4>::in[2]	
+          7	nor<4>::in[3]	
           resolved prs:
           in[0] | in[1] | in[2] | in[3] -> out-
           ~in[0] & ~in[1] & ~in[2] & ~in[3] -> out+
@@ -209,17 +209,19 @@ footprint: {
   )
   z = bool^0 = z (5) 
   Created state:
-  process instance pool:
-  1	a
-  2	b
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	a.in[0]
-  4	a.in[1]
-  5	z
-  6	b.in[0]
-  7	b.in[1]
-  8	b.in[2]
-  9	b.in[3]
+  process instance pool: (0 ports)
+  1	a	nor<2>
+    bool: 1,2,5,3,4
+  2	b	nor<4>
+    bool: 1,2,5,6,7,8,9
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	a.in[0]	
+  4	a.in[1]	
+  5	z	
+  6	b.in[0]	
+  7	b.in[1]	
+  8	b.in[2]	
+  9	b.in[3]	
 }

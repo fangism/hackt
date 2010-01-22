@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.39.2.4 2010/01/20 02:18:18 fang Exp $
+	$Id: instance_alias.tcc,v 1.39.2.5 2010/01/22 23:41:33 fang Exp $
 	TODO: trim includes
  */
 
@@ -622,6 +622,7 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	This fills in an entry of a footprint_frame with a translated 
 	globally-allocated index.
@@ -647,6 +648,7 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 	substructure_parent_type::__assign_footprint_frame(
 		ff, pcc.substructure_array[ind]);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -953,6 +955,7 @@ INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	First lookup canonical placeholder ID, assigned by create phase.
 	Then lookup...
@@ -983,6 +986,7 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 #endif
 	this->__construct_port_context(pcc.substructure_array[ind], ff);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

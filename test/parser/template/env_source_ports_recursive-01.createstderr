@@ -287,13 +287,13 @@ In namespace "", we have: {
             }
           e = bool^0 = e1of<3>::e (3) 
           Created state:
-          bool instance pool:
-          1	e1of<3>::!GND
-          2	e1of<3>::!Vdd
-          3	e1of<3>::e
-          4	e1of<3>::d[0]
-          5	e1of<3>::d[1]
-          6	e1of<3>::d[2]
+          bool instance pool: (6 ports)
+          1	e1of<3>::!GND	
+          2	e1of<3>::!Vdd	
+          3	e1of<3>::e	
+          4	e1of<3>::d[0]	
+          5	e1of<3>::d[1]	
+          6	e1of<3>::d[2]	
         }
       }
       }
@@ -349,16 +349,17 @@ In namespace "", we have: {
             e = bool^0 = source_e<3, 1, {0}>::rr.e (6) 
           )
           Created state:
-          process instance pool:
-          1	source_e<3, 1, {0}>::rr
-          bool instance pool:
-          1	source_e<3, 1, {0}>::!GND
-          2	source_e<3, 1, {0}>::!Vdd
-          3	source_e<3, 1, {0}>::rr.d[0]
-          4	source_e<3, 1, {0}>::rr.d[1]
-          5	source_e<3, 1, {0}>::rr.d[2]
-          6	source_e<3, 1, {0}>::rr.e
-          7	source_e<3, 1, {0}>::_Reset
+          process instance pool: (1 ports)
+          1	source_e<3, 1, {0}>::rr	e1of<3>
+            bool: 1,2,6,3,4,5
+          bool instance pool: (7 ports)
+          1	source_e<3, 1, {0}>::!GND	
+          2	source_e<3, 1, {0}>::!Vdd	
+          3	source_e<3, 1, {0}>::rr.d[0]	
+          4	source_e<3, 1, {0}>::rr.d[1]	
+          5	source_e<3, 1, {0}>::rr.d[2]	
+          6	source_e<3, 1, {0}>::rr.e	
+          7	source_e<3, 1, {0}>::_Reset	
           bool port aliases:
           1: source_e<3, 1, {0}>::rr.!GND = source_e<3, 1, {0}>::!GND
           2: source_e<3, 1, {0}>::rr.!Vdd = source_e<3, 1, {0}>::!Vdd
@@ -385,16 +386,17 @@ In namespace "", we have: {
             e = bool^0 = source_e<3, 1, {1}>::rr.e (6) 
           )
           Created state:
-          process instance pool:
-          1	source_e<3, 1, {1}>::rr
-          bool instance pool:
-          1	source_e<3, 1, {1}>::!GND
-          2	source_e<3, 1, {1}>::!Vdd
-          3	source_e<3, 1, {1}>::rr.d[0]
-          4	source_e<3, 1, {1}>::rr.d[1]
-          5	source_e<3, 1, {1}>::rr.d[2]
-          6	source_e<3, 1, {1}>::rr.e
-          7	source_e<3, 1, {1}>::_Reset
+          process instance pool: (1 ports)
+          1	source_e<3, 1, {1}>::rr	e1of<3>
+            bool: 1,2,6,3,4,5
+          bool instance pool: (7 ports)
+          1	source_e<3, 1, {1}>::!GND	
+          2	source_e<3, 1, {1}>::!Vdd	
+          3	source_e<3, 1, {1}>::rr.d[0]	
+          4	source_e<3, 1, {1}>::rr.d[1]	
+          5	source_e<3, 1, {1}>::rr.d[2]	
+          6	source_e<3, 1, {1}>::rr.e	
+          7	source_e<3, 1, {1}>::_Reset	
           bool port aliases:
           1: source_e<3, 1, {1}>::rr.!GND = source_e<3, 1, {1}>::!GND
           2: source_e<3, 1, {1}>::rr.!Vdd = source_e<3, 1, {1}>::!Vdd
@@ -421,16 +423,17 @@ In namespace "", we have: {
             e = bool^0 = source_e<3, 1, {2}>::rr.e (6) 
           )
           Created state:
-          process instance pool:
-          1	source_e<3, 1, {2}>::rr
-          bool instance pool:
-          1	source_e<3, 1, {2}>::!GND
-          2	source_e<3, 1, {2}>::!Vdd
-          3	source_e<3, 1, {2}>::rr.d[0]
-          4	source_e<3, 1, {2}>::rr.d[1]
-          5	source_e<3, 1, {2}>::rr.d[2]
-          6	source_e<3, 1, {2}>::rr.e
-          7	source_e<3, 1, {2}>::_Reset
+          process instance pool: (1 ports)
+          1	source_e<3, 1, {2}>::rr	e1of<3>
+            bool: 1,2,6,3,4,5
+          bool instance pool: (7 ports)
+          1	source_e<3, 1, {2}>::!GND	
+          2	source_e<3, 1, {2}>::!Vdd	
+          3	source_e<3, 1, {2}>::rr.d[0]	
+          4	source_e<3, 1, {2}>::rr.d[1]	
+          5	source_e<3, 1, {2}>::rr.d[2]	
+          6	source_e<3, 1, {2}>::rr.e	
+          7	source_e<3, 1, {2}>::_Reset	
           bool port aliases:
           1: source_e<3, 1, {2}>::rr.!GND = source_e<3, 1, {2}>::!GND
           2: source_e<3, 1, {2}>::rr.!Vdd = source_e<3, 1, {2}>::!Vdd
@@ -500,17 +503,20 @@ In namespace "", we have: {
               0 = 2
             }
           Created state:
-          process instance pool:
-          1	source_pack_port_test<3, 1, {2}>::Src[0]<1, {2}>
-          2	source_pack_port_test<3, 1, {2}>::Src[0].rr
-          bool instance pool:
-          1	source_pack_port_test<3, 1, {2}>::!GND
-          2	source_pack_port_test<3, 1, {2}>::!Vdd
-          3	source_pack_port_test<3, 1, {2}>::Src[0].rr.d[0]
-          4	source_pack_port_test<3, 1, {2}>::Src[0].rr.d[1]
-          5	source_pack_port_test<3, 1, {2}>::Src[0].rr.d[2]
-          6	source_pack_port_test<3, 1, {2}>::Src[0].rr.e
-          7	source_pack_port_test<3, 1, {2}>::Src[0]._Reset
+          process instance pool: (2 ports)
+          1	source_pack_port_test<3, 1, {2}>::Src[0]<1, {2}>	source_e<3, 1, {2}>
+            process: 2
+            bool: 1,2,3,4,5,6,7
+          2	source_pack_port_test<3, 1, {2}>::Src[0].rr	e1of<3>
+            bool: 1,2,6,3,4,5
+          bool instance pool: (7 ports)
+          1	source_pack_port_test<3, 1, {2}>::!GND	
+          2	source_pack_port_test<3, 1, {2}>::!Vdd	
+          3	source_pack_port_test<3, 1, {2}>::Src[0].rr.d[0]	
+          4	source_pack_port_test<3, 1, {2}>::Src[0].rr.d[1]	
+          5	source_pack_port_test<3, 1, {2}>::Src[0].rr.d[2]	
+          6	source_pack_port_test<3, 1, {2}>::Src[0].rr.e	
+          7	source_pack_port_test<3, 1, {2}>::Src[0]._Reset	
           bool port aliases:
           1: source_pack_port_test<3, 1, {2}>::Src[0].!GND = source_pack_port_test<3, 1, {2}>::Src[0].rr.!GND = source_pack_port_test<3, 1, {2}>::!GND
           2: source_pack_port_test<3, 1, {2}>::Src[0].!Vdd = source_pack_port_test<3, 1, {2}>::Src[0].rr.!Vdd = source_pack_port_test<3, 1, {2}>::!Vdd
@@ -584,25 +590,33 @@ In namespace "", we have: {
               }
           )
           Created state:
-          process instance pool:
-          1	source_pack_port_test<3, 2, {1,2}>::Src[1]<1, {2}>
-          2	source_pack_port_test<3, 2, {1,2}>::Src[1].rr
-          3	source_pack_port_test<3, 2, {1,2}>::Src[0]<1, {1}>
-          4	source_pack_port_test<3, 2, {1,2}>::Src[0].rr
-          5	source_pack_port_test<3, 2, {1,2}>::rec<{2}>
-          bool instance pool:
-          1	source_pack_port_test<3, 2, {1,2}>::!GND
-          2	source_pack_port_test<3, 2, {1,2}>::!Vdd
-          3	source_pack_port_test<3, 2, {1,2}>::Src[1].rr.d[0]
-          4	source_pack_port_test<3, 2, {1,2}>::Src[1].rr.d[1]
-          5	source_pack_port_test<3, 2, {1,2}>::Src[1].rr.d[2]
-          6	source_pack_port_test<3, 2, {1,2}>::Src[1].rr.e
-          7	source_pack_port_test<3, 2, {1,2}>::Src[1]._Reset
-          8	source_pack_port_test<3, 2, {1,2}>::Src[0].rr.d[0]
-          9	source_pack_port_test<3, 2, {1,2}>::Src[0].rr.d[1]
-          10	source_pack_port_test<3, 2, {1,2}>::Src[0].rr.d[2]
-          11	source_pack_port_test<3, 2, {1,2}>::Src[0].rr.e
-          12	source_pack_port_test<3, 2, {1,2}>::Src[0]._Reset
+          process instance pool: (4 ports)
+          1	source_pack_port_test<3, 2, {1,2}>::Src[1]<1, {2}>	source_e<3, 1, {2}>
+            process: 2
+            bool: 1,2,3,4,5,6,7
+          2	source_pack_port_test<3, 2, {1,2}>::Src[1].rr	e1of<3>
+            bool: 1,2,6,3,4,5
+          3	source_pack_port_test<3, 2, {1,2}>::Src[0]<1, {1}>	source_e<3, 1, {1}>
+            process: 4
+            bool: 1,2,8,9,10,11,12
+          4	source_pack_port_test<3, 2, {1,2}>::Src[0].rr	e1of<3>
+            bool: 1,2,11,8,9,10
+          5	source_pack_port_test<3, 2, {1,2}>::rec<{2}>	source_pack_port_test<3, 1, {2}>
+            process: 1,2
+            bool: 1,2,3,4,5,6,7
+          bool instance pool: (12 ports)
+          1	source_pack_port_test<3, 2, {1,2}>::!GND	
+          2	source_pack_port_test<3, 2, {1,2}>::!Vdd	
+          3	source_pack_port_test<3, 2, {1,2}>::Src[1].rr.d[0]	
+          4	source_pack_port_test<3, 2, {1,2}>::Src[1].rr.d[1]	
+          5	source_pack_port_test<3, 2, {1,2}>::Src[1].rr.d[2]	
+          6	source_pack_port_test<3, 2, {1,2}>::Src[1].rr.e	
+          7	source_pack_port_test<3, 2, {1,2}>::Src[1]._Reset	
+          8	source_pack_port_test<3, 2, {1,2}>::Src[0].rr.d[0]	
+          9	source_pack_port_test<3, 2, {1,2}>::Src[0].rr.d[1]	
+          10	source_pack_port_test<3, 2, {1,2}>::Src[0].rr.d[2]	
+          11	source_pack_port_test<3, 2, {1,2}>::Src[0].rr.e	
+          12	source_pack_port_test<3, 2, {1,2}>::Src[0]._Reset	
           bool port aliases:
           1: source_pack_port_test<3, 2, {1,2}>::Src[0].!GND = source_pack_port_test<3, 2, {1,2}>::Src[0].rr.!GND = source_pack_port_test<3, 2, {1,2}>::Src[1].!GND = source_pack_port_test<3, 2, {1,2}>::Src[1].rr.!GND = source_pack_port_test<3, 2, {1,2}>::!GND
           2: source_pack_port_test<3, 2, {1,2}>::Src[0].!Vdd = source_pack_port_test<3, 2, {1,2}>::Src[0].rr.!Vdd = source_pack_port_test<3, 2, {1,2}>::Src[1].!Vdd = source_pack_port_test<3, 2, {1,2}>::Src[1].rr.!Vdd = source_pack_port_test<3, 2, {1,2}>::!Vdd
@@ -709,32 +723,46 @@ In namespace "", we have: {
               }
           )
           Created state:
-          process instance pool:
-          1	source_pack_port_test<3, 3, {0,1,2}>::Src[1]<1, {1}>
-          2	source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr
-          3	source_pack_port_test<3, 3, {0,1,2}>::Src[2]<1, {2}>
-          4	source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr
-          5	source_pack_port_test<3, 3, {0,1,2}>::Src[0]<1, {0}>
-          6	source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr
-          7	source_pack_port_test<3, 3, {0,1,2}>::rec<{1,2}>
-          bool instance pool:
-          1	source_pack_port_test<3, 3, {0,1,2}>::!GND
-          2	source_pack_port_test<3, 3, {0,1,2}>::!Vdd
-          3	source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr.d[0]
-          4	source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr.d[1]
-          5	source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr.d[2]
-          6	source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr.e
-          7	source_pack_port_test<3, 3, {0,1,2}>::Src[1]._Reset
-          8	source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr.d[0]
-          9	source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr.d[1]
-          10	source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr.d[2]
-          11	source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr.e
-          12	source_pack_port_test<3, 3, {0,1,2}>::Src[2]._Reset
-          13	source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr.d[0]
-          14	source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr.d[1]
-          15	source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr.d[2]
-          16	source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr.e
-          17	source_pack_port_test<3, 3, {0,1,2}>::Src[0]._Reset
+          process instance pool: (6 ports)
+          1	source_pack_port_test<3, 3, {0,1,2}>::Src[1]<1, {1}>	source_e<3, 1, {1}>
+            process: 2
+            bool: 1,2,3,4,5,6,7
+          2	source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr	e1of<3>
+            bool: 1,2,6,3,4,5
+          3	source_pack_port_test<3, 3, {0,1,2}>::Src[2]<1, {2}>	source_e<3, 1, {2}>
+            process: 4
+            bool: 1,2,8,9,10,11,12
+          4	source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr	e1of<3>
+            bool: 1,2,11,8,9,10
+          5	source_pack_port_test<3, 3, {0,1,2}>::Src[0]<1, {0}>	source_e<3, 1, {0}>
+            process: 6
+            bool: 1,2,13,14,15,16,17
+          6	source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr	e1of<3>
+            bool: 1,2,16,13,14,15
+          7	source_pack_port_test<3, 3, {0,1,2}>::rec<{1,2}>	source_pack_port_test<3, 2, {1,2}>
+            process: 3,4,1,2
+            bool: 1,2,8,9,10,11,12,3,4,5,6,7
+          private sub-process index map:
+            (7 -> 0)
+            (8 -> 1)
+          bool instance pool: (17 ports)
+          1	source_pack_port_test<3, 3, {0,1,2}>::!GND	
+          2	source_pack_port_test<3, 3, {0,1,2}>::!Vdd	
+          3	source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr.d[0]	
+          4	source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr.d[1]	
+          5	source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr.d[2]	
+          6	source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr.e	
+          7	source_pack_port_test<3, 3, {0,1,2}>::Src[1]._Reset	
+          8	source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr.d[0]	
+          9	source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr.d[1]	
+          10	source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr.d[2]	
+          11	source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr.e	
+          12	source_pack_port_test<3, 3, {0,1,2}>::Src[2]._Reset	
+          13	source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr.d[0]	
+          14	source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr.d[1]	
+          15	source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr.d[2]	
+          16	source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr.e	
+          17	source_pack_port_test<3, 3, {0,1,2}>::Src[0]._Reset	
           bool port aliases:
           1: source_pack_port_test<3, 3, {0,1,2}>::Src[0].!GND = source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr.!GND = source_pack_port_test<3, 3, {0,1,2}>::Src[1].!GND = source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr.!GND = source_pack_port_test<3, 3, {0,1,2}>::Src[2].!GND = source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr.!GND = source_pack_port_test<3, 3, {0,1,2}>::!GND
           2: source_pack_port_test<3, 3, {0,1,2}>::Src[0].!Vdd = source_pack_port_test<3, 3, {0,1,2}>::Src[0].rr.!Vdd = source_pack_port_test<3, 3, {0,1,2}>::Src[1].!Vdd = source_pack_port_test<3, 3, {0,1,2}>::Src[1].rr.!Vdd = source_pack_port_test<3, 3, {0,1,2}>::Src[2].!Vdd = source_pack_port_test<3, 3, {0,1,2}>::Src[2].rr.!Vdd = source_pack_port_test<3, 3, {0,1,2}>::!Vdd
@@ -807,30 +835,44 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	Z<{0,1,2}>
-  2	Z.Src[0]<1, {0}>
-  3	Z.Src[0].rr
-  4	Z.Src[1]<1, {1}>
-  5	Z.Src[1].rr
-  6	Z.Src[2]<1, {2}>
-  7	Z.Src[2].rr
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	Z.Src[0].rr.d[0]
-  4	Z.Src[0].rr.d[1]
-  5	Z.Src[0].rr.d[2]
-  6	Z.Src[0].rr.e
-  7	Z.Src[0]._Reset
-  8	Z.Src[1].rr.d[0]
-  9	Z.Src[1].rr.d[1]
-  10	Z.Src[1].rr.d[2]
-  11	Z.Src[1].rr.e
-  12	Z.Src[1]._Reset
-  13	Z.Src[2].rr.d[0]
-  14	Z.Src[2].rr.d[1]
-  15	Z.Src[2].rr.d[2]
-  16	Z.Src[2].rr.e
-  17	Z.Src[2]._Reset
+  process instance pool: (0 ports)
+  1	Z<{0,1,2}>	source_pack_port_test<3, 3, {0,1,2}>
+    process: 4,5,6,7,2,3
+    bool: 1,2,8,9,10,11,12,13,14,15,16,17,3,4,5,6,7
+  2	Z.Src[0]<1, {0}>	source_e<3, 1, {0}>
+    process: 3
+    bool: 1,2,3,4,5,6,7
+  3	Z.Src[0].rr	e1of<3>
+    bool: 1,2,6,3,4,5
+  4	Z.Src[1]<1, {1}>	source_e<3, 1, {1}>
+    process: 5
+    bool: 1,2,8,9,10,11,12
+  5	Z.Src[1].rr	e1of<3>
+    bool: 1,2,11,8,9,10
+  6	Z.Src[2]<1, {2}>	source_e<3, 1, {2}>
+    process: 7
+    bool: 1,2,13,14,15,16,17
+  7	Z.Src[2].rr	e1of<3>
+    bool: 1,2,16,13,14,15
+  private sub-process index map:
+    (1 -> 0)
+    (8 -> 2)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	Z.Src[0].rr.d[0]	
+  4	Z.Src[0].rr.d[1]	
+  5	Z.Src[0].rr.d[2]	
+  6	Z.Src[0].rr.e	
+  7	Z.Src[0]._Reset	
+  8	Z.Src[1].rr.d[0]	
+  9	Z.Src[1].rr.d[1]	
+  10	Z.Src[1].rr.d[2]	
+  11	Z.Src[1].rr.e	
+  12	Z.Src[1]._Reset	
+  13	Z.Src[2].rr.d[0]	
+  14	Z.Src[2].rr.d[1]	
+  15	Z.Src[2].rr.d[2]	
+  16	Z.Src[2].rr.e	
+  17	Z.Src[2]._Reset	
 }

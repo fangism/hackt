@@ -117,19 +117,22 @@ In namespace "", we have: {
           c = bool^0 = bar<>::x.a (6) 
         )
         Created state:
-        process instance pool:
-        1	bar<>::y
-        2	bar<>::x
-        3	bar<>::z
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
-        3	bar<>::y.a
-        4	bar<>::y.b
-        5	bar<>::y.c
-        6	bar<>::x.a
-        7	bar<>::x.b
-        8	bar<>::z.b
+        process instance pool: (1 ports)
+        1	bar<>::y	foo<>
+          bool: 1,2,3,4,5
+        2	bar<>::x	foo<>
+          bool: 1,2,6,7,6
+        3	bar<>::z	foo<>
+          bool: 1,2,6,8,6
+        bool instance pool: (5 ports)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
+        3	bar<>::y.a	
+        4	bar<>::y.b	
+        5	bar<>::y.c	
+        6	bar<>::x.a	
+        7	bar<>::x.b	
+        8	bar<>::z.b	
         bool port aliases:
         1: bar<>::y.!GND = bar<>::!GND
         2: bar<>::y.!Vdd = bar<>::!Vdd
@@ -165,12 +168,12 @@ In namespace "", we have: {
         b = bool^0 = foo<>::b (4) 
         c = bool^0 = foo<>::c (5) 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::a
-        4	foo<>::b
-        5	foo<>::c
+        bool instance pool: (5 ports)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::a	
+        4	foo<>::b	
+        5	foo<>::c	
       }
       }
 
@@ -195,13 +198,22 @@ footprint: {
     )
   )
   Created state:
-  process instance pool:
-  1	poo
-  2	poo.y
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	poo.y.a
-  4	poo.y.b
-  5	poo.y.c
+  process instance pool: (0 ports)
+  1	poo	bar<>
+    process: 2
+    bool: 1,2,3,4,5
+  2	poo.y	foo<>
+    bool: 1,2,3,4,5
+  private sub-process index map:
+    (1 -> 0)
+    (3 -> 2)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	poo.y.a	
+  4	poo.y.b	
+  5	poo.y.c	
+  private sub-bool index map:
+    (1 -> 0)
+    (3 -> 3)
 }

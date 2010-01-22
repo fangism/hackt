@@ -87,11 +87,12 @@ In namespace "", we have: {
               !Vdd = bool^0 = bar::foo<>::!Vdd (2) 
             )
             Created state:
-            process instance pool:
-            1	bar::foo<>::zoo
-            bool instance pool:
-            1	bar::foo<>::!GND
-            2	bar::foo<>::!Vdd
+            process instance pool: (0 ports)
+            1	bar::foo<>::zoo	bar::ick<2>
+	bool: 1,2
+            bool instance pool: (2 ports)
+            1	bar::foo<>::!GND	
+            2	bar::foo<>::!Vdd	
           }
           }
 
@@ -118,9 +119,9 @@ In namespace "", we have: {
               !Vdd = bool^0 = bar::ick<2>::!Vdd (2) 
               X = pint^0 value: 2
               Created state:
-              bool instance pool:
-              1	bar::ick<2>::!GND
-              2	bar::ick<2>::!Vdd
+              bool instance pool: (2 ports)
+              1	bar::ick<2>::!GND	
+              2	bar::ick<2>::!Vdd	
             }
           }
           }
@@ -141,9 +142,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	f
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	f	bar::foo<>
+	bool: 1,2
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 1)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

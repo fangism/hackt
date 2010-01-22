@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.27.2.5 2010/01/20 02:18:19 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.27.2.6 2010/01/22 23:41:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -130,20 +130,20 @@ alias_reference_set<Tag>::dump(ostream& o, const dump_flags& df) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return true if ANY alias in this set is a direct port alias, 
-		or member thereof.  
+		or member thereof, return that pointer if true.  
 	reminder: instance_alias_info::is_port_alias doesn't check
 		equivalent aliases in the same union-find.  
  */
 template <class Tag>
-bool
+typename alias_reference_set<Tag>::alias_ptr_type
 alias_reference_set<Tag>::is_aliased_to_port(void) const {
 	const_iterator i(alias_array.begin());
 	const const_iterator e(alias_array.end());
 	for ( ; i!=e; ++i) {
 		if ((*i)->is_port_alias())
-			return true;
+			return *i;
 	}
-	return false;
+	return alias_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -563,13 +563,20 @@ void
 port_alias_tracker_base<Tag>::__assign_frame(
 		const substructure_alias& p, 
 		footprint_frame& ff) const {
+	STACKTRACE_VERBOSE;
 	footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
 	const_iterator i(_ids.begin()), e(_ids.end());
 	for ( ; i!=e; ++i) {
-	if (i->second.is_aliased_to_port()) {
+		const typename alias_set_type::alias_ptr_type
+			ap(i->second.is_aliased_to_port());
+		// now returns a direct port alias
+	if (ap) {
 		const size_t formal_index = i->first;
 		INVARIANT(formal_index);
-		const instance_alias_info<Tag>& f(*i->second.front());
+		const instance_alias_info<Tag>& f(*ap);
+#if ENABLE_STACKTRACE
+		f.dump_hierarchical_name(STACKTRACE_STREAM << "f: ") << endl;
+#endif
 		const instance_alias_info<Tag>& a(f.trace_alias(p));
 		// assign actual index from context to 
 		// corresponding slot in frame

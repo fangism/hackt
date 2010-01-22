@@ -1,5 +1,5 @@
 # "test/chpsim/bingcd/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2009/09/28 06:56:59 fang Exp $
+#	$Id: Makefile.am,v 1.3.2.1 2010/01/22 23:42:03 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -89,7 +89,9 @@ srcdir_EXTRA_DIST += \
 include $(top_srcdir)/test/Make.test-tail
 
 # clean up side-effect files from bitrouter tests
-HACKT_GUILE_CLEAN_IGNORE_PATTERNS += \
+# temporary:
+# HACKT_GUILE_CLEAN_IGNORE_PATTERNS +=
+HACKT_GUILE_CLEAN_IGNORE_PATTERNS = \
 	"*.hacchpsimscm-out.tmp"
 
 # additionsl search path for scheme scripts

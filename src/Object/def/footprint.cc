@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.6 2010/01/20 02:18:15 fang Exp $
+	$Id: footprint.cc,v 1.46.2.7 2010/01/22 23:41:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -153,8 +153,6 @@ template <class Tag>
 good_bool
 footprint_base<Tag>::__expand_unique_subinstances(
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-//		const port_alias_tracker& st, 
-//		const footprint_frame& gframe
 		void
 #else
 		const footprint_frame& gframe,
@@ -168,11 +166,8 @@ footprint_base<Tag>::__expand_unique_subinstances(
 	STACKTRACE_VERBOSE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	typedef	typename instance_pool_type::iterator	iterator;
-//	const footprint& _footprint(AS_A(const footprint&, *this));
-	// already sized in partition_local...
-//	const port_alias_tracker& st(_footprint.get_port_alias_tracker());
-//	_instance_pool->resize(st.template local_pool_size<Tag>());
-	iterator i(_instance_pool->begin());	// first entry valid?
+	// pool already sized in partition_local...
+	iterator i(_instance_pool->begin());	// first entry valid, 0-based
 	const iterator e(_instance_pool->end());
 #else
 	typedef	global_entry_pool<Tag>		global_pool_type;
@@ -190,10 +185,10 @@ footprint_base<Tag>::__expand_unique_subinstances(
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		state_instance<Tag>& ref(*i);
 		footprint_frame& target_frame(ref._frame);
-		// TODO: set the frame's footprint!
 		// done by canonical_type
 		const instance_alias_info<Tag>&
 			actual_alias(*ref.get_back_ref());
+		// INVARIANT(actual_alias has complete type)
 		if (!actual_alias.allocate_assign_subinstance_footprint_frame(
 				target_frame).good) {
 			ICE_EXIT(cerr);
@@ -1570,6 +1565,7 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 #endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	This recursively transforms a port_member_context to local
 	frame.  This copies globally assigned indices passed in
@@ -1596,6 +1592,7 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 	get_instance_collection_pool_bundle<bool_tag>()
 		.assign_footprint_frame(ff, pmc);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1881,7 +1878,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 #if AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 	// instead of writing redundant information, reconstruct it!
 	if (created) {
-		evaluate_scope_aliases(false);
+		evaluate_scope_aliases(true);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		partition_local_instance_pool();
 		expand_unique_subinstances();

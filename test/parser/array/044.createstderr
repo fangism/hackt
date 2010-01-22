@@ -61,7 +61,7 @@ footprint: {
   y = pbool^0 value: 0
   z = pbool^0 value: ?
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

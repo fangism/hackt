@@ -126,15 +126,15 @@ In namespace "", we have: {
             [2] = groupie<>::x[2] (8) 
           }
         Created state:
-        bool instance pool:
-        1	groupie<>::!GND
-        2	groupie<>::!Vdd
-        3	groupie<>::p
-        4	groupie<>::q
-        5	groupie<>::r
-        6	groupie<>::x[0]
-        7	groupie<>::x[1]
-        8	groupie<>::x[2]
+        bool instance pool: (5 ports)
+        1	groupie<>::!GND	
+        2	groupie<>::!Vdd	
+        3	groupie<>::p	
+        4	groupie<>::q	
+        5	groupie<>::r	
+        6	groupie<>::x[0]	
+        7	groupie<>::x[1]	
+        8	groupie<>::x[2]	
         resolved specs:
         min_sep<15>({x[0],x[1],x[2]},q)
         min_sep<10>(p,{x[0],x[1]})
@@ -162,12 +162,16 @@ footprint: {
     r = bool^0 = g.r (5) 
   )
   Created state:
-  process instance pool:
-  1	g
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	g.p
-  4	g.q
-  5	g.r
+  process instance pool: (0 ports)
+  1	g	groupie<>
+    bool: 1,2,3,4,5
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	g.p	
+  4	g.q	
+  5	g.r	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 3)
 }

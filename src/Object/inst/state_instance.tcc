@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.8.24.4 2010/01/20 02:18:20 fang Exp $
+	$Id: state_instance.tcc,v 1.8.24.5 2010/01/22 23:41:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_TCC__
@@ -14,6 +14,7 @@
 #include "Object/global_channel_entry.h"
 #endif
 #include "util/stacktrace.h"
+#include "util/indent.h"
 
 namespace HAC {
 namespace entity {
@@ -52,7 +53,10 @@ STATE_INSTANCE_CLASS::dump(ostream& o) const {
 	back_ref->dump_attributes(o);	// new: print non-default attributes
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	entry_type::dump_type(o << '\t');
+{
+	INDENT_SECTION(o);
 	entry_type::dump_frame_only(o);
+}
 #endif
 	return o;
 }

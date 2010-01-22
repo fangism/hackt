@@ -43,12 +43,12 @@ footprint: {
       [2] = x[2] (5) 
     }
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x[0]
-  4	x[1]
-  5	x[2]
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	x[0]	
+  4	x[1]	
+  5	x[2]	
   resolved specs:
   mk_exclhi({x[0],x[1],x[2]})
 }

@@ -87,11 +87,11 @@ In namespace "", we have: {
         x = channel chan(bool<>)^0 = senders<>::a (1) 
         y = channel chan(bool<>)^0 = senders<>::a (1) 
         Created state:
-        channel instance pool:
-        1	senders<>::a
-        bool instance pool:
-        1	senders<>::!GND
-        2	senders<>::!Vdd
+        channel instance pool: (1 ports)
+        1	senders<>::a	
+        bool instance pool: (2 ports)
+        1	senders<>::!GND	
+        2	senders<>::!Vdd	
       }
       }
 
@@ -110,11 +110,13 @@ footprint: {
     a = channel chan!(bool<>)^0 = z.a (1) 
   )
   Created state:
-  process instance pool:
-  1	z
-  channel instance pool:
-  1	z.a
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	z	senders<>
+    channel: 1
+    bool: 1,2
+  channel instance pool: (0 ports)
+  1	z.a	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

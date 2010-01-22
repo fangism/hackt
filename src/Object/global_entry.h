@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.7 2010/01/20 02:18:14 fang Exp $
+	$Id: global_entry.h,v 1.18.20.8 2010/01/22 23:41:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -33,7 +33,6 @@ class alias_string_set;
 class footprint;
 class state_manager;
 class entry_collection;		// defined in "Object/entry_collection.h"
-class port_member_context;
 class footprint_frame;
 
 template <class Tag>

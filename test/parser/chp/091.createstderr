@@ -174,15 +174,15 @@ In namespace "", we have: {
             }
           y = int<1>^0 = send_indexed<0>::y (1) 
           Created state:
-          channel instance pool:
-          1	send_indexed<0>::index
-          2	send_indexed<0>::out[0]
-          3	send_indexed<0>::out[1]
-          int instance pool:
-          1	send_indexed<0>::y
-          bool instance pool:
-          1	send_indexed<0>::!GND
-          2	send_indexed<0>::!Vdd
+          channel instance pool: (3 ports)
+          1	send_indexed<0>::index	
+          2	send_indexed<0>::out[0]	
+          3	send_indexed<0>::out[1]	
+          int instance pool: (0 ports)
+          1	send_indexed<0>::y	
+          bool instance pool: (2 ports)
+          1	send_indexed<0>::!GND	
+          2	send_indexed<0>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -212,15 +212,15 @@ In namespace "", we have: {
             }
           y = int<1>^0 = send_indexed<1>::y (1) 
           Created state:
-          channel instance pool:
-          1	send_indexed<1>::index
-          2	send_indexed<1>::out[0]
-          3	send_indexed<1>::out[1]
-          int instance pool:
-          1	send_indexed<1>::y
-          bool instance pool:
-          1	send_indexed<1>::!GND
-          2	send_indexed<1>::!Vdd
+          channel instance pool: (3 ports)
+          1	send_indexed<1>::index	
+          2	send_indexed<1>::out[0]	
+          3	send_indexed<1>::out[1]	
+          int instance pool: (0 ports)
+          1	send_indexed<1>::y	
+          bool instance pool: (2 ports)
+          1	send_indexed<1>::!GND	
+          2	send_indexed<1>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -267,17 +267,25 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	foo
-  2	bar
-  channel instance pool:
-  1	foo.index
-  2	foo.out[0]
-  3	foo.out[1]
-  4	bar.index
-  5	bar.out[0]
-  6	bar.out[1]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	foo	send_indexed<0>
+    channel: 1,2,3
+    bool: 1,2
+  2	bar	send_indexed<1>
+    channel: 4,5,6
+    bool: 1,2
+  channel instance pool: (0 ports)
+  1	foo.index	
+  2	foo.out[0]	
+  3	foo.out[1]	
+  4	bar.index	
+  5	bar.out[0]	
+  6	bar.out[1]	
+  private sub-int index map:
+    (1 -> 0)
+    (2 -> 1)
+    (3 -> 2)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

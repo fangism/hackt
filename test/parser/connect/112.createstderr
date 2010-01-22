@@ -109,11 +109,11 @@ In namespace "", we have: {
         a = bool^0 = wrap<>::a (3) 
         b = bool^0 = wrap<>::b (4) 
         Created state:
-        bool instance pool:
-        1	wrap<>::!GND
-        2	wrap<>::!Vdd
-        3	wrap<>::a
-        4	wrap<>::b
+        bool instance pool: (4 ports)
+        1	wrap<>::!GND	
+        2	wrap<>::!Vdd	
+        3	wrap<>::a	
+        4	wrap<>::b	
       }
       }
 
@@ -162,12 +162,15 @@ footprint: {
   y = bool^0 = x (3) 
   z = bool^0 = x (3) 
   Created state:
-  process instance pool:
-  1	j
-  2	l
-  3	m
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x
+  process instance pool: (0 ports)
+  1	j	wrap<>
+    bool: 1,2,3,3
+  2	l	wrap<>
+    bool: 1,2,3,3
+  3	m	wrap<>
+    bool: 1,2,3,3
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	x	
 }

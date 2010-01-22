@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.29.2.1 2010/01/20 02:18:20 fang Exp $
+	$Id: subinstance_manager.cc,v 1.29.2.2 2010/01/22 23:41:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -299,6 +299,7 @@ subinstance_manager::allocate_subinstances(footprint& f) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 void
 subinstance_manager::__construct_port_context(port_member_context& pmc, 
 		const footprint_frame& ff) const {
@@ -325,6 +326,7 @@ subinstance_manager::__assign_footprint_frame(footprint_frame& ff,
 		(*i)->assign_footprint_frame(ff, pmc[j]);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

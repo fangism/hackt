@@ -77,12 +77,12 @@ In namespace "", we have: {
               [2] = foo<3>::a[2] (5) 
             }
           Created state:
-          bool instance pool:
-          1	foo<3>::!GND
-          2	foo<3>::!Vdd
-          3	foo<3>::a[0]
-          4	foo<3>::a[1]
-          5	foo<3>::a[2]
+          bool instance pool: (5 ports)
+          1	foo<3>::!GND	
+          2	foo<3>::!Vdd	
+          3	foo<3>::a[0]	
+          4	foo<3>::a[1]	
+          5	foo<3>::a[2]	
         }
       }
       }
@@ -107,12 +107,13 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	poo
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	poo.a[0]
-  4	poo.a[1]
-  5	poo.a[2]
+  process instance pool: (0 ports)
+  1	poo	foo<3>
+    bool: 1,2,3,4,5
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	poo.a[0]	
+  4	poo.a[1]	
+  5	poo.a[2]	
 }

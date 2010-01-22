@@ -92,13 +92,13 @@ In namespace "", we have: {
         c = bool^0 = ass<>::c (6) 
         q = bool^0 = ass<>::q (3) 
         Created state:
-        bool instance pool:
-        1	ass<>::!GND
-        2	ass<>::!Vdd
-        3	ass<>::q
-        4	ass<>::a
-        5	ass<>::b
-        6	ass<>::c
+        bool instance pool: (3 ports)
+        1	ass<>::!GND	
+        2	ass<>::!Vdd	
+        3	ass<>::q	
+        4	ass<>::a	
+        5	ass<>::b	
+        6	ass<>::c	
         resolved specs:
         min_sep<5>(a,b)
       }
@@ -122,10 +122,14 @@ footprint: {
   )
   x = bool^0 = x (3) 
   Created state:
-  process instance pool:
-  1	myass
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x
+  process instance pool: (0 ports)
+  1	myass	ass<>
+    bool: 1,2,3
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	x	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 3)
 }

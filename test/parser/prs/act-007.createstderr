@@ -168,14 +168,14 @@ In namespace "", we have: {
               [4] = bar<5>::w[4] (7) 
             }
           Created state:
-          bool instance pool:
-          1	bar<5>::!GND
-          2	bar<5>::!Vdd
-          3	bar<5>::w[0]
-          4	bar<5>::w[1]
-          5	bar<5>::w[2]
-          6	bar<5>::w[3]
-          7	bar<5>::w[4]
+          bool instance pool: (7 ports)
+          1	bar<5>::!GND	
+          2	bar<5>::!Vdd	
+          3	bar<5>::w[0]	
+          4	bar<5>::w[1]	
+          5	bar<5>::w[2]	
+          6	bar<5>::w[3]	
+          7	bar<5>::w[4]	
           resolved prs:
           w[0] -> w[1]-
           rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -256,26 +256,27 @@ In namespace "", we have: {
               [3] = foo<3>::z[3] (12) 
             }
           Created state:
-          process instance pool:
-          1	foo<3>::b
-          bool instance pool:
-          1	foo<3>::!GND
-          2	foo<3>::!Vdd
-          3	foo<3>::x[0]
-          4	foo<3>::x[1]
-          5	foo<3>::x[2]
-          6	foo<3>::y[0]
-          7	foo<3>::y[1]
-          8	foo<3>::y[2]
-          9	foo<3>::z[0]
-          10	foo<3>::z[1]
-          11	foo<3>::z[2]
-          12	foo<3>::z[3]
-          13	foo<3>::b.w[0]
-          14	foo<3>::b.w[1]
-          15	foo<3>::b.w[2]
-          16	foo<3>::b.w[3]
-          17	foo<3>::b.w[4]
+          process instance pool: (0 ports)
+          1	foo<3>::b	bar<5>
+            bool: 1,2,13,14,15,16,17
+          bool instance pool: (12 ports)
+          1	foo<3>::!GND	
+          2	foo<3>::!Vdd	
+          3	foo<3>::x[0]	
+          4	foo<3>::x[1]	
+          5	foo<3>::x[2]	
+          6	foo<3>::y[0]	
+          7	foo<3>::y[1]	
+          8	foo<3>::y[2]	
+          9	foo<3>::z[0]	
+          10	foo<3>::z[1]	
+          11	foo<3>::z[2]	
+          12	foo<3>::z[3]	
+          13	foo<3>::b.w[0]	
+          14	foo<3>::b.w[1]	
+          15	foo<3>::b.w[2]	
+          16	foo<3>::b.w[3]	
+          17	foo<3>::b.w[4]	
           resolved prs:
           x[0] -> y[0]-
           ~x[0] -> y[0]+
@@ -323,19 +324,26 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	x
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x.x[0]
-  4	x.x[1]
-  5	x.x[2]
-  6	x.y[0]
-  7	x.y[1]
-  8	x.y[2]
-  9	x.z[0]
-  10	x.z[1]
-  11	x.z[2]
-  12	x.z[3]
+  process instance pool: (0 ports)
+  1	x	foo<3>
+    bool: 1,2,3,4,5,6,7,8,9,10,11,12
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 1)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	x.x[0]	
+  4	x.x[1]	
+  5	x.x[2]	
+  6	x.y[0]	
+  7	x.y[1]	
+  8	x.y[2]	
+  9	x.z[0]	
+  10	x.z[1]	
+  11	x.z[2]	
+  12	x.z[3]	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 5)
 }

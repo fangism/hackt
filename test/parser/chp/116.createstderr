@@ -261,30 +261,30 @@ In namespace "", we have: {
           }
         l = int<4>^0 = metalooptest<>::l (1) 
         Created state:
-        channel instance pool:
-        1	metalooptest<>::L
-        2	metalooptest<>::R
-        int instance pool:
-        1	metalooptest<>::l
-        bool instance pool:
-        1	metalooptest<>::!GND
-        2	metalooptest<>::!Vdd
-        3	metalooptest<>::b[0]
-        4	metalooptest<>::b[1]
-        5	metalooptest<>::b[2]
-        6	metalooptest<>::b[3]
-        7	metalooptest<>::b[4]
-        8	metalooptest<>::b[5]
-        9	metalooptest<>::b[6]
-        10	metalooptest<>::b[7]
-        11	metalooptest<>::b[8]
-        12	metalooptest<>::b[9]
-        13	metalooptest<>::b[10]
-        14	metalooptest<>::b[11]
-        15	metalooptest<>::b[12]
-        16	metalooptest<>::b[13]
-        17	metalooptest<>::b[14]
-        18	metalooptest<>::b[15]
+        channel instance pool: (2 ports)
+        1	metalooptest<>::L	
+        2	metalooptest<>::R	
+        int instance pool: (0 ports)
+        1	metalooptest<>::l	
+        bool instance pool: (2 ports)
+        1	metalooptest<>::!GND	
+        2	metalooptest<>::!Vdd	
+        3	metalooptest<>::b[0]	
+        4	metalooptest<>::b[1]	
+        5	metalooptest<>::b[2]	
+        6	metalooptest<>::b[3]	
+        7	metalooptest<>::b[4]	
+        8	metalooptest<>::b[5]	
+        9	metalooptest<>::b[6]	
+        10	metalooptest<>::b[7]	
+        11	metalooptest<>::b[8]	
+        12	metalooptest<>::b[9]	
+        13	metalooptest<>::b[10]	
+        14	metalooptest<>::b[11]	
+        15	metalooptest<>::b[12]	
+        16	metalooptest<>::b[13]	
+        17	metalooptest<>::b[14]	
+        18	metalooptest<>::b[15]	
         resolved concurrent actions:
           *[
             sequential: {
@@ -355,12 +355,20 @@ footprint: {
     R = channel chan!(bool<>)^0 = M.R (2) 
   )
   Created state:
-  process instance pool:
-  1	M
-  channel instance pool:
-  1	M.L
-  2	M.R
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	M	metalooptest<>
+    channel: 1,2
+    bool: 1,2
+  channel instance pool: (0 ports)
+  1	M.L	
+  2	M.R	
+  private sub-int index map:
+    (1 -> 0)
+    (2 -> 1)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 16)
 }

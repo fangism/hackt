@@ -121,11 +121,11 @@ In namespace "", we have: {
               [0] = foo<3>::q[0] (3) 
             }
           Created state:
-          bool instance pool:
-          1	foo<3>::!GND
-          2	foo<3>::!Vdd
-          3	foo<3>::q[0]
-          4	foo<3>::a[2]
+          bool instance pool: (4 ports)
+          1	foo<3>::!GND	
+          2	foo<3>::!Vdd	
+          3	foo<3>::q[0]	
+          4	foo<3>::a[2]	
           bool port aliases:
           3: foo<3>::a[0] = foo<3>::a[1]
         }
@@ -146,13 +146,13 @@ In namespace "", we have: {
               [1] = foo<4>::q[1] (6) 
             }
           Created state:
-          bool instance pool:
-          1	foo<4>::!GND
-          2	foo<4>::!Vdd
-          3	foo<4>::q[0]
-          4	foo<4>::a[1]
-          5	foo<4>::a[3]
-          6	foo<4>::q[1]
+          bool instance pool: (5 ports)
+          1	foo<4>::!GND	
+          2	foo<4>::!Vdd	
+          3	foo<4>::q[0]	
+          4	foo<4>::a[1]	
+          5	foo<4>::a[3]	
+          6	foo<4>::q[1]	
           bool port aliases:
           3: foo<4>::a[0] = foo<4>::a[2]
         }
@@ -174,14 +174,14 @@ In namespace "", we have: {
               [1] = foo<5>::q[1] (7) 
             }
           Created state:
-          bool instance pool:
-          1	foo<5>::!GND
-          2	foo<5>::!Vdd
-          3	foo<5>::q[0]
-          4	foo<5>::a[1]
-          5	foo<5>::a[3]
-          6	foo<5>::a[4]
-          7	foo<5>::q[1]
+          bool instance pool: (6 ports)
+          1	foo<5>::!GND	
+          2	foo<5>::!Vdd	
+          3	foo<5>::q[0]	
+          4	foo<5>::a[1]	
+          5	foo<5>::a[3]	
+          6	foo<5>::a[4]	
+          7	foo<5>::q[1]	
           bool port aliases:
           3: foo<5>::a[0] = foo<5>::a[2]
         }
@@ -233,20 +233,27 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	blinky
-  2	inky
-  3	clyde
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	blinky.a[0]
-  4	blinky.a[2]
-  5	inky.a[0]
-  6	inky.a[1]
-  7	inky.a[3]
-  8	clyde.a[0]
-  9	clyde.a[1]
-  10	clyde.a[3]
-  11	clyde.a[4]
+  process instance pool: (0 ports)
+  1	blinky	foo<3>
+    bool: 1,2,3,4
+  2	inky	foo<4>
+    bool: 1,2,5,6,7
+  3	clyde	foo<5>
+    bool: 1,2,8,9,10,11
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	blinky.a[0]	
+  4	blinky.a[2]	
+  5	inky.a[0]	
+  6	inky.a[1]	
+  7	inky.a[3]	
+  8	clyde.a[0]	
+  9	clyde.a[1]	
+  10	clyde.a[3]	
+  11	clyde.a[4]	
+  private sub-bool index map:
+    (2 -> 0)
+    (3 -> 1)
+    (4 -> 2)
 }

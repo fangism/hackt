@@ -53,8 +53,8 @@ footprint: {
   copier = bool^0 = blah (3) 
   sneeze = bool^0 = blah (3) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	blah
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	blah	
 }

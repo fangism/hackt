@@ -64,14 +64,14 @@ footprint: {
     }
   z = bool^0 = z (3) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	z
-  4	x[0]
-  5	x[1]
-  6	x[2]
-  7	x[3]
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	z	
+  4	x[0]	
+  5	x[1]	
+  6	x[2]	
+  7	x[3]	
   resolved prs:
   x[0] | x[1] | x[2] | x[3] -> z-
   ~x[0] | ~x[1] | ~x[2] | ~x[3] -> z+

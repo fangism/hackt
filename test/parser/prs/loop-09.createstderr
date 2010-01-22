@@ -101,11 +101,11 @@ In namespace "", we have: {
           x = bool^0 = null<0>::x (3) 
           y = bool^0 = null<0>::y (4) 
           Created state:
-          bool instance pool:
-          1	null<0>::!GND
-          2	null<0>::!Vdd
-          3	null<0>::x
-          4	null<0>::y
+          bool instance pool: (2 ports)
+          1	null<0>::!GND	
+          2	null<0>::!Vdd	
+          3	null<0>::x	
+          4	null<0>::y	
         }
         <3> {
           !GND = bool^0 = null<3>::!GND (1) 
@@ -114,11 +114,11 @@ In namespace "", we have: {
           x = bool^0 = null<3>::x (3) 
           y = bool^0 = null<3>::y (4) 
           Created state:
-          bool instance pool:
-          1	null<3>::!GND
-          2	null<3>::!Vdd
-          3	null<3>::x
-          4	null<3>::y
+          bool instance pool: (2 ports)
+          1	null<3>::!GND	
+          2	null<3>::!Vdd	
+          3	null<3>::x	
+          4	null<3>::y	
           resolved prs:
           x -> y-
           ~x -> y+
@@ -151,10 +151,16 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	none
-  2	foo
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	none	null<0>
+    bool: 1,2
+  2	foo	null<3>
+    bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 2)
+    (3 -> 4)
 }

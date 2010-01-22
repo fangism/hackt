@@ -55,7 +55,7 @@ footprint: {
   !GND = bool^0 = !GND (1) 
   !Vdd = bool^0 = !Vdd (2) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

@@ -114,12 +114,12 @@ In namespace "", we have: {
         b = bool^0 = nand_type<>::b (4) 
         c = bool^0 = nand_type<>::c (5) 
         Created state:
-        bool instance pool:
-        1	nand_type<>::!GND
-        2	nand_type<>::!Vdd
-        3	nand_type<>::a
-        4	nand_type<>::b
-        5	nand_type<>::c
+        bool instance pool: (5 ports)
+        1	nand_type<>::!GND	
+        2	nand_type<>::!Vdd	
+        3	nand_type<>::a	
+        4	nand_type<>::b	
+        5	nand_type<>::c	
         resolved prs:
         a<10;lvt> & b<10;svt=0> -> c-
         ~a<5,2;svt=1> | ~b<10;svt> -> c+
@@ -147,12 +147,13 @@ footprint: {
   lvt = pint^0 value: -2
   svt = pint^0 value: -1
   Created state:
-  process instance pool:
-  1	X
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	X.a
-  4	X.b
-  5	X.c
+  process instance pool: (0 ports)
+  1	X	nand_type<>
+    bool: 1,2,3,4,5
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	X.a	
+  4	X.b	
+  5	X.c	
 }

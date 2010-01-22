@@ -51,12 +51,12 @@ footprint: {
   g = bool^0 = g (3) 
   s = bool^0 = s (4) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	g
-  4	s
-  5	d
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	g	
+  4	s	
+  5	d	
   resolved macros:
   passn<;lvt>(g,s,d)
   rule supply map: (rules, macros, @nodes : Vdd, GND)

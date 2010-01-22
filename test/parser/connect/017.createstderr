@@ -64,9 +64,9 @@ In namespace "", we have: {
         !GND = bool^0 = barf<>::!GND (1) 
         !Vdd = bool^0 = barf<>::!Vdd (2) 
         Created state:
-        bool instance pool:
-        1	barf<>::!GND
-        2	barf<>::!Vdd
+        bool instance pool: (2 ports)
+        1	barf<>::!GND	
+        2	barf<>::!Vdd	
       }
       }
 
@@ -108,12 +108,16 @@ footprint: {
       )
     }
   Created state:
-  process instance pool:
-  1	bag
-  2	sack[1]
-  3	sack[2]
-  4	sack[3]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	bag	barf<>
+    bool: 1,2
+  2	sack[1]	barf<>
+    bool: 1,2
+  3	sack[2]	barf<>
+    bool: 1,2
+  4	sack[3]	barf<>
+    bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

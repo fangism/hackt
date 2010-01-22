@@ -175,16 +175,16 @@ In namespace "", we have: {
         y = int<1>^0 = send_indexed<>::y (1) 
         z = int<1>^0 = send_indexed<>::z (2) 
         Created state:
-        channel instance pool:
-        1	send_indexed<>::out
-        2	send_indexed<>::index[0]
-        3	send_indexed<>::index[1]
-        int instance pool:
-        1	send_indexed<>::y
-        2	send_indexed<>::z
-        bool instance pool:
-        1	send_indexed<>::!GND
-        2	send_indexed<>::!Vdd
+        channel instance pool: (3 ports)
+        1	send_indexed<>::out	
+        2	send_indexed<>::index[0]	
+        3	send_indexed<>::index[1]	
+        int instance pool: (0 ports)
+        1	send_indexed<>::y	
+        2	send_indexed<>::z	
+        bool instance pool: (2 ports)
+        1	send_indexed<>::!GND	
+        2	send_indexed<>::!Vdd	
         resolved concurrent actions:
           *[
             sequential: {
@@ -225,13 +225,18 @@ footprint: {
     out = channel chan!(int<32>)^0 = foo.out (3) 
   )
   Created state:
-  process instance pool:
-  1	foo
-  channel instance pool:
-  1	foo.index[0]
-  2	foo.index[1]
-  3	foo.out
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	foo	send_indexed<>
+    channel: 3,1,2
+    bool: 1,2
+  channel instance pool: (0 ports)
+  1	foo.index[0]	
+  2	foo.index[1]	
+  3	foo.out	
+  private sub-int index map:
+    (1 -> 0)
+    (2 -> 2)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

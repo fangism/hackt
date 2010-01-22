@@ -83,9 +83,9 @@ In namespace "", we have: {
             4 = ?
           }
         Created state:
-        bool instance pool:
-        1	bogus<>::!GND
-        2	bogus<>::!Vdd
+        bool instance pool: (2 ports)
+        1	bogus<>::!GND	
+        2	bogus<>::!Vdd	
       }
       }
 
@@ -108,10 +108,12 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	x
-  2	y
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	x	bogus<>
+	bool: 1,2
+  2	y	bogus<>
+	bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

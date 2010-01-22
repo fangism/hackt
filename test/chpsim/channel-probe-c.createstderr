@@ -429,12 +429,12 @@ In namespace "", we have: {
         B = channel chan?(bool<>)^0 = bool_sink<>::B (1) 
         b = bool^0 = bool_sink<>::b (3) 
         Created state:
-        channel instance pool:
-        1	bool_sink<>::B
-        bool instance pool:
-        1	bool_sink<>::!GND
-        2	bool_sink<>::!Vdd
-        3	bool_sink<>::b
+        channel instance pool: (1 ports)
+        1	bool_sink<>::B	
+        bool instance pool: (2 ports)
+        1	bool_sink<>::!GND	
+        2	bool_sink<>::!Vdd	
+        3	bool_sink<>::b	
         resolved concurrent actions:
           *[
             B?(b)
@@ -582,11 +582,11 @@ In namespace "", we have: {
           N = pint^0 value: 2
           S = channel chan!(bool<>)^0 = bool_source<2, {1,0}>::S (1) 
           Created state:
-          channel instance pool:
-          1	bool_source<2, {1,0}>::S
-          bool instance pool:
-          1	bool_source<2, {1,0}>::!GND
-          2	bool_source<2, {1,0}>::!Vdd
+          channel instance pool: (1 ports)
+          1	bool_source<2, {1,0}>::S	
+          bool instance pool: (2 ports)
+          1	bool_source<2, {1,0}>::!GND	
+          2	bool_source<2, {1,0}>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -813,23 +813,35 @@ footprint: {
   )
   z = bool^0 = z (5) 
   Created state:
-  process instance pool:
-  1	bs<2, {1,0}>
-  2	xs<2, {1,0}>
-  3	snk0
-  4	sink1
-  channel instance pool:
-  1	A
-  2	X
-  3	B
-  4	Z
-  5	Y
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	a
-  4	x
-  5	z
+  process instance pool: (0 ports)
+  1	bs<2, {1,0}>	bool_source<2, {1,0}>
+    channel: 1
+    bool: 1,2
+  2	xs<2, {1,0}>	bool_source<2, {1,0}>
+    channel: 2
+    bool: 1,2
+  3	snk0	bool_sink<>
+    channel: 3
+    bool: 1,2
+  4	sink1	bool_sink<>
+    channel: 4
+    bool: 1,2
+  channel instance pool: (0 ports)
+  1	A	
+  2	X	
+  3	B	
+  4	Z	
+  5	Y	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	a	
+  4	x	
+  5	z	
+  private sub-bool index map:
+    (3 -> 0)
+    (4 -> 1)
+    (5 -> 2)
   resolved concurrent actions:
     *[
       sequential: {

@@ -233,9 +233,9 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) 
   cornell::foo = int<32>^0 = cornell::foo (1) 
   Created state:
-  int instance pool:
-  1	cornell::foo
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  int instance pool: (0 ports)
+  1	cornell::foo	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

@@ -135,15 +135,15 @@ In namespace "", we have: {
           x = int<12>^0 = adjacent_diff<12>::x (1) 
           z = int<12>^0 = adjacent_diff<12>::z (2) 
           Created state:
-          channel instance pool:
-          1	adjacent_diff<12>::L
-          2	adjacent_diff<12>::R
-          int instance pool:
-          1	adjacent_diff<12>::x
-          2	adjacent_diff<12>::z
-          bool instance pool:
-          1	adjacent_diff<12>::!GND
-          2	adjacent_diff<12>::!Vdd
+          channel instance pool: (2 ports)
+          1	adjacent_diff<12>::L	
+          2	adjacent_diff<12>::R	
+          int instance pool: (0 ports)
+          1	adjacent_diff<12>::x	
+          2	adjacent_diff<12>::z	
+          bool instance pool: (2 ports)
+          1	adjacent_diff<12>::!GND	
+          2	adjacent_diff<12>::!Vdd	
           resolved concurrent actions:
             sequential: {
               L?(x)
@@ -179,12 +179,17 @@ footprint: {
     R = channel chan!(int<12>)^0 = B (2) 
   )
   Created state:
-  process instance pool:
-  1	differ
-  channel instance pool:
-  1	A
-  2	B
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	differ	adjacent_diff<12>
+    channel: 1,2
+    bool: 1,2
+  channel instance pool: (0 ports)
+  1	A	
+  2	B	
+  private sub-int index map:
+    (1 -> 0)
+    (2 -> 2)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

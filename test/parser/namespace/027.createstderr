@@ -57,9 +57,9 @@ In namespace "", we have: {
             !GND = bool^0 = foo::bar<>::!GND (1) 
             !Vdd = bool^0 = foo::bar<>::!Vdd (2) 
             Created state:
-            bool instance pool:
-            1	foo::bar<>::!GND
-            2	foo::bar<>::!Vdd
+            bool instance pool: (2 ports)
+            1	foo::bar<>::!GND	
+            2	foo::bar<>::!Vdd	
           }
           }
 
@@ -78,9 +78,10 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	BQ
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	BQ	foo::bar<>
+	bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

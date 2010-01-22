@@ -142,16 +142,16 @@ In namespace "", we have: {
         y = bool^0 = foo<>::y (4) 
         z = bool^0 = foo<>::z (5) 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::x
-        4	foo<>::y
-        5	foo<>::z
-        6	foo<>::w
-        7	foo<>::p
-        8	foo<>::q
-        9	foo<>::r
+        bool instance pool: (9 ports)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::x	
+        4	foo<>::y	
+        5	foo<>::z	
+        6	foo<>::w	
+        7	foo<>::p	
+        8	foo<>::q	
+        9	foo<>::r	
         resolved prs:
         x -> y-
         ~y -> z+
@@ -190,16 +190,17 @@ footprint: {
     r = bool^0 = bar.r (9) 
   )
   Created state:
-  process instance pool:
-  1	bar
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	bar.x
-  4	bar.y
-  5	bar.z
-  6	bar.w
-  7	bar.p
-  8	bar.q
-  9	bar.r
+  process instance pool: (0 ports)
+  1	bar	foo<>
+    bool: 1,2,3,4,5,6,7,8,9
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	bar.x	
+  4	bar.y	
+  5	bar.z	
+  6	bar.w	
+  7	bar.p	
+  8	bar.q	
+  9	bar.r	
 }

@@ -84,13 +84,13 @@ In namespace "", we have: {
           }
         zw = bool^0 = blah<>::zw (3) 
         Created state:
-        bool instance pool:
-        1	blah<>::!GND
-        2	blah<>::!Vdd
-        3	blah<>::zw
-        4	blah<>::b[0]
-        5	blah<>::b[1]
-        6	blah<>::b[2]
+        bool instance pool: (6 ports)
+        1	blah<>::!GND	
+        2	blah<>::!Vdd	
+        3	blah<>::zw	
+        4	blah<>::b[0]	
+        5	blah<>::b[1]	
+        6	blah<>::b[2]	
       }
       }
 
@@ -128,18 +128,19 @@ footprint: {
       [8] = w[8] (11) 
     }
   Created state:
-  process instance pool:
-  1	b
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	w[0]
-  4	w[1]
-  5	w[2]
-  6	w[3]
-  7	w[4]
-  8	w[5]
-  9	w[6]
-  10	w[7]
-  11	w[8]
+  process instance pool: (0 ports)
+  1	b	blah<>
+    bool: 1,2,6,3,4,5
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	w[0]	
+  4	w[1]	
+  5	w[2]	
+  6	w[3]	
+  7	w[4]	
+  8	w[5]	
+  9	w[6]	
+  10	w[7]	
+  11	w[8]	
 }

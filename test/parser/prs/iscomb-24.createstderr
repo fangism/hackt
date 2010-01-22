@@ -142,16 +142,18 @@ In namespace "", we have: {
           b = bool^0 = deep<>::y.b (6) @[ !autokeeper ] 
         )
         Created state:
-        process instance pool:
-        1	deep<>::x
-        2	deep<>::y
-        bool instance pool:
-        1	deep<>::!GND
-        2	deep<>::!Vdd
-        3	deep<>::x.a @[ iscomb !autokeeper ]
-        4	deep<>::x.b
-        5	deep<>::y.a @[ iscomb ]
-        6	deep<>::y.b @[ !autokeeper ]
+        process instance pool: (1 ports)
+        1	deep<>::x	inv<>
+          bool: 1,2,3,4
+        2	deep<>::y	inv<>
+          bool: 1,2,5,6
+        bool instance pool: (4 ports)
+        1	deep<>::!GND	
+        2	deep<>::!Vdd	
+        3	deep<>::x.a @[ iscomb !autokeeper ]	
+        4	deep<>::x.b	
+        5	deep<>::y.a @[ iscomb ]	
+        6	deep<>::y.b @[ !autokeeper ]	
         bool port aliases:
         1: deep<>::x.!GND = deep<>::!GND
         2: deep<>::x.!Vdd = deep<>::!Vdd
@@ -215,22 +217,41 @@ In namespace "", we have: {
           )
         )
         Created state:
-        process instance pool:
-        1	deeper<>::d[0]
-        2	deeper<>::d[0].x
-        3	deeper<>::d[1]
-        4	deeper<>::d[1].x
-        5	deeper<>::e
-        6	deeper<>::e.x
-        bool instance pool:
-        1	deeper<>::!GND
-        2	deeper<>::!Vdd
-        3	deeper<>::d[0].x.a @[ iscomb !autokeeper ]
-        4	deeper<>::d[0].x.b @[ iscomb ]
-        5	deeper<>::d[1].x.a @[ iscomb !autokeeper ]
-        6	deeper<>::d[1].x.b
-        7	deeper<>::e.x.a @[ iscomb !autokeeper ]
-        8	deeper<>::e.x.b
+        process instance pool: (4 ports)
+        1	deeper<>::d[0]	deep<>
+          process: 2
+          bool: 1,2,3,4
+        2	deeper<>::d[0].x	inv<>
+          bool: 1,2,3,4
+        3	deeper<>::d[1]	deep<>
+          process: 4
+          bool: 1,2,5,6
+        4	deeper<>::d[1].x	inv<>
+          bool: 1,2,5,6
+        5	deeper<>::e	deep<>
+          process: 6
+          bool: 1,2,7,8
+        6	deeper<>::e.x	inv<>
+          bool: 1,2,7,8
+        private sub-process index map:
+          (1 -> 0)
+          (3 -> 1)
+          (5 -> 2)
+          (7 -> 3)
+        bool instance pool: (6 ports)
+        1	deeper<>::!GND	
+        2	deeper<>::!Vdd	
+        3	deeper<>::d[0].x.a @[ iscomb !autokeeper ]	
+        4	deeper<>::d[0].x.b @[ iscomb ]	
+        5	deeper<>::d[1].x.a @[ iscomb !autokeeper ]	
+        6	deeper<>::d[1].x.b	
+        7	deeper<>::e.x.a @[ iscomb !autokeeper ]	
+        8	deeper<>::e.x.b	
+        private sub-bool index map:
+          (1 -> 0)
+          (3 -> 2)
+          (5 -> 4)
+          (7 -> 6)
         bool port aliases:
         1: deeper<>::d[0].!GND = deeper<>::d[0].x.!GND = deeper<>::d[1].!GND = deeper<>::d[1].x.!GND = deeper<>::!GND
         2: deeper<>::d[0].!Vdd = deeper<>::d[0].x.!Vdd = deeper<>::d[1].!Vdd = deeper<>::d[1].x.!Vdd = deeper<>::!Vdd
@@ -284,19 +305,37 @@ In namespace "", we have: {
             }
         )
         Created state:
-        process instance pool:
-        1	deepest<>::y
-        2	deepest<>::y.d[0]
-        3	deepest<>::y.d[0].x
-        4	deepest<>::y.d[1]
-        5	deepest<>::y.d[1].x
-        bool instance pool:
-        1	deepest<>::!GND
-        2	deepest<>::!Vdd
-        3	deepest<>::y.d[0].x.a @[ iscomb !autokeeper ]
-        4	deepest<>::y.d[0].x.b @[ iscomb ]
-        5	deepest<>::y.d[1].x.a @[ iscomb !autokeeper ]
-        6	deepest<>::y.d[1].x.b
+        process instance pool: (5 ports)
+        1	deepest<>::y	deeper<>
+          process: 2,3,4,5
+          bool: 1,2,3,4,5,6
+        2	deepest<>::y.d[0]	deep<>
+          process: 3
+          bool: 1,2,3,4
+        3	deepest<>::y.d[0].x	inv<>
+          bool: 1,2,3,4
+        4	deepest<>::y.d[1]	deep<>
+          process: 5
+          bool: 1,2,5,6
+        5	deepest<>::y.d[1].x	inv<>
+          bool: 1,2,5,6
+        private sub-process index map:
+          (1 -> 0)
+          (2 -> 5)
+          (4 -> 6)
+          (6 -> 7)
+        bool instance pool: (6 ports)
+        1	deepest<>::!GND	
+        2	deepest<>::!Vdd	
+        3	deepest<>::y.d[0].x.a @[ iscomb !autokeeper ]	
+        4	deepest<>::y.d[0].x.b @[ iscomb ]	
+        5	deepest<>::y.d[1].x.a @[ iscomb !autokeeper ]	
+        6	deepest<>::y.d[1].x.b	
+        private sub-bool index map:
+          (1 -> 0)
+          (2 -> 8)
+          (4 -> 10)
+          (6 -> 12)
         bool port aliases:
         1: deepest<>::y.!GND = deepest<>::y.d[0].!GND = deepest<>::y.d[0].x.!GND = deepest<>::y.d[1].!GND = deepest<>::y.d[1].x.!GND = deepest<>::!GND
         2: deepest<>::y.!Vdd = deepest<>::y.d[0].!Vdd = deepest<>::y.d[0].x.!Vdd = deepest<>::y.d[1].!Vdd = deepest<>::y.d[1].x.!Vdd = deepest<>::!Vdd
@@ -329,11 +368,11 @@ In namespace "", we have: {
         a = bool^0 = inv<>::a (3) @[ iscomb ] 
         b = bool^0 = inv<>::b (4) 
         Created state:
-        bool instance pool:
-        1	inv<>::!GND
-        2	inv<>::!Vdd
-        3	inv<>::a @[ iscomb ]
-        4	inv<>::b
+        bool instance pool: (4 ports)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::a @[ iscomb ]	
+        4	inv<>::b	
       }
       }
 
@@ -378,18 +417,40 @@ footprint: {
     )
   )
   Created state:
-  process instance pool:
-  1	sh1t
-  2	sh1t.y
-  3	sh1t.y.d[0]
-  4	sh1t.y.d[0].x
-  5	sh1t.y.d[1]
-  6	sh1t.y.d[1].x
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	sh1t.y.d[0].x.a @[ iscomb !autokeeper ]
-  4	sh1t.y.d[0].x.b @[ iscomb ]
-  5	sh1t.y.d[1].x.a @[ iscomb !autokeeper ]
-  6	sh1t.y.d[1].x.b
+  process instance pool: (0 ports)
+  1	sh1t	deepest<>
+    process: 2,3,4,5,6
+    bool: 1,2,3,4,5,6
+  2	sh1t.y	deeper<>
+    process: 3,4,5,6
+    bool: 1,2,3,4,5,6
+  3	sh1t.y.d[0]	deep<>
+    process: 4
+    bool: 1,2,3,4
+  4	sh1t.y.d[0].x	inv<>
+    bool: 1,2,3,4
+  5	sh1t.y.d[1]	deep<>
+    process: 6
+    bool: 1,2,5,6
+  6	sh1t.y.d[1].x	inv<>
+    bool: 1,2,5,6
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 7)
+    (3 -> 12)
+    (5 -> 13)
+    (7 -> 14)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	sh1t.y.d[0].x.a @[ iscomb !autokeeper ]	
+  4	sh1t.y.d[0].x.b @[ iscomb ]	
+  5	sh1t.y.d[1].x.a @[ iscomb !autokeeper ]	
+  6	sh1t.y.d[1].x.b	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 12)
+    (3 -> 20)
+    (5 -> 22)
+    (7 -> 24)
 }

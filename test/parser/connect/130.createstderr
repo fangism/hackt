@@ -99,13 +99,13 @@ In namespace "", we have: {
             }
           r = bool^0 = ass<3>::r (3) 
           Created state:
-          bool instance pool:
-          1	ass<3>::!GND
-          2	ass<3>::!Vdd
-          3	ass<3>::r
-          4	ass<3>::l[0]
-          5	ass<3>::l[1]
-          6	ass<3>::l[2]
+          bool instance pool: (6 ports)
+          1	ass<3>::!GND	
+          2	ass<3>::!Vdd	
+          3	ass<3>::r	
+          4	ass<3>::l[0]	
+          5	ass<3>::l[1]	
+          6	ass<3>::l[2]	
         }
       }
       }
@@ -139,13 +139,14 @@ footprint: {
   )
   r = bool^0 = r (6) 
   Created state:
-  process instance pool:
-  1	myass
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	a
-  4	b
-  5	c
-  6	r
+  process instance pool: (0 ports)
+  1	myass	ass<3>
+    bool: 1,2,6,3,4,5
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	a	
+  4	b	
+  5	c	
+  6	r	
 }

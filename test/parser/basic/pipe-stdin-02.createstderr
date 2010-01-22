@@ -43,7 +43,7 @@ footprint: {
   milk = pint^0 value: 4
   orange_juice = pint^0 value: 0
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

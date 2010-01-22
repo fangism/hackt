@@ -66,9 +66,9 @@ footprint: {
   fo = int<32>^0 = fe (1) 
   fum = int<32>^0 = fe (1) 
   Created state:
-  int instance pool:
-  1	fe
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  int instance pool: (0 ports)
+  1	fe	
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

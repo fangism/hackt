@@ -73,9 +73,9 @@ In namespace "", we have: {
           X = pint^0 value: 12
           Y = pint^0 value: 12
           Created state:
-          bool instance pool:
-          1	foo<12, 12>::!GND
-          2	foo<12, 12>::!Vdd
+          bool instance pool: (2 ports)
+          1	foo<12, 12>::!GND	
+          2	foo<12, 12>::!Vdd	
         }
         <12, 34> {
           !GND = bool^0 = foo<12, 34>::!GND (1) 
@@ -83,9 +83,9 @@ In namespace "", we have: {
           X = pint^0 value: 12
           Y = pint^0 value: 34
           Created state:
-          bool instance pool:
-          1	foo<12, 34>::!GND
-          2	foo<12, 34>::!Vdd
+          bool instance pool: (2 ports)
+          1	foo<12, 34>::!GND	
+          2	foo<12, 34>::!Vdd	
         }
       }
       }
@@ -109,10 +109,12 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	q
-  2	p
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	q	foo<12, 12>
+    bool: 1,2
+  2	p	foo<12, 34>
+    bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

@@ -96,10 +96,10 @@ In namespace "", we have: {
         y = bool^0 = ar<>::y (3) 
         z = bool^0 = ar<>::y (3) 
         Created state:
-        bool instance pool:
-        1	ar<>::!GND
-        2	ar<>::!Vdd
-        3	ar<>::y
+        bool instance pool: (3 ports)
+        1	ar<>::!GND	
+        2	ar<>::!Vdd	
+        3	ar<>::y	
       }
       }
 
@@ -128,10 +128,10 @@ In namespace "", we have: {
         composite = bool^0 = array<>::x (3) 
         x = bool^0 = array<>::x (3) 
         Created state:
-        bool instance pool:
-        1	array<>::!GND
-        2	array<>::!Vdd
-        3	array<>::x
+        bool instance pool: (3 ports)
+        1	array<>::!GND	
+        2	array<>::!Vdd	
+        3	array<>::x	
       }
       }
 
@@ -158,11 +158,13 @@ footprint: {
   )
   d = bool^0 = d (3) 
   Created state:
-  process instance pool:
-  1	A
-  2	B
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	d
+  process instance pool: (0 ports)
+  1	A	array<>
+    bool: 1,2,3
+  2	B	ar<>
+    bool: 1,2,3
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	d	
 }

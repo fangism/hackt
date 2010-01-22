@@ -79,11 +79,11 @@ In namespace "", we have: {
         q = bool^0 = groupie<>::p (3) 
         r = bool^0 = groupie<>::r (4) 
         Created state:
-        bool instance pool:
-        1	groupie<>::!GND
-        2	groupie<>::!Vdd
-        3	groupie<>::p
-        4	groupie<>::r
+        bool instance pool: (4 ports)
+        1	groupie<>::!GND	
+        2	groupie<>::!Vdd	
+        3	groupie<>::p	
+        4	groupie<>::r	
         bool port aliases:
         3: groupie<>::p = groupie<>::q
         resolved specs:
@@ -108,11 +108,12 @@ footprint: {
     r = bool^0 = g.r (4) 
   )
   Created state:
-  process instance pool:
-  1	g
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	g.p
-  4	g.r
+  process instance pool: (0 ports)
+  1	g	groupie<>
+    bool: 1,2,3,4
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	g.p	
+  4	g.r	
 }

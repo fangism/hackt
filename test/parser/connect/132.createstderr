@@ -88,8 +88,8 @@ footprint: {
   g = bool^0 = a (3) 
   h = bool^0 = a (3) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	a
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	a	
 }

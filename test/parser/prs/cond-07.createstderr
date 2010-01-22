@@ -97,10 +97,10 @@ In namespace "", we have: {
         !Vdd = bool^0 = bar<>::!Vdd (2) 
         q = bool^0 = bar<>::q (3) 
         Created state:
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
-        3	bar<>::q
+        bool instance pool: (3 ports)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
+        3	bar<>::q	
       }
       }
 
@@ -139,11 +139,11 @@ In namespace "", we have: {
           x = bool^0 = foo<false>::x (3) 
           y = bool^0 = foo<false>::y (4) 
           Created state:
-          bool instance pool:
-          1	foo<false>::!GND
-          2	foo<false>::!Vdd
-          3	foo<false>::x
-          4	foo<false>::y
+          bool instance pool: (2 ports)
+          1	foo<false>::!GND	
+          2	foo<false>::!Vdd	
+          3	foo<false>::x	
+          4	foo<false>::y	
         }
         <true> {
           !GND = bool^0 = foo<true>::!GND (1) 
@@ -165,14 +165,16 @@ In namespace "", we have: {
           x = bool^0 = foo<true>::x (3) 
           y = bool^0 = foo<true>::y (4) 
           Created state:
-          process instance pool:
-          1	foo<true>::b[0]
-          2	foo<true>::b[1]
-          bool instance pool:
-          1	foo<true>::!GND
-          2	foo<true>::!Vdd
-          3	foo<true>::x
-          4	foo<true>::y
+          process instance pool: (0 ports)
+          1	foo<true>::b[0]	bar<>
+            bool: 1,2,3
+          2	foo<true>::b[1]	bar<>
+            bool: 1,2,4
+          bool instance pool: (2 ports)
+          1	foo<true>::!GND	
+          2	foo<true>::!Vdd	
+          3	foo<true>::x	
+          4	foo<true>::y	
         }
       }
       }
@@ -196,10 +198,19 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	f
-  2	g
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	f	foo<false>
+    bool: 1,2
+  2	g	foo<true>
+    bool: 1,2
+  private sub-process index map:
+    (2 -> 0)
+    (3 -> 2)
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 2)
+    (3 -> 4)
 }

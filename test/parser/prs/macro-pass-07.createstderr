@@ -79,12 +79,12 @@ In namespace "", we have: {
         g = bool^0 = passn<>::g (3) 
         s = bool^0 = passn<>::s (4) 
         Created state:
-        bool instance pool:
-        1	passn<>::!GND
-        2	passn<>::!Vdd
-        3	passn<>::g
-        4	passn<>::s
-        5	passn<>::d
+        bool instance pool: (5 ports)
+        1	passn<>::!GND	
+        2	passn<>::!Vdd	
+        3	passn<>::g	
+        4	passn<>::s	
+        5	passn<>::d	
         resolved macros:
         passn<10.6,2.5>(g,s,d)
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -109,12 +109,13 @@ footprint: {
     d = bool^0 = x.d (5) 
   )
   Created state:
-  process instance pool:
-  1	x
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x.g
-  4	x.s
-  5	x.d
+  process instance pool: (0 ports)
+  1	x	passn<>
+    bool: 1,2,3,4,5
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	x.g	
+  4	x.s	
+  5	x.d	
 }

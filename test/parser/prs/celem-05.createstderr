@@ -127,14 +127,14 @@ In namespace "", we have: {
               [3] = celemNinv<4>::a[3] (7) 
             }
           Created state:
-          bool instance pool:
-          1	celemNinv<4>::!GND
-          2	celemNinv<4>::!Vdd
-          3	celemNinv<4>::_o
-          4	celemNinv<4>::a[0]
-          5	celemNinv<4>::a[1]
-          6	celemNinv<4>::a[2]
-          7	celemNinv<4>::a[3]
+          bool instance pool: (7 ports)
+          1	celemNinv<4>::!GND	
+          2	celemNinv<4>::!Vdd	
+          3	celemNinv<4>::_o	
+          4	celemNinv<4>::a[0]	
+          5	celemNinv<4>::a[1]	
+          6	celemNinv<4>::a[2]	
+          7	celemNinv<4>::a[3]	
           resolved prs:
           a[0] & a[1] & a[2] & a[3] -> _o-
           ~a[0] & ~a[1] & ~a[2] & ~a[3] -> _o+
@@ -166,14 +166,15 @@ footprint: {
     _o = bool^0 = c._o (7) 
   )
   Created state:
-  process instance pool:
-  1	c
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	c.a[0]
-  4	c.a[1]
-  5	c.a[2]
-  6	c.a[3]
-  7	c._o
+  process instance pool: (0 ports)
+  1	c	celemNinv<4>
+    bool: 1,2,7,3,4,5,6
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	c.a[0]	
+  4	c.a[1]	
+  5	c.a[2]	
+  6	c.a[3]	
+  7	c._o	
 }

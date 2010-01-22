@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.10.82.3 2010/01/20 02:18:21 fang Exp $
+	$Id: canonical_type.h,v 1.10.82.4 2010/01/22 23:41:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -21,7 +21,9 @@ class subinstance_manager;
 class footprint;
 class footprint_frame;
 class state_manager;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 class port_member_context;
+#endif
 using util::memory::never_ptr;
 using util::good_bool;
 

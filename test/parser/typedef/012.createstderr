@@ -95,9 +95,9 @@ In namespace "", we have: {
           M = pint^0 value: 12
           N = pint^0 value: 1
           Created state:
-          bool instance pool:
-          1	array2d<1, 12>::!GND
-          2	array2d<1, 12>::!Vdd
+          bool instance pool: (2 ports)
+          1	array2d<1, 12>::!GND	
+          2	array2d<1, 12>::!Vdd	
         }
         <3, 3> {
           !GND = bool^0 = array2d<3, 3>::!GND (1) 
@@ -105,9 +105,9 @@ In namespace "", we have: {
           M = pint^0 value: 3
           N = pint^0 value: 3
           Created state:
-          bool instance pool:
-          1	array2d<3, 3>::!GND
-          2	array2d<3, 3>::!Vdd
+          bool instance pool: (2 ports)
+          1	array2d<3, 3>::!GND	
+          2	array2d<3, 3>::!Vdd	
         }
         <10, 1> {
           !GND = bool^0 = array2d<10, 1>::!GND (1) 
@@ -115,9 +115,9 @@ In namespace "", we have: {
           M = pint^0 value: 1
           N = pint^0 value: 10
           Created state:
-          bool instance pool:
-          1	array2d<10, 1>::!GND
-          2	array2d<10, 1>::!Vdd
+          bool instance pool: (2 ports)
+          1	array2d<10, 1>::!GND	
+          2	array2d<10, 1>::!Vdd	
         }
       }
       }
@@ -155,11 +155,14 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	the_matrix
-  2	the_row
-  3	the_col
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports)
+  1	the_matrix	array2d<3, 3>
+    bool: 1,2
+  2	the_row	array2d<1, 12>
+    bool: 1,2
+  3	the_col	array2d<10, 1>
+    bool: 1,2
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
 }

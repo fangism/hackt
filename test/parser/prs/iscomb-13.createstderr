@@ -78,11 +78,11 @@ In namespace "", we have: {
         a = bool^0 = inv<>::a (3) 
         b = bool^0 = inv<>::b (4) 
         Created state:
-        bool instance pool:
-        1	inv<>::!GND
-        2	inv<>::!Vdd
-        3	inv<>::a
-        4	inv<>::b
+        bool instance pool: (4 ports)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::a	
+        4	inv<>::b	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -107,11 +107,12 @@ footprint: {
     b = bool^0 = x.b (4) 
   )
   Created state:
-  process instance pool:
-  1	x
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x.a @[ iscomb ]
-  4	x.b
+  process instance pool: (0 ports)
+  1	x	inv<>
+    bool: 1,2,3,4
+  bool instance pool: (0 ports)
+  1	!GND	
+  2	!Vdd	
+  3	x.a @[ iscomb ]	
+  4	x.b	
 }

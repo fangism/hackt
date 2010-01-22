@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.14.2.3 2010/01/20 02:18:17 fang Exp $
+	$Id: alias_actuals.h,v 1.14.2.4 2010/01/22 23:41:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
@@ -23,7 +23,9 @@ namespace entity {
 class const_param_expr_list;
 class footprint;
 class footprint_frame;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 class port_member_context;
+#endif
 class state_manager;
 template <class> class instance_alias_info;
 class unroll_context;

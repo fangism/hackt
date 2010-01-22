@@ -1,11 +1,13 @@
 /**
 	\file "Object/port_context.h"
-	$Id: port_context.h,v 1.4 2006/01/22 18:19:13 fang Exp $
+	$Id: port_context.h,v 1.4.154.1 2010/01/22 23:41:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PORT_CONTEXT_H__
 #define	__HAC_OBJECT_PORT_CONTEXT_H__
 
+#include "Object/devel_switches.h"
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include <iosfwd>
 // #include <valarray>
 #include <vector>
@@ -85,5 +87,6 @@ struct port_collection_context {
 }	// end namespace entity
 }	// end namespace HAC
 
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 #endif	// __HAC_OBJECT_PORT_CONTEXT_H__
 
