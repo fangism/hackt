@@ -4,5 +4,5 @@ ERROR sizes mismatch in port connection:
 	external references: x[0][0], x[0][1], 
 	local port references: myass[0].q[0], myass[0].q[1], myass[0].q[2], 
 Error resolving loop-body during iteration: $i = 0
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

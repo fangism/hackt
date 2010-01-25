@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.41.2.3 2010/01/18 23:43:31 fang Exp $
+ 	$Id: module.cc,v 1.41.2.4 2010/01/25 23:50:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -180,15 +180,13 @@ module::dump_instance_map(ostream& o) const {
 ostream&
 module::dump_definitions(ostream& o) const {
 	o << "In module created from: " << key;
-	if (is_unrolled())
-		o << " (unrolled)";
 	if (is_created())
-		o << " (created)";
+		o << " (unrolled) (created)";
 	o << endl;
 
 	global_namespace->dump(o) << endl;
 	const expr_dump_context& dc(expr_dump_context::default_value);
-	if (!is_unrolled()) {
+	if (!is_created()) {
 		o << "Sequential instance management (to unroll): " << endl;
 		sequential_scope::dump(o, dc);
 	}
@@ -212,7 +210,7 @@ module::dump_definitions(ostream& o) const {
 		const PRS::rule_dump_context rdc(*this);
 		spec.dump(o, rdc);	// << endl;
 	}
-	if (is_unrolled()) {
+	if (is_created()) {
 		footprint_map.dump(o, expr_dump_context::default_value) << endl;
 	}
 	return o;
@@ -222,7 +220,7 @@ module::dump_definitions(ostream& o) const {
 ostream&
 module::dump(ostream& o) const {
 	dump_definitions(o);
-	if (is_unrolled()) {
+	if (is_created()) {
 		dump_instance_map(o);
 	}
 	return o;
@@ -235,37 +233,6 @@ module::is_created(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-module::is_unrolled(void) const {
-	return get_footprint().is_unrolled();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Don't just call sequential_scope::unroll, this makes sure
-	entire module is not already unrolled.  
- */
-good_bool
-module::unroll_module(void) {
-	static const char err[] =
-		"Error encountered during module::unroll.";
-	STACKTRACE("module::unroll_module()");
-	footprint& f(get_footprint());
-try {
-	if (!parent_type::__unroll_complete_type(
-			null_module_params, f, f).good) {
-		cerr << err << endl;
-		return good_bool(false);
-	}
-} catch (...) {
-	// crappy error handling...
-	cerr << err << endl;
-	return good_bool(false);
-}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates placeholder footprints depedent types bottom up.
 	This replays internal aliases from the leaf-most types up.  
@@ -275,13 +242,17 @@ try {
  */
 good_bool
 module::create_dependent_types(void) {
+try {
 	footprint& f(get_footprint());
 	if (!parent_type::__create_complete_type(
 			null_module_params, f, f).good) {
-		cerr << "Error during create_unique." << endl;
 		return good_bool(false);
 	}
 	return good_bool(true);
+} catch (...) {
+	// generic error message
+	return good_bool(false);
+}
 }	// end method create_dependent_types
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -295,14 +266,14 @@ module::create_dependent_types(void) {
 good_bool
 module::create_unique(void) {
 	STACKTRACE_VERBOSE;
-	if (!unroll_module().good)
-		return good_bool(false);
 	if (!is_created()) {
 		STACKTRACE("not already created, creating...");
 		// this replays all internal aliases recursively
 		// and assigns local instance IDs
 		if (!create_dependent_types().good) {
-			// alraedy have error mesage
+			static const char err[] =
+				"Error encountered during module::create.";
+			cerr << err << endl;
 			return good_bool(false);
 		}
 	}
@@ -310,12 +281,12 @@ module::create_unique(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Allocates unique global entries for instance objects.  
  */
 good_bool
 module::__allocate_unique(void) {
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	if (!is_allocated()) {
 		STACKTRACE("not already allocated, allocating...");
 		// we've established uniqueness among public ports
@@ -333,16 +304,20 @@ module::__allocate_unique(void) {
 #endif
 		allocated = true;
 	}
-#endif
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 module::allocate_unique(void) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return create_unique();
+#else
 	if (!create_unique().good)
 		return good_bool(false);
 	else return __allocate_unique();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -446,7 +421,11 @@ module::allocate_unique_process_type(const process_type_reference& pt,
 #if ENABLE_STACKTRACE
 		_footprint.dump(cerr << "footprint:" << endl) << endl;
 #endif
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		return allocate_unique();
+#else
 		return __allocate_unique();
+#endif
 	}
 }
 
@@ -494,7 +473,11 @@ module::allocate_single_process(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	allocated = false;
 #endif
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return allocate_unique();
+#else
 	return __allocate_unique();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

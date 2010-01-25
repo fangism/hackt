@@ -2,7 +2,7 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.12 2009/09/14 21:16:48 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.12.4.1 2010/01/25 23:50:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -81,7 +81,6 @@ public:
 		// really, this should never be called...
 
 	REGISTER_COMPLETE_TYPE_PROTO;
-	UNROLL_COMPLETE_TYPE_PROTO;
 	CREATE_COMPLETE_TYPE_PROTO;
 
 	void

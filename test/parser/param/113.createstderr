@@ -2,5 +2,5 @@ lvalue/rvalue references dimensions mismatch in pint assignment.
 	got: [2][2] and: [2][3]
 ERROR: at position 1 of expression-assignment list.
 ERROR: failed to assign pint: { { x[0][0], x[0][1] }, { x[1][0], x[1][1] } } = { { 0, 1, 5 }, { 2, 3, 4 } };
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

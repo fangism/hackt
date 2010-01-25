@@ -1,5 +1,5 @@
 Error: dimensions mismatch between sub-collection 1 and 2.
 	got: [3] and: [2]
 ERROR: failed to resolve source values of { pint-val-ref x[2], pint-val-ref x[1][0..1], pint-val-ref x[0] } in pint assignment.
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

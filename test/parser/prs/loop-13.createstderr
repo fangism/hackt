@@ -3,7 +3,6 @@ Error unrolling production rule guard:
 	(|:j:[0..$i-1]: (&:k:[0..$j-1]: triangle::in[$i][$j][$k])) -> triangle::_out-
 Error resolving production rule in loop:
 $i = 0
-Error instantiating process footprint: 
-From canonical type: triangle<3>
-Error encountered during module::unroll.
+Instantiated from: triangle<3>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

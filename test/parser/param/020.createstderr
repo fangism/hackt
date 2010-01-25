@@ -2,5 +2,5 @@ Error: lvalue referenced at position 1 is already assigned value 5
 At least one error in assignment.
 ERROR: at position 1 of expression-assignment list.
 ERROR: failed to assign pint: foo[2] = 4;
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.7 2010/01/22 23:41:29 fang Exp $
+	$Id: footprint.cc,v 1.46.2.8 2010/01/25 23:50:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -488,7 +488,7 @@ footprint::footprint(const const_param_expr_list& p,
 	value_footprint_base<preal_tag>(), 
 	param_key(p), 
 	owner_def(&d),
-	unrolled(false), created(false),
+	created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
 	// maybe even quarter-size...
@@ -545,7 +545,7 @@ footprint::footprint(const footprint& t) :
 	value_footprint_base<preal_tag>(), 
 	param_key(t.param_key), 
 	owner_def(t.owner_def),
-	unrolled(false), created(false),
+	created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
 	// maybe even quarter-size...
@@ -597,7 +597,7 @@ footprint::dump_type(ostream& o) const {	// dump_flags
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 footprint::dump(ostream& o) const {
-	// unrolled? created?
+	// created?
 	// instance_collection_map ?
 	footprint_base<process_tag>::_instance_pool->dump(o);
 	footprint_base<channel_tag>::_instance_pool->dump(o);
@@ -849,7 +849,7 @@ footprint::create_dependent_types(const footprint& top) {
 	dump_type(STACKTRACE_STREAM << "*** CREATING TYPE: ") << endl;
 #endif
 try {
-	create_lock LOCK(*this);	// will catch recursion errors
+//	create_lock LOCK(*this);	// will catch recursion errors
 {
 	const good_bool g(
 		get_instance_collection_pool_bundle<process_tag>()
@@ -1772,7 +1772,8 @@ footprint::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	// don't bother writing owner_def because it will be reconstructed
-	write_value(o, unrolled);
+	// yes, write it 2x, preserve object binary format
+	write_value(o, created);
 	write_value(o, created);
 	// reconstruct the map AFTER all collections are loaded
 	footprint_base<process_tag>::write_reserve_sizes(o);
@@ -1849,7 +1850,8 @@ void
 footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	// don't bother reading owner_def because it will be reconstructed
-	read_value(i, unrolled);
+	// yes, read it 2x, preserve object binary format
+	read_value(i, created);
 	read_value(i, created);
 	// load all collections first, THEN reconstruct the local map
 	footprint_base<process_tag>::load_reserve_sizes(i);
@@ -1878,7 +1880,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 #if AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 	// instead of writing redundant information, reconstruct it!
 	if (created) {
-		evaluate_scope_aliases(true);
+		evaluate_scope_aliases(false);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		partition_local_instance_pool();
 		expand_unique_subinstances();

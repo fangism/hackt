@@ -3,5 +3,5 @@ ERROR: unrolling values.
 ERROR: unrolling lvalue references in pint assignment.
 ERROR: at position 1 of expression-assignment list.
 ERROR: failed to assign pint: foo[2] = M;
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

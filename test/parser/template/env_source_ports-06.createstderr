@@ -1,3 +1,3 @@
 Error: canonical alias of `s' (s) is already bound to relaxed parameters.
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

@@ -2,7 +2,7 @@
 	\file "Object/def/channel_definition_alias.h"
 	Definition-related HAC object classes.  
 	This file came from "art_object_definition_chan.h".
-	$Id: channel_definition_alias.h,v 1.8 2006/10/18 01:19:07 fang Exp $
+	$Id: channel_definition_alias.h,v 1.8.92.1 2010/01/25 23:50:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_CHANNEL_DEFINITION_ALIAS_H__
@@ -68,7 +68,6 @@ public:
 	MAKE_CANONICAL_CHANNEL_TYPE_PROTO;
 
 	REGISTER_COMPLETE_TYPE_PROTO;
-	UNROLL_COMPLETE_TYPE_PROTO;
 	CREATE_COMPLETE_TYPE_PROTO;
 
 public:

@@ -4,5 +4,5 @@ ERROR: Index [7] of int_array_1D blah already instantiated!
 ERROR: Index [8] of int_array_1D blah already instantiated!
 ERROR: Index [9] of int_array_1D blah already instantiated!
 ERROR: Index [10] of int_array_1D blah already instantiated!
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

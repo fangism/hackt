@@ -2,5 +2,5 @@ ERROR: unrolling packed instance aliases in bool_connection:
 	size of reference 2 (foo::b) = [3]
 	size of reference 1 (foo::a) = [2]
 Instantiated from: foo<Q>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

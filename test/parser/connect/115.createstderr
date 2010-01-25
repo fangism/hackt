@@ -3,5 +3,5 @@ ERROR: attempted to connect instances with conflicting relaxed parameters!
 	and: 1
 	from: snu
 	and:  bar
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

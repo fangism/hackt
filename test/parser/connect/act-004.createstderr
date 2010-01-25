@@ -84,5 +84,5 @@ ERROR: failed to resolve implicit indices from a collection whose subarray is no
     [3][3][3] = x[3][3][3] 
   }
 ERROR: unrolling instance references in int_connection::unroll().
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

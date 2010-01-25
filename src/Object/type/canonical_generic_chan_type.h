@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.12 2007/10/12 22:43:56 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.12.38.1 2010/01/25 23:50:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -137,10 +137,6 @@ public:
 	good_bool
 	unroll_port_instances(const unroll_context&, 
 		subinstance_manager&) const;
-
-	// like fundamental_type_reference::unroll_register_complete_type()
-	good_bool
-	unroll_definition_footprint(const footprint&) const;
 
 	good_bool
 	create_definition_footprint(const footprint&) const;

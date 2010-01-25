@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_alias.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_alias.h,v 1.10 2009/09/14 21:16:49 fang Exp $
+	$Id: datatype_definition_alias.h,v 1.10.4.1 2010/01/25 23:50:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
@@ -75,7 +75,6 @@ public:
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
 	REGISTER_COMPLETE_TYPE_PROTO;	// bogus
-	UNROLL_COMPLETE_TYPE_PROTO;
 	CREATE_COMPLETE_TYPE_PROTO;
 
 	void

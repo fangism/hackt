@@ -1,4 +1,4 @@
-ERROR: cannot unroll incomplete process type foo
+ERROR: cannot create undefined process foo
 Instantiated from: foo<5><4>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

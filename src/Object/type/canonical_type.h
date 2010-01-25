@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.10.82.4 2010/01/22 23:41:43 fang Exp $
+	$Id: canonical_type.h,v 1.10.82.5 2010/01/25 23:50:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -130,10 +130,6 @@ public:
 	const footprint&
 	get_definition_footprint(void) const;
 #endif
-
-	// like fundamental_type_reference::unroll_register_complete_type()
-	good_bool
-	unroll_definition_footprint(const footprint&) const;
 
 	good_bool
 	create_definition_footprint(const footprint&) const;

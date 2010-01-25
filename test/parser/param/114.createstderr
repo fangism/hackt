@@ -3,5 +3,5 @@ Error: dimensions mismatch between sub-collection 1 and 2.
 ERROR: unrolling lvalue references in pint assignment.
 ERROR: at position 1 of expression-assignment list.
 ERROR: failed to assign pint: { { x[0][0], x[0][1] }, { x[1][0] } } = { { 0, 1 }, { 2, 3 } };
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

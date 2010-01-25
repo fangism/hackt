@@ -5,7 +5,6 @@ Error during resolution of indexed reference to:
     [0] = e1of<1>::d[0] (4) 
   }
 Error resolving literal node at position 2 of spec directive 'exclhi'.
-Error instantiating process footprint: 
-From canonical type: e1of<1>
-Error encountered during module::unroll.
+Instantiated from: e1of<1>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

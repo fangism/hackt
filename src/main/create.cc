@@ -2,7 +2,7 @@
 	\file "main/create.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: create.cc,v 1.9 2007/09/13 01:14:14 fang Exp $
+	$Id: create.cc,v 1.9.46.1 2010/01/25 23:50:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -46,6 +46,7 @@ create::create() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 create::main(const int _argc, char* argv[], const global_options&) {
+	STACKTRACE_VERBOSE;
 	int argc = _argc;
 //	cout << "optind = " << optind << endl;	// is initialized to 1
 	options opt;
@@ -92,7 +93,7 @@ if (opt.compile_input) {
 	if (the_module->is_created()) {
 		cerr << "Module is already created, skipping..." << endl;
 	} else {
-		STACKTRACE("main: try createing.");
+		STACKTRACE("main: try creating.");
 		if (!the_module->create_unique().good) {
 			cerr << "ERROR in creating.  Aborting." << endl;
 			return 1;

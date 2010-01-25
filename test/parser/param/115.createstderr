@@ -2,5 +2,5 @@ Error: lvalue referenced at position 4 is already assigned value 0
 At least one error in assignment.
 ERROR: at position 1 of expression-assignment list.
 ERROR: failed to assign pint: { { a, b }, { c, a } } = x;
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

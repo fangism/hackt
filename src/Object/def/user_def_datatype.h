@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.13 2009/09/14 21:16:53 fang Exp $
+	$Id: user_def_datatype.h,v 1.13.4.1 2010/01/25 23:50:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -104,7 +104,11 @@ public:
 
 	CERTIFY_PORT_ACTUALS_PROTO;
 	REGISTER_COMPLETE_TYPE_PROTO;
-	UNROLL_COMPLETE_TYPE_PROTO;
+private:
+	good_bool
+	__unroll_complete_type(const count_ptr<const const_param_expr_list>&, 
+		const footprint&) const;
+public:
 	CREATE_COMPLETE_TYPE_PROTO;
 
 	void

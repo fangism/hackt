@@ -1,4 +1,4 @@
-ERROR: cannot unroll incomplete process type array2d
+ERROR: cannot create undefined process array2d
 Instantiated from: array2d<3, 3>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

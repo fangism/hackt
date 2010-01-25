@@ -1,5 +1,5 @@
 Error: dimensions mismatch between sub-collection 1 and 2.
 	got: [2] and: [3]
 ERROR: unrolling instance references in bool_connection::unroll().
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

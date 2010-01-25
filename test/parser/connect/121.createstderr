@@ -1,6 +1,5 @@
 Error: instance alias `bar<>::a' has incomplete type: mybool<>
 Error creating process type: bar<>
-Error instantiating process footprint: 
-From canonical type: bar<>
-Error encountered during module::unroll.
+Instantiated from: bar<>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

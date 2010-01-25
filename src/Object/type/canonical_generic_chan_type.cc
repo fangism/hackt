@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.10 2007/10/12 22:43:56 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.10.38.1 2010/01/25 23:50:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -233,35 +233,6 @@ canonical_generic_chan_type::type_mismatch_error(ostream& o,
 	l.dump(o << "\tgot: ") << endl;
 	r.dump(o << "\tand: ") << endl;
 	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Registers the complete type as a used type in the
-	definition's footprint map.  
-	Q: should it unroll 'instantiate' that definition?
-	A: IMHO, yes, but it is not truly required.  
-	A: could use a compiler flag to conditionally postpone... oooh.
- */
-good_bool
-canonical_generic_chan_type::unroll_definition_footprint(
-		const footprint& top) const {
-	if (canonical_definition_ptr) {
-		canonical_definition_ptr->register_complete_type(param_list_ptr);
-		return canonical_definition_ptr->
-			unroll_complete_type(param_list_ptr, top);
-	} else {
-	// else? does built-in channel have footprint? don't think so...
-		typedef	datatype_list_type::const_iterator	const_iterator;
-		const_iterator i(datatype_list.begin());
-		const const_iterator e(datatype_list.end());
-		for ( ; i!=e; i++) {
-			if (!i->unroll_definition_footprint(top).good)
-				return good_bool(false);
-		}
-		// else everything matches
-		return good_bool(true);
-	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

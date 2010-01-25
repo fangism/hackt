@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.7 2010/01/22 23:41:30 fang Exp $
+	$Id: footprint.h,v 1.30.2.8 2010/01/25 23:50:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -168,14 +168,9 @@ private:
 	// a place to create state pseudo-footprint
 	// back-reference to definition?  NO, instance_collection_map suffices
 	/**
-		Whether or not this definition footprint has been unrolled.
-		NOTE: this flag is obsolete since we've fused unrolling and
-		creating into a single phase.  
-	 */
-	bool					unrolled;
-	/**
 		Whether or not the footprint has created unique state
 		(WITHOUT external connectivity context).
+		This has replaced the old 'unrolled' flag as well.
 	 */
 	bool					created;
 	/**
@@ -307,17 +302,13 @@ public:
 	map_size(void) const { return instance_collection_map.size(); }
 
 	bool
-	is_unrolled(void) const { return unrolled; }
-
-	bool
 	is_created(void) const { return created; }
 
-	void
-	mark_unrolled(void) { unrolled = true; }
-
+private:
 	void
 	mark_created(void) { created = true; }
 
+public:
 	instance_collection_ptr_type
 	operator [] (const string&) const;
 

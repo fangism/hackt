@@ -1,5 +1,4 @@
 Error: internal node rule for `z' already registered.
-Error instantiating process footprint: 
-From canonical type: bogus<>
-Error encountered during module::unroll.
+Instantiated from: bogus<>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

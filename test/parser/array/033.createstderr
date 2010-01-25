@@ -4,5 +4,5 @@ ERROR: Index [2][2][3] of int_array_3D q already instantiated!
 ERROR: Index [2][3][3] of int_array_3D q already instantiated!
 ERROR: Index [3][2][3] of int_array_3D q already instantiated!
 ERROR: Index [3][3][3] of int_array_3D q already instantiated!
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

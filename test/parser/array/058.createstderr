@@ -7,5 +7,5 @@ Type mismatch in aggregate int reference.
 	got: int<13>
 	and: int<12>
 ERROR: unrolling instance references in int_connection::unroll().
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

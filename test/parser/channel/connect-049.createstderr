@@ -3,7 +3,6 @@ Error referencing foo::X[foo::i].
 Error unrolling action_sequence.
 Error resolving do-forever loop.
 Error unrolling action_sequence.
-Error instantiating process footprint: 
-From canonical type: foo<>
-Error encountered during module::unroll.
+Instantiated from: foo<>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.20.2.3 2010/01/13 17:43:30 fang Exp $
+	$Id: module.h,v 1.20.2.4 2010/01/25 23:50:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -101,9 +101,7 @@ public:
 	ostream&
 	dump_instance_map(ostream& o) const;
 
-	bool
-	is_unrolled(void) const;
-
+public:
 	bool
 	is_created(void) const;
 
@@ -132,14 +130,6 @@ private:
 	get_footprint(void);
 
 public:
-	/**
-		Note: sequential scope has a const-version of this, 
-		and is non-virtual.  
-		Protected-ness keep user from accessing parent's unroll().
-	 */
-	good_bool
-	unroll_module(void);
-
 	good_bool
 	create_unique(void);
 
@@ -174,8 +164,10 @@ private:
 	good_bool
 	__cflat_aliases(ostream&, const cflat_options&) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	good_bool
 	__allocate_unique(void);
+#endif
 
 public:
 	good_bool

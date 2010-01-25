@@ -1,5 +1,5 @@
 @c "hackt/compiler.texi"
-@c $Id: compiler.texi,v 1.5 2009/10/16 20:38:42 fang Exp $
+@c $Id: compiler.texi,v 1.5.2.1 2010/01/25 23:50:07 fang Exp $
 
 @node Compiler
 @chapter Compiler
@@ -95,6 +95,9 @@ invoke the compiler on a source file with the following options.
 @section Allocate
 @cindex allocate
 
+@strong{This phase has been deprecated and is no longer relevant, 
+a @emph{created} object file is considered @emph{allocated}.}
+
 The alloc phase expands the entire instance hierarchy top-down, 
 so that every unique instance has its own state in memory.  
 The input object file is the result of @t{haccreate}, 
@@ -138,7 +141,7 @@ source and object files.
 @item @t{.haco} -- compiled only
 @item @t{.hacf} -- preprocessed source only
 @item @t{.haco-c} -- compiled and created
-@item @t{.haco-a} -- compiled and allocated
+@item @t{.haco-a} -- compiled and allocated (Deprecated)
 @end itemize
 
 These suffices can be used to define @t{make} rules.  

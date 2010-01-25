@@ -7,5 +7,5 @@ ERROR in resolving strict template actuals.
 ERROR resolving template arguments.
 ERROR: unable to resolve process-type-reference during unroll.
 Instantiated from: ass<3, p>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

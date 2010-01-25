@@ -5,7 +5,6 @@ Error resolving production rule in loop:
 $i = 0
 Error resolving production rule in loop:
 $k = 0
-Error instantiating process footprint: 
-From canonical type: nandN<4>
-Error encountered during module::unroll.
+Instantiated from: nandN<4>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

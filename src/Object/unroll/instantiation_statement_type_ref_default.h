@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.15 2008/11/12 03:00:35 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.15.24.1 2010/01/25 23:50:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -13,6 +13,7 @@
 #include "Object/traits/class_traits.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/devel_switches.h"	// for MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "util/persistent_object_manager.h"
 
 namespace HAC {
@@ -117,11 +118,15 @@ protected:
 	commit_type_first_time(instance_collection_generic_type& v, 
 			const instance_collection_parameter_type& t, 
 			const footprint& top) {
-#if 1
-		if (t.is_strict() && !t.unroll_definition_footprint(top).good) {
+		if (t.is_strict() &&
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			!t.create_definition_footprint(top).good
+#else
+			!t.unroll_definition_footprint(top).good
+#endif
+			) {
 			return good_bool(false);
 		}
-#endif
 		v.establish_collection_type(t);
 		return good_bool(true);
 	}
@@ -138,11 +143,15 @@ protected:
 			const instance_collection_parameter_type& t, 
 			const footprint& top) {
 		// note: automatic conversion from bad_bool to good_bool :)
-#if 1
-		if (t.is_strict() && !t.unroll_definition_footprint(top).good) {
+		if (t.is_strict() &&
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			!t.create_definition_footprint(top).good
+#else
+			!t.unroll_definition_footprint(top).good
+#endif
+			) {
 			return good_bool(false);
 		}
-#endif
 		return v.check_established_type(t);
 	}
 

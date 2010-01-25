@@ -1,7 +1,6 @@
 Error: cannot connect to consumer by both aliasing and CHP!
 Error referencing bar::X.
 Error unrolling action_sequence.
-Error instantiating process footprint: 
-From canonical type: bar<>
-Error encountered during module::unroll.
+Instantiated from: bar<>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

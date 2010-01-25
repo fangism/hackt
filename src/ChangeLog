@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-10:
+	  Permanently eviscerated old traces of the unroll phase
+		and unroll-related functions, where they were aptly
+		supplanted by the create-family of functions.
+		Resulted in large clean-up of dead function calls, 
+		and dead interfaces.  So much easier to maintain 
+		and comprehend now.
+	  Updated create expect-fail test outputs.  
+
+
 2010-01-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-09:
