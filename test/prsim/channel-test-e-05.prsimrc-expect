@@ -1,10 +1,10 @@
 testing acknowledgeless channels 
 should be able to watch channels 
-channel	X (.data) : 0
-channel	X (.data) : 0
-channel	X (.data) : 1
-channel	X (.data) : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 0
+channel	X (.data) : 0 @ 0
+channel	X (.data) : 1 @ 0
+channel	X (.data) : 1 @ 0
+channel	X (.data) : 0 @ 0
 X : 1x1of2 watch
 	count: 1, unknowns: 0
 X : 1x1of2 watch

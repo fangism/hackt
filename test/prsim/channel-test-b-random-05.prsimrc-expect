@@ -17,171 +17,171 @@ event queue:
 	#TIME#	L.d[0] : 1
 	#TIME#	R.e : 1
 expect no assert fails 
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
+channel	L (.data) : #VALUE# @ 50
+channel	R (.data) : #VALUE# @ 70
+channel	L (.data) : #VALUE# @ 130
+channel	R (.data) : #VALUE# @ 150
+channel	L (.data) : #VALUE# @ 210
+channel	R (.data) : #VALUE# @ 230
+channel	L (.data) : #VALUE# @ 290
+channel	R (.data) : #VALUE# @ 310
+channel	L (.data) : #VALUE# @ 370
+channel	R (.data) : #VALUE# @ 390
+channel	L (.data) : #VALUE# @ 450
+channel	R (.data) : #VALUE# @ 470
+channel	L (.data) : #VALUE# @ 530
+channel	R (.data) : #VALUE# @ 550
+channel	L (.data) : #VALUE# @ 610
+channel	R (.data) : #VALUE# @ 630
+channel	L (.data) : #VALUE# @ 690
+channel	R (.data) : #VALUE# @ 710
+channel	L (.data) : #VALUE# @ 770
+channel	R (.data) : #VALUE# @ 790
+channel	L (.data) : #VALUE# @ 850
+channel	R (.data) : #VALUE# @ 870
+channel	L (.data) : #VALUE# @ 930
+channel	R (.data) : #VALUE# @ 950
+channel	L (.data) : #VALUE# @ 1010
+channel	R (.data) : #VALUE# @ 1030
+channel	L (.data) : #VALUE# @ 1090
+channel	R (.data) : #VALUE# @ 1110
+channel	L (.data) : #VALUE# @ 1170
+channel	R (.data) : #VALUE# @ 1190
+channel	L (.data) : #VALUE# @ 1250
+channel	R (.data) : #VALUE# @ 1270
+channel	L (.data) : #VALUE# @ 1330
+channel	R (.data) : #VALUE# @ 1350
+channel	L (.data) : #VALUE# @ 1410
+channel	R (.data) : #VALUE# @ 1430
+channel	L (.data) : #VALUE# @ 1490
+channel	R (.data) : #VALUE# @ 1510
+channel	L (.data) : #VALUE# @ 1570
+channel	R (.data) : #VALUE# @ 1590
+channel	L (.data) : #VALUE# @ 1650
+channel	R (.data) : #VALUE# @ 1670
+channel	L (.data) : #VALUE# @ 1730
+channel	R (.data) : #VALUE# @ 1750
+channel	L (.data) : #VALUE# @ 1810
+channel	R (.data) : #VALUE# @ 1830
+channel	L (.data) : #VALUE# @ 1890
+channel	R (.data) : #VALUE# @ 1910
+channel	L (.data) : #VALUE# @ 1970
+channel	R (.data) : #VALUE# @ 1990
+channel	L (.data) : #VALUE# @ 2050
+channel	R (.data) : #VALUE# @ 2070
+channel	L (.data) : #VALUE# @ 2130
+channel	R (.data) : #VALUE# @ 2150
+channel	L (.data) : #VALUE# @ 2210
+channel	R (.data) : #VALUE# @ 2230
+channel	L (.data) : #VALUE# @ 2290
+channel	R (.data) : #VALUE# @ 2310
+channel	L (.data) : #VALUE# @ 2370
+channel	R (.data) : #VALUE# @ 2390
+channel	L (.data) : #VALUE# @ 2450
+channel	R (.data) : #VALUE# @ 2470
+channel	L (.data) : #VALUE# @ 2530
+channel	R (.data) : #VALUE# @ 2550
+channel	L (.data) : #VALUE# @ 2610
+channel	R (.data) : #VALUE# @ 2630
+channel	L (.data) : #VALUE# @ 2690
+channel	R (.data) : #VALUE# @ 2710
+channel	L (.data) : #VALUE# @ 2770
+channel	R (.data) : #VALUE# @ 2790
+channel	L (.data) : #VALUE# @ 2850
+channel	R (.data) : #VALUE# @ 2870
+channel	L (.data) : #VALUE# @ 2930
+channel	R (.data) : #VALUE# @ 2950
+channel	L (.data) : #VALUE# @ 3010
+channel	R (.data) : #VALUE# @ 3030
+channel	L (.data) : #VALUE# @ 3090
+channel	R (.data) : #VALUE# @ 3110
+channel	L (.data) : #VALUE# @ 3170
+channel	R (.data) : #VALUE# @ 3190
+channel	L (.data) : #VALUE# @ 3250
+channel	R (.data) : #VALUE# @ 3270
+channel	L (.data) : #VALUE# @ 3330
+channel	R (.data) : #VALUE# @ 3350
+channel	L (.data) : #VALUE# @ 3410
+channel	R (.data) : #VALUE# @ 3430
+channel	L (.data) : #VALUE# @ 3490
+channel	R (.data) : #VALUE# @ 3510
+channel	L (.data) : #VALUE# @ 3570
+channel	R (.data) : #VALUE# @ 3590
+channel	L (.data) : #VALUE# @ 3650
+channel	R (.data) : #VALUE# @ 3670
+channel	L (.data) : #VALUE# @ 3730
+channel	R (.data) : #VALUE# @ 3750
+channel	L (.data) : #VALUE# @ 3810
+channel	R (.data) : #VALUE# @ 3830
+channel	L (.data) : #VALUE# @ 3890
+channel	R (.data) : #VALUE# @ 3910
+channel	L (.data) : #VALUE# @ 3970
+channel	R (.data) : #VALUE# @ 3990
+channel	L (.data) : #VALUE# @ 4050
+channel	R (.data) : #VALUE# @ 4070
+channel	L (.data) : #VALUE# @ 4130
+channel	R (.data) : #VALUE# @ 4150
+channel	L (.data) : #VALUE# @ 4210
+channel	R (.data) : #VALUE# @ 4230
+channel	L (.data) : #VALUE# @ 4290
+channel	R (.data) : #VALUE# @ 4310
+channel	L (.data) : #VALUE# @ 4370
+channel	R (.data) : #VALUE# @ 4390
+channel	L (.data) : #VALUE# @ 4450
+channel	R (.data) : #VALUE# @ 4470
+channel	L (.data) : #VALUE# @ 4530
+channel	R (.data) : #VALUE# @ 4550
+channel	L (.data) : #VALUE# @ 4610
+channel	R (.data) : #VALUE# @ 4630
+channel	L (.data) : #VALUE# @ 4690
+channel	R (.data) : #VALUE# @ 4710
+channel	L (.data) : #VALUE# @ 4770
+channel	R (.data) : #VALUE# @ 4790
+channel	L (.data) : #VALUE# @ 4850
+channel	R (.data) : #VALUE# @ 4870
+channel	L (.data) : #VALUE# @ 4930
+channel	R (.data) : #VALUE# @ 4950
+channel	L (.data) : #VALUE# @ 5010
+channel	R (.data) : #VALUE# @ 5030
+channel	L (.data) : #VALUE# @ 5090
+channel	R (.data) : #VALUE# @ 5110
+channel	L (.data) : #VALUE# @ 5170
+channel	R (.data) : #VALUE# @ 5190
+channel	L (.data) : #VALUE# @ 5250
+channel	R (.data) : #VALUE# @ 5270
+channel	L (.data) : #VALUE# @ 5330
+channel	R (.data) : #VALUE# @ 5350
+channel	L (.data) : #VALUE# @ 5410
+channel	R (.data) : #VALUE# @ 5430
+channel	L (.data) : #VALUE# @ 5490
+channel	R (.data) : #VALUE# @ 5510
+channel	L (.data) : #VALUE# @ 5570
+channel	R (.data) : #VALUE# @ 5590
+channel	L (.data) : #VALUE# @ 5650
+channel	R (.data) : #VALUE# @ 5670
+channel	L (.data) : #VALUE# @ 5730
+channel	R (.data) : #VALUE# @ 5750
+channel	L (.data) : #VALUE# @ 5810
+channel	R (.data) : #VALUE# @ 5830
+channel	L (.data) : #VALUE# @ 5890
+channel	R (.data) : #VALUE# @ 5910
+channel	L (.data) : #VALUE# @ 5970
+channel	R (.data) : #VALUE# @ 5990
+channel	L (.data) : #VALUE# @ 6050
+channel	R (.data) : #VALUE# @ 6070
+channel	L (.data) : #VALUE# @ 6130
+channel	R (.data) : #VALUE# @ 6150
+channel	L (.data) : #VALUE# @ 6210
+channel	R (.data) : #VALUE# @ 6230
+channel	L (.data) : #VALUE# @ 6290
+channel	R (.data) : #VALUE# @ 6310
+channel	L (.data) : #VALUE# @ 6370
+channel	R (.data) : #VALUE# @ 6390
+channel	L (.data) : #VALUE# @ 6450
+channel	R (.data) : #VALUE# @ 6470
+channel	L (.data) : #VALUE# @ 6530
+channel	R (.data) : #VALUE# @ 6550
+channel	L (.data) : #VALUE# @ 6610
+channel	R (.data) : #VALUE# @ 6630
+channel	L (.data) : #VALUE# @ 6690
 queue still alive, no failures 

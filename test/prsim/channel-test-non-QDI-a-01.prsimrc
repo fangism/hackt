@@ -1,7 +1,7 @@
 # "channel-test-non-QDI-a-01.prsimrc"
 # @haco@ channel-test-non-QDI-a.haco-a
-
 # echo-commands on
+channel-report-time on
 channel C e:0 :0 d:2
 channel-source-args-loop C 0 1
 

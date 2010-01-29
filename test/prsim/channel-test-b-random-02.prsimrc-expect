@@ -16,26 +16,26 @@ R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 event queue:
 	#TIME#	L.d[0] : 1
 	#TIME#	R.e : 1
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE# @ 50
+channel	R (.data) : #VALUE# @ 70
+channel	L (.data) : #VALUE# @ 130
+channel	R (.data) : #VALUE# @ 150
+channel	L (.data) : #VALUE# @ 210
+channel	R (.data) : #VALUE# @ 230
+channel	L (.data) : #VALUE# @ 290
+channel	R (.data) : #VALUE# @ 310
+channel	L (.data) : #VALUE# @ 370
+channel	R (.data) : #VALUE# @ 390
+channel	L (.data) : #VALUE# @ 450
+channel	R (.data) : #VALUE# @ 470
+channel	L (.data) : #VALUE# @ 530
+channel	R (.data) : #VALUE# @ 550
+channel	L (.data) : #VALUE# @ 610
+channel	R (.data) : #VALUE# @ 630
+channel	L (.data) : #VALUE# @ 690
+channel	R (.data) : #VALUE# @ 710
+channel	L (.data) : #VALUE# @ 770
+channel	R (.data) : #VALUE# @ 790
 source has run out of values! 
 deadlock analysis should point back to source 
 L.e:1
@@ -60,34 +60,34 @@ R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 event queue:
 	#TIME#	L.d[0] : 1
 	#TIME#	R.e : 1
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE# @ 860
+channel	R (.data) : #VALUE# @ 880
+channel	L (.data) : #VALUE# @ 940
+channel	R (.data) : #VALUE# @ 960
+channel	L (.data) : #VALUE# @ 1020
+channel	R (.data) : #VALUE# @ 1040
+channel	L (.data) : #VALUE# @ 1100
+channel	R (.data) : #VALUE# @ 1120
+channel	L (.data) : #VALUE# @ 1180
+channel	R (.data) : #VALUE# @ 1200
+channel	L (.data) : #VALUE# @ 1260
+channel	R (.data) : #VALUE# @ 1280
+channel	L (.data) : #VALUE# @ 1340
+channel	R (.data) : #VALUE# @ 1360
+channel	L (.data) : #VALUE# @ 1420
+channel	R (.data) : #VALUE# @ 1440
+channel	L (.data) : #VALUE# @ 1500
+channel	R (.data) : #VALUE# @ 1520
+channel	L (.data) : #VALUE# @ 1580
+channel	R (.data) : #VALUE# @ 1600
+channel	L (.data) : #VALUE# @ 1660
+channel	R (.data) : #VALUE# @ 1680
+channel	L (.data) : #VALUE# @ 1740
+channel	R (.data) : #VALUE# @ 1760
+channel	L (.data) : #VALUE# @ 1820
+channel	R (.data) : #VALUE# @ 1840
+channel	L (.data) : #VALUE# @ 1900
+channel	R (.data) : #VALUE# @ 1920
 --------------------------- 
 stop channel L 
 R.e:1
@@ -121,30 +121,30 @@ L : .e(init:0) 1x1of2 source-random,watch,stopped, timing: global
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 --------------------------- 
 resume channel L 
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE# @ 1980
+channel	R (.data) : #VALUE# @ 2000
 channels:
 L : .e(init:0) 1x1of2 source-random,watch, timing: global
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 --------------------------- 
 resume channel R 
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE# @ 2070
+channel	R (.data) : #VALUE# @ 2090
+channel	L (.data) : #VALUE# @ 2150
+channel	R (.data) : #VALUE# @ 2170
+channel	L (.data) : #VALUE# @ 2230
+channel	R (.data) : #VALUE# @ 2250
+channel	L (.data) : #VALUE# @ 2310
+channel	R (.data) : #VALUE# @ 2330
+channel	L (.data) : #VALUE# @ 2390
+channel	R (.data) : #VALUE# @ 2410
 channels:
 L : .e(init:0) 1x1of2 source-random,watch, timing: global
 R : .e(init:0) 1x1of2 sink,watch, timing: global
 --------------------------- 
 stop channel R 
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
+channel	L (.data) : #VALUE# @ 2470
+channel	R (.data) : #VALUE# @ 2490
 channels:
 L : .e(init:0) 1x1of2 source-random,watch, timing: global
 R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
@@ -164,15 +164,15 @@ L : .e(init:0) 1x1of2 source-random,watch,stopped, timing: global
 R : .e(init:0) 1x1of2 sink,watch, timing: global
 --------------------------- 
 resume channel L 
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
-channel	R (.data) : #VALUE#
-channel	L (.data) : #VALUE#
+channel	L (.data) : #VALUE# @ 2560
+channel	R (.data) : #VALUE# @ 2580
+channel	L (.data) : #VALUE# @ 2640
+channel	R (.data) : #VALUE# @ 2660
+channel	L (.data) : #VALUE# @ 2720
+channel	R (.data) : #VALUE# @ 2740
+channel	L (.data) : #VALUE# @ 2800
+channel	R (.data) : #VALUE# @ 2820
+channel	L (.data) : #VALUE# @ 2880
 channels:
 L : .e(init:0) 1x1of2 source-random,watch, timing: global
 R : .e(init:0) 1x1of2 sink,watch, timing: global

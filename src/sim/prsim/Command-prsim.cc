@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.56 2010/01/05 00:09:45 fang Exp $
+	$Id: Command-prsim.cc,v 1.57 2010/01/29 02:11:29 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -5069,6 +5069,53 @@ Channel::usage(ostream& o) {
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AutoChannel, "auto-channel", 
 	channels, "register a channel based on internal type")
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-report-time.texi
+@deffn Command channel-report-time [on|off]
+Set this switch on to show simulation timestamps when watched channels 
+are printed or logged channels are written to file.  
+Default: off
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelReportTime, "channel-report-time", 
+	channels, "display timestamps with watched and logged channels")
+
+int
+ChannelReportTime::main(State& s, const string_list& a) {
+	typedef	channel			channel_type;
+switch (a.size()) {
+case 1:
+	cout << "channel report time: " <<
+		(channel_type::report_time ? "on" : "off")
+		<< endl;
+	return Command::NORMAL;
+case 2: {
+	const string& arg(a.back());
+	if (arg == "on") {
+		channel_type::report_time = true;
+	} else if (arg == "off") {
+		channel_type::report_time = false;
+	} else {
+		cerr << "Bad argument." << endl;
+		usage(cerr);
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+default:
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+}
+}
+
+void
+ChannelReportTime::usage(ostream& o) {
+	o << name << " [on|off]" << endl;
+	o << brief << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

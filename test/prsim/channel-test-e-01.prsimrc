@@ -8,4 +8,5 @@ channel Y : :0 d:4
 channel Z : :0 d:3
 
 # channel-show-all
+channel-report-time on
 

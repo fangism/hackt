@@ -8,9 +8,9 @@ Y : .e(init:1) 1x1of4 off
 Z : .a(init:0) 1x1of3 off
 Warning: channel acknowledge `X.e' has no fanin!
 Warning: channel acknowledge `Y.e' has no fanin!
-channel	Z (.data) : 1
-channel	X (.data) : 0
-channel	Y (.data) : 0
+channel	Z (.data) : 1 @ 0
+channel	X (.data) : 0 @ 20
+channel	Y (.data) : 0 @ 20
 All subnodes of 'X':
 X.d[0] : 1
 X.d[1] : 0

@@ -5,4 +5,5 @@
 channel L e:0 :0 d:2
 channel R e:0 :0 d:2
 channel-show-all
+channel-report-time on
 

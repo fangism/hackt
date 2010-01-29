@@ -17,7 +17,7 @@ releasing channel X
 	20	X.e : 1
 ------------------------------------ 
 	20	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 20
 	20	X.v : 1
 	30	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @1 < channel-test-a-values-X.txt
@@ -30,7 +30,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 	count: 0, unknowns: 0
 ------------------------------------ 
 	40	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 40
 	40	X.v : 1
 	50	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
@@ -44,7 +44,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 ------------------------------------ 
 expect to assert fail here: 
 	60	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 60
 ERROR: value assertion failed on channel `X' at index [2].
 	expected: 1, got: 0
 ... at line 69

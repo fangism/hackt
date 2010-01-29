@@ -7,7 +7,7 @@ channels:
 X : .e(init:0) 1x1of2 off
 Y : .e(init:1) 1x1of4 source, timing: global {0,1,3,2,} @0
 Z : .a(init:0) 1x1of3 off
-channel	Y (.data) : 0
-channel	Y (.data) : 1
-channel	Y (.data) : 3
-channel	Y (.data) : 2
+channel	Y (.data) : 0 @ 20
+channel	Y (.data) : 1 @ 60
+channel	Y (.data) : 3 @ 100
+channel	Y (.data) : 2 @ 140

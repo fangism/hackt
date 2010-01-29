@@ -25,12 +25,12 @@ X.v : X
 	20	X.e : 1	[by X.v:=0]
 a channel value is logged when X.v+ 
 if data rails are invalid, 'X' will be logged 
-channel	X (.data) : X
+channel	X (.data) : X @ 20
 	20	X.v : 1
 	30	X.e : 0	[by X.v:=1]
 	30	X.v : 0
 	40	X.e : 1	[by X.v:=0]
-channel	X (.data) : X
+channel	X (.data) : X @ 40
 	40	X.v : 1
 	50	X.e : 0	[by X.v:=1]
 	50	X.v : 0
@@ -39,24 +39,24 @@ channel	X (.data) : X
 should not produce a value until X.v+ 
 	60	X.d[0] : 0
 	60	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 60
 	60	X.v : 1
 	70	X.e : 0	[by X.v:=1]
 	70	X.v : 0
 	80	X.e : 1	[by X.v:=0]
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 80
 	80	X.v : 1
 	90	X.e : 0	[by X.v:=1]
 	90	X.d[1] : 0
 	90	X.v : 0
 	100	X.e : 1	[by X.v:=0]
 	100	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 100
 	100	X.v : 1
 	110	X.e : 0	[by X.v:=1]
 	110	X.v : 0
 	120	X.e : 1	[by X.v:=0]
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 120
 	120	X.v : 1
 	130	X.e : 0	[by X.v:=1]
 	130	X.v : 0
@@ -64,31 +64,31 @@ channel	X (.data) : 0
 	140	X.d[0] : 0
 produce an X 
 	140	X.d[0] : X
-channel	X (.data) : X
+channel	X (.data) : X @ 140
 	140	X.v : 1
 	150	X.e : 0	[by X.v:=1]
 	150	X.v : 0
 	160	X.e : 1	[by X.v:=0]
 	160	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 160
 	160	X.v : 1
 	170	X.e : 0	[by X.v:=1]
 	170	X.v : 0
 	170	X.d[0] : 0
 	180	X.e : 1	[by X.v:=0]
 	180	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 180
 	180	X.v : 1
 	190	X.e : 0	[by X.v:=1]
 	190	X.v : 0
 	200	X.e : 1	[by X.v:=0]
 # log for channel: X
-X
-X
-1
-1
-0
-0
-X
-0
-1
+X @ 20
+X @ 40
+1 @ 60
+1 @ 80
+0 @ 100
+0 @ 120
+X @ 140
+0 @ 160
+1 @ 180

@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.26 2009/12/31 00:19:21 fang Exp $
+@c $Id: commands.texi,v 1.27 2010/01/29 02:11:26 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -195,6 +195,7 @@ the simulator provides basic watch commands.
 @include cmd/channel-unwatch.texi
 @include cmd/channel-watchall.texi
 @include cmd/channel-unwatchall.texi
+@include cmd/channel-report-time.texi
 
 Channel values can also be logged to a file or compared against
 expected values.  

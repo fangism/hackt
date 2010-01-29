@@ -18,83 +18,83 @@ releasing channel X (source)
 expect to see 10 values on X before source is exhausted... 
 	30	X.e : 1
 	40	X.d[0] : 1	[by X.e:=1]
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 50
 	50	X.v : 1	[by X.d[0]:=1]
 	60	X.e : 0	[by X.v:=1]
 	70	X.d[0] : 0	[by X.e:=0]
 	80	X.v : 0	[by X.d[0]:=0]
 	90	X.e : 1	[by X.v:=0]
 	100	X.d[1] : 1	[by X.e:=1]
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 110
 	110	X.v : 1	[by X.d[1]:=1]
 	120	X.e : 0	[by X.v:=1]
 	130	X.d[1] : 0	[by X.e:=0]
 	140	X.v : 0	[by X.d[1]:=0]
 	150	X.e : 1	[by X.v:=0]
 	160	X.d[1] : 1	[by X.e:=1]
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 170
 	170	X.v : 1	[by X.d[1]:=1]
 	180	X.e : 0	[by X.v:=1]
 	190	X.d[1] : 0	[by X.e:=0]
 	200	X.v : 0	[by X.d[1]:=0]
 	210	X.e : 1	[by X.v:=0]
 	220	X.d[0] : 1	[by X.e:=1]
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 230
 	230	X.v : 1	[by X.d[0]:=1]
 	240	X.e : 0	[by X.v:=1]
 	250	X.d[0] : 0	[by X.e:=0]
 	260	X.v : 0	[by X.d[0]:=0]
 	270	X.e : 1	[by X.v:=0]
 	280	X.d[0] : 1	[by X.e:=1]
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 290
 	290	X.v : 1	[by X.d[0]:=1]
 	300	X.e : 0	[by X.v:=1]
 	310	X.d[0] : 0	[by X.e:=0]
 	320	X.v : 0	[by X.d[0]:=0]
 	330	X.e : 1	[by X.v:=0]
 	340	X.d[0] : 1	[by X.e:=1]
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 350
 	350	X.v : 1	[by X.d[0]:=1]
 	360	X.e : 0	[by X.v:=1]
 	370	X.d[0] : 0	[by X.e:=0]
 	380	X.v : 0	[by X.d[0]:=0]
 	390	X.e : 1	[by X.v:=0]
 	400	X.d[1] : 1	[by X.e:=1]
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 410
 	410	X.v : 1	[by X.d[1]:=1]
 	420	X.e : 0	[by X.v:=1]
 	430	X.d[1] : 0	[by X.e:=0]
 	440	X.v : 0	[by X.d[1]:=0]
 	450	X.e : 1	[by X.v:=0]
 	460	X.d[1] : 1	[by X.e:=1]
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 470
 	470	X.v : 1	[by X.d[1]:=1]
 	480	X.e : 0	[by X.v:=1]
 	490	X.d[1] : 0	[by X.e:=0]
 	500	X.v : 0	[by X.d[1]:=0]
 	510	X.e : 1	[by X.v:=0]
 	520	X.d[1] : 1	[by X.e:=1]
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 530
 	530	X.v : 1	[by X.d[1]:=1]
 	540	X.e : 0	[by X.v:=1]
 	550	X.d[1] : 0	[by X.e:=0]
 	560	X.v : 0	[by X.d[1]:=0]
 	570	X.e : 1	[by X.v:=0]
 	580	X.d[1] : 1	[by X.e:=1]
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 590
 	590	X.v : 1	[by X.d[1]:=1]
 	600	X.e : 0	[by X.v:=1]
 	610	X.d[1] : 0	[by X.e:=0]
 	620	X.v : 0	[by X.d[1]:=0]
 	630	X.e : 1	[by X.v:=0]
 # log for channel: X
-0
-1
-1
-0
-0
-0
-1
-1
-1
-1
+0 @ 50
+1 @ 110
+1 @ 170
+0 @ 230
+0 @ 290
+0 @ 350
+1 @ 410
+1 @ 470
+1 @ 530
+1 @ 590

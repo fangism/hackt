@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.22 2009/07/10 20:39:44 fang Exp $
+	$Id: Channel-prsim.cc,v 1.23 2010/01/29 02:11:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -202,6 +202,11 @@ channel_file_handle::load_checkpoint(istream& i) {
 //=============================================================================
 // class channel method definitions
 
+// default global policy
+bool
+channel::report_time = false;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel::channel() :
 		name(), 
 		ack_signal(INVALID_NODE_INDEX), 
@@ -1709,19 +1714,23 @@ channel::process_data(const State& s) throw (channel_exception) {
 	if (watched()) {
 		cout << "channel\t" << name << " (.data) : ";
 		if (v) {
-			cout << data_rails_value(s) << endl;
+			cout << data_rails_value(s);
 		} else {	// data is in invalid state
-			cout << 'X' << endl;
+			cout << 'X';
 		}
+		if (report_time) cout << " @ " << s.time();
+		cout << endl;
 	}
 	if (!ignored() && dumplog.stream && *dumplog.stream) {
 		// TODO: format me, hex, dec, bin, etc...
 		// should be able to just setbase()
 		if (v) {
-		(*dumplog.stream) << data_rails_value(s) << endl;
+		(*dumplog.stream) << data_rails_value(s);
 		} else {
-		(*dumplog.stream) << 'X' << endl;
+		(*dumplog.stream) << 'X';
 		}
+		if (report_time) (*dumplog.stream) << " @ " << s.time();
+		(*dumplog.stream) << endl;
 		// really flush every line?
 	}
 	if (is_expecting() && !ignored()) {

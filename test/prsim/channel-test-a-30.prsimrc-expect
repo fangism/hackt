@@ -8,7 +8,7 @@ Y : .e(init:1) 1x1of4 off
 Z : .a(init:0) 1x1of3 off
 Warning: channel acknowledge `X.e' has no fanin!
 Warning: channel acknowledge `Y.e' has no fanin!
-channel	Y (.data) : 0
+channel	Y (.data) : 0 @ 20
 All subnodes of 'X':
 X.d[0] : 0
 X.d[1] : 0
@@ -24,8 +24,8 @@ Z.d[0] : 0
 Z.d[1] : 0
 Z.d[2] : 0
 Z.a : 0
-channel	Z (.data) : 0
-channel	Z (.data) : 1
+channel	Z (.data) : 0 @ 20
+channel	Z (.data) : 1 @ 40
 X : .e(init:0) 1x1of2 source,watch, timing: global {0,0,0,1,} @0
 	count: 0, unknowns: 0
 Y : .e(init:1) 1x1of4 source,watch, timing: global {0,2,0,1,}* @1 #0

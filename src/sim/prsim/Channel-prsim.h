@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.18 2009/10/03 09:34:56 fang Exp $
+	$Id: Channel-prsim.h,v 1.19 2010/01/29 02:11:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -221,6 +221,10 @@ public:
 		Utility data structure for set of unique node indices. 
 	 */
 	typedef	std::set<node_index_type>	node_set_type;
+
+	// global policies
+	/// if true, print watched and logged nodes with timestamps
+	static bool					report_time;
 private:
 	enum channel_flags {
 		/// the value of channel enable on reset

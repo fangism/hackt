@@ -18,7 +18,7 @@ releasing channel X
 ------------------------------------ 
 setting data rail 
 	20	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 20
 	20	X.n : 0
 	30	X.e : 0	[by X.n:=0]
 X : .e(init:0) .n 1x1of2 sink,watch, timing: global
@@ -39,7 +39,7 @@ caused by: `X.n' : 1
 ------------------------------------ 
 setting data rail 
 	40	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 40
 	40	X.n : 0
 	50	X.e : 0	[by X.n:=0]
 X : .e(init:0) .n 1x1of2 sink,watch, timing: global

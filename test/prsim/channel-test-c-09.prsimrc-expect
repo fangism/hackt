@@ -17,7 +17,7 @@ releasing channel X
 	20	X.e : 1
 ------------------------------------ 
 	20	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 20
 	20	X.v : 1
 	30	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @1 < channel-test-a-values-X.txt
@@ -30,7 +30,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 	count: 0, unknowns: 0
 ------------------------------------ 
 	40	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 40
 	40	X.v : 1
 	50	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @2 < channel-test-a-values-X.txt
@@ -43,7 +43,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 	count: 0, unknowns: 0
 ------------------------------------ 
 	60	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 60
 	60	X.v : 1
 	70	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @3 < channel-test-a-values-X.txt
@@ -56,7 +56,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 	count: 0, unknowns: 0
 ------------------------------------ 
 	80	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 80
 	80	X.v : 1
 	90	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @4 < channel-test-a-values-X.txt
@@ -69,7 +69,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 	count: 0, unknowns: 0
 ------------------------------------ 
 	100	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 100
 	100	X.v : 1
 	110	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @5 < channel-test-a-values-X.txt
@@ -82,7 +82,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 	count: 0, unknowns: 0
 ------------------------------------ 
 	120	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 120
 	120	X.v : 1
 	130	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @6 < channel-test-a-values-X.txt
@@ -95,7 +95,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 	count: 0, unknowns: 0
 ------------------------------------ 
 	140	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 140
 	140	X.v : 1
 	150	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @7 < channel-test-a-values-X.txt
@@ -108,7 +108,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 	count: 0, unknowns: 0
 ------------------------------------ 
 	160	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 160
 	160	X.v : 1
 	170	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @8 < channel-test-a-values-X.txt
@@ -121,7 +121,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 	count: 0, unknowns: 0
 ------------------------------------ 
 	180	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 180
 	180	X.v : 1
 	190	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} @9 < channel-test-a-values-X.txt
@@ -134,7 +134,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,
 	count: 0, unknowns: 0
 ------------------------------------ 
 	200	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 200
 	200	X.v : 1
 	210	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global
@@ -149,7 +149,7 @@ X : .e(init:0) .v 1x1of2 sink,expect,watch, timing: global
 expect values exhausted, now can be any value 
 ------------------------------------ 
 	220	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 220
 	220	X.v : 1
 	230	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,watch, timing: global
@@ -162,7 +162,7 @@ X : .e(init:0) .v 1x1of2 sink,watch, timing: global
 	count: 0, unknowns: 0
 ------------------------------------ 
 	240	X.d[1] : 1
-channel	X (.data) : 1
+channel	X (.data) : 1 @ 240
 	240	X.v : 1
 	250	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,watch, timing: global
@@ -175,7 +175,7 @@ X : .e(init:0) .v 1x1of2 sink,watch, timing: global
 	count: 0, unknowns: 0
 ------------------------------------ 
 	260	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 260
 	260	X.v : 1
 	270	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,watch, timing: global
@@ -188,7 +188,7 @@ X : .e(init:0) .v 1x1of2 sink,watch, timing: global
 	count: 0, unknowns: 0
 ------------------------------------ 
 	280	X.d[0] : 1
-channel	X (.data) : 0
+channel	X (.data) : 0 @ 280
 	280	X.v : 1
 	290	X.e : 0	[by X.v:=1]
 X : .e(init:0) .v 1x1of2 sink,watch, timing: global

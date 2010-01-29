@@ -16,26 +16,26 @@ R : .e(init:0) 1x1of2 sink,watch,stopped, timing: global
 event queue:
 	50	L.d[0] : 1
 	50	R.e : 1
-channel	L (.data) : 0
-channel	R (.data) : 0
-channel	L (.data) : 1
-channel	R (.data) : 1
-channel	L (.data) : 1
-channel	R (.data) : 1
-channel	L (.data) : 0
-channel	R (.data) : 0
-channel	L (.data) : 0
-channel	R (.data) : 0
-channel	L (.data) : 0
-channel	R (.data) : 0
-channel	L (.data) : 1
-channel	R (.data) : 1
-channel	L (.data) : 1
-channel	R (.data) : 1
-channel	L (.data) : 1
-channel	R (.data) : 1
-channel	L (.data) : 1
-channel	R (.data) : 1
+channel	L (.data) : 0 @ 50
+channel	R (.data) : 0 @ 70
+channel	L (.data) : 1 @ 130
+channel	R (.data) : 1 @ 150
+channel	L (.data) : 1 @ 210
+channel	R (.data) : 1 @ 230
+channel	L (.data) : 0 @ 290
+channel	R (.data) : 0 @ 310
+channel	L (.data) : 0 @ 370
+channel	R (.data) : 0 @ 390
+channel	L (.data) : 0 @ 450
+channel	R (.data) : 0 @ 470
+channel	L (.data) : 1 @ 530
+channel	R (.data) : 1 @ 550
+channel	L (.data) : 1 @ 610
+channel	R (.data) : 1 @ 630
+channel	L (.data) : 1 @ 690
+channel	R (.data) : 1 @ 710
+channel	L (.data) : 1 @ 770
+channel	R (.data) : 1 @ 790
 source has run out of values! 
 deadlock analysis should point back to source 
 L.e:1

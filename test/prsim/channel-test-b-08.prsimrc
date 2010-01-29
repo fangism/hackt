@@ -5,6 +5,7 @@
 # adding expect, not looped, should run out of asserts
 
 source channel-test-b-01.prsimrc
+channel-report-time off
 
 echo now with random timing!
 timing random
