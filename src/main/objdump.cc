@@ -4,7 +4,7 @@
 	Useful for testing object file integrity.  
 	This file came from "artobjdump.cc" in a previous life.  
 
-	$Id: objdump.cc,v 1.10 2009/10/16 20:38:47 fang Exp $
+	$Id: objdump.cc,v 1.10.2.1 2010/01/29 02:39:46 fang Exp $
  */
 
 #include <iostream>
@@ -27,7 +27,7 @@ struct objdump::options {
 
 	options() : show_table_of_contents(true), 
 		show_hierarchical_definitions(true),
-		show_global_allocate_table(true),
+		show_global_allocate_table(false),
 		auto_allocate(false),
 		help_only(false) { }
 };	// end class options

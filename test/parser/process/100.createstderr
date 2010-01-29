@@ -113,9 +113,8 @@ In namespace "", we have: {
         3	bar<>::x.a	
         4	bar<>::y.a	
         private sub-bool index map:
-          (1 -> 0)
-          (2 -> 1)
-          (3 -> 2)
+          (2 -> 0)
+          (3 -> 1)
         bool port aliases:
         1: bar<>::x.!GND = bar<>::!GND
         2: bar<>::x.!Vdd = bar<>::!Vdd
@@ -206,20 +205,17 @@ In namespace "", we have: {
         4	ick<>::q.x	foo<>
           bool: 1,2,4
         private sub-process index map:
-          (1 -> 0)
-          (3 -> 1)
-          (5 -> 2)
+          (3 -> 0)
+          (5 -> 1)
         bool instance pool: (3 ports)
         1	ick<>::!GND	
         2	ick<>::!Vdd	
         3	ick<>::p.x.a	
         4	ick<>::q.x.a	
         private sub-bool index map:
-          (1 -> 0)
-          (2 -> 3)
-          (3 -> 4)
-          (4 -> 7)
-          (5 -> 8)
+          (3 -> 0)
+          (4 -> 2)
+          (5 -> 3)
         bool port aliases:
         1: ick<>::p.!GND = ick<>::p.x.!GND = ick<>::!GND
         2: ick<>::p.!Vdd = ick<>::p.x.!Vdd = ick<>::!Vdd
@@ -260,15 +256,15 @@ footprint: {
     bool: 1,2,3
   private sub-process index map:
     (1 -> 0)
-    (2 -> 4)
-    (4 -> 5)
+    (2 -> 3)
+    (4 -> 4)
   bool instance pool: (0 ports)
   1	!GND	
   2	!Vdd	
   3	poo.p.x.a	
   private sub-bool index map:
     (1 -> 0)
-    (2 -> 9)
-    (3 -> 12)
-    (4 -> 13)
+    (2 -> 4)
+    (3 -> 6)
+    (4 -> 7)
 }

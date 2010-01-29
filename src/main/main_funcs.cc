@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.26 2009/10/16 21:46:21 fang Exp $
+	$Id: main_funcs.cc,v 1.26.2.1 2010/01/29 02:39:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -595,7 +595,7 @@ create_usage(const char* name, ostream& o) {
         o << "options:" << endl;
         o << "\t-c : input file is a source (compile it), not object\n"
                 "\t-C <opts> : forward options to compiler (driver)\n"
-                "\t-h : print this help"
+                "\t-h : print this help\n"
                 "\t-v : print version"
                 << endl;
 }

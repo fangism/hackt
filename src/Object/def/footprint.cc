@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.8 2010/01/25 23:50:17 fang Exp $
+	$Id: footprint.cc,v 1.46.2.9 2010/01/29 02:39:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -936,6 +936,7 @@ try {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Print canonical name.
+	\param the type-index pair, where index is 1-based.
  */
 ostream&
 footprint::dump_canonical_name(ostream& o,
@@ -1018,7 +1019,7 @@ footprint::partition_local_instance_pool(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Construct map that maps indicies to their local
+	Construct map that maps indices to their local
 	parent instance structures.
 	Indices that exceed the local public maximum index
 	will look up these maps, by first subtracting the public offset,
@@ -1029,16 +1030,20 @@ footprint::partition_local_instance_pool(void) {
 void
 footprint::construct_private_entry_map(void) {
 	STACKTRACE_VERBOSE;
-	// traverse all process instancess
+	// traverse all *private-local* process instances, skip process-ports
 	// add entry of pairs to map for every non-empty process
 	// needs to be accumulated to set _private_entries
 	typedef	footprint_base<process_tag>::instance_pool_type
 					process_pool_type;
 	typedef	process_pool_type::const_iterator	const_iterator;
 	process_pool_type& pp(get_instance_pool<process_tag>());
-	size_t index = 1;	// index map is 1-indexed
-	const_iterator i(pp.begin()), e(pp.end());
+	size_t index = pp.port_entries() +1;	// index map key is 1-based
+	const_iterator i(pp.local_private_begin()), e(pp.end());
 	for ( ; i!=e; ++i, ++index) {
+		// CAUTION: do not re-visit subordinate processes ports
+		// as they would be double-counted when visiting
+		// their parents!  but what about aliases???
+		// tried set of covered pid's, but failed...
 		const footprint* spf = i->_frame._footprint;
 		INVARIANT(spf);
 		append_private_map_entry(*spf, index);
@@ -1673,6 +1678,130 @@ footprint::cflat_aliases(ostream& o,
 	}
 #endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	Print all the subinstances 'owned' by a particular process, 
+	i.e. all local privates, as public ports belong to parents.
+	Does this in order using a recursive traversal.
+	TODO: factor this out into a common, reusable traversal.
+	\param o output stream
+	\param topfp top-level footprint needed for printing canonical name.
+	\param pff parent footprint_frame, the context for this instance.
+	\param ppid parent process index (1-based, 0 means top-level)
+	\param poffset process count offset (process_tag).
+	\param offset the parent instance<Tag> offset for global ID.
+ */
+template <class Tag>
+ostream&
+footprint::__dump_local_map_by_process(ostream& o, 
+		const footprint& topfp, const footprint_frame& pff, 
+		const size_t ppid, const size_t poffset, 
+		const size_t toffset) const {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("ppid = " << ppid <<
+		", poffset = " << poffset <<
+		", toffset = " << toffset << endl);
+	const typename state_instance<Tag>::pool_type&
+		_pool(get_instance_pool<Tag>());
+	// print local, non-port entries, since ports belong to 'parent'
+	const size_t l = _pool.local_entries();
+	size_t j = toffset;
+	size_t i = _pool.port_entries();
+	global_entry_dumper ged(o, topfp);
+	ged.pid = ppid;			// parent process id
+	for ( ; i<l; ++i, ++j) {
+		ged.local_index = i+1;
+		ged.index = j+1;	// global index
+		STACKTRACE_INDENT_PRINT("gid = " << ged.index <<
+			", lid = " << ged.local_index << endl);
+		_pool[i].dump_global_entry(ged) << endl;
+	}
+	// construct context (footprint_frame)
+	// recurse through processes
+	// print private, traversing by process
+	typedef pool_private_entry_map_type::const_iterator	const_iterator;
+	const_iterator pi(_pool.private_entry_map.begin()), 
+		pe(--_pool.private_entry_map.end()); // last entry is invalid
+	const state_instance<process_tag>::pool_type&
+		lpp(get_instance_pool<process_tag>());
+	const size_t lp_base = lpp.local_private_entries();
+	STACKTRACE_INDENT_PRINT("lp_base = " << lp_base << endl);
+#if ENABLE_STACKTRACE
+	lpp.dump(o);
+	_pool.dump(o);
+#endif
+	for ( ; pi!=pe; ++pi) {
+		const size_t& lpid = pi->first -1;
+		STACKTRACE_INDENT_PRINT("lpid = " << lpid);
+		const size_t& loffset = pi->second;
+		INVARIANT(lpid < lpp.local_entries());
+		const state_instance<process_tag>& sp(lpp[lpid]);
+		const size_t pps = (lpp.private_entry_map.size() > 1) ?
+			// could be empty
+			lpp.locate_cumulative_entry(pi->first).second : 0;
+		const size_t next_ppid = poffset +pi->first;
+		const size_t next_poffset = poffset +lp_base +pps;
+		const size_t next_toffset =
+			toffset +_pool.local_private_entries() +loffset;
+#if ENABLE_STACKTRACE
+		STACKTRACE_STREAM << ", pps = " << pps <<
+			", npid = " << next_ppid <<
+			", npoffset = " << next_poffset <<
+			", ntoffset = " << next_toffset << endl;
+#endif
+		const footprint_frame& spf(sp._frame);
+		// TODO: copy/transform footprint frame
+		spf._footprint->__dump_local_map_by_process<Tag>(o, topfp, spf,
+			next_ppid, next_poffset, next_toffset);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In order of global ID, print global frame information about
+	every instance in the hierarchy, using computed offsets
+	where applicable.
+ */
+template <class Tag>
+ostream&
+// footprint_base?
+footprint::__dump_allocation_map(ostream& o) const {
+	// traverse local pools first (instance_pool)
+	// traverse private subinstances, by ID and offset
+	//	by traversing private entry map, passing context
+	// recall: local pools are populated by ports and non-ports
+
+	// the following traversal is inefficient, but who cares?
+	const typename state_instance<Tag>::pool_type&
+		_pool(get_instance_pool<Tag>());
+if (_pool.total_entries()) {
+	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
+	const footprint_frame ff;	// empty top-level footprint frame
+	__dump_local_map_by_process<Tag>(o, *this, ff, 0, 0, 0);
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+footprint::dump_allocation_map(ostream& o) const {
+//	global_offset g;	// all 0s
+#if 0
+	__dump_allocation_map<process_tag>(o);
+	__dump_allocation_map<channel_tag>(o);
+#if ENABLE_DATASTRUCTS
+	__dump_allocation_map<datastruct_tag>(o);
+#endif
+	__dump_allocation_map<enum_tag>(o);
+	__dump_allocation_map<int_tag>(o);
+#endif
+	__dump_allocation_map<bool_tag>(o);
+	return o;
+}
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

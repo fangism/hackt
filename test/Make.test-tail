@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.95.2.1 2010/01/22 23:41:44 fang Exp $
+#	$Id: Make.test-tail,v 1.95.2.2 2010/01/29 02:39:47 fang Exp $
 
 # for test that depend on pre-install plug-ins
 # don't forget to pass -dlopen to assist searching for pre-install dependencies
@@ -16,6 +16,7 @@ HACKT_COMPILE_EXE = $(top_builddir)/src/haco
 HACKT_FLATTEN_EXE = $(top_builddir)/src/hacpp
 HACKT_OBJDUMP_EXE = $(top_builddir)/src/hacobjdump
 HACKT_CREATE_EXE = $(top_builddir)/src/haccreate
+# deprecated: replace with sym-link
 HACKT_ALLOC_EXE = $(top_builddir)/src/hacalloc
 HACKT_CFLAT_EXE = $(top_builddir)/src/hflat
 HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
@@ -61,8 +62,8 @@ PRSIM_TRACE_BINARY_FILTER = $(CHPSIM_TRACE_BINARY_FILTER)
 
 # objdump should NOT fail under any circumstances
 # reminder: dump goes to stderr
-DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $< > $@ 2>&1
-OBJDUMP_APPEND = $(HACKT_OBJDUMP_EXE) $< >> $@ 2>&1
+DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $$objdumpflags $< > $@ 2>&1
+OBJDUMP_APPEND = $(HACKT_OBJDUMP_EXE) $$objdumpflags $< >> $@ 2>&1
 
 HACO_FLAGS += -I$(srcdir)
 
@@ -157,8 +158,8 @@ CHECK_SUMMARIES =
 include $(top_srcdir)/test/Make.test-compile
 include $(top_srcdir)/test/Make.test-flatten
 include $(top_srcdir)/test/Make.test-create
-# temporary:
 # include $(top_srcdir)/test/Make.test-alloc
+# temporary:
 # include $(top_srcdir)/test/Make.test-cflat
 # include $(top_srcdir)/test/Make.test-graph
 # include $(top_srcdir)/test/Make.test-prsim

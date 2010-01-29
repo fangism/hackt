@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-01-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-11:
+	  Initial attempt to emulate global allocation dump met with
+		some difficulty.  Tried to re-use global_entry::dump
+		and global_entry_context as much as possible.
+	  bug fix: during construction of footprint::private_entry_maps,
+		should skip over sub processes that are in ports, 
+		as their 'space-allocation' is determined by the 
+		parent process that manages it locally and *privately*.
+		Fixes to footprint::get_instance and dump_canonical_name, 
+		related to miscalculation of index/offsets (1 vs 0 based).
+	  Current difficulty with allocdumps arises when processes
+		are passed as ports, tests still disabled until this
+		is resolved.
+
+
 2010-01-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-10:

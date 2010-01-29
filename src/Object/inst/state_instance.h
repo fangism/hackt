@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.11.88.4 2010/01/18 23:43:39 fang Exp $
+	$Id: state_instance.h,v 1.11.88.5 2010/01/29 02:39:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -29,6 +29,9 @@ using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct global_entry_dumper;
+#endif
 template <class> class instance_alias_info;
 template <class> class instance_collection_pool_bundle;
 
@@ -84,6 +87,9 @@ public:
 	dump(ostream&) const;
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	ostream&
+	dump_global_entry(global_entry_dumper&) const;
+
 	void
 	accept(PRS::cflat_visitor&) const;
 #endif

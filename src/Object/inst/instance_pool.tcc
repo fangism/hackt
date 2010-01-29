@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.13.88.4 2010/01/20 02:18:19 fang Exp $
+	$Id: instance_pool.tcc,v 1.13.88.5 2010/01/29 02:39:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -88,6 +88,13 @@ instance_pool<T>::~instance_pool() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+template <class T>
+typename instance_pool<T>::const_iterator
+instance_pool<T>::local_private_begin(void) const {
+	return this->begin() +_port_entries;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 static
 bool
@@ -95,6 +102,7 @@ offset_less(const size_t l, const pool_private_map_entry_type& r) {
 	return l < r.second;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Search for the entry that corresponds to the private local
 	substructure process.  
@@ -106,6 +114,32 @@ instance_pool<T>::locate_private_entry(const size_t li) const {
 		f(std::upper_bound(private_entry_map.begin(),
 			private_entry_map.end(), 
 			li, &offset_less));
+	INVARIANT(f != private_entry_map.begin());
+	--f;
+	return *f;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+static
+bool
+pid_less(const size_t l, const pool_private_map_entry_type& r) {
+	return l < r.first;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Search for the entry that corresponds to the private local
+	substructure process, the last entry before (up to) ID pi.  
+	\param pi the 1-based process index.
+ */
+template <class T>
+const pool_private_map_entry_type&
+instance_pool<T>::locate_cumulative_entry(const size_t pi) const {
+	pool_private_entry_map_type::const_iterator
+		f(std::upper_bound(private_entry_map.begin(),
+			private_entry_map.end(), 
+			pi, &pid_less));
 	INVARIANT(f != private_entry_map.begin());
 	--f;
 	return *f;

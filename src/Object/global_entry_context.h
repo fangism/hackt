@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.6.46.1 2010/01/09 03:29:57 fang Exp $
+	$Id: global_entry_context.h,v 1.6.46.2 2010/01/29 02:39:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -177,26 +177,48 @@ public:
 	Doesn't need the footprint_frame pointer because we're not
 	traversing the hierarchy.  
  */
-struct global_entry_dumper : public global_entry_context_base {
+struct global_entry_dumper :
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		public global_entry_context	// needs footprint_frame
+#else
+		public global_entry_context_base
+#endif
+{
 public:
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	typedef	global_entry_context		parent_type;
+#else
+	typedef	global_entry_context_base	parent_type;
 	using global_entry_context_base::sm;
 #endif
 	using global_entry_context_base::topfp;
 
 	ostream&				os;
+	// global index, 1-based
 	size_t					index;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// parent process index (1-based, 0 means top-level)
+	size_t					pid;
+	// index within parent process
+	size_t					local_index;
+#endif
 
 	global_entry_dumper(ostream& _o,
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_manager& _sm, 
 #endif
-		const footprint& _fp) :
-		global_entry_context_base(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			_sm,
+		const footprint& _fp
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const footprint_frame* ff = NULL
 #endif
-			_fp), os(_o), index(0) { }
+		) :
+		parent_type(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			_fp, ff
+#else
+			_sm, _fp
+#endif
+			), os(_o), index(0) { }
 
 };	// end struct global_entry_dumper
 

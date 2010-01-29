@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.8 2010/01/25 23:50:17 fang Exp $
+	$Id: footprint.h,v 1.30.2.9 2010/01/29 02:39:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -346,14 +346,17 @@ public:
 	}
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// index is 0-based
 	template <class Tag>
 	ostream&
 	dump_canonical_name(ostream&, const size_t) const;
 
+	// index is 0-based
 	ostream&
 	dump_canonical_name(ostream&, const global_indexed_reference&) const;
 
 	// perform hierarchical lookup to find uniquely typed instance
+	// index is 0-based
 	template <class Tag>
 	const state_instance<Tag>&
 	get_instance(const size_t) const;
@@ -510,6 +513,20 @@ public:
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	accept(PRS::cflat_visitor&) const;
+
+	ostream&
+	dump_allocation_map(ostream&) const;
+
+private:
+	template <class Tag>
+	ostream&
+	__dump_local_map_by_process(ostream&, 
+		const footprint&, const footprint_frame&, 
+		const size_t, const size_t, const size_t) const;
+
+	template <class Tag>
+	ostream&
+	__dump_allocation_map(ostream&) const;
 #endif
 
 public:

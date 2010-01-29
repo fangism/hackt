@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.22.20.5 2010/01/18 23:43:31 fang Exp $
+	$Id: global_entry.tcc,v 1.22.20.6 2010/01/29 02:39:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -114,7 +114,6 @@ extract_parent_formal_instance_alias(const state_manager& sm,
 //=============================================================================
 // class footprint_frame method definitions
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Prints the canonical type associated with this footprint_frame's
 	reference footprint.  
@@ -124,10 +123,14 @@ extract_parent_formal_instance_alias(const state_manager& sm,
 template <class Tag>
 ostream&
 footprint_frame::dump_footprint(global_entry_dumper& gec) const {
+	ostream& o(gec.os);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	gec.topfp->get_instance<Tag>(gec.index)._frame._footprint
+		->dump_type(o);
+#else
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	instance_alias_info<Tag>	alias_type;
 	INVARIANT(_footprint);
-	ostream& o(gec.os);
 	const size_t ind(gec.index);
 	const footprint& topfp(*gec.topfp);
 	const state_manager& sm(*gec.sm);
@@ -170,9 +173,9 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 		alias_type::dump_complete_type(*_inst.get_back_ref(),
 			o, _footprint);
 	}
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 	return o;
 }
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //=============================================================================
 // class global_entry_substructure_base method definitions
@@ -323,7 +326,6 @@ global_entry<Tag>::dump_canonical_name(ostream& o,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	NOTE: currently, only processes are ever super instances.  
  */
@@ -332,6 +334,13 @@ ostream&
 global_entry<Tag>::dump(global_entry_dumper& ged) const {
 	ostream& o(ged.os);
 	o << ged.index << '\t';
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const size_t parent_id = ged.pid;	// 1-based
+	const size_t local_offset = ged.local_index;
+	if (parent_id)
+		o << "process\t" << parent_id << '\t';
+	else	o << "(top)\t-\t";
+#else
 	switch (parent_tag_value) {
 	case PARENT_TYPE_NONE:
 		o << "(top)\t-\t";
@@ -349,13 +358,22 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 	default:
 		THROW_EXIT;
 	}
+#endif
 	o << local_offset << '\t';
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// ick, double lookup... TODO: avoid this? (not critical)
+	INVARIANT(ged.index);
+	const size_t gid = ged.index -1;
+	ged.topfp->dump_canonical_name<Tag>(o, gid) << '\t';
+	ged.topfp->get_instance<Tag>(gid).get_back_ref()
+		->dump_attributes(o);
+#else
 	dump_canonical_name(o, *ged.topfp, *ged.sm) << '\t';
 	dump_attributes(ged);
+#endif
 	parent_type::template dump<Tag>(ged);
 	return o;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.12.88.4 2010/01/18 23:43:38 fang Exp $
+	$Id: instance_pool.h,v 1.12.88.5 2010/01/29 02:39:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -40,6 +40,8 @@ template <class> class instance_collection_pool_bundle;
 	with each new entry, hence invariantly ordered.
 	Is sparse entry, so can skip indices for substructures
 	with no private entries.  
+	first: is 1-indexed to process pool
+	second: 0-indexed offset
  */
 typedef	std::pair<size_t, size_t>		pool_private_map_entry_type;
 typedef	vector<pool_private_map_entry_type>	pool_private_entry_map_type;
@@ -145,6 +147,9 @@ public:
 	using parent_type::end;
 	using parent_type::operator[];
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const_iterator
+	local_private_begin(void) const;
+
 	using parent_type::resize;
 	size_t
 	allocate(const value_type& t) {
@@ -211,6 +216,9 @@ public:
 
 	const private_map_entry_type&
 	locate_private_entry(const size_t) const;
+
+	const private_map_entry_type&
+	locate_cumulative_entry(const size_t) const;
 #endif
 
 	ostream&

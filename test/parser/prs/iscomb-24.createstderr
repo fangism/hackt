@@ -234,10 +234,8 @@ In namespace "", we have: {
         6	deeper<>::e.x	inv<>
           bool: 1,2,7,8
         private sub-process index map:
-          (1 -> 0)
-          (3 -> 1)
-          (5 -> 2)
-          (7 -> 3)
+          (5 -> 0)
+          (7 -> 1)
         bool instance pool: (6 ports)
         1	deeper<>::!GND	
         2	deeper<>::!Vdd	
@@ -248,10 +246,8 @@ In namespace "", we have: {
         7	deeper<>::e.x.a @[ iscomb !autokeeper ]	
         8	deeper<>::e.x.b	
         private sub-bool index map:
-          (1 -> 0)
-          (3 -> 2)
-          (5 -> 4)
-          (7 -> 6)
+          (5 -> 0)
+          (7 -> 2)
         bool port aliases:
         1: deeper<>::d[0].!GND = deeper<>::d[0].x.!GND = deeper<>::d[1].!GND = deeper<>::d[1].x.!GND = deeper<>::!GND
         2: deeper<>::d[0].!Vdd = deeper<>::d[0].x.!Vdd = deeper<>::d[1].!Vdd = deeper<>::d[1].x.!Vdd = deeper<>::!Vdd
@@ -319,11 +315,6 @@ In namespace "", we have: {
           bool: 1,2,5,6
         5	deepest<>::y.d[1].x	inv<>
           bool: 1,2,5,6
-        private sub-process index map:
-          (1 -> 0)
-          (2 -> 5)
-          (4 -> 6)
-          (6 -> 7)
         bool instance pool: (6 ports)
         1	deepest<>::!GND	
         2	deepest<>::!Vdd	
@@ -331,11 +322,6 @@ In namespace "", we have: {
         4	deepest<>::y.d[0].x.b @[ iscomb ]	
         5	deepest<>::y.d[1].x.a @[ iscomb !autokeeper ]	
         6	deepest<>::y.d[1].x.b	
-        private sub-bool index map:
-          (1 -> 0)
-          (2 -> 8)
-          (4 -> 10)
-          (6 -> 12)
         bool port aliases:
         1: deepest<>::y.!GND = deepest<>::y.d[0].!GND = deepest<>::y.d[0].x.!GND = deepest<>::y.d[1].!GND = deepest<>::y.d[1].x.!GND = deepest<>::!GND
         2: deepest<>::y.!Vdd = deepest<>::y.d[0].!Vdd = deepest<>::y.d[0].x.!Vdd = deepest<>::y.d[1].!Vdd = deepest<>::y.d[1].x.!Vdd = deepest<>::!Vdd
@@ -435,11 +421,10 @@ footprint: {
   6	sh1t.y.d[1].x	inv<>
     bool: 1,2,5,6
   private sub-process index map:
-    (1 -> 0)
-    (2 -> 7)
-    (3 -> 12)
-    (5 -> 13)
-    (7 -> 14)
+    (2 -> 0)
+    (3 -> 3)
+    (5 -> 4)
+    (7 -> 5)
   bool instance pool: (0 ports)
   1	!GND	
   2	!Vdd	
@@ -448,9 +433,8 @@ footprint: {
   5	sh1t.y.d[1].x.a @[ iscomb !autokeeper ]	
   6	sh1t.y.d[1].x.b	
   private sub-bool index map:
-    (1 -> 0)
-    (2 -> 12)
-    (3 -> 20)
-    (5 -> 22)
-    (7 -> 24)
+    (2 -> 0)
+    (3 -> 4)
+    (5 -> 6)
+    (7 -> 8)
 }

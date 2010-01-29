@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.6 2010/01/22 23:41:26 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.7 2010/01/29 02:39:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -233,6 +233,9 @@ footprint_frame::dump_type(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reminder: this only contains public ports.
+ */
 ostream&
 footprint_frame::dump_id_map(const footprint_frame_map_type& m, ostream& o, 
 		const char* const str) {
