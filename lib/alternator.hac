@@ -9,7 +9,7 @@
 
 	TODO: e1ofN alterators.
 
-	$Id: alternator.hac,v 1.15 2008/06/27 00:01:39 fang Exp $
+	$Id: alternator.hac,v 1.16 2010/01/30 03:33:14 fang Exp $
  */
 
 import "channel.hac";
@@ -102,30 +102,28 @@ prs {
 	Faster, smaller, and lower latency than the other version.  
 	Latency: inc => o+ (2T)
 	\param inc the request to advance or toggle
-	\param x, y dual-rail state variables
-	\param _o1 local inverted output rail
+	\param x dual-rail state variable
+	\param _o inverted output rails
 	\param o output rails
  */
 defproc symmetric_alternator_stage_fast(
 		bool inc,
-		x[2], y[2],
-		o[2],
+		x[2], _o[2], o[2],
 		_Reset) {
-bool _o;
 prs {
-	~_Reset					-> _o+
+	~_Reset					-> _o[0]+
 
-	// set-phase affects y
-	inc & x[0]				-> y[0]-
-	inc & x[0] & _Reset			-> _o-
-	~y[0] & ~(inc & x[1])			-> y[1]+	// x-coupled
-	~_o					-> o[0]+
+	// using cross-locking mutual exclusion
+	inc & x[0] & _o[1] & _Reset		-> _o[0]-
+	~_o[0]					-> o[0]+
+	// flip x to set up for next iteration
+	o[0]					-> x[0]-
+	~x[0] & ~(o[1])				-> x[1]+	// x-coupled
 
-	// reset-phase affects x
-	o[1] & y[1]				-> x[0]-
-	~inc					-> _o+
-	~inc & ~x[0] & ~(o[0] & y[0])		-> x[1]+	// x-coupled
-	_o					-> o[0]-
+	// reset phase is decoupled from everything else
+	// would like to guard _o- with x[1], but would be non-CMOS...
+	~inc 					-> _o[0]+
+	_o[0] & x[1]				-> o[0]-
 }
 }
 
@@ -210,49 +208,48 @@ defproc alternator_source_1of2_fast(
 		c1of2 o;
 		bool _Reset, Reset) {
 c1of2 x;	// exclhi dual-rail state-variable
-c1of2 y;	// exclhi dual-rail state-variable
-// _c1of2 _o;
+_c1of2 _o;
 symmetric_alternator_stage_fast s[2];
-	s[0](inc, x.d, y.d, o.d, _Reset);
-	s[1](inc, {x.d[1], x.d[0]}, {y.d[1], y.d[0]}, 
-		{o.d[1], o.d[0]}, _Reset);
+	s[0](inc, x.d, _o.d, o.d, _Reset);
+	s[1](inc, {x.d[1], x.d[0]}, 
+		{_o.d[1], _o.d[0]}, {o.d[1], o.d[0]}, _Reset);
 prs {
 	Reset					-> x.d[1]-
 	~_Reset					-> x.d[0]+
 	// the following two resets only needed for active-acknowledge on reset
-	Reset					-> y.d[0]-
-	~_Reset					-> y.d[1]+
 
 	// All the following production rules have been folded into:
-	// symmetric_alterator_stage, above.
+	// symmetric_alterator_stage_fast, above.
 	// The full expansion is left here for clarity.  
+	Reset					-> o.d[0]-
+	Reset					-> o.d[1]-
+
 /**
 	~_Reset					-> _o.d[1]+
 	~_Reset					-> _o.d[0]+
+	// x must be stable before responding with o-
 
-	// set-phase affects y
-	inc & x.d[0] & _Reset			-> y.d[0]-
-	inc & x.d[0] & _Reset			-> _o.d[0]-
+	// using cross-locking mutual exclusion
+	inc & x.d[0] & _o.d[1] & _Reset		-> _o.d[0]-
 	~_o.d[0]				-> o.d[0]+
-	~y.d[0] & ~(inc & x.d[1])		-> y.d[1]+	// x-coupled
+	// flip x to set up for next iteration
+	o.d[0]					-> x.d[0]-
+	~x.d[0] & ~(o.d[1])			-> x.d[1]+	// x-coupled
 
-	// reset-phase affects x
-	o.d[1] & y.d[1]				-> x.d[0]-
-	~inc					-> _o.d[0]+
-	_o.d[0]					-> o.d[0]-
-	~inc & ~x.d[0] & ~(o.d[0] & y.d[0])	-> x.d[1]+	// x-coupled
+	// reset phase is decoupled from everything else
+	~inc 					-> _o.d[0]+
+	_o.d[0] & x.d[1]			-> o.d[0]-
 
-	// set-phase affects y
-	inc & x.d[1] & _Reset			-> _o.d[1]-
-	inc & x.d[1] & _Reset			-> y.d[1]-
+	// symmetric counterpart
+	inc & x.d[1] & _o.d[0] & _Reset		-> _o.d[1]-
 	~_o.d[1]				-> o.d[1]+
-	~y.d[1] & ~(inc & x.d[0])		-> y.d[0]+	// x-coupled
+	// flip x to set up for next iteration
+	o.d[1]					-> x.d[1]-
+	~x.d[1] & ~(o.d[0])			-> x.d[0]+	// x-coupled
 
-	// reset-phase affects x
-	o.d[0] & y.d[0]				-> x.d[1]-
+	// reset phase is decoupled from everything else
 	~inc					-> _o.d[1]+
-	_o.d[1]					-> o.d[1]-
-	~inc & ~x.d[1] & ~(o.d[1] & y.d[1])	-> x.d[0]+	// x-coupled
+	_o.d[1] & x.d[0]			-> o.d[1]-
 **/
 }
 }

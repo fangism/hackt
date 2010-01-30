@@ -1,5 +1,14 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.60 2010/01/05 22:52:28 fang Exp $
+#	$Id: ChangeLog,v 1.61 2010/01/30 03:33:13 fang Exp $
+
+2010-01-29	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-65:
+	  lib/alternator.hac: CRITICAL FIX alternator_source_1of2_fast
+		did not actually alternate values before!
+		Now fixed and simplificied by removing the y variable
+		and using mutex-cross-locking in rules for _o.
+
 
 2010-01-05	David Fang	<fangism@users.sourceforge.net>
 
