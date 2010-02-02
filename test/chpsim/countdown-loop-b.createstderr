@@ -78,9 +78,9 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) 
   c = int<32>^0 = c (1) 
   Created state:
-  int instance pool: (0 ports)
+  int instance pool: (0 ports, 1 local, 0 mapped)
   1	c	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   resolved concurrent actions:

@@ -121,7 +121,7 @@ footprint: {
       [1][3] = h (10) 
     }
   Created state:
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 10 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	a	

@@ -93,7 +93,7 @@ In namespace "", we have: {
           }
         x = bool^0 = lt<>::x (3) 
         Created state:
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 1 local, 0 mapped)
         1	lt<>::!GND	
         2	lt<>::!Vdd	
         3	lt<>::x	
@@ -115,10 +115,10 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	l	lt<>
     bool: 1,2
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 1 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

@@ -106,13 +106,13 @@ In namespace "", we have: {
         X = channel chan(bool<>)^0 = bar<>::X (1) 
         b = bool^0 = bar<>::b (3) 
         Created state:
-        process instance pool: (0 ports)
+        process instance pool: (0 ports, 1 local, 0 mapped)
         1	bar<>::F	foo<>
           channel: 1
           bool: 1,2
-        channel instance pool: (0 ports)
+        channel instance pool: (0 ports, 1 local, 0 mapped)
         1	bar<>::X	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bar<>::!GND	
         2	bar<>::!Vdd	
         3	bar<>::b	
@@ -149,9 +149,9 @@ In namespace "", we have: {
         !Vdd = bool^0 = foo<>::!Vdd (2) 
         B = channel chan?(bool<>)^0 = foo<>::B (1) 
         Created state:
-        channel instance pool: (1 ports)
+        channel instance pool: (1 ports, 0 local, 0 mapped)
         1	foo<>::B	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
         1	foo<>::!GND	
         2	foo<>::!Vdd	
         resolved concurrent actions:
@@ -176,7 +176,7 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 1 mapped)
   1	BQ	bar<>
     bool: 1,2
   private sub-process index map:
@@ -185,7 +185,7 @@ footprint: {
   private sub-channel index map:
     (1 -> 0)
     (2 -> 1)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 1 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

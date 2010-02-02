@@ -39,9 +39,9 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) 
   X = channel chan(bool<>)^0 = X (1) 
   Created state:
-  channel instance pool: (0 ports)
+  channel instance pool: (0 ports, 1 local, 0 mapped)
   1	X	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

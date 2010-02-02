@@ -85,7 +85,7 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) 
   S = pint^0 value: 100
   Created state:
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

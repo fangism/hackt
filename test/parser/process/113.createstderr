@@ -94,9 +94,9 @@ In namespace "", we have: {
               [1] = bar<3, 2>::x[0] (1) 
             }
           Created state:
-          int instance pool: (0 ports)
+          int instance pool: (0 ports, 1 local, 0 mapped)
           1	bar<3, 2>::x[0]	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bar<3, 2>::!GND	
           2	bar<3, 2>::!Vdd	
         }
@@ -117,13 +117,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	poo	bar<3, 2>
     bool: 1,2
   private sub-int index map:
     (1 -> 0)
     (2 -> 1)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

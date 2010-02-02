@@ -114,7 +114,7 @@ In namespace "", we have: {
         b = bool^0 = nand_type<>::b (4) 
         c = bool^0 = nand_type<>::c (5) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	nand_type<>::!GND	
         2	nand_type<>::!Vdd	
         3	nand_type<>::a	
@@ -147,10 +147,10 @@ footprint: {
   lvt = pint^0 value: -2
   svt = pint^0 value: -1
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	X	nand_type<>
     bool: 1,2,3,4,5
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 5 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	X.a	

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.57.2.4 2010/01/15 18:42:32 fang Exp $
+	$Id: devel_switches.h,v 1.57.2.5 2010/02/02 23:08:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -107,10 +107,21 @@
 	Rationale: to eliminate expensive global allocation
 	Goal: 1
 	Phase 1: sifting of locally allocated indices public:private [done]
-	Phase 2: replacing all use of global state_manager [in progress]
-	Status: marking code for destruction
+	Phase 2: replace all use of global state_manager [done]
+	Phase 3: emulating global allocation [in-progress]
+	Phase 4: various back-ends
  */
 #define	MEMORY_MAPPED_GLOBAL_ALLOCATION		1
+
+/**
+	Define to 1 to allow the new hierarchical allocation scheme
+	to handle passing processes through ports, which adds some
+	complexity to the local pool mapping and partitioning.  
+	Before MEMORY_MAPPED_GLOBAL_ALLOCATION, this was always allowed
+	and handled correctly by the global allocation process.
+	Goal: 1
+ */
+#define	ALLOW_PROCESS_PORTS		(1 && MEMORY_MAPPED_GLOBAL_ALLOCATION)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

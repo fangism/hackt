@@ -160,7 +160,7 @@ In namespace "", we have: {
         y = bool^0 = foo<>::y (4) @[ iscomb ] 
         z = bool^0 = foo<>::y (4) @[ iscomb ] 
         Created state:
-        bool instance pool: (7 ports)
+        bool instance pool: (7 ports, 0 local, 0 mapped)
         1	foo<>::!GND	
         2	foo<>::!Vdd	
         3	foo<>::w @[ iscomb ]	
@@ -201,10 +201,10 @@ footprint: {
     f = bool^0 = bar.e (7) @[ iscomb ] 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	bar	foo<>
     bool: 1,2,3,4,5,6,7
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 7 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	bar.w @[ iscomb ]	

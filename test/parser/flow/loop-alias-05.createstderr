@@ -111,7 +111,7 @@ In namespace "", we have: {
           )
         )
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 1 local, 0 mapped)
         1	lut<>::pbint	pbitint<>
           process: 2
           bool: 1,2,3
@@ -119,7 +119,7 @@ In namespace "", we have: {
           bool: 1,2,3
         3	lut<>::p	pbit<>
           bool: 1,2,3
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	lut<>::!GND	
         2	lut<>::!Vdd	
         3	lut<>::p.t	
@@ -150,7 +150,7 @@ In namespace "", we have: {
         !Vdd = bool^0 = pbit<>::!Vdd (2) 
         t = bool^0 = pbit<>::t (3) 
         Created state:
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	pbit<>::!GND	
         2	pbit<>::!Vdd	
         3	pbit<>::t	
@@ -182,10 +182,10 @@ In namespace "", we have: {
           t = bool^0 = pbitint<>::pb.t (3) 
         )
         Created state:
-        process instance pool: (1 ports)
+        process instance pool: (1 ports, 0 local, 0 mapped)
         1	pbitint<>::pb	pbit<>
           bool: 1,2,3
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	pbitint<>::!GND	
         2	pbitint<>::!Vdd	
         3	pbitint<>::pb.t	
@@ -218,7 +218,7 @@ footprint: {
     )
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 1 mapped)
   1	l	lut<>
     process: 2,3
     bool: 1,2,3
@@ -230,7 +230,7 @@ footprint: {
   private sub-process index map:
     (1 -> 0)
     (4 -> 1)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 3 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	l.pbint.pb.t	

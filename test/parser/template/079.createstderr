@@ -316,7 +316,7 @@ In namespace "", we have: {
             }
           e = bool^0 = e1of<2>::e (3) 
           Created state:
-          bool instance pool: (5 ports)
+          bool instance pool: (5 ports, 0 local, 0 mapped)
           1	e1of<2>::!GND	
           2	e1of<2>::!Vdd	
           3	e1of<2>::e	
@@ -365,7 +365,7 @@ In namespace "", we have: {
         f = bool^0 = e1of2<>::f (4) 
         t = bool^0 = e1of2<>::t (3) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	e1of2<>::!GND	
         2	e1of2<>::!Vdd	
         3	e1of2<>::t	
@@ -425,7 +425,7 @@ In namespace "", we have: {
         gnd = bool^0 = globals<>::GND (4) 
         vdd = bool^0 = globals<>::Vdd (3) 
         Created state:
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 0 local, 0 mapped)
         1	globals<>::!GND	
         2	globals<>::!Vdd	
         3	globals<>::Vdd	
@@ -545,7 +545,7 @@ In namespace "", we have: {
             4 = 1
           }
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 2 local, 0 mapped)
         1	pseudo_rsource_e1of2a<>::g	globals<>
           bool: 1,2,3,4,5,6
         2	pseudo_rsource_e1of2a<>::l	e1of2<>
@@ -555,7 +555,7 @@ In namespace "", we have: {
         4	pseudo_rsource_e1of2a<>::src	source_e<5, 2, {0,1,1,0,1}>
           process: 1,3
           bool: 1,2,3,4,5,6,7,8,9
-        bool instance pool: (9 ports)
+        bool instance pool: (9 ports, 0 local, 0 mapped)
         1	pseudo_rsource_e1of2a<>::!GND	
         2	pseudo_rsource_e1of2a<>::!Vdd	
         3	pseudo_rsource_e1of2a<>::g.Vdd	
@@ -637,12 +637,12 @@ In namespace "", we have: {
             e = bool^0 = source_e<5, 2, {0,1,1,0,1}>::rr.e (9) 
           )
           Created state:
-          process instance pool: (2 ports)
+          process instance pool: (2 ports, 0 local, 0 mapped)
           1	source_e<5, 2, {0,1,1,0,1}>::g	globals<>
             bool: 1,2,3,4,5,6
           2	source_e<5, 2, {0,1,1,0,1}>::rr	e1of<2>
             bool: 1,2,9,7,8
-          bool instance pool: (9 ports)
+          bool instance pool: (9 ports, 0 local, 0 mapped)
           1	source_e<5, 2, {0,1,1,0,1}>::!GND	
           2	source_e<5, 2, {0,1,1,0,1}>::!Vdd	
           3	source_e<5, 2, {0,1,1,0,1}>::g.Vdd	
@@ -725,7 +725,7 @@ footprint: {
     e = bool^0 = x.e (5) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 2 mapped)
   1	x	e1of2<>
     bool: 1,2,4,3,5
   2	g	globals<>
@@ -736,7 +736,7 @@ footprint: {
   private sub-process index map:
     (3 -> 0)
     (4 -> 2)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 9 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	x.d[0]	

@@ -143,7 +143,7 @@ In namespace "", we have: {
         x = bool^0 = bogus<>::x (3) 
         y = bool^0 = bogus<>::y (4) 
         Created state:
-        bool instance pool: (7 ports)
+        bool instance pool: (7 ports, 1 local, 0 mapped)
         1	bogus<>::!GND	
         2	bogus<>::!Vdd	
         3	bogus<>::x	
@@ -187,10 +187,10 @@ footprint: {
     w = bool^0 = A.w (7) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	A	bogus<>
     bool: 1,2,3,4,7,5,6
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 7 local, 1 mapped)
   1	!GND	
   2	!Vdd	
   3	A.x	

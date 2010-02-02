@@ -84,7 +84,7 @@ In namespace "", we have: {
         G = bool^0 = foo<>::G (4) 
         V = bool^0 = foo<>::V (3) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	foo<>::!GND	
         2	foo<>::!Vdd	
         3	foo<>::V	
@@ -1653,7 +1653,7 @@ footprint: {
       )
     }
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 257 local, 0 mapped)
   1	bar[0]	foo<>
     bool: 1,2,3,4
   2	bar[1]	foo<>
@@ -2168,7 +2168,7 @@ footprint: {
     bool: 1,2,259,4
   257	bar[256]	foo<>
     bool: 1,2,260,4
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 260 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	bar[0].V	

@@ -97,7 +97,7 @@ In namespace "", we have: {
         !Vdd = bool^0 = bar<>::!Vdd (2) 
         q = bool^0 = bar<>::q (3) 
         Created state:
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	bar<>::!GND	
         2	bar<>::!Vdd	
         3	bar<>::q	
@@ -139,7 +139,7 @@ In namespace "", we have: {
           x = bool^0 = foo<false>::x (3) 
           y = bool^0 = foo<false>::y (4) 
           Created state:
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 2 local, 0 mapped)
           1	foo<false>::!GND	
           2	foo<false>::!Vdd	
           3	foo<false>::x	
@@ -165,12 +165,12 @@ In namespace "", we have: {
           x = bool^0 = foo<true>::x (3) 
           y = bool^0 = foo<true>::y (4) 
           Created state:
-          process instance pool: (0 ports)
+          process instance pool: (0 ports, 2 local, 0 mapped)
           1	foo<true>::b[0]	bar<>
             bool: 1,2,3
           2	foo<true>::b[1]	bar<>
             bool: 1,2,4
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 2 local, 0 mapped)
           1	foo<true>::!GND	
           2	foo<true>::!Vdd	
           3	foo<true>::x	
@@ -198,7 +198,7 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 2 mapped)
   1	f	foo<false>
     bool: 1,2
   2	g	foo<true>
@@ -206,7 +206,7 @@ footprint: {
   private sub-process index map:
     (2 -> 0)
     (3 -> 2)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 4 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

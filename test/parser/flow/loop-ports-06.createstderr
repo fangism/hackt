@@ -220,7 +220,7 @@ In namespace "", we have: {
               [3] = ch1of<4>::d[3] (6) 
             }
           Created state:
-          bool instance pool: (6 ports)
+          bool instance pool: (6 ports, 0 local, 0 mapped)
           1	ch1of<4>::!GND	
           2	ch1of<4>::!Vdd	
           3	ch1of<4>::d[0]	
@@ -252,7 +252,7 @@ In namespace "", we have: {
               [15] = ch1of<16>::d[15] (18) 
             }
           Created state:
-          bool instance pool: (18 ports)
+          bool instance pool: (18 ports, 0 local, 0 mapped)
           1	ch1of<16>::!GND	
           2	ch1of<16>::!Vdd	
           3	ch1of<16>::d[0]	
@@ -308,7 +308,7 @@ In namespace "", we have: {
               [3] = ch_1of<4>::d[3] (6) 
             }
           Created state:
-          bool instance pool: (6 ports)
+          bool instance pool: (6 ports, 0 local, 0 mapped)
           1	ch_1of<4>::!GND	
           2	ch_1of<4>::!Vdd	
           3	ch_1of<4>::d[0]	
@@ -340,7 +340,7 @@ In namespace "", we have: {
               [15] = ch_1of<16>::d[15] (18) 
             }
           Created state:
-          bool instance pool: (18 ports)
+          bool instance pool: (18 ports, 0 local, 0 mapped)
           1	ch_1of<16>::!GND	
           2	ch_1of<16>::!Vdd	
           3	ch_1of<16>::d[0]	
@@ -403,7 +403,7 @@ In namespace "", we have: {
         b = bool^0 = dcelm<>::b (4) 
         out = bool^0 = dcelm<>::out (6) 
         Created state:
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 0 local, 0 mapped)
         1	dcelm<>::!GND	
         2	dcelm<>::!Vdd	
         3	dcelm<>::a	
@@ -677,7 +677,7 @@ In namespace "", we have: {
             }
         )
         Created state:
-        process instance pool: (0 ports)
+        process instance pool: (0 ports, 22 local, 0 mapped)
         1	lut<>::d	ch1of<16>
           bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
         2	lut<>::_d	ch_1of<16>
@@ -722,7 +722,7 @@ In namespace "", we have: {
           bool: 1,2,50,45,33,17
         22	lut<>::ce[15]	dcelm<>
           bool: 1,2,50,46,34,18
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 48 local, 0 mapped)
         1	lut<>::!GND	
         2	lut<>::!Vdd	
         3	lut<>::d.d[0]	
@@ -790,13 +790,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 22 mapped)
   1	l	lut<>
     bool: 1,2
   private sub-process index map:
     (1 -> 0)
     (2 -> 22)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 48 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

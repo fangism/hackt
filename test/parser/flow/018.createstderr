@@ -172,7 +172,7 @@ In namespace "", we have: {
               [2][2] = checkers<3, 3>::m[0][0] (3) 
             }
           Created state:
-          bool instance pool: (3 ports)
+          bool instance pool: (3 ports, 0 local, 0 mapped)
           1	checkers<3, 3>::!GND	
           2	checkers<3, 3>::!Vdd	
           3	checkers<3, 3>::m[0][0]	
@@ -200,7 +200,7 @@ In namespace "", we have: {
               [2][3] = checkers<3, 4>::m[0][0] (3) 
             }
           Created state:
-          bool instance pool: (3 ports)
+          bool instance pool: (3 ports, 0 local, 0 mapped)
           1	checkers<3, 4>::!GND	
           2	checkers<3, 4>::!Vdd	
           3	checkers<3, 4>::m[0][0]	
@@ -228,7 +228,7 @@ In namespace "", we have: {
               [3][2] = checkers<4, 3>::m[0][0] (3) 
             }
           Created state:
-          bool instance pool: (3 ports)
+          bool instance pool: (3 ports, 0 local, 0 mapped)
           1	checkers<4, 3>::!GND	
           2	checkers<4, 3>::!Vdd	
           3	checkers<4, 3>::m[0][0]	
@@ -260,7 +260,7 @@ In namespace "", we have: {
               [3][3] = checkers<4, 4>::m[0][0] (3) 
             }
           Created state:
-          bool instance pool: (4 ports)
+          bool instance pool: (4 ports, 0 local, 0 mapped)
           1	checkers<4, 4>::!GND	
           2	checkers<4, 4>::!Vdd	
           3	checkers<4, 4>::m[0][0]	
@@ -362,7 +362,7 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 4 local, 0 mapped)
   1	a	checkers<3, 3>
     bool: 1,2,3
   2	b	checkers<3, 4>
@@ -371,7 +371,7 @@ footprint: {
     bool: 1,2,5
   4	d	checkers<4, 4>
     bool: 1,2,6,7
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 7 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	a.m[0][0]	

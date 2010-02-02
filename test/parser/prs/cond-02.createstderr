@@ -98,7 +98,7 @@ In namespace "", we have: {
           a = bool^0 = ass<1>::a (4) 
           x = bool^0 = ass<1>::x (3) 
           Created state:
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 2 local, 0 mapped)
           1	ass<1>::!GND	
           2	ass<1>::!Vdd	
           3	ass<1>::x	
@@ -111,7 +111,7 @@ In namespace "", we have: {
           a = bool^0 = ass<2>::a (4) 
           x = bool^0 = ass<2>::x (3) 
           Created state:
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 2 local, 0 mapped)
           1	ass<2>::!GND	
           2	ass<2>::!Vdd	
           3	ass<2>::x	
@@ -143,12 +143,12 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 0 mapped)
   1	x	ass<1>
     bool: 1,2
   2	y	ass<2>
     bool: 1,2
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 4 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

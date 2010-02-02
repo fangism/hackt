@@ -267,7 +267,7 @@ In namespace "", we have: {
         a = bool^0 = celem2inv<>::a (3) 
         b = bool^0 = celem2inv<>::b (4) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	celem2inv<>::!GND	
         2	celem2inv<>::!Vdd	
         3	celem2inv<>::a	
@@ -310,7 +310,7 @@ In namespace "", we have: {
           }
         e = bool^0 = e1of2<>::e (3) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	e1of2<>::!GND	
         2	e1of2<>::!Vdd	
         3	e1of2<>::e	
@@ -349,7 +349,7 @@ In namespace "", we have: {
         a = bool^0 = inv<>::a (3) 
         b = bool^0 = inv<>::b (4) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	inv<>::!GND	
         2	inv<>::!Vdd	
         3	inv<>::a	
@@ -396,7 +396,7 @@ In namespace "", we have: {
         a = bool^0 = nand2<>::a (3) 
         b = bool^0 = nand2<>::b (4) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	nand2<>::!GND	
         2	nand2<>::!Vdd	
         3	nand2<>::a	
@@ -520,7 +520,7 @@ In namespace "", we have: {
         )
         rv = bool^0 = wchb_e1of2<>::rv (11) 
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 6 local, 0 mapped)
         1	wchb_e1of2<>::L	e1of2<>
           bool: 1,2,5,3,4
         2	wchb_e1of2<>::R	e1of2<>
@@ -537,7 +537,7 @@ In namespace "", we have: {
           bool: 1,2,4,8,10
         8	wchb_e1of2<>::la	nand2<>
           bool: 1,2,9,10,11
-        bool instance pool: (8 ports)
+        bool instance pool: (8 ports, 3 local, 0 mapped)
         1	wchb_e1of2<>::!GND	
         2	wchb_e1of2<>::!Vdd	
         3	wchb_e1of2<>::L.d[0]	
@@ -611,7 +611,7 @@ footprint: {
     )
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 6 mapped)
   1	L	e1of2<>
     bool: 1,2,5,3,4
   2	R	e1of2<>
@@ -622,7 +622,7 @@ footprint: {
   private sub-process index map:
     (3 -> 0)
     (4 -> 6)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 8 local, 3 mapped)
   1	!GND	
   2	!Vdd	
   3	L.d[0]	

@@ -581,12 +581,12 @@ In namespace "", we have: {
               [2] = bool_or<3>::a[2] (5) 
             }
           Created state:
-          channel instance pool: (4 ports)
+          channel instance pool: (4 ports, 0 local, 0 mapped)
           1	bool_or<3>::O	
           2	bool_or<3>::A[0]	
           3	bool_or<3>::A[1]	
           4	bool_or<3>::A[2]	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 3 local, 0 mapped)
           1	bool_or<3>::!GND	
           2	bool_or<3>::!Vdd	
           3	bool_or<3>::a[0]	
@@ -685,9 +685,9 @@ In namespace "", we have: {
         B = channel chan?(bool<>)^0 = bool_sink<>::B (1) 
         b = bool^0 = bool_sink<>::b (3) 
         Created state:
-        channel instance pool: (1 ports)
+        channel instance pool: (1 ports, 0 local, 0 mapped)
         1	bool_sink<>::B	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_sink<>::!GND	
         2	bool_sink<>::!Vdd	
         3	bool_sink<>::b	
@@ -837,9 +837,9 @@ In namespace "", we have: {
           N = pint^0 value: 1
           S = channel chan!(bool<>)^0 = bool_source<1, {0}>::S (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	bool_source<1, {0}>::S	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bool_source<1, {0}>::!GND	
           2	bool_source<1, {0}>::!Vdd	
           resolved concurrent actions:
@@ -864,9 +864,9 @@ In namespace "", we have: {
           N = pint^0 value: 3
           S = channel chan!(bool<>)^0 = bool_source<3, {0,0,1}>::S (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	bool_source<3, {0,0,1}>::S	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bool_source<3, {0,0,1}>::!GND	
           2	bool_source<3, {0,0,1}>::!Vdd	
           resolved concurrent actions:
@@ -896,9 +896,9 @@ In namespace "", we have: {
           N = pint^0 value: 4
           S = channel chan!(bool<>)^0 = bool_source<4, {1,0,0,0}>::S (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	bool_source<4, {1,0,0,0}>::S	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bool_source<4, {1,0,0,0}>::!GND	
           2	bool_source<4, {1,0,0,0}>::!Vdd	
           resolved concurrent actions:
@@ -1112,7 +1112,7 @@ footprint: {
     B = channel chan?(bool<>)^0 = Out (4) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 5 local, 0 mapped)
   1	A	bool_or<3>
     channel: 4,1,2,3
     bool: 1,2
@@ -1128,12 +1128,12 @@ footprint: {
   5	Z	bool_sink<>
     channel: 4
     bool: 1,2
-  channel instance pool: (0 ports)
+  channel instance pool: (0 ports, 4 local, 0 mapped)
   1	In[0]	
   2	In[1]	
   3	In[2]	
   4	Out	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 4 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

@@ -61,7 +61,7 @@ footprint: {
       [3] = b[3] (9) 
     }
   Created state:
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 9 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	a[0]	

@@ -106,7 +106,7 @@ footprint: {
   y = bool^0 = y (4) @[ iscomb ] 
   z = bool^0 = y (4) @[ iscomb ] 
   Created state:
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 7 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	w @[ iscomb ]	

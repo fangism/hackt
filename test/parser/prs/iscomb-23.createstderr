@@ -298,7 +298,7 @@ In namespace "", we have: {
             }
         )
         Created state:
-        process instance pool: (10 ports)
+        process instance pool: (10 ports, 2 local, 0 mapped)
         1	deep<>::x	multi_inv<>
           process: 2,3,4,5
           bool: 1,2,3,4,5,6,3,4,6,5
@@ -327,7 +327,7 @@ In namespace "", we have: {
         12	deep<>::Q	twist<>
           process: 3,5
           bool: 1,2,5,6
-        bool instance pool: (14 ports)
+        bool instance pool: (14 ports, 0 local, 0 mapped)
         1	deep<>::!GND	
         2	deep<>::!Vdd	
         3	deep<>::x.s[0].a @[ iscomb ]	
@@ -378,7 +378,7 @@ In namespace "", we have: {
         a = bool^0 = inv<>::a (3) @[ iscomb ] 
         b = bool^0 = inv<>::b (4) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	inv<>::!GND	
         2	inv<>::!Vdd	
         3	inv<>::a @[ iscomb ]	
@@ -412,7 +412,7 @@ In namespace "", we have: {
         a = bool^0 = inv2<>::a (3) 
         b = bool^0 = inv2<>::b (4) @[ !autokeeper ] 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	inv2<>::!GND	
         2	inv2<>::!Vdd	
         3	inv2<>::a	
@@ -473,7 +473,7 @@ In namespace "", we have: {
             )
           }
         Created state:
-        process instance pool: (4 ports)
+        process instance pool: (4 ports, 0 local, 0 mapped)
         1	multi_inv<>::s[0]	inv<>
           bool: 1,2,3,4
         2	multi_inv<>::s[1]	inv<>
@@ -482,7 +482,7 @@ In namespace "", we have: {
           bool: 1,2,7,8
         4	multi_inv<>::t[1]	inv2<>
           bool: 1,2,9,10
-        bool instance pool: (10 ports)
+        bool instance pool: (10 ports, 0 local, 0 mapped)
         1	multi_inv<>::!GND	
         2	multi_inv<>::!Vdd	
         3	multi_inv<>::s[0].a @[ iscomb ]	
@@ -536,12 +536,12 @@ In namespace "", we have: {
           b = bool^0 = smoosh<>::j.b (4) @[ !autokeeper ] 
         )
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 0 local, 0 mapped)
         1	smoosh<>::j	inv<>
           bool: 1,2,3,4
         2	smoosh<>::k	inv2<>
           bool: 1,2,3,4
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	smoosh<>::!GND	
         2	smoosh<>::!Vdd	
         3	smoosh<>::j.a @[ iscomb ]	
@@ -591,12 +591,12 @@ In namespace "", we have: {
           b = bool^0 = twist<>::f.a (3) @[ iscomb !autokeeper ] 
         )
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 0 local, 0 mapped)
         1	twist<>::f	inv<>
           bool: 1,2,3,4
         2	twist<>::g	inv2<>
           bool: 1,2,4,3
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	twist<>::!GND	
         2	twist<>::!Vdd	
         3	twist<>::f.a @[ iscomb !autokeeper ]	
@@ -691,7 +691,7 @@ footprint: {
     )
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 11 local, 2 mapped)
   1	sh1t	deep<>
     process: 2,3,4,5,6,7,8,9,10,11
     bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14
@@ -720,7 +720,7 @@ footprint: {
   private sub-process index map:
     (1 -> 0)
     (12 -> 2)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 14 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	sh1t.x.s[0].a @[ iscomb ]	

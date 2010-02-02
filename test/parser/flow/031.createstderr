@@ -233,7 +233,7 @@ In namespace "", we have: {
               [100] = prime_array<100>::composite (3) 
             }
           Created state:
-          bool instance pool: (28 ports)
+          bool instance pool: (28 ports, 0 local, 0 mapped)
           1	prime_array<100>::!GND	
           2	prime_array<100>::!Vdd	
           3	prime_array<100>::composite	
@@ -386,10 +386,10 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	p	prime_array<100>
     bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 28 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	p.x[0]	

@@ -141,7 +141,7 @@ In namespace "", we have: {
         bar2 = bool^0 = dyne<>::bar (4) @[ may_weak_interfere ] 
         foo = bool^0 = dyne<>::foo (3) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	dyne<>::!GND	
         2	dyne<>::!Vdd	
         3	dyne<>::foo	
@@ -189,7 +189,7 @@ In namespace "", we have: {
         foo = bool^0 = yoyo<>::foo (3) @[ may_interfere ] 
         foo2 = bool^0 = yoyo<>::foo (3) @[ may_interfere ] 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	yoyo<>::!GND	
         2	yoyo<>::!Vdd	
         3	yoyo<>::foo @[ may_interfere ]	
@@ -239,7 +239,7 @@ footprint: {
     bar = bool^0 = wha.bar (8) @[ may_weak_interfere ] 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 4 local, 0 mapped)
   1	wee	yoyo<>
     bool: 1,2,3,4
   2	cheezburger	yoyo<>
@@ -248,7 +248,7 @@ footprint: {
     bool: 1,2,7,8
   4	bukkit	dyne<>
     bool: 1,2,5,6
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 8 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	wee.foo @[ may_interfere ]	

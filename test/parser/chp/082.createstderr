@@ -288,9 +288,9 @@ In namespace "", we have: {
           N = pint^0 value: 2
           b = channel chan!(int<16>)^0 = compute_me<2, {0,1}, 0>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<2, {0,1}, 0>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<2, {0,1}, 0>::!GND	
           2	compute_me<2, {0,1}, 0>::!Vdd	
           resolved concurrent actions:
@@ -313,9 +313,9 @@ In namespace "", we have: {
           N = pint^0 value: 2
           b = channel chan!(int<16>)^0 = compute_me<2, {0,1}, 1>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<2, {0,1}, 1>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<2, {0,1}, 1>::!GND	
           2	compute_me<2, {0,1}, 1>::!Vdd	
           resolved concurrent actions:
@@ -339,9 +339,9 @@ In namespace "", we have: {
           N = pint^0 value: 3
           b = channel chan!(int<16>)^0 = compute_me<3, {4,9,16}, 0>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 0>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 0>::!GND	
           2	compute_me<3, {4,9,16}, 0>::!Vdd	
           resolved concurrent actions:
@@ -365,9 +365,9 @@ In namespace "", we have: {
           N = pint^0 value: 3
           b = channel chan!(int<16>)^0 = compute_me<3, {4,9,16}, 1>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 1>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 1>::!GND	
           2	compute_me<3, {4,9,16}, 1>::!Vdd	
           resolved concurrent actions:
@@ -391,9 +391,9 @@ In namespace "", we have: {
           N = pint^0 value: 3
           b = channel chan!(int<16>)^0 = compute_me<3, {4,9,16}, 2>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 2>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 2>::!GND	
           2	compute_me<3, {4,9,16}, 2>::!Vdd	
           resolved concurrent actions:
@@ -420,9 +420,9 @@ In namespace "", we have: {
           N = pint^0 value: 6
           b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 0>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 0>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 0>::!GND	
           2	compute_me<6, {0,1,4,9,16,25}, 0>::!Vdd	
           resolved concurrent actions:
@@ -449,9 +449,9 @@ In namespace "", we have: {
           N = pint^0 value: 6
           b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 1>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 1>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 1>::!GND	
           2	compute_me<6, {0,1,4,9,16,25}, 1>::!Vdd	
           resolved concurrent actions:
@@ -478,9 +478,9 @@ In namespace "", we have: {
           N = pint^0 value: 6
           b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 2>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 2>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 2>::!GND	
           2	compute_me<6, {0,1,4,9,16,25}, 2>::!Vdd	
           resolved concurrent actions:
@@ -507,9 +507,9 @@ In namespace "", we have: {
           N = pint^0 value: 6
           b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 3>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 3>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 3>::!GND	
           2	compute_me<6, {0,1,4,9,16,25}, 3>::!Vdd	
           resolved concurrent actions:
@@ -536,9 +536,9 @@ In namespace "", we have: {
           N = pint^0 value: 6
           b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 4>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 4>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 4>::!GND	
           2	compute_me<6, {0,1,4,9,16,25}, 4>::!Vdd	
           resolved concurrent actions:
@@ -565,9 +565,9 @@ In namespace "", we have: {
           N = pint^0 value: 6
           b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 5>::b (1) 
           Created state:
-          channel instance pool: (1 ports)
+          channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 5>::b	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 5>::!GND	
           2	compute_me<6, {0,1,4,9,16,25}, 5>::!Vdd	
           resolved concurrent actions:
@@ -665,7 +665,7 @@ footprint: {
     b = channel chan!(int<16>)^0 = y6_5.b (11) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 11 local, 0 mapped)
   1	y2_0	compute_me<2, {0,1}, 0>
     channel: 1
     bool: 1,2
@@ -699,7 +699,7 @@ footprint: {
   11	y6_5	compute_me<6, {0,1,4,9,16,25}, 5>
     channel: 11
     bool: 1,2
-  channel instance pool: (0 ports)
+  channel instance pool: (0 ports, 11 local, 0 mapped)
   1	y2_0.b	
   2	y2_1.b	
   3	y3_0.b	
@@ -711,7 +711,7 @@ footprint: {
   9	y6_3.b	
   10	y6_4.b	
   11	y6_5.b	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

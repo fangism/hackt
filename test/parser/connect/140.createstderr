@@ -82,7 +82,7 @@ In namespace "", we have: {
             [0] = e1of1<>::d[0] (3) 
           }
         Created state:
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	e1of1<>::!GND	
         2	e1of1<>::!Vdd	
         3	e1of1<>::d[0]	
@@ -280,7 +280,7 @@ In namespace "", we have: {
             )
           }
         Created state:
-        process instance pool: (21 ports)
+        process instance pool: (21 ports, 0 local, 0 mapped)
         1	top_type<>::co[0][0][0]	e1of1<>
           bool: 1,2,3
         2	top_type<>::co[0][0][1]	e1of1<>
@@ -323,7 +323,7 @@ In namespace "", we have: {
           bool: 1,2,22
         21	top_type<>::co[0][6][2]	e1of1<>
           bool: 1,2,23
-        bool instance pool: (23 ports)
+        bool instance pool: (23 ports, 0 local, 0 mapped)
         1	top_type<>::!GND	
         2	top_type<>::!Vdd	
         3	top_type<>::co[0][0][0].d[0]	
@@ -710,7 +710,7 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 22 local, 0 mapped)
   1	top	top_type<>
     process: 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
     bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
@@ -756,7 +756,7 @@ footprint: {
     bool: 1,2,22
   22	co[0][6][2]	e1of1<>
     bool: 1,2,23
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 23 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	co[0][0][0].d[0]	

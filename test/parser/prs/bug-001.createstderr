@@ -208,10 +208,10 @@ In namespace "", we have: {
             }
           o = bool^0 = cel<2>::o (5) 
           Created state:
-          process instance pool: (0 ports)
+          process instance pool: (0 ports, 1 local, 0 mapped)
           1	cel<2>::c	gcel<2, 2>
             bool: 1,2,5,3,4,3,4
-          bool instance pool: (5 ports)
+          bool instance pool: (5 ports, 0 local, 0 mapped)
           1	cel<2>::!GND	
           2	cel<2>::!Vdd	
           3	cel<2>::i[0]	
@@ -262,7 +262,7 @@ In namespace "", we have: {
         x = bool^0 = foo<>::x (7) 
         xe = bool^0 = foo<>::xe (5) 
         Created state:
-        bool instance pool: (7 ports)
+        bool instance pool: (7 ports, 0 local, 0 mapped)
         1	foo<>::!GND	
         2	foo<>::!Vdd	
         3	foo<>::Ld	
@@ -328,7 +328,7 @@ In namespace "", we have: {
             }
           o = bool^0 = gcel<2, 2>::o (3) 
           Created state:
-          bool instance pool: (7 ports)
+          bool instance pool: (7 ports, 0 local, 0 mapped)
           1	gcel<2, 2>::!GND	
           2	gcel<2, 2>::!Vdd	
           3	gcel<2, 2>::o	
@@ -375,7 +375,7 @@ footprint: {
     x = bool^0 = y.x (10) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 1 mapped)
   1	x	cel<2>
     bool: 1,2,3,4,5
   2	y	foo<>
@@ -383,7 +383,7 @@ footprint: {
   private sub-process index map:
     (1 -> 0)
     (3 -> 1)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 10 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	x.i[0]	

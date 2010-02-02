@@ -132,7 +132,7 @@ In namespace "", we have: {
               [3] = ch1of<4>::d[3] (6) 
             }
           Created state:
-          bool instance pool: (6 ports)
+          bool instance pool: (6 ports, 0 local, 0 mapped)
           1	ch1of<4>::!GND	
           2	ch1of<4>::!Vdd	
           3	ch1of<4>::d[0]	
@@ -172,7 +172,7 @@ In namespace "", we have: {
         b = bool^0 = dcelm<>::b (4) 
         c = bool^0 = dcelm<>::c (5) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	dcelm<>::!GND	
         2	dcelm<>::!Vdd	
         3	dcelm<>::a	
@@ -331,7 +331,7 @@ In namespace "", we have: {
             )
           }
         Created state:
-        process instance pool: (0 ports)
+        process instance pool: (0 ports, 17 local, 0 mapped)
         1	lut<>::ad	ch1of<4>
           bool: 1,2,3,4,5,6
         2	lut<>::ce[0]	dcelm<>
@@ -366,7 +366,7 @@ In namespace "", we have: {
           bool: 1,2,6,5,21
         17	lut<>::ce[15]	dcelm<>
           bool: 1,2,6,6,22
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 20 local, 0 mapped)
         1	lut<>::!GND	
         2	lut<>::!Vdd	
         3	lut<>::ad.d[0]	
@@ -406,13 +406,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 17 mapped)
   1	l	lut<>
     bool: 1,2
   private sub-process index map:
     (1 -> 0)
     (2 -> 17)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 20 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

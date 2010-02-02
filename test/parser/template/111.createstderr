@@ -148,7 +148,7 @@ In namespace "", we have: {
               [1] = e1of<2>::rr[1] (5) 
             }
           Created state:
-          bool instance pool: (5 ports)
+          bool instance pool: (5 ports, 0 local, 0 mapped)
           1	e1of<2>::!GND	
           2	e1of<2>::!Vdd	
           3	e1of<2>::e	
@@ -167,7 +167,7 @@ In namespace "", we have: {
               [2] = e1of<3>::rr[2] (6) 
             }
           Created state:
-          bool instance pool: (6 ports)
+          bool instance pool: (6 ports, 0 local, 0 mapped)
           1	e1of<3>::!GND	
           2	e1of<3>::!Vdd	
           3	e1of<3>::e	
@@ -292,7 +292,7 @@ In namespace "", we have: {
               )
             }
           Created state:
-          process instance pool: (1 ports)
+          process instance pool: (1 ports, 5 local, 0 mapped)
           1	source_e<3, 2, {2,1}>::rr	e1of<3>
             bool: 1,2,6,3,4,5
           2	source_e<3, 2, {2,1}>::s[0]	e1of<2>
@@ -305,7 +305,7 @@ In namespace "", we have: {
             bool: 1,2,20,17,18,19
           6	source_e<3, 2, {2,1}>::r[1]	e1of<3>
             bool: 1,2,24,21,22,23
-          bool instance pool: (7 ports)
+          bool instance pool: (7 ports, 17 local, 0 mapped)
           1	source_e<3, 2, {2,1}>::!GND	
           2	source_e<3, 2, {2,1}>::!Vdd	
           3	source_e<3, 2, {2,1}>::rr.rr[0]	
@@ -363,7 +363,7 @@ footprint: {
     _Reset = bool^0 = Foo._Reset (7) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 5 mapped)
   1	Foo<2, {2,1}>	source_e<3, 2, {2,1}>
     process: 2
     bool: 1,2,3,4,5,6,7
@@ -372,7 +372,7 @@ footprint: {
   private sub-process index map:
     (1 -> 0)
     (3 -> 5)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 7 local, 17 mapped)
   1	!GND	
   2	!Vdd	
   3	Foo.rr.rr[0]	

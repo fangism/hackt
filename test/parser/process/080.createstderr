@@ -142,12 +142,12 @@ In namespace "", we have: {
               )
             }
           Created state:
-          process instance pool: (2 ports)
+          process instance pool: (2 ports, 0 local, 0 mapped)
           1	bar<3, 2>::x[0]	foo<3, 4>
             bool: 1,2,3,4
           2	bar<3, 2>::x[1]	foo<3, 4>
             bool: 1,2,5,6
-          bool instance pool: (6 ports)
+          bool instance pool: (6 ports, 0 local, 0 mapped)
           1	bar<3, 2>::!GND	
           2	bar<3, 2>::!Vdd	
           3	bar<3, 2>::x[0].a[0]	
@@ -199,7 +199,7 @@ In namespace "", we have: {
               [2] = foo<3, 4>::a[1] (4) 
             }
           Created state:
-          bool instance pool: (4 ports)
+          bool instance pool: (4 ports, 0 local, 0 mapped)
           1	foo<3, 4>::!GND	
           2	foo<3, 4>::!Vdd	
           3	foo<3, 4>::a[0]	
@@ -247,7 +247,7 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 0 mapped)
   1	poo	bar<3, 2>
     process: 2,3
     bool: 1,2,3,4,5,6
@@ -255,7 +255,7 @@ footprint: {
     bool: 1,2,3,4
   3	poo.x[1]	foo<3, 4>
     bool: 1,2,5,6
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 6 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	poo.x[0].a[0]	

@@ -99,7 +99,7 @@ In namespace "", we have: {
           }
         e = bool^0 = e1of2<>::e (3) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	e1of2<>::!GND	
         2	e1of2<>::!Vdd	
         3	e1of2<>::e	
@@ -157,12 +157,12 @@ In namespace "", we have: {
         _r = bool^0 = wchb_e1of2<>::_r (9) 
         l1 = bool^0 = wchb_e1of2<>::l1 (10) 
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 0 local, 0 mapped)
         1	wchb_e1of2<>::L	e1of2<>
           bool: 1,2,5,3,4
         2	wchb_e1of2<>::R	e1of2<>
           bool: 1,2,8,6,7
-        bool instance pool: (8 ports)
+        bool instance pool: (8 ports, 2 local, 0 mapped)
         1	wchb_e1of2<>::!GND	
         2	wchb_e1of2<>::!Vdd	
         3	wchb_e1of2<>::L.d[0]	
@@ -235,7 +235,7 @@ footprint: {
     )
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 0 mapped)
   1	L	e1of2<>
     bool: 1,2,5,3,4
   2	R	e1of2<>
@@ -243,7 +243,7 @@ footprint: {
   3	b	wchb_e1of2<>
     process: 1,2
     bool: 1,2,3,4,5,6,7,8
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 8 local, 2 mapped)
   1	!GND	
   2	!Vdd	
   3	L.d[0]	

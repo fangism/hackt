@@ -210,7 +210,7 @@ In namespace "", we have: {
             }
           e = bool^0 = e1of<2>::e (3) 
           Created state:
-          bool instance pool: (5 ports)
+          bool instance pool: (5 ports, 0 local, 0 mapped)
           1	e1of<2>::!GND	
           2	e1of<2>::!Vdd	
           3	e1of<2>::e	
@@ -270,10 +270,10 @@ In namespace "", we have: {
             e = bool^0 = source_e<2, 1, {0}>::rr.e (5) 
           )
           Created state:
-          process instance pool: (1 ports)
+          process instance pool: (1 ports, 0 local, 0 mapped)
           1	source_e<2, 1, {0}>::rr	e1of<2>
             bool: 1,2,5,3,4
-          bool instance pool: (6 ports)
+          bool instance pool: (6 ports, 0 local, 0 mapped)
           1	source_e<2, 1, {0}>::!GND	
           2	source_e<2, 1, {0}>::!Vdd	
           3	source_e<2, 1, {0}>::rr.d[0]	
@@ -305,10 +305,10 @@ In namespace "", we have: {
             e = bool^0 = source_e<2, 1, {1}>::rr.e (5) 
           )
           Created state:
-          process instance pool: (1 ports)
+          process instance pool: (1 ports, 0 local, 0 mapped)
           1	source_e<2, 1, {1}>::rr	e1of<2>
             bool: 1,2,5,3,4
-          bool instance pool: (6 ports)
+          bool instance pool: (6 ports, 0 local, 0 mapped)
           1	source_e<2, 1, {1}>::!GND	
           2	source_e<2, 1, {1}>::!Vdd	
           3	source_e<2, 1, {1}>::rr.d[0]	
@@ -377,7 +377,7 @@ In namespace "", we have: {
             )
           }
         Created state:
-        process instance pool: (4 ports)
+        process instance pool: (4 ports, 0 local, 0 mapped)
         1	source_pack_port_test<>::Src[0]<1, {0}>	source_e<2, 1, {0}>
           process: 2
           bool: 1,2,3,4,5,6
@@ -388,7 +388,7 @@ In namespace "", we have: {
           bool: 1,2,7,8,9,10
         4	source_pack_port_test<>::Src[1].rr	e1of<2>
           bool: 1,2,9,7,8
-        bool instance pool: (10 ports)
+        bool instance pool: (10 ports, 0 local, 0 mapped)
         1	source_pack_port_test<>::!GND	
         2	source_pack_port_test<>::!Vdd	
         3	source_pack_port_test<>::Src[0].rr.d[0]	
@@ -452,7 +452,7 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 5 local, 0 mapped)
   1	Z	source_pack_port_test<>
     process: 2,3,4,5
     bool: 1,2,3,4,5,6,7,8,9,10
@@ -466,7 +466,7 @@ footprint: {
     bool: 1,2,7,8,9,10
   5	Z.Src[1].rr	e1of<2>
     bool: 1,2,9,7,8
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 10 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	Z.Src[0].rr.d[0]	

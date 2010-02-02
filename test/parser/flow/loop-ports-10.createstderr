@@ -80,7 +80,7 @@ In namespace "", we have: {
             [2][1] = ass<>::q[2][1] (8) 
           }
         Created state:
-        bool instance pool: (8 ports)
+        bool instance pool: (8 ports, 0 local, 0 mapped)
         1	ass<>::!GND	
         2	ass<>::!Vdd	
         3	ass<>::q[0][0]	
@@ -185,7 +185,7 @@ footprint: {
       [3][2][1] = x[3][2][1] (26) 
     }
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 4 local, 0 mapped)
   1	myass[0]	ass<>
     bool: 1,2,3,4,5,6,7,8
   2	myass[1]	ass<>
@@ -194,7 +194,7 @@ footprint: {
     bool: 1,2,15,16,17,18,19,20
   4	myass[3]	ass<>
     bool: 1,2,21,22,23,24,25,26
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 26 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	x[0][0][0]	

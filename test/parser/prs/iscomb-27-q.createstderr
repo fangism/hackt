@@ -96,10 +96,10 @@ In namespace "", we have: {
           e = bool^0 = alt_e1of2<>::a.e (1) 
         )
         Created state:
-        process instance pool: (1 ports)
+        process instance pool: (1 ports, 0 local, 0 mapped)
         1	alt_e1of2<>::a	e1of2<>
           bool: 1
-        bool instance pool: (1 ports)
+        bool instance pool: (1 ports, 0 local, 0 mapped)
         1	alt_e1of2<>::a.e	
       }
       }
@@ -128,10 +128,10 @@ In namespace "", we have: {
           e = bool^0 = blah2<>::l.e (1) @[ iscomb ] 
         )
         Created state:
-        process instance pool: (1 ports)
+        process instance pool: (1 ports, 0 local, 0 mapped)
         1	blah2<>::l	e1of2<>
           bool: 1
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	blah2<>::l.e @[ iscomb ]	
         2	blah2<>::!GND	
         3	blah2<>::!Vdd	
@@ -179,7 +179,7 @@ In namespace "", we have: {
           )
         )
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 1 local, 0 mapped)
         1	blah3<>::in	alt_e1of2<>
           process: 2
           bool: 1
@@ -188,7 +188,7 @@ In namespace "", we have: {
         3	blah3<>::ma	blah2<>
           process: 2
           bool: 1,2,3
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	blah3<>::in_a.e @[ iscomb ]	
         2	blah3<>::!GND	
         3	blah3<>::!Vdd	
@@ -208,7 +208,7 @@ In namespace "", we have: {
       footprint: {
         e = bool^0 = e1of2<>::e (1) 
         Created state:
-        bool instance pool: (1 ports)
+        bool instance pool: (1 ports, 0 local, 0 mapped)
         1	e1of2<>::e	
       }
       }
@@ -232,7 +232,7 @@ footprint: {
     )
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 1 mapped)
   1	foo	blah3<>
     process: 2,3
     bool: 3,1,2
@@ -244,7 +244,7 @@ footprint: {
   private sub-process index map:
     (1 -> 0)
     (4 -> 1)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 3 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	foo.in.a.e @[ iscomb ]	

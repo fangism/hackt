@@ -347,9 +347,9 @@ In namespace "", we have: {
         B = channel chan?(bool<>)^0 = bool_sink<>::B (1) 
         b = bool^0 = bool_sink<>::b (3) 
         Created state:
-        channel instance pool: (1 ports)
+        channel instance pool: (1 ports, 0 local, 0 mapped)
         1	bool_sink<>::B	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_sink<>::!GND	
         2	bool_sink<>::!Vdd	
         3	bool_sink<>::b	
@@ -659,14 +659,14 @@ footprint: {
     B = channel chan?(bool<>)^0 = B (1) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	snk	bool_sink<>
     channel: 1
     bool: 1,2
-  channel instance pool: (0 ports)
+  channel instance pool: (0 ports, 2 local, 0 mapped)
   1	B	
   2	A	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 3 local, 1 mapped)
   1	!GND	
   2	!Vdd	
   3	a	

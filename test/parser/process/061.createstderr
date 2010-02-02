@@ -85,10 +85,10 @@ In namespace "", we have: {
               [1] = bar<3, 2>::x[1] (2) 
             }
           Created state:
-          int instance pool: (2 ports)
+          int instance pool: (2 ports, 0 local, 0 mapped)
           1	bar<3, 2>::x[0]	
           2	bar<3, 2>::x[1]	
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bar<3, 2>::!GND	
           2	bar<3, 2>::!Vdd	
         }
@@ -114,14 +114,14 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	poo	bar<3, 2>
     int: 1,2
     bool: 1,2
-  int instance pool: (0 ports)
+  int instance pool: (0 ports, 2 local, 0 mapped)
   1	poo.x[0]	
   2	poo.x[1]	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

@@ -67,11 +67,11 @@ footprint: {
   foo = int<32>^0 = foo (2) 
   ick::foo = int<32>^0 = ick::foo (3) 
   Created state:
-  int instance pool: (0 ports)
+  int instance pool: (0 ports, 3 local, 0 mapped)
   1	bar::foo	
   2	foo	
   3	ick::foo	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

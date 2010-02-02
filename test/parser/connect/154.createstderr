@@ -63,7 +63,7 @@ In namespace "", we have: {
             [1][0][0][1] = top_type<>::co[1][0][0][1] (6) 
           }
         Created state:
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 0 local, 0 mapped)
         1	top_type<>::!GND	
         2	top_type<>::!Vdd	
         3	top_type<>::co[0][0][0][0]	
@@ -94,10 +94,10 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	top	top_type<>
     bool: 1,2,3,4,5,6
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 6 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	top.co[0][0][0][0]	

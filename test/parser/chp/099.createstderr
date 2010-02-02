@@ -132,10 +132,10 @@ In namespace "", we have: {
         y = int<32>^0 = foo<>::y (1) 
         z = bool^0 = foo<>::z (4) 
         Created state:
-        int instance pool: (0 ports)
+        int instance pool: (0 ports, 2 local, 0 mapped)
         1	foo<>::y	
         2	foo<>::w	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 2 local, 0 mapped)
         1	foo<>::!GND	
         2	foo<>::!Vdd	
         3	foo<>::x	
@@ -182,13 +182,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	f	foo<>
     bool: 1,2
   private sub-int index map:
     (1 -> 0)
     (2 -> 2)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 2 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

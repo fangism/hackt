@@ -119,7 +119,7 @@ In namespace "", we have: {
         d = bool^0 = weakness<>::d (6) 
         e = bool^0 = weakness<>::e (7) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 3 local, 0 mapped)
         1	weakness<>::!GND	
         2	weakness<>::!Vdd	
         3	weakness<>::a	
@@ -155,10 +155,10 @@ footprint: {
     b = bool^0 = xyz.b (4) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	xyz	weakness<>
     bool: 1,2,3,4
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 4 local, 3 mapped)
   1	!GND	
   2	!Vdd	
   3	xyz.a	

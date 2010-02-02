@@ -110,7 +110,7 @@ In namespace "", we have: {
         y = bool^0 = ar<>::y (3) 
         z = bool^0 = ar<>::y (3) 
         Created state:
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	ar<>::!GND	
         2	ar<>::!Vdd	
         3	ar<>::y	
@@ -142,7 +142,7 @@ In namespace "", we have: {
         composite = bool^0 = array<>::x (3) 
         x = bool^0 = array<>::x (3) 
         Created state:
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	array<>::!GND	
         2	array<>::!Vdd	
         3	array<>::x	
@@ -182,12 +182,12 @@ In namespace "", we have: {
           y = bool^0 = foo<>::r.y (3) 
         )
         Created state:
-        process instance pool: (1 ports)
+        process instance pool: (1 ports, 1 local, 0 mapped)
         1	foo<>::r	ar<>
           bool: 1,2,3
         2	foo<>::k	array<>
           bool: 1,2,3
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	foo<>::!GND	
         2	foo<>::!Vdd	
         3	foo<>::r.y	
@@ -222,7 +222,7 @@ footprint: {
     )
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 1 mapped)
   1	B	ar<>
     bool: 1,2,3
   2	C	foo<>
@@ -231,7 +231,7 @@ footprint: {
   private sub-process index map:
     (2 -> 0)
     (3 -> 1)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 3 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	B.y	

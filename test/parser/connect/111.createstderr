@@ -73,7 +73,7 @@ In namespace "", we have: {
         a = bool^0 = wrap<>::a (3) 
         b = bool^0 = wrap<>::b (4) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	wrap<>::!GND	
         2	wrap<>::!Vdd	
         3	wrap<>::a	
@@ -104,10 +104,10 @@ footprint: {
     b = bool^0 = j.a (3) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	j	wrap<>
     bool: 1,2,3,3
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 3 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	j.a	

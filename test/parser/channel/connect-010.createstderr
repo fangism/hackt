@@ -105,9 +105,9 @@ In namespace "", we have: {
         a = channel chan?(bool<>)^0 = inner<>::a (1) 
         z = bool^0 = inner<>::z (3) 
         Created state:
-        channel instance pool: (1 ports)
+        channel instance pool: (1 ports, 0 local, 0 mapped)
         1	inner<>::a	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 1 local, 0 mapped)
         1	inner<>::!GND	
         2	inner<>::!Vdd	
         3	inner<>::z	
@@ -148,13 +148,13 @@ In namespace "", we have: {
           a = channel chan?(bool<>)^0 = one_shot<>::b (1) 
         )
         Created state:
-        process instance pool: (0 ports)
+        process instance pool: (0 ports, 1 local, 0 mapped)
         1	one_shot<>::y	inner<>
           channel: 1
           bool: 1,2
-        channel instance pool: (1 ports)
+        channel instance pool: (1 ports, 0 local, 0 mapped)
         1	one_shot<>::b	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 1 mapped)
         1	one_shot<>::!GND	
         2	one_shot<>::!Vdd	
         private sub-bool index map:
@@ -184,16 +184,16 @@ footprint: {
   )
   x = channel chan(bool<>)^0 = x (1) 
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 1 mapped)
   1	a	one_shot<>
     channel: 1
     bool: 1,2
   private sub-process index map:
     (1 -> 0)
     (2 -> 1)
-  channel instance pool: (0 ports)
+  channel instance pool: (0 ports, 1 local, 0 mapped)
   1	x	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 1 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

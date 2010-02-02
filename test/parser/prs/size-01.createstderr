@@ -76,7 +76,7 @@ In namespace "", we have: {
         a = bool^0 = size_test<>::a (3) 
         b = bool^0 = size_test<>::b (4) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	size_test<>::!GND	
         2	size_test<>::!Vdd	
         3	size_test<>::a	
@@ -105,10 +105,10 @@ footprint: {
     b = bool^0 = x.b (4) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	x	size_test<>
     bool: 1,2,3,4
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	x.a	

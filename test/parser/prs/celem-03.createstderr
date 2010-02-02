@@ -93,7 +93,7 @@ In namespace "", we have: {
             [1] = celem2inv<>::a[1] (5) 
           }
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	celem2inv<>::!GND	
         2	celem2inv<>::!Vdd	
         3	celem2inv<>::_o	
@@ -127,10 +127,10 @@ footprint: {
     _o = bool^0 = c._o (5) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	c	celem2inv<>
     bool: 1,2,5,3,4
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 5 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	c.a[0]	

@@ -145,7 +145,7 @@ In namespace "", we have: {
         tenf = preal^0 value: 10
         threef = preal^0 value: 3
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	sized_prs<>::!GND	
         2	sized_prs<>::!Vdd	
         3	sized_prs<>::a	
@@ -178,10 +178,10 @@ footprint: {
     b = bool^0 = z.b (4) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	z	sized_prs<>
     bool: 1,2,3,4
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	z.a	

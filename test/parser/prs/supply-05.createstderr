@@ -73,7 +73,7 @@ footprint: {
   y = bool^0 = y (5) 
   z = bool^0 = z (6) 
   Created state:
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 6 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	myGND	

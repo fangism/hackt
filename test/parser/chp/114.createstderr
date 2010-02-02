@@ -150,12 +150,12 @@ In namespace "", we have: {
         g = bool^0 = split_bool_soup<>::g (3) 
         x = bool^0 = split_bool_soup<>::x (4) 
         Created state:
-        channel instance pool: (4 ports)
+        channel instance pool: (4 ports, 0 local, 0 mapped)
         1	split_bool_soup<>::A	
         2	split_bool_soup<>::B	
         3	split_bool_soup<>::G	
         4	split_bool_soup<>::Z	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 2 local, 0 mapped)
         1	split_bool_soup<>::!GND	
         2	split_bool_soup<>::!Vdd	
         3	split_bool_soup<>::g	
@@ -208,16 +208,16 @@ footprint: {
     Z = channel chan!(bool<>)^0 = Z.Z (4) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	Z	split_bool_soup<>
     channel: 1,2,3,4
     bool: 1,2
-  channel instance pool: (0 ports)
+  channel instance pool: (0 ports, 4 local, 0 mapped)
   1	Z.A	
   2	Z.B	
   3	Z.G	
   4	Z.Z	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 2 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

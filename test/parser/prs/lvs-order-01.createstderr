@@ -93,7 +93,7 @@ In namespace "", we have: {
         e = bool^0 = lvs_order<>::e (7) 
         f = bool^0 = lvs_order<>::f (8) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 3 local, 0 mapped)
         1	lvs_order<>::!GND	
         2	lvs_order<>::!Vdd	
         3	lvs_order<>::a	
@@ -124,10 +124,10 @@ footprint: {
     c = bool^0 = foo.c (5) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	foo	lvs_order<>
     bool: 1,2,3,4,5
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 5 local, 3 mapped)
   1	!GND	
   2	!Vdd	
   3	foo.a	

@@ -60,7 +60,7 @@ footprint: {
   foo = bool^0 = foo (3) @[ may_interfere ] 
   foo2 = bool^0 = foo (3) @[ may_interfere ] 
   Created state:
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	foo @[ may_interfere ]	

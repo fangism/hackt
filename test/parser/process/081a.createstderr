@@ -88,7 +88,7 @@ In namespace "", we have: {
             [2] = foo<>::a[2] (5) 
           }
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	foo<>::!GND	
         2	foo<>::!Vdd	
         3	foo<>::a[0]	
@@ -140,14 +140,14 @@ footprint: {
       )
     }
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 0 mapped)
   1	x[0]	foo<>
     bool: 1,2,3,4,3
   2	x[1]	foo<>
     bool: 1,2,5,6,7
   3	x[2]	foo<>
     bool: 1,2,3,8,3
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 8 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	x[0].a[0]	

@@ -52,10 +52,10 @@ footprint: {
   bar::foo = int<32>^0 = bar::foo (2) 
   foo = int<32>^0 = foo (1) 
   Created state:
-  int instance pool: (0 ports)
+  int instance pool: (0 ports, 2 local, 0 mapped)
   1	foo	
   2	bar::foo	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

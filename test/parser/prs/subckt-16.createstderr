@@ -93,7 +93,7 @@ In namespace "", we have: {
         b = bool^0 = foo<>::b (5) 
         en = bool^0 = foo<>::en (3) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	foo<>::!GND	
         2	foo<>::!Vdd	
         3	foo<>::en	
@@ -128,10 +128,10 @@ footprint: {
     b = bool^0 = bar.b (5) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	bar	foo<>
     bool: 1,2,3,4,5
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 5 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	bar.en	

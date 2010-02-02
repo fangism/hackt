@@ -130,12 +130,12 @@ In namespace "", we have: {
           !Vdd = bool^0 = bar<>::!Vdd (2) 
         )
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 0 local, 0 mapped)
         1	bar<>::a	foo<1>
           bool: 1,2
         2	bar<>::b	foo<2>
           bool: 1,2
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
         1	bar<>::!GND	
         2	bar<>::!Vdd	
         bool port aliases:
@@ -167,7 +167,7 @@ In namespace "", we have: {
           !Vdd = bool^0 = foo<1>::!Vdd (2) 
           A = pint^0 value: 1
           Created state:
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	foo<1>::!GND	
           2	foo<1>::!Vdd	
         }
@@ -176,7 +176,7 @@ In namespace "", we have: {
           !Vdd = bool^0 = foo<2>::!Vdd (2) 
           A = pint^0 value: 2
           Created state:
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	foo<2>::!GND	
           2	foo<2>::!Vdd	
         }
@@ -225,7 +225,7 @@ footprint: {
     )
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 0 mapped)
   1	p	foo<1>
     bool: 1,2
   2	q	foo<2>
@@ -233,7 +233,7 @@ footprint: {
   3	w	bar<>
     process: 1,2
     bool: 1,2
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

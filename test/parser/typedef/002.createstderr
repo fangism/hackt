@@ -56,12 +56,12 @@ footprint: {
   fo = int<13>^0 = fo (3) 
   fum = int<128>^0 = fum (4) 
   Created state:
-  int instance pool: (0 ports)
+  int instance pool: (0 ports, 4 local, 0 mapped)
   1	fe	
   2	fi	
   3	fo	
   4	fum	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

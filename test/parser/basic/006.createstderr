@@ -127,7 +127,7 @@ footprint: {
       [4][2] = more_arrays::fancy_array[4][2] (20) 
     }
   Created state:
-  int instance pool: (0 ports)
+  int instance pool: (0 ports, 60 local, 0 mapped)
   1	good_array[0]	
   2	good_array[1]	
   3	good_array[2]	
@@ -188,7 +188,7 @@ footprint: {
   58	more_arrays::fancier_array[3][3][2]	
   59	more_arrays::fancier_array[3][4][1]	
   60	more_arrays::fancier_array[3][4][2]	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

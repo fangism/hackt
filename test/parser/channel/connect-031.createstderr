@@ -172,13 +172,13 @@ In namespace "", we have: {
         b = bool^0 = merge<>::b (3) 
         s = int<1>^0 = merge<>::s (1) 
         Created state:
-        channel instance pool: (3 ports)
+        channel instance pool: (3 ports, 0 local, 0 mapped)
         1	merge<>::S	
         2	merge<>::B[0]	
         3	merge<>::B[1]	
-        int instance pool: (0 ports)
+        int instance pool: (0 ports, 1 local, 0 mapped)
         1	merge<>::s	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 1 local, 0 mapped)
         1	merge<>::!GND	
         2	merge<>::!Vdd	
         3	merge<>::b	
@@ -237,13 +237,13 @@ In namespace "", we have: {
         S = channel chan?(int<1>)^0 = split<>::S (1) 
         s = int<1>^0 = split<>::s (1) 
         Created state:
-        channel instance pool: (3 ports)
+        channel instance pool: (3 ports, 0 local, 0 mapped)
         1	split<>::S	
         2	split<>::B[0]	
         3	split<>::B[1]	
-        int instance pool: (0 ports)
+        int instance pool: (0 ports, 1 local, 0 mapped)
         1	split<>::s	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
         1	split<>::!GND	
         2	split<>::!Vdd	
         resolved concurrent actions:
@@ -297,14 +297,14 @@ footprint: {
     S = channel chan?(int<1>)^0 = lanes.S (3) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 0 mapped)
   1	lanes	merge<>
     channel: 3,1,2
     bool: 1,2
   2	hairs	split<>
     channel: 4,1,2
     bool: 1,2
-  channel instance pool: (0 ports)
+  channel instance pool: (0 ports, 4 local, 0 mapped)
   1	b[0]	
   2	b[1]	
   3	lanes.S	
@@ -313,7 +313,7 @@ footprint: {
     (1 -> 0)
     (2 -> 1)
     (3 -> 2)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 1 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

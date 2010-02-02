@@ -120,7 +120,7 @@ In namespace "", we have: {
         c = bool^0 = pchg_test<>::c (5) 
         en = bool^0 = pchg_test<>::en (6) 
         Created state:
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 0 local, 0 mapped)
         1	pchg_test<>::!GND	
         2	pchg_test<>::!Vdd	
         3	pchg_test<>::a	
@@ -171,7 +171,7 @@ In namespace "", we have: {
         b = bool^0 = pchg_test2<>::b (4) 
         c = bool^0 = pchg_test2<>::c (5) 
         Created state:
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 0 local, 0 mapped)
         1	pchg_test2<>::!GND	
         2	pchg_test2<>::!Vdd	
         3	pchg_test2<>::a	
@@ -212,12 +212,12 @@ footprint: {
     en = bool^0 = foo.en (6) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 0 mapped)
   1	foo	pchg_test<>
     bool: 1,2,3,4,5,6
   2	bar	pchg_test2<>
     bool: 1,2,7,8,9,10
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 10 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	foo.a	

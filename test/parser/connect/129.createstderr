@@ -254,7 +254,7 @@ In namespace "", we have: {
         f = bool^0 = e1of2<>::f (4) 
         t = bool^0 = e1of2<>::t (3) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	e1of2<>::!GND	
         2	e1of2<>::!Vdd	
         3	e1of2<>::t	
@@ -283,7 +283,7 @@ In namespace "", we have: {
         !GND = bool^0 = globals<>::!GND (1) 
         !Vdd = bool^0 = globals<>::!Vdd (2) 
         Created state:
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
         1	globals<>::!GND	
         2	globals<>::!Vdd	
       }
@@ -373,7 +373,7 @@ In namespace "", we have: {
           e = bool^0 = merge<>::x.e (14) 
         )
         Created state:
-        process instance pool: (5 ports)
+        process instance pool: (5 ports, 0 local, 0 mapped)
         1	merge<>::g	globals<>
           bool: 1,2
         2	merge<>::a	e1of2<>
@@ -384,7 +384,7 @@ In namespace "", we have: {
           bool: 1,2,10,9,11
         5	merge<>::x	e1of2<>
           bool: 1,2,13,12,14
-        bool instance pool: (14 ports)
+        bool instance pool: (14 ports, 0 local, 0 mapped)
         1	merge<>::!GND	
         2	merge<>::!Vdd	
         3	merge<>::a.d[0]	
@@ -452,12 +452,12 @@ In namespace "", we have: {
           e = bool^0 = source_e1of2_1<>::r.e (5) 
         )
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 0 local, 0 mapped)
         1	source_e1of2_1<>::g	globals<>
           bool: 1,2
         2	source_e1of2_1<>::r	e1of2<>
           bool: 1,2,4,3,5
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	source_e1of2_1<>::!GND	
         2	source_e1of2_1<>::!Vdd	
         3	source_e1of2_1<>::r.d[0]	
@@ -555,7 +555,7 @@ In namespace "", we have: {
           e = bool^0 = split4<>::l.e (5) 
         )
         Created state:
-        process instance pool: (5 ports)
+        process instance pool: (5 ports, 0 local, 0 mapped)
         1	split4<>::g	globals<>
           bool: 1,2
         2	split4<>::l	e1of2<>
@@ -566,7 +566,7 @@ In namespace "", we have: {
           bool: 1,2,10,9,11
         5	split4<>::b	e1of2<>
           bool: 1,2,13,12,14
-        bool instance pool: (14 ports)
+        bool instance pool: (14 ports, 0 local, 0 mapped)
         1	split4<>::!GND	
         2	split4<>::!Vdd	
         3	split4<>::l.d[0]	
@@ -643,12 +643,12 @@ In namespace "", we have: {
           e = bool^0 = upcopy<>::r.e (6) 
         )
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 0 local, 0 mapped)
         1	upcopy<>::l	e1of2<>
           bool: 1,2,4,3,5
         2	upcopy<>::r	e1of2<>
           bool: 1,2,4,3,6
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 0 local, 0 mapped)
         1	upcopy<>::!GND	
         2	upcopy<>::!Vdd	
         3	upcopy<>::l.d[0]	
@@ -958,7 +958,7 @@ footprint: {
     e = bool^0 = xw.e (27) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 14 local, 0 mapped)
   1	g	globals<>
     bool: 1,2
   2	l	e1of2<>
@@ -991,7 +991,7 @@ footprint: {
   14	srcwcon	source_e1of2_1<>
     process: 1,5
     bool: 1,2,12,13,14
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 27 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	l.d[0]	

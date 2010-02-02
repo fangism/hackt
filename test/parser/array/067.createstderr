@@ -91,7 +91,7 @@ In namespace "", we have: {
         !GND = bool^0 = fifo<>::!GND (1) 
         !Vdd = bool^0 = fifo<>::!Vdd (2) 
         Created state:
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
         1	fifo<>::!GND	
         2	fifo<>::!Vdd	
       }
@@ -162,7 +162,7 @@ In namespace "", we have: {
               )
             }
           Created state:
-          process instance pool: (0 ports)
+          process instance pool: (0 ports, 9 local, 0 mapped)
           1	mult<5>::x[0][0]	fifo<>
             bool: 1,2
           2	mult<5>::x[0][1]	fifo<>
@@ -181,7 +181,7 @@ In namespace "", we have: {
             bool: 1,2
           9	mult<5>::x[4][1]	fifo<>
             bool: 1,2
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	mult<5>::!GND	
           2	mult<5>::!Vdd	
         }
@@ -202,13 +202,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 9 mapped)
   1	m	mult<5>
     bool: 1,2
   private sub-process index map:
     (1 -> 0)
     (2 -> 9)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

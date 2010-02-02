@@ -132,7 +132,7 @@ In namespace "", we have: {
             }
           out = bool^0 = nand<2>::out (3) 
           Created state:
-          bool instance pool: (5 ports)
+          bool instance pool: (5 ports, 0 local, 0 mapped)
           1	nand<2>::!GND	
           2	nand<2>::!Vdd	
           3	nand<2>::out	
@@ -157,7 +157,7 @@ In namespace "", we have: {
             }
           out = bool^0 = nand<4>::out (3) 
           Created state:
-          bool instance pool: (7 ports)
+          bool instance pool: (7 ports, 0 local, 0 mapped)
           1	nand<4>::!GND	
           2	nand<4>::!Vdd	
           3	nand<4>::out	
@@ -209,12 +209,12 @@ footprint: {
   )
   z = bool^0 = z (5) 
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 0 mapped)
   1	a	nand<2>
     bool: 1,2,5,3,4
   2	b	nand<4>
     bool: 1,2,5,6,7,8,9
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 9 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	a.in[0]	

@@ -175,7 +175,7 @@ In namespace "", we have: {
             }
           e = bool^0 = e1of<4>::e (3) 
           Created state:
-          bool instance pool: (7 ports)
+          bool instance pool: (7 ports, 0 local, 0 mapped)
           1	e1of<4>::!GND	
           2	e1of<4>::!Vdd	
           3	e1of<4>::e	
@@ -245,10 +245,10 @@ In namespace "", we have: {
             e = bool^0 = source_e<4, 1, {0}>::rr.e (7) 
           )
           Created state:
-          process instance pool: (1 ports)
+          process instance pool: (1 ports, 0 local, 0 mapped)
           1	source_e<4, 1, {0}>::rr	e1of<4>
             bool: 1,2,7,3,4,5,6
-          bool instance pool: (8 ports)
+          bool instance pool: (8 ports, 0 local, 0 mapped)
           1	source_e<4, 1, {0}>::!GND	
           2	source_e<4, 1, {0}>::!Vdd	
           3	source_e<4, 1, {0}>::rr.d[0]	
@@ -302,13 +302,13 @@ In namespace "", we have: {
             e = bool^0 = source_e<4, 2, {1,0}>::rr.e (7) 
           )
           Created state:
-          process instance pool: (1 ports)
+          process instance pool: (1 ports, 1 local, 0 mapped)
           1	source_e<4, 2, {1,0}>::rr	e1of<4>
             bool: 1,2,7,3,4,5,6
           2	source_e<4, 2, {1,0}>::S<1, {0}>	source_e<4, 1, {0}>
             process: 1
             bool: 1,2,3,4,5,6,7,8
-          bool instance pool: (8 ports)
+          bool instance pool: (8 ports, 0 local, 0 mapped)
           1	source_e<4, 2, {1,0}>::!GND	
           2	source_e<4, 2, {1,0}>::!Vdd	
           3	source_e<4, 2, {1,0}>::rr.d[0]	
@@ -363,7 +363,7 @@ In namespace "", we have: {
             e = bool^0 = source_e<4, 3, {2,1,0}>::rr.e (7) 
           )
           Created state:
-          process instance pool: (1 ports)
+          process instance pool: (1 ports, 1 local, 1 mapped)
           1	source_e<4, 3, {2,1,0}>::rr	e1of<4>
             bool: 1,2,7,3,4,5,6
           2	source_e<4, 3, {2,1,0}>::S<2, {1,0}>	source_e<4, 2, {1,0}>
@@ -372,7 +372,7 @@ In namespace "", we have: {
           private sub-process index map:
             (2 -> 0)
             (3 -> 1)
-          bool instance pool: (8 ports)
+          bool instance pool: (8 ports, 0 local, 0 mapped)
           1	source_e<4, 3, {2,1,0}>::!GND	
           2	source_e<4, 3, {2,1,0}>::!Vdd	
           3	source_e<4, 3, {2,1,0}>::rr.d[0]	
@@ -428,7 +428,7 @@ In namespace "", we have: {
             e = bool^0 = source_e<4, 4, {3,2,1,0}>::rr.e (7) 
           )
           Created state:
-          process instance pool: (1 ports)
+          process instance pool: (1 ports, 1 local, 2 mapped)
           1	source_e<4, 4, {3,2,1,0}>::rr	e1of<4>
             bool: 1,2,7,3,4,5,6
           2	source_e<4, 4, {3,2,1,0}>::S<3, {2,1,0}>	source_e<4, 3, {2,1,0}>
@@ -437,7 +437,7 @@ In namespace "", we have: {
           private sub-process index map:
             (2 -> 0)
             (3 -> 2)
-          bool instance pool: (8 ports)
+          bool instance pool: (8 ports, 0 local, 0 mapped)
           1	source_e<4, 4, {3,2,1,0}>::!GND	
           2	source_e<4, 4, {3,2,1,0}>::!Vdd	
           3	source_e<4, 4, {3,2,1,0}>::rr.d[0]	
@@ -480,7 +480,7 @@ footprint: {
     _Reset = bool^0 = S._Reset (8) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 3 mapped)
   1	S<4, {3,2,1,0}>	source_e<4, 4, {3,2,1,0}>
     process: 2
     bool: 1,2,3,4,5,6,7,8
@@ -489,7 +489,7 @@ footprint: {
   private sub-process index map:
     (1 -> 0)
     (3 -> 3)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 8 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	S.rr.d[0]	

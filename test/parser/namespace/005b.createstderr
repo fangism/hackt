@@ -52,7 +52,7 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) 
   yo::yo::whazzup = bool^0 = yo::yo::whazzup (3) 
   Created state:
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 3 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	yo::yo::whazzup	

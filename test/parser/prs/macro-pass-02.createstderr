@@ -140,7 +140,7 @@ In namespace "", we have: {
         g = bool^0 = passn<>::g (3) 
         s = bool^0 = passn<>::s (4) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	passn<>::!GND	
         2	passn<>::!Vdd	
         3	passn<>::g	
@@ -206,12 +206,12 @@ In namespace "", we have: {
         )
         s = bool^0 = passnp<>::s (4) 
         Created state:
-        process instance pool: (0 ports)
+        process instance pool: (0 ports, 2 local, 0 mapped)
         1	passnp<>::n	passn<>
           bool: 1,2,3,4,5
         2	passnp<>::p	passp<>
           bool: 1,2,6,4,5
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 0 local, 0 mapped)
         1	passnp<>::!GND	
         2	passnp<>::!Vdd	
         3	passnp<>::g	
@@ -254,7 +254,7 @@ In namespace "", we have: {
         g = bool^0 = passp<>::g (3) 
         s = bool^0 = passp<>::s (4) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	passp<>::!GND	
         2	passp<>::!Vdd	
         3	passp<>::g	
@@ -301,7 +301,7 @@ footprint: {
     d = bool^0 = _p_.d (8) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 2 mapped)
   1	_n_	passn<>
     bool: 1,2,3,4,5
   2	_p_	passp<>
@@ -311,7 +311,7 @@ footprint: {
   private sub-process index map:
     (3 -> 0)
     (4 -> 2)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 12 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	_n_.g	

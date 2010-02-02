@@ -63,7 +63,7 @@ footprint: {
   pi_three = preal^0 value: 9.42478
   three_pi = preal^0 value: 9.42478
   Created state:
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

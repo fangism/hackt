@@ -118,17 +118,17 @@ In namespace "", we have: {
             )
           }
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 0 local, 0 mapped)
         1	basket<>::egg_array[0]	egg<>
           int: 1
           bool: 1,2
         2	basket<>::egg_array[1]	egg<>
           int: 2
           bool: 1,2
-        int instance pool: (2 ports)
+        int instance pool: (2 ports, 0 local, 0 mapped)
         1	basket<>::egg_array[0].yolk	
         2	basket<>::egg_array[1].yolk	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
         1	basket<>::!GND	
         2	basket<>::!Vdd	
         bool port aliases:
@@ -194,7 +194,7 @@ In namespace "", we have: {
             )
           }
         Created state:
-        process instance pool: (6 ports)
+        process instance pool: (6 ports, 0 local, 0 mapped)
         1	bundle<>::c[0]	basket<>
           process: 2,3
           int: 1,2
@@ -215,12 +215,12 @@ In namespace "", we have: {
         6	bundle<>::c[1].egg_array[1]	egg<>
           int: 4
           bool: 1,2
-        int instance pool: (4 ports)
+        int instance pool: (4 ports, 0 local, 0 mapped)
         1	bundle<>::c[0].egg_array[0].yolk	
         2	bundle<>::c[0].egg_array[1].yolk	
         3	bundle<>::c[1].egg_array[0].yolk	
         4	bundle<>::c[1].egg_array[1].yolk	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
         1	bundle<>::!GND	
         2	bundle<>::!Vdd	
         bool port aliases:
@@ -250,9 +250,9 @@ In namespace "", we have: {
         !Vdd = bool^0 = egg<>::!Vdd (2) 
         yolk = int<32>^0 = egg<>::yolk (1) 
         Created state:
-        int instance pool: (1 ports)
+        int instance pool: (1 ports, 0 local, 0 mapped)
         1	egg<>::yolk	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
         1	egg<>::!GND	
         2	egg<>::!Vdd	
       }
@@ -317,7 +317,7 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 7 local, 0 mapped)
   1	load	bundle<>
     process: 2,3,4,5,6,7
     int: 1,2,3,4
@@ -342,12 +342,12 @@ footprint: {
   7	load.c[1].egg_array[1]	egg<>
     int: 4
     bool: 1,2
-  int instance pool: (0 ports)
+  int instance pool: (0 ports, 4 local, 0 mapped)
   1	load.c[0].egg_array[0].yolk	
   2	count	
   3	load.c[1].egg_array[0].yolk	
   4	load.c[1].egg_array[1].yolk	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

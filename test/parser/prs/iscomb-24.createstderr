@@ -142,12 +142,12 @@ In namespace "", we have: {
           b = bool^0 = deep<>::y.b (6) @[ !autokeeper ] 
         )
         Created state:
-        process instance pool: (1 ports)
+        process instance pool: (1 ports, 1 local, 0 mapped)
         1	deep<>::x	inv<>
           bool: 1,2,3,4
         2	deep<>::y	inv<>
           bool: 1,2,5,6
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 2 local, 0 mapped)
         1	deep<>::!GND	
         2	deep<>::!Vdd	
         3	deep<>::x.a @[ iscomb !autokeeper ]	
@@ -217,7 +217,7 @@ In namespace "", we have: {
           )
         )
         Created state:
-        process instance pool: (4 ports)
+        process instance pool: (4 ports, 2 local, 1 mapped)
         1	deeper<>::d[0]	deep<>
           process: 2
           bool: 1,2,3,4
@@ -236,7 +236,7 @@ In namespace "", we have: {
         private sub-process index map:
           (5 -> 0)
           (7 -> 1)
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 2 local, 2 mapped)
         1	deeper<>::!GND	
         2	deeper<>::!Vdd	
         3	deeper<>::d[0].x.a @[ iscomb !autokeeper ]	
@@ -301,7 +301,7 @@ In namespace "", we have: {
             }
         )
         Created state:
-        process instance pool: (5 ports)
+        process instance pool: (5 ports, 0 local, 0 mapped)
         1	deepest<>::y	deeper<>
           process: 2,3,4,5
           bool: 1,2,3,4,5,6
@@ -315,7 +315,7 @@ In namespace "", we have: {
           bool: 1,2,5,6
         5	deepest<>::y.d[1].x	inv<>
           bool: 1,2,5,6
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 0 local, 0 mapped)
         1	deepest<>::!GND	
         2	deepest<>::!Vdd	
         3	deepest<>::y.d[0].x.a @[ iscomb !autokeeper ]	
@@ -354,7 +354,7 @@ In namespace "", we have: {
         a = bool^0 = inv<>::a (3) @[ iscomb ] 
         b = bool^0 = inv<>::b (4) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	inv<>::!GND	
         2	inv<>::!Vdd	
         3	inv<>::a @[ iscomb ]	
@@ -403,7 +403,7 @@ footprint: {
     )
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 6 local, 5 mapped)
   1	sh1t	deepest<>
     process: 2,3,4,5,6
     bool: 1,2,3,4,5,6
@@ -425,7 +425,7 @@ footprint: {
     (3 -> 3)
     (5 -> 4)
     (7 -> 5)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 6 local, 8 mapped)
   1	!GND	
   2	!Vdd	
   3	sh1t.y.d[0].x.a @[ iscomb !autokeeper ]	

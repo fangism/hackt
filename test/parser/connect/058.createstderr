@@ -123,11 +123,11 @@ In namespace "", we have: {
             [1] = portaproc<>::j[1] (3) 
           }
         Created state:
-        int instance pool: (3 ports)
+        int instance pool: (3 ports, 0 local, 0 mapped)
         1	portaproc<>::i	
         2	portaproc<>::j[0]	
         3	portaproc<>::j[1]	
-        bool instance pool: (7 ports)
+        bool instance pool: (7 ports, 0 local, 0 mapped)
         1	portaproc<>::!GND	
         2	portaproc<>::!Vdd	
         3	portaproc<>::b	
@@ -203,21 +203,21 @@ footprint: {
       [3] = x[3] (6) 
     }
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 0 mapped)
   1	p	portaproc<>
     int: 1,2,1
     bool: 1,2,3,4,5,3,6
   2	s	portaproc<>
     int: 3,4,5
     bool: 1,2,7,8,9,10,11
-  int instance pool: (0 ports)
+  int instance pool: (0 ports, 6 local, 0 mapped)
   1	r[1]	
   2	r[0]	
   3	s.i	
   4	s.j[0]	
   5	s.j[1]	
   6	q	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 12 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	x[2]	

@@ -126,7 +126,7 @@ In namespace "", we have: {
             [2] = groupie<>::x[2] (8) 
           }
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 3 local, 0 mapped)
         1	groupie<>::!GND	
         2	groupie<>::!Vdd	
         3	groupie<>::p	
@@ -162,10 +162,10 @@ footprint: {
     r = bool^0 = g.r (5) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	g	groupie<>
     bool: 1,2,3,4,5
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 5 local, 3 mapped)
   1	!GND	
   2	!Vdd	
   3	g.p	

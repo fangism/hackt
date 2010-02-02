@@ -132,7 +132,7 @@ In namespace "", we have: {
               [1] = source_e<2, 2>::b[1] (4) 
             }
           Created state:
-          bool instance pool: (4 ports)
+          bool instance pool: (4 ports, 0 local, 0 mapped)
           1	source_e<2, 2>::!GND	
           2	source_e<2, 2>::!Vdd	
           3	source_e<2, 2>::b[0]	
@@ -160,10 +160,10 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	X<2>	source_e<2, 2>
     bool: 1,2,3,4
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	X.b[0]	

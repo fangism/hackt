@@ -144,7 +144,7 @@ In namespace "", we have: {
         i = bool^0 = buf<>::i (3) 
         o = bool^0 = buf<>::o (4) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 1 local, 0 mapped)
         1	buf<>::!GND	
         2	buf<>::!Vdd	
         3	buf<>::i	
@@ -177,7 +177,7 @@ In namespace "", we have: {
         d = bool^0 = e1of1<>::d (1) 
         e = bool^0 = e1of1<>::e (2) 
         Created state:
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
         1	e1of1<>::d	
         2	e1of1<>::e	
       }
@@ -244,7 +244,7 @@ In namespace "", we have: {
         )
         re = bool^0 = wire_copy_e1of1<>::re (7) 
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 3 local, 0 mapped)
         1	wire_copy_e1of1<>::I	e1of1<>
           bool: 1,2
         2	wire_copy_e1of1<>::O	e1of1<>
@@ -255,7 +255,7 @@ In namespace "", we have: {
           bool: 5,6,1,3
         5	wire_copy_e1of1<>::c	buf<>
           bool: 5,6,7,2
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 1 local, 3 mapped)
         1	wire_copy_e1of1<>::I.d	
         2	wire_copy_e1of1<>::I.e	
         3	wire_copy_e1of1<>::O.d	
@@ -293,7 +293,7 @@ footprint: {
     )
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 3 mapped)
   1	foo	wire_copy_e1of1<>
     process: 2,3
     bool: 3,4,5,6,1,2
@@ -304,7 +304,7 @@ footprint: {
   private sub-process index map:
     (1 -> 0)
     (4 -> 3)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 6 local, 4 mapped)
   1	!GND	
   2	!Vdd	
   3	foo.I.d	

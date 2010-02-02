@@ -97,7 +97,7 @@ In namespace "", we have: {
         a = bool^0 = inv<>::a (3) 
         b = bool^0 = inv<>::b (4) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	inv<>::!GND	
         2	inv<>::!Vdd	
         3	inv<>::a	
@@ -145,14 +145,14 @@ footprint: {
       )
     }
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 0 mapped)
   1	x[0]	inv<>
     bool: 1,2,3,4
   2	x[1]	inv<>
     bool: 1,2,5,6
   3	x[2]	inv<>
     bool: 1,2,7,8
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 8 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	p @[ iscomb ]	

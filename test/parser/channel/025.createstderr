@@ -73,9 +73,9 @@ footprint: {
   B = channel chan(bool<>)^0 = B (1) 
   x = bool^0 = x (3) 
   Created state:
-  channel instance pool: (0 ports)
+  channel instance pool: (0 ports, 1 local, 0 mapped)
   1	B	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 3 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	x	

@@ -174,7 +174,7 @@ footprint: {
       [4][3] = y[4][3] (43) 
     }
   Created state:
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 43 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	en	

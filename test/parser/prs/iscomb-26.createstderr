@@ -165,12 +165,12 @@ In namespace "", we have: {
           e = bool^0 = A<>::r.e (6) 
         )
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 0 local, 0 mapped)
         1	A<>::l	e1of2<>
           bool: 1,2,3
         2	A<>::r	e1of2<>
           bool: 4,5,6
-        bool instance pool: (8 ports)
+        bool instance pool: (8 ports, 0 local, 0 mapped)
         1	A<>::l.t	
         2	A<>::l.f	
         3	A<>::l_e @[ iscomb ]	
@@ -235,7 +235,7 @@ In namespace "", we have: {
           e = bool^0 = B1<>::r.e (3) 
         )
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 1 local, 0 mapped)
         1	B1<>::r	e1of2<>
           bool: 1,2,3
         2	B1<>::l[0]	e1of2<>
@@ -243,7 +243,7 @@ In namespace "", we have: {
         3	B1<>::m1	A<>
           process: 2,1
           bool: 6,7,8,1,2,3,4,5
-        bool instance pool: (8 ports)
+        bool instance pool: (8 ports, 0 local, 0 mapped)
         1	B1<>::r.t	
         2	B1<>::r.f	
         3	B1<>::r.e	
@@ -305,7 +305,7 @@ In namespace "", we have: {
           e = bool^0 = B2<>::r.e (6) 
         )
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 1 local, 0 mapped)
         1	B2<>::l	e1of2<>
           bool: 1,2,3
         2	B2<>::r	e1of2<>
@@ -313,7 +313,7 @@ In namespace "", we have: {
         3	B2<>::m2	A<>
           process: 1,2
           bool: 1,2,3,4,5,6,7,8
-        bool instance pool: (8 ports)
+        bool instance pool: (8 ports, 0 local, 0 mapped)
         1	B2<>::l.t	
         2	B2<>::l.f	
         3	B2<>::l.e @[ iscomb ]	
@@ -377,7 +377,7 @@ In namespace "", we have: {
           )
         )
         Created state:
-        process instance pool: (0 ports)
+        process instance pool: (0 ports, 6 local, 2 mapped)
         1	C<>::bar	B1<>
           process: 3,2
           bool: 6,7,8,1,2,3,4,5
@@ -396,7 +396,7 @@ In namespace "", we have: {
           (1 -> 0)
           (4 -> 1)
           (7 -> 2)
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 12 local, 0 mapped)
         1	C<>::!GND	
         2	C<>::!Vdd	
         3	C<>::bar.l[0].t	
@@ -435,7 +435,7 @@ In namespace "", we have: {
         f = bool^0 = e1of2<>::f (2) 
         t = bool^0 = e1of2<>::t (1) 
         Created state:
-        bool instance pool: (3 ports)
+        bool instance pool: (3 ports, 0 local, 0 mapped)
         1	e1of2<>::t	
         2	e1of2<>::f	
         3	e1of2<>::e	
@@ -456,13 +456,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 8 mapped)
   1	foo	C<>
     bool: 1,2
   private sub-process index map:
     (1 -> 0)
     (2 -> 8)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 12 mapped)
   1	!GND	
   2	!Vdd	
   private sub-bool index map:

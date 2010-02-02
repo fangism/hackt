@@ -79,7 +79,7 @@ In namespace "", we have: {
           Q = pint^0 value: 5
           R = pint^0 value: 4
           Created state:
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	foo<5, 4>::!GND	
           2	foo<5, 4>::!Vdd	
         }
@@ -105,10 +105,10 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	bar<4>	foo<5, 4>
     bool: 1,2
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

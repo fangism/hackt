@@ -128,7 +128,7 @@ In namespace "", we have: {
               [19] = spec_test<5, 5>::x[19] (22) 
             }
           Created state:
-          bool instance pool: (22 ports)
+          bool instance pool: (22 ports, 0 local, 0 mapped)
           1	spec_test<5, 5>::!GND	
           2	spec_test<5, 5>::!Vdd	
           3	spec_test<5, 5>::x[0]	
@@ -203,10 +203,10 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	X	spec_test<5, 5>
     bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 22 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	X.x[0]	

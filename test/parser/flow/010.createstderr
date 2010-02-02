@@ -84,7 +84,7 @@ footprint: {
       [2][2][2] = x[2][2][2] (12) 
     }
   Created state:
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 12 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	x[0][0][0]	

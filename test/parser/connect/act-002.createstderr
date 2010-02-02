@@ -102,7 +102,7 @@ footprint: {
   c = pint^0 value: ?
   x = int<32>^0 = x (1) 
   Created state:
-  int instance pool: (0 ports)
+  int instance pool: (0 ports, 7 local, 0 mapped)
   1	x	
   2	N[0]	
   3	N[1]	
@@ -110,7 +110,7 @@ footprint: {
   5	N[3]	
   6	N[6]	
   7	N[7]	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

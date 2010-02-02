@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.13.88.5 2010/01/29 02:39:44 fang Exp $
+	$Id: instance_pool.tcc,v 1.13.88.6 2010/02/02 23:08:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -166,7 +166,9 @@ if (this->size() > 1)
 {
 	o << auto_indent << traits_type::tag_name << " instance pool:";
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	o << " (" << this->port_entries() << " ports)";
+	o << " (" << this->port_entries() << " ports, " <<
+		this->local_private_entries() << " local, " <<
+		this->non_local_private_entries() << " mapped)";
 #endif
 	o << endl;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION

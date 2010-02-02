@@ -79,7 +79,7 @@ In namespace "", we have: {
         g = bool^0 = passn<>::g (3) 
         s = bool^0 = passn<>::s (4) 
         Created state:
-        bool instance pool: (5 ports)
+        bool instance pool: (5 ports, 0 local, 0 mapped)
         1	passn<>::!GND	
         2	passn<>::!Vdd	
         3	passn<>::g	
@@ -109,10 +109,10 @@ footprint: {
     d = bool^0 = x.d (5) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	x	passn<>
     bool: 1,2,3,4,5
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 5 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	x.g	

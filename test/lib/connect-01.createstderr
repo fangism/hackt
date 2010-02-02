@@ -709,7 +709,7 @@ In namespace "", we have: {
                   [4] = std::reverse_bool_array<5>::i[0] (3) 
                 }
               Created state:
-              bool instance pool: (7 ports)
+              bool instance pool: (7 ports, 0 local, 0 mapped)
               1	std::reverse_bool_array<5>::!GND	
               2	std::reverse_bool_array<5>::!Vdd	
               3	std::reverse_bool_array<5>::i[0]	
@@ -779,7 +779,7 @@ In namespace "", we have: {
                   [4] = std::rotate_bool_array<5, 2>::i[1] (4) 
                 }
               Created state:
-              bool instance pool: (7 ports)
+              bool instance pool: (7 ports, 0 local, 0 mapped)
               1	std::rotate_bool_array<5, 2>::!GND	
               2	std::rotate_bool_array<5, 2>::!Vdd	
               3	std::rotate_bool_array<5, 2>::i[0]	
@@ -852,7 +852,7 @@ In namespace "", we have: {
                   [2][1] = std::transpose_bool_array_2d<2, 3>::i[1][2] (8) 
                 }
               Created state:
-              bool instance pool: (8 ports)
+              bool instance pool: (8 ports, 0 local, 0 mapped)
               1	std::transpose_bool_array_2d<2, 3>::!GND	
               2	std::transpose_bool_array_2d<2, 3>::!Vdd	
               3	std::transpose_bool_array_2d<2, 3>::i[0][0]	
@@ -932,7 +932,7 @@ In namespace "", we have: {
                   [0][2][1] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][2] (8) 
                 }
               Created state:
-              bool instance pool: (8 ports)
+              bool instance pool: (8 ports, 0 local, 0 mapped)
               1	std::transpose_bool_array_3d_ikj<1, 2, 3>::!GND	
               2	std::transpose_bool_array_3d_ikj<1, 2, 3>::!Vdd	
               3	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][0]	
@@ -1012,7 +1012,7 @@ In namespace "", we have: {
                   [1][0][2] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][2] (8) 
                 }
               Created state:
-              bool instance pool: (8 ports)
+              bool instance pool: (8 ports, 0 local, 0 mapped)
               1	std::transpose_bool_array_3d_jik<1, 2, 3>::!GND	
               2	std::transpose_bool_array_3d_jik<1, 2, 3>::!Vdd	
               3	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][0]	
@@ -1092,7 +1092,7 @@ In namespace "", we have: {
                   [1][2][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][2] (8) 
                 }
               Created state:
-              bool instance pool: (8 ports)
+              bool instance pool: (8 ports, 0 local, 0 mapped)
               1	std::transpose_bool_array_3d_jki<1, 2, 3>::!GND	
               2	std::transpose_bool_array_3d_jki<1, 2, 3>::!Vdd	
               3	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][0]	
@@ -1172,7 +1172,7 @@ In namespace "", we have: {
                   [2][0][1] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][2] (8) 
                 }
               Created state:
-              bool instance pool: (8 ports)
+              bool instance pool: (8 ports, 0 local, 0 mapped)
               1	std::transpose_bool_array_3d_kij<1, 2, 3>::!GND	
               2	std::transpose_bool_array_3d_kij<1, 2, 3>::!Vdd	
               3	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][0]	
@@ -1252,7 +1252,7 @@ In namespace "", we have: {
                   [2][1][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][2] (8) 
                 }
               Created state:
-              bool instance pool: (8 ports)
+              bool instance pool: (8 ports, 0 local, 0 mapped)
               1	std::transpose_bool_array_3d_kji<1, 2, 3>::!GND	
               2	std::transpose_bool_array_3d_kji<1, 2, 3>::!Vdd	
               3	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][0]	
@@ -1462,7 +1462,7 @@ footprint: {
       }
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 8 local, 0 mapped)
   1	_a	std::reverse_bool_array<5>
     bool: 1,2,3,4,5,6,7
   2	_b<2>	std::rotate_bool_array<5, 2>
@@ -1479,7 +1479,7 @@ footprint: {
     bool: 1,2,37,38,39,40,41,42
   8	_d5	std::transpose_bool_array_3d_kji<1, 2, 3>
     bool: 1,2,43,44,45,46,47,48
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 48 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	_a.i[0]	

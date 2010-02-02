@@ -262,7 +262,7 @@ In namespace "", we have: {
             }
           out = bool^0 = celem<2>::out (3) 
           Created state:
-          bool instance pool: (5 ports)
+          bool instance pool: (5 ports, 0 local, 0 mapped)
           1	celem<2>::!GND	
           2	celem<2>::!Vdd	
           3	celem<2>::out	
@@ -345,7 +345,7 @@ In namespace "", we have: {
             }
           out = bool^0 = nand<4>::out (3) 
           Created state:
-          bool instance pool: (7 ports)
+          bool instance pool: (7 ports, 0 local, 0 mapped)
           1	nand<4>::!GND	
           2	nand<4>::!Vdd	
           3	nand<4>::out	
@@ -404,7 +404,7 @@ In namespace "", we have: {
             }
           out = bool^0 = nor<4>::out (3) 
           Created state:
-          bool instance pool: (7 ports)
+          bool instance pool: (7 ports, 0 local, 0 mapped)
           1	nor<4>::!GND	
           2	nor<4>::!Vdd	
           3	nor<4>::out	
@@ -469,14 +469,14 @@ footprint: {
   )
   z = bool^0 = z (7) 
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 0 mapped)
   1	_nand	nand<4>
     bool: 1,2,7,3,4,5,6
   2	_nor	nor<4>
     bool: 1,2,7,8,9,10,11
   3	_c	celem<2>
     bool: 1,2,7,12,13
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 13 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	_nand.in[0]	

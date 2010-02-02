@@ -133,7 +133,7 @@ In namespace "", we have: {
           x = bool^0 = fa<false>::x (3) 
           y = bool^0 = fa<false>::y (4) 
           Created state:
-          bool instance pool: (4 ports)
+          bool instance pool: (4 ports, 0 local, 0 mapped)
           1	fa<false>::!GND	
           2	fa<false>::!Vdd	
           3	fa<false>::x	
@@ -146,7 +146,7 @@ In namespace "", we have: {
           x = bool^0 = fa<true>::x (3) 
           y = bool^0 = fa<true>::x (3) 
           Created state:
-          bool instance pool: (3 ports)
+          bool instance pool: (3 ports, 0 local, 0 mapped)
           1	fa<true>::!GND	
           2	fa<true>::!Vdd	
           3	fa<true>::x	
@@ -197,10 +197,10 @@ In namespace "", we have: {
           x = bool^0 = foo<false>::x (3) 
           y = bool^0 = foo<false>::y (4) 
           Created state:
-          process instance pool: (0 ports)
+          process instance pool: (0 ports, 1 local, 0 mapped)
           1	foo<false>::fa0	fa<false>
             bool: 1,2,3,4
-          bool instance pool: (4 ports)
+          bool instance pool: (4 ports, 0 local, 0 mapped)
           1	foo<false>::!GND	
           2	foo<false>::!Vdd	
           3	foo<false>::x	
@@ -219,10 +219,10 @@ In namespace "", we have: {
           x = bool^0 = foo<true>::x (3) 
           y = bool^0 = foo<true>::x (3) 
           Created state:
-          process instance pool: (0 ports)
+          process instance pool: (0 ports, 1 local, 0 mapped)
           1	foo<true>::fa0	fa<true>
             bool: 1,2,3
-          bool instance pool: (3 ports)
+          bool instance pool: (3 ports, 0 local, 0 mapped)
           1	foo<true>::!GND	
           2	foo<true>::!Vdd	
           3	foo<true>::x	
@@ -269,7 +269,7 @@ footprint: {
     y = bool^0 = t.x (3) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 2 local, 2 mapped)
   1	t<true>	foo<true>
     bool: 1,2,3
   2	r<false>	foo<false>
@@ -278,7 +278,7 @@ footprint: {
     (1 -> 0)
     (2 -> 1)
     (3 -> 2)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 5 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	t.x	

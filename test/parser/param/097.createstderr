@@ -93,7 +93,7 @@ In namespace "", we have: {
               [1][1][1] = 0
             }
           Created state:
-          bool instance pool: (2 ports)
+          bool instance pool: (2 ports, 0 local, 0 mapped)
           1	foo<{{{0,1},{2,3}},{{3,2},{1,0}}}>::!GND	
           2	foo<{{{0,1},{2,3}},{{3,2},{1,0}}}>::!Vdd	
         }
@@ -121,10 +121,10 @@ footprint: {
       [1][1] = 0
     }
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	bar	foo<{{{0,1},{2,3}},{{3,2},{1,0}}}>
-	bool: 1,2
-  bool instance pool: (0 ports)
+    bool: 1,2
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

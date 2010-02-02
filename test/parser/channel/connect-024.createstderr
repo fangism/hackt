@@ -71,9 +71,9 @@ In namespace "", we have: {
         x = channel chan?(bool<>)^0 = forward<>::x (1) 
         y = channel chan!(bool<>)^0 = forward<>::x (1) 
         Created state:
-        channel instance pool: (1 ports)
+        channel instance pool: (1 ports, 0 local, 0 mapped)
         1	forward<>::x	
-        bool instance pool: (2 ports)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
         1	forward<>::!GND	
         2	forward<>::!Vdd	
         channel port aliases:
@@ -97,13 +97,13 @@ footprint: {
     y = channel chan!(bool<>)^0 = email.x (1) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	email	forward<>
     channel: 1
     bool: 1,2
-  channel instance pool: (0 ports)
+  channel instance pool: (0 ports, 1 local, 0 mapped)
   1	email.x	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

@@ -103,7 +103,7 @@ In namespace "", we have: {
         foo = bool^0 = yoyodyne<>::foo (3) @[ may_interfere ] 
         foo2 = bool^0 = yoyodyne<>::foo (3) @[ may_interfere ] 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	yoyodyne<>::!GND	
         2	yoyodyne<>::!Vdd	
         3	yoyodyne<>::foo @[ may_interfere ]	
@@ -132,10 +132,10 @@ footprint: {
     bar = bool^0 = wee.bar (4) @[ may_interfere ] 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	wee	yoyodyne<>
     bool: 1,2,3,4
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	wee.foo @[ may_interfere ]	

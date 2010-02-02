@@ -236,7 +236,7 @@ In namespace "", we have: {
             }
           e = bool^0 = e1of<2>::e (3) 
           Created state:
-          bool instance pool: (5 ports)
+          bool instance pool: (5 ports, 0 local, 0 mapped)
           1	e1of<2>::!GND	
           2	e1of<2>::!Vdd	
           3	e1of<2>::e	
@@ -296,10 +296,10 @@ In namespace "", we have: {
             e = bool^0 = source_e<2, 1, {0}>::rr.e (5) 
           )
           Created state:
-          process instance pool: (1 ports)
+          process instance pool: (1 ports, 0 local, 0 mapped)
           1	source_e<2, 1, {0}>::rr	e1of<2>
             bool: 1,2,5,3,4
-          bool instance pool: (6 ports)
+          bool instance pool: (6 ports, 0 local, 0 mapped)
           1	source_e<2, 1, {0}>::!GND	
           2	source_e<2, 1, {0}>::!Vdd	
           3	source_e<2, 1, {0}>::rr.d[0]	
@@ -331,10 +331,10 @@ In namespace "", we have: {
             e = bool^0 = source_e<2, 1, {1}>::rr.e (5) 
           )
           Created state:
-          process instance pool: (1 ports)
+          process instance pool: (1 ports, 0 local, 0 mapped)
           1	source_e<2, 1, {1}>::rr	e1of<2>
             bool: 1,2,5,3,4
-          bool instance pool: (6 ports)
+          bool instance pool: (6 ports, 0 local, 0 mapped)
           1	source_e<2, 1, {1}>::!GND	
           2	source_e<2, 1, {1}>::!Vdd	
           3	source_e<2, 1, {1}>::rr.d[0]	
@@ -434,7 +434,7 @@ In namespace "", we have: {
             )
           }
         Created state:
-        process instance pool: (2 ports)
+        process instance pool: (2 ports, 2 local, 0 mapped)
         1	source_pack_test<>::s[0]	e1of<2>
           bool: 1,2,5,3,4
         2	source_pack_test<>::s[1]	e1of<2>
@@ -445,7 +445,7 @@ In namespace "", we have: {
         4	source_pack_test<>::Src[1]<1, {1}>	source_e<2, 1, {1}>
           process: 2
           bool: 1,2,7,8,9,6
-        bool instance pool: (9 ports)
+        bool instance pool: (9 ports, 0 local, 0 mapped)
         1	source_pack_test<>::!GND	
         2	source_pack_test<>::!Vdd	
         3	source_pack_test<>::s[0].d[0]	
@@ -499,7 +499,7 @@ footprint: {
     _Reset = bool^0 = test_me._Reset (9) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 3 local, 2 mapped)
   1	test_me	source_pack_test<>
     process: 2,3
     bool: 1,2,3,4,5,9,6,7,8
@@ -510,7 +510,7 @@ footprint: {
   private sub-process index map:
     (1 -> 0)
     (4 -> 2)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 9 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	test_me.s[0].d[0]	

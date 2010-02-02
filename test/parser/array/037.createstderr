@@ -179,7 +179,7 @@ footprint: {
       [2][3][4] = foo[2][3][4] (60) 
     }
   Created state:
-  int instance pool: (0 ports)
+  int instance pool: (0 ports, 80 local, 0 mapped)
   1	blah[0]	
   2	blah[1]	
   3	blah[2]	
@@ -260,7 +260,7 @@ footprint: {
   78	bar[3][2][1]	
   79	bar[3][3][1]	
   80	bar[3][4][1]	
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND	
   2	!Vdd	
 }

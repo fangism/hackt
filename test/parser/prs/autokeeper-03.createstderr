@@ -162,7 +162,7 @@ In namespace "", we have: {
         a = bool^0 = inv<>::a (3) 
         b = bool^0 = inv<>::b (4) 
         Created state:
-        bool instance pool: (4 ports)
+        bool instance pool: (4 ports, 0 local, 0 mapped)
         1	inv<>::!GND	
         2	inv<>::!Vdd	
         3	inv<>::a	
@@ -247,14 +247,14 @@ In namespace "", we have: {
         y = bool^0 = wrap<>::y (5) @[ !autokeeper ] 
         z = bool^0 = wrap<>::z (6) 
         Created state:
-        process instance pool: (0 ports)
+        process instance pool: (0 ports, 3 local, 0 mapped)
         1	wrap<>::P	inv<>
           bool: 1,2,3,4
         2	wrap<>::Q	inv<>
           bool: 1,2,7,8
         3	wrap<>::R	inv<>
           bool: 1,2,8,9
-        bool instance pool: (6 ports)
+        bool instance pool: (6 ports, 3 local, 0 mapped)
         1	wrap<>::!GND	
         2	wrap<>::!Vdd	
         3	wrap<>::w	
@@ -293,13 +293,13 @@ footprint: {
     z = bool^0 = a (6) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 3 mapped)
   1	present	wrap<>
     bool: 1,2,3,4,5,6
   private sub-process index map:
     (1 -> 0)
     (2 -> 3)
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 6 local, 3 mapped)
   1	!GND	
   2	!Vdd	
   3	d	

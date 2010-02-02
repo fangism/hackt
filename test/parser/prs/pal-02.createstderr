@@ -115,7 +115,7 @@ In namespace "", we have: {
             [3][3] = matrix_array<>::in[3][3] (19) 
           }
         Created state:
-        bool instance pool: (19 ports)
+        bool instance pool: (19 ports, 0 local, 0 mapped)
         1	matrix_array<>::!GND	
         2	matrix_array<>::!Vdd	
         3	matrix_array<>::_o	
@@ -177,10 +177,10 @@ footprint: {
     _o = bool^0 = foo._o (19) 
   )
   Created state:
-  process instance pool: (0 ports)
+  process instance pool: (0 ports, 1 local, 0 mapped)
   1	foo	matrix_array<>
     bool: 1,2,19,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
-  bool instance pool: (0 ports)
+  bool instance pool: (0 ports, 19 local, 0 mapped)
   1	!GND	
   2	!Vdd	
   3	foo.in[0][0]	
