@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2010-02-02	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-66:
+	  configure.ac: generate src/hac-cpp wrapper script
+
+
 2010-01-11	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-58+:

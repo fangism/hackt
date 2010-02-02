@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.232 2010/01/08 04:20:31 fang Exp $
+#	$Id: Makefile.am,v 1.233 2010/02/02 21:57:52 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -56,7 +56,7 @@ bin_PROGRAMS = hackt haco haccreate hacalloc \
 	hacobjdump hflat hacpp hacprsim hacchpsim hacknet
 
 bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh \
-	scripts/hackt-env hacinstdump
+	scripts/hackt-env hacinstdump hac-cpp
 if HAVE_LIBGUILE
 bin_SCRIPTS += hacguile hacchpsimguile
 endif

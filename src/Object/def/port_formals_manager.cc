@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.16 2009/10/02 01:56:49 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.17 2010/02/02 21:57:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -29,6 +29,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/subinstance_manager.h"
 #include "Object/ref/meta_instance_reference_base.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/common/dump_flags.h"
 
 #include "util/memory/count_ptr.tcc"
@@ -132,6 +133,7 @@ port_formals_manager::lookup_port_formal_position(const string& id) const {
 /**
 	Validates a list of objects (instance references) against
 	the port formal specification.  
+	\param ol actual instance references.
 	\return true if type checks (is conservative).
  */
 good_bool
@@ -167,14 +169,17 @@ port_formals_manager::certify_port_actuals(const checked_refs_type& ol) const {
 		const count_ptr<const meta_instance_reference_base> a_iref(*a_iter);
 		if (a_iref) {
 			const port_formals_value_type f_inst(*f_iter);
-			// FINISH ME
 			const count_ptr<const meta_instance_reference_base>
 				f_iref(f_inst->make_meta_instance_reference());
 			if (!f_iref->may_be_type_equivalent(*a_iref)) {
 				cerr << "ERROR: actual instance reference "
-					<< i << " of port connection "
-					"doesn\'t match the formal type/size."
-					<< endl << "\tgot: ";
+					<< i << " of port connection (";
+				a_iref->dump(cerr,
+					expr_dump_context::default_value);
+				cerr <<	") doesn\'t match the formal (";
+				f_iref->dump(cerr,
+					expr_dump_context::default_value);
+				cerr << ") type/size." << endl << "\tgot: ";
 				a_iref->dump_type_size(cerr);
 				f_iref->dump_type_size(
 					cerr << ", expected: ") << endl;

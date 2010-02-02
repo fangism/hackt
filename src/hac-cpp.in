@@ -1,0 +1,17 @@
+#!@SHELL@
+# vi: ft=sh
+# hac-cpp -- C proprocessor wrapper for HAC (pipe)
+# usage: hac-cpp < in > out
+# wrapper is needed to protect comments and #FILE directives
+# input (stdin) should already be expanded by hacpp
+# don't assume that hacpp was invoked with -P (suppress-file-import-directives)
+# output is redirected to stdout
+
+exec @SED@ -e 's|^#FILE.*{|// &|' -e 's|^}.*#FILE.*|// &|' | \
+@CPP_TRADITIONAL@ -C -P | \
+@SED@ -e 's|^\/\/ \(.*#FILE.*\)|\1|'
+
+# comment out #FILE directives
+# cpp, preserving comments
+# uncomment #FILE directives
+

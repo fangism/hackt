@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-02-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-66:
+	  Added new helper script: hac-cpp[.in] to wrap calls to cpp.
+		No test cases added yet.
+	  Object/def/template_formals_manager.cc: improved port type
+		mismatch diagnostic message to name the actual and port.
+		Test cases (compile expect-fail) updated.
+
+
 2010-01-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-65:
