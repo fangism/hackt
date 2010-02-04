@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.9 2010/01/29 02:39:42 fang Exp $
+	$Id: footprint.cc,v 1.46.2.10 2010/02/04 04:32:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1697,11 +1697,13 @@ template <class Tag>
 ostream&
 footprint::__dump_local_map_by_process(ostream& o, 
 		const footprint& topfp, const footprint_frame& pff, 
-		const size_t ppid, const size_t poffset, 
+		const size_t ppid, 
 		const size_t toffset) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	dump_type(o << "type: ") << endl;
+#endif
 	STACKTRACE_INDENT_PRINT("ppid = " << ppid <<
-		", poffset = " << poffset <<
 		", toffset = " << toffset << endl);
 	const typename state_instance<Tag>::pool_type&
 		_pool(get_instance_pool<Tag>());
@@ -1710,7 +1712,7 @@ footprint::__dump_local_map_by_process(ostream& o,
 	size_t j = toffset;
 	size_t i = _pool.port_entries();
 	global_entry_dumper ged(o, topfp);
-	ged.pid = ppid;			// parent process id
+	ged.pid = ppid;			// parent process id is offset
 	for ( ; i<l; ++i, ++j) {
 		ged.local_index = i+1;
 		ged.index = j+1;	// global index
@@ -1726,35 +1728,43 @@ footprint::__dump_local_map_by_process(ostream& o,
 		pe(--_pool.private_entry_map.end()); // last entry is invalid
 	const state_instance<process_tag>::pool_type&
 		lpp(get_instance_pool<process_tag>());
-	const size_t lp_base = lpp.local_private_entries();
-	STACKTRACE_INDENT_PRINT("lp_base = " << lp_base << endl);
-#if ENABLE_STACKTRACE
+	const size_t lpl = lpp.port_entries();
+	STACKTRACE_INDENT_PRINT("lp_local_base = " << lpl << endl);
+	const size_t tp_base = _pool.local_private_entries();
+#if 0 && ENABLE_STACKTRACE
 	lpp.dump(o);
 	_pool.dump(o);
 #endif
+	// must skip processes that are in ports
 	for ( ; pi!=pe; ++pi) {
-		const size_t& lpid = pi->first -1;
+		const size_t lpid = pi->first -1;
 		STACKTRACE_INDENT_PRINT("lpid = " << lpid);
-		const size_t& loffset = pi->second;
+		const size_t loffset = pi->second;
 		INVARIANT(lpid < lpp.local_entries());
+		INVARIANT(lpid >= lpl);		// skipped ports
 		const state_instance<process_tag>& sp(lpp[lpid]);
-		const size_t pps = (lpp.private_entry_map.size() > 1) ?
-			// could be empty
-			lpp.locate_cumulative_entry(pi->first).second : 0;
-		const size_t next_ppid = poffset +pi->first;
-		const size_t next_poffset = poffset +lp_base +pps;
-		const size_t next_toffset =
-			toffset +_pool.local_private_entries() +loffset;
+		// count the skipped processes
+		size_t pps = 0;
+		if (lpp.private_entry_map.size() > 1) {
+			const pool_private_map_entry_type& 
+				e(lpp.locate_cumulative_entry(pi->first));
+			pps = e.second;
+		}
+		const size_t next_ppid = ppid +pps +pi->first -lpl;
+		// +pps to accumulate the number of mapped processes skipped
+		// -lpl to subtract the offset number of process ports
+		// +pi->first to count the number of processes at this level
+		const size_t next_toffset = toffset +tp_base +loffset;
 #if ENABLE_STACKTRACE
 		STACKTRACE_STREAM << ", pps = " << pps <<
 			", npid = " << next_ppid <<
-			", npoffset = " << next_poffset <<
 			", ntoffset = " << next_toffset << endl;
 #endif
 		const footprint_frame& spf(sp._frame);
 		// TODO: copy/transform footprint frame
 		spf._footprint->__dump_local_map_by_process<Tag>(o, topfp, spf,
-			next_ppid, next_poffset, next_toffset);
+			next_ppid, 
+			next_toffset);
 	}
 	return o;
 }
@@ -1780,15 +1790,19 @@ footprint::__dump_allocation_map(ostream& o) const {
 if (_pool.total_entries()) {
 	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
 	const footprint_frame ff;	// empty top-level footprint frame
-	__dump_local_map_by_process<Tag>(o, *this, ff, 0, 0, 0);
+	__dump_local_map_by_process<Tag>(o, *this, ff, 0, 0);
 }
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Takes place of state_manager::dump().
+ */
 ostream&
 footprint::dump_allocation_map(ostream& o) const {
-//	global_offset g;	// all 0s
+	o << "globID\tsuper\t\tlocalID\tcanonical\tfootprint-frame" << endl;
+// FIXME: process pool dump broken, but bools work
 #if 0
 	__dump_allocation_map<process_tag>(o);
 	__dump_allocation_map<channel_tag>(o);

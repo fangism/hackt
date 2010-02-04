@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.13.88.6 2010/02/02 23:08:23 fang Exp $
+	$Id: instance_pool.tcc,v 1.13.88.7 2010/02/04 04:32:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -123,8 +123,8 @@ instance_pool<T>::locate_private_entry(const size_t li) const {
 inline
 static
 bool
-pid_less(const size_t l, const pool_private_map_entry_type& r) {
-	return l < r.first;
+pid_less(const pool_private_map_entry_type& l, const size_t r) {
+	return l.first < r;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -137,11 +137,11 @@ template <class T>
 const pool_private_map_entry_type&
 instance_pool<T>::locate_cumulative_entry(const size_t pi) const {
 	pool_private_entry_map_type::const_iterator
-		f(std::upper_bound(private_entry_map.begin(),
+		f(std::lower_bound(private_entry_map.begin(),
 			private_entry_map.end(), 
 			pi, &pid_less));
-	INVARIANT(f != private_entry_map.begin());
-	--f;
+	INVARIANT(f != private_entry_map.end());
+//	--f;
 	return *f;
 }
 #endif

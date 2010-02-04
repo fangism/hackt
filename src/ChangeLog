@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-02-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-13:
+	  Fixed footprint::dump_canonical_name() and 
+		footprint::__dump_local_map_by_process() by using a 
+		new depth-first enumeration system, b/c breadth first
+		was too clumsy.  Alloc-dump is now able to print
+		the entire virtual pool of bools, but currently dies
+		printing the virtual pool of processes  
+	  Re-enabled alloc tests, but not yet updated.
+
+
 2010-02-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-12:
