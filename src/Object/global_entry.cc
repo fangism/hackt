@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.8 2010/02/05 06:13:20 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.9 2010/02/05 09:17:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -51,9 +51,28 @@ footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
+	Construct actuals context of global IDs from local IDs.
+	\param l local IDs map from a global_entry.
+	\param a global actual IDs constructed in host footprint.  
+ */
+template <class Tag>
+footprint_frame_map<Tag>::footprint_frame_map(const this_type& l, 
+		const this_type& a) {
+	const size_t s = l.id_map.size();
+	id_map.resize(s);
+	size_t i = 0;
+	for ( ; i<s; ++i) {
+		const size_t m = l[i];		// is 1-indexed
+		INVARIANT(m <= a.id_map.size());
+		id_map[i] = a[m-1];
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Takes parent context and transforms ports to create a local map.
-	\param f is the local footprint, form which this is sized/constructed.
-	\param context consists of global IDs.  
+	\param f is the local footprint, from which this is sized/constructed.
+	\param context consists of global IDs, passed in through ports.  
 	\param offset is the global ID offset for local instances.  
  */
 template <class Tag>
@@ -61,21 +80,22 @@ void
 footprint_frame_map<Tag>::__construct_global_context(
 		const footprint& f, 
 		const footprint_frame_map<Tag>& context, 
-		const size_t offset) {
+		const global_offset_base<Tag>& o) {
 	id_map.resize(f.template get_instance_pool<Tag>().local_entries());
-	const size_t s = context.size();	// number of ports
+	const size_t s = context.id_map.size();	// number of ports passed in
 	size_t i = 0;
-	// map public ports
+	// map public ports (copy sub-range over)
 	for ( ; i<s; ++i) {
 		id_map[i] = context[i];
 	}
 	// map local IDs for the remainder
-	INVARIANT(offset >= s);
+	INVARIANT(o.offset >= s);
+	const size_t delta = o.offset -s +1;	// needs to be 1-indexed
 	for ( ; i<id_map.size(); ++i) {
-		id_map[i] = i +offset -s;
+		id_map[i] = i +delta;
 	}
 }
-#endif
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -250,6 +270,30 @@ footprint_frame::footprint_frame(const footprint& f) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	Construct global actual context from local frame.
+ */
+footprint_frame::footprint_frame(const footprint_frame& l, 
+		const footprint_frame& a) :
+	footprint_frame_map<process_tag>(l, a), 
+	footprint_frame_map<channel_tag>(l, a), 
+#if ENABLE_DATASTRUCTS
+	footprint_frame_map<datastruct_tag>(l, a), 
+#endif
+	footprint_frame_map<enum_tag>(l, a), 
+	footprint_frame_map<int_tag>(l, a), 
+	footprint_frame_map<bool_tag>(l, a) {
+	STACKTRACE_VERBOSE;
+#if 0 && ENABLE_STACKTRACE
+	l.dump_frame(cerr << "local frame:\n");
+	a.dump_frame(cerr << "scope frame:\n");
+	dump_frame(cerr << "actuals frame:\n");
+#endif
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint_frame::~footprint_frame() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -381,6 +425,33 @@ footprint_frame::init_top_level(void) {
 	footprint_frame_map<int_tag>::__init_top_level();
 	footprint_frame_map<bool_tag>::__init_top_level();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	Construct a local context from a port context.
+	\param f is the local footprint whose local pool sizes should
+		be used to populate this footprint_frame.
+	\param ff is the footprint_frame of global instance IDs
+		that was passed in as context.
+		This may be smaller than the local footprint because
+		it was only sized for ports.  
+	\param g the global offsets, used to compute local instance IDs
+		that do not map to the ports.  
+ */
+void
+footprint_frame::construct_global_context(const footprint& f, 
+		const footprint_frame& ff, const global_offset& g) {
+	footprint_frame_map<process_tag>::__construct_global_context(f, ff, g);
+	footprint_frame_map<channel_tag>::__construct_global_context(f, ff, g);
+#if ENABLE_DATASTRUCTS
+	footprint_frame_map<datastruct_tag>::__construct_global_context(f, ff, g);
+#endif
+	footprint_frame_map<enum_tag>::__construct_global_context(f, ff, g);
+	footprint_frame_map<int_tag>::__construct_global_context(f, ff, g);
+	footprint_frame_map<bool_tag>::__construct_global_context(f, ff, g);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION

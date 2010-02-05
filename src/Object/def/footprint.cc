@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.11 2010/02/05 06:13:21 fang Exp $
+	$Id: footprint.cc,v 1.46.2.12 2010/02/05 09:17:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1694,6 +1694,7 @@ footprint::cflat_aliases(ostream& o,
 	\param offset the parent instance<Tag> offset for global ID.
  */
 #define	USE_GLOBAL_OFFSET		1
+#define	USE_GLOBAL_CONTEXT		1
 template <class Tag>
 ostream&
 footprint::__dump_local_map_by_process(ostream& o, 
@@ -1721,10 +1722,10 @@ footprint::__dump_local_map_by_process(ostream& o,
 	size_t j = toffset;
 	size_t i = _pool.port_entries();
 	// TODO: construct local context of global IDs
-#if 0
+#if USE_GLOBAL_CONTEXT
 	footprint_frame lff;
-	// (only needed for processes)
-	lff.construct_global_context(*this, pff, goffsets);
+	lff.construct_global_context(*this, pff, g);
+//	lff.dump_frame(cerr << "lff(local)=") << endl;
 	global_entry_dumper ged(o, topfp, &lff);
 #else
 	global_entry_dumper ged(o, topfp);
@@ -1751,16 +1752,24 @@ footprint::__dump_local_map_by_process(ostream& o,
 	// copy and increment with each local process
 	size_t pi = lpp.port_entries();
 	const size_t pe = lpp.local_entries();
-	size_t next_ppid = ppid +1;
+	size_t next_ppid = g.global_offset_base<process_tag>::offset +1;
 	for ( ; pi<pe; ++pi) {
 		const state_instance<process_tag>& sp(lpp[pi]);
 		const footprint_frame& spf(sp._frame);
 		const footprint& sfp(*spf._footprint);
+#if USE_GLOBAL_CONTEXT
+		const footprint_frame af(spf, lff);	// context
+#endif
 		if (sfp.get_instance_pool<Tag>().total_private_entries()) {
 			sfp.__dump_local_map_by_process<Tag>(o, topfp,
-				spf, next_ppid, sgo);
+#if USE_GLOBAL_CONTEXT
+				af, 
+#else
+				spf, 
+#endif
+				next_ppid, sgo);
 		}
-		next_ppid += sfp.get_instance_pool<process_tag>().total_private_entries() +1;
+		++next_ppid;
 		sgo += sfp;
 	}
 	// invariant checks on sgo, consistent with local instance_pools

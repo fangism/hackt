@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.22.20.7 2010/02/05 06:13:20 fang Exp $
+	$Id: global_entry.tcc,v 1.22.20.8 2010/02/05 09:17:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -200,6 +200,15 @@ global_entry_substructure_base<true>::dump(global_entry_dumper& ged) const {
 	this->_frame.template dump_footprint<Tag>(ged);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const util::indent __tab__(ged.os, "\t");
+	const footprint_frame* fpf(ged.get_footprint_frame());
+	if (fpf) {
+		// transform local (this) to global, from fpf context
+		const footprint_frame af(this->_frame, *fpf);
+		// TODO: extend size to local_entries, beyond port_entries
+		// and populate with appropriate offsets
+		return af.dump_frame(ged.os);
+	// override using actuals passed in from global context
+	} else
 #endif
 	return this->_frame.dump_frame(ged.os);
 }

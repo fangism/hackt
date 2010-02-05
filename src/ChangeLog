@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-02-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-14:
+	  Successfully created view of *virtually* allocated state
+		for global unique instances, and best of all, 
+		manager to preserve the original ordering and enumeration!
+	  TODO: the process-footprint-frames are missing local
+		allocation IDs, but ports are passed down correctly.
+	  Currently, 229 of 4569 tests differ (all alloc tests).
+
+
 2010-02-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-13:

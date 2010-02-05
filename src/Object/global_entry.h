@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.9 2010/02/05 06:13:20 fang Exp $
+	$Id: global_entry.h,v 1.18.20.10 2010/02/05 09:17:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -34,6 +34,15 @@ class footprint;
 class state_manager;
 class entry_collection;		// defined in "Object/entry_collection.h"
 class footprint_frame;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct global_offset;
+template <class Tag>
+struct global_offset_base;
+template <class Tag>
+struct  state_instance;
+template <class T>
+struct  instance_pool;
+#endif
 
 template <class Tag>
 struct  global_entry;
@@ -43,11 +52,6 @@ class global_entry_pool;
 
 template <class Tag>
 class instance_alias_info;
-
-template <class Tag>
-struct  state_instance;
-template <class T>
-struct  instance_pool;
 
 // TODO: use valarray for memory efficiency
 typedef	std::vector<size_t>		footprint_frame_map_type;
@@ -60,6 +64,7 @@ typedef	std::vector<size_t>		footprint_frame_map_type;
  */
 template <class Tag>
 struct footprint_frame_map {
+	typedef	footprint_frame_map<Tag>		this_type;
 	/**
 		0-indexed translation table from local to global ID.  
 	 */
@@ -68,6 +73,12 @@ struct footprint_frame_map {
 
 	explicit
 	footprint_frame_map(const footprint&);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+protected:
+	footprint_frame_map(const this_type&, const this_type&);
+
+public:
+#endif
 
 	~footprint_frame_map();
 
@@ -90,7 +101,8 @@ protected:
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	__construct_global_context(const footprint&, 
-		const footprint_frame_map<Tag>&, const size_t);
+		const footprint_frame_map<Tag>&,
+		const global_offset_base<Tag>&);
 #else
 	void
 	__initialize_top_frame(const footprint&);
@@ -152,6 +164,10 @@ struct footprint_frame :
 	explicit
 	footprint_frame(const footprint&);
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	footprint_frame(const footprint_frame&, const footprint_frame&);
+#endif
+
 	~footprint_frame();
 
 	template <class Tag>
@@ -185,7 +201,11 @@ struct footprint_frame :
 	ostream&
 	dump_footprint(global_entry_dumper&) const;
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	construct_global_context(const footprint&, 
+		const footprint_frame&, const global_offset&);
+#else
 	void
 	allocate_remaining_subinstances(const footprint&, state_manager&, 
 		const parent_tag_enum, const size_t);
