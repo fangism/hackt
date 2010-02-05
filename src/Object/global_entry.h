@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.8 2010/01/22 23:41:27 fang Exp $
+	$Id: global_entry.h,v 1.18.20.9 2010/02/05 06:13:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -46,6 +46,8 @@ class instance_alias_info;
 
 template <class Tag>
 struct  state_instance;
+template <class T>
+struct  instance_pool;
 
 // TODO: use valarray for memory efficiency
 typedef	std::vector<size_t>		footprint_frame_map_type;
@@ -85,7 +87,11 @@ protected:
 	void
 	__init_top_level(void);
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	__construct_global_context(const footprint&, 
+		const footprint_frame_map<Tag>&, const size_t);
+#else
 	void
 	__initialize_top_frame(const footprint&);
 
@@ -251,6 +257,49 @@ struct footprint_frame_transformer {
 	}
 	
 };	// end struct footprint_frame_transformer
+
+//=============================================================================
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+template <class Tag>
+struct global_offset_base {
+	typedef	state_instance<Tag>	instance_type;
+	typedef	instance_pool<instance_type>	pool_type;
+	typedef	global_offset_base<Tag>		this_type;
+
+	size_t				offset;
+
+	global_offset_base() : offset(0) { }
+	global_offset_base(const this_type&, const footprint&);
+
+	this_type&
+	operator += (const pool_type&);
+
+};	// end struct global_offset_base
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set offsets used for global ID calculation.  
+ */
+struct global_offset :
+	public global_offset_base<process_tag>, 
+	public global_offset_base<channel_tag>, 
+#if ENABLE_DATASTRUCTS
+	public global_offset_base<datastruct_tag>, 
+#endif
+	public global_offset_base<enum_tag>, 
+	public global_offset_base<int_tag>, 
+	public global_offset_base<bool_tag> {
+
+	// default ctor
+	global_offset() {}
+	global_offset(const global_offset&, const footprint&);
+
+	global_offset&
+	operator += (const footprint&);
+
+};	// end struct global_offset
+
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //=============================================================================
 template <bool B>

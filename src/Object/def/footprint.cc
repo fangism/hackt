@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.10 2010/02/04 04:32:25 fang Exp $
+	$Id: footprint.cc,v 1.46.2.11 2010/02/05 06:13:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1693,15 +1693,24 @@ footprint::cflat_aliases(ostream& o,
 	\param poffset process count offset (process_tag).
 	\param offset the parent instance<Tag> offset for global ID.
  */
+#define	USE_GLOBAL_OFFSET		1
 template <class Tag>
 ostream&
 footprint::__dump_local_map_by_process(ostream& o, 
 		const footprint& topfp, const footprint_frame& pff, 
 		const size_t ppid, 
-		const size_t toffset) const {
+#if USE_GLOBAL_OFFSET
+		const global_offset& g
+#else
+		const size_t toffset
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	dump_type(o << "type: ") << endl;
+#endif
+#if USE_GLOBAL_OFFSET
+	const size_t toffset = g.global_offset_base<Tag>::offset;
 #endif
 	STACKTRACE_INDENT_PRINT("ppid = " << ppid <<
 		", toffset = " << toffset << endl);
@@ -1711,23 +1720,54 @@ footprint::__dump_local_map_by_process(ostream& o,
 	const size_t l = _pool.local_entries();
 	size_t j = toffset;
 	size_t i = _pool.port_entries();
+	// TODO: construct local context of global IDs
+#if 0
+	footprint_frame lff;
+	// (only needed for processes)
+	lff.construct_global_context(*this, pff, goffsets);
+	global_entry_dumper ged(o, topfp, &lff);
+#else
 	global_entry_dumper ged(o, topfp);
+#endif
 	ged.pid = ppid;			// parent process id is offset
 	for ( ; i<l; ++i, ++j) {
 		ged.local_index = i+1;
 		ged.index = j+1;	// global index
 		STACKTRACE_INDENT_PRINT("gid = " << ged.index <<
 			", lid = " << ged.local_index << endl);
-		_pool[i].dump_global_entry(ged) << endl;
+		const state_instance<Tag>& inst(_pool[i]);
+		inst.dump_global_entry(ged) << endl;
+		// should use lff (transformed)
 	}
 	// construct context (footprint_frame)
 	// recurse through processes
 	// print private, traversing by process
+	const state_instance<process_tag>::pool_type&
+		lpp(get_instance_pool<process_tag>());
+#if USE_GLOBAL_OFFSET
+	// TODO: alternatively, construct lookup table of lpid->gpid ahead
+	// must skip processes that are in ports
+	global_offset sgo(g, *this);	// add base local offsets
+	// copy and increment with each local process
+	size_t pi = lpp.port_entries();
+	const size_t pe = lpp.local_entries();
+	size_t next_ppid = ppid +1;
+	for ( ; pi<pe; ++pi) {
+		const state_instance<process_tag>& sp(lpp[pi]);
+		const footprint_frame& spf(sp._frame);
+		const footprint& sfp(*spf._footprint);
+		if (sfp.get_instance_pool<Tag>().total_private_entries()) {
+			sfp.__dump_local_map_by_process<Tag>(o, topfp,
+				spf, next_ppid, sgo);
+		}
+		next_ppid += sfp.get_instance_pool<process_tag>().total_private_entries() +1;
+		sgo += sfp;
+	}
+	// invariant checks on sgo, consistent with local instance_pools
+#else
 	typedef pool_private_entry_map_type::const_iterator	const_iterator;
 	const_iterator pi(_pool.private_entry_map.begin()), 
 		pe(--_pool.private_entry_map.end()); // last entry is invalid
-	const state_instance<process_tag>::pool_type&
-		lpp(get_instance_pool<process_tag>());
 	const size_t lpl = lpp.port_entries();
 	STACKTRACE_INDENT_PRINT("lp_local_base = " << lpl << endl);
 	const size_t tp_base = _pool.local_private_entries();
@@ -1735,7 +1775,6 @@ footprint::__dump_local_map_by_process(ostream& o,
 	lpp.dump(o);
 	_pool.dump(o);
 #endif
-	// must skip processes that are in ports
 	for ( ; pi!=pe; ++pi) {
 		const size_t lpid = pi->first -1;
 		STACKTRACE_INDENT_PRINT("lpid = " << lpid);
@@ -1750,6 +1789,8 @@ footprint::__dump_local_map_by_process(ostream& o,
 				e(lpp.locate_cumulative_entry(pi->first));
 			pps = e.second;
 		}
+		// TODO: factor this out into reusable function
+		// that converts lpid to gpid
 		const size_t next_ppid = ppid +pps +pi->first -lpl;
 		// +pps to accumulate the number of mapped processes skipped
 		// -lpl to subtract the offset number of process ports
@@ -1763,9 +1804,9 @@ footprint::__dump_local_map_by_process(ostream& o,
 		const footprint_frame& spf(sp._frame);
 		// TODO: copy/transform footprint frame
 		spf._footprint->__dump_local_map_by_process<Tag>(o, topfp, spf,
-			next_ppid, 
-			next_toffset);
+			next_ppid, next_toffset);
 	}
+#endif
 	return o;
 }
 
@@ -1789,8 +1830,14 @@ footprint::__dump_allocation_map(ostream& o) const {
 		_pool(get_instance_pool<Tag>());
 if (_pool.total_entries()) {
 	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
-	const footprint_frame ff;	// empty top-level footprint frame
+	const footprint_frame ff;
+	// empty top-level footprint frame, has no ports to pass in!
+#if 0
 	__dump_local_map_by_process<Tag>(o, *this, ff, 0, 0);
+#else
+	global_offset g;	// 0s
+	__dump_local_map_by_process<Tag>(o, *this, ff, 0, g);
+#endif
 }
 	return o;
 }
@@ -1803,15 +1850,15 @@ ostream&
 footprint::dump_allocation_map(ostream& o) const {
 	o << "globID\tsuper\t\tlocalID\tcanonical\tfootprint-frame" << endl;
 // FIXME: process pool dump broken, but bools work
-#if 0
+#if 1
 	__dump_allocation_map<process_tag>(o);
+#endif
 	__dump_allocation_map<channel_tag>(o);
 #if ENABLE_DATASTRUCTS
 	__dump_allocation_map<datastruct_tag>(o);
 #endif
 	__dump_allocation_map<enum_tag>(o);
 	__dump_allocation_map<int_tag>(o);
-#endif
 	__dump_allocation_map<bool_tag>(o);
 	return o;
 }

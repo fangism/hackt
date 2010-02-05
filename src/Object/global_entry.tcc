@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.22.20.6 2010/01/29 02:39:41 fang Exp $
+	$Id: global_entry.tcc,v 1.22.20.7 2010/02/05 06:13:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -51,6 +51,7 @@
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
 #include "util/memory/index_pool.h"
+#include "util/indent.h"
 #include "common/TODO.h"
 #include "common/ICE.h"
 
@@ -125,7 +126,9 @@ ostream&
 footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 	ostream& o(gec.os);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	gec.topfp->get_instance<Tag>(gec.index)._frame._footprint
+	INVARIANT(gec.index);
+	// 1-based index convert to 0-based
+	gec.topfp->get_instance<Tag>(gec.index -1)._frame._footprint
 		->dump_type(o);
 #else
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
@@ -195,6 +198,9 @@ template <class Tag>
 ostream&
 global_entry_substructure_base<true>::dump(global_entry_dumper& ged) const {
 	this->_frame.template dump_footprint<Tag>(ged);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const util::indent __tab__(ged.os, "\t");
+#endif
 	return this->_frame.dump_frame(ged.os);
 }
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.7 2010/01/29 02:39:40 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.8 2010/02/05 06:13:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -40,7 +40,6 @@ footprint_frame_map<Tag>::footprint_frame_map() : id_map() { }
 template <class Tag>
 footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		// id_map(f.template get_instance_pool<Tag>().local_entries())
 		id_map(f.template get_instance_pool<Tag>().port_entries())
 		// bother initializing to 0?
 #else
@@ -48,6 +47,35 @@ footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
 #endif
 		{
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	Takes parent context and transforms ports to create a local map.
+	\param f is the local footprint, form which this is sized/constructed.
+	\param context consists of global IDs.  
+	\param offset is the global ID offset for local instances.  
+ */
+template <class Tag>
+void
+footprint_frame_map<Tag>::__construct_global_context(
+		const footprint& f, 
+		const footprint_frame_map<Tag>& context, 
+		const size_t offset) {
+	id_map.resize(f.template get_instance_pool<Tag>().local_entries());
+	const size_t s = context.size();	// number of ports
+	size_t i = 0;
+	// map public ports
+	for ( ; i<s; ++i) {
+		id_map[i] = context[i];
+	}
+	// map local IDs for the remainder
+	INVARIANT(offset >= s);
+	for ( ; i<id_map.size(); ++i) {
+		id_map[i] = i +offset -s;
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -540,6 +568,61 @@ footprint_frame::get_frame_map_test(void) const {
 	get_frame_map<int_tag>();
 	get_frame_map<bool_tag>();
 }
+
+//=============================================================================
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	Initialized by adding the number of local-private instances
+	of the pool.
+ */
+template <class Tag>
+global_offset_base<Tag>::global_offset_base(const this_type& g, 
+		const footprint& f) :
+		offset(g.offset
+#if 1
+			+f.template get_instance_pool<Tag>()
+			.local_private_entries()
+#endif
+			) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+global_offset_base<Tag>&
+global_offset_base<Tag>::operator += (const pool_type& p) {
+	offset += p.total_private_entries();
+	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+global_offset::global_offset(const global_offset& g, const footprint& f) :
+		global_offset_base<process_tag>(g, f), 
+		global_offset_base<channel_tag>(g, f), 
+#if ENABLE_DATASTRUCTS
+		global_offset_base<datastruct_tag>(g, f), 
+#endif
+		global_offset_base<enum_tag>(g, f), 
+		global_offset_base<int_tag>(g, f), 
+		global_offset_base<bool_tag>(g, f) {
+	// always advance process id by 1
+//	++global_offset_base<process_tag>::offset;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+global_offset&
+global_offset::operator += (const footprint& f) {
+	global_offset_base<process_tag>::operator += (f.get_instance_pool<process_tag>());
+	global_offset_base<channel_tag>::operator += (f.get_instance_pool<channel_tag>());
+#if ENABLE_DATASTRUCTS
+	global_offset_base<datastruct_tag>::operator += (f.get_instance_pool<datastruct_tag>());
+#endif
+	global_offset_base<enum_tag>::operator += (f.get_instance_pool<enum_tag>());
+	global_offset_base<int_tag>::operator += (f.get_instance_pool<int_tag>());
+	global_offset_base<bool_tag>::operator += (f.get_instance_pool<bool_tag>());
+	// every process traversed increments offset by at least 1!
+//	++(this->global_offset_base<process_tag>::offset);
+	return *this;
+}
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //=============================================================================
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

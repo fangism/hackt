@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.2.88.4 2010/02/04 04:32:27 fang Exp $
+	$Id: footprint.tcc,v 1.2.88.5 2010/02/05 06:13:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -48,7 +48,7 @@ template <class Tag>
 const state_instance<Tag>&
 footprint::get_instance(const size_t gi) const {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	const pool_type& p(get_instance_pool<Tag>());
 	const size_t ports = p.port_entries();
 	const size_t local = p.local_private_entries();	// skip ports
@@ -61,7 +61,8 @@ footprint::get_instance(const size_t gi) const {
 		// e.first is the local process index (1-indexed)
 		const state_instance<process_tag>::pool_type&
 			ppool(get_instance_pool<process_tag>());
-		INVARIANT(e.first <= ppool.local_entries());
+		const size_t m = ppool.local_entries();
+		INVARIANT(e.first <= m);
 		const state_instance<process_tag>& sp(ppool[e.first -1]);
 		// e.second is the offset to subtract
 		return sp._frame._footprint->get_instance<Tag>(si -e.second);
@@ -76,22 +77,22 @@ footprint::get_instance(const size_t gi) const {
 template <class Tag>
 ostream&
 footprint::dump_canonical_name(ostream& o, const size_t gi) const {
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
+//	STACKTRACE_VERBOSE;
+#if 0 && ENABLE_STACKTRACE
 	dump_type(o << "type:") << endl;
 #endif
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	const pool_type& p(get_instance_pool<Tag>());
 	const size_t ports = p.port_entries();
 	const size_t local = p.local_private_entries();	// skip ports
-	STACKTRACE_INDENT_PRINT("<gi=" << gi << '/' << local << '>' << endl);
+//	STACKTRACE_INDENT_PRINT("<gi=" << gi << '/' << local << '>' << endl);
 	if (gi < local) {
 		// enumeration skips over ports
 		p[gi +ports].get_back_ref()->dump_hierarchical_name(o, 
 			dump_flags::no_definition_owner);
 	} else {
 		const size_t si = gi -local;
-		STACKTRACE_INDENT_PRINT("<si=" << si << '>' << endl);
+//		STACKTRACE_INDENT_PRINT("<si=" << si << '>' << endl);
 		const pool_private_map_entry_type&
 			e(p.locate_private_entry(si));
 		// e.first is the local process index (1-indexed)
@@ -99,8 +100,8 @@ footprint::dump_canonical_name(ostream& o, const size_t gi) const {
 		const state_instance<process_tag>::pool_type&
 			ppool(get_instance_pool<process_tag>());
 		const size_t m = ppool.local_entries();
-		STACKTRACE_INDENT_PRINT("<e.first=" << e.first << '/' << m << '>' << endl);
-		STACKTRACE_INDENT_PRINT("<e.second=" << e.second << '>' << endl);
+//		STACKTRACE_INDENT_PRINT("<e.first=" << e.first << '/' << m << '>' << endl);
+//		STACKTRACE_INDENT_PRINT("<e.second=" << e.second << '>' << endl);
 		INVARIANT(e.first <= m);
 		const state_instance<process_tag>& sp(ppool[e.first -1]);
 		sp.get_back_ref()->dump_hierarchical_name(o, 
