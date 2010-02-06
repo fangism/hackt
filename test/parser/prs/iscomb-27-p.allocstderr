@@ -1,7 +1,7 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	foo	blah3<>
-	process: 2,3,4
+	process: 2,3;4
 	bool: 3,1,2
 2	(top)	-	2	foo.in	alt_e1of2<>
 	process: 3

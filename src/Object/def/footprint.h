@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.11 2010/02/05 06:13:23 fang Exp $
+	$Id: footprint.h,v 1.30.2.12 2010/02/06 01:41:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -524,13 +524,7 @@ private:
 	ostream&
 	__dump_local_map_by_process(ostream&, 
 		const footprint&, const footprint_frame&, 
-		const size_t, 
-#if 0
-		const size_t,
-#else
-		const global_offset&
-#endif
-		) const;
+		const size_t, const global_offset&) const;
 
 	template <class Tag>
 	ostream&

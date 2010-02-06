@@ -2,15 +2,15 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	foo	send_indexed<0>
 	channel: 1,2
-	int: 1
+	int: ;1
 	bool: 1,2
 2	(top)	-	2	bar	send_indexed<1>
 	channel: 3,4
-	int: 2
+	int: ;2
 	bool: 1,2
 3	(top)	-	3	S	send_indexed<3>
 	channel: 5,6
-	int: 3
+	int: ;3
 	bool: 1,2
 [global channel entries]
 1	(top)	-	1	foo.index	chan(int<32>)

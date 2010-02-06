@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.9 2010/02/05 09:17:33 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.10 2010/02/06 01:41:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -329,6 +329,63 @@ if (!m.empty()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	In addition to printing frame of ports, also print the local
+	ID that would be mapped to the process's local scope.
+	\param m port frame map.
+	\param li lower bound of local IDs
+	\param le upper bound (exclusive) of local IDs
+	\param lm upper bound of mapped IDs
+ */
+ostream&
+footprint_frame::dump_extended_id_map(const footprint_frame_map_type& m, 
+		const size_t li, const size_t le, const size_t lm,
+		ostream& o, const char* str) {
+	typedef	footprint_frame_map_type::const_iterator	const_iterator;
+	const bool ms = !m.empty();
+	const bool ls = (li < le);
+	const bool pm = (le < lm);
+if (ms || ls || pm) {
+	o << endl << auto_indent << str << ": ";
+	if (ms) {
+		const_iterator i(m.begin());
+		const const_iterator e(m.end());
+		o << *i;
+		for (++i; i!=e; ++i) {
+			o << ',' << *i;
+		}
+	}
+if (ls || pm) {
+	o << ';';
+	// reminder offset bounds given are 0-based, but we want reporting
+	// to be 1-based, so we add 1 to get tie global index.
+	if (ls) {
+		o << li+1;
+		if (le > li+1)
+			o << ".." << le;
+	} else {
+		o << '-';
+	}
+	// can (pm && !ls)?
+if (pm) {
+	o << " ";
+	if (pm) {
+		o << '{' << le+1;
+		if (lm > le+1)
+			o << ".." << lm;
+		o << '}';
+	} else {
+		o << '-';
+	}
+}
+}
+}
+	return o;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint_frame::write_id_map(const footprint_frame_map_type& m, ostream& o) {
 	util::write_array(o, m);
@@ -356,27 +413,61 @@ global_entry_substructure_base<true>::dump_frame_only(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+ostream&
+footprint_frame::__dump_frame(ostream& o) const {
+	return dump_id_map(footprint_frame_map<Tag>::id_map, o, 
+		class_traits<Tag>::tag_name);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param o the output stream.
  */
 ostream&
 footprint_frame::dump_frame(ostream& o) const {
-	dump_id_map(footprint_frame_map<process_tag>::id_map, o, 
-		class_traits<process_tag>::tag_name);
-	dump_id_map(footprint_frame_map<channel_tag>::id_map, o, 
-		class_traits<channel_tag>::tag_name);
+	__dump_frame<process_tag>(o);
+	__dump_frame<channel_tag>(o);
 #if ENABLE_DATASTRUCTS
-	dump_id_map(footprint_frame_map<datastruct_tag>::id_map, o, 
-		class_traits<datastruct_tag>::tag_name);
+	__dump_frame<datastruct_tag>(o);
 #endif
-	dump_id_map(footprint_frame_map<enum_tag>::id_map, o, 
-		class_traits<enum_tag>::tag_name);
-	dump_id_map(footprint_frame_map<int_tag>::id_map, o, 
-		class_traits<int_tag>::tag_name);
-	dump_id_map(footprint_frame_map<bool_tag>::id_map, o, 
-		class_traits<bool_tag>::tag_name);
+	__dump_frame<enum_tag>(o);
+	__dump_frame<int_tag>(o);
+	__dump_frame<bool_tag>(o);
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+template <class Tag>
+ostream&
+footprint_frame::__dump_extended_frame(ostream& o, const global_offset& a, 
+		const global_offset& b, const global_offset& c) const {
+	return dump_extended_id_map(footprint_frame_map<Tag>::id_map, 
+		a.global_offset_base<Tag>::offset, 
+		b.global_offset_base<Tag>::offset, 
+		c.global_offset_base<Tag>::offset, 
+		o, class_traits<Tag>::tag_name);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param o the output stream.
+ */
+ostream&
+footprint_frame::dump_extended_frame(ostream& o, const global_offset& a, 
+		const global_offset& b, const global_offset& c) const {
+	__dump_extended_frame<process_tag>(o, a, b, c);
+	__dump_extended_frame<channel_tag>(o, a, b, c);
+#if ENABLE_DATASTRUCTS
+	__dump_extended_frame<datastruct_tag>(o, a, b, c);
+#endif
+	__dump_extended_frame<enum_tag>(o, a, b, c);
+	__dump_extended_frame<int_tag>(o, a, b, c);
+	__dump_extended_frame<bool_tag>(o, a, b, c);
+	return o;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -648,15 +739,27 @@ footprint_frame::get_frame_map_test(void) const {
  */
 template <class Tag>
 global_offset_base<Tag>::global_offset_base(const this_type& g, 
-		const footprint& f) :
+		const footprint& f, const add_local_private_tag) :
 		offset(g.offset
-#if 1
 			+f.template get_instance_pool<Tag>()
-			.local_private_entries()
-#endif
-			) { }
+				.local_private_entries()) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Initialized by adding the number of private (local +mapped) 
+	instances of the pool.
+ */
+template <class Tag>
+global_offset_base<Tag>::global_offset_base(const this_type& g, 
+		const footprint& f, const add_total_private_tag) :
+		offset(g.offset
+			+f.template get_instance_pool<Tag>()
+				.total_private_entries()) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is kind of redudant with one of the constructors.
+ */
 template <class Tag>
 global_offset_base<Tag>&
 global_offset_base<Tag>::operator += (const pool_type& p) {
@@ -665,20 +768,35 @@ global_offset_base<Tag>::operator += (const pool_type& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-global_offset::global_offset(const global_offset& g, const footprint& f) :
-		global_offset_base<process_tag>(g, f), 
-		global_offset_base<channel_tag>(g, f), 
+global_offset::global_offset(const global_offset& g, const footprint& f, 
+		const add_local_private_tag t) :
+		global_offset_base<process_tag>(g, f, t), 
+		global_offset_base<channel_tag>(g, f, t), 
 #if ENABLE_DATASTRUCTS
-		global_offset_base<datastruct_tag>(g, f), 
+		global_offset_base<datastruct_tag>(g, f, t), 
 #endif
-		global_offset_base<enum_tag>(g, f), 
-		global_offset_base<int_tag>(g, f), 
-		global_offset_base<bool_tag>(g, f) {
-	// always advance process id by 1
-//	++global_offset_base<process_tag>::offset;
+		global_offset_base<enum_tag>(g, f, t), 
+		global_offset_base<int_tag>(g, f, t), 
+		global_offset_base<bool_tag>(g, f, t) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+global_offset::global_offset(const global_offset& g, const footprint& f, 
+		const add_total_private_tag t) :
+		global_offset_base<process_tag>(g, f, t), 
+		global_offset_base<channel_tag>(g, f, t), 
+#if ENABLE_DATASTRUCTS
+		global_offset_base<datastruct_tag>(g, f, t), 
+#endif
+		global_offset_base<enum_tag>(g, f, t), 
+		global_offset_base<int_tag>(g, f, t), 
+		global_offset_base<bool_tag>(g, f, t) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is kind of redudant with one of the constructors.
+ */
 global_offset&
 global_offset::operator += (const footprint& f) {
 	global_offset_base<process_tag>::operator += (f.get_instance_pool<process_tag>());
@@ -689,9 +807,21 @@ global_offset::operator += (const footprint& f) {
 	global_offset_base<enum_tag>::operator += (f.get_instance_pool<enum_tag>());
 	global_offset_base<int_tag>::operator += (f.get_instance_pool<int_tag>());
 	global_offset_base<bool_tag>::operator += (f.get_instance_pool<bool_tag>());
-	// every process traversed increments offset by at least 1!
-//	++(this->global_offset_base<process_tag>::offset);
 	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+operator << (ostream& o, const global_offset& g) {
+	return o << '['
+	<< g.global_offset_base<process_tag>::offset << ','
+	<< g.global_offset_base<channel_tag>::offset << ','
+#if ENABLE_DATASTRUCTS
+	<< g.global_offset_base<datastruct_tag>::offset << ','
+#endif
+	<< g.global_offset_base<enum_tag>::offset << ','
+	<< g.global_offset_base<int_tag>::offset << ','
+	<< g.global_offset_base<bool_tag>::offset << ']';
 }
 #endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 

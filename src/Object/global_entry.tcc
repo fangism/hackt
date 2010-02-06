@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.22.20.8 2010/02/05 09:17:34 fang Exp $
+	$Id: global_entry.tcc,v 1.22.20.9 2010/02/06 01:41:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -128,8 +128,16 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	INVARIANT(gec.index);
 	// 1-based index convert to 0-based
-	gec.topfp->get_instance<Tag>(gec.index -1)._frame._footprint
-		->dump_type(o);
+	const state_instance<Tag>&
+		_inst(gec.topfp->get_instance<Tag>(gec.index -1));
+#if 0
+	_inst._frame._footprint->dump_type(o);
+#else
+	// distinguishes relaxed from strict template arguments
+	typedef	instance_alias_info<Tag>	alias_type;
+	alias_type::dump_complete_type(*_inst.get_back_ref(),
+		o, _footprint);
+#endif
 #else
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	instance_alias_info<Tag>	alias_type;
@@ -200,6 +208,7 @@ global_entry_substructure_base<true>::dump(global_entry_dumper& ged) const {
 	this->_frame.template dump_footprint<Tag>(ged);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const util::indent __tab__(ged.os, "\t");
+#if 0
 	const footprint_frame* fpf(ged.get_footprint_frame());
 	if (fpf) {
 		// transform local (this) to global, from fpf context
@@ -209,6 +218,7 @@ global_entry_substructure_base<true>::dump(global_entry_dumper& ged) const {
 		return af.dump_frame(ged.os);
 	// override using actuals passed in from global context
 	} else
+#endif
 #endif
 	return this->_frame.dump_frame(ged.os);
 }
@@ -343,10 +353,11 @@ global_entry<Tag>::dump_canonical_name(ostream& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: currently, only processes are ever super instances.  
+	Missing endl.
  */
 template <class Tag>
 ostream&
-global_entry<Tag>::dump(global_entry_dumper& ged) const {
+global_entry<Tag>::dump_base(global_entry_dumper& ged) const {
 	ostream& o(ged.os);
 	o << ged.index << '\t';
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -386,8 +397,16 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 	dump_canonical_name(o, *ged.topfp, *ged.sm) << '\t';
 	dump_attributes(ged);
 #endif
-	parent_type::template dump<Tag>(ged);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+ostream&
+global_entry<Tag>::dump(global_entry_dumper& ged) const {
+	this->dump_base(ged);
+	parent_type::template dump<Tag>(ged);
+	return ged.os;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

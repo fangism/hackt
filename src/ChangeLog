@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-02-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-15:
+	  Complete printing of global allocation tables, 
+		which now computs and dumps "extended frames",
+		including private local subinstances of extended frames ";...", 
+		and range of private subinstances in {...}.
+	  Updated global_offset methods for adding offsets.
+		Recall that arithmetic is done 0-based, but global indices
+		should be displayed 1-based.
+	  Re-verified all alloc-expect test cases!!!
+		Easy because virtual global enumerations match
+		previous global allocation ordering EXACTLY.
+
+
 2010-02-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-14:

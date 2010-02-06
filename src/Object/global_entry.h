@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.10 2010/02/05 09:17:34 fang Exp $
+	$Id: global_entry.h,v 1.18.20.11 2010/02/06 01:41:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -55,6 +55,15 @@ class instance_alias_info;
 
 // TODO: use valarray for memory efficiency
 typedef	std::vector<size_t>		footprint_frame_map_type;
+
+/**
+	Define to 1 to extend footprint frame with a range to
+	represent local private subinstances of structures.
+	The non-extended footprint-frame only passes in ports, 
+	this would show the range of IDs local to subprocesses.
+	This will take a little more memory...
+ */
+#define	EXTENDED_FOOTPRINT_FRAME	(1 && MEMORY_MAPPED_GLOBAL_ALLOCATION)
 
 //=============================================================================
 /**
@@ -194,8 +203,23 @@ struct footprint_frame :
 	ostream&
 	dump_type(ostream&) const;
 
+	template <class Tag>
+	ostream&
+	__dump_frame(ostream&) const;
+
 	ostream&
 	dump_frame(ostream&) const;
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	template <class Tag>
+	ostream&
+	__dump_extended_frame(ostream&, const global_offset&, 
+		const global_offset&, const global_offset&) const;
+
+	ostream&
+	dump_extended_frame(ostream&, const global_offset&, 
+		const global_offset&, const global_offset&) const;
+#endif
 
 	template <class Tag>
 	ostream&
@@ -228,6 +252,14 @@ private:
 	ostream&
 	dump_id_map(const footprint_frame_map_type&, ostream&, 
 		const char* const);
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	static
+	ostream&
+	dump_extended_id_map(const footprint_frame_map_type&,
+		const size_t, const size_t, const size_t, 
+		ostream&, const char* const);
+#endif
 
 	static
 	void
@@ -280,6 +312,9 @@ struct footprint_frame_transformer {
 
 //=============================================================================
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct add_local_private_tag {};
+struct add_total_private_tag {};
+
 template <class Tag>
 struct global_offset_base {
 	typedef	state_instance<Tag>	instance_type;
@@ -289,7 +324,10 @@ struct global_offset_base {
 	size_t				offset;
 
 	global_offset_base() : offset(0) { }
-	global_offset_base(const this_type&, const footprint&);
+	global_offset_base(const this_type&, const footprint&, 
+		const add_local_private_tag);
+	global_offset_base(const this_type&, const footprint&, 
+		const add_total_private_tag);
 
 	this_type&
 	operator += (const pool_type&);
@@ -312,12 +350,19 @@ struct global_offset :
 
 	// default ctor
 	global_offset() {}
-	global_offset(const global_offset&, const footprint&);
+	global_offset(const global_offset&, const footprint&, 
+		const add_local_private_tag);
+	global_offset(const global_offset&, const footprint&, 
+		const add_total_private_tag);
 
 	global_offset&
 	operator += (const footprint&);
 
 };	// end struct global_offset
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+operator << (ostream&, const global_offset&);
 
 #endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
@@ -337,6 +382,10 @@ struct global_entry_substructure_base<false> {
 	template <class Tag>
 	ostream&
 	dump(global_entry_dumper&) const;
+
+	// try to avoid run-time checks in favor of compile-time...
+	const footprint_frame*
+	get_frame(void) const { return NULL; }
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	ostream&
@@ -383,6 +432,10 @@ private:
 	typedef	global_entry_substructure_base		this_type;
 public:
 	footprint_frame			_frame;
+
+	// try to avoid run-time checks in favor of compile-time...
+	const footprint_frame*
+	get_frame(void) const { return &_frame; }
 
 	template <class Tag>
 	ostream&
@@ -517,6 +570,9 @@ struct global_entry :
 public:
 	global_entry();
 	~global_entry();
+
+	ostream&
+	dump_base(global_entry_dumper&) const;
 
 	ostream&
 	dump(global_entry_dumper&) const;

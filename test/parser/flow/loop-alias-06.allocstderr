@@ -1,7 +1,7 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	l	lut<>
-	process: 2,3,4,5,6,7
+	process: 2,3,4,5;6..7
 	bool: 1,2,3,4
 2	(top)	-	2	l.pbint[0]	pbitint<>
 	process: 3

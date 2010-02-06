@@ -1,8 +1,8 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	burp	foo<>
-	int: 1
-	bool: 1,2,3,4,5
+	int: ;1
+	bool: 1,2,3,4;5
 [global int entries]
 1	process	1	1	burp.x	
 [global bool entries]

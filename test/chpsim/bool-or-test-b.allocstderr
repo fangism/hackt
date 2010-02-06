@@ -2,10 +2,10 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	A	bool_or<3>
 	channel: 4,1,2,3
-	bool: 1,2,3,4,5
+	bool: 1,2;3..5
 2	(top)	-	2	Z	bool_sink<>
 	channel: 4
-	bool: 1,2,6
+	bool: 1,2;6
 3	(top)	-	3	S[0]	bool_source<><1, {0}>
 	channel: 1
 	bool: 1,2

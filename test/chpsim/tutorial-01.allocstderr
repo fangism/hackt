@@ -5,10 +5,10 @@ globID	super		localID	canonical	footprint-frame
 	bool: 1,2
 2	(top)	-	2	B	bool_buf<>
 	channel: 1,2
-	bool: 1,2,3
+	bool: 1,2;3
 3	(top)	-	3	SNK	bool_sink<>
 	channel: 2
-	bool: 1,2,4
+	bool: 1,2;4
 [global channel entries]
 1	(top)	-	1	L	chan(bool<>)
 2	(top)	-	2	R	chan(bool<>)

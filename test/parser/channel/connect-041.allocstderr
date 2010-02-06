@@ -1,12 +1,12 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	hall	classroom<>
-	process: 2
-	channel: 1
-	bool: 1,2
+	process: ;2
+	channel: ;1
+	bool: 1,2;- {3}
 2	process	1	1	hall.lecture	boring<>
 	channel: 1
-	bool: 1,2,3
+	bool: 1,2;3
 [global channel entries]
 1	process	1	1	hall.lecture.B	chan(bool<>)
 [global bool entries]

@@ -2,7 +2,7 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	differ	adjacent_diff<12>
 	channel: 1,2
-	int: 1,2
+	int: ;1..2
 	bool: 1,2
 [global channel entries]
 1	(top)	-	1	A	chan(int<12>)

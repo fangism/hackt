@@ -4,25 +4,25 @@ globID	super		localID	canonical	footprint-frame
 	process: 2,3
 	bool: 1,2,3,4,5
 2	(top)	-	2	X.t	foo<><true>
-	process: 9
+	process: ;9
 	bool: 1,2,3
 3	(top)	-	3	X.r	foo<><false>
-	process: 10
+	process: ;10
 	bool: 1,2,4,5
 4	(top)	-	4	Y	bar<><false>
 	process: 5,6,7,8
 	bool: 1,2,6,7,8,9,10,11
 5	(top)	-	5	Y.t	foo<><false>
-	process: 11
+	process: ;11
 	bool: 1,2,6,7
 6	(top)	-	6	Y.s	foo<><true>
-	process: 12
+	process: ;12
 	bool: 1,2,8
 7	(top)	-	7	Y.r	foo<><true>
-	process: 13
+	process: ;13
 	bool: 1,2,9
 8	(top)	-	8	Y.q	foo<><false>
-	process: 14
+	process: ;14
 	bool: 1,2,10,11
 9	process	2	1	X.t.fa0	fa<true>
 	bool: 1,2,3

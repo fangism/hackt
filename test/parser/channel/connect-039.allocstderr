@@ -2,7 +2,7 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	lecture	boring<>
 	channel: 1
-	bool: 1,2,3
+	bool: 1,2;3
 [global channel entries]
 1	(top)	-	1	Q	chan(bool<>)
 [global bool entries]
