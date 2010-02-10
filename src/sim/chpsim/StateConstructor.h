@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.5.46.1 2010/01/12 02:49:04 fang Exp $
+	$Id: StateConstructor.h,v 1.5.46.2 2010/02/10 06:43:16 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -11,6 +11,8 @@
 #include "sim/chpsim/StateConstructorFlags.h"
 #include "sim/common.h"
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
@@ -128,6 +130,7 @@ protected:
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC
+#endif
 
 #endif	// __HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
 

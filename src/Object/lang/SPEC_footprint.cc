@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.5.88.2 2010/01/18 23:43:42 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.5.88.3 2010/02/10 06:43:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,7 +18,10 @@
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/common/dump_flags.h"
-
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_entry_context.h"
+#endif
+#include "common/TODO.h"
 #include "util/indent.h"
 #include "util/IO_utils.h"
 #include "util/persistent_object_manager.tcc"
@@ -73,8 +76,12 @@ using PRS::cflat_visitor;
 // class SPEC::footprint_directive method definitions
 
 void
-footprint_directive::accept(cflat_visitor& v) const {
+footprint_directive::accept(spec_visitor& v) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	v.visit(*this);
+#endif
 }
 
 //=============================================================================
@@ -172,8 +179,12 @@ footprint::load_object_base(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint::accept(cflat_visitor& v) const {
+footprint::accept(spec_visitor& v) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	v.visit(*this);
+#endif
 }
 
 //=============================================================================

@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.64 2009/08/28 20:45:32 fang Exp $
+#	$Id: Makefile.am,v 1.64.8.1 2010/02/10 06:43:18 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -271,25 +271,25 @@ liblinktest_la_SOURCES = \
 # possibly confusing the parent directories when they expect .deps to
 # exist, especially on make distclean.  
 stacktrace.cc: ../stacktrace.cc
-	$(LN_S) $? $@
+	$(LN_SF) $? $@
 
 static_trace.cc: ../static_trace.cc
-	$(LN_S) $? $@
+	$(LN_SF) $? $@
 
 thread_lock.cc: ../memory/thread_lock.cc
-	$(LN_S) $? $@
+	$(LN_SF) $? $@
 
 ref_count_pool.cc: ../memory/ref_count_pool.cc
-	$(LN_S) $? $@
+	$(LN_SF) $? $@
 
 bitset.cc: ../bitset.cc
-	$(LN_S) $? $@
+	$(LN_SF) $? $@
 
 string.cc: ../string.cc
-	$(LN_S) $? $@
+	$(LN_SF) $? $@
 
 nibble_tables.cc: ../numeric/nibble_tables.cc
-	$(LN_S) $? $@
+	$(LN_SF) $? $@
 
 friend_function_formal_bug.stderr:
 	$(TOUCH) $@

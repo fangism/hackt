@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.6.46.2 2010/01/29 02:39:41 fang Exp $
+	$Id: global_entry_context.h,v 1.6.46.3 2010/02/10 06:42:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -13,6 +13,9 @@
 #include "util/size_t.h"
 #include "util/member_saver.h"
 #include "Object/devel_switches.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/traits/classification_tags_fwd.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -20,6 +23,10 @@ class module;
 class footprint;
 class footprint_frame;
 class state_manager;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct global_offset;
+template <class> class state_instance;
+#endif
 struct bool_tag;
 template <class> class footprint_frame_map;
 template <class> class simple_meta_instance_reference;
@@ -36,7 +43,7 @@ class global_entry_context_base {
 	typedef	global_entry_context_base	this_type;
 protected:
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	// need some replacement
+	// need some replacement, nope
 #else
 	/**
 		Top-level state manager.
@@ -114,8 +121,21 @@ protected:
 		Use fpf->_footprint for local-to-global index translation.  
 	 */
 	const footprint_frame*			fpf;
-
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	/**
+		Offset needed to compute effective global IDs of 
+		local instances.
+	 */
+	const global_offset*			parent_offset;
+	/**
+		This is incremented with each local process iterated.
+		Should be set by visit_local for traversals that need it.
+	 */
+	global_offset*				g_offset;
+#endif
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 public:
+// just use util::value_saver on protected members
 	/**
 		Sets the footprint_frame for the duration of the scope.  
 	 */
@@ -136,20 +156,64 @@ public:
 		~footprint_frame_setter();
 	} __ATTRIBUTE_UNUSED__ ;	// end class footprint_frame_setter
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	typedef member_saver<this_type,
+		global_offset*, &global_entry_context::g_offset>
+					global_offset_setter;
+#endif
+#endif
+
 public:
-	global_entry_context() : global_entry_context_base(), fpf(NULL) { }
+	global_entry_context() : global_entry_context_base(), fpf(NULL)
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, parent_offset(NULL), g_offset(NULL)
+#endif
+		{ }
 
 	global_entry_context(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_manager& s,
 #endif
 		const footprint& _fp, 
-		const footprint_frame* const ff = NULL) : 
+		const footprint_frame* const ff = NULL
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, global_offset* g = NULL
+#endif
+		) : 
 		global_entry_context_base(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			s,
 #endif
-			_fp), fpf(ff) { }
+			_fp), fpf(ff)
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, parent_offset(g), g_offset(NULL)
+#endif
+			{ }
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+virtual	~global_entry_context();
+
+	template <class Tag>
+	void
+	visit_local(const footprint&);
+
+	void
+	visit_recursive(const footprint&);
+
+public:
+virtual	void
+	visit(const state_instance<process_tag>&);
+virtual	void
+	visit(const state_instance<channel_tag>&);
+virtual	void
+	visit(const state_instance<enum_tag>&);
+virtual	void
+	visit(const state_instance<int_tag>&);
+virtual	void
+	visit(const state_instance<bool_tag>&);
+virtual	void
+	visit(const footprint&);
+#endif
 
 	const footprint_frame*
 	get_footprint_frame(void) const { return fpf; }
@@ -157,6 +221,12 @@ public:
 	template <class Tag>
 	const footprint_frame_map<Tag>&
 	get_frame_map(void) const { return fpf; }
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// return read-only
+	const global_offset*
+	get_offset(void) const { return g_offset; }
+#endif
 
 	// param is a local or global index, depending on context
 	template <class Tag>
@@ -168,7 +238,6 @@ public:
 	size_t
 	lookup_meta_reference_global_index(
 		const simple_meta_instance_reference<Tag>&) const;
-	
 
 };	// end struct global_entry_context
 
@@ -194,14 +263,18 @@ public:
 	using global_entry_context_base::topfp;
 
 	ostream&				os;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// global index, 1-based
 	size_t					index;
+#endif
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// parent process index (1-based, 0 means top-level)
 	size_t					pid;
 	// index within parent process
-	size_t					local_index;
+//	size_t					local_index;
 #endif
+
+	static const char			table_header[];
 
 	global_entry_dumper(ostream& _o,
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -210,17 +283,62 @@ public:
 		const footprint& _fp
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, const footprint_frame* ff = NULL
+		, global_offset* g = NULL
 #endif
 		) :
 		parent_type(
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			_fp, ff
+			_fp, ff, g
 #else
 			_sm, _fp
 #endif
-			), os(_o), index(0) { }
+			), os(_o)
+			// , index(0)
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, pid(0)
+			//, local_index(0)
+#endif
+ { }
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+virtual	~global_entry_dumper();
+
+virtual	void
+	visit(const footprint&);
+virtual	void
+	visit(const state_instance<process_tag>&);
+virtual	void
+	visit(const state_instance<channel_tag>&);
+virtual	void
+	visit(const state_instance<enum_tag>&);
+virtual	void
+	visit(const state_instance<int_tag>&);
+virtual	void
+	visit(const state_instance<bool_tag>&);
+
+protected:
+	template <class Tag>
+	void
+	__default_visit(const state_instance<Tag>&);
+#endif
 
 };	// end struct global_entry_dumper
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+template <class Tag>
+struct global_allocation_dumper : public global_entry_dumper {
+	global_allocation_dumper(ostream& o, const footprint& f, 
+		const footprint_frame& ff, global_offset& g) :
+		global_entry_dumper(o, f, &ff, &g) { }
+
+	void
+	visit(const footprint&);
+
+	using global_entry_dumper::visit;
+
+};	// end struct global_allocation_dumper
+#endif
 
 //=============================================================================
 }	// end namespace entity

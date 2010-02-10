@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.9.46.1 2010/01/12 02:49:01 fang Exp $
+	$Id: DependenceCollector.cc,v 1.9.46.2 2010/02/10 06:43:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -93,6 +93,8 @@ dependence_collector_base<Tag>::~dependence_collector_base() { }
 //=============================================================================
 // class DependenceSetCollector method definitions
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) : 
 		global_entry_context(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -402,6 +404,7 @@ DEFINE_NEVER_VISIT(aggregate_datastruct_meta_instance_reference)
 #undef	DEFINE_NEVER_VISIT
 #undef	DEFINE_UNARY_VISIT
 #undef	DEFINE_BINARY_VISIT
+#endif	// TEMPORARY
 
 //=============================================================================
 }	// end namespace CHPSIM

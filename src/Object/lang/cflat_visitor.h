@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.9.24.2 2010/01/15 04:13:13 fang Exp $
+	$Id: cflat_visitor.h,v 1.9.24.3 2010/02/10 06:43:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -12,6 +12,7 @@
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 #include "Object/devel_switches.h"
 
+// TEMPORARY
 namespace HAC {
 namespace entity {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -26,6 +27,17 @@ namespace SPEC {
 	class footprint;
 	class footprint_directive;
 }
+
+template <class Tag>
+struct instance_exception {
+	/**
+		Identifies which top-level process id caused exception.
+	 */
+	size_t				pid;
+	explicit
+	instance_exception(const size_t p) : pid(p) { }
+};
+
 namespace PRS {
 // forward declarations of all the visitable types in this hierarchy
 class footprint;
@@ -33,13 +45,20 @@ class footprint_expr_node;
 class footprint_rule;
 class footprint_macro;
 
+
 //=============================================================================
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Base class from which other functional visitors are derived.  
 	TODO: default visit behavior for non-terminal types.  
 	No need to include state_manager -- its traversal is fixed.  
  */
-class cflat_visitor {
+class cflat_visitor
+#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
+	: public global_entry_context
+	// or dumper? no need
+#endif
+{
 	typedef	cflat_visitor				this_type;
 protected:
 	/**
@@ -64,16 +83,6 @@ protected:
 		expr_pool_setter(cflat_visitor&, const cflat_visitor&);
 		~expr_pool_setter();
 	};      // end struct expr_pool_setter
-public:
-	template <class Tag>
-	struct instance_exception {
-		/**
-			Identifies which top-level process id caused exception.
-		 */
-		size_t				pid;
-		explicit
-		instance_exception(const size_t p) : pid(p) { }
-	};
 public:
 	cflat_visitor() : expr_pool(NULL) { }
 virtual	~cflat_visitor() { }
@@ -115,6 +124,7 @@ private:
 };	// end struct cflat_visitor
 
 //=============================================================================
+#endif
 }	// end namespace PRS
 }	// end namespace entity
 }	// end namespace HAC

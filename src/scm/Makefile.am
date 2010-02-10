@@ -1,5 +1,5 @@
 # "src/scm/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2009/02/23 09:11:21 fang Exp $
+#	$Id: Makefile.am,v 1.3.16.1 2010/02/10 06:43:11 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 include $(top_srcdir)/installdirs.mk
@@ -24,7 +24,7 @@ EXTRA_DIST += README \
 
 # just re-use parent srcdir's template
 local.cvsignore: $(srcdir)/../local.cvsignore
-	$(LN_S) $< $@
+	$(LN_SF) $< $@
 
 include $(top_srcdir)/Make.global
 

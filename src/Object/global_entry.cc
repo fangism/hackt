@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.10 2010/02/06 01:41:41 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.11 2010/02/10 06:42:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -273,6 +273,8 @@ footprint_frame::footprint_frame(const footprint& f) :
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Construct global actual context from local frame.
+	\param l the local frame consisting of indices to lookup in...
+	\param a the actuals map.
  */
 footprint_frame::footprint_frame(const footprint_frame& l, 
 		const footprint_frame& a) :
@@ -283,9 +285,10 @@ footprint_frame::footprint_frame(const footprint_frame& l,
 #endif
 	footprint_frame_map<enum_tag>(l, a), 
 	footprint_frame_map<int_tag>(l, a), 
-	footprint_frame_map<bool_tag>(l, a) {
-	STACKTRACE_VERBOSE;
+	footprint_frame_map<bool_tag>(l, a), 
+	_footprint(l._footprint) {
 #if 0 && ENABLE_STACKTRACE
+	STACKTRACE_VERBOSE;
 	l.dump_frame(cerr << "local frame:\n");
 	a.dump_frame(cerr << "scope frame:\n");
 	dump_frame(cerr << "actuals frame:\n");
@@ -533,6 +536,7 @@ footprint_frame::init_top_level(void) {
 void
 footprint_frame::construct_global_context(const footprint& f, 
 		const footprint_frame& ff, const global_offset& g) {
+	_footprint = &f;
 	footprint_frame_map<process_tag>::__construct_global_context(f, ff, g);
 	footprint_frame_map<channel_tag>::__construct_global_context(f, ff, g);
 #if ENABLE_DATASTRUCTS

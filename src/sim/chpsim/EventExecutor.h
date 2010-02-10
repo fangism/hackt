@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.h"
 	Visitor classes for CHP events.  
-	$Id: EventExecutor.h,v 1.6 2007/09/11 06:53:10 fang Exp $
+	$Id: EventExecutor.h,v 1.6.46.1 2010/02/10 06:43:15 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENTEXECUTOR_H__
@@ -10,6 +10,8 @@
 #include <iosfwd>
 #include "Object/lang/CHP_visitor.h"
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
@@ -168,6 +170,7 @@ private:
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC
+#endif
 
 #endif	// __HAC_SIM_CHPSIM_EVENTEXECUTOR_H__
 

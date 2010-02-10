@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.12 2007/09/28 05:37:04 fang Exp $
+	$Id: Event.cc,v 1.12.40.1 2010/02/10 06:43:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -11,6 +11,7 @@
 #include <string>
 #include <sstream>
 #include "sim/chpsim/Event.h"
+#include "common/TODO.h"
 #include "sim/ISE.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
@@ -29,7 +30,10 @@ namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 using entity::CHP::EventSuccessorDumper;
+#endif
 using std::copy;
 using std::back_inserter;
 using std::for_each;
@@ -155,6 +159,9 @@ EventNode::setup(const local_event_type* l, const State& s) {
 	STACKTRACE_VERBOSE;
 	__local_event = l;
 	NEVER_NULL(__local_event);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	StateConstructor v(s, *this);
 	const action* action_ptr = get_chp_action();
 	if (action_ptr) {
@@ -163,6 +170,7 @@ EventNode::setup(const local_event_type* l, const State& s) {
 		// set default delay for NULL events
 		delay = 0;
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -205,6 +213,9 @@ if (countdown) {
 } else {
 	const action* action_ptr = get_chp_action();
 	if (action_ptr) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		FINISH_ME_EXIT(Fang);
+#else
 		EventRechecker rc(c);
 		action_ptr->accept(rc);
 		const char r = rc.ret;
@@ -221,6 +232,7 @@ if (countdown) {
 			STACKTRACE_INDENT_PRINT("unsubscribed." << endl);
 			block_deps.unsubscribe(c, ei);
 		}
+#endif
 	} else {
 		// RECHECK_NEVER_BLOCKED
 		STACKTRACE_INDENT_PRINT("null fire." << endl);
@@ -268,8 +280,12 @@ EventNode::execute(nonmeta_context& c) {
 		// at the same time, enqueue successors, depending on event_type
 		// execute is responsible for scheduling successors for recheck
 		// and decrement the predecessor-arrival countdown
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		FINISH_ME(Fang);
+#else
 		EventExecutor x(c);
 		action_ptr->accept(x);
+#endif
 	} else {	// event is NULL or action_ptr is NULL
 		STACKTRACE_INDENT_PRINT("no action" << endl);
 		// else do nothing
@@ -314,8 +330,12 @@ EventNode::dump_source_context(ostream& o, const expr_dump_context& edc) const {
 	const action* a = get_chp_action();
 	if (a) {
 		__local_event->dump_type(o) << ": ";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		FINISH_ME(Fang);
+#else
 		entity::CHP::chp_context_printer P(*a, o, edc);
 		P();
+#endif
 		return o;
 	} else {
 		return o << "[null]" << endl;

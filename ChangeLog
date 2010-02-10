@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2010-02-09	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-16:
+	  Make.stddef: provide LN_SF as ln -s -f
+
+
 2009-11-19	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53:

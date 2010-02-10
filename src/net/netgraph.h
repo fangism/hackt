@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.11.2.1 2010/01/15 04:13:14 fang Exp $
+	$Id: netgraph.h,v 1.11.2.2 2010/02/10 06:43:09 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -54,8 +54,10 @@ using std::string;
 using std::map;
 using std::set;
 using std::pair;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 using entity::cflat_context_visitor;
 using entity::state_manager;
+#endif
 using entity::footprint;
 using entity::GLOBAL_ENTRY;
 using entity::bool_tag;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.h"
-	$Id: SPEC_footprint.h,v 1.3 2006/02/10 21:50:40 fang Exp $
+	$Id: SPEC_footprint.h,v 1.3.140.1 2010/02/10 06:43:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FOOTPRINT_H__
@@ -8,21 +8,34 @@
 
 #include "Object/lang/directive_base.h"
 #include "Object/lang/SPEC_fwd.h"
-#include "Object/lang/cflat_visitee.h"
+#include "Object/devel_switches.h"
+// #include "Object/lang/cflat_visitee.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
 class footprint;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct global_entry_context;
+#endif
 namespace SPEC {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+typedef	global_entry_context		spec_visitor;
+#else
+typedef	PRS::cflat_visitor		spec_visitor;
+#endif
 
 //=============================================================================
 /**
 	A create-time resolved spec directive.  
 	Modeled after PRS::footprint_macro.
  */
-class footprint_directive : public PRS::cflat_visitee, public directive_base {
+class footprint_directive : 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		public PRS::cflat_visitee, 
+#endif
+		public directive_base {
 public:
 	footprint_directive() : directive_base() { }
 
@@ -32,7 +45,7 @@ public:
 	// everything else inherited from directive_base
 
 	void
-	accept(PRS::cflat_visitor&) const;
+	accept(spec_visitor&) const;
 
 };	// end class footprint directive.
 
@@ -44,7 +57,11 @@ typedef	std::vector<footprint_directive>	footprint_base_type;
 	This spec footprint is a signature of a complete type
 	whose references are resolved.  
  */
-class footprint : private footprint_base_type, public PRS::cflat_visitee {
+class footprint : private footprint_base_type
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, public PRS::cflat_visitee
+#endif
+		{
 public:
 	footprint();
 	~footprint();
@@ -75,7 +92,7 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 	void
-	accept(PRS::cflat_visitor&) const;
+	accept(spec_visitor&) const;
 
 };	// end class footprint
 

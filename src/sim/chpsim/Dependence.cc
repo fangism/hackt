@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.cc"
-	$Id: Dependence.cc,v 1.3 2007/02/05 06:39:51 fang Exp $
+	$Id: Dependence.cc,v 1.3.72.1 2010/02/10 06:43:12 fang Exp $
  */
 
 #include "sim/chpsim/Dependence.h"
@@ -185,6 +185,8 @@ if (channel_set.size()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 void
 DependenceSet::import(const DependenceSetCollector& d) {
 	dependence_set_base<bool_tag>::__import(d);
@@ -192,6 +194,7 @@ DependenceSet::import(const DependenceSetCollector& d) {
 	dependence_set_base<enum_tag>::__import(d);
 	dependence_set_base<channel_tag>::__import(d);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DependenceSet&

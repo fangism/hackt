@@ -1,6 +1,6 @@
 # "Make.test-alloc"
 #	vi: ft=automake
-#	$Id: Make.test-alloc,v 1.10.50.1 2010/01/29 02:39:47 fang Exp $
+#	$Id: Make.test-alloc,v 1.10.50.2 2010/02/10 06:43:18 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -41,7 +41,7 @@ AUTO_IGNORE += $(HACKT_ALLOC_CLEAN_IGNORE_PATTERNS)
 
 # ALLOC tests
 .haco-c.haco-a:
-	$(LN_S) -f $< $@
+	$(LN_SF) $< $@
 #	$(HACKT_ALLOC_EXE) $< $@
 # TODO: have allocdumps depend on .haco-c instead of making link from .haco-a
 

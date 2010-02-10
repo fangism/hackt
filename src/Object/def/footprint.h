@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.12 2010/02/06 01:41:45 fang Exp $
+	$Id: footprint.h,v 1.30.2.13 2010/02/10 06:43:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -48,7 +48,9 @@ class instance_collection_base;
 class port_formals_manager;
 class scopespace;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+class footprint_visitor;
 struct global_offset;
+struct global_entry_context;
 #else
 class port_member_context;
 #endif
@@ -514,7 +516,7 @@ public:
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
-	accept(PRS::cflat_visitor&) const;
+	accept(global_entry_context&) const;
 
 	ostream&
 	dump_allocation_map(ostream&) const;

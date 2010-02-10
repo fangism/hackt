@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.12.20.2 2010/01/15 04:13:12 fang Exp $
+	$Id: cflat_visitor.cc,v 1.12.20.3 2010/02/10 06:43:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -21,6 +21,8 @@
 #include "util/compose.h"
 #include "util/stacktrace.h"
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 namespace HAC {
 namespace entity {
 namespace PRS {
@@ -162,4 +164,5 @@ cflat_visitor::visit(const SPEC::footprint& f) {
 }	// end namespace PRS
 }	// end namespace entity
 }	// end namespace HAC
+#endif
 

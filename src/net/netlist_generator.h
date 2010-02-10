@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.5.2.2 2010/01/15 04:13:15 fang Exp $
+	$Id: netlist_generator.h,v 1.5.2.3 2010/02/10 06:43:10 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -18,8 +18,8 @@ namespace NET {
 using std::vector;
 using std::string;
 using std::map;
-using entity::cflat_context_visitor;
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+using entity::cflat_context_visitor;
 using entity::state_manager;
 #endif
 using entity::footprint;
@@ -29,6 +29,8 @@ using entity::process_tag;
 using entity::PRS::footprint_expr_node;
 
 //=============================================================================
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 /**
 	Visitor to do all the heavy-lifting and traversal.  
 	TODO: warn against instantiating port processes with production rules.
@@ -197,7 +199,7 @@ private:
 };	// end class netlist_generator
 
 //=============================================================================
-
+#endif
 }	// end namespace NET
 }	// end namespace HAC
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.11.40.1 2010/01/12 02:49:03 fang Exp $
+	$Id: EventExecutor.cc,v 1.11.40.2 2010/02/10 06:43:15 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -49,6 +49,7 @@
 #define	STACKTRACE_CHPSIM_VERBOSE
 #endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 namespace HAC {
 namespace entity {
 namespace CHP {
@@ -824,4 +825,5 @@ EventRechecker::visit(const function_call_stmt& fc) {
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC
+#endif
 

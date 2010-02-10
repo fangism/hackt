@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.57.2.2 2010/01/15 04:13:18 fang Exp $
+	$Id: State-prsim.cc,v 1.57.2.3 2010/02/10 06:43:17 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -370,6 +370,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 
 	// NOTE: we're referencing 'this' during construction, however, we 
 	// are done constructing this State's members at this point.  
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	ExprAlloc v(*this, f);
 	// pre-allocate array of process states
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -401,7 +404,7 @@ try {
 #else
 	sm.accept(v);
 #endif
-} catch (const entity::cflat_visitor::instance_exception<process_tag>& e) {
+} catch (const entity::instance_exception<process_tag>& e) {
 	cerr << "Error with process instance: ";
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	mod.get_footprint().dump_canonical_name<process_tag>(cerr, e.pid)
@@ -415,6 +418,7 @@ try {
 	THROW_EXIT;
 }
 	// recommend caller to invoke ::initialize() immediately after ctor
+#endif
 }	// end State::State(const module&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.24.2.3 2010/01/15 04:13:12 fang Exp $
+	$Id: cflat_printer.cc,v 1.24.2.4 2010/02/10 06:43:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -57,6 +57,9 @@ cflat_prs_printer::~cflat_prs_printer() { }
 void
 cflat_prs_printer::visit(const PRS::footprint& p) {
 	STACKTRACE_VERBOSE;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	parent_type::visit(p);
 	// now handle invariant expressions
 // if (cfopts.primary_tool == cflat_options::TOOL_LVS) {
@@ -76,6 +79,7 @@ cflat_prs_printer::visit(const PRS::footprint& p) {
 		os << endl;
 	}
 // }
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -106,7 +110,13 @@ if (!cfopts.check_prs) {
 			// fake an empty list if necessary
 		}
 	}
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+//	const PRS_footprint_expr_pool_type* expr_pool = 
+//		&fpf->_footprint->get_prs_footprint().get_expr_pool();
+	FINISH_ME(Fang);
+#else
 	(*expr_pool)[r.expr_index].accept(*this);
+#endif
 	os << " -> ";
 	// r.output_index gives the local unique ID,
 	// which needs to be translated to global ID.
@@ -291,7 +301,11 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 		case PRS_NOT_EXPR_TYPE_ENUM:
 			INVARIANT(sz == 1);
 			os << '~';
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			FINISH_ME(Fang);
+#else
 			(*expr_pool)[e.only()].accept(*this);
+#endif
 			// conductances ignore negations;
 			// just forward return value to caller.
 			break;
@@ -305,7 +319,11 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 				max_G.reserve(sz);
 				one_G.reserve(sz);
 				min_G.reserve(sz);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+				FINISH_ME(Fang);
+#else
 				(*expr_pool)[e.only()].accept(*this);
+#endif
 				max_G.push_back(max_conductance);
 				one_G.push_back(one_conductance);
 				min_G.push_back(min_conductance);
@@ -327,13 +345,21 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 						os << '{' << 
 							(pi->second.second ?
 							'+' : '-');
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+						FINISH_ME(Fang);
+#else
 						(*expr_pool)[pi->second.first].accept(*this);
+#endif
 						os << '}';
 						++pi;
 					}
 					}
 					os << ' ';
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+					FINISH_ME(Fang);
+#else
 					(*expr_pool)[e[i]].accept(*this);
+#endif
 					max_G.push_back(max_conductance);
 					one_G.push_back(one_conductance);
 					min_G.push_back(min_conductance);
@@ -386,7 +412,11 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			// we've already matched the direction of the rule
 			// so we should just be able to print the expression.
 			INVARIANT(sz == 1);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			FINISH_ME(Fang);
+#else
 			(*expr_pool)[e.only()].accept(*this);
+#endif
 			break;
 		default:
 			ICE(cerr,

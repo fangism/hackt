@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.11.2.4 2010/01/18 23:43:47 fang Exp $
+	$Id: netlist_generator.cc,v 1.11.2.5 2010/02/10 06:43:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -48,6 +48,8 @@ using entity::directive_base_params_type;
 using entity::resolved_attribute;
 using entity::resolved_attribute_list_type;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 //=============================================================================
 // helper globals
 
@@ -932,6 +934,7 @@ netlist_generator::visit(const entity::SPEC::footprint_directive&) {
 	// nothing... yet
 }
 
+#endif
 //=============================================================================
 }	// end namespace NET
 }	// end namespace HAC

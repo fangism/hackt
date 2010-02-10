@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_context_visitor.h"
-	$Id: cflat_context_visitor.h,v 1.4.58.1 2010/01/09 03:30:07 fang Exp $
+	$Id: cflat_context_visitor.h,v 1.4.58.2 2010/02/10 06:43:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
@@ -12,7 +12,9 @@
 
 namespace HAC {
 namespace entity {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 using PRS::cflat_visitor;
+#endif
 
 //=============================================================================
 /**
@@ -23,16 +25,27 @@ using PRS::cflat_visitor;
 	This is still an abstract base class, because visit is unimplemented.
 	Or should we provide a default visitation pattern?
  */
-class cflat_context_visitor : public cflat_visitor, public cflat_context {
+class cflat_context_visitor :
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		public cflat_visitor,
+#endif
+		public cflat_context {
 public:
-	cflat_context_visitor() : cflat_visitor(), cflat_context() { }
+	cflat_context_visitor() :
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		cflat_visitor(),
+#endif
+		cflat_context() { }
 
 	cflat_context_visitor(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_manager& _sm, 
 #endif
 		const footprint& _topfp) :
-		cflat_visitor(), cflat_context(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		cflat_visitor(),
+#endif
+		cflat_context(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			_sm,
 #endif
@@ -60,5 +73,3 @@ public:
 }	// end namespace HAC
 
 #endif	// __HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
-
-

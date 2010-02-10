@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.22.20.9 2010/02/06 01:41:43 fang Exp $
+	$Id: global_entry.tcc,v 1.22.20.10 2010/02/10 06:42:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -115,6 +115,7 @@ extract_parent_formal_instance_alias(const state_manager& sm,
 //=============================================================================
 // class footprint_frame method definitions
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Prints the canonical type associated with this footprint_frame's
 	reference footprint.  
@@ -187,6 +188,7 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 #endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 	return o;
 }
+#endif
 
 //=============================================================================
 // class global_entry_substructure_base method definitions
@@ -208,17 +210,6 @@ global_entry_substructure_base<true>::dump(global_entry_dumper& ged) const {
 	this->_frame.template dump_footprint<Tag>(ged);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const util::indent __tab__(ged.os, "\t");
-#if 0
-	const footprint_frame* fpf(ged.get_footprint_frame());
-	if (fpf) {
-		// transform local (this) to global, from fpf context
-		const footprint_frame af(this->_frame, *fpf);
-		// TODO: extend size to local_entries, beyond port_entries
-		// and populate with appropriate offsets
-		return af.dump_frame(ged.os);
-	// override using actuals passed in from global context
-	} else
-#endif
 #endif
 	return this->_frame.dump_frame(ged.os);
 }
@@ -355,6 +346,7 @@ global_entry<Tag>::dump_canonical_name(ostream& o,
 	NOTE: currently, only processes are ever super instances.  
 	Missing endl.
  */
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class Tag>
 ostream&
 global_entry<Tag>::dump_base(global_entry_dumper& ged) const {
@@ -408,6 +400,7 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 	parent_type::template dump<Tag>(ged);
 	return ged.os;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION

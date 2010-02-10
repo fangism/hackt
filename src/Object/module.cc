@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.41.2.5 2010/01/29 02:39:42 fang Exp $
+ 	$Id: module.cc,v 1.41.2.6 2010/02/10 06:43:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -500,6 +500,9 @@ module::reset(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 module::__cflat_rules(ostream& o, const cflat_options& cf) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	// our priting visitor functor
 	PRS::cflat_prs_printer cfp(o, cf);
 	const cflat_context::module_setter tmp(cfp, *this);
@@ -523,6 +526,7 @@ module::__cflat_rules(ostream& o, const cflat_options& cf) const {
 		}
 		if (cf.dsim_prs)	o << "}" << endl;
 	}
+#endif
 	return good_bool(true);
 }
 

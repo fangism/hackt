@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.8.46.1 2010/01/12 02:49:02 fang Exp $
+	$Id: DependenceCollector.h,v 1.8.46.2 2010/02/10 06:43:14 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -132,6 +132,8 @@ struct dependence_collector_base {
 };	// end struct dependence_collector_base
 
 //=============================================================================
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 /**
 	Keep synchronized with declarations in expr_visitor.  
  */
@@ -264,6 +266,7 @@ public:
 
 #undef	VISIT_PROTO
 };	// end class DependenceSetCollector
+#endif
 
 //=============================================================================
 }	// end namespace CHPSIM

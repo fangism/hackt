@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.7.46.1 2010/01/12 02:49:04 fang Exp $
+	$Id: StateConstructor.cc,v 1.7.46.2 2010/02/10 06:43:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -24,6 +24,8 @@
 #include "util/stacktrace.h"
 // #include "util/STL/valarray_iterator.h"
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
@@ -350,4 +352,5 @@ StateConstructor::get_process_footprint(void) const {
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC
+#endif
 

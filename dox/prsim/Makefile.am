@@ -1,5 +1,5 @@
 # "dox/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2009/05/29 15:13:20 fang Exp $
+#	$Id: Makefile.am,v 1.11.12.1 2010/02/10 06:42:54 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -13,7 +13,7 @@ INFOS = $(TEXINFOS:.texi=.info)
 
 AM_MAKEINFOFLAGS = -I$(srcdir)/../common -I../common
 hacmacros.texi: $(srcdir)/../common/hacmacros.texi
-	$(LN_S) $< $@
+	$(LN_SF) $< $@
 
 CLEANFILES += hacmacros.texi
 

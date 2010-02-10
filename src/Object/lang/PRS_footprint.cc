@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.28.2.2 2010/01/22 23:41:42 fang Exp $
+	$Id: PRS_footprint.cc,v 1.28.2.3 2010/02/10 06:43:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,6 +16,9 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_entry_context.h"
+#endif
 #include "Object/common/dump_flags.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
@@ -33,6 +36,7 @@
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "common/ICE.h"
+#include "common/TODO.h"
 
 #if STACKTRACE_DUMPS
 #define	STACKTRACE_DUMP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -647,8 +651,18 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint::accept(cflat_visitor& v) const {
+footprint::accept(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		global_entry_context& v
+#else
+		cflat_visitor& v
+#endif
+		) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	v.visit(*this);
+#endif
 }
 
 //=============================================================================
@@ -744,8 +758,18 @@ footprint_expr_node::load_object_base(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint_expr_node::accept(cflat_visitor& v) const {
+footprint_expr_node::accept(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		global_entry_context& v
+#else
+		cflat_visitor& v
+#endif
+		) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	v.visit(*this);
+#endif
 }
 
 //=============================================================================
@@ -790,16 +814,36 @@ footprint_rule::load_object_base(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint_rule::accept(cflat_visitor& v) const {
+footprint_rule::accept(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		global_entry_context& v
+#else
+		cflat_visitor& v
+#endif
+		) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	v.visit(*this);
+#endif
 }
 
 //=============================================================================
 // struct footprint_macro method definitions
 
 void
-footprint_macro::accept(cflat_visitor& v) const {
+footprint_macro::accept(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		global_entry_context& v
+#else
+		cflat_visitor& v
+#endif
+		) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME(Fang);
+#else
 	v.visit(*this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

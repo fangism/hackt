@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.15.18.3 2010/01/15 18:42:34 fang Exp $
+	$Id: ExprAlloc.h,v 1.15.18.4 2010/02/10 06:43:17 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -23,6 +23,8 @@
 #define	PRSIM_SIMPLE_ALLOC			0
 #endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
@@ -246,6 +248,7 @@ private:
 }	// end namespace PRSIM
 }	// end namespace SIM
 }	// end namespace HAC
+#endif
 
 #endif	// __HAC_SIM_PRSIM_EXPRALLOC_H__
 

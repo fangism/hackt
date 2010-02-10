@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.8.24.6 2010/01/29 02:39:45 fang Exp $
+	$Id: state_instance.tcc,v 1.8.24.7 2010/02/10 06:43:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_TCC__
@@ -10,7 +10,7 @@
 #include <iostream>
 #include "Object/inst/state_instance.h"
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-#include "Object/lang/cflat_visitor.h"
+#include "Object/global_entry_context.h"
 #include "Object/global_channel_entry.h"
 #endif
 #include "util/stacktrace.h"
@@ -64,17 +64,8 @@ STATE_INSTANCE_CLASS::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 STATE_INSTANCE_TEMPLATE_SIGNATURE
-ostream&
-STATE_INSTANCE_CLASS::dump_global_entry(global_entry_dumper& ged) const {
-	return entry_type::dump(ged);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-STATE_INSTANCE_TEMPLATE_SIGNATURE
 void
-STATE_INSTANCE_CLASS::accept(PRS::cflat_visitor& v) const {
+STATE_INSTANCE_CLASS::accept(global_entry_context& v) const {
 	STACKTRACE_VERBOSE;
 	v.visit(*this);
 }

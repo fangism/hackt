@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.42.4.5 2010/01/18 23:43:48 fang Exp $
+	$Id: ExprAlloc.cc,v 1.42.4.6 2010/02/10 06:43:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -45,6 +45,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/memory/free_list.h"
 #include "common/TODO.h"
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
@@ -1588,6 +1590,7 @@ RunModeStatic::main(visitor_type& v, const param_args_type& params,
 }	// end namespace PRSIM
 }	// end namespace SIM
 }	// end namespace HAC
+#endif
 
 DEFAULT_STATIC_TRACE_END
 

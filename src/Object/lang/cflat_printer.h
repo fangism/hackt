@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.14.2.2 2010/01/15 04:13:12 fang Exp $
+	$Id: cflat_printer.h,v 1.14.2.3 2010/02/10 06:43:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -90,7 +90,11 @@ public:
 		const char* l, const char* d, const char* r) const;
 
 protected:
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	using cflat_context::visit;
+#else
 	using cflat_visitor::visit;
+#endif
 
 	// override
 	void
