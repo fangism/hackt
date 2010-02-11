@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-02-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-17:
+	  Ton of markup for re-write: all global index lookups to the 
+		meta-instance-reference classes have been temporarily
+		commented out to mark for rewriting, intending to use
+		global_entry_context as new driver for lookups.
+		Crippled any code that touches lookups - FINISH_ME.
+	  global_entry_context_base mandates top-footprint.
+	  global_entry_context mandates footprint_frame and global_offset.
+		Derived classes also require in their ctors.
+	  chp_visitor class no longer derived from global_entry_context, 
+		only some subclasses will need it, most will not.
+		Again cripped/marked code for rewrite.
+	  parser/instref.cc: crippled calls to lookups
+	  Regression tests still pass.
+
+
 2010-02-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-16:

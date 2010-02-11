@@ -1,11 +1,11 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.2 2010/02/10 06:42:59 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.3 2010/02/11 01:41:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
-#include "Object/global_entry_context.h"
+#include "Object/global_entry_context.tcc"
 #include "Object/module.h"
 #include "Object/global_entry.h"
 #include "Object/traits/proc_traits.h"	// for process_tag
@@ -39,6 +39,7 @@ typedef	util::value_saver<const footprint_frame*>	footprint_frame_setter;
 //-----------------------------------------------------------------------------
 // class global_entry_context_base::module_setter method definitions
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 global_entry_context_base::module_setter::module_setter(
 		global_entry_context_base& _ccb, 
 		const module& m) :
@@ -50,6 +51,7 @@ global_entry_context_base::module_setter::module_setter(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_entry_context_base::module_setter::~module_setter() { }
+#endif
 
 //=============================================================================
 // class global_entry_context method definitions
@@ -215,6 +217,10 @@ global_entry_dumper::__default_visit(const state_instance<Tag>& p) {
 	STACKTRACE_VERBOSE;
 	// ripped from global_entry<Tag>::dump_base()
 	const size_t local_offset = p.get_back_ref()->instance_index;
+#if 1
+	const size_t global_index = lookup_global_id<Tag>(local_offset);
+#else
+	// faster, b/c we know that we have skipped the ports, but who cares?
 	NEVER_NULL(parent_offset);
 	const size_t toffset = parent_offset->global_offset_base<Tag>::offset;
 	// need old offset
@@ -222,6 +228,7 @@ global_entry_dumper::__default_visit(const state_instance<Tag>& p) {
 		fpf->_footprint->get_instance_pool<Tag>().port_entries();
 	// already 1-based
 	const size_t global_index = toffset +local_offset -p_offset;
+#endif
 	NEVER_NULL(global_index);
 	os << global_index << '\t';
 	if (pid) {

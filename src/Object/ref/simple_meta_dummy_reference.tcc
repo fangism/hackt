@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.cc"
 	Method definitions for the meta_dummy_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_dummy_reference.tcc,v 1.4.20.1 2010/01/13 17:43:39 fang Exp $
+ 	$Id: simple_meta_dummy_reference.tcc,v 1.4.20.2 2010/02/11 01:42:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_TCC__
@@ -208,16 +208,19 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Internal nodes are not reference-able as physical instances.  
  */
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
 global_indexed_reference
 SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_top_level_reference(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager& sm, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context& 
+#else
+		const state_manager&, const footprint&
 #endif
-		const footprint& top) const {
+		) const {
 	ICE_NEVER_CALL(cerr);
 	return global_indexed_reference(0, 0);
 }
@@ -235,13 +238,16 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_top_level_reference(
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_footprint_frame(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager&, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context&
+#else
+		const state_manager&, const footprint&
 #endif
-		const footprint&) const {
+		) const {
 	ICE_NEVER_CALL(cerr);
 	return NULL;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
@@ -348,6 +354,7 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::must_be_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Prototype stolen from meta_instance_reference_subtype.
 	Aliases are not applicable to dummy types.
@@ -360,7 +367,6 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::collect_aliases(const module& mod,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_DUMMY_REFERENCE_CLASS::collect_subentries(const module&, 

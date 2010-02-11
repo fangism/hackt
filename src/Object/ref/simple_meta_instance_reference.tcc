@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.1 2010/01/12 02:48:56 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.2 2010/02/11 01:42:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -20,6 +20,9 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "Object/type/fundamental_type_reference.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_entry_context.h"
+#endif
 #include "common/TODO.h"
 #include "common/ICE.h"
 #include "util/what.h"
@@ -203,6 +206,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	If this is called, we're at the top-level of the instance hierarchy.
 	This should work regardless of whether this type has substructure.  
@@ -218,11 +222,16 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager& sm, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context& gc
+#else
+		const state_manager& sm, const footprint& top
 #endif
-		const footprint& top) const {
+		) const {
 	STACKTRACE_VERBOSE;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint& top(*gc.get_top_footprint_ptr());
+#endif
 	const unroll_context uc(&top, &top);
 	// should not be virtual call (one hopes)
 	return this->lookup_locally_allocated_index(
@@ -236,16 +245,20 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 global_indexed_reference
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager& sm, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context& gc
+#else
+		const state_manager& sm, const footprint& top
 #endif
-		const footprint& top) const {
+		) const {
 	return global_indexed_reference(traits_type::type_tag_enum_value, 
 		this->lookup_globally_allocated_index(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			sm, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			gc
+#else
+			sm, top
 #endif
-			top));
+			));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -289,19 +302,24 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager& sm,
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context& gc
+#else
+		const state_manager& sm, const footprint& top
 #endif
-		const footprint& top) const {
+		) const {
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template simple_lookup_footprint_frame<Tag>(
 			*this->inst_collection_ref, this->array_indices, 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				sm,
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+				gc
+#else
+				sm, top
 #endif
-				top);
+				);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.18.20.2 2010/01/13 17:43:37 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.18.20.3 2010/02/11 01:42:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -24,7 +24,9 @@ namespace entity {
 class scopespace;
 struct footprint_frame;
 struct expr_dump_context;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct global_entry_context;
+#else
 class state_manager;
 #endif
 class entry_collection;
@@ -138,10 +140,12 @@ virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO = 0;
 
 virtual	CONNECT_PORT_PROTO = 0;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
 	const footprint_frame*						\
-	lookup_footprint_frame(const footprint&) const
+	lookup_footprint_frame(const global_entry_context&) const
 #else
 #define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
 	const footprint_frame*						\
@@ -153,7 +157,7 @@ virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #define	LOOKUP_TOP_LEVEL_REFERENCE_PROTO				\
 	global_indexed_reference					\
-	lookup_top_level_reference(const footprint&) const
+	lookup_top_level_reference(const global_entry_context&) const
 #else
 #define	LOOKUP_TOP_LEVEL_REFERENCE_PROTO				\
 	global_indexed_reference					\
@@ -169,7 +173,6 @@ virtual	LOOKUP_TOP_LEVEL_REFERENCE_PROTO = 0;
 
 virtual	COLLECT_ALIASES_PROTO = 0;
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 #define	COLLECT_SUBENTRIES_PROTO					\
 	good_bool							\
 	collect_subentries(const module&, entry_collection&) const

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.6.46.1 2010/01/12 02:49:05 fang Exp $
+	$Id: nonmeta_context.cc,v 1.6.46.2 2010/02/11 01:42:13 fang Exp $
  */
 
 #include <vector>
@@ -31,12 +31,19 @@ nonmeta_context::nonmeta_context(
 		const state_manager& s, 
 #endif
 		const footprint& f, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint_frame& ff, const global_offset& g, 
+#endif
 		State& r) :
 		nonmeta_context_base(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			s, 
 #endif
-			f, NULL, r.instances),
+			f, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			ff, g,
+#endif
+			r.instances),
 		event(NULL), 
 		global_event_offset(0), 	// any invalid value
 		process_index(0),

@@ -1,7 +1,7 @@
 /**
 	\file "Object/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.2.76.1 2010/01/09 03:29:59 fang Exp $
+	$Id: nonmeta_context.h,v 1.2.76.2 2010/02/11 01:42:03 fang Exp $
  */
 #ifndef	__HAC_OBJECT_NONMETA_CONTEXT_H__
 #define	__HAC_OBJECT_NONMETA_CONTEXT_H__
@@ -40,13 +40,19 @@ protected:
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_manager& s, 
 #endif
-		const footprint& f, const footprint_frame* const l, 
+		const footprint& f, 
+		const footprint_frame& l, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_offset& g, 
+#endif
 		nonmeta_state_manager& v) : 
 		global_entry_context(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			s,
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			f, l, g
+#else
+			s, f, l
 #endif
-			f, l), 
+			), 
 		values(v) { }
 
 	// default copy-ctor

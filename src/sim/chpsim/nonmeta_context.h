@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.6.46.1 2010/01/12 02:49:05 fang Exp $
+	$Id: nonmeta_context.h,v 1.6.46.2 2010/02/11 01:42:14 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -22,6 +22,9 @@ class State;
 using entity::footprint;
 using entity::footprint_frame;
 using entity::state_manager;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using entity::global_offset;
+#endif
 using entity::nonmeta_state_manager;
 using entity::nonmeta_context_base;
 using entity::event_subscribers_type;
@@ -99,6 +102,11 @@ public:
 		const state_manager&, 
 #endif
 		const footprint&, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint_frame&, const global_offset&, 
+		// may need to sub-class global_offset to map
+		// offsets of events and other things!
+#endif
 		State&);
 
 	~nonmeta_context();

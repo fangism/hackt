@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.3 2010/01/18 23:43:47 fang Exp $
+	$Id: instref.cc,v 1.19.2.4 2010/02/11 01:42:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -223,7 +223,9 @@ parse_node_to_index(const string& n, const module& m) {
 	// alloc phase to find the canonical ID number.  
 	const footprint& top(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const size_t ret = b->lookup_globally_allocated_index(top);
+//	const size_t ret = b->lookup_globally_allocated_index(top);
+	FINISH_ME(Fang);
+	const size_t ret = INVALID_NODE_INDEX;
 #else
 	const state_manager& sm(m.get_state_manager());
 	const size_t ret = b->lookup_globally_allocated_index(sm, top);
@@ -265,7 +267,9 @@ if (n == ".") {
 	// alloc phase to find the canonical ID number.  
 	const footprint& top(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const size_t ret = b->lookup_globally_allocated_index(top);
+	// const size_t ret = b->lookup_globally_allocated_index(top);
+	FINISH_ME(Fang);
+	const size_t ret = INVALID_PROCESS_INDEX;
 #else
 	const state_manager& sm(m.get_state_manager());
 	const size_t ret = b->lookup_globally_allocated_index(sm, top);
@@ -291,7 +295,9 @@ parse_global_reference(const string& n, const module& m) {
 	}
 	const footprint& top(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	return r.inst_ref()->lookup_top_level_reference(top);
+//	return r.inst_ref()->lookup_top_level_reference(top);
+	FINISH_ME(Fang);
+	return global_indexed_reference(META_TYPE_NONE, INVALID_NODE_INDEX);
 #else
 	const state_manager& sm(m.get_state_manager());
 	// r.inst_ref() is a meta_instance_reference_base
@@ -400,6 +406,11 @@ if (n == ".") {
 		return 1;
 	} else {
 		// check for valid reference first
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_indexed_reference gref;
+		FINISH_ME(Fang);
+		return 1;
+#else
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -411,6 +422,7 @@ if (n == ".") {
 				<< n << endl;
 			return 1;
 		}
+#endif
 		const footprint* f = NULL;
 		o << n << " (type: ";
 		switch (gref.first) {
@@ -609,7 +621,7 @@ parse_name_to_get_ports(const string& n, const module& m,
 	Prints reference identity information. 
 	TODO: check non-instance-references:
 		namespaces, definitions, typedefs, value-references.
-	\param list separator
+	\param sep list separator
 	\return 0 upon success, 1 upon error.  
  */
 int
@@ -628,7 +640,11 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 		return 1;
 	} else {
 		string_list aliases;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		FINISH_ME(Fang);
+#else
 		r.inst_ref()->collect_aliases(m, aliases);
+#endif
 		ostream_iterator<string> osi(o, sep);
 		copy(aliases.begin(), aliases.end(), osi);
 		return 0;
@@ -709,12 +725,17 @@ complete_instance_names(const char* _text, const module& m,
 			// no error message
 		if (r.inst_ref()->dimensions()) { return; }
 			// no error message
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_indexed_reference gref;
+		FINISH_ME(Fang);
+#else
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 				m.get_state_manager(), 
 #endif
 				m.get_footprint()));
+#endif
 		if (!gref.second) { return; }
 		if (gref.first != entity::META_TYPE_PROCESS) { return; }
 		// until non-process types have subinstances...

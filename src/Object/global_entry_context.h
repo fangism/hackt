@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.6.46.3 2010/02/10 06:42:59 fang Exp $
+	$Id: global_entry_context.h,v 1.6.46.4 2010/02/11 01:42:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -56,6 +56,7 @@ protected:
 	const footprint*			topfp;
 
 public:
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	/**
 		Sets the footprint and state_manager pointers of the 
 		global_entry_context_base for the duration of the scope.  
@@ -79,13 +80,13 @@ public:
 		module_setter(global_entry_context_base&, const module&);
 		~module_setter();
 	} __ATTRIBUTE_UNUSED__ ;	// end class module setter
-
-public:
-	global_entry_context_base() :
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		sm(NULL),
 #endif
-		topfp(NULL) { }
+public:
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+	global_entry_context_base() : sm(NULL), topfp(NULL) { }
+#endif
+
+	// requires top-footprint
 	explicit
 	global_entry_context_base(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -164,29 +165,31 @@ public:
 #endif
 
 public:
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	global_entry_context() : global_entry_context_base(), fpf(NULL)
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, parent_offset(NULL), g_offset(NULL)
 #endif
 		{ }
+#endif
 
 	global_entry_context(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_manager& s,
 #endif
 		const footprint& _fp, 
-		const footprint_frame* const ff = NULL
+		const footprint_frame& ff
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, global_offset* g = NULL
+		, const global_offset& g
 #endif
 		) : 
 		global_entry_context_base(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			s,
 #endif
-			_fp), fpf(ff)
+			_fp), fpf(&ff)
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			, parent_offset(g), g_offset(NULL)
+			, parent_offset(&g), g_offset(NULL)
 #endif
 			{ }
 
@@ -270,8 +273,6 @@ public:
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// parent process index (1-based, 0 means top-level)
 	size_t					pid;
-	// index within parent process
-//	size_t					local_index;
 #endif
 
 	static const char			table_header[];
@@ -282,8 +283,8 @@ public:
 #endif
 		const footprint& _fp
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, const footprint_frame* ff = NULL
-		, global_offset* g = NULL
+		, const footprint_frame& ff
+		, const global_offset& g
 #endif
 		) :
 		parent_type(
@@ -296,7 +297,6 @@ public:
 			// , index(0)
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 			, pid(0)
-			//, local_index(0)
 #endif
  { }
 
@@ -330,7 +330,7 @@ template <class Tag>
 struct global_allocation_dumper : public global_entry_dumper {
 	global_allocation_dumper(ostream& o, const footprint& f, 
 		const footprint_frame& ff, global_offset& g) :
-		global_entry_dumper(o, f, &ff, &g) { }
+		global_entry_dumper(o, f, ff, g) { }
 
 	void
 	visit(const footprint&);

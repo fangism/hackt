@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.14 2010/02/10 06:43:00 fang Exp $
+	$Id: footprint.cc,v 1.46.2.15 2010/02/11 01:42:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1700,8 +1700,8 @@ footprint::__dump_allocation_map(ostream& o) const {
 		_pool(get_instance_pool<Tag>());
 if (_pool.total_entries()) {
 	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
-	const footprint_frame ff;
 	// empty top-level footprint frame, has no ports to pass in!
+	const footprint_frame ff;
 	global_offset g;	// 0s
 	// TODO: why not just have global_offset initialize to 1s for 1-based?
 	// instead of adding 1 everywhere else?

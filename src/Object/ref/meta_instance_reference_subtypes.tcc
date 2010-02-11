@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.28.2.2 2010/01/12 02:48:55 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.28.2.3 2010/02/11 01:42:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -88,6 +88,7 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	First resolves canonical globally allocated index.  
 	Accumulates all aliases by traversing instance hierarchy
@@ -115,6 +116,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 	INVARIANT(index);	// because we already checked reference?
 	mod.template match_aliases<Tag>(aliases, index);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -123,7 +125,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 	else if this is aggregate (e.g. array slice) then visit
 	all instances in range.  
  */
-// TODO: redo
+// TODO: redo -- use extended footprint_frame with offsets!
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool

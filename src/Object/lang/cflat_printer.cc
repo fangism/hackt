@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.24.2.4 2010/02/10 06:43:07 fang Exp $
+	$Id: cflat_printer.cc,v 1.24.2.5 2010/02/11 01:42:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -487,8 +487,7 @@ if (cfopts.node_attributes) {
 if (a.has_nondefault_attributes()) {
 	std::ostringstream oss;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	print_node_name(oss,
-		i.get_back_ref()->instance_index +global_bool_offset);
+	print_node_name(oss, i.get_back_ref()->instance_index);
 #else
 	print_node_name(oss, b);	// auto-quote
 #endif

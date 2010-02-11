@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.22.40.1 2010/01/12 02:48:56 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.22.40.2 2010/02/11 01:42:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -22,6 +22,9 @@ using util::packed_array_generic;
 class nonmeta_expr_visitor;
 class instance_placeholder_base;
 template <class> class collection_interface;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct global_entry_context;
+#endif
 
 template <bool>	struct simple_meta_instance_reference_implementation;
 
@@ -47,10 +50,8 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_instance_reference :
 	public simple_meta_indexed_reference_base, 
 	public class_traits<Tag>::meta_instance_reference_parent_type {
-#if 1
 	template <bool>
 	friend struct simple_meta_instance_reference_implementation;
-#endif
 	typedef	SIMPLE_META_INSTANCE_REFERENCE_CLASS	this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;
@@ -153,16 +154,21 @@ virtual	count_ptr<const this_type>
 
 	UNROLL_RESOLVE_COPY_REFERENCE_PROTO;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO;
 
 	LOOKUP_TOP_LEVEL_REFERENCE_PROTO;
+#endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	size_t
 	lookup_globally_allocated_index(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager&, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context&
+#else
+		const state_manager&, const footprint&
 #endif
-		const footprint&) const;
+		) const;
 
 virtual	size_t
 	lookup_locally_allocated_index(
@@ -172,6 +178,7 @@ virtual	size_t
 		const unroll_context&) const;
 
 	using parent_type::lookup_globally_allocated_indices;
+#endif
 
 virtual	void
 	accept(nonmeta_expr_visitor&) const;

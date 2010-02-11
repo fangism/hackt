@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.41.2.6 2010/02/10 06:43:00 fang Exp $
+ 	$Id: module.cc,v 1.41.2.7 2010/02/11 01:42:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -500,33 +500,37 @@ module::reset(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 module::__cflat_rules(ostream& o, const cflat_options& cf) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-#else
 	// our priting visitor functor
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint& _footprint(get_footprint());
+	const footprint_frame ff;
+	global_offset g;	// 0s
+	PRS::cflat_prs_printer cfp(_footprint, ff, g, o, cf);
+#else
 	PRS::cflat_prs_printer cfp(o, cf);
 	const cflat_context::module_setter tmp(cfp, *this);
+#endif
 	if (cf.include_prs) {
 		STACKTRACE("cflatting production rules.");
 		if (cf.dsim_prs)	o << "dsim {" << endl;
 		try {
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			get_footprint().accept(cfp);
+#else
 			global_state.accept(cfp);	// print!
-#endif
 			// support for top-level prs!
 			// const top_level_footprint_importer foo(*this);
-			const footprint& _footprint(get_footprint());
 			_footprint.get_prs_footprint().accept(cfp);
 			_footprint.get_spec_footprint().accept(cfp);
 			// no flat CHP yet (hopefully ever)
 			// _footprint.get_chp_footprint().accept(cfp);
+#endif
 		} catch (...) {
 			cerr << "Caught exception during cflat PRS." << endl;
 			return good_bool(false);
 		}
 		if (cf.dsim_prs)	o << "}" << endl;
 	}
-#endif
 	return good_bool(true);
 }
 

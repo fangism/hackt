@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.6.76.2 2010/01/15 04:13:11 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.6.76.3 2010/02/11 01:42:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -42,13 +42,15 @@ cflat_context_visitor::__lookup_global_bool_id(const size_t lni) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param ni the global node ID.  
+	\param ni the global node ID, 1-based.  
  */
 ostream&
 cflat_context_visitor::__dump_resolved_canonical_literal(
 		ostream& os, const size_t ni) const {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	return topfp->dump_canonical_name<bool_tag>(os, ni);
+	// 0-based
+	INVARIANT(ni);
+	return topfp->dump_canonical_name<bool_tag>(os, ni-1);
 #else
 	return sm->get_pool<bool_tag>()[ni]
 		.dump_canonical_name(os, *topfp, *sm);

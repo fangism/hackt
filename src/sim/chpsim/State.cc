@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.21.14.1 2010/01/12 02:49:03 fang Exp $
+	$Id: State.cc,v 1.21.14.2 2010/02/11 01:42:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -152,6 +152,8 @@ using entity::CHP::EVENT_RECEIVE;
 //=============================================================================
 // class State::recheck_transformer definition
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 /**
 	Functor for re-evaluating events for the event-queue.
 	Should be allowed to access private members of State.
@@ -172,6 +174,9 @@ struct State::recheck_transformer {
 			state.mod.get_state_manager(), 
 #endif
 			state.mod.get_footprint(),
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			state.
+#endif
 			state),
 			cause_event_id(cei), cause_trace_id(cti)
 		{ }
@@ -216,6 +221,7 @@ struct State::recheck_transformer {
 	}
 
 };	// end class recheck_transformer
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -578,11 +584,13 @@ State::step(void) {
 	STACKTRACE_VERBOSE;
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
-	nonmeta_context c(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		mod.get_state_manager(),
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint_frame ff;
+	const global_offset g;
+	nonmeta_context c(mod.get_footprint(), ff, g, *this);
+#else
+	nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), *this);
 #endif
-		mod.get_footprint(), *this);
 	std::pair<bool, bool>	status(false, false);
 do {
 	// TODO: check immediate event FIFO first
@@ -759,9 +767,13 @@ State::__perform_rechecks(const event_index_type ei,
 // now pass are immediately ready for execution, and hence should be placed
 // in the immediate_event_fifo.  Change happens in recheck_transformer.
 try {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	FINISH_ME_EXIT(Fang);
+#else
 	for_each(__rechecks.begin(), __rechecks.end(), 
 		recheck_transformer(*this, ei, ti)
 	);
+#endif
 } catch (...) {
 	cerr << "Run-time error while rechecking events." << endl;
 	cerr << "event[" << ei << "]:";
@@ -1971,12 +1983,16 @@ State::load_checkpoint(istream& i) {
 	size_t j = 0;
 	size_t s;
 	read_value(i, s);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint_frame ff;
+	const global_offset g;
 	const nonmeta_context
-		c(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			mod.get_state_manager(), 
-#endif
+		c(mod.get_footprint(), ff, g, *this);
+#else
+	const nonmeta_context
+		c(mod.get_state_manager(), 
 			mod.get_footprint(), *this);
+#endif
 	immediate_event_fifo.clear();
 	check_event_queue.clear();
 	for ( ; j<s; ++j) {

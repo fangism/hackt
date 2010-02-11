@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_visitor.cc"
-	$Id: CHP_visitor.cc,v 1.4.24.3 2010/01/18 23:43:40 fang Exp $
+	$Id: CHP_visitor.cc,v 1.4.24.4 2010/02/11 01:42:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -42,6 +42,7 @@ if (f->has_chp_footprint()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	No-op.
  */
@@ -75,6 +76,7 @@ chp_visitor::visit(const footprint_macro&) { }
  */
 void
 chp_visitor::visit(const entity::SPEC::footprint_directive&) { }
+#endif
 
 //=============================================================================
 }	// end namespace CHP
