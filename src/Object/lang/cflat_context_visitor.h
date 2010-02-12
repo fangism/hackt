@@ -1,13 +1,15 @@
 /**
 	\file "Object/lang/cflat_context_visitor.h"
-	$Id: cflat_context_visitor.h,v 1.4.58.3 2010/02/11 01:42:06 fang Exp $
+	$Id: cflat_context_visitor.h,v 1.4.58.4 2010/02/12 18:20:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
 #define	__HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
 
 #include "Object/cflat_context.h"
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/lang/cflat_visitor.h"
+#endif
 #include "Object/lang/SPEC_fwd.h"
 
 namespace HAC {

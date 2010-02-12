@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.41.2.7 2010/02/11 01:42:02 fang Exp $
+ 	$Id: module.cc,v 1.41.2.8 2010/02/12 18:20:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -161,6 +161,7 @@ module::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 ostream&
 module::dump_instance_map(ostream& o) const {
 	if (is_allocated()) {
@@ -175,6 +176,7 @@ module::dump_instance_map(ostream& o) const {
 	}
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -224,7 +226,12 @@ ostream&
 module::dump(ostream& o) const {
 	dump_definitions(o);
 	if (is_created()) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		o << "Globally allocated state:" << endl;
+		get_footprint().dump_allocation_map(o);
+#else
 		dump_instance_map(o);
+#endif
 	}
 	return o;
 }
@@ -499,11 +506,19 @@ module::reset(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-module::__cflat_rules(ostream& o, const cflat_options& cf) const {
-	// our priting visitor functor
+module::__cflat_rules(
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const footprint& _footprint(get_footprint());
-	const footprint_frame ff;
+		const footprint& _footprint, 
+#endif
+		ostream& o, const cflat_options& cf)
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const
+#endif
+		{
+	STACKTRACE_VERBOSE;
+	// our printing visitor functor
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint_frame ff(_footprint);	// empty ports
 	global_offset g;	// 0s
 	PRS::cflat_prs_printer cfp(_footprint, ff, g, o, cf);
 #else
@@ -515,7 +530,7 @@ module::__cflat_rules(ostream& o, const cflat_options& cf) const {
 		if (cf.dsim_prs)	o << "dsim {" << endl;
 		try {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			get_footprint().accept(cfp);
+			_footprint.accept(cfp);
 #else
 			global_state.accept(cfp);	// print!
 			// support for top-level prs!
@@ -541,11 +556,21 @@ module::__cflat_rules(ostream& o, const cflat_options& cf) const {
 		of the top_level_footprint_importer helper class.
  */
 good_bool
-module::__cflat_aliases(ostream& o, const cflat_options& cf) const {
+module::__cflat_aliases(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint& _footprint, 
+#endif
+		ostream& o, const cflat_options& cf)
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const
+#endif
+		{
+	STACKTRACE_VERBOSE;
 	// TODO: instance_visitor
 	if (cf.connect_style) {
-		STACKTRACE("cflatting aliases.");
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const footprint& _footprint(get_footprint());
+#endif
 		_footprint.cflat_aliases(o,
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			global_state,
@@ -563,12 +588,25 @@ module::__cflat_aliases(ostream& o, const cflat_options& cf) const {
 	TODO: implement instance visitor pattern, including the footprint.  
  */
 good_bool
-module::__cflat(ostream& o, const cflat_options& cf) const {
+module::__cflat(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint& _f, 
+#endif
+		ostream& o, const cflat_options& cf)
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const
+#endif
+		{
 	STACKTRACE_VERBOSE;
 	// print the production rules first, using canonical names
 	// print the name aliases in the manner requested in cflat_options
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return good_bool(__cflat_rules(_f, o, cf).good &&
+			__cflat_aliases(_f, o, cf).good);
+#else
 	return good_bool(__cflat_rules(o, cf).good &&
 			__cflat_aliases(o, cf).good);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -577,11 +615,26 @@ module::__cflat(ostream& o, const cflat_options& cf) const {
 	already allocated, and will not perform any modifications.  
  */
 good_bool
-module::cflat(ostream& o, const cflat_options& cf) const {
+module::cflat(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint& _f,
+#endif
+		ostream& o, const cflat_options& cf)
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const
+#endif
+		{
 	STACKTRACE_VERBOSE;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+if (_f.is_created()) {
+	return __cflat(_f, o, cf);
+}
+#else
 if (is_allocated()) {
 	return __cflat(o, cf);
-} else {
+}
+#endif
+else {
 	cerr << "ERROR: Module is not globally allocated, "
 		"as required by cflat." << endl;
 	return good_bool(false);
@@ -589,6 +642,7 @@ if (is_allocated()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	This variant will automatically globally allocate unique 
 	instances before cflat-ting, if needed.  
@@ -603,6 +657,7 @@ if (allocate_unique().good) {
 	return good_bool(false);
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.6.46.4 2010/02/11 01:42:00 fang Exp $
+	$Id: global_entry_context.h,v 1.6.46.5 2010/02/12 18:20:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -52,6 +52,8 @@ protected:
 #endif
 	/**
 		Top-level footprint for global lookups.  
+		This really should be reference, since it is required
+		and immutable.
 	 */
 	const footprint*			topfp;
 
@@ -204,6 +206,8 @@ virtual	~global_entry_context();
 	visit_recursive(const footprint&);
 
 public:
+	bool
+	at_top(void) const;
 virtual	void
 	visit(const state_instance<process_tag>&);
 virtual	void
@@ -226,6 +230,9 @@ virtual	void
 	get_frame_map(void) const { return fpf; }
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint&
+	get_current_footprint(void) const;
+
 	// return read-only
 	const global_offset*
 	get_offset(void) const { return g_offset; }

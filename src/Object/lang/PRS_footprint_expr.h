@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint_expr.h"
-	$Id: PRS_footprint_expr.h,v 1.8.4.1 2010/02/10 06:43:05 fang Exp $
+	$Id: PRS_footprint_expr.h,v 1.8.4.2 2010/02/12 18:20:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
@@ -242,13 +242,7 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 	void
-	accept(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		global_entry_context&
-#else
-		cflat_visitor&
-#endif
-	) const;
+	accept(cflat_visitor&) const;
 };	// end struct foorprint_expr_node
 
 }	// end namespace PRS

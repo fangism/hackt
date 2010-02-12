@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.5.88.3 2010/02/10 06:43:06 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.5.88.4 2010/02/12 18:20:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -180,11 +180,7 @@ footprint::load_object_base(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::accept(spec_visitor& v) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-#else
 	v.visit(*this);
-#endif
 }
 
 //=============================================================================

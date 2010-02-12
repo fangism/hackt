@@ -1,6 +1,6 @@
 # "Make.test-alloc"
 #	vi: ft=automake
-#	$Id: Make.test-alloc,v 1.10.50.2 2010/02/10 06:43:18 fang Exp $
+#	$Id: Make.test-alloc,v 1.10.50.3 2010/02/12 18:20:41 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -76,7 +76,7 @@ endif
 #	$(ALLOCDUMP_FILTER_SCRIPT)
 
 if VERBOSE_CHECK
-ECHO_ALLOCDUMP_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+ECHO_ALLOCDUMP_DIFF_COMMAND = $(ECHO) "$(DIFF) -Bbu $$""(srcdir)/$$stderr $<"
 else
 ECHO_ALLOCDUMP_DIFF_COMMAND = :
 endif
@@ -87,7 +87,7 @@ endif
 	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_ALLOCDUMP_DIFF_COMMAND) ; \
-	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  $(DIFF) -Bbu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then $(ECHO) "$@ is non-empty!" ; fi ; \
 	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
 	fi ; \

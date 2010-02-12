@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.26.2.1 2010/01/29 02:39:46 fang Exp $
+	$Id: main_funcs.cc,v 1.26.2.2 2010/02/12 18:20:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,6 +33,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/create.h"
 #include "common/config.h"
 #include "Object/type/process_type_reference.h"
+#include "Object/type/canonical_type.h"
 #include "util/getopt_portable.h"
 #include "util/getopt_mapped.h"
 #include "util/value_saver.h"
@@ -463,6 +464,14 @@ parse_and_create_complete_process_type(const char* _type, const module& m) {
 		cerr << "Error resolving process type parameters." << endl;
 		return return_type(NULL);
 	}
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// oops: isn't this supposed to create()?
+	const entity::canonical_process_type cpt(rpt->make_canonical_type());
+	if (!cpt.create_definition_footprint(m.get_footprint()).good) {
+		cerr << "Error instantiating type \'" << _type << "\'." << endl;
+		return return_type(NULL);
+	}
+#endif
 	return rpt;
 }
 

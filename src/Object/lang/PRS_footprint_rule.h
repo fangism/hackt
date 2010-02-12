@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint_rule.h,v 1.6.2.1 2010/02/10 06:43:05 fang Exp $
+	$Id: PRS_footprint_rule.h,v 1.6.2.2 2010/02/12 18:20:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_RULE_H__
@@ -23,6 +23,7 @@ class const_param_expr_list;
 struct global_entry_context;
 #endif
 namespace PRS {
+struct cflat_visitor;
 using std::string;
 using std::ostream;
 using std::istream;
@@ -83,13 +84,8 @@ struct footprint_rule : public cflat_visitee {
 	load_object_base(const persistent_object_manager&, istream&);
 
 	void
-	accept(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		global_entry_context&
-#else
-		cflat_visitor&
-#endif
-		) const;
+	accept(cflat_visitor&) const;
+
 };	// end struct footprint_rule
 
 //=============================================================================

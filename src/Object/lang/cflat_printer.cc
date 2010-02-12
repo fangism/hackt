@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.24.2.5 2010/02/11 01:42:06 fang Exp $
+	$Id: cflat_printer.cc,v 1.24.2.6 2010/02/12 18:20:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -54,13 +54,27 @@ using util::numeric::reciprocate;
 cflat_prs_printer::~cflat_prs_printer() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+void
+cflat_prs_printer::visit(const entity::footprint& f) {
+	STACKTRACE_VERBOSE;
+	// visit rules and spec directives, locally
+	f.get_prs_footprint().accept(*this);
+	f.get_spec_footprint().accept(*this);
+	// f.get_chp_footprint().accept(*this);
+	parent_type::visit(f);	// visit_recursive
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat_prs_printer::visit(const PRS::footprint& p) {
 	STACKTRACE_VERBOSE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
+	cflat_visitor::visit(p);
 #else
 	parent_type::visit(p);
+#endif
 	// now handle invariant expressions
 // if (cfopts.primary_tool == cflat_options::TOOL_LVS) {
 // ah, hell, just print it for everything, it's easy to grep out
@@ -69,8 +83,10 @@ cflat_prs_printer::visit(const PRS::footprint& p) {
 	const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
 	const PRS::footprint::invariant_pool_type& ip(p.get_invariant_pool());
 	const PRS_footprint_expr_pool_type& ep(p.get_expr_pool());
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const expr_pool_setter __p(*this, ep);
 	NEVER_NULL(expr_pool);
+#endif
 	const_iterator i(ip.begin()), e(ip.end());
 	for ( ; i!=e; ++i) {
 		os << "invariant ";
@@ -79,7 +95,6 @@ cflat_prs_printer::visit(const PRS::footprint& p) {
 		os << endl;
 	}
 // }
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -111,22 +126,20 @@ if (!cfopts.check_prs) {
 		}
 	}
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-//	const PRS_footprint_expr_pool_type* expr_pool = 
-//		&fpf->_footprint->get_prs_footprint().get_expr_pool();
-	FINISH_ME(Fang);
-#else
-	(*expr_pool)[r.expr_index].accept(*this);
+	const PRS_footprint_expr_pool_type* const expr_pool = 
+		&get_current_footprint().get_prs_footprint().get_expr_pool();
 #endif
+	(*expr_pool)[r.expr_index].accept(*this);
 	os << " -> ";
 	// r.output_index gives the local unique ID,
 	// which needs to be translated to global ID.
 	// bfm[...] refers to a GLOBAL_ENTRY<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	__dump_canonical_literal(r.output_index);
+#else
 	const size_t global_bool_index =
 		parent_type::__lookup_global_bool_id(r.output_index);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	print_node_name(os, global_bool_index);
-#else
 	print_node_name(os, sm->get_pool<bool_tag>()[global_bool_index]);
 #endif
 	os << (r.dir ? '+' : '-');
@@ -141,8 +154,10 @@ if (!cfopts.check_prs) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Automatically adds quotes if the options desire it.  
+	redundant with __dump_resolved_canonical_literal, deprecated.
  */
 ostream&
 cflat_prs_printer::print_node_name(ostream& o, 
@@ -161,6 +176,7 @@ cflat_prs_printer::print_node_name(ostream& o,
 	if (cfopts.enquote_names) o << '\"';
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -266,6 +282,10 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 	const char type = e.get_type();
 	const char ptype = parent_expr_type;
 	const expr_type_setter __tmp(*this, type);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const PRS_footprint_expr_pool_type* const expr_pool = 
+		&get_current_footprint().get_prs_footprint().get_expr_pool();
+#endif
 	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM: {
 			INVARIANT(sz == 1);
@@ -301,11 +321,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 		case PRS_NOT_EXPR_TYPE_ENUM:
 			INVARIANT(sz == 1);
 			os << '~';
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			FINISH_ME(Fang);
-#else
 			(*expr_pool)[e.only()].accept(*this);
-#endif
 			// conductances ignore negations;
 			// just forward return value to caller.
 			break;
@@ -319,11 +335,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 				max_G.reserve(sz);
 				one_G.reserve(sz);
 				min_G.reserve(sz);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-				FINISH_ME(Fang);
-#else
 				(*expr_pool)[e.only()].accept(*this);
-#endif
 				max_G.push_back(max_conductance);
 				one_G.push_back(one_conductance);
 				min_G.push_back(min_conductance);
@@ -345,21 +357,13 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 						os << '{' << 
 							(pi->second.second ?
 							'+' : '-');
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-						FINISH_ME(Fang);
-#else
 						(*expr_pool)[pi->second.first].accept(*this);
-#endif
 						os << '}';
 						++pi;
 					}
 					}
 					os << ' ';
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-					FINISH_ME(Fang);
-#else
 					(*expr_pool)[e[i]].accept(*this);
-#endif
 					max_G.push_back(max_conductance);
 					one_G.push_back(one_conductance);
 					min_G.push_back(min_conductance);
@@ -412,11 +416,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			// we've already matched the direction of the rule
 			// so we should just be able to print the expression.
 			INVARIANT(sz == 1);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			FINISH_ME(Fang);
-#else
 			(*expr_pool)[e.only()].accept(*this);
-#endif
 			break;
 		default:
 			ICE(cerr,
@@ -487,7 +487,8 @@ if (cfopts.node_attributes) {
 if (a.has_nondefault_attributes()) {
 	std::ostringstream oss;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	print_node_name(oss, i.get_back_ref()->instance_index);
+	__dump_canonical_literal(i.get_back_ref()->instance_index);
+	// print_node_name(oss, i.get_back_ref()->instance_index);
 #else
 	print_node_name(oss, b);	// auto-quote
 #endif

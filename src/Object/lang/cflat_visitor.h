@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.9.24.3 2010/02/10 06:43:08 fang Exp $
+	$Id: cflat_visitor.h,v 1.9.24.4 2010/02/12 18:20:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -16,10 +16,8 @@
 namespace HAC {
 namespace entity {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-#define	GLOBAL_ENTRY		state_instance
 class footprint;
 #else
-#define	GLOBAL_ENTRY		global_entry
 class state_manager;
 #endif
 template <class Tag> class GLOBAL_ENTRY;
@@ -47,11 +45,11 @@ class footprint_macro;
 
 
 //=============================================================================
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Base class from which other functional visitors are derived.  
 	TODO: default visit behavior for non-terminal types.  
 	No need to include state_manager -- its traversal is fixed.  
+	Intended to be a visitor of unrolled PRS and SPEC directives.
  */
 class cflat_visitor
 #if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -61,6 +59,7 @@ class cflat_visitor
 {
 	typedef	cflat_visitor				this_type;
 protected:
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	/**
 		This needs to be set by the visit to the footprint.  
 		Will initially be NULL, before the PRS footprint is entered. 
@@ -83,10 +82,14 @@ protected:
 		expr_pool_setter(cflat_visitor&, const cflat_visitor&);
 		~expr_pool_setter();
 	};      // end struct expr_pool_setter
+#endif
 public:
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	cflat_visitor() : expr_pool(NULL) { }
+#endif
 virtual	~cflat_visitor() { }
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	void
 	visit(const GLOBAL_ENTRY<process_tag>&);
 virtual	void
@@ -97,6 +100,7 @@ virtual	void
 	visit(const GLOBAL_ENTRY<int_tag>&);
 virtual	void
 	visit(const GLOBAL_ENTRY<bool_tag>&);
+#endif
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	void
 	visit(const entity::footprint&);
@@ -124,7 +128,6 @@ private:
 };	// end struct cflat_visitor
 
 //=============================================================================
-#endif
 }	// end namespace PRS
 }	// end namespace entity
 }	// end namespace HAC

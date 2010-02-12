@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.tcc"
-	$Id: global_entry_context.tcc,v 1.4.20.3 2010/02/11 01:42:01 fang Exp $
+	$Id: global_entry_context.tcc,v 1.4.20.4 2010/02/12 18:20:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
@@ -35,7 +35,8 @@ global_entry_context::lookup_global_id(const size_t lni) const {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	NEVER_NULL(fpf);
 	NEVER_NULL(parent_offset);
-	const size_t ports = fpf->_footprint->get_instance_pool<Tag>().port_entries();
+	const size_t ports = at_top() ? 0 :
+		fpf->_footprint->get_instance_pool<Tag>().port_entries();
 if (lni <= ports) {
 	// lookup up from the context passed into the current process
 	return footprint_frame_transformer(*fpf, Tag())(lni);

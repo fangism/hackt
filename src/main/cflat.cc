@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.26 2009/10/29 23:00:29 fang Exp $
+	$Id: cflat.cc,v 1.26.2.1 2010/02/12 18:20:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -940,7 +940,13 @@ if (cf.use_referenced_type_instead_of_top_level) {
 	top_module = the_module;
 }	// end if use_referenced_type_instead_of_top_level
 	// based on mode, set the options to pass into the module.
-	if (!top_module->cflat(cout, cf).good) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const count_ptr<const module> m(top_module);	// const-ify
+	if (!module::cflat(m->get_footprint(), cout, cf).good)
+#else
+	if (!top_module->cflat(cout, cf).good)
+#endif
+	{
 		cerr << "Error during cflat." << endl;
 		return 1;
 	}

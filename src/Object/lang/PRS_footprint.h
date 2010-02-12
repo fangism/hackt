@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.16.2.1 2010/02/10 06:43:04 fang Exp $
+	$Id: PRS_footprint.h,v 1.16.2.2 2010/02/12 18:20:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -353,13 +353,7 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 	void
-	accept(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		global_entry_context&
-#else
-		cflat_visitor&
-#endif
-		) const;
+	accept(cflat_visitor&) const;
 
 };	// end class footprint
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.11 2010/02/06 01:41:42 fang Exp $
+	$Id: global_entry.h,v 1.18.20.12 2010/02/12 18:20:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -108,6 +108,10 @@ protected:
 	__init_top_level(void);
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	__construct_top_global_context(const footprint&, 
+		const global_offset_base<Tag>&);
+
 	void
 	__construct_global_context(const footprint&, 
 		const footprint_frame_map<Tag>&,
@@ -227,6 +231,9 @@ struct footprint_frame :
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
+	construct_top_global_context(const footprint&, const global_offset&);
+
+	void
 	construct_global_context(const footprint&, 
 		const footprint_frame&, const global_offset&);
 #else
@@ -314,6 +321,7 @@ struct footprint_frame_transformer {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 struct add_local_private_tag {};
 struct add_total_private_tag {};
+struct add_all_local_tag {};
 
 template <class Tag>
 struct global_offset_base {
@@ -326,6 +334,8 @@ struct global_offset_base {
 	global_offset_base() : offset(0) { }
 	global_offset_base(const this_type&, const footprint&, 
 		const add_local_private_tag);
+	global_offset_base(const this_type&, const footprint&, 
+		const add_all_local_tag);
 	global_offset_base(const this_type&, const footprint&, 
 		const add_total_private_tag);
 
@@ -352,6 +362,8 @@ struct global_offset :
 	global_offset() {}
 	global_offset(const global_offset&, const footprint&, 
 		const add_local_private_tag);
+	global_offset(const global_offset&, const footprint&, 
+		const add_all_local_tag);
 	global_offset(const global_offset&, const footprint&, 
 		const add_total_private_tag);
 

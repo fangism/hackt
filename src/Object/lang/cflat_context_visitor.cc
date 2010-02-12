@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.6.76.3 2010/02/11 01:42:05 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.6.76.4 2010/02/12 18:20:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -75,6 +75,7 @@ cflat_context_visitor::__dump_canonical_literal(
 	Translates set of local node IDs into unique set of 
 	global IDs which may result in fewer nodes because duplicate
 	aliases are dropped.  
+	Can be replaced with transform : set_inserter
  */
 void
 cflat_context_visitor::__resolve_unique_literal_group(

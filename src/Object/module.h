@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.20.2.4 2010/01/25 23:50:11 fang Exp $
+	$Id: module.h,v 1.20.2.5 2010/02/12 18:20:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -98,8 +98,10 @@ public:
 	ostream&
 	dump_definitions(ostream& o) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	ostream&
 	dump_instance_map(ostream& o) const;
+#endif
 
 public:
 	bool
@@ -141,11 +143,17 @@ public:
 	populate_top_footprint_frame(void);
 #endif
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	static
+	good_bool
+	cflat(const footprint&, ostream&, const cflat_options&);
+#else
 	good_bool
 	cflat(ostream&, const cflat_options&) const;
 
 	good_bool
 	cflat(ostream&, const cflat_options&);
+#endif
 
 	template <class Tag>
 	void
@@ -155,6 +163,19 @@ private:
 	good_bool
 	create_dependent_types(void);
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	static
+	good_bool
+	__cflat(const footprint&, ostream&, const cflat_options&);
+
+	static
+	good_bool
+	__cflat_rules(const footprint&, ostream&, const cflat_options&);
+
+	static
+	good_bool
+	__cflat_aliases(const footprint&, ostream&, const cflat_options&);
+#else
 	good_bool
 	__cflat(ostream&, const cflat_options&) const;
 
@@ -163,6 +184,7 @@ private:
 
 	good_bool
 	__cflat_aliases(ostream&, const cflat_options&) const;
+#endif
 
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	good_bool

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_visitor.cc"
-	$Id: CHP_visitor.cc,v 1.4.24.4 2010/02/11 01:42:05 fang Exp $
+	$Id: CHP_visitor.cc,v 1.4.24.5 2010/02/12 18:20:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -25,7 +25,6 @@ void
 chp_visitor::visit(const entity::state_manager&) {
 	// should be overridden
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -40,6 +39,7 @@ if (f->has_chp_footprint()) {
 	cfp.accept(v);
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION

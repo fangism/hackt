@@ -3,6 +3,29 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-02-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-18:
+	  hflat: successfully traversed hierarchical rule printing
+		next: alias printing, re-implement alias_visitor.
+		current state of hflat tests: rules match, aliases mising
+	  Key revision was handling of hierarchical lookups w.r.t.
+		footprints that come from another type used as the top, 
+		need to account for possibility of top-type having ports, 
+		and thus adjusting indices of lookups only at the top-level.
+		Functions have been flavored with such distinction,
+		default API calls should indicate "is_top".
+		construct_top_global_context, add_all_local_tag, 
+		global_entry_context::visit_local and visit_recursive
+		have been updated accordingly.
+	  module::cflat family of functions, now static, only requiring
+		a footprint, either top-level or user-chosen.
+	  main_funcs: parse_and_create_complete_process_type():
+		actually invoke automatic creation!
+	  main/objdump.cc: added support for -t TYPE as the type to
+		use for top-level virtual allocation (for debugging).
+
+
 2010-02-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-17:

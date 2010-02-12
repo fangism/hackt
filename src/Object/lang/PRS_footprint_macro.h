@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint_macro.h"
-	$Id: PRS_footprint_macro.h,v 1.5.2.1 2010/02/10 06:43:05 fang Exp $
+	$Id: PRS_footprint_macro.h,v 1.5.2.2 2010/02/12 18:20:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_MACRO_H__
@@ -29,13 +29,7 @@ public:
 	// everything else inherited from directive_base
 
 	void
-	accept(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		global_entry_context&
-#else
-		cflat_visitor&
-#endif
-		) const;
+	accept(cflat_visitor&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

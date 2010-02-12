@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.3 2010/02/11 01:41:59 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.4 2010/02/12 18:20:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -60,6 +60,24 @@ global_entry_context_base::module_setter::~module_setter() { }
 global_entry_context::~global_entry_context() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const footprint&
+global_entry_context::get_current_footprint(void) const {
+	if (fpf) {
+		NEVER_NULL(fpf->_footprint);
+		return *fpf->_footprint;
+	} else	return *topfp;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if current context is top-most level.
+ */
+bool
+global_entry_context::at_top(void) const {
+	return (topfp == fpf->_footprint);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 void
 global_entry_context::visit_local(const footprint& f) {
@@ -69,21 +87,28 @@ global_entry_context::visit_local(const footprint& f) {
 #endif
 	const typename state_instance<Tag>::pool_type&
 		_pool(f.get_instance_pool<Tag>());
+	const bool is_top = at_top();
 	// construct context (footprint_frame)
 	footprint_frame lff;
+	global_offset sgo(*parent_offset, f, add_local_private_tag());
 	NEVER_NULL(parent_offset);
+// something different for the top-level with ports...
+if (is_top) {
+	lff.construct_top_global_context(f, *parent_offset);
+	sgo = global_offset(*parent_offset, f, add_all_local_tag());
+} else {
 	lff.construct_global_context(f, *fpf, *parent_offset);
+}
 	// print local, non-port entries, since ports belong to 'parent'
 	// for processes duplicate work computing global offsets twice
-	global_offset sgo(*parent_offset, f, add_local_private_tag());
 	const value_saver<global_offset*> __gs__(g_offset, &sgo);
 	const footprint_frame_setter __ffs__(fpf, &lff);	// local actuals
 	const size_t l = _pool.local_entries();
-	size_t i = _pool.port_entries();
+	// but for the top-level only, we want start with ports
+	size_t i = is_top ? 0 : _pool.port_entries();
 	for ( ; i<l; ++i) {
 		// global and local index can be deduced
 		const state_instance<Tag>& inst(_pool[i]);
-		// __visit(inst);
 		inst.accept(*this);
 	}
 }
@@ -113,18 +138,31 @@ global_entry_context::visit(const state_instance<bool_tag>& p) { }
 void
 global_entry_context::visit_recursive(const footprint& f) {
         STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("in process type: ");
+	f.dump_type(STACKTRACE_STREAM) << endl;
+	STACKTRACE_INDENT_PRINT("offset: " << *parent_offset << endl);
+	fpf->dump_frame(STACKTRACE_STREAM << "frame:\n") << endl;
+#endif
 	// recurse through processes and print
 	const state_instance<process_tag>::pool_type&
 		lpp(f.get_instance_pool<process_tag>());
+	const bool is_top = at_top();
 	// TODO: alternatively, construct lookup table of lpid->gpid ahead
 	// must skip processes that are in ports
 	NEVER_NULL(parent_offset);
 	global_offset sgo(*parent_offset, f, add_local_private_tag());
 	footprint_frame lff;
+if (is_top) {
+	lff.construct_top_global_context(f, *parent_offset);
+	sgo = global_offset(*parent_offset, f, add_all_local_tag());
+} else {
 	lff.construct_global_context(f, *fpf, *parent_offset);
+}
 	// copy and increment with each local process
-	size_t pi = lpp.port_entries();
 	const size_t pe = lpp.local_entries();
+	// but for the top-level only, we want start with ports (process?)
+	size_t pi = is_top ? 0 : lpp.port_entries();
 	const value_saver<const global_offset*> __gs__(parent_offset, &sgo);
 	for ( ; pi<pe; ++pi) {
 		const state_instance<process_tag>& sp(lpp[pi]);
@@ -217,18 +255,8 @@ global_entry_dumper::__default_visit(const state_instance<Tag>& p) {
 	STACKTRACE_VERBOSE;
 	// ripped from global_entry<Tag>::dump_base()
 	const size_t local_offset = p.get_back_ref()->instance_index;
-#if 1
+	// this takes care of the case where we include top-level ports
 	const size_t global_index = lookup_global_id<Tag>(local_offset);
-#else
-	// faster, b/c we know that we have skipped the ports, but who cares?
-	NEVER_NULL(parent_offset);
-	const size_t toffset = parent_offset->global_offset_base<Tag>::offset;
-	// need old offset
-	const size_t p_offset =
-		fpf->_footprint->get_instance_pool<Tag>().port_entries();
-	// already 1-based
-	const size_t global_index = toffset +local_offset -p_offset;
-#endif
 	NEVER_NULL(global_index);
 	os << global_index << '\t';
 	if (pid) {
@@ -307,7 +335,9 @@ template <class Tag>
 void
 global_allocation_dumper<Tag>::visit(const footprint& f) {
 	STACKTRACE_VERBOSE;
-if (f.get_instance_pool<Tag>().total_private_entries()) {
+	const typename state_instance<Tag>::pool_type&
+		_pool(f.get_instance_pool<Tag>());
+if (_pool.total_private_entries() || (at_top() && _pool.port_entries())) {
 	visit_local<Tag>(f);
 	global_entry_dumper::visit(f);
 } else {

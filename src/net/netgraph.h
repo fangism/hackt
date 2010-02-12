@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.11.2.2 2010/02/10 06:43:09 fang Exp $
+	$Id: netgraph.h,v 1.11.2.3 2010/02/12 18:20:41 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -48,6 +48,11 @@
 #define	NETLIST_CHECK_NAME_COLLISIONS		1
 
 namespace HAC {
+namespace entity {
+namespace PRS {
+class footprint;
+}
+}
 namespace NET {
 using std::vector;
 using std::string;

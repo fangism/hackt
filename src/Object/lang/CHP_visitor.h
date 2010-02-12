@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_visitor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: CHP_visitor.h,v 1.6.24.3 2010/02/11 01:42:05 fang Exp $
+	$Id: CHP_visitor.h,v 1.6.24.4 2010/02/12 18:20:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_VISITOR_H__
@@ -12,12 +12,14 @@
 namespace HAC {
 namespace entity {
 namespace CHP {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 using entity::state_manager;
 using entity::cflat_context_visitor;
 using entity::PRS::footprint_rule;
 using entity::PRS::footprint_macro;
 using entity::PRS::footprint_expr_node;
 using entity::SPEC::footprint_directive;
+#endif
 
 // forward declarations
 class action;
@@ -120,12 +122,10 @@ protected:
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	void
 	visit(const state_manager&);
-#endif
 
 virtual	void
 	visit(const GLOBAL_ENTRY<process_tag>&);
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// overrides
 virtual	void
 	visit(const entity::PRS::footprint&);	// no-op

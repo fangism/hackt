@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.28.2.3 2010/02/10 06:43:04 fang Exp $
+	$Id: PRS_footprint.cc,v 1.28.2.4 2010/02/12 18:20:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -651,18 +651,8 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint::accept(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		global_entry_context& v
-#else
-		cflat_visitor& v
-#endif
-		) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-#else
+footprint::accept(cflat_visitor& v) const {
 	v.visit(*this);
-#endif
 }
 
 //=============================================================================
@@ -758,18 +748,8 @@ footprint_expr_node::load_object_base(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint_expr_node::accept(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		global_entry_context& v
-#else
-		cflat_visitor& v
-#endif
-		) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-#else
+footprint_expr_node::accept(cflat_visitor& v) const {
 	v.visit(*this);
-#endif
 }
 
 //=============================================================================
@@ -814,36 +794,16 @@ footprint_rule::load_object_base(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint_rule::accept(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		global_entry_context& v
-#else
-		cflat_visitor& v
-#endif
-		) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-#else
+footprint_rule::accept(cflat_visitor& v) const {
 	v.visit(*this);
-#endif
 }
 
 //=============================================================================
 // struct footprint_macro method definitions
 
 void
-footprint_macro::accept(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		global_entry_context& v
-#else
-		cflat_visitor& v
-#endif
-		) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-#else
+footprint_macro::accept(cflat_visitor& v) const {
 	v.visit(*this);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.2.88.5 2010/02/05 06:13:24 fang Exp $
+	$Id: footprint.tcc,v 1.2.88.6 2010/02/12 18:20:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -42,16 +42,18 @@ footprint_base<Tag>::~footprint_base() { }
 	that represents the type information.  
 	\param Tag is the meta-type tag.
 	\param gi is the global index being referenced.  0-based.
+	\param is_top is true if is top-level, should be compile-time param.
 	Implementation follows footprint::dump_canonical_name().
  */
 template <class Tag>
 const state_instance<Tag>&
-footprint::get_instance(const size_t gi) const {
+footprint::get_instance(const size_t gi, const bool is_top) const {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 //	STACKTRACE_VERBOSE;
 	const pool_type& p(get_instance_pool<Tag>());
-	const size_t ports = p.port_entries();
-	const size_t local = p.local_private_entries();	// skip ports
+	const size_t ports = is_top ? 0 : p.port_entries();
+	const size_t local = is_top ? p.local_entries()
+		: p.local_private_entries();	// skip ports
 	if (gi < local) {
 		return p[gi +ports];
 	} else {
@@ -73,21 +75,25 @@ footprint::get_instance(const size_t gi) const {
 /**
 	\param Tag is the meta-type tag.
 	\param gi is the global index being referenced.  0-based.
+	\param is_top is true if is top-level, should be compile-time param.
  */
 template <class Tag>
 ostream&
-footprint::dump_canonical_name(ostream& o, const size_t gi) const {
+footprint::dump_canonical_name(ostream& o, const size_t gi, 
+		const bool is_top) const {
 //	STACKTRACE_VERBOSE;
 #if 0 && ENABLE_STACKTRACE
 	dump_type(o << "type:") << endl;
 #endif
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	const pool_type& p(get_instance_pool<Tag>());
-	const size_t ports = p.port_entries();
-	const size_t local = p.local_private_entries();	// skip ports
+	const size_t ports = is_top ? 0 : p.port_entries();
+	const size_t local = is_top ? p.local_entries()
+		: p.local_private_entries();	// skip ports
 //	STACKTRACE_INDENT_PRINT("<gi=" << gi << '/' << local << '>' << endl);
 	if (gi < local) {
 		// enumeration skips over ports
+		// TODO: what if top-level has ports!?!?
 		p[gi +ports].get_back_ref()->dump_hierarchical_name(o, 
 			dump_flags::no_definition_owner);
 	} else {
@@ -108,7 +114,7 @@ footprint::dump_canonical_name(ostream& o, const size_t gi) const {
 			dump_flags::no_definition_owner) << '.';
 		// TODO: pass in dump_flags to honor hierarchical separator
 		// e.second is the offset to subtract
-		sp._frame._footprint->dump_canonical_name<Tag>(o, si -e.second);
+		sp._frame._footprint->dump_canonical_name<Tag>(o, si -e.second, false);
 	}
 	return o;
 }

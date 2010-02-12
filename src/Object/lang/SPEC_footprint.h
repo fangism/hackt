@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.h"
-	$Id: SPEC_footprint.h,v 1.3.140.1 2010/02/10 06:43:06 fang Exp $
+	$Id: SPEC_footprint.h,v 1.3.140.2 2010/02/12 18:20:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FOOTPRINT_H__
@@ -9,7 +9,7 @@
 #include "Object/lang/directive_base.h"
 #include "Object/lang/SPEC_fwd.h"
 #include "Object/devel_switches.h"
-// #include "Object/lang/cflat_visitee.h"
+#include "Object/lang/cflat_visitee.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
 
@@ -20,11 +20,7 @@ class footprint;
 struct global_entry_context;
 #endif
 namespace SPEC {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-typedef	global_entry_context		spec_visitor;
-#else
 typedef	PRS::cflat_visitor		spec_visitor;
-#endif
 
 //=============================================================================
 /**
@@ -32,9 +28,7 @@ typedef	PRS::cflat_visitor		spec_visitor;
 	Modeled after PRS::footprint_macro.
  */
 class footprint_directive : 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		public PRS::cflat_visitee, 
-#endif
 		public directive_base {
 public:
 	footprint_directive() : directive_base() { }
@@ -58,9 +52,7 @@ typedef	std::vector<footprint_directive>	footprint_base_type;
 	whose references are resolved.  
  */
 class footprint : private footprint_base_type
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		, public PRS::cflat_visitee
-#endif
 		{
 public:
 	footprint();

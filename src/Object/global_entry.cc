@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.11 2010/02/10 06:42:58 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.12 2010/02/12 18:20:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -72,6 +72,27 @@ footprint_frame_map<Tag>::footprint_frame_map(const this_type& l,
 /**
 	Takes parent context and transforms ports to create a local map.
 	\param f is the local footprint, from which this is sized/constructed.
+	\param offset is the global ID offset for local instances.  
+		Can this be assumed to be 0?
+ */
+template <class Tag>
+void
+footprint_frame_map<Tag>::__construct_top_global_context(
+		const footprint& topf, 
+		const global_offset_base<Tag>& o) {
+	id_map.resize(topf.template get_instance_pool<Tag>().local_entries());
+	const size_t s = id_map.size();	// number of ports passed in
+	size_t i = 0;
+	// map local entries, including public ports
+	for ( ; i<s; ++i) {
+		id_map[i] = i +o.offset +1;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Takes parent context and transforms ports to create a local map.
+	\param f is the local footprint, from which this is sized/constructed.
 	\param context consists of global IDs, passed in through ports.  
 	\param offset is the global ID offset for local instances.  
  */
@@ -89,9 +110,11 @@ footprint_frame_map<Tag>::__construct_global_context(
 		id_map[i] = context[i];
 	}
 	// map local IDs for the remainder
-	INVARIANT(o.offset >= s);
+//	INVARIANT(o.offset >= s);
 	const size_t delta = o.offset -s +1;	// needs to be 1-indexed
 	for ( ; i<id_map.size(); ++i) {
+		const size_t j = i+delta;
+		INVARIANT(j);
 		id_map[i] = i +delta;
 	}
 }
@@ -523,6 +546,28 @@ footprint_frame::init_top_level(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
+	Construct a local context for the top-level.
+	\param f is the local footprint whose local pool sizes should
+		be used to populate this footprint_frame.
+	\param g the global offsets, used to compute local instance IDs
+		that do not map to the ports.  
+ */
+void
+footprint_frame::construct_top_global_context(const footprint& f, 
+		const global_offset& g) {
+	_footprint = &f;
+	footprint_frame_map<process_tag>::__construct_top_global_context(f, g);
+	footprint_frame_map<channel_tag>::__construct_top_global_context(f, g);
+#if ENABLE_DATASTRUCTS
+	footprint_frame_map<datastruct_tag>::__construct_top_global_context(f, g);
+#endif
+	footprint_frame_map<enum_tag>::__construct_top_global_context(f, g);
+	footprint_frame_map<int_tag>::__construct_top_global_context(f, g);
+	footprint_frame_map<bool_tag>::__construct_top_global_context(f, g);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Construct a local context from a port context.
 	\param f is the local footprint whose local pool sizes should
 		be used to populate this footprint_frame.
@@ -750,6 +795,18 @@ global_offset_base<Tag>::global_offset_base(const this_type& g,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Initialized by adding the number of local-private+public instances
+	of the pool.
+ */
+template <class Tag>
+global_offset_base<Tag>::global_offset_base(const this_type& g, 
+		const footprint& f, const add_all_local_tag) :
+		offset(g.offset
+			+f.template get_instance_pool<Tag>()
+				.local_entries()) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Initialized by adding the number of private (local +mapped) 
 	instances of the pool.
  */
@@ -774,6 +831,19 @@ global_offset_base<Tag>::operator += (const pool_type& p) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_offset::global_offset(const global_offset& g, const footprint& f, 
 		const add_local_private_tag t) :
+		global_offset_base<process_tag>(g, f, t), 
+		global_offset_base<channel_tag>(g, f, t), 
+#if ENABLE_DATASTRUCTS
+		global_offset_base<datastruct_tag>(g, f, t), 
+#endif
+		global_offset_base<enum_tag>(g, f, t), 
+		global_offset_base<int_tag>(g, f, t), 
+		global_offset_base<bool_tag>(g, f, t) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+global_offset::global_offset(const global_offset& g, const footprint& f, 
+		const add_all_local_tag t) :
 		global_offset_base<process_tag>(g, f, t), 
 		global_offset_base<channel_tag>(g, f, t), 
 #if ENABLE_DATASTRUCTS

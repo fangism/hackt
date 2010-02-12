@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.12.20.3 2010/02/10 06:43:08 fang Exp $
+	$Id: cflat_visitor.cc,v 1.12.20.4 2010/02/12 18:20:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -21,8 +21,6 @@
 #include "util/compose.h"
 #include "util/stacktrace.h"
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-// TEMPORARY
 namespace HAC {
 namespace entity {
 namespace PRS {
@@ -34,6 +32,7 @@ using std::for_each;
 //=============================================================================
 // struct cflat_visitor class definition
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 cflat_visitor::expr_pool_setter::expr_pool_setter(
 		cflat_visitor& _cfv, const PRS_footprint_expr_pool_type& _p) :
 		cfv(_cfv) {
@@ -58,8 +57,10 @@ cflat_visitor::expr_pool_setter::expr_pool_setter(
 cflat_visitor::expr_pool_setter::~expr_pool_setter() {
 	cfv.expr_pool = NULL;
 }
+#endif
 
 //=============================================================================
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class Tag>
 void
 cflat_visitor::__default_visit(const GLOBAL_ENTRY<Tag>& e) {
@@ -105,6 +106,7 @@ cflat_visitor::visit(const GLOBAL_ENTRY<process_tag>& e) {
 		sfp(f->get_spec_footprint());
 	sfp.accept(v);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -140,7 +142,9 @@ cflat_visitor::visit(const state_manager& sm) {
 void
 cflat_visitor::visit(const footprint& f) {
 	STACKTRACE_VERBOSE;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const expr_pool_setter temp(*this, f);	// will expire end of scope
+#endif
 	for_each(f.rule_pool.begin(), f.rule_pool.end(), visitor_ref(*this));
 	for_each(f.macro_pool.begin(), f.macro_pool.end(), visitor_ref(*this));
 #if 0
@@ -164,5 +168,4 @@ cflat_visitor::visit(const SPEC::footprint& f) {
 }	// end namespace PRS
 }	// end namespace entity
 }	// end namespace HAC
-#endif
 
