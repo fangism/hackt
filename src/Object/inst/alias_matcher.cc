@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.5.76.1 2010/01/12 02:48:47 fang Exp $
+	$Id: alias_matcher.cc,v 1.5.76.2 2010/02/20 04:38:41 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
@@ -29,6 +29,8 @@
 #include "util/type_traits.h"
 #include "util/attributes.h"
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 namespace HAC {
 namespace entity {
 using std::ostringstream;
@@ -238,4 +240,5 @@ template struct alias_matcher<process_tag>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+#endif
 

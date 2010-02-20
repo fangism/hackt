@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.24.2.6 2010/02/12 18:20:36 fang Exp $
+	$Id: cflat_printer.cc,v 1.24.2.7 2010/02/20 04:38:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -63,6 +63,7 @@ cflat_prs_printer::visit(const entity::footprint& f) {
 	f.get_spec_footprint().accept(*this);
 	// f.get_chp_footprint().accept(*this);
 	parent_type::visit(f);	// visit_recursive
+	visit_local<bool_tag>(f, at_top());	// for bool attributes
 }
 #endif
 
@@ -183,10 +184,20 @@ cflat_prs_printer::print_node_name(ostream& o,
 	\param ni the global node ID.  
  */
 void
+cflat_prs_printer::__dump_resolved_canonical_literal(ostream& o, 
+		const size_t ni) const {
+	if (cfopts.enquote_names) { o << '\"'; }
+	parent_type::__dump_resolved_canonical_literal(o, ni);
+	if (cfopts.enquote_names) { o << '\"'; }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default, use the member output stream.
+ */
+void
 cflat_prs_printer::__dump_resolved_canonical_literal(const size_t ni) const {
-	if (cfopts.enquote_names) { os << '\"'; }
-	parent_type::__dump_resolved_canonical_literal(os, ni);
-	if (cfopts.enquote_names) { os << '\"'; }
+	return __dump_resolved_canonical_literal(os, ni);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -196,8 +207,16 @@ cflat_prs_printer::__dump_resolved_canonical_literal(const size_t ni) const {
 		into the globally allocated id.  
  */
 void
+cflat_prs_printer::__dump_canonical_literal(ostream& o, 
+		const size_t lni) const {
+	__dump_resolved_canonical_literal(o, 
+		parent_type::__lookup_global_bool_id(lni));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 cflat_prs_printer::__dump_canonical_literal(const size_t lni) const {
-	__dump_resolved_canonical_literal(
+	__dump_resolved_canonical_literal(os, 
 		parent_type::__lookup_global_bool_id(lni));
 }
 
@@ -487,8 +506,7 @@ if (cfopts.node_attributes) {
 if (a.has_nondefault_attributes()) {
 	std::ostringstream oss;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	__dump_canonical_literal(i.get_back_ref()->instance_index);
-	// print_node_name(oss, i.get_back_ref()->instance_index);
+	__dump_canonical_literal(oss, i.get_back_ref()->instance_index);
 #else
 	print_node_name(oss, b);	// auto-quote
 #endif

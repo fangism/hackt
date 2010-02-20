@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.h"
-	$Id: alias_matcher.h,v 1.3.16.1 2010/01/12 02:48:47 fang Exp $
+	$Id: alias_matcher.h,v 1.3.16.2 2010/02/20 04:38:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_MATCHER_H__
@@ -27,19 +27,24 @@ struct alias_matcher_base : public alias_visitor, public cflat_args_base {
 
 protected:
 	alias_matcher_base(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint_frame& _fpf, 
+		const global_offset& g, 
+#else
 		const state_manager& _sm, 
-#endif
 		const footprint& _f, 
 		const footprint_frame* const _fpf, 
+#endif
 		util::string_list& _al, 
 		const size_t _i, 
 		const string& _p = string()) : alias_visitor(), 
 		cflat_args_base(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			_sm, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			_fpf, g
+#else
+			_sm, _f, _fpf
 #endif
-			_f, _fpf), aliases(_al), 
+			), aliases(_al), 
 		index(_i), prefix(_p) {
 	}
 
@@ -49,6 +54,10 @@ public:
 	typedef	util::member_saver<alias_matcher_base, string, 
 			&alias_matcher_base::prefix>
 						save_prefix;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	using alias_visitor::visit;
+	using cflat_args_base::visit;
+#endif
 
 };	// end struct alias_matcher_base
 
@@ -61,19 +70,24 @@ template <class Tag>
 struct alias_matcher : public alias_matcher_base {
 
 	alias_matcher(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint_frame& _fpf, 
+		const global_offset& g, 
+#else
 		const state_manager& _sm,
-#endif
 		const footprint& _f, 
 		const footprint_frame* const _fpf, 
+#endif
 		util::string_list& _al, 
 		const size_t _i, 
 		const string& _p = string()) :
 		alias_matcher_base(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			_sm,
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			_fpf, g, 
+#else
+			_sm, _f, _fpf, 
 #endif
-			_f, _fpf, _al, _i, _p) {
+			_al, _i, _p) {
 	}
 
 	// default dtor
@@ -90,6 +104,10 @@ private:
 	// non-copyable
 	explicit
 	alias_matcher(const alias_matcher&);
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	using alias_matcher::visit;
+#endif
 
 };	// end class alias_matcher
 

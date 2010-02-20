@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.16 2009/10/02 01:57:48 fang Exp $
+#	$Id: Make.test-cflat,v 1.16.2.1 2010/02/20 04:38:49 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -134,7 +134,7 @@ endif
 
 .expect-prs.prsdiff:
 	@out=`$(ECHO) $@ | $(SED) 's/\.prsdiff$$/.prs/g'` ; \
-	$(RM) $@ ; \
+	$(RM) $@ $@-sort ; \
 	if test -f "$$out" ; then \
 	  $(ECHO_CFLATPRS_DIFF_COMMAND) ; \
 	  $(CFLATPRS_DIFF_COMMAND) > $@ ; \

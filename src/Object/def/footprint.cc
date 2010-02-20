@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.16 2010/02/12 18:20:29 fang Exp $
+	$Id: footprint.cc,v 1.46.2.17 2010/02/20 04:38:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1642,20 +1642,27 @@ footprint::cflat_aliases(ostream& o,
 #endif
 		const cflat_options& cf) const {
 	STACKTRACE_VERBOSE;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-	// iterate of all indices encompassed by this footprint
-	// including ports, local, and private sub-processes
-#else
 	wire_alias_set wires;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const size_t s = get_instance_pool<bool_tag>().total_entries() +1;
+#else
 	const global_entry_pool<bool_tag>& gbp(sm.get_pool<bool_tag>());
 	const size_t s = gbp.size();
+#endif
 	if (cf.wire_mode && !cf.check_prs) {
 		// reserve alias slots for all uniquely allocated bools
 		wires.resize(s);
+		// WARNING: could be HUGE
 	}
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint_frame ff(*this);
+	global_offset g;
+	alias_printer v(o, ff, g, cf, wires, string());
+	accept(AS_A(global_entry_context&, v));
+#else
 	alias_printer v(o, sm, *this, NULL, cf, wires, string());
 	accept(v);
+#endif
 	if (cf.wire_mode && cf.connect_style && !cf.check_prs) {
 		// style need not be CONNECT_STYLE_WIRE, just not NONE
 		// aliases were suppressed while accumulating
@@ -1664,23 +1671,62 @@ footprint::cflat_aliases(ostream& o,
 		for ( ; j<s; j++) {
 		const alias_string_cache& ac(wires[j]);
 		if (!ac.strings.empty()) {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			const global_entry<bool_tag>& b(gbp[j]);
+#endif
 			o << "wire (";
 			// NOTE: thus far, wire-style names are never quoted
 			// currently, this does not respect cf.enquote_names.
 			ostream_iterator<alias_string_cache::value_type>
 				osi(o, ",");
 			copy(ac.strings.begin(), ac.strings.end(), osi);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			dump_canonical_name<bool_tag>(o, j-1) << ");" << endl;
+#else
 			b.dump_canonical_name(o, *this, sm) << ");" << endl;
+#endif
 		}
 		// else is loner, has no aliases
 		}
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	\param i 1-based local process index.
+ */
+template <class Tag>
+void
+footprint::__set_global_offset_by_process(global_offset& g,
+		const size_t i) const {
+	g.global_offset_base<Tag>::offset =
+		get_instance_pool<Tag>().locate_cumulative_entry(i).second;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Construct relative offset.
+	\param i is 1-based index into local process pool.
+ */
+void
+footprint::set_global_offset_by_process(global_offset& g,
+		const size_t i) const {
+	STACKTRACE_VERBOSE;
+	const state_instance<process_tag>::pool_type&
+		p(get_instance_pool<process_tag>());
+	INVARIANT(i <= p.local_entries());
+	__set_global_offset_by_process<process_tag>(g, i);
+	__set_global_offset_by_process<channel_tag>(g, i);
+#if ENABLE_DATASTRUCTS
+	__set_global_offset_by_process<datastruct_tag>(g, i);
+#endif
+	__set_global_offset_by_process<enum_tag>(g, i);
+	__set_global_offset_by_process<int_tag>(g, i);
+	__set_global_offset_by_process<bool_tag>(g, i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	In order of global ID, print global frame information about
 	every instance in the hierarchy, using computed offsets
@@ -1705,7 +1751,7 @@ if (_pool.total_entries()) {
 	global_offset g;	// 0s
 	// TODO: why not just have global_offset initialize to 1s for 1-based?
 	// instead of adding 1 everywhere else?
-	global_allocation_dumper<Tag> d(o, *this, ff, g);
+	global_allocation_dumper<Tag> d(o, ff, g);
 	this->accept(d);
 }
 	return o;

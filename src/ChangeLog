@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-02-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-19:
+	  Worked on alias_printer for alias-pass for hflat, but encountered
+		difficulty with handling of process-ports.  
+		Considered both alias-based traversal and unique-instance
+		based traversals, each with own merits.
+		Regression tests not updated, b/c process-ports missing.
+
+
 2010-02-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-18:

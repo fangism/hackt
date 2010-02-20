@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.6.46.5 2010/02/12 18:20:28 fang Exp $
+	$Id: global_entry_context.h,v 1.6.46.6 2010/02/20 04:38:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -106,6 +106,9 @@ public:
 	get_state_manager(void) const { return sm; }
 #endif
 
+	const footprint&
+	get_top_footprint(void) const { return *topfp; }
+
 	const footprint*
 	get_top_footprint_ptr(void) const { return topfp; }
 
@@ -118,7 +121,11 @@ public:
  */
 class global_entry_context : public global_entry_context_base {
 	typedef	global_entry_context		this_type;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+public:
+#else
 protected:
+#endif
 	/**
 		Local footprint frame.  
 		Use fpf->_footprint for local-to-global index translation.  
@@ -130,6 +137,7 @@ protected:
 		local instances.
 	 */
 	const global_offset*			parent_offset;
+protected:
 	/**
 		This is incremented with each local process iterated.
 		Should be set by visit_local for traversals that need it.
@@ -175,32 +183,24 @@ public:
 		{ }
 #endif
 
-	global_entry_context(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager& s,
-#endif
-		const footprint& _fp, 
-		const footprint_frame& ff
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, const global_offset& g
+	global_entry_context(const footprint_frame&, const global_offset&);
+#else
+	global_entry_context(const state_manager& s, const footprint& _fp) : 
+		global_entry_context_base(s, _fp), fpf(&ff) { }
 #endif
-		) : 
-		global_entry_context_base(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			s,
-#endif
-			_fp), fpf(&ff)
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			, parent_offset(&g), g_offset(NULL)
-#endif
-			{ }
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	~global_entry_context();
 
 	template <class Tag>
 	void
-	visit_local(const footprint&);
+	visit_local(const footprint&, const bool);
+
+#if 0
+	void
+	visit_aliases(const footprint&);
+#endif
 
 	void
 	visit_recursive(const footprint&);
@@ -287,22 +287,22 @@ public:
 	global_entry_dumper(ostream& _o,
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_manager& _sm, 
-#endif
 		const footprint& _fp
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, const footprint_frame& ff
-		, const global_offset& g
+#else
+		const footprint_frame& ff,
+		const global_offset& g
 #endif
 		) :
 		parent_type(
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			_fp, ff, g
+			ff, g
 #else
 			_sm, _fp
 #endif
 			), os(_o)
-			// , index(0)
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, index(0)
+#else
 			, pid(0)
 #endif
  { }
@@ -335,9 +335,9 @@ protected:
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class Tag>
 struct global_allocation_dumper : public global_entry_dumper {
-	global_allocation_dumper(ostream& o, const footprint& f, 
+	global_allocation_dumper(ostream& o,
 		const footprint_frame& ff, global_offset& g) :
-		global_entry_dumper(o, f, ff, g) { }
+		global_entry_dumper(o, ff, g) { }
 
 	void
 	visit(const footprint&);

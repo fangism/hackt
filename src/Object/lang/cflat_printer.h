@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.14.2.5 2010/02/12 18:20:36 fang Exp $
+	$Id: cflat_printer.h,v 1.14.2.6 2010/02/20 04:38:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -58,13 +58,12 @@ protected:
 public:
 	cflat_prs_printer(
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			const entity::footprint& top,
 			const footprint_frame& ff, 
 			const global_offset& g,
 #endif
 			ostream& _os, const cflat_options& _cfo) :
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			cflat_context_visitor(top, ff, g), 
+			cflat_context_visitor(ff, g), 
 #else
 			cflat_context_visitor(), 
 #endif
@@ -81,6 +80,12 @@ public:
 
 	void
 	__dump_resolved_canonical_literal(const size_t) const;
+
+	void
+	__dump_canonical_literal(ostream&, const size_t) const;
+
+	void
+	__dump_resolved_canonical_literal(ostream&, const size_t) const;
 
 	void
 	__dump_canonical_literal_group(const directive_node_group_type&) const;

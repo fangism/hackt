@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.5.88.4 2010/02/12 18:20:33 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.5.88.5 2010/02/20 04:38:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -77,11 +77,7 @@ using PRS::cflat_visitor;
 
 void
 footprint_directive::accept(spec_visitor& v) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-#else
 	v.visit(*this);
-#endif
 }
 
 //=============================================================================

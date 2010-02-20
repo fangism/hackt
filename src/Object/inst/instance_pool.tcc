@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.13.88.7 2010/02/04 04:32:28 fang Exp $
+	$Id: instance_pool.tcc,v 1.13.88.8 2010/02/20 04:38:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -141,7 +141,6 @@ instance_pool<T>::locate_cumulative_entry(const size_t pi) const {
 			private_entry_map.end(), 
 			pi, &pid_less));
 	INVARIANT(f != private_entry_map.end());
-//	--f;
 	return *f;
 }
 #endif

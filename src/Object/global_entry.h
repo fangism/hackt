@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.12 2010/02/12 18:20:27 fang Exp $
+	$Id: global_entry.h,v 1.18.20.13 2010/02/20 04:38:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -215,14 +215,25 @@ struct footprint_frame :
 	dump_frame(ostream&) const;
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+private:
 	template <class Tag>
 	ostream&
 	__dump_extended_frame(ostream&, const global_offset&, 
 		const global_offset&, const global_offset&) const;
 
+public:
 	ostream&
 	dump_extended_frame(ostream&, const global_offset&, 
 		const global_offset&, const global_offset&) const;
+
+private:
+	template <class Tag>
+	void
+	__extend_frame(const global_offset&, const global_offset&);
+
+public:
+	void
+	extend_frame(const global_offset&, const global_offset&);
 #endif
 
 	template <class Tag>
@@ -266,6 +277,10 @@ private:
 	dump_extended_id_map(const footprint_frame_map_type&,
 		const size_t, const size_t, const size_t, 
 		ostream&, const char* const);
+
+	static
+	void
+	extend_id_map(footprint_frame_map_type&, const size_t, const size_t);
 #endif
 
 	static
@@ -342,6 +357,9 @@ struct global_offset_base {
 	this_type&
 	operator += (const pool_type&);
 
+	this_type&
+	operator += (const this_type&);
+
 };	// end struct global_offset_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -369,6 +387,9 @@ struct global_offset :
 
 	global_offset&
 	operator += (const footprint&);
+
+	global_offset&
+	operator += (const global_offset&);
 
 };	// end struct global_offset
 

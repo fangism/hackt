@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.4 2010/02/12 18:20:27 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.5 2010/02/20 04:38:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -57,6 +57,14 @@ global_entry_context_base::module_setter::~module_setter() { }
 // class global_entry_context method definitions
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+global_entry_context::global_entry_context(const footprint_frame& ff, 
+		const global_offset& g) :
+		global_entry_context_base(*ff._footprint), 
+		fpf(&ff), parent_offset(&g) {
+	NEVER_NULL(topfp);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_entry_context::~global_entry_context() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -78,9 +86,18 @@ global_entry_context::at_top(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This visits only private-local instances, skipping the ports, 
+	*except* for the top-level footprint, which includes the ports.
+	The default top-level has no ports, but user-overridden top-types
+	will almost certainly have ports.  
+	\param include_ports usually equal to at_top(), which is when
+		one typically wants to traverse ports (for uniqueness).
+ */
 template <class Tag>
 void
-global_entry_context::visit_local(const footprint& f) {
+global_entry_context::visit_local(const footprint& f,
+		const bool include_ports) {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	f.dump_type(STACKTRACE_STREAM << "type: ") << endl;
@@ -92,6 +109,8 @@ global_entry_context::visit_local(const footprint& f) {
 	footprint_frame lff;
 	global_offset sgo(*parent_offset, f, add_local_private_tag());
 	NEVER_NULL(parent_offset);
+// this setup is done twice, also for visit_recursive
+// possible to re-factor and setup once?
 // something different for the top-level with ports...
 if (is_top) {
 	lff.construct_top_global_context(f, *parent_offset);
@@ -105,13 +124,25 @@ if (is_top) {
 	const footprint_frame_setter __ffs__(fpf, &lff);	// local actuals
 	const size_t l = _pool.local_entries();
 	// but for the top-level only, we want start with ports
-	size_t i = is_top ? 0 : _pool.port_entries();
+	size_t i = include_ports ? 0 : _pool.port_entries();
 	for ( ; i<l; ++i) {
 		// global and local index can be deduced
 		const state_instance<Tag>& inst(_pool[i]);
 		inst.accept(*this);
+		// visitor will increment g_offset
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Hierarchical alias traversal.
+ */
+void
+global_entry_context::visit_aliases(const footprint& f) {
+	f.accept(IS_A(alias_visitor&, *this));	// dynamic_cast
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // default visitors do nothing, override in subclasses
@@ -134,6 +165,7 @@ global_entry_context::visit(const state_instance<bool_tag>& p) { }
 /**
 	Recursively traverses processes, setting up footprint frame context 
 	at each level.
+	TODO: parameter for include_ports.
  */
 void
 global_entry_context::visit_recursive(const footprint& f) {
@@ -271,12 +303,15 @@ global_entry_dumper::__default_visit(const state_instance<Tag>& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: refactor the procedure to build the extended frame
+ */
 void
 global_entry_dumper::visit(const state_instance<process_tag>& inst) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(g_offset);
 	const global_offset& sgo(*g_offset);
-	const footprint_frame& spf = *inst.get_frame();
+	const footprint_frame& spf(*inst.get_frame());
 	const footprint& sfp(*spf._footprint);
 	const global_offset
 		b(sgo, sfp, add_local_private_tag()),
@@ -295,6 +330,10 @@ global_entry_dumper::visit(const state_instance<process_tag>& inst) {
 		os, inst._frame._footprint);
 #endif
 	const util::indent __tab__(os, "\t");
+	// this should be equivalent to footprint_frame::extend_frame
+#if 0
+	af.extend_frame(sgo, b);
+#endif
 	af.dump_extended_frame(os, sgo, b, c) << endl;
 	*g_offset = c;		// increment global offset with each process
 }
@@ -337,8 +376,9 @@ global_allocation_dumper<Tag>::visit(const footprint& f) {
 	STACKTRACE_VERBOSE;
 	const typename state_instance<Tag>::pool_type&
 		_pool(f.get_instance_pool<Tag>());
-if (_pool.total_private_entries() || (at_top() && _pool.port_entries())) {
-	visit_local<Tag>(f);
+	const bool is_top = at_top();
+if (_pool.total_private_entries() || (is_top && _pool.port_entries())) {
+	visit_local<Tag>(f, is_top);
 	global_entry_dumper::visit(f);
 } else {
 	++pid;		// still need to increment local pid counter

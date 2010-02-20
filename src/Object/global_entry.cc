@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.12 2010/02/12 18:20:27 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.13 2010/02/20 04:38:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -115,7 +115,7 @@ footprint_frame_map<Tag>::__construct_global_context(
 	for ( ; i<id_map.size(); ++i) {
 		const size_t j = i+delta;
 		INVARIANT(j);
-		id_map[i] = i +delta;
+		id_map[i] = j;
 	}
 }
 #endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -385,7 +385,7 @@ if (ms || ls || pm) {
 if (ls || pm) {
 	o << ';';
 	// reminder offset bounds given are 0-based, but we want reporting
-	// to be 1-based, so we add 1 to get tie global index.
+	// to be 1-based, so we add 1 to get the global index.
 	if (ls) {
 		o << li+1;
 		if (le > li+1)
@@ -395,6 +395,7 @@ if (ls || pm) {
 	}
 	// can (pm && !ls)?
 if (pm) {
+	// print mapped index range (contiguous)
 	o << " ";
 	if (pm) {
 		o << '{' << le+1;
@@ -408,6 +409,23 @@ if (pm) {
 }
 }
 	return o;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Extends the footprint frame with would-be local indices.
+	\param li lower bound of extended range, inclusive.
+	\param le upper bound of extended range, exclusive.
+ */
+void
+footprint_frame::extend_id_map(footprint_frame_map_type& m, 
+		const size_t li, const size_t le) {
+if (li != le) {
+	m.reserve(m.size() +le -li);
+	size_t j = li;
+	for ( ; j<le; ++j) {
+		m.push_back(j+1);	// 1-indexed
+	}
+}
 }
 #endif
 
@@ -492,6 +510,33 @@ footprint_frame::dump_extended_frame(ostream& o, const global_offset& a,
 	__dump_extended_frame<int_tag>(o, a, b, c);
 	__dump_extended_frame<bool_tag>(o, a, b, c);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+footprint_frame::__extend_frame(const global_offset& a, 
+		const global_offset& b) {
+	extend_id_map(footprint_frame_map<Tag>::id_map, 
+		a.global_offset_base<Tag>::offset, 
+		b.global_offset_base<Tag>::offset);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Extend frame with globally assigned indices into local slots.
+ */
+void
+footprint_frame::extend_frame(const global_offset& a, 
+		const global_offset& b) {
+	__extend_frame<process_tag>(a, b);
+	__extend_frame<channel_tag>(a, b);
+#if ENABLE_DATASTRUCTS
+	__extend_frame<datastruct_tag>(a, b);
+#endif
+	__extend_frame<enum_tag>(a, b);
+	__extend_frame<int_tag>(a, b);
+	__extend_frame<bool_tag>(a, b);
 }
 #endif
 
@@ -829,6 +874,14 @@ global_offset_base<Tag>::operator += (const pool_type& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+global_offset_base<Tag>&
+global_offset_base<Tag>::operator += (const this_type& p) {
+	offset += p.offset;
+	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_offset::global_offset(const global_offset& g, const footprint& f, 
 		const add_local_private_tag t) :
 		global_offset_base<process_tag>(g, f, t), 
@@ -881,6 +934,20 @@ global_offset::operator += (const footprint& f) {
 	global_offset_base<enum_tag>::operator += (f.get_instance_pool<enum_tag>());
 	global_offset_base<int_tag>::operator += (f.get_instance_pool<int_tag>());
 	global_offset_base<bool_tag>::operator += (f.get_instance_pool<bool_tag>());
+	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+global_offset&
+global_offset::operator += (const global_offset& g) {
+	global_offset_base<process_tag>::operator += (g);
+	global_offset_base<channel_tag>::operator += (g);
+#if ENABLE_DATASTRUCTS
+	global_offset_base<datastruct_tag>::operator += (g);
+#endif
+	global_offset_base<enum_tag>::operator += (g);
+	global_offset_base<int_tag>::operator += (g);
+	global_offset_base<bool_tag>::operator += (g);
 	return *this;
 }
 

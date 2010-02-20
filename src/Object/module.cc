@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.41.2.8 2010/02/12 18:20:28 fang Exp $
+ 	$Id: module.cc,v 1.41.2.9 2010/02/20 04:38:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -520,7 +520,7 @@ module::__cflat_rules(
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint_frame ff(_footprint);	// empty ports
 	global_offset g;	// 0s
-	PRS::cflat_prs_printer cfp(_footprint, ff, g, o, cf);
+	PRS::cflat_prs_printer cfp(ff, g, o, cf);
 #else
 	PRS::cflat_prs_printer cfp(o, cf);
 	const cflat_context::module_setter tmp(cfp, *this);
@@ -566,7 +566,6 @@ module::__cflat_aliases(
 #endif
 		{
 	STACKTRACE_VERBOSE;
-	// TODO: instance_visitor
 	if (cf.connect_style) {
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const footprint& _footprint(get_footprint());

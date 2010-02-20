@@ -1,7 +1,7 @@
 /**
 	"Object/common/cflat_args.h"
 	Common aggregate argument types for various cflat methods.  
-	$Id: cflat_args.h,v 1.7.124.1 2010/01/12 02:48:43 fang Exp $
+	$Id: cflat_args.h,v 1.7.124.2 2010/02/20 04:38:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_CFLAT_ARGS_H__
@@ -11,6 +11,9 @@
 #include <string>
 #include "util/member_saver.h"
 #include "Object/devel_switches.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_entry_context.h"
+#endif
 
 namespace HAC {
 class cflat_options;
@@ -25,6 +28,9 @@ class state_manager;
 struct wire_alias_set;	// defined in "Object/common/alias_string_cache.h"
 
 //=============================================================================
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+typedef	global_entry_context			cflat_args_base;
+#else
 /**
 	The base structure for traversals of the name object (alias)
 	hierarchy.  
@@ -68,6 +74,7 @@ public:
 					save_frame;
 
 };	// end struct cflat_args_base
+#endif
 
 //=============================================================================
 /**
@@ -92,19 +99,24 @@ struct cflat_aliases_arg_type : public cflat_args_base {
 	string				prefix;
 public:
 	cflat_aliases_arg_type(ostream& _o,
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			const footprint_frame& _fpf,
+			const global_offset& g,
+#else
 			const state_manager& _sm, 
-#endif
 			const footprint& _f, 
 			const footprint_frame* const _fpf, 
+#endif
 			const cflat_options& _cf,
 			wire_alias_set& _w,
 			const string& _p = string()) :
 			cflat_args_base(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				_sm,
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+				_fpf, g
+#else
+				_sm, _f, _fpf
 #endif
-				_f, _fpf), 
+				), 
 			o(_o),
 			cf(_cf),
 			wires(_w), 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.14 2010/02/12 18:20:30 fang Exp $
+	$Id: footprint.h,v 1.30.2.15 2010/02/20 04:38:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -469,6 +469,10 @@ public:
 	port_frame_size(void) const {
 		return port_aliases.port_frame_size<Tag>();
 	}
+
+	void
+	set_global_offset_by_process(global_offset&, const size_t) const;
+
 private:
 	good_bool
 	expand_unique_subinstances(void);
@@ -487,6 +491,11 @@ private:
 
 	void
 	__dummy_get_instance(void) const;
+
+	template <class Tag>
+	void
+	__set_global_offset_by_process(global_offset&, const size_t) const;
+
 public:
 #else
 	good_bool
@@ -522,12 +531,6 @@ public:
 	dump_allocation_map(ostream&) const;
 
 private:
-	template <class Tag>
-	ostream&
-	__dump_local_map_by_process(ostream&, 
-		const footprint&, const footprint_frame&, 
-		const size_t, const global_offset&) const;
-
 	template <class Tag>
 	ostream&
 	__dump_allocation_map(ostream&) const;
