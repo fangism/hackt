@@ -1,0 +1,12 @@
+// "fet-type-13.hac"
+// copy-modified from "fet-type-12.hac"
+// testing rule-attributes for setting Vt flavors
+// note: complement rule follows same per-literal vt
+
+bool x, y, z, w;
+
+prs {
+[hvt]	x & y<;svt>	=> z-
+	x<;lvt> | y	=> w-
+}
+

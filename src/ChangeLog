@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-02-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-67:
+	  Added hvt,lvt,svt rule attributes, so that vt applies to 
+		entire LHS of production rule unless overridden.
+	  Documented, new test cases added.
+	  hacknet: netlist_generator: use map of attribute functions
+	  TODO: attach proper attributes to internal node definitions, 
+		new test cases net/fet-type-{18..24} are temporarily 
+		disabled until this is implemented (post-scalability).
+
+
 2010-02-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-66:

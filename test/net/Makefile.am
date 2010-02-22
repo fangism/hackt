@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2010/01/22 02:01:57 fang Exp $
+#	$Id: Makefile.am,v 1.16 2010/02/22 07:34:17 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -56,7 +56,9 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	tsmc65 tsmc65-equiv \
 	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
-	fet-type-09 fet-type-10 fet-type-11 \
+	fet-type-09 fet-type-10 fet-type-11 fet-type-12 \
+	fet-type-13 fet-type-14 fet-type-15 fet-type-16 \
+	fet-type-17 \
 	parasitics-01 \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \
@@ -79,6 +81,10 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	rename-01 rename-02 rename-03 rename-04 rename-05 rename-06 \
 	rename-07 rename-08 rename-09 rename-10 rename-11 rename-12 \
 	reserved-01 reserved-02 reserved-03 reserved-04
+
+# TODO: after attaching proper attributes to internal node definitions
+#	fet-type-18 fet-type-19 fet-type-20
+#	fet-type-21 fet-type-22 fet-type-23 fet-type-24
 
 # TODO: fix expanded strings for rename-04,05
 

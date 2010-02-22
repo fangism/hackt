@@ -1,0 +1,11 @@
+// "fet-type-16.hac"
+// copy-modified from "fet-type-15.hac"
+// testing rule-attributes for setting Vt flavors, with precharge
+// note: complement rule follows same per-literal vt
+
+bool x, y, z, w;
+
+prs {
+[hvt]	x<;svt> &{+~x} y & z	#> w-
+}
+

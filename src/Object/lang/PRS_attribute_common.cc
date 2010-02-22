@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_common.cc"
-	$Id: PRS_attribute_common.cc,v 1.10 2009/05/28 15:25:53 fang Exp $
+	$Id: PRS_attribute_common.cc,v 1.11 2010/02/22 07:34:15 fang Exp $
  */
 
 #include <iostream>
@@ -37,6 +37,24 @@ AfterMin::__check_vals(const char* name, const values_type& v) {
 good_bool
 AfterMax::__check_vals(const char* name, const values_type& v) {
         return check_delay_value(name, v);
+}
+
+//=============================================================================
+good_bool
+HVT::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+SVT::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+LVT::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
 }
 
 //=============================================================================

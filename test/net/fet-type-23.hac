@@ -1,0 +1,13 @@
+// "fet-type-23.hac"
+// copy-modified from "fet-type-22.hac"
+// testing rule-attributes for setting Vt flavors, with internal node
+// note: complement rule follows same per-literal vt
+
+bool x, y, z, w, a, b;
+
+prs {
+	x				-> @_int-
+[hvt=1]	~@_int &{+~x} y & z		-> w-	// first use sets type of x<>
+	~@_int &{+~x<;hvt>} a		-> b-
+}
+

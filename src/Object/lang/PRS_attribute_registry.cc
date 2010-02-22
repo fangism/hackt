@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.19 2009/09/14 21:16:56 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.20 2010/02/22 07:34:16 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -138,6 +138,71 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 	o << "after_max ";
 	v.at(0).is_a<const pint_const>()->dump(o,
 		entity::expr_dump_context::default_value) << '\t';
+}
+}
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-vt.texi
+@defmac hvt
+@defmacx lvt
+@defmacx svt
+If @option{hvt} is set, then emit all devices with in this particular 
+rule with hvt (high voltage threshold), unless explicitly overridden
+in a node literal.
+If @option{lvt} is set, then emit all devices with in this particular 
+rule with hvt (high voltage threshold), unless overridden.
+@option{svt} restores back to standard Vt as the default.
+When no parameter value is given, implicit value is 1.
+When multiple settings are given, the last one should take precedence.  
+Default: svt
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(HVT, "hvt")
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(LVT, "lvt")
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(SVT, "svt")
+
+void
+HVT::main(visitor_type& p, const values_type& v) {
+if (p.cfopts.primary_tool == cflat_options::TOOL_LVS) {
+	pint_value_type b = 1;	// default true
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		ostream& o(p.os);
+		o << "hvt\t";
+	}
+}
+}
+void
+LVT::main(visitor_type& p, const values_type& v) {
+if (p.cfopts.primary_tool == cflat_options::TOOL_LVS) {
+	pint_value_type b = 1;	// default true
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		ostream& o(p.os);
+		o << "lvt\t";
+	}
+}
+}
+void
+SVT::main(visitor_type& p, const values_type& v) {
+if (p.cfopts.primary_tool == cflat_options::TOOL_LVS) {
+	pint_value_type b = 1;	// default true
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		ostream& o(p.os);
+		o << "svt\t";
+	}
 }
 }
 

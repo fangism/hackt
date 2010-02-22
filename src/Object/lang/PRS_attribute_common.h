@@ -2,7 +2,7 @@
 	\file "Object/lang/PRS_attribute_common.h"
 	Contains base classes for all tool-independent implementations
 	of PRS rule attribute classes.  
-	$Id: PRS_attribute_common.h,v 1.12 2009/09/14 21:16:56 fang Exp $
+	$Id: PRS_attribute_common.h,v 1.13 2010/02/22 07:34:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_RULE_ATTRIBUTE_COMMON_H__
@@ -60,6 +60,15 @@ DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(Weak)
 		and also silence instability diagnostics on the rule.
  */
 DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(Unstab)
+
+//-----------------------------------------------------------------------------
+/**
+	Transistor type attributes.  (for netlist generation)
+	For convenience, rather than specifying per-literal.
+ */
+DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(HVT)
+DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(SVT)	// default, anyway
+DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(LVT)
 
 //-----------------------------------------------------------------------------
 // inherited attributes from ACT toolchain

@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.14 2010/01/22 02:01:55 fang Exp $
+	$Id: netlist_generator.cc,v 1.15 2010/02/22 07:34:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -434,6 +434,120 @@ netlist_generator::visit_macro(const MP& mpool, const index_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// PRS rule attribute action map
+typedef	entity::PRS::footprint_rule		PRS_rule;
+typedef	PRS_rule::attributes_list_type::value_type	rule_attribute;
+typedef	rule_attribute::values_ptr_type		attr_values_ptr_type;
+typedef	rule_attribute::values_type		attr_values_type;
+typedef	void rule_attribute_fun(netlist_generator&, const attr_values_ptr_type&);
+typedef	rule_attribute_fun*	rule_attribute_fun_ptr;
+typedef	map<string, rule_attribute_fun_ptr>	rule_attribute_map_type;
+
+// initializable
+static
+rule_attribute_map_type		__rule_attribute_map;
+
+// non-modifiable
+static
+const rule_attribute_map_type&	rule_attribute_map(__rule_attribute_map);
+
+struct netlist_generator::rule_attribute_functions {
+static
+void
+__attr_iskeeper(netlist_generator& g, const attr_values_ptr_type& v) {
+	pint_value_type b = 1;
+	if (v && v->size()) {
+		const pint_const&
+			pi(*(*v)[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		g.fet_attr |= transistor::IS_STANDARD_KEEPER;
+	}
+}
+
+static
+void
+__attr_isckeeper(netlist_generator& g, const attr_values_ptr_type& v) {
+	pint_value_type b = 1;
+	if (v && v->size()) {
+		const pint_const&
+			pi(*(*v)[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		g.fet_attr |= transistor::IS_COMB_FEEDBACK;
+	}
+}
+
+static
+void
+__attr_hvt(netlist_generator& g, const attr_values_ptr_type& v) {
+	pint_value_type b = 1;
+	if (v && v->size()) {
+		const pint_const&
+			pi(*(*v)[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		g.fet_attr |= transistor::IS_HIGH_VT;
+		g.fet_attr &= ~transistor::IS_LOW_VT;
+	} else {
+		g.fet_attr &= ~transistor::IS_HIGH_VT;
+	}
+}
+
+static
+void
+__attr_lvt(netlist_generator& g, const attr_values_ptr_type& v) {
+	pint_value_type b = 1;
+	if (v && v->size()) {
+		const pint_const&
+			pi(*(*v)[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		g.fet_attr |= transistor::IS_LOW_VT;
+		g.fet_attr &= ~transistor::IS_HIGH_VT;
+	} else {
+		g.fet_attr &= ~transistor::IS_LOW_VT;
+	}
+}
+
+static
+void
+__attr_svt(netlist_generator& g, const attr_values_ptr_type& v) {
+	pint_value_type b = 1;
+	if (v && v->size()) {
+		const pint_const&
+			pi(*(*v)[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		// clear low/high-Vt flags
+		g.fet_attr &= ~(transistor::IS_HIGH_VT | transistor::IS_LOW_VT);
+	}
+}
+
+static
+int
+init_rule_attribute_map(void) {
+	__rule_attribute_map["iskeeper"] = &__attr_iskeeper;
+	__rule_attribute_map["isckeeper"] = &__attr_isckeeper;
+	__rule_attribute_map["hvt"] = &__attr_hvt;
+	__rule_attribute_map["svt"] = &__attr_svt;
+	__rule_attribute_map["lvt"] = &__attr_lvt;
+	return 0;
+}
+
+static const int __init__;
+};	// end struct rule_attribute_functions
+
+// initialize global function map
+const int netlist_generator::rule_attribute_functions::__init__ =
+	netlist_generator::rule_attribute_functions::init_rule_attribute_map();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Construct subgraph from LHS expression, and connect final
 	output(s) to output node.
@@ -459,29 +573,10 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 	rule::attributes_list_type::const_iterator
 		i(rats.begin()), e(rats.end());
 for ( ; i!=e; ++i) {
-	// TODO: write a proper rule attribute map implementation
-	const bool k = i->key == "iskeeper";
-	const bool ck = i->key == "isckeeper";
-	if (k) {
-		pint_value_type b = 1;
-		if (i->values && i->values->size()) {
-			const pint_const&
-				pi(*(*i->values)[0].is_a<const pint_const>());
-			b = pi.static_constant_value();
-		}
-		if (b) {
-			fet_attr |= transistor::IS_STANDARD_KEEPER;
-		}
-	} else if (ck) {
-		pint_value_type b = 1;
-		if (i->values && i->values->size()) {
-			const pint_const&
-				pi(*(*i->values)[0].is_a<const pint_const>());
-			b = pi.static_constant_value();
-		}
-		if (b) {
-			fet_attr |= transistor::IS_COMB_FEEDBACK;
-		}
+	rule_attribute_map_type::const_iterator
+		f(rule_attribute_map.find(i->key));
+	if (f != rule_attribute_map.end()) {
+		(*f->second)(*this, i->values);
 	}
 	// ignore unknown attributes silently
 }
@@ -489,7 +584,6 @@ for ( ; i!=e; ++i) {
 	const bool is_keeper = fet_attr & transistor::IS_STANDARD_KEEPER;
 	set_current_width(opt.get_default_width(r.dir, is_keeper));
 	set_current_length(opt.get_default_length(r.dir, is_keeper));
-	// TODO: honor prs supply override directives
 try {
 	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
 	ep[r.expr_index].accept(*this);

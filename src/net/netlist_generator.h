@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.6 2010/01/22 02:01:55 fang Exp $
+	$Id: netlist_generator.h,v 1.7 2010/02/22 07:34:16 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -45,6 +45,8 @@ class netlist_generator : public cflat_context_visitor {
 	typedef	std::map<const footprint*, netlist>
 					netlist_map_type;
 	typedef	entity::PRS::footprint	prs_footprint;
+private:
+	struct rule_attribute_functions;
 private:
 	ostream& 			os;
 	const netlist_options&		opt;

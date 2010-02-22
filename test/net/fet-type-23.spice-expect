@@ -1,0 +1,7 @@
+M@_int:dn:0 !GND x @_int !GND nch_hvt W=5u L=2u
+Mw:dn:0:pchg !Vdd x @_int !Vdd pch_hvt W=5u L=2u
+Mw:dn:1 @_int y #0 !GND nch_hvt W=5u L=2u
+Mw:dn:2 #0 z w !GND nch_hvt W=5u L=2u
+Mb:dn:0:pchg !Vdd x @_int !Vdd pch_hvt W=5u L=2u
+Mb:dn:1 @_int a b !GND nch W=5u L=2u
+

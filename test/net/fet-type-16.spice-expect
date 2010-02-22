@@ -1,0 +1,8 @@
+Mw:dn:0 !GND x #0 !GND nch W=5u L=2u
+Mw:dn:1:pchg !Vdd x #0 !Vdd pch_hvt W=5u L=2u
+Mw:dn:2 #0 y #1 !GND nch_hvt W=5u L=2u
+Mw:dn:3 #1 z w !GND nch_hvt W=5u L=2u
+Mw:up:0 !Vdd x #2 !Vdd pch W=5u L=2u
+Mw:up:1 #2 y #3 !Vdd pch_hvt W=5u L=2u
+Mw:up:2 #3 z w !Vdd pch_hvt W=5u L=2u
+
