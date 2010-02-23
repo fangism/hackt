@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.8.24.2 2010/02/20 04:38:43 fang Exp $
+	$Id: alias_printer.cc,v 1.8.24.3 2010/02/23 00:44:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -52,7 +52,6 @@ cflat_print_alias(ostream&, const string&, const string&,
 		const cflat_options&);
 
 //=============================================================================
-#if TRAVERSE_BY_ALIAS
 /**
 	Defined by specialization only.  
 	\param HasSubstructure whether or not the meta-class type
@@ -140,24 +139,6 @@ struct alias_printer_recursion_policy<true> {
 	sub.accept(c);
 #endif
 if (is_private) {
-#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
-	footprint_frame lff;	// lff(f);
-//	global_offset sgo(*parent_offset, f, add_local_private_tag());
-if (c.at_top()) {
-	lff.construct_top_global_context(f, *c.parent_offset);
-//	sgo = global_offset(*parent_offset, f, add_all_local_tag());
-} else {
-	lff.construct_global_context(f, *c.fpf, *c.parent_offset);
-}
-	// visit aliases by collection, instead of uniquely
-	const value_saver<const footprint_frame*> _ff_(c.fpf, &lff);
-//	const value_saver<global_offset*> _g_(g_offset, &sgo);
-	// g_offset only applicable to *private* subinstances, not public ports
-#if ENABLE_STACKTRACE
-	lff.dump_frame(STACKTRACE_INDENT_PRINT("LOCAL CONTEXT =")) << endl;
-//	STACKTRACE_INDENT_PRINT("sgo =           " << sgo << endl);
-#endif
-#endif
 //	const footprint& f(*c.fpf->_footprint);
 	INVARIANT(!local_alias.get_container_base()->get_super_instance());
 #if 0
@@ -192,7 +173,6 @@ if (c.at_top()) {
 	const footprint_frame af(spf, *c.fpf);
 	const value_saver<const footprint_frame*> _f_(c.fpf, &af);
 	const value_saver<const global_offset*> _g_(c.parent_offset, &sgo);
-//	const value_saver<const footprint*> _o_(c.owner_fp, &f);
 	STACKTRACE_INDENT_PRINT("child  offset = " << sgo << endl);
 #if ENABLE_STACKTRACE
 	af.dump_frame(STACKTRACE_STREAM << "actual context =") << endl;
@@ -204,8 +184,6 @@ if (c.at_top()) {
 	// transformed frame
 	// but offset is already out of scope/range...
 	FINISH_ME(Fang);
-//	c.owner_fp->dump(STACKTRACE_INDENT_PRINT("owner fp =\n"));
-	// this local port process is not owned by the current frame!
 }
 #else
 	const alias_printer::save_frame save(c, &e._frame);
@@ -216,7 +194,6 @@ if (c.at_top()) {
 	}
 
 };	// end struct alias_printer_recursion_policy
-#endif	// TRAVERSE_BY_ALIAS
 
 //=============================================================================
 // class alias_printer method definitions
@@ -241,7 +218,8 @@ alias_printer::alias_printer(ostream& _o,
 #endif
 			_cf, _w, _p)
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			, owner_fp(_fpf._footprint)
+			// , aux_fpf(&_fpf)
+			, aux_fpf(NULL)
 #endif
 			{
 }
@@ -260,40 +238,31 @@ alias_printer::visit(const footprint& f) {
 	f.dump_type(STACKTRACE_INDENT_PRINT("type: ")) << endl;
 	STACKTRACE_INDENT_PRINT("parent_offset = " << *parent_offset << endl);
 	fpf->dump_frame(STACKTRACE_INDENT_PRINT("parent frame =")) << endl;
+	const footprint_frame* const cfpf = aux_fpf ? aux_fpf : fpf;
 #endif
-#if TRAVERSE_BY_ALIAS
-#if 1
 	footprint_frame lff;	// lff(f);
 //	global_offset sgo(*parent_offset, f, add_local_private_tag());
 if (at_top()) {
 	lff.construct_top_global_context(f, *parent_offset);
 //	sgo = global_offset(*parent_offset, f, add_all_local_tag());
-} else {
-	lff.construct_global_context(f, *fpf, *parent_offset);
-}
-	// visit aliases by collection, instead of uniquely
-	const value_saver<const footprint_frame*> _f_(fpf, &lff);
-//	const value_saver<global_offset*> _g_(g_offset, &sgo);
-	// g_offset only applicable to *private* subinstances, not public ports
 #if ENABLE_STACKTRACE
-	lff.dump_frame(STACKTRACE_INDENT_PRINT("LOCAL CONTEXT =")) << endl;
+	lff.dump_frame(STACKTRACE_INDENT_PRINT("TOP CONTEXT =")) << endl;
 //	STACKTRACE_INDENT_PRINT("sgo =           " << sgo << endl);
 #endif
+	const value_saver<const footprint_frame*> _f_(fpf, &lff);
+	f.accept(AS_A(alias_visitor&, *this));
+} else {
+//	lff.construct_global_context(f, *cfpf, *parent_offset);
+#if ENABLE_STACKTRACE
+	cfpf->dump_frame(STACKTRACE_INDENT_PRINT("LOCAL CONTEXT =")) << endl;
 #endif
 	f.accept(AS_A(alias_visitor&, *this));
-	// this should NOT visit public substructures!!!
-#else
-	// trying unique-instance-based traversal, not working...
-	visit_local<bool_tag>(f, true);	// always include bool ports in visit
-	visit_local<process_tag>(f, true);
-	// visit recursive that repeats for every process alias
-//	visit_recursive(f);
-	// based on global_entry_context::visit_recursive()
-#endif
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !TRAVERSE_BY_ALIAS
+#ifdef	TRAVERSE_BY_ALIAS
+// kept for reference for now
 /**
 	General algorithm stolen from global_entry_context::visit_recursive().
  */
@@ -365,10 +334,8 @@ if (is_top) {
 	}
 	// invariant checks on sgo, consistent with local instance_pools
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !TRAVERSE_BY_ALIAS
 /**
 	Goal: visit each unique process once, but repeat for aliases
 	Based on global_entry_dumper::visit(const process_instance&)
@@ -471,7 +438,7 @@ if (!cf.check_prs) {
 }
 }
 }
-#endif
+#endif	// TRAVERSE_BY_ALIAS
 #endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -547,6 +514,121 @@ if (this->fpf) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	Choose action based on whether or not this alias is a 
+	direct public port (not whether it is aliased to port).  
+	Don't forget that alias is visited *locally* through footprint, 
+	not publicly as a member alias.
+ */
+void
+alias_printer::visit(const instance_alias_info<process_tag>& a) {
+	typedef	process_tag			Tag;
+	typedef	value_saver<const footprint_frame*>	footprint_frame_setter;
+	STACKTRACE_VERBOSE;
+	ostringstream oss;
+	a.dump_leaf_name(oss);
+	const string& local_name(oss.str());
+	const save_prefix save(*this);
+	prefix += local_name + '.';
+	STACKTRACE_INDENT_PRINT("local  = " << local_name << endl);
+	const bool is_private = !a.get_container_base()
+		->get_placeholder_base()->is_port_formal();
+	STACKTRACE_INDENT_PRINT("is " << (is_private ? "private" : "public") << endl);
+	STACKTRACE_INDENT_PRINT("prefix = " << prefix << endl);
+	STACKTRACE_INDENT_PRINT((aux_fpf ? "have" : "no") << " aux_fpf" << endl);
+	const size_t mpid = a.instance_index;	// local to immediate parent
+if (is_private) {
+	// lpid needs to be relative to owner parent
+	INVARIANT(!aux_fpf);
+//	const size_t lpid = aux_fpf ? aux_fpf->get_frame_map<Tag>()[mpid -1] : mpid;
+	const size_t lpid = mpid;
+#if ENABLE_STACKTRACE
+	const size_t gpid = lookup_global_id<Tag>(lpid);
+	STACKTRACE_INDENT_PRINT("mpid = " << mpid << ", lpid = " << lpid <<
+		", gpid = " << gpid << endl);
+	STACKTRACE_INDENT_PRINT("canonical = ");
+	topfp->dump_canonical_name<Tag>(STACKTRACE_STREAM, gpid -1) << endl;
+#endif
+	// lookup unique instance to get footprint
+	// context footprint can be parent or auxiliary
+	const footprint& parent_fp(*fpf->_footprint);
+	const state_instance<Tag>&
+		unique_p(parent_fp.get_instance_pool<Tag>()[a.instance_index -1]);
+	const footprint_frame& sub_frame(unique_p._frame);
+	const footprint& sub_fp(*sub_frame._footprint);
+	const footprint& owner_fp(parent_fp);
+	STACKTRACE_INDENT_PRINT("parent offset = " << *parent_offset << endl);
+	global_offset sgo(*parent_offset);	// copy
+	global_offset delta, local;
+	if (at_top()) {
+		local = global_offset(local, owner_fp, add_all_local_tag());
+	} else {
+		local = global_offset(local, owner_fp, add_local_private_tag());
+	}
+	STACKTRACE_INDENT_PRINT("local         = " << local << endl);
+	sgo += local;
+	owner_fp.set_global_offset_by_process(delta, lpid);	// conditional?
+	STACKTRACE_INDENT_PRINT("delta         = " << delta << endl);
+	sgo += delta;
+	STACKTRACE_INDENT_PRINT("child offset  = " << sgo << endl);
+	// might need separate offset to distinguish between public/private...
+	const value_saver<const global_offset*> _g_(parent_offset, &sgo);
+	footprint_frame aux_ff(sub_frame, *fpf);
+	// can't be at top: there's no alias for top!
+	// aux_ff.construct_global_context(sub_fp, *cfpf, sgo);
+	const global_offset b(sgo, sub_fp, add_local_private_tag());
+	aux_ff.extend_frame(sgo, b);
+	const footprint_frame_setter _fpf_(fpf, &aux_ff);
+#if ENABLE_STACKTRACE
+	aux_ff.dump_frame(STACKTRACE_INDENT_PRINT("aux frame =")) << endl;
+#endif
+//	sub_fp.accept(AS_A(alias_visitor&, *this));
+	visit(sub_fp);
+} else {
+	// is public
+	FINISH_ME(Fang);
+//	sub_fp.accept(AS_A(alias_visitor&, *this));
+//	visit(sub_fp);
+	// shallow recursion, visit top-locals only
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Choose action based on whether or not this alias is a 
+	direct public port (not whether it is aliased to port).  
+	Don't forget that alias is visited *locally* through footprint, 
+	not publicly as a member alias.
+ */
+void
+alias_printer::visit(const instance_alias_info<bool_tag>& a) {
+	typedef	bool_tag			Tag;
+	STACKTRACE_VERBOSE;
+	ostringstream oss;
+	a.dump_leaf_name(oss);
+	const string& local_name(oss.str());
+	const string alias(prefix +local_name);
+	STACKTRACE_INDENT_PRINT("local = " << local_name << endl);
+	STACKTRACE_INDENT_PRINT("alias = " << alias << endl);
+#if ENABLE_STACKTRACE
+	const bool is_private = !a.get_container_base()
+		->get_placeholder_base()->is_port_formal();
+	STACKTRACE_INDENT_PRINT("is " << (is_private ? "private" : "public") << endl);
+#endif
+	// find canonical name from gpid
+	const size_t mbid = a.instance_index;
+	const size_t lbid = aux_fpf ? aux_fpf->get_frame_map<Tag>()[mbid -1] : mbid;
+	const size_t gbid = lookup_global_id<Tag>(lbid);
+	STACKTRACE_INDENT_PRINT("lbid = " << lbid << ", gbid = " << gbid << endl);
+	// same for private and public?
+	ostringstream c;
+	topfp->dump_canonical_name<Tag>(c, gbid -1);
+	cflat_print_alias(o, c.str(), alias, cf);
+}
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints an alias as specified by the flags.  
 	Should be publicly accessible.  
@@ -585,14 +667,18 @@ alias_printer::visit(const instance_alias_info<Tag>& a) {		\
 	__visit(a);							\
 }
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(bool_tag)
+#endif
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(int_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(enum_tag)
 #if ENABLE_DATASTRUCTS
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(datastruct_tag)
 #endif
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(channel_tag)
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(process_tag)
+#endif
 
 #undef	DEFINE_INSTANCE_ALIAS_INFO_VISITOR
 

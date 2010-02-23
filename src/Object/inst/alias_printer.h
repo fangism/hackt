@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.h"
-	$Id: alias_printer.h,v 1.3.16.2 2010/02/20 04:38:43 fang Exp $
+	$Id: alias_printer.h,v 1.3.16.3 2010/02/23 00:44:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_PRINTER_H__
@@ -14,9 +14,9 @@
 	Define to 0 to visit by unique instances.  
 	Visiting by aliases is easier to guarantee coverage.
 	Visiting by unique instances is easier to maintain footprint frames.
-	Goal: ?
+	Goal: 1
  */
-#define	TRAVERSE_BY_ALIAS		1
+// #define	TRAVERSE_BY_ALIAS		1
 
 namespace HAC {
 namespace entity {
@@ -25,13 +25,13 @@ namespace entity {
 	Alias-printing visitor.  
  */
 struct alias_printer : public alias_visitor, public cflat_aliases_arg_type {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION && TRAVERSE_BY_ALIAS
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	/**
-		At any given level of hierarchy, this points to the
-		footprint responsible for allocating local instances.
-		This is needed to properly handle process ports.  
+		Auxiliary footprint frame, this is updated with every
+		public and private recursion, whereas the parent 'fpf'
+		is only updated with private recursion.
 	 */
-	const footprint*			owner_fp;
+	const footprint_frame*			aux_fpf;
 #endif
 
 	alias_printer(ostream& _o, 
@@ -57,14 +57,6 @@ struct alias_printer : public alias_visitor, public cflat_aliases_arg_type {
 	void
 	visit(const footprint&);
 
-#if !TRAVERSE_BY_ALIAS
-	void
-	visit(const state_instance<bool_tag>&);
-
-	void
-	visit(const state_instance<process_tag>&);
-#endif
-
 	using alias_visitor::visit;
 	using cflat_aliases_arg_type::visit;
 #endif
@@ -78,11 +70,6 @@ private:
 	// non-copyable
 	explicit
 	alias_printer(const alias_printer&);
-
-#if !TRAVERSE_BY_ALIAS
-	void
-	visit_recursive(const footprint&);
-#endif
 
 };	// end class alias_printer
 
