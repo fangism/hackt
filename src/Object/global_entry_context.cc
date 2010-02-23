@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.5 2010/02/20 04:38:34 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.6 2010/02/23 22:34:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -83,6 +83,24 @@ global_entry_context::get_current_footprint(void) const {
 bool
 global_entry_context::at_top(void) const {
 	return (topfp == fpf->_footprint);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+global_entry_context::dump_context(ostream& o) const {
+	o << "frame: ";
+	if (fpf) {
+		fpf->dump_frame(o) << endl;
+	} else {
+		o << "NULL" << endl;
+	}
+	o << "offset: ";
+	if (parent_offset) {
+		o << *parent_offset << endl;
+	} else {
+		o << "NULL" << endl;
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

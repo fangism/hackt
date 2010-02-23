@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.6.46.6 2010/02/20 04:38:35 fang Exp $
+	$Id: global_entry_context.h,v 1.6.46.7 2010/02/23 22:34:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -192,6 +192,9 @@ public:
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	~global_entry_context();
+
+	ostream&
+	dump_context(ostream&) const;
 
 	template <class Tag>
 	void
