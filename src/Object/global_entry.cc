@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.13 2010/02/20 04:38:31 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.14 2010/02/24 22:48:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -46,6 +46,13 @@ footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
 		id_map(f.template get_instance_pool<Tag>().size() -1)
 #endif
 		{
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+footprint_frame_map<Tag>::__swap(footprint_frame& f) {
+	id_map.swap(f.template get_frame_map<Tag>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -321,6 +328,23 @@ footprint_frame::footprint_frame(const footprint_frame& l,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint_frame::~footprint_frame() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	More efficient that copy-assignment.
+ */
+void
+footprint_frame::swap(footprint_frame& f) {
+	std::swap(_footprint, f._footprint);
+	footprint_frame_map<process_tag>::__swap(f);
+	footprint_frame_map<channel_tag>::__swap(f);
+#if ENABLE_DATASTRUCTS
+	footprint_frame_map<datastruct_tag>::__swap(f);
+#endif
+	footprint_frame_map<enum_tag>::__swap(f);
+	footprint_frame_map<int_tag>::__swap(f);
+	footprint_frame_map<bool_tag>::__swap(f);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

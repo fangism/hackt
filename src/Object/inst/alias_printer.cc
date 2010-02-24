@@ -1,10 +1,14 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.8.24.4 2010/02/23 22:34:03 fang Exp $
+	$Id: alias_printer.cc,v 1.8.24.5 2010/02/24 22:48:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
 
+#include <set>
+#include <functional>			// for bind2nd, greater_equal
+#include <algorithm>
+#include <iterator>
 #include "Object/inst/alias_printer.h"
 #include "Object/devel_switches.h"
 #include "Object/inst/instance_alias_info.h"
@@ -33,6 +37,8 @@
 #include "common/TODO.h"
 #include "main/cflat.h"
 #include "main/cflat_options.h"
+#include "util/copy_if.h"
+#include "util/iterator_more.h"		// for set_inserter
 #include "util/sstream.h"
 #include "util/macros.h"
 #include "util/stacktrace.h"
@@ -41,8 +47,14 @@
 namespace HAC {
 namespace entity {
 using std::ostringstream;
+using std::set;		// for caching alias sets
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using std::copy;
+USING_COPY_IF
+using std::ostream_iterator;
+using std::bind2nd;
 using util::value_saver;
+using util::set_inserter;
 #endif
 
 //=============================================================================
@@ -273,7 +285,46 @@ if (at_top()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 1
-// kept for reference for now
+typedef	vector<size_t>		ordered_list_type;
+typedef	vector<set<size_t> >	graph_type;
+typedef	vector<bool>		marks_type;
+
+// TODO: publish thes functions
+/**
+	Recursive, visits the i'th node in the graph.
+ */
+static
+void
+__topological_sort_visit(const graph_type& G, const size_t i, 
+	marks_type& V, ordered_list_type& o) {
+	if (!V[i]) {
+		V[i] = true;
+		set<size_t>::const_iterator j(G[i].begin()), k(G[i].end());
+		for ( ; j!=k; ++j) {
+			__topological_sort_visit(G, *j, V, o);
+		}
+		o.push_back(i);	// really want push_front
+	}
+}
+
+/**
+	\pre graph must be acyclic, this algorithm does not detect cycles.
+ */
+static
+void
+topological_sort(const graph_type& G, ordered_list_type& o) {
+	ordered_list_type rev;
+	o.clear();
+	const size_t s = G.size();	// number of nodes
+	marks_type V(s, false);		// no nodes visited yet
+	size_t i = 0;
+	for ( ; i<s; ++i) {
+		__topological_sort_visit(G, i, V, rev);
+	}
+	copy(rev.rbegin(), rev.rend(), back_inserter(o));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	General algorithm stolen from global_entry_context::visit_recursive().
 	Push this into global_entry_context as visit_recursive_aliases.
@@ -305,51 +356,215 @@ if (is_top) {
 #endif
 	// copy and increment with each local process
 	const size_t pe = lpp.local_entries();
-	// but for the top-level only, we want start with ports (process?)
-#if 1
-	size_t pi = is_top ? 0 : lpp.port_entries();
-#else
-	size_t pi = 0;
-#endif
-	const value_saver<const global_offset*> __gs__(parent_offset, &sgo);
-	for ( ; pi<pe; ++pi) {
-		const state_instance<Tag>& sp(lpp[pi]);
-		const footprint_frame& spf(sp._frame);
-		const footprint& sfp(*spf._footprint);
-		const footprint_frame af(spf, lff);     // context
-		const footprint_frame_setter ffs(fpf, &af);
-		// repeat for each alias as prefix!
-		const size_t lpid = pi +1;
-		const alias_reference_set<Tag>&
-			ars(pt.get_id_map<Tag>().find(lpid)->second);
-		// 1-based
+	// but for the top-level only, we start with ports (process too?)
+	const size_t pb = is_top ? 0 : lpp.port_entries();
+//	const value_saver<const global_offset*> __gs__(parent_offset, &sgo);
+
+// TODO: cache alias sets per footprint! (easy speed-up)
+//	we can't because alias sets are context-sensitive
+// TODO: factor out this procedure for collecting aliases
+
+// indexed 1-based, by local process index
+// this map accumulates aliases of local process, their process ports
+// AND private internal aliases to their local ports.  
+// set<strings> will keep it unique.
+	typedef	vector<set<string> >		alias_name_map_type;
+	alias_name_map_type alias_map;	// should be vector<vector<string> >
+	alias_map.resize(pe+1);
+	size_t pi;
+// first pass: 
+// a) collect local aliases of processes owned by this footprint
+// b) construct and cache the footprint frames, as we use them multiple times
+// caching offsets is not really necessary.
+// c) construct graph used to perform topological sort
+	vector<footprint_frame>	fframes(pe+1);
+	vector<global_offset> offsets(pe+1);
+	graph_type G(pe+1);
+for (pi=pb; pi<pe; ++pi) {
+	const size_t lpid = pi +1;
+	const state_instance<Tag>& sp(lpp[pi]);
+	const footprint_frame& spf(sp._frame);
+	const footprint& sfp(*spf._footprint);
+	// construct actuals footprint frame to be used as context
+	footprint_frame af(spf, lff);     // context
+	fframes[lpid].swap(af);
+	offsets[lpid] = sgo;
+	// construct local-process port graph's adjacency lists
+	const footprint_frame_map_type& ppts(spf.get_frame_map<Tag>());
+	copy(ppts.begin(), ppts.end(), set_inserter(G[lpid]));
+	// collect local aliases
+	const alias_reference_set<Tag>&
+		ars(pt.get_id_map<Tag>().find(lpid)->second);
+	alias_reference_set<Tag>::const_iterator
+		i(ars.begin()), e(ars.end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+		const instance_alias_info<Tag>& a(**i);
+		ostringstream oss;
+		a.dump_hierarchical_name(oss, dump_flags::no_leading_scope);
+		const string& local_name(oss.str());	// base-names
+		alias_map[lpid].insert(local_name);
+	}
+	// increment global offset
+	if (pi >= lpp.port_entries()) {
+	sgo += sfp;
+	}
+}
+
+// topological sort of locally owned processes, 
+// some of which are ports of each other!
+// The reason this is necessary is to order hierarchical alias propagation
+// from, as children may have multiple parents, and all parents must be 
+// processed before their children.
+	ordered_list_type filtered_pid_list;
+{
+	ordered_list_type ordered_list;	// result
+	topological_sort(G, ordered_list);
+	copy_if(ordered_list.begin(), ordered_list.end(),
+		back_inserter(filtered_pid_list),
+		bind2nd(std::greater<size_t>(), pb));	// 1-based indices
+}
 #if ENABLE_STACKTRACE
-		const size_t gpid = global_entry_context::
-			lookup_global_id<Tag>(lpid);
-		STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
-		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
+	STACKTRACE_INDENT_PRINT("topo-sorted lpids: ");
+	copy(filtered_pid_list.begin(), filtered_pid_list.end(), 
+		std::ostream_iterator<size_t>(STACKTRACE_STREAM, ","));
+	STACKTRACE_STREAM << endl;
 #endif
+
+#if 0
+	// should be vector<set<string> > for uniqueness
+	alias_name_map_type member_map(alias_map);	// seed copy initially
+	// don't copy yet...
+#endif
+// second pass: collect member aliases, cross-product with local aliases
+// this needs to happen in topological order!
+	ordered_list_type::const_iterator
+		pidi(filtered_pid_list.begin()), pide(filtered_pid_list.end());
+// for (pi=pb; pi<pe; ++pi)
+for (; pidi!=pide; ++pidi)
+{
+	// HACK ALERT: to cover internal aliases
+	// now iterate over spf's process ports
+	// query footprint for private (and public) internal aliases.
+	const size_t lpid = *pidi;
+	// const size_t lpid = pi +1;
+	const state_instance<Tag>& sp(lpp[lpid-1]);
+	const footprint_frame& spf(sp._frame);
+	const footprint& sfp(*spf._footprint);
+	const port_alias_tracker& spt(sfp.get_scope_alias_tracker());
+	const port_alias_tracker_base<Tag>::map_type&
+		ppa(spt.get_id_map<Tag>());
+	const footprint_frame_map_type& ppts(spf.get_frame_map<Tag>());
+	const size_t pps = ppts.size();
+	size_t ppi = 0;
+	for ( ; ppi<pps; ++ppi) {
+		// ppi is the position within the ports frame
+		// ppts[ppi] is the local index mapped to that port
+		const size_t app = ppts[ppi];
+		INVARIANT(app != lpid);	// process cannot contain itself!
+		STACKTRACE_INDENT_PRINT("process-port[" << ppi+1 <<
+			"] -> local-process " << app << endl);
+		// iterate over everything but the port aliases,
+		// which were already covered by the above pass.
+		const alias_reference_set<Tag>& par(ppa.find(ppi+1)->second);
 		alias_reference_set<Tag>::const_iterator
-			i(ars.begin()), e(ars.end());
-		for ( ; i!=e; ++i) {
-			NEVER_NULL(*i);
-			const instance_alias_info<Tag>& a(**i);
-		// really want direct ports, and not port-substructures
-//		if (!a.get_container_base()->get_super_instance()) {
-			ostringstream oss;
-			a.dump_hierarchical_name(oss,
+			pmi(par.begin()), pme(par.end());
+		set<string> mem_aliases;
+		for ( ; pmi!=pme; ++pmi) {
+			const instance_alias_info<Tag>& a(**pmi);
+			// if it is a public port, skip it
+		if (!a.is_port_alias()) {
+			ostringstream malias;
+			a.dump_hierarchical_name(malias,
 				dump_flags::no_leading_scope);
-			const string& local_name(oss.str());
-			const save_prefix save(*this);
-			prefix += local_name + ".";
-			STACKTRACE_INDENT_PRINT("prefix = " << prefix << endl);
-			sfp.accept(AS_A(global_entry_context&, *this));
-//		}
+			STACKTRACE_INDENT_PRINT("considering private alias: "
+				<< malias.str() << endl);
+			mem_aliases.insert(malias.str());
+			// missing parent name
 		}
-		if (pi >= lpp.port_entries()) {
-		sgo += sfp;
+		}
+		// evaluate cross-product sets of parent x child
+		set<string>::const_iterator
+			j(alias_map[lpid].begin()), k(alias_map[lpid].end());
+		for ( ; j!=k; ++j) {
+			set<string>::const_iterator
+				p(mem_aliases.begin()), q(mem_aliases.end());
+		for ( ; p!=q; ++p) {
+			const string c(*j + '.' + *p);
+			STACKTRACE_INDENT_PRINT("member-alias[" << app <<
+				"]: " << c << endl);
+			alias_map[app].insert(c);
+			// will be inserted uniquely
+		}
 		}
 	}
+}
+#if 1
+// third phase: topologically ordered set product expansion
+// to guarantee correct ordering of updating parent-child sets (parent first)
+
+// final pass: recursion
+for (pi=pb; pi<pe; ++pi) {
+	STACKTRACE("iterating local unique process");
+	const size_t lpid = pi +1;
+#if 0
+	const state_instance<Tag>& sp(lpp[pi]);
+	const footprint_frame& spf(sp._frame);
+	const footprint& sfp(*spf._footprint);
+	const footprint_frame af(spf, lff);     // context
+#else
+	const footprint_frame& af(fframes[lpid]);     // context
+	const footprint& sfp(*af._footprint);
+	const value_saver<const global_offset*>
+		_g_(parent_offset, &offsets[lpid]);
+#endif
+	const footprint_frame_setter ffs(fpf, &af);
+	// repeat for each alias as prefix!
+#if 0
+	const alias_reference_set<Tag>&
+		ars(pt.get_id_map<Tag>().find(lpid)->second);
+	// 1-based
+#endif
+#if ENABLE_STACKTRACE
+	const size_t gpid = global_entry_context::
+		lookup_global_id<Tag>(lpid);
+	STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
+	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
+#endif
+#if 0
+	alias_reference_set<Tag>::const_iterator
+		i(ars.begin()), e(ars.end());
+#else
+	set<string>::const_iterator
+		i(alias_map[lpid].begin()), e(alias_map[lpid].end());
+#endif
+	// FIXME: set needs to be appended with local private aliases!
+	// TODO: collect set of private internal aliases
+	// then iterate over whole set
+	// find which processes are subordinate of other processes
+	for ( ; i!=e; ++i) {
+		const save_prefix save(*this);
+#if 0
+		NEVER_NULL(*i);
+		const instance_alias_info<Tag>& a(**i);
+		ostringstream oss;
+		a.dump_hierarchical_name(oss, dump_flags::no_leading_scope);
+		const string& local_name(oss.str());
+#else
+		const string& local_name(*i);
+#endif
+		prefix += local_name + ".";
+		STACKTRACE_INDENT_PRINT("prefix = " << prefix << endl);
+		sfp.accept(AS_A(global_entry_context&, *this));
+	}
+#if 0
+	// increment sgo to next
+	if (pi >= lpp.port_entries()) {
+	sgo += sfp;
+	}
+#endif
+}
+#endif
 	// invariant checks on sgo, consistent with local instance_pools
 }
 #endif
