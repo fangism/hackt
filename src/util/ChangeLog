@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.108.2.1 2010/01/18 23:43:49 fang Exp $
+#	$Id: ChangeLog,v 1.108.2.2 2010/02/25 02:48:44 fang Exp $
+
+2010-02-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-20:
+	  Added util/swap_saver, akin to value_saver, but uses swap()
+		method instead of copying where possible for 
+		efficiency, and saving memory.
+
 
 2010-01-18	David Fang		<fangism@users.sourceforge.net>
 
