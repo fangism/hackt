@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.8.24.7 2010/02/25 07:14:55 fang Exp $
+	$Id: alias_printer.cc,v 1.8.24.8 2010/02/25 08:35:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -435,14 +435,40 @@ for (pi=pb; pi<pe; ++pi) {
 template <class Tag>
 static
 bool
-accept_alias(const instance_alias_info<Tag>&, const footprint&);
+accept_deep_alias(const instance_alias_info<Tag>&, const footprint&);
 
 template <>
 static
 bool
-accept_alias(const instance_alias_info<process_tag>& a, 
-		const footprint&) {
+accept_deep_alias(const instance_alias_info<process_tag>& a, const footprint&) {
 	return !a.is_port_alias();
+}
+
+template <class Tag>
+static
+bool
+any_hierarchical_parent_is_aliased_to_port(const instance_alias_info<Tag>& a, 
+		const footprint& f) {
+	typedef	process_tag		ParentTag;
+	// NO hierarchical parents are already aliased to process port
+	never_ptr<const physical_instance_collection>
+		ac(a.get_container_base());
+	never_ptr<const substructure_alias>
+		ss(ac->get_super_instance());
+while (ss) {
+	typedef	instance_alias_info<ParentTag>	process_alias;
+	const never_ptr<const process_alias>
+		sp(ss.is_a<const process_alias>());
+	NEVER_NULL(sp);		// else parent is not a process!
+	if (sp->instance_index <=
+			f.get_instance_pool<ParentTag>().port_entries()) {
+		return true;
+	}
+	ac = sp->get_container_base();
+	ss = ac->get_super_instance();
+}
+	// what if has no parent, is terminal?
+	return false;
 }
 
 /**
@@ -454,8 +480,7 @@ accept_alias(const instance_alias_info<process_tag>& a,
 template <>
 static
 bool
-accept_alias(const instance_alias_info<bool_tag>& a, 
-		const footprint& f) {
+accept_deep_alias(const instance_alias_info<bool_tag>& a, const footprint& f) {
 	typedef	class_traits<bool_tag>		traits_type;
 #if ENABLE_STACKTRACE
 	static const char* tag_name = traits_type::tag_name;
@@ -466,21 +491,11 @@ accept_alias(const instance_alias_info<bool_tag>& a,
 		<< " reachable." << endl);
 	if (reachable)
 		return false;
-	// and supermost is NOT already aliased to process port
-	const never_ptr<const substructure_alias>
-		ss(a.get_supermost_substructure());
-	if (ss) {
-		typedef	instance_alias_info<process_tag>	process_alias;
-		const never_ptr<const process_alias>
-			sp(ss.is_a<const process_alias>());
-		// Q: what if some process in the hierarchical reference
-		// is aliased to a port?
-		if (sp) {
-			if (sp->instance_index > f.get_instance_pool<process_tag>().port_entries())
-				return false;
-		}
-	}
-	else	return true;	// ?
+//	if (a.instance_index >= f.get_instance_pool<bool_tag>().port_entries())
+	if (a.is_port_alias())
+		return false;
+	// and NO hierarchical parents are already aliased to process port
+	return !any_hierarchical_parent_is_aliased_to_port(a, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -532,7 +547,7 @@ for (; pidi!=pide; ++pidi) {
 			// process ports: if it is a public port, skip it
 			// bool ports: if supermost collection of the 
 			//	hierarchical alias is not publicly reachable
-		if (accept_alias(a, sfp)) {
+		if (accept_deep_alias(a, sfp)) {
 			ostringstream malias;
 			a.dump_hierarchical_name(malias,
 				dump_flags::no_leading_scope);
@@ -720,8 +735,14 @@ if (!cf.check_prs) {
 	// exclude some bool member references (x.y), already covered
 	// exclude publicly reachable aliases, as those will be covered
 	// by parent/owner process.
-	if (	// !a.get_container_base()->get_super_instance()
+	// exclude local bool private aliases that are aliased to port
+	if (// accept_deep_alias(a, f)
 		!a.get_supermost_collection()->get_placeholder_base()->is_port_formal()
+		&& (!((a.instance_index <=
+			f.get_instance_pool<bool_tag>().port_entries())
+			&& !a.is_port_alias())
+		|| any_hierarchical_parent_is_aliased_to_port(a, f)
+		)
 		) {
 		ostringstream ass;
 		a.dump_hierarchical_name(ass, dump_flags::no_leading_scope);
