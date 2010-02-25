@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.39.2.6 2010/02/20 04:38:44 fang Exp $
+	$Id: instance_alias.tcc,v 1.39.2.7 2010/02/25 07:14:55 fang Exp $
 	TODO: trim includes
  */
 
@@ -304,7 +304,7 @@ INSTANCE_ALIAS_INFO_CLASS::get_supermost_substructure(void) const {
 	// substructure_alias
 	instance_collection_base::super_instance_ptr_type
 		p(c->get_super_instance());
-	NEVER_NULL(p);		// first-time
+//	NEVER_NULL(p);		// first-time
 	while (p) {
 		ret = p;
 		c = p->get_container_base();

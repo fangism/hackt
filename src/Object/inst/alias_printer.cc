@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.8.24.6 2010/02/25 02:48:43 fang Exp $
+	$Id: alias_printer.cc,v 1.8.24.7 2010/02/25 07:14:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -30,6 +30,7 @@
 #include "Object/common/dump_flags.h"
 #include "Object/common/alias_string_cache.h"
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/physical_instance_placeholder.h"
 #endif
 #include "common/ICE.h"
@@ -428,13 +429,71 @@ for (pi=pb; pi<pe; ++pi) {
 }	// end alias_printer::prepare()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicates under which a subordinate alias should be considered.
+ */
+template <class Tag>
+static
+bool
+accept_alias(const instance_alias_info<Tag>&, const footprint&);
+
+template <>
+static
+bool
+accept_alias(const instance_alias_info<process_tag>& a, 
+		const footprint&) {
+	return !a.is_port_alias();
+}
+
+/**
+	If a bool is reachable through public port alias (hierarchical),
+	exclude it.  
+	if the supermost (process) collection of a bool is not aliased 
+	to a process-port, also exclude it.
+ */
+template <>
+static
+bool
+accept_alias(const instance_alias_info<bool_tag>& a, 
+		const footprint& f) {
+	typedef	class_traits<bool_tag>		traits_type;
+#if ENABLE_STACKTRACE
+	static const char* tag_name = traits_type::tag_name;
+#endif
+	const bool reachable = a.get_supermost_collection()
+		->get_placeholder_base()->is_port_formal();
+	STACKTRACE_INDENT_PRINT(tag_name << (reachable ? " is" : " is not")
+		<< " reachable." << endl);
+	if (reachable)
+		return false;
+	// and supermost is NOT already aliased to process port
+	const never_ptr<const substructure_alias>
+		ss(a.get_supermost_substructure());
+	if (ss) {
+		typedef	instance_alias_info<process_tag>	process_alias;
+		const never_ptr<const process_alias>
+			sp(ss.is_a<const process_alias>());
+		// Q: what if some process in the hierarchical reference
+		// is aliased to a port?
+		if (sp) {
+			if (sp->instance_index > f.get_instance_pool<process_tag>().port_entries())
+				return false;
+		}
+	}
+	else	return true;	// ?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class SubTag>
 void
-alias_printer::collect_local_aliases(const footprint& f, 
+alias_printer::collect_local_aliases(const footprint& f,
 		alias_set_type& local_aliases) const {
 	STACKTRACE_VERBOSE;
 	typedef	process_tag			Tag;
 	typedef	class_traits<SubTag>		traits_type;
+#if ENABLE_STACKTRACE
+	static const char* tag_name = traits_type::tag_name;
+#endif
 	const state_instance<Tag>::pool_type& lpp(f.get_instance_pool<Tag>());
 	ordered_list_type::const_iterator
 		pidi(ordered_lpids.begin()), pide(ordered_lpids.end());
@@ -459,8 +518,9 @@ for (; pidi!=pide; ++pidi) {
 		// ppts[ppi] is the local index mapped to that port
 		const size_t app = ppts[ppi];
 //		INVARIANT(app != lpid);	// process cannot contain itself!
-		STACKTRACE_INDENT_PRINT(traits_type::tag_name << "-port["
-			<< ppi+1 << "] -> local-process " << app << endl);
+		STACKTRACE_INDENT_PRINT(tag_name << "-port["
+			<< ppi+1 << "] -> local-" << tag_name
+			<< " " << app << endl);
 		// iterate over everything but the port aliases,
 		// which were already covered by the above pass.
 		const alias_reference_set<SubTag>& par(ppa.find(ppi+1)->second);
@@ -469,12 +529,14 @@ for (; pidi!=pide; ++pidi) {
 		set<string> mem_aliases;
 		for ( ; pmi!=pme; ++pmi) {
 			const instance_alias_info<SubTag>& a(**pmi);
-			// if it is a public port, skip it
-		if (!a.is_port_alias()) {
+			// process ports: if it is a public port, skip it
+			// bool ports: if supermost collection of the 
+			//	hierarchical alias is not publicly reachable
+		if (accept_alias(a, sfp)) {
 			ostringstream malias;
 			a.dump_hierarchical_name(malias,
 				dump_flags::no_leading_scope);
-			STACKTRACE_INDENT_PRINT("considering private alias: "
+			STACKTRACE_INDENT_PRINT(tag_name << "-member alias: "
 				<< malias.str() << endl);
 			mem_aliases.insert(malias.str());
 			// missing parent name
@@ -489,8 +551,8 @@ for (; pidi!=pide; ++pidi) {
 				p(mem_aliases.begin()), q(mem_aliases.end());
 		for ( ; p!=q; ++p) {
 			const string c(*j + '.' + *p);
-			STACKTRACE_INDENT_PRINT("proc-alias[" << app <<
-				"]: " << c << endl);
+			STACKTRACE_INDENT_PRINT(tag_name << 
+				"-alias[" << app << "]: " << c << endl);
 			local_aliases[app].insert(c);
 			// will be inserted uniquely
 		}
@@ -644,23 +706,30 @@ if (!cf.check_prs) {
 	topfp->dump_canonical_name<Tag>(oss, gi -1);	// 0-based
 	const string& canonical(oss.str());
 	STACKTRACE_INDENT_PRINT("canonical = " << canonical << endl);
+	set<string>& aliases(local_bool_aliases[bi]);
+#if 1
 	const footprint& f(get_current_footprint());
 	const port_alias_tracker& pt(f.get_scope_alias_tracker());
 	const alias_reference_set<Tag>&
 		ars(pt.get_id_map<Tag>().find(bi)->second);
 	alias_reference_set<Tag>::const_iterator
 		i(ars.begin()), e(ars.end());
-	set<string>& aliases(local_bool_aliases[bi]);
 	for (; i!=e; ++i) {
 		NEVER_NULL(*i);
 		const instance_alias_info<Tag>& a(**i);
-		// exclude some bool member references (x.y), already covered
-	if (!a.get_container_base()->get_super_instance()) {
+	// exclude some bool member references (x.y), already covered
+	// exclude publicly reachable aliases, as those will be covered
+	// by parent/owner process.
+	if (	// !a.get_container_base()->get_super_instance()
+		!a.get_supermost_collection()->get_placeholder_base()->is_port_formal()
+		) {
 		ostringstream ass;
 		a.dump_hierarchical_name(ass, dump_flags::no_leading_scope);
+		STACKTRACE_INDENT_PRINT("local-alias = " << ass.str() << endl);
 		aliases.insert(ass.str());	// unique
 	}
 	}
+#endif
 	set<string>::const_iterator
 		ai(aliases.begin()), ae(aliases.end());
 	for ( ; ai!=ae; ++ai) {
