@@ -1,7 +1,7 @@
 @ "foo.in.a.e" iscomb
 = "!GND" "foo.!GND"
-= "!Vdd" "foo.!Vdd"
-= "foo.in.a.e" "foo.in_a.e"
 = "!GND" "foo.ma.!GND"
+= "!Vdd" "foo.!Vdd"
 = "!Vdd" "foo.ma.!Vdd"
+= "foo.in.a.e" "foo.in_a.e"
 = "foo.in.a.e" "foo.ma.l.e"

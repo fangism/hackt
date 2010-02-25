@@ -1,10 +1,10 @@
 invariant "a" | "b"
 invariant ~("b" & "a")
 = "!GND" "barfu.!GND"
-= "!Vdd" "barfu.!Vdd"
-= "b" "barfu.w"
-= "a" "barfu.z"
 = "!GND" "fubar.!GND"
+= "!Vdd" "barfu.!Vdd"
 = "!Vdd" "fubar.!Vdd"
+= "a" "barfu.z"
 = "a" "fubar.x"
+= "b" "barfu.w"
 = "b" "fubar.y"

@@ -1,0 +1,11 @@
+// "132.hac"
+// copy-reduced from "130.hac"
+// checking for hflat aliases output coverage
+
+defproc bar(bool x) {
+	bool z;
+	x = z;
+}
+
+bar poo;
+

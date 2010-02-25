@@ -1,0 +1,19 @@
+// "connect-02.hac"
+// copy-modified from "connect-01.hac"
+// testing for proper aliasing in flattened output
+
+defproc inv(bool a) {
+bool b;
+}
+
+defproc deep(inv x) {
+inv y;
+}
+
+defproc deeper(deep d) {
+}
+
+deeper sh1t;
+// defproc deepest(deeper y) { }
+// deepest sh1t;
+

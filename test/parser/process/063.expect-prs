@@ -1,6 +1,6 @@
 = "!GND" "goo.!GND"
-= "!Vdd" "goo.!Vdd"
 = "!GND" "poo.!GND"
+= "!Vdd" "goo.!Vdd"
 = "!Vdd" "poo.!Vdd"
 = "goo.a[0]" "poo.a[0]"
 = "goo.a[1]" "poo.a[1]"

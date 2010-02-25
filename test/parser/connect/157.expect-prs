@@ -5,13 +5,13 @@
 iskeeper	"foo.I.e" -> "foo.c._o"-
 iskeeper	~"foo.I.e" -> "foo.c._o"+
 = "!GND" "foo.!GND"
+= "!GND" "foo.c.!GND"
 = "!Vdd" "foo.!Vdd"
+= "!Vdd" "foo.c.!Vdd"
 = "foo.I.d" "foo.O[0].d"
 = "foo.I.d" "foo.O[1].d"
-= "!GND" "foo.c.!GND"
-= "!Vdd" "foo.c.!Vdd"
-= "foo.O[0].e" "foo.c.i[0]"
-= "foo.O[1].e" "foo.c.i[1]"
 = "foo.I.e" "foo.c.o"
+= "foo.O[0].e" "foo.c.i[0]"
 = "foo.O[0].e" "foo.re[0]"
+= "foo.O[1].e" "foo.c.i[1]"
 = "foo.O[1].e" "foo.re[1]"

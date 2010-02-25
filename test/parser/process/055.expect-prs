@@ -1,6 +1,6 @@
 = "!GND" "poo.!GND"
-= "!Vdd" "poo.!Vdd"
 = "!GND" "poo.x.!GND"
-= "!Vdd" "poo.x.!Vdd"
 = "!GND" "poo.y.!GND"
+= "!Vdd" "poo.!Vdd"
+= "!Vdd" "poo.x.!Vdd"
 = "!Vdd" "poo.y.!Vdd"

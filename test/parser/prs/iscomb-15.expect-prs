@@ -7,10 +7,10 @@
 @ "p" iscomb
 @ "x[2].b" iscomb
 = "!GND" "x[0].!GND"
+= "!GND" "x[1].!GND"
+= "!GND" "x[2].!GND"
 = "!Vdd" "x[0].!Vdd"
+= "!Vdd" "x[1].!Vdd"
+= "!Vdd" "x[2].!Vdd"
 = "p" "x[0].a"
 = "q" "x[0].b"
-= "!GND" "x[1].!GND"
-= "!Vdd" "x[1].!Vdd"
-= "!GND" "x[2].!GND"
-= "!Vdd" "x[2].!Vdd"

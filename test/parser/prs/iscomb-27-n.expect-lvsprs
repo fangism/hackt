@@ -1,9 +1,9 @@
 @ "foo.bar.in.a.e" iscomb
 connect "!GND" "foo.!GND"
-connect "!Vdd" "foo.!Vdd"
 connect "!GND" "foo.bar.!GND"
+connect "!Vdd" "foo.!Vdd"
 connect "!Vdd" "foo.bar.!Vdd"
-connect "foo.bar.in.a.e" "foo.bar.in_a"
 connect "!GND" "foo.bar.ma.!GND"
 connect "!Vdd" "foo.bar.ma.!Vdd"
+connect "foo.bar.in.a.e" "foo.bar.in_a"
 connect "foo.bar.in.a.e" "foo.bar.ma.l"

@@ -3,8 +3,8 @@
 @ "a" !autokeeper
 @ "c" !autokeeper
 @ "e" !autokeeper
+= "w" "x"
+= "y" "z"
 = "a" "b"
 = "c" "d"
 = "e" "f"
-= "w" "x"
-= "y" "z"

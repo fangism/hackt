@@ -1,4 +1,4 @@
 @ "foo" may_interfere
 @ "bar" may_interfere
-= "bar" "bar2"
 = "foo" "foo2"
+= "bar" "bar2"

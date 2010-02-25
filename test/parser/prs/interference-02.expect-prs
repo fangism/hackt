@@ -4,5 +4,5 @@
 @ "wee.bar" may_interfere
 = "!GND" "wee.!GND"
 = "!Vdd" "wee.!Vdd"
-= "wee.bar" "wee.bar2"
 = "wee.foo" "wee.foo2"
+= "wee.bar" "wee.bar2"

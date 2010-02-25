@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-20:
+	  Finally fixed hflat-aliases, using a unique-instance based
+		approach instead of the old alias-based traversal.
+		Difficulty was in collecting visiting private aliases
+		that were aliased to public ports, and determing which
+		level of hierarchy is responsible for covering it, 
+		while guaranteeing unique coverage of aliases.
+		All regressions tests passed when considering sorted
+		flattened production rule outputs (all updated).
+		Added bunch of new interesting connection test cases.
+	  This was one of the most difficult tasks to-date.
+
+
 2010-02-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-19:

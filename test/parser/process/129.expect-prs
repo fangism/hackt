@@ -1,0 +1,6 @@
+= "!GND" "none[0].!GND"
+= "!GND" "none[1].!GND"
+= "!GND" "none[2].!GND"
+= "!Vdd" "none[0].!Vdd"
+= "!Vdd" "none[1].!Vdd"
+= "!Vdd" "none[2].!Vdd"

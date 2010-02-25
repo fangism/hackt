@@ -1,0 +1,13 @@
+// "100c.hac"
+// copy-reduced from "100b.hac"
+// testing global memory mapping with process-ports
+
+defproc foo(bool a) {
+	bool b;
+}
+
+defproc bar(foo x) {
+}
+
+bar none;
+

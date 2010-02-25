@@ -1,32 +1,32 @@
-@ "sh1t.y.d[0].x.a" iscomb !autokeeper
-@ "sh1t.y.d[0].x.b" iscomb
-@ "sh1t.y.d[1].x.a" iscomb !autokeeper
-@ "sh1t.y.e.x.a" iscomb !autokeeper
 @ "sh1t.y.e.y.a" iscomb
 @ "sh1t.y.e.y.b" !autokeeper
+@ "sh1t.y.e.x.a" iscomb !autokeeper
 @ "sh1t.y.d[0].y.a" iscomb
 @ "sh1t.y.d[0].y.b" !autokeeper
 @ "sh1t.y.d[1].y.a" iscomb
 @ "sh1t.y.d[1].y.b" !autokeeper
+@ "sh1t.y.d[0].x.a" iscomb !autokeeper
+@ "sh1t.y.d[0].x.b" iscomb
+@ "sh1t.y.d[1].x.a" iscomb !autokeeper
 connect "!GND" "sh1t.!GND"
-connect "!Vdd" "sh1t.!Vdd"
 connect "!GND" "sh1t.y.!GND"
-connect "!Vdd" "sh1t.y.!Vdd"
 connect "!GND" "sh1t.y.d[0].!GND"
-connect "!Vdd" "sh1t.y.d[0].!Vdd"
 connect "!GND" "sh1t.y.d[0].x.!GND"
-connect "!Vdd" "sh1t.y.d[0].x.!Vdd"
 connect "!GND" "sh1t.y.d[0].y.!GND"
-connect "!Vdd" "sh1t.y.d[0].y.!Vdd"
 connect "!GND" "sh1t.y.d[1].!GND"
-connect "!Vdd" "sh1t.y.d[1].!Vdd"
 connect "!GND" "sh1t.y.d[1].x.!GND"
-connect "!Vdd" "sh1t.y.d[1].x.!Vdd"
 connect "!GND" "sh1t.y.d[1].y.!GND"
-connect "!Vdd" "sh1t.y.d[1].y.!Vdd"
 connect "!GND" "sh1t.y.e.!GND"
-connect "!Vdd" "sh1t.y.e.!Vdd"
 connect "!GND" "sh1t.y.e.x.!GND"
+connect "!Vdd" "sh1t.!Vdd"
+connect "!Vdd" "sh1t.y.!Vdd"
+connect "!Vdd" "sh1t.y.d[0].!Vdd"
+connect "!Vdd" "sh1t.y.d[0].x.!Vdd"
+connect "!Vdd" "sh1t.y.d[0].y.!Vdd"
+connect "!Vdd" "sh1t.y.d[1].!Vdd"
+connect "!Vdd" "sh1t.y.d[1].x.!Vdd"
+connect "!Vdd" "sh1t.y.d[1].y.!Vdd"
+connect "!Vdd" "sh1t.y.e.!Vdd"
 connect "!Vdd" "sh1t.y.e.x.!Vdd"
 connect "!GND" "sh1t.y.e.y.!GND"
 connect "!Vdd" "sh1t.y.e.y.!Vdd"

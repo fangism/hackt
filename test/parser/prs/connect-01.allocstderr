@@ -1,0 +1,30 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	sh1t	deepest<>
+	process: 2,3,4
+	bool: 1,2,3
+2	(top)	-	2	sh1t.y	deeper<>
+	process: 3,4;5..6 {7}
+	bool: 1,2,3;4 {5}
+3	(top)	-	3	sh1t.y.d	deep<>
+	process: 4;8
+	bool: 1,2,3;6
+4	(top)	-	4	sh1t.y.d.x	inv<>
+	bool: 1,2,3
+5	process	2	3	sh1t.y.e	deep<>
+	process: 6;7
+	bool: 1,2,4;5
+6	process	2	4	sh1t.y.e.x	inv<>
+	bool: 1,2,4
+7	process	5	2	sh1t.y.e.y	inv<>
+	bool: 1,2,5
+8	process	3	2	sh1t.y.d.y	inv<>
+	bool: 1,2,6
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	sh1t.y.d.x.a	
+4	process	2	4	sh1t.y.e.x.a	
+5	process	5	4	sh1t.y.e.y.a	
+6	process	3	4	sh1t.y.d.y.a	
+

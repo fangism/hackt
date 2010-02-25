@@ -6,6 +6,6 @@
 ~"x.x[2]" -> "x.y[2]"+
 "x.b.w[0]" -> "x.b.w[1]"-
 = "!GND" "x.!GND"
-= "!Vdd" "x.!Vdd"
 = "!GND" "x.b.!GND"
+= "!Vdd" "x.!Vdd"
 = "!Vdd" "x.b.!Vdd"

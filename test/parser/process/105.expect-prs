@@ -1,4 +1,4 @@
 = "!GND" "achoo.!GND"
-= "!Vdd" "achoo.!Vdd"
 = "!GND" "poo.!GND"
+= "!Vdd" "achoo.!Vdd"
 = "!Vdd" "poo.!Vdd"

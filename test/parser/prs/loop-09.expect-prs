@@ -5,6 +5,6 @@
 "foo.x" -> "foo.y"-
 ~"foo.x" -> "foo.y"+
 = "!GND" "foo.!GND"
-= "!Vdd" "foo.!Vdd"
 = "!GND" "none.!GND"
+= "!Vdd" "foo.!Vdd"
 = "!Vdd" "none.!Vdd"

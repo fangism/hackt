@@ -5,11 +5,11 @@
 "_c.in[0]" & "_c.in[1]" -> "z"-
 ~"_c.in[0]" & ~"_c.in[1]" -> "z"+
 = "!GND" "_c.!GND"
-= "!Vdd" "_c.!Vdd"
-= "z" "_c.out"
 = "!GND" "_nand.!GND"
-= "!Vdd" "_nand.!Vdd"
-= "z" "_nand.out"
 = "!GND" "_nor.!GND"
+= "!Vdd" "_c.!Vdd"
+= "!Vdd" "_nand.!Vdd"
 = "!Vdd" "_nor.!Vdd"
+= "z" "_c.out"
+= "z" "_nand.out"
 = "z" "_nor.out"

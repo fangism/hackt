@@ -5,8 +5,8 @@
 @ "bar.f" iscomb
 = "!GND" "bar.!GND"
 = "!Vdd" "bar.!Vdd"
+= "bar.x" "bar.w"
+= "bar.z" "bar.y"
 = "bar.b" "bar.a"
 = "bar.d" "bar.c"
 = "bar.f" "bar.e"
-= "bar.x" "bar.w"
-= "bar.z" "bar.y"

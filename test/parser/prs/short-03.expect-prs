@@ -3,8 +3,8 @@
 "b.in[0]" & "b.in[1]" & "b.in[2]" & "b.in[3]" -> "z"-
 ~"b.in[0]" | ~"b.in[1]" | ~"b.in[2]" | ~"b.in[3]" -> "z"+
 = "!GND" "a.!GND"
-= "!Vdd" "a.!Vdd"
-= "z" "a.out"
 = "!GND" "b.!GND"
+= "!Vdd" "a.!Vdd"
 = "!Vdd" "b.!Vdd"
+= "z" "a.out"
 = "z" "b.out"

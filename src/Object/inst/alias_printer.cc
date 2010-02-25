@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.8.24.8 2010/02/25 08:35:26 fang Exp $
+	$Id: alias_printer.cc,v 1.8.24.9 2010/02/25 21:26:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -280,6 +280,7 @@ if (at_top()) {
 	f.accept(AS_A(alias_visitor&, *this));
 }
 #else
+// TODO: try-catch exception handling?
 	// save these on the stack, to auto-restore them, clearing them out
 	// swap_savers are extremely efficient
 	const swap_saver<vector<footprint_frame> > __ffs__(fframes);
@@ -295,8 +296,7 @@ if (at_top()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// TODO: publish thes functions
+// TODO: publish these functions
 /**
 	Recursive, visits the i'th node in the graph.
  */

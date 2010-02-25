@@ -3,8 +3,8 @@
 "B.a" -> "z"-
 ~"B.a" -> "z"+
 = "!GND" "A.!GND"
-= "!Vdd" "A.!Vdd"
-= "z" "A.b"
 = "!GND" "B.!GND"
+= "!Vdd" "A.!Vdd"
 = "!Vdd" "B.!Vdd"
+= "z" "A.b"
 = "z" "B.b"

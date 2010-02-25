@@ -1,0 +1,17 @@
+// "126.hac" should pass, will recursively instantiate ports
+// copy-modified from "100.hac"
+
+defproc foo(bool a[2]) {
+	bool b[2];
+}
+
+defproc bar(foo x) {
+	foo y;
+}
+
+defproc ick(bar p) {
+	bar q;
+}
+
+ick poo[2];
+
