@@ -283,34 +283,44 @@ In namespace "", we have: {
         )
         in = bool^0 = foo<>::in (7) 
         Created state:
-        process instance pool:
-        1	foo<>::g
-        2	foo<>::a
-        3	foo<>::b
-        4	foo<>::c
-        5	foo<>::d
-        6	foo<>::d2
-        7	foo<>::e
-        8	foo<>::f
-        9	foo<>::f2
-        10	foo<>::h
-        bool instance pool:
-        1	foo<>::g.Vdd_1
-        2	foo<>::g.GND_1
-        3	foo<>::g.Vdd_2
-        4	foo<>::g.GND_2
-        5	foo<>::!GND
-        6	foo<>::!Vdd
-        7	foo<>::in
-        8	foo<>::a.y
-        9	foo<>::b.y
-        10	foo<>::c.y
-        11	foo<>::d.y
-        12	foo<>::d2.y
-        13	foo<>::e.y
-        14	foo<>::f.y
-        15	foo<>::f2.y
-        16	foo<>::h.y
+        process instance pool: (1 ports, 9 local, 0 mapped)
+        1	foo<>::g	globals<>
+          bool: 1,2,3,4
+        2	foo<>::a	inv<>
+          bool: 5,6,7,8
+        3	foo<>::b	inv<>
+          bool: 5,6,7,9
+        4	foo<>::c	inv<>
+          bool: 5,6,7,10
+        5	foo<>::d	inv<>
+          bool: 2,6,7,11
+        6	foo<>::d2	inv<>
+          bool: 4,6,7,12
+        7	foo<>::e	inv<>
+          bool: 2,6,7,13
+        8	foo<>::f	inv<>
+          bool: 5,1,7,14
+        9	foo<>::f2	inv<>
+          bool: 5,1,7,15
+        10	foo<>::h	inv<>
+          bool: 4,3,7,16
+        bool instance pool: (7 ports, 9 local, 0 mapped)
+        1	foo<>::g.Vdd_1	
+        2	foo<>::g.GND_1	
+        3	foo<>::g.Vdd_2	
+        4	foo<>::g.GND_2	
+        5	foo<>::!GND	
+        6	foo<>::!Vdd	
+        7	foo<>::in	
+        8	foo<>::a.y	
+        9	foo<>::b.y	
+        10	foo<>::c.y	
+        11	foo<>::d.y	
+        12	foo<>::d2.y	
+        13	foo<>::e.y	
+        14	foo<>::f.y	
+        15	foo<>::f2.y	
+        16	foo<>::h.y	
       }
       }
 
@@ -339,11 +349,11 @@ In namespace "", we have: {
         Vdd_1 = bool^0 = globals<>::Vdd_1 (1) 
         Vdd_2 = bool^0 = globals<>::Vdd_2 (3) 
         Created state:
-        bool instance pool:
-        1	globals<>::Vdd_1
-        2	globals<>::GND_1
-        3	globals<>::Vdd_2
-        4	globals<>::GND_2
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	globals<>::Vdd_1	
+        2	globals<>::GND_1	
+        3	globals<>::Vdd_2	
+        4	globals<>::GND_2	
       }
       }
 
@@ -377,11 +387,11 @@ In namespace "", we have: {
         x = bool^0 = inv<>::x (3) 
         y = bool^0 = inv<>::y (4) 
         Created state:
-        bool instance pool:
-        1	inv<>::!GND
-        2	inv<>::!Vdd
-        3	inv<>::x
-        4	inv<>::y
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::x	
+        4	inv<>::y	
         resolved prs:
         x -> y-
         ~x -> y+
@@ -420,15 +430,24 @@ footprint: {
     GND_2 = bool^0 = g.GND_2 (4) 
   )
   Created state:
-  process instance pool:
-  1	g
-  2	bar
-  bool instance pool:
-  1	g.Vdd_1
-  2	g.GND_1
-  3	g.Vdd_2
-  4	g.GND_2
-  5	!GND
-  6	!Vdd
-  7	Z
+  process instance pool: (0 ports, 2 local, 9 mapped)
+  1	g	globals<>
+    bool: 1,2,3,4
+  2	bar	foo<>
+    process: 1
+    bool: 1,2,3,4,5,6,7
+  private sub-process index map:
+    (2 -> 0)
+    (3 -> 9)
+  bool instance pool: (0 ports, 7 local, 9 mapped)
+  1	g.Vdd_1	
+  2	g.GND_1	
+  3	g.Vdd_2	
+  4	g.GND_2	
+  5	!GND	
+  6	!Vdd	
+  7	Z	
+  private sub-bool index map:
+    (2 -> 0)
+    (3 -> 9)
 }

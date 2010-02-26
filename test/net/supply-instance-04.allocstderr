@@ -1,8 +1,8 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	bar	foo<>
-	process: 2,3,4,5,6,7,8,9,10,11
-	bool: 3,4,5,6,1,2,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+	process: 2;3..11
+	bool: 3,4,5,6,1,2;7..24
 2	(top)	-	2	bar.g	globals<>
 	bool: 3,4,5,6
 3	process	1	2	bar.a	inv<>
@@ -48,3 +48,4 @@ globID	super		localID	canonical	footprint-frame
 22	process	1	22	bar.f2.y	
 23	process	1	23	bar.h.x	
 24	process	1	24	bar.h.y	
+

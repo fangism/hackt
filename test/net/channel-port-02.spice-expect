@@ -1,5 +1,3 @@
-* subcircuit e1of2<> is empty.
-
 .subckt inv<> !GND !Vdd x y
 My:dn:0 !GND x y !GND nch W=5u L=2u
 My:up:0 !Vdd x y !Vdd pch W=5u L=2u
@@ -10,6 +8,8 @@ xa !GND !Vdd i.d[1] o.d[1] inv<>
 xb !GND !Vdd i.d[0] o.d[0] inv<>
 xc !GND !Vdd o.e i.e inv<>
 .ends
+
+* subcircuit e1of2<> is empty.
 
 xplease !GND !Vdd please.i.d[0] please.i.d[1] please.i.e please.o.d[0] please.o.d[1] please.o.e connect_me<>
 

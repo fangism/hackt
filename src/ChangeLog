@@ -5,6 +5,20 @@
 
 2010-02-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-53-scalable-01-21:
+	  hacknet +scalability finished.
+		Regression tests passed with minor differences:
+		port processes are no longer emitted duplicately in
+		both the definition and the instance, only the 
+		instance level which is responsible for owning it
+		emits it, which was the intended correct behavior.
+		Order of visiting unique types slightly changed.
+		All test/net tests clean.
+		That was almost too easy.
+
+
+2010-02-25	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-83-53-scalable-01-20:
 	  Finally fixed hflat-aliases, using a unique-instance based
 		approach instead of the old alias-based traversal.

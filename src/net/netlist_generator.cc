@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.11.2.5 2010/02/10 06:43:10 fang Exp $
+	$Id: netlist_generator.cc,v 1.11.2.6 2010/02/26 01:53:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -21,6 +21,11 @@
 #include "Object/expr/string_expr.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/state_instance.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/inst/substructure_alias_base.h"
+#endif
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
 #include "common/TODO.h"
@@ -48,8 +53,6 @@ using entity::directive_base_params_type;
 using entity::resolved_attribute;
 using entity::resolved_attribute_list_type;
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-// TEMPORARY
 //=============================================================================
 // helper globals
 
@@ -59,16 +62,22 @@ using entity::resolved_attribute_list_type;
 // class netlist_generator method definitions
 
 netlist_generator::netlist_generator(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint_frame& ff, 
+		const global_offset& go, 
+#else
 		const state_manager& _sm,
+		const footprint& _topfp, 
 #endif
-		const footprint& _topfp, ostream& o, 
+		ostream& o, 
 		const netlist_options& p) :
-		cflat_context_visitor(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			_sm,
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		global_entry_context(ff, go), 
+		cflat_visitor(), 
+#else
+		cflat_context_visitor(_sm, _topfp),
 #endif
-			_topfp), os(o), opt(p), netmap(),
+		os(o), opt(p), netmap(),
 		prs(NULL), 
 		current_netlist(NULL), 
 		current_local_netlist(NULL),
@@ -105,7 +114,8 @@ void
 netlist_generator::operator () (void) {
 	STACKTRACE_VERBOSE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
+	NEVER_NULL(topfp);
+	topfp->accept(*this);
 #else
 	NEVER_NULL(sm);
 	const GLOBAL_ENTRY<process_tag>& ptop(sm->get_pool<process_tag>()[0]);
@@ -154,32 +164,31 @@ netlist_generator::visit(const GLOBAL_ENTRY<process_tag>& p) {
 	// don't need to temporarily set the footprint_frame
 	// because algorithm is completely hierarchical, no flattening
 	// will need p._frame when emitting subinstances
-	const footprint* f(p._frame._footprint);
-	NEVER_NULL(f);
-	INVARIANT(f->is_created());	// don't need is_allocated()!!!
-	netlist_map_type::iterator mi(netmap.find(f));
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint& f(*p._frame._footprint);
+	INVARIANT(f.is_created());	// don't need is_allocated()!!!
+	netlist_map_type::iterator mi(netmap.find(&f));
 	const bool first_time = (mi == netmap.end());
 	const bool top_level = !current_netlist;
 if (first_time) {
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("processing unique type: ");
-	f->dump_type(STACKTRACE_STREAM) << endl;
+	f.dump_type(STACKTRACE_STREAM) << endl;
 #endif
-	netlist* nl = &netmap[f];	// insert default constructed
-if (f == topfp) {
-	nl->bind_footprint(*f, "<top-level>");
+	netlist* nl = &netmap[&f];	// insert default constructed
+if (&f == topfp) {	// at_top()
+	nl->bind_footprint(f, "<top-level>");
 } else {
-	nl->bind_footprint(*f, opt);
+	nl->bind_footprint(f, opt);
 }
 	// initialize netlist:
 try {
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint_frame_map_type&
 		bfm(p._frame.get_frame_map<bool_tag>());
 		// ALERT: top-footprint frame's size will be +1!
 	nl->named_node_map.resize(bfm.size(), netlist::void_index);
 	// 0-fill
-	// resize(f->get_instance_pool<bool_tag>().size()) ???
+	// resize(f.get_instance_pool<bool_tag>().size()) ???
 	STACKTRACE_INDENT_PRINT("bfm.size = " << bfm.size() << endl);
 	// set current netlist (duplicate for local):
 	const value_saver<netlist*> __tmp(current_netlist, nl);
@@ -206,32 +215,23 @@ try {
 			subp(sm->get_pool<process_tag>()[*i]);
 		// no need to set footprint frames (global use only)
 		visit(subp);	// recursion
+#else
+		const GLOBAL_ENTRY<process_tag>& subp(p);
+		const size_t lpid = subp.get_back_ref()->instance_index;
+#endif
 		// guarantee that dependent type is processed with netlist
 		// find out how local nodes are passed to *local* instance
 		const footprint* subfp = subp._frame._footprint;
 		const netlist& subnet(netmap.find(subfp)->second);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		current_netlist->append_instance(subp, subnet, lpid, opt);
+#else
 		nl->append_instance(subp, subnet, lpid, opt);
 	}
 	}
-#else
-	// this would be easier if there was a local state_manager per footprint
-	// TODO: do this after scalability re-work
-	typedef	state_instance<process_tag>::pool_type	process_pool_type;
-	const process_pool_type& pp(f->get_instance_pool<process_tag>());
-	process_pool_type::const_iterator i(pp.begin()), e(pp.end());
-#if 0
-	size_t j = ...;
-	for ( ; i!=e; ++i) {
-		...
-		// visit local subprocess or fake one
-	}
-#else
-	FINISH_ME_EXIT(Fang);
-#endif
-#endif
 	// process local production rules and macros
-	f->get_prs_footprint().accept(*this);
-	// f->get_spec_footprint().accept(*this);	// ?
+	f.get_prs_footprint().accept(*this);
+	// f.get_spec_footprint().accept(*this);	// ?
 	if (!top_level || opt.top_type_ports) {
 		nl->summarize_ports(opt);
 #if NETLIST_CHECK_CONNECTIVITY
@@ -256,15 +256,74 @@ if (opt.empty_subcircuits || !nl->is_empty()) {
 		<< nl->name << " is empty.\n" << endl;
 }
 }
+#endif
 	// if this is not top-level, wrap emit in .subckt/.ends
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 void
-netlist_generator::visit(const entity::footprint& f) {
-	STACKTRACE_VERBOSE;
-	FINISH_ME(Fang);
+netlist_generator::visit(const footprint& f) {
+	INVARIANT(f.is_created());	// don't need is_allocated()!!!
+	netlist_map_type::iterator mi(netmap.find(&f));
+	const bool first_time = (mi == netmap.end());
+	const bool top_level = at_top();
+if (first_time) {
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("processing unique type: ");
+	f.dump_type(STACKTRACE_STREAM) << endl;
+#endif
+	netlist* nl = &netmap[&f];	// insert default constructed
+if (&f == topfp) {	// at_top()
+	nl->bind_footprint(f, "<top-level>");
+} else {
+	nl->bind_footprint(f, opt);
+}
+try {
+	// set current netlist (duplicate for local):
+	// should not invalidate existing iterators
+	const value_saver<netlist*> __tmp(current_netlist, nl);
+	const value_saver<netlist_common*> __tmp2(current_local_netlist, nl);
+	const size_t bs = f.get_instance_pool<bool_tag>().local_entries();
+	nl->named_node_map.resize(bs, netlist::void_index);
+	// 0-fill
+	// resize(f.get_instance_pool<bool_tag>().size()) ???
+	STACKTRACE_INDENT_PRINT("|bools| = " << bs << endl);
+	const size_t ps = f.get_instance_pool<process_tag>().local_entries();
+	// really should be local_private_entries(), excluding process ports
+	// process ports belong to parents
+	STACKTRACE_INDENT_PRINT("|procs| = " << ps << endl);
+	nl->instance_pool.reserve(ps);	// prevent reallocation!!!
+
+	visit_recursive(f);	// process dependent types depth-first
+	visit_local<process_tag>(f, top_level);
+//	visit_local<bool_tag>(f, top_level);
+	f.get_prs_footprint().accept(*this);
+//	f.get_spec_footprint().accept(*this);	// ?
+
+	if (!top_level || opt.top_type_ports) {
+		nl->summarize_ports(opt);
+#if NETLIST_CHECK_CONNECTIVITY
+		// don't bother checking top-level
+		if (nl->check_node_connectivity(opt) == STATUS_ERROR) {
+			THROW_EXIT;
+		}
+#endif
+	}
+} catch (...) {
+	cerr << "ERROR producing netlist for " << nl->name << endl;
+	throw;
+}
+#if ENABLE_STACKTRACE
+	nl->dump_raw(cerr);	// DEBUG point
+#endif
+if (opt.empty_subcircuits || !nl->is_empty()) {
+	nl->emit(os, !top_level || opt.top_type_ports, opt) << endl;
+} else {
+	os << opt.comment_prefix << "subcircuit "
+		<< nl->name << " is empty.\n" << endl;
+}
+}
 }
 #else
 void
@@ -934,7 +993,6 @@ netlist_generator::visit(const entity::SPEC::footprint_directive&) {
 	// nothing... yet
 }
 
-#endif
 //=============================================================================
 }	// end namespace NET
 }	// end namespace HAC

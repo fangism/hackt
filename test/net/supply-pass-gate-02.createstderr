@@ -122,11 +122,11 @@ In namespace "", we have: {
         Vdd_1 = bool^0 = globals<>::Vdd_1 (1) 
         Vdd_2 = bool^0 = globals<>::Vdd_2 (3) 
         Created state:
-        bool instance pool:
-        1	globals<>::Vdd_1
-        2	globals<>::GND_1
-        3	globals<>::Vdd_2
-        4	globals<>::GND_2
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	globals<>::Vdd_1	
+        2	globals<>::GND_1	
+        3	globals<>::Vdd_2	
+        4	globals<>::GND_2	
       }
       }
 
@@ -180,23 +180,24 @@ footprint: {
       [1] = s[1] (12) 
     }
   Created state:
-  process instance pool:
-  1	gl
-  bool instance pool:
-  1	gl.Vdd_1
-  2	gl.GND_1
-  3	gl.Vdd_2
-  4	gl.GND_2
-  5	!GND
-  6	!Vdd
-  7	_g[0]
-  8	_g[1]
-  9	g[0]
-  10	g[1]
-  11	s[0]
-  12	s[1]
-  13	d[0]
-  14	d[1]
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	gl	globals<>
+    bool: 1,2,3,4
+  bool instance pool: (0 ports, 14 local, 0 mapped)
+  1	gl.Vdd_1	
+  2	gl.GND_1	
+  3	gl.Vdd_2	
+  4	gl.GND_2	
+  5	!GND	
+  6	!Vdd	
+  7	_g[0]	
+  8	_g[1]	
+  9	g[0]	
+  10	g[1]	
+  11	s[0]	
+  12	s[1]	
+  13	d[0]	
+  14	d[1]	
   resolved macros:
   passp(_g[0],s[0],d[0])
   passn(g[0],s[0],d[0])

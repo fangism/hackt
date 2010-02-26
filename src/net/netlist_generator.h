@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.5.2.3 2010/02/10 06:43:10 fang Exp $
+	$Id: netlist_generator.h,v 1.5.2.4 2010/02/26 01:53:57 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -10,7 +10,12 @@
 #include <string>
 #include <map>
 #include "net/netgraph.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_entry_context.h"
+#include "Object/lang/cflat_visitor.h"
+#else
 #include "Object/lang/cflat_context_visitor.h"
+#endif
 #include "Object/lang/PRS_footprint_expr.h"	// for precharge_ref_type
 
 namespace HAC {
@@ -18,7 +23,12 @@ namespace NET {
 using std::vector;
 using std::string;
 using std::map;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using entity::global_entry_context;
+using entity::PRS::cflat_visitor;
+using entity::footprint_frame;
+using entity::global_offset;
+#else
 using entity::cflat_context_visitor;
 using entity::state_manager;
 #endif
@@ -29,8 +39,6 @@ using entity::process_tag;
 using entity::PRS::footprint_expr_node;
 
 //=============================================================================
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-// TEMPORARY
 /**
 	Visitor to do all the heavy-lifting and traversal.  
 	TODO: warn against instantiating port processes with production rules.
@@ -38,7 +46,14 @@ using entity::PRS::footprint_expr_node;
 	Certainly should NOT be duplicated.
 	This is the reason for deftype, defchan, etc.
  */
-class netlist_generator : public cflat_context_visitor {
+class netlist_generator :
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	public global_entry_context,
+	public cflat_visitor
+#else
+	public cflat_context_visitor
+#endif
+{
 	/**
 		Primary structure for maintaining prerequisite ordering
 		of emitting dependent subcircuits before they are used.
@@ -134,10 +149,14 @@ private:
 	real_type			last_length;
 public:
 	netlist_generator(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint_frame&, 
+		const global_offset&,
+#else
 		const state_manager& _sm, 
+		const footprint& _topfp, 
 #endif
-		const footprint& _topfp, ostream& o, const netlist_options& p);
+		ostream& o, const netlist_options& p);
 	~netlist_generator();
 
 	// go!!!
@@ -148,7 +167,11 @@ private:
 	void
 	visit(const GLOBAL_ENTRY<process_tag>&);
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	using global_entry_context::visit;
+#else
 	using cflat_context_visitor::visit;
+#endif
 
 	void
 	visit(const GLOBAL_ENTRY<bool_tag>&);		// do nothing?
@@ -199,7 +222,6 @@ private:
 };	// end class netlist_generator
 
 //=============================================================================
-#endif
 }	// end namespace NET
 }	// end namespace HAC
 

@@ -136,11 +136,11 @@ In namespace "", we have: {
         Vdd_1 = bool^0 = globals<>::Vdd_1 (1) 
         Vdd_2 = bool^0 = globals<>::Vdd_2 (3) 
         Created state:
-        bool instance pool:
-        1	globals<>::Vdd_1
-        2	globals<>::GND_1
-        3	globals<>::Vdd_2
-        4	globals<>::GND_2
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	globals<>::Vdd_1	
+        2	globals<>::GND_1	
+        3	globals<>::Vdd_2	
+        4	globals<>::GND_2	
       }
       }
 
@@ -174,11 +174,11 @@ In namespace "", we have: {
         x = bool^0 = inv<>::x (3) 
         y = bool^0 = inv<>::y (4) 
         Created state:
-        bool instance pool:
-        1	inv<>::!GND
-        2	inv<>::!Vdd
-        3	inv<>::x
-        4	inv<>::y
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::x	
+        4	inv<>::y	
         resolved prs:
         x -> y-
         ~x -> y+
@@ -259,37 +259,46 @@ footprint: {
     y = bool^0 = h.y (22) 
   )
   Created state:
-  process instance pool:
-  1	g
-  2	a
-  3	b
-  4	c
-  5	d
-  6	d2
-  7	e
-  8	f
-  9	h
-  bool instance pool:
-  1	g.Vdd_1
-  2	g.GND_1
-  3	g.Vdd_2
-  4	g.GND_2
-  5	!GND
-  6	!Vdd
-  7	a.x
-  8	a.y
-  9	b.x
-  10	b.y
-  11	c.x
-  12	c.y
-  13	d.x
-  14	d.y
-  15	d2.x
-  16	d2.y
-  17	e.x
-  18	e.y
-  19	f.x
-  20	f.y
-  21	h.x
-  22	h.y
+  process instance pool: (0 ports, 9 local, 0 mapped)
+  1	g	globals<>
+    bool: 1,2,3,4
+  2	a	inv<>
+    bool: 5,6,7,8
+  3	b	inv<>
+    bool: 5,6,9,10
+  4	c	inv<>
+    bool: 5,6,11,12
+  5	d	inv<>
+    bool: 2,6,13,14
+  6	d2	inv<>
+    bool: 4,6,15,16
+  7	e	inv<>
+    bool: 2,6,17,18
+  8	f	inv<>
+    bool: 5,1,19,20
+  9	h	inv<>
+    bool: 4,3,21,22
+  bool instance pool: (0 ports, 22 local, 0 mapped)
+  1	g.Vdd_1	
+  2	g.GND_1	
+  3	g.Vdd_2	
+  4	g.GND_2	
+  5	!GND	
+  6	!Vdd	
+  7	a.x	
+  8	a.y	
+  9	b.x	
+  10	b.y	
+  11	c.x	
+  12	c.y	
+  13	d.x	
+  14	d.y	
+  15	d2.x	
+  16	d2.y	
+  17	e.x	
+  18	e.y	
+  19	f.x	
+  20	f.y	
+  21	h.x	
+  22	h.y	
 }

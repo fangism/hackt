@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.6.2.3 2010/02/10 06:43:09 fang Exp $
+	$Id: hacknet.cc,v 1.6.2.4 2010/02/26 01:53:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -22,6 +22,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/simple_options.tcc"
 #include "main/global_options.h"
 #include "main/compile_options.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_entry.h"
+#endif
 #include "common/TODO.h"
 #include "util/stacktrace.h"
 #include "util/getopt_mapped.h"
@@ -191,20 +194,18 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	// the simulator state object, initialized with the module
 try {
 	opt.net_opt.commit();		// commit options
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-#else
 	const module& top_module_c(AS_A(const module&, *top_module));
 	const entity::footprint& topfp(top_module_c.get_footprint());
-	NET::netlist_generator n(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		top_module->get_state_manager(), 
-#endif
-		topfp, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const entity::footprint_frame tff(topfp);
+	const entity::global_offset g;		// 0
+	NET::netlist_generator n(tff, g, cout, opt.net_opt);
+#else
+	NET::netlist_generator n(top_module->get_state_manager(), topfp, 
 		cout, opt.net_opt);
 	// process global-scope instances and rules
-	n();
 #endif
+	n();
 } catch (...) {
 	cerr << "Caught exception during netlist generation."
 		<< endl;

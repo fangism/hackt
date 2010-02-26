@@ -124,11 +124,11 @@ In namespace "", we have: {
         x = bool^0 = inv<>::x (3) 
         y = bool^0 = inv<>::y (4) 
         Created state:
-        bool instance pool:
-        1	inv<>::!GND
-        2	inv<>::!Vdd
-        3	inv<>::x
-        4	inv<>::y
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::x	
+        4	inv<>::y	
         resolved prs:
         x -> y-
         ~x -> y+
@@ -206,34 +206,42 @@ footprint: {
   myGND = bool^0 = myGND (9) 
   myVdd = bool^0 = myVdd (16) 
   Created state:
-  process instance pool:
-  1	a
-  2	b
-  3	c
-  4	d
-  5	d2
-  6	e
-  7	f
-  8	g
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	a.x
-  4	a.y
-  5	b.x
-  6	b.y
-  7	c.x
-  8	c.y
-  9	myGND
-  10	d.x
-  11	d.y
-  12	d2.x
-  13	d2.y
-  14	e.x
-  15	e.y
-  16	myVdd
-  17	f.x
-  18	f.y
-  19	g.x
-  20	g.y
+  process instance pool: (0 ports, 8 local, 0 mapped)
+  1	a	inv<>
+    bool: 1,2,3,4
+  2	b	inv<>
+    bool: 1,2,5,6
+  3	c	inv<>
+    bool: 1,2,7,8
+  4	d	inv<>
+    bool: 9,2,10,11
+  5	d2	inv<>
+    bool: 9,2,12,13
+  6	e	inv<>
+    bool: 9,2,14,15
+  7	f	inv<>
+    bool: 1,16,17,18
+  8	g	inv<>
+    bool: 9,16,19,20
+  bool instance pool: (0 ports, 20 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	a.x	
+  4	a.y	
+  5	b.x	
+  6	b.y	
+  7	c.x	
+  8	c.y	
+  9	myGND	
+  10	d.x	
+  11	d.y	
+  12	d2.x	
+  13	d2.y	
+  14	e.x	
+  15	e.y	
+  16	myVdd	
+  17	f.x	
+  18	f.y	
+  19	g.x	
+  20	g.y	
 }

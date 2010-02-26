@@ -1,5 +1,3 @@
-* subcircuit e1of2<> is empty.
-
 .subckt res<6> !GND in out
 Mout:dn:0 in in out !GND nch W=5u L=2u
 .ends
@@ -7,6 +5,8 @@ Mout:dn:0 in in out !GND nch W=5u L=2u
 .subckt connect_me<> !GND i.e o.e
 xr !GND i.e o.e res<6>
 .ends
+
+* subcircuit e1of2<> is empty.
 
 xplease !GND please.i.e please.o.e connect_me<>
 
