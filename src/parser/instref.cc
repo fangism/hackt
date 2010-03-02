@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.4 2010/02/11 01:42:12 fang Exp $
+	$Id: instref.cc,v 1.19.2.5 2010/03/02 02:34:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -224,8 +224,15 @@ parse_node_to_index(const string& n, const module& m) {
 	const footprint& top(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 //	const size_t ret = b->lookup_globally_allocated_index(top);
-	FINISH_ME(Fang);
-	const size_t ret = INVALID_NODE_INDEX;
+	const footprint& topfp(m.get_footprint());
+	entity::footprint_frame tff(topfp);
+	const entity::global_offset g;
+	tff.construct_top_global_context(topfp, g);
+	const entity::global_entry_context gc(tff, g);
+#if ENABLE_STACKTRACE
+	gc.dump_context(STACKTRACE_INDENT_PRINT("context:")) << endl;
+#endif
+	const size_t ret = b->lookup_globally_allocated_index(gc);
 #else
 	const state_manager& sm(m.get_state_manager());
 	const size_t ret = b->lookup_globally_allocated_index(sm, top);
@@ -267,9 +274,12 @@ if (n == ".") {
 	// alloc phase to find the canonical ID number.  
 	const footprint& top(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	// const size_t ret = b->lookup_globally_allocated_index(top);
-	FINISH_ME(Fang);
-	const size_t ret = INVALID_PROCESS_INDEX;
+	const footprint& topfp(m.get_footprint());
+	entity::footprint_frame tff(topfp);
+	const entity::global_offset g;
+	tff.construct_top_global_context(topfp, g);
+	const entity::global_entry_context gc(tff, g);
+	const size_t ret = b->lookup_globally_allocated_index(gc);
 #else
 	const state_manager& sm(m.get_state_manager());
 	const size_t ret = b->lookup_globally_allocated_index(sm, top);
@@ -295,9 +305,12 @@ parse_global_reference(const string& n, const module& m) {
 	}
 	const footprint& top(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-//	return r.inst_ref()->lookup_top_level_reference(top);
-	FINISH_ME(Fang);
-	return global_indexed_reference(META_TYPE_NONE, INVALID_NODE_INDEX);
+	const footprint& topfp(m.get_footprint());
+	entity::footprint_frame tff(topfp);
+	const entity::global_offset g;
+	tff.construct_top_global_context(topfp, g);
+	const entity::global_entry_context gc(tff, g);
+	return r.inst_ref()->lookup_top_level_reference(gc);
 #else
 	const state_manager& sm(m.get_state_manager());
 	// r.inst_ref() is a meta_instance_reference_base
@@ -309,20 +322,26 @@ parse_global_reference(const string& n, const module& m) {
 /**
 	Convenience function.
 	Maybe make this public...
+	\param pid 1-based global process index, 0 for top-level.
  */
 static
 const footprint*
 get_process_footprint(const size_t pid, const module& m) {
+	typedef	process_tag			Tag;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME_EXIT(Fang);
-	// this should be easy to implement with hierarchy!
-	return NULL;
+	const footprint& topfp(m.get_footprint());
+if (pid) {
+	return topfp.get_instance<Tag>(pid -1)._frame._footprint;
+} else {
+	// top-level
+	return &topfp;
+}
 #else
 	const state_manager& sm(m.get_state_manager());
-	const global_entry_pool<process_tag>&
-		proc_pool(sm.get_pool<process_tag>());
+	const global_entry_pool<Tag>&
+		proc_pool(sm.get_pool<Tag>());
 	// get process_instance_alias
-	const entity::global_entry<process_tag>& pe(proc_pool[pid]);
+	const entity::global_entry<Tag>& pe(proc_pool[pid]);
 	const footprint* f = pe._frame._footprint;
 	NEVER_NULL(f);
 	return f;
@@ -406,23 +425,24 @@ if (n == ".") {
 		return 1;
 	} else {
 		// check for valid reference first
+		const footprint& topfp(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const global_indexed_reference gref;
-		FINISH_ME(Fang);
-		return 1;
+		entity::footprint_frame tff(topfp);
+		const entity::global_offset g;
+		tff.construct_top_global_context(topfp, g);
+		const entity::global_entry_context gc(tff, g);
+		const global_indexed_reference
+			gref(r.inst_ref()->lookup_top_level_reference(gc));
 #else
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				m.get_state_manager(), 
+				m.get_state_manager(), topfp));
 #endif
-				m.get_footprint()));
 		if (!gref.second) {
 			o << "Error resolving instance reference: "
 				<< n << endl;
 			return 1;
 		}
-#endif
 		const footprint* f = NULL;
 		o << n << " (type: ";
 		switch (gref.first) {
@@ -725,16 +745,18 @@ complete_instance_names(const char* _text, const module& m,
 			// no error message
 		if (r.inst_ref()->dimensions()) { return; }
 			// no error message
+		const footprint& topfp(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const global_indexed_reference gref;
-		FINISH_ME(Fang);
+		entity::footprint_frame tff(topfp);
+		const entity::global_offset g;
+		tff.construct_top_global_context(topfp, g);
+		const entity::global_entry_context gc(tff, g);
+		const global_indexed_reference
+			gref(r.inst_ref()->lookup_top_level_reference(gc));
 #else
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				m.get_state_manager(), 
-#endif
-				m.get_footprint()));
+				m.get_state_manager(), topfp));
 #endif
 		if (!gref.second) { return; }
 		if (gref.first != entity::META_TYPE_PROCESS) { return; }

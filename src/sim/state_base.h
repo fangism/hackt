@@ -1,7 +1,7 @@
 /**
 	\file "sim/state_base.h"
 	Facilities common to all simulator states.  (Recommended)
-	$Id: state_base.h,v 1.3 2008/11/05 23:03:39 fang Exp $
+	$Id: state_base.h,v 1.3.24.1 2010/03/02 02:34:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_STATE_BASE_H__
@@ -32,7 +32,9 @@ class state_base {
 protected:
 	/**
 		Attachment to the source object that contains
-		whole programm hierarchical and allocation information.  
+		whole program hierarchical and allocation information.  
+		TODO: reduce this to just the top_footprint, now that
+		back-ends are hierarchical?
 	 */
 	const module&					mod;
 	/**

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.32 2009/04/17 21:14:38 fang Exp $
+	$Id: State-prsim.h,v 1.32.14.1 2010/03/02 02:34:49 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -33,6 +33,7 @@
 #include "util/string_fwd.h"
 #include "util/named_ifstream_manager.h"
 #include "util/tokenize_fwd.h"
+#include "Object/devel_switches.h"
 #if PRSIM_TRACE_GENERATION
 #include "util/memory/excl_ptr.h"
 #endif
@@ -430,6 +431,9 @@ protected:
 	typedef	vector<ring_set_type>		check_excl_array_type;
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	/**
+		TODO: use a hierarchical local_private_entry map scheme!
+		Analogous to global_entry_context's id lookups.
+
 		Translates a global expression ID to the process ID
 		to which the expression belongs.  
 		key is the *lowest* expression-index 'owned' by
@@ -615,7 +619,11 @@ public:
 	string
 	get_process_canonical_name(const process_index_type) const;
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	footprint_frame_map_type
+#else
 	const footprint_frame_map_type&
+#endif
 	get_footprint_frame_map(const process_index_type pid) const;
 
 	const process_sim_state&

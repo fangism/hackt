@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.6.46.7 2010/02/23 22:34:02 fang Exp $
+	$Id: global_entry_context.h,v 1.6.46.8 2010/03/02 02:34:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -26,6 +26,7 @@ class state_manager;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 struct global_offset;
 template <class> class state_instance;
+class meta_instance_reference_base;
 #endif
 struct bool_tag;
 template <class> class footprint_frame_map;
@@ -251,6 +252,18 @@ virtual	void
 	size_t
 	lookup_meta_reference_global_index(
 		const simple_meta_instance_reference<Tag>&) const;
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	construct_global_footprint_frame(footprint_frame&, 
+		global_offset&, size_t pid) const;
+
+	// \return true on error
+	bool
+	construct_global_footprint_frame(footprint_frame&, footprint_frame&, 
+		global_offset&, const meta_instance_reference_base&) const;
+#endif
+
 
 };	// end struct global_entry_context
 

@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.18.20.3 2010/02/11 01:42:09 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.18.20.4 2010/03/02 02:34:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -153,6 +153,7 @@ virtual	CONNECT_PORT_PROTO = 0;
 #endif
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
+#endif
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #define	LOOKUP_TOP_LEVEL_REFERENCE_PROTO				\
@@ -167,6 +168,8 @@ virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 
 virtual	LOOKUP_TOP_LEVEL_REFERENCE_PROTO = 0;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 #define	COLLECT_ALIASES_PROTO						\
 	void								\
 	collect_aliases(const module&, util::string_list&) const

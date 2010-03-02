@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.12.20.4 2010/02/12 18:20:37 fang Exp $
+	$Id: cflat_visitor.cc,v 1.12.20.5 2010/03/02 02:34:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -114,6 +114,9 @@ void
 cflat_visitor::visit(const entity::footprint& f) {
 	STACKTRACE_VERBOSE;
 	FINISH_ME_EXIT(Fang);
+	// visit PRS
+	// visit CHP
+	// visit SPEC
 }
 #else
 /**

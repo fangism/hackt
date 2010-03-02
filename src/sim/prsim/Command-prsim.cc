@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.54 2009/11/19 23:29:12 fang Exp $
+	$Id: Command-prsim.cc,v 1.54.2.1 2010/03/02 02:34:47 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -20,6 +20,8 @@
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
+
+#define	ENABLE_STACKTRACE				0
 
 #include <iostream>
 #include <fstream>
@@ -41,6 +43,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "common/TODO.h"
 #include "util/libc.h"
 #include "util/memory/excl_malloc_ptr.h"
+#include "util/stacktrace.h"
 
 /**
 	These commands are deprecated, but provided for backwards compatibility.
@@ -1918,6 +1921,12 @@ try {	// temporary measure until bug ACX-PR-1456 is fixed
 		// already got error message?
 		return Command::BADARG;
 	} else {
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT_PRINT("node-ids: ");
+		copy(nodes.begin(), nodes.end(),
+			ostream_iterator<size_t>(STACKTRACE_STREAM, ","));
+		STACKTRACE_STREAM << endl;
+#endif
 		typedef	nodes_id_list_type::const_iterator	const_iterator;
 		cout << "All subnodes of \'" << 
 			nonempty_abs_dir(objname) << "\':" << endl;

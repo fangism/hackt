@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.6.76.4 2010/02/12 18:20:35 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.6.76.5 2010/03/02 02:34:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -24,6 +24,7 @@ namespace entity {
 
 /**
 	Can also be pushed to parent class.  
+
 	Frequently used, consider inlining.  
 	The footprint_frame is NOT set in the case of top-level (new supported)
 	visits (b/c type frame is not applicable), in which case, 

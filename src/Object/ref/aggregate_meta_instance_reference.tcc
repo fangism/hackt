@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.13.40.2 2010/02/11 01:42:07 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.13.40.3 2010/03/02 02:34:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -161,6 +161,7 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 	ICE_NEVER_CALL(cerr);
 	return NULL;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -178,7 +179,6 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
 	ICE_NEVER_CALL(cerr);
 	return global_indexed_reference(META_TYPE_NONE, 0);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.12.88.5 2010/01/29 02:39:43 fang Exp $
+	$Id: instance_pool.h,v 1.12.88.6 2010/03/02 02:34:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -211,7 +211,8 @@ public:
 	 */
 	size_t
 	total_entries(void) const {
-		return this->size() +this->non_local_private_entries();
+		return this->local_entries()
+			+this->non_local_private_entries();
 	}
 
 	const private_map_entry_type&

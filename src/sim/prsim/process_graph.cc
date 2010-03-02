@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_graph.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_graph.cc,v 1.5 2009/02/19 02:58:38 fang Exp $
+	$Id: process_graph.cc,v 1.5.16.1 2010/03/02 02:34:49 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -361,6 +361,7 @@ unique_process_subgraph::dump_struct_dot(ostream& o,
  */
 node_index_type
 unique_process_subgraph::local_root_expr(expr_index_type ei) const {
+	STACKTRACE_VERBOSE;
 	const expr_struct_type* e = &expr_pool[ei];
 	while (!e->is_root()) {
 		DEBUG_FANOUT_PRINT("ei = " << ei << endl);
@@ -376,6 +377,7 @@ unique_process_subgraph::local_root_expr(expr_index_type ei) const {
  */
 expr_index_type
 unique_process_subgraph::fan_count(void) const {
+	STACKTRACE_VERBOSE;
 	return std::accumulate(local_faninout_map.begin(), 
 		local_faninout_map.end(), expr_index_type(0), 
 		&faninout_struct_type::add_size);

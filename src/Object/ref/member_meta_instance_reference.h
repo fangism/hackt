@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.18.40.2 2010/02/11 01:42:08 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.18.40.3 2010/03/02 02:34:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -103,13 +103,16 @@ public:
 		const count_ptr<const parent_type>&) const;
 
 	using parent_type::connect_port;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	base_inst_ptr_type
+	get_base_ref(void) const { return this->base_inst_ref; }
+#endif
 
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// overrides simple_meta...
 	LOOKUP_FOOTPRINT_FRAME_PROTO;
 #endif
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// overrides simple_meta...
 	size_t
 	lookup_globally_allocated_index(
@@ -128,6 +131,7 @@ public:
 #endif
 		const unroll_context&) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using parent_type::lookup_globally_allocated_indices;
 #endif
 

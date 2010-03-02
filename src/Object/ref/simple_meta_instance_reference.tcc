@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.2 2010/02/11 01:42:11 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.3 2010/03/02 02:34:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -206,7 +206,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	If this is called, we're at the top-level of the instance hierarchy.
 	This should work regardless of whether this type has substructure.  
@@ -230,15 +229,17 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		) const {
 	STACKTRACE_VERBOSE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const footprint& top(*gc.get_top_footprint_ptr());
+	const footprint& top(gc.get_top_footprint());
 #endif
 	const unroll_context uc(&top, &top);
 	// should not be virtual call (one hopes)
-	return this->lookup_locally_allocated_index(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		sm, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// translate local index to global
+	return gc.lookup_global_id<Tag>(
+		this->lookup_locally_allocated_index(uc));
+#else
+	return this->lookup_locally_allocated_index(sm, uc);
 #endif
-		uc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -290,6 +291,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Since this is a simple_meta_instance_reference, we're 
 	at the top of the reference hierarchy.  

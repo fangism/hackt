@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.cc"
 	Method definitions for the meta_dummy_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_dummy_reference.tcc,v 1.4.20.2 2010/02/11 01:42:11 fang Exp $
+ 	$Id: simple_meta_dummy_reference.tcc,v 1.4.20.3 2010/03/02 02:34:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_TCC__
@@ -208,7 +208,6 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Internal nodes are not reference-able as physical instances.  
  */
@@ -226,6 +225,7 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_top_level_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Since this is a simple_meta_dummy_reference, we're 
 	at the top of the reference hierarchy.  

@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.28.24.2 2010/02/11 01:42:08 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.28.24.3 2010/03/02 02:34:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -158,7 +158,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 }	// end method resolve_parent_member_helper
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Recurse through parent instances first.  
 	This can be used to lookup private members.  
@@ -166,6 +165,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		up until the lookup part?
 	\pre this MUST be a top-level instance reference.  
 	FIXME: this looks identical to simple_meta_instance_reference's
+	\return 1-based global index, 0 for error.
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
@@ -178,14 +178,34 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		) const {
 	STACKTRACE_VERBOSE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const footprint& top(*gc.get_top_footprint_ptr());
+	const footprint& top(gc.get_top_footprint());
 #endif
 	const unroll_context uc(&top, &top);
-	return this->lookup_locally_allocated_index(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		sm, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if 0
+	NEVER_NULL(base_inst_ref);
+	const size_t lid = this->lookup_locally_allocated_index(uc);
+if (!lid) {
+	// error message?
+	return 0;
+}
+//	const footprint& f(gc.current_footprint());
+	footprint_frame owner;	// scratch space
+	footprint_frame pff;
+	global_offset g;
+	if (gc.construct_global_footprint_frame(owner, pff, g, *base_inst_ref)) {
+		return 0;
+	}
+#if ENABLE_STACKTRACE
+	pff.dump_frame(STACKTRACE_STREAM) << endl;
 #endif
-		uc);
+	return pff.get_frame_map<Tag>()[lid -1];
+#else
+	return this->lookup_locally_allocated_index(uc);
+#endif
+#else
+	return this->lookup_locally_allocated_index(sm, uc);
+#endif
 }	// end method lookup_globally_allocated_index
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -212,12 +232,20 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 		return 0;
 	}
 	// TODO: have parent reference populate footprint_frame
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	footprint_frame owner, tmp;	// scratch space
+	footprint_frame pff(top);
+	global_offset g;
+	global_entry_context gc(pff, g);
+	if (gc.construct_global_footprint_frame(
+			owner, tmp, g, _parent_inst_ref)) {
+		return 0;
+	}
+	const footprint_frame* const fpf = &tmp;
+#else
 	const footprint_frame* const fpf =
-		_parent_inst_ref.lookup_footprint_frame(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			sm, 
+		_parent_inst_ref.lookup_footprint_frame(sm, top);
 #endif
-			top);
 	if (!fpf) {
 		// TODO: better error message
 		cerr << "Failure resolving parent instance reference" << endl;
@@ -255,7 +283,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	// this lookup returns a globally allocated index
 	return footprint_frame_transformer(*fpf, Tag())(ind);
 }	// end method lookup_locally_allocated_index
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

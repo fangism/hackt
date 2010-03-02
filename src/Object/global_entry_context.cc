@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.6 2010/02/23 22:34:02 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.7 2010/03/02 02:34:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -20,6 +20,7 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
+#include "Object/ref/member_meta_instance_reference.h"
 #include "util/stacktrace.h"
 #include "util/indent.h"
 #include "util/value_saver.h"
@@ -101,6 +102,182 @@ global_entry_context::dump_context(ostream& o) const {
 		o << "NULL" << endl;
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Similar traversal to footprint::get_instance<>().
+	\param _gpid global process index 1-based.  
+		pass 0 to indicate top-level.
+	NOTE: parent_offset and fpf are only used once in this impl.
+ */
+void
+global_entry_context::construct_global_footprint_frame(footprint_frame& ret, 
+		global_offset& g, size_t gpid) const {
+	STACKTRACE_VERBOSE;
+	typedef	process_tag				Tag;
+	typedef	state_instance<Tag>::pool_type		pool_type;
+//	ret = *fpf;		// initialize to top-level (scratch space)
+	ret.construct_top_global_context(*topfp, g);
+	g = *parent_offset;
+#if ENABLE_STACKTRACE
+	ret.dump_frame(STACKTRACE_INDENT_PRINT("top:")) << endl;
+#endif
+if (gpid) {
+	// iterative instead of recursive implementation, hence pointers
+	const footprint* cf = fpf->_footprint;
+	const pool_type* p = &cf->get_instance_pool<Tag>();
+	size_t ports = 0;			// at_top
+	size_t local = p->local_entries();	// at_top
+	STACKTRACE_INDENT_PRINT("ports = " << ports << endl);
+	STACKTRACE_INDENT_PRINT("local = " << local << endl);
+	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
+	STACKTRACE_INDENT_PRINT("offset = " << g << endl);
+	while (gpid > local) {
+		STACKTRACE_INDENT_PRINT("descending..." << endl);
+		const size_t si = gpid -local;	// 1-based index
+		if (cf == topfp) {
+			g = global_offset(g, *cf, add_all_local_tag());
+		} else {
+			g = global_offset(g, *cf, add_local_private_tag());
+		}
+		const pool_private_map_entry_type&
+			e(p->locate_private_entry(si));
+		const size_t lpid = e.first;
+		global_offset delta;
+		cf->set_global_offset_by_process(delta, lpid);
+		delta += g;
+		const state_instance<Tag>& sp((*p)[lpid -1]);
+		const footprint_frame& sff(sp._frame);
+		cf = sff._footprint;
+		gpid = si -e.second;
+		footprint_frame lff(sff, ret);
+		lff.extend_frame(g, delta);
+	//	lff.construct_global_context(*cf, ret, g);
+#if ENABLE_STACKTRACE
+		lff.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+#endif
+		lff.swap(ret);
+		g = delta;
+		p = &cf->get_instance_pool<Tag>();
+		ports = p->port_entries();
+		local = p->local_private_entries();
+		STACKTRACE_INDENT_PRINT("ports = " << ports << endl);
+		STACKTRACE_INDENT_PRINT("local = " << local << endl);
+		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
+		STACKTRACE_INDENT_PRINT("offset = " << g << endl);
+	}
+	const size_t lpid = gpid;
+	STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
+	p = &cf->get_instance_pool<Tag>();
+	const state_instance<Tag>& sp((*p)[lpid -1]);
+	const footprint_frame& sff(sp._frame);
+#if ENABLE_STACKTRACE
+	sff.dump_frame(STACKTRACE_INDENT_PRINT("sff:")) << endl;
+	ret.dump_frame(STACKTRACE_INDENT_PRINT("actuals:")) << endl;
+#endif
+	footprint_frame lff(sff, ret);
+	global_offset delta;
+	cf->set_global_offset_by_process(delta, lpid);
+	delta += g;
+	lff.extend_frame(g, delta);
+#if ENABLE_STACKTRACE
+	lff.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+#endif
+	lff.swap(ret);
+	// keep g
+}
+	// else refers to top-level
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursive implementation due to member instance reference structuring.
+	\return true to signal an error.
+ */
+bool
+global_entry_context::construct_global_footprint_frame(
+		footprint_frame& owner, 
+		footprint_frame& ret, global_offset& g, 
+		const meta_instance_reference_base& pr) const {
+	STACKTRACE_VERBOSE;
+	typedef	process_tag			Tag;
+	const meta_instance_reference_base* prp = &pr;
+	const simple_meta_instance_reference<Tag>*
+		spr = IS_A(const simple_meta_instance_reference<Tag>*, prp);
+	if (!spr) {
+		cerr << "Parent is not a process, I give up!" << endl;
+		// TODO: more informative error message
+		return true;
+	}
+	// check for scalar reference
+	if (spr->dimensions()) {
+		cerr << "Parent reference must be scalar." << endl;
+		return true;
+	}
+	const member_meta_instance_reference<Tag>*
+		mpr = IS_A(const member_meta_instance_reference<Tag>*, spr);
+	if (mpr) {
+		STACKTRACE_INDENT_PRINT("have a member-ref" << endl);
+		// in a sub-process, sets ret, owner and g
+		if (construct_global_footprint_frame(owner, ret, g,
+				*mpr->get_base_ref())) {
+			// have some error
+			return true;
+		}
+		const unroll_context uc(topfp, topfp);
+		const size_t lpid = mpr->lookup_locally_allocated_index(uc);
+		const footprint& ofp(*owner._footprint);
+		const state_instance<Tag>::pool_type&
+			pp(ofp.get_instance_pool<Tag>());
+		const size_t ports = pp.port_entries();
+		const state_instance<Tag>& sp(pp[lpid -1]);
+		if (lpid >= ports) {
+			STACKTRACE_INDENT_PRINT("private local" << endl);
+			// then is local private
+			// change both ret frame and owner, and global offset
+			global_offset delta;
+			ofp.set_global_offset_by_process(
+				delta, lpid);
+			global_offset sgo;
+			if (&ofp == topfp) {
+				sgo = global_offset(g, *owner._footprint,
+					add_all_local_tag());
+			} else {
+				sgo = global_offset(g, *owner._footprint,
+					add_local_private_tag());
+			}
+			delta += sgo;
+			footprint_frame lff(sp._frame, owner);
+			lff.extend_frame(g, delta);
+			g = delta;
+#if ENABLE_STACKTRACE
+			lff.dump_frame(STACKTRACE_STREAM) << endl;
+			STACKTRACE_INDENT_PRINT("offset: " << g << endl);
+#endif
+			owner = lff;
+			lff.swap(ret);
+		} else {
+			STACKTRACE_INDENT_PRINT("public port" << endl);
+			// then is public port, only change ret frame
+			// no change in global offset
+			footprint_frame lff(sp._frame, owner);
+#if ENABLE_STACKTRACE
+			lff.dump_frame(STACKTRACE_STREAM) << endl;
+#endif
+			ret.swap(lff);
+		}
+	} else {
+		STACKTRACE_INDENT_PRINT("at top-level" << endl);
+		// we're at top level
+		ret = *fpf;
+		owner = *fpf;
+		g = *parent_offset;
+#if ENABLE_STACKTRACE
+		ret.dump_frame(STACKTRACE_STREAM) << endl;
+#endif
+	}
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
