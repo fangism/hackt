@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.28.24.3 2010/03/02 02:34:38 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.28.24.4 2010/03/03 02:42:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -193,7 +193,7 @@ if (!lid) {
 	footprint_frame owner;	// scratch space
 	footprint_frame pff;
 	global_offset g;
-	if (gc.construct_global_footprint_frame(owner, pff, g, *base_inst_ref)) {
+	if (!gc.construct_global_footprint_frame(owner, pff, g, *base_inst_ref)) {
 		return 0;
 	}
 #if ENABLE_STACKTRACE
@@ -220,6 +220,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 		const state_manager& sm, 
 #endif
 		const unroll_context& uc) const {
+	STACKTRACE_VERBOSE;
 	const footprint& top(*uc.get_top_footprint());
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
 	if (_parent_inst_ref.dimensions()) {
@@ -237,7 +238,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	footprint_frame pff(top);
 	global_offset g;
 	global_entry_context gc(pff, g);
-	if (gc.construct_global_footprint_frame(
+	if (!gc.construct_global_footprint_frame(
 			owner, tmp, g, _parent_inst_ref)) {
 		return 0;
 	}

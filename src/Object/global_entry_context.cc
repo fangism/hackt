@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.7 2010/03/02 02:34:30 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.8 2010/03/03 02:42:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,6 +13,7 @@
 #include <iostream>
 #include "Object/global_channel_entry.h"
 #include "Object/def/footprint.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_pool.h"
@@ -20,6 +21,10 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
+#include "Object/inst/instance_collection.h"
+#include "Object/inst/general_collection_type_manager.h"
+#include "Object/inst/instance_placeholder.h"
+#include "Object/inst/physical_instance_placeholder.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "util/stacktrace.h"
 #include "util/indent.h"
@@ -193,18 +198,19 @@ if (gpid) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursive implementation due to member instance reference structuring.
-	\return true to signal an error.
+	\return local pid of returned process frame, 0 to signal an error.
  */
-bool
+size_t
 global_entry_context::construct_global_footprint_frame(
 		footprint_frame& owner, 
 		footprint_frame& ret, global_offset& g, 
 		const meta_instance_reference_base& pr) const {
 	STACKTRACE_VERBOSE;
 	typedef	process_tag			Tag;
+	typedef	simple_meta_instance_reference<Tag>	simple_ref;
+	typedef	member_meta_instance_reference<Tag>	member_ref;
 	const meta_instance_reference_base* prp = &pr;
-	const simple_meta_instance_reference<Tag>*
-		spr = IS_A(const simple_meta_instance_reference<Tag>*, prp);
+	const simple_ref* spr = IS_A(const simple_ref*, prp);
 	if (!spr) {
 		cerr << "Parent is not a process, I give up!" << endl;
 		// TODO: more informative error message
@@ -215,48 +221,62 @@ global_entry_context::construct_global_footprint_frame(
 		cerr << "Parent reference must be scalar." << endl;
 		return true;
 	}
-	const member_meta_instance_reference<Tag>*
-		mpr = IS_A(const member_meta_instance_reference<Tag>*, spr);
+	const member_ref* mpr = IS_A(const member_ref*, spr);
 	if (mpr) {
-		STACKTRACE_INDENT_PRINT("have a member-ref" << endl);
+#if ENABLE_STACKTRACE
+		mpr->dump(STACKTRACE_INDENT_PRINT("have a member-ref: "), 
+			expr_dump_context::default_value) << endl;
+#endif
 		// in a sub-process, sets ret, owner and g
-		if (construct_global_footprint_frame(owner, ret, g,
-				*mpr->get_base_ref())) {
+		const size_t ppid =
+			construct_global_footprint_frame(owner, ret, g,
+				*mpr->get_base_ref());
+		if (!ppid) {
 			// have some error
-			return true;
+			return 0;
 		}
-		const unroll_context uc(topfp, topfp);
-		const size_t lpid = mpr->lookup_locally_allocated_index(uc);
+#if ENABLE_STACKTRACE
+		mpr->dump(STACKTRACE_INDENT_PRINT("back to member-ref: "), 
+			expr_dump_context::default_value) << endl;
+#endif
+		const unroll_context uc(ret._footprint, topfp);
+		// yes, use base-class method, not virtual override
+		const size_t lpid = mpr->simple_ref::lookup_locally_allocated_index(uc);
+		STACKTRACE_INDENT_PRINT("ppid = " << ppid << endl);
+		const footprint& rfp(*ret._footprint);
 		const footprint& ofp(*owner._footprint);
 		const state_instance<Tag>::pool_type&
-			pp(ofp.get_instance_pool<Tag>());
+			pp(rfp.get_instance_pool<Tag>());
 		const size_t ports = pp.port_entries();
+		STACKTRACE_INDENT_PRINT("lpid = " << lpid << " (" << ports
+			<< ") ports" << endl);
 		const state_instance<Tag>& sp(pp[lpid -1]);
 		if (lpid >= ports) {
 			STACKTRACE_INDENT_PRINT("private local" << endl);
 			// then is local private
 			// change both ret frame and owner, and global offset
 			global_offset delta;
-			ofp.set_global_offset_by_process(
-				delta, lpid);
+			ofp.set_global_offset_by_process(delta, ppid);
+			STACKTRACE_INDENT_PRINT("delta: " << delta << endl);
 			global_offset sgo;
 			if (&ofp == topfp) {
-				sgo = global_offset(g, *owner._footprint,
-					add_all_local_tag());
+				sgo = global_offset(g, ofp, add_all_local_tag());
 			} else {
-				sgo = global_offset(g, *owner._footprint,
-					add_local_private_tag());
+				sgo = global_offset(g, ofp, add_local_private_tag());
 			}
+			STACKTRACE_INDENT_PRINT("sgo: " << sgo << endl);
 			delta += sgo;
-			footprint_frame lff(sp._frame, owner);
-			lff.extend_frame(g, delta);
+			owner.construct_global_context(*sp._frame._footprint, 
+				ret, delta);
 			g = delta;
+			ret = owner;
 #if ENABLE_STACKTRACE
-			lff.dump_frame(STACKTRACE_STREAM) << endl;
+			sp._frame.dump_frame(STACKTRACE_INDENT_PRINT("sp.frame:")) << endl;
+			owner.dump_frame(STACKTRACE_INDENT_PRINT("new owner:")) << endl;
 			STACKTRACE_INDENT_PRINT("offset: " << g << endl);
+			ret.dump_frame(STACKTRACE_INDENT_PRINT("ret:")) << endl;
 #endif
-			owner = lff;
-			lff.swap(ret);
+			return lpid;
 		} else {
 			STACKTRACE_INDENT_PRINT("public port" << endl);
 			// then is public port, only change ret frame
@@ -266,18 +286,25 @@ global_entry_context::construct_global_footprint_frame(
 			lff.dump_frame(STACKTRACE_STREAM) << endl;
 #endif
 			ret.swap(lff);
+			return sp._frame.get_frame_map<Tag>()[lpid -1];
 		}
 	} else {
-		STACKTRACE_INDENT_PRINT("at top-level" << endl);
+		STACKTRACE_INDENT_PRINT("at top-level: ");
 		// we're at top level
-		ret = *fpf;
-		owner = *fpf;
 		g = *parent_offset;
+		owner.construct_top_global_context(*topfp, g);
 #if ENABLE_STACKTRACE
-		ret.dump_frame(STACKTRACE_STREAM) << endl;
+		owner.dump_frame(STACKTRACE_STREAM << "owner:") << endl;
 #endif
+		const unroll_context uc(topfp, topfp);
+		const size_t gpid = spr->lookup_locally_allocated_index(uc);
+		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
+		construct_global_footprint_frame(ret, g, gpid);
+#if ENABLE_STACKTRACE
+		ret.dump_frame(STACKTRACE_STREAM << "process:") << endl;
+#endif
+		return gpid;
 	}
-	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
