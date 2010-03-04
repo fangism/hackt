@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.39.2.7 2010/02/25 07:14:55 fang Exp $
+	$Id: instance_alias.tcc,v 1.39.2.8 2010/03/04 02:53:25 fang Exp $
 	TODO: trim includes
  */
 
@@ -34,6 +34,7 @@
 #include "Object/inst/instance_alias_info.h"
 // #include "Object/inst/alias_actuals.tcc"
 #include "Object/inst/alias_actuals.h"
+#include "Object/inst/alias_visitor.h"
 #include "Object/inst/subinstance_manager.tcc"
 #include "Object/inst/instance_pool.tcc"
 #include "Object/inst/internal_aliases_policy.h"

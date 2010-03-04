@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.5 2010/03/02 02:34:45 fang Exp $
+	$Id: instref.cc,v 1.19.2.6 2010/03/04 02:53:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -76,6 +76,11 @@ using entity::entry_collection;
 using entity::index_set_type;
 using entity::global_indexed_reference;
 using entity::META_TYPE_NONE;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using entity::footprint_frame;
+using entity::global_entry_context;
+using entity::global_offset;
+#endif
 using std::vector;
 using std::copy;
 using std::string;
@@ -225,8 +230,8 @@ parse_node_to_index(const string& n, const module& m) {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 //	const size_t ret = b->lookup_globally_allocated_index(top);
 	const footprint& topfp(m.get_footprint());
-	entity::footprint_frame tff(topfp);
-	const entity::global_offset g;
+	footprint_frame tff(topfp);
+	const global_offset g;
 	tff.construct_top_global_context(topfp, g);
 	const entity::global_entry_context gc(tff, g);
 #if ENABLE_STACKTRACE
@@ -275,10 +280,10 @@ if (n == ".") {
 	const footprint& top(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint& topfp(m.get_footprint());
-	entity::footprint_frame tff(topfp);
-	const entity::global_offset g;
+	footprint_frame tff(topfp);
+	const global_offset g;
 	tff.construct_top_global_context(topfp, g);
-	const entity::global_entry_context gc(tff, g);
+	const global_entry_context gc(tff, g);
 	const size_t ret = b->lookup_globally_allocated_index(gc);
 #else
 	const state_manager& sm(m.get_state_manager());
@@ -306,10 +311,10 @@ parse_global_reference(const string& n, const module& m) {
 	const footprint& top(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint& topfp(m.get_footprint());
-	entity::footprint_frame tff(topfp);
-	const entity::global_offset g;
+	footprint_frame tff(topfp);
+	const global_offset g;
 	tff.construct_top_global_context(topfp, g);
-	const entity::global_entry_context gc(tff, g);
+	const global_entry_context gc(tff, g);
 	return r.inst_ref()->lookup_top_level_reference(gc);
 #else
 	const state_manager& sm(m.get_state_manager());
@@ -427,10 +432,10 @@ if (n == ".") {
 		// check for valid reference first
 		const footprint& topfp(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		entity::footprint_frame tff(topfp);
-		const entity::global_offset g;
+		footprint_frame tff(topfp);
+		const global_offset g;
 		tff.construct_top_global_context(topfp, g);
-		const entity::global_entry_context gc(tff, g);
+		const global_entry_context gc(tff, g);
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(gc));
 #else
@@ -641,7 +646,10 @@ parse_name_to_get_ports(const string& n, const module& m,
 	Prints reference identity information. 
 	TODO: check non-instance-references:
 		namespaces, definitions, typedefs, value-references.
-	\param sep list separator
+	This is called by the 'who' command in various simulators.  
+	\param n the name of the instance, whose aliases are to be sought.
+	\param m top-level module.
+	\param sep list separator, like space or newline.
 	\return 0 upon success, 1 upon error.  
  */
 int
@@ -662,6 +670,10 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 		string_list aliases;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		FINISH_ME(Fang);
+#if 0
+		const footprint& topfp(m.get_footprint());
+		global_offset g;
+#endif
 #else
 		r.inst_ref()->collect_aliases(m, aliases);
 #endif
@@ -747,10 +759,10 @@ complete_instance_names(const char* _text, const module& m,
 			// no error message
 		const footprint& topfp(m.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		entity::footprint_frame tff(topfp);
-		const entity::global_offset g;
+		footprint_frame tff(topfp);
+		const global_offset g;
 		tff.construct_top_global_context(topfp, g);
-		const entity::global_entry_context gc(tff, g);
+		const global_entry_context gc(tff, g);
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(gc));
 #else

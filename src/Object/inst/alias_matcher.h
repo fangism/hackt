@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.h"
-	$Id: alias_matcher.h,v 1.3.16.2 2010/02/20 04:38:42 fang Exp $
+	$Id: alias_matcher.h,v 1.3.16.3 2010/03/04 02:53:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_MATCHER_H__
@@ -17,7 +17,14 @@ namespace entity {
 using std::string;
 
 //=============================================================================
-struct alias_matcher_base : public alias_visitor, public cflat_args_base {
+struct alias_matcher_base :
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		public cflat_aliases_arg_type
+#else
+		public alias_visitor,
+		public cflat_args_base
+#endif
+{
 	/**
 		The container of aliases in which to accumulate matches. 
 	 */
@@ -37,24 +44,27 @@ protected:
 #endif
 		util::string_list& _al, 
 		const size_t _i, 
-		const string& _p = string()) : alias_visitor(), 
-		cflat_args_base(
+		const string& _p = string()) :
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			_fpf, g
+		cflat_aliases_arg_type(_fpf, g),
 #else
-			_sm, _f, _fpf
+		alias_visitor(), 
+		cflat_args_base(
+			_sm, _f, _fpf),
 #endif
-			), aliases(_al), 
+		aliases(_al), 
 		index(_i), prefix(_p) {
 	}
 
 	~alias_matcher_base() { }
 
 public:
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	using cflat_aliases_arg_type::visit;
+#else
 	typedef	util::member_saver<alias_matcher_base, string, 
 			&alias_matcher_base::prefix>
 						save_prefix;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using alias_visitor::visit;
 	using cflat_args_base::visit;
 #endif

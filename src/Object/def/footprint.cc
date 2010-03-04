@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.17 2010/02/20 04:38:40 fang Exp $
+	$Id: footprint.cc,v 1.46.2.18 2010/03/04 02:53:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,6 +27,7 @@
 #include "Object/common/cflat_args.h"
 #include "Object/common/alias_string_cache.h"
 #include "Object/common/dump_flags.h"
+#include "Object/inst/alias_visitor.h"
 #include "Object/inst/alias_printer.h"
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/inst/instance_collection_pool_bundle_footprint.tcc"

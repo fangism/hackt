@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22:
+	  Re-organized cflat_aliases_arg_type as new working base class for
+		alias-based traversals, including alias_printer, and 
+		coming soon, alias_matcher.  Much code refactored.
+		Moved common members from alias_printer to base.
+		Moved printer-specific members to alias_printer.
+		Added Object/common/cflat_args.{tcc,cc}.
+		Eliminated useless class/typedef cflat_args_base.
+		All regressions still pass.
+	  In progress, working on alias_matcher for hacprsim's 'who' command.
+		Some hacprsim tests starting to pass.
+
+
 2010-03-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-21-b:

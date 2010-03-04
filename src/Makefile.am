@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.228 2009/12/03 23:15:34 fang Exp $
+#	$Id: Makefile.am,v 1.228.2.1 2010/03/04 02:53:17 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -631,6 +631,7 @@ OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 
 OBJECT_CC_FILES = \
 	Object/common/namespace.cc \
+	Object/common/cflat_args.cc \
 	Object/expr/exceptions.cc \
 	Object/expr/expr_dump_context.cc \
 	Object/expr/expr_visitor.cc \
@@ -723,6 +724,7 @@ OBJECT_CC_NO_H_FILES = \
 
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
+	Object/common/cflat_args.tcc \
 	Object/def/footprint.tcc \
 	Object/expr/const_collection.tcc \
 	Object/expr/convert_expr.tcc \
@@ -757,7 +759,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/persistent_type_hash.h \
 	Object/cflat_context.h \
 	Object/entry_collection.h \
-	Object/common/cflat_args.h \
 	Object/common/scopespace.h \
 	Object/traits/class_traits_fwd.h \
 	Object/traits/classification_tags_fwd.h \
