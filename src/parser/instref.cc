@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.6 2010/03/04 02:53:26 fang Exp $
+	$Id: instref.cc,v 1.19.2.7 2010/03/06 00:33:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -80,6 +80,7 @@ using entity::META_TYPE_NONE;
 using entity::footprint_frame;
 using entity::global_entry_context;
 using entity::global_offset;
+using std::set;
 #endif
 using std::vector;
 using std::copy;
@@ -667,14 +668,18 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 			<< endl;
 		return 1;
 	} else {
-		string_list aliases;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		FINISH_ME(Fang);
-#if 0
+		set<string> aliases;
 		const footprint& topfp(m.get_footprint());
-		global_offset g;
-#endif
+		footprint_frame tff(topfp);
+		const global_offset g;
+		tff.construct_top_global_context(topfp, g);
+		const global_entry_context gc(tff, g);
+		const global_indexed_reference
+			gref(r.inst_ref()->lookup_top_level_reference(gc));
+		topfp.collect_aliases_recursive(gref, aliases);
 #else
+		string_list aliases;
 		r.inst_ref()->collect_aliases(m, aliases);
 #endif
 		ostream_iterator<string> osi(o, sep);

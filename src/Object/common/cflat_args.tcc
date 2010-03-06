@@ -1,6 +1,6 @@
 /**
 	\file "Object/common/cflat_args.tcc"
-	$Id: cflat_args.tcc,v 1.1.2.1 2010/03/04 02:53:23 fang Exp $
+	$Id: cflat_args.tcc,v 1.1.2.2 2010/03/06 00:32:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_CFLAT_ARGS_TCC__
@@ -106,6 +106,11 @@ accept_deep_alias(const instance_alias_info<Tag>& a, const footprint& f) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collect all local scope aliases, *including* private aliases
+	inside subprocesses that are also aliased to their ports.  
+	Re-use: would be useful to just search for one 
+ */
 template <class SubTag>
 void
 cflat_aliases_arg_type::collect_local_aliases(const footprint& f,
@@ -122,7 +127,6 @@ cflat_aliases_arg_type::collect_local_aliases(const footprint& f,
 	ordered_list_type::const_iterator
 		pidi(ordered_lpids.begin()), pide(ordered_lpids.end());
 for (; pidi!=pide; ++pidi) {
-	// could template this to bool_tag for bool members as well!
 	// HACK ALERT: to cover internal aliases
 	// now iterate over spf's process ports
 	// query footprint for private (and public) internal aliases.

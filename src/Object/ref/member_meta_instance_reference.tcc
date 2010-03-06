@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.28.24.4 2010/03/03 02:42:17 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.28.24.5 2010/03/06 00:33:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -242,6 +242,9 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 			owner, tmp, g, _parent_inst_ref)) {
 		return 0;
 	}
+#if ENABLE_STACKTRACE
+	tmp.dump_frame(STACKTRACE_INDENT_PRINT("parent frame:")) << endl;
+#endif
 	const footprint_frame* const fpf = &tmp;
 #else
 	const footprint_frame* const fpf =

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.20.2.5 2010/02/12 18:20:29 fang Exp $
+	$Id: module.h,v 1.20.2.6 2010/03/06 00:32:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -14,7 +14,9 @@
 #include "Object/def/footprint.h"
 #include "Object/state_manager.h"
 #include "Object/def/process_definition.h"
-#include "util/tokenize_fwd.h"
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "util/tokenize_fwd.h"			// for string_list
+#endif
 #include "util/attributes.h"
 #include "util/STL/vector_fwd.h"
 
@@ -155,9 +157,11 @@ public:
 	cflat(ostream&, const cflat_options&);
 #endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	template <class Tag>
 	void
 	match_aliases(util::string_list&, const size_t) const;
+#endif
 
 private:
 	good_bool

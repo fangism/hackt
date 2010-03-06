@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.27.2.6 2010/01/22 23:41:38 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.27.2.7 2010/03/06 00:32:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -244,6 +244,23 @@ if (f != e) {
 		// set of *scope* aliases which includes non-ports.
 		_inst.import_properties(a);
 } else { STACKTRACE_INDENT_PRINT("is not port alias" << endl); }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convenient alias collector.
+	TODO: add predicated version
+ */
+template <class Tag>
+void
+alias_reference_set<Tag>::export_alias_strings(set<string>& aliases) const {
+	const_iterator i(this->begin()), e(this->end());
+	for ( ; i!=e; ++i) {
+		const instance_alias_info<Tag>& a(**i);
+		std::ostringstream alias;
+		a.dump_hierarchical_name(alias, dump_flags::no_leading_scope);
+		aliases.insert(alias.str());
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

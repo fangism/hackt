@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.h"
-	$Id: alias_matcher.h,v 1.3.16.3 2010/03/04 02:53:24 fang Exp $
+	$Id: alias_matcher.h,v 1.3.16.4 2010/03/06 00:32:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_MATCHER_H__
@@ -15,7 +15,9 @@
 namespace HAC {
 namespace entity {
 using std::string;
+using util::string_list;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 //=============================================================================
 struct alias_matcher_base :
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -28,7 +30,10 @@ struct alias_matcher_base :
 	/**
 		The container of aliases in which to accumulate matches. 
 	 */
-	util::string_list&			aliases;
+	string_list&				aliases;
+	/**
+		0-based global index.
+	 */
 	const size_t				index;
 	string					prefix;
 
@@ -42,7 +47,7 @@ protected:
 		const footprint& _f, 
 		const footprint_frame* const _fpf, 
 #endif
-		util::string_list& _al, 
+		string_list& _al, 
 		const size_t _i, 
 		const string& _p = string()) :
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -53,7 +58,15 @@ protected:
 			_sm, _f, _fpf),
 #endif
 		aliases(_al), 
-		index(_i), prefix(_p) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		index(_i -1),
+#else
+		index(_i),
+#endif
+		prefix(_p) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		INVARIANT(_i);
+#endif
 	}
 
 	~alias_matcher_base() { }
@@ -88,7 +101,7 @@ struct alias_matcher : public alias_matcher_base {
 		const footprint& _f, 
 		const footprint_frame* const _fpf, 
 #endif
-		util::string_list& _al, 
+		string_list& _al, 
 		const size_t _i, 
 		const string& _p = string()) :
 		alias_matcher_base(
@@ -106,21 +119,24 @@ struct alias_matcher : public alias_matcher_base {
 	VISIT_INSTANCE_ALIAS_INFO_PROTOS()
 
 private:
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// helper functions here
 	template <class Tag2>
 	void
 	__visit(const instance_alias_info<Tag2>&);
+#endif
 
 	// non-copyable
 	explicit
 	alias_matcher(const alias_matcher&);
 
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	using alias_matcher::visit;
+	using alias_matcher_base::visit;
 #endif
 
 };	// end class alias_matcher
 
+#endif
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC

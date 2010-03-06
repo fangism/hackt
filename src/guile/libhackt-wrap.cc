@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.7.16.2 2010/01/18 23:43:44 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.7.16.3 2010/03/06 00:33:02 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -11,12 +11,15 @@
 
 #include <iostream>
 #include <sstream>
+#include <set>
 #include "Object/module.h"
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/state_instance.h"
+#include "Object/global_entry_context.h"
+#include "Object/inst/alias_matcher.h"
 #include "parser/instref.h"
 #include "guile/devel_switches.h"
 #include "guile/libhackt-wrap.h"
@@ -47,7 +50,13 @@ using std::string;
 using std::transform;
 using std::ostringstream;
 using entity::module;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using std::set;
+using entity::global_entry_context;
+using entity::global_offset;
+using entity::footprint_frame;
+#else
+using entity::alias_matcher;
 using entity::state_manager;
 #endif
 using entity::footprint;
@@ -235,15 +244,30 @@ HAC_GUILE_DEFINE(wrap_lookup_reference_aliases, FUNC_NAME, 1, 0, 0, (SCM rpair),
 		type = f->second;					\
 	}
 	extract_scm(SCM_CDR(rpair), index);	// already error-handled
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	set<string> aliases;
+#else
 	string_list aliases;
+#endif
 	size_t type;
 	EXTRACT_TYPE_ENUM(rpair, type);		// already error-handled
 	const module& mod(*obj_module);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint& topfp(mod.get_footprint());
+#endif
 	switch (type) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#define	CASE_TYPE(Tag)							\
+	case class_traits<Tag>::type_tag_enum_value: {			\
+		topfp.collect_aliases_recursive<Tag>(index-1, aliases);	\
+		break;							\
+	}
+#else
 #define	CASE_TYPE(Tag)							\
 	case class_traits<Tag>::type_tag_enum_value:			\
 		mod.match_aliases<Tag>(aliases, index);			\
 		break;
+#endif
 	CASE_TYPE(bool_tag)
 	CASE_TYPE(int_tag)
 	CASE_TYPE(enum_tag)

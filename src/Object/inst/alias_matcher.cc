@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.5.76.2 2010/02/20 04:38:41 fang Exp $
+	$Id: alias_matcher.cc,v 1.5.76.3 2010/03/06 00:32:58 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
@@ -35,7 +35,12 @@ namespace HAC {
 namespace entity {
 using std::ostringstream;
 using util::is_same;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using util::value_saver;
+#endif
+
 //=============================================================================
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <bool B>
 struct alias_matcher_recursion_policy;
 
@@ -224,6 +229,7 @@ DEFINE_INSTANCE_ALIAS_INFO_VISITOR(channel_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(process_tag)
 
 #undef	DEFINE_INSTANCE_ALIAS_INFO_VISITOR
+#endif
 
 //=============================================================================
 // explicit template instantiations

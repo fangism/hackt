@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.19.2.5 2010/01/22 23:41:39 fang Exp $
+	$Id: port_alias_tracker.h,v 1.19.2.6 2010/03/06 00:32:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -10,6 +10,7 @@
 
 #include <iosfwd>
 #include <map>
+#include <set>
 #include <vector>
 #include "util/size_t.h"
 #include "util/persistent_fwd.h"
@@ -40,6 +41,9 @@ struct footprint_frame;
 using std::istream;
 #endif
 using std::ostream;
+using std::vector;
+using std::set;
+using std::string;
 using util::good_bool;
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 using util::persistent_object_manager;
@@ -82,7 +86,7 @@ public:
 	struct alias_to_string_transformer;
 #endif
 private:
-	typedef	std::vector<alias_ptr_type>		alias_array_type;
+	typedef	vector<alias_ptr_type>			alias_array_type;
 	typedef	typename alias_array_type::iterator	iterator;
 	typedef	instance_collection_pool_bundle<Tag>
 						collection_pool_bundle_type;
@@ -147,6 +151,9 @@ public:
 
 	const_alias_ptr_type
 	shortest_alias(void);
+
+	void
+	export_alias_strings(set<string>&) const;
 
 #if USE_ALIAS_STRING_CACHE
 	void

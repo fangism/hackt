@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.8 2010/03/03 02:42:15 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.9 2010/03/06 00:32:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -451,7 +451,7 @@ global_entry_context::visit(const footprint& f) {
 //	visit_local<Tag>(f);		// no Tag available in this context
 	visit_recursive(f);
 }
-#endif
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //=============================================================================
 // class global_entry_context::footprint_frame_setter method definitions

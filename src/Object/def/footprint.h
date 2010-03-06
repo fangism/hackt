@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.15 2010/02/20 04:38:40 fang Exp $
+	$Id: footprint.h,v 1.30.2.16 2010/03/06 00:32:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -16,6 +16,7 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/lang/CHP_footprint.h"
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include <set>
 #include "Object/ref/reference_enum.h"
 #include "util/tokenize_fwd.h"		// for string_list
 #endif
@@ -48,6 +49,7 @@ class instance_collection_base;
 class port_formals_manager;
 class scopespace;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using std::set;
 class footprint_visitor;
 struct global_offset;
 struct global_entry_context;
@@ -504,6 +506,20 @@ public:
 	void
 	assign_footprint_frame(footprint_frame&, 
 		const port_member_context&) const;
+#endif
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	template <class Tag>
+	void
+	collect_aliases_recursive(const size_t, set<string>&) const;
+
+	void
+	collect_aliases_recursive(const global_indexed_reference&,
+		set<string>&) const;
+
+	template <class Tag>
+	void
+	collect_port_aliases(const size_t, set<string>&) const;
 #endif
 
 	void

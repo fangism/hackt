@@ -1,6 +1,6 @@
 /**
 	\file "Object/common/cflat_args.cc"
-	$Id: cflat_args.cc,v 1.1.2.1 2010/03/04 02:53:21 fang Exp $
+	$Id: cflat_args.cc,v 1.1.2.2 2010/03/06 00:32:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -84,8 +84,8 @@ cflat_aliases_arg_type::visit(const footprint& f) {
 	Recursive, visits the i'th node in the graph.
  */
 void
-cflat_aliases_arg_type::__topological_sort_visit(const graph_type& G, const size_t i, 
-	marks_type& V, ordered_list_type& o) {
+cflat_aliases_arg_type::__topological_sort_visit(const graph_type& G,
+		const size_t i, marks_type& V, ordered_list_type& o) {
 	if (!V[i]) {
 		V[i] = true;
 		set<size_t>::const_iterator j(G[i].begin()), k(G[i].end());
@@ -100,7 +100,8 @@ cflat_aliases_arg_type::__topological_sort_visit(const graph_type& G, const size
 	\pre graph must be acyclic, this algorithm does not detect cycles.
  */
 void
-cflat_aliases_arg_type::topological_sort(const graph_type& G, ordered_list_type& o) {
+cflat_aliases_arg_type::topological_sort(const graph_type& G,
+		ordered_list_type& o) {
 	ordered_list_type rev;
 	o.clear();
 	const size_t s = G.size();	// number of nodes

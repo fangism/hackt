@@ -1,7 +1,7 @@
 /**
 	"Object/common/cflat_args.h"
 	Common aggregate argument types for various cflat methods.  
-	$Id: cflat_args.h,v 1.7.124.3 2010/03/04 02:53:22 fang Exp $
+	$Id: cflat_args.h,v 1.7.124.4 2010/03/06 00:32:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_CFLAT_ARGS_H__
@@ -177,7 +177,7 @@ virtual	~cflat_aliases_arg_type();
 protected:
 	using global_entry_context::visit;
 
-	void
+virtual	void
 	visit(const footprint&);
 
 private:

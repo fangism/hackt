@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.42.4.7 2010/03/02 02:34:48 fang Exp $
+	$Id: ExprAlloc.cc,v 1.42.4.8 2010/03/06 00:33:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -287,10 +287,17 @@ ExprAlloc::operator () (void) {
 		ptemplate(state.unique_process_pool[ti]);
 	process_sim_state& ps(state.process_state_array[current_process_index]);
 	ps.allocate_from_type(ptemplate, ti, total_exprs);
+	footprint_frame topff;
+	topff.construct_top_global_context(*topfp, *parent_offset);
+	const value_saver<const footprint_frame*> _ffs_(fpf, &topff);
+#if ENABLE_STACKTRACE
+	fpf->dump_frame(STACKTRACE_INDENT_PRINT("top-frame:")) << endl;
+#endif
 	// spec directives?
 	const entity::footprint_frame_map_type&
-		bmap(fpf->get_frame_map<bool_tag>());
-	const node_index_type node_pool_size = bmap.size();
+		bmap(topff.get_frame_map<bool_tag>());
+	const node_index_type node_pool_size =
+		fpf->_footprint->get_instance_pool<bool_tag>().local_entries();
 	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
 
 	topfp->accept(AS_A(global_entry_context&, *this));
@@ -691,6 +698,7 @@ if (pxs) {
 	// connect global nodes to global fanout expressions
 	node_index_type lni = 0;	// frame-map is 0-indexed
 	for ( ; lni < node_pool_size; ++lni) {
+		STACKTRACE_INDENT_PRINT("local node: " << lni << endl);
 		const node_index_type gni = bmap[lni];
 		// global index conversion, or local if top-level (pid=0)
 		const faninout_struct_type&
@@ -701,6 +709,8 @@ if (pxs) {
 			bind2nd(std::plus<expr_index_type>(), pso));
 		if (ff.has_fanin()) {
 #if VECTOR_NODE_FANIN
+			STACKTRACE_INDENT_PRINT("fanin-process: "
+				<< current_process_index << endl);
 			n.fanin.push_back(current_process_index);
 #else
 			finish(me);

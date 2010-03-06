@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.108.2.2 2010/02/25 02:48:44 fang Exp $
+#	$Id: ChangeLog,v 1.108.2.3 2010/03/06 00:33:04 fang Exp $
+
+2010-03-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-23:
+	  util/guile_STL.h: added scm_builders for std::map and std::set, 
+		defaulting to constructing SCM list.
+
 
 2010-02-24	David Fang		<fangism@users.sourceforge.net>
 

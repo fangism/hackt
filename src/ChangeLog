@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-a:
+	  Implemented alias_matcher purely in footprint class, using
+		only recursive lookups with index-offset subtraction,
+		no longer need alias_matcher class!!!
+		Early tests of hacprsim:who look good!
+	  guile/libhackt-wrap.cc: use new footprint::collect_aliases.
+	  ExprAlloc: fixed top-level frame sizing for rules.
+	  Debugging parsing/lookup of hierarchical references still...
+
+
 2010-03-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-22:

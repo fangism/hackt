@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.18 2010/03/04 02:53:23 fang Exp $
+	$Id: footprint.cc,v 1.46.2.19 2010/03/06 00:32:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -937,29 +937,60 @@ try {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Print canonical name.
-	\param the type-index pair, where index is 1-based.
+	\param r the type-index pair, where index is 1-based.
  */
 ostream&
 footprint::dump_canonical_name(ostream& o,
 		const global_indexed_reference& r) const {
-	switch (r.first) {
+	INVARIANT(r.second);
+	const size_t i = r.second -1;	// adjust to 0-based
+switch (r.first) {
 	case META_TYPE_PROCESS:
-		return dump_canonical_name<process_tag>(o, r.second);
+		return dump_canonical_name<process_tag>(o, i);
 	case META_TYPE_CHANNEL:
-		return dump_canonical_name<channel_tag>(o, r.second);
+		return dump_canonical_name<channel_tag>(o, i);
 #if ENABLE_DATASTRUCTS
 	case META_TYPE_STRUCT:
-		return dump_canonical_name<datastruct_tag>(o, r.second);
+		return dump_canonical_name<datastruct_tag>(o, i);
 #endif
 	case META_TYPE_BOOL:
-		return dump_canonical_name<bool_tag>(o, r.second);
+		return dump_canonical_name<bool_tag>(o, i);
 	case META_TYPE_INT:
-		return dump_canonical_name<int_tag>(o, r.second);
+		return dump_canonical_name<int_tag>(o, i);
 	case META_TYPE_ENUM:
-		return dump_canonical_name<enum_tag>(o, r.second);
+		return dump_canonical_name<enum_tag>(o, i);
 	default:	o << "<Unhandled-TAG>";
-	}
+}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collects all aliases, deeply-recursively.
+	\param r the type-index pair, where index is 1-based.
+ */
+void
+footprint::collect_aliases_recursive(const global_indexed_reference& r, 
+		set<string>& aliases) const {
+	INVARIANT(r.second);
+	const size_t i = r.second -1;	// adjust to 0-based
+switch (r.first) {
+	case META_TYPE_PROCESS:
+		collect_aliases_recursive<process_tag>(i, aliases); break;
+	case META_TYPE_CHANNEL:
+		collect_aliases_recursive<channel_tag>(i, aliases); break;
+#if ENABLE_DATASTRUCTS
+	case META_TYPE_STRUCT:
+		collect_aliases_recursive<datastruct_tag>(i, aliases); break;
+#endif
+	case META_TYPE_BOOL:
+		collect_aliases_recursive<bool_tag>(i, aliases); break;
+	case META_TYPE_INT:
+		collect_aliases_recursive<int_tag>(i, aliases); break;
+	case META_TYPE_ENUM:
+		collect_aliases_recursive<enum_tag>(i, aliases); break;
+	default:	cerr << "<Unhandled-TAG>";
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
