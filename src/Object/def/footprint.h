@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.17 2010/03/09 01:00:18 fang Exp $
+	$Id: footprint.h,v 1.30.2.18 2010/03/09 04:58:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -513,7 +513,8 @@ public:
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	template <class Tag>
 	void
-	collect_aliases_recursive(const size_t, set<string>&) const;
+	collect_aliases_recursive(const size_t, set<string>&, 
+		const bool is_top = true) const;
 
 	void
 	collect_aliases_recursive(const global_indexed_reference&,

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.2.88.7 2010/03/06 00:32:58 fang Exp $
+	$Id: footprint.tcc,v 1.2.88.8 2010/03/09 04:58:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -131,7 +131,7 @@ footprint::dump_canonical_name(ostream& o, const size_t gi,
 template <class Tag>
 void
 footprint::collect_aliases_recursive(const size_t index,
-		set<string>& aliases) const {
+		set<string>& aliases, const bool is_top) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("rel-id(0) = " << index << endl);
 	// based on current index, decide how to recurse
@@ -139,17 +139,21 @@ footprint::collect_aliases_recursive(const size_t index,
 	// visit all processes that contain local id
 	const typename state_instance<Tag>::pool_type&
 		lp(get_instance_pool<Tag>());
-	const size_t local = lp.local_entries();
+	const size_t ports = is_top ? 0 : lp.port_entries();
+	const size_t local = is_top ? lp.local_entries()
+		: lp.local_private_entries();
+	STACKTRACE_INDENT_PRINT("local entries: " << local << endl);
 if (index < local) { 
 	STACKTRACE_INDENT_PRINT("local reference" << endl);
 	// is locally owned or covered by port, 
 	// traverse all local processes in which it is found
-	this->collect_port_aliases<Tag>(index, aliases);
+	this->collect_port_aliases<Tag>(index +ports, aliases);
 } else {
 	STACKTRACE_INDENT_PRINT("private reference" << endl);
 	// is privately owned by subprocess
 	// identify which subprocess owns it
 	const size_t si = index -local;
+	STACKTRACE_INDENT_PRINT("si = " << si << endl);
 	const pool_private_map_entry_type&
 		e(lp.locate_private_entry(si));
 	const state_instance<process_tag>::pool_type&
@@ -157,10 +161,18 @@ if (index < local) {
 	const size_t m = ppool.local_entries();
 	const size_t& lpid(e.first);
 	INVARIANT(lpid <= m);	// e.first is lpid (1-based)
+	STACKTRACE_INDENT_PRINT("found in lpid(1) " << lpid << endl);
 	set<string> private_aliases;
 	// recurse first, then prepend resulting aliases
 	ppool[lpid -1]._frame._footprint
-		->collect_aliases_recursive<Tag>(si -e.second, private_aliases);
+		->collect_aliases_recursive<Tag>(si -e.second,
+			private_aliases, false);
+#if ENABLE_STACKTRACE
+	copy(private_aliases.begin(), private_aliases.end(),
+		ostream_iterator<string>(
+			STACKTRACE_INDENT_PRINT("private-aliases: "), " "));
+	STACKTRACE_STREAM << endl;
+#endif
 	// collect all aliases of that process
 	set<string> local_aliases;
 	scope_aliases.get_id_map<process_tag>().find(lpid)->second
@@ -168,6 +180,11 @@ if (index < local) {
 	// to form cross-product of aliases
 	set<string>::const_iterator
 		pi(local_aliases.begin()), pe(local_aliases.end());
+#if ENABLE_STACKTRACE
+	copy(pi, pe, ostream_iterator<string>(
+		STACKTRACE_INDENT_PRINT("local-aliases: "), " "));
+	STACKTRACE_STREAM << endl;
+#endif
 	INVARIANT(pi != pe);            // must be at least one name!
 	for ( ; pi!=pe; ++pi) {
 		set<string>::const_iterator
@@ -191,12 +208,13 @@ template <class Tag>
 void
 footprint::collect_port_aliases(const size_t ltid, set<string>& aliases) const {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("ltid(0) = " << ltid << endl);
 #if ENABLE_STACKTRACE
 	static const char* tag_name = class_traits<Tag>::tag_name;
 #endif
 {
 	// first collect local aliases
-	INVARIANT(ltid <= get_instance_pool<Tag>().local_entries());
+	INVARIANT(ltid < get_instance_pool<Tag>().local_entries());
 	const typename port_alias_tracker_base<Tag>::map_type&
 		lpa(scope_aliases.get_id_map<Tag>());
 	const alias_reference_set<Tag>& lrs(lpa.find(ltid+1)->second);

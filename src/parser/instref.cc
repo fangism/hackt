@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.8 2010/03/09 01:00:22 fang Exp $
+	$Id: instref.cc,v 1.19.2.9 2010/03/09 04:58:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -204,6 +204,7 @@ parse_and_check_reference(const char* s, const module& m) {
 	\param n the string that names the instance reference
 	\param m the compiled module with the top-level namespace
 		and allocated state_manager.  
+	\return 1-based global bool index, 0 if not found.
  */
 size_t
 parse_node_to_index(const string& n, const module& m) {
@@ -495,7 +496,7 @@ if (n == ".") {
 	// no lookup necessary, just copy all integers!
 	const size_t bmax =
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		m.get_footprint().get_instance_pool<bool_tag>().total_entries();
+		m.get_footprint().get_instance_pool<bool_tag>().total_entries() +1;
 #else
 		m.get_state_manager().get_pool<bool_tag>().size();
 #endif
@@ -741,7 +742,12 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 		const global_entry_context gc(tff, g);
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(gc));
-		topfp.collect_aliases_recursive(gref, aliases);
+		STACKTRACE_INDENT_PRINT("gref.second = " << gref.second << endl);
+		if (gref.first && gref.second) {
+			topfp.collect_aliases_recursive(gref, aliases);
+		} else {
+			return 1;
+		}
 #else
 		string_list aliases;
 		r.inst_ref()->collect_aliases(m, aliases);

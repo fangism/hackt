@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.22 2009/04/17 21:14:37 fang Exp $
+	$Id: Node.h,v 1.22.14.1 2010/03/09 04:58:35 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -158,6 +158,10 @@ struct Node {
 	/**
 		This refers to a list of global process instances (indices)
 		that can drive this node.  
+		TODO: replace this with a purely hierarchical lookup
+		when MEMORY_MAPPED_GLOBAL_ALLOCATION is complete.
+		This would be relocated to unique_process_subgraph
+		for the respective owners of the nodes.
 	 */
 	process_fanin_type		fanin;
 
@@ -167,6 +171,10 @@ struct Node {
 		TODO: far future, only fanout to *processes* and 
 			do additional rule lookups from there.
 			Performance-memory tradeoff.
+		TODO: replace this with a purely hierarchical lookup
+		when MEMORY_MAPPED_GLOBAL_ALLOCATION is complete.
+		This would be relocated to unique_process_subgraph
+		for the respective owners of the nodes.
 	 */
 	fanout_array_type		fanout;
 

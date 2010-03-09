@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.42.4.8 2010/03/06 00:33:03 fang Exp $
+	$Id: ExprAlloc.cc,v 1.42.4.9 2010/03/09 04:58:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -538,12 +538,24 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint_frame& gpff(gp._frame);
 	const footprint& gpfp(*gpff._footprint);
-	// set footprint frame using local frame?
-	// or follow global_entry_context?
-	const value_saver<const footprint_frame*> _ff_(fpf, &gpff);
+	const global_offset& sgo(*g_offset);
+	const global_offset
+		b(sgo, gpfp, entity::add_local_private_tag()),
+		c(sgo, gpfp, entity::add_total_private_tag());
+	// set footprint frame using local frame? see global_entry_dumper::visit
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("offset: " << sgo << endl);
+	gpff.dump_frame(STACKTRACE_INDENT_PRINT("instance-frame:")) << endl;
+	fpf->dump_frame(STACKTRACE_INDENT_PRINT("actuals-frame:")) << endl;
+#endif
+	footprint_frame af(gpff, *fpf);
+	af.extend_frame(sgo, b);
+#if ENABLE_STACKTRACE
+	af.dump_frame(STACKTRACE_INDENT_PRINT("EXT-frame:")) << endl;
+#endif
+	const value_saver<const footprint_frame*> _ff_(fpf, &af);
 	// global_offset? not used?
 #endif
-//	++current_process_index;
 	// also set up proper unique_process references
 #if PRSIM_SIMPLE_ALLOC
 	const entity::footprint* const fp(&gpfp);
@@ -554,13 +566,18 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 	// this now works for pid=0, top-level
 	const entity::footprint_frame_map_type&
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		bmap(gpff.get_frame_map<bool_tag>());
+		bmap(af.get_frame_map<bool_tag>());
 #else
 		bmap(m.get_state_manager()
 			.get_pool<process_tag>()[current_process_index]
 			._frame.get_frame_map<bool_tag>());
 #endif
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const node_index_type node_pool_size =
+		gpff._footprint->get_instance_pool<bool_tag>().local_entries();
+#else
 	const node_index_type node_pool_size = bmap.size();
+#endif
 	STACKTRACE_INDENT_PRINT("node_pool_size = " << node_pool_size << endl);
 	// append-allocate new state, based on type
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -584,74 +601,20 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 	STACKTRACE_INDENT_PRINT("current process index = "
 		<< current_process_index << endl);
 	STACKTRACE_INDENT_PRINT("current type index = " << type_index << endl);
-#if 0
-	const expr_index_type pxs = ptemplate.expr_pool.size();
-	total_exprs += pxs;
-	STACKTRACE_INDENT_PRINT("has " << pxs << " exprs" << endl);
-#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
-	INVARIANT(!state.global_expr_process_id_map.empty());
+#if ENABLE_STACKTRACE
+	copy(bmap.begin(), bmap.end(), std::ostream_iterator<size_t>(
+		STACKTRACE_INDENT_PRINT("bmap: "), ","));
+	STACKTRACE_STREAM << endl;
 #endif
-#else
 	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
-#endif
 #if PRSIM_SIMPLE_ALLOC
 	// problem: spec directives are still global, not per-process
 	const entity::SPEC::footprint& sfp(fp->get_spec_footprint());
 	sfp.accept(*this);
 #endif
-#if 0
-if (pxs) {
-#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
-	// Each process appends an entry for 
-	// the process that *follows* it (P+1)!  (optionally delete last one)
-	typedef state_type::global_expr_process_id_map_type::const_iterator
-			map_iterator;
-	const map_iterator x(--state.global_expr_process_id_map.end());	// last
-	// get the cumulative number of expressions (state)
-	// by adding the lower bound of the last appended entry
-	// to its corresponding size.  
-	const expr_index_type ex_offset = x->first +pxs;
-	// STACKTRACE_INDENT_PRINT("prev offset = " << x->first << endl);
-	STACKTRACE_INDENT_PRINT("offset[" << ex_offset << "] -> process " <<
-		current_process_index +1 << endl);
-	state.global_expr_process_id_map[ex_offset] = current_process_index +1;
-	// connect global nodes to global fanout expressions
-#endif
-	node_index_type lni = 0;	// frame-map is 0-indexed
-	for ( ; lni < node_pool_size; ++lni) {
-		const node_index_type gni = bmap[lni];
-		// global index conversion, or local if top-level (pid=0)
-		const faninout_struct_type&
-			ff(ptemplate.local_faninout_map[lni]);
-		const fanout_array_type& lfo(ff.fanout);
-		State::node_type& n(state.node_pool[gni]);
-		transform(lfo.begin(), lfo.end(), back_inserter(n.fanout), 
-			bind2nd(std::plus<expr_index_type>(), ps.get_offset()));
-		if (ff.has_fanin()) {
-#if VECTOR_NODE_FANIN
-			n.fanin.push_back(current_process_index);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	*g_offset = c;
 #else
-			finish(me);
-#endif
-			n.count_fanins(ff);	// count total OR-fanins
-		}
-	}
-} else {
-#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
-	// we have an empty process, but previous entry already added an 
-	// entry pointing to this one.  
-	// so we just "modify" the key in place without removing/re-inserting
-	// a new entry in the sorted map, preserving order.
-	typedef state_type::global_expr_process_id_map_type::iterator
-			map_iterator;
-	const map_iterator x(--state.global_expr_process_id_map.end());	// last
-	x->second = current_process_index +1;	// equiv: ++(x->second);
-	STACKTRACE_INDENT_PRINT("offset[" << x->first << "] -> process "
-		<< x->second << endl);
-#endif
-}
-#endif
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// the very last process will add an entry pointing one-past-the-end
 	// assume that processes are visited in sequence
 	++current_process_index;
@@ -699,6 +662,7 @@ if (pxs) {
 	node_index_type lni = 0;	// frame-map is 0-indexed
 	for ( ; lni < node_pool_size; ++lni) {
 		STACKTRACE_INDENT_PRINT("local node: " << lni << endl);
+		INVARIANT(lni < bmap.size());
 		const node_index_type gni = bmap[lni];
 		// global index conversion, or local if top-level (pid=0)
 		const faninout_struct_type&

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.20 2010/03/09 01:00:17 fang Exp $
+	$Id: footprint.cc,v 1.46.2.21 2010/03/09 04:58:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -976,19 +976,19 @@ footprint::collect_aliases_recursive(const global_indexed_reference& r,
 	const size_t i = r.second -1;	// adjust to 0-based
 switch (r.first) {
 	case META_TYPE_PROCESS:
-		collect_aliases_recursive<process_tag>(i, aliases); break;
+		collect_aliases_recursive<process_tag>(i, aliases, true); break;
 	case META_TYPE_CHANNEL:
-		collect_aliases_recursive<channel_tag>(i, aliases); break;
+		collect_aliases_recursive<channel_tag>(i, aliases, true); break;
 #if ENABLE_DATASTRUCTS
 	case META_TYPE_STRUCT:
-		collect_aliases_recursive<datastruct_tag>(i, aliases); break;
+		collect_aliases_recursive<datastruct_tag>(i, aliases, true); break;
 #endif
 	case META_TYPE_BOOL:
-		collect_aliases_recursive<bool_tag>(i, aliases); break;
+		collect_aliases_recursive<bool_tag>(i, aliases, true); break;
 	case META_TYPE_INT:
-		collect_aliases_recursive<int_tag>(i, aliases); break;
+		collect_aliases_recursive<int_tag>(i, aliases, true); break;
 	case META_TYPE_ENUM:
-		collect_aliases_recursive<enum_tag>(i, aliases); break;
+		collect_aliases_recursive<enum_tag>(i, aliases, true); break;
 	default:	cerr << "<Unhandled-TAG>";
 }
 }

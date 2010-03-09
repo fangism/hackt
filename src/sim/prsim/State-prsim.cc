@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.57.2.4 2010/03/02 02:34:49 fang Exp $
+	$Id: State-prsim.cc,v 1.57.2.5 2010/03/09 04:58:36 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4322,17 +4322,21 @@ State::dump_struct(ostream& o) const {
 {
 	o << "Nodes: " << endl;
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
+	const state_manager& sm(mod.get_state_manager());
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
+#endif
 	const node_index_type nodes = node_pool.size();
 	node_index_type i = FIRST_VALID_GLOBAL_NODE;
 	for ( ; i<nodes; ++i) {
 		o << "node[" << i << "]: \"";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		dump_node_canonical_name(o, i);
+#else
 		bp[i].dump_canonical_name(o, topfp, sm);
+#endif
 		node_pool[i].dump_struct(o << "\" ") << endl;
 	}
-#endif
 }
 {
 	o << "Unique processes: {" << endl;
@@ -4366,23 +4370,28 @@ State::dump_struct_dot(ostream& o) const {
 {
 	o << "# nodes: " << endl;
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
+	const state_manager& sm(mod.get_state_manager());
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
+#endif
+	const node_index_type nodes = node_pool.size();
 	// box or plaintext
 	o << "node [shape=box, fillcolor=white];" << endl;
-	const node_index_type nodes = node_pool.size();
 	node_index_type i = FIRST_VALID_GLOBAL_NODE;
 	for ( ; i<nodes; ++i) {
 		ostringstream oss;
 		oss << "NODE_" << i;
 		const string& s(oss.str());
 		o << s;
-		bp[i].dump_canonical_name(o << "\t[label=\"", topfp, sm)
+		o << "\t[label=\"";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		dump_node_canonical_name(o, i)
+#else
+		bp[i].dump_canonical_name(o, topfp, sm)
+#endif
 			<< "\"];" << endl;
 		node_pool[i].dump_fanout_dot(o, s) << endl;
 	}
-#endif
 }
 {
 	o << "# Processes: " << endl;
@@ -4696,6 +4705,7 @@ ostream&
 State::dump_node_fanin(ostream& o, const node_index_type ni, 
 		const bool v) const {
 	// typedef	process_fanin_type::const_iterator	const_iterator;
+	STACKTRACE_INDENT_PRINT("node_fanin:ni = " << ni << endl);
 	const node_type& n(get_node(ni));
 #if VECTOR_NODE_FANIN
 	process_fanin_type::const_iterator i(n.fanin.begin()), e(n.fanin.end());

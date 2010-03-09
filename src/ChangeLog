@@ -5,6 +5,16 @@
 
 2010-03-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-c:
+	  Fixed ExprAlloc.cc: visit(const state_instance<process_tag>&)
+		wasn't transforming and extending local frame, 
+		similar to what is done in global_entry_dumper:visit(), 
+		also incrementing global_entry_context::*g_offset.
+	  Fixed hacprsim::who (footprint::collect_aliases_*).
+	  Fixed parser/instref.cc: parse_name_to_get_subnodes(".")
+	  prsim/State-prsim.cc: fixed some dump_struct utils.
+
+
 	* HACKT-00-01-04-main-00-83-53-scalable-01-22-b:
 	  Further fixed global_entry_context::construct_global_footprint_frame.
 		Tested hacprsim commands: getall, getports, getlocal.
