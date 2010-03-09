@@ -1,9 +1,9 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.7 2010/03/06 00:33:02 fang Exp $
+	$Id: instref.cc,v 1.19.2.8 2010/03/09 01:00:22 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE		0
+#define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 
@@ -77,9 +77,12 @@ using entity::index_set_type;
 using entity::global_indexed_reference;
 using entity::META_TYPE_NONE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using entity::META_TYPE_PROCESS;
+using entity::META_TYPE_BOOL;
 using entity::footprint_frame;
 using entity::global_entry_context;
 using entity::global_offset;
+using entity::global_offset_base;
 using std::set;
 #endif
 using std::vector;
@@ -234,7 +237,7 @@ parse_node_to_index(const string& n, const module& m) {
 	footprint_frame tff(topfp);
 	const global_offset g;
 	tff.construct_top_global_context(topfp, g);
-	const entity::global_entry_context gc(tff, g);
+	const global_entry_context gc(tff, g);
 #if ENABLE_STACKTRACE
 	gc.dump_context(STACKTRACE_INDENT_PRINT("context:")) << endl;
 #endif
@@ -519,24 +522,56 @@ if (n == ".") {
 		// much easier with continuous ranges in memory mapping
 		const global_indexed_reference
 			gref(parse_global_reference(n, m));
-		if (!gref.first) {
-			return 1;
+	switch (gref.first) {
+	case META_TYPE_PROCESS: {
+		footprint_frame tmpf, tff(m.get_footprint());
+		global_offset g, tmpg;
+		const global_entry_context gc(tff, g);
+		gc.construct_global_footprint_frame(
+			tmpf, tmpg, gref.second);
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT_PRINT("gpid = " << gref.second << endl);
+		STACKTRACE_INDENT_PRINT("offset = " << tmpg << endl);
+		tmpf.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+#endif
+		const footprint_frame_map_type&
+			pbf(tmpf.get_frame_map<bool_tag>());
+		std::set<size_t> s;
+		copy(pbf.begin(), pbf.end(), util::set_inserter(s));
+		const size_t b_off =	// adjust to 1-indexed global index
+			tmpg.global_offset_base<bool_tag>::offset +1;
+		const size_t priv = tmpf._footprint
+			->get_instance_pool<bool_tag>()
+				.non_local_private_entries();
+		size_t i = 0;
+		for ( ; i<priv; ++i) {
+			s.insert(i+b_off);
 		}
-		if (!m.get_footprint().collect_subentries(gref, e).good) {
-			return 1;
-		}
+		copy(s.begin(), s.end(), back_inserter(v));
+#if ENABLE_STACKTRACE
+		copy(v.begin(), v.end(), ostream_iterator<size_t>(
+			STACKTRACE_INDENT_PRINT("all-sub: "), ","));
+		STACKTRACE_STREAM << endl;
+#endif
+		break;
+	}
+	case META_TYPE_BOOL:
+		v.push_back(gref.second);
+		break;
+	default: break;
+	}
 #else
 		if (!r.inst_ref()->collect_subentries(m, e).good) {
 			return 1;
 		}
-#endif
 		const index_set_type& b(e.get_index_set<bool_tag>());
 		v.resize(b.size());
 		copy(b.begin(), b.end(), v.begin());
+#endif
 		return 0;
 	}
 }
-}
+}	// end parse_name_to_get_subnodes
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -550,18 +585,31 @@ parse_name_to_get_subnodes_local(const string& n, const module& m,
 		vector<size_t>& v) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME_EXIT(Fang);
-	return 1;
-#else
 	const size_t pid = parse_process_to_index(n, m);
 	if (pid == INVALID_PROCESS_INDEX) {
 		return 1;
 	}
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	footprint_frame tff(m.get_footprint());
+	global_offset g, tmpg;
+	footprint_frame tmpf;
+	const global_entry_context gc(tff, g);
+	gc.construct_global_footprint_frame(tmpf, tmpg, pid);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("offset: " << tmpg) << endl;
+	tmpf.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+#endif
+	const footprint_frame_map_type&
+		pbf(tmpf.get_frame_map<bool_tag>());
+#else
 	const footprint_frame_map_type&
 		pbf(m.get_state_manager().get_bool_frame_map(pid));
+#endif
 	// unique sort it
 	std::set<size_t> s;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	copy(pbf.begin(), pbf.end(), util::set_inserter(s));
+#else
 	if (pid) {
 		copy(pbf.begin(), pbf.end(), util::set_inserter(s));
 	} else {	// top-level process needs transformation, yuck...
@@ -569,10 +617,10 @@ parse_name_to_get_subnodes_local(const string& n, const module& m,
 		copy(++pbf.begin(), pbf.end(), util::set_inserter(s));
 		// skip the 0th entry
 	}
+#endif
 	copy(s.begin(), s.end(), back_inserter(v));
 	return 0;
-#endif
-}
+}	// end parse_name_to_get_subnodes_local
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -595,10 +643,26 @@ parse_name_to_get_ports(const string& n, const module& m,
 	} else if (!pid) {
 		// top-level process has no ports!
 		return 0;
+		// even when using user-specified top-type?
 	}
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME_EXIT(Fang);
-	return 1;
+	footprint_frame tff(m.get_footprint());
+	global_offset g, tmpg;
+	footprint_frame tmpf;
+	const global_entry_context gc(tff, g);
+	gc.construct_global_footprint_frame(tmpf, tmpg, pid);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("offset: " << tmpg) << endl;
+	tmpf.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+#endif
+	const footprint_frame_map_type&
+		pbf(tmpf.get_frame_map<bool_tag>());
+	const size_t ps = tmpf._footprint->get_instance_pool<bool_tag>()
+		.port_entries();
+	std::set<size_t> s;
+	copy(pbf.begin(), pbf.begin() +ps, util::set_inserter(s));
+	copy(s.begin(), s.end(), back_inserter(v));
+	return 0;
 #else
 	const state_manager& sm(m.get_state_manager());
 	const footprint& topfp(m.get_footprint());
@@ -640,7 +704,7 @@ parse_name_to_get_ports(const string& n, const module& m,
 #endif
 #endif
 	return 0;
-}
+}	// end parse_name_to_get_ports
 
 //=============================================================================
 /**

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.3 2010/03/02 02:34:42 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.4 2010/03/09 01:00:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -217,6 +217,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 	Will private subinstances still work on local references? no
 	\param sm is not used here, but is needed for member lookups, 
 		implemented in the virtual override.  
+	\return 1-based global index.
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t

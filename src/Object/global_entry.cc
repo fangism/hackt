@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.14 2010/02/24 22:48:50 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.15 2010/03/09 01:00:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -541,9 +541,11 @@ template <class Tag>
 void
 footprint_frame::__extend_frame(const global_offset& a, 
 		const global_offset& b) {
-	extend_id_map(footprint_frame_map<Tag>::id_map, 
-		a.global_offset_base<Tag>::offset, 
-		b.global_offset_base<Tag>::offset);
+//	const footprint& f(*_footprint);
+	const size_t lb = a.global_offset_base<Tag>::offset;
+	const size_t le = b.global_offset_base<Tag>::offset;
+//	INVARIANT(f.get_instance_pool<Tag>().local_private_entries() == le -lb);
+	extend_id_map(footprint_frame_map<Tag>::id_map, lb, le);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -553,6 +555,8 @@ footprint_frame::__extend_frame(const global_offset& a,
 void
 footprint_frame::extend_frame(const global_offset& a, 
 		const global_offset& b) {
+	STACKTRACE_VERBOSE;
+	NEVER_NULL(_footprint);
 	__extend_frame<process_tag>(a, b);
 	__extend_frame<channel_tag>(a, b);
 #if ENABLE_DATASTRUCTS
@@ -624,6 +628,7 @@ footprint_frame::init_top_level(void) {
 void
 footprint_frame::construct_top_global_context(const footprint& f, 
 		const global_offset& g) {
+	STACKTRACE_VERBOSE;
 	_footprint = &f;
 	footprint_frame_map<process_tag>::__construct_top_global_context(f, g);
 	footprint_frame_map<channel_tag>::__construct_top_global_context(f, g);
@@ -650,6 +655,7 @@ footprint_frame::construct_top_global_context(const footprint& f,
 void
 footprint_frame::construct_global_context(const footprint& f, 
 		const footprint_frame& ff, const global_offset& g) {
+	STACKTRACE_VERBOSE;
 	_footprint = &f;
 	footprint_frame_map<process_tag>::__construct_global_context(f, ff, g);
 	footprint_frame_map<channel_tag>::__construct_global_context(f, ff, g);
@@ -888,7 +894,7 @@ global_offset_base<Tag>::global_offset_base(const this_type& g,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	This is kind of redudant with one of the constructors.
+	This is kind of redundant with one of the constructors.
  */
 template <class Tag>
 global_offset_base<Tag>&

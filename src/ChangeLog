@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-b:
+	  Further fixed global_entry_context::construct_global_footprint_frame.
+		Tested hacprsim commands: getall, getports, getlocal.
+		See to work.  Mostly.
+		Removing footprint::collect_subentries in favor of 
+		just implementing in parser/instref.cc (get_subnodes).
+	  Still debugging other assert-fails.
+
+
 2010-03-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-22-a:

@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.54.2.1 2010/03/02 02:34:47 fang Exp $
+	$Id: Command-prsim.cc,v 1.54.2.2 2010/03/09 01:00:23 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -106,6 +106,7 @@ nonempty_abs_dir(const string& s) {
 static
 size_t
 parse_node_to_index(const string& s, const entity::module& m) {
+	STACKTRACE_VERBOSE;
 	// automatically prepend working directory
 	return parser::parse_node_to_index(
 		CommandRegistry::prepend_working_dir(s), m);
@@ -114,6 +115,7 @@ parse_node_to_index(const string& s, const entity::module& m) {
 static
 size_t
 parse_process_to_index(const string& s, const entity::module& m) {
+	STACKTRACE_VERBOSE;
 	// automatically prepend working directory
 	const string t(nonempty_abs_dir(s));
 	return parser::parse_process_to_index(t, m);
@@ -122,6 +124,7 @@ parse_process_to_index(const string& s, const entity::module& m) {
 static
 int
 parse_name_to_what(ostream& o, const string& s, const entity::module& m) {
+	STACKTRACE_VERBOSE;
 	return parser::parse_name_to_what(o, 
 		CommandRegistry::prepend_working_dir(s), m);
 }
@@ -129,6 +132,7 @@ parse_name_to_what(ostream& o, const string& s, const entity::module& m) {
 static
 entity::global_indexed_reference
 parse_global_reference(const string& s, const entity::module& m) {
+	STACKTRACE_VERBOSE;
 	return parser::parse_global_reference(
 		CommandRegistry::prepend_working_dir(s), m);
 }
@@ -137,6 +141,7 @@ static
 int
 parse_name_to_get_subnodes(const string& s, const entity::module& m,
 		vector<size_t>& v) {
+	STACKTRACE_VERBOSE;
 	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_subnodes(t, m, v);
 }
@@ -145,6 +150,7 @@ static
 int
 parse_name_to_get_subnodes_local(const string& s, const entity::module& m,
 		vector<size_t>& v) {
+	STACKTRACE_VERBOSE;
 	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_subnodes_local(t, m, v);
 }
@@ -153,6 +159,7 @@ static
 int
 parse_name_to_get_ports(const string& s, const entity::module& m,
 		vector<size_t>& v) {
+	STACKTRACE_VERBOSE;
 	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_ports(t, m, v);
 }
@@ -1921,16 +1928,15 @@ try {	// temporary measure until bug ACX-PR-1456 is fixed
 		// already got error message?
 		return Command::BADARG;
 	} else {
+		typedef	nodes_id_list_type::const_iterator	const_iterator;
+		const_iterator i(nodes.begin()), e(nodes.end());
 #if ENABLE_STACKTRACE
 		STACKTRACE_INDENT_PRINT("node-ids: ");
-		copy(nodes.begin(), nodes.end(),
-			ostream_iterator<size_t>(STACKTRACE_STREAM, ","));
+		copy(i, e, ostream_iterator<size_t>(STACKTRACE_STREAM, ","));
 		STACKTRACE_STREAM << endl;
 #endif
-		typedef	nodes_id_list_type::const_iterator	const_iterator;
 		cout << "All subnodes of \'" << 
 			nonempty_abs_dir(objname) << "\':" << endl;
-		const_iterator i(nodes.begin()), e(nodes.end());
 		for ( ; i!=e; ++i) {
 			s.dump_node_value(cout, *i) << endl;
 		}

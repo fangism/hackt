@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.30.2.16 2010/03/06 00:32:58 fang Exp $
+	$Id: footprint.h,v 1.30.2.17 2010/03/09 01:00:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -367,9 +367,11 @@ public:
 	const state_instance<Tag>&
 	get_instance(const size_t, const bool t = true) const;
 
+#if 0
 	good_bool
 	collect_subentries(const global_indexed_reference&,
 		entry_collection&) const;
+#endif
 #endif
 
 	template <class Tag>

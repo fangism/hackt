@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.46.2.19 2010/03/06 00:32:57 fang Exp $
+	$Id: footprint.cc,v 1.46.2.20 2010/03/09 01:00:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1012,6 +1012,7 @@ footprint::__dummy_get_instance(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 good_bool
 footprint::collect_subentries(const global_indexed_reference& gref,
 		entry_collection& e) const {
@@ -1020,6 +1021,7 @@ footprint::collect_subentries(const global_indexed_reference& gref,
 	// and all private local subinstance indices (range)
 	return good_bool(false);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
