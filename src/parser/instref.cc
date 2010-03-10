@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.10 2010/03/10 01:20:22 fang Exp $
+	$Id: instref.cc,v 1.19.2.11 2010/03/10 23:38:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -529,30 +529,60 @@ if (n == ".") {
 	}
 	switch (gref.first) {
 	case META_TYPE_PROCESS: {
-		STACKTRACE_INDENT_PRINT("gpid = " << gref.second << endl);
+		// TODO: factor this out somewhere else for reuse?
+		set<size_t> worklist, covered;	// coverage of process ports
+		std::set<size_t> sorted;
+		worklist.insert(gref.second);
+	do {
+		const set<size_t>::iterator next_pi(worklist.begin());
+		const size_t gpid = *next_pi;
+		worklist.erase(next_pi);
+		const std::pair<set<size_t>::const_iterator, bool>
+			pip(covered.insert(gpid));
+	if (pip.second) {
+		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
+
 		footprint_frame tmpf, tff(m.get_footprint());
 		global_offset g, tmpg;
 		const global_entry_context gc(tff, g);
-		gc.construct_global_footprint_frame(
-			tmpf, tmpg, gref.second);
+		gc.construct_global_footprint_frame(tmpf, tmpg, gpid);
 #if ENABLE_STACKTRACE
 		STACKTRACE_INDENT_PRINT("offset = " << tmpg << endl);
 		tmpf.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
 #endif
+	{
+		// visit public process ports separately through worklist
+		const footprint_frame_map_type&
+			ppf(tmpf.get_frame_map<process_tag>());
+		const entity::state_instance<process_tag>::pool_type&
+			pp(tmpf._footprint->get_instance_pool<process_tag>());
+		copy(ppf.begin(), ppf.begin() +pp.port_entries(), 
+			util::set_inserter(worklist));
+	}
 		const footprint_frame_map_type&
 			pbf(tmpf.get_frame_map<bool_tag>());
-		std::set<size_t> s;
-		copy(pbf.begin(), pbf.end(), util::set_inserter(s));
-		const size_t b_off =	// adjust to 1-indexed global index
-			tmpg.global_offset_base<bool_tag>::offset +1;
-		const size_t priv = tmpf._footprint
-			->get_instance_pool<bool_tag>()
-				.non_local_private_entries();
+		copy(pbf.begin(), pbf.end(), util::set_inserter(sorted));
+		const entity::state_instance<bool_tag>::pool_type&
+			bp(tmpf._footprint->get_instance_pool<bool_tag>());
+			// deep private enumeration just continues past
+			// end-of-local indices
+			// what if there are no locals!
+			// adjust to 1-indexed global index
+		const size_t priv = bp.non_local_private_entries();
+		const size_t locp = bp.local_private_entries();
+		const size_t b_off =
+			tmpg.entity::global_offset_base<bool_tag>::offset +1;
+		STACKTRACE_INDENT_PRINT("b_off = " << b_off << endl);
+		STACKTRACE_INDENT_PRINT("locp = " << locp << endl);
+		STACKTRACE_INDENT_PRINT("priv. entries = " << priv << endl);
+		const size_t p_off = b_off +locp;
 		size_t i = 0;
 		for ( ; i<priv; ++i) {
-			s.insert(i+b_off);
+			sorted.insert(i+p_off);
 		}
-		copy(s.begin(), s.end(), back_inserter(v));
+	}	// else was already covered, skip it
+	} while (!worklist.empty());
+		copy(sorted.begin(), sorted.end(), back_inserter(v));
 #if ENABLE_STACKTRACE
 		copy(v.begin(), v.end(), ostream_iterator<size_t>(
 			STACKTRACE_INDENT_PRINT("all-sub: "), ","));
