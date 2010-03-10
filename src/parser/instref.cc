@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.9 2010/03/09 04:58:34 fang Exp $
+	$Id: instref.cc,v 1.19.2.10 2010/03/10 01:20:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -523,15 +523,19 @@ if (n == ".") {
 		// much easier with continuous ranges in memory mapping
 		const global_indexed_reference
 			gref(parse_global_reference(n, m));
+	if (!gref.second) {
+		// there was an error
+		return 1;
+	}
 	switch (gref.first) {
 	case META_TYPE_PROCESS: {
+		STACKTRACE_INDENT_PRINT("gpid = " << gref.second << endl);
 		footprint_frame tmpf, tff(m.get_footprint());
 		global_offset g, tmpg;
 		const global_entry_context gc(tff, g);
 		gc.construct_global_footprint_frame(
 			tmpf, tmpg, gref.second);
 #if ENABLE_STACKTRACE
-		STACKTRACE_INDENT_PRINT("gpid = " << gref.second << endl);
 		STACKTRACE_INDENT_PRINT("offset = " << tmpg << endl);
 		tmpf.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
 #endif
@@ -559,7 +563,8 @@ if (n == ".") {
 	case META_TYPE_BOOL:
 		v.push_back(gref.second);
 		break;
-	default: break;
+	default:
+		return 1;
 	}
 #else
 		if (!r.inst_ref()->collect_subentries(m, e).good) {

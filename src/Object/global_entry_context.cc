@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.10 2010/03/09 01:00:15 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.11 2010/03/10 01:20:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -136,26 +136,29 @@ if (gpid) {
 	size_t local = p->local_entries();	// at_top
 	STACKTRACE_INDENT_PRINT("ports = " << ports << endl);
 	STACKTRACE_INDENT_PRINT("local = " << local << endl);
-	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
+	STACKTRACE_INDENT_PRINT("gpid(1) = " << gpid << endl);
 	STACKTRACE_INDENT_PRINT("offset = " << g << endl);
 	while (gpid > local) {
 		STACKTRACE_INDENT_PRINT("descending..." << endl);
 		const size_t si = gpid -local;	// 1-based index
+		// subtract 1 for self index?
+		STACKTRACE_INDENT_PRINT("rem(1) = " << si << endl);
 		if (cf == topfp) {
 			g = global_offset(g, *cf, add_all_local_tag());
 		} else {
 			g = global_offset(g, *cf, add_local_private_tag());
 		}
 		const pool_private_map_entry_type&
-			e(p->locate_private_entry(si));
+			e(p->locate_private_entry(si -1));	// need 0-base!
 		const size_t lpid = e.first;
+		STACKTRACE_INDENT_PRINT("lpid(1) = " << lpid << endl);
 		global_offset delta;
 		cf->set_global_offset_by_process(delta, lpid);
 		delta += g;
 		const state_instance<Tag>& sp((*p)[lpid -1]);
 		const footprint_frame& sff(sp._frame);
 		cf = sff._footprint;
-		gpid = si -e.second;
+		gpid = si -e.second;		// still 1-based
 		footprint_frame lff(sff, ret);
 		lff.extend_frame(g, delta);
 	//	lff.construct_global_context(*cf, ret, g);
@@ -169,11 +172,11 @@ if (gpid) {
 		local = p->local_private_entries();
 		STACKTRACE_INDENT_PRINT("ports = " << ports << endl);
 		STACKTRACE_INDENT_PRINT("local = " << local << endl);
-		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
+		STACKTRACE_INDENT_PRINT("gpid(1) = " << gpid << endl);
 		STACKTRACE_INDENT_PRINT("offset = " << g << endl);
 	}
 	const size_t lpid = gpid;
-	STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
+	STACKTRACE_INDENT_PRINT("lpid(1) = " << lpid << endl);
 	STACKTRACE_INDENT_PRINT("offset = " << g << endl);
 	g = global_offset(g, *cf, add_local_private_tag());
 	STACKTRACE_INDENT_PRINT("offset+fp = " << g << endl);

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.13.88.8 2010/02/20 04:38:45 fang Exp $
+	$Id: instance_pool.tcc,v 1.13.88.9 2010/03/10 01:20:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -106,6 +106,7 @@ offset_less(const size_t l, const pool_private_map_entry_type& r) {
 /**
 	Search for the entry that corresponds to the private local
 	substructure process.  
+	\param li mapped index must be 0-based.
  */
 template <class T>
 const pool_private_map_entry_type&

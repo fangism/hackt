@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.2.88.8 2010/03/09 04:58:34 fang Exp $
+	$Id: footprint.tcc,v 1.2.88.9 2010/03/10 01:20:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -101,6 +101,7 @@ footprint::dump_canonical_name(ostream& o, const size_t gi,
 			dump_flags::no_definition_owner);
 	} else {
 		const size_t si = gi -local;
+		// si is 0-based residue index
 //		STACKTRACE_INDENT_PRINT("<si=" << si << '>' << endl);
 		const pool_private_map_entry_type&
 			e(p.locate_private_entry(si));
@@ -154,6 +155,7 @@ if (index < local) {
 	// identify which subprocess owns it
 	const size_t si = index -local;
 	STACKTRACE_INDENT_PRINT("si = " << si << endl);
+		// si is 0-based residue index
 	const pool_private_map_entry_type&
 		e(lp.locate_private_entry(si));
 	const state_instance<process_tag>::pool_type&

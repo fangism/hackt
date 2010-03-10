@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.57.2.5 2010/03/09 04:58:36 fang Exp $
+	$Id: State-prsim.cc,v 1.57.2.6 2010/03/10 01:20:24 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -867,7 +867,11 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 /** 
 	Returns the local-to-global node translation map for process pid.
 	This *really* should be inlined...
+	NOTE: this operation could become prohibitively expensive, 
+		reconstructing the footprint_frame of global indices each time.
+	TODO: create a reasonable size cache to store these, keyed by pid.
 	\param pid is 1-based global process index.
+	\return frame
  */
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 footprint_frame_map_type
@@ -884,7 +888,7 @@ State::get_footprint_frame_map(const process_index_type pid) const {
 	const global_entry_context tmp(tff, g);
 	tmp.construct_global_footprint_frame(ret, g, pid);
 #if ENABLE_STACKTRACE
-//	ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:\n")) << endl;
+//	ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
 #endif
 	return ret.get_frame_map<bool_tag>();	// copy
 #else
@@ -3110,6 +3114,7 @@ State::finish_process_type_map(void) {
 	STACKTRACE_VERBOSE;
 	process_state_array_type::iterator
 		i(process_state_array.begin()), e(process_state_array.end());
+	// replaces index union member with pointer union member
 	for ( ; i!=e; ++i) {
 		const size_t j = i->get_index();
 		const unique_process_subgraph& g(unique_process_pool[j]);
@@ -3210,17 +3215,27 @@ State::translate_to_global_node(const process_sim_state& ps,
 node_index_type
 State::translate_to_global_node(const process_index_type pid, 
 		const node_index_type lni) const {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("lni = " << lni << endl);
 	// HACK: poor style, using pointer arithmetic to deduce index
 	ISE_INVARIANT(pid < process_state_array.size());
 	// no longer need special case for pid=0, b/c frame is identity
 	const footprint_frame_map_type& bfm(get_footprint_frame_map(pid));
-#if ENABLE_STACKTRACE
+#if 0 && ENABLE_STACKTRACE
 	copy(bfm.begin(), bfm.end(),
 		std::ostream_iterator<size_t>(
 			STACKTRACE_INDENT_PRINT("translate bfm: "), ","));
 	STACKTRACE_STREAM << endl;
 #endif
-	return bfm[lni];
+#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
+	INVARIANT(lni <= bfm.size());
+	const size_t ret = bfm[lni -1];
+#else
+	INVARIANT(lni < bfm.size());
+	const size_t ret = bfm[lni];
+#endif
+	STACKTRACE_INDENT_PRINT("gni = " << ret << endl);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

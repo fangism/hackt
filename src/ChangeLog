@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-d:
+	  Fixed global_entry_context::construct_global_footprint_frame(), 
+		call to locate_private_entry needs 0-based index, but 
+		was passed a 1-based index, doh!
+	  Improved error handling in parser/instref.cc.
+	  Debugging messed up hacprsim stepping...
+		possibly suspicious translate_to_global_node indexing.
+
+
 2010-03-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-22-c:
