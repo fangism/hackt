@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.11 2010/03/10 23:38:01 fang Exp $
+	$Id: instref.cc,v 1.19.2.12 2010/03/11 01:49:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -533,6 +533,9 @@ if (n == ".") {
 		set<size_t> worklist, covered;	// coverage of process ports
 		std::set<size_t> sorted;
 		worklist.insert(gref.second);
+		const footprint_frame tff(m.get_footprint());
+		const global_offset g;
+		const global_entry_context gc(tff, g);
 	do {
 		const set<size_t>::iterator next_pi(worklist.begin());
 		const size_t gpid = *next_pi;
@@ -542,9 +545,8 @@ if (n == ".") {
 	if (pip.second) {
 		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
 
-		footprint_frame tmpf, tff(m.get_footprint());
-		global_offset g, tmpg;
-		const global_entry_context gc(tff, g);
+		footprint_frame tmpf;
+		global_offset tmpg;
 		gc.construct_global_footprint_frame(tmpf, tmpg, gpid);
 #if ENABLE_STACKTRACE
 		STACKTRACE_INDENT_PRINT("offset = " << tmpg << endl);

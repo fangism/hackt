@@ -5,6 +5,14 @@
 
 2010-03-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-f:
+	  Fixed global_entry_context::construct_global_footprint_frame()
+		again, this time forgot to adjust final lpid by +ports.
+		Replaced call to extend_frame with construct_global_context.
+	  parser/instref.cc: loop-invariant code-motion.
+	  hacprsim tests no longer crash!  Few differences remain.
+
+
 	* HACKT-00-01-04-main-00-83-53-scalable-01-22-e:
 	  Fixed hacprsim:getall (parser/instref.cc:parse_name_to_get_subnodes)
 		Needed to traverse public process ports for the 

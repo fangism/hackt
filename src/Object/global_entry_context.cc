@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.11 2010/03/10 01:20:18 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.12 2010/03/11 01:49:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -160,12 +160,15 @@ if (gpid) {
 		cf = sff._footprint;
 		gpid = si -e.second;		// still 1-based
 		footprint_frame lff(sff, ret);
+#if 0
 		lff.extend_frame(g, delta);
-	//	lff.construct_global_context(*cf, ret, g);
-#if ENABLE_STACKTRACE
-		lff.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
-#endif
 		lff.swap(ret);
+#else
+		ret.construct_global_context(*cf, lff, delta);
+#endif
+#if ENABLE_STACKTRACE
+		ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+#endif
 		g = delta;
 		p = &cf->get_instance_pool<Tag>();
 		ports = p->port_entries();
@@ -175,7 +178,8 @@ if (gpid) {
 		STACKTRACE_INDENT_PRINT("gpid(1) = " << gpid << endl);
 		STACKTRACE_INDENT_PRINT("offset = " << g << endl);
 	}
-	const size_t lpid = gpid;
+	STACKTRACE_INDENT_PRINT("found owner scope" << endl);
+	const size_t lpid = gpid +ports;
 	STACKTRACE_INDENT_PRINT("lpid(1) = " << lpid << endl);
 	STACKTRACE_INDENT_PRINT("offset = " << g << endl);
 	g = global_offset(g, *cf, add_local_private_tag());
@@ -183,24 +187,25 @@ if (gpid) {
 	p = &cf->get_instance_pool<Tag>();
 	const state_instance<Tag>& sp((*p)[lpid -1]);
 	const footprint_frame& sff(sp._frame);
+	footprint_frame lff(sff, ret);
 #if ENABLE_STACKTRACE
 	sff.dump_frame(STACKTRACE_INDENT_PRINT("sff:")) << endl;
 	ret.dump_frame(STACKTRACE_INDENT_PRINT("actuals:")) << endl;
+	lff.dump_frame(STACKTRACE_INDENT_PRINT("pre-frame:")) << endl;
 #endif
-	footprint_frame lff(sff, ret);
 	global_offset delta;
 	cf->set_global_offset_by_process(delta, lpid);
 	STACKTRACE_INDENT_PRINT("delta = " << delta << endl);
 	delta += g;
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("delta+g = " << delta << endl);
-	lff.dump_frame(STACKTRACE_INDENT_PRINT("pre-frame:")) << endl;
 #endif
+	cf = sff._footprint;
 #if 0
 	lff.extend_frame(g, delta);
 	lff.swap(ret);
 #else
-	ret.construct_global_context(*sff._footprint, lff, delta);
+	ret.construct_global_context(*cf, lff, delta);
 #endif
 #if ENABLE_STACKTRACE
 	ret.dump_frame(STACKTRACE_INDENT_PRINT("ret-frame:")) << endl;
