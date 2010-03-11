@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.17 2009/05/29 15:13:15 fang Exp $
+dnl	$Id: hackt.m4,v 1.18 2010/03/11 18:39:14 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -144,7 +144,7 @@ XDR_INCLUDE="$xdr_include"
 fi
 CPPFLAGS="$saved_CPPFLAGS"
 fi
-dnl realine may need to link against xdr, without requiring headers
+dnl readline may need to link against xdr, without requiring headers
 dnl Thus, we check for tputs unconditionally
 saved_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS $xdr_ldpath"
@@ -172,7 +172,7 @@ dnl NCURSES_LDPATH for path to libraries, and
 dnl NCURSES_LIB for the library itself.  
 dnl
 dnl @category InstalledPackages
-dnl @version 2006-05-08
+dnl @version 2010-03-09
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -201,11 +201,13 @@ NCURSES_INCLUDE="$ncurses_include"
 fi
 CPPFLAGS="$saved_CPPFLAGS"
 fi
-dnl realine may need to link against ncurses, without requiring headers
+dnl readline may need to link against ncurses, without requiring headers
 dnl Thus, we check for tputs unconditionally
 saved_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS $ncurses_ldpath"
 dnl NOTE: SEARCH_LIBS automatically prepends LIBS
+AC_LANG_PUSH(C)
+dnl autoconf's test may not automatically extern "C"
 AC_SEARCH_LIBS(tputs, ncurses termcap,
 	[NCURSES_LDPATH="$ncurses_ldpath"
 	NCURSES_LIB="$ac_cv_search_tputs"
@@ -214,6 +216,7 @@ AC_SEARCH_LIBS(tputs, ncurses termcap,
 	[:]
 	dnl check for ac_cv_search_tputs for the result of this check
 )
+AC_LANG_POP(C)
 LDFLAGS="$saved_LDFLAGS"
 dnl these variables are set only if corresponding headers/libraries are found
 AC_SUBST(NCURSES_INCLUDE)

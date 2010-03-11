@@ -1,12 +1,12 @@
 /**
 	\file "Object/nonmeta_channel_manipulator.cc"
-	$Id: nonmeta_channel_manipulator.cc,v 1.3 2007/08/28 04:53:59 fang Exp $
+	$Id: nonmeta_channel_manipulator.cc,v 1.4 2010/03/11 18:39:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
-#if ENABLE_STACKTRACE
 #include <iostream>
+#if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
 #endif
 

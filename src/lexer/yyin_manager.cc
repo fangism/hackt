@@ -1,9 +1,10 @@
 /**
 	\file "lexer/yyin_manager.cc"
-	$Id: yyin_manager.cc,v 1.6 2008/07/30 05:26:44 fang Exp $
+	$Id: yyin_manager.cc,v 1.7 2010/03/11 18:39:24 fang Exp $
  */
 
 #include <iostream>
+#include <cstdio>
 #include "lexer/yyin_manager.h"
 #include "lexer/file_manager.h"
 

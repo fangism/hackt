@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.26 2009/10/16 21:46:21 fang Exp $
+	$Id: main_funcs.cc,v 1.27 2010/03/11 18:39:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <fstream>
 #include <stack>
+#include <cstdio>
 
 #include "util/macros.h"
 #include "main/main_funcs.h"
@@ -342,6 +343,7 @@ parse_and_check(const char* name, const compile_options& opt) {
 			return return_type(NULL);
 		} else {
 			fclose(f);
+			// or use util::memory::excl_ptr<FILE, fclose_tag>
 		}
 	}
 	// error message would be nice

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.233 2010/02/02 21:57:52 fang Exp $
+#	$Id: Makefile.am,v 1.234 2010/03/11 18:39:18 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -104,13 +104,14 @@ EXTRA_LTLIBRARIES += \
 
 # NOTE: the order matters for proper library installation!!!
 # should follow partial order of dependencies (independent first)
-# WIsh automake would automatically order these properly.
+# Wish automake would automatically order these properly.
+# Just topological sort libraries based on LIBADD deps.
 pkglib_LTLIBRARIES = \
-	libhacknet.la \
+	libhacktast.la \
+	libhacktparsers.la \
 	libhacktlib.la \
 	libhacktsim.la \
-	libhacktast.la \
-	libhacktparsers.la
+	libhacknet.la
 # lib_LTLIBRARIES = libhacktlib.la
 if HAVE_LIBGUILE
 pkglib_LTLIBRARIES += libhacktguile.la
@@ -1920,7 +1921,10 @@ CLEANPARSER = \
 	parser/$(TYPE_PARSE_ROOT).output \
 	parser/$(TYPE_PARSE_ROOT).output.h \
 	parser/type-union.cc \
-	parser/type.types
+	parser/type.types \
+	parser/$(VERILOG_PARSE_ROOT).cc \
+	parser/$(VERILOG_PARSE_ROOT).h \
+	parser/$(VERILOG_PARSE_ROOT).output
 
 CLEANLEXER = \
 	lexer/$(HACKT_LEX_ROOT)-real.cc \

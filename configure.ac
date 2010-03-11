@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.214 2010/02/02 21:57:51 fang Exp $
+#	$Id: configure.ac,v 1.215 2010/03/11 18:39:12 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20100107, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20100310, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -29,7 +29,9 @@ AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
 
 AC_CANONICAL_HOST
 if test "$AWK" = "mawk" ; then
-  AC_MSG_WARN([mawk is known to die on valid input, please try any other awk!])
+  AC_MSG_ERROR([mawk is known to reject valid input, please try any other awk!
+You can override the tool by passing AWK=... to the configure options.
+  ])
 fi
 HACKT_AUTO_CVSIGNORE
 dnl true if building in srcdir
@@ -510,6 +512,7 @@ AC_SUBST(CONFIGDATE)
 cat <<ACEOF
 configuration summary:
 	CONFIG_SHELL:		$CONFIG_SHELL
+	AWK:			$AWK
 	CXX:			$CXX_VERSION
 	CPPFLAGS:		$CPPFLAGS
 	CXXFLAGS:		$CXXFLAGS
@@ -538,6 +541,9 @@ configuration summary:
 	guile LDFLAGS: 		$GUILE_LDFLAGS
 ACEOF
 
+dnl error out if critical dependencies are not met
+test "$LEX_VERSION" || AC_MSG_ERROR([lex or flex required, but none found!])
+test "$YACC_VERSION" || AC_MSG_ERROR([yacc or bison required, but none found!])
 
 # additional patch to Makefile to work around automake shortcoming
 # recursive rm may fail if too many files in particular subdir.

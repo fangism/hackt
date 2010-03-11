@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.22 2009/10/27 18:21:48 fang Exp $
+	$Id: compile.cc,v 1.23 2010/03/11 18:39:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,6 +12,7 @@
 #include <list>
 #include <string>
 #include <map>
+#include <cstdio>
 #include "common/config.h"
 #include "main/compile.h"
 #include "main/main_funcs.h"
@@ -308,6 +309,7 @@ compile::make_module(int argc, char* argv[], options& opt,
 	}
 if (!opt.use_stdin) {
 	opt.source_file = argv[0];
+	// or use util::memory::excl_ptr<FILE, fclose_tag>
 	FILE* f = open_source_file(opt.source_file.c_str());
 	if (!f)
 		return 1;

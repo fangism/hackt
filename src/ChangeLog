@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-68:
+	  Mostly portability fixes, thanks to testing on ubuntu with
+		gcc-4.4.1 by Ilya Konstantinovich Ganusov.
+	  Makefile.am: order pkglib_LTLIBRARIES in topological ordering
+		by dependency, so ensure proper relink ordering
+		at install-time.
+		distclean generated verilog parser files.
+	  include <cstdio> in sources where calling fopen/fclose, etc...
+	  Object/expr/meta_param_expr_list.cc: instantiate count_ptr
+		for dynamic_param_expr_list.
+
+
 2010-02-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-67:

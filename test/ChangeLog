@@ -1,6 +1,15 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.102 2010/01/11 21:25:19 fang Exp $
+#	$Id: ChangeLog,v 1.103 2010/03/11 18:39:28 fang Exp $
 # ChangeLog for test directory.
+
+2010-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-68:
+	  test/guile/Makefile.am: call INSTALLED_HACGUILE (hacguile)
+		instead of guile directly, so that user need not
+		manually set GUILE_LOAD_PATH, as used to be done in
+		src/scripts/init_hackt.{csh,sh}.in
+
 
 2010-01-11	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2010-03-10	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-68:
+	  Mostly portability fixes.
+	  configure.ac: version bump, reject mawk, not just warn.
+		Error out if lex/yacc missing at summary.
+	  config/hackt.m4: checking for tputs, force AC_LANG C
+	  Re-validated on ubuntu vs. gcc-4.4.1, many thanks to
+		Ilya Konstantinovich Ganusov for helping test!
+
+
 2010-02-02	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-66:

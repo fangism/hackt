@@ -3,13 +3,14 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: flatten.cc,v 1.12 2009/10/16 20:38:46 fang Exp $
+	$Id: flatten.cc,v 1.13 2010/03/11 18:39:26 fang Exp $
  */
 
 #include <iostream>
 #include <list>
 #include <string>
 #include <map>
+#include <cstdio>
 #include "common/config.h"
 #include "main/program_registry.h"
 #include "main/flatten.h"
@@ -199,6 +200,7 @@ if (argc == 1) {
 	FILE* f = open_source_file(argv[0]);
 	if (!f)	return 1;
 	fclose(f);
+	// or use util::memory::excl_ptr<FILE, fclose_tag>
 
 	// dependency generation setup
 	opt.source_file = argv[0];

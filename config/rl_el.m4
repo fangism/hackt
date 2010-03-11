@@ -1,5 +1,5 @@
 dnl "config/rl_el.m4"
-dnl	$Id: rl_el.m4,v 1.8 2009/02/25 03:31:03 fang Exp $
+dnl	$Id: rl_el.m4,v 1.9 2010/03/11 18:39:15 fang Exp $
 dnl Readline and Editline support for the utility library used by hackt.
 dnl This is not only specific to hackt, so we place these macros here.  
 dnl
@@ -119,7 +119,7 @@ CPPFLAGS="$CPPFLAGS $rl_include"
 		dnl remember to link in proper order
 		dnl LIBS="$ac_cv_search_tputs $LIBS"
 	else
-	AC_MSG_ERROR([Found neither ncurses or termcap, needed by readline])
+	AC_MSG_ERROR([Found neither ncurses nor termcap (symbol: tputs), needed by readline])
 	fi
 	saved_LDFLAGS="$LDFLAGS"
 	LDFLAGS="$LDFLAGS $rl_ldpath"
@@ -198,7 +198,7 @@ LDFLAGS="$LDFLAGS $el_ldpath"
 		dnl remember to link in proper order
 		dnl LIBS="$ac_cv_search_tputs $LIBS"
 	else
-	AC_MSG_ERROR([Found neither ncurses or termcap, needed by editline])
+	AC_MSG_ERROR([Found neither ncurses nor termcap (symbol: tputs), needed by editline])
 	fi
 	AC_CHECK_LIB(edit, readline,
 		[AC_DEFINE(EDITLINE_HAS_READLINE_INTERFACE, [],

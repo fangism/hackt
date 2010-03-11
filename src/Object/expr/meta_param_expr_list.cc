@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.29 2009/09/14 21:16:54 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.30 2010/03/11 18:39:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -62,6 +62,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace memory {
 	// explicit template instantiations, needed for -O3
 template class count_ptr<const HAC::entity::const_param_expr_list>;
+template class count_ptr<const HAC::entity::dynamic_param_expr_list>;
 }
 }	// end namespace util
 

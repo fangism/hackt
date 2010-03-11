@@ -1,10 +1,11 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.10 2008/11/23 17:54:06 fang Exp $
+	$Id: file_manager.cc,v 1.11 2010/03/11 18:39:23 fang Exp $
  */
 
 #include <iostream>
 #include <set>
+#include <cstdio>
 #include "lexer/file_manager.h"
 #include "util/unique_list.tcc"
 // #include "util/unique_stack.tcc"
