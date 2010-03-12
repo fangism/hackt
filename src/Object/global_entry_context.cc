@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.13 2010/03/12 03:33:37 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.14 2010/03/12 22:20:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -263,6 +263,8 @@ global_entry_context::construct_global_footprint_frame(
 		STACKTRACE_INDENT_PRINT("lpid = " << lpid << " (" << ports
 			<< " ports)" << endl);
 		if (lpid >= ports) {
+			// then is local private
+			// change both ret frame and owner, and global offset
 			STACKTRACE_INDENT_PRINT("private local" << endl);
 			const state_instance<Tag>& sp(pp[lpid -1]);
 			STACKTRACE_INDENT_PRINT("ret-g: " << g << endl);
@@ -271,21 +273,31 @@ global_entry_context::construct_global_footprint_frame(
 			} else {
 			g = global_offset(g, ofp, add_local_private_tag());
 			}
-			STACKTRACE_INDENT_PRINT("ret-g +fp: " << g << endl);
-			g = global_offset(g, rfp, add_local_private_tag());
-			STACKTRACE_INDENT_PRINT("ret-g +fp +pl: " << g << endl);
-			// then is local private
-			// change both ret frame and owner, and global offset
-			global_offset delta;
-			rfp.set_global_offset_by_process(delta, lpid);
-			STACKTRACE_INDENT_PRINT("delta: " << delta << endl);
-			delta += g;
-			STACKTRACE_INDENT_PRINT("delta+g: " << delta << endl);
+			STACKTRACE_INDENT_PRINT("ret-g +ofp: " << g << endl);
+		{
+			global_offset odelta;
+			ofp.set_global_offset_by_process(odelta, ppid);
+			STACKTRACE_INDENT_PRINT("odelta: " << odelta << endl);
+			odelta += g;
+			STACKTRACE_INDENT_PRINT("odelta+g: " << odelta << endl);
+			g = odelta;
+		}
+			global_offset z;
+			z = global_offset(z, rfp, add_local_private_tag());
+			STACKTRACE_INDENT_PRINT("r-delta: " << z << endl);
+			global_offset pdelta;
+			rfp.set_global_offset_by_process(pdelta, lpid);
+			STACKTRACE_INDENT_PRINT("pdelta: " << pdelta << endl);
+			pdelta += z;
+			STACKTRACE_INDENT_PRINT("pdelta+z: " << pdelta << endl);
+			pdelta += g;
+			STACKTRACE_INDENT_PRINT("pdelta+z+o: " << pdelta << endl);
+			owner = ret;
 			footprint_frame lff(sp._frame, ret);
-			owner.construct_global_context(
-				*sp._frame._footprint, lff, delta);
-			g = delta;
-			ret = owner;	// copy over
+			ret.construct_global_context(
+				*sp._frame._footprint, lff, pdelta);
+			// g = odelta;
+			// ret = owner;	// copy over
 #if ENABLE_STACKTRACE
 			sp._frame.dump_frame(STACKTRACE_INDENT_PRINT("sp.frame:")) << endl;
 			owner.dump_frame(STACKTRACE_INDENT_PRINT("new owner:")) << endl;

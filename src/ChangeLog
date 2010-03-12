@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-h:
+	  Final iteration (?) of construct_global_footprint_frame(), 
+		where latest fix is in the compuatation of offsets, 
+		now distinguished between owner and non-owner offsets, 
+		for correct recursion.
+		hacprsim:getall/getports/getlocal tests now all pass.
+	  Next: focus on run-time/simulation differences.
+
+
 2010-03-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-22-g:
