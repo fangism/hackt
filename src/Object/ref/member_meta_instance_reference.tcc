@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.28.24.6 2010/03/09 01:00:20 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.28.24.7 2010/03/12 03:33:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -211,7 +211,8 @@ if (!lid) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Looks up the local index of this reference.  
-	\return a local index (local to footprint) for this reference.  
+	\return a local index (local to footprint) for this reference, 
+		or 0 to signal an error.  
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
@@ -235,10 +236,11 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	// TODO: have parent reference populate footprint_frame
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	footprint_frame tmp, owner;	// scratch space
-	footprint_frame pff(top);
+	const footprint_frame pff(top);
 	global_offset g;
 	const global_entry_context gc(pff, g);
 	if (!gc.construct_global_footprint_frame(owner, tmp, g, _parent_inst_ref)) {
+		STACKTRACE_INDENT_PRINT("member::lookup_local error." << endl);
 		return 0;
 	}
 #if ENABLE_STACKTRACE
@@ -284,7 +286,13 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	const size_t ind = local_alias->instance_index;
 	INVARIANT(ind);
 	// this lookup returns a globally allocated index
-	return footprint_frame_transformer(*fpf, Tag())(ind);
+#if ENABLE_STACKTRACE
+	fpf->dump_frame(STACKTRACE_INDENT_PRINT("parent frame:")) << endl;
+#endif
+	const size_t ret = footprint_frame_transformer(*fpf, Tag())(ind);
+	STACKTRACE_INDENT_PRINT("local index = " << ind << endl);
+	STACKTRACE_INDENT_PRINT("global index = " << ret << endl);
+	return ret;
 }	// end method lookup_locally_allocated_index
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

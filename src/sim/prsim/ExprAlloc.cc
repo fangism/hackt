@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.42.4.9 2010/03/09 04:58:35 fang Exp $
+	$Id: ExprAlloc.cc,v 1.42.4.10 2010/03/12 03:33:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -550,6 +550,7 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 #endif
 	footprint_frame af(gpff, *fpf);
 	af.extend_frame(sgo, b);
+	// construct_global_context instead?
 #if ENABLE_STACKTRACE
 	af.dump_frame(STACKTRACE_INDENT_PRINT("EXT-frame:")) << endl;
 #endif

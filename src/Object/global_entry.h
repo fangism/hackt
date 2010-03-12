@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18.20.14 2010/02/24 22:48:51 fang Exp $
+	$Id: global_entry.h,v 1.18.20.15 2010/03/12 03:33:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -232,6 +232,7 @@ public:
 	dump_extended_frame(ostream&, const global_offset&, 
 		const global_offset&, const global_offset&) const;
 
+#if 1
 private:
 	template <class Tag>
 	void
@@ -240,6 +241,7 @@ private:
 public:
 	void
 	extend_frame(const global_offset&, const global_offset&);
+#endif
 #endif
 
 	template <class Tag>
@@ -284,9 +286,11 @@ private:
 		const size_t, const size_t, const size_t, 
 		ostream&, const char* const);
 
+#if 1
 	static
 	void
 	extend_id_map(footprint_frame_map_type&, const size_t, const size_t);
+#endif
 #endif
 
 	static

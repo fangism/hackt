@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.13.24.15 2010/03/09 01:00:14 fang Exp $
+	$Id: global_entry.cc,v 1.13.24.16 2010/03/12 03:33:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -435,6 +435,7 @@ if (pm) {
 	return o;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
 /**
 	Extends the footprint frame with would-be local indices.
 	\param li lower bound of extended range, inclusive.
@@ -451,6 +452,7 @@ if (li != le) {
 	}
 }
 }
+#endif
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -537,6 +539,7 @@ footprint_frame::dump_extended_frame(ostream& o, const global_offset& a,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
 template <class Tag>
 void
 footprint_frame::__extend_frame(const global_offset& a, 
@@ -566,6 +569,7 @@ footprint_frame::extend_frame(const global_offset& a,
 	__extend_frame<int_tag>(a, b);
 	__extend_frame<bool_tag>(a, b);
 }
+#endif
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
