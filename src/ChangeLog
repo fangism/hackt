@@ -5,6 +5,16 @@
 
 2010-03-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-53-scalable-01-23:
+	  Finally satisfied with hacprsim progress!
+		Fixed ExprAlloc, needed to save parent_offset before
+			traversing SPEC footprint, which needs 
+			global index lookup tables.  
+		Feature regression: getall no longer works on top-level arrays.
+		Might fix this before end-of-branch, but not critical for now.
+		memstats tests memory usage dump has not yet been updated.
+
+
 	* HACKT-00-01-04-main-00-83-53-scalable-01-22-h:
 	  Final iteration (?) of construct_global_footprint_frame(), 
 		where latest fix is in the compuatation of offsets, 

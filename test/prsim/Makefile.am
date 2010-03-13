@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.84 2009/11/14 03:12:14 fang Exp $
+#	$Id: Makefile.am,v 1.84.2.1 2010/03/13 02:18:45 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -66,6 +66,9 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 # TODO: more cross-coupled test cases
 # SRAM cell
 # register with read/write ports, cross-coupled
+
+# after getall works on arrays:
+#	array-02
 
 HACKT_PARSE_TEST_PASSES = \
 	expr-limit-b \

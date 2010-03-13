@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.12 2010/03/11 01:49:02 fang Exp $
+	$Id: instref.cc,v 1.19.2.13 2010/03/13 02:18:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -525,6 +525,8 @@ if (n == ".") {
 			gref(parse_global_reference(n, m));
 	if (!gref.second) {
 		// there was an error
+		r.inst_ref()->dump(cerr << "ERROR: bad instance reference: ",
+			expr_dump_context::default_value) << endl;
 		return 1;
 	}
 	switch (gref.first) {

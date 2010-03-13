@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.95.2.6 2010/02/26 01:53:58 fang Exp $
+#	$Id: Make.test-tail,v 1.95.2.7 2010/03/13 02:18:43 fang Exp $
 
 # for test that depend on pre-install plug-ins
 # don't forget to pass -dlopen to assist searching for pre-install dependencies
@@ -162,7 +162,7 @@ include $(top_srcdir)/test/Make.test-alloc
 include $(top_srcdir)/test/Make.test-cflat
 # temporary:
 # include $(top_srcdir)/test/Make.test-graph
-# include $(top_srcdir)/test/Make.test-prsim
+include $(top_srcdir)/test/Make.test-prsim
 # include $(top_srcdir)/test/Make.test-vpi
 # include $(top_srcdir)/test/Make.test-chpsim
 # include $(top_srcdir)/test/Make.test-guile

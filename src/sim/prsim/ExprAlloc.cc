@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.42.4.10 2010/03/12 03:33:38 fang Exp $
+	$Id: ExprAlloc.cc,v 1.42.4.11 2010/03/13 02:18:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -240,7 +240,10 @@ ExprAlloc::visit_rules_and_directives(const footprint& f) {
 	STACKTRACE_VERBOSE;
 	const entity::PRS::footprint& pfp(f.get_prs_footprint());
 	pfp.accept(*this);
+	// TODO: implement spec directives hierarchically
+#if 0
 	f.get_spec_footprint().accept(*this);
+#endif
 
 #if 0
 	typedef footprint::invariant_pool_type::const_iterator
@@ -279,6 +282,7 @@ ExprAlloc::operator () (void) {
 		<< current_process_index << endl);
 #if 0 && !PRSIM_SIMPLE_ALLOC
 	visit_rules_and_directives(*topfp);
+	// already in auto_create_unique_process_subgraph
 #endif
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// process top type
@@ -299,6 +303,9 @@ ExprAlloc::operator () (void) {
 	const node_index_type node_pool_size =
 		fpf->_footprint->get_instance_pool<bool_tag>().local_entries();
 	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
+	// problem: spec directives are still global, not per-process
+	const entity::SPEC::footprint& sfp(topfp->get_spec_footprint());
+	sfp.accept(*this);
 
 	topfp->accept(AS_A(global_entry_context&, *this));
 	state.finish_process_type_map();	// finalize indices to pointers
@@ -545,17 +552,20 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 	// set footprint frame using local frame? see global_entry_dumper::visit
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("offset: " << sgo << endl);
+	STACKTRACE_INDENT_PRINT("local: " << b << endl);
+	STACKTRACE_INDENT_PRINT("local-bnd: " << b << endl);
 	gpff.dump_frame(STACKTRACE_INDENT_PRINT("instance-frame:")) << endl;
 	fpf->dump_frame(STACKTRACE_INDENT_PRINT("actuals-frame:")) << endl;
 #endif
 	footprint_frame af(gpff, *fpf);
 	af.extend_frame(sgo, b);
-	// construct_global_context instead?
+	// TODO: call construct_global_context instead
 #if ENABLE_STACKTRACE
 	af.dump_frame(STACKTRACE_INDENT_PRINT("EXT-frame:")) << endl;
 #endif
 	const value_saver<const footprint_frame*> _ff_(fpf, &af);
-	// global_offset? not used?
+	// global_offset is used by spec_footprint visit (for now)
+	const value_saver<const global_offset*> _g_(parent_offset, &sgo);
 #endif
 	// also set up proper unique_process references
 #if PRSIM_SIMPLE_ALLOC
@@ -620,7 +630,7 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 	// assume that processes are visited in sequence
 	++current_process_index;
 #endif
-}
+}	// end method visit(const state_instance<process_tag>&);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -833,6 +843,7 @@ ExprAlloc::compact_expr_pools(void) {
 void
 ExprAlloc::visit(const footprint_rule& r) {
 	STACKTRACE_VERBOSE;
+//	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
 try {
 	rule_type dummy_rule;
 {
@@ -1287,7 +1298,6 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		g->local_faninout_map.size() << endl);
 	expr_type& ne(g->expr_pool[top_ex_index]);
 	graph_node_type& ng(g->expr_graph_node_pool[top_ex_index]);
-	STACKTRACE_INDENT_PRINT("here A" << endl);
 	fanin_array_type& fin(g->local_faninout_map[ni].get_pull_expr(dir
 #if PRSIM_WEAK_RULES
 			, w
@@ -1296,7 +1306,6 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	// root expression's position in node's fanin (OR-combination)
 	ng.offset = fin.size();	
 	fin.push_back(top_ex_index);		// append to fanin rules
-	STACKTRACE_INDENT_PRINT("here B" << endl);
 	ne.pull(ni);				// set as a root expression
 	g->rule_map[top_ex_index] = g->rule_pool.size();	// map
 	g->rule_pool.push_back(dummy);
