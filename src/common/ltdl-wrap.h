@@ -1,15 +1,15 @@
 /**
 	"common/ltdl-wrap.h"
 	Wrapped interfaces for libltdl.  
-	$Id: ltdl-wrap.h,v 1.2 2007/07/31 23:23:28 fang Exp $
+	$Id: ltdl-wrap.h,v 1.3 2010/03/15 17:21:12 fang Exp $
  */
 
 #ifndef	__HAC_COMMON_LTDL_WRAP_H__
 #define	__HAC_COMMON_LTDL_WRAP_H__
 
-// relative path given to avoid adding another CPPFLAG
-#include "../libltdl/ltdl.h"	// needed for the types
-// do we ever want to fallback to the system's installed ltdl?
+#include "ltdl.h"
+// needed for the types, from $(top_srcdir)/libltdl/ a.k.a. $(LTDLINCL)
+// or user may opt to select different libltdl PATH
 #include "util/attributes.h"
 #include "util/type_traits.h"
 #include <string>

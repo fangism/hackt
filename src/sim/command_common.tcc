@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.19 2009/11/14 03:12:11 fang Exp $
+	$Id: command_common.tcc,v 1.20 2010/03/15 17:21:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -23,7 +23,6 @@
 #include "parser/instref.h"
 #include "Object/expr/dlfunction.h"
 #include "common/TODO.h"
-#include "common/ltdl-wrap.h"
 #include "util/compose.h"
 #include "util/string.tcc"
 #include "util/utypes.h"
