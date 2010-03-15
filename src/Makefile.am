@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.234 2010/03/11 18:39:18 fang Exp $
+#	$Id: Makefile.am,v 1.235 2010/03/15 06:03:53 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1585,7 +1585,7 @@ parser/type-union.cc: $(TYPE_PARSE_OUTPUT) parser/type.types \
 
 
 # configure accumulated AUTO_CPPFLAGS for dependent package includes
-AM_CPPFLAGS = -I$(srcdir) @AUTO_CPPFLAGS@
+AM_CPPFLAGS = -I$(srcdir) $(LTDLINCL) @AUTO_CPPFLAGS@
 # will need _build directories for "make distcheck" with auto-generated headers
 # the last -Iparser is for the relative path in the build directory
 
@@ -1735,20 +1735,25 @@ EXTRA_DIST += $(srcdir)/test/header_test.cc
 # automake produces empty placeholders (never updated) for them initially, 
 # so make will not die.
 
+SKIP_HCHK = $(ECHO) "Skipping $@ ..." && $(TOUCH) $@
+
 common/devel_switches.hchk: common/devel_switches.h
-	@$(TOUCH) $@
+	@$(SKIP_HCHK)
 
 Object/devel_switches.hchk: Object/devel_switches.h
-	@$(TOUCH) $@
+	@$(SKIP_HCHK)
 
 sim/devel_switches.hchk: sim/devel_switches.h
-	@$(TOUCH) $@
+	@$(SKIP_HCHK)
 
 sim/prsim/devel_switches.hchk: sim/prsim/devel_switches.h
 	@$(TOUCH) $@
 
-../libltdl/ltdl.hchk: ../libltdl/ltdl.h
-	@$(TOUCH) $@
+common/ltdl-wrap.hchk: common/ltdl-wrap.h
+	@$(SKIP_HCHK)
+
+# ../libltdl/ltdl.hchk: ../libltdl/ltdl.h
+#	@$(SKIP_HCHK)
 
 ../libltdl/libltdl.la:
 	+cd ../libltdl && $(MAKE)
