@@ -16,7 +16,6 @@ node[3]: up: - < - , dn: - < -  fanout:
 node[4]: up: - < - , dn: - < -  fanout: 
 node[5]: up: - < - , dn: - < -  fanout: 
 node[6]: up: - < - , dn: - < -  fanout: 
-node[7]: up: - < - , dn: - < -  fanout: 
 Local expressions: 
 Local expression -> rule map:
 

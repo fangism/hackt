@@ -20,7 +20,6 @@ node[5]: up: - < - , dn: - < -  fanout:
 node[6]: up: - < - , dn: - < -  fanout: 
 node[7]: up: - < - , dn: - < -  fanout: 
 node[8]: up: - < - , dn: - < -  fanout: 
-node[9]: up: - < - , dn: - < -  fanout: 
 Local expressions: 
 Local expression -> rule map:
 

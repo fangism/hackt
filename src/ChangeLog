@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-24:
+	  No source revision.
+		Re-enabled prsimexpr dump tests, update tests b/c
+		top-footprint no longer carries dummy node at index [0].
+	  VPI tests work.  Graph-dump re-enabled.
+	  Next: chpsim or guile
+
+
 2010-03-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-23:
