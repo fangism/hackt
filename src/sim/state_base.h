@@ -1,16 +1,28 @@
 /**
 	\file "sim/state_base.h"
 	Facilities common to all simulator states.  (Recommended)
-	$Id: state_base.h,v 1.3.24.1 2010/03/02 02:34:46 fang Exp $
+	$Id: state_base.h,v 1.3.24.2 2010/03/16 21:23:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_STATE_BASE_H__
 #define	__HAC_SIM_STATE_BASE_H__
 
 #include <iosfwd>
+#include "Object/devel_switches.h"
 #include "util/string_fwd.h"
 #include "util/named_ifstream_manager.h"
 #include "util/tokenize_fwd.h"
+
+/**
+	Define to 1 to keep around a cache of 
+ */
+#define	CACHE_GLOBAL_FOOTPRINT_FRAMES	(1 && MEMORY_MAPPED_GLOBAL_ALLOCATION)
+
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+#include "Object/global_entry_context.h"
+#include "Object/global_entry.h"		// for footprint_frame
+#include "util/tree_cache.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -23,6 +35,11 @@ using std::string;
 using entity::module;
 using util::string_list;
 using util::ifstream_manager;
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+using entity::footprint_frame;
+using entity::global_offset;
+using entity::global_entry_context;
+#endif
 
 //=============================================================================
 /**
@@ -37,6 +54,12 @@ protected:
 		back-ends are hierarchical?
 	 */
 	const module&					mod;
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+	typedef	global_entry_context::frame_cache_type	frame_cache_type;
+	mutable frame_cache_type			frame_cache;
+	// keep around a permanent top-context
+	const global_entry_context			top_context;
+#endif
 	/**
 		Interpreter prompt string.
 	 */

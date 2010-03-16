@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-25:
+	  hacprsim was unacceptably slow (5x) with new scalability
+		re-work, due to huge number of lookups to global
+		footprint-frames for bool-id translation.
+		Implemented tree-cache to maintain hierarchical cache
+		of global process footprint-frames.  
+		Gained most of lost performance back!!!
+		In test/lib: make check (hacprsim-only) is 25% slower 
+			than before, the non-scalable version.
+	  TODO: cache currently only grows, never shrinks.
+		Institute some half-life decay policy to gradually
+		evict stale cache items.
+		Dump memory usage statistics of cache in SIM::state_base.
+
+
 2010-03-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-24:

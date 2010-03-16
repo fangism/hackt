@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.41.2.1 2010/02/25 02:48:45 fang Exp $
+#	$Id: Makefile.inc,v 1.41.2.2 2010/03/16 21:24:02 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -47,6 +47,7 @@ UTIL_TCC_FILES = \
 	util/ring_node.tcc \
 	util/string.tcc \
 	util/sublist.tcc \
+	util/tree_cache.tcc \
 	util/unique_list.tcc \
 	util/unique_stack.tcc \
 	util/what.tcc

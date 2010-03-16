@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.6.46.11 2010/03/09 01:00:16 fang Exp $
+	$Id: global_entry_context.h,v 1.6.46.12 2010/03/16 21:23:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -14,10 +14,16 @@
 #include "util/member_saver.h"
 #include "Object/devel_switches.h"
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include <utility>
 #include "Object/traits/classification_tags_fwd.h"
 #include "Object/ref/reference_enum.h"	// for global_indexed_reference
 #include "util/tokenize_fwd.h"		// for string_list
 #endif
+
+namespace util {
+template <class, class>
+class tree_cache;
+}
 
 namespace HAC {
 namespace entity {
@@ -256,10 +262,19 @@ virtual	void
 	lookup_meta_reference_global_index(
 		const simple_meta_instance_reference<Tag>&) const;
 
+	typedef	std::pair<footprint_frame, global_offset>
+					cache_entry_type;
+	typedef	util::tree_cache<size_t, cache_entry_type>
+					frame_cache_type;
+
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	construct_global_footprint_frame(footprint_frame&, 
 		global_offset&, size_t pid) const;
+
+	const cache_entry_type&
+	lookup_global_footprint_frame_cache(size_t pid,
+		frame_cache_type*) const;
 
 	// \return lpid of returned process frame, 0 on error
 	size_t
