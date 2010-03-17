@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.235 2010/03/15 06:03:53 fang Exp $
+#	$Id: Makefile.am,v 1.236 2010/03/17 06:32:47 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1161,6 +1161,7 @@ libhacknet_la_SOURCES = $(NET_CC_FILES) $(NET_TCC_FILES) $(NET_H_FILES)
 # unfornately, it doesn't detect these dependenvies until AFTER first compile
 sim/ISE.lo sim/ISE.o: cvstag.h
 common/ICE.lo common/ICE.o: cvstag.h
+main/lexyacc.lo main/lexyacc.o: parser/$(HACKT_PARSE_ROOT).h
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
 common/config.lo common/config.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
 	parser/yacc_version.h lexer/lex_version.h
