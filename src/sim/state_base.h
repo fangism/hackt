@@ -1,7 +1,7 @@
 /**
 	\file "sim/state_base.h"
 	Facilities common to all simulator states.  (Recommended)
-	$Id: state_base.h,v 1.3.24.2 2010/03/16 21:23:58 fang Exp $
+	$Id: state_base.h,v 1.3.24.3 2010/03/17 02:11:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_STATE_BASE_H__
@@ -102,6 +102,17 @@ public:
 	add_source_path(const string& s) {
 		ifstreams.add_path(s);
 	}
+
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+	const frame_cache_type&
+	get_frame_cache(void) const { return frame_cache; }
+
+	size_t
+	halve_cache(void);
+
+	ostream&
+	dump_frame_cache(ostream&) const;
+#endif
 
 	ostream&
 	dump_source_paths(ostream&) const;

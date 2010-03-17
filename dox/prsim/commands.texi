@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.25 2009/11/11 00:33:56 fang Exp $
+@c $Id: commands.texi,v 1.25.2.1 2010/03/17 02:11:34 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -418,6 +418,14 @@ glitch, such as synchronous (clocked) circuits.
 
 @include cmd/unstable-unknown.texi
 @include cmd/unstable-dequeue.texi
+
+Some additional commands are available for examining and 
+controlling some internal lookup table caching.
+Most users won't need to worry about these.
+
+@include cmd/frame-cache-half-life.texi
+@include cmd/frame-cache-halve.texi
+@include cmd/frame-cache-dump.texi
 
 @c ----------------------------------------------------------------------------
 @node Tracing Commands

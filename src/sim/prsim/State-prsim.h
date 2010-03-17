@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.32.14.2 2010/03/16 21:24:00 fang Exp $
+	$Id: State-prsim.h,v 1.32.14.3 2010/03/17 02:11:44 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -514,6 +514,15 @@ private:
 	excl_ptr<trace_manager_type>		trace_manager;
 	trace_index_type			trace_flush_interval;
 #endif
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+public:
+	// parameters for managing state_base's footprint_frame cache
+	// period at which cache decays, half-life
+	size_t					cache_half_life;
+private:
+	// when counter hits zero, age the cache
+	size_t					cache_countdown;
+#endif
 	// mode of operation
 	// operation flags
 	flags_type				flags;
@@ -625,6 +634,11 @@ public:
 	const footprint_frame_map_type&
 #endif
 	get_footprint_frame_map(const process_index_type pid) const;
+
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+	const size_t&
+	get_cache_countdown(void) const { return cache_countdown; }
+#endif
 
 	const process_sim_state&
 	get_process_state(const process_index_type pid) const {

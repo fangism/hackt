@@ -5,6 +5,13 @@
 
 2010-03-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-53-scalable-01-26:
+	  hacprsim: now automatically shrinks/ages cache per half-life
+		period, defaulting to 1024 events.
+		Added commands to dump and manage the frame-cache.
+		Documented.
+
+
 	* HACKT-00-01-04-main-00-83-53-scalable-01-25:
 	  hacprsim was unacceptably slow (5x) with new scalability
 		re-work, due to huge number of lookups to global

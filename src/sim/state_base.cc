@@ -1,6 +1,6 @@
 /**
 	\file "sim/state_base.cc"
-	$Id: state_base.cc,v 1.3.24.2 2010/03/16 21:23:57 fang Exp $
+	$Id: state_base.cc,v 1.3.24.3 2010/03/17 02:11:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -40,7 +40,7 @@ state_base::state_base(const module& m, const string& p) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STACKTRACE
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
 static
 void
 cache_entry_dump(ostream& o, const global_entry_context::cache_entry_type&) {
@@ -49,13 +49,32 @@ cache_entry_dump(ostream& o, const global_entry_context::cache_entry_type&) {
 #endif
 
 state_base::~state_base() {
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
-	frame_cache.dump(std::cerr, &cache_entry_dump) << std::endl;
+	dump_cache_stats(std::cerr);
+#endif
 #endif
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+size_t
+state_base::halve_cache(void) {
+	return frame_cache.halve();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+state_base::dump_frame_cache(ostream& o) const {
+	o << "footprint-frame cache (" << frame_cache.size() <<
+		" entries):" << std::endl;
+	frame_cache.dump(o, &cache_entry_dump) << std::endl;
+	return o;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 state_base::dump_source_paths(ostream& o) const {
 	o << "source paths:" << endl;
@@ -63,11 +82,27 @@ state_base::dump_source_paths(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// copied from State-prsim.cc
+#ifdef HAVE_STL_TREE
+#define	sizeof_tree_node(type)	sizeof(std::_Rb_tree_node<type>)
+#else
+	// assume tree/set/map nodes have 3 pointers +enum color
+	static const size_t tree_node_base_size = (3*(sizeof(void*)) +1);
+#define	sizeof_tree_node(type)	(sizeof(type) +tree_node_base_size)
+#endif
+
 ostream&
 state_base::dump_memory_usage(ostream& o) const {
 	// TODO: report definitions' footprints' memory usage
+	// TODO: sum of frame sizes, accumulate over all entries
+	// tree-cache: ability to gather pointers to all entries?
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	return o << "FINISH ME: sim::state_base::dump_memory_usage" << endl;
+	typedef	frame_cache_type		value_type;
+	const size_t n = frame_cache.size();
+	o << "frame-cache: (" << n << " * " << sizeof_tree_node(value_type)
+		<< " B/entry) = " << n * sizeof_tree_node(value_type)
+		<< " B" << endl;
+	return o;
 #else
 	return mod.get_state_manager().dump_memory_usage(o);
 #endif

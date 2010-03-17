@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.57.2.7 2010/03/16 21:23:59 fang Exp $
+	$Id: State-prsim.cc,v 1.57.2.8 2010/03/17 02:11:43 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -320,6 +320,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 #if PRSIM_TRACE_GENERATION
 		trace_manager(),
 		trace_flush_interval(1L<<16),
+#endif
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+		cache_half_life(1024),
+		cache_countdown(cache_half_life),
 #endif
 		flags(FLAGS_DEFAULT),
 #define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
@@ -2937,6 +2941,15 @@ if (n.in_channel()) {
 #if 0
 	// very slow, but terrific for debugging!!!
 	check_event_queue();
+#endif
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+	// periodically age the cache, evict old entries
+	if (LIKELY(cache_countdown)) {
+		--cache_countdown;
+	} else {
+		cache_countdown = cache_half_life;
+		frame_cache.halve();
+	}
 #endif
 
 	// return the affected node's index

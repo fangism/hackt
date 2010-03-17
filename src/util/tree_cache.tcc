@@ -1,6 +1,6 @@
 /**
 	\file "util/tree_cache.tcc"
-	$Id: tree_cache.tcc,v 1.1.2.1 2010/03/16 21:24:06 fang Exp $
+	$Id: tree_cache.tcc,v 1.1.2.2 2010/03/17 02:11:47 fang Exp $
  */
 
 #ifndef	__UTIL_TREE_CACHE_TCC__
@@ -193,6 +193,21 @@ TREE_CACHE_CLASS::halve(const weight_type shave) const {
 	const weight_type ldiff = old_local_weight -local_weight;
 	const weight_type ret = ldiff +child_diff;
 	STACKTRACE_INDENT_PRINT("weight lost: " << ret << endl);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return Count total number of entries in tree cache.
+ */
+TREE_CACHE_TEMPLATE_SIGNATURE
+size_t
+TREE_CACHE_CLASS::size(void) const {
+	size_t ret = 1;		// self
+	const_child_iterator i(children_cache.begin()), e(children_cache.end());
+	for ( ; i!=e; ++i) {
+		ret += i->size();
+	}
 	return ret;
 }
 

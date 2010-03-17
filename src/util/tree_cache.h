@@ -1,7 +1,7 @@
 /**
 	\file "util/tree_cache.h"
 	Structure for a hierarchical cache.
-	$Id: tree_cache.h,v 1.1.2.1 2010/03/16 21:24:05 fang Exp $
+	$Id: tree_cache.h,v 1.1.2.2 2010/03/17 02:11:46 fang Exp $
  */
 
 #ifndef	__UTIL_TREE_CACHE_H__
@@ -61,6 +61,9 @@ public:
 
 	const key_type&
 	key(void) const { return this->_key; }
+
+	size_t
+	size(void) const;
 
 	weight_type
 	weight(void) const {
