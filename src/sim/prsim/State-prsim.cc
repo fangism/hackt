@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.57.2.8 2010/03/17 02:11:43 fang Exp $
+	$Id: State-prsim.cc,v 1.57.2.9 2010/03/17 22:27:12 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -868,48 +868,13 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** 
-	Returns the local-to-global node translation map for process pid.
-	This *really* should be inlined...
-	NOTE: this operation could become prohibitively expensive, 
-		reconstructing the footprint_frame of global indices each time.
-	TODO: create a reasonable size cache to store these, keyed by pid.
-	\param pid is 1-based global process index.
-	\return frame containing global bool ids for this process
- */
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION && !CACHE_GLOBAL_FOOTPRINT_FRAMES
 footprint_frame_map_type
 #else
 const footprint_frame_map_type&
 #endif
 State::get_footprint_frame_map(const process_index_type pid) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("pid = " << pid << endl);
-#if CACHE_GLOBAL_FOOTPRINT_FRAMES
-	const footprint_frame&
-		ret(top_context.lookup_global_footprint_frame_cache(pid,
-		&frame_cache).first);
-#if ENABLE_STACKTRACE
-	ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
-#endif
-	return ret.get_frame_map<bool_tag>();
-#else
-	footprint_frame ret;
-	global_offset g;
-#if !CACHE_GLOBAL_FOOTPRINT_FRAMES
-	const footprint_frame tff(mod.get_footprint());
-	const global_entry_context top_context(tff, g);
-#endif
-	top_context.construct_global_footprint_frame(ret, g, pid);
-#if ENABLE_STACKTRACE
-//	ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
-#endif
-	return ret.get_frame_map<bool_tag>();	// copy
-#endif	// CACHE_GLOBAL_FOOTPRINT_FRAME
-#else
-	return get_module().get_state_manager().get_bool_frame_map(pid);
-#endif
+	return state_base::get_footprint_frame(pid).get_frame_map<bool_tag>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2948,7 +2913,7 @@ if (n.in_channel()) {
 		--cache_countdown;
 	} else {
 		cache_countdown = cache_half_life;
-		frame_cache.halve();
+		halve_cache();
 	}
 #endif
 

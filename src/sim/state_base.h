@@ -1,7 +1,7 @@
 /**
 	\file "sim/state_base.h"
 	Facilities common to all simulator states.  (Recommended)
-	$Id: state_base.h,v 1.3.24.3 2010/03/17 02:11:41 fang Exp $
+	$Id: state_base.h,v 1.3.24.4 2010/03/17 22:27:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_STATE_BASE_H__
@@ -14,9 +14,13 @@
 #include "util/tokenize_fwd.h"
 
 /**
-	Define to 1 to keep around a cache of 
+	Define to 1 to keep around a cache of global footprint frames.  
  */
 #define	CACHE_GLOBAL_FOOTPRINT_FRAMES	(1 && MEMORY_MAPPED_GLOBAL_ALLOCATION)
+/**
+	Define to 1 to keep around the last two footprint frames.  
+ */
+#define HOT_CACHE_FRAMES		(1 && CACHE_GLOBAL_FOOTPRINT_FRAMES)
 
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 #include "Object/global_entry_context.h"
@@ -55,11 +59,21 @@ protected:
 	 */
 	const module&					mod;
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
+private:
 	typedef	global_entry_context::frame_cache_type	frame_cache_type;
+	typedef	global_entry_context::cache_entry_type	cache_entry_type;
 	mutable frame_cache_type			frame_cache;
 	// keep around a permanent top-context
 	const global_entry_context			top_context;
+#if HOT_CACHE_FRAMES
+	// just keep two most recent entries
+	// key: global pid
+	// value: copies of the most recent cache hits
+	mutable std::pair<size_t, cache_entry_type>	hot_cache[2];
+	mutable size_t					cache_lru;
 #endif
+#endif
+protected:
 	/**
 		Interpreter prompt string.
 	 */
@@ -102,6 +116,13 @@ public:
 	add_source_path(const string& s) {
 		ifstreams.add_path(s);
 	}
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION && !CACHE_GLOBAL_FOOTPRINT_FRAMES
+	footprint_frame
+#else
+	const footprint_frame&
+#endif
+	get_footprint_frame(const size_t pid) const;
 
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 	const frame_cache_type&

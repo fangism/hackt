@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-27:
+	  SIM::state_base: implemented a 2-entry LRU hot-cache for
+		global footrint frames, that falls back to using
+		the tree cache.  Reason: high locality and frequent
+		immediate re-use of most recent frame, by pid.
+		Results in only a little speed-up, but still helpful.
+		Not accounted in memory usage, too small.
+
+
 2010-03-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-26:
