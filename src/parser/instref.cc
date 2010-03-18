@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.13 2010/03/13 02:18:40 fang Exp $
+	$Id: instref.cc,v 1.19.2.14 2010/03/18 21:58:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -399,6 +399,7 @@ parse_name_to_what(ostream& o, const string& n, const module& m) {
 	switch (gref.first) {
 	// for now, only processes have footprints
 	case entity::META_TYPE_PROCESS: {
+		STACKTRACE_INDENT_PRINT("gpid = " << gref.second << endl);
 		get_process_footprint(gref.second, m)->dump_type(o) << endl;
 		break;
 	}

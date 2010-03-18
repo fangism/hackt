@@ -1,0 +1,21 @@
+// "type-test-a.hac"
+// debugging a reduced test case
+// hacprsim:what command was failing
+// prsim> what foo.L.rtg
+
+defproc globals () { }
+defproc R () {
+	bool has_R;
+}
+
+defproc LT (globals g_si) {
+        R rtg;
+}
+
+defproc sparse () {
+        LT L;
+}
+
+sparse foo;
+
+

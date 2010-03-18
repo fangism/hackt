@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.2.88.9 2010/03/10 01:20:18 fang Exp $
+	$Id: footprint.tcc,v 1.2.88.10 2010/03/18 21:58:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -47,6 +47,7 @@ footprint_base<Tag>::~footprint_base() { }
 	\param gi is the global index being referenced.  0-based.
 	\param is_top is true if is top-level, should be compile-time param.
 	Implementation follows footprint::dump_canonical_name().
+	TODO: re-write non-recursively
  */
 template <class Tag>
 const state_instance<Tag>&
@@ -70,12 +71,14 @@ footprint::get_instance(const size_t gi, const bool is_top) const {
 		INVARIANT(e.first <= m);
 		const state_instance<process_tag>& sp(ppool[e.first -1]);
 		// e.second is the offset to subtract
-		return sp._frame._footprint->get_instance<Tag>(si -e.second);
+		return sp._frame._footprint->get_instance<Tag>(
+			si -e.second, false);
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: re-write non-recursively
 	\param Tag is the meta-type tag.
 	\param gi is the global index being referenced.  0-based.
 	\param is_top is true if is top-level, should be compile-time param.
@@ -118,7 +121,8 @@ footprint::dump_canonical_name(ostream& o, const size_t gi,
 			dump_flags::no_definition_owner) << '.';
 		// TODO: pass in dump_flags to honor hierarchical separator
 		// e.second is the offset to subtract
-		sp._frame._footprint->dump_canonical_name<Tag>(o, si -e.second, false);
+		sp._frame._footprint->dump_canonical_name<Tag>(
+			o, si -e.second, false);
 	}
 	return o;
 }

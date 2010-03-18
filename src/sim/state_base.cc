@@ -1,6 +1,6 @@
 /**
 	\file "sim/state_base.cc"
-	$Id: state_base.cc,v 1.3.24.4 2010/03/17 22:27:11 fang Exp $
+	$Id: state_base.cc,v 1.3.24.5 2010/03/18 21:58:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -53,7 +53,7 @@ state_base::state_base(const module& m, const string& p) :
 static
 void
 cache_entry_dump(ostream& o, const global_entry_context::cache_entry_type&) {
-	o << "pair<frame,offset>";
+	o << "pair<frame,offset>\n";
 }
 #endif
 

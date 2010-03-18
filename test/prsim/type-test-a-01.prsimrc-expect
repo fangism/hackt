@@ -1,0 +1,13 @@
+foo.L refers to process-member-inst-ref LT<>
+foo.L (type: LT<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  g_si = process globals<>
+  rtg = process R<>
+foo.L.rtg refers to process-member-inst-ref R<>
+foo.L.rtg (type: R<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  has_R = bool
