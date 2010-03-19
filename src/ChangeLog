@@ -5,10 +5,19 @@
 
 2010-03-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-53-scalable-01-29:
+	  global_entry_context::construct_global_footprint_frame():
+		the variant that operates on meta_instance_reference_base:
+		fixed handling of public process port case, 
+		was constructing incorrect return frame from
+		the wrong local/formal frame.
+		Regression test case added: prsim/type-test-b.
+
+
 	* HACKT-00-01-04-main-00-83-53-scalable-01-28:
 	  footprint::get_instance<>(): recursive call to self forgot
 		to pass is_top=false, causing a lookup bug.  Yikes!
-		Regression test added.
+		Regression test added: prsim/type-test-a.
 
 
 2010-03-17	David Fang		<fangism@users.sourceforge.net>

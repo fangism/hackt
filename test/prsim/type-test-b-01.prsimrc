@@ -1,0 +1,7 @@
+# "type-test-b-01.prsimrc"
+# @haco@ type-test-b.haco
+
+what foo.L.rt.mx.ix[0].p.me
+ls foo.L.rt.mx.ix[0].p.me
+get foo.L.rt.mx.ix[0].p.me.f
+
