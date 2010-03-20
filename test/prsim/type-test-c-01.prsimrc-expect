@@ -1,0 +1,8 @@
+foo.L.r.m.ix.p.y refers to process-member-inst-ref pb<>
+foo.L.r.m.ix.p.y.f : X
+foo.L.r.m.ix.p.y.f refers to bool-member-inst-ref bool<>
+	0	foo.L.r.m.ix.p.y.f : 1
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+foo.L.r.m.ix.p.y.f : 1

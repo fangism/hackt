@@ -1,0 +1,21 @@
+	0	foo.K.r.m.ix.p.y.f : 0
+	0	foo.K.r.m.ix.p.y.t : 1
+	0	foo.L.r.m.ix.p.y.f : 1
+	0	foo.L.r.m.ix.p.y.t : 0
+	0	foo.M.r.m.ix.p.y.f : 0
+	0	foo.M.r.m.ix.p.y.t : 1
+All subnodes of 'foo.K':
+!GND : 0
+!Vdd : 1
+foo.K.r.m.ix.p.y.f : 0
+foo.K.r.m.ix.p.y.t : 1
+All subnodes of 'foo.L':
+!GND : 0
+!Vdd : 1
+foo.L.r.m.ix.p.y.f : 1
+foo.L.r.m.ix.p.y.t : 0
+All subnodes of 'foo.M':
+!GND : 0
+!Vdd : 1
+foo.M.r.m.ix.p.y.f : 0
+foo.M.r.m.ix.p.y.t : 1

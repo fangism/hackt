@@ -1,0 +1,32 @@
+// "type-test-d.hac"
+// copy-modified from "type-test-c.hac"
+// reduced test case for debugging
+// crashed on hacprsim> get foo.L.rtg.myxb.ix.p.p_dmux_i.f
+
+defproc pb (bool f) {
+	bool t;		// local private of a public port
+} 
+
+defproc pi (pb y) { }
+
+defproc ib (pi p){ }
+
+defproc xb () {
+  ib ix;
+}
+
+defproc RR () {
+ xb m;
+}
+
+defproc LUTTILE () {
+ RR r;
+}
+
+defproc sparse () {
+ LUTTILE K, L, M;
+}
+
+sparse foo;
+
+

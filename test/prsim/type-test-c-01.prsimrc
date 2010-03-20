@@ -1,0 +1,11 @@
+# "type-test-c-01.prsimrc"
+# @haco@ type-test-c.haco-c
+
+watchall
+what foo.L.r.m.ix.p.y
+get foo.L.r.m.ix.p.y.f
+what foo.L.r.m.ix.p.y.f
+set foo.L.r.m.ix.p.y.f 1
+cycle
+getall .
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.16 2010/03/19 01:50:24 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.17 2010/03/20 00:36:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -414,8 +414,10 @@ global_entry_context::construct_global_footprint_frame(
 			STACKTRACE_INDENT_PRINT("public port" << endl);
 			// then is public port, only change ret frame
 			// no change in global offset
+#if 0
 			const size_t apid = ret.get_frame_map<Tag>()[lpid -1];
 			STACKTRACE_INDENT_PRINT("apid = " << apid << endl);
+#endif
 			const state_instance<Tag>& sp(pp[lpid -1]);
 #if 0
 			const state_instance<Tag>::pool_type&
@@ -465,7 +467,11 @@ global_entry_context::construct_global_footprint_frame(
 #if ENABLE_STACKTRACE
 			ret.dump_frame(STACKTRACE_INDENT_PRINT("ret-frame:")) << endl;
 #endif
+#if 0
 			const size_t lret = apid;
+#else
+			const size_t lret = lpid;
+#endif
 			//	ap._frame.get_frame_map<Tag>()[lpid -1];
 			STACKTRACE_INDENT_PRINT("ret-id = " << lret << endl);
 			return lret;

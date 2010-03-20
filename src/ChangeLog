@@ -11,7 +11,7 @@
 		fixed handling of public process port case, 
 		was constructing incorrect return frame from
 		the wrong local/formal frame.
-		Regression test case added: prsim/type-test-b.
+		Regression test case added: prsim/type-test-b, -c, -d.
 
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-28:
