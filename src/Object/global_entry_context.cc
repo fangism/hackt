@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.17 2010/03/20 00:36:27 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.18 2010/03/26 01:31:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -107,6 +107,7 @@ global_entry_context::dump_context(ostream& o) const {
 	o << "frame: ";
 	if (fpf) {
 		fpf->dump_frame(o) << endl;
+		fpf->_footprint->dump_type(o << "type: ") << endl;
 	} else {
 		o << "NULL" << endl;
 	}

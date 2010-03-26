@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.9.46.2 2010/02/10 06:43:13 fang Exp $
+	$Id: DependenceCollector.cc,v 1.9.46.3 2010/03/26 01:31:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -93,52 +93,58 @@ dependence_collector_base<Tag>::~dependence_collector_base() { }
 //=============================================================================
 // class DependenceSetCollector method definitions
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-// TEMPORARY
 DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) : 
 		global_entry_context(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			s.get_state_manager(), 
-#endif
 			s.get_process_footprint(), 	// is top-level!
-			(s.current_process_index ?
+#endif
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			NULL	// TODO: FINISH ME
+			s.state.top_context
 #else
+			(s.current_process_index ?
 			&s.get_state_manager().get_pool<process_tag>()
 				[s.current_process_index]._frame
+					: NULL)
 #endif
-			: NULL)), 	// don't default to top-level
+			), 	// don't default to top-level
 		dependence_collector_base<bool_tag>(), 
 		dependence_collector_base<int_tag>(), 
 		dependence_collector_base<enum_tag>(), 
 		dependence_collector_base<channel_tag>() {
+	STACKTRACE_VERBOSE;
 	// all processes except the top-level should have valid footprint-frame
 	if (s.current_process_index) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if !CACHE_GLOBAL_FOOTPRINT_FRAMES
+#error	"Caching of global footprint frames is required!"
+	// because a return by reference is necessary, not return by value
+#endif
+		fpf = &s.state.get_footprint_frame(s.current_process_index);
+		// do anything about global offset?
+		// probably don't need if process traversal is flat
+#else
 		NEVER_NULL(fpf);
+#endif
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	With this constructor, footprint_frame pointer is not set, 
 	and should be set using global_entry_context::footprint_frame_setter.
  */
 DependenceSetCollector::DependenceSetCollector(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_manager& _sm, 
-#endif
 		const footprint& _topfp) : 
-		global_entry_context(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			_sm, 
-#endif
-			_topfp), 
+		global_entry_context(_sm, _topfp), 
 		dependence_collector_base<bool_tag>(), 
 		dependence_collector_base<int_tag>(), 
 		dependence_collector_base<enum_tag>(), 
 		dependence_collector_base<channel_tag>() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DependenceSetCollector::~DependenceSetCollector() { }
@@ -404,7 +410,6 @@ DEFINE_NEVER_VISIT(aggregate_datastruct_meta_instance_reference)
 #undef	DEFINE_NEVER_VISIT
 #undef	DEFINE_UNARY_VISIT
 #undef	DEFINE_BINARY_VISIT
-#endif	// TEMPORARY
 
 //=============================================================================
 }	// end namespace CHPSIM

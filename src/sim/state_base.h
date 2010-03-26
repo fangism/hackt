@@ -1,7 +1,7 @@
 /**
 	\file "sim/state_base.h"
 	Facilities common to all simulator states.  (Recommended)
-	$Id: state_base.h,v 1.3.24.4 2010/03/17 22:27:12 fang Exp $
+	$Id: state_base.h,v 1.3.24.5 2010/03/26 01:31:27 fang Exp $
  */
 
 #ifndef	__HAC_SIM_STATE_BASE_H__
@@ -15,10 +15,13 @@
 
 /**
 	Define to 1 to keep around a cache of global footprint frames.  
+	This brings dramatic speedup, by reducing the number of
+	global frame computations.
  */
 #define	CACHE_GLOBAL_FOOTPRINT_FRAMES	(1 && MEMORY_MAPPED_GLOBAL_ALLOCATION)
 /**
-	Define to 1 to keep around the last two footprint frames.  
+	Define to 1 to keep around the last two footprint frames (LRU).  
+	This brings a little bit more speedup.
  */
 #define HOT_CACHE_FRAMES		(1 && CACHE_GLOBAL_FOOTPRINT_FRAMES)
 
@@ -64,7 +67,9 @@ private:
 	typedef	global_entry_context::cache_entry_type	cache_entry_type;
 	mutable frame_cache_type			frame_cache;
 	// keep around a permanent top-context
+public:
 	const global_entry_context			top_context;
+private:
 #if HOT_CACHE_FRAMES
 	// just keep two most recent entries
 	// key: global pid

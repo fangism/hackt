@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.tcc"
-	$Id: global_entry_context.tcc,v 1.4.20.4 2010/02/12 18:20:28 fang Exp $
+	$Id: global_entry_context.tcc,v 1.4.20.5 2010/03/26 01:31:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
@@ -15,6 +15,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/unroll_context.h"
 #include "common/TODO.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
@@ -70,12 +71,11 @@ template <class Tag>
 size_t
 global_entry_context::lookup_meta_reference_global_index(
 		const simple_meta_instance_reference<Tag>& r) const {
-	NEVER_NULL(topfp);
+	STACKTRACE_VERBOSE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-//	return r.lookup_globally_allocated_index(*this);
-	FINISH_ME(Fang);
-	return 0;
+	return r.lookup_globally_allocated_index(*this);
 #else
+	NEVER_NULL(topfp);
 	NEVER_NULL(sm);
 	if (fpf) {
 		const unroll_context c(fpf->_footprint, topfp);

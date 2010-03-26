@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.8.46.2 2010/02/10 06:43:14 fang Exp $
+	$Id: DependenceCollector.h,v 1.8.46.3 2010/03/26 01:31:31 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -132,8 +132,6 @@ struct dependence_collector_base {
 };	// end struct dependence_collector_base
 
 //=============================================================================
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-// TEMPORARY
 /**
 	Keep synchronized with declarations in expr_visitor.  
  */
@@ -149,11 +147,9 @@ public:
 	explicit
 	DependenceSetCollector(const StateConstructor&);
 
-	DependenceSetCollector(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager&,
+	DependenceSetCollector(const state_manager&, const footprint&);
 #endif
-		const footprint&);
 
 	~DependenceSetCollector();
 
@@ -169,6 +165,9 @@ public:
 	clear(void);
 
 	using parent_type::visit;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	using global_entry_context::visit;
+#endif
 
 #define	VISIT_PROTO(type)						\
 	void visit(const type&)
@@ -266,7 +265,6 @@ public:
 
 #undef	VISIT_PROTO
 };	// end class DependenceSetCollector
-#endif
 
 //=============================================================================
 }	// end namespace CHPSIM

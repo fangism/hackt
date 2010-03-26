@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.7.46.2 2010/02/10 06:43:15 fang Exp $
+	$Id: StateConstructor.cc,v 1.7.46.3 2010/03/26 01:31:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -24,8 +24,6 @@
 #include "util/stacktrace.h"
 // #include "util/STL/valarray_iterator.h"
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-// TEMPORARY
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
@@ -336,8 +334,8 @@ StateConstructor::get_state_manager(void) const {
 const entity::footprint&
 StateConstructor::get_process_footprint(void) const {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME_EXIT(Fang);
-	return state.get_module().get_footprint();
+	// 1-indexed process index, 0 for top-level
+	return *state.get_footprint_frame(current_process_index)._footprint;
 #else
 	const module& m(state.get_module());
 	return current_process_index ?
@@ -352,5 +350,4 @@ StateConstructor::get_process_footprint(void) const {
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC
-#endif
 

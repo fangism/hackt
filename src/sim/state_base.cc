@@ -1,6 +1,6 @@
 /**
 	\file "sim/state_base.cc"
-	$Id: state_base.cc,v 1.3.24.5 2010/03/18 21:58:12 fang Exp $
+	$Id: state_base.cc,v 1.3.24.6 2010/03/26 01:31:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -103,6 +103,12 @@ state_base::get_footprint_frame(const size_t pid) const {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 //	STACKTRACE_VERBOSE;
 //	STACKTRACE_INDENT_PRINT("pid = " << pid << endl);
+	// special case for top-level
+	if (!pid) {
+		// this is permanent
+		// return top_context.get_footprint_frame();
+		return frame_cache.value.first;
+	}
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 #if HOT_CACHE_FRAMES
 	// check LRU before tree cache
@@ -122,7 +128,7 @@ state_base::get_footprint_frame(const size_t pid) const {
 		cache_lru = second;
 		cache_entry_type& ret(hot_cache[cache_lru].second);
 		hot_cache[cache_lru].first = pid;
-		// copy over
+		// copy over to hot_cache
 		ret = top_context.lookup_global_footprint_frame_cache(
 			pid, &frame_cache);
 		return ret.first;
@@ -130,7 +136,7 @@ state_base::get_footprint_frame(const size_t pid) const {
 #else
 	const footprint_frame&
 		ret(top_context.lookup_global_footprint_frame_cache(pid,
-		&frame_cache).first);
+			&frame_cache).first);
 #if ENABLE_STACKTRACE
 	ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
 #endif

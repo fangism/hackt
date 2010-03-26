@@ -1,18 +1,25 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.6.46.3 2010/02/20 04:38:48 fang Exp $
+	$Id: nonmeta_context.cc,v 1.6.46.4 2010/03/26 01:31:39 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE				0
 
 #include <vector>
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/chpsim/Event.h"
 #include "sim/chpsim/State.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/def/footprint.h"
+#else
 #include "Object/state_manager.h"
+#endif
 #include "Object/global_entry.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/lang/CHP_event.h"
 #include "util/iterator_more.h"
 #include "common/TODO.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace SIM {
@@ -30,15 +37,14 @@ nonmeta_context::nonmeta_context(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_manager& s, 
 		const footprint& f, 
-#else
-		const footprint_frame& ff, const global_offset& g, 
 #endif
 		State& r) :
 		nonmeta_context_base(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			s, f, 
 #else
-			ff, g,
+			*r.top_context.fpf,
+			*r.top_context.parent_offset, 
 #endif
 			r.instances),
 		event(NULL), 
@@ -56,13 +62,19 @@ nonmeta_context::~nonmeta_context() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-nonmeta_context::set_event(event_type& e,
+nonmeta_context::set_event(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_base& sb,
+#endif
+		event_type& e,
 		const size_t pid, const event_index_type offset) {
+	STACKTRACE_VERBOSE;
 	event = &e;
 	global_event_offset = offset;
 	process_index = pid;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME_EXIT(Fang);
+//	fpf = &sb.get_footprint_frame(pid);
+	NEVER_NULL(fpf);
 #else
 	fpf = (pid ? &sm->get_pool<process_tag>()[pid]._frame : NULL);
 #endif
@@ -76,6 +88,7 @@ nonmeta_context::set_event(event_type& e,
  */
 void
 nonmeta_context::subscribe_this_event(void) const {
+	STACKTRACE_VERBOSE;
 	const event_index_type d = std::distance(&event_pool[0], event);
 	INVARIANT(d < event_pool.size());
 	event->subscribe_deps(*this, d);
@@ -94,6 +107,7 @@ nonmeta_context::get_event_index(void) const {
  */
 void
 nonmeta_context::insert_first_checks(const event_index_type ei) {
+	STACKTRACE_VERBOSE;
 	first_checks.insert(ei +global_event_offset);
 }
 
@@ -104,6 +118,7 @@ nonmeta_context::insert_first_checks(const event_index_type ei) {
  */
 void
 nonmeta_context::first_check_all_successors(void) {
+	STACKTRACE_VERBOSE;
 	const event_type::local_event_type::successor_list_type&
 		l(event->get_local_event().successor_events);
 	copy(l.begin(), l.end(), util::set_inserter(*this));

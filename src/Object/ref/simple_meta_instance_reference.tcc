@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.5 2010/03/10 01:20:20 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.6 2010/03/26 01:31:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -231,8 +231,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	STACKTRACE_VERBOSE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint& top(gc.get_top_footprint());
-#endif
+	const footprint_frame* const fpf = gc.get_footprint_frame();
+	const unroll_context uc(fpf ? fpf->_footprint : &top, &top);
+#else
 	const unroll_context uc(&top, &top);
+#endif
 	// should not be virtual call (one hopes)
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// translate local index to global

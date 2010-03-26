@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.21.14.3 2010/02/20 04:38:48 fang Exp $
+	$Id: State.cc,v 1.21.14.4 2010/03/26 01:31:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -32,9 +32,14 @@
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_footprint.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_pool.h"
+#endif
 
 #include "common/TODO.h"
 #include "sim/ISE.h"
+#include "util/likely.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"	// for explicit instantiation
 #include "util/iterator_more.h"
@@ -132,6 +137,9 @@ using entity::META_TYPE_CHANNEL;
 using entity::META_TYPE_PROCESS;
 using entity::canonical_fundamental_chan_type_base;
 using entity::expr_dump_context;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using entity::state_instance;
+#endif
 using std::copy;
 using std::back_inserter;
 using std::mem_fun_ref;
@@ -152,8 +160,6 @@ using entity::CHP::EVENT_RECEIVE;
 //=============================================================================
 // class State::recheck_transformer definition
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-// TEMPORARY
 /**
 	Functor for re-evaluating events for the event-queue.
 	Should be allowed to access private members of State.
@@ -173,8 +179,6 @@ struct State::recheck_transformer {
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 			state.mod.get_state_manager(), 
 			state.mod.get_footprint(),
-#else
-			...
 #endif
 			state),
 			cause_event_id(cei), cause_trace_id(cti)
@@ -194,7 +198,16 @@ struct State::recheck_transformer {
 		DEBUG_QUEUE_PRINT("rechecking event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
 		const size_t pid = state.get_process_id(ei);
-		context.set_event(e, pid, state.get_offset_from_pid(pid));
+		STACKTRACE_INDENT_PRINT("in process " << pid << endl);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		context.set_footprint_frame(state.get_footprint_frame(pid));
+		// no need for global_offset
+#endif
+		context.set_event(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			state, 
+#endif
+			e, pid, state.get_offset_from_pid(pid));
 		// To accomodate blocking-sends that wake-up probes
 		// we must prevent self-wake up in this corner case.
 		if (cause_event_id != ei) {
@@ -202,6 +215,9 @@ struct State::recheck_transformer {
 		// that have been woken up by an update, not first-time.
 		// now that delays have been paid up-front, events that
 		// pass recheck can be scheduled into the immediate event fifo
+#if ENABLE_STACKTRACE
+		context.dump_context(STACKTRACE_INDENT_PRINT("context: "));
+#endif
 		if (e.recheck(context, ei)) {
 			DEBUG_QUEUE_PRINT("enqueue to immediate fifo" << endl);
 			// note: time is irrelevant to immediate-event-fifo
@@ -220,7 +236,6 @@ struct State::recheck_transformer {
 	}
 
 };	// end class recheck_transformer
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -334,15 +349,17 @@ State::State(const module& m) :
 	event_pool.reserve(256);	// pre-allocate some
 	event_pool.resize(1);		// 0th entry is a global-spawn event
 {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME_EXIT(Fang);
-#else
 	event_type& init(event_pool[0]);
 	const footprint& topfp(mod.get_footprint());
-	const state_manager& sm(mod.get_state_manager());
-
 	init.make_global_root(&global_root_event);	// use the FORK, Luke...
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const state_instance<process_tag>::pool_type&
+		pp(topfp.get_instance_pool<process_tag>());
+	const size_t procs = pp.total_entries() +1;	// count top-level as 0
+#else
+	const state_manager& sm(mod.get_state_manager());
 	const size_t procs = sm.get_pool<process_tag>().size();
+#endif
 	pid_to_offset.resize(procs +1);
 	// use pid_to_offset[procs] to represent the spawn event (offset 0)
 	pid_to_offset[procs] = std::make_pair(0, 1);
@@ -353,10 +370,18 @@ State::State(const module& m) :
 
 	size_t i = 1;
 	for ( ; i<procs; ++i) {
-		initialize_process_event_chunk(
-			sm.get_pool<process_tag>()[i]._frame._footprint
-				->get_chp_event_footprint(), 
-			i);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_instance<process_tag>&
+			p(topfp.get_instance<process_tag>(i-1));	// 0-based
+#else
+		const global_entry<process_tag>&
+			p(sm.get_pool<process_tag>()[i]);
+#endif
+		const footprint& fp(*p._frame._footprint);
+#if ENABLE_STACKTRACE
+		fp.dump_type(STACKTRACE_INDENT_PRINT("type: ")) << endl;
+#endif
+		initialize_process_event_chunk(fp.get_chp_event_footprint(), i);
 	}
 	// connect all process-root events to the spawn event
 {
@@ -369,7 +394,6 @@ State::State(const module& m) :
 		global_root_event.successor_events.push_back(j->first);
 	}
 }
-#endif
 }
 }
 
@@ -474,6 +498,7 @@ void
 State::initialize_process_event_chunk(const local_event_footprint& chpfp, 
 		const size_t pid) {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("pid = " << pid << endl);
 	const size_t offset = event_pool.size();
 	const size_t local_events = chpfp.size();
 	pid_to_offset[pid] = std::make_pair(offset, local_events);
@@ -584,9 +609,7 @@ State::step(void) {
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const footprint_frame ff(mod.get_footprint());
-	const global_offset g;
-	nonmeta_context c(ff, g, *this);
+	nonmeta_context c(*this);
 #else
 	nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), *this);
 #endif
@@ -627,7 +650,22 @@ do {
 	event_type& ev(event_pool[ei]);
 	const size_t pid = get_process_id(ei);
 	const event_index_type offset = get_offset_from_pid(pid);
-	c.set_event(ev, pid, offset);	// not nonmeta_context::event_setter!!!
+	DEBUG_STEP_PRINT("in process " << pid << endl);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// pid could be one-past-the-end to represent the global spawn event
+	if (LIKELY(valid_process_id(pid))) {
+		c.set_footprint_frame(get_footprint_frame(pid));
+	}
+	// no need for global_offset
+#if ENABLE_STACKTRACE
+	c.dump_context(STACKTRACE_INDENT_PRINT("context: "));
+#endif
+#endif
+	c.set_event(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		*this, 
+#endif
+		ev, pid, offset);	// not nonmeta_context::event_setter!!!
 	// TODO: re-use this nonmeta-context in the recheck_transformer
 	// TODO: unify check and execute into "chexecute"
 	try {
@@ -766,13 +804,9 @@ State::__perform_rechecks(const event_index_type ei,
 // now pass are immediately ready for execution, and hence should be placed
 // in the immediate_event_fifo.  Change happens in recheck_transformer.
 try {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME_EXIT(Fang);
-#else
 	for_each(__rechecks.begin(), __rechecks.end(), 
 		recheck_transformer(*this, ei, ti)
 	);
-#endif
 } catch (...) {
 	cerr << "Run-time error while rechecking events." << endl;
 	cerr << "event[" << ei << "]:";
@@ -1300,17 +1334,20 @@ entity::expr_dump_context
 State::make_process_dump_context(const node_index_type pid) const {
 	// -1 because we allocated one more pid slot for the
 	// global spawn event.
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-	return expr_dump_context::default_value;
-#else
 	if (pid && valid_process_id(pid)) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		std::ostringstream canonical_name;
+		top_context.get_top_footprint().
+			dump_canonical_name<process_tag>(
+				canonical_name, pid -1);
+		return expr_dump_context(canonical_name.str());
+#else
 		return mod.get_state_manager().make_process_dump_context(
 			mod.get_footprint(), pid);
+#endif
 	} else {
 		return expr_dump_context::default_value;
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1748,44 +1785,67 @@ State::dump_recheck_events(ostream& o) const {
 ostream&
 State::print_instance_name_value(ostream& o,
 		const global_indexed_reference& g) const {
+	const entity::footprint& topfp(mod.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
+	INVARIANT(g.second);
+	const size_t id0 = g.second -1;
 #else
 	const state_manager& sm(mod.get_state_manager());
-	const entity::footprint& topfp(mod.get_footprint());
+#endif
 	switch (g.first) {
 	case META_TYPE_BOOL: {
 		o << "bool ";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		topfp.dump_canonical_name<bool_tag>(o, id0);
+#else
 		sm.get_pool<bool_tag>()[g.second]
 			.dump_canonical_name(o, topfp, sm);
+#endif
 		o << " = ";
 		o << size_t(instances.get_pool<bool_tag>()[g.second].value);
 		break;
 	}
 	case META_TYPE_INT: {
 		o << "int ";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		topfp.dump_canonical_name<int_tag>(o, id0);
+#else
 		sm.get_pool<int_tag>()[g.second]
 			.dump_canonical_name(o, topfp, sm);
+#endif
 		o << " = ";
 		o << instances.get_pool<int_tag>()[g.second].value;
 		break;
 	}
 	case META_TYPE_ENUM: {
 		o << "enum ";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		topfp.dump_canonical_name<enum_tag>(o, id0);
+#else
 		sm.get_pool<enum_tag>()[g.second]
 			.dump_canonical_name(o, topfp, sm);
+#endif
 		o << " = ";
 		o << instances.get_pool<enum_tag>()[g.second].value;
 		break;
 	}
 	case META_TYPE_CHANNEL: {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_instance<channel_tag>&
+			c(topfp.get_instance<channel_tag>(id0));
+#else
 		const global_entry<channel_tag>&
 			c(sm.get_pool<channel_tag>()[g.second]);
+#endif
 		const ChannelState&
 			nc(instances.get_pool<channel_tag>()[g.second]);
 		const canonical_fundamental_chan_type_base& t(*c.channel_type);
 		t.dump(o) << ' ';
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		topfp.dump_canonical_name<channel_tag>(o, id0);
+#else
 		c.dump_canonical_name(o, topfp, sm);
+#endif
 		o << " = ";
 		nc.dump(o, t);	// print the channel data using type info
 		break;
@@ -1797,7 +1857,6 @@ State::print_instance_name_value(ostream& o,
 	default:
 		o << "(unsupported)";
 	}
-#endif
 	return o;
 }
 
@@ -1807,42 +1866,60 @@ State::print_instance_name_value(ostream& o,
 ostream&
 State::print_instance_name_subscribers(ostream& o,
 		const global_indexed_reference& g) const {
+	const entity::footprint& topfp(mod.get_footprint());
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
+	INVARIANT(g.second);
+	const size_t id0 = g.second-1;
 #else
 	const state_manager& sm(mod.get_state_manager());
-	const entity::footprint& topfp(mod.get_footprint());
+#endif
 	switch (g.first) {
 	case META_TYPE_BOOL: {
 		o << "bool ";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		topfp.dump_canonical_name<bool_tag>(o, id0);
+#else
 		sm.get_pool<bool_tag>()[g.second]
 			.dump_canonical_name(o, topfp, sm);
+#endif
 		o << " : ";
 		instances.get_pool<bool_tag>()[g.second].dump_subscribers(o);
 		break;
 	}
 	case META_TYPE_INT: {
 		o << "int ";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		topfp.dump_canonical_name<int_tag>(o, id0);
+#else
 		sm.get_pool<int_tag>()[g.second]
 			.dump_canonical_name(o, topfp, sm);
+#endif
 		o << " : ";
 		instances.get_pool<int_tag>()[g.second].dump_subscribers(o);
 		break;
 	}
 	case META_TYPE_ENUM: {
 		o << "enum ";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		topfp.dump_canonical_name<enum_tag>(o, id0);
+#else
 		sm.get_pool<enum_tag>()[g.second]
 			.dump_canonical_name(o, topfp, sm);
+#endif
 		o << " : ";
 		instances.get_pool<enum_tag>()[g.second].dump_subscribers(o);
 		break;
 	}
 	case META_TYPE_CHANNEL: {
-		const global_entry<channel_tag>&
-			c(sm.get_pool<channel_tag>()[g.second]);
 		const ChannelState&
 			nc(instances.get_pool<channel_tag>()[g.second]);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		topfp.dump_canonical_name<channel_tag>(o, id0);
+#else
+		const global_entry<channel_tag>&
+			c(sm.get_pool<channel_tag>()[g.second]);
 		c.dump_canonical_name(o, topfp, sm);
+#endif
 		o << " : ";
 		nc.dump_subscribers(o);	// print the channel subscribers
 		break;
@@ -1854,7 +1931,6 @@ State::print_instance_name_subscribers(ostream& o,
 	default:
 		o << "(unsupported)";
 	}
-#endif
 	return o << endl;
 }
 
@@ -1866,13 +1942,11 @@ State::print_instance_name_subscribers(ostream& o,
  */
 ostream&
 State::print_all_subscriptions(ostream& o) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	FINISH_ME(Fang);
-	return o;
-#else
 	return instances.dump_all_subscriptions(o, 
-		mod.get_state_manager(), mod.get_footprint());
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		mod.get_state_manager(),
 #endif
+		mod.get_footprint());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1983,9 +2057,7 @@ State::load_checkpoint(istream& i) {
 	size_t s;
 	read_value(i, s);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const footprint_frame ff(mod.get_footprint());
-	const global_offset g;
-	const nonmeta_context c(ff, g, *this);
+	const nonmeta_context c(*this);
 #else
 	const nonmeta_context
 		c(mod.get_state_manager(), mod.get_footprint(), *this);

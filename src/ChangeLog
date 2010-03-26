@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-29-a:
+	  hacchpsim "mostly" to work with new scalability framework,
+		few bugs left: nothing crashes, just wrong result.
+	  Fixed unroll_context setup to use footprint-frame's for symbol lookup
+		in simple_meta_instance_reference
+		::lookup_globally_allocated_index().
+
+
 2010-03-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-29:
