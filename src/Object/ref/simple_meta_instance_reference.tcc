@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.6 2010/03/26 01:31:26 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.7 2010/03/30 00:36:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -296,6 +296,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	}
 	const size_t ret = alias->instance_index;
 	INVARIANT(ret);
+	STACKTRACE_INDENT_PRINT("local-index = " << ret << endl);
 	return ret;
 }
 

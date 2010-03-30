@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.6.46.13 2010/03/26 01:31:23 fang Exp $
+	$Id: global_entry_context.h,v 1.6.46.14 2010/03/30 00:36:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -238,9 +238,6 @@ virtual	void
 	const footprint_frame*
 	get_footprint_frame(void) const { return fpf; }
 
-	void
-	set_footprint_frame(const footprint_frame& f) { fpf = &f; }
-
 	template <class Tag>
 	const footprint_frame_map<Tag>&
 	get_frame_map(void) const { return fpf; }
@@ -284,6 +281,10 @@ virtual	void
 	construct_global_footprint_frame(footprint_frame&, 
 		footprint_frame&, 
 		global_offset&, const meta_instance_reference_base&) const;
+
+	// e.g. use this after a cache-lookup
+	void
+	set_global_context(const cache_entry_type& c);
 #endif
 
 };	// end struct global_entry_context

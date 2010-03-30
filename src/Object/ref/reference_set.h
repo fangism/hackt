@@ -1,12 +1,13 @@
 /**
 	\file "Object/ref/reference_set.h"
 	Container for unique-sorted set of indexed references.  
-	$Id: reference_set.h,v 1.3 2007/03/15 06:11:04 fang Exp $
+	$Id: reference_set.h,v 1.3.68.1 2010/03/30 00:36:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_REFERENCE_SET_H__
 #define	__HAC_OBJECT_REF_REFERENCE_SET_H__
 
+#include <iosfwd>
 #include "Object/ref/reference_enum.h"
 #include <set>
 // #include <cassert>
@@ -14,6 +15,7 @@
 namespace HAC {
 namespace entity {
 struct entry_collection;
+using std::ostream;
 
 //=============================================================================
 /**
@@ -58,6 +60,9 @@ struct global_references_set {
 	void
 	set_intersection(const global_references_set&, 
 		global_references_set&) const;
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end struct global_references_set
 

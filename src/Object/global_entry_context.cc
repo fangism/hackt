@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.4.46.18 2010/03/26 01:31:22 fang Exp $
+	$Id: global_entry_context.cc,v 1.4.46.19 2010/03/30 00:36:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -99,6 +99,14 @@ global_entry_context::get_current_footprint(void) const {
 bool
 global_entry_context::at_top(void) const {
 	return (topfp == fpf->_footprint);
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+global_entry_context::set_global_context(const cache_entry_type& c) {
+	fpf = &c.first;
+	parent_offset = &c.second;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

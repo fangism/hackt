@@ -1,6 +1,6 @@
 /**
 	\file "sim/state_base.cc"
-	$Id: state_base.cc,v 1.3.24.6 2010/03/26 01:31:26 fang Exp $
+	$Id: state_base.cc,v 1.3.24.7 2010/03/30 00:36:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -84,6 +84,20 @@ state_base::dump_frame_cache(ostream& o) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only returns the frame portion of the context.
+ */
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION && !CACHE_GLOBAL_FOOTPRINT_FRAMES
+footprint_frame
+#else
+const footprint_frame&
+#endif
+state_base::get_footprint_frame(const size_t pid) const {
+	return get_global_context(pid).first;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /** 
 	Returns the local-to-global node translation map for process pid.
 	This *really* should be inlined...
@@ -93,12 +107,8 @@ state_base::dump_frame_cache(ostream& o) const {
 	\param pid is 1-based global process index.
 	\return frame containing global bool ids for this process
  */
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION && !CACHE_GLOBAL_FOOTPRINT_FRAMES
-footprint_frame
-#else
-const footprint_frame&
-#endif
-state_base::get_footprint_frame(const size_t pid) const {
+const state_base::cache_entry_type&
+state_base::get_global_context(const size_t pid) const {
 //	cerr << "<pid:" << pid << '>' << endl;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 //	STACKTRACE_VERBOSE;
@@ -107,7 +117,7 @@ state_base::get_footprint_frame(const size_t pid) const {
 	if (!pid) {
 		// this is permanent
 		// return top_context.get_footprint_frame();
-		return frame_cache.value.first;
+		return frame_cache.value;
 	}
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 #if HOT_CACHE_FRAMES
@@ -116,12 +126,12 @@ state_base::get_footprint_frame(const size_t pid) const {
 	if (hot_cache[cache_lru].first == pid) {
 		// hit most LRU
 		STACKTRACE_INDENT_PRINT("LRU hit 1 @" << pid << endl);
-		return hot_cache[cache_lru].second.first;
+		return hot_cache[cache_lru].second;
 	} else if (hot_cache[second].first == pid) {
 		STACKTRACE_INDENT_PRINT("LRU hit 2 @" << pid << endl);
 		// hit second most LRU
 		cache_lru = second;
-		return hot_cache[cache_lru].second.first;
+		return hot_cache[cache_lru].second;
 	} else {
 		STACKTRACE_INDENT_PRINT("LRU miss  @" << pid << endl);
 		// miss hot cache, replace second most LRU
@@ -131,7 +141,7 @@ state_base::get_footprint_frame(const size_t pid) const {
 		// copy over to hot_cache
 		ret = top_context.lookup_global_footprint_frame_cache(
 			pid, &frame_cache);
-		return ret.first;
+		return ret;
 	}
 #else
 	const footprint_frame&
@@ -143,6 +153,7 @@ state_base::get_footprint_frame(const size_t pid) const {
 	return ret.get_frame_map<bool_tag>();
 #endif	// HOT_CACHE_FRAMES
 #else
+	// this was not updated to include global_offset
 	footprint_frame ret;
 	global_offset g;
 	const footprint_frame tff(mod.get_footprint());

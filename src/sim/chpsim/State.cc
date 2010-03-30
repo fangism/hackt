@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.21.14.4 2010/03/26 01:31:35 fang Exp $
+	$Id: State.cc,v 1.21.14.5 2010/03/30 00:36:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -200,7 +200,7 @@ struct State::recheck_transformer {
 		const size_t pid = state.get_process_id(ei);
 		STACKTRACE_INDENT_PRINT("in process " << pid << endl);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		context.set_footprint_frame(state.get_footprint_frame(pid));
+		context.set_global_context(state.get_global_context(pid));
 		// no need for global_offset
 #endif
 		context.set_event(
@@ -654,7 +654,7 @@ do {
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// pid could be one-past-the-end to represent the global spawn event
 	if (LIKELY(valid_process_id(pid))) {
-		c.set_footprint_frame(get_footprint_frame(pid));
+		c.set_global_context(get_global_context(pid));
 	}
 	// no need for global_offset
 #if ENABLE_STACKTRACE
@@ -1749,23 +1749,7 @@ State::dump_updated_references(ostream& o) const {
 	typedef	update_reference_array_type::ref_bin_type::const_iterator
 							const_iterator;
 	o << "updated references:" << endl;
-
-#define	CASE_PRINT_TYPE_TAG_NAME(Tag)					\
-{									\
-	const update_reference_array_type::ref_bin_type&		\
-		ub(__updated_list.ref_bin				\
-			[class_traits<Tag>::type_tag_enum_value]);	\
-	const_iterator i(ub.begin()), e(ub.end());			\
-	for ( ; i!=e; ++i) {						\
-		o << class_traits<Tag>::tag_name << '[' << *i << "], ";	\
-	}								\
-}
-	CASE_PRINT_TYPE_TAG_NAME(bool_tag)
-	CASE_PRINT_TYPE_TAG_NAME(int_tag)
-	CASE_PRINT_TYPE_TAG_NAME(enum_tag)
-	CASE_PRINT_TYPE_TAG_NAME(channel_tag)
-#undef	CASE_PRINT_TYPE_TAG_NAME
-	return o << endl;
+	return __updated_list.dump(o) << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

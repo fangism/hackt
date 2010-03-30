@@ -1,7 +1,7 @@
 /**
 	\file "sim/state_base.h"
 	Facilities common to all simulator states.  (Recommended)
-	$Id: state_base.h,v 1.3.24.5 2010/03/26 01:31:27 fang Exp $
+	$Id: state_base.h,v 1.3.24.6 2010/03/30 00:36:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_STATE_BASE_H__
@@ -130,6 +130,9 @@ public:
 	get_footprint_frame(const size_t pid) const;
 
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
+	const cache_entry_type&
+	get_global_context(const size_t pid) const;
+
 	const frame_cache_type&
 	get_frame_cache(void) const { return frame_cache; }
 
