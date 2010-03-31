@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-03-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-31:
+	  scheme: guile and chpsimguile regression tests re-verified (!!!) 
+		after some easy fixes to index adjustment in guile library.
+		Implemented scm global-reference-subinstances, by calling
+		parser::parse_name_to_get_subinstances, which was refactored
+		from parse_name_to_get_subnodes (parser/instref.cc).
+	  Only one missing feature/regression left on branch: getall(arrays).
+
+
 2010-03-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-30:

@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_reference.cc"
-	$Id: scm_reference.cc,v 1.4.20.1 2010/01/13 17:43:40 fang Exp $
+	$Id: scm_reference.cc,v 1.4.20.2 2010/03/31 00:33:10 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -16,6 +16,7 @@
 #include "Object/traits/instance_traits.h"
 #include "Object/ref/reference_set.h"
 #include "Object/entry_collection.h"
+#include "common/TODO.h"
 #include "parser/instref.h"
 #include "guile/hackt-documentation.h"
 #include "guile/libhackt-wrap.h"
@@ -268,6 +269,7 @@ HAC_GUILE_DEFINE(wrap_reference_type_to_string, FUNC_NAME, 1, 0, 0, (SCM sref),
 	\param sref a raw_reference smob.  
 	\return list of references (type,index)-pairs that are subinstances, 
 		reachable aliases.  
+	TODO: define in terms of parse-raw-reference and collector function.
  */
 #define	FUNC_NAME "collect-reference-subinstances"
 HAC_GUILE_DEFINE(wrap_collect_reference_subinstances, FUNC_NAME, 1, 0, 0,
@@ -281,6 +283,13 @@ HAC_GUILE_DEFINE(wrap_collect_reference_subinstances, FUNC_NAME, 1, 0, 0,
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		// parse to global_index_reference
 		// footprint::collect_subentries
+		const entity::global_indexed_reference
+			gref(parser::parse_global_reference(*ptr, *obj_module));
+		if (!gref.second ||
+				parser::parse_name_to_get_subinstances(
+					gref, *obj_module, e)) {
+			return SCM_EOL;
+		}
 #else
 		ptr->inst_ref()->collect_subentries(*obj_module, e);
 #endif

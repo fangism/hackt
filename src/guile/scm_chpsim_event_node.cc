@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.7 2007/11/27 06:10:14 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.7.34.1 2010/03/31 00:33:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -468,6 +468,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_source, FUNC_NAME, 1, 0, 0, (SCM obj),
 #undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	TODO: this is a duplicate of the above!?
 	Prints the full source (with context) of the event.  
@@ -482,6 +483,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_process_id, FUNC_NAME, 1, 0, 0, (SCM obj),
 	return make_scm(chpsim_state->get_process_id(*ptr));
 }
 #undef	FUNC_NAME
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // #define	FUNC_NAME "chpsim-valid-process-id?"

@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.7.16.3 2010/03/06 00:33:02 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.7.16.4 2010/03/31 00:33:08 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -351,7 +351,7 @@ HAC_GUILE_DEFINE(wrap_canonical_reference_to_string, FUNC_NAME, 1, 0, 0,
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #define	CASE_TYPE(Tag)							\
 	case class_traits<Tag>::type_tag_enum_value:			\
-		topfp.dump_canonical_name<Tag>(oss, index);		\
+		topfp.dump_canonical_name<Tag>(oss, index -1);		\
 		break;
 #else
 #define	CASE_TYPE(Tag)							\
@@ -393,13 +393,21 @@ __get_pool_size(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: also for other meta types... channel, bool, int...
+	\param ind global process ID is 1-based index, but
+	0 is a valid process id, referring to the top-level process.
+	Other meta-types do NOT have 0 as a valid index, 
+	prcesses are the exception.
  */
 #define	FUNC_NAME	"valid-process-id?"
 HAC_GUILE_DEFINE(wrap_valid_process_id_p, FUNC_NAME, 1, 0, 0, (SCM ind), 
 	"Return true if process-index is valid.  [Is 0 valid?]") {
 	size_t index;
 	extract_scm(ind, index);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return make_scm(index <= __get_pool_size<process_tag>());
+#else
 	return make_scm(index < __get_pool_size<process_tag>());
+#endif
 }
 #undef	FUNC_NAME
 

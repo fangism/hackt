@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.14 2010/03/18 21:58:11 fang Exp $
+	$Id: instref.cc,v 1.19.2.15 2010/03/31 00:33:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -25,6 +25,7 @@
 #include "AST/parse_context.h"
 #include "Object/module.h"
 #include "Object/global_entry.h"
+#include "Object/global_channel_entry.h"
 #include "Object/global_entry_context.h"
 // #include "Object/common/dump_flags.h"
 #include "Object/common/namespace.h"
@@ -61,6 +62,9 @@ instref_parse(void*, YYSTYPE&, flex::lexer_state&);
 namespace HAC {
 namespace parser {
 using entity::bool_tag;
+using entity::int_tag;
+using entity::enum_tag;
+using entity::channel_tag;
 using entity::process_tag;
 using entity::global_entry_pool;
 using entity::footprint_frame_map_type;
@@ -78,6 +82,9 @@ using entity::global_indexed_reference;
 using entity::META_TYPE_NONE;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
 using entity::META_TYPE_PROCESS;
+using entity::META_TYPE_INT;
+using entity::META_TYPE_ENUM;
+using entity::META_TYPE_CHANNEL;
 using entity::META_TYPE_BOOL;
 using entity::footprint_frame;
 using entity::global_entry_context;
@@ -90,6 +97,7 @@ using std::copy;
 using std::string;
 using std::ostream_iterator;
 using std::bind1st;
+using util::set_inserter;
 using util::value_saver;
 using util::string_list;
 using util::memory::excl_ptr;
@@ -313,9 +321,15 @@ parse_global_reference(const string& n, const module& m) {
 		return global_indexed_reference(META_TYPE_NONE, 
 			INVALID_NODE_INDEX);
 	}
-	const footprint& top(m.get_footprint());
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return parse_global_reference(r, m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+global_indexed_reference
+parse_global_reference(const entity::meta_reference_union& r, const module& m) {
+	INVARIANT(r.inst_ref());
 	const footprint& topfp(m.get_footprint());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	footprint_frame tff(topfp);
 	const global_offset g;
 	tff.construct_top_global_context(topfp, g);
@@ -324,7 +338,7 @@ parse_global_reference(const string& n, const module& m) {
 #else
 	const state_manager& sm(m.get_state_manager());
 	// r.inst_ref() is a meta_instance_reference_base
-	return r.inst_ref()->lookup_top_level_reference(sm, top);
+	return r.inst_ref()->lookup_top_level_reference(sm, topfp);
 #endif
 }
 
@@ -491,59 +505,100 @@ if (n == ".") {
 int
 parse_name_to_get_subnodes(const string& n, const module& m, 
 		vector<size_t>& v) {
+	entry_collection e;
+	const int ret = parse_name_to_get_subinstances(n, m, e);
+	if (ret) {
+		return ret;
+	}
+	index_set_type& bools(e.get_index_set<bool_tag>());
+	v.reserve(bools.size());
+	copy(bools.begin(), bools.end(), back_inserter(v));
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collects set of all subinstances, bools, channels, etc...
+	\return 0 upon success, 1 upon error.  
+ */
+int
+parse_name_to_get_subinstances(const string& n, const module& m, 
+		entry_collection& e) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
+	const footprint& topfp(m.get_footprint());
 if (n == ".") {
 	// no lookup necessary, just copy all integers!
-	const size_t bmax =
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		m.get_footprint().get_instance_pool<bool_tag>().total_entries() +1;
+#define PMAX(Tag)	topfp.get_instance_pool<Tag>().total_entries() +1
 #else
-		m.get_state_manager().get_pool<bool_tag>().size();
+#define	PMAX(Tag)	m.get_state_manager().get_pool<Tag>().size()
 #endif
-	size_t i = INVALID_NODE_INDEX +1;
-	v.reserve(bmax -1);
-	for ( ; i<bmax; ++i) {
-		v.push_back(i);
-	}
+
+#define	ADD_EVERYTHING(Tag)						\
+{									\
+	const size_t bmax = PMAX(Tag);					\
+	size_t i = INVALID_NODE_INDEX +1;				\
+	index_set_type& v(e.get_index_set<Tag>());			\
+	for ( ; i<bmax; ++i) {						\
+		v.insert(i);						\
+	}								\
+}
+	ADD_EVERYTHING(bool_tag)
+	ADD_EVERYTHING(int_tag)
+	ADD_EVERYTHING(enum_tag)
+	ADD_EVERYTHING(channel_tag)
+	ADD_EVERYTHING(process_tag)
+#undef	ADD_EVERYTHING
+#undef	PMAX
 	return 0;
 } else {
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
-	if (!r || !r.inst_ref()) {
-		return 1;
-#if 0
-	} else if (r.inst_ref()->dimensions()) {
-		cerr << "Error: referenced instance must be a single (scalar)."
-			<< endl;
-		return 1;
-#endif
-	// TODO: allow non-scalar collections, sloppy arrays, etc...
-	} else {
-		entry_collection e;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		// much easier with continuous ranges in memory mapping
-		const global_indexed_reference
-			gref(parse_global_reference(n, m));
+if (!r || !r.inst_ref()) {
+	return 1;
+} else if (r.inst_ref()->dimensions()) {
+	cerr << "Error: referenced instance must be a single (scalar)."
+		<< endl;
+	return 1;
+// TODO: allow non-scalar collections, sloppy arrays, etc...
+}
+	// wasteful double-parsing...
+	// much easier with continuous ranges in memory mapping
+	const global_indexed_reference
+		gref(parse_global_reference(n, m));
 	if (!gref.second) {
 		// there was an error
-		r.inst_ref()->dump(cerr << "ERROR: bad instance reference: ",
-			expr_dump_context::default_value) << endl;
+		cerr << "ERROR: bad instance reference: ";
+		r.inst_ref()->dump(cerr, expr_dump_context::default_value);
+//		cerr << n;
+		cerr << endl;
 		return 1;
 	}
+	return parse_name_to_get_subinstances(gref, m, e);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+parse_name_to_get_subinstances(const global_indexed_reference& gref,
+		const module& m, entry_collection& e) {
+	const footprint& topfp(m.get_footprint());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	switch (gref.first) {
 	case META_TYPE_PROCESS: {
 		// TODO: factor this out somewhere else for reuse?
-		set<size_t> worklist, covered;	// coverage of process ports
-		std::set<size_t> sorted;
+		index_set_type worklist;
+		// coverage of process ports
+		index_set_type& covered(e.get_index_set<process_tag>());
 		worklist.insert(gref.second);
-		const footprint_frame tff(m.get_footprint());
+		const footprint_frame tff(topfp);
 		const global_offset g;
 		const global_entry_context gc(tff, g);
 	do {
-		const set<size_t>::iterator next_pi(worklist.begin());
+		const index_set_type::iterator next_pi(worklist.begin());
 		const size_t gpid = *next_pi;
 		worklist.erase(next_pi);
-		const std::pair<set<size_t>::const_iterator, bool>
+		const std::pair<index_set_type::const_iterator, bool>
 			pip(covered.insert(gpid));
 	if (pip.second) {
 		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
@@ -562,56 +617,64 @@ if (n == ".") {
 		const entity::state_instance<process_tag>::pool_type&
 			pp(tmpf._footprint->get_instance_pool<process_tag>());
 		copy(ppf.begin(), ppf.begin() +pp.port_entries(), 
-			util::set_inserter(worklist));
+			set_inserter(worklist));
 	}
-		const footprint_frame_map_type&
-			pbf(tmpf.get_frame_map<bool_tag>());
-		copy(pbf.begin(), pbf.end(), util::set_inserter(sorted));
-		const entity::state_instance<bool_tag>::pool_type&
-			bp(tmpf._footprint->get_instance_pool<bool_tag>());
-			// deep private enumeration just continues past
-			// end-of-local indices
-			// what if there are no locals!
-			// adjust to 1-indexed global index
-		const size_t priv = bp.non_local_private_entries();
-		const size_t locp = bp.local_private_entries();
-		const size_t b_off =
-			tmpg.entity::global_offset_base<bool_tag>::offset +1;
-		STACKTRACE_INDENT_PRINT("b_off = " << b_off << endl);
-		STACKTRACE_INDENT_PRINT("locp = " << locp << endl);
-		STACKTRACE_INDENT_PRINT("priv. entries = " << priv << endl);
-		const size_t p_off = b_off +locp;
-		size_t i = 0;
-		for ( ; i<priv; ++i) {
-			sorted.insert(i+p_off);
-		}
+		// deep private enumeration just continues past
+		// end-of-local indices
+		// what if there are no locals!
+		// adjust to 1-indexed global index
+#define	COLLECT_SUBINSTANCES(Tag)					\
+	{								\
+		index_set_type& sorted(e.get_index_set<Tag>());		\
+		const footprint_frame_map_type&				\
+			pbf(tmpf.get_frame_map<Tag>());			\
+		copy(pbf.begin(), pbf.end(), set_inserter(sorted));	\
+		const entity::state_instance<Tag>::pool_type&		\
+			bp(tmpf._footprint->get_instance_pool<Tag>());	\
+		const size_t priv = bp.non_local_private_entries();	\
+		const size_t locp = bp.local_private_entries();		\
+		const size_t b_off =					\
+			tmpg.entity::global_offset_base<Tag>::offset +1; \
+		STACKTRACE_INDENT_PRINT("b_off = " << b_off << endl);	\
+		STACKTRACE_INDENT_PRINT("locp = " << locp << endl);	\
+		STACKTRACE_INDENT_PRINT("priv. entries = " << priv << endl); \
+		const size_t p_off = b_off +locp;			\
+		size_t i = 0;						\
+		for ( ; i<priv; ++i) {					\
+			sorted.insert(i+p_off);				\
+		}							\
+	}
+	COLLECT_SUBINSTANCES(bool_tag)
+	COLLECT_SUBINSTANCES(int_tag)
+	COLLECT_SUBINSTANCES(enum_tag)
+	COLLECT_SUBINSTANCES(channel_tag)
+#undef	COLLECT_SUBINSTANCES
 	}	// else was already covered, skip it
 	} while (!worklist.empty());
-		copy(sorted.begin(), sorted.end(), back_inserter(v));
-#if ENABLE_STACKTRACE
-		copy(v.begin(), v.end(), ostream_iterator<size_t>(
-			STACKTRACE_INDENT_PRINT("all-sub: "), ","));
-		STACKTRACE_STREAM << endl;
-#endif
 		break;
-	}
+	}	// end case META_TYPE_PROCESS
 	case META_TYPE_BOOL:
-		v.push_back(gref.second);
+		e.get_index_set<bool_tag>().insert(gref.second);
+		break;
+	case META_TYPE_INT:
+		e.get_index_set<int_tag>().insert(gref.second);
+		break;
+	case META_TYPE_ENUM:
+		e.get_index_set<enum_tag>().insert(gref.second);
+		break;
+	case META_TYPE_CHANNEL:
+		e.get_index_set<channel_tag>().insert(gref.second);
 		break;
 	default:
 		return 1;
-	}
+	}	// end switch
 #else
+	// OBSOLETE
 		if (!r.inst_ref()->collect_subentries(m, e).good) {
 			return 1;
 		}
-		const index_set_type& b(e.get_index_set<bool_tag>());
-		v.resize(b.size());
-		copy(b.begin(), b.end(), v.begin());
 #endif
 		return 0;
-	}
-}
 }	// end parse_name_to_get_subnodes
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -649,13 +712,13 @@ parse_name_to_get_subnodes_local(const string& n, const module& m,
 	// unique sort it
 	std::set<size_t> s;
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	copy(pbf.begin(), pbf.end(), util::set_inserter(s));
+	copy(pbf.begin(), pbf.end(), set_inserter(s));
 #else
 	if (pid) {
-		copy(pbf.begin(), pbf.end(), util::set_inserter(s));
+		copy(pbf.begin(), pbf.end(), set_inserter(s));
 	} else {	// top-level process needs transformation, yuck...
 		// FIXME: this is very BUG prone
-		copy(++pbf.begin(), pbf.end(), util::set_inserter(s));
+		copy(++pbf.begin(), pbf.end(), set_inserter(s));
 		// skip the 0th entry
 	}
 #endif
@@ -701,7 +764,7 @@ parse_name_to_get_ports(const string& n, const module& m,
 	const size_t ps = tmpf._footprint->get_instance_pool<bool_tag>()
 		.port_entries();
 	std::set<size_t> s;
-	copy(pbf.begin(), pbf.begin() +ps, util::set_inserter(s));
+	copy(pbf.begin(), pbf.begin() +ps, set_inserter(s));
 	copy(s.begin(), s.end(), back_inserter(v));
 	return 0;
 #else
@@ -782,7 +845,7 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 		const global_entry_context gc(tff, g);
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(gc));
-		STACKTRACE_INDENT_PRINT("gref.second = " << gref.second << endl);
+		STACKTRACE_INDENT_PRINT("gref.index = " << gref.second << endl);
 		if (gref.first && gref.second) {
 			topfp.collect_aliases_recursive(gref, aliases);
 		} else {

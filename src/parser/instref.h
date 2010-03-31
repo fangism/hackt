@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.9 2009/11/14 03:12:10 fang Exp $
+	$Id: instref.h,v 1.9.2.1 2010/03/31 00:33:13 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -26,6 +26,7 @@ namespace HAC {
 namespace entity {
 class module;
 class meta_reference_union;
+struct entry_collection;
 }
 using util::memory::excl_ptr;
 
@@ -59,6 +60,11 @@ entity::global_indexed_reference
 parse_global_reference(const std::string&, const entity::module&);
 
 extern
+entity::global_indexed_reference
+parse_global_reference(const entity::meta_reference_union&,
+	const entity::module&);
+
+extern
 int
 parse_name_to_what(std::ostream&, const std::string&, const entity::module&);
 
@@ -66,6 +72,18 @@ extern
 int
 parse_name_to_members(std::ostream&,
 	const std::string&, const entity::module&);
+
+extern
+int
+parse_name_to_get_subinstances(
+	const std::string&, const entity::module&, 
+	entity::entry_collection&);
+
+extern
+int
+parse_name_to_get_subinstances(
+	const entity::global_indexed_reference&, const entity::module&, 
+	entity::entry_collection&);
 
 extern
 int

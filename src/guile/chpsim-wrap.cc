@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.8.16.2 2010/01/18 23:43:44 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.8.16.3 2010/03/31 00:33:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -331,15 +331,18 @@ struct changed_state_extractor<channel_tag> :
 
 	SCM
 	operator () (const state_trace_window_base<channel_tag>::iter_type::value_type& i) const {
+		STACKTRACE_VERBOSE;
 		// TODO: construct structure of references, FINISH_ME
 		static const SCM scm_ack = scm_permanent_object(
 			scm_from_locale_symbol("ack"));	// 'ack symbol
 		SCM scm_dat = scm_ack;
+		STACKTRACE_INDENT_PRINT("index = " << i.global_index << endl);
 		if (i.raw_data.has_trace_value()) {
 			const canonical_fundamental_chan_type_base::datatype_list_type&
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-				cdl(fp.get_instance<channel_tag>(i.global_index)
+				cdl(fp.get_instance<channel_tag>(i.global_index -1)
 					.channel_type->get_datatype_list());
+				// get_instance is 0-indexed
 #else
 				cdl(sm.get_pool<channel_tag>()[i.global_index]
 					.channel_type->get_datatype_list());
