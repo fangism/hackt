@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.13.40.3 2010/03/02 02:34:37 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.13.40.4 2010/04/01 19:56:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -179,6 +179,17 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
 	ICE_NEVER_CALL(cerr);
 	return global_indexed_reference(META_TYPE_NONE, 0);
 }
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
+		const global_entry_context&,
+		global_reference_array_type&) const {
+	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

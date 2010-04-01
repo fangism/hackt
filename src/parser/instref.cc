@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.19.2.15 2010/03/31 00:33:12 fang Exp $
+	$Id: instref.cc,v 1.19.2.16 2010/04/01 19:56:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -557,11 +557,35 @@ if (n == ".") {
 if (!r || !r.inst_ref()) {
 	return 1;
 } else if (r.inst_ref()->dimensions()) {
+#if 0
+// TODO: allow non-scalar collections, sloppy arrays, etc...
 	cerr << "Error: referenced instance must be a single (scalar)."
 		<< endl;
 	return 1;
-// TODO: allow non-scalar collections, sloppy arrays, etc...
-}
+#else
+// TODO: refactor this to make re-usable
+	entity::global_reference_array_type tmp;
+	const footprint& topfp(m.get_footprint());
+	const footprint_frame tff(topfp);
+	const global_offset g;
+	const global_entry_context gc(tff, g);
+	if (!r.inst_ref()->lookup_top_level_references(gc, tmp).good) {
+		cerr << "Error expanding reference array: ";
+		r.inst_ref()->dump(cerr, expr_dump_context::default_value);
+		cerr << endl;
+		return 1;
+	}
+	// note: is waste to reconstruct top-context everytime, oh well...
+	entity::global_reference_array_type::const_iterator
+		ti(tmp.begin()), te(tmp.end());
+	for ( ; ti!=te; ++ti) {
+		// should never error out, really
+		if (parse_name_to_get_subinstances(*ti, m, e))
+			return 1;
+	}
+	return 0;
+#endif
+} else {
 	// wasteful double-parsing...
 	// much easier with continuous ranges in memory mapping
 	const global_indexed_reference
@@ -575,6 +599,7 @@ if (!r || !r.inst_ref()) {
 		return 1;
 	}
 	return parse_name_to_get_subinstances(gref, m, e);
+}
 }
 }
 

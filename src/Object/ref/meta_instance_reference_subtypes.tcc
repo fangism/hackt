@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.28.2.3 2010/02/11 01:42:10 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.28.2.4 2010/04/01 19:56:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -335,6 +335,7 @@ META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 #endif
 		const footprint& top, 
 		vector<size_t>& indices) const {
+	STACKTRACE_VERBOSE;
 	typedef	vector<size_t>				indices_type;
 	typedef	typename alias_collection_type::const_iterator	const_iterator;
 	alias_collection_type aliases;

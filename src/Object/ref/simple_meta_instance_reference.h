@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.22.40.3 2010/03/02 02:34:41 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.22.40.4 2010/04/01 19:56:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -137,7 +137,11 @@ virtual	ostream&
 	good_bool
 	attach_indices(indices_ptr_arg_type);
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+protected:
+#else
 private:
+#endif
 	using parent_type::unroll_references_packed_helper;
 protected:
 	using parent_type::unroll_references_packed_helper_no_lookup;
@@ -163,6 +167,9 @@ virtual	LOOKUP_FOOTPRINT_FRAME_PROTO;
 #endif
 
 	LOOKUP_TOP_LEVEL_REFERENCE_PROTO;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	LOOKUP_TOP_LEVEL_REFERENCES_PROTO;
+#endif
 
 virtual	size_t
 	lookup_globally_allocated_index(

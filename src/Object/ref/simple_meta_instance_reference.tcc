@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.7 2010/03/30 00:36:42 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.33.40.8 2010/04/01 19:56:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -260,6 +260,8 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
 		const state_manager& sm, const footprint& top
 #endif
 		) const {
+	STACKTRACE_VERBOSE;
+#if 0
 	return global_indexed_reference(traits_type::type_tag_enum_value, 
 		this->lookup_globally_allocated_index(
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
@@ -268,7 +270,38 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
 			sm, top
 #endif
 			));
+#else
+	global_reference_array_type tmp;
+	if (lookup_top_level_references(gc, tmp).good) {
+		return tmp.front();
+	} else {
+		return global_indexed_reference(META_TYPE_NONE, 0);
+	}
+#endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
+		const global_entry_context& gc,
+		global_reference_array_type& ret) const {
+	STACKTRACE_VERBOSE;
+	vector<size_t> tmp;
+	const footprint& top(gc.get_top_footprint());
+	const footprint_frame* const fpf = gc.get_footprint_frame();
+	const footprint& fp(fpf ? *fpf->_footprint : top);
+	if (this->lookup_globally_allocated_indices(fp, tmp).good) {
+		transform(tmp.begin(), tmp.end(), back_inserter(ret), 
+			std::bind1st(std::ptr_fun(&make_global_reference),
+				size_t(traits_type::type_tag_enum_value)));
+		return good_bool(true);
+	} else {
+		return good_bool(false);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

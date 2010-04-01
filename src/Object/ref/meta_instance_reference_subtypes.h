@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.15.2.3 2010/02/11 01:42:09 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.15.2.4 2010/04/01 19:56:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -90,6 +90,9 @@ virtual bad_bool
 virtual	void
 	accept(nonmeta_expr_visitor&) const = 0;
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+virtual
+#endif
 	good_bool
 	lookup_globally_allocated_indices(
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION

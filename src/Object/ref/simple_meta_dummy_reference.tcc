@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.cc"
 	Method definitions for the meta_dummy_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_dummy_reference.tcc,v 1.4.20.3 2010/03/02 02:34:41 fang Exp $
+ 	$Id: simple_meta_dummy_reference.tcc,v 1.4.20.4 2010/04/01 19:56:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_TCC__
@@ -223,6 +223,18 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_top_level_reference(
 	ICE_NEVER_CALL(cerr);
 	return global_indexed_reference(0, 0);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_top_level_references(
+		const global_entry_context&,
+		global_reference_array_type&) const {
+	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION

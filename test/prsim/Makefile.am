@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.84.2.4 2010/03/20 00:36:29 fang Exp $
+#	$Id: Makefile.am,v 1.84.2.5 2010/04/01 19:56:42 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -135,7 +135,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	celem-share-01 celem-share-02 \
 	deep-01 deep-02 \
 	tree-01 tree-02 \
-	array-01 \
+	array-01 array-02 \
 	aliases-08 aliases-09 \
 	timing-01 \
 	pending-01 pending-02 \

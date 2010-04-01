@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-04-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-32:
+	  Fixed getall on member arrays, and all arrays in general, 
+		closing the last branch regression!
+		Implemented by having lookup_top_level_references call
+		unroll_references_packed.
+		Scalar references lookups now redirected through 
+		array reference lookups first (then just take only entry).
+	  State of branch: qualifies for final review before merge.
+
+
 2010-03-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-31:

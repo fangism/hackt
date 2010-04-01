@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.18.20.4 2010/03/02 02:34:39 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.18.20.5 2010/04/01 19:56:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -159,6 +159,10 @@ virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 #define	LOOKUP_TOP_LEVEL_REFERENCE_PROTO				\
 	global_indexed_reference					\
 	lookup_top_level_reference(const global_entry_context&) const
+#define	LOOKUP_TOP_LEVEL_REFERENCES_PROTO				\
+	good_bool							\
+	lookup_top_level_references(const global_entry_context&, 	\
+		global_reference_array_type&) const
 #else
 #define	LOOKUP_TOP_LEVEL_REFERENCE_PROTO				\
 	global_indexed_reference					\
@@ -167,6 +171,9 @@ virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 #endif
 
 virtual	LOOKUP_TOP_LEVEL_REFERENCE_PROTO = 0;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+virtual	LOOKUP_TOP_LEVEL_REFERENCES_PROTO = 0;
+#endif
 
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 // TEMPORARY

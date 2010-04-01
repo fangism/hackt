@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.28.24.7 2010/03/12 03:33:37 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.28.24.8 2010/04/01 19:56:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -182,27 +182,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 #endif
 	const unroll_context uc(&top, &top);
 #if MEMORY_MAPPED_GLOBAL_ALLOCATION
-#if 0
-	NEVER_NULL(base_inst_ref);
-	const size_t lid = this->lookup_locally_allocated_index(uc);
-if (!lid) {
-	// error message?
-	return 0;
-}
-//	const footprint& f(gc.current_footprint());
-	footprint_frame owner;	// scratch space
-	footprint_frame pff;
-	global_offset g;
-	if (!gc.construct_global_footprint_frame(owner, pff, g, *base_inst_ref)) {
-		return 0;
-	}
-#if ENABLE_STACKTRACE
-	pff.dump_frame(STACKTRACE_STREAM) << endl;
-#endif
-	return pff.get_frame_map<Tag>()[lid -1];
-#else
 	return this->lookup_locally_allocated_index(uc);
-#endif
 #else
 	return this->lookup_locally_allocated_index(sm, uc);
 #endif
@@ -296,15 +276,51 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 }	// end method lookup_locally_allocated_index
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	\param indices the return set (not sorted or uniqued)
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
-		const state_manager& sm, const footprint& top,
+//		const state_manager& sm,
+		const footprint& top,
 		vector<size_t>& indices) const {
+	STACKTRACE_VERBOSE;
+	typedef vector<size_t>				indices_type;
+	typedef typename alias_collection_type::const_iterator  const_iterator;
+	alias_collection_type aliases;
+	const footprint_frame tff(top);
+	const global_offset g;
+	const global_entry_context gc(tff, g);
+	global_offset tmpg;
+	footprint_frame tmpo, tmpf;
+	const size_t gpid =
+		gc.construct_global_footprint_frame(tmpo, tmpf, tmpg,
+		*this->base_inst_ref);
+	if (!gpid) {
+		return good_bool(false);
+	}
+	const unroll_context dummy(tmpf._footprint, &top);
+	// reminder: call to unroll_references_packed is virtual
+#if 0
+	if (this->unroll_references_packed(dummy, aliases).bad)
+#else
+	if (unroll_references_packed_helper(dummy, *this->inst_collection_ref,
+			this->array_indices, aliases).bad)
+#endif
+	{
+		cerr << "Error resolving collection of aliases." << endl;
+		return good_bool(false);
+	}
+	const_iterator i(aliases.begin()), e(aliases.end());
+	const footprint_frame_transformer fft(tmpf, Tag());
+	for ( ; i!=e; ++i) {
+		// don't bother checking for duplicates
+		// (easy: just use std::set instead of vector)
+		indices.push_back(fft((*i)->instance_index));
+	}
+	return good_bool(true);
 }
 #endif
 

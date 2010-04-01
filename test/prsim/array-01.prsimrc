@@ -1,20 +1,20 @@
 # "array-01.prsimrc"
-#	$Id: array-01.prsimrc,v 1.1.108.1 2010/03/13 02:18:47 fang Exp $
+#	$Id: array-01.prsimrc,v 1.1.108.2 2010/04/01 19:56:43 fang Exp $
 # @haco@ array.haco-a
 # testing getall
 
-# getall X
-echo skipping test for getall X (array-reference)
+getall X
+# echo skipping test for getall X (array-reference)
 getall X[0]
 echo expect some duplicates
 # consider introducing getall-unique
-# getall X[0].w
-echo skipping test for getall X[0].w (array-reference)
+getall X[0].w
+# echo skipping test for getall X[0].w (array-reference)
 getall X[0].w[1]
-# getall X[0].w[1].x
-echo skipping test for getall X[0].w[1].x (array-reference)
-# echo under-specified array reference!
-# getall X[0].w[1].x[0]
-echo skipping test for getall X[0].w[1].x[0] (array-reference)
+getall X[0].w[1].x
+# echo skipping test for getall X[0].w[1].x (array-reference)
+echo under-specified array reference!
+getall X[0].w[1].x[0]
+# echo skipping test for getall X[0].w[1].x[0] (array-reference)
 getall X[0].w[1].x[0][1]
 
