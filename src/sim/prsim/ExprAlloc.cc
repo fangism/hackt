@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.42 2009/09/14 21:17:14 fang Exp $
+	$Id: ExprAlloc.cc,v 1.43 2010/04/02 22:19:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -25,9 +25,17 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/SPEC_common.h"
 #include "Object/lang/SPEC_registry.tcc"
 #include "Object/lang/SPEC_footprint.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.h"
 #if 0
 #include "Object/lang/cflat_printer.h"		// for diagnostics
 #include "main/cflat_options.h"			// for diagnostics
+#endif
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/substructure_alias_base.h"
 #endif
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
@@ -50,9 +58,11 @@ using std::replace;
 using entity::bool_tag;
 using entity::process_tag;
 using entity::pint_const;
+using entity::instance_alias_info;
 using util::good_bool;
 using util::memory::free_list_acquire;
 using util::memory::free_list_release;
+using util::value_saver;
 #include "util/using_ostream.h"
 
 // shortcut for accessing the rules structure of a process graph
@@ -185,14 +195,29 @@ register_ExprAlloc_spec_class(void) {
 /**
 	NOTE: 0 is an invalid index to the state's expr_pool.  
  */
-ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
+ExprAlloc::ExprAlloc(state_type& _s, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint_frame& ff, 
+		const global_offset& go, 
+#endif
+		const ExprAllocFlags& f) :
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		cflat_visitor(),
+		cflat_context_visitor(ff, go), 
+#else
 		parent_type(), 
+#endif
 		state(_s),
 		g(NULL), 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		current_process_index(0), 	// to represent top-level
+#else
 #if PRSIM_SIMPLE_ALLOC
+		// TODO: not sure
 		current_process_index(size_t(-1)), 
 #else
 		current_process_index(0), 
+#endif
 #endif
 		total_exprs(FIRST_VALID_GLOBAL_EXPR), 	// non-zero!
 		process_footprint_map(), 	// empty
@@ -203,6 +228,107 @@ ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ExprAlloc::~ExprAlloc() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Local-only visit of rules and spec directives.
+	\pre current_process_index has been set
+ */
+void
+ExprAlloc::visit_rules_and_directives(const footprint& f) {
+	STACKTRACE_VERBOSE;
+	const entity::PRS::footprint& pfp(f.get_prs_footprint());
+	pfp.accept(*this);
+	// TODO: implement spec directives hierarchically
+#if 0
+	f.get_spec_footprint().accept(*this);
+#endif
+
+#if 0
+	typedef footprint::invariant_pool_type::const_iterator
+						const_iterator;
+	// const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
+	const footprint::invariant_pool_type&
+		ip(pfp.get_invariant_pool());
+	const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const expr_pool_setter __p(*this, ep);
+	NEVER_NULL(expr_pool);
+#endif
+	const_iterator i(ip.begin()), e(ip.end());
+	for ( ; i!=e; ++i) {
+		// construct invariant expression
+	//	ep[*i].accept(*this);
+		visit(ep[*i]);
+		link_invariant_expr(ret_ex_index);
+	}
+	}
+#else
+	// covered by visit(const PRS::footprint&), below
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need to treat the top-footprint as global process 0.
+ */
+void
+ExprAlloc::operator () (void) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(!current_process_index);
+	STACKTRACE_INDENT_PRINT("top-level process ..." << endl);
+	STACKTRACE_INDENT_PRINT("current process index = "
+		<< current_process_index << endl);
+#if 0 && !PRSIM_SIMPLE_ALLOC
+	visit_rules_and_directives(*topfp);
+	// already in auto_create_unique_process_subgraph
+#endif
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// process top type
+	const size_t ti = auto_create_unique_process_graph(*topfp);
+	const unique_process_subgraph&
+		ptemplate(state.unique_process_pool[ti]);
+	process_sim_state& ps(state.process_state_array[current_process_index]);
+	ps.allocate_from_type(ptemplate, ti, total_exprs);
+	footprint_frame topff;
+	topff.construct_top_global_context(*topfp, *parent_offset);
+	const value_saver<const footprint_frame*> _ffs_(fpf, &topff);
+#if ENABLE_STACKTRACE
+	fpf->dump_frame(STACKTRACE_INDENT_PRINT("top-frame:")) << endl;
+#endif
+	// spec directives?
+	const entity::footprint_frame_map_type&
+		bmap(topff.get_frame_map<bool_tag>());
+	const node_index_type node_pool_size =
+		fpf->_footprint->get_instance_pool<bool_tag>().local_entries();
+	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
+	// problem: spec directives are still global, not per-process
+	const entity::SPEC::footprint& sfp(topfp->get_spec_footprint());
+	sfp.accept(*this);
+
+	topfp->accept(AS_A(global_entry_context&, *this));
+	state.finish_process_type_map();	// finalize indices to pointers
+#if ENABLE_STACKTRACE
+	state.dump_struct(cerr << "Final global struct:" << endl) << endl;
+#endif
+#else
+	sm->accept(*this);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+void
+ExprAlloc::visit(const footprint& f) {
+	STACKTRACE_VERBOSE;
+//	visit_rules_and_directives(*topfp);
+	// visit every unique bool once, every unique process once
+	visit_local<bool_tag>(f, at_top());
+	visit_local<process_tag>(f, at_top());
+	visit_recursive(f);
+}
+#else
 /**
 	Top-level visitor.  
 	Use default traversal, but then conditionally do some cleanup.  
@@ -212,7 +338,7 @@ ExprAlloc::visit(const state_manager& _sm) {
 	STACKTRACE_VERBOSE;
 #if PRSIM_SIMPLE_ALLOC
 	STACKTRACE_INDENT_PRINT("top-level process ..." << endl);
-	const entity::global_entry_pool<entity::process_tag>&
+	const entity::GLOBAL_ENTRY_pool<entity::process_tag>&
 		proc_entry_pool(_sm.get_pool<entity::process_tag>());
 	// relies on module::populate_top_footprint_frame()
 	proc_entry_pool[0].accept(*this);	// b/c state_manager skips [0]
@@ -224,7 +350,7 @@ ExprAlloc::visit(const state_manager& _sm) {
 	state.dump_struct(cerr << "Final global struct:" << endl) << endl;
 #endif
 }
-
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_SIMPLE_ALLOC
@@ -242,8 +368,13 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	// kludgy way of inferring the correct footprint
 	u.local_faninout_map.resize(node_pool_size);
 #endif
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	cflat_visitor::visit(pfp);	// visit rules/macros/exprs
+#else
 	parent_type::visit(pfp);	// visit rules/macros/exprs
+#endif
 	{
+	// handle invariants separately
 	using entity::PRS::PRS_footprint_expr_pool_type;
 	using entity::PRS::footprint;
 	typedef footprint::invariant_pool_type::const_iterator
@@ -251,8 +382,10 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	// const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
 	const footprint::invariant_pool_type& ip(pfp.get_invariant_pool());
 	const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const expr_pool_setter __p(*this, ep);
 	NEVER_NULL(expr_pool);
+#endif
 	const_iterator i(ip.begin()), e(ip.end());
 	for ( ; i!=e; ++i) {
 		// construct invariant expression
@@ -271,6 +404,114 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	Visiting every unique bool once, setting attributes based on
+	the canonical attributes associated at the owner level.  
+ */
+void
+ExprAlloc::visit(const GLOBAL_ENTRY<bool_tag>& b) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	topfp->dump_canonical_name<bool_tag>(
+		STACKTRACE_INDENT_PRINT("unique bool: "),
+		lookup_global_id<bool_tag>(
+			b.get_back_ref()->instance_index) -1) << endl;
+#endif
+	const never_ptr<const instance_alias_info<bool_tag> >
+		bref(b.get_back_ref());
+	NEVER_NULL(bref);
+	const size_t lbi = bref->instance_index;
+	const size_t gbi = lookup_global_id<bool_tag>(lbi);
+	state.node_pool[gbi].import_attributes(*bref);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return index into state.unique_graph_pool that points to 
+	the corresponding type.
+ */
+size_t
+ExprAlloc::auto_create_unique_process_graph(const footprint& gpfp) {
+	STACKTRACE_VERBOSE;
+	typedef	process_footprint_map_type::const_iterator	const_iterator;
+	size_t type_index;	// unique process type index
+	const const_iterator f(process_footprint_map.find(&gpfp));
+if (f == process_footprint_map.end()) {
+	type_index = state.unique_process_pool.size();
+	STACKTRACE_INDENT_PRINT("first time with this type, assigned id " << type_index << endl);
+	process_footprint_map[&gpfp] = type_index;
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const state_instance<bool_tag>::pool_type&
+		bmap(gpfp.get_instance_pool<bool_tag>());
+#else
+	const entity::footprint_frame_map_type&
+		bmap(m.get_state_manager()
+			.get_pool<process_tag>()[current_process_index]
+			._frame.get_frame_map<bool_tag>());
+#endif
+	const node_index_type node_pool_size = bmap.local_entries();
+	STACKTRACE_INDENT_PRINT("node_pool_size = " << node_pool_size << endl);
+		state.unique_process_pool.push_back(unique_process_subgraph());
+	unique_process_subgraph& u(state.unique_process_pool.back());
+	const util::value_saver<unique_process_subgraph*> tmp(g, &u);
+	// resize the faninout_struct array as if it were local nodes
+	// kludgy way of inferring the correct footprint
+	u.local_faninout_map.resize(node_pool_size);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// map is now sized without sentinel, will need index adjustment!
+#endif
+	STACKTRACE_INDENT_PRINT("u.fan_map.size = " << u.local_faninout_map.size() << endl);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	visit_rules_and_directives(gpfp);
+	// gpfp.accept(AS_A(cflat_visitor&, *this));
+	// won't recurse to global_entry_context
+#else
+#if !PRSIM_SIMPLE_ALLOC
+	// const entity::PRS::footprint& pfp(fp->get_prs_footprint());
+	cflat_visitor::visit(pfp);
+	{
+	using entity::PRS::PRS_footprint_expr_pool_type;
+	using entity::PRS::footprint;
+	typedef footprint::invariant_pool_type::const_iterator
+						const_iterator;
+	// const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
+	const footprint::invariant_pool_type&
+		ip(pfp.get_invariant_pool());
+	const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
+	const expr_pool_setter __p(*this, ep);
+	NEVER_NULL(expr_pool);
+	const_iterator i(ip.begin()), e(ip.end());
+	for ( ; i!=e; ++i) {
+		// construct invariant expression
+	//	ep[*i].accept(*this);
+		visit(ep[*i]);
+		link_invariant_expr(ret_ex_index);
+	}
+	}
+#endif
+#endif
+	// definitely want to keep this
+	if (flags.any_optimize() && expr_free_list.size()) {
+		compact_expr_pools();
+	}
+#if ENABLE_STACKTRACE
+	u.dump_struct(cerr << "Final local struct:" << endl) << endl;
+#endif
+	// auto-restore graph pointer
+} else {
+	// found existing type
+	type_index = f->second;
+	STACKTRACE_INDENT_PRINT("found existing type " <<
+		type_index << endl);
+}
+	return type_index;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// needs to be re-written without use of global state_manager
 /**
 	Lookup this PRS_footprint in the address map.
 	If this is the first time this type is visited, then allocate
@@ -284,97 +525,86 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
  */
 void
 #if PRSIM_SIMPLE_ALLOC
-ExprAlloc::visit(const global_entry<process_tag>& gp)
+ExprAlloc::visit(const GLOBAL_ENTRY<process_tag>& gp)
 #else
 ExprAlloc::visit(const entity::PRS::footprint& pfp)
 #endif
 {
 	STACKTRACE_VERBOSE;
-//	++current_process_index;
-	// also set up proper unique_process references
-	typedef	process_footprint_map_type::const_iterator	const_iterator;
 #if PRSIM_SIMPLE_ALLOC
-	const entity::footprint* const fp(gp._frame._footprint);
+	const size_t lpid = gp.get_back_ref()->instance_index;
+	const util::value_saver<size_t>
+		__pi__(current_process_index,
+			lookup_global_id<process_tag>(lpid));
+#endif
+#if ENABLE_STACKTRACE
+	topfp->dump_canonical_name<process_tag>(
+		STACKTRACE_INDENT_PRINT("In process: "),
+		current_process_index -1) << endl;
+#endif
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint_frame& gpff(gp._frame);
+	const footprint& gpfp(*gpff._footprint);
+	const global_offset& sgo(*g_offset);
+	const global_offset
+		b(sgo, gpfp, entity::add_local_private_tag()),
+		c(sgo, gpfp, entity::add_total_private_tag());
+	// set footprint frame using local frame? see global_entry_dumper::visit
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("offset: " << sgo << endl);
+	STACKTRACE_INDENT_PRINT("local: " << b << endl);
+	STACKTRACE_INDENT_PRINT("local-bnd: " << b << endl);
+	gpff.dump_frame(STACKTRACE_INDENT_PRINT("instance-frame:")) << endl;
+	fpf->dump_frame(STACKTRACE_INDENT_PRINT("actuals-frame:")) << endl;
+#endif
+	footprint_frame af(gpff, *fpf);
+	af.extend_frame(sgo, b);
+	// TODO: call construct_global_context instead
+#if ENABLE_STACKTRACE
+	af.dump_frame(STACKTRACE_INDENT_PRINT("EXT-frame:")) << endl;
+#endif
+	const value_saver<const footprint_frame*> _ff_(fpf, &af);
+	// global_offset is used by spec_footprint visit (for now)
+	const value_saver<const global_offset*> _g_(parent_offset, &sgo);
+#endif
+	// also set up proper unique_process references
+#if PRSIM_SIMPLE_ALLOC
+	const entity::footprint* const fp(&gpfp);
 #else
 	const entity::PRS::footprint* const fp(&pfp);
-#endif
 	const module& m(state.get_module());
+#endif
 	// this now works for pid=0, top-level
 	const entity::footprint_frame_map_type&
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		bmap(af.get_frame_map<bool_tag>());
+#else
 		bmap(m.get_state_manager()
 			.get_pool<process_tag>()[current_process_index]
 			._frame.get_frame_map<bool_tag>());
+#endif
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const node_index_type node_pool_size =
+		gpff._footprint->get_instance_pool<bool_tag>().local_entries();
+#else
 	const node_index_type node_pool_size = bmap.size();
+#endif
 	STACKTRACE_INDENT_PRINT("node_pool_size = " << node_pool_size << endl);
-	size_t type_index;	// unique process type index
-	const const_iterator f(process_footprint_map.find(fp));
-	if (f == process_footprint_map.end()) {
-		STACKTRACE_INDENT_PRINT("first time with this type" << endl);
-		type_index = state.unique_process_pool.size();
-		process_footprint_map[fp] = type_index;
-		state.unique_process_pool.push_back(unique_process_subgraph());
-		unique_process_subgraph& u(state.unique_process_pool.back());
-		const util::value_saver<unique_process_subgraph*> tmp(g, &u);
-		// resize the faninout_struct array as if it were local nodes
-		// kludgy way of inferring the correct footprint
-		u.local_faninout_map.resize(node_pool_size);
-#if !PRSIM_SIMPLE_ALLOC
-		// const entity::PRS::footprint& pfp(fp->get_prs_footprint());
-		cflat_visitor::visit(pfp);
-		{
-		using entity::PRS::PRS_footprint_expr_pool_type;
-		using entity::PRS::footprint;
-		typedef footprint::invariant_pool_type::const_iterator
-							const_iterator;
-		// const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
-		const footprint::invariant_pool_type&
-			ip(pfp.get_invariant_pool());
-		const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
-		const expr_pool_setter __p(*this, ep);
-		NEVER_NULL(expr_pool);
-		const_iterator i(ip.begin()), e(ip.end());
-		for ( ; i!=e; ++i) {
-			// construct invariant expression
-		//	ep[*i].accept(*this);
-			visit(ep[*i]);
-			link_invariant_expr(ret_ex_index);
-		}
-		}
-#else
-#if 1
-		// problem: spec directives are still global, not per-process
-		const entity::PRS::footprint& pfp(fp->get_prs_footprint());
-		// cflat_visitor::visit(pfp);
-		pfp.accept(*this);
-#else
-		// use this once spec rings, etc. have been moved 
-		// into process subgraphs
-		parent_type::visit(gp);
-#endif
-		// should cover PRS and SPEC footprint
-#endif
-		// definitely want to keep this
-		if (flags.any_optimize() && expr_free_list.size()) {
-			compact_expr_pools();
-		}
-#if ENABLE_STACKTRACE
-		u.dump_struct(cerr << "Final local struct:" << endl) << endl;
-#endif
-		// auto-restore graph pointer
-	} else {
-		// found existing type
-		type_index = f->second;
-		STACKTRACE_INDENT_PRINT("found existing type " <<
-			type_index << endl);
-	}
 	// append-allocate new state, based on type
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	state.process_state_array.push_back(process_sim_state()); // resize +1
+#endif
 	// now, allocate state for instance of this process type
+	const size_t type_index = auto_create_unique_process_graph(gpfp);
 	const unique_process_subgraph&
 		ptemplate(state.unique_process_pool[type_index]);
 	// TODO: ALERT! if (pxs == 0) this will still cost to 
 	// lookup empty process with binary search through process_state_array
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	process_sim_state& ps(state.process_state_array[current_process_index]);
+#else
 	process_sim_state& ps(state.process_state_array.back());
+#endif
 	ps.allocate_from_type(ptemplate, type_index, total_exprs);
 	// mapping update: for expr->process map, assign value
 	// We are careful not to add an entry for EMPTY processes!
@@ -382,13 +612,43 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp)
 	STACKTRACE_INDENT_PRINT("current process index = "
 		<< current_process_index << endl);
 	STACKTRACE_INDENT_PRINT("current type index = " << type_index << endl);
+#if ENABLE_STACKTRACE
+	copy(bmap.begin(), bmap.end(), std::ostream_iterator<size_t>(
+		STACKTRACE_INDENT_PRINT("bmap: "), ","));
+	STACKTRACE_STREAM << endl;
+#endif
+	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
+#if PRSIM_SIMPLE_ALLOC
+	// problem: spec directives are still global, not per-process
+	const entity::SPEC::footprint& sfp(fp->get_spec_footprint());
+	sfp.accept(*this);
+#endif
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	*g_offset = c;
+#else
+	// the very last process will add an entry pointing one-past-the-end
+	// assume that processes are visited in sequence
+	++current_process_index;
+#endif
+}	// end method visit(const state_instance<process_tag>&);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAlloc::update_expr_maps(const unique_process_subgraph& ptemplate,
+		const size_t node_pool_size, 
+		const footprint_frame_map_type& bmap, 
+		const size_t pso) {
+	STACKTRACE_VERBOSE;
+	// mapping update: for expr->process map, assign value
+	// We are careful not to add an entry for EMPTY processes!
+	// nice side effect of optimization: only map leaf cells with PRS!
 	const expr_index_type pxs = ptemplate.expr_pool.size();
 	total_exprs += pxs;
 	STACKTRACE_INDENT_PRINT("has " << pxs << " exprs" << endl);
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	INVARIANT(!state.global_expr_process_id_map.empty());
 #endif
-#if PRSIM_SIMPLE_ALLOC
+#if 0 && PRSIM_SIMPLE_ALLOC
 	// problem: spec directives are still global, not per-process
 	const entity::SPEC::footprint& sfp(fp->get_spec_footprint());
 	sfp.accept(*this);
@@ -408,10 +668,12 @@ if (pxs) {
 	STACKTRACE_INDENT_PRINT("offset[" << ex_offset << "] -> process " <<
 		current_process_index +1 << endl);
 	state.global_expr_process_id_map[ex_offset] = current_process_index +1;
-	// connect global nodes to global fanout expressions
 #endif
+	// connect global nodes to global fanout expressions
 	node_index_type lni = 0;	// frame-map is 0-indexed
 	for ( ; lni < node_pool_size; ++lni) {
+		STACKTRACE_INDENT_PRINT("local node: " << lni << endl);
+		INVARIANT(lni < bmap.size());
 		const node_index_type gni = bmap[lni];
 		// global index conversion, or local if top-level (pid=0)
 		const faninout_struct_type&
@@ -419,9 +681,11 @@ if (pxs) {
 		const fanout_array_type& lfo(ff.fanout);
 		State::node_type& n(state.node_pool[gni]);
 		transform(lfo.begin(), lfo.end(), back_inserter(n.fanout), 
-			bind2nd(std::plus<expr_index_type>(), ps.get_offset()));
+			bind2nd(std::plus<expr_index_type>(), pso));
 		if (ff.has_fanin()) {
 #if VECTOR_NODE_FANIN
+			STACKTRACE_INDENT_PRINT("fanin-process: "
+				<< current_process_index << endl);
 			n.fanin.push_back(current_process_index);
 #else
 			finish(me);
@@ -443,9 +707,6 @@ if (pxs) {
 		<< x->second << endl);
 #endif
 }
-	// the very last process will add an entry pointing one-past-the-end
-	// assume that processes are visited in sequence
-	++current_process_index;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -581,7 +842,8 @@ ExprAlloc::compact_expr_pools(void) {
  */
 void
 ExprAlloc::visit(const footprint_rule& r) {
-	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
+	STACKTRACE_VERBOSE;
+//	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
 try {
 	rule_type dummy_rule;
 {
@@ -602,11 +864,21 @@ try {
 if (suppress_keeper_rule) {
 	suppress_keeper_rule = false;	// reset it for next rule
 } else {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if ENABLE_STACKTRACE
+	get_current_footprint().dump_type(STACKTRACE_INDENT_PRINT("In type: ")) << endl;
+#endif
+	const entity::PRS::footprint::expr_pool_type* const expr_pool =
+		&get_current_footprint().get_prs_footprint().get_expr_pool();
+#endif
+	STACKTRACE_INDENT_PRINT("expr_pool.size = " << expr_pool->size() << endl);
+	STACKTRACE_INDENT_PRINT("r.expr_index = " << r.expr_index << endl);
+	INVARIANT(size_t(r.expr_index) <= expr_pool->size());
 	(*expr_pool)[r.expr_index].accept(*this);
 	const size_t top_ex_index = ret_ex_index;
 	// r.output_index gives the local unique ID,
 	// which needs to be translated to global ID.
-	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
+	// bfm[...] refers to a GLOBAL_ENTRY<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
 	const size_t ni = lookup_local_bool_id(r.output_index);
 
@@ -672,6 +944,7 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 		g->expr_pool.push_back(expr_type(
 			expr_struct_type::EXPR_NODE,1));
 		g->expr_graph_node_pool.push_back(graph_node_type());
+		STACKTRACE_INDENT_PRINT("appending graph_expr_pool..." << endl);
 	}
 	g->local_faninout_map[ni].fanout.push_back(ret);
 	g->expr_graph_node_pool[ret].push_back_node(ni);
@@ -742,6 +1015,7 @@ if (expr_free_list.size()) {
 	const expr_index_type ret = g->expr_pool.size();
 	g->expr_pool.push_back(temp);
 	g->expr_graph_node_pool.push_back(graph_node_type());
+	STACKTRACE_INDENT_PRINT("appending graph_expr_pool..." << endl);
 	return ret;
 }
 }
@@ -873,6 +1147,10 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 	const size_t sz = e.size();
 	const char type = e.get_type();
 	// NOTE: 1-indexed
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const entity::PRS::footprint::expr_pool_type* const expr_pool =
+		&get_current_footprint().get_prs_footprint().get_expr_pool();
+#endif
 switch (type) {
 	// enumerations from "Object/lang/PRS_enum.h"
 	case entity::PRS::PRS_LITERAL_TYPE_ENUM: {
@@ -995,7 +1273,7 @@ ExprAlloc::link_invariant_expr(const expr_index_type top_ex_index) {
 	its root pull-up or pull-down expression.  
 	This automatically takes care of OR-combination by allocating
 	new root expressions when necessary.  
-	\param ni is the target output node.
+	\param ni is the target output node (1-based).
 	\param top_ex_index is the root expression pulling the target node.
 	\param dir is true if pulling up, false if pulling down.
 	\param w is true if rule is weak.  
@@ -1011,6 +1289,13 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
 	STACKTRACE_INDENT_PRINT("linking expr " << top_ex_index <<
 		" to node " << ni << ' ' << (dir ? '+' : '-') << endl);
+	NEVER_NULL(g);
+	STACKTRACE_INDENT_PRINT("expr-pool.size = " <<
+		g->expr_pool.size() << endl);
+	STACKTRACE_INDENT_PRINT("expr-node-pool.size = " <<
+		g->expr_graph_node_pool.size() << endl);
+	STACKTRACE_INDENT_PRINT("fan-map.size = " <<
+		g->local_faninout_map.size() << endl);
 	expr_type& ne(g->expr_pool[top_ex_index]);
 	graph_node_type& ng(g->expr_graph_node_pool[top_ex_index]);
 	fanin_array_type& fin(g->local_faninout_map[ni].get_pull_expr(dir

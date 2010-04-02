@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.13 2010/01/22 02:01:54 fang Exp $
+	$Id: netgraph.h,v 1.14 2010/04/02 22:19:00 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -48,16 +48,23 @@
 #define	NETLIST_CHECK_NAME_COLLISIONS		1
 
 namespace HAC {
+namespace entity {
+namespace PRS {
+class footprint;
+}
+}
 namespace NET {
 using std::vector;
 using std::string;
 using std::map;
 using std::set;
 using std::pair;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 using entity::cflat_context_visitor;
 using entity::state_manager;
+#endif
 using entity::footprint;
-using entity::global_entry;
+using entity::GLOBAL_ENTRY;
 using entity::bool_tag;
 using entity::process_tag;
 using entity::PRS::footprint_expr_node;
@@ -683,7 +690,7 @@ public:
 #endif
 
 	void
-	append_instance(const global_entry<process_tag>&, const netlist&, 
+	append_instance(const GLOBAL_ENTRY<process_tag>&, const netlist&, 
 		const index_type, const netlist_options&);
 
 	void

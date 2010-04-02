@@ -1,7 +1,7 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	top	top_type<>
-	process: 2,3,4,5,6,7,15
+	process: 2,3,4,5,6,7;15
 	bool: 3,4,5,6,7,8,9,10,11,12,13,14,15,1,2
 2	(top)	-	2	top.g	globals<>
 3	(top)	-	3	top.x	e1of<2>
@@ -15,7 +15,7 @@ globID	super		localID	canonical	footprint-frame
 7	(top)	-	7	top.so	e1of<2>
 	bool: 15,13,14
 8	(top)	-	8	top2	top_type2<>
-	process: 9,10,11,12,13,14,16
+	process: 9,10,11,12,13,14;16 {17}
 	bool: 16,17,18,19,20,21,22,23,24,25,26,27,28,1,2
 9	(top)	-	9	top2.g	globals<>
 10	(top)	-	10	top2.x	e1of<2>
@@ -32,7 +32,7 @@ globID	super		localID	canonical	footprint-frame
 	process: 2,3,4,5,6,7
 	bool: 3,4,5,6,7,8,9,10,11,12,13,14,15,1,2
 16	process	8	7	top2.top_cpa	doh<><true>
-	process: 9,10,11,12,13,14,17
+	process: 9,10,11,12,13,14;17
 	bool: 16,17,18,19,20,21,22,23,24,25,26,27,28,1,2
 17	process	16	7	top2.top_cpa.fa0	foo<>
 	process: 9,10,11,12,13,14

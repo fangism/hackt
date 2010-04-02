@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.21 2010/01/14 23:51:25 fang Exp $
+	$Id: module.h,v 1.22 2010/04/02 22:17:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -14,7 +14,9 @@
 #include "Object/def/footprint.h"
 #include "Object/state_manager.h"
 #include "Object/def/process_definition.h"
-#include "util/tokenize_fwd.h"
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "util/tokenize_fwd.h"			// for string_list
+#endif
 #include "util/attributes.h"
 #include "util/STL/vector_fwd.h"
 
@@ -53,6 +55,7 @@ protected:
 		for definitions, and nested namespaces.  
 	 */
 	excl_ptr<name_space>			global_namespace;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	/**
 		Whether or not the global instances have been allocated
 		in the state_manager.  
@@ -62,7 +65,7 @@ protected:
 		Global unique instance manager.  
 	 */
 	state_manager				global_state;
-
+#endif
 private:
 	module();
 
@@ -97,22 +100,28 @@ public:
 	ostream&
 	dump_definitions(ostream& o) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	ostream&
 	dump_instance_map(ostream& o) const;
+#endif
 
-	bool
-	is_unrolled(void) const;
-
+public:
 	bool
 	is_created(void) const;
 
 	bool
 	is_allocated(void) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		return is_created();
+#else
 		return allocated;
+#endif
 	}
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const state_manager&
 	get_state_manager(void) const { return global_state; }
+#endif
 
 	const footprint&
 	get_footprint(void) const;
@@ -128,37 +137,52 @@ private:
 	get_footprint(void);
 
 public:
-	/**
-		Note: sequential scope has a const-version of this, 
-		and is non-virtual.  
-		Protected-ness keep user from accessing parent's unroll().
-	 */
-	good_bool
-	unroll_module(void);
-
 	good_bool
 	create_unique(void);
 
 	good_bool
 	allocate_unique(void);
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	populate_top_footprint_frame(void);
+#endif
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	static
+	good_bool
+	cflat(const footprint&, ostream&, const cflat_options&);
+#else
 	good_bool
 	cflat(ostream&, const cflat_options&) const;
 
 	good_bool
 	cflat(ostream&, const cflat_options&);
+#endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	template <class Tag>
 	void
 	match_aliases(util::string_list&, const size_t) const;
+#endif
 
 private:
 	good_bool
 	create_dependent_types(void);
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	static
+	good_bool
+	__cflat(const footprint&, ostream&, const cflat_options&);
+
+	static
+	good_bool
+	__cflat_rules(const footprint&, ostream&, const cflat_options&);
+
+	static
+	good_bool
+	__cflat_aliases(const footprint&, ostream&, const cflat_options&);
+#else
 	good_bool
 	__cflat(ostream&, const cflat_options&) const;
 
@@ -167,9 +191,12 @@ private:
 
 	good_bool
 	__cflat_aliases(ostream&, const cflat_options&) const;
+#endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	good_bool
 	__allocate_unique(void);
+#endif
 
 public:
 	good_bool

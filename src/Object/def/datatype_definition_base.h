@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_base.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_base.h,v 1.8 2009/09/14 21:16:49 fang Exp $
+	$Id: datatype_definition_base.h,v 1.9 2010/04/02 22:18:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DATATYPE_DEFINITION_BASE_H__
@@ -68,7 +68,6 @@ virtual	good_bool
 		const never_ptr<const definition_base> d) const = 0;
 
 virtual	REGISTER_COMPLETE_TYPE_PROTO = 0;
-virtual	UNROLL_COMPLETE_TYPE_PROTO = 0;
 virtual	CREATE_COMPLETE_TYPE_PROTO = 0;
 
 virtual	void

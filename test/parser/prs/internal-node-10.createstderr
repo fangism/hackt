@@ -3,7 +3,6 @@ Error in sub-expression 0.
 Error resolving production rule expression at:
 Error unrolling production rule guard: 
 	@bogus::z | ~bogus::x | ~bogus::y -> bogus::w+
-Error instantiating process footprint: 
-From canonical type: bogus<>
-Error encountered during module::unroll.
+Instantiated from: bogus<>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

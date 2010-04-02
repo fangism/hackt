@@ -1,7 +1,7 @@
 /**
 	\file "Object/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.2 2007/01/21 05:58:27 fang Exp $
+	$Id: nonmeta_context.h,v 1.3 2010/04/02 22:18:00 fang Exp $
  */
 #ifndef	__HAC_OBJECT_NONMETA_CONTEXT_H__
 #define	__HAC_OBJECT_NONMETA_CONTEXT_H__
@@ -25,7 +25,9 @@ class nonmeta_state_manager;	// for run-time value information
 class nonmeta_context_base : public global_entry_context {
 	typedef	global_entry_context		parent_type;
 public:
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using parent_type::sm;
+#endif
 	using parent_type::topfp;
 	using parent_type::fpf;
 	/**
@@ -34,10 +36,23 @@ public:
 	nonmeta_state_manager&			values;
 
 protected:
-	nonmeta_context_base(const state_manager& s, 
-		const footprint& f, const footprint_frame* const l, 
+	nonmeta_context_base(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& s, 
+		const footprint& f, 
+#endif
+		const footprint_frame& l, 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_offset& g, 
+#endif
 		nonmeta_state_manager& v) : 
-		global_entry_context(s, f, l), 
+		global_entry_context(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			l, g
+#else
+			s, f, l
+#endif
+			), 
 		values(v) { }
 
 	// default copy-ctor

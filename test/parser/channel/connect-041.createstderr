@@ -99,12 +99,12 @@ In namespace "", we have: {
         B = channel chan(bool<>)^0 = boring<>::B (1) 
         x = bool^0 = boring<>::x (3) 
         Created state:
-        channel instance pool:
-        1	boring<>::B
-        bool instance pool:
-        1	boring<>::!GND
-        2	boring<>::!Vdd
-        3	boring<>::x
+        channel instance pool: (1 ports, 0 local, 0 mapped)
+        1	boring<>::B	
+        bool instance pool: (2 ports, 1 local, 0 mapped)
+        1	boring<>::!GND	
+        2	boring<>::!Vdd	
+        3	boring<>::x	
         resolved concurrent actions:
           *[
             B?(x)
@@ -144,13 +144,18 @@ In namespace "", we have: {
           B = channel chan(bool<>)^0 = classroom<>::lecture.B (1) 
         )
         Created state:
-        process instance pool:
-        1	classroom<>::lecture
-        channel instance pool:
-        1	classroom<>::lecture.B
-        bool instance pool:
-        1	classroom<>::!GND
-        2	classroom<>::!Vdd
+        process instance pool: (0 ports, 1 local, 0 mapped)
+        1	classroom<>::lecture	boring<>
+          channel: 1
+          bool: 1,2
+        channel instance pool: (0 ports, 1 local, 0 mapped)
+        1	classroom<>::lecture.B	
+        bool instance pool: (2 ports, 0 local, 1 mapped)
+        1	classroom<>::!GND	
+        2	classroom<>::!Vdd	
+        private sub-bool index map:
+          (1 -> 0)
+          (2 -> 1)
       }
       }
 
@@ -168,9 +173,19 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	hall
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 1 mapped)
+  1	hall	classroom<>
+    bool: 1,2
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 1)
+  private sub-channel index map:
+    (1 -> 0)
+    (2 -> 1)
+  bool instance pool: (0 ports, 2 local, 1 mapped)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 1)
 }

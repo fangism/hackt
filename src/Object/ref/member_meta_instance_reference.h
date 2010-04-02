@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.18 2007/10/08 01:21:33 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.19 2010/04/02 22:18:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -58,6 +58,8 @@ public:
 						instance_collection_ptr_type;
 	typedef	typename parent_type::instance_alias_info_ptr_type
 						instance_alias_info_ptr_type;
+	typedef	typename parent_type::const_instance_alias_info_ptr_type
+					const_instance_alias_info_ptr_type;
 	/// the containing type, whose member is referenced
 	typedef	meta_instance_reference_base		base_inst_type;
 	// should be kept consistent with
@@ -103,21 +105,44 @@ public:
 		const count_ptr<const parent_type>&) const;
 
 	using parent_type::connect_port;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	base_inst_ptr_type
+	get_base_ref(void) const { return this->base_inst_ref; }
+#endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// overrides simple_meta...
 	LOOKUP_FOOTPRINT_FRAME_PROTO;
+#endif
 
 	// overrides simple_meta...
 	size_t
-	lookup_globally_allocated_index(const state_manager&, 
-		const footprint&) const;
+	lookup_globally_allocated_index(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context&
+#else
+		const state_manager&, const footprint&
+#endif
+		) const;
 
 	// overrides simple_meta...
 	size_t
-	lookup_locally_allocated_index(const state_manager&, 
+	lookup_locally_allocated_index(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&, 
+#endif
 		const unroll_context&) const;
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// override meta_instance_reference<>
+	good_bool
+	lookup_globally_allocated_indices(
+//		const global_entry_context&,
+		const footprint&,
+		std::default_vector<size_t>::type&) const;
+#else
 	using parent_type::lookup_globally_allocated_indices;
+#endif
 
 	void
 	accept(nonmeta_expr_visitor&) const;

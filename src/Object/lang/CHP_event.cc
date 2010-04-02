@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_event.cc"
-	$Id: CHP_event.cc,v 1.3 2007/09/28 05:36:57 fang Exp $
+	$Id: CHP_event.cc,v 1.4 2010/04/02 22:18:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,6 +13,7 @@
 #include "Object/lang/CHP_event.h"
 #include "Object/lang/CHP_event_alloc.h"	// for EventSuccessorDumper
 #include "common/ICE.h"
+#include "common/TODO.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
 #include "sim/chpsim/graph_options.h"
@@ -201,8 +202,12 @@ local_event::dump_dot_node(ostream& o, const event_index_type i,
 	o << "\"];" << endl;
 	// successor edges
 	if (action_ptr) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		FINISH_ME(Fang);
+#else
 		EventSuccessorDumper d(o, *this, i, edc, offset);
 		action_ptr->accept(d);
+#endif
 	} else {
 		dump_successor_edges_default(o, i, offset);
 	}

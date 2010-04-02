@@ -128,19 +128,19 @@ footprint: {
       [1] = s[1] (10) 
     }
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	myVdd
-  4	myGND
-  5	_g[0]
-  6	_g[1]
-  7	g[0]
-  8	g[1]
-  9	s[0]
-  10	s[1]
-  11	d[0]
-  12	d[1]
+  bool instance pool: (0 ports, 12 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	myVdd	
+  4	myGND	
+  5	_g[0]	
+  6	_g[1]	
+  7	g[0]	
+  8	g[1]	
+  9	s[0]	
+  10	s[1]	
+  11	d[0]	
+  12	d[1]	
   resolved macros:
   passp(_g[0],s[0],d[0])
   passn(g[0],s[0],d[0])

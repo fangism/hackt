@@ -1,0 +1,19 @@
+// "connect-01.hac"
+// copy-reduced from "iscomb-24.hac"
+// testing for proper aliasing in flattened output
+
+defproc inv(bool a) {
+}
+
+defproc deep(inv x) {
+inv y;
+}
+
+defproc deeper(deep d) {
+deep e;
+}
+
+defproc deepest(deeper y) { }
+
+deepest sh1t;
+

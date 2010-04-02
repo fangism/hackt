@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.22 2008/10/11 06:35:14 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.23 2010/04/02 22:18:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -15,7 +15,11 @@
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_actuals.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/def/footprint.h"
+#else
 #include "Object/state_manager.h"
+#endif
 #include "Object/global_entry.h"
 #include "Object/unroll/unroll_context.h"
 #include "common/ICE.h"
@@ -118,7 +122,10 @@ const footprint_frame*
 simple_lookup_footprint_frame(
 		const typename instance_placeholder_type<Tag>::type& inst, 
 		index_list_ptr_arg_type ind,
-		const state_manager& sm, const footprint& top) {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm,
+#endif
+		const footprint& top) {
 	STACKTRACE_VERBOSE;
 	const unroll_context uc(&top, &top);
 	const never_ptr<substructure_alias>
@@ -131,8 +138,12 @@ simple_lookup_footprint_frame(
 	const size_t id = alias->instance_index;
 	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	INVARIANT(id);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return &top.template get_instance<Tag>(id)._frame;
+#else
 	// TODO: bounds checking...
 	return &sm.template get_pool<Tag>()[id]._frame;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -145,15 +156,26 @@ static
 const footprint_frame*
 member_lookup_footprint_frame(
 		const member_meta_instance_reference<Tag>& _this, 
-		const state_manager& sm, const footprint& top) {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager& sm, 
+#endif
+		const footprint& top) {
 	STACKTRACE_VERBOSE;
-	const size_t id = _this.lookup_globally_allocated_index(sm, top);
+	const size_t id = _this.lookup_globally_allocated_index(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		sm, 
+#endif
+		top);
 	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	if (!id) {
 		// already have error message
 		return NULL;
 	}
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return &top.template get_instance<Tag>(id)._frame;
+#else
 	return &sm.template get_pool<Tag>()[id]._frame;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -242,7 +264,10 @@ const footprint_frame*
 simple_lookup_footprint_frame(
 		const typename instance_placeholder_type<Tag>::type&, 
 		index_list_ptr_arg_type,
-		const state_manager&, const footprint& /* top */) {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&, 
+#endif
+		const footprint& /* top */) {
 	// ICE?
 	return NULL;
 }
@@ -257,7 +282,10 @@ static
 const footprint_frame*
 member_lookup_footprint_frame(
 		const member_meta_instance_reference<Tag>&, 
-		const state_manager&, const footprint&) {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&, 
+#endif
+		const footprint&) {
 	// ICE?
 	return NULL;
 }

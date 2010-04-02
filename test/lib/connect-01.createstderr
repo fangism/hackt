@@ -709,14 +709,14 @@ In namespace "", we have: {
                   [4] = std::reverse_bool_array<5>::i[0] (3) 
                 }
               Created state:
-              bool instance pool:
-              1	std::reverse_bool_array<5>::!GND
-              2	std::reverse_bool_array<5>::!Vdd
-              3	std::reverse_bool_array<5>::i[0]
-              4	std::reverse_bool_array<5>::i[1]
-              5	std::reverse_bool_array<5>::i[2]
-              6	std::reverse_bool_array<5>::i[3]
-              7	std::reverse_bool_array<5>::i[4]
+              bool instance pool: (7 ports, 0 local, 0 mapped)
+              1	std::reverse_bool_array<5>::!GND	
+              2	std::reverse_bool_array<5>::!Vdd	
+              3	std::reverse_bool_array<5>::i[0]	
+              4	std::reverse_bool_array<5>::i[1]	
+              5	std::reverse_bool_array<5>::i[2]	
+              6	std::reverse_bool_array<5>::i[3]	
+              7	std::reverse_bool_array<5>::i[4]	
               bool port aliases:
               3: std::reverse_bool_array<5>::i[0] = std::reverse_bool_array<5>::o[4]
               4: std::reverse_bool_array<5>::i[1] = std::reverse_bool_array<5>::o[3]
@@ -779,14 +779,14 @@ In namespace "", we have: {
                   [4] = std::rotate_bool_array<5, 2>::i[1] (4) 
                 }
               Created state:
-              bool instance pool:
-              1	std::rotate_bool_array<5, 2>::!GND
-              2	std::rotate_bool_array<5, 2>::!Vdd
-              3	std::rotate_bool_array<5, 2>::i[0]
-              4	std::rotate_bool_array<5, 2>::i[1]
-              5	std::rotate_bool_array<5, 2>::i[2]
-              6	std::rotate_bool_array<5, 2>::i[3]
-              7	std::rotate_bool_array<5, 2>::i[4]
+              bool instance pool: (7 ports, 0 local, 0 mapped)
+              1	std::rotate_bool_array<5, 2>::!GND	
+              2	std::rotate_bool_array<5, 2>::!Vdd	
+              3	std::rotate_bool_array<5, 2>::i[0]	
+              4	std::rotate_bool_array<5, 2>::i[1]	
+              5	std::rotate_bool_array<5, 2>::i[2]	
+              6	std::rotate_bool_array<5, 2>::i[3]	
+              7	std::rotate_bool_array<5, 2>::i[4]	
               bool port aliases:
               3: std::rotate_bool_array<5, 2>::i[0] = std::rotate_bool_array<5, 2>::o[3]
               4: std::rotate_bool_array<5, 2>::i[1] = std::rotate_bool_array<5, 2>::o[4]
@@ -852,15 +852,15 @@ In namespace "", we have: {
                   [2][1] = std::transpose_bool_array_2d<2, 3>::i[1][2] (8) 
                 }
               Created state:
-              bool instance pool:
-              1	std::transpose_bool_array_2d<2, 3>::!GND
-              2	std::transpose_bool_array_2d<2, 3>::!Vdd
-              3	std::transpose_bool_array_2d<2, 3>::i[0][0]
-              4	std::transpose_bool_array_2d<2, 3>::i[0][1]
-              5	std::transpose_bool_array_2d<2, 3>::i[0][2]
-              6	std::transpose_bool_array_2d<2, 3>::i[1][0]
-              7	std::transpose_bool_array_2d<2, 3>::i[1][1]
-              8	std::transpose_bool_array_2d<2, 3>::i[1][2]
+              bool instance pool: (8 ports, 0 local, 0 mapped)
+              1	std::transpose_bool_array_2d<2, 3>::!GND	
+              2	std::transpose_bool_array_2d<2, 3>::!Vdd	
+              3	std::transpose_bool_array_2d<2, 3>::i[0][0]	
+              4	std::transpose_bool_array_2d<2, 3>::i[0][1]	
+              5	std::transpose_bool_array_2d<2, 3>::i[0][2]	
+              6	std::transpose_bool_array_2d<2, 3>::i[1][0]	
+              7	std::transpose_bool_array_2d<2, 3>::i[1][1]	
+              8	std::transpose_bool_array_2d<2, 3>::i[1][2]	
               bool port aliases:
               3: std::transpose_bool_array_2d<2, 3>::i[0][0] = std::transpose_bool_array_2d<2, 3>::o[0][0]
               4: std::transpose_bool_array_2d<2, 3>::i[0][1] = std::transpose_bool_array_2d<2, 3>::o[1][0]
@@ -932,15 +932,15 @@ In namespace "", we have: {
                   [0][2][1] = std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][2] (8) 
                 }
               Created state:
-              bool instance pool:
-              1	std::transpose_bool_array_3d_ikj<1, 2, 3>::!GND
-              2	std::transpose_bool_array_3d_ikj<1, 2, 3>::!Vdd
-              3	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][0]
-              4	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][1]
-              5	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][2]
-              6	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][0]
-              7	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][1]
-              8	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][2]
+              bool instance pool: (8 ports, 0 local, 0 mapped)
+              1	std::transpose_bool_array_3d_ikj<1, 2, 3>::!GND	
+              2	std::transpose_bool_array_3d_ikj<1, 2, 3>::!Vdd	
+              3	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][0]	
+              4	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][1]	
+              5	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][2]	
+              6	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][0]	
+              7	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][1]	
+              8	std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][1][2]	
               bool port aliases:
               3: std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][0] = std::transpose_bool_array_3d_ikj<1, 2, 3>::o[0][0][0]
               4: std::transpose_bool_array_3d_ikj<1, 2, 3>::i[0][0][1] = std::transpose_bool_array_3d_ikj<1, 2, 3>::o[0][1][0]
@@ -1012,15 +1012,15 @@ In namespace "", we have: {
                   [1][0][2] = std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][2] (8) 
                 }
               Created state:
-              bool instance pool:
-              1	std::transpose_bool_array_3d_jik<1, 2, 3>::!GND
-              2	std::transpose_bool_array_3d_jik<1, 2, 3>::!Vdd
-              3	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][0]
-              4	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][1]
-              5	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][2]
-              6	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][0]
-              7	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][1]
-              8	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][2]
+              bool instance pool: (8 ports, 0 local, 0 mapped)
+              1	std::transpose_bool_array_3d_jik<1, 2, 3>::!GND	
+              2	std::transpose_bool_array_3d_jik<1, 2, 3>::!Vdd	
+              3	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][0]	
+              4	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][1]	
+              5	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][2]	
+              6	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][0]	
+              7	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][1]	
+              8	std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][1][2]	
               bool port aliases:
               3: std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][0] = std::transpose_bool_array_3d_jik<1, 2, 3>::o[0][0][0]
               4: std::transpose_bool_array_3d_jik<1, 2, 3>::i[0][0][1] = std::transpose_bool_array_3d_jik<1, 2, 3>::o[0][0][1]
@@ -1092,15 +1092,15 @@ In namespace "", we have: {
                   [1][2][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][2] (8) 
                 }
               Created state:
-              bool instance pool:
-              1	std::transpose_bool_array_3d_jki<1, 2, 3>::!GND
-              2	std::transpose_bool_array_3d_jki<1, 2, 3>::!Vdd
-              3	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][0]
-              4	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][1]
-              5	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][2]
-              6	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][0]
-              7	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][1]
-              8	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][2]
+              bool instance pool: (8 ports, 0 local, 0 mapped)
+              1	std::transpose_bool_array_3d_jki<1, 2, 3>::!GND	
+              2	std::transpose_bool_array_3d_jki<1, 2, 3>::!Vdd	
+              3	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][0]	
+              4	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][1]	
+              5	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][2]	
+              6	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][0]	
+              7	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][1]	
+              8	std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][1][2]	
               bool port aliases:
               3: std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][0] = std::transpose_bool_array_3d_jki<1, 2, 3>::o[0][0][0]
               4: std::transpose_bool_array_3d_jki<1, 2, 3>::i[0][0][1] = std::transpose_bool_array_3d_jki<1, 2, 3>::o[0][1][0]
@@ -1172,15 +1172,15 @@ In namespace "", we have: {
                   [2][0][1] = std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][2] (8) 
                 }
               Created state:
-              bool instance pool:
-              1	std::transpose_bool_array_3d_kij<1, 2, 3>::!GND
-              2	std::transpose_bool_array_3d_kij<1, 2, 3>::!Vdd
-              3	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][0]
-              4	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][1]
-              5	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][2]
-              6	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][0]
-              7	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][1]
-              8	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][2]
+              bool instance pool: (8 ports, 0 local, 0 mapped)
+              1	std::transpose_bool_array_3d_kij<1, 2, 3>::!GND	
+              2	std::transpose_bool_array_3d_kij<1, 2, 3>::!Vdd	
+              3	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][0]	
+              4	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][1]	
+              5	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][2]	
+              6	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][0]	
+              7	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][1]	
+              8	std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][1][2]	
               bool port aliases:
               3: std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][0] = std::transpose_bool_array_3d_kij<1, 2, 3>::o[0][0][0]
               4: std::transpose_bool_array_3d_kij<1, 2, 3>::i[0][0][1] = std::transpose_bool_array_3d_kij<1, 2, 3>::o[1][0][0]
@@ -1252,15 +1252,15 @@ In namespace "", we have: {
                   [2][1][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][2] (8) 
                 }
               Created state:
-              bool instance pool:
-              1	std::transpose_bool_array_3d_kji<1, 2, 3>::!GND
-              2	std::transpose_bool_array_3d_kji<1, 2, 3>::!Vdd
-              3	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][0]
-              4	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][1]
-              5	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][2]
-              6	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][0]
-              7	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][1]
-              8	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][2]
+              bool instance pool: (8 ports, 0 local, 0 mapped)
+              1	std::transpose_bool_array_3d_kji<1, 2, 3>::!GND	
+              2	std::transpose_bool_array_3d_kji<1, 2, 3>::!Vdd	
+              3	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][0]	
+              4	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][1]	
+              5	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][2]	
+              6	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][0]	
+              7	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][1]	
+              8	std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][1][2]	
               bool port aliases:
               3: std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][0] = std::transpose_bool_array_3d_kji<1, 2, 3>::o[0][0][0]
               4: std::transpose_bool_array_3d_kji<1, 2, 3>::i[0][0][1] = std::transpose_bool_array_3d_kji<1, 2, 3>::o[1][0][0]
@@ -1462,62 +1462,70 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	_a
-  2	_b<2>
-  3	_c
-  4	_d1
-  5	_d2
-  6	_d3
-  7	_d4
-  8	_d5
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	_a.i[0]
-  4	_a.i[1]
-  5	_a.i[2]
-  6	_a.i[3]
-  7	_a.i[4]
-  8	_b.i[0]
-  9	_b.i[1]
-  10	_b.i[2]
-  11	_b.i[3]
-  12	_b.i[4]
-  13	_c.i[0][0]
-  14	_c.i[0][1]
-  15	_c.i[0][2]
-  16	_c.i[1][0]
-  17	_c.i[1][1]
-  18	_c.i[1][2]
-  19	_d1.i[0][0][0]
-  20	_d1.i[0][0][1]
-  21	_d1.i[0][0][2]
-  22	_d1.i[0][1][0]
-  23	_d1.i[0][1][1]
-  24	_d1.i[0][1][2]
-  25	_d2.i[0][0][0]
-  26	_d2.i[0][0][1]
-  27	_d2.i[0][0][2]
-  28	_d2.i[0][1][0]
-  29	_d2.i[0][1][1]
-  30	_d2.i[0][1][2]
-  31	_d3.i[0][0][0]
-  32	_d3.i[0][0][1]
-  33	_d3.i[0][0][2]
-  34	_d3.i[0][1][0]
-  35	_d3.i[0][1][1]
-  36	_d3.i[0][1][2]
-  37	_d4.i[0][0][0]
-  38	_d4.i[0][0][1]
-  39	_d4.i[0][0][2]
-  40	_d4.i[0][1][0]
-  41	_d4.i[0][1][1]
-  42	_d4.i[0][1][2]
-  43	_d5.i[0][0][0]
-  44	_d5.i[0][0][1]
-  45	_d5.i[0][0][2]
-  46	_d5.i[0][1][0]
-  47	_d5.i[0][1][1]
-  48	_d5.i[0][1][2]
+  process instance pool: (0 ports, 8 local, 0 mapped)
+  1	_a	std::reverse_bool_array<5>
+    bool: 1,2,3,4,5,6,7
+  2	_b<2>	std::rotate_bool_array<5, 2>
+    bool: 1,2,8,9,10,11,12
+  3	_c	std::transpose_bool_array_2d<2, 3>
+    bool: 1,2,13,14,15,16,17,18
+  4	_d1	std::transpose_bool_array_3d_ikj<1, 2, 3>
+    bool: 1,2,19,20,21,22,23,24
+  5	_d2	std::transpose_bool_array_3d_jik<1, 2, 3>
+    bool: 1,2,25,26,27,28,29,30
+  6	_d3	std::transpose_bool_array_3d_jki<1, 2, 3>
+    bool: 1,2,31,32,33,34,35,36
+  7	_d4	std::transpose_bool_array_3d_kij<1, 2, 3>
+    bool: 1,2,37,38,39,40,41,42
+  8	_d5	std::transpose_bool_array_3d_kji<1, 2, 3>
+    bool: 1,2,43,44,45,46,47,48
+  bool instance pool: (0 ports, 48 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	_a.i[0]	
+  4	_a.i[1]	
+  5	_a.i[2]	
+  6	_a.i[3]	
+  7	_a.i[4]	
+  8	_b.i[0]	
+  9	_b.i[1]	
+  10	_b.i[2]	
+  11	_b.i[3]	
+  12	_b.i[4]	
+  13	_c.i[0][0]	
+  14	_c.i[0][1]	
+  15	_c.i[0][2]	
+  16	_c.i[1][0]	
+  17	_c.i[1][1]	
+  18	_c.i[1][2]	
+  19	_d1.i[0][0][0]	
+  20	_d1.i[0][0][1]	
+  21	_d1.i[0][0][2]	
+  22	_d1.i[0][1][0]	
+  23	_d1.i[0][1][1]	
+  24	_d1.i[0][1][2]	
+  25	_d2.i[0][0][0]	
+  26	_d2.i[0][0][1]	
+  27	_d2.i[0][0][2]	
+  28	_d2.i[0][1][0]	
+  29	_d2.i[0][1][1]	
+  30	_d2.i[0][1][2]	
+  31	_d3.i[0][0][0]	
+  32	_d3.i[0][0][1]	
+  33	_d3.i[0][0][2]	
+  34	_d3.i[0][1][0]	
+  35	_d3.i[0][1][1]	
+  36	_d3.i[0][1][2]	
+  37	_d4.i[0][0][0]	
+  38	_d4.i[0][0][1]	
+  39	_d4.i[0][0][2]	
+  40	_d4.i[0][1][0]	
+  41	_d4.i[0][1][1]	
+  42	_d4.i[0][1][2]	
+  43	_d5.i[0][0][0]	
+  44	_d5.i[0][0][1]	
+  45	_d5.i[0][0][2]	
+  46	_d5.i[0][1][0]	
+  47	_d5.i[0][1][1]	
+  48	_d5.i[0][1][2]	
 }

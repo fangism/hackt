@@ -1,5 +1,5 @@
 # "dox/cast2hac/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2009/05/29 15:13:17 fang Exp $
+#	$Id: Makefile.am,v 1.17 2010/04/02 22:17:24 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -29,7 +29,7 @@ cast2hac_info_INCLUDES = \
 	cflat.texi
 
 hacmacros.texi: $(srcdir)/../common/hacmacros.texi
-	$(LN_S) $< $@
+	$(LN_SF) $< $@
 
 CLEANFILES += hacmacros.texi
 

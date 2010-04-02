@@ -1,4 +1,5 @@
-// "iscomb-23.hac"
+// "iscomb-24.hac"
+// copy-modified from "iscomb-23.hac"
 // testing that member references can be attached to attributes
 // @hflat-flags@ -fnode-attributes
 

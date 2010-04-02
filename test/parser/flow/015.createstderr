@@ -121,13 +121,13 @@ footprint: {
       [5][5] = m[0][0] (3) 
     }
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	m[0][0]
-  4	m[0][1]
-  5	m[0][2]
-  6	m[0][3]
-  7	m[0][4]
-  8	m[0][5]
+  bool instance pool: (0 ports, 8 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	m[0][0]	
+  4	m[0][1]	
+  5	m[0][2]	
+  6	m[0][3]	
+  7	m[0][4]	
+  8	m[0][5]	
 }

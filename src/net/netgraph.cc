@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.17 2010/01/21 19:50:01 fang Exp $
+	$Id: netgraph.cc,v 1.18 2010/04/02 22:18:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -25,6 +25,8 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/bool_port_collector.tcc"
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_pool.h"
 #include "util/iterator_more.h"		// for set_inserter
 #include "util/unique_list.tcc"
 #include "util/string.h"		// for strgsub
@@ -44,12 +46,14 @@ using entity::physical_instance_collection;
 using entity::port_alias_tracker;
 using entity::port_alias_tracker_base;
 using entity::alias_reference_set;
+using entity::instance_alias_info;
 using std::ostringstream;
 using std::ostream_iterator;
 using entity::directive_base_params_type;
 using entity::preal_value_type;
 using util::unique_list;
 using util::strings::strgsub;
+using util::memory::never_ptr;
 
 //=============================================================================
 bool
@@ -355,7 +359,11 @@ instance::emit(ostream& o, const node_pool_type& node_pool,
 {
 	// process instance name
 	ostringstream oss;
-	fp.get_instance_pool<process_tag>()[pid].get_back_ref()
+	fp.get_instance_pool<process_tag>()[pid
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		-1
+#endif
+		].get_back_ref()
 		->dump_hierarchical_name(oss, nopt.__dump_flags);
 	pname = oss.str();
 }
@@ -673,7 +681,7 @@ netlist::get_unmangled_name(void) const {
 	TODO: possible check for name collisions?
  */
 void
-netlist::append_instance(const global_entry<process_tag>& subp,
+netlist::append_instance(const GLOBAL_ENTRY<process_tag>& subp,
 		const netlist& subnet, const index_type lpid,
 		const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
@@ -688,7 +696,11 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 	instance& np(instance_pool.back());
 	// local process instance needed to find local port actual id
 	const instance_alias_info<process_tag>&
-		lp(*fp->get_instance_pool<process_tag>()[lpid].get_back_ref());
+		lp(*fp->get_instance_pool<process_tag>()[lpid
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			-1
+#endif
+			].get_back_ref());
 	// ALERT: translates to global index, not what we want!
 	netlist::port_list_type::const_iterator
 		fi(subnet.port_list.begin()), fe(subnet.port_list.end());
@@ -717,7 +729,13 @@ netlist::append_instance(const global_entry<process_tag>& subp,
 			STACKTRACE_INDENT_PRINT("formal id = " << fid << endl);
 
 			const instance_alias_info<bool_tag>&
-				fb(*subnet.fp->get_instance_pool<bool_tag>()[fid].get_back_ref());
+				fb(*subnet.fp->get_instance_pool<bool_tag>()[
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+					fid -1
+#else
+					fid
+#endif
+					].get_back_ref());
 			INVARIANT(fb.is_aliased_to_port());
 			index_type actual_id = 0;
 			// ALERT: fb might pick a non-port alias!!!
@@ -876,6 +894,7 @@ netlist::lookup_internal_node(const index_type ei) const {
 string
 netlist::get_original_node_name(const size_t _i, 
 		const netlist_options& opt) const {
+	STACKTRACE_VERBOSE;
 if (opt.prefer_port_aliases) {
 	typedef port_alias_tracker_base<bool_tag>::map_type map_type;
 	const map_type&
@@ -890,6 +909,7 @@ if (asi != ase) {
 	const_iterator ai(s.begin()), ae(s.end());
 	for ( ; ai != ae; ++ai) {
 	// just take the first one, arbitrary
+		NEVER_NULL(*ai);
 	if ((*ai)->is_port_alias()) {
 		ostringstream oss;
 		(*ai)->dump_hierarchical_name(oss, opt.__dump_flags);
@@ -898,9 +918,20 @@ if (asi != ase) {
 	}
 }	// else has no other aliases
 }	// end if prefer_port_aliases
+	const state_instance<bool_tag>::pool_type&
+		bp(fp->get_instance_pool<bool_tag>());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const size_t i = _i -1;		// pool is 0-based
+#else
+	const size_t i = _i;		// pool is 1-based
+#endif
+	STACKTRACE_INDENT_PRINT("bp.size = " << bp.local_entries() << endl);
+	INVARIANT(i < bp.local_entries());
+	const never_ptr<const instance_alias_info<bool_tag> >
+		a(bp[i].get_back_ref());
+	NEVER_NULL(a);
 	ostringstream oss;
-	fp->get_instance_pool<bool_tag>()[_i].get_back_ref()
-		->dump_hierarchical_name(oss, opt.__dump_flags);
+	a->dump_hierarchical_name(oss, opt.__dump_flags);
 	return oss.str();
 }
 

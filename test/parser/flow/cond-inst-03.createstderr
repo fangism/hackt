@@ -104,12 +104,12 @@ In namespace "", we have: {
               [2] = spec_test<2, 4>::y (3) 
             }
           Created state:
-          bool instance pool:
-          1	spec_test<2, 4>::!GND
-          2	spec_test<2, 4>::!Vdd
-          3	spec_test<2, 4>::y
-          4	spec_test<2, 4>::z[0]
-          5	spec_test<2, 4>::z[1]
+          bool instance pool: (2 ports, 3 local, 0 mapped)
+          1	spec_test<2, 4>::!GND	
+          2	spec_test<2, 4>::!Vdd	
+          3	spec_test<2, 4>::y	
+          4	spec_test<2, 4>::z[0]	
+          5	spec_test<2, 4>::z[1]	
         }
         <3, 1> {
           !GND = bool^0 = spec_test<3, 1>::!GND (1) 
@@ -117,9 +117,9 @@ In namespace "", we have: {
           M = pint^0 value: 1
           N = pint^0 value: 3
           Created state:
-          bool instance pool:
-          1	spec_test<3, 1>::!GND
-          2	spec_test<3, 1>::!Vdd
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	spec_test<3, 1>::!GND	
+          2	spec_test<3, 1>::!Vdd	
         }
       }
       }
@@ -143,10 +143,15 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	A
-  2	B
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	A	spec_test<2, 4>
+    bool: 1,2
+  2	B	spec_test<3, 1>
+    bool: 1,2
+  bool instance pool: (0 ports, 2 local, 3 mapped)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (3 -> 3)
 }

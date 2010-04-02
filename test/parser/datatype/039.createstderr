@@ -78,9 +78,9 @@ In namespace "", we have: {
         f = bool^0 = ch1of2<>::f (2) 
         t = bool^0 = ch1of2<>::t (1) 
         Created state:
-        bool instance pool:
-        1	ch1of2<>::t
-        2	ch1of2<>::f
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	ch1of2<>::t	
+        2	ch1of2<>::f	
         bool port aliases:
         1: ch1of2<>::t = ch1of2<>::d[1]
         2: ch1of2<>::f = ch1of2<>::d[0]
@@ -108,11 +108,12 @@ footprint: {
     f = bool^0 = FOO.d[0] (1) 
   )
   Created state:
-  process instance pool:
-  1	FOO
-  bool instance pool:
-  1	FOO.d[0]
-  2	FOO.d[1]
-  3	!GND
-  4	!Vdd
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	FOO	ch1of2<>
+    bool: 2,1
+  bool instance pool: (0 ports, 4 local, 0 mapped)
+  1	FOO.d[0]	
+  2	FOO.d[1]	
+  3	!GND	
+  4	!Vdd	
 }

@@ -2,5 +2,5 @@ WARNING: channel sink<>::X lacks connection to a producer.
 Error: cannot alias two non-sharing consumers of type channel.
 	got: Y.X
 	and: Z.X
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

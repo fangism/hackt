@@ -1,0 +1,15 @@
+// "130.hac"
+// copy-reduced from "085.hac"
+// checking for hflat aliases output coverage
+
+defproc foo() { }
+
+defproc bar(foo x) {
+	foo z;
+	x = z;
+}
+
+bar poo;
+
+// expecting poo.z.!GND, and poo.z.!Vdd
+

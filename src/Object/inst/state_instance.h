@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.11 2006/11/07 06:35:00 fang Exp $
+	$Id: state_instance.h,v 1.12 2010/04/02 22:18:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -12,6 +12,10 @@
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
 #include "Object/inst/instance_pool_fwd.h"
+#include "Object/devel_switches.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_entry.h"
+#endif
 
 namespace util {
 	class persistent_object_manager;
@@ -25,6 +29,10 @@ using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct global_entry_context;
+struct global_entry_dumper;
+#endif
 template <class> class instance_alias_info;
 template <class> class instance_collection_pool_bundle;
 
@@ -42,9 +50,16 @@ typedef	count_ptr<const const_param_expr_list>
 	\param Tag the meta-class tag.  
  */
 STATE_INSTANCE_TEMPLATE_SIGNATURE
-class state_instance {
+class state_instance 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	: public global_entry<Tag>
+#endif
+{
 	typedef	STATE_INSTANCE_CLASS		this_type;
 public:
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	typedef	global_entry<Tag>		entry_type;
+#endif
 	typedef	class_traits<Tag>		traits_type;
 private:
 	typedef	instance_alias_info<Tag>	alias_info_type;
@@ -72,6 +87,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	accept(global_entry_context&) const;
+#endif
+
 #define	STATE_INSTANCE_PERSISTENCE_PROTOS				\
 	void								\
 	collect_transient_info_base(persistent_object_manager&) const;	\
@@ -81,6 +101,15 @@ public:
 	load_object_base(const collection_pool_bundle_type&, istream&);
 
 	STATE_INSTANCE_PERSISTENCE_PROTOS
+
+	void
+	write_object(const collection_pool_bundle_type& m, ostream& o) const {
+		write_object_base(m, o);
+	}
+	void
+	load_object(const collection_pool_bundle_type& m, istream& i) {
+		load_object_base(m, i);
+	}
 
 public:
 	typedef	instance_pool<this_type>	pool_type;

@@ -1,6 +1,7 @@
 SPEC directive 'order' takes no grouped arguments.
 	got: 3 nodes in argument position 1
 Error with spec directive.
-FATAL: error during processing of process id 1.
+Instantiated from type: lvs_order<3>
+Instantiated from -TOP-:
 Caught exception during cflat PRS.
 Error during cflat.

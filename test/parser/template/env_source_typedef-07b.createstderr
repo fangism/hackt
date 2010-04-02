@@ -193,11 +193,11 @@ In namespace "", we have: {
             }
           e = bool^0 = e1of<1>::e (3) 
           Created state:
-          bool instance pool:
-          1	e1of<1>::!GND
-          2	e1of<1>::!Vdd
-          3	e1of<1>::e
-          4	e1of<1>::d[0]
+          bool instance pool: (4 ports, 0 local, 0 mapped)
+          1	e1of<1>::!GND	
+          2	e1of<1>::!Vdd	
+          3	e1of<1>::e	
+          4	e1of<1>::d[0]	
         }
       }
       }
@@ -251,14 +251,15 @@ In namespace "", we have: {
             e = bool^0 = source_e<1, 1, {0}>::rr.e (4) 
           )
           Created state:
-          process instance pool:
-          1	source_e<1, 1, {0}>::rr
-          bool instance pool:
-          1	source_e<1, 1, {0}>::!GND
-          2	source_e<1, 1, {0}>::!Vdd
-          3	source_e<1, 1, {0}>::rr.d[0]
-          4	source_e<1, 1, {0}>::rr.e
-          5	source_e<1, 1, {0}>::_Reset
+          process instance pool: (1 ports, 0 local, 0 mapped)
+          1	source_e<1, 1, {0}>::rr	e1of<1>
+            bool: 1,2,4,3
+          bool instance pool: (5 ports, 0 local, 0 mapped)
+          1	source_e<1, 1, {0}>::!GND	
+          2	source_e<1, 1, {0}>::!Vdd	
+          3	source_e<1, 1, {0}>::rr.d[0]	
+          4	source_e<1, 1, {0}>::rr.e	
+          5	source_e<1, 1, {0}>::_Reset	
           bool port aliases:
           1: source_e<1, 1, {0}>::rr.!GND = source_e<1, 1, {0}>::!GND
           2: source_e<1, 1, {0}>::rr.!Vdd = source_e<1, 1, {0}>::!Vdd
@@ -297,13 +298,16 @@ footprint: {
     _Reset = bool^0 = foo._Reset (5) 
   )
   Created state:
-  process instance pool:
-  1	foo<1, {0}>
-  2	foo.rr
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	foo.rr.d[0]
-  4	foo.rr.e
-  5	foo._Reset
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	foo<1, {0}>	source_e<1, 1, {0}>
+    process: 2
+    bool: 1,2,3,4,5
+  2	foo.rr	e1of<1>
+    bool: 1,2,4,3
+  bool instance pool: (0 ports, 5 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	foo.rr.d[0]	
+  4	foo.rr.e	
+  5	foo._Reset	
 }

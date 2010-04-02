@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.29 2008/12/04 21:27:08 fang Exp $
+#	$Id: Make.stddef,v 1.30 2010/04/02 22:17:23 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -31,6 +31,7 @@ ECHO = @ECHO@
 FIND = @FIND@
 GREP = @GREP@
 HEAD = @HEAD@
+LN_SF = $(LN_S) -f
 SED = sed
 SORT = @SORT@
 TAIL = @TAIL@

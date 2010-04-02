@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.16 2009/10/02 01:57:48 fang Exp $
+#	$Id: Make.test-cflat,v 1.17 2010/04/02 22:19:26 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -39,6 +39,7 @@ HACKT_CFLAT_CLEAN_IGNORE_PATTERNS = \
 	"*.prsdiff-sort" \
 	"*.lvssprs" \
 	"*.lvsprs" \
+	"*.lvsprs-sort" \
 	"*.lvsprsdiff" \
 	"*.lvsprsdiff-sort" \
 	"*.lvsfail" \
@@ -134,7 +135,7 @@ endif
 
 .expect-prs.prsdiff:
 	@out=`$(ECHO) $@ | $(SED) 's/\.prsdiff$$/.prs/g'` ; \
-	$(RM) $@ ; \
+	$(RM) $@ $@-sort ; \
 	if test -f "$$out" ; then \
 	  $(ECHO_CFLATPRS_DIFF_COMMAND) ; \
 	  $(CFLATPRS_DIFF_COMMAND) > $@ ; \
@@ -223,12 +224,13 @@ endif
 
 .expect-lvsprs.lvsprsdiff:
 	@out=`$(ECHO) $@ | $(SED) 's/\.lvsprsdiff$$/.lvsprs/g'` ; \
-	$(RM) $@ ; \
+	$(RM) $@ $@-sort ; \
 	if test -f "$$out" ; then \
 	  $(ECHO_CFLATLVS_DIFF_COMMAND) ; \
 	  $(DIFF) -bu $< "$$out" > $@ ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
+	    $(MAKE) $@-sort ; \
 	  fi ; \
 	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
 	fi ; \
@@ -367,12 +369,13 @@ endif
 
 .expect-sprs.sprsdiff:
 	@out=`$(ECHO) $@ | $(SED) 's/\.sprsdiff$$/.sprs/g'` ; \
-	$(RM) $@ ; \
+	$(RM) $@ $@-sort ; \
 	if test -f "$$out" ; then \
 	    $(ECHO_SPRS_DIFF_COMMAND) ; \
 	    $(SPRS_DIFF_COMMAND) > $@ ; \
 	    if test -s $@ ; then \
 	      $(ECHO) "$@ is non-empty!" ; \
+	      $(MAKE) $@-sort ; \
 	    fi ; \
 	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
 	fi ; \
@@ -414,7 +417,7 @@ BOGUS_TESTS += .hacktcflattest .hacktcflatlvstest .hacktcflatlvsfailtest \
 BOGUS_TARGETS += .expect-prs
 
 CHECK_SUMMARIES += prsdiffs prsdiffs.sort \
-	lvsprsdiffs lvsfaildiffs \
+	lvsprsdiffs lvsfaildiffs lvsprsdiffs.sort \
 	prsseudiffs prsseudiffs.sort sprsdiffs sprsdiffs.sort
 
 
@@ -435,6 +438,9 @@ sprsdiffs: force
 
 prsdiffs.sort: force
 	-$(CAT) *.prsdiff-sort > $@
+
+lvsprsdiffs.sort: force
+	-$(CAT) *.lvsprsdiff-sort > $@
 
 prsseudiffs.sort: force
 	-$(CAT) *.prsseu-diff-sort > $@

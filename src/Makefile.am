@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.236 2010/03/17 06:32:47 fang Exp $
+#	$Id: Makefile.am,v 1.237 2010/04/02 22:17:48 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -52,11 +52,11 @@ endif
 
 ########################### main dependencies #################################
 
-bin_PROGRAMS = hackt haco haccreate hacalloc \
+bin_PROGRAMS = hackt haco haccreate \
 	hacobjdump hflat hacpp hacprsim hacchpsim hacknet
 
 bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh \
-	scripts/hackt-env hacinstdump hac-cpp
+	scripts/hackt-env hacalloc hacinstdump hac-cpp
 if HAVE_LIBGUILE
 bin_SCRIPTS += hacguile hacchpsimguile
 endif
@@ -64,8 +64,14 @@ DISTCLEANFILES += $(bin_SCRIPTS)
 
 # NOTE: this executes whatever is in PATH, not necessarily the built one
 hacinstdump: hacobjdump
-	{ $(ECHO) "#!/bin/sh -e" ; \
+	{ $(ECHO) "#!$(SHELL) -e" ; \
 	$(ECHO) "exec hacobjdump -a -G -M \"$$""@\"" ; } > $@ && \
+	chmod +x $@
+
+hacalloc: haccreate
+	{ $(ECHO) "#!$(SHELL) -e" ; \
+	$(ECHO) "echo \"Warning: hacalloc is obsolete, use the created object file instead.\"" ; \
+	$(ECHO) "exec ln -s -f $$1 $$2" ; } > $@ && \
 	chmod +x $@
 
 scripts/init_hackt.sh: scripts/init_hackt.sh.in $(top_builddir)/config.status
@@ -159,9 +165,9 @@ haccreate_SOURCES = main/create.cc
 haccreate_CPPFLAGS = -DWITH_MAIN
 haccreate_LDADD = libhacktlib.la
 
-hacalloc_SOURCES = main/alloc.cc
-hacalloc_CPPFLAGS = -DWITH_MAIN
-hacalloc_LDADD = libhacktlib.la
+# hacalloc_SOURCES = main/alloc.cc
+# hacalloc_CPPFLAGS = -DWITH_MAIN
+# hacalloc_LDADD = libhacktlib.la
 
 hflat_SOURCES = main/cflat.cc
 hflat_CPPFLAGS = -DWITH_MAIN
@@ -652,6 +658,7 @@ OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 
 OBJECT_CC_FILES = \
 	Object/common/namespace.cc \
+	Object/common/cflat_args.cc \
 	Object/expr/exceptions.cc \
 	Object/expr/expr_dump_context.cc \
 	Object/expr/expr_visitor.cc \
@@ -744,6 +751,7 @@ OBJECT_CC_NO_H_FILES = \
 
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
+	Object/common/cflat_args.tcc \
 	Object/def/footprint.tcc \
 	Object/expr/const_collection.tcc \
 	Object/expr/convert_expr.tcc \
@@ -778,7 +786,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/persistent_type_hash.h \
 	Object/cflat_context.h \
 	Object/entry_collection.h \
-	Object/common/cflat_args.h \
 	Object/common/scopespace.h \
 	Object/traits/class_traits_fwd.h \
 	Object/traits/classification_tags_fwd.h \

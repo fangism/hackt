@@ -81,14 +81,14 @@ footprint: {
   y = bool^0 = y (4) 
   z = bool^0 = z (7) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x
-  4	y
-  5	a
-  6	b
-  7	z
+  bool instance pool: (0 ports, 7 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	x	
+  4	y	
+  5	a	
+  6	b	
+  7	z	
   resolved prs:
   (x | y) & (a | b) -> z-
   (~x | ~y) & (~a | ~b) -> z+

@@ -2,7 +2,7 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	foo	send_indexed<>
 	channel: 3,1,2
-	int: 1,2
+	int: ;1..2
 	bool: 1,2
 [global channel entries]
 1	(top)	-	1	foo.index[0]	chan(int<1>)

@@ -5,5 +5,5 @@ ERROR: at position 1 of expression-assignment list.
 ERROR: failed to assign pint: rotate_right_N_fb::K[($i-rotate_right_N_fb::rot)%rotate_right_N_fb::N] = rotate_right_N_fb::K[$i];
 Error resolving loop-body during iteration: $i = 0
 Instantiated from: rotate_right_N_fb<32, 4>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

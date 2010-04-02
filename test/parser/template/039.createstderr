@@ -7,5 +7,5 @@ ERROR: type/size mismatch between template formal and actual.
 	expected: pint [0..1]
 ERROR: actual parameter types do not completely match up against formals.
 ERROR: unable to resolve process-type-reference during unroll.
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

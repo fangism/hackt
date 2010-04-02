@@ -52,8 +52,8 @@ footprint: {
   N = pint^0 value: 4
   b = bool^0 = b (3) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	b
+  bool instance pool: (0 ports, 3 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	b	
 }

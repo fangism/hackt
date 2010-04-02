@@ -91,9 +91,9 @@ In namespace "", we have: {
         !GND = bool^0 = fang<>::!GND (1) 
         !Vdd = bool^0 = fang<>::!Vdd (2) 
         Created state:
-        bool instance pool:
-        1	fang<>::!GND
-        2	fang<>::!Vdd
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	fang<>::!GND	
+        2	fang<>::!Vdd	
       }
       }
 
@@ -164,14 +164,20 @@ footprint: {
       )
     }
   Created state:
-  process instance pool:
-  1	this[0][0]
-  2	this[0][1]
-  3	this[0][2]
-  4	this[1][0]
-  5	this[1][1]
-  6	this[1][2]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 6 local, 0 mapped)
+  1	this[0][0]	fang<>
+    bool: 1,2
+  2	this[0][1]	fang<>
+    bool: 1,2
+  3	this[0][2]	fang<>
+    bool: 1,2
+  4	this[1][0]	fang<>
+    bool: 1,2
+  5	this[1][1]	fang<>
+    bool: 1,2
+  6	this[1][2]	fang<>
+    bool: 1,2
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

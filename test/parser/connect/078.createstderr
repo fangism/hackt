@@ -118,18 +118,18 @@ In namespace "", we have: {
             [1] = portaproc<>::j[1] (3) 
           }
         Created state:
-        int instance pool:
-        1	portaproc<>::i
-        2	portaproc<>::j[0]
-        3	portaproc<>::j[1]
-        bool instance pool:
-        1	portaproc<>::!GND
-        2	portaproc<>::!Vdd
-        3	portaproc<>::b
-        4	portaproc<>::c[0]
-        5	portaproc<>::c[1]
-        6	portaproc<>::c[2]
-        7	portaproc<>::c[3]
+        int instance pool: (3 ports, 0 local, 0 mapped)
+        1	portaproc<>::i	
+        2	portaproc<>::j[0]	
+        3	portaproc<>::j[1]	
+        bool instance pool: (7 ports, 0 local, 0 mapped)
+        1	portaproc<>::!GND	
+        2	portaproc<>::!Vdd	
+        3	portaproc<>::b	
+        4	portaproc<>::c[0]	
+        5	portaproc<>::c[1]	
+        6	portaproc<>::c[2]	
+        7	portaproc<>::c[3]	
       }
       }
 
@@ -217,36 +217,42 @@ footprint: {
       [3] = x[3] (7) 
     }
   Created state:
-  process instance pool:
-  1	p
-  2	s
-  3	t
-  int instance pool:
-  1	q
-  2	r[0]
-  3	r[1]
-  4	s.i
-  5	s.j[0]
-  6	s.j[1]
-  7	t.i
-  8	t.j[0]
-  9	t.j[1]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	a
-  4	x[0]
-  5	x[1]
-  6	x[2]
-  7	x[3]
-  8	s.b
-  9	s.c[0]
-  10	s.c[1]
-  11	s.c[2]
-  12	s.c[3]
-  13	t.b
-  14	t.c[0]
-  15	t.c[1]
-  16	t.c[2]
-  17	t.c[3]
+  process instance pool: (0 ports, 3 local, 0 mapped)
+  1	p	portaproc<>
+    int: 1,2,3
+    bool: 1,2,3,4,5,6,7
+  2	s	portaproc<>
+    int: 4,5,6
+    bool: 1,2,8,9,10,11,12
+  3	t	portaproc<>
+    int: 7,8,9
+    bool: 1,2,13,14,15,16,17
+  int instance pool: (0 ports, 9 local, 0 mapped)
+  1	q	
+  2	r[0]	
+  3	r[1]	
+  4	s.i	
+  5	s.j[0]	
+  6	s.j[1]	
+  7	t.i	
+  8	t.j[0]	
+  9	t.j[1]	
+  bool instance pool: (0 ports, 17 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	a	
+  4	x[0]	
+  5	x[1]	
+  6	x[2]	
+  7	x[3]	
+  8	s.b	
+  9	s.c[0]	
+  10	s.c[1]	
+  11	s.c[2]	
+  12	s.c[3]	
+  13	t.b	
+  14	t.c[0]	
+  15	t.c[1]	
+  16	t.c[2]	
+  17	t.c[3]	
 }

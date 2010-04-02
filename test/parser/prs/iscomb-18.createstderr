@@ -129,11 +129,11 @@ In namespace "", we have: {
         a = bool^0 = inv<>::a (3) @[ !autokeeper ] 
         b = bool^0 = inv<>::b (4) 
         Created state:
-        bool instance pool:
-        1	inv<>::!GND
-        2	inv<>::!Vdd
-        3	inv<>::a @[ !autokeeper ]
-        4	inv<>::b
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::a @[ !autokeeper ]	
+        4	inv<>::b	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -208,22 +208,26 @@ In namespace "", we have: {
         y = bool^0 = multi_inv<>::y (5) @[ !autokeeper ] 
         z = bool^0 = multi_inv<>::z (8) @[ !autokeeper ] 
         Created state:
-        process instance pool:
-        1	multi_inv<>::x[0]
-        2	multi_inv<>::x[1]
-        3	multi_inv<>::x[2]
-        4	multi_inv<>::x[3]
-        bool instance pool:
-        1	multi_inv<>::!GND
-        2	multi_inv<>::!Vdd
-        3	multi_inv<>::p @[ !autokeeper ]
-        4	multi_inv<>::q
-        5	multi_inv<>::y @[ !autokeeper ]
-        6	multi_inv<>::x[1].b
-        7	multi_inv<>::x[2].a @[ !autokeeper ]
-        8	multi_inv<>::z @[ !autokeeper ]
-        9	multi_inv<>::x[3].a @[ !autokeeper ]
-        10	multi_inv<>::x[3].b
+        process instance pool: (4 ports, 0 local, 0 mapped)
+        1	multi_inv<>::x[0]	inv<>
+          bool: 1,2,3,4
+        2	multi_inv<>::x[1]	inv<>
+          bool: 1,2,5,6
+        3	multi_inv<>::x[2]	inv<>
+          bool: 1,2,7,8
+        4	multi_inv<>::x[3]	inv<>
+          bool: 1,2,9,10
+        bool instance pool: (10 ports, 0 local, 0 mapped)
+        1	multi_inv<>::!GND	
+        2	multi_inv<>::!Vdd	
+        3	multi_inv<>::p @[ !autokeeper ]	
+        4	multi_inv<>::q	
+        5	multi_inv<>::y @[ !autokeeper ]	
+        6	multi_inv<>::x[1].b	
+        7	multi_inv<>::x[2].a @[ !autokeeper ]	
+        8	multi_inv<>::z @[ !autokeeper ]	
+        9	multi_inv<>::x[3].a @[ !autokeeper ]	
+        10	multi_inv<>::x[3].b	
         bool port aliases:
         1: multi_inv<>::x[0].!GND = multi_inv<>::x[1].!GND = multi_inv<>::x[2].!GND = multi_inv<>::x[3].!GND = multi_inv<>::!GND
         2: multi_inv<>::x[0].!Vdd = multi_inv<>::x[1].!Vdd = multi_inv<>::x[2].!Vdd = multi_inv<>::x[3].!Vdd = multi_inv<>::!Vdd
@@ -275,21 +279,27 @@ footprint: {
     z = bool^0 = foo.z (8) @[ !autokeeper ] 
   )
   Created state:
-  process instance pool:
-  1	foo
-  2	foo.x[0]
-  3	foo.x[1]
-  4	foo.x[2]
-  5	foo.x[3]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	foo.x[0].a @[ !autokeeper ]
-  4	foo.x[0].b
-  5	foo.y @[ !autokeeper ]
-  6	foo.x[1].b
-  7	foo.x[2].a @[ !autokeeper ]
-  8	foo.z @[ !autokeeper ]
-  9	foo.x[3].a @[ !autokeeper ]
-  10	foo.x[3].b
+  process instance pool: (0 ports, 5 local, 0 mapped)
+  1	foo	multi_inv<>
+    process: 2,3,4,5
+    bool: 1,2,3,4,5,6,7,8,9,10
+  2	foo.x[0]	inv<>
+    bool: 1,2,3,4
+  3	foo.x[1]	inv<>
+    bool: 1,2,5,6
+  4	foo.x[2]	inv<>
+    bool: 1,2,7,8
+  5	foo.x[3]	inv<>
+    bool: 1,2,9,10
+  bool instance pool: (0 ports, 10 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	foo.x[0].a @[ !autokeeper ]	
+  4	foo.x[0].b	
+  5	foo.y @[ !autokeeper ]	
+  6	foo.x[1].b	
+  7	foo.x[2].a @[ !autokeeper ]	
+  8	foo.z @[ !autokeeper ]	
+  9	foo.x[3].a @[ !autokeeper ]	
+  10	foo.x[3].b	
 }

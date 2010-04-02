@@ -94,12 +94,12 @@ In namespace "", we have: {
         B = channel chan(bool<>)^0 = boring<>::B (1) 
         x = bool^0 = boring<>::x (3) 
         Created state:
-        channel instance pool:
-        1	boring<>::B
-        bool instance pool:
-        1	boring<>::!GND
-        2	boring<>::!Vdd
-        3	boring<>::x
+        channel instance pool: (1 ports, 0 local, 0 mapped)
+        1	boring<>::B	
+        bool instance pool: (2 ports, 1 local, 0 mapped)
+        1	boring<>::!GND	
+        2	boring<>::!Vdd	
+        3	boring<>::x	
         resolved concurrent actions:
           *[
             B?(x)
@@ -133,13 +133,18 @@ footprint: {
     B = channel chan(bool<>)^0 = Q (1) 
   )
   Created state:
-  process instance pool:
-  1	lecture
-  channel instance pool:
-  1	Q
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	lecture	boring<>
+    channel: 1
+    bool: 1,2
+  channel instance pool: (0 ports, 1 local, 0 mapped)
+  1	Q	
+  bool instance pool: (0 ports, 2 local, 1 mapped)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 1)
   resolved concurrent actions:
     *[
       Q!(false)

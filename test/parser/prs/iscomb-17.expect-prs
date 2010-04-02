@@ -1,5 +1,5 @@
 @ "foo.x.a" iscomb
 = "!GND" "foo.!GND"
-= "!Vdd" "foo.!Vdd"
 = "!GND" "foo.x.!GND"
+= "!Vdd" "foo.!Vdd"
 = "!Vdd" "foo.x.!Vdd"

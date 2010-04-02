@@ -86,12 +86,12 @@ In namespace "", we have: {
         y = bool^0 = bogus<>::y (4) 
         z = bool^0 = bogus<>::z (5) 
         Created state:
-        bool instance pool:
-        1	bogus<>::!GND
-        2	bogus<>::!Vdd
-        3	bogus<>::x
-        4	bogus<>::y
-        5	bogus<>::z
+        bool instance pool: (5 ports, 0 local, 0 mapped)
+        1	bogus<>::!GND	
+        2	bogus<>::!Vdd	
+        3	bogus<>::x	
+        4	bogus<>::y	
+        5	bogus<>::z	
         resolved prs:
         x -> y-
         ~y -> z+
@@ -119,12 +119,13 @@ footprint: {
     z = bool^0 = Z.z (5) 
   )
   Created state:
-  process instance pool:
-  1	Z
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	Z.x
-  4	Z.y
-  5	Z.z
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	Z	bogus<>
+    bool: 1,2,3,4,5
+  bool instance pool: (0 ports, 5 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	Z.x	
+  4	Z.y	
+  5	Z.z	
 }

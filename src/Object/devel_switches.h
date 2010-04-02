@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.57 2009/11/04 00:16:00 fang Exp $
+	$Id: devel_switches.h,v 1.58 2010/04/02 22:17:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -99,6 +99,34 @@
 	Status: complete, tested, perm'd
 #define	FOOTPRINT_OWNER_DEF			1
  */
+
+/**
+	Define to 1 for final scalability rework, where each footprint
+	keeps a hierarchically mapped state-manager for all
+	subinstances.
+	Rationale: to eliminate expensive global allocation
+	Goal: 1
+	Phase 1: sifting of locally allocated indices public:private [done]
+	Phase 2: replace all use of global state_manager [done]
+	Phase 3: emulating global allocation [in-progress]
+	Phase 4: various back-ends
+ */
+#define	MEMORY_MAPPED_GLOBAL_ALLOCATION		1
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#define	GLOBAL_ENTRY		state_instance
+#else
+#define	GLOBAL_ENTRY		global_entry
+#endif
+
+/**
+	Define to 1 to allow the new hierarchical allocation scheme
+	to handle passing processes through ports, which adds some
+	complexity to the local pool mapping and partitioning.  
+	Before MEMORY_MAPPED_GLOBAL_ALLOCATION, this was always allowed
+	and handled correctly by the global allocation process.
+	Goal: 1
+ */
+#define	ALLOW_PROCESS_PORTS		(1 && MEMORY_MAPPED_GLOBAL_ALLOCATION)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

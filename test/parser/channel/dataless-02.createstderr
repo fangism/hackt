@@ -56,14 +56,14 @@ footprint: {
       [1][2] = dataless[1][2] (6) 
     }
   Created state:
-  channel instance pool:
-  1	dataless[0][0]
-  2	dataless[0][1]
-  3	dataless[0][2]
-  4	dataless[1][0]
-  5	dataless[1][1]
-  6	dataless[1][2]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  channel instance pool: (0 ports, 6 local, 0 mapped)
+  1	dataless[0][0]	
+  2	dataless[0][1]	
+  3	dataless[0][2]	
+  4	dataless[1][0]	
+  5	dataless[1][1]	
+  6	dataless[1][2]	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

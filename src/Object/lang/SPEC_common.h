@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_common.h"
 	Tool independent base-classes for macro definitions.  
-	$Id: SPEC_common.h,v 1.5 2009/05/27 19:36:13 fang Exp $
+	$Id: SPEC_common.h,v 1.6 2010/04/02 22:18:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_COMMON_H__
@@ -13,6 +13,7 @@
 
 namespace HAC {
 namespace entity {
+class cflat_visitor;
 class cflat_context_visitor;
 
 namespace SPEC {

@@ -1,0 +1,15 @@
+# "type-test-d-01.prsimrc"
+# @haco@ type-test-d.haco-c
+
+watchall
+set foo.K.r.m.ix.p.y.f 0
+set foo.K.r.m.ix.p.y.t 1
+set foo.L.r.m.ix.p.y.f 1
+set foo.L.r.m.ix.p.y.t 0
+set foo.M.r.m.ix.p.y.f 0
+set foo.M.r.m.ix.p.y.t 1
+cycle
+getall foo.K
+getall foo.L
+getall foo.M
+

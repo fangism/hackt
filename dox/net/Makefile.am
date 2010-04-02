@@ -1,5 +1,5 @@
 # "dox/net/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2009/10/02 01:56:08 fang Exp $
+#	$Id: Makefile.am,v 1.4 2010/04/02 22:17:28 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -15,7 +15,7 @@ INFOS = $(TEXINFOS:.texi=.info)
 
 AM_MAKEINFOFLAGS = -I$(srcdir)/../common -I../common
 hacmacros.texi: $(srcdir)/../common/hacmacros.texi
-	$(LN_S) $< $@
+	$(LN_SF) $< $@
 
 CLEANFILES += hacmacros.texi
 
@@ -26,6 +26,7 @@ HTML_HOOKS += hacknet.html
 hacknet_INCLUDES = \
 	hacmacros.texi \
 	intro.texi \
+	tutorial.texi \
 	lang.texi \
 	usage.texi \
 	algo.texi \

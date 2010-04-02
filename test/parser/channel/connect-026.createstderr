@@ -1,5 +1,5 @@
 Error: cannot alias two non-sharing consumers of type channel.
 	got: b.a
 	and: a.a
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

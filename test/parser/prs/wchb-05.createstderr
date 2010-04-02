@@ -99,12 +99,12 @@ In namespace "", we have: {
           }
         e = bool^0 = e1of2<>::e (3) 
         Created state:
-        bool instance pool:
-        1	e1of2<>::!GND
-        2	e1of2<>::!Vdd
-        3	e1of2<>::e
-        4	e1of2<>::d[0]
-        5	e1of2<>::d[1]
+        bool instance pool: (5 ports, 0 local, 0 mapped)
+        1	e1of2<>::!GND	
+        2	e1of2<>::!Vdd	
+        3	e1of2<>::e	
+        4	e1of2<>::d[0]	
+        5	e1of2<>::d[1]	
       }
       }
 
@@ -157,20 +157,22 @@ In namespace "", we have: {
         _r = bool^0 = wchb_e1of2<>::_r (9) 
         l1 = bool^0 = wchb_e1of2<>::l1 (10) 
         Created state:
-        process instance pool:
-        1	wchb_e1of2<>::L
-        2	wchb_e1of2<>::R
-        bool instance pool:
-        1	wchb_e1of2<>::!GND
-        2	wchb_e1of2<>::!Vdd
-        3	wchb_e1of2<>::L.d[0]
-        4	wchb_e1of2<>::L.d[1]
-        5	wchb_e1of2<>::L.e
-        6	wchb_e1of2<>::R.d[0]
-        7	wchb_e1of2<>::R.d[1]
-        8	wchb_e1of2<>::R.e
-        9	wchb_e1of2<>::_r
-        10	wchb_e1of2<>::l1
+        process instance pool: (2 ports, 0 local, 0 mapped)
+        1	wchb_e1of2<>::L	e1of2<>
+          bool: 1,2,5,3,4
+        2	wchb_e1of2<>::R	e1of2<>
+          bool: 1,2,8,6,7
+        bool instance pool: (8 ports, 2 local, 0 mapped)
+        1	wchb_e1of2<>::!GND	
+        2	wchb_e1of2<>::!Vdd	
+        3	wchb_e1of2<>::L.d[0]	
+        4	wchb_e1of2<>::L.d[1]	
+        5	wchb_e1of2<>::L.e	
+        6	wchb_e1of2<>::R.d[0]	
+        7	wchb_e1of2<>::R.d[1]	
+        8	wchb_e1of2<>::R.e	
+        9	wchb_e1of2<>::_r	
+        10	wchb_e1of2<>::l1	
         bool port aliases:
         1: wchb_e1of2<>::L.!GND = wchb_e1of2<>::R.!GND = wchb_e1of2<>::!GND
         2: wchb_e1of2<>::L.!Vdd = wchb_e1of2<>::R.!Vdd = wchb_e1of2<>::!Vdd
@@ -233,17 +235,24 @@ footprint: {
     )
   )
   Created state:
-  process instance pool:
-  1	L
-  2	R
-  3	b
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	L.d[0]
-  4	L.d[1]
-  5	L.e
-  6	R.d[0]
-  7	R.d[1]
-  8	R.e
+  process instance pool: (0 ports, 3 local, 0 mapped)
+  1	L	e1of2<>
+    bool: 1,2,5,3,4
+  2	R	e1of2<>
+    bool: 1,2,8,6,7
+  3	b	wchb_e1of2<>
+    process: 1,2
+    bool: 1,2,3,4,5,6,7,8
+  bool instance pool: (0 ports, 8 local, 2 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	L.d[0]	
+  4	L.d[1]	
+  5	L.e	
+  6	R.d[0]	
+  7	R.d[1]	
+  8	R.e	
+  private sub-bool index map:
+    (3 -> 0)
+    (4 -> 2)
 }

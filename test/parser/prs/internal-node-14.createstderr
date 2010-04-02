@@ -139,28 +139,28 @@ In namespace "", we have: {
           !GND = bool^0 = bogus<2>::!GND (1) 
           !Vdd = bool^0 = bogus<2>::!Vdd (2) 
           N = pint^0 value: 2
-          en = bool^0 = bogus<2>::en (4) 
+          en = bool^0 = bogus<2>::en (8) 
           w = bool^0 = bogus<2>::w (3) 
           x = bool^1
             {
-              [0] = bogus<2>::x[0] (5) 
-              [1] = bogus<2>::x[1] (6) 
+              [0] = bogus<2>::x[0] (4) 
+              [1] = bogus<2>::x[1] (5) 
             }
           y = bool^1
             {
-              [0] = bogus<2>::y[0] (7) 
-              [1] = bogus<2>::y[1] (8) 
+              [0] = bogus<2>::y[0] (6) 
+              [1] = bogus<2>::y[1] (7) 
             }
           Created state:
-          bool instance pool:
-          1	bogus<2>::!GND
-          2	bogus<2>::!Vdd
-          3	bogus<2>::w
-          4	bogus<2>::en
-          5	bogus<2>::x[0]
-          6	bogus<2>::x[1]
-          7	bogus<2>::y[0]
-          8	bogus<2>::y[1]
+          bool instance pool: (7 ports, 1 local, 0 mapped)
+          1	bogus<2>::!GND	
+          2	bogus<2>::!Vdd	
+          3	bogus<2>::w	
+          4	bogus<2>::x[0]	
+          5	bogus<2>::x[1]	
+          6	bogus<2>::y[0]	
+          7	bogus<2>::y[1]	
+          8	bogus<2>::en	
           resolved prs:
           ~en & ~x[0] & ~y[0] -> w+
           ~en & ~x[1] & ~y[1] -> w+
@@ -199,14 +199,18 @@ footprint: {
     w = bool^0 = A.w (7) 
   )
   Created state:
-  process instance pool:
-  1	A
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	A.x[0]
-  4	A.x[1]
-  5	A.y[0]
-  6	A.y[1]
-  7	A.w
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	A	bogus<2>
+    bool: 1,2,7,3,4,5,6
+  bool instance pool: (0 ports, 7 local, 1 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	A.x[0]	
+  4	A.x[1]	
+  5	A.y[0]	
+  6	A.y[1]	
+  7	A.w	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 1)
 }

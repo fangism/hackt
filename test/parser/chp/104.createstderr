@@ -181,20 +181,20 @@ In namespace "", we have: {
         b = int<32>^0 = foo<>::b (2) 
         z = int<32>^0 = foo<>::z (3) 
         Created state:
-        channel instance pool:
-        1	foo<>::A
-        2	foo<>::B
-        3	foo<>::C
-        4	foo<>::D
-        5	foo<>::E
-        6	foo<>::F
-        int instance pool:
-        1	foo<>::a
-        2	foo<>::b
-        3	foo<>::z
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
+        channel instance pool: (6 ports, 0 local, 0 mapped)
+        1	foo<>::A	
+        2	foo<>::B	
+        3	foo<>::C	
+        4	foo<>::D	
+        5	foo<>::E	
+        6	foo<>::F	
+        int instance pool: (0 ports, 3 local, 0 mapped)
+        1	foo<>::a	
+        2	foo<>::b	
+        3	foo<>::z	
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
         resolved concurrent actions:
           *[
             sequential: {
@@ -247,16 +247,21 @@ footprint: {
     F = channel chan!(int<32>)^0 = bar.F (6) 
   )
   Created state:
-  process instance pool:
-  1	bar
-  channel instance pool:
-  1	bar.A
-  2	bar.B
-  3	bar.C
-  4	bar.D
-  5	bar.E
-  6	bar.F
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	bar	foo<>
+    channel: 1,2,3,4,5,6
+    bool: 1,2
+  channel instance pool: (0 ports, 6 local, 0 mapped)
+  1	bar.A	
+  2	bar.B	
+  3	bar.C	
+  4	bar.D	
+  5	bar.E	
+  6	bar.F	
+  private sub-int index map:
+    (1 -> 0)
+    (2 -> 3)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

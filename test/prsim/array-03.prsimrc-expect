@@ -1,0 +1,5 @@
+FATAL: reference to process foo<> with out-of-bounds indices [99]:[99]
+ERROR: unrolling aliases.
+Error resolving collection of aliases.
+Error resolving instance reference: X[0].w[99]
+... at line 7

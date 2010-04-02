@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.15 2009/09/14 21:16:50 fang Exp $
+	$Id: definition_base.h,v 1.16 2010/04/02 22:18:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -287,15 +287,6 @@ virtual	DEFINITION_ADD_PORT_FORMAL_PROTO;
 	void								\
 	register_complete_type(						\
 		const count_ptr<const const_param_expr_list>&) const
-
-/**
-	Need footprint argument to pass top-level footprint.  
- */
-#define	UNROLL_COMPLETE_TYPE_PROTO					\
-	good_bool							\
-	unroll_complete_type(						\
-		const count_ptr<const const_param_expr_list>&, 		\
-			const footprint&) const
 
 /**
 	Need footprint argument to pass top-level footprint.  

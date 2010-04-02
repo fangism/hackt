@@ -40,7 +40,7 @@ footprint: {
   thirteen = preal^0 value: 13.13
   uninit = preal^0 value: ?
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

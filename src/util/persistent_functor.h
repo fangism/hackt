@@ -1,6 +1,6 @@
 /**
 	\file "util/persistent_functor.h"
-	$Id: persistent_functor.h,v 1.6 2009/09/14 21:17:17 fang Exp $
+	$Id: persistent_functor.h,v 1.7 2010/04/02 22:19:22 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_H__
@@ -14,22 +14,21 @@ namespace util {
 class persistent_object_manager;
 
 //=============================================================================
-struct persistent_visitor_base {
-	persistent_object_manager&		pom;
-
+/**
+	When persistent object manager is something different.
+ */
+template <class T>
+struct foreign_persistent_visitor_base {
+	T&					pom;
 	explicit
-	persistent_visitor_base(persistent_object_manager& m) :
-		pom(m) { }
-};
+	foreign_persistent_visitor_base(T& t) : pom(t) { }
+};	// end struct foreign_persistent_visitor_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct persistent_const_visitor_base {
-	const persistent_object_manager&	pom;
-
-	explicit
-	persistent_const_visitor_base(const persistent_object_manager& m) :
-		pom(m) { }
-};
+typedef	foreign_persistent_visitor_base<persistent_object_manager>
+					persistent_visitor_base;
+typedef	foreign_persistent_visitor_base<const persistent_object_manager>
+					persistent_const_visitor_base;
 
 //=============================================================================
 /**
@@ -37,18 +36,22 @@ struct persistent_const_visitor_base {
 		collect_transient_info_base()
 	TODO: default to member-function, allow overrideable.  
  */
-struct persistent_collector_ref : public persistent_visitor_base {
+template <class P>
+struct foreign_persistent_collector_ref :
+		public foreign_persistent_visitor_base<P> {
 	explicit
-	persistent_collector_ref(persistent_object_manager& m)
-		: persistent_visitor_base(m) { }
+	foreign_persistent_collector_ref(P& m)
+		: foreign_persistent_visitor_base<P>(m) { }
 
 	template <class T>
 	void
 	operator () (const T& t) const {
-		t.collect_transient_info_base(pom);
+		t.collect_transient_info_base(this->pom);
 	}
-};	// end struct persistent_collector_ref
+};	// end struct foreign_persistent_collector_ref
 
+typedef	foreign_persistent_collector_ref<persistent_object_manager>
+					persistent_collector_ref;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -56,24 +59,29 @@ struct persistent_collector_ref : public persistent_visitor_base {
 	containers, such as 2D containers.  
 	This works for lists and vectors and sets, but not maps.
  */
-struct persistent_sequence_collector_ref : public persistent_visitor_base {
+template <class P>
+struct foreign_persistent_sequence_collector_ref :
+		public foreign_persistent_visitor_base<P> {
 	explicit
-	persistent_sequence_collector_ref(persistent_object_manager& m)
-		: persistent_visitor_base(m) { }
+	foreign_persistent_sequence_collector_ref(P& m)
+		: foreign_persistent_visitor_base<P>(m) { }
 
 	template <class T>
 	void
 	operator () (const T& t) const {
 		std::for_each(t.begin(), t.end(), 
-			persistent_collector_ref(pom)
+			persistent_collector_ref(this->pom)
 		);
 	}
 
-};	// end struct persistent_sequence_collector_ref
+};	// end struct foreign_persistent_sequence_collector_ref
+
+typedef	foreign_persistent_sequence_collector_ref<persistent_object_manager>
+					persistent_sequence_collector_ref;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Can override 
+	Can override the member function used to collect.
  */
 template <class T>
 struct persistent_collector : public persistent_visitor_base {
@@ -98,17 +106,22 @@ struct persistent_collector : public persistent_visitor_base {
 		and is derived from util::persistent.  
 	TODO: default to member-function, allow overrideable.  
  */
-struct persistent_collector_ptr : public persistent_visitor_base {
+template <class P>
+struct foreign_persistent_collector_ptr :
+		public foreign_persistent_visitor_base<P> {
 	explicit
-	persistent_collector_ptr(persistent_object_manager& m)
-		: persistent_visitor_base(m) { }
+	foreign_persistent_collector_ptr(P& m)
+		: foreign_persistent_visitor_base<P>(m) { }
 
 	template <class T>
 	void
 	operator () (const T& t) const {
-		if (t) t->collect_transient_info(pom);
+		if (t) t->collect_transient_info(this->pom);
 	}
 };	// end struct persistent_collector_ptr
+
+typedef	foreign_persistent_collector_ptr<persistent_object_manager>
+					persistent_collector_ptr;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -116,29 +129,35 @@ struct persistent_collector_ptr : public persistent_visitor_base {
 	containers, such as 2D containers.  
 	This works for lists and vectors and sets, but not maps.
  */
-struct persistent_sequence_collector_ptr : public persistent_visitor_base {
+template <class P>
+struct foreign_persistent_sequence_collector_ptr :
+		public foreign_persistent_visitor_base<P> {
 	explicit
-	persistent_sequence_collector_ptr(persistent_object_manager& m)
-		: persistent_visitor_base(m) { }
+	foreign_persistent_sequence_collector_ptr(P& m)
+		: foreign_persistent_visitor_base<P>(m) { }
 
 	template <class T>
 	void
 	operator () (const T& t) const {
 		std::for_each(t.begin(), t.end(), 
-			persistent_collector_ptr(pom)
+			foreign_persistent_collector_ptr<P>(this->pom)
 		);
 	}
 
 };	// end struct persistent_sequence_collector_ptr
 
 //=============================================================================
-struct persistent_writer_base : public persistent_const_visitor_base {
+template <class P>
+struct foreign_persistent_writer_base :
+		public foreign_persistent_visitor_base<const P> {
 	std::ostream&			os;
 
-	persistent_writer_base(const persistent_object_manager& m, 
-		std::ostream& o)
-		: persistent_const_visitor_base(m), os(o) { }
+	foreign_persistent_writer_base(const P& m, std::ostream& o)
+		: foreign_persistent_visitor_base<const P>(m), os(o) { }
 };
+
+typedef	foreign_persistent_writer_base<persistent_object_manager>
+					persistent_writer_base;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -161,11 +180,12 @@ struct persistent_writer : public persistent_writer_base {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct persistent_writer_ref : public persistent_writer_base {
+template <class P>
+struct foreign_persistent_writer_ref :
+		public foreign_persistent_writer_base<P> {
 
-	persistent_writer_ref(const persistent_object_manager& m, 
-		std::ostream& o)
-		: persistent_writer_base(m, o) { }
+	foreign_persistent_writer_ref(const P& m, std::ostream& o)
+		: foreign_persistent_writer_base<P>(m, o) { }
 
 	template <class T>
 	void
@@ -173,6 +193,9 @@ struct persistent_writer_ref : public persistent_writer_base {
 		t.write_object(this->pom, this->os);
 	}
 };
+
+typedef	foreign_persistent_writer_ref<persistent_object_manager>
+					persistent_writer_ref;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -196,13 +219,17 @@ struct persistent_writer_ptr : public persistent_const_visitor_base {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct persistent_loader_base : public persistent_const_visitor_base {
+template <class P>
+struct foreign_persistent_loader_base :
+		public foreign_persistent_visitor_base<const P> {
 	std::istream&			is;
 
-	persistent_loader_base(const persistent_object_manager& m, 
-		std::istream& i)
-		: persistent_const_visitor_base(m), is(i) { }
+	foreign_persistent_loader_base(const P& m, std::istream& i)
+		: foreign_persistent_visitor_base<const P>(m), is(i) { }
 };
+
+typedef	foreign_persistent_loader_base<persistent_object_manager>
+					persistent_loader_base;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -226,11 +253,12 @@ struct persistent_loader : public persistent_loader_base {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct persistent_loader_ref : public persistent_loader_base {
+template <class P>
+struct foreign_persistent_loader_ref :
+		public foreign_persistent_loader_base<const P> {
 
-	persistent_loader_ref(const persistent_object_manager& m, 
-		std::istream& i)
-		: persistent_loader_base(m, i) { }
+	foreign_persistent_loader_ref(const P& m, std::istream& i)
+		: foreign_persistent_loader_base<const P>(m, i) { }
 
 	template <class T>
 	void
@@ -238,6 +266,9 @@ struct persistent_loader_ref : public persistent_loader_base {
 		t.load_object(this->pom, this->is);
 	}
 };
+
+typedef	foreign_persistent_loader_ref<persistent_object_manager>
+					persistent_loader_ref;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -266,22 +297,20 @@ struct persistent_loader_ptr : public persistent_const_visitor_base {
 		of persistent_object_manager.  
 	Like util/IO_utils's write_sequence, except that this also
 	passes along a persistent_object_manager.
+	\param P persistent_object_manager type
 	\param T the sequence type.  Must support iteration.  
  */
-template <class T>
+template <class P, class T>
 void
-write_persistent_sequence(const persistent_object_manager&, 
-		std::ostream&, const T&);
+write_persistent_sequence(const P&, std::ostream&, const T&);
 
-template <class T>
+template <class P, class T>
 void
-write_persistent_array(const persistent_object_manager&, 
-		std::ostream&, const T&);
+write_persistent_array(const P&, std::ostream&, const T&);
 
-template <class T>
+template <class P, class T>
 void
-read_persistent_sequence_in_place(const persistent_object_manager&, 
-		std::istream&, T&);
+read_persistent_sequence_in_place(const P&, std::istream&, T&);
 
 #if 0
 template <class S>
@@ -290,21 +319,18 @@ read_persistent_sequence_prealloc(const persistent_object_manager&,
 		std::istream&, S&);
 #endif
 
-template <class S>
+template <class P, class S>
 void
-read_persistent_sequence_resize(const persistent_object_manager&, 
-		std::istream&, S&);
+read_persistent_sequence_resize(const P&, std::istream&, S&);
 
-template <class S>
+template <class P, class S>
 void
-read_persistent_sequence_back_insert(const persistent_object_manager&, 
-		std::istream&, S&);
+read_persistent_sequence_back_insert(const P&, std::istream&, S&);
 
 
-template <class S>
+template <class P, class S>
 void
-read_persistent_set_insert(const persistent_object_manager&, 
-		std::istream&, S&);
+read_persistent_set_insert(const P&, std::istream&, S&);
 
 //=============================================================================
 }	// end namespace util

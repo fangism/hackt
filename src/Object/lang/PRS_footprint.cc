@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.28 2009/10/29 18:05:23 fang Exp $
+	$Id: PRS_footprint.cc,v 1.29 2010/04/02 22:18:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,6 +16,9 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_entry_context.h"
+#endif
 #include "Object/common/dump_flags.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
@@ -24,6 +27,8 @@
 #include "Object/lang/directive_base.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/global_channel_entry.h"
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_pool.h"
 #include "main/cflat_options.h"
 #include "util/indent.h"
 #include "util/persistent_object_manager.tcc"	// includes "IO_utils.tcc"
@@ -31,6 +36,7 @@
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "common/ICE.h"
+#include "common/TODO.h"
 
 #if STACKTRACE_DUMPS
 #define	STACKTRACE_DUMP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -133,7 +139,7 @@ footprint::~footprint() { }
 /**
 	\param e the expression node to print.
 	\param o the output stream.
-	\param np the scope's node pool.
+	\param np the scope's node pool, now 0-indexed.
 	\param ep the scope's expression pool.
 	\param ps the print_stamp corresponding to callee, 
 		should be compared with e.type.  
@@ -152,7 +158,18 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 		case PRS_LITERAL_TYPE_ENUM:
 			STACKTRACE_DUMP_PRINT("Literal ");
 			INVARIANT(one == 1);
-			np[e.only()].get_back_ref()
+			const size_t only = e.only();
+			INVARIANT(only);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			INVARIANT(only <= np.local_entries());
+#else
+			INVARIANT(only <= np.size());
+#endif
+			np[only
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+				-1
+#endif
+				].get_back_ref()
 				->dump_hierarchical_name(o,
 					dump_flags::no_definition_owner);
 			if (e.params.size() || e.attributes.size()
@@ -233,7 +250,12 @@ footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np,
 #endif
 	dump_expr(ep[r.expr_index],
 		o, np, ep, PRS_LITERAL_TYPE_ENUM) << " -> ";
-	np[r.output_index].get_back_ref()
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const size_t ni = r.output_index -1;	// 0-indexed node_pool
+#else
+	const size_t ni = r.output_index;	// 1-indexed node_pool
+#endif
+	np[ni].get_back_ref()
 		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
 	o << (r.dir ? '+' : '-');
 if (r.attributes.size()) {

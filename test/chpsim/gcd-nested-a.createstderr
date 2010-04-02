@@ -627,13 +627,13 @@ In namespace "", we have: {
           W = pint^0 value: 32
           b = int<32>^0 = int_sink<32>::b (1) 
           Created state:
-          channel instance pool:
-          1	int_sink<32>::B
-          int instance pool:
-          1	int_sink<32>::b
-          bool instance pool:
-          1	int_sink<32>::!GND
-          2	int_sink<32>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	int_sink<32>::B	
+          int instance pool: (0 ports, 1 local, 0 mapped)
+          1	int_sink<32>::b	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	int_sink<32>::!GND	
+          2	int_sink<32>::!Vdd	
           resolved concurrent actions:
             *[
               B?(b)
@@ -724,11 +724,11 @@ In namespace "", we have: {
           S = channel chan!(int<32>)^0 = int_source<32, 3, {15,24,30}>::S (1) 
           W = pint^0 value: 32
           Created state:
-          channel instance pool:
-          1	int_source<32, 3, {15,24,30}>::S
-          bool instance pool:
-          1	int_source<32, 3, {15,24,30}>::!GND
-          2	int_source<32, 3, {15,24,30}>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	int_source<32, 3, {15,24,30}>::S	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	int_source<32, 3, {15,24,30}>::!GND	
+          2	int_source<32, 3, {15,24,30}>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -757,11 +757,11 @@ In namespace "", we have: {
           S = channel chan!(int<32>)^0 = int_source<32, 4, {12,15,17,30}>::S (1) 
           W = pint^0 value: 32
           Created state:
-          channel instance pool:
-          1	int_source<32, 4, {12,15,17,30}>::S
-          bool instance pool:
-          1	int_source<32, 4, {12,15,17,30}>::!GND
-          2	int_source<32, 4, {12,15,17,30}>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	int_source<32, 4, {12,15,17,30}>::S	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	int_source<32, 4, {12,15,17,30}>::!GND	
+          2	int_source<32, 4, {12,15,17,30}>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -793,11 +793,11 @@ In namespace "", we have: {
           S = channel chan!(int<32>)^0 = int_source<32, 5, {9,13,22,27,34}>::S (1) 
           W = pint^0 value: 32
           Created state:
-          channel instance pool:
-          1	int_source<32, 5, {9,13,22,27,34}>::S
-          bool instance pool:
-          1	int_source<32, 5, {9,13,22,27,34}>::!GND
-          2	int_source<32, 5, {9,13,22,27,34}>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	int_source<32, 5, {9,13,22,27,34}>::S	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	int_source<32, 5, {9,13,22,27,34}>::!GND	
+          2	int_source<32, 5, {9,13,22,27,34}>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -832,11 +832,11 @@ In namespace "", we have: {
           S = channel chan!(int<32>)^0 = int_source<32, 6, {16,18,20,32,36,28}>::S (1) 
           W = pint^0 value: 32
           Created state:
-          channel instance pool:
-          1	int_source<32, 6, {16,18,20,32,36,28}>::S
-          bool instance pool:
-          1	int_source<32, 6, {16,18,20,32,36,28}>::!GND
-          2	int_source<32, 6, {16,18,20,32,36,28}>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	int_source<32, 6, {16,18,20,32,36,28}>::S	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	int_source<32, 6, {16,18,20,32,36,28}>::!GND	
+          2	int_source<32, 6, {16,18,20,32,36,28}>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -1032,20 +1032,20 @@ In namespace "", we have: {
         c = int<32>^0 = my_gcd<>::c (3) 
         d = int<32>^0 = my_gcd<>::d (4) 
         Created state:
-        channel instance pool:
-        1	my_gcd<>::A
-        2	my_gcd<>::B
-        3	my_gcd<>::C
-        4	my_gcd<>::D
-        5	my_gcd<>::G
-        int instance pool:
-        1	my_gcd<>::a
-        2	my_gcd<>::b
-        3	my_gcd<>::c
-        4	my_gcd<>::d
-        bool instance pool:
-        1	my_gcd<>::!GND
-        2	my_gcd<>::!Vdd
+        channel instance pool: (5 ports, 0 local, 0 mapped)
+        1	my_gcd<>::A	
+        2	my_gcd<>::B	
+        3	my_gcd<>::C	
+        4	my_gcd<>::D	
+        5	my_gcd<>::G	
+        int instance pool: (0 ports, 4 local, 0 mapped)
+        1	my_gcd<>::a	
+        2	my_gcd<>::b	
+        3	my_gcd<>::c	
+        4	my_gcd<>::d	
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	my_gcd<>::!GND	
+        2	my_gcd<>::!Vdd	
         resolved concurrent actions:
           *[
             sequential: {
@@ -1221,20 +1221,36 @@ footprint: {
     G = channel chan!(int<32>)^0 = G (5) 
   )
   Created state:
-  process instance pool:
-  1	X
-  2	AS<4, {12,15,17,30}>
-  3	BS<5, {9,13,22,27,34}>
-  4	CS<3, {15,24,30}>
-  5	DS<6, {16,18,20,32,36,28}>
-  6	GS
-  channel instance pool:
-  1	A
-  2	B
-  3	C
-  4	D
-  5	G
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 6 local, 0 mapped)
+  1	X	my_gcd<>
+    channel: 1,2,3,4,5
+    bool: 1,2
+  2	AS<4, {12,15,17,30}>	int_source<32, 4, {12,15,17,30}>
+    channel: 1
+    bool: 1,2
+  3	BS<5, {9,13,22,27,34}>	int_source<32, 5, {9,13,22,27,34}>
+    channel: 2
+    bool: 1,2
+  4	CS<3, {15,24,30}>	int_source<32, 3, {15,24,30}>
+    channel: 3
+    bool: 1,2
+  5	DS<6, {16,18,20,32,36,28}>	int_source<32, 6, {16,18,20,32,36,28}>
+    channel: 4
+    bool: 1,2
+  6	GS	int_sink<32>
+    channel: 5
+    bool: 1,2
+  channel instance pool: (0 ports, 5 local, 0 mapped)
+  1	A	
+  2	B	
+  3	C	
+  4	D	
+  5	G	
+  private sub-int index map:
+    (1 -> 0)
+    (6 -> 4)
+    (7 -> 5)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

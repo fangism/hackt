@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.7 2007/09/11 06:53:13 fang Exp $
+	$Id: StateConstructor.cc,v 1.8 2010/04/02 22:19:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -19,6 +19,7 @@
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 // #include "Object/traits/chan_traits.h"
 #include "common/ICE.h"
+#include "common/TODO.h"
 // #include "util/visitor_functor.h"
 #include "util/stacktrace.h"
 // #include "util/STL/valarray_iterator.h"
@@ -318,10 +319,12 @@ StateConstructor::visit(const do_while_loop& dw) {
 }	// end visit(const do_while_loop&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 const state_manager&
 StateConstructor::get_state_manager(void) const {
 	return state.get_module().get_state_manager();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -330,12 +333,17 @@ StateConstructor::get_state_manager(void) const {
  */
 const entity::footprint&
 StateConstructor::get_process_footprint(void) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// 1-indexed process index, 0 for top-level
+	return *state.get_footprint_frame(current_process_index)._footprint;
+#else
 	const module& m(state.get_module());
 	return current_process_index ?
 		*m.get_state_manager()
 			.get_pool<process_tag>()[current_process_index]
 			._frame._footprint
 		: m.get_footprint();
+#endif
 }
 
 //=============================================================================

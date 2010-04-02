@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.5 2007/09/11 06:53:14 fang Exp $
+	$Id: StateConstructor.h,v 1.6 2010/04/02 22:19:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -17,10 +17,12 @@ namespace CHPSIM {
 class EventNode;		// from "sim/chpsim/Event.h"
 class State;
 using entity::state_manager;
-// using entity::cflat_context_visitor;
+#if 0
+using entity::cflat_context_visitor;
 using entity::PRS::footprint_rule;
 using entity::PRS::footprint_macro;
 using entity::PRS::footprint_expr_node;
+#endif
 using entity::SPEC::footprint_directive;
 using entity::CHP::chp_visitor;
 using entity::CHP::action;
@@ -50,8 +52,8 @@ public:
 	typedef	State				state_type;
 	// typedef	std::default_vector<size_t>::type	return_indices_type;
 	typedef	EventNode			event_type;
-private:
 	const state_type&			state;
+private:
 	event_type&				event;
 public:
 	/**
@@ -68,8 +70,10 @@ public:
 
 	~StateConstructor();
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const state_manager&
 	get_state_manager(void) const;
+#endif
 
 	const entity::footprint&
 	get_process_footprint(void) const;

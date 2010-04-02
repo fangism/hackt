@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.11 2009/10/02 01:56:59 fang Exp $
+	$Id: port_formal_array.tcc,v 1.12 2010/04/02 22:18:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -539,6 +539,7 @@ PORT_FORMAL_ARRAY_CLASS::load_reference(istream& i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::construct_port_context(port_collection_context& pcc, 
@@ -567,6 +568,7 @@ PORT_FORMAL_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 		i->assign_footprint_frame(ff, pcc, j);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE

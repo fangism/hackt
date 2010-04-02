@@ -3,6 +3,161 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-04-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-69-merged-scalable-01-33:
+	  Massive branch merge of scalability re-work, which renders
+		the global allocation phase of the middle and and all 
+		back end tools obsolete, and nonexistent.
+		As a result, tools gain huge scalability, especially prsim,
+		by using a virtual global view of an instantiated hierarchy.
+	  TODO post-merge: remove last traces of .haco-a, 
+		update installtests, make templates, documentation, and perm!
+
+
+2010-04-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-33:
+	  Pre-merge distcheck passes.
+	  Makefile.am: hacalloc binary replaced with script with
+		decprecation warning.
+		Fixed installcheck.
+		Added a few more test cases.
+
+
+2010-04-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-32:
+	  Fixed getall on member arrays, and all arrays in general, 
+		closing the last branch regression!
+		Implemented by having lookup_top_level_references call
+		unroll_references_packed.
+		Scalar references lookups now redirected through 
+		array reference lookups first (then just take only entry).
+	  State of branch: qualifies for final review before merge.
+
+
+2010-03-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-31:
+	  scheme: guile and chpsimguile regression tests re-verified (!!!) 
+		after some easy fixes to index adjustment in guile library.
+		Implemented scm global-reference-subinstances, by calling
+		parser::parse_name_to_get_subinstances, which was refactored
+		from parse_name_to_get_subnodes (parser/instref.cc).
+	  Only one missing feature/regression left on branch: getall(arrays).
+
+
+2010-03-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-30:
+	  hacchpsim: completely fixed, regression tests passed!
+		had forgotten to pass global_offset in context to 
+		global ID lookup during data updating of event execution.
+
+
+2010-03-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-29-a:
+	  hacchpsim "mostly" to work with new scalability framework,
+		few bugs left: nothing crashes, just wrong result.
+	  Fixed unroll_context setup to use footprint-frame's for symbol lookup
+		in simple_meta_instance_reference
+		::lookup_globally_allocated_index().
+
+
+2010-03-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-29:
+	  global_entry_context::construct_global_footprint_frame():
+		the variant that operates on meta_instance_reference_base:
+		fixed handling of public process port case, 
+		was constructing incorrect return frame from
+		the wrong local/formal frame.
+		Regression test case added: prsim/type-test-b, -c, -d.
+
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-28:
+	  footprint::get_instance<>(): recursive call to self forgot
+		to pass is_top=false, causing a lookup bug.  Yikes!
+		Regression test added: prsim/type-test-a.
+
+
+2010-03-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-27:
+	  SIM::state_base: implemented a 2-entry LRU hot-cache for
+		global footrint frames, that falls back to using
+		the tree cache.  Reason: high locality and frequent
+		immediate re-use of most recent frame, by pid.
+		Results in only a little speed-up, but still helpful.
+		Not accounted in memory usage, too small.
+
+
+2010-03-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-26:
+	  hacprsim: now automatically shrinks/ages cache per half-life
+		period, defaulting to 1024 events.
+		Added commands to dump and manage the frame-cache.
+		Documented.
+
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-25:
+	  hacprsim was unacceptably slow (5x) with new scalability
+		re-work, due to huge number of lookups to global
+		footprint-frames for bool-id translation.
+		Implemented tree-cache to maintain hierarchical cache
+		of global process footprint-frames.  
+		Gained most of lost performance back!!!
+		In test/lib: make check (hacprsim-only) is 25% slower 
+			than before, the non-scalable version.
+	  TODO: cache currently only grows, never shrinks.
+		Institute some half-life decay policy to gradually
+		evict stale cache items.
+		Dump memory usage statistics of cache in SIM::state_base.
+
+
+2010-03-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-24:
+	  No source revision.
+		Re-enabled prsimexpr dump tests, update tests b/c
+		top-footprint no longer carries dummy node at index [0].
+	  VPI tests work.  Graph-dump re-enabled.
+	  Next: chpsim or guile
+
+
+2010-03-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-23:
+	  Finally satisfied with hacprsim progress!
+		Fixed ExprAlloc, needed to save parent_offset before
+			traversing SPEC footprint, which needs 
+			global index lookup tables.  
+		Feature regression: getall no longer works on top-level arrays.
+		Might fix this before end-of-branch, but not critical for now.
+		memstats tests memory usage dump has not yet been updated.
+
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-h:
+	  Final iteration (?) of construct_global_footprint_frame(), 
+		where latest fix is in the compuatation of offsets, 
+		now distinguished between owner and non-owner offsets, 
+		for correct recursion.
+		hacprsim:getall/getports/getlocal tests now all pass.
+	  Next: focus on run-time/simulation differences.
+
+
+2010-03-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-g:
+	  More fixing of global_entry_context::construct_global_footprint_frame
+		from meta_instance_reference_base.  Fixed case for descending
+		down public proces ports, and construction of owner frame.
+	  Next: focus on test case getlocal-03.
+
+
 2010-03-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-68:
@@ -17,6 +172,130 @@
 		for dynamic_param_expr_list.
 
 
+2010-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-f:
+	  Fixed global_entry_context::construct_global_footprint_frame()
+		again, this time forgot to adjust final lpid by +ports.
+		Replaced call to extend_frame with construct_global_context.
+	  parser/instref.cc: loop-invariant code-motion.
+	  hacprsim tests no longer crash!  Few differences remain.
+
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-e:
+	  Fixed hacprsim:getall (parser/instref.cc:parse_name_to_get_subnodes)
+		Needed to traverse public process ports for the 
+		missing coverage, using worklist method.  
+
+
+2010-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-d:
+	  Fixed global_entry_context::construct_global_footprint_frame(), 
+		call to locate_private_entry needs 0-based index, but 
+		was passed a 1-based index, doh!
+	  Improved error handling in parser/instref.cc.
+	  Debugging messed up hacprsim stepping...
+		possibly suspicious translate_to_global_node indexing.
+
+
+2010-03-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-c:
+	  Fixed ExprAlloc.cc: visit(const state_instance<process_tag>&)
+		wasn't transforming and extending local frame, 
+		similar to what is done in global_entry_dumper:visit(), 
+		also incrementing global_entry_context::*g_offset.
+	  Fixed hacprsim::who (footprint::collect_aliases_*).
+	  Fixed parser/instref.cc: parse_name_to_get_subnodes(".")
+	  prsim/State-prsim.cc: fixed some dump_struct utils.
+
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-b:
+	  Further fixed global_entry_context::construct_global_footprint_frame.
+		Tested hacprsim commands: getall, getports, getlocal.
+		See to work.  Mostly.
+		Removing footprint::collect_subentries in favor of 
+		just implementing in parser/instref.cc (get_subnodes).
+	  Still debugging other assert-fails.
+
+
+2010-03-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22-a:
+	  Implemented alias_matcher purely in footprint class, using
+		only recursive lookups with index-offset subtraction,
+		no longer need alias_matcher class!!!
+		Early tests of hacprsim:who look good!
+	  guile/libhackt-wrap.cc: use new footprint::collect_aliases.
+	  ExprAlloc: fixed top-level frame sizing for rules.
+	  Debugging parsing/lookup of hierarchical references still...
+
+
+2010-03-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-22:
+	  Re-organized cflat_aliases_arg_type as new working base class for
+		alias-based traversals, including alias_printer, and 
+		coming soon, alias_matcher.  Much code refactored.
+		Moved common members from alias_printer to base.
+		Moved printer-specific members to alias_printer.
+		Added Object/common/cflat_args.{tcc,cc}.
+		Eliminated useless class/typedef cflat_args_base.
+		All regressions still pass.
+	  In progress, working on alias_matcher for hacprsim's 'who' command.
+		Some hacprsim tests starting to pass.
+
+
+2010-03-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-21-b:
+	  Fixed global_entry_context::construct_global_footprint_frame()
+		so that hacprsim commands "get foo.x.p.a" work again.
+
+
+2010-03-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-21-a:
+	  hacprsim work in progress, most of work on ExprAlloc class, 
+		now using a hierarchical traversal instead of flat.
+		Re-factored some functions, need to treat top-footprint
+		as if it were process[0].
+	  global_entry_context.cc: implement construct_global_footprint_frame
+	  parser/instref.cc: re-implemented some lookup functions.
+	  known issues: member_meta_instance_reference
+		::lookup_globally_allocated_index().
+
+
+2010-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-21:
+	  hacknet +scalability finished.
+		Regression tests passed with minor differences:
+		port processes are no longer emitted duplicately in
+		both the definition and the instance, only the 
+		instance level which is responsible for owning it
+		emits it, which was the intended correct behavior.
+		Order of visiting unique types slightly changed.
+		All test/net tests clean.
+		That was almost too easy.
+
+
+2010-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-20:
+	  Finally fixed hflat-aliases, using a unique-instance based
+		approach instead of the old alias-based traversal.
+		Difficulty was in collecting visiting private aliases
+		that were aliased to public ports, and determing which
+		level of hierarchy is responsible for covering it, 
+		while guaranteeing unique coverage of aliases.
+		All regressions tests passed when considering sorted
+		flattened production rule outputs (all updated).
+		Added bunch of new interesting connection test cases.
+	  This was one of the most difficult tasks to-date.
+
+
 2010-02-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-67:
@@ -29,6 +308,104 @@
 		disabled until this is implemented (post-scalability).
 
 
+2010-02-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-19:
+	  Worked on alias_printer for alias-pass for hflat, but encountered
+		difficulty with handling of process-ports.  
+		Considered both alias-based traversal and unique-instance
+		based traversals, each with own merits.
+		Regression tests not updated, b/c process-ports missing.
+
+
+2010-02-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-18:
+	  hflat: successfully traversed hierarchical rule printing
+		next: alias printing, re-implement alias_visitor.
+		current state of hflat tests: rules match, aliases mising
+	  Key revision was handling of hierarchical lookups w.r.t.
+		footprints that come from another type used as the top, 
+		need to account for possibility of top-type having ports, 
+		and thus adjusting indices of lookups only at the top-level.
+		Functions have been flavored with such distinction,
+		default API calls should indicate "is_top".
+		construct_top_global_context, add_all_local_tag, 
+		global_entry_context::visit_local and visit_recursive
+		have been updated accordingly.
+	  module::cflat family of functions, now static, only requiring
+		a footprint, either top-level or user-chosen.
+	  main_funcs: parse_and_create_complete_process_type():
+		actually invoke automatic creation!
+	  main/objdump.cc: added support for -t TYPE as the type to
+		use for top-level virtual allocation (for debugging).
+
+
+2010-02-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-17:
+	  Ton of markup for re-write: all global index lookups to the 
+		meta-instance-reference classes have been temporarily
+		commented out to mark for rewriting, intending to use
+		global_entry_context as new driver for lookups.
+		Crippled any code that touches lookups - FINISH_ME.
+	  global_entry_context_base mandates top-footprint.
+	  global_entry_context mandates footprint_frame and global_offset.
+		Derived classes also require in their ctors.
+	  chp_visitor class no longer derived from global_entry_context, 
+		only some subclasses will need it, most will not.
+		Again cripped/marked code for rewrite.
+	  parser/instref.cc: crippled calls to lookups
+	  Regression tests still pass.
+
+
+2010-02-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-16:
+	  Re-implemented global allocation dump by factoring common traversal
+		code into global_entry_context, intended to be replacement 
+		for next hierarchical visitor (to be re-designed).
+		Regression tests still clean.
+
+
+2010-02-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-15:
+	  Complete printing of global allocation tables, 
+		which now computs and dumps "extended frames",
+		including private local subinstances of extended frames ";...", 
+		and range of private subinstances in {...}.
+	  Updated global_offset methods for adding offsets.
+		Recall that arithmetic is done 0-based, but global indices
+		should be displayed 1-based.
+	  Re-verified all alloc-expect test cases!!!
+		Easy because virtual global enumerations match
+		previous global allocation ordering EXACTLY.
+
+
+2010-02-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-14:
+	  Successfully created view of *virtually* allocated state
+		for global unique instances, and best of all, 
+		manager to preserve the original ordering and enumeration!
+	  TODO: the process-footprint-frames are missing local
+		allocation IDs, but ports are passed down correctly.
+	  Currently, 229 of 4569 tests differ (all alloc tests).
+
+
+2010-02-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-13:
+	  Fixed footprint::dump_canonical_name() and 
+		footprint::__dump_local_map_by_process() by using a 
+		new depth-first enumeration system, b/c breadth first
+		was too clumsy.  Alloc-dump is now able to print
+		the entire virtual pool of bools, but currently dies
+		printing the virtual pool of processes  
+	  Re-enabled alloc tests, but not yet updated.
+
+
 2010-02-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-66:
@@ -37,6 +414,14 @@
 	  Object/def/template_formals_manager.cc: improved port type
 		mismatch diagnostic message to name the actual and port.
 		Test cases (compile expect-fail) updated.
+
+
+2010-02-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-12:
+	  Instace pool dumps now print summary of ports, private-locals, 
+		and mapped privates, very informative for debugging.
+	  All create-tests updated.
 
 
 2010-01-29	David Fang		<fangism@users.sourceforge.net>
@@ -51,6 +436,56 @@
 	  hacprsim: added new command 'channel-report-time' to display
 		timestamp of channel data events when watched or logged.
 	  Documented and updated test cases, accordingly.  
+
+
+2010-01-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-11:
+	  Initial attempt to emulate global allocation dump met with
+		some difficulty.  Tried to re-use global_entry::dump
+		and global_entry_context as much as possible.
+	  bug fix: during construction of footprint::private_entry_maps,
+		should skip over sub processes that are in ports, 
+		as their 'space-allocation' is determined by the 
+		parent process that manages it locally and *privately*.
+		Fixes to footprint::get_instance and dump_canonical_name, 
+		related to miscalculation of index/offsets (1 vs 0 based).
+	  Current difficulty with allocdumps arises when processes
+		are passed as ports, tests still disabled until this
+		is resolved.
+
+
+2010-01-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-10:
+	  Permanently eviscerated old traces of the unroll phase
+		and unroll-related functions, where they were aptly
+		supplanted by the create-family of functions.
+		Resulted in large clean-up of dead function calls, 
+		and dead interfaces.  So much easier to maintain 
+		and comprehend now.
+	  Updated create expect-fail test outputs.  
+
+
+2010-01-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-09:
+	  Completely eliminated use of port_member_context and
+		port_collection_context, and all functions that use them.
+		Marked a lot of code for obsolescence and deletion.
+	  footprint::sift scope/port aliases on loading of object
+		during reconstruction (no reason to be conditional).
+	  bug fix: alias_actuals.tcc: now need to load-one actuals,
+		not just pointer, to guarantee that it can be used
+		during footprint (instance_pool) reconstruction.
+	  bug fix: port_alias_tracker_base::__assign_frame, do not 
+		assume that first alias in reference set is direct
+		port alias; search for the first one (any one).
+	  bug fixes: various indexes into instance_pools now need to
+		be adjusted to 0-indexed instead of old 1-indexed
+		b/c no longer have a pool sentinel at index 0.
+	  Disabled all back end tests, keeping only create tests.
+		Re-validated ALL create tests!  Looking good!
 
 
 2010-01-21	David Fang		<fangism@users.sourceforge.net>
@@ -69,6 +504,40 @@
 	  Test cases updated.
 
 
+2010-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-08:
+	  Huge progress!
+	  Finished assigning footprint-local footprint-frames, 
+		early create tests look promising, though not 
+		thoroughly hand-re-verified yet.
+	  Cleanup: block out all traces of "port_member_context"
+	  Testing: TODO: re-verify everything
+
+
+2010-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-07:
+	  footprint: re-instated expand_unique_subinstances, 
+		implemented frame sizing, local allocation.
+	  Re-write instance_alias index-allocation methods.  
+	  instance_pool is now 0-based indices!
+	  Most basic create tests are working (not dying).
+	  util/ChangeLog: made persistent functors more generic.
+
+
+2010-01-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-06:
+	  And more markup for alteration.
+		visitors that traversed global_entry now need to 
+		traverse state_instance instead.
+		Procedures that depend on footprint_frame probably
+		need to apply offset transformations.
+	  Turned on MEMORY_MAPPED_GLOBAL_ALLOCATION!
+	  Finally links, though many placeholder functions are empty.
+
+
 2010-01-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-61:
@@ -83,6 +552,30 @@
 	  hacknet: improved diagnostics, print out relevant PRS rules
 		in error messages, where applicable.
 		Test cases updated.  
+
+
+2010-01-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-05:
+	  Continued markup for alteration/destruction.
+
+
+2010-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-04:
+	  Continued markup for alteration.  Finally compiles, not links.
+
+
+2010-01-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-03:
+	  Round of surgical marks for ripping out everything to do with
+		the global state_manager structure.
+		MEMORY_MAPPED_GLOBAL_ALLOCATION still off.
+	  Moved private_entry_map and information from footprint_base
+		to instance_pool.
+	  Removed unused arguments from global_entry object
+		persistence functions.
 
 
 2010-01-07	David Fang		<fangism@users.sourceforge.net>
@@ -140,6 +633,31 @@
 	  vpi-prsim.cc: upon registration of connection to_prsim(),
 		enqueue a set-node event if its current value differs.
 	  Added test case for confirming propagation of initial values.
+
+
+2009-12-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-02:
+	  First major revision on branch:
+		Started flagging potential code changes with
+		macro MEMORY_MAPPED_GLOBAL_ALLOCATION (now off).
+		Goals: call allocation on local footprint's only
+		and map private subinstances, who's allocation can be
+		represented by reserving intervals in the index space.
+	  local footprints instance_indices are now 'sifted' such that
+		indices of public ports are less than those of
+		private instances, via stable partition.
+		This partitioning is the first step toward memory
+		mapping allocation.
+	  Test cases (create, alloc) updated, some back-ends print
+		output in slightly different order, and global
+		indices of instance may be permuted.
+
+
+2009-12-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-01:
+	  No source revision, only lib/verilog updates.
 
 
 2009-12-03	David Fang		<fangism@users.sourceforge.net>

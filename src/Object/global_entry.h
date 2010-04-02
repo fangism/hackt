@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.18 2008/11/23 17:53:34 fang Exp $
+	$Id: global_entry.h,v 1.19 2010/04/02 22:17:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -33,8 +33,16 @@ class alias_string_set;
 class footprint;
 class state_manager;
 class entry_collection;		// defined in "Object/entry_collection.h"
-class port_member_context;
 class footprint_frame;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct global_offset;
+template <class Tag>
+struct global_offset_base;
+template <class Tag>
+struct  state_instance;
+template <class T>
+struct  instance_pool;
+#endif
 
 template <class Tag>
 struct  global_entry;
@@ -45,11 +53,17 @@ class global_entry_pool;
 template <class Tag>
 class instance_alias_info;
 
-template <class Tag>
-struct  state_instance;
-
 // TODO: use valarray for memory efficiency
 typedef	std::vector<size_t>		footprint_frame_map_type;
+
+/**
+	Define to 1 to extend footprint frame with a range to
+	represent local private subinstances of structures.
+	The non-extended footprint-frame only passes in ports, 
+	this would show the range of IDs local to subprocesses.
+	This will take a little more memory...
+ */
+#define	EXTENDED_FOOTPRINT_FRAME	(1 && MEMORY_MAPPED_GLOBAL_ALLOCATION)
 
 //=============================================================================
 /**
@@ -59,6 +73,7 @@ typedef	std::vector<size_t>		footprint_frame_map_type;
  */
 template <class Tag>
 struct footprint_frame_map {
+	typedef	footprint_frame_map<Tag>		this_type;
 	/**
 		0-indexed translation table from local to global ID.  
 	 */
@@ -67,6 +82,12 @@ struct footprint_frame_map {
 
 	explicit
 	footprint_frame_map(const footprint&);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+protected:
+	footprint_frame_map(const this_type&, const this_type&);
+
+public:
+#endif
 
 	~footprint_frame_map();
 
@@ -87,11 +108,23 @@ protected:
 	__init_top_level(void);
 
 	void
-	__initialize_top_frame(const footprint&);
+	__swap(footprint_frame&);
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	__construct_top_global_context(const footprint&, 
+		const global_offset_base<Tag>&);
 
 	void
-	__allocate_remaining_sub(const footprint&, state_manager&, 
+	__construct_global_context(const footprint&, 
+		const footprint_frame_map<Tag>&,
+		const global_offset_base<Tag>&);
+#else
+	void
+	__initialize_top_frame(const footprint&);
+
+	void
+	__allocate_remaining_sub(state_manager&, 
 		const parent_tag_enum, const size_t);
 
 	void
@@ -100,6 +133,7 @@ protected:
 
 	void
 	__collect_subentries(entry_collection&, const state_manager&) const;
+#endif
 
 };	// end struct footprint_frame_map
 
@@ -146,6 +180,10 @@ struct footprint_frame :
 	explicit
 	footprint_frame(const footprint&);
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	footprint_frame(const footprint_frame&, const footprint_frame&);
+#endif
+
 	~footprint_frame();
 
 	template <class Tag>
@@ -169,16 +207,62 @@ struct footprint_frame :
 	void
 	initialize_top_frame(const footprint&);
 
+	void
+	swap(footprint_frame&);
+
+	ostream&
+	dump_type(ostream&) const;
+
+	template <class Tag>
+	ostream&
+	__dump_frame(ostream&) const;
+
 	ostream&
 	dump_frame(ostream&) const;
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+private:
+	template <class Tag>
+	ostream&
+	__dump_extended_frame(ostream&, const global_offset&, 
+		const global_offset&, const global_offset&) const;
+
+public:
+	ostream&
+	dump_extended_frame(ostream&, const global_offset&, 
+		const global_offset&, const global_offset&) const;
+
+#if 1
+private:
+	template <class Tag>
+	void
+	__extend_frame(const global_offset&, const global_offset&);
+
+public:
+	void
+	extend_frame(const global_offset&, const global_offset&);
+#endif
+#endif
 
 	template <class Tag>
 	ostream&
 	dump_footprint(global_entry_dumper&) const;
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	construct_top_global_context(const footprint&, const global_offset&);
+
+	void
+	construct_global_context(const footprint&, 
+		const footprint_frame&, const global_offset&);
+#else
 	void
 	allocate_remaining_subinstances(const footprint&, state_manager&, 
 		const parent_tag_enum, const size_t);
+
+	void
+	collect_subentries(entry_collection&, const state_manager&) const;
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -189,14 +273,25 @@ struct footprint_frame :
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-	void
-	collect_subentries(entry_collection&, const state_manager&) const;
-
 private:
 	static
 	ostream&
 	dump_id_map(const footprint_frame_map_type&, ostream&, 
 		const char* const);
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	static
+	ostream&
+	dump_extended_id_map(const footprint_frame_map_type&,
+		const size_t, const size_t, const size_t, 
+		ostream&, const char* const);
+
+#if 1
+	static
+	void
+	extend_id_map(footprint_frame_map_type&, const size_t, const size_t);
+#endif
+#endif
 
 	static
 	void
@@ -248,6 +343,73 @@ struct footprint_frame_transformer {
 };	// end struct footprint_frame_transformer
 
 //=============================================================================
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct add_local_private_tag {};
+struct add_total_private_tag {};
+struct add_all_local_tag {};
+
+template <class Tag>
+struct global_offset_base {
+	typedef	state_instance<Tag>	instance_type;
+	typedef	instance_pool<instance_type>	pool_type;
+	typedef	global_offset_base<Tag>		this_type;
+
+	size_t				offset;
+
+	global_offset_base() : offset(0) { }
+	global_offset_base(const this_type&, const footprint&, 
+		const add_local_private_tag);
+	global_offset_base(const this_type&, const footprint&, 
+		const add_all_local_tag);
+	global_offset_base(const this_type&, const footprint&, 
+		const add_total_private_tag);
+
+	this_type&
+	operator += (const pool_type&);
+
+	this_type&
+	operator += (const this_type&);
+
+};	// end struct global_offset_base
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Set offsets used for global ID calculation.  
+ */
+struct global_offset :
+	public global_offset_base<process_tag>, 
+	public global_offset_base<channel_tag>, 
+#if ENABLE_DATASTRUCTS
+	public global_offset_base<datastruct_tag>, 
+#endif
+	public global_offset_base<enum_tag>, 
+	public global_offset_base<int_tag>, 
+	public global_offset_base<bool_tag> {
+
+	// default ctor
+	global_offset() {}
+	global_offset(const global_offset&, const footprint&, 
+		const add_local_private_tag);
+	global_offset(const global_offset&, const footprint&, 
+		const add_all_local_tag);
+	global_offset(const global_offset&, const footprint&, 
+		const add_total_private_tag);
+
+	global_offset&
+	operator += (const footprint&);
+
+	global_offset&
+	operator += (const global_offset&);
+
+};	// end struct global_offset
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+operator << (ostream&, const global_offset&);
+
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
+
+//=============================================================================
 template <bool B>
 struct global_entry_substructure_base;
 
@@ -264,6 +426,22 @@ struct global_entry_substructure_base<false> {
 	ostream&
 	dump(global_entry_dumper&) const;
 
+	// try to avoid run-time checks in favor of compile-time...
+	const footprint_frame*
+	get_frame(void) const { return NULL; }
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	ostream&
+	dump_type(ostream& o) const {
+		return o;
+	}
+
+	ostream&
+	dump_frame_only(ostream& o) const {
+		return o;
+	}
+#endif
+
 	template <class Tag>
 	static
 	const size_t&
@@ -271,20 +449,19 @@ struct global_entry_substructure_base<false> {
 		return s;
 	}
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	collect_subentries(entry_collection&, const state_manager&) const { }
+#endif
 
 	void
-	collect_transient_info_base(const persistent_object_manager&, 
-		const size_t, const footprint&, const state_manager&) const { }
+	collect_transient_info_base(const persistent_object_manager&) const { }
 
 	void
-	write_object_base(const persistent_object_manager&, const ostream&, 
-		const size_t, const footprint&, const state_manager&) const { }
+	write_object_base(const persistent_object_manager&, const ostream&) const { }
 
 	void
-	load_object_base(const persistent_object_manager&, const istream&,
-		const size_t, const footprint&, const state_manager&) { }
+	load_object_base(const persistent_object_manager&, const istream&) { }
 
 };	// end struct global_entry_substructure_base
 
@@ -299,20 +476,26 @@ private:
 public:
 	footprint_frame			_frame;
 
+	// try to avoid run-time checks in favor of compile-time...
+	const footprint_frame*
+	get_frame(void) const { return &_frame; }
+
 	template <class Tag>
 	ostream&
 	dump(global_entry_dumper&) const;
 
 	ostream&
-	dump_frame_only(ostream& o) const {
-		return _frame.dump_frame(o);
-	}
+	dump_type(ostream& o) const;
+
+	ostream&
+	dump_frame_only(ostream& o) const;
 
 	template <class Tag>
 	static
 	size_t
 	count_frame_size(const size_t s, const this_type&);
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	initialize_top_frame(const footprint& f) {
 		_frame.initialize_top_frame(f);
@@ -322,30 +505,30 @@ public:
 	collect_subentries(entry_collection& e, const state_manager& sm) const {
 		_frame.collect_subentries(e, sm);
 	}
+#endif
 
 	// some footprint (in frame) may contain relaxed template arguments.  
 	void
-	collect_transient_info_base(persistent_object_manager&, 
-		const size_t, const footprint&, const state_manager&) const;
+	collect_transient_info_base(persistent_object_manager&) const;
 
 	// dumper could be reused for write_object_base!
 	void
-	write_object_base(const persistent_object_manager&, ostream&, 
-		const size_t, const footprint&, const state_manager&) const;
+	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	/**
 		Consider bundling arguments together...
 	 */
 	void
-	load_object_base(const persistent_object_manager&, istream&,
-		const size_t, const footprint&, const state_manager&);
+	load_object_base(const persistent_object_manager&, istream&);
 };	// end struct global_entry_substructure_base
 
 //=============================================================================
 /**
 	Data common to all global entries (uniquely allocated objects).  
+	TODO: is this still useful with MEMORY_MAPPED_GLOBAL_ALLOCATION?
  */
 struct global_entry_common {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	/**
 		Uses parent_tag_enum.
 	 */
@@ -369,6 +552,7 @@ struct global_entry_common {
 
 	global_entry_common() : parent_tag_value(META_TYPE_NONE), parent_id(0),
 			local_offset(0) { }
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 };	// end struct global_entry_common
 
 //=============================================================================
@@ -380,7 +564,9 @@ struct global_entry_base :
 	public global_entry_substructure_base<false> {
 	typedef	global_entry_substructure_base<false>	substructure_policy;
 	using substructure_policy::dump;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using substructure_policy::collect_subentries;
+#endif
 	using substructure_policy::collect_transient_info_base;
 	using substructure_policy::write_object_base;
 	using substructure_policy::load_object_base;
@@ -396,7 +582,9 @@ struct global_entry_base<process_tag> :
 	typedef	global_entry_substructure_base<true>	substructure_policy;
 
 	using substructure_policy::dump;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using substructure_policy::collect_subentries;
+#endif
 	using substructure_policy::collect_transient_info_base;
 	using substructure_policy::write_object_base;
 	using substructure_policy::load_object_base;
@@ -427,35 +615,61 @@ public:
 	~global_entry();
 
 	ostream&
+	dump_base(global_entry_dumper&) const;
+
+	ostream&
 	dump(global_entry_dumper&) const;
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// use footprint::get_instance<>().get_back_ref()->dump_attributes()
+#else
 	ostream&
 	dump_attributes(global_entry_dumper&) const;
+#endif
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// use footprint::dump_canonical_name() now
+#else
 	ostream&
 	dump_canonical_name(ostream&,
-		const footprint&, const state_manager&) const;
+		const footprint&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const state_manager&
+#endif
+		) const;
 
 	ostream&
 	__dump_canonical_name(ostream&, const dump_flags&,
-		const footprint&, const state_manager&) const;
+		const footprint&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, const state_manager&
+#endif
+		) const;
+#endif
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// use footprint::get_instance()
+#else
 	const state_instance<Tag>&
 	get_canonical_instance(const global_entry_context_base&) const;
+#endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// relocated to state_instance<Tag>::accept
 	void
 	accept(PRS::cflat_visitor&) const;
+#endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using parent_type::collect_subentries;
+#endif
 	using parent_type::collect_transient_info_base;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&, 
-		const size_t, const footprint&, const state_manager&) const;
+	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&, 
-		const size_t, const footprint&, const state_manager&);
+	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end struct global_entry
 

@@ -1,8 +1,8 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	poo	ick<>
-	process: 2,3,4,5
-	bool: 1,2,3
+	process: ;2..5
+	bool: 1,2;3
 2	process	1	1	poo.p	bar<>
 	process: 3
 	bool: 1,2,3

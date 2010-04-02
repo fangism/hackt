@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.17 2008/10/24 01:09:00 fang Exp $
+	$Id: process_instance_collection.cc,v 1.18 2010/04/02 22:18:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -55,7 +55,13 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace HAC {
 namespace entity {
 //=============================================================================
-// explicit template clas instantiations
+// explicit template class instantiations
+
+template 
+ostream&
+instance_alias_info_actuals::dump_complete_type(
+	const instance_alias_info<process_tag>&,
+	ostream&, const footprint* const);
 
 template class instance_placeholder<process_tag>;
 template class state_instance<process_tag>;

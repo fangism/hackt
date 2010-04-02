@@ -3,5 +3,5 @@ ERROR: in unroll_resolve-ing simple_meta_value_reference: rotate_right_N_fb::K[(
 ERROR: failed to resolve source values of pint-val-ref rotate_right_N_fb::K[($i-rotate_right_N_fb::rot)%rotate_right_N_fb::N] in pint assignment.
 Error resolving loop-body during iteration: $i = 0
 Instantiated from: rotate_right_N_fb<32, 4>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

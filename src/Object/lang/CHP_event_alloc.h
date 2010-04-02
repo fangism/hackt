@@ -2,7 +2,7 @@
 	\file "Object/lang/CHP_event_alloc.h"
 	The visitor that initializes and allocates local CHP events.
 	Class based on "sim/chpsim/StateConstructor.h".
-	$Id: CHP_event_alloc.h,v 1.2 2007/09/11 06:52:47 fang Exp $
+	$Id: CHP_event_alloc.h,v 1.3 2010/04/02 22:18:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_EVENT_ALLOC_H__
@@ -182,7 +182,8 @@ public:
 	/// uninitialized return value
 	char					ret;
 public:
-	EventSuccessorDumper(ostream& o, const local_event& e,
+	EventSuccessorDumper(
+		ostream& o, const local_event& e,
 		const event_index_type i, 
 		const expr_dump_context& edc, 
 		const event_index_type off = 0) : 

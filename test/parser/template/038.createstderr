@@ -98,9 +98,9 @@ In namespace "", we have: {
           Y = pint^0 value: 13
           Z = pint^0 value: 26
           Created state:
-          bool instance pool:
-          1	foo<12, 13, 26>::!GND
-          2	foo<12, 13, 26>::!Vdd
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	foo<12, 13, 26>::!GND	
+          2	foo<12, 13, 26>::!Vdd	
         }
         <12, 34, 56> {
           !GND = bool^0 = foo<12, 34, 56>::!GND (1) 
@@ -109,9 +109,9 @@ In namespace "", we have: {
           Y = pint^0 value: 34
           Z = pint^0 value: 56
           Created state:
-          bool instance pool:
-          1	foo<12, 34, 56>::!GND
-          2	foo<12, 34, 56>::!Vdd
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	foo<12, 34, 56>::!GND	
+          2	foo<12, 34, 56>::!Vdd	
         }
         <12, 34, 68> {
           !GND = bool^0 = foo<12, 34, 68>::!GND (1) 
@@ -120,9 +120,9 @@ In namespace "", we have: {
           Y = pint^0 value: 34
           Z = pint^0 value: 68
           Created state:
-          bool instance pool:
-          1	foo<12, 34, 68>::!GND
-          2	foo<12, 34, 68>::!Vdd
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	foo<12, 34, 68>::!GND	
+          2	foo<12, 34, 68>::!Vdd	
         }
       }
       }
@@ -151,11 +151,14 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	q
-  2	p
-  3	r
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 3 local, 0 mapped)
+  1	q	foo<12, 13, 26>
+    bool: 1,2
+  2	p	foo<12, 34, 68>
+    bool: 1,2
+  3	r	foo<12, 34, 56>
+    bool: 1,2
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

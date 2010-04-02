@@ -2,7 +2,6 @@ Error: cannot connect to producer by both aliasing and CHP!
 Error referencing one_shot::b.
 Error resolving do-forever loop.
 Error unrolling action_sequence.
-Error instantiating process footprint: 
-From canonical type: one_shot<>
-Error encountered during module::unroll.
+Instantiated from: one_shot<>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

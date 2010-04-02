@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.11 2008/11/12 03:00:06 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.12 2010/04/02 22:18:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -534,6 +534,7 @@ if (this->get_dimensions()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
 PORT_ACTUAL_COLLECTION_CLASS::construct_port_context(
@@ -563,6 +564,7 @@ PORT_ACTUAL_COLLECTION_CLASS::assign_footprint_frame(footprint_frame& ff,
 		i->assign_footprint_frame(ff, pcc, j);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

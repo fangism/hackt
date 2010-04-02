@@ -120,14 +120,14 @@ In namespace "", we have: {
               [3] = nandN<4>::in[3] (7) 
             }
           Created state:
-          bool instance pool:
-          1	nandN<4>::!GND
-          2	nandN<4>::!Vdd
-          3	nandN<4>::_out
-          4	nandN<4>::in[0]
-          5	nandN<4>::in[1]
-          6	nandN<4>::in[2]
-          7	nandN<4>::in[3]
+          bool instance pool: (7 ports, 0 local, 0 mapped)
+          1	nandN<4>::!GND	
+          2	nandN<4>::!Vdd	
+          3	nandN<4>::_out	
+          4	nandN<4>::in[0]	
+          5	nandN<4>::in[1]	
+          6	nandN<4>::in[2]	
+          7	nandN<4>::in[3]	
           resolved prs:
           in[0] & in[1] & in[2] & in[3] -> _out-
           ~in[0] -> _out+
@@ -162,14 +162,15 @@ footprint: {
     _out = bool^0 = foo._out (7) 
   )
   Created state:
-  process instance pool:
-  1	foo
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	foo.in[0]
-  4	foo.in[1]
-  5	foo.in[2]
-  6	foo.in[3]
-  7	foo._out
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	foo	nandN<4>
+    bool: 1,2,7,3,4,5,6
+  bool instance pool: (0 ports, 7 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	foo.in[0]	
+  4	foo.in[1]	
+  5	foo.in[2]	
+  6	foo.in[3]	
+  7	foo._out	
 }

@@ -538,12 +538,12 @@ In namespace "", we have: {
         B = channel chan?(bool<>)^0 = bool_sink<>::B (1) 
         b = bool^0 = bool_sink<>::b (3) 
         Created state:
-        channel instance pool:
-        1	bool_sink<>::B
-        bool instance pool:
-        1	bool_sink<>::!GND
-        2	bool_sink<>::!Vdd
-        3	bool_sink<>::b
+        channel instance pool: (1 ports, 0 local, 0 mapped)
+        1	bool_sink<>::B	
+        bool instance pool: (2 ports, 1 local, 0 mapped)
+        1	bool_sink<>::!GND	
+        2	bool_sink<>::!Vdd	
+        3	bool_sink<>::b	
         resolved concurrent actions:
           *[
             B?(b)
@@ -692,11 +692,11 @@ In namespace "", we have: {
           N = pint^0 value: 3
           S = channel chan!(bool<>)^0 = bool_source<3, {0,1,0}>::S (1) 
           Created state:
-          channel instance pool:
-          1	bool_source<3, {0,1,0}>::S
-          bool instance pool:
-          1	bool_source<3, {0,1,0}>::!GND
-          2	bool_source<3, {0,1,0}>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	bool_source<3, {0,1,0}>::S	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	bool_source<3, {0,1,0}>::!GND	
+          2	bool_source<3, {0,1,0}>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -724,11 +724,11 @@ In namespace "", we have: {
           N = pint^0 value: 4
           S = channel chan!(bool<>)^0 = bool_source<4, {0,0,0,1}>::S (1) 
           Created state:
-          channel instance pool:
-          1	bool_source<4, {0,0,0,1}>::S
-          bool instance pool:
-          1	bool_source<4, {0,0,0,1}>::!GND
-          2	bool_source<4, {0,0,0,1}>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	bool_source<4, {0,0,0,1}>::S	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	bool_source<4, {0,0,0,1}>::!GND	
+          2	bool_source<4, {0,0,0,1}>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -759,11 +759,11 @@ In namespace "", we have: {
           N = pint^0 value: 5
           S = channel chan!(bool<>)^0 = bool_source<5, {0,1,0,0,0}>::S (1) 
           Created state:
-          channel instance pool:
-          1	bool_source<5, {0,1,0,0,0}>::S
-          bool instance pool:
-          1	bool_source<5, {0,1,0,0,0}>::!GND
-          2	bool_source<5, {0,1,0,0,0}>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	bool_source<5, {0,1,0,0,0}>::S	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	bool_source<5, {0,1,0,0,0}>::!GND	
+          2	bool_source<5, {0,1,0,0,0}>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -797,11 +797,11 @@ In namespace "", we have: {
           N = pint^0 value: 6
           S = channel chan!(bool<>)^0 = bool_source<6, {1,0,0,0,0,0}>::S (1) 
           Created state:
-          channel instance pool:
-          1	bool_source<6, {1,0,0,0,0,0}>::S
-          bool instance pool:
-          1	bool_source<6, {1,0,0,0,0,0}>::!GND
-          2	bool_source<6, {1,0,0,0,0,0}>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	bool_source<6, {1,0,0,0,0,0}>::S	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	bool_source<6, {1,0,0,0,0,0}>::!GND	
+          2	bool_source<6, {1,0,0,0,0,0}>::!Vdd	
           resolved concurrent actions:
             *[
               sequential: {
@@ -1026,19 +1026,19 @@ In namespace "", we have: {
         c = bool^0 = my_foo<>::c (5) 
         d = bool^0 = my_foo<>::d (6) 
         Created state:
-        channel instance pool:
-        1	my_foo<>::A
-        2	my_foo<>::B
-        3	my_foo<>::C
-        4	my_foo<>::D
-        5	my_foo<>::G
-        bool instance pool:
-        1	my_foo<>::!GND
-        2	my_foo<>::!Vdd
-        3	my_foo<>::a
-        4	my_foo<>::b
-        5	my_foo<>::c
-        6	my_foo<>::d
+        channel instance pool: (5 ports, 0 local, 0 mapped)
+        1	my_foo<>::A	
+        2	my_foo<>::B	
+        3	my_foo<>::C	
+        4	my_foo<>::D	
+        5	my_foo<>::G	
+        bool instance pool: (2 ports, 4 local, 0 mapped)
+        1	my_foo<>::!GND	
+        2	my_foo<>::!Vdd	
+        3	my_foo<>::a	
+        4	my_foo<>::b	
+        5	my_foo<>::c	
+        6	my_foo<>::d	
         resolved concurrent actions:
           *[
             sequential: {
@@ -1122,20 +1122,36 @@ footprint: {
     G = channel chan!(bool<>)^0 = G (5) 
   )
   Created state:
-  process instance pool:
-  1	X
-  2	AS<4, {0,0,0,1}>
-  3	BS<5, {0,1,0,0,0}>
-  4	CS<3, {0,1,0}>
-  5	DS<6, {1,0,0,0,0,0}>
-  6	GS
-  channel instance pool:
-  1	A
-  2	B
-  3	C
-  4	D
-  5	G
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 6 local, 0 mapped)
+  1	X	my_foo<>
+    channel: 1,2,3,4,5
+    bool: 1,2
+  2	AS<4, {0,0,0,1}>	bool_source<4, {0,0,0,1}>
+    channel: 1
+    bool: 1,2
+  3	BS<5, {0,1,0,0,0}>	bool_source<5, {0,1,0,0,0}>
+    channel: 2
+    bool: 1,2
+  4	CS<3, {0,1,0}>	bool_source<3, {0,1,0}>
+    channel: 3
+    bool: 1,2
+  5	DS<6, {1,0,0,0,0,0}>	bool_source<6, {1,0,0,0,0,0}>
+    channel: 4
+    bool: 1,2
+  6	GS	bool_sink<>
+    channel: 5
+    bool: 1,2
+  channel instance pool: (0 ports, 5 local, 0 mapped)
+  1	A	
+  2	B	
+  3	C	
+  4	D	
+  5	G	
+  bool instance pool: (0 ports, 2 local, 5 mapped)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (6 -> 4)
+    (7 -> 5)
 }

@@ -46,9 +46,9 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) 
   rajit::parser = int<32>^0 = rajit::parser (1) 
   Created state:
-  int instance pool:
-  1	rajit::parser
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  int instance pool: (0 ports, 1 local, 0 mapped)
+  1	rajit::parser	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

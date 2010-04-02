@@ -1,7 +1,7 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	a	one_shot<>
-	process: 2
+	process: ;2
 	channel: 1
 	bool: 1,2
 2	process	1	1	a.y	inner<>

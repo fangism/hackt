@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.31 2010/01/12 19:26:41 fang Exp $
+	$Id: footprint.h,v 1.32 2010/04/02 22:18:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -15,6 +15,11 @@
 #include "Object/inst/collection_index_entry.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/lang/CHP_footprint.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include <set>
+#include "Object/ref/reference_enum.h"
+#include "util/tokenize_fwd.h"		// for string_list
+#endif
 
 #include "util/boolean_types.h"
 #include "util/string_fwd.h"
@@ -30,6 +35,9 @@ namespace entity {
 namespace PRS {
 	class footprint;
 	class footprint_rule;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	class cflat_visitor;
+#endif
 }
 namespace SPEC {
 	class footprint;
@@ -37,19 +45,27 @@ namespace SPEC {
 namespace CHP {
 	class concurrent_actions;
 }
+class definition_base;
 class instance_collection_base;
 class port_formals_manager;
 class scopespace;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using std::set;
+class footprint_visitor;
+struct global_offset;
+struct global_entry_context;
+#else
 class port_member_context;
+#endif
 class footprint_manager;
+struct entry_collection;
 struct alias_visitor;
 struct dump_flags;
 struct expr_dump_context;
 
 using std::string;
-using util::good_bool;
 using util::memory::count_ptr;
-using util::memory::excl_ptr;
+using util::memory::never_ptr;
 
 // use this explicity to construct a default temporary footprint
 struct temp_footprint_tag_type { };
@@ -159,14 +175,9 @@ private:
 	// a place to create state pseudo-footprint
 	// back-reference to definition?  NO, instance_collection_map suffices
 	/**
-		Whether or not this definition footprint has been unrolled.
-		NOTE: this flag is obsolete since we've fused unrolling and
-		creating into a single phase.  
-	 */
-	bool					unrolled;
-	/**
 		Whether or not the footprint has created unique state
 		(WITHOUT external connectivity context).
+		This has replaced the old 'unrolled' flag as well.
 	 */
 	bool					created;
 	/**
@@ -204,6 +215,10 @@ private:
 	port_alias_tracker			scope_aliases;
 	/**
 		This keeps track which port members are internally aliased.
+		This is somewhat redundant with scope_aliases, 
+		which is now sifted so that port aliases are 
+		partition before non-port aliases.  
+		May eventually be able to eliminate this structure.
 	 */
 	port_alias_tracker			port_aliases;
 
@@ -294,17 +309,13 @@ public:
 	map_size(void) const { return instance_collection_map.size(); }
 
 	bool
-	is_unrolled(void) const { return unrolled; }
-
-	bool
 	is_created(void) const { return created; }
 
-	void
-	mark_unrolled(void) { unrolled = true; }
-
+private:
 	void
 	mark_created(void) { created = true; }
 
+public:
 	instance_collection_ptr_type
 	operator [] (const string&) const;
 
@@ -343,6 +354,29 @@ public:
 	get_scope_alias_tracker(void) const {
 		return scope_aliases;
 	}
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// index is 0-based
+	template <class Tag>
+	ostream&
+	dump_canonical_name(ostream&, const size_t, const bool t = true) const;
+
+	// index is 0-based
+	ostream&
+	dump_canonical_name(ostream&, const global_indexed_reference&) const;
+
+	// perform hierarchical lookup to find uniquely typed instance
+	// index is 0-based
+	template <class Tag>
+	const state_instance<Tag>&
+	get_instance(const size_t, const bool t = true) const;
+
+#if 0
+	good_bool
+	collect_subentries(const global_indexed_reference&,
+		entry_collection&) const;
+#endif
+#endif
 
 	template <class Tag>
 	typename state_instance<Tag>::pool_type&
@@ -405,9 +439,11 @@ public:
 	lookup_implicit_bool_port(const string&) const;
 #endif
 
+private:
 	void
-	evaluate_scope_aliases(void);
+	evaluate_scope_aliases(const bool sift);
 
+public:
 	PRS::footprint&
 	get_prs_footprint(void) { return *prs_footprint; }
 
@@ -435,15 +471,69 @@ public:
 	const SPEC::footprint&
 	get_spec_footprint(void) const { return *spec_footprint; }
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	template <class Tag>
+	size_t
+	port_frame_size(void) const {
+		return port_aliases.port_frame_size<Tag>();
+	}
+
+	void
+	set_global_offset_by_process(global_offset&, const size_t) const;
+
+private:
+	good_bool
+	expand_unique_subinstances(void);
+
+	void
+	partition_local_instance_pool(void);
+
+	void
+	construct_private_entry_map(void);
+
+	void
+	append_private_map_entry(const footprint&, const size_t);
+
+	void
+	finish_instance_pools(const size_t);
+
+	void
+	__dummy_get_instance(void) const;
+
+	template <class Tag>
+	void
+	__set_global_offset_by_process(global_offset&, const size_t) const;
+
+public:
+#else
 	good_bool
 	expand_unique_subinstances(state_manager&) const;
 
 	void
 	assign_footprint_frame(footprint_frame&, 
 		const port_member_context&) const;
+#endif
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	template <class Tag>
+	void
+	collect_aliases_recursive(const size_t, set<string>&, 
+		const bool is_top = true) const;
 
 	void
-	cflat_aliases(ostream&, const state_manager&,
+	collect_aliases_recursive(const global_indexed_reference&,
+		set<string>&) const;
+
+	template <class Tag>
+	void
+	collect_port_aliases(const size_t, set<string>&) const;
+#endif
+
+	void
+	cflat_aliases(ostream&,
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&,
+#endif
 		const cflat_options&) const;
 
 	// eventually pass parameter for warning control 
@@ -455,6 +545,19 @@ public:
 
 	void
 	accept(alias_visitor&) const;
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	accept(global_entry_context&) const;
+
+	ostream&
+	dump_allocation_map(ostream&) const;
+
+private:
+	template <class Tag>
+	ostream&
+	__dump_allocation_map(ostream&) const;
+#endif
 
 public:
 	instance_collection_ptr_type

@@ -5,5 +5,5 @@ Type mismatch in aggregate process reference.
 	got: process foo<>
 	and: process bar<>
 ERROR: unrolling instance references in process_connection::unroll().
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

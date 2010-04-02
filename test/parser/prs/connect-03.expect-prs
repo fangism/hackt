@@ -1,0 +1,6 @@
+= "!GND" "sh1t.!GND"
+= "!GND" "sh1t.x.!GND"
+= "!GND" "sh1t.y.!GND"
+= "!Vdd" "sh1t.!Vdd"
+= "!Vdd" "sh1t.x.!Vdd"
+= "!Vdd" "sh1t.y.!Vdd"

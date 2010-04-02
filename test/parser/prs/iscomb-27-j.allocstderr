@@ -1,10 +1,10 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	foo	obox<>
-	process: 2,3,4,5,6,7,8,9,10
-	bool: 1,2,3,4,5,6
+	process: ;2..10 {11}
+	bool: 1,2;3..6
 2	process	1	1	foo.bar	blah3<>
-	process: 3,4,5,6,7,8,9,10,11
+	process: 3,4,5,6,7,8,9,10;11
 	bool: 3,4,5,6,1,2
 3	process	1	2	foo.bar.in	alt_e1of2<>
 	process: 4,5,6

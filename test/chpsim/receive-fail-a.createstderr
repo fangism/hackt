@@ -79,13 +79,13 @@ footprint: {
   x = bool^0 = x (3) 
   y = bool^0 = y (4) 
   Created state:
-  channel instance pool:
-  1	X
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x
-  4	y
+  channel instance pool: (0 ports, 1 local, 0 mapped)
+  1	X	
+  bool instance pool: (0 ports, 4 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	x	
+  4	y	
   resolved concurrent actions:
     *[
       X?(x)

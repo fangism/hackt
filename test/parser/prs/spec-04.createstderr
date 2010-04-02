@@ -102,13 +102,13 @@ In namespace "", we have: {
         r = bool^0 = testing<>::r (5) 
         s = bool^0 = testing<>::s (6) 
         Created state:
-        bool instance pool:
-        1	testing<>::!GND
-        2	testing<>::!Vdd
-        3	testing<>::p
-        4	testing<>::q
-        5	testing<>::r
-        6	testing<>::s
+        bool instance pool: (2 ports, 4 local, 0 mapped)
+        1	testing<>::!GND	
+        2	testing<>::!Vdd	
+        3	testing<>::p	
+        4	testing<>::q	
+        5	testing<>::r	
+        6	testing<>::s	
         resolved prs:
         p & q -> s-
         ~p | ~q -> s+
@@ -134,9 +134,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	tester
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	tester	testing<>
+    bool: 1,2
+  bool instance pool: (0 ports, 2 local, 4 mapped)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 4)
 }

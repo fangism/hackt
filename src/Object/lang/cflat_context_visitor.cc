@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.6 2007/01/21 05:59:21 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.7 2010/04/02 22:18:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -24,6 +24,7 @@ namespace entity {
 
 /**
 	Can also be pushed to parent class.  
+
 	Frequently used, consider inlining.  
 	The footprint_frame is NOT set in the case of top-level (new supported)
 	visits (b/c type frame is not applicable), in which case, 
@@ -42,13 +43,19 @@ cflat_context_visitor::__lookup_global_bool_id(const size_t lni) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param ni the global node ID.  
+	\param ni the global node ID, 1-based.  
  */
 ostream&
 cflat_context_visitor::__dump_resolved_canonical_literal(
 		ostream& os, const size_t ni) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// 0-based
+	INVARIANT(ni);
+	return topfp->dump_canonical_name<bool_tag>(os, ni-1);
+#else
 	return sm->get_pool<bool_tag>()[ni]
 		.dump_canonical_name(os, *topfp, *sm);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -69,6 +76,7 @@ cflat_context_visitor::__dump_canonical_literal(
 	Translates set of local node IDs into unique set of 
 	global IDs which may result in fewer nodes because duplicate
 	aliases are dropped.  
+	Can be replaced with transform : set_inserter
  */
 void
 cflat_context_visitor::__resolve_unique_literal_group(

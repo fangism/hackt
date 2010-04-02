@@ -30,5 +30,5 @@ ERROR: failed to resolve implicit indices from a collection whose subarray is no
   }
 ERROR unrolling port actual reference during port connection: x[$i]
 Error resolving loop-body during iteration: $i = 3
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

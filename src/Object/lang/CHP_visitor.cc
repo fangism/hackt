@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_visitor.cc"
-	$Id: CHP_visitor.cc,v 1.4 2008/10/11 06:35:12 fang Exp $
+	$Id: CHP_visitor.cc,v 1.5 2010/04/02 22:18:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -9,6 +9,7 @@
 #include "Object/def/footprint.h"
 #include "Object/lang/CHP.h"
 #include "Object/global_entry.h"
+#include "Object/inst/state_instance.h"
 #include "common/ICE.h"
 
 namespace HAC {
@@ -16,6 +17,7 @@ namespace entity {
 namespace CHP {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	No-op.
  */
@@ -26,7 +28,7 @@ chp_visitor::visit(const entity::state_manager&) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-chp_visitor::visit(const global_entry<process_tag>& p) {
+chp_visitor::visit(const GLOBAL_ENTRY<process_tag>& p) {
 //	cflat_context_visitor::visit(p);	// optional: PRS, SPEC
 // TODO: will need this once CHP interacts with SPEC directives
 	chp_visitor& v(*this);
@@ -37,8 +39,10 @@ if (f->has_chp_footprint()) {
 	cfp.accept(v);
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	No-op.
  */
@@ -72,6 +76,7 @@ chp_visitor::visit(const footprint_macro&) { }
  */
 void
 chp_visitor::visit(const entity::SPEC::footprint_directive&) { }
+#endif
 
 //=============================================================================
 }	// end namespace CHP

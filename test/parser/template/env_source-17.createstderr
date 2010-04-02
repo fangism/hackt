@@ -3,5 +3,5 @@ ERROR resolving member reference parent Y
 Error: instance alias `X' has incomplete type: source_e<2>
 ERROR resolving member reference parent X
 ERROR: unrolling instance references in bool_connection::unroll().
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

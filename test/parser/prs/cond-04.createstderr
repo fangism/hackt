@@ -204,37 +204,37 @@ In namespace "", we have: {
               [7] = div<15, 8>::z[7] (30) 
             }
           Created state:
-          bool instance pool:
-          1	div<15, 8>::!GND
-          2	div<15, 8>::!Vdd
-          3	div<15, 8>::x[1]
-          4	div<15, 8>::x[2]
-          5	div<15, 8>::x[3]
-          6	div<15, 8>::x[4]
-          7	div<15, 8>::x[5]
-          8	div<15, 8>::x[6]
-          9	div<15, 8>::x[7]
-          10	div<15, 8>::y[1]
-          11	div<15, 8>::y[2]
-          12	div<15, 8>::y[3]
-          13	div<15, 8>::y[4]
-          14	div<15, 8>::y[5]
-          15	div<15, 8>::y[6]
-          16	div<15, 8>::y[7]
-          17	div<15, 8>::y[8]
-          18	div<15, 8>::y[9]
-          19	div<15, 8>::y[10]
-          20	div<15, 8>::y[11]
-          21	div<15, 8>::y[12]
-          22	div<15, 8>::y[13]
-          23	div<15, 8>::y[14]
-          24	div<15, 8>::z[1]
-          25	div<15, 8>::z[2]
-          26	div<15, 8>::z[3]
-          27	div<15, 8>::z[4]
-          28	div<15, 8>::z[5]
-          29	div<15, 8>::z[6]
-          30	div<15, 8>::z[7]
+          bool instance pool: (2 ports, 28 local, 0 mapped)
+          1	div<15, 8>::!GND	
+          2	div<15, 8>::!Vdd	
+          3	div<15, 8>::x[1]	
+          4	div<15, 8>::x[2]	
+          5	div<15, 8>::x[3]	
+          6	div<15, 8>::x[4]	
+          7	div<15, 8>::x[5]	
+          8	div<15, 8>::x[6]	
+          9	div<15, 8>::x[7]	
+          10	div<15, 8>::y[1]	
+          11	div<15, 8>::y[2]	
+          12	div<15, 8>::y[3]	
+          13	div<15, 8>::y[4]	
+          14	div<15, 8>::y[5]	
+          15	div<15, 8>::y[6]	
+          16	div<15, 8>::y[7]	
+          17	div<15, 8>::y[8]	
+          18	div<15, 8>::y[9]	
+          19	div<15, 8>::y[10]	
+          20	div<15, 8>::y[11]	
+          21	div<15, 8>::y[12]	
+          22	div<15, 8>::y[13]	
+          23	div<15, 8>::y[14]	
+          24	div<15, 8>::z[1]	
+          25	div<15, 8>::z[2]	
+          26	div<15, 8>::z[3]	
+          27	div<15, 8>::z[4]	
+          28	div<15, 8>::z[5]	
+          29	div<15, 8>::z[6]	
+          30	div<15, 8>::z[7]	
           resolved prs:
           x[1] -> y[1]-
           y[1] -> z[2]+
@@ -354,9 +354,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	K
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	K	div<15, 8>
+    bool: 1,2
+  bool instance pool: (0 ports, 2 local, 28 mapped)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 28)
 }

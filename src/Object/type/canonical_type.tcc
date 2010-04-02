@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.16 2008/11/12 03:00:17 fang Exp $
+	$Id: canonical_type.tcc,v 1.17 2010/04/02 22:18:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -214,25 +214,6 @@ CANONICAL_TYPE_CLASS::get_definition_footprint(void) const {
 	return canonical_definition_ptr->get_footprint(param_list_ptr);
 }
 #endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Registers the complete type as a used type in the
-	definition's footprint map.  
-	Q: should it unroll 'instantiate' that definition?
-	A: IMHO, yes, but it is not truly required.  
-	A: could use a compiler flag to conditionally postpone... oooh.
- */
-CANONICAL_TYPE_TEMPLATE_SIGNATURE
-good_bool
-CANONICAL_TYPE_CLASS::unroll_definition_footprint(const footprint& top) const {
-	STACKTRACE_VERBOSE;
-	NEVER_NULL(canonical_definition_ptr);
-	INVARIANT(this->is_strict());
-	canonical_definition_ptr->register_complete_type(param_list_ptr);
-	return canonical_definition_ptr->unroll_complete_type(
-		param_list_ptr, top);
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

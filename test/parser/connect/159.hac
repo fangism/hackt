@@ -26,7 +26,7 @@ bool re[C];
 celem<C> c(re, I.e);
 }
 
-// wrap inside another process, which should complatin that 
+// wrap inside another process, which should complain that 
 // foo's input ports are floating
 defproc empty() {
 wire_copy_e1of1<2> foo;

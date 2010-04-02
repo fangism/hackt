@@ -172,93 +172,102 @@ In namespace "", we have: {
         a = process inv<>^0 = foo<>::a (1) (
           !GND = bool^0 = foo<>::!GND (1) 
           !Vdd = bool^0 = foo<>::!Vdd (2) 
-          x = bool^0 = foo<>::a.x (3) 
-          y = bool^0 = foo<>::a.y (4) 
+          x = bool^0 = foo<>::a.x (5) 
+          y = bool^0 = foo<>::a.y (6) 
         )
         b = process inv<>^0 = foo<>::b (2) (
           !GND = bool^0 = foo<>::!GND (1) 
           !Vdd = bool^0 = foo<>::!Vdd (2) 
-          x = bool^0 = foo<>::b.x (5) 
-          y = bool^0 = foo<>::b.y (6) 
+          x = bool^0 = foo<>::b.x (7) 
+          y = bool^0 = foo<>::b.y (8) 
         )
         c = process inv<>^0 = foo<>::c (3) (
           !GND = bool^0 = foo<>::!GND (1) 
           !Vdd = bool^0 = foo<>::!Vdd (2) 
-          x = bool^0 = foo<>::c.x (7) 
-          y = bool^0 = foo<>::c.y (8) 
+          x = bool^0 = foo<>::c.x (9) 
+          y = bool^0 = foo<>::c.y (10) 
         )
         d = process inv<>^0 = foo<>::d (4) (
-          !GND = bool^0 = foo<>::myGND (9) 
+          !GND = bool^0 = foo<>::myGND (3) 
           !Vdd = bool^0 = foo<>::!Vdd (2) 
-          x = bool^0 = foo<>::d.x (10) 
-          y = bool^0 = foo<>::d.y (11) 
+          x = bool^0 = foo<>::d.x (11) 
+          y = bool^0 = foo<>::d.y (12) 
         )
         d2 = process inv<>^0 = foo<>::d2 (5) (
-          !GND = bool^0 = foo<>::myGND (9) 
+          !GND = bool^0 = foo<>::myGND (3) 
           !Vdd = bool^0 = foo<>::!Vdd (2) 
-          x = bool^0 = foo<>::d2.x (12) 
-          y = bool^0 = foo<>::d2.y (13) 
+          x = bool^0 = foo<>::d2.x (13) 
+          y = bool^0 = foo<>::d2.y (14) 
         )
         e = process inv<>^0 = foo<>::e (6) (
-          !GND = bool^0 = foo<>::myGND (9) 
+          !GND = bool^0 = foo<>::myGND (3) 
           !Vdd = bool^0 = foo<>::!Vdd (2) 
-          x = bool^0 = foo<>::e.x (14) 
-          y = bool^0 = foo<>::e.y (15) 
+          x = bool^0 = foo<>::e.x (15) 
+          y = bool^0 = foo<>::e.y (16) 
         )
         f = process inv<>^0 = foo<>::f (7) (
           !GND = bool^0 = foo<>::!GND (1) 
-          !Vdd = bool^0 = foo<>::myVdd (16) 
+          !Vdd = bool^0 = foo<>::myVdd (4) 
           x = bool^0 = foo<>::f.x (17) 
           y = bool^0 = foo<>::f.y (18) 
         )
         f2 = process inv<>^0 = foo<>::f2 (8) (
           !GND = bool^0 = foo<>::!GND (1) 
-          !Vdd = bool^0 = foo<>::myVdd (16) 
+          !Vdd = bool^0 = foo<>::myVdd (4) 
           x = bool^0 = foo<>::f2.x (19) 
           y = bool^0 = foo<>::f2.y (20) 
         )
         g = process inv<>^0 = foo<>::g (9) (
-          !GND = bool^0 = foo<>::myGND (9) 
-          !Vdd = bool^0 = foo<>::myVdd (16) 
+          !GND = bool^0 = foo<>::myGND (3) 
+          !Vdd = bool^0 = foo<>::myVdd (4) 
           x = bool^0 = foo<>::g.x (21) 
           y = bool^0 = foo<>::g.y (22) 
         )
-        myGND = bool^0 = foo<>::myGND (9) 
-        myVdd = bool^0 = foo<>::myVdd (16) 
+        myGND = bool^0 = foo<>::myGND (3) 
+        myVdd = bool^0 = foo<>::myVdd (4) 
         Created state:
-        process instance pool:
-        1	foo<>::a
-        2	foo<>::b
-        3	foo<>::c
-        4	foo<>::d
-        5	foo<>::d2
-        6	foo<>::e
-        7	foo<>::f
-        8	foo<>::f2
-        9	foo<>::g
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::a.x
-        4	foo<>::a.y
-        5	foo<>::b.x
-        6	foo<>::b.y
-        7	foo<>::c.x
-        8	foo<>::c.y
-        9	foo<>::myGND
-        10	foo<>::d.x
-        11	foo<>::d.y
-        12	foo<>::d2.x
-        13	foo<>::d2.y
-        14	foo<>::e.x
-        15	foo<>::e.y
-        16	foo<>::myVdd
-        17	foo<>::f.x
-        18	foo<>::f.y
-        19	foo<>::f2.x
-        20	foo<>::f2.y
-        21	foo<>::g.x
-        22	foo<>::g.y
+        process instance pool: (0 ports, 9 local, 0 mapped)
+        1	foo<>::a	inv<>
+          bool: 1,2,5,6
+        2	foo<>::b	inv<>
+          bool: 1,2,7,8
+        3	foo<>::c	inv<>
+          bool: 1,2,9,10
+        4	foo<>::d	inv<>
+          bool: 3,2,11,12
+        5	foo<>::d2	inv<>
+          bool: 3,2,13,14
+        6	foo<>::e	inv<>
+          bool: 3,2,15,16
+        7	foo<>::f	inv<>
+          bool: 1,4,17,18
+        8	foo<>::f2	inv<>
+          bool: 1,4,19,20
+        9	foo<>::g	inv<>
+          bool: 3,4,21,22
+        bool instance pool: (4 ports, 18 local, 0 mapped)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::myGND	
+        4	foo<>::myVdd	
+        5	foo<>::a.x	
+        6	foo<>::a.y	
+        7	foo<>::b.x	
+        8	foo<>::b.y	
+        9	foo<>::c.x	
+        10	foo<>::c.y	
+        11	foo<>::d.x	
+        12	foo<>::d.y	
+        13	foo<>::d2.x	
+        14	foo<>::d2.y	
+        15	foo<>::e.x	
+        16	foo<>::e.y	
+        17	foo<>::f.x	
+        18	foo<>::f.y	
+        19	foo<>::f2.x	
+        20	foo<>::f2.y	
+        21	foo<>::g.x	
+        22	foo<>::g.y	
       }
       }
 
@@ -292,11 +301,11 @@ In namespace "", we have: {
         x = bool^0 = inv<>::x (3) 
         y = bool^0 = inv<>::y (4) 
         Created state:
-        bool instance pool:
-        1	inv<>::!GND
-        2	inv<>::!Vdd
-        3	inv<>::x
-        4	inv<>::y
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::x	
+        4	inv<>::y	
         resolved prs:
         x -> y-
         ~x -> y+
@@ -321,11 +330,18 @@ footprint: {
     myGND = bool^0 = bar.myGND (4) 
   )
   Created state:
-  process instance pool:
-  1	bar
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	bar.myVdd
-  4	bar.myGND
+  process instance pool: (0 ports, 1 local, 9 mapped)
+  1	bar	foo<>
+    bool: 1,2,4,3
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 9)
+  bool instance pool: (0 ports, 4 local, 18 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	bar.myVdd	
+  4	bar.myGND	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 18)
 }

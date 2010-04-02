@@ -5,12 +5,12 @@
 "i3.a" -> "q"-
 ~"i3.a" -> "q"+
 = "!GND" "i1.!GND"
+= "!GND" "i2.!GND"
+= "!GND" "i3.!GND"
 = "!Vdd" "i1.!Vdd"
+= "!Vdd" "i2.!Vdd"
+= "!Vdd" "i3.!Vdd"
 = "x" "i1.a"
 = "y" "i1.b"
-= "!GND" "i2.!GND"
-= "!Vdd" "i2.!Vdd"
 = "p" "i2.a"
-= "!GND" "i3.!GND"
-= "!Vdd" "i3.!Vdd"
 = "q" "i3.b"

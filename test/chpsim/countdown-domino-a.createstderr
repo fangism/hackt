@@ -119,13 +119,13 @@ footprint: {
   b = int<32>^0 = b (2) 
   c = int<32>^0 = c (3) 
   Created state:
-  int instance pool:
-  1	a
-  2	b
-  3	c
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  int instance pool: (0 ports, 3 local, 0 mapped)
+  1	a	
+  2	b	
+  3	c	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
   resolved concurrent actions:
     sequential: {
       *[

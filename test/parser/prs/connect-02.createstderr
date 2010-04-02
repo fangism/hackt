@@ -1,0 +1,240 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	113
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	20	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	334
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	524
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	procdefn	0	#HEAD#	#TAIL#	107
+	37	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	39	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	footprnt	0	#HEAD#	#TAIL#	500
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	587
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    deep = process-definition (defined) deep(
+        bool<> !GND
+        bool<> !Vdd
+        inv<> x
+      )
+      In definition "deep", we have: {
+      Instances:
+        !GND = bool<> deep::!GND
+        !Vdd = bool<> deep::!Vdd
+        x = inv<> deep::x
+        y = inv<> deep::y
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          inv<> x
+        )
+        inv<> y
+      footprint: {
+        !GND = bool^0 = deep<>::!GND (1) 
+        !Vdd = bool^0 = deep<>::!Vdd (2) 
+        x = process inv<>^0 = deep<>::x (1) (
+          !GND = bool^0 = deep<>::!GND (1) 
+          !Vdd = bool^0 = deep<>::!Vdd (2) 
+          a = bool^0 = deep<>::x.a (3) 
+        )
+        y = process inv<>^0 = deep<>::y (2) (
+          !GND = bool^0 = deep<>::!GND (1) 
+          !Vdd = bool^0 = deep<>::!Vdd (2) 
+          a = bool^0 = deep<>::y.a (4) 
+        )
+        Created state:
+        process instance pool: (1 ports, 1 local, 0 mapped)
+        1	deep<>::x	inv<>
+          bool: 1,2,3
+        2	deep<>::y	inv<>
+          bool: 1,2,4
+        bool instance pool: (3 ports, 1 local, 1 mapped)
+        1	deep<>::!GND	
+        2	deep<>::!Vdd	
+        3	deep<>::x.a	
+        4	deep<>::y.a	
+        private sub-bool index map:
+          (2 -> 0)
+          (3 -> 1)
+        bool port aliases:
+        1: deep<>::x.!GND = deep<>::!GND
+        2: deep<>::x.!Vdd = deep<>::!Vdd
+      }
+      }
+
+    deeper = process-definition (defined) deeper(
+        bool<> !GND
+        bool<> !Vdd
+        deep<> d
+      )
+      In definition "deeper", we have: {
+      Instances:
+        !GND = bool<> deeper::!GND
+        !Vdd = bool<> deeper::!Vdd
+        d = deep<> deeper::d
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          deep<> d
+        )
+      footprint: {
+        !GND = bool^0 = deeper<>::!GND (1) 
+        !Vdd = bool^0 = deeper<>::!Vdd (2) 
+        d = process deep<>^0 = deeper<>::d (1) (
+          !GND = bool^0 = deeper<>::!GND (1) 
+          !Vdd = bool^0 = deeper<>::!Vdd (2) 
+          x = process inv<>^0 = deeper<>::d.x (2) (
+            !GND = bool^0 = deeper<>::!GND (1) 
+            !Vdd = bool^0 = deeper<>::!Vdd (2) 
+            a = bool^0 = deeper<>::d.x.a (3) 
+          )
+        )
+        Created state:
+        process instance pool: (2 ports, 0 local, 0 mapped)
+        1	deeper<>::d	deep<>
+          process: 2
+          bool: 1,2,3
+        2	deeper<>::d.x	inv<>
+          bool: 1,2,3
+        bool instance pool: (3 ports, 0 local, 0 mapped)
+        1	deeper<>::!GND	
+        2	deeper<>::!Vdd	
+        3	deeper<>::d.x.a	
+        bool port aliases:
+        1: deeper<>::d.!GND = deeper<>::d.x.!GND = deeper<>::!GND
+        2: deeper<>::d.!Vdd = deeper<>::d.x.!Vdd = deeper<>::!Vdd
+      }
+      }
+
+    inv = process-definition (defined) inv(
+        bool<> !GND
+        bool<> !Vdd
+        bool<> a
+      )
+      In definition "inv", we have: {
+      Instances:
+        !GND = bool<> inv::!GND
+        !Vdd = bool<> inv::!Vdd
+        a = bool<> inv::a
+        b = bool<> inv::b
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<> a
+        )
+        bool<> b
+      footprint: {
+        !GND = bool^0 = inv<>::!GND (1) 
+        !Vdd = bool^0 = inv<>::!Vdd (2) 
+        a = bool^0 = inv<>::a (3) 
+        b = bool^0 = inv<>::b (4) 
+        Created state:
+        bool instance pool: (3 ports, 1 local, 0 mapped)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::a	
+        4	inv<>::b	
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    sh1t = deeper<> sh1t
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  sh1t = process deeper<>^0 = sh1t (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    d = process deep<>^0 = sh1t.d (2) (
+      !GND = bool^0 = !GND (1) 
+      !Vdd = bool^0 = !Vdd (2) 
+      x = process inv<>^0 = sh1t.d.x (3) (
+        !GND = bool^0 = !GND (1) 
+        !Vdd = bool^0 = !Vdd (2) 
+        a = bool^0 = sh1t.d.x.a (3) 
+      )
+    )
+  )
+  Created state:
+  process instance pool: (0 ports, 3 local, 1 mapped)
+  1	sh1t	deeper<>
+    process: 2,3
+    bool: 1,2,3
+  2	sh1t.d	deep<>
+    process: 3
+    bool: 1,2,3
+  3	sh1t.d.x	inv<>
+    bool: 1,2,3
+  private sub-process index map:
+    (2 -> 0)
+    (4 -> 1)
+  bool instance pool: (0 ports, 3 local, 3 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	sh1t.d.x.a	
+  private sub-bool index map:
+    (2 -> 0)
+    (3 -> 2)
+    (4 -> 3)
+}

@@ -8,7 +8,6 @@ Error unrolling deterministic selection.
 Error unrolling action_sequence.
 Error resolving do-forever loop.
 Error unrolling action_sequence.
-Error instantiating process footprint: 
-From canonical type: merge<>
-Error encountered during module::unroll.
+Instantiated from: merge<>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

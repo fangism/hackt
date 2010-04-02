@@ -121,14 +121,14 @@ In namespace "", we have: {
         s = bool^0 = echo<>::s (6) 
         z = bool^0 = echo<>::z (7) 
         Created state:
-        bool instance pool:
-        1	echo<>::!GND
-        2	echo<>::!Vdd
-        3	echo<>::p
-        4	echo<>::q
-        5	echo<>::r
-        6	echo<>::s
-        7	echo<>::z
+        bool instance pool: (7 ports, 0 local, 0 mapped)
+        1	echo<>::!GND	
+        2	echo<>::!Vdd	
+        3	echo<>::p	
+        4	echo<>::q	
+        5	echo<>::r	
+        6	echo<>::s	
+        7	echo<>::z	
         resolved prs:
         (p & q) | (r & s) -> z-
         ~((p & q) | (r & s)) -> z+
@@ -159,14 +159,15 @@ footprint: {
     z = bool^0 = E.z (7) 
   )
   Created state:
-  process instance pool:
-  1	E
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	E.p
-  4	E.q
-  5	E.r
-  6	E.s
-  7	E.z
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	E	echo<>
+    bool: 1,2,3,4,5,6,7
+  bool instance pool: (0 ports, 7 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	E.p	
+  4	E.q	
+  5	E.r	
+  6	E.s	
+  7	E.z	
 }

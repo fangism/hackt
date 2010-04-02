@@ -133,5 +133,5 @@ ERROR: detected negative array indices: [-4]
 ERROR: unrolling instance references in process_connection::unroll().
 Error resolving loop-body during iteration: $i = 0
 Instantiated from: rotate_right_N_fb<32, 4>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

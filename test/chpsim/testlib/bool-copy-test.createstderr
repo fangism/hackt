@@ -228,14 +228,14 @@ In namespace "", we have: {
             }
           a = bool^0 = bool_copy<2>::a (3) 
           Created state:
-          channel instance pool:
-          1	bool_copy<2>::A
-          2	bool_copy<2>::O[0]
-          3	bool_copy<2>::O[1]
-          bool instance pool:
-          1	bool_copy<2>::!GND
-          2	bool_copy<2>::!Vdd
-          3	bool_copy<2>::a
+          channel instance pool: (3 ports, 0 local, 0 mapped)
+          1	bool_copy<2>::A	
+          2	bool_copy<2>::O[0]	
+          3	bool_copy<2>::O[1]	
+          bool instance pool: (2 ports, 1 local, 0 mapped)
+          1	bool_copy<2>::!GND	
+          2	bool_copy<2>::!Vdd	
+          3	bool_copy<2>::a	
           resolved concurrent actions:
             *[
               sequential: {
@@ -341,13 +341,18 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	HAHA
-  channel instance pool:
-  1	HAHA.A
-  2	HAHA.O[0]
-  3	HAHA.O[1]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	HAHA	bool_copy<2>
+    channel: 1,2,3
+    bool: 1,2
+  channel instance pool: (0 ports, 3 local, 0 mapped)
+  1	HAHA.A	
+  2	HAHA.O[0]	
+  3	HAHA.O[1]	
+  bool instance pool: (0 ports, 2 local, 1 mapped)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 1)
 }

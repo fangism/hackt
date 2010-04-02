@@ -1,0 +1,25 @@
+// "type-test-b.hac"
+// reduced test case for debugging hacprsim:what process lookups
+
+defproc b (bool t,f) { }
+defproc pi (b me) { }
+defproc ixb (pi p) { }
+defproc pxb () { }
+
+defproc X (pxb p) {
+  ixb ix[2];
+}
+
+defproc R () {
+ X mx;
+}
+
+defproc LT () {
+ R rt;
+}
+defproc sparse () { 
+ LT L;
+}
+
+sparse foo;
+

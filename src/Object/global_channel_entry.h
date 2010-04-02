@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_channel_entry.h"
-	$Id: global_channel_entry.h,v 1.2 2007/01/21 05:58:20 fang Exp $
+	$Id: global_channel_entry.h,v 1.3 2010/04/02 22:17:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_CHANNEL_ENTRY_H__
@@ -31,19 +31,18 @@ struct global_entry_base<channel_tag> :
 	ostream&
 	dump(global_entry_dumper&) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using substructure_policy::collect_subentries;
+#endif
 
 	void
-	collect_transient_info_base(persistent_object_manager&, 
-		const size_t, const footprint&, const state_manager&) const;
+	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&, 
-		const size_t, const footprint&, const state_manager&) const;
+	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&, 
-		const size_t, const footprint&, const state_manager&);
+	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end struct global_entry_base
 

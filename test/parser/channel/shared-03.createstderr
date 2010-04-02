@@ -76,11 +76,11 @@ In namespace "", we have: {
         !Vdd = bool^0 = sink<>::!Vdd (2) 
         X = channel chan??(bool<>)^0 = sink<>::X (1) 
         Created state:
-        channel instance pool:
-        1	sink<>::X
-        bool instance pool:
-        1	sink<>::!GND
-        2	sink<>::!Vdd
+        channel instance pool: (1 ports, 0 local, 0 mapped)
+        1	sink<>::X	
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	sink<>::!GND	
+        2	sink<>::!Vdd	
         resolved concurrent actions:
           X?
         chp events: {
@@ -106,11 +106,13 @@ footprint: {
     X = channel chan??(bool<>)^0 = B (1) 
   )
   Created state:
-  process instance pool:
-  1	Y
-  channel instance pool:
-  1	B
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	Y	sink<>
+    channel: 1
+    bool: 1,2
+  channel instance pool: (0 ports, 1 local, 0 mapped)
+  1	B	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

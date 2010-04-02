@@ -201,20 +201,20 @@ footprint: {
   r = bool^0 = r (12) 
   s = bool^0 = s (13) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	a
-  4	b
-  5	c
-  6	d
-  7	e
-  8	f
-  9	o
-  10	p
-  11	q
-  12	r
-  13	s
+  bool instance pool: (0 ports, 13 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	a	
+  4	b	
+  5	c	
+  6	d	
+  7	e	
+  8	f	
+  9	o	
+  10	p	
+  11	q	
+  12	r	
+  13	s	
   resolved prs:
   a<40> & b<30> & c<20> & d<25> -> o-
   ~a<40> | ~b<30> | ~c<20> | ~d<25> -> o+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/nonmeta_ref_implementation.tcc"
 	Policy-based implementations of some nonmeta reference functions.  
- 	$Id: nonmeta_ref_implementation.tcc,v 1.4 2007/04/15 05:52:24 fang Exp $
+ 	$Id: nonmeta_ref_implementation.tcc,v 1.5 2010/04/02 22:18:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_REF_IMPLEMENTATION_TCC__
@@ -68,9 +68,14 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 				instance_collection_generic_type;
 	STACKTRACE_VERBOSE;
 	const footprint_frame* const ff = c.get_footprint_frame();
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	INVARIANT(ff);
+	const footprint* local_fp = ff->_footprint;
+#else
 //	if (ff) INVARIANT(ff->_footprint == c.fpf);
 	const footprint* local_fp =
 		(ff ? ff->_footprint : c.get_top_footprint_ptr());
+#endif
 	const never_ptr<const nonmeta_index_list> r_ind(r.get_indices());
 	const count_ptr<dynamic_meta_index_list>
 		mil(r_ind ? r_ind->make_meta_index_list() :
@@ -140,7 +145,9 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 		const meta_reference_type cr(r.get_inst_base_subtype(), mil);
 		// the call only results in local indices!
 		if (cr.lookup_globally_allocated_indices(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 				*c.get_state_manager(), 
+#endif
 				*local_fp, indices).good) {
 			if (ff) {
 				// apply transformation if not top-level

@@ -37,9 +37,9 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) 
   bar = enum foo^0 = bar (1) 
   Created state:
-  enum instance pool:
-  1	bar
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  enum instance pool: (0 ports, 1 local, 0 mapped)
+  1	bar	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

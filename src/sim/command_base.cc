@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_base.cc"
-	$Id: command_base.cc,v 1.8 2010/01/05 00:09:43 fang Exp $
+	$Id: command_base.cc,v 1.9 2010/04/02 22:19:04 fang Exp $
  */
 
 #include <iostream>

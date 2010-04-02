@@ -1,6 +1,6 @@
 # "dox/tutorial/Makefile.am"
 # Makefile for tutorial directory
-#	$Id: Makefile.am,v 1.15 2009/05/29 15:13:21 fang Exp $
+#	$Id: Makefile.am,v 1.16 2010/04/02 22:17:35 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -26,7 +26,7 @@ hackt_INCLUDES = \
 EXTRA_DIST += $(hackt_INCLUDES)
 
 hacmacros.texi: $(srcdir)/../common/hacmacros.texi
-	$(LN_S) $< $@
+	$(LN_SF) $< $@
 
 CLEANFILES += hacmacros.texi
 

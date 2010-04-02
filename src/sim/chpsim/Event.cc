@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.12 2007/09/28 05:37:04 fang Exp $
+	$Id: Event.cc,v 1.13 2010/04/02 22:19:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -11,6 +11,7 @@
 #include <string>
 #include <sstream>
 #include "sim/chpsim/Event.h"
+#include "common/TODO.h"
 #include "sim/ISE.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
@@ -29,7 +30,10 @@ namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 using entity::CHP::EventSuccessorDumper;
+#endif
 using std::copy;
 using std::back_inserter;
 using std::for_each;
@@ -239,6 +243,7 @@ if (countdown) {
  */
 bool
 EventNode::first_check(const nonmeta_context& c, const event_index_type ei) {
+	STACKTRACE_VERBOSE;
 	// same as countdown_decrementer
 	if (get_predecessors()) {	// event 0 has no predecessors!
 		// TODO: give it an artificial one, to avoid this check

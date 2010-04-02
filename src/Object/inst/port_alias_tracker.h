@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.19 2009/11/06 02:57:55 fang Exp $
+	$Id: port_alias_tracker.h,v 1.20 2010/04/02 22:18:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -10,6 +10,7 @@
 
 #include <iosfwd>
 #include <map>
+#include <set>
 #include <vector>
 #include "util/size_t.h"
 #include "util/persistent_fwd.h"
@@ -35,10 +36,14 @@ namespace HAC {
 namespace entity {
 struct dump_flags;
 class footprint;
+struct footprint_frame;
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 using std::istream;
 #endif
 using std::ostream;
+using std::vector;
+using std::set;
+using std::string;
 using util::good_bool;
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 using util::persistent_object_manager;
@@ -81,7 +86,7 @@ public:
 	struct alias_to_string_transformer;
 #endif
 private:
-	typedef	std::vector<alias_ptr_type>		alias_array_type;
+	typedef	vector<alias_ptr_type>			alias_array_type;
 	typedef	typename alias_array_type::iterator	iterator;
 	typedef	instance_collection_pool_bundle<Tag>
 						collection_pool_bundle_type;
@@ -126,6 +131,18 @@ public:
 	typename alias_array_type::const_reference
 	front(void) const { return alias_array.front(); }
 
+	alias_ptr_type
+	is_aliased_to_port(void) const;
+
+	void
+	swap(this_type&);
+
+	void
+	bare_swap(this_type&);
+
+	void
+	override_id(const size_t);
+
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
 
@@ -134,6 +151,9 @@ public:
 
 	const_alias_ptr_type
 	shortest_alias(void);
+
+	void
+	export_alias_strings(set<string>&) const;
 
 #if USE_ALIAS_STRING_CACHE
 	void
@@ -160,13 +180,15 @@ public:
 	void
 	load_object_base(const collection_pool_bundle_type&, istream&);
 #endif
-
 };	// end class alias_reference_set
 
 //=============================================================================
 /**
 	Meta-class specific base class for tracking collections of aliases.  
 	Contains a map from index to instance alias set.  
+	TODO: now that port aliases are sifted, their indices will always
+		be contiguous starting from 1, so we can replace the
+		sparse map structure with a vector!
  */
 template <class Tag>
 class port_alias_tracker_base {
@@ -175,7 +197,8 @@ protected:
 	typedef	Tag						tag_type;
 public:
 	// public for workaround in "Object/inst/instance_collection.tcc"
-	typedef	std::map<size_t, alias_reference_set<Tag> >	map_type;
+	typedef	alias_reference_set<Tag>			alias_set_type;
+	typedef	std::map<size_t, alias_set_type>		map_type;
 protected:
 	typedef	typename map_type::const_iterator		const_iterator;
 	typedef	typename map_type::iterator			iterator;
@@ -198,6 +221,11 @@ protected:
 	__export_alias_properties(substructure_alias&) const;
 
 	void
+	__sift_ports(void);
+
+	struct port_alias_predicate;
+
+	void
 	__shorten_canonical_aliases(
 		instance_pool<state_instance<Tag> >&);
 
@@ -209,6 +237,14 @@ protected:
 	__import_port_aliases(const this_type&);
 
 	struct port_alias_importer;
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	size_t
+	__port_offset(void) const;
+
+	void
+	__assign_frame(const substructure_alias&, footprint_frame&) const;
+#endif
 
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 #if 0
@@ -282,10 +318,32 @@ public:
 	const typename port_alias_tracker_base<Tag>::map_type&
 	get_id_map(void) const { return port_alias_tracker_base<Tag>::_ids; }
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// should only be called from footprint::port_aliases
+	template <class Tag>
+	size_t
+	port_frame_size(void) const {
+		return port_alias_tracker_base<Tag>::__port_offset();
+	}
+
+	// should only be called from footprint::scope_aliases
+	template <class Tag>
+	size_t
+	local_pool_size(void) const {
+		return get_id_map<Tag>().size();
+	}
+
+	// only port_aliases as this, with Tag=process_tag
+	void
+	assign_alias_frame(const substructure_alias&, footprint_frame&) const;
+#endif
 public:
 
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
+
+	void
+	sift_ports(void);
 
 	void
 	export_alias_properties(substructure_alias&) const;

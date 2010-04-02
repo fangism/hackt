@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.cc"
-	$Id: Dependence.cc,v 1.3 2007/02/05 06:39:51 fang Exp $
+	$Id: Dependence.cc,v 1.4 2010/04/02 22:19:07 fang Exp $
  */
 
 #include "sim/chpsim/Dependence.h"

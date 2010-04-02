@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.58 2009/10/05 23:09:42 fang Exp $
+#	$Id: Makefile.am,v 1.59 2010/04/02 22:26:31 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -91,6 +91,7 @@ HACKT_PARSE_TEST_PASSES = \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
 	act-006 act-007 act-009 act-010 \
+	connect-01 connect-02 connect-03 \
 	internal-node-00 internal-node-06 internal-node-07 internal-node-09 \
 	internal-node-10 internal-node-12 internal-node-13 internal-node-14 \
 	internal-node-15 internal-node-17 \
@@ -170,6 +171,7 @@ HACKT_CREATE_TEST_PASSES = \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
 	act-001 act-002 act-003 act-004 act-005 act-006 act-007 act-010 \
+	connect-01 connect-02 connect-03 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
@@ -242,6 +244,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	internal-node-17 \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
+	connect-01 connect-02 connect-03 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \

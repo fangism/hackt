@@ -5,3 +5,5 @@ My:up:0 !Vdd x y !Vdd pch W=13u L=2u
 
 xfoo !GND !Vdd foo.x foo.y inv<>
 
+* --- WARNINGS ---
+Warning: node top<>::foo.x has no pull-up nor pull-dn PRS fanin.

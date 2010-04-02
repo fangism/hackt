@@ -46,7 +46,7 @@ footprint: {
       7 = ?
     }
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

@@ -2,7 +2,7 @@ globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	A	bool_and<4>
 	channel: 5,1,2,3,4
-	bool: 1,2,3,4,5,6
+	bool: 1,2;3..6
 2	(top)	-	2	S0	bool_source<><1, {1}>
 	channel: 1
 	bool: 1,2
@@ -17,7 +17,7 @@ globID	super		localID	canonical	footprint-frame
 	bool: 1,2
 6	(top)	-	6	Z	bool_sink<>
 	channel: 5
-	bool: 1,2,7
+	bool: 1,2;7
 [global channel entries]
 1	(top)	-	1	In[0]	chan(bool<>)
 2	(top)	-	2	In[1]	chan(bool<>)

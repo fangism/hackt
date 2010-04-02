@@ -3,5 +3,5 @@ At least one error in assignment.
 ERROR: at position 1 of expression-assignment list.
 ERROR: failed to assign pint: bogus::M[bogus::E-1] = 5;
 Instantiated from: bogus<1>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

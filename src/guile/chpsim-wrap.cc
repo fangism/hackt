@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.8 2009/02/23 09:11:15 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.9 2010/04/02 22:18:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,6 +18,8 @@
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/def/built_in_datatype_def.h"
 #include "Object/def/enum_datatype_def.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.h"
 #include "util/stacktrace.h"
 #include "util/libguile.h"
 #include "util/guile_STL.h"
@@ -43,7 +45,11 @@ using entity::built_in_datatype_def;
 using entity::enum_datatype_def;
 using entity::ChannelData;
 using entity::channel_data_reader;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using entity::footprint;
+#else
 using entity::state_manager;
+#endif
 using entity::class_traits;
 using entity::bool_tag;
 using entity::int_tag;
@@ -173,10 +179,19 @@ scm_from_event_trace_point(const event_trace_point& tp, const size_t i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 class changed_state_extractor_base {
 protected:
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint&		fp;
+#else
 	const state_manager& 		sm;
+#endif
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	explicit
+	changed_state_extractor_base(const footprint& f) : fp(f) { }
+#else
 	explicit
 	changed_state_extractor_base(const state_manager& s) : sm(s) { }
+#endif
 
 };	// end struct changed_state_extractor_base
 
@@ -190,7 +205,13 @@ struct changed_state_extractor : protected changed_state_extractor_base {
 		\param s the state_manager is unused and not needed.
 	 */
 	explicit
-	changed_state_extractor(const state_manager& s) :
+	changed_state_extractor(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			const footprint& s
+#else
+			const state_manager& s
+#endif
+			) :
 		changed_state_extractor_base(s) { }
 
 	SCM
@@ -216,9 +237,15 @@ struct changed_state_extractor<bool_tag> : protected changed_state_extractor_bas
 	/**
 		\param s the state_manager is unused and not needed.
 	 */
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	explicit
+	changed_state_extractor(const footprint& s) :
+		changed_state_extractor_base(s) { }
+#else
 	explicit
 	changed_state_extractor(const state_manager& s) :
 		changed_state_extractor_base(s) { }
+#endif
 
 	SCM
 	operator () (const state_trace_window_base<bool_tag>::iter_type::value_type& i) const {
@@ -292,20 +319,34 @@ struct channel_data_scm_extractor {
 template <>
 struct changed_state_extractor<channel_tag> :
 		protected changed_state_extractor_base {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	explicit
+	changed_state_extractor(const footprint& s) :
+		changed_state_extractor_base(s) { }
+#else
 	explicit
 	changed_state_extractor(const state_manager& s) :
 		changed_state_extractor_base(s) { }
+#endif
 
 	SCM
 	operator () (const state_trace_window_base<channel_tag>::iter_type::value_type& i) const {
+		STACKTRACE_VERBOSE;
 		// TODO: construct structure of references, FINISH_ME
 		static const SCM scm_ack = scm_permanent_object(
 			scm_from_locale_symbol("ack"));	// 'ack symbol
 		SCM scm_dat = scm_ack;
+		STACKTRACE_INDENT_PRINT("index = " << i.global_index << endl);
 		if (i.raw_data.has_trace_value()) {
 			const canonical_fundamental_chan_type_base::datatype_list_type&
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+				cdl(fp.get_instance<channel_tag>(i.global_index -1)
+					.channel_type->get_datatype_list());
+				// get_instance is 0-indexed
+#else
 				cdl(sm.get_pool<channel_tag>()[i.global_index]
 					.channel_type->get_datatype_list());
+#endif
 			 // reverse! is destructive, and saves allocation
 			scm_dat = scm_reverse_x(
 				(*transform(cdl.begin(), cdl.end(),
@@ -326,8 +367,13 @@ template <class Tag>
 static
 SCM
 __collect_changed_values(
-		const state_trace_time_window::pseudo_const_iterator_range& r, 
-		const state_manager& s) {
+		const state_trace_time_window::pseudo_const_iterator_range& r,
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint& s
+#else
+		const state_manager& s
+#endif
+		) {
 	const typename state_trace_window_base<Tag>::__pseudo_const_iterator_pair&
 		p(r.template get<Tag>());
 	
@@ -354,7 +400,12 @@ scm_from_state_trace_point(
 		const TraceManager::state_change_streamer::
 			pseudo_const_iterator_range& tp, 
 		const size_t i, 
-		const state_manager& s) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const footprint& s
+#else
+		const state_manager& s
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	return scm_cons(make_scm(i), 
 		scm_cons(__collect_changed_values<bool_tag>(tp, s), 
@@ -450,7 +501,12 @@ HAC_GUILE_DEFINE(wrap_chpsim_state_change_trace_entry_to_scm,
 	const TraceManager::state_change_streamer::pseudo_const_iterator_range&
 		tp(ptr->current_state_iter());
 	const SCM ret = scm_from_state_trace_point(tp, ptr->index(), 
-		obj_module->get_state_manager());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		AS_A(const module&, *obj_module).get_footprint()
+#else
+		obj_module->get_state_manager()
+#endif
+		);
 	// alternatively, last pair can be made with SCM_EOL
 	ptr->advance();	// should never fail, really...
 	return ret;

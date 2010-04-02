@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/process_graph.h"
-	$Id: process_graph.h,v 1.2 2009/02/07 03:33:02 fang Exp $
+	$Id: process_graph.h,v 1.3 2010/04/02 22:19:20 fang Exp $
 	Unique process subgraph structure, shared by all process instances
 	of the same type.
  */
@@ -135,6 +135,8 @@ struct faninout_struct_type {
 		unnecessary data replication, structure from create/unrolling.
 	No stateful information should be kept here.  
 	TODO: rings for mk_excl and check_excl!
+	TODO: global_entry_context-like hierarchical mapping of exprs!
+		using local private mapping.
  */
 struct unique_process_subgraph {
 	typedef	Expr				expr_struct_type;
@@ -197,7 +199,8 @@ struct unique_process_subgraph {
 	 */
 	typedef	faninout_struct_type			node_type;
 	/**
-		indexed by local node index.
+		indexed by local node index (1-based).
+		Now subtract 1, for 0-based indexing!
 	 */
 	typedef	std::vector<faninout_struct_type>	faninout_map_type;
 	/**

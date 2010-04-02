@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.28 2007/09/27 02:03:42 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.29 2010/04/02 22:18:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -15,7 +15,7 @@
 #endif
 
 #ifndef	STACKTRACE_DESTRUCTORS
-#define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS				(0 && ENABLE_STACKTRACE)
 #endif
 
 #include <iostream>
@@ -765,6 +765,7 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::direct_assign(
 		const nonmeta_context_base& c, 
 		assign_update_arg_type& u, 
 		channel_data_reader& r) const {
+	STACKTRACE_VERBOSE;
 	nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>::
 		direct_assign(*this, c, u, r);
 }

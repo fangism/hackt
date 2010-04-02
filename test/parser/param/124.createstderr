@@ -56,7 +56,7 @@ footprint: {
   PS = preal^0 value: 4.5
   WCH = pint^0 value: 3
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

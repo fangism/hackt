@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.cc"
 	Method definitions for the meta_dummy_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_dummy_reference.tcc,v 1.4 2008/12/18 00:25:52 fang Exp $
+ 	$Id: simple_meta_dummy_reference.tcc,v 1.5 2010/04/02 22:18:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_TCC__
@@ -214,12 +214,30 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
 global_indexed_reference
 SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_top_level_reference(
-		const state_manager& sm, const footprint& top) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context& 
+#else
+		const state_manager&, const footprint&
+#endif
+		) const {
 	ICE_NEVER_CALL(cerr);
 	return global_indexed_reference(0, 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_top_level_references(
+		const global_entry_context&,
+		global_reference_array_type&) const {
+	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Since this is a simple_meta_dummy_reference, we're 
 	at the top of the reference hierarchy.  
@@ -232,10 +250,16 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_top_level_reference(
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager&, const footprint&) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context&
+#else
+		const state_manager&, const footprint&
+#endif
+		) const {
 	ICE_NEVER_CALL(cerr);
 	return NULL;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
@@ -342,6 +366,7 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::must_be_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Prototype stolen from meta_instance_reference_subtype.
 	Aliases are not applicable to dummy types.
@@ -361,6 +386,7 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::collect_subentries(const module&,
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE

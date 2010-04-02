@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.35 2009/09/14 21:16:40 fang Exp $
+#	$Id: Makefile.am,v 1.36 2010/04/02 22:17:27 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -49,7 +49,7 @@ hac_info_INCLUDES = \
 	$(srcdir)/$(GRAMMAR_TEXI)
 
 hacmacros.texi: $(srcdir)/../common/hacmacros.texi
-	$(LN_S) $< $@
+	$(LN_SF) $< $@
 
 CLEANFILES += hacmacros.texi
 

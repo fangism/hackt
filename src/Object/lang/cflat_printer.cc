@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.24 2009/10/29 23:00:27 fang Exp $
+	$Id: cflat_printer.cc,v 1.25 2010/04/02 22:18:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -24,7 +24,11 @@
 #include "Object/inst/connection_policy.h"
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/def/footprint.h"
+#else
 #include "Object/state_manager.h"
+#endif
 #include "Object/traits/bool_traits.h"
 #include "main/cflat_options.h"
 #include "common/ICE.h"
@@ -47,10 +51,40 @@ using util::numeric::reciprocate;
 //=============================================================================
 // class cflat_prs_printer method definitions
 
+cflat_prs_printer::~cflat_prs_printer() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+void
+cflat_prs_printer::visit(const entity::footprint& f) {
+	STACKTRACE_VERBOSE;
+try {
+	// visit rules and spec directives, locally
+	f.get_prs_footprint().accept(*this);
+	f.get_spec_footprint().accept(*this);
+	// f.get_chp_footprint().accept(*this);
+	parent_type::visit(f);	// visit_recursive
+	visit_local<bool_tag>(f, at_top());	// for bool attributes
+} catch (...) {
+	if (at_top()) {
+		cerr << "Instantiated from -TOP-: " << endl;
+	} else {
+		f.dump_type(cerr << "Instantiated from type: ") << endl;
+	}
+	throw;	// re-throw
+}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat_prs_printer::visit(const PRS::footprint& p) {
 	STACKTRACE_VERBOSE;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	cflat_visitor::visit(p);
+#else
 	parent_type::visit(p);
+#endif
 	// now handle invariant expressions
 // if (cfopts.primary_tool == cflat_options::TOOL_LVS) {
 // ah, hell, just print it for everything, it's easy to grep out
@@ -59,8 +93,10 @@ cflat_prs_printer::visit(const PRS::footprint& p) {
 	const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
 	const PRS::footprint::invariant_pool_type& ip(p.get_invariant_pool());
 	const PRS_footprint_expr_pool_type& ep(p.get_expr_pool());
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const expr_pool_setter __p(*this, ep);
 	NEVER_NULL(expr_pool);
+#endif
 	const_iterator i(ip.begin()), e(ip.end());
 	for ( ; i!=e; ++i) {
 		os << "invariant ";
@@ -99,15 +135,23 @@ if (!cfopts.check_prs) {
 			// fake an empty list if necessary
 		}
 	}
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const PRS_footprint_expr_pool_type* const expr_pool = 
+		&get_current_footprint().get_prs_footprint().get_expr_pool();
+#endif
 	(*expr_pool)[r.expr_index].accept(*this);
 	os << " -> ";
 	// r.output_index gives the local unique ID,
 	// which needs to be translated to global ID.
-	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
+	// bfm[...] refers to a GLOBAL_ENTRY<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	__dump_canonical_literal(r.output_index);
+#else
 	const size_t global_bool_index =
 		parent_type::__lookup_global_bool_id(r.output_index);
 	print_node_name(os, sm->get_pool<bool_tag>()[global_bool_index]);
+#endif
 	os << (r.dir ? '+' : '-');
 	if (cfopts.compute_conductances) {
 		// min/mxa_conductance was evaluated from expression
@@ -120,27 +164,49 @@ if (!cfopts.check_prs) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Automatically adds quotes if the options desire it.  
+	redundant with __dump_resolved_canonical_literal, deprecated.
  */
 ostream&
 cflat_prs_printer::print_node_name(ostream& o, 
-		const global_entry<bool_tag>& b) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const size_t bi
+#else
+		const GLOBAL_ENTRY<bool_tag>& b
+#endif
+		) const {
 	if (cfopts.enquote_names) o << '\"';
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	topfp->dump_canonical_name<bool_tag>(o, bi);
+#else
 	b.dump_canonical_name(o, *topfp, *sm);
+#endif
 	if (cfopts.enquote_names) o << '\"';
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param ni the global node ID.  
  */
 void
+cflat_prs_printer::__dump_resolved_canonical_literal(ostream& o, 
+		const size_t ni) const {
+	if (cfopts.enquote_names) { o << '\"'; }
+	parent_type::__dump_resolved_canonical_literal(o, ni);
+	if (cfopts.enquote_names) { o << '\"'; }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default, use the member output stream.
+ */
+void
 cflat_prs_printer::__dump_resolved_canonical_literal(const size_t ni) const {
-	if (cfopts.enquote_names) { os << '\"'; }
-	parent_type::__dump_resolved_canonical_literal(os, ni);
-	if (cfopts.enquote_names) { os << '\"'; }
+	return __dump_resolved_canonical_literal(os, ni);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -150,8 +216,16 @@ cflat_prs_printer::__dump_resolved_canonical_literal(const size_t ni) const {
 		into the globally allocated id.  
  */
 void
+cflat_prs_printer::__dump_canonical_literal(ostream& o, 
+		const size_t lni) const {
+	__dump_resolved_canonical_literal(o, 
+		parent_type::__lookup_global_bool_id(lni));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 cflat_prs_printer::__dump_canonical_literal(const size_t lni) const {
-	__dump_resolved_canonical_literal(
+	__dump_resolved_canonical_literal(os, 
 		parent_type::__lookup_global_bool_id(lni));
 }
 
@@ -236,6 +310,10 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 	const char type = e.get_type();
 	const char ptype = parent_expr_type;
 	const expr_type_setter __tmp(*this, type);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const PRS_footprint_expr_pool_type* const expr_pool = 
+		&get_current_footprint().get_prs_footprint().get_expr_pool();
+#endif
 	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM: {
 			INVARIANT(sz == 1);
@@ -426,13 +504,21 @@ cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
 	Print attributes for nodes with non-default attribute values.  
  */
 void
-cflat_prs_printer::visit(const global_entry<bool_tag>& b) {
+cflat_prs_printer::visit(const GLOBAL_ENTRY<bool_tag>& b) {
 if (cfopts.node_attributes) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const state_instance<bool_tag>& i(b);
+#else
 	const state_instance<bool_tag>& i(b.get_canonical_instance(*this));
+#endif
 	const instance_alias_info<bool_tag>& a(*i.get_back_ref());
 if (a.has_nondefault_attributes()) {
 	std::ostringstream oss;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	__dump_canonical_literal(oss, i.get_back_ref()->instance_index);
+#else
 	print_node_name(oss, b);	// auto-quote
+#endif
 	const string& n(oss.str());
 	if (cfopts.split_instance_attributes) {
 		a.dump_split_attributes(os, n);

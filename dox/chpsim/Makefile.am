@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.20 2009/11/19 23:29:08 fang Exp $
+#	$Id: Makefile.am,v 1.21 2010/04/02 22:17:25 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -15,7 +15,7 @@ INFOS = $(TEXINFOS:.texi=.info)
 
 AM_MAKEINFOFLAGS = -I$(srcdir)/../common -I../common
 hacmacros.texi: $(srcdir)/../common/hacmacros.texi
-	$(LN_S) $< $@
+	$(LN_SF) $< $@
 
 CLEANFILES += hacmacros.texi
 

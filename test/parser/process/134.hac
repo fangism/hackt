@@ -1,0 +1,24 @@
+// "134.hac"
+// copy-modified from "133.hac"
+// checking for hflat aliases output coverage
+
+defproc foo(bool a) {
+	bool b = a;
+	bool c;
+}
+
+defproc bar(foo x) {
+	foo z;
+	x = z;
+}
+
+defproc ick(bar p) {
+	bar q = p;
+	bar r, s;
+	r.x = s.x;
+}
+
+ick poo, goo;
+poo.p.x = goo.p.x;
+
+

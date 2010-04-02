@@ -33,8 +33,8 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) 
   subdir = bool^0 = subdir (3) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	subdir
+  bool instance pool: (0 ports, 3 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	subdir	
 }

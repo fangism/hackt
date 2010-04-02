@@ -1,7 +1,6 @@
 Sorry, empty expression loops are not yet supported.  Currently waiting for resolution on language defect report.
 Error unrolling production rule guard: 
 	(&:i:[0..-1]: null::z[$i]) -> null::o-
-Error instantiating process footprint: 
-From canonical type: null<>
-Error encountered during module::unroll.
+Instantiated from: null<>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

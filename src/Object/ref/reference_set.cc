@@ -1,9 +1,10 @@
 /**
 	\file "Object/ref/reference_set.cc"
-	$Id: reference_set.cc,v 1.3 2007/03/15 06:11:04 fang Exp $
+	$Id: reference_set.cc,v 1.4 2010/04/02 22:18:46 fang Exp $
  */
 
 #include "Object/ref/reference_set.h"
+#include <iostream>
 #include <functional>
 #include <algorithm>
 #include "Object/entry_collection.h"
@@ -15,6 +16,7 @@ namespace entity {
 using std::for_each;
 using std::mem_fun_ref;
 using util::set_inserter;
+#include "util/using_ostream.h"
 
 //=============================================================================
 /**
@@ -92,6 +94,28 @@ global_references_set::set_intersection(const global_references_set& src,
 			set_inserter(dst.ref_bin[i]));
 		++i;
 	} while (i<MAX);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+global_references_set::dump(ostream& o) const {
+	typedef ref_bin_type::const_iterator	const_iterator;
+#define CASE_PRINT_TYPE_TAG_NAME(Tag)					\
+{									\
+	const ref_bin_type&						\
+		ub(ref_bin[class_traits<Tag>::type_tag_enum_value]);	\
+	const_iterator i(ub.begin()), e(ub.end());			\
+	for ( ; i!=e; ++i) {						\
+		o << class_traits<Tag>::tag_name << '[' << *i << "], ";	\
+	}								\
+}
+	CASE_PRINT_TYPE_TAG_NAME(bool_tag)
+	CASE_PRINT_TYPE_TAG_NAME(int_tag)
+	CASE_PRINT_TYPE_TAG_NAME(enum_tag)
+	CASE_PRINT_TYPE_TAG_NAME(channel_tag)
+	CASE_PRINT_TYPE_TAG_NAME(process_tag)
+#undef  CASE_PRINT_TYPE_TAG_NAME 
+	return o;
 }
 
 //=============================================================================

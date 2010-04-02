@@ -1,5 +1,3 @@
-* subcircuit e1of<2> is empty.
-
 * typename_mangle("std::logic::celem<2, 10>") = std::logic::celem<2,10>
 .subckt std::logic::celem<2,10> !GND !Vdd in[0] in[1] o
 * BEGIN node name mangle map
@@ -30,6 +28,8 @@ Mo:up:0 !Vdd _o o !Vdd pch W=10u L=2u
 * instance: std::logic::celem<2, 10> comp
 xcomp !GND !Vdd oe[0] oe[1] in.e std::logic::celem<2,10>
 .ends
+
+* subcircuit e1of<2> is empty.
 
 * typename_mangle("std::logic::celem<3, 10>") = std::logic::celem<3,10>
 .subckt std::logic::celem<3,10> !GND !Vdd in[0] in[1] in[2] o

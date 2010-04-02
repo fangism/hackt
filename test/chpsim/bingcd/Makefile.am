@@ -1,5 +1,5 @@
 # "test/chpsim/bingcd/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2009/09/28 06:56:59 fang Exp $
+#	$Id: Makefile.am,v 1.4 2010/04/02 22:19:52 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head

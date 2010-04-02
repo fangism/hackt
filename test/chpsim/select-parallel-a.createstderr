@@ -149,13 +149,13 @@ footprint: {
   c = bool^0 = c (5) 
   d = bool^0 = d (6) 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	a
-  4	b
-  5	c
-  6	d
+  bool instance pool: (0 ports, 6 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	a	
+  4	b	
+  5	c	
+  6	d	
   resolved concurrent actions:
     sequential: {
       concurrent: {

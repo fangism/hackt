@@ -58,9 +58,9 @@ footprint: {
   copier = int<32>^0 = blah (1) 
   sneeze = int<32>^0 = blah (1) 
   Created state:
-  int instance pool:
-  1	blah
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  int instance pool: (0 ports, 1 local, 0 mapped)
+  1	blah	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

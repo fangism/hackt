@@ -2,7 +2,6 @@ ERROR: complete type required for instantiation
 	have: source_e<2>
 Failed to instantiate source_pack_port_test<>::Src[1]
 Error creating process type: source_pack_port_test<>
-Error instantiating process footprint: 
-From canonical type: source_pack_port_test<>
-Error encountered during module::unroll.
+Instantiated from: source_pack_port_test<>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

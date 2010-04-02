@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.14 2009/10/02 01:56:54 fang Exp $
+	$Id: alias_actuals.h,v 1.15 2010/04/02 22:18:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
@@ -14,6 +14,7 @@
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/devel_switches.h"	// for MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 
@@ -22,7 +23,9 @@ namespace entity {
 class const_param_expr_list;
 class footprint;
 class footprint_frame;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 class port_member_context;
+#endif
 class state_manager;
 template <class> class instance_alias_info;
 class unroll_context;
@@ -95,8 +98,13 @@ protected:
 	template <class AliasType>
 	static
 	good_bool
-	__initialize_assign_footprint_frame(const AliasType&, footprint_frame&, 
-		state_manager&, const port_member_context&, const size_t);
+	__initialize_assign_footprint_frame(const AliasType&, footprint_frame&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, state_manager&, 
+		const port_member_context&
+		, const size_t
+#endif
+		);
 
 	template <class AliasType>
 	static

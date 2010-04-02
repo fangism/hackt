@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.6 2007/09/11 06:53:15 fang Exp $
+	$Id: nonmeta_context.h,v 1.7 2010/04/02 22:19:14 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -16,12 +16,17 @@
 
 namespace HAC {
 namespace SIM {
+class state_base;
 namespace CHPSIM {
 class EventNode;
 class State;
 using entity::footprint;
 using entity::footprint_frame;
 using entity::state_manager;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+using entity::global_offset;
+using entity::global_entry_context;
+#endif
 using entity::nonmeta_state_manager;
 using entity::nonmeta_context_base;
 using entity::event_subscribers_type;
@@ -94,13 +99,24 @@ public:
 			event_setter_base(const_cast<this_type&>(t), e) { }
 	};
 public:
-	nonmeta_context(const state_manager&, const footprint&, 
+	nonmeta_context(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&, const footprint&, 
+#else
+		// const global_entry_context& available from State&
+		// may need to sub-class global_offset to map
+		// offsets of events and other things!
+#endif
 		State&);
 
 	~nonmeta_context();
 
 	void
-	set_event(event_type&, const size_t, const event_index_type);
+	set_event(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_base&,	// for frame-cache
+#endif
+		event_type&, const size_t, const event_index_type);
 
 	event_type&
 	get_event(void) const { return *event; }

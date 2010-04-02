@@ -67,11 +67,11 @@ footprint: {
   dog::moo = int<32>^0 = dog::moo (3) 
   dog::woof = int<32>^0 = dog::woof (1) 
   Created state:
-  int instance pool:
-  1	dog::woof
-  2	cat::meow
-  3	dog::moo
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  int instance pool: (0 ports, 3 local, 0 mapped)
+  1	dog::woof	
+  2	cat::meow	
+  3	dog::moo	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

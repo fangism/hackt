@@ -116,11 +116,12 @@ In namespace "", we have: {
             !Vdd = bool^0 = bar<2, {0,1}>::!Vdd (2) 
           )
           Created state:
-          process instance pool:
-          1	bar<2, {0,1}>::x
-          bool instance pool:
-          1	bar<2, {0,1}>::!GND
-          2	bar<2, {0,1}>::!Vdd
+          process instance pool: (1 ports, 0 local, 0 mapped)
+          1	bar<2, {0,1}>::x	foo<4, {0,1,0,1}>
+            bool: 1,2
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	bar<2, {0,1}>::!GND	
+          2	bar<2, {0,1}>::!Vdd	
           bool port aliases:
           1: bar<2, {0,1}>::x.!GND = bar<2, {0,1}>::!GND
           2: bar<2, {0,1}>::x.!Vdd = bar<2, {0,1}>::!Vdd
@@ -160,9 +161,9 @@ In namespace "", we have: {
             }
           N = pint^0 value: 4
           Created state:
-          bool instance pool:
-          1	foo<4, {0,1,0,1}>::!GND
-          2	foo<4, {0,1,0,1}>::!Vdd
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	foo<4, {0,1,0,1}>::!GND	
+          2	foo<4, {0,1,0,1}>::!Vdd	
         }
       }
       }
@@ -185,10 +186,13 @@ footprint: {
     )
   )
   Created state:
-  process instance pool:
-  1	X
-  2	X.x
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	X	bar<2, {0,1}>
+    process: 2
+    bool: 1,2
+  2	X.x	foo<4, {0,1,0,1}>
+    bool: 1,2
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

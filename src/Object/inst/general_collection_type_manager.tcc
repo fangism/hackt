@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.tcc,v 1.11 2009/03/09 07:30:50 fang Exp $
+	$Id: general_collection_type_manager.tcc,v 1.12 2010/04/02 22:18:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_TCC__
@@ -52,7 +52,11 @@ GENERAL_COLLECTION_TYPE_MANAGER_CLASS::complete_type_definition_footprint(
 		// param r doesn't belong in temporary footprint
 		const DECLARE_TEMPORARY_FOOTPRINT(fake_top);
 		// don't have top-level footprint handy, need it?
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		return ct.create_definition_footprint(fake_top);
+#else
 		return ct.unroll_definition_footprint(fake_top);
+#endif
 	} else {
 		return good_bool(true);
 	}

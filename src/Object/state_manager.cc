@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.23 2009/10/06 17:05:32 fang Exp $
+	$Id: state_manager.cc,v 1.24 2010/04/02 22:18:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,6 +13,7 @@
 #include <algorithm>		// for std::accumulate
 #include <sstream>
 #include "Object/state_manager.tcc"
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/global_entry.tcc"
 #if BUILTIN_CHANNEL_FOOTPRINTS
 #include "Object/global_channel_entry.h"
@@ -122,15 +123,13 @@ if (f) {
 template <class Tag>
 void
 global_entry_pool<Tag>::collect_transient_info_base(
-		persistent_object_manager& m, 
-		const footprint& f) const {
+		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	size_t j = 1;
 	for ( ; i!=e; ++i, ++j) {
-		i->collect_transient_info_base(m, j, f, 
-			AS_A(const state_manager&, *this));
+		i->collect_transient_info_base(m);
 	}
 }
 
@@ -138,7 +137,7 @@ global_entry_pool<Tag>::collect_transient_info_base(
 template <class Tag>
 void
 global_entry_pool<Tag>::write_object_base(const persistent_object_manager& m, 
-		ostream& o, const footprint& f) const {
+		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, this->size() -1);
 	const_iterator i(++this->begin());
@@ -146,8 +145,7 @@ global_entry_pool<Tag>::write_object_base(const persistent_object_manager& m,
 	size_t j = 1;
 	for ( ; i!=e; i++, j++) {
 		STACKTRACE_INDENT_PRINT("writing entry " << j << endl);
-		i->write_object_base(m, o, j, f,
-			AS_A(const state_manager&, *this));
+		i->write_object_base(m, o);
 	}
 }
 
@@ -155,7 +153,7 @@ global_entry_pool<Tag>::write_object_base(const persistent_object_manager& m,
 template <class Tag>
 void
 global_entry_pool<Tag>::load_object_base(const persistent_object_manager& m, 
-		istream& i, const footprint& f) {
+		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	size_t s;
 	read_value(i, s);
@@ -163,8 +161,7 @@ global_entry_pool<Tag>::load_object_base(const persistent_object_manager& m,
 	size_t j = 1;
 	for ( ; j<=s; j++) {
 		STACKTRACE_INDENT_PRINT("loading entry " << j << endl);
-		(*this)[this->allocate()].load_object_base(m, i, j, f, 
-			AS_A(const state_manager&, *this));
+		(*this)[this->allocate()].load_object_base(m, i);
 	}
 }
 
@@ -375,16 +372,16 @@ void
 state_manager::collect_transient_info_base(persistent_object_manager& m, 
 		const footprint& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	global_entry_pool<process_tag>::collect_transient_info_base(m, f);
+	global_entry_pool<process_tag>::collect_transient_info_base(m);
 #if ENABLE_DATASTRUCTS
-	global_entry_pool<datastruct_tag>::collect_transient_info_base(m, f);
+	global_entry_pool<datastruct_tag>::collect_transient_info_base(m);
 #endif
-	global_entry_pool<channel_tag>::collect_transient_info_base(m, f);
+	global_entry_pool<channel_tag>::collect_transient_info_base(m);
 #if 0
 	// these cannot contain pointers... yet
-	global_entry_pool<enum_tag>::collect_transient_info_base(m, f);
-	global_entry_pool<int_tag>::collect_transient_info_base(m, f);
-	global_entry_pool<bool_tag>::collect_transient_info_base(m, f);
+	global_entry_pool<enum_tag>::collect_transient_info_base(m);
+	global_entry_pool<int_tag>::collect_transient_info_base(m);
+	global_entry_pool<bool_tag>::collect_transient_info_base(m);
 #endif
 }
 
@@ -393,14 +390,14 @@ void
 state_manager::write_object_base(const persistent_object_manager& m, 
 		ostream& o, const footprint& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	global_entry_pool<process_tag>::write_object_base(m, o, f);
+	global_entry_pool<process_tag>::write_object_base(m, o);
 #if ENABLE_DATASTRUCTS
-	global_entry_pool<datastruct_tag>::write_object_base(m, o, f);
+	global_entry_pool<datastruct_tag>::write_object_base(m, o);
 #endif
-	global_entry_pool<channel_tag>::write_object_base(m, o, f);
-	global_entry_pool<enum_tag>::write_object_base(m, o, f);
-	global_entry_pool<int_tag>::write_object_base(m, o, f);
-	global_entry_pool<bool_tag>::write_object_base(m, o, f);
+	global_entry_pool<channel_tag>::write_object_base(m, o);
+	global_entry_pool<enum_tag>::write_object_base(m, o);
+	global_entry_pool<int_tag>::write_object_base(m, o);
+	global_entry_pool<bool_tag>::write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -408,17 +405,19 @@ void
 state_manager::load_object_base(const persistent_object_manager& m, 
 		istream& i, const footprint& f) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	global_entry_pool<process_tag>::load_object_base(m, i, f);
+	global_entry_pool<process_tag>::load_object_base(m, i);
 #if ENABLE_DATASTRUCTS
-	global_entry_pool<datastruct_tag>::load_object_base(m, i, f);
+	global_entry_pool<datastruct_tag>::load_object_base(m, i);
 #endif
-	global_entry_pool<channel_tag>::load_object_base(m, i, f);
-	global_entry_pool<enum_tag>::load_object_base(m, i, f);
-	global_entry_pool<int_tag>::load_object_base(m, i, f);
-	global_entry_pool<bool_tag>::load_object_base(m, i, f);
+	global_entry_pool<channel_tag>::load_object_base(m, i);
+	global_entry_pool<enum_tag>::load_object_base(m, i);
+	global_entry_pool<int_tag>::load_object_base(m, i);
+	global_entry_pool<bool_tag>::load_object_base(m, i);
 }
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 

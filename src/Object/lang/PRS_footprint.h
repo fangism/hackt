@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.17 2010/01/12 19:26:41 fang Exp $
+	$Id: PRS_footprint.h,v 1.18 2010/04/02 22:18:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__

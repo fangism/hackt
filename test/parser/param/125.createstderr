@@ -3,5 +3,5 @@ At least one error in assignment.
 ERROR: at position 1 of expression-assignment list.
 ERROR: failed to assign pint: z = 12;
 Error resolving conditional-body:
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

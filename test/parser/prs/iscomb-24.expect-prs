@@ -1,32 +1,32 @@
-@ "sh1t.y.d[0].x.a" iscomb !autokeeper
-@ "sh1t.y.d[0].x.b" iscomb
-@ "sh1t.y.d[1].x.a" iscomb !autokeeper
-@ "sh1t.y.e.x.a" iscomb !autokeeper
 @ "sh1t.y.e.y.a" iscomb
 @ "sh1t.y.e.y.b" !autokeeper
+@ "sh1t.y.e.x.a" iscomb !autokeeper
 @ "sh1t.y.d[0].y.a" iscomb
 @ "sh1t.y.d[0].y.b" !autokeeper
 @ "sh1t.y.d[1].y.a" iscomb
 @ "sh1t.y.d[1].y.b" !autokeeper
+@ "sh1t.y.d[0].x.a" iscomb !autokeeper
+@ "sh1t.y.d[0].x.b" iscomb
+@ "sh1t.y.d[1].x.a" iscomb !autokeeper
 = "!GND" "sh1t.!GND"
-= "!Vdd" "sh1t.!Vdd"
 = "!GND" "sh1t.y.!GND"
-= "!Vdd" "sh1t.y.!Vdd"
 = "!GND" "sh1t.y.d[0].!GND"
-= "!Vdd" "sh1t.y.d[0].!Vdd"
 = "!GND" "sh1t.y.d[0].x.!GND"
-= "!Vdd" "sh1t.y.d[0].x.!Vdd"
 = "!GND" "sh1t.y.d[0].y.!GND"
-= "!Vdd" "sh1t.y.d[0].y.!Vdd"
 = "!GND" "sh1t.y.d[1].!GND"
-= "!Vdd" "sh1t.y.d[1].!Vdd"
 = "!GND" "sh1t.y.d[1].x.!GND"
-= "!Vdd" "sh1t.y.d[1].x.!Vdd"
 = "!GND" "sh1t.y.d[1].y.!GND"
-= "!Vdd" "sh1t.y.d[1].y.!Vdd"
 = "!GND" "sh1t.y.e.!GND"
-= "!Vdd" "sh1t.y.e.!Vdd"
 = "!GND" "sh1t.y.e.x.!GND"
+= "!Vdd" "sh1t.!Vdd"
+= "!Vdd" "sh1t.y.!Vdd"
+= "!Vdd" "sh1t.y.d[0].!Vdd"
+= "!Vdd" "sh1t.y.d[0].x.!Vdd"
+= "!Vdd" "sh1t.y.d[0].y.!Vdd"
+= "!Vdd" "sh1t.y.d[1].!Vdd"
+= "!Vdd" "sh1t.y.d[1].x.!Vdd"
+= "!Vdd" "sh1t.y.d[1].y.!Vdd"
+= "!Vdd" "sh1t.y.e.!Vdd"
 = "!Vdd" "sh1t.y.e.x.!Vdd"
 = "!GND" "sh1t.y.e.y.!GND"
 = "!Vdd" "sh1t.y.e.y.!Vdd"

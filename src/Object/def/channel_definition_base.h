@@ -2,7 +2,7 @@
 	\file "Object/def/channel_definition_base.h"
 	Channel definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h".
-	$Id: channel_definition_base.h,v 1.7 2009/09/14 21:16:49 fang Exp $
+	$Id: channel_definition_base.h,v 1.8 2010/04/02 22:18:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
@@ -51,7 +51,6 @@ virtual	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO = 0;
 virtual	MAKE_CANONICAL_CHANNEL_TYPE_PROTO = 0;
 
 virtual	REGISTER_COMPLETE_TYPE_PROTO = 0;
-virtual	UNROLL_COMPLETE_TYPE_PROTO = 0;
 virtual	CREATE_COMPLETE_TYPE_PROTO = 0;
 
 protected:

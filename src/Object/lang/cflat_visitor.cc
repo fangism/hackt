@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.12 2008/12/07 00:27:05 fang Exp $
+	$Id: cflat_visitor.cc,v 1.13 2010/04/02 22:18:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -15,6 +15,7 @@
 #include "Object/global_entry.tcc"
 #include "Object/global_channel_entry.h"
 #include "Object/traits/instance_traits.h"
+#include "common/TODO.h"
 #include "util/visitor_functor.h"
 #include "util/index_functor.h"
 #include "util/compose.h"
@@ -31,6 +32,7 @@ using std::for_each;
 //=============================================================================
 // struct cflat_visitor class definition
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 cflat_visitor::expr_pool_setter::expr_pool_setter(
 		cflat_visitor& _cfv, const PRS_footprint_expr_pool_type& _p) :
 		cfv(_cfv) {
@@ -55,17 +57,19 @@ cflat_visitor::expr_pool_setter::expr_pool_setter(
 cflat_visitor::expr_pool_setter::~expr_pool_setter() {
 	cfv.expr_pool = NULL;
 }
+#endif
 
 //=============================================================================
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class Tag>
 void
-cflat_visitor::__default_visit(const global_entry<Tag>& e) {
+cflat_visitor::__default_visit(const GLOBAL_ENTRY<Tag>& e) {
 //	e.accept(*this);
 }
 
 #define	DEFINE_VISIT_GLOBAL_ENTRY(Tag)					\
 void									\
-cflat_visitor::visit(const global_entry<Tag>& e) {			\
+cflat_visitor::visit(const GLOBAL_ENTRY<Tag>& e) {			\
 	STACKTRACE_VERBOSE;						\
 	__default_visit(e);						\
 }
@@ -85,7 +89,7 @@ DEFINE_VISIT_GLOBAL_ENTRY(bool_tag)
 	is not derived from cflat_context... should it be?
  */
 void
-cflat_visitor::visit(const global_entry<process_tag>& e) {
+cflat_visitor::visit(const GLOBAL_ENTRY<process_tag>& e) {
 	STACKTRACE_VERBOSE;
 	cflat_visitor& v(*this);
 	const entity::footprint* const f(e._frame._footprint);
@@ -102,8 +106,19 @@ cflat_visitor::visit(const global_entry<process_tag>& e) {
 		sfp(f->get_spec_footprint());
 	sfp.accept(v);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+void
+cflat_visitor::visit(const entity::footprint& f) {
+	STACKTRACE_VERBOSE;
+	FINISH_ME_EXIT(Fang);
+	// visit PRS
+	// visit CHP
+	// visit SPEC
+}
+#else
 /**
 	Default state_manager traversal. 
  */
@@ -120,6 +135,7 @@ cflat_visitor::visit(const state_manager& sm) {
 	sm.__accept<int_tag>(v);
 	sm.__accept<bool_tag>(v);
 }
+#endif
 
 //=============================================================================
 /**
@@ -129,7 +145,9 @@ cflat_visitor::visit(const state_manager& sm) {
 void
 cflat_visitor::visit(const footprint& f) {
 	STACKTRACE_VERBOSE;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const expr_pool_setter temp(*this, f);	// will expire end of scope
+#endif
 	for_each(f.rule_pool.begin(), f.rule_pool.end(), visitor_ref(*this));
 	for_each(f.macro_pool.begin(), f.macro_pool.end(), visitor_ref(*this));
 #if 0

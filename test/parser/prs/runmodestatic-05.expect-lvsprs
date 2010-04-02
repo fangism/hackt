@@ -5,10 +5,10 @@ runmodestatic("a")
 ~"a" -> "c"+
 runmodestatic("a")
 connect "!GND" "bar.!GND"
-connect "!Vdd" "bar.!Vdd"
-connect "a" "bar.x"
-connect "b" "bar.y"
 connect "!GND" "bq.!GND"
+connect "!Vdd" "bar.!Vdd"
 connect "!Vdd" "bq.!Vdd"
+connect "a" "bar.x"
 connect "a" "bq.x"
+connect "b" "bar.y"
 connect "c" "bq.y"

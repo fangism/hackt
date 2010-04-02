@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.33 2007/10/08 01:21:39 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.34 2010/04/02 22:18:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -20,6 +20,9 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "Object/type/fundamental_type_reference.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_entry_context.h"
+#endif
 #include "common/TODO.h"
 #include "common/ICE.h"
 #include "util/what.h"
@@ -214,25 +217,91 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 	Will private subinstances still work on local references? no
 	\param sm is not used here, but is needed for member lookups, 
 		implemented in the virtual override.  
+	\return 1-based global index, 0 on error.
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const state_manager& sm, const footprint& top) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context& gc
+#else
+		const state_manager& sm, const footprint& top
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const footprint& top(gc.get_top_footprint());
+	const footprint_frame* const fpf = gc.get_footprint_frame();
+	const unroll_context uc(fpf ? fpf->_footprint : &top, &top);
+#else
 	const unroll_context uc(&top, &top);
+#endif
 	// should not be virtual call (one hopes)
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// translate local index to global
+	const size_t lid = this->lookup_locally_allocated_index(uc);
+	if (lid) {
+		return gc.lookup_global_id<Tag>(lid);
+	} else {
+		return 0;
+	}
+#else
 	return this->lookup_locally_allocated_index(sm, uc);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 global_indexed_reference
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
-		const state_manager& sm, const footprint& top) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context& gc
+#else
+		const state_manager& sm, const footprint& top
+#endif
+		) const {
+	STACKTRACE_VERBOSE;
+#if 0
 	return global_indexed_reference(traits_type::type_tag_enum_value, 
-		this->lookup_globally_allocated_index(sm, top));
+		this->lookup_globally_allocated_index(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			gc
+#else
+			sm, top
+#endif
+			));
+#else
+	global_reference_array_type tmp;
+	if (lookup_top_level_references(gc, tmp).good) {
+		return tmp.front();
+	} else {
+		return global_indexed_reference(META_TYPE_NONE, 0);
+	}
+#endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
+		const global_entry_context& gc,
+		global_reference_array_type& ret) const {
+	STACKTRACE_VERBOSE;
+	vector<size_t> tmp;
+	const footprint& top(gc.get_top_footprint());
+	const footprint_frame* const fpf = gc.get_footprint_frame();
+	const footprint& fp(fpf ? *fpf->_footprint : top);
+	if (this->lookup_globally_allocated_indices(fp, tmp).good) {
+		transform(tmp.begin(), tmp.end(), back_inserter(ret), 
+			std::bind1st(std::ptr_fun(&make_global_reference),
+				size_t(traits_type::type_tag_enum_value)));
+		return good_bool(true);
+	} else {
+		return good_bool(false);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -240,11 +309,15 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
 	in the unroll_context argument.  
 	To convert to a global index, caller is responsible
 	for translating using the footprint_frame.  
+	\return 1-based index for local alias, 0 for error.
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
-		const state_manager&, const unroll_context& uc) const {
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&, 
+#endif
+		const unroll_context& uc) const {
 	STACKTRACE_VERBOSE;
 	const instance_alias_info_ptr_type
 		alias(__unroll_generic_scalar_reference(
@@ -256,10 +329,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	}
 	const size_t ret = alias->instance_index;
 	INVARIANT(ret);
+	STACKTRACE_INDENT_PRINT("local-index = " << ret << endl);
 	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Since this is a simple_meta_instance_reference, we're 
 	at the top of the reference hierarchy.  
@@ -272,13 +347,24 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager& sm, const footprint& top) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context& gc
+#else
+		const state_manager& sm, const footprint& top
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template simple_lookup_footprint_frame<Tag>(
 			*this->inst_collection_ref, this->array_indices, 
-				sm, top);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+				gc
+#else
+				sm, top
+#endif
+				);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

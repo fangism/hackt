@@ -1,0 +1,8 @@
+foo.L.rt.mx.ix[0].p.me refers to process-member-inst-ref b<>
+foo.L.rt.mx.ix[0].p.me (type: b<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  f = bool
+  t = bool
+foo.L.rt.mx.ix[0].p.me.f : X

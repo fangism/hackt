@@ -1,8 +1,8 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	Foo	source_e<3><2, {2,1}>
-	process: 2,3,4,5,6,7
-	bool: 1,2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,7
+	process: 2;3..7
+	bool: 1,2,3,4,5,6,7;8..24
 2	(top)	-	2	Foo.rr	e1of<3>
 	bool: 1,2,6,3,4,5
 3	process	1	2	Foo.s[0]	e1of<2>
@@ -23,20 +23,20 @@ globID	super		localID	canonical	footprint-frame
 5	(top)	-	5	Foo.rr.rr[2]	
 6	(top)	-	6	Foo.rr.e	
 7	(top)	-	7	Foo._Reset	
-8	process	1	7	Foo.s[0].rr[0]	
-9	process	1	8	Foo.s[0].rr[1]	
-10	process	1	9	Foo.s[0].e	
-11	process	1	10	Foo.s[1].rr[0]	
-12	process	1	11	Foo.s[1].rr[1]	
-13	process	1	12	Foo.s[1].e	
-14	process	1	13	Foo.s[2].rr[0]	
-15	process	1	14	Foo.s[2].rr[1]	
-16	process	1	15	Foo.s[2].e	
-17	process	1	16	Foo.r[0].rr[0]	
-18	process	1	17	Foo.r[0].rr[1]	
-19	process	1	18	Foo.r[0].rr[2]	
-20	process	1	19	Foo.r[0].e	
-21	process	1	20	Foo.r[1].rr[0]	
-22	process	1	21	Foo.r[1].rr[1]	
-23	process	1	22	Foo.r[1].rr[2]	
-24	process	1	23	Foo.r[1].e	
+8	process	1	8	Foo.s[0].rr[0]	
+9	process	1	9	Foo.s[0].rr[1]	
+10	process	1	10	Foo.s[0].e	
+11	process	1	11	Foo.s[1].rr[0]	
+12	process	1	12	Foo.s[1].rr[1]	
+13	process	1	13	Foo.s[1].e	
+14	process	1	14	Foo.s[2].rr[0]	
+15	process	1	15	Foo.s[2].rr[1]	
+16	process	1	16	Foo.s[2].e	
+17	process	1	17	Foo.r[0].rr[0]	
+18	process	1	18	Foo.r[0].rr[1]	
+19	process	1	19	Foo.r[0].rr[2]	
+20	process	1	20	Foo.r[0].e	
+21	process	1	21	Foo.r[1].rr[0]	
+22	process	1	22	Foo.r[1].rr[1]	
+23	process	1	23	Foo.r[1].rr[2]	
+24	process	1	24	Foo.r[1].e	

@@ -1,4 +1,4 @@
 ERROR: Index [0] of bool_array_1D b already instantiated!
 Error resolving conditional-body:
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

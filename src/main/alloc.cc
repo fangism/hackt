@@ -2,7 +2,7 @@
 	\file "main/alloc.cc"
 	Allocates global unique state.  
 
-	$Id: alloc.cc,v 1.7 2007/09/13 01:14:05 fang Exp $
+	$Id: alloc.cc,v 1.8 2010/04/02 22:18:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -46,6 +46,9 @@ alloc::alloc() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 alloc::main(const int _argc, char* argv[], const global_options&) {
+	cerr <<
+"The hacalloc phase is OBSOLETE, use object files produced by haccreate\n"
+"for all back-end tools." << endl;
 	int argc = _argc;
 	options opt;
 	// re-use create's options

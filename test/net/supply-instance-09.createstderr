@@ -120,26 +120,30 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bar<>::!GND (1) 
         !Vdd = bool^0 = bar<>::!Vdd (2) 
-        a = bool^0 = bar<>::a (5) 
-        b = bool^0 = bar<>::b (6) 
+        a = bool^0 = bar<>::a (3) 
+        b = bool^0 = bar<>::b (4) 
         f = process foo<>^0 = bar<>::f (1) (
           !GND = bool^0 = bar<>::!GND (1) 
           !Vdd = bool^0 = bar<>::!Vdd (2) 
-          myVdd = bool^0 = bar<>::f.myVdd (3) 
-          myGND = bool^0 = bar<>::f.myGND (4) 
-          in = bool^0 = bar<>::a (5) 
-          out = bool^0 = bar<>::b (6) 
+          myVdd = bool^0 = bar<>::f.myVdd (5) 
+          myGND = bool^0 = bar<>::f.myGND (6) 
+          in = bool^0 = bar<>::a (3) 
+          out = bool^0 = bar<>::b (4) 
         )
         Created state:
-        process instance pool:
-        1	bar<>::f
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
-        3	bar<>::f.myVdd
-        4	bar<>::f.myGND
-        5	bar<>::a
-        6	bar<>::b
+        process instance pool: (0 ports, 1 local, 1 mapped)
+        1	bar<>::f	foo<>
+          bool: 6,5,3,4,1,2
+        private sub-process index map:
+          (1 -> 0)
+          (2 -> 1)
+        bool instance pool: (4 ports, 2 local, 0 mapped)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
+        3	bar<>::a	
+        4	bar<>::b	
+        5	bar<>::f.myVdd	
+        6	bar<>::f.myGND	
       }
       }
 
@@ -186,15 +190,16 @@ In namespace "", we have: {
         myVdd = bool^0 = foo<>::myVdd (2) 
         out = bool^0 = foo<>::out (4) 
         Created state:
-        process instance pool:
-        1	foo<>::a
-        bool instance pool:
-        1	foo<>::myGND
-        2	foo<>::myVdd
-        3	foo<>::in
-        4	foo<>::out
-        5	foo<>::!GND
-        6	foo<>::!Vdd
+        process instance pool: (0 ports, 1 local, 0 mapped)
+        1	foo<>::a	inv<>
+          bool: 1,2,3,4
+        bool instance pool: (6 ports, 0 local, 0 mapped)
+        1	foo<>::myGND	
+        2	foo<>::myVdd	
+        3	foo<>::in	
+        4	foo<>::out	
+        5	foo<>::!GND	
+        6	foo<>::!Vdd	
       }
       }
 
@@ -228,11 +233,11 @@ In namespace "", we have: {
         x = bool^0 = inv<>::x (3) 
         y = bool^0 = inv<>::y (4) 
         Created state:
-        bool instance pool:
-        1	inv<>::!GND
-        2	inv<>::!Vdd
-        3	inv<>::x
-        4	inv<>::y
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::x	
+        4	inv<>::y	
         resolved prs:
         x -> y-
         ~x -> y+
@@ -257,11 +262,18 @@ footprint: {
     b = bool^0 = bq.b (4) 
   )
   Created state:
-  process instance pool:
-  1	bq
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	bq.a
-  4	bq.b
+  process instance pool: (0 ports, 1 local, 2 mapped)
+  1	bq	bar<>
+    bool: 1,2,3,4
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 2)
+  bool instance pool: (0 ports, 4 local, 2 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	bq.a	
+  4	bq.b	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 2)
 }

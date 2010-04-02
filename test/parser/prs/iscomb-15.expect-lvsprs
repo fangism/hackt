@@ -7,10 +7,10 @@
 @ "p" iscomb
 @ "x[2].b" iscomb
 connect "!GND" "x[0].!GND"
+connect "!GND" "x[1].!GND"
+connect "!GND" "x[2].!GND"
 connect "!Vdd" "x[0].!Vdd"
+connect "!Vdd" "x[1].!Vdd"
+connect "!Vdd" "x[2].!Vdd"
 connect "p" "x[0].a"
 connect "q" "x[0].b"
-connect "!GND" "x[1].!GND"
-connect "!Vdd" "x[1].!Vdd"
-connect "!GND" "x[2].!GND"
-connect "!Vdd" "x[2].!Vdd"

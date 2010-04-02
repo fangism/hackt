@@ -3,10 +3,10 @@
 "a" -> "c"-
 ~"a" -> "c"+
 = "!GND" "bar.!GND"
-= "!Vdd" "bar.!Vdd"
-= "a" "bar.x"
-= "b" "bar.y"
 = "!GND" "bq.!GND"
+= "!Vdd" "bar.!Vdd"
 = "!Vdd" "bq.!Vdd"
+= "a" "bar.x"
 = "a" "bq.x"
+= "b" "bar.y"
 = "c" "bq.y"

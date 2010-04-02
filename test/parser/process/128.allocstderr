@@ -1,0 +1,56 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	poo[0]	ick<>
+	process: 2,3;7..8 {9}
+	bool: 1,2,3;5 {6..8}
+2	(top)	-	2	poo[0].p	bar<>
+	process: 3;10
+	bool: 1,2,3;9 {10}
+3	(top)	-	3	poo[0].p.x	foo<>
+	bool: 1,2,3;11
+4	(top)	-	4	poo[1]	ick<>
+	process: 5,6;11..12 {13}
+	bool: 1,2,4;12 {13..15}
+5	(top)	-	5	poo[1].p	bar<>
+	process: 6;14
+	bool: 1,2,4;16 {17}
+6	(top)	-	6	poo[1].p.x	foo<>
+	bool: 1,2,4;18
+7	process	1	3	poo[0].q	bar<>
+	process: 8;9
+	bool: 1,2,5;6 {7}
+8	process	1	4	poo[0].q.x	foo<>
+	bool: 1,2,5;8
+9	process	7	2	poo[0].q.y	foo<>
+	bool: 1,2,6;7
+10	process	2	2	poo[0].p.y	foo<>
+	bool: 1,2,9;10
+11	process	4	3	poo[1].q	bar<>
+	process: 12;13
+	bool: 1,2,12;13 {14}
+12	process	4	4	poo[1].q.x	foo<>
+	bool: 1,2,12;15
+13	process	11	2	poo[1].q.y	foo<>
+	bool: 1,2,13;14
+14	process	5	2	poo[1].p.y	foo<>
+	bool: 1,2,16;17
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	poo[0].p.x.a	
+4	(top)	-	4	poo[1].p.x.a	
+5	process	1	4	poo[0].q.x.a	
+6	process	7	4	poo[0].q.y.a	
+7	process	9	4	poo[0].q.y.b	
+8	process	8	4	poo[0].q.x.b	
+9	process	2	4	poo[0].p.y.a	
+10	process	10	4	poo[0].p.y.b	
+11	process	3	4	poo[0].p.x.b	
+12	process	4	4	poo[1].q.x.a	
+13	process	11	4	poo[1].q.y.a	
+14	process	13	4	poo[1].q.y.b	
+15	process	12	4	poo[1].q.x.b	
+16	process	5	4	poo[1].p.y.a	
+17	process	14	4	poo[1].p.y.b	
+18	process	6	4	poo[1].p.x.b	
+

@@ -81,14 +81,16 @@ In namespace "", we have: {
             )
           }
         Created state:
-        process instance pool:
-        1	bar<>::x[0]
-        2	bar<>::x[1]
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
-        3	bar<>::x[0].a
-        4	bar<>::x[1].a
+        process instance pool: (2 ports, 0 local, 0 mapped)
+        1	bar<>::x[0]	foo<>
+          bool: 1,2,3
+        2	bar<>::x[1]	foo<>
+          bool: 1,2,4
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
+        3	bar<>::x[0].a	
+        4	bar<>::x[1].a	
         bool port aliases:
         1: bar<>::x[0].!GND = bar<>::x[1].!GND = bar<>::!GND
         2: bar<>::x[0].!Vdd = bar<>::x[1].!Vdd = bar<>::!Vdd
@@ -116,10 +118,10 @@ In namespace "", we have: {
         !Vdd = bool^0 = foo<>::!Vdd (2) 
         a = bool^0 = foo<>::a (3) 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::a
+        bool instance pool: (3 ports, 0 local, 0 mapped)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::a	
       }
       }
 
@@ -150,13 +152,17 @@ footprint: {
       }
   )
   Created state:
-  process instance pool:
-  1	poo
-  2	poo.x[0]
-  3	poo.x[1]
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	poo.x[0].a
-  4	poo.x[1].a
+  process instance pool: (0 ports, 3 local, 0 mapped)
+  1	poo	bar<>
+    process: 2,3
+    bool: 1,2,3,4
+  2	poo.x[0]	foo<>
+    bool: 1,2,3
+  3	poo.x[1]	foo<>
+    bool: 1,2,4
+  bool instance pool: (0 ports, 4 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	poo.x[0].a	
+  4	poo.x[1].a	
 }

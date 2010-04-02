@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.58 2010/01/05 00:09:46 fang Exp $
+	$Id: State-prsim.cc,v 1.59 2010/04/02 22:19:18 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -325,6 +325,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		trace_manager(),
 		trace_flush_interval(1L<<16),
 #endif
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+		cache_half_life(1024),
+		cache_countdown(cache_half_life),
+#endif
 		flags(FLAGS_DEFAULT),
 #define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
 		invariant_fail_policy(E(INVARIANT_FAIL)),
@@ -340,25 +344,35 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
 		__shuffle_indices(0) {
+	const footprint& topfp(mod.get_footprint());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const size_t s = topfp.get_instance_pool<bool_tag>().total_entries() +1;
+	// let 0th slot be dummy, so we can use 1-based global indexing
+#else
 	const state_manager& sm(mod.get_state_manager());
 	const global_entry_pool<bool_tag>&
 		bool_pool(sm.get_pool<bool_tag>());
-	head_sentinel();
 	// recall, the global node pool is 1-indexed because entry 0 is null
 	// we mirror this in our own node state pool, by allocating
 	// the same number of elements.  
 	const size_t s = bool_pool.size();
+#endif
+	head_sentinel();
 	node_pool.resize(s);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// let ExprAlloc take care of this during visit
+#else
 	// could implement the following as a cflat_visitor...
 	// apply node attributes:
 	node_pool_type::iterator i(node_pool.begin()), ne(node_pool.end());
 	global_entry_pool<bool_tag>::const_iterator j(bool_pool.begin());
-	const entity::global_entry_context_base gec(sm, mod.get_footprint());
+	const entity::global_entry_context_base gec(sm, topfp);
 	for (++i, ++j; i!=ne; ++i, ++j) {
 		const entity::state_instance<bool_tag>&
 			b(j->get_canonical_instance(gec));
 		i->import_attributes(*b.get_back_ref());
 	}
+#endif
 
 	// not expect expression-trees deeper than 8, but is growable
 	__shuffle_indices.reserve(32);
@@ -370,37 +384,59 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 
 	// NOTE: we're referencing 'this' during construction, however, we 
 	// are done constructing this State's members at this point.  
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const entity::footprint_frame tff(topfp);
+	const entity::global_offset g;
+	ExprAlloc v(*this, tff, g, f);
+#else
 	ExprAlloc v(*this, f);
+#endif
 	// pre-allocate array of process states
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// use 0th slot for top-level
+	process_state_array.resize(
+		topfp.get_instance_pool<process_tag>().total_entries() +1);
+#else
+	// why was this +2? was last slot used for top-level?
 	process_state_array.reserve(sm.get_pool<process_tag>().size() +2);
+#endif
 	// unique_process_pool.reserve() ?
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	// first valid global expression ID is 1, 0 is reserved as NULL
 	global_expr_process_id_map[FIRST_VALID_GLOBAL_EXPR]
-		= FIRST_VALID_PROCESS;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		= 0	// for top-level
+#else
+		= FIRST_VALID_PROCESS
+#endif
+		;
 	// if top-level process is empty, will need to replace this entry!
 #endif
 	// top-level prs in the module, pid=0
+#if 0
 #if !PRSIM_SIMPLE_ALLOC
 	STACKTRACE_INDENT_PRINT("top-level process ..." << endl);
-	const footprint& topfp(mod.get_footprint());
-	topfp.get_prs_footprint().accept(v);	// throw?
-	topfp.get_spec_footprint().accept(v);	// throw?
+//	v.visit_rules_and_directives(topfp);
 	// ALERT: when is compact_expr_pool() called!? (hint: before SPEC)
 #else
 	// fold into state_manager's visit
 #endif
+#endif
 	// this may throw an exception!
 try {
 	STACKTRACE_INDENT_PRINT("instantiated processes ..." << endl);
-	sm.accept(v);
-} catch (const entity::cflat_visitor::instance_exception<process_tag>& e) {
+	v();	// GO!!!
+} catch (const entity::instance_exception<process_tag>& e) {
+	cerr << "Error with process instance: ";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// ALERT: could be top-level
+	topfp.dump_canonical_name<process_tag>(cerr, e.pid) << endl;
+#else
 	const global_entry_pool<process_tag>&
 		proc_entry_pool(sm.get_pool<process_tag>());
-	cerr << "Error with process instance: ";
-	proc_entry_pool[e.pid].dump_canonical_name(cerr, 
-		mod.get_footprint(), sm) << endl;
-	THROW_EXIT;
+	proc_entry_pool[e.pid].dump_canonical_name(cerr, topfp, sm) << endl;
+#endif
+	THROW_EXIT;	// re-throw
 }
 	// recommend caller to invoke ::initialize() immediately after ctor
 }	// end State::State(const module&)
@@ -836,13 +872,13 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** 
-	Returns the local-to-global node translation map for process pid.
-	This *really* should be inlined...
- */
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION && !CACHE_GLOBAL_FOOTPRINT_FRAMES
+footprint_frame_map_type
+#else
 const footprint_frame_map_type&
+#endif
 State::get_footprint_frame_map(const process_index_type pid) const {
-	return get_module().get_state_manager().get_bool_frame_map(pid);
+	return state_base::get_footprint_frame(pid).get_frame_map<bool_tag>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2936,6 +2972,15 @@ if (n.in_channel()) {
 	// very slow, but terrific for debugging!!!
 	check_event_queue();
 #endif
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+	// periodically age the cache, evict old entries
+	if (LIKELY(cache_countdown)) {
+		--cache_countdown;
+	} else {
+		cache_countdown = cache_half_life;
+		halve_cache();
+	}
+#endif
 
 	// return the affected node's index
 	DEBUG_STEP_PRINT("returning node index " << ni << endl);
@@ -3124,8 +3169,12 @@ State::finish_process_type_map(void) {
 	STACKTRACE_VERBOSE;
 	process_state_array_type::iterator
 		i(process_state_array.begin()), e(process_state_array.end());
+	// replaces index union member with pointer union member
 	for ( ; i!=e; ++i) {
-		i->set_ptr(unique_process_pool[i->get_index()]);
+		const size_t j = i->get_index();
+		const unique_process_subgraph& g(unique_process_pool[j]);
+		STACKTRACE_INDENT_PRINT("type " << j << " @ " << &g << endl);
+		i->set_ptr(g);
 	}
 }
 
@@ -3164,6 +3213,7 @@ State::lookup_global_expr_process(const expr_index_type gei) const {
 		f(global_expr_process_id_map.upper_bound(gei));
 	INVARIANT(f != global_expr_process_id_map.begin());
 	--f;
+	STACKTRACE_INDENT_PRINT("pid = " << f->second << endl);
 	return process_state_array[f->second];
 #else
 	process_state_array_type::const_iterator
@@ -3204,8 +3254,9 @@ State::lookup_global_expr_process(const expr_index_type gei) {
 	Given a reference to a process state object, translate a local node
 	index to the global node index using corresponding footprint frame.  
 	\param ps process-state, must belong to the process_state_array member
-	\param lni local node index, local to the unique_process_subgraph
-	\return global node index
+	\param lni local node index, local to the unique_process_subgraph,
+		1-based
+	\return global node index, 1-based
  */
 node_index_type
 State::translate_to_global_node(const process_sim_state& ps, 
@@ -3219,10 +3270,27 @@ State::translate_to_global_node(const process_sim_state& ps,
 node_index_type
 State::translate_to_global_node(const process_index_type pid, 
 		const node_index_type lni) const {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("lni = " << lni << endl);
 	// HACK: poor style, using pointer arithmetic to deduce index
 	ISE_INVARIANT(pid < process_state_array.size());
 	// no longer need special case for pid=0, b/c frame is identity
-	return get_footprint_frame_map(pid)[lni];
+	const footprint_frame_map_type& bfm(get_footprint_frame_map(pid));
+#if 0 && ENABLE_STACKTRACE
+	copy(bfm.begin(), bfm.end(),
+		std::ostream_iterator<size_t>(
+			STACKTRACE_INDENT_PRINT("translate bfm: "), ","));
+	STACKTRACE_STREAM << endl;
+#endif
+#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
+	INVARIANT(lni <= bfm.size());
+	const size_t ret = bfm[lni -1];
+#else
+	INVARIANT(lni < bfm.size());
+	const size_t ret = bfm[lni];
+#endif
+	STACKTRACE_INDENT_PRINT("gni = " << ret << endl);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4250,12 +4318,16 @@ State::check_structure(void) const {
  */
 ostream&
 State::dump_node_canonical_name(ostream& o, const node_index_type i) const {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	return mod.get_footprint().dump_canonical_name<bool_tag>(o, i-1);
+#else
 	ISE_INVARIANT(i);
 	ISE_INVARIANT(i < node_pool.size());
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
 	return bp[i].dump_canonical_name(o, topfp, sm);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4271,15 +4343,23 @@ State::get_node_canonical_name(const node_index_type i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i 1-based global process index.
+ */
 ostream&
 State::dump_process_canonical_name(ostream& o, 
 		const process_index_type i) const {
 if (i) {
 	ISE_INVARIANT(i < process_state_array.size());
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	// footprint::dump_canonical_name expects 0-based index.
+	return mod.get_footprint().dump_canonical_name<process_tag>(o, i-1);
+#else
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
 	const global_entry_pool<process_tag>& pp(sm.get_pool<process_tag>());
 	return pp[i].dump_canonical_name(o, topfp, sm);
+#endif
 } else {
 	return o << "[top-level]";
 }
@@ -4311,14 +4391,20 @@ ostream&
 State::dump_struct(ostream& o) const {
 {
 	o << "Nodes: " << endl;
-	const state_manager& sm(mod.get_state_manager());
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const entity::footprint& topfp(mod.get_footprint());
+	const state_manager& sm(mod.get_state_manager());
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
+#endif
 	const node_index_type nodes = node_pool.size();
 	node_index_type i = FIRST_VALID_GLOBAL_NODE;
 	for ( ; i<nodes; ++i) {
 		o << "node[" << i << "]: \"";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		dump_node_canonical_name(o, i);
+#else
 		bp[i].dump_canonical_name(o, topfp, sm);
+#endif
 		node_pool[i].dump_struct(o << "\" ") << endl;
 	}
 }
@@ -4352,20 +4438,27 @@ State::dump_struct_dot(ostream& o) const {
 	STACKTRACE_VERBOSE;
 	o << "digraph G {" << endl;
 {
-	const state_manager& sm(mod.get_state_manager());
-	const entity::footprint& topfp(mod.get_footprint());
-	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
 	o << "# nodes: " << endl;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const entity::footprint& topfp(mod.get_footprint());
+	const state_manager& sm(mod.get_state_manager());
+	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
+#endif
+	const node_index_type nodes = node_pool.size();
 	// box or plaintext
 	o << "node [shape=box, fillcolor=white];" << endl;
-	const node_index_type nodes = node_pool.size();
 	node_index_type i = FIRST_VALID_GLOBAL_NODE;
 	for ( ; i<nodes; ++i) {
 		ostringstream oss;
 		oss << "NODE_" << i;
 		const string& s(oss.str());
 		o << s;
-		bp[i].dump_canonical_name(o << "\t[label=\"", topfp, sm)
+		o << "\t[label=\"";
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		dump_node_canonical_name(o, i)
+#else
+		bp[i].dump_canonical_name(o, topfp, sm)
+#endif
 			<< "\"];" << endl;
 		node_pool[i].dump_fanout_dot(o, s) << endl;
 	}
@@ -4682,6 +4775,7 @@ ostream&
 State::dump_node_fanin(ostream& o, const node_index_type ni, 
 		const bool v) const {
 	// typedef	process_fanin_type::const_iterator	const_iterator;
+	STACKTRACE_INDENT_PRINT("node_fanin:ni = " << ni << endl);
 	const node_type& n(get_node(ni));
 #if VECTOR_NODE_FANIN
 	process_fanin_type::const_iterator i(n.fanin.begin()), e(n.fanin.end());

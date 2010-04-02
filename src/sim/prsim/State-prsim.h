@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.33 2010/01/05 00:09:46 fang Exp $
+	$Id: State-prsim.h,v 1.34 2010/04/02 22:19:19 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -33,6 +33,7 @@
 #include "util/string_fwd.h"
 #include "util/named_ifstream_manager.h"
 #include "util/tokenize_fwd.h"
+#include "Object/devel_switches.h"
 #if PRSIM_TRACE_GENERATION
 #include "util/memory/excl_ptr.h"
 #endif
@@ -430,6 +431,9 @@ protected:
 	typedef	vector<ring_set_type>		check_excl_array_type;
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	/**
+		TODO: use a hierarchical local_private_entry map scheme!
+		Analogous to global_entry_context's id lookups.
+
 		Translates a global expression ID to the process ID
 		to which the expression belongs.  
 		key is the *lowest* expression-index 'owned' by
@@ -515,6 +519,15 @@ private:
 #if PRSIM_TRACE_GENERATION
 	excl_ptr<trace_manager_type>		trace_manager;
 	trace_index_type			trace_flush_interval;
+#endif
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+public:
+	// parameters for managing state_base's footprint_frame cache
+	// period at which cache decays, half-life
+	size_t					cache_half_life;
+private:
+	// when counter hits zero, age the cache
+	size_t					cache_countdown;
 #endif
 	// mode of operation
 	// operation flags
@@ -621,8 +634,17 @@ public:
 	string
 	get_process_canonical_name(const process_index_type) const;
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION && !CACHE_GLOBAL_FOOTPRINT_FRAMES
+	footprint_frame_map_type
+#else
 	const footprint_frame_map_type&
+#endif
 	get_footprint_frame_map(const process_index_type pid) const;
+
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+	const size_t&
+	get_cache_countdown(void) const { return cache_countdown; }
+#endif
 
 	const process_sim_state&
 	get_process_state(const process_index_type pid) const {

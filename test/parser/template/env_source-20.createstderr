@@ -194,12 +194,12 @@ In namespace "", we have: {
             }
           e = bool^0 = e1of<2>::e (3) 
           Created state:
-          bool instance pool:
-          1	e1of<2>::!GND
-          2	e1of<2>::!Vdd
-          3	e1of<2>::e
-          4	e1of<2>::d[0]
-          5	e1of<2>::d[1]
+          bool instance pool: (5 ports, 0 local, 0 mapped)
+          1	e1of<2>::!GND	
+          2	e1of<2>::!Vdd	
+          3	e1of<2>::e	
+          4	e1of<2>::d[0]	
+          5	e1of<2>::d[1]	
         }
       }
       }
@@ -255,15 +255,16 @@ In namespace "", we have: {
             e = bool^0 = source_e<2, 2, {0,1}>::rr.e (5) 
           )
           Created state:
-          process instance pool:
-          1	source_e<2, 2, {0,1}>::rr
-          bool instance pool:
-          1	source_e<2, 2, {0,1}>::!GND
-          2	source_e<2, 2, {0,1}>::!Vdd
-          3	source_e<2, 2, {0,1}>::rr.d[0]
-          4	source_e<2, 2, {0,1}>::rr.d[1]
-          5	source_e<2, 2, {0,1}>::rr.e
-          6	source_e<2, 2, {0,1}>::_Reset
+          process instance pool: (1 ports, 0 local, 0 mapped)
+          1	source_e<2, 2, {0,1}>::rr	e1of<2>
+            bool: 1,2,5,3,4
+          bool instance pool: (6 ports, 0 local, 0 mapped)
+          1	source_e<2, 2, {0,1}>::!GND	
+          2	source_e<2, 2, {0,1}>::!Vdd	
+          3	source_e<2, 2, {0,1}>::rr.d[0]	
+          4	source_e<2, 2, {0,1}>::rr.d[1]	
+          5	source_e<2, 2, {0,1}>::rr.e	
+          6	source_e<2, 2, {0,1}>::_Reset	
           bool port aliases:
           1: source_e<2, 2, {0,1}>::rr.!GND = source_e<2, 2, {0,1}>::!GND
           2: source_e<2, 2, {0,1}>::rr.!Vdd = source_e<2, 2, {0,1}>::!Vdd
@@ -312,14 +313,17 @@ footprint: {
     _Reset = bool^0 = X._Reset (6) 
   )
   Created state:
-  process instance pool:
-  1	X<2, {0,1}>
-  2	X.rr
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	X.rr.d[0]
-  4	X.rr.d[1]
-  5	X.rr.e
-  6	X._Reset
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	X<2, {0,1}>	source_e<2, 2, {0,1}>
+    process: 2
+    bool: 1,2,3,4,5,6
+  2	X.rr	e1of<2>
+    bool: 1,2,5,3,4
+  bool instance pool: (0 ports, 6 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	X.rr.d[0]	
+  4	X.rr.d[1]	
+  5	X.rr.e	
+  6	X._Reset	
 }

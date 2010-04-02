@@ -145,13 +145,13 @@ In namespace "", we have: {
         R = channel chan!(bool<>)^0 = bool_peekbuf<>::R (2) 
         x = bool^0 = bool_peekbuf<>::x (3) 
         Created state:
-        channel instance pool:
-        1	bool_peekbuf<>::L
-        2	bool_peekbuf<>::R
-        bool instance pool:
-        1	bool_peekbuf<>::!GND
-        2	bool_peekbuf<>::!Vdd
-        3	bool_peekbuf<>::x
+        channel instance pool: (2 ports, 0 local, 0 mapped)
+        1	bool_peekbuf<>::L	
+        2	bool_peekbuf<>::R	
+        bool instance pool: (2 ports, 1 local, 0 mapped)
+        1	bool_peekbuf<>::!GND	
+        2	bool_peekbuf<>::!Vdd	
+        3	bool_peekbuf<>::x	
         resolved concurrent actions:
           *[
             sequential: {
@@ -208,13 +208,13 @@ In namespace "", we have: {
         R = channel chan!(bool<>)^0 = bool_peekbuf_fast<>::R (2) 
         x = bool^0 = bool_peekbuf_fast<>::x (3) 
         Created state:
-        channel instance pool:
-        1	bool_peekbuf_fast<>::L
-        2	bool_peekbuf_fast<>::R
-        bool instance pool:
-        1	bool_peekbuf_fast<>::!GND
-        2	bool_peekbuf_fast<>::!Vdd
-        3	bool_peekbuf_fast<>::x
+        channel instance pool: (2 ports, 0 local, 0 mapped)
+        1	bool_peekbuf_fast<>::L	
+        2	bool_peekbuf_fast<>::R	
+        bool instance pool: (2 ports, 1 local, 0 mapped)
+        1	bool_peekbuf_fast<>::!GND	
+        2	bool_peekbuf_fast<>::!Vdd	
+        3	bool_peekbuf_fast<>::x	
         resolved concurrent actions:
           *[
             sequential: {
@@ -258,15 +258,23 @@ footprint: {
     R = channel chan!(bool<>)^0 = B.R (4) 
   )
   Created state:
-  process instance pool:
-  1	A
-  2	B
-  channel instance pool:
-  1	A.L
-  2	A.R
-  3	B.L
-  4	B.R
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	A	bool_peekbuf<>
+    channel: 1,2
+    bool: 1,2
+  2	B	bool_peekbuf_fast<>
+    channel: 3,4
+    bool: 1,2
+  channel instance pool: (0 ports, 4 local, 0 mapped)
+  1	A.L	
+  2	A.R	
+  3	B.L	
+  4	B.R	
+  bool instance pool: (0 ports, 2 local, 2 mapped)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 1)
+    (3 -> 2)
 }

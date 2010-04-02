@@ -1,0 +1,10 @@
+# "type-test-a-01.prsimrc"
+# @haco@ type-test-a.haco-c
+
+# should be of type R, not globals
+what foo.L
+ls foo.L
+
+what foo.L.rtg
+ls foo.L.rtg
+

@@ -220,13 +220,13 @@ In namespace "", we have: {
               [3] = ch1of<4>::d[3] (6) 
             }
           Created state:
-          bool instance pool:
-          1	ch1of<4>::!GND
-          2	ch1of<4>::!Vdd
-          3	ch1of<4>::d[0]
-          4	ch1of<4>::d[1]
-          5	ch1of<4>::d[2]
-          6	ch1of<4>::d[3]
+          bool instance pool: (6 ports, 0 local, 0 mapped)
+          1	ch1of<4>::!GND	
+          2	ch1of<4>::!Vdd	
+          3	ch1of<4>::d[0]	
+          4	ch1of<4>::d[1]	
+          5	ch1of<4>::d[2]	
+          6	ch1of<4>::d[3]	
         }
         <16> {
           !GND = bool^0 = ch1of<16>::!GND (1) 
@@ -252,25 +252,25 @@ In namespace "", we have: {
               [15] = ch1of<16>::d[15] (18) 
             }
           Created state:
-          bool instance pool:
-          1	ch1of<16>::!GND
-          2	ch1of<16>::!Vdd
-          3	ch1of<16>::d[0]
-          4	ch1of<16>::d[1]
-          5	ch1of<16>::d[2]
-          6	ch1of<16>::d[3]
-          7	ch1of<16>::d[4]
-          8	ch1of<16>::d[5]
-          9	ch1of<16>::d[6]
-          10	ch1of<16>::d[7]
-          11	ch1of<16>::d[8]
-          12	ch1of<16>::d[9]
-          13	ch1of<16>::d[10]
-          14	ch1of<16>::d[11]
-          15	ch1of<16>::d[12]
-          16	ch1of<16>::d[13]
-          17	ch1of<16>::d[14]
-          18	ch1of<16>::d[15]
+          bool instance pool: (18 ports, 0 local, 0 mapped)
+          1	ch1of<16>::!GND	
+          2	ch1of<16>::!Vdd	
+          3	ch1of<16>::d[0]	
+          4	ch1of<16>::d[1]	
+          5	ch1of<16>::d[2]	
+          6	ch1of<16>::d[3]	
+          7	ch1of<16>::d[4]	
+          8	ch1of<16>::d[5]	
+          9	ch1of<16>::d[6]	
+          10	ch1of<16>::d[7]	
+          11	ch1of<16>::d[8]	
+          12	ch1of<16>::d[9]	
+          13	ch1of<16>::d[10]	
+          14	ch1of<16>::d[11]	
+          15	ch1of<16>::d[12]	
+          16	ch1of<16>::d[13]	
+          17	ch1of<16>::d[14]	
+          18	ch1of<16>::d[15]	
         }
       }
       }
@@ -308,13 +308,13 @@ In namespace "", we have: {
               [3] = ch_1of<4>::d[3] (6) 
             }
           Created state:
-          bool instance pool:
-          1	ch_1of<4>::!GND
-          2	ch_1of<4>::!Vdd
-          3	ch_1of<4>::d[0]
-          4	ch_1of<4>::d[1]
-          5	ch_1of<4>::d[2]
-          6	ch_1of<4>::d[3]
+          bool instance pool: (6 ports, 0 local, 0 mapped)
+          1	ch_1of<4>::!GND	
+          2	ch_1of<4>::!Vdd	
+          3	ch_1of<4>::d[0]	
+          4	ch_1of<4>::d[1]	
+          5	ch_1of<4>::d[2]	
+          6	ch_1of<4>::d[3]	
         }
         <16> {
           !GND = bool^0 = ch_1of<16>::!GND (1) 
@@ -340,25 +340,25 @@ In namespace "", we have: {
               [15] = ch_1of<16>::d[15] (18) 
             }
           Created state:
-          bool instance pool:
-          1	ch_1of<16>::!GND
-          2	ch_1of<16>::!Vdd
-          3	ch_1of<16>::d[0]
-          4	ch_1of<16>::d[1]
-          5	ch_1of<16>::d[2]
-          6	ch_1of<16>::d[3]
-          7	ch_1of<16>::d[4]
-          8	ch_1of<16>::d[5]
-          9	ch_1of<16>::d[6]
-          10	ch_1of<16>::d[7]
-          11	ch_1of<16>::d[8]
-          12	ch_1of<16>::d[9]
-          13	ch_1of<16>::d[10]
-          14	ch_1of<16>::d[11]
-          15	ch_1of<16>::d[12]
-          16	ch_1of<16>::d[13]
-          17	ch_1of<16>::d[14]
-          18	ch_1of<16>::d[15]
+          bool instance pool: (18 ports, 0 local, 0 mapped)
+          1	ch_1of<16>::!GND	
+          2	ch_1of<16>::!Vdd	
+          3	ch_1of<16>::d[0]	
+          4	ch_1of<16>::d[1]	
+          5	ch_1of<16>::d[2]	
+          6	ch_1of<16>::d[3]	
+          7	ch_1of<16>::d[4]	
+          8	ch_1of<16>::d[5]	
+          9	ch_1of<16>::d[6]	
+          10	ch_1of<16>::d[7]	
+          11	ch_1of<16>::d[8]	
+          12	ch_1of<16>::d[9]	
+          13	ch_1of<16>::d[10]	
+          14	ch_1of<16>::d[11]	
+          15	ch_1of<16>::d[12]	
+          16	ch_1of<16>::d[13]	
+          17	ch_1of<16>::d[14]	
+          18	ch_1of<16>::d[15]	
         }
       }
       }
@@ -403,13 +403,13 @@ In namespace "", we have: {
         b = bool^0 = dcelm<>::b (4) 
         out = bool^0 = dcelm<>::out (6) 
         Created state:
-        bool instance pool:
-        1	dcelm<>::!GND
-        2	dcelm<>::!Vdd
-        3	dcelm<>::a
-        4	dcelm<>::b
-        5	dcelm<>::_out
-        6	dcelm<>::out
+        bool instance pool: (6 ports, 0 local, 0 mapped)
+        1	dcelm<>::!GND	
+        2	dcelm<>::!Vdd	
+        3	dcelm<>::a	
+        4	dcelm<>::b	
+        5	dcelm<>::_out	
+        6	dcelm<>::out	
         resolved prs:
         a & b -> _out-
         ~a & ~b -> _out+
@@ -677,80 +677,102 @@ In namespace "", we have: {
             }
         )
         Created state:
-        process instance pool:
-        1	lut<>::d
-        2	lut<>::_d
-        3	lut<>::_ad[0]
-        4	lut<>::_ad[1]
-        5	lut<>::ad[0]
-        6	lut<>::ad[1]
-        7	lut<>::ce[0]
-        8	lut<>::ce[1]
-        9	lut<>::ce[2]
-        10	lut<>::ce[3]
-        11	lut<>::ce[4]
-        12	lut<>::ce[5]
-        13	lut<>::ce[6]
-        14	lut<>::ce[7]
-        15	lut<>::ce[8]
-        16	lut<>::ce[9]
-        17	lut<>::ce[10]
-        18	lut<>::ce[11]
-        19	lut<>::ce[12]
-        20	lut<>::ce[13]
-        21	lut<>::ce[14]
-        22	lut<>::ce[15]
-        bool instance pool:
-        1	lut<>::!GND
-        2	lut<>::!Vdd
-        3	lut<>::d.d[0]
-        4	lut<>::d.d[1]
-        5	lut<>::d.d[2]
-        6	lut<>::d.d[3]
-        7	lut<>::d.d[4]
-        8	lut<>::d.d[5]
-        9	lut<>::d.d[6]
-        10	lut<>::d.d[7]
-        11	lut<>::d.d[8]
-        12	lut<>::d.d[9]
-        13	lut<>::d.d[10]
-        14	lut<>::d.d[11]
-        15	lut<>::d.d[12]
-        16	lut<>::d.d[13]
-        17	lut<>::d.d[14]
-        18	lut<>::d.d[15]
-        19	lut<>::_d.d[0]
-        20	lut<>::_d.d[1]
-        21	lut<>::_d.d[2]
-        22	lut<>::_d.d[3]
-        23	lut<>::_d.d[4]
-        24	lut<>::_d.d[5]
-        25	lut<>::_d.d[6]
-        26	lut<>::_d.d[7]
-        27	lut<>::_d.d[8]
-        28	lut<>::_d.d[9]
-        29	lut<>::_d.d[10]
-        30	lut<>::_d.d[11]
-        31	lut<>::_d.d[12]
-        32	lut<>::_d.d[13]
-        33	lut<>::_d.d[14]
-        34	lut<>::_d.d[15]
-        35	lut<>::_ad[0].d[0]
-        36	lut<>::_ad[0].d[1]
-        37	lut<>::_ad[0].d[2]
-        38	lut<>::_ad[0].d[3]
-        39	lut<>::_ad[1].d[0]
-        40	lut<>::_ad[1].d[1]
-        41	lut<>::_ad[1].d[2]
-        42	lut<>::_ad[1].d[3]
-        43	lut<>::ad[0].d[0]
-        44	lut<>::ad[0].d[1]
-        45	lut<>::ad[0].d[2]
-        46	lut<>::ad[0].d[3]
-        47	lut<>::ad[1].d[0]
-        48	lut<>::ad[1].d[1]
-        49	lut<>::ad[1].d[2]
-        50	lut<>::ad[1].d[3]
+        process instance pool: (0 ports, 22 local, 0 mapped)
+        1	lut<>::d	ch1of<16>
+          bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+        2	lut<>::_d	ch_1of<16>
+          bool: 1,2,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34
+        3	lut<>::_ad[0]	ch_1of<4>
+          bool: 1,2,35,36,37,38
+        4	lut<>::_ad[1]	ch_1of<4>
+          bool: 1,2,39,40,41,42
+        5	lut<>::ad[0]	ch1of<4>
+          bool: 1,2,43,44,45,46
+        6	lut<>::ad[1]	ch1of<4>
+          bool: 1,2,47,48,49,50
+        7	lut<>::ce[0]	dcelm<>
+          bool: 1,2,47,43,19,3
+        8	lut<>::ce[1]	dcelm<>
+          bool: 1,2,47,44,20,4
+        9	lut<>::ce[2]	dcelm<>
+          bool: 1,2,47,45,21,5
+        10	lut<>::ce[3]	dcelm<>
+          bool: 1,2,47,46,22,6
+        11	lut<>::ce[4]	dcelm<>
+          bool: 1,2,48,43,23,7
+        12	lut<>::ce[5]	dcelm<>
+          bool: 1,2,48,44,24,8
+        13	lut<>::ce[6]	dcelm<>
+          bool: 1,2,48,45,25,9
+        14	lut<>::ce[7]	dcelm<>
+          bool: 1,2,48,46,26,10
+        15	lut<>::ce[8]	dcelm<>
+          bool: 1,2,49,43,27,11
+        16	lut<>::ce[9]	dcelm<>
+          bool: 1,2,49,44,28,12
+        17	lut<>::ce[10]	dcelm<>
+          bool: 1,2,49,45,29,13
+        18	lut<>::ce[11]	dcelm<>
+          bool: 1,2,49,46,30,14
+        19	lut<>::ce[12]	dcelm<>
+          bool: 1,2,50,43,31,15
+        20	lut<>::ce[13]	dcelm<>
+          bool: 1,2,50,44,32,16
+        21	lut<>::ce[14]	dcelm<>
+          bool: 1,2,50,45,33,17
+        22	lut<>::ce[15]	dcelm<>
+          bool: 1,2,50,46,34,18
+        bool instance pool: (2 ports, 48 local, 0 mapped)
+        1	lut<>::!GND	
+        2	lut<>::!Vdd	
+        3	lut<>::d.d[0]	
+        4	lut<>::d.d[1]	
+        5	lut<>::d.d[2]	
+        6	lut<>::d.d[3]	
+        7	lut<>::d.d[4]	
+        8	lut<>::d.d[5]	
+        9	lut<>::d.d[6]	
+        10	lut<>::d.d[7]	
+        11	lut<>::d.d[8]	
+        12	lut<>::d.d[9]	
+        13	lut<>::d.d[10]	
+        14	lut<>::d.d[11]	
+        15	lut<>::d.d[12]	
+        16	lut<>::d.d[13]	
+        17	lut<>::d.d[14]	
+        18	lut<>::d.d[15]	
+        19	lut<>::_d.d[0]	
+        20	lut<>::_d.d[1]	
+        21	lut<>::_d.d[2]	
+        22	lut<>::_d.d[3]	
+        23	lut<>::_d.d[4]	
+        24	lut<>::_d.d[5]	
+        25	lut<>::_d.d[6]	
+        26	lut<>::_d.d[7]	
+        27	lut<>::_d.d[8]	
+        28	lut<>::_d.d[9]	
+        29	lut<>::_d.d[10]	
+        30	lut<>::_d.d[11]	
+        31	lut<>::_d.d[12]	
+        32	lut<>::_d.d[13]	
+        33	lut<>::_d.d[14]	
+        34	lut<>::_d.d[15]	
+        35	lut<>::_ad[0].d[0]	
+        36	lut<>::_ad[0].d[1]	
+        37	lut<>::_ad[0].d[2]	
+        38	lut<>::_ad[0].d[3]	
+        39	lut<>::_ad[1].d[0]	
+        40	lut<>::_ad[1].d[1]	
+        41	lut<>::_ad[1].d[2]	
+        42	lut<>::_ad[1].d[3]	
+        43	lut<>::ad[0].d[0]	
+        44	lut<>::ad[0].d[1]	
+        45	lut<>::ad[0].d[2]	
+        46	lut<>::ad[0].d[3]	
+        47	lut<>::ad[1].d[0]	
+        48	lut<>::ad[1].d[1]	
+        49	lut<>::ad[1].d[2]	
+        50	lut<>::ad[1].d[3]	
       }
       }
 
@@ -768,9 +790,16 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	l
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 22 mapped)
+  1	l	lut<>
+    bool: 1,2
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 22)
+  bool instance pool: (0 ports, 2 local, 48 mapped)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 48)
 }

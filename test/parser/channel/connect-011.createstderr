@@ -2,5 +2,5 @@ Error: cannot alias two non-sharing producers of type channel.
 	got: one_shot<>::b
 	and: one_shot<>::y.a
 Instantiated from: one_shot<>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

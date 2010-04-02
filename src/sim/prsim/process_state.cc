@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_state.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_state.cc,v 1.4 2009/02/07 04:08:44 fang Exp $
+	$Id: process_state.cc,v 1.5 2010/04/02 22:19:20 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -61,11 +61,15 @@ process_sim_state::clear(void) {
 void
 process_sim_state::initialize(void) {
 	STACKTRACE_VERBOSE;
-	expr_state_type* i(&expr_states[0]),
-		*e(&expr_states[expr_states.size()]);
+	const size_t s = expr_states.size();
+	STACKTRACE_INDENT_PRINT("expr_state.size = " << s << endl);
+	expr_state_type* i(&expr_states[0]), *e(&expr_states[s]);
+	STACKTRACE_INDENT_PRINT("type @ " << &type() << endl);
+	STACKTRACE_INDENT_PRINT("type.pool_size = " << type().expr_pool.size() << endl);
 	unique_process_subgraph::expr_pool_type::const_iterator
 		j(type().expr_pool.begin());
 	for ( ; i!=e; ++i, ++j) {
+		STACKTRACE_INDENT_PRINT("foo..." << endl);
 		i->initialize(*j);
 	}
 }

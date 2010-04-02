@@ -1,4 +1,4 @@
-ERROR: cannot unroll incomplete process type fang
+ERROR: cannot create undefined process fang
 Instantiated from: fang<>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

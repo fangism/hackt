@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.22 2007/10/08 01:21:38 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.23 2010/04/02 22:18:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -22,6 +22,9 @@ using util::packed_array_generic;
 class nonmeta_expr_visitor;
 class instance_placeholder_base;
 template <class> class collection_interface;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct global_entry_context;
+#endif
 
 template <bool>	struct simple_meta_instance_reference_implementation;
 
@@ -47,10 +50,8 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_instance_reference :
 	public simple_meta_indexed_reference_base, 
 	public class_traits<Tag>::meta_instance_reference_parent_type {
-#if 1
 	template <bool>
 	friend struct simple_meta_instance_reference_implementation;
-#endif
 	typedef	SIMPLE_META_INSTANCE_REFERENCE_CLASS	this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;
@@ -90,7 +91,11 @@ public:
 						instance_collection_ptr_type;
 	typedef	typename parent_type::port_connection_ptr_type
 						port_connection_ptr_type;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+protected:
+#else
 private:
+#endif
 	const instance_placeholder_ptr_type	inst_collection_ref;
 protected:
 	simple_meta_instance_reference();
@@ -132,7 +137,11 @@ virtual	ostream&
 	good_bool
 	attach_indices(indices_ptr_arg_type);
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+protected:
+#else
 private:
+#endif
 	using parent_type::unroll_references_packed_helper;
 protected:
 	using parent_type::unroll_references_packed_helper_no_lookup;
@@ -153,19 +162,34 @@ virtual	count_ptr<const this_type>
 
 	UNROLL_RESOLVE_COPY_REFERENCE_PROTO;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO;
+#endif
 
 	LOOKUP_TOP_LEVEL_REFERENCE_PROTO;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	LOOKUP_TOP_LEVEL_REFERENCES_PROTO;
+#endif
 
 virtual	size_t
-	lookup_globally_allocated_index(const state_manager&, 
-		const footprint&) const;
+	lookup_globally_allocated_index(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const global_entry_context&
+#else
+		const state_manager&, const footprint&
+#endif
+		) const;
 
 virtual	size_t
-	lookup_locally_allocated_index(const state_manager&, 
+	lookup_locally_allocated_index(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		const state_manager&, 
+#endif
 		const unroll_context&) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using parent_type::lookup_globally_allocated_indices;
+#endif
 
 virtual	void
 	accept(nonmeta_expr_visitor&) const;

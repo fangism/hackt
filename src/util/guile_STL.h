@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.6 2007/06/10 03:50:12 fang Exp $
+	$Id: guile_STL.h,v 1.7 2010/04/02 22:19:21 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -25,6 +25,8 @@
 #include <list>
 #include <vector>
 #include <valarray>
+#include <set>
+#include <map>
 // maybe even include "gmpxx.h"
 #include <iterator>
 #include "util/boolean_types.h"
@@ -47,6 +49,8 @@ using std::pair;
 using std::unary_function;
 using std::list;
 using std::valarray;
+using std::set;
+using std::map;
 
 // TODO:
 // goals of library: orthogonal design
@@ -620,7 +624,8 @@ struct scm_extractor<double> {
 // pairs
 template <class F, class S>
 struct scm_builder<pair<F, S> > : public unary_function<pair<F, S>, SCM> {
-	typedef	scm_builder<pair<F, S> >		this_type;
+	typedef	pair<F, S>				struct_type;
+	typedef	scm_builder<struct_type>		this_type;
 	SCM
 	operator () (const typename this_type::argument_type& a) {
 		STACKTRACE_VERBOSE;
@@ -763,9 +768,12 @@ make_scm_list(const L& l) {
  */
 template <class T, class A>
 struct scm_builder<list<T, A> > : public scm_list_builder<list<T, A> > {
-	typedef	scm_list_builder<list<T, A> >	parent_type;
+	typedef	list<T, A>			struct_type;
+	typedef	scm_list_builder<struct_type>	parent_type;
 	using parent_type::operator();
 };	// end struct scm_builder<list>
+
+// extractor?
 
 //-----------------------------------------------------------------------------
 // tuples
@@ -783,7 +791,30 @@ struct scm_builder<list<T, A> > : public scm_list_builder<list<T, A> > {
 // streams (ice-9 streams)
 
 //-----------------------------------------------------------------------------
-// maps (associative)
+// maps, sets (associative)
+// also unordered/hash containers?
+
+/**
+	For now treat sets as lists of values.  
+ */
+template <class T, class C, class A>
+struct scm_builder<set<T, C, A> > : public scm_list_builder<set<T, C, A> > {
+	typedef	set<T, C, A>			struct_type;
+	typedef	scm_list_builder<struct_type>	parent_type;
+	using parent_type::operator();
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For now treat maps as associative lists of key-value pairs.  
+ */
+template <class K, class T, class C, class A>
+struct scm_builder<map<K, T, C, A> > :
+		public scm_list_builder<map<K, T, C, A> > {
+	typedef	map<K, T, C, A>			struct_type;
+	typedef	scm_list_builder<struct_type>	parent_type;
+	using parent_type::operator();
+};
 
 //=============================================================================
 }	// end namespace guile

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.32 2009/06/05 16:28:10 fang Exp $
+	$Id: instance_collection.h,v 1.33 2010/04/02 22:18:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -244,9 +244,11 @@ virtual	UNROLL_ALIASES_PROTO = 0;
 
 virtual	COLLECT_PORT_ALIASES_PROTO = 0;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
 
 virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
+#endif
 
 virtual	void
 	accept(alias_visitor&) const = 0;
@@ -324,7 +326,8 @@ public:
 		element_loader(const footprint& f, 
 			const persistent_object_manager& m,
 			istream& i, const never_ptr<const parent_type> b) : 
-			persistent_loader_base(m, i), back_ref(b), fp(f) { }
+			util::persistent_loader_base(m, i),
+			back_ref(b), fp(f) { }
 
 		void
 		operator () (instance_alias_info_type&);	// const?

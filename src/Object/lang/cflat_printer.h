@@ -1,13 +1,16 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.14 2009/10/29 23:00:28 fang Exp $
+	$Id: cflat_printer.h,v 1.15 2010/04/02 22:18:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
 #define	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
 
 #include "Object/lang/cflat_context_visitor.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/lang/cflat_visitor.h"
+#endif
 #include "util/member_saver_fwd.h"
 #include "Object/lang/SPEC_fwd.h"
 
@@ -22,7 +25,11 @@ namespace PRS {
 /**
 	PRS print visitor functor.  
  */
-class cflat_prs_printer : public cflat_context_visitor {
+class cflat_prs_printer : public cflat_context_visitor
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	, public cflat_visitor
+#endif
+{
 	typedef	cflat_context_visitor		parent_type;
 public:
 	ostream&				os;
@@ -49,18 +56,36 @@ protected:
 	float					one_conductance;
 
 public:
-	cflat_prs_printer(ostream& _os, const cflat_options& _cfo) :
+	cflat_prs_printer(
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			const footprint_frame& ff, 
+			const global_offset& g,
+#endif
+			ostream& _os, const cflat_options& _cfo) :
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			cflat_context_visitor(ff, g), 
+#else
 			cflat_context_visitor(), 
+#endif
 			os(_os), cfopts(_cfo) { }
+	~cflat_prs_printer();
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	ostream&
-	print_node_name(ostream&, const global_entry<bool_tag>&) const;
+	print_node_name(ostream&, const GLOBAL_ENTRY<bool_tag>&) const;
+#endif
 
 	void
 	__dump_canonical_literal(const size_t) const;
 
 	void
 	__dump_resolved_canonical_literal(const size_t) const;
+
+	void
+	__dump_canonical_literal(ostream&, const size_t) const;
+
+	void
+	__dump_resolved_canonical_literal(ostream&, const size_t) const;
 
 	void
 	__dump_canonical_literal_group(const directive_node_group_type&) const;
@@ -77,11 +102,19 @@ public:
 		const char* l, const char* d, const char* r) const;
 
 protected:
+	using cflat_context_visitor::visit;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using cflat_visitor::visit;
+#endif
+
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	void
+	visit(const entity::footprint&);
+#endif
 
 	// override
 	void
-	visit(const global_entry<bool_tag>&);
+	visit(const GLOBAL_ENTRY<bool_tag>&);
 
 	void
 	visit(const footprint_rule&);

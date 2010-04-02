@@ -74,10 +74,10 @@ In namespace "", we have: {
         !Vdd = bool^0 = bar<>::!Vdd (2) 
         a = bool^0 = bar<>::a (3) 
         Created state:
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
-        3	bar<>::a
+        bool instance pool: (3 ports, 0 local, 0 mapped)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
+        3	bar<>::a	
       }
       }
 
@@ -106,10 +106,11 @@ footprint: {
   x = bool^0 = x (3) 
   y = bool^0 = x (3) 
   Created state:
-  process instance pool:
-  1	p
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	p	bar<>
+    bool: 1,2,3
+  bool instance pool: (0 ports, 3 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	x	
 }

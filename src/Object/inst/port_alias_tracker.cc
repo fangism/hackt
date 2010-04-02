@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.27 2009/11/06 02:57:54 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.28 2010/04/02 22:18:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,8 +13,13 @@
 #include "Object/inst/port_alias_tracker.tcc"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/global_channel_entry.h"
+#endif
 #include "Object/inst/connection_policy.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.h"
 #include "Object/common/dump_flags.h"
 #include "Object/def/footprint.h"
 #include "Object/traits/proc_traits.h"
@@ -26,6 +31,7 @@
 
 #include "util/persistent_object_manager.h"
 #include "util/copy_if.h"
+#include "util/STL/functional.h"	// for _Select2nd
 #include "util/IO_utils.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
@@ -40,6 +46,7 @@ using util::auto_indent;
 USING_COPY_IF
 using std::for_each;
 using std::back_inserter;
+using std::not1;
 
 //=============================================================================
 #if 0
@@ -122,6 +129,68 @@ alias_reference_set<Tag>::dump(ostream& o, const dump_flags& df) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true if ANY alias in this set is a direct port alias, 
+		or member thereof, return that pointer if true.  
+	reminder: instance_alias_info::is_port_alias doesn't check
+		equivalent aliases in the same union-find.  
+ */
+template <class Tag>
+typename alias_reference_set<Tag>::alias_ptr_type
+alias_reference_set<Tag>::is_aliased_to_port(void) const {
+	const_iterator i(alias_array.begin());
+	const const_iterator e(alias_array.end());
+	for ( ; i!=e; ++i) {
+		if ((*i)->is_port_alias())
+			return *i;
+	}
+	return alias_ptr_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overrides allocation-assigned ID with new value for all aliases
+	in this set.
+ */
+template <class Tag>
+void
+alias_reference_set<Tag>::override_id(const size_t id) {
+	iterator i(alias_array.begin());
+	const iterator e(alias_array.end());
+if ((*i)->instance_index != id) {
+	// all-or-none: invariant: all instance IDs are the same
+	for ( ; i!=e; ++i) {
+		(*i)->instance_index = id;
+	}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Swaps the alias arrays *without* updating their respective
+	instance_index-s!  Use with caution!
+ */
+template <class Tag>
+void
+alias_reference_set<Tag>::bare_swap(this_type& t) {
+	alias_array.swap(t.alias_array);
+}
+
+/**
+	Swaps alias sets AND their aliases' ID numbers (locally allocated
+	unique IDs)!
+ */
+template <class Tag>
+void
+alias_reference_set<Tag>::swap(this_type& t) {
+	const size_t lid = alias_array.front()->instance_index;
+	const size_t rid = t.alias_array.front()->instance_index;
+	bare_swap(t);
+	this->override_id(lid);
+	t.override_id(rid);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param s the structured instance in which to resolve and 
 		connect internal aliases of this type.  
  */
@@ -175,6 +244,23 @@ if (f != e) {
 		// set of *scope* aliases which includes non-ports.
 		_inst.import_properties(a);
 } else { STACKTRACE_INDENT_PRINT("is not port alias" << endl); }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convenient alias collector.
+	TODO: add predicated version
+ */
+template <class Tag>
+void
+alias_reference_set<Tag>::export_alias_strings(set<string>& aliases) const {
+	const_iterator i(this->begin()), e(this->end());
+	for ( ; i!=e; ++i) {
+		const instance_alias_info<Tag>& a(**i);
+		std::ostringstream alias;
+		a.dump_hierarchical_name(alias, dump_flags::no_leading_scope);
+		aliases.insert(alias.str());
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -357,6 +443,171 @@ port_alias_tracker_base<Tag>::__export_alias_properties(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true if alias is aliased to any public port (reachable).
+ */
+template <class Tag>
+struct port_alias_tracker_base<Tag>::port_alias_predicate {
+	typedef	typename map_type::mapped_type	mapped_type;
+	typedef	mapped_type		argument_type;
+	bool
+	operator () (const mapped_type& a) const {
+		return a.is_aliased_to_port();
+	}
+
+	typedef	typename map_type::value_type	value_type;
+	typedef	value_type		argument_type;
+	bool
+	operator () (const value_type& a) const {
+		return a.second.is_aliased_to_port();
+	}
+};
+
+/**
+	Want to use the std::stable_partition algorithm, except that we need to
+	actually modify the key (instance ID index).
+ */
+template <class Tag>
+void
+port_alias_tracker_base<Tag>::__sift_ports(void) {
+	STACKTRACE_VERBOSE;
+	typedef typename map_type::mapped_type	mapped_type;
+	typedef	typename vector<mapped_type>::iterator	temp_iterator;
+	const iterator fb(_ids.begin()), fe(_ids.end());
+	iterator fi(fb);
+#if 0
+	// slow-but-stable partitioning, relative order preserved
+	vector<mapped_type> tmp;
+//	STACKTRACE_INDENT_PRINT("_ids.size() = " << _ids.size() << endl);
+#if 0
+	tmp.reserve(_ids.size());	// pre-allocate
+	transform(fi, fe, back_inserter(tmp), std::_Select2nd<value_type>());
+	const temp_iterator tb(tmp.begin()), te(tmp.end());
+#else
+	// must avoid expensive copy to save memory
+	tmp.resize(_ids.size());	// default construct
+	const temp_iterator tb(tmp.begin()), te(tmp.end());
+	temp_iterator ti(tb);
+	for ( ; fi!=fe; ++fi, ++ti) {
+		// swap instead of copy to conserve memory
+		fi->second.bare_swap(*ti);
+	}
+#endif
+	std::stable_partition(tb, te, port_alias_predicate());
+	// throws std::bad_alloc for sufficiently large arrays
+	// or use std::mem_fun_ref(&mapped_type::is_aliased_to_port)
+	for (fi = fb, ti = tb; fi!=fe; ++fi, ++ti) {
+		fi->second.bare_swap(*ti);
+		fi->second.override_id(fi->first);
+	}
+	cerr << "after array-swap" << endl;
+#elif 1
+	// manual stable-partition, less elegant, but memory efficient
+	vector<mapped_type> p, np;
+	// don't reserve, don't know breakdown a priori
+	for ( ; fi!=fe; ++fi) {
+		// move instead of copy
+		if (fi->second.is_aliased_to_port()) {
+			p.push_back(mapped_type());
+			fi->second.bare_swap(p.back());
+		} else {
+			np.push_back(mapped_type());
+			fi->second.bare_swap(np.back());
+		}
+	}
+	_ids.clear();	// wipe and reconstruct
+	size_t j = 1;
+	temp_iterator ti(p.begin()), te(p.end());
+	for ( ; ti!=te; ++ti, ++j) {
+		mapped_type& m(_ids[j]);
+		m.bare_swap(*ti);	// move instead of copy
+		m.override_id(j);
+	}
+	ti = np.begin();
+	te = np.end();
+	for ( ; ti!=te; ++ti, ++j) {
+		mapped_type& m(_ids[j]);
+		m.bare_swap(*ti);	// move instead of copy
+		m.override_id(j);
+	}
+#else
+	// fast-but-unstable partitioning, relative order not preserved
+	// this does not preserve relative order, hence 'unstable'
+	typedef	typename map_type::reverse_iterator	reverse_iterator;
+	reverse_iterator ri(_ids.rbegin());
+	const reverse_iterator re(_ids.rend());
+	fi = find_if(fi, fe, not1(port_alias_predicate()));	// forward seek
+	ri = find_if(ri, re, port_alias_predicate());		// reverse seek
+	while (fi != fe && ri != re && fi->first < ri->first) {
+		// swap-eroo
+		fi->second.swap(ri->second);
+		fi = find_if(++fi, fe, not1(port_alias_predicate()));
+		ri = find_if(++ri, re, port_alias_predicate());
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+/**
+	For the complete set of scope aliases, this returns the index offset 
+	of the first non-port alias.
+ */
+template <class Tag>
+size_t
+port_alias_tracker_base<Tag>::__port_offset(void) const {
+	const const_iterator b(_ids.begin()), e(_ids.end());
+#if 0
+	// faster than find_first
+	const const_iterator p(lower_bound(b, e,
+		not1(port_alias_predicate())));
+	if (p != e) {
+		return p->second;
+	} else {
+		return _ids.size();
+	}
+#else
+	return std::count_if(b, e, port_alias_predicate());
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param a is an alias of an enclosing substructure (process)
+		representing the actual instance (context).  
+ */
+template <class Tag>
+void
+port_alias_tracker_base<Tag>::__assign_frame(
+		const substructure_alias& p, 
+		footprint_frame& ff) const {
+	STACKTRACE_VERBOSE;
+	footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
+	const_iterator i(_ids.begin()), e(_ids.end());
+	for ( ; i!=e; ++i) {
+		const typename alias_set_type::alias_ptr_type
+			ap(i->second.is_aliased_to_port());
+		// now returns a direct port alias
+	if (ap) {
+		const size_t formal_index = i->first;
+		INVARIANT(formal_index);
+		const instance_alias_info<Tag>& f(*ap);
+#if ENABLE_STACKTRACE
+		f.dump_hierarchical_name(STACKTRACE_STREAM << "f: ") << endl;
+#endif
+		const instance_alias_info<Tag>& a(f.trace_alias(p));
+		// assign actual index from context to 
+		// corresponding slot in frame
+		const size_t actual_index = a.instance_index;
+		INVARIANT(actual_index);
+		INVARIANT(formal_index <= fm.size());
+		fm[formal_index -1] = actual_index;
+	}
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Re-sets the back references of the unique aliases to
 	be the 'shortest; for canonicalization.  
 	TODO: in addition to setting the back-reference, 
@@ -367,7 +618,7 @@ void
 port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 		instance_pool<state_instance<Tag> >& p) {
 	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("p.size() = " << p.size() << endl);
+//	STACKTRACE_INDENT_PRINT("p.size() = " << p.size() << endl);
 	iterator i(_ids.begin());
 	const iterator e(_ids.end());
 	for ( ; i!=e; ++i) {
@@ -376,8 +627,14 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 		const const_alias_ptr_type al(i->second.shortest_alias());
 		INVARIANT(i->first);	// non-zero
 		STACKTRACE_INDENT_PRINT("i->first = " << i->first << endl);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		BOUNDS_CHECK(i->first <= p.local_entries());
+		p[i->first -1].set_back_ref(al);
+		// 1-based to 0-based index, no dummy instance anymore
+#else
 		BOUNDS_CHECK(i->first < p.size());
 		p[i->first].set_back_ref(al);
+#endif
 	}
 }
 
@@ -530,6 +787,26 @@ if (has_internal_aliases) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Re-enumerates the alias indices so that aliases that are
+	public ports have lower indices than those that are locally private.
+	This is needed for efficient memory mapping.  
+ */
+void
+port_alias_tracker::sift_ports(void) {
+	STACKTRACE_VERBOSE;
+	port_alias_tracker_base<process_tag>::__sift_ports();
+	port_alias_tracker_base<channel_tag>::__sift_ports();
+#if ENABLE_DATASTRUCTS
+	port_alias_tracker_base<datastruct_tag>::__sift_ports();
+#endif
+	port_alias_tracker_base<enum_tag>::__sift_ports();
+	port_alias_tracker_base<int_tag>::__sift_ports();
+	port_alias_tracker_base<bool_tag>::__sift_ports();
+	// watch for std::bad_alloc, especially when calling stable_partition
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 port_alias_tracker::export_alias_properties(substructure_alias& s) const {
 	STACKTRACE_VERBOSE;
@@ -639,6 +916,22 @@ port_alias_tracker::dump_local_bool_aliases(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+void
+port_alias_tracker::assign_alias_frame(const substructure_alias& a, 
+		footprint_frame& ff) const {
+	port_alias_tracker_base<process_tag>::__assign_frame(a, ff);
+	port_alias_tracker_base<channel_tag>::__assign_frame(a, ff);
+#if ENABLE_DATASTRUCTS
+	port_alias_tracker_base<datastruct_tag>::__assign_frame(a, ff);
+#endif
+	port_alias_tracker_base<enum_tag>::__assign_frame(a, ff);
+	port_alias_tracker_base<int_tag>::__assign_frame(a, ff);
+	port_alias_tracker_base<bool_tag>::__assign_frame(a, ff);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 #if 0
 void
@@ -694,6 +987,7 @@ if (has_internal_aliases) {
 //=============================================================================
 // explicit template instantiations
 
+#if 0
 #define	INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(Tag)			\
 template void alias_reference_set<Tag>::push_back(			\
 		never_ptr<instance_alias_info<Tag> >);
@@ -706,6 +1000,22 @@ INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(datastruct_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(enum_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(int_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(bool_tag)
+#else
+template class alias_reference_set<process_tag>;
+template class port_alias_tracker_base<process_tag>;
+template class alias_reference_set<channel_tag>;
+template class port_alias_tracker_base<channel_tag>;
+#if ENABLE_DATASTRUCTS
+template class alias_reference_set<datastruct_tag>;
+template class port_alias_tracker_base<datastruct_tag>;
+#endif
+template class alias_reference_set<enum_tag>;
+template class port_alias_tracker_base<enum_tag>;
+template class alias_reference_set<int_tag>;
+template class port_alias_tracker_base<int_tag>;
+template class alias_reference_set<bool_tag>;
+template class port_alias_tracker_base<bool_tag>;
+#endif
 
 #if USE_ALIAS_STRING_CACHE
 template void alias_reference_set<process_tag>::refresh_string_cache() const;

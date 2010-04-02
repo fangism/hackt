@@ -103,9 +103,9 @@ In namespace "", we have: {
             }
           N = pint^0 value: 1
           Created state:
-          bool instance pool:
-          1	internal<1, {1}>::!GND
-          2	internal<1, {1}>::!Vdd
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	internal<1, {1}>::!GND	
+          2	internal<1, {1}>::!Vdd	
         }
       }
       }
@@ -145,11 +145,12 @@ In namespace "", we have: {
             !Vdd = bool^0 = use_the_source<1, {1}>::!Vdd (2) 
           )
           Created state:
-          process instance pool:
-          1	use_the_source<1, {1}>::s
-          bool instance pool:
-          1	use_the_source<1, {1}>::!GND
-          2	use_the_source<1, {1}>::!Vdd
+          process instance pool: (0 ports, 1 local, 0 mapped)
+          1	use_the_source<1, {1}>::s	internal<1, {1}>
+            bool: 1,2
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	use_the_source<1, {1}>::!GND	
+          2	use_the_source<1, {1}>::!Vdd	
         }
       }
       }
@@ -168,9 +169,13 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	luke
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 1 mapped)
+  1	luke	use_the_source<1, {1}>
+    bool: 1,2
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 1)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

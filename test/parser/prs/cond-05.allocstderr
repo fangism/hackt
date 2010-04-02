@@ -3,7 +3,7 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	f	foo<false>
 	bool: 1,2
 2	(top)	-	2	g	foo<true>
-	process: 3
+	process: ;3
 	bool: 1,2
 3	process	2	1	g.b	bar<>
 	bool: 1,2

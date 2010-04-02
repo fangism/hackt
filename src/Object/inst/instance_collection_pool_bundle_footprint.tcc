@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle_footprint.tcc"
 	This contains select methods to export to Object/def/footprint.cc
-	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.7 2008/11/12 03:00:03 fang Exp $
+	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.8 2010/04/02 22:18:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_FOOTPRINT_TCC__
@@ -84,6 +84,7 @@ struct instance_collection_pool_wrapper<T>::scope_alias_collector {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Functor for assigning footprint frame IDs.  
  */
@@ -104,6 +105,7 @@ struct instance_collection_pool_wrapper<T>::footprint_frame_assigner {
 		}
 	}
 };
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
@@ -152,6 +154,7 @@ instance_collection_pool_wrapper<T>::collect_scope_aliases(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class T>
 void
 instance_collection_pool_wrapper<T>::assign_footprint_frame(
@@ -160,6 +163,7 @@ instance_collection_pool_wrapper<T>::assign_footprint_frame(
 	const const_iterator b(this->pool.begin()), e(this->pool.end());
 	for_each(b, e, footprint_frame_assigner(ff, pmc));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
@@ -280,6 +284,7 @@ instance_collection_pool_bundle<Tag>::finalize_substructure_aliases(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Only visit port-formals.  
  */
@@ -307,6 +312,7 @@ instance_collection_pool_bundle<Tag>::assign_footprint_frame(
 		::assign_footprint_frame(ff, pmc);
 #endif
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity

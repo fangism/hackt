@@ -1,5 +1,5 @@
 # "test/chpsim/router/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2009/09/28 06:57:00 fang Exp $
+#	$Id: Makefile.am,v 1.8 2010/04/02 22:19:54 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -231,8 +231,7 @@ include $(top_srcdir)/test/Make.test-tail
 
 # extend the default test script
 if HAVE_LIBGUILE
-HACCHPSIMSCM_TEST_SCRIPT += && \
-	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
+HACCHPSIMSCM_TEST_SCRIPT += && $(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
 endif
 
 # clean up side-effect files from bitrouter tests

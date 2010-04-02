@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.11 2007/09/27 02:03:43 fang Exp $
+	$Id: EventExecutor.cc,v 1.12 2010/04/02 22:19:11 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -15,6 +15,7 @@
 
 #include "sim/chpsim/EventExecutor.h"
 #include "Object/lang/CHP.h"
+#include "Object/def/footprint.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
@@ -168,12 +169,22 @@ using entity::process_tag;
 	it has two equivalent references to the state_manager and top_footprint.
  */
 EventExecutor::EventExecutor(nonmeta_context& c) : 
-	chp_visitor(*c.get_state_manager(), *c.get_top_footprint_ptr()), 
+	chp_visitor(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		*c.get_state_manager(), 
+		*c.get_top_footprint_ptr()
+#endif
+		), 
 	context(c) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EventRechecker::EventRechecker(const nonmeta_context& c) : 
-	chp_visitor(*c.get_state_manager(), *c.get_top_footprint_ptr()), 
+	chp_visitor(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		*c.get_state_manager(), 
+		*c.get_top_footprint_ptr()
+#endif
+		), 
 	context(c) { }
 
 //=============================================================================
@@ -606,8 +617,13 @@ EventRechecker::visit(const channel_send& cs) {
 			"already blocked waiting to send!" << endl;
 		// TODO: factor out reusable code
 		ostringstream oss;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		context.get_top_footprint().dump_canonical_name<channel_tag>(
+			oss, chan_index -1);
+#else
 		sm->get_pool<channel_tag>()[chan_index].
 			dump_canonical_name(oss, *topfp, *sm);
+#endif
 		cerr << "\ton channel[" << chan_index << "] (" << oss.str()
 			<< ")" << endl;
 		THROW_EXIT;
@@ -624,9 +640,14 @@ try {
 	std::ostringstream canonical_name;
 	const size_t process_index = context.get_process_index();
 	if (process_index) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		context.get_top_footprint().dump_canonical_name<process_tag>(
+			canonical_name, process_index -1);
+#else
 		context.sm->get_pool<process_tag>()[process_index]
 			.dump_canonical_name(canonical_name,
 				*context.topfp, *context.sm);
+#endif
 	}
 	const expr_dump_context
 		edc(process_index ? canonical_name.str() : string());
@@ -705,8 +726,13 @@ EventRechecker::visit(const channel_receive& cr) {
 			"already blocked waiting to receive!" << endl;
 		// TODO: factor out reusable code
 		ostringstream oss;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+		context.get_top_footprint().dump_canonical_name<channel_tag>(
+			oss, chan_index -1);
+#else
 		sm->get_pool<channel_tag>()[chan_index].
 			dump_canonical_name(oss, *topfp, *sm);
+#endif
 		cerr << "\ton channel[" << chan_index << "] (" << oss.str()
 			<< ")" << endl;
 		THROW_EXIT;

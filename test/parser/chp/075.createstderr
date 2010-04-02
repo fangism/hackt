@@ -105,11 +105,11 @@ In namespace "", we have: {
           B = pint^0 value: 123
           b = int<32>^0 = assign_me<123>::b (1) 
           Created state:
-          int instance pool:
-          1	assign_me<123>::b
-          bool instance pool:
-          1	assign_me<123>::!GND
-          2	assign_me<123>::!Vdd
+          int instance pool: (1 ports, 0 local, 0 mapped)
+          1	assign_me<123>::b	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	assign_me<123>::!GND	
+          2	assign_me<123>::!Vdd	
           resolved concurrent actions:
             *[
               b := 123
@@ -124,11 +124,11 @@ In namespace "", we have: {
           B = pint^0 value: 456
           b = int<32>^0 = assign_me<456>::b (1) 
           Created state:
-          int instance pool:
-          1	assign_me<456>::b
-          bool instance pool:
-          1	assign_me<456>::!GND
-          2	assign_me<456>::!Vdd
+          int instance pool: (1 ports, 0 local, 0 mapped)
+          1	assign_me<456>::b	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	assign_me<456>::!GND	
+          2	assign_me<456>::!Vdd	
           resolved concurrent actions:
             *[
               b := 456
@@ -143,11 +143,11 @@ In namespace "", we have: {
           B = pint^0 value: 789
           b = int<32>^0 = assign_me<789>::b (1) 
           Created state:
-          int instance pool:
-          1	assign_me<789>::b
-          bool instance pool:
-          1	assign_me<789>::!GND
-          2	assign_me<789>::!Vdd
+          int instance pool: (1 ports, 0 local, 0 mapped)
+          1	assign_me<789>::b	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	assign_me<789>::!GND	
+          2	assign_me<789>::!Vdd	
           resolved concurrent actions:
             *[
               b := 789
@@ -186,15 +186,21 @@ footprint: {
     b = int<32>^0 = Z.b (3) 
   )
   Created state:
-  process instance pool:
-  1	X
-  2	Y
-  3	Z
-  int instance pool:
-  1	X.b
-  2	Y.b
-  3	Z.b
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 3 local, 0 mapped)
+  1	X	assign_me<123>
+    int: 1
+    bool: 1,2
+  2	Y	assign_me<456>
+    int: 2
+    bool: 1,2
+  3	Z	assign_me<789>
+    int: 3
+    bool: 1,2
+  int instance pool: (0 ports, 3 local, 0 mapped)
+  1	X.b	
+  2	Y.b	
+  3	Z.b	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

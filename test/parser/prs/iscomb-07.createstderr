@@ -160,14 +160,14 @@ In namespace "", we have: {
         y = bool^0 = foo<>::y (4) @[ iscomb ] 
         z = bool^0 = foo<>::y (4) @[ iscomb ] 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::w @[ iscomb ]
-        4	foo<>::y @[ iscomb ]
-        5	foo<>::a @[ iscomb ]
-        6	foo<>::c @[ iscomb ]
-        7	foo<>::e @[ iscomb ]
+        bool instance pool: (7 ports, 0 local, 0 mapped)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::w @[ iscomb ]	
+        4	foo<>::y @[ iscomb ]	
+        5	foo<>::a @[ iscomb ]	
+        6	foo<>::c @[ iscomb ]	
+        7	foo<>::e @[ iscomb ]	
         bool port aliases:
         3: foo<>::w = foo<>::x @[ iscomb ]
         4: foo<>::y = foo<>::z @[ iscomb ]
@@ -201,14 +201,15 @@ footprint: {
     f = bool^0 = bar.e (7) @[ iscomb ] 
   )
   Created state:
-  process instance pool:
-  1	bar
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	bar.w @[ iscomb ]
-  4	bar.y @[ iscomb ]
-  5	bar.a @[ iscomb ]
-  6	bar.c @[ iscomb ]
-  7	bar.e @[ iscomb ]
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	bar	foo<>
+    bool: 1,2,3,4,5,6,7
+  bool instance pool: (0 ports, 7 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	bar.w @[ iscomb ]	
+  4	bar.y @[ iscomb ]	
+  5	bar.a @[ iscomb ]	
+  6	bar.c @[ iscomb ]	
+  7	bar.e @[ iscomb ]	
 }

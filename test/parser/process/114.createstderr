@@ -2,5 +2,5 @@ ERROR: unrolling packed instance aliases in int_connection:
 	size of reference 2 (bar::y) = [3]
 	size of reference 1 (bar::x) = [2]
 Instantiated from: bar<3, 2>
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.48 2009/10/02 01:56:45 fang Exp $
+ 	$Id: definition.cc,v 1.49 2010/04/02 22:18:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -44,6 +44,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/process_type_reference.h"
 #include "Object/inst/param_value_placeholder.h"
 #include "Object/inst/physical_instance_placeholder.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
@@ -1009,16 +1011,6 @@ user_def_chan::register_complete_type(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 good_bool
-user_def_chan::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p, 
-		const footprint& top) const {
-	// nothing until this has a footprint manager
-	// don't forget spec
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-good_bool
 user_def_chan::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
 		const footprint& top) const {
@@ -1212,14 +1204,6 @@ channel_definition_alias::make_canonical_fundamental_type_reference(
 void
 channel_definition_alias::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
-	ICE_NEVER_CALL(cerr);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
-channel_definition_alias::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p, 
-		const footprint& top) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1501,15 +1485,6 @@ void
 built_in_datatype_def::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	// nothing, built-in types have no footprint manater
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
-built_in_datatype_def::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p, 
-		const footprint& top) const {
-	// nothing, built-in types have no footprint manater
-	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1954,15 +1929,6 @@ enum_datatype_def::register_complete_type(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-enum_datatype_def::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p, 
-		const footprint& top) const {
-	// nothing, doesn't have a footprint manager
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
 enum_datatype_def::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
 		const footprint& top) const {
@@ -2333,14 +2299,14 @@ user_def_datatype::register_complete_type(
 	definition copied verbatim from process_definition::unroll_complete_type
  */
 good_bool
-user_def_datatype::unroll_complete_type(
+user_def_datatype::__unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
 		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_DATASTRUCTS
 if (defined) {
 	footprint* const f = &footprint_map[p];
-	if (!f->is_unrolled()) {
+	{
 		const canonical_type_base canonical_params(p);
 		const template_actuals
 			canonical_actuals(canonical_params.get_template_params(
@@ -2360,7 +2326,6 @@ if (defined) {
 		c.dump(cerr) << endl;
 #endif
 		if (sequential_scope::unroll(c).good) {
-			f->mark_unrolled();
 		} else {
 			// already have partial error message
 			// cpt.dump(cerr << "Instantiated from ") << endl;
@@ -2372,6 +2337,7 @@ if (defined) {
 	cerr << "ERROR: cannot unroll incomplete data type " <<
 			get_qualified_name() << endl;
 	// parent should print: "instantiated from here"
+	// could print parameters too
 	return good_bool(false);
 }
 #else
@@ -2392,21 +2358,11 @@ user_def_datatype::create_complete_type(
 #if ENABLE_DATASTRUCTS
 if (defined) {
 	footprint* f = &footprint_map[p];
-#if 0
-	if (p) {
-		INVARIANT(p->size() == footprint_map.arity());
-		f = &footprint_map[*p];
-	} else {
-		INVARIANT(!footprint_map.arity());
-		f = &footprint_map.only();
-	}
-#endif
 	// will automatically unroll first if not already unrolled
-	if (!f->is_unrolled() && !unroll_complete_type(p, top).good) {
-		// already have error message
-		return good_bool(false);
-	}
 	if (!f->is_created()) {
+		if (!__unroll_complete_type(p, top).good) {
+			return good_bool(false);
+		}
 		const canonical_type_base canonical_params(p);
 		const template_actuals
 			canonical_actuals(canonical_params.get_template_params(
@@ -2705,15 +2661,6 @@ void
 datatype_definition_alias::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	ICE_NEVER_CALL(cerr);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
-datatype_definition_alias::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p, 
-		const footprint& top) const {
-	ICE_NEVER_CALL(cerr);
-	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3217,9 +3164,7 @@ process_definition::__unroll_complete_type(
 		const footprint& top) const {
 	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
-try {
-	const footprint::create_lock LOCK(f);	// will catch recursion error
-	if (!f.is_unrolled()) {
+	{
 		const canonical_type_base canonical_params(p);
 		const template_actuals
 			canonical_actuals(canonical_params.get_template_params(
@@ -3247,49 +3192,13 @@ try {
 			// and IDs are assigned by creating
 		}
 #endif
-			f.mark_unrolled();
 		} else {
-			// already have partial error message
+		// already have partial error message
 			// cpt.dump(cerr << "Instantiated from ") << endl;
 			return good_bool(false);
 		}
 	}
 	return good_bool(true);
-} catch (...) {
-if (parent) {
-	cerr << "Error unrolling type: " << get_qualified_name();
-	if (p) {
-		p->dump(cerr << '<', expr_dump_context::default_value) << '>';
-	}
-	cerr << endl;
-}
-	// else don't print name for top-level module
-	throw;	// re-throw
-	return good_bool(false);
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This just plays the sequential instantiation record, which 
-	instantiates objects and connections.  
-	PRS/CHP etc., are unrolled during ::create_complete_type.  
-	TODO: catch mutual recursion of types?
- */
-good_bool
-process_definition::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p, 
-		const footprint& top) const {
-	STACKTRACE_VERBOSE;
-if (defined) {
-	footprint* const f = &footprint_map.lookup(p);
-	return __unroll_complete_type(p, *f, top);
-} else {
-	cerr << "ERROR: cannot unroll incomplete process type " <<
-			get_qualified_name() << endl;
-	// parent should print: "instantiated from here"
-	return good_bool(false);
-}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3304,12 +3213,14 @@ process_definition::__create_complete_type(
 		footprint& f, 
 		const footprint& top) const {
 	STACKTRACE_VERBOSE;
+try {
+	const footprint::create_lock LOCK(f);	// will catch recursion error
 	// will automatically unroll first if not already unrolled
-	if (!f.is_unrolled() && !__unroll_complete_type(p, f, top).good) {
-		// already have error message
-		return good_bool(false);
-	}
 	if (!f.is_created()) {
+		if (!__unroll_complete_type(p, f, top).good) {
+			// already have type error message
+			return good_bool(false);
+		}
 		const unroll_context c(&f, &top);
 		// no need to re-unroll formal parameters, 
 		// already expanded in footprint
@@ -3357,6 +3268,18 @@ process_definition::__create_complete_type(
 		// f.mark_created();	// ?
 	}
 	return good_bool(true);
+} catch (...) {
+if (parent) {
+	cerr << "Error creating type: " << get_qualified_name();
+	if (p) {
+		p->dump(cerr << '<', expr_dump_context::default_value) << '>';
+	}
+	cerr << endl;
+}
+	// else don't print name for top-level module
+	throw;	// re-throw
+	return good_bool(false);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

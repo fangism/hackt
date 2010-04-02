@@ -1,4 +1,12 @@
 "ChangeLog"
+#	$Id: ChangeLog,v 1.243 2010/04/02 22:17:22 fang Exp $
+
+2010-04-02	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-69-merged-scalable-01-33:
+	  Merge of -scalable-01 branch, major revisions to make middle and
+		back ends of HACKT more memory scalable.  
+
 
 2010-03-10	David Fang	<fangism@users.sourceforge.net>
 
@@ -9,6 +17,12 @@
 	  config/hackt.m4: checking for tputs, force AC_LANG C
 	  Re-validated on ubuntu vs. gcc-4.4.1, many thanks to
 		Ilya Konstantinovich Ganusov for helping test!
+
+
+2010-02-09	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-16:
+	  Make.stddef: provide LN_SF as ln -s -f
 
 
 2010-02-02	David Fang	<fangism@users.sourceforge.net>

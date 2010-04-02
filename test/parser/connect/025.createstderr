@@ -77,12 +77,12 @@ In namespace "", we have: {
         a = int<32>^0 = bar<>::a (1) 
         b = int<32>^0 = bar<>::b (2) 
         Created state:
-        int instance pool:
-        1	bar<>::a
-        2	bar<>::b
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
+        int instance pool: (2 ports, 0 local, 0 mapped)
+        1	bar<>::a	
+        2	bar<>::b	
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
       }
       }
 
@@ -104,11 +104,13 @@ footprint: {
     b = int<32>^0 = foo (1) 
   )
   Created state:
-  process instance pool:
-  1	none
-  int instance pool:
-  1	foo
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	none	bar<>
+    int: 1,1
+    bool: 1,2
+  int instance pool: (0 ports, 1 local, 0 mapped)
+  1	foo	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

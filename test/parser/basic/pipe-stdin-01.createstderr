@@ -36,7 +36,7 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) 
   orange_juice = pint^0 value: 0
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

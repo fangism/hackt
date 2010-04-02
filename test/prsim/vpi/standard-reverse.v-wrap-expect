@@ -11,7 +11,7 @@ module HAC_AND2 #(
 	input A2,
 	output Z
 );
-	integer i;
+	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 initial begin
 #0	// happens *after* initial
@@ -32,14 +32,14 @@ module HAC_AND_N #(
 	input [input_size-1:0] A,
 	output Z
 );
-	integer i;
+	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 initial begin
 #0	// happens *after* initial
 	if (prsim_name != "") begin
 	$sformat(verilog_name, "%m");
-	for (i=0; i<=input_size-1; i=i+1) begin
-		$sformat(tmp, ".A[%d]", i);
+	for (_i_=0; _i_<=input_size-1; _i_=_i_+1) begin
+		$sformat(tmp, ".A[%d]", _i_);
 		$to_prsim({verilog_name, tmp}, {prsim_name, tmp});
 	end // end for
 	$from_prsim({prsim_name, ".Z"}, {verilog_name, ".Z"});
@@ -55,7 +55,7 @@ module HAC_OR2 #(
 	input A2,
 	output Z
 );
-	integer i;
+	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 initial begin
 #0	// happens *after* initial
@@ -82,7 +82,7 @@ module HAC_bus_array_test #(
 	output [7:0] G,
 	output [31:0] H
 );
-	integer i;
+	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 initial begin
 #0	// happens *after* initial
@@ -90,29 +90,29 @@ initial begin
 	$sformat(verilog_name, "%m");
 	$to_prsim({verilog_name, ".CLK"}, {prsim_name, ".CLK"});
 	$to_prsim({verilog_name, ".A"}, {prsim_name, ".A"});
-	for (i=0; i<=3; i=i+1) begin
-		$sformat(tmp, ".B[%d]", i);
+	for (_i_=0; _i_<=3; _i_=_i_+1) begin
+		$sformat(tmp, ".B[%d]", _i_);
 		$to_prsim({verilog_name, tmp}, {prsim_name, tmp});
 	end // end for
-	for (i=0; i<=7; i=i+1) begin
-		$sformat(tmp, ".C[%d]", i);
+	for (_i_=0; _i_<=7; _i_=_i_+1) begin
+		$sformat(tmp, ".C[%d]", _i_);
 		$to_prsim({verilog_name, tmp}, {prsim_name, tmp});
 	end // end for
-	for (i=0; i<=31; i=i+1) begin
-		$sformat(tmp, ".D[%d]", i);
+	for (_i_=0; _i_<=31; _i_=_i_+1) begin
+		$sformat(tmp, ".D[%d]", _i_);
 		$to_prsim({verilog_name, tmp}, {prsim_name, tmp});
 	end // end for
 	$from_prsim({prsim_name, ".E"}, {verilog_name, ".E"});
-	for (i=0; i<=3; i=i+1) begin
-		$sformat(tmp, ".F[%d]", i);
+	for (_i_=0; _i_<=3; _i_=_i_+1) begin
+		$sformat(tmp, ".F[%d]", _i_);
 		$from_prsim({prsim_name, tmp}, {verilog_name, tmp});
 	end // end for
-	for (i=0; i<=7; i=i+1) begin
-		$sformat(tmp, ".G[%d]", i);
+	for (_i_=0; _i_<=7; _i_=_i_+1) begin
+		$sformat(tmp, ".G[%d]", _i_);
 		$from_prsim({prsim_name, tmp}, {verilog_name, tmp});
 	end // end for
-	for (i=0; i<=31; i=i+1) begin
-		$sformat(tmp, ".H[%d]", i);
+	for (_i_=0; _i_<=31; _i_=_i_+1) begin
+		$sformat(tmp, ".H[%d]", _i_);
 		$from_prsim({prsim_name, tmp}, {verilog_name, tmp});
 	end // end for
 	end // end if
@@ -127,19 +127,19 @@ module HAC_wire_port_test #(
 	input [3:0] in_b,
 	output [3:0] out_x
 );
-	integer i;
+	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 initial begin
 #0	// happens *after* initial
 	if (prsim_name != "") begin
 	$sformat(verilog_name, "%m");
 	$to_prsim({verilog_name, ".in_a"}, {prsim_name, ".in_a"});
-	for (i=0; i<=3; i=i+1) begin
-		$sformat(tmp, ".in_b[%d]", i);
+	for (_i_=0; _i_<=3; _i_=_i_+1) begin
+		$sformat(tmp, ".in_b[%d]", _i_);
 		$to_prsim({verilog_name, tmp}, {prsim_name, tmp});
 	end // end for
-	for (i=0; i<=3; i=i+1) begin
-		$sformat(tmp, ".out_x[%d]", i);
+	for (_i_=0; _i_<=3; _i_=_i_+1) begin
+		$sformat(tmp, ".out_x[%d]", _i_);
 		$from_prsim({prsim_name, tmp}, {verilog_name, tmp});
 	end // end for
 	end // end if

@@ -3,8 +3,8 @@
 @ "a" iscomb
 @ "c" iscomb
 @ "e" iscomb
+connect "w" "x"
+connect "y" "z"
 connect "a" "b"
 connect "c" "d"
 connect "e" "f"
-connect "w" "x"
-connect "y" "z"

@@ -1,14 +1,14 @@
-"y.Ld" & "y.Re" & "y.xe" & "y.x" -> "y._rd"-
 "x.i[0]" & "x.i[1]" -> "x.o"-
 ~"x.i[0]" & ~"x.i[1]" -> "x.o"+
+"y.Ld" & "y.Re" & "y.xe" & "y.x" -> "y._rd"-
 = "!GND" "x.!GND"
-= "!Vdd" "x.!Vdd"
 = "!GND" "x.c.!GND"
+= "!GND" "y.!GND"
+= "!Vdd" "x.!Vdd"
 = "!Vdd" "x.c.!Vdd"
+= "!Vdd" "y.!Vdd"
 = "x.i[0]" "x.c.id[0]"
-= "x.i[1]" "x.c.id[1]"
 = "x.i[0]" "x.c.iu[0]"
+= "x.i[1]" "x.c.id[1]"
 = "x.i[1]" "x.c.iu[1]"
 = "x.o" "x.c.o"
-= "!GND" "y.!GND"
-= "!Vdd" "y.!Vdd"

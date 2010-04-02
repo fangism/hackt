@@ -1,0 +1,160 @@
+@c "chpsim/tutorial.texi"
+@c $Id: tutorial.texi,v 1.2 2010/04/02 22:17:30 fang Exp $
+
+@node Tutorial
+@chapter Tutorial
+@cindex tutorial
+
+This chapter demonstrates the basic usage of @command{hacknet}
+for generating SPICE-netlists.
+A complete description of features and options follows
+in the next chapters.
+
+@menu
+* Top-level circuits::
+* Subcircuits::
+* Configuration help::
+@end menu
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Top-level circuits
+@section Top-level circuits
+
+Write the following HAC file, @file{inv-top.hac}:
+
+@example
+bool x, y;
+prs @{
+  x => y-
+@}
+@end example
+
+@noindent
+Compile the source to an object file:
+
+@example
+$ haco inv-top.hac inv-top.haco
+$ haccreate inv-top.haco inv-top.haco-c
+@end example
+
+@noindent
+Generate a netlist:
+
+@example
+$ hacknet inv-top.haco-c > inv-top.spice
+@end example
+
+@noindent
+The resulting output should look like:
+
+@example
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+@end example
+
+The resulting netlist produces a set of transistors at the top-level.
+The @t{!Vdd} and @t{!GND} nodes are implicit power supplies.
+The default device types are @t{nch} for NFETs and @t{pch} for PFETs.
+Default widths and lengths were chosen because none were specified.  
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Subcircuits
+@section Subcircuits
+
+Process definitions are emitted as subcircuit definitions, 
+and can be instantiated with the SPICE @t{X} card.  
+
+Write the following HAC file, @file{inv-def.hac}:
+
+@example
+defproc inv(bool x, y) @{
+prs @{
+  x => y-
+@}
+@}
+@end example
+
+@noindent
+Compile the source to an object file as before.  
+Since there are no top-level instances, you'll need to tell 
+@command{hacknet} what type to emit as the top subcircuit.  
+
+@example
+$ hacknet -T 'inv' inv-def.haco-c
+@end example
+
+@noindent
+should produce:
+
+@example
+.subckt inv<> !GND !Vdd x y
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+.ends
+@end example
+
+@noindent
+Use of single-quotes around the type argument is encouraged
+(in fact, only required for template parameters to protect the 
+@t{<>} characters from being interpreted by the shell).  
+
+Finally, entire hierarchal netlists can be produced by instantiating
+subcircuit definitions.  Write the following file @file{invs.hac}, 
+and compile it into @file{invs.haco-c}:
+
+@example
+import "inv-def.hac";
+
+// pair of inverters
+defproc foo(bool a, b, c) @{
+inv p(a, b), q(b, c);
+@}
+
+foo bar;
+@end example
+
+@noindent
+Run @command{hacknet}:
+
+@example
+$ hacknet invs.haco-c > invs.spice
+@end example
+
+@noindent
+to produce the following hierarchical netlist.
+
+@example
+.subckt inv<> !GND !Vdd x y
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+.ends
+
+.subckt foo<> !GND !Vdd a b c
+xp !GND !Vdd a b inv<>
+xq !GND !Vdd b c inv<>
+.ends
+
+xbar !GND !Vdd bar.a bar.b bar.c foo<>
+@end example
+
+In this example, there is a top-level instance of type @t{foo} named @t{bar}.
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Configuration help
+@section Configuration help
+
+A quick way to list all of the known configuration options with their
+default values is:
+
+@example
+$ hacknet -d
+@end example
+
+@noindent
+The output can be pasted into a file for modification.
+To use a configuration file, pass the @option{-c} option:
+
+@example
+$ hacknet -c my.hacknet-conf inv.haco-c > inv.spice
+@end example
+

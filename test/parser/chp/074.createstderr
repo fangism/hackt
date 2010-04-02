@@ -91,10 +91,10 @@ In namespace "", we have: {
           B = pbool^0 value: 0
           b = bool^0 = assign_me<false>::b (3) 
           Created state:
-          bool instance pool:
-          1	assign_me<false>::!GND
-          2	assign_me<false>::!Vdd
-          3	assign_me<false>::b
+          bool instance pool: (3 ports, 0 local, 0 mapped)
+          1	assign_me<false>::!GND	
+          2	assign_me<false>::!Vdd	
+          3	assign_me<false>::b	
           resolved concurrent actions:
             *[
               b := false
@@ -109,10 +109,10 @@ In namespace "", we have: {
           B = pbool^0 value: 1
           b = bool^0 = assign_me<true>::b (3) 
           Created state:
-          bool instance pool:
-          1	assign_me<true>::!GND
-          2	assign_me<true>::!Vdd
-          3	assign_me<true>::b
+          bool instance pool: (3 ports, 0 local, 0 mapped)
+          1	assign_me<true>::!GND	
+          2	assign_me<true>::!Vdd	
+          3	assign_me<true>::b	
           resolved concurrent actions:
             *[
               b := true
@@ -145,12 +145,14 @@ footprint: {
     b = bool^0 = Y.b (4) 
   )
   Created state:
-  process instance pool:
-  1	X
-  2	Y
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	X.b
-  4	Y.b
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	X	assign_me<true>
+    bool: 1,2,3
+  2	Y	assign_me<false>
+    bool: 1,2,4
+  bool instance pool: (0 ports, 4 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	X.b	
+  4	Y.b	
 }

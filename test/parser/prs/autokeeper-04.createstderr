@@ -116,12 +116,12 @@ footprint: {
   y = bool^0 = y (4) @[ !autokeeper ] 
   z = bool^0 = y (4) @[ !autokeeper ] 
   Created state:
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	w @[ !autokeeper ]
-  4	y @[ !autokeeper ]
-  5	a @[ !autokeeper ]
-  6	c @[ !autokeeper ]
-  7	e @[ !autokeeper ]
+  bool instance pool: (0 ports, 7 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	w @[ !autokeeper ]	
+  4	y @[ !autokeeper ]	
+  5	a @[ !autokeeper ]	
+  6	c @[ !autokeeper ]	
+  7	e @[ !autokeeper ]	
 }

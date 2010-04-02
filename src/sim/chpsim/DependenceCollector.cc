@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.9 2007/09/11 06:53:05 fang Exp $
+	$Id: DependenceCollector.cc,v 1.10 2010/04/02 22:19:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -38,6 +38,7 @@
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
+#include "Object/traits/classification_tags.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/enum_traits.h"
@@ -93,28 +94,49 @@ dependence_collector_base<Tag>::~dependence_collector_base() { }
 // class DependenceSetCollector method definitions
 
 DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) : 
-		global_entry_context(s.get_state_manager(), 
+		global_entry_context(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			s.get_state_manager(), 
 			s.get_process_footprint(), 	// is top-level!
+#endif
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+			s.state.top_context
+#else
 			(s.current_process_index ?
 			&s.get_state_manager().get_pool<process_tag>()
 				[s.current_process_index]._frame
-			: NULL)), 	// don't default to top-level
+					: NULL)
+#endif
+			), 	// don't default to top-level
 		dependence_collector_base<bool_tag>(), 
 		dependence_collector_base<int_tag>(), 
 		dependence_collector_base<enum_tag>(), 
 		dependence_collector_base<channel_tag>() {
+	STACKTRACE_VERBOSE;
 	// all processes except the top-level should have valid footprint-frame
 	if (s.current_process_index) {
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#if !CACHE_GLOBAL_FOOTPRINT_FRAMES
+#error	"Caching of global footprint frames is required!"
+	// because a return by reference is necessary, not return by value
+#endif
+		fpf = &s.state.get_footprint_frame(s.current_process_index);
+		// do anything about global offset?
+		// probably don't need if process traversal is flat
+#else
 		NEVER_NULL(fpf);
+#endif
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	With this constructor, footprint_frame pointer is not set, 
 	and should be set using global_entry_context::footprint_frame_setter.
  */
-DependenceSetCollector::DependenceSetCollector(const state_manager& _sm, 
+DependenceSetCollector::DependenceSetCollector(
+		const state_manager& _sm, 
 		const footprint& _topfp) : 
 		global_entry_context(_sm, _topfp), 
 		dependence_collector_base<bool_tag>(), 
@@ -122,6 +144,7 @@ DependenceSetCollector::DependenceSetCollector(const state_manager& _sm,
 		dependence_collector_base<enum_tag>(), 
 		dependence_collector_base<channel_tag>() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DependenceSetCollector::~DependenceSetCollector() { }

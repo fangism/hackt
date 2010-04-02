@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_chan.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.10 2007/09/13 20:37:15 fang Exp $
+	$Id: user_def_chan.h,v 1.11 2010/04/02 22:18:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_CHAN_H__
@@ -106,7 +106,6 @@ public:
 	MAKE_CANONICAL_CHANNEL_TYPE_PROTO;
 
 	REGISTER_COMPLETE_TYPE_PROTO;
-	UNROLL_COMPLETE_TYPE_PROTO;
 	CREATE_COMPLETE_TYPE_PROTO;
 
 public:

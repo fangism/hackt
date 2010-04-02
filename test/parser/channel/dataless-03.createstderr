@@ -82,13 +82,13 @@ In namespace "", we have: {
         out = channel chan!()^0 = boring<>::out (2) 
         peek = channel chan()^0 = boring<>::peek (3) 
         Created state:
-        channel instance pool:
-        1	boring<>::in
-        2	boring<>::out
-        3	boring<>::peek
-        bool instance pool:
-        1	boring<>::!GND
-        2	boring<>::!Vdd
+        channel instance pool: (3 ports, 0 local, 0 mapped)
+        1	boring<>::in	
+        2	boring<>::out	
+        3	boring<>::peek	
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	boring<>::!GND	
+        2	boring<>::!Vdd	
       }
       }
 
@@ -109,13 +109,15 @@ footprint: {
     peek = channel chan()^0 = work.peek (3) 
   )
   Created state:
-  process instance pool:
-  1	work
-  channel instance pool:
-  1	work.in
-  2	work.out
-  3	work.peek
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	work	boring<>
+    channel: 1,2,3
+    bool: 1,2
+  channel instance pool: (0 ports, 3 local, 0 mapped)
+  1	work.in	
+  2	work.out	
+  3	work.peek	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

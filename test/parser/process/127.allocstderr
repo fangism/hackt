@@ -1,0 +1,112 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	farm[0]	moo<>
+	process: 2,3,4;9..11 {12..15}
+	bool: 1,2,3;5 {6..12}
+2	(top)	-	2	farm[0].poo	ick<>
+	process: 3,4;16..17 {18}
+	bool: 1,2,3;13 {14..16}
+3	(top)	-	3	farm[0].poo.p	bar<>
+	process: 4;19
+	bool: 1,2,3;17 {18}
+4	(top)	-	4	farm[0].poo.p.x	foo<>
+	bool: 1,2,3;19
+5	(top)	-	5	farm[1]	moo<>
+	process: 6,7,8;20..22 {23..26}
+	bool: 1,2,4;20 {21..27}
+6	(top)	-	6	farm[1].poo	ick<>
+	process: 7,8;27..28 {29}
+	bool: 1,2,4;28 {29..31}
+7	(top)	-	7	farm[1].poo.p	bar<>
+	process: 8;30
+	bool: 1,2,4;32 {33}
+8	(top)	-	8	farm[1].poo.p.x	foo<>
+	bool: 1,2,4;34
+9	process	1	4	farm[0].who	ick<>
+	process: 10,11;12..13 {14}
+	bool: 1,2,5;6 {7..9}
+10	process	1	5	farm[0].who.p	bar<>
+	process: 11;15
+	bool: 1,2,5;10 {11}
+11	process	1	6	farm[0].who.p.x	foo<>
+	bool: 1,2,5;12
+12	process	9	3	farm[0].who.q	bar<>
+	process: 13;14
+	bool: 1,2,6;7 {8}
+13	process	9	4	farm[0].who.q.x	foo<>
+	bool: 1,2,6;9
+14	process	12	2	farm[0].who.q.y	foo<>
+	bool: 1,2,7;8
+15	process	10	2	farm[0].who.p.y	foo<>
+	bool: 1,2,10;11
+16	process	2	3	farm[0].poo.q	bar<>
+	process: 17;18
+	bool: 1,2,13;14 {15}
+17	process	2	4	farm[0].poo.q.x	foo<>
+	bool: 1,2,13;16
+18	process	16	2	farm[0].poo.q.y	foo<>
+	bool: 1,2,14;15
+19	process	3	2	farm[0].poo.p.y	foo<>
+	bool: 1,2,17;18
+20	process	5	4	farm[1].who	ick<>
+	process: 21,22;23..24 {25}
+	bool: 1,2,20;21 {22..24}
+21	process	5	5	farm[1].who.p	bar<>
+	process: 22;26
+	bool: 1,2,20;25 {26}
+22	process	5	6	farm[1].who.p.x	foo<>
+	bool: 1,2,20;27
+23	process	20	3	farm[1].who.q	bar<>
+	process: 24;25
+	bool: 1,2,21;22 {23}
+24	process	20	4	farm[1].who.q.x	foo<>
+	bool: 1,2,21;24
+25	process	23	2	farm[1].who.q.y	foo<>
+	bool: 1,2,22;23
+26	process	21	2	farm[1].who.p.y	foo<>
+	bool: 1,2,25;26
+27	process	6	3	farm[1].poo.q	bar<>
+	process: 28;29
+	bool: 1,2,28;29 {30}
+28	process	6	4	farm[1].poo.q.x	foo<>
+	bool: 1,2,28;31
+29	process	27	2	farm[1].poo.q.y	foo<>
+	bool: 1,2,29;30
+30	process	7	2	farm[1].poo.p.y	foo<>
+	bool: 1,2,32;33
+[global bool entries]
+1	(top)	-	1	!GND	
+2	(top)	-	2	!Vdd	
+3	(top)	-	3	farm[0].poo.p.x.a	
+4	(top)	-	4	farm[1].poo.p.x.a	
+5	process	1	4	farm[0].who.p.x.a	
+6	process	9	4	farm[0].who.q.x.a	
+7	process	12	4	farm[0].who.q.y.a	
+8	process	14	4	farm[0].who.q.y.b	
+9	process	13	4	farm[0].who.q.x.b	
+10	process	10	4	farm[0].who.p.y.a	
+11	process	15	4	farm[0].who.p.y.b	
+12	process	11	4	farm[0].who.p.x.b	
+13	process	2	4	farm[0].poo.q.x.a	
+14	process	16	4	farm[0].poo.q.y.a	
+15	process	18	4	farm[0].poo.q.y.b	
+16	process	17	4	farm[0].poo.q.x.b	
+17	process	3	4	farm[0].poo.p.y.a	
+18	process	19	4	farm[0].poo.p.y.b	
+19	process	4	4	farm[0].poo.p.x.b	
+20	process	5	4	farm[1].who.p.x.a	
+21	process	20	4	farm[1].who.q.x.a	
+22	process	23	4	farm[1].who.q.y.a	
+23	process	25	4	farm[1].who.q.y.b	
+24	process	24	4	farm[1].who.q.x.b	
+25	process	21	4	farm[1].who.p.y.a	
+26	process	26	4	farm[1].who.p.y.b	
+27	process	22	4	farm[1].who.p.x.b	
+28	process	6	4	farm[1].poo.q.x.a	
+29	process	27	4	farm[1].poo.q.y.a	
+30	process	29	4	farm[1].poo.q.y.b	
+31	process	28	4	farm[1].poo.q.x.b	
+32	process	7	4	farm[1].poo.p.y.a	
+33	process	30	4	farm[1].poo.p.y.b	
+34	process	8	4	farm[1].poo.p.x.b	
+

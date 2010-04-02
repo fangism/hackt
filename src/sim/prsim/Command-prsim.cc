@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.57 2010/01/29 02:11:29 fang Exp $
+	$Id: Command-prsim.cc,v 1.58 2010/04/02 22:19:17 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -20,6 +20,8 @@
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
+
+#define	ENABLE_STACKTRACE				0
 
 #include <iostream>
 #include <fstream>
@@ -41,6 +43,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "common/TODO.h"
 #include "util/libc.h"
 #include "util/memory/excl_malloc_ptr.h"
+#include "util/stacktrace.h"
 
 /**
 	These commands are deprecated, but provided for backwards compatibility.
@@ -103,6 +106,7 @@ nonempty_abs_dir(const string& s) {
 static
 size_t
 parse_node_to_index(const string& s, const entity::module& m) {
+	STACKTRACE_VERBOSE;
 	// automatically prepend working directory
 	return parser::parse_node_to_index(
 		CommandRegistry::prepend_working_dir(s), m);
@@ -111,6 +115,7 @@ parse_node_to_index(const string& s, const entity::module& m) {
 static
 size_t
 parse_process_to_index(const string& s, const entity::module& m) {
+	STACKTRACE_VERBOSE;
 	// automatically prepend working directory
 	const string t(nonempty_abs_dir(s));
 	return parser::parse_process_to_index(t, m);
@@ -119,6 +124,7 @@ parse_process_to_index(const string& s, const entity::module& m) {
 static
 int
 parse_name_to_what(ostream& o, const string& s, const entity::module& m) {
+	STACKTRACE_VERBOSE;
 	return parser::parse_name_to_what(o, 
 		CommandRegistry::prepend_working_dir(s), m);
 }
@@ -126,6 +132,7 @@ parse_name_to_what(ostream& o, const string& s, const entity::module& m) {
 static
 entity::global_indexed_reference
 parse_global_reference(const string& s, const entity::module& m) {
+	STACKTRACE_VERBOSE;
 	return parser::parse_global_reference(
 		CommandRegistry::prepend_working_dir(s), m);
 }
@@ -134,6 +141,7 @@ static
 int
 parse_name_to_get_subnodes(const string& s, const entity::module& m,
 		vector<size_t>& v) {
+	STACKTRACE_VERBOSE;
 	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_subnodes(t, m, v);
 }
@@ -142,6 +150,7 @@ static
 int
 parse_name_to_get_subnodes_local(const string& s, const entity::module& m,
 		vector<size_t>& v) {
+	STACKTRACE_VERBOSE;
 	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_subnodes_local(t, m, v);
 }
@@ -150,6 +159,7 @@ static
 int
 parse_name_to_get_ports(const string& s, const entity::module& m,
 		vector<size_t>& v) {
+	STACKTRACE_VERBOSE;
 	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_ports(t, m, v);
 }
@@ -1919,9 +1929,14 @@ try {	// temporary measure until bug ACX-PR-1456 is fixed
 		return Command::BADARG;
 	} else {
 		typedef	nodes_id_list_type::const_iterator	const_iterator;
+		const_iterator i(nodes.begin()), e(nodes.end());
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT_PRINT("node-ids: ");
+		copy(i, e, ostream_iterator<size_t>(STACKTRACE_STREAM, ","));
+		STACKTRACE_STREAM << endl;
+#endif
 		cout << "All subnodes of \'" << 
 			nonempty_abs_dir(objname) << "\':" << endl;
-		const_iterator i(nodes.begin()), e(nodes.end());
 		for ( ; i!=e; ++i) {
 			s.dump_node_value(cout, *i) << endl;
 		}
@@ -4181,6 +4196,119 @@ but not with the @command{initialize} command.
 ***/
 typedef	Seed48<State>			Seed48;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Seed48, modes)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+/***
+@texinfo cmd/frame-cache-half-life.texi
+@deffn Command frame-cache-half-life [int]
+Sets the period (in event count) at which the internal cache of
+footprint frames (lookup-tables) should be aged.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(FrameCacheHalfLife,
+	"frame-cache-half-life", modes, "lookup table cache age interval")
+
+int
+FrameCacheHalfLife::main(State& s, const string_list& a) {
+switch (a.size()) {
+case 0: cout << "frame-cache-half-life: " << s.cache_half_life << endl;
+	cout << "frame-cache-countdown: " << s.get_cache_countdown() << endl;
+	return Command::NORMAL;
+case 1: {
+	size_t x;
+	if (string_to_num(a.front(), x)) {
+		cerr << "Invalid interval value." << endl;
+		return Command::BADARG;
+	}
+	s.cache_half_life = x;
+	return Command::NORMAL;
+}
+default:
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+}
+}
+
+void
+FrameCacheHalfLife::usage(ostream& o) {
+	o << name << " [interval]" << endl;
+	o <<
+"Sets the number of events at which the frame cache should age (half-life)\n"
+"by decaying all entry weights by half, and evict nodes that reach 0.\n"
+"When no argument is given, just reports the current half-life and counter."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/frame-cache-halve.texi
+@deffn Command frame-cache-halve
+Manually age the cache, as if a half-life period elapsed.
+One typically never needs to do this unless the memory usage
+has gone out of hand.
+The output reports the total amount of weight lost in the cache, 
+which is meaningless unless you know how the cache works.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(FrameCacheHalve,
+	"frame-cache-halve", modes, "downsize lookup table cache")
+
+int
+FrameCacheHalve::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+} else {
+	const global_entry_context::frame_cache_type& c(s.get_frame_cache());
+	const size_t weight = c.weight();
+	s.halve_cache();
+	const size_t aft_weight = c.weight();
+	cout << "frame cache weight reduced from " << weight << " to "
+		<< aft_weight << endl;
+	return Command::NORMAL;
+}
+}
+
+void
+FrameCacheHalve::usage(ostream& o) {
+	o << name << endl;
+	o <<
+"Manually age the contents of the frame cache by one half-life."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/frame-cache-dump.texi
+@deffn Command frame-cache-dump
+Print the contents of the global footprint-frame cache.
+Really only intended for memory diagnostics.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(FrameCacheDump,
+	"frame-cache-dump", modes, "examine lookup table cache contents")
+
+int
+FrameCacheDump::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+} else {
+	s.dump_frame_cache(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+FrameCacheDump::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+#endif	// CACHE_GLOBAL_FOOTPRINT_FRAMES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

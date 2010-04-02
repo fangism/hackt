@@ -6,5 +6,5 @@ ERROR: types mismatch!
 	and: chan(int<11>)
 	from: foobar
 	and:  barfoo
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

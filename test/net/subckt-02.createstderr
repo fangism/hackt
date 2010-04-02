@@ -1,5 +1,4 @@
 ERROR: nested subcircuits are not yet supported.
-Error instantiating process footprint: 
-From canonical type: inv_c<>
-Error encountered during module::unroll.
+Instantiated from: inv_c<>
+Error encountered during module::create.
 ERROR in creating.  Aborting.

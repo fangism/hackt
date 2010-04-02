@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.26 2009/02/28 01:20:43 fang Exp $
+	$Id: substructure_alias_base.h,v 1.27 2010/04/02 22:18:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -23,7 +23,9 @@ class port_alias_tracker;
 #endif
 class footprint;
 class footprint_frame;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 class port_member_context;
+#endif
 class state_manager;
 template <class> class global_entry;
 template <class> class state_instance;
@@ -115,8 +117,10 @@ protected:
 	__allocate_subinstance_footprint(
 		footprint_frame&, state_manager&) const;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using parent_type::__assign_footprint_frame;
 	using parent_type::__construct_port_context;
+#endif
 	using parent_type::connect_port_aliases_recursive;
 
 public:
@@ -184,6 +188,7 @@ protected:
 		return good_bool(true);
 	}
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	__assign_footprint_frame(const footprint_frame&,
 			const port_member_context&) const {
@@ -194,6 +199,7 @@ protected:
 			const footprint_frame&) const {
 		// No-op.
 	}
+#endif
 
 	// has no substructure
 	good_bool

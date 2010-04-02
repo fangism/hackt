@@ -1,6 +1,6 @@
 # "mk/hackt-rules.mk"
 #	vi: ft=automake
-#	$Id: hackt-rules.mk,v 1.5 2009/08/28 20:44:46 fang Exp $
+#	$Id: hackt-rules.mk,v 1.6 2010/04/02 22:17:40 fang Exp $
 # The rules portion of the hackt automake template.
 # The counterpart of this file is "mk/hackt-suffixes.am".
 # Include this file after suffixes have been included.  
@@ -27,7 +27,8 @@
 	$(HACKT_CREATE_EXE) $< $@
 
 .haco-c.haco-a:
-	$(HACKT_ALLOC_EXE) $< $@
+	ln -s $< $@
+#	$(HACKT_ALLOC_EXE) $< $@
 
 .haco-a.prs:
 	$(HACKT_CFLAT_PRSIM_EXE) $< > $@

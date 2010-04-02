@@ -1,5 +1,5 @@
 @ "foo.x.a" iscomb
 connect "!GND" "foo.!GND"
-connect "!Vdd" "foo.!Vdd"
 connect "!GND" "foo.x.!GND"
+connect "!Vdd" "foo.!Vdd"
 connect "!Vdd" "foo.x.!Vdd"

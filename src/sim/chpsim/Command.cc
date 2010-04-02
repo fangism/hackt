@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.25 2009/11/19 23:29:11 fang Exp $
+	$Id: Command.cc,v 1.26 2010/04/02 22:19:06 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1126,6 +1126,7 @@ event when its value does not change.
 @end deffn
 @end texinfo
 ***/
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(BreakValue, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakValue, "break-value", simulation, 
 	"set breakpoint on selected variables")
 
@@ -1170,6 +1171,7 @@ Remove breakpoint on variable @var{inst}.
 @end deffn
 @end texinfo
 ***/
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(UnBreakValue, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakValue, 
 	"unbreak-value", simulation, 
 	"remove breakpoint on selected variables")
@@ -1576,6 +1578,7 @@ when value of @var{inst} changes.
 @end deffn
 @end texinfo
 ***/
+CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Subscribers, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Subscribers, "subscribers", info,
 	"list events subscribed to the named instance")
 

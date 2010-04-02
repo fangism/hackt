@@ -3,5 +3,5 @@ ERROR: attempted to connect instances with conflicting relaxed parameters!
 	and: 1, {1}
 	from: Y.Src[1]
 	and:  Z.Src[1]
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

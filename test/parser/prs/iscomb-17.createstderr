@@ -77,11 +77,11 @@ In namespace "", we have: {
         a = bool^0 = inv<>::a (3) 
         b = bool^0 = inv<>::b (4) 
         Created state:
-        bool instance pool:
-        1	inv<>::!GND
-        2	inv<>::!Vdd
-        3	inv<>::a
-        4	inv<>::b
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	inv<>::!GND	
+        2	inv<>::!Vdd	
+        3	inv<>::a	
+        4	inv<>::b	
       }
       }
 
@@ -112,13 +112,14 @@ In namespace "", we have: {
           b = bool^0 = multi_inv<>::x.b (4) 
         )
         Created state:
-        process instance pool:
-        1	multi_inv<>::x
-        bool instance pool:
-        1	multi_inv<>::!GND
-        2	multi_inv<>::!Vdd
-        3	multi_inv<>::x.a @[ iscomb ]
-        4	multi_inv<>::x.b
+        process instance pool: (1 ports, 0 local, 0 mapped)
+        1	multi_inv<>::x	inv<>
+          bool: 1,2,3,4
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	multi_inv<>::!GND	
+        2	multi_inv<>::!Vdd	
+        3	multi_inv<>::x.a @[ iscomb ]	
+        4	multi_inv<>::x.b	
         bool port aliases:
         1: multi_inv<>::x.!GND = multi_inv<>::!GND
         2: multi_inv<>::x.!Vdd = multi_inv<>::!Vdd
@@ -145,12 +146,15 @@ footprint: {
     )
   )
   Created state:
-  process instance pool:
-  1	foo
-  2	foo.x
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	foo.x.a @[ iscomb ]
-  4	foo.x.b
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	foo	multi_inv<>
+    process: 2
+    bool: 1,2,3,4
+  2	foo.x	inv<>
+    bool: 1,2,3,4
+  bool instance pool: (0 ports, 4 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	foo.x.a @[ iscomb ]	
+  4	foo.x.b	
 }

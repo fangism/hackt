@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.10 2006/12/01 23:28:56 fang Exp $
+	$Id: canonical_type.h,v 1.11 2010/04/02 22:18:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -8,6 +8,7 @@
 
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/type/canonical_type_base.h"
+#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 #include "util/memory/excl_ptr.h"
 
@@ -20,7 +21,9 @@ class subinstance_manager;
 class footprint;
 class footprint_frame;
 class state_manager;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 class port_member_context;
+#endif
 using util::memory::never_ptr;
 using util::good_bool;
 
@@ -128,10 +131,6 @@ public:
 	get_definition_footprint(void) const;
 #endif
 
-	// like fundamental_type_reference::unroll_register_complete_type()
-	good_bool
-	unroll_definition_footprint(const footprint&) const;
-
 	good_bool
 	create_definition_footprint(const footprint&) const;
 
@@ -185,8 +184,13 @@ struct canonical_type_footprint_frame_policy {
 	static
 	good_bool
 	initialize_and_assign(const canonical_type<DefType>&,
-			const footprint_frame&, const state_manager&, 
-			const port_member_context&, const size_t) {
+			const footprint_frame&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, const state_manager&, 
+			const port_member_context&
+			, const size_t
+#endif
+			) {
 		return good_bool(true);
 	}
 };      // end struct initialize_footprint_frame_policy
@@ -197,8 +201,13 @@ struct canonical_type_footprint_frame_policy<process_definition> {
 
 	static
 	good_bool
-	initialize_and_assign(const canonical_process_type&, footprint_frame&, 
-		state_manager&, const port_member_context&, const size_t);
+	initialize_and_assign(const canonical_process_type&, footprint_frame&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, state_manager&,
+		const port_member_context&
+		, const size_t
+#endif
+		);
 };      // end struct initialize_footprint_frame_policy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -208,8 +217,13 @@ struct canonical_type_footprint_frame_policy<user_def_datatype> {
 	static
 	good_bool
 	initialize_and_assign(const canonical_user_def_data_type&,
-		footprint_frame&, state_manager&,
-		const port_member_context&, const size_t);
+		footprint_frame&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		, state_manager&,
+		const port_member_context&
+		, const size_t
+#endif
+		);
 };      // end struct initialize_footprint_frame_policy
 
 //-----------------------------------------------------------------------------

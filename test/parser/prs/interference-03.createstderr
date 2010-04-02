@@ -141,11 +141,11 @@ In namespace "", we have: {
         bar2 = bool^0 = dyne<>::bar (4) @[ may_weak_interfere ] 
         foo = bool^0 = dyne<>::foo (3) 
         Created state:
-        bool instance pool:
-        1	dyne<>::!GND
-        2	dyne<>::!Vdd
-        3	dyne<>::foo
-        4	dyne<>::bar @[ may_weak_interfere ]
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	dyne<>::!GND	
+        2	dyne<>::!Vdd	
+        3	dyne<>::foo	
+        4	dyne<>::bar @[ may_weak_interfere ]	
         resolved prs:
         bar -> foo- [weak=1]
         ~bar -> foo+ [weak=1]
@@ -189,11 +189,11 @@ In namespace "", we have: {
         foo = bool^0 = yoyo<>::foo (3) @[ may_interfere ] 
         foo2 = bool^0 = yoyo<>::foo (3) @[ may_interfere ] 
         Created state:
-        bool instance pool:
-        1	yoyo<>::!GND
-        2	yoyo<>::!Vdd
-        3	yoyo<>::foo @[ may_interfere ]
-        4	yoyo<>::bar
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	yoyo<>::!GND	
+        2	yoyo<>::!Vdd	
+        3	yoyo<>::foo @[ may_interfere ]	
+        4	yoyo<>::bar	
         resolved prs:
         foo -> bar-
         ~foo -> bar+
@@ -239,18 +239,22 @@ footprint: {
     bar = bool^0 = wha.bar (8) @[ may_weak_interfere ] 
   )
   Created state:
-  process instance pool:
-  1	wee
-  2	cheezburger
-  3	wha
-  4	bukkit
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	wee.foo @[ may_interfere ]
-  4	wee.bar
-  5	cheezburger.foo @[ may_interfere ]
-  6	cheezburger.bar @[ may_weak_interfere ]
-  7	wha.foo
-  8	wha.bar @[ may_weak_interfere ]
+  process instance pool: (0 ports, 4 local, 0 mapped)
+  1	wee	yoyo<>
+    bool: 1,2,3,4
+  2	cheezburger	yoyo<>
+    bool: 1,2,5,6
+  3	wha	dyne<>
+    bool: 1,2,7,8
+  4	bukkit	dyne<>
+    bool: 1,2,5,6
+  bool instance pool: (0 ports, 8 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	wee.foo @[ may_interfere ]	
+  4	wee.bar	
+  5	cheezburger.foo @[ may_interfere ]	
+  6	cheezburger.bar @[ may_weak_interfere ]	
+  7	wha.foo	
+  8	wha.bar @[ may_weak_interfere ]	
 }

@@ -97,11 +97,11 @@ In namespace "", we have: {
           B = pbool^0 value: 0
           b = channel chan!(bool<>)^0 = send_me<false>::b (1) 
           Created state:
-          channel instance pool:
-          1	send_me<false>::b
-          bool instance pool:
-          1	send_me<false>::!GND
-          2	send_me<false>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	send_me<false>::b	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	send_me<false>::!GND	
+          2	send_me<false>::!Vdd	
           resolved concurrent actions:
             *[
               b!(false)
@@ -116,11 +116,11 @@ In namespace "", we have: {
           B = pbool^0 value: 1
           b = channel chan!(bool<>)^0 = send_me<true>::b (1) 
           Created state:
-          channel instance pool:
-          1	send_me<true>::b
-          bool instance pool:
-          1	send_me<true>::!GND
-          2	send_me<true>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	send_me<true>::b	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	send_me<true>::!GND	
+          2	send_me<true>::!Vdd	
           resolved concurrent actions:
             *[
               b!(true)
@@ -153,13 +153,17 @@ footprint: {
     b = channel chan!(bool<>)^0 = Y.b (2) 
   )
   Created state:
-  process instance pool:
-  1	X
-  2	Y
-  channel instance pool:
-  1	X.b
-  2	Y.b
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	X	send_me<true>
+    channel: 1
+    bool: 1,2
+  2	Y	send_me<false>
+    channel: 2
+    bool: 1,2
+  channel instance pool: (0 ports, 2 local, 0 mapped)
+  1	X.b	
+  2	Y.b	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

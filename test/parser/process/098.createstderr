@@ -114,19 +114,22 @@ In namespace "", we have: {
           b = bool^0 = bar<>::y.b (6) 
         )
         Created state:
-        process instance pool:
-        1	bar<>::x
-        2	bar<>::y
-        3	bar<>::a
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
-        3	bar<>::x.a
-        4	bar<>::x.b
-        5	bar<>::y.a
-        6	bar<>::y.b
-        7	bar<>::a.a
-        8	bar<>::a.b
+        process instance pool: (2 ports, 1 local, 0 mapped)
+        1	bar<>::x	foo<>
+          bool: 1,2,3,4
+        2	bar<>::y	foo<>
+          bool: 1,2,5,6
+        3	bar<>::a	foo<>
+          bool: 1,2,7,8
+        bool instance pool: (6 ports, 2 local, 0 mapped)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
+        3	bar<>::x.a	
+        4	bar<>::x.b	
+        5	bar<>::y.a	
+        6	bar<>::y.b	
+        7	bar<>::a.a	
+        8	bar<>::a.b	
         bool port aliases:
         1: bar<>::x.!GND = bar<>::y.!GND = bar<>::!GND
         2: bar<>::x.!Vdd = bar<>::y.!Vdd = bar<>::!Vdd
@@ -158,11 +161,11 @@ In namespace "", we have: {
         a = bool^0 = foo<>::a (3) 
         b = bool^0 = foo<>::b (4) 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::a
-        4	foo<>::b
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::a	
+        4	foo<>::b	
       }
       }
 
@@ -192,15 +195,25 @@ footprint: {
     )
   )
   Created state:
-  process instance pool:
-  1	poo
-  2	poo.x
-  3	poo.y
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	poo.x.a
-  4	poo.x.b
-  5	poo.y.a
-  6	poo.y.b
+  process instance pool: (0 ports, 3 local, 1 mapped)
+  1	poo	bar<>
+    process: 2,3
+    bool: 1,2,3,4,5,6
+  2	poo.x	foo<>
+    bool: 1,2,3,4
+  3	poo.y	foo<>
+    bool: 1,2,5,6
+  private sub-process index map:
+    (1 -> 0)
+    (4 -> 1)
+  bool instance pool: (0 ports, 6 local, 2 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	poo.x.a	
+  4	poo.x.b	
+  5	poo.y.a	
+  6	poo.y.b	
+  private sub-bool index map:
+    (1 -> 0)
+    (4 -> 2)
 }

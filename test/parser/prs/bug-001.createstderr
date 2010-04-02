@@ -208,14 +208,15 @@ In namespace "", we have: {
             }
           o = bool^0 = cel<2>::o (5) 
           Created state:
-          process instance pool:
-          1	cel<2>::c
-          bool instance pool:
-          1	cel<2>::!GND
-          2	cel<2>::!Vdd
-          3	cel<2>::i[0]
-          4	cel<2>::i[1]
-          5	cel<2>::o
+          process instance pool: (0 ports, 1 local, 0 mapped)
+          1	cel<2>::c	gcel<2, 2>
+            bool: 1,2,5,3,4,3,4
+          bool instance pool: (5 ports, 0 local, 0 mapped)
+          1	cel<2>::!GND	
+          2	cel<2>::!Vdd	
+          3	cel<2>::i[0]	
+          4	cel<2>::i[1]	
+          5	cel<2>::o	
         }
       }
       }
@@ -261,14 +262,14 @@ In namespace "", we have: {
         x = bool^0 = foo<>::x (7) 
         xe = bool^0 = foo<>::xe (5) 
         Created state:
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::Ld
-        4	foo<>::Re
-        5	foo<>::xe
-        6	foo<>::_rd
-        7	foo<>::x
+        bool instance pool: (7 ports, 0 local, 0 mapped)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::Ld	
+        4	foo<>::Re	
+        5	foo<>::xe	
+        6	foo<>::_rd	
+        7	foo<>::x	
         resolved prs:
         Ld & Re & xe & x -> _rd-
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -327,14 +328,14 @@ In namespace "", we have: {
             }
           o = bool^0 = gcel<2, 2>::o (3) 
           Created state:
-          bool instance pool:
-          1	gcel<2, 2>::!GND
-          2	gcel<2, 2>::!Vdd
-          3	gcel<2, 2>::o
-          4	gcel<2, 2>::id[0]
-          5	gcel<2, 2>::id[1]
-          6	gcel<2, 2>::iu[0]
-          7	gcel<2, 2>::iu[1]
+          bool instance pool: (7 ports, 0 local, 0 mapped)
+          1	gcel<2, 2>::!GND	
+          2	gcel<2, 2>::!Vdd	
+          3	gcel<2, 2>::o	
+          4	gcel<2, 2>::id[0]	
+          5	gcel<2, 2>::id[1]	
+          6	gcel<2, 2>::iu[0]	
+          7	gcel<2, 2>::iu[1]	
           resolved prs:
           id[0] & id[1] -> o-
           ~iu[0] & ~iu[1] -> o+
@@ -374,18 +375,23 @@ footprint: {
     x = bool^0 = y.x (10) 
   )
   Created state:
-  process instance pool:
-  1	x
-  2	y
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x.i[0]
-  4	x.i[1]
-  5	x.o
-  6	y.Ld
-  7	y.Re
-  8	y.xe
-  9	y._rd
-  10	y.x
+  process instance pool: (0 ports, 2 local, 1 mapped)
+  1	x	cel<2>
+    bool: 1,2,3,4,5
+  2	y	foo<>
+    bool: 1,2,6,7,8,9,10
+  private sub-process index map:
+    (1 -> 0)
+    (3 -> 1)
+  bool instance pool: (0 ports, 10 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	x.i[0]	
+  4	x.i[1]	
+  5	x.o	
+  6	y.Ld	
+  7	y.Re	
+  8	y.xe	
+  9	y._rd	
+  10	y.x	
 }

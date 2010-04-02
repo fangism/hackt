@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.19 2010/01/03 01:34:42 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.20 2010/04/02 22:18:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -15,6 +15,7 @@
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/lang/generic_attribute_fwd.h"
 #include "Object/ref/reference_enum.h"
+#include "Object/devel_switches.h"	// for MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "util/boolean_types.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
 
@@ -23,7 +24,11 @@ namespace entity {
 class scopespace;
 struct footprint_frame;
 struct expr_dump_context;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+struct global_entry_context;
+#else
 class state_manager;
+#endif
 class entry_collection;
 class module;
 class definition_base;
@@ -135,19 +140,43 @@ virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO = 0;
 
 virtual	CONNECT_PORT_PROTO = 0;
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
+	const footprint_frame*						\
+	lookup_footprint_frame(const global_entry_context&) const
+#else
 #define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
 	const footprint_frame*						\
 	lookup_footprint_frame(const state_manager&, const footprint&) const
+#endif
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
+#endif
 
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#define	LOOKUP_TOP_LEVEL_REFERENCE_PROTO				\
+	global_indexed_reference					\
+	lookup_top_level_reference(const global_entry_context&) const
+#define	LOOKUP_TOP_LEVEL_REFERENCES_PROTO				\
+	good_bool							\
+	lookup_top_level_references(const global_entry_context&, 	\
+		global_reference_array_type&) const
+#else
 #define	LOOKUP_TOP_LEVEL_REFERENCE_PROTO				\
 	global_indexed_reference					\
 	lookup_top_level_reference(const state_manager&, 		\
 		const footprint&) const
+#endif
 
 virtual	LOOKUP_TOP_LEVEL_REFERENCE_PROTO = 0;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+virtual	LOOKUP_TOP_LEVEL_REFERENCES_PROTO = 0;
+#endif
 
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+// TEMPORARY
 #define	COLLECT_ALIASES_PROTO						\
 	void								\
 	collect_aliases(const module&, util::string_list&) const
@@ -159,6 +188,7 @@ virtual	COLLECT_ALIASES_PROTO = 0;
 	collect_subentries(const module&, entry_collection&) const
 
 virtual	COLLECT_SUBENTRIES_PROTO = 0;
+#endif
 
 #define	CREATE_INSTANCE_ATTRIBUTE_PROTO					\
 	count_ptr<const instance_management_base>			\

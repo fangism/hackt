@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.15 2009/10/02 01:56:56 fang Exp $
+	$Id: alias_empty.h,v 1.16 2010/04/02 22:18:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -15,6 +15,7 @@
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -22,7 +23,9 @@ class const_param_expr_list;
 class footprint;
 class footprint_frame;
 class state_manager;
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 class port_member_context;
+#endif
 template <class> class instance_alias_info;
 class unroll_context;
 using std::istream;
@@ -93,24 +96,17 @@ protected:
 		NOT TRUE ANYMORE! channels and datatypes now cannot
 		have relaxed types.  
 	 */
-#if 1
 	template <class AliasType>
 	static
 	good_bool
 	__initialize_assign_footprint_frame(const AliasType&,
-			footprint_frame&, state_manager&,
-			const port_member_context&, const size_t);
-#else
-	template <class AliasType>
-	static
-	good_bool
-	__initialize_assign_footprint_frame(const AliasType&,
-			const footprint_frame&, const state_manager&,
-			const port_member_context&, const size_t) {
-		// no-op.
-		return good_bool(true);
-	}
+			footprint_frame&
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+			, state_manager&,
+			const port_member_context&
+			, const size_t
 #endif
+			);
 
 	static
 	good_bool

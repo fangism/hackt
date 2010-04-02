@@ -66,9 +66,9 @@ In namespace "", we have: {
           !Vdd = bool^0 = bool_source<1>::!Vdd (2) 
           N = pint^0 value: 1
           Created state:
-          bool instance pool:
-          1	bool_source<1>::!GND
-          2	bool_source<1>::!Vdd
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	bool_source<1>::!GND	
+          2	bool_source<1>::!Vdd	
         }
       }
       }
@@ -88,9 +88,10 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) 
   )
   Created state:
-  process instance pool:
-  1	src
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	src	bool_source<1>
+    bool: 1,2
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

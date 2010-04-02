@@ -4,7 +4,7 @@
 	Useful for testing object file integrity.  
 	This file came from "artobjdump.cc" in a previous life.  
 
-	$Id: objdump.cc,v 1.10 2009/10/16 20:38:47 fang Exp $
+	$Id: objdump.cc,v 1.11 2010/04/02 22:18:59 fang Exp $
  */
 
 #include <iostream>
@@ -13,6 +13,9 @@
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
 #include "main/global_options.h"
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+#include "Object/type/process_type_reference.h"
+#endif
 #include "util/getopt_mapped.h"
 #include "util/using_ostream.h"
 
@@ -23,13 +26,17 @@ struct objdump::options {
 	bool			show_hierarchical_definitions;
 	bool			show_global_allocate_table;
 	bool			auto_allocate;
+	bool			use_referenced_type_instead_of_top_level;
 	bool			help_only;
+	string			named_process_type;
 
 	options() : show_table_of_contents(true), 
 		show_hierarchical_definitions(true),
-		show_global_allocate_table(true),
+		show_global_allocate_table(false),
 		auto_allocate(false),
-		help_only(false) { }
+		use_referenced_type_instead_of_top_level(false),
+		help_only(false),
+		named_process_type() { }
 };	// end class options
 
 //=============================================================================
@@ -83,15 +90,38 @@ if (opt.show_table_of_contents) {
 		return 1;
 
 	// this should really go to std::cout...
+	ostream& o(cout);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	count_ptr<const process_type_reference> rpt;
+if (opt.use_referenced_type_instead_of_top_level) {
+	// create this in advance before dumping definitions/footprints
+	rpt = parse_and_create_complete_process_type(
+		opt.named_process_type.c_str(), *the_module);
+	if (!rpt) {
+		return 1;
+	}
+}
+#endif
 if (opt.show_hierarchical_definitions) {
-	the_module->dump_definitions(cerr);
+	the_module->dump_definitions(o);
 }
 	if (opt.auto_allocate && !the_module->allocate_unique().good) {
 		cerr << "Error allocating global instances." << endl;
 		return 1;
 	}
 if (opt.show_global_allocate_table) {
-	the_module->dump_instance_map(cerr);
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	const count_ptr<const module> m(the_module);
+	o << "Globally allocated state:" << endl;
+if (opt.use_referenced_type_instead_of_top_level) {
+	NEVER_NULL(rpt);	// already checked
+	rpt->lookup_footprint()->dump_allocation_map(o) << endl;
+} else {
+	m->get_footprint().dump_allocation_map(o) << endl;
+}
+#else
+	the_module->dump_instance_map(o);
+#endif
 }
 	return 0;
 }
@@ -99,7 +129,7 @@ if (opt.show_global_allocate_table) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 objdump::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+aAcCdDgGhmMv";
+	static const char optstring[] = "+aAcCdDgGhmt:Mv";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -140,6 +170,12 @@ objdump::parse_command_options(const int argc, char* argv[], options& o) {
 	case 'M':
 		o.auto_allocate = true;
 		break;
+#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	case 't':
+		o.use_referenced_type_instead_of_top_level = true;
+		o.named_process_type = optarg;
+		break;
+#endif
 	case 'v':
 		config::dump_all(cout);
 		exit(0);
@@ -173,7 +209,8 @@ objdump::usage(void) {
 "\t-G : show global allocation tables\n"
 "\t-h : help on usage and exit\n"
 "\t-m : suppress automatic global instance allocation\n"
-"\t-M : enable automatic global instance allocation"
+"\t-M : enable automatic global instance allocation\n"
+"\t-t type : treat TYPE as top-level\n"
 "\t-v : print version and exit\n"
 	<< endl;
 }

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/reference_enum.h"
 	Forward declarations and typedefs for indexed/enumerated references.  
-	$Id: reference_enum.h,v 1.2 2007/01/21 05:59:34 fang Exp $
+	$Id: reference_enum.h,v 1.3 2010/04/02 22:18:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_REFERENCE_ENUM_H__
@@ -22,6 +22,12 @@ namespace entity {
  */
 typedef	std::pair<size_t, size_t>	global_indexed_reference;
 
+static
+inline
+global_indexed_reference
+make_global_reference(const size_t f, const size_t s) {
+	return global_indexed_reference(f, s);
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Array container of reference.  

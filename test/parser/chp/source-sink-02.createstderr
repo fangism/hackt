@@ -109,11 +109,11 @@ In namespace "", we have: {
         !Vdd = bool^0 = chp_bool_sink_alt<>::!Vdd (2) 
         S = channel chan?(bool<>)^0 = chp_bool_sink_alt<>::S (1) 
         Created state:
-        channel instance pool:
-        1	chp_bool_sink_alt<>::S
-        bool instance pool:
-        1	chp_bool_sink_alt<>::!GND
-        2	chp_bool_sink_alt<>::!Vdd
+        channel instance pool: (1 ports, 0 local, 0 mapped)
+        1	chp_bool_sink_alt<>::S	
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	chp_bool_sink_alt<>::!GND	
+        2	chp_bool_sink_alt<>::!Vdd	
         resolved concurrent actions:
           *[
             S?
@@ -157,11 +157,11 @@ In namespace "", we have: {
           B = pbool^0 value: 1
           S = channel chan!(bool<>)^0 = chp_bool_source<true>::S (1) 
           Created state:
-          channel instance pool:
-          1	chp_bool_source<true>::S
-          bool instance pool:
-          1	chp_bool_source<true>::!GND
-          2	chp_bool_source<true>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	chp_bool_source<true>::S	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	chp_bool_source<true>::!GND	
+          2	chp_bool_source<true>::!Vdd	
           resolved concurrent actions:
             *[
               S!(true)
@@ -196,12 +196,16 @@ footprint: {
     S = channel chan!(bool<>)^0 = B (1) 
   )
   Created state:
-  process instance pool:
-  1	s
-  2	b
-  channel instance pool:
-  1	B
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	s	chp_bool_source<true>
+    channel: 1
+    bool: 1,2
+  2	b	chp_bool_sink_alt<>
+    channel: 1
+    bool: 1,2
+  channel instance pool: (0 ports, 1 local, 0 mapped)
+  1	B	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

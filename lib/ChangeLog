@@ -1,5 +1,5 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.61 2010/01/30 03:33:13 fang Exp $
+#	$Id: ChangeLog,v 1.62 2010/04/02 22:17:38 fang Exp $
 
 2010-01-29	David Fang	<fangism@users.sourceforge.net>
 
@@ -15,6 +15,16 @@
 	* HACKT-00-01-04-main-00-83-44:
 	  verilog/wrap_verilog_modules_to_hacprsim.awk:
 		replace strtonum calls with equivalent "+= 0" (POSIX).
+
+
+2009-12-11	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-01:
+	  verilog/wrap_verilog_modules_to_hacprsim.awk:
+		fixed parsing of ranges.
+		properly parse "strings" now.
+		Tested, new test case added to prsim/vpi/parse-test.v
+	  vpp.sh: changed single quote protection string
 
 
 2009-10-30	David Fang	<fangism@users.sourceforge.net>

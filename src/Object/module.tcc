@@ -1,7 +1,8 @@
 /**
-	\file "Object/art_object_module.tcc"
+	\file "Object/module.tcc"
+	Previously named "Object/art_object_module.tcc"
 	Template method definitions for the module class.
-	$Id: module.tcc,v 1.8 2009/02/18 00:22:29 fang Exp $
+	$Id: module.tcc,v 1.9 2010/04/02 22:17:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_TCC__
@@ -34,6 +35,7 @@ module::collect(L& l) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	\param a the list of aliases to accumulate matches.
 	\param i the globally allocated (canonical) index to match.  
@@ -44,9 +46,14 @@ module::match_aliases(util::string_list& a, const size_t i) const {
 	INVARIANT(this->is_allocated());
 	typedef	alias_matcher<Tag>		matcher_type;
 	const footprint& _fp(get_footprint());
-	matcher_type m(this->global_state, _fp, NULL, a, i);
+	matcher_type m(
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
+		this->global_state, 
+#endif
+		_fp, NULL, a, i);
 	_fp.accept(m);
 }
+#endif
 
 //=============================================================================
 }	// end namepace entity

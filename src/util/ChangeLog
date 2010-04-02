@@ -1,5 +1,34 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.110 2010/01/05 00:09:46 fang Exp $
+#	$Id: ChangeLog,v 1.111 2010/04/02 22:19:21 fang Exp $
+
+2010-03-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-25:
+	  Welcome new data structure: util/tree_cache.{h,tcc}
+		maintains a child-weighted tree-cache structure.
+
+
+2010-03-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-23:
+	  util/guile_STL.h: added scm_builders for std::map and std::set, 
+		defaulting to constructing SCM list.
+
+
+2010-02-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-20:
+	  Added util/swap_saver, akin to value_saver, but uses swap()
+		method instead of copying where possible for 
+		efficiency, and saving memory.
+
+
+2010-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-07:
+	  util/persistent_functor.{h,tcc}: abstracted away 
+		persistent object manager type as generic template parameter.
+
 
 2010-01-04	David Fang		<fangism@users.sourceforge.net>
 

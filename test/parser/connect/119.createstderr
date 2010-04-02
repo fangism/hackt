@@ -126,10 +126,10 @@ In namespace "", we have: {
         !Vdd = bool^0 = bar<>::!Vdd (2) 
         a = bool^0 = bar<>::a (3) 
         Created state:
-        bool instance pool:
-        1	bar<>::!GND
-        2	bar<>::!Vdd
-        3	bar<>::a
+        bool instance pool: (3 ports, 0 local, 0 mapped)
+        1	bar<>::!GND	
+        2	bar<>::!Vdd	
+        3	bar<>::a	
       }
       }
 
@@ -158,12 +158,13 @@ In namespace "", we have: {
           a = bool^0 = foo<>::b.a (3) 
         )
         Created state:
-        process instance pool:
-        1	foo<>::b
-        bool instance pool:
-        1	foo<>::!GND
-        2	foo<>::!Vdd
-        3	foo<>::b.a
+        process instance pool: (1 ports, 0 local, 0 mapped)
+        1	foo<>::b	bar<>
+          bool: 1,2,3
+        bool instance pool: (3 ports, 0 local, 0 mapped)
+        1	foo<>::!GND	
+        2	foo<>::!Vdd	
+        3	foo<>::b.a	
         bool port aliases:
         1: foo<>::b.!GND = foo<>::!GND
         2: foo<>::b.!Vdd = foo<>::!Vdd
@@ -199,13 +200,16 @@ In namespace "", we have: {
           )
         )
         Created state:
-        process instance pool:
-        1	ick<>::x
-        2	ick<>::x.b
-        bool instance pool:
-        1	ick<>::!GND
-        2	ick<>::!Vdd
-        3	ick<>::x.b.a
+        process instance pool: (2 ports, 0 local, 0 mapped)
+        1	ick<>::x	foo<>
+          process: 2
+          bool: 1,2,3
+        2	ick<>::x.b	bar<>
+          bool: 1,2,3
+        bool instance pool: (3 ports, 0 local, 0 mapped)
+        1	ick<>::!GND	
+        2	ick<>::!Vdd	
+        3	ick<>::x.b.a	
         bool port aliases:
         1: ick<>::x.!GND = ick<>::x.b.!GND = ick<>::!GND
         2: ick<>::x.!Vdd = ick<>::x.b.!Vdd = ick<>::!Vdd
@@ -285,12 +289,17 @@ footprint: {
   x = bool^0 = x (3) 
   y = bool^0 = x (3) 
   Created state:
-  process instance pool:
-  1	p
-  2	j
-  3	m
-  bool instance pool:
-  1	!GND
-  2	!Vdd
-  3	x
+  process instance pool: (0 ports, 3 local, 0 mapped)
+  1	p	bar<>
+    bool: 1,2,3
+  2	j	foo<>
+    process: 1
+    bool: 1,2,3
+  3	m	ick<>
+    process: 2,1
+    bool: 1,2,3
+  bool instance pool: (0 ports, 3 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	x	
 }

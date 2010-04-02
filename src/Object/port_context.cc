@@ -1,10 +1,11 @@
 /**
 	\file "Object/port_context.h"
-	$Id: port_context.cc,v 1.3 2005/12/13 04:15:17 fang Exp $
+	$Id: port_context.cc,v 1.4 2010/04/02 22:18:01 fang Exp $
  */
 
 #include <iostream>
 #include "Object/port_context.h"
+#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "util/macros.h"
 #include "util/indent.h"
 
@@ -106,4 +107,6 @@ port_collection_context::resize(const size_t s) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 

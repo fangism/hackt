@@ -3,5 +3,5 @@ ERROR: attempted to connect instances with conflicting relaxed parameters!
 	and: 2
 	from: ick
 	and:  poo
-Error encountered during module::unroll.
+Error encountered during module::create.
 ERROR in creating.  Aborting.

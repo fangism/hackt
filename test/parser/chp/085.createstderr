@@ -163,11 +163,11 @@ In namespace "", we have: {
               1 = 0
             }
           Created state:
-          channel instance pool:
-          1	send_indexed<0, 0>::out
-          bool instance pool:
-          1	send_indexed<0, 0>::!GND
-          2	send_indexed<0, 0>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	send_indexed<0, 0>::out	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	send_indexed<0, 0>::!GND	
+          2	send_indexed<0, 0>::!Vdd	
           resolved concurrent actions:
             *[
               out!(0)
@@ -188,11 +188,11 @@ In namespace "", we have: {
               1 = 0
             }
           Created state:
-          channel instance pool:
-          1	send_indexed<0, 1>::out
-          bool instance pool:
-          1	send_indexed<0, 1>::!GND
-          2	send_indexed<0, 1>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	send_indexed<0, 1>::out	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	send_indexed<0, 1>::!GND	
+          2	send_indexed<0, 1>::!Vdd	
           resolved concurrent actions:
             *[
               out!(1)
@@ -213,11 +213,11 @@ In namespace "", we have: {
               1 = 0
             }
           Created state:
-          channel instance pool:
-          1	send_indexed<1, 0>::out
-          bool instance pool:
-          1	send_indexed<1, 0>::!GND
-          2	send_indexed<1, 0>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	send_indexed<1, 0>::out	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	send_indexed<1, 0>::!GND	
+          2	send_indexed<1, 0>::!Vdd	
           resolved concurrent actions:
             *[
               out!(1)
@@ -238,11 +238,11 @@ In namespace "", we have: {
               1 = 0
             }
           Created state:
-          channel instance pool:
-          1	send_indexed<1, 1>::out
-          bool instance pool:
-          1	send_indexed<1, 1>::!GND
-          2	send_indexed<1, 1>::!Vdd
+          channel instance pool: (1 ports, 0 local, 0 mapped)
+          1	send_indexed<1, 1>::out	
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	send_indexed<1, 1>::!GND	
+          2	send_indexed<1, 1>::!Vdd	
           resolved concurrent actions:
             *[
               out!(0)
@@ -287,17 +287,25 @@ footprint: {
     out = channel chan!(int<32>)^0 = poo.out (3) 
   )
   Created state:
-  process instance pool:
-  1	foo
-  2	ick
-  3	poo
-  4	bar
-  channel instance pool:
-  1	foo.out
-  2	ick.out
-  3	poo.out
-  4	bar.out
-  bool instance pool:
-  1	!GND
-  2	!Vdd
+  process instance pool: (0 ports, 4 local, 0 mapped)
+  1	foo	send_indexed<0, 0>
+    channel: 1
+    bool: 1,2
+  2	ick	send_indexed<0, 1>
+    channel: 2
+    bool: 1,2
+  3	poo	send_indexed<1, 0>
+    channel: 3
+    bool: 1,2
+  4	bar	send_indexed<1, 1>
+    channel: 4
+    bool: 1,2
+  channel instance pool: (0 ports, 4 local, 0 mapped)
+  1	foo.out	
+  2	ick.out	
+  3	poo.out	
+  4	bar.out	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
 }

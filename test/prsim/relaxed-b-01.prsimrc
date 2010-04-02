@@ -17,5 +17,5 @@ what S[0].bar[1].falsch
 what S[0].bar[1].falsch[1]
 ls S[0].bar[1].falsch[1]
 
-# this test is also god for testing tab-completion on instantiated names
+# this test is also godd for testing tab-completion on instantiated names
 
