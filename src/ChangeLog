@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-04-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-53-scalable-01-33:
+	  Pre-merge distcheck passes.
+	  Makefile.am: hacalloc binary replaced with script with
+		decprecation warning.
+		Fixed installcheck.
+		Added a few more test cases.
+
+
 2010-04-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-53-scalable-01-32:

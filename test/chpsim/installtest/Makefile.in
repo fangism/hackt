@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.6 2009/02/06 02:24:51 fang Exp $
+#	$Id: Makefile.in,v 1.6.18.1 2010/04/02 18:02:18 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -77,7 +77,6 @@ confirm-exec:
 	which $(HACKT_EXE) && \
 	which $(HACKT_COMPILE_EXE) && \
 	which $(HACKT_CREATE_EXE) && \
-	which $(HACKT_ALLOC_EXE) && \
 	which $(HACKT_CHPSIM_EXE) ; \
 	} > $@ 2>&1
 

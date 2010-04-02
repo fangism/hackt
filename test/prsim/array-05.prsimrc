@@ -1,0 +1,8 @@
+# "array-05.prsimrc"
+#	$Id: array-05.prsimrc,v 1.1.2.1 2010/04/02 18:02:35 fang Exp $
+# @haco@ array.haco-a
+# testing bad references
+
+# consider introducing getall-unique
+who-newline X[22].w[0]
+

@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2009/02/23 09:11:38 fang Exp $
+#	$Id: Makefile.am,v 1.3.16.1 2010/04/02 18:02:22 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -52,7 +52,7 @@ installcheck-guile:
 	$(mkdir_p) installtest && \
 	pushd installtest && \
 	$(ECHO) "(display \"Hello, guile!\") (newline)" | \
-	$(GUILE) -l $(scmdir)/hacguile.scm -- -b && \
+	$(INSTALLED_HACGUILE) -b && \
 	popd
 
 # test 2: compare a built test to an equivalent installed test

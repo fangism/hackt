@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.228.2.1 2010/03/04 02:53:17 fang Exp $
+#	$Id: Makefile.am,v 1.228.2.2 2010/04/02 18:02:16 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -50,11 +50,11 @@ endif
 
 ########################### main dependencies #################################
 
-bin_PROGRAMS = hackt haco haccreate hacalloc \
+bin_PROGRAMS = hackt haco haccreate \
 	hacobjdump hflat hacpp hacprsim hacchpsim hacknet
 
 bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh \
-	scripts/hackt-env hacinstdump
+	scripts/hackt-env hacalloc hacinstdump
 if HAVE_LIBGUILE
 bin_SCRIPTS += hacguile hacchpsimguile
 endif
@@ -62,8 +62,14 @@ DISTCLEANFILES += $(bin_SCRIPTS)
 
 # NOTE: this executes whatever is in PATH, not necessarily the built one
 hacinstdump: hacobjdump
-	{ $(ECHO) "#!/bin/sh -e" ; \
+	{ $(ECHO) "#!$(SHELL) -e" ; \
 	$(ECHO) "exec hacobjdump -a -G -M \"$$""@\"" ; } > $@ && \
+	chmod +x $@
+
+hacalloc: haccreate
+	{ $(ECHO) "#!$(SHELL) -e" ; \
+	$(ECHO) "echo \"Warning: hacalloc is obsolete, use the created object file instead.\"" ; \
+	$(ECHO) "exec ln -s -f $$1 $$2" ; } > $@ && \
 	chmod +x $@
 
 scripts/init_hackt.sh: scripts/init_hackt.sh.in $(top_builddir)/config.status
@@ -144,9 +150,9 @@ haccreate_SOURCES = main/create.cc
 haccreate_CPPFLAGS = -DWITH_MAIN
 haccreate_LDADD = libhacktlib.la
 
-hacalloc_SOURCES = main/alloc.cc
-hacalloc_CPPFLAGS = -DWITH_MAIN
-hacalloc_LDADD = libhacktlib.la
+# hacalloc_SOURCES = main/alloc.cc
+# hacalloc_CPPFLAGS = -DWITH_MAIN
+# hacalloc_LDADD = libhacktlib.la
 
 hflat_SOURCES = main/cflat.cc
 hflat_CPPFLAGS = -DWITH_MAIN
@@ -1895,7 +1901,10 @@ CLEANPARSER = \
 	parser/$(TYPE_PARSE_ROOT).output \
 	parser/$(TYPE_PARSE_ROOT).output.h \
 	parser/type-union.cc \
-	parser/type.types
+	parser/type.types \
+	parser/$(VERILOG_PARSE_ROOT).cc \
+	parser/$(VERILOG_PARSE_ROOT).h \
+	parser/$(VERILOG_PARSE_ROOT).output
 
 CLEANLEXER = \
 	lexer/$(HACKT_LEX_ROOT)-real.cc \

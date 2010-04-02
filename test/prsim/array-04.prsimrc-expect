@@ -1,0 +1,5 @@
+aliases of "X[0].w[99]":
+FATAL: reference to process foo<> with out-of-bounds indices [99]:[99]
+ERROR: unrolling aliases.
+Error resolving collection of aliases.
+... at line 7
