@@ -5,6 +5,12 @@
 
 2010-04-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-70:
+	  hflat: fixed so that port-aliases of user-specified types
+		passed through -t get processed, treated as top-level.
+		Failure was not caught on branch, added regression tests.
+
+
 	* HACKT-00-01-04-main-00-83-69-merged-scalable-01-33:
 	  Massive branch merge of scalability re-work, which renders
 		the global allocation phase of the middle and and all 

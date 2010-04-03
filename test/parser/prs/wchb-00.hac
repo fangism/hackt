@@ -1,0 +1,26 @@
+// "wchb-00.hac"
+// should pass
+// @hflat-flags@ -t wchb
+// check for self-aliases
+
+deftype globals <: int<4> (bool Vdd, GND, _sReset, _pReset) { }
+deftype _1of2 <: int<1> (bool d[2], t, f) { d[0] = f; d[1] = t; }
+defchan e1of2 <: chan(bool) (bool d[2], e, t, f) { d[0] = f; d[1] = t; }
+
+defproc wchb (globals g; e1of2 l, r) {
+_1of2 _r;
+bool rv;
+bool _sReset = g._sReset;
+bool _pReset = g._pReset;
+bool mypReset;
+prs {
+(:d:2:
+	l.d[d] & r.e -> _r.d[d]-
+	~l.d[d] & ~r.e -> _r.d[d]+
+	_r.d[d] => r.d[d]-
+)
+	g._sReset & _r.t & _r.f => rv-
+	rv => l.e-
+}
+}
+

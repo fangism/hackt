@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.59 2010/04/02 22:26:31 fang Exp $
+#	$Id: Makefile.am,v 1.60 2010/04/03 01:32:23 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -34,7 +34,7 @@ HACKT_PARSE_TEST_PASSES = \
 	nand-01 nand-02 nand-03 nand-04 nand-05 nand-06 nand-07 \
 	nor-01 xor-01 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
-	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
+	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-01 loop-02 loop-03 loop-04 loop-05 loop-06 loop-07 \
@@ -118,7 +118,7 @@ HACKT_CREATE_TEST_PASSES = \
 	inv-14 inv-15 inv-16 inv-17 inv-18 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
-	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
+	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
@@ -199,7 +199,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	inv-14 inv-15 inv-16 inv-17 inv-18 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
-	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
+	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
@@ -263,6 +263,7 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-05b macro-pass-07b \
 	weak-03 \
+	wchb-00 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	iscomb-01 iscomb-02 iscomb-03 iscomb-04 iscomb-05 iscomb-06 \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \

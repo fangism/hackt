@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.9 2010/04/02 22:18:19 fang Exp $
+	$Id: alias_printer.cc,v 1.10 2010/04/03 01:32:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -229,6 +229,7 @@ if (!cf.check_prs) {
 	// visit all aliases!
 	const size_t bi = b.get_back_ref()->instance_index;	// 1-based
 	const size_t gi = lookup_global_id<Tag>(bi);	// 1-based
+	const bool is_top = at_top();
 	STACKTRACE_INDENT_PRINT("gbid = " << gi << endl);
 	ostringstream oss;
 	topfp->dump_canonical_name<Tag>(oss, gi -1);	// 0-based
@@ -251,12 +252,12 @@ if (!cf.check_prs) {
 	// by parent/owner process.
 	// exclude local bool private aliases that are aliased to port
 	if (// accept_deep_alias(a, f)
+		is_top || 
 		!a.get_supermost_collection()->get_placeholder_base()->is_port_formal()
 		&& (!((a.instance_index <=
 			f.get_instance_pool<bool_tag>().port_entries())
-			&& !a.is_port_alias())
-		|| any_hierarchical_parent_is_aliased_to_port(a, f)
-		)
+				&& !a.is_port_alias())
+			|| any_hierarchical_parent_is_aliased_to_port(a, f))
 		) {
 		ostringstream ass;
 		a.dump_hierarchical_name(ass, dump_flags::no_leading_scope);
