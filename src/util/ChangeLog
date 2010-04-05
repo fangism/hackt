@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.111 2010/04/02 22:19:21 fang Exp $
+#	$Id: ChangeLog,v 1.112 2010/04/05 00:18:46 fang Exp $
+
+2010-04-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-70:
+	  util/memory/allocator_adaptor.{h,tcc}: wraps around a
+		pool-allocator class like chunk_map_pool, and provides
+		an interface to an allocator that can replace std::allocator.
+	  Tested with allocator_adaptor_test.cc.
+
 
 2010-03-16	David Fang		<fangism@users.sourceforge.net>
 

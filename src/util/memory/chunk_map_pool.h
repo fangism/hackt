@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.16 2010/01/03 01:34:48 fang Exp $
+	$Id: chunk_map_pool.h,v 1.17 2010/04/05 00:18:47 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -337,11 +337,18 @@ public:
 	deallocate(pointer p, size_type n);
 #endif
 
+	// placement constructor
 	void
-	construct(pointer, const_reference);
+	construct(pointer __p, const_reference __val) const {
+		::new(__p) value_type(__val);
+	}
 
+	// placement destructor
 	void
-	destroy(pointer);
+	destroy(pointer __p) {
+		__p->~value_type();
+	}
+
 
 	size_type
 	max_size(void) const;

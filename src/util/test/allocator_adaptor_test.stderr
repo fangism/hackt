@@ -1,0 +1,18 @@
+inserting 0..9999
+removing 0..9999
+inserting (1 mod 2)
+inserting (0 mod 3)
+inserting (0 mod 4)
+removing (0..5 mod 10)
+inserting 0..19999
+removing 0..19999
+inserting (1 mod 2)
+inserting (0 mod 3)
+inserting (0 mod 4)
+removing (0..5 mod 10)
+inserting 0..99999
+removing 0..99999
+inserting (1 mod 2)
+inserting (0 mod 3)
+inserting (0 mod 4)
+removing (0..5 mod 10)

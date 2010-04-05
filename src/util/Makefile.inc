@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.42 2010/04/02 22:19:21 fang Exp $
+#	$Id: Makefile.inc,v 1.43 2010/04/05 00:18:46 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -23,6 +23,7 @@ UTIL_TCC_FILES = \
 	util/getopt_mapped.tcc \
 	util/hash_qmap.tcc \
 	util/list_vector.tcc \
+	util/memory/allocator_adaptor.tcc \
 	util/memory/chunk_map_pool.tcc \
 	util/memory/destruction_policy.tcc \
 	util/memory/fixed_pool_chunk.tcc \
