@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.28 2010/04/02 22:18:25 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.29 2010/04/05 22:20:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -455,7 +455,6 @@ struct port_alias_tracker_base<Tag>::port_alias_predicate {
 	}
 
 	typedef	typename map_type::value_type	value_type;
-	typedef	value_type		argument_type;
 	bool
 	operator () (const value_type& a) const {
 		return a.second.is_aliased_to_port();
