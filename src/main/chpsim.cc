@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.23 2009/11/11 00:34:00 fang Exp $
+	$Id: chpsim.cc,v 1.24 2010/04/05 20:10:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -125,6 +125,15 @@ if (opt.comp_opt.compile_input) {
 //	the_module->dump(cerr);
 	static const char alloc_errstr[] =  "ERROR in allocating.  Aborting.";
 
+	// normally, this would only be called if using the original top-level
+	// workaround: (for missing global param bug)
+	// just create the entire object hierarchy first
+	// that way global params area already processed
+	if (!the_module->allocate_unique().good) {
+		cerr << alloc_errstr << endl;
+		return 1;
+	}
+
 	count_ptr<module> top_module;
 	// when we want to print information for only a specific type
 	const footprint* fp = NULL;
@@ -151,14 +160,6 @@ if (opt.comp_opt.compile_input) {
 		// if (opt.instantiate_type_recursively)
 	} else {
 		top_module = the_module;
-	}
-
-	// automatically compile as far as needed:
-	if (!top_module->is_allocated()) {
-		if (!top_module->allocate_unique().good) {
-			cerr << alloc_errstr << endl;
-			return 1;
-		}
 	}
 try {
 	// first, cache all built-in channel types' summaries

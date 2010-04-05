@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.17 2010/04/02 22:19:26 fang Exp $
+#	$Id: Make.test-cflat,v 1.18 2010/04/05 20:11:01 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -83,13 +83,17 @@ DEDUCE_HFLAT_VARIANT = \
 
 # the touch is only necessary if the output is empty, in which case
 # we need to force a timestamp update
-.haco-a.prs:
-	@$(DEDUCE_HFLAT_VARIANT) ; \
+HACKT_CFLAT_PRSIM_SCRIPT = \
+	$(DEDUCE_HFLAT_VARIANT) ; \
 	cmd="$(HACKT_CFLAT_PRSIM_EXE) $$flags $<" ; \
 	$(ECHO) "$$cmd > $@" ; \
 	$$cmd > $@
 	@$(TOUCH) $@
 
+.haco-a.prs:
+	@$(HACKT_CFLAT_PRSIM_SCRIPT)
+
+# shouldn't really bother with this anymore...
 OLD_PRSIM_TEST_SCRIPT =
 if HAVE_PRSIM
 OLD_PRSIM_TEST_SCRIPT += \
@@ -164,11 +168,8 @@ cflatprstest.autodepend: Makefile
 
 -include cflatprstest.autodepend
 
-if VERBOSE_CHECK
+# always show this command, it's short
 ECHO_CFLAT_LVS_COMMAND = $(ECHO) "$$cmd > $@"
-else
-ECHO_CFLAT_LVS_COMMAND = :
-endif
 
 HACKT_CFLAT_LVS_SCRIPT = \
 	$(DEDUCE_HFLAT_VARIANT) ; \
@@ -334,13 +335,14 @@ cflatprsseutest.autodepend: Makefile
 
 -include cflatprsseutest.autodepend
 
-
-.haco-a.sprs:
-	@$(DEDUCE_HFLAT_VARIANT) ; \
+HACKT_CFLAT_SIZED_PRSIM_SCRIPT = \
+	$(DEDUCE_HFLAT_VARIANT) ; \
 	cmd="$(HACKT_CFLAT_PRSIM_EXE) -fsizes $$flags $<" ; \
 	$(ECHO) "$$cmd > $@" ; \
 	$$cmd > $@
 
+.haco-a.sprs:
+	@$(HACKT_CFLAT_SIZED_PRSIM_SCRIPT)
 
 .sprs.sprs-sort:
 	$(DEFAULT_SORT_SCRIPT)

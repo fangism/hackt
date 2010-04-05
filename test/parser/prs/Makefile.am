@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.60 2010/04/03 01:32:23 fang Exp $
+#	$Id: Makefile.am,v 1.61 2010/04/05 20:11:04 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -34,7 +34,7 @@ HACKT_PARSE_TEST_PASSES = \
 	nand-01 nand-02 nand-03 nand-04 nand-05 nand-06 nand-07 \
 	nor-01 xor-01 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
-	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
+	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 wchb-06 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-01 loop-02 loop-03 loop-04 loop-05 loop-06 loop-07 \
@@ -56,7 +56,7 @@ HACKT_PARSE_TEST_PASSES = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	bug-001 \
-	top-level-01 top-level-04 \
+	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
@@ -118,7 +118,7 @@ HACKT_CREATE_TEST_PASSES = \
 	inv-14 inv-15 inv-16 inv-17 inv-18 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
-	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
+	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 wchb-06 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
@@ -137,7 +137,7 @@ HACKT_CREATE_TEST_PASSES = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	bug-001 \
-	top-level-01 top-level-04 \
+	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
@@ -199,7 +199,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	inv-14 inv-15 inv-16 inv-17 inv-18 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
-	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
+	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 wchb-06 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
@@ -217,7 +217,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	size-01 size-03 size-04 size-05 \
 	weak-01 weak-02 weak-03 \
 	bug-001 \
-	top-level-01 top-level-04 \
+	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
 	tree-02 tree-03 \
 	subckt-01 \
@@ -263,7 +263,8 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-05b macro-pass-07b \
 	weak-03 \
-	wchb-00 \
+	top-level-05 \
+	wchb-00 wchb-06 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	iscomb-01 iscomb-02 iscomb-03 iscomb-04 iscomb-05 iscomb-06 \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \
@@ -280,6 +281,23 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	isrvc-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	isckeeper-01 isckeeper-02
+
+# some custom rules: create these prs from pre-created object file
+wchb-06.prs: wchb-06.haco
+	@$(HACKT_CFLAT_PRSIM_SCRIPT)
+wchb-06.lvsprs: wchb-06.haco
+	@$(HACKT_CFLAT_LVS_SCRIPT)
+wchb-06.spice: wchb-06.haco
+	@$(HACKNET_TEST_SCRIPT)
+
+top-level-06.prs: top-level-06.haco
+	@$(HACKT_CFLAT_PRSIM_SCRIPT)
+top-level-06.sprs: top-level-06.haco
+	@$(HACKT_CFLAT_SIZED_PRSIM_SCRIPT)
+top-level-06.lvsprs: top-level-06.haco
+	@$(HACKT_CFLAT_LVS_SCRIPT)
+top-level-06.spice: top-level-06.haco
+	@$(HACKNET_TEST_SCRIPT)
 
 HACKT_CFLAT_LVS_TEST_FAILURES = \
 	lvs-order-02
@@ -309,6 +327,10 @@ HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 EMPTY_CFLAT_PRS_TESTS += \
 	cond-08 cond-10 cond-11 cond-15 \
 	macro-pass-01
+
+HACKNET_TEST_SCRIPTS_PASSES = \
+	wchb-06 \
+	top-level-05
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += inv-01 inv-11 \

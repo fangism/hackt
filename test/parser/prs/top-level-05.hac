@@ -1,0 +1,12 @@
+// "top-level-05.hac"
+// @hflat-flags@ -t inv
+// @hacknet-flags@ -t inv
+
+pint W = 25;
+
+defproc inv(bool a, b) {
+prs {
+	a<W>	=> b-
+}
+}
+

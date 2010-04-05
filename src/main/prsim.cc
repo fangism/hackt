@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.27 2010/04/02 22:18:59 fang Exp $
+	$Id: prsim.cc,v 1.28 2010/04/05 20:10:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -183,6 +183,14 @@ if (opt.comp_opt.compile_input) {
 	static const char alloc_errstr[] = 
 		"ERROR in allocating global state.  Aborting.";
 	// inspired by hflat flag
+	// normally, this would only be called if using the original top-level
+	// workaround: (for missing global param bug)
+	// just create the entire object hierarchy first
+	// that way global params area already processed
+	if (!the_module->allocate_unique().good) {
+		cerr << alloc_errstr << endl;
+		return 1;
+	}
 	count_ptr<module> top_module;
 if (opt.use_referenced_type_instead_of_top_level) {
 	const count_ptr<const process_type_reference>
@@ -198,16 +206,6 @@ if (opt.use_referenced_type_instead_of_top_level) {
 		return 1;
 	}
 } else {
-//	the_module->dump(cerr);
-	if (the_module->is_allocated()) {
-		// cerr << "Module is already allocated, skipping..." << endl;
-	} else {
-		if (!the_module->allocate_unique().good) {
-			cerr << alloc_errstr << endl;
-			return 1;
-		}
-//		the_module->dump(cerr);
-	}
 	top_module = the_module;
 }
 #if !MEMORY_MAPPED_GLOBAL_ALLOCATION

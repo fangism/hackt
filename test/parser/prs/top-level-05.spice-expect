@@ -1,0 +1,3 @@
+Mb:dn:0 !GND a b !GND nch W=25u L=2u
+Mb:up:0 !Vdd a b !Vdd pch W=25u L=2u
+

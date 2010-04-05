@@ -1,0 +1,20 @@
+"l.d[0]" & "r.e" -> "_r.d[0]"-
+~"l.d[0]" & ~"r.e" -> "_r.d[0]"+
+"_r.d[0]" -> "r.d[0]"-
+~"_r.d[0]" -> "r.d[0]"+
+"l.d[1]" & "r.e" -> "_r.d[1]"-
+~"l.d[1]" & ~"r.e" -> "_r.d[1]"+
+"_r.d[1]" -> "r.d[1]"-
+~"_r.d[1]" -> "r.d[1]"+
+"_sReset" & "_r.d[1]" & "_r.d[0]" -> "rv"-
+~"_sReset" | ~"_r.d[1]" | ~"_r.d[0]" -> "rv"+
+"rv" -> "l.e"-
+~"rv" -> "l.e"+
+connect "_sReset" "g._sReset"
+connect "_pReset" "g._pReset"
+connect "l.d[0]" "l.f"
+connect "l.d[1]" "l.t"
+connect "r.d[0]" "r.f"
+connect "r.d[1]" "r.t"
+connect "_r.d[0]" "_r.f"
+connect "_r.d[1]" "_r.t"

@@ -1,0 +1,27 @@
+* subcircuit globals<> is empty.
+
+* subcircuit e1of2<> is empty.
+
+* subcircuit _1of2<> is empty.
+
+M_r.d[0]:dn:0 !GND l.d[0] #0 !GND nch W=5u L=2u
+M_r.d[0]:dn:1 #0 r.e _r.d[0] !GND nch W=5u L=2u
+M_r.d[0]:up:0 !Vdd l.d[0] #1 !Vdd pch W=5u L=2u
+M_r.d[0]:up:1 #1 r.e _r.d[0] !Vdd pch W=5u L=2u
+Mr.d[0]:dn:0 !GND _r.d[0] r.d[0] !GND nch W=5u L=2u
+Mr.d[0]:up:0 !Vdd _r.d[0] r.d[0] !Vdd pch W=5u L=2u
+M_r.d[1]:dn:0 !GND l.d[1] #2 !GND nch W=5u L=2u
+M_r.d[1]:dn:1 #2 r.e _r.d[1] !GND nch W=5u L=2u
+M_r.d[1]:up:0 !Vdd l.d[1] #3 !Vdd pch W=5u L=2u
+M_r.d[1]:up:1 #3 r.e _r.d[1] !Vdd pch W=5u L=2u
+Mr.d[1]:dn:0 !GND _r.d[1] r.d[1] !GND nch W=5u L=2u
+Mr.d[1]:up:0 !Vdd _r.d[1] r.d[1] !Vdd pch W=5u L=2u
+Mrv:dn:0 !GND _sReset #4 !GND nch W=5u L=2u
+Mrv:dn:1 #4 _r.d[1] #5 !GND nch W=5u L=2u
+Mrv:dn:2 #5 _r.d[0] rv !GND nch W=5u L=2u
+Mrv:up:0 !Vdd _sReset rv !Vdd pch W=5u L=2u
+Mrv:up:1 !Vdd _r.d[1] rv !Vdd pch W=5u L=2u
+Mrv:up:2 !Vdd _r.d[0] rv !Vdd pch W=5u L=2u
+Ml.e:dn:0 !GND rv l.e !GND nch W=5u L=2u
+Ml.e:up:0 !Vdd rv l.e !Vdd pch W=5u L=2u
+

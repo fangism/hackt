@@ -1,6 +1,6 @@
 # "Make.test-net"
 #	vi: ft=automake
-#	$Id: Make.test-net,v 1.4 2009/10/02 01:57:49 fang Exp $
+#	$Id: Make.test-net,v 1.5 2010/04/05 20:11:02 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -40,7 +40,7 @@ EXTRACT_HACKNET_FLAGS_PIPE = $(GREP) "@hacknet-flags@" | $(HEAD) -n1 | \
 # should really take some configure/test file for testing combinations
 # of object files and netlist configuration options.
 HACKNET_TEST_SCRIPT = \
-	src="$(srcdir)/"`$(ECHO) $< | $(SED) 's|\.haco-a|.hac|'` && \
+	src="$(srcdir)/"`$(ECHO) $< | $(SED) 's|\.haco.*|.hac|'` && \
 	hnflags=`$(CAT) $$src | $(EXTRACT_HACKNET_FLAGS_PIPE)` && \
 	cmd="$(HACKNET_EXE) $(AM_HACKNET_FLAGS) $$hnflags $<" && \
 	$(ECHO) "$$cmd > $@" && \

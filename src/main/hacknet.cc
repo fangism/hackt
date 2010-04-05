@@ -1,7 +1,7 @@
 /**
 	\file "main/hacknet.cc"
 	Traditional netlist generator.
-	$Id: hacknet.cc,v 1.9 2010/04/02 22:18:58 fang Exp $
+	$Id: hacknet.cc,v 1.10 2010/04/05 20:10:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -148,6 +148,14 @@ if (opt.comp_opt.compile_input) {
 	static const char alloc_errstr[] = 
 		"ERROR in allocating global state.  Aborting.";
 	// inspired by hflat flag
+	// normally, this would only be called if using the original top-level
+	// workaround: (for missing global param bug)
+	// just create the entire object hierarchy first
+	// that way global params area already processed
+	if (!the_module->allocate_unique().good) {
+		cerr << alloc_errstr << endl;
+		return 1;
+	}
 	count_ptr<module> top_module;
 if (opt.use_referenced_type_instead_of_top_level ||
 	opt.instantiate_one_of_referenced_type) {
@@ -174,16 +182,6 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	}
 }
 } else {
-//	the_module->dump(cerr);
-	if (the_module->is_allocated()) {
-		// cerr << "Module is already allocated, skipping..." << endl;
-	} else {
-		if (!the_module->allocate_unique().good) {
-			cerr << alloc_errstr << endl;
-			return 1;
-		}
-//		the_module->dump(cerr);
-	}
 	top_module = the_module;
 }
 	// is this needed? yes, we traverse top-down

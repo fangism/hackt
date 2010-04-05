@@ -1,6 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.103 2010/03/11 18:39:28 fang Exp $
+#	$Id: ChangeLog,v 1.104 2010/04/05 20:10:59 fang Exp $
 # ChangeLog for test directory.
+
+2010-04-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-71:
+	  Make.test-cflat, Make.test-net: updated scripts to be able to
+		take pre-created object file.  Added test cases.
+
 
 2010-03-10	David Fang		<fangism@users.sourceforge.net>
 

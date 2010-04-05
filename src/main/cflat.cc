@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.27 2010/04/02 22:18:58 fang Exp $
+	$Id: cflat.cc,v 1.28 2010/04/05 20:10:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -918,6 +918,14 @@ if (cf.comp_opt.compile_input) {
 }
 	if (!the_module)
 		return 1;
+	// normally, this would only be called if using the original top-level
+	// workaround: (for missing global param bug)
+	// just create the entire object hierarchy first
+	// that way global params area already processed
+	if (!the_module->allocate_unique().good) {
+		cerr << alloc_errstr << endl;
+		return 1;
+	}
 	count_ptr<module> top_module;	// use this module to cflat
 if (cf.use_referenced_type_instead_of_top_level) {
 	const count_ptr<const process_type_reference>
@@ -933,10 +941,6 @@ if (cf.use_referenced_type_instead_of_top_level) {
 		return 1;
 	}
 } else {
-	if (!the_module->allocate_unique().good) {
-		cerr << alloc_errstr << endl;
-		return 1;
-	}
 	top_module = the_module;
 }	// end if use_referenced_type_instead_of_top_level
 	// based on mode, set the options to pass into the module.
