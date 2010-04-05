@@ -2,7 +2,7 @@
 	\file "util/memory/allocator_adaptor.h"
 	Takes an allocator-like class and encapsulates into a
 	global member to become suitable substitution for std::allocator.
-	$Id: allocator_adaptor.h,v 1.1 2010/04/05 00:18:47 fang Exp $
+	$Id: allocator_adaptor.h,v 1.2 2010/04/05 00:46:13 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_ALLOCATOR_ADAPTOR_H__
@@ -44,7 +44,7 @@ public:
 	allocator_adaptor() throw() { }
 
 	// no members to copy, default no-throw
-	allocator_adaptor(const this_type& __a) throw() { }
+	allocator_adaptor(const this_type&) throw() { }
 
 	// does not copy underlying pool
 	template<typename _Tp1>
