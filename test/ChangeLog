@@ -1,8 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.104 2010/04/05 20:10:59 fang Exp $
+#	$Id: ChangeLog,v 1.105 2010/04/05 23:59:44 fang Exp $
 # ChangeLog for test directory.
 
 2010-04-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-72:
+	  All test cases updated to use .haco-c instead of .haco-a.
+		Make.tail-* updated accordingly.
+
 
 	* HACKT-00-01-04-main-00-83-71:
 	  Make.test-cflat, Make.test-net: updated scripts to be able to

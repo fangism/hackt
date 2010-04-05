@@ -1,5 +1,5 @@
 # "precharge-d-01.prsimrc"
-# @haco@ precharge-d.haco-a
+# @haco@ precharge-d.haco-c
 
 # trying to reproduce internal queue consistency bug
 # reminder interference sets output immediately!

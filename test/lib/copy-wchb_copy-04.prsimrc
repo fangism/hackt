@@ -1,6 +1,6 @@
 # "copy-wchb_copy-04.prsimrc"
-#	$Id: copy-wchb_copy-04.prsimrc,v 1.2 2006/09/17 23:39:24 fang Exp $
-# @haco@ copy-wchb_copy-04.haco-a
+#	$Id: copy-wchb_copy-04.prsimrc,v 1.3 2010/04/06 00:03:23 fang Exp $
+# @haco@ copy-wchb_copy-04.haco-c
 # testing stability of general half-buffered split template
 
 source stable-test-short.prsimrc

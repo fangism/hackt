@@ -1,5 +1,5 @@
 # "SRAM-b-02.prsimrc"
-# @haco@ SRAM-b.haco-a
+# @haco@ SRAM-b.haco-c
 
 echo testing RAM writing with random timing ...
 # echo-commands on

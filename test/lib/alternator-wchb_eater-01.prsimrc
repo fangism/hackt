@@ -1,6 +1,6 @@
 # "alternator-wchb_eater-01.pprsimrc"
-#	$Id: alternator-wchb_eater-01.prsimrc,v 1.2 2006/09/17 23:39:15 fang Exp $
-# @haco@ alternator-wchb_eater-01.haco-a
+#	$Id: alternator-wchb_eater-01.prsimrc,v 1.3 2010/04/06 00:03:02 fang Exp $
+# @haco@ alternator-wchb_eater-01.haco-c
 # testing stability of source-sink pair
 
 source stable-test-medium.prsimrc

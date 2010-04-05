@@ -1,5 +1,5 @@
 # "channel-test-f-05.prsimrc"
-# @haco@ channel-test-f.haco-a
+# @haco@ channel-test-f.haco-c
 # testing acknowledgeless channels
 
 source channel-test-f-01.prsimrc

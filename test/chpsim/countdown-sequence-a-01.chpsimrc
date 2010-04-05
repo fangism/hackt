@@ -1,6 +1,6 @@
 # "countdown-sequence-a-01.chpsimrc"
-#	$Id: countdown-sequence-a-01.chpsimrc,v 1.2 2007/01/21 06:03:18 fang Exp $
-# @haco@ countdown-sequence-a.haco-a
+#	$Id: countdown-sequence-a-01.chpsimrc,v 1.3 2010/04/06 00:00:55 fang Exp $
+# @haco@ countdown-sequence-a.haco-c
 
 queue
 get c

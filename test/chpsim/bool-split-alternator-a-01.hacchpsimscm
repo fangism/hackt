@@ -2,8 +2,8 @@
 !#
 ;; "bool-split-alternator-a-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: bool-split-alternator-a-01.hacchpsimscm,v 1.1 2007/05/26 05:34:29 fang Exp $
-;; @haco@ bool-split-alternator-a.haco-a
+;;	$Id: bool-split-alternator-a-01.hacchpsimscm,v 1.2 2010/04/06 00:00:11 fang Exp $
+;; @haco@ bool-split-alternator-a.haco-c
 ;; @chpsimtrace@ bool-split-alternator-a-01.chpsimtrace
 
 ;; Testing failure to open trace file.

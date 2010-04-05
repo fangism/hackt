@@ -3,8 +3,8 @@
 ;; "channel-sync-desync-a-30.hacchpsimscm"
 ;; copy-modified from "channel-sync-desync-a-06.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: channel-sync-desync-a-30.hacchpsimscm,v 1.3 2007/05/04 03:38:01 fang Exp $
-;; @haco@ channel-sync-desync-a.haco-a
+;;	$Id: channel-sync-desync-a-30.hacchpsimscm,v 1.4 2010/04/06 00:00:40 fang Exp $
+;; @haco@ channel-sync-desync-a.haco-c
 ;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
 ;; testing stream-filter and selectors
 

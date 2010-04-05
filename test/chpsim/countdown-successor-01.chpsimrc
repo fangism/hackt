@@ -1,6 +1,6 @@
 # "countdown-successor-01.chpsimrc"
-#	$Id: countdown-successor-01.chpsimrc,v 1.2 2007/01/21 06:03:19 fang Exp $
-# @haco@ countdown-successor.haco-a
+#	$Id: countdown-successor-01.chpsimrc,v 1.3 2010/04/06 00:00:56 fang Exp $
+# @haco@ countdown-successor.haco-c
 
 queue
 get c

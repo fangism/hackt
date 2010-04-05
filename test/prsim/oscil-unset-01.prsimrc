@@ -1,6 +1,6 @@
 # "oscil-unset-01.prsimrc"
-#	$Id: oscil-unset-01.prsimrc,v 1.3 2006/08/13 22:16:09 fang Exp $
-# @haco@ oscillator.haco-a
+#	$Id: oscil-unset-01.prsimrc,v 1.4 2010/04/06 00:07:42 fang Exp $
+# @haco@ oscillator.haco-c
 # testing unset vs. setf commands
 
 watchall

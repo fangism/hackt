@@ -1,7 +1,7 @@
 # "wchb-token-ring-e-01.prsimrc"
 # copied from "wchb-token-ring-b-03.prsimrc"
-#	$Id: wchb-token-ring-e-01.prsimrc,v 1.3 2008/06/10 22:45:03 fang Exp $
-# @haco@ wchb-token-ring-e.haco-a
+#	$Id: wchb-token-ring-e-01.prsimrc,v 1.4 2010/04/06 00:03:39 fang Exp $
+# @haco@ wchb-token-ring-e.haco-c
 # testing why-not commands
 
 echo initially all X...

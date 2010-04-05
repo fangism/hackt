@@ -1,5 +1,5 @@
 # "assert-confirm-01.prsimrc"
-# @haco@ inv.haco-a
+# @haco@ inv.haco-c
 
 echo testing assert confirmation
 confirm

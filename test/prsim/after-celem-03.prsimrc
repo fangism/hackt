@@ -1,6 +1,6 @@
 # "after-celem-03.prsimrc"
-#	$Id: after-celem-03.prsimrc,v 1.1 2007/12/01 04:25:32 fang Exp $
-# @haco@ after-celem-more.haco-a
+#	$Id: after-celem-03.prsimrc,v 1.2 2010/04/06 00:04:09 fang Exp $
+# @haco@ after-celem-more.haco-c
 # testing different delays on rules
 
 watchall

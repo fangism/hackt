@@ -1,5 +1,5 @@
 # "getlocal-03.prsimrc"
-# @haco@ completion_test.haco-a
+# @haco@ completion_test.haco-c
 
 getports .
 getlocal .

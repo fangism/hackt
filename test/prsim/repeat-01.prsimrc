@@ -1,5 +1,5 @@
 # "repeat-01.prsimrc"
-# @haco@ inv.haco-a
+# @haco@ inv.haco-c
 
 echo testing the repeat command...
 repeat 2 echo foo

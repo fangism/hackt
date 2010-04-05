@@ -2,8 +2,8 @@
 !#
 ;; "bitrouter-twin-test-a-09-trace-crit"
 ;; vi: ft=scheme
-;;	$Id: bitrouter-twin-test-a-09-trace-crit.hacchpsimscm,v 1.2 2007/11/27 06:13:15 fang Exp $
-;; @haco@ bitrouter-twin-test-a-09.haco-a
+;;	$Id: bitrouter-twin-test-a-09-trace-crit.hacchpsimscm,v 1.3 2010/04/06 00:02:21 fang Exp $
+;; @haco@ bitrouter-twin-test-a-09.haco-c
 ;; @chpsimtrace@ bitrouter-twin-test-a-09.chpsimtrace
 
 (define trace-name "bitrouter-twin-test-a-09.chpsimtrace")

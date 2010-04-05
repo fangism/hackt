@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.18 2010/04/05 20:11:01 fang Exp $
+#	$Id: Make.test-cflat,v 1.19 2010/04/05 23:59:45 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -90,7 +90,7 @@ HACKT_CFLAT_PRSIM_SCRIPT = \
 	$$cmd > $@
 	@$(TOUCH) $@
 
-.haco-a.prs:
+.haco-c.prs:
 	@$(HACKT_CFLAT_PRSIM_SCRIPT)
 
 # shouldn't really bother with this anymore...
@@ -181,10 +181,10 @@ HACKT_CFLAT_LVS_SCRIPT = \
 # if the source file has a magic line @hflat-type@, then extract it
 # as the type to process for cflatting.
 # The hflat-type string must not contain any spaces!
-.haco-a.lvsprs:
+.haco-c.lvsprs:
 	@$(HACKT_CFLAT_LVS_SCRIPT)
 
-.haco-a.lvsfail:
+.haco-c.lvsfail:
 	-@$(HACKT_CFLAT_LVS_SCRIPT)
 
 if VERBOSE_CHECK
@@ -193,7 +193,7 @@ else
 ECHO_CFLAT_LVS_SIZE_COMMAND = :
 endif
 
-.haco-a.lvssprs:
+.haco-c.lvssprs:
 	@$(DEDUCE_HFLAT_VARIANT) ; \
 	cmd="$(HACKT_CFLAT_LVS_EXE) -fsizes $$flags $<" ; \
 	$(ECHO_CFLAT_LVS_SIZE_COMMAND) ; \
@@ -280,7 +280,7 @@ cflatlvsfailtest.autodepend: Makefile
 -include cflatlvsfailtest.autodepend
 
 # not bothering to extract @hflat-flags@ for these tests
-.haco-a.prsseu:
+.haco-c.prsseu:
 	$(HACKT_CFLAT_PRSIM_SEU_EXE) $< > $@
 
 .prsseu.prsseu-sort:
@@ -341,7 +341,7 @@ HACKT_CFLAT_SIZED_PRSIM_SCRIPT = \
 	$(ECHO) "$$cmd > $@" ; \
 	$$cmd > $@
 
-.haco-a.sprs:
+.haco-c.sprs:
 	@$(HACKT_CFLAT_SIZED_PRSIM_SCRIPT)
 
 .sprs.sprs-sort:
@@ -474,15 +474,14 @@ TESTS += \
 endif
 
 CFLAT_BUILD_CHECK_LOCAL = \
-	$(HACKT_CFLAT_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.prs) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.prsdiff) \
-	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseu) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseudiff) \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco) \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-c) \
-	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-a) \
 	$(HACKT_CFLAT_LVS_TEST_PASSES:=.lvsprs) \
 	$(HACKT_CFLAT_LVS_TEST_PASSES:=.lvsprsdiff) \
 	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.lvsfail) \

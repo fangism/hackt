@@ -1,6 +1,6 @@
 # "nand-01.prsimrc"
-#	$Id: nand-01.prsimrc,v 1.2 2006/05/06 04:19:27 fang Exp $
-# @haco@ nand.haco-a
+#	$Id: nand-01.prsimrc,v 1.3 2010/04/06 00:07:32 fang Exp $
+# @haco@ nand.haco-c
 # Testing basic NAND gate
 
 watchall

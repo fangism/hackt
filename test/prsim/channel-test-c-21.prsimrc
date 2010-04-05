@@ -1,5 +1,5 @@
 # "channel-test-c-21.prsimrc"
-# @haco@ channel-test-c.haco-a
+# @haco@ channel-test-c.haco-c
 # testing initialization and reset
 # can source this script after running any other test
 # by itself, will fail, since channels are not registered

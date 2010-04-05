@@ -1,6 +1,6 @@
 # "Make.test-net"
 #	vi: ft=automake
-#	$Id: Make.test-net,v 1.5 2010/04/05 20:11:02 fang Exp $
+#	$Id: Make.test-net,v 1.6 2010/04/05 23:59:49 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -48,12 +48,12 @@ HACKNET_TEST_SCRIPT = \
 
 HACKNET_FAIL_TEST_SCRIPT = $(HACKNET_TEST_SCRIPT)
 
-.haco-a.spice:
+.haco-c.spice:
 	@$(HACKNET_TEST_SCRIPT) && \
 	{ test ! -s $@-err || \
 	  { $(ECHO) "* --- WARNINGS ---" ; $(CAT) $@-err ;} | $(TEE) -a $@ ;}
 
-.haco-a.spice-fail:
+.haco-c.spice-fail:
 	-@$(HACKNET_FAIL_TEST_SCRIPT) ; \
 	stat=$$? ; \
 	$(MV) $@-err $@ ; \
@@ -193,7 +193,7 @@ endif
 
 HAC_COMPILE_OBJECT_TARGETS += $(HACKNET_TEST_SCRIPTS_BASES:=.haco)
 HAC_CREATE_OBJECT_TARGETS += $(HACKNET_TEST_SCRIPTS_BASES:=.haco-c)
-HAC_ALLOC_OBJECT_TARGETS += $(HACKNET_TEST_SCRIPTS_BASES:=.haco-a)
+# HAC_ALLOC_OBJECT_TARGETS += $(HACKNET_TEST_SCRIPTS_BASES:=.haco-a)
 
 HACKNET_PRODUCTS = \
 	$(HACKNET_TEST_SCRIPTS_PASSES:=.spice) \
@@ -202,7 +202,7 @@ HACKNET_PRODUCTS = \
 $(HACKNET_PRODUCTS): $(HACKNET_EXE)
 
 build-check-local: \
-	$(HACKNET_TEST_SUBJECTS:=.haco-a) \
+	$(HACKNET_TEST_SUBJECTS:=.haco-c) \
 	$(HACKNET_TEST_SCRIPTS_PASSES:=.spice) \
 	$(HACKNET_TEST_SCRIPTS_PASSES:=.spice-diff) \
 	$(HACKNET_TEST_SCRIPTS_FAILURES:=.spice-fail) \

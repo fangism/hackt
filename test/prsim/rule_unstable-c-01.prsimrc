@@ -1,5 +1,5 @@
 # "rule_unstable-c-01.prsimrc"
-# @haco@ rule_unstable-c.haco-a
+# @haco@ rule_unstable-c.haco-c
 
 rules .
 watchall

@@ -1,7 +1,7 @@
 # "greeting_func-a-04.chpsimrc"
-#	$Id: greeting_func-a-04.chpsimrc,v 1.2 2007/07/31 23:24:22 fang Exp $
+#	$Id: greeting_func-a-04.chpsimrc,v 1.3 2010/04/06 00:01:10 fang Exp $
 # load both function libraries from command-line
-# @haco@ greeting_func-a.haco-a
+# @haco@ greeting_func-a.haco-c
 # @module@ -lgreeting -lgcd
 # @deps@ greeting.la gcd.la
 

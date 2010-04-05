@@ -1,6 +1,6 @@
 # "unstable-01.prsimrc"
-#	$Id: unstable-01.prsimrc,v 1.5 2006/08/12 00:36:43 fang Exp $
-# @haco@ inv.haco-a
+#	$Id: unstable-01.prsimrc,v 1.6 2010/04/06 00:08:01 fang Exp $
+# @haco@ inv.haco-c
 # testing for instabilities
 # With the exception of 'echo' and 'advance' commands, 
 # this script is usable with old prsim

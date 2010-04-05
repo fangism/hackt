@@ -2,8 +2,8 @@
 !#
 ;; "binary-gcd-seq-a-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: binary-gcd-seq-a-01.hacchpsimscm,v 1.1 2008/05/06 17:43:36 fang Exp $
-;; @haco@ binary-gcd-seq-a-01.haco-a
+;;	$Id: binary-gcd-seq-a-01.hacchpsimscm,v 1.2 2010/04/06 00:01:57 fang Exp $
+;; @haco@ binary-gcd-seq-a-01.haco-c
 ;; @chpsimtrace@ binary-gcd-seq-a-01.chpsimtrace
 
 (define trace-name "binary-gcd-seq-a-01.chpsimtrace")

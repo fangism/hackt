@@ -1,6 +1,6 @@
 # "deep-02.prsimrc"
-#	$Id: deep-02.prsimrc,v 1.2 2006/04/11 07:54:52 fang Exp $
-# @haco@ deep.haco-a
+#	$Id: deep-02.prsimrc,v 1.3 2010/04/06 00:06:20 fang Exp $
+# @haco@ deep.haco-c
 # Testing info commands on deep hierarchies.
 
 echo there's only one unique bool in whole test case

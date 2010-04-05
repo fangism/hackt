@@ -1,5 +1,5 @@
 @c "hackt/compiler.texi"
-@c $Id: compiler.texi,v 1.6 2010/04/02 22:17:37 fang Exp $
+@c $Id: compiler.texi,v 1.7 2010/04/05 23:59:37 fang Exp $
 
 @node Compiler
 @chapter Compiler
@@ -98,22 +98,8 @@ invoke the compiler on a source file with the following options.
 @strong{This phase has been deprecated and is no longer relevant, 
 a @emph{created} object file is considered @emph{allocated}.}
 
-The alloc phase expands the entire instance hierarchy top-down, 
-so that every unique instance has its own state in memory.  
-The input object file is the result of @t{haccreate}, 
-but will automatically run @command{create} on the object file if necessary.  
-
-@deffn Program hacalloc in-object out-object
-Further compiles an object file through the alloc phase.  
-@end deffn
-
-@t{hacalloc} is provided as a single-command alias to @t{hackt alloc}.  
-@t{hacalloc} supports the same options as @t{haccreate}.  
-
-In summary, 
-the create, and allocate compile phases 
-automatically run the necessary prerequisite phases where needed.  
-All developed tools should also implement this behavior.  
+@command{hacalloc} is now installed as a script that prints a
+deprecation warning and links from the input to output object file.
 
 @c ----------------------------------------------------------------------------
 @node Instance Dump
@@ -141,7 +127,6 @@ source and object files.
 @item @t{.haco} -- compiled only
 @item @t{.hacf} -- preprocessed source only
 @item @t{.haco-c} -- compiled and created
-@item @t{.haco-a} -- compiled and allocated (Deprecated)
 @end itemize
 
 These suffices can be used to define @t{make} rules.  

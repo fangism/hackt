@@ -2,8 +2,8 @@
 !#
 ;; "countdown-nested-a-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: countdown-nested-a-02.hacchpsimscm,v 1.3 2007/05/04 03:38:05 fang Exp $
-;; @haco@ countdown-nested-a.haco-a
+;;	$Id: countdown-nested-a-02.hacchpsimscm,v 1.4 2010/04/06 00:00:50 fang Exp $
+;; @haco@ countdown-nested-a.haco-c
 ;; @chpsimtrace countdown-nested-a-03.chpsimtrace
 
 (define trace-name "countdown-nested-a-03.chpsimtrace")

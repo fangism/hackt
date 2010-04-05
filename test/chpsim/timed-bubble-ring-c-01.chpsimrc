@@ -1,6 +1,6 @@
 # "timed-bubble-ring-c-01.chpsimrc"
-#	$Id: timed-bubble-ring-c-01.chpsimrc,v 1.3 2009/02/01 07:22:35 fang Exp $
-# @haco@ timed-bubble-ring-c.haco-a
+#	$Id: timed-bubble-ring-c-01.chpsimrc,v 1.4 2010/04/06 00:01:42 fang Exp $
+# @haco@ timed-bubble-ring-c.haco-c
 
 timing per-event
 # trace timed-bubble-ring-c-01.chpsimtrace

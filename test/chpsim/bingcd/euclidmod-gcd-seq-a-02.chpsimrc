@@ -1,5 +1,5 @@
 # "euclidmod-gcd-seq-a-02.chpsimrc"
-# @haco@ euclidmod-gcd-seq-a-02.haco-a
+# @haco@ euclidmod-gcd-seq-a-02.haco-c
 
 # trace euclidmod-gcd-seq-a-02.chpsimtrace
 source gcd-cycle-template.chpsimrc

@@ -1,5 +1,5 @@
 # "ls-04.prsimrc"
-# @haco@ invs.haco-a
+# @haco@ invs.haco-c
 # test case for accepts-invalid reference (ACX-PR-2310)
 # expect-fail
 

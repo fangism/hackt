@@ -1,6 +1,6 @@
 # "alternator-bucket-01.prsimrc"
-#	$Id: alternator-bucket-01.prsimrc,v 1.2 2006/09/17 23:39:10 fang Exp $
-# @haco@ alternator-bucket-01.haco-a
+#	$Id: alternator-bucket-01.prsimrc,v 1.3 2010/04/06 00:02:59 fang Exp $
+# @haco@ alternator-bucket-01.haco-c
 
 source stable-test-medium.prsimrc
 source reset-test-medium.prsimrc

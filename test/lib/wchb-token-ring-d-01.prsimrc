@@ -1,6 +1,6 @@
 # "wchb-token-ring-d-01.prsimrc"
-#	$Id: wchb-token-ring-d-01.prsimrc,v 1.3 2008/06/10 22:45:02 fang Exp $
-# @haco@ wchb-token-ring-d.haco-a
+#	$Id: wchb-token-ring-d-01.prsimrc,v 1.4 2010/04/06 00:03:39 fang Exp $
+# @haco@ wchb-token-ring-d.haco-c
 # testing deadlock analysis commands
 
 echo initially all X.

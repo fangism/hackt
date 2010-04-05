@@ -1,6 +1,6 @@
 # "assign-once-sequence-a-01.chpsimrc"
-#	$Id: assign-once-sequence-a-01.chpsimrc,v 1.2 2007/01/21 06:02:11 fang Exp $
-# @haco@ assign-once-sequence-a.haco-a
+#	$Id: assign-once-sequence-a-01.chpsimrc,v 1.3 2010/04/05 23:59:56 fang Exp $
+# @haco@ assign-once-sequence-a.haco-c
 
 # below script is same as:
 # source assign-once-parallel-a-01.chpsimrc

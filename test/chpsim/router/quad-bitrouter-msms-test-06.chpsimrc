@@ -1,6 +1,6 @@
 # "quad-bitrouter-msms-test-06-trace.chpsimrc"
-#	$Id: quad-bitrouter-msms-test-06.chpsimrc,v 1.2 2009/02/01 07:23:53 fang Exp $
-# @haco@ quad-bitrouter-msms-test-06.haco-a
+#	$Id: quad-bitrouter-msms-test-06.chpsimrc,v 1.3 2010/04/06 00:02:31 fang Exp $
+# @haco@ quad-bitrouter-msms-test-06.haco-c
 # @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
 # @deps@ $(top_builddir)/lib/stdchpfn.la
 

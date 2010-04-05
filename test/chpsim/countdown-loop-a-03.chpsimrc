@@ -1,6 +1,6 @@
 # "countdown-loop-a-03.chpsimrc"
-#	$Id: countdown-loop-a-03.chpsimrc,v 1.2 2007/09/28 05:37:50 fang Exp $
-# @haco@ countdown-loop-a.haco-a
+#	$Id: countdown-loop-a-03.chpsimrc,v 1.3 2010/04/06 00:00:45 fang Exp $
+# @haco@ countdown-loop-a.haco-c
 
 dump-all-event-source
 

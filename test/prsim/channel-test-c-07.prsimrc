@@ -1,5 +1,5 @@
 # "channel-test-c-07.prsimrc"
-# @haco@ channel-test-c.haco-a
+# @haco@ channel-test-c.haco-c
 # @deps@ channel-test-a-values-X.txt
 # testing channel source and sink and log together
 

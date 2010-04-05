@@ -1,6 +1,6 @@
 # "do-while-countdown-05-break.chpsimrc"
-#	$Id: do-while-countdown-05-break.chpsimrc,v 1.3 2009/02/01 07:22:28 fang Exp $
-# @haco@ do-while-countdown.haco-a
+#	$Id: do-while-countdown-05-break.chpsimrc,v 1.4 2010/04/06 00:00:58 fang Exp $
+# @haco@ do-while-countdown.haco-c
 
 
 echo just testing break and watching of events (no running)

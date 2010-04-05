@@ -2,8 +2,8 @@
 !#
 ;; "fib-test-c-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: fib-test-c-01.hacchpsimscm,v 1.3 2008/05/08 04:34:43 fang Exp $
-;; @haco@ fib-test-c.haco-a
+;;	$Id: fib-test-c-01.hacchpsimscm,v 1.4 2010/04/06 00:01:01 fang Exp $
+;; @haco@ fib-test-c.haco-c
 ;; @chpsimtrace@ fib-test-c-01.chpsimtrace
 
 ;; Testing failure to open trace file.

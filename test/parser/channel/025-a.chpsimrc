@@ -1,6 +1,6 @@
 # "025-a.chpsimrc"
-#	$Id: 025-a.chpsimrc,v 1.2 2007/01/21 06:04:34 fang Exp $
-# @haco@ 025.haco-a
+#	$Id: 025-a.chpsimrc,v 1.3 2010/04/06 00:03:40 fang Exp $
+# @haco@ 025.haco-c
 
 watchall-events
 get x

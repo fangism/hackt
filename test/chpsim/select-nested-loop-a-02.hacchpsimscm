@@ -3,8 +3,8 @@
 ;; "select-nested-loop-a-02.hacchpsimscm"
 ;; copy-modified from "select-nested-loop-a-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: select-nested-loop-a-02.hacchpsimscm,v 1.2 2007/04/20 18:27:29 fang Exp $
-;; @haco@ select-nested-loop-a.haco-a
+;;	$Id: select-nested-loop-a-02.hacchpsimscm,v 1.3 2010/04/06 00:01:27 fang Exp $
+;; @haco@ select-nested-loop-a.haco-c
 ;; @chpsimtrace@ select-nested-loop-a-03.chpsimtrace
 
 ;; Testing histogram construction, using defined functions

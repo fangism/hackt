@@ -1,5 +1,5 @@
 # "assert-fail-01.prsimrc"
-# @haco@ inv.haco-a
+# @haco@ inv.haco-c
 
 echo testing different error handling policies
 

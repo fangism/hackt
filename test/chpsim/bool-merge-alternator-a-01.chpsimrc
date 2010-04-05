@@ -1,6 +1,6 @@
 # "bool-merge-alternator-a-01.chpsimrc"
-#	$Id: bool-merge-alternator-a-01.chpsimrc,v 1.2 2009/02/01 07:22:02 fang Exp $
-# @haco@ bool-merge-alternator-a.haco-a
+#	$Id: bool-merge-alternator-a-01.chpsimrc,v 1.3 2010/04/06 00:00:03 fang Exp $
+# @haco@ bool-merge-alternator-a.haco-c
 
 # watchall-events
 timing per-event

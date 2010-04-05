@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.237 2010/04/02 22:17:48 fang Exp $
+#	$Id: Makefile.am,v 1.238 2010/04/05 23:59:40 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -164,10 +164,6 @@ hacpp_LDADD = libhacktlib.la
 haccreate_SOURCES = main/create.cc
 haccreate_CPPFLAGS = -DWITH_MAIN
 haccreate_LDADD = libhacktlib.la
-
-# hacalloc_SOURCES = main/alloc.cc
-# hacalloc_CPPFLAGS = -DWITH_MAIN
-# hacalloc_LDADD = libhacktlib.la
 
 hflat_SOURCES = main/cflat.cc
 hflat_CPPFLAGS = -DWITH_MAIN
@@ -1060,7 +1056,6 @@ MAIN_EXEC_CC_FILES = \
 	main/flatten.cc \
 	main/haco.cc \
 	main/create.cc \
-	main/alloc.cc \
 	main/cflat.cc \
 	main/prsobjdemo.cc \
 	main/prsim.cc \

@@ -1,5 +1,5 @@
 # "channel-test-c-01.prsimrc"
-# @haco@ channel-test-c.haco-a
+# @haco@ channel-test-c.haco-c
 
 channel X ev:0 :0 d:2
 channel Y ev:1 :0 d:4

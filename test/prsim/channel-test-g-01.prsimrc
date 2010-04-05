@@ -1,5 +1,5 @@
 # "channel-test-g-01.prsimrc"
-# @haco@ channel-test-g.haco-a
+# @haco@ channel-test-g.haco-c
 
 echo testing active-low data-rails
 channel X e:1 :0 ~d:2

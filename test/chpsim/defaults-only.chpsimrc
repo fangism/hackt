@@ -1,6 +1,6 @@
 # "defaults-only.chpsimrc"
-#	$Id: defaults-only.chpsimrc,v 1.2 2007/01/21 06:03:22 fang Exp $
-# @haco@ defaults.haco-a
+#	$Id: defaults-only.chpsimrc,v 1.3 2010/04/06 00:00:56 fang Exp $
+# @haco@ defaults.haco-c
 
 queue
 assert-queue

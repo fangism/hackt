@@ -1,5 +1,5 @@
 # "weak-yield-b-01.prsimrc"
-# @haco@ weak-yield-b.haco-a
+# @haco@ weak-yield-b.haco-c
 # an instability on a strong rule should then yield to a 
 # weak rule (either direction)
 

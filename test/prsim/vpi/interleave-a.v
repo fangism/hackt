@@ -2,7 +2,7 @@
 	\file "interleave-a.v"
 	Chain a bunch of inverters between VPI/VCS and prsim, shoelacing.
 	Added inverters in prsim to check for proper event interleaving.  
-	$Id: interleave-a.v,v 1.2 2008/03/17 23:10:52 fang Exp $
+	$Id: interleave-a.v,v 1.3 2010/04/06 00:08:31 fang Exp $
  */
 
 `timescale 1ns/1ps 
@@ -21,8 +21,8 @@ module TOP;
 	// prsim stuff
 	initial 
 	begin
-	// @haco@ interleave-a.haco-a
-		$prsim("interleave-a.haco-a");
+	// @haco@ interleave-a.haco-c
+		$prsim("interleave-a.haco-c");
 		$prsim_cmd("echo $start of simulation");
 		$prsim_cmd("watchall");
 		$prsim_cmd("timing after");

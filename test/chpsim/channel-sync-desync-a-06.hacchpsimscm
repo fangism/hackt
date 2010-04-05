@@ -1,9 +1,9 @@
 #!hacchpsimguile -b
 !#
 ;; "channel-sync-desync-a-06.hacchpsimscm"
-;;	$Id: channel-sync-desync-a-06.hacchpsimscm,v 1.2 2007/04/20 18:26:50 fang Exp $
+;;	$Id: channel-sync-desync-a-06.hacchpsimscm,v 1.3 2010/04/06 00:00:36 fang Exp $
 ;; vi: ft=scheme
-;; @haco@ channel-sync-desync-a.haco-a
+;; @haco@ channel-sync-desync-a.haco-c
 ;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
 ;; testing stream-filter and selectors
 

@@ -1,6 +1,6 @@
 # "token-ring-a-02.chpsimrc"
-#	$Id: token-ring-a-02.chpsimrc,v 1.1 2007/06/16 23:05:36 fang Exp $
-# @haco@ token-ring-a.haco-a
+#	$Id: token-ring-a-02.chpsimrc,v 1.2 2010/04/06 00:01:54 fang Exp $
+# @haco@ token-ring-a.haco-c
 
 source random-timing-test-series.chpsimrc
 

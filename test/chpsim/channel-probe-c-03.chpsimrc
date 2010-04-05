@@ -1,6 +1,6 @@
 # "channel-probe-c-03.chpsimrc"
-#	$Id: channel-probe-c-03.chpsimrc,v 1.2 2007/09/28 05:37:43 fang Exp $
-# @haco@ channel-probe-c.haco-a
+#	$Id: channel-probe-c-03.chpsimrc,v 1.3 2010/04/06 00:00:31 fang Exp $
+# @haco@ channel-probe-c.haco-c
 
 dump-all-event-source
 

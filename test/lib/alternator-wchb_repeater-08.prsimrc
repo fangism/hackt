@@ -1,6 +1,6 @@
 # "alternator-wchb_repeater-08.pprsimrc"
-#	$Id: alternator-wchb_repeater-08.prsimrc,v 1.1 2006/09/19 04:11:54 fang Exp $
-# @haco@ alternator-wchb_repeater-08.haco-a
+#	$Id: alternator-wchb_repeater-08.prsimrc,v 1.2 2010/04/06 00:03:13 fang Exp $
+# @haco@ alternator-wchb_repeater-08.haco-c
 # testing stability of token repeater process
 
 source stable-test-medium.prsimrc

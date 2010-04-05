@@ -1,5 +1,5 @@
 # "euclid-gcd-dec-a-02.chpsimrc"
-# @haco@ euclid-gcd-dec-a-02.haco-a
+# @haco@ euclid-gcd-dec-a-02.haco-c
 
 # trace euclid-gcd-dec-a-02.chpsimtrace
 source gcd-cycle-template.chpsimrc

@@ -1,6 +1,6 @@
 # "114-a.chpsimrc"
-#	$Id: 114-a.chpsimrc,v 1.2 2007/09/28 05:39:42 fang Exp $
-# @haco@ 114.haco-a
+#	$Id: 114-a.chpsimrc,v 1.3 2010/04/06 00:03:50 fang Exp $
+# @haco@ 114.haco-c
 
 dump-all-event-source
 

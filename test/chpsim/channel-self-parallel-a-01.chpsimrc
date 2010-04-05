@@ -1,6 +1,6 @@
 # "channel-self-parallel-a-01.chpsimrc"
-#	$Id: channel-self-parallel-a-01.chpsimrc,v 1.2 2007/01/21 06:02:23 fang Exp $
-# @haco@ channel-self-parallel-a.haco-a
+#	$Id: channel-self-parallel-a-01.chpsimrc,v 1.3 2010/04/06 00:00:32 fang Exp $
+# @haco@ channel-self-parallel-a.haco-c
 
 # source channel-self-sequence-01.chpsimrc
 # longer than this script because of null-join events

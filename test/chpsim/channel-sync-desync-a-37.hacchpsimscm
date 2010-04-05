@@ -1,9 +1,9 @@
 #!hacchpsimguile -b
 !#
 ;; "channel-sync-desync-a-37.hacchpsimscm"
-;;	$Id: channel-sync-desync-a-37.hacchpsimscm,v 1.2 2007/09/28 05:37:46 fang Exp $
+;;	$Id: channel-sync-desync-a-37.hacchpsimscm,v 1.3 2010/04/06 00:00:42 fang Exp $
 ;; vi: ft=scheme
-;; @haco@ channel-sync-desync-a.haco-a
+;; @haco@ channel-sync-desync-a.haco-c
 
 (load-from-path "event-source-context.hacchpsimscm")
 

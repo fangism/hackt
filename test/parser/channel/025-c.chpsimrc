@@ -1,6 +1,6 @@
 # "025-c.chpsimrc"
-#	$Id: 025-c.chpsimrc,v 1.2 2007/09/28 05:38:57 fang Exp $
-# @haco@ 025.haco-a
+#	$Id: 025-c.chpsimrc,v 1.3 2010/04/06 00:03:42 fang Exp $
+# @haco@ 025.haco-c
 
 dump-all-event-source
 

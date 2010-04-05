@@ -1,6 +1,6 @@
 # "buffer-advance-to.chpsimrc
 #
-# @haco@ buffer-advance-to.haco-a
+# @haco@ buffer-advance-to.haco-c
 
 watchall-events
 # advance-to -5

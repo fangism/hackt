@@ -1,7 +1,7 @@
 /**
 	\file "inverters-watch.v"
 	Chain a bunch of inverters between VPI/VCS and prsim, shoelacing.
-	$Id: inverters-watch.v,v 1.1 2008/12/11 22:45:12 fang Exp $
+	$Id: inverters-watch.v,v 1.2 2010/04/06 00:08:34 fang Exp $
 	Thanks to Ilya Ganusov for contributing this test.
  */
 
@@ -21,8 +21,8 @@ module TOP;
 	// prsim stuff
 	initial 
 	begin
-	// @haco@ inverters.haco-a
-		$prsim("inverters.haco-a");
+	// @haco@ inverters.haco-c
+		$prsim("inverters.haco-c");
 		$prsim_cmd("echo $start of simulation");
 		$prsim_cmd("watch in1 out3");
 		$to_prsim("TOP.in",   "in0");

@@ -1,6 +1,6 @@
 # "bool-memory-read-b-01.chpsimrc"
-#	$Id: bool-memory-read-b-01.chpsimrc,v 1.2 2007/02/05 06:40:08 fang Exp $
-# @haco@ bool-memory-read-b.haco-a
+#	$Id: bool-memory-read-b-01.chpsimrc,v 1.3 2010/04/06 00:00:01 fang Exp $
+# @haco@ bool-memory-read-b.haco-c
 
 echo expecting out-of-bounds access run-time error
 watchall-events

@@ -1,6 +1,6 @@
 # "bool-lookup-a-01.chpsimrc"
-#	$Id: bool-lookup-a-01.chpsimrc,v 1.2 2007/02/05 06:40:06 fang Exp $
-# @haco@ bool-lookup-a.haco-a
+#	$Id: bool-lookup-a-01.chpsimrc,v 1.3 2010/04/05 23:59:58 fang Exp $
+# @haco@ bool-lookup-a.haco-c
 
 watchall-events
 step 6

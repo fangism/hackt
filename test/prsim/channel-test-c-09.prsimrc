@@ -1,6 +1,6 @@
 # "channel-test-c-09.prsimrc"
 # copy-modified from "channel-test-c-03.prsimrc"
-# @haco@ channel-test-c.haco-a
+# @haco@ channel-test-c.haco-c
 # @deps@ channel-test-a-values-X.txt
 # testing channel sink, with expect
 

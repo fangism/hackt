@@ -1,9 +1,9 @@
 #!hacchpsimguile -b
 !#
 ;; "select-nested-loop-a-01.hacchpsimscm"
-;;	$Id: select-nested-loop-a-01.hacchpsimscm,v 1.2 2007/04/20 18:27:29 fang Exp $
+;;	$Id: select-nested-loop-a-01.hacchpsimscm,v 1.3 2010/04/06 00:01:26 fang Exp $
 ;; vi: ft=scheme
-;; @haco@ select-nested-loop-a.haco-a
+;; @haco@ select-nested-loop-a.haco-c
 ;; @chpsimtrace@ select-nested-loop-a-03.chpsimtrace
 
 ;; Developing histogram construction routines

@@ -1,5 +1,5 @@
 # "killed-01.prsimrc"
-# @haco@ inv.haco-a
+# @haco@ inv.haco-c
 # testing checkpointing of killed events in event queue, proper reconstruction
 
 unstable-dequeue

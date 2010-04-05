@@ -1,5 +1,5 @@
 # "ls-06.prsimrc"
-# @haco@ invs.haco-a
+# @haco@ invs.haco-c
 # reduced test case: ISE-on-invalid (ACX-PR-1484)
 
 echo expect malformed reference to be rejected:

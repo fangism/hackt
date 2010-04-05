@@ -1,6 +1,6 @@
 # "wchb-token-ring-a-03.prsimrc"
-#	$Id: wchb-token-ring-a-03.prsimrc,v 1.2 2008/03/17 23:04:07 fang Exp $
-# @haco@ wchb-token-ring-a.haco-a
+#	$Id: wchb-token-ring-a-03.prsimrc,v 1.3 2010/04/06 00:03:36 fang Exp $
+# @haco@ wchb-token-ring-a.haco-c
 # testing stability of token ring
 
 source initial-reset.prsimrc

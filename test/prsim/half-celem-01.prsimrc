@@ -1,6 +1,6 @@
 # "half-celem-01.prsimrc"
-#	$Id: half-celem-01.prsimrc,v 1.3 2006/08/12 00:36:41 fang Exp $
-# @haco@ half-celem.haco-a
+#	$Id: half-celem-01.prsimrc,v 1.4 2010/04/06 00:06:27 fang Exp $
+# @haco@ half-celem.haco-c
 # testing instability scenario
 
 # reminder: b is only in the pull-up guard for c

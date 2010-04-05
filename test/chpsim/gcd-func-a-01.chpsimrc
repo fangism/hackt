@@ -1,7 +1,7 @@
 # "gcd-func-a-01.chpsimrc"
-#	$Id: gcd-func-a-01.chpsimrc,v 1.2 2007/07/31 23:24:01 fang Exp $
+#	$Id: gcd-func-a-01.chpsimrc,v 1.3 2010/04/06 00:01:01 fang Exp $
 # Yes, use THIS object file
-# @haco@ missing_func-a.haco-a
+# @haco@ missing_func-a.haco-c
 # @module@ -lgcd
 # @deps@ gcd.la
 

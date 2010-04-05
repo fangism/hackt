@@ -1,9 +1,9 @@
 #!hacchpsimguile -b
 !#
 ;; "channel-sync-desync-a-11.hacchpsimscm"
-;;	$Id: channel-sync-desync-a-11.hacchpsimscm,v 1.2 2007/04/20 18:26:54 fang Exp $
+;;	$Id: channel-sync-desync-a-11.hacchpsimscm,v 1.3 2010/04/06 00:00:37 fang Exp $
 ;; vi: ft=scheme
-;; @haco@ channel-sync-desync-a.haco-a
+;; @haco@ channel-sync-desync-a.haco-c
 
 (use-modules (hackt chpsim-primitives))
 (use-modules (hackt streams))

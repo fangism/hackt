@@ -1,6 +1,6 @@
 # "round-robin-sink-test-01-a.chpsimrc"
-#	$Id: round-robin-sink-test-01-a.chpsimrc,v 1.2 2007/10/12 22:44:15 fang Exp $
-# @haco@ round-robin-sink-test-01.haco-a
+#	$Id: round-robin-sink-test-01-a.chpsimrc,v 1.3 2010/04/06 00:01:24 fang Exp $
+# @haco@ round-robin-sink-test-01.haco-c
 
 echo running with random timing...
 timing random

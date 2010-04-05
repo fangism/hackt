@@ -51,15 +51,15 @@ and_tree.vx: standard.v-wrap pli.tab
 and_template_tree.vx: standard.v-wrap pli.tab
 and_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 and_template_tree_reverse.vx: standard-reverse.v-wrap pli.tab
-inverters.vx-log: inverters.haco-a
-inverters-delay.vx-log: inverters.haco-a
-shoelace.vx-log: inverters.haco-a
-channel-source-sink.vx-log: channel-source-sink.haco-a
-and_tree.vx-log: and_tree.haco-a
-and_template_tree.vx-log: and_template_tree.haco-a
-and_tree_reverse.vx-log: and_tree_reverse.haco-a
-and_template_tree_reverse.vx-log: and_template_tree_reverse.haco-a
-oscillator-fanout.vx-log: oscillator.haco-a
+inverters.vx-log: inverters.haco-c
+inverters-delay.vx-log: inverters.haco-c
+shoelace.vx-log: inverters.haco-c
+channel-source-sink.vx-log: channel-source-sink.haco-c
+and_tree.vx-log: and_tree.haco-c
+and_template_tree.vx-log: and_template_tree.haco-c
+and_tree_reverse.vx-log: and_tree_reverse.haco-c
+and_template_tree_reverse.vx-log: and_template_tree_reverse.haco-c
+oscillator-fanout.vx-log: oscillator.haco-c
 
 pli.tab:
 	echo "acc=wn:*" > $@

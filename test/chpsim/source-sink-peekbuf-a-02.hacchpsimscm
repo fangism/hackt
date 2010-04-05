@@ -2,8 +2,8 @@
 !#
 ;; "source-sink-peekbuf-a-02.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: source-sink-peekbuf-a-02.hacchpsimscm,v 1.2 2007/06/12 05:13:57 fang Exp $
-;; @haco@ source-sink-peekbuf-a.haco-a
+;;	$Id: source-sink-peekbuf-a-02.hacchpsimscm,v 1.3 2010/04/06 00:01:34 fang Exp $
+;; @haco@ source-sink-peekbuf-a.haco-c
 
 ;; Testing failure to open trace file.
 

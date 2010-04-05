@@ -3,8 +3,8 @@
 ;; "channel-sync-desync-a-36.hacchpsimscm"
 ;; copy-modified from "channel-sync-desync-a-33.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: channel-sync-desync-a-36.hacchpsimscm,v 1.2 2007/05/04 03:38:02 fang Exp $
-;; @haco@ channel-sync-desync-a.haco-a
+;;	$Id: channel-sync-desync-a-36.hacchpsimscm,v 1.3 2010/04/06 00:00:42 fang Exp $
+;; @haco@ channel-sync-desync-a.haco-c
 ;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
 
 ;; Developing more general query functions...

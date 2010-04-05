@@ -1,6 +1,6 @@
 # "025-b.chpsimrc"
-#	$Id: 025-b.chpsimrc,v 1.2 2007/01/21 06:04:35 fang Exp $
-# @haco@ 025.haco-a
+#	$Id: 025-b.chpsimrc,v 1.3 2010/04/06 00:03:41 fang Exp $
+# @haco@ 025.haco-c
 
 echo expect to see only one event in queue at a time, b/c blocking
 watchall-events

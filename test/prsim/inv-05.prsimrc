@@ -1,6 +1,6 @@
 # "inv-05.prsimrc"
-#	$Id: inv-05.prsimrc,v 1.4 2006/08/12 00:36:41 fang Exp $
-# @haco@ inv.haco-a
+#	$Id: inv-05.prsimrc,v 1.5 2010/04/06 00:06:44 fang Exp $
+# @haco@ inv.haco-c
 # testing for instabilities
 
 # allow events to continue past instability

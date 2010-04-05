@@ -1,6 +1,6 @@
 # "channel-once-parallel-a-01.chpsimrc"
-#	$Id: channel-once-parallel-a-01.chpsimrc,v 1.2 2007/01/21 06:02:18 fang Exp $
-# @haco@ channel-once-parallel-a.haco-a
+#	$Id: channel-once-parallel-a-01.chpsimrc,v 1.3 2010/04/06 00:00:27 fang Exp $
+# @haco@ channel-once-parallel-a.haco-c
 
 queue
 get X

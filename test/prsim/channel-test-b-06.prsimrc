@@ -1,5 +1,5 @@
 # "channel-test-b-06.prsimrc"
-# @haco@ channel-test-b.haco-a
+# @haco@ channel-test-b.haco-c
 # @deps@ channel-test-a-values-X.txt
 # testing source/sinks on different channels
 # adding expect, not looped, should run out of asserts

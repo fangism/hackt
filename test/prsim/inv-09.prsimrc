@@ -1,7 +1,7 @@
 # "inv-09.prsimrc"
 # copy-modified from "inv-03.prsimrc"
-#	$Id: inv-09.prsimrc,v 1.2 2006/05/06 04:19:26 fang Exp $
-# @haco@ inv.haco-a
+#	$Id: inv-09.prsimrc,v 1.3 2010/04/06 00:06:47 fang Exp $
+# @haco@ inv.haco-c
 # testing watch listing facilities
 
 # watching individual nodes here

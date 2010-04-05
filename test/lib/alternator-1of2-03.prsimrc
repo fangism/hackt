@@ -1,6 +1,6 @@
 # "alternator-1of2-03.pprsimrc"
-#	$Id: alternator-1of2-03.prsimrc,v 1.2 2006/09/17 23:39:09 fang Exp $
-# @haco@ alternator-1of2-03.haco-a
+#	$Id: alternator-1of2-03.prsimrc,v 1.3 2010/04/06 00:02:58 fang Exp $
+# @haco@ alternator-1of2-03.haco-c
 # testing stability of source-sink pair
 
 source stable-test-medium.prsimrc

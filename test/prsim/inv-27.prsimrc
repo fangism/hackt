@@ -1,5 +1,5 @@
 # "inv-27.prsimrc"
-# @haco@ inv.haco-a
+# @haco@ inv.haco-c
 
 echo propagate 0s and 1s first
 watchall

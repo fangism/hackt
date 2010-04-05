@@ -2,8 +2,8 @@
 !#
 ;; "timed-fifo-d-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: timed-fifo-d-01.hacchpsimscm,v 1.2 2007/05/04 03:38:59 fang Exp $
-;; @haco@ timed-fifo-d.haco-a
+;;	$Id: timed-fifo-d-01.hacchpsimscm,v 1.3 2010/04/06 00:01:48 fang Exp $
+;; @haco@ timed-fifo-d.haco-c
 ;; @chpsimtrace@ timed-fifo-d-01.chpsimtrace
 
 ;; Testing failure to open trace file.

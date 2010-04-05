@@ -1,6 +1,6 @@
 # "deadlock-buf-a-01.chpsimrc"
-#	$Id: deadlock-buf-a-01.chpsimrc,v 1.3 2007/05/04 03:38:08 fang Exp $
-# @haco@ deadlock-buf-a.haco-a
+#	$Id: deadlock-buf-a-01.chpsimrc,v 1.4 2010/04/06 00:00:56 fang Exp $
+# @haco@ deadlock-buf-a.haco-c
 
 timing per-event
 # trace-flush-interval 40

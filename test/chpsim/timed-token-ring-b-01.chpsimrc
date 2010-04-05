@@ -1,6 +1,6 @@
 # "timed-token-ring-b-01.chpsimrc"
-#	$Id: timed-token-ring-b-01.chpsimrc,v 1.3 2009/02/01 07:22:41 fang Exp $
-# @haco@ timed-token-ring-b.haco-a
+#	$Id: timed-token-ring-b-01.chpsimrc,v 1.4 2010/04/06 00:01:53 fang Exp $
+# @haco@ timed-token-ring-b.haco-c
 
 timing per-event
 # trace timed-token-ring-b-01.chpsimtrace

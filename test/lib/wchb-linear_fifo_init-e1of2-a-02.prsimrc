@@ -1,5 +1,5 @@
 # "wchb_linear_fifo_init-e1of2-a-02.prsimrc"
-# @haco@ wchb-linear_fifo_init-e1of2-a.haco-a
+# @haco@ wchb-linear_fifo_init-e1of2-a.haco-c
 # @deps@ 1of2_values.txt
 
 channel L e:0 :0 d:2

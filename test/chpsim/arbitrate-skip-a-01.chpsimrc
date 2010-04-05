@@ -1,6 +1,6 @@
 # "arbitrate-skip-a-01.chpsimrc"
-#	$Id: arbitrate-skip-a-01.chpsimrc,v 1.2 2007/01/21 06:01:48 fang Exp $
-# @haco@ arbitrate-skip-a.haco-a
+#	$Id: arbitrate-skip-a-01.chpsimrc,v 1.3 2010/04/05 23:59:53 fang Exp $
+# @haco@ arbitrate-skip-a.haco-c
 
 queue
 get a

@@ -1,5 +1,5 @@
 # "invariant-not-X-01.prsimrc"
-# @haco@ invariant-not-X.haco-a
+# @haco@ invariant-not-X.haco-c
 
 # ACX: bugzilla 2315
 echo This test reveals a fundamental bug in the way expressions

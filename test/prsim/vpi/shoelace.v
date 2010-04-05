@@ -1,7 +1,7 @@
 /**
 	\file "shoelace.v"
 	Chain a bunch of inverters between VPI/VCS and prsim, shoelacing.
-	$Id: shoelace.v,v 1.2 2008/03/17 23:10:59 fang Exp $
+	$Id: shoelace.v,v 1.3 2010/04/06 00:08:37 fang Exp $
 	Thanks to Ilya Ganusov for contributing this test.
  */
 
@@ -48,8 +48,8 @@ module TOP;
 	// prsim stuff
 	initial 
 	begin
-	// @haco@ inverters.haco-a
-		$prsim("inverters.haco-a");
+	// @haco@ inverters.haco-c
+		$prsim("inverters.haco-c");
 		$prsim_cmd("echo $start of simulation");
 
 		$to_prsim("TOP.in", "in0");

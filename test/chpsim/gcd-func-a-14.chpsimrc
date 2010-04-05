@@ -1,8 +1,8 @@
 # "gcd-func-a-14.chpsimrc"
 # This test demonstratss dlopening a shared library linked from a static lib
-#	$Id: gcd-func-a-14.chpsimrc,v 1.2 2007/07/31 23:24:13 fang Exp $
+#	$Id: gcd-func-a-14.chpsimrc,v 1.3 2010/04/06 00:01:05 fang Exp $
 # Yes, use THIS object file
-# @haco@ missing_func-a.haco-a
+# @haco@ missing_func-a.haco-c
 # @module@ -lgcdwrap
 # @deps@ gcdwrap.la
 

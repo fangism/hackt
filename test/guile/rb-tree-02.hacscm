@@ -2,8 +2,8 @@
 !#
 ;; "rb-tree-02.hacscm"
 ;; vi: ft=scheme
-;;	$Id: rb-tree-02.hacscm,v 1.2 2007/04/20 18:27:43 fang Exp $
-;; @haco@ empty.haco-a
+;;	$Id: rb-tree-02.hacscm,v 1.3 2010/04/06 00:02:57 fang Exp $
+;; @haco@ empty.haco-c
 
 (use-modules (hackt rb-tree))
 (use-modules (hackt streams))

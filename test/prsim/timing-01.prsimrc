@@ -1,6 +1,6 @@
 # "timing-01.prsimrc"
-#	$Id: timing-01.prsimrc,v 1.2 2006/04/23 07:37:42 fang Exp $
-# @haco@ inv.haco-a
+#	$Id: timing-01.prsimrc,v 1.3 2010/04/06 00:07:57 fang Exp $
+# @haco@ inv.haco-c
 # testing timing commands
 # note: not using random/norandom anymore
 

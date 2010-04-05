@@ -2,8 +2,8 @@
 !#
 ;; "timed-token-ring-c-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: timed-token-ring-c-01.hacchpsimscm,v 1.2 2007/05/04 03:39:15 fang Exp $
-;; @haco@ timed-token-ring-c.haco-a
+;;	$Id: timed-token-ring-c-01.hacchpsimscm,v 1.3 2010/04/06 00:01:53 fang Exp $
+;; @haco@ timed-token-ring-c.haco-c
 ;; @chpsimtrace@ timed-token-ring-c-01.chpsimtrace
 
 ;; Testing failure to open trace file.

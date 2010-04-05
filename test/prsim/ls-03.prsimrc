@@ -1,5 +1,5 @@
 # "ls-03.prsimrc"
-# @haco@ invs.haco-a
+# @haco@ invs.haco-c
 # test case for ISE on invalid reference to getall (ACX-PR-2400)
 # expect-fail
 

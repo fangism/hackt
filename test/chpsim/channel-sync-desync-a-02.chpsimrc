@@ -1,6 +1,6 @@
 # "channel-sync-desync-a-02.chpsimrc"
-#	$Id: channel-sync-desync-a-02.chpsimrc,v 1.2 2007/02/05 06:40:16 fang Exp $
-# @haco@ channel-sync-desync-a.haco-a
+#	$Id: channel-sync-desync-a-02.chpsimrc,v 1.3 2010/04/06 00:00:34 fang Exp $
+# @haco@ channel-sync-desync-a.haco-c
 
 echo silent operation at random timing
 timing random

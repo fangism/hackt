@@ -1,6 +1,6 @@
 # "arbitrate-loop-a-03.chpsimrc
-#	$Id: arbitrate-loop-a-03.chpsimrc,v 1.3 2008/03/17 23:03:36 fang Exp $
-# @haco@ arbitrate-loop-a.haco-a
+#	$Id: arbitrate-loop-a-03.chpsimrc,v 1.4 2010/04/05 23:59:52 fang Exp $
+# @haco@ arbitrate-loop-a.haco-c
 
 echo testing random delays
 echo events are silent

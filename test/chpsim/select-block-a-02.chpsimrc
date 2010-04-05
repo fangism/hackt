@@ -1,6 +1,6 @@
 # "select-block-a-02.chpsimrc"
-#	$Id: select-block-a-02.chpsimrc,v 1.2 2007/02/05 06:40:23 fang Exp $
-# @haco@ select-block-a.haco-a
+#	$Id: select-block-a-02.chpsimrc,v 1.3 2010/04/06 00:01:25 fang Exp $
+# @haco@ select-block-a.haco-c
 
 echo same trace with fixed-per-event delays (using defaults)
 echo everything except times stamps should match because

@@ -1,6 +1,6 @@
 # "select-block-a-01.chpsimrc"
-#	$Id: select-block-a-01.chpsimrc,v 1.4 2007/09/11 06:54:28 fang Exp $
-# @haco@ select-block-a.haco-a
+#	$Id: select-block-a-01.chpsimrc,v 1.5 2010/04/06 00:01:24 fang Exp $
+# @haco@ select-block-a.haco-c
 
 # NOTE: "in queue" now means scheduled for *checking*, 
 # not nececssarily for execution!

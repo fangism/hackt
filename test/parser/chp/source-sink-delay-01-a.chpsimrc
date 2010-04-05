@@ -1,6 +1,6 @@
 # "source-sink-delay-01-a.chpsimrc"
-#	$Id: source-sink-delay-01-a.chpsimrc,v 1.2 2007/09/28 05:39:49 fang Exp $
-# @haco@ source-sink-delay-01.haco-a
+#	$Id: source-sink-delay-01-a.chpsimrc,v 1.3 2010/04/06 00:03:52 fang Exp $
+# @haco@ source-sink-delay-01.haco-c
 
 dump-all-event-source
 

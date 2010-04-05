@@ -1,6 +1,6 @@
 # "delayed-sink-a-02-trace.chpsimrc"
-#	$Id: delayed-sink-a-02.chpsimrc,v 1.2 2009/02/01 07:22:24 fang Exp $
-# @haco@ delayed-sink-a.haco-a
+#	$Id: delayed-sink-a-02.chpsimrc,v 1.3 2010/04/06 00:00:57 fang Exp $
+# @haco@ delayed-sink-a.haco-c
 
 # this test seems redundant now...
 # trace delayed-sink-a-02.chpsimtrace

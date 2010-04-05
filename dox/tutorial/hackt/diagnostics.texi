@@ -1,5 +1,5 @@
 @c "hackt/diagnostics.texi"
-@c $Id: diagnostics.texi,v 1.1 2007/08/22 02:09:22 fang Exp $
+@c $Id: diagnostics.texi,v 1.2 2010/04/05 23:59:37 fang Exp $
 
 @node Diagnostics
 @chapter Diagnostics
@@ -19,6 +19,8 @@ This chapter describes some diagnostic commands of @command{hackt} tools.
 
 The @t{version} command just tells you the configuration with which
 @command{hackt} was compiled and installed.  
+(All @command{hackt} binaries should print this version information
+with the @option{-v} flag.)
 The output may looks something like the following:
 
 @example

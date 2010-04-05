@@ -1,6 +1,6 @@
 # "countdown-loop-a-01.chpsimrc"
-#	$Id: countdown-loop-a-01.chpsimrc,v 1.2 2007/01/21 06:02:47 fang Exp $
-# @haco@ countdown-loop-a.haco-a
+#	$Id: countdown-loop-a-01.chpsimrc,v 1.3 2010/04/06 00:00:44 fang Exp $
+# @haco@ countdown-loop-a.haco-c
 
 queue
 get c

@@ -1,6 +1,6 @@
 # "oscil-random-01a.prsimrc"
-#	$Id: oscil-random-01a.prsimrc,v 1.2 2008/03/17 23:09:52 fang Exp $
-# @haco@ oscillator.haco-a
+#	$Id: oscil-random-01a.prsimrc,v 1.3 2010/04/06 00:07:40 fang Exp $
+# @haco@ oscillator.haco-c
 # Testing timing features, different random seed
 
 seed48 666 666 666

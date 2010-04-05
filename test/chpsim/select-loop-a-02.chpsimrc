@@ -1,6 +1,6 @@
 # "select-loop-a-02.chpsimrc"
-#	$Id: select-loop-a-02.chpsimrc,v 1.2 2007/09/28 05:38:33 fang Exp $
-# @haco@ select-loop-a.haco-a
+#	$Id: select-loop-a-02.chpsimrc,v 1.3 2010/04/06 00:01:26 fang Exp $
+# @haco@ select-loop-a.haco-c
 
 dump-all-event-source
 

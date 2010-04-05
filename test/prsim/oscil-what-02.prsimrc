@@ -1,6 +1,6 @@
 # "oscil-what-02.prsimrc"
-#	$Id: oscil-what-02.prsimrc,v 1.1 2007/12/01 04:25:35 fang Exp $
-# @haco@ oscillator.haco-a
+#	$Id: oscil-what-02.prsimrc,v 1.2 2010/04/06 00:07:43 fang Exp $
+# @haco@ oscillator.haco-c
 # Testing prsim 'who' and 'what' commands on oscillator.  
 
 what R

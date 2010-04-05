@@ -1,5 +1,5 @@
 # "unused-03.prsimrc"
-# @haco@ unused.haco-a
+# @haco@ unused.haco-c
 
 echo unknown nodes with fanout
 unknown-fanout

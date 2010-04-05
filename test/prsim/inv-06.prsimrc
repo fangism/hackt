@@ -1,6 +1,6 @@
 # "inv-06.prsimrc"
-#	$Id: inv-06.prsimrc,v 1.2 2006/04/11 07:54:53 fang Exp $
-# @haco@ inv.haco-a
+#	$Id: inv-06.prsimrc,v 1.3 2010/04/06 00:06:45 fang Exp $
+# @haco@ inv.haco-c
 # testing warnings about setting pending nodes
 
 watchall

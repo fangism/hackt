@@ -1,6 +1,6 @@
 # "countdown-domino-b-04.chpsimrc"
-#	$Id: countdown-domino-b-04.chpsimrc,v 1.2 2007/09/28 05:37:48 fang Exp $
-# @haco@ countdown-domino-b.haco-a
+#	$Id: countdown-domino-b-04.chpsimrc,v 1.3 2010/04/06 00:00:44 fang Exp $
+# @haco@ countdown-domino-b.haco-c
 
 dump-all-event-source
 

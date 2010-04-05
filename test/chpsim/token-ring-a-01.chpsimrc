@@ -1,6 +1,6 @@
 # "token-ring-a-01.chpsimrc"
-#	$Id: token-ring-a-01.chpsimrc,v 1.3 2009/02/01 07:22:42 fang Exp $
-# @haco@ token-ring-a.haco-a
+#	$Id: token-ring-a-01.chpsimrc,v 1.4 2010/04/06 00:01:54 fang Exp $
+# @haco@ token-ring-a.haco-c
 
 timing per-event
 # trace-flush-interval 40

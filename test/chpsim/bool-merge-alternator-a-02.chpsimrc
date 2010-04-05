@@ -1,6 +1,6 @@
 # "bool-merge-alternator-a-02.chpsimrc"
-#	$Id: bool-merge-alternator-a-02.chpsimrc,v 1.1 2007/06/16 23:05:21 fang Exp $
-# @haco@ bool-merge-alternator-a.haco-a
+#	$Id: bool-merge-alternator-a-02.chpsimrc,v 1.2 2010/04/06 00:00:04 fang Exp $
+# @haco@ bool-merge-alternator-a.haco-c
 
 source random-timing-test-series.chpsimrc
 

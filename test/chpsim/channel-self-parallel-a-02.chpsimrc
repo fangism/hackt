@@ -1,6 +1,6 @@
 # "channel-self-parallel-a-02.chpsimrc"
-#	$Id: channel-self-parallel-a-02.chpsimrc,v 1.2 2007/01/21 06:02:24 fang Exp $
-# @haco@ channel-self-parallel-a.haco-a
+#	$Id: channel-self-parallel-a-02.chpsimrc,v 1.3 2010/04/06 00:00:32 fang Exp $
+# @haco@ channel-self-parallel-a.haco-c
 
 echo now we set trivial-event delay to 0
 null-event-delay 0

@@ -1,9 +1,9 @@
 #!hacchpsimguile -b
 !#
 ;; "select-block-a-02.hacchpsimscm"
-;;	$Id: select-block-a-02.hacchpsimscm,v 1.2 2007/09/28 05:38:31 fang Exp $
+;;	$Id: select-block-a-02.hacchpsimscm,v 1.3 2010/04/06 00:01:25 fang Exp $
 ;; vi: ft=scheme
-;; @haco@ select-block-a.haco-a
+;; @haco@ select-block-a.haco-c
 
 (load-from-path "event-process-map.hacchpsimscm")
 

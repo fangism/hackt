@@ -1,6 +1,6 @@
 # "missing_func-b-01.chpsimrc"
-#	$Id: missing_func-b-01.chpsimrc,v 1.2 2007/07/31 23:24:27 fang Exp $
-# @haco@ missing_func-b.haco-a
+#	$Id: missing_func-b-01.chpsimrc,v 1.3 2010/04/06 00:01:22 fang Exp $
+# @haco@ missing_func-b.haco-c
 
 watchall-events
 step 200

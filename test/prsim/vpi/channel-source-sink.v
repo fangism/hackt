@@ -1,7 +1,7 @@
 /**
 	\file "channel-source-sink.v"
 	Chain a source and sink in prsim to verilog.
-	$Id: channel-source-sink.v,v 1.3 2008/11/29 23:46:28 fang Exp $
+	$Id: channel-source-sink.v,v 1.4 2010/04/06 00:08:26 fang Exp $
  */
 
 `timescale 1ns/1ps 
@@ -45,8 +45,8 @@ module TOP;
 	// prsim stuff
 	initial 
 	begin
-	// @haco@ channel-source-sink.haco-a
-		$prsim("channel-source-sink.haco-a");
+	// @haco@ channel-source-sink.haco-c
+		$prsim("channel-source-sink.haco-c");
 		$prsim_cmd("echo $start of simulation");
 		$prsim_cmd("echo-commands on");
 

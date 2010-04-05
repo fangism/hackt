@@ -1,5 +1,5 @@
 # "channel-test-non-QDI-a-02.prsimrc"
-# @haco@ channel-test-non-QDI-a.haco-a
+# @haco@ channel-test-non-QDI-a.haco-c
 
 unstable-dequeue
 source channel-test-non-QDI-a-01.prsimrc

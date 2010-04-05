@@ -1,5 +1,5 @@
 # "cross-pulldown-01.prsimrc"
-# @haco@ cross-pulldown.haco-a
+# @haco@ cross-pulldown.haco-c
 # currently fails, in the same manner as the reference prsim
 
 watchall-queue

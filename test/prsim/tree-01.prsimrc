@@ -1,6 +1,6 @@
 # "tree-01.prsimrc"
-#	$Id: tree-01.prsimrc,v 1.2 2006/04/11 07:54:55 fang Exp $
-# @haco@ tree.haco-a
+#	$Id: tree-01.prsimrc,v 1.3 2010/04/06 00:07:59 fang Exp $
+# @haco@ tree.haco-c
 # Testing info commands on deep hierarchies.
 
 what poo

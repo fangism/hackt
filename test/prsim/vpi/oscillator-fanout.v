@@ -2,7 +2,7 @@
 	\file "oscillator-fanout.v"
 	A prsim-driven oscilator faning out to multiple verilog nodes.
 	This is a test case for a bug as well.  
-	$Id: oscillator-fanout.v,v 1.1 2008/12/03 05:32:24 fang Exp $
+	$Id: oscillator-fanout.v,v 1.2 2010/04/06 00:08:36 fang Exp $
  */
 
 `timescale 1ns/1ps 
@@ -18,8 +18,8 @@ module TOP;
 	// prsim stuff
 	initial 
 	begin
-	// @haco@ oscillator.haco-a
-		$prsim("oscillator.haco-a");
+	// @haco@ oscillator.haco-c
+		$prsim("oscillator.haco-c");
 		$from_prsim("R.x[7]","TOP.out[0]");
 		$from_prsim("R.x[7]","TOP.out[1]");
 		$from_prsim("R.x[7]","TOP.out[2]");

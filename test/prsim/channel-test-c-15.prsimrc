@@ -1,6 +1,6 @@
 # "channel-test-c-15.prsimrc"
 # copy-modified from "channel-test-c-13.prsimrc"
-# @haco@ channel-test-c.haco-a
+# @haco@ channel-test-c.haco-c
 # @deps@ channel-test-a-values-Y.txt
 # Using channel Y (e1of4) instead of X
 

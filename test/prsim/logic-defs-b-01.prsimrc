@@ -1,5 +1,5 @@
 # "logic-defs-b-01.prsimrc"
-# @haco@ logic-defs-b.haco-a
+# @haco@ logic-defs-b.haco-c
 # @hacprsim-flags@ -t inv_chain<7>
 # note: caller already wraps in quotes
 

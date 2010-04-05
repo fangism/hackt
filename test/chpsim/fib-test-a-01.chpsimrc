@@ -1,6 +1,6 @@
 # "fib-test-a-01.chpsimrc"
-#	$Id: fib-test-a-01.chpsimrc,v 1.3 2009/02/01 07:22:28 fang Exp $
-# @haco@ fib-test-a.haco-a
+#	$Id: fib-test-a-01.chpsimrc,v 1.4 2010/04/06 00:00:59 fang Exp $
+# @haco@ fib-test-a.haco-c
 
 # use default delays
 timing per-event

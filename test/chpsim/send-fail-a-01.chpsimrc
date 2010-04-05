@@ -1,6 +1,6 @@
 # "send-fail-a-01.chpsimrc"
-#	$Id: send-fail-a-01.chpsimrc,v 1.3 2007/09/11 06:54:42 fang Exp $
-# @haco@ send-fail-a.haco-a
+#	$Id: send-fail-a-01.chpsimrc,v 1.4 2010/04/06 00:01:31 fang Exp $
+# @haco@ send-fail-a.haco-c
 
 queue
 time

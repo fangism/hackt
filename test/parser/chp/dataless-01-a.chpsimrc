@@ -1,6 +1,6 @@
 # "dataless-01-a.chpsimrc"
-#	$Id: dataless-01-a.chpsimrc,v 1.2 2007/09/28 05:39:47 fang Exp $
-# @haco@ dataless-01.haco-a
+#	$Id: dataless-01-a.chpsimrc,v 1.3 2010/04/06 00:03:52 fang Exp $
+# @haco@ dataless-01.haco-c
 
 dump-all-event-source
 

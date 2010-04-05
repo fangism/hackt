@@ -1,6 +1,6 @@
 # "alternator-wchb_tree_fifo-06.prsimrc"
-#	$Id: alternator-wchb_tree_fifo-06.prsimrc,v 1.1 2006/09/19 21:07:12 fang Exp $
-# @haco@ alternator-wchb_tree_fifo-06.haco-a
+#	$Id: alternator-wchb_tree_fifo-06.prsimrc,v 1.2 2010/04/06 00:03:20 fang Exp $
+# @haco@ alternator-wchb_tree_fifo-06.haco-c
 
 source stable-test-medium.prsimrc
 source reset-test-medium.prsimrc

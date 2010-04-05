@@ -1,6 +1,6 @@
 # "gcd-nested-a-03.chpsimrc"
-#	$Id: gcd-nested-a-03.chpsimrc,v 1.2 2007/09/28 05:38:19 fang Exp $
-# @haco@ gcd-nested-a.haco-a
+#	$Id: gcd-nested-a-03.chpsimrc,v 1.3 2010/04/06 00:01:08 fang Exp $
+# @haco@ gcd-nested-a.haco-c
 
 dump-all-event-source
 

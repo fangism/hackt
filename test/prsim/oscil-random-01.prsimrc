@@ -1,6 +1,6 @@
 # "oscil-random-01.prsimrc"
-#	$Id: oscil-random-01.prsimrc,v 1.4 2006/08/13 22:16:08 fang Exp $
-# @haco@ oscillator.haco-a
+#	$Id: oscil-random-01.prsimrc,v 1.5 2010/04/06 00:07:40 fang Exp $
+# @haco@ oscillator.haco-c
 # Testing timing features
 
 watchall

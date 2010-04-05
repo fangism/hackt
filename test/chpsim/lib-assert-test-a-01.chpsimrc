@@ -1,6 +1,6 @@
 # "lib-assert-test-a-01.chpsimrc"
-#	$Id: lib-assert-test-a-01.chpsimrc,v 1.4 2007/11/27 06:10:34 fang Exp $
-# @haco@ lib-assert-test-a.haco-a
+#	$Id: lib-assert-test-a-01.chpsimrc,v 1.5 2010/04/06 00:01:10 fang Exp $
+# @haco@ lib-assert-test-a.haco-c
 # Use the *built* library for this test (as opposed to installed)
 # @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
 # @deps@ $(top_builddir)/lib/stdchpfn.la

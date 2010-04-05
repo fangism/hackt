@@ -1,5 +1,5 @@
 # "channel-test-b-22.prsimrc"
-# @haco@ channel-test-b.haco-a
+# @haco@ channel-test-b.haco-c
 # testing behavior of channel-stop w.r.t. logging and expecting
 
 source channel-test-b-01.prsimrc

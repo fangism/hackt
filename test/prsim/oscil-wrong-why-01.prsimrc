@@ -1,5 +1,5 @@
 # "oscil-wrong-why-01.prsimrc"
-# @haco@ oscillator-wrong.haco-a
+# @haco@ oscillator-wrong.haco-c
 
 watchall
 why-x R.x[3]

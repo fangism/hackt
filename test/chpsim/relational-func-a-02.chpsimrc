@@ -1,7 +1,7 @@
 # "relational-func-a-01.chpsimrc"
-#	$Id: relational-func-a-02.chpsimrc,v 1.2 2007/08/15 02:50:12 fang Exp $
+#	$Id: relational-func-a-02.chpsimrc,v 1.3 2010/04/06 00:01:24 fang Exp $
 # Yes, use THIS object file
-# @haco@ relational-func-a.haco-a
+# @haco@ relational-func-a.haco-c
 # @module@ -lbad_gcd1
 # @deps@ bad_gcd1.la
 

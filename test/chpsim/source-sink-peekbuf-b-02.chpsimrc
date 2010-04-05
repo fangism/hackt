@@ -1,6 +1,6 @@
 # "source-sink-peekbuf-b-02.chpsimrc"
-#	$Id: source-sink-peekbuf-b-02.chpsimrc,v 1.3 2009/02/01 07:22:33 fang Exp $
-# @haco@ source-sink-peekbuf-b.haco-a
+#	$Id: source-sink-peekbuf-b-02.chpsimrc,v 1.4 2010/04/06 00:01:35 fang Exp $
+# @haco@ source-sink-peekbuf-b.haco-c
 
 timing per-event
 # trace source-sink-peekbuf-b-02.chpsimtrace

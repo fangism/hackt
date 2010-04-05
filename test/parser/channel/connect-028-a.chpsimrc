@@ -1,6 +1,6 @@
 # "connect-028-a.chpsimrc"
-#	$Id: connect-028-a.chpsimrc,v 1.2 2007/09/28 05:39:08 fang Exp $
-# @haco@ connect-028.haco-a
+#	$Id: connect-028-a.chpsimrc,v 1.3 2010/04/06 00:03:45 fang Exp $
+# @haco@ connect-028.haco-c
 
 dump-all-event-source
 

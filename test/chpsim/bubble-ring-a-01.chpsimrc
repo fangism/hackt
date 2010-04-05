@@ -1,6 +1,6 @@
 # "bubble-ring-a-01.chpsimrc"
-#	$Id: bubble-ring-a-01.chpsimrc,v 1.3 2009/02/01 07:22:07 fang Exp $
-# @haco@ bubble-ring-a.haco-a
+#	$Id: bubble-ring-a-01.chpsimrc,v 1.4 2010/04/06 00:00:25 fang Exp $
+# @haco@ bubble-ring-a.haco-c
 
 timing per-event
 # trace-flush-interval 40

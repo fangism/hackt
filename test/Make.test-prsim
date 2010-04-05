@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.20 2010/01/05 00:09:48 fang Exp $
+#	$Id: Make.test-prsim,v 1.21 2010/04/05 23:59:49 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -77,16 +77,16 @@ PRSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimckpt-load-template.prsimrc
 EXTRACT_HACPRSIM_FLAGS_PIPE = $(GREP) "@hacprsim-flags@" | $(HEAD) -n1 | \
 	$(SED) 's/^.*@hacprsim-flags@[ ]*//g'
 
-.haco-a.prsimexpr:
+.haco-c.prsimexpr:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc -fcheck-structure $< > $@
 
-.haco-a.prs-dot:
+.haco-c.prs-dot:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct $< > $@
 
-.haco-a.prsimexpr-O1:
+.haco-c.prsimexpr-O1:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc -O1 $< > $@
 
-.haco-a.prs-dot-O1:
+.haco-c.prs-dot-O1:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct -O1 $< > $@
 
 .prsimexpr-O1.hacktprsdottest:
@@ -615,7 +615,7 @@ endif
 
 HAC_COMPILE_OBJECT_TARGETS += $(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco)
 HAC_CREATE_OBJECT_TARGETS += $(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-c)
-HAC_ALLOC_OBJECT_TARGETS += $(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a)
+# HAC_ALLOC_OBJECT_TARGETS += $(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a)
 
 # this should really only reference the root products of prsim,
 # derivative files (.prsimckpt, .prsimtrace) could be omitted
@@ -635,7 +635,7 @@ HACKT_PRSIM_PRODUCTS = \
 $(HACKT_PRSIM_PRODUCTS): $(HACKT_PRSIM_EXE)
 
 build-check-local: \
-	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimckpt) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimtrace) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimrc-out) \
@@ -647,7 +647,7 @@ build-check-local: \
 	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimtrace-dump) \
 	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimtrace-dump-filter) \
 	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimtrace-diff) \
-	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexprdiff) \
 	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpt) \

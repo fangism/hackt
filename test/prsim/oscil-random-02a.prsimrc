@@ -1,6 +1,6 @@
 # "oscil-random-02a.prsimrc"
-#	$Id: oscil-random-02a.prsimrc,v 1.2 2008/03/17 23:09:53 fang Exp $
-# @haco@ oscillator.haco-a
+#	$Id: oscil-random-02a.prsimrc,v 1.3 2010/04/06 00:07:41 fang Exp $
+# @haco@ oscillator.haco-c
 # Testing random seeding
 
 source oscil-random-02.prsimrc

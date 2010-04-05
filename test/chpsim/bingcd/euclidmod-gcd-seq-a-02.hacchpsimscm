@@ -2,8 +2,8 @@
 !#
 ;; "euclidmod-gcd-seq-a-02.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: euclidmod-gcd-seq-a-02.hacchpsimscm,v 1.1 2008/05/06 17:43:50 fang Exp $
-;; @haco@ euclidmod-gcd-seq-a-02.haco-a
+;;	$Id: euclidmod-gcd-seq-a-02.hacchpsimscm,v 1.2 2010/04/06 00:02:00 fang Exp $
+;; @haco@ euclidmod-gcd-seq-a-02.haco-c
 ;; @chpsimtrace@ euclidmod-gcd-seq-a-02.chpsimtrace
 
 (define trace-name "euclidmod-gcd-seq-a-02.chpsimtrace")

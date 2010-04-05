@@ -1,7 +1,7 @@
 /**
 	\file "fatal-assert-fail.v"
 	Copy-modiifed from "inverters.v".
-	$Id: fatal-assert-fail.v,v 1.1 2009/10/21 00:04:41 fang Exp $
+	$Id: fatal-assert-fail.v,v 1.2 2010/04/06 00:08:29 fang Exp $
  */
 
 `timescale 1ns/1ps 
@@ -20,8 +20,8 @@ module TOP;
 	// prsim stuff
 	initial 
 	begin
-	// @haco@ inverters.haco-a
-		$prsim("inverters.haco-a");
+	// @haco@ inverters.haco-c
+		$prsim("inverters.haco-c");
 		$prsim_cmd("echo $start of simulation");
 		$prsim_cmd("watchall");
 

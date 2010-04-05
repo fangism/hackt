@@ -2,7 +2,7 @@
 	\file "initial-value.v"
 	Testing that initial values are propagated to prsim
 	upon connection with to_prsim.
-	$Id: initial-value.v,v 1.1 2009/12/18 23:25:05 fang Exp $
+	$Id: initial-value.v,v 1.2 2010/04/06 00:08:30 fang Exp $
  */
 
 `timescale 1ps/1ps 
@@ -19,8 +19,8 @@ module TOP;
 	// prsim stuff
 	initial 
 	begin
-	// @haco@ inverters.haco-a
-		$prsim("inverters.haco-a");
+	// @haco@ inverters.haco-c
+		$prsim("inverters.haco-c");
 		$prsim_cmd("echo $start of simulation");
 		$prsim_cmd("watchall");
 

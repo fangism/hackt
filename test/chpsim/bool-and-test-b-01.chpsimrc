@@ -1,6 +1,6 @@
 # "bool-and-test-b-01.chpsimrc"
-#	$Id: bool-and-test-b-01.chpsimrc,v 1.2 2007/02/26 22:01:10 fang Exp $
-# @haco@ bool-and-test-b.haco-a
+#	$Id: bool-and-test-b-01.chpsimrc,v 1.3 2010/04/05 23:59:58 fang Exp $
+# @haco@ bool-and-test-b.haco-c
 
 watchall-events
 timing per-event

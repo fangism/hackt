@@ -1,6 +1,6 @@
 # "bool-and-test-a-02-break.chpsimrc"
-#	$Id: bool-and-test-a-02-break.chpsimrc,v 1.4 2009/02/01 07:21:57 fang Exp $
-# @haco@ bool-and-test-a.haco-a
+#	$Id: bool-and-test-a-02-break.chpsimrc,v 1.5 2010/04/05 23:59:57 fang Exp $
+# @haco@ bool-and-test-a.haco-c
 
 print-event-header
 echo watching A.a[1]

@@ -5,6 +5,12 @@
 
 2010-04-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-72:
+	  Permanently removed main/alloc.{h,cc}
+	  Entire test suite updated to no longer reference allocated object 
+		files .haco-a, using .haco-c as substitute.
+
+
 	* HACKT-00-01-04-main-00-83-71:
 	  Fixed bug where back-end tools would fail to see global parameters
 		when auto-creating from a pre-created object file.

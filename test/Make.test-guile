@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.21 2009/10/02 17:36:28 fang Exp $
+#	$Id: Make.test-guile,v 1.22 2010/04/05 23:59:48 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -453,9 +453,9 @@ HAC_COMPILE_OBJECT_TARGETS += \
 HAC_CREATE_OBJECT_TARGETS += \
 	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco-c)
-HAC_ALLOC_OBJECT_TARGETS += \
-	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-a) \
-	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco-a)
+# HAC_ALLOC_OBJECT_TARGETS += \
+#	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-a) \
+#	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco-a)
 
 GUILE_RANDOM_BUILD_CHECK_LOCAL =
 if RANDOM_TESTS
@@ -467,12 +467,12 @@ GUILE_RANDOM_BUILD_CHECK_LOCAL += \
 endif
 
 build-check-local: \
-	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_GUILE_TEST_SCRIPTS_PASSES:=.hacscm-out) \
 	$(HACKT_GUILE_TEST_SCRIPTS_PASSES:=.hacscm-diff) \
 	$(HACKT_GUILE_TEST_SCRIPTS_FAILURES:=.hacscmfail-out) \
 	$(HACKT_GUILE_TEST_SCRIPTS_FAILURES:=.hacscmfail-diff) \
-	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES:=.hacchpsimscm-out) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES:=.hacchpsimscm-diff) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfail-out) \

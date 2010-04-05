@@ -1,6 +1,6 @@
 # "bitrouter-twin-test-a-04-trace.chpsimrc"
-#	$Id: bitrouter-twin-test-a-04.chpsimrc,v 1.2 2009/02/01 07:23:22 fang Exp $
-# @haco@ bitrouter-twin-test-a-04.haco-a
+#	$Id: bitrouter-twin-test-a-04.chpsimrc,v 1.3 2010/04/06 00:02:17 fang Exp $
+# @haco@ bitrouter-twin-test-a-04.haco-c
 # @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
 # @deps@ $(top_builddir)/lib/stdchpfn.la
 

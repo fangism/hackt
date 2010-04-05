@@ -1,5 +1,5 @@
 # "allow_weak_interference-01.prsimrc"
-# @haco@ allow_weak_interference.haco-a
+# @haco@ allow_weak_interference.haco-c
 
 # don't stop
 interference warn

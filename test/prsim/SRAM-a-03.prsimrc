@@ -1,5 +1,5 @@
 # "SRAM-a-03.prsimrc"
-# @haco@ SRAM-a.haco-a
+# @haco@ SRAM-a.haco-c
 
 weak-rules on
 fanin bl

@@ -1,6 +1,6 @@
 # "after-celem-base.prsimrc"
-#	$Id: after-celem-base.prsimrc,v 1.3 2008/03/17 23:07:09 fang Exp $
-# @haco@ after-celem.haco-a
+#	$Id: after-celem-base.prsimrc,v 1.4 2010/04/06 00:04:10 fang Exp $
+# @haco@ after-celem.haco-c
 # testing different delays on rules
 
 # this script should run silently by itself

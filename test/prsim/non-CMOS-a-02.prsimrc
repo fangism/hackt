@@ -1,5 +1,5 @@
 # "non-CMOS-a-02.prsimrc"
-# @haco@ non-CMOS-a.haco-a
+# @haco@ non-CMOS-a.haco-c
 # reduced bug test case for -O1
 
 rules .

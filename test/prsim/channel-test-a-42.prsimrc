@@ -1,5 +1,5 @@
 # "channel-test-a-42.prsimrc"
-# @haco@ channel-test-a.haco-a
+# @haco@ channel-test-a.haco-c
 # testing channel timing policies
 
 source channel-test-a-01.prsimrc

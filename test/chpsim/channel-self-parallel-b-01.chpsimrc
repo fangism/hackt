@@ -1,6 +1,6 @@
 # "channel-self-parallel-b-01.chpsimrc"
-#	$Id: channel-self-parallel-b-01.chpsimrc,v 1.2 2007/01/21 06:02:27 fang Exp $
-# @haco@ channel-self-parallel-b.haco-a
+#	$Id: channel-self-parallel-b-01.chpsimrc,v 1.3 2010/04/06 00:00:32 fang Exp $
+# @haco@ channel-self-parallel-b.haco-c
 
 # source channel-self-parallel-a-01.chpsimrc
 # not quite the same due to event graph structure

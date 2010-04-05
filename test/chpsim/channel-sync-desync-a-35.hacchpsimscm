@@ -1,9 +1,9 @@
 #!hacchpsimguile -b
 !#
 ;; "channel-sync-desync-a-27.hacchpsimscm"
-;;	$Id: channel-sync-desync-a-35.hacchpsimscm,v 1.2 2007/04/20 18:27:11 fang Exp $
+;;	$Id: channel-sync-desync-a-35.hacchpsimscm,v 1.3 2010/04/06 00:00:41 fang Exp $
 ;; vi: ft=scheme
-;; @haco@ channel-sync-desync-a.haco-a
+;; @haco@ channel-sync-desync-a.haco-c
 ;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
 
 ;; Testing critical path

@@ -1,5 +1,5 @@
 # "channel-test-g-02.prsimrc"
-# @haco@ channel-test-g.haco-a
+# @haco@ channel-test-g.haco-c
 
 source channel-test-g-01.prsimrc
 channel-show-all

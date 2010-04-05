@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.98 2010/04/02 22:19:26 fang Exp $
+#	$Id: Make.test-tail,v 1.99 2010/04/05 23:59:50 fang Exp $
 
 # for test that depend on pre-install plug-ins
 # don't forget to pass -dlopen to assist searching for pre-install dependencies
@@ -17,7 +17,7 @@ HACKT_FLATTEN_EXE = $(top_builddir)/src/hacpp
 HACKT_OBJDUMP_EXE = $(top_builddir)/src/hacobjdump
 HACKT_CREATE_EXE = $(top_builddir)/src/haccreate
 # deprecated: replace with sym-link
-HACKT_ALLOC_EXE = $(top_builddir)/src/hacalloc
+# HACKT_ALLOC_EXE = $(top_builddir)/src/hacalloc
 HACKT_CFLAT_EXE = $(top_builddir)/src/hflat
 HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
 HACKT_CFLAT_PRSIM_SEU_EXE = $(HACKT_CFLAT_PRSIM_EXE) -f SEU
@@ -128,7 +128,7 @@ ECHO_FILTERED = :
 endif
 
 # Each run-commands script should include the command to invoke
-# for loading the object, e.g.: hackt prsim foo.haco-a
+# for loading the object, e.g.: hackt prsim foo.haco-c
 # This rule should deduce the input object from the source script.  
 
 # to apply different compile flags to the same source file
@@ -165,7 +165,7 @@ BOGUS_TESTS =
 BOGUS_TARGETS =
 HAC_COMPILE_OBJECT_TARGETS =
 HAC_CREATE_OBJECT_TARGETS =
-HAC_ALLOC_OBJECT_TARGETS =
+# HAC_ALLOC_OBJECT_TARGETS =
 CHECK_SUMMARIES =
 
 # These included templates contain all the rules
@@ -205,8 +205,8 @@ TESTS +=
 
 HAC_OBJECT_TARGETS = \
 	$(HAC_COMPILE_OBJECT_TARGETS) \
-	$(HAC_CREATE_OBJECT_TARGETS) \
-	$(HAC_ALLOC_OBJECT_TARGETS)
+	$(HAC_CREATE_OBJECT_TARGETS)
+#	$(HAC_ALLOC_OBJECT_TARGETS)
 
 # build all tests, but don't run the resulting test scripts
 build-check-local: $(TESTS)
@@ -217,7 +217,7 @@ build-check-local: $(TESTS)
 # depending on the hackt dispatcher should cover everything
 $(HAC_COMPILE_OBJECT_TARGETS): $(HACKT_COMPILE_EXE)
 $(HAC_CREATE_OBJECT_TARGETS): $(HACKT_CREATE_EXE)
-$(HAC_ALLOC_OBJECT_TARGETS): $(HACKT_ALLOC_EXE)
+# $(HAC_ALLOC_OBJECT_TARGETS): $(HACKT_ALLOC_EXE)
 
 HACGUILE_TARGETS = \
 	$(HACKT_GUILE_TEST_SCRIPTS_BASES:=.hacscm-out) \

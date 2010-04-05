@@ -1,5 +1,5 @@
 # "weak-unstable-b-02.prsimrc"
-# @haco@ weak-unstable-b.haco-a
+# @haco@ weak-unstable-b.haco-c
 
 weak-rules on
 source weak-unstable-a-02.prsimrc

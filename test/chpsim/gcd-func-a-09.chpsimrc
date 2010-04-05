@@ -1,7 +1,7 @@
 # "gcd-func-a-09.chpsimrc"
-#	$Id: gcd-func-a-09.chpsimrc,v 1.2 2007/07/31 23:24:10 fang Exp $
+#	$Id: gcd-func-a-09.chpsimrc,v 1.3 2010/04/06 00:01:03 fang Exp $
 # Yes, use THIS object file
-# @haco@ missing_func-a.haco-a
+# @haco@ missing_func-a.haco-c
 
 # opening module in script instead of on command-line
 

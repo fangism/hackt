@@ -1,7 +1,7 @@
 /**
 	\file "inverters-delay.v"
 	Modifying default delay value.  
-	$Id: inverters-delay.v,v 1.1 2008/12/01 20:27:42 fang Exp $
+	$Id: inverters-delay.v,v 1.2 2010/04/06 00:08:33 fang Exp $
  */
 
 `timescale 1ns/1ps 
@@ -20,9 +20,9 @@ module TOP;
 	// prsim stuff
 	initial 
 	begin
-	// @haco@ inverters.haco-a
+	// @haco@ inverters.haco-c
 		$prsim_default_after(25);	// in prsim time units
-		$prsim("inverters.haco-a");
+		$prsim("inverters.haco-c");
 		$prsim_cmd("echo $start of simulation");
 		$prsim_cmd("timing after");
 		// $prsim_cmd("watchall");

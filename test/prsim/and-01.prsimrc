@@ -1,6 +1,6 @@
 # "and-01.prsimrc"
-#	$Id: and-01.prsimrc,v 1.2 2006/05/06 04:19:16 fang Exp $
-# @haco@ and.haco-a
+#	$Id: and-01.prsimrc,v 1.3 2010/04/06 00:04:16 fang Exp $
+# @haco@ and.haco-c
 # Testing basic AND gate
 
 watchall

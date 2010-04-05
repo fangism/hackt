@@ -1,5 +1,5 @@
 # "binary-gcd-seq-a-01.chpsimrc"
-# @haco@ binary-gcd-seq-a-01.haco-a
+# @haco@ binary-gcd-seq-a-01.haco-c
 
 # trace binary-gcd-seq-a-01.chpsimtrace
 source gcd-cycle-template.chpsimrc

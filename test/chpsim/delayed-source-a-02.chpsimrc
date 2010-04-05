@@ -1,6 +1,6 @@
 # "delayed-source-a-02-trace.chpsimrc"
-#	$Id: delayed-source-a-02.chpsimrc,v 1.2 2009/02/01 07:22:26 fang Exp $
-# @haco@ delayed-source-a.haco-a
+#	$Id: delayed-source-a-02.chpsimrc,v 1.3 2010/04/06 00:00:57 fang Exp $
+# @haco@ delayed-source-a.haco-c
 
 # trace delayed-source-a-02.chpsimtrace
 # this test seems redundant now...

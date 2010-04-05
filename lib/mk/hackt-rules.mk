@@ -1,6 +1,6 @@
 # "mk/hackt-rules.mk"
 #	vi: ft=automake
-#	$Id: hackt-rules.mk,v 1.6 2010/04/02 22:17:40 fang Exp $
+#	$Id: hackt-rules.mk,v 1.7 2010/04/05 23:59:37 fang Exp $
 # The rules portion of the hackt automake template.
 # The counterpart of this file is "mk/hackt-suffixes.am".
 # Include this file after suffixes have been included.  
@@ -30,34 +30,34 @@
 	ln -s $< $@
 #	$(HACKT_ALLOC_EXE) $< $@
 
-.haco-a.prs:
+.haco-c.prs:
 	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
 
-.haco-a.lvsprs:
+.haco-c.lvsprs:
 	$(HACKT_CFLAT_LVS_EXE) $< > $@
 
-.haco-a.sprs:
+.haco-c.sprs:
 	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
 
-.haco-a.lvssprs:
+.haco-c.lvssprs:
 	$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@
 
 # TODO: extract flags
-.haco-a.spice:
+.haco-c.spice:
 	$(HACKNET_EXE) $< > $@
 
 # note: does not use optimization
-.haco-a.prsimexpr:
+.haco-c.prsimexpr:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc $< > $@
 
-.haco-a.prsimexpr-O1:
+.haco-c.prsimexpr-O1:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc -O1 $< > $@
 
 # note: does not use optimization
-.haco-a.prs-dot:
+.haco-c.prs-dot:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct $< > $@
 
-.haco-a.prs-dot-O1:
+.haco-c.prs-dot-O1:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct -O1 $< > $@
 
 # assumes dot and friends are found in path
@@ -107,7 +107,7 @@
 .prs-fdp-fig.prs-fdp-pdf:
 	$(FIG2DEV) -Lpdf $< $@
 
-.haco-a.chpsim-event-dot:
+.haco-c.chpsim-event-dot:
 	@echo "$(CHPSIM_GRAPH_DOT_COMMAND) $< > $@" ; \
 	if $(CHPSIM_GRAPH_DOT_COMMAND) $< > $@.tmp ; then $(MV) $@.tmp $@ ; \
 	else $(RM) $@.tmp ; exit 1 ; \

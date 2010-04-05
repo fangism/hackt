@@ -2,8 +2,8 @@
 !#
 ;; "quad-bitrouter-mmss-test-03-trace.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: quad-bitrouter-mmss-test-03-trace.hacchpsimscm,v 1.1 2008/05/08 04:34:56 fang Exp $
-;; @haco@ quad-bitrouter-mmss-test-03.haco-a
+;;	$Id: quad-bitrouter-mmss-test-03-trace.hacchpsimscm,v 1.2 2010/04/06 00:02:24 fang Exp $
+;; @haco@ quad-bitrouter-mmss-test-03.haco-c
 ;; @chpsimtrace@ quad-bitrouter-mmss-test-03.chpsimtrace
 
 (define trace-name "quad-bitrouter-mmss-test-03.chpsimtrace")

@@ -15,8 +15,8 @@ module TOP;
 	wire j, k, z;
 	initial
 	begin
-	// @haco@ and_tree_reverse.haco-a
-		$prsim("and_tree_reverse.haco-a");
+	// @haco@ and_tree_reverse.haco-c
+		$prsim("and_tree_reverse.haco-c");
 		$prsim_cmd("echo $start of simulation");
 		$prsim_cmd("watchall");
 	end

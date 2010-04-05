@@ -1,6 +1,6 @@
 # "channel-test-b-29.prsimrc"
 # copy-modified from "channel-test-b-28.prsimrc"
-# @haco@ channel-test-b.haco-a
+# @haco@ channel-test-b.haco-c
 # bug fix test case -- expect fail
 
 source channel-test-b-01.prsimrc

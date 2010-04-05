@@ -1,5 +1,5 @@
 # "SRAM-b-03.prsimrc"
-# @haco@ SRAM-b.haco-a
+# @haco@ SRAM-b.haco-c
 
 echo repeating test with different random seeds
 source SRAM-b-02.prsimrc

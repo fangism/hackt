@@ -1,6 +1,6 @@
 # "channel-test-b-random-05.prsimrc"
 # copy-modified from "channel-test-b-21.prsimrc"
-# @haco@ channel-test-b.haco-a
+# @haco@ channel-test-b.haco-c
 # testing source/sinks on different channels
 # should be ok with random and don't care values
 

@@ -1,6 +1,6 @@
 # "init-source-sink-c-02.prsimrc"
-#	$Id: init-source-sink-c-02.prsimrc,v 1.1 2007/08/01 21:07:59 fang Exp $
-# @haco@ init-source-sink-c.haco-a
+#	$Id: init-source-sink-c-02.prsimrc,v 1.2 2010/04/06 00:03:33 fang Exp $
+# @haco@ init-source-sink-c.haco-c
 # testing stability of source-sink pair
 
 source stable-test-medium.prsimrc

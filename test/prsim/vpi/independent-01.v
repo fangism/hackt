@@ -1,7 +1,7 @@
 /**
 	\file "independent-01.v"
 	Completely decoupled simulations.  
-	$Id: independent-01.v,v 1.3 2008/11/29 23:46:29 fang Exp $
+	$Id: independent-01.v,v 1.4 2010/04/06 00:08:30 fang Exp $
 	Thanks to Ilya Ganusov for contributing this test.
  */
 
@@ -21,8 +21,8 @@ module TOP;
 	// prsim stuff
 	initial 
 	begin
-	// @haco@ oscillator.haco-a
-		$prsim("oscillator.haco-a");
+	// @haco@ oscillator.haco-c
+		$prsim("oscillator.haco-c");
 		$prsim_cmd("echo $start of simulation");
 		$prsim_cmd("echo-commands on");
 		$prsim_cmd("watchall");

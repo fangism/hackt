@@ -1,6 +1,6 @@
 # "do-while-countdown-03-watch.chpsimrc"
-#	$Id: do-while-countdown-03-watch.chpsimrc,v 1.4 2009/02/01 07:22:27 fang Exp $
-# @haco@ do-while-countdown.haco-a
+#	$Id: do-while-countdown-03-watch.chpsimrc,v 1.5 2010/04/06 00:00:58 fang Exp $
+# @haco@ do-while-countdown.haco-c
 
 cause
 watch-event 4

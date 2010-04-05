@@ -1,5 +1,5 @@
 # "weak-vs-weak-04.prsimrc"
-# @haco@ weak-vs-weak.haco-a
+# @haco@ weak-vs-weak.haco-c
 
 # [weak] ~a -> c+
 # [weak] b  -> c-

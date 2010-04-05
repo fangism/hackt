@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2010/04/02 22:20:06 fang Exp $
+#	$Id: Makefile.am,v 1.6 2010/04/06 00:02:56 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -60,7 +60,7 @@ HACGUILE_INSTALLCHECK_TEST_FILE = rb-tree-03.hacscm
 HACGUILE_INSTALLCHECK_COPY_FILES = \
 	$(srcdir)/$(HACGUILE_INSTALLCHECK_TEST_FILE) \
 	$(HACGUILE_INSTALLCHECK_TEST_FILE)-out \
-	empty.haco-a
+	empty.haco-c
 
 installcheck-hacguile: $(HACGUILE_INSTALLCHECK_COPY_FILES)
 	PATH=$(INSTALL_PATH_OVERRIDE) && \
@@ -68,7 +68,7 @@ installcheck-hacguile: $(HACGUILE_INSTALLCHECK_COPY_FILES)
 	$(mkdir_p) installtest && \
 	cp $(HACGUILE_INSTALLCHECK_COPY_FILES) installtest && \
 	pushd installtest && \
-	$(INSTALLED_HACGUILE) -b empty.haco-a \
+	$(INSTALLED_HACGUILE) -b empty.haco-c \
 		< $(HACGUILE_INSTALLCHECK_TEST_FILE) \
 		> $(HACGUILE_INSTALLCHECK_TEST_FILE)-out-inst && \
 	$(DIFF) -u $(HACGUILE_INSTALLCHECK_TEST_FILE)-out \

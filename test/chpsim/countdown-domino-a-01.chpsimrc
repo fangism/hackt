@@ -1,6 +1,6 @@
 # "countdown-domino-a-01.hac"
-#	$Id: countdown-domino-a-01.chpsimrc,v 1.2 2007/01/21 06:02:35 fang Exp $
-# @haco@ countdown-domino-a.haco-a
+#	$Id: countdown-domino-a-01.chpsimrc,v 1.3 2010/04/06 00:00:42 fang Exp $
+# @haco@ countdown-domino-a.haco-c
 
 queue
 get a

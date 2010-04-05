@@ -1,6 +1,6 @@
 # "cycle-source-a.prsimrc"
-#	$Id: cycle-source-a.prsimrc,v 1.2 2006/04/03 05:30:45 fang Exp $
-# @haco@ inv.haco-a
+#	$Id: cycle-source-a.prsimrc,v 1.3 2010/04/06 00:06:18 fang Exp $
+# @haco@ inv.haco-c
 # tests error handling of cyclic sources
 
 get a

@@ -1,6 +1,6 @@
 # "bool-or-test-b-01.chpsimrc"
-#	$Id: bool-or-test-b-01.chpsimrc,v 1.1 2007/08/09 05:49:43 fang Exp $
-# @haco@ bool-or-test-b.haco-a
+#	$Id: bool-or-test-b-01.chpsimrc,v 1.2 2010/04/06 00:00:06 fang Exp $
+# @haco@ bool-or-test-b.haco-c
 
 # because I'm lazy to copy
 source bool-or-test-a-01.chpsimrc

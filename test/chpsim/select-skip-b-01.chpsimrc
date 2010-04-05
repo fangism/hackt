@@ -1,6 +1,6 @@
 # "select-skip-b-01.chpsimrc"
-#	$Id: select-skip-b-01.chpsimrc,v 1.3 2007/05/04 03:38:36 fang Exp $
-# @haco@ select-skip-b.haco-a
+#	$Id: select-skip-b-01.chpsimrc,v 1.4 2010/04/06 00:01:31 fang Exp $
+# @haco@ select-skip-b.haco-c
 
 queue
 get a

@@ -1,6 +1,6 @@
 # "send-once-01.chpsimrc"
-#	$Id: send-once-01.chpsimrc,v 1.2 2007/01/21 06:03:53 fang Exp $
-# @haco@ send-once.haco-a
+#	$Id: send-once-01.chpsimrc,v 1.3 2010/04/06 00:01:32 fang Exp $
+# @haco@ send-once.haco-c
 
 queue
 get X

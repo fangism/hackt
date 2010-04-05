@@ -1,6 +1,6 @@
 # "bool-xor-test-a-01.chpsimrc"
-#	$Id: bool-xor-test-a-01.chpsimrc,v 1.2 2007/02/08 02:11:20 fang Exp $
-# @haco@ bool-xor-test-a.haco-a
+#	$Id: bool-xor-test-a-01.chpsimrc,v 1.3 2010/04/06 00:00:24 fang Exp $
+# @haco@ bool-xor-test-a.haco-c
 
 step
 get Out

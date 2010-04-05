@@ -1,6 +1,6 @@
 # "celem-05.prsimrc"
-# @haco@ celem.haco-a
-#	$Id: celem-05.prsimrc,v 1.2 2008/03/17 23:07:21 fang Exp $
+# @haco@ celem.haco-c
+#	$Id: celem-05.prsimrc,v 1.3 2010/04/06 00:04:26 fang Exp $
 # testing get commands
 
 # expect fail this test because checkpoint comparison will not

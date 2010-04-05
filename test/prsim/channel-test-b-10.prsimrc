@@ -1,6 +1,6 @@
 # "channel-test-b-10.prsimrc"
 # copy-modified from "channel-test-b-05.prsimrc"
-# @haco@ channel-test-b.haco-a
+# @haco@ channel-test-b.haco-c
 # @deps@ channel-dont-cares.txt channel-test-a-values-X.txt
 # testing source/sinks on different channels
 # adding expect, looped, with don't care values

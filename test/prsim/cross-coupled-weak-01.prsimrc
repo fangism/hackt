@@ -1,5 +1,5 @@
 # "cross-coupled-weak-01.prsimrc"
-# @haco@ cross-coupled-weak.haco-a
+# @haco@ cross-coupled-weak.haco-c
 
 weak-rules on
 source cross-coupled-01.prsimrc

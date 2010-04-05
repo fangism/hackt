@@ -1,5 +1,5 @@
 # "repeat-02.prsimrc"
-# @haco@ inv.haco-a
+# @haco@ inv.haco-c
 
 echo testing the repeat command... expect fail
 watchall

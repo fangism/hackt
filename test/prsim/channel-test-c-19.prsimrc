@@ -1,5 +1,5 @@
 # "channel-test-c-19.prsimrc"
-# @haco@ channel-test-c.haco-a
+# @haco@ channel-test-c.haco-c
 # reduced test case for a crash on vacuous Xs from channel sink
 
 source channel-test-c-01.prsimrc

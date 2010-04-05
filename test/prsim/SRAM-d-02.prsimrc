@@ -1,5 +1,5 @@
 # "SRAM-d-02.prsimrc"
-# @haco@ SRAM-d.haco-a
+# @haco@ SRAM-d.haco-c
 # bug: turning off strong pull-up did not yield to opposing weak pull-down
 
 # echo-commands on

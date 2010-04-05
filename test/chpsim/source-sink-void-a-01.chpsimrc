@@ -1,6 +1,6 @@
 # "source-sink-void-a-01.chpsimrc"
-#	$Id: source-sink-void-a-01.chpsimrc,v 1.4 2009/02/01 07:22:34 fang Exp $
-# @haco@ source-sink-void-a.haco-a
+#	$Id: source-sink-void-a-01.chpsimrc,v 1.5 2010/04/06 00:01:37 fang Exp $
+# @haco@ source-sink-void-a.haco-c
 
 # trace source-sink-void-a-01.chpsimtrace
 timing per-event

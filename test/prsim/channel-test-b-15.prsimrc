@@ -1,6 +1,6 @@
 # "channel-test-b-15.prsimrc"
 # copy-m0odified from "channel-test-b-02.prsimrc"
-# @haco@ channel-test-b.haco-a
+# @haco@ channel-test-b.haco-c
 # testing source/sinks on different channels
 
 source channel-test-b-01.prsimrc

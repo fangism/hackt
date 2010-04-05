@@ -1,6 +1,6 @@
 # "select-parallel-a-04.chpsimrc"
-#	$Id: select-parallel-a-04.chpsimrc,v 1.3 2007/05/04 03:38:33 fang Exp $
-# @haco@ select-parallel-a.haco-a
+#	$Id: select-parallel-a-04.chpsimrc,v 1.4 2010/04/06 00:01:30 fang Exp $
+# @haco@ select-parallel-a.haco-c
 
 echo testing new commands
 watchall-events

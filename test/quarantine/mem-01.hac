@@ -1,6 +1,6 @@
 /***
 	\file "mem-01.hac"
-	$Id: mem-01.hac,v 1.9 2009/10/27 18:22:08 fang Exp $
+	$Id: mem-01.hac,v 1.10 2010/04/06 00:08:39 fang Exp $
 REMARKS:
 For large arrays, unrolling dies running out of memory, need to investigate...
 Known to choke on 40 x 40
@@ -211,4 +211,9 @@ hohoho rum[10][10];
 // saves about 25% in space, at the cost of re-doing some work
 **/
 
+/** FILE SIZES as of HACKT-00-01-04-main-00-83-71
+after scalability merge (alloc-phase obsolete):
+-rw-r--r--  1 user    24376 Apr  5 13:32 mem-01.haco
+-rw-r--r--  1 user 19115418 Apr  5 13:32 mem-01.haco-c
+**/
 

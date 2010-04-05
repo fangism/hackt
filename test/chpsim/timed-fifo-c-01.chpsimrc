@@ -1,6 +1,6 @@
 # "timed-fifo-c-01.chpsimrc"
-#	$Id: timed-fifo-c-01.chpsimrc,v 1.3 2009/02/01 07:22:36 fang Exp $
-# @haco@ timed-fifo-c.haco-a
+#	$Id: timed-fifo-c-01.chpsimrc,v 1.4 2010/04/06 00:01:46 fang Exp $
+# @haco@ timed-fifo-c.haco-c
 
 timing per-event
 # trace timed-fifo-c-01.chpsimtrace

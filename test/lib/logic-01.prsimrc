@@ -1,6 +1,6 @@
 # "logic-01.prsimrc"
-#	$Id: logic-01.prsimrc,v 1.1 2006/07/26 19:27:47 fang Exp $
-# @haco@ logic-01.haco-a
+#	$Id: logic-01.prsimrc,v 1.2 2010/04/06 00:03:33 fang Exp $
+# @haco@ logic-01.haco-c
 # testing prsim on basic logic gates
 
 assert _nand4.o X

@@ -1,5 +1,5 @@
 # "invariant-a-09.prsimrc"
-# @haco@ invariant-a.haco-a
+# @haco@ invariant-a.haco-c
 
 invariant-fail fatal
 source invariant-a-02.prsimrc

@@ -1,6 +1,6 @@
 # "connect-038-b.chpsimrc"
-#	$Id: connect-038-b.chpsimrc,v 1.2 2007/01/21 06:05:03 fang Exp $
-# @haco@ connect-038.haco-a
+#	$Id: connect-038-b.chpsimrc,v 1.3 2010/04/06 00:03:46 fang Exp $
+# @haco@ connect-038.haco-c
 watchall-events
 get lecture
 get lecture.x

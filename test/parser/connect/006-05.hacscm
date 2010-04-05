@@ -1,9 +1,9 @@
 #!hacguile -b
 !#
 ;; "006-05.hacscm"
-;;	$Id: 006-05.hacscm,v 1.3 2007/04/20 18:27:48 fang Exp $
+;;	$Id: 006-05.hacscm,v 1.4 2010/04/06 00:03:55 fang Exp $
 ;; vi: ft=scheme
-;; @haco@ 006.haco-a
+;; @haco@ 006.haco-c
 
 ; who is int[1]?
 (hac:reference-index->string '(int . 1))

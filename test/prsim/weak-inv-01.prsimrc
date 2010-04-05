@@ -1,5 +1,5 @@
 # "weak-inv-01.prsimrc"
-# @haco@ weak-inv.haco-a
+# @haco@ weak-inv.haco-c
 echo compare with "inv-22.prsimrc"
 
 weak-rules on

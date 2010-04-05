@@ -1,5 +1,5 @@
 # "alternator-wchb_tree_fifo-e1of2-05.prsimrc"
-# @haco@ alternator-wchb_tree_fifo-e1of2.haco-a
+# @haco@ alternator-wchb_tree_fifo-e1of2.haco-c
 
 channel L e:0 :0 d:2
 channel R e:0 :0 d:2

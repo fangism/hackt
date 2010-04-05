@@ -1,6 +1,6 @@
 # "or-01.prsimrc"
-#	$Id: or-01.prsimrc,v 1.2 2006/05/06 04:19:30 fang Exp $
-# @haco@ or.haco-a
+#	$Id: or-01.prsimrc,v 1.3 2010/04/06 00:07:38 fang Exp $
+# @haco@ or.haco-c
 # Testing basic OR gate
 
 watchall

@@ -1,6 +1,6 @@
 # "expr-limit-a-01.prsimrc"
-#	$Id: expr-limit-a-01.prsimrc,v 1.2 2007/09/13 20:38:22 fang Exp $
-# @haco@ expr-limit-a.haco-a
+#	$Id: expr-limit-a-01.prsimrc,v 1.3 2010/04/06 00:06:26 fang Exp $
+# @haco@ expr-limit-a.haco-c
 # testing for state allocation only
 
 # do nothing

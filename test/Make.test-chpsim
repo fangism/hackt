@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.27 2010/01/05 22:52:32 fang Exp $
+#	$Id: Make.test-chpsim,v 1.28 2010/04/05 23:59:46 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -67,10 +67,10 @@ HACKT_CHPSIM_CLEAN_IGNORE_PATTERNS = \
 
 AUTO_IGNORE += $(HACKT_CHPSIM_CLEAN_IGNORE_PATTERNS)
 
-.haco-a.chpsimallocdump:
+.haco-c.chpsimallocdump:
 	$(CHPSIM_ALLOC_DUMP) $< > $@
 
-.haco-a.chpsim-event-dot:
+.haco-c.chpsim-event-dot:
 	@$(ECHO) "$(CHPSIM_GRAPH_DOT) $< > $@" ; \
 	if $(CHPSIM_GRAPH_DOT) $< > $@.tmp ; then $(MV) $@.tmp $@ ; \
 	else $(RM) $@.tmp ; exit 1 ; \
@@ -488,9 +488,9 @@ HAC_CREATE_OBJECT_TARGETS += \
 	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.haco-c)
 
-HAC_ALLOC_OBJECT_TARGETS += \
-	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco-a) \
-	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.haco-a)
+# HAC_ALLOC_OBJECT_TARGETS += \
+#	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco-a) \
+#	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.haco-a)
 
 
 CHPSIM_RANDOM_BUILD_CHECK_LOCAL =
@@ -504,11 +504,11 @@ CHPSIM_RANDOM_BUILD_CHECK_LOCAL += \
 endif
 
 build-check-local: \
-	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.chpsimallocdump) \
 	$(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsim-event-dot) \
 	$(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsimdottest) \
-	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-out) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-out-filter) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-diff) \

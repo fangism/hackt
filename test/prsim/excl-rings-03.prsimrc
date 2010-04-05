@@ -1,6 +1,6 @@
 # "excl-rings-03.prsimrc"
-#	$Id: excl-rings-03.prsimrc,v 1.2 2006/05/06 04:19:24 fang Exp $
-# @haco@ excl-rings.haco-a
+#	$Id: excl-rings-03.prsimrc,v 1.3 2010/04/06 00:06:25 fang Exp $
+# @haco@ excl-rings.haco-c
 # testing excl rings features
 
 watchall

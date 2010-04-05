@@ -1,5 +1,5 @@
 # "SRAM-a-05.prsimrc"
-# @haco@ SRAM-a.haco-a
+# @haco@ SRAM-a.haco-c
 # testing inactive write
 
 watch bl _bl

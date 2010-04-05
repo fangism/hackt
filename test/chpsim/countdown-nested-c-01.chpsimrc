@@ -1,6 +1,6 @@
 # "countdown-nested-c-01.chpsimrc"
-#	$Id: countdown-nested-c-01.chpsimrc,v 1.2 2007/01/21 06:03:07 fang Exp $
-# @haco@ countdown-nested-c.haco-a
+#	$Id: countdown-nested-c-01.chpsimrc,v 1.3 2010/04/06 00:00:53 fang Exp $
+# @haco@ countdown-nested-c.haco-c
 
 queue
 get c

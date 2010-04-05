@@ -1,5 +1,5 @@
 @c "hackt/legacy.texi"
-@c $Id: legacy.texi,v 1.6 2009/10/16 20:38:42 fang Exp $
+@c $Id: legacy.texi,v 1.7 2010/04/05 23:59:37 fang Exp $
 
 @node Legacy Compatibility
 @chapter Legacy Compatibility
@@ -34,9 +34,9 @@ Modes and options are explained below.
 Instead of reading in the source file directly, it reads a compiled
 object file.  
 (Later, we may add an option to read a source file directly.)
-If the object file is not already in the allocated state
-(@ref{Allocate}), then it will automatically
-invoke the allocation phase before doing its real work.  
+If the object file is not already in the created state
+(@ref{Create}), then it will automatically
+invoke the create phase before doing its real work.  
 The options and modes are described in 
 @ref{CFLAT Options}.  
 
