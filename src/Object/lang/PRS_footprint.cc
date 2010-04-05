@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.29 2010/04/02 22:18:32 fang Exp $
+	$Id: PRS_footprint.cc,v 1.30 2010/04/05 23:48:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -155,7 +155,7 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 	const size_t one __ATTRIBUTE_UNUSED__ = e.size();
 	const char type = e.get_type();
 	switch (type) {
-		case PRS_LITERAL_TYPE_ENUM:
+		case PRS_LITERAL_TYPE_ENUM: {
 			STACKTRACE_DUMP_PRINT("Literal ");
 			INVARIANT(one == 1);
 			const size_t only = e.only();
@@ -182,11 +182,13 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			o << '>';
 			}
 			break;
-		case PRS_NOT_EXPR_TYPE_ENUM:
+		}
+		case PRS_NOT_EXPR_TYPE_ENUM: {
 			STACKTRACE_DUMP_PRINT("Not ");
 			INVARIANT(one == 1);
 			dump_expr(ep[e.only()], o << '~', np, ep, type);
 			break;
+		}
 		case PRS_AND_EXPR_TYPE_ENUM:
 			// yes, fall-through
 		case PRS_OR_EXPR_TYPE_ENUM: {
@@ -224,11 +226,12 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			if (paren) o << ')';
 			break;
 		}
-		case PRS_NODE_TYPE_ENUM:
+		case PRS_NODE_TYPE_ENUM: {
 			STACKTRACE_DUMP_PRINT("Node ");
 			INVARIANT(one == 1);
 			dump_expr(ep[e.only()], o, np, ep, type);
 			break;
+		}
 		default:
 			ICE(cerr, 
 			cerr << "Invalid PRS expr type enumeration: "

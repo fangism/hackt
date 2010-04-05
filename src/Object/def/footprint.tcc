@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.3 2010/04/02 22:18:14 fang Exp $
+	$Id: footprint.tcc,v 1.4 2010/04/05 23:48:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -12,6 +12,8 @@
 #include "Object/def/footprint.h"
 #include "Object/inst/instance_pool.h"	// for pool_private_map_entry_type
 #include "Object/inst/state_instance.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/inst/instance_alias_info.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/common/dump_flags.h"
 #include "util/stacktrace.h"

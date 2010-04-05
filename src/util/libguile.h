@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.h"
-	$Id: libguile.h,v 1.7 2008/11/23 17:54:49 fang Exp $
+	$Id: libguile.h,v 1.8 2010/04/05 23:48:36 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -18,6 +18,11 @@
 // guile-1.6 header defect (-Wunused)
 #ifndef	HAVE_SYS_STDTYPES_H
 #define	HAVE_SYS_STDTYPES_H		0
+#endif
+
+// guile-1.8 libguile/inline.h header defect, under C++, use C90
+#ifndef	__STDC_VERSION__
+#define	__STDC_VERSION__	199001L
 #endif
 
 #include <cstdio>		// because <gmp.h> needs std::FILE
