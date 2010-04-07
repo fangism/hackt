@@ -1,14 +1,14 @@
 /**
 	\file "Object/lang/cflat_visitee.h"
 	TODO: rename and organize files?
-	$Id: cflat_visitee.h,v 1.3 2010/04/02 22:18:37 fang Exp $
+	$Id: cflat_visitee.h,v 1.4 2010/04/07 00:12:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITEE_H__
 #define	__HAC_OBJECT_LANG_CFLAT_VISITEE_H__
 
 #include "util/visitee.h"
-#include "Object/devel_switches.h"
+// #include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {

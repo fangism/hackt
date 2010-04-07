@@ -1,6 +1,6 @@
 /**
 	\file "sim/state_base.cc"
-	$Id: state_base.cc,v 1.4 2010/04/02 22:19:05 fang Exp $
+	$Id: state_base.cc,v 1.5 2010/04/07 00:13:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -87,7 +87,7 @@ state_base::dump_frame_cache(ostream& o) const {
 /**
 	Only returns the frame portion of the context.
  */
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION && !CACHE_GLOBAL_FOOTPRINT_FRAMES
+#if !CACHE_GLOBAL_FOOTPRINT_FRAMES
 footprint_frame
 #else
 const footprint_frame&
@@ -110,7 +110,6 @@ state_base::get_footprint_frame(const size_t pid) const {
 const state_base::cache_entry_type&
 state_base::get_global_context(const size_t pid) const {
 //	cerr << "<pid:" << pid << '>' << endl;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 //	STACKTRACE_VERBOSE;
 //	STACKTRACE_INDENT_PRINT("pid = " << pid << endl);
 	// special case for top-level
@@ -164,9 +163,6 @@ state_base::get_global_context(const size_t pid) const {
 #endif
 	return ret.get_frame_map<bool_tag>();	// copy
 #endif	// CACHE_GLOBAL_FOOTPRINT_FRAME
-#else
-	return get_module().get_state_manager().get_bool_frame_map(pid);
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -191,16 +187,12 @@ state_base::dump_memory_usage(ostream& o) const {
 	// TODO: report definitions' footprints' memory usage
 	// TODO: sum of frame sizes, accumulate over all entries
 	// tree-cache: ability to gather pointers to all entries?
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	typedef	frame_cache_type		value_type;
 	const size_t n = frame_cache.size();
 	o << "frame-cache: (" << n << " * " << sizeof_tree_node(value_type)
 		<< " B/entry) = " << n * sizeof_tree_node(value_type)
 		<< " B" << endl;
 	return o;
-#else
-	return mod.get_state_manager().dump_memory_usage(o);
-#endif
 }
 
 //=============================================================================

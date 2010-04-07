@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.11 2010/04/02 22:18:51 fang Exp $
+	$Id: canonical_type.h,v 1.12 2010/04/07 00:12:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -8,7 +8,6 @@
 
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/type/canonical_type_base.h"
-#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 #include "util/memory/excl_ptr.h"
 
@@ -21,9 +20,6 @@ class subinstance_manager;
 class footprint;
 class footprint_frame;
 class state_manager;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-class port_member_context;
-#endif
 using util::memory::never_ptr;
 using util::good_bool;
 
@@ -184,13 +180,7 @@ struct canonical_type_footprint_frame_policy {
 	static
 	good_bool
 	initialize_and_assign(const canonical_type<DefType>&,
-			const footprint_frame&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			, const state_manager&, 
-			const port_member_context&
-			, const size_t
-#endif
-			) {
+			const footprint_frame&) {
 		return good_bool(true);
 	}
 };      // end struct initialize_footprint_frame_policy
@@ -201,13 +191,7 @@ struct canonical_type_footprint_frame_policy<process_definition> {
 
 	static
 	good_bool
-	initialize_and_assign(const canonical_process_type&, footprint_frame&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, state_manager&,
-		const port_member_context&
-		, const size_t
-#endif
-		);
+	initialize_and_assign(const canonical_process_type&, footprint_frame&);
 };      // end struct initialize_footprint_frame_policy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -217,13 +201,7 @@ struct canonical_type_footprint_frame_policy<user_def_datatype> {
 	static
 	good_bool
 	initialize_and_assign(const canonical_user_def_data_type&,
-		footprint_frame&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, state_manager&,
-		const port_member_context&
-		, const size_t
-#endif
-		);
+		footprint_frame&);
 };      // end struct initialize_footprint_frame_policy
 
 //-----------------------------------------------------------------------------

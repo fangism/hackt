@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle_footprint.tcc"
 	This contains select methods to export to Object/def/footprint.cc
-	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.8 2010/04/02 22:18:22 fang Exp $
+	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.9 2010/04/07 00:12:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_FOOTPRINT_TCC__
@@ -14,7 +14,6 @@
 #include "Object/inst/instance_scalar.h"
 #include "Object/inst/port_formal_array.h"
 #include "Object/inst/port_actual_collection.h"
-#include "Object/port_context.h"
 #include "Object/devel_switches.h"
 #include "util/stacktrace.h"
 
@@ -84,30 +83,6 @@ struct instance_collection_pool_wrapper<T>::scope_alias_collector {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Functor for assigning footprint frame IDs.  
- */
-template <class T>
-struct instance_collection_pool_wrapper<T>::footprint_frame_assigner {
-	footprint_frame&		ff;
-	const port_member_context&	pmc;
-
-	footprint_frame_assigner(footprint_frame& f, 
-		const port_member_context& p) : ff(f), pmc(p) { }
-
-	void
-	operator () (const T& t) {
-		// recall: port-formal is 1-based indexed
-		const size_t pfp = t.get_placeholder()->is_port_formal();
-		if (pfp) {
-			t.assign_footprint_frame(ff, pmc.member_array[pfp -1]);
-		}
-	}
-};
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
 struct instance_collection_pool_wrapper<T>::substructure_finalizer {
 	const unroll_context&	context;
@@ -152,18 +127,6 @@ instance_collection_pool_wrapper<T>::collect_scope_aliases(
 	const const_iterator b(this->pool.begin()), e(this->pool.end());
 	for_each(b, e, scope_alias_collector(pt));
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-template <class T>
-void
-instance_collection_pool_wrapper<T>::assign_footprint_frame(
-		footprint_frame& ff, const port_member_context& pmc) const {
-	STACKTRACE_VERBOSE;
-	const const_iterator b(this->pool.begin()), e(this->pool.end());
-	for_each(b, e, footprint_frame_assigner(ff, pmc));
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
@@ -282,37 +245,6 @@ instance_collection_pool_bundle<Tag>::finalize_substructure_aliases(
 //		::finalize_substructure_aliases(c);
 	);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Only visit port-formals.  
- */
-template <class Tag>
-void
-instance_collection_pool_bundle<Tag>::assign_footprint_frame(
-		footprint_frame& ff, const port_member_context& pmc) const {
-	STACKTRACE_VERBOSE;
-	instance_collection_pool_wrapper<instance_array<Tag, 0> >
-		::assign_footprint_frame(ff, pmc);
-#if 0
-	instance_collection_pool_wrapper<instance_array<Tag, 1> >
-		::assign_footprint_frame(ff, pmc);
-	instance_collection_pool_wrapper<instance_array<Tag, 2> >
-		::assign_footprint_frame(ff, pmc);
-	instance_collection_pool_wrapper<instance_array<Tag, 3> >
-		::assign_footprint_frame(ff, pmc);
-	instance_collection_pool_wrapper<instance_array<Tag, 4> >
-		::assign_footprint_frame(ff, pmc);
-#endif
-	instance_collection_pool_wrapper<port_formal_array<Tag> >
-		::assign_footprint_frame(ff, pmc);
-#if 0
-	instance_collection_pool_wrapper<port_actual_collection<Tag> >
-		::assign_footprint_frame(ff, pmc);
-#endif
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

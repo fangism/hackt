@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint_expr.h"
-	$Id: PRS_footprint_expr.h,v 1.9 2010/04/02 22:18:34 fang Exp $
+	$Id: PRS_footprint_expr.h,v 1.10 2010/04/07 00:12:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
@@ -15,7 +15,6 @@
 #include "Object/lang/cflat_visitee.h"
 #include "Object/lang/generic_attribute.h"
 #include "util/memory/count_ptr.h"
-#include "Object/devel_switches.h"
 
 #include "sim/prsim/devel_switches.h"
 #if PRSIM_UNIFY_GRAPH_STRUCTURES
@@ -24,9 +23,7 @@
 
 namespace HAC {
 namespace entity {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 struct global_entry_context;
-#endif
 namespace PRS {
 using std::istream;
 using std::ostream;

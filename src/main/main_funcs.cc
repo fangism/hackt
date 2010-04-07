@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.28 2010/04/02 22:18:58 fang Exp $
+	$Id: main_funcs.cc,v 1.29 2010/04/07 00:13:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -466,14 +466,12 @@ parse_and_create_complete_process_type(const char* _type, const module& m) {
 		cerr << "Error resolving process type parameters." << endl;
 		return return_type(NULL);
 	}
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// oops: isn't this supposed to create()?
 	const entity::canonical_process_type cpt(rpt->make_canonical_type());
 	if (!cpt.create_definition_footprint(m.get_footprint()).good) {
 		cerr << "Error instantiating type \'" << _type << "\'." << endl;
 		return return_type(NULL);
 	}
-#endif
 	return rpt;
 }
 

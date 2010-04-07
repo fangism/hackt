@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.28 2010/04/02 22:18:21 fang Exp $
+	$Id: instance_alias_info.h,v 1.29 2010/04/07 00:12:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -23,10 +23,6 @@ namespace HAC {
 namespace entity {
 struct dump_flags;
 class footprint;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-class port_collection_context;
-class port_member_context;
-#endif
 class instance_alias_info_actuals;
 struct alias_visitor;
 struct alias_printer;
@@ -366,31 +362,10 @@ public:
 
 	/// called by top-level
 	good_bool
-	allocate_assign_subinstance_footprint_frame(footprint_frame&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, state_manager&, 
-		const port_member_context&
-		, const size_t
-#endif
-		) const;
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	/// called recursively
-	void
-	assign_footprint_frame(footprint_frame&,
-		const port_collection_context&, const size_t) const;
-
-	void
-	construct_port_context(port_collection_context&, 
-		const footprint_frame&, const size_t) const;
-#endif
+	allocate_assign_subinstance_footprint_frame(footprint_frame&) const;
 
 private:
 	using substructure_parent_type::__allocate_subinstance_footprint;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-public:
-	using substructure_parent_type::__construct_port_context;
-#endif
 
 public:
 	static

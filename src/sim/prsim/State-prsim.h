@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.34 2010/04/02 22:19:19 fang Exp $
+	$Id: State-prsim.h,v 1.35 2010/04/07 00:13:09 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -634,7 +634,7 @@ public:
 	string
 	get_process_canonical_name(const process_index_type) const;
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION && !CACHE_GLOBAL_FOOTPRINT_FRAMES
+#if !CACHE_GLOBAL_FOOTPRINT_FRAMES
 	footprint_frame_map_type
 #else
 	const footprint_frame_map_type&

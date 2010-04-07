@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.22 2010/04/02 22:19:13 fang Exp $
+	$Id: State.cc,v 1.23 2010/04/07 00:13:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -22,7 +22,6 @@
 #include "sim/random_time.h"
 #include "sim/chpsim/Trace.h"
 #include "Object/module.h"
-#include "Object/state_manager.h"
 #include "Object/global_channel_entry.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
@@ -32,10 +31,8 @@
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_footprint.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_pool.h"
-#endif
 
 #include "common/TODO.h"
 #include "sim/ISE.h"
@@ -137,9 +134,7 @@ using entity::META_TYPE_CHANNEL;
 using entity::META_TYPE_PROCESS;
 using entity::canonical_fundamental_chan_type_base;
 using entity::expr_dump_context;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 using entity::state_instance;
-#endif
 using std::copy;
 using std::back_inserter;
 using std::mem_fun_ref;
@@ -174,13 +169,8 @@ struct State::recheck_transformer {
 	explicit
 	recheck_transformer(this_type& s,
 		const event_index_type cei, const size_t cti) : 
-		state(s), 
-		context(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			state.mod.get_state_manager(), 
-			state.mod.get_footprint(),
-#endif
-			state),
+			state(s), 
+			context(state),
 			cause_event_id(cei), cause_trace_id(cti)
 		{ }
 
@@ -199,14 +189,9 @@ struct State::recheck_transformer {
 		event_type& e(state.event_pool[ei]);
 		const size_t pid = state.get_process_id(ei);
 		STACKTRACE_INDENT_PRINT("in process " << pid << endl);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		context.set_global_context(state.get_global_context(pid));
 		// no need for global_offset
-#endif
-		context.set_event(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			state, 
-#endif
+		context.set_event(state, 
 			e, pid, state.get_offset_from_pid(pid));
 		// To accomodate blocking-sends that wake-up probes
 		// we must prevent self-wake up in this corner case.
@@ -312,13 +297,7 @@ State::dump_event_table_header(ostream& o) {
  */
 State::State(const module& m) : 
 		state_base(m, "chpsim> "), 
-		instances(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			m.get_footprint()
-#else
-			m.get_state_manager()
-#endif
-			), 
+		instances(m.get_footprint()), 
 		event_pool(), 
 		global_root_event(NULL, entity::CHP::EVENT_CONCURRENT_FORK),
 		global_event_to_pid(),
@@ -352,14 +331,9 @@ State::State(const module& m) :
 	event_type& init(event_pool[0]);
 	const footprint& topfp(mod.get_footprint());
 	init.make_global_root(&global_root_event);	// use the FORK, Luke...
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const state_instance<process_tag>::pool_type&
 		pp(topfp.get_instance_pool<process_tag>());
 	const size_t procs = pp.total_entries() +1;	// count top-level as 0
-#else
-	const state_manager& sm(mod.get_state_manager());
-	const size_t procs = sm.get_pool<process_tag>().size();
-#endif
 	pid_to_offset.resize(procs +1);
 	// use pid_to_offset[procs] to represent the spawn event (offset 0)
 	pid_to_offset[procs] = std::make_pair(0, 1);
@@ -370,13 +344,8 @@ State::State(const module& m) :
 
 	size_t i = 1;
 	for ( ; i<procs; ++i) {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_instance<process_tag>&
 			p(topfp.get_instance<process_tag>(i-1));	// 0-based
-#else
-		const global_entry<process_tag>&
-			p(sm.get_pool<process_tag>()[i]);
-#endif
 		const footprint& fp(*p._frame._footprint);
 #if ENABLE_STACKTRACE
 		fp.dump_type(STACKTRACE_INDENT_PRINT("type: ")) << endl;
@@ -608,11 +577,7 @@ State::step(void) {
 	STACKTRACE_VERBOSE;
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	nonmeta_context c(*this);
-#else
-	nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), *this);
-#endif
 	std::pair<bool, bool>	status(false, false);
 do {
 	// TODO: check immediate event FIFO first
@@ -651,7 +616,6 @@ do {
 	const size_t pid = get_process_id(ei);
 	const event_index_type offset = get_offset_from_pid(pid);
 	DEBUG_STEP_PRINT("in process " << pid << endl);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// pid could be one-past-the-end to represent the global spawn event
 	if (LIKELY(valid_process_id(pid))) {
 		c.set_global_context(get_global_context(pid));
@@ -660,12 +624,8 @@ do {
 #if ENABLE_STACKTRACE
 	c.dump_context(STACKTRACE_INDENT_PRINT("context: "));
 #endif
-#endif
-	c.set_event(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		*this, 
-#endif
-		ev, pid, offset);	// not nonmeta_context::event_setter!!!
+	c.set_event(*this, ev, pid, offset);
+	// not nonmeta_context::event_setter!!!
 	// TODO: re-use this nonmeta-context in the recheck_transformer
 	// TODO: unify check and execute into "chexecute"
 	try {
@@ -1335,16 +1295,11 @@ State::make_process_dump_context(const node_index_type pid) const {
 	// -1 because we allocated one more pid slot for the
 	// global spawn event.
 	if (pid && valid_process_id(pid)) {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		std::ostringstream canonical_name;
 		top_context.get_top_footprint().
 			dump_canonical_name<process_tag>(
 				canonical_name, pid -1);
 		return expr_dump_context(canonical_name.str());
-#else
-		return mod.get_state_manager().make_process_dump_context(
-			mod.get_footprint(), pid);
-#endif
 	} else {
 		return expr_dump_context::default_value;
 	}
@@ -1559,17 +1514,10 @@ State::dump_check_event_queue(ostream& o) const {
  */
 ostream&
 State::dump_struct(ostream& o) const {
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const state_manager& sm(mod.get_state_manager());
-#endif
 	const entity::footprint& topfp(mod.get_footprint());
 {
 	o << "Variables: " << endl;
-	instances.dump_struct(o, 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		sm, 
-#endif
-		topfp);
+	instances.dump_struct(o, topfp);
 	o << endl;
 }
 // CHP graph structures (non-hierarchical)
@@ -1618,19 +1566,16 @@ State::dump_struct(ostream& o) const {
 ostream&
 State::dump_struct_dot(ostream& o, const graph_options& g) const {
 	// should be event_type::local_event_type
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
 	static const char* node_prefix = local_event::node_prefix;
-#endif
 
 	o << "digraph G {" << endl;
 	// consider using global_entry_context_base instead...
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const state_manager& sm(mod.get_state_manager());
 	const footprint& topfp(mod.get_footprint());
 {
 if (g.show_instances) {
 	o << "# Instances: " << endl;
-	sm.dump_dot_instances(o, topfp);
+	topfp.dump_non_process_dot_nodes(o);
+	// reminder: label enumerations are 1-based
 }
 	o << "# Events: " << endl;
 	const event_index_type es = event_pool.size();
@@ -1641,7 +1586,6 @@ if (g.show_instances) {
 {
 	// the last event was reserved for event[0], the global root event
 	const size_t mp = pid_to_offset.size() -1;
-	const global_entry_pool<process_tag>& ppool(sm.get_pool<process_tag>());
 for ( ; pid < mp; ++pid) {
 	const size_t max = pid_to_offset[pid].second;
 	if (max) {
@@ -1650,7 +1594,7 @@ for ( ; pid < mp; ++pid) {
 	if (pid && g.process_event_clusters) {
 		o << "subgraph cluster" << pid << " {" << endl;
 		std::ostringstream oss;
-		ppool[pid].dump_canonical_name(oss, topfp, sm);
+		topfp.dump_canonical_name<process_tag>(oss, pid-1);
 		o << "label=\"pid=" << pid << ": " << oss.str() << "\";"
 			<< endl;
 	} else {
@@ -1675,10 +1619,10 @@ if (g.show_channels) {
 	// TODO: can this re-used as a guile-routine?
 	o << "# Channels:" << endl;
 	typedef std::set<event_index_type>	event_id_set_type;
-	const global_entry_pool<channel_tag>&
-		cpool(sm.get_pool<channel_tag>());
+	const size_t cs =
+		topfp.get_instance_pool<channel_tag>().total_entries() +1;
 	vector<event_id_set_type>
-		send_map(cpool.size()), recv_map(cpool.size());
+		send_map(cs), recv_map(cs);
 	event_index_type i = 0;		// FIRST_VALID_EVENT
 	// collect communicating channels over all events
 	for ( ; i<es; ++i) {
@@ -1706,14 +1650,14 @@ if (g.show_channels) {
 	o << "edge [style=dashed];" << endl;
 	// keep arrowheads? constraint=false?
 	i = 1;	// FIRST_VALID_GLOBAL_NODE
-	for ( ; i<cpool.size(); ++i) {
+	for ( ; i<cs; ++i) {
 		const event_id_set_type& ss(send_map[i]), rs(recv_map[i]);
 		event_id_set_type::const_iterator
 			si(ss.begin()), se(ss.end()),
 			ri(rs.begin()), re(rs.end());
 		// get channel name
 		std::ostringstream oss;
-		cpool[i].dump_canonical_name(oss, topfp, sm);
+		topfp.dump_canonical_name<channel_tag>(oss, i-1);
 		// emit a node if there are multiple senders or receivers
 		// also if sender/receiver set is empty
 		if (ss.size() != 1 || rs.size() != 1) {
@@ -1738,7 +1682,6 @@ if (g.show_channels) {
 	}	// end for all channels
 }	// end if show_channels
 }
-#endif
 	o << "}" << endl;
 	return o;
 }	// end dump_struct_dot
@@ -1770,66 +1713,38 @@ ostream&
 State::print_instance_name_value(ostream& o,
 		const global_indexed_reference& g) const {
 	const entity::footprint& topfp(mod.get_footprint());
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	INVARIANT(g.second);
 	const size_t id0 = g.second -1;
-#else
-	const state_manager& sm(mod.get_state_manager());
-#endif
 	switch (g.first) {
 	case META_TYPE_BOOL: {
 		o << "bool ";
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		topfp.dump_canonical_name<bool_tag>(o, id0);
-#else
-		sm.get_pool<bool_tag>()[g.second]
-			.dump_canonical_name(o, topfp, sm);
-#endif
 		o << " = ";
 		o << size_t(instances.get_pool<bool_tag>()[g.second].value);
 		break;
 	}
 	case META_TYPE_INT: {
 		o << "int ";
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		topfp.dump_canonical_name<int_tag>(o, id0);
-#else
-		sm.get_pool<int_tag>()[g.second]
-			.dump_canonical_name(o, topfp, sm);
-#endif
 		o << " = ";
 		o << instances.get_pool<int_tag>()[g.second].value;
 		break;
 	}
 	case META_TYPE_ENUM: {
 		o << "enum ";
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		topfp.dump_canonical_name<enum_tag>(o, id0);
-#else
-		sm.get_pool<enum_tag>()[g.second]
-			.dump_canonical_name(o, topfp, sm);
-#endif
 		o << " = ";
 		o << instances.get_pool<enum_tag>()[g.second].value;
 		break;
 	}
 	case META_TYPE_CHANNEL: {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_instance<channel_tag>&
 			c(topfp.get_instance<channel_tag>(id0));
-#else
-		const global_entry<channel_tag>&
-			c(sm.get_pool<channel_tag>()[g.second]);
-#endif
 		const ChannelState&
 			nc(instances.get_pool<channel_tag>()[g.second]);
 		const canonical_fundamental_chan_type_base& t(*c.channel_type);
 		t.dump(o) << ' ';
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		topfp.dump_canonical_name<channel_tag>(o, id0);
-#else
-		c.dump_canonical_name(o, topfp, sm);
-#endif
 		o << " = ";
 		nc.dump(o, t);	// print the channel data using type info
 		break;
@@ -1851,45 +1766,26 @@ ostream&
 State::print_instance_name_subscribers(ostream& o,
 		const global_indexed_reference& g) const {
 	const entity::footprint& topfp(mod.get_footprint());
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	INVARIANT(g.second);
 	const size_t id0 = g.second-1;
-#else
-	const state_manager& sm(mod.get_state_manager());
-#endif
 	switch (g.first) {
 	case META_TYPE_BOOL: {
 		o << "bool ";
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		topfp.dump_canonical_name<bool_tag>(o, id0);
-#else
-		sm.get_pool<bool_tag>()[g.second]
-			.dump_canonical_name(o, topfp, sm);
-#endif
 		o << " : ";
 		instances.get_pool<bool_tag>()[g.second].dump_subscribers(o);
 		break;
 	}
 	case META_TYPE_INT: {
 		o << "int ";
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		topfp.dump_canonical_name<int_tag>(o, id0);
-#else
-		sm.get_pool<int_tag>()[g.second]
-			.dump_canonical_name(o, topfp, sm);
-#endif
 		o << " : ";
 		instances.get_pool<int_tag>()[g.second].dump_subscribers(o);
 		break;
 	}
 	case META_TYPE_ENUM: {
 		o << "enum ";
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		topfp.dump_canonical_name<enum_tag>(o, id0);
-#else
-		sm.get_pool<enum_tag>()[g.second]
-			.dump_canonical_name(o, topfp, sm);
-#endif
 		o << " : ";
 		instances.get_pool<enum_tag>()[g.second].dump_subscribers(o);
 		break;
@@ -1897,13 +1793,7 @@ State::print_instance_name_subscribers(ostream& o,
 	case META_TYPE_CHANNEL: {
 		const ChannelState&
 			nc(instances.get_pool<channel_tag>()[g.second]);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		topfp.dump_canonical_name<channel_tag>(o, id0);
-#else
-		const global_entry<channel_tag>&
-			c(sm.get_pool<channel_tag>()[g.second]);
-		c.dump_canonical_name(o, topfp, sm);
-#endif
 		o << " : ";
 		nc.dump_subscribers(o);	// print the channel subscribers
 		break;
@@ -1927,9 +1817,6 @@ State::print_instance_name_subscribers(ostream& o,
 ostream&
 State::print_all_subscriptions(ostream& o) const {
 	return instances.dump_all_subscriptions(o, 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		mod.get_state_manager(),
-#endif
 		mod.get_footprint());
 }
 
@@ -2040,12 +1927,7 @@ State::load_checkpoint(istream& i) {
 	size_t j = 0;
 	size_t s;
 	read_value(i, s);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const nonmeta_context c(*this);
-#else
-	const nonmeta_context
-		c(mod.get_state_manager(), mod.get_footprint(), *this);
-#endif
 	immediate_event_fifo.clear();
 	check_event_queue.clear();
 	for ( ; j<s; ++j) {

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.52 2010/04/02 22:18:22 fang Exp $
+	$Id: instance_collection.tcc,v 1.53 2010/04/07 00:12:40 fang Exp $
 	TODO: trim includes
  */
 
@@ -53,7 +53,6 @@
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/def/footprint.h"
 #include "Object/global_entry.tcc"
-#include "Object/port_context.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/inst/sparse_collection.tcc"
 #include "Object/inst/element_key_dumper.h"
@@ -1112,39 +1111,6 @@ INSTANCE_COLLECTION_CLASS::connection_loader::operator() (
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Translates port formal placeholders to actual global IDs.  
-	\pre footprint_frame has already been constructed.  
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-void
-INSTANCE_ARRAY_CLASS::construct_port_context(port_collection_context& pcc, 
-		const footprint_frame& ff) const {
-	STACKTRACE_VERBOSE;
-	const_iterator i(this->collection.begin());
-	const const_iterator e(this->collection.end());
-	pcc.resize(this->collection.size());
-	size_t j = 0;
-	for ( ; i!=e; i++, j++) {
-		i->construct_port_context(pcc, ff, j);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Assigns...
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-void
-INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame&, 
-		const port_collection_context&) const {
-	// only called and managed by the footprint's pools
-	ICE_NEVER_CALL(cerr);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::finalize_substructure_aliases(
@@ -1703,32 +1669,6 @@ INSTANCE_SCALAR_CLASS::load_reference(istream&) {
 	// no key to read!
 	return this->the_instance;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Translates port formal placeholders to actual global IDs.  
-	\pre footprint_frame has already been constructed.  
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-void
-INSTANCE_SCALAR_CLASS::construct_port_context(port_collection_context& pcc, 
-		const footprint_frame& ff) const {
-	STACKTRACE_VERBOSE;
-	pcc.resize(1);
-	this->the_instance.construct_port_context(pcc, ff, 0);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-void
-INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
-		const port_collection_context& pcc) const {
-	STACKTRACE_VERBOSE;
-	INVARIANT(pcc.size() == 1);
-	this->the_instance.assign_footprint_frame(ff, pcc, 0);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

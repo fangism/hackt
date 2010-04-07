@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.8 2010/04/02 22:19:13 fang Exp $
+	$Id: StateConstructor.cc,v 1.9 2010/04/07 00:13:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -319,31 +319,14 @@ StateConstructor::visit(const do_while_loop& dw) {
 }	// end visit(const do_while_loop&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-const state_manager&
-StateConstructor::get_state_manager(void) const {
-	return state.get_module().get_state_manager();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return reference to current's processes footprint or
 		the top-level footprint (if index is null)
  */
 const entity::footprint&
 StateConstructor::get_process_footprint(void) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// 1-indexed process index, 0 for top-level
 	return *state.get_footprint_frame(current_process_index)._footprint;
-#else
-	const module& m(state.get_module());
-	return current_process_index ?
-		*m.get_state_manager()
-			.get_pool<process_tag>()[current_process_index]
-			._frame._footprint
-		: m.get_footprint();
-#endif
 }
 
 //=============================================================================

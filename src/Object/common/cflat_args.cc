@@ -1,6 +1,6 @@
 /**
 	\file "Object/common/cflat_args.cc"
-	$Id: cflat_args.cc,v 1.2 2010/04/02 22:18:04 fang Exp $
+	$Id: cflat_args.cc,v 1.3 2010/04/07 00:12:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -26,7 +26,6 @@ using std::bind2nd;
 using util::swap_saver;
 using util::set_inserter;
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 //=============================================================================
 // helper functions
 /**
@@ -208,9 +207,6 @@ for (pi=pb; pi<pe; ++pi) {
 	collect_local_aliases<process_tag>(f, local_proc_aliases);
 // also need to see which local bools are members of local processes
 }	// end cflat_aliases_arg_type::prepare()
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //=============================================================================
 }	// end namespace entity

@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.8 2010/04/02 22:19:01 fang Exp $
+	$Id: netlist_generator.h,v 1.9 2010/04/07 00:13:05 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -10,12 +10,8 @@
 #include <string>
 #include <map>
 #include "net/netgraph.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/global_entry_context.h"
 #include "Object/lang/cflat_visitor.h"
-#else
-#include "Object/lang/cflat_context_visitor.h"
-#endif
 #include "Object/lang/PRS_footprint_expr.h"	// for precharge_ref_type
 
 namespace HAC {
@@ -23,17 +19,12 @@ namespace NET {
 using std::vector;
 using std::string;
 using std::map;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 using entity::global_entry_context;
 using entity::PRS::cflat_visitor;
 using entity::footprint_frame;
 using entity::global_offset;
-#else
-using entity::cflat_context_visitor;
-using entity::state_manager;
-#endif
 using entity::footprint;
-using entity::GLOBAL_ENTRY;
+using entity::state_instance;
 using entity::bool_tag;
 using entity::process_tag;
 using entity::PRS::footprint_expr_node;
@@ -47,12 +38,8 @@ using entity::PRS::footprint_expr_node;
 	This is the reason for deftype, defchan, etc.
  */
 class netlist_generator :
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	public global_entry_context,
 	public cflat_visitor
-#else
-	public cflat_context_visitor
-#endif
 {
 	/**
 		Primary structure for maintaining prerequisite ordering
@@ -150,13 +137,8 @@ private:
 	real_type			last_length;
 public:
 	netlist_generator(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const footprint_frame&, 
 		const global_offset&,
-#else
-		const state_manager& _sm, 
-		const footprint& _topfp, 
-#endif
 		ostream& o, const netlist_options& p);
 	~netlist_generator();
 
@@ -166,20 +148,12 @@ public:
 
 private:
 	void
-	visit(const GLOBAL_ENTRY<process_tag>&);
+	visit(const state_instance<process_tag>&);
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using global_entry_context::visit;
-#else
-	using cflat_context_visitor::visit;
-#endif
 
 	void
-	visit(const GLOBAL_ENTRY<bool_tag>&);		// do nothing?
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	void
-	visit(const state_manager&);		// only visit processes
-#endif
+	visit(const state_instance<bool_tag>&);		// do nothing?
 	void
 	visit(const footprint&);
 	void

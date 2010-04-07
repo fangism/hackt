@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.28 2010/04/05 23:59:46 fang Exp $
+#	$Id: Make.test-chpsim,v 1.29 2010/04/07 00:13:10 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -10,6 +10,7 @@ AM_HACCHPSIM_FLAGS = -I$(srcdir)
 
 CHPSIM_ALLOC_DUMP = $(HACKT_CHPSIM_RAW_EXE) -fno-run -fdump-graph-alloc
 CHPSIM_GRAPH_DOT = $(HACKT_CHPSIM_RAW_EXE) -fno-run -fdump-dot-struct -fcluster-processes -fshow-channels
+# -fshow-instances
 
 CHPSIMCKPT_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/chpsimckpt-template.chpsimrc
 CHPSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/chpsimckpt-load-template.chpsimrc

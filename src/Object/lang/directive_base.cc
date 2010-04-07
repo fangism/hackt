@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.5 2010/04/02 22:18:39 fang Exp $
+	$Id: directive_base.cc,v 1.6 2010/04/07 00:12:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -135,30 +135,18 @@ directive_base::dump_node_group(const directive_node_group_type& g,
 		const_iterator i(g.begin());
 		const const_iterator e(g.end());
 		o << '{';
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		size_t ni = *i -1;	// node-pool is 0-indexed
-#else
-		size_t ni = *i;
-#endif
 		np[ni].get_back_ref()->dump_hierarchical_name(o,
 			dump_flags::no_definition_owner);
 		for (++i; i!=e; ++i) {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 			ni = *i -1;	// node-pool is 0-indexed
-#else
-			ni = *i;
-#endif
 			np[ni].get_back_ref()->dump_hierarchical_name(
 				o << ',', dump_flags::no_definition_owner);
 		}
 		o << '}';
 	} else {
 		INVARIANT(g.size() == 1);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const size_t ni = *g.begin() -1;	// pool is 0-indexed
-#else
-		const size_t ni = *g.begin();
-#endif
 		np[ni].get_back_ref()->dump_hierarchical_name(o,
 			dump_flags::no_definition_owner);
 	}

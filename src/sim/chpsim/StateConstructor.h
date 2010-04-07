@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.6 2010/04/02 22:19:13 fang Exp $
+	$Id: StateConstructor.h,v 1.7 2010/04/07 00:13:08 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -69,11 +69,6 @@ public:
 	StateConstructor(const state_type&, event_type&);
 
 	~StateConstructor();
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const state_manager&
-	get_state_manager(void) const;
-#endif
 
 	const entity::footprint&
 	get_process_footprint(void) const;

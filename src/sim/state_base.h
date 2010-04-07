@@ -1,7 +1,7 @@
 /**
 	\file "sim/state_base.h"
 	Facilities common to all simulator states.  (Recommended)
-	$Id: state_base.h,v 1.4 2010/04/02 22:19:06 fang Exp $
+	$Id: state_base.h,v 1.5 2010/04/07 00:13:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_STATE_BASE_H__
@@ -18,7 +18,7 @@
 	This brings dramatic speedup, by reducing the number of
 	global frame computations.
  */
-#define	CACHE_GLOBAL_FOOTPRINT_FRAMES	(1 && MEMORY_MAPPED_GLOBAL_ALLOCATION)
+#define	CACHE_GLOBAL_FOOTPRINT_FRAMES	1
 /**
 	Define to 1 to keep around the last two footprint frames (LRU).  
 	This brings a little bit more speedup.
@@ -122,7 +122,7 @@ public:
 		ifstreams.add_path(s);
 	}
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION && !CACHE_GLOBAL_FOOTPRINT_FRAMES
+#if !CACHE_GLOBAL_FOOTPRINT_FRAMES
 	footprint_frame
 #else
 	const footprint_frame&

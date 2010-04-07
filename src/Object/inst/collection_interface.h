@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.6 2010/04/02 22:18:20 fang Exp $
+	$Id: collection_interface.h,v 1.7 2010/04/07 00:12:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -179,12 +179,6 @@ virtual	const_index_list
 virtual	UNROLL_ALIASES_PROTO = 0;
 
 virtual	COLLECT_PORT_ALIASES_PROTO = 0;
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
-
-virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
-#endif
 
 #define	FINALIZE_SUBSTRUCTURE_ALIASES_PROTO				\
 	void								\

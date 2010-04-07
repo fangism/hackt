@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.7 2010/04/02 22:19:14 fang Exp $
+	$Id: nonmeta_context.cc,v 1.8 2010/04/07 00:13:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -9,11 +9,7 @@
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/chpsim/Event.h"
 #include "sim/chpsim/State.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/def/footprint.h"
-#else
-#include "Object/state_manager.h"
-#endif
 #include "Object/global_entry.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/lang/CHP_event.h"
@@ -33,19 +29,10 @@ using entity::process_tag;
 	Constructor without event type argument.  
 	A delegating constructor would be nice...
  */
-nonmeta_context::nonmeta_context(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager& s, 
-		const footprint& f, 
-#endif
-		State& r) :
+nonmeta_context::nonmeta_context(State& r) :
 		nonmeta_context_base(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			s, f, 
-#else
 			*r.top_context.fpf,
 			*r.top_context.parent_offset, 
-#endif
 			r.instances),
 		event(NULL), 
 		global_event_offset(0), 	// any invalid value
@@ -63,21 +50,15 @@ nonmeta_context::~nonmeta_context() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 nonmeta_context::set_event(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const state_base& sb,
-#endif
 		event_type& e,
 		const size_t pid, const event_index_type offset) {
 	STACKTRACE_VERBOSE;
 	event = &e;
 	global_event_offset = offset;
 	process_index = pid;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 //	fpf = &sb.get_footprint_frame(pid);
 	NEVER_NULL(fpf);
-#else
-	fpf = (pid ? &sm->get_pool<process_tag>()[pid]._frame : NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

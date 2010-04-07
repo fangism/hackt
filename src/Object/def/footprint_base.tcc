@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_base.tcc"
 	Implementation of footprint class. 
-	$Id: footprint_base.tcc,v 1.3 2010/04/02 22:18:14 fang Exp $
+	$Id: footprint_base.tcc,v 1.4 2010/04/07 00:12:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_TCC__
@@ -34,11 +34,7 @@ namespace entity {
 template <class Tag>
 footprint_base<Tag>::footprint_base() :
 	collection_pool_bundle(new collection_pool_bundle_type), 
-	_instance_pool(new instance_pool_type(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		class_traits<Tag>::instance_pool_chunk_size >> 1
-#endif
-		)) {
+	_instance_pool(new instance_pool_type()) {
 	NEVER_NULL(collection_pool_bundle);
 	NEVER_NULL(_instance_pool);
 }

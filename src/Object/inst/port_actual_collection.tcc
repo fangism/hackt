@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.12 2010/04/02 22:18:24 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.13 2010/04/07 00:12:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -18,7 +18,6 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/def/footprint.h"
-#include "Object/port_context.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
 
@@ -532,39 +531,6 @@ if (this->get_dimensions()) {
 	return *this->begin();
 }
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
-void
-PORT_ACTUAL_COLLECTION_CLASS::construct_port_context(
-		port_collection_context& pcc, 
-		const footprint_frame& ff) const {
-	STACKTRACE_VERBOSE;
-	const_iterator i(this->begin());
-	const const_iterator e(this->end());
-	pcc.resize(this->value_array.size());
-	size_t j = 0;
-	for ( ; i!=e; ++i, ++j) {
-		i->construct_port_context(pcc, ff, j);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
-void
-PORT_ACTUAL_COLLECTION_CLASS::assign_footprint_frame(footprint_frame& ff, 
-		const port_collection_context& pcc) const {
-	STACKTRACE_VERBOSE;
-	INVARIANT(this->value_array.size() == pcc.size());
-	const_iterator i(this->begin());
-	const const_iterator e(this->end());
-	size_t j = 0;
-	for ( ; i!=e; ++i, ++j) {
-		i->assign_footprint_frame(ff, pcc, j);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

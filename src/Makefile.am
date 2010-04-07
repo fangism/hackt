@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.238 2010/04/05 23:59:40 fang Exp $
+#	$Id: Makefile.am,v 1.239 2010/04/07 00:12:25 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -485,7 +485,6 @@ OBJECT_INST_CC_FILES = \
 	Object/inst/port_alias_tracker.cc \
 	Object/inst/port_visitor.cc \
 	Object/inst/alias_actuals.cc \
-	Object/inst/alias_matcher.cc \
 	Object/inst/alias_printer.cc \
 	Object/inst/instance_collection.cc \
 	Object/inst/param_value_collection.cc \
@@ -683,13 +682,12 @@ OBJECT_CC_FILES = \
 	Object/module.cc \
 	Object/global_entry.cc \
 	Object/global_channel_entry.cc \
-	Object/port_context.cc \
-	Object/state_manager.cc \
 	Object/nonmeta_state.cc \
 	Object/nonmeta_variable.cc \
 	Object/nonmeta_context.cc \
 	Object/nonmeta_channel_manipulator.cc \
 	Object/global_entry_context.cc \
+	Object/global_entry_dumper.cc \
 	Object/sizes-entity.cc \
 	Object/type/template_actuals.cc \
 	Object/type/canonical_type_base.cc \
@@ -772,7 +770,6 @@ OBJECT_TCC_FILES = \
 	Object/global_entry.tcc \
 	Object/global_entry_context.tcc \
 	Object/nonmeta_context.tcc \
-	Object/state_manager.tcc \
 	Object/common/namespace.tcc \
 	Object/lang/CHP.tcc
 

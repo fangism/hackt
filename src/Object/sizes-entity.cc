@@ -2,7 +2,7 @@
 	\file "Object/sizes-entity.cc"
 	Just dumps the sizeof for most HAC::entity classes.
 	This file came from "art_persistent_table.cc".
-	$Id: sizes-entity.cc,v 1.2 2010/04/02 22:18:02 fang Exp $
+	$Id: sizes-entity.cc,v 1.3 2010/04/07 00:12:32 fang Exp $
  */
 
 #include <iostream>
@@ -14,8 +14,6 @@
 // include all Object/*.h header files to evaluate struct sizes.
 #include "Object/module.h"
 #include "Object/global_entry.h"
-#include "Object/port_context.h"
-#include "Object/state_manager.h"
 #include "Object/def/footprint.h"
 #include "Object/def/enum_datatype_def.h"
 #include "Object/def/process_definition.h"
@@ -71,7 +69,6 @@
 
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
-#include "Object/inst/alias_matcher.h"
 #include "Object/inst/alias_printer.h"
 #include "Object/inst/alias_visitee.h"
 #include "Object/inst/alias_visitor.h"
@@ -172,11 +169,6 @@ dump_class_sizes(ostream& o) {
 
 	o << "HAC::entity general classes:" << endl;
 	__dump_class_size<module>(o);
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	__dump_class_size<state_manager>(o);
-	__dump_class_size<port_member_context>(o);
-	__dump_class_size<port_collection_context>(o);
-#endif
 
 	o << "HAC::entity definition classes:" << endl;
 	__dump_class_size<footprint>(o);

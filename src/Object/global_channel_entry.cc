@@ -1,11 +1,11 @@
 /**
 	\file "Object/global_channel_entry.cc"
-	$Id: global_channel_entry.cc,v 1.3 2010/04/02 22:17:51 fang Exp $
+	$Id: global_channel_entry.cc,v 1.4 2010/04/07 00:12:27 fang Exp $
  */
 
 #include "Object/global_channel_entry.h"
 #if BUILTIN_CHANNEL_FOOTPRINTS
-#include "Object/global_entry_context.h"
+#include "Object/global_entry_dumper.h"
 // #include "Object/global_entry.tcc"	// for substructure dump
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "util/memory/count_ptr.tcc"

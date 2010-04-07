@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.4 2010/04/05 23:48:35 fang Exp $
+	$Id: footprint.tcc,v 1.5 2010/04/07 00:12:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -40,7 +40,6 @@ footprint_base<Tag>::~footprint_base() { }
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	This lookup could be critical?
 	Return a reference to a unique object in the hierarchy
@@ -295,8 +294,6 @@ for (; lpid <= lpm; ++lpid) {
 	}
 }
 }
-
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //=============================================================================
 }	// end namespace entity

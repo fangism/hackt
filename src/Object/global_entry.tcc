@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.23 2010/04/02 22:17:54 fang Exp $
+	$Id: global_entry.tcc,v 1.24 2010/04/07 00:12:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -22,7 +22,6 @@
 #include "util/macros.h"
 #include "util/sstream.h"
 #include "Object/global_entry.h"
-#include "Object/state_manager.h"
 #include "Object/def/footprint.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/struct_traits.h"
@@ -38,6 +37,7 @@
 #include "Object/common/dump_flags.h"
 #include "Object/cflat_context.h"
 #include "Object/global_entry_context.h"
+#include "Object/global_entry_dumper.h"
 #include "Object/lang/cflat_visitor.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
@@ -71,124 +71,7 @@ template <class Tag>
 footprint_frame_map<Tag>::~footprint_frame_map() { }
 
 //=============================================================================
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	\param sm the global state allocator.  
-	\param gec the referencing entry with parent_id, and local_offset.
-	\return reference to the parent super-instance global entry.  
- */
-template <class Tag>
-const global_entry<Tag>&
-extract_parent_entry(const state_manager& sm, 
-		const global_entry_common& gec) {
-	const global_entry_pool<Tag>&
-		gproc_pool(sm.template get_pool<Tag>());
-	return gproc_pool[gec.parent_id];
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Resolves a global parent instance reference.
-	\param Tag must be the tag of a meta type with substructure, 
-		such as process_tag, channel_tag, datastruct_tag.  
-	\param sm the global state allocator.  
-	\param gec the referencing entry with parent_id, and local_offset.
-		The parent_id member is the global id of the parent instance.
-		The local_offset member the position of the corresponding
-		formal instance alias in the parent's footprint.  
- */
-template <class Tag>
-const instance_alias_info<Tag>&
-extract_parent_formal_instance_alias(const state_manager& sm, 
-		const global_entry_common& gec) {
-	const global_entry<Tag>&
-		p_ent(extract_parent_entry<Tag>(sm, gec));
-	const footprint& pfp(*p_ent._frame._footprint);
-	const typename state_instance<Tag>::pool_type&
-		local_placeholder_pool(pfp.template get_instance_pool<Tag>());
-	const state_instance<Tag>&
-		_inst(local_placeholder_pool[gec.local_offset]);
-	return *_inst.get_back_ref();
-}
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
-
-//=============================================================================
 // class footprint_frame method definitions
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Prints the canonical type associated with this footprint_frame's
-	reference footprint.  
-	NOTE: enumerations are defined in "Object/traits/type_tag_enum.h"
-	\param ind the globally assigned index (top-level) for state.  
- */
-template <class Tag>
-ostream&
-footprint_frame::dump_footprint(global_entry_dumper& gec) const {
-	ostream& o(gec.os);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	INVARIANT(gec.index);
-	// 1-based index convert to 0-based
-	const state_instance<Tag>&
-		_inst(gec.topfp->get_instance<Tag>(gec.index -1));
-#if 0
-	_inst._frame._footprint->dump_type(o);
-#else
-	// distinguishes relaxed from strict template arguments
-	typedef	instance_alias_info<Tag>	alias_type;
-	alias_type::dump_complete_type(*_inst.get_back_ref(),
-		o, _footprint);
-#endif
-#else
-	typedef	typename state_instance<Tag>::pool_type	pool_type;
-	typedef	instance_alias_info<Tag>	alias_type;
-	INVARIANT(_footprint);
-	const size_t ind(gec.index);
-	const footprint& topfp(*gec.topfp);
-	const state_manager& sm(*gec.sm);
-	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
-	if (ind >= _pool.size()) {
-		// then this isn't top-level
-		const global_entry_pool<Tag>&
-			gpool(sm.template get_pool<Tag>());
-		const global_entry<Tag>& ent(gpool[ind]);
-		INVARIANT(ent.parent_tag_value);
-		INVARIANT(ent.parent_id);
-		switch (ent.parent_tag_value) {
-		case PARENT_TYPE_PROCESS: {
-			instance_alias_info<process_tag>::dump_complete_type(
-				extract_parent_formal_instance_alias<
-					process_tag>(sm, ent),
-				o, _footprint);
-			break;
-		}
-#if !BUILTIN_CHANNEL_FOOTPRINTS
-		// case PARENT_TYPE_CHANNEL: ?
-#endif
-#if ENABLE_DATASTRUCTS
-		case PARENT_TYPE_STRUCT: {
-			instance_alias_info<datastruct_tag>::dump_complete_type(
-				extract_parent_formal_instance_alias<
-					datastruct_tag>(sm, ent),
-				o, _footprint);
-			break;
-		}
-#endif
-		default:
-			// for now, the only thing that can be parent
-			// is process, append cases later...
-			FINISH_ME_EXIT(Fang);
-		}
-	} else {
-		// then it is top-level, can index the top-level footprint
-		const state_instance<Tag>& _inst(_pool[ind]);
-		alias_type::dump_complete_type(*_inst.get_back_ref(),
-			o, _footprint);
-	}
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
-	return o;
-}
-#endif
 
 //=============================================================================
 // class global_entry_substructure_base method definitions
@@ -208,9 +91,7 @@ template <class Tag>
 ostream&
 global_entry_substructure_base<true>::dump(global_entry_dumper& ged) const {
 	this->_frame.template dump_footprint<Tag>(ged);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const util::indent __tab__(ged.os, "\t");
-#endif
 	return this->_frame.dump_frame(ged.os);
 }
 
@@ -226,8 +107,7 @@ global_entry_substructure_base<true>::count_frame_size(const size_t s,
 // class global_entry method definitions
 
 template <class Tag>
-global_entry<Tag>::global_entry() : 
-		parent_type(), global_entry_common() {
+global_entry<Tag>::global_entry() : parent_type() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -250,221 +130,6 @@ footprint_frame::get_frame_map(void) const {
 }
 #endif
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Recursively prints canonical name.  
- */
-template <class Tag>
-ostream&
-global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df, 
-		const footprint& topfp, const state_manager& sm) const {
-	typedef	typename state_instance<Tag>::pool_type	pool_type;
-	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
-	// dump canonical name
-	const state_instance<Tag>* _inst;
-	switch (parent_tag_value) {
-	case PARENT_TYPE_NONE:
-		_inst = &_pool[local_offset];
-		break;
-	case PARENT_TYPE_PROCESS: {
-		const global_entry<process_tag>&
-			p_ent(extract_parent_entry<process_tag>(sm, *this));
-		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
-		// partial, omit formal type parent
-		const pool_type&
-			_lpool(p_ent._frame._footprint
-				->template get_instance_pool<Tag>());
-		_inst = &_lpool[local_offset];
-		break;
-	}
-#if !BUILTIN_CHANNEL_FOOTPRINTS
-	case PARENT_TYPE_CHANNEL: {
-		const global_entry<channel_tag>&
-			p_ent(extract_parent_entry<channel_tag>(sm, *this));
-		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
-		// partial, omit formal type parent
-		const pool_type&
-			_lpool(p_ent._frame._footprint
-				->template get_instance_pool<Tag>());
-		_inst = &_lpool[local_offset];
-		break;
-	}
-#endif
-#if ENABLE_DATASTRUCTS
-	case PARENT_TYPE_STRUCT: {
-		const global_entry<datastruct_tag>&
-			p_ent(extract_parent_entry<datastruct_tag>(sm, *this));
-		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
-		// partial, omit formal type parent
-		const pool_type&
-			_lpool(p_ent._frame._footprint
-				->template get_instance_pool<Tag>());
-		_inst = &_lpool[local_offset];
-		break;
-	}
-#endif
-	default:
-		ICE(cerr, 
-			cerr << "Unknown parent tag enumeration: " <<
-				parent_tag_value << endl;
-		)
-	}
-	const instance_alias_info<Tag>& _alias(*_inst->get_back_ref());
-	return _alias.dump_hierarchical_name(o, df);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Wrapped call that formats properly.  
-	\param topfp should be the top-level footprint belonging to the module.
-	This could just take a global_entry_context_base bundled argument.  
- */
-template <class Tag>
-ostream&
-global_entry<Tag>::dump_canonical_name(ostream& o,
-		const footprint& topfp
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, const state_manager& sm
-#endif
-		) const {
-	return __dump_canonical_name(o,
-		dump_flags::no_definition_owner,
-		// dump_flags::no_leading_scope,
-		topfp
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, sm
-#endif
-		);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	NOTE: currently, only processes are ever super instances.  
-	Missing endl.
- */
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-template <class Tag>
-ostream&
-global_entry<Tag>::dump_base(global_entry_dumper& ged) const {
-	ostream& o(ged.os);
-	o << ged.index << '\t';
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	const size_t parent_id = ged.pid;	// 1-based
-	const size_t local_offset = ged.local_index;
-	if (parent_id)
-		o << "process\t" << parent_id << '\t';
-	else	o << "(top)\t-\t";
-#else
-	switch (parent_tag_value) {
-	case PARENT_TYPE_NONE:
-		o << "(top)\t-\t";
-		break;
-	// should take strings from "Object/traits/class_traits.cc"
-	case PARENT_TYPE_PROCESS:
-		o << "process\t" << parent_id << '\t';
-		break;
-	case PARENT_TYPE_CHANNEL:
-		o << "channel\t" << parent_id << '\t';
-		break;
-	case PARENT_TYPE_STRUCT:
-		o << "struct\t" << parent_id << '\t';
-		break;
-	default:
-		THROW_EXIT;
-	}
-#endif
-	o << local_offset << '\t';
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	// ick, double lookup... TODO: avoid this? (not critical)
-	INVARIANT(ged.index);
-	const size_t gid = ged.index -1;
-	ged.topfp->dump_canonical_name<Tag>(o, gid) << '\t';
-	ged.topfp->get_instance<Tag>(gid).get_back_ref()
-		->dump_attributes(o);
-#else
-	dump_canonical_name(o, *ged.topfp, *ged.sm) << '\t';
-	dump_attributes(ged);
-#endif
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-ostream&
-global_entry<Tag>::dump(global_entry_dumper& ged) const {
-	this->dump_base(ged);
-	parent_type::template dump<Tag>(ged);
-	return ged.os;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-template <class Tag>
-ostream&
-global_entry<Tag>::dump_attributes(global_entry_dumper& ged) const {
-	return get_canonical_instance(ged)
-		.get_back_ref()->dump_attributes(ged.os);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	This returns a unique leaf instance in the hierarchy that contains the
-	instance and alias information.  
-	The instance reference returned can be either top-level
-	or a subinstance of a structure in the instance hierarchy.  
- */
-template <class Tag>
-const state_instance<Tag>&
-global_entry<Tag>::get_canonical_instance(
-		const global_entry_context_base& ged) const {
-	typedef	typename state_instance<Tag>::pool_type	pool_type;
-	const footprint& topfp(*ged.get_top_footprint_ptr());
-	const state_manager& sm(*ged.get_state_manager());
-	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
-	const state_instance<Tag>* _inst;
-	switch (parent_tag_value) {
-	case PARENT_TYPE_NONE:
-		_inst = &_pool[local_offset];
-		break;
-	// for now, only processes can be parents
-	case PARENT_TYPE_PROCESS: {
-		const global_entry<process_tag>&
-			p_ent(extract_parent_entry<process_tag>(sm, *this));
-		const pool_type&
-			_lpool(p_ent._frame._footprint
-				->template get_instance_pool<Tag>());
-		_inst = &_lpool[local_offset];
-		break;
-	}
-	default:
-		ICE(cerr, 
-			cerr << "Unknown parent tag enumeration: " <<
-				parent_tag_value << endl;
-		)
-	}
-	NEVER_NULL(_inst);
-	return *_inst;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-template <class Tag>
-void
-global_entry<Tag>::accept(PRS::cflat_visitor& v) const {
-	STACKTRACE_VERBOSE;
-	v.visit(*this);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: use global_entry_dumper
  */
@@ -473,14 +138,6 @@ void
 global_entry<Tag>::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	write_value(o, parent_tag_value);
-	STACKTRACE_PERSISTENT_PRINT("parent_tag = " << size_t(parent_tag_value) << endl);
-	write_value(o, parent_id);
-	STACKTRACE_PERSISTENT_PRINT("parent_id = " << parent_id << endl);
-	write_value(o, local_offset);
-	STACKTRACE_PERSISTENT_PRINT("local_offset = " << local_offset << endl);
-#endif
 	parent_type::write_object_base(m, o);
 }
 
@@ -495,14 +152,6 @@ void
 global_entry<Tag>::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	read_value(i, parent_tag_value);
-	STACKTRACE_PERSISTENT_PRINT("parent_tag = " << size_t(parent_tag_value) << endl);
-	read_value(i, parent_id);
-	STACKTRACE_PERSISTENT_PRINT("parent_id = " << parent_id << endl);
-	read_value(i, local_offset);
-	STACKTRACE_PERSISTENT_PRINT("local_offset = " << local_offset << endl);
-#endif
 	parent_type::load_object_base(m, i);
 }
 

@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.16 2010/04/02 22:18:19 fang Exp $
+	$Id: alias_empty.h,v 1.17 2010/04/07 00:12:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -15,7 +15,6 @@
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -23,9 +22,6 @@ class const_param_expr_list;
 class footprint;
 class footprint_frame;
 class state_manager;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-class port_member_context;
-#endif
 template <class> class instance_alias_info;
 class unroll_context;
 using std::istream;
@@ -100,13 +96,7 @@ protected:
 	static
 	good_bool
 	__initialize_assign_footprint_frame(const AliasType&,
-			footprint_frame&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			, state_manager&,
-			const port_member_context&
-			, const size_t
-#endif
-			);
+			footprint_frame&);
 
 	static
 	good_bool

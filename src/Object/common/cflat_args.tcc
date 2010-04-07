@@ -1,6 +1,6 @@
 /**
 	\file "Object/common/cflat_args.tcc"
-	$Id: cflat_args.tcc,v 1.2 2010/04/02 22:18:05 fang Exp $
+	$Id: cflat_args.tcc,v 1.3 2010/04/07 00:12:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_CFLAT_ARGS_TCC__
@@ -14,10 +14,8 @@
 #include "Object/def/footprint.h"
 #include "Object/global_entry.tcc"
 #include "Object/common/dump_flags.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/physical_instance_placeholder.h"
-#endif
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/sstream.h"
@@ -31,7 +29,6 @@ using std::ostringstream;
 using std::set;		// for caching alias sets
 using std::copy;
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 //=============================================================================
 // class cflat_aliases_arg_type method definitions
 
@@ -188,8 +185,6 @@ for (; pidi!=pide; ++pidi) {
 	}
 }
 }	// end cflat_aliases_arg_type::collect_local_aliases()
-
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //=============================================================================
 }	// end namespace entity

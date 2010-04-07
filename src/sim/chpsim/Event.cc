@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.13 2010/04/02 22:19:11 fang Exp $
+	$Id: Event.cc,v 1.14 2010/04/07 00:13:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -30,10 +30,6 @@ namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-// TEMPORARY
-using entity::CHP::EventSuccessorDumper;
-#endif
 using std::copy;
 using std::back_inserter;
 using std::for_each;

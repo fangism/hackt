@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_reference.cc"
-	$Id: scm_reference.cc,v 1.5 2010/04/02 22:18:57 fang Exp $
+	$Id: scm_reference.cc,v 1.6 2010/04/07 00:12:59 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -280,7 +280,6 @@ HAC_GUILE_DEFINE(wrap_collect_reference_subinstances, FUNC_NAME, 1, 0, 0,
 	const meta_reference_union* ptr = scm_smob_to_raw_reference_ptr(sref);
 	if (ptr && ptr->inst_ref()) {
 		entry_collection e;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		// parse to global_index_reference
 		// footprint::collect_subentries
 		const entity::global_indexed_reference
@@ -290,9 +289,6 @@ HAC_GUILE_DEFINE(wrap_collect_reference_subinstances, FUNC_NAME, 1, 0, 0,
 					gref, *obj_module, e)) {
 			return SCM_EOL;
 		}
-#else
-		ptr->inst_ref()->collect_subentries(*obj_module, e);
-#endif
 		global_references_set s;
 		s.import_entry_collection(e);
 		return global_references_set_export_scm_refs(s);

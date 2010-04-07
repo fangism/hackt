@@ -3,7 +3,7 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.9 2010/04/02 22:18:17 fang Exp $
+	$Id: alias_actuals.cc,v 1.10 2010/04/07 00:12:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -145,13 +145,11 @@ instance_alias_info_actuals::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer(i, actuals);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// relaxed actuals are needed during footprint reconstruction
 	if (actuals)
 		m.load_object_once(actuals);
 	// Q: does this loading need to be deeply recursive?
 	// reminder: is a const_param_expr_list
-#endif
 }
 
 //=============================================================================

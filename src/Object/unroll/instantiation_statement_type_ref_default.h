@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.16 2010/04/02 22:18:54 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.17 2010/04/07 00:12:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -13,7 +13,6 @@
 #include "Object/traits/class_traits.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/const_param_expr_list.h"
-#include "Object/devel_switches.h"	// for MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "util/persistent_object_manager.h"
 
 namespace HAC {
@@ -119,12 +118,7 @@ protected:
 			const instance_collection_parameter_type& t, 
 			const footprint& top) {
 		if (t.is_strict() &&
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			!t.create_definition_footprint(top).good
-#else
-			!t.unroll_definition_footprint(top).good
-#endif
-			) {
+			!t.create_definition_footprint(top).good) {
 			return good_bool(false);
 		}
 		v.establish_collection_type(t);
@@ -144,12 +138,7 @@ protected:
 			const footprint& top) {
 		// note: automatic conversion from bad_bool to good_bool :)
 		if (t.is_strict() &&
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			!t.create_definition_footprint(top).good
-#else
-			!t.unroll_definition_footprint(top).good
-#endif
-			) {
+			!t.create_definition_footprint(top).good) {
 			return good_bool(false);
 		}
 		return v.check_established_type(t);

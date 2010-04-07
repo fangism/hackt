@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.h"
-	$Id: SPEC_footprint.h,v 1.4 2010/04/02 22:18:35 fang Exp $
+	$Id: SPEC_footprint.h,v 1.5 2010/04/07 00:12:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FOOTPRINT_H__
@@ -8,7 +8,6 @@
 
 #include "Object/lang/directive_base.h"
 #include "Object/lang/SPEC_fwd.h"
-#include "Object/devel_switches.h"
 #include "Object/lang/cflat_visitee.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
@@ -16,9 +15,7 @@
 namespace HAC {
 namespace entity {
 class footprint;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 struct global_entry_context;
-#endif
 namespace SPEC {
 typedef	PRS::cflat_visitor		spec_visitor;
 

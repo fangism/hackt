@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.17 2008/11/12 03:00:11 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.18 2010/04/07 00:12:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -8,7 +8,6 @@
 #include <iostream>
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/instance_collection_base.h"
-#include "Object/port_context.h"
 #include "Object/common/dump_flags.h"
 #include "common/ICE.h"
 #include "util/macros.h"
@@ -74,26 +73,6 @@ substructure_alias::connect_ports(const connection_references_type& cr,
 	}
 	return parent_type::__connect_ports(cr, c);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	TODO: finish me.
-	NOTE: subinstance_manager only has public ports.  
-		Somewhere else will take care of private subinstances.  
-	First, construct ports.  
- */
-good_bool
-substructure_alias::__allocate_subinstance_footprint(footprint_frame& ff, 
-		state_manager& sm) const {
-	STACKTRACE_VERBOSE;
-	port_member_context pmc;
-	subinstances.construct_port_context(pmc, ff, sm);
-	// HERE
-	// pass port context to allocator for this instance.  (?)
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

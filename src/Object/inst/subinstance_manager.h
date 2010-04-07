@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.25 2010/04/02 22:18:27 fang Exp $
+	$Id: subinstance_manager.h,v 1.26 2010/04/07 00:12:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -142,16 +142,6 @@ public:
 
 	void
 	allocate_subinstances(footprint&);
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	void
-	__construct_port_context(port_member_context&, 
-		const footprint_frame&) const;
-
-	void
-	__assign_footprint_frame(footprint_frame&,
-		const port_member_context&) const;
-#endif
 
 	void
 	accept(alias_visitor&) const;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.14 2010/04/02 22:18:41 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.15 2010/04/07 00:12:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -148,39 +148,18 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-const footprint_frame*
-AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const global_entry_context&
-#else
-		const state_manager&, const footprint&
-#endif
-		) const {
-	ICE_NEVER_CALL(cerr);
-	return NULL;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Aggregate lookups with this interface not supported.  
  */
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 global_indexed_reference
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const global_entry_context&
-#else
-		const state_manager&, const footprint&
-#endif
-		) const {
+		const global_entry_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return global_indexed_reference(META_TYPE_NONE, 0);
 }
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
@@ -189,7 +168,6 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.10 2010/04/02 22:18:39 fang Exp $
+	$Id: cflat_visitor.h,v 1.11 2010/04/07 00:12:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -10,17 +10,11 @@
 #include "util/size_t.h"
 #include "Object/traits/classification_tags_fwd.h"
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
-#include "Object/devel_switches.h"
 
-// TEMPORARY
 namespace HAC {
 namespace entity {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 class footprint;
-#else
-class state_manager;
-#endif
-template <class Tag> class GLOBAL_ENTRY;
+template <class Tag> class state_instance;
 namespace SPEC {
 	class footprint;
 	class footprint_directive;
@@ -51,63 +45,13 @@ class footprint_macro;
 	No need to include state_manager -- its traversal is fixed.  
 	Intended to be a visitor of unrolled PRS and SPEC directives.
  */
-class cflat_visitor
-#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
-	: public global_entry_context
-	// or dumper? no need
-#endif
-{
+class cflat_visitor {
 	typedef	cflat_visitor				this_type;
-protected:
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	/**
-		This needs to be set by the visit to the footprint.  
-		Will initially be NULL, before the PRS footprint is entered. 
-	 */
-	const PRS_footprint_expr_pool_type*		expr_pool;
-
-	/**
-		helper class for maintaining expr_pool.
-		We only made this public so other non-cflat functions could
-		print better diagnostic messages cflat-style.  
-		TODO: just use member_saver?
-	 */
-	class expr_pool_setter {
-	private:
-		cflat_visitor&                          cfv;
-	public:
-		expr_pool_setter(cflat_visitor&,
-			const PRS_footprint_expr_pool_type&);
-		expr_pool_setter(cflat_visitor&, const footprint&);
-		expr_pool_setter(cflat_visitor&, const cflat_visitor&);
-		~expr_pool_setter();
-	};      // end struct expr_pool_setter
-#endif
 public:
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	cflat_visitor() : expr_pool(NULL) { }
-#endif
 virtual	~cflat_visitor() { }
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-virtual	void
-	visit(const GLOBAL_ENTRY<process_tag>&);
-virtual	void
-	visit(const GLOBAL_ENTRY<channel_tag>&);
-virtual	void
-	visit(const GLOBAL_ENTRY<enum_tag>&);
-virtual	void
-	visit(const GLOBAL_ENTRY<int_tag>&);
-virtual	void
-	visit(const GLOBAL_ENTRY<bool_tag>&);
-#endif
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 virtual	void
 	visit(const entity::footprint&);
-#else
-virtual	void
-	visit(const state_manager&);
-#endif
 virtual	void
 	visit(const footprint&);
 virtual	void
@@ -123,7 +67,7 @@ virtual	void
 
 private:
 	template <class Tag>
-	void __default_visit(const GLOBAL_ENTRY<Tag>&);
+	void __default_visit(const state_instance<Tag>&);
 
 };	// end struct cflat_visitor
 

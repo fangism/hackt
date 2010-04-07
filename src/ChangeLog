@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-04-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-73:
+	  Massive post-branch-merge source cleanup, perm-ing the switch
+		MEMORY_MAPPED_GLOBAL_ALLOCATION from Object/devel_switches.h.
+	  Also re-implemented chpsim::dump_struct_nodes in footprint, 
+		which was ripped from Object/state_manager.cc
+	  Removed sources: Object/state_manager.*, Object/port_context.*,
+		Object/alias_matcher.*
+	  Total lines of code removed: 6k!
+
+
 2010-04-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-72:

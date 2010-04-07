@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.5 2010/04/02 22:18:01 fang Exp $
+	$Id: nonmeta_state.h,v 1.6 2010/04/07 00:12:30 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "Object/nonmeta_variable.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -45,13 +44,8 @@ protected:
 	// only used by State::dump_raw_checkpoint
 	nonmeta_state_base();
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	explicit
 	nonmeta_state_base(const footprint&);
-#else
-	explicit
-	nonmeta_state_base(const state_manager&);
-#endif
 
 	~nonmeta_state_base();
 
@@ -60,9 +54,6 @@ protected:
 
 	ostream&
 	__dump_all_subscriptions(ostream&,
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager&, 
-#endif
 		const footprint&) const;
 
 	ostream&
@@ -102,13 +93,8 @@ public:
 	// only used by State::dump_raw_checkpoint
 	nonmeta_state_manager();
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	explicit
 	nonmeta_state_manager(const footprint&);
-#else
-	explicit
-	nonmeta_state_manager(const state_manager&);
-#endif
 
 	~nonmeta_state_manager();
 
@@ -135,16 +121,10 @@ public:
 
 	ostream&
 	dump_struct(ostream&,
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager&,
-#endif
 		const footprint&) const;
 
 	ostream&
 	dump_all_subscriptions(ostream&, 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager&,
-#endif
 		const footprint&) const;
 
 #if 0

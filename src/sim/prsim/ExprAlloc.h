@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.16 2010/04/02 22:19:18 fang Exp $
+	$Id: ExprAlloc.h,v 1.17 2010/04/07 00:13:09 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -8,25 +8,12 @@
 
 #include <queue>
 #include <map>
-#include "Object/devel_switches.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/global_entry_context.h"
 #include "Object/lang/cflat_visitor.h"
-#endif
 #include "Object/lang/cflat_context_visitor.h"
 #include "sim/prsim/ExprAllocFlags.h"
 #include "sim/prsim/State-prsim.h"		// for nested typedefs
 #include "sim/common.h"
-
-/**
-	Define to 1 to try to use simple allocation traversal
-	without peeling out top-level process separately.  
- */
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-#define	PRSIM_SIMPLE_ALLOC			1
-#else
-#define	PRSIM_SIMPLE_ALLOC			0
-#endif
 
 namespace HAC {
 namespace SIM {
@@ -34,20 +21,18 @@ namespace PRSIM {
 class State;
 class unique_process_subgraph;
 using std::map;
-using entity::GLOBAL_ENTRY;
+using entity::state_instance;
 using entity::process_tag;
 using entity::state_manager;
 using entity::PRS::footprint_rule;
 using entity::PRS::footprint_expr_node;
 using entity::PRS::footprint_macro;
 using entity::SPEC::footprint_directive;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 using entity::bool_tag;
 using entity::PRS::cflat_visitor;
 using entity::footprint_frame;
 using entity::global_offset;
 using entity::global_entry_context;
-#endif
 using entity::cflat_context_visitor;
 
 //=============================================================================
@@ -56,25 +41,16 @@ using entity::cflat_context_visitor;
 	the prsim simulator.  
  */
 class ExprAlloc :
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		public cflat_visitor, 
-#endif
 		public cflat_context_visitor
 		{
 public:
 	typedef	State					state_type;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	typedef	cflat_context_visitor			parent_type;
-#endif
 	typedef	state_type::expr_struct_type		expr_struct_type;
 	typedef	state_type::expr_state_type		expr_state_type;
 	typedef	expr_struct_type			expr_type;
 	typedef	unique_process_subgraph			unique_type;
-#if PRSIM_SIMPLE_ALLOC
 	typedef	map<const entity::footprint*, process_index_type>
-#else
-	typedef	map<const entity::PRS::footprint*, process_index_type>
-#endif
 						process_footprint_map_type;
 	typedef	unique_type::expr_pool_type		expr_pool_type;
 	typedef	unique_type::graph_node_type		graph_node_type;
@@ -133,10 +109,8 @@ protected:
 public:
 
 	ExprAlloc(state_type&, 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const footprint_frame&, 
 		const global_offset&,
-#endif
 		const ExprAllocFlags&);
 	~ExprAlloc();
 
@@ -160,24 +134,16 @@ public:
 protected:
 	using cflat_visitor::visit;
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using global_entry_context::visit;
 
 	void
 	visit(const footprint&);
-#else
-	void
-	visit(const state_manager&);
-#endif
 
-#if PRSIM_SIMPLE_ALLOC
 	void
-	visit(const GLOBAL_ENTRY<process_tag>&);
-#endif
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+	visit(const state_instance<process_tag>&);
+
 	void
-	visit(const GLOBAL_ENTRY<bool_tag>&);
-#endif
+	visit(const state_instance<bool_tag>&);
 
 	void
 	visit(const entity::PRS::footprint&);
@@ -211,41 +177,14 @@ public:
 	 */
 	node_index_type
 	lookup_local_bool_id(const node_index_type ni) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		return ni -1;
-#else
-	// DELIBERATE OVERRIDE: DO NOT TRANSLATE TO GLOBAL NODE INDICES!
-	// if node index argument comes from PRS_footprint, then it was
-	// 1-indexed, and needs to be converted to 0-indexed.
-	if (current_process_index) {
-		INVARIANT(ni);
-		return ni -1;
-	} else {	// top-level, keep 1-indexed, 0 is reserved
-		return ni;
-	}
-#endif
 	}
 
 	// for now, exclusive rings (both force and check) use this
 	// eventually, they may be pushed into local subgraphs...
 	node_index_type
 	lookup_global_bool_id(const node_index_type ni) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		return global_entry_context::lookup_global_id<bool_tag>(ni);
-#else
-		// works without catching pid=0 (top-level)
-		// b/c we populated its frame map with identity indices
-#if PRSIM_SIMPLE_ALLOC
-	// CAUTION!!! TODO, FIXME, XXX, ACHTUNG!
-	if (current_process_index) {
-		return __lookup_global_bool_id(ni);
-	} else {
-		return __lookup_global_bool_id(ni) +1;
-	}
-#else
-		return __lookup_global_bool_id(ni);
-#endif
-#endif
 	}
 
 	// these public functions are really only intended for

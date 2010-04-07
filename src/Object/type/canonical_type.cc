@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.19 2010/04/02 22:18:51 fang Exp $
+	$Id: canonical_type.cc,v 1.20 2010/04/07 00:12:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -167,25 +167,12 @@ struct unroll_port_instances_policy<process_definition> {
 good_bool
 canonical_type_footprint_frame_policy<process_definition>::
 		initialize_and_assign(const canonical_process_type& cpt,
-		footprint_frame& ff
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, state_manager& sm, 
-		const port_member_context& pmc
-		, const size_t ind
-#endif
-		) {
+		footprint_frame& ff) {
 	STACKTRACE_VERBOSE;
 	const footprint&
 		f(cpt.get_base_def()->get_footprint(
 			cpt.get_raw_template_params()));
 	new (&ff) footprint_frame(f);	// placement construct
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	f.assign_footprint_frame(ff, pmc);
-	// allocate the rest with the state_manager
-	ff.allocate_remaining_subinstances(f, sm,
-		parent_tag_enum(class_traits<process_tag>::type_tag_enum_value),
-		ind);
-#endif
 	return good_bool(true);
 }
 
@@ -218,26 +205,12 @@ check_footprint_policy<process_definition>::operator () (
 good_bool
 canonical_type_footprint_frame_policy<user_def_datatype>::
 		initialize_and_assign(const canonical_user_def_data_type& cpt,
-		footprint_frame& ff
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, state_manager& sm, 
-		const port_member_context& pmc
-		, const size_t ind
-#endif
-		) {
+		footprint_frame& ff) {
 	STACKTRACE_VERBOSE;
 	const footprint&
 		f(cpt.get_base_def()->get_footprint(
 			cpt.get_raw_template_params()));
 	new (&ff) footprint_frame(f);	// placement construct
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	f.assign_footprint_frame(ff, pmc);
-	// allocate the rest with the state_manager
-	ff.allocate_remaining_subinstances(f, sm,
-		parent_tag_enum(
-			class_traits<datastruct_tag>::type_tag_enum_value),
-		ind);
-#endif
 	return good_bool(true);
 }
 

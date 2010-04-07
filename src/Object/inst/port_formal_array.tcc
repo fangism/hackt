@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.12 2010/04/02 22:18:26 fang Exp $
+	$Id: port_formal_array.tcc,v 1.13 2010/04/07 00:12:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -19,7 +19,6 @@
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
-#include "Object/port_context.h"
 #include "Object/def/footprint.h"
 #include "common/ICE.h"
 
@@ -537,38 +536,6 @@ PORT_FORMAL_ARRAY_CLASS::load_reference(istream& i) {
 	INVARIANT(index);
 	return *(this->begin() +(index -1));	// array-access
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
-void
-PORT_FORMAL_ARRAY_CLASS::construct_port_context(port_collection_context& pcc, 
-		const footprint_frame& ff) const {
-	STACKTRACE_VERBOSE;
-	const_iterator i(this->begin());
-	const const_iterator e(this->end());
-	pcc.resize(this->collection_size());
-	size_t j = 0;
-	for ( ; i!=e; ++i, ++j) {
-		i->construct_port_context(pcc, ff, j);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
-void
-PORT_FORMAL_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff, 
-		const port_collection_context& pcc) const {
-	STACKTRACE_VERBOSE;
-	INVARIANT(this->collection_size() == pcc.size());
-	const_iterator i(this->begin());
-	const const_iterator e(this->end());
-	size_t j = 0;
-	for ( ; i!=e; ++i, ++j) {
-		i->assign_footprint_frame(ff, pcc, j);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE

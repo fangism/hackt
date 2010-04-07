@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.9 2010/04/02 22:18:23 fang Exp $
+	$Id: instance_scalar.h,v 1.10 2010/04/07 00:12:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -132,12 +132,6 @@ public:
 	CREATE_DEPENDENT_TYPES_PROTO;
 
 	COLLECT_PORT_ALIASES_PROTO;
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	CONSTRUCT_PORT_CONTEXT_PROTO;
-
-	ASSIGN_FOOTPRINT_FRAME_PROTO;
-#endif
 
 	FINALIZE_SUBSTRUCTURE_ALIASES_PROTO;
 

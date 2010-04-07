@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.14 2010/04/02 22:19:00 fang Exp $
+	$Id: netgraph.h,v 1.15 2010/04/07 00:13:04 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -59,12 +59,8 @@ using std::string;
 using std::map;
 using std::set;
 using std::pair;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-using entity::cflat_context_visitor;
-using entity::state_manager;
-#endif
 using entity::footprint;
-using entity::GLOBAL_ENTRY;
+using entity::state_instance;
 using entity::bool_tag;
 using entity::process_tag;
 using entity::PRS::footprint_expr_node;
@@ -690,7 +686,7 @@ public:
 #endif
 
 	void
-	append_instance(const GLOBAL_ENTRY<process_tag>&, const netlist&, 
+	append_instance(const state_instance<process_tag>&, const netlist&, 
 		const index_type, const netlist_options&);
 
 	void

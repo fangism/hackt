@@ -1,16 +1,14 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.15 2010/04/02 22:18:36 fang Exp $
+	$Id: cflat_printer.h,v 1.16 2010/04/07 00:12:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
 #define	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
 
 #include "Object/lang/cflat_context_visitor.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/lang/cflat_visitor.h"
-#endif
 #include "util/member_saver_fwd.h"
 #include "Object/lang/SPEC_fwd.h"
 
@@ -25,11 +23,7 @@ namespace PRS {
 /**
 	PRS print visitor functor.  
  */
-class cflat_prs_printer : public cflat_context_visitor
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	, public cflat_visitor
-#endif
-{
+class cflat_prs_printer : public cflat_context_visitor, public cflat_visitor {
 	typedef	cflat_context_visitor		parent_type;
 public:
 	ostream&				os;
@@ -57,23 +51,12 @@ protected:
 
 public:
 	cflat_prs_printer(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 			const footprint_frame& ff, 
 			const global_offset& g,
-#endif
 			ostream& _os, const cflat_options& _cfo) :
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 			cflat_context_visitor(ff, g), 
-#else
-			cflat_context_visitor(), 
-#endif
 			os(_os), cfopts(_cfo) { }
 	~cflat_prs_printer();
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	ostream&
-	print_node_name(ostream&, const GLOBAL_ENTRY<bool_tag>&) const;
-#endif
 
 	void
 	__dump_canonical_literal(const size_t) const;
@@ -103,18 +86,14 @@ public:
 
 protected:
 	using cflat_context_visitor::visit;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	using cflat_visitor::visit;
-#endif
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	visit(const entity::footprint&);
-#endif
 
 	// override
 	void
-	visit(const GLOBAL_ENTRY<bool_tag>&);
+	visit(const state_instance<bool_tag>&);
 
 	void
 	visit(const footprint_rule&);

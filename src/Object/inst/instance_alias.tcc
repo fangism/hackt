@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.40 2010/04/02 22:18:21 fang Exp $
+	$Id: instance_alias.tcc,v 1.41 2010/04/07 00:12:39 fang Exp $
 	TODO: trim includes
  */
 
@@ -52,8 +52,6 @@
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/def/footprint.h"
 #include "Object/global_entry.h"
-#include "Object/port_context.h"
-#include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
 #include "Object/common/cflat_args.h"
 #include "Object/inst/alias_printer.h"
@@ -409,20 +407,10 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 		typename instance_type::pool_type&
 			the_pool(f.template get_instance_pool<Tag>());
 		i->instance_index = the_pool.allocate(instance_type(*i));
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		++i->instance_index;	// returned index is now 0-based
 		// but instance_id is 1-based
-#else
-		INVARIANT(this->instance_index);
-#endif
 		// also need to recursively allocate subinstances ids
 		i->allocate_subinstances(f);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		// OR... do this work in second pass after local allocations
-		// get the footprint for this type
-		// figure out how many private instances to allocate
-		// append private map entry to the owning footprint
-#endif
 	}
 	// by here, the canonical alias in this set has been processed
 	if (&*i != this) {
@@ -431,9 +419,6 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 		this->instance_index = i->instance_index;
 		// also need to recursively allocate subinstances ids
 		this->allocate_subinstances(f);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		// need to do anything here?
-#endif
 	}
 #if ENABLE_STACKTRACE
 	this->dump_hierarchical_name(STACKTRACE_INDENT)
@@ -597,23 +582,13 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
-		footprint_frame& ff
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, state_manager& sm,
-		const port_member_context& pmc
-		, const size_t ind
-#endif
-		) const {
+		footprint_frame& ff) const {
 	STACKTRACE_VERBOSE;
 	// this recursively fills up the footprint frame with indices
 	// assigned from the external context, mapped onto this
 	// instance's public ports.  
 	if (!actuals_parent_type::__initialize_assign_footprint_frame(
-			*this, ff
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-				, sm, pmc, ind
-#endif
-				).good) {
+			*this, ff).good) {
 		cerr << "Error alloc_assign_subinstance_footprint_frame."
 			<< endl;
 		return good_bool(false);
@@ -621,35 +596,6 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
 	// scan footprint_frame for unallocated subinstances, and create them!
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	This fills in an entry of a footprint_frame with a translated 
-	globally-allocated index.
-	Called recursively.  
- */
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
-		const port_collection_context& pcc, const size_t ind) const {
-	STACKTRACE_VERBOSE;
-	footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
-	// could use footprint_frame_transformer here for consistency
-	// except that this is with modify intent
-	const size_t local_offset = this->instance_index -1;
-	STACKTRACE_INDENT_PRINT("local_offset = " << local_offset << endl);
-	STACKTRACE_INDENT_PRINT("global_id = " << pcc.id_map[ind] << endl);
-	INVARIANT(ind < pcc.size());
-	INVARIANT(local_offset < fm.size());
-	fm[local_offset] = pcc.id_map[ind];
-#if ENABLE_STACKTRACE
-	ff.dump_frame(STACKTRACE_STREAM) << endl;
-#endif
-	substructure_parent_type::__assign_footprint_frame(
-		ff, pcc.substructure_array[ind]);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -965,40 +911,6 @@ INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias& a) const {
 #endif
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	First lookup canonical placeholder ID, assigned by create phase.
-	Then lookup...
-	\param pcc the port context to assign to.  
-	\param ff the reference footprint_frame.
-	\param sm the global state allocation manager.
-	\param ind offset into the port_collection_context.  
- */
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
-		port_collection_context& pcc,
-		const footprint_frame& ff,
-		const size_t ind) const {
-	STACKTRACE_VERBOSE;
-#if 0
-	const footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
-	const size_t local_placeholder_id = this->instance_index -1;
-	STACKTRACE_INDENT_PRINT("local_id = " << local_placeholder_id << endl);
-	STACKTRACE_INDENT_PRINT("global_id = " << fm[local_placeholder_id]
-		<< endl);
-	pcc.id_map[ind] = fm[local_placeholder_id];
-#else
-	const footprint_frame_transformer ft(ff, Tag());
-	pcc.id_map[ind] = ft(this->instance_index);
-	STACKTRACE_INDENT_PRINT("pcc.id_map[" << ind << "] = " <<
-		pcc.id_map[ind] << endl);
-#endif
-	this->__construct_port_context(pcc.substructure_array[ind], ff);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

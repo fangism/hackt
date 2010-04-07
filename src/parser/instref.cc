@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.21 2010/04/02 22:19:02 fang Exp $
+	$Id: instref.cc,v 1.22 2010/04/07 00:13:05 fang Exp $
  */
 
 #define	DEBUGGING_SHIT			0
@@ -86,7 +86,6 @@ using entity::entry_collection;
 using entity::index_set_type;
 using entity::global_indexed_reference;
 using entity::META_TYPE_NONE;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 using entity::META_TYPE_PROCESS;
 using entity::META_TYPE_INT;
 using entity::META_TYPE_ENUM;
@@ -97,7 +96,6 @@ using entity::global_entry_context;
 using entity::global_offset;
 using entity::global_offset_base;
 using std::set;
-#endif
 using std::vector;
 using std::copy;
 using std::string;
@@ -275,7 +273,6 @@ parse_node_to_index(const string& n, const module& m) {
 	// this code uses the allocation information from the 
 	// alloc phase to find the canonical ID number.  
 	const footprint& top(m.get_footprint());
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 //	const size_t ret = b->lookup_globally_allocated_index(top);
 	const footprint& topfp(m.get_footprint());
 	footprint_frame tff(topfp);
@@ -286,10 +283,6 @@ parse_node_to_index(const string& n, const module& m) {
 	gc.dump_context(STACKTRACE_INDENT_PRINT("context:")) << endl;
 #endif
 	const size_t ret = b->lookup_globally_allocated_index(gc);
-#else
-	const state_manager& sm(m.get_state_manager());
-	const size_t ret = b->lookup_globally_allocated_index(sm, top);
-#endif
 #if 0
 	cerr << "index = " << ret << endl;
 #endif
@@ -325,18 +318,12 @@ if (n == ".") {
 	// reminder: this is a packed_array_generic
 	// this code uses the allocation information from the 
 	// alloc phase to find the canonical ID number.  
-	const footprint& top(m.get_footprint());
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint& topfp(m.get_footprint());
 	footprint_frame tff(topfp);
 	const global_offset g;
 	tff.construct_top_global_context(topfp, g);
 	const global_entry_context gc(tff, g);
 	const size_t ret = b->lookup_globally_allocated_index(gc);
-#else
-	const state_manager& sm(m.get_state_manager());
-	const size_t ret = b->lookup_globally_allocated_index(sm, top);
-#endif
 	return ret;
 }
 }
@@ -364,17 +351,11 @@ global_indexed_reference
 parse_global_reference(const entity::meta_reference_union& r, const module& m) {
 	INVARIANT(r.inst_ref());
 	const footprint& topfp(m.get_footprint());
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	footprint_frame tff(topfp);
 	const global_offset g;
 	tff.construct_top_global_context(topfp, g);
 	const global_entry_context gc(tff, g);
 	return r.inst_ref()->lookup_top_level_reference(gc);
-#else
-	const state_manager& sm(m.get_state_manager());
-	// r.inst_ref() is a meta_instance_reference_base
-	return r.inst_ref()->lookup_top_level_reference(sm, topfp);
-#endif
 }
 
 //=============================================================================
@@ -387,7 +368,6 @@ static
 const footprint*
 get_process_footprint(const size_t pid, const module& m) {
 	typedef	process_tag			Tag;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint& topfp(m.get_footprint());
 if (pid) {
 	return topfp.get_instance<Tag>(pid -1)._frame._footprint;
@@ -395,16 +375,6 @@ if (pid) {
 	// top-level
 	return &topfp;
 }
-#else
-	const state_manager& sm(m.get_state_manager());
-	const global_entry_pool<Tag>&
-		proc_pool(sm.get_pool<Tag>());
-	// get process_instance_alias
-	const entity::global_entry<Tag>& pe(proc_pool[pid]);
-	const footprint* f = pe._frame._footprint;
-	NEVER_NULL(f);
-	return f;
-#endif
 }
 
 //=============================================================================
@@ -486,18 +456,12 @@ if (n == ".") {
 	} else {
 		// check for valid reference first
 		const footprint& topfp(m.get_footprint());
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		footprint_frame tff(topfp);
 		const global_offset g;
 		tff.construct_top_global_context(topfp, g);
 		const global_entry_context gc(tff, g);
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(gc));
-#else
-		const global_indexed_reference
-			gref(r.inst_ref()->lookup_top_level_reference(
-				m.get_state_manager(), topfp));
-#endif
 		if (!gref.second) {
 			o << "Error resolving instance reference: "
 				<< n << endl;
@@ -564,11 +528,7 @@ parse_name_to_get_subinstances(const string& n, const module& m,
 	const footprint& topfp(m.get_footprint());
 if (n == ".") {
 	// no lookup necessary, just copy all integers!
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #define PMAX(Tag)	topfp.get_instance_pool<Tag>().total_entries() +1
-#else
-#define	PMAX(Tag)	m.get_state_manager().get_pool<Tag>().size()
-#endif
 
 #define	ADD_EVERYTHING(Tag)						\
 {									\
@@ -643,7 +603,6 @@ int
 parse_name_to_get_subinstances(const global_indexed_reference& gref,
 		const module& m, entry_collection& e) {
 	const footprint& topfp(m.get_footprint());
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	switch (gref.first) {
 	case META_TYPE_PROCESS: {
 		// TODO: factor this out somewhere else for reuse?
@@ -728,13 +687,7 @@ parse_name_to_get_subinstances(const global_indexed_reference& gref,
 	default:
 		return 1;
 	}	// end switch
-#else
-	// OBSOLETE
-		if (!r.inst_ref()->collect_subentries(m, e).good) {
-			return 1;
-		}
-#endif
-		return 0;
+	return 0;
 }	// end parse_name_to_get_subnodes
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -753,7 +706,6 @@ parse_name_to_get_subnodes_local(const string& n, const module& m,
 	if (pid == INVALID_PROCESS_INDEX) {
 		return 1;
 	}
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	footprint_frame tff(m.get_footprint());
 	global_offset g, tmpg;
 	footprint_frame tmpf;
@@ -765,23 +717,9 @@ parse_name_to_get_subnodes_local(const string& n, const module& m,
 #endif
 	const footprint_frame_map_type&
 		pbf(tmpf.get_frame_map<bool_tag>());
-#else
-	const footprint_frame_map_type&
-		pbf(m.get_state_manager().get_bool_frame_map(pid));
-#endif
 	// unique sort it
 	std::set<size_t> s;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	copy(pbf.begin(), pbf.end(), set_inserter(s));
-#else
-	if (pid) {
-		copy(pbf.begin(), pbf.end(), set_inserter(s));
-	} else {	// top-level process needs transformation, yuck...
-		// FIXME: this is very BUG prone
-		copy(++pbf.begin(), pbf.end(), set_inserter(s));
-		// skip the 0th entry
-	}
-#endif
 	copy(s.begin(), s.end(), back_inserter(v));
 	return 0;
 }	// end parse_name_to_get_subnodes_local
@@ -809,7 +747,6 @@ parse_name_to_get_ports(const string& n, const module& m,
 		return 0;
 		// even when using user-specified top-type?
 	}
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	footprint_frame tff(m.get_footprint());
 	global_offset g, tmpg;
 	footprint_frame tmpf;
@@ -826,47 +763,6 @@ parse_name_to_get_ports(const string& n, const module& m,
 	std::set<size_t> s;
 	copy(pbf.begin(), pbf.begin() +ps, set_inserter(s));
 	copy(s.begin(), s.end(), back_inserter(v));
-	return 0;
-#else
-	const state_manager& sm(m.get_state_manager());
-	const footprint& topfp(m.get_footprint());
-	const entity::global_entry_context_base gec(sm, topfp);
-	const global_entry_pool<process_tag>&
-		proc_pool(sm.get_pool<process_tag>());
-	// get process_instance_alias
-	const entity::global_entry<process_tag>& pe(proc_pool[pid]);
-	const entity::state_instance<process_tag>&
-		p(pe.get_canonical_instance(gec));
-	const entity::instance_alias_info<process_tag>&
-		pi(*p.get_back_ref());
-	// get subinstances, and their local indices
-	entity::bool_port_collector<std::set<size_t> > C;
-	pi.accept(C);
-#if 0
-	pi.dump_ports(cout, entity::dump_flags::default_value) << endl;
-	copy(C.bool_indices.begin(), C.bool_indices.end(), 
-		ostream_iterator<size_t>(cout, ","));
-	cout << endl;
-#endif
-	if (pe.parent_tag_value == entity::META_TYPE_NONE) {
-		// then parent is top-level no transformation necessary
-		copy(C.bool_indices.begin(), C.bool_indices.end(),
-			back_inserter(v));
-	} else {
-		// we need to translate local to global indices
-		INVARIANT(pe.parent_tag_value == entity::META_TYPE_PROCESS);
-		const footprint_frame_map_type&
-			pbf(sm.get_bool_frame_map(pe.parent_id));
-		transform(C.bool_indices.begin(), C.bool_indices.end(), 
-			back_inserter(v),
-			entity::footprint_frame_transformer(pbf));
-	}
-	// can't handle non-processes yet :S
-#if 0
-	copy(v.begin(), v.end(), ostream_iterator<size_t>(cout, ","));
-	cout << endl;
-#endif
-#endif
 	return 0;
 }	// end parse_name_to_get_ports
 
@@ -896,7 +792,6 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 			<< endl;
 		return 1;
 	} else {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		set<string> aliases;
 		const footprint& topfp(m.get_footprint());
 		footprint_frame tff(topfp);
@@ -911,10 +806,6 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 		} else {
 			return 1;
 		}
-#else
-		string_list aliases;
-		r.inst_ref()->collect_aliases(m, aliases);
-#endif
 		ostream_iterator<string> osi(o, sep);
 		copy(aliases.begin(), aliases.end(), osi);
 		return 0;
@@ -996,18 +887,12 @@ complete_instance_names(const char* _text, const module& m,
 		if (r.inst_ref()->dimensions()) { return; }
 			// no error message
 		const footprint& topfp(m.get_footprint());
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		footprint_frame tff(topfp);
 		const global_offset g;
 		tff.construct_top_global_context(topfp, g);
 		const global_entry_context gc(tff, g);
 		const global_indexed_reference
 			gref(r.inst_ref()->lookup_top_level_reference(gc));
-#else
-		const global_indexed_reference
-			gref(r.inst_ref()->lookup_top_level_reference(
-				m.get_state_manager(), topfp));
-#endif
 		if (!gref.second) { return; }
 		if (gref.first != entity::META_TYPE_PROCESS) { return; }
 		// until non-process types have subinstances...

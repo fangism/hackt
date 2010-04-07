@@ -1,22 +1,16 @@
 /**
 	\file "Object/lang/cflat_context_visitor.h"
-	$Id: cflat_context_visitor.h,v 1.5 2010/04/02 22:18:35 fang Exp $
+	$Id: cflat_context_visitor.h,v 1.6 2010/04/07 00:12:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
 #define	__HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
 
 #include "Object/cflat_context.h"
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-#include "Object/lang/cflat_visitor.h"
-#endif
 #include "Object/lang/SPEC_fwd.h"
 
 namespace HAC {
 namespace entity {
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-using PRS::cflat_visitor;
-#endif
 
 //=============================================================================
 /**
@@ -31,37 +25,12 @@ using PRS::cflat_visitor;
 	Or should we provide a default visitation pattern?
  */
 class cflat_context_visitor :
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		public cflat_visitor,
-#endif
 		public cflat_context {
 public:
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	cflat_context_visitor() :
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		cflat_visitor(),
-#endif
-		cflat_context() { }
-#endif
 
 	cflat_context_visitor(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager& _sm, 
-		const footprint& _topfp
-#else
-		const footprint_frame& ff, const global_offset& g
-#endif
-		) :
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		cflat_visitor(),
-#endif
-		cflat_context(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			ff, g
-#else
-			_sm, _topfp
-#endif
-			) { }
+		const footprint_frame& ff, const global_offset& g) :
+		cflat_context(ff, g) { }
 
 	~cflat_context_visitor() { }
 

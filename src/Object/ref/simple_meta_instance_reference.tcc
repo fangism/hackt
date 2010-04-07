@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.34 2010/04/02 22:18:48 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.35 2010/04/07 00:12:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -20,9 +20,7 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "Object/type/fundamental_type_reference.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/global_entry_context.h"
-#endif
 #include "common/TODO.h"
 #include "common/ICE.h"
 #include "util/what.h"
@@ -222,22 +220,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const global_entry_context& gc
-#else
-		const state_manager& sm, const footprint& top
-#endif
-		) const {
+		const global_entry_context& gc) const {
 	STACKTRACE_VERBOSE;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const footprint& top(gc.get_top_footprint());
 	const footprint_frame* const fpf = gc.get_footprint_frame();
 	const unroll_context uc(fpf ? fpf->_footprint : &top, &top);
-#else
-	const unroll_context uc(&top, &top);
-#endif
 	// should not be virtual call (one hopes)
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// translate local index to global
 	const size_t lid = this->lookup_locally_allocated_index(uc);
 	if (lid) {
@@ -245,31 +233,18 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	} else {
 		return 0;
 	}
-#else
-	return this->lookup_locally_allocated_index(sm, uc);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 global_indexed_reference
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const global_entry_context& gc
-#else
-		const state_manager& sm, const footprint& top
-#endif
-		) const {
+		const global_entry_context& gc) const {
 	STACKTRACE_VERBOSE;
 #if 0
+	// also works
 	return global_indexed_reference(traits_type::type_tag_enum_value, 
-		this->lookup_globally_allocated_index(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			gc
-#else
-			sm, top
-#endif
-			));
+		this->lookup_globally_allocated_index(gc));
 #else
 	global_reference_array_type tmp;
 	if (lookup_top_level_references(gc, tmp).good) {
@@ -281,7 +256,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
@@ -301,7 +275,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
 		return good_bool(false);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -314,9 +287,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager&, 
-#endif
 		const unroll_context& uc) const {
 	STACKTRACE_VERBOSE;
 	const instance_alias_info_ptr_type
@@ -332,39 +302,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	STACKTRACE_INDENT_PRINT("local-index = " << ret << endl);
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Since this is a simple_meta_instance_reference, we're 
-	at the top of the reference hierarchy.  
-	We can just lookup the state_manager with the 
-	base instance's index.  
-	Implementation depends on whether or not this type
-	can have subinstances, so we use a policy class.  
-	\pre This should never be called for substructureless types.  
- */
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-const footprint_frame*
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const global_entry_context& gc
-#else
-		const state_manager& sm, const footprint& top
-#endif
-		) const {
-	STACKTRACE_VERBOSE;
-	return substructure_implementation_policy::
-		template simple_lookup_footprint_frame<Tag>(
-			*this->inst_collection_ref, this->array_indices, 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-				gc
-#else
-				sm, top
-#endif
-				);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

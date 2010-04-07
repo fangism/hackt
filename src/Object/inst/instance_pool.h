@@ -1,23 +1,17 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.13 2010/04/02 22:18:23 fang Exp $
+	$Id: instance_pool.h,v 1.14 2010/04/07 00:12:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
 #define	__HAC_OBJECT_INST_INSTANCE_POOL_H__
 
 #include <iosfwd>
+#include <vector>
 #include "Object/inst/instance_pool_fwd.h"
-#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-#include <vector>
-#else
-#include "util/list_vector.h"
-#include "util/memory/index_pool.h"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -27,13 +21,9 @@ using std::ostream;
 using std::vector;
 using util::good_bool;
 using util::persistent_object_manager;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-using util::memory::index_pool;
-#endif
 template <class> class instance_collection_pool_bundle;
 
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Map entry (remains sorted) is amended each time a local
 	structure is allocated.  key,value increase monotonically
@@ -45,7 +35,6 @@ template <class> class instance_collection_pool_bundle;
  */
 typedef	std::pair<size_t, size_t>		pool_private_map_entry_type;
 typedef	vector<pool_private_map_entry_type>	pool_private_entry_map_type;
-#endif
 
 //=============================================================================
 /**
@@ -57,18 +46,8 @@ typedef	vector<pool_private_map_entry_type>	pool_private_entry_map_type;
 		port_alias_tracker footprint::scope_aliases.
  */
 template <class T>
-class instance_pool :
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		private vector<T>
-#else
-		private index_pool<util::list_vector<T> >
-#endif
-{
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+class instance_pool : private vector<T> {
 	typedef	vector<T>				parent_type;
-#else
-	typedef	index_pool<util::list_vector<T> >	parent_type;
-#endif
 	typedef	instance_pool<T>		this_type;
 	typedef	typename T::tag_type		tag_type;
 public:
@@ -84,7 +63,6 @@ private:
 		Default chunk size when not specified.  
 	 */
 	enum	{ default_chunk_size = 32 };
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 public:	// out of sheer laziness for now...
 	// see "Object/inst/state_instance.h"
 	/**
@@ -109,11 +87,6 @@ public:	// out of sheer laziness for now...
 		from private_entry_map.back() plus the number of
 		local non-port entries in this instance_pool.
 	 */
-#if 0
-	size_t						_private_entries;
-#else
-	// can be deduced, use total_private_entries()
-#endif
 	typedef	pool_private_map_entry_type	private_map_entry_type;
 	typedef	pool_private_entry_map_type	private_entry_map_type;
 	/**
@@ -127,15 +100,10 @@ public:	// out of sheer laziness for now...
 		key and value should be monotonically increasing.
 	 */
 	private_entry_map_type				private_entry_map;
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
+
 public:
 	// custom default constructor
 	instance_pool();
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	explicit
-	instance_pool(const size_type);
-#endif
 
 private:
 	// copy-construction policy
@@ -146,7 +114,7 @@ public:
 	using parent_type::begin;
 	using parent_type::end;
 	using parent_type::operator[];
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
+
 	const_iterator
 	local_private_begin(void) const;
 
@@ -156,14 +124,9 @@ public:
 		this->push_back(t);
 		return this->size() -1;
 	}
-#else
-	using parent_type::size;
-	using parent_type::allocate;
-#endif
 
 	// there is no deallocate
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	/**
 		\return number of _port_entries
 		Use this value to size footprint_frames.
@@ -220,7 +183,6 @@ public:
 
 	const private_map_entry_type&
 	locate_cumulative_entry(const size_t) const;
-#endif
 
 	ostream&
 	dump(ostream&) const;

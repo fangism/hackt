@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.30 2010/04/02 22:18:27 fang Exp $
+	$Id: subinstance_manager.cc,v 1.31 2010/04/07 00:12:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -12,7 +12,6 @@
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/type/fundamental_type_reference.h"
-#include "Object/port_context.h"
 #include "Object/common/dump_flags.h"
 #include "Object/inst/physical_instance_placeholder.h"
 #if INSTANCE_SUPPLY_OVERRIDES
@@ -297,36 +296,6 @@ subinstance_manager::allocate_subinstances(footprint& f) {
 		}
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-void
-subinstance_manager::__construct_port_context(port_member_context& pmc, 
-		const footprint_frame& ff) const {
-	STACKTRACE_VERBOSE;
-	pmc.resize(size());
-	size_t j = 0;
-	const_iterator i(subinstance_array.begin());
-	const const_iterator e(subinstance_array.end());
-	for ( ; i!=e; i++, j++) {
-		(*i)->construct_port_context(pmc[j], ff);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-subinstance_manager::__assign_footprint_frame(footprint_frame& ff, 
-		const port_member_context& pmc) const {
-	STACKTRACE_VERBOSE;
-	INVARIANT(pmc.size() == subinstance_array.size());
-	size_t j = 0;
-	const_iterator i(subinstance_array.begin());
-	const const_iterator e(subinstance_array.end());
-	for ( ; i!=e; i++, j++) {
-		(*i)->assign_footprint_frame(ff, pmc[j]);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

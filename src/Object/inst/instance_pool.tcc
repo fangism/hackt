@@ -1,17 +1,15 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.14 2010/04/02 22:18:23 fang Exp $
+	$Id: instance_pool.tcc,v 1.15 2010/04/07 00:12:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
 #define	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
 
 #include <iostream>
-#include "Object/inst/instance_pool.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include <algorithm>
-#endif
+#include "Object/inst/instance_pool.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/def/footprint.h"
 #include "util/persistent_object_manager.tcc"	// for STACKTRACE macros
@@ -32,51 +30,17 @@ using util::auto_indent;
 //=============================================================================
 // class instance_pool method definitions
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Note: this constructor initializes with one element pre-allocated, 
-	so the first index returned by allocator is nonzero.  
- */
-template <class T>
-instance_pool<T>::instance_pool(const size_type s) : parent_type()
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, _port_entries(0), private_entry_map()
-#endif
-		{
-	STACKTRACE_CTOR_VERBOSE;
-	STACKTRACE_CTOR_PRINT("at: " << this << endl);
-	this->set_chunk_size(s);
-	allocate();
-	INVARIANT(this->size());
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-	// start with a dummy sentinel entry
-	private_entry_map.push_back(std::make_pair(0, 0));
-#endif
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Default constructor, when we don't care about chunk size.  
 	Note: this constructor initializes with one element pre-allocated, 
 	so the first index returned by allocator is nonzero.  
  */
 template <class T>
-instance_pool<T>::instance_pool() : parent_type()
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, _port_entries(0), private_entry_map()
-#endif
-		{
+instance_pool<T>::instance_pool() : parent_type(),
+		_port_entries(0), private_entry_map() {
 	STACKTRACE_CTOR_VERBOSE;
 	STACKTRACE_CTOR_PRINT("at: " << this << endl);
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	this->set_chunk_size(default_chunk_size);
-	allocate();
-	INVARIANT(this->size());
-#endif
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	private_entry_map.push_back(std::make_pair(0, 0));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -87,7 +51,6 @@ instance_pool<T>::~instance_pool() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 template <class T>
 typename instance_pool<T>::const_iterator
 instance_pool<T>::local_private_begin(void) const {
@@ -144,7 +107,6 @@ instance_pool<T>::locate_cumulative_entry(const size_t pi) const {
 	INVARIANT(f != private_entry_map.end());
 	return *f;
 }
-#endif
 
 //-----------------------------------------------------------------------------
 /**
@@ -157,25 +119,14 @@ instance_pool<T>::locate_cumulative_entry(const size_t pi) const {
 template <class T>
 ostream&
 instance_pool<T>::dump(ostream& o) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 // no-sentinel or dummy instance
-if (this->size())
-#else
-if (this->size() > 1)
-#endif
-{
+if (this->size()) {
 	o << auto_indent << traits_type::tag_name << " instance pool:";
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	o << " (" << this->port_entries() << " ports, " <<
 		this->local_private_entries() << " local, " <<
 		this->non_local_private_entries() << " mapped)";
-#endif
 	o << endl;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const_iterator i(this->begin());
-#else
-	const_iterator i(++this->begin());
-#endif
 	const const_iterator e(this->end());
 	size_t j = 1;
 	for ( ; i!=e; i++, j++) {
@@ -183,7 +134,6 @@ if (this->size() > 1)
 	}
 }
 	// else pool is empty
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	pool_private_entry_map_type::const_iterator
 		i(private_entry_map.begin()), e(private_entry_map.end());
 	INVARIANT(i != e);
@@ -207,7 +157,6 @@ if (private_entry_map.size() > 1) {
 	// silence empty sub maps
 #endif
 }
-#endif
 	return o;
 }
 
@@ -221,16 +170,7 @@ instance_pool<T>::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	STACKTRACE_PERSISTENT_PRINT("at: " << this << endl);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	for_each(this->begin(), this->end(), util::persistent_collector_ref(m));
-#else
-	INVARIANT(this->size());
-	const_iterator i(++this->begin());
-	const const_iterator e(this->end());
-	for ( ; i!=e; i++) {
-		i->collect_transient_info_base(m);
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -239,24 +179,8 @@ void
 instance_pool<T>::write_object_base(const collection_pool_bundle_type& m, 
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	util::write_persistent_sequence(m, o, AS_A(const parent_type&, *this));
-#else
-	const_iterator i(++this->begin());	// skip first element (NULL)
-	const const_iterator e(this->end());
-	const size_t s = this->size();
-	STACKTRACE_PERSISTENT_PRINT("size = " << s << endl);
-	INVARIANT(s);
-	write_value(o, s-1);
-	for ( ; i!=e; ++i) {
-		i->write_object_base(m, o);
-	}
-#endif
-#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
-	// technically, this information can be reconstructed
-	write_value(o, _port_entries);
-	write_sequence(o, private_entry_map);
-#endif
+	// other member fields are reconstructed
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -271,25 +195,8 @@ void
 instance_pool<T>::load_object_base(const collection_pool_bundle_type& m, 
 		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	util::read_persistent_sequence_resize(m, i, AS_A(parent_type&, *this));
-#else
-	size_t s;
-	read_value(i, s);
-	STACKTRACE_PERSISTENT_PRINT("size = " << s << endl);
-	size_t j=0;
-	for ( ; j<s; j++) {
-		T temp;
-		temp.load_object_base(m, i);
-		this->allocate(temp);
-		// works because this_type is copy-constructible
-	}
-#endif
-#if 0 && MEMORY_MAPPED_GLOBAL_ALLOCATION
-	// technically, this information can be reconstructed
-	read_value(i, _port_entries);
-	read_sequence_resize(i, private_entry_map);
-#endif
+	// other member fields are reconstructed
 }
 
 //=============================================================================

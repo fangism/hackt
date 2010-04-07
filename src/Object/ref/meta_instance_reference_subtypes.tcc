@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.30 2010/04/02 22:18:46 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.31 2010/04/07 00:12:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -23,10 +23,8 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/common/dump_flags.h"
-#include "Object/state_manager.tcc"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 #include "util/stacktrace.h"
-#include "Object/inst/alias_matcher.h"
 #include "common/TODO.h"
 #include "util/macros.h"
 
@@ -90,81 +88,6 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 	// else fall-through handle multidimensional case
 	return true;            // conservatively
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	First resolves canonical globally allocated index.  
-	Accumulates all aliases by traversing instance hierarchy
-	and recording matches.  
-	\param sm the global state manager with globally allocated
-		map of all unique instances.  
-	\param aliases the string container in which to accumulate aliases.  
-	\pre m module is already allocated ('alloc' phase).  
-	\pre this must be a scalar, simple_meta_instance_reference type, 
-		member-references are acceptable.  
- */
-// TODO: redo
-META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-void
-META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod, 
-		string_list& aliases) const {
-	// assert dynamic_cast
-	const simple_reference_type&
-		_this(IS_A(const simple_reference_type&, *this));
-	const size_t index = _this.lookup_globally_allocated_index(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		mod.get_state_manager(), 
-#endif
-		mod.get_footprint());
-	INVARIANT(index);	// because we already checked reference?
-	mod.template match_aliases<Tag>(aliases, index);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Collects all subnodes of this reference.  
-	If this is scalar, just visit the one, 
-	else if this is aggregate (e.g. array slice) then visit
-	all instances in range.  
- */
-// TODO: redo -- use extended footprint_frame with offsets!
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-good_bool
-META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod, 
-		entry_collection& v) const {
-	const simple_reference_type&
-		_this(IS_A(const simple_reference_type&, *this));
-	const state_manager& sm(mod.get_state_manager());
-	// temporary kludge until we clean up
-	const footprint& top(mod.get_footprint());
-	if (_this.dimensions()) {
-		vector<size_t> inds;
-		if (!_this.lookup_globally_allocated_indices(sm, 
-				top, inds).good) {
-			// got error message already
-			return good_bool(false);
-		}
-		// else we're good
-		vector<size_t>::const_iterator i(inds.begin()), e(inds.end());
-		for ( ; i!=e; ++i) {
-			sm.template collect_subentries<Tag>(v, *i);
-		}
-	} else {
-		const size_t index =
-			_this.lookup_globally_allocated_index(sm, top);
-		if (!index) {
-			this->dump(cerr << "ERROR: bad instance reference: ",
-				expr_dump_context::default_value) << endl;
-			return good_bool(false);
-		}
-		sm.template collect_subentries<Tag>(v, index);
-	}
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -334,9 +257,6 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager& /* sm */, 
-#endif
 		const footprint& top, 
 		vector<size_t>& indices) const {
 	STACKTRACE_VERBOSE;

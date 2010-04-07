@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.6 2010/04/02 22:18:35 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.7 2010/04/07 00:12:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,9 +18,7 @@
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/common/dump_flags.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/global_entry_context.h"
-#endif
 #include "common/TODO.h"
 #include "util/indent.h"
 #include "util/IO_utils.h"

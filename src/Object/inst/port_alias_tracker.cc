@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.29 2010/04/05 22:20:56 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.30 2010/04/07 00:12:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,9 +13,7 @@
 #include "Object/inst/port_alias_tracker.tcc"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/global_channel_entry.h"
-#endif
 #include "Object/inst/connection_policy.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/instance_pool.h"
@@ -546,7 +544,6 @@ port_alias_tracker_base<Tag>::__sift_ports(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	For the complete set of scope aliases, this returns the index offset 
 	of the first non-port alias.
@@ -603,7 +600,6 @@ port_alias_tracker_base<Tag>::__assign_frame(
 	}
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -626,14 +622,9 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 		const const_alias_ptr_type al(i->second.shortest_alias());
 		INVARIANT(i->first);	// non-zero
 		STACKTRACE_INDENT_PRINT("i->first = " << i->first << endl);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		BOUNDS_CHECK(i->first <= p.local_entries());
 		p[i->first -1].set_back_ref(al);
 		// 1-based to 0-based index, no dummy instance anymore
-#else
-		BOUNDS_CHECK(i->first < p.size());
-		p[i->first].set_back_ref(al);
-#endif
 	}
 }
 
@@ -915,7 +906,6 @@ port_alias_tracker::dump_local_bool_aliases(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 void
 port_alias_tracker::assign_alias_frame(const substructure_alias& a, 
 		footprint_frame& ff) const {
@@ -928,7 +918,6 @@ port_alias_tracker::assign_alias_frame(const substructure_alias& a,
 	port_alias_tracker_base<int_tag>::__assign_frame(a, ff);
 	port_alias_tracker_base<bool_tag>::__assign_frame(a, ff);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES

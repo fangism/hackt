@@ -4,7 +4,7 @@
 	Useful for testing object file integrity.  
 	This file came from "artobjdump.cc" in a previous life.  
 
-	$Id: objdump.cc,v 1.11 2010/04/02 22:18:59 fang Exp $
+	$Id: objdump.cc,v 1.12 2010/04/07 00:13:02 fang Exp $
  */
 
 #include <iostream>
@@ -13,9 +13,7 @@
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
 #include "main/global_options.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/type/process_type_reference.h"
-#endif
 #include "util/getopt_mapped.h"
 #include "util/using_ostream.h"
 
@@ -91,7 +89,6 @@ if (opt.show_table_of_contents) {
 
 	// this should really go to std::cout...
 	ostream& o(cout);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	count_ptr<const process_type_reference> rpt;
 if (opt.use_referenced_type_instead_of_top_level) {
 	// create this in advance before dumping definitions/footprints
@@ -101,7 +98,6 @@ if (opt.use_referenced_type_instead_of_top_level) {
 		return 1;
 	}
 }
-#endif
 if (opt.show_hierarchical_definitions) {
 	the_module->dump_definitions(o);
 }
@@ -110,7 +106,6 @@ if (opt.show_hierarchical_definitions) {
 		return 1;
 	}
 if (opt.show_global_allocate_table) {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	const count_ptr<const module> m(the_module);
 	o << "Globally allocated state:" << endl;
 if (opt.use_referenced_type_instead_of_top_level) {
@@ -119,9 +114,6 @@ if (opt.use_referenced_type_instead_of_top_level) {
 } else {
 	m->get_footprint().dump_allocation_map(o) << endl;
 }
-#else
-	the_module->dump_instance_map(o);
-#endif
 }
 	return 0;
 }
@@ -170,12 +162,10 @@ objdump::parse_command_options(const int argc, char* argv[], options& o) {
 	case 'M':
 		o.auto_allocate = true;
 		break;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	case 't':
 		o.use_referenced_type_instead_of_top_level = true;
 		o.named_process_type = optarg;
 		break;
-#endif
 	case 'v':
 		config::dump_all(cout);
 		exit(0);

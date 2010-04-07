@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.20 2010/04/02 22:18:25 fang Exp $
+	$Id: port_alias_tracker.h,v 1.21 2010/04/07 00:12:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -238,13 +238,11 @@ protected:
 
 	struct port_alias_importer;
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	size_t
 	__port_offset(void) const;
 
 	void
 	__assign_frame(const substructure_alias&, footprint_frame&) const;
-#endif
 
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 #if 0
@@ -318,7 +316,6 @@ public:
 	const typename port_alias_tracker_base<Tag>::map_type&
 	get_id_map(void) const { return port_alias_tracker_base<Tag>::_ids; }
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// should only be called from footprint::port_aliases
 	template <class Tag>
 	size_t
@@ -336,7 +333,7 @@ public:
 	// only port_aliases as this, with Tag=process_tag
 	void
 	assign_alias_frame(const substructure_alias&, footprint_frame&) const;
-#endif
+
 public:
 
 	good_bool

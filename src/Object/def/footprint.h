@@ -1,13 +1,14 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.32 2010/04/02 22:18:13 fang Exp $
+	$Id: footprint.h,v 1.33 2010/04/07 00:12:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_H__
 
 #include <iosfwd>
+#include <set>
 #include "Object/devel_switches.h"
 #include "Object/def/footprint_base.h"
 #include "Object/inst/port_alias_tracker.h"
@@ -15,11 +16,8 @@
 #include "Object/inst/collection_index_entry.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/lang/CHP_footprint.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-#include <set>
 #include "Object/ref/reference_enum.h"
 #include "util/tokenize_fwd.h"		// for string_list
-#endif
 
 #include "util/boolean_types.h"
 #include "util/string_fwd.h"
@@ -35,9 +33,7 @@ namespace entity {
 namespace PRS {
 	class footprint;
 	class footprint_rule;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	class cflat_visitor;
-#endif
 }
 namespace SPEC {
 	class footprint;
@@ -49,14 +45,10 @@ class definition_base;
 class instance_collection_base;
 class port_formals_manager;
 class scopespace;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 using std::set;
 class footprint_visitor;
 struct global_offset;
 struct global_entry_context;
-#else
-class port_member_context;
-#endif
 class footprint_manager;
 struct entry_collection;
 struct alias_visitor;
@@ -355,7 +347,6 @@ public:
 		return scope_aliases;
 	}
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// index is 0-based
 	template <class Tag>
 	ostream&
@@ -375,7 +366,6 @@ public:
 	good_bool
 	collect_subentries(const global_indexed_reference&,
 		entry_collection&) const;
-#endif
 #endif
 
 	template <class Tag>
@@ -471,7 +461,6 @@ public:
 	const SPEC::footprint&
 	get_spec_footprint(void) const { return *spec_footprint; }
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	template <class Tag>
 	size_t
 	port_frame_size(void) const {
@@ -505,16 +494,7 @@ private:
 	__set_global_offset_by_process(global_offset&, const size_t) const;
 
 public:
-#else
-	good_bool
-	expand_unique_subinstances(state_manager&) const;
 
-	void
-	assign_footprint_frame(footprint_frame&, 
-		const port_member_context&) const;
-#endif
-
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	template <class Tag>
 	void
 	collect_aliases_recursive(const size_t, set<string>&, 
@@ -527,13 +507,9 @@ public:
 	template <class Tag>
 	void
 	collect_port_aliases(const size_t, set<string>&) const;
-#endif
 
 	void
 	cflat_aliases(ostream&,
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		const state_manager&,
-#endif
 		const cflat_options&) const;
 
 	// eventually pass parameter for warning control 
@@ -546,9 +522,11 @@ public:
 	void
 	accept(alias_visitor&) const;
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	accept(global_entry_context&) const;
+
+	ostream&
+	dump_non_process_dot_nodes(ostream&) const;
 
 	ostream&
 	dump_allocation_map(ostream&) const;
@@ -556,8 +534,11 @@ public:
 private:
 	template <class Tag>
 	ostream&
+	__dump_instances_dot_nodes(ostream&) const;
+
+	template <class Tag>
+	ostream&
 	__dump_allocation_map(ostream&) const;
-#endif
 
 public:
 	instance_collection_ptr_type

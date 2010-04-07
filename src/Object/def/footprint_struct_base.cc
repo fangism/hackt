@@ -2,7 +2,7 @@
 	\file "Object/inst/footprint_struct_base.cc"
 	Explicit template instantiations of footprint_bases
 	that manage (sub)structured meta-types.  
-	$Id: footprint_struct_base.cc,v 1.4 2010/04/02 22:18:14 fang Exp $
+	$Id: footprint_struct_base.cc,v 1.5 2010/04/07 00:12:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -25,9 +25,7 @@
 #include "Object/inst/instance_array.h"
 #include "Object/inst/instance_collection_pool_bundle.tcc"
 #include "Object/devel_switches.h"
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 #include "Object/global_channel_entry.h"
-#endif
 
 namespace HAC {
 namespace entity {

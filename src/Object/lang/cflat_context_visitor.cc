@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.7 2010/04/02 22:18:35 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.8 2010/04/07 00:12:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,7 +12,6 @@
 #include "Object/global_entry_context.tcc"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/global_entry.tcc"
-#include "Object/state_manager.h"
 #include "Object/traits/bool_traits.h"
 #include "util/stacktrace.h"
 
@@ -48,14 +47,9 @@ cflat_context_visitor::__lookup_global_bool_id(const size_t lni) const {
 ostream&
 cflat_context_visitor::__dump_resolved_canonical_literal(
 		ostream& os, const size_t ni) const {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// 0-based
 	INVARIANT(ni);
 	return topfp->dump_canonical_name<bool_tag>(os, ni-1);
-#else
-	return sm->get_pool<bool_tag>()[ni]
-		.dump_canonical_name(os, *topfp, *sm);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

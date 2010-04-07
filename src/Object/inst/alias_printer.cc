@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.10 2010/04/03 01:32:22 fang Exp $
+	$Id: alias_printer.cc,v 1.11 2010/04/07 00:12:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -12,7 +12,6 @@
 #endif
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
-#include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
 #include "Object/common/alias_string_cache.h"
 #include "Object/common/cflat_args.tcc"
@@ -23,10 +22,8 @@
 
 namespace HAC {
 namespace entity {
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 using util::value_saver;
 using util::swap_saver;
-#endif
 
 //=============================================================================
 static
@@ -35,82 +32,15 @@ cflat_print_alias(ostream&, const string&, const string&,
 		const cflat_options&);
 
 //=============================================================================
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Defined by specialization only.  
-	\param HasSubstructure whether or not the meta-class type
-		has substructure.  
- */
-template <bool HasSubstructure>
-struct alias_printer_recursion_policy;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <>
-struct alias_printer_recursion_policy<false> {
-	template <class Tag>
-	static
-	void
-	accept(alias_printer& c, const GLOBAL_ENTRY<Tag>& e, const size_t gi) {
-		typedef class_traits<Tag>		traits_type;
-		STACKTRACE_VERBOSE;
-	if (traits_type::print_cflat_leaf) {
-		ostringstream os;
-		e.dump_canonical_name(os, c.topfp, c.sm);
-		const string& canonical(os.str());
-		STACKTRACE_INDENT_PRINT("canonical = " << canonical << endl);
-	if (!c.cf.check_prs) {
-		if (!c.cf.wire_mode) {
-			cflat_print_alias(c.o, canonical, c.prefix, c.cf);
-		} else if (canonical != c.prefix) {
-			// this should only be done for bool_tag!
-			INVARIANT(gi < c.wires.size());
-			c.wires[gi].strings.push_back(c.prefix);
-		}
-	}
-	}
-	}
-};	// end struct alias_printer_recursion_policy
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <>
-struct alias_printer_recursion_policy<true> {
-	template <class Tag>
-	static
-	void
-	accept(alias_printer& c, const GLOBAL_ENTRY<Tag>& e, const size_t) {
-	STACKTRACE_VERBOSE;
-	// saves away current footprint frame on stack, and restores on return
-	const alias_printer::save_frame save(c, &e._frame);
-	NEVER_NULL(c.fpf);
-	NEVER_NULL(c.fpf->_footprint);
-	c.fpf->_footprint->accept(c);
-	}
-
-};	// end struct alias_printer_recursion_policy
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
-
-//=============================================================================
 // class alias_printer method definitions
 
 alias_printer::alias_printer(ostream& _o,
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 		const footprint_frame& _fpf,
 		const global_offset& g,
-#else
-		const state_manager& _sm,
-		const footprint& _f,
-		const footprint_frame* const _fpf,
-#endif
 		const cflat_options& _cf,
 		wire_alias_set& _w,
 		const string& _p) :
-		cflat_aliases_arg_type(
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			_fpf, g, _p
-#else
-			_sm, _f, _fpf
-#endif
-			), 
+			cflat_aliases_arg_type(_fpf, g, _p), 
 			local_bool_aliases(), 
 			o(_o),
 			cf(_cf),
@@ -118,7 +48,6 @@ alias_printer::alias_printer(ostream& _o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 /**
 	Save additional structures first.
 	Parent call to visit() will call virtual visit_footprint();
@@ -282,54 +211,6 @@ if (!cf.check_prs) {
 }
 }
 }
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-/**
-	Rather than take a footprint argument, passed by the collection, 
-	we get the footprint each time because collections with
-	relaxed types may have different types per element.  
-	This executes in a top-down traversal of the hierarchy.  
-	NOTE: this code was relocated from instance_alias_info::cflat_aliases.
- */
-template <class Tag>
-void
-alias_printer::__visit(const instance_alias_info<Tag>& a) {
-	typedef class_traits<Tag>		traits_type;
-	STACKTRACE_VERBOSE;
-	// possibly uninstantiated because of conditionals
-if (a.valid()) {
-	ostringstream os;
-	a.dump_hierarchical_name(os, dump_flags::no_leading_scope);
-	const string& local_name(os.str());
-	STACKTRACE_INDENT_PRINT("local " << traits_type::tag_name <<
-		" name[" << a.instance_index << "] = " << local_name << endl);
-	// construct new prefix from os
-	const alias_printer::save_prefix save(*this);
-	const global_entry_pool<Tag>& gp(this->sm.template get_pool<Tag>());
-	size_t gindex;
-if (this->fpf) {
-	this->prefix += ".";
-	// this is not a top-level instance (from recursion)
-	const footprint_frame_transformer ft(*this->fpf, Tag());
-	gindex = ft(a.instance_index);
-} else {
-	// footprint_frame is null, this is a top-level instance
-	// the instance_index can be used directly as the offset into
-	// the state_manager's member arrays
-	BOUNDS_CHECK(a.instance_index && a.instance_index < gp.size());
-	gindex = a.instance_index;
-}
-	const global_entry<Tag>& e(gp[gindex]);
-	this->prefix += local_name;
-	STACKTRACE_INDENT_PRINT("prefix = " << prefix << endl);
-	alias_printer_recursion_policy<traits_type::has_substructure>::accept(
-		*this, e, gindex);
-	// recursion or termination
-}	// end if a.valid()
-}
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -362,30 +243,6 @@ if (cf.dump_self_connect || alias != canonical) {
 	o << endl;
 }       
 }
-
-//=============================================================================
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-#define	DEFINE_INSTANCE_ALIAS_INFO_VISITOR(Tag)				\
-void									\
-alias_printer::visit(const instance_alias_info<Tag>& a) {		\
-	__visit(a);							\
-}
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-DEFINE_INSTANCE_ALIAS_INFO_VISITOR(bool_tag)
-#endif
-DEFINE_INSTANCE_ALIAS_INFO_VISITOR(int_tag)
-DEFINE_INSTANCE_ALIAS_INFO_VISITOR(enum_tag)
-#if ENABLE_DATASTRUCTS
-DEFINE_INSTANCE_ALIAS_INFO_VISITOR(datastruct_tag)
-#endif
-DEFINE_INSTANCE_ALIAS_INFO_VISITOR(channel_tag)
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-DEFINE_INSTANCE_ALIAS_INFO_VISITOR(process_tag)
-#endif
-
-#undef	DEFINE_INSTANCE_ALIAS_INFO_VISITOR
-#endif
 
 //=============================================================================
 }	// end namespace entity

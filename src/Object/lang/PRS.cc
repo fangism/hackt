@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.41 2010/04/02 22:18:31 fang Exp $
+	$Id: PRS.cc,v 1.42 2010/04/07 00:12:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -662,22 +662,17 @@ if (output.is_internal()) {
 		bp(tfp.get_instance_pool<bool_tag>());
 	// kludge: get_back_ref only returns const ptr ...
 	const_cast<instance_alias_info<bool_tag>&>(
-		*bp[output_node_index
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			-1		// pool is 0-indexed
-#endif
-			].get_back_ref()).find()->prs_fanin(dir);
+		*bp[output_node_index -1].get_back_ref())
+			.find()->prs_fanin(dir);
+		// pool is 0-indexed
 	std::set<size_t> f;	// node_index_type
 	pfp.collect_literal_indices(f, guard_expr_index);
 	std::set<size_t>::const_iterator
 		i(f.begin()), e(f.end());
 	for ( ; i!=e; ++i) {
 		const_cast<instance_alias_info<bool_tag>&>(
-			*bp[*i
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-			-1		// pool is 0-indexed
-#endif
-				].get_back_ref()).find()->prs_fanout(dir);
+			*bp[*i -1].get_back_ref()).find()->prs_fanout(dir);
+		// pool is 0-indexed
 	}
 }
 #endif
@@ -2522,14 +2517,9 @@ if (name == "passn" || name == "passp") {
 	state_instance<bool_tag>::pool_type&
 		bp(tfp.get_instance_pool<bool_tag>());
 	// see "Object/lang/PRS_macro_registry.cc" for node interpretation
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
-#define	ADJUST	-1
-#else
-#define	ADJUST
-#endif
-	const size_t g = *new_macro_call.nodes[0].begin() ADJUST;
-	const size_t s = *new_macro_call.nodes[1].begin() ADJUST;
-	const size_t d = *new_macro_call.nodes[2].begin() ADJUST;
+	const size_t g = *new_macro_call.nodes[0].begin() -1;
+	const size_t s = *new_macro_call.nodes[1].begin() -1;
+	const size_t d = *new_macro_call.nodes[2].begin() -1;
 	const bool dir = (name == "passn") ? false : true;	// direction
 	const_cast<instance_alias_info<bool_tag>&>(
 		*bp[g].get_back_ref()).find()->prs_fanout(dir);
@@ -2537,7 +2527,6 @@ if (name == "passn" || name == "passp") {
 		*bp[s].get_back_ref()).find()->prs_fanout(dir);
 	const_cast<instance_alias_info<bool_tag>&>(
 		*bp[d].get_back_ref()).find()->prs_fanin(dir);
-#undef	ADJUST
 }
 #endif
 	return good_bool(true);

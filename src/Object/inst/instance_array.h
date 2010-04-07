@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.9 2010/04/02 22:18:21 fang Exp $
+	$Id: instance_array.h,v 1.10 2010/04/07 00:12:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -152,12 +152,6 @@ public:
 	CREATE_DEPENDENT_TYPES_PROTO;
 
 	COLLECT_PORT_ALIASES_PROTO;
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	CONSTRUCT_PORT_CONTEXT_PROTO;
-
-	ASSIGN_FOOTPRINT_FRAME_PROTO;
-#endif
 
 	FINALIZE_SUBSTRUCTURE_ALIASES_PROTO;
 

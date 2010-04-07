@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.19 2010/04/02 22:17:53 fang Exp $
+	$Id: global_entry.h,v 1.20 2010/04/07 00:12:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -34,7 +34,6 @@ class footprint;
 class state_manager;
 class entry_collection;		// defined in "Object/entry_collection.h"
 class footprint_frame;
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 struct global_offset;
 template <class Tag>
 struct global_offset_base;
@@ -42,13 +41,9 @@ template <class Tag>
 struct  state_instance;
 template <class T>
 struct  instance_pool;
-#endif
 
 template <class Tag>
 struct  global_entry;
-
-template <class Tag>
-class global_entry_pool;
 
 template <class Tag>
 class instance_alias_info;
@@ -63,7 +58,7 @@ typedef	std::vector<size_t>		footprint_frame_map_type;
 	this would show the range of IDs local to subprocesses.
 	This will take a little more memory...
  */
-#define	EXTENDED_FOOTPRINT_FRAME	(1 && MEMORY_MAPPED_GLOBAL_ALLOCATION)
+#define	EXTENDED_FOOTPRINT_FRAME	1
 
 //=============================================================================
 /**
@@ -82,12 +77,10 @@ struct footprint_frame_map {
 
 	explicit
 	footprint_frame_map(const footprint&);
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 protected:
 	footprint_frame_map(const this_type&, const this_type&);
 
 public:
-#endif
 
 	~footprint_frame_map();
 
@@ -110,7 +103,6 @@ protected:
 	void
 	__swap(footprint_frame&);
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	__construct_top_global_context(const footprint&, 
 		const global_offset_base<Tag>&);
@@ -119,21 +111,6 @@ protected:
 	__construct_global_context(const footprint&, 
 		const footprint_frame_map<Tag>&,
 		const global_offset_base<Tag>&);
-#else
-	void
-	__initialize_top_frame(const footprint&);
-
-	void
-	__allocate_remaining_sub(state_manager&, 
-		const parent_tag_enum, const size_t);
-
-	void
-	__expand_subinstances(const footprint&, state_manager&,
-		const size_t, const size_t);
-
-	void
-	__collect_subentries(entry_collection&, const state_manager&) const;
-#endif
 
 };	// end struct footprint_frame_map
 
@@ -180,9 +157,7 @@ struct footprint_frame :
 	explicit
 	footprint_frame(const footprint&);
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	footprint_frame(const footprint_frame&, const footprint_frame&);
-#endif
 
 	~footprint_frame();
 
@@ -220,7 +195,6 @@ struct footprint_frame :
 	ostream&
 	dump_frame(ostream&) const;
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 private:
 	template <class Tag>
 	ostream&
@@ -232,7 +206,7 @@ public:
 	dump_extended_frame(ostream&, const global_offset&, 
 		const global_offset&, const global_offset&) const;
 
-#if 1
+#if EXTENDED_FOOTPRINT_FRAME
 private:
 	template <class Tag>
 	void
@@ -242,27 +216,17 @@ public:
 	void
 	extend_frame(const global_offset&, const global_offset&);
 #endif
-#endif
 
 	template <class Tag>
 	ostream&
 	dump_footprint(global_entry_dumper&) const;
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	void
 	construct_top_global_context(const footprint&, const global_offset&);
 
 	void
 	construct_global_context(const footprint&, 
 		const footprint_frame&, const global_offset&);
-#else
-	void
-	allocate_remaining_subinstances(const footprint&, state_manager&, 
-		const parent_tag_enum, const size_t);
-
-	void
-	collect_subentries(entry_collection&, const state_manager&) const;
-#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -279,18 +243,16 @@ private:
 	dump_id_map(const footprint_frame_map_type&, ostream&, 
 		const char* const);
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	static
 	ostream&
 	dump_extended_id_map(const footprint_frame_map_type&,
 		const size_t, const size_t, const size_t, 
 		ostream&, const char* const);
 
-#if 1
+#if EXTENDED_FOOTPRINT_FRAME
 	static
 	void
 	extend_id_map(footprint_frame_map_type&, const size_t, const size_t);
-#endif
 #endif
 
 	static
@@ -343,7 +305,6 @@ struct footprint_frame_transformer {
 };	// end struct footprint_frame_transformer
 
 //=============================================================================
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 struct add_local_private_tag {};
 struct add_total_private_tag {};
 struct add_all_local_tag {};
@@ -407,8 +368,6 @@ struct global_offset :
 ostream&
 operator << (ostream&, const global_offset&);
 
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
-
 //=============================================================================
 template <bool B>
 struct global_entry_substructure_base;
@@ -430,7 +389,6 @@ struct global_entry_substructure_base<false> {
 	const footprint_frame*
 	get_frame(void) const { return NULL; }
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	ostream&
 	dump_type(ostream& o) const {
 		return o;
@@ -440,7 +398,6 @@ struct global_entry_substructure_base<false> {
 	dump_frame_only(ostream& o) const {
 		return o;
 	}
-#endif
 
 	template <class Tag>
 	static
@@ -448,11 +405,6 @@ struct global_entry_substructure_base<false> {
 	count_frame_size(const size_t& s, const global_entry<Tag>&) {
 		return s;
 	}
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	void
-	collect_subentries(entry_collection&, const state_manager&) const { }
-#endif
 
 	void
 	collect_transient_info_base(const persistent_object_manager&) const { }
@@ -495,18 +447,6 @@ public:
 	size_t
 	count_frame_size(const size_t s, const this_type&);
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	void
-	initialize_top_frame(const footprint& f) {
-		_frame.initialize_top_frame(f);
-	}
-
-	void
-	collect_subentries(entry_collection& e, const state_manager& sm) const {
-		_frame.collect_subentries(e, sm);
-	}
-#endif
-
 	// some footprint (in frame) may contain relaxed template arguments.  
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -524,39 +464,6 @@ public:
 
 //=============================================================================
 /**
-	Data common to all global entries (uniquely allocated objects).  
-	TODO: is this still useful with MEMORY_MAPPED_GLOBAL_ALLOCATION?
- */
-struct global_entry_common {
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	/**
-		Uses parent_tag_enum.
-	 */
-	char		parent_tag_value;
-	/**
-		Used as a global index to parent structure.  
-	 */
-	size_t		parent_id;
-	/**
-		The placeholder id in the corresponding parent type.  
-		This used to lookup the parent's footprint_frame.
-		The position in the frame is used to identify
-		the canonical entry in the footprint.  
-		Invariant: the id obtained from looking up the 
-		parent's footprint frame corresponds to the 
-		global ID of this entry.  
-		Because of aliasing, multiple entries in the footprint
-		frame may point to the same global entry.  
-	 */
-	size_t		local_offset;
-
-	global_entry_common() : parent_tag_value(META_TYPE_NONE), parent_id(0),
-			local_offset(0) { }
-#endif	// MEMORY_MAPPED_GLOBAL_ALLOCATION
-};	// end struct global_entry_common
-
-//=============================================================================
-/**
 	Default implementation.  
  */
 template <class Tag>
@@ -564,9 +471,6 @@ struct global_entry_base :
 	public global_entry_substructure_base<false> {
 	typedef	global_entry_substructure_base<false>	substructure_policy;
 	using substructure_policy::dump;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	using substructure_policy::collect_subentries;
-#endif
 	using substructure_policy::collect_transient_info_base;
 	using substructure_policy::write_object_base;
 	using substructure_policy::load_object_base;
@@ -582,9 +486,6 @@ struct global_entry_base<process_tag> :
 	typedef	global_entry_substructure_base<true>	substructure_policy;
 
 	using substructure_policy::dump;
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	using substructure_policy::collect_subentries;
-#endif
 	using substructure_policy::collect_transient_info_base;
 	using substructure_policy::write_object_base;
 	using substructure_policy::load_object_base;
@@ -606,9 +507,8 @@ struct global_entry_base<channel_tag>;
  */
 template <class Tag>
 struct global_entry :
-	public global_entry_base<Tag>, 
+	public global_entry_base<Tag> {
 	// no need to derive from substructure policy classes, really
-	public global_entry_common {
 	typedef	global_entry_base<Tag>		parent_type;
 public:
 	global_entry();
@@ -620,49 +520,12 @@ public:
 	ostream&
 	dump(global_entry_dumper&) const;
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// use footprint::get_instance<>().get_back_ref()->dump_attributes()
-#else
-	ostream&
-	dump_attributes(global_entry_dumper&) const;
-#endif
 
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// use footprint::dump_canonical_name() now
-#else
-	ostream&
-	dump_canonical_name(ostream&,
-		const footprint&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, const state_manager&
-#endif
-		) const;
 
-	ostream&
-	__dump_canonical_name(ostream&, const dump_flags&,
-		const footprint&
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, const state_manager&
-#endif
-		) const;
-#endif
-
-#if MEMORY_MAPPED_GLOBAL_ALLOCATION
 	// use footprint::get_instance()
-#else
-	const state_instance<Tag>&
-	get_canonical_instance(const global_entry_context_base&) const;
-#endif
 
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	// relocated to state_instance<Tag>::accept
-	void
-	accept(PRS::cflat_visitor&) const;
-#endif
-
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-	using parent_type::collect_subentries;
-#endif
 	using parent_type::collect_transient_info_base;
 
 	void
@@ -672,18 +535,6 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end struct global_entry
-
-//=============================================================================
-// Tag must be the tag of a meta-type with subinstances.  
-
-template <class Tag>
-const global_entry<Tag>&
-extract_parent_entry(const state_manager&, const global_entry_common&);
-
-template <class Tag>
-const instance_alias_info<Tag>&
-extract_parent_formal_instance_alias(const state_manager&, 
-	const global_entry_common&);
 
 //=============================================================================
 }	// end namespace entity

@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.20 2010/04/02 22:18:18 fang Exp $
+	$Id: alias_actuals.tcc,v 1.21 2010/04/07 00:12:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -241,13 +241,7 @@ instance_alias_info_actuals::__assert_complete_type(
 template <class AliasType>
 good_bool
 instance_alias_info_actuals::__initialize_assign_footprint_frame(
-		const AliasType& _alias, footprint_frame& ff
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-		, state_manager& sm,
-		const port_member_context& pmc
-		, const size_t ind
-#endif
-		) {
+		const AliasType& _alias, footprint_frame& ff) {
 	typedef	typename AliasType::canonical_container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
@@ -268,11 +262,7 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 	_type.dump(STACKTRACE_INDENT_PRINT("_type: ")) << endl;
 #endif
 	return canonical_type_footprint_frame_policy<canonical_definition_type>
-		::initialize_and_assign(_type, ff
-#if !MEMORY_MAPPED_GLOBAL_ALLOCATION
-			, sm, pmc, ind
-#endif
-			);
+		::initialize_and_assign(_type, ff);
 }
 
 //=============================================================================
