@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-04-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-74:
+	  hacknet: now keep a set of preferred_names for local aliases
+		that takes precedence over port-aliases and 
+		canonical-shortest-names.
+	  Set of reserved names is kept case-preserving, and conditionally
+		keyed case-insensitively (case-slamming).  
+	  Documented, test cases added, no regression.
+
+
 2010-04-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-73:

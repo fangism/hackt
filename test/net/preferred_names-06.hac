@@ -1,0 +1,6 @@
+// "preferred_names-06.hac"
+// testing preferred_names set feature
+// @hacknet-flags@ -f preferred_names=thisVdd,thisGND -d
+
+import "preferred_names-01.hac";
+

@@ -1,0 +1,6 @@
+// "preferred_names-03.hac"
+// testing preferred_names set feature
+// @hacknet-flags@ -f prefer_port_aliases=1
+
+import "preferred_names-01.hac";
+

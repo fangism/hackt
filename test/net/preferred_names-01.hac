@@ -1,0 +1,18 @@
+// "preferred_names-01.hac"
+// testing preferred_names set feature
+
+deftype globals <: int<4> (bool thisVdd, thisGND, Vdd, GND) { }
+
+defproc inv(globals G; bool in[2], out[2]) {
+bool thisVdd = G.thisVdd;
+bool thisGND = G.thisGND;
+prs <thisVdd, thisGND> {
+	in[0]		=> out[0]-
+}
+prs <G.Vdd, G.GND> {
+	in[1]		=> out[1]-
+}
+}
+
+inv foo;
+

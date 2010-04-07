@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2010/02/22 07:34:17 fang Exp $
+#	$Id: Makefile.am,v 1.17 2010/04/07 21:47:31 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -80,7 +80,9 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	supply-instance-16 supply-instance-17 supply-instance-18 \
 	rename-01 rename-02 rename-03 rename-04 rename-05 rename-06 \
 	rename-07 rename-08 rename-09 rename-10 rename-11 rename-12 \
-	reserved-01 reserved-02 reserved-03 reserved-04
+	reserved-01 reserved-02 reserved-03 reserved-04 \
+	preferred_names-01 preferred_names-02 preferred_names-03 \
+	preferred_names-04 preferred_names-05 preferred_names-06
 
 # TODO: after attaching proper attributes to internal node definitions
 #	fet-type-18 fet-type-19 fet-type-20

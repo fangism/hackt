@@ -1,0 +1,11 @@
+.subckt inv<> thisVdd thisGND G.Vdd G.GND in[0] in[1] out[0] out[1]
+Mout[0]:dn:0 thisGND in[0] out[0] thisGND nch W=5u L=2u
+Mout[0]:up:0 thisVdd in[0] out[0] thisVdd pch W=5u L=2u
+Mout[1]:dn:0 G.GND in[1] out[1] G.GND nch W=5u L=2u
+Mout[1]:up:0 G.Vdd in[1] out[1] G.Vdd pch W=5u L=2u
+.ends
+
+* subcircuit globals<> is empty.
+
+xfoo foo.G.thisVdd foo.G.thisGND foo.G.Vdd foo.G.GND foo.in[0] foo.in[1] foo.out[0] foo.out[1] inv<>
+

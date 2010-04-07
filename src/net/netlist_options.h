@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.12 2010/01/22 02:01:56 fang Exp $
+	$Id: netlist_options.h,v 1.13 2010/04/07 21:47:30 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -30,6 +30,17 @@ using entity::dump_flags;
 // for error-handling
 // just use the same enum
 typedef	error_status	option_error_policy;
+
+/**
+	Store a set of strings as a map, where the key-string is 
+	determined by case-sensitivity checking, and the
+	value-string is always the case-preserved string.
+ */
+#if 0
+typedef	set<string>		string_set_type;
+#else
+typedef	map<string, string>	string_set_type;
+#endif
 
 //=============================================================================
 /**
@@ -144,7 +155,12 @@ struct netlist_options {
 		Set of reserved names with special meanings to other 
 		back-end tools.
 	 */
-	set<string>			reserved_names;
+	string_set_type			reserved_names;
+	/**
+		Set of preferred local node names, that take precedence
+		over shortest-canonical-name or port-alias.
+	 */
+	string_set_type			preferred_names;
 	/**
 		If true, emit area/perimeter of source/drain diffusions.
 	 */
@@ -251,6 +267,9 @@ struct netlist_options {
 
 	bool
 	collides_reserved_name(const string&) const;
+
+	bool
+	matches_preferred_name(const string&) const;
 
 	static
 	ostream&

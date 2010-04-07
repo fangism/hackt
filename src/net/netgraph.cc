@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.19 2010/04/07 00:13:03 fang Exp $
+	$Id: netgraph.cc,v 1.20 2010/04/07 21:47:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -876,23 +876,49 @@ netlist::lookup_internal_node(const index_type ei) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param _i is the footprint's local node index, never 0.
+	Honors (in order of precedence):
+	preferred_names, 
+	prefer_port_aliases, 
+	[default] canonical shortest-name
+	\param _i is the footprint's local node index, 1-based, never 0.
+	\return designated (un-mangled) alias of the indexed local node.
  */
 string
 netlist::get_original_node_name(const size_t _i, 
 		const netlist_options& opt) const {
 	STACKTRACE_VERBOSE;
-if (opt.prefer_port_aliases) {
 	typedef port_alias_tracker_base<bool_tag>::map_type map_type;
+	typedef alias_reference_set<bool_tag>::const_iterator
+					const_iterator;
 	const map_type&
-		pa(fp->get_scope_alias_tracker()
-			.get_id_map<bool_tag>());
+		pa(fp->get_scope_alias_tracker().get_id_map<bool_tag>());
+// stupid multi-pass implementation
+if (!opt.preferred_names.empty()) {
+	// then scan *all* aliases for the match (slow)
 	const map_type::const_iterator
 		asi(pa.find(_i)), ase(pa.end());
 if (asi != ase) {
 	const alias_reference_set<bool_tag>& s(asi->second);
-	typedef alias_reference_set<bool_tag>::const_iterator
-					const_iterator;
+	const_iterator ai(s.begin()), ae(s.end());
+	for ( ; ai != ae; ++ai) {
+		// check for match against preferred name set
+		NEVER_NULL(*ai);
+		ostringstream oss;
+		(*ai)->dump_hierarchical_name(oss, opt.__dump_flags);
+		const string& n(oss.str());
+		if (opt.matches_preferred_name(n)) {
+			// return if matched (exact), accounting for case
+			return n;
+		}
+	}
+}	// else has no other aliases
+}
+// another pass to check for preferred port aliases
+if (opt.prefer_port_aliases) {
+	const map_type::const_iterator
+		asi(pa.find(_i)), ase(pa.end());
+if (asi != ase) {
+	const alias_reference_set<bool_tag>& s(asi->second);
 	const_iterator ai(s.begin()), ae(s.end());
 	for ( ; ai != ae; ++ai) {
 	// just take the first one, arbitrary
@@ -905,6 +931,7 @@ if (asi != ase) {
 	}
 }	// else has no other aliases
 }	// end if prefer_port_aliases
+// fallback to using shortest canonical name (first position in set)
 	const state_instance<bool_tag>::pool_type&
 		bp(fp->get_instance_pool<bool_tag>());
 	const size_t i = _i -1;		// pool is 0-based

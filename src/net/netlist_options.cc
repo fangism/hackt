@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.14 2010/01/22 02:01:56 fang Exp $
+	$Id: netlist_options.cc,v 1.15 2010/04/07 21:47:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,7 @@
 #include "util/stacktrace.h"
 #include "util/attributes.h"
 #include "util/iterator_more.h"
+#include "util/assoc_traits.h"
 #include "util/cppcat.h"
 
 namespace HAC {
@@ -30,6 +31,8 @@ using util::strings::strgsub;
 using util::file_status;
 using util::named_ifstream;
 using util::set_inserter;
+using util::strings::string_tolower;
+using util::assoc_traits;
 
 //=============================================================================
 // class netlist_options method definitions
@@ -360,6 +363,59 @@ __set_member_single_string(const option_value& opt,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Inspired by "util/iterator_more.h".
+	Could avoid writing this by using compose and bind...
+ */
+struct map_pair_insert_iterator : 
+	public std::iterator<std::output_iterator_tag, void, void, void, void> {
+	typedef	map_pair_insert_iterator	this_type;
+protected:
+	string_set_type*			container;
+	// if true, case-slam keys tolower(), but always preserve value case
+	const bool				lower_case_key;
+public:
+	/// A nested typedef for the type of whatever container you used.
+	typedef string_set_type			container_type;
+	typedef container_type::key_type	key_type;
+	typedef container_type::value_type	value_type;
+
+	/// The only way to create this %iterator is with a container.
+	explicit
+	map_pair_insert_iterator(container_type& __x, const bool l) :
+		container(&__x), lower_case_key(l) { }
+
+	this_type&
+	operator=(const key_type& __v) {
+		if (lower_case_key)
+			container->insert(std::make_pair(
+				string_tolower(__v), __v));
+		else
+			container->insert(std::make_pair(__v, __v));
+		return *this;
+	}
+
+	/// Simply returns *this.
+	this_type&
+	operator*() { return *this; }
+
+	/// Simply returns *this.  (This %iterator does not "move".)
+	this_type& 
+	operator++() { return *this; }
+
+	/// Simply returns *this.  (This %iterator does not "move".)
+	this_type
+	operator++(int) { return *this; }
+};
+
+static
+inline
+map_pair_insert_iterator
+map_pair_inserter(string_set_type& __c, const bool l) {
+	return map_pair_insert_iterator(__c, l);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	NOTE: this conditionally applies lower-casing transformation
 	depending on case_collision.
 	Blank values are filtered out.
@@ -370,18 +426,23 @@ static
 bool
 __set_member_string_set(const option_value& opt, 
 		netlist_options& n_opt, 
-		set<string> netlist_options::*mem) {
+		string_set_type netlist_options::*mem) {
 	// remove blanks
 	std::list<string> s;
 	std::remove_copy(opt.values.begin(), opt.values.end(), 
 		back_inserter(s), string());
 if (s.size()) {
+#if 0
 	if (n_opt.case_collision_policy == OPTION_IGNORE) {
 		copy(s.begin(), s.end(), set_inserter(n_opt.*mem));
 	} else {
 		transform(s.begin(), s.end(), set_inserter(n_opt.*mem), 
-			&util::strings::string_tolower);
+			&string_tolower);
 	}
+#else
+	copy(s.begin(), s.end(), map_pair_inserter(n_opt.*mem, 
+		n_opt.case_collision_policy != OPTION_IGNORE));
+#endif
 } else {
 	// if argument is blank, then clear the set
 	(n_opt.*mem).clear();
@@ -459,7 +520,7 @@ __set_member_default(const option_value& opt,
 bool
 __set_member_default(const option_value& opt, 
 		netlist_options& n_opt,
-		set<string> netlist_options::*mem) {
+		string_set_type netlist_options::*mem) {
 	return __set_member_string_set(opt, n_opt, mem);
 }
 
@@ -498,7 +559,7 @@ __string_type_of(string netlist_options::*) { return __str_type__; }
 const string&
 __string_type_of(option_error_policy netlist_options::*) { return __str_type__; }
 const string&
-__string_type_of(set<string> netlist_options::*) { return __strs_type__; }
+__string_type_of(string_set_type netlist_options::*) { return __strs_type__; }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <typename T>
@@ -506,6 +567,32 @@ ostream&
 __print_member_default(ostream& o, const netlist_options& n_opt,
 		T netlist_options::*mem) {
 	return o << n_opt.*mem;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Always print the case-preserved string, even when checking for
+	case-collisions.
+ */
+// specialization
+ostream&
+__print_member_sequence(ostream& o, const netlist_options& n_opt,
+		string_set_type netlist_options::*mem) {
+	typedef	string_set_type				T;
+	const T& s(n_opt.*mem);
+	if (!s.empty()) {
+		typedef	T::const_iterator	const_iterator;
+#if 0
+		typedef	T::value_type	value_type;
+#else
+		typedef	T::mapped_type	value_type;
+#endif
+		const_iterator i(s.begin()), l(--s.end());
+		transform(i, l, std::ostream_iterator<value_type>(o, ","), 
+			assoc_traits<string_set_type>::value_selector());
+		o << l->second;
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1220,6 +1307,20 @@ Default: (blank)
 DEFINE_OPTION_SEQUENCE(reserved_names, "reserved_names",
 	"set of reserved names to avoid")
 
+/***
+@texinfo config/preferred_names.texi
+@defopt preferred_names (strings)
+Declare local node names that should always take precedence over
+canonical shortest-names and preferred-port-aliases.
+This is useful for supply nodes that appear in structures, 
+that are passed around globally.  
+Default: (blank)
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_SEQUENCE(preferred_names, "preferred_names",
+	"set of local node names to prefer")
+
 #undef	DEFINE_OPTION_DEFAULT
 #undef	DEFINE_OPTION_MEMFUN
 #undef	DEFINE_OPTION_POLICY
@@ -1346,8 +1447,23 @@ netlist_options::get_default_length(const bool d, const bool k) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 netlist_options::collides_reserved_name(const string& n) const {
-	const std::set<string>::const_iterator f(reserved_names.find(n));
+	// check for name collision
+	const string_set_type::const_iterator
+		f(reserved_names.find(
+			(case_collision_policy != OPTION_IGNORE) ? 
+				string_tolower(n) : n));
 	return f != reserved_names.end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+netlist_options::matches_preferred_name(const string& n) const {
+	// check for name collision
+	const string_set_type::const_iterator
+		f(preferred_names.find(
+			(case_collision_policy != OPTION_IGNORE) ? 
+				string_tolower(n) : n));
+	return f != preferred_names.end();
 }
 
 //=============================================================================

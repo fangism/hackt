@@ -43,6 +43,7 @@ pfet_svt=pch
 post_line_continue=+
 pre_line_continue=
 prefer_port_aliases=0
+preferred_names=
 reserved_names=barf,foo
 stat_n_length=20
 stat_n_width=3
