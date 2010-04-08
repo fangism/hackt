@@ -1,0 +1,7 @@
+# "top-level-a-01.chpsimrc"
+# @haco@ top-level-a.haco-c
+
+print-event-header
+watchall-events
+step 20
+

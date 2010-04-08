@@ -1,0 +1,14 @@
+// "bad-selection-01.hac"
+// expect fail, but not crash
+// issue initially reported by Carlos Tadeo Ortega Otero
+
+defproc foo(chan?(bool) in; chan!(bool) out) {
+bool x;
+chp {
+*[
+	in?(x);
+	[x -> out!(x)]
+]
+}
+}
+

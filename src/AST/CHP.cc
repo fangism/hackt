@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.25 2009/10/05 23:09:22 fang Exp $
+	$Id: CHP.cc,v 1.26 2010/04/08 00:32:43 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -934,6 +934,12 @@ communication::check_channel(const inst_ref_expr& chan, context& c) {
 			where(chan) << " is not a channel!" << endl;
 		return checked_channel_type(NULL);
 	}
+	if (ret->dimensions()) {
+		cerr << "ERROR expecting a scalar channel reference, but got a "
+			<< ret->dimensions() << "-dim reference.  " <<
+			where(chan) << endl;
+		return checked_channel_type(NULL);
+	}
 	return ret;
 }
 
@@ -1194,7 +1200,15 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(det_selection)
 statement::return_type
 det_selection::__check_action(context& c) const {
 	checked_gcs_type checked_gcs;	// checked guarded commands
-	INVARIANT(size() > 1);
+	INVARIANT(size());
+	if (size() == 1) {
+		cerr <<
+"ERROR: statement of the form [G -> S] is interpreted as a single-clause\n"
+"selection statement, which is not defined nor supported.  " << where(*this) <<
+"\nHowever, if you intended this as a wait statement, then write it as [G]; S."
+			<< endl;
+		return statement::return_type(NULL);
+	}
 	if (!postorder_check_gcs(checked_gcs, c).good) {
 		// already have error message
 		return statement::return_type(NULL);
@@ -1508,7 +1522,13 @@ log::rightmost(void) const {
 
 statement::return_type
 log::__check_action(context& c) const {
-	FINISH_ME(Fang);
+	cerr << "Error: log() statements have been deprecated.  "
+			<< where(*this) << endl;
+	cerr << "Use libstdchpfn\'s functions instead: echo, print, fprint..."
+		<< endl;
+	cerr <<
+"NOTE: In the future, log() will become part of the standard CHP function\n"
+"library as the math function for natural-logarithm."  << endl;
 	return statement::return_type(NULL);
 }
 

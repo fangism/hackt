@@ -1,0 +1,152 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	119
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	chanplch	0	#HEAD#	#TAIL#	26
+	12	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	33	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	393
+	36	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	429
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  1 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    A = pint<> A
+  Definitions:
+    wa = process-definition (defined) wa(
+        bool<> !GND
+        bool<> !Vdd
+        chan(int<32>) TX
+      )
+      In definition "wa", we have: {
+      Instances:
+        !GND = bool<> wa::!GND
+        !Vdd = bool<> wa::!Vdd
+        TX = chan(int<32>) wa::TX
+        x = int<32> wa::x
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          chan(int<32>) TX
+        )
+        int<32> x
+      chp:
+        concurrent: {
+          *[
+            TX!(A)
+          ]
+          *[
+            TX?(x)
+          ]
+        }
+      footprint: {
+        !GND = bool^0 = wa<>::!GND (1) 
+        !Vdd = bool^0 = wa<>::!Vdd (2) 
+        TX = channel chan(int<32>)^0 = wa<>::TX (1) 
+        x = int<32>^0 = wa<>::x (1) 
+        Created state:
+        channel instance pool: (1 ports, 0 local, 0 mapped)
+        1	wa<>::TX	
+        int instance pool: (0 ports, 1 local, 0 mapped)
+        1	wa<>::x	
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	wa<>::!GND	
+        2	wa<>::!Vdd	
+        resolved concurrent actions:
+          *[
+            TX!(10)
+          ]
+          *[
+            TX?(x)
+          ]
+        chp events: {
+          event[0]: fork: , #pred: 1, succ: 2 1 
+          event[1]: receive: TX?(x), #pred: 1, succ: 1 
+          event[2]: send: TX!(10), #pred: 1, succ: 2 
+        }
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    w = wa<> w
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  A = pint^0 value: 10
+  w = process wa<>^0 = w (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+    TX = channel chan(int<32>)^0 = w.TX (1) 
+  )
+  Created state:
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	w	wa<>
+    channel: 1
+    bool: 1,2
+  channel instance pool: (0 ports, 1 local, 0 mapped)
+  1	w.TX	
+  private sub-int index map:
+    (1 -> 0)
+    (2 -> 1)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+}

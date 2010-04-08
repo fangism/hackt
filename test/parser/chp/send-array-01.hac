@@ -1,0 +1,13 @@
+// "send-array-01.hac"
+// expect fail: probe statements should expect scalar channels
+
+defproc a (chan!(bool) OUT[2]) {
+	chp {
+	*[
+		OUT!(true)	// bad!
+	]
+	}
+}
+
+a b;
+

@@ -5,6 +5,15 @@
 
 2010-04-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-75:
+	  Fixed several annoying CHP front-end bugs:
+		single-clause-selection [G->S] diagnostic.
+		log() statement deprecation warning and diagnostic.
+		referencing global parameters from inside definition.
+		Properly reject and diagnose channel-array misuses.
+	  Test cases added for all of the above.
+
+
 	* HACKT-00-01-04-main-00-83-74:
 	  hacknet: now keep a set of preferred_names for local aliases
 		that takes precedence over port-aliases and 

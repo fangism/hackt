@@ -1,0 +1,5 @@
+Error: log
+Use libstdchpfn's functions instead: echo, print, fprint...
+NOTE: In the future, log
+library as the math function for natural-logarithm.
+ERROR: at least one error in CHP body.

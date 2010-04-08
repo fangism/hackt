@@ -1,0 +1,6 @@
+ERROR: statement of the form [G -> S] is interpreted as a single-clause
+selection statement, which is not defined nor supported.  [10:2..15]
+However, if you intended this as a wait statement, then write it as [G]; S.
+ERROR in CHP statement(s) at [8:1--11:1]
+ERROR in one of the actions in [8:1--11:1]
+ERROR: at least one error in CHP body.

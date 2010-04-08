@@ -1,0 +1,5 @@
+ERROR expecting a scalar channel reference, but got a 1-dim reference.  [9:5..9]
+ERROR in guard expression at [9:4..9]
+At least one error in guarded statement list in [9:3--11:3]
+ERROR in one of the actions in [8:2--12:2]
+ERROR: at least one error in CHP body.

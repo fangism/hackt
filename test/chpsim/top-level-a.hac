@@ -1,0 +1,16 @@
+// "top-level-a.hac"
+// test case contributed by Carlos Tadeo Ortega Otero
+
+pint A = 10;
+defproc wa(chan(int) TX) {
+	chp {
+		*[ TX!( A ) ]
+	}
+	int x;
+	chp {
+		*[ TX?(x) ]
+	}
+}
+
+wa w;
+

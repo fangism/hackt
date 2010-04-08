@@ -1,0 +1,7 @@
+// "log-01.hac"
+// expect fail with helpful error message
+
+chp {
+	log("Hello, world!\n")
+}
+

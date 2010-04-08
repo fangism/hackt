@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.37 2009/10/02 01:56:30 fang Exp $
+	$Id: expr.cc,v 1.38 2010/04/08 00:32:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1175,34 +1175,43 @@ id_expr::check_nonmeta_reference(const context& c) const {
 	STACKTRACE_VERBOSE;
 	const never_ptr<const instance_placeholder_base>
 		o(qid->lookup_instance(c));	// not ->check_build(c);
-	if (o) {
-		const never_ptr<const instance_placeholder_base>
-			inst(o.is_a<const instance_placeholder_base>());
-		if (inst) {
-			STACKTRACE("valid instance collection found");
-			// we found an instance which may be single
-			// or collective... info is in inst.
+if (o) {
+	const never_ptr<const instance_placeholder_base>
+		inst(o.is_a<const instance_placeholder_base>());
+	if (inst) {
+		STACKTRACE("valid instance collection found");
+		// we found an instance which may be single
+		// or collective... info is in inst.
+		const never_ptr<const physical_instance_placeholder>
+			pinst(inst.is_a<const physical_instance_placeholder>());
+		if (pinst) {
 			if (!c.at_top_level() &&
-				inst->get_owner()
+				pinst->get_owner()
 				.is_a<const entity::name_space>()) {
 				cerr <<
 	"Error: cannot reference top-level instance from within a definition!  "
 					<< where(*qid) << endl;
 				return return_type(NULL);
 			}
-			return inst->make_nonmeta_instance_reference();
+			return pinst->make_nonmeta_instance_reference();
 		} else {
-			cerr << "object \"" << *qid <<
-				"\" does not refer to an instance, ERROR!  "
-				<< where(*qid) << endl;
-			return return_type(NULL);
+			const never_ptr<const param_value_placeholder>
+				vinst(inst.is_a<const param_value_placeholder>());
+			NEVER_NULL(vinst);
+			return inst->make_nonmeta_instance_reference();
 		}
 	} else {
-		// push NULL or error object to continue?
-		cerr << "object \"" << *qid << "\" not found, ERROR!  "
+		cerr << "object \"" << *qid <<
+			"\" does not refer to an instance, ERROR!  "
 			<< where(*qid) << endl;
 		return return_type(NULL);
 	}
+} else {
+	// push NULL or error object to continue?
+	cerr << "object \"" << *qid << "\" not found, ERROR!  "
+		<< where(*qid) << endl;
+	return return_type(NULL);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

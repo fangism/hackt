@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.36 2009/11/19 23:29:14 fang Exp $
+#	$Id: Makefile.am,v 1.37 2010/04/08 00:32:44 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -40,7 +40,8 @@ HACKT_PARSE_TEST_PASSES = \
 	receive-fail-a \
 	gcd-nested-a gcd-nested-b \
 	logical-func-a logical-func-b \
-	relational-func-a
+	relational-func-a \
+	top-level-a
 
 # in this directory, no parse-fail tests
 HACKT_CREATE_TEST_PASSES = $(HACKT_PARSE_TEST_PASSES)
@@ -93,6 +94,7 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	source-sink-peekbuf-a source-sink-peekbuf-b \
 	mux-test-flat \
 	source-sink-void-a \
+	top-level-a \
 	missing_func-a missing_func-b missing_func-c missing_func-d \
 	greeting_func-a \
 	gcd-nested-a gcd-nested-b \
@@ -249,6 +251,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	gcd-nested-a-01 gcd-nested-a-03 \
 	gcd-nested-b-01 \
 	relational-func-a-01 \
+	top-level-a-01 \
 	lib-zcond-test-a-01 \
 	lib-select-test-a-01 \
 	lib-echo-test-a-01 lib-echo-test-b-01 \

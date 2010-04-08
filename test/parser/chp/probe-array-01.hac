@@ -1,0 +1,17 @@
+// "probe-array-01.hac"
+// expect fail: probe statements should expect scalar channels
+// reported by Carlos Tadeo Ortega Otero
+
+defproc a (chan?(int) INPUT[2]) {
+	int x;
+	chp {
+	*[
+		[#INPUT -> INPUT[0]?(x)	// bad probe!
+		[]else -> skip
+		]
+	]
+	}
+}
+
+a b;
+

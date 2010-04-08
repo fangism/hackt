@@ -1,0 +1,14 @@
+// "receive-array-01.hac"
+// expect fail: probe statements should expect scalar channels
+
+defproc a (chan?(bool) INPUT[2]) {
+	bool x;
+	chp {
+	*[
+		INPUT?(x)	// bad!
+	]
+	}
+}
+
+a b;
+
