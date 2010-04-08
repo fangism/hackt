@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.26 2010/04/08 00:32:43 fang Exp $
+	$Id: CHP.cc,v 1.27 2010/04/08 23:04:13 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -35,6 +35,7 @@
 #include "Object/expr/preal_expr.h"
 #include "Object/expr/convert_expr.h"
 #include "Object/expr/nonmeta_func_call.h"
+#include "Object/expr/nonmeta_cast_expr.h"
 #include "Object/expr/nonmeta_expr_list.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
@@ -103,6 +104,7 @@ using std::back_inserter;
 using std::mem_fun_ref;
 #include "util/using_ostream.h"
 using entity::bool_expr;
+using entity::bool_return_cast_expr;
 using entity::meta_range_expr;
 using entity::CHP::action_sequence;
 using entity::CHP::concurrent_actions;
@@ -579,6 +581,13 @@ guarded_command::check_guarded_action(context& c) const {
 				<< endl;
 			return return_type(NULL);
 		}
+		// catch and wrap function-call guards
+		const count_ptr<nonmeta_func_call>
+			f(checked_guard.is_a<nonmeta_func_call>());
+		if (f) {
+			checked_guard = count_ptr<bool_expr>(
+				new bool_return_cast_expr(f));
+		}
 	}
 	// else with else clause, guard is allowed to be NULL
 #if 1
@@ -686,8 +695,17 @@ wait::__check_action(context& c) const {
 			where(*cond) << endl;
 		return return_type(NULL);
 	}
+	// auto-cast function call expressions
+	count_ptr<bool_expr> bret(ret.is_a<bool_expr>());
+	if (!bret) {
+		const count_ptr<nonmeta_func_call>
+			f(ret.is_a<nonmeta_func_call>());
+		if (f) {
+			bret = count_ptr<bool_expr>(
+				new bool_return_cast_expr(f));
+		}
+	}
 	// this will work until we introduce template-dependent types
-	const count_ptr<bool_expr> bret(ret.is_a<bool_expr>());
 	if (!bret) {
 		cerr << "ERROR: wait condition at " << where(*cond) <<
 			" is not boolean." << endl;

@@ -1,0 +1,22 @@
+// "lib-parity-test-a.hac"
+//	$Id: lib-parity-test-a.hac,v 1.1 2010/04/08 23:04:18 fang Exp $
+// testing functions as guards
+
+import "testlib/int-source.hac";
+import "testlib/bool-sink.hac";
+
+chan(int) A;
+chan(bool) P;
+int a;
+int_source<32> AS<6,{42,14,22,11,5,27}>(A);
+bool_sink ZZ(P);
+
+chp {
+*[ A?(a);
+   // print("a=", a, ", p=" , parity(a));
+   [parity(a) -> P!(true)
+   [] ~parity(a) -> P!(false)
+   ]
+]
+}
+

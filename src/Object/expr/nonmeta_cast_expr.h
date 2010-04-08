@@ -3,7 +3,7 @@
 	Convert an untyped value at run time.
 	For example, the return type of a nonmeta function call
 	is unknown until it is invoked.  
-	$Id: nonmeta_cast_expr.h,v 1.2 2007/08/15 02:48:59 fang Exp $
+	$Id: nonmeta_cast_expr.h,v 1.3 2010/04/08 23:04:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_CAST_EXPR_H__
@@ -63,6 +63,9 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	const count_ptr<const rvalue_type>&
+	get_operand(void) const { return this->rvalue; }
 
 	GET_UNRESOLVED_DATA_TYPE_REF_PROTO;
 	GET_RESOLVED_DATA_TYPE_REF_PROTO;

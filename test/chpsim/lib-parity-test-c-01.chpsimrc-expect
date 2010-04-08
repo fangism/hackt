@@ -1,0 +1,145 @@
+a=0
+bool-sink: false
+a=1
+bool-sink: true
+a=2
+bool-sink: true
+a=3
+bool-sink: false
+a=4
+bool-sink: true
+a=5
+bool-sink: false
+a=6
+bool-sink: false
+a=7
+bool-sink: true
+a=8
+bool-sink: true
+a=9
+bool-sink: false
+a=10
+bool-sink: false
+a=11
+bool-sink: true
+a=12
+bool-sink: false
+a=13
+bool-sink: true
+a=14
+bool-sink: true
+a=15
+bool-sink: false
+a=16
+bool-sink: true
+a=17
+bool-sink: false
+a=18
+bool-sink: false
+a=19
+bool-sink: true
+a=20
+bool-sink: false
+a=21
+bool-sink: true
+a=22
+bool-sink: true
+a=23
+bool-sink: false
+a=24
+bool-sink: false
+a=25
+bool-sink: true
+a=26
+bool-sink: true
+a=27
+bool-sink: false
+a=28
+bool-sink: true
+a=29
+bool-sink: false
+a=30
+bool-sink: false
+a=31
+bool-sink: true
+a=32
+bool-sink: true
+a=33
+bool-sink: false
+a=34
+bool-sink: false
+a=35
+bool-sink: true
+a=36
+bool-sink: false
+a=37
+bool-sink: true
+a=38
+bool-sink: true
+a=39
+bool-sink: false
+a=40
+bool-sink: false
+a=41
+bool-sink: true
+a=42
+bool-sink: true
+a=43
+bool-sink: false
+a=44
+bool-sink: true
+a=45
+bool-sink: false
+a=46
+bool-sink: false
+a=47
+bool-sink: true
+a=48
+bool-sink: false
+a=49
+bool-sink: true
+a=50
+bool-sink: true
+a=51
+bool-sink: false
+a=52
+bool-sink: true
+a=53
+bool-sink: false
+a=54
+bool-sink: false
+a=55
+bool-sink: true
+a=56
+bool-sink: true
+a=57
+bool-sink: false
+a=58
+bool-sink: false
+a=59
+bool-sink: true
+a=60
+bool-sink: false
+a=61
+bool-sink: true
+a=62
+bool-sink: true
+a=63
+bool-sink: false
+a=64
+bool-sink: true
+a=65
+bool-sink: false
+a=66
+bool-sink: false
+a=67
+bool-sink: true
+a=68
+bool-sink: false
+a=69
+bool-sink: true
+a=70
+bool-sink: true
+a=71
+bool-sink: false
+a=72

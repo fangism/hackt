@@ -1,0 +1,60 @@
+	0	0	3	null
+	10	6	1	AS.S!(42)
+	10	1	0	A?(a)
+	20	5	0	[ bool(parity(a)) -> ... [] ~bool(parity(a)) -> ... ]
+	30	3	0	P!(true)
+	30	12	2	ZZ.B?(ZZ.b)
+	40	2	0	null
+	50	1	0	A?(a)
+	50	11	1	AS.S!(14)
+	60	5	0	[ bool(parity(a)) -> ... [] ~bool(parity(a)) -> ... ]
+	70	3	0	P!(true)
+	70	12	2	ZZ.B?(ZZ.b)
+	80	2	0	null
+	90	1	0	A?(a)
+	90	10	1	AS.S!(22)
+	100	5	0	[ bool(parity(a)) -> ... [] ~bool(parity(a)) -> ... ]
+	110	3	0	P!(true)
+	110	12	2	ZZ.B?(ZZ.b)
+	120	2	0	null
+	130	1	0	A?(a)
+	130	9	1	AS.S!(11)
+	140	5	0	[ bool(parity(a)) -> ... [] ~bool(parity(a)) -> ... ]
+	150	3	0	P!(true)
+	150	12	2	ZZ.B?(ZZ.b)
+	160	2	0	null
+	170	1	0	A?(a)
+	170	8	1	AS.S!(5)
+	180	5	0	[ bool(parity(a)) -> ... [] ~bool(parity(a)) -> ... ]
+	190	4	0	P!(false)
+	190	12	2	ZZ.B?(ZZ.b)
+	200	2	0	null
+	210	1	0	A?(a)
+	210	7	1	AS.S!(27)
+	220	5	0	[ bool(parity(a)) -> ... [] ~bool(parity(a)) -> ... ]
+	230	4	0	P!(false)
+	230	12	2	ZZ.B?(ZZ.b)
+	240	2	0	null
+	250	1	0	A?(a)
+	250	6	1	AS.S!(42)
+	260	5	0	[ bool(parity(a)) -> ... [] ~bool(parity(a)) -> ... ]
+	270	3	0	P!(true)
+	270	12	2	ZZ.B?(ZZ.b)
+	280	2	0	null
+	290	1	0	A?(a)
+	290	11	1	AS.S!(14)
+	300	5	0	[ bool(parity(a)) -> ... [] ~bool(parity(a)) -> ... ]
+	310	3	0	P!(true)
+	310	12	2	ZZ.B?(ZZ.b)
+	320	2	0	null
+	330	1	0	A?(a)
+	330	10	1	AS.S!(22)
+	340	5	0	[ bool(parity(a)) -> ... [] ~bool(parity(a)) -> ... ]
+	350	3	0	P!(true)
+	350	12	2	ZZ.B?(ZZ.b)
+	360	2	0	null
+	370	1	0	A?(a)
+	370	9	1	AS.S!(11)
+	380	5	0	[ bool(parity(a)) -> ... [] ~bool(parity(a)) -> ... ]
+	390	3	0	P!(true)
+	390	12	2	ZZ.B?(ZZ.b)

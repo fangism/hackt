@@ -1,0 +1,24 @@
+// "lib-parity-test-b.hac"
+//	$Id: lib-parity-test-b.hac,v 1.1 2010/04/08 23:04:18 fang Exp $
+// testing functions as guards
+
+import "testlib/int-source.hac";
+import "testlib/bool-sink.hac";
+
+chan(int) A;
+chan(bool) P;
+int a;
+int_source<32> AS<6,{43,30,20,10,6,28}>(A);
+bool_sink ZZ(P);
+
+// decoupled, shared-variable
+chp {
+a:=0;
+*[ A?(a) ]
+}
+chp {
+*[ 
+   [parity(a)]; P!(true)
+]
+}
+

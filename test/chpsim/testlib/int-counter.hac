@@ -1,0 +1,20 @@
+// "int-counter.hac"
+
+/**
+	Produce an arithmetic sequence of values.
+ */
+template <pint W><pint Init, Delta>
+defproc int_counter(chan!(int<W>) O) {
+int<W> x;
+chp {
+	x:=Init;
+	*[
+		O!(x);
+		x:=x+Delta
+	]
+}
+}
+
+template <pint W>
+typedef	int_counter<W><0,1>	int_counter_default;
+

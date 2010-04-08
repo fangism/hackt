@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.38 2010/04/08 00:32:44 fang Exp $
+	$Id: expr.cc,v 1.39 2010/04/08 23:04:13 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1378,21 +1378,27 @@ prefix_expr::check_nonmeta_expr(const context& c) const {
 		return return_type(NULL);
 	}
 	// we have a valid param_expr
-	const count_ptr<int_expr> ie(pe.is_a<int_expr>());
-	const count_ptr<bool_expr> be(pe.is_a<bool_expr>());
+	count_ptr<int_expr> ie(pe.is_a<int_expr>());
+	count_ptr<bool_expr> be(pe.is_a<bool_expr>());
+	const count_ptr<nonmeta_func_call> fe(pe.is_a<nonmeta_func_call>());
+	if (fe) {
+		// punt to run-time type check
+		ie = count_ptr<int_expr>(new int_return_cast_expr(fe));
+		be = count_ptr<bool_expr>(new bool_return_cast_expr(fe));
+	}
 
 	const int ch = op->text[0];
 	switch(ch) {
 		case '-':
 			// integer negation
-			if (!ie) {
+			if (ie) {
+				return return_type(new int_negation_expr(ie, ch));
+			} else {
 				cerr << "Unary \'-\' operator requires an "
 					"int argument, but got a ";
 				pe->what(cerr) << ".  ERROR!  "
 					<< where(*e) << endl;
 				return return_type(NULL);
-			} else {
-				return return_type(new int_negation_expr(ie, ch));
 			}
 		case '!':
 			// integer logical negation

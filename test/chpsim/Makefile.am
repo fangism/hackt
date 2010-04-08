@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.37 2010/04/08 00:32:44 fang Exp $
+#	$Id: Makefile.am,v 1.38 2010/04/08 23:04:15 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -105,6 +105,7 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	lib-select-test-a lib-select-test-b lib-select-test-c \
 	lib-echo-test-a lib-echo-test-b lib-echo-test-c lib-echo-test-d \
 	lib-print-test-a \
+	lib-parity-test-a lib-parity-test-b lib-parity-test-c \
 	lib-zscan-test-a lib-zscan-test-b lib-zscan-test-c \
 	lib-bscan-test-a \
 	lib-sscan-test-a lib-sscan-test-b \
@@ -264,6 +265,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	lib-fzscan-test-a-01 \
 	lib-fzscan_loop-test-a-01 \
 	lib-fzscan_loop-test-b-01 \
+	lib-parity-test-a-01 lib-parity-test-b-01 lib-parity-test-c-01 \
 	lib-sprint-test-a-01 \
 	lib-strtoz-test-a-01 lib-strtoz-test-b-01 \
 	lib-strtob-test-a-01 \

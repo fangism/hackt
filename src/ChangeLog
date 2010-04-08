@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-04-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-76:
+	  AST/CHP.cc, AST/expr.cc: insert nonmeta_cast_expr in CHP
+		guard conditions and wait expressions as necessary.
+		Relay on run-time type check of function return type.
+	  hacchpsim: propagate dependency checking through
+		cast-expressions, so now functions are supported 
+		in recheck-expressions (selections and waits).
+		Change in operands will trigger re-evaluation of
+		whole function expression, where blocked.  
+	  Added test cases to chpsim/.
+
+
 2010-04-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-75:

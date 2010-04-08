@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.11 2010/04/07 00:13:06 fang Exp $
+	$Id: DependenceCollector.cc,v 1.12 2010/04/08 23:04:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -27,6 +27,7 @@
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/nonmeta_expr_list.h"
 #include "Object/expr/nonmeta_func_call.h"
+#include "Object/expr/nonmeta_cast_expr.h"
 #include "Object/global_entry.h"
 #include "Object/global_entry_context.h"
 
@@ -169,8 +170,22 @@ DEFINE_NEVER_VISIT(pint_arith_loop_expr)
 DEFINE_NEVER_VISIT(pbool_logical_loop_expr)
 DEFINE_NEVER_VISIT(preal_arith_loop_expr)
 DEFINE_NEVER_VISIT(convert_pint_to_preal_expr)
+
+#if 0
+// TODO: finish these!
 DEFINE_NEVER_VISIT(bool_return_cast_expr)
 DEFINE_NEVER_VISIT(int_return_cast_expr)
+#else
+void
+DependenceSetCollector::visit(const bool_return_cast_expr& e) {
+	e.get_operand()->accept(*this);
+}
+
+void
+DependenceSetCollector::visit(const int_return_cast_expr& e) {
+	e.get_operand()->accept(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #define	DEFINE_UNARY_VISIT(type)					\

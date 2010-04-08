@@ -1,0 +1,8 @@
+# "lib-parity-test-a-01.chpsimrc"
+# @haco@ lib-parity-test-a.haco-c
+# @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
+# @deps@ $(top_builddir)/lib/stdchpfn.la
+
+watchall-events
+step 60
+

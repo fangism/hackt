@@ -1,0 +1,17 @@
+// "lib-parity-test-a.hac"
+//	$Id: lib-parity-test-c.hac,v 1.1 2010/04/08 23:04:19 fang Exp $
+// testing functions as guards
+
+import "testlib/int-counter.hac";
+import "testlib/bool-sink.hac";
+
+chan(int) A;
+chan(bool) P;
+int a;
+int_counter_default<32> AS(A);
+bool_sink_echo ZZ(P);
+
+chp {
+*[ A?(a); print("a=", a); P!(parity(a)) ]
+}
+
