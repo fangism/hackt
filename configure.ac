@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.217 2010/04/07 00:12:23 fang Exp $
+#	$Id: configure.ac,v 1.218 2010/04/09 17:17:57 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -657,6 +657,8 @@ AC_CONFIG_FILES([src/scripts/init_hackt.csh],
 	[chmod +x src/scripts/init_hackt.csh])
 AC_CONFIG_FILES([src/scripts/hackt-env],
 	[chmod +x src/scripts/hackt-env])
+AC_CONFIG_FILES([src/scripts/hacalloc],
+	[chmod +x src/scripts/hacalloc])
 
 dnl initialize and reset header check dependencies
 dnl also depend on Makefile?

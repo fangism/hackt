@@ -1,5 +1,11 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.244 2010/04/07 00:12:22 fang Exp $
+#	$Id: ChangeLog,v 1.245 2010/04/09 17:17:57 fang Exp $
+
+2010-04-09	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-77:
+	  configure.ac: generate src/scripts/hacalloc
+
 
 2010-04-06	David Fang	<fangism@users.sourceforge.net>
 

@@ -1,0 +1,18 @@
+#!@SHELL@ -e
+# "hacalloc.in"
+#	vi: ft=sh
+# replacement script for deprecated hacalloc
+echo "Warning: hacalloc is obsolete, use the created object file instead."
+echo "Warning: I will create a sym-link to $1 for now."
+srcdir=`dirname $1`
+tgtdir=`dirname $2`
+srcfile=`basename $1`
+tgtfile=`basename $2`
+if test "$srcdir" != "$tgtdir"
+then
+	echo "Error: source file and target file must be in the same directory."
+	exit 1
+fi
+cd $tgtdir
+exec @LN_S@ -f "$srcfile" "$tgtfile"
+

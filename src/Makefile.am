@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.239 2010/04/07 00:12:25 fang Exp $
+#	$Id: Makefile.am,v 1.240 2010/04/09 17:18:00 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -56,7 +56,7 @@ bin_PROGRAMS = hackt haco haccreate \
 	hacobjdump hflat hacpp hacprsim hacchpsim hacknet
 
 bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh \
-	scripts/hackt-env hacalloc hacinstdump hac-cpp
+	scripts/hackt-env scripts/hacalloc hacinstdump hac-cpp
 if HAVE_LIBGUILE
 bin_SCRIPTS += hacguile hacchpsimguile
 endif
@@ -66,12 +66,6 @@ DISTCLEANFILES += $(bin_SCRIPTS)
 hacinstdump: hacobjdump
 	{ $(ECHO) "#!$(SHELL) -e" ; \
 	$(ECHO) "exec hacobjdump -a -G -M \"$$""@\"" ; } > $@ && \
-	chmod +x $@
-
-hacalloc: haccreate
-	{ $(ECHO) "#!$(SHELL) -e" ; \
-	$(ECHO) "echo \"Warning: hacalloc is obsolete, use the created object file instead.\"" ; \
-	$(ECHO) "exec ln -s -f $$1 $$2" ; } > $@ && \
 	chmod +x $@
 
 scripts/init_hackt.sh: scripts/init_hackt.sh.in $(top_builddir)/config.status
