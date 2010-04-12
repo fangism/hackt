@@ -1,0 +1,12 @@
+# "bad-set-01.prsimrc"
+# @haco@ inv.haco-c
+# testing crash bug on invalid value
+
+watchall
+set a 0
+cycle
+set a 1
+cycle
+set a 0blahblah
+cycle
+

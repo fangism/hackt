@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.17 2009/10/02 01:57:42 fang Exp $
+	$Id: Node.cc,v 1.18 2010/04/12 17:53:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -214,7 +214,7 @@ NodeState::dump_state(ostream& o) const {
 /**
 	Lexes char to node value.  
 	NOTE: reserving H/L for weak logic levels.  
-	\return 0, 1, 2 (X), or -1 on error.  
+	\return 0, 1, 2 (X), or LOGIC_INVALID on error.  
  */
 value_enum
 NodeState::char_to_value(const char v) {
@@ -233,7 +233,7 @@ NodeState::char_to_value(const char v) {
 	case 'u':	// fall-through
 		return LOGIC_OTHER;
 	default:
-		return value_enum(-1);
+		return LOGIC_INVALID;
 	}
 }
 
@@ -241,12 +241,12 @@ NodeState::char_to_value(const char v) {
 /**
 	Lexes string to node value.  
 	TODO: add synonymous character mappings.  
-	\return 0, 1, 2 (X), or -1 on error.  
+	\return 0, 1, 2 (X), or LOGIC_INVALID on error.  
  */
 value_enum
 NodeState::string_to_value(const string& v) {
 	if (v.length() != 1) {
-		return value_enum(-1);
+		return LOGIC_INVALID;
 	} else {
 		return char_to_value(v[0]);
 	}

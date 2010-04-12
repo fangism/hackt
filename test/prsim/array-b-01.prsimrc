@@ -1,0 +1,8 @@
+# "array-b-01.prsimrc"
+# @haco@ array-b.haco-c
+# bug test case: getall crashes on member arrays
+
+getall x
+
+getall x.y
+

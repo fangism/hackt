@@ -1,0 +1,8 @@
+	0	a : 0
+	10	b : 1	[by a:=0]
+	20	c : 0	[by b:=1]
+	20	a : 1
+	30	b : 0	[by a:=1]
+	40	c : 1	[by b:=0]
+Invalid logic value: 0blahblah
+... at line 10

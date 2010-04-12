@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-04-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-78:
+	  hacprsim: fixed handling of bad values (set/assert).
+		Added test cases.
+
+
 2010-04-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-77:

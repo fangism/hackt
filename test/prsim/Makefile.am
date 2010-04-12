@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.87 2010/04/02 22:29:50 fang Exp $
+#	$Id: Makefile.am,v 1.88 2010/04/12 17:53:16 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -23,7 +23,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	check-excl-rings-chan-def check-excl-rings-chan \
 	check-excl-fail \
 	logic-defs logic-defs-a logic-defs-b \
-	and nand or nor array \
+	and nand or nor \
+	array array-b \
 	and-nand or-nor nand-or \
 	and-nand-alt or-nor-alt nor-and \
 	expr-limit-a \
@@ -138,6 +139,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	deep-01 deep-02 \
 	tree-01 tree-02 \
 	array-01 array-02 \
+	array-b-01 \
 	aliases-08 aliases-09 \
 	timing-01 \
 	pending-01 pending-02 \
@@ -441,6 +443,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	comment-03 comment-05 comment-07 \
 	repeat-02 \
+	bad-set-01 \
 	autosave-01 \
 	celem-05 \
 	inv-06 inv-10 inv-28 nor-03 \
@@ -482,8 +485,6 @@ HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)
 
 HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
-srcdir_EXTRA_DIST += array-b.hac
-# array-b.hac is pending BUG fix
 srcdir_EXTRA_DIST += \
 	half-keeper-cycle.prsimrc \
 	precharge-c-repeat.prsimrc \

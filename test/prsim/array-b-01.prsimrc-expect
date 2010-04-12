@@ -1,0 +1,12 @@
+All subnodes of 'x':
+!GND : 0
+!Vdd : 1
+x.y[0] : X
+x.y[1] : X
+x.y[2] : X
+x.y[3] : X
+All subnodes of 'x.y':
+x.y[0] : X
+x.y[1] : X
+x.y[2] : X
+x.y[3] : X

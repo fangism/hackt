@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/enums.h"
-	$Id: enums.h,v 1.5 2009/02/07 03:33:01 fang Exp $
+	$Id: enums.h,v 1.6 2010/04/12 17:53:15 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_ENUMS_H__
@@ -34,7 +34,8 @@ enum value_enum {
 	LOGIC_HIGH = 0x01,		// 1
 	LOGIC_VALUE = 0x01,		// value mask
 	LOGIC_OTHER = 0x02,		// 2
-	LOGIC_MASK = 0x03
+	LOGIC_MASK = 0x03,
+	LOGIC_INVALID = 0xFF		// to signal error
 };
 
 //-----------------------------------------------------------------------------
