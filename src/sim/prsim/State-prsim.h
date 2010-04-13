@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.35 2010/04/07 00:13:09 fang Exp $
+	$Id: State-prsim.h,v 1.36 2010/04/13 18:04:08 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -697,6 +697,10 @@ public:
 
 	ostream&
 	dump_timing(ostream&) const;
+
+	static
+	bool
+	parse_min_max_delay(const string&, time_type&, time_type&);
 
 	bool
 	set_timing(const string&, const string_list&);

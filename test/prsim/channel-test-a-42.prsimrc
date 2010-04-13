@@ -58,7 +58,7 @@ set X.e 0
 cycle
 **/
 
-channel-timing X random 1000
+channel-timing X random :1000
 channel-timing X
 /**
 set X.e 1

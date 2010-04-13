@@ -18,7 +18,7 @@ timing: uniform (10)
 timing random 
 default after min: 0
 default after max: +INF
-timing: random
+timing: random [0,+INF]
 timing after 
 timing: after
 	20	a : 0
@@ -37,4 +37,4 @@ timing: uniform (30)
 timing random 
 default after min: 0
 default after max: +INF
-timing: random
+timing: random [0,+INF]

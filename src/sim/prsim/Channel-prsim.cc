@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.23 2010/01/29 02:11:29 fang Exp $
+	$Id: Channel-prsim.cc,v 1.24 2010/04/13 18:04:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -91,6 +91,22 @@ using util::numeric::rand48;
 
 //=============================================================================
 #if PRSIM_CHANNEL_TIMING
+
+#if 0
+/**
+	\returns the default value if given value is 0
+	Stolen from State-prsim.cc:__get_delay()
+ */
+static
+inline
+const channel_time_type&
+__get_channel_delay(const channel& c,
+		channel_time_type channel::* m, 
+		const channel_time_type& def) {
+	return !State::time_traits::is_zero(c.*m) ? c.*m : def;
+}
+#endif
+
 env_event_type::env_event_type(const node_index_type ni, 
 		const value_enum v, const channel& c) :
 		node_index(ni), value(v) {
@@ -99,15 +115,40 @@ env_event_type::env_event_type(const node_index_type ni,
 		use_global = true; break;
 	case CHANNEL_TIMING_AFTER:
 		use_global = false;
-		delay = c.after; break;
-	case CHANNEL_TIMING_RANDOM:
+		delay = c.after_min; break;	// same as after_max
+	case CHANNEL_TIMING_RANDOM: {
 		use_global = false;
+#if PRSIM_AFTER_RANGE
+		typedef	State::time_traits		time_traits;
+		typedef	channel_time_type		time_type;
+		const time_type min_val = c.after_min;
+	//	__get_channel_delay(c, &channel::after_min, default_after_min);
+		const time_type max_val = c.after_max;
+	//	__get_channel_delay(c, &channel::after_max, default_after_max);
+		const bool have_min = !time_traits::is_zero(min_val);
+		const bool have_max = !time_traits::is_zero(max_val);
+		if (have_max) {
+			if (have_min) {
+				delay = min_val +
+					(max_val -min_val)
+					* State::uniform_random_delay();
+			} else {
+				delay = max_val * State::uniform_random_delay();
+			}
+		} else {
+			delay = ((0x01 << 11) * State::exponential_random_delay());
+			if (have_min) delay += min_val;
+		}
+#else
 		if (c.after < 0) {	// negative signals unbounded
 		delay = State::exponential_random_delay(); break;
+		// should this match State::get_delay_up? (normalized?)
 		} else {
 		delay = State::uniform_random_delay() *c.after; break;
 		}
+#endif
 		break;
+	}
 	default: DIE;
 	}
 }
@@ -213,7 +254,8 @@ channel::channel() :
 		valid_signal(INVALID_NODE_INDEX), 
 #if PRSIM_CHANNEL_TIMING
 		timing_mode(CHANNEL_TIMING_DEFAULT),
-		after(State::rule_type::default_unspecified_delay),
+		after_min(State::rule_type::default_unspecified_delay),
+		after_max(State::rule_type::default_unspecified_delay),
 #endif
 		flags(CHANNEL_DEFAULT_FLAGS), 
 		counter_state(0), 	// invalid
@@ -800,12 +842,22 @@ channel::set_timing(const string& m, const string_list& a) {
 	if (m == __random) {
 		timing_mode = CHANNEL_TIMING_RANDOM;
 		if (a.size()) {
+#if PRSIM_AFTER_RANGE
+			return State::parse_min_max_delay(a.front(), 
+				after_min, after_max);
+#else
 			// bounded, uniform
 			return string_to_num(a.front(), after);
+#endif
 			// ignore trailing values
 		} else {
+#if PRSIM_AFTER_RANGE
+			// just report bounds, don't change
+			dump_timing(cout << "channel " << name << ": ") << endl;
+#else
 			after = -1;
 			// unbounded, exponential var.
+#endif
 		}
 	} else if (m == __global) {
 		timing_mode = CHANNEL_TIMING_GLOBAL;
@@ -813,7 +865,12 @@ channel::set_timing(const string& m, const string_list& a) {
 	} else if (m == __after) {
 		timing_mode = CHANNEL_TIMING_AFTER;
 		if (a.size()) {
-			return string_to_num(a.front(), after);
+			const bool ret = string_to_num(a.front(), after_min);
+			if (!ret) after_max = after_min;
+			return ret;
+		} else {
+			// alert user that using old value
+			dump_timing(cout << "channel " << name << ": ") << endl;
 		}
 	} else {
 		cerr << "Error: invalid mode: " << m << endl;
@@ -828,10 +885,17 @@ channel::dump_timing(ostream& o) const {
 	o << "timing: ";
 	switch (timing_mode) {
 	case CHANNEL_TIMING_GLOBAL: o << "global"; break;
-	case CHANNEL_TIMING_AFTER: o << "after=" << after; break;
+	case CHANNEL_TIMING_AFTER: o << "after=" << after_min; break;
 	case CHANNEL_TIMING_RANDOM: o << "random"; 
-		if (after < 0.0) o << "(exp.)";
-		else	o << "(<" << after << ')';
+		const bool mz = State::time_traits::is_zero(after_max);
+		if (mz)
+			o << "(exp.) ";
+		else	o << "(uniform) ";
+		o << "[" << after_min << ",";
+		if (mz)
+			o << "+INF";
+		else	o << after_max;
+		o << "]";
 		break;
 	default: o << "unknown"; DIE;
 	}
@@ -844,7 +908,9 @@ ostream&
 channel::help_timing(ostream& o) {
 o << "available channel timing modes:" << endl;
 o << "\tglobal : use the global policy set by \'timing\'" << endl;
-o << "\trandom [max] : if max given, uniform bounded, else exponential variate" << endl;
+o << "\trandom [[min]:[max]] :\n"
+"if max and min given, uniform bounded, else exponential variate"
+"if min given, use min as lower bound." << endl;
 o << "\tafter [del] : if del given, set fixed delay, else use prev. value" << endl;
 	return o;
 }
@@ -1960,7 +2026,8 @@ channel::save_checkpoint(ostream& o) const {
 	write_value(o, valid_signal);
 #if PRSIM_CHANNEL_TIMING
 	write_value(o, timing_mode);
-	write_value(o, after);
+	write_value(o, after_min);
+	write_value(o, after_max);
 #endif
 	write_value(o, flags);
 	write_value(o, counter_state);
@@ -1985,7 +2052,8 @@ channel::load_checkpoint(istream& i) {
 	read_value(i, valid_signal);
 #if PRSIM_CHANNEL_TIMING
 	read_value(i, timing_mode);
-	read_value(i, after);
+	read_value(i, after_min);
+	read_value(i, after_max);
 #endif
 	read_value(i, flags);
 	read_value(i, counter_state);

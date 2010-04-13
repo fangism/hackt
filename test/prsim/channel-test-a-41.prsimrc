@@ -16,7 +16,13 @@ channel-timing X
 channel-timing X random
 channel-timing X
 
-channel-timing X random 1000
+channel-timing X random :
+channel-timing X
+channel-timing X random 20:
+channel-timing X
+channel-timing X random 40:80
+channel-timing X
+channel-timing X random :1000
 channel-timing X
 
 channel-timing X global

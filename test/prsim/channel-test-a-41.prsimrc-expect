@@ -6,7 +6,12 @@ X : .e(init:0) 1x1of2 off
 	count: 0, unknowns: 2
 channel X: timing: global
 channel X: timing: after=10
+channel X: timing: after=10
 channel X: timing: after=50
-channel X: timing: random(exp.)
-channel X: timing: random(<1000)
+channel X: timing: random(uniform) [50,50]
+channel X: timing: random(uniform) [50,50]
+channel X: timing: random(exp.) [0,+INF]
+channel X: timing: random(exp.) [20,+INF]
+channel X: timing: random(uniform) [40,80]
+channel X: timing: random(uniform) [0,1000]
 channel X: timing: global

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.60 2010/04/07 00:13:09 fang Exp $
+	$Id: State-prsim.cc,v 1.61 2010/04/13 18:04:07 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1615,7 +1615,12 @@ ostream&
 State::dump_timing(ostream& o) const {
 	o << "timing: ";
 switch (timing_mode) {
-	case TIMING_RANDOM:	o << "random";	break;
+	case TIMING_RANDOM:	o << "random [" << default_after_min << ",";
+		if (time_traits::is_zero(default_after_max))
+			o << "+INF";
+		else	o << default_after_max;
+		o << "]";
+		break;
 	case TIMING_UNIFORM:
 		o << "uniform (" << uniform_delay << ")";
 		break;
@@ -1623,6 +1628,54 @@ switch (timing_mode) {
 	default:		o << "unknown";
 }
 	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Parses delay-pair parameter of the form: [MIN]:[MAX]
+	\return true on syntax error.
+ */
+bool
+State::parse_min_max_delay(const string& d,
+		time_type& min_delay, time_type& max_delay) {
+	time_type new_min = min_delay;
+	time_type new_max = max_delay;
+	string_list mm;
+	tokenize_char(d, mm, ':');
+	// there should be one ':'
+	// substrings before and after may be empty (set to 0)
+	if (mm.size() != 2)
+		return true;
+	if (mm.front().length()) {
+		if (string_to_num(mm.front(), new_min))
+			return true;
+		else if (new_min < time_traits::zero) {
+			cerr << "min delay must be >= 0" << endl;
+			return true;
+		}
+	} else {
+		new_min = time_traits::zero;
+	}
+	if (mm.back().length()) {
+		if (string_to_num(mm.back(), new_max))
+			return true;
+		else if (new_max < time_traits::zero) {
+			cerr << "max delay must be >= 0" << endl;
+			return true;
+		}
+	} else {
+		new_max = time_traits::zero;
+	}
+	if (time_traits::is_zero(new_max) || 
+			new_max > new_min) {
+		min_delay = new_min;
+		max_delay = new_max;
+		return false;
+	} else {
+		cerr << "if (max>0) min <= max" << endl;
+		// leave min_delay and max_delay unchanged
+		return true;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1647,42 +1700,8 @@ State::set_timing(const string& m, const string_list& a) {
 			else	cout << default_after_max << endl;
 			return false;
 		case 1: {
-			// parse default min:max bounds
-			time_type new_min = default_after_min;
-			time_type new_max = default_after_max;
-			string_list mm;
-			tokenize_char(a.back(), mm, ':');
-			if (mm.size() != 2)
-				return true;
-			if (mm.front().length()) {
-				if (string_to_num(mm.front(), new_min))
-					return true;
-				else if (new_min < time_traits::zero) {
-					cerr << "min delay must be >= 0" << endl;
-					return true;
-				}
-			} else {
-				new_min = time_traits::zero;
-			}
-			if (mm.back().length()) {
-				if (string_to_num(mm.back(), new_max))
-					return true;
-				else if (new_max < time_traits::zero) {
-					cerr << "max delay must be >= 0" << endl;
-					return true;
-				}
-			} else {
-				new_max = time_traits::zero;
-			}
-			if (time_traits::is_zero(new_max) || 
-					new_max > new_min) {
-				default_after_min = new_min;
-				default_after_max = new_max;
-				return false;
-			} else {
-				cerr << "if (max>0) min <= max" << endl;
-				return true;
-			}
+			return parse_min_max_delay(a.back(),
+				default_after_min, default_after_max);
 		}
 		default:	return true;
 		}
@@ -1792,9 +1811,9 @@ if (e.cause_rule) {
 			}
 		} else {
 #endif
-		delta = after_zero ?
-			time_traits::zero : 
-			((0x01 << 11) * exponential_random_delay());
+			delta = after_zero ?
+				time_traits::zero : 
+				((0x01 << 11) * exponential_random_delay());
 #if PRSIM_AFTER_RANGE
 			if (have_min) delta += min_val;
 		}

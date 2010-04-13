@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.19 2010/01/29 02:11:29 fang Exp $
+	$Id: Channel-prsim.h,v 1.20 2010/04/13 18:04:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -305,7 +305,8 @@ private:
 	/**
 		Delay to used with after delay mode (fixed).
 	 */
-	channel_time_type			after;
+	channel_time_type			after_min;
+	channel_time_type			after_max;
 #endif
 	/**
 		General attribute and mode flags.  

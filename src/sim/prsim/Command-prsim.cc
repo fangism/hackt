@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.58 2010/04/02 22:19:17 fang Exp $
+	$Id: Command-prsim.cc,v 1.59 2010/04/13 18:04:06 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -6313,9 +6313,11 @@ Modes:
 @itemize
 @item @t{global} : use the global simulation-wide timing policy.
 @item @t{after [delay]} : use a fixed delay.
-@item @t{random [max]} : if @var{max} is specified, 
+@item @t{random [[min]:[max]]} : if @var{max} is specified, 
 	use a uniform distribution delay bounded by @var{max}, 
-	otherwise return an exponential variate delay.  
+	otherwise return an exponential variate delay with a minimum
+	of @var{min}.  Unspecified @var{min} bounds defaults to 0.
+	Unspecified @var{max} defaults to +INF.
 @end itemize
 @end deffn
 @end texinfo

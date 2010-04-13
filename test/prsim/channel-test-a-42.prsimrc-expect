@@ -15,6 +15,7 @@ channel X: timing: global
 	20	X.e : 0
 	30	X.d[0] : 0	[by X.e:=0]
 channel X: timing: after=10
+channel X: timing: after=10
 	30	X.e : 1
 	40	X.d[1] : 1	[by X.e:=1]
 	40	X.e : 0
@@ -24,8 +25,9 @@ channel X: timing: after=50
 	100	X.d[0] : 1	[by X.e:=1]
 	100	X.e : 0
 	150	X.d[0] : 0	[by X.e:=0]
-channel X: timing: random(exp.)
-channel X: timing: random(<1000)
+channel X: timing: random(uniform) [50,50]
+channel X: timing: random(uniform) [50,50]
+channel X: timing: random(uniform) [0,1000]
 timing: uniform (10)
 channel X: timing: global
 	150	X.e : 1
