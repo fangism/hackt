@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-04-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-80:
+	  For i686-darwin10-gcc-4.2, need to explicitly instantiate
+		a few template member functions of footprint::.
+
+
 2010-04-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-79:

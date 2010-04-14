@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.50 2010/04/07 00:12:35 fang Exp $
+	$Id: footprint.cc,v 1.51 2010/04/14 22:49:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1766,6 +1766,46 @@ void
 footprint::load_object(const persistent_object_manager& m, istream& i) {
 	load_object_base(m, i);
 }
+
+//=============================================================================
+// explicit template instantiations
+
+template
+const state_instance<channel_tag>&
+footprint::get_instance<channel_tag>(const size_t, const bool) const;
+template
+const state_instance<process_tag>&
+footprint::get_instance<process_tag>(const size_t, const bool) const;
+template
+const state_instance<bool_tag>&
+footprint::get_instance<bool_tag>(const size_t, const bool) const;
+template
+const state_instance<int_tag>&
+footprint::get_instance<int_tag>(const size_t, const bool) const;
+template
+const state_instance<enum_tag>&
+footprint::get_instance<enum_tag>(const size_t, const bool) const;
+
+template
+ostream&
+footprint::dump_canonical_name<process_tag>(ostream&, const size_t, 
+	const bool) const;
+template
+ostream&
+footprint::dump_canonical_name<channel_tag>(ostream&, const size_t, 
+	const bool) const;
+template
+ostream&
+footprint::dump_canonical_name<bool_tag>(ostream&, const size_t, 
+	const bool) const;
+template
+ostream&
+footprint::dump_canonical_name<int_tag>(ostream&, const size_t, 
+	const bool) const;
+template
+ostream&
+footprint::dump_canonical_name<enum_tag>(ostream&, const size_t, 
+	const bool) const;
 
 //=============================================================================
 }	// end namespace entity
