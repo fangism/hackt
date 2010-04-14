@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.24 2010/04/13 18:04:04 fang Exp $
+	$Id: Channel-prsim.cc,v 1.25 2010/04/14 22:53:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -886,7 +886,8 @@ channel::dump_timing(ostream& o) const {
 	switch (timing_mode) {
 	case CHANNEL_TIMING_GLOBAL: o << "global"; break;
 	case CHANNEL_TIMING_AFTER: o << "after=" << after_min; break;
-	case CHANNEL_TIMING_RANDOM: o << "random"; 
+	case CHANNEL_TIMING_RANDOM: {
+		o << "random"; 
 		const bool mz = State::time_traits::is_zero(after_max);
 		if (mz)
 			o << "(exp.) ";
@@ -897,6 +898,7 @@ channel::dump_timing(ostream& o) const {
 		else	o << after_max;
 		o << "]";
 		break;
+	}
 	default: o << "unknown"; DIE;
 	}
 	return o;
