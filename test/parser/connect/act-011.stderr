@@ -1,2 +1,2 @@
-Instance reference port connection must be scalar, but got a 1-dim reference!  (f)
+Instance reference port connection must be scalar, but got a 1-dim reference!  (foo<> f)
 HALT: at least one error in port connection list.  [13:2..10]

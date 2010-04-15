@@ -1,2 +1,2 @@
-Instance reference port connection must be scalar, but got a 1-dim reference!  (p[1])
+Instance reference port connection must be scalar, but got a 1-dim reference!  (portaproc<> p[1])
 HALT: at least one error in port connection list.  [12:5..16]

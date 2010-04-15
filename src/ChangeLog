@@ -9,7 +9,7 @@
 	  For i686-darwin10-gcc-4.2, need to explicitly instantiate
 		a few template member functions of footprint::.
 	  AST/instance.cc: improved diagnostic message for
-		bad port connections with instance name.
+		bad port connections with instance name and declared type.
 		Test cases (expect-fails) updated.
 
 

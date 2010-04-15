@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.35 2010/04/15 00:40:19 fang Exp $
+	$Id: instance.cc,v 1.36 2010/04/15 01:29:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -934,9 +934,7 @@ connection_statement::make_port_connection(
 	const size_t ir_dim = ir->dimensions();
 	if (ir_dim) {
 		cerr << "Instance reference port connection must be scalar, "
-			"but got a " << ir_dim << "-dim reference!  (";
-		ir->dump(cerr, expr_dump_context::default_value) << ")" << endl;
-		return const_return_type(NULL);
+			"but got a " << ir_dim << "-dim reference!  ";
 	} else if (base_def->certify_port_actuals(temp).good) {
 		typedef	entity::checked_refs_type::const_iterator
 							const_iterator;
@@ -951,10 +949,12 @@ connection_statement::make_port_connection(
 		// transfers ownership
 		return const_return_type(ret);
 	} else {
-		cerr << "At least one error in port connection of (";
-		ir->dump(cerr, expr_dump_context::default_value) << ")." << endl;
-		return const_return_type(NULL);
+		cerr << "At least one error in port connection of ";
 	}
+	// diagnostic: reached here in the event of error
+	ir->get_unresolved_type_ref()->dump(cerr << "(") << " ";
+	ir->dump(cerr, expr_dump_context::default_value) << ")" << endl;
+	return const_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1020,6 +1020,7 @@ connection_statement::check_build(context& c) const {
 	if (!inst_ref) {
 		cerr << "Error checking instance reference of "
 			"connection statement.  " << where(*lvalue) << endl;
+		THROW_EXIT;
 	}
 
 	if (!actuals_base::add_instance_port_connections(inst_ref, c).good) {
