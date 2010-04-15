@@ -1,5 +1,5 @@
 Dimensions do not match! got: 0 and: 1.
 ERROR: actual instance reference 1 of port connection (x[2..2]) doesn't match the formal (portaproc::b) type/size.
 	got: bool<>{1-dim}, expected: bool<>
-At least one error in port connection.  
+At least one error in port connection of (p).
 HALT: at least one error in port connection list.  [12:2..19]

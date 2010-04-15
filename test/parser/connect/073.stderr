@@ -1,2 +1,2 @@
-Instance reference port connection must be scalar, but got a 2-dim reference!
+Instance reference port connection must be scalar, but got a 2-dim reference!  (p[0..0][1..1])
 HALT: at least one error in port connection list.  [12:14..25]

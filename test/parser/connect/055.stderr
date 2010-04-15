@@ -1,5 +1,5 @@
 Meta-class type does not match!  got: int-inst-ref and: bool-inst-ref
 ERROR: actual instance reference 3 of port connection (x) doesn't match the formal (portaproc::i) type/size.
 	got: bool<>{1-dim}, expected: int<32>
-At least one error in port connection.  
+At least one error in port connection of (p).
 HALT: at least one error in port connection list.  [12:2..16]

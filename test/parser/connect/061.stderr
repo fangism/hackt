@@ -1,5 +1,5 @@
 Dimensions do not match! got: 1 and: 0.
 ERROR: actual instance reference 4 of port connection (r[1]) doesn't match the formal (portaproc::j) type/size.
 	got: int<32>, expected: int<32>{1-dim}
-At least one error in port connection.  
+At least one error in port connection of (p).
 HALT: at least one error in port connection list.  [12:2..22]

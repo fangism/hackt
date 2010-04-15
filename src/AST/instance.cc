@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.34 2009/11/04 00:15:59 fang Exp $
+	$Id: instance.cc,v 1.35 2010/04/15 00:40:19 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -37,6 +37,7 @@
 #include "Object/ref/meta_value_reference_base.h"
 #include "Object/lang/PRS.h"
 #include "Object/lang/SPEC.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_range_list.h"
@@ -121,6 +122,7 @@ using std::accumulate;
 // using std::_Select1st;
 // using std::_Select2nd;
 using std::find;
+using entity::expr_dump_context;
 using entity::channel_type_reference_base;
 using entity::meta_instance_reference_base;
 using entity::meta_value_reference_base;
@@ -932,7 +934,8 @@ connection_statement::make_port_connection(
 	const size_t ir_dim = ir->dimensions();
 	if (ir_dim) {
 		cerr << "Instance reference port connection must be scalar, "
-			"but got a " << ir_dim << "-dim reference!" << endl;
+			"but got a " << ir_dim << "-dim reference!  (";
+		ir->dump(cerr, expr_dump_context::default_value) << ")" << endl;
 		return const_return_type(NULL);
 	} else if (base_def->certify_port_actuals(temp).good) {
 		typedef	entity::checked_refs_type::const_iterator
@@ -948,7 +951,8 @@ connection_statement::make_port_connection(
 		// transfers ownership
 		return const_return_type(ret);
 	} else {
-		cerr << "At least one error in port connection.  " << endl;
+		cerr << "At least one error in port connection of (";
+		ir->dump(cerr, expr_dump_context::default_value) << ")." << endl;
 		return const_return_type(NULL);
 	}
 }
