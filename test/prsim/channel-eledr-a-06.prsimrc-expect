@@ -1,0 +1,44 @@
+channels:
+C : LEDR (init .d:0 .r:0) off
+D : LEDR (init .e:0 .d:0 .r:0) off
+testing two-phase sink on D 
+Warning: channel validity `D.n' has no fanin.
+resetting D.d/r to match empty-parity 
+D : LEDR (init .e:0 .d:0 .r:0) sink,expect,stopped,ignored, timing: global {1,0,1,0,0,1,0,0,1,0,0,} @0
+	count: 0, unknowns: 2
+channel D: timing: global
+	0	D.d : 0
+	0	D.r : 0
+	10	D.e : 0
+releasing D 
+D : LEDR (init .e:0 .d:0 .r:0) sink,expect,watch, timing: global {1,0,1,0,0,1,0,0,1,0,0,} @0
+	count: 0, unknowns: 0
+release!!! 
+expect NO ack above (channel is empty). 
+channel	D (.data) : 1 @ 10
+	10	D.d : 1
+	20	D.e : 1	[by D.d:=1]
+channel	D (.data) : 0 @ 20
+	20	D.d : 0
+	30	D.e : 0	[by D.d:=0]
+channel	D (.data) : 1 @ 30
+	30	D.d : 1
+	40	D.e : 1	[by D.d:=1]
+channel	D (.data) : 0 @ 40
+	40	D.d : 0
+	50	D.e : 0	[by D.d:=0]
+channel	D (.data) : 0 @ 50
+	50	D.r : 1
+	60	D.e : 1	[by D.r:=1]
+channel	D (.data) : 1 @ 60
+	60	D.d : 1
+	70	D.e : 0	[by D.d:=1]
+D : LEDR (init .e:0 .d:0 .r:0) sink,expect,watch, timing: global {1,0,1,0,0,1,0,0,1,0,0,} @6
+	count: 0, unknowns: 0
+channel	D (.data) : 0 @ 70
+	70	D.d : 0
+	80	D.e : 1	[by D.d:=0]
+channel	D (.data) : 1 @ 80
+ERROR: value assertion failed on channel `D' at index [7].
+	expected: 0, got: 1
+... at line 47

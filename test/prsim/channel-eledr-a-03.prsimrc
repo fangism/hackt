@@ -1,0 +1,73 @@
+# "channel-ledr-a-03.prsimrc"
+# @haco@ channel-ledr-a.haco-c
+
+source channel-ledr-a-01.prsimrc
+
+watchall
+echo testing two-phase source on D
+channel-source-args D 0 0 0 1 1 1 0 0 0 1 1 1 0 0 1 1 0 0 1 1
+channel-reset D
+echo setting D.e to full state (full-parity)
+set D.e 1
+channel-show D
+channel-timing D
+cycle
+echo thawing D
+channel-release D
+channel-watch D
+channel-show D
+echo release!!!
+cycle
+echo expect NO token above.
+
+set D.e 0
+cycle
+set D.e 1
+cycle
+set D.e 0
+cycle
+set D.e 1
+cycle
+set D.e 0
+cycle
+set D.e 1
+cycle
+set D.e 0
+cycle
+set D.e 1
+cycle
+set D.e 0
+cycle
+set D.e 1
+cycle
+set D.e 0
+cycle
+set D.e 1
+cycle
+set D.e 0
+cycle
+set D.e 1
+cycle
+set D.e 0
+cycle
+
+channel-show D
+set D.e 1
+cycle
+set D.e 0
+cycle
+set D.e 1
+cycle
+set D.e 0
+cycle
+set D.e 1
+cycle
+set D.e 0
+cycle
+set D.e 1
+cycle
+# set D.e 0
+# cycle
+
+channel-show D
+

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.88 2010/04/12 17:53:16 fang Exp $
+#	$Id: Makefile.am,v 1.89 2010/04/17 00:39:20 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -56,6 +56,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	channel-test-a channel-test-b channel-test-c channel-test-d \
 	channel-test-f channel-test-g \
 	channel-test-non-QDI-a \
+	channel-ledr-a \
 	type-test-a type-test-b type-test-c type-test-d \
 	stuck-bug-a \
 	crash-bug-01 \
@@ -236,6 +237,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-g-01 channel-test-g-02 channel-test-g-03 \
 	channel-test-g-04 channel-test-g-05 channel-test-g-06 \
 	channel-test-g-07 \
+	channel-ledr-a-01 channel-ledr-a-02 channel-ledr-a-03 \
+	channel-ledr-a-04 channel-ledr-a-05 \
+	channel-eledr-a-01 channel-eledr-a-02 channel-eledr-a-03 \
+	channel-eledr-a-04 channel-eledr-a-05 \
 	stuck-bug-a-01 \
 	crash-bug-01-a \
 	always_random-a-01 \
@@ -279,6 +284,8 @@ HACKT_PRSIMTRACE_TEST_SUBJECTS = \
 	channel-test-b-25 channel-test-b-28 \
 	channel-test-d-04 channel-test-d-06 \
 	channel-test-d-30 channel-test-d-34 \
+	channel-ledr-a-03 channel-ledr-a-05 \
+	channel-ledr-a-07 channel-ledr-a-08 \
 	check-excl-fail-02 check-excl-fail-03 \
 	check-excl-rings-02 check-excl-rings-05 \
 	check-excl-rings-chan-02 check-excl-rings-chan-05 \
@@ -468,6 +475,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-test-f-03 channel-test-f-04 \
 	channel-test-non-QDI-a-02 \
 	precharge-g-01 \
+	channel-ledr-a-06 \
+	channel-eledr-a-06 \
 	interference-11 \
 	invariant-a-07 invariant-a-09 \
 	invariant-b-07 \

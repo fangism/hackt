@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.20 2010/04/13 18:04:06 fang Exp $
+	$Id: Channel-prsim.h,v 1.21 2010/04/17 00:39:19 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -44,7 +44,7 @@
 /**
 	Define to 1 to support an option to interpret data-rails
 	as active-low in their inverted sense.  
-	TODO: start me, test me
+	Status: done, tested, can perm.
  */
 #define	PRSIM_CHANNEL_RAILS_INVERTED		1
 
@@ -69,6 +69,14 @@
 	Useful for synchronous bus interfaces.  
  */
 #define	PRSIM_CHANNEL_VECTORS			0
+
+/**
+	Define to 1 to support different channel types.
+	The first new channel type we support is LEDR.
+	Next could be single-track.
+	Goal: 1
+ */
+#define	PRSIM_CHANNEL_LEDR			1
 
 namespace HAC {
 namespace SIM {
@@ -226,6 +234,13 @@ public:
 	/// if true, print watched and logged nodes with timestamps
 	static bool					report_time;
 private:
+#if PRSIM_CHANNEL_LEDR
+	enum channel_types {
+		CHANNEL_TYPE_1ofN,
+		CHANNEL_TYPE_LEDR,
+		CHANNEL_TYPE_SINGLE_TRACK
+	};
+#endif
 	enum channel_flags {
 		/// the value of channel enable on reset
 		CHANNEL_ACK_RESET_VALUE =	0x0001,
@@ -308,6 +323,12 @@ private:
 	channel_time_type			after_min;
 	channel_time_type			after_max;
 #endif
+#if PRSIM_CHANNEL_LEDR
+	/**
+		Channel encoding and protocol type.
+	 */
+	ushort					type;
+#endif
 	/**
 		General attribute and mode flags.  
 	 */
@@ -336,6 +357,7 @@ private:
 	/**
 		Size of this array is the number of bundles (rail sets). 
 		Size of each element is the radix of the data rails.
+		2 is for 2D array.
 	 */
 	typedef	util::packed_array<2, size_t, node_index_type>
 						data_bundle_array_type;
@@ -384,9 +406,11 @@ public:
 	channel();
 	~channel();
 
+	// should be ok for LEDR as well
 	size_t
 	bundles(void) const { return data.size()[0]; }
 
+	// should be ok for LEDR as well
 	size_t
 	radix(void) const { return data.size()[1]; }
 
@@ -405,12 +429,18 @@ public:
 	const array_value_type&
 	current_value(void) const { return values[value_index]; }
 
+	value_type
+	max_value(void) const;
+
 private:
 	bool
 	alias_data_rails(const node_index_type) const;
 
+#if 0
+	// unused
 	void
 	current_data_rails(vector<node_index_type>&) const;
+#endif
 
 	void
 	advance_value(void);
@@ -428,7 +458,10 @@ private:
 	reset_all_data_rails(vector<env_event_type>&);
 
 	void
-	set_all_data_rails(vector<env_event_type>&);
+	set_all_data_rails(const State&, vector<env_event_type>&);
+
+	void
+	initialize_all_data_rails(vector<env_event_type>&);
 
 	bool
 	set_ack_signal(const node_index_type ai) {
@@ -492,11 +525,55 @@ public:
 
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	void
-	set_data_sense(bool al) {
+	set_data_sense(const bool al) {
 		if (al)	{ flags |= CHANNEL_DATA_ACTIVE_SENSE; }
 		else	{ flags &= ~CHANNEL_DATA_ACTIVE_SENSE; }
 	}
 #endif
+
+#if PRSIM_CHANNEL_LEDR
+	// TODO: once wider LEDR channels are supported, 
+	// cannot use a single repeat rail any more, 
+	// need one per bit.  
+	const node_index_type&
+	repeat_rail(void) const { return valid_signal; }
+
+	void
+	set_data_init(const bool a) {
+		set_data_sense(a);
+	}
+
+	bool
+	get_data_init(void) const {
+		return get_data_sense();
+	}
+
+	// validity rail is overloaded to function as repeat rail
+	void
+	set_repeat_init(const bool a) {
+		set_valid_sense(a);
+	}
+
+	bool
+	get_repeat_init(void) const {
+		return get_valid_sense();
+	}
+
+private:
+	// the parity specified by the initial empty state
+	bool
+	empty_parity(void) const {
+		return get_data_init() ^ get_repeat_init() ^ get_ack_init();
+	}
+
+	bool
+	full_parity(void) const {
+		return !empty_parity();
+	}
+
+	value_enum
+	current_ledr_parity(const State& s) const;
+#endif	// PRSIM_CHANNEL_LEDR
 
 public:
 	bool
@@ -667,6 +744,9 @@ private:
 	dump_state(ostream&) const;
 
 private:
+	env_event_type
+	toggle_node(const State& s, const node_index_type ni) const;
+
 	void
 	process_data(const State&) throw(channel_exception);
 
@@ -729,6 +809,15 @@ public:
 	bool
 	set_channel_ack_valid(State&, const string&, 
 		const bool, const bool, const bool, const bool, const bool);
+
+#if PRSIM_CHANNEL_LEDR
+	bool
+	new_channel_ledr(State&, const string&, 
+		const string& an, const bool ai,
+		const string& bn, const size_t, 
+		const string& dn, const bool di,
+		const string& rn, const bool ri);
+#endif
 
 	ostream&
 	__dump(ostream&, const bool) const;

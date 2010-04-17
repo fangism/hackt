@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.59 2010/04/13 18:04:06 fang Exp $
+	$Id: Command-prsim.cc,v 1.60 2010/04/17 00:39:20 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -67,6 +67,7 @@ using std::copy;
 using std::reverse_copy;
 using std::ostream_iterator;
 using std::front_inserter;
+using util::tokenize_char;
 using util::excl_malloc_ptr;
 using util::strings::string_to_num;
 using entity::global_indexed_reference;
@@ -5190,6 +5191,170 @@ Channel::usage(ostream& o) {
 "data rails d[0..3], and an active-low acknowledge reset to 0, no bundles."
 	<< endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_LEDR
+/***
+@texinfo cmd/channel-ledr.texi
+@deffn Command channel-ledr name ack:init bundles:num data:init repeat:init
+Registers a level-encoded dual-rail (LEDR) channel.
+LEDR channels do not follow a return-to-null protocol;
+there is exactly one transition per iteration on the forward path.
+Currently, LEDR channels only encode 1-bit of information per channel.
+The data rail represents the logic level, and the repeat rail is
+toggled to communicate another token with the same value.  
+The channel acknowledge (if present) also fires onces per handshake.
+Together, they are used for 2-phase protocols.  
+The @var{name} of the channel should match that of an instance 
+(process or channel) in the source file.  
+@itemize
+@item @var{name} is the name of the new channel in the simulator's namespace
+@item @var{ack} is a regular expression of the form @t{id:[01]}, where
+@itemize
+	@item if an identifier @t{id} is given before the @t{:},
+	it is interpreted as the name of an acknowledge signal.  
+	@item The value after the @t{:} (required)
+	is interpreted as the initial state of the acknowledge wire.
+	There is no need to express whether the acknowledge is active-high
+	or active-low.
+	@item @t{:} with no name represents a channel with no acknowledge.
+@end itemize
+@item @var{bundles} is the name of the data-repeat bundle followed by
+	@t{:} and the number of bundles.  Pass just @t{:0} to indicate
+	that there is only one data-repeat pair.  
+@item @var{data} is the name of the data rail, interpreted with active-high
+	logic levels.  The @var{init} value specifies the initial
+	value of the data rail on an empty channel.
+@item @var{repeat} is the name of the repeat rail.  @var{init} specifies the
+	initial value of the repeat rail on an empty channel.
+@end itemize
+The initial values of the three rails determines the ``empty-parity'' of the
+channel, the parity of the rails when the channel is in its empty state.
+The initial values are used when the channels are connected up to 
+driving environments such as sources and sinks.  
+For bundled channels, the initial values of data and repeat apply
+to all bundles.  
+@example
+@t{channel NAME e:0 :0 d:0 r:0}
+@t{channel NAME e:1 :0 d:0 r:0}
+@end example
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelLEDR, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLEDR, "channel-ledr", 
+	channels, "declare a handshake channel from a group of nodes")
+
+int
+ChannelLEDR::main(State& s, const string_list& a) {
+if (a.size() != 6) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string& chan_name(*i);
+	const string& ack(*++i);
+	const string& bundle(*++i);
+	const string& data(*++i);
+	const string& repeat(*++i);
+	// could confirm that 'name' exists as a process/channel/datatype?
+	bool ack_init = false;
+	bool data_init = false;
+	bool repeat_init = false;
+	size_t num_bundles = 0;
+	string ack_name, bundle_name, data_name, repeat_name;
+	{
+		// parse ack
+		string_list tmp;
+		tokenize_char(ack, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: ack must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		if (tmp.front().length()) {	// if we have ack (name)...
+		ack_name = tmp.front();
+		if (string_to_num(tmp.back(), ack_init)) {
+			cerr << "Error: parsing initial value of ack." << endl;
+			return Command::SYNTAX;
+		}
+		}	// else skip
+	}{
+		// parse bundle
+		string_list tmp;
+		tokenize_char(bundle, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: bundle must be of the form id:num."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		bundle_name = tmp.front();
+		if (string_to_num(tmp.back(), num_bundles)) {
+			cerr << "Error: parsing number of bundles." << endl;
+			return Command::SYNTAX;
+		}
+	}{
+		// parse data
+		string_list tmp;
+		tokenize_char(data, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: data must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		data_name = tmp.front();
+		if (string_to_num(tmp.back(), data_init)) {
+			cerr << "Error: parsing initial value of data." << endl;
+			return Command::SYNTAX;
+		}
+	}{
+		// parse repeat
+		string_list tmp;
+		tokenize_char(repeat, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: repeat must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		repeat_name = tmp.front();
+		if (string_to_num(tmp.back(), repeat_init)) {
+			cerr << "Error: parsing initial value of repeat."
+				<< endl;
+			return Command::SYNTAX;
+		}
+	}
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.new_channel_ledr(s, chan_name, ack_name, ack_init, 
+			bundle_name, num_bundles, 
+			data_name, data_init, repeat_name, repeat_init)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelLEDR::usage(ostream& o) {
+	o << name <<
+" <name> <ack:init> <bundle:num> <data:init> <repeat:init>"
+	<< endl;
+	o <<
+"Registers a named LEDR channel in a separate namespace in \n"
+"the simulator, typically used to drive or log the environment.\n"
+"\'name\' is the name of the new channel in the simulator's namespace\n"
+"\'ack:init\' : ack is the name of the acknowledge wire, init is the initial\n"
+	"\tvalue of this wire in an empty channel.\n"
+	"\tIf the name is omitted, then the channel is acknowledgeless.\n"
+"\'bundle:num\' : the name of data-repeat bundle array, if num is > 0\n"
+	"\tor just :0 if channel contains no bundles.\n"
+"\'data:init\' : data is the name of the data rail of the channel.\n"
+	"\tinit is the initial value of this rail in an empty channel.\n"
+"\'repeat:init\' : repeat is the name of the repeat rail of the channel.\n"
+	"\tinit is the inital value of the repeat rail.\n"
+"The XOR of the initial values of the rails defines the \'empty-parity\'"
+	<< endl;
+}
+#endif	// PRSIM_CHANNEL_LEDR
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

@@ -1,0 +1,83 @@
+channels:
+C : LEDR (init .d:0 .r:0) off
+D : LEDR (init .e:0 .d:0 .r:0) off
+testing two-phase source on D 
+Warning: channel acknowledge `D.e' has no fanin!
+setting D.e to full state (full-parity) 
+D : LEDR (init .e:0 .d:0 .r:0) source,stopped, timing: global {0,0,0,1,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,} @0
+	count: 0, unknowns: 2
+channel D: timing: global
+	0	D.e : 1
+	10	D.d : 0
+	10	D.r : 0
+thawing D 
+D : LEDR (init .e:0 .d:0 .r:0) source,watch, timing: global {0,0,0,1,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,} @0
+	count: 0, unknowns: 0
+release!!! 
+expect NO token above. 
+	10	D.e : 0
+channel	D (.data) : 0 @ 20
+	20	D.r : 1	[by D.e:=0]
+	20	D.e : 1
+channel	D (.data) : 0 @ 30
+	30	D.r : 0	[by D.e:=1]
+	30	D.e : 0
+channel	D (.data) : 0 @ 40
+	40	D.r : 1	[by D.e:=0]
+	40	D.e : 1
+channel	D (.data) : 1 @ 50
+	50	D.d : 1	[by D.e:=1]
+	50	D.e : 0
+channel	D (.data) : 1 @ 60
+	60	D.r : 0	[by D.e:=0]
+	60	D.e : 1
+channel	D (.data) : 1 @ 70
+	70	D.r : 1	[by D.e:=1]
+	70	D.e : 0
+channel	D (.data) : 0 @ 80
+	80	D.d : 0	[by D.e:=0]
+	80	D.e : 1
+channel	D (.data) : 0 @ 90
+	90	D.r : 0	[by D.e:=1]
+	90	D.e : 0
+channel	D (.data) : 0 @ 100
+	100	D.r : 1	[by D.e:=0]
+	100	D.e : 1
+channel	D (.data) : 1 @ 110
+	110	D.d : 1	[by D.e:=1]
+	110	D.e : 0
+channel	D (.data) : 1 @ 120
+	120	D.r : 0	[by D.e:=0]
+	120	D.e : 1
+channel	D (.data) : 1 @ 130
+	130	D.r : 1	[by D.e:=1]
+	130	D.e : 0
+channel	D (.data) : 0 @ 140
+	140	D.d : 0	[by D.e:=0]
+	140	D.e : 1
+channel	D (.data) : 0 @ 150
+	150	D.r : 0	[by D.e:=1]
+	150	D.e : 0
+channel	D (.data) : 1 @ 160
+	160	D.d : 1	[by D.e:=0]
+D : LEDR (init .e:0 .d:0 .r:0) source,watch, timing: global {0,0,0,1,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,} @15
+	count: 0, unknowns: 0
+	160	D.e : 1
+channel	D (.data) : 1 @ 170
+	170	D.r : 1	[by D.e:=1]
+	170	D.e : 0
+channel	D (.data) : 0 @ 180
+	180	D.d : 0	[by D.e:=0]
+	180	D.e : 1
+channel	D (.data) : 0 @ 190
+	190	D.r : 0	[by D.e:=1]
+	190	D.e : 0
+channel	D (.data) : 1 @ 200
+	200	D.d : 1	[by D.e:=0]
+	200	D.e : 1
+channel	D (.data) : 1 @ 210
+	210	D.r : 1	[by D.e:=1]
+	210	D.e : 0
+	210	D.e : 1
+D : LEDR (init .e:0 .d:0 .r:0) watch
+	count: 0, unknowns: 0

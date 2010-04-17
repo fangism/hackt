@@ -1,0 +1,9 @@
+// "channel-ledr-a.hac"
+// test case for LEDR channels
+
+import "../../lib/channel_ledr.hac";
+
+ledr C;
+eledr D;
+// e2xledr B;		// not supported yet
+

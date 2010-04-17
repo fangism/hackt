@@ -1,0 +1,34 @@
+channels:
+C : LEDR (init .d:0 .r:0) off
+D : LEDR (init .e:0 .d:0 .r:0) off
+checking values on channel C 
+channel-ignore to inhibit response 
+C : LEDR (init .d:0 .r:0) expect,ignored {0,0,0,1,1,1,0,0,0,1,0,1,0,0,1,1,0,0,1,1,} @0
+	count: 0, unknowns: 2
+	0	C.d : 0
+	0	C.r : 0
+channel-release to start checking 
+channel	C (.data) : 0 @ 0
+	0	C.r : 1
+channel	C (.data) : 0 @ 0
+	0	C.r : 0
+channel	C (.data) : 0 @ 0
+	0	C.r : 1
+channel	C (.data) : 1 @ 0
+	0	C.d : 1
+channel	C (.data) : 1 @ 0
+	0	C.r : 0
+channel	C (.data) : 1 @ 0
+	0	C.r : 1
+channel	C (.data) : 0 @ 0
+	0	C.d : 0
+channel	C (.data) : 0 @ 0
+	0	C.r : 0
+channel	C (.data) : 0 @ 0
+	0	C.r : 1
+channel	C (.data) : 1 @ 0
+	0	C.d : 1
+channel	C (.data) : 1 @ 0
+ERROR: value assertion failed on channel `C' at index [10].
+	expected: 0, got: 1
+... at line 43

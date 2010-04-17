@@ -1,0 +1,64 @@
+# "channel-ledr-a-06.prsimrc"
+# @haco@ channel-ledr-a.haco-c
+# expect-fail
+
+source channel-ledr-a-01.prsimrc
+
+watchall
+echo checking values on channel C
+channel-expect-args C 0 0 0 1 1 1 0 0 0 1 0 1 0 0 1 1 0 0 1 1
+echo channel-ignore to inhibit response
+channel-ignore C
+set C.d 0
+set C.r 0
+channel-show C
+cycle
+echo channel-release to start checking
+channel-heed C
+channel-watch C
+
+# confirm
+
+set C.r 1
+cycle
+set C.r 0
+cycle
+set C.r 1
+cycle
+set C.d 1
+cycle
+set C.r 0
+cycle
+set C.r 1
+cycle
+set C.d 0
+cycle
+set C.r 0
+cycle
+set C.r 1
+cycle
+set C.d 1
+cycle
+set C.r 0
+cycle
+set C.r 1
+cycle
+set C.d 0
+cycle
+set C.r 0
+cycle
+set C.d 1
+cycle
+set C.r 1
+cycle
+set C.d 0
+cycle
+set C.r 0
+cycle
+set C.d 1
+cycle
+set C.r 1
+cycle
+
+channel-show C
+
