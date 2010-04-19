@@ -1,6 +1,6 @@
 /**
 	\file "Object/common/cflat_args.tcc"
-	$Id: cflat_args.tcc,v 1.3 2010/04/07 00:12:34 fang Exp $
+	$Id: cflat_args.tcc,v 1.4 2010/04/19 02:45:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_CFLAT_ARGS_TCC__
@@ -49,10 +49,10 @@ any_hierarchical_parent_is_aliased_to_port(const instance_alias_info<Tag>& a,
 while (ss) {
 	typedef	instance_alias_info<ParentTag>	process_alias;
 	const never_ptr<const process_alias>
-		sp(ss.is_a<const process_alias>());
+		sp(ss.template is_a<const process_alias>());
 	NEVER_NULL(sp);		// else parent is not a process!
 	if (sp->instance_index <=
-			f.get_instance_pool<ParentTag>().port_entries()) {
+		f.template get_instance_pool<ParentTag>().port_entries()) {
 		return true;
 	}
 	ac = sp->get_container_base();
@@ -118,7 +118,8 @@ cflat_aliases_arg_type::collect_local_aliases(const footprint& f,
 #if ENABLE_STACKTRACE
 	static const char* tag_name = traits_type::tag_name;
 #endif
-	const state_instance<Tag>::pool_type& lpp(f.get_instance_pool<Tag>());
+	const state_instance<Tag>::pool_type&
+		lpp(f.template get_instance_pool<Tag>());
 //	local_aliases.resize(lpp.local_entries() +1);	// allow 1-based index
 //	STACKTRACE_INDENT_PRINT("resized local-aliases to: " << local_aliases.size() << endl);
 	ordered_list_type::const_iterator
@@ -134,7 +135,7 @@ for (; pidi!=pide; ++pidi) {
 	const footprint& sfp(*spf._footprint);
 	const port_alias_tracker& spt(sfp.get_scope_alias_tracker());
 	const typename port_alias_tracker_base<SubTag>::map_type&
-		ppa(spt.get_id_map<SubTag>());
+		ppa(spt.template get_id_map<SubTag>());
 	const footprint_frame_map_type& ppts(spf.get_frame_map<SubTag>());
 	const size_t pps = ppts.size();
 	size_t ppi = 0;

@@ -3,7 +3,7 @@
 	Parity counter.  
 	TODO: fallback implementation should look for popcount, 
 	and use its LSB as the result (& 1).  
-	$Id: parity.h,v 1.3 2008/11/23 17:55:20 fang Exp $
+	$Id: parity.h,v 1.4 2010/04/19 02:46:17 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_PARITY_H__
@@ -106,7 +106,8 @@ SPECIALIZE_PARITY_COUNTER(unsigned long long, __builtin_parityll)
 template <class T>
 inline
 char
-parity(const T v) {
+parity(const T& v) {
+//	const
 	parity_counter<T> O;
 	return O(v);
 //	return parity_counter<T>()(v);	// g++-3.3 chokes

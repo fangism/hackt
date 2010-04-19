@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.7 2009/04/29 05:33:39 fang Exp $
+	$Id: Trace.h,v 1.8 2010/04/19 02:46:03 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -240,7 +240,7 @@ public:
 	void
 	push_back_data(const typename variable_type<Tag>::type& v, 
 			const trace_index_type t, const size_t g) {
-		current_chunk.push_back<Tag>(v, t, g);
+		current_chunk.template push_back<Tag>(v, t, g);
 	}
 
 	trace_index_type

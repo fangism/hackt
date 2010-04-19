@@ -2,7 +2,7 @@
 	\file "util/numeric/clz.h"
 	Count-leading zero related functions.
 	Includes most-significant-bit functions.  
-	$Id: clz.h,v 1.3 2008/11/23 17:55:16 fang Exp $
+	$Id: clz.h,v 1.4 2010/04/19 02:46:15 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_CLZ_H__
@@ -214,7 +214,7 @@ SPECIALIZE_MSB_POSITION(unsigned long long, __builtin_clzll)
 template <class T>
 inline
 char
-msb(const T v) {
+msb(const T& v) {
 #if DEFINE_MSB_FROM_CLZ
 	return (sizeof(T) << 3) -1 -clz(v);
 	// undefined: results in -1 for (v == 0)
@@ -229,7 +229,7 @@ msb(const T v) {
 template <class T>
 inline
 char
-fls(const T v) {
+fls(const T& v) {
 	return msb(v);
 }
 

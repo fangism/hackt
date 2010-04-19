@@ -1,6 +1,6 @@
 /**
 	\file "util/directory.h"
-	$Id: directory.h,v 1.1 2009/11/14 03:12:14 fang Exp $
+	$Id: directory.h,v 1.2 2010/04/19 02:46:13 fang Exp $
 	Directory-like command-interface extensions for simulator
 	command interpreters.  
 	This could be useful enough to go into the util library.
@@ -117,6 +117,7 @@ public:
 	 */
 	class transformer {
 		const directory_stack&	ds;
+	public:
 		explicit
 		transformer(const directory_stack& d) : ds(d) { }
 
@@ -125,7 +126,7 @@ public:
 		operator () (const string& s) const {
 			return ds.transform(s);
 		}
-	};
+	};	// end class transformer
 
 private:
 	bool

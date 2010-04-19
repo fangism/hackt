@@ -2,7 +2,7 @@
 	\file "util/memory/allocator_adaptor.h"
 	Takes an allocator-like class and encapsulates into a
 	global member to become suitable substitution for std::allocator.
-	$Id: allocator_adaptor.h,v 1.2 2010/04/05 00:46:13 fang Exp $
+	$Id: allocator_adaptor.h,v 1.3 2010/04/19 02:46:14 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_ALLOCATOR_ADAPTOR_H__
@@ -59,10 +59,17 @@ public:
 	address(const_reference __x) const { return &__x; }
 
 	pointer
-	allocate(const size_type __n, const void* = 0) __ATTRIBUTE_MALLOC__ {
+	allocate(const size_type __n, const void* = 0)
+#if defined (__GNUC__) && (__GNUC__ >= 4)
+	__ATTRIBUTE_MALLOC__
+#endif
+	{
 		INVARIANT(__n == 1);
 		return __pool.allocate();
 	}
+#if defined (__GNUC__) && (__GNUC__ <= 3)
+	__ATTRIBUTE_MALLOC__ 
+#endif
 
 	// __p is not permitted to be a null pointer.
 	void

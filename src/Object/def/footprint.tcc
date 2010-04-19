@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.5 2010/04/07 00:12:35 fang Exp $
+	$Id: footprint.tcc,v 1.6 2010/04/19 02:45:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -182,7 +182,7 @@ if (index < local) {
 #endif
 	// collect all aliases of that process
 	set<string> local_aliases;
-	scope_aliases.get_id_map<process_tag>().find(lpid)->second
+	scope_aliases.template get_id_map<process_tag>().find(lpid)->second
 		.export_alias_strings(local_aliases);
 	// to form cross-product of aliases
 	set<string>::const_iterator
@@ -223,7 +223,7 @@ footprint::collect_port_aliases(const size_t ltid, set<string>& aliases) const {
 	// first collect local aliases
 	INVARIANT(ltid < get_instance_pool<Tag>().local_entries());
 	const typename port_alias_tracker_base<Tag>::map_type&
-		lpa(scope_aliases.get_id_map<Tag>());
+		lpa(scope_aliases.template get_id_map<Tag>());
 	const alias_reference_set<Tag>& lrs(lpa.find(ltid+1)->second);
 	lrs.export_alias_strings(aliases);
 #if ENABLE_STACKTRACE
@@ -234,7 +234,7 @@ footprint::collect_port_aliases(const size_t ltid, set<string>& aliases) const {
 #endif
 }
 	const port_alias_tracker_base<process_tag>::map_type&
-		lpps(scope_aliases.get_id_map<process_tag>());
+		lpps(scope_aliases.template get_id_map<process_tag>());
 	const state_instance<process_tag>::pool_type&
 		lpp(get_instance_pool<process_tag>());
 	const size_t lpm = lpp.local_entries();
@@ -257,7 +257,8 @@ for (; lpid <= lpm; ++lpid) {
 	const state_instance<process_tag>& sp(lpp[lpid-1]);
 	const footprint_frame& spf(sp._frame);
 	const footprint& sfp(*spf._footprint);
-	const footprint_frame_map_type& ppts(spf.get_frame_map<Tag>());
+	const footprint_frame_map_type&
+		ppts(spf.template get_frame_map<Tag>());
 	const size_t pps = ppts.size();
 	size_t ppi = 0;
 	set<string> mem_aliases;

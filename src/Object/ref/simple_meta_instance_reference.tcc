@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.35 2010/04/07 00:12:56 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.36 2010/04/19 02:46:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -229,7 +229,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	// translate local index to global
 	const size_t lid = this->lookup_locally_allocated_index(uc);
 	if (lid) {
-		return gc.lookup_global_id<Tag>(lid);
+		return gc.template lookup_global_id<Tag>(lid);
 	} else {
 		return 0;
 	}

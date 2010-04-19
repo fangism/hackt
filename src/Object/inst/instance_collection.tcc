@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.53 2010/04/07 00:12:40 fang Exp $
+	$Id: instance_collection.tcc,v 1.54 2010/04/19 02:46:00 fang Exp $
 	TODO: trim includes
  */
 
@@ -164,7 +164,8 @@ INSTANCE_COLLECTION_CLASS::dump_hierarchical_name(ostream& o,
 	// copied from instance_placeholder_base::dump_qualified_name()
 	const instance_placeholder_base::owner_ptr_type
 		owner(source_placeholder->get_owner());
-	const never_ptr<const name_space> n(owner.is_a<const name_space>());
+	const never_ptr<const name_space>
+		n(owner.template is_a<const name_space>());
 	if (n) {
 		if (!n->is_global_namespace()) {
 			n->dump_qualified_name(o, df) << "::";

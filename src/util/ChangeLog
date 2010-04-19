@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.112 2010/04/05 00:18:46 fang Exp $
+#	$Id: ChangeLog,v 1.113 2010/04/19 02:46:07 fang Exp $
+
+2010-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-82:
+	  Patched sources to compile under g++-3.3 again.
+	  New libs: array (like std::array or tr1::array),
+		bitarray (fixed-length bitvectors) for set operations.
+		bitwise_functional: standard functors for &|^~
 
 2010-04-04	David Fang		<fangism@users.sourceforge.net>
 

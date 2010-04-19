@@ -1,7 +1,7 @@
 /**
 	\file "util/numeric/ffs.h"
 	Find first set bit (LSB).  
-	$Id: ffs.h,v 1.3 2008/11/23 17:55:17 fang Exp $
+	$Id: ffs.h,v 1.4 2010/04/19 02:46:16 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_FFS_H__
@@ -93,14 +93,14 @@ SPECIALIZE_FFS(unsigned long long, __builtin_ffsll)
 template <class T>
 inline
 char
-ffs(const T v) {
+ffs(const T& v) {
 	return first_set_finder<T>()(v);
 }
 
 template <class T>
 inline
 char
-lsb(const T v) {
+lsb(const T& v) {
 	return ffs(v) -1;
 }
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.tcc"
-	$Id: global_entry_context.tcc,v 1.6 2010/04/07 00:12:29 fang Exp $
+	$Id: global_entry_context.tcc,v 1.7 2010/04/19 02:45:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
@@ -34,14 +34,15 @@ global_entry_context::lookup_global_id(const size_t lni) const {
 	NEVER_NULL(fpf);
 	NEVER_NULL(parent_offset);
 	const size_t ports = at_top() ? 0 :
-		fpf->_footprint->get_instance_pool<Tag>().port_entries();
+		fpf->_footprint->
+			template get_instance_pool<Tag>().port_entries();
 if (lni <= ports) {
 	// lookup up from the context passed into the current process
 	return footprint_frame_transformer(*fpf, Tag())(lni);
 } else {
 	// TODO: range check lni
 	// compute global index based on global offset
-	const size_t toffset = parent_offset->global_offset_base<Tag>::offset;
+	const size_t toffset = parent_offset->template get_offset<Tag>();
 	const size_t global_index = toffset +lni -ports;
 	return global_index;
 }

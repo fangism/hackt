@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.20 2010/04/07 00:12:28 fang Exp $
+	$Id: global_entry.h,v 1.21 2010/04/19 02:45:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -355,6 +355,12 @@ struct global_offset :
 		const add_all_local_tag);
 	global_offset(const global_offset&, const footprint&, 
 		const add_total_private_tag);
+
+	template <class Tag>
+	const size_t&
+	get_offset(void) const {
+		return global_offset_base<Tag>::offset;
+	}
 
 	global_offset&
 	operator += (const footprint&);

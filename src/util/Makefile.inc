@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.43 2010/04/05 00:18:46 fang Exp $
+#	$Id: Makefile.inc,v 1.44 2010/04/19 02:46:08 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -17,6 +17,8 @@ util-libs: $(UTILLIBS)
 # template definition header files
 UTIL_TCC_FILES = \
 	util/IO_utils.tcc \
+	util/array.tcc \
+	util/bitarray.tcc \
 	util/bitset.tcc \
 	util/const_assoc_query.tcc \
 	util/discrete_interval_set.tcc \
@@ -83,11 +85,13 @@ UTIL_HEADER_FILES = \
 	util/IO_utils_fwd.h \
 	util/addressof.h \
 	util/algorithm.h \
+	util/array_indexer.h \
 	util/array_traits.h \
 	util/assoc_traits_fwd.h \
 	util/assoc_traits.h \
 	util/attributes.h \
 	util/bitmanip.h \
+	util/bitwise_functional.h \
 	util/boolean_types.h \
 	util/c99.h \
 	util/c_decl.h \
