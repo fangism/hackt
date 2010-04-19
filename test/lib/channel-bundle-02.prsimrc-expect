@@ -1,4 +1,10 @@
 Warning: channel acknowledge `C.e' has no fanin!
+Warning: value 61453 exceeds the maximum value encoded, 32.
+Higher significant bits may be ignored.
+Warning: value 57005 exceeds the maximum value encoded, 32.
+Higher significant bits may be ignored.
+Warning: value 48879 exceeds the maximum value encoded, 32.
+Higher significant bits may be ignored.
 channel	C (.data) : 0
 channel	C (.data) : 1
 channel	C (.data) : 3
