@@ -1,0 +1,45 @@
+configuring environment... 
+with random delays 
+default after min: 0
+default after max: +INF
+resetting... 
+WARNING: weak-interference `buf.d_rail._r'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `buf.p_rail._r'
+>> cause: `_Reset' (val: 0)
+X nodes:
+
+releasing from reset... 
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel R has value 1, as expected.
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel R has value 0, as expected.
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel R has value 0, as expected.
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel R has value 0, as expected.
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel R has value 0, as expected.
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel R has value 1, as expected.
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel R has value 0, as expected.
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel R has value 1, as expected.
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel R has value 1, as expected.
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel R has value 1, as expected.
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel R has value 1, as expected.

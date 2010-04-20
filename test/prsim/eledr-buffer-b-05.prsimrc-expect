@@ -1,0 +1,19 @@
+configuring environment infinite sequences... 
+with random delays 
+default after min: 0
+default after max: +INF
+with random (min) channel min-delays 
+resetting... 
+WARNING: weak-interference `buf1.d_rail._r'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `buf1.p_rail._r'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `buf2.d_rail._r'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `buf2.p_rail._r'
+>> cause: `_Reset' (val: 0)
+X nodes:
+
+releasing from reset... 
+running for a long time... 
+event queue still alive 

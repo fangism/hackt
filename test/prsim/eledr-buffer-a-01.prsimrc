@@ -1,0 +1,98 @@
+# "eledr-buffer-a-01.prsimrc"
+# @haco@ eledr-buffer-a.haco-c
+
+channel-ledr L e:0 :0 d:0 r:0
+channel-ledr R e:0 :0 d:0 r:0
+echo manually operating channels
+
+watchall
+echo resetting...
+set L.d 0
+set L.r 0
+set R.e 0
+set _Reset 0
+cycle
+status X
+
+echo releasing from reset...
+channel-watchall
+set _Reset 1
+cycle
+
+echo sending data 1...
+set L.d 1
+cycle
+echo ack-ing bucket...
+set R.e 1
+cycle
+
+echo sending data 0...
+set L.d 0
+cycle
+echo ack-ing bucket...
+set R.e 0
+cycle
+
+echo repeating data 0...
+set L.r 1
+cycle
+echo ack-ing bucket...
+set R.e 1
+cycle
+
+echo repeating data 0...
+set L.r 0
+cycle
+echo ack-ing bucket...
+set R.e 0
+cycle
+
+echo repeating data 0...
+set L.r 1
+cycle
+echo ack-ing bucket...
+set R.e 1
+cycle
+
+echo sending data 1...
+set L.d 1
+cycle
+echo ack-ing bucket...
+set R.e 0
+cycle
+
+echo sending data 0...
+set L.d 0
+cycle
+echo ack-ing bucket...
+set R.e 1
+cycle
+
+echo sending data 1...
+set L.d 1
+cycle
+echo ack-ing bucket...
+set R.e 0
+cycle
+
+echo repeating data 1...
+set L.r 0
+cycle
+echo ack-ing bucket...
+set R.e 1
+cycle
+
+echo repeating data 1...
+set L.r 1
+cycle
+echo ack-ing bucket...
+set R.e 0
+cycle
+
+echo repeating data 1...
+set L.r 0
+cycle
+echo ack-ing bucket...
+set R.e 1
+cycle
+

@@ -1,0 +1,31 @@
+# "eledr-buffer-b-02.prsimrc"
+# @haco@ eledr-buffer-b.haco-c
+
+channel-ledr L e:0 :0 d:0 r:0
+channel-ledr M e:0 :0 d:0 r:0
+channel-ledr R e:0 :0 d:0 r:0
+echo configuring environment...
+channel-source-args L 1 0 0 0 0 1 0 1 1 1 1
+channel-sink R
+channel-expect-args R 1 0 0 0 0 1 0 1 1 1 1
+
+timing after
+channel-timing L after 20
+channel-timing R after 20
+
+# watchall
+confirm
+echo resetting...
+channel-ignore-all
+set _Reset 0
+channel-reset-all
+cycle
+status X
+
+echo releasing from reset...
+channel-watchall
+set _Reset 1
+channel-heed-all
+channel-release-all
+cycle
+

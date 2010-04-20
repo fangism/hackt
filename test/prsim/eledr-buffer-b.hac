@@ -1,0 +1,11 @@
+// "eledr-buffer-b.hac"
+// testing a pair of buffers
+
+import "eledr-buffer.hac";
+
+bool _Reset;
+eledr L, M, R;
+eledr_buffer
+	buf1(_Reset, L, M),
+	buf2(_Reset, M, R);
+

@@ -1,0 +1,103 @@
+// "eledr-buffer.hac"
+
+import "../../lib/channel_ledr.hac";
+
+/**
+	2-input C-element, using combinational feedback, look-aside node.
+ */
+defproc eledr_buffer_rail(bool _pReset; bool ld, re; bool r, r_)
+{
+  bool _r;
+  prs {
+    ~_pReset		-> _r+
+    ~ld & ~re		-> _r+
+    ~re & ~ld		-> _r+
+     ld &  re		-> _r-
+     re &  ld		-> _r-
+
+/**
+    // combinational feedback, private look-aside
+    [isckeeper=1]
+    (~ld | ~re) & ~r	-> _r+
+    [isckeeper=1]
+    _pReset &
+    ( ld |  re) &  r	-> _r-
+**/
+
+    // feedback/output inverter
+    // [_r -> r transition requires an after=0 with comb feedback]
+//    [after=0]
+	~_r	-> r+
+//    [after=0]
+	 _r	-> r-
+	// inverted sense
+    [after=0] ~r	-> r_+
+    [after=0]  r	-> r_-
+
+  }
+}
+
+defproc plain_xor(bool a, a_, b, b_, o) {
+	o @ [iscomb=1];
+prs {
+	~a_ & ~b	-> o+
+	 ~a & ~b_	-> o+
+	 a_ &  b_	-> o-
+	  a &  b	-> o-
+}
+}
+
+/**
+	Combinational xor, inputs include inverses, 
+	rules with timing assumption.
+	Can be connected differently to make an xnor.  
+ */
+defproc fast_xor(bool a, a_, b, b_, o) {
+	o @ [iscomb=1];
+prs {
+	[after=0] ~a_ & ~b	-> o+
+	[after=0]  ~a & ~b_	-> o+
+	[after=0]  a_ &  b_	-> o-
+	[after=0]   a &  b	-> o-
+}
+}
+
+/**
+	Two-phase LEDR buffer.
+ */
+defproc eledr_buffer(bool _pReset; eledr L, R)
+{
+  bool end, enr, _le;
+  bool r_d, r_r, r_a;
+
+	// initial state
+  spec {
+    $(_pReset | ~R.e)
+    $(_pReset | ~R.d)
+    $(_pReset | ~R.r)
+    $(_pReset | ~L.e)
+    $(_pReset | ~L.d)
+    $(_pReset | ~L.r)
+  }
+
+  eledr_buffer_rail
+	d_rail(_pReset, L.d, end, R.d, r_d),
+	p_rail(_pReset, L.r, enr, R.r, r_r);
+
+  fast_xor
+	xnr(R.d, r_d, r_a, R.e, enr),
+	xnd(R.r, r_r, r_a, R.e, end);
+  plain_xor lxr(R.r, r_r, r_d, R.d, _le);
+
+  prs {
+    //Inverter for r.e [timing assumption on this inverter]
+        [after=0] ~R.e -> r_a+
+        [after=0]  R.e -> r_a-
+
+        ~_le -> L.e+
+         _le -> L.e-
+
+  }
+}
+
+

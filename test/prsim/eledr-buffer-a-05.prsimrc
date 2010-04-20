@@ -1,0 +1,36 @@
+# "eledr-buffer-a-05.prsimrc"
+# @haco@ eledr-buffer-a.haco-c
+
+channel-ledr L e:0 :0 d:0 r:0
+channel-ledr R e:0 :0 d:0 r:0
+echo configuring environment infinite sequences...
+channel-source-args-loop L 1 0 0 0 0 1 0 1 1 1 1
+channel-sink R
+channel-expect-args-loop R 1 0 0 0 0 1 0 1 1 1 1
+
+echo with random delays
+timing random
+echo with random (min) channel min-delays
+# channel-timing L random 10:
+# channel-timing R random 10:
+
+# watchall
+# confirm
+echo resetting...
+channel-ignore-all
+set _Reset 0
+channel-reset-all
+cycle
+status X
+
+echo releasing from reset...
+# channel-watchall
+set _Reset 1
+channel-heed-all
+channel-release-all
+echo running for a long time...
+step-event 500000
+
+assert-queue
+echo event queue still alive
+

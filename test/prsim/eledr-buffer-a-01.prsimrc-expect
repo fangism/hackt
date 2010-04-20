@@ -1,0 +1,186 @@
+manually operating channels 
+resetting... 
+	0	L.d : 0
+	0	L.r : 0
+	0	R.e : 0
+	0	_Reset : 0
+	10	buf.r_a : 1	[by R.e:=0]
+	10	buf.d_rail._r : 1	[by _Reset:=0]
+	10	buf.p_rail._r : 1	[by _Reset:=0]
+	20	R.d : 0	[by buf.d_rail._r:=1]
+	20	R.r : 0	[by buf.p_rail._r:=1]
+	30	buf.r_d : 1	[by R.d:=0]
+	30	buf.enr : 1	[by R.d:=0]
+	30	buf.r_r : 1	[by R.r:=0]
+	30	buf.end : 1	[by R.r:=0]
+	30	buf._le : 1	[by R.r:=0]
+	40	L.e : 0	[by buf._le:=1]
+X nodes:
+
+releasing from reset... 
+	40	_Reset : 1
+sending data 1... 
+channel	L (.data) : 1
+	40	L.d : 1
+	50	buf.d_rail._r : 0	[by L.d:=1]
+channel	R (.data) : 1
+	60	R.d : 1	[by buf.d_rail._r:=0]
+	70	buf.r_d : 0	[by R.d:=1]
+	70	buf.enr : 0	[by R.d:=1]
+	70	buf._le : 0	[by R.d:=1]
+	80	L.e : 1	[by buf._le:=0]
+ack-ing bucket... 
+	80	R.e : 1
+	90	buf.r_a : 0	[by R.e:=1]
+	90	buf.end : 0	[by R.e:=1]
+	100	buf.enr : 1	[by buf.r_a:=0]
+sending data 0... 
+channel	L (.data) : 0
+	100	L.d : 0
+	110	buf.d_rail._r : 1	[by L.d:=0]
+channel	R (.data) : 0
+	120	R.d : 0	[by buf.d_rail._r:=1]
+	130	buf.r_d : 1	[by R.d:=0]
+	130	buf._le : 1	[by R.d:=0]
+	140	buf.enr : 0	[by buf.r_d:=1]
+	140	L.e : 0	[by buf._le:=1]
+ack-ing bucket... 
+	140	R.e : 0
+	150	buf.r_a : 1	[by R.e:=0]
+	150	buf.enr : 1	[by R.e:=0]
+	150	buf.end : 1	[by R.e:=0]
+repeating data 0... 
+channel	L (.data) : 0
+	150	L.r : 1
+	160	buf.p_rail._r : 0	[by L.r:=1]
+channel	R (.data) : 0
+	170	R.r : 1	[by buf.p_rail._r:=0]
+	180	buf.r_r : 0	[by R.r:=1]
+	180	buf.end : 0	[by R.r:=1]
+	180	buf._le : 0	[by R.r:=1]
+	190	L.e : 1	[by buf._le:=0]
+ack-ing bucket... 
+	190	R.e : 1
+	200	buf.r_a : 0	[by R.e:=1]
+	200	buf.enr : 0	[by R.e:=1]
+	210	buf.end : 1	[by buf.r_a:=0]
+repeating data 0... 
+channel	L (.data) : 0
+	210	L.r : 0
+	220	buf.p_rail._r : 1	[by L.r:=0]
+channel	R (.data) : 0
+	230	R.r : 0	[by buf.p_rail._r:=1]
+	240	buf.r_r : 1	[by R.r:=0]
+	240	buf._le : 1	[by R.r:=0]
+	250	buf.end : 0	[by buf.r_r:=1]
+	250	L.e : 0	[by buf._le:=1]
+ack-ing bucket... 
+	250	R.e : 0
+	260	buf.r_a : 1	[by R.e:=0]
+	260	buf.enr : 1	[by R.e:=0]
+	260	buf.end : 1	[by R.e:=0]
+repeating data 0... 
+channel	L (.data) : 0
+	260	L.r : 1
+	270	buf.p_rail._r : 0	[by L.r:=1]
+channel	R (.data) : 0
+	280	R.r : 1	[by buf.p_rail._r:=0]
+	290	buf.r_r : 0	[by R.r:=1]
+	290	buf.end : 0	[by R.r:=1]
+	290	buf._le : 0	[by R.r:=1]
+	300	L.e : 1	[by buf._le:=0]
+ack-ing bucket... 
+	300	R.e : 1
+	310	buf.r_a : 0	[by R.e:=1]
+	310	buf.enr : 0	[by R.e:=1]
+	320	buf.end : 1	[by buf.r_a:=0]
+sending data 1... 
+channel	L (.data) : 1
+	320	L.d : 1
+	330	buf.d_rail._r : 0	[by L.d:=1]
+channel	R (.data) : 1
+	340	R.d : 1	[by buf.d_rail._r:=0]
+	350	buf.r_d : 0	[by R.d:=1]
+	360	buf.enr : 1	[by buf.r_d:=0]
+	360	buf._le : 1	[by buf.r_d:=0]
+	370	L.e : 0	[by buf._le:=1]
+ack-ing bucket... 
+	370	R.e : 0
+	380	buf.r_a : 1	[by R.e:=0]
+	390	buf.enr : 0	[by buf.r_a:=1]
+	390	buf.end : 0	[by buf.r_a:=1]
+sending data 0... 
+channel	L (.data) : 0
+	390	L.d : 0
+	400	buf.d_rail._r : 1	[by L.d:=0]
+channel	R (.data) : 0
+	410	R.d : 0	[by buf.d_rail._r:=1]
+	420	buf.r_d : 1	[by R.d:=0]
+	420	buf.enr : 1	[by R.d:=0]
+	430	buf._le : 0	[by buf.r_d:=1]
+	440	L.e : 1	[by buf._le:=0]
+ack-ing bucket... 
+	440	R.e : 1
+	450	buf.r_a : 0	[by R.e:=1]
+	450	buf.enr : 0	[by R.e:=1]
+	460	buf.end : 1	[by buf.r_a:=0]
+sending data 1... 
+channel	L (.data) : 1
+	460	L.d : 1
+	470	buf.d_rail._r : 0	[by L.d:=1]
+channel	R (.data) : 1
+	480	R.d : 1	[by buf.d_rail._r:=0]
+	490	buf.r_d : 0	[by R.d:=1]
+	500	buf.enr : 1	[by buf.r_d:=0]
+	500	buf._le : 1	[by buf.r_d:=0]
+	510	L.e : 0	[by buf._le:=1]
+ack-ing bucket... 
+	510	R.e : 0
+	520	buf.r_a : 1	[by R.e:=0]
+	530	buf.enr : 0	[by buf.r_a:=1]
+	530	buf.end : 0	[by buf.r_a:=1]
+repeating data 1... 
+channel	L (.data) : 1
+	530	L.r : 0
+	540	buf.p_rail._r : 1	[by L.r:=0]
+channel	R (.data) : 1
+	550	R.r : 0	[by buf.p_rail._r:=1]
+	560	buf.r_r : 1	[by R.r:=0]
+	560	buf.end : 1	[by R.r:=0]
+	570	buf._le : 0	[by buf.r_r:=1]
+	580	L.e : 1	[by buf._le:=0]
+ack-ing bucket... 
+	580	R.e : 1
+	590	buf.r_a : 0	[by R.e:=1]
+	590	buf.end : 0	[by R.e:=1]
+	600	buf.enr : 1	[by buf.r_a:=0]
+repeating data 1... 
+channel	L (.data) : 1
+	600	L.r : 1
+	610	buf.p_rail._r : 0	[by L.r:=1]
+channel	R (.data) : 1
+	620	R.r : 1	[by buf.p_rail._r:=0]
+	630	buf.r_r : 0	[by R.r:=1]
+	640	buf.end : 1	[by buf.r_r:=0]
+	640	buf._le : 1	[by buf.r_r:=0]
+	650	L.e : 0	[by buf._le:=1]
+ack-ing bucket... 
+	650	R.e : 0
+	660	buf.r_a : 1	[by R.e:=0]
+	670	buf.enr : 0	[by buf.r_a:=1]
+	670	buf.end : 0	[by buf.r_a:=1]
+repeating data 1... 
+channel	L (.data) : 1
+	670	L.r : 0
+	680	buf.p_rail._r : 1	[by L.r:=0]
+channel	R (.data) : 1
+	690	R.r : 0	[by buf.p_rail._r:=1]
+	700	buf.r_r : 1	[by R.r:=0]
+	700	buf.end : 1	[by R.r:=0]
+	710	buf._le : 0	[by buf.r_r:=1]
+	720	L.e : 1	[by buf._le:=0]
+ack-ing bucket... 
+	720	R.e : 1
+	730	buf.r_a : 0	[by R.e:=1]
+	730	buf.end : 0	[by R.e:=1]
+	740	buf.enr : 1	[by buf.r_a:=0]

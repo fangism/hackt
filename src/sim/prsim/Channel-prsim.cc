@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.26 2010/04/17 00:39:19 fang Exp $
+	$Id: Channel-prsim.cc,v 1.27 2010/04/20 22:34:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -2161,12 +2161,14 @@ default: DIE;
 	This is written generically for all channel types.
 	Print it if it is watched, log it if it is logged.  
 	Check it if it is expected.  
+	Suppress if ignored.
 	TODO: what to do if data is in bad state (validity protocol only).
  */
 void
 channel::process_data(const State& s) throw (channel_exception) {
 	const bool v = data_is_valid();
 	if (watched()) {
+		// even if channel is ignored?
 		cout << "channel\t" << name << " (.data) : ";
 		if (v) {
 			cout << data_rails_value(s);
