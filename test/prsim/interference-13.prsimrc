@@ -1,0 +1,14 @@
+# "interference-13.prsimrc"
+# @haco@ interference.haco-c
+
+# interference fatal
+mode fatal
+# echo-commands on
+set a 0
+cycle
+set b 1
+cycle
+echo expect fail!!!
+status-interference
+status-weak-interference
+

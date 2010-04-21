@@ -1,0 +1,4 @@
+WARNING: weak-interference `c'
+>> cause: `a' (val: 0)
+Halting on node: a
+... at line 8

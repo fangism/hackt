@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.36 2010/04/13 18:04:08 fang Exp $
+	$Id: State-prsim.h,v 1.37 2010/04/21 20:36:46 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -830,6 +830,14 @@ public:
 		weak_unstable_policy = ERROR_BREAK;
 		interference_policy = ERROR_BREAK;
 		weak_interference_policy = ERROR_BREAK;
+	}
+
+	void
+	set_mode_fatal(void) {
+		unstable_policy = ERROR_FATAL;
+		weak_unstable_policy = ERROR_FATAL;
+		interference_policy = ERROR_FATAL;
+		weak_interference_policy = ERROR_FATAL;
 	}
 
 #define	DEFINE_POLICY_CONTROL_SET(name)				\

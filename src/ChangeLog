@@ -6,7 +6,10 @@
 2010-04-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-82+:
-	  No source revision, just added more LEDR channel prsim tests.
+	  Added hacprsim: 'mode fatal' to abort on any interference
+		or instability diagnostic with non-zero exit status.
+		Test cases added, documentation updated.
+	  Added more LEDR channel prsim tests.
 
 
 2010-04-18	David Fang		<fangism@users.sourceforge.net>

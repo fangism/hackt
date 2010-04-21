@@ -1,0 +1,8 @@
+time: 0
+	0	a : 1
+expect instability 
+WARNING: unstable `b'-
+rule: [after 10]	a:0 -> b-:X
+>> cause: `a' (val: 0)
+Halting on node: a
+... at line 19

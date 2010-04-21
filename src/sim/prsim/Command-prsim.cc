@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.60 2010/04/17 00:39:20 fang Exp $
+	$Id: Command-prsim.cc,v 1.61 2010/04/21 20:36:45 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4946,6 +4946,8 @@ With argument @var{md}, @t{run} is the default set of policies,
 may transiently and weakly interfere, as they come out of unknown state.  
 @t{paranoid} causes the simulation to break on weak-instabilities
 and weak-interferences, which is useful for debugging.  
+@t{fatal} causes the simulation to exit immediate with non-zero exit status, 
+which is useful for non-interactive batch testing.  
 @end deffn
 @end texinfo
 ***/
@@ -4960,6 +4962,7 @@ if (a.size() == 1) {
 	static const string reset("reset");
 	static const string run("run");
 	static const string paranoid("paranoid");
+	static const string fatal("fatal");
 	const string& m(a.back());
 	if (m == reset) {
 		s.set_mode_reset();
@@ -4967,6 +4970,8 @@ if (a.size() == 1) {
 		s.set_mode_run();
 	} else if (m == paranoid) {
 		s.set_mode_breakall();
+	} else if (m == fatal) {
+		s.set_mode_fatal();
 	} else {
 		usage(cerr << "usage: ");
 		return Command::BADARG;
@@ -4980,13 +4985,14 @@ if (a.size() == 1) {
 
 void
 SetMode::usage(ostream& o) {
-	o << "mode [reset|run|paranoid]\n"
+	o << "mode [reset|run|paranoid|fatal]\n"
 "\t\'reset\' disables weak-interference warnings, useful during initialization\n"
 "\t\'run\' (default) enables weak-interference warnings\n"
-"\t\'paranoid\' also break on weak-instability and weak-interference" << endl;
+"\t\'paranoid\' also break on weak-instability and weak-interference\n"
+"\t\'fatal\' causes the simulator to exit with non-zero exit status" << endl;
 	o <<
-"Instabilities and interferences still cause simulations to halt, while \n"
-"weak-instabilities trigger warnings." << endl;
+"By default, instabilities and interferences still cause simulations to halt,\n"
+"while weak-instabilities trigger warnings." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

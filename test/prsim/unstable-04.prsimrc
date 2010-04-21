@@ -1,0 +1,33 @@
+# "unstable-04.prsimrc"
+#	$Id: unstable-04.prsimrc,v 1.1 2010/04/21 20:36:49 fang Exp $
+# @haco@ inv.haco-c
+# testing for instabilities
+# With the exception of 'echo' and 'advance' commands, 
+# this script is usable with old prsim
+
+# cntinue past unstable events with warning
+unstable fatal
+
+watchall
+time
+
+initialize
+set a 1
+advance 5
+set a 0
+echo expect instability
+step
+
+echo NOT REACHED
+
+echo initializing
+initialize
+set a 0
+advance 5
+set a 1
+echo expect instability
+step
+# but with old behavior, this is reported as an interference
+# because of arbitrary evaluation ordering!
+# FIXED: HACKT-00-01-04-main-00-79-27-prsim-06-03
+
