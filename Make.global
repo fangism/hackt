@@ -7,7 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.34 2010/01/11 21:25:19 fang Exp $
+#	$Id: Make.global,v 1.35 2010/04/22 19:06:53 fang Exp $
 
 # automatically runs autotools (and recursively in subdirectories)
 reconf: force
@@ -59,6 +59,12 @@ CLEAN_RECURSIVE_TARGET_SCRIPT = \
 	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
 	done && test -z "$$fail"
 
+# demonstration of recursive target
+MORE_RECURSIVE_TARGETS += pwd-recursive
+pwd: pwd-recursive
+pwd-am: pwd-local
+pwd-local:
+	@$(ECHO) "======== "`pwd`
 
 if AUTO_CVSIGNORE
 # .cvsignore for this project will always be semi-automatically generated

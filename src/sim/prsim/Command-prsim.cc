@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.61 2010/04/21 20:36:45 fang Exp $
+	$Id: Command-prsim.cc,v 1.62 2010/04/22 19:07:00 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -5449,6 +5449,39 @@ if (a.size() != 2) {
 
 void
 ChannelShow::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-get.texi
+@deffn Command channel-get chan
+This prints the current handshake state of a channel, 
+including the current value, if valid, 
+and the expected activity (e.g., waiting for data from sender, 
+or ack from receiver).
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelGet, "channel-get", 
+	channels, "print handshake state of channel")
+
+int
+ChannelGet::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.dump_channel_state(cout, a.back())) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelGet::usage(ostream& o) {
 	o << name << " <channel>" << endl;
 	o << brief << endl;
 }

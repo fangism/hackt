@@ -1,0 +1,61 @@
+channels:
+C : LEDR (init .d:0 .r:0) off
+D : LEDR (init .e:0 .d:0 .r:0) off
+freezing D 
+	0	D.d : 0
+	0	D.r : 0
+	0	D.e : 0
+channel D: channel is empty, waiting for sender
+thawing D 
+channel D: channel is empty, waiting for sender
+repeat 3 values 
+	0	D.r : 1
+channel D: channel is full (0), waiting for receiver ack
+	0	D.e : 1
+channel D: channel is empty, waiting for sender
+	0	D.r : 0
+channel D: channel is full (0), waiting for receiver ack
+	0	D.e : 0
+channel D: channel is empty, waiting for sender
+	0	D.r : 1
+channel D: channel is full (0), waiting for receiver ack
+	0	D.e : 1
+channel D: channel is empty, waiting for sender
+toggle 3 values 
+	0	D.d : 1
+channel D: channel is full (1), waiting for receiver ack
+	0	D.e : 0
+channel D: channel is empty, waiting for sender
+	0	D.d : 0
+channel D: channel is full (0), waiting for receiver ack
+	0	D.e : 1
+channel D: channel is empty, waiting for sender
+	0	D.d : 1
+channel D: channel is full (1), waiting for receiver ack
+	0	D.e : 0
+channel D: channel is empty, waiting for sender
+repeat 3 values 
+	0	D.r : 0
+channel D: channel is full (1), waiting for receiver ack
+	0	D.e : 1
+channel D: channel is empty, waiting for sender
+	0	D.r : 1
+channel D: channel is full (1), waiting for receiver ack
+	0	D.e : 0
+channel D: channel is empty, waiting for sender
+	0	D.r : 0
+channel D: channel is full (1), waiting for receiver ack
+	0	D.e : 1
+channel D: channel is empty, waiting for sender
+toggle 3 values 
+	0	D.d : 0
+channel D: channel is full (0), waiting for receiver ack
+	0	D.e : 0
+channel D: channel is empty, waiting for sender
+	0	D.d : 1
+channel D: channel is full (1), waiting for receiver ack
+	0	D.e : 1
+channel D: channel is empty, waiting for sender
+	0	D.d : 0
+channel D: channel is full (0), waiting for receiver ack
+channel D: channel is full (0), waiting for receiver ack

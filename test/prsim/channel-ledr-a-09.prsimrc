@@ -1,0 +1,64 @@
+# "channel-ledr-a-09.prsimrc"
+# @haco@ channel-ledr-a.haco-c
+
+source channel-ledr-a-01.prsimrc
+
+watchall
+echo freezing C
+channel-stop C
+channel-get C
+set C.d 0
+set C.r 0
+cycle
+channel-get C
+
+echo thawing C
+channel-release C
+# channel-watch C
+cycle
+channel-get C
+
+echo repeat 3 values
+set C.r 1
+cycle
+channel-get C
+set C.r 0
+cycle
+channel-get C
+set C.r 1
+cycle
+channel-get C
+
+echo toggle 3 values
+set C.d 1
+cycle
+channel-get C
+set C.d 0
+cycle
+channel-get C
+set C.d 1
+cycle
+channel-get C
+
+echo repeat 3 values
+set C.r 0
+cycle
+channel-get C
+set C.r 1
+cycle
+channel-get C
+set C.r 0
+cycle
+channel-get C
+
+echo toggle 3 values
+set C.d 0
+cycle
+channel-get C
+set C.d 1
+cycle
+channel-get C
+set C.d 0
+cycle
+channel-get C
+

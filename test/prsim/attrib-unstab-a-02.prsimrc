@@ -1,0 +1,59 @@
+# "attrib-unstab-a-02.prsimrc"
+# @haco@ attrib-unstab-a.haco-c
+
+echo initially all unknown
+echo unstable-dequeue
+unstable-dequeue
+
+watchall
+timing uniform 10
+fanout-get a
+
+set a 0
+advance 4
+assert a 0
+assert b X
+queue
+time
+
+set a 1
+# advance 4
+cycle
+echo instability silenced...
+queue
+time
+
+echo finishing...
+cycle
+assert a 1
+assert b 0
+echo b is 0 due to unstable-dequeue
+
+echo repeat:
+
+set a 1
+cycle
+
+echo glitch low on a
+set a 0
+advance 4
+assert a 0
+assert b 0
+queue
+time
+
+set a 1
+# advance 4
+cycle
+echo instability silenced...
+queue
+time
+
+echo finishing...
+cycle
+assert a 1
+assert b 0
+echo b is 0 due to unstable-dequeue
+
+echo done.
+

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.37 2010/04/21 20:36:46 fang Exp $
+	$Id: State-prsim.h,v 1.38 2010/04/22 19:07:01 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1414,6 +1414,11 @@ public:
 	ostream&
 	dump_channels(ostream& o) const {
 		return _channel_manager.dump(o, *this);
+	}
+
+	bool
+	dump_channel_state(ostream& o, const string& s) const {
+		return _channel_manager.dump_channel_state(o, *this, s);
 	}
 
 	bool

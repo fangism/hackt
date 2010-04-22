@@ -1,0 +1,86 @@
+# "channel-status-c-01.prsimrc"
+# @haco@ channel-test-c.haco-c
+# testing channel sink
+
+# register channels
+source channel-test-c-01.prsimrc
+
+watchall
+channel-watch X
+channel-sink X
+channel-source-args-loop X 0 0 1 1
+channel-stop X
+channel-reset X
+channel-get X
+
+cycle
+getall X
+channel-get X
+assert X.e 0
+
+echo releasing channel X
+channel-release X
+
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+
+assert-queue

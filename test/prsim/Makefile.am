@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.91 2010/04/21 20:36:47 fang Exp $
+#	$Id: Makefile.am,v 1.92 2010/04/22 19:07:03 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -30,6 +30,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	expr-limit-a \
 	unstable-a unstable-b \
 	weak-unstable-a weak-unstable-b \
+	attrib-unstab-a \
 	rule_unstable-a rule_unstable-b rule_unstable-c \
 	rule_unstable-d rule_unstable-e rule_unstable-f \
 	precharge-a precharge-b precharge-c precharge-d \
@@ -54,7 +55,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	iskeeper-a \
 	isckeeper-a \
 	channel-test-a channel-test-b channel-test-c channel-test-d \
-	channel-test-f channel-test-g \
+	channel-test-f channel-test-g channel-test-h \
 	channel-test-non-QDI-a \
 	channel-ledr-a \
 	eledr-buffer eledr-buffer-a eledr-buffer-b \
@@ -121,6 +122,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	killed-01 \
 	rule_unstable-a-01 rule_unstable-b-01 rule_unstable-c-01 \
 	rule_unstable-d-01 rule_unstable-e-01 rule_unstable-f-01 \
+	attrib-unstab-a-01 attrib-unstab-a-02 \
 	unstable-01 unstable-02 unstable-03 \
 	unstable-a-01 unstable-b-01 \
 	weak-unstable-a-01 weak-unstable-a-02 weak-unstable-a-03 \
@@ -238,10 +240,18 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-g-01 channel-test-g-02 channel-test-g-03 \
 	channel-test-g-04 channel-test-g-05 channel-test-g-06 \
 	channel-test-g-07 \
+	channel-test-h-01 \
 	channel-ledr-a-01 channel-ledr-a-02 channel-ledr-a-03 \
 	channel-ledr-a-04 channel-ledr-a-05 \
+	channel-ledr-a-07 channel-ledr-a-08 channel-ledr-a-09 \
 	channel-eledr-a-01 channel-eledr-a-02 channel-eledr-a-03 \
 	channel-eledr-a-04 channel-eledr-a-05 \
+	channel-eledr-a-07 channel-eledr-a-08 \
+	channel-status-a-01 channel-status-a-02 channel-status-a-03 \
+	channel-status-c-01 \
+	channel-status-f-01 \
+	channel-status-g-01 \
+	channel-status-h-01 \
 	eledr-buffer-a-01 eledr-buffer-a-02 eledr-buffer-a-03 \
 	eledr-buffer-a-04 eledr-buffer-a-05 eledr-buffer-a-06 \
 	eledr-buffer-b-01 eledr-buffer-b-02 eledr-buffer-b-03 \

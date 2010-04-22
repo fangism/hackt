@@ -1,0 +1,38 @@
+channels:
+C : LEDR (init .d:0 .r:0) off
+D : LEDR (init .e:0 .d:0 .r:0) off
+freezing C 
+channel C: unknown, because there are 2 X rails
+	0	C.d : 0
+	0	C.r : 0
+channel C: channel value (0)
+thawing C 
+channel C: channel value (0)
+repeat 3 values 
+	0	C.r : 1
+channel C: channel value (0)
+	0	C.r : 0
+channel C: channel value (0)
+	0	C.r : 1
+channel C: channel value (0)
+toggle 3 values 
+	0	C.d : 1
+channel C: channel value (1)
+	0	C.d : 0
+channel C: channel value (0)
+	0	C.d : 1
+channel C: channel value (1)
+repeat 3 values 
+	0	C.r : 0
+channel C: channel value (1)
+	0	C.r : 1
+channel C: channel value (1)
+	0	C.r : 0
+channel C: channel value (1)
+toggle 3 values 
+	0	C.d : 0
+channel C: channel value (0)
+	0	C.d : 1
+channel C: channel value (1)
+	0	C.d : 0
+channel C: channel value (0)

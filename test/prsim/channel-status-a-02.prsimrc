@@ -1,0 +1,195 @@
+# "channel-status-a-02.prsimrc"
+# copy-modified from "channel-test-a-04.prsimrc"
+# @haco@ channel-test-a.haco-c
+# @deps@ channel-test-a-values-X.txt
+# testing channel source
+
+# echo-commands on
+source channel-test-a-01.prsimrc
+
+channel-get X
+getall X
+watchall
+channel-source X channel-test-a-values-X.txt
+channel-watch X
+channel-reset X
+cycle
+getall X
+channel-get X
+
+echo manually bucketing
+set X.e 0
+cycle
+assert X.d[0] 0
+assert X.d[1] 0
+channel-get X
+
+echo releasing channel X (source)
+channel-release X
+step-event
+channel-get X
+cycle
+channel-get X
+echo should be no data yet because ack is off
+assert X.d[0] 0
+assert X.d[1] 0
+
+echo -----------------------------------
+set X.e 1
+step-event
+channel-get X
+cycle
+assert X.d[0] 1
+assert X.d[1] 0
+# we know the first data value
+channel-get X
+backtrace X.d[0]
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo -----------------------------------
+set X.e 1
+step-event
+channel-get X
+cycle
+assert X.d[0] 0
+assert X.d[1] 1
+# we know the second data value
+channel-get X
+# backtrace X.d[0]
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo -----------------------------------
+set X.e 1
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo -----------------------------------
+set X.e 1
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo -----------------------------------
+set X.e 1
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo -----------------------------------
+set X.e 1
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo -----------------------------------
+set X.e 1
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo -----------------------------------
+set X.e 1
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo -----------------------------------
+set X.e 1
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo -----------------------------------
+set X.e 1
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+step-event
+channel-get X
+cycle
+channel-get X
+
+echo -----------------------------------
+echo no more values!!!
+set X.e 1
+step-event
+channel-get X
+cycle
+channel-get X
+getall X
+assert X.d[0] 0
+assert X.d[1] 0
+

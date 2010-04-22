@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.29 2010/04/17 00:39:16 fang Exp $
+@c $Id: commands.texi,v 1.30 2010/04/22 19:06:54 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -189,9 +189,11 @@ Another class of channels use level-encoded dual rail (LEDR).
 Such channels are declared using @command{channel-ledr}.
 @include cmd/channel-ledr.texi
 
-One can get information about channels with the following commands:
+One can get information about channel configurations with 
+the following commands:
 @include cmd/channel-show.texi
 @include cmd/channel-show-all.texi
+@include cmd/channel-get.texi
 
 To control which channels should report values to the console, 
 the simulator provides basic watch commands.  

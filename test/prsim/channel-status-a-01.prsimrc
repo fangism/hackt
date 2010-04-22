@@ -1,0 +1,71 @@
+# "channel-status-a-01.prsimrc"
+# copy modified from "channel-test-a-03.prsimrc"
+# @haco@ channel-test-a.haco-c
+# testing channel sink
+
+# register channels
+source channel-test-a-01.prsimrc
+
+watchall
+# set up some channels with commands
+# channel-log X channel-test-a-03-X.log
+channel-watch X
+channel-sink X
+channel-reset X
+getall X
+channel-get X
+
+echo manually resetting data
+set X.d[0] 0
+set X.d[1] 0
+cycle
+channel-get X
+assert X.e 0
+
+echo releasing channel X
+channel-release X
+cycle
+channel-get X
+assert X.e 1
+# because data is neutral, X.e should request new data
+
+echo ------------------------------------
+echo setting data rail
+set X.d[0] 1
+step-event
+channel-get X
+cycle
+assert X.e 0
+channel-get X
+backtrace X.e
+
+echo ------------------------------------
+echo resetting data rail
+set X.d[0] 0
+step-event
+channel-get X
+cycle
+assert X.e 1
+channel-get X
+backtrace X.e
+
+echo ------------------------------------
+echo setting data rail
+set X.d[1] 1
+step-event
+channel-get X
+cycle
+assert X.e 0
+channel-get X
+backtrace X.e
+
+echo ------------------------------------
+echo resetting data rail
+set X.d[1] 0
+step-event
+channel-get X
+cycle
+assert X.e 1
+channel-get X
+backtrace X.e
+

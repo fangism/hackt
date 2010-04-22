@@ -1,0 +1,7 @@
+// "attrib-unstab-a.hac"
+// testing that 'unstab' attribute is propagated to cflat
+
+bool a, b;
+prs {
+	[unstab=1] a => b-
+}

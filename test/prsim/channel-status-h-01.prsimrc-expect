@@ -1,0 +1,82 @@
+testing bundled channels 
+Warning: channel acknowledge `X.e' has no fanin!
+channel X: unknown, because there are 4 X rails
+	10	X.b[0].d[0] : 0
+	10	X.b[0].d[1] : 0
+	10	X.b[1].d[0] : 0
+	10	X.b[1].d[1] : 0
+	10	X.e : 1
+All subnodes of 'X':
+X.b[0].d[0] : 0
+X.b[0].d[1] : 0
+X.b[1].d[0] : 0
+X.b[1].d[1] : 0
+X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+releasing channel X 
+channel X: data is neutral, waiting for sender to produce data
+	20	X.b[0].d[0] : 1
+channel X: data is transitioning to valid
+channel	X (.data) : 0 @ 20
+	20	X.b[1].d[0] : 1
+channel X: data is valid (0), waiting for receiver to ack
+	30	X.e : 0	[by X.b[1].d[0]:=1]
+channel X: data is valid (0), waiting for sender to remove data
+	40	X.b[0].d[0] : 0	[by X.e:=0]
+channel X: data is transitioning to neutral
+	40	X.b[1].d[0] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+	50	X.e : 1	[by X.b[1].d[0]:=0]
+channel X: data is neutral, waiting for sender to produce data
+	60	X.b[0].d[1] : 1	[by X.e:=1]
+channel X: data is transitioning to valid
+channel	X (.data) : 1 @ 60
+	60	X.b[1].d[0] : 1	[by X.e:=1]
+channel X: data is valid (1), waiting for receiver to ack
+	70	X.e : 0	[by X.b[1].d[0]:=1]
+channel X: data is valid (1), waiting for sender to remove data
+	80	X.b[0].d[1] : 0	[by X.e:=0]
+channel X: data is transitioning to neutral
+	80	X.b[1].d[0] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+	90	X.e : 1	[by X.b[1].d[0]:=0]
+channel X: data is neutral, waiting for sender to produce data
+	100	X.b[0].d[0] : 1	[by X.e:=1]
+channel X: data is transitioning to valid
+channel	X (.data) : 2 @ 100
+	100	X.b[1].d[1] : 1	[by X.e:=1]
+channel X: data is valid (2), waiting for receiver to ack
+	110	X.e : 0	[by X.b[1].d[1]:=1]
+channel X: data is valid (2), waiting for sender to remove data
+	120	X.b[0].d[0] : 0	[by X.e:=0]
+channel X: data is transitioning to neutral
+	120	X.b[1].d[1] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+	130	X.e : 1	[by X.b[1].d[1]:=0]
+channel X: data is neutral, waiting for sender to produce data
+	140	X.b[0].d[1] : 1	[by X.e:=1]
+channel X: data is transitioning to valid
+channel	X (.data) : 3 @ 140
+	140	X.b[1].d[1] : 1	[by X.e:=1]
+channel X: data is valid (3), waiting for receiver to ack
+	150	X.e : 0	[by X.b[1].d[1]:=1]
+channel X: data is valid (3), waiting for sender to remove data
+	160	X.b[0].d[1] : 0	[by X.e:=0]
+channel X: data is transitioning to neutral
+	160	X.b[1].d[1] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+	170	X.e : 1	[by X.b[1].d[1]:=0]
+channel X: data is neutral, waiting for sender to produce data
+	180	X.b[0].d[0] : 1	[by X.e:=1]
+channel X: data is transitioning to valid
+channel	X (.data) : 0 @ 180
+	180	X.b[1].d[0] : 1	[by X.e:=1]
+channel X: data is valid (0), waiting for receiver to ack
+	190	X.e : 0	[by X.b[1].d[0]:=1]
+channel X: data is valid (0), waiting for sender to remove data
+	200	X.b[0].d[0] : 0	[by X.e:=0]
+channel X: data is transitioning to neutral
+	200	X.b[1].d[0] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+	210	X.e : 1	[by X.b[1].d[0]:=0]
+channel X: data is neutral, waiting for sender to produce data

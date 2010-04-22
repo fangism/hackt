@@ -1,0 +1,55 @@
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+All subnodes of 'X':
+X.d[0] : X
+X.d[1] : X
+X.e : X
+channel X: unknown, because there are 2 X rails
+manually resetting data 
+	0	X.d[0] : 0
+	0	X.d[1] : 0
+	10	X.e : 0
+channel X: data is neutral, waiting for receiver to neg-ack
+releasing channel X 
+	20	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+------------------------------------ 
+setting data rail 
+channel	X (.data) : 0 @ 20
+	20	X.d[0] : 1
+channel X: data is valid (0), waiting for receiver to ack
+	30	X.e : 0	[by X.d[0]:=1]
+channel X: data is valid (0), waiting for sender to remove data
+event    : `X.e' : 0
+caused by: `X.d[0]' : 1
+(no cycle)
+------------------------------------ 
+resetting data rail 
+	30	X.d[0] : 0
+channel X: data is neutral, waiting for receiver to neg-ack
+	40	X.e : 1	[by X.d[0]:=0]
+channel X: data is neutral, waiting for sender to produce data
+event    : `X.e' : 1
+caused by: `X.d[0]' : 0
+(no cycle)
+------------------------------------ 
+setting data rail 
+channel	X (.data) : 1 @ 40
+	40	X.d[1] : 1
+channel X: data is valid (1), waiting for receiver to ack
+	50	X.e : 0	[by X.d[1]:=1]
+channel X: data is valid (1), waiting for sender to remove data
+event    : `X.e' : 0
+caused by: `X.d[1]' : 1
+(no cycle)
+------------------------------------ 
+resetting data rail 
+	50	X.d[1] : 0
+channel X: data is neutral, waiting for receiver to neg-ack
+	60	X.e : 1	[by X.d[1]:=0]
+channel X: data is neutral, waiting for sender to produce data
+event    : `X.e' : 1
+caused by: `X.d[1]' : 0
+(no cycle)

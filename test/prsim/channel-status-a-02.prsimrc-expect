@@ -1,0 +1,146 @@
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+channel X: unknown, because there are 2 X rails
+All subnodes of 'X':
+X.d[0] : X
+X.d[1] : X
+X.e : X
+Warning: channel acknowledge `X.e' has no fanin!
+	10	X.d[0] : 0
+	10	X.d[1] : 0
+All subnodes of 'X':
+X.d[0] : 0
+X.d[1] : 0
+X.e : X
+channel X: data is neutral, ack is X
+manually bucketing 
+	10	X.e : 0
+channel X: data is neutral, waiting for receiver to neg-ack
+releasing channel X (source) 
+channel X: data is neutral, waiting for receiver to neg-ack
+channel X: data is neutral, waiting for receiver to neg-ack
+should be no data yet because ack is off 
+----------------------------------- 
+	10	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel	X (.data) : 0 @ 20
+	20	X.d[0] : 1	[by X.e:=1]
+channel X: data is valid (0), waiting for receiver to ack
+event    : `X.d[0]' : 1
+caused by: `X.e' : 1
+(no cycle)
+- - - - - - - - - - - - - - - - - - 
+	20	X.e : 0
+channel X: data is valid (0), waiting for sender to remove data
+	30	X.d[0] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+----------------------------------- 
+	30	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel	X (.data) : 1 @ 40
+	40	X.d[1] : 1	[by X.e:=1]
+channel X: data is valid (1), waiting for receiver to ack
+- - - - - - - - - - - - - - - - - - 
+	40	X.e : 0
+channel X: data is valid (1), waiting for sender to remove data
+	50	X.d[1] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+----------------------------------- 
+	50	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel	X (.data) : 1 @ 60
+	60	X.d[1] : 1	[by X.e:=1]
+channel X: data is valid (1), waiting for receiver to ack
+- - - - - - - - - - - - - - - - - - 
+	60	X.e : 0
+channel X: data is valid (1), waiting for sender to remove data
+	70	X.d[1] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+----------------------------------- 
+	70	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel	X (.data) : 0 @ 80
+	80	X.d[0] : 1	[by X.e:=1]
+channel X: data is valid (0), waiting for receiver to ack
+- - - - - - - - - - - - - - - - - - 
+	80	X.e : 0
+channel X: data is valid (0), waiting for sender to remove data
+	90	X.d[0] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+----------------------------------- 
+	90	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel	X (.data) : 0 @ 100
+	100	X.d[0] : 1	[by X.e:=1]
+channel X: data is valid (0), waiting for receiver to ack
+- - - - - - - - - - - - - - - - - - 
+	100	X.e : 0
+channel X: data is valid (0), waiting for sender to remove data
+	110	X.d[0] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+----------------------------------- 
+	110	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel	X (.data) : 0 @ 120
+	120	X.d[0] : 1	[by X.e:=1]
+channel X: data is valid (0), waiting for receiver to ack
+- - - - - - - - - - - - - - - - - - 
+	120	X.e : 0
+channel X: data is valid (0), waiting for sender to remove data
+	130	X.d[0] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+----------------------------------- 
+	130	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel	X (.data) : 1 @ 140
+	140	X.d[1] : 1	[by X.e:=1]
+channel X: data is valid (1), waiting for receiver to ack
+- - - - - - - - - - - - - - - - - - 
+	140	X.e : 0
+channel X: data is valid (1), waiting for sender to remove data
+	150	X.d[1] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+----------------------------------- 
+	150	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel	X (.data) : 1 @ 160
+	160	X.d[1] : 1	[by X.e:=1]
+channel X: data is valid (1), waiting for receiver to ack
+- - - - - - - - - - - - - - - - - - 
+	160	X.e : 0
+channel X: data is valid (1), waiting for sender to remove data
+	170	X.d[1] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+----------------------------------- 
+	170	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel	X (.data) : 1 @ 180
+	180	X.d[1] : 1	[by X.e:=1]
+channel X: data is valid (1), waiting for receiver to ack
+- - - - - - - - - - - - - - - - - - 
+	180	X.e : 0
+channel X: data is valid (1), waiting for sender to remove data
+	190	X.d[1] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+----------------------------------- 
+	190	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel	X (.data) : 1 @ 200
+	200	X.d[1] : 1	[by X.e:=1]
+channel X: data is valid (1), waiting for receiver to ack
+- - - - - - - - - - - - - - - - - - 
+	200	X.e : 0
+channel X: data is valid (1), waiting for sender to remove data
+	210	X.d[1] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+----------------------------------- 
+no more values!!! 
+	210	X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+channel X: data is neutral, waiting for sender to produce data
+All subnodes of 'X':
+X.d[0] : 0
+X.d[1] : 0
+X.e : 1

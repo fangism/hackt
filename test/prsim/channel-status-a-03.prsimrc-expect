@@ -1,0 +1,66 @@
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+Warning: channel acknowledge `Z.a' has no fanin!
+All subnodes of 'Z':
+Z.d[0] : X
+Z.d[1] : X
+Z.d[2] : X
+Z.a : X
+channel Z: unknown, because there are 3 X rails
+	10	Z.d[0] : 0
+	10	Z.d[1] : 0
+	10	Z.d[2] : 0
+	10	Z.a : 0
+channel Z: data is neutral, waiting for sender to produce data
+releasing channel Z 
+channel Z: data is neutral, waiting for sender to produce data
+channel	Z (.data) : 0 @ 20
+	20	Z.d[0] : 1
+channel Z: data is valid (0), waiting for receiver to ack
+	30	Z.a : 1	[by Z.d[0]:=1]
+channel Z: data is valid (0), waiting for sender to remove data
+	40	Z.d[0] : 0	[by Z.a:=1]
+channel Z: data is neutral, waiting for receiver to neg-ack
+	50	Z.a : 0	[by Z.d[0]:=0]
+channel Z: data is neutral, waiting for sender to produce data
+channel	Z (.data) : 2 @ 60
+	60	Z.d[2] : 1	[by Z.a:=0]
+channel Z: data is valid (2), waiting for receiver to ack
+	70	Z.a : 1	[by Z.d[2]:=1]
+channel Z: data is valid (2), waiting for sender to remove data
+	80	Z.d[2] : 0	[by Z.a:=1]
+channel Z: data is neutral, waiting for receiver to neg-ack
+	90	Z.a : 0	[by Z.d[2]:=0]
+channel Z: data is neutral, waiting for sender to produce data
+channel	Z (.data) : 1 @ 100
+	100	Z.d[1] : 1	[by Z.a:=0]
+channel Z: data is valid (1), waiting for receiver to ack
+	110	Z.a : 1	[by Z.d[1]:=1]
+channel Z: data is valid (1), waiting for sender to remove data
+	120	Z.d[1] : 0	[by Z.a:=1]
+channel Z: data is neutral, waiting for receiver to neg-ack
+	130	Z.a : 0	[by Z.d[1]:=0]
+channel Z: data is neutral, waiting for sender to produce data
+channel	Z (.data) : 0 @ 140
+	140	Z.d[0] : 1	[by Z.a:=0]
+channel Z: data is valid (0), waiting for receiver to ack
+	150	Z.a : 1	[by Z.d[0]:=1]
+channel Z: data is valid (0), waiting for sender to remove data
+	160	Z.d[0] : 0	[by Z.a:=1]
+channel Z: data is neutral, waiting for receiver to neg-ack
+	170	Z.a : 0	[by Z.d[0]:=0]
+channel Z: data is neutral, waiting for sender to produce data
+channel	Z (.data) : 2 @ 180
+	180	Z.d[2] : 1	[by Z.a:=0]
+channel Z: data is valid (2), waiting for receiver to ack
+	190	Z.a : 1	[by Z.d[2]:=1]
+channel Z: data is valid (2), waiting for sender to remove data
+	200	Z.d[2] : 0	[by Z.a:=1]
+channel Z: data is neutral, waiting for receiver to neg-ack
+	210	Z.a : 0	[by Z.d[2]:=0]
+channel Z: data is neutral, waiting for sender to produce data
+channel	Z (.data) : 1 @ 220
+	220	Z.d[1] : 1	[by Z.a:=0]
+channel Z: data is valid (1), waiting for receiver to ack

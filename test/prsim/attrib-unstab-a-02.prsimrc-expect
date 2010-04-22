@@ -1,0 +1,30 @@
+initially all unknown 
+unstable-dequeue 
+Fanouts of node `a':
+(to [top-level]):
+[after 10, unstable]	a:X -> b-:X
+[after 10, unstable]	~a:X -> b+:X
+	0	a : 0
+event queue:
+	10	b : 1	[from a:=0]
+time: 4
+	4	a : 1
+	14	b : 0	[by a:=1]
+instability silenced... 
+event queue:
+time: 14
+finishing... 
+b is 0 due to unstable-dequeue 
+repeat: 
+glitch low on a 
+	14	a : 0
+event queue:
+	24	b : 1	[from a:=0]
+time: 18
+	18	a : 1
+instability silenced... 
+event queue:
+time: 18
+finishing... 
+b is 0 due to unstable-dequeue 
+done. 

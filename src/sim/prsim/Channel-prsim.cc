@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.27 2010/04/20 22:34:49 fang Exp $
+	$Id: Channel-prsim.cc,v 1.28 2010/04/22 19:06:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -426,6 +426,104 @@ ostream&
 channel::dump_state(ostream& o) const {
 	o << "count: " << size_t(counter_state);
 	o << ", unknowns: " << size_t(x_counter);
+	return o;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints state information about channel, w.r.t. phase of handshake.
+	TODO: tests to cover all states
+ */
+ostream&
+channel::dump_status(ostream& o, const State& s) const {
+if (!x_counter) {
+	// then we can infer the state of the handshake
+#if PRSIM_CHANNEL_LEDR
+switch (type) {
+case CHANNEL_TYPE_1ofN: {
+#endif
+	bool ack = false;	// true is acknowledging, false is neg-ack
+	bool xack = false;
+	bool xval = false;
+	if (ack_signal) {
+		const value_enum a = s.get_node(ack_signal).current_value();
+		xack = (a == LOGIC_OTHER);
+		ack = get_ack_active() ^ (a == LOGIC_LOW);
+	}
+	bool val = false;
+	if (valid_signal) {
+		const value_enum v = s.get_node(valid_signal).current_value();
+		xval = (v == LOGIC_OTHER);
+		val = get_valid_sense() ^ (v == LOGIC_LOW);
+	}
+	bool transitional = false;
+	if (!counter_state) {
+		// data is neutral
+		o << "data is neutral";
+	if (valid_signal) {
+		if (xval) o << ", validity is X";
+		// validity is catching up
+		else if (val) o << ", validity resetting";
+		// else validity reflects data rails
+	}
+	if (ack_signal && !(valid_signal && val)) {
+		o << ", " << (xack ? "ack is X" :
+			(ack ? "waiting for receiver to neg-ack"
+			: "waiting for sender to produce data"));
+	} // else nothing else
+	} else if (counter_state == bundles()) {
+		// data is valid
+		// ALERT: shared validity protocol validity *follows* data rails
+		o << "data is valid (" << data_rails_value(s) << ")";
+	if (valid_signal) {
+		if (xval) o << ", validity is X";
+		// validity is catching up
+		else if (!val) o << ", validity setting";
+		// else validity reflects data rails
+	}
+	if (ack_signal && !(valid_signal && !val)) {
+		o << ", " << (xack ? "ack is X" :
+			(ack ? "waiting for sender to remove data"
+			: "waiting for receiver to ack"));
+	}
+	} else {
+		// data is in between
+		transitional = true;
+		o << "data is transitioning to " << (ack ? "neutral" : "valid");
+	}
+#if PRSIM_CHANNEL_LEDR
+	break;
+}
+case CHANNEL_TYPE_LEDR: {
+	const value_enum p = current_ledr_parity(s);
+	INVARIANT(p != LOGIC_OTHER);
+	if (ack_signal) {
+	// full/empty
+		bool empty = empty_parity() ^ (p == LOGIC_LOW);
+		if (empty) {
+			o << "channel is empty, waiting for sender";
+		} else {
+			o << "channel is full (" << data_rails_value(s) <<
+				"), waiting for receiver ack";
+		}
+	} else {
+		// is a 1-phase channel, only report data rails
+		o << "channel value (" << data_rails_value(s) << ")";
+	}
+	break;
+}
+case CHANNEL_TYPE_SINGLE_TRACK: {
+	FINISH_ME(Fang);
+	break;
+}
+default: break;
+}	// end switch
+#endif
+} else {
+	o << "unknown, because there are " << size_t(x_counter) <<
+		" X rails";
+}
 	return o;
 }
 
@@ -1557,6 +1655,12 @@ channel::__get_fanins(const node_index_type ni,
 	Is mutually recursive with State::__node_why_not().
 	If channel is stopped, do not report.  
 	TODO: test eMx1ofN channels
+	\param ni the node driven by channel to query.
+	\param limit is the recursion limit.
+	\param dir is the direction of the node being checked.
+	\param why_not is true to ask 'why-not'?
+	\param verbose is true to pretty-print trees.
+	\param u, v are just visited sets of nodes (stack, seen)
  */
 ostream&
 channel::__node_why_not(const State& s, ostream& o, const node_index_type ni, 
@@ -1565,16 +1669,15 @@ channel::__node_why_not(const State& s, ostream& o, const node_index_type ni,
 		node_set_type& u, node_set_type& v) const {
 	typedef	State::node_type		node_type;
 	const indent __ind_outer(o, verbose ? " " : "");
-if (stopped()) {
-	// && (is_sourcing() || is_sinking())
-	// TODO: this should really only be printed in cases below
-	// where it is actually acting as a source or sink.
-	// watched and logged channels won't care...
-	o << auto_indent << "(channel " << name << " is stopped.)" << endl;
-	// FIXME: later
-} else {
 	// const node_type& n(s.get_node(ni));
-	if (is_sourcing()) {
+if (is_sourcing()) {
+	if (stopped()) {
+	o << auto_indent << "(channel " << name << " is stopped.)" << endl;
+	} else {
+#if PRSIM_CHANNEL_LEDR
+	switch (type) {
+	case CHANNEL_TYPE_1ofN: {
+#endif
 		// only data or validity can be driven by source
 		if (valid_signal && (ni == valid_signal)) {
 			__node_why_not_data_rails(s, o, 
@@ -1595,9 +1698,44 @@ if (stopped()) {
 				why_not, verbose, u, v);
 		}
 		}
+#if PRSIM_CHANNEL_LEDR
+		break;
 	}
-	if (is_sinking() && ack_signal && (ni == ack_signal)) {
-		// no other signal should be driven by sink
+	case CHANNEL_TYPE_LEDR: {
+		// channel is empty
+#if 0
+		const value_enum p = current_ledr_parity(s);
+		bool empty = false;
+		switch (p) {
+		case LOGIC_OTHER:
+			break;
+		default:
+			empty = (p == LOGIC_HIGH) ^ empty_parity();
+			break;
+		}
+#endif
+#if 0
+		// channel is full
+		s.__node_why_not(o, ack_signal, limit, 
+			dir ^ , 
+			why_not, verbose, u, v);
+#endif
+		FINISH_ME(Fang);
+		break;
+	}
+	case CHANNEL_TYPE_SINGLE_TRACK:
+		FINISH_ME(Fang);
+	default:
+		break;
+	}	// end switch
+#endif
+	}
+}
+if (is_sinking() && ack_signal && (ni == ack_signal)) {
+	// no other signal should be driven by sink
+if (stopped()) {
+	o << auto_indent << "(channel " << name << " is stopped.)" << endl;
+} else {
 	if (valid_signal) {
 		// TODO: not sure if the following is correct
 		// it may be backwards, if I just think about it...
@@ -1613,8 +1751,8 @@ if (stopped()) {
 		__node_why_not_data_rails(s, o, ack_signal, get_ack_active(), 
 			limit, dir, why_not, verbose, u, v);
 	}
-	}	// end if sinking
-}	// end if !stopped
+}
+}	// end if sinking
 	return o;
 }	// end channel::__node_why_not
 
@@ -3244,7 +3382,7 @@ for ( ; i!=e; ++i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Just show all managed channels.  
+	Just show a single channel.
  */
 bool
 channel_manager::__dump_channel(ostream& o, const string& channel_name, 
@@ -3254,6 +3392,15 @@ channel_manager::__dump_channel(ostream& o, const string& channel_name,
 	if (state) {
 		c.dump_state(o << '\t') << endl;
 	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_manager::dump_channel_state(ostream& o, const State& s, 
+		const string& channel_name) const {
+	GET_NAMED_CHANNEL_CONST(c, channel_name)
+	c.dump_status(o << "channel " << c.name << ": ", s) << endl;
 	return false;
 }
 
