@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.62 2010/04/22 19:07:00 fang Exp $
+	$Id: Command-prsim.cc,v 1.63 2010/04/23 02:40:59 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -5860,8 +5860,51 @@ ChannelStopAll::usage(ostream& o) {
 	o << "Prevent all source/sink channels from operating." << endl;
 }
 
-// could call these Resume...
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-stop-on-empty.texi
+@deffn Command channel-stop-on-empty chan
+@deffnx Command channel-continue-on-empty chan
+For channels that are sinking and expecting values (non-loop), 
+stop sinking as soon as expected values are exhausted.  
+The default behavior for a sink is to continue sinking regardless
+of checking against expected values.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStopOnEmpty,
+	"channel-stop-on-empty", 
+	channels, "stop channel sink after last expected value")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelContinueOnEmpty,
+	"channel-continue-on-empty", 
+	channels, "allow channel sink after last expected value")
+
+int
+ChannelStopOnEmpty::main(State& s, const string_list& a) {
+	return standard_channel_command_main(s, a,
+		&channel::stop_on_empty, usage);
+}
+
+int
+ChannelContinueOnEmpty::main(State& s, const string_list& a) {
+	return standard_channel_command_main(s, a,
+		&channel::continue_on_empty, usage);
+}
+
+void
+ChannelStopOnEmpty::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
+void
+ChannelContinueOnEmpty::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// could call these Resume...
 /***
 @texinfo cmd/channel-release.texi
 @deffn Command channel-release chan
@@ -6471,6 +6514,7 @@ if (a.size() != 3) {
 			usage(cerr);
 			return Command::BADARG;
 		}
+		// TODO: generalize argument to number of values remaining?
 		if (c->have_value()) {
 			if (!x) {
 				cerr << "Expecting no more channel values on "
@@ -6478,7 +6522,7 @@ if (a.size() != 3) {
 				return Command::FATAL;
 			} else if (s.confirm_asserts()) {
 				cout << "channel " << cn <<
-					" has no more values, as expected."
+					" has more values, as expected."
 					<< endl;
 			}
 		} else {
@@ -6488,7 +6532,7 @@ if (a.size() != 3) {
 				return Command::FATAL;
 			} else if (s.confirm_asserts()) {
 				cout << "channel " << cn <<
-					" has more values, as expected."
+					" has no more values, as expected."
 					<< endl;
 			}
 		}

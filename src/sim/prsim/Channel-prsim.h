@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.22 2010/04/22 19:06:59 fang Exp $
+	$Id: Channel-prsim.h,v 1.23 2010/04/23 02:40:59 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -302,6 +302,12 @@ private:
 			in the data-valid state.  
 		 */
 		CHANNEL_WATCHED =		0x0800,
+		/**
+			If true, and channel is both sinking and
+			expecting values, then stop sinking as soon
+			as values are exhausted.
+		 */
+		CHANNEL_STOP_ON_EMPTY = 	0x1000,
 		/// default initial value
 		CHANNEL_DEFAULT_FLAGS = 	0x0000
 	};
@@ -559,6 +565,21 @@ public:
 		return get_valid_sense();
 	}
 
+	bool
+	four_phase(void) const {
+	switch (type) {
+		case CHANNEL_TYPE_1ofN: return true;
+		// CHANNEL_TYPE_LEDR
+		// CHANNEL_TYPE_SINGLE_TRACK
+		default: return false;
+	}
+	}
+
+	bool
+	two_phase(void) const {
+		return !four_phase();
+	}
+
 private:
 	// the parity specified by the initial empty state
 	bool
@@ -631,6 +652,26 @@ public:
 
 	void
 	heed(void) { flags &= ~CHANNEL_IGNORED; }
+
+	void
+	set_stop_on_empty(const bool t) {
+		if (t)	{ flags |= CHANNEL_STOP_ON_EMPTY; }
+		else	{ flags &= ~CHANNEL_STOP_ON_EMPTY; }
+	}
+
+	void
+	stop_on_empty(void) {
+		set_stop_on_empty(true);
+	}
+	void
+	continue_on_empty(void) {
+		set_stop_on_empty(false);
+	}
+
+	bool
+	stopping_on_empty(void) const {
+		return flags & CHANNEL_STOP_ON_EMPTY;
+	}
 
 private:
 	bool

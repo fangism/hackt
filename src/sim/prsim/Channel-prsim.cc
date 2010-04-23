@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.28 2010/04/22 19:06:58 fang Exp $
+	$Id: Channel-prsim.cc,v 1.29 2010/04/23 02:40:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -374,6 +374,9 @@ default:
 		if (something) o << ',';
 		o << "expect";
 		something = true;
+	}
+	if (stopping_on_empty()) {
+		o << ",stop-on-empty";
 	}
 	if (watched()) {
 		if (something) o << ',';
@@ -2002,6 +2005,7 @@ if (ack_signal) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This is the primary callback function for channel activity.  
 	Event on node ni may trigger environment events, logging, 
 	checking, etc... process them here.
 	This assumes that in any given channel, the acknowledge
@@ -2370,12 +2374,21 @@ channel::process_data(const State& s) throw (channel_exception) {
 				advance_value();
 			}
 		}
+		// configure to stop sinking on empty expect (2-phase)
+		if (two_phase() && !have_value() &&
+				is_sinking() && stopping_on_empty()) {
+			stop();
+		}
 	} else {
 		// exhausted values, disable expecting
 		flags &= ~CHANNEL_EXPECTING;
 		// might as well release memory...
 		if (!values.empty()) {
 			values.clear();
+		}
+		// configure to stop sinking on empty expect (4-phase)
+		if (four_phase() && is_sinking() && stopping_on_empty()) {
+			stop();
 		}
 	}
 	}	// end if is_expecting

@@ -5,6 +5,14 @@
 
 2010-04-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-84:
+	  hacprsim: implemented channel-stop-on-empty to stop sinking
+		channels as soon as expected values run out.
+		Opposite is channel-continue-on-empty.
+	  Added test cases, documented.
+	  Fixed minor typo on channel-assert-value-queue+confirm.
+
+
 	* HACKT-00-01-04-main-00-83-83:
 	  hacprism: implemented channel-get, very informative!
 		Added bunch of test cases, documented.

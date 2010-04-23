@@ -1,0 +1,36 @@
+# "eledr-buffer-a-07.prsimrc"
+# @haco@ eledr-buffer-a.haco-c
+
+channel-ledr L e:0 :0 d:0 r:0
+channel-ledr R e:0 :0 d:0 r:0
+echo configuring environment...
+channel-source-args L 1 0 0 0 0 1 0 1 1 1 1 1 1 1 0
+channel-sink R
+channel-expect-args R 1 0 0 0 0 1 0
+channel-stop-on-empty R
+
+echo with random delays
+timing random
+
+# watchall
+confirm
+echo resetting...
+channel-ignore-all
+set _Reset 0
+channel-reset-all
+cycle
+status X
+channel-show-all
+
+echo releasing from reset...
+channel-watchall
+set _Reset 1
+channel-heed-all
+channel-release-all
+cycle
+
+channel-show-all
+channel-assert-value-queue L 1
+getports R
+channel-get R
+

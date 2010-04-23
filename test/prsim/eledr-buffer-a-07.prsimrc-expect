@@ -1,0 +1,48 @@
+configuring environment... 
+with random delays 
+default after min: 0
+default after max: +INF
+resetting... 
+WARNING: weak-interference `buf.d_rail._r'
+>> cause: `_Reset' (val: 0)
+WARNING: weak-interference `buf.p_rail._r'
+>> cause: `_Reset' (val: 0)
+X nodes:
+
+channels:
+L : LEDR (init .e:0 .d:0 .r:0) source,stopped,ignored, timing: global {1,0,0,0,0,1,0,1,1,1,1,1,1,1,0,} @0
+R : LEDR (init .e:0 .d:0 .r:0) sink,expect,stop-on-empty,stopped,ignored, timing: global {1,0,0,0,0,1,0,} @0
+releasing from reset... 
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel R has value 1, as expected.
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel R has value 0, as expected.
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel R has value 0, as expected.
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel R has value 0, as expected.
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel R has value 0, as expected.
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel R has value 1, as expected.
+channel	L (.data) : 0
+channel	R (.data) : 0
+channel R has value 0, as expected.
+channel	L (.data) : 1
+channel	R (.data) : 1
+channel	L (.data) : 1
+channels:
+L : LEDR (init .e:0 .d:0 .r:0) source,watch, timing: global {1,0,0,0,0,1,0,1,1,1,1,1,1,1,0,} @9
+R : LEDR (init .e:0 .d:0 .r:0) sink,stop-on-empty,watch,stopped, timing: global
+channel L has more values, as expected.
+Ports subnodes of 'R':
+R.e : 1
+R.d : 1
+R.r : 1
+channel R: channel is full (1), waiting for receiver ack

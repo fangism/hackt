@@ -1,0 +1,54 @@
+channels:
+L : .e(init:0)  1x1of2 off
+R : .e(init:0)  1x1of2 off
+L : .e(init:0)  1x1of2 source, timing: global {0,1,1,0,1,1,0,1,1,} @0
+	count: 0, unknowns: 2
+R : .e(init:0)  1x1of2 sink,expect,stop-on-empty, timing: global {0,1,1,0,1,1,} @0
+	count: 0, unknowns: 2
+L : .e(init:0)  1x1of2 source,watch,stopped, timing: global {0,1,1,0,1,1,0,1,1,} @0
+	count: 0, unknowns: 2
+R : .e(init:0)  1x1of2 sink,expect,stop-on-empty,watch,stopped, timing: global {0,1,1,0,1,1,} @0
+	count: 0, unknowns: 2
+L : .e(init:0)  1x1of2 source,watch,stopped, timing: global {0,1,1,0,1,1,0,1,1,} @0
+	count: 0, unknowns: 0
+R : .e(init:0)  1x1of2 sink,expect,stop-on-empty,watch,stopped, timing: global {0,1,1,0,1,1,} @0
+	count: 0, unknowns: 0
+event queue:
+	50	L.d[0] : 1
+	50	R.e : 1
+channel	L (.data) : 0 @ 50
+channel	R (.data) : 0 @ 70
+channel	L (.data) : 1 @ 130
+channel	R (.data) : 1 @ 150
+channel	L (.data) : 1 @ 210
+channel	R (.data) : 1 @ 230
+channel	L (.data) : 0 @ 290
+channel	R (.data) : 0 @ 310
+channel	L (.data) : 1 @ 370
+channel	R (.data) : 1 @ 390
+channel	L (.data) : 1 @ 450
+channel	R (.data) : 1 @ 470
+channel	L (.data) : 0 @ 530
+channel	R (.data) : 0 @ 550
+expect value remaining on L because R stopped 
+L : .e(init:0)  1x1of2 source,watch, timing: global {0,1,1,0,1,1,0,1,1,} @7
+	count: 0, unknowns: 0
+R : .e(init:0)  1x1of2 sink,stop-on-empty,watch,stopped, timing: global
+	count: 1, unknowns: 0
+a value will still be pushed on to R 
+Ports subnodes of 'R':
+R.d[0] : 1
+R.d[1] : 0
+R.e : 1
+R.d[0]:1
+. _r[0]:0
+. .-+
+. . & ~R.e:1
+. . & ~. (channel R is stopped.)
+L.e:0
+.-+
+. & ~R.d[0]:1
+. & ~. _r[0]:0
+. & ~. .-+
+. & ~. . & ~R.e:1
+. & ~. . & ~. (channel R is stopped.)

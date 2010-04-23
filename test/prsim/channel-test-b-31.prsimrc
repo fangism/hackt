@@ -1,0 +1,41 @@
+# "channel-test-b-31.prsimrc"
+# copy-modified from "channel-test-b-17.prsimrc"
+# @haco@ channel-test-b.haco-c
+# testing channel-stop-on-empty
+
+source channel-test-b-01.prsimrc
+
+channel-source-args L 0 1 1 0 1 1 0 1 1
+channel-sink R
+channel-expect-args R 0 1 1 0 1 1
+channel-stop-on-empty R
+channel-show L
+channel-show R
+channel-watchall
+
+channel-reset-all
+channel-show L
+channel-show R
+cycle
+channel-show L
+channel-show R
+assert L.d[0] 0
+assert L.d[1] 0
+assert L.e 1
+assert R.d[0] 0
+assert R.d[1] 0
+assert R.e 0
+
+channel-release-all
+queue
+
+cycle
+assertn-queue
+echo expect value remaining on L because R stopped
+channel-show L
+channel-show R
+echo a value will still be pushed on to R
+getports R
+why-not-verbose R.d[0]
+why-not-verbose L.e
+

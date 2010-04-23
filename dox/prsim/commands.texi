@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.30 2010/04/22 19:06:54 fang Exp $
+@c $Id: commands.texi,v 1.31 2010/04/23 02:40:57 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -296,6 +296,7 @@ and reset-all and release-all are also provided for convenience.
 @include cmd/channel-reset-all.texi
 @include cmd/channel-stop.texi
 @include cmd/channel-stop-all.texi
+@include cmd/channel-stop-on-empty.texi
 @include cmd/channel-release.texi
 @include cmd/channel-release-all.texi
 
