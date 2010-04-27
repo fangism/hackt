@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.113 2010/04/19 02:46:07 fang Exp $
+#	$Id: ChangeLog,v 1.114 2010/04/27 21:19:47 fang Exp $
+
+2010-04-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-85:
+	  util/persistent_object_manager.{h,cc}: implemented object file
+		format version tag check, settable through a global variable.
+
 
 2010-04-18	David Fang		<fangism@users.sourceforge.net>
 
