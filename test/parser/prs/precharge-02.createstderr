@@ -25,7 +25,7 @@ Persistent Object Manager text dump:
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	25	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	26	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	33
 	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
@@ -35,7 +35,7 @@ Persistent Object Manager text dump:
 	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	488
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	496
 	35	##ADDR##	procdefn	0	#HEAD#	#TAIL#	139
 	36	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	37	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -52,7 +52,7 @@ Persistent Object Manager text dump:
 	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	52	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	53	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	33
 	54	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
@@ -63,7 +63,7 @@ Persistent Object Manager text dump:
 	59	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	497
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	505
 	63	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	64	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -130,7 +130,7 @@ In namespace "", we have: {
         resolved prs:
         a &{+en} b -> c-
         rule supply map: (rules, macros, @nodes : Vdd, GND)
-        0..0 none none : 2, 1
+        0..0 none none : 2, 1 | 2, 1
       }
       }
 
@@ -181,7 +181,7 @@ In namespace "", we have: {
         resolved prs:
         a &{+~_en} b -> c-
         rule supply map: (rules, macros, @nodes : Vdd, GND)
-        0..0 none none : 2, 1
+        0..0 none none : 2, 1 | 2, 1
       }
       }
 

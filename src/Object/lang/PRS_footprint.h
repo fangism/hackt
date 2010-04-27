@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.18 2010/04/02 22:18:33 fang Exp $
+	$Id: PRS_footprint.h,v 1.19 2010/04/27 18:33:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -209,6 +209,10 @@ public:
 		// never_ptr<const rule_set>		back_ref;
 		size_t				Vdd;
 		size_t				GND;
+#if PRS_SUBSTRATE_OVERRIDES
+		size_t				Vdd_substrate;
+		size_t				GND_substrate;
+#endif
 
 		void
 		write_object(const persistent_object_manager&, ostream&) const;
@@ -245,6 +249,10 @@ public:
 	 */
 	size_t					current_Vdd;
 	size_t					current_GND;
+#if PRS_SUBSTRATE_OVERRIDES
+	size_t					current_Vdd_substrate;
+	size_t					current_GND_substrate;
+#endif
 #endif
 public:
 	footprint();

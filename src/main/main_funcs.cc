@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.29 2010/04/07 00:13:01 fang Exp $
+	$Id: main_funcs.cc,v 1.30 2010/04/27 18:33:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -87,6 +87,7 @@ using parser::root_body;
 using parser::concrete_type_ref;
 using util::persistent;
 using util::persistent_object_manager;
+using util::value_saver;
 using lexer::file_manager;
 #if KEEP_PARSE_FUNCS
 using lexer::yyin_manager;
@@ -123,7 +124,6 @@ open_source_file(const char* fname) {
 //=============================================================================
 /**
 	Makes sure named object file is openable in binary mode.  
-	TODO: check object header to verify hackt format?
  */
 good_bool
 check_object_loadable(const char* fname) {
@@ -382,12 +382,23 @@ try {
 
 //=============================================================================
 /**
+	Identifies the object file format version.
+	Increment this whenever format changes.  
+ */
+static const size_t
+object_file_format_version = 1;
+
+//=============================================================================
+/**
 	Saves module to object file.  
  */
 void
 save_module(const module& m, const char* name) {
 	STACKTRACE_VERBOSE;
 	const string fname(name);
+	const value_saver<size_t>
+		__tmp(persistent_object_manager::format_version,
+			object_file_format_version);
 	persistent_object_manager::save_object_to_file(fname, m);
 }
 
@@ -418,6 +429,9 @@ save_module_debug(const module& m, const char* name, const bool d) {
 count_ptr<module>
 load_module(const char* fname) {
 	STACKTRACE_VERBOSE;
+	const value_saver<size_t>
+		__tmp(persistent_object_manager::format_version,
+			object_file_format_version);
 	return persistent_object_manager::load_object_from_file(fname)
 		.is_a<module>();
 }
@@ -536,10 +550,10 @@ in the shell.
 	case 'C': {
 		// forward bundled arguments to compile-driver
 		// because getopt is not re-entrant...
-		const util::value_saver<int> _1(optind);
-		const util::value_saver<int> _2(optopt);
-		const util::value_saver<int> _3(opterr);
-		const util::value_saver<char*> _4(optarg);
+		const value_saver<int> _1(optind);
+		const value_saver<int> _2(optopt);
+		const value_saver<int> _3(opterr);
+		const value_saver<char*> _4(optarg);
 		// despite my best efforts, this STILL doesn't work
 		// because getopt is simply not required to be re-entrant
 		// TODO: re-implement own re-entrant getopt.

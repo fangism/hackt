@@ -5,53 +5,24 @@
 	ALERT: Make sure you are editing "parser/type-parse.yy.in"
 	and NOT the configure-generated "parser/type-parse.yy"
 	or else your changes will be clobbered during the next configure!
-	$Id: type-parse.yy.in,v 1.7 2008/12/18 00:32:10 fang Exp $
+	$Id: type-parse.yy.in,v 1.8 2010/04/27 18:33:22 fang Exp $
  */
 
 %{
 #include <iostream>
 
-#include "config.h"
+#include "parser/yacc-config.h"
 #include "AST/AST.h"		// should be first
 #include "parser/type-prefix.h"
 #include "parser/type-parse.output.h"	// auto-generated state strings! :)
 #include "parser/type-parse-options.h"
 #include "parser/type-union.h"
 #include "lexer/type-lex-options.h"
+#include "lexer/flex_lexer_state.h"
 #include "util/using_ostream.h"
 
 #define	ENABLE_STACKTRACE		0
 #include "util/stacktrace.h"
-
-/** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
-#if defined (__GNUC__) && (3 <= __GNUC__)
-#define __attribute__(arglist)		/* empty */
-#endif
-
-#ifndef	YYBISON
-#define	YYBISON		0
-#endif
-
-#include "lexer/flex_lexer_state.h"
-
-#if YYBISON
-#if defined(USING_BISON) && !USING_BISON
-#error	Inconsistency in configuration: YYBISON && !USING_BISON
-#endif
-
-#elif defined(YYBYACC) && YYBYACC
-
-#if defined(USING_BYACC) && !USING_BYACC && !USING_YACC
-// on many systems, yacc == byacc
-#error	Inconsistency in configuration: YYBYACC && !USING_BYACC && !USING_YACC
-#endif
-#else	// !YYBISON && !YYBYACC
-
-#if defined(USING_YACC) && !USING_YACC
-#error	Inconsistency in configuration: !YYBISON && !YYBYACC && !USING_YACC
-#endif
-
-#endif	// YYBISON
 
 // extern FILE* yyin;
 
@@ -62,17 +33,17 @@
 static flex::lexer_state	_lexer_state;
 #endif
 
-#define	WRAP_LIST(left, list, right)	list->wrap(left, right)
-
-#define	DELETE_TOKEN(tok)		delete tok
-
-#define	APPEND_LIST(list, delim, item)					\
-	DELETE_TOKEN(delim); list->push_back(item)
-
 using namespace HAC::lexer;
 using namespace HAC::parser;
 
-
+/***
+// list macros (now inline functions in "AST/node_list.h")
+WRAP_LIST
+DELETE_TOKEN
+APPEND_LIST
+APPEND_NULL
+CONCAT_LIST
+***/
 %}
 
 /**

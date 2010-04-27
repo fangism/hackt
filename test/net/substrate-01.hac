@@ -1,0 +1,11 @@
+// "substrate-01.hac"
+// just testing formatting of intermediate representation dump
+
+bool x, y, z;
+prs <,|,> {
+	x	=> y-
+}
+prs <|> {
+	y	=> z-
+}
+

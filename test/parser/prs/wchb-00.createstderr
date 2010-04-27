@@ -98,7 +98,7 @@ Persistent Object Manager text dump:
 	94	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	95	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	96	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	97	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	40
+	97	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	48
 	98	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	36
 	99	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	100	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16

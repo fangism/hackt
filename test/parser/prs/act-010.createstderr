@@ -19,7 +19,7 @@ Persistent Object Manager text dump:
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	19	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	21	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
@@ -31,7 +31,7 @@ Persistent Object Manager text dump:
 	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	670
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	678
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -81,5 +81,5 @@ footprint: {
   a<2> & b -> c-
   a<3> & b -> c-
   rule supply map: (rules, macros, @nodes : Vdd, GND)
-  0..3 none none : 2, 1
+  0..3 none none : 2, 1 | 2, 1
 }

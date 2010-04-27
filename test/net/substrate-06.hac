@@ -1,0 +1,16 @@
+// "substrate-06.hac"
+// copy-modified from "substrate-05.hac"
+// just testing formatting of intermediate representation dump
+
+bool BGND, SGND, BVdd, SVdd;
+bool w, x, y, z;
+prs <SVdd|BVdd,BGND> {
+	w	=> x-
+}
+prs <,SGND|BVdd,BGND> {
+	x	=> y-
+}
+prs <SVdd,SGND|> {
+	y	=> z-
+}
+

@@ -1,0 +1,7 @@
+Mx:dn:0 !GND w x myGND nch W=5u L=2u
+Mx:up:0 !Vdd w x !Vdd pch W=5u L=2u
+My:dn:0 myGND x y myGND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+Mz:dn:0 myGND y z myGND nch W=5u L=2u
+Mz:up:0 !Vdd y z !Vdd pch W=5u L=2u
+

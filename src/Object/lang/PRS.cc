@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.42 2010/04/07 00:12:48 fang Exp $
+	$Id: PRS.cc,v 1.43 2010/04/27 18:33:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -242,6 +242,9 @@ rule_set_base::~rule_set_base() { }
 rule_set::rule_set() : rule_set_base()
 #if PRS_SUPPLY_OVERRIDES
 	, GND(), Vdd()
+#if PRS_SUPPLY_OVERRIDES
+	, GND_substrate(), Vdd_substrate()
+#endif
 #endif
 	{ }
 
@@ -281,6 +284,14 @@ rule_set::dump(ostream& o, const rule_dump_context& c) const {
 		if (Vdd)	Vdd->dump(o << "!Vdd=", edc);
 		o << ',';
 		if (GND)	GND->dump(o << "!GND=", edc);
+#if PRS_SUBSTRATE_OVERRIDES
+		if (Vdd_substrate || GND_substrate) {
+		o << '|';
+		if (Vdd_substrate)	Vdd_substrate->dump(o << "!BVdd=", edc);
+		o << ',';
+		if (GND_substrate)	GND_substrate->dump(o << "!BGND=", edc);
+		}
+#endif
 		o << "> ";
 	}
 #endif
@@ -419,6 +430,11 @@ rule_set::unroll(const unroll_context& c, const node_pool_type& np,
 }
 	const value_saver<size_t>	// save on stack
 		__t1(pfp.current_Vdd), __t2(pfp.current_GND);
+#if PRS_SUBSTRATE_OVERRIDES
+	const value_saver<size_t>	// save on stack
+		__t3(pfp.current_Vdd_substrate),
+		__t4(pfp.current_GND_substrate);
+#endif
 	// since rule_sets are not nested (not self recursive)
 	// we can simplify the checking for Vdd, GND
 	if (Vdd) {
@@ -445,6 +461,32 @@ rule_set::unroll(const unroll_context& c, const node_pool_type& np,
 	}
 	INVARIANT(pfp.current_Vdd);
 	INVARIANT(pfp.current_GND);
+#if PRS_SUBSTRATE_OVERRIDES
+	if (Vdd_substrate) {
+		const bool_literal l(Vdd_substrate);
+		const size_t i = l.unroll_base(c);
+		if (!i) { return good_bool(false); }
+		else	pfp.current_Vdd_substrate = i;
+		STACKTRACE_INDENT_PRINT("overriding !Vdd_substrate" << endl);
+	} else {
+		STACKTRACE_INDENT_PRINT("defaulting to !Vdd" << endl);
+		// set to default supply !Vdd
+		pfp.current_Vdd_substrate = pfp.current_Vdd;
+	}
+	if (GND_substrate) {
+		const bool_literal l(GND_substrate);
+		const size_t i = l.unroll_base(c);
+		if (!i) { return good_bool(false); }
+		else	pfp.current_GND_substrate = i;
+		STACKTRACE_INDENT_PRINT("overriding !GND_substrate" << endl);
+	} else {
+		STACKTRACE_INDENT_PRINT("defaulting to !GND" << endl);
+		// set to default supply !GND
+		pfp.current_GND_substrate = pfp.current_GND;
+	}
+	INVARIANT(pfp.current_Vdd_substrate);
+	INVARIANT(pfp.current_GND_substrate);
+#endif
 #endif	// PRS_SUPPLY_OVERRIDES
 	if (!rule_set_base::unroll(c, np, pfp).good) {
 		return good_bool(false);
@@ -470,6 +512,12 @@ rule_set::unroll(const unroll_context& c, const node_pool_type& np,
 		e.GND = pfp.current_GND;
 		INVARIANT(e.Vdd);
 		INVARIANT(e.GND);
+#if PRS_SUBSTRATE_OVERRIDES
+		e.Vdd_substrate = pfp.current_Vdd_substrate;
+		e.GND_substrate = pfp.current_GND_substrate;
+		INVARIANT(e.Vdd_substrate);
+		INVARIANT(e.GND_substrate);
+#endif
 		m.push_back(e);
 	}
 }
@@ -496,6 +544,12 @@ if (!m.register_transient_object(this,
 		GND->collect_transient_info(m);
 	if (Vdd)
 		Vdd->collect_transient_info(m);
+#if PRS_SUBSTRATE_OVERRIDES
+	if (GND_substrate)
+		GND_substrate->collect_transient_info(m);
+	if (Vdd_substrate)
+		Vdd_substrate->collect_transient_info(m);
+#endif
 #endif
 }
 }
@@ -517,6 +571,10 @@ rule_set::write_object(const persistent_object_manager& m,
 #if PRS_SUPPLY_OVERRIDES
 	m.write_pointer(o, GND);
 	m.write_pointer(o, Vdd);
+#if PRS_SUBSTRATE_OVERRIDES
+	m.write_pointer(o, GND_substrate);
+	m.write_pointer(o, Vdd_substrate);
+#endif
 #endif
 }
 
@@ -537,6 +595,10 @@ rule_set::load_object(const persistent_object_manager& m,
 #if PRS_SUPPLY_OVERRIDES
 	m.read_pointer(i, GND);
 	m.read_pointer(i, Vdd);
+#if PRS_SUBSTRATE_OVERRIDES
+	m.read_pointer(i, GND_substrate);
+	m.read_pointer(i, Vdd_substrate);
+#endif
 #endif
 }
 

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.240 2010/04/09 17:18:00 fang Exp $
+#	$Id: Makefile.am,v 1.241 2010/04/27 18:33:10 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -922,6 +922,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/lang/SPEC_fwd.h
 
 PARSER_H_FILES = \
+	parser/yacc-config.h \
 	parser/$(HACKT_PARSE_ROOT)-real.h \
 	parser/hackt-union.h \
 	parser/$(HACKT_PARSE_ROOT).output.h \

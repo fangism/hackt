@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.52 2009/10/05 23:09:32 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.53 2010/04/27 18:33:21 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -23,13 +23,14 @@
 #include <iterator>
 #include <algorithm>
 
-#include "config.h"
+#include "parser/yacc-config.h"
 #include "AST/AST.h"		// should be first
 #include "parser/hackt-prefix.h"
 #include "parser/hackt-parse.output.h"	// auto-generated state strings! :)
 #include "parser/hackt-parse-options.h"
 #include "parser/hackt-union.h"
 #include "lexer/hackt-lex-options.h"
+#include "lexer/flex_lexer_state.h"
 #include "util/using_ostream.h"
 #include "lexer/file_manager.h"
 #include "Object/devel_switches.h"	// for DEFCHAN_LIKE_PROCESS
@@ -42,42 +43,12 @@
 #define	ENABLE_STACKTRACE		0
 #include "util/stacktrace.h"
 
-/** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
-#if defined (__GNUC__) && (3 <= __GNUC__)
-#define __attribute__(arglist)		/* empty */
-#endif
-
 using namespace HAC::lexer;
 using namespace HAC::parser;
 
-/**
-	When using yacc, this would otherwise be undefined.  
- */
-#ifndef	YYBISON
-#define	YYBISON		0
-#endif
 
-#include "lexer/flex_lexer_state.h"
-
-#if YYBISON
-#if defined(USING_BISON) && !USING_BISON
-#error	Inconsistency in configuration: YYBISON && !USING_BISON
-#endif
-
-#elif defined(YYBYACC) && YYBYACC
-
-#if defined(USING_BYACC) && !USING_BYACC && !USING_YACC
-// on many systems, yacc == byacc
-#error	Inconsistency in configuration: YYBYACC && !USING_BYACC && !USING_YACC
-#endif
-#else	// !YYBISON && !YYBYACC
-
-#if defined(USING_YACC) && !USING_YACC
-#error	Inconsistency in configuration: !YYBISON && !YYBYACC && !USING_YACC
-#endif
-
-#endif
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// global variables
 // may be changed when nesed files are opened
 extern FILE* yyin;
 
@@ -99,13 +70,17 @@ static flex::lexer_state	_lexer_state;
 HAC::parser::root_body* global_hackt_lval;
 #endif
 
-#define	WRAP_LIST(left, list, right)	list->wrap(left, right)
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+// list macros (now inline functions in "AST/node_list.h")
+WRAP_LIST
+DELETE_TOKEN
+APPEND_LIST
+APPEND_NULL
+CONCAT_LIST
+***/
 
-#define	DELETE_TOKEN(tok)		delete tok
-
-#define	APPEND_LIST(list, delim, item)					\
-	DELETE_TOKEN(delim); list->push_back(item)
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Bogus namespace for documenting yacc's internal tables:
 	The extern declarations are needed so the compiler doesn't complain
@@ -725,6 +700,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>	literal
 %type	<_id_expr>	id_expr
 %type	<_qualified_id>	qualified_id absolute_id relative_id generic_id
+%type	<_inst_ref_expr_list>	member_index_expr_pair
 %type	<_inst_ref_expr_list>	member_index_expr_list
 %type	<_inst_ref_expr_list>	member_index_expr_list_in_parens
 %type	<_inst_ref_expr_list>	member_index_expr_list_in_parens_optional
@@ -2669,6 +2645,16 @@ member_index_expr_list
 	| optional_member_index_expr { $$ = new inst_ref_expr_list($1); }
 	;
 
+member_index_expr_pair
+	: optional_member_index_expr ',' optional_member_index_expr
+		{ $$ = new inst_ref_expr_list($1);
+			APPEND_LIST($$, $2, $3); }
+	/** always make a pair, even from a singleton **/
+	| optional_member_index_expr
+		{ $$ = new inst_ref_expr_list($1);
+			APPEND_NULL($$); }
+	;
+
 optional_member_index_expr
 	: member_index_expr
 	| { $$ = NULL; }
@@ -3031,6 +3017,7 @@ optional_complex_expr
 	| { $$ = NULL; }
 	;
 
+/** so far, this is only used following PRS_LANG **/
 member_index_expr_list_in_parens_optional
 	: member_index_expr_list_in_parens { $$ = $1; }
 	| { $$ = NULL; }
@@ -3046,9 +3033,16 @@ member_index_expr_list_in_angles_optional
 	| { $$ = NULL; }
 	;
 
+/** so far, this is only used following PRS_LANG **/
 member_index_expr_list_in_angles
-	: '<' member_index_expr_list '>'
+	/** really, only want two **/
+	: '<' member_index_expr_pair '>'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	/** optional: overriding of substrate contacts **/
+	| '<' member_index_expr_pair '|' member_index_expr_pair '>'
+		{ $$ = $2; WRAP_LIST($1, $2, $5); 
+		  CONCAT_LIST($$, $4);
+		  DELETE_TOKEN($3); }
 	;
 
 expr_list_in_parens

@@ -19,7 +19,7 @@ Persistent Object Manager text dump:
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
+	18	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
 	19	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16

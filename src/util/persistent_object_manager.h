@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.30 2008/11/25 21:52:45 fang Exp $
+	$Id: persistent_object_manager.h,v 1.31 2010/04/27 18:33:24 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -199,8 +199,10 @@ private:
 	count_ptr<persistent>			root;
 
 public:
+	// global variables
 	static bool				dump_reconstruction_table;
-
+	// some integer value that is bumped when format changes
+	static size_t				format_version;
 public:
 	persistent_object_manager();
 

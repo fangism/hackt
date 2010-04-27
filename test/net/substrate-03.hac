@@ -1,0 +1,16 @@
+// "substrate-03.hac"
+// copy-modified from "substrate-02.hac"
+// just testing formatting of intermediate representation dump
+
+bool myGND;
+bool w, x, y, z;
+prs <|,myGND> {
+	w	=> x-
+}
+prs <,myGND|,myGND> {
+	x	=> y-
+}
+prs <,myGND|> {
+	y	=> z-
+}
+

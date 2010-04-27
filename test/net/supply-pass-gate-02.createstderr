@@ -38,7 +38,7 @@ Persistent Object Manager text dump:
 	34	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
+	37	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
 	38	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
@@ -61,7 +61,7 @@ Persistent Object Manager text dump:
 	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	58	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	59	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
+	60	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
 	61	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
@@ -86,7 +86,7 @@ Persistent Object Manager text dump:
 	82	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	83	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	84	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	85	##ADDR##	footprnt	0	#HEAD#	#TAIL#	876
+	85	##ADDR##	footprnt	0	#HEAD#	#TAIL#	892
 	86	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -204,6 +204,6 @@ footprint: {
   passp(_g[1],s[1],d[1])
   passn(g[1],s[1],d[1])
   rule supply map: (rules, macros, @nodes : Vdd, GND)
-  none 0..1 none : 1, 5
-  none 2..3 none : 3, 4
+  none 0..1 none : 1, 5 | 1, 5
+  none 2..3 none : 3, 4 | 3, 4
 }

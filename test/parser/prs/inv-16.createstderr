@@ -22,7 +22,7 @@ Persistent Object Manager text dump:
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
+	21	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
 	22	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -32,7 +32,7 @@ Persistent Object Manager text dump:
 	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	435
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	443
 	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -113,7 +113,7 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
         rule supply map: (rules, macros, @nodes : Vdd, GND)
-        0..1 none none : 2, 1
+        0..1 none none : 2, 1 | 2, 1
       }
       }
 

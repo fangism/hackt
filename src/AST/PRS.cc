@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.40 2009/10/29 18:05:19 fang Exp $
+	$Id: PRS.cc,v 1.41 2010/04/27 18:33:12 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -752,11 +752,21 @@ if (rules) {
 			return false;
 		}
 		const size_t s = temp.size();
+#if PRS_SUBSTRATE_OVERRIDES
+		if (s > 4 || s < 1) {
+			cerr <<
+"Error: PRS supply/substrate overrides are of the form:\n"
+"\t<Vdd [,GND] [| BVdd [,BGND]]>\n\terror at: "
+				<< where(*supplies) << endl;
+			return false;
+		}
+#else
 		if (s > 2 || s < 1) {
 	cerr << "Error: PRS supply overrides are of the form: <Vdd [,GND]>.  "
 				<< where(*supplies) << endl;
 			return false;
 		}
+#endif
 		entity::PRS::rule_set& r(IS_A(entity::PRS::rule_set&,
 			c.get_current_prs_body()));
 		// throw bad_case if cast fails
@@ -764,6 +774,14 @@ if (rules) {
 			r.Vdd = temp[0]->get_bool_var();
 		if (s > 1 && temp[1])
 			r.GND = temp[1]->get_bool_var();
+#if PRS_SUBSTRATE_OVERRIDES
+		if (s > 2 && temp[2])
+			r.Vdd_substrate = temp[2]->get_bool_var();
+		// else	r.Vdd_substrate = r.Vdd;
+		if (s > 3 && temp[3])
+			r.GND_substrate = temp[3]->get_bool_var();
+		// else	r.GND_substrate = r.GND;
+#endif
 	}
 #endif
 	try {

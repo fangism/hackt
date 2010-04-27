@@ -1,0 +1,129 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	60
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	28	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	37	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	47	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	48	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	52	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	757
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  10 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    BGND = bool<> BGND
+    BVdd = bool<> BVdd
+    SGND = bool<> SGND
+    SVdd = bool<> SVdd
+    w = bool<> w
+    x = bool<> x
+    y = bool<> y
+    z = bool<> z
+}
+
+top-level prs:
+  {
+  w -> x-
+  ~w -> x+
+  }
+  <,!GND=SGND|,!BGND=BGND> {
+  x -> y-
+  ~x -> y+
+  }
+  <,!GND=SGND> {
+  y -> z-
+  ~y -> z+
+  }
+
+footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  BGND = bool^0 = BGND (3) 
+  BVdd = bool^0 = BVdd (5) 
+  SGND = bool^0 = SGND (4) 
+  SVdd = bool^0 = SVdd (6) 
+  w = bool^0 = w (7) 
+  x = bool^0 = x (8) 
+  y = bool^0 = y (9) 
+  z = bool^0 = z (10) 
+  Created state:
+  bool instance pool: (0 ports, 10 local, 0 mapped)
+  1	!GND	
+  2	!Vdd	
+  3	BGND	
+  4	SGND	
+  5	BVdd	
+  6	SVdd	
+  7	w	
+  8	x	
+  9	y	
+  10	z	
+  resolved prs:
+  w -> x-
+  ~w -> x+
+  x -> y-
+  ~x -> y+
+  y -> z-
+  ~y -> z+
+  rule supply map: (rules, macros, @nodes : Vdd, GND)
+  0..1 none none : 2, 1 | 2, 3
+  2..3 none none : 2, 4 | 2, 3
+  4..5 none none : 2, 4 | 2, 4
+}

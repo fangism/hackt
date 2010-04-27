@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.30 2009/10/29 18:05:22 fang Exp $
+	$Id: PRS.h,v 1.31 2010/04/27 18:33:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -316,14 +316,21 @@ class rule_set : public rule, public nested_rules {
 	typedef	rule_set			this_type;
 public:
 #if PRS_SUPPLY_OVERRIDES
+	// for netlist generation purposes
 	// is bool_literal_base_ptr_type from "Object/lang/bool_literal.h"
 	typedef	bool_literal_base_ptr_type	supply_node_ref_type;
 	// kind of wastes a little memory for derived classes that
 	// don't need overrides... oh well.
 	/// optional: GND override
-	supply_node_ref_type			GND;
+	supply_node_ref_type			GND;	// supply
 	/// optional: Vdd override
-	supply_node_ref_type			Vdd;
+	supply_node_ref_type			Vdd;	// supply
+#if PRS_SUBSTRATE_OVERRIDES
+	// substrate contact override for NFETs
+	supply_node_ref_type			GND_substrate;
+	// substrate contact override for PFETs
+	supply_node_ref_type			Vdd_substrate;
+#endif
 #endif
 
 public:

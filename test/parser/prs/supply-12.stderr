@@ -8,15 +8,14 @@ state	value
 #STATE#	list<(def-body-item)>: (instance-decl) ... [5:1..8]
 #STATE#	keyword: prs [6:1..3]
 #STATE#	< [6:5]
-#STATE#	list<(inst-ref-expr)>: ... [0:0]
+#STATE#	(null) 
 #STATE#	, [6:7]
 #STATE#	! [6:9]
 in state #STATE#, possible rules are:
-	member_index_expr_list : member_index_expr_list ',' . optional_member_index_expr  (#RULE#)
+	member_index_expr_pair : optional_member_index_expr ',' . optional_member_index_expr  (#RULE#)
 	optional_member_index_expr : .  (#RULE#)
 acceptable tokens are: 
-	')' (reduce)
-	',' (reduce)
 	'>' (reduce)
+	'|' (reduce)
 	ID (shift)
 	SCOPE (shift)

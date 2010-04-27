@@ -1,0 +1,16 @@
+// "substrate-02.hac"
+// copy-modified from "substrate-01.hac"
+// just testing formatting of intermediate representation dump
+
+bool myVdd;
+bool w, x, y, z;
+prs <|myVdd> {
+	w	=> x-
+}
+prs <myVdd|myVdd> {
+	x	=> y-
+}
+prs <myVdd|> {
+	y	=> z-
+}
+

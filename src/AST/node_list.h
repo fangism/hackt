@@ -1,7 +1,9 @@
 /**
 	\file "AST/node_list.h"
 	Base set of classes for the HAC parser.  
-	$Id: node_list.h,v 1.8 2008/03/20 00:03:17 fang Exp $
+	Also includes yacc macros for list operations, look like
+	preprocessor macros, but defined as inline functions.
+	$Id: node_list.h,v 1.9 2010/04/27 18:33:13 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.h,v 1.10.12.1 2005/12/11 00:45:08 fang Exp
  */
@@ -143,6 +145,11 @@ public:
 	}
 
 	void
+	concat(const this_type& r) {
+		nodes.insert(nodes.end(), r.begin(), r.end());
+	}
+
+	void
 	release_append(this_type&);
 
 	ostream&
@@ -258,6 +265,55 @@ public:
 
 };	// end class list_checker
 #endif
+
+//=============================================================================
+// list macros (now inline functions)
+// these macros are mostly for use in yacc/bison grammar files
+
+template <class L>
+static
+inline
+void
+WRAP_LIST(const node_position* left, L* list, const node_position* right) {
+	NEVER_NULL(list);
+	list->wrap(left, right);
+}
+
+template <class P>
+static
+inline
+void
+DELETE_TOKEN(P* tok) {
+	if (tok) delete tok;
+}
+
+template <class L>
+static
+inline
+void
+APPEND_LIST(L* list, const node_position* delim,
+		typename L::value_type::element_type* item) {
+	DELETE_TOKEN(delim);
+	list->push_back(item);
+}
+
+template <class L>
+static
+inline
+void
+APPEND_NULL(L* list) {
+	list->push_back(NULL);
+}
+
+// concatenates right list into left
+template <class L>
+static
+inline
+void
+CONCAT_LIST(L* list, L* right) {
+	NEVER_NULL(list);
+	if (right) { list->concat(*right); }
+}
 
 //=============================================================================
 }	// end namespace parser

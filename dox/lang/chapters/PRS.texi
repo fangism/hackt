@@ -1,5 +1,5 @@
 @c "chapters/PRS.texi"
-@c $Id: PRS.texi,v 1.13 2010/02/22 07:34:13 fang Exp $
+@c $Id: PRS.texi,v 1.14 2010/04/27 18:33:07 fang Exp $
 
 @node PRS
 @chapter Production Rule Set (PRS)
@@ -367,6 +367,7 @@ This section describes some of the recent extensions to the PRS language.
 * PRS Macros::
 * Pass-gates::
 * PRS Supply Overrides::
+* PRS Substrate Overrides::
 @end menu
 
 @c ----------------------------------------------------------------------------
@@ -496,6 +497,28 @@ for a block of production rules is to pass in replacement supplies:
 @item @t{prs} @t{<} @i{Vdd} @t{>} @t{@{...@}}
 @item @t{prs} @t{<} @i{Vdd} @t{,} @i{GND} @t{>} @t{@{...@}}
 @end itemize
+
+@c ----------------------------------------------------------------------------
+@node PRS Substrate Overrides
+@subsection PRS Substrate Overrides
+@cindex substrate overrides
+@cindex body contacts
+
+By default, the @emph{supply} contact for a set of rules is also used to
+connect to the substrate (body) contacts for a given type of transistor.  
+There may be cases where one wants to use a different substrate connection
+than the corresponding supply, for instance with power-gating.  
+The substrate contacts of transistors for netlist back-ends can be overridden
+with an additional set of @t{prs} parameters:
+
+@itemize
+@item @t{prs} @t{<} ... @t{|} @i{BVdd} @t{>} @t{@{...@}}
+@item @t{prs} @t{<} ... @t{|} @i{BVdd} @t{,} @i{BGND} @t{>} @t{@{...@}}
+@end itemize
+
+All arguments are optional; the @t{prs} parameters always form a 
+4-tuple, which includes the default connections when left unspecified.  
+
 
 @c ----------------------------------------------------------------------------
 @node PRS Options

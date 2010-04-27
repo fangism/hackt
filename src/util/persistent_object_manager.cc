@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.37 2008/05/30 05:17:03 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.38 2010/04/27 18:33:23 fang Exp $
  */
 
 // flags and switches
@@ -245,9 +245,12 @@ persistent_object_manager::reconstruction_table_entry::mode =
 	ios_base::in | ios_base::out | ios_base::binary;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+// global variable initialization
 bool
 persistent_object_manager::dump_reconstruction_table = false;
+
+size_t
+persistent_object_manager::format_version = 0;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent_object_manager::reconstruction_table_entry::
@@ -907,6 +910,8 @@ persistent_object_manager::write_header(ofstream& f) {
 	sign_endian<unsigned short>(f);
 	sign_endian<unsigned int>(f);
 	sign_endian<size_t>(f);
+	// format version check
+	write_value(f, format_version);
 }
 	// How many entries to expect?
 	const size_t max = reconstruction_table.size();
@@ -950,6 +955,14 @@ persistent_object_manager::load_header(ifstream& f) {
 	verify_endian<unsigned short>(f);
 	verify_endian<unsigned int>(f);
 	verify_endian<size_t>(f);
+	size_t fv;
+	read_value(f, fv);
+	if (fv != format_version) {
+		cerr <<
+"Object file format version does not match, please re-compile the object file.\n"
+"\tgot: " << fv << ", expected: " << format_version << endl;
+		THROW_EXIT;
+	}
 }
 	size_t max;
 	INVARIANT(f.good());

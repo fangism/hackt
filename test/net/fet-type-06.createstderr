@@ -17,7 +17,7 @@ Persistent Object Manager text dump:
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
+	16	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
 	17	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	18	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	39
@@ -35,7 +35,7 @@ Persistent Object Manager text dump:
 	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	39
 	32	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	28
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	582
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	590
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -75,5 +75,5 @@ footprint: {
   x<20,4;hvt> & y<20,4> -> z-
   ~x<20,4;hvt> & ~y<20,4> -> z+
   rule supply map: (rules, macros, @nodes : Vdd, GND)
-  0..1 none none : 2, 1
+  0..1 none none : 2, 1 | 2, 1
 }

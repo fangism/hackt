@@ -27,7 +27,7 @@ Persistent Object Manager text dump:
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
+	23	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
 	24	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	25	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
@@ -48,7 +48,7 @@ Persistent Object Manager text dump:
 	41	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	45
 	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	622
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	630
 	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -113,7 +113,7 @@ In namespace "", we have: {
         p & q -> s-
         ~p | ~q -> s+
         rule supply map: (rules, macros, @nodes : Vdd, GND)
-        0..1 none none : 2, 1
+        0..1 none none : 2, 1 | 2, 1
         resolved specs:
         mk_exclhi(p,q,r)
         mk_exclhi(r,s)

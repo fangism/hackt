@@ -11,8 +11,8 @@ state	value
 #STATE#	list<(inst-ref-expr)>: ... [0:0]
 #STATE#	! [6:9]
 in state #STATE#, possible rules are:
-	member_index_expr_list: member_index_expr_list . ',' optional_member_index_expr  (#RULE#)
-	member_index_expr_list_in_angles: '<' member_index_expr_list . '>'  (#RULE#)
+	member_index_expr_list_in_angles: '<' member_index_expr_pair . '>'  (#RULE#)
+	                                | '<' member_index_expr_pair . '|' member_index_expr_pair '>'  (#RULE#)
 acceptable tokens are: 
 	'>' (shift)
-	',' (shift)
+	'|' (shift)

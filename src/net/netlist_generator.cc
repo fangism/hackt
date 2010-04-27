@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.17 2010/04/07 00:13:04 fang Exp $
+	$Id: netlist_generator.cc,v 1.18 2010/04/27 18:33:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -385,6 +385,11 @@ netlist_generator::visit_rule(const RP& rpool, const index_type i) {
 	const value_saver<index_type>
 		__s1(low_supply, register_named_node(f->GND)),
 		__s2(high_supply, register_named_node(f->Vdd));
+#if PRS_SUBSTRATE_OVERRIDES
+	const value_saver<index_type>
+		__s3(low_substrate, register_named_node(f->GND_substrate)),
+		__s4(high_substrate, register_named_node(f->Vdd_substrate));
+#endif
 #endif
 	rpool[i].accept(*this);
 }
@@ -404,6 +409,11 @@ netlist_generator::visit_macro(const MP& mpool, const index_type i) {
 	const value_saver<index_type>
 		__s1(low_supply, register_named_node(f->GND)),
 		__s2(high_supply, register_named_node(f->Vdd));
+#if PRS_SUBSTRATE_OVERRIDES
+	const value_saver<index_type>
+		__s3(low_substrate, register_named_node(f->GND_substrate)),
+		__s4(high_substrate, register_named_node(f->Vdd_substrate));
+#endif
 #endif
 	mpool[i].accept(*this);
 }
@@ -595,6 +605,7 @@ netlist_generator::set_current_length(const real_type l) {
 #if PRS_SUPPLY_OVERRIDES
 /**
 	Errors out by throwing exception.
+	TODO: check for substrate domain differences?
  */
 static
 void
@@ -657,6 +668,10 @@ if (!n.used)
 	--f;
 	const index_type gi = register_named_node(f->GND);
 	const index_type vi = register_named_node(f->Vdd);
+#if PRS_SUBSTRATE_OVERRIDES
+	const index_type bgi = register_named_node(f->GND_substrate);
+	const index_type bvi = register_named_node(f->Vdd_substrate);
+#endif
 	// diagnostic: if supply differs from definition and use domains
 	if (!dir && (low_supply != gi)) {
 		__diagnose_supply_mismatch(cerr, opt,
@@ -668,6 +683,11 @@ if (!n.used)
 	}
 	const value_saver<index_type>
 		__s1(low_supply, gi), __s2(high_supply, vi);
+#if PRS_SUBSTRATE_OVERRIDES
+	const value_saver<index_type>
+		__s3(low_substrate, bgi),
+		__s4(high_substrate, bvi);
+#endif
 #endif
 	const value_saver<index_type>
 		__t1(foot_node, (dir ? high_supply : low_supply)),
@@ -820,7 +840,12 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.gate = register_named_node(e.only());
 	t.source = foot_node;
 	t.drain = output_node;
+#if PRS_SUBSTRATE_OVERRIDES
+	t.body = (t.type == transistor::NFET_TYPE ?
+		low_substrate : high_substrate);
+#else
 	t.body = (t.type == transistor::NFET_TYPE ? low_supply : high_supply);
+#endif
 		// Vdd or GND
 #if NETLIST_GROUPED_TRANSISTORS
 	t.assoc_node = current_assoc_node;
@@ -953,7 +978,11 @@ if (passn || passp) {
 	t.gate = register_named_node(*e.nodes[0].begin());
 	t.source = register_named_node(*e.nodes[1].begin());
 	t.drain = register_named_node(*e.nodes[2].begin());
+#if PRS_SUBSTRATE_OVERRIDES
+	t.body = passp ? high_substrate : low_substrate;
+#else
 	t.body = passp ? high_supply : low_supply;
+#endif
 #if NETLIST_GROUPED_TRANSISTORS
 	t.assoc_node = t.drain;
 	t.assoc_dir = passp;

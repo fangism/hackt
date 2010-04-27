@@ -42,12 +42,12 @@ Persistent Object Manager text dump:
 	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	34	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	427
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	435
 	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
@@ -64,12 +64,12 @@ Persistent Object Manager text dump:
 	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	55	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	56	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	53
 	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	427
+	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	435
 	61	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	62	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	63	##ADDR##	procdefn	0	#HEAD#	#TAIL#	155
@@ -240,7 +240,7 @@ In namespace "", we have: {
         resolved macros:
         passn(g,s,d)
         rule supply map: (rules, macros, @nodes : Vdd, GND)
-        none 0..0 none : 2, 1
+        none 0..0 none : 2, 1 | 2, 1
       }
       }
 
@@ -354,7 +354,7 @@ In namespace "", we have: {
         resolved macros:
         passp(g,s,d)
         rule supply map: (rules, macros, @nodes : Vdd, GND)
-        none 0..0 none : 2, 1
+        none 0..0 none : 2, 1 | 2, 1
       }
       }
 

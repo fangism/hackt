@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	23	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	24	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	37
 	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	31

@@ -29,7 +29,7 @@ Persistent Object Manager text dump:
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	29	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	30	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -50,7 +50,7 @@ Persistent Object Manager text dump:
 	46	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	47	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	50	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	28
 	51	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
 	52	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
@@ -69,7 +69,7 @@ Persistent Object Manager text dump:
 	65	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	66	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	67	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	890
+	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	922
 	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	71	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -150,10 +150,10 @@ In namespace "", we have: {
           ~in[0] & ~in[1] -> _out+
           ~in[0] & ~in[1] & ~in[2] -> _out+
           rule supply map: (rules, macros, @nodes : Vdd, GND)
-          0..0 none none : 2, 1
-          1..1 none none : 2, 1
-          2..2 none none : 2, 1
-          3..3 none none : 2, 1
+          0..0 none none : 2, 1 | 2, 1
+          1..1 none none : 2, 1 | 2, 1
+          2..2 none none : 2, 1 | 2, 1
+          3..3 none none : 2, 1 | 2, 1
         }
       }
       }

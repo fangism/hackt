@@ -102,7 +102,7 @@ Persistent Object Manager text dump:
 	98	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	99	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	28
 	100	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	101	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	40
+	101	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	48
 	102	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	36
 	103	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	104	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16

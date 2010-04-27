@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.17 2010/04/07 21:47:31 fang Exp $
+#	$Id: Makefile.am,v 1.18 2010/04/27 18:33:25 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -78,6 +78,8 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	supply-instance-10 supply-instance-11 supply-instance-12 \
 	supply-instance-13 supply-instance-14 supply-instance-15 \
 	supply-instance-16 supply-instance-17 supply-instance-18 \
+	substrate-01 substrate-02 substrate-03 \
+	substrate-04 substrate-05 substrate-06 \
 	rename-01 rename-02 rename-03 rename-04 rename-05 rename-06 \
 	rename-07 rename-08 rename-09 rename-10 rename-11 rename-12 \
 	reserved-01 reserved-02 reserved-03 reserved-04 \
@@ -142,7 +144,9 @@ HACKT_CREATE_TEST_PASSES = \
 	supply-instance-07 supply-instance-08 supply-instance-09 \
 	supply-instance-10 supply-instance-11 supply-instance-12 \
 	supply-instance-13 supply-instance-14 supply-instance-15 \
-	supply-instance-16 supply-instance-17 supply-instance-18
+	supply-instance-16 supply-instance-17 supply-instance-18 \
+	substrate-01 substrate-02 substrate-03 \
+	substrate-04 substrate-05 substrate-06
 
 HACKT_CREATE_TEST_FAILURES = \
 	non-CMOS-06 subckt-02

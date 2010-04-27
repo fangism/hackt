@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-04-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-85:
+	  Implemented PRS_SUBSTRATE_OVERRIDES: syntax in front-end, 
+		middle-end, and also implemented for hacknet.
+		Now you can override substrate contacts with additional 
+		parameters: prs <SVdd,SGND|BVdd,BGND> (all optional).
+		Default substrate contact uses corresponding supply.  
+	  Object file format updated -- now using format version number
+		check in main/main_funcs.cc.  Supported in util lib's
+		util/persistent_object_manager.*
+	  Added test cases, briefly documented.  No regressions!
+	  parsers: factored out a parser/yacc-config.h for common
+		preprocessor macros.  Also converted list manipulation
+		macros into inline functions AST/node_list.h.
+
+
 2010-04-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-84:
@@ -14,7 +31,7 @@
 
 
 	* HACKT-00-01-04-main-00-83-83:
-	  hacprism: implemented channel-get, very informative!
+	  hacprsim: implemented channel-get, very informative!
 		Added bunch of test cases, documented.
 
 

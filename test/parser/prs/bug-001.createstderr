@@ -60,7 +60,7 @@ Persistent Object Manager text dump:
 	56	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	58	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	28
+	59	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
 	60	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	61	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
 	62	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -88,7 +88,7 @@ Persistent Object Manager text dump:
 	84	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	85	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	86	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	87	##ADDR##	footprnt	0	#HEAD#	#TAIL#	616
+	87	##ADDR##	footprnt	0	#HEAD#	#TAIL#	624
 	88	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	90	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
@@ -120,7 +120,7 @@ Persistent Object Manager text dump:
 	116	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	117	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	118	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	119	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	119	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	120	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	121	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	32
 	122	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
@@ -132,7 +132,7 @@ Persistent Object Manager text dump:
 	128	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	129	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	130	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	131	##ADDR##	footprnt	0	#HEAD#	#TAIL#	520
+	131	##ADDR##	footprnt	0	#HEAD#	#TAIL#	528
 	132	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	133	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	134	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -273,7 +273,7 @@ In namespace "", we have: {
         resolved prs:
         Ld & Re & xe & x -> _rd-
         rule supply map: (rules, macros, @nodes : Vdd, GND)
-        0..0 none none : 2, 1
+        0..0 none none : 2, 1 | 2, 1
       }
       }
 
@@ -340,7 +340,7 @@ In namespace "", we have: {
           id[0] & id[1] -> o-
           ~iu[0] & ~iu[1] -> o+
           rule supply map: (rules, macros, @nodes : Vdd, GND)
-          0..1 none none : 2, 1
+          0..1 none none : 2, 1 | 2, 1
         }
       }
       }

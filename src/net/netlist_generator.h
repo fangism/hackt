@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.9 2010/04/07 00:13:05 fang Exp $
+	$Id: netlist_generator.h,v 1.10 2010/04/27 18:33:21 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -82,6 +82,16 @@ private:
 		Usually Vdd, used for precharge, and local prs override.
 	 */
 	index_type			high_supply;
+#if PRS_SUBSTRATE_OVERRIDES
+	/**
+		Substrate contact for NFETs.
+	 */
+	index_type			low_substrate;
+	/**
+		Substrate contact for PFETs.
+	 */
+	index_type			high_substrate;
+#endif
 	/**
 		The base node (initially, Vdd/GND) to connect to the source
 		terminal of the next device/expression.  

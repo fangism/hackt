@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.59 2010/04/07 00:12:26 fang Exp $
+	$Id: devel_switches.h,v 1.60 2010/04/27 18:33:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -240,16 +240,22 @@
 	Define to 1 to allow prs bodies to override Vdd and GND.
 	Note: should allow declared internal nodes, not just regular nodes.
 	Goal: 1
-	Status: done, tested
+	Status: done, tested, ready-to-perm
  */
 #define	PRS_SUPPLY_OVERRIDES			(1 && IMPLICIT_SUPPLY_PORTS)
+
+/**
+	Define to 1 to support substrate contact overriding.
+	Status: begun
+ */
+#define	PRS_SUBSTRATE_OVERRIDES			(1 && PRS_SUPPLY_OVERRIDES)
 
 /**
 	Define to 1 enable means of overriding the implicit primary supplies
 	per-instance.  
 	Will require syntax extension.  
 	Goal: 1
-	Status: done, tested
+	Status: done, tested, ready-to-perm
  */
 #define	INSTANCE_SUPPLY_OVERRIDES		(1 && IMPLICIT_SUPPLY_PORTS)
 

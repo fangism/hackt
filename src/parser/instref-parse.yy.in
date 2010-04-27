@@ -4,7 +4,7 @@
 	This will be used in prsim and other simulators, for example.  
 	The grammar in here is an extremely small snippet
 	of the hackt language grammar.  
-	$Id: instref-parse.yy.in,v 1.10 2008/12/18 00:32:09 fang Exp $
+	$Id: instref-parse.yy.in,v 1.11 2010/04/27 18:33:22 fang Exp $
  */
 
 %{
@@ -12,7 +12,7 @@
 
 #include <iostream>
 
-#include "config.h"
+#include "parser/yacc-config.h"
 #include "AST/AST.h"
 #include "parser/instref-prefix.h"
 #include "util/using_ostream.h"
@@ -20,37 +20,8 @@
 #include "parser/instref-parse-options.h"
 #include "parser/instref-parse.output.h"
 #include "lexer/instref-lex-options.h"
-#include "util/stacktrace.h"
-
-/** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
-#if defined (__GNUC__) && (3 <= __GNUC__)
-#define __attribute__(arglist)			/* empty */
-#endif
-
-#ifndef	YYBISON
-#define	YYBISON		0
-#endif
-
 #include "lexer/flex_lexer_state.h"
-
-#if YYBISON
-#if defined(USING_BISON) && !USING_BISON
-#error	Inconsistency in configuration: YYBISON && !USING_BISON
-#endif
-
-#elif defined(YYBYACC) && YYBYACC
-
-#if defined(USING_BYACC) && !USING_BYACC && !USING_YACC
-// on many systems, yacc == byacc
-#error	Inconsistency in configuration: YYBYACC && !USING_BYACC && !USING_YACC
-#endif
-#else   // !YYBISON && !YYBYACC
-
-#if defined(USING_YACC) && !USING_YACC
-#error	Inconsistency in configuration: !YYBISON && !YYBYACC && !USING_YACC
-#endif
-
-#endif  // YYBISON
+#include "util/stacktrace.h"
 
 // extern FILE* yyin;
 
@@ -59,16 +30,17 @@ static flex::lexer_state	_lexer_state;
 #endif
 
 
-#define	WRAP_LIST(left, list, right)	list->wrap(left, right)
-
-#define	DELETE_TOKEN(tok)		delete tok
-
-#define APPEND_LIST(list, delim, item)					\
-	DELETE_TOKEN(delim); list->push_back(item)
-
 using namespace HAC::lexer;
 using namespace HAC::parser;
 
+/***
+// list macros (now inline functions in "AST/node_list.h")
+WRAP_LIST
+DELETE_TOKEN
+APPEND_LIST
+APPEND_NULL
+CONCAT_LIST
+***/
 %}
 
 %union {

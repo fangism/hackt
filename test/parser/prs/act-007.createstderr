@@ -27,7 +27,7 @@ Persistent Object Manager text dump:
 	21	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	25	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -36,7 +36,7 @@ Persistent Object Manager text dump:
 	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	472
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	480
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	procdefn	0	#HEAD#	#TAIL#	144
 	36	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -85,7 +85,7 @@ Persistent Object Manager text dump:
 	79	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	80	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	81	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	82	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
+	82	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	32
 	83	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
 	84	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	85	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
@@ -104,7 +104,7 @@ Persistent Object Manager text dump:
 	98	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	99	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	100	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	101	##ADDR##	footprnt	0	#HEAD#	#TAIL#	932
+	101	##ADDR##	footprnt	0	#HEAD#	#TAIL#	940
 	102	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	103	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	104	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -179,7 +179,7 @@ In namespace "", we have: {
           resolved prs:
           w[0] -> w[1]-
           rule supply map: (rules, macros, @nodes : Vdd, GND)
-          0..0 none none : 2, 1
+          0..0 none none : 2, 1 | 2, 1
         }
       }
       }
@@ -285,7 +285,7 @@ In namespace "", we have: {
           x[2] -> y[2]-
           ~x[2] -> y[2]+
           rule supply map: (rules, macros, @nodes : Vdd, GND)
-          0..5 none none : 2, 1
+          0..5 none none : 2, 1 | 2, 1
         }
       }
       }
