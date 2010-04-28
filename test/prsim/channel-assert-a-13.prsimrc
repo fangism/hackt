@@ -1,0 +1,30 @@
+# "channel-assert-a-13.prsimrc"
+# copy-modified from "channel-assert-a-01.prsimrc"
+# @haco@ channel-test-a.haco-c
+# testing bad arguments
+
+source channel-test-a-01.prsimrc
+
+watchall
+confirm
+# set up some channels with commands
+# channel-log X channel-test-a-03-X.log
+channel-watch X
+channel-sink X
+channel-reset X
+getall X
+
+echo manually resetting data
+set X.d[0] 0
+set X.d[1] 0
+cycle
+channel-assert X neutered empty waiting-receiver
+echo ERROR OUT BEFORE THIS
+assert X.e 0
+
+echo releasing channel X
+channel-release X
+cycle
+assert X.e 1
+channel-assert X neutral waiting-sender
+

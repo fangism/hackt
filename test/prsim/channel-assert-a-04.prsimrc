@@ -1,0 +1,75 @@
+# "channel-assert-a-04.prsimrc"
+# copy-modified from "channel-assert-a-02.prsimrc"
+# @haco@ channel-test-a.haco-c
+# expect fail
+
+source channel-test-a-01.prsimrc
+
+watchall
+confirm
+# set up some channels with commands
+# channel-log X channel-test-a-03-X.log
+channel-watch X
+channel-sink X
+channel-reset X
+getall X
+
+echo manually resetting data
+set X.d[0] 0
+set X.d[1] 0
+cycle
+channel-assert X neutral empty waiting-receiver
+assert X.e 0
+
+echo releasing channel X
+channel-release X
+cycle
+assert X.e 1
+channel-assert X neutral waiting-sender
+# because data is neutral, X.e should request new data
+
+echo ------------------------------------
+echo setting data rail
+set X.d[0] 1
+step-event
+channel-assert X valid 0 waiting-receiver
+cycle
+assert X.e 0
+channel-assert X valid 0 waiting-sender
+channel-show X
+backtrace X.e
+
+echo ------------------------------------
+echo resetting data rail
+set X.d[0] 0
+step-event
+channel-assert X neutral waiting-receiver
+cycle
+assert X.e 1
+channel-assert X neutral waiting-sender
+channel-show X
+backtrace X.e
+
+echo ------------------------------------
+echo setting data rail
+set X.d[1] 1
+step-event
+channel-assert X valid 1 waiting-receiver
+cycle
+assert X.e 0
+channel-assert X valid 1 waiting-sender
+channel-show X
+backtrace X.e
+
+echo ------------------------------------
+echo resetting data rail
+set X.d[1] 0
+step-event
+channel-assert X valid waiting-sender
+echo EXPECT FAIL HERE (this line not reached)
+cycle
+assert X.e 1
+channel-assert X neutral waiting-sender
+channel-show X
+backtrace X.e
+

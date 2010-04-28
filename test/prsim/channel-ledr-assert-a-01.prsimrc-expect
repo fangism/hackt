@@ -1,0 +1,47 @@
+channels:
+C : LEDR (init .d:0 .r:0) off
+D : LEDR (init .e:0 .d:0 .r:0) off
+freezing C 
+	0	C.d : 0
+	0	C.r : 0
+thawing C 
+repeat 3 values 
+channel	C (.data) : 0 @ 0
+	0	C.r : 1
+channel C has value 0, as expected.
+channel	C (.data) : 0 @ 0
+	0	C.r : 0
+channel C has value 0, as expected.
+channel	C (.data) : 0 @ 0
+	0	C.r : 1
+channel C has value 0, as expected.
+toggle 3 values 
+channel	C (.data) : 1 @ 0
+	0	C.d : 1
+channel C has value 1, as expected.
+channel	C (.data) : 0 @ 0
+	0	C.d : 0
+channel C has value 0, as expected.
+channel	C (.data) : 1 @ 0
+	0	C.d : 1
+channel C has value 1, as expected.
+repeat 3 values 
+channel	C (.data) : 1 @ 0
+	0	C.r : 0
+channel C has value 1, as expected.
+channel	C (.data) : 1 @ 0
+	0	C.r : 1
+channel C has value 1, as expected.
+channel	C (.data) : 1 @ 0
+	0	C.r : 0
+channel C has value 1, as expected.
+toggle 3 values 
+channel	C (.data) : 0 @ 0
+	0	C.d : 0
+channel C has value 0, as expected.
+channel	C (.data) : 1 @ 0
+	0	C.d : 1
+channel C has value 1, as expected.
+channel	C (.data) : 0 @ 0
+	0	C.d : 0
+channel C has value 0, as expected.

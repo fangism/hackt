@@ -1,0 +1,34 @@
+# "channel-assert-c-06.prsimrc"
+# copy-modified from "channel-assert-c-05.prsimrc"
+# @haco@ channel-test-c.haco-c
+# testing channel-assert
+
+# register channels
+source channel-test-c-01.prsimrc
+
+watchall
+confirm
+channel-watch X
+channel-sink X
+channel-source-args X 0 0 1 1
+channel-stop X
+channel-reset X
+channel-get X
+
+cycle
+channel-assert X neutral ack waiting-receiver
+getall X
+channel-get X
+assert X.e 0
+
+echo releasing channel X
+channel-release X
+
+echo recall: for shared-validity protocol, use validity signal not rails
+
+step-event
+channel-assert X neutral waiting-sender neg-ack
+
+cycle
+channel-assert X neutral waiting-sender neg-ack
+

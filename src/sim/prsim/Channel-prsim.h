@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.23 2010/04/23 02:40:59 fang Exp $
+	$Id: Channel-prsim.h,v 1.24 2010/04/28 02:17:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -784,10 +784,59 @@ private:
 	ostream&
 	dump_state(ostream&) const;
 
+	/**
+		Summarize channel state that is not already
+		in the channel structure.  
+	 */
+	struct status_summary {
+		value_type		current_value;
+		bool			value_transitioning;
+		bool			full;	// or empty
+		bool			x_ack;
+		bool			ack_active;
+		bool			x_valid;
+		bool			valid_active;
+		bool			valid_following;
+		bool			waiting_sender;
+		bool			waiting_receiver;
+
+		status_summary() :	// defaults
+			current_value(0), 
+			value_transitioning(false), 
+			full(false), 
+			x_ack(false), 
+			ack_active(false), 
+			x_valid(false), 
+			valid_active(false), 
+			valid_following(false), 
+			waiting_sender(false), 
+			waiting_receiver(false)
+			{ }
+	};	// end struct status_summary
+
+	status_summary
+	summarize_status(const State&) const;
+
 	ostream&
 	dump_status(ostream&, const State&) const;
 
+	error_policy_enum
+	assert_status(ostream&, const State&, const string&) const;
+
 private:
+// don't bother passing ostream& to these assert functions for now
+	bool
+	__assert_value(const status_summary&, const value_type&, 
+		const bool) const;
+
+	bool
+	__assert_validity(const status_summary&,
+		const bool, const bool) const;
+
+	bool
+	__assert_full(const status_summary&,
+		const bool, const bool) const;
+
 	env_event_type
 	toggle_node(const State& s, const node_index_type ni) const;
 

@@ -1,0 +1,71 @@
+# "channel-assert-g-01.prsimrc"
+# @haco@ channel-test-g.haco-c
+# testing channel-assert
+
+# register channels
+source channel-test-g-01.prsimrc
+
+watchall
+confirm
+channel-watch X
+channel-sink X
+channel-source-args-loop X 0 0 1 1
+channel-stop X
+channel-reset X
+channel-get X
+
+cycle
+getall X
+channel-get X
+assert X.e 1
+channel-assert X neutral neg-ack waiting-sender
+
+echo releasing channel X
+channel-release X
+
+step-event
+channel-assert X valid waiting-receiver neg-ack 0
+step-event
+channel-assert X ack waiting-sender valid
+step-event
+channel-assert X neutral ack waiting-receiver
+step-event
+channel-assert X neg-ack waiting-sender neutral
+
+step-event
+channel-assert X valid waiting-receiver neg-ack 0
+step-event
+channel-assert X ack waiting-sender valid
+step-event
+channel-assert X neutral ack waiting-receiver
+step-event
+channel-assert X neg-ack waiting-sender neutral
+
+step-event
+channel-assert X valid waiting-receiver neg-ack 1
+step-event
+channel-assert X ack waiting-sender valid
+step-event
+channel-assert X neutral ack waiting-receiver
+step-event
+channel-assert X neg-ack waiting-sender neutral
+
+step-event
+channel-assert X valid waiting-receiver neg-ack 1
+step-event
+channel-assert X ack waiting-sender valid
+step-event
+channel-assert X neutral ack waiting-receiver
+step-event
+channel-assert X neg-ack waiting-sender neutral
+
+step-event
+channel-assert X valid waiting-receiver neg-ack 0
+step-event
+channel-assert X ack waiting-sender valid
+step-event
+channel-assert X neutral ack waiting-receiver
+step-event
+channel-assert X neg-ack waiting-sender neutral
+
+assert-queue

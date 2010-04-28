@@ -1,0 +1,24 @@
+# "channel-assert-a-09.prsimrc"
+# copy-modified from "channel-assert-a-02.prsimrc"
+# @haco@ channel-test-a.haco-c
+# expect fail
+
+source channel-test-a-01.prsimrc
+
+watchall
+confirm
+# set up some channels with commands
+# channel-log X channel-test-a-03-X.log
+channel-watch X
+channel-sink X
+channel-reset X
+getall X
+
+echo manually resetting data
+set X.d[0] 0
+set X.d[1] 0
+step-event
+channel-assert X neutral waiting-receiver
+echo EXPECT FAIL HERE (this line not reached)
+echo because there is still one X rail
+

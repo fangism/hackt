@@ -1,0 +1,50 @@
+# "channel-assert-f-01.prsimrc"
+# @haco@ channel-test-f.haco-c
+
+# register channels
+source channel-test-f-01.prsimrc
+
+watchall
+confirm
+set X.d[0] 1
+set X.d[1] 1
+channel-get X
+step-event
+channel-get X
+step-event
+channel-get X
+
+echo toggling active-low data-rails
+
+set X.d[0] 0
+step-event
+channel-assert X valid 0
+
+set X.d[0] 1
+step-event
+channel-assert X neutral
+
+set X.d[1] 0
+step-event
+channel-assert X 1 valid
+
+set X.d[1] 1
+step-event
+channel-assert X neutral
+
+set X.d[0] 0
+step-event
+channel-get X
+
+set X.d[0] 1
+step-event
+channel-get X
+
+set X.d[1] 0
+step-event
+channel-get X
+
+set X.d[1] 1
+step-event
+channel-get X
+

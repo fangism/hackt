@@ -1,0 +1,66 @@
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+All subnodes of 'Z':
+Z.d[0] : X
+Z.d[1] : X
+Z.d[2] : X
+Z.a : X
+manually resetting data 
+	0	Z.d[0] : 0
+	0	Z.d[1] : 0
+	0	Z.d[2] : 0
+	10	Z.a : 0
+node `Z.a' is 0, as expected.
+channel Z is waiting for the sender, as expected.
+channel Z is neutral, as expected.
+channel Z is neutral, as expected.
+releasing channel Z 
+node `Z.a' is 0, as expected.
+channel Z is neutral, as expected.
+channel Z is waiting for the sender, as expected.
+------------------------------------ 
+setting data rail 
+channel	Z (.data) : 0 @ 10
+	10	Z.d[0] : 1
+channel Z is valid, as expected.
+channel Z has value 0, as expected.
+channel Z is waiting for the receiver, as expected.
+	20	Z.a : 1	[by Z.d[0]:=1]
+node `Z.a' is 1, as expected.
+channel Z is valid, as expected.
+channel Z has value 0, as expected.
+channel Z is waiting for the sender, as expected.
+------------------------------------ 
+resetting data rail 
+	20	Z.d[0] : 0
+channel Z is neutral, as expected.
+channel Z is waiting for the receiver, as expected.
+	30	Z.a : 0	[by Z.d[0]:=0]
+node `Z.a' is 0, as expected.
+channel Z is neutral, as expected.
+channel Z is waiting for the sender, as expected.
+------------------------------------ 
+setting data rail 
+channel	Z (.data) : 1 @ 30
+	30	Z.d[1] : 1
+channel Z is valid, as expected.
+channel Z has value 1, as expected.
+channel Z is waiting for the receiver, as expected.
+	40	Z.a : 1	[by Z.d[1]:=1]
+node `Z.a' is 1, as expected.
+channel Z is valid, as expected.
+channel Z has value 1, as expected.
+channel Z is waiting for the sender, as expected.
+------------------------------------ 
+resetting data rail 
+	40	Z.d[1] : 0
+channel Z is neutral, as expected.
+channel Z is waiting for the receiver, as expected.
+	50	Z.a : 0	[by Z.d[1]:=0]
+node `Z.a' is 0, as expected.
+channel-assert: expected channel Z neutral, but is valid.
+channel-assert: cannot assert value on channel Z because 0 of 1 bundles are valid.
+channel-assert: channel Z is expecting to be waiting for the receiver, but is not.
+... at line 63

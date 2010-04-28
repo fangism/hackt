@@ -1,0 +1,90 @@
+# "channel-eledr-assert-a-02.prsimrc"
+# copy-modified from "channel-eledr-assert-a-01.prsimrc"
+# @haco@ channel-ledr-a.haco-c
+
+source channel-ledr-a-01.prsimrc
+
+confirm
+watchall
+echo testing two-phase source on D
+channel-source-args-loop D 0 0 0 1 1 1 1 0 1
+channel-sink D
+channel-reset D
+channel-show D
+channel-timing D
+cycle
+channel-get D
+channel-assert D neutral waiting-sender
+echo thawing D
+channel-release D
+# channel-watch D
+channel-show D
+echo release!!!
+step-event
+channel-get D
+echo expect a token above.
+channel-assert D valid waiting-receiver
+
+step-event
+channel-assert D neutral waiting-sender
+step-event
+channel-assert D valid waiting-receiver
+
+step-event
+channel-assert D empty waiting-sender
+step-event
+channel-assert D full waiting-receiver
+
+step-event
+channel-assert D neutral waiting-sender
+step-event
+channel-assert D valid waiting-receiver
+
+step-event
+channel-assert D neutral waiting-sender
+step-event
+channel-assert D neutral waiting-receiver
+echo EXPECT FAIL HERE
+
+step-event
+channel-assert D empty waiting-sender
+step-event
+channel-assert D full waiting-receiver
+
+step-event
+channel-assert D neutral waiting-sender
+step-event
+channel-assert D valid waiting-receiver
+
+step-event
+channel-assert D neutral waiting-sender
+step-event
+channel-assert D valid waiting-receiver
+
+step-event
+channel-assert D neutral waiting-sender
+step-event
+channel-assert D valid waiting-receiver
+
+step-event
+channel-assert D neutral waiting-sender
+step-event
+channel-assert D valid waiting-receiver
+
+step-event
+channel-assert D neutral waiting-sender
+step-event
+channel-assert D valid waiting-receiver
+
+step-event
+channel-assert D neutral waiting-sender
+step-event
+channel-assert D valid waiting-receiver
+
+step-event
+channel-assert D neutral waiting-sender
+step-event
+channel-assert D valid waiting-receiver
+
+channel-show D
+

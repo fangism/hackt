@@ -1,0 +1,130 @@
+testing bundled channels 
+Warning: channel acknowledge `X.e' has no fanin!
+channel X: unknown, because there are 4 X rails
+	10	X.b[0].d[0] : 0
+	10	X.b[0].d[1] : 0
+	10	X.b[1].d[0] : 0
+	10	X.b[1].d[1] : 0
+	10	X.e : 1
+All subnodes of 'X':
+X.b[0].d[0] : 0
+X.b[0].d[1] : 0
+X.b[1].d[0] : 0
+X.b[1].d[1] : 0
+X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+node `X.e' is 1, as expected.
+releasing channel X 
+channel X is neutral, as expected.
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+	20	X.b[0].d[0] : 1
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+channel	X (.data) : 0 @ 20
+	20	X.b[1].d[0] : 1
+channel X is valid, as expected.
+channel X ackowledge is negative, as expected.
+channel X is waiting for the receiver, as expected.
+channel X has value 0, as expected.
+	30	X.e : 0	[by X.b[1].d[0]:=1]
+channel X is valid, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+channel X has value 0, as expected.
+	40	X.b[0].d[0] : 0	[by X.e:=0]
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+	40	X.b[1].d[0] : 0	[by X.e:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+	50	X.e : 1	[by X.b[1].d[0]:=0]
+channel X is neutral, as expected.
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+	60	X.b[0].d[1] : 1	[by X.e:=1]
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+channel	X (.data) : 1 @ 60
+	60	X.b[1].d[0] : 1	[by X.e:=1]
+channel X is valid, as expected.
+channel X ackowledge is negative, as expected.
+channel X is waiting for the receiver, as expected.
+channel X has value 1, as expected.
+	70	X.e : 0	[by X.b[1].d[0]:=1]
+channel X is valid, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+channel X has value 1, as expected.
+	80	X.b[0].d[1] : 0	[by X.e:=0]
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+	80	X.b[1].d[0] : 0	[by X.e:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+	90	X.e : 1	[by X.b[1].d[0]:=0]
+channel X is neutral, as expected.
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+	100	X.b[0].d[0] : 1	[by X.e:=1]
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+channel	X (.data) : 2 @ 100
+	100	X.b[1].d[1] : 1	[by X.e:=1]
+channel X is valid, as expected.
+channel X ackowledge is negative, as expected.
+channel X is waiting for the receiver, as expected.
+channel X has value 2, as expected.
+	110	X.e : 0	[by X.b[1].d[1]:=1]
+channel X is valid, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+channel X has value 2, as expected.
+	120	X.b[0].d[0] : 0	[by X.e:=0]
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+	120	X.b[1].d[1] : 0	[by X.e:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+	130	X.e : 1	[by X.b[1].d[1]:=0]
+channel X is neutral, as expected.
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+	140	X.b[0].d[1] : 1	[by X.e:=1]
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+channel	X (.data) : 3 @ 140
+	140	X.b[1].d[1] : 1	[by X.e:=1]
+channel X is valid, as expected.
+channel X ackowledge is negative, as expected.
+channel X is waiting for the receiver, as expected.
+channel X has value 3, as expected.
+	150	X.e : 0	[by X.b[1].d[1]:=1]
+channel X is valid, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+channel X has value 3, as expected.
+	160	X.b[0].d[1] : 0	[by X.e:=0]
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+	160	X.b[1].d[1] : 0	[by X.e:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+	170	X.e : 1	[by X.b[1].d[1]:=0]
+channel X: data is neutral, waiting for sender to produce data
+	180	X.b[0].d[0] : 1	[by X.e:=1]
+channel X: data is transitioning to valid
+channel	X (.data) : 0 @ 180
+	180	X.b[1].d[0] : 1	[by X.e:=1]
+channel X: data is valid (0), waiting for receiver to ack
+	190	X.e : 0	[by X.b[1].d[0]:=1]
+channel X: data is valid (0), waiting for sender to remove data
+	200	X.b[0].d[0] : 0	[by X.e:=0]
+channel X: data is transitioning to neutral
+	200	X.b[1].d[0] : 0	[by X.e:=0]
+channel X: data is neutral, waiting for receiver to neg-ack
+Event queue is non-empty, as expected.

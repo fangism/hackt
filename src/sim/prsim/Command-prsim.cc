@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.63 2010/04/23 02:40:59 fang Exp $
+	$Id: Command-prsim.cc,v 1.64 2010/04/28 02:17:51 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -5512,6 +5512,97 @@ void
 ChannelShowAll::usage(ostream& o) {
 	o << name << endl;
 o << "Print list of all registered channels with their type information."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-assert.texi
+@deffn Command channel-assert chan args...
+This asserts the current state of a channel.  
+Legal values for arguments (in any order and combination):
+@itemize
+@item <int> the integer value of the data rails; passes only if data
+	is valid and matches the expected value.  
+@item @t{valid} (four-phase or two-phase) passes if the channel data
+	rails are in the valid state, 
+	or the validity signal (if any) is active, 
+	or a two-phase channel is in the set-phase (full).  
+@item @t{neutral} (four-phase or two-phase) passes if the channel data
+	rails are all neutral/null.
+@item @t{full} is synonymous with @t{valid}
+@item @t{empty} is synonymous with @t{neutral}
+@item @t{ack} (four-phase only) passes if the acknowledge is in
+	the active state, whether the signal is active-high or active-low.
+@item @t{neg-ack} (four-phase only) passes if the acknowledge is in
+	the negative state.
+@item @t{waiting-sender} (four-phase or two-phase) passes if the channel
+	is in a state of the handshake that expects the next action
+	from the sender of the channel.  
+@item @t{waiting-receiver} (four-phase or two-phase) passes if the channel
+	is in a state of the handshake that expects the next action
+	from the receiver of the channel.  
+@end itemize
+The error-handling policy in the case of a failed assertion is controlled
+by @command{channel-expect-fail}.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert", 
+	channels, "asserts current state of channel")
+
+int
+ChannelAssert::main(State& s, const string_list& a) {
+if (a.size() < 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string& n(*i);
+	++i;
+	const channel* const c = s.get_channel_manager().lookup(n);
+	if (!c) {
+		cerr << "No channel " << n << " found." << endl;
+		return Command::BADARG;
+	}
+	// check all arguments
+	error_policy_enum E = ERROR_NONE;
+	for ( ; i!=a.end(); ++i) {
+		const error_policy_enum R = c->assert_status(cout, s, *i);
+		if (R > E) E = R;
+	}
+	return error_policy_to_status(E);
+}
+}
+
+void
+ChannelAssert::usage(ostream& o) {
+	o << name << " <channel> {<int>|<keyword>}*" << endl;
+// TODO: !summon info!
+	o <<
+"This asserts the current state of a channel.\n"
+"Legal values for arguments (in any order and combination):\n"
+"  <int> the integer value of the data rails; passes only if data\n"
+"\tis valid and matches the expected value.\n"
+"  \'valid\' (four-phase or two-phase) passes if the channel data\n"
+"\trails are in the valid state, or the validity signal (if any) is active,\n"
+"\tor a two-phase channel is in the set-phase (full).\n"
+"  \'neutral\' (four-phase or two-phase) passes if the channel data\n"
+"\trails are all neutral/null.\n"
+"  \'full\' is synonymous with \'valid\'\n"
+"  \'empty\' is synonymous with \'neutral\'\n"
+"  \'ack\' (four-phase only) passes if acknowledge is in the active state,\n"
+"\twhether the signal is active-high or active-low.\n"
+"  \'neg-ack\' (four-phase only) passes if the acknowledge is in\n"
+"\tthe negative state.\n"
+"  \'waiting-sender\' (four-phase or two-phase) passes if the channel\n"
+"\tis in a state of the handshake that expects the next action\n"
+"\tfrom the sender of the channel.\n"
+"  \'waiting-receiver\' (four-phase or two-phase) passes if the channel\n"
+"\tis in a state of the handshake that expects the next action\n"
+"\tfrom the receiver of the channel.  \n"
+"The error-handling policy in the case of a failed assertion is controlled\n"
+"by @command{channel-expect-fail}."
 	<< endl;
 }
 

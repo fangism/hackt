@@ -1,0 +1,107 @@
+testing active-low data-rails 
+Warning: channel acknowledge `X.e' has no fanin!
+channel X: unknown, because there are 2 X rails
+	10	X.d[0] : 1
+	10	X.d[1] : 1
+	10	X.e : 1
+All subnodes of 'X':
+X.d[0] : 1
+X.d[1] : 1
+X.e : 1
+channel X: data is neutral, waiting for sender to produce data
+node `X.e' is 1, as expected.
+channel X is neutral, as expected.
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+releasing channel X 
+channel	X (.data) : 0 @ 20
+	20	X.d[0] : 0
+channel X is valid, as expected.
+channel X is waiting for the receiver, as expected.
+channel X ackowledge is negative, as expected.
+channel X has value 0, as expected.
+	30	X.e : 0	[by X.d[0]:=0]
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+channel X is valid, as expected.
+	40	X.d[0] : 1	[by X.e:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+	50	X.e : 1	[by X.d[0]:=1]
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+channel X is neutral, as expected.
+channel	X (.data) : 0 @ 60
+	60	X.d[0] : 0	[by X.e:=1]
+channel X is valid, as expected.
+channel X is waiting for the receiver, as expected.
+channel X ackowledge is negative, as expected.
+channel X has value 0, as expected.
+	70	X.e : 0	[by X.d[0]:=0]
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+channel X is valid, as expected.
+	80	X.d[0] : 1	[by X.e:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+	90	X.e : 1	[by X.d[0]:=1]
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+channel X is neutral, as expected.
+channel	X (.data) : 1 @ 100
+	100	X.d[1] : 0	[by X.e:=1]
+channel X is valid, as expected.
+channel X is waiting for the receiver, as expected.
+channel X ackowledge is negative, as expected.
+channel X has value 1, as expected.
+	110	X.e : 0	[by X.d[1]:=0]
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+channel X is valid, as expected.
+	120	X.d[1] : 1	[by X.e:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+	130	X.e : 1	[by X.d[1]:=1]
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+channel X is neutral, as expected.
+channel	X (.data) : 1 @ 140
+	140	X.d[1] : 0	[by X.e:=1]
+channel X is valid, as expected.
+channel X is waiting for the receiver, as expected.
+channel X ackowledge is negative, as expected.
+channel X has value 1, as expected.
+	150	X.e : 0	[by X.d[1]:=0]
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+channel X is valid, as expected.
+	160	X.d[1] : 1	[by X.e:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+	170	X.e : 1	[by X.d[1]:=1]
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+channel X is neutral, as expected.
+channel	X (.data) : 0 @ 180
+	180	X.d[0] : 0	[by X.e:=1]
+channel X is valid, as expected.
+channel X is waiting for the receiver, as expected.
+channel X ackowledge is negative, as expected.
+channel X has value 0, as expected.
+	190	X.e : 0	[by X.d[0]:=0]
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+channel X is valid, as expected.
+	200	X.d[0] : 1	[by X.e:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+	210	X.e : 1	[by X.d[0]:=1]
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+channel X is neutral, as expected.
+Event queue is non-empty, as expected.

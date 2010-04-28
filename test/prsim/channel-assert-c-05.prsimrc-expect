@@ -1,0 +1,74 @@
+channels:
+X : .e(init:0) .v 1x1of2 off
+Y : .e(init:1) .v 1x1of4 off
+Z : .a(init:0) .v 1x1of3 off
+Warning: channel validity `X.v' has no fanin.
+Warning: channel acknowledge `X.e' has no fanin!
+Warning: channel validity `X.v' has no fanout, but is being sourced.
+channel X: unknown, because there are 2 X rails
+	10	X.d[0] : 0
+	10	X.d[1] : 0
+	10	X.e : 0
+	20	X.v : 0	[by X.d[1]:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+All subnodes of 'X':
+X.d[0] : 0
+X.d[1] : 0
+X.e : 0
+X.v : 0
+channel X: data is neutral, waiting for receiver to neg-ack
+node `X.e' is 0, as expected.
+releasing channel X 
+recall: for shared-validity protocol, use validity signal not rails 
+	30	X.e : 1
+channel X is neutral, as expected.
+channel X is waiting for the sender, as expected.
+channel X ackowledge is negative, as expected.
+	40	X.d[0] : 1	[by X.e:=1]
+rail is high, but validity still to follow 
+channel X is neutral, as expected.
+channel X is waiting for the sender, as expected.
+channel X ackowledge is negative, as expected.
+channel X has value 0, as expected.
+channel	X (.data) : 0 @ 50
+	50	X.v : 1	[by X.d[0]:=1]
+channel X is valid, as expected.
+channel X is waiting for the receiver, as expected.
+channel X ackowledge is negative, as expected.
+channel X has value 0, as expected.
+	60	X.e : 0	[by X.v:=1]
+channel X ackowledge is active, as expected.
+channel X is waiting for the sender, as expected.
+channel X is valid, as expected.
+	70	X.d[0] : 0	[by X.e:=0]
+rails are low, but validity still to follow 
+channel X is waiting for the sender, as expected.
+channel X is valid, as expected.
+channel X ackowledge is active, as expected.
+	80	X.v : 0	[by X.d[0]:=0]
+channel X is neutral, as expected.
+channel X ackowledge is active, as expected.
+channel X is waiting for the receiver, as expected.
+	90	X.e : 1	[by X.v:=0]
+channel X ackowledge is negative, as expected.
+channel X is waiting for the sender, as expected.
+channel X is neutral, as expected.
+	100	X.d[0] : 1	[by X.e:=1]
+rail is high, but validity still to follow 
+channel X is neutral, as expected.
+channel X is waiting for the sender, as expected.
+channel X ackowledge is negative, as expected.
+channel X has value 0, as expected.
+channel	X (.data) : 0 @ 110
+	110	X.v : 1	[by X.d[0]:=1]
+channel X is valid, as expected.
+channel X is waiting for the receiver, as expected.
+channel X ackowledge is negative, as expected.
+channel X has value 0, as expected.
+	120	X.e : 0	[by X.v:=1]
+channel-assert: channel X acknowledge expected negative, but is active.
+channel-assert: channel X is expecting to be waiting for the receiver, but is not.
+channel-assert: expected channel X neutral, but is valid.
+... at line 54

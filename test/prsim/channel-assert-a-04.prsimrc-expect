@@ -1,0 +1,75 @@
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+All subnodes of 'X':
+X.d[0] : X
+X.d[1] : X
+X.e : X
+manually resetting data 
+	0	X.d[0] : 0
+	0	X.d[1] : 0
+	10	X.e : 0
+channel X is neutral, as expected.
+channel X is neutral, as expected.
+channel X is waiting for the receiver, as expected.
+node `X.e' is 0, as expected.
+releasing channel X 
+	20	X.e : 1
+node `X.e' is 1, as expected.
+channel X is neutral, as expected.
+channel X is waiting for the sender, as expected.
+------------------------------------ 
+setting data rail 
+channel	X (.data) : 0 @ 20
+	20	X.d[0] : 1
+channel X is valid, as expected.
+channel X has value 0, as expected.
+channel X is waiting for the receiver, as expected.
+	30	X.e : 0	[by X.d[0]:=1]
+node `X.e' is 0, as expected.
+channel X is valid, as expected.
+channel X has value 0, as expected.
+channel X is waiting for the sender, as expected.
+X : .e(init:0)  1x1of2 sink,watch, timing: global
+	count: 1, unknowns: 0
+event    : `X.e' : 0
+caused by: `X.d[0]' : 1
+(no cycle)
+------------------------------------ 
+resetting data rail 
+	30	X.d[0] : 0
+channel X is neutral, as expected.
+channel X is waiting for the receiver, as expected.
+	40	X.e : 1	[by X.d[0]:=0]
+node `X.e' is 1, as expected.
+channel X is neutral, as expected.
+channel X is waiting for the sender, as expected.
+X : .e(init:0)  1x1of2 sink,watch, timing: global
+	count: 0, unknowns: 0
+event    : `X.e' : 1
+caused by: `X.d[0]' : 0
+(no cycle)
+------------------------------------ 
+setting data rail 
+channel	X (.data) : 1 @ 40
+	40	X.d[1] : 1
+channel X is valid, as expected.
+channel X has value 1, as expected.
+channel X is waiting for the receiver, as expected.
+	50	X.e : 0	[by X.d[1]:=1]
+node `X.e' is 0, as expected.
+channel X is valid, as expected.
+channel X has value 1, as expected.
+channel X is waiting for the sender, as expected.
+X : .e(init:0)  1x1of2 sink,watch, timing: global
+	count: 1, unknowns: 0
+event    : `X.e' : 0
+caused by: `X.d[1]' : 1
+(no cycle)
+------------------------------------ 
+resetting data rail 
+	50	X.d[1] : 0
+channel-assert: expected channel X neutral, but is valid.
+channel-assert: channel X is expecting to be waiting for the sender, but is not.
+... at line 68

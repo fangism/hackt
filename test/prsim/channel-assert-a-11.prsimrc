@@ -1,0 +1,65 @@
+# "channel-assert-a-11.prsimrc"
+# copy-modified from "channel-assert-a-10.prsimrc"
+# @haco@ channel-test-a.haco-c
+
+source channel-test-a-01.prsimrc
+
+watchall
+confirm
+# set up some channels with commands
+channel-watch Z
+channel-sink Z
+channel-reset Z
+getall Z
+
+echo manually resetting data
+set Z.d[0] 0
+set Z.d[1] 0
+set Z.d[2] 0
+cycle
+assert Z.a 0
+channel-assert Z waiting-sender empty neutral
+
+echo releasing channel Z
+channel-release Z
+cycle
+assert Z.a 0
+channel-assert Z neutral waiting-sender
+
+echo ------------------------------------
+echo setting data rail
+set Z.d[0] 1
+step-event
+channel-assert Z valid 0 waiting-receiver
+cycle
+assert Z.a 1
+channel-assert Z valid 0 waiting-sender
+
+echo ------------------------------------
+echo resetting data rail
+set Z.d[0] 0
+step-event
+channel-assert Z neutral waiting-receiver
+cycle
+assert Z.a 0
+channel-assert Z neutral waiting-sender
+
+echo ------------------------------------
+echo setting data rail
+set Z.d[1] 1
+step-event
+channel-assert Z valid 1 waiting-receiver
+cycle
+assert Z.a 1
+channel-assert Z valid 1 waiting-sender
+
+echo ------------------------------------
+echo resetting data rail
+set Z.d[1] 0
+step-event
+channel-assert Z neutral waiting-receiver
+cycle
+assert Z.a 0
+channel-assert Z valid 0 waiting-receiver
+echo EXPECT FAIL, accumulate errors (tihs line not reached)
+

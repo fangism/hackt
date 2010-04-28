@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.31 2010/04/23 02:40:57 fang Exp $
+@c $Id: commands.texi,v 1.32 2010/04/28 02:17:49 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -194,6 +194,7 @@ the following commands:
 @include cmd/channel-show.texi
 @include cmd/channel-show-all.texi
 @include cmd/channel-get.texi
+@include cmd/channel-assert.texi
 
 To control which channels should report values to the console, 
 the simulator provides basic watch commands.  

@@ -1,0 +1,16 @@
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+All subnodes of 'X':
+X.d[0] : X
+X.d[1] : X
+X.e : X
+manually resetting data 
+	0	X.d[0] : 0
+	0	X.d[1] : 0
+	10	X.e : 0
+channel-assert: unknown keyword or value "neutered"
+channel X is neutral, as expected.
+channel X is waiting for the receiver, as expected.
+... at line 21

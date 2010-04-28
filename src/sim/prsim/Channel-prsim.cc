@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.29 2010/04/23 02:40:59 fang Exp $
+	$Id: Channel-prsim.cc,v 1.30 2010/04/28 02:17:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -435,84 +435,183 @@ channel::dump_state(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Prints state information about channel, w.r.t. phase of handshake.
-	TODO: tests to cover all states
+	Summarize information about the state of a channel.
  */
-ostream&
-channel::dump_status(ostream& o, const State& s) const {
+channel::status_summary
+channel::summarize_status(const State& s) const {
+	status_summary ret;
 if (!x_counter) {
 	// then we can infer the state of the handshake
 #if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
 #endif
-	bool ack = false;	// true is acknowledging, false is neg-ack
-	bool xack = false;
-	bool xval = false;
+	// 4-phase
 	if (ack_signal) {
 		const value_enum a = s.get_node(ack_signal).current_value();
-		xack = (a == LOGIC_OTHER);
-		ack = get_ack_active() ^ (a == LOGIC_LOW);
+		ret.x_ack = (a == LOGIC_OTHER);
+		ret.ack_active = get_ack_active() ^ (a == LOGIC_LOW);
 	}
-	bool val = false;
 	if (valid_signal) {
 		const value_enum v = s.get_node(valid_signal).current_value();
-		xval = (v == LOGIC_OTHER);
-		val = get_valid_sense() ^ (v == LOGIC_LOW);
+		ret.x_valid = (v == LOGIC_OTHER);
+		ret.valid_active = get_valid_sense() ^ (v == LOGIC_LOW);
 	}
-	bool transitional = false;
 	if (!counter_state) {
 		// data is neutral
-		o << "data is neutral";
-	if (valid_signal) {
-		if (xval) o << ", validity is X";
-		// validity is catching up
-		else if (val) o << ", validity resetting";
-		// else validity reflects data rails
-	}
-	if (ack_signal && !(valid_signal && val)) {
-		o << ", " << (xack ? "ack is X" :
-			(ack ? "waiting for receiver to neg-ack"
-			: "waiting for sender to produce data"));
+	if (ack_signal && !ret.x_ack) {
+		if (valid_signal) {
+		if (!ret.x_valid) {
+			// shared validity, validity may follow rails
+			if (ret.valid_active ^ ret.ack_active)
+				ret.waiting_receiver = true;
+			else	ret.waiting_sender = true;
+		}
+		} else {
+			// no shared validity
+			if (ret.ack_active)
+				ret.waiting_receiver = true;
+			else	ret.waiting_sender = true;
+		}
 	} // else nothing else
 	} else if (counter_state == bundles()) {
 		// data is valid
 		// ALERT: shared validity protocol validity *follows* data rails
-		o << "data is valid (" << data_rails_value(s) << ")";
-	if (valid_signal) {
-		if (xval) o << ", validity is X";
-		// validity is catching up
-		else if (!val) o << ", validity setting";
-		// else validity reflects data rails
-	}
-	if (ack_signal && !(valid_signal && !val)) {
-		o << ", " << (xack ? "ack is X" :
-			(ack ? "waiting for sender to remove data"
-			: "waiting for receiver to ack"));
+		ret.current_value = data_rails_value(s);
+	if (ack_signal && !ret.x_ack) {
+		if (valid_signal) {
+		if (!ret.x_valid) {
+			// shared-validity
+			if (ret.valid_active ^ ret.ack_active)
+				ret.waiting_receiver = true;
+			else	ret.waiting_sender = true;
+		}
+		} else {
+			// no shared-validity
+			if (ret.ack_active)
+				ret.waiting_sender = true;
+			else	ret.waiting_receiver = true;
+		}
 	}
 	} else {
 		// data is in between
-		transitional = true;
-		o << "data is transitioning to " << (ack ? "neutral" : "valid");
+		ret.value_transitioning = true;
+		if (ack_signal && !ret.x_ack) {
+			// data is always sender's responsibility
+			ret.waiting_sender = true;
+		}
 	}
 #if PRSIM_CHANNEL_LEDR
 	break;
 }
 case CHANNEL_TYPE_LEDR: {
+	// 2-phase, or 1-phase
 	const value_enum p = current_ledr_parity(s);
+	// FIXME: can be X if we didn't check the state of the ack
 	INVARIANT(p != LOGIC_OTHER);
 	if (ack_signal) {
 	// full/empty
-		bool empty = empty_parity() ^ (p == LOGIC_LOW);
+		const bool empty = empty_parity() ^ (p == LOGIC_LOW);
+		ret.full = !empty;
+		// could just overload the ::*valid_active member...
 		if (empty) {
+			ret.waiting_sender = true;
+			ret.valid_active = false;
+			ret.ack_active = true;
+		} else {
+			ret.waiting_receiver = true;
+			ret.valid_active = true;
+			ret.ack_active = false;
+			ret.current_value = data_rails_value(s);
+		}
+	} else {
+		// is a 1-phase channel, only report data rails
+		ret.current_value = data_rails_value(s);
+	}
+	break;
+}
+case CHANNEL_TYPE_SINGLE_TRACK: {
+	FINISH_ME(Fang);
+	break;
+}
+default: break;
+}	// end switch
+#endif
+} else {
+	// if there are X's do nothing, don't bother summarizing
+}
+	return ret;
+}	// end channel::summarize_status
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints state information about channel, w.r.t. phase of handshake.
+	TODO: tests to cover all states
+ */
+ostream&
+channel::dump_status(ostream& o, const State& s) const {
+	// compute status summary first
+	const status_summary stat(summarize_status(s));
+if (!x_counter) {
+	// then we can infer the state of the handshake
+#if PRSIM_CHANNEL_LEDR
+switch (type) {
+case CHANNEL_TYPE_1ofN: {
+#endif
+	if (!counter_state) {
+		// data is neutral
+		o << "data is neutral";
+	if (valid_signal) {
+		if (stat.x_valid)
+			o << ", validity is X";
+		// validity is catching up
+		else if (stat.valid_active)
+			o << ", validity resetting";
+		// else validity already reflects the state of data rails
+	}
+	if (ack_signal && !(valid_signal && stat.valid_active)) {
+		o << ", " << (stat.x_ack ? "ack is X" :
+			(stat.ack_active ? "waiting for receiver to neg-ack"
+			: "waiting for sender to produce data"));
+	} // else nothing else
+	} else if (counter_state == bundles()) {
+		// data is valid
+		// ALERT: shared validity protocol validity *follows* data rails
+		o << "data is valid (" << stat.current_value << ")";
+	if (valid_signal) {
+		if (stat.x_valid)
+			o << ", validity is X";
+		// validity is catching up
+		else if (!stat.valid_active)
+			o << ", validity setting";
+		// else validity already reflects the state of data rails
+	}
+	if (ack_signal && !(valid_signal && !stat.valid_active)) {
+		o << ", " << (stat.x_ack ? "ack is X" :
+			(stat.ack_active ? "waiting for sender to remove data"
+			: "waiting for receiver to ack"));
+	}
+	} else {
+		// data is in between
+		INVARIANT(stat.value_transitioning);
+		o << "data is transitioning to " <<
+			(stat.ack_active ? "neutral" : "valid");
+	}
+#if PRSIM_CHANNEL_LEDR
+	break;
+}
+case CHANNEL_TYPE_LEDR: {
+	if (ack_signal) {
+	// full/empty
+		if (!stat.full) {
 			o << "channel is empty, waiting for sender";
 		} else {
-			o << "channel is full (" << data_rails_value(s) <<
+			o << "channel is full (" << stat.current_value <<
 				"), waiting for receiver ack";
 		}
 	} else {
 		// is a 1-phase channel, only report data rails
-		o << "channel value (" << data_rails_value(s) << ")";
+		o << "channel value (" << stat.current_value << ")";
 	}
 	break;
 }
@@ -528,7 +627,277 @@ default: break;
 		" X rails";
 }
 	return o;
+}	// end channel::dump_status
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper function.
+	Always prints a diagnostic on failure (non-maskable), 
+	but up to caller how to handle.  
+	\return false if assertion fails.  
+ */
+static
+bool
+__assert_channel_value(const channel::value_type& expect, 
+		const channel::value_type& got,
+		const string& name, const bool confirm) {
+	static const char cmd[] = "channel-assert";
+	if (expect != got) {
+		cerr << cmd << ": value assertion failed on channel " <<
+			name << ", expected: " << expect <<
+			", but got: " << got << endl;
+		return false;
+	} else if (confirm) {
+		cout << "channel " << name << " has value " <<
+			expect << ", as expected." << endl;
+	}
+	return true;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return false if assertion fails.  
+ */
+bool
+channel::__assert_value(const status_summary& stat, const value_type& expect, 
+		const bool confirm) const {
+	static const char cmd[] = "channel-assert";
+#if PRSIM_CHANNEL_LEDR
+switch (type) {
+case CHANNEL_TYPE_1ofN: {
+#endif
+	if (counter_state == bundles()) {
+		if (!__assert_channel_value(expect, stat.current_value,
+				name, confirm))
+			return false;
+	} else {
+		cerr << cmd << ": cannot assert value on channel " <<
+			name << " because " << size_t(counter_state) << " of "
+			<< bundles() << " bundles are valid." << endl;
+		return false;
+	}
+#if PRSIM_CHANNEL_LEDR
+	break;
+}	// end case CHANNEL_TYPE_1ofN
+case CHANNEL_TYPE_LEDR: {
+	if (ack_signal) {
+	// 2-phase
+	// full/empty
+	if (stat.full) {
+		if (!__assert_channel_value(expect, stat.current_value,
+				name, confirm))
+			return false;
+	} else {
+		cerr << cmd << ": cannot assert value on channel " <<
+			name << " because it is now empty." << endl;
+		return false;
+	}
+	} else {
+	// 1-phase (ackless)
+		if (!__assert_channel_value(expect, stat.current_value,
+				name, confirm))
+			return false;
+	}
+	break;
+}	// end case CHANNEL_TYPE_LEDR
+// case CHANNEL_TYPE_SINGLE_TRACK:
+default:
+	FINISH_ME(Fang);
+	break;
+}	// end switch (type)
+#endif
+	return true;
+}	// end channel::assert_value
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+void
+__assert_validity_diagnostic(ostream& o, const string& name, 
+		const bool expect_valid) {
+	static const char cmd[] = "channel-assert";
+	o << cmd << ": expected channel " << name;
+	if (expect_valid) {
+		o << " valid, but is neutral." << endl;
+	} else {
+		o << " neutral, but is valid." << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return false if assertion failed.
+ */
+bool
+channel::__assert_validity(const status_summary& stat,
+		const bool expect_valid, const bool confirm) const {
+	static const char cmd[] = "channel-assert";
+#if PRSIM_CHANNEL_LEDR
+switch (type) {
+case CHANNEL_TYPE_1ofN: {
+#endif
+	if (valid_signal) {
+	if (stat.x_valid) {
+		cerr << cmd << ": validity signal of " << name
+			<< " is X, cannot assert." << endl;
+		return false;
+	} else if (expect_valid ^ stat.valid_active) {
+		__assert_validity_diagnostic(cerr, name, expect_valid);
+		return false;
+	} else if (confirm) {
+		cout << "channel " << name << " is " <<
+			(expect_valid ? "valid" : "neutral") <<
+			", as expected." << endl;
+	}
+	} else {
+		// no validity signal, have to examine data rails
+		if (counter_state == bundles()) {
+			// data is valid
+		if (!expect_valid) {
+			__assert_validity_diagnostic(cerr, name, expect_valid);
+			return false;
+		} else if (confirm) {
+			cout << "channel " << name <<
+				" is valid, as expected." << endl;
+		}
+		} else if (!counter_state) {
+			// data is neutral
+		if (expect_valid) {
+			__assert_validity_diagnostic(cerr, name, !expect_valid);
+			return false;
+		} else if (confirm) {
+			cout << "channel " << name <<
+				" is neutral, as expected." << endl;
+		}
+		} else {
+			// data is transitional
+			cerr << cmd << ": channel " << name <<
+				" is transitional (neither valid nor "
+				"neutral), cannot assert." << endl;
+			return false;
+		}
+	}
+#if PRSIM_CHANNEL_LEDR
+	break;
+}	// end case CHANNEL_TYPE_1ofN
+case CHANNEL_TYPE_LEDR: {
+	if (ack_signal) {
+	// 2-phase
+	// full/empty
+	if (stat.full ^ expect_valid) {
+		__assert_validity_diagnostic(cerr, name, expect_valid);
+		return false;
+	} else if (confirm) {
+		cout << "channel " << name << " is " <<
+			(expect_valid ? "valid" : "neutral") <<
+			", as expected." << endl;
+	}
+	} else {
+		// 1-phase (ackless)
+		cerr <<
+"Validity is not applicable to (acknowledgeless) single-phase channel "
+			<< name << "." << endl;
+		return false;
+	}
+	break;
+}	// end case CHANNEL_TYPE_LEDR
+// case CHANNEL_TYPE_SINGLE_TRACK:
+default:
+	FINISH_ME(Fang);
+	break;
+}	// end switch
+#endif
+	return true;
+}	// end channel::__assert_validity
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	User error checking on channels' state.
+	\param o error stream
+	\param s global state
+	\param v keyword for state to assert.
+ */
+error_policy_enum
+channel::assert_status(ostream& o, const State& s, const string& v) const {
+	static const char cmd[] = "channel-assert";
+	const error_policy_enum E = s.get_channel_expect_fail_policy();
+	const status_summary stat(summarize_status(s));
+	const bool confirm = s.confirm_asserts();
+if (x_counter) {
+	o << "Error: Cannot assert the state of a channel with X rails."
+		<< endl;
+	return E;
+}
+// SINGLE_TRACK not implemented yet
+if (type == CHANNEL_TYPE_SINGLE_TRACK) {
+	FINISH_ME(Fang);
+	return E;
+}
+	value_type expect;
+// check for numerical string
+if (!string_to_num(v, expect)) {
+	// then we have a value
+	if (!__assert_value(stat, expect, confirm))
+		return E;
+} else if (v == "valid" || v == "neutral") {
+	if (!__assert_validity(stat, (v == "valid"), confirm))
+		return E;
+} else if (v == "full" || v == "empty") {
+	// if (two_phase()) ... ?
+	// for now make synonymous with valid/neutral
+	if (!__assert_validity(stat, (v == "full"), confirm))
+		return E;
+} else if (v == "ack" || v == "neg-ack") {
+	// four-phase only
+	if (!four_phase() || !ack_signal) {
+		cerr << cmd <<
+": \'ack\' and \'neg-ack\' are applicable to only four-phase channels\n"
+"with acknowledge signals, of which channel " << name << " is not."
+			<< endl;
+		return E;
+	}
+	const bool expect_ack = (v == "ack");
+	if (expect_ack ^ stat.ack_active) {
+		cerr << cmd << ": channel " << name << " acknowledge expected ";
+		if (expect_ack) {
+			cerr << "active, but is negative." << endl;
+		} else {
+			cerr << "negative, but is active." << endl;
+		}
+		return E;
+	} else if (confirm) {
+		cout << "channel " << name << " ackowledge is " <<
+			(expect_ack ? "active" : "negative") <<
+			", as expected." << endl;
+	}
+} else if (v == "waiting-sender") {
+	// four-phase or two-phase
+	if (!stat.waiting_sender) {
+		cerr << cmd << ": channel " << name <<
+			" is expecting to be waiting for the sender, "
+			"but is not." << endl;
+		return E;
+	} else if (confirm) {
+		cout << "channel " << name <<
+			" is waiting for the sender, as expected." << endl;
+	}
+} else if (v == "waiting-receiver") {
+	// four-phase or two-phase
+	if (!stat.waiting_receiver) {
+		cerr << cmd << ": channel " << name <<
+			" is expecting to be waiting for the receiver, "
+			"but is not." << endl;
+		return E;
+	} else if (confirm) {
+		cout << "channel " << name <<
+			" is waiting for the receiver, as expected." << endl;
+	}
+} else {
+	cerr << cmd << ": unknown keyword or value \"" << v << "\"" << endl;
+	return ERROR_FATAL;
+//	return ERROR_BREAK;
+}
+	return ERROR_NONE;
+}	// end channel::assert_status
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2344,6 +2713,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 		advance_value();
 		// want to advance after checking, 
 		// but need to guarantee progress in the event of exception
+	// TODO: factor this into __assert_channel_value
 		if (DATA_VALUE(expect) != got) {
 			const channel_exception
 				ex(this, cur_index, cur_iter,

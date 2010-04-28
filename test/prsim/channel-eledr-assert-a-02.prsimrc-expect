@@ -1,0 +1,49 @@
+channels:
+C : LEDR (init .d:0 .r:0) off
+D : LEDR (init .e:0 .d:0 .r:0) off
+testing two-phase source on D 
+Warning: channel acknowledge `D.e' has no fanin!
+Warning: channel validity `D.n' has no fanin.
+D : LEDR (init .e:0 .d:0 .r:0) source,sink,stopped, timing: global {0,0,0,1,1,1,1,0,1,}* @0 #0
+	count: 0, unknowns: 2
+channel D: timing: global
+	10	D.d : 0
+	10	D.r : 0
+	10	D.e : 0
+channel D: channel is empty, waiting for sender
+channel D is neutral, as expected.
+channel D is waiting for the sender, as expected.
+thawing D 
+D : LEDR (init .e:0 .d:0 .r:0) source,sink, timing: global {0,0,0,1,1,1,1,0,1,}* @1 #0
+	count: 0, unknowns: 0
+release!!! 
+	20	D.r : 1
+channel D: channel is full (0), waiting for receiver ack
+expect a token above. 
+channel D is valid, as expected.
+channel D is waiting for the receiver, as expected.
+	30	D.e : 1	[by D.r:=1]
+channel D is neutral, as expected.
+channel D is waiting for the sender, as expected.
+	40	D.r : 0	[by D.e:=1]
+channel D is valid, as expected.
+channel D is waiting for the receiver, as expected.
+	50	D.e : 0	[by D.r:=0]
+channel D is neutral, as expected.
+channel D is waiting for the sender, as expected.
+	60	D.r : 1	[by D.e:=0]
+channel D is valid, as expected.
+channel D is waiting for the receiver, as expected.
+	70	D.e : 1	[by D.r:=1]
+channel D is neutral, as expected.
+channel D is waiting for the sender, as expected.
+	80	D.d : 1	[by D.e:=1]
+channel D is valid, as expected.
+channel D is waiting for the receiver, as expected.
+	90	D.e : 0	[by D.d:=1]
+channel D is neutral, as expected.
+channel D is waiting for the sender, as expected.
+	100	D.r : 0	[by D.e:=0]
+channel-assert: expected channel D neutral, but is valid.
+channel D is waiting for the receiver, as expected.
+... at line 46

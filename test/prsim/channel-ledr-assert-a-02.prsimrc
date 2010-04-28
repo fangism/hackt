@@ -1,0 +1,63 @@
+# "channel-ledr-assert-a-02.prsimrc"
+# copy-modified from "channel-ledr-assert-a-01.prsimrc"
+# @haco@ channel-ledr-a.haco-c
+
+source channel-ledr-a-01.prsimrc
+
+confirm
+watchall
+echo freezing C
+channel-stop C
+set C.d 0
+set C.r 0
+cycle
+echo thawing C
+channel-release C
+channel-watch C
+cycle
+
+echo repeat 3 values
+set C.r 1
+cycle
+channel-assert C 0
+set C.r 0
+cycle
+channel-assert C 0
+set C.r 1
+cycle
+channel-assert C 0
+
+echo toggle 3 values
+set C.d 1
+cycle
+channel-assert C 1
+set C.d 0
+cycle
+channel-assert C 1
+echo EXPECT FAIL HERE
+set C.d 1
+cycle
+channel-assert C 1
+
+echo repeat 3 values
+set C.r 0
+cycle
+channel-assert C 1
+set C.r 1
+cycle
+channel-assert C 1
+set C.r 0
+cycle
+channel-assert C 1
+
+echo toggle 3 values
+set C.d 0
+cycle
+channel-assert C 0
+set C.d 1
+cycle
+channel-assert C 1
+set C.d 0
+cycle
+channel-assert C 0
+

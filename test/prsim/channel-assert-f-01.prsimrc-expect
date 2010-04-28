@@ -1,0 +1,25 @@
+testing active-low data-rails 
+channel X: unknown, because there are 2 X rails
+	0	X.d[0] : 1
+channel X: unknown, because there are 1 X rails
+	0	X.d[1] : 1
+channel X: data is neutral
+toggling active-low data-rails 
+	0	X.d[0] : 0
+channel X is valid, as expected.
+channel X has value 0, as expected.
+	0	X.d[0] : 1
+channel X is neutral, as expected.
+	0	X.d[1] : 0
+channel X has value 1, as expected.
+channel X is valid, as expected.
+	0	X.d[1] : 1
+channel X is neutral, as expected.
+	0	X.d[0] : 0
+channel X: data is valid (0)
+	0	X.d[0] : 1
+channel X: data is neutral
+	0	X.d[1] : 0
+channel X: data is valid (1)
+	0	X.d[1] : 1
+channel X: data is neutral

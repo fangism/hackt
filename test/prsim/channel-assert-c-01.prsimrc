@@ -1,0 +1,106 @@
+# "channel-assert-c-01.prsimrc"
+# @haco@ channel-test-c.haco-c
+# testing channel-assert
+
+# register channels
+source channel-test-c-01.prsimrc
+
+watchall
+confirm
+channel-watch X
+channel-sink X
+channel-source-args-loop X 0 0 1 1
+channel-stop X
+channel-reset X
+channel-get X
+
+cycle
+channel-assert X neutral ack waiting-receiver
+getall X
+channel-get X
+assert X.e 0
+
+echo releasing channel X
+channel-release X
+
+echo recall: for shared-validity protocol, use validity signal not rails
+
+step-event
+channel-assert X neutral waiting-sender neg-ack
+
+step-event
+echo rail is high, but validity still to follow
+channel-assert X neutral waiting-sender neg-ack 0
+step-event
+channel-assert X valid waiting-receiver neg-ack 0
+step-event
+channel-assert X ack waiting-sender valid
+step-event
+echo rails are low, but validity still to follow
+channel-assert X waiting-sender valid ack
+step-event
+channel-assert X neutral ack waiting-receiver
+step-event
+channel-assert X neg-ack waiting-sender neutral
+
+step-event
+echo rail is high, but validity still to follow
+channel-assert X neutral waiting-sender neg-ack 0
+step-event
+channel-assert X valid waiting-receiver neg-ack 0
+step-event
+channel-assert X ack waiting-sender valid
+step-event
+echo rails are low, but validity still to follow
+channel-assert X waiting-sender valid ack
+step-event
+channel-assert X neutral ack waiting-receiver
+step-event
+channel-assert X neg-ack waiting-sender neutral
+
+step-event
+echo rail is high, but validity still to follow
+channel-assert X neutral waiting-sender neg-ack 1
+step-event
+channel-assert X valid waiting-receiver neg-ack 1
+step-event
+channel-assert X ack waiting-sender valid
+step-event
+echo rails are low, but validity still to follow
+channel-assert X waiting-sender valid ack
+step-event
+channel-assert X neutral ack waiting-receiver
+step-event
+channel-assert X neg-ack waiting-sender neutral
+
+step-event
+echo rail is high, but validity still to follow
+channel-assert X neutral waiting-sender neg-ack 1
+step-event
+channel-assert X valid waiting-receiver neg-ack 1
+step-event
+channel-assert X ack waiting-sender valid
+step-event
+echo rails are low, but validity still to follow
+channel-assert X waiting-sender valid ack
+step-event
+channel-assert X neutral ack waiting-receiver
+step-event
+channel-assert X neg-ack waiting-sender neutral
+
+step-event
+echo rail is high, but validity still to follow
+channel-assert X neutral waiting-sender neg-ack 0
+step-event
+channel-assert X valid waiting-receiver neg-ack 0
+step-event
+channel-assert X ack waiting-sender valid
+step-event
+echo rails are low, but validity still to follow
+channel-assert X waiting-sender valid ack
+step-event
+channel-assert X neutral ack waiting-receiver
+step-event
+channel-assert X neg-ack waiting-sender neutral
+
+assert-queue
