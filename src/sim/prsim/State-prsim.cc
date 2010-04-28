@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.61 2010/04/13 18:04:07 fang Exp $
+	$Id: State-prsim.cc,v 1.62 2010/04/28 21:51:50 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -570,9 +570,9 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 		const value_enum _v = i->second;
 #endif
 		node_type& _n(__get_node(ni));
-		if (_n.current_value() != _v) {
 		const event_index_type pe = _n.get_event();
-
+		// check for pending events regardless of value-change
+		// to detect cancelled events and instabilities.
 		if (pe) {
 	// interaction with other enqueued events? anomalies?
 	// for now, give up if there are conflicting events in queue
@@ -591,6 +591,8 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 				continue;
 			}
 		}
+
+		if (_n.current_value() != _v) {
 		// __allocate_event
 		const event_index_type pn =
 			__allocate_event(_n, ni, c,
@@ -628,6 +630,7 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Set a single channel into reset state.  
+	FIXME:
 	NB: flush_channel_events may result in instabilities!
 	\return ?
  */
@@ -643,6 +646,7 @@ State::reset_channel(const string& cn) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Reset all channels.  
+	FIXME:
 	NB: flush_channel_events may result in instabilities!
  */
 void
@@ -2815,7 +2819,7 @@ if (eval_ordering_is_random()) {
 		if (UNLIKELY(E >= ERROR_BREAK)) {
 			stop();
 			// just signal to break
-			// TODO: signal FATAL and INTERACTIVE
+			// FATAL and INTERACTIVE are handled after this loop
 			if (E > __throw__) {
 				__throw__ = E;
 			}
@@ -2840,8 +2844,12 @@ if (n.in_channel()) {
 	const break_type E = flush_channel_events(env_events, new_cause);
 	if (UNLIKELY(E >= ERROR_BREAK)) {
 		stop();
+	if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
+		// now catches FATAL and INTERACTIVE
+		const instability_exception unstabex(ni, E);
+		throw unstabex;
 	}
-	// TODO: handle FATAL and INTERACTIVE
+	}
 }
 	/***
 		If an event is forced (say, by user), then check node's own

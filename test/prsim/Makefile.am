@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.94 2010/04/28 02:17:52 fang Exp $
+#	$Id: Makefile.am,v 1.95 2010/04/28 21:51:51 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -517,6 +517,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	unstable-04 unstable-05 unstable-06 \
 	invariant-a-07 invariant-a-09 \
 	invariant-b-07 \
+	channel-unstable-01 channel-unstable-02 \
 	assert-fail-02 \
 	check-excl-fail-05 \
 	after_min_max-bad-01 \

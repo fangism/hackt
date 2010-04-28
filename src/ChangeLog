@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-87:
+	  hacprsim: now properly error-handle instabilities that occur
+		through channel environments.  Quite simple fix.
+	  Test cases added.  
+
+
 2010-04-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-86:

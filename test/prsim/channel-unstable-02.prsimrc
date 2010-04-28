@@ -1,0 +1,35 @@
+# "channel-unstable-02.prsimrc"
+# copy-modified from "channel-unstable-01.prsimrc"
+# @haco@ channel-test-a.haco-c
+
+source channel-test-a-01.prsimrc
+watchall
+channel-source-args-loop X 0 1 1 0
+mode fatal
+mode
+
+echo we will manually toggle the enable
+set X.e 0
+channel-reset X
+cycle
+channel-release X
+cycle
+
+channel-get X
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+# all good so far
+set X.e 0
+step-event
+queue
+echo now retracting acknowledge, should be unstable
+set X.e 1
+cycle
+
+echo DEATH!
+

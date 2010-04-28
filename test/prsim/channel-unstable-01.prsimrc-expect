@@ -1,0 +1,35 @@
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+Warning: channel acknowledge `X.e' has no fanin!
+mode: 
+	weak rules: off
+	unstable events propagate Xs
+	on unstable: fatal
+	on weak-unstable: fatal
+	on interference: fatal
+	on weak-interference: fatal
+	checking exclusions: on
+	on exclusion-fail: fatal
+	on invariant-fail: break
+	on invariant-unknown: warn
+	on assert-fail: fatal
+	on channel-expect-fail: fatal
+we will manually toggle the enable 
+	0	X.e : 0
+	10	X.d[0] : 0
+	10	X.d[1] : 0
+channel X: data is neutral, waiting for receiver to neg-ack
+	10	X.e : 1
+	20	X.d[0] : 1	[by X.e:=1]
+	20	X.e : 0
+	30	X.d[0] : 0	[by X.e:=0]
+	30	X.e : 1
+event queue:
+	40	X.d[1] : 1	[from X.e:=1]
+now retracting acknowledge, should be unstable 
+WARNING: unstable `X.d[1]'+
+>> cause: `X.e' (val: 0)
+Halting on node: X.e
+... at line 29
