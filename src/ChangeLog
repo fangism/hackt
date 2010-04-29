@@ -5,6 +5,15 @@
 
 2010-04-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-88:
+	  hacknet: added type-name collision checking, post-mangling, 
+		using the case-collision policy to conditionally case-slam.
+		added device-name-override collision checking.
+		Currently these diagnostics are nonmaskable, i.e.
+		there is no configure option to downgrade these.
+		Added and updated test cases.
+
+
 	* HACKT-00-01-04-main-00-83-87:
 	  hacprsim: now properly error-handle instabilities that occur
 		through channel environments.  Quite simple fix.

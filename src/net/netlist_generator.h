@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.10 2010/04/27 18:33:21 fang Exp $
+	$Id: netlist_generator.h,v 1.11 2010/04/29 01:02:21 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -29,6 +29,14 @@ using entity::bool_tag;
 using entity::process_tag;
 using entity::PRS::footprint_expr_node;
 
+/**
+	Define to 1 to check for type-name collisions.
+	Use global case_collision policy to determine whether or not
+	to case slam to_lower.
+	Status: done.
+ */
+#define	POST_MANGLE_TYPE_NAME_COLLISIONS	NETLIST_CHECK_NAME_COLLISIONS
+
 //=============================================================================
 /**
 	Visitor to do all the heavy-lifting and traversal.  
@@ -53,10 +61,17 @@ class netlist_generator :
 	typedef	entity::PRS::footprint	prs_footprint;
 private:
 	struct rule_attribute_functions;
+#if POST_MANGLE_TYPE_NAME_COLLISIONS
+	typedef	std::map<string, const netlist*>
+					typename_map_type;
+#endif
 private:
 	ostream& 			os;
 	const netlist_options&		opt;
 	netlist_map_type		netmap;
+#if POST_MANGLE_TYPE_NAME_COLLISIONS
+	typename_map_type		typename_map;
+#endif
 
 // local data used only during traversal:
 	/**

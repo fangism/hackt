@@ -1,0 +1,20 @@
+// "type-mangle-collision-01.hac"
+// test to catch type-name collision after mangling
+// @hacknet-flags@ -f mangle_template_open=_ -f mangle_template_close=_ -f mangle_template_empty=
+
+defproc foo_1_ (bool x, y, z) {
+prs {
+	x & y	#> z-
+}
+}
+
+template <pint N>
+defproc foo (bool a, b) {
+prs {
+	a	=> b-
+}
+}
+
+foo<1> bar1;
+foo_1_ bar2;
+

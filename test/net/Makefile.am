@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2010/04/27 18:33:25 fang Exp $
+#	$Id: Makefile.am,v 1.19 2010/04/29 01:02:23 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -80,7 +80,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	supply-instance-16 supply-instance-17 supply-instance-18 \
 	substrate-01 substrate-02 substrate-03 \
 	substrate-04 substrate-05 substrate-06 \
-	rename-01 rename-02 rename-03 rename-04 rename-05 rename-06 \
+	rename-01 rename-02 rename-03 rename-06 \
 	rename-07 rename-08 rename-09 rename-10 rename-11 rename-12 \
 	reserved-01 reserved-02 reserved-03 reserved-04 \
 	preferred_names-01 preferred_names-02 preferred_names-03 \
@@ -90,14 +90,16 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 #	fet-type-18 fet-type-19 fet-type-20
 #	fet-type-21 fet-type-22 fet-type-23 fet-type-24
 
-# TODO: fix expanded strings for rename-04,05
+# TODO: implement string manipulation to modify rename-04,05
 
 HACKNET_TEST_SCRIPTS_FAILURES = \
 	non-CMOS-00 non-CMOS-03 non-CMOS-04 non-CMOS-05 \
 	config-arg-07 config-arg-10 config-file-04 \
 	supply-internal-04 \
 	case-01 case-02 case-03 case-04 \
-	reserved-05 reserved-06
+	reserved-05 reserved-06 \
+	rename-04 rename-05 \
+	type-mangle-collision-01 type-mangle-collision-02
 
 # TODO: promote these to real tests
 EXTRA_DIST_HAC = \

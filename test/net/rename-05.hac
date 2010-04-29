@@ -1,7 +1,8 @@
 // "rename-05.hac"
 // copy-modified from "rename-05.hac"
-// TROUBLE: haven't handled labels inside loops yet...
-// consider something like ${i} expansions... inside the label string
+// TROUBLE: haven't handled labels inside complement expansions yet
+// can't see a way to cleanly implement, just have to expand manually
+// this is now caught by the collision checker
 
 bool x, y, _z, _w;
 prs {

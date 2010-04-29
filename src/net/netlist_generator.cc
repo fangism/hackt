@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.18 2010/04/27 18:33:20 fang Exp $
+	$Id: netlist_generator.cc,v 1.19 2010/04/29 01:02:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -26,6 +26,7 @@
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
 #include "common/TODO.h"
+#include "util/string.h"
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -175,6 +176,26 @@ if (&f == topfp) {	// at_top()
 	nl->bind_footprint(f, opt);
 }
 try {
+#if POST_MANGLE_TYPE_NAME_COLLISIONS
+	// check for type name collisions, not configurable yet
+	const string nmn(opt.case_collision_policy != OPTION_IGNORE ?
+			util::strings::string_tolower(nl->name) : nl->name);
+	// case slam if case is not ignored
+	const pair<typename_map_type::iterator, bool>
+		tni(typename_map.insert(make_pair(nmn, nl)));
+	if (!tni.second) {
+		// then there was a collision, not maskable
+		cerr <<
+"Error: detected name collision between mangled subcircuit names." << endl;
+		const netlist* prev = tni.first->second;
+		cerr << "prev. type: " << prev->get_unmangled_name() <<
+			" -> " << prev->name << endl;
+		cerr << "new   type: " << nl->get_unmangled_name() <<
+			" -> " << nl->name << endl;
+		THROW_EXIT;
+	}
+#endif
+
 	// set current netlist (duplicate for local):
 	// should not invalidate existing iterators
 	const value_saver<netlist*> __tmp(current_netlist, nl);
@@ -205,6 +226,7 @@ try {
 		}
 #endif
 	}
+	// TODO: accumulate warning count and print summary
 } catch (...) {
 	cerr << "ERROR producing netlist for " << nl->name << endl;
 	throw;
@@ -869,7 +891,7 @@ case PRS_LITERAL_TYPE_ENUM: {
 	// transistor attributes
 	process_transistor_attributes(t, e.attributes);
 	NEVER_NULL(current_local_netlist);
-	current_local_netlist->transistor_pool.push_back(t);
+	current_local_netlist->add_transistor(t);
 	break;
 }
 case PRS_NOT_EXPR_TYPE_ENUM: {
@@ -1003,7 +1025,7 @@ if (passn || passp) {
 	process_transistor_attributes(t, e.attributes);
 	t.set_pass();		// indicate is pass gate
 	NEVER_NULL(current_local_netlist);
-	current_local_netlist->transistor_pool.push_back(t);
+	current_local_netlist->add_transistor(t);
 } else if (e.name == "echo") {
 	// do nothing
 } else {

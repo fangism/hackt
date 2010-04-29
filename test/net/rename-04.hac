@@ -2,6 +2,7 @@
 // copy-modified from "rename-01.hac"
 // TROUBLE: haven't handled labels inside loops yet...
 // consider something like ${i} expansions... inside the label string
+// duplicates are now caught during expansion
 
 bool x, y, _z[2];
 (;i:2:

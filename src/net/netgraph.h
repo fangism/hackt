@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.15 2010/04/07 00:13:04 fang Exp $
+	$Id: netgraph.h,v 1.16 2010/04/29 01:02:20 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -40,10 +40,10 @@
 	Define to 1 to check for name collisions, due to mangling
 	or case-insensitivity, or reserved names.
 	TODO: name collision checking should eventually include
-	instance names, transistor names, subcircuit names, etc...
+		instance names, etc...
 	For now, just checks node names.
 	Goal: 1
-	Status: starting
+	Status: done, used for a while.
  */
 #define	NETLIST_CHECK_NAME_COLLISIONS		1
 
@@ -197,7 +197,7 @@ struct transistor {
 	Group of transistors.
 	TODO: indices of originating rule and/or internal node definition?
  */
-struct device_group {
+class device_group {
 	typedef	vector<transistor>	transistor_pool_type;
 #if 0
 	/**
@@ -208,6 +208,12 @@ struct device_group {
 #else
 	// infer index from position in node pool
 #endif
+#if	NETLIST_CHECK_NAME_COLLISIONS
+	typedef	set<string>		name_set_type;
+	// to check for device name collisions
+	name_set_type			names;
+#endif
+protected:
 	/**
 		Set of transistors that participate in driving
 		this node, be it logical or named internal.  
@@ -216,6 +222,7 @@ struct device_group {
 	 */
 	transistor_pool_type		transistor_pool;
 
+public:
 	bool
 	is_empty(void) const;
 
@@ -224,6 +231,8 @@ struct device_group {
 	emit_devices(ostream&, const index_type, const node_pool_type&, 
 		const footprint&, const netlist_options&) const;
 #endif
+	void
+	add_transistor(const transistor&);
 
 	void
 	mark_used_nodes(node_pool_type&) const;

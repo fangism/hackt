@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.20 2010/04/07 21:47:28 fang Exp $
+	$Id: netgraph.cc,v 1.21 2010/04/29 01:02:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -59,9 +59,8 @@ bool
 device_group::is_empty(void) const {
 	return transistor_pool.empty();
 }
-//=============================================================================
-// class netlist_common method definitions
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 device_group::mark_used_nodes(node_pool_type& node_pool) const {
 	transistor_pool_type::const_iterator
@@ -72,6 +71,25 @@ device_group::mark_used_nodes(node_pool_type& node_pool) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+device_group::add_transistor(const transistor& t) {
+#if NETLIST_CHECK_NAME_COLLISIONS
+	// only check user-overridden names, not generated ones
+if (t.name.length()) {
+	const pair<name_set_type::iterator, bool> p(names.insert(t.name));
+	if (!p.second) {
+		cerr << "Error: transistor name \"" << t.name <<
+			"\" was already used, and cannot be re-used."
+			<< endl;
+		THROW_EXIT;
+	}
+}
+#endif
+	transistor_pool.push_back(t);
+}
+
+//=============================================================================
+// class netlist_common method definitions
 bool
 netlist_common::is_empty(void) const {
 	return device_group::is_empty() && passive_device_pool.empty();
