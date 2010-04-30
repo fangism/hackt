@@ -1,4 +1,5 @@
 WARNING: channel sink<>::X lacks connection to a producer.
+Warnings found (1) while creating complete type sink<>.
 Error: cannot alias two non-sharing consumers of type channel.
 	got: Y.X
 	and: Z.X

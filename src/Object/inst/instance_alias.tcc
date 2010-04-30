@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.41 2010/04/07 00:12:39 fang Exp $
+	$Id: instance_alias.tcc,v 1.42 2010/04/30 23:58:43 fang Exp $
 	TODO: trim includes
  */
 
@@ -838,7 +838,7 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) const {
 	\pre this must be a canonical alias.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-good_bool
+error_count
 INSTANCE_ALIAS_INFO_CLASS::check_connection(void) const {
 	INVARIANT(this->next == this);
 	return direction_connection_policy::__check_connection(*this);

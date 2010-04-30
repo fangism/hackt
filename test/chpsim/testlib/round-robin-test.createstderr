@@ -2,6 +2,7 @@ WARNING: channel RR1.Cin lacks connection to a producer.
 WARNING: channel RR1.Cout lacks connection to a consumer.
 WARNING: channel RR2.Cin lacks connection to a producer.
 WARNING: channel RR2.Cout lacks connection to a consumer.
+Warnings found (4) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

@@ -1,6 +1,7 @@
 WARNING: channel S lacks connection to a producer.
 WARNING: channel B[0] lacks connection to a producer.
 WARNING: channel B[1] lacks connection to a producer.
+Warnings found (3) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

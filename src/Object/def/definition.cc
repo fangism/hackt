@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.49 2010/04/02 22:18:11 fang Exp $
+ 	$Id: definition.cc,v 1.50 2010/04/30 23:58:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3266,6 +3266,17 @@ try {
 		// allocate local CHP event pool
 		f.allocate_chp_events();
 		// f.mark_created();	// ?
+		// count warnings
+		if (f.warnings()) {
+			cerr << "Warnings found (" << f.warnings() <<
+				") while creating complete type ";
+			if (&f == &top) {
+				cerr << "<top-level>";
+			} else {
+				f.dump_type(cerr);
+			}
+			cerr << "." << endl;
+		}
 	}
 	return good_bool(true);
 } catch (...) {

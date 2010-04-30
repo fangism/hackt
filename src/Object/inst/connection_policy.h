@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.13 2009/07/02 23:22:48 fang Exp $
+	$Id: connection_policy.h,v 1.14 2010/04/30 23:58:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -9,6 +9,7 @@
 
 #include "Object/inst/connection_policy_fwd.h"
 #include <iosfwd>
+#include "common/status.h"		// for error_count
 #include "util/string_fwd.h"
 #include "util/boolean_types.h"
 
@@ -61,9 +62,9 @@ protected:
 	__update_flags(const this_type&) const { }
 
 	static
-	good_bool
+	error_count
 	__check_connection(const this_type&) {
-		return good_bool(true);
+		return error_count();
 	}
 
 public:
@@ -345,7 +346,7 @@ protected:
 
 	template <class AliasType>
 	static
-	good_bool
+	error_count
 	__check_connection(const AliasType&);
 
 public:
@@ -535,7 +536,7 @@ protected:
 
 	template <class AliasType>
 	static
-	good_bool
+	error_count
 	__check_connection(const AliasType&);
 
 public:

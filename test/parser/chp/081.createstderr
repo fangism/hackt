@@ -9,6 +9,7 @@ WARNING: channel y6_2.b lacks connection to a consumer.
 WARNING: channel y6_3.b lacks connection to a consumer.
 WARNING: channel y6_4.b lacks connection to a consumer.
 WARNING: channel y6_5.b lacks connection to a consumer.
+Warnings found (11) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

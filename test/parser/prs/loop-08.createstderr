@@ -1,4 +1,5 @@
 Warning: node null<3>::x has no pull-up nor pull-dn PRS fanin.
+Warnings found (1) while creating complete type null<3>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

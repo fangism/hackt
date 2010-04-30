@@ -4,6 +4,7 @@ WARNING: channel bar.index lacks connection to a producer.
 WARNING: channel bar.out lacks connection to a consumer.
 WARNING: channel S.index lacks connection to a producer.
 WARNING: channel S.out lacks connection to a consumer.
+Warnings found (6) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

@@ -1,5 +1,7 @@
 Warning: node ass<1>::x has no pull-up nor pull-dn PRS fanin.
+Warnings found (1) while creating complete type ass<1>.
 Warning: node ass<2>::x has no pull-up nor pull-dn PRS fanin.
+Warnings found (1) while creating complete type ass<2>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.30 2010/04/07 00:12:44 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.31 2010/04/30 23:58:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -635,19 +635,17 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 	and checks for dangling connections.  
  */
 template <class Tag>
-good_bool
+error_count
 port_alias_tracker_base<Tag>::check_connections(void) const {
-	bool good = true;
+	error_count ret;
 	const_iterator i(_ids.begin()), e(_ids.end());
 	for ( ; i!=e; ++i) {
 		// grab the canonical alias from each set.
 		INVARIANT(i->second.size());
-		if (!i->second.front()->find()->check_connection().good) {
-			// already have diagnostic message
-			good = false;
-		}
+		ret += i->second.front()->find()->check_connection();
+		// already have diagnostic message
 	}
-	return good_bool(good);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -833,12 +831,12 @@ if (has_internal_aliases) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
+error_count
 port_alias_tracker::check_bool_connections(void) const {
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	return port_alias_tracker_base<bool_tag>::check_connections();
 #else
-	return good_bool(true);
+	return error_count();
 #endif
 }
 
@@ -848,7 +846,7 @@ port_alias_tracker::check_bool_connections(void) const {
 	TODO: other things will need to be checked, like relaxed actual
 		type completion.  
  */
-good_bool
+error_count
 port_alias_tracker::check_channel_connections(void) const {
 	return port_alias_tracker_base<channel_tag>::check_connections();
 }

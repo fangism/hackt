@@ -10,6 +10,7 @@ WARNING: channel dataless[1][1] lacks connection to a producer.
 WARNING: channel dataless[1][1] lacks connection to a consumer.
 WARNING: channel dataless[1][2] lacks connection to a producer.
 WARNING: channel dataless[1][2] lacks connection to a consumer.
+Warnings found (12) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

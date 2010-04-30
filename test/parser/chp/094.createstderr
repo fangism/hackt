@@ -1,15 +1,19 @@
 WARNING: channel send_indexed<0, 0>::out[0][1] lacks connection to a producer.
 WARNING: channel send_indexed<0, 0>::out[1][0] lacks connection to a producer.
 WARNING: channel send_indexed<0, 0>::out[1][1] lacks connection to a producer.
+Warnings found (3) while creating complete type send_indexed<0, 0>.
 WARNING: channel send_indexed<0, 1>::out[0][0] lacks connection to a producer.
 WARNING: channel send_indexed<0, 1>::out[1][0] lacks connection to a producer.
 WARNING: channel send_indexed<0, 1>::out[1][1] lacks connection to a producer.
+Warnings found (3) while creating complete type send_indexed<0, 1>.
 WARNING: channel send_indexed<1, 0>::out[0][0] lacks connection to a producer.
 WARNING: channel send_indexed<1, 0>::out[0][1] lacks connection to a producer.
 WARNING: channel send_indexed<1, 0>::out[1][1] lacks connection to a producer.
+Warnings found (3) while creating complete type send_indexed<1, 0>.
 WARNING: channel send_indexed<1, 1>::out[0][0] lacks connection to a producer.
 WARNING: channel send_indexed<1, 1>::out[0][1] lacks connection to a producer.
 WARNING: channel send_indexed<1, 1>::out[1][0] lacks connection to a producer.
+Warnings found (3) while creating complete type send_indexed<1, 1>.
 WARNING: channel foo.out[0][0] lacks connection to a consumer.
 WARNING: channel foo.out[0][1] lacks connection to a producer.
 WARNING: channel foo.out[0][1] lacks connection to a consumer.
@@ -38,6 +42,7 @@ WARNING: channel bar.out[0][1] lacks connection to a consumer.
 WARNING: channel bar.out[1][0] lacks connection to a producer.
 WARNING: channel bar.out[1][0] lacks connection to a consumer.
 WARNING: channel bar.out[1][1] lacks connection to a consumer.
+Warnings found (28) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

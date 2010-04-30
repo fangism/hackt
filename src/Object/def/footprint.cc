@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.52 2010/04/30 18:41:49 fang Exp $
+	$Id: footprint.cc,v 1.53 2010/04/30 23:58:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -755,10 +755,13 @@ try {
 #if ENABLE_STACKTRACE
 	dump_type(STACKTRACE_STREAM << "*** DONE CREATING: ") << endl;
 #endif
+#if 0
+	// check inside process_definition::create_complete_type instead
 	if (warning_count) {
 		dump_type(cerr << "Warnings found (" << warning_count <<
 			") while creating complete type ") << "." << endl;
 	}
+#endif
 	return good_bool(true);
 } catch (...) {
 	// expect recursion errors to trigger this
@@ -1368,17 +1371,14 @@ footprint::expand_unique_subinstances(void) {
 		for the top-level footprint.
 	\return true to indicate acceptance.  
  */
-good_bool
+error_count
 footprint::connection_diagnostics(const bool top) const {
-	const bool cc = scope_aliases.check_channel_connections().good;
-	if (!cc) { ++warning_count; }
+	error_count ret(scope_aliases.check_channel_connections());
 	if (!top) {
-		const bool cb = scope_aliases.check_bool_connections().good;
-		if (!cb) { ++warning_count; }
-		return good_bool(cc && cb);
-	} else {
-		return good_bool(cc);
+		ret += scope_aliases.check_bool_connections();
 	}
+	warning_count += ret.warnings;
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

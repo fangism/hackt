@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.10 2009/07/02 23:22:48 fang Exp $
+	$Id: connection_policy.tcc,v 1.11 2010/04/30 23:58:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -53,9 +53,10 @@ bool_connect_policy::__update_flags(AliasType& a) {
 	Static connectivity property checking, regarding drive/use.  
  */
 template <class AliasType>
-good_bool
+error_count
 bool_connect_policy::__check_connection(const AliasType& a) {
 	// TODO: check must/must-not directions!
+	error_count ret;
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	STACKTRACE_VERBOSE;
 // (!a.is_port_alias())	// wrong: misses aliases to direct ports
@@ -79,37 +80,50 @@ if (warn) {
 	std::ostringstream oss;
 	a.dump_hierarchical_name(oss);
 	const string& n(oss.str());
+	// TODO: configurable warnings
 #if 0
-	if (!any_fanout_dn)
+	if (!any_fanout_dn) {
 		cerr << "Warning: node " << n <<
 			" does not fan-out to any pull-down rules." << endl;
-	if (!any_fanout_up)
+		++ret.warnings;
+	}
+	if (!any_fanout_up) {
 		cerr << "Warning: node " << n <<
 			" does not fan-out to any pull-up rules." << endl;
-	if (!any_fanin_dn)
+		++ret.warnings;
+	}
+	if (!any_fanin_dn) {
 		cerr << "Warning: node " << n <<
 			" has no pull-up fan-ins." << endl;
-	if (!any_fanin_up)
+		++ret.warnings;
+	}
+	if (!any_fanin_up) {
 		cerr << "Warning: node " << n <<
 			" has no pull-down fan-ins." << endl;
+		++ret.warnings;
+	}
 #else
 #if 0
 	if (dead) {
 		cerr << "Warning: unused node " << n <<
 			" has neither PRS fanin nor fanout." << endl;
+		++ret.warnings;
 	}
 #endif
 	if (floating) {
 		cerr << "Warning: node " << n <<
 			" has no pull-up nor pull-dn PRS fanin." << endl;
+		++ret.warnings;
 	}
 	if (asym_fanin) {
 		if (any_fanin_dn) {
 			cerr << "Warning: node " << n <<
 				" has no PRS pull-up fanin." << endl;
+			++ret.warnings;
 		} else {
 			cerr << "Warning: node " << n <<
 				" has no PRS pull-dn fanin." << endl;
+			++ret.warnings;
 		}
 	}
 #endif
@@ -117,7 +131,7 @@ if (warn) {
 }
 }
 #endif
-	return good_bool(true);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -388,21 +402,24 @@ channel_connect_policy::initialize_actual_direction(
 		to promote warning to error.  
  */
 template <class AliasType>
-good_bool
+error_count
 channel_connect_policy::__check_connection(const AliasType& a) {
 	typedef	typename AliasType::traits_type		traits_type;
+	error_count ret;
 	const connection_flags_type f = a.direction_flags;
 	if (!(f & CONNECTED_TO_ANY_PRODUCER)) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a producer." << endl;
+		++ret.warnings;
 	}
 	if (!(f & CONNECTED_TO_ANY_CONSUMER)) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a consumer." << endl;
+		++ret.warnings;
 	}
-	return good_bool(true);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -6,6 +6,7 @@ Warning: node lut<>::ad[1].d[0] has no pull-up nor pull-dn PRS fanin.
 Warning: node lut<>::ad[1].d[1] has no pull-up nor pull-dn PRS fanin.
 Warning: node lut<>::ad[1].d[2] has no pull-up nor pull-dn PRS fanin.
 Warning: node lut<>::ad[1].d[3] has no pull-up nor pull-dn PRS fanin.
+Warnings found (8) while creating complete type lut<>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

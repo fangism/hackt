@@ -5,6 +5,12 @@
 
 2010-04-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-91:
+	  Middle-end added warning summaries to aggregate and report 
+		warnings per process type, including a count.
+	  Updated existing test cases.
+
+
 	* HACKT-00-01-04-main-00-83-90:
 	  Front-end compiler implemented cumulative warning counts, 
 		and print diagnostic summary at end of each file/definition

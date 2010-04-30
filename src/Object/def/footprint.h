@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.34 2010/04/30 18:41:51 fang Exp $
+	$Id: footprint.h,v 1.35 2010/04/30 23:58:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -304,6 +304,9 @@ public:
 	size_t
 	map_size(void) const { return instance_collection_map.size(); }
 
+	size_t
+	warnings(void) const { return warning_count; }
+
 	bool
 	is_created(void) const { return created; }
 
@@ -517,7 +520,7 @@ public:
 		const cflat_options&) const;
 
 	// eventually pass parameter for warning control 
-	good_bool
+	error_count
 	connection_diagnostics(bool) const;
 
 	void

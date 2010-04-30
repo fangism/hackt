@@ -10,5 +10,6 @@ xfoo !GND !Vdd foo.x foo.y inv<>
 
 * --- WARNINGS ---
 Warning: node top<>::foo.x has no pull-up nor pull-dn PRS fanin.
+Warnings found (1) while creating complete type top<>.
 Warning: node foo.x is used but not driven!
 ... in subcircuit top<>

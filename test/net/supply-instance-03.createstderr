@@ -7,6 +7,7 @@ Warning: node foo<>::e.x has no pull-up nor pull-dn PRS fanin.
 Warning: node foo<>::f.x has no pull-up nor pull-dn PRS fanin.
 Warning: node foo<>::f2.x has no pull-up nor pull-dn PRS fanin.
 Warning: node foo<>::g.x has no pull-up nor pull-dn PRS fanin.
+Warnings found (9) while creating complete type foo<>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

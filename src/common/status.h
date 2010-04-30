@@ -2,13 +2,16 @@
 	\file "common/status.h"
 	Error condition/status and policy enumeration.
 	This could eventually replace "util/boolean_types.h"
-	$Id: status.h,v 1.1 2009/10/27 18:21:48 fang Exp $
+	$Id: status.h,v 1.2 2010/04/30 23:58:49 fang Exp $
  */
 
 #ifndef	__HAC_COMMON_STATUS_H__
 #define	__HAC_COMMON_STATUS_H__
 
+#include "util/size_t.h"
+
 namespace HAC {
+//=============================================================================
 /**
 	Used for both setting error-handling policy and returning error value.
  */
@@ -29,6 +32,40 @@ enum error_status {
 };
 
 typedef	error_status			error_policy;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just a pair of error counters.
+	Could just be std::pair, but this is clearer.
+	Common operations: addition
+ */
+struct error_count {
+	size_t				warnings;
+	size_t				errors;
+
+	error_count() : warnings(0), errors(0) { }
+
+	// adding constructor
+	error_count(const error_count& l, const error_count& r) :
+		warnings(l.warnings + r.warnings), 
+		errors(l.errors + r.errors) { }
+
+	// default copy-ctor
+	// default POD dtor
+
+	error_count&
+	operator += (const error_count& r) {
+		warnings += r.warnings;
+		errors += r.errors;
+		return *this;
+	}
+
+	error_count
+	operator + (const error_count& r) const {
+		return error_count(*this, r);
+	}
+
+};	// end struct error_count
 
 //=============================================================================
 }	// end namespace HAC

@@ -1,4 +1,5 @@
 Warning: node wire_copy_e1of1<>::re has no pull-up nor pull-dn PRS fanin.
+Warnings found (1) while creating complete type wire_copy_e1of1<>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

@@ -1,5 +1,7 @@
 Warning: node foo1<>::a has no PRS pull-up fanin.
+Warnings found (1) while creating complete type foo1<>.
 Warning: node foo2<>::a has no PRS pull-dn fanin.
+Warnings found (1) while creating complete type foo2<>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

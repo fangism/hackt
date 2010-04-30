@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.29 2010/04/07 00:12:39 fang Exp $
+	$Id: instance_alias_info.h,v 1.30 2010/04/30 23:58:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -13,6 +13,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
+#include "common/status.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/internal_aliases_policy_fwd.h"
@@ -243,7 +244,7 @@ public:
 	void
 	import_properties(const this_type&);
 
-	good_bool
+	error_count
 	check_connection(void) const;
 
 	void

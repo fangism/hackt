@@ -1,4 +1,5 @@
 WARNING: channel bar<>::X lacks connection to a producer.
+Warnings found (1) while creating complete type bar<>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

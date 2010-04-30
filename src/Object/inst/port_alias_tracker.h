@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.21 2010/04/07 00:12:44 fang Exp $
+	$Id: port_alias_tracker.h,v 1.22 2010/04/30 23:58:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -16,6 +16,7 @@
 #include "util/persistent_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/boolean_types.h"
+#include "common/status.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/devel_switches.h"
@@ -230,7 +231,7 @@ protected:
 		instance_pool<state_instance<Tag> >&);
 
 	// only applicable to channels, really
-	good_bool
+	error_count
 	check_connections(void) const;
 
 	void
@@ -348,10 +349,10 @@ public:
 	void
 	shorten_canonical_aliases(footprint&);
 
-	good_bool
+	error_count
 	check_bool_connections(void) const;
 
-	good_bool
+	error_count
 	check_channel_connections(void) const;
 
 	void

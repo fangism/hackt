@@ -1,4 +1,5 @@
 Warning: node aftershave<>::a has no pull-up nor pull-dn PRS fanin.
+Warnings found (1) while creating complete type aftershave<>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

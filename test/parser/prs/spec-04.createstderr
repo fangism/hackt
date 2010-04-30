@@ -1,5 +1,6 @@
 Warning: node testing<>::p has no pull-up nor pull-dn PRS fanin.
 Warning: node testing<>::q has no pull-up nor pull-dn PRS fanin.
+Warnings found (2) while creating complete type testing<>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

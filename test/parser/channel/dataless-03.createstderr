@@ -2,12 +2,14 @@ WARNING: channel boring<>::in lacks connection to a consumer.
 WARNING: channel boring<>::out lacks connection to a producer.
 WARNING: channel boring<>::peek lacks connection to a producer.
 WARNING: channel boring<>::peek lacks connection to a consumer.
+Warnings found (4) while creating complete type boring<>.
 WARNING: channel work.in lacks connection to a producer.
 WARNING: channel work.in lacks connection to a consumer.
 WARNING: channel work.out lacks connection to a producer.
 WARNING: channel work.out lacks connection to a consumer.
 WARNING: channel work.peek lacks connection to a producer.
 WARNING: channel work.peek lacks connection to a consumer.
+Warnings found (6) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

@@ -1,5 +1,6 @@
 Warning: node empty<>::foo.O[0].e has no pull-up nor pull-dn PRS fanin.
 Warning: node empty<>::foo.O[1].e has no pull-up nor pull-dn PRS fanin.
+Warnings found (2) while creating complete type empty<>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

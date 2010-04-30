@@ -5,6 +5,7 @@ Warning: node foo<>::_p_.s has no pull-up nor pull-dn PRS fanin.
 Warning: node foo<>::_np_.g has no pull-up nor pull-dn PRS fanin.
 Warning: node foo<>::_np_._g has no pull-up nor pull-dn PRS fanin.
 Warning: node foo<>::_np_.s has no pull-up nor pull-dn PRS fanin.
+Warnings found (7) while creating complete type foo<>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

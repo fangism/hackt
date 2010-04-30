@@ -2,6 +2,7 @@ WARNING: channel B.L[0] lacks connection to a producer.
 WARNING: channel B.L[1] lacks connection to a producer.
 WARNING: channel B.R[0] lacks connection to a consumer.
 WARNING: channel B.R[1] lacks connection to a consumer.
+Warnings found (4) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

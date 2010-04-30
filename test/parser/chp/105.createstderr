@@ -4,6 +4,7 @@ WARNING: channel bar.C lacks connection to a consumer.
 WARNING: channel bar.D lacks connection to a consumer.
 WARNING: channel bar.E lacks connection to a consumer.
 WARNING: channel bar.F lacks connection to a consumer.
+Warnings found (6) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

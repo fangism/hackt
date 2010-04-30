@@ -2,10 +2,12 @@ WARNING: channel boring<>::B lacks connection to a producer.
 WARNING: channel boring<>::B lacks connection to a consumer.
 WARNING: channel boring<>::I lacks connection to a producer.
 WARNING: channel boring<>::I lacks connection to a consumer.
+Warnings found (4) while creating complete type boring<>.
 WARNING: channel lecture.B lacks connection to a producer.
 WARNING: channel lecture.B lacks connection to a consumer.
 WARNING: channel lecture.I lacks connection to a producer.
 WARNING: channel lecture.I lacks connection to a consumer.
+Warnings found (4) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

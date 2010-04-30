@@ -1,6 +1,8 @@
 WARNING: channel hanging<>::x lacks connection to a consumer.
+Warnings found (1) while creating complete type hanging<>.
 WARNING: channel folder.x lacks connection to a producer.
 WARNING: channel folder.x lacks connection to a consumer.
+Warnings found (2) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

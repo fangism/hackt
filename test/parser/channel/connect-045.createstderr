@@ -4,6 +4,7 @@ WARNING: channel X[0] lacks connection to a producer.
 WARNING: channel X[1] lacks connection to a producer.
 WARNING: channel X[2] lacks connection to a producer.
 WARNING: channel X[3] lacks connection to a producer.
+Warnings found (6) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

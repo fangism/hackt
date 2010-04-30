@@ -19,6 +19,7 @@ Warning: node div<15, 8>::y[11] has no PRS pull-up fanin.
 Warning: node div<15, 8>::y[12] has no PRS pull-up fanin.
 Warning: node div<15, 8>::y[13] has no PRS pull-up fanin.
 Warning: node div<15, 8>::y[14] has no PRS pull-up fanin.
+Warnings found (21) while creating complete type div<15, 8>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

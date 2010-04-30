@@ -2,6 +2,7 @@ WARNING: channel Z.A lacks connection to a producer.
 WARNING: channel Z.B lacks connection to a producer.
 WARNING: channel Z.G lacks connection to a producer.
 WARNING: channel Z.Z lacks connection to a consumer.
+Warnings found (4) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

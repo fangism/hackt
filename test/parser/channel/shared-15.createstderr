@@ -1,4 +1,5 @@
 WARNING: channel source<>::X lacks connection to a consumer.
+Warnings found (1) while creating complete type source<>.
 Error: cannot alias two non-sharing producers of type channel.
 	got: S.X
 	and: T.X

@@ -1,4 +1,5 @@
 WARNING: channel Z.S lacks connection to a consumer.
+Warnings found (1) while creating complete type <top-level>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
