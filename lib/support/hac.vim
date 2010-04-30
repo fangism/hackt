@@ -7,6 +7,8 @@
 " A bunch of useful C keywords
 syn keyword	hacImport  	import
 syn match	hacImport  	"#FILE"
+syn match	hacImport  	"%{"
+syn match	hacImport  	"%}"
 syn keyword	cStatement  	template export open 
 " syn keyword	cLabel		case default
 syn keyword	cLabel		defproc deftype defchan namespace

@@ -1,5 +1,6 @@
 // "import-017.hac"
 // testing proper token deallocation upon import error
 
+
 Expecting "file" after import.
 From: "import-017.hac":4:

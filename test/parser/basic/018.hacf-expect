@@ -5,24 +5,22 @@
 // a non-import?
 // consider making parser re-entrant? (bye-bye yacc...)
 
-#FILE "001.hac" {
+#FILE "001.hac" %{
 /* "001.hac" this should pass */
 
 int N;
 
 
-}	// #FILE "001.hac"
-
+%}	// #FILE "001.hac"
 
 bool Q;
 
-#FILE "003.hac" {
+#FILE "003.hac" %{
 // "003.hac" this should pass
 
 namespace rajit {
 int parser;
 }
 
-}	// #FILE "003.hac"
-
+%}	// #FILE "003.hac"
 

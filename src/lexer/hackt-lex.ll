@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.30 2009/10/02 01:57:24 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.31 2010/04/30 00:21:44 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -394,6 +394,8 @@ ASSIGN		":="
 BEGINLOOP	"*["
 BEGINPROB	"%["
 ENDPROB		"]%"
+BEGINFILE	"%{"
+ENDFILE		"%}"
 THICKBAR	"[]"
 SCOPE		"::"
 DEFINEOP	"<:"
@@ -498,6 +500,8 @@ EMBEDFILE	^#FILE
 {BEGINLOOP}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return BEGINLOOP; }
 {BEGINPROB}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return BEGINPROB; }
 {ENDPROB}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return ENDPROB; }
+{BEGINFILE}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return BEGINFILE; }
+{ENDFILE}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return ENDFILE; }
 {THICKBAR}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return THICKBAR; }
 {SCOPE}		{ NODE_POSITION_UPDATE(*hackt_lval, foo); return SCOPE; }
 {RANGE}		{ NODE_POSITION_UPDATE(*hackt_lval, foo); return RANGE; }

@@ -1,0 +1,15 @@
+// "file-expand-05.hac"
+// line 2: expect-fail
+#FILE "wrapper.hac" %{
+#FILE "bogus.hac" %{		// line 1
+
+bool x;
+
+%} // #FILE "bogus.hac"
+#FILE "bogus2.hac" %{		// line 2
+bool y;
+%} // #FILE "bogus2.hac"
+// line 4
+bool error here;        // line 4 -- error should point here
+
+%} // #FILE "wrapper.hac"

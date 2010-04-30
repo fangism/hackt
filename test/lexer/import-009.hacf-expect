@@ -1,7 +1,7 @@
 // "import-009.hac"
 // including file that includes non-existent file
 
-#FILE "import-007.hac" {
+#FILE "import-007.hac" %{
 // "import-007.hac"
 
 At: "import-009.hac":4:

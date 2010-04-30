@@ -1,9 +1,8 @@
 // "import-022.hac"
 
 // there is extra white space at the end of the next line
-#FILE "empty.hac" {
+#FILE "empty.hac" %{
 // "empty.hac" -- empty
 
-}	// #FILE "empty.hac"
-    
+%}	// #FILE "empty.hac"    
 

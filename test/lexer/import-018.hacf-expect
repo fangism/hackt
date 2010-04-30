@@ -1,16 +1,15 @@
 // "import-018.hac"
 // testing proper token deallocation upon import error
 
-#FILE "import-000.hac" {
+#FILE "import-000.hac" %{
 // "import-000.hac"
 // should fail, importing a file with errors
 // testing reporting
 
-#FILE "badid-000.hac" {
+#FILE "badid-000.hac" %{
 1bad_identifier
 
-}	// #FILE "badid-000.hac"
-
-}	// #FILE "import-000.hac"
+%}	// #FILE "badid-000.hac"
+%}	// #FILE "import-000.hac"
 Expecting "file" after import.
 From: "import-018.hac":4:

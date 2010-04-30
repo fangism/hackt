@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.53 2010/04/27 18:33:21 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.54 2010/04/30 00:21:46 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -469,6 +469,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_node_position>	SCOPE RANGE
 %token	<_node_position>	THICKBAR
 %token	<_node_position>	BEGINLOOP BEGINPROB ENDPROB
+%token	<_node_position>	BEGINFILE ENDFILE
 %token	<_node_position>	DEFINEOP
 
 /* _token_string */
@@ -831,7 +832,7 @@ import_item
 	This really shouldn't be used directly, but only what is produced
 	by the flattener, hacpp.
 ***/
-	| EMBEDFILE '{' embedded_module '}'
+	| EMBEDFILE BEGINFILE embedded_module ENDFILE
 	{
 		$$ = $1;
 		DELETE_TOKEN($2);
@@ -841,6 +842,7 @@ import_item
 		// fake imported file.  
 		INVARIANT(!hackt_embedded_file_stack.empty());
 		hackt_embedded_file_stack.pop();
+		++hackt_parse_file_manager.current_position().line;
 	}
 	;
 

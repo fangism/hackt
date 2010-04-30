@@ -1,0 +1,5 @@
+// "bad-ref-01.hac"
+// expect-fail, unexpected EOF
+
+foo.bar.
+

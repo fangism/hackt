@@ -1,9 +1,8 @@
 // "015.hac"
 // should pass, including valid empty file.  
 
-#FILE "000.hac" {
+#FILE "000.hac" %{
 // "000.hac" empty file should pass
 
-}	// #FILE "000.hac"
-
+%}	// #FILE "000.hac"
 

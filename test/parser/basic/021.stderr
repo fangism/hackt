@@ -24,6 +24,7 @@ acceptable tokens are:
 	INT (shift)
 	STRING (shift)
 	SCOPE (shift)
+	ENDFILE (reduce)
 	NAMESPACE (shift)
 	OPEN (shift)
 	CHP_LANG (shift)

@@ -1,29 +1,24 @@
 // placeholder for test.hac
 
-#FILE "import-015-c.hac" {
+#FILE "import-015-c.hac" %{
 //
 // channel.hac placeholder.
-}	// #FILE "import-015-c.hac"
-
-#FILE "import-015-b.hac" {
+%}	// #FILE "import-015-c.hac"
+#FILE "import-015-b.hac" %{
 // buffers.hac placeholder
 
 
-#FILE "import-015-p.hac" {
+#FILE "import-015-p.hac" %{
 // programming.hac placeholder
 
 
-}	// #FILE "import-015-p.hac"
-
-#FILE "import-015-g.hac" {
+%}	// #FILE "import-015-p.hac"
+#FILE "import-015-g.hac" %{
 // globals.hac placehodler
-}	// #FILE "import-015-g.hac"
-
-}	// #FILE "import-015-b.hac"
-
-#FILE "import-015-e.hac" {
+%}	// #FILE "import-015-g.hac"
+%}	// #FILE "import-015-b.hac"
+#FILE "import-015-e.hac" %{
 
 
-}	// #FILE "import-015-e.hac"
-
+%}	// #FILE "import-015-e.hac"
 

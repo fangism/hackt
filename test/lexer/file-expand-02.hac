@@ -1,0 +1,13 @@
+// "file-expand-02.hac"
+// line 2: expect-fail
+// line 3: and counting
+#FILE "bogus.hac" %{	// from import "bogus.hac";	// line 4
+#FILE "bogus2.hac" %{	// from import "bogus.hac";	// line 4
+
+bool x;
+
+%} // #FILE "bogus2.hac"
+%} // #FILE "bogus.hac"
+// line 5
+bool error here;        // line 6 -- error should point here
+

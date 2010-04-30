@@ -5,6 +5,15 @@
 
 2010-04-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-83-89:
+	  Updated lexer/parser handling of embedded #FILE directives to 
+		properly adjust line numbers.  
+	  Changed file-wrapper markers to %{ and %} (new) tokens.  
+	  Added and updated test cases.  
+
+
+2010-04-28	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-83-88:
 	  hacknet: added type-name collision checking, post-mangling, 
 		using the case-collision policy to conditionally case-slam.

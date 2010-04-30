@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2008/09/26 17:32:58 fang Exp $
+#	$Id: Makefile.am,v 1.25 2010/04/30 00:21:47 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -29,7 +29,11 @@ HACKT_PARSE_TEST_FAILURES = \
 	import-020 import-021 \
 	line-number-01 line-number-02 line-number-03 \
 	bin-02 \
-	quad-02
+	quad-02 \
+	bad-ref-01 \
+	flat-import-03 \
+	file-expand-01 file-expand-02 file-expand-03 file-expand-04 \
+	file-expand-05
 
 # these tests don't work when building in the srcdir
 if SRCDIR_BUILD
@@ -138,7 +142,7 @@ DISTHOOK_CLEANFILES += $(INCLUDE_FIRST_TEST_FILES)
 
 ###############################################################################
 # additional sources included by other test cases
-srcdir_EXTRA_DIST += empty.hac \
+srcdir_EXTRA_DIST += empty.hac bogus.hac \
 	import-014-a.hac import-014-b.hac \
 	import-015-b.hac import-015-c.hac import-015-e.hac \
 	import-015-g.hac import-015-p.hac

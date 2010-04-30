@@ -1,0 +1,7 @@
+// "flat-import-03.hac"
+// line 2: expect-fail
+// line 3: and counting
+import "bogus.hac";
+// line 5
+bool error here;        // line 6 -- error should point here
+

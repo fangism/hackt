@@ -1,15 +1,15 @@
-#FILE "import-003.hac" {
+#FILE "import-003.hac" %{
 // "import-003.hac"
 // should die on bad included file
 
 
 
 
-#FILE "import-001.hac" {
+#FILE "import-001.hac" %{
 // "import-001.hac"
 // should die on bad included file
 
-#FILE "comment-000.hac" {
+#FILE "comment-000.hac" %{
 // "comment-000.hac"
 // should die, unterminated comment
 

@@ -1,14 +1,13 @@
 // "016.hac"
 // copy-modified from "020.hac"
 
-#FILE "001.hac" {
+#FILE "001.hac" %{
 /* "001.hac" this should pass */
 
 int N;
 
 
-}	// #FILE "001.hac"
-
+%}	// #FILE "001.hac"
 
 bool bool;	// intentional error
 

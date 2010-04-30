@@ -4,7 +4,7 @@
 // purpose: testing bug fix in lexer's import mechanism
 //	used to assert-fail during file-stack dump
 // P.S: point of failure had to be changed because we added macro support
-#FILE "import-014-a.hac" {
+#FILE "import-014-a.hac" %{
 // "import-014-a.hac"
 // contributed by: Clint Kelly
 // reduced by: David Fang
@@ -28,9 +28,8 @@ defproc e1of2 (bool d[2]; bool t,f,e)
 }
 
 
-}	// #FILE "import-014-a.hac"
-
-#FILE "import-014-b.hac" {
+%}	// #FILE "import-014-a.hac"
+#FILE "import-014-b.hac" %{
 /**
 	"import-014-b.hac"
 	contributed by: Clint Kelly
@@ -49,8 +48,7 @@ defproc srambit (pbit pb; ch1of2 b, w)
 	}
 }
 
-}	// #FILE "import-014-b.hac"
-
+%}	// #FILE "import-014-b.hac"
 
 defproc problem (e1of2 Din; e1of2 Dout; pbit pb)
 {

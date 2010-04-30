@@ -1,5 +1,11 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.62 2010/04/02 22:17:38 fang Exp $
+#	$Id: ChangeLog,v 1.63 2010/04/30 00:21:40 fang Exp $
+
+2010-04-29	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-89:
+	  support/hac.vim: updated to reflect new embedded #FILE
+		delimited tokens %{ and %}
 
 2010-01-29	David Fang	<fangism@users.sourceforge.net>
 

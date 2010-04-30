@@ -2,8 +2,7 @@
 // should fail, importing a file with errors
 // testing reporting
 
-#FILE "badid-000.hac" {
+#FILE "badid-000.hac" %{
 1bad_identifier
 
-}	// #FILE "badid-000.hac"
-
+%}	// #FILE "badid-000.hac"

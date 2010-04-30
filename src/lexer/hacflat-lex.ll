@@ -3,7 +3,7 @@
  *	vi: ft=lex
  *	Will flattens a HAC source file into a single file by dumping
  *	imported files (visit-once only).  
- *	$Id: hacflat-lex.ll,v 1.8 2008/03/21 00:20:16 fang Exp $
+ *	$Id: hacflat-lex.ll,v 1.9 2010/04/30 00:21:43 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -62,7 +62,7 @@ namespace lexer {
 // global variable (flag)
 
 /**
-	Set to true to print with "#FILE { ... } // #FILE" 
+	Set to true to print with "#FILE %{ ... %} // #FILE" 
 	hierarchy wrappers.
 	Set to false to suppress.  
 	NOTE: The caller is responsible for properly initializing this!
@@ -307,7 +307,7 @@ IMPORT		"import"
 	{
 	const int expect_string = __hacflat_lex(hacflat_lval, foo);
 	if (expect_string != HF_STRING) {
-		cerr << "Expecting \"file\" after import." << endl;
+		cerr << "\nExpecting \"file\" after import." << endl;
 		const string& pstr(hackt_parse_file_manager.top_FILE_name());
 		cerr << "From: \"" << pstr << "\":" <<
 			CURRENT.line << ':' << endl;
@@ -320,7 +320,7 @@ IMPORT		"import"
 	{
 	const int expect_semi = __hacflat_lex(hacflat_lval, foo);
 	if (expect_semi != ';') {
-		cerr << "Expecting \';\' after import \"...\"." << endl;
+		cerr << "\nExpecting \';\' after import \"...\"." << endl;
 		// cerr << "got: " << expect_semi << endl;
 		const string& pstr(hackt_parse_file_manager.top_FILE_name());
 		cerr << "From: \"" << pstr << "\":" <<
@@ -345,13 +345,13 @@ IMPORT		"import"
 		const string& pstr(hackt_parse_file_manager.top_FILE_name());
 		if (CURRENT.col != 1) { cout << "\n"; }
 		// wrap file's contents in a #FILE embedding directive:
-		// EMBEDFILE STRING '{' module '}'
+		// EMBEDFILE STRING BEGINFILE embedded_module ENDFILE
 		// TODO: maintain consistency with
 		//	"$(top_srcdir)/test/vpath_file_filter.awk"
 	if (!flatten_with_file_wrappers) {
 		cout << "// ";		// just comment out
 	}
-		cout << "#FILE \"" << pstr << "\" {" << endl;
+		cout << "#FILE \"" << pstr << "\" %{" << endl;
 		// cout << "// enter: \"" << pstr << "\"" << endl;
 		if (!__flatten_source(ym.get_file()).good) {
 			// presumably already have error message from callee
@@ -364,7 +364,8 @@ IMPORT		"import"
 	if (!flatten_with_file_wrappers) {
 		cout << "// ";		// just comment out
 	}
-		cout << "}\t// #FILE \"" << pstr << "\"" << endl;
+		cout << "%}\t// #FILE \"" << pstr << "\"";	// << endl;
+		// the newline at the end of the import is already preserved
 		// cout << "// leave: \"" << pstr << "\"" << endl;
 		return HF_IMPORT;
 	}

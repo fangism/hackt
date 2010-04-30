@@ -1,7 +1,7 @@
 // "import-002.hac"
 // should die on bad included file
 
-#FILE "string-001.hac" {
+#FILE "string-001.hac" %{
 // "string-001.hac"
 // should die on non-terminated string
 

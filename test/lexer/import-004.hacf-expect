@@ -1,8 +1,7 @@
 // "import-004.hac"
 // imports valid empty file
-#FILE "empty.hac" {
+#FILE "empty.hac" %{
 // "empty.hac" -- empty
 
-}	// #FILE "empty.hac"
-
+%}	// #FILE "empty.hac"
 

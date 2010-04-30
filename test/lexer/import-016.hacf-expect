@@ -1,5 +1,6 @@
 // "import-016.hac"
 // testing proper token deallocation upon import error
 
+
 Expecting ';' after import "...".
 From: "import-016.hac":5:

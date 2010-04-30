@@ -1,0 +1,22 @@
+At: "file-expand-03.hac":7:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(imported-root-list) [4:1--5:20]
+#STATE#	(type-ref) [7:1..4]
+#STATE#	identifier: error [7:6..10]
+#STATE#	identifier: here [7:12..15]
+in state #STATE#, possible rules are:
+	instance_id_item : ID . optional_template_arguments_in_angles sparse_range_list  (#RULE#)
+	instance_id_item : ID . optional_template_arguments_in_angles  (#RULE#)
+	instance_id_item : ID . optional_template_arguments_in_angles extended_connection_actuals_list  (#RULE#)
+	instance_id_item : ID . optional_template_arguments_in_angles '=' alias_list  (#RULE#)
+	optional_template_arguments_in_angles : .  (#RULE#)
+acceptable tokens are: 
+	'$' (reduce)
+	'(' (reduce)
+	',' (reduce)
+	';' (reduce)
+	'<' (shift)
+	'=' (reduce)
+	'[' (reduce)
