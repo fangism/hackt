@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.41 2010/04/27 18:33:12 fang Exp $
+	$Id: PRS.cc,v 1.42 2010/04/30 18:41:39 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -1151,6 +1151,7 @@ if (params->attrs) {
 if (attribs) {
 	cerr << "WARNING: attributes on PRS macros are tentatively ignored.  "
 		<< where(*attribs) << endl;
+	++c.warning_count;
 	// FINISH_ME(Fang);
 }
 	c.get_current_prs_body().append_rule(ret);

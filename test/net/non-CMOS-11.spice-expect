@@ -10,3 +10,4 @@ xbar !GND !Vdd bar.en bar.a bar.b bar._o foo<>
 
 * --- WARNINGS ---
 * Warning : precharge is not fully-restoring.
+* Warnings found in producing netlist for foo<>.

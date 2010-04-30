@@ -1,2 +1,3 @@
 WARNING: use '&' for bitwise-AND on ints.  [12:24]
 WARNING: use '|' for bitwise-OR on ints.  [12:36]
+Warning: found 2 warning(s) in definition "foo"

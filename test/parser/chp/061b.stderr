@@ -1,3 +1,4 @@
 WARNING: Use '&&' for logical-AND on bools.  [9:8]
 WARNING: Use '&&' for logical-AND on bools.  [10:8]
 WARNING: Use '&&' for logical-AND on bools.  [10:13]
+Warning: found 3 warning(s) in definition "foo"

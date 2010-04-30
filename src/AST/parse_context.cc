@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.26 2009/07/02 23:22:43 fang Exp $
+ 	$Id: parse_context.cc,v 1.27 2010/04/30 18:41:46 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -77,6 +77,7 @@ using entity::expr_dump_context;
 context::context(module& m, const parse_options& o) :
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
+		warning_count(0),
 		namespace_stack(), 
 		open_definition_stack(), 
 		current_prototype(NULL), 
@@ -1074,7 +1075,7 @@ context::dump_file_stack(ostream& o) const {
  */
 string
 context::auto_indent(void) const {
-	long i = 0;
+	size_t i = 0;
 	string ret = "\n";
 	for (i=0; i < indent; i++)
 		ret += "| ";

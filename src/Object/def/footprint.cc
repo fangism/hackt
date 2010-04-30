@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.51 2010/04/14 22:49:10 fang Exp $
+	$Id: footprint.cc,v 1.52 2010/04/30 18:41:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -251,6 +251,7 @@ footprint::footprint() :
 	value_footprint_base<preal_tag>(), 
 	prs_footprint(new PRS::footprint), 
 	spec_footprint(new SPEC::footprint),
+	warning_count(0), 
 	lock_state(false) { }
 // the other members, don't care, just placeholder ctor before loading object
 
@@ -289,6 +290,10 @@ footprint::__reconstruct(const const_param_expr_list& p,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The actual initializating constructor.
+	Called in-place?
+ */
 footprint::footprint(const const_param_expr_list& p,
 	const definition_base& d) :
 	footprint_base<process_tag>(), 
@@ -314,6 +319,7 @@ footprint::footprint(const const_param_expr_list& p,
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
 	spec_footprint(new SPEC::footprint), 
+	warning_count(0),
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
 	NEVER_NULL(prs_footprint);
@@ -749,10 +755,15 @@ try {
 #if ENABLE_STACKTRACE
 	dump_type(STACKTRACE_STREAM << "*** DONE CREATING: ") << endl;
 #endif
+	if (warning_count) {
+		dump_type(cerr << "Warnings found (" << warning_count <<
+			") while creating complete type ") << "." << endl;
+	}
 	return good_bool(true);
 } catch (...) {
 	// expect recursion errors to trigger this
-	cerr << "Error creating footprint of complete type." << endl;
+	dump_type(cerr << "Error creating footprint of complete type ")
+		<< "." << endl;
 	return good_bool(false);
 }
 }
@@ -1359,8 +1370,15 @@ footprint::expand_unique_subinstances(void) {
  */
 good_bool
 footprint::connection_diagnostics(const bool top) const {
-	return good_bool(scope_aliases.check_channel_connections().good &&
-		(top || scope_aliases.check_bool_connections().good));
+	const bool cc = scope_aliases.check_channel_connections().good;
+	if (!cc) { ++warning_count; }
+	if (!top) {
+		const bool cb = scope_aliases.check_bool_connections().good;
+		if (!cb) { ++warning_count; }
+		return good_bool(cc && cb);
+	} else {
+		return good_bool(cc);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

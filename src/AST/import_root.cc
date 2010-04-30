@@ -1,6 +1,6 @@
 /**
 	\file "AST/import_root.cc"
-	$Id: import_root.cc,v 1.8 2007/08/15 01:08:16 fang Exp $
+	$Id: import_root.cc,v 1.9 2010/04/30 18:41:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -17,6 +17,7 @@
 #include "common/TODO.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/value_saver.h"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::imported_root, "(imported-root)")
@@ -117,7 +118,16 @@ imported_root::check_build(context& c) const {
 		NEVER_NULL(root);
 		const context::file_stack_frame _fsf(c, name);
 		try {
-			return root->check_build(c);
+			const util::value_saver<size_t> _wc(c.warning_count, 0);
+			const never_ptr<const object> ret(root->check_build(c));
+			if (c.warning_count) {
+			cerr << "Warning: found " << c.warning_count <<
+				" warning(s) in file \"" << name
+				<< "\"" << endl;
+			}
+			// TODO: bother with cumulative warning count
+			// from sub-files?
+			return ret;
 		} catch (...) {
 			cerr << "From: " << '\"' << name << '\"' << endl;
 			throw;

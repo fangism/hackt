@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.27 2010/04/08 23:04:13 fang Exp $
+	$Id: CHP.cc,v 1.28 2010/04/30 18:41:36 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -410,6 +410,7 @@ body::check_build(context& c) const {
 		cerr <<
 		"WARNING: Ignoring CHP inside loops/conditionals for now."
 			<< where(*this) << endl;
+		++c.warning_count;
 		return never_ptr<const object>(NULL);
 	}
 #endif

@@ -6,3 +6,4 @@ My:dn:1 @_int x y !GND nch W=5u L=2u
 * --- WARNINGS ---
 * Warning: in subcircuit <top-level>:
 * GND supply of internal node differs between definition and use: @_int
+* Warnings found in producing netlist for <top-level>.

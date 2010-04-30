@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.13 2009/10/27 18:21:42 fang Exp $
+	$Id: definition.cc,v 1.14 2010/04/30 18:41:41 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -45,6 +45,7 @@
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/value_saver.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -285,6 +286,9 @@ user_data_type_def::rightmost(void) const {
 never_ptr<const object>
 user_data_type_def::check_build(context& c) const {
 	STACKTRACE("user_data_type_def::check_build()");
+	size_t local_warnings = 0;
+{
+	const util::value_saver<size_t> _wc(c.warning_count, 0);
 	const user_chan_type_signature::return_type
 		o(check_signature(c));
 	if (!o) {
@@ -319,6 +323,13 @@ if (p != OPTION_IGNORE) {
 	}
 	}
 }
+	if (c.warning_count) {
+		local_warnings = c.warning_count;
+		cerr << "Warning: found " << c.warning_count <<
+			" warning(s) in definition \"" << *id << "\"" << endl;
+	}
+}
+	c.warning_count += local_warnings;	// accumulate
 	return c.top_namespace();
 }
 
@@ -621,6 +632,9 @@ user_chan_type_def::rightmost(void) const {
 never_ptr<const object>
 user_chan_type_def::check_build(context& c) const {
 	STACKTRACE("user_chan_type_def::check_build()");
+	size_t local_warnings = 0;
+{
+	const util::value_saver<size_t> _wc(c.warning_count, 0);
 	user_chan_type_signature::return_type
 		o(check_signature(c));
 	if (!o) {
@@ -656,6 +670,13 @@ if (p != OPTION_IGNORE) {
 	}
 	}
 }
+	if (c.warning_count) {
+		local_warnings = c.warning_count;
+		cerr << "Warning: found " << c.warning_count <<
+			" warning(s) in definition \"" << *id << "\"" << endl;
+	}
+}
+	c.warning_count += local_warnings;	// accumulate
 	// nothing better to do
 	return c.top_namespace();
 }
@@ -837,6 +858,9 @@ process_def::rightmost(void) const {
 never_ptr<const object>
 process_def::check_build(context& c) const {
 	STACKTRACE("process_def::check_build()");
+	size_t local_warnings = 0;
+{
+	const util::value_saver<size_t> _wc(c.warning_count, 0);
 	process_signature::return_type
 		o(check_signature(c));
 	if (!o) {
@@ -874,6 +898,13 @@ if (p != OPTION_IGNORE) {
 	}
 	}
 }
+	if (c.warning_count) {
+		local_warnings = c.warning_count;
+		cerr << "Warning: found " << c.warning_count <<
+			" warning(s) in definition \"" << *id << "\"" << endl;
+	}
+}
+	c.warning_count += local_warnings;	// accumulate
 	// nothing better to do
 	return c.top_namespace();
 }

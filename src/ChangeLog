@@ -3,7 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2010-04-28	David Fang		<fangism@users.sourceforge.net>
+2010-04-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-90:
+	  Front-end compiler implemented cumulative warning counts, 
+		and print diagnostic summary at end of each file/definition
+		with non-zero warnings.
+	  hacknet: accumulate a warning count and print warning summary
+		for subcircuits with non-zero warnings (citing type).
+	  Expect-fail and expect-warn test cases updated.
+	  TODO: in general, return diagnostic counts instead of bools, 
+		especially in connectivity checking.
+
+
+2010-04-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-89:
 	  Updated lexer/parser handling of embedded #FILE directives to 

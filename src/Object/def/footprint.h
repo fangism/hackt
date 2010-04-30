@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.33 2010/04/07 00:12:35 fang Exp $
+	$Id: footprint.h,v 1.34 2010/04/30 18:41:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -247,6 +247,10 @@ private:
 		Privatized implementation.  
 	 */
 	excl_ptr<SPEC::footprint>		spec_footprint;
+	/**
+		Only used during create-phase, count of local warnings.
+	 */
+	mutable size_t				warning_count;
 	/**
 		Lock to detect recursion and cyclic dependencies.  
 	 */

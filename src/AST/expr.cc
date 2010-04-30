@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.39 2010/04/08 23:04:13 fang Exp $
+	$Id: expr.cc,v 1.40 2010/04/30 18:41:42 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1966,6 +1966,7 @@ if (li && ri) {
 		cerr << "WARNING: Use \'&&\' for logical-AND on pbools.  "
 			<< where(*op) << endl;
 		op_str = "&&";
+		++c.warning_count;
 		}
 		break;
 	case '|':
@@ -1973,6 +1974,7 @@ if (li && ri) {
 		cerr << "WARNING: Use \'||\' for logical-OR on pbools.  "
 			<< where(*op) << endl;
 		op_str = "||";
+		++c.warning_count;
 		}
 		break;
 	case '^':
@@ -1980,6 +1982,7 @@ if (li && ri) {
 		cerr << "WARNING: Use \'!=\' for logical-XOR on pbools.  "
 			<< where(*op) << endl;
 		op_str = "!=";
+		++c.warning_count;
 		break;
 	default:
 		cerr << "Bad operator char \'" << ch << "\' in "
@@ -2073,14 +2076,17 @@ arith_expr::check_nonmeta_expr(const context& c) const {
 		case '&':
 			cerr << "WARNING: Use \'&&\' for logical-AND on bools.  "
 				<< where(*op) << endl;
+			++c.warning_count;
 			return return_type(new entity::bool_logical_expr(lb, "&&", rb));
 		case '|':
 			cerr << "WARNING: Use \'||\' for logical-OR on bools.  "
 				<< where(*op) << endl;
+			++c.warning_count;
 			return return_type(new entity::bool_logical_expr(lb, "||", rb));
 		case '^':
 			cerr << "WARNING: Use \'!=\' for logical-XOR on bools.  "
 				<< where(*op) << endl;
+			++c.warning_count;
 			return return_type(new entity::bool_logical_expr(lb, "!=", rb));
 		default:
 			cerr << "ERROR: unrecognized operator \'" << op->text
@@ -2307,14 +2313,17 @@ if (lb && rb) {
 	case '&':
 		cerr << "WARNING: use \'&\' for bitwise-AND on pints.  "
 			<< where(*op) << endl;
+		++c.warning_count;
 		return return_type(new entity::pint_arith_expr(li, ch, ri));
 	case '|':
 		cerr << "WARNING: use \'|\' for bitwise-OR on pints.  "
 			<< where(*op) << endl;
+		++c.warning_count;
 		return return_type(new entity::pint_arith_expr(li, ch, ri));
 	case '!':
 		cerr << "WARNING: use \'^\' for bitwise-XOR on pints.  "
 			<< where(*op) << endl;
+		++c.warning_count;
 		return return_type(new entity::pint_arith_expr(li, ch, ri));
 	default:
 		cerr << "ERROR: \"" << op_str << "\" is not a valid "
@@ -2386,14 +2395,17 @@ if (lb && rb) {
 	case '&':
 		cerr << "WARNING: use \'&\' for bitwise-AND on ints.  "
 			<< where(*op) << endl;
+		++c.warning_count;
 		return return_type(new entity::int_arith_expr(li, ch, ri));
 	case '|':
 		cerr << "WARNING: use \'|\' for bitwise-OR on ints.  "
 			<< where(*op) << endl;
+		++c.warning_count;
 		return return_type(new entity::int_arith_expr(li, ch, ri));
 	case '!':
 		cerr << "WARNING: use \'^\' for bitwise-XOR on ints.  "
 			<< where(*op) << endl;
+		++c.warning_count;
 		return return_type(new entity::int_arith_expr(li, ch, ri));
 	default:
 		cerr << "ERROR: \"" << op_str << "\" is not a valid "

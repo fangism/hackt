@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.16 2010/04/29 01:02:20 fang Exp $
+	$Id: netgraph.h,v 1.17 2010/04/30 18:41:53 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -656,7 +656,11 @@ private:
 		This is only used as a local variable, can toss it...
 	 */
 	index_type			subs_count;
-
+public:
+	/**
+		Warning count.
+	 */
+	size_t				warning_count;
 public:
 	netlist();
 	~netlist();

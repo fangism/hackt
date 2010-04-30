@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.24 2009/10/02 01:56:38 fang Exp $
+	$Id: parse_context.h,v 1.25 2010/04/30 18:41:48 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -142,9 +142,15 @@ private:
 // are we in some expression? what depth?
 // what language context are we in? global? prs, chp, hse?
 
-	long			indent;		///< for formatted output
-	long			type_error_count;	///< error count
-
+	size_t			indent;		///< for formatted output
+	size_t			type_error_count;	///< error count
+public:
+	/**
+		Aggregate number of warnings.
+		Report files with at least one warning.
+	 */
+	mutable size_t			warning_count;
+private:
 	/**
 		Explicit namespace stack.  
 		Maintained here instead of using pointers returned by

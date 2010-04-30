@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.19 2010/04/29 01:02:21 fang Exp $
+	$Id: netlist_generator.cc,v 1.20 2010/04/30 18:41:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -227,6 +227,11 @@ try {
 #endif
 	}
 	// TODO: accumulate warning count and print summary
+	if (nl->warning_count) {
+		cerr << opt.comment_prefix <<
+			"Warnings found in producing netlist for " <<
+			nl->name << '.' << endl;
+	}
 } catch (...) {
 	cerr << "ERROR producing netlist for " << nl->name << endl;
 	throw;
@@ -632,14 +637,17 @@ netlist_generator::set_current_length(const real_type l) {
 static
 void
 __diagnose_supply_mismatch(ostream& o, const netlist_options& opt, 
-		const string& subc_name, const char* supply_name, 
+		netlist& subc, const char* supply_name, 
 		const string& node_name) {
 if (opt.internal_node_supply_mismatch_policy != OPTION_IGNORE) {
 const bool err = opt.internal_node_supply_mismatch_policy == OPTION_ERROR;
 	if (err)
 		o << "Error:";
-	else	o <<  opt.comment_prefix << "Warning:";
-	o << " in subcircuit " << subc_name << ':' << endl <<
+	else {
+		o <<  opt.comment_prefix << "Warning:";
+		++subc.warning_count;
+	}
+	o << " in subcircuit " << subc.get_name() << ':' << endl <<
 		opt.comment_prefix << supply_name <<
 		" supply of internal node differs between definition and use: @"
 		<< node_name << endl;
@@ -697,11 +705,11 @@ if (!n.used)
 	// diagnostic: if supply differs from definition and use domains
 	if (!dir && (low_supply != gi)) {
 		__diagnose_supply_mismatch(cerr, opt,
-			current_netlist->get_name(), "GND", n.name);
+			*current_netlist, "GND", n.name);
 	}
 	if (dir && (high_supply != vi)) {
 		__diagnose_supply_mismatch(cerr, opt,
-			current_netlist->get_name(), "Vdd", n.name);
+			*current_netlist, "Vdd", n.name);
 	}
 	const value_saver<index_type>
 		__s1(low_supply, gi), __s2(high_supply, vi);
@@ -794,7 +802,8 @@ netlist_generator::visit(const footprint_expr_node::precharge_pull_type& p) {
 static
 void
 process_transistor_attributes(transistor& t, 
-		const resolved_attribute_list_type& a) {
+		const resolved_attribute_list_type& a, 
+		netlist& nl) {
 	resolved_attribute_list_type::const_iterator
 		ai(a.begin()), ae(a.end());
 	// TODO: write an actual attribute function map for altering transistor
@@ -812,6 +821,7 @@ process_transistor_attributes(transistor& t,
 		else {
 			cerr << "Warning: unknown literal attribute \'" <<
 				ai->key << "\' ignored." << endl;
+			++nl.warning_count;
 		}
 	}
 }
@@ -842,6 +852,7 @@ case PRS_LITERAL_TYPE_ENUM: {
 	switch (opt.non_CMOS_precharge_policy) {
 	case OPTION_WARN:
 		cerr << opt.comment_prefix << "Warning : " << msg << endl;
+		++current_netlist->warning_count;
 		break;
 	case OPTION_ERROR:
 		cerr << "ERROR: " << msg << endl;
@@ -889,7 +900,7 @@ case PRS_LITERAL_TYPE_ENUM: {
 	// TODO: constrain length
 	t.attributes = fet_attr;
 	// transistor attributes
-	process_transistor_attributes(t, e.attributes);
+	process_transistor_attributes(t, e.attributes, *current_netlist);
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->add_transistor(t);
 	break;
@@ -1022,7 +1033,7 @@ if (passn || passp) {
 	}
 	t.attributes = fet_attr;
 	// transistor attributes
-	process_transistor_attributes(t, e.attributes);
+	process_transistor_attributes(t, e.attributes, *current_netlist);
 	t.set_pass();		// indicate is pass gate
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->add_transistor(t);
@@ -1031,6 +1042,7 @@ if (passn || passp) {
 } else {
 	cerr << "WARNING: unknown PRS macro " << e.name
 		<< " ignored." << endl;
+	++current_netlist->warning_count;
 }
 }
 

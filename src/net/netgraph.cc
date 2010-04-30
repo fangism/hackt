@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.21 2010/04/29 01:02:18 fang Exp $
+	$Id: netgraph.cc,v 1.22 2010/04/30 18:41:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -598,7 +598,8 @@ netlist::netlist() : netlist_common(), name(),
 		port_list(), 
 		empty(false), 	// is cached
 		aux_count(0),
-		subs_count(0) {
+		subs_count(0),
+		warning_count(0) {
 	// copy supply nodes
 	node_pool.reserve(8);	// reasonable pre-allocation
 	// following order should match above universal node indices
