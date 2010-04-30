@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.25 2010/04/30 00:21:47 fang Exp $
+#	$Id: Makefile.am,v 1.26 2010/04/30 00:32:06 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -149,7 +149,11 @@ srcdir_EXTRA_DIST += empty.hac bogus.hac \
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += string-002 string-003 \
-	import-014-c cpp-line-02
+	import-014-c cpp-line-02 \
+	bad-ref-01 \
+	flat-import-03 \
+	file-expand-01 file-expand-02 file-expand-03 file-expand-04 \
+	file-expand-05
 
 include $(top_srcdir)/test/Make.test-tail
 
