@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.38 2010/04/08 23:04:15 fang Exp $
+#	$Id: Makefile.am,v 1.39 2010/05/03 18:06:42 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -543,7 +543,7 @@ chpsimlib_DATA = \
 	lib-zcond-test-a-01.chpsimrc
 
 # flatten source so it doesn't depend on testlib imports after installed
-lib-zcond-flat.hac: lib-zcond-test-a.hac
+lib-zcond-flat.hac: lib-zcond-test-a.hac $(HACKT_FLATTEN_EXE)
 	$(HACKT_FLATTEN_EXE) $(HACPP_FLAGS) $< > $@
 
 CLEANFILES += lib-zcond-flat.hac
