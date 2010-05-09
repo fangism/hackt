@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.64 2010/04/28 02:17:51 fang Exp $
+	$Id: Command-prsim.cc,v 1.65 2010/05/09 02:36:59 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2257,7 +2257,7 @@ Connections to channel sinks and sources can counts as outputs (fake fanout).
 
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnknownFanout,
 	"unknown-fanout", info, 
-	"list all X nodes with no fanout")
+	"list all X nodes with fanout")
 
 int
 UnknownFanout::main(State& s, const string_list& a) {
