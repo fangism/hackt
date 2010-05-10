@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.95 2010/04/28 21:51:51 fang Exp $
+#	$Id: Makefile.am,v 1.96 2010/05/10 18:21:11 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -413,7 +413,7 @@ oscil-random-02c.prsimrc-diff: \
 
 $(srcdir)/cbit_test_stat-01.prsimrc: gen_cbit_test.awk
 	{ $(ECHO) "# $@" ; \
-	$(ECHO) "# @haco@ cbit_test_stat.haco-a" ; \
+	$(ECHO) "# @haco@ cbit_test_stat.haco-c" ; \
 	$(AWK) -f $< ;} > $@
 
 cbit_test_stat_alt-01.prsimrc-out: $(srcdir)/cbit_test_stat-01.prsimrc
