@@ -1,0 +1,11 @@
+// "162.hac"
+// accepts-invalid test case
+
+defproc bar(bool p, q) { }
+
+defproc foo(bool a, b) {
+pint M = 0;
+bar AP(a, M);	// invalid, cannot pass parameter to port, duh!
+}
+
+

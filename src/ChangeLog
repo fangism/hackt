@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-05-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-92:
+	  main/cflat.cc options implemented using optparse, 
+		in favor of old options_modifier.
+	  hflat: added support for options to emit/mangle alternate names:
+		-f alt_tool_name=BLAH to enable alternate names
+		-f alt_name_prefix=STR prepend string before mangled names
+		-f alt_process_member_separator
+		-f alt_struct_member_separator
+	  Also the raw prs can be mangled with:
+		-f process_member_separator
+		-f struct_member_separator
+	  cflat_aliases_arg_type: added __dump_flags and alt_dump_flags
+		same options added to cflat_options
+	  alias_printer supports building an alt_prefix for efficient mangling
+	  Everywhere that calls footprint::dump_canonical_name, added
+		extra dump_flags argument.
+
 2010-04-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-91:

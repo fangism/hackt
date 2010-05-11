@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.9 2010/04/07 00:12:59 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.10 2010/05/11 00:18:09 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -19,6 +19,7 @@
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/state_instance.h"
 #include "Object/global_entry_context.h"
+#include "Object/common/dump_flags.h"
 #include "parser/instref.h"
 #include "guile/devel_switches.h"
 #include "guile/libhackt-wrap.h"
@@ -64,6 +65,7 @@ using entity::int_tag;
 using entity::enum_tag;
 using entity::channel_tag;
 using entity::process_tag;
+using entity::dump_flags;
 using util::guile::make_scm;
 using util::guile::extract_scm;
 #ifndef	HAVE_SCM_IS_PAIR
@@ -324,11 +326,12 @@ HAC_GUILE_DEFINE(wrap_canonical_reference_to_string, FUNC_NAME, 1, 0, 0,
 		// TODO: check upper bound of index too
 		return SCM_UNSPECIFIED;
 	}
+	const dump_flags& df(dump_flags::no_owners);
 	ostringstream oss;
 	switch (type) {
 #define	CASE_TYPE(Tag)							\
 	case class_traits<Tag>::type_tag_enum_value:			\
-		topfp.dump_canonical_name<Tag>(oss, index -1);		\
+		topfp.dump_canonical_name<Tag>(oss, index -1, df);	\
 		break;
 	CASE_TYPE(bool_tag)
 	CASE_TYPE(int_tag)

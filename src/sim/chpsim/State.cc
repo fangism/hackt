@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.23 2010/04/07 00:13:07 fang Exp $
+	$Id: State.cc,v 1.24 2010/05/11 00:18:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,6 +33,7 @@
 #include "Object/lang/CHP_footprint.h"
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_pool.h"
+#include "Object/common/dump_flags.h"
 
 #include "common/TODO.h"
 #include "sim/ISE.h"
@@ -135,6 +136,7 @@ using entity::META_TYPE_PROCESS;
 using entity::canonical_fundamental_chan_type_base;
 using entity::expr_dump_context;
 using entity::state_instance;
+using entity::dump_flags;
 using std::copy;
 using std::back_inserter;
 using std::mem_fun_ref;
@@ -1298,7 +1300,8 @@ State::make_process_dump_context(const node_index_type pid) const {
 		std::ostringstream canonical_name;
 		top_context.get_top_footprint().
 			dump_canonical_name<process_tag>(
-				canonical_name, pid -1);
+				canonical_name, pid -1, 
+				dump_flags::no_owners);
 		return expr_dump_context(canonical_name.str());
 	} else {
 		return expr_dump_context::default_value;
@@ -1594,7 +1597,8 @@ for ( ; pid < mp; ++pid) {
 	if (pid && g.process_event_clusters) {
 		o << "subgraph cluster" << pid << " {" << endl;
 		std::ostringstream oss;
-		topfp.dump_canonical_name<process_tag>(oss, pid-1);
+		topfp.dump_canonical_name<process_tag>(oss, pid-1, 
+				dump_flags::no_owners);
 		o << "label=\"pid=" << pid << ": " << oss.str() << "\";"
 			<< endl;
 	} else {
@@ -1657,7 +1661,8 @@ if (g.show_channels) {
 			ri(rs.begin()), re(rs.end());
 		// get channel name
 		std::ostringstream oss;
-		topfp.dump_canonical_name<channel_tag>(oss, i-1);
+		topfp.dump_canonical_name<channel_tag>(oss, i-1, 
+				dump_flags::no_owners);
 		// emit a node if there are multiple senders or receivers
 		// also if sender/receiver set is empty
 		if (ss.size() != 1 || rs.size() != 1) {
@@ -1713,26 +1718,27 @@ ostream&
 State::print_instance_name_value(ostream& o,
 		const global_indexed_reference& g) const {
 	const entity::footprint& topfp(mod.get_footprint());
+	const dump_flags& df(dump_flags::no_owners);
 	INVARIANT(g.second);
 	const size_t id0 = g.second -1;
 	switch (g.first) {
 	case META_TYPE_BOOL: {
 		o << "bool ";
-		topfp.dump_canonical_name<bool_tag>(o, id0);
+		topfp.dump_canonical_name<bool_tag>(o, id0, df);
 		o << " = ";
 		o << size_t(instances.get_pool<bool_tag>()[g.second].value);
 		break;
 	}
 	case META_TYPE_INT: {
 		o << "int ";
-		topfp.dump_canonical_name<int_tag>(o, id0);
+		topfp.dump_canonical_name<int_tag>(o, id0, df);
 		o << " = ";
 		o << instances.get_pool<int_tag>()[g.second].value;
 		break;
 	}
 	case META_TYPE_ENUM: {
 		o << "enum ";
-		topfp.dump_canonical_name<enum_tag>(o, id0);
+		topfp.dump_canonical_name<enum_tag>(o, id0, df);
 		o << " = ";
 		o << instances.get_pool<enum_tag>()[g.second].value;
 		break;
@@ -1744,7 +1750,7 @@ State::print_instance_name_value(ostream& o,
 			nc(instances.get_pool<channel_tag>()[g.second]);
 		const canonical_fundamental_chan_type_base& t(*c.channel_type);
 		t.dump(o) << ' ';
-		topfp.dump_canonical_name<channel_tag>(o, id0);
+		topfp.dump_canonical_name<channel_tag>(o, id0, df);
 		o << " = ";
 		nc.dump(o, t);	// print the channel data using type info
 		break;
@@ -1766,26 +1772,27 @@ ostream&
 State::print_instance_name_subscribers(ostream& o,
 		const global_indexed_reference& g) const {
 	const entity::footprint& topfp(mod.get_footprint());
+	const dump_flags& df(dump_flags::no_owners);
 	INVARIANT(g.second);
 	const size_t id0 = g.second-1;
 	switch (g.first) {
 	case META_TYPE_BOOL: {
 		o << "bool ";
-		topfp.dump_canonical_name<bool_tag>(o, id0);
+		topfp.dump_canonical_name<bool_tag>(o, id0, df);
 		o << " : ";
 		instances.get_pool<bool_tag>()[g.second].dump_subscribers(o);
 		break;
 	}
 	case META_TYPE_INT: {
 		o << "int ";
-		topfp.dump_canonical_name<int_tag>(o, id0);
+		topfp.dump_canonical_name<int_tag>(o, id0, df);
 		o << " : ";
 		instances.get_pool<int_tag>()[g.second].dump_subscribers(o);
 		break;
 	}
 	case META_TYPE_ENUM: {
 		o << "enum ";
-		topfp.dump_canonical_name<enum_tag>(o, id0);
+		topfp.dump_canonical_name<enum_tag>(o, id0, df);
 		o << " : ";
 		instances.get_pool<enum_tag>()[g.second].dump_subscribers(o);
 		break;
@@ -1793,7 +1800,7 @@ State::print_instance_name_subscribers(ostream& o,
 	case META_TYPE_CHANNEL: {
 		const ChannelState&
 			nc(instances.get_pool<channel_tag>()[g.second]);
-		topfp.dump_canonical_name<channel_tag>(o, id0);
+		topfp.dump_canonical_name<channel_tag>(o, id0, df);
 		o << " : ";
 		nc.dump_subscribers(o);	// print the channel subscribers
 		break;

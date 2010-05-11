@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.35 2010/04/30 23:58:40 fang Exp $
+	$Id: footprint.h,v 1.36 2010/05/11 00:18:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -357,11 +357,13 @@ public:
 	// index is 0-based
 	template <class Tag>
 	ostream&
-	dump_canonical_name(ostream&, const size_t, const bool t = true) const;
+	dump_canonical_name(ostream&, const size_t, const dump_flags&,
+		const bool t = true) const;
 
 	// index is 0-based
 	ostream&
-	dump_canonical_name(ostream&, const global_indexed_reference&) const;
+	dump_canonical_name(ostream&, const global_indexed_reference&, 
+		const dump_flags&) const;
 
 	// perform hierarchical lookup to find uniquely typed instance
 	// index is 0-based

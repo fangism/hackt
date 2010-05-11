@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.11 2010/04/07 00:12:38 fang Exp $
+	$Id: alias_printer.cc,v 1.12 2010/05/11 00:18:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -40,7 +40,12 @@ alias_printer::alias_printer(ostream& _o,
 		const cflat_options& _cf,
 		wire_alias_set& _w,
 		const string& _p) :
-			cflat_aliases_arg_type(_fpf, g, _p), 
+			// pass same alt_dump_flags to skip alternate names
+			cflat_aliases_arg_type(_fpf, g, _cf.__dump_flags,
+				(_cf.emit_alt_names() ? _cf.alt_dump_flags
+					: _cf.__dump_flags),
+				_p), 
+			alt_prefix(),
 			local_bool_aliases(), 
 			o(_o),
 			cf(_cf),
@@ -108,7 +113,7 @@ alias_printer::visit_recursive(const footprint& f) {
 // indexed 1-based, by local process index
 // this map accumulates aliases of local process, their process ports
 // AND private internal aliases to their local ports.  
-// set<strings> will keep it unique.
+// alias_group_type will keep it unique.
 	size_t pi;
 // final pass: recursion
 for (pi=pb; pi<pe; ++pi) {
@@ -126,7 +131,7 @@ for (pi=pb; pi<pe; ++pi) {
 	STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
 	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
 #endif
-	set<string>::const_iterator
+	alias_group_type::const_iterator
 		i(local_proc_aliases[lpid].begin()),
 		e(local_proc_aliases[lpid].end());
 	// FIXME: set needs to be appended with local private aliases!
@@ -134,9 +139,18 @@ for (pi=pb; pi<pe; ++pi) {
 	// then iterate over whole set
 	// find which processes are subordinate of other processes
 	for ( ; i!=e; ++i) {
-		const save_prefix save(*this);
+		const value_saver<string> save(prefix);
+		const value_saver<string> save_alt(alt_prefix);
+#if USE_ALT_ALIAS_PAIRS
+		const string& local_name(i->first);
+#else
 		const string& local_name(*i);
-		prefix += local_name + ".";
+#endif
+		prefix += local_name +cf.__dump_flags.process_member_separator;
+		if (cf.emit_alt_names()) {
+			alt_prefix += i->second		// alternate name
+				+cf.alt_dump_flags.process_member_separator;
+		}
 		STACKTRACE_INDENT_PRINT("prefix = " << prefix << endl);
 		sfp.accept(AS_A(global_entry_context&, *this));
 	}
@@ -161,11 +175,12 @@ if (!cf.check_prs) {
 	const bool is_top = at_top();
 	STACKTRACE_INDENT_PRINT("gbid = " << gi << endl);
 	ostringstream oss;
-	topfp->dump_canonical_name<Tag>(oss, gi -1);	// 0-based
+	topfp->dump_canonical_name<Tag>(oss, gi -1, 
+		cf.__dump_flags);	// 0-based
 	const string& canonical(oss.str());
 	STACKTRACE_INDENT_PRINT("canonical = " << canonical << endl);
 	INVARIANT(bi < local_bool_aliases.size());
-	set<string>& aliases(local_bool_aliases[bi]);
+	alias_group_type& aliases(local_bool_aliases[bi]);
 
 	const footprint& f(get_current_footprint());
 	const port_alias_tracker& pt(f.get_scope_alias_tracker());
@@ -189,17 +204,42 @@ if (!cf.check_prs) {
 			|| any_hierarchical_parent_is_aliased_to_port(a, f))
 		) {
 		ostringstream ass;
-		a.dump_hierarchical_name(ass, dump_flags::no_leading_scope);
+		a.dump_hierarchical_name(ass, cf.__dump_flags);
 		STACKTRACE_INDENT_PRINT("local-alias = " << ass.str() << endl);
-		aliases.insert(ass.str());	// unique
+#if USE_ALT_ALIAS_PAIRS
+		string& alt_s(aliases[ass.str()]);
+		if (cf.emit_alt_names()) {
+			ostringstream xs;
+			a.dump_hierarchical_name(xs, cf.alt_dump_flags);
+			alt_s = xs.str();
+		}
+#else
+		aliases.insert(ass.str());
+#endif
+		// insertion is unique
 	}
 	}
 
-	set<string>::const_iterator
+	alias_group_type::const_iterator
 		ai(aliases.begin()), ae(aliases.end());
 	for ( ; ai!=ae; ++ai) {
-		const string alias(prefix +*ai);
+#if USE_ALT_ALIAS_PAIRS
+		const string& suffix(ai->first);
+#else
+		const string& suffix(*ai);
+#endif
+		const string alias(prefix +suffix);
 		STACKTRACE_INDENT_PRINT("alias = " << alias << endl);
+#if USE_ALT_ALIAS_PAIRS
+		if (cf.emit_alt_names()) {
+			const string& alt_suffix(ai->second);
+			// const string alt_alias(alt_prefix +alt_suffix);
+			o << "# ALT[" << cf.alt_tool_name << "]: " <<
+				cf.alt_name_prefix << 
+				alt_prefix << alt_suffix << " = " <<
+				alias << endl;
+		}
+#endif
 		if (!cf.wire_mode) {
 			cflat_print_alias(o, canonical, alias, cf);
 		} else if (canonical != alias) {

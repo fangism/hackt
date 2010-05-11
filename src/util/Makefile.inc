@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.44 2010/04/19 02:46:08 fang Exp $
+#	$Id: Makefile.inc,v 1.45 2010/05/11 00:18:19 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -43,6 +43,7 @@ UTIL_TCC_FILES = \
 	util/multikey_qmap.tcc \
 	util/multikey_set.tcc \
 	util/new_functor.tcc \
+	util/optparse.tcc \
 	util/packed_array.tcc \
 	util/persistent_object_manager.tcc \
 	util/persistent_functor.tcc \

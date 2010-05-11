@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_dumper.cc"
-	$Id: global_entry_dumper.cc,v 1.1 2010/04/07 00:12:29 fang Exp $
+	$Id: global_entry_dumper.cc,v 1.2 2010/05/11 00:18:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,7 @@
 #include "Object/module.h"
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
+#include "Object/common/dump_flags.h"
 #include "Object/def/footprint.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "Object/expr/expr_dump_context.h"
@@ -68,7 +69,7 @@ global_entry_dumper::__default_visit(const state_instance<Tag>& p) {
 	}
 	os << local_offset << '\t';
 	const size_t gid = global_index -1;	// 0-based
-	topfp->dump_canonical_name<Tag>(os, gid) << '\t';
+	topfp->dump_canonical_name<Tag>(os, gid, dump_flags::no_owners) << '\t';
 	p.get_back_ref()->dump_attributes(os);
 }
 

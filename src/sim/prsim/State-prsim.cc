@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.62 2010/04/28 21:51:50 fang Exp $
+	$Id: State-prsim.cc,v 1.63 2010/05/11 00:18:17 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -39,6 +39,7 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/traits/proc_traits.h"	// for diagnostic
 #include "Object/global_entry.h"
+#include "Object/common/dump_flags.h"
 #if IMPLICIT_SUPPLY_PORTS
 #include "parser/instref.h"
 #endif
@@ -132,6 +133,7 @@ using util::bind2nd_argval_void;
 using util::auto_indent;
 using util::indent;
 using util::tokenize_char;
+using entity::dump_flags;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -381,7 +383,8 @@ try {
 } catch (const entity::instance_exception<process_tag>& e) {
 	cerr << "Error with process instance: ";
 	// ALERT: could be top-level
-	topfp.dump_canonical_name<process_tag>(cerr, e.pid) << endl;
+	topfp.dump_canonical_name<process_tag>(cerr, e.pid, 
+		dump_flags::no_owners) << endl;
 	THROW_EXIT;	// re-throw
 }
 	// recommend caller to invoke ::initialize() immediately after ctor
@@ -4286,7 +4289,8 @@ State::check_structure(void) const {
  */
 ostream&
 State::dump_node_canonical_name(ostream& o, const node_index_type i) const {
-	return mod.get_footprint().dump_canonical_name<bool_tag>(o, i-1);
+	return mod.get_footprint().dump_canonical_name<bool_tag>(o, i-1, 
+		dump_flags::no_owners);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4311,7 +4315,8 @@ State::dump_process_canonical_name(ostream& o,
 if (i) {
 	ISE_INVARIANT(i < process_state_array.size());
 	// footprint::dump_canonical_name expects 0-based index.
-	return mod.get_footprint().dump_canonical_name<process_tag>(o, i-1);
+	return mod.get_footprint().dump_canonical_name<process_tag>(o, i-1, 
+		dump_flags::no_owners);
 } else {
 	return o << "[top-level]";
 }

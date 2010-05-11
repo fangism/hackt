@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.6 2010/04/19 02:45:58 fang Exp $
+	$Id: footprint.tcc,v 1.7 2010/05/11 00:18:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -87,6 +87,7 @@ footprint::get_instance(const size_t gi, const bool is_top) const {
 template <class Tag>
 ostream&
 footprint::dump_canonical_name(ostream& o, const size_t gi, 
+		const dump_flags& df, 
 		const bool is_top) const {
 //	STACKTRACE_VERBOSE;
 #if 0 && ENABLE_STACKTRACE
@@ -119,11 +120,14 @@ footprint::dump_canonical_name(ostream& o, const size_t gi,
 		INVARIANT(e.first <= m);
 		const state_instance<process_tag>& sp(ppool[e.first -1]);
 		sp.get_back_ref()->dump_hierarchical_name(o, 
-			dump_flags::no_definition_owner) << '.';
+			df
+			// dump_flags::no_definition_owner
+			)
+				<< df.process_member_separator;
 		// TODO: pass in dump_flags to honor hierarchical separator
 		// e.second is the offset to subtract
 		sp._frame._footprint->dump_canonical_name<Tag>(
-			o, si -e.second, false);
+			o, si -e.second, df, false);
 	}
 	return o;
 }

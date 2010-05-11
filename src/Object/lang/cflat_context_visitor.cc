@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.8 2010/04/07 00:12:49 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.9 2010/05/11 00:18:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -46,10 +46,10 @@ cflat_context_visitor::__lookup_global_bool_id(const size_t lni) const {
  */
 ostream&
 cflat_context_visitor::__dump_resolved_canonical_literal(
-		ostream& os, const size_t ni) const {
+		ostream& os, const size_t ni, const dump_flags& df) const {
 	// 0-based
 	INVARIANT(ni);
-	return topfp->dump_canonical_name<bool_tag>(os, ni-1);
+	return topfp->dump_canonical_name<bool_tag>(os, ni-1, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -60,9 +60,9 @@ cflat_context_visitor::__dump_resolved_canonical_literal(
  */
 ostream&
 cflat_context_visitor::__dump_canonical_literal(
-		ostream& o, const size_t lni) const {
+		ostream& o, const size_t lni, const dump_flags& df) const {
 	return __dump_resolved_canonical_literal(
-		o, __lookup_global_bool_id(lni));
+		o, __lookup_global_bool_id(lni), df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

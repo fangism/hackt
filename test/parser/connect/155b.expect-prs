@@ -1,0 +1,35 @@
+"foo.O[0].e" & "foo.O[1].e" -> "foo.c._o"-
+~"foo.O[0].e" & ~"foo.O[1].e" -> "foo.c._o"+
+"foo.c._o" -> "foo.I.e"-
+~"foo.c._o" -> "foo.I.e"+
+iskeeper	"foo.I.e" -> "foo.c._o"-
+iskeeper	~"foo.I.e" -> "foo.c._o"+
+# ALT[spice]: spice:!GND = !GND
+# ALT[spice]: spice:foo:!GND = foo.!GND
+= "!GND" "foo.!GND"
+# ALT[spice]: spice:foo:c:!GND = foo.c.!GND
+= "!GND" "foo.c.!GND"
+# ALT[spice]: spice:!Vdd = !Vdd
+# ALT[spice]: spice:foo:!Vdd = foo.!Vdd
+= "!Vdd" "foo.!Vdd"
+# ALT[spice]: spice:foo:c:!Vdd = foo.c.!Vdd
+= "!Vdd" "foo.c.!Vdd"
+# ALT[spice]: spice:foo:I-d = foo.I.d
+# ALT[spice]: spice:foo:O[0]-d = foo.O[0].d
+= "foo.I.d" "foo.O[0].d"
+# ALT[spice]: spice:foo:O[1]-d = foo.O[1].d
+= "foo.I.d" "foo.O[1].d"
+# ALT[spice]: spice:foo:I-e = foo.I.e
+# ALT[spice]: spice:foo:c:o = foo.c.o
+= "foo.I.e" "foo.c.o"
+# ALT[spice]: spice:foo:O[0]-e = foo.O[0].e
+# ALT[spice]: spice:foo:c:i[0] = foo.c.i[0]
+= "foo.O[0].e" "foo.c.i[0]"
+# ALT[spice]: spice:foo:re[0] = foo.re[0]
+= "foo.O[0].e" "foo.re[0]"
+# ALT[spice]: spice:foo:O[1]-e = foo.O[1].e
+# ALT[spice]: spice:foo:c:i[1] = foo.c.i[1]
+= "foo.O[1].e" "foo.c.i[1]"
+# ALT[spice]: spice:foo:re[1] = foo.re[1]
+= "foo.O[1].e" "foo.re[1]"
+# ALT[spice]: spice:foo:c:_o = foo.c._o

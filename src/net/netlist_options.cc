@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.15 2010/04/07 21:47:29 fang Exp $
+	$Id: netlist_options.cc,v 1.16 2010/05/11 00:18:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,6 +17,7 @@
 #include "util/iterator_more.h"
 #include "util/assoc_traits.h"
 #include "util/cppcat.h"
+#include "util/optparse.tcc"
 
 namespace HAC {
 namespace NET {
@@ -37,6 +38,9 @@ using util::assoc_traits;
 //=============================================================================
 // class netlist_options method definitions
 
+/**
+	Default construct gives default values for every member.
+ */
 netlist_options::netlist_options() :
 		file_manager(), 
 		__dump_flags(dump_flags::no_definition_owner), 
@@ -305,6 +309,15 @@ netlist_options::line_continue(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// options map setup
+typedef	util::options_map_impl<netlist_options>		options_map_impl_type;
+typedef	options_map_impl_type::opt_func			opt_func;
+typedef	options_map_impl_type::opt_entry		opt_entry;
+typedef	options_map_impl_type::opt_map_type		opt_map_type;
+static	options_map_impl_type				options_map_wrapper;
+static	opt_map_type&	netlist_option_map(options_map_wrapper.options_map);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Sets a value of a structure member according to first value
 	associated with option.  
@@ -319,26 +332,9 @@ bool
 __set_member_single_numeric_value(const option_value& opt, 
 		netlist_options& n_opt, 
 		T netlist_options::*mem) {
-	const size_t s = opt.values.size();
-	if (s >= 1) {
-		if (s > 1) {
-		cerr << "Warning: extra arguments passed to \'" << opt.key
-			<< "\' option ignored." << endl;
-		}
-		const string& arg(opt.values.front());
-		const bool ret = string_to_num(arg, n_opt.*mem);
-		if (ret) {
-			cerr << "Error: processing argument of \'" << opt.key
-				<< "\' option, expecting numeric value, "
-				"but got: " << arg << endl;
-		}
-		return ret;
-	} else {
-		cerr << "Warning: blank argument passed to \'" << opt.key
-			<< "\' option where one is expected.  Ignoring."
-			<< endl;
-		return false;
-	}
+	// simply forwards to a default reasonable implementation
+	return options_map_impl_type::set_member_single_numeric_value(
+			opt, n_opt, mem);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -347,18 +343,9 @@ bool
 __set_member_single_string(const option_value& opt, 
 		netlist_options& n_opt, 
 		string netlist_options::*mem) {
-	const size_t s = opt.values.size();
-	if (s >= 1) {
-		if (s > 1) {
-		cerr << "Warning: extra arguments passed to \'" << opt.key
-			<< "\' option ignored." << endl;
-		}
-		n_opt.*mem = opt.values.front();
-	} else {
-		// if blank value, erase the string
-		(n_opt.*mem).clear();
-	}
-	return false;
+	// simply forwards to a default reasonable implementation
+	return options_map_impl_type::set_member_single_string(
+			opt, n_opt, mem);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -566,7 +553,7 @@ template <typename T>
 ostream&
 __print_member_default(ostream& o, const netlist_options& n_opt,
 		T netlist_options::*mem) {
-	return o << n_opt.*mem;
+	return options_map_impl_type::print_member_default(o, n_opt, mem);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -600,15 +587,8 @@ template <typename T>
 ostream&
 __print_member_sequence(ostream& o, const netlist_options& n_opt,
 		T netlist_options::*mem) {
-	const T& s(n_opt.*mem);
-	if (!s.empty()) {
-		typedef	typename T::const_iterator	const_iterator;
-		typedef	typename T::value_type	value_type;
-		const_iterator i(s.begin()), l(--s.end());
-		copy(i, l, std::ostream_iterator<value_type>(o, ","));
-		o << *l;
-	}
-	return o;
+	// using reasonable default
+	return options_map_impl_type::print_member_sequence(o, n_opt, mem);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -628,6 +608,9 @@ __print_misc_option(ostream& o, const netlist_options& n_opt,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialization for error policy enumeration.
+ */
 template <>
 ostream&
 __print_member_default(ostream& o, const netlist_options& n_opt,
@@ -642,22 +625,7 @@ switch (n_opt.*mem) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	bool (*opt_func)(const option_value&, netlist_options&);
-typedef	ostream& (*print_func)(ostream&, const netlist_options&);
-// typedef	const string& (*type_func)(void);
-struct opt_entry {
-	opt_func			func;
-	print_func			printer;
-	const string*			type;
-	string				help;
-	opt_entry() : type(NULL) { }
-	opt_entry(const opt_func f, const print_func p, 
-		const string* const t, const string& h) :
-		func(f), printer(p), type(t), help(h) { }
-};
-typedef	map<string, opt_entry>		opt_map_type;
-static	opt_map_type			netlist_option_map;
-
+// macros for registering options
 
 #define	DEFINE_SET_MEMBER(member)					\
 static									\
@@ -1382,17 +1350,7 @@ ostream&
 netlist_options::dump(ostream& o) const {
 	o << "# netlist generation configuration values:"
 		<< endl;
-	typedef	opt_map_type::const_iterator	map_iterator;
-	map_iterator i(netlist_option_map.begin());
-	const map_iterator e(netlist_option_map.end());
-	for ( ; i!=e; ++i) {
-		const opt_entry& s(i->second);
-	if (s.printer) {
-		o << i->first << '=';
-		(*s.printer)(o, *this) << endl;
-	}	// else is a meta option
-	}
-	return o;
+	return options_map_wrapper.dump(o, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1403,24 +1361,7 @@ ostream&
 netlist_options::help(ostream& o) {
 	o << "hacknet configuration options [default values]:"
 		<< endl;
-	typedef	opt_map_type::const_iterator	map_iterator;
-	map_iterator i(netlist_option_map.begin());
-	const map_iterator e(netlist_option_map.end());
-	for ( ; i!=e; ++i) {
-		const opt_entry& s(i->second);
-		o << i->first << " (";
-		if (s.type)
-			o << *s.type;
-		o << "): "
-		<< s.help;
-		if (s.printer) {
-			o << " [";
-			(*s.printer)(o, default_value);
-			o << ']';
-		} else o << " <pseudo-option>";
-		o << endl;
-	}
-	return o;
+	return options_map_wrapper.help(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.h"
-	$Id: alias_printer.h,v 1.6 2010/04/07 00:12:39 fang Exp $
+	$Id: alias_printer.h,v 1.7 2010/05/11 00:18:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_PRINTER_H__
@@ -23,6 +23,7 @@ struct wire_alias_set;
  */
 struct alias_printer : 
 		public cflat_aliases_arg_type {
+	string				alt_prefix;
 	// local map of bool aliases
 	alias_set_type			local_bool_aliases;
 	ostream&			o;

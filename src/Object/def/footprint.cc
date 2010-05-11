@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.53 2010/04/30 23:58:39 fang Exp $
+	$Id: footprint.cc,v 1.54 2010/05/11 00:18:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -778,24 +778,25 @@ try {
  */
 ostream&
 footprint::dump_canonical_name(ostream& o,
-		const global_indexed_reference& r) const {
+		const global_indexed_reference& r, 
+		const dump_flags& df) const {
 	INVARIANT(r.second);
 	const size_t i = r.second -1;	// adjust to 0-based
 switch (r.first) {
 	case META_TYPE_PROCESS:
-		return dump_canonical_name<process_tag>(o, i);
+		return dump_canonical_name<process_tag>(o, i, df);
 	case META_TYPE_CHANNEL:
-		return dump_canonical_name<channel_tag>(o, i);
+		return dump_canonical_name<channel_tag>(o, i, df);
 #if ENABLE_DATASTRUCTS
 	case META_TYPE_STRUCT:
-		return dump_canonical_name<datastruct_tag>(o, i);
+		return dump_canonical_name<datastruct_tag>(o, i, df);
 #endif
 	case META_TYPE_BOOL:
-		return dump_canonical_name<bool_tag>(o, i);
+		return dump_canonical_name<bool_tag>(o, i, df);
 	case META_TYPE_INT:
-		return dump_canonical_name<int_tag>(o, i);
+		return dump_canonical_name<int_tag>(o, i, df);
 	case META_TYPE_ENUM:
-		return dump_canonical_name<enum_tag>(o, i);
+		return dump_canonical_name<enum_tag>(o, i, df);
 	default:	o << "<Unhandled-TAG>";
 }
 	return o;
@@ -1428,7 +1429,8 @@ footprint::cflat_aliases(ostream& o,
 			ostream_iterator<alias_string_cache::value_type>
 				osi(o, ",");
 			copy(ac.strings.begin(), ac.strings.end(), osi);
-			dump_canonical_name<bool_tag>(o, j-1) << ");" << endl;
+			dump_canonical_name<bool_tag>(o, j-1, 
+				cf.__dump_flags) << ");" << endl;
 		}
 		// else is loner, has no aliases
 		}
@@ -1484,7 +1486,8 @@ footprint::__dump_instances_dot_nodes(ostream& o) const {
                 o << class_traits<Tag>::tag_name << '_' << j+1 <<
                         "\t[style=bold,label=\"";
                 // other styles: dashed, dotted, bold, invis
-                dump_canonical_name<Tag>(o, j);	// 0-based index
+                dump_canonical_name<Tag>(o, j, 
+			dump_flags::no_owners);	// 0-based index
                 o << "\"];" << endl;
         }
 	return o;
@@ -1807,23 +1810,23 @@ footprint::get_instance<enum_tag>(const size_t, const bool) const;
 template
 ostream&
 footprint::dump_canonical_name<process_tag>(ostream&, const size_t, 
-	const bool) const;
+	const dump_flags&, const bool) const;
 template
 ostream&
 footprint::dump_canonical_name<channel_tag>(ostream&, const size_t, 
-	const bool) const;
+	const dump_flags&, const bool) const;
 template
 ostream&
 footprint::dump_canonical_name<bool_tag>(ostream&, const size_t, 
-	const bool) const;
+	const dump_flags&, const bool) const;
 template
 ostream&
 footprint::dump_canonical_name<int_tag>(ostream&, const size_t, 
-	const bool) const;
+	const dump_flags&, const bool) const;
 template
 ostream&
 footprint::dump_canonical_name<enum_tag>(ostream&, const size_t, 
-	const bool) const;
+	const dump_flags&, const bool) const;
 
 //=============================================================================
 }	// end namespace entity

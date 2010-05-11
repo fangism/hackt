@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.37 2009/10/27 18:22:01 fang Exp $
+#	$Id: Makefile.am,v 1.38 2010/05/11 00:18:23 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -116,18 +116,18 @@ srcdir_EXTRA_DIST += 086.hac 086a.hac 086b.hac 087.hac
 
 HACKT_CFLAT_TEST_SUBJECTS = \
 	001 006b \
-	025b 027b \
+	025b 025c 027b \
 	030b \
 	046 047 049 \
 	051 057 \
-	062 063 064 069 \
+	062 063 064 069 069b \
 	078 \
 	083 084 085 \
 	111 112 113 118 119 \
-	122 123 124 125 126 127 128 129 \
+	122 123 124 125 126 127 127b 128 128b 129 129b \
 	130 131 132 133 134 \
 	140 141 142 143 144 145 146 147 148 149 \
-	150 151 155 156 157 158 159 \
+	150 151 155 155b 156 157 158 159 \
 	160 161
 
 HACKT_GUILE_TEST_SCRIPTS_PASSES = \
@@ -144,7 +144,8 @@ BISON_OUTPUTS += 032 076 077 \
 	act-007
 
 # pending test cases
-srcdir_EXTRA_DIST +=
+srcdir_EXTRA_DIST += 162.hac
+# FIXME: 162.hac should be rejected
 
 include $(top_srcdir)/test/Make.test-tail
 

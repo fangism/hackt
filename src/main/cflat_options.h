@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.19 2009/10/29 23:00:29 fang Exp $
+	$Id: cflat_options.h,v 1.20 2010/05/11 00:18:12 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -8,8 +8,10 @@
 
 #include <string>
 #include "main/compile_options.h"
+#include "Object/common/dump_flags.h"
 
 namespace HAC {
+using entity::dump_flags;
 
 /**
 	Printing and operating options for cflat.
@@ -179,6 +181,23 @@ public:
 		Options to forward to compiler driver.  
 	 */
 	compile_options			comp_opt;
+	/**
+		Global printing options.
+		Should rarely have to modify these.
+	 */
+	dump_flags			__dump_flags;
+	/**
+		For alias pass only, print alternative name map.
+	 */
+	string				alt_tool_name;
+	/**
+		e.g. "xspice.x"
+	 */
+	string				alt_name_prefix;
+	/**
+		Flags to be used for printing alternate tool name map.
+	 */
+	dump_flags			alt_dump_flags;
 	// ignore policies...
 	// warning flags...
 	// error flags...
@@ -202,13 +221,19 @@ public:
 		show_precharges(false), 
 		use_referenced_type_instead_of_top_level(false), 
 		named_process_type(), 
-		comp_opt() {
+		comp_opt(), 
+		__dump_flags(dump_flags::no_owners),
+		alt_tool_name(),
+		alt_dump_flags(dump_flags::no_owners) {
 	}
 
 	~cflat_options() { }
 
 	bool
 	with_SEU(void) const { return tool_options & TOOL_OPTIONS_SEU; }
+
+	bool
+	emit_alt_names(void) const { return alt_tool_name.length(); }
 
 };	// end class cflat::options
 // __attribute__(packed) ? (no one cares...)

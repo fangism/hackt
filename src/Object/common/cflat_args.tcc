@@ -1,6 +1,6 @@
 /**
 	\file "Object/common/cflat_args.tcc"
-	$Id: cflat_args.tcc,v 1.4 2010/04/19 02:45:57 fang Exp $
+	$Id: cflat_args.tcc,v 1.5 2010/05/11 00:18:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_CFLAT_ARGS_TCC__
@@ -152,7 +152,7 @@ for (; pidi!=pide; ++pidi) {
 		const alias_reference_set<SubTag>& par(ppa.find(ppi+1)->second);
 		typename alias_reference_set<SubTag>::const_iterator
 			pmi(par.begin()), pme(par.end());
-		set<string> mem_aliases;
+		alias_group_type mem_aliases;
 		for ( ; pmi!=pme; ++pmi) {
 			const instance_alias_info<SubTag>& a(**pmi);
 			// process ports: if it is a public port, skip it
@@ -160,27 +160,45 @@ for (; pidi!=pide; ++pidi) {
 			//	hierarchical alias is not publicly reachable
 		if (accept_deep_alias(a, sfp)) {
 			ostringstream malias;
-			a.dump_hierarchical_name(malias,
-				dump_flags::no_leading_scope);
+			a.dump_hierarchical_name(malias, df);
 			STACKTRACE_INDENT_PRINT(tag_name << "-member alias: "
 				<< malias.str() << endl);
+#if USE_ALT_ALIAS_PAIRS
+			string& alt_m(mem_aliases[malias.str()]);
+			if (use_alt_name()) {
+				ostringstream aa;
+				a.dump_hierarchical_name(aa, alt_df);
+				alt_m = aa.str();
+			}
+#else
 			mem_aliases.insert(malias.str());
+#endif
 			// missing parent name
 		}
 		}
 		// evaluate cross-product sets of parent x child
-		set<string>::const_iterator
+		alias_group_type::const_iterator
 			j(local_proc_aliases[lpid].begin()),
 			k(local_proc_aliases[lpid].end());
 		for ( ; j!=k; ++j) {
-			set<string>::const_iterator
+			alias_group_type::const_iterator
 				p(mem_aliases.begin()), q(mem_aliases.end());
 		for ( ; p!=q; ++p) {
-			const string c(*j + '.' + *p);
+#if USE_ALT_ALIAS_PAIRS
+			const string c(j->first
+				+df.process_member_separator +p->first);
+			string& alt(local_aliases[app][c]);
+			if (use_alt_name()) {
+				alt = j->second +alt_df.process_member_separator
+					+p->second;
+			}
+#else
+			const string c(*j +df.process_member_separator +*p);
 			STACKTRACE_INDENT_PRINT(tag_name << 
 				"-alias[" << app << "]: " << c << endl);
 			local_aliases[app].insert(c);
 			// will be inserted uniquely
+#endif
 		}
 		}
 	}

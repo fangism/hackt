@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.29 2010/04/07 00:13:01 fang Exp $
+	$Id: cflat.cc,v 1.30 2010/05/11 00:18:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,7 +18,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/cflat_options.h"
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
+#if USE_OPTPARSE
+#include "util/optparse.tcc"
+#else
 #include "main/options_modifier.tcc"
+#endif
 #include "main/global_options.h"
 #include "common/config.h"
 
@@ -41,10 +45,16 @@ using entity::process_type_reference;
 // explicit early class instantiation for proper static initializer ordering
 // this guarantees the registry map is initialized before anything is registered
 
+#if USE_OPTPARSE
+typedef	util::options_map_impl<cflat_options>		options_map_impl_type;
+typedef	options_map_impl_type::opt_map_type		opt_map_type;
+static	options_map_impl_type				options_map_wrapper;
+#else
 // preferred by g++-3.3, but rejected by g++-4
 // template class cflat::options_modifier_policy_type;
 // accepted by both :S (hate having to copy exact name...)
 template class options_modifier_policy<cflat_options>;
+#endif
 
 //=============================================================================
 // class cflat static initializers
@@ -71,6 +81,30 @@ cflat::program_id = register_hackt_program_class<cflat>();
 #endif
 
 //=============================================================================
+#if USE_OPTPARSE
+static const string default_options_brief("(CAST cflat preset)");
+
+class cflat::register_options_modifier {
+	typedef	options_map_impl_type::opt_entry	opt_entry;
+	typedef	options_map_impl_type::opt_func		modifier_type;
+	const opt_entry&				receipt;
+
+public:
+	register_options_modifier(const string& Mode, 
+			const modifier_type COM, 
+			const string& h = default_options_brief) :
+		receipt(options_map_wrapper.options_map[Mode] =
+			opt_entry(COM, NULL, NULL, h)) {
+	}
+
+	register_options_modifier(const string& Mode, 
+			const modifier_type COM, 
+			const char* h) :
+		receipt(options_map_wrapper.options_map[Mode] =
+			opt_entry(COM, NULL, NULL, h)) {
+	}
+};
+#else
 static const char default_options_brief[] = "(CAST cflat preset)";
 
 /**
@@ -88,6 +122,7 @@ public:
 	}
 
 };	// end class register_options_modifier
+#endif
 
 //=============================================================================
 // cflat::options_modifier declarations and definitions
@@ -97,16 +132,32 @@ public:
 	all other mode modifiers leave it untouched.  
 ***/
 
+#if USE_OPTPARSE
+#define	OPTARG			const util::option_value& v, 
+#define	OPTARG_UNUSED		const util::option_value&, 
+#define	OPTARG_FWD		v, 
+typedef	bool			optfun_return_type;
+#define	OPTFUN_RETURN		return false;
+#else
+#define	OPTARG
+#define	OPTARG_UNUSED
+#define	OPTARG_FWD
+typedef	void			optfun_return_type;
+#define	OPTFUN_RETURN
+#endif
+
 /// Does absolutely nothing.  
 static
-void
-__cflat_default(cflat::options&) { }
+optfun_return_type
+__cflat_default(OPTARG_UNUSED cflat::options&) {
+	OPTFUN_RETURN
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // preset modes
 static
-void
-__cflat_prsim(cflat::options& cf) {
+optfun_return_type
+__cflat_prsim(OPTARG_UNUSED cflat::options& cf) {
 	cf.primary_tool = cflat::options::TOOL_PRSIM;
 	cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_EQUAL;
@@ -123,12 +174,13 @@ __cflat_prsim(cflat::options& cf) {
 	cf.show_precharges = false;
 	cf.size_prs = false;
 	cf.use_referenced_type_instead_of_top_level = false;
+	OPTFUN_RETURN
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
-void
-__cflat_prlint(cflat::options& cf) {
+optfun_return_type
+__cflat_prlint(OPTARG_UNUSED cflat::options& cf) {
 	cf.primary_tool = cflat::options::TOOL_PRLINT;
 	cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_NONE;
@@ -145,12 +197,13 @@ __cflat_prlint(cflat::options& cf) {
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
 	cf.use_referenced_type_instead_of_top_level = false;
+	OPTFUN_RETURN
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
-void
-__cflat_connect(cflat::options& cf) {
+optfun_return_type
+__cflat_connect(OPTARG_UNUSED cflat::options& cf) {
 	// cf.primary_tool = ?
 	// cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_CONNECT;
@@ -169,6 +222,7 @@ __cflat_connect(cflat::options& cf) {
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
 	cf.use_referenced_type_instead_of_top_level = false;
+	OPTFUN_RETURN
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -178,8 +232,8 @@ __cflat_connect(cflat::options& cf) {
 	alint
  */
 static
-void
-__cflat_lvs(cflat::options& cf) {
+optfun_return_type
+__cflat_lvs(OPTARG_UNUSED cflat::options& cf) {
 	cf.primary_tool = cflat::options::TOOL_LVS;
 	cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_CONNECT;
@@ -196,18 +250,20 @@ __cflat_lvs(cflat::options& cf) {
 	cf.compute_conductances = false;
 	cf.show_precharges = false;	// maybe true?
 	cf.use_referenced_type_instead_of_top_level = false;
+	OPTFUN_RETURN
 }
 
 /**
 	For the java-lvs flavor, some variations.  
  */
 static
-void
-__cflat_java_lvs(cflat::options& cf) {
-	__cflat_lvs(cf);
+optfun_return_type
+__cflat_java_lvs(OPTARG cflat::options& cf) {
+	__cflat_lvs(OPTARG_FWD cf);
 	cf.node_attributes = true;
 	cf.split_instance_attributes = true;
 	cf.expand_pass_gates = false;
+	OPTFUN_RETURN
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -216,8 +272,8 @@ __cflat_java_lvs(cflat::options& cf) {
 	aspice, Aspice
  */
 static
-void
-__cflat_wire(cflat::options& cf) {
+optfun_return_type
+__cflat_wire(OPTARG_UNUSED cflat::options& cf) {
 	// cf.primary_tool = ?
 	cf.connect_style = cflat::options::CONNECT_STYLE_WIRE;
 	cf.include_prs = false;
@@ -232,12 +288,13 @@ __cflat_wire(cflat::options& cf) {
 	cf.size_prs = false;
 	cf.compute_conductances = false;
 	cf.use_referenced_type_instead_of_top_level = false;
+	OPTFUN_RETURN
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
-void
-__cflat_ADspice(cflat::options& cf) {
+optfun_return_type
+__cflat_ADspice(OPTARG_UNUSED cflat::options& cf) {
 	// cf.primary_tool = ?
 	// cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_WIRE;
@@ -254,6 +311,7 @@ __cflat_ADspice(cflat::options& cf) {
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
 	cf.use_referenced_type_instead_of_top_level = false;
+	OPTFUN_RETURN
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -261,8 +319,8 @@ __cflat_ADspice(cflat::options& cf) {
 	Just check, don't print.
  */
 static
-void
-__cflat_check(cflat::options& cf) {
+optfun_return_type
+__cflat_check(OPTARG_UNUSED cflat::options& cf) {
 	// cf.primary_tool = ?
 	// cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_NONE;
@@ -273,13 +331,14 @@ __cflat_check(cflat::options& cf) {
 	cf.dsim_prs = false;
 	cf.size_prs = false;
 	cf.use_referenced_type_instead_of_top_level = false;
+	OPTFUN_RETURN
 }
 
 // end of primary modes
 //=============================================================================
 STATIC_TRACE_HERE("before cflat option modifiers")
 
-const cflat::register_options_modifier
+static const cflat::register_options_modifier
 /***
 @texinfo cflat/mode-prsim.texi
 @defvr {@t{cflat} option} prsim
@@ -287,7 +346,7 @@ const cflat::register_options_modifier
 @end defvr
 @end texinfo
 ***/
-	cflat::_prsim("prsim", &__cflat_prsim),
+	cflat_opt_mod_prsim("prsim", &__cflat_prsim),
 
 /***
 @texinfo cflat/mode-lvs.texi
@@ -299,9 +358,9 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_lvs("lvs", &__cflat_lvs),
-	cflat::_LVS("LVS", &__cflat_lvs),		// re-use lvs
-	cflat::_java_lvs("java-lvs", &__cflat_java_lvs),
+	cflat_opt_mod_lvs("lvs", &__cflat_lvs),
+	cflat_opt_mod_LVS("LVS", &__cflat_lvs),		// re-use lvs
+	cflat_opt_mod_java_lvs("java-lvs", &__cflat_java_lvs),
 
 /***
 @texinfo cflat/mode-ergen.texi
@@ -310,7 +369,7 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_ergen("ergen", &__cflat_lvs),		// re-use lvs
+	cflat_opt_mod_ergen("ergen", &__cflat_lvs),		// re-use lvs
 
 /***
 @texinfo cflat/mode-alint.texi
@@ -319,7 +378,7 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_alint("alint", &__cflat_lvs),		// re-use lvs
+	cflat_opt_mod_alint("alint", &__cflat_lvs),		// re-use lvs
 
 /***
 @texinfo cflat/mode-prlint.texi
@@ -328,7 +387,7 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_prlint("prlint", &__cflat_prlint),
+	cflat_opt_mod_prlint("prlint", &__cflat_prlint),
 
 /***
 @texinfo cflat/mode-prs2tau.texi
@@ -337,7 +396,7 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_prs2tau("prs2tau", &__cflat_lvs),	// re-use lvs
+	cflat_opt_mod_prs2tau("prs2tau", &__cflat_lvs),	// re-use lvs
 
 /***
 @texinfo cflat/mode-connect.texi
@@ -346,7 +405,7 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_connect("connect", &__cflat_connect),
+	cflat_opt_mod_connect("connect", &__cflat_connect),
 
 /***
 @texinfo cflat/mode-check.texi
@@ -355,7 +414,7 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_check("check", &__cflat_check),
+	cflat_opt_mod_check("check", &__cflat_check),
 
 /***
 @texinfo cflat/mode-wire.texi
@@ -364,7 +423,7 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_wire("wire", &__cflat_wire),
+	cflat_opt_mod_wire("wire", &__cflat_wire),
 
 /***
 @texinfo cflat/mode-aspice.texi
@@ -374,8 +433,8 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_aspice("aspice", &__cflat_wire),	// re-use wire
-	cflat::_Aspice("Aspice", &__cflat_wire),	// re-use wire
+	cflat_opt_mod_aspice("aspice", &__cflat_wire),	// re-use wire
+	cflat_opt_mod_Aspice("Aspice", &__cflat_wire),	// re-use wire
 
 /***
 @texinfo cflat/mode-ADspice.texi
@@ -384,7 +443,7 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_ADspice("ADspice", &__cflat_ADspice),
+	cflat_opt_mod_ADspice("ADspice", &__cflat_ADspice),
 
 /***
 @texinfo cflat/mode-default.texi
@@ -393,7 +452,7 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end defvr
 @end texinfo
 ***/
-	cflat::_default("default", &__cflat_default);
+	cflat_opt_mod_default("default", &__cflat_default);
 
 STATIC_TRACE_HERE("after cflat option modifiers")
 
@@ -411,15 +470,24 @@ Suppress printing of aliases.
 @end defvr
 @end texinfo
 ***/
+#if USE_OPTPARSE
+#define	SET_CONNECT_STYLE(k)	options_map_impl_type::set_member_constant<unsigned char, &cflat_options::connect_style, cflat::options::k>
+#define	__cflat_connect_none	SET_CONNECT_STYLE(CONNECT_STYLE_NONE)
+#define	__cflat_connect_equal	SET_CONNECT_STYLE(CONNECT_STYLE_EQUAL)
+#define	__cflat_connect_connect	SET_CONNECT_STYLE(CONNECT_STYLE_CONNECT)
+#define	__cflat_connect_wire	SET_CONNECT_STYLE(CONNECT_STYLE_WIRE)
+#else
 static
-void
-__cflat_connect_none(cflat::options& cf) {
+optfun_return_type
+__cflat_connect_none(OPTARG_UNUSED cflat::options& cf) {
 	cf.connect_style = cflat::options::CONNECT_STYLE_NONE;
+	OPTFUN_RETURN
 }
-const cflat::register_options_modifier
-	cflat::_connect_none("connect-none", &__cflat_connect_none, 
+#endif
+static const cflat::register_options_modifier
+	cflat_opt_mod_connect_none("connect-none", &__cflat_connect_none, 
 		"suppresses all printing of aliases"), 
-	cflat::_no_connect("no-connect", &__cflat_connect_none, 
+	cflat_opt_mod_no_connect("no-connect", &__cflat_connect_none, 
 		"(connect-none)");
 
 /***
@@ -429,13 +497,16 @@ Print aliases with style: @samp{= x y}.
 @end defvr
 @end texinfo
 ***/
+#if !USE_OPTPARSE
 static
-void
-__cflat_connect_equal(cflat::options& cf) {
+optfun_return_type
+__cflat_connect_equal(OPTARG_UNUSED cflat::options& cf) {
 	cf.connect_style = cflat::options::CONNECT_STYLE_EQUAL;
+	OPTFUN_RETURN
 }
-const cflat::register_options_modifier
-	cflat::_connect_equal("connect-equal", &__cflat_connect_equal, 
+#endif
+static const cflat::register_options_modifier
+	cflat_opt_mod_connect_equal("connect-equal", &__cflat_connect_equal, 
 		"alias-style: = x y");
 
 /***
@@ -445,13 +516,16 @@ Print aliases with style: @samp{connect x y}.
 @end defvr
 @end texinfo
 ***/
+#if !USE_OPTPARSE
 static
-void
-__cflat_connect_connect(cflat::options& cf) {
+optfun_return_type
+__cflat_connect_connect(OPTARG_UNUSED cflat::options& cf) {
 	cf.connect_style = cflat::options::CONNECT_STYLE_CONNECT;
+	OPTFUN_RETURN
 }
-const cflat::register_options_modifier
-	cflat::_connect_connect("connect-connect", &__cflat_connect_connect,
+#endif
+static const cflat::register_options_modifier
+	cflat_opt_mod_connect_connect("connect-connect", &__cflat_connect_connect,
 		"alias-style: connect x y");
 
 /***
@@ -461,16 +535,23 @@ Print aliases with style: @samp{wire x y}.
 @end defvr
 @end texinfo
 ***/
+#if !USE_OPTPARSE
 static
-void
-__cflat_connect_wire(cflat::options& cf) {
+optfun_return_type
+__cflat_connect_wire(OPTARG_UNUSED cflat::options& cf) {
 	cf.connect_style = cflat::options::CONNECT_STYLE_WIRE;
+	OPTFUN_RETURN
 }
-const cflat::register_options_modifier
-	cflat::_connect_wire("connect-wire", &__cflat_connect_wire,
+#endif
+static const cflat::register_options_modifier
+	cflat_opt_mod_connect_wire("connect-wire", &__cflat_connect_wire,
 		"alias-style: wire x y");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_OPTPARSE
+#define	SET_BOOL_OPT(m,v)	options_map_impl_type::set_member_constant<bool, &cflat_options::m, v>
+#endif
+
 /***
 @texinfo cflat/opt-include-prs.texi
 @defvr {@t{cflat -f} option} include-prs
@@ -481,29 +562,60 @@ Include or exclude production rules from output.
 @end defvr
 @end texinfo
 ***/
+#if USE_OPTPARSE
+#define	__cflat_include_prs	SET_BOOL_OPT(include_prs, true)
+#define	__cflat_exclude_prs	SET_BOOL_OPT(include_prs, false)
+#else
 static
-void
-__cflat_include_prs(cflat::options& cf) {
+optfun_return_type
+__cflat_include_prs(OPTARG_UNUSED cflat::options& cf) {
 	cf.include_prs = true;
+	OPTFUN_RETURN
 }
-const cflat::register_options_modifier
-	cflat::_include_prs("include-prs", &__cflat_include_prs, 
-		"includes prs in output"),
-	cflat::_no_exclude_prs("no-exclude-prs", &__cflat_include_prs, 
-		"(include-prs)");
-
 static
-void
-__cflat_exclude_prs(cflat::options& cf) {
+optfun_return_type
+__cflat_exclude_prs(OPTARG_UNUSED cflat::options& cf) {
 	cf.include_prs = false;
+	OPTFUN_RETURN
 }
-const cflat::register_options_modifier
-	cflat::_exclude_prs("exclude-prs", &__cflat_exclude_prs,
+#endif
+
+static const cflat::register_options_modifier
+	cflat_opt_mod_include_prs("include-prs", &__cflat_include_prs, 
+		"includes prs in output"),
+	cflat_opt_mod_no_exclude_prs("no-exclude-prs", &__cflat_include_prs, 
+		"(include-prs)"),
+	cflat_opt_mod_exclude_prs("exclude-prs", &__cflat_exclude_prs,
 		"excludes prs from output"),
-	cflat::_no_include_prs("no-include-prs", &__cflat_exclude_prs, 
+	cflat_opt_mod_no_include_prs("no-include-prs", &__cflat_exclude_prs, 
 		"(exclude-prs)");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_OPTPARSE
+#define	DEFINE_BOOL_OPTION_PAIR(mem, key, truestr, falsestr)		\
+static const cflat::register_options_modifier				\
+	cflat_opt_mod_ ## mem(key, &SET_BOOL_OPT(mem, true), truestr),	\
+	cflat_opt_mod_no_## mem("no-" key, &SET_BOOL_OPT(mem, false),	\
+		falsestr);
+#else
+#define	DEFINE_BOOL_OPTION_PAIR(mem, key, truestr, falsestr)		\
+static									\
+optfun_return_type							\
+__cflat_ ## mem(OPTARG_UNUSED cflat::options& cf) {			\
+	cf.mem = true;							\
+	OPTFUN_RETURN							\
+}									\
+static									\
+optfun_return_type							\
+__cflat_no_ ## mem(OPTARG_UNUSED cflat::options& cf) {			\
+	cf.mem = false;							\
+	OPTFUN_RETURN							\
+}									\
+static const cflat::register_options_modifier				\
+	cflat_opt_mod_ ## mem(key, &__cflat_ ## mem, truestr),		\
+	cflat_opt_mod_no_## mem("no-" key, &__cflat_no_ ## mem, falsestr);
+#endif
+
 /***
 @texinfo cflat/opt-self-aliases.texi
 @defvr {@t{cflat -f} option} self-aliases
@@ -512,23 +624,9 @@ Includes or exclude aliases @samp{x = x}.
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_self_aliases(cflat::options& cf) {
-	cf.dump_self_connect = true;
-}
-const cflat::register_options_modifier
-	cflat::_self_aliases("self-aliases", &__cflat_self_aliases, 
-		"includes aliases x = x");
-
-static
-void
-__cflat_no_self_aliases(cflat::options& cf) {
-	cf.dump_self_connect = false;
-}
-const cflat::register_options_modifier
-	cflat::_no_self_aliases("no-self-aliases", &__cflat_no_self_aliases,
-		"excludes aliases x = x");
+DEFINE_BOOL_OPTION_PAIR(dump_self_connect, "self-aliases",
+	"includes aliases x = x",
+	"excludes aliases x = x")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -539,23 +637,9 @@ Print or hide precharge expressions.
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_precharges(cflat::options& cf) {
-	cf.show_precharges = true;
-}
-const cflat::register_options_modifier
-	cflat::_precharges("precharges", &__cflat_precharges, 
-		"show precharge expressions");
-
-static
-void
-__cflat_no_precharges(cflat::options& cf) {
-	cf.show_precharges = false;
-}
-const cflat::register_options_modifier
-	cflat::_no_precharges("no-precharges", &__cflat_no_precharges,
-		"hide precharge expressions");
+DEFINE_BOOL_OPTION_PAIR(show_precharges, "precharges",
+	"show precharge expressions",
+	"hide precharge expressions")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -566,23 +650,9 @@ Wrap all node names in ``quotes''.
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_quote_names(cflat::options& cf) {
-	cf.enquote_names = true;
-}
-const cflat::register_options_modifier
-	cflat::_quote_names("quote-names", &__cflat_quote_names,
-		"wraps all node names in \"quotes\"");
-
-static
-void
-__cflat_no_quote_names(cflat::options& cf) {
-	cf.enquote_names = false;
-}
-const cflat::register_options_modifier
-	cflat::_no_quote_names("no-quote-names", &__cflat_no_quote_names, 
-		"no quote around node names");
+DEFINE_BOOL_OPTION_PAIR(enquote_names, "quote-names",
+	"wraps all node names in \"quotes\"",
+	"no quote around node names")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -593,24 +663,9 @@ Whether or not to print node attributes.
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_node_attributes(cflat::options& cf) {
-	cf.node_attributes = true;
-}
-const cflat::register_options_modifier
-	cflat::_node_attributes("node-attributes", &__cflat_node_attributes,
-		"print node attributes");
-
-static
-void
-__cflat_no_node_attributes(cflat::options& cf) {
-	cf.node_attributes = false;
-}
-const cflat::register_options_modifier
-	cflat::_no_node_attributes("no-node-attributes",
-		&__cflat_no_node_attributes, 
-		"suppress node attributes");
+DEFINE_BOOL_OPTION_PAIR(node_attributes, "node-attributes",
+	"print node attributes",
+	"suppress node attributes")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -632,25 +687,9 @@ or one attribute per line:
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_split_instance_attributes(cflat::options& cf) {
-	cf.split_instance_attributes = true;
-}
-const cflat::register_options_modifier
-	cflat::_split_instance_attributes("split-instance-attributes",
-		&__cflat_split_instance_attributes,
-		"print one attribute per line");
-
-static
-void
-__cflat_join_instance_attributes(cflat::options& cf) {
-	cf.split_instance_attributes = false;
-}
-const cflat::register_options_modifier
-	cflat::_join_instance_attributes("join-instance-attributes",
-		&__cflat_join_instance_attributes, 
-		"group instance attributes in a single line");
+DEFINE_BOOL_OPTION_PAIR(split_instance_attributes, "join-instance-attributes",
+	"print one attribute per line",
+	"group instance attributes in a single line")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -662,25 +701,9 @@ unidirectional production rules.
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_expand_pass_gates(cflat::options& cf) {
-	cf.expand_pass_gates = true;
-}
-const cflat::register_options_modifier
-	cflat::_expand_pass_gates("expand-pass-gates",
-		&__cflat_expand_pass_gates,
-		"expand pass gates to production rules");
-
-static
-void
-__cflat_no_expand_pass_gates(cflat::options& cf) {
-	cf.expand_pass_gates = false;
-}
-const cflat::register_options_modifier
-	cflat::_no_expand_pass_gates("no-expand-pass-gates",
-		&__cflat_no_expand_pass_gates, 
-		"do not expand pass gates as production rules");
+DEFINE_BOOL_OPTION_PAIR(expand_pass_gates, "expand-pass-gates",
+	"expand pass gates to production rules",
+	"do not expand pass gates as production rules")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -691,22 +714,25 @@ Enable single-event-upset mode for selected tool.
 @end defvr
 @end texinfo
 ***/
+// TODO: define a bitfield setter in util::optparse
 static
-void
-__cflat_SEU(cflat::options& cf) {
+optfun_return_type
+__cflat_SEU(OPTARG_UNUSED cflat::options& cf) {
 	cf.tool_options |= cflat::options::TOOL_OPTIONS_SEU;
+	OPTFUN_RETURN
 }
-const cflat::register_options_modifier
-	cflat::_SEU("SEU", &__cflat_SEU,
+static const cflat::register_options_modifier
+	cflat_opt_mod_SEU("SEU", &__cflat_SEU,
 		"enable single-event-upset mode for tool");
 
 static
-void
-__cflat_no_SEU(cflat::options& cf) {
+optfun_return_type
+__cflat_no_SEU(OPTARG_UNUSED cflat::options& cf) {
 	cf.tool_options &= ~cflat::options::TOOL_OPTIONS_SEU;
+	OPTFUN_RETURN
 }
-const cflat::register_options_modifier
-	cflat::_no_SEU("no-SEU", &__cflat_no_SEU, 
+static const cflat::register_options_modifier
+	cflat_opt_mod_no_SEU("no-SEU", &__cflat_no_SEU, 
 		"disable single-event-upset mode");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -723,23 +749,9 @@ Useful only as a diagnostic tool for debugging.
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_check_mode(cflat::options& cf) {
-	cf.check_prs = true;
-}
-const cflat::register_options_modifier
-	cflat::_check_mode("check-mode", &__cflat_check_mode, 
-		"silences cflat output while traversing hierarchy");
-
-static
-void
-__cflat_no_check_mode(cflat::options& cf) {
-	cf.check_prs = false;
-}
-const cflat::register_options_modifier
-	cflat::_no_check_mode("no-check-mode", &__cflat_no_check_mode, 
-		"cflat output enabled");
+DEFINE_BOOL_OPTION_PAIR(check_prs, "check-mode",
+	"silences cflat output while traversing hierarchy",
+	"cflat output enabled")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -750,23 +762,9 @@ Accumulate aliases in the form: @samp{wire (x,y,...)}
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_wire_mode(cflat::options& cf) {
-	cf.wire_mode = true;
-}
-const cflat::register_options_modifier
-	cflat::_wire_mode("wire-mode", &__cflat_wire_mode, 
-		"accumulate aliases in the form: wire (x,y,...)");
-
-static
-void
-__cflat_no_wire_mode(cflat::options& cf) {
-	cf.wire_mode = false;
-}
-const cflat::register_options_modifier
-	cflat::_no_wire_mode("no-wire-mode", &__cflat_no_wire_mode, 
-		"use one of the connect-* modes of printing aliases");
+DEFINE_BOOL_OPTION_PAIR(wire_mode, "wire-mode",
+	"accumulate aliases in the form: wire (x,y,...)",
+	"use one of the connect-* modes of printing aliases")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -777,23 +775,9 @@ Wraps prs in: @samp{dsim @{ ... @}}
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_dsim_prs(cflat::options& cf) {
-	cf.dsim_prs = true;
-}
-const cflat::register_options_modifier
-	cflat::_dsim_prs("dsim-prs", &__cflat_dsim_prs, 
-		"wraps prs in: dsim { ... }");
-
-static
-void
-__cflat_no_dsim_prs(cflat::options& cf) {
-	cf.dsim_prs = false;
-}
-const cflat::register_options_modifier
-	cflat::_no_dsim_prs("no-dsim-prs", &__cflat_no_dsim_prs, 
-		"not (dsim-prs)");
+DEFINE_BOOL_OPTION_PAIR(dsim_prs, "dsim-prs",
+	"wraps prs in: dsim { ... }",
+	"not (dsim-prs)")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -804,23 +788,9 @@ Prints rule literals with @t{<size>} specifications.
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_size_prs(cflat::options& cf) {
-	cf.size_prs = true;
-}
-const cflat::register_options_modifier
-	cflat::_size_prs("sizes", &__cflat_size_prs, 
-		"prints rule literals with <size> specifications");
-
-static
-void
-__cflat_no_size_prs(cflat::options& cf) {
-	cf.size_prs = false;
-}
-const cflat::register_options_modifier
-	cflat::_no_size_prs("no-sizes", &__cflat_no_size_prs, 
-		"not (size-prs)");
+DEFINE_BOOL_OPTION_PAIR(size_prs, "sizes",
+	"prints rule literals with <size> specifications",
+	"not (size-prs)")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -840,26 +810,118 @@ The default width is 5, and default length is 2.
 @end defvr
 @end texinfo
 ***/
-static
-void
-__cflat_strengths(cflat::options& cf) {
-	cf.compute_conductances = true;
-}
-const cflat::register_options_modifier
-	cflat::_strengths("strengths", &__cflat_strengths, 
-		"prints min/max strengths for each rule");
-
-static
-void
-__cflat_no_strengths(cflat::options& cf) {
-	cf.compute_conductances = false;
-}
-const cflat::register_options_modifier
-	cflat::_no_strengths("no-strengths", &__cflat_no_strengths, 
-		"suppresses min/max strengths for each rule");
+DEFINE_BOOL_OPTION_PAIR(compute_conductances, "strengths",
+	"prints min/max strengths for each rule",
+	"suppresses min/max strengths for each rule")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	cf.csim_style_prs = false;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-mangle.texi
+@defvr {@t{cflat -f} option} process_member_separator=SEP
+By default, '@t{.}' is used to separate process hierarchy.
+@var{SEP} can be any string that doesn't contain a comma.
+@end defvr
+@defvr {@t{cflat -f} option} struct_member_separator=SEP
+By default, '@t{.}' is used to denote channel or structure members.
+@var{SEP} can be any string that doesn't contain a comma.
+@end defvr
+@end texinfo
+***/
+static
+optfun_return_type
+__cflat_process_member_separator(OPTARG cflat_options& cf) {
+	cf.__dump_flags.process_member_separator = v.values.front();
+	// ignore excess values
+	OPTFUN_RETURN
+}
+static
+optfun_return_type
+__cflat_struct_member_separator(OPTARG cflat_options& cf) {
+	cf.__dump_flags.struct_member_separator = v.values.front();
+	// ignore excess values
+	OPTFUN_RETURN
+}
+
+static const cflat::register_options_modifier
+	cflat_opt_mod_process_member_separator(
+		"process_member_separator",
+		&__cflat_process_member_separator, 
+		"override the default process hierarchy delimiter"),
+	cflat_opt_mod_struct_member_separator(
+		"struct_member_separator",
+		&__cflat_struct_member_separator, 
+		"override the default struct member delimiter");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-alternate-names.texi
+@defvr {@t{cflat -f} option} alt_tool_name=name
+By setting an alternate tool name (just a string), this enables the printing
+of an additional name map between the baseline names and 
+alternatively mangled names.  
+For example, you may wish to generate a map between equivalent spice
+names and hflat names.  
+@end defvr
+
+The following @t{alt-} options control the mangling for names
+emitted for the @emph{alternate} tool.
+
+@defvr {@t{cflat -f} option} alt_name_prefix=STR
+This specifies a string to prefix in front of all tool names. 
+For example, @option{alt_name_prefix=TOP.} will turn a hierarchical
+name @t{x.y.z} into @t{TOP.x.y.z}.
+@end defvr
+
+@defvr {@t{cflat -f} option} alt_process_member_separator=SEP
+By default, '@t{.}' is used to separate process hierarchy.
+@var{SEP} can be any string that doesn't contain a comma.
+@end defvr
+
+@defvr {@t{cflat -f} option} alt_struct_member_separator=SEP
+By default, '@t{.}' is used to denote channel or structure members.
+@var{SEP} can be any string that doesn't contain a comma.
+@end defvr
+@end texinfo
+***/
+static
+optfun_return_type
+__cflat_alt_process_member_separator(OPTARG cflat_options& cf) {
+	cf.alt_dump_flags.process_member_separator = v.values.front();
+	// ignore excess values
+	OPTFUN_RETURN
+}
+static
+optfun_return_type
+__cflat_alt_struct_member_separator(OPTARG cflat_options& cf) {
+	cf.alt_dump_flags.struct_member_separator = v.values.front();
+	// ignore excess values
+	OPTFUN_RETURN
+}
+
+static const cflat::register_options_modifier
+#if USE_OPTPARSE
+	cflat_opt_mod_alt_tool_name(
+		"alt_tool_name",
+		&options_map_impl_type::set_member_single_string<
+			&cflat_options::alt_tool_name>, 
+		"enable alternate tool name mapping"),
+	cflat_opt_mod_alt_name_prefix(
+		"alt_name_prefix",
+		&options_map_impl_type::set_member_single_string<
+			&cflat_options::alt_name_prefix>, 
+		"common prefix for alternate tool names"),
+#endif
+	cflat_opt_mod_alt_process_member_separator(
+		"alt_process_member_separator",
+		&__cflat_alt_process_member_separator, 
+		"set the alternate tool process hierarchy delimiter"),
+	cflat_opt_mod_alt_struct_member_separator(
+		"alt_struct_member_separator",
+		&__cflat_alt_struct_member_separator, 
+		"set the alternate tool struct member delimiter");
 
 //=============================================================================
 cflat::cflat() { }
@@ -881,13 +943,27 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 	}
 	// cflat mode
 	const char* const mode = argv[1];
-	const options_modifier_map_iterator mi(options_modifier_map.find(mode));
-	if (mi == options_modifier_map.end() || !mi->second) {
+#if USE_OPTPARSE
+	typedef	opt_map_type::const_iterator	options_modifier_map_iterator;
+	const opt_map_type&
+		options_modifier_map(options_map_wrapper.options_map);
+#endif
+	const options_modifier_map_iterator
+		mi(options_modifier_map.find(mode));
+	if (mi == options_modifier_map.end()
+#if !USE_OPTPARSE
+			|| !mi->second
+#endif
+			) {
 		cerr << "Invalid mode: " << mode << endl;
 		usage();
 		return 1;
 	} else {
+#if USE_OPTPARSE
+		(mi->second.func)(util::option_value(), cf);
+#else
 		(mi->second)(cf);
+#endif
 	}
 
 	// additional mode modifiers
@@ -965,17 +1041,37 @@ cflat::parse_command_options(const int argc, char* argv[], options& cf) {
  */
 void
 cflat::getopt_f_options(options& opt, const char* optarg) {
+#if USE_OPTPARSE
+	typedef	opt_map_type::const_iterator			const_iterator;
+	const opt_map_type&
+		options_modifier_map(options_map_wrapper.options_map);
+	const util::option_value ov(util::optparse(optarg));
+	const const_iterator mi(options_modifier_map.find(ov.key));
+#else
 	typedef options_modifier_map_type::mapped_type		mapped_type;
 	typedef options_modifier_map_type::const_iterator	const_iterator;
 	const const_iterator mi(options_modifier_map.find(optarg));
-	if (mi == options_modifier_map.end() || !mi->second) {
+#endif
+	if (mi == options_modifier_map.end()
+#if !USE_OPTPARSE
+			|| !mi->second
+#endif
+			) {
 		// cerr << "Invalid mode: " << optarg << endl;
-		string err("Invalid mode: ");
+		string err("Invalid -f option: ");
+#if USE_OPTPARSE
+		err += ov.key;
+#else
 		err += optarg;
+#endif
 		throw util::getopt_exception(1, err);
 	} else {
+#if USE_OPTPARSE
+		(mi->second.func)(ov, opt);
+#else
 		const mapped_type& om(mi->second);
 		om(opt);	// process option
+#endif
 	}
 }
 
@@ -1086,16 +1182,15 @@ cflat::usage(void) {
 	cerr << "\t-f <mode> : applies mode-preset or individual flag modifier"
 		" (repeatable)" << endl;
 	// list modes
+#if USE_OPTPARSE
+	const opt_map_type&
+		options_modifier_map(options_map_wrapper.options_map);
+#endif
 	const size_t modes = options_modifier_map.size();
 if (modes) {
 	cerr << "Modes and modifier-flags (" << modes << " total):" << endl;
-#if 0
-	typedef	options_modifier_map_type::const_iterator	const_iterator;
-	const_iterator i(options_modifier_map.begin());
-	const const_iterator e(options_modifier_map.end());
-	for ( ; i!=e; i++) {
-		cerr << '\t' << i->first << " : " << i->second.brief << endl;
-	}
+#if USE_OPTPARSE
+	options_map_wrapper.help(cerr, false, false);
 #else
 	dump_options_briefs(cerr);
 #endif

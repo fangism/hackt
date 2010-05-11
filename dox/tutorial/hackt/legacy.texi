@@ -1,5 +1,5 @@
 @c "hackt/legacy.texi"
-@c $Id: legacy.texi,v 1.7 2010/04/05 23:59:37 fang Exp $
+@c $Id: legacy.texi,v 1.8 2010/05/11 00:18:00 fang Exp $
 
 @node Legacy Compatibility
 @chapter Legacy Compatibility
@@ -127,4 +127,10 @@ The following @option{-f} flags are supported:
 @include cflat/opt-sizes.texi
 
 Preset modes are just combinations of the individual mode modifiers.  
+
+There are limited options for mangling the hierarchical names
+of nodes.
+
+@include cflat/opt-mangle.texi
+@include cflat/opt-alternate-names.texi
 

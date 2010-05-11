@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.13 2010/04/07 00:13:07 fang Exp $
+	$Id: EventExecutor.cc,v 1.14 2010/05/11 00:18:15 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -28,6 +28,7 @@
 #include "Object/global_channel_entry.h"
 #include "Object/nonmeta_channel_manipulator.h"
 #include "Object/traits/proc_traits.h"
+#include "Object/common/dump_flags.h"
 
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/chpsim/DependenceCollector.h"
@@ -158,6 +159,7 @@ using util::numeric::rand48;
 using util::memory::count_ptr;
 using entity::preal_const;
 using entity::process_tag;
+using entity::dump_flags;
 
 //=============================================================================
 /// helper routines
@@ -605,7 +607,7 @@ EventRechecker::visit(const channel_send& cs) {
 		// TODO: factor out reusable code
 		ostringstream oss;
 		context.get_top_footprint().dump_canonical_name<channel_tag>(
-			oss, chan_index -1);
+			oss, chan_index -1, dump_flags::no_owners);
 		cerr << "\ton channel[" << chan_index << "] (" << oss.str()
 			<< ")" << endl;
 		THROW_EXIT;
@@ -623,7 +625,8 @@ try {
 	const size_t process_index = context.get_process_index();
 	if (process_index) {
 		context.get_top_footprint().dump_canonical_name<process_tag>(
-			canonical_name, process_index -1);
+			canonical_name, process_index -1,
+			dump_flags::no_owners);
 	}
 	const expr_dump_context
 		edc(process_index ? canonical_name.str() : string());
@@ -703,7 +706,7 @@ EventRechecker::visit(const channel_receive& cr) {
 		// TODO: factor out reusable code
 		ostringstream oss;
 		context.get_top_footprint().dump_canonical_name<channel_tag>(
-			oss, chan_index -1);
+			oss, chan_index -1, dump_flags::no_owners);
 		cerr << "\ton channel[" << chan_index << "] (" << oss.str()
 			<< ")" << endl;
 		THROW_EXIT;

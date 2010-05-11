@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.6 2010/04/07 00:12:30 fang Exp $
+	$Id: nonmeta_state.cc,v 1.7 2010/05/11 00:18:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -9,6 +9,7 @@
 #include <functional>
 #include "Object/nonmeta_state.h"
 #include "Object/def/footprint.h"
+#include "Object/common/dump_flags.h"
 #include "Object/global_entry.h"
 #if BUILTIN_CHANNEL_FOOTPRINTS
 #include "Object/global_channel_entry.h"
@@ -74,7 +75,8 @@ nonmeta_state_base<Tag>::__dump_all_subscriptions(ostream& o,
 		const instance_type& nsi(this->pool[i]);
 		if (nsi.has_subscribers()) {
 			o << traits_type::tag_name << "[" << i << "]: \"";
-			topfp.dump_canonical_name<Tag>(o, i-1);
+			topfp.dump_canonical_name<Tag>(o, i-1, 
+				dump_flags::no_owners);
 			o << "\" : ";
 			nsi.dump_subscribers(o) << endl;
 		}
@@ -211,6 +213,7 @@ nonmeta_state_manager::dump_state(ostream& o) const {
 ostream&
 nonmeta_state_manager::dump_struct(ostream& o,
 		const footprint& topfp) const {
+	const dump_flags& df(dump_flags::no_owners);
 	{
 		const size_t bools =
 			topfp.get_instance_pool<bool_tag>().total_entries() +1;
@@ -218,7 +221,7 @@ nonmeta_state_manager::dump_struct(ostream& o,
 		INVARIANT(i);
 		for ( ; i<bools; ++i) {
 			o << "bool[" << i << "]: \"";
-			topfp.dump_canonical_name<bool_tag>(o, i-1);
+			topfp.dump_canonical_name<bool_tag>(o, i-1, df);
 			o << "\" ";
 			// no static structural information
 			// bool_pool[i].dump_struct(o);
@@ -231,7 +234,7 @@ nonmeta_state_manager::dump_struct(ostream& o,
 		INVARIANT(i);
 		for ( ; i<ints; ++i) {
 			o << "int[" << i << "]: \"";
-			topfp.dump_canonical_name<int_tag>(o, i-1);
+			topfp.dump_canonical_name<int_tag>(o, i-1, df);
 			o << "\" ";
 			// no static structural information
 			// int_pool[i].dump_struct(o);
@@ -244,7 +247,7 @@ nonmeta_state_manager::dump_struct(ostream& o,
 		INVARIANT(i);
 		for ( ; i<enums; ++i) {
 			o << "enum[" << i << "]: \"";
-			topfp.dump_canonical_name<enum_tag>(o, i-1);
+			topfp.dump_canonical_name<enum_tag>(o, i-1, df);
 			o << "\" ";
 			// no static structural information
 			// enum_pool[i].dump_struct(o);
@@ -257,7 +260,7 @@ nonmeta_state_manager::dump_struct(ostream& o,
 		INVARIANT(i);
 		for ( ; i<chans; ++i) {
 			o << "chan[" << i << "]: \"";
-			topfp.dump_canonical_name<channel_tag>(o, i-1);
+			topfp.dump_canonical_name<channel_tag>(o, i-1, df);
 			o << "\" ";
 			// no static structural information
 			// channel_pool[i].dump_struct(o);

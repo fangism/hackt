@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.18 2009/10/16 20:38:46 fang Exp $
+	$Id: cflat.h,v 1.19 2010/05/11 00:18:12 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_H__
@@ -9,7 +9,15 @@
 
 #include <iosfwd>
 #include "main/hackt_fwd.h"
+
+// define to 1 to use optparse over old options_modifier
+#define USE_OPTPARSE                            1
+
+#if USE_OPTPARSE
+#include "util/optparse.h"
+#else
 #include "main/options_modifier.h"
+#endif
 
 namespace util {
 template <class> class getopt_map;
@@ -26,17 +34,26 @@ using std::ostream;
 	Yes, most everything is private, not supposed to use this directly, 
 	but rather, through program registration.  
  */
-class cflat : protected options_modifier_policy<cflat_options> {
+class cflat
+#if !USE_OPTPARSE
+		: protected options_modifier_policy<cflat_options>
+#endif
+{
+#if !USE_OPTPARSE
 	typedef	options_modifier_policy<cflat_options>
 						options_modifier_policy_type;
+#endif
 public:
 	/// defined in "main/cflat_options.h"
 	typedef	cflat_options			options;
+
+#if !USE_OPTPARSE
+	// derive from options_modifier_policy::register_options_modifier_base
+#endif
+	class register_options_modifier;
 private:
 	/// the top-level options map
 	typedef	util::getopt_map<options>	master_options_map_type;
-	// derive from options_modifier_policy::register_options_modifier_base
-	class register_options_modifier;
 
 	static
 	master_options_map_type			master_options;
@@ -71,33 +88,6 @@ private:
 	static
 	const size_t
 	program_id;
-
-	// no reason why these have to be static members, 
-	// other than convenience
-	// complete presets, from original cflat (CAST)
-	static const register_options_modifier
-		_default, _prsim, _lvs, _java_lvs, 
-		_ergen, _prlint, _prs2tau,
-		_connect, _wire, _aspice, _env, _check, _csim, _LVS,
-		_Aspice, _ADspice, _alint;
-
-	// individual flag modifiers
-	static const register_options_modifier
-		_connect_none, _no_connect, _connect_equal,
-		_connect_connect, _connect_wire,
-		_include_prs, _exclude_prs, _no_include_prs, _no_exclude_prs,
-		_precharges, _no_precharges,
-		_self_aliases, _no_self_aliases,
-		_node_attributes, _no_node_attributes, 
-		_split_instance_attributes, _join_instance_attributes, 
-		_expand_pass_gates, _no_expand_pass_gates, 
-		_quote_names, _no_quote_names,
-		_check_mode, _no_check_mode,
-		_wire_mode, _no_wire_mode,
-		_dsim_prs, _no_dsim_prs,
-		_size_prs, _no_size_prs, 
-		_strengths, _no_strengths, 
-		_SEU, _no_SEU;
 
 	static
 	void

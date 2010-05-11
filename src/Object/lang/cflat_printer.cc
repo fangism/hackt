@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.26 2010/04/07 00:12:50 fang Exp $
+	$Id: cflat_printer.cc,v 1.27 2010/05/11 00:18:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -149,7 +149,8 @@ void
 cflat_prs_printer::__dump_resolved_canonical_literal(ostream& o, 
 		const size_t ni) const {
 	if (cfopts.enquote_names) { o << '\"'; }
-	parent_type::__dump_resolved_canonical_literal(o, ni);
+	parent_type::__dump_resolved_canonical_literal(o, ni,
+		cfopts.__dump_flags);
 	if (cfopts.enquote_names) { o << '\"'; }
 }
 

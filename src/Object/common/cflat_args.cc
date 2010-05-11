@@ -1,6 +1,6 @@
 /**
 	\file "Object/common/cflat_args.cc"
-	$Id: cflat_args.cc,v 1.3 2010/04/07 00:12:34 fang Exp $
+	$Id: cflat_args.cc,v 1.4 2010/05/11 00:18:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -44,12 +44,20 @@ __accept_deep_alias(const instance_alias_info<process_tag>& a,
 cflat_aliases_arg_type::cflat_aliases_arg_type(
 		const footprint_frame& _fpf,
 		const global_offset& g,
+		const dump_flags& d,
+#if USE_ALT_ALIAS_PAIRS
+		const dump_flags& ad, 
+#endif
 		const string& _p) :
 		global_entry_context(_fpf, g),
 		local_proc_graph(), 
 		ordered_lpids(),
 		local_proc_aliases(),
 //		local_bool_aliases(),
+		df(d),
+#if USE_ALT_ALIAS_PAIRS
+		alt_df(ad), 
+#endif
 		prefix(_p) {
 }
 
@@ -173,15 +181,26 @@ for (pi=pb; pi<pe; ++pi) {
 		NEVER_NULL(*i);
 		const instance_alias_info<Tag>& a(**i);
 		ostringstream oss;
-		a.dump_hierarchical_name(oss, dump_flags::no_leading_scope);
+		a.dump_hierarchical_name(oss, df);
 		const string& local_name(oss.str());	// base-names
+#if USE_ALT_ALIAS_PAIRS
+		// map::insert
+		string& alt_name(local_proc_aliases[lpid][local_name]);
+		// TODO: check uniqueness
+		if (use_alt_name()) {
+			ostringstream altss;
+			a.dump_hierarchical_name(altss, alt_df);
+			alt_name = altss.str();
+		}	// otherwise save work, leave blank
+#else
 		local_proc_aliases[lpid].insert(local_name);
+#endif
 	}
 	// increment global offset
 	if (pi >= lpp.port_entries()) {
 	sgo += sfp;
 	}
-}
+}	// end for
 
 // topological sort of locally owned processes, 
 // some of which are ports of each other!

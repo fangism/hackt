@@ -1,0 +1,11 @@
+# ALT[spice]: !GND = !GND
+# ALT[spice]: none/!GND = none.!GND
+= "!GND" "none.!GND"
+# ALT[spice]: !Vdd = !Vdd
+# ALT[spice]: none/!Vdd = none.!Vdd
+= "!Vdd" "none.!Vdd"
+# ALT[spice]: foo = foo
+# ALT[spice]: none/a = none.a
+= "foo" "none.a"
+# ALT[spice]: none/b = none.b
+= "foo" "none.b"

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_context_visitor.h"
-	$Id: cflat_context_visitor.h,v 1.6 2010/04/07 00:12:49 fang Exp $
+	$Id: cflat_context_visitor.h,v 1.7 2010/05/11 00:18:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
@@ -11,6 +11,7 @@
 
 namespace HAC {
 namespace entity {
+struct dump_flags;		// from "Object/common/dump_flags.h"
 
 //=============================================================================
 /**
@@ -42,10 +43,12 @@ public:
 		directive_node_group_type&) const;
 
 	ostream&
-	__dump_canonical_literal(ostream&, const size_t) const;
+	__dump_canonical_literal(ostream&, const size_t,
+		const dump_flags&) const;
 
 	ostream&
-	__dump_resolved_canonical_literal(ostream&, const size_t) const;
+	__dump_resolved_canonical_literal(ostream&, const size_t, 
+		const dump_flags&) const;
 
 };	// end class cflat_context_visitor
 
