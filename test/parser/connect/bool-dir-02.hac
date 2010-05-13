@@ -1,0 +1,12 @@
+// "bool-dir-02.hac"
+
+defproc in_and_out(bool x; bool y) {
+bool? z;	// this should be an warning/error, suspicious declaration
+prs {
+	x => z-
+	z => y-
+}
+}
+
+in_and_out burger;
+

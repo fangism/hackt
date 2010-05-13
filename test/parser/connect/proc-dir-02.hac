@@ -1,0 +1,16 @@
+// "proc-dir-02.hac"
+
+defproc ch1of2 (bool d[2]) { }
+
+defproc in_and_out(ch1of2? x; ch1of2! y) {
+ch1of2? z;		// should be at least a warning
+prs {
+(:i:2:
+	x.d[i] => z.d[i]-
+	z.d[i] => y.d[i]-
+)
+}
+}
+
+in_and_out burger;
+

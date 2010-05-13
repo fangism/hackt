@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.12 2009/10/02 01:56:39 fang Exp $
+	$Id: type.cc,v 1.13 2010/05/13 21:47:55 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -326,10 +326,15 @@ generic_type_ref::check_type(const context& c) const {
 		const count_ptr<channel_type_reference>
 			ctr(type_ref.is_a<channel_type_reference>());
 		if (!ctr) {
+#if 0
 			cerr << "ERROR: only channel types "
 				"have directionality.  "
 				<< where(*chan_dir) << endl;
 			return return_type(NULL);
+#else
+			// TODO: use direction spec for other types
+			return type_ref;
+#endif
 		}
 		const char dir(chan_dir->text[0]);
 		INVARIANT(dir == '!' || dir == '?');

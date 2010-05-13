@@ -1,0 +1,10 @@
+// "bool-dir-01.hac"
+
+defproc in_and_out(bool? x; bool! y) {
+prs {
+	x => y-
+}
+}
+
+in_and_out burger;
+

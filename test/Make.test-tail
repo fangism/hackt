@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.99 2010/04/05 23:59:50 fang Exp $
+#	$Id: Make.test-tail,v 1.100 2010/05/13 21:47:56 fang Exp $
 
 # for test that depend on pre-install plug-ins
 # don't forget to pass -dlopen to assist searching for pre-install dependencies
@@ -113,13 +113,16 @@ SKIP_TEST_SCRIPT = \
 
 DUMMY_TEST_SCRIPT = $(ECHO) "$(SHELL_INTERPRETER)" > $@ ; $(CHMOD) +x $@
 
-.hac.depend:
-	@if test -x $(HACKT_COMPILE_EXE) ; then \
+HAC_DEPEND_SCRIPT = \
+	if test -x $(HACKT_COMPILE_EXE) ; then \
 		$(ECHO) "Generating automatic dependencies $@ ..." && \
 		$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $@-tmp $< && \
 		$(CAT) $@-tmp | $(HAC_DEPEND_FILTER) > $@ && \
 		$(RM) $@-tmp ; \
 	fi
+
+.hac.depend:
+	@$(HAC_DEPEND_SCRIPT)
 
 if VERBOSE_CHECK
 ECHO_FILTERED = $(ECHO) "Filtered $@"
@@ -315,6 +318,7 @@ MORE_CLEAN_RECURSIVE_TARGETS += clean-summaries-recursive
 
 distclean-depend-local:
 	-$(RM_PATTERN) "*.autodepend"
+	-$(RM_PATTERN) "*.depend-tmp"
 	-$(RM_PATTERN) "*.depend"
 	-$(RM_PATTERN) "*.hacdepend"
 

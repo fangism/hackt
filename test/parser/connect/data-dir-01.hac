@@ -1,0 +1,14 @@
+// "data-dir-01.hac"
+
+deftype ch1of2 <: int<1> (bool d[2]) { }
+
+defproc in_and_out(ch1of2? x; ch1of2! y) {
+prs {
+(:i:2:
+	x.d[i] => y.d[i]-
+)
+}
+}
+
+in_and_out burger;
+

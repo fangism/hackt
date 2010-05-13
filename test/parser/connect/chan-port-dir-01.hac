@@ -1,0 +1,16 @@
+// "chan-port-dir-01.hac"
+
+// sender supposed to drive d
+// receiver supposed to drive e
+defchan e1of2 <: chan(bool) (bool! d[2]; bool? e) { }
+
+defproc in_and_out(e1of2? x; e1of2! y) {
+prs {
+(:i:2:
+	x.d[i] => y.d[i]-
+)
+}
+}
+
+in_and_out burger;
+

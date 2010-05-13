@@ -1,0 +1,14 @@
+// "chan-dir-01.hac"
+
+defchan e1of2 <: chan(bool) (bool d[2], e) { }
+
+defproc in_and_out(e1of2? x; e1of2! y) {
+prs {
+(:i:2:
+	x.d[i] => y.d[i]-
+)
+}
+}
+
+in_and_out burger;
+

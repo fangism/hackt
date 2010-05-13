@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.54 2010/04/30 00:21:46 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.55 2010/05/13 21:47:56 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -1177,9 +1177,9 @@ physical_type_ref
 	;
 
 base_data_type_ref
-	: base_data_type strict_relaxed_template_arguments
-		{ $$ = new generic_type_ref($1, $2); }
-		/* 3rd argument is channel direction, doesn't apply here */
+	: base_data_type strict_relaxed_template_arguments optional_chan_dir
+		{ $$ = new generic_type_ref($1, $2); DELETE_TOKEN($3); }
+		/* TODO: use direction argument */
 	;
 
 /** because general data types may be user-defined **/

@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-05-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-94:
+	  parser/hackt-parse.yy.in: updated grammar to accept '!' '?'
+		direction hints along with more (non-channel) types.
+		For now the extra token are just discarded, the front-end
+		doesn't take advantage of this information yet, nor does
+		it propagate the middle-end or intermediate representations.
+	  Updated some expect-fail test cases (diagnotsic messages).
+	  Added a few basic expect-pass test cases, not yet documented.
+
+
 2010-05-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-93:

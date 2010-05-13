@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.38 2010/05/11 00:18:23 fang Exp $
+#	$Id: Makefile.am,v 1.39 2010/05/13 21:47:59 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -21,6 +21,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	globals-07 globals-08 globals-11 globals-12 \
 	supply-01 supply-02 \
 	act-006 act-007 act-009 act-010 act-011
+# TODO: {bool,chan,data,proc}-dir-02.hac
 
 # pending: member_nonmeta_instance_references: globals-09 globals-10
 srcdir_EXTRA_DIST += globals-09.hac globals-10.hac
@@ -47,6 +48,11 @@ HACKT_PARSE_TEST_PASSES = \
 	140 141 142 143 144 145 146 147 148 149 \
 	150 151 152 153 154 155 156 157 158 159 \
 	160 161 \
+	bool-dir-01 \
+	data-dir-01 \
+	chan-dir-01 \
+	proc-dir-01 \
+	chan-port-dir-01 \
 	act-001 act-002 act-003 act-004 act-005 act-008 act-012
 
 HACKT_CREATE_TEST_PASSES = \
@@ -68,6 +74,7 @@ HACKT_CREATE_TEST_PASSES = \
 	150 151 152 153 154 155 156 157 158 159 \
 	160 161 \
 	act-001 act-002 act-003 act-005 act-012
+# TODO: {bool,chan,data,proc}-dir-*
 
 HACKT_CREATE_TEST_FAILURES = \
 	020 020a 023 023a 024 \
@@ -146,6 +153,12 @@ BISON_OUTPUTS += 032 076 077 \
 # pending test cases
 srcdir_EXTRA_DIST += 162.hac
 # FIXME: 162.hac should be rejected
+
+srcdir_EXTRA_DIST += \
+	bool-dir-02 \
+	data-dir-02 \
+	chan-dir-02 \
+	proc-dir-02
 
 include $(top_srcdir)/test/Make.test-tail
 

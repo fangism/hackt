@@ -1,0 +1,15 @@
+// "chan-dir-02.hac"
+
+defchan e1of2 <: chan(bool) (bool d[2], e) { }
+
+defproc in_and_out(e1of2? x; e1of2! y) {
+e1of2? z;	// should at least be a warning
+prs {
+(:i:2:
+	x.d[i] => y.d[i]-
+)
+}
+}
+
+in_and_out burger;
+
