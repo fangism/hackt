@@ -1,0 +1,10 @@
+// "bad-spec-01.hac"
+// @haco-flags@ -f unknown-spec=warn
+// option to ignore unknown directives
+
+bool x, y;
+
+spec {
+	bogus_spec(x, y)
+}
+

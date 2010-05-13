@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.61 2010/04/05 20:11:04 fang Exp $
+#	$Id: Makefile.am,v 1.62 2010/05/13 00:32:04 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -26,7 +26,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	supply-07 supply-08 supply-09 supply-10 supply-11 supply-12
 
 HACKT_PARSE_TEST_WARNINGS = \
-	macro-attrib-01 macro-attrib-02
+	macro-attrib-01 macro-attrib-02 \
+	bad-spec-01
 
 HACKT_PARSE_TEST_PASSES = \
 	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \

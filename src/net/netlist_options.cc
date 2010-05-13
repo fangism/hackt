@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.16 2010/05/11 00:18:13 fang Exp $
+	$Id: netlist_options.cc,v 1.17 2010/05/13 00:32:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -470,6 +470,7 @@ __set_policy_member(const option_value& opt,
 /**
 	Leave undefined, specialize the rest.
 	Use single overloaded function to automatically dispatch.
+	TODO: pass mem as a template parameter instead of function parameter.
  */
 template <typename T>
 bool

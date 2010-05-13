@@ -1,7 +1,7 @@
 /**
 	\file "main/compile.h"
 	Interface header for compile module.  
-	$Id: compile.h,v 1.8 2007/09/13 01:14:14 fang Exp $
+	$Id: compile.h,v 1.9 2010/05/13 00:32:02 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_COMPILE_H__
@@ -12,6 +12,8 @@
 #include "util/STL/map_fwd.h"
 #include "util/string_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
+
+#define	COMPILE_USE_OPTPARSE				1
 
 namespace HAC {
 class compile_options;
@@ -29,12 +31,14 @@ using util::memory::count_ptr;
 class compile {
 public:
 	typedef	compile_options			options;
+#if !COMPILE_USE_OPTPARSE
 	typedef	util::good_bool (*options_modifier)(options&);
 private:
 	struct options_modifier_info;
 	typedef	std::default_map<std::string, options_modifier_info>::type
 						options_modifier_map_type;
 	static const options_modifier_map_type	options_modifier_map;
+#endif
 public:
 	class register_options_modifier;
 public:

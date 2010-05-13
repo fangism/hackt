@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.30 2010/05/11 00:18:12 fang Exp $
+	$Id: cflat.cc,v 1.31 2010/05/13 00:32:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,7 +18,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/cflat_options.h"
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 #include "util/optparse.tcc"
 #else
 #include "main/options_modifier.tcc"
@@ -45,7 +45,7 @@ using entity::process_type_reference;
 // explicit early class instantiation for proper static initializer ordering
 // this guarantees the registry map is initialized before anything is registered
 
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 typedef	util::options_map_impl<cflat_options>		options_map_impl_type;
 typedef	options_map_impl_type::opt_map_type		opt_map_type;
 static	options_map_impl_type				options_map_wrapper;
@@ -81,7 +81,7 @@ cflat::program_id = register_hackt_program_class<cflat>();
 #endif
 
 //=============================================================================
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 static const string default_options_brief("(CAST cflat preset)");
 
 class cflat::register_options_modifier {
@@ -103,7 +103,7 @@ public:
 		receipt(options_map_wrapper.options_map[Mode] =
 			opt_entry(COM, NULL, NULL, h)) {
 	}
-};
+} __ATTRIBUTE_UNUSED__ ;
 #else
 static const char default_options_brief[] = "(CAST cflat preset)";
 
@@ -121,7 +121,7 @@ public:
 			base_type(Mode, COM, b) {
 	}
 
-};	// end class register_options_modifier
+} __ATTRIBUTE_UNUSED__ ;	// end class register_options_modifier
 #endif
 
 //=============================================================================
@@ -132,7 +132,7 @@ public:
 	all other mode modifiers leave it untouched.  
 ***/
 
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 #define	OPTARG			const util::option_value& v, 
 #define	OPTARG_UNUSED		const util::option_value&, 
 #define	OPTARG_FWD		v, 
@@ -470,7 +470,7 @@ Suppress printing of aliases.
 @end defvr
 @end texinfo
 ***/
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 #define	SET_CONNECT_STYLE(k)	options_map_impl_type::set_member_constant<unsigned char, &cflat_options::connect_style, cflat::options::k>
 #define	__cflat_connect_none	SET_CONNECT_STYLE(CONNECT_STYLE_NONE)
 #define	__cflat_connect_equal	SET_CONNECT_STYLE(CONNECT_STYLE_EQUAL)
@@ -497,7 +497,7 @@ Print aliases with style: @samp{= x y}.
 @end defvr
 @end texinfo
 ***/
-#if !USE_OPTPARSE
+#if !HFLAT_USE_OPTPARSE
 static
 optfun_return_type
 __cflat_connect_equal(OPTARG_UNUSED cflat::options& cf) {
@@ -516,7 +516,7 @@ Print aliases with style: @samp{connect x y}.
 @end defvr
 @end texinfo
 ***/
-#if !USE_OPTPARSE
+#if !HFLAT_USE_OPTPARSE
 static
 optfun_return_type
 __cflat_connect_connect(OPTARG_UNUSED cflat::options& cf) {
@@ -535,7 +535,7 @@ Print aliases with style: @samp{wire x y}.
 @end defvr
 @end texinfo
 ***/
-#if !USE_OPTPARSE
+#if !HFLAT_USE_OPTPARSE
 static
 optfun_return_type
 __cflat_connect_wire(OPTARG_UNUSED cflat::options& cf) {
@@ -548,7 +548,7 @@ static const cflat::register_options_modifier
 		"alias-style: wire x y");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 #define	SET_BOOL_OPT(m,v)	options_map_impl_type::set_member_constant<bool, &cflat_options::m, v>
 #endif
 
@@ -562,7 +562,7 @@ Include or exclude production rules from output.
 @end defvr
 @end texinfo
 ***/
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 #define	__cflat_include_prs	SET_BOOL_OPT(include_prs, true)
 #define	__cflat_exclude_prs	SET_BOOL_OPT(include_prs, false)
 #else
@@ -591,7 +591,7 @@ static const cflat::register_options_modifier
 		"(exclude-prs)");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 #define	DEFINE_BOOL_OPTION_PAIR(mem, key, truestr, falsestr)		\
 static const cflat::register_options_modifier				\
 	cflat_opt_mod_ ## mem(key, &SET_BOOL_OPT(mem, true), truestr),	\
@@ -902,7 +902,7 @@ __cflat_alt_struct_member_separator(OPTARG cflat_options& cf) {
 }
 
 static const cflat::register_options_modifier
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 	cflat_opt_mod_alt_tool_name(
 		"alt_tool_name",
 		&options_map_impl_type::set_member_single_string<
@@ -943,7 +943,7 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 	}
 	// cflat mode
 	const char* const mode = argv[1];
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 	typedef	opt_map_type::const_iterator	options_modifier_map_iterator;
 	const opt_map_type&
 		options_modifier_map(options_map_wrapper.options_map);
@@ -951,7 +951,7 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 	const options_modifier_map_iterator
 		mi(options_modifier_map.find(mode));
 	if (mi == options_modifier_map.end()
-#if !USE_OPTPARSE
+#if !HFLAT_USE_OPTPARSE
 			|| !mi->second
 #endif
 			) {
@@ -959,7 +959,7 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 		usage();
 		return 1;
 	} else {
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 		(mi->second.func)(util::option_value(), cf);
 #else
 		(mi->second)(cf);
@@ -1041,7 +1041,7 @@ cflat::parse_command_options(const int argc, char* argv[], options& cf) {
  */
 void
 cflat::getopt_f_options(options& opt, const char* optarg) {
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 	typedef	opt_map_type::const_iterator			const_iterator;
 	const opt_map_type&
 		options_modifier_map(options_map_wrapper.options_map);
@@ -1053,21 +1053,21 @@ cflat::getopt_f_options(options& opt, const char* optarg) {
 	const const_iterator mi(options_modifier_map.find(optarg));
 #endif
 	if (mi == options_modifier_map.end()
-#if !USE_OPTPARSE
+#if !HFLAT_USE_OPTPARSE
 			|| !mi->second
 #endif
 			) {
 		// cerr << "Invalid mode: " << optarg << endl;
 		string err("Invalid -f option: ");
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 		err += ov.key;
 #else
 		err += optarg;
 #endif
 		throw util::getopt_exception(1, err);
 	} else {
-#if USE_OPTPARSE
-		(mi->second.func)(ov, opt);
+#if HFLAT_USE_OPTPARSE
+		(mi->second.func)(ov, opt);	// check return value?
 #else
 		const mapped_type& om(mi->second);
 		om(opt);	// process option
@@ -1182,14 +1182,14 @@ cflat::usage(void) {
 	cerr << "\t-f <mode> : applies mode-preset or individual flag modifier"
 		" (repeatable)" << endl;
 	// list modes
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 	const opt_map_type&
 		options_modifier_map(options_map_wrapper.options_map);
 #endif
 	const size_t modes = options_modifier_map.size();
 if (modes) {
 	cerr << "Modes and modifier-flags (" << modes << " total):" << endl;
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 	options_map_wrapper.help(cerr, false, false);
 #else
 	dump_options_briefs(cerr);

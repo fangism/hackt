@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.19 2010/05/11 00:18:12 fang Exp $
+	$Id: cflat.h,v 1.20 2010/05/13 00:32:02 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_H__
@@ -11,9 +11,10 @@
 #include "main/hackt_fwd.h"
 
 // define to 1 to use optparse over old options_modifier
-#define USE_OPTPARSE                            1
+// this has been tested, ready to perm.
+#define HFLAT_USE_OPTPARSE                            1
 
-#if USE_OPTPARSE
+#if HFLAT_USE_OPTPARSE
 #include "util/optparse.h"
 #else
 #include "main/options_modifier.h"
@@ -35,11 +36,11 @@ using std::ostream;
 	but rather, through program registration.  
  */
 class cflat
-#if !USE_OPTPARSE
+#if !HFLAT_USE_OPTPARSE
 		: protected options_modifier_policy<cflat_options>
 #endif
 {
-#if !USE_OPTPARSE
+#if !HFLAT_USE_OPTPARSE
 	typedef	options_modifier_policy<cflat_options>
 						options_modifier_policy_type;
 #endif
@@ -47,7 +48,7 @@ public:
 	/// defined in "main/cflat_options.h"
 	typedef	cflat_options			options;
 
-#if !USE_OPTPARSE
+#if !HFLAT_USE_OPTPARSE
 	// derive from options_modifier_policy::register_options_modifier_base
 #endif
 	class register_options_modifier;

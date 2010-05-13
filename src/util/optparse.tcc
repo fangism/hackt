@@ -1,6 +1,6 @@
 /**
 	\file "util/optparse.tcc"
-	$Id: optparse.tcc,v 1.1 2010/05/11 00:18:21 fang Exp $
+	$Id: optparse.tcc,v 1.2 2010/05/13 00:32:04 fang Exp $
  */
 
 #ifndef	__UTIL_OPTPARSE_TCC__
@@ -108,23 +108,23 @@ options_map_impl<T>::set_member_constant(const option_value& opt,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
-	This overload binds the member as a template meta-parameter.
+	Set a member of a member.
  */
 template <class T>
-template <class V, V T::*mem, V K>
+template <class V1, class V2, V2 K>
 bool
-options_map_impl<T>::set_member_constant(const option_value& opt,
-		options_struct_type& t) {
+options_map_impl<T>::set_member_member_constant(const option_value& opt,
+	options_struct_type& t, V1 options_struct_type::*mem1, 
+	V2 V1::*mem2) {
 	if (opt.values.size()) {
 		cerr << "Warning: arguments passed to \'" << opt.key
 			<< "\' option ignored." << endl;
 	}
-	t.*mem = K;
+	t.*mem1.*mem2 = K;
 	return false;
 }
-#endif
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>

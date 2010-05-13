@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.23 2010/03/11 18:39:25 fang Exp $
+	$Id: compile.cc,v 1.24 2010/05/13 00:32:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -19,6 +19,9 @@
 #include "main/compile_options.h"
 #include "main/global_options.h"
 #include "lexer/file_manager.h"
+#if COMPILE_USE_OPTPARSE
+#include "util/optparse.tcc"
+#endif
 #include "util/getopt_portable.h"
 #include "util/getopt_mapped.h"
 #include "util/attributes.h"
@@ -36,6 +39,8 @@ using lexer::file_manager;
 using util::good_bool;
 
 //=============================================================================
+
+#if !COMPILE_USE_OPTPARSE
 /**
 	Entry for options.  
  */
@@ -57,6 +62,7 @@ struct compile::options_modifier_info {
 	}
 
 };	// end struct options_modifier_info
+#endif
 
 //=============================================================================
 // class compile static initializers
@@ -68,15 +74,43 @@ const char
 compile::brief_str[] = "Compiles HACKT source to object file.";
 
 
+#if COMPILE_USE_OPTPARSE
+typedef	util::options_map_impl<compile_options>		options_map_impl_type;
+typedef	options_map_impl_type::opt_map_type		opt_map_type;
+static	options_map_impl_type				options_map_wrapper;
+#else
 /**
 	Options modifier map must be initialized before any registrations.  
  */
 const compile::options_modifier_map_type
 compile::options_modifier_map;
+#endif
 
 //=============================================================================
 static const char default_options_brief[] = "Needs description.";
 
+#if COMPILE_USE_OPTPARSE
+class compile::register_options_modifier {
+	typedef options_map_impl_type::opt_entry        opt_entry;
+	typedef options_map_impl_type::opt_func         modifier_type;
+	const opt_entry&                                receipt;
+
+public:
+	register_options_modifier(const string& Mode,
+			const modifier_type COM,
+			const string& h = default_options_brief) :
+		receipt(options_map_wrapper.options_map[Mode] =
+			opt_entry(COM, NULL, NULL, h)) {
+	}
+
+	register_options_modifier(const string& Mode,
+			const modifier_type COM,
+			const char* h) :
+		receipt(options_map_wrapper.options_map[Mode] =
+			opt_entry(COM, NULL, NULL, h)) {
+	}
+} __ATTRIBUTE_UNUSED__ ;
+#else
 /**
 	Options modification registration interface.  
  */
@@ -95,141 +129,156 @@ public:
 		i.brief = b;
 	}
 } __ATTRIBUTE_UNUSED__;	// end class register_options_modifier
+#endif
 
 //=============================================================================
 // compile::options_modifier declarations and definitions
 // Texinfo documentation is below, under -f option.  
 
-static
-good_bool
-__compile_dump_include_paths(compile::options& o) {
-	o.dump_include_paths = true;
-	return good_bool(true);
-}
+#if COMPILE_USE_OPTPARSE
+#define	OPTARG			const util::option_value& v, 
+#define	OPTARG_UNUSED		const util::option_value&, 
+#define	OPTARG_FWD		v, 
+typedef	bool			optfun_return_type;
+#define	OPTFUN_RETURN		return false;
+#else
+#define	OPTARG
+#define	OPTARG_UNUSED
+#define	OPTARG_FWD
+typedef	good_bool		optfun_return_type;
+#define	OPTFUN_RETURN		return good_bool(true);
+#endif
 
-static const compile::register_options_modifier
-__compile_om_dump_include_paths("dump-include-paths",
-	&__compile_dump_include_paths,
-	"dumps -I include paths as they are processed");
+using HAC::parser::parse_options;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static
-good_bool
-__compile_no_dump_include_paths(compile::options& o) {
-	o.dump_include_paths = false;
-	return good_bool(true);
-}
+#if COMPILE_USE_OPTPARSE
+#define SET_OPT(t,m,v)							\
+	options_map_impl_type::set_member_constant<t, &compile_options::m, v>
 
-static const compile::register_options_modifier
-__compile_om_no_dump_include_paths("no-dump-include-paths",
-	&__compile_no_dump_include_paths,
-	"suppress feedback of -I include paths");
+#define SET_OPT2(t1,m1,t2,m2,v)						\
+	options_map_impl_type::set_member_member_constant<		\
+		t1, t2, &compile_options::m1, &t1::m2, v>
+
+#define SET_BOOL_OPT(m,v)		SET_OPT(bool, m, v)
+
+#define SET_BOOL_OPT2(t1,m1,t2,m2,v)	SET_OPT2(t1, m1, bool, m2, v)
+
+#define SET_PARSE_OPT2(t2,m2,v)						\
+	SET_OPT2(parse_options, parse_opts, t2, m2, v)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COMPILE_USE_OPTPARSE
+#define	DEFINE_OPTION(type, mem, key, val, str)				\
+static const compile::register_options_modifier				\
+	compile_opt_mod_ ## mem(key, &SET_OPT(type, mem, val), str);
+
+#define	DEFINE_BOOL_OPTION(mem, key, val, str)				\
+	DEFINE_OPTION(bool, mem, key, val, str)
+
+#define	DEFINE_OPTION2(type1, mem1, type2, mem2, key, val, str)		\
+static const compile::register_options_modifier				\
+	compile_opt_mod_ ## mem2 ## _ ## val(key,			\
+		&SET_OPT2(type1, mem1, type2, mem2, val), str);
+
+#define	DEFINE_PARSE_OPTION2(type2, mem2, key, val, str)		\
+	DEFINE_OPTION2(parse_options, parse_opts, 			\
+		type2, mem2, key, val, str)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COMPILE_USE_OPTPARSE
+#define	DEFINE_BOOL_OPTION_PAIR(mem, key, truestr, falsestr)		\
+static const compile::register_options_modifier				\
+	compile_opt_mod_ ## mem(key, &SET_BOOL_OPT(mem, true), truestr), \
+	compile_opt_mod_no_## mem("no-" key, &SET_BOOL_OPT(mem, false),	\
+		falsestr);
+#define	DEFINE_BOOL_PARSE_OPTION_PAIR(mem, key, truestr, falsestr)	\
+	DEFINE_PARSE_OPTION2(bool, mem, key, true, truestr)		\
+	DEFINE_PARSE_OPTION2(bool, mem, "no-" key, false, falsestr)
+#else
+#define	DEFINE_BOOL_OPTION_PAIR(mem, key, truestr, falsestr)		\
+static									\
+optfun_return_type							\
+__compile_ ## mem(OPTARG_UNUSED compile::options& cf) {			\
+	cf.mem = true;							\
+	OPTFUN_RETURN							\
+}									\
+static									\
+optfun_return_type							\
+__compile_no_ ## mem(OPTARG_UNUSED compile::options& cf) {		\
+	cf.mem = false;							\
+	OPTFUN_RETURN							\
+}									\
+static const compile::register_options_modifier				\
+	compile_opt_mod_ ## mem(key, &__compile_ ## mem, truestr),	\
+	compile_opt_mod_no_## mem("no-" key, &__compile_no_ ## mem, falsestr);
+#endif
+
+DEFINE_BOOL_OPTION_PAIR(dump_include_paths, "dump-include-paths",
+	"dumps -I include paths as they are processed",
+	"suppress feedback of -I include paths")
 
 //-----------------------------------------------------------------------------
-static
-good_bool
-__compile_dump_object_header(compile::options& o) {
-	o.dump_object_header = true;
-	return good_bool(true);
-}
-
-static const compile::register_options_modifier
-__compile_om_dump_object_header("dump-object-header",
-	&__compile_dump_object_header,
-	"dumps persistent object header before saving");
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static
-good_bool
-__compile_no_dump_object_header(compile::options& o) {
-	o.dump_object_header = false;
-	return good_bool(true);
-}
-
-static const compile::register_options_modifier
-__compile_om_no_dump_object_header("no-dump-object-header",
-	&__compile_no_dump_object_header,
-	"suppress persistent object header dump");
+DEFINE_BOOL_OPTION_PAIR(dump_object_header, "dump-object-header",
+	"dumps persistent object header before saving",
+	"suppress persistent object header dump")
 
 //-----------------------------------------------------------------------------
 // dialect flags
 // texinfo documentation is below under option-f
 
-static
-good_bool
-__compile_export_all(compile::options& o) {
-	o.parse_opts.export_all = true;
-	return good_bool(true);
-}
-
-static const compile::register_options_modifier
-__compile_om_export_all("export-all", 
-	&__compile_export_all,
-	"treat all definitions as exported");
-
-static
-good_bool
-__compile_export_strict(compile::options& o) {
-	o.parse_opts.export_all = false;
-	return good_bool(true);
-}
-
-static const compile::register_options_modifier
-__compile_om_export_strict("export-strict", 
-	&__compile_export_strict,
-	"only export definitions that are marked as such (default, ACT)");
+DEFINE_PARSE_OPTION2(bool, export_all, "export-all", true,
+	"treat all definitions as exported")
+DEFINE_PARSE_OPTION2(bool, export_all, "export-strict", false,
+	"only export definitions that are marked as such (default, ACT)")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static
-good_bool
-__compile_namespace_instances(compile::options& o) {
-	o.parse_opts.namespace_instances = true;
-	return good_bool(true);
-}
-
-static const compile::register_options_modifier
-__compile_om_namespace_instances("namespace-instances", 
-	&__compile_namespace_instances,
-	"allow instance management outside global namespace (default)");
-
-static
-good_bool
-__compile_no_namespace_instances(compile::options& o) {
-	o.parse_opts.namespace_instances = false;
-	return good_bool(true);
-}
-
-static const compile::register_options_modifier
-__compile_om_no_namespace_instances("no-namespace-instances", 
-	&__compile_no_namespace_instances,
-	"forbid instance management outside global namespace (ACT)");
+DEFINE_BOOL_PARSE_OPTION_PAIR(namespace_instances, "namespace-instances",
+	"allow instance management outside global namespace (default)",
+	"forbid instance management outside global namespace (ACT)")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static
-good_bool
-__compile_array_internal_nodes(compile::options& o) {
-	o.parse_opts.array_internal_nodes = true;
-	return good_bool(true);
-}
-
-static const compile::register_options_modifier
-__compile_om_array_internal_nodes("array-internal-nodes", 
-	&__compile_array_internal_nodes,
-	"allow implicit arrays of internal nodes in PRS (default)");
-
-static
-good_bool
-__compile_no_array_internal_nodes(compile::options& o) {
-	o.parse_opts.array_internal_nodes = false;
-	return good_bool(true);
-}
-
-static const compile::register_options_modifier
-__compile_om_no_array_internal_nodes("no-array-internal-nodes", 
-	&__compile_no_array_internal_nodes,
-	"reject implicit arrays of internal nodes in PRS (ACT)");
+DEFINE_BOOL_PARSE_OPTION_PAIR(array_internal_nodes, "array-internal-nodes",
+	"allow implicit arrays of internal nodes in PRS (default)",
+	"reject implicit arrays of internal nodes in PRS (ACT)")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COMPILE_USE_OPTPARSE
+template <error_policy parse_options::*mem>
+static
+bool
+__set_policy_member(const util::option_value& opt,
+		compile_options& c_opt) {
+const size_t s = opt.values.size();
+if (s >= 1) {
+	if (s > 1) {
+	cerr << "Warning: extra arguments passed to \'" << opt.key
+		<< "\' option ignored." << endl;
+	}
+	const string& p(opt.values.front());
+	if (p == "ignore") {
+		c_opt.parse_opts.*mem = OPTION_IGNORE;
+	} else if (p == "warn") {
+		c_opt.parse_opts.*mem = OPTION_WARN;
+	} else if (p == "error") {
+		c_opt.parse_opts.*mem = OPTION_ERROR;
+	} else {
+		cerr << "Error: error policy values for option " <<
+			opt.key << " are [ignore|warn|error]." << endl;
+		return true;
+	}
+}
+	return false;
+}
+
+static const compile::register_options_modifier
+__compile_om_case_collision("case-collision", 
+	&__set_policy_member<&parse_options::case_collision_policy>, 
+	"handle case-insensitive collisions (= ignore|[warn]|error)");
+
+#else
 static
 good_bool
 __compile_case_collision_ignore(compile::options& o) {
@@ -251,6 +300,7 @@ __compile_case_collision_error(compile::options& o) {
 	return good_bool(true);
 }
 
+// TODO: actually parse the policy argument using optparse()
 static const compile::register_options_modifier
 __compile_om_case_collision_ignore("case-collision=ignore", 
 	&__compile_case_collision_ignore, 
@@ -261,15 +311,28 @@ __compile_om_case_collision_warn("case-collision=warn",
 __compile_om_case_collision_error("case-collision=error", 
 	&__compile_case_collision_error, 
 	"reject case-insensitive collisions");
+#endif	// COMPILE_USE_OPTPARSE
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static const compile::register_options_modifier
+__compile_om_unknown_spec("unknown-spec", 
+	&__set_policy_member<&parse_options::unknown_spec_policy>, 
+	"handle unknown spec directives (= ignore|warn|[error])");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
-good_bool
-__compile_ACT(compile::options& o) {
+optfun_return_type
+__compile_ACT(OPTARG_UNUSED compile::options& o) {
+#if COMPILE_USE_OPTPARSE
+	o.parse_opts.export_all = false;
+	o.parse_opts.namespace_instances = false;
+	o.parse_opts.array_internal_nodes = false;
+#else
 	__compile_export_strict(o);
 	__compile_no_namespace_instances(o);
 	__compile_no_array_internal_nodes(o);
-	return good_bool(true);
+#endif
+	OPTFUN_RETURN
 }
 
 static const compile::register_options_modifier
@@ -416,6 +479,8 @@ general compile flags (repeatable) where @var{optname} is one of the following:
 	@item @option{warn} issues a warning but continues
 	@item @option{error} rejects and aborts compiling
 	@end itemize
+@item @option{unknown-spec=[ignore|warn|error]}:
+	Sets the error handling policy for unknown spec directives.
 @end itemize
 
 Dialect flags (for ACT-compatibility):
@@ -439,12 +504,31 @@ Dialect flags (for ACT-compatibility):
 @end texinfo
 ***/
 	case 'f': {
-		const options_modifier_map_type::const_iterator
-			mi(options_modifier_map.find(optarg));
-		if (mi == options_modifier_map.end() || !mi->second) {
+#if COMPILE_USE_OPTPARSE
+	typedef opt_map_type::const_iterator                    const_iterator;
+	const opt_map_type&
+		options_modifier_map(options_map_wrapper.options_map);
+	const util::option_value ov(util::optparse(optarg));
+	const const_iterator mi(options_modifier_map.find(ov.key));
+#else
+	typedef options_modifier_map_type::mapped_type          mapped_type;
+	typedef options_modifier_map_type::const_iterator       const_iterator;
+	const const_iterator mi(options_modifier_map.find(optarg));
+#endif
+		if (mi == options_modifier_map.end()
+#if !COMPILE_USE_OPTPARSE
+			|| !mi->second
+#endif
+			) {
 			cerr << "Invalid option argument: " << optarg << endl;
 			return 1;
-		} else if (!((mi->second)(opt).good)) {
+		}
+#if COMPILE_USE_OPTPARSE
+			else if ((mi->second.func)(ov, opt))
+#else
+			else if (!((mi->second)(opt).good))
+#endif
+		{
 			return 1;
 		}
 		break;
@@ -557,6 +641,9 @@ compile::usage(void) {
 	cerr << "  -d: produces text dump of compiled module" << endl <<
 		"  -f <opt> : general compile flags (repeatable)" << endl;
 {
+#if COMPILE_USE_OPTPARSE
+	options_map_wrapper.help(cerr, false, false);
+#else
 	typedef	options_modifier_map_type::const_iterator	const_iterator;
 	const_iterator i(options_modifier_map.begin());
 	const const_iterator e(options_modifier_map.end());
@@ -564,6 +651,7 @@ compile::usage(void) {
 		cerr << "    " << i->first << ": " <<
 			i->second.brief << endl;
 	}
+#endif
 }
 	cerr << "  -h: gives this usage messsage and exits" << endl <<
 		"  -I <path> : adds include path (repeatable)" << endl;

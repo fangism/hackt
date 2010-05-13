@@ -1,6 +1,6 @@
 /**
 	\file "AST/parse_options.h"
-	$Id: parse_options.h,v 1.3 2009/10/27 18:21:44 fang Exp $
+	$Id: parse_options.h,v 1.4 2010/05/13 00:32:01 fang Exp $
  */
 
 #ifndef	__HAC_AST_PARSE_OPTIONS_H__
@@ -41,6 +41,10 @@ struct parse_options {
 		Default: warn
 	 */
 	error_policy	case_collision_policy;
+	/**
+		What to about unknown spec directives.
+	 */
+	error_policy	unknown_spec_policy;
 
 	parse_options() : 
 #if REQUIRE_DEFINITION_EXPORT
@@ -50,7 +54,8 @@ struct parse_options {
 #endif
 		namespace_instances(true), 
 		array_internal_nodes(true),
-		case_collision_policy(OPTION_WARN)
+		case_collision_policy(OPTION_WARN),
+		unknown_spec_policy(OPTION_ERROR)
 		{ }
 
 };	// end class parse_options

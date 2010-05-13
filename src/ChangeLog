@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-05-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-93:
+	  main/compile.cc options implemented using optparse
+	  Added new compile option -f unknown-spec=[ignore|warn|error],
+		defaulting to error.  This is for compatibility.
+	  Added one test case, documented in texinfo.
+
+
 2010-05-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-92:

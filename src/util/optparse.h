@@ -4,7 +4,7 @@
 	Simply tokenizes into string sets, which is then handed off
 	elsewhere for processing.
 	Options can come from file or command-line argv.
-	$Id: optparse.h,v 1.4 2010/05/11 00:18:19 fang Exp $
+	$Id: optparse.h,v 1.5 2010/05/13 00:32:03 fang Exp $
  */
 
 #ifndef	__UTIL_OPTPARSE_H__
@@ -174,6 +174,24 @@ struct options_map_impl {
 	set_member_constant(const option_value& opt, options_struct_type& t) {
 		return set_member_constant<V,K>(opt, t, mem);
 	}
+
+	template <class V1, class V2, V2 K>
+	static
+	bool
+	set_member_member_constant(const option_value&,
+		options_struct_type&, V1 options_struct_type::*, 
+		V2 V1::*);
+
+	template <class V1, class V2,
+		V1 options_struct_type::*mem1,
+		V2 V1::*mem2, V2 K>
+	static
+	bool
+	set_member_member_constant(const option_value& opt,
+			options_struct_type& t) {
+		return set_member_member_constant<V1,V2,K>(opt, t, mem1, mem2);
+	}
+
 
 // TODO: set member bitfield, and clear member bitfield
 
