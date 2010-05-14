@@ -8,10 +8,10 @@
 # output is redirected to stdout
 
 exec @SED@ -e 's|^#FILE.*{|// &|' -e 's|^}.*#FILE.*|// &|' | \
-@CPP_TRADITIONAL@ -C -P | \
+@CPP_TRADITIONAL@ -traditional-cpp -C -P | \
 @SED@ -e 's|^\/\/ \(.*#FILE.*\)|\1|'
 
 # comment out #FILE directives
-# cpp, preserving comments
+# cpp, preserving comments, -traditional-cpp preserve spaces/lines better
 # uncomment #FILE directives
 

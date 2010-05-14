@@ -13,6 +13,9 @@
 		it propagate the middle-end or intermediate representations.
 	  Updated some expect-fail test cases (diagnotsic messages).
 	  Added a few basic expect-pass test cases, not yet documented.
+	  hac-cpp[.in]: pass -traditional-cpp to preserve line numbers
+		in the presence of #define macros.  Unfortunately, this
+		comes at the cost of variadic macro support. :(
 
 
 2010-05-12	David Fang		<fangism@users.sourceforge.net>
