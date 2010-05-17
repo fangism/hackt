@@ -60,7 +60,7 @@ channel Z is neutral, as expected.
 channel Z is waiting for the receiver, as expected.
 	50	Z.a : 0	[by Z.d[1]:=0]
 node `Z.a' is 0, as expected.
-channel-assert: expected channel Z neutral, but is valid.
+channel-assert: expected channel Z valid, but is neutral.
 channel-assert: cannot assert value on channel Z because 0 of 1 bundles are valid.
 channel-assert: channel Z is expecting to be waiting for the receiver, but is not.
 ... at line 63

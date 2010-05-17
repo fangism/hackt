@@ -74,6 +74,6 @@ channel X is neutral, as expected.
 channel X is waiting for the receiver, as expected.
 	60	X.e : 1	[by X.d[1]:=0]
 node `X.e' is 1, as expected.
-channel-assert: expected channel X neutral, but is valid.
+channel-assert: expected channel X valid, but is neutral.
 channel X is waiting for the sender, as expected.
 ... at line 71

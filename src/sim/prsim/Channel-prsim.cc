@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.30 2010/04/28 02:17:51 fang Exp $
+	$Id: Channel-prsim.cc,v 1.31 2010/05/17 21:37:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -762,7 +762,7 @@ case CHANNEL_TYPE_1ofN: {
 		} else if (!counter_state) {
 			// data is neutral
 		if (expect_valid) {
-			__assert_validity_diagnostic(cerr, name, !expect_valid);
+			__assert_validity_diagnostic(cerr, name, expect_valid);
 			return false;
 		} else if (confirm) {
 			cout << "channel " << name <<

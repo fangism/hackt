@@ -70,6 +70,6 @@ caused by: `X.d[1]' : 1
 ------------------------------------ 
 resetting data rail 
 	50	X.d[1] : 0
-channel-assert: expected channel X neutral, but is valid.
+channel-assert: expected channel X valid, but is neutral.
 channel-assert: channel X is expecting to be waiting for the sender, but is not.
 ... at line 68
