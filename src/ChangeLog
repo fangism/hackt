@@ -5,9 +5,12 @@
 
 2010-05-17	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-83-94+:
+	* HACKT-00-01-04-main-00-83-95:
 	  hacprsim: fixed channel-assert fail diagnostic message (typo)
 		Updated a few test cases.  Reported by Chris Pelosi.
+	  haco/parser: deleted list of tokens after passing to CONCAT_LIST
+		in hackt-parse.yy.in (PRS substrate contact overrides)
+		Test case added.
 
 
 2010-05-13	David Fang		<fangism@users.sourceforge.net>

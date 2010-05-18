@@ -3,7 +3,7 @@
 	Base set of classes for the HAC parser.  
 	Also includes yacc macros for list operations, look like
 	preprocessor macros, but defined as inline functions.
-	$Id: node_list.h,v 1.9 2010/04/27 18:33:13 fang Exp $
+	$Id: node_list.h,v 1.10 2010/05/18 21:10:18 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.h,v 1.10.12.1 2005/12/11 00:45:08 fang Exp
  */
@@ -310,7 +310,7 @@ template <class L>
 static
 inline
 void
-CONCAT_LIST(L* list, L* right) {
+CONCAT_LIST(L* list, const L* right) {
 	NEVER_NULL(list);
 	if (right) { list->concat(*right); }
 }

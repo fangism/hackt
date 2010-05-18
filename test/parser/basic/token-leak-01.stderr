@@ -1,0 +1,21 @@
+At: "token-leak-01.hac":13:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	keyword: prs [7:1..3]
+#STATE#	list<(inst-ref-expr)>: (id-expr): a ... [7:5..17]
+#STATE#	{ [7:19]
+#STATE#	end-of-file
+in state #STATE#, possible rules are:
+	language_body : PRS_LANG member_index_expr_list_in_angles_optional '{' . prs_body_optional '}'  (#RULE#)
+	prs_body_optional : .  (#RULE#)
+acceptable tokens are: 
+	'(' (shift)
+	'@' (shift)
+	'[' (shift)
+	'}' (reduce)
+	'~' (shift)
+	ID (shift)
+	TREE_LANG (shift)
+	SUBCKT_LANG (shift)

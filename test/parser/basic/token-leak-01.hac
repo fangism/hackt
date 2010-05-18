@@ -1,0 +1,12 @@
+// "token-leak-01.hac"
+// reduced test-case for leaked token
+// thanks to Carlos Tadeo Ortega Otero
+// symptom: compile fail is leaking tokens
+
+// tokens c, d leaked
+prs <a, b | c, d> {
+// prs <a, b | c, > {
+// prs <a, b | , d> {
+
+// that's right, no close-brace
+
