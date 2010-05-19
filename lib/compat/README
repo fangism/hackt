@@ -1,0 +1,13 @@
+"lib/compat/README"
+
+This directory is named 'compat' so that scripts that are intended to assist
+with tool/version migration to and from HAC can have a home.  
+
+The scripts and files in this directory are contributed from external sources
+and are NOT regularly tested, nor are they installed, though it is conceivable
+that one might wish to install some of them, so we continue to distribute them.
+To install them, copy them over yourself.
+
+Use at your own risk.
+But then again, the same goes for this entire project.  
+

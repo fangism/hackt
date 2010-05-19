@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.39 2010/04/17 00:39:17 fang Exp $
+#	$Id: Makefile.am,v 1.40 2010/05/19 23:09:30 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -62,9 +62,15 @@ dist_bin_SCRIPTS = \
 	verilog/vcs_scandepend.sh \
 	verilog/wrap_verilog_modules_to_hacprsim.awk
 
+# distribute these, but do not install
+dist_noinst_SCRIPTS = \
+	compat/hac_fix_vt.sh \
+	compat/upgrade_hacprsim_channel_commands.awk
+
 EXTRA_DIST += README \
 	ChangeLog \
 	TODO \
+	compat/README \
 	support/hac.vim \
 	support/ChangeLog
 
