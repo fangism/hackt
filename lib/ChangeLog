@@ -1,5 +1,5 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.64 2010/05/21 20:44:33 fang Exp $
+#	$Id: ChangeLog,v 1.65 2010/05/21 23:19:25 fang Exp $
 
 2010-05-19	David Fang	<fangism@users.sourceforge.net>
 
@@ -8,6 +8,9 @@
 		hac_fix_vt.sh: for syntax change of PRS
 		upgrade_hacprsim_channel_commands.awk: automatically converts
 			legacy prsim channel commands to hacprsim.
+	  verilog/wrap_verilog_modules_to_hacprsim.awk:
+		added -v output_format option to generate empty HAC
+			defproc if requested.
 
 
 2010-04-29	David Fang	<fangism@users.sourceforge.net>
