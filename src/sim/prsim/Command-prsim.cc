@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.65 2010/05/09 02:36:59 fang Exp $
+	$Id: Command-prsim.cc,v 1.66 2010/05/21 20:44:36 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4948,6 +4948,15 @@ may transiently and weakly interfere, as they come out of unknown state.
 and weak-interferences, which is useful for debugging.  
 @t{fatal} causes the simulation to exit immediate with non-zero exit status, 
 which is useful for non-interactive batch testing.  
+@strong{Caution:} @t{fatal} also causes the following diagnostic conditions to 
+exit fatally:
+	@i{invariant-fail},
+	@i{invariant-unknown},
+	@i{assert-fail},
+	@i{channel-expect-fail},
+	@i{excl-check-fail}
+
+@strong{TODO:} summarize this in table format.
 @end deffn
 @end texinfo
 ***/

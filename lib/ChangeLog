@@ -1,5 +1,14 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.63 2010/04/30 00:21:40 fang Exp $
+#	$Id: ChangeLog,v 1.64 2010/05/21 20:44:33 fang Exp $
+
+2010-05-19	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-96:
+	  added lib/compat directory for compatibility scripts
+		hac_fix_vt.sh: for syntax change of PRS
+		upgrade_hacprsim_channel_commands.awk: automatically converts
+			legacy prsim channel commands to hacprsim.
+
 
 2010-04-29	David Fang	<fangism@users.sourceforge.net>
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.38 2010/04/22 19:07:01 fang Exp $
+	$Id: State-prsim.h,v 1.39 2010/05/21 20:44:36 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -808,6 +808,7 @@ public:
 	ostream&
 	dump_mode(ostream&) const;
 
+// TODO: document these modes in table format in texinfo
 	void
 	set_mode_reset(void) {
 		unstable_policy = ERROR_BREAK;
@@ -838,6 +839,12 @@ public:
 		weak_unstable_policy = ERROR_FATAL;
 		interference_policy = ERROR_FATAL;
 		weak_interference_policy = ERROR_FATAL;
+	// additional fatalities:
+		invariant_fail_policy = ERROR_FATAL;
+		invariant_unknown_policy = ERROR_FATAL;
+		assert_fail_policy = ERROR_FATAL;
+		channel_expect_fail_policy = ERROR_FATAL;
+		excl_check_fail_policy = ERROR_FATAL;
 	}
 
 #define	DEFINE_POLICY_CONTROL_SET(name)				\

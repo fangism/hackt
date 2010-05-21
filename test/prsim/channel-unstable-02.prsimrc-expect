@@ -12,8 +12,8 @@ mode:
 	on weak-interference: fatal
 	checking exclusions: on
 	on exclusion-fail: fatal
-	on invariant-fail: break
-	on invariant-unknown: warn
+	on invariant-fail: fatal
+	on invariant-unknown: fatal
 	on assert-fail: fatal
 	on channel-expect-fail: fatal
 we will manually toggle the enable 
