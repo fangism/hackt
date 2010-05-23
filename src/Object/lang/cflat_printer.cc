@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.27 2010/05/11 00:18:09 fang Exp $
+	$Id: cflat_printer.cc,v 1.28 2010/05/23 21:49:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <set>
 #include <sstream>
+#include <numeric>
 #include "Object/lang/cflat_printer.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/PRS_footprint.h"
