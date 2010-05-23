@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.17 2010/04/30 18:41:53 fang Exp $
+	$Id: netgraph.h,v 1.18 2010/05/23 07:56:57 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -198,7 +198,9 @@ struct transistor {
 	TODO: indices of originating rule and/or internal node definition?
  */
 class device_group {
+public:
 	typedef	vector<transistor>	transistor_pool_type;
+protected:
 #if 0
 	/**
 		This is the index of the rule or internal node 
