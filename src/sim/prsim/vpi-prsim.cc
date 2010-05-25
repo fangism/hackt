@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.23 2010/04/07 00:13:10 fang Exp $
+	$Id: vpi-prsim.cc,v 1.24 2010/05/25 23:49:14 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -546,23 +546,7 @@ try {
 	throw;		// re-throw
 #endif
 }
-#if 0
-	if (!prsim_state->pending_events()) {
-		// catch up to vcs time?
-		prsim_state->update_time(vcstime);
-	}
-#endif
-#if 0
-  register_self_callback (vcstime);
-#else
-#if 0
-	if (prsim_state->pending_events()) {
-		register_self_callback(prsim_state->next_event_time());
-	}
-#else
 	reregister_next_callback();
-#endif
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1515,6 +1499,22 @@ prsim_default_after(PLI_BYTE8 *args) {
 
   return 1;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/***
+@texinfo vpi/prsim_cycle.texi
+@deffn Function $prsim_cycle
+Execute prsim events until event queue is empty.
+@end deffn
+@end texinfo
+***/
+static
+PLI_INT32
+prsim_cycle(PLI_BYTE8 *args) {
+  STACKTRACE_VERBOSE;
+}
+#endif
 
 //=============================================================================
 struct funcs {

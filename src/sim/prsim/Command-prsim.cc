@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.66 2010/05/21 20:44:36 fang Exp $
+	$Id: Command-prsim.cc,v 1.67 2010/05/25 23:49:13 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4956,7 +4956,27 @@ exit fatally:
 	@i{channel-expect-fail},
 	@i{excl-check-fail}
 
-@strong{TODO:} summarize this in table format.
+@multitable {channel-expect-fail} {@i{default}} {@t{reset}} {@t{run}} {@t{paranoid}} {@t{fatal}}
+@headitem policy @tab @i{default} @tab @t{reset} @tab @t{run} @tab @t{paranoid} @tab @t{fatal}
+@item interference
+@tab break @tab break @tab break @tab break @tab fatal
+@item weak-interference
+@tab warn @tab ignore @tab warn @tab break @tab fatal
+@item unstable
+@tab break @tab break @tab break @tab break @tab fatal
+@item weak-unstable
+@tab warn @tab warn @tab warn @tab break @tab fatal
+@item assert-fail
+@tab fatal @tab - @tab - @tab - @tab fatal
+@item excl-check-fail
+@tab fatal @tab - @tab - @tab - @tab fatal
+@item channel-expect-fail
+@tab fatal @tab - @tab - @tab - @tab fatal
+@item invariant-fail
+@tab break @tab - @tab - @tab - @tab fatal
+@item invariant-unknown
+@tab warn @tab - @tab - @tab - @tab fatal
+@end multitable
 @end deffn
 @end texinfo
 ***/
