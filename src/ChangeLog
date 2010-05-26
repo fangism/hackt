@@ -3,10 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-05-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-96:
+	  Fixed long standing connectivity-check false-positive bug
+		about missing fanins on signals.  (ACX-PR-4080)
+		Attributes and connectivity flags were being sync'd early at 
+		alias-time before the language bodies (chp, prs) were 
+		processed, just needed one more flag synchronization before
+		checking connectivity.  Test cases added.
+	  Factored process_definition::unroll_lang().
+	  port_alias_tracker: added ::synchronize_flag().
+
+
 2010-05-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-95+:
 	  hacprsim: mode fatal: now sets ALL diagnostic policies to fatal.
+	  Updated documentation for hacprsim:mode command.
+	  Minor gcc-4.4 compatibility fixes.
 
 
 2010-05-17	David Fang		<fangism@users.sourceforge.net>

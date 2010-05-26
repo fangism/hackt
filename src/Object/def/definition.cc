@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.50 2010/04/30 23:58:37 fang Exp $
+ 	$Id: definition.cc,v 1.51 2010/05/26 00:46:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -538,6 +538,18 @@ definition_base::add_port_formal(
 		const token_identifier&) {
 	ICE_NEVER_CALL(cerr);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Does nothing by default.
+	Overridden by subclasses.
+ */
+good_bool
+definition_base::unroll_lang(const unroll_context&) const {
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2382,7 +2394,7 @@ if (defined) {
 			// error message
 			return good_bool(false);
 		}
-		// TODO: CHP
+		// TODO: CHP -- override unroll_lang()
 	}
 	return good_bool(true);
 } else {
@@ -3203,6 +3215,44 @@ process_definition::__unroll_complete_type(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Process the language bodies.
+ */
+good_bool
+process_definition::unroll_lang(const unroll_context& c) const {
+	footprint& f(c.get_target_footprint());
+	// after all aliases have been successfully assigned local IDs
+	// then process the PRS and CHP bodies
+	if ((meta_type == META_TYPE_PROCESS) &&
+		!prs.unroll(c, f.get_instance_pool<bool_tag>(), 
+			f.get_prs_footprint()).good) {
+		// already have error message
+		return good_bool(false);
+	}
+	if (!spec.unroll(c, f.get_instance_pool<bool_tag>(), 
+			f.get_spec_footprint()).good) {
+		// already have error message
+		return good_bool(false);
+	}
+	// CHP unrolling also checks channel connectivity now
+	if ((meta_type == META_TYPE_PROCESS) &&
+		!chp.unroll(c, f).good) {
+		// already have error message
+		return good_bool(false);
+	}
+	// allocate local CHP event pool
+	f.allocate_chp_events();
+	// need to propagate flags after connectivity processing!
+	f.synchronize_alias_flags();
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("in process_definition::unroll_lang()");
+	const port_alias_tracker& st(f.get_scope_alias_tracker());
+	st.dump(cerr) << endl;
+#endif
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Create the definition footprint for a complete process_type.  
 	This can be invoked as a top-level module.  
 	\pre this definition is completely defined.  
@@ -3217,17 +3267,18 @@ try {
 	const footprint::create_lock LOCK(f);	// will catch recursion error
 	// will automatically unroll first if not already unrolled
 	if (!f.is_created()) {
+		const unroll_context c(&f, &top);
+		// why not pass context?
 		if (!__unroll_complete_type(p, f, top).good) {
 			// already have type error message
 			return good_bool(false);
 		}
-		const unroll_context c(&f, &top);
 		// no need to re-unroll formal parameters, 
 		// already expanded in footprint
 		// this replays internal aliases of all instances in this scope
 		// doesn't use context? what if dependent on global parameter?
 		// probably need to pass it in!
-		if (!f.create_dependent_types(top).good) {
+		if (!f.create_dependent_types(c).good) {
 			// error message
 		if (parent) {
 			cerr << "Error creating process type: " <<
@@ -3241,30 +3292,16 @@ try {
 		} // suppress this message for the top-level module
 			return good_bool(false);
 		}
-		// after all aliases have been successfully assigned local IDs
-		// then process the PRS and CHP bodies
-		if ((meta_type == META_TYPE_PROCESS) &&
-			!prs.unroll(c, f.get_instance_pool<bool_tag>(), 
-				f.get_prs_footprint()).good) {
-			// already have error message
+#if 1
+		if (!unroll_lang(c).good) {
 			return good_bool(false);
 		}
-		if (!spec.unroll(c, f.get_instance_pool<bool_tag>(), 
-				f.get_spec_footprint()).good) {
-			// already have error message
-			return good_bool(false);
-		}
-		// CHP unrolling also checks channel connectivity now
-		if ((meta_type == META_TYPE_PROCESS) &&
-			!chp.unroll(c, f).good) {
-			// already have error message
-			return good_bool(false);
-		}
+#endif
 		// check channel producer/consumer connectivity:
+		// since alias sets were computed before connectivity
+		// we may need to re-synchronize...
 		// however, skip some checks for top-level instantiations
 		f.connection_diagnostics(&top == &f);	// returns good_bool
-		// allocate local CHP event pool
-		f.allocate_chp_events();
 		// f.mark_created();	// ?
 		// count warnings
 		if (f.warnings()) {

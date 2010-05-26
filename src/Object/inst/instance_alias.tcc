@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.42 2010/04/30 23:58:43 fang Exp $
+	$Id: instance_alias.tcc,v 1.43 2010/05/26 00:46:52 fang Exp $
 	TODO: trim includes
  */
 
@@ -175,6 +175,7 @@ if (!this->container->get_canonical_collection().has_relaxed_type()
 	actuals_parent_type::copy_actuals(f);
 #endif
 	direction_connection_policy::initialize_direction(*this, c);
+	// FIXME: inherit direction flags?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -257,6 +258,10 @@ INSTANCE_ALIAS_INFO_CLASS::import_properties(const this_type& f) {
 	this->dump_hierarchical_name(STACKTRACE_INDENT_PRINT("this: ")) << endl;
 #endif
 	direction_connection_policy::initialize_actual_direction(f);
+#if ENABLE_STACKTRACE
+	f.dump_attributes(STACKTRACE_INDENT_PRINT("f.attributes: ")) << endl;
+	this->dump_attributes(STACKTRACE_INDENT_PRINT("this->attributes: ")) << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

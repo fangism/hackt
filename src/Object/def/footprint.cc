@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.54 2010/05/11 00:18:05 fang Exp $
+	$Id: footprint.cc,v 1.55 2010/05/26 00:46:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -581,10 +581,12 @@ footprint::instance_collection_ptr_type
 footprint::operator [] (const string& k) const {
 #if ENABLE_STACKTRACE
 	STACKTRACE_VERBOSE;
+#if 0
 	STACKTRACE_INDENT_PRINT("footprint looking up: " << k << endl);
 	dump_with_collections(cerr << "we have: " << endl,
 		dump_flags::default_value, expr_dump_context::default_value);
 
+#endif
 #endif
 	const const_instance_map_iterator
 		e(instance_collection_map.end()),
@@ -652,18 +654,6 @@ footprint::get_chp_footprint(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Visitor that constructs this footprint's private entry maps.
- */
-struct footprint_allocator : public alias_visitor {
-	footprint&			fp;
-	VISIT_INSTANCE_ALIAS_INFO_PROTOS()
-};
-
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For all instance collections, expand their canonical types.  
 	This does not unroll/create PRS footprints, that's done separately.  
@@ -676,8 +666,9 @@ struct footprint_allocator : public alias_visitor {
 	\param top top-level footprint for looking up global parameters?
  */
 good_bool
-footprint::create_dependent_types(const footprint& top) {
+footprint::create_dependent_types(const unroll_context& c) {
 	STACKTRACE_VERBOSE;
+	const footprint& top(*c.get_top_footprint());
 #if ENABLE_STACKTRACE
 	dump_type(STACKTRACE_STREAM << "*** CREATING TYPE: ") << endl;
 #endif
@@ -712,7 +703,6 @@ try {
 	// with relaxed types, whose types were implicitly bound 
 	// *after* aliasing to a complete-typed alias.  
 	// this performs the appropriate recursive connections
-	const unroll_context c(this, &top);
 	// will instantiate into this footprint
 	// only processes have relaxed types and substructure
 	if (!get_instance_collection_pool_bundle<process_tag>()
@@ -741,7 +731,9 @@ try {
 		return g;
 	}
 }
+
 	evaluate_scope_aliases(true);
+
 	// should this be postponed until connection_diagnostics()?
 	// after evaluate_scope_aliases, indices have been adjusted so
 	//	all publicly reachable indices are before private ones,
@@ -749,6 +741,7 @@ try {
 	partition_local_instance_pool();
 	expand_unique_subinstances();
 	construct_private_entry_map();
+
 	// for all structures with private subinstances (processes)
 	//	publicly reachable local processes that are aliased to a port
 	mark_created();
@@ -848,18 +841,6 @@ footprint::__dummy_get_instance(void) const {
 	get_instance<int_tag>(0);
 	get_instance<bool_tag>(0);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-good_bool
-footprint::collect_subentries(const global_indexed_reference& gref,
-		entry_collection& e) const {
-	FINISH_ME(Fang);
-	// use the footprint frame of the referenced process instance
-	// and all private local subinstance indices (range)
-	return good_bool(false);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -1297,9 +1278,14 @@ if (sift) {
 	// don't filter for scope, want to keep around unique entries
 	// scope_aliases.filter_uniques();
 #if ENABLE_STACKTRACE
-	scope_aliases.dump(cerr << "footprint::scope_aliases: " << endl) << endl;
+	scope_aliases.dump(cerr << "footprint::scope_aliases (before): " << endl) << endl;
 #endif
 	scope_aliases.shorten_canonical_aliases(*this);
+	// NOTE: at this point, prs has not yet been processed
+	// for connectivity diagnostics.
+#if ENABLE_STACKTRACE
+	scope_aliases.dump(cerr << "footprint::scope_aliases (after): " << endl) << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

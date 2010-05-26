@@ -1,0 +1,310 @@
+Warning: node aligner<>::_le has no pull-up nor pull-dn PRS fanin.
+Warnings found (1) while creating complete type aligner<>.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	48
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	90
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	286
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	26	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	484
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	37	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	40	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	50	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	51	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	56	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	footprnt	0	#HEAD#	#TAIL#	484
+	59	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	61	##ADDR##	procdefn	0	#HEAD#	#TAIL#	133
+	62	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	63	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	64	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	65	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	66	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	67	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	76	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	81	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	footprnt	0	#HEAD#	#TAIL#	647
+	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	85	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	86	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	87	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	88	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	90	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	92	##ADDR##	footprnt	0	#HEAD#	#TAIL#	386
+	93	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  4 definitions
+  0 typedefs
+  Definitions:
+    aligner = process-definition (defined) aligner(
+        bool<> !GND
+        bool<> !Vdd
+        e1of2<> l
+      )
+      In definition "aligner", we have: {
+      Instances:
+        !GND = bool<> aligner::!GND
+        !Vdd = bool<> aligner::!Vdd
+        _le = bool<> aligner::_le
+        l = e1of2<> aligner::l
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          e1of2<> l
+        )
+        bool<> _le
+      prs:
+        {
+        _le -> l.e-
+        ~_le -> l.e+
+        }
+      footprint: {
+        !GND = bool^0 = aligner<>::!GND (2) 
+        !Vdd = bool^0 = aligner<>::!Vdd (3) 
+        _le = bool^0 = aligner<>::_le (4) 
+        l = process e1of2<>^0 = aligner<>::l (1) (
+          e = bool^0 = aligner<>::l.e (1) 
+        )
+        Created state:
+        process instance pool: (1 ports, 0 local, 0 mapped)
+        1	aligner<>::l	e1of2<>
+          bool: 1
+        bool instance pool: (3 ports, 1 local, 0 mapped)
+        1	aligner<>::l.e	
+        2	aligner<>::!GND	
+        3	aligner<>::!Vdd	
+        4	aligner<>::_le	
+        resolved prs:
+        _le -> l.e-
+        ~_le -> l.e+
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 3, 2 | 3, 2
+      }
+      }
+
+    conv = process-definition (defined) conv(
+        bool<> !GND
+        bool<> !Vdd
+        e1of2<> r
+      )
+      In definition "conv", we have: {
+      Instances:
+        !GND = bool<> conv::!GND
+        !Vdd = bool<> conv::!Vdd
+        _r = bool<> conv::_r
+        r = e1of2<> conv::r
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          e1of2<> r
+        )
+        bool<> _r
+      prs:
+        {
+        r.e -> _r-
+        ~r.e -> _r+
+        }
+      footprint: {
+        !GND = bool^0 = conv<>::!GND (2) 
+        !Vdd = bool^0 = conv<>::!Vdd (3) 
+        _r = bool^0 = conv<>::_r (4) 
+        r = process e1of2<>^0 = conv<>::r (1) (
+          e = bool^0 = conv<>::r.e (1) 
+        )
+        Created state:
+        process instance pool: (1 ports, 0 local, 0 mapped)
+        1	conv<>::r	e1of2<>
+          bool: 1
+        bool instance pool: (3 ports, 1 local, 0 mapped)
+        1	conv<>::r.e	
+        2	conv<>::!GND	
+        3	conv<>::!Vdd	
+        4	conv<>::_r	
+        resolved prs:
+        r.e -> _r-
+        ~r.e -> _r+
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 3, 2 | 3, 2
+      }
+      }
+
+    e1of2 = process-definition (defined) e1of2(
+        bool<> e
+      )
+      In definition "e1of2", we have: {
+      Instances:
+        e = bool<> e1of2::e
+      unroll sequence: 
+        ports: (
+          bool<> e
+        )
+      footprint: {
+        e = bool^0 = e1of2<>::e (1) 
+        Created state:
+        bool instance pool: (1 ports, 0 local, 0 mapped)
+        1	e1of2<>::e	
+      }
+      }
+
+    top_type = process-definition (defined) top_type(
+        bool<> !GND
+        bool<> !Vdd
+      )
+      In definition "top_type", we have: {
+      Instances:
+        !GND = bool<> top_type::!GND
+        !Vdd = bool<> top_type::!Vdd
+        align = aligner<> top_type::align
+        conv0 = conv<> top_type::conv0
+        m = e1of2<> top_type::m
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+        )
+        e1of2<> m
+        conv<> conv0
+        conv0 ( , , m);
+        aligner<> align
+        align ( , , m);
+      footprint: {
+        !GND = bool^0 = top_type<>::!GND (1) 
+        !Vdd = bool^0 = top_type<>::!Vdd (2) 
+        align = process aligner<>^0 = top_type<>::align (3) (
+          !GND = bool^0 = top_type<>::!GND (1) 
+          !Vdd = bool^0 = top_type<>::!Vdd (2) 
+          l = process e1of2<>^0 = top_type<>::m (1) (
+            e = bool^0 = top_type<>::m.e (3) 
+          )
+        )
+        conv0 = process conv<>^0 = top_type<>::conv0 (2) (
+          !GND = bool^0 = top_type<>::!GND (1) 
+          !Vdd = bool^0 = top_type<>::!Vdd (2) 
+          r = process e1of2<>^0 = top_type<>::m (1) (
+            e = bool^0 = top_type<>::m.e (3) 
+          )
+        )
+        m = process e1of2<>^0 = top_type<>::m (1) (
+          e = bool^0 = top_type<>::m.e (3) 
+        )
+        Created state:
+        process instance pool: (0 ports, 3 local, 0 mapped)
+        1	top_type<>::m	e1of2<>
+          bool: 3
+        2	top_type<>::conv0	conv<>
+          process: 1
+          bool: 3,1,2
+        3	top_type<>::align	aligner<>
+          process: 1
+          bool: 3,1,2
+        bool instance pool: (2 ports, 1 local, 2 mapped)
+        1	top_type<>::!GND	
+        2	top_type<>::!Vdd	
+        3	top_type<>::m.e	
+        private sub-bool index map:
+          (2 -> 0)
+          (3 -> 1)
+          (4 -> 2)
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    top = top_type<> top
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) 
+  !Vdd = bool^0 = !Vdd (2) 
+  top = process top_type<>^0 = top (1) (
+    !GND = bool^0 = !GND (1) 
+    !Vdd = bool^0 = !Vdd (2) 
+  )
+  Created state:
+  process instance pool: (0 ports, 1 local, 3 mapped)
+  1	top	top_type<>
+    bool: 1,2
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 3)
+  bool instance pool: (0 ports, 2 local, 3 mapped)
+  1	!GND	
+  2	!Vdd	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 3)
+}

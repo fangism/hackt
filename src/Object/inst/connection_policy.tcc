@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.11 2010/04/30 23:58:43 fang Exp $
+	$Id: connection_policy.tcc,v 1.12 2010/05/26 00:46:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -460,7 +460,7 @@ process_connect_policy::initialize_direction(AliasType& a,
 #if ENABLE_STACKTRACE
 	a.dump_hierarchical_name(cerr << "alias: ") << endl;
 	a.dump_ports(cerr, dump_flags::default_value) << endl;
-	c.dump(cerr << "context: ") << endl;
+//	c.dump(cerr << "context: ") << endl;
 #endif
 	// check to make sure type is complete (no longer relaxed)
 	// lookup resolved type of the alias or its container
@@ -486,7 +486,8 @@ process_connect_policy::initialize_direction(AliasType& a,
 	// b/c port_alias_tracker only lists ports with *aliases*
 	// copy-initialize: alias actuals and attributes and flags
 #if ENABLE_STACKTRACE
-	pt.dump(cerr << "scope_alias_tracker:" << endl);
+	f.dump_type(STACKTRACE_INDENT_PRINT("instantiating type: ")) << endl;
+	pt.dump(STACKTRACE_INDENT_PRINT("scope_alias_tracker: ") << endl);
 #endif
 	pt.export_alias_properties(a);
 	// TODO: use footprint.port_alias_tracker::replay_internal_aliases

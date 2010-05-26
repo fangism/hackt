@@ -1,0 +1,35 @@
+/**
+	\file "fanin-check-01-c.prsimrc"
+	Testing for false-positive warning about missing fanins.
+
+
+ */
+defchan e1of2 <: chan(bool)(bool e) { }
+
+defproc conv(
+e1of2 r
+) {
+bool _r;
+prs {
+r.e => _r-
+}
+}
+
+defproc aligner(
+e1of2 l
+) {
+bool _le, le;
+// le = l.e;	// this line makes a difference!
+// l.e = le;	// this line makes a difference!
+prs {
+_le => le-
+}
+}
+
+defproc top_type() {
+e1of2 m;
+conv conv0(m);
+aligner align(m);
+}
+
+top_type top;

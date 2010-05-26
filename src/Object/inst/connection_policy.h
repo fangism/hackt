@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.14 2010/04/30 23:58:42 fang Exp $
+	$Id: connection_policy.h,v 1.15 2010/05/26 00:46:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -253,10 +253,7 @@ public:
 	set_connection_flags(const connection_flags_type);
 
 	bool
-	has_nondefault_attributes(void) const {
-		return attributes & BOOL_ATTRIBUTES_MASK;
-		// if any attribute bits are set
-	}
+	has_nondefault_attributes(void) const;
 
 	void
 	flag_port(void) {

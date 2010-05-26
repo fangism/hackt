@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.8 2007/07/18 23:28:44 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.9 2010/05/26 00:46:52 fang Exp $
 	TODO: trim includes
  */
 
@@ -220,7 +220,7 @@ INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->initial_instantiation_statement_ptr);
 	typedef	port_actual_collection<Tag>	port_collection_type;
-#if ENABLE_STACKTRACE
+#if 0 && ENABLE_STACKTRACE
 	cerr << "looking up: " << this->key << endl;
 	c.dump(cerr << "context: ") << endl;
 #endif

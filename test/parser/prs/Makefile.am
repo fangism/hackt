@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.63 2010/05/13 21:48:01 fang Exp $
+#	$Id: Makefile.am,v 1.64 2010/05/26 00:46:54 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -109,7 +109,9 @@ HACKT_PARSE_TEST_PASSES = \
 	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	reff-01 \
-	load_cap-01 
+	load_cap-01 \
+	fanin-check-01-a fanin-check-01-b fanin-check-01-c fanin-check-01-d \
+	fanin-check-01-e fanin-check-01-f fanin-check-01-g
 # pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
 
 srcdir_EXTRA_DIST += \
@@ -186,7 +188,9 @@ HACKT_CREATE_TEST_PASSES = \
 	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	reff-01 \
-	load_cap-01 
+	load_cap-01 \
+	fanin-check-01-a fanin-check-01-b fanin-check-01-c fanin-check-01-d \
+	fanin-check-01-e fanin-check-01-f fanin-check-01-g
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \

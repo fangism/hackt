@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.44 2010/04/07 00:12:29 fang Exp $
+ 	$Id: module.cc,v 1.45 2010/05/26 00:46:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -372,8 +372,10 @@ module::allocate_single_process(
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(pt);
 	// grab global parameters
-	if (!__import_global_parameters(top_module,
-		*pt->get_base_def().is_a<const process_definition>()).good) {
+	const never_ptr<const process_definition>
+		pdef(pt->get_base_def().is_a<const process_definition>());
+	NEVER_NULL(pdef);
+	if (!__import_global_parameters(top_module, *pdef).good) {
 		return good_bool(false);
 	}
 	const count_ptr<instantiation_statement_base>
@@ -396,9 +398,10 @@ module::allocate_single_process(
 	// what to do about overshadowed parameters?
 	const unroll_context c(&_footprint, &_footprint);
 	if (pi->unroll(c).good) {
-		_footprint.create_dependent_types(_footprint);
+		_footprint.create_dependent_types(c);
 		// force to reallocate new instance (fragile!)
 		// since there are no new connections, no new aliases are formed
+		// do NOT want to call process_definition::unroll_lang.
 		return allocate_unique();
 	}
 	else return good_bool(false);

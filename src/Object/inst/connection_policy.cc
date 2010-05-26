@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.12 2009/07/02 23:22:47 fang Exp $
+	$Id: connection_policy.cc,v 1.13 2010/05/26 00:46:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -25,6 +25,16 @@ using util::read_value;
 // TODO: handle directions
 
 /**
+	Mostly for connectivity diagnostics debugging.
+ */
+#define	DUMP_CONNECTIVITY_ATTRIBUTES			0
+#if DUMP_CONNECTIVITY_ATTRIBUTES
+#define	PRINTED_ATTRIBUTES				16
+#else
+#define	PRINTED_ATTRIBUTES				7
+#endif
+
+/**
 	These strings should be ordered according their corresponding
 	bit fields (enum) in the attribute flags.  
  */
@@ -37,6 +47,18 @@ bool_connect_policy::attribute_names[] = {
 	"isrvc3",
 	"may_interfere",
 	"may_weak_interfere",
+#if DUMP_CONNECTIVITY_ATTRIBUTES
+	"port-alias",
+
+	"local-fanout-",
+	"local-fanout+",
+	"local-fanin-",
+	"local-fanin+",
+	"sub-fanout-",
+	"sub-fanout+",
+	"sub-fanin-",
+	"sub-fanin+",
+#endif
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -102,6 +124,17 @@ bool_connect_policy::synchronize_flags(this_type& l, this_type& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+bool_connect_policy::has_nondefault_attributes(void) const {
+#if DUMP_CONNECTIVITY_ATTRIBUTES
+	return true;
+#else
+	return attributes & BOOL_ATTRIBUTES_MASK;
+	// if any attribute bits are set
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For debugging only.
  */
@@ -136,7 +169,7 @@ ostream&
 bool_connect_policy::dump_flat_attributes(ostream& o) const {
 	connection_flags_type temp = attributes;	// better be unsigned!
 	const char** p = attribute_names;
-while (temp && p < attribute_names +7) {
+while (temp && p < attribute_names +PRINTED_ATTRIBUTES) {
 	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << ' ' << *p;
@@ -155,7 +188,7 @@ ostream&
 bool_connect_policy::dump_split_attributes(ostream& o, const string& n) const {
 	connection_flags_type temp = attributes;	// better be unsigned!
 	const char** p = attribute_names;
-while (temp && p < attribute_names +7) {
+while (temp && p < attribute_names +PRINTED_ATTRIBUTES) {
 	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << "@ " << n << ' ' << *p << endl;

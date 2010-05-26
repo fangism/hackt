@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.36 2010/05/11 00:18:06 fang Exp $
+	$Id: footprint.h,v 1.37 2010/05/26 00:46:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -354,6 +354,11 @@ public:
 		return scope_aliases;
 	}
 
+	void
+	synchronize_alias_flags(void) {
+		scope_aliases.synchronize_flags();
+	}
+
 	// index is 0-based
 	template <class Tag>
 	ostream&
@@ -423,7 +428,7 @@ public:
 		const collection_map_entry_type&);
 
 	good_bool
-	create_dependent_types(const footprint&);
+	create_dependent_types(const unroll_context&);
 
 #if IMPLICIT_SUPPLY_PORTS
 	good_bool

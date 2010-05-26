@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.31 2010/04/30 23:58:45 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.32 2010/05/26 00:46:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -89,7 +89,13 @@ alias_reference_set<Tag>::refresh_string_cache(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to print ALL attributes for ALL aliases, 
+	which *should* be redundant, as they should match.
+	Really only useful for debugging.  
+ */
 #define	VERBOSE_ALIAS_ATTRIBUTES		0
+
 /**
 	Prints all equivalent aliases as determined by this set.  
  */
@@ -241,6 +247,7 @@ if (f != e) {
 		// predicate is needed because this is called on the 
 		// set of *scope* aliases which includes non-ports.
 		_inst.import_properties(a);
+		// FIXME: want directions initialized too!
 } else { STACKTRACE_INDENT_PRINT("is not port alias" << endl); }
 }
 
@@ -265,6 +272,8 @@ alias_reference_set<Tag>::export_alias_strings(set<string>& aliases) const {
 /**
 	Edits the canonical back reference to point to the 
 	shallowest instance.  
+	However, the alias list retains its original order!
+	So the front is not necessarily canonical!
 	Now this also flattens the union-find structure of each alias
 	set by setting all aliases to point to the chosen canonical alias.
  */
@@ -306,10 +315,27 @@ alias_reference_set<Tag>::shortest_alias(void) {
 	for (ii=b ; ii!=e; ++ii) {
 		(*ii)->update_direction_flags();
 	}
+	// NOTE: this is currently called before all direction flags
+	// have been updated by definition::unroll_lang() (prs, chp)
 }
 	// pardon the const_cast :S, we intend to modify, yes
 	// consider making mutable...
 	return __shortest_alias;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Makes all flags/attributes consistent among aliases within a set.
+ */
+template <class Tag>
+void
+alias_reference_set<Tag>::synchronize_flags(void) {
+	// for_each(...);
+	const iterator b(alias_array.begin()), e(alias_array.end());
+	iterator i(b);
+	for ( ; i!=e; ++i) {
+		(*i)->update_direction_flags();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -630,6 +656,20 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Makes all flags/attributes consistent among aliases within each set.
+ */
+template <class Tag>
+void
+port_alias_tracker_base<Tag>::__synchronize_flags(void) {
+	iterator i(_ids.begin());
+	const iterator e(_ids.end());
+	for ( ; i!=e; ++i) {
+		i->second.synchronize_flags();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This is only ever instantiated for channels and bools.
 	Walks over all unique channel instances in scope, 
 	and checks for dangling connections.  
@@ -637,6 +677,7 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 template <class Tag>
 error_count
 port_alias_tracker_base<Tag>::check_connections(void) const {
+	STACKTRACE_VERBOSE;
 	error_count ret;
 	const_iterator i(_ids.begin()), e(_ids.end());
 	for ( ; i!=e; ++i) {
@@ -827,6 +868,22 @@ if (has_internal_aliases) {
 		__shorten_canonical_aliases(f.get_instance_pool<int_tag>());
 	port_alias_tracker_base<bool_tag>::
 		__shorten_canonical_aliases(f.get_instance_pool<bool_tag>());
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+port_alias_tracker::synchronize_flags(void) {
+	STACKTRACE_VERBOSE;
+if (has_internal_aliases) {
+	port_alias_tracker_base<process_tag>::__synchronize_flags();
+	port_alias_tracker_base<channel_tag>::__synchronize_flags();
+#if ENABLE_DATASTRUCTS
+	port_alias_tracker_base<datastruct_tag>::__synchronize_flags();
+#endif
+	port_alias_tracker_base<enum_tag>::__synchronize_flags();
+	port_alias_tracker_base<int_tag>::__synchronize_flags();
+	port_alias_tracker_base<bool_tag>::__synchronize_flags();
 }
 }
 

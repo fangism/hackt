@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.16 2010/04/02 22:18:11 fang Exp $
+	$Id: definition_base.h,v 1.17 2010/05/26 00:46:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -43,6 +43,7 @@ class template_actuals;
 class const_param_expr_list;
 class port_formals_manager;
 class footprint;
+class unroll_context;
 struct dump_flags;
 using std::string;
 using std::istream;
@@ -296,6 +297,11 @@ virtual	DEFINITION_ADD_PORT_FORMAL_PROTO;
 	create_complete_type(						\
 		const count_ptr<const const_param_expr_list>&,		\
 			const footprint&) const
+
+#if 0
+virtual	good_bool
+	unroll_lang(const unroll_context&) const;
+#endif
 
 protected:
 	void
