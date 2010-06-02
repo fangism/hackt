@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.55 2010/05/26 00:46:47 fang Exp $
+	$Id: footprint.cc,v 1.56 2010/06/02 02:42:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1179,7 +1179,7 @@ footprint::__lookup_scalar_port_alias(const string& s) const {
 		f(instance_collection_map.find(s)),
 		e(instance_collection_map.end());
 	INVARIANT(f != e);
-	return ((*this)[f->second].is_a<instance_array<Tag, 0> >()
+	return ((*this)[f->second].template is_a<instance_array<Tag, 0> >()
 		->get_the_instance());
 }
 

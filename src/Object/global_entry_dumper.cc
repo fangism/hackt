@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_dumper.cc"
-	$Id: global_entry_dumper.cc,v 1.2 2010/05/11 00:18:03 fang Exp $
+	$Id: global_entry_dumper.cc,v 1.3 2010/06/02 02:42:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -69,7 +69,8 @@ global_entry_dumper::__default_visit(const state_instance<Tag>& p) {
 	}
 	os << local_offset << '\t';
 	const size_t gid = global_index -1;	// 0-based
-	topfp->dump_canonical_name<Tag>(os, gid, dump_flags::no_owners) << '\t';
+	topfp->template dump_canonical_name<Tag>(
+		os, gid, dump_flags::no_owners) << '\t';
 	p.get_back_ref()->dump_attributes(os);
 }
 
@@ -146,7 +147,7 @@ void
 global_allocation_dumper<Tag>::visit(const footprint& f) {
 	STACKTRACE_VERBOSE;
 	const typename state_instance<Tag>::pool_type&
-		_pool(f.get_instance_pool<Tag>());
+		_pool(f.template get_instance_pool<Tag>());
 	const bool is_top = at_top();
 if (_pool.total_private_entries() || (is_top && _pool.port_entries())) {
 	visit_local<Tag>(f, is_top);

@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.7 2010/05/11 00:18:03 fang Exp $
+	$Id: nonmeta_state.cc,v 1.8 2010/06/02 02:42:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -75,7 +75,7 @@ nonmeta_state_base<Tag>::__dump_all_subscriptions(ostream& o,
 		const instance_type& nsi(this->pool[i]);
 		if (nsi.has_subscribers()) {
 			o << traits_type::tag_name << "[" << i << "]: \"";
-			topfp.dump_canonical_name<Tag>(o, i-1, 
+			topfp.template dump_canonical_name<Tag>(o, i-1, 
 				dump_flags::no_owners);
 			o << "\" : ";
 			nsi.dump_subscribers(o) << endl;

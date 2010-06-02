@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.6 2010/04/07 00:12:28 fang Exp $
+	$Id: global_entry_context.cc,v 1.7 2010/06/02 02:42:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -528,7 +528,7 @@ global_entry_context::visit_local(const footprint& f,
 	f.dump_type(STACKTRACE_STREAM << "type: ") << endl;
 #endif
 	const typename state_instance<Tag>::pool_type&
-		_pool(f.get_instance_pool<Tag>());
+		_pool(f.template get_instance_pool<Tag>());
 	const bool is_top = at_top();
 	// construct context (footprint_frame)
 	footprint_frame lff;

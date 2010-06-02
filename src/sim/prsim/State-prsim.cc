@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.63 2010/05/11 00:18:17 fang Exp $
+	$Id: State-prsim.cc,v 1.64 2010/06/02 02:42:40 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -758,6 +758,8 @@ const State::node_type&
 State::get_node(const node_index_type i) const {
 	ISE_INVARIANT(i);
 	ISE_INVARIANT(i < node_pool.size());
+	// the following line ICEs gcc-3.3.4 (suse-linux), WTF!?
+	// internal compiler error: in build_base_path, at cp/class.c:283
 	return node_pool[i];
 }
 
