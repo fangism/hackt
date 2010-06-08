@@ -1,0 +1,7 @@
+channels:
+C : LEDR (init .d:0 .r:0) off
+D : LEDR (init .e:0 .d:0 .r:0) off
+C : LEDR (init .d:0 .r:0) off
+	count: 0, unknowns: 0
+D : LEDR (init .e:0 .d:0 .r:0) off
+	count: 0, unknowns: 0

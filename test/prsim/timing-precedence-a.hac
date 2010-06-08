@@ -1,0 +1,7 @@
+// "timing-precedence-a.hac"
+// testing precedence of timing policies
+
+bool x, y;
+prs {
+[after=0]	x => y-
+}

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.31 2010/05/17 21:37:14 fang Exp $
+	$Id: Channel-prsim.cc,v 1.32 2010/06/08 00:48:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1303,6 +1303,7 @@ channel::set_log(const string& fn) {
 	Immediately upon registering a channel, initialize the state 
 	of the data counter according the current values of all
 	data rail nodes.  
+	x_counter does not count the validity nor acknowledges.
 	One LOGIC_HIGH counts, X's are treated as 0s.  
 	invariant: if exclusiveness is violated, this will complain!
 	invariant: no data rails alias
@@ -1346,8 +1347,11 @@ case CHANNEL_TYPE_1ofN: {
 }
 case CHANNEL_TYPE_LEDR:
 	// FIXME: account for multiple bundles
-	// don't care about counter_state
-	x_counter = 2;
+	// don't care about counter_state, leave 0
+	if (s.get_node(ledr_data_rail()).current_value() == LOGIC_OTHER)
+		++x_counter;
+	if (s.get_node(repeat_rail()).current_value() == LOGIC_OTHER)
+		++x_counter;
 	break;
 default: break;
 }	// end switch
@@ -1597,7 +1601,7 @@ case CHANNEL_TYPE_1ofN:
 	break;
 case CHANNEL_TYPE_LEDR:
 	events.push_back(__node_setter(
-		get_data_init() ? LOGIC_HIGH : LOGIC_LOW)(data.front()));
+		get_data_init() ? LOGIC_HIGH : LOGIC_LOW)(ledr_data_rail()));
 	events.push_back(__node_setter(
 		get_repeat_init() ? LOGIC_HIGH : LOGIC_LOW)(repeat_rail()));
 	break;
@@ -1714,7 +1718,7 @@ case CHANNEL_TYPE_1ofN:
 #if PRSIM_CHANNEL_LEDR
 	break;
 case CHANNEL_TYPE_LEDR:
-	events.push_back(X_it(data.front()));
+	events.push_back(X_it(ledr_data_rail()));
 	events.push_back(X_it(repeat_rail()));
 	break;
 default:
@@ -1779,7 +1783,7 @@ case CHANNEL_TYPE_1ofN: {
 }
 case CHANNEL_TYPE_LEDR: {
 	// FIXME: eventually support wider bundled ledr values
-	const node_index_type& dn(data.front());
+	const node_index_type& dn(ledr_data_rail());
 	const bool v = DATA_VALUE(current_value()) & 0x01;	// LSB
 	switch (s.get_node(dn).current_value()) {
 	case LOGIC_LOW:
@@ -1918,7 +1922,7 @@ case CHANNEL_TYPE_1ofN: {
 }
 case CHANNEL_TYPE_LEDR:
 	// value is that of just the data rail
-	ret = ((s.get_node(data.front()).current_value()) == LOGIC_LOW ? 0 : 1);
+	ret = ((s.get_node(ledr_data_rail()).current_value()) == LOGIC_LOW ? 0 : 1);
 	break;
 default: DIE;
 }	// end switch
@@ -2348,7 +2352,7 @@ if (ack_signal) {
 		return LOGIC_OTHER;
 	}
 }
-	switch (s.get_node(data.front()).current_value()) {
+	switch (s.get_node(ledr_data_rail()).current_value()) {
 	case LOGIC_HIGH:
 		parity = !parity;
 		break;
@@ -2625,7 +2629,7 @@ if (ack_signal && (ni == ack_signal)) {
 	// else 2-phase does not have a reset phase on full, do nothing
 	}	// end if sourcing
 } else {
-	INVARIANT(ni == repeat_rail() || ni == data.front());
+	INVARIANT(ni == repeat_rail() || ni == ledr_data_rail());
 	STACKTRACE_INDENT_PRINT("got data or repeat-rail update" << endl);
 	switch (prev) {
 	case LOGIC_OTHER: --x_counter; break;

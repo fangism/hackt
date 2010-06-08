@@ -1,0 +1,15 @@
+# "channel-ledr-a-10.prsimrc"
+# @haco@ channel-ledr-a.haco-c
+
+set C.d 0
+set C.r 0
+set D.d 0
+set D.r 0
+set D.e 0
+cycle
+
+source channel-ledr-a-01.prsimrc
+
+channel-show C
+channel-show D
+

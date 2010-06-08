@@ -1,0 +1,16 @@
+# "timing-precedence-a-01.prsimrc"
+# @haco@ timing-precedence-a.haco-c
+
+watchall
+timing random
+set x 0
+cycle
+set x 1
+cycle
+timing random 10:20
+set x 0
+cycle
+set x 1
+cycle
+echo after 0 should overule global default min/max timing delays
+

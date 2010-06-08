@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.64 2010/06/02 02:42:40 fang Exp $
+	$Id: State-prsim.cc,v 1.65 2010/06/08 00:48:44 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1803,6 +1803,9 @@ if (e.cause_rule) {
 	} else if (timing_mode == TIMING_RANDOM ||
 			(r && r->is_always_random())) {
 		const bool after_zero = r && time_traits::is_zero(r->after);
+		if (after_zero) {
+			delta = time_traits::zero;
+		} else {
 #if PRSIM_AFTER_RANGE
 		const time_type min_val =
 			__get_delay(r, &rule_type::after_min, default_after_min);
@@ -1810,6 +1813,7 @@ if (e.cause_rule) {
 			__get_delay(r, &rule_type::after_max, default_after_max);
 		const bool have_min = r && !time_traits::is_zero(min_val);
 		const bool have_max = r && !time_traits::is_zero(max_val);
+		// FIXME: global after min/max wrongly overrules after=0!
 		if (have_max) {
 			if (have_min) {
 				delta = min_val +
@@ -1820,13 +1824,12 @@ if (e.cause_rule) {
 			}
 		} else {
 #endif
-			delta = after_zero ?
-				time_traits::zero : 
-				((0x01 << 11) * exponential_random_delay());
+			delta = ((0x01 << 11) * exponential_random_delay());
 #if PRSIM_AFTER_RANGE
 			if (have_min) delta += min_val;
 		}
 #endif
+		}
 	} else {
 	// timing_mode == TIMING_AFTER
 		delta = r ? r->after : time_traits::zero;

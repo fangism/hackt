@@ -1,0 +1,11 @@
+default after min: 0
+default after max: +INF
+	0	x : 0
+	0	y : 1	[by x:=0]
+	0	x : 1
+	0	y : 0	[by x:=1]
+	0	x : 0
+	0	y : 1	[by x:=0]
+	0	x : 1
+	0	y : 0	[by x:=1]
+after 0 should overule global default min/max timing delays 

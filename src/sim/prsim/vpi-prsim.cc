@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.24 2010/05/25 23:49:14 fang Exp $
+	$Id: vpi-prsim.cc,v 1.25 2010/06/08 00:48:45 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -157,6 +157,16 @@ static int scheduled = 0;
   last scheduled _run_prsim_callback. We need to remove it!!! Insane! 
 */
 static vpiHandle last_registered_callback;
+
+/**
+	By default, don't print to/from connections as they are created.
+	TODO: document this function? even if it's only for debugging?
+ */
+static int _confirm_connections = 0;
+static PLI_INT32 confirm_connections (PLI_BYTE8 *args) {
+	_confirm_connections = 1;
+	return 0;
+}
 
 /**
 	Wrapper around vpi_printf that casts away constness
@@ -756,7 +766,7 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
 
   const string VCS_name(strip_spaces(vcs_name));
   const string PRSIM_name(strip_spaces(prsim_name));
-  string vcs_name_stripped, prsim_name_stripped;
+  // string vcs_name_stripped, prsim_name_stripped;
 
   cb_data.reason = cbValueChange;
   cb_data.cb_rtn = prsim_callback;
@@ -780,6 +790,10 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
   /* prsim net name */
   cb_data.user_data = reinterpret_cast<PLI_BYTE8*>(ni);	// YUCK, void*
   vpi_register_cb (&cb_data);
+
+  if (_confirm_connections) {
+	cout << "$to_prsim: " << VCS_name << " -> " << PRSIM_name << endl;
+  }
 
   /* propagate the current value of the node to prsim */
   s_vpi_value v;
@@ -860,6 +874,11 @@ void register_from_prsim (const char *vcs_name, const char *prsim_name)
 	vpiHandleMap[ni].insert(net);
 	// support multiple unique Handles
 #endif
+
+  if (_confirm_connections) {
+	cout << "$from_prsim: " << PRSIM_name << " -> " << VCS_name << endl;
+  }
+
 }
 
 #if 0
@@ -1527,6 +1546,7 @@ static struct funcs f[] = {
   { "$from_prsim", from_prsim },
   { "$prsim", prsim_file },
   { "$prsim_default_after", prsim_default_after },
+  { "$prsim_confirm_connections", confirm_connections },
   { "$prsim_cmd", prsim_cmd },		// one command to rule them all
   { "$prsim_sync", __no_op__ },		// deprecated, should be automatic now
 	// these other commands are not needed, only for convenience

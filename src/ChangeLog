@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-06-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-97:
+	  hacprsim channel-ledr:
+		Fixed issue with corrupt channel counter state when 
+		declaring LEDR channels after they have non-X rails.
+		Test case added;
+	  hacprsim timing:
+		after=0 now takes precedence over global default
+			after min/max delays.  Test case added.
+	  hacprsim: Added instance name tab-completion as the default for 
+		channel commands.
+	  vpi-prsim.cc: added optional $confirm_connections function
+		to verbosely confirm to/from_prsim connections.
+		Not yet documented.
+
+
 2010-05-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-96:

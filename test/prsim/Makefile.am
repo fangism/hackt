@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.96 2010/05/10 18:21:11 fang Exp $
+#	$Id: Makefile.am,v 1.97 2010/06/08 00:48:45 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -28,6 +28,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	and-nand or-nor nand-or \
 	and-nand-alt or-nor-alt nor-and \
 	expr-limit-a \
+	timing-precedence-a \
 	unstable-a unstable-b \
 	weak-unstable-a weak-unstable-b \
 	attrib-unstab-a \
@@ -146,6 +147,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	array-b-01 \
 	aliases-08 aliases-09 \
 	timing-01 \
+	timing-precedence-a-01 \
 	pending-01 pending-02 \
 	after-override-01 \
 	after-celem-base \
@@ -245,6 +247,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-ledr-a-01 channel-ledr-a-02 channel-ledr-a-03 \
 	channel-ledr-a-04 channel-ledr-a-05 \
 	channel-ledr-a-07 channel-ledr-a-08 channel-ledr-a-09 \
+	channel-ledr-a-10 \
 	channel-eledr-a-01 channel-eledr-a-02 channel-eledr-a-03 \
 	channel-eledr-a-04 channel-eledr-a-05 \
 	channel-eledr-a-07 channel-eledr-a-08 \

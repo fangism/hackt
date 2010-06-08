@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.24 2010/04/28 02:17:51 fang Exp $
+	$Id: Channel-prsim.h,v 1.25 2010/06/08 00:48:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -594,6 +594,10 @@ private:
 
 	value_enum
 	current_ledr_parity(const State& s) const;
+
+	node_index_type
+	ledr_data_rail(void) const { return data.front(); }
+
 #endif	// PRSIM_CHANNEL_LEDR
 
 public:

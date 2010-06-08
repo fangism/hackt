@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.67 2010/05/25 23:49:13 fang Exp $
+	$Id: Command-prsim.cc,v 1.68 2010/06/08 00:48:43 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -5459,6 +5459,7 @@ name of the current log file to which values are dumped, if enabled.
 @end texinfo
 ***/
 // TODO: prsim tab-completion on registered channel names
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelShow, instance_completer)
 // PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelShow, prsim_channel_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelShow, "channel-show", 
 	channels, "show configuration of registered channel")
@@ -5493,6 +5494,7 @@ or ack from receiver).
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelGet, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelGet, "channel-get", 
 	channels, "print handshake state of channel")
 
@@ -5577,6 +5579,7 @@ by @command{channel-expect-fail}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelAssert, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert", 
 	channels, "asserts current state of channel")
 
@@ -5694,6 +5697,7 @@ make sure that they are resumed by @command{channel-release}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelWatch, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelWatch, "channel-watch", 
 	channels, "report when specified channel changes state")
 
@@ -5716,6 +5720,7 @@ Remove channel @var{chan} from watch list.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelUnWatch, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelUnWatch, "channel-unwatch", 
 	channels, "ignore when spcified channel changes state")
 
@@ -5782,6 +5787,7 @@ Take channel @var{chan} out of the ignored state.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelHeed, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelHeed, "channel-heed", 
 	channels, "resume logging and checking channel values")
 
@@ -5807,6 +5813,7 @@ is stopped, by a @command{stop} command.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelIgnore, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelIgnore, "channel-ignore", 
 	channels, "stop logging and checking channel values")
 
@@ -5879,6 +5886,7 @@ resumed by @command{channel-release}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelReset, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelReset, "channel-reset", 
 	channels, "set a channel into its reset state")
 
@@ -5943,6 +5951,7 @@ A channel can be unfrozen by @command{channel-release}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelStop, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelStop, "channel-stop", 
 	channels, "hold a channel in its current state")
 
@@ -6036,6 +6045,7 @@ to the event queue as deemed appropriate.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelRelease, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelRelease, "channel-release", 
 	channels, "release a channel from its reset or stopped state")
 
@@ -6101,6 +6111,7 @@ files are read in their entirety upon configuration.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelClose, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelClose, "channel-close", 
 	channels, "close any files/streams associated with channel")
 
@@ -6156,8 +6167,11 @@ drive the acknowledge signal and no other rules driving the data rails
 @end deffn
 @end texinfo
 ***/
+// TODO: position-specific completion
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelSourceFile, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceFile, "channel-source-file", 
 	channels, "source values on channel from file (once)")
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelSource, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSource, "channel-source", 
 	channels, "alias to channel-source (deprecated)")
 
@@ -6202,9 +6216,11 @@ infintely.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelSourceFileLoop, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceFileLoop, 
 	"channel-source-file-loop", 
 	channels, "source values on channel from file (loop)")
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelSourceLoop, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceLoop, "channel-source-loop", 
 	channels, "alias to channel-source-loop (deprecated)")
 
@@ -6252,6 +6268,7 @@ but it will still reset the data rails to neutral state.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelSourceArgs, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceArgs,
 	"channel-source-args", 
 	channels, "source values on channel from arguments (once)")
@@ -6293,6 +6310,7 @@ but it will still reset the data rails to neutral state.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelSourceArgsLoop, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSourceArgsLoop,
 	"channel-source-args-loop", 
 	channels, "source channel values from arguments (loop)")
@@ -6330,6 +6348,7 @@ This is useful for tests that do not depend on data values.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelRandomSource, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelRandomSource, "channel-rsource", 
 	channels, "source random values on channel (infinite)")
 
@@ -6364,6 +6383,7 @@ Mmmmm... tokens!  Nom-nom-nom...
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelSink, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSink, "channel-sink", 
 	channels, "consume tokens infinitely on channel")
 
@@ -6397,6 +6417,7 @@ make sure that they are resumed by @command{channel-release}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelLog, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelLog, "channel-log", 
 	channels, "log channel values to file")
 
@@ -6434,8 +6455,10 @@ See also @command{channel-expect-file-loop}.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelExpectFile, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectFile, "channel-expect-file", 
 	channels, "assert values on channel from file (once)")
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelExpect, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpect, "channel-expect", 
 	channels, "alias to channel-expect-file (deprecated)")
 
@@ -6482,9 +6505,11 @@ Like @command{channel-expect-file} but repeats value sequence infintely.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelExpectFileLoop, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectFileLoop,
 	"channel-expect-file-loop", 
 	channels, "assert values on channel from file (loop)")
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelExpectLoop, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectLoop, "channel-expect-loop", 
 	channels, "alias to channel-expect-loop (deprecated)")
 
@@ -6530,6 +6555,7 @@ Stops checking values after last value is used.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelExpectArgs, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectArgs,
 	"channel-expect-args", 
 	channels, "assert values on channel from arguments (once)")
@@ -6568,6 +6594,7 @@ Checks that value sequence repeats infintely.
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelExpectArgsLoop, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelExpectArgsLoop,
 	"channel-expect-args-loop", 
 	channels, "assert channel values from arguments (loop)")
@@ -6690,6 +6717,7 @@ Modes:
 @end deffn
 @end texinfo
 ***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelTiming, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelTiming, "channel-timing", 
 	channels, "set/get per channel timing mode")
 
