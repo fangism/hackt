@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-06-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-98:
+	  hacprsim/vpi-prsim: fixed bug with next_event_time() which 
+		now skips killed events (as it should).  Was causing
+		a co-simulation bug that appeared to violate causality, 
+		exposed in unstable-dequeue mode with instabilities
+		while pending events are behind the killed event in queue.
+	  Test case added.  Fixes ACX-PR-5397.
+
+
 2010-06-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-97:

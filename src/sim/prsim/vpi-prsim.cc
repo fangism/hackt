@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.25 2010/06/08 00:48:45 fang Exp $
+	$Id: vpi-prsim.cc,v 1.26 2010/06/14 00:22:34 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -293,7 +293,7 @@ static void register_self_callback (Time_t vcstime)
   if (scheduled == 1) return;
 
 	STACKTRACE_INDENT_PRINT("not scheduled" << endl);
-#if VERBOSE_DEBUG
+#if 0 && VERBOSE_DEBUG
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;
 #endif
@@ -393,11 +393,14 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 	n_space(vpiHandleMap.find(ni)),
 	n_end(vpiHandleMap.end());
     // "n_space" in honor of the abuse of a certain void* PrsNode::*space
-#if VERBOSE_DEBUG
+#if 0 && VERBOSE_DEBUG
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;
 #endif
 #if TRACE_VCS_TIME
+	if (prsim_state->pending_events()) {
+	cout << "next event time: " << prsim_state->next_event_time() << endl;
+	}
 	cout << "prsim time: " << prsim_time << endl;
 #endif
 	if (prsim_state->watching_all_nodes()) {

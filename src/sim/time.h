@@ -3,7 +3,8 @@
 	Useful time typedefs and structures.  
 	Also contains some time macros and inline functions.  
 	TODO: use mpz_t for really long integers.  
-	$Id: time.h,v 1.5 2010/01/05 00:09:44 fang Exp $
+	TODO: use mpfr for really long integers.  
+	$Id: time.h,v 1.6 2010/06/14 00:22:32 fang Exp $
  */
 
 #ifndef	__HAC_SIM_TIME_H__
@@ -29,6 +30,7 @@ typedef	long		discrete_time;
 template <typename T>
 struct delay_policy;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct delay_policy<real_time> {
 	/**
@@ -40,6 +42,13 @@ struct delay_policy<real_time> {
 	 */
 	static const real_time	default_delay;
 	static const real_time	zero;
+	static const real_time	infinity;
+
+	static
+	real_time
+	max(void) throw() {
+		return std::numeric_limits<real_time>::max();
+	}
 
 	/**
 		Don't use floating point equality, use < threshold comparison.
@@ -51,11 +60,19 @@ struct delay_policy<real_time> {
 	}
 };	// end struct delay_policy
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct delay_policy<discrete_time> {
 	enum {	invalid_value = -1 };
 	enum {	default_delay = 10 };
 	enum {	zero = 0 };
+	static const discrete_time	infinity;	// uses max()
+
+	static
+	discrete_time
+	max(void) throw() {
+		return std::numeric_limits<discrete_time>::max();
+	}
 
 	static
 	bool

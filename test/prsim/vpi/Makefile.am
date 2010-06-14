@@ -1,5 +1,5 @@
 # "test/prsim/vpi/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2010/04/02 22:30:03 fang Exp $
+#	$Id: Makefile.am,v 1.16 2010/06/14 00:22:34 fang Exp $
 # Test auto-Makefile for prsim with VPI.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -12,7 +12,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 	oscillator \
 	channel-source-sink \
 	and_tree and_template_tree \
-	and_tree_reverse and_template_tree_reverse
+	and_tree_reverse and_template_tree_reverse \
+	inverters-separate
 
 # for .v verilog tests
 HACKT_VPI_TEST_SCRIPTS_PASSES = \
@@ -25,7 +26,8 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	channel-source-sink \
 	and_tree and_template_tree \
 	and_tree_reverse and_template_tree_reverse \
-	fatal-assert-fail
+	fatal-assert-fail \
+	unstable-dequeue
 
 HACKT_VWRAP_TEST_SCRIPTS_PASSES = \
 	standard standard-ports standard-reverse \

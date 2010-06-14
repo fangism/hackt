@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.65 2010/06/08 00:48:44 fang Exp $
+	$Id: State-prsim.cc,v 1.66 2010/06/14 00:22:33 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1118,18 +1118,20 @@ State::kill_event(const event_index_type ei, const node_index_type ni) {
 node_index_type
 State::load_enqueue_event(const time_type t, const event_index_type ei) {
 	INVARIANT(ei);
+	const event_type& e(get_event(ei));
+	const node_index_type ni = e.node;
 #if 1
 	// keep this on for now b/c VPI co-sim seems to trip this a lot
 	if (UNLIKELY(!(t >= current_time))) {
-		cerr << "FATAL: attempt to schedule event in the past!" << endl;
+		dump_node_canonical_name(cerr <<
+		"FATAL: attempt to schedule event in the past on node: ", ni)
+			<< endl;
 		cerr << "\tnew: " << t << " vs. now: " << current_time << endl;
 	}
 #endif
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
 		" at time " << t << endl);
-	const event_type& e(get_event(ei));
-	const node_index_type ni = e.node;
 	if (UNLIKELY(watching_all_event_queue() ||
 		(watching_event_queue() &&
 			is_watching_node(e.node)))) {
@@ -1340,10 +1342,24 @@ State::dequeue_event(void) {
 /**
 	\pre There must be at least one event in queue before this is called.  
 	\return the scheduled time of the next event.  
+	This should return the next *non-killed* event time.  
  */
 State::time_type
 State::next_event_time(void) const {
+#if 0
+	// includes killed events, which we don't want
 	return event_queue.top().time;
+#else
+	// fixed.
+	event_queue_type::const_iterator
+		i(event_queue.begin()), e(event_queue.end());
+	for ( ; i!=e; ++i) {
+		if (!get_event(i->event_index).killed())
+			return i->time;
+	}
+	// else no-live events left, issue warning?
+	return delay_policy<time_type>::max();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

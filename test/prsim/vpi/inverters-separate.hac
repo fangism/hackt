@@ -1,0 +1,24 @@
+// "inverters.hac"
+// to be connected to VPI and back
+
+template <pint D>
+defproc inv (bool a, b) {
+prs {
+[after=D]	a	=> b-
+}
+}
+
+template <pint N, D>
+defproc inv_chain(bool i, o) {
+inv<D> Z[N];
+bool x[N+1];
+x[0] = i;
+x[N] = o;
+(;j:N: Z[j](x[j], x[j+1]);	)
+}
+
+bool in0, out0;
+bool in1, out1;
+inv_chain<3,10> c0(in0, out0);
+inv_chain<3,2> c1(in1, out1);
+
