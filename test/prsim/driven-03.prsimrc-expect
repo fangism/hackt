@@ -1,0 +1,46 @@
+Nodes driven:
+Nodes undriven (state-holding):
+!GND
+!Vdd
+a
+b
+Nodes driven by X:
+c
+c pulled up:X dn:X weak-up:0 weak-dn:0
+	0	a : 1
+	0	b : 0
+Nodes driven:
+Nodes undriven (state-holding):
+!GND
+!Vdd
+a
+b
+c
+Nodes driven by X:
+c pulled up:0 dn:0 weak-up:0 weak-dn:0
+	0	b : 1
+	10	c : 0	[by b:=1]
+Nodes driven:
+c
+Nodes undriven (state-holding):
+!GND
+!Vdd
+a
+b
+Nodes driven by X:
+c pulled up:0 dn:1 weak-up:0 weak-dn:0
+	10	b : 0
+	10	a : 0
+	20	c : 1	[by a:=0]
+Nodes driven:
+c
+Nodes undriven (state-holding):
+!GND
+!Vdd
+a
+b
+Nodes driven by X:
+c pulled up:1 dn:0 weak-up:0 weak-dn:0
+	20	a : 1
+assert failed: expecting node `c' with drive-state 1, but got 0.
+... at line 46

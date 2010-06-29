@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.39 2010/05/21 20:44:36 fang Exp $
+	$Id: State-prsim.h,v 1.40 2010/06/29 01:55:05 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1028,6 +1028,9 @@ public:
 
 	ostream&
 	status_interference(ostream&, const bool) const;
+
+	ostream&
+	status_driven(ostream&, const pull_enum) const;
 
 	bool
 	dequeue_unstable_events(void) const {

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.23 2010/04/02 22:19:18 fang Exp $
+	$Id: Node.h,v 1.24 2010/06/29 01:55:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -327,6 +327,7 @@ public:
 	} state_flags_enum;
 
 public:
+	// also use this as pull_to_char
 	static const uchar		value_to_char[3];
 	static const value_enum		invert_value[3];
 protected:
@@ -502,8 +503,19 @@ public:
 	}
 
 	static
+	bool
+	is_valid_pull(const pull_enum c) {
+		// return c >= LOGIC_LOW && c <= LOGIC_OTHER;
+		return c <= PULL_WEAK;
+	}
+
+	static
 	value_enum
 	char_to_value(const char);
+
+	static
+	pull_enum
+	char_to_pull(const char);
 
 	static
 	char
@@ -515,6 +527,10 @@ public:
 	static
 	value_enum
 	string_to_value(const std::string&);
+
+	static
+	pull_enum
+	string_to_pull(const std::string&);
 
 	void
 	initialize(void);
@@ -553,6 +569,24 @@ public:
 
 	bool
 	weak_interfering(void) const;
+
+	pull_enum
+	drive_state(void) const;
+
+	bool
+	driven(void) const {
+		return drive_state() == PULL_ON;
+	}
+
+	bool
+	x_driven(void) const {
+		return drive_state() == PULL_WEAK;
+	}
+
+	bool
+	undriven(void) const {
+		return drive_state() == PULL_OFF;
+	}
 
 	void
 	save_state(ostream&) const;

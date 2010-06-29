@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.68 2010/06/08 00:48:43 fang Exp $
+	$Id: Command-prsim.cc,v 1.69 2010/06/29 01:55:03 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1811,6 +1811,65 @@ Get::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/get-driven.texi
+@deffn Command get-driven node
+Reports the drive state of pull-up/dn on a @var{node}.  
+See also @command{fanin-get} for details.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetDriven, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetDriven, "get-driven", info,
+	"print pull-up/pull-dn drive state on node")
+
+/**
+	Prints current value of the named node.  
+ */
+int
+GetDriven::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		const node_type& n(s.get_node(ni));
+		const pull_enum u = n.get_pull_struct(true, NORMAL_RULE).pull();
+		const pull_enum d = n.get_pull_struct(false, NORMAL_RULE).pull();
+#if PRSIM_WEAK_RULES
+		const pull_enum wu = n.get_pull_struct(true, WEAK_RULE).pull();
+		const pull_enum wd = n.get_pull_struct(false, WEAK_RULE).pull();
+#endif
+		cout << objname <<
+			" pulled up:" << node_type::value_to_char[u] <<
+			" dn:" << node_type::value_to_char[d] <<
+#if PRSIM_WEAK_RULES
+			" weak-up:" << node_type::value_to_char[wu] <<
+			" weak-dn:" << node_type::value_to_char[wd] <<
+#endif
+				endl;
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+GetDriven::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o <<
+"Print the current drive state of the node, pull in all directions.\n"
+"See also 'fanin-get' for details."
+	<< endl;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/getports.texi
 @deffn Command getports struct
 Print the state of all port nodes of @var{struct}.  
@@ -2085,6 +2144,55 @@ StatusWeakInterfere::usage(ostream& o) {
 	o << brief << endl;
 }
 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/status-driven.texi
+@deffn Command status-driven val
+Reports all nodes that are in a particular drive-state.
+The drive-state of a node is the strongest pull in any direction.  
+The current value of the node is not considered.
+@var{val} is 0 for undriven nodes, X for X-driven nodes, and 1 for 
+driven nodes (which may include interfering nodes).  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusDriven, "status-driven", info, 
+	"show all nodes that are currently driven or undriven")
+
+int
+StatusDriven::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& v(a.back());
+	pull_enum p = PULL_OFF;
+	if (v == "0") {
+		p = PULL_OFF;
+	} else if (v == "1") {
+		p = PULL_ON;
+	} else if (v == "X" || v == "x") {
+		p = PULL_WEAK;
+	} else {
+		cerr << "Error: invalid status argument, expecting [01X]."
+			<< endl;
+		return Command::BADARG;
+	}
+	s.status_driven(cout, p);
+	return Command::NORMAL;
+}
+}
+
+void
+StatusDriven::usage(ostream& o) {
+	o << name << " [01Xx]" << endl;
+	o << 
+"status-driven 0: reports nodes that are undriven\n"
+"status-driven 1: reports nodes that are driven (including interference)\n"
+"status-driven X: reports nodes that are only driven by X"
+	<< endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2763,6 +2871,79 @@ void
 AssertN::usage(ostream& o) {
 	o << "assertn <node> <value>" << endl;
 	o << "signal an error and halt simulation if node is at this value"
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assert-driven.texi
+@deffn Command assert node value
+Error out if @var{node} is driven with strength @var{value}.  
+The error-handling policy can actually be determined by
+the @command{assert-fail} command.  
+By default, such errors are fatal and cause the simulator to terminate
+upon first error.  
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(AssertDriven, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertDriven, "assert-driven", info, 
+	"error if drive-state of node does not match expected")
+
+/**
+	Checks expected value of node against actual value.  
+	\return FATAL on assertion failure.  
+ */
+int
+AssertDriven::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		const node_type& n(s.get_node(ni));
+		const string& _val(a.back());	// node value
+		// valid values are 0, 1, 2(X)
+		const pull_enum val = node_type::string_to_pull(_val);
+		if (!node_type::is_valid_pull(val)) {
+			cerr << "Invalid pull value: " << _val << endl;
+			return Command::SYNTAX;
+		}
+		const pull_enum actual = n.drive_state();
+		if (actual != val) {
+			const error_policy_enum e(s.get_assert_fail_policy());
+			if (e != ERROR_IGNORE) {
+			cout << "assert failed: expecting node `" << 
+				nonempty_abs_dir(objname) <<
+				"\' with drive-state " <<
+				node_type::value_to_char[size_t(val)] <<
+				", but got ";
+			cout << node_type::value_to_char[size_t(actual)]
+				<< "." << endl;
+			}	// yes, actually allow suppression
+			return error_policy_to_status(e);
+		} else if (s.confirm_asserts()) {
+			cout << "node `" << nonempty_abs_dir(objname)
+				<< "\' has drive-state " <<
+				node_type::value_to_char[size_t(val)] <<
+				", as expected." << endl;
+		}
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+AssertDriven::usage(ostream& o) {
+	o << name << " <node> <value>" << endl;
+	o << "signal an error and halt simulation if node is not driven with the strength asserted."
 		<< endl;
 }
 

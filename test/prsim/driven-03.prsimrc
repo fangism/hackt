@@ -1,0 +1,67 @@
+# "driven-03.prsimrc"
+# copy-modified from "driven-02.prsimrc"
+# @haco@ interference.haco-c
+
+# ~a -> c+
+# b  -> c-
+
+watchall
+timing uniform 10
+
+status-driven 1
+status-driven 0
+status-driven X
+get-driven c
+
+set a 1
+set b 0
+cycle
+status-driven 1
+status-driven 0
+status-driven X
+get-driven c
+assert-driven c 0
+
+# set a 1
+set b 1
+cycle
+status-driven 1
+status-driven 0
+status-driven X
+get-driven c
+assert-driven c 1
+
+set b 0
+set a 0
+cycle
+status-driven 1
+status-driven 0
+status-driven X
+get-driven c
+assert-driven c 1
+
+set a 1
+cycle
+# WRONG
+assert-driven c 1
+echo NOT REACHED
+
+status-driven 1
+status-driven 0
+status-driven X
+get-driven c
+
+echo testing for interference
+
+set a 0
+set b 1
+echo expecting interference from guard
+cycle
+
+status-driven 1
+status-driven 0
+status-driven X
+get-driven c
+assert-driven c 1
+
+

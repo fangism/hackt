@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/enums.h"
-	$Id: enums.h,v 1.6 2010/04/12 17:53:15 fang Exp $
+	$Id: enums.h,v 1.7 2010/06/29 01:55:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_ENUMS_H__
@@ -22,7 +22,8 @@ namespace PRSIM {
 enum pull_enum {
 	PULL_OFF = 0x00,
 	PULL_ON = 0x01,
-	PULL_WEAK = 0x02
+	PULL_WEAK = 0x02,
+	PULL_INVALID = 0xFF
 };
 
 //-----------------------------------------------------------------------------

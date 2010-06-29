@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-06-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-83-99:
+	  hacprsim: added new familiy of diagnostic commands to check
+		the drive-status of a node, whether or not it is pulled.
+		This is useful for checking whether nodes are combinationally
+		driven at run-time, or when they become state-holding.
+		commands: drive values (DRV) are 0 (off), X, or 1(on)
+			get-driven NODE
+			status-driven NODE DRV
+			assert-driven NODE DRV
+		Documented, and test cases added.
+
+
 2010-06-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-98:

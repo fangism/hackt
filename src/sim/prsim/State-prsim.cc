@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.66 2010/06/14 00:22:33 fang Exp $
+	$Id: State-prsim.cc,v 1.67 2010/06/29 01:55:05 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4212,6 +4212,34 @@ State::status_interference(ostream& o, const bool w) const {
 	o << "Nodes with " << (w ? "weak-" : "") << "interference:" << endl;
 	find_nodes(nodes,
 		w ? &node_type::weak_interfering : &node_type::interfering);
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks at the state of pull up/dn, not current value.
+	Interfering nodes are driven.
+ */
+ostream&
+State::status_driven(ostream& o, const pull_enum p) const {
+	vector<node_index_type> nodes;
+switch (p) {
+case PULL_OFF:
+	o << "Nodes undriven (state-holding):" << endl;
+	break;
+case PULL_WEAK:
+	o << "Nodes driven by X:" << endl;
+	break;
+// case PULL_ON:
+default:
+	o << "Nodes driven:" << endl;
+	break;
+}
+	find_nodes(nodes,
+		(p == PULL_OFF) ? &node_type::undriven :
+		(p == PULL_WEAK) ? &node_type::x_driven :
+			&node_type::driven);
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }

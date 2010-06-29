@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.18 2010/04/12 17:53:14 fang Exp $
+	$Id: Node.cc,v 1.19 2010/06/29 01:55:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -237,6 +237,23 @@ NodeState::char_to_value(const char v) {
 	}
 }
 
+pull_enum
+NodeState::char_to_pull(const char v) {
+	switch (v) {
+	case '0': return PULL_OFF;
+
+	case '1': return PULL_ON;
+
+	case 'X':	// fall-through
+	case 'x':	// fall-through
+	case 'U':	// fall-through
+	case 'u':	// fall-through
+		return PULL_WEAK;
+	default:
+		return PULL_INVALID;
+	}
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Lexes string to node value.  
@@ -249,6 +266,15 @@ NodeState::string_to_value(const string& v) {
 		return LOGIC_INVALID;
 	} else {
 		return char_to_value(v[0]);
+	}
+}
+
+pull_enum
+NodeState::string_to_pull(const string& v) {
+	if (v.length() != 1) {
+		return PULL_INVALID;
+	} else {
+		return char_to_pull(v[0]);
 	}
 }
 
@@ -300,6 +326,28 @@ NodeState::weak_interfering(void) const {
 	return (u != PULL_OFF && d != PULL_OFF &&
 		(u == PULL_WEAK || d == PULL_WEAK));
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pull_enum
+NodeState::drive_state(void) const {
+	// check strong vs. strong rules
+	const pull_enum u(get_pull_struct(true, NORMAL_RULE).pull());
+	const pull_enum d(get_pull_struct(false, NORMAL_RULE).pull());
+#if PRSIM_WEAK_RULES
+	// else check weak vs. weak rules
+	const pull_enum wu(get_pull_struct(true, WEAK_RULE).pull());
+	const pull_enum wd(get_pull_struct(false, WEAK_RULE).pull());
+#endif
+	if (u == PULL_ON || d == PULL_ON) { return PULL_ON; }
+#if PRSIM_WEAK_RULES
+	else if (wu == PULL_ON || wd == PULL_ON) { return PULL_ON; }
+#endif
+	else if (u == PULL_WEAK || d == PULL_WEAK) { return PULL_WEAK; }
+#if PRSIM_WEAK_RULES
+	else if (wu == PULL_WEAK || wd == PULL_WEAK) { return PULL_WEAK; }
+#endif
+	else return PULL_OFF;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
